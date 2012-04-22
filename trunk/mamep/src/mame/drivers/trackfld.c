@@ -211,7 +211,7 @@ WRITE8_MEMBER(trackfld_state::questions_bank_w)
 	{
 		if((data & 1 << i) == 0) // check first bit active low, change ROM bank according to the correlated bit
 		{
-			memory_set_bank(machine(), "bank1", i);
+			membank("bank1")->set_entry(i);
 			return;
 		}
 	}
@@ -232,22 +232,22 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x1085, 0x1085) AM_MIRROR(0x0078) AM_WRITENOP						/* CN3.2 */
 	AM_RANGE(0x1086, 0x1086) AM_MIRROR(0x0078) AM_WRITENOP						/* CN3.4 */
 	AM_RANGE(0x1087, 0x1087) AM_MIRROR(0x0078) AM_WRITE(irq_mask_w)				/* INT */
-	AM_RANGE(0x1100, 0x1100) AM_MIRROR(0x007f) AM_WRITE(soundlatch_w)			/* 32 */
+	AM_RANGE(0x1100, 0x1100) AM_MIRROR(0x007f) AM_WRITE(soundlatch_byte_w)			/* 32 */
 	AM_RANGE(0x1200, 0x1200) AM_MIRROR(0x007f) AM_READ_PORT("DSW2")
 	AM_RANGE(0x1280, 0x1280) AM_MIRROR(0x007c) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x1281, 0x1281) AM_MIRROR(0x007c) AM_READ_PORT("IN0")
 	AM_RANGE(0x1282, 0x1282) AM_MIRROR(0x007c) AM_READ_PORT("IN1")
 	AM_RANGE(0x1283, 0x1283) AM_MIRROR(0x007c) AM_READ_PORT("DSW1")
 	/* not used according to schems: AM_RANGE(0x1300, 0x1300) AM_MIRROR(0x007f) AM_READ_PORT("DSW3") */
-	AM_RANGE(0x1800, 0x183f) AM_RAM AM_BASE(m_spriteram2)
-	AM_RANGE(0x1840, 0x185f) AM_RAM AM_BASE(m_scroll)
+	AM_RANGE(0x1800, 0x183f) AM_RAM AM_SHARE("spriteram2")
+	AM_RANGE(0x1840, 0x185f) AM_RAM AM_SHARE("scroll")
 	AM_RANGE(0x1860, 0x1bff) AM_RAM
-	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_BASE(m_scroll2)
+	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_SHARE("scroll2")
 	AM_RANGE(0x1c60, 0x1fff) AM_RAM
 	AM_RANGE(0x2800, 0x2fff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0x6000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -271,22 +271,22 @@ static ADDRESS_MAP_START( yieartf_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x1085, 0x1085) AM_MIRROR(0x0078) AM_WRITENOP						/* CN3.2 */
 	AM_RANGE(0x1086, 0x1086) AM_MIRROR(0x0078) AM_WRITENOP						/* CN3.4 */
 	AM_RANGE(0x1087, 0x1087) AM_MIRROR(0x0078) AM_WRITE(irq_mask_w)				/* INT */
-//  AM_RANGE(0x1100, 0x1100) AM_MIRROR(0x007f) AM_WRITE(soundlatch_w)           /* 32 */
+//  AM_RANGE(0x1100, 0x1100) AM_MIRROR(0x007f) AM_WRITE(soundlatch_byte_w)           /* 32 */
 	AM_RANGE(0x1200, 0x1200) AM_MIRROR(0x007f) AM_READ_PORT("DSW2")
 	AM_RANGE(0x1280, 0x1280) AM_MIRROR(0x007c) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x1281, 0x1281) AM_MIRROR(0x007c) AM_READ_PORT("IN0")
 	AM_RANGE(0x1282, 0x1282) AM_MIRROR(0x007c) AM_READ_PORT("IN1")
 	AM_RANGE(0x1283, 0x1283) AM_MIRROR(0x007c) AM_READ_PORT("DSW1")
 	AM_RANGE(0x1300, 0x1300) AM_MIRROR(0x007f) AM_READ_PORT("DSW3")
-	AM_RANGE(0x1800, 0x183f) AM_RAM AM_BASE(m_spriteram2)
-	AM_RANGE(0x1840, 0x185f) AM_RAM AM_BASE(m_scroll)
+	AM_RANGE(0x1800, 0x183f) AM_RAM AM_SHARE("spriteram2")
+	AM_RANGE(0x1840, 0x185f) AM_RAM AM_SHARE("scroll")
 	AM_RANGE(0x1860, 0x1bff) AM_RAM
-	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_BASE(m_scroll2)
+	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_SHARE("scroll2")
 	AM_RANGE(0x1c60, 0x1fff) AM_RAM
 	AM_RANGE(0x2800, 0x2fff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0x6000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -298,22 +298,22 @@ static ADDRESS_MAP_START( reaktor_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x9081, 0x9081) AM_WRITE_LEGACY(konami_sh_irqtrigger_w)  /* cause interrupt on audio CPU */
 	AM_RANGE(0x9083, 0x9084) AM_WRITE(coin_w)
 	AM_RANGE(0x9087, 0x9087) AM_WRITE(irq_mask_w)
-	AM_RANGE(0x9100, 0x9100) AM_WRITE(soundlatch_w)
+	AM_RANGE(0x9100, 0x9100) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0x9200, 0x9200) AM_READ_PORT("DSW2")
 	AM_RANGE(0x9280, 0x9280) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x9281, 0x9281) AM_READ_PORT("IN0")
 	AM_RANGE(0x9282, 0x9282) AM_READ_PORT("IN1")
 	AM_RANGE(0x9283, 0x9283) AM_READ_PORT("DSW1")
-	AM_RANGE(0x9800, 0x983f) AM_RAM AM_BASE(m_spriteram2)
-	AM_RANGE(0x9840, 0x985f) AM_RAM AM_BASE(m_scroll)
+	AM_RANGE(0x9800, 0x983f) AM_RAM AM_SHARE("spriteram2")
+	AM_RANGE(0x9840, 0x985f) AM_RAM AM_SHARE("scroll")
 	AM_RANGE(0x9860, 0x9bff) AM_RAM
-	AM_RANGE(0x9c00, 0x9c3f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0x9c40, 0x9c5f) AM_RAM AM_BASE(m_scroll2)
+	AM_RANGE(0x9c00, 0x9c3f) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x9c40, 0x9c5f) AM_RAM AM_SHARE("scroll2")
 	AM_RANGE(0x9c60, 0x9fff) AM_RAM
 	AM_RANGE(0xa800, 0xabff) AM_RAM
 	AM_RANGE(0xac00, 0xafff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0xb000, 0xb7ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xb800, 0xbfff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0xb000, 0xb7ff) AM_RAM_WRITE(trackfld_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xb800, 0xbfff) AM_RAM_WRITE(trackfld_colorram_w) AM_SHARE("colorram")
 ADDRESS_MAP_END
 
 /* Reaktor reads / writes some I/O ports, no idea what they're connected to, if anything */
@@ -331,23 +331,23 @@ static ADDRESS_MAP_START( mastkin_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x10b1, 0x10b1) AM_READNOP AM_WRITE_LEGACY(konami_sh_irqtrigger_w)
 	AM_RANGE(0x10b3, 0x10b4) AM_WRITE(coin_w) // actually not used
 	AM_RANGE(0x10b7, 0x10b7) AM_READNOP AM_WRITE(irq_mask_w)
-	AM_RANGE(0x1100, 0x1100) AM_WRITE(soundlatch_w)
+	AM_RANGE(0x1100, 0x1100) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0x1200, 0x1200) AM_READ_PORT("DSW2")
 	AM_RANGE(0x1280, 0x1280) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x1281, 0x1281) AM_READ_PORT("IN0")
 //  AM_RANGE(0x1282, 0x1282) AM_READ_PORT("IN1") /* unused */
 	AM_RANGE(0x1283, 0x1283) AM_READ_PORT("DSW1")
-	AM_RANGE(0x1800, 0x183f) AM_RAM AM_BASE(m_spriteram2)
-	AM_RANGE(0x1840, 0x185f) AM_RAM AM_BASE(m_scroll)
+	AM_RANGE(0x1800, 0x183f) AM_RAM AM_SHARE("spriteram2")
+	AM_RANGE(0x1840, 0x185f) AM_RAM AM_SHARE("scroll")
 	AM_RANGE(0x1860, 0x1bff) AM_RAM
-	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_BASE(m_scroll2)
+	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_SHARE("scroll2")
 	AM_RANGE(0x1c60, 0x1fff) AM_RAM
 	AM_RANGE(0x2000, 0x27ff) AM_RAM // initialized at POST
 	AM_RANGE(0x2800, 0x2bff) AM_RAM
 	AM_RANGE(0x2c00, 0x2fff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0x6000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -358,22 +358,22 @@ static ADDRESS_MAP_START( wizzquiz_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x1081, 0x1081) AM_WRITE_LEGACY(konami_sh_irqtrigger_w)  /* cause interrupt on audio CPU */
 	AM_RANGE(0x1083, 0x1084) AM_WRITE(coin_w)
 	AM_RANGE(0x1087, 0x1087) AM_WRITE(irq_mask_w)
-	AM_RANGE(0x1100, 0x1100) AM_WRITE(soundlatch_w)
+	AM_RANGE(0x1100, 0x1100) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0x1200, 0x1200) AM_READ_PORT("DSW2")
 	AM_RANGE(0x1280, 0x1280) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x1281, 0x1281) AM_READ_PORT("IN0")
 	AM_RANGE(0x1282, 0x1282) AM_READ_PORT("IN1")
 	AM_RANGE(0x1283, 0x1283) AM_READ_PORT("DSW1")
-	AM_RANGE(0x1800, 0x183f) AM_RAM AM_BASE(m_spriteram2)
-	AM_RANGE(0x1840, 0x185f) AM_RAM AM_BASE(m_scroll)
+	AM_RANGE(0x1800, 0x183f) AM_RAM AM_SHARE("spriteram2")
+	AM_RANGE(0x1840, 0x185f) AM_RAM AM_SHARE("scroll")
 	AM_RANGE(0x1860, 0x1bff) AM_RAM
-	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_BASE(m_scroll2)
+	AM_RANGE(0x1c00, 0x1c3f) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x1c40, 0x1c5f) AM_RAM AM_SHARE("scroll2")
 	AM_RANGE(0x1c60, 0x1fff) AM_RAM
 	AM_RANGE(0x2800, 0x2bff) AM_RAM
 	AM_RANGE(0x2c00, 0x2fff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(trackfld_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x3800, 0x3fff) AM_RAM_WRITE(trackfld_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0xc000, 0xc000) AM_WRITE(questions_bank_w)
 	AM_RANGE(0x6000, 0xdfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xe000, 0xffff) AM_ROM
@@ -389,7 +389,7 @@ READ8_DEVICE_HANDLER( trackfld_SN76496_r )
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x43ff) AM_MIRROR(0x1c00) AM_RAM
-	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_READ(soundlatch_r)
+	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x8000, 0x8000) AM_MIRROR(0x1fff) AM_READ_LEGACY(trackfld_sh_timer_r)
 	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_WRITE_LEGACY(konami_SN76496_latch_w)
 	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x1fff) AM_DEVREADWRITE_LEGACY("snsnd", trackfld_SN76496_r, konami_SN76496_w)
@@ -403,7 +403,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( hyprolyb_sound_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x43ff) AM_MIRROR(0x1c00) AM_RAM
-	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_READ(soundlatch_r)
+	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x8000, 0x8000) AM_MIRROR(0x1fff) AM_READ_LEGACY(trackfld_sh_timer_r)
 	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_WRITE_LEGACY(konami_SN76496_latch_w)
 	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x1fff) AM_DEVREADWRITE_LEGACY("snsnd", trackfld_SN76496_r, konami_SN76496_w)
@@ -1424,7 +1424,7 @@ static DRIVER_INIT( trackfld )
 static DRIVER_INIT( atlantol )
 {
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 	UINT8 *decrypt;
 	int A;
 
@@ -1446,15 +1446,15 @@ static DRIVER_INIT( atlantol )
 	space->install_read_bank(0x1380, 0x17ff, "bank11");
 	space->install_read_bank(0x2000, 0x27ff, "bank12");
 	space->install_read_bank(0x4000, 0x5fff, "bank13");
-	memory_set_bankptr(machine, "bank10", &rom[0x0000]);
-	memory_set_bankptr(machine, "bank11", &rom[0x1380]);
-	memory_set_bankptr(machine, "bank12", &rom[0x2000]);
-	memory_set_bankptr(machine, "bank13", &rom[0x4000]);
+	state->membank("bank10")->set_base(&rom[0x0000]);
+	state->membank("bank11")->set_base(&rom[0x1380]);
+	state->membank("bank12")->set_base(&rom[0x2000]);
+	state->membank("bank13")->set_base(&rom[0x4000]);
 }
 
 static DRIVER_INIT( mastkin )
 {
-	UINT8 *prom = machine.region("proms")->base();
+	UINT8 *prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* build a fake palette so the screen won't be all black */
@@ -1475,20 +1475,20 @@ static DRIVER_INIT( mastkin )
 
 static DRIVER_INIT( wizzquiz )
 {
-	UINT8 *ROM = machine.region("maincpu")->base() + 0xe000;
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base() + 0xe000;
 	int i;
 
 	/* decrypt program rom */
 	for (i = 0; i < 0x2000; i++)
 		ROM[i] = BITSWAP8(ROM[i],0,1,2,3,4,5,6,7);
 
-	ROM = machine.region("user1")->base();
+	ROM = machine.root_device().memregion("user1")->base();
 
 	/* decrypt questions roms */
 	for (i = 0; i < 0x40000; i++)
 		ROM[i] = BITSWAP8(ROM[i],0,1,2,3,4,5,6,7);
 
-	memory_configure_bank(machine, "bank1", 0, 8, ROM, 0x8000);
+	machine.root_device().membank("bank1")->configure_entries(0, 8, ROM, 0x8000);
 }
 
 

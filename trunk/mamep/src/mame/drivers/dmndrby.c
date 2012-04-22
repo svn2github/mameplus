@@ -60,12 +60,16 @@ class dmndrby_state : public driver_device
 {
 public:
 	dmndrby_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_scroll_ram(*this, "scroll_ram"),
+		m_sprite_ram(*this, "sprite_ram"),
+		m_dderby_vidchars(*this, "vidchars"),
+		m_dderby_vidattribs(*this, "vidattribs"){ }
 
-	UINT8* m_dderby_vidchars;
-	UINT8* m_scroll_ram;
-	UINT8* m_dderby_vidattribs;
-	UINT8* m_sprite_ram;
+	required_shared_ptr<UINT8> m_scroll_ram;
+	required_shared_ptr<UINT8> m_sprite_ram;
+	required_shared_ptr<UINT8> m_dderby_vidchars;
+	required_shared_ptr<UINT8> m_dderby_vidattribs;
 	UINT8 *m_racetrack_tilemap_rom;
 	tilemap_t *m_racetrack_tilemap;
 	UINT8 m_io_port[8];
@@ -78,7 +82,7 @@ public:
 
 WRITE8_MEMBER(dmndrby_state::dderby_sound_w)
 {
-	soundlatch_w(space,0,data);
+	soundlatch_byte_w(space,0,data);
 	cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
 }
 
@@ -128,17 +132,17 @@ static ADDRESS_MAP_START( memmap, AS_PROGRAM, 8, dmndrby_state )
 	AM_RANGE(0xca01, 0xca01) AM_WRITENOP //watchdog
 	AM_RANGE(0xca02, 0xca02) AM_RAM_WRITE(dderby_sound_w)
 	AM_RANGE(0xca03, 0xca03) AM_WRITENOP//(timer_irq_w) //???
-	AM_RANGE(0xcc00, 0xcc05) AM_RAM AM_BASE(m_scroll_ram)
-	AM_RANGE(0xce08, 0xce1f) AM_RAM AM_BASE(m_sprite_ram) // horse sprites
-	AM_RANGE(0xd000, 0xd3ff) AM_RAM AM_BASE(m_dderby_vidchars) // char ram
-	AM_RANGE(0xd400, 0xd7ff) AM_RAM AM_BASE(m_dderby_vidattribs) // colours/ attrib ram
+	AM_RANGE(0xcc00, 0xcc05) AM_RAM AM_SHARE("scroll_ram")
+	AM_RANGE(0xce08, 0xce1f) AM_RAM AM_SHARE("sprite_ram") // horse sprites
+	AM_RANGE(0xd000, 0xd3ff) AM_RAM AM_SHARE("vidchars") // char ram
+	AM_RANGE(0xd400, 0xd7ff) AM_RAM AM_SHARE("vidattribs") // colours/ attrib ram
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( dderby_sound_map, AS_PROGRAM, 8, dmndrby_state )
 	AM_RANGE(0x0000, 0x0fff) AM_ROM
 	AM_RANGE(0x1000, 0x1000) AM_RAM //???
 	AM_RANGE(0x4000, 0x4001) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w)
-	AM_RANGE(0x4000, 0x4000) AM_READ(soundlatch_r)
+	AM_RANGE(0x4000, 0x4000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x4001, 0x4001) AM_DEVREAD_LEGACY("ay1", ay8910_r)
 	AM_RANGE(0x6000, 0x67ff) AM_RAM
 ADDRESS_MAP_END
@@ -334,7 +338,7 @@ static TILE_GET_INFO( get_dmndrby_tile_info )
 static VIDEO_START(dderby)
 {
 	dmndrby_state *state = machine.driver_data<dmndrby_state>();
-	state->m_racetrack_tilemap_rom = machine.region("user1")->base();
+	state->m_racetrack_tilemap_rom = state->memregion("user1")->base();
 	state->m_racetrack_tilemap = tilemap_create(machine,get_dmndrby_tile_info,tilemap_scan_rows,16,16, 16, 512);
 	state->m_racetrack_tilemap->mark_all_dirty();
 
@@ -440,6 +444,7 @@ wouldnt like to say its the most effective way though...
 // copied from elsewhere. surely incorrect
 static PALETTE_INIT( dmnderby )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	static const int resistances_rg[3] = { 1000, 470, 220 };
 	static const int resistances_b [2] = { 470, 220 };
 	double rweights[3], gweights[3], bweights[2];
@@ -481,7 +486,7 @@ static PALETTE_INIT( dmnderby )
 	}
 
 	/* color_prom now points to the beginning of the lookup table */
-	color_prom = machine.region("proms2")->base();
+	color_prom = machine.root_device().memregion("proms2")->base();
 
 	/* normal tiles use colors 0-15 */
 	for (i = 0x000; i < 0x300; i++)

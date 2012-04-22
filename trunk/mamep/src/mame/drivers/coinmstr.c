@@ -33,12 +33,16 @@ class coinmstr_state : public driver_device
 {
 public:
 	coinmstr_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"),
+		m_attr_ram1(*this, "attr_ram1"),
+		m_attr_ram2(*this, "attr_ram2"),
+		m_attr_ram3(*this, "attr_ram3"){ }
 
-	UINT8 *m_videoram;
-	UINT8 *m_attr_ram1;
-	UINT8 *m_attr_ram2;
-	UINT8 *m_attr_ram3;
+	required_shared_ptr<UINT8> m_videoram;
+	required_shared_ptr<UINT8> m_attr_ram1;
+	required_shared_ptr<UINT8> m_attr_ram2;
+	required_shared_ptr<UINT8> m_attr_ram3;
 	tilemap_t *m_bg_tilemap;
 	UINT8 m_question_adr[4];
 	DECLARE_WRITE8_MEMBER(quizmstr_bg_w);
@@ -137,7 +141,7 @@ WRITE8_MEMBER(coinmstr_state::quizmstr_attr3_w)
 READ8_MEMBER(coinmstr_state::question_r)
 {
 	int address;
-	UINT8 *questions = machine().region("user1")->base();
+	UINT8 *questions = memregion("user1")->base();
 
 	switch(m_question_adr[2])
 	{
@@ -202,10 +206,10 @@ READ8_MEMBER(coinmstr_state::ff_r)
 static ADDRESS_MAP_START( coinmstr_map, AS_PROGRAM, 8, coinmstr_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(quizmstr_bg_w) AM_BASE(m_videoram)
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(quizmstr_attr1_w) AM_BASE(m_attr_ram1)
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(quizmstr_attr2_w) AM_BASE(m_attr_ram2)
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(quizmstr_attr3_w) AM_BASE(m_attr_ram3)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(quizmstr_bg_w) AM_SHARE("videoram")
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(quizmstr_attr1_w) AM_SHARE("attr_ram1")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(quizmstr_attr2_w) AM_SHARE("attr_ram2")
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(quizmstr_attr3_w) AM_SHARE("attr_ram3")
 ADDRESS_MAP_END
 
 // Different I/O mappping for every game
@@ -1221,8 +1225,8 @@ ROM_END
 
 static DRIVER_INIT( coinmstr )
 {
-	UINT8 *rom = machine.region("user1")->base();
-	int length = machine.region("user1")->bytes();
+	UINT8 *rom = machine.root_device().memregion("user1")->base();
+	int length = machine.root_device().memregion("user1")->bytes();
 	UINT8 *buf = auto_alloc_array(machine, UINT8, length);
 	int i;
 

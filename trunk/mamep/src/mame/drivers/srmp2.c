@@ -171,7 +171,7 @@ static WRITE16_DEVICE_HANDLER( srmp2_adpcm_code_w )
 */
 
 	srmp2_state *state = device->machine().driver_data<srmp2_state>();
-	UINT8 *ROM = device->machine().region("adpcm")->base();
+	UINT8 *ROM = state->memregion("adpcm")->base();
 
 	state->m_adpcm_sptr = (ROM[((state->m_adpcm_bank * 0x10000) + (data << 2) + 0)] << 8);
 	state->m_adpcm_eptr = (ROM[((state->m_adpcm_bank * 0x10000) + (data << 2) + 1)] << 8);
@@ -195,7 +195,7 @@ static WRITE8_DEVICE_HANDLER( srmp3_adpcm_code_w )
 */
 
 	srmp2_state *state = device->machine().driver_data<srmp2_state>();
-	UINT8 *ROM = device->machine().region("adpcm")->base();
+	UINT8 *ROM = state->memregion("adpcm")->base();
 
 	state->m_adpcm_sptr = (ROM[((state->m_adpcm_bank * 0x10000) + (data << 2) + 0)] << 8);
 	state->m_adpcm_eptr = (ROM[((state->m_adpcm_bank * 0x10000) + (data << 2) + 1)] << 8);
@@ -212,7 +212,7 @@ static WRITE8_DEVICE_HANDLER( srmp3_adpcm_code_w )
 static void srmp2_adpcm_int(device_t *device)
 {
 	srmp2_state *state = device->machine().driver_data<srmp2_state>();
-	UINT8 *ROM = device->machine().region("adpcm")->base();
+	UINT8 *ROM = state->memregion("adpcm")->base();
 
 	if (state->m_adpcm_sptr)
 	{
@@ -357,7 +357,7 @@ WRITE8_MEMBER(srmp2_state::srmp3_rombank_w)
     xxx- ---- : ADPCM ROM bank
 */
 
-	UINT8 *ROM = machine().region("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 	int addr;
 
 	m_adpcm_bank = ((data & 0xe0) >> 5);
@@ -365,7 +365,7 @@ WRITE8_MEMBER(srmp2_state::srmp3_rombank_w)
 	if (data & 0x1f) addr = ((0x10000 + (0x2000 * (data & 0x0f))) - 0x8000);
 	else addr = 0x10000;
 
-	memory_set_bankptr(machine(), "bank1", &ROM[addr]);
+	membank("bank1")->set_base(&ROM[addr]);
 }
 
 /**************************************************************************
@@ -428,7 +428,7 @@ static ADDRESS_MAP_START( mjyuugi_map, AS_PROGRAM, 16, srmp2_state )
 	AM_RANGE(0x300000, 0x300001) AM_READ8(mjyuugi_irq4_ack_r,0x00ff) /* irq ack lv 4? */
 	AM_RANGE(0x500000, 0x500001) AM_READ_PORT("DSW3-1")				/* DSW 3-1 */
 	AM_RANGE(0x500010, 0x500011) AM_READ_PORT("DSW3-2")				/* DSW 3-2 */
-	AM_RANGE(0x700000, 0x7003ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x700000, 0x7003ff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x800000, 0x800001) AM_READNOP				/* ??? */
 	AM_RANGE(0x900000, 0x900001) AM_READWRITE8(iox_mux_r, iox_command_w,0x00ff)	/* key matrix | I/O */
 	AM_RANGE(0x900002, 0x900003) AM_READWRITE8(iox_status_r,iox_data_w,0x00ff)
@@ -507,7 +507,7 @@ WRITE8_MEMBER(srmp2_state::rmgoldyh_rombank_w)
     xxx- ---- : ADPCM ROM bank
 */
 
-	UINT8 *ROM = machine().region("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 	int addr;
 
 	m_adpcm_bank = ((data & 0xe0) >> 5);
@@ -515,7 +515,7 @@ WRITE8_MEMBER(srmp2_state::rmgoldyh_rombank_w)
 	if (data & 0x1f) addr = ((0x10000 + (0x2000 * (data & 0x1f))) - 0x8000);
 	else addr = 0x10000;
 
-	memory_set_bankptr(machine(), "bank1", &ROM[addr]);
+	membank("bank1")->set_base(&ROM[addr]);
 }
 
 static ADDRESS_MAP_START( rmgoldyh_io_map, AS_IO, 8, srmp2_state )

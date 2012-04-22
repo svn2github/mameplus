@@ -67,7 +67,7 @@ static INTERRUPT_GEN( rockrage_interrupt )
 WRITE8_MEMBER(rockrage_state::rockrage_bankswitch_w)
 {
 	/* bits 4-6 = bank number */
-	memory_set_bank(machine(), "bank1", (data & 0x70) >> 4);
+	membank("bank1")->set_entry((data & 0x70) >> 4);
 
 	/* bits 0 & 1 = coin counters */
 	coin_counter_w(machine(), 0,data & 0x01);
@@ -78,7 +78,7 @@ WRITE8_MEMBER(rockrage_state::rockrage_bankswitch_w)
 
 WRITE8_MEMBER(rockrage_state::rockrage_sh_irqtrigger_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	device_set_input_line(m_audiocpu, M6809_IRQ_LINE, HOLD_LINE);
 }
 
@@ -98,7 +98,7 @@ static ADDRESS_MAP_START( rockrage_map, AS_PROGRAM, 8, rockrage_state )
 	AM_RANGE(0x0000, 0x1fff) AM_DEVREADWRITE_LEGACY("k007342", k007342_r, k007342_w)					/* Color RAM + Video RAM */
 	AM_RANGE(0x2000, 0x21ff) AM_DEVREADWRITE_LEGACY("k007420", k007420_r, k007420_w)					/* Sprite RAM */
 	AM_RANGE(0x2200, 0x23ff) AM_DEVREADWRITE_LEGACY("k007342", k007342_scroll_r, k007342_scroll_w)	/* Scroll RAM */
-	AM_RANGE(0x2400, 0x247f) AM_RAM AM_BASE(m_paletteram)						/* Palette */
+	AM_RANGE(0x2400, 0x247f) AM_RAM AM_SHARE("paletteram")						/* Palette */
 	AM_RANGE(0x2600, 0x2607) AM_DEVWRITE_LEGACY("k007342", k007342_vreg_w)							/* Video Registers */
 	AM_RANGE(0x2e00, 0x2e00) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x2e01, 0x2e01) AM_READ_PORT("P1")
@@ -118,7 +118,7 @@ static ADDRESS_MAP_START( rockrage_sound_map, AS_PROGRAM, 8, rockrage_state )
 	AM_RANGE(0x2000, 0x2000) AM_DEVWRITE_LEGACY("vlm", vlm5030_data_w)				/* VLM5030 */
 	AM_RANGE(0x3000, 0x3000) AM_DEVREAD_LEGACY("vlm", rockrage_VLM5030_busy_r)			/* VLM5030 */
 	AM_RANGE(0x4000, 0x4000) AM_DEVWRITE_LEGACY("vlm", rockrage_speech_w)				/* VLM5030 */
-	AM_RANGE(0x5000, 0x5000) AM_READ(soundlatch_r)								/* soundlatch_r */
+	AM_RANGE(0x5000, 0x5000) AM_READ(soundlatch_byte_r)								/* soundlatch_byte_r */
 	AM_RANGE(0x6000, 0x6001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)			/* YM 2151 */
 	AM_RANGE(0x7000, 0x77ff) AM_RAM												/* RAM */
 	AM_RANGE(0x8000, 0xffff) AM_ROM												/* ROM */
@@ -237,9 +237,9 @@ static const k007420_interface rockrage_k007420_intf =
 static MACHINE_START( rockrage )
 {
 	rockrage_state *state = machine.driver_data<rockrage_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 8, &ROM[0x10000], 0x2000);
+	state->membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x2000);
 
 	state->m_audiocpu = machine.device("audiocpu");
 	state->m_k007342 = machine.device("k007342");

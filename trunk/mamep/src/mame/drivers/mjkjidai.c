@@ -24,14 +24,14 @@ TODO:
 #include "emu.h"
 #include "cpu/z80/z80.h"
 #include "sound/sn76496.h"
-#include "sound/okim6295.h"
+#include "sound/okiadpcm.h"
 #include "includes/mjkjidai.h"
 
 /* Start of ADPCM custom chip code */
 typedef struct _mjkjidai_adpcm_state mjkjidai_adpcm_state;
 struct _mjkjidai_adpcm_state
 {
-	adpcm_state m_adpcm;
+	oki_adpcm_state m_adpcm;
 	sound_stream *m_stream;
 	UINT32 m_current;
 	UINT32 m_end;
@@ -74,7 +74,7 @@ static DEVICE_START( mjkjidai_adpcm )
 
 	state->m_playing = 0;
 	state->m_stream = device->machine().sound().stream_alloc(*device, 0, 1, device->clock(), state, mjkjidai_adpcm_callback);
-	state->m_base = machine.region("adpcm")->base();
+	state->m_base = machine.root_device().memregion("adpcm")->base();
 	state->m_adpcm.reset();
 }
 
@@ -157,9 +157,9 @@ static NVRAM_HANDLER( mjkjidai )
 	mjkjidai_state *state = machine.driver_data<mjkjidai_state>();
 
 	if (read_or_write)
-		file->write(state->m_nvram, state->m_nvram_size);
+		file->write(state->m_nvram, state->m_nvram.bytes());
 	else if (file)
-		file->read(state->m_nvram, state->m_nvram_size);
+		file->read(state->m_nvram, state->m_nvram.bytes());
 	else
 	{
 		state->m_nvram_init_count = 1;
@@ -172,11 +172,11 @@ static ADDRESS_MAP_START( mjkjidai_map, AS_PROGRAM, 8, mjkjidai_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
-	AM_RANGE(0xd000, 0xdfff) AM_RAM	AM_BASE_SIZE(m_nvram,m_nvram_size)	// cleared and initialized on startup if bit 6 if port 00 is 0
-	AM_RANGE(0xe000, 0xe01f) AM_RAM AM_BASE(m_spriteram1)			// shared with tilemap ram
-	AM_RANGE(0xe800, 0xe81f) AM_RAM AM_BASE(m_spriteram2)		// shared with tilemap ram
-	AM_RANGE(0xf000, 0xf01f) AM_RAM AM_BASE(m_spriteram3)		// shared with tilemap ram
-	AM_RANGE(0xe000, 0xf7ff) AM_RAM_WRITE(mjkjidai_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0xd000, 0xdfff) AM_RAM	AM_SHARE("nvram")	// cleared and initialized on startup if bit 6 if port 00 is 0
+	AM_RANGE(0xe000, 0xe01f) AM_RAM AM_SHARE("spriteram1")			// shared with tilemap ram
+	AM_RANGE(0xe800, 0xe81f) AM_RAM AM_SHARE("spriteram2")		// shared with tilemap ram
+	AM_RANGE(0xf000, 0xf01f) AM_RAM AM_SHARE("spriteram3")		// shared with tilemap ram
+	AM_RANGE(0xe000, 0xf7ff) AM_RAM_WRITE(mjkjidai_videoram_w) AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( mjkjidai_io_map, AS_IO, 8, mjkjidai_state )

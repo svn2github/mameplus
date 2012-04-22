@@ -443,7 +443,7 @@ bb63           = Square things again
 
 WRITE8_MEMBER(dec8_state::dec8_bank_w)
 {
-	memory_set_bank(machine(), "bank1", data & 0x0f);
+	membank("bank1")->set_entry(data & 0x0f);
 }
 
 /* Used by Ghostbusters, Meikyuu Hunter G & Gondomania */
@@ -457,11 +457,11 @@ WRITE8_MEMBER(dec8_state::ghostb_bank_w)
        Bits 4-7: Bank switch
     */
 
-	memory_set_bank(machine(), "bank1", data >> 4);
+	membank("bank1")->set_entry(data >> 4);
 
 	if ((data&1)==0) device_set_input_line(m_maincpu, M6809_IRQ_LINE, CLEAR_LINE);
 	if (data & 2) m_nmi_enable =1; else m_nmi_enable = 0;
-	flip_screen_set(machine(), data & 0x08);
+	flip_screen_set(data & 0x08);
 }
 
 WRITE8_MEMBER(dec8_state::csilver_control_w)
@@ -473,12 +473,12 @@ WRITE8_MEMBER(dec8_state::csilver_control_w)
         Bit 0x40 - Unused.
         Bit 0x80 - Hold subcpu reset line high if clear, else low?  (Not needed anyway)
     */
-	memory_set_bank(machine(), "bank1", data & 0x0f);
+	membank("bank1")->set_entry(data & 0x0f);
 }
 
 WRITE8_MEMBER(dec8_state::dec8_sound_w)
 {
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -506,7 +506,7 @@ WRITE8_MEMBER(dec8_state::csilver_adpcm_data_w)
 
 WRITE8_MEMBER(dec8_state::csilver_sound_bank_w)
 {
-	memory_set_bank(machine(), "bank3", (data & 0x08) >> 3);
+	membank("bank3")->set_entry((data & 0x08) >> 3);
 }
 
 /******************************************************************************/
@@ -576,15 +576,15 @@ WRITE8_MEMBER(dec8_state::shackled_int_w)
 
 /******************************************************************************/
 
-WRITE8_MEMBER(dec8_state::flip_screen_w){ flip_screen_set(machine(), data); }
+WRITE8_MEMBER(dec8_state::flip_screen_w){ flip_screen_set(data); }
 
 /******************************************************************************/
 
 
 static ADDRESS_MAP_START( lastmisn_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_SHARE("share3") AM_SHARE("paletteram")
-	AM_RANGE(0x1400, 0x17ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_SHARE("share4") AM_SHARE("paletteram2")
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_lo_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1400, 0x17ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_hi_w) AM_SHARE("paletteram2")
 	AM_RANGE(0x1800, 0x1800) AM_READ_PORT("IN0")
 	AM_RANGE(0x1801, 0x1801) AM_READ_PORT("IN1")
 	AM_RANGE(0x1802, 0x1802) AM_READ_PORT("IN2")
@@ -599,18 +599,18 @@ static ADDRESS_MAP_START( lastmisn_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x180c, 0x180c) AM_WRITE(dec8_sound_w)
 	AM_RANGE(0x180d, 0x180d) AM_WRITE(lastmisn_control_w) /* Bank switch + Scroll MSB */
 	AM_RANGE(0x180e, 0x180f) AM_WRITE(lastmisn_i8751_w)
-	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(dec8_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
+	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(dec8_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x2800, 0x2fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x3000, 0x37ff) AM_RAM AM_SHARE("share2")
-	AM_RANGE(0x3800, 0x3fff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w) AM_BASE(m_bg_data)
+	AM_RANGE(0x3800, 0x3fff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w) AM_SHARE("bg_data")
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( lastmisn_sub_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_SHARE("share3")
-	AM_RANGE(0x1400, 0x17ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_SHARE("share4")
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_lo_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1400, 0x17ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_hi_w) AM_SHARE("paletteram2")
 	AM_RANGE(0x1800, 0x1800) AM_READ_PORT("IN0")
 	AM_RANGE(0x1801, 0x1801) AM_READ_PORT("IN1")
 	AM_RANGE(0x1802, 0x1802) AM_READ_PORT("IN2")
@@ -629,8 +629,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( shackled_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_SHARE("share3") AM_SHARE("paletteram")
-	AM_RANGE(0x1400, 0x17ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_SHARE("share4") AM_SHARE("paletteram2")
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_lo_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1400, 0x17ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_hi_w) AM_SHARE("paletteram2")
 	AM_RANGE(0x1800, 0x1800) AM_READ_PORT("IN0")
 	AM_RANGE(0x1801, 0x1801) AM_READ_PORT("IN1")
 	AM_RANGE(0x1802, 0x1802) AM_READ_PORT("IN2")
@@ -646,15 +646,15 @@ static ADDRESS_MAP_START( shackled_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(dec8_videoram_w)
 	AM_RANGE(0x2800, 0x2fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x3000, 0x37ff) AM_RAM AM_SHARE("share2")
-	AM_RANGE(0x3800, 0x3fff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w) AM_BASE(m_bg_data)
+	AM_RANGE(0x3800, 0x3fff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w) AM_SHARE("bg_data")
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( shackled_sub_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_SHARE("share3")
-	AM_RANGE(0x1400, 0x17ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_SHARE("share4")
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_lo_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1400, 0x17ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_hi_w) AM_SHARE("paletteram2")
 	AM_RANGE(0x1800, 0x1800) AM_READ_PORT("IN0")
 	AM_RANGE(0x1801, 0x1801) AM_READ_PORT("IN1")
 	AM_RANGE(0x1802, 0x1802) AM_READ_PORT("IN2")
@@ -669,7 +669,7 @@ static ADDRESS_MAP_START( shackled_sub_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x180c, 0x180c) AM_WRITE(dec8_sound_w)
 	AM_RANGE(0x180d, 0x180d) AM_WRITE(shackled_control_w) /* Bank switch + Scroll MSB */
 	AM_RANGE(0x180e, 0x180f) AM_WRITE(shackled_i8751_w)
-	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(dec8_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
+	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(dec8_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x2800, 0x2fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x3000, 0x37ff) AM_RAM AM_SHARE("share2")
 	AM_RANGE(0x3800, 0x3fff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w)
@@ -678,10 +678,10 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( gondo_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x17ff) AM_RAM
-	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(dec8_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
-	AM_RANGE(0x2000, 0x27ff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w) AM_BASE(m_bg_data)
-	AM_RANGE(0x2800, 0x2bff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_SHARE("paletteram")
-	AM_RANGE(0x2c00, 0x2fff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_SHARE("paletteram2")
+	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(dec8_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x2000, 0x27ff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w) AM_SHARE("bg_data")
+	AM_RANGE(0x2800, 0x2bff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_lo_w) AM_SHARE("paletteram")
+	AM_RANGE(0x2c00, 0x2fff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_hi_w) AM_SHARE("paletteram2")
 	AM_RANGE(0x3000, 0x37ff) AM_RAM AM_SHARE("spriteram")	/* Sprites */
 	AM_RANGE(0x3800, 0x3800) AM_READ_PORT("DSW0")		/* Dip 1 */
 	AM_RANGE(0x3801, 0x3801) AM_READ_PORT("DSW1")		/* Dip 2 */
@@ -701,10 +701,10 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( garyoret_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x17ff) AM_RAM
-	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(dec8_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
-	AM_RANGE(0x2000, 0x27ff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w) AM_BASE(m_bg_data)
-	AM_RANGE(0x2800, 0x2bff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_SHARE("paletteram")
-	AM_RANGE(0x2c00, 0x2fff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_SHARE("paletteram2")
+	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(dec8_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x2000, 0x27ff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w) AM_SHARE("bg_data")
+	AM_RANGE(0x2800, 0x2bff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_lo_w) AM_SHARE("paletteram")
+	AM_RANGE(0x2c00, 0x2fff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_hi_w) AM_SHARE("paletteram2")
 	AM_RANGE(0x3000, 0x37ff) AM_RAM AM_SHARE("spriteram") /* Sprites */
 	AM_RANGE(0x3800, 0x3800) AM_READ_PORT("DSW0")	/* Dip 1 */
 	AM_RANGE(0x3801, 0x3801) AM_READ_PORT("DSW1")	/* Dip 2 */
@@ -724,7 +724,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( meikyuh_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM
 	AM_RANGE(0x1000, 0x17ff) AM_RAM
-	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(dec8_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
+	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(dec8_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x2000, 0x27ff) AM_DEVREADWRITE_LEGACY("tilegen1", deco_bac06_pf_data_8bit_r, deco_bac06_pf_data_8bit_w)
 	AM_RANGE(0x2800, 0x2bff) AM_RAM // colscroll? mirror?
 	AM_RANGE(0x2c00, 0x2fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco_bac06_pf_rowscroll_8bit_r, deco_bac06_pf_rowscroll_8bit_w)
@@ -747,8 +747,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( csilver_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_SHARE("share3") AM_SHARE("paletteram")
-	AM_RANGE(0x1400, 0x17ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_SHARE("share4") AM_SHARE("paletteram2")
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_lo_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1400, 0x17ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_hi_w) AM_SHARE("paletteram2")
 	AM_RANGE(0x1800, 0x1800) AM_READ_PORT("IN1")
 	AM_RANGE(0x1801, 0x1801) AM_READ_PORT("IN0")
 	AM_RANGE(0x1803, 0x1803) AM_READ_PORT("IN2")
@@ -765,21 +765,21 @@ static ADDRESS_MAP_START( csilver_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(dec8_videoram_w)
 	AM_RANGE(0x2800, 0x2fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x3000, 0x37ff) AM_RAM AM_SHARE("share2")
-	AM_RANGE(0x3800, 0x3fff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w) AM_BASE(m_bg_data)
+	AM_RANGE(0x3800, 0x3fff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w) AM_SHARE("bg_data")
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( csilver_sub_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_SHARE("share3")
-	AM_RANGE(0x1400, 0x17ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_SHARE("share4")
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_lo_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1400, 0x17ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_hi_w) AM_SHARE("paletteram2")
 	AM_RANGE(0x1803, 0x1803) AM_READ_PORT("IN2")
 	AM_RANGE(0x1804, 0x1804) AM_READ_PORT("DSW1")
 	AM_RANGE(0x1800, 0x1804) AM_WRITE(shackled_int_w)
 	AM_RANGE(0x1805, 0x1805) AM_READ_PORT("DSW0") AM_WRITE(dec8_mxc06_karn_buffer_spriteram_w) /* DMA */
 	AM_RANGE(0x180c, 0x180c) AM_WRITE(dec8_sound_w)
-	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(dec8_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
+	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(dec8_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x2800, 0x2fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x3000, 0x37ff) AM_RAM AM_SHARE("share2")
 	AM_RANGE(0x3800, 0x3fff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w)
@@ -790,10 +790,10 @@ static ADDRESS_MAP_START( oscar_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x0eff) AM_RAM AM_SHARE("share1")
 	AM_RANGE(0x0f00, 0x0fff) AM_RAM
 	AM_RANGE(0x1000, 0x1fff) AM_RAM AM_SHARE("share2")
-	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(dec8_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
+	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(dec8_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x2800, 0x2fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco_bac06_pf_data_8bit_r, deco_bac06_pf_data_8bit_w)
 	AM_RANGE(0x3000, 0x37ff) AM_RAM AM_SHARE("spriteram") /* Sprites */
-	AM_RANGE(0x3800, 0x3bff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0x3800, 0x3bff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_be_w) AM_SHARE("paletteram")
 	AM_RANGE(0x3c00, 0x3c00) AM_READ_PORT("IN0")
 	AM_RANGE(0x3c01, 0x3c01) AM_READ_PORT("IN1")
 	AM_RANGE(0x3c02, 0x3c02) AM_READ_PORT("IN2")	/* VBL & coins */
@@ -821,9 +821,9 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( srdarwin_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x05ff) AM_RAM
 	AM_RANGE(0x0600, 0x07ff) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE(0x0800, 0x0fff) AM_RAM_WRITE(srdarwin_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x0800, 0x0fff) AM_RAM_WRITE(srdarwin_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x1000, 0x13ff) AM_RAM
-	AM_RANGE(0x1400, 0x17ff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w) AM_BASE(m_bg_data)
+	AM_RANGE(0x1400, 0x17ff) AM_READWRITE(dec8_bg_data_r, dec8_bg_data_w) AM_SHARE("bg_data")
 	AM_RANGE(0x1800, 0x1801) AM_WRITE(srdarwin_i8751_w)
 	AM_RANGE(0x1802, 0x1802) AM_WRITE(i8751_reset_w)		/* Maybe.. */
 	AM_RANGE(0x1803, 0x1803) AM_WRITENOP			/* NMI ack */
@@ -831,8 +831,8 @@ static ADDRESS_MAP_START( srdarwin_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x1805, 0x1806) AM_WRITE(srdarwin_control_w) /* Scroll & Bank */
 	AM_RANGE(0x2000, 0x2000) AM_READWRITE(i8751_h_r, dec8_sound_w)	/* Sound */
 	AM_RANGE(0x2001, 0x2001) AM_READWRITE(i8751_l_r, flip_screen_w)		/* Flipscreen */
-	AM_RANGE(0x2800, 0x288f) AM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_SHARE("paletteram")
-	AM_RANGE(0x3000, 0x308f) AM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_SHARE("paletteram2")
+	AM_RANGE(0x2800, 0x288f) AM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_lo_w) AM_SHARE("paletteram")
+	AM_RANGE(0x3000, 0x308f) AM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_hi_w) AM_SHARE("paletteram2")
 	AM_RANGE(0x3800, 0x3800) AM_READ_PORT("DSW0")	/* Dip 1 */
 	AM_RANGE(0x3801, 0x3801) AM_READ_PORT("IN0")	/* Player 1 */
 	AM_RANGE(0x3802, 0x3802) AM_READ_PORT("IN1")	/* Player 2 (cocktail) + VBL */
@@ -846,9 +846,9 @@ static ADDRESS_MAP_START( cobra_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0800, 0x0fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco_bac06_pf_data_8bit_r, deco_bac06_pf_data_8bit_w)
 	AM_RANGE(0x1000, 0x17ff) AM_DEVREADWRITE_LEGACY("tilegen2", deco_bac06_pf_data_8bit_r, deco_bac06_pf_data_8bit_w)
 	AM_RANGE(0x1800, 0x1fff) AM_RAM
-	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(dec8_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
+	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(dec8_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x2800, 0x2fff) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE(0x3000, 0x31ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0x3000, 0x31ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_be_w) AM_SHARE("paletteram")
 	AM_RANGE(0x3200, 0x37ff) AM_WRITEONLY /* Unused */
 	AM_RANGE(0x3800, 0x3800) AM_READ_PORT("IN0")	/* Player 1 */
 	AM_RANGE(0x3801, 0x3801) AM_READ_PORT("IN1")	/* Player 2 */
@@ -873,7 +873,7 @@ static ADDRESS_MAP_START( dec8_s_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x05ff) AM_RAM
 	AM_RANGE(0x2000, 0x2001) AM_DEVWRITE_LEGACY("ym1", ym2203_w)
 	AM_RANGE(0x4000, 0x4001) AM_DEVWRITE_LEGACY("ym2", ym3812_w)
-	AM_RANGE(0x6000, 0x6000) AM_READ(soundlatch_r)
+	AM_RANGE(0x6000, 0x6000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -882,7 +882,7 @@ static ADDRESS_MAP_START( oscar_s_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x05ff) AM_RAM
 	AM_RANGE(0x2000, 0x2001) AM_DEVWRITE_LEGACY("ym1", ym2203_w)
 	AM_RANGE(0x4000, 0x4001) AM_DEVWRITE_LEGACY("ym2", ym3526_w)
-	AM_RANGE(0x6000, 0x6000) AM_READ(soundlatch_r)
+	AM_RANGE(0x6000, 0x6000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -891,7 +891,7 @@ static ADDRESS_MAP_START( ym3526_s_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x0000, 0x05ff) AM_RAM
 	AM_RANGE(0x0800, 0x0801) AM_DEVWRITE_LEGACY("ym1", ym2203_w)
 	AM_RANGE(0x1000, 0x1001) AM_DEVWRITE_LEGACY("ym2", ym3526_w)
-	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_r)
+	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -902,7 +902,7 @@ static ADDRESS_MAP_START( csilver_s_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x1000, 0x1001) AM_DEVWRITE_LEGACY("ym2", ym3526_w)
 	AM_RANGE(0x1800, 0x1800) AM_WRITE(csilver_adpcm_data_w)	/* ADPCM data for the MSM5205 chip */
 	AM_RANGE(0x2000, 0x2000) AM_WRITE(csilver_sound_bank_w)
-	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_r)
+	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x3400, 0x3400) AM_DEVREAD_LEGACY("msm", csilver_adpcm_reset_r)	/* ? not sure */
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank3")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -3548,7 +3548,7 @@ static DRIVER_INIT( deco222 )
 	UINT8 *rom;
 
 	/* bits 5 and 6 of the opcodes are swapped */
-	rom = machine.region("audiocpu")->base();
+	rom = state->memregion("audiocpu")->base();
 	decrypt = auto_alloc_array(machine, UINT8, 0x8000);
 
 	space->set_decrypted_region(0x8000, 0xffff, decrypt);
@@ -3562,84 +3562,84 @@ static DRIVER_INIT( deco222 )
 /* Below, I set up the correct number of banks depending on the "maincpu" region size */
 static DRIVER_INIT( lastmisn )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	memory_configure_bank(machine, "bank1", 0, 4, &ROM[0x10000], 0x4000);
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	machine.root_device().membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x4000);
 	DRIVER_INIT_CALL( dec8 );
 }
 
 static DRIVER_INIT( shackled )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	memory_configure_bank(machine, "bank1", 0, 14, &ROM[0x10000], 0x4000);
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	machine.root_device().membank("bank1")->configure_entries(0, 14, &ROM[0x10000], 0x4000);
 	DRIVER_INIT_CALL( dec8 );
 }
 
 static DRIVER_INIT( gondo )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	memory_configure_bank(machine, "bank1", 0, 12, &ROM[0x10000], 0x4000);
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	machine.root_device().membank("bank1")->configure_entries(0, 12, &ROM[0x10000], 0x4000);
 	DRIVER_INIT_CALL( dec8 );
 }
 
 static DRIVER_INIT( garyoret )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	memory_configure_bank(machine, "bank1", 0, 16, &ROM[0x10000], 0x4000);
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	machine.root_device().membank("bank1")->configure_entries(0, 16, &ROM[0x10000], 0x4000);
 	DRIVER_INIT_CALL( dec8 );
 }
 
 static DRIVER_INIT( ghostb )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	UINT8 *RAM = machine.region("proms")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *RAM = machine.root_device().memregion("proms")->base();
 
 	/* Blank out unused garbage in colour prom to avoid colour overflow */
 	memset(RAM + 0x20, 0, 0xe0);
 
-	memory_configure_bank(machine, "bank1", 0, 16, &ROM[0x10000], 0x4000);
+	machine.root_device().membank("bank1")->configure_entries(0, 16, &ROM[0x10000], 0x4000);
 	DRIVER_INIT_CALL(deco222);
 }
 
 static DRIVER_INIT( meikyuh )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	UINT8 *RAM = machine.region("proms")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *RAM = machine.root_device().memregion("proms")->base();
 
 	/* Blank out unused garbage in colour prom to avoid colour overflow */
 	memset(RAM + 0x20, 0, 0xe0);
 
-	memory_configure_bank(machine, "bank1", 0, 12, &ROM[0x10000], 0x4000);
+	machine.root_device().membank("bank1")->configure_entries(0, 12, &ROM[0x10000], 0x4000);
 	DRIVER_INIT_CALL( dec8 );
 }
 
 static DRIVER_INIT( csilver )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	UINT8 *RAM = machine.region("audiocpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *RAM = machine.root_device().memregion("audiocpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 14, &ROM[0x10000], 0x4000);
-	memory_configure_bank(machine, "bank3", 0, 2, &RAM[0x10000], 0x4000);
+	machine.root_device().membank("bank1")->configure_entries(0, 14, &ROM[0x10000], 0x4000);
+	machine.root_device().membank("bank3")->configure_entries(0, 2, &RAM[0x10000], 0x4000);
 	DRIVER_INIT_CALL( dec8 );
 }
 
 static DRIVER_INIT( oscar )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	memory_configure_bank(machine, "bank1", 0, 4, &ROM[0x10000], 0x4000);
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	machine.root_device().membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x4000);
 	DRIVER_INIT_CALL( deco222 );
 }
 
 static DRIVER_INIT( srdarwin )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	memory_configure_bank(machine, "bank1", 0, 6, &ROM[0x10000], 0x4000);
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	machine.root_device().membank("bank1")->configure_entries(0, 6, &ROM[0x10000], 0x4000);
 	DRIVER_INIT_CALL( deco222 );
 }
 
 static DRIVER_INIT( cobracom )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	memory_configure_bank(machine, "bank1", 0, 8, &ROM[0x10000], 0x4000);
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	machine.root_device().membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
 	DRIVER_INIT_CALL( dec8 );
 }
 

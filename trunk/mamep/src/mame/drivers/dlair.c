@@ -52,7 +52,8 @@ public:
 		: driver_device(mconfig, type, tag),
 		  m_ldv1000(*this, "ld_ldv1000"),
 		  m_pr7820(*this, "ld_pr7820"),
-		  m_22vp932(*this, "ld_22vp932") { }
+		  m_22vp932(*this, "ld_22vp932") ,
+		m_videoram(*this, "videoram"){ }
 
 	void laserdisc_data_w(UINT8 data)
 	{
@@ -93,10 +94,10 @@ public:
 		return CLEAR_LINE;
 	}
 
-	UINT8 *m_videoram;
 	optional_device<pioneer_ldv1000_device> m_ldv1000;
 	optional_device<pioneer_pr7820_device> m_pr7820;
 	optional_device<phillips_22vp932_device> m_22vp932;
+	optional_shared_ptr<UINT8> m_videoram;
 	UINT8 m_last_misc;
 	UINT8 m_laserdisc_data;
 	DECLARE_WRITE8_MEMBER(misc_w);
@@ -105,6 +106,8 @@ public:
 	DECLARE_WRITE8_MEMBER(led_den2_w);
 	DECLARE_READ8_MEMBER(laserdisc_r);
 	DECLARE_WRITE8_MEMBER(laserdisc_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(laserdisc_status_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(laserdisc_command_r);
 };
 
 
@@ -360,17 +363,15 @@ WRITE8_MEMBER(dlair_state::led_den2_w)
  *
  *************************************/
 
-static CUSTOM_INPUT( laserdisc_status_r )
+CUSTOM_INPUT_MEMBER(dlair_state::laserdisc_status_r)
 {
-	dlair_state *state = field.machine().driver_data<dlair_state>();
-	return state->laserdisc_status_r();
+	return laserdisc_status_r();
 }
 
 
-static CUSTOM_INPUT( laserdisc_command_r )
+CUSTOM_INPUT_MEMBER(dlair_state::laserdisc_command_r)
 {
-	dlair_state *state = field.machine().driver_data<dlair_state>();
-	return (state->laserdisc_ready_r() == ASSERT_LINE) ? 0 : 1;
+	return (laserdisc_ready_r() == ASSERT_LINE) ? 0 : 1;
 }
 
 
@@ -423,7 +424,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( dleuro_map, AS_PROGRAM, 8, dlair_state )
 	AM_RANGE(0x0000, 0x9fff) AM_ROM
 	AM_RANGE(0xa000, 0xa7ff) AM_MIRROR(0x1800) AM_RAM
-	AM_RANGE(0xc000, 0xc7ff) AM_MIRROR(0x1800) AM_RAM AM_BASE(m_videoram)
+	AM_RANGE(0xc000, 0xc7ff) AM_MIRROR(0x1800) AM_RAM AM_SHARE("videoram")
 	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x1f47) // WT LED 1
 	AM_RANGE(0xe008, 0xe008) AM_MIRROR(0x1f47) // WT LED 2
 	AM_RANGE(0xe010, 0xe010) AM_MIRROR(0x1f47) AM_WRITE(led_den1_w)			// WT EXT LED 1
@@ -579,8 +580,8 @@ static INPUT_PORTS_START( dlair )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x30, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* probably unused */
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(laserdisc_status_r, NULL) 	/* status strobe */
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(laserdisc_command_r, NULL)	/* command strobe */
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, dlair_state,laserdisc_status_r, NULL) 	/* status strobe */
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, dlair_state,laserdisc_command_r, NULL)	/* command strobe */
 INPUT_PORTS_END
 
 
@@ -611,8 +612,8 @@ static INPUT_PORTS_START( dleuro )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x30, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* probably unused */
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(laserdisc_status_r, NULL) 	/* status strobe */
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(laserdisc_command_r, NULL)	/* command strobe */
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, dlair_state,laserdisc_status_r, NULL) 	/* status strobe */
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, dlair_state,laserdisc_command_r, NULL)	/* command strobe */
 
 	PORT_START("DSW1")
 	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coinage ) ) PORT_DIPLOCATION("A:2,1")

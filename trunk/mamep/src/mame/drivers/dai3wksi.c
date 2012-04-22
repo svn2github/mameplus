@@ -48,11 +48,11 @@ class dai3wksi_state : public driver_device
 {
 public:
 	dai3wksi_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_dai3wksi_videoram(*this, "videoram"){ }
 
 	/* video */
-	UINT8 *     m_dai3wksi_videoram;
-	size_t      m_dai3wksi_videoram_size;
+	required_shared_ptr<UINT8> m_dai3wksi_videoram;
 	int         m_dai3wksi_flipscreen;
 	int         m_dai3wksi_redscreen;
 	int         m_dai3wksi_redterop;
@@ -134,7 +134,7 @@ static SCREEN_UPDATE_RGB32( dai3wksi )
 
 	dai3wksi_get_pens(pens);
 
-	for (offs = 0; offs < state->m_dai3wksi_videoram_size; offs++)
+	for (offs = 0; offs < state->m_dai3wksi_videoram.bytes(); offs++)
 	{
 		offs_t i;
 
@@ -509,7 +509,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, dai3wksi_state )
 	AM_RANGE(0x3000, 0x3000) AM_WRITE(dai3wksi_audio_1_w)
 	AM_RANGE(0x3400, 0x3400) AM_WRITE(dai3wksi_audio_2_w)
 	AM_RANGE(0x3800, 0x3800) AM_WRITE(dai3wksi_audio_3_w)
-	AM_RANGE(0x8000, 0xbfff) AM_RAM AM_BASE_SIZE(m_dai3wksi_videoram, m_dai3wksi_videoram_size)
+	AM_RANGE(0x8000, 0xbfff) AM_RAM AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 

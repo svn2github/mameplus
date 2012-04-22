@@ -356,9 +356,10 @@ class missile_state : public driver_device
 {
 public:
 	missile_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"){ }
 
-	UINT8 *m_videoram;
+	required_shared_ptr<UINT8> m_videoram;
 	const UINT8 *m_writeprom;
 	emu_timer *m_irq_timer;
 	emu_timer *m_cpu_timer;
@@ -369,6 +370,8 @@ public:
 	UINT16 m_madsel_lastpc;
 	DECLARE_WRITE8_MEMBER(missile_w);
 	DECLARE_READ8_MEMBER(missile_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(get_vblank);
+	DECLARE_DIRECT_UPDATE_MEMBER(missile_direct_handler);
 };
 
 
@@ -450,10 +453,10 @@ static TIMER_CALLBACK( clock_irq )
 }
 
 
-static CUSTOM_INPUT( get_vblank )
+CUSTOM_INPUT_MEMBER(missile_state::get_vblank)
 {
-	missile_state *state = field.machine().driver_data<missile_state>();
-	int v = scanline_to_v(state, field.machine().primary_screen->vpos());
+	missile_state *state = machine().driver_data<missile_state>();
+	int v = scanline_to_v(state, machine().primary_screen->vpos());
 	return v < 24;
 }
 
@@ -482,7 +485,7 @@ static TIMER_CALLBACK( adjust_cpu_speed )
 }
 
 
-DIRECT_UPDATE_HANDLER( missile_direct_handler )
+DIRECT_UPDATE_MEMBER(missile_state::missile_direct_handler)
 {
 	/* offset accounts for lack of A15 decoding */
 	int offset = address & 0x8000;
@@ -491,15 +494,14 @@ DIRECT_UPDATE_HANDLER( missile_direct_handler )
 	/* RAM? */
 	if (address < 0x4000)
 	{
-		missile_state *state = direct.space().machine().driver_data<missile_state>();
-		direct.explicit_configure(0x0000 | offset, 0x3fff | offset, 0x3fff, state->m_videoram);
+		direct.explicit_configure(0x0000 | offset, 0x3fff | offset, 0x3fff, m_videoram);
 		return ~0;
 	}
 
 	/* ROM? */
 	else if (address >= 0x5000)
 	{
-		direct.explicit_configure(0x5000 | offset, 0x7fff | offset, 0x7fff, direct.space().machine().region("maincpu")->base() + 0x5000);
+		direct.explicit_configure(0x5000 | offset, 0x7fff | offset, 0x7fff, direct.space().machine().root_device().memregion("maincpu")->base() + 0x5000);
 		return ~0;
 	}
 
@@ -512,12 +514,12 @@ static MACHINE_START( missile )
 {
 	missile_state *state = machine.driver_data<missile_state>();
 	/* initialize globals */
-	state->m_writeprom = machine.region("proms")->base();
+	state->m_writeprom = state->memregion("proms")->base();
 	state->m_flipscreen = 0;
 
 	/* set up an opcode base handler since we use mapped handlers for RAM */
 	address_space *space = machine.device<m6502_device>("maincpu")->space(AS_PROGRAM);
-	space->set_direct_update_handler(direct_update_delegate(FUNC(missile_direct_handler), &machine));
+	space->set_direct_update_handler(direct_update_delegate(FUNC(missile_state::missile_direct_handler), state));
 
 	/* create a timer to speed/slow the CPU */
 	state->m_cpu_timer = machine.scheduler().timer_alloc(FUNC(adjust_cpu_speed));
@@ -748,7 +750,7 @@ WRITE8_MEMBER(missile_state::missile_w)
 
 	/* watchdog */
 	else if (offset >= 0x4c00 && offset < 0x4d00)
-		watchdog_reset(machine());
+		machine().watchdog_reset();
 
 	/* interrupt ack */
 	else if (offset >= 0x4d00 && offset < 0x4e00)
@@ -784,7 +786,7 @@ READ8_MEMBER(missile_state::missile_r)
 
 	/* ROM */
 	else if (offset >= 0x5000)
-		result = machine().region("maincpu")->base()[offset];
+		result = memregion("maincpu")->base()[offset];
 
 	/* POKEY */
 	else if (offset < 0x4800)
@@ -828,7 +830,7 @@ READ8_MEMBER(missile_state::missile_r)
 
 /* complete memory map derived from schematics (implemented above) */
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, missile_state )
-	AM_RANGE(0x0000, 0xffff) AM_READWRITE(missile_r, missile_w) AM_BASE(m_videoram)
+	AM_RANGE(0x0000, 0xffff) AM_READWRITE(missile_r, missile_w) AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 
@@ -857,7 +859,7 @@ static INPUT_PORTS_START( missile )
 	PORT_BIT( 0x18, IP_ACTIVE_HIGH, IPT_SPECIAL )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_SERVICE( 0x40, IP_ACTIVE_LOW )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(get_vblank, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, missile_state,get_vblank, NULL)
 
 	PORT_START("R10")	/* IN2 */
 	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coinage ) ) PORT_DIPLOCATION("R10:1,2")
@@ -939,7 +941,7 @@ static INPUT_PORTS_START( suprmatk )
 	PORT_BIT( 0x18, IP_ACTIVE_HIGH, IPT_SPECIAL )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_SERVICE( 0x40, IP_ACTIVE_LOW )
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(get_vblank, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, missile_state,get_vblank, NULL)
 
 	PORT_START("R10")	/* IN2 */
 	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coinage ) ) PORT_DIPLOCATION("R10:1,2")
@@ -1197,7 +1199,7 @@ ROM_END
 static DRIVER_INIT( suprmatk )
 {
 	int i;
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 	for (i = 0; i < 0x40; i++)
 	{
@@ -1278,8 +1280,8 @@ static DRIVER_INIT( suprmatk )
 GAME( 1980, missile,  0,       missile, missile,         0, ROT0, "Atari", "Missile Command (rev 3)", GAME_SUPPORTS_SAVE )
 GAME( 1980, missile2, missile, missile, missile,         0, ROT0, "Atari", "Missile Command (rev 2)", GAME_SUPPORTS_SAVE )
 GAME( 1980, missile1, missile, missile, missile,         0, ROT0, "Atari", "Missile Command (rev 1)", GAME_SUPPORTS_SAVE )
-GAME( 1981, suprmatk, missile, missile, suprmatk, suprmatk, ROT0, "Atari / Gencomp", "Super Missile Attack (for rev 1)", GAME_SUPPORTS_SAVE )
-GAME( 1981, suprmatkd,missile, missile, suprmatk,        0, ROT0, "Atari / Gencomp", "Super Missile Attack (not encrypted)", GAME_SUPPORTS_SAVE )
+GAME( 1981, suprmatk, missile, missile, suprmatk, suprmatk, ROT0, "Atari / General Computer Corporation", "Super Missile Attack (for rev 1)", GAME_SUPPORTS_SAVE )
+GAME( 1981, suprmatkd,missile, missile, suprmatk,        0, ROT0, "Atari / General Computer Corporation", "Super Missile Attack (not encrypted)", GAME_SUPPORTS_SAVE )
 
 /* the bootlegs are on different hardware and don't work */
 GAME( 198?, mcombat,  missile, missile, missile,         0, ROT0, "bootleg (Videotron)", "Missile Combat (Videotron bootleg, set 1)", GAME_NOT_WORKING )

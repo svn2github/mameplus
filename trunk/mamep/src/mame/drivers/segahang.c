@@ -290,7 +290,7 @@ static WRITE8_DEVICE_HANDLER( sound_latch_w )
 {
 	segas1x_state *state = device->machine().driver_data<segas1x_state>();
 	address_space *space = state->m_maincpu->memory().space(AS_PROGRAM);
-	state->soundlatch_w(*space, offset, data);
+	state->soundlatch_byte_w(*space, offset, data);
 }
 
 
@@ -417,7 +417,7 @@ static READ8_HANDLER( sound_data_r )
 
 	/* assert ACK */
 	ppi8255_set_port_c(state->m_ppi8255_1, 0x00);
-	return state->soundlatch_r(*space, offset);
+	return state->soundlatch_byte_r(*space, offset);
 }
 
 
@@ -778,7 +778,7 @@ static const ym2203_interface ym2203_config =
 
 static const ym2151_interface ym2151_config =
 {
-	sound_irq
+	DEVCB_LINE(sound_irq)
 };
 
 
@@ -1762,7 +1762,7 @@ static DRIVER_INIT( enduror )
 static DRIVER_INIT( endurobl )
 {
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 	UINT16 *decrypt = auto_alloc_array(machine, UINT16, 0x40000/2);
 
 	hangon_generic_init(machine);
@@ -1776,7 +1776,7 @@ static DRIVER_INIT( endurobl )
 static DRIVER_INIT( endurob2 )
 {
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 	UINT16 *decrypt = auto_alloc_array(machine, UINT16, 0x40000/2);
 
 	hangon_generic_init(machine);

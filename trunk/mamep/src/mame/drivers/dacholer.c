@@ -43,14 +43,18 @@ public:
 	dacholer_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this,"maincpu"),
-		m_audiocpu(*this,"audiocpu")
-		{ }
+		m_audiocpu(*this,"audiocpu"),
+		m_bgvideoram(*this, "bgvideoram"),
+		m_fgvideoram(*this, "fgvideoram"),
+		m_spriteram(*this, "spriteram"){ }
 
+	/* devices */
+	required_device<cpu_device> m_maincpu;
+	required_device<cpu_device> m_audiocpu;
 	/* memory pointers */
-	UINT8 *  m_bgvideoram;
-	UINT8 *  m_fgvideoram;
-	UINT8 *  m_spriteram;
-	size_t   m_spriteram_size;
+	required_shared_ptr<UINT8> m_bgvideoram;
+	required_shared_ptr<UINT8> m_fgvideoram;
+	required_shared_ptr<UINT8> m_spriteram;
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
@@ -66,9 +70,6 @@ public:
 	UINT8 m_music_interrupt_enable;
 	UINT8 m_snd_ack;
 
-	/* devices */
-	required_device<cpu_device> m_maincpu;
-	required_device<cpu_device> m_audiocpu;
 	DECLARE_WRITE8_MEMBER(bg_scroll_x_w);
 	DECLARE_WRITE8_MEMBER(bg_scroll_y_w);
 	DECLARE_WRITE8_MEMBER(background_w);
@@ -81,6 +82,7 @@ public:
 	DECLARE_WRITE8_MEMBER(snd_ack_w);
 	DECLARE_WRITE8_MEMBER(snd_irq_w);
 	DECLARE_WRITE8_MEMBER(music_irq_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(snd_ack_r);
 };
 
 static TILE_GET_INFO( get_bg_tile_info )
@@ -119,7 +121,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	dacholer_state *state = machine.driver_data<dacholer_state>();
 	int offs, code, attr, sx, sy, flipx, flipy;
 
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		code = state->m_spriteram[offs + 1];
 		attr = state->m_spriteram[offs + 2];
@@ -130,7 +132,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		sx = (state->m_spriteram[offs + 3] - 128) + 256 * (attr & 0x01);
 		sy = 255 - state->m_spriteram[offs];
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;
 			sy = 240 - sy;
@@ -150,7 +152,7 @@ static SCREEN_UPDATE_IND16(dacholer)
 {
 	dacholer_state *state = screen.machine().driver_data<dacholer_state>();
 
-	if (flip_screen_get(screen.machine()))
+	if (state->flip_screen())
 	{
 		state->m_bg_tilemap->set_scrollx(0, 256 - state->m_scroll_x);
 		state->m_bg_tilemap->set_scrolly(0, 256 - state->m_scroll_y);
@@ -187,7 +189,7 @@ WRITE8_MEMBER(dacholer_state::bg_bank_w)
 		m_bg_tilemap->mark_all_dirty();
 	}
 
-	flip_screen_set(machine(), data & 0xc); // probably one bit for flipx and one for flipy
+	flip_screen_set(data & 0xc); // probably one bit for flipx and one for flipy
 
 }
 
@@ -202,7 +204,7 @@ WRITE8_MEMBER(dacholer_state::coins_w)
 
 WRITE8_MEMBER(dacholer_state::snd_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -215,9 +217,9 @@ WRITE8_MEMBER(dacholer_state::main_irq_ack_w)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, dacholer_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8800, 0x97ff) AM_RAM
-	AM_RANGE(0xc000, 0xc3ff) AM_MIRROR(0x400) AM_RAM_WRITE(background_w) AM_BASE(m_bgvideoram)
-	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(foreground_w) AM_BASE(m_fgvideoram)
-	AM_RANGE(0xe000, 0xe0ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xc000, 0xc3ff) AM_MIRROR(0x400) AM_RAM_WRITE(background_w) AM_SHARE("bgvideoram")
+	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(foreground_w) AM_SHARE("fgvideoram")
+	AM_RANGE(0xe000, 0xe0ff) AM_RAM AM_SHARE("spriteram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( itaten_main_map, AS_PROGRAM, 8, dacholer_state )
@@ -266,10 +268,9 @@ WRITE8_MEMBER(dacholer_state::snd_ack_w)
 	m_snd_ack = data;
 }
 
-static CUSTOM_INPUT( snd_ack_r )
+CUSTOM_INPUT_MEMBER(dacholer_state::snd_ack_r)
 {
-	dacholer_state *state = field.machine().driver_data<dacholer_state>();
-	return state->m_snd_ack;		//guess ...
+	return m_snd_ack;		//guess ...
 }
 
 WRITE8_MEMBER(dacholer_state::snd_irq_w)
@@ -284,7 +285,7 @@ WRITE8_MEMBER(dacholer_state::music_irq_w)
 
 static ADDRESS_MAP_START( snd_io_map, AS_IO, 8, dacholer_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READWRITE(soundlatch_r, soundlatch_clear_w )
+	AM_RANGE(0x00, 0x00) AM_READWRITE(soundlatch_byte_r, soundlatch_clear_byte_w )
 	AM_RANGE(0x04, 0x04) AM_WRITE(music_irq_w)
 	AM_RANGE(0x08, 0x08) AM_WRITE(snd_irq_w)
 	AM_RANGE(0x0c, 0x0c) AM_WRITE(snd_ack_w)
@@ -296,7 +297,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( itaten_snd_io_map, AS_IO, 8, dacholer_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READWRITE(soundlatch_r, soundlatch_clear_w )
+	AM_RANGE(0x00, 0x00) AM_READWRITE(soundlatch_byte_r, soundlatch_clear_byte_w )
 	AM_RANGE(0x86, 0x87) AM_DEVWRITE_LEGACY("ay1", ay8910_data_address_w)
 	AM_RANGE(0x8a, 0x8b) AM_DEVWRITE_LEGACY("ay2", ay8910_data_address_w)
 	AM_RANGE(0x8e, 0x8f) AM_DEVWRITE_LEGACY("ay3", ay8910_data_address_w)
@@ -345,7 +346,7 @@ static INPUT_PORTS_START( dacholer )
 	PORT_DIPSETTING(    0x04, DEF_STR( 5C_1C ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( 4C_1C ) )
 	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_1C ) )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snd_ack_r, NULL)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, dacholer_state,snd_ack_r, NULL)
 
 	PORT_START("DSWB")
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Lives ) )            /* table at 0x0a9c */
@@ -605,6 +606,7 @@ static MACHINE_RESET( dacholer )
 /* guess: use the same resistor values as Crazy Climber (needs checking on the real HW) */
 static PALETTE_INIT( dacholer )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	static const int resistances_rg[3] = { 1000, 470, 220 };
 	static const int resistances_b [2] = { 470, 220 };
 	double weights_rg[3], weights_b[2];

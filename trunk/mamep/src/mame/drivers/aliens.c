@@ -38,7 +38,7 @@ READ8_MEMBER(aliens_state::bankedram_r)
 WRITE8_MEMBER(aliens_state::bankedram_w)
 {
 	if (m_palette_selected)
-		paletteram_xBBBBBGGGGGRRRRR_be_w(space, offset, data);
+		paletteram_xBBBBBGGGGGRRRRR_byte_be_w(space, offset, data);
 	else
 		m_ram[offset] = data;
 }
@@ -69,7 +69,7 @@ WRITE8_MEMBER(aliens_state::aliens_coin_counter_w)
 WRITE8_MEMBER(aliens_state::aliens_sh_irqtrigger_w)
 {
 
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
 }
 
@@ -115,7 +115,7 @@ WRITE8_MEMBER(aliens_state::k052109_051960_w)
 }
 
 static ADDRESS_MAP_START( aliens_map, AS_PROGRAM, 8, aliens_state )
-	AM_RANGE(0x0000, 0x03ff) AM_READWRITE(bankedram_r, bankedram_w) AM_BASE(m_ram)		/* palette + work RAM */
+	AM_RANGE(0x0000, 0x03ff) AM_READWRITE(bankedram_r, bankedram_w) AM_SHARE("ram")		/* palette + work RAM */
 	AM_RANGE(0x0400, 0x1fff) AM_RAM
 	AM_RANGE(0x2000, 0x3fff) AM_ROMBANK("bank1")												/* banked ROM */
 	AM_RANGE(0x5f80, 0x5f80) AM_READ_PORT("DSW3")
@@ -133,7 +133,7 @@ static ADDRESS_MAP_START( aliens_sound_map, AS_PROGRAM, 8, aliens_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM								/* ROM g04_b03.bin */
 	AM_RANGE(0x8000, 0x87ff) AM_RAM								/* RAM */
 	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_r)				/* soundlatch_r */
+	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_byte_r)				/* soundlatch_byte_r */
 	AM_RANGE(0xe000, 0xe00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r, k007232_w)
 ADDRESS_MAP_END
 
@@ -206,8 +206,8 @@ static const k007232_interface k007232_config =
 
 static const ym2151_interface ym2151_config =
 {
-	0,
-	aliens_snd_bankswitch_w
+	DEVCB_NULL,
+	DEVCB_HANDLER(aliens_snd_bankswitch_w)
 };
 
 
@@ -230,10 +230,10 @@ static const k051960_interface aliens_k051960_intf =
 static MACHINE_START( aliens )
 {
 	aliens_state *state = machine.driver_data<aliens_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 20, &ROM[0x10000], 0x2000);
-	memory_set_bank(machine, "bank1", 0);
+	state->membank("bank1")->configure_entries(0, 20, &ROM[0x10000], 0x2000);
+	state->membank("bank1")->set_entry(0);
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_audiocpu = machine.device("audiocpu");
@@ -545,7 +545,7 @@ static KONAMI_SETLINES_CALLBACK( aliens_banking )
 		bank -= 4;
 
 	bank += (lines & 0x0f);
-	memory_set_bank(device->machine(), "bank1", bank);
+	device->machine().root_device().membank("bank1")->set_entry(bank);
 }
 
 GAME( 1990, aliens,   0,      aliens, aliens, 0, ROT0, "Konami", "Aliens (World set 1)", GAME_SUPPORTS_SAVE )

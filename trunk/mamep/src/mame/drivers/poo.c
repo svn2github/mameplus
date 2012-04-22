@@ -50,11 +50,14 @@ class poo_state : public driver_device
 {
 public:
 	poo_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_sprites(*this, "sprites"),
+		m_scrolly(*this, "scrolly"),
+		m_vram(*this, "vram"){ }
 
-	UINT8 *m_vram;
-	UINT8 *m_scrolly;
-	UINT8 *m_sprites;
+	required_shared_ptr<UINT8> m_sprites;
+	required_shared_ptr<UINT8> m_scrolly;
+	required_shared_ptr<UINT8> m_vram;
 	UINT8 m_vram_colbank;
 	DECLARE_READ8_MEMBER(unk_inp_r);
 	DECLARE_READ8_MEMBER(unk_inp2_r);
@@ -142,7 +145,7 @@ WRITE8_MEMBER(poo_state::unk_w)
 /* soundlatch write */
 WRITE8_MEMBER(poo_state::sound_cmd_w)
 {
-	soundlatch_w(space, 0, (data & 0xff));
+	soundlatch_byte_w(space, 0, (data & 0xff));
 	cputag_set_input_line(machine(), "subcpu", 0, HOLD_LINE);
 }
 
@@ -158,8 +161,8 @@ static ADDRESS_MAP_START( unclepoo_main_map, AS_PROGRAM, 8, poo_state )
 	AM_RANGE(0x9000, 0x97ff) AM_RAM
 	AM_RANGE(0x9800, 0x9801) AM_READ(unk_inp_r) //AM_WRITE(unk_w )
 
-	AM_RANGE(0xb000, 0xb07f) AM_RAM AM_BASE(m_sprites)
-	AM_RANGE(0xb080, 0xb0ff) AM_RAM AM_BASE(m_scrolly)
+	AM_RANGE(0xb000, 0xb07f) AM_RAM AM_SHARE("sprites")
+	AM_RANGE(0xb080, 0xb0ff) AM_RAM AM_SHARE("scrolly")
 
 	AM_RANGE(0xb400, 0xb400) AM_WRITE(sound_cmd_w)
 
@@ -171,7 +174,7 @@ static ADDRESS_MAP_START( unclepoo_main_map, AS_PROGRAM, 8, poo_state )
 
 	AM_RANGE(0xb700, 0xb700) AM_WRITE(poo_vregs_w)
 
-	AM_RANGE(0xb800, 0xbfff) AM_RAM AM_BASE(m_vram)
+	AM_RANGE(0xb800, 0xbfff) AM_RAM AM_SHARE("vram")
 
 ADDRESS_MAP_END
 
@@ -288,6 +291,7 @@ GFXDECODE_END
 
 static PALETTE_INIT( unclepoo )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i,r,g,b,val;
 	int bit0,bit1,bit2;
 
@@ -322,7 +326,7 @@ static const ay8910_interface ay8910_config =
 {
 	AY8910_LEGACY_OUTPUT,
 	AY8910_DEFAULT_LOADS,
-	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_r),
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r),
 	DEVCB_DRIVER_MEMBER(poo_state, timer_r),
 	DEVCB_NULL,
 	DEVCB_NULL

@@ -326,7 +326,7 @@ WRITE8_MEMBER(omegrace_state::omegrace_leds_w)
 
 WRITE8_MEMBER(omegrace_state::omegrace_soundlatch_w)
 {
-	soundlatch_w (space, offset, data);
+	soundlatch_byte_w (space, offset, data);
 	cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
 }
 
@@ -378,7 +378,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_port, AS_IO, 8, omegrace_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ(soundlatch_r)	/* likely ay8910 input port, not direct */
+	AM_RANGE(0x00, 0x00) AM_READ(soundlatch_byte_r)	/* likely ay8910 input port, not direct */
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w)
 	AM_RANGE(0x02, 0x03) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
 ADDRESS_MAP_END
@@ -589,8 +589,8 @@ ROM_END
 
 static DRIVER_INIT( omegrace )
 {
-	int i, len = machine.region("user1")->bytes();
-	UINT8 *prom = machine.region("user1")->base();
+	int i, len = machine.root_device().memregion("user1")->bytes();
+	UINT8 *prom = machine.root_device().memregion("user1")->base();
 
 	/* Omega Race has two pairs of the state PROM output
      * lines swapped before going into the decoder.

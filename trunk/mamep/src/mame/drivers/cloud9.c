@@ -140,11 +140,10 @@ static TIMER_CALLBACK( clock_irq )
 }
 
 
-static CUSTOM_INPUT( get_vblank )
+CUSTOM_INPUT_MEMBER(cloud9_state::get_vblank)
 {
-	cloud9_state *state = field.machine().driver_data<cloud9_state>();
-	int scanline = field.machine().primary_screen->vpos();
-	return (~state->m_syncprom[scanline & 0xff] >> 1) & 1;
+	int scanline = machine().primary_screen->vpos();
+	return (~m_syncprom[scanline & 0xff] >> 1) & 1;
 }
 
 
@@ -161,7 +160,7 @@ static MACHINE_START( cloud9 )
 	rectangle visarea;
 
 	/* initialize globals */
-	state->m_syncprom = machine.region("proms")->base() + 0x000;
+	state->m_syncprom = state->memregion("proms")->base() + 0x000;
 
 	/* find the start of VBLANK in the SYNC PROM */
 	for (state->m_vblank_start = 0; state->m_vblank_start < 256; state->m_vblank_start++)
@@ -269,10 +268,10 @@ static ADDRESS_MAP_START( cloud9_map, AS_PROGRAM, 8, cloud9_state )
 	AM_RANGE(0x0000, 0x0001) AM_WRITE(cloud9_bitmode_addr_w)
 	AM_RANGE(0x0002, 0x0002) AM_READWRITE(cloud9_bitmode_r, cloud9_bitmode_w)
 	AM_RANGE(0x0000, 0x4fff) AM_ROMBANK("bank1") AM_WRITE(cloud9_videoram_w)
-	AM_RANGE(0x5000, 0x53ff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x5000, 0x53ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x5400, 0x547f) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x5480, 0x54ff) AM_WRITE(irq_ack_w)
-	AM_RANGE(0x5500, 0x557f) AM_RAM_WRITE(cloud9_paletteram_w) AM_BASE(m_paletteram)
+	AM_RANGE(0x5500, 0x557f) AM_RAM_WRITE(cloud9_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0x5580, 0x5587) AM_MIRROR(0x0078) AM_WRITE(cloud9_video_control_w)
 	AM_RANGE(0x5600, 0x5601) AM_MIRROR(0x0078) AM_WRITE(cloud9_coin_counter_w)
 	AM_RANGE(0x5602, 0x5603) AM_MIRROR(0x0078) AM_WRITE(cloud9_led_w)
@@ -302,7 +301,7 @@ static INPUT_PORTS_START( cloud9 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(get_vblank, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, cloud9_state,get_vblank, NULL)
 
 	PORT_START("IN1")
 	PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -343,7 +342,7 @@ static INPUT_PORTS_START( firebeas )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN2 )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(get_vblank, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, cloud9_state,get_vblank, NULL)
 
 	PORT_START("IN1")
 	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_UNKNOWN )

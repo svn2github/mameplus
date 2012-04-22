@@ -135,7 +135,7 @@ WRITE32_MEMBER(polygonet_state::polygonet_eeprom_w)
 READ32_MEMBER(polygonet_state::ttl_rom_r)
 {
 	UINT32 *ROM;
-	ROM = (UINT32 *)machine().region("gfx1")->base();
+	ROM = (UINT32 *)machine().root_device().memregion("gfx1")->base();
 
 	return ROM[offset];
 }
@@ -144,7 +144,7 @@ READ32_MEMBER(polygonet_state::ttl_rom_r)
 READ32_MEMBER(polygonet_state::psac_rom_r)
 {
 	UINT32 *ROM;
-	ROM = (UINT32 *)machine().region("gfx2")->base();
+	ROM = (UINT32 *)machine().root_device().memregion("gfx2")->base();
 
 	return ROM[offset];
 }
@@ -161,7 +161,7 @@ static INTERRUPT_GEN(polygonet_interrupt)
 /* sound CPU communications */
 READ32_MEMBER(polygonet_state::sound_r)
 {
-	int latch = soundlatch3_r(space, 0);
+	int latch = soundlatch3_byte_r(space, 0);
 
 	if ((latch == 0xd) || (latch == 0xe)) latch = 0xf;	/* hack: until 54539 NMI disable found */
 
@@ -172,11 +172,11 @@ WRITE32_MEMBER(polygonet_state::sound_w)
 {
 	if (ACCESSING_BITS_8_15)
 	{
-		soundlatch_w(space, 0, (data>>8)&0xff);
+		soundlatch_byte_w(space, 0, (data>>8)&0xff);
 	}
 	else
 	{
-		soundlatch2_w(space, 0, data&0xff);
+		soundlatch2_byte_w(space, 0, data&0xff);
 	}
 }
 
@@ -313,26 +313,24 @@ READ16_MEMBER(polygonet_state::dsp56k_bootload_r)
 	return 0x7fff;
 }
 
-DIRECT_UPDATE_HANDLER( plygonet_dsp56k_direct_handler )
+DIRECT_UPDATE_MEMBER(polygonet_state::plygonet_dsp56k_direct_handler)
 {
-	polygonet_state *state = machine.driver_data<polygonet_state>();
-
 	/* Call the dsp's update handler first */
-	if (!state->m_dsp56k_update_handler.isnull())
+	if (!m_dsp56k_update_handler.isnull())
 	{
-		if (state->m_dsp56k_update_handler(direct, address) == ~0)
+		if (m_dsp56k_update_handler(direct, address) == ~0)
 			return ~0;
 	}
 
 	/* If the requested region wasn't in there, see if it needs to be caught driver-side */
 	if (address >= (0x7000<<1) && address <= (0x7fff<<1))
 	{
-		direct.explicit_configure(0x7000<<1, 0x7fff<<1, (0xfff<<1) | 1, state->m_dsp56k_p_mirror);
+		direct.explicit_configure(0x7000<<1, 0x7fff<<1, (0xfff<<1) | 1, m_dsp56k_p_mirror);
 		return ~0;
 	}
 	else if (address >= (0x8000<<1) && address <= (0x87ff<<1))
 	{
-		direct.explicit_configure(0x8000<<1, 0x87ff<<1, (0x7ff<<1) | 1, state->m_dsp56k_p_8000);
+		direct.explicit_configure(0x8000<<1, 0x87ff<<1, (0x7ff<<1) | 1, m_dsp56k_p_8000);
 		return ~0;
 	}
 
@@ -509,7 +507,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 32, polygonet_state )
 	AM_RANGE(0x440000, 0x440fff) AM_READWRITE(polygonet_roz_ram_r, polygonet_roz_ram_w)
 	AM_RANGE(0x480000, 0x4bffff) AM_DEVREAD_LEGACY("eeprom", polygonet_eeprom_r)
 	AM_RANGE(0x4C0000, 0x4fffff) AM_WRITE(polygonet_eeprom_w)
-	AM_RANGE(0x500000, 0x503fff) AM_RAM_WRITE(shared_ram_write) AM_BASE(m_shared_ram)
+	AM_RANGE(0x500000, 0x503fff) AM_RAM_WRITE(shared_ram_write) AM_SHARE("shared_ram")
 	AM_RANGE(0x504000, 0x504003) AM_WRITE(dsp_w_lines)
 	AM_RANGE(0x506000, 0x50600f) AM_READWRITE(dsp_host_interface_r, dsp_host_interface_w)
 	AM_RANGE(0x540000, 0x540fff) AM_READWRITE(polygonet_ttl_ram_r, polygonet_ttl_ram_w)
@@ -528,8 +526,8 @@ ADDRESS_MAP_END
 /**********************************************************************************/
 
 static ADDRESS_MAP_START( dsp_program_map, AS_PROGRAM, 16, polygonet_state )
-	AM_RANGE(0x7000, 0x7fff) AM_RAM AM_BASE(m_dsp56k_p_mirror)	/* Unsure of size, but 0x1000 matches bank01 */
-	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_BASE(m_dsp56k_p_8000)
+	AM_RANGE(0x7000, 0x7fff) AM_RAM AM_SHARE("dsp56k_p_mirror")	/* Unsure of size, but 0x1000 matches bank01 */
+	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("dsp56k_p_8000")
 	AM_RANGE(0xc000, 0xc000) AM_READ(dsp56k_bootload_r)
 ADDRESS_MAP_END
 
@@ -547,7 +545,7 @@ ADDRESS_MAP_END
 static void reset_sound_region(running_machine &machine)
 {
 	polygonet_state *state = machine.driver_data<polygonet_state>();
-	memory_set_bankptr(machine, "bank2", machine.region("soundcpu")->base() + 0x10000 + state->m_cur_sound_region*0x4000);
+	state->membank("bank2")->set_base(state->memregion("soundcpu")->base() + 0x10000 + state->m_cur_sound_region*0x4000);
 }
 
 WRITE8_MEMBER(polygonet_state::sound_bankswitch_w)
@@ -570,9 +568,9 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, polygonet_state )
 	AM_RANGE(0xe230, 0xe3ff) AM_RAM
 	AM_RANGE(0xe400, 0xe62f) AM_DEVREADWRITE("konami2", k054539_device, read, write)
 	AM_RANGE(0xe630, 0xe7ff) AM_RAM
-	AM_RANGE(0xf000, 0xf000) AM_WRITE(soundlatch3_w)
-	AM_RANGE(0xf002, 0xf002) AM_READ(soundlatch_r)
-	AM_RANGE(0xf003, 0xf003) AM_READ(soundlatch2_r)
+	AM_RANGE(0xf000, 0xf000) AM_WRITE(soundlatch3_byte_w)
+	AM_RANGE(0xf002, 0xf002) AM_READ(soundlatch_byte_r)
+	AM_RANGE(0xf003, 0xf003) AM_READ(soundlatch2_byte_r)
 	AM_RANGE(0xf800, 0xf800) AM_WRITE(sound_bankswitch_w)
 	AM_RANGE(0xfff1, 0xfff3) AM_WRITENOP
 ADDRESS_MAP_END
@@ -743,7 +741,7 @@ static DRIVER_INIT(polygonet)
 
 	/* The dsp56k occasionally executes out of mapped memory */
 	address_space *space = machine.device<dsp56k_device>("dsp")->space(AS_PROGRAM);
-	state->m_dsp56k_update_handler = space->set_direct_update_handler(direct_update_delegate(FUNC(plygonet_dsp56k_direct_handler), &machine));
+	state->m_dsp56k_update_handler = space->set_direct_update_handler(direct_update_delegate(FUNC(polygonet_state::plygonet_dsp56k_direct_handler), state));
 
     /* save states */
 	state->save_item(NAME(state->m_dsp56k_bank00_ram));

@@ -103,10 +103,11 @@ class royalmah_state : public driver_device
 public:
 	royalmah_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this,"maincpu")
-		{ }
+		m_maincpu(*this,"maincpu"),
+		m_videoram(*this, "videoram"){ }
 
-	UINT8 *m_videoram;
+	required_device<cpu_device> m_maincpu;
+	required_shared_ptr<UINT8> m_videoram;
 	UINT8 m_input_port_select;
 	UINT8 m_dsw_select;
 	UINT8 m_rombank;
@@ -122,7 +123,6 @@ public:
 	UINT8 m_jansou_colortable[16];
 	UINT8 m_mjifb_rom_enable;
 
-	required_device<cpu_device> m_maincpu;
 	DECLARE_WRITE8_MEMBER(royalmah_palbank_w);
 	DECLARE_WRITE8_MEMBER(mjderngr_coin_w);
 	DECLARE_WRITE8_MEMBER(mjderngr_palbank_w);
@@ -196,8 +196,8 @@ public:
 static PALETTE_INIT( royalmah )
 {
 	offs_t i;
-	const UINT8 *prom = machine.region("proms")->base();
-	int len = machine.region("proms")->bytes();
+	const UINT8 *prom = machine.root_device().memregion("proms")->base();
+	int len = machine.root_device().memregion("proms")->bytes();
 
 	for (i = 0; i < len; i++)
 	{
@@ -231,8 +231,8 @@ static PALETTE_INIT( royalmah )
 static PALETTE_INIT( mjderngr )
 {
 	offs_t i;
-	const UINT8 *prom = machine.region("proms")->base();
-	int len = machine.region("proms")->bytes();
+	const UINT8 *prom = machine.root_device().memregion("proms")->base();
+	int len = machine.root_device().memregion("proms")->bytes();
 
 	for (i = 0; i < len / 2; i++)
 	{
@@ -386,7 +386,7 @@ READ8_MEMBER(royalmah_state::suzume_dsw_r)
 
 WRITE8_MEMBER(royalmah_state::suzume_bank_w)
 {
-	UINT8 *rom = machine().region("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 	int address;
 
 	m_suzume_bank = data;
@@ -396,20 +396,20 @@ logerror("%04x: bank %02x\n",cpu_get_pc(&space.device()),data);
 	/* bits 6, 4 and 3 used for something input related? */
 
 	address = 0x10000 + (data & 0x07) * 0x8000;
-	memory_set_bankptr(machine(), "bank1",&rom[address]);
+	membank("bank1")->set_base(&rom[address]);
 }
 
 
 WRITE8_MEMBER(royalmah_state::mjapinky_bank_w)
 {
-	UINT8 *ROM = machine().region("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 	m_rombank = data;
-	memory_set_bankptr(machine(), "bank1",ROM + 0x10000 + 0x8000 * data);
+	membank("bank1")->set_base(ROM + 0x10000 + 0x8000 * data);
 }
 
 WRITE8_MEMBER(royalmah_state::mjapinky_palbank_w)
 {
-	flip_screen_set(machine(), ~data & 4);
+	flip_screen_set(~data & 4);
 	m_palette_base = (data >> 3) & 0x01;
 	coin_counter_w(machine(), 0,data & 2);	// in
 	coin_counter_w(machine(), 1,data & 1);	// out
@@ -418,12 +418,12 @@ WRITE8_MEMBER(royalmah_state::mjapinky_palbank_w)
 READ8_MEMBER(royalmah_state::mjapinky_dsw_r)
 {
 	if (m_rombank == 0x0e)	return input_port_read(machine(), "DSW3");
-	else					return *(machine().region("maincpu")->base() + 0x10000 + 0x8000 * m_rombank);
+	else					return *(machine().root_device().memregion("maincpu")->base() + 0x10000 + 0x8000 * m_rombank);
 }
 
 WRITE8_MEMBER(royalmah_state::tontonb_bank_w)
 {
-	UINT8 *rom = machine().region("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 	int address;
 
 logerror("%04x: bank %02x\n",cpu_get_pc(&space.device()),data);
@@ -434,14 +434,14 @@ logerror("%04x: bank %02x\n",cpu_get_pc(&space.device()),data);
 
 	address = 0x10000 + data * 0x8000;
 
-	memory_set_bankptr(machine(), "bank1",&rom[address]);
+	membank("bank1")->set_base(&rom[address]);
 }
 
 
 /* bits 5 and 6 seem to affect which Dip Switch to read in 'majs101b' */
 WRITE8_MEMBER(royalmah_state::dynax_bank_w)
 {
-	UINT8 *rom = machine().region("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 	int address;
 
 //logerror("%04x: bank %02x\n",cpu_get_pc(&space.device()),data);
@@ -452,7 +452,7 @@ WRITE8_MEMBER(royalmah_state::dynax_bank_w)
 
 	address = 0x10000 + data * 0x8000;
 
-	memory_set_bankptr(machine(), "bank1",&rom[address]);
+	membank("bank1")->set_base(&rom[address]);
 }
 
 READ8_MEMBER(royalmah_state::daisyari_dsw_r)
@@ -470,7 +470,7 @@ READ8_MEMBER(royalmah_state::daisyari_dsw_r)
 
 WRITE8_MEMBER(royalmah_state::daisyari_bank_w)
 {
-	UINT8 *rom = machine().region("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 	int address;
 
 	m_dsw_select = (data & 0xc);
@@ -478,7 +478,7 @@ WRITE8_MEMBER(royalmah_state::daisyari_bank_w)
 	address = 0x10000 + ((data & 0x30)>>4) * 0x10000 + (data & 0x1) * 0x8000;
 //  printf("%08x %02x\n",address,data);
 
-	memory_set_bankptr(machine(), "bank1",&rom[address]);
+	membank("bank1")->set_base(&rom[address]);
 
 	/* bit 1 used too but unknown purpose. */
 }
@@ -498,7 +498,7 @@ READ8_MEMBER(royalmah_state::mjclub_dsw_r)
 
 WRITE8_MEMBER(royalmah_state::mjclub_bank_w)
 {
-	UINT8 *rom = machine().region("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 	int address;
 
 	m_dsw_select = data & 0xc0;
@@ -508,7 +508,7 @@ WRITE8_MEMBER(royalmah_state::mjclub_bank_w)
 	address = 0x10000 + data * 0x8000;
 //  printf("%08x\n",address);
 
-	memory_set_bankptr(machine(), "bank1",&rom[address]);
+	membank("bank1")->set_base(&rom[address]);
 
 	/* bit 5 used too but unknown purpose. */
 }
@@ -518,7 +518,7 @@ static ADDRESS_MAP_START( royalmah_map, AS_PROGRAM, 8, royalmah_state )
 	AM_RANGE( 0x0000, 0x6fff ) AM_ROM AM_WRITE(royalmah_rom_w )
 	AM_RANGE( 0x7000, 0x7fff ) AM_RAM AM_SHARE("nvram")
 	AM_RANGE( 0x8000, 0xffff ) AM_ROMBANK( "bank1" )	// banked ROMs not present in royalmah
-	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_BASE(m_videoram)
+	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 
@@ -528,7 +528,7 @@ static ADDRESS_MAP_START( mjapinky_map, AS_PROGRAM, 8, royalmah_state )
 	AM_RANGE( 0x7800, 0x7fff ) AM_RAM
 	AM_RANGE( 0x8000, 0x8000 ) AM_READ(mjapinky_dsw_r )
 	AM_RANGE( 0x8000, 0xffff ) AM_ROMBANK( "bank1" )
-	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_BASE(m_videoram)
+	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 
@@ -660,7 +660,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( janoh_map, AS_PROGRAM, 8, royalmah_state )
 	AM_RANGE( 0x0000, 0x6fff ) AM_ROM AM_WRITE(royalmah_rom_w )
 	AM_RANGE( 0x7000, 0x7fff ) AM_RAM AM_SHARE("nvram")
-	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_BASE(m_videoram)
+	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 
@@ -727,7 +727,7 @@ WRITE8_MEMBER(royalmah_state::jansou_6402_w)
 
 READ8_MEMBER(royalmah_state::jansou_6403_r)
 {
-	UINT8 *GFXROM = machine().region("gfx1")->base();
+	UINT8 *GFXROM = memregion("gfx1")->base();
 	int d0 = GFXROM[m_gfx_adr];
 	int d1 = GFXROM[m_gfx_adr+1];
 	int c0 = m_jansou_colortable[d1 & 0x0f] & 0x0f;
@@ -757,7 +757,7 @@ READ8_MEMBER(royalmah_state::jansou_6405_r)
 
 WRITE8_MEMBER(royalmah_state::jansou_sound_w)
 {
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -778,7 +778,7 @@ static ADDRESS_MAP_START( jansou_map, AS_PROGRAM, 8, royalmah_state )
 	AM_RANGE( 0x6800, 0x6800 ) AM_WRITE(jansou_sound_w)
 
 	AM_RANGE( 0x7000, 0x77ff ) AM_RAM AM_SHARE("nvram")
-	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_BASE(m_videoram)
+	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( jansou_sub_map, AS_PROGRAM, 8, royalmah_state )
@@ -788,7 +788,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( jansou_sub_iomap, AS_IO, 8, royalmah_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ(soundlatch_r) AM_DEVWRITE_LEGACY("dac", dac_w )
+	AM_RANGE(0x00, 0x00) AM_READ(soundlatch_byte_r) AM_DEVWRITE_LEGACY("dac", dac_w )
 ADDRESS_MAP_END
 
 
@@ -801,7 +801,7 @@ static ADDRESS_MAP_START( janptr96_map, AS_PROGRAM, 8, royalmah_state )
 	AM_RANGE( 0x6000, 0x6fff ) AM_RAMBANK("bank3") AM_SHARE("nvram")	// nvram
 	AM_RANGE( 0x7000, 0x7fff ) AM_RAMBANK("bank2")	// banked nvram
 	AM_RANGE( 0x8000, 0xffff ) AM_ROMBANK("bank1")
-	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_BASE(m_videoram)
+	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 WRITE8_MEMBER(royalmah_state::janptr96_dswsel_w)
@@ -828,13 +828,13 @@ READ8_MEMBER(royalmah_state::janptr96_dsw_r)
 
 WRITE8_MEMBER(royalmah_state::janptr96_rombank_w)
 {
-	UINT8 *ROM = machine().region("maincpu")->base();
-	memory_set_bankptr(machine(), "bank1",ROM + 0x10000 + 0x8000 * data);
+	UINT8 *ROM = memregion("maincpu")->base();
+	membank("bank1")->set_base(ROM + 0x10000 + 0x8000 * data);
 }
 
 WRITE8_MEMBER(royalmah_state::janptr96_rambank_w)
 {
-	memory_set_bankptr(machine(), "bank2", m_janptr96_nvram + 0x1000 + 0x1000 * data);
+	membank("bank2")->set_base(m_janptr96_nvram + 0x1000 + 0x1000 * data);
 }
 
 READ8_MEMBER(royalmah_state::janptr96_unknown_r)
@@ -845,7 +845,7 @@ READ8_MEMBER(royalmah_state::janptr96_unknown_r)
 
 WRITE8_MEMBER(royalmah_state::janptr96_coin_counter_w)
 {
-	flip_screen_set(machine(), ~data & 4);
+	flip_screen_set(~data & 4);
 	coin_counter_w(machine(), 0,data & 2);	// in
 	coin_counter_w(machine(), 1,data & 1);	// out
 }
@@ -872,7 +872,7 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER(royalmah_state::mjifb_coin_counter_w)
 {
-	flip_screen_set(machine(),  data & 4);
+	flip_screen_set(data & 4);
 	coin_counter_w(machine(), 0,data & 2);	// in
 	coin_counter_w(machine(), 1,data & 1);	// out
 }
@@ -880,7 +880,7 @@ WRITE8_MEMBER(royalmah_state::mjifb_coin_counter_w)
 READ8_MEMBER(royalmah_state::mjifb_rom_io_r)
 {
 	if (m_mjifb_rom_enable)
-		return ((UINT8*)(machine().region("maincpu")->base() + 0x10000 + m_rombank * 0x4000))[offset];
+		return ((UINT8*)(machine().root_device().memregion("maincpu")->base() + 0x10000 + m_rombank * 0x4000))[offset];
 
 	offset += 0x8000;
 
@@ -933,7 +933,7 @@ WRITE8_MEMBER(royalmah_state::mjifb_videoram_w)
 static ADDRESS_MAP_START( mjifb_map, AS_PROGRAM, 8, royalmah_state )
 	AM_RANGE( 0x0000, 0x6fff ) AM_ROM
 	AM_RANGE( 0x7000, 0x7fff ) AM_RAM AM_SHARE("nvram")
-	AM_RANGE( 0x8000, 0xbfff ) AM_READWRITE(mjifb_rom_io_r, mjifb_rom_io_w) AM_BASE(m_videoram)
+	AM_RANGE( 0x8000, 0xbfff ) AM_READWRITE(mjifb_rom_io_r, mjifb_rom_io_w) AM_SHARE("videoram")
 	AM_RANGE( 0xc000, 0xffff ) AM_ROM AM_WRITE(mjifb_videoram_w)
 //  AM_RANGE( 0xc000, 0xffff ) AM_ROM AM_WRITEONLY  This should, but doesn't work
 ADDRESS_MAP_END
@@ -989,7 +989,7 @@ ADDRESS_MAP_END
 READ8_MEMBER(royalmah_state::mjdejavu_rom_io_r)
 {
 	if (m_mjifb_rom_enable)
-		return ((UINT8*)(machine().region("maincpu")->base() + 0x10000 + m_rombank * 0x4000))[offset];
+		return ((UINT8*)(machine().root_device().memregion("maincpu")->base() + 0x10000 + m_rombank * 0x4000))[offset];
 
 	offset += 0x8000;
 
@@ -1033,7 +1033,7 @@ WRITE8_MEMBER(royalmah_state::mjdejavu_rom_io_w)
 static ADDRESS_MAP_START( mjdejavu_map, AS_PROGRAM, 8, royalmah_state )
 	AM_RANGE( 0x0000, 0x6fff ) AM_ROM
 	AM_RANGE( 0x7000, 0x7fff ) AM_RAM AM_SHARE("nvram")
-	AM_RANGE( 0x8000, 0xbfff ) AM_READWRITE(mjdejavu_rom_io_r, mjdejavu_rom_io_w) AM_BASE(m_videoram)
+	AM_RANGE( 0x8000, 0xbfff ) AM_READWRITE(mjdejavu_rom_io_r, mjdejavu_rom_io_w) AM_SHARE("videoram")
 	AM_RANGE( 0xc000, 0xffff ) AM_ROM AM_WRITE(mjifb_videoram_w)
 ADDRESS_MAP_END
 
@@ -1050,7 +1050,7 @@ READ8_MEMBER(royalmah_state::mjtensin_p3_r)
 static void mjtensin_update_rombank(running_machine &machine)
 {
 	royalmah_state *state = machine.driver_data<royalmah_state>();
-	memory_set_bankptr(machine,  "bank1", machine.region("maincpu")->base() + 0x10000 + state->m_rombank * 0x8000 );
+	state->membank("bank1")->set_base(state->memregion("maincpu")->base() + 0x10000 + state->m_rombank * 0x8000 );
 }
 WRITE8_MEMBER(royalmah_state::mjtensin_p4_w)
 {
@@ -1076,7 +1076,7 @@ static ADDRESS_MAP_START( mjtensin_map, AS_PROGRAM, 8, royalmah_state )
 	AM_RANGE( 0x6ff3, 0x6ff3 ) AM_WRITE(mjtensin_6ff3_w )
 	AM_RANGE( 0x7000, 0x7fff ) AM_RAM AM_SHARE("nvram")
 	AM_RANGE( 0x8000, 0xffff ) AM_ROMBANK( "bank1" )
-	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_BASE(m_videoram)
+	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( mjtensin_iomap, AS_IO, 8, royalmah_state )
@@ -1092,7 +1092,7 @@ ADDRESS_MAP_END
 static void cafetime_update_rombank(running_machine &machine)
 {
 	royalmah_state *state = machine.driver_data<royalmah_state>();
-	memory_set_bankptr(machine,  "bank1", machine.region("maincpu")->base() + 0x10000 + state->m_rombank * 0x8000 );
+	state->membank("bank1")->set_base(state->memregion("maincpu")->base() + 0x10000 + state->m_rombank * 0x8000 );
 }
 WRITE8_MEMBER(royalmah_state::cafetime_p4_w)
 {
@@ -1147,7 +1147,7 @@ static ADDRESS_MAP_START( cafetime_map, AS_PROGRAM, 8, royalmah_state )
 	AM_RANGE( 0x7fe4, 0x7fe4 ) AM_READ(cafetime_7fe4_r )
 	AM_RANGE( 0x7ff0, 0x7fff ) AM_DEVREADWRITE("rtc", msm6242_device, read, write)
 	AM_RANGE( 0x8000, 0xffff ) AM_ROMBANK( "bank1" )
-	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_BASE(m_videoram)
+	AM_RANGE( 0x8000, 0xffff ) AM_WRITEONLY AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 
@@ -1177,7 +1177,7 @@ WRITE8_MEMBER(royalmah_state::mjvegasa_rombank_w)
 READ8_MEMBER(royalmah_state::mjvegasa_rom_io_r)
 {
 	if ((m_rombank & 0x70) != 0x70)
-		return machine().region("maincpu")->base()[0x10000 + m_rombank * 0x8000 + offset];
+		return memregion("maincpu")->base()[0x10000 + m_rombank * 0x8000 + offset];
 
 	offset += 0x8000;
 
@@ -1216,7 +1216,7 @@ WRITE8_MEMBER(royalmah_state::mjvegasa_rom_io_w)
 
 WRITE8_MEMBER(royalmah_state::mjvegasa_coin_counter_w)
 {
-	flip_screen_set(machine(),  data & 4);
+	flip_screen_set(data & 4);
 	coin_counter_w(machine(), 0,data & 2);	// in
 	coin_counter_w(machine(), 1,data & 1);	// out
 }
@@ -1237,7 +1237,7 @@ static ADDRESS_MAP_START( mjvegasa_map, AS_PROGRAM, 8, royalmah_state )
 
 	AM_RANGE( 0x00000, 0x05fff ) AM_ROM
 	AM_RANGE( 0x06000, 0x07fff ) AM_RAM AM_SHARE("nvram")
-	AM_RANGE( 0x08000, 0x0ffff ) AM_READWRITE(mjvegasa_rom_io_r, mjvegasa_rom_io_w) AM_BASE(m_videoram)
+	AM_RANGE( 0x08000, 0x0ffff ) AM_READWRITE(mjvegasa_rom_io_r, mjvegasa_rom_io_w) AM_SHARE("videoram")
 
 	AM_RANGE( 0x10001, 0x10001 ) AM_DEVREAD_LEGACY("aysnd", ay8910_r )
 	AM_RANGE( 0x10002, 0x10003 ) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_address_w )
@@ -4710,13 +4710,13 @@ ROM_START( jansoua )
 ROM_END
 
 
-static DRIVER_INIT( ippatsu )	{	memory_set_bankptr(machine, "bank1", machine.region("maincpu")->base() + 0x8000 );	}
+static DRIVER_INIT( ippatsu )	{	machine.root_device().membank("bank1")->set_base(machine.root_device().memregion("maincpu")->base() + 0x8000 );	}
 
 static DRIVER_INIT( janptr96 )
 {
 	royalmah_state *state = machine.driver_data<royalmah_state>();
 	state->m_janptr96_nvram = auto_alloc_array(machine, UINT8, 0x1000 * 9);
-	memory_set_bankptr(machine, "bank3", state->m_janptr96_nvram);
+	state->membank("bank3")->set_base(state->m_janptr96_nvram);
 	machine.device<nvram_device>("nvram")->set_base(state->m_janptr96_nvram, 0x1000 * 9);
 }
 

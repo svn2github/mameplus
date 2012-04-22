@@ -170,15 +170,21 @@ class cybertnk_state : public driver_device
 {
 public:
 	cybertnk_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_spr_ram(*this, "spr_ram"),
+		m_tx_vram(*this, "tx_vram"),
+		m_bg_vram(*this, "bg_vram"),
+		m_fg_vram(*this, "fg_vram"),
+		m_io_ram(*this, "io_ram"),
+		m_roadram(*this, "roadram"){ }
 
 	tilemap_t *m_tx_tilemap;
-	UINT16 *m_tx_vram;
-	UINT16 *m_bg_vram;
-	UINT16 *m_fg_vram;
-	UINT16 *m_spr_ram;
-	UINT16 *m_io_ram;
-	UINT16 *m_roadram;
+	required_shared_ptr<UINT16> m_spr_ram;
+	required_shared_ptr<UINT16> m_tx_vram;
+	required_shared_ptr<UINT16> m_bg_vram;
+	required_shared_ptr<UINT16> m_fg_vram;
+	required_shared_ptr<UINT16> m_io_ram;
+	required_shared_ptr<UINT16> m_roadram;
 	int m_test_x;
 	int m_test_y;
 	int m_start_offs;
@@ -288,7 +294,7 @@ static UINT32 update_screen(screen_device &screen, bitmap_ind16 &bitmap, const r
 	/* non-tile based spriteram (BARE-BONES, looks pretty complex) */
 	if(1)
 	{
-		const UINT8 *blit_ram = screen.machine().region("spr_gfx")->base();
+		const UINT8 *blit_ram = screen.machine().root_device().memregion("spr_gfx")->base();
 		int offs,x,y,z,xsize,ysize,yi,xi,col_bank,fx,zoom;
 		UINT32 spr_offs,spr_offs_helper;
 		int xf,yf,xz,yz;
@@ -420,7 +426,7 @@ static UINT32 update_screen(screen_device &screen, bitmap_ind16 &bitmap, const r
 		if(0) //sprite gfx debug viewer
 		{
 			int x,y,count;
-			const UINT8 *blit_ram = screen.machine().region("spr_gfx")->base();
+			const UINT8 *blit_ram = screen.machine().root_device().memregion("spr_gfx")->base();
 
 			if(screen.machine().input().code_pressed(KEYCODE_Z))
 			state->m_test_x++;
@@ -662,19 +668,19 @@ READ8_MEMBER(cybertnk_state::soundport_r)
 static ADDRESS_MAP_START( master_mem, AS_PROGRAM, 16, cybertnk_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x080000, 0x087fff) AM_RAM /*Work RAM*/
-	AM_RANGE(0x0a0000, 0x0a0fff) AM_RAM AM_BASE(m_spr_ram) // non-tile based sprite ram
-	AM_RANGE(0x0c0000, 0x0c1fff) AM_RAM_WRITE(tx_vram_w) AM_BASE(m_tx_vram)
-	AM_RANGE(0x0c4000, 0x0c5fff) AM_RAM AM_BASE(m_bg_vram)
-	AM_RANGE(0x0c8000, 0x0c9fff) AM_RAM AM_BASE(m_fg_vram)
+	AM_RANGE(0x0a0000, 0x0a0fff) AM_RAM AM_SHARE("spr_ram") // non-tile based sprite ram
+	AM_RANGE(0x0c0000, 0x0c1fff) AM_RAM_WRITE(tx_vram_w) AM_SHARE("tx_vram")
+	AM_RANGE(0x0c4000, 0x0c5fff) AM_RAM AM_SHARE("bg_vram")
+	AM_RANGE(0x0c8000, 0x0c9fff) AM_RAM AM_SHARE("fg_vram")
 	AM_RANGE(0x0e0000, 0x0e0fff) AM_RAM AM_SHARE("sharedram")
-	AM_RANGE(0x100000, 0x107fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x110000, 0x1101ff) AM_READWRITE(io_r,io_w) AM_BASE(m_io_ram)
+	AM_RANGE(0x100000, 0x107fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x110000, 0x1101ff) AM_READWRITE(io_r,io_w) AM_SHARE("io_ram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( slave_mem, AS_PROGRAM, 16, cybertnk_state )
 	AM_RANGE(0x000000, 0x01ffff) AM_ROM
 	AM_RANGE(0x080000, 0x083fff) AM_RAM /*Work RAM*/
-	AM_RANGE(0x0c0000, 0x0c0fff) AM_RAM AM_BASE(m_roadram)
+	AM_RANGE(0x0c0000, 0x0c0fff) AM_RAM AM_SHARE("roadram")
 	AM_RANGE(0x100000, 0x100fff) AM_RAM AM_SHARE("sharedram")
 	AM_RANGE(0x140000, 0x140003) AM_NOP /*Watchdog? Written during loops and interrupts*/
 ADDRESS_MAP_END
@@ -1008,7 +1014,7 @@ DRIVER_INIT( cybertnk )
     UINT8* road_data;
     int i;
 
-    road_data = machine.region("road_data")->base();
+    road_data = machine.root_device().memregion("road_data")->base();
     for (i=0;i < 0x40000;i++)
     {
         road_data[i] = BITSWAP8(road_data[i],3,2,1,0,7,6,5,4);

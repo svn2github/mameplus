@@ -51,10 +51,11 @@ class chinsan_state : public driver_device
 {
 public:
 	chinsan_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_video(*this, "video"){ }
 
 	/* memory pointers */
-	UINT8 *  m_video;
+	required_shared_ptr<UINT8> m_video;
 
 	/* misc */
 	UINT8    m_port_select;
@@ -77,7 +78,7 @@ public:
 
 static PALETTE_INIT( chinsan )
 {
-	UINT8 *src = machine.region( "color_proms" )->base();
+	UINT8 *src = machine.root_device().memregion( "color_proms" )->base();
 	int i;
 
 	for (i = 0; i < 0x100; i++)
@@ -118,7 +119,7 @@ static SCREEN_UPDATE_IND16( chinsan )
 
 WRITE8_MEMBER(chinsan_state::ctrl_w)
 {
-	memory_set_bank(machine(), "bank1", data >> 6);
+	membank("bank1")->set_entry(data >> 6);
 }
 
 static WRITE8_DEVICE_HANDLER( ym_port_w1 )
@@ -242,7 +243,7 @@ static ADDRESS_MAP_START( chinsan_map, AS_PROGRAM, 8, chinsan_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_BASE(m_video)
+	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("video")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( chinsan_io, AS_IO, 8, chinsan_state )
@@ -540,7 +541,7 @@ static void chin_adpcm_int( device_t *device )
 	}
 	else
 	{
-		UINT8 *ROM = device->machine().region("adpcm")->base();
+		UINT8 *ROM = device->machine().root_device().memregion("adpcm")->base();
 
 		state->m_adpcm_data = ((state->m_trigger ? (ROM[state->m_adpcm_pos] & 0x0f) : (ROM[state->m_adpcm_pos] & 0xf0) >> 4));
 		msm5205_data_w(device, state->m_adpcm_data & 0xf);
@@ -570,7 +571,7 @@ static MACHINE_START( chinsan )
 {
 	chinsan_state *state = machine.driver_data<chinsan_state>();
 
-	memory_configure_bank(machine, "bank1", 0, 4, machine.region("maincpu")->base() + 0x10000, 0x4000);
+	state->membank("bank1")->configure_entries(0, 4, state->memregion("maincpu")->base() + 0x10000, 0x4000);
 
 	state->save_item(NAME(state->m_adpcm_idle));
 	state->save_item(NAME(state->m_port_select));

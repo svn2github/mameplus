@@ -18,16 +18,16 @@ class photon2_state : public driver_device
 public:
 	photon2_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this,"maincpu")
-		{ }
+		m_maincpu(*this,"maincpu"),
+		m_spectrum_video_ram(*this, "spectrum_vram"){ }
 
-	UINT8 *m_spectrum_video_ram;
+	required_device<cpu_device> m_maincpu;
+	required_shared_ptr<UINT8> m_spectrum_video_ram;
 	int m_spectrum_frame_number;
 	int m_spectrum_flash_invert;
 	UINT8 m_spectrum_port_fe;
 	UINT8 m_nmi_enable;
 
-	required_device<cpu_device> m_maincpu;
 	DECLARE_WRITE8_MEMBER(photon2_membank_w);
 	DECLARE_READ8_MEMBER(photon2_fe_r);
 	DECLARE_WRITE8_MEMBER(photon2_fe_w);
@@ -198,7 +198,7 @@ WRITE8_MEMBER(photon2_state::photon2_membank_w)
 		logerror( "Unknown banking write: %02X\n", data);
 	}
 
-	memory_set_bankptr(machine(), "bank1", machine().region("maincpu")->base() + 0x4000*bank );
+	membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x4000*bank );
 }
 
 READ8_MEMBER(photon2_state::photon2_fe_r)
@@ -227,7 +227,7 @@ WRITE8_MEMBER(photon2_state::photon2_misc_w)
 
 static ADDRESS_MAP_START (spectrum_mem, AS_PROGRAM, 8, photon2_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROMBANK("bank1")
-	AM_RANGE(0x4000, 0x5aff) AM_RAM AM_BASE(m_spectrum_video_ram )
+	AM_RANGE(0x4000, 0x5aff) AM_RAM AM_SHARE("spectrum_vram")
 	AM_RANGE(0x5b00, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -312,7 +312,7 @@ static TIMER_DEVICE_CALLBACK( spec_interrupt_hack )
 
 static MACHINE_RESET( photon2 )
 {
-	memory_set_bankptr(machine, "bank1", machine.region("maincpu")->base());
+	machine.root_device().membank("bank1")->set_base(machine.root_device().memregion("maincpu")->base());
 }
 
 static MACHINE_CONFIG_START( photon2, photon2_state )

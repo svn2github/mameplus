@@ -163,7 +163,7 @@ Note: The 'rastsagaa' set's rom numbers were named as RSxx_37 through RSxx_42
 
 static WRITE8_DEVICE_HANDLER( rastan_bankswitch_w )
 {
-	memory_set_bank(device->machine(),  "bank1", data & 3);
+	device->machine().root_device().membank("bank1")->set_entry(data & 3);
 }
 
 
@@ -177,7 +177,7 @@ static void rastan_msm5205_vck( device_t *device )
 	}
 	else
 	{
-		state->m_adpcm_data = device->machine().region("adpcm")->base()[state->m_adpcm_pos];
+		state->m_adpcm_data = device->machine().root_device().memregion("adpcm")->base()[state->m_adpcm_pos];
 		state->m_adpcm_pos = (state->m_adpcm_pos + 1) & 0xffff;
 		msm5205_data_w(device, state->m_adpcm_data >> 4);
 	}
@@ -205,7 +205,7 @@ static WRITE8_DEVICE_HANDLER( rastan_msm5205_stop_w )
 static ADDRESS_MAP_START( rastan_map, AS_PROGRAM, 16, rastan_state )
 	AM_RANGE(0x000000, 0x05ffff) AM_ROM
 	AM_RANGE(0x10c000, 0x10ffff) AM_RAM
-	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x350008, 0x350009) AM_WRITENOP	/* 0 only (often) ? */
 	AM_RANGE(0x380000, 0x380001) AM_WRITE(rastan_spritectrl_w)	/* sprite palette bank, coin counters & lockout */
 	AM_RANGE(0x390000, 0x390001) AM_READ_PORT("P1")
@@ -346,8 +346,8 @@ static void irqhandler( device_t *device, int irq )
 
 static const ym2151_interface ym2151_config =
 {
-	irqhandler,
-	rastan_bankswitch_w
+	DEVCB_LINE(irqhandler),
+	DEVCB_HANDLER(rastan_bankswitch_w)
 };
 
 static const msm5205_interface msm5205_config =
@@ -359,10 +359,10 @@ static const msm5205_interface msm5205_config =
 static MACHINE_START( rastan )
 {
 	rastan_state *state = machine.driver_data<rastan_state>();
-	UINT8 *ROM = machine.region("audiocpu")->base();
+	UINT8 *ROM = state->memregion("audiocpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 1, &ROM[0x00000], 0x4000);
-	memory_configure_bank(machine, "bank1", 1, 3, &ROM[0x10000], 0x4000);
+	state->membank("bank1")->configure_entry(0, &ROM[0x00000]);
+	state->membank("bank1")->configure_entries(1, 3, &ROM[0x10000], 0x4000);
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_audiocpu = machine.device("audiocpu");

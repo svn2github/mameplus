@@ -70,7 +70,7 @@ WRITE8_MEMBER(bigevglf_state::beg_banking_w)
 /* d0-d3 connect to A11-A14 of the ROMs (via ls273 latch)
    d4-d7 select one of ROMs (via ls273(above) and then ls154)
 */
-	memory_set_bank(machine(), "bank1", m_beg_bank & 0xff); /* empty sockets for IC37-IC44 ROMS */
+	membank("bank1")->set_entry(m_beg_bank & 0xff); /* empty sockets for IC37-IC44 ROMS */
 }
 
 static TIMER_CALLBACK( from_sound_latch_callback )
@@ -299,10 +299,10 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, bigevglf_state )
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
 	AM_RANGE(0xd000, 0xd7ff) AM_ROMBANK("bank1")
 	AM_RANGE(0xd800, 0xdbff) AM_RAM AM_SHARE("share1") /* only half of the RAM is accessible, line a10 of IC73 (6116) is GNDed */
-	AM_RANGE(0xe000, 0xe7ff) AM_WRITE(bigevglf_palette_w) AM_BASE(m_paletteram)
-	AM_RANGE(0xe800, 0xefff) AM_WRITEONLY AM_BASE(m_spriteram1) /* sprite 'templates' */
+	AM_RANGE(0xe000, 0xe7ff) AM_WRITE(bigevglf_palette_w) AM_SHARE("paletteram")
+	AM_RANGE(0xe800, 0xefff) AM_WRITEONLY AM_SHARE("spriteram1") /* sprite 'templates' */
 	AM_RANGE(0xf000, 0xf0ff) AM_READWRITE(bigevglf_vidram_r, bigevglf_vidram_w) /* 41464 (64kB * 8 chips), addressed using ports 1 and 5 */
-	AM_RANGE(0xf840, 0xf8ff) AM_RAM AM_BASE(m_spriteram2)  /* spriteram (x,y,offset in spriteram1,palette) */
+	AM_RANGE(0xf840, 0xf8ff) AM_RAM AM_SHARE("spriteram2")  /* spriteram (x,y,offset in spriteram1,palette) */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( bigevglf_portmap, AS_IO, 8, bigevglf_state )
@@ -619,8 +619,8 @@ ROM_END
 
 static DRIVER_INIT( bigevglf )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	memory_configure_bank(machine, "bank1", 0, 0xff, &ROM[0x10000], 0x800);
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	machine.root_device().membank("bank1")->configure_entries(0, 0xff, &ROM[0x10000], 0x800);
 }
 
 GAME( 1986, bigevglf,  0,        bigevglf, bigevglf, bigevglf, ROT270, "Taito America Corporation", "Big Event Golf (US)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )

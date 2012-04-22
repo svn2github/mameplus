@@ -65,7 +65,7 @@ WRITE8_MEMBER(speedspn_state::speedspn_banked_rom_change)
 {
 	/* is this weird banking some form of protection? */
 
-	UINT8 *rom = machine().region("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 	int addr;
 
 	switch (data)
@@ -85,14 +85,14 @@ WRITE8_MEMBER(speedspn_state::speedspn_banked_rom_change)
 			break;
 	}
 
-	memory_set_bankptr(machine(), "bank1",&rom[addr + 0x8000]);
+	membank("bank1")->set_base(&rom[addr + 0x8000]);
 }
 
 /*** SOUND RELATED ***********************************************************/
 
 WRITE8_MEMBER(speedspn_state::speedspn_sound_w)
 {
-	soundlatch_w(space, 1, data);
+	soundlatch_byte_w(space, 1, data);
 	cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
 }
 
@@ -107,8 +107,8 @@ static WRITE8_DEVICE_HANDLER( oki_banking_w )
 
 static ADDRESS_MAP_START( speedspn_map, AS_PROGRAM, 8, speedspn_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0x8000, 0x87ff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_le_w) AM_SHARE("paletteram")	/* RAM COLOUR */
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(speedspn_attram_w) AM_BASE(m_attram)
+	AM_RANGE(0x8000, 0x87ff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_byte_le_w) AM_SHARE("paletteram")	/* RAM COLOUR */
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(speedspn_attram_w) AM_SHARE("attram")
 	AM_RANGE(0x9000, 0x9fff) AM_READWRITE(speedspn_vidram_r,speedspn_vidram_w)	/* RAM FIX / RAM OBJECTS (selected by bit 0 of port 17) */
 	AM_RANGE(0xa000, 0xa7ff) AM_RAM
 	AM_RANGE(0xa800, 0xafff) AM_RAM
@@ -135,7 +135,7 @@ static ADDRESS_MAP_START( speedspn_sound_map, AS_PROGRAM, 8, speedspn_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x9000, 0x9000) AM_DEVWRITE_LEGACY("oki", oki_banking_w)
 	AM_RANGE(0x9800, 0x9800) AM_DEVREADWRITE("oki", okim6295_device, read, write)
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
 

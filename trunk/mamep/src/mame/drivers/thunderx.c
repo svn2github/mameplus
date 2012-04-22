@@ -48,7 +48,7 @@ WRITE8_MEMBER(thunderx_state::scontra_bankedram_w)
 {
 
 	if (m_palette_selected)
-		paletteram_xBBBBBGGGGGRRRRR_be_w(space, offset, data);
+		paletteram_xBBBBBGGGGGRRRRR_byte_be_w(space, offset, data);
 	else
 		m_ram[offset] = data;
 }
@@ -91,7 +91,7 @@ WRITE8_MEMBER(thunderx_state::thunderx_bankedram_w)
 			logerror("%04x pmc internal ram %04x = %02x\n",cpu_get_pc(&space.device()),offset,data);
 	}
 	else
-		paletteram_xBBBBBGGGGGRRRRR_be_w(space, offset, data);
+		paletteram_xBBBBBGGGGGRRRRR_byte_be_w(space, offset, data);
 }
 
 /*
@@ -315,14 +315,14 @@ WRITE8_MEMBER(thunderx_state::thunderx_1f98_w)
 
 WRITE8_MEMBER(thunderx_state::scontra_bankswitch_w)
 {
-	UINT8 *RAM = machine().region("maincpu")->base();
+	UINT8 *RAM = memregion("maincpu")->base();
 	int offs;
 
 //logerror("%04x: bank switch %02x\n",cpu_get_pc(&space.device()),data);
 
 	/* bits 0-3 ROM bank */
 	offs = 0x10000 + (data & 0x0f)*0x2000;
-	memory_set_bankptr(machine(),  "bank1", &RAM[offs] );
+	membank("bank1")->set_base(&RAM[offs] );
 
 	/* bit 4 select work RAM or palette RAM at 5800-5fff */
 	m_palette_selected = ~data & 0x10;
@@ -397,7 +397,7 @@ WRITE8_MEMBER(thunderx_state::k052109_051960_w)
 
 static ADDRESS_MAP_START( scontra_map, AS_PROGRAM, 8, thunderx_state )
 	AM_RANGE(0x1f80, 0x1f80) AM_WRITE(scontra_bankswitch_w)	/* bankswitch control + coin counters */
-	AM_RANGE(0x1f84, 0x1f84) AM_WRITE(soundlatch_w)
+	AM_RANGE(0x1f84, 0x1f84) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0x1f88, 0x1f88) AM_WRITE(thunderx_sh_irqtrigger_w)		/* cause interrupt on audio CPU */
 	AM_RANGE(0x1f8c, 0x1f8c) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x1f90, 0x1f90) AM_READ_PORT("SYSTEM")
@@ -410,14 +410,14 @@ static ADDRESS_MAP_START( scontra_map, AS_PROGRAM, 8, thunderx_state )
 	AM_RANGE(0x0000, 0x3fff) AM_READWRITE(k052109_051960_r, k052109_051960_w)		/* video RAM + sprite RAM */
 
 	AM_RANGE(0x4000, 0x57ff) AM_RAM
-	AM_RANGE(0x5800, 0x5fff) AM_READWRITE(scontra_bankedram_r, scontra_bankedram_w) AM_BASE(m_ram)			/* palette + work RAM */
+	AM_RANGE(0x5800, 0x5fff) AM_READWRITE(scontra_bankedram_r, scontra_bankedram_w) AM_SHARE("ram")			/* palette + work RAM */
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( thunderx_map, AS_PROGRAM, 8, thunderx_state )
 	AM_RANGE(0x1f80, 0x1f80) AM_WRITE(thunderx_videobank_w)
-	AM_RANGE(0x1f84, 0x1f84) AM_WRITE(soundlatch_w)
+	AM_RANGE(0x1f84, 0x1f84) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0x1f88, 0x1f88) AM_WRITE(thunderx_sh_irqtrigger_w)		/* cause interrupt on audio CPU */
 	AM_RANGE(0x1f8c, 0x1f8c) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x1f90, 0x1f90) AM_READ_PORT("SYSTEM")
@@ -430,7 +430,7 @@ static ADDRESS_MAP_START( thunderx_map, AS_PROGRAM, 8, thunderx_state )
 	AM_RANGE(0x0000, 0x3fff) AM_READWRITE(k052109_051960_r, k052109_051960_w)
 
 	AM_RANGE(0x4000, 0x57ff) AM_RAM
-	AM_RANGE(0x5800, 0x5fff) AM_READWRITE(thunderx_bankedram_r, thunderx_bankedram_w) AM_BASE(m_ram)			/* palette + work RAM + unknown RAM */
+	AM_RANGE(0x5800, 0x5fff) AM_READWRITE(thunderx_bankedram_r, thunderx_bankedram_w) AM_SHARE("ram")			/* palette + work RAM + unknown RAM */
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -438,7 +438,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( scontra_sound_map, AS_PROGRAM, 8, thunderx_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM					/* ROM */
 	AM_RANGE(0x8000, 0x87ff) AM_RAM					/* RAM */
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)			/* soundlatch_r */
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)			/* soundlatch_byte_r */
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r, k007232_w)		/* 007232 registers */
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)		/* YM2151 */
 	AM_RANGE(0xf000, 0xf000) AM_DEVWRITE_LEGACY("k007232", scontra_snd_bankswitch_w)	/* 007232 bank select */
@@ -447,7 +447,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( thunderx_sound_map, AS_PROGRAM, 8, thunderx_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 ADDRESS_MAP_END
 
@@ -624,11 +624,11 @@ static MACHINE_START( scontra )
 static MACHINE_START( thunderx )
 {
 	thunderx_state *state = machine.driver_data<thunderx_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 12, &ROM[0x10000], 0x2000);
-	memory_configure_bank(machine, "bank1", 12, 4, &ROM[0x08000], 0x2000);
-	memory_set_bank(machine, "bank1", 0);
+	state->membank("bank1")->configure_entries(0, 12, &ROM[0x10000], 0x2000);
+	state->membank("bank1")->configure_entries(12, 4, &ROM[0x08000], 0x2000);
+	state->membank("bank1")->set_entry(0);
 
 	memset(state->m_pmcram, 0, sizeof(state->m_pmcram));
 
@@ -991,7 +991,7 @@ ROM_END
 static KONAMI_SETLINES_CALLBACK( thunderx_banking )
 {
 	//logerror("thunderx %04x: bank select %02x\n", cpu_get_pc(device->cpu), lines);
-	memory_set_bank(device->machine(),  "bank1", ((lines & 0x0f) ^ 0x08));
+	device->machine().root_device().membank("bank1")->set_entry(((lines & 0x0f) ^ 0x08));
 }
 
 GAME( 1988, scontra,   0,        scontra,  scontra,  0, ROT90, "Konami", "Super Contra", GAME_SUPPORTS_SAVE )

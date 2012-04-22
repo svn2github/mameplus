@@ -65,9 +65,9 @@ static ADDRESS_MAP_START( mouser_map, AS_PROGRAM, 8, mouser_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x6000, 0x6bff) AM_RAM
 	AM_RANGE(0x8800, 0x88ff) AM_WRITENOP /* unknown */
-	AM_RANGE(0x9000, 0x93ff) AM_RAM AM_BASE(m_videoram)
-	AM_RANGE(0x9800, 0x9cff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0x9c00, 0x9fff) AM_RAM AM_BASE(m_colorram)
+	AM_RANGE(0x9000, 0x93ff) AM_RAM AM_SHARE("videoram")
+	AM_RANGE(0x9800, 0x9cff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x9c00, 0x9fff) AM_RAM AM_SHARE("colorram")
 	AM_RANGE(0xa000, 0xa000) AM_READ_PORT("P1") AM_WRITE(mouser_nmi_enable_w) /* bit 0 = NMI Enable */
 	AM_RANGE(0xa001, 0xa001) AM_WRITE(mouser_flip_screen_x_w)
 	AM_RANGE(0xa002, 0xa002) AM_WRITE(mouser_flip_screen_y_w)
@@ -295,9 +295,9 @@ static DRIVER_INIT( mouser )
 
 	offs_t i;
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 	UINT8 *decrypted = auto_alloc_array(machine, UINT8, 0x6000);
-	UINT8 *table = machine.region("user1")->base();
+	UINT8 *table = machine.root_device().memregion("user1")->base();
 
 	space->set_decrypted_region(0x0000, 0x5fff, decrypted);
 

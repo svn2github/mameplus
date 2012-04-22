@@ -140,12 +140,14 @@ class ppmast93_state : public driver_device
 {
 public:
 	ppmast93_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_bgram(*this, "bgram"),
+		m_fgram(*this, "fgram"){ }
 
 	tilemap_t *m_fg_tilemap;
 	tilemap_t *m_bg_tilemap;
-	UINT8 *m_fgram;
-	UINT8 *m_bgram;
+	required_shared_ptr<UINT8> m_bgram;
+	required_shared_ptr<UINT8> m_fgram;
 	DECLARE_WRITE8_MEMBER(ppmast93_fgram_w);
 	DECLARE_WRITE8_MEMBER(ppmast93_bgram_w);
 	DECLARE_WRITE8_MEMBER(ppmast93_port4_w);
@@ -169,22 +171,22 @@ WRITE8_MEMBER(ppmast93_state::ppmast93_bgram_w)
 
 WRITE8_MEMBER(ppmast93_state::ppmast93_port4_w)
 {
-	UINT8 *rom = machine().region("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 	int bank;
 
 	coin_counter_w(machine(), 0, data & 0x08);
 	coin_counter_w(machine(), 1, data & 0x10);
 
 	bank = data & 0x07;
-	memory_set_bankptr(machine(), "bank1",&rom[0x10000+(bank*0x4000)]);
+	membank("bank1")->set_base(&rom[0x10000+(bank*0x4000)]);
 }
 
 static ADDRESS_MAP_START( ppmast93_cpu1_map, AS_PROGRAM, 8, ppmast93_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM AM_WRITENOP AM_REGION("maincpu", 0x10000)
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(ppmast93_bgram_w) AM_BASE(m_bgram) AM_SHARE("share1")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(ppmast93_bgram_w) AM_SHARE("bgram")
 	AM_RANGE(0xd800, 0xdfff) AM_WRITENOP
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(ppmast93_fgram_w) AM_BASE(m_fgram) AM_SHARE("share2")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(ppmast93_fgram_w) AM_SHARE("fgram")
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -196,13 +198,13 @@ static ADDRESS_MAP_START( ppmast93_cpu1_io, AS_IO, 8, ppmast93_state )
 	AM_RANGE(0x06, 0x06) AM_READ_PORT("DSW1")
 	AM_RANGE(0x08, 0x08) AM_READ_PORT("DSW2")
 
-	AM_RANGE(0x00, 0x00) AM_WRITE(soundlatch_w)
+	AM_RANGE(0x00, 0x00) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(ppmast93_port4_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( ppmast93_cpu2_map, AS_PROGRAM, 8, ppmast93_state )
 	AM_RANGE(0x0000, 0xfbff) AM_ROM AM_REGION("sub", 0x10000)
-	AM_RANGE(0xfc00, 0xfc00) AM_READ(soundlatch_r)
+	AM_RANGE(0xfc00, 0xfc00) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xfd00, 0xffff) AM_RAM
 ADDRESS_MAP_END
 

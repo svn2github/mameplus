@@ -369,7 +369,7 @@ static TIMER_CALLBACK( delayed_sound_data_w )
 {
 	segas1x_state *state = machine.driver_data<segas1x_state>();
 	address_space *space = state->m_maincpu->memory().space(AS_PROGRAM);
-	state->soundlatch_w(*space, 0, param);
+	state->soundlatch_byte_w(*space, 0, param);
 	device_set_input_line(state->m_soundcpu, INPUT_LINE_NMI, ASSERT_LINE);
 }
 
@@ -385,7 +385,7 @@ static READ8_HANDLER( sound_data_r )
 	segas1x_state *state = space->machine().driver_data<segas1x_state>();
 
 	device_set_input_line(state->m_soundcpu, INPUT_LINE_NMI, CLEAR_LINE);
-	return state->soundlatch_r(*space, offset);
+	return state->soundlatch_byte_r(*space, offset);
 }
 
 
@@ -2126,22 +2126,22 @@ static DRIVER_INIT( outrunb )
 	state->m_custom_io_w = outrun_custom_io_w;
 
 	/* main CPU: swap bits 11,12 and 6,7 */
-	word = (UINT16 *)machine.region("maincpu")->base();
-	length = machine.region("maincpu")->bytes() / 2;
+	word = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+	length = machine.root_device().memregion("maincpu")->bytes() / 2;
 	for (i = 0; i < length; i++)
 		word[i] = BITSWAP16(word[i], 15,14,11,12,13,10,9,8,6,7,5,4,3,2,1,0);
 
 	/* sub CPU: swap bits 14,15 and 2,3 */
-	word = (UINT16 *)machine.region("sub")->base();
-	length = machine.region("sub")->bytes() / 2;
+	word = (UINT16 *)machine.root_device().memregion("sub")->base();
+	length = machine.root_device().memregion("sub")->bytes() / 2;
 	for (i = 0; i < length; i++)
 		word[i] = BITSWAP16(word[i], 14,15,13,12,11,10,9,8,7,6,5,4,2,3,1,0);
 
 	/* road gfx */
 	/* rom a-2.bin: swap bits 6,7 */
 	/* rom a-3.bin: swap bits 5,6 */
-	byte = machine.region("gfx3")->base();
-	length = machine.region("gfx3")->bytes() / 2;
+	byte = machine.root_device().memregion("gfx3")->base();
+	length = machine.root_device().memregion("gfx3")->bytes() / 2;
 	for (i = 0; i < length; i++)
 	{
 		byte[i]        = BITSWAP8(byte[i],        6,7,5,4,3,2,1,0);
@@ -2149,8 +2149,8 @@ static DRIVER_INIT( outrunb )
 	}
 
 	/* Z80 code: swap bits 5,6 */
-	byte = machine.region("soundcpu")->base();
-	length = machine.region("soundcpu")->bytes();
+	byte = machine.root_device().memregion("soundcpu")->base();
+	length = machine.root_device().memregion("soundcpu")->bytes();
 	for (i = 0; i < length; i++)
 		byte[i] = BITSWAP8(byte[i], 7,5,6,4,3,2,1,0);
 }

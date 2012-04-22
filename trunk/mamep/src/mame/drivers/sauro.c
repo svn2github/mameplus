@@ -131,13 +131,13 @@ Stephh's notes (based on the games Z80 code and some tests) :
 WRITE8_MEMBER(sauro_state::sauro_sound_command_w)
 {
 	data |= 0x80;
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 }
 
 READ8_MEMBER(sauro_state::sauro_sound_command_r)
 {
-	int ret	= soundlatch_r(space, offset);
-	soundlatch_clear_w(space, offset, 0);
+	int ret	= soundlatch_byte_r(space, offset);
+	soundlatch_clear_byte_w(space, offset, 0);
 	return ret;
 }
 
@@ -155,7 +155,7 @@ WRITE8_MEMBER(sauro_state::sauro_coin2_w)
 
 WRITE8_MEMBER(sauro_state::flip_screen_w)
 {
-	flip_screen_set(machine(), data);
+	flip_screen_set(data);
 }
 
 static WRITE8_DEVICE_HANDLER( adpcm_w )
@@ -166,11 +166,11 @@ static WRITE8_DEVICE_HANDLER( adpcm_w )
 static ADDRESS_MAP_START( sauro_map, AS_PROGRAM, 8, sauro_state )
 	AM_RANGE(0x0000, 0xdfff) AM_ROM
 	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0xe800, 0xebff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0xf000, 0xf3ff) AM_RAM_WRITE(tecfri_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xf400, 0xf7ff) AM_RAM_WRITE(tecfri_colorram_w) AM_BASE(m_colorram)
-	AM_RANGE(0xf800, 0xfbff) AM_RAM_WRITE(tecfri_videoram2_w) AM_BASE(m_videoram2)
-	AM_RANGE(0xfc00, 0xffff) AM_RAM_WRITE(tecfri_colorram2_w) AM_BASE(m_colorram2)
+	AM_RANGE(0xe800, 0xebff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xf000, 0xf3ff) AM_RAM_WRITE(tecfri_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xf400, 0xf7ff) AM_RAM_WRITE(tecfri_colorram_w) AM_SHARE("colorram")
+	AM_RANGE(0xf800, 0xfbff) AM_RAM_WRITE(tecfri_videoram2_w) AM_SHARE("videoram2")
+	AM_RANGE(0xfc00, 0xffff) AM_RAM_WRITE(tecfri_colorram2_w) AM_SHARE("colorram2")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sauro_io_map, AS_IO, 8, sauro_state )
@@ -212,9 +212,9 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( trckydoc_map, AS_PROGRAM, 8, sauro_state )
 	AM_RANGE(0x0000, 0xdfff) AM_ROM
 	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0xe800, 0xebff) AM_RAM AM_MIRROR(0x400) AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0xf000, 0xf3ff) AM_RAM_WRITE(tecfri_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xf400, 0xf7ff) AM_RAM_WRITE(tecfri_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0xe800, 0xebff) AM_RAM AM_MIRROR(0x400) AM_SHARE("spriteram")
+	AM_RANGE(0xf000, 0xf3ff) AM_RAM_WRITE(tecfri_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xf400, 0xf7ff) AM_RAM_WRITE(tecfri_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("DSW1")
 	AM_RANGE(0xf808, 0xf808) AM_READ_PORT("DSW2")
 	AM_RANGE(0xf810, 0xf810) AM_READ_PORT("P1")
@@ -554,7 +554,7 @@ static DRIVER_INIT( tecfri )
 	/* This game doesn't like all memory to be initialized to zero, it won't
        initialize the high scores */
 
-	UINT8 *RAM = machine.region("maincpu")->base();
+	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
 
 	memset(&RAM[0xe000], 0, 0x100);
 	RAM[0xe000] = 1;

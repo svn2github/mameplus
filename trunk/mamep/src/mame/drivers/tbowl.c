@@ -34,23 +34,23 @@ note: check this, its borrowed from tecmo.c / wc90.c at the moment and could wel
 WRITE8_MEMBER(tbowl_state::tbowlb_bankswitch_w)
 {
 	int bankaddress;
-	UINT8 *RAM = machine().region("maincpu")->base();
+	UINT8 *RAM = memregion("maincpu")->base();
 
 
 	bankaddress = 0x10000 + ((data & 0xf8) << 8);
-	memory_set_bankptr(machine(), "bank1",&RAM[bankaddress]);
+	membank("bank1")->set_base(&RAM[bankaddress]);
 }
 
 WRITE8_MEMBER(tbowl_state::tbowlc_bankswitch_w)
 {
 	int bankaddress;
-	UINT8 *RAM = machine().region("sub")->base();
+	UINT8 *RAM = memregion("sub")->base();
 
 
 	bankaddress = 0x10000 + ((data & 0xf8) << 8);
 
 
-	memory_set_bankptr(machine(), "bank2", &RAM[bankaddress]);
+	membank("bank2")->set_base(&RAM[bankaddress]);
 }
 
 /*** Shared Ram Handlers
@@ -69,7 +69,7 @@ WRITE8_MEMBER(tbowl_state::shared_w)
 
 WRITE8_MEMBER(tbowl_state::tbowl_sound_command_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -88,12 +88,12 @@ WRITE8_MEMBER(tbowl_state::tbowl_sound_command_w)
 static ADDRESS_MAP_START( 6206B_map, AS_PROGRAM, 8, tbowl_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x9fff) AM_RAM
-	AM_RANGE(0xa000, 0xbfff) AM_RAM_WRITE(tbowl_bg2videoram_w) AM_BASE(m_bg2videoram)
-	AM_RANGE(0xc000, 0xdfff) AM_RAM_WRITE(tbowl_bgvideoram_w) AM_BASE(m_bgvideoram)
-	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(tbowl_txvideoram_w) AM_BASE(m_txvideoram)
+	AM_RANGE(0xa000, 0xbfff) AM_RAM_WRITE(tbowl_bg2videoram_w) AM_SHARE("bg2videoram")
+	AM_RANGE(0xc000, 0xdfff) AM_RAM_WRITE(tbowl_bgvideoram_w) AM_SHARE("bgvideoram")
+	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(tbowl_txvideoram_w) AM_SHARE("txvideoram")
 //  AM_RANGE(0xf000, 0xf000) AM_WRITE_LEGACY(unknown_write) * written during start-up, not again */
 	AM_RANGE(0xf000, 0xf7ff) AM_ROMBANK("bank1")
-	AM_RANGE(0xf800, 0xfbff) AM_READWRITE(shared_r, shared_w) AM_BASE(m_shared_ram) /* check */
+	AM_RANGE(0xf800, 0xfbff) AM_READWRITE(shared_r, shared_w) AM_SHARE("shared_ram") /* check */
 	AM_RANGE(0xfc00, 0xfc00) AM_READ_PORT("P1") AM_WRITE(tbowlb_bankswitch_w)
 	AM_RANGE(0xfc01, 0xfc01) AM_READ_PORT("P2")
 //  AM_RANGE(0xfc01, 0xfc01) AM_WRITE_LEGACY(unknown_write) /* written during start-up, not again */
@@ -130,8 +130,8 @@ static ADDRESS_MAP_START( 6206C_map, AS_PROGRAM, 8, tbowl_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xdfff) AM_READONLY
 	AM_RANGE(0xc000, 0xd7ff) AM_WRITEONLY
-	AM_RANGE(0xd800, 0xdfff) AM_WRITEONLY AM_BASE(m_spriteram)
-	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_be_w) AM_SHARE("paletteram") // 2x palettes, one for each monitor?
+	AM_RANGE(0xd800, 0xdfff) AM_WRITEONLY AM_SHARE("spriteram")
+	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_byte_be_w) AM_SHARE("paletteram") // 2x palettes, one for each monitor?
 	AM_RANGE(0xf000, 0xf7ff) AM_ROMBANK("bank2")
 	AM_RANGE(0xf800, 0xfbff) AM_READWRITE(shared_r, shared_w)
 	AM_RANGE(0xfc00, 0xfc00) AM_WRITE(tbowlc_bankswitch_w)
@@ -166,7 +166,7 @@ static void tbowl_adpcm_int(device_t *device)
 	tbowl_state *state = device->machine().driver_data<tbowl_state>();
 	int num = (strcmp(device->tag(), ":msm1") == 0) ? 0 : 1;
 	if (state->m_adpcm_pos[num] >= state->m_adpcm_end[num] ||
-				state->m_adpcm_pos[num] >= device->machine().region("adpcm")->bytes()/2)
+				state->m_adpcm_pos[num] >= state->memregion("adpcm")->bytes()/2)
 		msm5205_reset_w(device,1);
 	else if (state->m_adpcm_data[num] != -1)
 	{
@@ -175,7 +175,7 @@ static void tbowl_adpcm_int(device_t *device)
 	}
 	else
 	{
-		UINT8 *ROM = device->machine().region("adpcm")->base() + 0x10000 * num;
+		UINT8 *ROM = device->machine().root_device().memregion("adpcm")->base() + 0x10000 * num;
 
 		state->m_adpcm_data[num] = ROM[state->m_adpcm_pos[num]++];
 		msm5205_data_w(device,state->m_adpcm_data[num] >> 4);
@@ -192,7 +192,7 @@ static ADDRESS_MAP_START( 6206A_map, AS_PROGRAM, 8, tbowl_state )
 	AM_RANGE(0xe004, 0xe005) AM_WRITE(tbowl_adpcm_vol_w)
 	AM_RANGE(0xe006, 0xe006) AM_WRITENOP
 	AM_RANGE(0xe007, 0xe007) AM_WRITENOP	/* NMI acknowledge */
-	AM_RANGE(0xe010, 0xe010) AM_READ(soundlatch_r)
+	AM_RANGE(0xe010, 0xe010) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
 /*** Input Ports

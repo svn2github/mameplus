@@ -105,7 +105,7 @@ $8000 - $ffff   ROM
 #include "cpu/m6809/m6809.h"
 #include "cpu/m6805/m6805.h"
 #include "sound/3526intf.h"
-#include "sound/okim6295.h"
+#include "sound/okiadpcm.h"
 #include "includes/renegade.h"
 
 
@@ -114,7 +114,7 @@ $8000 - $ffff   ROM
 typedef struct _renegade_adpcm_state renegade_adpcm_state;
 struct _renegade_adpcm_state
 {
-	adpcm_state m_adpcm;
+	oki_adpcm_state m_adpcm;
 	sound_stream *m_stream;
 	UINT32 m_current;
 	UINT32 m_end;
@@ -165,7 +165,7 @@ static DEVICE_START( renegade_adpcm )
 	renegade_adpcm_state *state = get_safe_token(device);
 	state->m_playing = 0;
 	state->m_stream = device->machine().sound().stream_alloc(*device, 0, 1, device->clock(), state, renegade_adpcm_callback);
-	state->m_base = device->machine().region("adpcm")->base();
+	state->m_base = device->machine().root_device().memregion("adpcm")->base();
 	state->m_adpcm.reset();
 }
 
@@ -214,7 +214,7 @@ static WRITE8_DEVICE_HANDLER( adpcm_play_w )
 
 WRITE8_MEMBER(renegade_state::sound_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	cputag_set_input_line(machine(), "audiocpu", M6809_IRQ_LINE, HOLD_LINE);
 }
 
@@ -240,8 +240,8 @@ static const UINT8 kuniokun_xor_table[0x2a] =
 static void setbank(running_machine &machine)
 {
 	renegade_state *state = machine.driver_data<renegade_state>();
-	UINT8 *RAM = machine.region("maincpu")->base();
-	memory_set_bankptr(machine, "bank1", &RAM[state->m_bank ? 0x10000 : 0x4000]);
+	UINT8 *RAM = state->memregion("maincpu")->base();
+	state->membank("bank1")->set_base(&RAM[state->m_bank ? 0x10000 : 0x4000]);
 }
 
 static MACHINE_START( renegade )
@@ -593,20 +593,19 @@ READ8_MEMBER(renegade_state::mcu_r)
 	}
 }
 
-static CUSTOM_INPUT( mcu_status_r )
+CUSTOM_INPUT_MEMBER(renegade_state::mcu_status_r)
 {
-	renegade_state *state = field.machine().driver_data<renegade_state>();
 	UINT8 res = 0;
 
-	if (state->m_mcu_sim == TRUE)
+	if (m_mcu_sim == TRUE)
 	{
 		res = 1;
 	}
 	else
 	{
-		if (!state->m_main_sent)
+		if (!m_main_sent)
 			res |= 0x01;
-		if (!state->m_mcu_sent)
+		if (!m_mcu_sent)
 			res |= 0x02;
 	}
 
@@ -645,11 +644,11 @@ WRITE8_MEMBER(renegade_state::renegade_coin_counter_w)
 
 static ADDRESS_MAP_START( renegade_map, AS_PROGRAM, 8, renegade_state )
 	AM_RANGE(0x0000, 0x17ff) AM_RAM
-	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(renegade_videoram2_w) AM_BASE(m_videoram2)
-	AM_RANGE(0x2000, 0x27ff) AM_RAM AM_BASE(m_spriteram)
-	AM_RANGE(0x2800, 0x2fff) AM_RAM_WRITE(renegade_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x3000, 0x30ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_SHARE("paletteram")
-	AM_RANGE(0x3100, 0x31ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_SHARE("paletteram2")
+	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(renegade_videoram2_w) AM_SHARE("videoram2")
+	AM_RANGE(0x2000, 0x27ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x2800, 0x2fff) AM_RAM_WRITE(renegade_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x3000, 0x30ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_lo_w) AM_SHARE("paletteram")
+	AM_RANGE(0x3100, 0x31ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_hi_w) AM_SHARE("paletteram2")
 	AM_RANGE(0x3800, 0x3800) AM_READ_PORT("IN0") AM_WRITE(renegade_scroll0_w)		/* Player#1 controls, P1,P2 start */
 	AM_RANGE(0x3801, 0x3801) AM_READ_PORT("IN1") AM_WRITE(renegade_scroll1_w)		/* Player#2 controls, coin triggers */
 	AM_RANGE(0x3802, 0x3802) AM_READ_PORT("DSW2") AM_WRITE(sound_w)	/* DIP2  various IO ports */
@@ -664,7 +663,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( renegade_sound_map, AS_PROGRAM, 8, renegade_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM
-	AM_RANGE(0x1000, 0x1000) AM_READ(soundlatch_r)
+	AM_RANGE(0x1000, 0x1000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x1800, 0x1800) AM_WRITENOP // this gets written the same values as 0x2000
 	AM_RANGE(0x2000, 0x2000) AM_DEVWRITE_LEGACY("adpcm", adpcm_play_w)
 	AM_RANGE(0x2800, 0x2801) AM_DEVREADWRITE_LEGACY("ymsnd", ym3526_r,ym3526_w)
@@ -717,7 +716,7 @@ static INPUT_PORTS_START( renegade )
 
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)	/* attack right */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)	/* attack right */
-	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(mcu_status_r, NULL)
+	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, renegade_state,mcu_status_r, NULL)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_VBLANK )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE1 )
 

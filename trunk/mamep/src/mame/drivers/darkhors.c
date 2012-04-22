@@ -68,19 +68,29 @@ class darkhors_state : public st0016_state
 public:
 	darkhors_state(const machine_config &mconfig, device_type type, const char *tag)
 		: st0016_state(mconfig, type, tag),
-		m_maincpu(*this, "maincpu")
-		{ }
+		m_tmapram(*this, "tmapram"),
+		m_tmapscroll(*this, "tmapscroll"),
+		m_tmapram2(*this, "tmapram2"),
+		m_tmapscroll2(*this, "tmapscroll2"),
+		m_jclub2_tileram(*this, "jclub2_tileram"),
+		m_spriteram(*this, "spriteram"),
+		m_maincpu(*this, "maincpu") { }
+
+	virtual void machine_start()
+	{
+		m_generic_paletteram_16.allocate(0x10000);
+	}
 
 	tilemap_t *m_tmap;
 	tilemap_t *m_tmap2;
-	UINT32 *m_tmapram;
-	UINT32 *m_tmapscroll;
-	UINT32 *m_tmapram2;
-	UINT32 *m_tmapscroll2;
+	optional_shared_ptr<UINT32> m_tmapram;
+	optional_shared_ptr<UINT32> m_tmapscroll;
+	optional_shared_ptr<UINT32> m_tmapram2;
+	optional_shared_ptr<UINT32> m_tmapscroll2;
 	UINT32 m_input_sel;
-	UINT32* m_jclub2_tileram;
+	optional_shared_ptr<UINT32> m_jclub2_tileram;
 	int m_jclub2_gfx_index;
-	UINT32 *m_spriteram;
+	optional_shared_ptr<UINT32> m_spriteram;
 
 	required_device<cpu_device> m_maincpu;
 	DECLARE_WRITE32_MEMBER(darkhors_tmapram_w);
@@ -270,8 +280,8 @@ static WRITE32_DEVICE_HANDLER( darkhors_eeprom_w )
 
 WRITE32_MEMBER(darkhors_state::paletteram32_xBBBBBGGGGGRRRRR_dword_w)
 {
-	if (ACCESSING_BITS_16_31)	paletteram16_xBBBBBGGGGGRRRRR_word_w(space, offset*2, data >> 16, mem_mask >> 16);
-	if (ACCESSING_BITS_0_15)	paletteram16_xBBBBBGGGGGRRRRR_word_w(space, offset*2+1, data, mem_mask);
+	if (ACCESSING_BITS_16_31)	paletteram_xBBBBBGGGGGRRRRR_word_w(space, offset*2, data >> 16, mem_mask >> 16);
+	if (ACCESSING_BITS_0_15)	paletteram_xBBBBBGGGGGRRRRR_word_w(space, offset*2+1, data, mem_mask);
 }
 
 WRITE32_MEMBER(darkhors_state::darkhors_input_sel_w)
@@ -330,14 +340,14 @@ static ADDRESS_MAP_START( darkhors_map, AS_PROGRAM, 32, darkhors_state )
 	AM_RANGE(0x580420, 0x580423) AM_READ_PORT("580420")
 
 	AM_RANGE(0x800000, 0x86bfff) AM_RAM
-	AM_RANGE(0x86c000, 0x86ffff) AM_RAM_WRITE(darkhors_tmapram_w) AM_BASE(m_tmapram)
-	AM_RANGE(0x870000, 0x873fff) AM_RAM_WRITE(darkhors_tmapram2_w) AM_BASE(m_tmapram2)
+	AM_RANGE(0x86c000, 0x86ffff) AM_RAM_WRITE(darkhors_tmapram_w) AM_SHARE("tmapram")
+	AM_RANGE(0x870000, 0x873fff) AM_RAM_WRITE(darkhors_tmapram2_w) AM_SHARE("tmapram2")
 	AM_RANGE(0x874000, 0x87dfff) AM_RAM
-	AM_RANGE(0x87e000, 0x87ffff) AM_RAM AM_BASE(m_spriteram)
-	AM_RANGE(0x880000, 0x89ffff) AM_WRITE(paletteram32_xBBBBBGGGGGRRRRR_dword_w) AM_SHARE("paletteram")
+	AM_RANGE(0x87e000, 0x87ffff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x880000, 0x89ffff) AM_WRITE(paletteram32_xBBBBBGGGGGRRRRR_dword_w)
 	AM_RANGE(0x8a0000, 0x8bffff) AM_WRITEONLY	// this should still be palette ram!
-	AM_RANGE(0x8c0120, 0x8c012f) AM_WRITEONLY AM_BASE(m_tmapscroll)
-	AM_RANGE(0x8c0130, 0x8c013f) AM_WRITEONLY AM_BASE(m_tmapscroll2)
+	AM_RANGE(0x8c0120, 0x8c012f) AM_WRITEONLY AM_SHARE("tmapscroll")
+	AM_RANGE(0x8c0130, 0x8c013f) AM_WRITEONLY AM_SHARE("tmapscroll2")
 ADDRESS_MAP_END
 
 
@@ -363,15 +373,15 @@ static ADDRESS_MAP_START( jclub2_map, AS_PROGRAM, 32, darkhors_state )
 	AM_RANGE(0x580400, 0x580403) AM_READ_PORT("580400")
 	AM_RANGE(0x580420, 0x580423) AM_READ_PORT("580420")
 
-	AM_RANGE(0x800000, 0x87ffff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x800000, 0x87ffff) AM_RAM AM_SHARE("spriteram")
 
-	AM_RANGE(0x880000, 0x89ffff) AM_WRITE(paletteram32_xBBBBBGGGGGRRRRR_dword_w) AM_SHARE("paletteram")
+	AM_RANGE(0x880000, 0x89ffff) AM_WRITE(paletteram32_xBBBBBGGGGGRRRRR_dword_w)
 	AM_RANGE(0x8a0000, 0x8bffff) AM_WRITEONLY	// this should still be palette ram!
 
 	AM_RANGE(0x8C0000, 0x8C01ff) AM_RAM
 	AM_RANGE(0x8E0000, 0x8E01ff) AM_RAM
 
-	AM_RANGE(0x900000, 0x90ffff) AM_RAM_WRITE(jclub2_tileram_w) AM_BASE(m_jclub2_tileram) // tile data gets decompressed here by main cpu?
+	AM_RANGE(0x900000, 0x90ffff) AM_RAM_WRITE(jclub2_tileram_w) AM_SHARE("jclub2_tileram") // tile data gets decompressed here by main cpu?
 ADDRESS_MAP_END
 
 
@@ -696,7 +706,7 @@ static VIDEO_START(jclub2)
 	assert(state->m_jclub2_gfx_index != MAX_GFX_ELEMENTS);
 
 	/* create the char set (gfx will then be updated dynamically from RAM) */
-	machine.gfx[state->m_jclub2_gfx_index] = gfx_element_alloc(machine, &layout_16x16x8_jclub2, (UINT8 *)state->m_jclub2_tileram, machine.total_colors() / 16, 0);
+	machine.gfx[state->m_jclub2_gfx_index] = gfx_element_alloc(machine, &layout_16x16x8_jclub2, reinterpret_cast<UINT8 *>(state->m_jclub2_tileram.target()), machine.total_colors() / 16, 0);
 
 
 }
@@ -741,8 +751,8 @@ static ADDRESS_MAP_START( st0016_io, AS_IO, 8, darkhors_state )
 	//AM_RANGE(0xc0, 0xc0) AM_READ_LEGACY(cmd1_r)
 	//AM_RANGE(0xc1, 0xc1) AM_READ_LEGACY(cmd2_r)
 	//AM_RANGE(0xc2, 0xc2) AM_READ_LEGACY(cmd_stat8_r)
-	AM_RANGE(0xe1, 0xe1) AM_WRITE_LEGACY(st0016_rom_bank_w)
-	AM_RANGE(0xe7, 0xe7) AM_WRITE_LEGACY(st0016_rom_bank_w)
+	AM_RANGE(0xe1, 0xe1) AM_WRITE(st0016_rom_bank_w)
+	AM_RANGE(0xe7, 0xe7) AM_WRITE(st0016_rom_bank_w)
 	//AM_RANGE(0xf0, 0xf0) AM_READ_LEGACY(st0016_dma_r)
 ADDRESS_MAP_END
 
@@ -952,9 +962,9 @@ ROM_END
 
 static DRIVER_INIT( darkhors )
 {
-	UINT32 *rom    = (UINT32 *) machine.region("maincpu")->base();
-	UINT8  *eeprom = (UINT8 *)  machine.region("eeprom")->base();
-	int i;
+	UINT32 *rom    = (UINT32 *) machine.root_device().memregion("maincpu")->base();
+//  UINT8  *eeprom = (UINT8 *)  machine.root_device().memregion("eeprom")->base();
+//  int i;
 
 #if 1
 	// eeprom error patch
@@ -965,9 +975,9 @@ static DRIVER_INIT( darkhors )
 	rom[0x04600/4]	=	0x4e714eb9;
 #endif
 
-	if (eeprom != NULL)
-		for (i = 0; i < (1<<7); i++)
-			eeprom[i] = eeprom[i*2];
+//  if (eeprom != NULL)
+//      for (i = 0; i < (1<<7); i++)
+//          eeprom[i] = eeprom[i*2];
 }
 
 GAME( 199?, jclub2,   0,      jclub2,  darkhors, 0,        ROT0, "Seta", "Jockey Club II (newer hardware)", GAME_NOT_WORKING | GAME_NO_SOUND )

@@ -43,27 +43,41 @@ class skylncr_state : public driver_device
 {
 public:
 	skylncr_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"),
+		m_colorram(*this, "colorram"),
+		m_reeltiles_1_ram(*this, "reeltiles_1_ram"),
+		m_reeltiles_2_ram(*this, "reeltiles_2_ram"),
+		m_reeltiles_3_ram(*this, "reeltiles_3_ram"),
+		m_reeltiles_4_ram(*this, "reeltiles_4_ram"),
+		m_reeltileshigh_1_ram(*this, "rthigh_1_ram"),
+		m_reeltileshigh_2_ram(*this, "rthigh_2_ram"),
+		m_reeltileshigh_3_ram(*this, "rthigh_3_ram"),
+		m_reeltileshigh_4_ram(*this, "rthigh_4_ram"),
+		m_reelscroll1(*this, "reelscroll1"),
+		m_reelscroll2(*this, "reelscroll2"),
+		m_reelscroll3(*this, "reelscroll3"),
+		m_reelscroll4(*this, "reelscroll4"){ }
 
 	tilemap_t *m_tmap;
-	UINT8 *m_videoram;
-	UINT8 *m_colorram;
-	UINT8* m_reeltiles_1_ram;
-	UINT8* m_reeltiles_2_ram;
-	UINT8* m_reeltiles_3_ram;
-	UINT8* m_reeltiles_4_ram;
-	UINT8* m_reeltileshigh_1_ram;
-	UINT8* m_reeltileshigh_2_ram;
-	UINT8* m_reeltileshigh_3_ram;
-	UINT8* m_reeltileshigh_4_ram;
+	required_shared_ptr<UINT8> m_videoram;
+	required_shared_ptr<UINT8> m_colorram;
+	required_shared_ptr<UINT8> m_reeltiles_1_ram;
+	required_shared_ptr<UINT8> m_reeltiles_2_ram;
+	required_shared_ptr<UINT8> m_reeltiles_3_ram;
+	required_shared_ptr<UINT8> m_reeltiles_4_ram;
+	required_shared_ptr<UINT8> m_reeltileshigh_1_ram;
+	required_shared_ptr<UINT8> m_reeltileshigh_2_ram;
+	required_shared_ptr<UINT8> m_reeltileshigh_3_ram;
+	required_shared_ptr<UINT8> m_reeltileshigh_4_ram;
 	tilemap_t *m_reel_1_tilemap;
 	tilemap_t *m_reel_2_tilemap;
 	tilemap_t *m_reel_3_tilemap;
 	tilemap_t *m_reel_4_tilemap;
-	UINT8* m_reelscroll1;
-	UINT8* m_reelscroll2;
-	UINT8* m_reelscroll3;
-	UINT8* m_reelscroll4;
+	required_shared_ptr<UINT8> m_reelscroll1;
+	required_shared_ptr<UINT8> m_reelscroll2;
+	required_shared_ptr<UINT8> m_reelscroll3;
+	required_shared_ptr<UINT8> m_reelscroll4;
 	UINT8 m_nmi_enable;
 	int m_color;
 	int m_color2;
@@ -349,21 +363,21 @@ static ADDRESS_MAP_START( mem_map_skylncr, AS_PROGRAM, 8, skylncr_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("nvram")
 
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(skylncr_videoram_w ) AM_BASE(m_videoram )
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(skylncr_colorram_w ) AM_BASE(m_colorram )
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(skylncr_videoram_w ) AM_SHARE("videoram")
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(skylncr_colorram_w ) AM_SHARE("colorram")
 
-	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(reeltiles_1_w ) AM_BASE(m_reeltiles_1_ram )
-	AM_RANGE(0x9a00, 0x9bff) AM_RAM_WRITE(reeltiles_2_w ) AM_BASE(m_reeltiles_2_ram )
-	AM_RANGE(0x9c00, 0x9dff) AM_RAM_WRITE(reeltiles_3_w ) AM_BASE(m_reeltiles_3_ram )
-	AM_RANGE(0x9e00, 0x9fff) AM_RAM_WRITE(reeltiles_4_w ) AM_BASE(m_reeltiles_4_ram )
-	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(reeltileshigh_1_w ) AM_BASE(m_reeltileshigh_1_ram )
-	AM_RANGE(0xa200, 0xa3ff) AM_RAM_WRITE(reeltileshigh_2_w ) AM_BASE(m_reeltileshigh_2_ram )
-	AM_RANGE(0xa400, 0xa5ff) AM_RAM_WRITE(reeltileshigh_3_w ) AM_BASE(m_reeltileshigh_3_ram )
-	AM_RANGE(0xa600, 0xa7ff) AM_RAM_WRITE(reeltileshigh_4_w ) AM_BASE(m_reeltileshigh_4_ram )
+	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(reeltiles_1_w ) AM_SHARE("reeltiles_1_ram")
+	AM_RANGE(0x9a00, 0x9bff) AM_RAM_WRITE(reeltiles_2_w ) AM_SHARE("reeltiles_2_ram")
+	AM_RANGE(0x9c00, 0x9dff) AM_RAM_WRITE(reeltiles_3_w ) AM_SHARE("reeltiles_3_ram")
+	AM_RANGE(0x9e00, 0x9fff) AM_RAM_WRITE(reeltiles_4_w ) AM_SHARE("reeltiles_4_ram")
+	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(reeltileshigh_1_w ) AM_SHARE("rthigh_1_ram")
+	AM_RANGE(0xa200, 0xa3ff) AM_RAM_WRITE(reeltileshigh_2_w ) AM_SHARE("rthigh_2_ram")
+	AM_RANGE(0xa400, 0xa5ff) AM_RAM_WRITE(reeltileshigh_3_w ) AM_SHARE("rthigh_3_ram")
+	AM_RANGE(0xa600, 0xa7ff) AM_RAM_WRITE(reeltileshigh_4_w ) AM_SHARE("rthigh_4_ram")
 
 	AM_RANGE(0xaa55, 0xaa55) AM_READ(ret_ff )
 
-	AM_RANGE(0xb000, 0xb03f) AM_RAM_WRITE(reelscroll1_w) AM_BASE(m_reelscroll1)
+	AM_RANGE(0xb000, 0xb03f) AM_RAM_WRITE(reelscroll1_w) AM_SHARE("reelscroll1")
 	AM_RANGE(0xb040, 0xb07f) AM_RAM_WRITE(reelscroll1_w)
 	AM_RANGE(0xb080, 0xb0bf) AM_RAM_WRITE(reelscroll1_w)
 	AM_RANGE(0xb0c0, 0xb0ff) AM_RAM_WRITE(reelscroll1_w)
@@ -372,7 +386,7 @@ static ADDRESS_MAP_START( mem_map_skylncr, AS_PROGRAM, 8, skylncr_state )
 	AM_RANGE(0xb180, 0xb1bf) AM_RAM_WRITE(reelscroll1_w)
 	AM_RANGE(0xb1c0, 0xb1ff) AM_RAM_WRITE(reelscroll1_w)
 
-	AM_RANGE(0xb200, 0xb23f) AM_RAM_WRITE(reelscroll2_w) AM_BASE(m_reelscroll2)
+	AM_RANGE(0xb200, 0xb23f) AM_RAM_WRITE(reelscroll2_w) AM_SHARE("reelscroll2")
 	AM_RANGE(0xb240, 0xb27f) AM_RAM_WRITE(reelscroll2_w)
 	AM_RANGE(0xb280, 0xb2bf) AM_RAM_WRITE(reelscroll2_w)
 	AM_RANGE(0xb2c0, 0xb2ff) AM_RAM_WRITE(reelscroll2_w)
@@ -381,7 +395,7 @@ static ADDRESS_MAP_START( mem_map_skylncr, AS_PROGRAM, 8, skylncr_state )
 	AM_RANGE(0xb380, 0xb3bf) AM_RAM_WRITE(reelscroll2_w)
 	AM_RANGE(0xb3c0, 0xb3ff) AM_RAM_WRITE(reelscroll2_w)
 
-	AM_RANGE(0xb400, 0xb43f) AM_RAM_WRITE(reelscroll3_w) AM_BASE(m_reelscroll3)
+	AM_RANGE(0xb400, 0xb43f) AM_RAM_WRITE(reelscroll3_w) AM_SHARE("reelscroll3")
 	AM_RANGE(0xb440, 0xb47f) AM_RAM_WRITE(reelscroll3_w)
 	AM_RANGE(0xb480, 0xb4bf) AM_RAM_WRITE(reelscroll3_w)
 	AM_RANGE(0xb4c0, 0xb4ff) AM_RAM_WRITE(reelscroll3_w)
@@ -390,7 +404,7 @@ static ADDRESS_MAP_START( mem_map_skylncr, AS_PROGRAM, 8, skylncr_state )
 	AM_RANGE(0xb580, 0xb5bf) AM_RAM_WRITE(reelscroll3_w)
 	AM_RANGE(0xb5c0, 0xb5ff) AM_RAM_WRITE(reelscroll3_w)
 
-	AM_RANGE(0xb600, 0xb63f) AM_RAM_WRITE(reelscroll4_w) AM_BASE(m_reelscroll4)
+	AM_RANGE(0xb600, 0xb63f) AM_RAM_WRITE(reelscroll4_w) AM_SHARE("reelscroll4")
 	AM_RANGE(0xb640, 0xb67f) AM_RAM_WRITE(reelscroll4_w)
 	AM_RANGE(0xb680, 0xb6bf) AM_RAM_WRITE(reelscroll4_w)
 	AM_RANGE(0xb6c0, 0xb6ff) AM_RAM_WRITE(reelscroll4_w)

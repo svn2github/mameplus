@@ -20,9 +20,10 @@ class deshoros_state : public driver_device
 {
 public:
 	deshoros_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_io_ram(*this, "io_ram"){ }
 
-	UINT8 *m_io_ram;
+	required_shared_ptr<UINT8> m_io_ram;
 	char m_led_array[21];
 	UINT8 m_bank;
 	DECLARE_READ8_MEMBER(io_r);
@@ -66,12 +67,12 @@ static void answer_bankswitch(running_machine &machine,UINT8 new_bank)
 	deshoros_state *state = machine.driver_data<deshoros_state>();
 	if(state->m_bank!=new_bank)
 	{
-		UINT8 *ROM = machine.region("data")->base();
+		UINT8 *ROM = state->memregion("data")->base();
 		UINT32 bankaddress;
 
 		state->m_bank = new_bank;
 		bankaddress = 0 + 0x6000 * state->m_bank;
-		memory_set_bankptr(machine, "bank1", &ROM[bankaddress]);
+		state->membank("bank1")->set_base(&ROM[bankaddress]);
 	}
 }
 
@@ -110,7 +111,7 @@ WRITE8_MEMBER(deshoros_state::io_w)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, deshoros_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x9000, 0x900f) AM_READWRITE(io_r,io_w) AM_BASE(m_io_ram) //i/o area
+	AM_RANGE(0x9000, 0x900f) AM_READWRITE(io_r,io_w) AM_SHARE("io_ram") //i/o area
 	AM_RANGE(0xc000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 

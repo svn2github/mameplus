@@ -187,13 +187,13 @@ WRITE32_MEMBER(namcofl_state::namcofl_sysreg_w)
 	{
 		if (data == 0)	// RAM at 00000000, ROM at 10000000
 		{
-			memory_set_bankptr(machine(),  "bank1", m_workram );
-			memory_set_bankptr(machine(),  "bank2", machine().region("maincpu")->base() );
+			membank("bank1")->set_base(m_workram );
+			membank("bank2")->set_base(machine().root_device().memregion("maincpu")->base() );
 		}
 		else		// ROM at 00000000, RAM at 10000000
 		{
-			memory_set_bankptr(machine(),  "bank1", machine().region("maincpu")->base() );
-			memory_set_bankptr(machine(),  "bank2", m_workram );
+			membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() );
+			membank("bank2")->set_base(m_workram );
 		}
 	}
 }
@@ -323,7 +323,7 @@ READ8_MEMBER(namcofl_state::dac0_r){ return 0xff; }
 
 static ADDRESS_MAP_START( namcoc75_am, AS_PROGRAM, 16, namcofl_state )
 	AM_RANGE(0x002000, 0x002fff) AM_DEVREADWRITE("c352", c352_device, read, write)
-	AM_RANGE(0x004000, 0x00bfff) AM_RAM_WRITE(mcu_shared_w) AM_BASE(m_shareram)
+	AM_RANGE(0x004000, 0x00bfff) AM_RAM_WRITE(mcu_shared_w) AM_SHARE("shareram")
 	AM_RANGE(0x00c000, 0x00ffff) AM_ROM AM_REGION("c75", 0)
 	AM_RANGE(0x200000, 0x27ffff) AM_ROM AM_REGION("c75data", 0)
 ADDRESS_MAP_END
@@ -580,8 +580,8 @@ static MACHINE_RESET( namcofl )
 	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(machine.primary_screen->visible_area().max_y + 3), FUNC(network_interrupt_callback));
 	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(machine.primary_screen->visible_area().max_y + 1), FUNC(vblank_interrupt_callback));
 
-	memory_set_bankptr(machine,  "bank1", machine.region("maincpu")->base() );
-	memory_set_bankptr(machine,  "bank2", state->m_workram );
+	state->membank("bank1")->set_base(state->memregion("maincpu")->base() );
+	state->membank("bank2")->set_base(state->m_workram );
 
 	memset(state->m_workram, 0x00, 0x100000);
 }
@@ -811,8 +811,8 @@ static void namcofl_common_init(running_machine &machine)
 	namcofl_state *state = machine.driver_data<namcofl_state>();
 	state->m_workram = auto_alloc_array(machine, UINT32, 0x100000/4);
 
-	memory_set_bankptr(machine,  "bank1", machine.region("maincpu")->base() );
-	memory_set_bankptr(machine,  "bank2", state->m_workram );
+	state->membank("bank1")->set_base(state->memregion("maincpu")->base() );
+	state->membank("bank2")->set_base(state->m_workram );
 }
 
 static DRIVER_INIT(speedrcr)

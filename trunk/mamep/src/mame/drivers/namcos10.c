@@ -339,7 +339,7 @@ WRITE32_MEMBER(namcos10_state::bank_w)
 
 READ32_MEMBER(namcos10_state::range_r)
 {
-	UINT32 data32 = ((const UINT32 *)(machine().region("user1")->base()))[offset+bank_base];
+	UINT32 data32 = ((const UINT32 *)(machine().root_device().memregion("user1")->base()))[offset+bank_base];
 
 	UINT16 d16;
 	if(ACCESSING_BITS_16_31)
@@ -491,8 +491,8 @@ ADDRESS_MAP_END
 static void memn_driver_init( running_machine &machine )
 {
 	namcos10_state *state = machine.driver_data<namcos10_state>();
-	UINT8 *BIOS = (UINT8 *)machine.region( "user1" )->base();
-	state->nand_base = (UINT8 *)machine.region( "user2" )->base();
+	UINT8 *BIOS = (UINT8 *)machine.root_device().memregion( "user1" )->base();
+	state->nand_base = (UINT8 *)state->memregion( "user2" )->base();
 
 	state->nand_copy( (UINT32 *)( BIOS + 0x0000000 ), 0x08000, 0x001c000 );
 	state->nand_copy( (UINT32 *)( BIOS + 0x0020000 ), 0x24000, 0x03e0000 );
@@ -500,11 +500,12 @@ static void memn_driver_init( running_machine &machine )
 	psx_driver_init(machine);
 }
 
-static void decrypt_bios( running_machine &machine, int start, int end, int b15, int b14, int b13, int b12, int b11, int b10, int b9, int b8,
+static void decrypt_bios( running_machine &machine, const char *regionName, int start, int b15, int b14, int b13, int b12, int b11, int b10, int b9, int b8,
 	int b7, int b6, int b5, int b4, int b3, int b2, int b1, int b0 )
 {
-	UINT16 *BIOS = (UINT16 *)(machine.region( "user1" )->base() + start);
-	int len = (end - start)/2;
+	memory_region *region = machine.root_device().memregion( regionName );
+	UINT16 *BIOS = (UINT16 *)( region->base() + start );
+	int len = (region->bytes()-start)/2;
 
 	for( int i = 0; i < len; i++ )
 	{
@@ -515,66 +516,65 @@ static void decrypt_bios( running_machine &machine, int start, int end, int b15,
 
 static DRIVER_INIT( mrdrilr2 )
 {
+	decrypt_bios( machine, "user1", 0, 0xc, 0xd, 0xf, 0xe, 0xb, 0xa, 0x9, 0x8, 0x7, 0x6, 0x4, 0x1, 0x2, 0x5, 0x0, 0x3 );
 	memm_driver_init(machine);
-	decrypt_bios( machine, 0x000000, 0x041000, 0xc, 0xd, 0xf, 0xe, 0xb, 0xa, 0x9, 0x8, 0x7, 0x6, 0x4, 0x1, 0x2, 0x5, 0x0, 0x3 );
-	decrypt_bios( machine, 0x060000, 0x062000, 0xc, 0xd, 0xf, 0xe, 0xb, 0xa, 0x9, 0x8, 0x7, 0x6, 0x4, 0x1, 0x2, 0x5, 0x0, 0x3 );
 }
 
 static DRIVER_INIT( gjspace )
 {
+	decrypt_bios( machine, "user2", 0x8400, 0x0, 0x2, 0xe, 0xd, 0xf, 0x6, 0xc, 0x7, 0x5, 0x1, 0x9, 0x8, 0xa, 0x3, 0x4, 0xb );
 	memn_driver_init(machine);
-	decrypt_bios( machine, 0x000000, 0x400000, 0x0, 0x2, 0xe, 0xd, 0xf, 0x6, 0xc, 0x7, 0x5, 0x1, 0x9, 0x8, 0xa, 0x3, 0x4, 0xb );
 }
 
 static DRIVER_INIT( mrdrilrg )
 {
+	decrypt_bios( machine, "user2", 0x8400, 0x6, 0x4, 0x7, 0x5, 0x2, 0x1, 0x0, 0x3, 0xc, 0xd, 0xe, 0xf, 0x8, 0x9, 0xb, 0xa );
 	memn_driver_init(machine);
-	decrypt_bios( machine, 0x000000, 0x400000, 0x6, 0x4, 0x7, 0x5, 0x2, 0x1, 0x0, 0x3, 0xc, 0xd, 0xe, 0xf, 0x8, 0x9, 0xb, 0xa );
 }
 
 static DRIVER_INIT( knpuzzle )
 {
+	decrypt_bios( machine, "user2", 0x8400, 0x6, 0x7, 0x4, 0x5, 0x2, 0x0, 0x3, 0x1, 0xc, 0xd, 0xe, 0xf, 0x9, 0xb, 0x8, 0xa );
 	memn_driver_init(machine);
-	decrypt_bios( machine, 0x000000, 0x400000, 0x6, 0x7, 0x4, 0x5, 0x2, 0x0, 0x3, 0x1, 0xc, 0xd, 0xe, 0xf, 0x9, 0xb, 0x8, 0xa );
 }
 
 static DRIVER_INIT( startrgn )
 {
+	decrypt_bios( machine, "user2", 0x8400, 0x6, 0x5, 0x4, 0x7, 0x1, 0x3, 0x0, 0x2, 0xc, 0xd, 0xe, 0xf, 0x8, 0xb, 0xa, 0x9 );
 	memn_driver_init(machine);
-	decrypt_bios( machine, 0x000000, 0x400000, 0x6, 0x5, 0x4, 0x7, 0x1, 0x3, 0x0, 0x2, 0xc, 0xd, 0xe, 0xf, 0x8, 0xb, 0xa, 0x9 );
 }
 
 static DRIVER_INIT( gamshara )
 {
+	decrypt_bios( machine, "user2", 0x8400, 0x5, 0x4, 0x7, 0x6, 0x0, 0x1, 0x3, 0x2, 0xd, 0xf, 0xc, 0xe, 0x8, 0x9, 0xa, 0xb );
 	memn_driver_init(machine);
-	decrypt_bios( machine, 0x000000, 0x400000, 0x5, 0x4, 0x7, 0x6, 0x0, 0x1, 0x3, 0x2, 0xd, 0xf, 0xc, 0xe, 0x8, 0x9, 0xa, 0xb );
 }
 
 static DRIVER_INIT( gunbalna )
 {
+	decrypt_bios( machine, "user2", 0x8400, 0x5, 0x4, 0x7, 0x6, 0x0, 0x1, 0x3, 0x2, 0xd, 0xf, 0xc, 0xe, 0x9, 0x8, 0xa, 0xb );
 	memn_driver_init(machine);
-	decrypt_bios( machine, 0x000000, 0x400000, 0x5, 0x4, 0x7, 0x6, 0x0, 0x1, 0x3, 0x2, 0xd, 0xf, 0xc, 0xe, 0x9, 0x8, 0xa, 0xb );
 }
 
 static DRIVER_INIT( chocovdr )
 {
-	memn_driver_init(machine);
 //  NOTE: none of the possible permutations show the Sony Computer Entertainment string at BIOS[0x84], very likely a bad dump
 //                                             BAD? 0 or 9                             1 or 8         0 or 9
 //                         ok!  ok!  ok!  ok!            ok!  ok!  ok!  ok!  ok!  ok!       ok!  ok!
-	decrypt_bios( machine, 0x000000, 0x400000, 0x5, 0x4, 0x6, 0x7, 0x1, 0x0, 0x2, 0x3, 0xc, 0xf, 0xe, 0xd, 0x8, 0xb, 0xa, 0x9 );
+	decrypt_bios( machine, "user2", 0x8400, 0x5, 0x4, 0x6, 0x7, 0x1, 0x0, 0x2, 0x3, 0xc, 0xf, 0xe, 0xd, 0x8, 0xb, 0xa, 0x9 );
+	memn_driver_init(machine);
 }
 
 static DRIVER_INIT( panikuru )
 {
+	decrypt_bios( machine, "user2", 0x8400, 0x6, 0x4, 0x7, 0x5, 0x0, 0x1, 0x2, 0x3, 0xc, 0xf, 0xe, 0xd, 0x9, 0x8, 0xb, 0xa );
 	memn_driver_init(machine);
-	decrypt_bios( machine, 0x000000, 0x400000, 0x6, 0x4, 0x7, 0x5, 0x0, 0x1, 0x2, 0x3, 0xc, 0xf, 0xe, 0xd, 0x9, 0x8, 0xb, 0xa );
 }
 
 static DRIVER_INIT( nflclsfb )
 {
+	decrypt_bios( machine, "user2", 0x8400, 0x6, 0x5, 0x4, 0x7, 0x1, 0x3, 0x0, 0x2, 0xc, 0xd, 0xe, 0xf, 0x8, 0xb, 0xa, 0x9 );
 	memn_driver_init(machine);
-	decrypt_bios( machine, 0x000000, 0x400000, 0x6, 0x5, 0x4, 0x7, 0x1, 0x3, 0x0, 0x2, 0xc, 0xd, 0xe, 0xf, 0x8, 0xb, 0xa, 0x9 );
 }
 
 
@@ -685,7 +685,7 @@ ROM_START( gjspace )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* bios */
 	ROM_FILL( 0x0000000, 0x400000, 0x55 )
 
-	ROM_REGION( 0x4200000, "user2", 0 ) /* main prg */
+	ROM_REGION16_LE( 0x4200000, "user2", 0 ) /* main prg */
 	ROM_LOAD( "10011a_0.bin", 0x0000000, 0x1080000, CRC(df862033) SHA1(4141357ed315adb4de636d7bf752354e953e8cbf) )
 	ROM_LOAD( "10011a_1.bin", 0x1080000, 0x1080000, CRC(734c7ac0) SHA1(2f325236a4e4f2dba886682e9a7e8e243b5fbb3d) )
 	ROM_LOAD( "10011a_2.bin", 0x2100000, 0x1080000, CRC(3bbbc0b7) SHA1(ad02ec2e5f401f0f5d40a413038649ebd25d5343) )
@@ -696,7 +696,7 @@ ROM_START( mrdrilrg )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* bios */
 	ROM_FILL( 0x0000000, 0x400000, 0x55 )
 
-	ROM_REGION( 0x3180000, "user2", 0 ) /* main prg */
+	ROM_REGION16_LE( 0x3180000, "user2", 0 ) /* main prg */
 	ROM_LOAD( "drg1a_0.bin",  0x0000000, 0x1080000, CRC(e0801878) SHA1(fbb771c1e76e0690f6dffed2287eb470b561ec20) )
 	ROM_LOAD( "drg1a_1.bin",  0x1080000, 0x1080000, CRC(4d8cde73) SHA1(62a5fab8be8fd0a6bfeb101020d4cf58866a757c) )
 	ROM_LOAD( "drg1a_2.bin",  0x2100000, 0x1080000, CRC(ccfabf7b) SHA1(0cbd91ce8abd6efca5d427b52279ce265f685aa9) )
@@ -706,7 +706,7 @@ ROM_START( knpuzzle )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* bios */
 	ROM_FILL( 0x0000000, 0x400000, 0x55 )
 
-	ROM_REGION( 0x3180000, "user2", 0 ) /* main prg */
+	ROM_REGION16_LE( 0x3180000, "user2", 0 ) /* main prg */
 	ROM_LOAD( "kpm1a_0.bin",  0x0000000, 0x1080000, CRC(b2947eb8) SHA1(fa941bf3598bb25d2c8f0a93154e32bf78a6507c) )
 	ROM_LOAD( "kpm1a_1.bin",  0x1080000, 0x1080000, CRC(f3aa855a) SHA1(87b94e22db4bc4169324bbff93c4ea19c1d99b40) )
 	ROM_LOAD( "kpm1a_2.bin",  0x2100000, 0x1080000, CRC(b297cc8d) SHA1(c3494e7a8a0b4e0c8c40b99121373effbfe848eb) )
@@ -716,7 +716,7 @@ ROM_START( startrgn )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* bios */
 	ROM_FILL( 0x0000000, 0x400000, 0x55 )
 
-	ROM_REGION( 0x2100000, "user2", 0 ) /* main prg */
+	ROM_REGION16_LE( 0x2100000, "user2", 0 ) /* main prg */
 	ROM_LOAD( "stt1a_0.bin",  0x0000000, 0x1080000, CRC(1e090644) SHA1(a7a293e2bd9eea2eb64a492a47272d9d9ee2c724) )
 	ROM_LOAD( "stt1a_1.bin",  0x1080000, 0x1080000, CRC(aa527694) SHA1(a25dcbeca58a1443070848b3487a24d51d41a34b) )
 ROM_END
@@ -725,7 +725,7 @@ ROM_START( gamshara )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* bios */
 	ROM_FILL( 0x0000000, 0x400000, 0x55 )
 
-	ROM_REGION( 0x2100000, "user2", 0 ) /* main prg */
+	ROM_REGION16_LE( 0x2100000, "user2", 0 ) /* main prg */
 	ROM_LOAD( "10021a.8e",    0x0000000, 0x1080000, CRC(6c0361fc) SHA1(7debf1f2e6bed31d59fb224a78a17a94fc573785) )
 	ROM_LOAD( "10021a.8d",    0x1080000, 0x1080000, CRC(73669ff7) SHA1(eb8bbf931f1f8a049208d081d040512a3ffa9c00) )
 ROM_END
@@ -734,7 +734,7 @@ ROM_START( ptblank3 )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* bios */
 	ROM_FILL( 0x0000000, 0x400000, 0x55 )
 
-	ROM_REGION( 0x2100000, "user2", 0 ) /* main prg */
+	ROM_REGION16_LE( 0x2100000, "user2", 0 ) /* main prg */
 	ROM_LOAD( "gnn2a.8e",         0x0000000, 0x1080000, CRC(31b39221) SHA1(7fcb14aaa26c531928a6cd704e746d0e3ae3e031) )
 	ROM_LOAD( "gnn2a.8d",         0x1080000, 0x1080000, CRC(82d2cfb5) SHA1(4b5e713a55e74a7b32b1b9b5811892df2df86256) )
 ROM_END
@@ -743,7 +743,7 @@ ROM_START( gunbalina )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* bios */
 	ROM_FILL( 0x0000000, 0x400000, 0x55 )
 
-	ROM_REGION( 0x2100000, "user2", 0 ) /* main prg */
+	ROM_REGION16_LE( 0x2100000, "user2", 0 ) /* main prg */
 	ROM_LOAD( "gnn1a.8e",         0x0000000, 0x1080000, CRC(981b03d4) SHA1(1c55458f1b2964afe2cf4e9d84548c0699808e9f) )
 	ROM_LOAD( "gnn1a.8d",         0x1080000, 0x1080000, CRC(6cd343e0) SHA1(dcec44abae1504025895f42fe574549e5010f7d5) )
 ROM_END
@@ -752,7 +752,7 @@ ROM_START( chocovdr )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* bios */
 	ROM_FILL( 0x0000000, 0x400000, 0x55 )
 
-	ROM_REGION( 0x5280000, "user2", 0 ) /* main prg */
+	ROM_REGION16_LE( 0x5280000, "user2", 0 ) /* main prg */
 	ROM_LOAD( "0.8e",         0x0000000, 0x1080000, BAD_DUMP CRC(f265b1b6) SHA1(f327e7bac0bc1bd31aa3362e36233130a6b240ea) )
 	ROM_LOAD( "1.8d",         0x1080000, 0x1080000, CRC(05d01cd2) SHA1(e9947ebea24d618e8b9a69f582ef0b9d97bb4cad) )
 	ROM_LOAD( "2.7e",         0x2100000, 0x1080000, CRC(2e308d20) SHA1(4ff072f0d488b12f77ef7d119822f89b5b5a6712) )
@@ -764,7 +764,7 @@ ROM_START( panikuru )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* bios */
 	ROM_FILL( 0x0000000, 0x400000, 0x55 )
 
-	ROM_REGION( 0x3180000, "user2", 0 ) /* main prg */
+	ROM_REGION16_LE( 0x3180000, "user2", 0 ) /* main prg */
 	ROM_LOAD( "0.8e",         0x0000000, 0x1080000, CRC(3aa66da4) SHA1(3f6ff164981e2c1825766c775442608fbf86d702) )
 	ROM_LOAD( "1.8d",         0x1080000, 0x1080000, CRC(18e5135d) SHA1(a7b1533a1df71be5498718e301d1c9c548551fb4) )
 	ROM_LOAD( "2.7e",         0x2100000, 0x1080000, CRC(cd3b25e0) SHA1(39dfebc59e71b8f1c28e718ee71032620f11440c) )
@@ -774,7 +774,7 @@ ROM_START( nflclsfb )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* bios */
 	ROM_FILL( 0x0000000, 0x400000, 0x55 )
 
-	ROM_REGION( 0x4200000, "user2", 0 ) /* main prg */
+	ROM_REGION16_LE( 0x4200000, "user2", 0 ) /* main prg */
 	ROM_LOAD( "0.8e",         0x0000000, 0x1080000, CRC(b08d4270) SHA1(5f5dc1c2862292a9e597f6a21c0f9db2e5796ded) )
 	ROM_LOAD( "1.8d",         0x1080000, 0x1080000, CRC(d3f519d8) SHA1(60d5f2fafd700e39245bed17e3cc6d608cc2c088) )
 	ROM_LOAD( "2.7e",         0x2100000, 0x1080000, CRC(0c65fdc2) SHA1(fa5d41a7b10ae8f8d312b61cc6d34408123bda97) )

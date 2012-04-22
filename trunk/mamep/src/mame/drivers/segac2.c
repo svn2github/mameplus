@@ -111,15 +111,15 @@ static MACHINE_START( segac2 )
 static MACHINE_RESET( segac2 )
 {
 	segac2_state *state = machine.driver_data<segac2_state>();
-	megadrive_ram = reinterpret_cast<UINT16 *>(machine.memory().shared("nvram")->ptr());
+	megadrive_ram = reinterpret_cast<UINT16 *>(state->memshare("nvram")->ptr());
 
 	/* set up interrupts and such */
 	MACHINE_RESET_CALL(megadriv);
 
 	/* determine how many sound banks */
 	state->m_sound_banks = 0;
-	if (machine.region("upd")->base())
-		state->m_sound_banks = machine.region("upd")->bytes() / 0x20000;
+	if (machine.root_device().memregion("upd")->base())
+		state->m_sound_banks = state->memregion("upd")->bytes() / 0x20000;
 
 	/* reset the protection */
 	state->m_prot_write_buf = 0;
@@ -610,7 +610,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, segac2_state )
 	AM_RANGE(0x840000, 0x84001f) AM_MIRROR(0x13fee0) AM_READWRITE_LEGACY(io_chip_r, io_chip_w)
 	AM_RANGE(0x840100, 0x840107) AM_MIRROR(0x13fef8) AM_DEVREADWRITE8_LEGACY("ymsnd", ym3438_r, ym3438_w, 0x00ff)
 	AM_RANGE(0x880100, 0x880101) AM_MIRROR(0x13fefe) AM_WRITE_LEGACY(counter_timer_w)
-	AM_RANGE(0x8c0000, 0x8c0fff) AM_MIRROR(0x13f000) AM_READWRITE_LEGACY(palette_r, palette_w) AM_BASE(m_paletteram)
+	AM_RANGE(0x8c0000, 0x8c0fff) AM_MIRROR(0x13f000) AM_READWRITE_LEGACY(palette_r, palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0xc00000, 0xc0001f) AM_MIRROR(0x18ff00) AM_READWRITE_LEGACY(megadriv_vdp_r, megadriv_vdp_w)
 	AM_RANGE(0xe00000, 0xe0ffff) AM_MIRROR(0x1f0000) AM_RAM AM_SHARE("nvram")
 ADDRESS_MAP_END
@@ -2088,7 +2088,7 @@ static DRIVER_INIT( ichirj )
 static DRIVER_INIT( ichirjbl )
 {
 	/* when did this actually work? - the protection is patched but the new check fails? */
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 	rom[0x390/2] = 0x6600;
 
 	segac2_common_init(machine, NULL);

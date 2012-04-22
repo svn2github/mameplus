@@ -44,20 +44,23 @@ class skimaxx_state : public driver_device
 {
 public:
 	skimaxx_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_blitter_regs(*this, "blitter_regs"),
+		m_fpga_ctrl(*this, "fpga_ctrl"),
+		m_fg_buffer(*this, "fg_buffer"){ }
 
+	required_shared_ptr<UINT32> m_blitter_regs;
+	required_shared_ptr<UINT32> m_fpga_ctrl;
+	required_shared_ptr<UINT16> m_fg_buffer;
 	UINT32 *m_bg_buffer;
-	UINT16 *m_fg_buffer;
 	UINT32 *m_bg_buffer_front;
 	UINT32 *m_bg_buffer_back;
-	UINT32 *m_blitter_regs;
 	UINT16 *m_blitter_gfx;
 	UINT32 m_blitter_gfx_len;
 	UINT32 m_blitter_src_x;
 	UINT32 m_blitter_src_dx;
 	UINT32 m_blitter_src_y;
 	UINT32 m_blitter_src_dy;
-	UINT32 *m_fpga_ctrl;
 	DECLARE_WRITE32_MEMBER(skimaxx_blitter_w);
 	DECLARE_READ32_MEMBER(skimaxx_blitter_r);
 	DECLARE_WRITE32_MEMBER(m68k_tms_w);
@@ -135,14 +138,14 @@ READ32_MEMBER(skimaxx_state::skimaxx_blitter_r)
 static VIDEO_START( skimaxx )
 {
 	skimaxx_state *state = machine.driver_data<skimaxx_state>();
-	state->m_blitter_gfx = (UINT16 *) machine.region( "blitter" )->base();
-	state->m_blitter_gfx_len = machine.region( "blitter" )->bytes() / 2;
+	state->m_blitter_gfx = (UINT16 *) machine.root_device().memregion( "blitter" )->base();
+	state->m_blitter_gfx_len = state->memregion( "blitter" )->bytes() / 2;
 
 	state->m_bg_buffer = auto_alloc_array(machine, UINT32, 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * 2);	// 2 buffers
 	state->m_bg_buffer_back  = state->m_bg_buffer + 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * 0;
 	state->m_bg_buffer_front = state->m_bg_buffer + 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * 1;
-	memory_configure_bank(machine, "bank1", 0, 1, state->m_bg_buffer_back,  0);
-	memory_configure_bank(machine, "bank1", 1, 1, state->m_bg_buffer_front, 0);
+	state->membank("bank1")->configure_entry(0, state->m_bg_buffer_back);
+	state->membank("bank1")->configure_entry(1, state->m_bg_buffer_front);
 }
 
 static SCREEN_UPDATE_IND16( skimaxx )
@@ -262,7 +265,7 @@ WRITE32_MEMBER(skimaxx_state::skimaxx_fpga_ctrl_w)
 		m_bg_buffer_back  = m_bg_buffer + 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * bank_bg_buffer;
 		m_bg_buffer_front = m_bg_buffer + 0x400 * 0x100 * sizeof(UINT16) / sizeof(UINT32) * (1 - bank_bg_buffer);
 
-		memory_set_bank(machine(), "bank1", bank_bg_buffer);
+		membank("bank1")->set_entry(bank_bg_buffer);
 	}
 }
 
@@ -351,9 +354,9 @@ static ADDRESS_MAP_START( 68030_2_map, AS_PROGRAM, 32, skimaxx_state )
 	AM_RANGE(0x00000000, 0x003fffff) AM_ROM
 
 	AM_RANGE(0x20000000, 0x2007ffff) AM_READ(skimaxx_blitter_r )	// do blit
-	AM_RANGE(0x30000000, 0x3000000f) AM_WRITE(skimaxx_blitter_w ) AM_BASE(m_blitter_regs )
+	AM_RANGE(0x30000000, 0x3000000f) AM_WRITE(skimaxx_blitter_w ) AM_SHARE("blitter_regs")
 
-	AM_RANGE(0x40000000, 0x40000003) AM_WRITE(skimaxx_fpga_ctrl_w ) AM_BASE(m_fpga_ctrl )
+	AM_RANGE(0x40000000, 0x40000003) AM_WRITE(skimaxx_fpga_ctrl_w ) AM_SHARE("fpga_ctrl")
 
 	AM_RANGE(0x50000000, 0x5007ffff) AM_RAMBANK("bank1")	// background ram allocated here at video_start (skimaxx_bg_buffer_back/front)
 //  AM_RANGE(0xfffc0000, 0xfffc7fff) AM_RAM AM_SHARE("share1")
@@ -375,7 +378,7 @@ static ADDRESS_MAP_START( tms_program_map, AS_PROGRAM, 16, skimaxx_state )
 	AM_RANGE(0x00000000, 0x000100ff) AM_RAM
 	AM_RANGE(0x00008000, 0x0003ffff) AM_RAM
 	AM_RANGE(0x00050000, 0x0005ffff) AM_RAM
-	AM_RANGE(0x00220000, 0x003fffff) AM_RAM AM_BASE(m_fg_buffer)
+	AM_RANGE(0x00220000, 0x003fffff) AM_RAM AM_SHARE("fg_buffer")
 	AM_RANGE(0x02000000, 0x0200000f) AM_RAM
 	AM_RANGE(0x02100000, 0x0210000f) AM_RAM
 	AM_RANGE(0x04000000, 0x047fffff) AM_ROM AM_REGION("tmsgfx", 0)

@@ -32,7 +32,7 @@ WRITE8_MEMBER(crimfght_state::crimfght_coin_w)
 
 WRITE8_MEMBER(crimfght_state::crimfght_sh_irqtrigger_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
 }
 
@@ -99,7 +99,7 @@ static ADDRESS_MAP_START( crimfght_sound_map, AS_PROGRAM, 8, crimfght_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM												/* ROM 821l01.h4 */
 	AM_RANGE(0x8000, 0x87ff) AM_RAM												/* RAM */
 	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)			/* YM2151 */
-	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_r)								/* soundlatch_r */
+	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_byte_r)								/* soundlatch_byte_r */
 	AM_RANGE(0xe000, 0xe00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r, k007232_w)	/* 007232 registers */
 ADDRESS_MAP_END
 
@@ -220,8 +220,8 @@ INPUT_PORTS_END
 
 static const ym2151_interface ym2151_config =
 {
-	0,
-	crimfght_snd_bankswitch_w
+	DEVCB_NULL,
+	DEVCB_HANDLER(crimfght_snd_bankswitch_w)
 };
 
 static void volume_callback( device_t *device, int v )
@@ -255,10 +255,10 @@ static const k051960_interface crimfght_k051960_intf =
 static MACHINE_START( crimfght )
 {
 	crimfght_state *state = machine.driver_data<crimfght_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank2", 0, 12, &ROM[0x10000], 0x2000);
-	memory_set_bank(machine, "bank2", 0);
+	state->membank("bank2")->configure_entries(0, 12, &ROM[0x10000], 0x2000);
+	state->membank("bank2")->set_entry(0);
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_audiocpu = machine.device("audiocpu");
@@ -407,8 +407,8 @@ static KONAMI_SETLINES_CALLBACK( crimfght_banking )
 	if (lines & 0x20)
 	{
 		device->memory().space(AS_PROGRAM)->install_read_bank(0x0000, 0x03ff, "bank3");
-		device->memory().space(AS_PROGRAM)->install_write_handler(0x0000, 0x03ff, write8_delegate(FUNC(crimfght_state::paletteram_xBBBBBGGGGGRRRRR_be_w), state));
-		memory_set_bankptr(device->machine(), "bank3", state->m_generic_paletteram_8);
+		device->memory().space(AS_PROGRAM)->install_write_handler(0x0000, 0x03ff, write8_delegate(FUNC(crimfght_state::paletteram_xBBBBBGGGGGRRRRR_byte_be_w), state));
+		state->membank("bank3")->set_base(state->m_generic_paletteram_8);
 	}
 	else
 		device->memory().space(AS_PROGRAM)->install_readwrite_bank(0x0000, 0x03ff, "bank1");								/* RAM */
@@ -416,7 +416,7 @@ static KONAMI_SETLINES_CALLBACK( crimfght_banking )
 	/* bit 6 = enable char ROM reading through the video RAM */
 	k052109_set_rmrd_line(state->m_k052109, (lines & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 
-	memory_set_bank(device->machine(), "bank2", lines & 0x0f);
+	state->membank("bank2")->set_entry(lines & 0x0f);
 }
 
 GAME( 1989, crimfght,  0,        crimfght, crimfght, 0, ROT0, "Konami", "Crime Fighters (US 4 players)", GAME_SUPPORTS_SAVE )

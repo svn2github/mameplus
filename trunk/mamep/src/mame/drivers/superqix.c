@@ -112,8 +112,8 @@ static SAMPLES_START( pbillian_sh_start )
 {
 	superqix_state *state = device.machine().driver_data<superqix_state>();
 	running_machine &machine = device.machine();
-	UINT8 *src = machine.region("samples")->base();
-	int i, len = machine.region("samples")->bytes();
+	UINT8 *src = machine.root_device().memregion("samples")->base();
+	int i, len = state->memregion("samples")->bytes();
 
 	/* convert 8-bit unsigned samples to 8-bit signed */
 	state->m_samplebuf = auto_alloc_array(machine, INT16, len);
@@ -124,8 +124,8 @@ static SAMPLES_START( pbillian_sh_start )
 WRITE8_MEMBER(superqix_state::pbillian_sample_trigger_w)
 {
 	samples_device *samples = machine().device<samples_device>("samples");
-	UINT8 *src = machine().region("samples")->base();
-	int len = machine().region("samples")->bytes();
+	UINT8 *src = memregion("samples")->base();
+	int len = memregion("samples")->bytes();
 	int start,end;
 
 	start = data << 7;
@@ -222,7 +222,7 @@ WRITE8_MEMBER(superqix_state::bootleg_mcu_p1_w)
 			coin_lockout_global_w(machine(), (data & 1) ^ m_invert_coin_lockout);
 			break;
 		case 4:
-			flip_screen_set(machine(), data & 1);
+			flip_screen_set(data & 1);
 			break;
 		case 5:
 			m_port1 = data;
@@ -289,7 +289,7 @@ WRITE8_MEMBER(superqix_state::sqixu_mcu_p2_w)
 	coin_lockout_global_w(machine(), ~data & 8);
 
 	// bit 4 = flip screen
-	flip_screen_set(machine(), data & 0x10);
+	flip_screen_set(data & 0x10);
 
 	// bit 5 = unknown (set on startup)
 
@@ -330,7 +330,7 @@ static READ8_DEVICE_HANDLER( bootleg_in0_r )
 
 WRITE8_MEMBER(superqix_state::bootleg_flipscreen_w)
 {
-	flip_screen_set(machine(), ~data & 1);
+	flip_screen_set(~data & 1);
 }
 
 
@@ -548,7 +548,7 @@ static void machine_init_common(running_machine &machine)
 static MACHINE_START( superqix )
 {
 	/* configure the banks */
-	memory_configure_bank(machine, "bank1", 0, 4, machine.region("maincpu")->base() + 0x10000, 0x4000);
+	machine.root_device().membank("bank1")->configure_entries(0, 4, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
 
 	machine_init_common(machine);
 }
@@ -556,7 +556,7 @@ static MACHINE_START( superqix )
 static MACHINE_START( pbillian )
 {
 	/* configure the banks */
-	memory_configure_bank(machine, "bank1", 0, 2, machine.region("maincpu")->base() + 0x10000, 0x4000);
+	machine.root_device().membank("bank1")->configure_entries(0, 2, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
 
 	machine_init_common(machine);
 }
@@ -565,14 +565,14 @@ static MACHINE_START( pbillian )
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, superqix_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xe000, 0xe0ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xe000, 0xe0ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xe100, 0xe7ff) AM_RAM
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(superqix_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(superqix_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0xf000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( pbillian_port_map, AS_IO, 8, superqix_state )
-	AM_RANGE(0x0000, 0x01ff) AM_RAM_WRITE(paletteram_BBGGRRII_w) AM_SHARE("paletteram")
+	AM_RANGE(0x0000, 0x01ff) AM_RAM_WRITE(paletteram_BBGGRRII_byte_w) AM_SHARE("paletteram")
 	AM_RANGE(0x0401, 0x0401) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
 	AM_RANGE(0x0402, 0x0403) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_address_w)
 	AM_RANGE(0x0408, 0x0408) AM_READ(pbillian_from_mcu_r)
@@ -585,7 +585,7 @@ static ADDRESS_MAP_START( pbillian_port_map, AS_IO, 8, superqix_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( hotsmash_port_map, AS_IO, 8, superqix_state )
-	AM_RANGE(0x0000, 0x01ff) AM_RAM_WRITE(paletteram_BBGGRRII_w) AM_SHARE("paletteram")
+	AM_RANGE(0x0000, 0x01ff) AM_RAM_WRITE(paletteram_BBGGRRII_byte_w) AM_SHARE("paletteram")
 	AM_RANGE(0x0401, 0x0401) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
 	AM_RANGE(0x0402, 0x0403) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_address_w)
 	AM_RANGE(0x0408, 0x0408) AM_READ(hotsmash_from_mcu_r)
@@ -598,7 +598,7 @@ static ADDRESS_MAP_START( hotsmash_port_map, AS_IO, 8, superqix_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sqix_port_map, AS_IO, 8, superqix_state )
-	AM_RANGE(0x0000, 0x00ff) AM_RAM_WRITE(paletteram_BBGGRRII_w) AM_SHARE("paletteram")
+	AM_RANGE(0x0000, 0x00ff) AM_RAM_WRITE(paletteram_BBGGRRII_byte_w) AM_SHARE("paletteram")
 	AM_RANGE(0x0401, 0x0401) AM_DEVREAD_LEGACY("ay1", ay8910_r)
 	AM_RANGE(0x0402, 0x0403) AM_DEVWRITE_LEGACY("ay1", ay8910_data_address_w)
 	AM_RANGE(0x0405, 0x0405) AM_DEVREAD_LEGACY("ay2", ay8910_r)
@@ -606,12 +606,12 @@ static ADDRESS_MAP_START( sqix_port_map, AS_IO, 8, superqix_state )
 	AM_RANGE(0x0408, 0x0408) AM_READ(mcu_acknowledge_r)
 	AM_RANGE(0x0410, 0x0410) AM_WRITE(superqix_0410_w)	/* ROM bank, NMI enable, tile bank */
 	AM_RANGE(0x0418, 0x0418) AM_READ(nmi_ack_r)
-	AM_RANGE(0x0800, 0x77ff) AM_RAM_WRITE(superqix_bitmapram_w) AM_BASE(m_bitmapram)
-	AM_RANGE(0x8800, 0xf7ff) AM_RAM_WRITE(superqix_bitmapram2_w) AM_BASE(m_bitmapram2)
+	AM_RANGE(0x0800, 0x77ff) AM_RAM_WRITE(superqix_bitmapram_w) AM_SHARE("bitmapram")
+	AM_RANGE(0x8800, 0xf7ff) AM_RAM_WRITE(superqix_bitmapram2_w) AM_SHARE("bitmapram2")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( bootleg_port_map, AS_IO, 8, superqix_state )
-	AM_RANGE(0x0000, 0x00ff) AM_RAM_WRITE(paletteram_BBGGRRII_w) AM_SHARE("paletteram")
+	AM_RANGE(0x0000, 0x00ff) AM_RAM_WRITE(paletteram_BBGGRRII_byte_w) AM_SHARE("paletteram")
 	AM_RANGE(0x0401, 0x0401) AM_DEVREAD_LEGACY("ay1", ay8910_r)
 	AM_RANGE(0x0402, 0x0403) AM_DEVWRITE_LEGACY("ay1", ay8910_data_address_w)
 	AM_RANGE(0x0405, 0x0405) AM_DEVREAD_LEGACY("ay2", ay8910_r)
@@ -619,8 +619,8 @@ static ADDRESS_MAP_START( bootleg_port_map, AS_IO, 8, superqix_state )
 	AM_RANGE(0x0408, 0x0408) AM_WRITE(bootleg_flipscreen_w)
 	AM_RANGE(0x0410, 0x0410) AM_WRITE(superqix_0410_w)	/* ROM bank, NMI enable, tile bank */
 	AM_RANGE(0x0418, 0x0418) AM_READ_PORT("SYSTEM")
-	AM_RANGE(0x0800, 0x77ff) AM_RAM_WRITE(superqix_bitmapram_w) AM_BASE(m_bitmapram)
-	AM_RANGE(0x8800, 0xf7ff) AM_RAM_WRITE(superqix_bitmapram2_w) AM_BASE(m_bitmapram2)
+	AM_RANGE(0x0800, 0x77ff) AM_RAM_WRITE(superqix_bitmapram_w) AM_SHARE("bitmapram")
+	AM_RANGE(0x8800, 0xf7ff) AM_RAM_WRITE(superqix_bitmapram2_w) AM_SHARE("bitmapram2")
 ADDRESS_MAP_END
 
 
@@ -1363,8 +1363,8 @@ static DRIVER_INIT( perestro )
 	int i,j;
 
 	/* decrypt program code; the address lines are shuffled around in a non-trivial way */
-	src = machine.region("maincpu")->base();
-	len = machine.region("maincpu")->bytes();
+	src = machine.root_device().memregion("maincpu")->base();
+	len = machine.root_device().memregion("maincpu")->bytes();
 	for (i = 0;i < len;i += 16)
 	{
 		memcpy(temp,&src[i],16);
@@ -1383,8 +1383,8 @@ static DRIVER_INIT( perestro )
 	}
 
 	/* decrypt gfx ROMs; simple bit swap on the address lines */
-	src = machine.region("gfx1")->base();
-	len = machine.region("gfx1")->bytes();
+	src = machine.root_device().memregion("gfx1")->base();
+	len = machine.root_device().memregion("gfx1")->bytes();
 	for (i = 0;i < len;i += 16)
 	{
 		memcpy(temp,&src[i],16);
@@ -1394,8 +1394,8 @@ static DRIVER_INIT( perestro )
 		}
 	}
 
-	src = machine.region("gfx2")->base();
-	len = machine.region("gfx2")->bytes();
+	src = machine.root_device().memregion("gfx2")->base();
+	len = machine.root_device().memregion("gfx2")->bytes();
 	for (i = 0;i < len;i += 16)
 	{
 		memcpy(temp,&src[i],16);
@@ -1405,8 +1405,8 @@ static DRIVER_INIT( perestro )
 		}
 	}
 
-	src = machine.region("gfx3")->base();
-	len = machine.region("gfx3")->bytes();
+	src = machine.root_device().memregion("gfx3")->base();
+	len = machine.root_device().memregion("gfx3")->bytes();
 	for (i = 0;i < len;i += 16)
 	{
 		memcpy(temp,&src[i],16);

@@ -296,10 +296,12 @@ class blitz_state : public driver_device
 {
 public:
 	blitz_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"),
+		m_colorram(*this, "colorram"){ }
 
-	UINT8 *m_videoram;
-	UINT8 *m_colorram;
+	required_shared_ptr<UINT8> m_videoram;
+	required_shared_ptr<UINT8> m_colorram;
 	tilemap_t *m_bg_tilemap;
 	int m_mux_data;
 	DECLARE_WRITE8_MEMBER(megadpkr_videoram_w);
@@ -362,6 +364,7 @@ static SCREEN_UPDATE_IND16( megadpkr )
 
 static PALETTE_INIT( megadpkr )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 /*
     This hardware has a feature called BLUE KILLER.
     Using the original intensity line, the PCB has a bridge
@@ -485,8 +488,8 @@ static ADDRESS_MAP_START( megadpkr_map, AS_PROGRAM, 8, blitz_state )
     AM_RANGE(0x10f8, 0x10fb) AM_DEVREADWRITE("pia1", pia6821_device, read, write)
 */
 
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(megadpkr_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(megadpkr_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(megadpkr_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(megadpkr_colorram_w) AM_SHARE("colorram")
 
 	AM_RANGE(0xc000, 0xffff) AM_ROM
 ADDRESS_MAP_END

@@ -97,12 +97,11 @@ READ8_MEMBER(cinemat_state::switches_r)
  *
  *************************************/
 
-static INPUT_CHANGED( coin_inserted )
+INPUT_CHANGED_MEMBER(cinemat_state::coin_inserted)
 {
-	cinemat_state *state = field.machine().driver_data<cinemat_state>();
 	/* on the falling edge of a new coin, set the coin_detected flag */
 	if (newval == 0)
-		state->m_coin_detected = 1;
+		m_coin_detected = 1;
 }
 
 
@@ -131,7 +130,7 @@ WRITE8_MEMBER(cinemat_state::coin_reset_w)
 WRITE8_MEMBER(cinemat_state::mux_select_w)
 {
 	m_mux_select = data;
-	cinemat_sound_control_w(&space, 0x07, data);
+	cinemat_sound_control_w(space, 0x07, data);
 }
 
 
@@ -274,7 +273,7 @@ READ8_MEMBER(cinemat_state::qb3_frame_r)
 
 WRITE8_MEMBER(cinemat_state::qb3_ram_bank_w)
 {
-	memory_set_bank(machine(), "bank1", cpu_get_reg(machine().device("maincpu"), CCPU_P) & 3);
+	membank("bank1")->set_entry(cpu_get_reg(machine().device("maincpu"), CCPU_P) & 3);
 }
 
 
@@ -312,7 +311,7 @@ static ADDRESS_MAP_START( data_map, AS_DATA, 16, cinemat_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( data_map_qb3, AS_DATA, 16, cinemat_state )
-	AM_RANGE(0x0000, 0x03ff) AM_RAMBANK("bank1") AM_BASE(m_rambase)
+	AM_RANGE(0x0000, 0x03ff) AM_RAMBANK("bank1") AM_SHARE("rambase")
 ADDRESS_MAP_END
 
 
@@ -323,7 +322,7 @@ static ADDRESS_MAP_START( io_map, AS_IO, 8, cinemat_state )
 
 	AM_RANGE(0x05, 0x05) AM_WRITE(coin_reset_w)
 	AM_RANGE(0x06, 0x06) AM_WRITE(cinemat_vector_control_w)
-	AM_RANGE(0x00, 0x07) AM_WRITE_LEGACY(cinemat_sound_control_w)
+	AM_RANGE(0x00, 0x07) AM_WRITE(cinemat_sound_control_w)
 ADDRESS_MAP_END
 
 
@@ -366,7 +365,7 @@ static INPUT_PORTS_START( spacewar )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(	0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 INPUT_PORTS_END
 
 
@@ -426,7 +425,7 @@ static INPUT_PORTS_START( barrier )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 INPUT_PORTS_END
 
 
@@ -459,7 +458,7 @@ static INPUT_PORTS_START( speedfrk )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 
 	PORT_START("WHEEL")
 	PORT_BIT( 0xff, 0x00, IPT_DIAL ) PORT_SENSITIVITY(100) PORT_KEYDELTA(10) PORT_RESET
@@ -504,7 +503,7 @@ static INPUT_PORTS_START( starhawk )
 	PORT_DIPNAME( 0x40,	0x40, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(	0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 INPUT_PORTS_END
 
 
@@ -548,7 +547,7 @@ static INPUT_PORTS_START( sundance )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 
 	PORT_START("PAD1")
 	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("P1 Pad 1") PORT_CODE(KEYCODE_7_PAD) PORT_PLAYER(1)
@@ -604,7 +603,7 @@ static INPUT_PORTS_START( tailg )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 
 	PORT_START("ANALOGX")
 	PORT_BIT( 0xfff, 0x800, IPT_AD_STICK_X ) PORT_MINMAX(0x200,0xe00) PORT_SENSITIVITY(100) PORT_KEYDELTA(50)
@@ -649,7 +648,7 @@ static INPUT_PORTS_START( warrior )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 INPUT_PORTS_END
 
 
@@ -685,7 +684,7 @@ static INPUT_PORTS_START( armora )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x40, IP_ACTIVE_HIGH )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 INPUT_PORTS_END
 
 
@@ -721,7 +720,7 @@ static INPUT_PORTS_START( ripoff )
 	PORT_DIPSETTING(	0x00, "Individual" )
 	PORT_DIPSETTING(	0x20, "Combined" )
 	PORT_SERVICE( 0x40,	IP_ACTIVE_LOW )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 INPUT_PORTS_END
 
 
@@ -758,7 +757,7 @@ static INPUT_PORTS_START( starcas )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x40, IP_ACTIVE_HIGH )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 INPUT_PORTS_END
 
 
@@ -790,7 +789,7 @@ static INPUT_PORTS_START( solarq )
 	PORT_DIPSETTING(	0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x40,	IP_ACTIVE_HIGH )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 INPUT_PORTS_END
 
 
@@ -824,7 +823,7 @@ static INPUT_PORTS_START( boxingb )
 	PORT_DIPSETTING(	0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x40,	IP_ACTIVE_LOW )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 
 	PORT_START("DIAL")
 	PORT_BIT( 0xff, 0x00, IPT_DIAL ) PORT_REVERSE PORT_SENSITIVITY(100) PORT_KEYDELTA(5)
@@ -866,7 +865,7 @@ static INPUT_PORTS_START( wotw )
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x40, IP_ACTIVE_LOW )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 INPUT_PORTS_END
 
 
@@ -908,7 +907,7 @@ static INPUT_PORTS_START( demon )
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Free_Play ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 INPUT_PORTS_END
 
 
@@ -954,7 +953,7 @@ static INPUT_PORTS_START( qb3 )
 	PORT_DIPSETTING(	0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
 	PORT_SERVICE( 0x40,	IP_ACTIVE_LOW )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, cinemat_state,coin_inserted, 0)
 INPUT_PORTS_END
 
 
@@ -1488,7 +1487,7 @@ static DRIVER_INIT( qb3 )
 	machine.device("maincpu")->memory().space(AS_IO)->install_read_handler(0x0f, 0x0f, read8_delegate(FUNC(cinemat_state::qb3_frame_r),state));
 	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x00, 0x00, write8_delegate(FUNC(cinemat_state::qb3_ram_bank_w),state));
 
-	memory_configure_bank(machine, "bank1", 0, 4, state->m_rambase, 0x100*2);
+	state->membank("bank1")->configure_entries(0, 4, state->m_rambase, 0x100*2);
 }
 
 

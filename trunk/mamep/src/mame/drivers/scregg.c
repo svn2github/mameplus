@@ -70,8 +70,8 @@ static WRITE8_HANDLER( scregg_irqack_w )
 
 static ADDRESS_MAP_START( dommy_map, AS_PROGRAM, 8, btime_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
-	AM_RANGE(0x2000, 0x23ff) AM_RAM AM_BASE_SIZE(m_videoram, m_videoram_size)
-	AM_RANGE(0x2400, 0x27ff) AM_RAM AM_BASE(m_colorram)
+	AM_RANGE(0x2000, 0x23ff) AM_RAM AM_SHARE("videoram")
+	AM_RANGE(0x2400, 0x27ff) AM_RAM AM_SHARE("colorram")
 	AM_RANGE(0x2800, 0x2bff) AM_READWRITE(btime_mirrorvideoram_r, btime_mirrorvideoram_w)
 	AM_RANGE(0x4000, 0x4000) AM_READ_PORT("DSW1") AM_WRITE_LEGACY(scregg_irqack_w)
 	AM_RANGE(0x4001, 0x4001) AM_READ_PORT("DSW2") AM_WRITE(btime_video_control_w)
@@ -86,8 +86,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( eggs_map, AS_PROGRAM, 8, btime_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
-	AM_RANGE(0x1000, 0x13ff) AM_RAM AM_BASE_SIZE(m_videoram, m_videoram_size)
-	AM_RANGE(0x1400, 0x17ff) AM_RAM AM_BASE(m_colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM AM_SHARE("videoram")
+	AM_RANGE(0x1400, 0x17ff) AM_RAM AM_SHARE("colorram")
 	AM_RANGE(0x1800, 0x1bff) AM_READWRITE(btime_mirrorvideoram_r,btime_mirrorvideoram_w)
 	AM_RANGE(0x1c00, 0x1fff) AM_READWRITE(btime_mirrorcolorram_r,btime_mirrorcolorram_w)
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("DSW1") AM_WRITE(btime_video_control_w)
@@ -396,7 +396,7 @@ static DRIVER_INIT( rockduck )
 {
 	// rd2.rdh and rd1.rdj are bitswapped, but not rd3.rdg .. are they really from the same board?
 	int x;
-	UINT8 *src = machine.region( "gfx1" )->base();
+	UINT8 *src = machine.root_device().memregion( "gfx1" )->base();
 
 	for (x = 0x2000; x < 0x6000; x++)
 	{

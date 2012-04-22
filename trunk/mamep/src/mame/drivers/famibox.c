@@ -99,6 +99,9 @@ public:
 	DECLARE_READ8_MEMBER(famibox_IN1_r);
 	DECLARE_READ8_MEMBER(famibox_system_r);
 	DECLARE_WRITE8_MEMBER(famibox_system_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(famibox_coin_r);
+	DECLARE_INPUT_CHANGED_MEMBER(famibox_keyswitch_changed);
+	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
 };
 
 /******************************************************
@@ -254,9 +257,9 @@ static void famicombox_bankswitch(running_machine &machine, UINT8 bank)
 		if ( bank == famicombox_banks[i].bank ||
 			 famicombox_banks[i].bank == 0 )
 		{
-			memory_set_bankptr(machine, "cpubank1", machine.region(famicombox_banks[i].memory_region)->base() + famicombox_banks[i].bank1_offset);
-			memory_set_bankptr(machine, "cpubank2", machine.region(famicombox_banks[i].memory_region)->base() + famicombox_banks[i].bank2_offset);
-			memory_set_bankptr(machine, "ppubank1", machine.region(famicombox_banks[i].memory_region)->base() + famicombox_banks[i].ppubank_offset);
+			machine.root_device().membank("cpubank1")->set_base(machine.root_device().memregion(famicombox_banks[i].memory_region)->base() + famicombox_banks[i].bank1_offset);
+			machine.root_device().membank("cpubank2")->set_base(machine.root_device().memregion(famicombox_banks[i].memory_region)->base() + famicombox_banks[i].bank2_offset);
+			machine.root_device().membank("ppubank1")->set_base(machine.root_device().memregion(famicombox_banks[i].memory_region)->base() + famicombox_banks[i].ppubank_offset);
 			break;
 		}
 	}
@@ -393,41 +396,38 @@ ADDRESS_MAP_END
 
 *******************************************************/
 
-static INPUT_CHANGED( famibox_keyswitch_changed )
+INPUT_CHANGED_MEMBER(famibox_state::famibox_keyswitch_changed)
 {
-	famibox_state *state = field.machine().driver_data<famibox_state>();
 
-	if ( BIT(state->m_exception_mask, 3) )
+	if ( BIT(m_exception_mask, 3) )
 	{
-		state->m_exception_cause &= ~0x08;
-		famicombox_reset(field.machine());
+		m_exception_cause &= ~0x08;
+		famicombox_reset(machine());
 	}
 }
 
-static INPUT_CHANGED( coin_inserted )
+INPUT_CHANGED_MEMBER(famibox_state::coin_inserted)
 {
-	famibox_state *state = field.machine().driver_data<famibox_state>();
 
 	if ( newval )
 	{
-		state->m_coins++;
-		if (state->m_attract_timer->start() != attotime::never)
+		m_coins++;
+		if (m_attract_timer->start() != attotime::never)
 		{
-			state->m_gameplay_timer->adjust(attotime::from_seconds(60*(state->m_money_reg == 0x22 ? 20 : 10)), 0, attotime::never);
+			m_gameplay_timer->adjust(attotime::from_seconds(60*(m_money_reg == 0x22 ? 20 : 10)), 0, attotime::never);
 		}
 
-		if ( BIT(state->m_exception_mask,4) && (state->m_coins == 1) )
+		if ( BIT(m_exception_mask,4) && (m_coins == 1) )
 		{
-			state->m_exception_cause &= ~0x10;
-			famicombox_reset(field.machine());
+			m_exception_cause &= ~0x10;
+			famicombox_reset(machine());
 		}
 	}
 }
 
-static CUSTOM_INPUT( famibox_coin_r )
+CUSTOM_INPUT_MEMBER(famibox_state::famibox_coin_r)
 {
-	famibox_state *state = field.machine().driver_data<famibox_state>();
-	return state->m_coins > 0;
+	return m_coins > 0;
 }
 
 static INPUT_PORTS_START( famibox )
@@ -477,17 +477,17 @@ static INPUT_PORTS_START( famibox )
 
 
 	PORT_START("KEYSWITCH")
-	PORT_DIPNAME( 0x3f, 0x01, "Key switch" ) PORT_CHANGED(famibox_keyswitch_changed, 0)
+	PORT_DIPNAME( 0x3f, 0x01, "Key switch" ) PORT_CHANGED_MEMBER(DEVICE_SELF, famibox_state,famibox_keyswitch_changed, 0)
 	PORT_DIPSETTING(    0x01, "Key position 1" )
 	PORT_DIPSETTING(    0x02, "Key position 2" )
 	PORT_DIPSETTING(    0x04, "Key position 3" )
 	PORT_DIPSETTING(    0x08, "Key position 4" )
 	PORT_DIPSETTING(    0x10, "Key position 5" )
 	PORT_DIPSETTING(    0x20, "Key position 6" )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(famibox_coin_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, famibox_state,famibox_coin_r, NULL)
 
 	PORT_START("COIN")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, famibox_state,coin_inserted, 0)
 
 INPUT_PORTS_END
 

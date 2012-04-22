@@ -157,8 +157,8 @@ WRITE8_MEMBER(vball_state::vball_irq_ack_w)
 */
 WRITE8_MEMBER(vball_state::vb_bankswitch_w)
 {
-	UINT8 *RAM = machine().region("maincpu")->base();
-	memory_set_bankptr(machine(), "bank1", &RAM[0x10000 + (0x4000 * (data & 1))]);
+	UINT8 *RAM = memregion("maincpu")->base();
+	membank("bank1")->set_base(&RAM[0x10000 + (0x4000 * (data & 1))]);
 
 	if (m_gfxset != ((data  & 0x20) ^ 0x20))
 	{
@@ -171,7 +171,7 @@ WRITE8_MEMBER(vball_state::vb_bankswitch_w)
 /* The sound system comes all but verbatim from Double Dragon */
 WRITE8_MEMBER(vball_state::cpu_sound_command_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -187,7 +187,7 @@ WRITE8_MEMBER(vball_state::cpu_sound_command_w)
 */
 WRITE8_MEMBER(vball_state::vb_scrollx_hi_w)
 {
-	flip_screen_set(machine(), ~data&1);
+	flip_screen_set(~data&1);
 	m_vb_scrollx_hi = (data & 0x02) << 7;
 	vb_bgprombank_w(machine(), (data >> 2) & 0x07);
 	vb_spprombank_w(machine(), (data >> 5) & 0x07);
@@ -204,7 +204,7 @@ WRITE8_MEMBER(vball_state::vb_scrollx_lo_w)
 //Cheaters note: Scores are stored in ram @ 0x57-0x58 (though the space is used for other things between matches)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, vball_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
-	AM_RANGE(0x0800, 0x08ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x0800, 0x08ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x1000, 0x1000) AM_READ_PORT("P1")
 	AM_RANGE(0x1001, 0x1001) AM_READ_PORT("P2")
 	AM_RANGE(0x1002, 0x1002) AM_READ_PORT("SYSTEM")
@@ -217,9 +217,9 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, vball_state )
 	AM_RANGE(0x100a, 0x100b) AM_WRITE(vball_irq_ack_w)	/* is there a scanline counter here? */
 	AM_RANGE(0x100c, 0x100c) AM_WRITE(vb_scrollx_lo_w)
 	AM_RANGE(0x100d, 0x100d) AM_WRITE(cpu_sound_command_w)
-	AM_RANGE(0x100e, 0x100e) AM_WRITEONLY AM_BASE(m_vb_scrolly_lo)
-	AM_RANGE(0x2000, 0x2fff) AM_WRITE(vb_videoram_w) AM_BASE(m_vb_videoram)
-	AM_RANGE(0x3000, 0x3fff) AM_WRITE(vb_attrib_w) AM_BASE(m_vb_attribram)
+	AM_RANGE(0x100e, 0x100e) AM_WRITEONLY AM_SHARE("vb_scrolly_lo")
+	AM_RANGE(0x2000, 0x2fff) AM_WRITE(vb_videoram_w) AM_SHARE("vb_videoram")
+	AM_RANGE(0x3000, 0x3fff) AM_WRITE(vb_attrib_w) AM_SHARE("vb_attribram")
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -229,7 +229,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, vball_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0x9800, 0x9803) AM_DEVREADWRITE("oki", okim6295_device, read, write)
-	AM_RANGE(0xA000, 0xA000) AM_READ(soundlatch_r)
+	AM_RANGE(0xA000, 0xA000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
 
@@ -401,7 +401,7 @@ static void vball_irq_handler(device_t *device, int irq)
 
 static const ym2151_interface ym2151_config =
 {
-	vball_irq_handler
+	DEVCB_LINE(vball_irq_handler)
 };
 
 

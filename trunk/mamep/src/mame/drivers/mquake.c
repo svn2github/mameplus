@@ -35,7 +35,7 @@
 static WRITE8_DEVICE_HANDLER( mquake_cia_0_porta_w )
 {
 	/* switch banks as appropriate */
-	memory_set_bank(device->machine(), "bank1", data & 1);
+	device->machine().root_device().membank("bank1")->set_entry(data & 1);
 
 	/* swap the write handlers between ROM and bank 1 based on the bit */
 	if ((data & 1) == 0)
@@ -87,7 +87,7 @@ static WRITE8_DEVICE_HANDLER( mquake_cia_0_portb_w )
 
 static READ8_HANDLER( es5503_sample_r )
 {
-	UINT8 *rom = space->machine().region("es5503")->base();
+	UINT8 *rom = space->machine().root_device().memregion("es5503")->base();
 	es5503_device *es5503 = space->machine().device<es5503_device>("es5503");
 
 	return rom[offset + (es5503->get_channel_strobe() * 0x10000)];
@@ -133,9 +133,9 @@ static WRITE16_HANDLER( coin_chip_w )
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, amiga_state )
 	ADDRESS_MAP_UNMAP_HIGH
-	AM_RANGE(0x000000, 0x07ffff) AM_RAMBANK("bank1") AM_BASE_SIZE(m_chip_ram, m_chip_ram_size)
+	AM_RANGE(0x000000, 0x07ffff) AM_RAMBANK("bank1") AM_SHARE("chip_ram")
 	AM_RANGE(0xbfd000, 0xbfefff) AM_READWRITE_LEGACY(amiga_cia_r, amiga_cia_w)
-	AM_RANGE(0xc00000, 0xdfffff) AM_READWRITE_LEGACY(amiga_custom_r, amiga_custom_w)  AM_BASE(m_custom_regs)
+	AM_RANGE(0xc00000, 0xdfffff) AM_READWRITE_LEGACY(amiga_custom_r, amiga_custom_w)  AM_SHARE("custom_regs")
 	AM_RANGE(0xe80000, 0xe8ffff) AM_READWRITE_LEGACY(amiga_autoconfig_r, amiga_autoconfig_w)
 	AM_RANGE(0xfc0000, 0xffffff) AM_ROM AM_REGION("user1", 0)			/* System ROM */
 
@@ -164,11 +164,11 @@ static INPUT_PORTS_START( mquake )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)			/* JS1SW */
 
 	PORT_START("JOY0DAT")
-	PORT_BIT( 0x0303, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(amiga_joystick_convert, "P1JOY")
+	PORT_BIT( 0x0303, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, amiga_state,amiga_joystick_convert, "P1JOY")
 	PORT_BIT( 0xfcfc, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("JOY1DAT")
-	PORT_BIT( 0x0303, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(amiga_joystick_convert, "P2JOY")
+	PORT_BIT( 0x0303, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, amiga_state,amiga_joystick_convert, "P2JOY")
 	PORT_BIT( 0xfcfc, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("P1JOY")
@@ -444,8 +444,8 @@ static DRIVER_INIT(mquake)
 	amiga_machine_config(machine, &mquake_intf);
 
 	/* set up memory */
-	memory_configure_bank(machine, "bank1", 0, 1, state->m_chip_ram, 0);
-	memory_configure_bank(machine, "bank1", 1, 1, machine.region("user1")->base(), 0);
+	state->membank("bank1")->configure_entry(0, state->m_chip_ram);
+	state->membank("bank1")->configure_entry(1, machine.root_device().memregion("user1")->base());
 }
 
 

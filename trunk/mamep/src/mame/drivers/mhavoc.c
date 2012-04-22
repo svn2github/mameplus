@@ -233,9 +233,9 @@ WRITE8_MEMBER(mhavoc_state::dual_pokey_w)
 
 static ADDRESS_MAP_START( alpha_map, AS_PROGRAM, 8, mhavoc_state )
 	AM_RANGE(0x0000, 0x01ff) AM_RAM
-	AM_RANGE(0x0200, 0x07ff) AM_RAMBANK("bank1") AM_BASE(m_zram0)
+	AM_RANGE(0x0200, 0x07ff) AM_RAMBANK("bank1") AM_SHARE("zram0")
 	AM_RANGE(0x0800, 0x09ff) AM_RAM
-	AM_RANGE(0x0a00, 0x0fff) AM_RAMBANK("bank1") AM_BASE(m_zram1)
+	AM_RANGE(0x0a00, 0x0fff) AM_RAMBANK("bank1") AM_SHARE("zram1")
 	AM_RANGE(0x1000, 0x1000) AM_READ(mhavoc_gamma_r)			/* Gamma Read Port */
 	AM_RANGE(0x1200, 0x1200) AM_READ_PORT("IN0") AM_WRITENOP	/* Alpha Input Port 0 */
 	AM_RANGE(0x1400, 0x141f) AM_RAM AM_BASE_LEGACY(&avgdvg_colorram)	/* ColorRAM */
@@ -287,9 +287,9 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( alphaone_map, AS_PROGRAM, 8, mhavoc_state )
 	AM_RANGE(0x0000, 0x01ff) AM_RAM
-	AM_RANGE(0x0200, 0x07ff) AM_RAMBANK("bank1") AM_BASE(m_zram0)
+	AM_RANGE(0x0200, 0x07ff) AM_RAMBANK("bank1") AM_SHARE("zram0")
 	AM_RANGE(0x0800, 0x09ff) AM_RAM
-	AM_RANGE(0x0a00, 0x0fff) AM_RAMBANK("bank1") AM_BASE(m_zram1)
+	AM_RANGE(0x0a00, 0x0fff) AM_RAMBANK("bank1") AM_SHARE("zram1")
 	AM_RANGE(0x1020, 0x103f) AM_READWRITE(dual_pokey_r, dual_pokey_w)
 	AM_RANGE(0x1040, 0x1040) AM_READ_PORT("IN0") AM_WRITENOP	/* Alpha Input Port 0 */
 	AM_RANGE(0x1060, 0x1060) AM_READ_PORT("IN1")				/* Gamma Input Port */
@@ -317,10 +317,10 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static CUSTOM_INPUT( clock_r )
+CUSTOM_INPUT_MEMBER(mhavoc_state::clock_r)
 {
 	/* 2.4kHz (divide 2.5MHz by 1024) */
-	return (field.machine().device<cpu_device>("alpha")->total_cycles() & 0x400) ? 0 : 1;
+	return (machine().device<cpu_device>("alpha")->total_cycles() & 0x400) ? 0 : 1;
 }
 
 
@@ -337,19 +337,19 @@ static INPUT_PORTS_START( mhavoc )
 	/* Bit 1 = 2.4kHz (divide 2.5MHz by 1024) */
 	/* Bit 0 = Vector generator halt flag */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(avgdvg_done_r, NULL)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(clock_r, NULL)
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(gamma_xmtd_r, NULL)
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(gamma_rcvd_r, NULL)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mhavoc_state,clock_r, NULL)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mhavoc_state,gamma_xmtd_r, NULL)
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mhavoc_state,gamma_rcvd_r, NULL)
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE1 ) PORT_NAME("Diag Step/Coin C") PORT_CODE(KEYCODE_F1)
-	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(mhavoc_bit67_r, "COIN\0SERVICE")
+	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mhavoc_state,mhavoc_bit67_r, "COIN\0SERVICE")
 
 	PORT_START("IN1")	/* gamma */
 	/* Bits 7-2 = input switches */
 	/* Bit 1 = Alpha rcvd flag */
 	/* Bit 0 = Alpha xmtd flag */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(alpha_xmtd_r, NULL)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(alpha_rcvd_r, NULL)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mhavoc_state,alpha_xmtd_r, NULL)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mhavoc_state,alpha_rcvd_r, NULL)
 	PORT_BIT( 0x0c, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
@@ -418,7 +418,7 @@ static INPUT_PORTS_START( mhavocrv )
 	PORT_INCLUDE( mhavoc )
 
 	PORT_MODIFY("IN1")
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(tms5220_r, NULL)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mhavoc_state,tms5220_r, NULL)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -436,7 +436,7 @@ INPUT_PORTS_END
 static INPUT_PORTS_START( alphaone )
 	PORT_START("IN0")	/* alpha (player_1 = 0) */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(avgdvg_done_r, NULL)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(clock_r, NULL)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mhavoc_state,clock_r, NULL)
 	PORT_BIT( 0x7c, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 )
 

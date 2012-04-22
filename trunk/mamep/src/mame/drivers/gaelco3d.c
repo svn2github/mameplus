@@ -206,7 +206,7 @@ static MACHINE_RESET( common )
 	state->m_framenum = 0;
 
 	/* boot the ADSP chip */
-	src = (UINT16 *)machine.region("user1")->base();
+	src = (UINT16 *)state->memregion("user1")->base();
 	for (i = 0; i < (src[3] & 0xff) * 8; i++)
 	{
 		UINT32 opcode = ((src[i*4+0] & 0xff) << 16) | ((src[i*4+1] & 0xff) << 8) | (src[i*4+2] & 0xff);
@@ -216,8 +216,8 @@ static MACHINE_RESET( common )
 	/* allocate a timer for feeding the autobuffer */
 	state->m_adsp_autobuffer_timer = machine.device<timer_device>("adsp_timer");
 
-	memory_configure_bank(machine, "bank1", 0, 256, machine.region("user1")->base(), 0x4000);
-	memory_set_bank(machine, "bank1", 0);
+	state->membank("bank1")->configure_entries(0, 256, machine.root_device().memregion("user1")->base(), 0x4000);
+	state->membank("bank1")->set_entry(0);
 
 	/* keep the TMS32031 halted until the code is ready to go */
 	cputag_set_input_line(machine, "tms", INPUT_LINE_RESET, ASSERT_LINE);
@@ -414,11 +414,10 @@ WRITE16_MEMBER(gaelco3d_state::sound_status_w)
  *
  *************************************/
 
-static CUSTOM_INPUT( analog_bit_r )
+CUSTOM_INPUT_MEMBER(gaelco3d_state::analog_bit_r)
 {
-	gaelco3d_state *state = field.machine().driver_data<gaelco3d_state>();
 	int which = (FPTR)param;
-	return (state->m_analog_ports[which] >> 7) & 0x01;
+	return (m_analog_ports[which] >> 7) & 0x01;
 }
 
 
@@ -614,7 +613,7 @@ WRITE16_MEMBER(gaelco3d_state::adsp_rombank_w)
 {
 	if (LOG)
 		logerror("adsp_rombank_w(%d) = %04X\n", offset, data);
-	memory_set_bank(machine(), "bank1", (offset & 1) * 0x80 + (data & 0x7f));
+	membank("bank1")->set_entry((offset & 1) * 0x80 + (data & 0x7f));
 }
 
 
@@ -793,8 +792,8 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, gaelco3d_state )
 	AM_RANGE(0x510156, 0x510157) AM_WRITE(analog_port_clock_w)
 	AM_RANGE(0x510166, 0x510167) AM_WRITE(analog_port_latch_w)
 	AM_RANGE(0x510176, 0x510177) AM_DEVWRITE8_LEGACY("serial", gaelco_serial_unknown_w, 0x00ff)
-	AM_RANGE(0xfe7f80, 0xfe7fff) AM_WRITE(tms_comm_w) AM_BASE(m_tms_comm_base)
-	AM_RANGE(0xfe0000, 0xfeffff) AM_RAM AM_BASE(m_m68k_ram_base)
+	AM_RANGE(0xfe7f80, 0xfe7fff) AM_WRITE(tms_comm_w) AM_SHARE("tms_comm_base")
+	AM_RANGE(0xfe0000, 0xfeffff) AM_RAM AM_SHARE("m68k_ram_base")
 ADDRESS_MAP_END
 
 
@@ -824,8 +823,8 @@ static ADDRESS_MAP_START( main020_map, AS_PROGRAM, 32, gaelco3d_state )
 	AM_RANGE(0x510154, 0x510157) AM_WRITE16(analog_port_clock_w, 0x0000ffff)
 	AM_RANGE(0x510164, 0x510167) AM_WRITE16(analog_port_latch_w, 0x0000ffff)
 	AM_RANGE(0x510174, 0x510177) AM_DEVWRITE8_LEGACY("serial", gaelco_serial_unknown_w, 0x000000ff)
-	AM_RANGE(0xfe7f80, 0xfe7fff) AM_WRITE16(tms_comm_w, 0xffffffff) AM_BASE(m_tms_comm_base)
-	AM_RANGE(0xfe0000, 0xfeffff) AM_RAM AM_BASE(m_m68k_ram_base)
+	AM_RANGE(0xfe7f80, 0xfe7fff) AM_WRITE16(tms_comm_w, 0xffffffff) AM_SHARE("tms_comm_base")
+	AM_RANGE(0xfe0000, 0xfeffff) AM_RAM AM_SHARE("m68k_ram_base")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( tms_map, AS_PROGRAM, 32, gaelco3d_state )
@@ -836,7 +835,7 @@ ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( adsp_program_map, AS_PROGRAM, 32, gaelco3d_state )
-	AM_RANGE(0x0000, 0x03ff) AM_RAM AM_BASE(m_adsp_ram_base)		/* 1k words internal RAM */
+	AM_RANGE(0x0000, 0x03ff) AM_RAM AM_SHARE("adsp_ram_base")		/* 1k words internal RAM */
 	AM_RANGE(0x37ff, 0x37ff) AM_READNOP							/* speedup hammers this for no apparent reason */
 ADDRESS_MAP_END
 
@@ -844,8 +843,8 @@ static ADDRESS_MAP_START( adsp_data_map, AS_DATA, 16, gaelco3d_state )
 	AM_RANGE(0x0000, 0x0001) AM_WRITE(adsp_rombank_w)
 	AM_RANGE(0x0000, 0x1fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x2000, 0x2000) AM_READWRITE(sound_data_r, sound_status_w)
-	AM_RANGE(0x3800, 0x39ff) AM_RAM AM_BASE(m_adsp_fastram_base)	/* 512 words internal RAM */
-	AM_RANGE(0x3fe0, 0x3fff) AM_WRITE(adsp_control_w) AM_BASE(m_adsp_control_regs)
+	AM_RANGE(0x3800, 0x39ff) AM_RAM AM_SHARE("adsp_fastram")	/* 512 words internal RAM */
+	AM_RANGE(0x3fe0, 0x3fff) AM_WRITE(adsp_control_w) AM_SHARE("adsp_regs")
 ADDRESS_MAP_END
 
 
@@ -877,10 +876,10 @@ static INPUT_PORTS_START( speedup )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)	// checked after reading analog from port 1
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)	// checked after reading analog from port 2
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(2)	// checked after reading analog from port 3
-	PORT_BIT( 0x1000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(analog_bit_r, (void *)0)
-	PORT_BIT( 0x2000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(analog_bit_r, (void *)1)
-	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(analog_bit_r, (void *)2)
-	PORT_BIT( 0x8000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(analog_bit_r, (void *)3)
+	PORT_BIT( 0x1000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco3d_state,analog_bit_r, (void *)0)
+	PORT_BIT( 0x2000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco3d_state,analog_bit_r, (void *)1)
+	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco3d_state,analog_bit_r, (void *)2)
+	PORT_BIT( 0x8000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco3d_state,analog_bit_r, (void *)3)
 
 	PORT_START("IN3")
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_COIN2 )		// verified
@@ -916,10 +915,10 @@ static INPUT_PORTS_START( surfplnt )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x0800, IP_ACTIVE_LOW )
-	PORT_BIT( 0x1000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(analog_bit_r, (void *)0)
-	PORT_BIT( 0x2000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(analog_bit_r, (void *)1)
-	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(analog_bit_r, (void *)2)
-	PORT_BIT( 0x8000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(analog_bit_r, (void *)3)
+	PORT_BIT( 0x1000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco3d_state,analog_bit_r, (void *)0)
+	PORT_BIT( 0x2000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco3d_state,analog_bit_r, (void *)1)
+	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco3d_state,analog_bit_r, (void *)2)
+	PORT_BIT( 0x8000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco3d_state,analog_bit_r, (void *)3)
 
 	PORT_START("IN3")
 	PORT_BIT( 0xffff, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -953,10 +952,10 @@ static INPUT_PORTS_START( radikalb )
 	PORT_BIT( 0x02000000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x04000000, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x08000000, IP_ACTIVE_LOW )
-	PORT_BIT( 0x10000000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(analog_bit_r, (void *)0)
-	PORT_BIT( 0x20000000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(analog_bit_r, (void *)1)
-	PORT_BIT( 0x40000000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(analog_bit_r, (void *)2)
-	PORT_BIT( 0x80000000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(analog_bit_r, (void *)3)
+	PORT_BIT( 0x10000000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco3d_state,analog_bit_r, (void *)0)
+	PORT_BIT( 0x20000000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco3d_state,analog_bit_r, (void *)1)
+	PORT_BIT( 0x40000000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco3d_state,analog_bit_r, (void *)2)
+	PORT_BIT( 0x80000000, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco3d_state,analog_bit_r, (void *)3)
 
 	PORT_START("IN3")
 	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_UNKNOWN )

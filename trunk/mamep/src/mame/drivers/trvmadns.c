@@ -69,11 +69,13 @@ class trvmadns_state : public driver_device
 {
 public:
 	trvmadns_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_gfxram(*this, "gfxram"),
+		m_tileram(*this, "tileram"){ }
 
 	tilemap_t *m_bg_tilemap;
-	UINT8 *m_gfxram;
-	UINT8 *m_tileram;
+	required_shared_ptr<UINT8> m_gfxram;
+	required_shared_ptr<UINT8> m_tileram;
 	int m_old_data;
 	DECLARE_WRITE8_MEMBER(trvmadns_banking_w);
 	DECLARE_WRITE8_MEMBER(trvmadns_gfxram_w);
@@ -96,7 +98,7 @@ WRITE8_MEMBER(trvmadns_state::trvmadns_banking_w)
 	}
 	else if((data & 0xf0) == 0x80 || (data & 0xf0) == 0x90)
 	{
-		rom = machine().region("user2")->base();
+		rom = memregion("user2")->base();
 
 		switch(data & 0xf)
 		{
@@ -112,8 +114,8 @@ WRITE8_MEMBER(trvmadns_state::trvmadns_banking_w)
 
 		address |= (data & 0x10) ? 0x10000 : 0;
 
-		memory_set_bankptr(machine(), "bank1", &rom[address]);
-		memory_set_bankptr(machine(), "bank2", &rom[address + 0x1000]);
+		membank("bank1")->set_base(&rom[address]);
+		membank("bank2")->set_base(&rom[address + 0x1000]);
 	}
 	else
 	{
@@ -124,7 +126,7 @@ WRITE8_MEMBER(trvmadns_state::trvmadns_banking_w)
 				//logerror("port80 = %02X\n",data);
 			}
 
-		rom = machine().region("user1")->base();
+		rom = memregion("user1")->base();
 
 		/*
         7
@@ -152,7 +154,7 @@ WRITE8_MEMBER(trvmadns_state::trvmadns_banking_w)
 
 //      logerror("add = %X\n",address);
 
-		memory_set_bankptr(machine(), "bank1", &rom[address]);
+		membank("bank1")->set_base(&rom[address]);
 	}
 }
 
@@ -215,9 +217,9 @@ static ADDRESS_MAP_START( cpu_map, AS_PROGRAM, 8, trvmadns_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x6000, 0x6fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x7000, 0x7fff) AM_ROMBANK("bank2")
-	AM_RANGE(0x6000, 0x7fff) AM_WRITE(trvmadns_gfxram_w) AM_BASE(m_gfxram)
+	AM_RANGE(0x6000, 0x7fff) AM_WRITE(trvmadns_gfxram_w) AM_SHARE("gfxram")
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xa000, 0xa7ff) AM_RAM_WRITE(trvmadns_tileram_w) AM_BASE(m_tileram)
+	AM_RANGE(0xa000, 0xa7ff) AM_RAM_WRITE(trvmadns_tileram_w) AM_SHARE("tileram")
 	AM_RANGE(0xc000, 0xc01f) AM_RAM_WRITE(trvmadns_palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0xe000, 0xe000) AM_WRITE(w2)//NOP
 	AM_RANGE(0xe004, 0xe004) AM_WRITE(w3)//NOP

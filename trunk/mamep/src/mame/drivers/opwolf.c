@@ -346,7 +346,7 @@ READ8_MEMBER(opwolf_state::z80_input2_r)
 
 static WRITE8_DEVICE_HANDLER( sound_bankswitch_w )
 {
-	memory_set_bank(device->machine(), "bank10", (data - 1) & 0x03);
+	device->machine().root_device().membank("bank10")->set_entry((data - 1) & 0x03);
 }
 
 /***********************************************************
@@ -362,7 +362,7 @@ static ADDRESS_MAP_START( opwolf_map, AS_PROGRAM, 16, opwolf_state )
 	AM_RANGE(0x0ff802, 0x0ff803) AM_WRITE(opwolf_cchip_status_w)
 	AM_RANGE(0x0ffc00, 0x0ffc01) AM_WRITE(opwolf_cchip_bank_w)
 	AM_RANGE(0x100000, 0x107fff) AM_RAM
-	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram16_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x380000, 0x380003) AM_READ(opwolf_dsw_r)			/* dip switches */
 	AM_RANGE(0x380000, 0x380003) AM_WRITE(opwolf_spritectrl_w)	// usually 0x4, changes when you fire
 	AM_RANGE(0x3a0000, 0x3a0003) AM_READ(opwolf_lightgun_r)		/* lightgun, read at $11e0/6 */
@@ -383,7 +383,7 @@ static ADDRESS_MAP_START( opwolfb_map, AS_PROGRAM, 16, opwolf_state )
 	AM_RANGE(0x0f0008, 0x0f000b) AM_READ(opwolf_in_r)			/* coins and buttons */
 	AM_RANGE(0x0ff000, 0x0fffff) AM_READWRITE(cchip_r,cchip_w)
 	AM_RANGE(0x100000, 0x107fff) AM_RAM
-	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram16_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x380000, 0x380003) AM_READ(opwolf_dsw_r)			/* dip switches */
 	AM_RANGE(0x380000, 0x380003) AM_WRITE(opwolf_spritectrl_w)	// usually 0x4, changes when you fire
 	AM_RANGE(0x3a0000, 0x3a0003) AM_READ(opwolf_lightgun_r)		/* lightgun, read at $11e0/6 */
@@ -409,7 +409,7 @@ static ADDRESS_MAP_START( opwolfb_sub_z80_map, AS_PROGRAM, 8, opwolf_state )
 	AM_RANGE(0x9000, 0x9000) AM_WRITENOP			/* unknown write, 0 then 1 each interrupt */
 	AM_RANGE(0x9800, 0x9800) AM_READ(z80_input2_r)	/* read at PC=$631: poked to $c005 */
 	AM_RANGE(0xa000, 0xa000) AM_WRITENOP	/* IRQ acknowledge (unimplemented) */
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_BASE(m_cchip_ram)
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("cchip_ram")
 ADDRESS_MAP_END
 
 
@@ -476,7 +476,7 @@ static void opwolf_msm5205_vck( device_t *device )
 	}
 	else
 	{
-		state->m_adpcm_data[chip] = device->machine().region("adpcm")->base()[state->m_adpcm_pos[chip]];
+		state->m_adpcm_data[chip] = device->machine().root_device().memregion("adpcm")->base()[state->m_adpcm_pos[chip]];
 		state->m_adpcm_pos[chip] = (state->m_adpcm_pos[chip] + 1) & 0x7ffff;
 		msm5205_data_w(device, state->m_adpcm_data[chip] >> 4);
 	}
@@ -699,8 +699,8 @@ static void irq_handler( device_t *device, int irq )
 
 static const ym2151_interface ym2151_config =
 {
-	irq_handler,
-	sound_bankswitch_w
+	DEVCB_LINE(irq_handler),
+	DEVCB_HANDLER(sound_bankswitch_w)
 };
 
 
@@ -979,7 +979,7 @@ ROM_END
 static DRIVER_INIT( opwolf )
 {
 	opwolf_state *state = machine.driver_data<opwolf_state>();
-	UINT16* rom = (UINT16*)machine.region("maincpu")->base();
+	UINT16* rom = (UINT16*)machine.root_device().memregion("maincpu")->base();
 
 	state->m_opwolf_region = rom[0x03fffe / 2] & 0xff;
 
@@ -989,14 +989,14 @@ static DRIVER_INIT( opwolf )
 	state->m_opwolf_gun_xoffs = 0xec - (rom[0x03ffb0 / 2] & 0xff);
 	state->m_opwolf_gun_yoffs = 0x1c - (rom[0x03ffae / 2] & 0xff);
 
-	memory_configure_bank(machine, "bank10", 0, 4, machine.region("audiocpu")->base() + 0x10000, 0x4000);
+	state->membank("bank10")->configure_entries(0, 4, state->memregion("audiocpu")->base() + 0x10000, 0x4000);
 }
 
 
 static DRIVER_INIT( opwolfb )
 {
 	opwolf_state *state = machine.driver_data<opwolf_state>();
-	UINT16* rom = (UINT16*)machine.region("maincpu")->base();
+	UINT16* rom = (UINT16*)machine.root_device().memregion("maincpu")->base();
 
 	state->m_opwolf_region = rom[0x03fffe / 2] & 0xff;
 
@@ -1004,7 +1004,7 @@ static DRIVER_INIT( opwolfb )
 	state->m_opwolf_gun_xoffs = -2;
 	state->m_opwolf_gun_yoffs = 17;
 
-	memory_configure_bank(machine, "bank10", 0, 4, machine.region("audiocpu")->base() + 0x10000, 0x4000);
+	state->membank("bank10")->configure_entries(0, 4, state->memregion("audiocpu")->base() + 0x10000, 0x4000);
 }
 
 

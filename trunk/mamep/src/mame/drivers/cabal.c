@@ -119,10 +119,10 @@ WRITE16_MEMBER(cabal_state::cabalbl_sound_irq_trigger_word_w)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, cabal_state )
 	AM_RANGE(0x00000, 0x3ffff) AM_ROM
 	AM_RANGE(0x40000, 0x437ff) AM_RAM
-	AM_RANGE(0x43800, 0x43fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x43800, 0x43fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x44000, 0x4ffff) AM_RAM
-	AM_RANGE(0x60000, 0x607ff) AM_RAM_WRITE(cabal_text_videoram16_w) AM_BASE(m_colorram)
-	AM_RANGE(0x80000, 0x801ff) AM_RAM_WRITE(cabal_background_videoram16_w) AM_BASE(m_videoram)
+	AM_RANGE(0x60000, 0x607ff) AM_RAM_WRITE(cabal_text_videoram16_w) AM_SHARE("colorram")
+	AM_RANGE(0x80000, 0x801ff) AM_RAM_WRITE(cabal_background_videoram16_w) AM_SHARE("videoram")
 	AM_RANGE(0x80200, 0x803ff) AM_RAM
 	AM_RANGE(0xa0000, 0xa0001) AM_READ_PORT("DSW")
 	AM_RANGE(0xa0008, 0xa000f) AM_READ(track_r)
@@ -130,7 +130,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, cabal_state )
 	AM_RANGE(0xc0000, 0xc0001) AM_WRITE(track_reset_w)
 	AM_RANGE(0xc0040, 0xc0041) AM_WRITENOP /* ??? */
 	AM_RANGE(0xc0080, 0xc0081) AM_WRITE(cabal_flipscreen_w)
-	AM_RANGE(0xe0000, 0xe07ff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xe0000, 0xe07ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0xe8008, 0xe8009) AM_WRITE(cabal_sound_irq_trigger_word_w)	// fix coin insertion
 	AM_RANGE(0xe8000, 0xe800d) AM_READWRITE_LEGACY(seibu_main_word_r, seibu_main_word_w)
 ADDRESS_MAP_END
@@ -138,17 +138,17 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( cabalbl_main_map, AS_PROGRAM, 16, cabal_state )
 	AM_RANGE(0x00000, 0x3ffff) AM_ROM
 	AM_RANGE(0x40000, 0x437ff) AM_RAM
-	AM_RANGE(0x43800, 0x43fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x43800, 0x43fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x44000, 0x4ffff) AM_RAM
-	AM_RANGE(0x60000, 0x607ff) AM_RAM_WRITE(cabal_text_videoram16_w) AM_BASE(m_colorram)
-	AM_RANGE(0x80000, 0x801ff) AM_RAM_WRITE(cabal_background_videoram16_w) AM_BASE(m_videoram)
+	AM_RANGE(0x60000, 0x607ff) AM_RAM_WRITE(cabal_text_videoram16_w) AM_SHARE("colorram")
+	AM_RANGE(0x80000, 0x801ff) AM_RAM_WRITE(cabal_background_videoram16_w) AM_SHARE("videoram")
 	AM_RANGE(0x80200, 0x803ff) AM_RAM
 	AM_RANGE(0xa0000, 0xa0001) AM_READ_PORT("DSW")
 	AM_RANGE(0xa0008, 0xa0009) AM_READ_PORT("JOY")
 	AM_RANGE(0xa0010, 0xa0011) AM_READ_PORT("INPUTS")
 	AM_RANGE(0xc0040, 0xc0041) AM_WRITENOP /* ??? */
 	AM_RANGE(0xc0080, 0xc0081) AM_WRITE(cabal_flipscreen_w)
-	AM_RANGE(0xe0000, 0xe07ff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xe0000, 0xe07ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0xe8000, 0xe8003) AM_WRITE(cabalbl_sndcmd_w)
 	AM_RANGE(0xe8004, 0xe8005) AM_READ(soundlatch2_word_r)
 	AM_RANGE(0xe8008, 0xe8009) AM_WRITE(cabalbl_sound_irq_trigger_word_w)
@@ -199,13 +199,13 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( cabalbl_sound_map, AS_PROGRAM, 8, cabal_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x2000, 0x2fff) AM_RAM
-	AM_RANGE(0x4000, 0x4000) AM_WRITE(soundlatch3_w)
-	AM_RANGE(0x4002, 0x4002) AM_WRITE(soundlatch4_w)
+	AM_RANGE(0x4000, 0x4000) AM_WRITE(soundlatch3_byte_w)
+	AM_RANGE(0x4002, 0x4002) AM_WRITE(soundlatch4_byte_w)
 	AM_RANGE(0x4004, 0x4004) AM_WRITE(cabalbl_coin_w)
 	AM_RANGE(0x4006, 0x4006) AM_READ_PORT("COIN")
 	AM_RANGE(0x4008, 0x4008) AM_READ(cabalbl_snd2_r)
 	AM_RANGE(0x400a, 0x400a) AM_READ(cabalbl_snd1_r)
-	AM_RANGE(0x400c, 0x400c) AM_WRITE(soundlatch2_w)
+	AM_RANGE(0x400c, 0x400c) AM_WRITE(soundlatch2_byte_w)
 	AM_RANGE(0x400e, 0x400f) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0x6000, 0x6000) AM_WRITENOP  /* ??? */
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -228,7 +228,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cabalbl_talk1_portmap, AS_IO, 8, cabal_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ(soundlatch3_r)
+	AM_RANGE(0x00, 0x00) AM_READ(soundlatch3_byte_r)
 	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("msm1", cabalbl_adpcm_w)
 ADDRESS_MAP_END
 
@@ -238,7 +238,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cabalbl_talk2_portmap, AS_IO, 8, cabal_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ(soundlatch4_r)
+	AM_RANGE(0x00, 0x00) AM_READ(soundlatch4_byte_r)
 	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("msm2", cabalbl_adpcm_w)
 ADDRESS_MAP_END
 
@@ -464,7 +464,7 @@ static void irqhandler(device_t *device, int irq)
 
 static const ym2151_interface cabalbl_ym2151_interface =
 {
-	irqhandler
+	DEVCB_LINE(irqhandler)
 };
 
 static const msm5205_interface msm5205_interface_1 =
@@ -844,14 +844,14 @@ static void seibu_sound_bootleg(running_machine &machine,const char *cpu,int len
 {
 	address_space *space = machine.device(cpu)->memory().space(AS_PROGRAM);
 	UINT8 *decrypt = auto_alloc_array(machine, UINT8, length);
-	UINT8 *rom = machine.region(cpu)->base();
+	UINT8 *rom = machine.root_device().memregion(cpu)->base();
 
 	space->set_decrypted_region(0x0000, (length < 0x10000) ? (length - 1) : 0x1fff, decrypt);
 
 	memcpy(decrypt, rom+length, length);
 
 	if (length > 0x10000)
-		memory_configure_bank_decrypted(machine, "bank1", 0, (length - 0x10000) / 0x8000, decrypt + 0x10000, 0x8000);
+		machine.root_device().membank("bank1")->configure_decrypted_entries(0, (length - 0x10000) / 0x8000, decrypt + 0x10000, 0x8000);
 }
 
 

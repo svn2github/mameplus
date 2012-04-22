@@ -39,7 +39,7 @@ WRITE16_MEMBER(cbuster_state::twocrude_control_w)
 		return;
 
     case 2: /* Sound CPU write */
-		soundlatch_w(space, 0, data & 0xff);
+		soundlatch_byte_w(space, 0, data & 0xff);
 		device_set_input_line(m_audiocpu, 0, HOLD_LINE);
     	return;
 
@@ -104,19 +104,19 @@ READ16_MEMBER(cbuster_state::twocrude_control_r)
 
 static ADDRESS_MAP_START( twocrude_map, AS_PROGRAM, 16, cbuster_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	AM_RANGE(0x080000, 0x083fff) AM_RAM AM_BASE(m_ram)
+	AM_RANGE(0x080000, 0x083fff) AM_RAM AM_SHARE("ram")
 
 	AM_RANGE(0x0a0000, 0x0a1fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x0a2000, 0x0a2fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x0a4000, 0x0a47ff) AM_RAM AM_BASE(m_pf1_rowscroll)
-	AM_RANGE(0x0a6000, 0x0a67ff) AM_RAM AM_BASE(m_pf2_rowscroll)
+	AM_RANGE(0x0a4000, 0x0a47ff) AM_RAM AM_SHARE("pf1_rowscroll")
+	AM_RANGE(0x0a6000, 0x0a67ff) AM_RAM AM_SHARE("pf2_rowscroll")
 
 	AM_RANGE(0x0a8000, 0x0a8fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x0aa000, 0x0aafff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x0ac000, 0x0ac7ff) AM_RAM AM_BASE(m_pf3_rowscroll)
-	AM_RANGE(0x0ae000, 0x0ae7ff) AM_RAM AM_BASE(m_pf4_rowscroll)
+	AM_RANGE(0x0ac000, 0x0ac7ff) AM_RAM AM_SHARE("pf3_rowscroll")
+	AM_RANGE(0x0ae000, 0x0ae7ff) AM_RAM AM_SHARE("pf4_rowscroll")
 
-	AM_RANGE(0x0b0000, 0x0b07ff) AM_RAM AM_BASE(m_spriteram16)
+	AM_RANGE(0x0b0000, 0x0b07ff) AM_RAM AM_SHARE("spriteram16")
 	AM_RANGE(0x0b4000, 0x0b4001) AM_WRITENOP
 	AM_RANGE(0x0b5000, 0x0b500f) AM_DEVWRITE_LEGACY("tilegen1", deco16ic_pf_control_w)
 	AM_RANGE(0x0b6000, 0x0b600f) AM_DEVWRITE_LEGACY("tilegen2", deco16ic_pf_control_w)
@@ -133,7 +133,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, cbuster_state )
 	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ym2", ym2151_r, ym2151_w)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
-	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_r)
+	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x1f0000, 0x1f1fff) AM_RAMBANK("bank8")
 	AM_RANGE(0x1fec00, 0x1fec01) AM_WRITE_LEGACY(h6280_timer_w)
 	AM_RANGE(0x1ff400, 0x1ff403) AM_WRITE_LEGACY(h6280_irq_status_w)
@@ -270,7 +270,7 @@ static void sound_irq(device_t *device, int state)
 
 static const ym2151_interface ym2151_config =
 {
-	sound_irq
+	DEVCB_LINE(sound_irq)
 };
 
 static int twocrude_bank_callback( const int bank )
@@ -530,7 +530,7 @@ ROM_END
 
 static DRIVER_INIT( twocrude )
 {
-	UINT8 *RAM = machine.region("maincpu")->base();
+	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
 	UINT8 *PTR;
 	int i, j;
 
@@ -547,8 +547,8 @@ static DRIVER_INIT( twocrude )
 	}
 
 	/* Rearrange the 'extra' sprite bank to be in the same format as main sprites */
-	RAM = machine.region("gfx3")->base() + 0x080000;
-	PTR = machine.region("gfx3")->base() + 0x140000;
+	RAM = machine.root_device().memregion("gfx3")->base() + 0x080000;
+	PTR = machine.root_device().memregion("gfx3")->base() + 0x140000;
 	for (i = 0; i < 0x20000; i += 64)
 	{
 		for (j = 0; j < 16; j += 1)

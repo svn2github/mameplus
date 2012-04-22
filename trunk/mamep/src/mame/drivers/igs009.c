@@ -27,20 +27,28 @@ class igs009_state : public driver_device
 {
 public:
 	igs009_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_bg_scroll(*this, "bg_scroll"),
+		m_gp98_reel1_ram(*this, "gp98_reel1_ram"),
+		m_gp98_reel2_ram(*this, "gp98_reel2_ram"),
+		m_gp98_reel3_ram(*this, "gp98_reel3_ram"),
+		m_gp98_reel4_ram(*this, "gp98_reel4_ram"),
+		m_bg_scroll2(*this, "bg_scroll2"),
+		m_fg_tile_ram(*this, "fg_tile_ram"),
+		m_fg_color_ram(*this, "fg_color_ram"){ }
 
+	required_shared_ptr<UINT8> m_bg_scroll;
+	required_shared_ptr<UINT8> m_gp98_reel1_ram;
+	required_shared_ptr<UINT8> m_gp98_reel2_ram;
+	required_shared_ptr<UINT8> m_gp98_reel3_ram;
+	required_shared_ptr<UINT8> m_gp98_reel4_ram;
+	required_shared_ptr<UINT8> m_bg_scroll2;
+	required_shared_ptr<UINT8> m_fg_tile_ram;
+	required_shared_ptr<UINT8> m_fg_color_ram;
 	tilemap_t *m_gp98_reel1_tilemap;
-	UINT8 *m_gp98_reel1_ram;
 	tilemap_t *m_gp98_reel2_tilemap;
-	UINT8 *m_gp98_reel2_ram;
 	tilemap_t *m_gp98_reel3_tilemap;
-	UINT8 *m_gp98_reel3_ram;
 	tilemap_t *m_gp98_reel4_tilemap;
-	UINT8 *m_gp98_reel4_ram;
-	UINT8 *m_fg_tile_ram;
-	UINT8 *m_fg_color_ram;
-	UINT8 *m_bg_scroll;
-	UINT8 *m_bg_scroll2;
 	tilemap_t *m_fg_tilemap;
 	int m_video_enable;
 	int m_nmi_enable;
@@ -60,6 +68,7 @@ public:
 	DECLARE_WRITE8_MEMBER(jingbell_magic_w);
 	DECLARE_READ8_MEMBER(jingbell_magic_r);
 	void show_out();
+	DECLARE_CUSTOM_INPUT_MEMBER(hopper_r);
 };
 
 
@@ -343,10 +352,9 @@ static SCREEN_UPDATE_IND16(jingbell)
 ***************************************************************************/
 
 
-static CUSTOM_INPUT( hopper_r )
+CUSTOM_INPUT_MEMBER(igs009_state::hopper_r)
 {
-	igs009_state *state = field.machine().driver_data<igs009_state>();
-	return state->m_hopper && !(field.machine().primary_screen->frame_number()%10);
+	return m_hopper && !(machine().primary_screen->frame_number()%10);
 }
 
 
@@ -452,19 +460,19 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( jingbell_portmap, AS_IO, 8, igs009_state )
 	AM_RANGE( 0x0000, 0x003f ) AM_RAM // Z180 internal regs
 
-	AM_RANGE( 0x1000, 0x11ff ) AM_RAM_WRITE(bg_scroll_w ) AM_BASE(m_bg_scroll )
+	AM_RANGE( 0x1000, 0x11ff ) AM_RAM_WRITE(bg_scroll_w ) AM_SHARE("bg_scroll")
 
-	AM_RANGE( 0x2000, 0x23ff ) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split1_w ) AM_SHARE("paletteram")
-	AM_RANGE( 0x2400, 0x27ff ) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split2_w ) AM_SHARE("paletteram2")
+	AM_RANGE( 0x2000, 0x23ff ) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_lo_w ) AM_SHARE("paletteram")
+	AM_RANGE( 0x2400, 0x27ff ) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_hi_w ) AM_SHARE("paletteram2")
 
-	AM_RANGE( 0x3000, 0x33ff ) AM_RAM_WRITE(gp98_reel1_ram_w )  AM_BASE(m_gp98_reel1_ram )
-	AM_RANGE( 0x3400, 0x37ff ) AM_RAM_WRITE(gp98_reel2_ram_w )  AM_BASE(m_gp98_reel2_ram )
-	AM_RANGE( 0x3800, 0x3bff ) AM_RAM_WRITE(gp98_reel3_ram_w )  AM_BASE(m_gp98_reel3_ram )
-	AM_RANGE( 0x3c00, 0x3fff ) AM_RAM_WRITE(gp98_reel4_ram_w )  AM_BASE(m_gp98_reel4_ram )
+	AM_RANGE( 0x3000, 0x33ff ) AM_RAM_WRITE(gp98_reel1_ram_w )  AM_SHARE("gp98_reel1_ram")
+	AM_RANGE( 0x3400, 0x37ff ) AM_RAM_WRITE(gp98_reel2_ram_w )  AM_SHARE("gp98_reel2_ram")
+	AM_RANGE( 0x3800, 0x3bff ) AM_RAM_WRITE(gp98_reel3_ram_w )  AM_SHARE("gp98_reel3_ram")
+	AM_RANGE( 0x3c00, 0x3fff ) AM_RAM_WRITE(gp98_reel4_ram_w )  AM_SHARE("gp98_reel4_ram")
 
-	AM_RANGE( 0x4000, 0x407f ) AM_RAM AM_BASE(m_bg_scroll2 )
+	AM_RANGE( 0x4000, 0x407f ) AM_RAM AM_SHARE("bg_scroll2")
 
-	AM_RANGE( 0x5000, 0x5fff ) AM_RAM_WRITE(fg_tile_w )  AM_BASE(m_fg_tile_ram )
+	AM_RANGE( 0x5000, 0x5fff ) AM_RAM_WRITE(fg_tile_w )  AM_SHARE("fg_tile_ram")
 
 	AM_RANGE( 0x6480, 0x6480 ) AM_WRITE(jingbell_nmi_and_coins_w )
 
@@ -481,7 +489,7 @@ static ADDRESS_MAP_START( jingbell_portmap, AS_IO, 8, igs009_state )
 
 	AM_RANGE( 0x64d0, 0x64d1 ) AM_READWRITE(jingbell_magic_r, jingbell_magic_w )	// DSW1-5
 
-	AM_RANGE( 0x7000, 0x7fff ) AM_RAM_WRITE(fg_color_w ) AM_BASE(m_fg_color_ram )
+	AM_RANGE( 0x7000, 0x7fff ) AM_RAM_WRITE(fg_color_w ) AM_SHARE("fg_color_ram")
 
 	AM_RANGE( 0x8000, 0xffff ) AM_ROM AM_REGION("data", 0)
 ADDRESS_MAP_END
@@ -549,7 +557,7 @@ static INPUT_PORTS_START( jingbell )
 	PORT_START("SERVICE")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE1 ) PORT_NAME("Memory Clear")	// stats, memory
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM( hopper_r, (void *)0 )	// hopper sensor
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF,igs009_state,hopper_r, (void *)0 )	// hopper sensor
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_GAMBLE_PAYOUT ) PORT_NAME("Pay Out")
 	PORT_SERVICE_NO_TOGGLE( 0x20, IP_ACTIVE_LOW )	// test (press during boot)
@@ -775,8 +783,8 @@ ROM_END
 static DRIVER_INIT( jingbell )
 {
 	int i;
-	UINT8 *rom  = (UINT8 *)machine.region("maincpu")->base();
-	size_t size = machine.region("maincpu")->bytes();
+	UINT8 *rom  = (UINT8 *)machine.root_device().memregion("maincpu")->base();
+	size_t size = machine.root_device().memregion("maincpu")->bytes();
 
 	for (i=0; i<size; i++)
 	{

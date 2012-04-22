@@ -455,15 +455,17 @@ class _5clown_state : public driver_device
 {
 public:
 	_5clown_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"),
+		m_colorram(*this, "colorram"){ }
 
 	UINT8 m_main_latch_d800;
 	UINT8 m_snd_latch_0800;
 	UINT8 m_snd_latch_0a02;
 	UINT8 m_ay8910_addr;
 	device_t *m_ay8910;
-	UINT8 *m_videoram;
-	UINT8 *m_colorram;
+	required_shared_ptr<UINT8> m_videoram;
+	required_shared_ptr<UINT8> m_colorram;
 	tilemap_t *m_bg_tilemap;
 	int m_mux_data;
 	DECLARE_WRITE8_MEMBER(fclown_videoram_w);
@@ -535,6 +537,7 @@ static SCREEN_UPDATE_IND16( fclown )
 
 static PALETTE_INIT( fclown )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 /*
     7654 3210
     ---- ---x   RED component.
@@ -723,8 +726,8 @@ static ADDRESS_MAP_START( fclown_map, AS_PROGRAM, 8, _5clown_state )
 	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_device, read, write)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(fclown_videoram_w) AM_BASE(m_videoram)	/* Init'ed at $2042 */
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(fclown_colorram_w) AM_BASE(m_colorram)	/* Init'ed at $2054 */
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(fclown_videoram_w) AM_SHARE("videoram")	/* Init'ed at $2042 */
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(fclown_colorram_w) AM_SHARE("colorram")	/* Init'ed at $2054 */
 	AM_RANGE(0x2000, 0x7fff) AM_ROM					/* ROM space */
 
 	AM_RANGE(0xc048, 0xc048) AM_WRITE(cpu_c048_w )
@@ -1202,7 +1205,7 @@ static DRIVER_INIT( fclown )
     /* Decrypting main program */
 
 	int x;
-	UINT8 *src = machine.region( "maincpu" )->base();
+	UINT8 *src = state->memregion( "maincpu" )->base();
 
 	for (x = 0x0000; x < 0x10000; x++)
 	{
@@ -1212,8 +1215,8 @@ static DRIVER_INIT( fclown )
 
     /* Decrypting GFX by segments */
 
-	UINT8 *gfx1_src = machine.region( "gfx1" )->base();
-	UINT8 *gfx2_src = machine.region( "gfx2" )->base();
+	UINT8 *gfx1_src = machine.root_device().memregion( "gfx1" )->base();
+	UINT8 *gfx2_src = machine.root_device().memregion( "gfx2" )->base();
 
 	for (x = 0x2000; x < 0x3000; x++)
 	{
@@ -1233,7 +1236,7 @@ static DRIVER_INIT( fclown )
 
     /* Decrypting sound samples */
 
-	UINT8 *samples_src = machine.region( "oki6295" )->base();
+	UINT8 *samples_src = machine.root_device().memregion( "oki6295" )->base();
 
 	for (x = 0x0000; x < 0x10000; x++)
 	{

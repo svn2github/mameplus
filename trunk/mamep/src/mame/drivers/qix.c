@@ -275,10 +275,10 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( mcu_map, AS_PROGRAM, 8, qix_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7ff)
-	AM_RANGE(0x0000, 0x0000) AM_READWRITE(qix_68705_portA_r, qix_68705_portA_w) AM_BASE(m_68705_port_out)
+	AM_RANGE(0x0000, 0x0000) AM_READWRITE(qix_68705_portA_r, qix_68705_portA_w) AM_SHARE("68705_port_out")
 	AM_RANGE(0x0001, 0x0001) AM_READWRITE(qix_68705_portB_r, qix_68705_portB_w)
 	AM_RANGE(0x0002, 0x0002) AM_READWRITE(qix_68705_portC_r, qix_68705_portC_w)
-	AM_RANGE(0x0004, 0x0007) AM_WRITEONLY AM_BASE(m_68705_ddr)
+	AM_RANGE(0x0004, 0x0007) AM_WRITEONLY AM_SHARE("68705_ddr")
 	AM_RANGE(0x0010, 0x007f) AM_RAM
 	AM_RANGE(0x0080, 0x07ff) AM_ROM
 ADDRESS_MAP_END
@@ -1278,8 +1278,8 @@ static DRIVER_INIT( kram3 )
      ********************************/
 
 	i = 0;
-	//patch = machine.region("user1")->base();
-	rom = machine.region("maincpu")->base();
+	//patch = machine.root_device().memregion("user1")->base();
+	rom = machine.root_device().memregion("maincpu")->base();
 	decrypted = auto_alloc_array(machine, UINT8, 0x6000);
 
 	mainspace->set_decrypted_region(0xa000, 0xffff, decrypted);
@@ -1291,8 +1291,8 @@ static DRIVER_INIT( kram3 )
 	}
 
 	i = 0;
-	//patch = machine.region("user2")->base();
-	rom = machine.region("videocpu")->base();
+	//patch = machine.root_device().memregion("user2")->base();
+	rom = machine.root_device().memregion("videocpu")->base();
 	decrypted = auto_alloc_array(machine, UINT8, 0x6000);
 
 	videospace->set_decrypted_region(0xa000, 0xffff, decrypted);
@@ -1308,9 +1308,9 @@ static DRIVER_INIT( kram3 )
 static DRIVER_INIT( zookeep )
 {
 	/* configure the banking */
-	memory_configure_bank(machine, "bank1", 0, 1, machine.region("videocpu")->base() + 0xa000, 0);
-	memory_configure_bank(machine, "bank1", 1, 1, machine.region("videocpu")->base() + 0x10000, 0);
-	memory_set_bank(machine, "bank1", 0);
+	machine.root_device().membank("bank1")->configure_entry(0, machine.root_device().memregion("videocpu")->base() + 0xa000);
+	machine.root_device().membank("bank1")->configure_entry(1, machine.root_device().memregion("videocpu")->base() + 0x10000);
+	machine.root_device().membank("bank1")->set_entry(0);
 }
 
 

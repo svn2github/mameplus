@@ -68,10 +68,11 @@ class feversoc_state : public driver_device
 {
 public:
 	feversoc_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_spriteram(*this, "spriteram"){ }
 
 	UINT16 m_x;
-	UINT32 *m_spriteram;
+	required_shared_ptr<UINT32> m_spriteram;
 	DECLARE_WRITE32_MEMBER(fs_paletteram_w);
 	DECLARE_READ32_MEMBER(in0_r);
 	DECLARE_WRITE32_MEMBER(output_w);
@@ -165,7 +166,7 @@ WRITE32_MEMBER(feversoc_state::output_w)
 static ADDRESS_MAP_START( feversoc_map, AS_PROGRAM, 32, feversoc_state )
 	AM_RANGE(0x00000000, 0x0003ffff) AM_ROM
 	AM_RANGE(0x02000000, 0x0203dfff) AM_RAM //work ram
-	AM_RANGE(0x0203e000, 0x0203ffff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x0203e000, 0x0203ffff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x06000000, 0x06000003) AM_WRITE(output_w)
 	AM_RANGE(0x06000004, 0x06000007) AM_WRITENOP //???
 	AM_RANGE(0x06000008, 0x0600000b) AM_READ(in0_r)
@@ -297,7 +298,7 @@ ROM_END
 
 static DRIVER_INIT( feversoc )
 {
-	seibuspi_rise11_sprite_decrypt_feversoc(machine.region("gfx1")->base(), 0x200000);
+	seibuspi_rise11_sprite_decrypt_feversoc(machine.root_device().memregion("gfx1")->base(), 0x200000);
 }
 
 GAME( 2004, feversoc,  0,       feversoc,  feversoc,  feversoc, ROT0, "Seibu Kaihatsu", "Fever Soccer", 0 )

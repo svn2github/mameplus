@@ -179,8 +179,8 @@ WRITE8_MEMBER(djboy_state::cpu0_bankswitch_w)
 {
 
 	data ^= m_bankxor;
-	memory_set_bank(machine(), "bank1", data);
-	memory_set_bank(machine(), "bank4", 0); /* unsure if/how this area is banked */
+	membank("bank1")->set_entry(data);
+	membank("bank4")->set_entry(0); /* unsure if/how this area is banked */
 }
 
 /******************************************************************************/
@@ -202,7 +202,7 @@ WRITE8_MEMBER(djboy_state::cpu1_bankswitch_w)
 	case 0x01:
 	case 0x02:
 	case 0x03:
-		memory_set_bank(machine(), "bank2", (data & 0xf));
+		membank("bank2")->set_entry((data & 0xf));
 		break;
 
 	/* bs101.6w */
@@ -214,7 +214,7 @@ WRITE8_MEMBER(djboy_state::cpu1_bankswitch_w)
 	case 0x0d:
 	case 0x0e:
 	case 0x0f:
-		memory_set_bank(machine(), "bank2", (data & 0xf) - 4);
+		membank("bank2")->set_entry((data & 0xf) - 4);
 		break;
 
 	default:
@@ -232,13 +232,13 @@ WRITE8_MEMBER(djboy_state::coin_count_w)
 
 WRITE8_MEMBER(djboy_state::trigger_nmi_on_sound_cpu2)
 {
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	device_set_input_line(m_cpu2, INPUT_LINE_NMI, PULSE_LINE);
 } /* trigger_nmi_on_sound_cpu2 */
 
 WRITE8_MEMBER(djboy_state::cpu2_bankswitch_w)
 {
-	memory_set_bank(machine(), "bank3", data);	// shall we check data<0x07?
+	membank("bank3")->set_entry(data);	// shall we check data<0x07?
 }
 
 /******************************************************************************/
@@ -263,8 +263,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( cpu1_am, AS_PROGRAM, 8, djboy_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank2")
-	AM_RANGE(0xc000, 0xcfff) AM_RAM_WRITE(djboy_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(djboy_paletteram_w) AM_BASE(m_paletteram)
+	AM_RANGE(0xc000, 0xcfff) AM_RAM_WRITE(djboy_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(djboy_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0xd400, 0xd8ff) AM_RAM
 	AM_RANGE(0xe000, 0xffff) AM_RAM AM_SHARE("share1")
 ADDRESS_MAP_END
@@ -293,7 +293,7 @@ static ADDRESS_MAP_START( cpu2_port_am, AS_IO, 8, djboy_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_WRITE(cpu2_bankswitch_w)
 	AM_RANGE(0x02, 0x03) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)
-	AM_RANGE(0x04, 0x04) AM_READ(soundlatch_r)
+	AM_RANGE(0x04, 0x04) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x06, 0x06) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x07, 0x07) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
 ADDRESS_MAP_END
@@ -522,17 +522,17 @@ static const kaneko_pandora_interface djboy_pandora_config =
 static MACHINE_START( djboy )
 {
 	djboy_state *state = machine.driver_data<djboy_state>();
-	UINT8 *MAIN = machine.region("maincpu")->base();
-	UINT8 *CPU1 = machine.region("cpu1")->base();
-	UINT8 *CPU2 = machine.region("cpu2")->base();
+	UINT8 *MAIN = machine.root_device().memregion("maincpu")->base();
+	UINT8 *CPU1 = machine.root_device().memregion("cpu1")->base();
+	UINT8 *CPU2 = state->memregion("cpu2")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 4,  &MAIN[0x00000], 0x2000);
-	memory_configure_bank(machine, "bank1", 4, 28, &MAIN[0x10000], 0x2000);
-	memory_configure_bank(machine, "bank2", 0, 2,  &CPU1[0x00000], 0x4000);
-	memory_configure_bank(machine, "bank2", 2, 10, &CPU1[0x10000], 0x4000);
-	memory_configure_bank(machine, "bank3", 0, 3,  &CPU2[0x00000], 0x4000);
-	memory_configure_bank(machine, "bank3", 3, 5,  &CPU2[0x10000], 0x4000);
-	memory_configure_bank(machine, "bank4", 0, 1,  &MAIN[0x10000], 0x3000); /* unsure if/how this area is banked */
+	state->membank("bank1")->configure_entries(0, 4,  &MAIN[0x00000], 0x2000);
+	state->membank("bank1")->configure_entries(4, 28, &MAIN[0x10000], 0x2000);
+	state->membank("bank2")->configure_entries(0, 2,  &CPU1[0x00000], 0x4000);
+	state->membank("bank2")->configure_entries(2, 10, &CPU1[0x10000], 0x4000);
+	state->membank("bank3")->configure_entries(0, 3,  &CPU2[0x00000], 0x4000);
+	state->membank("bank3")->configure_entries(3, 5,  &CPU2[0x10000], 0x4000);
+	state->membank("bank4")->configure_entry(0, &MAIN[0x10000]); /* unsure if/how this area is banked */
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_cpu1 = machine.device("cpu1");

@@ -55,15 +55,21 @@ public:
 	igs017_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_input_addr(-1),
-		m_maincpu(*this, "maincpu")
-		{ }
+		m_maincpu(*this, "maincpu"),
+		m_spriteram(*this, "spriteram", 0),
+		m_fg_videoram(*this, "fg_videoram", 0),
+		m_bg_videoram(*this, "bg_videoram", 0){ }
+
+	int m_input_addr;
+	required_device<cpu_device> m_maincpu;
+	optional_shared_ptr<UINT8> m_spriteram;
+	optional_shared_ptr<UINT8> m_fg_videoram;
+	optional_shared_ptr<UINT8> m_bg_videoram;
 
 	int m_toggle;
 	int m_debug_addr;
 	int m_debug_width;
 	UINT8 m_video_disable;
-	UINT8 *m_fg_videoram;
-	UINT8 *m_bg_videoram;
 	tilemap_t *m_fg_tilemap;
 	tilemap_t *m_bg_tilemap;
 	UINT8 *m_sprites_gfx;
@@ -71,16 +77,12 @@ public:
 	int m_nmi_enable;
 	int m_irq_enable;
 	UINT8 m_input_select;
-	int m_input_addr;
 	UINT8 m_hopper;
 	UINT16 m_igs_magic[2];
 	UINT8 m_scramble_data;
 	UINT8 m_prot[2];
 	int m_irq1_enable;
 	int m_irq2_enable;
-	UINT8 *m_spriteram;
-
-	required_device<cpu_device> m_maincpu;
 	DECLARE_WRITE8_MEMBER(video_disable_w);
 	DECLARE_WRITE16_MEMBER(video_disable_lsb_w);
 	DECLARE_WRITE8_MEMBER(fg_w);
@@ -217,8 +219,8 @@ WRITE16_MEMBER(igs017_state::spriteram_lsb_w)
 static void expand_sprites(running_machine &machine)
 {
 	igs017_state *state = machine.driver_data<igs017_state>();
-	UINT8 *rom	=	machine.region("sprites")->base();
-	int size	=	machine.region("sprites")->bytes();
+	UINT8 *rom	=	machine.root_device().memregion("sprites")->base();
+	int size	=	state->memregion("sprites")->bytes();
 	int i;
 
 	state->m_sprites_gfx_size	=	size / 2 * 3;
@@ -419,8 +421,8 @@ static SCREEN_UPDATE_IND16( igs017 )
 
 static void decrypt_program_rom(running_machine &machine, int mask, int a7, int a6, int a5, int a4, int a3, int a2, int a1, int a0)
 {
-	int length = machine.region("maincpu")->bytes();
-	UINT8 *rom = machine.region("maincpu")->base();
+	int length = machine.root_device().memregion("maincpu")->bytes();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 	UINT8 *tmp = auto_alloc_array(machine, UINT8, length);
 	int i;
 
@@ -472,7 +474,7 @@ static void decrypt_program_rom(running_machine &machine, int mask, int a7, int 
 
 static void iqblocka_patch_rom(running_machine &machine)
 {
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 //  rom[0x7b64] = 0xc9;
 
@@ -513,8 +515,8 @@ static DRIVER_INIT( iqblockf )
 
 static void tjsb_decrypt_sprites(running_machine &machine)
 {
-	int length = machine.region("sprites")->bytes();
-	UINT8 *rom = machine.region("sprites")->base();
+	int length = machine.root_device().memregion("sprites")->bytes();
+	UINT8 *rom = machine.root_device().memregion("sprites")->base();
 	UINT8 *tmp = auto_alloc_array(machine, UINT8, length);
 	int i, addr;
 
@@ -549,7 +551,7 @@ static DRIVER_INIT( tjsb )
 static void mgcs_decrypt_program_rom(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *src = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	int rom_size = 0x80000;
 
@@ -598,8 +600,8 @@ static void mgcs_decrypt_program_rom(running_machine &machine)
 
 static void mgcs_decrypt_tiles(running_machine &machine)
 {
-	int length = machine.region("tilemaps")->bytes();
-	UINT8 *rom = machine.region("tilemaps")->base();
+	int length = machine.root_device().memregion("tilemaps")->bytes();
+	UINT8 *rom = machine.root_device().memregion("tilemaps")->base();
 	UINT8 *tmp = auto_alloc_array(machine, UINT8, length);
 	int i;
 
@@ -615,8 +617,8 @@ static void mgcs_decrypt_tiles(running_machine &machine)
 
 static void mgcs_flip_sprites(running_machine &machine)
 {
-	int length = machine.region("sprites")->bytes();
-	UINT8 *rom = machine.region("sprites")->base();
+	int length = machine.root_device().memregion("sprites")->bytes();
+	UINT8 *rom = machine.root_device().memregion("sprites")->base();
 	int i;
 
 	for (i = 0;i < length;i+=2)
@@ -636,7 +638,7 @@ static void mgcs_flip_sprites(running_machine &machine)
 
 static void mgcs_patch_rom(running_machine &machine)
 {
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	rom[0x4e036/2] = 0x6006;
 
@@ -662,7 +664,7 @@ static DRIVER_INIT( mgcs )
 // decryption is incomplete, the first part of code doesn't seem right.
 static DRIVER_INIT( tarzan )
 {
-	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 	int i;
 	int size = 0x40000;
 
@@ -688,7 +690,7 @@ static DRIVER_INIT( tarzan )
 // by iq_132
 static DRIVER_INIT( tarzana )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	int i;
 	int size = 0x80000;
 
@@ -761,7 +763,7 @@ static DRIVER_INIT( starzan )
 {
 	int size = 0x040000;
 
-	UINT8 *data = machine.region("maincpu")->base();
+	UINT8 *data = machine.root_device().memregion("maincpu")->base();
 	UINT8 *code = auto_alloc_array(machine, UINT8, size);
 	memcpy(code, data, size);
 
@@ -779,7 +781,7 @@ static DRIVER_INIT( starzan )
 static DRIVER_INIT( sdmg2 )
 {
 	int i;
-	UINT16 *src = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *src = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	int rom_size = 0x80000;
 
@@ -836,7 +838,7 @@ static DRIVER_INIT( sdmg2 )
 static DRIVER_INIT( mgdha )
 {
 	int i;
-	UINT16 *src = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *src = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	int rom_size = 0x80000;
 
@@ -871,7 +873,7 @@ static DRIVER_INIT( mgdh )
 {
 	DRIVER_INIT_CALL( mgdha );
 
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// additional protection
 	rom[0x4ad50/2] = 0x4e71;
@@ -883,7 +885,7 @@ static DRIVER_INIT( mgdh )
 
 static void lhzb2_patch_rom(running_machine &machine)
 {
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// Prot. checks:
 	rom[0x14786/2] = 0x6044;	// 014786: 6744    beq $147cc
@@ -894,8 +896,8 @@ static void lhzb2_patch_rom(running_machine &machine)
 
 static void lhzb2_decrypt_tiles(running_machine &machine)
 {
-	int length = machine.region("tilemaps")->bytes();
-	UINT8 *rom = machine.region("tilemaps")->base();
+	int length = machine.root_device().memregion("tilemaps")->bytes();
+	UINT8 *rom = machine.root_device().memregion("tilemaps")->base();
 	UINT8 *tmp = auto_alloc_array(machine, UINT8, length);
 	int i;
 
@@ -912,8 +914,8 @@ static void lhzb2_decrypt_tiles(running_machine &machine)
 
 static void lhzb2_decrypt_sprites(running_machine &machine)
 {
-	int length = machine.region("sprites")->bytes();
-	UINT8 *rom = machine.region("sprites")->base();
+	int length = machine.root_device().memregion("sprites")->bytes();
+	UINT8 *rom = machine.root_device().memregion("sprites")->base();
 	UINT8 *tmp = auto_alloc_array(machine, UINT8, length);
 	int i, addr;
 
@@ -938,7 +940,7 @@ static void lhzb2_decrypt_sprites(running_machine &machine)
 static DRIVER_INIT( lhzb2 )
 {
 	int i;
-	UINT16 *src = (UINT16 *) (machine.region("maincpu")->base());
+	UINT16 *src = (UINT16 *) (machine.root_device().memregion("maincpu")->base());
 
 	int rom_size = 0x80000;
 
@@ -1031,7 +1033,7 @@ static DRIVER_INIT( lhzb2 )
 
 static void lhzb2a_patch_rom(running_machine &machine)
 {
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// Prot. checks:
 	rom[0x09c52/2] = 0x6026;	// 009C52: 6726    beq $9c7a
@@ -1047,7 +1049,7 @@ static void lhzb2a_patch_rom(running_machine &machine)
 static DRIVER_INIT( lhzb2a )
 {
 	int i;
-	UINT16 *src = (UINT16 *) (machine.region("maincpu")->base());
+	UINT16 *src = (UINT16 *) (machine.root_device().memregion("maincpu")->base());
 
 	int rom_size = 0x80000;
 
@@ -1112,7 +1114,7 @@ static DRIVER_INIT( lhzb2a )
 
 static void slqz2_patch_rom(running_machine &machine)
 {
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// Prot. checks:
 	rom[0x1489c/2] = 0x6044;	// 01489C: 6744    beq $148e2
@@ -1123,8 +1125,8 @@ static void slqz2_patch_rom(running_machine &machine)
 
 static void slqz2_decrypt_tiles(running_machine &machine)
 {
-	int length = machine.region("tilemaps")->bytes();
-	UINT8 *rom = machine.region("tilemaps")->base();
+	int length = machine.root_device().memregion("tilemaps")->bytes();
+	UINT8 *rom = machine.root_device().memregion("tilemaps")->base();
 	UINT8 *tmp = auto_alloc_array(machine, UINT8, length);
 	int i;
 
@@ -1141,7 +1143,7 @@ static void slqz2_decrypt_tiles(running_machine &machine)
 static DRIVER_INIT( slqz2 )
 {
 	int i;
-	UINT16 *src = (UINT16 *) (machine.region("maincpu")->base());
+	UINT16 *src = (UINT16 *) (machine.root_device().memregion("maincpu")->base());
 
 	int rom_size = 0x80000;
 
@@ -1294,8 +1296,8 @@ READ8_MEMBER(igs017_state::input_r)
 static ADDRESS_MAP_START( iqblocka_io, AS_IO, 8, igs017_state )
 	AM_RANGE( 0x0000, 0x003f ) AM_RAM // internal regs
 
-	AM_RANGE( 0x1000, 0x17ff ) AM_RAM AM_BASE(m_spriteram)
-	AM_RANGE( 0x1800, 0x1bff ) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_le_w ) AM_SHARE("paletteram")
+	AM_RANGE( 0x1000, 0x17ff ) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE( 0x1800, 0x1bff ) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_byte_le_w ) AM_SHARE("paletteram")
 	AM_RANGE( 0x1c00, 0x1fff ) AM_RAM
 
 //  AM_RANGE(0x200a, 0x200a) AM_WRITENOP
@@ -1306,8 +1308,8 @@ static ADDRESS_MAP_START( iqblocka_io, AS_IO, 8, igs017_state )
 	AM_RANGE( 0x2014, 0x2014 ) AM_WRITE(nmi_enable_w )
 	AM_RANGE( 0x2015, 0x2015 ) AM_WRITE(irq_enable_w )
 
-	AM_RANGE( 0x4000, 0x5fff ) AM_RAM_WRITE(fg_w ) AM_BASE(m_fg_videoram )
-	AM_RANGE( 0x6000, 0x7fff ) AM_RAM_WRITE(bg_w ) AM_BASE(m_bg_videoram )
+	AM_RANGE( 0x4000, 0x5fff ) AM_RAM_WRITE(fg_w ) AM_SHARE("fg_videoram")
+	AM_RANGE( 0x6000, 0x7fff ) AM_RAM_WRITE(bg_w ) AM_SHARE("bg_videoram")
 
 	AM_RANGE( 0x8000, 0x8000 ) AM_WRITE(input_select_w )
 	AM_RANGE( 0x8001, 0x8001 ) AM_READ(input_r )
@@ -1420,14 +1422,14 @@ static ADDRESS_MAP_START( mgcs, AS_PROGRAM, 16, igs017_state )
 	AM_RANGE( 0x300000, 0x303fff ) AM_RAM
 	AM_RANGE( 0x49c000, 0x49c003 ) AM_WRITE(mgcs_magic_w )
 	AM_RANGE( 0x49c002, 0x49c003 ) AM_READ(mgcs_magic_r )
-	AM_RANGE( 0xa02000, 0xa02fff ) AM_READWRITE(spriteram_lsb_r, spriteram_lsb_w ) AM_BASE(m_spriteram)
+	AM_RANGE( 0xa02000, 0xa02fff ) AM_READWRITE(spriteram_lsb_r, spriteram_lsb_w ) AM_SHARE("spriteram")
 	AM_RANGE( 0xa03000, 0xa037ff ) AM_RAM_WRITE(mgcs_paletteram_w ) AM_SHARE("paletteram")
 	AM_RANGE( 0xa04020, 0xa04027 ) AM_DEVREAD8_LEGACY("ppi8255", ppi8255_r, 0x00ff )
 	AM_RANGE( 0xa04024, 0xa04025 ) AM_WRITE(video_disable_lsb_w )
 	AM_RANGE( 0xa04028, 0xa04029 ) AM_WRITE(irq2_enable_w )
 	AM_RANGE( 0xa0402a, 0xa0402b ) AM_WRITE(irq1_enable_w )
-	AM_RANGE( 0xa08000, 0xa0bfff ) AM_READWRITE(fg_lsb_r, fg_lsb_w ) AM_BASE(m_fg_videoram )
-	AM_RANGE( 0xa0c000, 0xa0ffff ) AM_READWRITE(bg_lsb_r, bg_lsb_w ) AM_BASE(m_bg_videoram )
+	AM_RANGE( 0xa08000, 0xa0bfff ) AM_READWRITE(fg_lsb_r, fg_lsb_w ) AM_SHARE("fg_videoram")
+	AM_RANGE( 0xa0c000, 0xa0ffff ) AM_READWRITE(bg_lsb_r, bg_lsb_w ) AM_SHARE("bg_videoram")
 	AM_RANGE( 0xa12000, 0xa12001 ) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff )
 	// oki banking through protection (code at $1a350)?
 ADDRESS_MAP_END
@@ -1517,14 +1519,14 @@ READ16_MEMBER(igs017_state::sdmg2_magic_r)
 static ADDRESS_MAP_START( sdmg2, AS_PROGRAM, 16, igs017_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x1f0000, 0x1fffff) AM_RAM
-	AM_RANGE(0x202000, 0x202fff) AM_READWRITE(spriteram_lsb_r, spriteram_lsb_w ) AM_BASE(m_spriteram)
+	AM_RANGE(0x202000, 0x202fff) AM_READWRITE(spriteram_lsb_r, spriteram_lsb_w ) AM_SHARE("spriteram")
 	AM_RANGE(0x203000, 0x2037ff) AM_RAM_WRITE(sdmg2_paletteram_w ) AM_SHARE("paletteram")
 	AM_RANGE(0x204020, 0x204027) AM_DEVREAD8_LEGACY("ppi8255", ppi8255_r, 0x00ff )
 	AM_RANGE(0x204024, 0x204025) AM_WRITE(video_disable_lsb_w )
 	AM_RANGE(0x204028, 0x204029) AM_WRITE(irq2_enable_w )
 	AM_RANGE(0x20402a, 0x20402b) AM_WRITE(irq1_enable_w )
-	AM_RANGE(0x208000, 0x20bfff) AM_READWRITE(fg_lsb_r, fg_lsb_w ) AM_BASE(m_fg_videoram )
-	AM_RANGE(0x20c000, 0x20ffff) AM_READWRITE(bg_lsb_r, bg_lsb_w ) AM_BASE(m_bg_videoram )
+	AM_RANGE(0x208000, 0x20bfff) AM_READWRITE(fg_lsb_r, fg_lsb_w ) AM_SHARE("fg_videoram")
+	AM_RANGE(0x20c000, 0x20ffff) AM_READWRITE(bg_lsb_r, bg_lsb_w ) AM_SHARE("bg_videoram")
 	AM_RANGE(0x210000, 0x210001) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff )
 	AM_RANGE(0x300000, 0x300003) AM_WRITE(sdmg2_magic_w )
 	AM_RANGE(0x300002, 0x300003) AM_READ(sdmg2_magic_r )
@@ -1638,15 +1640,15 @@ static ADDRESS_MAP_START( mgdha_map, AS_PROGRAM, 16, igs017_state )
 	AM_RANGE(0x600000, 0x603fff) AM_RAM
 	AM_RANGE(0x876000, 0x876003) AM_WRITE(mgdha_magic_w )
 	AM_RANGE(0x876002, 0x876003) AM_READ(mgdha_magic_r )
-	AM_RANGE(0xa02000, 0xa02fff) AM_READWRITE(spriteram_lsb_r, spriteram_lsb_w ) AM_BASE(m_spriteram)
+	AM_RANGE(0xa02000, 0xa02fff) AM_READWRITE(spriteram_lsb_r, spriteram_lsb_w ) AM_SHARE("spriteram")
 	AM_RANGE(0xa03000, 0xa037ff) AM_RAM_WRITE(sdmg2_paletteram_w ) AM_SHARE("paletteram")
 //  AM_RANGE(0xa04014, 0xa04015) // written with FF at boot
 	AM_RANGE(0xa04020, 0xa04027) AM_DEVREAD8_LEGACY("ppi8255", ppi8255_r, 0x00ff )
 	AM_RANGE(0xa04024, 0xa04025) AM_WRITE(video_disable_lsb_w )
 	AM_RANGE(0xa04028, 0xa04029) AM_WRITE(irq2_enable_w )
 	AM_RANGE(0xa0402a, 0xa0402b) AM_WRITE(irq1_enable_w )
-	AM_RANGE(0xa08000, 0xa0bfff) AM_READWRITE(fg_lsb_r, fg_lsb_w ) AM_BASE(m_fg_videoram )
-	AM_RANGE(0xa0c000, 0xa0ffff) AM_READWRITE(bg_lsb_r, bg_lsb_w ) AM_BASE(m_bg_videoram )
+	AM_RANGE(0xa08000, 0xa0bfff) AM_READWRITE(fg_lsb_r, fg_lsb_w ) AM_SHARE("fg_videoram")
+	AM_RANGE(0xa0c000, 0xa0ffff) AM_READWRITE(bg_lsb_r, bg_lsb_w ) AM_SHARE("bg_videoram")
 	AM_RANGE(0xa10000, 0xa10001) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff )
 ADDRESS_MAP_END
 
@@ -1727,7 +1729,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( tjsb_io, AS_IO, 8, igs017_state )
 	AM_RANGE( 0x0000, 0x003f ) AM_RAM // internal regs
 
-	AM_RANGE( 0x1000, 0x17ff ) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE( 0x1000, 0x17ff ) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE( 0x1800, 0x1bff ) AM_RAM_WRITE(tjsb_paletteram_w ) AM_SHARE("paletteram")
 	AM_RANGE( 0x1c00, 0x1fff ) AM_RAM
 
@@ -1739,8 +1741,8 @@ static ADDRESS_MAP_START( tjsb_io, AS_IO, 8, igs017_state )
 	AM_RANGE( 0x2014, 0x2014 ) AM_WRITE(nmi_enable_w )
 	AM_RANGE( 0x2015, 0x2015 ) AM_WRITE(irq_enable_w )
 
-	AM_RANGE( 0x4000, 0x5fff ) AM_RAM_WRITE(fg_w ) AM_BASE(m_fg_videoram )
-	AM_RANGE( 0x6000, 0x7fff ) AM_RAM_WRITE(bg_w ) AM_BASE(m_bg_videoram )
+	AM_RANGE( 0x4000, 0x5fff ) AM_RAM_WRITE(fg_w ) AM_SHARE("fg_videoram")
+	AM_RANGE( 0x6000, 0x7fff ) AM_RAM_WRITE(bg_w ) AM_SHARE("bg_videoram")
 
 	AM_RANGE( 0x9000, 0x9000 ) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 
@@ -1815,14 +1817,14 @@ static ADDRESS_MAP_START( lhzb2, AS_PROGRAM, 16, igs017_state )
 	AM_RANGE(0x500000, 0x503fff) AM_RAM
 	AM_RANGE(0x910000, 0x910003) AM_WRITE( lhzb2_magic_w )
 	AM_RANGE(0x910002, 0x910003) AM_READ( lhzb2_magic_r )
-	AM_RANGE(0xb02000, 0xb02fff) AM_READWRITE( spriteram_lsb_r, spriteram_lsb_w ) AM_BASE( m_spriteram )
+	AM_RANGE(0xb02000, 0xb02fff) AM_READWRITE( spriteram_lsb_r, spriteram_lsb_w ) AM_SHARE("spriteram")
 	AM_RANGE(0xb03000, 0xb037ff) AM_RAM_WRITE( lhzb2a_paletteram_w ) AM_SHARE("paletteram")
 	AM_RANGE(0xb04020, 0xb04027) AM_DEVREAD8_LEGACY( "ppi8255", ppi8255_r, 0x00ff )
 	AM_RANGE(0xb04024, 0xb04025) AM_WRITE( video_disable_lsb_w )
 	AM_RANGE(0xb04028, 0xb04029) AM_WRITE( irq2_enable_w )
 	AM_RANGE(0xb0402a, 0xb0402b) AM_WRITE( irq1_enable_w )
-	AM_RANGE(0xb08000, 0xb0bfff) AM_READWRITE( fg_lsb_r, fg_lsb_w ) AM_BASE( m_fg_videoram )
-	AM_RANGE(0xb0c000, 0xb0ffff) AM_READWRITE( bg_lsb_r, bg_lsb_w ) AM_BASE( m_bg_videoram )
+	AM_RANGE(0xb08000, 0xb0bfff) AM_READWRITE( fg_lsb_r, fg_lsb_w ) AM_SHARE("fg_videoram")
+	AM_RANGE(0xb0c000, 0xb0ffff) AM_READWRITE( bg_lsb_r, bg_lsb_w ) AM_SHARE("bg_videoram")
 	AM_RANGE(0xb10000, 0xb10001) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff )
 ADDRESS_MAP_END
 
@@ -1947,13 +1949,13 @@ static ADDRESS_MAP_START( lhzb2a, AS_PROGRAM, 16, igs017_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x500000, 0x503fff) AM_RAM
 //  AM_RANGE(0x910000, 0x910003) protection
-	AM_RANGE(0xb02000, 0xb02fff) AM_READWRITE( spriteram_lsb_r, spriteram_lsb_w ) AM_BASE( m_spriteram )
+	AM_RANGE(0xb02000, 0xb02fff) AM_READWRITE( spriteram_lsb_r, spriteram_lsb_w ) AM_SHARE("spriteram")
 	AM_RANGE(0xb03000, 0xb037ff) AM_RAM_WRITE( lhzb2a_paletteram_w ) AM_SHARE("paletteram")
 	AM_RANGE(0xb04024, 0xb04025) AM_WRITE( video_disable_lsb_w )
 	AM_RANGE(0xb04028, 0xb04029) AM_WRITE( irq2_enable_w )
 	AM_RANGE(0xb0402a, 0xb0402b) AM_WRITE( irq1_enable_w )
-	AM_RANGE(0xb08000, 0xb0bfff) AM_READWRITE( fg_lsb_r, fg_lsb_w ) AM_BASE( m_fg_videoram )
-	AM_RANGE(0xb0c000, 0xb0ffff) AM_READWRITE( bg_lsb_r, bg_lsb_w ) AM_BASE( m_bg_videoram )
+	AM_RANGE(0xb08000, 0xb0bfff) AM_READWRITE( fg_lsb_r, fg_lsb_w ) AM_SHARE("fg_videoram")
+	AM_RANGE(0xb0c000, 0xb0ffff) AM_READWRITE( bg_lsb_r, bg_lsb_w ) AM_SHARE("bg_videoram")
 	AM_RANGE(0xb10000, 0xb10001) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff )
 	AM_RANGE(0xb12000, 0xb12001) AM_WRITE( lhzb2a_input_select_w )
 //  Inputs dynamically mapped at xx8000, protection at xx4000 (xx = f0 initially). xx written to xxc000
@@ -2028,14 +2030,14 @@ static ADDRESS_MAP_START( slqz2, AS_PROGRAM, 16, igs017_state )
 	AM_RANGE(0x100000, 0x103fff) AM_RAM
 	AM_RANGE(0x602000, 0x602003) AM_WRITE( slqz2_magic_w )
 	AM_RANGE(0x602002, 0x602003) AM_READ( slqz2_magic_r )
-	AM_RANGE(0x902000, 0x902fff) AM_READWRITE( spriteram_lsb_r, spriteram_lsb_w ) AM_BASE( m_spriteram )
+	AM_RANGE(0x902000, 0x902fff) AM_READWRITE( spriteram_lsb_r, spriteram_lsb_w ) AM_SHARE("spriteram")
 	AM_RANGE(0x903000, 0x9037ff) AM_RAM_WRITE( slqz2_paletteram_w ) AM_SHARE("paletteram")
 	AM_RANGE(0x904020, 0x904027) AM_DEVREAD8_LEGACY( "ppi8255", ppi8255_r, 0x00ff )
 	AM_RANGE(0x904024, 0x904025) AM_WRITE( video_disable_lsb_w )
 	AM_RANGE(0x904028, 0x904029) AM_WRITE( irq2_enable_w )
 	AM_RANGE(0x90402a, 0x90402b) AM_WRITE( irq1_enable_w )
-	AM_RANGE(0x908000, 0x90bfff) AM_READWRITE( fg_lsb_r, fg_lsb_w ) AM_BASE( m_fg_videoram )
-	AM_RANGE(0x90c000, 0x90ffff) AM_READWRITE( bg_lsb_r, bg_lsb_w ) AM_BASE( m_bg_videoram )
+	AM_RANGE(0x908000, 0x90bfff) AM_READWRITE( fg_lsb_r, fg_lsb_w ) AM_SHARE("fg_videoram")
+	AM_RANGE(0x90c000, 0x90ffff) AM_READWRITE( bg_lsb_r, bg_lsb_w ) AM_SHARE("bg_videoram")
 	AM_RANGE(0x910000, 0x910001) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff )
 ADDRESS_MAP_END
 

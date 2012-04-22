@@ -53,7 +53,7 @@ Runs in interrupt mode 0, the interrupt vectors are 0xcf (RST 08h) and
 
 WRITE8_MEMBER(gundealr_state::yamyam_bankswitch_w)
 {
-	memory_set_bank(machine(), "bank1", data & 0x07);
+	membank("bank1")->set_entry(data & 0x07);
 }
 
 
@@ -70,10 +70,10 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, gundealr_state )
 	AM_RANGE(0xc014, 0xc014) AM_WRITE(gundealr_flipscreen_w)
 	AM_RANGE(0xc016, 0xc016) AM_WRITE(yamyam_bankswitch_w)
 	AM_RANGE(0xc020, 0xc023) AM_WRITE(gundealr_fg_scroll_w)	/* Gun Dealer only */
-	AM_RANGE(0xc400, 0xc7ff) AM_RAM_WRITE(gundealr_paletteram_w) AM_BASE(m_paletteram)
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(gundealr_bg_videoram_w) AM_BASE(m_bg_videoram)
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(gundealr_fg_videoram_w) AM_BASE(m_fg_videoram)
-	AM_RANGE(0xe000, 0xffff) AM_RAM AM_BASE(m_rambase)
+	AM_RANGE(0xc400, 0xc7ff) AM_RAM_WRITE(gundealr_paletteram_w) AM_SHARE("paletteram")
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(gundealr_bg_videoram_w) AM_SHARE("bg_videoram")
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(gundealr_fg_videoram_w) AM_SHARE("fg_videoram")
+	AM_RANGE(0xe000, 0xffff) AM_RAM AM_SHARE("rambase")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( main_portmap, AS_IO, 8, gundealr_state )
@@ -364,9 +364,9 @@ GFXDECODE_END
 static MACHINE_START( gundealr )
 {
 	gundealr_state *state = machine.driver_data<gundealr_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 8, &ROM[0x10000], 0x4000);
+	state->membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
 
 	state->save_item(NAME(state->m_flipscreen));
 	state->save_item(NAME(state->m_scroll));

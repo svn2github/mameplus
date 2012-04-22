@@ -118,15 +118,15 @@ static READ8_HANDLER( mirrorcolorram_r )
 
 
 static ADDRESS_MAP_START( decocass_map, AS_PROGRAM, 8, decocass_state )
-	AM_RANGE(0x0000, 0x5fff) AM_RAM_WRITE_LEGACY(ram_w) AM_BASE(m_rambase)
-	AM_RANGE(0x6000, 0xbfff) AM_RAM_WRITE_LEGACY(charram_w) AM_BASE(m_charram) /* still RMS3 RAM */
-	AM_RANGE(0xc000, 0xc3ff) AM_RAM_WRITE_LEGACY(fgvideoram_w) AM_BASE_SIZE(m_fgvideoram, m_fgvideoram_size)  /* DSP3 RAM */
-	AM_RANGE(0xc400, 0xc7ff) AM_RAM_WRITE_LEGACY(fgcolorram_w) AM_BASE_SIZE(m_colorram, m_colorram_size)
+	AM_RANGE(0x0000, 0x5fff) AM_RAM_WRITE_LEGACY(ram_w) AM_SHARE("rambase")
+	AM_RANGE(0x6000, 0xbfff) AM_RAM_WRITE_LEGACY(charram_w) AM_SHARE("charram") /* still RMS3 RAM */
+	AM_RANGE(0xc000, 0xc3ff) AM_RAM_WRITE_LEGACY(fgvideoram_w) AM_SHARE("fgvideoram")  /* DSP3 RAM */
+	AM_RANGE(0xc400, 0xc7ff) AM_RAM_WRITE_LEGACY(fgcolorram_w) AM_SHARE("colorram")
 	AM_RANGE(0xc800, 0xcbff) AM_READWRITE_LEGACY(mirrorvideoram_r, mirrorvideoram_w)
 	AM_RANGE(0xcc00, 0xcfff) AM_READWRITE_LEGACY(mirrorcolorram_r, mirrorcolorram_w)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE_LEGACY(tileram_w) AM_BASE_SIZE(m_tileram, m_tileram_size)
-	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE_LEGACY(objectram_w) AM_BASE_SIZE(m_objectram, m_objectram_size)
-	AM_RANGE(0xe000, 0xe0ff) AM_RAM_WRITE_LEGACY(decocass_paletteram_w) AM_BASE(m_paletteram)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE_LEGACY(tileram_w) AM_SHARE("tileram")
+	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE_LEGACY(objectram_w) AM_SHARE("objectram")
+	AM_RANGE(0xe000, 0xe0ff) AM_RAM_WRITE_LEGACY(decocass_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0xe300, 0xe300) AM_READ_PORT("DSW1") AM_WRITE_LEGACY(decocass_watchdog_count_w)
 	AM_RANGE(0xe301, 0xe301) AM_READ_PORT("DSW2") AM_WRITE_LEGACY(decocass_watchdog_flip_w)
 	AM_RANGE(0xe302, 0xe302) AM_WRITE_LEGACY(decocass_color_missiles_w)
@@ -1451,7 +1451,7 @@ static DRIVER_INIT( decocass )
 {
 	decocass_state *state = machine.driver_data<decocass_state>();
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = state->memregion("maincpu")->base();
 	int A;
 
 	/* allocate memory and mark all RAM regions with their decrypted pointers */
@@ -1475,8 +1475,8 @@ static DRIVER_INIT( decocass )
 static DRIVER_INIT( decocrom )
 {
 	decocass_state *state = machine.driver_data<decocass_state>();
-	int romlength = machine.region("user3")->bytes();
-	UINT8 *rom = machine.region("user3")->base();
+	int romlength = machine.root_device().memregion("user3")->bytes();
+	UINT8 *rom = machine.root_device().memregion("user3")->base();
 	int i;
 
 	state->m_decrypted2 = auto_alloc_array(machine, UINT8, romlength);
@@ -1491,11 +1491,11 @@ static DRIVER_INIT( decocrom )
 	/* convert charram to a banked ROM */
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x6000, 0xafff, "bank1");
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x6000, 0xafff, FUNC(decocass_de0091_w));
-	memory_configure_bank(machine, "bank1", 0, 1, state->m_charram, 0);
-	memory_configure_bank(machine, "bank1", 1, 1, machine.region("user3")->base(), 0);
-	memory_configure_bank_decrypted(machine, "bank1", 0, 1, &state->m_decrypted[0x6000], 0);
-	memory_configure_bank_decrypted(machine, "bank1", 1, 1, state->m_decrypted2, 0);
-	memory_set_bank(machine, "bank1", 0);
+	state->membank("bank1")->configure_entry(0, state->m_charram);
+	state->membank("bank1")->configure_entry(1, state->memregion("user3")->base());
+	state->membank("bank1")->configure_decrypted_entry(0, &state->m_decrypted[0x6000]);
+	state->membank("bank1")->configure_decrypted_entry(1, state->m_decrypted2);
+	state->membank("bank1")->set_entry(0);
 
 	/* install the bank selector */
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0xe900, 0xe900, FUNC(decocass_e900_w));

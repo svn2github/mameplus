@@ -142,7 +142,7 @@ WRITE8_MEMBER(chaknpop_state::coinlock_w)
 
 static ADDRESS_MAP_START( chaknpop_map, AS_PROGRAM, 8, chaknpop_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_BASE(m_mcu_ram)
+	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("mcu_ram")
 	AM_RANGE(0x8800, 0x8800) AM_READWRITE(chaknpop_mcu_port_a_r, chaknpop_mcu_port_a_w)
 	AM_RANGE(0x8801, 0x8801) AM_READWRITE(chaknpop_mcu_port_b_r, chaknpop_mcu_port_b_w)
 	AM_RANGE(0x8802, 0x8802) AM_READWRITE(chaknpop_mcu_port_c_r, chaknpop_mcu_port_c_w)
@@ -154,9 +154,9 @@ static ADDRESS_MAP_START( chaknpop_map, AS_PROGRAM, 8, chaknpop_state )
 	AM_RANGE(0x880b, 0x880b) AM_READ_PORT("P2")
 	AM_RANGE(0x880c, 0x880c) AM_READWRITE(chaknpop_gfxmode_r, chaknpop_gfxmode_w)
 	AM_RANGE(0x880d, 0x880d) AM_WRITE(coinlock_w)												// coin lock out
-	AM_RANGE(0x9000, 0x93ff) AM_RAM_WRITE(chaknpop_txram_w) AM_BASE(m_tx_ram)			// TX tilemap
-	AM_RANGE(0x9800, 0x983f) AM_RAM_WRITE(chaknpop_attrram_w) AM_BASE(m_attr_ram)		// Color attribute
-	AM_RANGE(0x9840, 0x98ff) AM_RAM AM_BASE_SIZE(m_spr_ram, m_spr_ram_size)	// sprite
+	AM_RANGE(0x9000, 0x93ff) AM_RAM_WRITE(chaknpop_txram_w) AM_SHARE("tx_ram")			// TX tilemap
+	AM_RANGE(0x9800, 0x983f) AM_RAM_WRITE(chaknpop_attrram_w) AM_SHARE("attr_ram")		// Color attribute
+	AM_RANGE(0x9840, 0x98ff) AM_RAM AM_SHARE("spr_ram")	// sprite
 	AM_RANGE(0xa000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xffff) AM_RAMBANK("bank1")														// bitmap plane 1-4
 ADDRESS_MAP_END
@@ -346,9 +346,9 @@ GFXDECODE_END
 static MACHINE_START( chaknpop )
 {
 	chaknpop_state *state = machine.driver_data<chaknpop_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 2, &ROM[0x10000], 0x4000);
+	state->membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x4000);
 
 	state->save_item(NAME(state->m_gfxmode));
 	state->save_item(NAME(state->m_flip_x));

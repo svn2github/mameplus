@@ -289,11 +289,11 @@
  *
  *************************************/
 
-static INPUT_CHANGED( service_switch )
+INPUT_CHANGED_MEMBER(zaxxon_state::service_switch)
 {
 	/* pressing the service switch sends an NMI */
 	if (newval)
-		cputag_set_input_line(field.machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -350,26 +350,25 @@ READ8_MEMBER(zaxxon_state::razmataz_counter_r)
 }
 
 
-static CUSTOM_INPUT( razmataz_dial_r )
+CUSTOM_INPUT_MEMBER(zaxxon_state::razmataz_dial_r)
 {
-	zaxxon_state *state = field.machine().driver_data<zaxxon_state>();
 	static const char *const dialname[2] = { "DIAL0", "DIAL1" };
 	int num = (FPTR)param;
 	int delta, res;
 
-	delta = input_port_read(field.machine(), dialname[num]);
+	delta = input_port_read(machine(), dialname[num]);
 
 	if (delta < 0x80)
 	{
 		// right
-		state->m_razmataz_dial_pos[num] -= delta;
-		res = (state->m_razmataz_dial_pos[num] << 1) | 1;
+		m_razmataz_dial_pos[num] -= delta;
+		res = (m_razmataz_dial_pos[num] << 1) | 1;
 	}
 	else
 	{
 		// left
-		state->m_razmataz_dial_pos[num] += delta;
-		res = (state->m_razmataz_dial_pos[num] << 1);
+		m_razmataz_dial_pos[num] += delta;
+		res = (m_razmataz_dial_pos[num] << 1);
 	}
 
 	return res;
@@ -400,22 +399,19 @@ WRITE8_MEMBER(zaxxon_state::zaxxon_coin_enable_w)
 }
 
 
-static INPUT_CHANGED( zaxxon_coin_inserted )
+INPUT_CHANGED_MEMBER(zaxxon_state::zaxxon_coin_inserted)
 {
 	if (newval)
 	{
-		zaxxon_state *state = field.machine().driver_data<zaxxon_state>();
-
-		state->m_coin_status[(int)(FPTR)param] = state->m_coin_enable[(int)(FPTR)param];
+		m_coin_status[(int)(FPTR)param] = m_coin_enable[(int)(FPTR)param];
 	}
 }
 
 
-static CUSTOM_INPUT( zaxxon_coin_r )
+CUSTOM_INPUT_MEMBER(zaxxon_state::zaxxon_coin_r)
 {
-	zaxxon_state *state = field.machine().driver_data<zaxxon_state>();
 
-	return state->m_coin_status[(int)(FPTR)param];
+	return m_coin_status[(int)(FPTR)param];
 }
 
 
@@ -430,8 +426,8 @@ static CUSTOM_INPUT( zaxxon_coin_r )
 static ADDRESS_MAP_START( zaxxon_map, AS_PROGRAM, 8, zaxxon_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x6000, 0x6fff) AM_RAM
-	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x1c00) AM_RAM_WRITE(zaxxon_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xa000, 0xa0ff) AM_MIRROR(0x1f00) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x8000, 0x83ff) AM_MIRROR(0x1c00) AM_RAM_WRITE(zaxxon_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xa000, 0xa0ff) AM_MIRROR(0x1f00) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x18fc) AM_READ_PORT("SW00")
 	AM_RANGE(0xc001, 0xc001) AM_MIRROR(0x18fc) AM_READ_PORT("SW01")
 	AM_RANGE(0xc002, 0xc002) AM_MIRROR(0x18fc) AM_READ_PORT("DSW02")
@@ -453,8 +449,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( congo_map, AS_PROGRAM, 8, zaxxon_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
-	AM_RANGE(0xa000, 0xa3ff) AM_MIRROR(0x1800) AM_RAM_WRITE(zaxxon_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xa400, 0xa7ff) AM_MIRROR(0x1800) AM_RAM_WRITE(congo_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0xa000, 0xa3ff) AM_MIRROR(0x1800) AM_RAM_WRITE(zaxxon_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xa400, 0xa7ff) AM_MIRROR(0x1800) AM_RAM_WRITE(congo_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x1fc4) AM_READ_PORT("SW00")
 	AM_RANGE(0xc001, 0xc001) AM_MIRROR(0x1fc4) AM_READ_PORT("SW01")
 	AM_RANGE(0xc002, 0xc002) AM_MIRROR(0x1fc4) AM_READ_PORT("DSW02")
@@ -471,7 +467,7 @@ static ADDRESS_MAP_START( congo_map, AS_PROGRAM, 8, zaxxon_state )
 	AM_RANGE(0xc027, 0xc027) AM_MIRROR(0x1fc0) AM_WRITE(congo_color_bank_w)
 	AM_RANGE(0xc028, 0xc029) AM_MIRROR(0x1fc4) AM_WRITE(zaxxon_bg_position_w)
 	AM_RANGE(0xc030, 0xc033) AM_MIRROR(0x1fc4) AM_WRITE(congo_sprite_custom_w)
-	AM_RANGE(0xc038, 0xc03f) AM_MIRROR(0x1fc0) AM_WRITE(soundlatch_w)
+	AM_RANGE(0xc038, 0xc03f) AM_MIRROR(0x1fc0) AM_WRITE(soundlatch_byte_w)
 ADDRESS_MAP_END
 
 
@@ -514,17 +510,17 @@ static INPUT_PORTS_START( zaxxon )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_START2 )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_UNUSED )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(zaxxon_coin_r, (void *)0)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(zaxxon_coin_r, (void *)1)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(zaxxon_coin_r, (void *)2)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, zaxxon_state,zaxxon_coin_r, (void *)0)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, zaxxon_state,zaxxon_coin_r, (void *)1)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, zaxxon_state,zaxxon_coin_r, (void *)2)
 
 	PORT_START("COIN")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )    PORT_CHANGED(zaxxon_coin_inserted, (void *)0)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )    PORT_CHANGED(zaxxon_coin_inserted, (void *)1)
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SERVICE1 ) PORT_CHANGED(zaxxon_coin_inserted, (void *)2)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )    PORT_CHANGED_MEMBER(DEVICE_SELF, zaxxon_state,zaxxon_coin_inserted, (void *)0)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )    PORT_CHANGED_MEMBER(DEVICE_SELF, zaxxon_state,zaxxon_coin_inserted, (void *)1)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SERVICE1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, zaxxon_state,zaxxon_coin_inserted, (void *)2)
 
 	PORT_START("SERVICESW")
-	PORT_SERVICE_NO_TOGGLE( 0x01, IP_ACTIVE_HIGH ) PORT_CHANGED(service_switch, 0)
+	PORT_SERVICE_NO_TOGGLE( 0x01, IP_ACTIVE_HIGH ) PORT_CHANGED_MEMBER(DEVICE_SELF, zaxxon_state,service_switch, 0)
 
 	PORT_START("DSW02")
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Bonus_Life ) ) PORT_DIPLOCATION("SW1:!1,!2")
@@ -675,7 +671,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( razmataz )
 	PORT_START("SW00")
-	PORT_BIT( 0xff, 0x00, IPT_SPECIAL) PORT_CUSTOM(razmataz_dial_r, (void *)0)
+	PORT_BIT( 0xff, 0x00, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, zaxxon_state,razmataz_dial_r, (void *)0)
 
 	PORT_START("DIAL0")
 	PORT_BIT( 0xff, 0x00, IPT_DIAL ) PORT_SENSITIVITY(30) PORT_KEYDELTA(15) PORT_RESET PORT_PLAYER(1)
@@ -690,7 +686,7 @@ static INPUT_PORTS_START( razmataz )
 	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_UNUSED )
 
 	PORT_START("SW08")
-	PORT_BIT( 0xff, 0x00, IPT_SPECIAL) PORT_CUSTOM(razmataz_dial_r, (void *)1)
+	PORT_BIT( 0xff, 0x00, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, zaxxon_state,razmataz_dial_r, (void *)1)
 
 	PORT_START("DIAL1")
 	PORT_BIT( 0xff, 0x00, IPT_DIAL ) PORT_SENSITIVITY(30) PORT_KEYDELTA(15) PORT_RESET PORT_PLAYER(2)
@@ -703,17 +699,17 @@ static INPUT_PORTS_START( razmataz )
 
 	PORT_START("SW100")
 	PORT_BIT( 0x1f, IP_ACTIVE_HIGH, IPT_UNUSED )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(zaxxon_coin_r, (void *)0)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(zaxxon_coin_r, (void *)1)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(zaxxon_coin_r, (void *)2)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, zaxxon_state,zaxxon_coin_r, (void *)0)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, zaxxon_state,zaxxon_coin_r, (void *)1)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, zaxxon_state,zaxxon_coin_r, (void *)2)
 
 	PORT_START("COIN")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )    PORT_CHANGED(zaxxon_coin_inserted, (void *)0)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )    PORT_CHANGED(zaxxon_coin_inserted, (void *)1)
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SERVICE1 ) PORT_CHANGED(zaxxon_coin_inserted, (void *)2)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )    PORT_CHANGED_MEMBER(DEVICE_SELF, zaxxon_state,zaxxon_coin_inserted, (void *)0)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )    PORT_CHANGED_MEMBER(DEVICE_SELF, zaxxon_state,zaxxon_coin_inserted, (void *)1)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SERVICE1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, zaxxon_state,zaxxon_coin_inserted, (void *)2)
 
 	PORT_START("SERVICESW")
-	PORT_SERVICE_NO_TOGGLE( 0x01, IP_ACTIVE_HIGH ) PORT_CHANGED(service_switch, 0)
+	PORT_SERVICE_NO_TOGGLE( 0x01, IP_ACTIVE_HIGH ) PORT_CHANGED_MEMBER(DEVICE_SELF, zaxxon_state,service_switch, 0)
 
 	PORT_START("DSW02")
 	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Bonus_Life ) )
@@ -768,7 +764,7 @@ static INPUT_PORTS_START( ixion )
 	PORT_INCLUDE(zaxxon)
 
 	PORT_MODIFY("SW00")
-	PORT_BIT( 0xff, 0x00, IPT_SPECIAL) PORT_CUSTOM(razmataz_dial_r, (void *)0)
+	PORT_BIT( 0xff, 0x00, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, zaxxon_state,razmataz_dial_r, (void *)0)
 
 	PORT_START("DIAL0")
 	PORT_BIT( 0xff, 0x00, IPT_DIAL ) PORT_SENSITIVITY(30) PORT_KEYDELTA(15) PORT_CODE_DEC(KEYCODE_Z) PORT_CODE_INC(KEYCODE_X) PORT_RESET
@@ -877,7 +873,7 @@ static const ppi8255_interface zaxxon_ppi_intf =
 
 static const ppi8255_interface congo_ppi_intf =
 {
-	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_r),
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r),
 	DEVCB_NULL,
 	DEVCB_NULL,
 	DEVCB_NULL,
@@ -1434,8 +1430,8 @@ static void zaxxonj_decode(running_machine &machine, const char *cputag)
 
 	int A;
 	address_space *space = machine.device(cputag)->memory().space(AS_PROGRAM);
-	UINT8 *rom = machine.region(cputag)->base();
-	int size = machine.region(cputag)->bytes();
+	UINT8 *rom = machine.root_device().memregion(cputag)->base();
+	int size = machine.root_device().memregion(cputag)->bytes();
 	UINT8 *decrypt = auto_alloc_array(machine, UINT8, size);
 
 	space->set_decrypted_region(0x0000, size - 1, decrypt);

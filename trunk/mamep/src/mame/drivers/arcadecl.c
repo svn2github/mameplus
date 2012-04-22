@@ -127,7 +127,7 @@ static MACHINE_RESET( arcadecl )
  *
  *************************************/
 
-static WRITE16_HANDLER( latch_w )
+WRITE16_MEMBER(arcadecl_state::latch_w)
 {
 	/* bit layout in this register:
 
@@ -138,9 +138,9 @@ static WRITE16_HANDLER( latch_w )
 	/* lower byte being modified? */
 	if (ACCESSING_BITS_0_7)
 	{
-		okim6295_device *oki = space->machine().device<okim6295_device>("oki");
+		okim6295_device *oki = machine().device<okim6295_device>("oki");
 		oki->set_bank_base((data & 0x80) ? 0x40000 : 0x00000);
-		atarigen_set_oki6295_vol(space->machine(), (data & 0x001f) * 100 / 0x1f);
+		atarigen_set_oki6295_vol(machine(), (data & 0x001f) * 100 / 0x1f);
 	}
 }
 
@@ -154,7 +154,7 @@ static WRITE16_HANDLER( latch_w )
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, arcadecl_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
-	AM_RANGE(0x200000, 0x21ffff) AM_RAM AM_BASE(m_bitmap)
+	AM_RANGE(0x200000, 0x21ffff) AM_RAM AM_SHARE("bitmap")
 	AM_RANGE(0x3c0000, 0x3c07ff) AM_RAM_WRITE_LEGACY(atarigen_expanded_666_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0x3e0000, 0x3e07ff) AM_READWRITE_LEGACY(atarimo_0_spriteram_r, atarimo_0_spriteram_w)
 	AM_RANGE(0x3e0800, 0x3effbf) AM_RAM
@@ -167,7 +167,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, arcadecl_state )
 	AM_RANGE(0x640022, 0x640023) AM_READ_PORT("TRACKY2")
 	AM_RANGE(0x640024, 0x640025) AM_READ_PORT("TRACKX1")
 	AM_RANGE(0x640026, 0x640027) AM_READ_PORT("TRACKY1")
-	AM_RANGE(0x640040, 0x64004f) AM_WRITE_LEGACY(latch_w)
+	AM_RANGE(0x640040, 0x64004f) AM_WRITE(latch_w)
 	AM_RANGE(0x640060, 0x64006f) AM_WRITE_LEGACY(atarigen_eeprom_enable_w)
 	AM_RANGE(0x641000, 0x641fff) AM_READWRITE_LEGACY(atarigen_eeprom_r, atarigen_eeprom_w) AM_SHARE("eeprom")
 	AM_RANGE(0x642000, 0x642001) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0xff00)
@@ -398,7 +398,7 @@ ROM_END
 
 static DRIVER_INIT( sparkz )
 {
-	memset(machine.region("gfx1")->base(), 0, machine.region("gfx1")->bytes());
+	memset(machine.root_device().memregion("gfx1")->base(), 0, machine.root_device().memregion("gfx1")->bytes());
 }
 
 

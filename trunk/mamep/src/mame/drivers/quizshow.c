@@ -36,11 +36,13 @@ class quizshow_state : public driver_device
 {
 public:
 	quizshow_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_main_ram(*this, "main_ram"),
+		m_fo_state(*this, "fo_state"){ }
 
 	tilemap_t *m_tilemap;
-	UINT8* m_fo_state;
-	UINT8* m_main_ram;
+	required_shared_ptr<UINT8> m_main_ram;
+	required_shared_ptr<UINT8> m_fo_state;
 	UINT32 m_clocks;
 	int m_blink_state;
 	int m_category_enable;
@@ -54,6 +56,8 @@ public:
 	DECLARE_READ8_MEMBER(quizshow_timing_r);
 	DECLARE_READ8_MEMBER(quizshow_tape_signal_r);
 	DECLARE_WRITE8_MEMBER(quizshow_main_ram_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(quizshow_tape_headpos_r);
+	DECLARE_INPUT_CHANGED_MEMBER(quizshow_category_select);
 };
 
 
@@ -216,7 +220,7 @@ static ADDRESS_MAP_START( quizshow_mem_map, AS_PROGRAM, 8, quizshow_state )
 	AM_RANGE(0x1884, 0x1884) AM_READ_PORT("IN2")
 	AM_RANGE(0x1888, 0x1888) AM_READ_PORT("IN3")
 	AM_RANGE(0x1900, 0x1900) AM_READ(quizshow_timing_r)
-	AM_RANGE(0x1e00, 0x1fff) AM_RAM_WRITE(quizshow_main_ram_w) AM_BASE(m_main_ram)
+	AM_RANGE(0x1e00, 0x1fff) AM_RAM_WRITE(quizshow_main_ram_w) AM_SHARE("main_ram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( quizshow_io_map, AS_IO, 8, quizshow_state )
@@ -224,7 +228,7 @@ static ADDRESS_MAP_START( quizshow_io_map, AS_IO, 8, quizshow_state )
 //  AM_RANGE(S2650_CTRL_PORT, S2650_CTRL_PORT) AM_NOP // unused
 //  AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_NOP // unused
 	AM_RANGE(S2650_SENSE_PORT, S2650_SENSE_PORT) AM_READ(quizshow_tape_signal_r)
-	AM_RANGE(S2650_FO_PORT, S2650_FO_PORT) AM_RAM AM_BASE(m_fo_state)
+	AM_RANGE(S2650_FO_PORT, S2650_FO_PORT) AM_RAM AM_SHARE("fo_state")
 ADDRESS_MAP_END
 
 
@@ -234,25 +238,23 @@ ADDRESS_MAP_END
 
 ***************************************************************************/
 
-static CUSTOM_INPUT(quizshow_tape_headpos_r)
+CUSTOM_INPUT_MEMBER(quizshow_state::quizshow_tape_headpos_r)
 {
-	quizshow_state *state = field.machine().driver_data<quizshow_state>();
-	return 1 << state->m_tape_head_pos;
+	return 1 << m_tape_head_pos;
 }
 
-static INPUT_CHANGED(quizshow_category_select)
+INPUT_CHANGED_MEMBER(quizshow_state::quizshow_category_select)
 {
 	if (newval)
 	{
-		quizshow_state *state = field.machine().driver_data<quizshow_state>();
-		if (state->m_category_enable)
-			state->m_tape_head_pos = (state->m_tape_head_pos + 1) & 3;
+		if (m_category_enable)
+			m_tape_head_pos = (m_tape_head_pos + 1) & 3;
 	}
 }
 
 static INPUT_PORTS_START( quizshow )
 	PORT_START("IN0") // ADR strobe 0
-	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(quizshow_tape_headpos_r, NULL)
+	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, quizshow_state,quizshow_tape_headpos_r, NULL)
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_START2 )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_COIN1 )
@@ -317,7 +319,7 @@ static INPUT_PORTS_START( quizshow )
 	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_UNUSED )
 
 	PORT_START("CAT")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON5 ) PORT_NAME("Category Select") PORT_CHANGED(quizshow_category_select, NULL)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON5 ) PORT_NAME("Category Select") PORT_CHANGED_MEMBER(DEVICE_SELF, quizshow_state,quizshow_category_select, NULL)
 
 INPUT_PORTS_END
 
@@ -423,8 +425,8 @@ ROM_END
 
 static DRIVER_INIT( quizshow )
 {
-	UINT8 *gfxdata = machine.region("user1")->base();
-	UINT8 *dest = machine.region("gfx1")->base();
+	UINT8 *gfxdata = machine.root_device().memregion("user1")->base();
+	UINT8 *dest = machine.root_device().memregion("gfx1")->base();
 
 	int tile, line;
 

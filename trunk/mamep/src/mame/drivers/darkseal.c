@@ -32,7 +32,7 @@ WRITE16_MEMBER(darkseal_state::darkseal_control_w)
 		m_spriteram->copy();
 		return;
     case 8: /* Sound CPU write */
-		soundlatch_w(space, 0, data & 0xff);
+		soundlatch_byte_w(space, 0, data & 0xff);
 		cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
     	return;
 	case 0xa: /* IRQ Ack (VBL) */
@@ -61,7 +61,7 @@ READ16_MEMBER(darkseal_state::darkseal_control_r)
 
 static ADDRESS_MAP_START( darkseal_map, AS_PROGRAM, 16, darkseal_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	AM_RANGE(0x100000, 0x103fff) AM_RAM AM_BASE(m_ram)
+	AM_RANGE(0x100000, 0x103fff) AM_RAM AM_SHARE("ram")
 	AM_RANGE(0x120000, 0x1207ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x140000, 0x140fff) AM_RAM_WRITE(darkseal_palette_24bit_rg_w) AM_SHARE("paletteram")
 	AM_RANGE(0x141000, 0x141fff) AM_RAM_WRITE(darkseal_palette_24bit_b_w) AM_SHARE("paletteram2")
@@ -71,9 +71,9 @@ static ADDRESS_MAP_START( darkseal_map, AS_PROGRAM, 16, darkseal_state )
 	AM_RANGE(0x202000, 0x203fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
 	AM_RANGE(0x240000, 0x24000f) AM_DEVWRITE_LEGACY("tilegen2", deco16ic_pf_control_w)
 
-	AM_RANGE(0x220000, 0x220fff) AM_RAM AM_BASE(m_pf1_rowscroll)
+	AM_RANGE(0x220000, 0x220fff) AM_RAM AM_SHARE("pf1_rowscroll")
 	// pf2 & 4 rowscrolls are where? (maybe don't exist?)
-	AM_RANGE(0x222000, 0x222fff) AM_RAM AM_BASE(m_pf3_rowscroll)
+	AM_RANGE(0x222000, 0x222fff) AM_RAM AM_SHARE("pf3_rowscroll")
 
 	AM_RANGE(0x260000, 0x261fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x262000, 0x263fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
@@ -88,7 +88,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, darkseal_state )
 	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ym2", ym2151_r, ym2151_w)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
-	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_r)
+	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x1f0000, 0x1f1fff) AM_RAMBANK("bank8")
 	AM_RANGE(0x1fec00, 0x1fec01) AM_WRITE_LEGACY(h6280_timer_w)
 	AM_RANGE(0x1ff400, 0x1ff403) AM_WRITE_LEGACY(h6280_irq_status_w)
@@ -229,7 +229,7 @@ static void sound_irq(device_t *device, int state)
 
 static const ym2151_interface ym2151_config =
 {
-	sound_irq
+	DEVCB_LINE(sound_irq)
 };
 
 static const deco16ic_interface darkseal_deco16ic_tilegen1_intf =
@@ -471,7 +471,7 @@ ROM_END
 
 static DRIVER_INIT( darkseal )
 {
-	UINT8 *RAM = machine.region("maincpu")->base();
+	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
 	int i;
 
 	for (i=0x00000; i<0x80000; i++)

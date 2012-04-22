@@ -268,7 +268,7 @@ WRITE32_MEMBER(srmp5_state::spr_w)
 READ32_MEMBER(srmp5_state::data_r)
 {
 	UINT32 data;
-	const UINT8 *usr = machine().region("user2")->base();
+	const UINT8 *usr = memregion("user2")->base();
 
 	data=((m_databank>>4)&0xf)*0x100000; //guess
 	data=usr[data+offset*2]+usr[data+offset*2+1]*256;
@@ -411,8 +411,8 @@ static ADDRESS_MAP_START( st0016_io, AS_IO, 8, srmp5_state )
 	AM_RANGE(0xc0, 0xc0) AM_READ(cmd1_r)
 	AM_RANGE(0xc1, 0xc1) AM_READ(cmd2_r)
 	AM_RANGE(0xc2, 0xc2) AM_READ(cmd_stat8_r)
-	AM_RANGE(0xe1, 0xe1) AM_WRITE_LEGACY(st0016_rom_bank_w)
-	AM_RANGE(0xe7, 0xe7) AM_WRITE_LEGACY(st0016_rom_bank_w)
+	AM_RANGE(0xe1, 0xe1) AM_WRITE(st0016_rom_bank_w)
+	AM_RANGE(0xe7, 0xe7) AM_WRITE(st0016_rom_bank_w)
 	AM_RANGE(0xf0, 0xf0) AM_READ(st0016_dma_r)
 ADDRESS_MAP_END
 

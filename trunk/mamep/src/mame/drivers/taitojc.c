@@ -844,24 +844,24 @@ READ32_MEMBER(taitojc_state::jc_lan_r)
 static ADDRESS_MAP_START( taitojc_map, AS_PROGRAM, 32, taitojc_state )
 	AM_RANGE(0x00000000, 0x001fffff) AM_ROM AM_MIRROR(0x200000)
 	AM_RANGE(0x00400000, 0x01bfffff) AM_ROM AM_REGION("gfx1", 0)
-	AM_RANGE(0x04000000, 0x040f7fff) AM_RAM AM_BASE(m_vram)
+	AM_RANGE(0x04000000, 0x040f7fff) AM_RAM AM_SHARE("vram")
 	AM_RANGE(0x040f8000, 0x040fbfff) AM_READWRITE(taitojc_tile_r, taitojc_tile_w)
 	AM_RANGE(0x040fc000, 0x040fefff) AM_READWRITE(taitojc_char_r, taitojc_char_w)
-	AM_RANGE(0x040ff000, 0x040fffff) AM_RAM AM_BASE(m_objlist)
+	AM_RANGE(0x040ff000, 0x040fffff) AM_RAM AM_SHARE("objlist")
 	AM_RANGE(0x05800000, 0x0580003f) AM_READ8(jc_pcbid_r,0xffffffff)
 	AM_RANGE(0x05900000, 0x05900007) AM_READWRITE(mcu_comm_r, mcu_comm_w)
 	//AM_RANGE(0x05a00000, 0x05a01fff)
 	//AM_RANGE(0x05fc0000, 0x05fc3fff)
-	AM_RANGE(0x06400000, 0x0641ffff) AM_READWRITE(taitojc_palette_r, taitojc_palette_w) AM_BASE(m_palette_ram)
+	AM_RANGE(0x06400000, 0x0641ffff) AM_READWRITE(taitojc_palette_r, taitojc_palette_w) AM_SHARE("palette_ram")
 	AM_RANGE(0x06600000, 0x0660001f) AM_READ(jc_control_r)
 	AM_RANGE(0x06600000, 0x06600003) AM_WRITE(jc_control1_w) // watchdog
 	AM_RANGE(0x06600010, 0x06600013) AM_WRITE(jc_coin_counters_w)
 	AM_RANGE(0x06600040, 0x0660004f) AM_WRITE(jc_control_w)
 	//AM_RANGE(0x06800000, 0x06801fff) AM_NOP       // unknown
-	AM_RANGE(0x06a00000, 0x06a01fff) AM_READWRITE(f3_share_r, f3_share_w) AM_SHARE("f3_shared") AM_BASE(m_f3_shared_ram)
+	AM_RANGE(0x06a00000, 0x06a01fff) AM_READWRITE(f3_share_r, f3_share_w) AM_SHARE("f3_shared")
 	AM_RANGE(0x06c00000, 0x06c0001f) AM_READ(jc_lan_r) AM_WRITENOP // Dangerous Curves
 	AM_RANGE(0x06e00000, 0x06e00007) AM_WRITE(jc_meters_w)
-	AM_RANGE(0x08000000, 0x080fffff) AM_RAM AM_BASE(m_main_ram)
+	AM_RANGE(0x08000000, 0x080fffff) AM_RAM AM_SHARE("main_ram")
 	AM_RANGE(0x10000000, 0x10001fff) AM_READWRITE(dsp_shared_r, dsp_shared_w)
 ADDRESS_MAP_END
 
@@ -919,7 +919,7 @@ ADDRESS_MAP_END
 
 READ16_MEMBER(taitojc_state::dsp_rom_r)
 {
-	UINT16 *rom = (UINT16*)machine().region("gfx2")->base();
+	UINT16 *rom = (UINT16*)machine().root_device().memregion("gfx2")->base();
 	UINT16 data = rom[m_dsp_rom_pos++];
 
 	//mame_printf_debug("dsp_rom_r:  %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(&space.device()));
@@ -1113,7 +1113,7 @@ static ADDRESS_MAP_START( tms_data_map, AS_DATA, 16, taitojc_state )
 	AM_RANGE(0x701d, 0x701f) AM_READ(dsp_projection_r)
 	AM_RANGE(0x7022, 0x7022) AM_READ(dsp_unk_r)
 	AM_RANGE(0x7ffe, 0x7ffe) AM_READWRITE(dsp_to_main_r,dsp_to_main_w)
-	AM_RANGE(0x7800, 0x7fff) AM_RAM AM_BASE(m_dsp_shared_ram)
+	AM_RANGE(0x7800, 0x7fff) AM_RAM AM_SHARE("dsp_shared_ram")
 	AM_RANGE(0x8000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -1163,10 +1163,10 @@ INPUT_PORTS_END
 
 /* Mascon must always be in a defined state, Densha de Go 2 in particular returns black screen if the Mascon input is undefined
    We convert the 6 lever "shifter" into a fake analog port for now. */
-static CUSTOM_INPUT( mascon_state_r )
+CUSTOM_INPUT_MEMBER(taitojc_state::mascon_state_r)
 {
 	static const UINT8 mascon_table[6] = { 0x01, 0x10, 0x02, 0x20, 0x04, 0x40 };
-	UINT8 res = input_port_read(field.machine(), "MASCON");
+	UINT8 res = input_port_read(machine(), "MASCON");
 	int i;
 
 	//popmessage("%02x",res);
@@ -1205,7 +1205,7 @@ static INPUT_PORTS_START( dendego )
 	PORT_START("BUTTONS")
 	/* TODO: fix this */
 	PORT_BIT( 0x88, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x77, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(mascon_state_r,NULL)
+	PORT_BIT( 0x77, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, taitojc_state,mascon_state_r,NULL)
 //  PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_NAME("Mascon 5")      // Mascon 5
 //  PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("Mascon 3")      // Mascon 3
 //  PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("Mascon 1")      // Mascon 1

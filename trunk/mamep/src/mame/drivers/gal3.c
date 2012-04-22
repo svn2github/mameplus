@@ -137,14 +137,15 @@ class gal3_state : public driver_device
 {
 public:
 	gal3_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_nvmem(*this, "nvmem"),
+		m_rso_shared_ram(*this, "rso_shared_ram"){ }
 
 	UINT32 *m_mpSharedRAM0;
 	//UINT32 *m_mpSharedRAM1;
-	UINT32 *m_nvmem;
-	size_t m_nvmem_size;
+	required_shared_ptr<UINT32> m_nvmem;
 	UINT16 m_namcos21_video_enable;
-	UINT16 *m_rsoSharedRAM;
+	required_shared_ptr<UINT16> m_rso_shared_ram;
 	UINT32 m_led_mst;
 	UINT32 m_led_slv;
 	DECLARE_READ32_MEMBER(led_mst_r);
@@ -162,6 +163,9 @@ public:
 
 static VIDEO_START(gal3)
 {
+	gal3_state *state = machine.driver_data<gal3_state>();
+	state->m_generic_paletteram_16.allocate(0x10000);
+
 	namco_obj_init(machine,
 		0,		/* gfx bank */
 		0xf,	/* reverse palette mapping */
@@ -250,7 +254,7 @@ static NVRAM_HANDLER( gal3 )
 	UINT8 data[4];
 	if( read_or_write )
 	{
-		for( i=0; i<state->m_nvmem_size/4; i++ )
+		for( i=0; i<state->m_nvmem.bytes()/4; i++ )
 		{
 			UINT32 dword = state->m_nvmem[i];
 			data[0] = dword>>24;
@@ -264,7 +268,7 @@ static NVRAM_HANDLER( gal3 )
 	{
 		if( file )
 		{
-			for( i=0; i<state->m_nvmem_size/4; i++ )
+			for( i=0; i<state->m_nvmem.bytes()/4; i++ )
 			{
 				file->read( data, 4 );
 				state->m_nvmem[i] = (data[0]<<24)|(data[1]<<16)|(data[2]<<8)|data[3];
@@ -273,7 +277,7 @@ static NVRAM_HANDLER( gal3 )
 		else
 		{
 			/* fill in the default values */
-			memset( state->m_nvmem, 0x00, state->m_nvmem_size );
+			memset( state->m_nvmem, 0x00, state->m_nvmem.bytes() );
 		}
 	}
 }
@@ -339,23 +343,23 @@ READ32_MEMBER(gal3_state::rso_r)
     Check @$009a==1 to start DEMO
     HACK*/
 	offset *= 2;
-	return (m_rsoSharedRAM[offset]<<16)|m_rsoSharedRAM[offset+1];
+	return (m_rso_shared_ram[offset]<<16)|m_rso_shared_ram[offset+1];
 }
 
 WRITE32_MEMBER(gal3_state::rso_w)
 {
 	UINT32 v;
 	offset *= 2;
-	v = (m_rsoSharedRAM[offset]<<16)|m_rsoSharedRAM[offset+1];
+	v = (m_rso_shared_ram[offset]<<16)|m_rso_shared_ram[offset+1];
 	COMBINE_DATA( &v );
-	m_rsoSharedRAM[offset+0] = v>>16;
-	m_rsoSharedRAM[offset+1] = v&0xffff;
+	m_rso_shared_ram[offset+0] = v>>16;
+	m_rso_shared_ram[offset+1] = v&0xffff;
 }
 
 
 static ADDRESS_MAP_START( cpu_mst_map, AS_PROGRAM, 32, gal3_state )
 	AM_RANGE(0x00000000, 0x001fffff) AM_ROM
-	AM_RANGE(0x20000000, 0x20001fff) AM_RAM AM_BASE(m_nvmem) AM_SIZE(m_nvmem_size)	//NVRAM
+	AM_RANGE(0x20000000, 0x20001fff) AM_RAM AM_SHARE("nvmem")	//NVRAM
 /// AM_RANGE(0x40000000, 0x4000ffff) AM_WRITE_LEGACY() //
 	AM_RANGE(0x44000000, 0x44000003) AM_READ_PORT("DSW_CPU_mst"	)
 	AM_RANGE(0x44800000, 0x44800003) AM_READ(led_mst_r) AM_WRITE(led_mst_w)	//LEDs
@@ -389,7 +393,7 @@ static ADDRESS_MAP_START( cpu_slv_map, AS_PROGRAM, 32, gal3_state )
 /// AM_RANGE(0xf1480000, 0xf14807ff) AM_READWRITE_LEGACY(namcos21_depthcue_r,namcos21_depthcue_w)
 	AM_RANGE(0xf1700000, 0xf170ffff) AM_READWRITE_LEGACY(namco_obj32_r,namco_obj32_w)
 	AM_RANGE(0xf1720000, 0xf1720007) AM_READWRITE_LEGACY(namco_spritepos32_r,namco_spritepos32_w)
-	AM_RANGE(0xf1740000, 0xf175ffff) AM_READWRITE(paletteram32_r,paletteram32_w) AM_SHARE("paletteram")
+	AM_RANGE(0xf1740000, 0xf175ffff) AM_READWRITE(paletteram32_r,paletteram32_w)
 	AM_RANGE(0xf1760000, 0xf1760003) AM_READWRITE(namcos21_video_enable_r,namcos21_video_enable_w)
 
 	AM_RANGE(0xf2200000, 0xf220ffff) AM_RAM
@@ -432,7 +436,7 @@ static ADDRESS_MAP_START( rs_cpu_map, AS_PROGRAM, 16, gal3_state )
 	AM_RANGE(0x2c3800, 0x2c3801) AM_RAM //?
 	AM_RANGE(0x2c4000, 0x2c4001) AM_RAM //?
 
-	AM_RANGE(0x300000, 0x300fff) AM_RAM AM_BASE(m_rsoSharedRAM)	//shared RAM
+	AM_RANGE(0x300000, 0x300fff) AM_RAM AM_SHARE("rso_shared_ram")	//shared RAM
 
 	AM_RANGE(0x400000, 0x400017) AM_RAM //MC68681?
 	AM_RANGE(0x480000, 0x480017) AM_RAM //?

@@ -469,7 +469,7 @@ public:
 
 	tilemap_t    *m_bg_tilemap,	*m_fg_tilemap;
 
-	UINT8 *m_videoram;
+	UINT8 m_videoram[0x1000];
 
 	required_device<okim6295_device> oki;
 
@@ -566,7 +566,7 @@ static SCREEN_UPDATE_IND16(majorpkr)
 
 WRITE8_MEMBER(majorpkr_state::rom_bank_w)
 {
-	memory_set_bank(machine(), "rom_bank", data & 0x3);
+	membank("rom_bank")->set_entry(data & 0x3);
 }
 
 
@@ -594,7 +594,7 @@ WRITE8_MEMBER(majorpkr_state::paletteram_w)
 
 WRITE8_MEMBER(majorpkr_state::vram_bank_w)
 {
-	m_vram_bank = data;
+	m_vram_bank = data & 1;
 }
 
 READ8_MEMBER(majorpkr_state::vram_r)
@@ -1083,8 +1083,8 @@ ROM_END
 
 static DRIVER_INIT( majorpkr )
 {
-	UINT8 * ROM = (UINT8 *)machine.region("maincpu")->base();
-	memory_configure_bank(machine, "rom_bank", 0, 4, &ROM[0x10000], 0x800);
+	UINT8 * ROM = (UINT8 *)machine.root_device().memregion("maincpu")->base();
+	machine.root_device().membank("rom_bank")->configure_entries(0, 4, &ROM[0x10000], 0x800);
 }
 
 

@@ -106,7 +106,7 @@ WRITE16_MEMBER(yunsun16_state::yunsun16_sound_bank_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		int bank = data & 3;
-		UINT8 *dst	= machine().region("oki")->base();
+		UINT8 *dst	= memregion("oki")->base();
 		UINT8 *src	= dst + 0x80000 + 0x20000 * bank;
 		memcpy(dst + 0x20000, src, 0x20000);
 	}
@@ -123,16 +123,16 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, yunsun16_state )
 	AM_RANGE(0x800102, 0x800103) AM_WRITENOP	// ? $9080
 	AM_RANGE(0x800104, 0x800105) AM_WRITENOP	// ? $90c0
 	AM_RANGE(0x80010a, 0x80010b) AM_WRITENOP	// ? $9000
-	AM_RANGE(0x80010c, 0x80010f) AM_RAM AM_BASE(m_scrollram_1)	// Scrolling
-	AM_RANGE(0x800114, 0x800117) AM_RAM AM_BASE(m_scrollram_0)	// Scrolling
-	AM_RANGE(0x800154, 0x800155) AM_RAM AM_BASE(m_priorityram)	// Priority
+	AM_RANGE(0x80010c, 0x80010f) AM_RAM AM_SHARE("scrollram_1")	// Scrolling
+	AM_RANGE(0x800114, 0x800117) AM_RAM AM_SHARE("scrollram_0")	// Scrolling
+	AM_RANGE(0x800154, 0x800155) AM_RAM AM_SHARE("priorityram")	// Priority
 	AM_RANGE(0x800180, 0x800181) AM_WRITE(yunsun16_sound_bank_w)	// Sound
 	AM_RANGE(0x800188, 0x800189) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)	// Sound
 	AM_RANGE(0x8001fe, 0x8001ff) AM_WRITENOP	// ? 0 (during int)
-	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")	// Palette
-	AM_RANGE(0x908000, 0x90bfff) AM_RAM_WRITE(yunsun16_vram_1_w) AM_BASE(m_vram_1)	// Layer 1
-	AM_RANGE(0x90c000, 0x90ffff) AM_RAM_WRITE(yunsun16_vram_0_w) AM_BASE(m_vram_0)	// Layer 0
-	AM_RANGE(0x910000, 0x910fff) AM_RAM	AM_BASE_SIZE(m_spriteram, m_spriteram_size)	// Sprites
+	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")	// Palette
+	AM_RANGE(0x908000, 0x90bfff) AM_RAM_WRITE(yunsun16_vram_1_w) AM_SHARE("vram_1")	// Layer 1
+	AM_RANGE(0x90c000, 0x90ffff) AM_RAM_WRITE(yunsun16_vram_0_w) AM_SHARE("vram_0")	// Layer 0
+	AM_RANGE(0x910000, 0x910fff) AM_RAM	AM_SHARE("spriteram")	// Sprites
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -147,7 +147,7 @@ number 0 on each voice. That sample is 00000-00000.
 */
 		if ((data & 0xff) != 0x3a)
 		{
-			soundlatch_w(space, 0, data & 0xff);
+			soundlatch_byte_w(space, 0, data & 0xff);
 			device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
 		}
 	}
@@ -176,7 +176,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_port_map, AS_IO, 8, yunsun16_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x10, 0x11) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_r, ym3812_w )
-	AM_RANGE(0x18, 0x18) AM_READ(soundlatch_r )						// From Main CPU
+	AM_RANGE(0x18, 0x18) AM_READ(soundlatch_byte_r )						// From Main CPU
 	AM_RANGE(0x1c, 0x1c) AM_DEVREADWRITE("oki", okim6295_device, read, write)		// M6295
 ADDRESS_MAP_END
 

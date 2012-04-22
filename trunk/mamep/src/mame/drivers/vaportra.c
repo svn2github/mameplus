@@ -25,7 +25,7 @@ WRITE16_MEMBER(vaportra_state::vaportra_sound_w)
 
 	/* Force synchronisation between CPUs with fake timer */
 	machine().scheduler().synchronize();
-	soundlatch_w(space, 0, data & 0xff);
+	soundlatch_byte_w(space, 0, data & 0xff);
 	device_set_input_line(m_audiocpu, 0, ASSERT_LINE);
 }
 
@@ -72,7 +72,7 @@ ADDRESS_MAP_END
 READ8_MEMBER(vaportra_state::vaportra_soundlatch_r)
 {
 	device_set_input_line(m_audiocpu, 0, CLEAR_LINE);
-	return soundlatch_r(space, offset);
+	return soundlatch_byte_r(space, offset);
 }
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, vaportra_state )
@@ -207,7 +207,7 @@ static void sound_irq( device_t *device, int state )
 
 static const ym2151_interface ym2151_config =
 {
-	sound_irq
+	DEVCB_LINE(sound_irq)
 };
 
 
@@ -855,7 +855,7 @@ C3D54*
 
 static DRIVER_INIT( vaportra )
 {
-	UINT8 *RAM = machine.region("maincpu")->base();
+	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
 	int i;
 
 	for (i = 0x00000; i < 0x80000; i++)

@@ -89,7 +89,7 @@ READ8_MEMBER(bingoc_state::sound_test_r)
 #else
 WRITE16_MEMBER(bingoc_state::main_sound_latch_w)
 {
-	soundlatch_w(space,0,data&0xff);
+	soundlatch_byte_w(space,0,data&0xff);
 	cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 #endif
@@ -100,7 +100,7 @@ static WRITE8_DEVICE_HANDLER( bingoc_play_w )
     ---- --x- sound rom banking
     ---- ---x start-stop sample
     */
-	UINT8 *upd = device->machine().region("upd")->base();
+	UINT8 *upd = device->machine().root_device().memregion("upd")->base();
 	memcpy(&upd[0x00000], &upd[0x20000 + (((data & 2)>>1) * 0x20000)], 0x20000);
 	upd7759_start_w(device, data & 1);
 //  printf("%02x\n",data);
@@ -127,7 +127,7 @@ static ADDRESS_MAP_START( sound_io, AS_IO, 8, bingoc_state )
 	AM_RANGE(0x40, 0x40) AM_DEVWRITE_LEGACY("upd", bingoc_play_w)
 	AM_RANGE(0x80, 0x80) AM_DEVWRITE_LEGACY("upd", upd7759_port_w)
 #if !SOUND_TEST
-	AM_RANGE(0xc0, 0xc0) AM_READ(soundlatch_r) //soundlatch
+	AM_RANGE(0xc0, 0xc0) AM_READ(soundlatch_byte_r) //soundlatch
 #else
 	AM_RANGE(0xc0, 0xc0) AM_READ(sound_test_r)
 #endif

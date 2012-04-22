@@ -108,33 +108,33 @@ static void sfkick_remap_banks(running_machine &machine)
 	{
 		case 0: /* bios */
 		{
-			UINT8 *mem = machine.region("bios")->base();
-			memory_set_bankptr(machine,"bank1", mem);
-			memory_set_bankptr(machine,"bank2", mem+0x2000);
+			UINT8 *mem = state->memregion("bios")->base();
+			state->membank("bank1")->set_base(mem);
+			state->membank("bank2")->set_base(mem+0x2000);
 		}
 		break;
 
 		case 1: /* ext rom */
 		{
-			UINT8 *mem = machine.region("extrom")->base();
-			memory_set_bankptr(machine,"bank1", mem+0x4000);
-			memory_set_bankptr(machine,"bank2", mem+0x6000);
+			UINT8 *mem = machine.root_device().memregion("extrom")->base();
+			state->membank("bank1")->set_base(mem+0x4000);
+			state->membank("bank2")->set_base(mem+0x6000);
 		}
 		break;
 
 		case 2: /* banked */
 		{
-			UINT8 *mem = machine.region("banked")->base();
-			memory_set_bankptr(machine,"bank1", mem+0x2000*state->m_bank[0]);
-			memory_set_bankptr(machine,"bank2", mem+0x2000*state->m_bank[1]);
+			UINT8 *mem = machine.root_device().memregion("banked")->base();
+			state->membank("bank1")->set_base(mem+0x2000*state->m_bank[0]);
+			state->membank("bank2")->set_base(mem+0x2000*state->m_bank[1]);
 		}
 		break;
 
 		case 3: /* unknown */
 		{
-			UINT8 *mem = machine.region("banked")->base();
-			memory_set_bankptr(machine,"bank1", mem+0x18000);
-			memory_set_bankptr(machine,"bank2", mem+0x18000);
+			UINT8 *mem = machine.root_device().memregion("banked")->base();
+			state->membank("bank1")->set_base(mem+0x18000);
+			state->membank("bank2")->set_base(mem+0x18000);
 		}
 		break;
 	}
@@ -144,26 +144,26 @@ static void sfkick_remap_banks(running_machine &machine)
 	{
 		case 0: /* bios - upper part */
 		{
-			UINT8 *mem = machine.region("bios")->base();
-			memory_set_bankptr(machine,"bank3", mem+0x4000);
-			memory_set_bankptr(machine,"bank4", mem+0x6000);
+			UINT8 *mem = machine.root_device().memregion("bios")->base();
+			state->membank("bank3")->set_base(mem+0x4000);
+			state->membank("bank4")->set_base(mem+0x6000);
 		}
 		break;
 
 		case 1:  /* unknown */
 		case 3:
 		{
-			UINT8 *mem = machine.region("banked")->base();
-			memory_set_bankptr(machine,"bank3", mem+0x18000);
-			memory_set_bankptr(machine,"bank4", mem+0x18000);
+			UINT8 *mem = machine.root_device().memregion("banked")->base();
+			state->membank("bank3")->set_base(mem+0x18000);
+			state->membank("bank4")->set_base(mem+0x18000);
 		}
 		break;
 
 		case 2: /* banked */
 		{
-			UINT8 *mem = machine.region("banked")->base();
-			memory_set_bankptr(machine,"bank3", mem+0x2000*state->m_bank[2]);
-			memory_set_bankptr(machine,"bank4", mem+0x2000*state->m_bank[3]);
+			UINT8 *mem = machine.root_device().memregion("banked")->base();
+			state->membank("bank3")->set_base(mem+0x2000*state->m_bank[2]);
+			state->membank("bank4")->set_base(mem+0x2000*state->m_bank[3]);
 		}
 		break;
 	}
@@ -173,26 +173,26 @@ static void sfkick_remap_banks(running_machine &machine)
 	{
 		case 0: /* cartridge */
 		{
-			UINT8 *mem = machine.region("cartridge")->base();
-			memory_set_bankptr(machine,"bank5", mem+0x4000);
-			memory_set_bankptr(machine,"bank6", mem+0x6000);
+			UINT8 *mem = machine.root_device().memregion("cartridge")->base();
+			state->membank("bank5")->set_base(mem+0x4000);
+			state->membank("bank6")->set_base(mem+0x6000);
 		}
 		break;
 
 		case 1: /* unknown */
 		case 3:
 		{
-			UINT8 *mem = machine.region("banked")->base();
-			memory_set_bankptr(machine,"bank5", mem+0x18000);
-			memory_set_bankptr(machine,"bank6", mem+0x18000);
+			UINT8 *mem = machine.root_device().memregion("banked")->base();
+			state->membank("bank5")->set_base(mem+0x18000);
+			state->membank("bank6")->set_base(mem+0x18000);
 		}
 		break;
 
 		case 2: /* banked */
 		{
-			UINT8 *mem = machine.region("banked")->base();
-			memory_set_bankptr(machine,"bank5", mem+0x2000*state->m_bank[4]);
-			memory_set_bankptr(machine,"bank6", mem+0x2000*state->m_bank[5]);
+			UINT8 *mem = machine.root_device().memregion("banked")->base();
+			state->membank("bank5")->set_base(mem+0x2000*state->m_bank[4]);
+			state->membank("bank6")->set_base(mem+0x2000*state->m_bank[5]);
 		}
 		break;
 	}
@@ -203,24 +203,24 @@ static void sfkick_remap_banks(running_machine &machine)
 		case 0: /* unknown */
 		case 1:
 		{
-			UINT8 *mem = machine.region("banked")->base();
-			memory_set_bankptr(machine,"bank7", mem+0x18000);
-			memory_set_bankptr(machine,"bank8", mem+0x18000);
+			UINT8 *mem = machine.root_device().memregion("banked")->base();
+			state->membank("bank7")->set_base(mem+0x18000);
+			state->membank("bank8")->set_base(mem+0x18000);
 		}
 		break;
 
 		case 2: /* banked */
 		{
-			UINT8 *mem = machine.region("banked")->base();
-			memory_set_bankptr(machine,"bank7", mem+0x2000*state->m_bank[6]);
-			memory_set_bankptr(machine,"bank8", mem+0x2000*state->m_bank[7]);
+			UINT8 *mem = machine.root_device().memregion("banked")->base();
+			state->membank("bank7")->set_base(mem+0x2000*state->m_bank[6]);
+			state->membank("bank8")->set_base(mem+0x2000*state->m_bank[7]);
 		}
 		break;
 
 		case 3: /* RAM */
 		{
-			memory_set_bankptr(machine,"bank7", state->m_main_mem);
-			memory_set_bankptr(machine,"bank8", state->m_main_mem+0x2000);
+			state->membank("bank7")->set_base(state->m_main_mem);
+			state->membank("bank8")->set_base(state->m_main_mem+0x2000);
 		}
 		break;
 	}
@@ -332,7 +332,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sfkick_io_map, AS_IO, 8, sfkick_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE( 0xa0, 0xa7) AM_WRITE(soundlatch_w )
+	AM_RANGE( 0xa0, 0xa7) AM_WRITE(soundlatch_byte_w )
 	AM_RANGE( 0x98, 0x9b) AM_DEVREADWRITE( "v9938", v9938_device, read, write)
 	AM_RANGE( 0xa8, 0xab) AM_DEVREADWRITE_LEGACY("ppi8255", ppi8255_r, ppi8255_w)
 	AM_RANGE( 0xb4, 0xb5) AM_RAM /* loopback ? req by sfkicka (MSX Bios leftover)*/
@@ -345,7 +345,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sfkick_sound_io_map, AS_IO, 8, sfkick_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ(soundlatch_r)
+	AM_RANGE(0x00, 0x00) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x04, 0x05) AM_DEVREADWRITE_LEGACY("ym1", ym2203_r, ym2203_w)
 ADDRESS_MAP_END
 

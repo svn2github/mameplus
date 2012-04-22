@@ -176,27 +176,26 @@ Super Strong Warriors
 
 /********** READ INPUTS **********/
 
-static CUSTOM_INPUT( mahjong_ctrl_r )
+CUSTOM_INPUT_MEMBER(ms32_state::mahjong_ctrl_r)
 {
-	ms32_state *state = field.machine().driver_data<ms32_state>();
 	UINT32 mj_input;
 
-	switch (state->m_mahjong_input_select[0])
+	switch (m_mahjong_input_select[0])
 	{
 		case 0x01:
-			mj_input = input_port_read(field.machine(), "MJ0");
+			mj_input = input_port_read(machine(), "MJ0");
 			break;
 		case 0x02:
-			mj_input = input_port_read(field.machine(), "MJ1");
+			mj_input = input_port_read(machine(), "MJ1");
 			break;
 		case 0x04:
-			mj_input = input_port_read(field.machine(), "MJ2");
+			mj_input = input_port_read(machine(), "MJ2");
 			break;
 		case 0x08:
-			mj_input = input_port_read(field.machine(), "MJ3");
+			mj_input = input_port_read(machine(), "MJ3");
 			break;
 		case 0x10:
-			mj_input = input_port_read(field.machine(), "MJ4");
+			mj_input = input_port_read(machine(), "MJ4");
 			break;
 		default:
 			mj_input = 0;
@@ -220,7 +219,7 @@ READ32_MEMBER(ms32_state::ms32_read_inputs3)
 
 WRITE32_MEMBER(ms32_state::ms32_sound_w)
 {
-	soundlatch_w(space, 0, data & 0xff);
+	soundlatch_byte_w(space, 0, data & 0xff);
 	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, ASSERT_LINE);
 
 	// give the Z80 time to respond
@@ -353,7 +352,7 @@ static ADDRESS_MAP_START( ms32_map, AS_PROGRAM, 32, ms32_state )
 	AM_RANGE(0xc2c00000, 0xc2c07fff) AM_READWRITE16(ms32_txram_r16,  ms32_txram_w16,  0x0000ffff) AM_MIRROR(0x3c1f0000) /* txram is 16-bit wide, 0x4000 in size */
 	AM_RANGE(0xc2c08000, 0xc2c0ffff) AM_READWRITE16(ms32_bgram_r16,  ms32_bgram_w16,  0x0000ffff) AM_MIRROR(0x3c1f0000) /* bgram is 16-bit wide, 0x4000 in size */
 /*  AM_RANGE(0xc2c10000, 0xc2dfffff) // mirrors of txram / bg, handled above */
-	AM_RANGE(0xc2e00000, 0xc2e1ffff) AM_RAM AM_BASE(m_mainram)                                AM_MIRROR(0x3c0e0000) /* mainram is 32-bit wide, 0x20000 in size */
+	AM_RANGE(0xc2e00000, 0xc2e1ffff) AM_RAM AM_SHARE("mainram")                                AM_MIRROR(0x3c0e0000) /* mainram is 32-bit wide, 0x20000 in size */
 	AM_RANGE(0xc3e00000, 0xc3ffffff) AM_ROMBANK("bank1")                                                AM_MIRROR(0x3c000000) // ROM is 32-bit wide, 0x200000 in size */
 
 	/* todo: clean up the mapping of these */
@@ -367,13 +366,13 @@ static ADDRESS_MAP_START( ms32_map, AS_PROGRAM, 32, ms32_state )
 //  AM_RANGE(0xfce00000, 0xfce0007f) AM_WRITEONLY AM_BASE_LEGACY(&ms32_fce00000) /* registers not ram? */
 	AM_RANGE(0xfce00000, 0xfce00003) AM_WRITE(ms32_gfxctrl_w)	/* flip screen + other unknown bits */
 	AM_RANGE(0xfce00280, 0xfce0028f) AM_WRITE(ms32_brightness_w)	// global brightness control
-/**/AM_RANGE(0xfce00600, 0xfce0065f) AM_RAM AM_BASE(m_roz_ctrl)		/* roz control registers */
-/**/AM_RANGE(0xfce00a00, 0xfce00a17) AM_RAM AM_BASE(m_tx_scroll)	/* tx layer scroll */
-/**/AM_RANGE(0xfce00a20, 0xfce00a37) AM_RAM AM_BASE(m_bg_scroll)	/* bg layer scroll */
+/**/AM_RANGE(0xfce00600, 0xfce0065f) AM_RAM AM_SHARE("roz_ctrl")		/* roz control registers */
+/**/AM_RANGE(0xfce00a00, 0xfce00a17) AM_RAM AM_SHARE("tx_scroll")	/* tx layer scroll */
+/**/AM_RANGE(0xfce00a20, 0xfce00a37) AM_RAM AM_SHARE("bg_scroll")	/* bg layer scroll */
 	AM_RANGE(0xfce00a7c, 0xfce00a7f) AM_WRITE(pip_w)	// ??? layer related? seems to be always 0
 //  AM_RANGE(0xfce00e00, 0xfce00e03)    coin counters + something else
 	AM_RANGE(0xfd000000, 0xfd000003) AM_READ(ms32_sound_r)
-	AM_RANGE(0xfd1c0000, 0xfd1c0003) AM_WRITEONLY AM_BASE(m_mahjong_input_select)
+	AM_RANGE(0xfd1c0000, 0xfd1c0003) AM_WRITEONLY AM_SHARE("mahjong_select")
 ADDRESS_MAP_END
 
 
@@ -624,7 +623,7 @@ static INPUT_PORTS_START( ms32_mahjong )
 	PORT_INCLUDE( ms32 )
 
 	PORT_MODIFY("INPUTS")
-	PORT_BIT( 0x000000ff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(mahjong_ctrl_r, NULL)	// here we read mahjong keys
+	PORT_BIT( 0x000000ff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, ms32_state,mahjong_ctrl_r, NULL)	// here we read mahjong keys
 	PORT_BIT( 0x0000ff00, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00010000, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x00020000, IP_ACTIVE_LOW, IPT_COIN2 )
@@ -1348,13 +1347,13 @@ static TIMER_DEVICE_CALLBACK(ms32_interrupt)
 READ8_MEMBER(ms32_state::latch_r)
 {
 	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, CLEAR_LINE);
-	return soundlatch_r(space,0)^0xff;
+	return soundlatch_byte_r(space,0)^0xff;
 }
 
 WRITE8_MEMBER(ms32_state::ms32_snd_bank_w)
 {
-	memory_set_bank(machine(), "bank4", (data >> 0) & 0x0F);
-	memory_set_bank(machine(), "bank5", (data >> 4) & 0x0F);
+	membank("bank4")->set_entry((data >> 0) & 0x0F);
+	membank("bank5")->set_entry((data >> 4) & 0x0F);
 }
 
 WRITE8_MEMBER(ms32_state::to_main_w)
@@ -1382,9 +1381,9 @@ ADDRESS_MAP_END
 
 static MACHINE_RESET( ms32 )
 {
-	memory_set_bankptr(machine, "bank1", machine.region("maincpu")->base());
-	memory_set_bank(machine, "bank4", 0);
-	memory_set_bank(machine, "bank5", 1);
+	machine.root_device().membank("bank1")->set_base(machine.root_device().memregion("maincpu")->base());
+	machine.root_device().membank("bank4")->set_entry(0);
+	machine.root_device().membank("bank5")->set_entry(1);
 	irq_init(machine);
 }
 
@@ -2203,8 +2202,8 @@ static void configure_banks(running_machine &machine)
 {
 	ms32_state *state = machine.driver_data<ms32_state>();
 	state_save_register_global(machine, state->m_to_main);
-	memory_configure_bank(machine, "bank4", 0, 16, machine.region("audiocpu")->base() + 0x14000, 0x4000);
-	memory_configure_bank(machine, "bank5", 0, 16, machine.region("audiocpu")->base() + 0x14000, 0x4000);
+	state->membank("bank4")->configure_entries(0, 16, machine.root_device().memregion("audiocpu")->base() + 0x14000, 0x4000);
+	state->membank("bank5")->configure_entries(0, 16, state->memregion("audiocpu")->base() + 0x14000, 0x4000);
 }
 
 static DRIVER_INIT( ms32_common )
@@ -2263,7 +2262,7 @@ static DRIVER_INIT (47pie2)
 static DRIVER_INIT (f1superb)
 {
 #if 0 // we shouldn't need this hack, something else is wrong, and the x offsets are never copied either, v70 problems??
-	UINT32 *pROM = (UINT32 *)machine.region("maincpu")->base();
+	UINT32 *pROM = (UINT32 *)machine.root_device().memregion("maincpu")->base();
 	pROM[0x19d04/4]=0x167a021a; // bne->br  : sprite Y offset table is always copied to RAM
 #endif
 	DRIVER_INIT_CALL(ss92046_01);

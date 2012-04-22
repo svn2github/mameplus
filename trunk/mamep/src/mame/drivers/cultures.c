@@ -18,17 +18,24 @@ class cultures_state : public driver_device
 {
 public:
 	cultures_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_bg0_videoram(*this, "bg0_videoram"),
+		m_bg0_regs_x(*this, "bg0_regs_x"),
+		m_bg0_regs_y(*this, "bg0_regs_y"),
+		m_bg1_regs_x(*this, "bg1_regs_x"),
+		m_bg1_regs_y(*this, "bg1_regs_y"),
+		m_bg2_regs_x(*this, "bg2_regs_x"),
+		m_bg2_regs_y(*this, "bg2_regs_y"){ }
 
-	/* memory pointers */
-	UINT8 *   m_bg0_videoram;
 	UINT8     m_paletteram[0x4000];
-	UINT8 *   m_bg0_regs_x;
-	UINT8 *   m_bg1_regs_x;
-	UINT8 *   m_bg2_regs_x;
-	UINT8 *   m_bg0_regs_y;
-	UINT8 *   m_bg1_regs_y;
-	UINT8 *   m_bg2_regs_y;
+	/* memory pointers */
+	required_shared_ptr<UINT8> m_bg0_videoram;
+	required_shared_ptr<UINT8> m_bg0_regs_x;
+	required_shared_ptr<UINT8> m_bg0_regs_y;
+	required_shared_ptr<UINT8> m_bg1_regs_x;
+	required_shared_ptr<UINT8> m_bg1_regs_y;
+	required_shared_ptr<UINT8> m_bg2_regs_x;
+	required_shared_ptr<UINT8> m_bg2_regs_y;
 
 	/* video-related */
 	tilemap_t  *m_bg0_tilemap;
@@ -50,7 +57,7 @@ public:
 static TILE_GET_INFO( get_bg1_tile_info )
 {
 	cultures_state *state = machine.driver_data<cultures_state>();
-	UINT8 *region = machine.region("gfx3")->base() + 0x200000 + 0x80000 * state->m_bg1_bank;
+	UINT8 *region = state->memregion("gfx3")->base() + 0x200000 + 0x80000 * state->m_bg1_bank;
 	int code = region[tile_index * 2] + (region[tile_index * 2 + 1] << 8);
 	SET_TILE_INFO(2, code, code >> 12, 0);
 }
@@ -58,7 +65,7 @@ static TILE_GET_INFO( get_bg1_tile_info )
 static TILE_GET_INFO( get_bg2_tile_info )
 {
 	cultures_state *state = machine.driver_data<cultures_state>();
-	UINT8 *region = machine.region("gfx2")->base() + 0x200000 + 0x80000 * state->m_bg2_bank;
+	UINT8 *region = state->memregion("gfx2")->base() + 0x200000 + 0x80000 * state->m_bg2_bank;
 	int code = region[tile_index * 2] + (region[tile_index * 2 + 1] << 8);
 	SET_TILE_INFO(1, code, code >> 12, 0);
 }
@@ -121,7 +128,7 @@ static SCREEN_UPDATE_IND16( cultures )
 
 WRITE8_MEMBER(cultures_state::cpu_bankswitch_w)
 {
-	memory_set_bank(machine(), "bank1", data & 0x0f);
+	membank("bank1")->set_entry(data & 0x0f);
 	m_video_bank = ~data & 0x20;
 }
 
@@ -154,8 +161,8 @@ WRITE8_MEMBER(cultures_state::misc_w)
 	if (m_old_bank != new_bank)
 	{
 		// oki banking
-		UINT8 *src = machine().region("oki")->base() + 0x40000 + 0x20000 * new_bank;
-		UINT8 *dst = machine().region("oki")->base() + 0x20000;
+		UINT8 *src = memregion("oki")->base() + 0x40000 + 0x20000 * new_bank;
+		UINT8 *dst = memregion("oki")->base() + 0x20000;
 		memcpy(dst, src, 0x20000);
 
 		m_old_bank = new_bank;
@@ -183,7 +190,7 @@ WRITE8_MEMBER(cultures_state::bg_bank_w)
 static ADDRESS_MAP_START( cultures_map, AS_PROGRAM, 8, cultures_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
-	AM_RANGE(0x8000, 0xbfff) AM_RAM_WRITE(bg0_videoram_w) AM_BASE(m_bg0_videoram)
+	AM_RANGE(0x8000, 0xbfff) AM_RAM_WRITE(bg0_videoram_w) AM_SHARE("bg0_videoram")
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
 	AM_RANGE(0xf000, 0xffff) AM_RAM
 ADDRESS_MAP_END
@@ -192,12 +199,12 @@ static ADDRESS_MAP_START( cultures_io_map, AS_IO, 8, cultures_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x03) AM_RAM
 	AM_RANGE(0x10, 0x13) AM_RAM
-	AM_RANGE(0x20, 0x23) AM_RAM AM_BASE(m_bg0_regs_x)
-	AM_RANGE(0x30, 0x33) AM_RAM AM_BASE(m_bg0_regs_y)
-	AM_RANGE(0x40, 0x43) AM_RAM AM_BASE(m_bg1_regs_x)
-	AM_RANGE(0x50, 0x53) AM_RAM AM_BASE(m_bg1_regs_y)
-	AM_RANGE(0x60, 0x63) AM_RAM AM_BASE(m_bg2_regs_x)
-	AM_RANGE(0x70, 0x73) AM_RAM AM_BASE(m_bg2_regs_y)
+	AM_RANGE(0x20, 0x23) AM_RAM AM_SHARE("bg0_regs_x")
+	AM_RANGE(0x30, 0x33) AM_RAM AM_SHARE("bg0_regs_y")
+	AM_RANGE(0x40, 0x43) AM_RAM AM_SHARE("bg1_regs_x")
+	AM_RANGE(0x50, 0x53) AM_RAM AM_SHARE("bg1_regs_y")
+	AM_RANGE(0x60, 0x63) AM_RAM AM_SHARE("bg2_regs_x")
+	AM_RANGE(0x70, 0x73) AM_RAM AM_SHARE("bg2_regs_y")
 	AM_RANGE(0x80, 0x80) AM_WRITE(cpu_bankswitch_w)
 	AM_RANGE(0x90, 0x90) AM_WRITE(misc_w)
 	AM_RANGE(0xa0, 0xa0) AM_WRITE(bg_bank_w)
@@ -363,9 +370,9 @@ static INTERRUPT_GEN( cultures_interrupt )
 static MACHINE_START( cultures )
 {
 	cultures_state *state = machine.driver_data<cultures_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 16, &ROM[0x0000], 0x4000);
+	state->membank("bank1")->configure_entries(0, 16, &ROM[0x0000], 0x4000);
 
 	state->save_item(NAME(state->m_paletteram));
 	state->save_item(NAME(state->m_old_bank));

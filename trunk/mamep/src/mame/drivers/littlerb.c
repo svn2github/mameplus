@@ -77,9 +77,13 @@ public:
 		: driver_device(mconfig, type, tag),
 		  m_maincpu(*this, "maincpu"),
 		  m_dacl(*this, "dacl"),
-	      m_dacr(*this, "dacr")
-		{ }
+	      m_dacr(*this, "dacr"),
+		m_region4(*this, "region4"){ }
 
+	required_device<cpu_device> m_maincpu;
+	required_device<dac_device> m_dacl;
+	required_device<dac_device> m_dacr;
+	required_shared_ptr<UINT16> m_region4;
 	UINT16 m_vdp_address_low;
 	UINT16 m_vdp_address_high;
 	UINT16 m_vdp_writemode;
@@ -88,7 +92,6 @@ public:
 	UINT32 m_write_address_laststart;
 	UINT32 m_write_address_lastend;
 
-	UINT16* m_region4;
 	UINT8 m_paldac[3][0x100];
 	int m_paldac_select;
 	int m_paldac_offset;
@@ -97,15 +100,13 @@ public:
 	UINT8 m_sound_index_l,m_sound_index_r;
 	UINT16 m_sound_pointer_l,m_sound_pointer_r;
 
-	required_device<cpu_device> m_maincpu;
-	required_device<dac_device> m_dacl;
-	required_device<dac_device> m_dacr;
 	DECLARE_WRITE16_MEMBER(region4_w);
 	DECLARE_READ16_MEMBER(buffer_status_r);
 	DECLARE_READ16_MEMBER(littlerb_vdp_r);
 	DECLARE_WRITE16_MEMBER(littlerb_vdp_w);
 	DECLARE_WRITE16_MEMBER(littlerb_l_sound_w);
 	DECLARE_WRITE16_MEMBER(littlerb_r_sound_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(littlerb_frame_step_r);
 };
 
 
@@ -130,9 +131,9 @@ static ADDRESS_MAP_START( littlerb_vdp_map8, AS_0, 16, littlerb_state )
 	AM_RANGE(0x00800002 ,0x00800003) AM_DEVWRITE8("^ramdac", ramdac_device, pal_w,   0x00ff)
 	AM_RANGE(0x00800004 ,0x00800005) AM_DEVWRITE8("^ramdac", ramdac_device, mask_w,  0x00ff)
 
-	AM_RANGE(0x1ff80804, 0x1ff80805) AM_READ(buffer_status_r)
+	AM_RANGE(0x1ff80804, 0x1ff80805) AM_DEVREAD("^", littlerb_state, buffer_status_r)
 	// most gfx end up here including the sprite list
-	AM_RANGE(0x1ff80000, 0x1fffffff) AM_RAM_WRITE(region4_w)  AM_BASE(m_region4)
+	AM_RANGE(0x1ff80000, 0x1fffffff) AM_RAM AM_DEVWRITE("^", littlerb_state, region4_w)  AM_SHARE("region4")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( ramdac_map, AS_0, 8, littlerb_state )
@@ -349,9 +350,9 @@ static ADDRESS_MAP_START( littlerb_main, AS_PROGRAM, 16, littlerb_state )
 ADDRESS_MAP_END
 
 /* guess according to DASM code and checking the gameplay speed, could be different */
-static CUSTOM_INPUT( littlerb_frame_step_r )
+CUSTOM_INPUT_MEMBER(littlerb_state::littlerb_frame_step_r)
 {
-	UINT32 ret = field.machine().primary_screen->frame_number();
+	UINT32 ret = machine().primary_screen->frame_number();
 
 	return (ret) & 7;
 }
@@ -422,7 +423,7 @@ static INPUT_PORTS_START( littlerb )
 	PORT_DIPNAME( 0x1000, 0x1000, "???"  )
 	PORT_DIPSETTING(      0x1000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_BIT( 0xe000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(littlerb_frame_step_r, NULL)
+	PORT_BIT( 0xe000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, littlerb_state,littlerb_frame_step_r, NULL)
 
 	PORT_START("P2")	/* 16bit */
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(2)
@@ -502,7 +503,7 @@ static TIMER_DEVICE_CALLBACK( littlerb_scanline )
 	if((scanline % 2) == 0)
 	{
 		UINT8 res;
-		UINT8 *sample_rom = timer.machine().region("samples")->base();
+		UINT8 *sample_rom = state->memregion("samples")->base();
 
 		res = sample_rom[state->m_sound_pointer_l|(state->m_sound_index_l<<10)|0x40000];
 		dac_signed_w(state->m_dacl, 0, res);

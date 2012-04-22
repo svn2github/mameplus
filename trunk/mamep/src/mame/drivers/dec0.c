@@ -188,7 +188,7 @@ WRITE16_MEMBER(dec0_state::dec0_control_w)
 		case 4: /* 6502 sound cpu */
 			if (ACCESSING_BITS_0_7)
 			{
-				soundlatch_w(space, 0, data & 0xff);
+				soundlatch_byte_w(space, 0, data & 0xff);
 				cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 			}
 			break;
@@ -227,7 +227,7 @@ WRITE16_MEMBER(dec0_state::automat_control_w)
 		case 0xe: /* 6502 sound cpu */
 			if (ACCESSING_BITS_0_7)
 			{
-				soundlatch_w(space, 0, data & 0xff);
+				soundlatch_byte_w(space, 0, data & 0xff);
 				cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
 			}
 			break;
@@ -260,7 +260,7 @@ WRITE16_MEMBER(dec0_state::slyspy_control_w)
     	case 0:
 			if (ACCESSING_BITS_0_7)
 			{
-				soundlatch_w(space, 0, data & 0xff);
+				soundlatch_byte_w(space, 0, data & 0xff);
 				cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 			}
 			break;
@@ -274,7 +274,7 @@ WRITE16_MEMBER(dec0_state::midres_sound_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		soundlatch_w(space, 0, data & 0xff);
+		soundlatch_byte_w(space, 0, data & 0xff);
 		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
@@ -307,14 +307,14 @@ static ADDRESS_MAP_START( dec0_map, AS_PROGRAM, 16, dec0_state )
 	AM_RANGE(0x30c010, 0x30c01f) AM_WRITE(dec0_control_w)									/* Priority, sound, etc. */
 	AM_RANGE(0x310000, 0x3107ff) AM_RAM_WRITE(dec0_paletteram_rg_w) AM_SHARE("paletteram")
 	AM_RANGE(0x314000, 0x3147ff) AM_RAM_WRITE(dec0_paletteram_b_w) AM_SHARE("paletteram2")
-	AM_RANGE(0xff8000, 0xffbfff) AM_RAM AM_BASE(m_ram)									/* Main ram */
-	AM_RANGE(0xffc000, 0xffc7ff) AM_RAM AM_BASE(m_spriteram)								/* Sprites */
+	AM_RANGE(0xff8000, 0xffbfff) AM_RAM AM_SHARE("ram")									/* Main ram */
+	AM_RANGE(0xffc000, 0xffc7ff) AM_RAM AM_SHARE("spriteram")								/* Sprites */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( robocop_sub_map, AS_PROGRAM, 8, dec0_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM
 	AM_RANGE(0x1f0000, 0x1f1fff) AM_RAM									/* Main ram */
-	AM_RANGE(0x1f2000, 0x1f3fff) AM_RAM AM_BASE(m_robocop_shared_ram)	/* Shared ram */
+	AM_RANGE(0x1f2000, 0x1f3fff) AM_RAM AM_SHARE("robocop_shared")	/* Shared ram */
 	AM_RANGE(0x1ff400, 0x1ff403) AM_WRITE_LEGACY(h6280_irq_status_w)
 ADDRESS_MAP_END
 
@@ -505,9 +505,9 @@ static ADDRESS_MAP_START( slyspy_map, AS_PROGRAM, 16, dec0_state )
 	AM_RANGE(0x300c00, 0x300fff) AM_DEVREADWRITE_LEGACY("tilegen3", deco_bac06_pf_rowscroll_r, deco_bac06_pf_rowscroll_w)
 	AM_RANGE(0x301000, 0x3017ff) AM_DEVREADWRITE_LEGACY("tilegen3", deco_bac06_pf_data_r, deco_bac06_pf_data_w)
 
-	AM_RANGE(0x304000, 0x307fff) AM_RAM AM_BASE(m_ram)	/* Sly spy main ram */
-	AM_RANGE(0x308000, 0x3087ff) AM_RAM AM_BASE(m_spriteram)	/* Sprites */
-	AM_RANGE(0x310000, 0x3107ff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x304000, 0x307fff) AM_RAM AM_SHARE("ram")	/* Sly spy main ram */
+	AM_RANGE(0x308000, 0x3087ff) AM_RAM AM_SHARE("spriteram")	/* Sprites */
+	AM_RANGE(0x310000, 0x3107ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x314000, 0x314003) AM_WRITE(slyspy_control_w)
 	AM_RANGE(0x314008, 0x31400f) AM_READ(slyspy_controls_r)
 	AM_RANGE(0x31c000, 0x31c00f) AM_READ(slyspy_protection_r) AM_WRITENOP
@@ -516,9 +516,9 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( midres_map, AS_PROGRAM, 16, dec0_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	AM_RANGE(0x100000, 0x103fff) AM_RAM AM_BASE(m_ram)
-	AM_RANGE(0x120000, 0x1207ff) AM_RAM AM_BASE(m_spriteram)
-	AM_RANGE(0x140000, 0x1407ff) AM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x100000, 0x103fff) AM_RAM AM_SHARE("ram")
+	AM_RANGE(0x120000, 0x1207ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x140000, 0x1407ff) AM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x160000, 0x160001) AM_WRITE(dec0_priority_w)
 	AM_RANGE(0x180000, 0x18000f) AM_READ(midres_controls_r)
 	AM_RANGE(0x180008, 0x18000f) AM_WRITENOP /* ?? watchdog ?? */
@@ -552,7 +552,7 @@ static ADDRESS_MAP_START( dec0_s_map, AS_PROGRAM, 8, dec0_state )
 	AM_RANGE(0x0000, 0x05ff) AM_RAM
 	AM_RANGE(0x0800, 0x0801) AM_DEVWRITE_LEGACY("ym1", ym2203_w)
 	AM_RANGE(0x1000, 0x1001) AM_DEVWRITE_LEGACY("ym2", ym3812_w)
-	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_r)
+	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x3800, 0x3800) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -564,7 +564,7 @@ static ADDRESS_MAP_START( slyspy_s_map, AS_PROGRAM, 8, dec0_state )
 	AM_RANGE(0x0a0000, 0x0a0001) AM_READNOP /* Protection counter */
 	AM_RANGE(0x0b0000, 0x0b0001) AM_DEVWRITE_LEGACY("ym1", ym2203_w)
 	AM_RANGE(0x0e0000, 0x0e0001) AM_DEVREADWRITE("oki", okim6295_device, read, write)
-	AM_RANGE(0x0f0000, 0x0f0001) AM_READ(soundlatch_r)
+	AM_RANGE(0x0f0000, 0x0f0001) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x1f0000, 0x1f1fff) AM_RAMBANK("bank8")
 	AM_RANGE(0x1ff400, 0x1ff403) AM_WRITE_LEGACY(h6280_irq_status_w)
 ADDRESS_MAP_END
@@ -574,7 +574,7 @@ static ADDRESS_MAP_START( midres_s_map, AS_PROGRAM, 8, dec0_state )
 	AM_RANGE(0x108000, 0x108001) AM_DEVWRITE_LEGACY("ym2", ym3812_w)
 	AM_RANGE(0x118000, 0x118001) AM_DEVWRITE_LEGACY("ym1", ym2203_w)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki", okim6295_device, read, write)
-	AM_RANGE(0x138000, 0x138001) AM_READ(soundlatch_r)
+	AM_RANGE(0x138000, 0x138001) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x1f0000, 0x1f1fff) AM_RAMBANK("bank8")
 	AM_RANGE(0x1ff400, 0x1ff403) AM_WRITE_LEGACY(h6280_irq_status_w)
 ADDRESS_MAP_END
@@ -605,9 +605,9 @@ static ADDRESS_MAP_START( secretab_map, AS_PROGRAM, 16, dec0_state )
 	AM_RANGE(0x300800, 0x30087f) AM_DEVREADWRITE_LEGACY("tilegen3", deco_bac06_pf_colscroll_r, deco_bac06_pf_colscroll_w)
 	AM_RANGE(0x300c00, 0x300fff) AM_DEVREADWRITE_LEGACY("tilegen3", deco_bac06_pf_rowscroll_r, deco_bac06_pf_rowscroll_w)
 	AM_RANGE(0x301000, 0x3017ff) AM_DEVREADWRITE_LEGACY("tilegen3", deco_bac06_pf_data_r, deco_bac06_pf_data_w)
-	AM_RANGE(0x301800, 0x307fff) AM_RAM AM_BASE(m_ram) /* Sly spy main ram */
-	AM_RANGE(0x310000, 0x3107ff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0xb08000, 0xb087ff) AM_RAM AM_BASE(m_spriteram) /* Sprites */
+	AM_RANGE(0x301800, 0x307fff) AM_RAM AM_SHARE("ram") /* Sly spy main ram */
+	AM_RANGE(0x310000, 0x3107ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xb08000, 0xb087ff) AM_RAM AM_SHARE("spriteram") /* Sprites */
 ADDRESS_MAP_END
 
 
@@ -636,11 +636,11 @@ static ADDRESS_MAP_START( automat_map, AS_PROGRAM, 16, dec0_state )
 	AM_RANGE(0x300000, 0x30001f) AM_READ(dec0_rotary_r)
 	AM_RANGE(0x30c000, 0x30c00b) AM_READ(dec0_controls_r)
 	AM_RANGE(0x30c000, 0x30c01f) AM_WRITE(automat_control_w)			/* Priority, sound, etc. */
-	AM_RANGE(0x310000, 0x3107ff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x310000, 0x3107ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x314000, 0x3147ff) AM_RAM
 	AM_RANGE(0x400008, 0x400009) AM_WRITE(dec0_priority_w)				// NEW
-	AM_RANGE(0xff8000, 0xffbfff) AM_RAM AM_BASE(m_ram)				/* Main ram */
-	AM_RANGE(0xffc000, 0xffc7ff) AM_RAM AM_BASE(m_spriteram)			/* Sprites */
+	AM_RANGE(0xff8000, 0xffbfff) AM_RAM AM_SHARE("ram")				/* Main ram */
+	AM_RANGE(0xffc000, 0xffc7ff) AM_RAM AM_SHARE("spriteram")			/* Sprites */
 ADDRESS_MAP_END
 
 WRITE8_MEMBER(dec0_state::automat_adpcm_w)
@@ -652,7 +652,7 @@ static ADDRESS_MAP_START( automat_s_map, AS_PROGRAM, 8, dec0_state )
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 //  AM_RANGE(0xc800, 0xc800) AM_WRITE_LEGACY(ym2203_control_port_0_w)
 //  AM_RANGE(0xc801, 0xc801) AM_WRITE_LEGACY(ym2203_write_port_0_w)
-	AM_RANGE(0xd800, 0xd800) AM_READ(soundlatch_r)
+	AM_RANGE(0xd800, 0xd800) AM_READ(soundlatch_byte_r)
 //  AM_RANGE(0xd000, 0xd000) AM_WRITE_LEGACY(ym2203_control_port_1_w)
 //  AM_RANGE(0xd001, 0xd001) AM_WRITE_LEGACY(ym2203_write_port_1_w)
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(automat_adpcm_w)
@@ -3038,7 +3038,7 @@ static void dump_to_file(running_machine& machine, UINT8* ROM, int offset, int s
 
 static DRIVER_INIT( convert_robocop_gfx4_to_automat )
 {
-	UINT8* R = machine.region("gfx4")->base();
+	UINT8* R = machine.root_device().memregion("gfx4")->base();
 	int i;
 
 	for (i=0;i<0x80000;i++)

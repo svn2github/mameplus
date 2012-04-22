@@ -391,7 +391,7 @@ READ8_MEMBER(cvs_state::cvs_speech_command_r)
 
 	/* FIXME: this was by observation on board ???
      *          -bit 7 is TMS status (active LO) */
-	return ((tms5110_ctl_r(m_tms, 0) ^ 1) << 7) | (soundlatch_r(space, 0) & 0x7f);
+	return ((tms5110_ctl_r(m_tms, 0) ^ 1) << 7) | (soundlatch_byte_r(space, 0) & 0x7f);
 }
 
 
@@ -426,11 +426,11 @@ static int speech_rom_read_bit( device_t *device )
 {
 	cvs_state *state = device->machine().driver_data<cvs_state>();
 	running_machine &machine = device->machine();
-	UINT8 *ROM = machine.region("speechdata")->base();
+	UINT8 *ROM = machine.root_device().memregion("speechdata")->base();
 	int bit;
 
 	/* before reading the bit, clamp the address to the region length */
-	state->m_speech_rom_bit_address = state->m_speech_rom_bit_address & ((machine.region("speechdata")->bytes() * 8) - 1);
+	state->m_speech_rom_bit_address = state->m_speech_rom_bit_address & ((state->memregion("speechdata")->bytes() * 8) - 1);
 	bit = (ROM[state->m_speech_rom_bit_address >> 3] >> (state->m_speech_rom_bit_address & 0x07)) & 0x01;
 
 	/* prepare for next bit */
@@ -459,7 +459,7 @@ WRITE8_MEMBER(cvs_state::audio_command_w)
 
 	LOG(("data %02x\n", data));
 	/* cause interrupt on audio CPU if bit 7 set */
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	cvs_slave_cpu_interrupt(m_audiocpu, data & 0x80 ? 1 : 0);
 }
 
@@ -474,11 +474,11 @@ WRITE8_MEMBER(cvs_state::audio_command_w)
 static ADDRESS_MAP_START( cvs_main_cpu_map, AS_PROGRAM, 8, cvs_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x13ff) AM_ROM
-	AM_RANGE(0x1400, 0x14ff) AM_MIRROR(0x6000) AM_READWRITE(cvs_bullet_ram_or_palette_r, cvs_bullet_ram_or_palette_w) AM_BASE(m_bullet_ram)
+	AM_RANGE(0x1400, 0x14ff) AM_MIRROR(0x6000) AM_READWRITE(cvs_bullet_ram_or_palette_r, cvs_bullet_ram_or_palette_w) AM_SHARE("bullet_ram")
 	AM_RANGE(0x1500, 0x15ff) AM_MIRROR(0x6000) AM_READWRITE(cvs_s2636_2_or_character_ram_r, cvs_s2636_2_or_character_ram_w)
 	AM_RANGE(0x1600, 0x16ff) AM_MIRROR(0x6000) AM_READWRITE(cvs_s2636_1_or_character_ram_r, cvs_s2636_1_or_character_ram_w)
 	AM_RANGE(0x1700, 0x17ff) AM_MIRROR(0x6000) AM_READWRITE(cvs_s2636_0_or_character_ram_r, cvs_s2636_0_or_character_ram_w)
-	AM_RANGE(0x1800, 0x1bff) AM_MIRROR(0x6000) AM_READWRITE(cvs_video_or_color_ram_r, cvs_video_or_color_ram_w) AM_BASE(m_video_ram)
+	AM_RANGE(0x1800, 0x1bff) AM_MIRROR(0x6000) AM_READWRITE(cvs_video_or_color_ram_r, cvs_video_or_color_ram_w) AM_SHARE("video_ram")
 	AM_RANGE(0x1c00, 0x1fff) AM_MIRROR(0x6000) AM_RAM
 	AM_RANGE(0x2000, 0x33ff) AM_ROM
 	AM_RANGE(0x4000, 0x53ff) AM_ROM
@@ -491,7 +491,7 @@ static ADDRESS_MAP_START( cvs_main_cpu_io_map, AS_IO, 8, cvs_state )
 	AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_READWRITE(cvs_collision_clear, cvs_video_fx_w)
 	AM_RANGE(S2650_CTRL_PORT, S2650_CTRL_PORT) AM_READ(cvs_collision_r) AM_WRITE(audio_command_w)
 	AM_RANGE(S2650_SENSE_PORT, S2650_SENSE_PORT) AM_READ_PORT("SENSE")
-	AM_RANGE(S2650_FO_PORT, S2650_FO_PORT) AM_RAM AM_BASE(m_fo_state)
+	AM_RANGE(S2650_FO_PORT, S2650_FO_PORT) AM_RAM AM_SHARE("fo_state")
 ADDRESS_MAP_END
 
 
@@ -506,10 +506,10 @@ static ADDRESS_MAP_START( cvs_dac_cpu_map, AS_PROGRAM, 8, cvs_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x0fff) AM_ROM
 	AM_RANGE(0x1000, 0x107f) AM_RAM
-	AM_RANGE(0x1800, 0x1800) AM_READ(soundlatch_r)
+	AM_RANGE(0x1800, 0x1800) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x1840, 0x1840) AM_DEVWRITE_LEGACY("dac1", dac_w)
-	AM_RANGE(0x1880, 0x1883) AM_DEVWRITE_LEGACY("dac2", cvs_4_bit_dac_data_w) AM_BASE(m_cvs_4_bit_dac_data)
-	AM_RANGE(0x1884, 0x1887) AM_DEVWRITE_LEGACY("dac3", cvs_unknown_w)	AM_BASE(m_dac3_state)	/* ???? not connected to anything */
+	AM_RANGE(0x1880, 0x1883) AM_DEVWRITE_LEGACY("dac2", cvs_4_bit_dac_data_w) AM_SHARE("4bit_dac")
+	AM_RANGE(0x1884, 0x1887) AM_DEVWRITE_LEGACY("dac3", cvs_unknown_w)	AM_SHARE("dac3_state")	/* ???? not connected to anything */
 ADDRESS_MAP_END
 
 
@@ -532,7 +532,7 @@ static ADDRESS_MAP_START( cvs_speech_cpu_map, AS_PROGRAM, 8, cvs_state )
 	AM_RANGE(0x1d00, 0x1d00) AM_WRITE(cvs_speech_rom_address_lo_w)
 	AM_RANGE(0x1d40, 0x1d40) AM_WRITE(cvs_speech_rom_address_hi_w)
 	AM_RANGE(0x1d80, 0x1d80) AM_READ(cvs_speech_command_r)
-	AM_RANGE(0x1ddc, 0x1dde) AM_DEVWRITE_LEGACY("tms", cvs_tms5110_ctl_w) AM_BASE(m_tms5110_ctl_data)
+	AM_RANGE(0x1ddc, 0x1dde) AM_DEVWRITE_LEGACY("tms", cvs_tms5110_ctl_w) AM_SHARE("tms5110_ctl")
 	AM_RANGE(0x1ddf, 0x1ddf) AM_DEVWRITE_LEGACY("tms", cvs_tms5110_pdc_w)
 ADDRESS_MAP_END
 
@@ -1595,7 +1595,7 @@ ROM_END
 
 static DRIVER_INIT( huncholy )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	/* patch out protection */
 	ROM[0x0082] = 0xc0;
@@ -1615,7 +1615,7 @@ static DRIVER_INIT( huncholy )
 
 static DRIVER_INIT( hunchbaka )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	offs_t offs;
 
@@ -1627,7 +1627,7 @@ static DRIVER_INIT( hunchbaka )
 
 static DRIVER_INIT( superbik )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	/* patch out protection */
 	ROM[0x0079] = 0xc0;
@@ -1655,7 +1655,7 @@ static DRIVER_INIT( superbik )
 
 static DRIVER_INIT( hero )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	/* patch out protection */
 	ROM[0x0087] = 0xc0;
@@ -1677,7 +1677,7 @@ static DRIVER_INIT( hero )
 
 static DRIVER_INIT( raiders )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	offs_t offs;
 

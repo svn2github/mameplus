@@ -150,7 +150,7 @@ static WRITE8_DEVICE_HANDLER( eeprom_serial_w )
 
 WRITE8_MEMBER(mitchell_state::pang_bankswitch_w)
 {
-	memory_set_bank(machine(), "bank1", data & 0x0f);
+	membank("bank1")->set_entry(data & 0x0f);
 }
 
 /*************************************
@@ -299,8 +299,8 @@ static ADDRESS_MAP_START( mgakuen_map, AS_PROGRAM, 8, mitchell_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xc7ff) AM_READWRITE(mgakuen_paletteram_r, mgakuen_paletteram_w)	/* palette RAM */
-	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(pang_colorram_r, pang_colorram_w) AM_BASE(m_colorram) /* Attribute RAM */
-	AM_RANGE(0xd000, 0xdfff) AM_READWRITE(mgakuen_videoram_r, mgakuen_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size) /* char RAM */
+	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(pang_colorram_r, pang_colorram_w) AM_SHARE("colorram") /* Attribute RAM */
+	AM_RANGE(0xd000, 0xdfff) AM_READWRITE(mgakuen_videoram_r, mgakuen_videoram_w) AM_SHARE("videoram") /* char RAM */
 	AM_RANGE(0xe000, 0xefff) AM_RAM	/* Work RAM */
 	AM_RANGE(0xf000, 0xffff) AM_READWRITE(mgakuen_objram_r, mgakuen_objram_w)	/* OBJ RAM */
 ADDRESS_MAP_END
@@ -309,8 +309,8 @@ static ADDRESS_MAP_START( mitchell_map, AS_PROGRAM, 8, mitchell_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xc7ff) AM_READWRITE(pang_paletteram_r,pang_paletteram_w) /* Banked palette RAM */
-	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(pang_colorram_r,pang_colorram_w) AM_BASE(m_colorram) /* Attribute RAM */
-	AM_RANGE(0xd000, 0xdfff) AM_READWRITE(pang_videoram_r,pang_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)/* Banked char / OBJ RAM */
+	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(pang_colorram_r,pang_colorram_w) AM_SHARE("colorram") /* Attribute RAM */
+	AM_RANGE(0xd000, 0xdfff) AM_READWRITE(pang_videoram_r,pang_videoram_w) AM_SHARE("videoram")/* Banked char / OBJ RAM */
 	AM_RANGE(0xe000, 0xffff) AM_RAM	/* Work RAM */
 ADDRESS_MAP_END
 
@@ -335,8 +335,8 @@ static ADDRESS_MAP_START( spangbl_map, AS_PROGRAM, 8, mitchell_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1") AM_WRITENOP
 	AM_RANGE(0xc000, 0xc7ff) AM_READWRITE(pang_paletteram_r, pang_paletteram_w)	/* Banked palette RAM */
-	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(pang_colorram_r, pang_colorram_w)	AM_BASE(m_colorram)/* Attribute RAM */
-	AM_RANGE(0xd000, 0xdfff) AM_READWRITE(pang_videoram_r, pang_videoram_w)	AM_BASE_SIZE(m_videoram, m_videoram_size) /* Banked char / OBJ RAM */
+	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(pang_colorram_r, pang_colorram_w)	AM_SHARE("colorram")/* Attribute RAM */
+	AM_RANGE(0xd000, 0xdfff) AM_READWRITE(pang_videoram_r, pang_videoram_w)	AM_SHARE("videoram") /* Banked char / OBJ RAM */
 	AM_RANGE(0xe000, 0xffff) AM_RAM		/* Work RAM */
 ADDRESS_MAP_END
 
@@ -386,12 +386,12 @@ static ADDRESS_MAP_START( mstworld_sound_map, AS_PROGRAM, 8, mitchell_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x9000, 0x9000) AM_DEVWRITE_LEGACY("oki", oki_banking_w)
 	AM_RANGE(0x9800, 0x9800) AM_DEVREADWRITE("oki", okim6295_device, read, write)
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
 WRITE8_MEMBER(mitchell_state::mstworld_sound_w)
 {
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
 }
 
@@ -2105,14 +2105,14 @@ ROM_END
 static void bootleg_decode( running_machine &machine )
 {
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0x7fff, machine.region("maincpu")->base() + 0x50000);
-	memory_configure_bank_decrypted(machine, "bank1", 0, 16, machine.region("maincpu")->base() + 0x60000, 0x4000);
+	space->set_decrypted_region(0x0000, 0x7fff, machine.root_device().memregion("maincpu")->base() + 0x50000);
+	machine.root_device().membank("bank1")->configure_decrypted_entries(0, 16, machine.root_device().memregion("maincpu")->base() + 0x60000, 0x4000);
 }
 
 
 static void configure_banks( running_machine &machine )
 {
-	memory_configure_bank(machine, "bank1", 0, 16, machine.region("maincpu")->base() + 0x10000, 0x4000);
+	machine.root_device().membank("bank1")->configure_entries(0, 16, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
 }
 
 
@@ -2161,7 +2161,7 @@ static DRIVER_INIT( spang )
 	mitchell_state *state = machine.driver_data<mitchell_state>();
 	state->m_input_type = 3;
 	state->m_nvram_size = 0x80;
-	state->m_nvram = &machine.region("maincpu")->base()[0xe000];	/* NVRAM */
+	state->m_nvram = &state->memregion("maincpu")->base()[0xe000];	/* NVRAM */
 	spang_decode(machine);
 	configure_banks(machine);
 }
@@ -2171,7 +2171,7 @@ static DRIVER_INIT( spangbl )
 	mitchell_state *state = machine.driver_data<mitchell_state>();
 	state->m_input_type = 3;
 	state->m_nvram_size = 0x80;
-	state->m_nvram = &machine.region("maincpu")->base()[0xe000];	/* NVRAM */
+	state->m_nvram = &state->memregion("maincpu")->base()[0xe000];	/* NVRAM */
 	bootleg_decode(machine);
 	configure_banks(machine);
 }
@@ -2181,7 +2181,7 @@ static DRIVER_INIT( spangj )
 	mitchell_state *state = machine.driver_data<mitchell_state>();
 	state->m_input_type = 3;
 	state->m_nvram_size = 0x80;
-	state->m_nvram = &machine.region("maincpu")->base()[0xe000];	/* NVRAM */
+	state->m_nvram = &state->memregion("maincpu")->base()[0xe000];	/* NVRAM */
 	spangj_decode(machine);
 	configure_banks(machine);
 }
@@ -2190,7 +2190,7 @@ static DRIVER_INIT( sbbros )
 	mitchell_state *state = machine.driver_data<mitchell_state>();
 	state->m_input_type = 3;
 	state->m_nvram_size = 0x80;
-	state->m_nvram = &machine.region("maincpu")->base()[0xe000];	/* NVRAM */
+	state->m_nvram = &state->memregion("maincpu")->base()[0xe000];	/* NVRAM */
 	sbbros_decode(machine);
 	configure_banks(machine);
 }
@@ -2255,7 +2255,7 @@ static DRIVER_INIT( block )
 	mitchell_state *state = machine.driver_data<mitchell_state>();
 	state->m_input_type = 2;
 	state->m_nvram_size = 0x80;
-	state->m_nvram = &machine.region("maincpu")->base()[0xff80];	/* NVRAM */
+	state->m_nvram = &state->memregion("maincpu")->base()[0xff80];	/* NVRAM */
 	block_decode(machine);
 	configure_banks(machine);
 }
@@ -2264,7 +2264,7 @@ static DRIVER_INIT( blockbl )
 	mitchell_state *state = machine.driver_data<mitchell_state>();
 	state->m_input_type = 2;
 	state->m_nvram_size = 0x80;
-	state->m_nvram = &machine.region("maincpu")->base()[0xff80];	/* NVRAM */
+	state->m_nvram = &state->memregion("maincpu")->base()[0xff80];	/* NVRAM */
 	bootleg_decode(machine);
 	configure_banks(machine);
 }
@@ -2272,9 +2272,9 @@ static DRIVER_INIT( blockbl )
 static DRIVER_INIT( mstworld )
 {
 	/* descramble the program rom .. */
-	int len = machine.region("maincpu")->bytes();
+	int len = machine.root_device().memregion("maincpu")->bytes();
 	UINT8* source = auto_alloc_array(machine, UINT8, len);
-	UINT8* dst = machine.region("maincpu")->base() ;
+	UINT8* dst = machine.root_device().memregion("maincpu")->base() ;
 	int x;
 
 	static const int tablebank[]=

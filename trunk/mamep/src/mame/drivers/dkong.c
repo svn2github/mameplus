@@ -424,7 +424,7 @@ static MACHINE_START( dkong2b )
 static MACHINE_START( s2650 )
 {
     dkong_state *state = machine.driver_data<dkong_state>();
-    UINT8   *p = machine.region("user1")->base();
+    UINT8   *p = state->memregion("user1")->base();
     const char *game_name = machine.system().name;
     int i;
 
@@ -487,27 +487,27 @@ static MACHINE_RESET( dkong )
 static MACHINE_RESET( strtheat )
 {
     dkong_state *state = machine.driver_data<dkong_state>();
-    UINT8 *ROM = machine.region("maincpu")->base();
+    UINT8 *ROM = state->memregion("maincpu")->base();
 
     MACHINE_RESET_CALL(dkong);
 
     /* The initial state of the counter is 0x08 */
-    memory_configure_bank(machine, "bank1", 0, 4, &ROM[0x10000], 0x4000);
+    state->membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x4000);
     state->m_decrypt_counter = 0x08;
-    memory_set_bank(machine, "bank1", 0);
+    state->membank("bank1")->set_entry(0);
 }
 
 static MACHINE_RESET( drakton )
 {
     dkong_state *state = machine.driver_data<dkong_state>();
-    UINT8 *ROM = machine.region("maincpu")->base();
+    UINT8 *ROM = state->memregion("maincpu")->base();
 
     MACHINE_RESET_CALL(dkong);
 
     /* The initial state of the counter is 0x09 */
-    memory_configure_bank(machine, "bank1", 0, 4, &ROM[0x10000], 0x4000);
+    state->membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x4000);
     state->m_decrypt_counter = 0x09;
-    memory_set_bank(machine, "bank1", 1);
+    state->membank("bank1")->set_entry(1);
 }
 
 
@@ -627,10 +627,10 @@ READ8_MEMBER(dkong_state::epos_decrypt_rom)
 
     switch(m_decrypt_counter)
     {
-        case 0x08:  memory_set_bank(machine(), "bank1", 0);      break;
-        case 0x09:  memory_set_bank(machine(), "bank1", 1);      break;
-        case 0x0A:  memory_set_bank(machine(), "bank1", 2);      break;
-        case 0x0B:  memory_set_bank(machine(), "bank1", 3);      break;
+        case 0x08:  membank("bank1")->set_entry(0);      break;
+        case 0x09:  membank("bank1")->set_entry(1);      break;
+        case 0x0A:  membank("bank1")->set_entry(2);      break;
+        case 0x0B:  membank("bank1")->set_entry(3);      break;
         default:
             logerror("Invalid counter = %02X\n",m_decrypt_counter);
             break;
@@ -771,8 +771,8 @@ WRITE8_MEMBER(dkong_state::nmi_mask_w)
 static ADDRESS_MAP_START( dkong_map, AS_PROGRAM, 8, dkong_state )
     AM_RANGE(0x0000, 0x3fff) AM_ROM
     AM_RANGE(0x6000, 0x6bff) AM_RAM
-    AM_RANGE(0x7000, 0x73ff) AM_RAM AM_BASE_SIZE(m_sprite_ram, m_sprite_ram_size) /* sprite set 1 */
-    AM_RANGE(0x7400, 0x77ff) AM_RAM_WRITE(dkong_videoram_w) AM_BASE(m_video_ram)
+    AM_RANGE(0x7000, 0x73ff) AM_RAM AM_SHARE("sprite_ram") /* sprite set 1 */
+    AM_RANGE(0x7400, 0x77ff) AM_RAM_WRITE(dkong_videoram_w) AM_SHARE("video_ram")
     AM_RANGE(0x7800, 0x780f) AM_DEVREADWRITE_LEGACY("dma8257", i8257_r, i8257_w)   /* P8257 control registers */
     AM_RANGE(0x7c00, 0x7c00) AM_READ_PORT("IN0") AM_LATCH8_WRITE("ls175.3d")    /* IN0, sound CPU intf */
     AM_RANGE(0x7c80, 0x7c80) AM_READ_PORT("IN1") AM_WRITE(radarscp_grid_color_w)/* IN1 */
@@ -780,7 +780,7 @@ static ADDRESS_MAP_START( dkong_map, AS_PROGRAM, 8, dkong_state )
     AM_RANGE(0x7d00, 0x7d00) AM_READ(dkong_in2_r)                               /* IN2 */
     AM_RANGE(0x7d00, 0x7d07) AM_DEVWRITE_LEGACY("ls259.6h", latch8_bit0_w)  		/* Sound signals */
 
-    AM_RANGE(0x7d80, 0x7d80) AM_READ_PORT("DSW0") AM_WRITE_LEGACY(dkong_audio_irq_w)   /* DSW0 */
+    AM_RANGE(0x7d80, 0x7d80) AM_READ_PORT("DSW0") AM_WRITE(dkong_audio_irq_w)   /* DSW0 */
     AM_RANGE(0x7d81, 0x7d81) AM_WRITE(radarscp_grid_enable_w)
     AM_RANGE(0x7d82, 0x7d82) AM_WRITE(dkong_flipscreen_w)
     AM_RANGE(0x7d83, 0x7d83) AM_WRITE(dkong_spritebank_w)                       /* 2 PSL Signal */
@@ -793,8 +793,8 @@ static ADDRESS_MAP_START( dkongjr_map, AS_PROGRAM, 8, dkong_state )
     AM_RANGE(0x0000, 0x5fff) AM_ROM
     AM_RANGE(0x6000, 0x6bff) AM_RAM
     AM_RANGE(0x6c00, 0x6fff) AM_RAM                                              /* DK3 bootleg only */
-    AM_RANGE(0x7000, 0x73ff) AM_RAM AM_BASE_SIZE(m_sprite_ram, m_sprite_ram_size) /* sprite set 1 */
-    AM_RANGE(0x7400, 0x77ff) AM_RAM_WRITE(dkong_videoram_w) AM_BASE(m_video_ram)
+    AM_RANGE(0x7000, 0x73ff) AM_RAM AM_SHARE("sprite_ram") /* sprite set 1 */
+    AM_RANGE(0x7400, 0x77ff) AM_RAM_WRITE(dkong_videoram_w) AM_SHARE("video_ram")
     AM_RANGE(0x7800, 0x780f) AM_DEVREADWRITE_LEGACY("dma8257", i8257_r, i8257_w)   /* P8257 control registers */
 
     AM_RANGE(0x7c00, 0x7c00) AM_READ_PORT("IN0") AM_LATCH8_WRITE("ls174.3d")    /* IN0, sound interface */
@@ -805,7 +805,7 @@ static ADDRESS_MAP_START( dkongjr_map, AS_PROGRAM, 8, dkong_state )
     AM_RANGE(0x7d00, 0x7d00) AM_READ(dkongjr_in2_r)                             /* IN2 */
     AM_RANGE(0x7d00, 0x7d07) AM_DEVWRITE_LEGACY("ls259.6h",latch8_bit0_w)      /* Sound addrs */
 
-    AM_RANGE(0x7d80, 0x7d80) AM_READ_PORT("DSW0") AM_WRITE_LEGACY(dkong_audio_irq_w)   /* DSW0 */
+    AM_RANGE(0x7d80, 0x7d80) AM_READ_PORT("DSW0") AM_WRITE(dkong_audio_irq_w)   /* DSW0 */
     AM_RANGE(0x7d82, 0x7d82) AM_WRITE(dkong_flipscreen_w)
     AM_RANGE(0x7d83, 0x7d83) AM_WRITE(dkong_spritebank_w)                       /* 2 PSL Signal */
     AM_RANGE(0x7d84, 0x7d84) AM_WRITE(nmi_mask_w)
@@ -822,8 +822,8 @@ static ADDRESS_MAP_START( dkong3_map, AS_PROGRAM, 8, dkong_state )
     AM_RANGE(0x0000, 0x5fff) AM_ROM
     AM_RANGE(0x6000, 0x67ff) AM_RAM
     AM_RANGE(0x6800, 0x6fff) AM_RAM
-    AM_RANGE(0x7000, 0x73ff) AM_RAM AM_BASE_SIZE(m_sprite_ram, m_sprite_ram_size) /* sprite set 1 */
-    AM_RANGE(0x7400, 0x77ff) AM_RAM_WRITE(dkong_videoram_w) AM_BASE(m_video_ram)
+    AM_RANGE(0x7000, 0x73ff) AM_RAM AM_SHARE("sprite_ram") /* sprite set 1 */
+    AM_RANGE(0x7400, 0x77ff) AM_RAM_WRITE(dkong_videoram_w) AM_SHARE("video_ram")
     AM_RANGE(0x7c00, 0x7c00) AM_READ_PORT("IN0")  AM_LATCH8_WRITE("latch1")
     AM_RANGE(0x7c80, 0x7c80) AM_READ_PORT("IN1")  AM_LATCH8_WRITE("latch2")
     AM_RANGE(0x7d00, 0x7d00) AM_READ_PORT("DSW0") AM_LATCH8_WRITE("latch3")
@@ -854,19 +854,19 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( s2650_map, AS_PROGRAM, 8, dkong_state )
     AM_RANGE(0x0000, 0x0fff) AM_ROM
-    AM_RANGE(0x1000, 0x13ff) AM_RAM AM_BASE_SIZE(m_sprite_ram, m_sprite_ram_size)  /* 0x7000 */
+    AM_RANGE(0x1000, 0x13ff) AM_RAM AM_SHARE("sprite_ram")  /* 0x7000 */
     AM_RANGE(0x1400, 0x1400) AM_MIRROR(0x007f) AM_READ_PORT("IN0") AM_DEVWRITE_LEGACY("ls175.3d", latch8_w)
     AM_RANGE(0x1480, 0x1480) AM_READ_PORT("IN1")
     AM_RANGE(0x1500, 0x1500) AM_MIRROR(0x007f) AM_READ(dkong_in2_r)                                 /* IN2 */
     AM_RANGE(0x1500, 0x1507) AM_DEVWRITE_LEGACY("ls259.6h", latch8_bit0_w)       /* Sound signals */
-    AM_RANGE(0x1580, 0x1580) AM_READ_PORT("DSW0") AM_WRITE_LEGACY(dkong_audio_irq_w)     /* DSW0 */
+    AM_RANGE(0x1580, 0x1580) AM_READ_PORT("DSW0") AM_WRITE(dkong_audio_irq_w)     /* DSW0 */
     AM_RANGE(0x1582, 0x1582) AM_WRITE(dkong_flipscreen_w)
     AM_RANGE(0x1583, 0x1583) AM_WRITE(dkong_spritebank_w)                         /* 2 PSL Signal */
     AM_RANGE(0x1584, 0x1584) AM_NOP                                               /* Possibly still interrupt enable */
     AM_RANGE(0x1585, 0x1585) AM_DEVWRITE_LEGACY("dma8257", p8257_drq_w)          /* P8257 ==> /DRQ0 /DRQ1 */
     AM_RANGE(0x1586, 0x1587) AM_WRITE(dkong_palettebank_w)
     AM_RANGE(0x1600, 0x17ff) AM_RAM                                               /* 0x6400  spriteram location */
-    AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(dkong_videoram_w) AM_BASE(m_video_ram)        /* 0x7400 */
+    AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(dkong_videoram_w) AM_SHARE("video_ram")        /* 0x7400 */
     AM_RANGE(0x1C00, 0x1f7f) AM_RAM                                               /* 0x6000 */
     AM_RANGE(0x1f80, 0x1f8f) AM_DEVREADWRITE_LEGACY("dma8257", i8257_r, i8257_w)   /* P8257 control registers */
     /* 0x6800 not remapped */
@@ -1618,8 +1618,8 @@ static READ8_DEVICE_HANDLER( braze_eeprom_r )
 
 WRITE8_MEMBER(dkong_state::braze_a15_w)
 {
-	memory_set_bank(machine(), "bank1", data & 0x01);
-	memory_set_bank(machine(), "bank2", data & 0x01);
+	membank("bank1")->set_entry(data & 0x01);
+	membank("bank2")->set_entry(data & 0x01);
 }
 
 static WRITE8_DEVICE_HANDLER( braze_eeprom_w )
@@ -1637,7 +1637,7 @@ static void braze_decrypt_rom(running_machine &machine, UINT8 *dest)
 	UINT32 mem;
 	UINT32 newmem;
 
-	ROM = machine.region("braze")->base();
+	ROM = machine.root_device().memregion("braze")->base();
 
 	for (mem=0;mem<0x10000;mem++)
 	{
@@ -3065,7 +3065,7 @@ static void drakton_decrypt_rom(running_machine &machine, UINT8 mod, int offs, i
     UINT8 *ROM;
     int mem;
 
-    ROM = machine.region("maincpu")->base();
+    ROM = machine.root_device().memregion("maincpu")->base();
 
     for (mem=0;mem<0x4000;mem++)
     {
@@ -3091,7 +3091,7 @@ static void drakton_decrypt_rom(running_machine &machine, UINT8 mod, int offs, i
 static DRIVER_INIT( herodk )
 {
     int A;
-    UINT8 *rom = machine.region("maincpu")->base();
+    UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
     /* swap data lines D3 and D4 */
     for (A = 0;A < 0x8000;A++)
@@ -3174,15 +3174,15 @@ static DRIVER_INIT( dkongx )
 
 	braze_decrypt_rom(machine, decrypted);
 
-	memory_configure_bank(machine,"bank1", 0, 2, &decrypted[0], 0x8000);
-	memory_set_bank(machine,"bank1", 0);
-	memory_configure_bank(machine,"bank2", 0, 2, &decrypted[0], 0x8000);
-	memory_set_bank(machine,"bank2", 0);
+	state->membank("bank1")->configure_entries(0, 2, &decrypted[0], 0x8000);
+	state->membank("bank1")->set_entry(0);
+	state->membank("bank2")->configure_entries(0, 2, &decrypted[0], 0x8000);
+	state->membank("bank2")->set_entry(0);
 }
 
 static DRIVER_INIT( dkingjr )
 {
-	UINT8 *prom = machine.region("proms")->base();
+	UINT8 *prom = machine.root_device().memregion("proms")->base();
 	for( int i=0; i<0x200; ++i)
 	{
 		prom[i]^=0xff; // invert color data

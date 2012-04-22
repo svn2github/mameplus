@@ -29,9 +29,10 @@ class r2dx_v33_state : public driver_device
 {
 public:
 	r2dx_v33_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_spriteram(*this, "spriteram"){ }
 
-	UINT16 *m_spriteram;
+	required_shared_ptr<UINT16> m_spriteram;
 	DECLARE_WRITE16_MEMBER(rdx_bg_vram_w);
 	DECLARE_WRITE16_MEMBER(rdx_md_vram_w);
 	DECLARE_WRITE16_MEMBER(rdx_fg_vram_w);
@@ -226,7 +227,7 @@ static SCREEN_UPDATE_IND16( rdx_v33 )
 		if(frame == 5)
 		{
 			int i,data;
-			static UINT8 *rom = space->machine().region("mainprg")->base();
+			static UINT8 *rom = space->machine().root_device().memregion("mainprg")->base();
 
 			for(i=0;i<0x800;i+=2)
 			{
@@ -400,7 +401,7 @@ static ADDRESS_MAP_START( rdx_v33_map, AS_PROGRAM, 16, r2dx_v33_state )
 	AM_RANGE(0x00800, 0x00fff) AM_RAM // copies eeprom here?
 	AM_RANGE(0x01000, 0x0bfff) AM_RAM
 
-	AM_RANGE(0x0c000, 0x0c7ff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x0c000, 0x0c7ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x0c800, 0x0cfff) AM_RAM
 	AM_RANGE(0x0d000, 0x0d7ff) AM_RAM_WRITE(rdx_bg_vram_w) AM_BASE_LEGACY(&bg_vram)
 	AM_RANGE(0x0d800, 0x0dfff) AM_RAM_WRITE(rdx_md_vram_w) AM_BASE_LEGACY(&md_vram)
@@ -408,7 +409,7 @@ static ADDRESS_MAP_START( rdx_v33_map, AS_PROGRAM, 16, r2dx_v33_state )
 	AM_RANGE(0x0e800, 0x0f7ff) AM_RAM_WRITE(rdx_tx_vram_w) AM_BASE_LEGACY(&tx_vram)
 	AM_RANGE(0x0f800, 0x0ffff) AM_RAM /* Stack area */
 	AM_RANGE(0x10000, 0x1efff) AM_RAM
-	AM_RANGE(0x1f000, 0x1ffff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1f000, 0x1ffff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 
 	AM_RANGE(0x20000, 0x3ffff) AM_ROMBANK("bank1")
 	AM_RANGE(0x40000, 0xfffff) AM_ROM AM_REGION("mainprg", 0x40000 )
@@ -473,7 +474,7 @@ static ADDRESS_MAP_START( nzerotea_map, AS_PROGRAM, 16, r2dx_v33_state )
 	AM_RANGE(0x00800, 0x00fff) AM_RAM
 	AM_RANGE(0x01000, 0x0bfff) AM_RAM
 
-	AM_RANGE(0x0c000, 0x0c7ff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x0c000, 0x0c7ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x0c800, 0x0cfff) AM_RAM
 	AM_RANGE(0x0d000, 0x0d7ff) AM_RAM_WRITE(rdx_bg_vram_w) AM_BASE_LEGACY(&bg_vram)
 	AM_RANGE(0x0d800, 0x0dfff) AM_RAM_WRITE(rdx_md_vram_w) AM_BASE_LEGACY(&md_vram)
@@ -481,7 +482,7 @@ static ADDRESS_MAP_START( nzerotea_map, AS_PROGRAM, 16, r2dx_v33_state )
 	AM_RANGE(0x0e800, 0x0f7ff) AM_RAM_WRITE(rdx_tx_vram_w) AM_BASE_LEGACY(&tx_vram)
 	AM_RANGE(0x0f800, 0x0ffff) AM_RAM /* Stack area */
 	AM_RANGE(0x10000, 0x1efff) AM_RAM
-	AM_RANGE(0x1f000, 0x1ffff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1f000, 0x1ffff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 
 	AM_RANGE(0x20000, 0x3ffff) AM_ROMBANK("bank1")
 	AM_RANGE(0x40000, 0xfffff) AM_ROM AM_REGION("mainprg", 0x40000 )
@@ -732,20 +733,20 @@ MACHINE_CONFIG_END
 
 static DRIVER_INIT(rdx_v33)
 {
-	memory_configure_bank(machine, "bank1", 0, 0x20, machine.region("mainprg")->base(), 0x20000);
+	machine.root_device().membank("bank1")->configure_entries(0, 0x20, machine.root_device().memregion("mainprg")->base(), 0x20000);
 
 	raiden2_decrypt_sprites(machine);
 
-	memory_set_bank(machine, "bank1", 1);
+	machine.root_device().membank("bank1")->set_entry(1);
 }
 
 static DRIVER_INIT(nzerotea)
 {
-	memory_configure_bank(machine, "bank1", 0, 2, machine.region("mainprg")->base(), 0x20000);
+	machine.root_device().membank("bank1")->configure_entries(0, 2, machine.root_device().memregion("mainprg")->base(), 0x20000);
 
-	raiden2_decrypt_sprites(machine);
+	zeroteam_decrypt_sprites(machine);
 
-	memory_set_bank(machine, "bank1", 1);
+	machine.root_device().membank("bank1")->set_entry(1);
 
 }
 

@@ -78,7 +78,10 @@ class subsino2_state : public driver_device
 {
 public:
 	subsino2_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_outputs16(*this, "outputs16"),
+		m_outputs(*this, "outputs"),
+		m_am188em_regs(*this, "am188em_regs"){ }
 
 	UINT8 *m_hm86171_colorram;
 	layer_t m_layers[2];
@@ -91,9 +94,9 @@ public:
 	UINT8 m_ss9601_disable;
 	int m_hm86171_offs;
 	UINT8 m_dsw_mask;
-	UINT8 *m_outputs;
-	UINT16 *m_outputs16;
-	UINT8 *m_am188em_regs;
+	optional_shared_ptr<UINT16> m_outputs16;
+	optional_shared_ptr<UINT8> m_outputs;
+	required_shared_ptr<UINT8> m_am188em_regs;
 	UINT16 m_bishjan_sel;
 	UINT16 m_bishjan_input;
 	DECLARE_WRITE8_MEMBER(ss9601_byte_lo_w);
@@ -916,7 +919,7 @@ READ16_MEMBER(subsino2_state::bishjan_input_r)
 
 	return	(res << 8) |									// high byte
 			input_port_read(machine(), "SYSTEM") |		// low byte
-			(ticket_dispenser_r(machine().device("hopper"), 0) ? 0x00 : 0x04)	// bit 2: hopper sensor
+			(machine().device<ticket_dispenser_device>("hopper")->read(space, 0) ? 0x00 : 0x04)	// bit 2: hopper sensor
 	;
 }
 
@@ -930,7 +933,7 @@ WRITE16_MEMBER(subsino2_state::bishjan_outputs_w)
 			if (ACCESSING_BITS_0_7)
 			{
 				// coin out         data & 0x01;
-				ticket_dispenser_w(machine().device("hopper"), 0, (data & 0x0002) ? 0x80 : 0);	// hopper
+				machine().device<ticket_dispenser_device>("hopper")->write(space, 0, (data & 0x0002) ? 0x80 : 0);	// hopper
 				coin_counter_w(machine(), 0,	data & 0x0010 );
 			}
 			break;
@@ -985,7 +988,7 @@ static ADDRESS_MAP_START( bishjan_map, AS_PROGRAM, 16, subsino2_state )
 	AM_RANGE( 0xc00002, 0xc00003 ) AM_READ_PORT("JOY") AM_WRITE(bishjan_input_w )	// IN C
 	AM_RANGE( 0xc00004, 0xc00005 ) AM_READ(bishjan_input_r )						// IN A & B
 	AM_RANGE( 0xc00006, 0xc00007 ) AM_READ(bishjan_serial_r )						// IN D
-	AM_RANGE( 0xc00008, 0xc00009 ) AM_READ_PORT("RESET") AM_WRITE(bishjan_outputs_w ) AM_BASE(m_outputs16 )
+	AM_RANGE( 0xc00008, 0xc00009 ) AM_READ_PORT("RESET") AM_WRITE(bishjan_outputs_w ) AM_SHARE("outputs16")
 ADDRESS_MAP_END
 
 /***************************************************************************
@@ -1129,7 +1132,7 @@ static ADDRESS_MAP_START( mtrain_map, AS_PROGRAM, 8, subsino2_state )
 
 	AM_RANGE( 0x0912f, 0x0912f ) AM_WRITE(ss9601_byte_lo_w )
 
-	AM_RANGE( 0x09140, 0x09142 ) AM_WRITE(mtrain_outputs_w ) AM_BASE(m_outputs )
+	AM_RANGE( 0x09140, 0x09142 ) AM_WRITE(mtrain_outputs_w ) AM_SHARE("outputs")
 	AM_RANGE( 0x09143, 0x09143 ) AM_READ_PORT( "IN D" )	// (not shown in system test) 0x40 serial out, 0x80 serial in
 	AM_RANGE( 0x09144, 0x09144 ) AM_READ_PORT( "IN A" )	// A
 	AM_RANGE( 0x09145, 0x09145 ) AM_READ_PORT( "IN B" )	// B
@@ -1221,7 +1224,7 @@ static ADDRESS_MAP_START( saklove_io, AS_IO, 8, subsino2_state )
 	AM_RANGE(0x021f, 0x021f) AM_WRITE(ss9601_disable_w )
 	AM_RANGE(0x0220, 0x0225) AM_WRITE(ss9601_scroll_w )
 
-	AM_RANGE(0x0300, 0x0303) AM_WRITE(saklove_outputs_w ) AM_BASE(m_outputs )
+	AM_RANGE(0x0300, 0x0303) AM_WRITE(saklove_outputs_w ) AM_SHARE("outputs")
 	AM_RANGE(0x0303, 0x0303) AM_READ_PORT( "IN D" )	// 0x40 serial out, 0x80 serial in
 	AM_RANGE(0x0304, 0x0304) AM_READ_PORT( "IN A" )
 	AM_RANGE(0x0305, 0x0305) AM_READ_PORT( "IN B" )
@@ -1233,7 +1236,7 @@ static ADDRESS_MAP_START( saklove_io, AS_IO, 8, subsino2_state )
 	AM_RANGE(0x0312, 0x0312) AM_READ(vblank_bit2_r ) AM_DEVWRITE_LEGACY("oki", oki_bank_bit0_w )
 
 	// Peripheral Control Block
-	AM_RANGE(0xff00, 0xffff) AM_READWRITE(am188em_regs_r, am188em_regs_w ) AM_BASE(m_am188em_regs )
+	AM_RANGE(0xff00, 0xffff) AM_READWRITE(am188em_regs_r, am188em_regs_w ) AM_SHARE("am188em_regs")
 ADDRESS_MAP_END
 
 /***************************************************************************
@@ -1332,10 +1335,10 @@ static ADDRESS_MAP_START( xplan_io, AS_IO, 8, subsino2_state )
 	AM_RANGE(0x0306, 0x0306) AM_READ_PORT( "IN D" )	// 0x40 serial out, 0x80 serial in
 
 	// 306 = d, 307 = c, 308 = b, 309 = a
-	AM_RANGE(0x0306, 0x0309) AM_WRITE(xplan_outputs_w ) AM_BASE(m_outputs )
+	AM_RANGE(0x0306, 0x0309) AM_WRITE(xplan_outputs_w ) AM_SHARE("outputs")
 
 	// Peripheral Control Block
-	AM_RANGE(0xff00, 0xffff) AM_READWRITE(am188em_regs_r, am188em_regs_w ) AM_BASE(m_am188em_regs )
+	AM_RANGE(0xff00, 0xffff) AM_READWRITE(am188em_regs_r, am188em_regs_w ) AM_SHARE("am188em_regs")
 ADDRESS_MAP_END
 
 /***************************************************************************
@@ -1378,14 +1381,14 @@ WRITE8_MEMBER(subsino2_state::xtrain_outputs_w)
 
 static ADDRESS_MAP_START( expcard_io, AS_IO, 8, subsino2_state )
 	// 306 = d, 307 = c, 308 = b, 309 = a
-	AM_RANGE(0x0306, 0x0309) AM_WRITE(expcard_outputs_w ) AM_BASE(m_outputs )
+	AM_RANGE(0x0306, 0x0309) AM_WRITE(expcard_outputs_w ) AM_SHARE("outputs")
 
 	AM_IMPORT_FROM( xplan_io )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( xtrain_io, AS_IO, 8, subsino2_state )
 	// 306 = d, 307 = c, 308 = b, 309 = a
-	AM_RANGE(0x0306, 0x0309) AM_WRITE(xtrain_outputs_w ) AM_BASE(m_outputs )
+	AM_RANGE(0x0306, 0x0309) AM_WRITE(xtrain_outputs_w ) AM_SHARE("outputs")
 
 	AM_IMPORT_FROM( xplan_io )
 ADDRESS_MAP_END
@@ -2161,7 +2164,7 @@ static MACHINE_CONFIG_START( bishjan, subsino2_state )
 	MCFG_TIMER_ADD_PERIODIC("timer", h8_timer_irq, attotime::from_hz(60)) // timer, ?? Hz
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
-	MCFG_TICKET_DISPENSER_ADD("hopper", 200, TICKET_MOTOR_ACTIVE_HIGH, TICKET_STATUS_ACTIVE_LOW)
+	MCFG_TICKET_DISPENSER_ADD("hopper", attotime::from_msec(200), TICKET_MOTOR_ACTIVE_HIGH, TICKET_STATUS_ACTIVE_LOW)
 
 	// video hardware
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2359,7 +2362,7 @@ ROM_END
 
 static DRIVER_INIT( bishjan )
 {
-	UINT16 *rom = (UINT16*)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16*)machine.root_device().memregion("maincpu")->base();
 
 	// patch serial protection test (it always enters test mode on boot otherwise)
 	rom[0x042EA/2] = 0x4008;
@@ -2423,7 +2426,7 @@ ROM_END
 
 static DRIVER_INIT( expcard )
 {
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 	// patch protection test (it always enters test mode on boot otherwise)
 	rom[0xed4dc-0xc0000] = 0xeb;
@@ -2521,7 +2524,7 @@ DRIVER_INIT( mtrain )
 	subsino_decrypt(machine, crsbingo_bitswaps, crsbingo_xors, 0x8000);
 
 	// patch serial protection test (it always enters test mode on boot otherwise)
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 	rom[0x0cec] = 0x18;
 	rom[0xb037] = 0x18;
 
@@ -2575,7 +2578,7 @@ ROM_END
 
 static DRIVER_INIT( saklove )
 {
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 	// patch serial protection test (it always enters test mode on boot otherwise)
 	rom[0x0e029] = 0xeb;
@@ -2635,7 +2638,7 @@ ROM_END
 
 static DRIVER_INIT( xplan )
 {
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 	// patch protection test (it always enters test mode on boot otherwise)
 	rom[0xeded9-0xc0000] = 0xeb;
@@ -2695,7 +2698,7 @@ ROM_END
 
 static DRIVER_INIT( xtrain )
 {
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 	// patch protection test (it always enters test mode on boot otherwise)
 	rom[0xe190f-0xc0000] = 0xeb;
@@ -2740,7 +2743,7 @@ DRIVER_INIT( wtrnymph )
 	subsino_decrypt(machine, victor5_bitswaps, victor5_xors, 0x8000);
 
 	// patch serial protection test (it always enters test mode on boot otherwise)
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 	rom[0x0d79] = 0x18;
 	rom[0xc1cf] = 0x18;
 	rom[0xc2a9] = 0x18;

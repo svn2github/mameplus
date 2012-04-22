@@ -60,13 +60,14 @@ class progolf_state : public driver_device
 {
 public:
 	progolf_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_fbram(*this, "fbram"){ }
 
 	UINT8 *m_videoram;
 	UINT8 m_char_pen;
 	UINT8 m_char_pen_vreg;
 	UINT8 *m_fg_fb;
-	UINT8 *m_fbram;
+	required_shared_ptr<UINT8> m_fbram;
 	UINT8 m_scrollx_hi;
 	UINT8 m_scrollx_lo;
 	UINT8 m_gfx_switch;
@@ -80,6 +81,7 @@ public:
 	DECLARE_READ8_MEMBER(audio_command_r);
 	DECLARE_READ8_MEMBER(progolf_videoram_r);
 	DECLARE_WRITE8_MEMBER(progolf_videoram_w);
+	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
 };
 
 
@@ -190,7 +192,7 @@ WRITE8_MEMBER(progolf_state::progolf_scrollx_hi_w)
 
 WRITE8_MEMBER(progolf_state::progolf_flip_screen_w)
 {
-	flip_screen_set(machine(), data & 1);
+	flip_screen_set(data & 1);
 	if(data & 0xfe)
 		printf("$9600 with data = %02x used\n",data);
 }
@@ -210,7 +212,7 @@ READ8_MEMBER(progolf_state::audio_command_r)
 READ8_MEMBER(progolf_state::progolf_videoram_r)
 {
 	UINT8 *videoram = m_videoram;
-	UINT8 *gfx_rom = machine().region("gfx1")->base();
+	UINT8 *gfx_rom = memregion("gfx1")->base();
 
 	if (offset >= 0x0800)
 	{
@@ -243,7 +245,7 @@ WRITE8_MEMBER(progolf_state::progolf_videoram_w)
 
 static ADDRESS_MAP_START( main_cpu, AS_PROGRAM, 8, progolf_state )
 	AM_RANGE(0x0000, 0x5fff) AM_RAM
-	AM_RANGE(0x6000, 0x7fff) AM_RAM_WRITE(progolf_charram_w) AM_BASE(m_fbram)
+	AM_RANGE(0x6000, 0x7fff) AM_RAM_WRITE(progolf_charram_w) AM_SHARE("fbram")
 	AM_RANGE(0x8000, 0x8fff) AM_READWRITE(progolf_videoram_r,progolf_videoram_w)
 	AM_RANGE(0x9000, 0x9000) AM_READ_PORT("IN2") AM_WRITE(progolf_char_vregs_w)
 	AM_RANGE(0x9200, 0x9200) AM_READ_PORT("P1") AM_WRITE(progolf_scrollx_hi_w) //p1 inputs
@@ -268,9 +270,9 @@ static ADDRESS_MAP_START( sound_cpu, AS_PROGRAM, 8, progolf_state )
 ADDRESS_MAP_END
 
 
-static INPUT_CHANGED( coin_inserted )
+INPUT_CHANGED_MEMBER(progolf_state::coin_inserted)
 {
-	cputag_set_input_line(field.machine(), "maincpu", INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
+	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
 }
 
 /* verified from M6502 code */
@@ -301,8 +303,8 @@ static INPUT_PORTS_START( progolf )
 
 	PORT_START("IN2")
 	PORT_BIT( 0x3f, IP_ACTIVE_HIGH, IPT_UNUSED )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW,IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW,IPT_COIN2 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW,IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, progolf_state,coin_inserted, 0)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, progolf_state,coin_inserted, 0)
 
 	PORT_START("DSW1")
 	PORT_DIPNAME( 0x03, 0x00, DEF_STR( Coin_B ) )
@@ -321,7 +323,7 @@ static INPUT_PORTS_START( progolf )
 	PORT_DIPSETTING(    0x10, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
 	PORT_DIPUNUSED( 0x20, IP_ACTIVE_HIGH )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SERVICE1 ) PORT_CHANGED(coin_inserted, 0)    /* same coinage as COIN1 */
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SERVICE1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, progolf_state,coin_inserted, 0)    /* same coinage as COIN1 */
 	PORT_SERVICE( 0x80, IP_ACTIVE_HIGH )
 
 	PORT_START("DSW2")
@@ -387,6 +389,7 @@ static const mc6845_interface mc6845_intf =
 
 static PALETTE_INIT( progolf )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0;i < machine.total_colors();i++)
@@ -499,7 +502,7 @@ static DRIVER_INIT( progolf )
 {
 	int A;
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 	UINT8* decrypted = auto_alloc_array(machine, UINT8, 0x10000);
 
 	space->set_decrypted_region(0x0000,0xffff, decrypted);
@@ -513,7 +516,7 @@ static DRIVER_INIT( progolfa )
 {
 	int A;
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 	UINT8* decrypted = auto_alloc_array(machine, UINT8, 0x10000);
 
 	space->set_decrypted_region(0x0000,0xffff, decrypted);

@@ -194,7 +194,7 @@ static const ppi8255_interface single_ppi_intf =
 	DEVCB_NULL,
 	DEVCB_NULL,
 	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_w),
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_w),
 	DEVCB_HANDLER(video_control_w),
 	DEVCB_HANDLER(tilemap_sound_w)
 };
@@ -433,7 +433,7 @@ static READ8_HANDLER( sound_data_r )
 
 	/* assert ACK */
 	ppi8255_set_port_c(state->m_ppi8255, 0x00);
-	return state->soundlatch_r(*space, offset);
+	return state->soundlatch_byte_r(*space, offset);
 }
 
 
@@ -451,7 +451,7 @@ static WRITE8_HANDLER( n7751_command_w )
     */
 	segas1x_state *state = space->machine().driver_data<segas1x_state>();
 
-	int numroms = space->machine().region("n7751data")->bytes() / 0x8000;
+	int numroms = state->memregion("n7751data")->bytes() / 0x8000;
 	state->m_n7751_rom_address &= 0x3fff;
 	state->m_n7751_rom_address |= (data & 0x01) << 14;
 	if (!(data & 0x02) && numroms >= 1) state->m_n7751_rom_address |= 0x00000;
@@ -496,7 +496,7 @@ static READ8_HANDLER( n7751_rom_r )
 {
 	/* read from BUS */
 	segas1x_state *state = space->machine().driver_data<segas1x_state>();
-	return space->machine().region("n7751data")->base()[state->m_n7751_rom_address];
+	return state->memregion("n7751data")->base()[state->m_n7751_rom_address];
 }
 
 
@@ -973,11 +973,11 @@ static READ8_HANDLER( mcu_io_r )
 			return maincpu_byte_r(space->machine(), 0x840001 ^ offset);
 
 		case 5:
-			return space->machine().region("maincpu")->base()[0x00000 + offset];
+			return space->machine().root_device().memregion("maincpu")->base()[0x00000 + offset];
 		case 6:
-			return space->machine().region("maincpu")->base()[0x10000 + offset];
+			return space->machine().root_device().memregion("maincpu")->base()[0x10000 + offset];
 		case 7:
-			return space->machine().region("maincpu")->base()[0x20000 + offset];
+			return state->memregion("maincpu")->base()[0x20000 + offset];
 
 		default:
 			logerror("%03X: MCU movx read mode %02X offset %04X\n",
@@ -1936,8 +1936,8 @@ INPUT_PORTS_END
 
 static const ym2151_interface ym2151_config =
 {
-	NULL,
-	n7751_control_w
+	DEVCB_NULL,
+	DEVCB_HANDLER(n7751_control_w)
 };
 
 

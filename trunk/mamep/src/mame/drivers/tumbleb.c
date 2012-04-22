@@ -350,7 +350,7 @@ READ16_MEMBER(tumbleb_state::tumblepb_prot_r)
 
 WRITE16_MEMBER(tumbleb_state::jumppop_sound_w)
 {
-	soundlatch_w(space, 0, data & 0xff);
+	soundlatch_byte_w(space, 0, data & 0xff);
 	device_set_input_line(m_audiocpu, 0, ASSERT_LINE);
 }
 
@@ -490,7 +490,7 @@ static const int tumbleb_sound_lookup[256] = {
 /* we use channels 1,2,3 for sound effects, and channel 4 for music */
 static void tumbleb2_set_music_bank( running_machine &machine, int bank )
 {
-	UINT8 *oki = machine.region("oki")->base();
+	UINT8 *oki = machine.root_device().memregion("oki")->base();
 	memcpy(&oki[0x38000], &oki[0x80000 + 0x38000 + 0x8000 * bank], 0x8000);
 }
 
@@ -653,16 +653,16 @@ static ADDRESS_MAP_START( tumblepopb_main_map, AS_PROGRAM, 16, tumbleb_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_WRITEONLY	/* To write levels modifications */
 #endif
 	AM_RANGE(0x100000, 0x100001) AM_READWRITE(tumblepb_prot_r, tumblepb_oki_w)
-	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_BASE(m_mainram)
-	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size) /* Bootleg sprite buffer */
+	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_SHARE("mainram")
+	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_SHARE("spriteram") /* Bootleg sprite buffer */
 	AM_RANGE(0x160800, 0x160807) AM_WRITEONLY /* writes past the end of spriteram */
 	AM_RANGE(0x180000, 0x18000f) AM_READ(tumblepopb_controls_r)
 	AM_RANGE(0x18000c, 0x18000d) AM_WRITENOP
 	AM_RANGE(0x1a0000, 0x1a07ff) AM_RAM
 	AM_RANGE(0x300000, 0x30000f) AM_WRITE(tumblepb_control_0_w)
-	AM_RANGE(0x320000, 0x320fff) AM_WRITE(tumblepb_pf1_data_w) AM_BASE(m_pf1_data)
-	AM_RANGE(0x322000, 0x322fff) AM_WRITE(tumblepb_pf2_data_w) AM_BASE(m_pf2_data)
+	AM_RANGE(0x320000, 0x320fff) AM_WRITE(tumblepb_pf1_data_w) AM_SHARE("pf1_data")
+	AM_RANGE(0x322000, 0x322fff) AM_WRITE(tumblepb_pf2_data_w) AM_SHARE("pf2_data")
 	AM_RANGE(0x340000, 0x3401ff) AM_WRITENOP /* Unused row scroll */
 	AM_RANGE(0x340400, 0x34047f) AM_WRITENOP /* Unused col scroll */
 	AM_RANGE(0x342000, 0x3421ff) AM_WRITENOP
@@ -676,15 +676,15 @@ static ADDRESS_MAP_START( fncywld_main_map, AS_PROGRAM, 16, tumbleb_state )
 #endif
 	AM_RANGE(0x100000, 0x100003) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2151_r, ym2151_w, 0x00ff)
 	AM_RANGE(0x100004, 0x100005) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
-	AM_RANGE(0x140000, 0x140fff) AM_RAM_WRITE(paletteram16_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size) /* sprites */
+	AM_RANGE(0x140000, 0x140fff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_SHARE("spriteram") /* sprites */
 	AM_RANGE(0x160800, 0x16080f) AM_WRITEONLY /* goes slightly past the end of spriteram? */
 	AM_RANGE(0x180000, 0x18000f) AM_READ(tumblepopb_controls_r)
 	AM_RANGE(0x18000c, 0x18000d) AM_WRITENOP
 	AM_RANGE(0x1a0000, 0x1a07ff) AM_RAM
 	AM_RANGE(0x300000, 0x30000f) AM_WRITE(tumblepb_control_0_w)
-	AM_RANGE(0x320000, 0x321fff) AM_RAM_WRITE(fncywld_pf1_data_w) AM_BASE(m_pf1_data)
-	AM_RANGE(0x322000, 0x323fff) AM_RAM_WRITE(fncywld_pf2_data_w) AM_BASE(m_pf2_data)
+	AM_RANGE(0x320000, 0x321fff) AM_RAM_WRITE(fncywld_pf1_data_w) AM_SHARE("pf1_data")
+	AM_RANGE(0x322000, 0x323fff) AM_RAM_WRITE(fncywld_pf2_data_w) AM_SHARE("pf2_data")
 	AM_RANGE(0x340000, 0x3401ff) AM_WRITENOP /* Unused row scroll */
 	AM_RANGE(0x340400, 0x34047f) AM_WRITENOP /* Unused col scroll */
 	AM_RANGE(0x342000, 0x3421ff) AM_WRITENOP
@@ -703,15 +703,15 @@ static ADDRESS_MAP_START( htchctch_main_map, AS_PROGRAM, 16, tumbleb_state )
 	AM_RANGE(0x100000, 0x10000f) AM_READ(semibase_unknown_r)
 	AM_RANGE(0x100000, 0x100001) AM_WRITE(semicom_soundcmd_w)
 	AM_RANGE(0x100002, 0x100003) AM_WRITE(bcstory_tilebank_w)
-	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_BASE(m_mainram)
-	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x160000, 0x160fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size) /* Bootleg sprite buffer */
+	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_SHARE("mainram")
+	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x160000, 0x160fff) AM_RAM AM_SHARE("spriteram") /* Bootleg sprite buffer */
 	AM_RANGE(0x180000, 0x18000f) AM_READ(tumblepopb_controls_r)
 	AM_RANGE(0x18000c, 0x18000d) AM_WRITENOP
 	AM_RANGE(0x1a0000, 0x1a0fff) AM_RAM
 	AM_RANGE(0x300000, 0x30000f) AM_WRITE(tumblepb_control_0_w)
-	AM_RANGE(0x320000, 0x321fff) AM_WRITE(tumblepb_pf1_data_w) AM_BASE(m_pf1_data)
-	AM_RANGE(0x322000, 0x322fff) AM_WRITE(tumblepb_pf2_data_w) AM_BASE(m_pf2_data)
+	AM_RANGE(0x320000, 0x321fff) AM_WRITE(tumblepb_pf1_data_w) AM_SHARE("pf1_data")
+	AM_RANGE(0x322000, 0x322fff) AM_WRITE(tumblepb_pf2_data_w) AM_SHARE("pf2_data")
 	AM_RANGE(0x323000, 0x331fff) AM_NOP // metal saver writes there when clearing the above tilemaps, flaw in the program routine
 	AM_RANGE(0x341000, 0x342fff) AM_RAM				// Extra ram?
 ADDRESS_MAP_END
@@ -719,33 +719,33 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( jumppop_main_map, AS_PROGRAM, 16, tumbleb_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_BASE(m_mainram)
-	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x160000, 0x160fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size) /* Bootleg sprite buffer */
+	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_SHARE("mainram")
+	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x160000, 0x160fff) AM_RAM AM_SHARE("spriteram") /* Bootleg sprite buffer */
 	AM_RANGE(0x180000, 0x180001) AM_NOP	/* IRQ ack? */
 	AM_RANGE(0x180002, 0x180003) AM_READ_PORT("PLAYERS")
 	AM_RANGE(0x180004, 0x180005) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x180006, 0x180007) AM_READ_PORT("DSW")
 	AM_RANGE(0x18000c, 0x18000d) AM_WRITE(jumppop_sound_w)
 	AM_RANGE(0x1a0000, 0x1a7fff) AM_RAM
-	AM_RANGE(0x300000, 0x303fff) AM_RAM_WRITE(tumblepb_pf2_data_w) AM_BASE(m_pf2_data)
-	AM_RANGE(0x320000, 0x323fff) AM_RAM_WRITE(tumblepb_pf1_data_w) AM_BASE(m_pf1_data)
-	AM_RANGE(0x380000, 0x38000f) AM_WRITEONLY AM_BASE(m_control)
+	AM_RANGE(0x300000, 0x303fff) AM_RAM_WRITE(tumblepb_pf2_data_w) AM_SHARE("pf2_data")
+	AM_RANGE(0x320000, 0x323fff) AM_RAM_WRITE(tumblepb_pf1_data_w) AM_SHARE("pf1_data")
+	AM_RANGE(0x380000, 0x38000f) AM_WRITEONLY AM_SHARE("control")
 ADDRESS_MAP_END
 
 WRITE16_MEMBER(tumbleb_state::jumpkids_sound_w)
 {
-	soundlatch_w(space, 0, data & 0xff);
+	soundlatch_byte_w(space, 0, data & 0xff);
 	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
 }
 
 static ADDRESS_MAP_START( suprtrio_main_map, AS_PROGRAM, 16, tumbleb_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	AM_RANGE(0x700000, 0x700fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0xa00000, 0xa0000f) AM_RAM AM_BASE(m_control)
-	AM_RANGE(0xa20000, 0xa20fff) AM_RAM_WRITE(tumblepb_pf1_data_w) AM_BASE(m_pf1_data)
-	AM_RANGE(0xa22000, 0xa22fff) AM_RAM_WRITE(tumblepb_pf2_data_w) AM_BASE(m_pf2_data)
-	AM_RANGE(0xcf0000, 0xcf05ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x700000, 0x700fff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xa00000, 0xa0000f) AM_RAM AM_SHARE("control")
+	AM_RANGE(0xa20000, 0xa20fff) AM_RAM_WRITE(tumblepb_pf1_data_w) AM_SHARE("pf1_data")
+	AM_RANGE(0xa22000, 0xa22fff) AM_RAM_WRITE(tumblepb_pf2_data_w) AM_SHARE("pf2_data")
+	AM_RANGE(0xcf0000, 0xcf05ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0xe00000, 0xe00001) AM_READ_PORT("PLAYERS") AM_WRITE(suprtrio_tilebank_w)
 	AM_RANGE(0xe40000, 0xe40001) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0xe80002, 0xe80003) AM_READ_PORT("DSW")
@@ -755,15 +755,15 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( pangpang_main_map, AS_PROGRAM, 16, tumbleb_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_BASE(m_mainram)
-	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size) /* Bootleg sprite buffer */
+	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_SHARE("mainram")
+	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_SHARE("spriteram") /* Bootleg sprite buffer */
 	AM_RANGE(0x160800, 0x160807) AM_WRITEONLY // writes past the end of spriteram
 	AM_RANGE(0x180000, 0x18000f) AM_READ(tumblepopb_controls_r)
 	AM_RANGE(0x1a0000, 0x1a07ff) AM_RAM
 	AM_RANGE(0x300000, 0x30000f) AM_WRITE(tumblepb_control_0_w)
-	AM_RANGE(0x320000, 0x321fff) AM_RAM_WRITE(pangpang_pf1_data_w) AM_BASE(m_pf1_data)
-	AM_RANGE(0x340000, 0x341fff) AM_RAM_WRITE(pangpang_pf2_data_w) AM_BASE(m_pf2_data)
+	AM_RANGE(0x320000, 0x321fff) AM_RAM_WRITE(pangpang_pf1_data_w) AM_SHARE("pf1_data")
+	AM_RANGE(0x340000, 0x341fff) AM_RAM_WRITE(pangpang_pf2_data_w) AM_SHARE("pf2_data")
 ADDRESS_MAP_END
 
 
@@ -773,7 +773,7 @@ WRITE16_MEMBER(tumbleb_state::semicom_soundcmd_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		soundlatch_w(space, 0, data & 0xff);
+		soundlatch_byte_w(space, 0, data & 0xff);
 		// needed for Super Trio which reads the sound with polling
 		// device_spin_until_time(&space.device(), attotime::from_usec(100));
 		machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(20));
@@ -783,7 +783,7 @@ WRITE16_MEMBER(tumbleb_state::semicom_soundcmd_w)
 
 WRITE8_MEMBER(tumbleb_state::oki_sound_bank_w)
 {
-	UINT8 *oki = machine().region("oki")->base();
+	UINT8 *oki = memregion("oki")->base();
 	memcpy(&oki[0x30000], &oki[(data * 0x10000) + 0x40000], 0x10000);
 }
 
@@ -793,7 +793,7 @@ static ADDRESS_MAP_START( semicom_sound_map, AS_PROGRAM, 8, tumbleb_state )
 	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0xf002, 0xf002) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	//AM_RANGE(0xf006, 0xf006) ??
-	AM_RANGE(0xf008, 0xf008) AM_READ(soundlatch_r)
+	AM_RANGE(0xf008, 0xf008) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xf00e, 0xf00e) AM_WRITE(oki_sound_bank_w)
 ADDRESS_MAP_END
 
@@ -802,13 +802,13 @@ static ADDRESS_MAP_START( suprtrio_sound_map, AS_PROGRAM, 8, tumbleb_state )
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM
 	AM_RANGE(0xf002, 0xf002) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	//AM_RANGE(0xf006, 0xf006) ??
-	AM_RANGE(0xf008, 0xf008) AM_READ(soundlatch_r)
+	AM_RANGE(0xf008, 0xf008) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xf00e, 0xf00e) AM_WRITE(oki_sound_bank_w)
 ADDRESS_MAP_END
 
 WRITE8_MEMBER(tumbleb_state::jumppop_z80_bank_w)
 {
-	memory_set_bankptr(machine(), "bank1", machine().region("audiocpu")->base() + 0x10000 + (0x4000 * data));
+	membank("bank1")->set_base(machine().root_device().memregion("audiocpu")->base() + 0x10000 + (0x4000 * data));
 }
 
 static ADDRESS_MAP_START( jumppop_sound_map, AS_PROGRAM, 8, tumbleb_state )
@@ -820,7 +820,7 @@ ADDRESS_MAP_END
 READ8_MEMBER(tumbleb_state::jumppop_z80latch_r)
 {
 	device_set_input_line(m_audiocpu, 0, CLEAR_LINE);
-	return soundlatch_r(space, 0);
+	return soundlatch_byte_r(space, 0);
 }
 
 static ADDRESS_MAP_START( jumppop_sound_io_map, AS_IO, 8, tumbleb_state )
@@ -838,16 +838,16 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( jumpkids_main_map, AS_PROGRAM, 16, tumbleb_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x100000, 0x100001) AM_WRITE(jumpkids_sound_w)
-	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_BASE(m_mainram)
-	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size) /* Bootleg sprite buffer */
+	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_SHARE("mainram")
+	AM_RANGE(0x140000, 0x1407ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_SHARE("spriteram") /* Bootleg sprite buffer */
 	AM_RANGE(0x160800, 0x160807) AM_WRITEONLY /* writes past the end of spriteram */
 	AM_RANGE(0x180000, 0x18000f) AM_READ(tumblepopb_controls_r)
 	AM_RANGE(0x18000c, 0x18000d) AM_WRITENOP
 	AM_RANGE(0x1a0000, 0x1a07ff) AM_RAM
 	AM_RANGE(0x300000, 0x30000f) AM_WRITE(tumblepb_control_0_w)
-	AM_RANGE(0x320000, 0x320fff) AM_WRITE(tumblepb_pf1_data_w) AM_BASE(m_pf1_data)
-	AM_RANGE(0x322000, 0x322fff) AM_WRITE(tumblepb_pf2_data_w) AM_BASE(m_pf2_data)
+	AM_RANGE(0x320000, 0x320fff) AM_WRITE(tumblepb_pf1_data_w) AM_SHARE("pf1_data")
+	AM_RANGE(0x322000, 0x322fff) AM_WRITE(tumblepb_pf2_data_w) AM_SHARE("pf2_data")
 	AM_RANGE(0x340000, 0x3401ff) AM_WRITENOP /* Unused row scroll */
 	AM_RANGE(0x340400, 0x34047f) AM_WRITENOP /* Unused col scroll */
 	AM_RANGE(0x342000, 0x3421ff) AM_WRITENOP
@@ -856,8 +856,8 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER(tumbleb_state::jumpkids_oki_bank_w)
 {
-	UINT8* sound1 = machine().region("oki")->base();
-	UINT8* sound2 = machine().region("oki2")->base();
+	UINT8* sound1 = memregion("oki")->base();
+	UINT8* sound2 = memregion("oki2")->base();
 	int bank = data & 0x03;
 
 	memcpy(sound1 + 0x20000, sound2 + bank * 0x20000, 0x20000);
@@ -868,7 +868,7 @@ static ADDRESS_MAP_START( jumpkids_sound_map, AS_PROGRAM, 8, tumbleb_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x9000, 0x9000) AM_WRITE(jumpkids_oki_bank_w)
 	AM_RANGE(0x9800, 0x9800) AM_DEVREADWRITE("oki", okim6295_device, read, write)
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
 
@@ -2219,7 +2219,7 @@ static void semicom_irqhandler( device_t *device, int irq )
 
 static const ym2151_interface semicom_ym2151_interface =
 {
-	semicom_irqhandler
+	DEVCB_LINE(semicom_irqhandler)
 };
 
 static MACHINE_RESET (htchctch)
@@ -2227,8 +2227,8 @@ static MACHINE_RESET (htchctch)
 	tumbleb_state *state = machine.driver_data<tumbleb_state>();
 
 	/* copy protection data every reset */
-	UINT16 *PROTDATA = (UINT16*)machine.region("user1")->base();
-	int i, len = machine.region("user1")->bytes();
+	UINT16 *PROTDATA = (UINT16*)machine.root_device().memregion("user1")->base();
+	int i, len = state->memregion("user1")->bytes();
 
 	for (i = 0; i < len / 2; i++)
 		state->m_mainram[0x000/2 + i] = PROTDATA[i];
@@ -3362,7 +3362,7 @@ ROM_END
 void tumblepb_patch_code(running_machine &machine, UINT16 offset)
 {
 	/* A hack which enables all Dip Switches effects */
-	UINT16 *RAM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 	RAM[(offset + 0)/2] = 0x0240;
 	RAM[(offset + 2)/2] = 0xffff;	// andi.w  #$f3ff, D0
 }
@@ -3371,8 +3371,8 @@ void tumblepb_patch_code(running_machine &machine, UINT16 offset)
 
 static void tumblepb_gfx1_rearrange(running_machine &machine)
 {
-	UINT8 *rom = machine.region("gfx1")->base();
-	int len = machine.region("gfx1")->bytes();
+	UINT8 *rom = machine.root_device().memregion("gfx1")->base();
+	int len = machine.root_device().memregion("gfx1")->bytes();
 	int i;
 
 	/* gfx data is in the wrong order */
@@ -3429,7 +3429,7 @@ static DRIVER_INIT( fncywld )
 	#if FNCYWLD_HACK
 	/* This is a hack to allow you to use the extra features
        of the 2 first "Unused" Dip Switch (see notes above). */
-	UINT16 *RAM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 	RAM[0x0005fa/2] = 0x4e71;
 	RAM[0x00060a/2] = 0x4e71;
 	#endif
@@ -3456,9 +3456,9 @@ static DRIVER_INIT( htchctch )
 {
 
 	tumbleb_state *state = machine.driver_data<tumbleb_state>();
-//  UINT16 *HCROM = (UINT16*)machine.region("maincpu")->base();
-	UINT16 *PROTDATA = (UINT16*)machine.region("user1")->base();
-	int i, len = machine.region("user1")->bytes();
+//  UINT16 *HCROM = (UINT16*)machine.root_device().memregion("maincpu")->base();
+	UINT16 *PROTDATA = (UINT16*)machine.root_device().memregion("user1")->base();
+	int i, len = state->memregion("user1")->bytes();
 	/* simulate RAM initialization done by the protection MCU */
 	/* verified on real hardware */
 //  static const UINT16 htchctch_mcu68k[] =
@@ -3710,7 +3710,7 @@ static DRIVER_INIT( htchctch )
 
 static void suprtrio_decrypt_code(running_machine &machine)
 {
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 	UINT16 *buf = auto_alloc_array(machine, UINT16, 0x80000/2);
 	int i;
 
@@ -3728,7 +3728,7 @@ static void suprtrio_decrypt_code(running_machine &machine)
 
 static void suprtrio_decrypt_gfx(running_machine &machine)
 {
-	UINT16 *rom = (UINT16 *)machine.region("gfx1")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("gfx1")->base();
 	UINT16 *buf = auto_alloc_array(machine, UINT16, 0x100000/2);
 	int i;
 
@@ -3755,7 +3755,7 @@ static DRIVER_INIT( chokchok )
 
 	/* different palette format, closer to tumblep -- is this controlled by a register? the palette was right with the hatch catch trojan */
 	tumbleb_state *state = machine.driver_data<tumbleb_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x140000, 0x140fff, write16_delegate(FUNC(tumbleb_state::paletteram16_xxxxBBBBGGGGRRRR_word_w), state));
+	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x140000, 0x140fff, write16_delegate(FUNC(tumbleb_state::paletteram_xxxxBBBBGGGGRRRR_word_w), state));
 
 	/* slightly different banking */
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::chokchok_tilebank_w),state));

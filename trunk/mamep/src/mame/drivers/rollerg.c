@@ -93,7 +93,7 @@ static ADDRESS_MAP_START( rollerg_map, AS_PROGRAM, 8, rollerg_state )
 	AM_RANGE(0x0300, 0x030f) AM_DEVREADWRITE_LEGACY("k053244", k053244_r, k053244_w)
 	AM_RANGE(0x0800, 0x0fff) AM_READ(rollerg_k051316_r) AM_DEVWRITE_LEGACY("k051316", k051316_w)
 	AM_RANGE(0x1000, 0x17ff) AM_DEVREADWRITE_LEGACY("k053244", k053245_r, k053245_w)
-	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_be_w) AM_SHARE("paletteram")
 	AM_RANGE(0x2000, 0x3aff) AM_RAM
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -249,11 +249,11 @@ static const k053252_interface rollerg_k053252_intf =
 static MACHINE_START( rollerg )
 {
 	rollerg_state *state = machine.driver_data<rollerg_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 6, &ROM[0x10000], 0x4000);
-	memory_configure_bank(machine, "bank1", 6, 2, &ROM[0x10000], 0x4000);
-	memory_set_bank(machine, "bank1", 0);
+	state->membank("bank1")->configure_entries(0, 6, &ROM[0x10000], 0x4000);
+	state->membank("bank1")->configure_entries(6, 2, &ROM[0x10000], 0x4000);
+	state->membank("bank1")->set_entry(0);
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_audiocpu = machine.device("audiocpu");
@@ -372,7 +372,7 @@ ROM_END
 
 static KONAMI_SETLINES_CALLBACK( rollerg_banking )
 {
-	memory_set_bank(device->machine(), "bank1", lines & 0x07);
+	device->machine().root_device().membank("bank1")->set_entry(lines & 0x07);
 }
 
 

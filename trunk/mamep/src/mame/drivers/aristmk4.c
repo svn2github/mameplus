@@ -262,14 +262,15 @@ class aristmk4_state : public driver_device
 {
 public:
 	aristmk4_state(const machine_config &mconfig, device_type type, const char *tag)
-	: driver_device(mconfig, type, tag) { }
+	: driver_device(mconfig, type, tag) ,
+		m_mkiv_vram(*this, "mkiv_vram"){ }
 
 	int m_rtc_address_strobe;
 	int m_rtc_data_strobe;
 	samples_device *m_samples;
 	UINT8 *m_shapeRomPtr;
 	UINT8 m_shapeRom[0xc000];
-	UINT8 *m_mkiv_vram;
+	required_shared_ptr<UINT8> m_mkiv_vram;
 	UINT8 *m_nvram;
 	UINT8 m_psg_data;
 	int m_ay8910_1;
@@ -875,7 +876,7 @@ ADDRESS MAP - SLOT GAMES
 ******************************************************************************/
 
 static ADDRESS_MAP_START( aristmk4_map, AS_PROGRAM, 8, aristmk4_state )
-	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_BASE(m_mkiv_vram) // video ram -  chips U49 / U50
+	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("mkiv_vram") // video ram -  chips U49 / U50
 	AM_RANGE(0x0800, 0x17ff) AM_RAM
 	AM_RANGE(0x1800, 0x1800) AM_DEVREADWRITE("crtc", mc6845_device, status_r, address_w)
 	AM_RANGE(0x1801, 0x1801) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
@@ -919,7 +920,7 @@ The U87 personality rom is not required, therefore game rom code mapping is from
 */
 
 static ADDRESS_MAP_START( aristmk4_poker_map, AS_PROGRAM, 8, aristmk4_state )
-	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_BASE(m_mkiv_vram) // video ram -  chips U49 / U50
+	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("mkiv_vram") // video ram -  chips U49 / U50
 	AM_RANGE(0x0800, 0x17ff) AM_RAM
 	AM_RANGE(0x1800, 0x1800) AM_DEVREADWRITE("crtc", mc6845_device, status_r, address_w)
 	AM_RANGE(0x1801, 0x1801) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
@@ -1586,6 +1587,7 @@ static const ppi8255_interface ppi8255_intf1 =
 /* same as Casino Winner HW */
 static PALETTE_INIT( aristmk4 )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0;i < machine.total_colors();i++)
@@ -1612,7 +1614,7 @@ static PALETTE_INIT( aristmk4 )
 static DRIVER_INIT( aristmk4 )
 {
 	aristmk4_state *state = machine.driver_data<aristmk4_state>();
-	state->m_shapeRomPtr = (UINT8 *)machine.region("tile_gfx")->base();
+	state->m_shapeRomPtr = (UINT8 *)state->memregion("tile_gfx")->base();
 	memcpy(state->m_shapeRom,state->m_shapeRomPtr,sizeof(state->m_shapeRom)); // back up
 	state->m_nvram = auto_alloc_array(machine, UINT8, 0x1000);
 }

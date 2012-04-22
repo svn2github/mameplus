@@ -24,13 +24,18 @@ class igs_m027_state : public driver_device
 {
 public:
 	igs_m027_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_igs_mainram(*this, "igs_mainram"),
+		m_igs_cg_videoram(*this, "igs_cg_videoram"),
+		m_igs_palette32(*this, "igs_palette32"),
+		m_igs_tx_videoram(*this, "igs_tx_videoram"),
+		m_igs_bg_videoram(*this, "igs_bg_videoram"){ }
 
-	UINT32 *m_igs_mainram;
-	UINT32 *m_igs_cg_videoram;
-	UINT32 *m_igs_tx_videoram;
-	UINT32 *m_igs_bg_videoram;
-	UINT32 *m_igs_palette32;
+	required_shared_ptr<UINT32> m_igs_mainram;
+	required_shared_ptr<UINT32> m_igs_cg_videoram;
+	required_shared_ptr<UINT32> m_igs_palette32;
+	required_shared_ptr<UINT32> m_igs_tx_videoram;
+	required_shared_ptr<UINT32> m_igs_bg_videoram;
 	tilemap_t *m_igs_tx_tilemap;
 	tilemap_t *m_igs_bg_tilemap;
 	DECLARE_WRITE32_MEMBER(igs_cg_videoram_w);
@@ -142,10 +147,10 @@ static TILE_GET_INFO( get_bg_tilemap_tile_info )
 /* Palette Layer */
 WRITE32_MEMBER(igs_m027_state::igs_palette32_w)
 {
-	m_generic_paletteram_16.set_target((UINT16 *)m_igs_palette32, 0x800);
+	m_generic_paletteram_16.set_target(reinterpret_cast<UINT16 *>(m_igs_palette32.target()), 0x800);
 	COMBINE_DATA(&m_igs_palette32[offset]);
-	//paletteram16_xGGGGGRRRRRBBBBB_word_w(offset*2,m_generic_paletteram_16[offset*2],0);
-	//paletteram16_xGGGGGRRRRRBBBBB_word_w(offset*2+1,m_generic_paletteram_16[offset*2+1],0);
+	//paletteram_xGGGGGRRRRRBBBBB_word_w(offset*2,m_generic_paletteram_16[offset*2],0);
+	//paletteram_xGGGGGRRRRRBBBBB_word_w(offset*2+1,m_generic_paletteram_16[offset*2+1],0);
 	//if(data!=0)
 	//fprintf(stdout,"PALETTE RAM OFFSET %x ,data %x!\n",offset ,m_igs_palette32[offset]);
 }
@@ -194,14 +199,14 @@ static SCREEN_UPDATE_IND16(igs_majhong)
 static ADDRESS_MAP_START( igs_majhong_map, AS_PROGRAM, 32, igs_m027_state )
 	AM_RANGE(0x00000000, 0x00003fff) AM_ROM /* Internal ROM */
 	AM_RANGE(0x08000000, 0x0807ffff) AM_ROM AM_REGION("user1", 0)/* Game ROM */
-	AM_RANGE(0x10000000, 0x100003ff) AM_RAM AM_BASE(m_igs_mainram)// main ram for asic?
+	AM_RANGE(0x10000000, 0x100003ff) AM_RAM AM_SHARE("igs_mainram")// main ram for asic?
 	AM_RANGE(0x18000000, 0x18007fff) AM_RAM
 
-	AM_RANGE(0x38001000, 0x380017ff) AM_RAM_WRITE(igs_cg_videoram_w) AM_BASE(m_igs_cg_videoram)		//0x200 * 1   CG PALETTE?
-	AM_RANGE(0x38001800, 0x38001fff) AM_RAM_WRITE(igs_palette32_w) AM_BASE(m_igs_palette32)		//0x200 * 1
+	AM_RANGE(0x38001000, 0x380017ff) AM_RAM_WRITE(igs_cg_videoram_w) AM_SHARE("igs_cg_videoram")		//0x200 * 1   CG PALETTE?
+	AM_RANGE(0x38001800, 0x38001fff) AM_RAM_WRITE(igs_palette32_w) AM_SHARE("igs_palette32")		//0x200 * 1
 
-	AM_RANGE(0x38004000, 0x38005FFF) AM_RAM_WRITE(igs_tx_videoram_w) AM_BASE(m_igs_tx_videoram) /* Text Layer */
-	AM_RANGE(0x38006000, 0x38007FFF) AM_RAM_WRITE(igs_bg_videoram_w) AM_BASE(m_igs_bg_videoram) /* CG Layer */
+	AM_RANGE(0x38004000, 0x38005FFF) AM_RAM_WRITE(igs_tx_videoram_w) AM_SHARE("igs_tx_videoram") /* Text Layer */
+	AM_RANGE(0x38006000, 0x38007FFF) AM_RAM_WRITE(igs_bg_videoram_w) AM_SHARE("igs_bg_videoram") /* CG Layer */
 
 
 	AM_RANGE(0x38002010, 0x38002017) AM_RAM		//??????????????
@@ -249,7 +254,7 @@ static void sdwx_gfx_decrypt(running_machine &machine)
 {
 	int i;
 	unsigned rom_size = 0x80000;
-	UINT8 *src = (UINT8 *) (machine.region("gfx1")->base());
+	UINT8 *src = (UINT8 *) (machine.root_device().memregion("gfx1")->base());
 	UINT8 *result_data = auto_alloc_array(machine, UINT8, rom_size);
 
 	for (i=0; i<rom_size; i++)
@@ -753,7 +758,7 @@ ROM_END
 
 static void pgm_create_dummy_internal_arm_region(running_machine &machine)
 {
-	UINT16 *temp16 = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *temp16 = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// fill with RX 14
 	int i;
@@ -780,7 +785,7 @@ static void sdwx_decrypt(running_machine &machine)
 {
 
 	int i;
-	UINT16 *src = (UINT16 *) machine.region("user1")->base();
+	UINT16 *src = (UINT16 *) machine.root_device().memregion("user1")->base();
 
 	int rom_size = 0x80000;
 
@@ -826,7 +831,7 @@ static const UINT8 hauntedh_tab[0x100] = {
 static void hauntedh_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) machine.region("user1")->base();
+	UINT16 *src = (UINT16 *) machine.root_device().memregion("user1")->base();
 
 	int rom_size = 0x080000;
 
@@ -871,7 +876,7 @@ static const UINT8 chessc2_tab[0x100] = {
 static void chessc2_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) machine.region("user1")->base();
+	UINT16 *src = (UINT16 *) machine.root_device().memregion("user1")->base();
 
 	int rom_size = 0x80000;
 
@@ -916,7 +921,7 @@ static const UINT8 klxyj_tab[0x100] = {
 static void klxyj_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) machine.region("user1")->base();
+	UINT16 *src = (UINT16 *) machine.root_device().memregion("user1")->base();
 
 	int rom_size = 0x80000;
 
@@ -960,7 +965,7 @@ static const UINT8 big2_tab[0x100] = {
 static void big2_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) machine.region("user1")->base();
+	UINT16 *src = (UINT16 *) machine.root_device().memregion("user1")->base();
 
 	int rom_size = 0x80000;
 
@@ -1004,7 +1009,7 @@ static const UINT8 gonefsh2_tab[0x100] = {
 static void gonefsh2_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) machine.region("user1")->base();
+	UINT16 *src = (UINT16 *) machine.root_device().memregion("user1")->base();
 
 	int rom_size = 0x80000;
 
@@ -1048,7 +1053,7 @@ static const UINT8 sddz_tab[0x100] = {
 static void sddz_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) machine.region("user1")->base();
+	UINT16 *src = (UINT16 *) machine.root_device().memregion("user1")->base();
 
 	int rom_size = 0x80000;
 
@@ -1092,7 +1097,7 @@ static const UINT8 lhzb3_tab[0x100] = {
 static void lhzb3_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) machine.region("user1")->base();
+	UINT16 *src = (UINT16 *) machine.root_device().memregion("user1")->base();
 
 	int rom_size = 0x80000;
 
@@ -1136,7 +1141,7 @@ static const UINT8 mgfx_tab[0x100] = {
 static void mgfx_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) machine.region("user1")->base();
+	UINT16 *src = (UINT16 *) machine.root_device().memregion("user1")->base();
 
 	int rom_size = 0x80000;
 
@@ -1180,7 +1185,7 @@ static const UINT8 lhzb4_tab[0x100] = {
 static void lhzb4_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) machine.region("user1")->base();
+	UINT16 *src = (UINT16 *) machine.root_device().memregion("user1")->base();
 
 	int rom_size = 0x80000;
 

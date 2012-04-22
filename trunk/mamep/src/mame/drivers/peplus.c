@@ -180,25 +180,34 @@ class peplus_state : public driver_device
 public:
 	peplus_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		  m_cmos_ram(*this, "cmos") { }
+		  m_cmos_ram(*this, "cmos") ,
+		m_program_ram(*this, "prograram"),
+		m_s3000_ram(*this, "s3000_ram"),
+		m_s5000_ram(*this, "s5000_ram"),
+		m_videoram(*this, "videoram"),
+		m_s7000_ram(*this, "s7000_ram"),
+		m_sb000_ram(*this, "sb000_ram"),
+		m_sd000_ram(*this, "sd000_ram"),
+		m_sf000_ram(*this, "sf000_ram"),
+		m_io_port(*this, "io_port"){ }
 
-	UINT8 *m_videoram;
 	required_shared_ptr<UINT8> m_cmos_ram;
+	required_shared_ptr<UINT8> m_program_ram;
+	required_shared_ptr<UINT8> m_s3000_ram;
+	required_shared_ptr<UINT8> m_s5000_ram;
+	required_shared_ptr<UINT8> m_videoram;
+	required_shared_ptr<UINT8> m_s7000_ram;
+	required_shared_ptr<UINT8> m_sb000_ram;
+	required_shared_ptr<UINT8> m_sd000_ram;
+	required_shared_ptr<UINT8> m_sf000_ram;
+	required_shared_ptr<UINT8> m_io_port;
 	UINT16 m_autohold_addr;
 	tilemap_t *m_bg_tilemap;
 	UINT8 m_wingboard;
 	UINT8 m_jumper_e16_e17;
-	UINT8 *m_program_ram;
-	UINT8 *m_s3000_ram;
-	UINT8 *m_s5000_ram;
-	UINT8 *m_s7000_ram;
-	UINT8 *m_sb000_ram;
-	UINT8 *m_sd000_ram;
-	UINT8 *m_sf000_ram;
 	UINT16 m_vid_address;
 	UINT8 *m_palette_ram;
 	UINT8 *m_palette_ram2;
-	UINT8 *m_io_port;
 	UINT64 m_last_cycles;
 	UINT8 m_coin_state;
 	UINT64 m_last_door;
@@ -232,6 +241,7 @@ public:
 	DECLARE_READ8_MEMBER(peplus_bgcolor_r);
 	DECLARE_READ8_MEMBER(peplus_dropdoor_r);
 	DECLARE_READ8_MEMBER(peplus_watchdog_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(peplus_input_r);
 };
 
 
@@ -275,7 +285,7 @@ static const mc6845_interface mc6845_intf =
 static void peplus_load_superdata(running_machine &machine, const char *bank_name)
 {
 	peplus_state *state = machine.driver_data<peplus_state>();
-    UINT8 *super_data = machine.region(bank_name)->base();
+    UINT8 *super_data = state->memregion(bank_name)->base();
 
     /* Distribute Superboard Data */
     memcpy(state->m_s3000_ram, &super_data[0x3000], 0x1000);
@@ -690,6 +700,7 @@ static SCREEN_UPDATE_IND16( peplus )
 
 static PALETTE_INIT( peplus )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 /*  prom bits
     7654 3210
     ---- -xxx   red component.
@@ -739,7 +750,7 @@ GFXDECODE_END
 *************************/
 
 static ADDRESS_MAP_START( peplus_map, AS_PROGRAM, 8, peplus_state )
-	AM_RANGE(0x0000, 0xffff) AM_ROM AM_BASE(m_program_ram)
+	AM_RANGE(0x0000, 0xffff) AM_ROM AM_SHARE("prograram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( peplus_iomap, AS_IO, 8, peplus_state )
@@ -753,23 +764,23 @@ static ADDRESS_MAP_START( peplus_iomap, AS_IO, 8, peplus_state )
 	AM_RANGE(0x2083, 0x2083) AM_DEVREAD("crtc", mc6845_device, register_r) AM_WRITE(peplus_crtc_display_w)
 
     // Superboard Data
-	AM_RANGE(0x3000, 0x3fff) AM_READWRITE(peplus_s3000_r, peplus_s3000_w) AM_BASE(m_s3000_ram)
+	AM_RANGE(0x3000, 0x3fff) AM_READWRITE(peplus_s3000_r, peplus_s3000_w) AM_SHARE("s3000_ram")
 
 	// Sound and Dipswitches
 	AM_RANGE(0x4000, 0x4000) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)
 	AM_RANGE(0x4004, 0x4004) AM_READ_PORT("SW1")/* likely ay8910 input port, not direct */ AM_DEVWRITE_LEGACY("aysnd", ay8910_data_w)
 
     // Superboard Data
-	AM_RANGE(0x5000, 0x5fff) AM_READWRITE(peplus_s5000_r, peplus_s5000_w) AM_BASE(m_s5000_ram)
+	AM_RANGE(0x5000, 0x5fff) AM_READWRITE(peplus_s5000_r, peplus_s5000_w) AM_SHARE("s5000_ram")
 
 	// Background Color Latch
 	AM_RANGE(0x6000, 0x6000) AM_READ(peplus_bgcolor_r) AM_WRITE(peplus_bgcolor_w)
 
     // Bogus Location for Video RAM
-	AM_RANGE(0x06001, 0x06400) AM_RAM AM_BASE(m_videoram)
+	AM_RANGE(0x06001, 0x06400) AM_RAM AM_SHARE("videoram")
 
     // Superboard Data
-	AM_RANGE(0x7000, 0x7fff) AM_READWRITE(peplus_s7000_r, peplus_s7000_w) AM_BASE(m_s7000_ram)
+	AM_RANGE(0x7000, 0x7fff) AM_READWRITE(peplus_s7000_r, peplus_s7000_w) AM_SHARE("s7000_ram")
 
 	// Input Bank A, Output Bank C
 	AM_RANGE(0x8000, 0x8000) AM_DEVREAD_LEGACY("i2cmem",peplus_input_bank_a_r) AM_WRITE(peplus_output_bank_c_w)
@@ -781,22 +792,22 @@ static ADDRESS_MAP_START( peplus_iomap, AS_IO, 8, peplus_state )
 	AM_RANGE(0xa000, 0xa000) AM_READ_PORT("IN0") AM_WRITE(peplus_output_bank_b_w)
 
     // Superboard Data
-	AM_RANGE(0xb000, 0xbfff) AM_READWRITE(peplus_sb000_r, peplus_sb000_w) AM_BASE(m_sb000_ram)
+	AM_RANGE(0xb000, 0xbfff) AM_READWRITE(peplus_sb000_r, peplus_sb000_w) AM_SHARE("sb000_ram")
 
 	// Output Bank A
 	AM_RANGE(0xc000, 0xc000) AM_READ(peplus_watchdog_r) AM_WRITE(peplus_output_bank_a_w)
 
     // Superboard Data
-	AM_RANGE(0xd000, 0xdfff) AM_READWRITE(peplus_sd000_r, peplus_sd000_w) AM_BASE(m_sd000_ram)
+	AM_RANGE(0xd000, 0xdfff) AM_READWRITE(peplus_sd000_r, peplus_sd000_w) AM_SHARE("sd000_ram")
 
 	// DUART
 	AM_RANGE(0xe000, 0xe00f) AM_READWRITE(peplus_duart_r, peplus_duart_w)
 
     // Superboard Data
-	AM_RANGE(0xf000, 0xffff) AM_READWRITE(peplus_sf000_r, peplus_sf000_w) AM_BASE(m_sf000_ram)
+	AM_RANGE(0xf000, 0xffff) AM_READWRITE(peplus_sf000_r, peplus_sf000_w) AM_SHARE("sf000_ram")
 
 	/* Ports start here */
-	AM_RANGE(MCS51_PORT_P0, MCS51_PORT_P3) AM_READ(peplus_io_r) AM_WRITE(peplus_io_w) AM_BASE(m_io_port)
+	AM_RANGE(MCS51_PORT_P0, MCS51_PORT_P3) AM_READ(peplus_io_r) AM_WRITE(peplus_io_w) AM_SHARE("io_port")
 ADDRESS_MAP_END
 
 
@@ -804,10 +815,10 @@ ADDRESS_MAP_END
 *      Input ports       *
 *************************/
 
-static CUSTOM_INPUT( peplus_input_r )
+CUSTOM_INPUT_MEMBER(peplus_state::peplus_input_r)
 {
 	UINT8 inp_ret = 0x00;
-	UINT8 inp_read = input_port_read(field.machine(), (const char *)param);
+	UINT8 inp_read = input_port_read(machine(), (const char *)param);
 
 	if (inp_read & 0x01) inp_ret = 0x01;
 	if (inp_read & 0x02) inp_ret = 0x02;
@@ -863,9 +874,9 @@ static INPUT_PORTS_START( peplus_schip )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("IN0")
-	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(peplus_input_r, "IN_BANK1")
+	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, peplus_state,peplus_input_r, "IN_BANK1")
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(peplus_input_r, "IN_BANK2")
+	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, peplus_state,peplus_input_r, "IN_BANK2")
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -891,9 +902,9 @@ static INPUT_PORTS_START( peplus_poker )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Bill Acceptor") PORT_CODE(KEYCODE_U)
 
 	PORT_START("IN0")
-	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(peplus_input_r, "IN_BANK1")
+	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, peplus_state,peplus_input_r, "IN_BANK1")
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(peplus_input_r, "IN_BANK2")
+	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, peplus_state,peplus_input_r, "IN_BANK2")
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -919,9 +930,9 @@ static INPUT_PORTS_START( peplus_bjack )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON15 ) PORT_NAME("Bill Acceptor") PORT_CODE(KEYCODE_U)
 
 	PORT_START("IN0")
-	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(peplus_input_r, "IN_BANK1")
+	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, peplus_state,peplus_input_r, "IN_BANK1")
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(peplus_input_r, "IN_BANK2")
+	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, peplus_state,peplus_input_r, "IN_BANK2")
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -952,9 +963,9 @@ static INPUT_PORTS_START( peplus_keno )
 	PORT_BIT( 0xffff, 0x200, IPT_LIGHTGUN_Y ) PORT_MINMAX(0x00, 1024) PORT_CROSSHAIR(Y, 1.0, 0.0, 0) PORT_SENSITIVITY(25) PORT_KEYDELTA(13)
 
 	PORT_START("IN0")
-	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(peplus_input_r, "IN_BANK1")
+	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, peplus_state,peplus_input_r, "IN_BANK1")
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("Light Pen") PORT_CODE(KEYCODE_A)
-	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(peplus_input_r, "IN_BANK2")
+	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, peplus_state,peplus_input_r, "IN_BANK2")
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -980,9 +991,9 @@ static INPUT_PORTS_START( peplus_slots )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON15 ) PORT_NAME("Bill Acceptor") PORT_CODE(KEYCODE_U)
 
 	PORT_START("IN0")
-	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(peplus_input_r, "IN_BANK1")
+	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, peplus_state,peplus_input_r, "IN_BANK1")
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(peplus_input_r, "IN_BANK2")
+	PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, peplus_state,peplus_input_r, "IN_BANK2")
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 

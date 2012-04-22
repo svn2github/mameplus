@@ -140,7 +140,7 @@ WRITE8_MEMBER(tehkanwc_state::tehkanwc_track_1_reset_w)
 
 WRITE8_MEMBER(tehkanwc_state::sound_command_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -151,7 +151,7 @@ static TIMER_CALLBACK( reset_callback )
 
 WRITE8_MEMBER(tehkanwc_state::sound_answer_w)
 {
-	soundlatch2_w(space, 0, data);
+	soundlatch2_byte_w(space, 0, data);
 
 	/* in Gridiron, the sound CPU goes in a tight loop after the self test, */
 	/* probably waiting to be reset by a watchdog */
@@ -195,7 +195,7 @@ static void tehkanwc_adpcm_int(device_t *device)
 {
 	tehkanwc_state *state = device->machine().driver_data<tehkanwc_state>();
 
-	UINT8 *SAMPLES = device->machine().region("adpcm")->base();
+	UINT8 *SAMPLES = state->memregion("adpcm")->base();
 	int msm_data = SAMPLES[state->m_msm_data_offs & 0x7fff];
 
 	if (state->m_toggle == 0)
@@ -217,12 +217,12 @@ static ADDRESS_MAP_START( main_mem, AS_PROGRAM, 8, tehkanwc_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 	AM_RANGE(0xc800, 0xcfff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(tehkanwc_videoram_w) AM_SHARE("share2") AM_BASE(m_videoram)
-	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(tehkanwc_colorram_w) AM_SHARE("share3") AM_BASE(m_colorram)
-	AM_RANGE(0xd800, 0xddff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_be_w) AM_SHARE("share4") AM_SHARE("paletteram")
+	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(tehkanwc_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(tehkanwc_colorram_w) AM_SHARE("colorram")
+	AM_RANGE(0xd800, 0xddff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_be_w) AM_SHARE("paletteram")
 	AM_RANGE(0xde00, 0xdfff) AM_RAM AM_SHARE("share5") /* unused part of the palette RAM, I think? Gridiron uses it */
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(tehkanwc_videoram2_w) AM_SHARE("share6") AM_BASE(m_videoram2)
-	AM_RANGE(0xe800, 0xebff) AM_RAM AM_SHARE("share7") AM_BASE_SIZE(m_spriteram, m_spriteram_size) /* sprites */
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(tehkanwc_videoram2_w) AM_SHARE("videoram2")
+	AM_RANGE(0xe800, 0xebff) AM_RAM AM_SHARE("spriteram") /* sprites */
 	AM_RANGE(0xec00, 0xec01) AM_RAM_WRITE(tehkanwc_scroll_x_w)
 	AM_RANGE(0xec02, 0xec02) AM_RAM_WRITE(tehkanwc_scroll_y_w)
 	AM_RANGE(0xf800, 0xf801) AM_READWRITE(tehkanwc_track_0_r, tehkanwc_track_0_reset_w)	/* track 0 x/y */
@@ -232,7 +232,7 @@ static ADDRESS_MAP_START( main_mem, AS_PROGRAM, 8, tehkanwc_state )
 	AM_RANGE(0xf810, 0xf811) AM_READWRITE(tehkanwc_track_1_r, tehkanwc_track_1_reset_w)	/* track 1 x/y */
 	AM_RANGE(0xf812, 0xf812) AM_WRITE(gridiron_led1_w)
 	AM_RANGE(0xf813, 0xf813) AM_READ_PORT("P2BUT")
-	AM_RANGE(0xf820, 0xf820) AM_READ(soundlatch2_r) AM_WRITE(sound_command_w)	/* answer from the sound CPU */
+	AM_RANGE(0xf820, 0xf820) AM_READ(soundlatch2_byte_r) AM_WRITE(sound_command_w)	/* answer from the sound CPU */
 	AM_RANGE(0xf840, 0xf840) AM_READ_PORT("DSW1") AM_WRITE(sub_cpu_halt_w)
 	AM_RANGE(0xf850, 0xf850) AM_READ_PORT("DSW2") AM_WRITENOP			/* ?? writes 0x00 or 0xff */
 	AM_RANGE(0xf860, 0xf860) AM_READ(watchdog_reset_r) AM_WRITE(tehkanwc_flipscreen_x_w)
@@ -243,12 +243,12 @@ static ADDRESS_MAP_START( sub_mem, AS_PROGRAM, 8, tehkanwc_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xc7ff) AM_RAM
 	AM_RANGE(0xc800, 0xcfff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(tehkanwc_videoram_w) AM_SHARE("share2")
-	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(tehkanwc_colorram_w) AM_SHARE("share3")
-	AM_RANGE(0xd800, 0xddff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_be_w) AM_SHARE("share4") AM_SHARE("paletteram")
+	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(tehkanwc_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(tehkanwc_colorram_w) AM_SHARE("colorram")
+	AM_RANGE(0xd800, 0xddff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_be_w) AM_SHARE("paletteram")
 	AM_RANGE(0xde00, 0xdfff) AM_RAM AM_SHARE("share5") /* unused part of the palette RAM, I think? Gridiron uses it */
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(tehkanwc_videoram2_w) AM_SHARE("share6")
-	AM_RANGE(0xe800, 0xebff) AM_RAM AM_SHARE("share7") /* sprites */
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(tehkanwc_videoram2_w) AM_SHARE("videoram2")
+	AM_RANGE(0xe800, 0xebff) AM_RAM AM_SHARE("spriteram") /* sprites */
 	AM_RANGE(0xec00, 0xec01) AM_RAM_WRITE(tehkanwc_scroll_x_w)
 	AM_RANGE(0xec02, 0xec02) AM_RAM_WRITE(tehkanwc_scroll_y_w)
 	AM_RANGE(0xf860, 0xf860) AM_READ(watchdog_reset_r)
@@ -260,7 +260,7 @@ static ADDRESS_MAP_START( sound_mem, AS_PROGRAM, 8, tehkanwc_state )
 	AM_RANGE(0x8001, 0x8001) AM_DEVWRITE_LEGACY("msm", msm_reset_w)/* MSM51xx reset */
 	AM_RANGE(0x8002, 0x8002) AM_WRITENOP	/* ?? written in the IRQ handler */
 	AM_RANGE(0x8003, 0x8003) AM_WRITENOP	/* ?? written in the NMI handler */
-	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_r) AM_WRITE(sound_answer_w)
+	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_byte_r) AM_WRITE(sound_answer_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_port, AS_IO, 8, tehkanwc_state )
@@ -707,7 +707,7 @@ static DRIVER_INIT( teedoff )
         023A: 00          nop
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0x0238] = 0x00;
 	ROM[0x0239] = 0x00;

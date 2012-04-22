@@ -127,7 +127,7 @@ WRITE8_MEMBER(ladybug_state::sraider_misc_w)
 static ADDRESS_MAP_START( ladybug_map, AS_PROGRAM, 8, ladybug_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x6000, 0x6fff) AM_RAM
-	AM_RANGE(0x7000, 0x73ff) AM_WRITEONLY AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x7000, 0x73ff) AM_WRITEONLY AM_SHARE("spriteram")
 	AM_RANGE(0x8000, 0x8fff) AM_READNOP
 	AM_RANGE(0x9000, 0x9000) AM_READ_PORT("IN0")
 	AM_RANGE(0x9001, 0x9001) AM_READ_PORT("IN1")
@@ -136,8 +136,8 @@ static ADDRESS_MAP_START( ladybug_map, AS_PROGRAM, 8, ladybug_state )
 	AM_RANGE(0xa000, 0xa000) AM_WRITE(ladybug_flipscreen_w)
 	AM_RANGE(0xb000, 0xbfff) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
 	AM_RANGE(0xc000, 0xcfff) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
-	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(ladybug_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(ladybug_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0xd000, 0xd3ff) AM_RAM_WRITE(ladybug_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(ladybug_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0xe000, 0xe000) AM_READ_PORT("IN2")
 ADDRESS_MAP_END
 
@@ -145,7 +145,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sraider_cpu1_map, AS_PROGRAM, 8, ladybug_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x6000, 0x6fff) AM_RAM
-	AM_RANGE(0x7000, 0x73ff) AM_WRITEONLY AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x7000, 0x73ff) AM_WRITEONLY AM_SHARE("spriteram")
 	AM_RANGE(0x8005, 0x8005) AM_READ(sraider_8005_r)  // protection check?
 	AM_RANGE(0x8006, 0x8006) AM_WRITE(sraider_sound_low_w)
 	AM_RANGE(0x8007, 0x8007) AM_WRITE(sraider_sound_high_w)
@@ -153,8 +153,8 @@ static ADDRESS_MAP_START( sraider_cpu1_map, AS_PROGRAM, 8, ladybug_state )
 	AM_RANGE(0x9001, 0x9001) AM_READ_PORT("IN1")
 	AM_RANGE(0x9002, 0x9002) AM_READ_PORT("DSW0")
 	AM_RANGE(0x9003, 0x9003) AM_READ_PORT("DSW1")
-	AM_RANGE(0xd000, 0xd3ff) AM_WRITE(ladybug_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xd400, 0xd7ff) AM_WRITE(ladybug_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0xd000, 0xd3ff) AM_WRITE(ladybug_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xd400, 0xd7ff) AM_WRITE(ladybug_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0xe000, 0xe000) AM_WRITENOP  //unknown 0x10 when in attract, 0x20 when coined/playing
 ADDRESS_MAP_END
 
@@ -165,7 +165,7 @@ static ADDRESS_MAP_START( sraider_cpu2_map, AS_PROGRAM, 8, ladybug_state )
 	AM_RANGE(0x8000, 0x8000) AM_READ(sraider_sound_low_r)
 	AM_RANGE(0xa000, 0xa000) AM_READ(sraider_sound_high_r)
 	AM_RANGE(0xc000, 0xc000) AM_READNOP //some kind of sync
-	AM_RANGE(0xe000, 0xe0ff) AM_WRITEONLY AM_BASE(m_grid_data)
+	AM_RANGE(0xe000, 0xe0ff) AM_WRITEONLY AM_SHARE("grid_data")
 	AM_RANGE(0xe800, 0xe800) AM_WRITE(sraider_io_w)
 ADDRESS_MAP_END
 
@@ -182,41 +182,39 @@ ADDRESS_MAP_END
 
 
 
-static INPUT_CHANGED( coin1_inserted )
+INPUT_CHANGED_MEMBER(ladybug_state::coin1_inserted)
 {
-	ladybug_state *state = field.machine().driver_data<ladybug_state>();
 
 	/* left coin insertion causes an NMI */
-	device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, newval ? ASSERT_LINE : CLEAR_LINE);
+	device_set_input_line(m_maincpu, INPUT_LINE_NMI, newval ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static INPUT_CHANGED( coin2_inserted )
+INPUT_CHANGED_MEMBER(ladybug_state::coin2_inserted)
 {
-	ladybug_state *state = field.machine().driver_data<ladybug_state>();
 
 	/* right coin insertion causes an IRQ */
 	if (newval)
-		device_set_input_line(state->m_maincpu, 0, HOLD_LINE);
+		device_set_input_line(m_maincpu, 0, HOLD_LINE);
 }
 
 
 #define LADYBUG_P1_CONTROL_PORT_TAG	("CONTP1")
 #define LADYBUG_P2_CONTROL_PORT_TAG	("CONTP2")
 
-static CUSTOM_INPUT( ladybug_p1_control_r )
+CUSTOM_INPUT_MEMBER(ladybug_state::ladybug_p1_control_r)
 {
-	return input_port_read(field.machine(), LADYBUG_P1_CONTROL_PORT_TAG);
+	return input_port_read(machine(), LADYBUG_P1_CONTROL_PORT_TAG);
 }
 
-static CUSTOM_INPUT( ladybug_p2_control_r )
+CUSTOM_INPUT_MEMBER(ladybug_state::ladybug_p2_control_r)
 {
 	UINT32 ret;
 
 	/* upright cabinet only uses a single set of controls */
-	if (input_port_read(field.machine(), "DSW0") & 0x20)
-		ret = input_port_read(field.machine(), LADYBUG_P2_CONTROL_PORT_TAG);
+	if (input_port_read(machine(), "DSW0") & 0x20)
+		ret = input_port_read(machine(), LADYBUG_P2_CONTROL_PORT_TAG);
 	else
-		ret = input_port_read(field.machine(), LADYBUG_P1_CONTROL_PORT_TAG);
+		ret = input_port_read(machine(), LADYBUG_P1_CONTROL_PORT_TAG);
 
 	return ret;
 }
@@ -224,13 +222,13 @@ static CUSTOM_INPUT( ladybug_p2_control_r )
 
 static INPUT_PORTS_START( ladybug )
 	PORT_START("IN0")
-	PORT_BIT( 0x1f, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(ladybug_p1_control_r, NULL)
+	PORT_BIT( 0x1f, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, ladybug_state,ladybug_p1_control_r, NULL)
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_TILT )
 
 	PORT_START("IN1")
-	PORT_BIT( 0x1f, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(ladybug_p2_control_r, NULL)
+	PORT_BIT( 0x1f, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, ladybug_state,ladybug_p2_control_r, NULL)
 	/* This should be connected to the 4V clock. I don't think the game uses it. */
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	/* Note that there are TWO VBlank inputs, one is active low, the other active */
@@ -293,8 +291,8 @@ static INPUT_PORTS_START( ladybug )
 	/* settings 0x00 through 0x50 all give 1 Coin/1 Credit */
 
 	PORT_START("COIN")	/* FAKE */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED(coin1_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_CHANGED(coin2_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, ladybug_state,coin1_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, ladybug_state,coin2_inserted, 0)
 
 	PORT_START(LADYBUG_P1_CONTROL_PORT_TAG)
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_4WAY
@@ -392,8 +390,8 @@ static INPUT_PORTS_START( snapjack )
 	/* settings 0x00 through 0x04 all give 1 Coin/1 Credit */
 
 	PORT_START("COIN")	/* FAKE */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED(coin1_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_CHANGED(coin2_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, ladybug_state,coin1_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, ladybug_state,coin2_inserted, 0)
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( cavenger )
@@ -475,8 +473,8 @@ static INPUT_PORTS_START( cavenger )
 	/* settings 0x00 through 0x50 all give 1 Coin/1 Credit */
 
 	PORT_START("COIN")	/* FAKE */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED(coin1_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_CHANGED(coin2_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, ladybug_state,coin1_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, ladybug_state,coin2_inserted, 0)
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( dorodon )
@@ -558,8 +556,8 @@ static INPUT_PORTS_START( dorodon )
 	/* settings 0x00 through 0x50 all give 1 Coin/1 Credit */
 
 	PORT_START("COIN")	/* FAKE */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED(coin1_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_CHANGED(coin2_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, ladybug_state,coin1_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, ladybug_state,coin2_inserted, 0)
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( sraider )
@@ -1047,8 +1045,8 @@ static DRIVER_INIT( dorodon )
 	offs_t i;
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *decrypted = auto_alloc_array(machine, UINT8, 0x6000);
-	UINT8 *rom = machine.region("maincpu")->base();
-	UINT8 *table = machine.region("user1")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *table = machine.root_device().memregion("user1")->base();
 
 	space->set_decrypted_region(0x0000, 0x5fff, decrypted);
 

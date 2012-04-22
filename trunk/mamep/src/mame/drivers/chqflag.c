@@ -40,18 +40,18 @@ static TIMER_DEVICE_CALLBACK( chqflag_scanline )
 WRITE8_MEMBER(chqflag_state::chqflag_bankswitch_w)
 {
 	int bankaddress;
-	UINT8 *RAM = machine().region("maincpu")->base();
+	UINT8 *RAM = memregion("maincpu")->base();
 
 	/* bits 0-4 = ROM bank # (0x00-0x11) */
 	bankaddress = 0x10000 + (data & 0x1f) * 0x4000;
-	memory_set_bankptr(machine(), "bank4", &RAM[bankaddress]);
+	membank("bank4")->set_base(&RAM[bankaddress]);
 
 	/* bit 5 = memory bank select */
 	if (data & 0x20)
 	{
 		space.install_read_bank(0x1800, 0x1fff, "bank5");
-		space.install_write_handler(0x1800, 0x1fff, write8_delegate(FUNC(driver_device::paletteram_xBBBBBGGGGGRRRRR_be_w),this));
-		memory_set_bankptr(machine(), "bank5", m_generic_paletteram_8);
+		space.install_write_handler(0x1800, 0x1fff, write8_delegate(FUNC(driver_device::paletteram_xBBBBBGGGGGRRRRR_byte_be_w),this));
+		membank("bank5")->set_base(m_generic_paletteram_8);
 
 		if (m_k051316_readroms)
 			space.install_legacy_readwrite_handler(*m_k051316_1, 0x1000, 0x17ff, FUNC(k051316_rom_r), FUNC(k051316_w));	/* 051316 #1 (ROM test) */
@@ -131,7 +131,7 @@ READ8_MEMBER(chqflag_state::analog_read_r)
 
 WRITE8_MEMBER(chqflag_state::chqflag_sh_irqtrigger_w)
 {
-	soundlatch2_w(space, 0, data);
+	soundlatch2_byte_w(space, 0, data);
 	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
 }
 
@@ -145,7 +145,7 @@ static ADDRESS_MAP_START( chqflag_map, AS_PROGRAM, 8, chqflag_state )
 	AM_RANGE(0x2000, 0x2007) AM_DEVREADWRITE_LEGACY("k051960", k051937_r, k051937_w)					/* Sprite control registers */
 	AM_RANGE(0x2400, 0x27ff) AM_DEVREADWRITE_LEGACY("k051960", k051960_r, k051960_w)					/* Sprite RAM */
 	AM_RANGE(0x2800, 0x2fff) AM_READ_BANK("bank3") AM_DEVWRITE_LEGACY("k051316_2", k051316_w)		/* 051316 zoom/rotation (chip 2) */
-	AM_RANGE(0x3000, 0x3000) AM_WRITE(soundlatch_w)								/* sound code # */
+	AM_RANGE(0x3000, 0x3000) AM_WRITE(soundlatch_byte_w)								/* sound code # */
 	AM_RANGE(0x3001, 0x3001) AM_WRITE(chqflag_sh_irqtrigger_w)					/* cause interrupt on audio CPU */
 	AM_RANGE(0x3002, 0x3002) AM_WRITE(chqflag_bankswitch_w)						/* bankswitch control */
 	AM_RANGE(0x3003, 0x3003) AM_WRITE(chqflag_vreg_w)							/* enable K051316 ROM reading */
@@ -187,8 +187,8 @@ static ADDRESS_MAP_START( chqflag_sound_map, AS_PROGRAM, 8, chqflag_state )
 	AM_RANGE(0xa01c, 0xa01c) AM_DEVWRITE_LEGACY("k007232_2", k007232_extvolume_w)	/* extra volume, goes to the 007232 w/ A11 */
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232_2", k007232_r, k007232_w)	/* 007232 (chip 2) */
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)	/* YM2151 */
-	AM_RANGE(0xd000, 0xd000) AM_READ(soundlatch_r)			/* soundlatch_r */
-	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch2_r)         /* engine sound volume */
+	AM_RANGE(0xd000, 0xd000) AM_READ(soundlatch_byte_r)			/* soundlatch_byte_r */
+	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch2_byte_r)         /* engine sound volume */
 	AM_RANGE(0xf000, 0xf000) AM_WRITENOP					/* ??? */
 ADDRESS_MAP_END
 
@@ -266,7 +266,7 @@ static void chqflag_ym2151_irq_w( device_t *device, int data )
 
 static const ym2151_interface ym2151_config =
 {
-	chqflag_ym2151_irq_w
+	DEVCB_LINE(chqflag_ym2151_irq_w)
 };
 
 static void volume_callback0( device_t *device, int v )
@@ -322,9 +322,9 @@ static const k051316_interface chqflag_k051316_intf_2 =
 static MACHINE_START( chqflag )
 {
 	chqflag_state *state = machine.driver_data<chqflag_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 4, &ROM[0x10000], 0x2000);
+	state->membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x2000);
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_audiocpu = machine.device("audiocpu");

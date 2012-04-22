@@ -296,20 +296,20 @@ READ16_MEMBER(alpha68k_state::jongbou_inputs_r)
 WRITE16_MEMBER(alpha68k_state::kyros_sound_w)
 {
 	if(ACCESSING_BITS_8_15)
-		soundlatch_w(space, 0, (data >> 8) & 0xff);
+		soundlatch_byte_w(space, 0, (data >> 8) & 0xff);
 }
 
 WRITE16_MEMBER(alpha68k_state::alpha68k_II_sound_w)
 {
 	if(ACCESSING_BITS_0_7)
-		soundlatch_w(space, 0, data & 0xff);
+		soundlatch_byte_w(space, 0, data & 0xff);
 }
 
 WRITE16_MEMBER(alpha68k_state::alpha68k_V_sound_w)
 {
 	/* Sound & fix bank select are in the same word */
 	if(ACCESSING_BITS_0_7)
-		soundlatch_w(space, 0, data & 0xff);
+		soundlatch_byte_w(space, 0, data & 0xff);
 	if(ACCESSING_BITS_8_15)
 		alpha68k_V_video_bank_w(machine(), (data >> 8) & 0xff);
 }
@@ -319,7 +319,7 @@ WRITE16_MEMBER(alpha68k_state::paddlema_soundlatch_w)
 
 	if (ACCESSING_BITS_0_7)
 	{
-		soundlatch_w(space, 0, data);
+		soundlatch_byte_w(space, 0, data);
 		device_set_input_line(m_audiocpu, 0, HOLD_LINE);
 	}
 }
@@ -329,7 +329,7 @@ WRITE16_MEMBER(alpha68k_state::tnextspc_soundlatch_w)
 
 	if (ACCESSING_BITS_0_7)
 	{
-		soundlatch_w(space, 0, data);
+		soundlatch_byte_w(space, 0, data);
 		device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
@@ -658,9 +658,9 @@ READ16_MEMBER(alpha68k_state::alpha_V_trigger_r)
 
 static ADDRESS_MAP_START( kyros_map, AS_PROGRAM, 16, alpha68k_state )
 	AM_RANGE(0x000000, 0x01ffff) AM_ROM						  // main program
-	AM_RANGE(0x020000, 0x020fff) AM_RAM AM_BASE(m_shared_ram)  // work RAM
-	AM_RANGE(0x040000, 0x041fff) AM_RAM AM_BASE(m_spriteram) // sprite RAM
-	AM_RANGE(0x060000, 0x060001) AM_RAM AM_BASE(m_videoram)  // MSB: watchdog, LSB: BGC
+	AM_RANGE(0x020000, 0x020fff) AM_RAM AM_SHARE("shared_ram")  // work RAM
+	AM_RANGE(0x040000, 0x041fff) AM_RAM AM_SHARE("spriteram") // sprite RAM
+	AM_RANGE(0x060000, 0x060001) AM_RAM AM_SHARE("videoram")  // MSB: watchdog, LSB: BGC
 	AM_RANGE(0x080000, 0x0801ff) AM_READWRITE(kyros_alpha_trigger_r, alpha_microcontroller_w)
 	AM_RANGE(0x0c0000, 0x0c0001) AM_READ_PORT("IN0")
 	AM_RANGE(0x0e0000, 0x0e0001) AM_READWRITE(kyros_dip_r, kyros_sound_w)
@@ -669,7 +669,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( alpha68k_I_map, AS_PROGRAM, 16, alpha68k_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM							// main program
 	AM_RANGE(0x080000, 0x083fff) AM_RAM							// work RAM
-	AM_RANGE(0x100000, 0x103fff) AM_RAM AM_BASE(m_spriteram)	// video RAM
+	AM_RANGE(0x100000, 0x103fff) AM_RAM AM_SHARE("spriteram")	// video RAM
 	AM_RANGE(0x180000, 0x180001) AM_READ_PORT("IN3") AM_WRITENOP // LSB: DSW0, MSB: watchdog(?)
 	AM_RANGE(0x180008, 0x180009) AM_READ_PORT("IN4")			// LSB: DSW1
 	AM_RANGE(0x300000, 0x300001) AM_READ_PORT("IN0")			// joy1, joy2
@@ -679,7 +679,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( alpha68k_II_map, AS_PROGRAM, 16, alpha68k_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
-	AM_RANGE(0x040000, 0x040fff) AM_RAM AM_BASE(m_shared_ram)
+	AM_RANGE(0x040000, 0x040fff) AM_RAM AM_SHARE("shared_ram")
 	AM_RANGE(0x080000, 0x080001) AM_READ(control_1_r) /* Joysticks */
 	AM_RANGE(0x080000, 0x080001) AM_WRITE(alpha68k_II_sound_w)
 	AM_RANGE(0x0c0000, 0x0c0001) AM_READ(control_2_r) /* CN1 & Dip 1 */
@@ -689,28 +689,28 @@ static ADDRESS_MAP_START( alpha68k_II_map, AS_PROGRAM, 16, alpha68k_state )
 	AM_RANGE(0x0d8000, 0x0d8001) AM_READNOP /* IRQ ack? */
 	AM_RANGE(0x0e0000, 0x0e0001) AM_READNOP /* IRQ ack? */
 	AM_RANGE(0x0e8000, 0x0e8001) AM_READNOP /* watchdog? */
-	AM_RANGE(0x100000, 0x100fff) AM_RAM_WRITE(alpha68k_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x200000, 0x207fff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x100000, 0x100fff) AM_RAM_WRITE(alpha68k_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x200000, 0x207fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x300000, 0x3001ff) AM_READWRITE(alpha_II_trigger_r, alpha_microcontroller_w)
-	AM_RANGE(0x400000, 0x400fff) AM_RAM_WRITE(alpha68k_paletteram_w) AM_BASE(m_paletteram)
+	AM_RANGE(0x400000, 0x400fff) AM_RAM_WRITE(alpha68k_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0x800000, 0x83ffff) AM_ROMBANK("bank8")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( alpha68k_V_map, AS_PROGRAM, 16, alpha68k_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
-	AM_RANGE(0x040000, 0x043fff) AM_RAM AM_BASE(m_shared_ram)
+	AM_RANGE(0x040000, 0x043fff) AM_RAM AM_SHARE("shared_ram")
 	AM_RANGE(0x080000, 0x080001) AM_READWRITE(control_1_r, alpha68k_V_sound_w) /* Joysticks */
 	AM_RANGE(0x0c0000, 0x0c0001) AM_READ(control_2_V_r) /* Dip 2 */
 	AM_RANGE(0x0c0000, 0x0c00ff) AM_WRITE(alpha68k_V_video_control_w)
 	AM_RANGE(0x0d8000, 0x0d8001) AM_READNOP /* IRQ ack? */
 	AM_RANGE(0x0e0000, 0x0e0001) AM_READNOP /* IRQ ack? */
 	AM_RANGE(0x0e8000, 0x0e8001) AM_READNOP /* watchdog? */
-	AM_RANGE(0x100000, 0x100fff) AM_RAM_WRITE(alpha68k_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x200000, 0x207fff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x100000, 0x100fff) AM_RAM_WRITE(alpha68k_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x200000, 0x207fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x300000, 0x303fff) AM_READ(alpha_V_trigger_r)
 	AM_RANGE(0x300000, 0x3001ff) AM_WRITE(alpha_microcontroller_w)
 	AM_RANGE(0x303e00, 0x303fff) AM_WRITE(alpha_microcontroller_w) /* Gang Wars mirror */
-	AM_RANGE(0x400000, 0x401fff) AM_RAM_WRITE(alpha68k_paletteram_w) AM_BASE(m_paletteram)
+	AM_RANGE(0x400000, 0x401fff) AM_RAM_WRITE(alpha68k_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0x800000, 0x83ffff) AM_ROMBANK("bank8")
 ADDRESS_MAP_END
 
@@ -719,7 +719,7 @@ READ16_MEMBER(alpha68k_state::sound_cpu_r){ return 1; }
 static ADDRESS_MAP_START( tnextspc_map, AS_PROGRAM, 16, alpha68k_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x070000, 0x073fff) AM_RAM
-	AM_RANGE(0x0a0000, 0x0a3fff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x0a0000, 0x0a3fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x0d0000, 0x0d0001) AM_WRITENOP // unknown write port (0)
 	AM_RANGE(0x0e0000, 0x0e0001) AM_READ_PORT("P1")
 	AM_RANGE(0x0e0002, 0x0e0003) AM_READ_PORT("P2")
@@ -738,7 +738,7 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER(alpha68k_state::sound_bank_w)
 {
-	memory_set_bank(machine(), "bank7", data);
+	membank("bank7")->set_entry(data);
 }
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, alpha68k_state )
@@ -750,8 +750,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( kyros_sound_map, AS_PROGRAM, 8, alpha68k_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_r)
-	AM_RANGE(0xe002, 0xe002) AM_WRITE(soundlatch_clear_w)
+	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
+	AM_RANGE(0xe002, 0xe002) AM_WRITE(soundlatch_clear_byte_w)
 	AM_RANGE(0xe004, 0xe004) AM_DEVWRITE_LEGACY("dac", dac_signed_w)
 	AM_RANGE(0xe006, 0xe00e) AM_WRITENOP // soundboard I/O's, ignored
 /* reference only
@@ -766,8 +766,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sstingry_sound_map, AS_PROGRAM, 8, alpha68k_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xc100, 0xc100) AM_READ(soundlatch_r)
-	AM_RANGE(0xc102, 0xc102) AM_WRITE(soundlatch_clear_w)
+	AM_RANGE(0xc100, 0xc100) AM_READ(soundlatch_byte_r)
+	AM_RANGE(0xc102, 0xc102) AM_WRITE(soundlatch_clear_byte_w)
 	AM_RANGE(0xc104, 0xc104) AM_DEVWRITE_LEGACY("dac", dac_signed_w)
 	AM_RANGE(0xc106, 0xc10e) AM_WRITENOP // soundboard I/O's, ignored
 ADDRESS_MAP_END
@@ -779,7 +779,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( alpha68k_I_s_map, AS_PROGRAM, 8, alpha68k_state )
 	AM_RANGE(0x0000, 0x9fff) AM_ROM
-	AM_RANGE(0xe000, 0xe000) AM_READWRITE(soundlatch_r, soundlatch_clear_w)
+	AM_RANGE(0xe000, 0xe000) AM_READWRITE(soundlatch_byte_r, soundlatch_clear_byte_w)
 	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_status_port_r, ym3812_control_port_w)
 	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE_LEGACY("ymsnd", ym3812_write_port_w)
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
@@ -790,12 +790,12 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( tnextspc_sound_map, AS_PROGRAM, 8, alpha68k_state )
 	AM_RANGE(0x0000, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
-	AM_RANGE(0xf800, 0xf800) AM_READWRITE(soundlatch_r, soundlatch_clear_w)
+	AM_RANGE(0xf800, 0xf800) AM_READWRITE(soundlatch_byte_r, soundlatch_clear_byte_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_portmap, AS_IO, 8, alpha68k_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READWRITE(soundlatch_r, soundlatch_clear_w)
+	AM_RANGE(0x00, 0x00) AM_READWRITE(soundlatch_byte_r, soundlatch_clear_byte_w)
 	AM_RANGE(0x08, 0x08) AM_DEVWRITE_LEGACY("dac", dac_signed_w)
 	AM_RANGE(0x0a, 0x0b) AM_DEVWRITE_LEGACY("ym2", ym2413_w)
 	AM_RANGE(0x0c, 0x0d) AM_DEVWRITE_LEGACY("ym1", ym2203_w)
@@ -815,7 +815,7 @@ static ADDRESS_MAP_START( jongbou_sound_portmap, AS_IO, 8, alpha68k_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)
 	AM_RANGE(0x01, 0x01) AM_DEVREADWRITE_LEGACY("aysnd", ay8910_r, ay8910_data_w)
-	AM_RANGE(0x02, 0x02) AM_WRITE(soundlatch_clear_w)
+	AM_RANGE(0x02, 0x02) AM_WRITE(soundlatch_clear_byte_w)
 	AM_RANGE(0x06, 0x06) AM_WRITENOP
 ADDRESS_MAP_END
 
@@ -1823,7 +1823,7 @@ static const ay8910_interface ay8910_config =
 {
 	AY8910_LEGACY_OUTPUT,
 	AY8910_DEFAULT_LOADS,
-	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_r)
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r)
 };
 
 WRITE8_MEMBER(alpha68k_state::porta_w)
@@ -1847,7 +1847,7 @@ static const ym2203_interface ym2203_config =
 	{
 		AY8910_LEGACY_OUTPUT,
 		AY8910_DEFAULT_LOADS,
-		DEVCB_DRIVER_MEMBER(driver_device, soundlatch_r),
+		DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r),
 		DEVCB_NULL,
 		DEVCB_DRIVER_MEMBER(alpha68k_state, porta_w),
 		DEVCB_NULL
@@ -1903,9 +1903,9 @@ static MACHINE_RESET( common )
 static MACHINE_START( alpha68k_V )
 {
 	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	UINT8 *ROM = machine.region("audiocpu")->base();
+	UINT8 *ROM = state->memregion("audiocpu")->base();
 
-	memory_configure_bank(machine, "bank7", 0, 32, &ROM[0x10000], 0x4000);
+	state->membank("bank7")->configure_entries(0, 32, &ROM[0x10000], 0x4000);
 
 	MACHINE_START_CALL(common);
 
@@ -1939,9 +1939,9 @@ static MACHINE_RESET( alpha68k_II )
 static MACHINE_START( alpha68k_II )
 {
 	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	UINT8 *ROM = machine.region("audiocpu")->base();
+	UINT8 *ROM = state->memregion("audiocpu")->base();
 
-	memory_configure_bank(machine, "bank7", 0, 28, &ROM[0x10000], 0x4000);
+	state->membank("bank7")->configure_entries(0, 28, &ROM[0x10000], 0x4000);
 
 	MACHINE_START_CALL(common);
 
@@ -3222,7 +3222,7 @@ static DRIVER_INIT( btlfieldb )
 static DRIVER_INIT( skysoldr )
 {
 	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	memory_set_bankptr(machine, "bank8", (machine.region("user1")->base()) + 0x40000);
+	state->membank("bank8")->set_base((state->memregion("user1")->base()) + 0x40000);
 	state->m_invert_controls = 0;
 	state->m_microcontroller_id = 0;
 	state->m_coin_id = 0x22 | (0x22 << 8);
@@ -3241,7 +3241,7 @@ static DRIVER_INIT( goldmedl )
 static DRIVER_INIT( goldmedla )
 {
 	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	memory_set_bankptr(machine, "bank8", machine.region("maincpu")->base() + 0x20000);
+	state->membank("bank8")->set_base(state->memregion("maincpu")->base() + 0x20000);
 	state->m_invert_controls = 0;
 	state->m_microcontroller_id = 0x8803; //Guess - routine to handle coinage is the same as in 'goldmedl'
 	state->m_coin_id = 0x23 | (0x24 << 8);
@@ -3269,7 +3269,7 @@ static DRIVER_INIT( skyadvntu )
 static DRIVER_INIT( gangwarsu )
 {
 	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	memory_set_bankptr(machine, "bank8", machine.region("user1")->base());
+	state->membank("bank8")->set_base(state->memregion("user1")->base());
 	state->m_invert_controls = 0;
 	state->m_microcontroller_id = 0x8512;
 	state->m_coin_id = 0x23 | (0x24 << 8);
@@ -3279,7 +3279,7 @@ static DRIVER_INIT( gangwarsu )
 static DRIVER_INIT( gangwars )
 {
 	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	memory_set_bankptr(machine, "bank8", machine.region("user1")->base());
+	state->membank("bank8")->set_base(state->memregion("user1")->base());
 	state->m_invert_controls = 0;
 	state->m_microcontroller_id = 0x8512;
 	state->m_coin_id = 0x23 | (0x24 << 8);
@@ -3289,7 +3289,7 @@ static DRIVER_INIT( gangwars )
 static DRIVER_INIT( sbasebal )
 {
 	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)state->memregion("maincpu")->base();
 
 	/* Patch protection check, it does a divide by zero because the MCU is trying to
        calculate the ball speed when a strike is scored, notice that current emulation

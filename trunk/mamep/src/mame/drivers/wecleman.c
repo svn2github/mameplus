@@ -494,16 +494,16 @@ WRITE16_MEMBER(wecleman_state::blitter_w)
 
 static ADDRESS_MAP_START( wecleman_map, AS_PROGRAM, 16, wecleman_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM	// ROM (03c000-03ffff used as RAM sometimes!)
-	AM_RANGE(0x040494, 0x040495) AM_WRITE(wecleman_videostatus_w) AM_BASE(m_videostatus)	// cloud blending control (HACK)
+	AM_RANGE(0x040494, 0x040495) AM_WRITE(wecleman_videostatus_w) AM_SHARE("videostatus")	// cloud blending control (HACK)
 	AM_RANGE(0x040000, 0x043fff) AM_RAM	// RAM
-	AM_RANGE(0x060000, 0x060005) AM_WRITE(wecleman_protection_w) AM_BASE(m_protection_ram)
+	AM_RANGE(0x060000, 0x060005) AM_WRITE(wecleman_protection_w) AM_SHARE("protection_ram")
 	AM_RANGE(0x060006, 0x060007) AM_READ(wecleman_protection_r)	// MCU read
-	AM_RANGE(0x080000, 0x080011) AM_RAM_WRITE(blitter_w) AM_BASE(m_blitter_regs)	// Blitter
-	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(wecleman_pageram_w) AM_BASE(m_pageram)	// Background Layers
-	AM_RANGE(0x108000, 0x108fff) AM_RAM_WRITE(wecleman_txtram_w) AM_BASE(m_txtram)	// Text Layer
+	AM_RANGE(0x080000, 0x080011) AM_RAM_WRITE(blitter_w) AM_SHARE("blitter_regs")	// Blitter
+	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(wecleman_pageram_w) AM_SHARE("pageram")	// Background Layers
+	AM_RANGE(0x108000, 0x108fff) AM_RAM_WRITE(wecleman_txtram_w) AM_SHARE("txtram")	// Text Layer
 	AM_RANGE(0x110000, 0x110fff) AM_RAM_WRITE(wecleman_paletteram16_SSSSBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x124000, 0x127fff) AM_RAM AM_SHARE("share1")	// Shared with main CPU
-	AM_RANGE(0x130000, 0x130fff) AM_RAM AM_BASE(m_spriteram)	// Sprites
+	AM_RANGE(0x130000, 0x130fff) AM_RAM AM_SHARE("spriteram")	// Sprites
 	AM_RANGE(0x140000, 0x140001) AM_WRITE(wecleman_soundlatch_w)	// To sound CPU
 	AM_RANGE(0x140002, 0x140003) AM_WRITE(selected_ip_w)	// Selects accelerator / wheel / ..
 	AM_RANGE(0x140004, 0x140005) AM_WRITE(irqctrl_w)	// Main CPU controls the other CPUs
@@ -528,14 +528,14 @@ static ADDRESS_MAP_START( hotchase_map, AS_PROGRAM, 16, wecleman_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x040000, 0x041fff) AM_RAM									// RAM
 	AM_RANGE(0x060000, 0x063fff) AM_RAM									// RAM
-	AM_RANGE(0x080000, 0x080011) AM_RAM_WRITE(blitter_w) AM_BASE(m_blitter_regs)	// Blitter
+	AM_RANGE(0x080000, 0x080011) AM_RAM_WRITE(blitter_w) AM_SHARE("blitter_regs")	// Blitter
 	AM_RANGE(0x100000, 0x100fff) AM_DEVREADWRITE8_LEGACY("k051316_1", k051316_r, k051316_w, 0x00ff)	// Background
 	AM_RANGE(0x101000, 0x10101f) AM_DEVWRITE8_LEGACY("k051316_1", k051316_ctrl_w, 0x00ff)	// Background Ctrl
 	AM_RANGE(0x102000, 0x102fff) AM_DEVREADWRITE8_LEGACY("k051316_2", k051316_r, k051316_w, 0x00ff)	// Foreground
 	AM_RANGE(0x103000, 0x10301f) AM_DEVWRITE8_LEGACY("k051316_2", k051316_ctrl_w, 0x00ff)	// Foreground Ctrl
 	AM_RANGE(0x110000, 0x111fff) AM_RAM_WRITE(hotchase_paletteram16_SBGRBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_SHARE("share1")					// Shared with sub CPU
-	AM_RANGE(0x130000, 0x130fff) AM_RAM AM_BASE(m_spriteram)	// Sprites
+	AM_RANGE(0x130000, 0x130fff) AM_RAM AM_SHARE("spriteram")	// Sprites
 	AM_RANGE(0x140000, 0x140001) AM_WRITE(hotchase_soundlatch_w)	// To sound CPU
 	AM_RANGE(0x140002, 0x140003) AM_WRITE(selected_ip_w)	// Selects accelerator / wheel /
 	AM_RANGE(0x140004, 0x140005) AM_WRITE(irqctrl_w)	// Main CPU controls the other CPUs
@@ -556,7 +556,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( wecleman_sub_map, AS_PROGRAM, 16, wecleman_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM	// ROM
-	AM_RANGE(0x060000, 0x060fff) AM_RAM AM_BASE(m_roadram) AM_SIZE(m_roadram_size)	// Road
+	AM_RANGE(0x060000, 0x060fff) AM_RAM AM_SHARE("roadram")	// Road
 	AM_RANGE(0x070000, 0x073fff) AM_RAM AM_SHARE("share1")	// RAM (Shared with main CPU)
 ADDRESS_MAP_END
 
@@ -567,7 +567,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( hotchase_sub_map, AS_PROGRAM, 16, wecleman_state )
 	AM_RANGE(0x000000, 0x01ffff) AM_ROM	// ROM
-	AM_RANGE(0x020000, 0x020fff) AM_RAM AM_BASE(m_roadram) AM_SIZE(m_roadram_size)	// Road
+	AM_RANGE(0x020000, 0x020fff) AM_RAM AM_SHARE("roadram")	// Road
 	AM_RANGE(0x040000, 0x043fff) AM_RAM AM_SHARE("share1") // Shared with main CPU
 	AM_RANGE(0x060000, 0x060fff) AM_RAM // a table, presumably road related
 	AM_RANGE(0x061000, 0x06101f) AM_RAM // road vregs?
@@ -583,7 +583,7 @@ WRITE16_MEMBER(wecleman_state::wecleman_soundlatch_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		soundlatch_w(space, 0, data & 0xFF);
+		soundlatch_byte_w(space, 0, data & 0xFF);
 		cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
 	}
 }
@@ -627,7 +627,7 @@ static ADDRESS_MAP_START( wecleman_sound_map, AS_PROGRAM, 8, wecleman_state )
 	AM_RANGE(0x9000, 0x9000) AM_READ(multiply_r)	// Protection
 	AM_RANGE(0x9000, 0x9001) AM_WRITE(multiply_w)	// Protection
 	AM_RANGE(0x9006, 0x9006) AM_WRITENOP	// ?
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)	// From main CPU
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)	// From main CPU
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("konami", k007232_r, k007232_w)	// K007232 (Reading offset 5/b triggers the sample)
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0xf000, 0xf000) AM_DEVWRITE_LEGACY("konami", wecleman_K00723216_bank_w)	// Samples banking
@@ -643,7 +643,7 @@ WRITE16_MEMBER(wecleman_state::hotchase_soundlatch_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		soundlatch_w(space, 0, data & 0xFF);
+		soundlatch_byte_w(space, 0, data & 0xFF);
 		cputag_set_input_line(machine(), "audiocpu", M6809_IRQ_LINE, HOLD_LINE);
 	}
 }
@@ -720,7 +720,7 @@ static ADDRESS_MAP_START( hotchase_sound_map, AS_PROGRAM, 8, wecleman_state )
 	AM_RANGE(0x3000, 0x300d) AM_DEVREADWRITE_LEGACY("konami3", hotchase_k007232_r, hotchase_k007232_w)
 	AM_RANGE(0x4000, 0x4007) AM_WRITE(hotchase_sound_control_w)	// Sound volume, banking, etc.
 	AM_RANGE(0x5000, 0x5000) AM_WRITENOP	// ? (written with 0 on IRQ, 1 on FIRQ)
-	AM_RANGE(0x6000, 0x6000) AM_READ(soundlatch_r)	// From main CPU (Read on IRQ)
+	AM_RANGE(0x6000, 0x6000) AM_READ(soundlatch_byte_r)	// From main CPU (Read on IRQ)
 	AM_RANGE(0x7000, 0x7000) AM_WRITENOP	// Command acknowledge ?
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -1218,9 +1218,9 @@ static void wecleman_unpack_sprites(running_machine &machine)
 {
 	const char *region       = "gfx1";	// sprites
 
-	const UINT32 len = machine.region(region)->bytes();
-	UINT8 *src     = machine.region(region)->base() + len / 2 - 1;
-	UINT8 *dst     = machine.region(region)->base() + len - 1;
+	const UINT32 len = machine.root_device().memregion(region)->bytes();
+	UINT8 *src     = machine.root_device().memregion(region)->base() + len / 2 - 1;
+	UINT8 *dst     = machine.root_device().memregion(region)->base() + len - 1;
 
 	while(dst > src)
 	{
@@ -1251,7 +1251,7 @@ static DRIVER_INIT( wecleman )
 	wecleman_state *state = machine.driver_data<wecleman_state>();
 	int i, len;
 	UINT8 *RAM;
-//  UINT16 *RAM1 = (UINT16 *) machine.region("maincpu")->base();   /* Main CPU patches */
+//  UINT16 *RAM1 = (UINT16 *) machine.root_device().memregion("maincpu")->base();   /* Main CPU patches */
 //  RAM1[0x08c2/2] = 0x601e;    // faster self test
 
 	/* Decode GFX Roms - Compensate for the address lines scrambling */
@@ -1261,8 +1261,8 @@ static DRIVER_INIT( wecleman )
         I hope you'll appreciate this effort!  */
 
 	/* let's swap even and odd *pixels* of the sprites */
-	RAM = machine.region("gfx1")->base();
-	len = machine.region("gfx1")->bytes();
+	RAM = machine.root_device().memregion("gfx1")->base();
+	len = state->memregion("gfx1")->bytes();
 	for (i = 0; i < len; i ++)
 	{
 		/* TODO: could be wrong, colors have to be fixed.       */
@@ -1271,18 +1271,18 @@ static DRIVER_INIT( wecleman )
 		RAM[i] = BITSWAP8(RAM[i],7,0,1,2,3,4,5,6);
 	}
 
-	bitswap(machine, machine.region("gfx1")->base(), machine.region("gfx1")->bytes(),
+	bitswap(machine, machine.root_device().memregion("gfx1")->base(), machine.root_device().memregion("gfx1")->bytes(),
 			0,1,20,19,18,17,14,9,16,6,4,7,8,15,10,11,13,5,12,3,2);
 
 	/* Now we can unpack each nibble of the sprites into a pixel (one byte) */
 	wecleman_unpack_sprites(machine);
 
 	/* Bg & Fg & Txt */
-	bitswap(machine, machine.region("gfx2")->base(), machine.region("gfx2")->bytes(),
+	bitswap(machine, machine.root_device().memregion("gfx2")->base(), machine.root_device().memregion("gfx2")->bytes(),
 			20,19,18,17,16,15,12,7,14,4,2,5,6,13,8,9,11,3,10,1,0);
 
 	/* Road */
-	bitswap(machine, machine.region("gfx3")->base(), machine.region("gfx3")->bytes(),
+	bitswap(machine, machine.root_device().memregion("gfx3")->base(), machine.root_device().memregion("gfx3")->bytes(),
 			20,19,18,17,16,15,14,7,12,4,2,5,6,13,8,9,11,3,10,1,0);
 
 	state->m_spr_color_offs = 0x40;
@@ -1347,7 +1347,7 @@ static void hotchase_sprite_decode( running_machine &machine, int num16_banks, i
 	UINT8 *base, *temp;
 	int i;
 
-	base = machine.region("gfx1")->base();	// sprites
+	base = machine.root_device().memregion("gfx1")->base();	// sprites
 	temp = auto_alloc_array(machine, UINT8,  bank_size );
 
 	for( i = num16_banks; i >0; i-- ){
@@ -1393,7 +1393,7 @@ static void hotchase_sprite_decode( running_machine &machine, int num16_banks, i
 static DRIVER_INIT( hotchase )
 {
 	wecleman_state *state = machine.driver_data<wecleman_state>();
-//  UINT16 *RAM1 = (UINT16) machine.region("maincpu")->base(); /* Main CPU patches */
+//  UINT16 *RAM1 = (UINT16) machine.root_device().memregion("maincpu")->base(); /* Main CPU patches */
 //  RAM[0x1140/2] = 0x0015; RAM[0x195c/2] = 0x601A; // faster self test
 
 	UINT8 *RAM;
@@ -1401,13 +1401,13 @@ static DRIVER_INIT( hotchase )
 	/* Decode GFX Roms */
 
 	/* Let's swap even and odd bytes of the sprites gfx roms */
-	RAM = machine.region("gfx1")->base();
+	RAM = machine.root_device().memregion("gfx1")->base();
 
 	/* Now we can unpack each nibble of the sprites into a pixel (one byte) */
 	hotchase_sprite_decode(machine,3,0x80000*2);	// num banks, bank len
 
 	/* Let's copy the second half of the fg layer gfx (charset) over the first */
-	RAM = machine.region("gfx3")->base();
+	RAM = state->memregion("gfx3")->base();
 	memcpy(&RAM[0], &RAM[0x10000/2], 0x10000/2);
 
 	state->m_spr_color_offs = 0;

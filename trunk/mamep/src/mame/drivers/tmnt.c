@@ -193,7 +193,7 @@ static INTERRUPT_GEN( lgtnfght_interrupt )
 WRITE16_MEMBER(tmnt_state::tmnt_sound_command_w)
 {
 	if (ACCESSING_BITS_0_7)
-		soundlatch_w(space, 0, data & 0xff);
+		soundlatch_byte_w(space, 0, data & 0xff);
 }
 
 static READ8_DEVICE_HANDLER( punkshot_sound_r )
@@ -214,7 +214,7 @@ static WRITE8_DEVICE_HANDLER( glfgreat_sound_w )
 
 READ16_MEMBER(tmnt_state::prmrsocr_sound_r)
 {
-	return soundlatch3_r(space, 0);
+	return soundlatch3_byte_r(space, 0);
 }
 
 WRITE16_MEMBER(tmnt_state::prmrsocr_sound_cmd_w)
@@ -223,9 +223,9 @@ WRITE16_MEMBER(tmnt_state::prmrsocr_sound_cmd_w)
 	{
 		data &= 0xff;
 		if (offset == 0)
-			soundlatch_w(space, 0, data);
+			soundlatch_byte_w(space, 0, data);
 		else
-			soundlatch2_w(space, 0, data);
+			soundlatch2_byte_w(space, 0, data);
 	}
 }
 
@@ -236,7 +236,7 @@ WRITE16_MEMBER(tmnt_state::prmrsocr_sound_irq_w)
 
 WRITE8_MEMBER(tmnt_state::prmrsocr_audio_bankswitch_w)
 {
-	memory_set_bank(machine(), "bank1", data & 7);
+	membank("bank1")->set_entry(data & 7);
 }
 
 
@@ -278,7 +278,7 @@ static SAMPLES_START( tmnt_decode_sample )
 	running_machine &machine = device.machine();
 	tmnt_state *state = machine.driver_data<tmnt_state>();
 	int i;
-	UINT8 *source = machine.region("title")->base();
+	UINT8 *source = state->memregion("title")->base();
 
 	state->save_item(NAME(state->m_sampledata));
 
@@ -621,7 +621,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( punkshot_main_map, AS_PROGRAM, 16, tmnt_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x080000, 0x083fff) AM_RAM /* main RAM */
-	AM_RANGE(0x090000, 0x090fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x090000, 0x090fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x0a0000, 0x0a0001) AM_READ_PORT("DSW1/DSW2")
 	AM_RANGE(0x0a0002, 0x0a0003) AM_READ_PORT("COINS/DSW3")
 	AM_RANGE(0x0a0004, 0x0a0005) AM_READ_PORT("P3/P4")
@@ -640,7 +640,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( lgtnfght_main_map, AS_PROGRAM, 16, tmnt_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
-	AM_RANGE(0x080000, 0x080fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x080000, 0x080fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x090000, 0x093fff) AM_RAM	/*main RAM */
 	AM_RANGE(0x0a0000, 0x0a0001) AM_READ_PORT("COINS")
 	AM_RANGE(0x0a0002, 0x0a0003) AM_READ_PORT("P1")
@@ -652,7 +652,7 @@ static ADDRESS_MAP_START( lgtnfght_main_map, AS_PROGRAM, 16, tmnt_state )
 	AM_RANGE(0x0a0020, 0x0a0023) AM_DEVREAD8_LEGACY("k053260", punkshot_sound_r, 0x00ff)	/* K053260 */
 	AM_RANGE(0x0a0020, 0x0a0021) AM_DEVWRITE8_LEGACY("k053260", k053260_w, 0x00ff)
 	AM_RANGE(0x0a0028, 0x0a0029) AM_WRITE(watchdog_reset16_w)
-	AM_RANGE(0x0b0000, 0x0b3fff) AM_READWRITE(k053245_scattered_word_r, k053245_scattered_word_w) AM_BASE(m_spriteram)
+	AM_RANGE(0x0b0000, 0x0b3fff) AM_READWRITE(k053245_scattered_word_r, k053245_scattered_word_w) AM_SHARE("spriteram")
 	AM_RANGE(0x0c0000, 0x0c001f) AM_READWRITE(k053244_word_noA1_r, k053244_word_noA1_w)
 	AM_RANGE(0x0e0000, 0x0e001f) AM_DEVWRITE_LEGACY("k053251", k053251_lsb_w)
 	AM_RANGE(0x100000, 0x107fff) AM_READWRITE(k052109_word_noA12_r, k052109_word_noA12_w)
@@ -670,8 +670,8 @@ static ADDRESS_MAP_START( blswhstl_main_map, AS_PROGRAM, 16, tmnt_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x180000, 0x183fff) AM_DEVREADWRITE_LEGACY("k052109", k052109_word_r, k052109_word_w)
 	AM_RANGE(0x204000, 0x207fff) AM_RAM	/* main RAM */
-	AM_RANGE(0x300000, 0x303fff) AM_READWRITE(k053245_scattered_word_r, k053245_scattered_word_w) AM_BASE(m_spriteram)
-	AM_RANGE(0x400000, 0x400fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x300000, 0x303fff) AM_READWRITE(k053245_scattered_word_r, k053245_scattered_word_w) AM_SHARE("spriteram")
+	AM_RANGE(0x400000, 0x400fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x500000, 0x50003f) AM_DEVREADWRITE_LEGACY("k054000", k054000_lsb_r, k054000_lsb_w)
 	AM_RANGE(0x680000, 0x68001f) AM_READWRITE(k053244_word_noA1_r, k053244_word_noA1_w)
 	AM_RANGE(0x700000, 0x700001) AM_READ_PORT("P1")
@@ -712,8 +712,8 @@ WRITE16_MEMBER(tmnt_state::k053251_glfgreat_w)
 static ADDRESS_MAP_START( glfgreat_main_map, AS_PROGRAM, 16, tmnt_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x100000, 0x103fff) AM_RAM	/* main RAM */
-	AM_RANGE(0x104000, 0x107fff) AM_READWRITE(k053245_scattered_word_r, k053245_scattered_word_w) AM_BASE(m_spriteram)
-	AM_RANGE(0x108000, 0x108fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x104000, 0x107fff) AM_READWRITE(k053245_scattered_word_r, k053245_scattered_word_w) AM_SHARE("spriteram")
+	AM_RANGE(0x108000, 0x108fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x10c000, 0x10cfff) AM_DEVREADWRITE_LEGACY("k053936", k053936_linectrl_r, k053936_linectrl_w)	/* 053936? */
 	AM_RANGE(0x110000, 0x11001f) AM_WRITE(k053244_word_noA1_w)				/* duplicate! */
 	AM_RANGE(0x114000, 0x11401f) AM_DEVREADWRITE_LEGACY("k053245", k053244_lsb_r, k053244_lsb_w)	/* duplicate! */
@@ -736,8 +736,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( prmrsocr_main_map, AS_PROGRAM, 16, tmnt_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x100000, 0x103fff) AM_RAM	/* main RAM */
-	AM_RANGE(0x104000, 0x107fff) AM_READWRITE(k053245_scattered_word_r, k053245_scattered_word_w) AM_BASE(m_spriteram)
-	AM_RANGE(0x108000, 0x108fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x104000, 0x107fff) AM_READWRITE(k053245_scattered_word_r, k053245_scattered_word_w) AM_SHARE("spriteram")
+	AM_RANGE(0x108000, 0x108fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x10c000, 0x10cfff) AM_DEVREADWRITE_LEGACY("k053936", k053936_linectrl_r, k053936_linectrl_w)
 	AM_RANGE(0x110000, 0x11001f) AM_WRITE(k053244_word_noA1_w)				/* duplicate! */
 	AM_RANGE(0x114000, 0x11401f) AM_DEVREADWRITE_LEGACY("k053245", k053244_lsb_r, k053244_lsb_w)	/* duplicate! */
@@ -925,7 +925,7 @@ WRITE16_MEMBER(tmnt_state::tmnt2_1c0800_w)
 		CellSrc = m_tmnt2_1c0800[0x00] | (m_tmnt2_1c0800[0x01] << 16 );
 //        if (CellDest >= 0x180000 && CellDest < 0x183fe0) {
 		CellVar -= 0x104000;
-		src = (UINT16 *)(machine().region("maincpu")->base() + CellSrc);
+		src = (UINT16 *)(machine().root_device().memregion("maincpu")->base() + CellSrc);
 
 		CellVar >>= 1;
 
@@ -997,10 +997,10 @@ logerror("copy command %04x sprite %08x data %08x: %04x%04x %04x%04x  modifiers 
 #endif
 
 static ADDRESS_MAP_START( tmnt2_main_map, AS_PROGRAM, 16, tmnt_state )
-	AM_RANGE(0x000000, 0x0fffff) AM_ROM AM_BASE(m_tmnt2_rom)
-	AM_RANGE(0x104000, 0x107fff) AM_RAM AM_BASE(m_sunset_104000)	/* main RAM */
-	AM_RANGE(0x140000, 0x140fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x180000, 0x183fff) AM_RAM_WRITE(k053245_scattered_word_w) AM_BASE(m_spriteram)	// k053245_scattered_word_r
+	AM_RANGE(0x000000, 0x0fffff) AM_ROM AM_SHARE("tmnt2_rom")
+	AM_RANGE(0x104000, 0x107fff) AM_RAM AM_SHARE("sunset_104000")	/* main RAM */
+	AM_RANGE(0x140000, 0x140fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x180000, 0x183fff) AM_RAM_WRITE(k053245_scattered_word_w) AM_SHARE("spriteram")	// k053245_scattered_word_r
 	AM_RANGE(0x1c0000, 0x1c0001) AM_READ_PORT("P1")
 	AM_RANGE(0x1c0002, 0x1c0003) AM_READ_PORT("P2")
 	AM_RANGE(0x1c0004, 0x1c0005) AM_READ_PORT("P3")
@@ -1012,7 +1012,7 @@ static ADDRESS_MAP_START( tmnt2_main_map, AS_PROGRAM, 16, tmnt_state )
 	AM_RANGE(0x1c0400, 0x1c0401) AM_READWRITE(watchdog_reset16_r, watchdog_reset16_w)
 	AM_RANGE(0x1c0500, 0x1c057f) AM_RAM	/* TMNT2 only (1J) unknown, mostly MCU blit offsets */
 //  AM_RANGE(0x1c0800, 0x1c0801) AM_READ(ssriders_protection_r) /* protection device */
-	AM_RANGE(0x1c0800, 0x1c081f) AM_WRITE(tmnt2_1c0800_w) AM_BASE(m_tmnt2_1c0800)	/* protection device */
+	AM_RANGE(0x1c0800, 0x1c081f) AM_WRITE(tmnt2_1c0800_w) AM_SHARE("tmnt2_1c0800")	/* protection device */
 	AM_RANGE(0x5a0000, 0x5a001f) AM_READWRITE(k053244_word_noA1_r, k053244_word_noA1_w)
 	AM_RANGE(0x5c0600, 0x5c0603) AM_DEVREAD8_LEGACY("k053260", punkshot_sound_r, 0x00ff)	/* K053260 */
 	AM_RANGE(0x5c0600, 0x5c0601) AM_DEVWRITE8_LEGACY("k053260", k053260_w, 0x00ff)
@@ -1025,8 +1025,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( ssriders_main_map, AS_PROGRAM, 16, tmnt_state )
 	AM_RANGE(0x000000, 0x0bffff) AM_ROM
 	AM_RANGE(0x104000, 0x107fff) AM_RAM	/* main RAM */
-	AM_RANGE(0x140000, 0x140fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x180000, 0x183fff) AM_READWRITE(k053245_scattered_word_r, k053245_scattered_word_w) AM_BASE(m_spriteram)
+	AM_RANGE(0x140000, 0x140fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x180000, 0x183fff) AM_READWRITE(k053245_scattered_word_r, k053245_scattered_word_w) AM_SHARE("spriteram")
 	AM_RANGE(0x1c0000, 0x1c0001) AM_READ_PORT("P1")
 	AM_RANGE(0x1c0002, 0x1c0003) AM_READ_PORT("P2")
 	AM_RANGE(0x1c0004, 0x1c0005) AM_READ_PORT("P3")
@@ -1051,9 +1051,9 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sunsetbl_main_map, AS_PROGRAM, 16, tmnt_state )
 	AM_RANGE(0x000000, 0x0bffff) AM_ROM
 	AM_RANGE(0x104000, 0x107fff) AM_RAM	/* main RAM */
-	AM_RANGE(0x14c000, 0x14cfff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x14c000, 0x14cfff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x14e700, 0x14e71f) AM_DEVWRITE_LEGACY("k053251", k053251_lsb_w)
-	AM_RANGE(0x180000, 0x183fff) AM_READWRITE(k053245_scattered_word_r, k053245_scattered_word_w) AM_BASE(m_spriteram)
+	AM_RANGE(0x180000, 0x183fff) AM_READWRITE(k053245_scattered_word_r, k053245_scattered_word_w) AM_SHARE("spriteram")
 	AM_RANGE(0x184000, 0x18ffff) AM_RAM
 	AM_RANGE(0x1c0300, 0x1c0301) AM_WRITE(ssriders_1c0300_w)
 	AM_RANGE(0x1c0400, 0x1c0401) AM_WRITENOP
@@ -1077,7 +1077,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( thndrx2_main_map, AS_PROGRAM, 16, tmnt_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x100000, 0x103fff) AM_RAM	/* main RAM */
-	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x300000, 0x30001f) AM_DEVWRITE_LEGACY("k053251", k053251_lsb_w)
 	AM_RANGE(0x400000, 0x400003) AM_DEVREAD8_LEGACY("k053260", punkshot_sound_r, 0x00ff)	/* K053260 */
 	AM_RANGE(0x400000, 0x400001) AM_DEVWRITE8_LEGACY("k053260", k053260_w, 0x00ff)
@@ -1096,7 +1096,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( mia_audio_map, AS_PROGRAM, 8, tmnt_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r, k007232_w)
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 ADDRESS_MAP_END
@@ -1106,7 +1106,7 @@ static ADDRESS_MAP_START( tmnt_audio_map, AS_PROGRAM, 8, tmnt_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x9000, 0x9000) AM_READWRITE(tmnt_sres_r, tmnt_sres_w)	/* title music & UPD7759C reset */
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r, k007232_w)
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0xd000, 0xd000) AM_DEVWRITE_LEGACY("upd", upd7759_port_w)
@@ -1174,9 +1174,9 @@ static ADDRESS_MAP_START( prmrsocr_audio_map, AS_PROGRAM, 8, tmnt_state )
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
 	AM_RANGE(0xe000, 0xe0ff) AM_DEVREADWRITE("k054539", k054539_device, read, write)
 	AM_RANGE(0xe100, 0xe12f) AM_READWRITE(k054539_ctrl_r, k054539_ctrl_w)
-	AM_RANGE(0xf000, 0xf000) AM_WRITE(soundlatch3_w)
-	AM_RANGE(0xf002, 0xf002) AM_READ(soundlatch_r)
-	AM_RANGE(0xf003, 0xf003) AM_READ(soundlatch2_r)
+	AM_RANGE(0xf000, 0xf000) AM_WRITE(soundlatch3_byte_w)
+	AM_RANGE(0xf002, 0xf002) AM_READ(soundlatch_byte_r)
+	AM_RANGE(0xf003, 0xf003) AM_READ(soundlatch2_byte_r)
 	AM_RANGE(0xf800, 0xf800) AM_WRITE(prmrsocr_audio_bankswitch_w)
 ADDRESS_MAP_END
 
@@ -2038,7 +2038,7 @@ static void cuebrick_irq_handler( device_t *device, int state )
 
 static const ym2151_interface ym2151_interface_cbj =
 {
-	cuebrick_irq_handler
+	DEVCB_LINE(cuebrick_irq_handler)
 };
 
 static void volume_callback(device_t *device, int v)
@@ -2604,8 +2604,8 @@ static const k054539_interface k054539_config =
 static MACHINE_START( prmrsocr )
 {
 	MACHINE_START_CALL(common);
-	UINT8 *ROM = machine.region("audiocpu")->base();
-	memory_configure_bank(machine, "bank1", 0, 8, &ROM[0x10000], 0x4000);
+	UINT8 *ROM = machine.root_device().memregion("audiocpu")->base();
+	machine.root_device().membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
 }
 
 static MACHINE_CONFIG_START( prmrsocr, tmnt_state )
@@ -4079,8 +4079,8 @@ static DRIVER_INIT( mia )
         be shuffled around because the ROMs are connected differently to the
         051962 custom IC.
     */
-	gfxdata = machine.region("gfx1")->base();
-	len = machine.region("gfx1")->bytes();
+	gfxdata = machine.root_device().memregion("gfx1")->base();
+	len = machine.root_device().memregion("gfx1")->bytes();
 	for (i = 0; i < len; i += 4)
 	{
 		for (j = 0; j < 4; j++)
@@ -4100,8 +4100,8 @@ static DRIVER_INIT( mia )
         be shuffled around because the ROMs are connected differently to the
         051937 custom IC.
     */
-	gfxdata = machine.region("gfx2")->base();
-	len = machine.region("gfx2")->bytes();
+	gfxdata = machine.root_device().memregion("gfx2")->base();
+	len = machine.root_device().memregion("gfx2")->bytes();
 	for (i = 0; i < len; i += 4)
 	{
 		for (j = 0; j < 4; j++)
@@ -4172,8 +4172,8 @@ static DRIVER_INIT( tmnt )
         be shuffled around because the ROMs are connected differently to the
         051962 custom IC.
     */
-	gfxdata = machine.region("gfx1")->base();
-	len = machine.region("gfx1")->bytes();
+	gfxdata = machine.root_device().memregion("gfx1")->base();
+	len = machine.root_device().memregion("gfx1")->bytes();
 	for (i = 0; i < len; i += 4)
 	{
 		for (j = 0; j < 4; j++)
@@ -4193,8 +4193,8 @@ static DRIVER_INIT( tmnt )
         be shuffled around because the ROMs are connected differently to the
         051937 custom IC.
     */
-	gfxdata = machine.region("gfx2")->base();
-	len = machine.region("gfx2")->bytes();
+	gfxdata = machine.root_device().memregion("gfx2")->base();
+	len = machine.root_device().memregion("gfx2")->bytes();
 	for (i = 0; i < len; i += 4)
 	{
 		for (j = 0; j < 4; j++)
@@ -4211,7 +4211,7 @@ static DRIVER_INIT( tmnt )
 
 	temp = auto_alloc_array(machine, UINT8, len);
 	memcpy(temp, gfxdata, len);
-	code_conv_table = &machine.region("proms")->base()[0x0000];
+	code_conv_table = &machine.root_device().memregion("proms")->base()[0x0000];
 	for (A = 0; A < len / 4; A++)
 	{
 #define CA0 0

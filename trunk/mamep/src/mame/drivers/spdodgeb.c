@@ -31,7 +31,7 @@ Notes:
 
 WRITE8_MEMBER(spdodgeb_state::sound_command_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	cputag_set_input_line(machine(), "audiocpu", M6809_IRQ_LINE, HOLD_LINE);
 }
 
@@ -78,7 +78,7 @@ static void spd_adpcm_int(device_t *device)
 	}
 	else
 	{
-		UINT8 *ROM = device->machine().region("adpcm")->base() + 0x10000 * chip;
+		UINT8 *ROM = device->machine().root_device().memregion("adpcm")->base() + 0x10000 * chip;
 
 		state->m_adpcm_data[chip] = ROM[state->m_adpcm_pos[chip]++];
 		msm5205_data_w(device,state->m_adpcm_data[chip] >> 4);
@@ -246,8 +246,8 @@ READ8_MEMBER(spdodgeb_state::port_0_r)
 
 static ADDRESS_MAP_START( spdodgeb_map, AS_PROGRAM, 8, spdodgeb_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM
-	AM_RANGE(0x1000, 0x10ff) AM_WRITEONLY AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0x2000, 0x2fff) AM_RAM_WRITE(spdodgeb_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x1000, 0x10ff) AM_WRITEONLY AM_SHARE("spriteram")
+	AM_RANGE(0x2000, 0x2fff) AM_RAM_WRITE(spdodgeb_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x3000, 0x3000) AM_READ(port_0_r) //AM_WRITENOP
 	AM_RANGE(0x3001, 0x3001) AM_READ_PORT("DSW") //AM_WRITENOP
 	AM_RANGE(0x3002, 0x3002) AM_WRITE(sound_command_w)
@@ -263,7 +263,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( spdodgeb_sound_map, AS_PROGRAM, 8, spdodgeb_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM
-	AM_RANGE(0x1000, 0x1000) AM_READ(soundlatch_r)
+	AM_RANGE(0x1000, 0x1000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x2800, 0x2801) AM_DEVWRITE_LEGACY("ymsnd", ym3812_w)
 	AM_RANGE(0x3800, 0x3807) AM_WRITE(spd_adpcm_w)
 	AM_RANGE(0x8000, 0xffff) AM_ROM

@@ -118,7 +118,13 @@ class jalmah_state : public driver_device
 {
 public:
 	jalmah_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_sc0_vram(*this, "sc0_vram"),
+		m_sc1_vram(*this, "sc1_vram"),
+		m_sc2_vram(*this, "sc2_vram"),
+		m_sc3_vram(*this, "sc3_vram"),
+		m_jm_shared_ram(*this, "jshared_ram"),
+		m_jm_mcu_code(*this, "jmcu_code"){ }
 
 	tilemap_t *m_sc0_tilemap_0;
 	tilemap_t *m_sc0_tilemap_1;
@@ -135,10 +141,10 @@ public:
 	tilemap_t *m_sc3_tilemap_0;
 	tilemap_t *m_sc3_tilemap_2;
 	tilemap_t *m_sc3_tilemap_3;
-	UINT16 *m_sc0_vram;
-	UINT16 *m_sc1_vram;
-	UINT16 *m_sc2_vram;
-	UINT16 *m_sc3_vram;
+	required_shared_ptr<UINT16> m_sc0_vram;
+	optional_shared_ptr<UINT16> m_sc1_vram;
+	optional_shared_ptr<UINT16> m_sc2_vram;
+	required_shared_ptr<UINT16> m_sc3_vram;
 	UINT16 *m_jm_scrollram;
 	UINT16 *m_jm_vregs;
 	UINT16 m_sc0bank;
@@ -147,8 +153,8 @@ public:
 	UINT8 m_sc1_prin;
 	UINT8 m_sc2_prin;
 	UINT8 m_sc3_prin;
-	UINT16 *m_jm_shared_ram;
-	UINT16 *m_jm_mcu_code;
+	required_shared_ptr<UINT16> m_jm_shared_ram;
+	required_shared_ptr<UINT16> m_jm_mcu_code;
 	UINT8 m_mcu_prg;
 	int m_respcount;
 	UINT8 m_test_mode;
@@ -347,7 +353,7 @@ priority = 8, then 4, 2 and finally 1).
 static void jalmah_priority_system(running_machine &machine)
 {
 	jalmah_state *state = machine.driver_data<jalmah_state>();
-	UINT8 *pri_rom = machine.region("user1")->base();
+	UINT8 *pri_rom = state->memregion("user1")->base();
 	UINT8 i;
 	UINT8 prinum[0x10];
 
@@ -944,7 +950,7 @@ WRITE16_MEMBER(jalmah_state::jalmah_okirom_w)
 {
 	if(ACCESSING_BITS_0_7)
 	{
-		UINT8 *oki = machine().region("oki")->base();
+		UINT8 *oki = memregion("oki")->base();
 
 		m_oki_rom = data & 1;
 
@@ -961,7 +967,7 @@ WRITE16_MEMBER(jalmah_state::jalmah_okibank_w)
 {
 	if(ACCESSING_BITS_0_7)
 	{
-		UINT8 *oki = machine().region("oki")->base();
+		UINT8 *oki = memregion("oki")->base();
 
 		m_oki_bank = data & 3;
 
@@ -974,7 +980,7 @@ WRITE16_MEMBER(jalmah_state::jalmah_okibank_w)
 WRITE16_MEMBER(jalmah_state::jalmah_flip_screen_w)
 {
 	/*---- ----x flip screen*/
-	flip_screen_set(machine(), data & 1);
+	flip_screen_set(data & 1);
 
 //  popmessage("%04x",data);
 }
@@ -993,14 +999,14 @@ static ADDRESS_MAP_START( jalmah, AS_PROGRAM, 16, jalmah_state )
 /**/AM_RANGE(0x080020, 0x08003f) AM_RAM_WRITE(jalmah_scroll_w)
 	AM_RANGE(0x080040, 0x080041) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
 	//       0x084000, 0x084001  ?
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram") /* Palette RAM */
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(sc0_vram_w) AM_BASE(m_sc0_vram)
-	AM_RANGE(0x094000, 0x097fff) AM_RAM_WRITE(sc1_vram_w) AM_BASE(m_sc1_vram)
-	AM_RANGE(0x098000, 0x09bfff) AM_RAM_WRITE(sc2_vram_w) AM_BASE(m_sc2_vram)
-	AM_RANGE(0x09c000, 0x09ffff) AM_RAM_WRITE(sc3_vram_w) AM_BASE(m_sc3_vram)
-	AM_RANGE(0x0f0000, 0x0f0fff) AM_RAM AM_BASE(m_jm_shared_ram)/*shared with MCU*/
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram") /* Palette RAM */
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(sc0_vram_w) AM_SHARE("sc0_vram")
+	AM_RANGE(0x094000, 0x097fff) AM_RAM_WRITE(sc1_vram_w) AM_SHARE("sc1_vram")
+	AM_RANGE(0x098000, 0x09bfff) AM_RAM_WRITE(sc2_vram_w) AM_SHARE("sc2_vram")
+	AM_RANGE(0x09c000, 0x09ffff) AM_RAM_WRITE(sc3_vram_w) AM_SHARE("sc3_vram")
+	AM_RANGE(0x0f0000, 0x0f0fff) AM_RAM AM_SHARE("jshared_ram")/*shared with MCU*/
 	AM_RANGE(0x0f1000, 0x0fffff) AM_RAM /*Work Ram*/
-	AM_RANGE(0x100000, 0x10ffff) AM_RAM AM_BASE(m_jm_mcu_code)/*extra RAM for MCU code prg (NOT ON REAL HW!!!)*/
+	AM_RANGE(0x100000, 0x10ffff) AM_RAM AM_SHARE("jmcu_code")/*extra RAM for MCU code prg (NOT ON REAL HW!!!)*/
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( urashima, AS_PROGRAM, 16, jalmah_state )
@@ -1017,19 +1023,19 @@ static ADDRESS_MAP_START( urashima, AS_PROGRAM, 16, jalmah_state )
 /**/AM_RANGE(0x08001c, 0x08001d) AM_RAM_WRITE(urashima_bank_w)
 	AM_RANGE(0x080040, 0x080041) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
 	//       0x084000, 0x084001  ?
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram") /* Palette RAM */
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(urashima_sc0_vram_w) AM_BASE(m_sc0_vram)
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram") /* Palette RAM */
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(urashima_sc0_vram_w) AM_SHARE("sc0_vram")
 	AM_RANGE(0x094000, 0x097fff) AM_RAM_WRITE(urashima_sc0_vram_w)
 	AM_RANGE(0x098000, 0x09bfff) AM_RAM_WRITE(urashima_sc0_vram_w)
-//  AM_RANGE(0x094000, 0x097fff) AM_RAM_WRITE_LEGACY(urashima_sc1_vram_w) AM_BASE(m_sc1_vram)/*unused*/
-//  AM_RANGE(0x098000, 0x09bfff) AM_RAM_WRITE_LEGACY(urashima_sc2_vram_w) AM_BASE(m_sc2_vram)/*unused*/
+//  AM_RANGE(0x094000, 0x097fff) AM_RAM_WRITE_LEGACY(urashima_sc1_vram_w) AM_SHARE("sc1_vram")/*unused*/
+//  AM_RANGE(0x098000, 0x09bfff) AM_RAM_WRITE_LEGACY(urashima_sc2_vram_w) AM_SHARE("sc2_vram")/*unused*/
 	/*$9c000-$9cfff Video Registers*/
 /**/AM_RANGE(0x09c000, 0x09dfff) AM_WRITE(urashima_vregs_w)
 /**///AM_RANGE(0x09c480, 0x09c49f) AM_RAM_WRITE_LEGACY(urashima_sc2vregs_w)
-	AM_RANGE(0x09e000, 0x0a1fff) AM_RAM_WRITE(urashima_sc3_vram_w) AM_BASE(m_sc3_vram)
-	AM_RANGE(0x0f0000, 0x0f0fff) AM_RAM AM_BASE(m_jm_shared_ram)/*shared with MCU*/
+	AM_RANGE(0x09e000, 0x0a1fff) AM_RAM_WRITE(urashima_sc3_vram_w) AM_SHARE("sc3_vram")
+	AM_RANGE(0x0f0000, 0x0f0fff) AM_RAM AM_SHARE("jshared_ram")/*shared with MCU*/
 	AM_RANGE(0x0f1000, 0x0fffff) AM_RAM /*Work Ram*/
-	AM_RANGE(0x100000, 0x10ffff) AM_RAM AM_BASE(m_jm_mcu_code)/*extra RAM for MCU code prg (NOT ON REAL HW!!!)*/
+	AM_RANGE(0x100000, 0x10ffff) AM_RAM AM_SHARE("jmcu_code")/*extra RAM for MCU code prg (NOT ON REAL HW!!!)*/
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( common )

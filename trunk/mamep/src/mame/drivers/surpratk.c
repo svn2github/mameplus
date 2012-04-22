@@ -47,9 +47,9 @@ WRITE8_MEMBER(surpratk_state::bankedram_w)
 	if (m_videobank & 0x02)
 	{
 		if (m_videobank & 0x04)
-			paletteram_xBBBBBGGGGGRRRRR_be_w(space,offset + 0x0800,data);
+			paletteram_xBBBBBGGGGGRRRRR_byte_be_w(space,offset + 0x0800,data);
 		else
-			paletteram_xBBBBBGGGGGRRRRR_be_w(space,offset,data);
+			paletteram_xBBBBBGGGGGRRRRR_byte_be_w(space,offset,data);
 	}
 	else if (m_videobank & 0x01)
 		k053245_w(m_k053244, offset, data);
@@ -87,7 +87,7 @@ WRITE8_MEMBER(surpratk_state::surpratk_5fc0_w)
 /********************************************/
 
 static ADDRESS_MAP_START( surpratk_map, AS_PROGRAM, 8, surpratk_state )
-	AM_RANGE(0x0000, 0x07ff) AM_READWRITE(bankedram_r, bankedram_w) AM_BASE(m_ram)
+	AM_RANGE(0x0000, 0x07ff) AM_READWRITE(bankedram_r, bankedram_w) AM_SHARE("ram")
 	AM_RANGE(0x0800, 0x1fff) AM_RAM
 	AM_RANGE(0x2000, 0x3fff) AM_ROMBANK("bank1")					/* banked ROM */
 	AM_RANGE(0x5f8c, 0x5f8c) AM_READ_PORT("P1")
@@ -166,7 +166,7 @@ static void irqhandler( device_t *device, int linestate )
 
 static const ym2151_interface ym2151_config =
 {
-	irqhandler
+	DEVCB_LINE(irqhandler)
 };
 
 
@@ -191,11 +191,11 @@ static const k05324x_interface surpratk_k05324x_intf =
 static MACHINE_START( surpratk )
 {
 	surpratk_state *state = machine.driver_data<surpratk_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 28, &ROM[0x10000], 0x2000);
-	memory_configure_bank(machine, "bank1", 28, 4, &ROM[0x08000], 0x2000);
-	memory_set_bank(machine, "bank1", 0);
+	state->membank("bank1")->configure_entries(0, 28, &ROM[0x10000], 0x2000);
+	state->membank("bank1")->configure_entries(28, 4, &ROM[0x08000], 0x2000);
+	state->membank("bank1")->set_entry(0);
 
 	state->m_generic_paletteram_8.allocate(0x1000);
 
@@ -323,7 +323,7 @@ ROM_END
 static KONAMI_SETLINES_CALLBACK( surpratk_banking )
 {
 	logerror("%04x: setlines %02x\n",cpu_get_pc(device), lines);
-	memory_set_bank(device->machine(), "bank1", lines & 0x1f);
+	device->machine().root_device().membank("bank1")->set_entry(lines & 0x1f);
 }
 
 

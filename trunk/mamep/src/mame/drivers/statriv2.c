@@ -80,11 +80,13 @@ class statriv2_state : public driver_device
 {
 public:
 	statriv2_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"),
+		m_question_offset(*this, "question_offset"){ }
 
-	UINT8 *m_videoram;
+	required_shared_ptr<UINT8> m_videoram;
 	tilemap_t *m_tilemap;
-	UINT8 *m_question_offset;
+	required_shared_ptr<UINT8> m_question_offset;
 	UINT8 m_question_offset_low;
 	UINT8 m_question_offset_mid;
 	UINT8 m_question_offset_high;
@@ -94,6 +96,7 @@ public:
 	DECLARE_READ8_MEMBER(question_data_r);
 	DECLARE_READ8_MEMBER(laserdisc_io_r);
 	DECLARE_WRITE8_MEMBER(laserdisc_io_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(latched_coin_r);
 };
 
 
@@ -221,8 +224,8 @@ static INTERRUPT_GEN( statriv2_interrupt )
 
 READ8_MEMBER(statriv2_state::question_data_r)
 {
-	const UINT8 *qrom = machine().region("questions")->base();
-	UINT32 qromsize = machine().region("questions")->bytes();
+	const UINT8 *qrom = memregion("questions")->base();
+	UINT32 qromsize = memregion("questions")->bytes();
 	UINT32 address;
 
 	if (m_question_offset_high == 0xff)
@@ -244,10 +247,9 @@ READ8_MEMBER(statriv2_state::question_data_r)
  *
  *************************************/
 
-static CUSTOM_INPUT( latched_coin_r )
+CUSTOM_INPUT_MEMBER(statriv2_state::latched_coin_r)
 {
-	statriv2_state *state = field.machine().driver_data<statriv2_state>();
-	return state->m_latched_coin;
+	return m_latched_coin;
 }
 
 
@@ -294,12 +296,12 @@ static ADDRESS_MAP_START( statriv2_map, AS_PROGRAM, 8, statriv2_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x43ff) AM_RAM
 	AM_RANGE(0x4800, 0x48ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(statriv2_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(statriv2_videoram_w) AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( statriv2_io_map, AS_IO, 8, statriv2_state )
 	AM_RANGE(0x20, 0x23) AM_DEVREADWRITE_LEGACY("ppi", ppi8255_r, ppi8255_w)
-	AM_RANGE(0x28, 0x2b) AM_READ(question_data_r) AM_WRITEONLY AM_BASE(m_question_offset)
+	AM_RANGE(0x28, 0x2b) AM_READ(question_data_r) AM_WRITEONLY AM_SHARE("question_offset")
 	AM_RANGE(0xb0, 0xb1) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w)
 	AM_RANGE(0xb1, 0xb1) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
 	AM_RANGE(0xc0, 0xcf) AM_DEVREADWRITE_LEGACY("tms", tms9927_r, tms9927_w)
@@ -337,7 +339,7 @@ static INPUT_PORTS_START( statusbj )
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(latched_coin_r, "COIN")
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, statriv2_state,latched_coin_r, "COIN")
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_DIPNAME( 0x30, 0x00, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
@@ -370,7 +372,7 @@ static INPUT_PORTS_START( funcsino )
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_NAME("Stand")         PORT_CODE(KEYCODE_4)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_NAME("Select Game")   PORT_CODE(KEYCODE_S)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(latched_coin_r, "COIN")
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, statriv2_state,latched_coin_r, "COIN")
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_DIPNAME( 0x10, 0x10, "DIP switch? 10" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
@@ -445,7 +447,7 @@ static INPUT_PORTS_START( statriv2 )
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE1 ) PORT_NAME("Play 1000")
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(latched_coin_r, "COIN")
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, statriv2_state,latched_coin_r, "COIN")
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_SERVICE( 0x10, IP_ACTIVE_HIGH )
 	PORT_DIPNAME( 0x20, 0x20, "Show Correct Answer" )
@@ -1100,8 +1102,8 @@ static DRIVER_INIT( addr_lmhe )
     *                                                   *
     \***************************************************/
 
-	UINT8 *qrom = machine.region("questions")->base();
-	UINT32 length = machine.region("questions")->bytes();
+	UINT8 *qrom = machine.root_device().memregion("questions")->base();
+	UINT32 length = machine.root_device().memregion("questions")->bytes();
 	UINT32 address;
 
 	for (address = 0; address < length; address++)

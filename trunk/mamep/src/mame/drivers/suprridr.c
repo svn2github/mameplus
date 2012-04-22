@@ -165,10 +165,10 @@ WRITE8_MEMBER(suprridr_state::coin_lock_w)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, suprridr_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x8800, 0x8bff) AM_RAM_WRITE(suprridr_bgram_w) AM_BASE(m_bgram)
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(suprridr_fgram_w) AM_BASE(m_fgram)
+	AM_RANGE(0x8800, 0x8bff) AM_RAM_WRITE(suprridr_bgram_w) AM_SHARE("bgram")
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(suprridr_fgram_w) AM_SHARE("fgram")
 	AM_RANGE(0x9800, 0x983f) AM_RAM
-	AM_RANGE(0x9840, 0x987f) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x9840, 0x987f) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x9880, 0x9bff) AM_RAM
 	AM_RANGE(0xa000, 0xa000) AM_READ_PORT("INPUTS")
 	AM_RANGE(0xa800, 0xa800) AM_READ_PORT("SYSTEM")
@@ -224,15 +224,15 @@ ADDRESS_MAP_END
 #define SUPRRIDR_P1_CONTROL_PORT_TAG	("CONTP1")
 #define SUPRRIDR_P2_CONTROL_PORT_TAG	("CONTP2")
 
-static CUSTOM_INPUT( suprridr_control_r )
+CUSTOM_INPUT_MEMBER(suprridr_state::suprridr_control_r)
 {
 	UINT32 ret;
 
 	/* screen flip multiplexes controls */
-	if (suprridr_is_screen_flipped(field.machine()))
-		ret = input_port_read(field.machine(), SUPRRIDR_P2_CONTROL_PORT_TAG);
+	if (suprridr_is_screen_flipped(machine()))
+		ret = input_port_read(machine(), SUPRRIDR_P2_CONTROL_PORT_TAG);
 	else
-		ret = input_port_read(field.machine(), SUPRRIDR_P1_CONTROL_PORT_TAG);
+		ret = input_port_read(machine(), SUPRRIDR_P1_CONTROL_PORT_TAG);
 
 	return ret;
 }
@@ -240,7 +240,7 @@ static CUSTOM_INPUT( suprridr_control_r )
 
 static INPUT_PORTS_START( suprridr )
 	PORT_START("INPUTS")
-	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(suprridr_control_r, NULL)
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, suprridr_state,suprridr_control_r, NULL)
 
 	PORT_START("SYSTEM")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )

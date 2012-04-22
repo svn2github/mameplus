@@ -44,7 +44,7 @@
 
 WRITE8_MEMBER(crgolf_state::rom_bank_select_w)
 {
-	memory_set_bank(machine(), "bank1", data & 15);
+	membank("bank1")->set_entry(data & 15);
 }
 
 
@@ -56,8 +56,8 @@ static MACHINE_START( crgolf )
 	state->m_audiocpu = machine.device("audiocpu");
 
 	/* configure the banking */
-	memory_configure_bank(machine, "bank1", 0, 16, machine.region("maincpu")->base() + 0x10000, 0x2000);
-	memory_set_bank(machine, "bank1", 0);
+	state->membank("bank1")->configure_entries(0, 16, state->memregion("maincpu")->base() + 0x10000, 0x2000);
+	state->membank("bank1")->set_entry(0);
 
 	/* register for save states */
 	state->save_item(NAME(state->m_port_select));
@@ -193,7 +193,7 @@ static void vck_callback( device_t *device )
 	/* only play back if we have data remaining */
 	if (state->m_sample_count != 0xff)
 	{
-		UINT8 data = device->machine().region("adpcm")->base()[state->m_sample_offset >> 1];
+		UINT8 data = state->memregion("adpcm")->base()[state->m_sample_offset >> 1];
 
 		/* write the next nibble and advance */
 		msm5205_data_w(device, (data >> (4 * (~state->m_sample_offset & 1))) & 0x0f);
@@ -252,11 +252,11 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, crgolf_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x5fff) AM_RAM
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank1")
-	AM_RANGE(0x8003, 0x8003) AM_WRITEONLY AM_BASE(m_color_select)
-	AM_RANGE(0x8004, 0x8004) AM_WRITEONLY AM_BASE(m_screen_flip)
-	AM_RANGE(0x8005, 0x8005) AM_WRITEONLY AM_BASE(m_screen_select)
-	AM_RANGE(0x8006, 0x8006) AM_WRITEONLY AM_BASE(m_screenb_enable)
-	AM_RANGE(0x8007, 0x8007) AM_WRITEONLY AM_BASE(m_screena_enable)
+	AM_RANGE(0x8003, 0x8003) AM_WRITEONLY AM_SHARE("color_select")
+	AM_RANGE(0x8004, 0x8004) AM_WRITEONLY AM_SHARE("screen_flip")
+	AM_RANGE(0x8005, 0x8005) AM_WRITEONLY AM_SHARE("screen_select")
+	AM_RANGE(0x8006, 0x8006) AM_WRITEONLY AM_SHARE("screenb_enable")
+	AM_RANGE(0x8007, 0x8007) AM_WRITEONLY AM_SHARE("screena_enable")
 	AM_RANGE(0x8800, 0x8800) AM_READWRITE(sound_to_main_r, main_to_sound_w)
 	AM_RANGE(0x9000, 0x9000) AM_WRITE(rom_bank_select_w)
 	AM_RANGE(0xa000, 0xffff) AM_READWRITE(crgolf_videoram_r, crgolf_videoram_w)

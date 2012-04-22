@@ -51,7 +51,7 @@ static TIMER_DEVICE_CALLBACK(targeth_interrupt )
 
 WRITE16_MEMBER(targeth_state::OKIM6295_bankswitch_w)
 {
-	UINT8 *RAM = machine().region("oki")->base();
+	UINT8 *RAM = memregion("oki")->base();
 
 	if (ACCESSING_BITS_0_7){
 		memcpy(&RAM[0x30000], &RAM[0x40000 + (data & 0x0f)*0x10000], 0x10000);
@@ -65,16 +65,16 @@ WRITE16_MEMBER(targeth_state::targeth_coin_counter_w)
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, targeth_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
-	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(targeth_vram_w) AM_BASE(m_videoram)	/* Video RAM */
-	AM_RANGE(0x108000, 0x108007) AM_WRITEONLY AM_BASE(m_vregs)	/* Video Registers */
+	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(targeth_vram_w) AM_SHARE("videoram")	/* Video RAM */
+	AM_RANGE(0x108000, 0x108007) AM_WRITEONLY AM_SHARE("vregs")	/* Video Registers */
 	AM_RANGE(0x108000, 0x108001) AM_READ_PORT("GUNX1")
 	AM_RANGE(0x108002, 0x108003) AM_READ_PORT("GUNY1")
 	AM_RANGE(0x108004, 0x108005) AM_READ_PORT("GUNX2")
 	AM_RANGE(0x108006, 0x108007) AM_READ_PORT("GUNY2")
-	AM_RANGE(0x108000, 0x108007) AM_WRITEONLY AM_BASE(m_vregs)	/* Video Registers */
+	AM_RANGE(0x108000, 0x108007) AM_WRITEONLY AM_SHARE("vregs")	/* Video Registers */
 	AM_RANGE(0x10800c, 0x10800d) AM_WRITENOP					/* CLR Video INT */
-	AM_RANGE(0x200000, 0x2007ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")	/* Palette */
-	AM_RANGE(0x440000, 0x440fff) AM_RAM AM_BASE(m_spriteram)	/* Sprite RAM */
+	AM_RANGE(0x200000, 0x2007ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")	/* Palette */
+	AM_RANGE(0x440000, 0x440fff) AM_RAM AM_SHARE("spriteram")	/* Sprite RAM */
 	AM_RANGE(0x700000, 0x700001) AM_READ_PORT("DSW2")
 	AM_RANGE(0x700002, 0x700003) AM_READ_PORT("DSW1")
 	AM_RANGE(0x700006, 0x700007) AM_READ_PORT("SYSTEM")				/* Coins, Start & Fire buttons */

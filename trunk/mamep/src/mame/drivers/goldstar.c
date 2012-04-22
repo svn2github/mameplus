@@ -140,14 +140,14 @@ static ADDRESS_MAP_START( goldstar_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0x0000, 0xb7ff) AM_ROM
 	AM_RANGE(0xb800, 0xbfff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0xc000, 0xc7ff) AM_ROM
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(goldstar_fg_vidram_w ) AM_BASE(m_fg_vidram)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(goldstar_fg_atrram_w ) AM_BASE(m_fg_atrram)
-	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE(goldstar_reel1_ram_w ) AM_BASE(m_reel1_ram)
-	AM_RANGE(0xe000, 0xe1ff) AM_RAM_WRITE(goldstar_reel2_ram_w ) AM_BASE(m_reel2_ram)
-	AM_RANGE(0xe800, 0xe9ff) AM_RAM_WRITE(goldstar_reel3_ram_w ) AM_BASE(m_reel3_ram)
-	AM_RANGE(0xf040, 0xf07f) AM_RAM AM_BASE(m_reel1_scroll)
-	AM_RANGE(0xf080, 0xf0bf) AM_RAM AM_BASE(m_reel2_scroll)
-	AM_RANGE(0xf0c0, 0xf0ff) AM_RAM AM_BASE(m_reel3_scroll)
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(goldstar_fg_vidram_w ) AM_SHARE("fg_vidram")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(goldstar_fg_atrram_w ) AM_SHARE("fg_atrram")
+	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE(goldstar_reel1_ram_w ) AM_SHARE("reel1_ram")
+	AM_RANGE(0xe000, 0xe1ff) AM_RAM_WRITE(goldstar_reel2_ram_w ) AM_SHARE("reel2_ram")
+	AM_RANGE(0xe800, 0xe9ff) AM_RAM_WRITE(goldstar_reel3_ram_w ) AM_SHARE("reel3_ram")
+	AM_RANGE(0xf040, 0xf07f) AM_RAM AM_SHARE("reel1_scroll")
+	AM_RANGE(0xf080, 0xf0bf) AM_RAM AM_SHARE("reel2_scroll")
+	AM_RANGE(0xf0c0, 0xf0ff) AM_RAM AM_SHARE("reel3_scroll")
 
 	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("IN0")
 	AM_RANGE(0xf801, 0xf801) AM_READ_PORT("IN1")	/* Test Mode */
@@ -163,7 +163,7 @@ static ADDRESS_MAP_START( goldstar_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0xf840, 0xf840) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)
 	AM_RANGE(0xfa00, 0xfa00) AM_WRITE(goldstar_fa00_w)
 	AM_RANGE(0xfb00, 0xfb00) AM_DEVREADWRITE("oki", okim6295_device, read, write)
-	AM_RANGE(0xfd00, 0xfdff) AM_RAM_WRITE(paletteram_BBGGGRRR_w) AM_SHARE("paletteram")
+	AM_RANGE(0xfd00, 0xfdff) AM_RAM_WRITE(paletteram_BBGGGRRR_byte_w) AM_SHARE("paletteram")
 	AM_RANGE(0xfe00, 0xfe00) AM_READWRITE(protection_r,protection_w)
 ADDRESS_MAP_END
 
@@ -183,14 +183,14 @@ static ADDRESS_MAP_START( ncb3_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0x0000, 0xb7ff) AM_ROM
 	AM_RANGE(0xb800, 0xbfff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0xc000, 0xc7ff) AM_ROM
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE(m_fg_vidram)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE(m_fg_atrram)
-	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE(m_reel1_ram)
-	AM_RANGE(0xe000, 0xe1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE(m_reel2_ram)
-	AM_RANGE(0xe800, 0xe9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE(m_reel3_ram)
-	AM_RANGE(0xf040, 0xf07f) AM_RAM AM_BASE(m_reel1_scroll)
-	AM_RANGE(0xf080, 0xf0bf) AM_RAM AM_BASE(m_reel2_scroll)
-	AM_RANGE(0xf100, 0xf17f) AM_RAM AM_BASE(m_reel3_scroll) // moved compared to goldstar
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_SHARE("fg_vidram")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_SHARE("fg_atrram")
+	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_SHARE("reel1_ram")
+	AM_RANGE(0xe000, 0xe1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_SHARE("reel2_ram")
+	AM_RANGE(0xe800, 0xe9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_SHARE("reel3_ram")
+	AM_RANGE(0xf040, 0xf07f) AM_RAM AM_SHARE("reel1_scroll")
+	AM_RANGE(0xf080, 0xf0bf) AM_RAM AM_SHARE("reel2_scroll")
+	AM_RANGE(0xf100, 0xf17f) AM_RAM AM_SHARE("reel3_scroll") // moved compared to goldstar
 
 	AM_RANGE(0xf800, 0xf803) AM_DEVREADWRITE_LEGACY("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports */
 	AM_RANGE(0xf810, 0xf813) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)	/* Input Ports */
@@ -257,19 +257,19 @@ static ADDRESS_MAP_START( cm_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("nvram")
 
 
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE(m_fg_vidram)
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE(m_fg_atrram)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_SHARE("fg_vidram")
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_SHARE("fg_atrram")
 
-	AM_RANGE(0xf000, 0xf1ff) AM_RAM_WRITE(goldstar_reel1_ram_w ) AM_BASE(m_reel1_ram)
-	AM_RANGE(0xf200, 0xf3ff) AM_RAM_WRITE(goldstar_reel2_ram_w ) AM_BASE(m_reel2_ram)
-	AM_RANGE(0xf400, 0xf5ff) AM_RAM_WRITE(goldstar_reel3_ram_w ) AM_BASE(m_reel3_ram)
+	AM_RANGE(0xf000, 0xf1ff) AM_RAM_WRITE(goldstar_reel1_ram_w ) AM_SHARE("reel1_ram")
+	AM_RANGE(0xf200, 0xf3ff) AM_RAM_WRITE(goldstar_reel2_ram_w ) AM_SHARE("reel2_ram")
+	AM_RANGE(0xf400, 0xf5ff) AM_RAM_WRITE(goldstar_reel3_ram_w ) AM_SHARE("reel3_ram")
 	AM_RANGE(0xf600, 0xf7ff) AM_RAM
 
-	AM_RANGE(0xf800, 0xf87f) AM_RAM AM_BASE(m_reel1_scroll)
+	AM_RANGE(0xf800, 0xf87f) AM_RAM AM_SHARE("reel1_scroll")
 	AM_RANGE(0xf880, 0xf9ff) AM_RAM
-	AM_RANGE(0xfa00, 0xfa7f) AM_RAM AM_BASE(m_reel2_scroll)
+	AM_RANGE(0xfa00, 0xfa7f) AM_RAM AM_SHARE("reel2_scroll")
 	AM_RANGE(0xfa80, 0xfbff) AM_RAM
-	AM_RANGE(0xfc00, 0xfc7f) AM_RAM AM_BASE(m_reel3_scroll)
+	AM_RANGE(0xfc00, 0xfc7f) AM_RAM AM_SHARE("reel3_scroll")
 	AM_RANGE(0xfc80, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -279,19 +279,19 @@ static ADDRESS_MAP_START( nfm_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("nvram")
 
 
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE(m_fg_vidram)
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE(m_fg_atrram)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_SHARE("fg_vidram")
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_SHARE("fg_atrram")
 
-	AM_RANGE(0xf000, 0xf1ff) AM_RAM_WRITE(goldstar_reel1_ram_w ) AM_BASE(m_reel1_ram)
-	AM_RANGE(0xf200, 0xf3ff) AM_RAM_WRITE(goldstar_reel2_ram_w ) AM_BASE(m_reel2_ram)
-	AM_RANGE(0xf400, 0xf5ff) AM_RAM_WRITE(goldstar_reel3_ram_w ) AM_BASE(m_reel3_ram)
+	AM_RANGE(0xf000, 0xf1ff) AM_RAM_WRITE(goldstar_reel1_ram_w ) AM_SHARE("reel1_ram")
+	AM_RANGE(0xf200, 0xf3ff) AM_RAM_WRITE(goldstar_reel2_ram_w ) AM_SHARE("reel2_ram")
+	AM_RANGE(0xf400, 0xf5ff) AM_RAM_WRITE(goldstar_reel3_ram_w ) AM_SHARE("reel3_ram")
 	AM_RANGE(0xf600, 0xf7ff) AM_RAM
 
-	AM_RANGE(0xf800, 0xf87f) AM_RAM AM_BASE(m_reel1_scroll)
+	AM_RANGE(0xf800, 0xf87f) AM_RAM AM_SHARE("reel1_scroll")
 	AM_RANGE(0xf880, 0xf9ff) AM_RAM
-	AM_RANGE(0xfa00, 0xfa7f) AM_RAM AM_BASE(m_reel2_scroll)
+	AM_RANGE(0xfa00, 0xfa7f) AM_RAM AM_SHARE("reel2_scroll")
 	AM_RANGE(0xfa80, 0xfbff) AM_RAM
-	AM_RANGE(0xfc00, 0xfc7f) AM_RAM AM_BASE(m_reel3_scroll)
+	AM_RANGE(0xfc00, 0xfc7f) AM_RAM AM_SHARE("reel3_scroll")
 	AM_RANGE(0xfc80, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -362,14 +362,14 @@ WRITE8_MEMBER(goldstar_state::lucky8_outport_w)
 static ADDRESS_MAP_START( lucky8_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE(m_fg_vidram)
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE(m_fg_atrram)
-	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE(m_reel1_ram)
-	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE(m_reel2_ram)
-	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE(m_reel3_ram)
-	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE(m_reel1_scroll)
-	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE(m_reel2_scroll)
-	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE(m_reel3_scroll)
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_SHARE("fg_vidram")
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_SHARE("fg_atrram")
+	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_SHARE("reel1_ram")
+	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_SHARE("reel2_ram")
+	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_SHARE("reel3_ram")
+	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_SHARE("reel1_scroll")
+	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_SHARE("reel2_scroll")
+	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_SHARE("reel3_scroll")
 
 	AM_RANGE(0xb800, 0xb803) AM_DEVREADWRITE_LEGACY("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports */
 	AM_RANGE(0xb810, 0xb813) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)	/* Input Ports */
@@ -405,15 +405,15 @@ WRITE8_MEMBER(goldstar_state::magodds_outb860_w)
 static ADDRESS_MAP_START(magodds_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	// where does the extra rom data map?? it seems like it should come straight after the existing rom, but it can't if this is a plain z80?
-	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("share1") AM_SHARE("nvram")
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE(m_fg_vidram)
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE(m_fg_atrram)
-	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE(m_reel1_ram)
-	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE(m_reel2_ram)
-	AM_RANGE(0xa900, 0xaaff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE(m_reel3_ram) // +0x100 compared to lucky8
-	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE(m_reel1_scroll)
-	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE(m_reel2_scroll)
-	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE(m_reel3_scroll)
+	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("nvram")
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_SHARE("fg_vidram")
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_SHARE("fg_atrram")
+	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_SHARE("reel1_ram")
+	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_SHARE("reel2_ram")
+	AM_RANGE(0xa900, 0xaaff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_SHARE("reel3_ram") // +0x100 compared to lucky8
+	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_SHARE("reel1_scroll")
+	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_SHARE("reel2_scroll")
+	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_SHARE("reel3_scroll")
 
 	AM_RANGE(0xb800, 0xb803) AM_DEVREADWRITE_LEGACY("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports */
 	AM_RANGE(0xb810, 0xb813) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)	/* Input Ports */
@@ -429,14 +429,14 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( kkotnoli_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM	/* definitely no NVRAM */
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE(m_fg_vidram)
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE(m_fg_atrram)
-	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE(m_reel1_ram)
-	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE(m_reel2_ram)
-	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE(m_reel3_ram)
-	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE(m_reel1_scroll)
-	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE(m_reel2_scroll)
-	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE(m_reel3_scroll)
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_SHARE("fg_vidram")
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_SHARE("fg_atrram")
+	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_SHARE("reel1_ram")
+	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_SHARE("reel2_ram")
+	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_SHARE("reel3_ram")
+	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_SHARE("reel1_scroll")
+	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_SHARE("reel2_scroll")
+	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_SHARE("reel3_scroll")
 
 	AM_RANGE(0xb800, 0xb803) AM_DEVREADWRITE_LEGACY("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports */
 	AM_RANGE(0xb810, 0xb813) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)	/* Input Ports */
@@ -468,14 +468,14 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( ladylinr_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE(m_fg_vidram)
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE(m_fg_atrram)
-	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE(m_reel1_ram)
-	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE(m_reel2_ram)
-	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE(m_reel3_ram)
-	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE(m_reel1_scroll)
-	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE(m_reel2_scroll)
-	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE(m_reel3_scroll)
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_SHARE("fg_vidram")
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_SHARE("fg_atrram")
+	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_SHARE("reel1_ram")
+	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_SHARE("reel2_ram")
+	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_SHARE("reel3_ram")
+	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_SHARE("reel1_scroll")
+	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_SHARE("reel2_scroll")
+	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_SHARE("reel3_scroll")
 
 	AM_RANGE(0xb800, 0xb803) AM_DEVREADWRITE_LEGACY("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports */
 	AM_RANGE(0xb810, 0xb813) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)	/* DSW bank */
@@ -489,14 +489,14 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( wcat3_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE(m_fg_vidram)
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE(m_fg_atrram)
-	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_BASE(m_reel1_ram)
-	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_BASE(m_reel2_ram)
-	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_BASE(m_reel3_ram)
-	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_BASE(m_reel1_scroll)
-	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_BASE(m_reel2_scroll)
-	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_BASE(m_reel3_scroll)
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_SHARE("fg_vidram")
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_SHARE("fg_atrram")
+	AM_RANGE(0x9800, 0x99ff) AM_RAM_WRITE(goldstar_reel1_ram_w) AM_SHARE("reel1_ram")
+	AM_RANGE(0xa000, 0xa1ff) AM_RAM_WRITE(goldstar_reel2_ram_w) AM_SHARE("reel2_ram")
+	AM_RANGE(0xa800, 0xa9ff) AM_RAM_WRITE(goldstar_reel3_ram_w) AM_SHARE("reel3_ram")
+	AM_RANGE(0xb040, 0xb07f) AM_RAM AM_SHARE("reel1_scroll")
+	AM_RANGE(0xb080, 0xb0bf) AM_RAM AM_SHARE("reel2_scroll")
+	AM_RANGE(0xb100, 0xb17f) AM_RAM AM_SHARE("reel3_scroll")
 
 	AM_RANGE(0xb800, 0xb803) AM_DEVREADWRITE_LEGACY("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports */
 	AM_RANGE(0xb810, 0xb813) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)	/* Input Ports */
@@ -522,26 +522,26 @@ READ8_MEMBER(goldstar_state::unkch_unk_r)
 /* newer / more capable hw */
 static ADDRESS_MAP_START( unkch_map, AS_PROGRAM, 8, goldstar_state )
 	AM_RANGE(0x0000, 0x9fff) AM_ROM
-	AM_RANGE(0xc000, 0xc1ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split1_w) AM_SHARE("paletteram")
-	AM_RANGE(0xc800, 0xc9ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split2_w) AM_SHARE("paletteram2")
+	AM_RANGE(0xc000, 0xc1ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_lo_w) AM_SHARE("paletteram")
+	AM_RANGE(0xc800, 0xc9ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_hi_w) AM_SHARE("paletteram2")
 
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("nvram")
 
-	AM_RANGE(0xd840, 0xd87f) AM_RAM AM_BASE(m_reel1_scroll)
-	AM_RANGE(0xd880, 0xd8bf) AM_RAM AM_BASE(m_reel2_scroll)
-	AM_RANGE(0xd900, 0xd93f) AM_RAM AM_BASE(m_reel3_scroll)
+	AM_RANGE(0xd840, 0xd87f) AM_RAM AM_SHARE("reel1_scroll")
+	AM_RANGE(0xd880, 0xd8bf) AM_RAM AM_SHARE("reel2_scroll")
+	AM_RANGE(0xd900, 0xd93f) AM_RAM AM_SHARE("reel3_scroll")
 	AM_RANGE(0xdfc0, 0xdfff) AM_RAM
 
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_BASE(m_fg_vidram)
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_BASE(m_fg_atrram)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(goldstar_fg_vidram_w) AM_SHARE("fg_vidram")
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goldstar_fg_atrram_w) AM_SHARE("fg_atrram")
 
-	AM_RANGE(0xf000, 0xf1ff) AM_RAM_WRITE(goldstar_reel1_ram_w ) AM_BASE(m_reel1_ram)
-	AM_RANGE(0xf200, 0xf3ff) AM_RAM_WRITE(goldstar_reel2_ram_w ) AM_BASE(m_reel2_ram)
-	AM_RANGE(0xf400, 0xf5ff) AM_RAM_WRITE(goldstar_reel3_ram_w ) AM_BASE(m_reel3_ram)
+	AM_RANGE(0xf000, 0xf1ff) AM_RAM_WRITE(goldstar_reel1_ram_w ) AM_SHARE("reel1_ram")
+	AM_RANGE(0xf200, 0xf3ff) AM_RAM_WRITE(goldstar_reel2_ram_w ) AM_SHARE("reel2_ram")
+	AM_RANGE(0xf400, 0xf5ff) AM_RAM_WRITE(goldstar_reel3_ram_w ) AM_SHARE("reel3_ram")
 	AM_RANGE(0xf600, 0xf7ff) AM_RAM
-	AM_RANGE(0xf800, 0xf9ff) AM_RAM_WRITE(unkch_reel1_attrram_w ) AM_BASE(m_reel1_attrram)
-	AM_RANGE(0xfa00, 0xfbff) AM_RAM_WRITE(unkch_reel2_attrram_w ) AM_BASE(m_reel2_attrram)
-	AM_RANGE(0xfc00, 0xfdff) AM_RAM_WRITE(unkch_reel3_attrram_w ) AM_BASE(m_reel3_attrram)
+	AM_RANGE(0xf800, 0xf9ff) AM_RAM_WRITE(unkch_reel1_attrram_w ) AM_SHARE("reel1_attrram")
+	AM_RANGE(0xfa00, 0xfbff) AM_RAM_WRITE(unkch_reel2_attrram_w ) AM_SHARE("reel2_attrram")
+	AM_RANGE(0xfc00, 0xfdff) AM_RAM_WRITE(unkch_reel3_attrram_w ) AM_SHARE("reel3_attrram")
 	AM_RANGE(0xfe00, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -5946,7 +5946,7 @@ static PALETTE_INIT(cm)
 	for (i = 0; i < 0x100; i++)
 	{
 		UINT8 data;
-		UINT8*proms = machine.region("proms")->base();
+		UINT8*proms = machine.root_device().memregion("proms")->base();
 
 		data = proms[0x000 + i] | (proms[0x100 + i] << 4);
 
@@ -5961,7 +5961,7 @@ static PALETTE_INIT(cmast91)
 	{
 		int r,g,b;
 
-		UINT8*proms = machine.region("proms")->base();
+		UINT8*proms = machine.root_device().memregion("proms")->base();
 
 		b = proms[0x000 + i] << 4;
 		g = proms[0x100 + i] << 4;
@@ -5979,7 +5979,7 @@ static PALETTE_INIT(lucky8)
 	UINT8 data;
 	UINT8 *proms;
 
-	proms = machine.region("proms")->base();
+	proms = machine.root_device().memregion("proms")->base();
 	for (i = 0; i < 0x100; i++)
 	{
 
@@ -5988,7 +5988,7 @@ static PALETTE_INIT(lucky8)
 		palette_set_color_rgb(machine, i, pal3bit(data >> 0), pal3bit(data >> 3), pal2bit(data >> 6));
 	}
 
-	proms = machine.region("proms2")->base();
+	proms = machine.root_device().memregion("proms2")->base();
 	for (i=0; i < 0x20; i++)
 	{
 		data = proms[i];
@@ -6361,7 +6361,7 @@ static PALETTE_INIT(magodds)
 	{
 		int r,g,b;
 
-		UINT8*proms = machine.region("proms")->base();
+		UINT8*proms = machine.root_device().memregion("proms")->base();
 
 		b = proms[0x000 + i] << 4;
 		g = proms[0x100 + i] << 4;
@@ -8433,7 +8433,7 @@ YM2203
 static DRIVER_INIT(magoddsc)
 {
 	int A;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	for (A = 0;A < 0x8000;A++)
 	{
@@ -10058,7 +10058,7 @@ ROM_END
 static DRIVER_INIT(goldstar)
 {
 	int A;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	for (A = 0;A < 0x10000;A++)
 	{
@@ -10143,8 +10143,8 @@ static UINT8 chry10_decrypt(UINT8 cipherText)
 
 static DRIVER_INIT( chry10 )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	int size = machine.region("maincpu")->bytes();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	int size = machine.root_device().memregion("maincpu")->bytes();
 	int start = 0;
 
 	int i;
@@ -10167,8 +10167,8 @@ static DRIVER_INIT( chry10 )
 
 static DRIVER_INIT( cb3 )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	int size = machine.region("maincpu")->bytes();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	int size = machine.root_device().memregion("maincpu")->bytes();
 	int start = 0;
 
 	int i;
@@ -10186,7 +10186,7 @@ static DRIVER_INIT( cb3 )
 static DRIVER_INIT( chrygld )
 {
 	int A;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	do_blockswaps(machine, ROM);
 
 	// a data bitswap
@@ -10202,7 +10202,7 @@ static DRIVER_INIT( chrygld )
 
 static DRIVER_INIT(cm)
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 /*  forcing PPI mode 0 for all, and A, B & C as input.
     the mixed modes 2-0 are not working properly.
@@ -10213,7 +10213,7 @@ static DRIVER_INIT(cm)
 
 static DRIVER_INIT(cmv4)
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 /*  forcing PPI mode 0 for all, and A, B & C as input.
     the mixed modes 2-0 are not working properly.
@@ -10224,7 +10224,7 @@ static DRIVER_INIT(cmv4)
 
 static DRIVER_INIT(cmast91)
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 /*  forcing PPI mode 0 for all, and A, B & C as input.
     the mixed modes 2-0 are not working properly.
@@ -10235,7 +10235,7 @@ static DRIVER_INIT(cmast91)
 
 static DRIVER_INIT(lucky8a)
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0x0010] = 0x21;
 }
@@ -10243,7 +10243,7 @@ static DRIVER_INIT(lucky8a)
 static DRIVER_INIT( nfb96sea )
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	for (i = 0;i < 0x10000;i++)
 	{
@@ -10276,7 +10276,7 @@ READ8_MEMBER(goldstar_state::fixedvala8_r)
 static DRIVER_INIT( schery97 )
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10304,7 +10304,7 @@ READ8_MEMBER(goldstar_state::fixedval38_r)
 static DRIVER_INIT( schery97a )
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10333,7 +10333,7 @@ READ8_MEMBER(goldstar_state::fixedvalea_r)
 static DRIVER_INIT( skill98 )
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10360,7 +10360,7 @@ READ8_MEMBER(goldstar_state::fixedval68_r)
 static DRIVER_INIT( nfb96_c1 )
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10387,7 +10387,7 @@ READ8_MEMBER(goldstar_state::fixedval58_r)
 static DRIVER_INIT( nfb96_c2 )
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10424,7 +10424,7 @@ READ8_MEMBER(goldstar_state::fixedvalaa_r)
 static DRIVER_INIT( nfb96_d )
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10457,7 +10457,7 @@ READ8_MEMBER(goldstar_state::fixedvalbe_r)
 static DRIVER_INIT( nfb96_dk )
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10489,7 +10489,7 @@ READ8_MEMBER(goldstar_state::fixedval84_r)
 static DRIVER_INIT( rp35 )
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10517,7 +10517,7 @@ READ8_MEMBER(goldstar_state::fixedvalb2_r)
 static DRIVER_INIT( rp36 )
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10545,7 +10545,7 @@ READ8_MEMBER(goldstar_state::fixedval48_r)
 static DRIVER_INIT( rp36c3 )
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10579,7 +10579,7 @@ READ8_MEMBER(goldstar_state::fixedval74_r)
 static DRIVER_INIT( po33 )
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10613,7 +10613,7 @@ READ8_MEMBER(goldstar_state::fixedvalc7_r)
 static DRIVER_INIT( match133 )
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	for (i = 0;i < 0x10000;i++)
 	{
 		UINT8 x = ROM[i];
@@ -10637,7 +10637,7 @@ static DRIVER_INIT( match133 )
 static DRIVER_INIT(cherrys)
 {
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	unsigned char rawData[256] = {
 		0xCC, 0xCD, 0xCE, 0xCF, 0xC8, 0xC9, 0xCA, 0xCB, 0xC4, 0xC5, 0xC6, 0xC7,
@@ -10674,21 +10674,21 @@ static DRIVER_INIT(cherrys)
 /* todo: remove these patches! */
 static DRIVER_INIT( unkch1 )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	ROM[0x9d52] = 0x00;
 	ROM[0x9d53] = 0x00;
 }
 
 static DRIVER_INIT( unkch3 )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	ROM[0x9b86] = 0x00;
 	ROM[0x9b87] = 0x00;
 }
 
 static DRIVER_INIT( unkch4 )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	ROM[0x9a6e] = 0x00;
 	ROM[0x9a6f] = 0x00;
 }

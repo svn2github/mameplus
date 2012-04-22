@@ -45,11 +45,11 @@ class astinvad_state : public driver_device
 {
 public:
 	astinvad_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"){ }
 
 	UINT8 *    m_colorram;
-	UINT8 *    m_videoram;
-	size_t     m_videoram_size;
+	required_shared_ptr<UINT8> m_videoram;
 
 	emu_timer  *m_int_timer;
 	UINT8      m_sound_state[2];
@@ -68,6 +68,7 @@ public:
 	DECLARE_WRITE8_MEMBER(kamikaze_ppi_w);
 	DECLARE_WRITE8_MEMBER(spaceint_sound1_w);
 	DECLARE_WRITE8_MEMBER(spaceint_sound2_w);
+	DECLARE_INPUT_CHANGED_MEMBER(spaceint_coin_inserted);
 };
 
 
@@ -111,10 +112,10 @@ static const ppi8255_interface ppi8255_intf[2] =
 static VIDEO_START( spaceint )
 {
 	astinvad_state *state = machine.driver_data<astinvad_state>();
-	state->m_colorram = auto_alloc_array(machine, UINT8, state->m_videoram_size);
+	state->m_colorram = auto_alloc_array(machine, UINT8, state->m_videoram.bytes());
 
 	state->save_item(NAME(state->m_color_latch));
-	state->save_pointer(NAME(state->m_colorram), state->m_videoram_size);
+	state->save_pointer(NAME(state->m_colorram), state->m_videoram.bytes());
 }
 
 
@@ -158,7 +159,7 @@ static void plot_byte( running_machine &machine, bitmap_rgb32 &bitmap, UINT8 y, 
 static SCREEN_UPDATE_RGB32( astinvad )
 {
 	astinvad_state *state = screen.machine().driver_data<astinvad_state>();
-	const UINT8 *color_prom = screen.machine().region("proms")->base();
+	const UINT8 *color_prom = state->memregion("proms")->base();
 	UINT8 yoffs = state->m_flip_yoffs & state->m_screen_flip;
 	int x, y;
 
@@ -178,10 +179,10 @@ static SCREEN_UPDATE_RGB32( astinvad )
 static SCREEN_UPDATE_RGB32( spaceint )
 {
 	astinvad_state *state = screen.machine().driver_data<astinvad_state>();
-	const UINT8 *color_prom = screen.machine().region("proms")->base();
+	const UINT8 *color_prom = state->memregion("proms")->base();
 	int offs;
 
-	for (offs = 0; offs < state->m_videoram_size; offs++)
+	for (offs = 0; offs < state->m_videoram.bytes(); offs++)
 	{
 		UINT8 data = state->m_videoram[offs];
 		UINT8 color = state->m_colorram[offs];
@@ -277,11 +278,10 @@ static MACHINE_RESET( spaceint )
 }
 
 
-static INPUT_CHANGED( spaceint_coin_inserted )
+INPUT_CHANGED_MEMBER(astinvad_state::spaceint_coin_inserted)
 {
-	astinvad_state *state = field.machine().driver_data<astinvad_state>();
 	/* coin insertion causes an NMI */
-	device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, newval ? ASSERT_LINE : CLEAR_LINE);
+	device_set_input_line(m_maincpu, INPUT_LINE_NMI, newval ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -398,14 +398,14 @@ static ADDRESS_MAP_START( kamikaze_map, AS_PROGRAM, 8, astinvad_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x3fff)
 	AM_RANGE(0x0000, 0x1bff) AM_ROM
 	AM_RANGE(0x1c00, 0x1fff) AM_RAM
-	AM_RANGE(0x2000, 0x3fff) AM_RAM AM_BASE_SIZE(m_videoram, m_videoram_size)
+	AM_RANGE(0x2000, 0x3fff) AM_RAM AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( spaceint_map, AS_PROGRAM, 8, astinvad_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x2000, 0x23ff) AM_RAM
-	AM_RANGE(0x4000, 0x5fff) AM_RAM_WRITE(spaceint_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
+	AM_RANGE(0x4000, 0x5fff) AM_RAM_WRITE(spaceint_videoram_w) AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 
@@ -528,7 +528,7 @@ static INPUT_PORTS_START( spaceint )
 	PORT_DIPSETTING(    0x08, DEF_STR( 1C_2C ) )
 
 	PORT_START("IN2")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED(spaceint_coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, astinvad_state,spaceint_coin_inserted, 0)
 
 	PORT_START("CABINET")
 	PORT_DIPNAME( 0xff, 0x00, DEF_STR( Cabinet ) )

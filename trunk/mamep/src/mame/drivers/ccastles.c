@@ -171,11 +171,10 @@ static TIMER_CALLBACK( clock_irq )
 }
 
 
-static CUSTOM_INPUT( get_vblank )
+CUSTOM_INPUT_MEMBER(ccastles_state::get_vblank)
 {
-	ccastles_state *state = field.machine().driver_data<ccastles_state>();
-	int scanline = field.machine().primary_screen->vpos();
-	return state->m_syncprom[scanline & 0xff] & 1;
+	int scanline = machine().primary_screen->vpos();
+	return m_syncprom[scanline & 0xff] & 1;
 }
 
 
@@ -192,7 +191,7 @@ static MACHINE_START( ccastles )
 	rectangle visarea;
 
 	/* initialize globals */
-	state->m_syncprom = machine.region("proms")->base() + 0x000;
+	state->m_syncprom = machine.root_device().memregion("proms")->base() + 0x000;
 
 	/* find the start of VBLANK in the SYNC PROM */
 	for (state->m_vblank_start = 0; state->m_vblank_start < 256; state->m_vblank_start++)
@@ -214,7 +213,7 @@ static MACHINE_START( ccastles )
 	machine.primary_screen->configure(320, 256, visarea, HZ_TO_ATTOSECONDS(PIXEL_CLOCK) * VTOTAL * HTOTAL);
 
 	/* configure the ROM banking */
-	memory_configure_bank(machine, "bank1", 0, 2, machine.region("maincpu")->base() + 0xa000, 0x6000);
+	state->membank("bank1")->configure_entries(0, 2, state->memregion("maincpu")->base() + 0xa000, 0x6000);
 
 	/* create a timer for IRQs and set up the first callback */
 	state->m_irq_timer = machine.scheduler().timer_alloc(FUNC(clock_irq));
@@ -266,7 +265,7 @@ WRITE8_MEMBER(ccastles_state::ccounter_w)
 
 WRITE8_MEMBER(ccastles_state::bankswitch_w)
 {
-	memory_set_bank(machine(), "bank1", data & 1);
+	membank("bank1")->set_entry(data & 1);
 }
 
 
@@ -328,9 +327,9 @@ WRITE8_MEMBER(ccastles_state::nvram_w)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, ccastles_state )
 	AM_RANGE(0x0000, 0x0001) AM_WRITE(ccastles_bitmode_addr_w)
 	AM_RANGE(0x0002, 0x0002) AM_READWRITE(ccastles_bitmode_r, ccastles_bitmode_w)
-	AM_RANGE(0x0000, 0x7fff) AM_RAM_WRITE(ccastles_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x0000, 0x7fff) AM_RAM_WRITE(ccastles_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
-	AM_RANGE(0x8e00, 0x8fff) AM_BASE(m_spriteram)
+	AM_RANGE(0x8e00, 0x8fff) AM_SHARE("spriteram")
 	AM_RANGE(0x9000, 0x90ff) AM_MIRROR(0x0300) AM_READWRITE(nvram_r, nvram_w)
 	AM_RANGE(0x9400, 0x9403) AM_MIRROR(0x01fc) AM_READ(leta_r)
 	AM_RANGE(0x9600, 0x97ff) AM_READ_PORT("IN0")
@@ -366,7 +365,7 @@ static INPUT_PORTS_START( ccastles )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_SERVICE( 0x10, IP_ACTIVE_LOW )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(get_vblank, NULL)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, ccastles_state,get_vblank, NULL)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 )					/* 1p Jump, non-cocktail start1 */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)		/* 2p Jump, non-cocktail start2 */
 

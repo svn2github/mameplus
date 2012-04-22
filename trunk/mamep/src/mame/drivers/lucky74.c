@@ -708,7 +708,7 @@ static WRITE8_DEVICE_HANDLER( ym2149_portb_w )
     bit 0 contains the screen orientation.
 */
 	state->m_ym2149_portb = data;
-	flip_screen_set(device->machine(), data & 0x01);
+	state->flip_screen_set(data & 0x01);
 }
 
 READ8_MEMBER(lucky74_state::usart_8251_r)
@@ -805,10 +805,10 @@ static INTERRUPT_GEN( nmi_interrupt )
 static ADDRESS_MAP_START( lucky74_map, AS_PROGRAM, 8, lucky74_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM AM_SHARE("nvram")	/* NVRAM */
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(lucky74_fg_videoram_w) AM_BASE(m_fg_videoram)				/* VRAM1-1 */
-	AM_RANGE(0xd800, 0xdfff) AM_RAM_WRITE(lucky74_fg_colorram_w) AM_BASE(m_fg_colorram)				/* VRAM1-2 */
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(lucky74_bg_videoram_w) AM_BASE(m_bg_videoram)				/* VRAM2-1 */
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(lucky74_bg_colorram_w) AM_BASE(m_bg_colorram)				/* VRAM2-2 */
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(lucky74_fg_videoram_w) AM_SHARE("fg_videoram")				/* VRAM1-1 */
+	AM_RANGE(0xd800, 0xdfff) AM_RAM_WRITE(lucky74_fg_colorram_w) AM_SHARE("fg_colorram")				/* VRAM1-2 */
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(lucky74_bg_videoram_w) AM_SHARE("bg_videoram")				/* VRAM2-1 */
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(lucky74_bg_colorram_w) AM_SHARE("bg_colorram")				/* VRAM2-2 */
 	AM_RANGE(0xf000, 0xf003) AM_DEVREADWRITE_LEGACY("ppi8255_0", ppi8255_r, ppi8255_w)	/* Input Ports 0 & 1 */
 	AM_RANGE(0xf080, 0xf083) AM_DEVREADWRITE_LEGACY("ppi8255_2", ppi8255_r, ppi8255_w)	/* DSW 1, 2 & 3 */
 	AM_RANGE(0xf0c0, 0xf0c3) AM_DEVREADWRITE_LEGACY("ppi8255_3", ppi8255_r, ppi8255_w)	/* DSW 4 */
@@ -1130,7 +1130,7 @@ static void lucky74_adpcm_int(device_t *device)
 		if (state->m_adpcm_data == -1)
 		{
 			/* transferring 1st nibble */
-			state->m_adpcm_data = device->machine().region("adpcm")->base()[state->m_adpcm_pos];
+			state->m_adpcm_data = device->machine().root_device().memregion("adpcm")->base()[state->m_adpcm_pos];
 			state->m_adpcm_pos = (state->m_adpcm_pos + 1) & 0xffff;
 			msm5205_data_w(device, state->m_adpcm_data >> 4);
 

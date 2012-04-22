@@ -26,10 +26,12 @@ class missb2_state : public bublbobl_state
 {
 public:
 	missb2_state(const machine_config &mconfig, device_type type, const char *tag)
-		: bublbobl_state(mconfig, type, tag) { }
+		: bublbobl_state(mconfig, type, tag),
+		  m_bgvram(*this, "bgvram"),
+		  m_bg_paletteram(*this, "bg_paletteram") { }
 
-	UINT8 *  m_bgvram;
-	UINT8 *  m_bg_paletteram;
+	required_shared_ptr<UINT8> m_bgvram;
+	required_shared_ptr<UINT8> m_bg_paletteram;
 	DECLARE_WRITE8_MEMBER(bg_paletteram_RRRRGGGGBBBBxxxx_be_w);
 	DECLARE_WRITE8_MEMBER(missb2_bg_bank_w);
 };
@@ -70,8 +72,8 @@ static SCREEN_UPDATE_IND16( missb2 )
 
 	sx = 0;
 
-	prom = screen.machine().region("proms")->base();
-	for (offs = 0; offs < state->m_objectram_size; offs += 4)
+	prom = screen.machine().root_device().memregion("proms")->base();
+	for (offs = 0; offs < state->m_objectram.bytes(); offs += 4)
 	{
 		/* skip empty sprites */
 		/* this is dword aligned so the UINT32 * cast shouldn't give problems */
@@ -112,7 +114,7 @@ static SCREEN_UPDATE_IND16( missb2 )
 				x = sx + xc * 8;
 				y = (sy + yc * 8) & 0xff;
 
-				if (flip_screen_get(screen.machine()))
+				if (state->flip_screen())
 				{
 					x = 248 - x;
 					y = 248 - y;
@@ -152,8 +154,8 @@ WRITE8_MEMBER(missb2_state::missb2_bg_bank_w)
 	// I don't know how this is really connected, bit 1 is always high afaik...
 	bank = ((data & 2) ? 1 : 0) | ((data & 1) ? 4 : 0);
 
-	memory_set_bank(machine(), "bank2", bank);
-	memory_set_bank(machine(), "bank3", bank);
+	membank("bank2")->set_entry(bank);
+	membank("bank3")->set_entry(bank);
 }
 
 /* Memory Maps */
@@ -161,10 +163,10 @@ WRITE8_MEMBER(missb2_state::missb2_bg_bank_w)
 static ADDRESS_MAP_START( master_map, AS_PROGRAM, 8, missb2_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xdcff) AM_RAM AM_BASE_SIZE(m_videoram, m_videoram_size)
-	AM_RANGE(0xdd00, 0xdfff) AM_RAM AM_BASE_SIZE(m_objectram, m_objectram_size)
+	AM_RANGE(0xc000, 0xdcff) AM_RAM AM_SHARE("videoram")
+	AM_RANGE(0xdd00, 0xdfff) AM_RAM AM_SHARE("objectram")
 	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0xf800, 0xf9ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0xf800, 0xf9ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_byte_be_w) AM_SHARE("paletteram")
 	AM_RANGE(0xfa00, 0xfa00) AM_WRITE(bublbobl_sound_command_w)
 	AM_RANGE(0xfa03, 0xfa03) AM_WRITENOP // sound cpu reset
 	AM_RANGE(0xfa80, 0xfa80) AM_WRITENOP
@@ -186,11 +188,11 @@ static ADDRESS_MAP_START( slave_map, AS_PROGRAM, 8, missb2_state )
 	AM_RANGE(0x9000, 0x9fff) AM_ROMBANK("bank2")	// ROM data for the background palette ram
 	AM_RANGE(0xa000, 0xafff) AM_ROMBANK("bank3")	// ROM data for the background palette ram
 	AM_RANGE(0xb000, 0xb1ff) AM_ROM			// banked ???
-	AM_RANGE(0xc000, 0xc1ff) AM_RAM_WRITE(bg_paletteram_RRRRGGGGBBBBxxxx_be_w) AM_BASE(m_bg_paletteram)
+	AM_RANGE(0xc000, 0xc1ff) AM_RAM_WRITE(bg_paletteram_RRRRGGGGBBBBxxxx_be_w) AM_SHARE("bg_paletteram")
 	AM_RANGE(0xc800, 0xcfff) AM_RAM			// main ???
 	AM_RANGE(0xd000, 0xd000) AM_WRITE(missb2_bg_bank_w)
 	AM_RANGE(0xd002, 0xd002) AM_WRITENOP
-	AM_RANGE(0xd003, 0xd003) AM_RAM AM_BASE(m_bgvram)
+	AM_RANGE(0xd003, 0xd003) AM_RAM AM_SHARE("bgvram")
 	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("share1")
 ADDRESS_MAP_END
 
@@ -201,7 +203,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, missb2_state )
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
 	AM_RANGE(0x9000, 0x9000) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE_LEGACY("ymsnd", ym3526_r, ym3526_w)
-	AM_RANGE(0xb000, 0xb000) AM_READ(soundlatch_r) AM_WRITENOP // message for main cpu
+	AM_RANGE(0xb000, 0xb000) AM_READ(soundlatch_byte_r) AM_WRITENOP // message for main cpu
 	AM_RANGE(0xb001, 0xb001) AM_READNOP AM_WRITE(bublbobl_sh_nmi_enable_w)	// bit 0: message pending for main cpu, bit 1: message pending for sound cpu
 	AM_RANGE(0xb002, 0xb002) AM_WRITE(bublbobl_sh_nmi_disable_w)
 	AM_RANGE(0xe000, 0xefff) AM_ROM			// space for diagnostic ROM?
@@ -571,14 +573,14 @@ ROM_END
 
 static void configure_banks( running_machine& machine )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
-	UINT8 *SLAVE = machine.region("slave")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *SLAVE = machine.root_device().memregion("slave")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 8, &ROM[0x10000], 0x4000);
+	machine.root_device().membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
 
 	/* 2009-11 FP: isn't there a way to configure both at once? */
-	memory_configure_bank(machine, "bank2", 0, 7, &SLAVE[0x8000], 0x1000);
-	memory_configure_bank(machine, "bank3", 0, 7, &SLAVE[0x9000], 0x1000);
+	machine.root_device().membank("bank2")->configure_entries(0, 7, &SLAVE[0x8000], 0x1000);
+	machine.root_device().membank("bank3")->configure_entries(0, 7, &SLAVE[0x9000], 0x1000);
 }
 
 static DRIVER_INIT( missb2 )

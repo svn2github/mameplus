@@ -62,13 +62,13 @@ WRITE16_MEMBER(aquarium_state::aquarium_sound_w)
 {
 //  popmessage("sound write %04x",data);
 
-	soundlatch_w(space, 1, data & 0xff);
+	soundlatch_byte_w(space, 1, data & 0xff);
 	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE );
 }
 
 WRITE8_MEMBER(aquarium_state::aquarium_z80_bank_w)
 {
-	memory_set_bank(machine(), "bank1", data & 0x07);
+	membank("bank1")->set_entry(data & 0x07);
 }
 
 static UINT8 aquarium_snd_bitswap( UINT8 scrambled_data )
@@ -105,12 +105,12 @@ WRITE8_MEMBER(aquarium_state::aquarium_oki_w)
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, aquarium_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	AM_RANGE(0xc00000, 0xc00fff) AM_RAM_WRITE(aquarium_mid_videoram_w) AM_BASE(m_mid_videoram)
-	AM_RANGE(0xc01000, 0xc01fff) AM_RAM_WRITE(aquarium_bak_videoram_w) AM_BASE(m_bak_videoram)
-	AM_RANGE(0xc02000, 0xc03fff) AM_RAM_WRITE(aquarium_txt_videoram_w) AM_BASE(m_txt_videoram)
-	AM_RANGE(0xc80000, 0xc81fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0xd00000, 0xd00fff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0xd80014, 0xd8001f) AM_WRITEONLY AM_BASE(m_scroll)
+	AM_RANGE(0xc00000, 0xc00fff) AM_RAM_WRITE(aquarium_mid_videoram_w) AM_SHARE("mid_videoram")
+	AM_RANGE(0xc01000, 0xc01fff) AM_RAM_WRITE(aquarium_bak_videoram_w) AM_SHARE("bak_videoram")
+	AM_RANGE(0xc02000, 0xc03fff) AM_RAM_WRITE(aquarium_txt_videoram_w) AM_SHARE("txt_videoram")
+	AM_RANGE(0xc80000, 0xc81fff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xd00000, 0xd00fff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xd80014, 0xd8001f) AM_WRITEONLY AM_SHARE("scroll")
 	AM_RANGE(0xd80068, 0xd80069) AM_WRITENOP		/* probably not used */
 	AM_RANGE(0xd80080, 0xd80081) AM_READ_PORT("DSW")
 	AM_RANGE(0xd80082, 0xd80083) AM_READNOP	/* stored but not read back ? check code at 0x01f440 */
@@ -131,7 +131,7 @@ static ADDRESS_MAP_START( snd_portmap, AS_IO, 8, aquarium_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0x02, 0x02) AM_READWRITE(aquarium_oki_r, aquarium_oki_w)
-	AM_RANGE(0x04, 0x04) AM_READ(soundlatch_r)
+	AM_RANGE(0x04, 0x04) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x06, 0x06) AM_WRITE(aquarium_snd_ack_w)
 	AM_RANGE(0x08, 0x08) AM_WRITE(aquarium_z80_bank_w)
 ADDRESS_MAP_END
@@ -239,13 +239,13 @@ static const gfx_layout tilelayout =
 
 static DRIVER_INIT( aquarium )
 {
-	UINT8 *Z80 = machine.region("audiocpu")->base();
+	UINT8 *Z80 = machine.root_device().memregion("audiocpu")->base();
 
 	/* The BG tiles are 5bpp, this rearranges the data from
        the roms containing the 1bpp data so we can decode it
        correctly */
-	UINT8 *DAT2 = machine.region("gfx1")->base() + 0x080000;
-	UINT8 *DAT = machine.region("user1")->base();
+	UINT8 *DAT2 = machine.root_device().memregion("gfx1")->base() + 0x080000;
+	UINT8 *DAT = machine.root_device().memregion("user1")->base();
 	int len = 0x0200000;
 
 	for (len = 0; len < 0x020000; len++)
@@ -260,8 +260,8 @@ static DRIVER_INIT( aquarium )
 		DAT2[len * 4 + 2] |= (DAT[len] & 0x01) << 3;
 	}
 
-	DAT2 = machine.region("gfx4")->base() + 0x080000;
-	DAT = machine.region("user2")->base();
+	DAT2 = machine.root_device().memregion("gfx4")->base() + 0x080000;
+	DAT = machine.root_device().memregion("user2")->base();
 
 	for (len = 0; len < 0x020000; len++)
 	{
@@ -276,8 +276,8 @@ static DRIVER_INIT( aquarium )
 	}
 
 	/* configure and set up the sound bank */
-	memory_configure_bank(machine, "bank1", 0, 7, &Z80[0x18000], 0x8000);
-	memory_set_bank(machine, "bank1", 1);
+	machine.root_device().membank("bank1")->configure_entries(0, 7, &Z80[0x18000], 0x8000);
+	machine.root_device().membank("bank1")->set_entry(1);
 }
 
 
@@ -296,7 +296,7 @@ static void irq_handler( device_t *device, int irq )
 
 static const ym2151_interface ym2151_config =
 {
-	irq_handler
+	DEVCB_LINE(irq_handler)
 };
 
 

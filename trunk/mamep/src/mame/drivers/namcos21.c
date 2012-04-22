@@ -313,7 +313,7 @@ CPU68 PCB:
 static INT32
 ReadPointROMData( running_machine &machine, unsigned offset )
 {
-	const INT32 *pPointData = (INT32 *)machine.region( "user2" )->base();
+	const INT32 *pPointData = (INT32 *)machine.root_device().memregion( "user2" )->base();
 	INT32 result = pPointData[offset];
 	return result;
 }
@@ -590,7 +590,7 @@ static int
 InitDSP( running_machine &machine )
 {
 	namcos21_state *state = machine.driver_data<namcos21_state>();
-	UINT16 *pMem = (UINT16 *)machine.region("dspmaster")->base();
+	UINT16 *pMem = (UINT16 *)state->memregion("dspmaster")->base();
 	/**
      * DSP BIOS tests "CPU ID" on startup
      * "JAPAN (C)1990 NAMCO LTD. by H.F "
@@ -761,7 +761,7 @@ WRITE16_MEMBER(namcos21_state::dsp_xf_w)
 
 static ADDRESS_MAP_START( master_dsp_program, AS_PROGRAM, 16, namcos21_state )
 	AM_RANGE(0x0000, 0x0fff) AM_ROM /* BIOS */
-	AM_RANGE(0x8000, 0xbfff) AM_RAM AM_BASE(m_master_dsp_code)
+	AM_RANGE(0x8000, 0xbfff) AM_RAM AM_SHARE("master_dsp_code")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( master_dsp_data, AS_DATA, 16, namcos21_state )
@@ -1069,7 +1069,7 @@ READ16_MEMBER(namcos21_state::NAMCO_C139_SCI_register_r){ return 0; }
 /*************************************************************/
 
 #define NAMCO21_68K_COMMON \
-	AM_RANGE(0x200000, 0x20ffff) AM_READWRITE(dspram16_r,dspram16_w) AM_BASE(m_dspram16) \
+	AM_RANGE(0x200000, 0x20ffff) AM_READWRITE(dspram16_r,dspram16_w) AM_SHARE("dspram16") \
 	AM_RANGE(0x280000, 0x280001) AM_WRITENOP /* written once on startup */ \
 	AM_RANGE(0x400000, 0x400001) AM_WRITE(pointram_control_w) \
 	AM_RANGE(0x440000, 0x440001) AM_READWRITE(pointram_data_r,pointram_data_w) \
@@ -1080,7 +1080,7 @@ READ16_MEMBER(namcos21_state::NAMCO_C139_SCI_register_r){ return 0; }
 	AM_RANGE(0x740000, 0x75ffff) AM_READWRITE(paletteram16_r,paletteram16_w) AM_SHARE("paletteram") \
 	AM_RANGE(0x760000, 0x760001) AM_READWRITE(namcos21_video_enable_r,namcos21_video_enable_w) \
 	AM_RANGE(0x800000, 0x8fffff) AM_READ(datarom_r) \
-	AM_RANGE(0x900000, 0x90ffff) AM_READWRITE(shareram1_r,shareram1_w) AM_BASE(m_mpSharedRAM1) \
+	AM_RANGE(0x900000, 0x90ffff) AM_READWRITE(shareram1_r,shareram1_w) AM_SHARE("mpsharedram1") \
 	AM_RANGE(0xa00000, 0xa00fff) AM_READWRITE(namcos2_68k_dualportram_word_r,namcos2_68k_dualportram_word_w) \
 	AM_RANGE(0xb00000, 0xb03fff) AM_READWRITE(NAMCO_C139_SCI_buffer_r,NAMCO_C139_SCI_buffer_w) \
 	AM_RANGE(0xb80000, 0xb8000f) AM_READWRITE(NAMCO_C139_SCI_register_r,NAMCO_C139_SCI_register_w) \
@@ -1222,7 +1222,7 @@ WRITE16_MEMBER(namcos21_state::winrun_dsp_pointrom_addr_w)
 
 READ16_MEMBER(namcos21_state::winrun_dsp_pointrom_data_r)
 {
-	UINT16 *ptrom = (UINT16 *)machine().region("user2")->base();
+	UINT16 *ptrom = (UINT16 *)machine().root_device().memregion("user2")->base();
 	return ptrom[m_winrun_pointrom_addr++];
 } /* winrun_dsp_pointrom_data_r */
 
@@ -1264,7 +1264,7 @@ ADDRESS_MAP_END
 
 READ16_MEMBER(namcos21_state::gpu_data_r)
 {
-	const UINT16 *pSrc = (UINT16 *)machine().region( "user3" )->base();
+	const UINT16 *pSrc = (UINT16 *)machine().root_device().memregion( "user3" )->base();
 	return pSrc[offset];
 }
 
@@ -1282,7 +1282,7 @@ WRITE16_MEMBER(namcos21_state::winrun_dspbios_w)
 	COMBINE_DATA( &m_winrun_dspbios[offset] );
 	if( offset==0xfff )
 	{
-		UINT16 *mem = (UINT16 *)machine().region("dsp")->base();
+		UINT16 *mem = (UINT16 *)machine().root_device().memregion("dsp")->base();
 		memcpy( mem, m_winrun_dspbios, 0x2000 );
 		m_winrun_dsp_alive = 1;
 	}
@@ -1322,16 +1322,16 @@ static ADDRESS_MAP_START( am_master_winrun, AS_PROGRAM, 16, namcos21_state )
 	AM_RANGE(0x100000, 0x10ffff) AM_RAM /* work RAM */
 	AM_RANGE(0x180000, 0x183fff) AM_READWRITE_LEGACY(NAMCOS2_68K_eeprom_R,NAMCOS2_68K_eeprom_W)// AM_BASE_LEGACY(&namcos2_eeprom) AM_SIZE_LEGACY(&namcos2_eeprom_size)
 	AM_RANGE(0x1c0000, 0x1fffff) AM_READWRITE_LEGACY(namcos2_68k_master_C148_r,namcos2_68k_master_C148_w)
-	AM_RANGE(0x250000, 0x25ffff) AM_RAM AM_BASE(m_winrun_polydata )
+	AM_RANGE(0x250000, 0x25ffff) AM_RAM AM_SHARE("winrun_polydata")
 	AM_RANGE(0x260000, 0x26ffff) AM_RAM /* unused? */
-	AM_RANGE(0x280000, 0x281fff) AM_WRITE(winrun_dspbios_w) AM_BASE(m_winrun_dspbios)
+	AM_RANGE(0x280000, 0x281fff) AM_WRITE(winrun_dspbios_w) AM_SHARE("winrun_dspbios")
 	AM_RANGE(0x380000, 0x38000f) AM_READWRITE(winrun_dspcomram_control_r,winrun_dspcomram_control_w)
 	AM_RANGE(0x3c0000, 0x3c1fff) AM_READWRITE(winrun_68k_dspcomram_r,winrun_68k_dspcomram_w)
 	AM_RANGE(0x400000, 0x400001) AM_WRITE(pointram_control_w)
 	AM_RANGE(0x440000, 0x440001) AM_READWRITE(pointram_data_r,pointram_data_w)
 	AM_RANGE(0x600000, 0x60ffff) AM_READWRITE(winrun_gpucomram_r,winrun_gpucomram_w)
 	AM_RANGE(0x800000, 0x87ffff) AM_READ(datarom_r)
-	AM_RANGE(0x900000, 0x90ffff) AM_READWRITE(shareram1_r,shareram1_w) AM_BASE(m_mpSharedRAM1)
+	AM_RANGE(0x900000, 0x90ffff) AM_READWRITE(shareram1_r,shareram1_w) AM_SHARE("mpsharedram1")
 	AM_RANGE(0xa00000, 0xa00fff) AM_READWRITE(namcos2_68k_dualportram_word_r,namcos2_68k_dualportram_word_w)
 	AM_RANGE(0xb00000, 0xb03fff) AM_READWRITE(NAMCO_C139_SCI_buffer_r,NAMCO_C139_SCI_buffer_w)
 	AM_RANGE(0xb80000, 0xb8000f) AM_READWRITE(NAMCO_C139_SCI_register_r,NAMCO_C139_SCI_register_w)
@@ -1354,7 +1354,7 @@ static ADDRESS_MAP_START( am_gpu_winrun, AS_PROGRAM, 16, namcos21_state )
 	AM_RANGE(0x100000, 0x100001) AM_READWRITE(winrun_gpu_color_r,winrun_gpu_color_w) /* ? */
 	AM_RANGE(0x180000, 0x19ffff) AM_RAM /* work RAM */
 	AM_RANGE(0x1c0000, 0x1fffff) AM_READWRITE_LEGACY(namcos2_68k_gpu_C148_r,namcos2_68k_gpu_C148_w)
-	AM_RANGE(0x200000, 0x20ffff) AM_RAM AM_BASE(m_winrun_gpucomram )
+	AM_RANGE(0x200000, 0x20ffff) AM_RAM AM_SHARE("winrun_comram")
 	AM_RANGE(0x400000, 0x41ffff) AM_READWRITE(paletteram16_r,paletteram16_w) AM_SHARE("paletteram")
 	AM_RANGE(0x600000, 0x6fffff) AM_READ(gpu_data_r)
 	AM_RANGE(0xc00000, 0xcfffff) AM_READWRITE(winrun_gpu_videoram_r,winrun_gpu_videoram_w)
@@ -1372,7 +1372,7 @@ static ADDRESS_MAP_START( am_sound_winrun, AS_PROGRAM, 8, namcos21_state )
 	AM_RANGE(0x3000, 0x3003) AM_WRITENOP /* ? */
 	AM_RANGE(0x4000, 0x4001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)
 	AM_RANGE(0x5000, 0x6fff) AM_DEVREADWRITE_LEGACY("c140", c140_r,c140_w)
-	AM_RANGE(0x7000, 0x77ff) AM_READWRITE(namcos2_dualportram_byte_r,namcos2_dualportram_byte_w) AM_BASE(m_mpDualPortRAM)
+	AM_RANGE(0x7000, 0x77ff) AM_READWRITE(namcos2_dualportram_byte_r,namcos2_dualportram_byte_w) AM_SHARE("mpdualportram")
 	AM_RANGE(0x7800, 0x7fff) AM_READWRITE(namcos2_dualportram_byte_r,namcos2_dualportram_byte_w) /* mirror */
 	AM_RANGE(0x8000, 0x9fff) AM_RAM
 	AM_RANGE(0xa000, 0xbfff) AM_WRITENOP /* amplifier enable on 1st write */
@@ -1403,7 +1403,7 @@ static ADDRESS_MAP_START( am_mcu_winrun, AS_PROGRAM, 8, namcos21_state )
 	AM_RANGE(0x3001, 0x3001) AM_READ_PORT("DIAL1")
 	AM_RANGE(0x3002, 0x3002) AM_READ_PORT("DIAL2")
 	AM_RANGE(0x3003, 0x3003) AM_READ_PORT("DIAL3")
-	AM_RANGE(0x5000, 0x57ff) AM_READWRITE(namcos2_dualportram_byte_r,namcos2_dualportram_byte_w) AM_BASE(m_mpDualPortRAM)
+	AM_RANGE(0x5000, 0x57ff) AM_READWRITE(namcos2_dualportram_byte_r,namcos2_dualportram_byte_w) AM_SHARE("mpdualportram")
 	AM_RANGE(0x6000, 0x6fff) AM_READNOP				/* watchdog */
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -1420,7 +1420,7 @@ ADDRESS_MAP_END
 	AM_RANGE(0x740000, 0x75ffff) AM_READWRITE(paletteram16_r,paletteram16_w) AM_SHARE("paletteram") \
 	AM_RANGE(0x760000, 0x760001) AM_READWRITE(namcos21_video_enable_r,namcos21_video_enable_w) \
 	AM_RANGE(0x800000, 0x8fffff) AM_READ(datarom_r) \
-	AM_RANGE(0x900000, 0x90ffff) AM_READWRITE(shareram1_r,shareram1_w) AM_BASE(m_mpSharedRAM1) \
+	AM_RANGE(0x900000, 0x90ffff) AM_READWRITE(shareram1_r,shareram1_w) AM_SHARE("mpsharedram1") \
 	AM_RANGE(0xa00000, 0xa00fff) AM_READWRITE(namcos2_68k_dualportram_word_r,namcos2_68k_dualportram_word_w) \
 	AM_RANGE(0xb00000, 0xb03fff) AM_READWRITE(NAMCO_C139_SCI_buffer_r,NAMCO_C139_SCI_buffer_w) \
 	AM_RANGE(0xb80000, 0xb8000f) AM_READWRITE(NAMCO_C139_SCI_register_r,NAMCO_C139_SCI_register_w) \
@@ -1431,8 +1431,8 @@ static ADDRESS_MAP_START( driveyes_68k_master, AS_PROGRAM, 16, namcos21_state )
 	AM_RANGE(0x100000, 0x10ffff) AM_RAM /* private work RAM */
 	AM_RANGE(0x180000, 0x183fff) AM_READWRITE_LEGACY(NAMCOS2_68K_eeprom_R,NAMCOS2_68K_eeprom_W)// AM_BASE_LEGACY(&namcos2_eeprom) AM_SIZE_LEGACY(&namcos2_eeprom_size)
 	AM_RANGE(0x1c0000, 0x1fffff) AM_READWRITE_LEGACY(namcos2_68k_master_C148_r,namcos2_68k_master_C148_w)
-	AM_RANGE(0x250000, 0x25ffff) AM_RAM AM_BASE(m_winrun_polydata )
-	AM_RANGE(0x280000, 0x281fff) AM_WRITE(winrun_dspbios_w) AM_BASE(m_winrun_dspbios)
+	AM_RANGE(0x250000, 0x25ffff) AM_RAM AM_SHARE("winrun_polydata")
+	AM_RANGE(0x280000, 0x281fff) AM_WRITE(winrun_dspbios_w) AM_SHARE("winrun_dspbios")
 	AM_RANGE(0x380000, 0x38000f) AM_READWRITE(winrun_dspcomram_control_r,winrun_dspcomram_control_w)
 	AM_RANGE(0x3c0000, 0x3c1fff) AM_READWRITE(winrun_68k_dspcomram_r,winrun_68k_dspcomram_w)
 	AM_RANGE(0x400000, 0x400001) AM_WRITE(pointram_control_w)
@@ -2245,7 +2245,7 @@ static void namcos21_init( running_machine &machine, int game_type )
 	namcos21_state *state = machine.driver_data<namcos21_state>();
 	namcos2_gametype = game_type;
 	state->m_pointram = auto_alloc_array(machine, UINT8, PTRAM_SIZE);
-	state->m_mpDataROM = (UINT16 *)machine.region( "user1" )->base();
+	state->m_mpDataROM = (UINT16 *)state->memregion( "user1" )->base();
 	InitDSP(machine);
 	state->m_mbNeedsKickstart = 20;
 	if( game_type==NAMCOS21_CYBERSLED )
@@ -2257,7 +2257,7 @@ static void namcos21_init( running_machine &machine, int game_type )
 static DRIVER_INIT( winrun )
 {
 	namcos21_state *state = machine.driver_data<namcos21_state>();
-	UINT16 *pMem = (UINT16 *)machine.region("dsp")->base();
+	UINT16 *pMem = (UINT16 *)machine.root_device().memregion("dsp")->base();
 	int pc = 0;
 	pMem[pc++] = 0xff80; /* b */
 	pMem[pc++] = 0;
@@ -2265,7 +2265,7 @@ static DRIVER_INIT( winrun )
 	state->m_winrun_dspcomram = auto_alloc_array(machine, UINT16, 0x1000*2);
 
 	namcos2_gametype = NAMCOS21_WINRUN91;
-	state->m_mpDataROM = (UINT16 *)machine.region( "user1" )->base();
+	state->m_mpDataROM = (UINT16 *)state->memregion( "user1" )->base();
 	state->m_pointram = auto_alloc_array(machine, UINT8, PTRAM_SIZE);
 	state->m_pointram_idx = 0;
 	state->m_mbNeedsKickstart = 0;
@@ -2289,7 +2289,7 @@ static DRIVER_INIT( cybsled )
 
 static DRIVER_INIT( solvalou )
 {
-	UINT16 *mem = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *mem = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 	mem[0x20ce4/2+1] = 0x0000; // $200128
 	mem[0x20cf4/2+0] = 0x4e71; // 2nd ptr_booting
 	mem[0x20cf4/2+1] = 0x4e71;
@@ -2301,13 +2301,13 @@ static DRIVER_INIT( solvalou )
 static DRIVER_INIT( driveyes )
 {
 	namcos21_state *state = machine.driver_data<namcos21_state>();
-	UINT16 *pMem = (UINT16 *)machine.region("dsp")->base();
+	UINT16 *pMem = (UINT16 *)machine.root_device().memregion("dsp")->base();
 	int pc = 0;
 	pMem[pc++] = 0xff80; /* b */
 	pMem[pc++] = 0;
 	state->m_winrun_dspcomram = auto_alloc_array(machine, UINT16, 0x1000*2);
 	namcos2_gametype = NAMCOS21_DRIVERS_EYES;
-	state->m_mpDataROM = (UINT16 *)machine.region( "user1" )->base();
+	state->m_mpDataROM = (UINT16 *)state->memregion( "user1" )->base();
 	state->m_pointram = auto_alloc_array(machine, UINT8, PTRAM_SIZE);
 	state->m_pointram_idx = 0;
 	state->m_mbNeedsKickstart = 0;

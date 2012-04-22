@@ -373,7 +373,7 @@ static WRITE16_DEVICE_HANDLER( sslam_snd_w )
 
 WRITE16_MEMBER(sslam_state::powerbls_sound_w)
 {
-	soundlatch_w(space, 0, data & 0xff);
+	soundlatch_byte_w(space, 0, data & 0xff);
 	cputag_set_input_line(machine(), "audiocpu", MCS51_INT1_LINE, HOLD_LINE);
 }
 
@@ -383,13 +383,13 @@ WRITE16_MEMBER(sslam_state::powerbls_sound_w)
 
 static ADDRESS_MAP_START( sslam_program_map, AS_PROGRAM, 16, sslam_state )
 	AM_RANGE(0x000400, 0x07ffff) AM_RAM
-	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(sslam_bg_tileram_w) AM_BASE(m_bg_tileram)
-	AM_RANGE(0x104000, 0x107fff) AM_RAM_WRITE(sslam_md_tileram_w) AM_BASE(m_md_tileram)
-	AM_RANGE(0x108000, 0x10ffff) AM_RAM_WRITE(sslam_tx_tileram_w) AM_BASE(m_tx_tileram)
-	AM_RANGE(0x110000, 0x11000d) AM_RAM AM_BASE(m_regs)
+	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(sslam_bg_tileram_w) AM_SHARE("bg_tileram")
+	AM_RANGE(0x104000, 0x107fff) AM_RAM_WRITE(sslam_md_tileram_w) AM_SHARE("md_tileram")
+	AM_RANGE(0x108000, 0x10ffff) AM_RAM_WRITE(sslam_tx_tileram_w) AM_SHARE("tx_tileram")
+	AM_RANGE(0x110000, 0x11000d) AM_RAM AM_SHARE("regs")
 	AM_RANGE(0x200000, 0x200001) AM_WRITENOP
 	AM_RANGE(0x280000, 0x280fff) AM_RAM_WRITE(sslam_paletteram_w) AM_SHARE("paletteram")
-	AM_RANGE(0x201000, 0x201fff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x201000, 0x201fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x304000, 0x304001) AM_WRITENOP
 	AM_RANGE(0x300010, 0x300011) AM_READ_PORT("IN0")
 	AM_RANGE(0x300012, 0x300013) AM_READ_PORT("IN1")
@@ -406,11 +406,11 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( powerbls_map, AS_PROGRAM, 16, sslam_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(powerbls_bg_tileram_w) AM_BASE(m_bg_tileram)
+	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(powerbls_bg_tileram_w) AM_SHARE("bg_tileram")
 	AM_RANGE(0x104000, 0x107fff) AM_RAM // not used
-	AM_RANGE(0x110000, 0x11000d) AM_RAM AM_BASE(m_regs)
+	AM_RANGE(0x110000, 0x11000d) AM_RAM AM_SHARE("regs")
 	AM_RANGE(0x200000, 0x200001) AM_WRITENOP
-	AM_RANGE(0x201000, 0x201fff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x201000, 0x201fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x280000, 0x2803ff) AM_RAM_WRITE(sslam_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0x300010, 0x300011) AM_READ_PORT("IN0")
 	AM_RANGE(0x300012, 0x300013) AM_READ_PORT("IN1")
@@ -432,7 +432,7 @@ READ8_MEMBER(sslam_state::playmark_snd_command_r)
 	UINT8 data = 0;
 
 	if ((m_oki_control & 0x38) == 0x30) {
-		data = soundlatch_r(space,0);
+		data = soundlatch_byte_r(space,0);
 	}
 	else if ((m_oki_control & 0x38) == 0x28) {
 		data = (machine().device<okim6295_device>("oki")->read(space,0) & 0x0f);

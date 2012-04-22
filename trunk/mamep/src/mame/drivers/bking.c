@@ -42,7 +42,7 @@ WRITE8_MEMBER(bking_state::bking_soundlatch_w)
 		if (data & (1 << i))
 			code |= 0x80 >> i;
 
-	soundlatch_w(space, offset, code);
+	soundlatch_byte_w(space, offset, code);
 	if (m_sound_nmi_enable)
 		device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
 }
@@ -59,7 +59,7 @@ WRITE8_MEMBER(bking_state::bking3_addr_h_w)
 
 READ8_MEMBER(bking_state::bking3_extrarom_r)
 {
-	UINT8 *rom = machine().region("user2")->base();
+	UINT8 *rom = memregion("user2")->base();
 	return rom[m_addr_h * 256 + m_addr_l];
 }
 
@@ -79,7 +79,7 @@ READ8_MEMBER(bking_state::bking3_ext_check_r)
 static ADDRESS_MAP_START( bking_map, AS_PROGRAM, 8, bking_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x83ff) AM_RAM
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(bking_playfield_w) AM_BASE(m_playfield_ram)
+	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(bking_playfield_w) AM_SHARE("playfield_ram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( bking_io_map, AS_IO, 8, bking_state )
@@ -133,7 +133,7 @@ static ADDRESS_MAP_START( bking_audio_map, AS_PROGRAM, 8, bking_state )
 	AM_RANGE(0x4401, 0x4401) AM_DEVREAD_LEGACY("ay1", ay8910_r)
 	AM_RANGE(0x4402, 0x4403) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
 	AM_RANGE(0x4403, 0x4403) AM_DEVREAD_LEGACY("ay2", ay8910_r)
-	AM_RANGE(0x4800, 0x4800) AM_READ(soundlatch_r)
+	AM_RANGE(0x4800, 0x4800) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x4802, 0x4802) AM_READWRITE(bking_sndnmi_disable_r, bking_sndnmi_enable_w)
 	AM_RANGE(0xe000, 0xefff) AM_ROM   /* Space for diagnostic ROM */
 ADDRESS_MAP_END

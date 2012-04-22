@@ -184,7 +184,7 @@ static WRITE8_DEVICE_HANDLER( zaccaria_port1b_w )
 
 WRITE8_MEMBER(zaccaria_state::sound_command_w)
 {
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	cputag_set_input_line(machine(), "audio2", 0, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
 }
 
@@ -192,7 +192,7 @@ WRITE8_MEMBER(zaccaria_state::sound1_command_w)
 {
 	pia6821_device *pia0 = machine().device<pia6821_device>("pia0");
 	pia0->ca1_w(data & 0x80);
-	soundlatch2_w(space, 0, data);
+	soundlatch2_byte_w(space, 0, data);
 }
 
 static WRITE8_DEVICE_HANDLER( mc1408_data_w )
@@ -260,10 +260,10 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, zaccaria_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x6000, 0x63ff) AM_READONLY
 	AM_RANGE(0x6400, 0x6407) AM_READ(zaccaria_prot1_r)
-	AM_RANGE(0x6000, 0x67ff) AM_WRITE(zaccaria_videoram_w) AM_BASE(m_videoram)	/* 6400-67ff is 4 bits wide */
-	AM_RANGE(0x6800, 0x683f) AM_WRITE(zaccaria_attributes_w) AM_BASE(m_attributesram)
-	AM_RANGE(0x6840, 0x685f) AM_RAM AM_BASE(m_spriteram)
-	AM_RANGE(0x6881, 0x68c0) AM_RAM AM_BASE(m_spriteram2)
+	AM_RANGE(0x6000, 0x67ff) AM_WRITE(zaccaria_videoram_w) AM_SHARE("videoram")	/* 6400-67ff is 4 bits wide */
+	AM_RANGE(0x6800, 0x683f) AM_WRITE(zaccaria_attributes_w) AM_SHARE("attributesram")
+	AM_RANGE(0x6840, 0x685f) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x6881, 0x68c0) AM_RAM AM_SHARE("spriteram2")
 	AM_RANGE(0x6c00, 0x6c00) AM_WRITE(zaccaria_flip_screen_x_w)
 	AM_RANGE(0x6c01, 0x6c01) AM_WRITE(zaccaria_flip_screen_y_w)
 	AM_RANGE(0x6c02, 0x6c02) AM_WRITENOP    /* sound reset */
@@ -330,7 +330,7 @@ static ADDRESS_MAP_START( sound_map_2, AS_PROGRAM, 8, zaccaria_state )
 	AM_RANGE(0x0090, 0x0093) AM_DEVREADWRITE("pia1", pia6821_device, read, write) AM_MIRROR(0x8F6C)
 	AM_RANGE(0x1000, 0x1000) AM_DEVWRITE_LEGACY("dac2", mc1408_data_w) AM_MIRROR(0x83FF) /* MC1408 */
 	AM_RANGE(0x1400, 0x1400) AM_WRITE(sound1_command_w) AM_MIRROR(0xC3FF)
-	AM_RANGE(0x1800, 0x1800) AM_READ(soundlatch_r) AM_MIRROR(0xC3FF)
+	AM_RANGE(0x1800, 0x1800) AM_READ(soundlatch_byte_r) AM_MIRROR(0xC3FF)
 	AM_RANGE(0x2000, 0x2fff) AM_ROM AM_MIRROR(0x8000) // rom 8 with A12 low
 	AM_RANGE(0x3000, 0x3fff) AM_ROM AM_MIRROR(0x8000) // rom 7 with A12 low
 	AM_RANGE(0x6000, 0x6fff) AM_ROM AM_MIRROR(0x8000) // rom 8 with A12 high
@@ -338,10 +338,9 @@ static ADDRESS_MAP_START( sound_map_2, AS_PROGRAM, 8, zaccaria_state )
 ADDRESS_MAP_END
 
 
-static CUSTOM_INPUT( acs_r )
+CUSTOM_INPUT_MEMBER(zaccaria_state::acs_r)
 {
-	zaccaria_state *state = field.machine().driver_data<zaccaria_state>();
-	return (state->m_acs & 0x08) ? 1 : 0;
+	return (m_acs & 0x08) ? 1 : 0;
 }
 
 static INPUT_PORTS_START( monymony )
@@ -449,7 +448,7 @@ static INPUT_PORTS_START( monymony )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN3 )
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(acs_r, NULL)	/* "ACS" - from pin 13 of a PIA on the sound board */
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, zaccaria_state,acs_r, NULL)	/* "ACS" - from pin 13 of a PIA on the sound board */
 	/* other bits come from a protection device */
 INPUT_PORTS_END
 
@@ -532,7 +531,7 @@ static const ay8910_interface ay8910_config =
 	AY8910_LEGACY_OUTPUT,
 	AY8910_DEFAULT_LOADS,
 	DEVCB_NULL,
-	DEVCB_DRIVER_MEMBER(driver_device, soundlatch2_r),
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch2_byte_r),
 	DEVCB_HANDLER(ay8910_port0a_w),
 	DEVCB_NULL
 };

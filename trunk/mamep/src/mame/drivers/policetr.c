@@ -178,15 +178,15 @@ WRITE32_MEMBER(policetr_state::policetr_bsmt2000_data_w)
 }
 
 
-static CUSTOM_INPUT( bsmt_status_r )
+CUSTOM_INPUT_MEMBER(policetr_state::bsmt_status_r)
 {
-	return field.machine().device<bsmt2000_device>("bsmt")->read_status();
+	return machine().device<bsmt2000_device>("bsmt")->read_status();
 }
 
 
 READ32_MEMBER(policetr_state::bsmt2000_data_r)
 {
-	return machine().region("bsmt")->base()[m_bsmt_data_bank * 0x10000 + m_bsmt_data_offset] << 8;
+	return memregion("bsmt")->base()[m_bsmt_data_bank * 0x10000 + m_bsmt_data_offset] << 8;
 }
 
 
@@ -250,7 +250,7 @@ static const eeprom_interface eeprom_interface_policetr =
  *************************************/
 
 static ADDRESS_MAP_START( policetr_map, AS_PROGRAM, 32, policetr_state )
-	AM_RANGE(0x00000000, 0x0001ffff) AM_RAM AM_BASE(m_rambase)
+	AM_RANGE(0x00000000, 0x0001ffff) AM_RAM AM_SHARE("rambase")
 	AM_RANGE(0x00200000, 0x0020000f) AM_WRITE(policetr_video_w)
 	AM_RANGE(0x00400000, 0x00400003) AM_READ(policetr_video_r)
 	AM_RANGE(0x00500000, 0x00500003) AM_WRITENOP		// copies ROM here at startup, plus checksum
@@ -269,7 +269,7 @@ ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( sshooter_map, AS_PROGRAM, 32, policetr_state )
-	AM_RANGE(0x00000000, 0x0001ffff) AM_RAM AM_BASE(m_rambase)
+	AM_RANGE(0x00000000, 0x0001ffff) AM_RAM AM_SHARE("rambase")
 	AM_RANGE(0x00200000, 0x00200003) AM_WRITE(policetr_bsmt2000_data_w)
 	AM_RANGE(0x00300000, 0x00300003) AM_WRITE(policetr_palette_offset_w)
 	AM_RANGE(0x00320000, 0x00320003) AM_WRITE(policetr_palette_data_w)
@@ -321,7 +321,7 @@ static INPUT_PORTS_START( policetr )
 	PORT_BIT( 0x00100000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_SERVICE( 0x00200000, IP_ACTIVE_LOW )		/* Not actually a dipswitch */
 	PORT_BIT( 0x00400000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x00800000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(bsmt_status_r, NULL)
+	PORT_BIT( 0x00800000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, policetr_state,bsmt_status_r, NULL)
 	PORT_BIT( 0x01000000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
 	PORT_BIT( 0x02000000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x04000000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)

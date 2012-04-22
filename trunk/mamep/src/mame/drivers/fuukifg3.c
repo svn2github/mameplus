@@ -238,24 +238,24 @@ static ADDRESS_MAP_START( fuuki32_map, AS_PROGRAM, 32, fuuki32_state )
 	AM_RANGE(0x400000, 0x40ffff) AM_RAM																		// Work RAM
 	AM_RANGE(0x410000, 0x41ffff) AM_RAM																		// Work RAM (used by asurabus)
 
-	AM_RANGE(0x500000, 0x501fff) AM_RAM_WRITE(fuuki32_vram_0_w) AM_BASE(m_vram[0])	// Tilemap 1
-	AM_RANGE(0x502000, 0x503fff) AM_RAM_WRITE(fuuki32_vram_1_w) AM_BASE(m_vram[1])	// Tilemap 2
-	AM_RANGE(0x504000, 0x505fff) AM_RAM_WRITE(fuuki32_vram_2_w) AM_BASE(m_vram[2])	// Tilemap bg
-	AM_RANGE(0x506000, 0x507fff) AM_RAM_WRITE(fuuki32_vram_3_w) AM_BASE(m_vram[3])	// Tilemap bg2
+	AM_RANGE(0x500000, 0x501fff) AM_RAM_WRITE(fuuki32_vram_0_w) AM_SHARE("vram.0")	// Tilemap 1
+	AM_RANGE(0x502000, 0x503fff) AM_RAM_WRITE(fuuki32_vram_1_w) AM_SHARE("vram.1")	// Tilemap 2
+	AM_RANGE(0x504000, 0x505fff) AM_RAM_WRITE(fuuki32_vram_2_w) AM_SHARE("vram.2")	// Tilemap bg
+	AM_RANGE(0x506000, 0x507fff) AM_RAM_WRITE(fuuki32_vram_3_w) AM_SHARE("vram.3")	// Tilemap bg2
 	AM_RANGE(0x508000, 0x517fff) AM_RAM																		// More tilemap, or linescroll? Seems to be empty all of the time
-	AM_RANGE(0x600000, 0x601fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)	// Sprites
-	AM_RANGE(0x700000, 0x703fff) AM_RAM_WRITE(paletteram32_xRRRRRGGGGGBBBBB_dword_w) AM_BASE(m_paletteram) // Palette
+	AM_RANGE(0x600000, 0x601fff) AM_RAM AM_SHARE("spriteram")	// Sprites
+	AM_RANGE(0x700000, 0x703fff) AM_RAM_WRITE(paletteram32_xRRRRRGGGGGBBBBB_dword_w) AM_SHARE("paletteram") // Palette
 
 	AM_RANGE(0x800000, 0x800003) AM_READ_PORT("800000") AM_WRITENOP											// Coin
 	AM_RANGE(0x810000, 0x810003) AM_READ_PORT("810000") AM_WRITENOP											// Player Inputs
 	AM_RANGE(0x880000, 0x880003) AM_READ_PORT("880000")														// Service + DIPS
 	AM_RANGE(0x890000, 0x890003) AM_READ_PORT("890000")														// More DIPS
 
-	AM_RANGE(0x8c0000, 0x8c001f) AM_RAM_WRITE(fuuki32_vregs_w) AM_BASE(m_vregs)		// Video Registers
+	AM_RANGE(0x8c0000, 0x8c001f) AM_RAM_WRITE(fuuki32_vregs_w) AM_SHARE("vregs")		// Video Registers
 	AM_RANGE(0x8d0000, 0x8d0003) AM_RAM 																	// Flipscreen Related
-	AM_RANGE(0x8e0000, 0x8e0003) AM_RAM AM_BASE(m_priority)							// Controls layer order
+	AM_RANGE(0x8e0000, 0x8e0003) AM_RAM AM_SHARE("priority")							// Controls layer order
 	AM_RANGE(0x903fe0, 0x903fff) AM_READWRITE(snd_020_r, snd_020_w) 										// Shared with Z80
-	AM_RANGE(0xa00000, 0xa00003) AM_WRITEONLY AM_BASE(m_tilebank)						// Tilebank
+	AM_RANGE(0xa00000, 0xa00003) AM_WRITEONLY AM_SHARE("tilebank")						// Tilebank
 ADDRESS_MAP_END
 
 
@@ -267,7 +267,7 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER(fuuki32_state::fuuki32_sound_bw_w)
 {
-	memory_set_bank(machine(), "bank1", data);
+	membank("bank1")->set_entry(data);
 }
 
 READ8_MEMBER(fuuki32_state::snd_z80_r)
@@ -314,20 +314,20 @@ ADDRESS_MAP_END
 
 static INPUT_PORTS_START( asurabld )
 	PORT_START("800000")
-	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(custom_port_read, "SYSTEM")
-	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(custom_port_read, "SYSTEM")
+	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, driver_device,custom_port_read, "SYSTEM")
+	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, driver_device,custom_port_read, "SYSTEM")
 
 	PORT_START("810000")
-	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(custom_port_read, "INPUTS")
-	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(custom_port_read, "INPUTS")
+	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, driver_device,custom_port_read, "INPUTS")
+	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, driver_device,custom_port_read, "INPUTS")
 
 	PORT_START("880000")
-	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(custom_port_read, "DSW1")
-	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(custom_port_read, "DSW1")
+	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, driver_device,custom_port_read, "DSW1")
+	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, driver_device,custom_port_read, "DSW1")
 
 	PORT_START("890000")
-	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(custom_port_read, "DSW2")
-	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(custom_port_read, "DSW2")
+	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, driver_device,custom_port_read, "DSW2")
+	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, driver_device,custom_port_read, "DSW2")
 
 	PORT_START("SYSTEM")
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -550,9 +550,9 @@ static TIMER_CALLBACK( raster_interrupt_callback )
 static MACHINE_START( fuuki32 )
 {
 	fuuki32_state *state = machine.driver_data<fuuki32_state>();
-	UINT8 *ROM = machine.region("soundcpu")->base();
+	UINT8 *ROM = state->memregion("soundcpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 0x10, &ROM[0x10000], 0x8000);
+	state->membank("bank1")->configure_entries(0, 0x10, &ROM[0x10000], 0x8000);
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_audiocpu = machine.device("soundcpu");

@@ -69,7 +69,7 @@ WRITE8_MEMBER(skykid_state::skykid_subreset_w)
 
 WRITE8_MEMBER(skykid_state::skykid_bankswitch_w)
 {
-	memory_set_bank(machine(), "bank1", !BIT(offset,11));
+	membank("bank1")->set_entry(!BIT(offset,11));
 }
 
 WRITE8_MEMBER(skykid_state::skykid_irq_1_ctrl_w)
@@ -92,7 +92,7 @@ static MACHINE_START( skykid )
 {
 	skykid_state *state = machine.driver_data<skykid_state>();
 	/* configure the banks */
-	memory_configure_bank(machine, "bank1", 0, 2, machine.region("maincpu")->base() + 0x10000, 0x2000);
+	state->membank("bank1")->configure_entries(0, 2, state->memregion("maincpu")->base() + 0x10000, 0x2000);
 
 	state_save_register_global(machine, state->m_inputport_selected);
 }
@@ -101,9 +101,9 @@ static MACHINE_START( skykid )
 
 static ADDRESS_MAP_START( skykid_map, AS_PROGRAM, 8, skykid_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROMBANK("bank1")				/* banked ROM */
-	AM_RANGE(0x2000, 0x2fff) AM_READWRITE(skykid_videoram_r,skykid_videoram_w) AM_BASE(m_videoram)/* Video RAM (background) */
-	AM_RANGE(0x4000, 0x47ff) AM_READWRITE(skykid_textram_r,skykid_textram_w) AM_BASE(m_textram)	/* video RAM (text layer) */
-	AM_RANGE(0x4800, 0x5fff) AM_RAM AM_BASE(m_spriteram)	/* RAM + Sprite RAM */
+	AM_RANGE(0x2000, 0x2fff) AM_READWRITE(skykid_videoram_r,skykid_videoram_w) AM_SHARE("videoram")/* Video RAM (background) */
+	AM_RANGE(0x4000, 0x47ff) AM_READWRITE(skykid_textram_r,skykid_textram_w) AM_SHARE("textram")	/* video RAM (text layer) */
+	AM_RANGE(0x4800, 0x5fff) AM_RAM AM_SHARE("spriteram")	/* RAM + Sprite RAM */
 	AM_RANGE(0x6000, 0x60ff) AM_WRITE(skykid_scroll_y_w)		/* Y scroll register map */
 	AM_RANGE(0x6200, 0x63ff) AM_WRITE(skykid_scroll_x_w)		/* X scroll register map */
 	AM_RANGE(0x6800, 0x6bff) AM_DEVREADWRITE_LEGACY("namco", namcos1_cus30_r, namcos1_cus30_w) /* PSG device, shared RAM */
@@ -638,7 +638,7 @@ static DRIVER_INIT( skykid )
 	int i;
 
 	/* unpack the third sprite ROM */
-	rom = machine.region("gfx3")->base() + 0x4000;
+	rom = machine.root_device().memregion("gfx3")->base() + 0x4000;
 	for (i = 0;i < 0x2000;i++)
 	{
 		rom[i + 0x4000] = rom[i];		// sprite set #1, plane 3

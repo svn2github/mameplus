@@ -58,18 +58,21 @@ class merit_state : public driver_device
 {
 public:
 	merit_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_ram_attr(*this, "raattr"),
+		m_ram_video(*this, "ravideo"),
+		m_backup_ram(*this, "backup_ram"){ }
 
 	void dodge_nvram_init(nvram_device &nvram, void *base, size_t size);
 	pen_t m_pens[NUM_PENS];
-	UINT8 *m_ram_attr;
-	UINT8 *m_ram_video;
+	required_shared_ptr<UINT8> m_ram_attr;
+	required_shared_ptr<UINT8> m_ram_video;
 	UINT8 *m_ram_palette;
 	UINT8 m_lscnblk;
 	int m_extra_video_bank_bit;
 	int m_question_address;
 	int m_decryption_key;
-	UINT8 *m_backup_ram;
+	optional_shared_ptr<UINT8> m_backup_ram;
 	DECLARE_READ8_MEMBER(questions_r);
 	DECLARE_WRITE8_MEMBER(low_offset_w);
 	DECLARE_WRITE8_MEMBER(med_offset_w);
@@ -77,6 +80,7 @@ public:
 	DECLARE_READ8_MEMBER(palette_r);
 	DECLARE_WRITE8_MEMBER(palette_w);
 	DECLARE_WRITE8_MEMBER(casino5_bank_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(rndbit_r);
 };
 
 
@@ -96,7 +100,7 @@ static MACHINE_START(merit)
 
 READ8_MEMBER(merit_state::questions_r)
 {
-	UINT8 *questions = machine().region("user1")->base();
+	UINT8 *questions = memregion("user1")->base();
 	int address;
 
 	switch(m_question_address >> 16)
@@ -216,9 +220,9 @@ static MC6845_UPDATE_ROW( update_row )
 	UINT16 x = 0;
 	int rlen;
 
-	gfx[0] = device->machine().region("gfx1")->base();
-	gfx[1] = device->machine().region("gfx2")->base();
-	rlen = device->machine().region("gfx2")->bytes();
+	gfx[0] = device->machine().root_device().memregion("gfx1")->base();
+	gfx[1] = device->machine().root_device().memregion("gfx2")->base();
+	rlen = state->memregion("gfx2")->bytes();
 
 	//ma = ma ^ 0x7ff;
 	for (cx = 0; cx < x_count; cx++)
@@ -307,7 +311,7 @@ static WRITE8_DEVICE_HANDLER( led2_w )
 static WRITE8_DEVICE_HANDLER( misc_w )
 {
 	merit_state *state = device->machine().driver_data<merit_state>();
-	flip_screen_set(device->machine(), ~data & 0x10);
+	state->flip_screen_set(~data & 0x10);
 	state->m_extra_video_bank_bit = (data & 2) << 8;
 	state->m_lscnblk = (data >> 3) & 1;
 
@@ -317,7 +321,7 @@ static WRITE8_DEVICE_HANDLER( misc_w )
 static WRITE8_DEVICE_HANDLER( misc_couple_w )
 {
 	merit_state *state = device->machine().driver_data<merit_state>();
-	flip_screen_set(device->machine(), ~data & 0x10);
+	state->flip_screen_set(~data & 0x10);
 	state->m_extra_video_bank_bit = (data & 2) << 8;
 	state->m_lscnblk = (data >> 3) & 1;
 
@@ -331,13 +335,13 @@ WRITE8_MEMBER(merit_state::casino5_bank_w)
 {
 	if ( data == 0 )
 	{
-		memory_set_bank(machine(), "bank1", 1);
-		memory_set_bank(machine(), "bank2", 1);
+		membank("bank1")->set_entry(1);
+		membank("bank2")->set_entry(1);
 	}
 	else if ( data == 0xff )
 	{
-		memory_set_bank(machine(), "bank1", 0);
-		memory_set_bank(machine(), "bank2", 0);
+		membank("bank1")->set_entry(0);
+		membank("bank2")->set_entry(0);
 	}
 	else
 	{
@@ -345,9 +349,9 @@ WRITE8_MEMBER(merit_state::casino5_bank_w)
 	}
 }
 
-static CUSTOM_INPUT(rndbit_r)
+CUSTOM_INPUT_MEMBER(merit_state::rndbit_r)
 {
-	return field.machine().rand();
+	return machine().rand();
 }
 
 static ADDRESS_MAP_START( pitboss_map, AS_PROGRAM, 8, merit_state )
@@ -357,8 +361,8 @@ static ADDRESS_MAP_START( pitboss_map, AS_PROGRAM, 8, merit_state )
 	AM_RANGE(0xc000, 0xc003) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)
 	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0xe001, 0xe001) AM_DEVWRITE("crtc", mc6845_device, register_w)
-	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE(m_ram_attr)
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_BASE(m_ram_video)
+	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("raattr")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_SHARE("ravideo")
 	AM_RANGE(0xf800, 0xfbff) AM_READWRITE(palette_r, palette_w)
 ADDRESS_MAP_END
 
@@ -373,8 +377,8 @@ static ADDRESS_MAP_START( casino5_map, AS_PROGRAM, 8, merit_state )
 	AM_RANGE(0xc000, 0xc003) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)
 	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0xe001, 0xe001) AM_DEVWRITE("crtc", mc6845_device, register_w)
-	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE(m_ram_attr)
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_BASE(m_ram_video)
+	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("raattr")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_SHARE("ravideo")
 	AM_RANGE(0xf800, 0xfbff) AM_READWRITE(palette_r, palette_w)
 ADDRESS_MAP_END
 
@@ -385,8 +389,8 @@ static ADDRESS_MAP_START( bigappg_map, AS_PROGRAM, 8, merit_state )
 	AM_RANGE(0xc008, 0xc00b) AM_DEVREADWRITE_LEGACY("ppi8255_0", ppi8255_r, ppi8255_w)
 	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0xe001, 0xe001) AM_DEVWRITE("crtc", mc6845_device, register_w)
-	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE(m_ram_attr)
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_BASE(m_ram_video)
+	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("raattr")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_SHARE("ravideo")
 	AM_RANGE(0xf800, 0xfbff) AM_READWRITE(palette_r, palette_w)
 ADDRESS_MAP_END
 
@@ -397,8 +401,8 @@ static ADDRESS_MAP_START( dodge_map, AS_PROGRAM, 8, merit_state )
 	AM_RANGE(0xc008, 0xc00b) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)
 	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0xe001, 0xe001) AM_DEVWRITE("crtc", mc6845_device, register_w)
-	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE(m_ram_attr)
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_BASE(m_ram_video)
+	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("raattr")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_SHARE("ravideo")
 	AM_RANGE(0xf800, 0xfbff) AM_READWRITE(palette_r, palette_w)
 ADDRESS_MAP_END
 
@@ -417,8 +421,8 @@ static ADDRESS_MAP_START( trvwhiz_map, AS_PROGRAM, 8, merit_state )
 	AM_RANGE(0xc000, 0xc003) AM_MIRROR(0x1df0) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)
 	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x05f0) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0xe001, 0xe001) AM_MIRROR(0x05f0) AM_DEVWRITE("crtc", mc6845_device, register_w)
-	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE(m_ram_attr)
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_BASE(m_ram_video)
+	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("raattr")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_SHARE("ravideo")
 	AM_RANGE(0xf800, 0xfbff) AM_READWRITE(palette_r, palette_w)
 ADDRESS_MAP_END
 
@@ -438,8 +442,8 @@ static ADDRESS_MAP_START( phrcraze_map, AS_PROGRAM, 8, merit_state )
 	AM_RANGE(0xda00, 0xdaff) AM_WRITE(med_offset_w)
 	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x05f0) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0xe001, 0xe001) AM_MIRROR(0x05f0) AM_DEVWRITE("crtc", mc6845_device, register_w)
-	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE(m_ram_attr)
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_BASE(m_ram_video)
+	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("raattr")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_SHARE("ravideo")
 	AM_RANGE(0xf800, 0xfbff) AM_READWRITE(palette_r, palette_w)
 ADDRESS_MAP_END
 
@@ -459,8 +463,8 @@ static ADDRESS_MAP_START( tictac_map, AS_PROGRAM, 8, merit_state )
 	AM_RANGE(0xda00, 0xdaff) AM_WRITE(med_offset_w)
 	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x05f0) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0xe001, 0xe001) AM_MIRROR(0x05f0) AM_DEVWRITE("crtc", mc6845_device, register_w)
-	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE(m_ram_attr)
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_BASE(m_ram_video)
+	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("raattr")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_SHARE("ravideo")
 	AM_RANGE(0xf800, 0xfbff) AM_READWRITE(palette_r, palette_w)
 ADDRESS_MAP_END
 
@@ -480,8 +484,8 @@ static ADDRESS_MAP_START( trvwhziv_map, AS_PROGRAM, 8, merit_state )
 	AM_RANGE(0xda00, 0xdaff) AM_WRITE(med_offset_w)
 	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x05f0) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0xe001, 0xe001) AM_MIRROR(0x05f0) AM_DEVWRITE("crtc", mc6845_device, register_w)
-	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE(m_ram_attr)
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_BASE(m_ram_video)
+	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("raattr")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_SHARE("ravideo")
 	AM_RANGE(0xf800, 0xfbff) AM_READWRITE(palette_r, palette_w)
 ADDRESS_MAP_END
 
@@ -496,21 +500,21 @@ static ADDRESS_MAP_START( dtrvwz5_map, AS_PROGRAM, 8, merit_state )
 	AM_RANGE(0xda00, 0xdaff) AM_WRITE(med_offset_w)
 	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x05f0) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0xe001, 0xe001) AM_MIRROR(0x05f0) AM_DEVWRITE("crtc", mc6845_device, register_w)
-	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE(m_ram_attr)
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_BASE(m_ram_video)
+	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("raattr")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_SHARE("ravideo")
 	AM_RANGE(0xf800, 0xfbff) AM_READWRITE(palette_r, palette_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( couple_map, AS_PROGRAM, 8, merit_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x9fff) AM_ROMBANK("bank1")
-	AM_RANGE(0xa000, 0xbfff) AM_RAM AM_BASE(m_backup_ram)
+	AM_RANGE(0xa000, 0xbfff) AM_RAM AM_SHARE("backup_ram")
 	AM_RANGE(0xc004, 0xc007) AM_DEVREADWRITE_LEGACY("ppi8255_0", ppi8255_r, ppi8255_w)
 	AM_RANGE(0xc008, 0xc00b) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)
 	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0xe001, 0xe001) AM_DEVWRITE("crtc", mc6845_device, register_w)
-	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE(m_ram_attr)
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_BASE(m_ram_video)
+	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("raattr")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM AM_SHARE("ravideo")
 	AM_RANGE(0xf800, 0xfbff) AM_READWRITE(palette_r, palette_w)
 ADDRESS_MAP_END
 
@@ -1024,7 +1028,7 @@ static INPUT_PORTS_START( bigappg )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(rndbit_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, merit_state,rndbit_r, NULL)
 
 	PORT_START("DSW")
 	PORT_DIPNAME( 0x01, 0x01, "Draw Poker enabled" )
@@ -1211,10 +1215,10 @@ void merit_state::dodge_nvram_init(nvram_device &nvram, void *base, size_t size)
 static MACHINE_START(casino5)
 {
 	MACHINE_START_CALL(merit);
-	memory_configure_bank(machine, "bank1", 0, 2, machine.region("maincpu")->base() + 0x2000, 0x2000);
-	memory_configure_bank(machine, "bank2", 0, 2, machine.region("maincpu")->base() + 0x6000, 0x2000);
-	memory_set_bank(machine, "bank1", 0);
-	memory_set_bank(machine, "bank2", 0);
+	machine.root_device().membank("bank1")->configure_entries(0, 2, machine.root_device().memregion("maincpu")->base() + 0x2000, 0x2000);
+	machine.root_device().membank("bank2")->configure_entries(0, 2, machine.root_device().memregion("maincpu")->base() + 0x6000, 0x2000);
+	machine.root_device().membank("bank1")->set_entry(0);
+	machine.root_device().membank("bank2")->set_entry(0);
 }
 
 static MACHINE_CONFIG_START( pitboss, merit_state )
@@ -2017,7 +2021,7 @@ static DRIVER_INIT( key_7 )
 
 static DRIVER_INIT( couple )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	#if 0 //quick rom compare test
 	{
@@ -2037,14 +2041,14 @@ static DRIVER_INIT( couple )
       dumpers it's just the way it is,a.k.a. it's an "hardware" banking.
       update 20060118 by f205v: now we have 3 dumps from 3 different boards and they
       all behave the same...*/
-	memory_set_bankptr(machine, "bank1",ROM + 0x10000 + (0x2000 * 2));
+	machine.root_device().membank("bank1")->set_base(ROM + 0x10000 + (0x2000 * 2));
 }
 
 static DRIVER_INIT( dtrvwz5 )
 {
 	merit_state *state = machine.driver_data<merit_state>();
 	int i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 	/* fill b000 - b0ff with ret 0xc9 */
 	for ( i = 0xb000; i < 0xb100; i++ )
 		ROM[i] = 0xc9;

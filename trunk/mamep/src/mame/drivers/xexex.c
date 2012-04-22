@@ -211,17 +211,17 @@ WRITE16_MEMBER(xexex_state::sound_cmd1_w)
 	{
 		// anyone knows why 0x1a keeps lurking the sound queue in the world version???
 		if (m_strip_0x1a)
-			if (soundlatch2_r(space, 0) == 1 && data == 0x1a)
+			if (soundlatch2_byte_r(space, 0) == 1 && data == 0x1a)
 				return;
 
-		soundlatch_w(space, 0, data & 0xff);
+		soundlatch_byte_w(space, 0, data & 0xff);
 	}
 }
 
 WRITE16_MEMBER(xexex_state::sound_cmd2_w)
 {
 	if (ACCESSING_BITS_0_7)
-		soundlatch2_w(space, 0, data & 0xff);
+		soundlatch2_byte_w(space, 0, data & 0xff);
 }
 
 WRITE16_MEMBER(xexex_state::sound_irq_w)
@@ -231,13 +231,13 @@ WRITE16_MEMBER(xexex_state::sound_irq_w)
 
 READ16_MEMBER(xexex_state::sound_status_r)
 {
-	return soundlatch3_r(space, 0);
+	return soundlatch3_byte_r(space, 0);
 }
 
 static void reset_sound_region(running_machine &machine)
 {
 	xexex_state *state = machine.driver_data<xexex_state>();
-	memory_set_bank(machine, "bank2", state->m_cur_sound_region & 0x07);
+	state->membank("bank2")->set_entry(state->m_cur_sound_region & 0x07);
 }
 
 WRITE8_MEMBER(xexex_state::sound_bankswitch_w)
@@ -314,13 +314,13 @@ static TIMER_DEVICE_CALLBACK( xexex_interrupt )
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, xexex_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	AM_RANGE(0x080000, 0x08ffff) AM_RAM AM_BASE(m_workram)			// work RAM
+	AM_RANGE(0x080000, 0x08ffff) AM_RAM AM_SHARE("workram")			// work RAM
 
 #if XE_SKIPIDLE
 	AM_RANGE(0x080014, 0x080015) AM_READ(xexex_waitskip_r)				// helps sound CPU by giving back control as early as possible
 #endif
 
-	AM_RANGE(0x090000, 0x097fff) AM_RAM AM_BASE(m_spriteram)			// K053247 sprite RAM
+	AM_RANGE(0x090000, 0x097fff) AM_RAM AM_SHARE("spriteram")			// K053247 sprite RAM
 	AM_RANGE(0x098000, 0x09ffff) AM_READWRITE(spriteram_mirror_r, spriteram_mirror_w)	// K053247 sprite RAM mirror read
 	AM_RANGE(0x0c0000, 0x0c003f) AM_DEVWRITE_LEGACY("k056832", k056832_word_w)				// VACSET (K054157)
 	AM_RANGE(0x0c2000, 0x0c2007) AM_DEVWRITE_LEGACY("k053246", k053246_word_w)				// OBJSET1
@@ -346,7 +346,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, xexex_state )
 	AM_RANGE(0x182000, 0x183fff) AM_DEVREADWRITE_LEGACY("k056832", k056832_ram_word_r, k056832_ram_word_w)
 	AM_RANGE(0x190000, 0x191fff) AM_DEVREAD_LEGACY("k056832", k056832_rom_word_r)		// Passthrough to tile roms
 	AM_RANGE(0x1a0000, 0x1a1fff) AM_DEVREAD("k053250", k053250_t, rom_r)
-	AM_RANGE(0x1b0000, 0x1b1fff) AM_RAM_WRITE(paletteram16_xrgb_word_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0x1b0000, 0x1b1fff) AM_RAM_WRITE(paletteram_xrgb_word_be_w) AM_SHARE("paletteram")
 
 #if XE_DEBUG
 	AM_RANGE(0x0c0000, 0x0c003f) AM_DEVREAD_LEGACY("k056832", k056832_word_r)
@@ -365,9 +365,9 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, xexex_state )
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
 	AM_RANGE(0xe000, 0xe22f) AM_DEVREADWRITE("k054539", k054539_device, read, write)
 	AM_RANGE(0xec00, 0xec01) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0xf000, 0xf000) AM_WRITE(soundlatch3_w)
-	AM_RANGE(0xf002, 0xf002) AM_READ(soundlatch_r)
-	AM_RANGE(0xf003, 0xf003) AM_READ(soundlatch2_r)
+	AM_RANGE(0xf000, 0xf000) AM_WRITE(soundlatch3_byte_w)
+	AM_RANGE(0xf002, 0xf002) AM_READ(soundlatch_byte_r)
+	AM_RANGE(0xf003, 0xf003) AM_READ(soundlatch2_byte_r)
 	AM_RANGE(0xf800, 0xf800) AM_WRITE(sound_bankswitch_w)
 ADDRESS_MAP_END
 
@@ -456,10 +456,10 @@ static void xexex_postload(running_machine &machine)
 static MACHINE_START( xexex )
 {
 	xexex_state *state = machine.driver_data<xexex_state>();
-	UINT8 *ROM = machine.region("audiocpu")->base();
+	UINT8 *ROM = state->memregion("audiocpu")->base();
 
-	memory_configure_bank(machine, "bank2", 0, 8, &ROM[0x10000], 0x4000);
-	memory_set_bank(machine, "bank2", 0);
+	state->membank("bank2")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
+	state->membank("bank2")->set_entry(0);
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_audiocpu = machine.device("audiocpu");
@@ -684,8 +684,8 @@ static DRIVER_INIT( xexex )
 	if (!strcmp(machine.system().name, "xexex"))
 	{
 		// Invulnerability
-//      *(UINT16 *)(machine.region("maincpu")->base() + 0x648d4) = 0x4a79;
-//      *(UINT16 *)(machine.region("maincpu")->base() + 0x00008) = 0x5500;
+//      *(UINT16 *)(machine.root_device().memregion("maincpu")->base() + 0x648d4) = 0x4a79;
+//      *(UINT16 *)(state->memregion("maincpu")->base() + 0x00008) = 0x5500;
 		state->m_strip_0x1a = 1;
 	}
 }

@@ -162,7 +162,7 @@ static MACHINE_START( jedi )
 	state->m_interrupt_timer->adjust(machine.primary_screen->time_until_pos(32), 32);
 
 	/* configure the banks */
-	memory_configure_bank(machine, "bank1", 0, 3, machine.region("maincpu")->base() + 0x10000, 0x4000);
+	state->membank("bank1")->configure_entries(0, 3, state->memregion("maincpu")->base() + 0x10000, 0x4000);
 
 	/* set up save state */
 	state->save_item(NAME(state->m_nvram_enabled));
@@ -195,9 +195,9 @@ static MACHINE_RESET( jedi )
 
 WRITE8_MEMBER(jedi_state::rom_banksel_w)
 {
-	if (data & 0x01) memory_set_bank(machine(), "bank1", 0);
-	if (data & 0x02) memory_set_bank(machine(), "bank1", 1);
-	if (data & 0x04) memory_set_bank(machine(), "bank1", 2);
+	if (data & 0x01) membank("bank1")->set_entry(0);
+	if (data & 0x02) membank("bank1")->set_entry(1);
+	if (data & 0x04) membank("bank1")->set_entry(2);
 }
 
 
@@ -270,7 +270,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, jedi_state )
 	AM_RANGE(0x0c00, 0x0c00) AM_MIRROR(0x03fe) AM_READ_PORT("0c00") AM_WRITENOP
 	AM_RANGE(0x0c01, 0x0c01) AM_MIRROR(0x03fe) AM_READ_PORT("0c01") AM_WRITENOP
 	AM_RANGE(0x1000, 0x13ff) AM_NOP
-	AM_RANGE(0x1400, 0x1400) AM_MIRROR(0x03ff) AM_READ_LEGACY(jedi_audio_ack_latch_r) AM_WRITENOP
+	AM_RANGE(0x1400, 0x1400) AM_MIRROR(0x03ff) AM_READ(jedi_audio_ack_latch_r) AM_WRITENOP
 	AM_RANGE(0x1800, 0x1800) AM_MIRROR(0x03ff) AM_READ(a2d_data_r) AM_WRITENOP
 	AM_RANGE(0x1c00, 0x1c01) AM_MIRROR(0x007f) AM_READNOP AM_WRITE(nvram_enable_w)
 	AM_RANGE(0x1c80, 0x1c82) AM_MIRROR(0x0078) AM_READNOP AM_WRITE(a2d_select_w)
@@ -280,19 +280,19 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, jedi_state )
 	AM_RANGE(0x1e00, 0x1e00) AM_MIRROR(0x007f) AM_READNOP AM_WRITE(main_irq_ack_w)
 	AM_RANGE(0x1e80, 0x1e81) AM_MIRROR(0x0078) AM_READNOP AM_WRITE(jedi_coin_counter_w)
 	AM_RANGE(0x1e82, 0x1e83) AM_MIRROR(0x0078) AM_NOP	/* write: LED control - not used */
-	AM_RANGE(0x1e84, 0x1e84) AM_MIRROR(0x0078) AM_READNOP AM_WRITEONLY AM_BASE(m_foreground_bank)
+	AM_RANGE(0x1e84, 0x1e84) AM_MIRROR(0x0078) AM_READNOP AM_WRITEONLY AM_SHARE("foreground_bank")
 	AM_RANGE(0x1e85, 0x1e85) AM_MIRROR(0x0078) AM_NOP
-	AM_RANGE(0x1e86, 0x1e86) AM_MIRROR(0x0078) AM_READNOP AM_WRITE_LEGACY(jedi_audio_reset_w)
-	AM_RANGE(0x1e87, 0x1e87) AM_MIRROR(0x0078) AM_READNOP AM_WRITEONLY AM_BASE(m_video_off)
-	AM_RANGE(0x1f00, 0x1f00) AM_MIRROR(0x007f) AM_READNOP AM_WRITE_LEGACY(jedi_audio_latch_w)
+	AM_RANGE(0x1e86, 0x1e86) AM_MIRROR(0x0078) AM_READNOP AM_WRITE(jedi_audio_reset_w)
+	AM_RANGE(0x1e87, 0x1e87) AM_MIRROR(0x0078) AM_READNOP AM_WRITEONLY AM_SHARE("video_off")
+	AM_RANGE(0x1f00, 0x1f00) AM_MIRROR(0x007f) AM_READNOP AM_WRITE(jedi_audio_latch_w)
 	AM_RANGE(0x1f80, 0x1f80) AM_MIRROR(0x007f) AM_READNOP AM_WRITE(rom_banksel_w)
-	AM_RANGE(0x2000, 0x27ff) AM_RAM AM_BASE(m_backgroundram)
-	AM_RANGE(0x2800, 0x2fff) AM_RAM AM_BASE(m_paletteram)
-	AM_RANGE(0x3000, 0x37bf) AM_RAM AM_BASE(m_foregroundram)
-	AM_RANGE(0x37c0, 0x3bff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x2000, 0x27ff) AM_RAM AM_SHARE("backgroundram")
+	AM_RANGE(0x2800, 0x2fff) AM_RAM AM_SHARE("paletteram")
+	AM_RANGE(0x3000, 0x37bf) AM_RAM AM_SHARE("foregroundram")
+	AM_RANGE(0x37c0, 0x3bff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x3c00, 0x3c01) AM_MIRROR(0x00fe) AM_READNOP AM_WRITE(jedi_vscroll_w)
 	AM_RANGE(0x3d00, 0x3d01) AM_MIRROR(0x00fe) AM_READNOP AM_WRITE(jedi_hscroll_w)
-	AM_RANGE(0x3e00, 0x3e00) AM_MIRROR(0x01ff) AM_WRITEONLY AM_BASE(m_smoothing_table)
+	AM_RANGE(0x3e00, 0x3e00) AM_MIRROR(0x01ff) AM_WRITEONLY AM_SHARE("smoothing_table")
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -320,7 +320,7 @@ static INPUT_PORTS_START( jedi )
 	PORT_BIT( 0x03, IP_ACTIVE_LOW,  IPT_UNUSED )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_TILT )
 	PORT_BIT( 0x18, IP_ACTIVE_LOW,  IPT_UNUSED )
-	PORT_BIT( 0x60, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(jedi_audio_comm_stat_r, NULL)
+	PORT_BIT( 0x60, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF,jedi_state,jedi_audio_comm_stat_r, NULL)
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
 
 	PORT_START("STICKY")	/* analog Y */

@@ -18,10 +18,11 @@ class mayumi_state : public driver_device
 {
 public:
 	mayumi_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"){ }
 
 	/* memory pointers */
-	UINT8 *    m_videoram;
+	required_shared_ptr<UINT8> m_videoram;
 //  UINT8 *    m_nvram;       // this currently uses generic nvram handlers
 
 	/* video-related */
@@ -95,11 +96,11 @@ WRITE8_MEMBER(mayumi_state::bank_sel_w)
 {
 	int bank = BIT(data, 7) | (BIT(data, 6) << 1);
 
-	memory_set_bank(machine(), "bank1", bank);
+	membank("bank1")->set_entry(bank);
 
 	m_int_enable = data & 1;
 
-	flip_screen_set(machine(), data & 2);
+	flip_screen_set(data & 2);
 }
 
 WRITE8_MEMBER(mayumi_state::input_sel_w)
@@ -139,7 +140,7 @@ static ADDRESS_MAP_START( mayumi_map, AS_PROGRAM, 8, mayumi_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xdfff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0xe000, 0xf7ff) AM_RAM_WRITE(mayumi_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0xe000, 0xf7ff) AM_RAM_WRITE(mayumi_videoram_w) AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 
@@ -350,10 +351,10 @@ static const ym2203_interface ym2203_config =
 static MACHINE_START( mayumi )
 {
 	mayumi_state *state = machine.driver_data<mayumi_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 4, &ROM[0x10000], 0x4000);
-	memory_set_bank(machine, "bank1", 0);
+	state->membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x4000);
+	state->membank("bank1")->set_entry(0);
 
 	state->save_item(NAME(state->m_int_enable));
 	state->save_item(NAME(state->m_input_sel));

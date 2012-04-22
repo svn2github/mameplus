@@ -36,7 +36,7 @@ WRITE8_MEMBER(drmicro_state::nmi_enable_w)
 
 	m_nmi_enable = data & 1;
 	m_flipscreen = (data & 2) ? 1 : 0;
-	flip_screen_set(machine(), data & 2);
+	flip_screen_set(data & 2);
 
 	// bit2,3 unknown
 }
@@ -45,7 +45,7 @@ WRITE8_MEMBER(drmicro_state::nmi_enable_w)
 static void pcm_w(device_t *device)
 {
 	drmicro_state *state = device->machine().driver_data<drmicro_state>();
-	UINT8 *PCM = device->machine().region("adpcm")->base();
+	UINT8 *PCM = state->memregion("adpcm")->base();
 
 	int data = PCM[state->m_pcm_adr / 2];
 

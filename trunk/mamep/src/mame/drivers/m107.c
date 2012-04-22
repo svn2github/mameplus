@@ -83,7 +83,7 @@ WRITE16_MEMBER(m107_state::m107_bankswitch_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		memory_set_bank(machine(), "bank1", (data & 0x06) >> 1);
+		membank("bank1")->set_entry((data & 0x06) >> 1);
 		if (data & 0xf9)
 			logerror("%05x: bankswitch %04x\n", cpu_get_pc(&space.device()), data);
 	}
@@ -92,8 +92,8 @@ WRITE16_MEMBER(m107_state::m107_bankswitch_w)
 WRITE16_MEMBER(m107_state::m107_soundlatch_w)
 {
 	cputag_set_input_line(machine(), "soundcpu", NEC_INPUT_LINE_INTP1, ASSERT_LINE);
-	soundlatch_w(space, 0, data & 0xff);
-//      logerror("soundlatch_w %02x\n",data);
+	soundlatch_byte_w(space, 0, data & 0xff);
+//      logerror("soundlatch_byte_w %02x\n",data);
 }
 
 READ16_MEMBER(m107_state::m107_sound_status_r)
@@ -104,7 +104,7 @@ READ16_MEMBER(m107_state::m107_sound_status_r)
 READ16_MEMBER(m107_state::m107_soundlatch_r)
 {
 	cputag_set_input_line(machine(), "soundcpu", NEC_INPUT_LINE_INTP1, CLEAR_LINE);
-	return soundlatch_r(space, offset) | 0xff00;
+	return soundlatch_byte_r(space, offset) | 0xff00;
 }
 
 WRITE16_MEMBER(m107_state::m107_sound_irq_ack_w)
@@ -128,10 +128,10 @@ WRITE16_MEMBER(m107_state::m107_sound_reset_w)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, m107_state )
 	AM_RANGE(0x00000, 0x9ffff) AM_ROM
 	AM_RANGE(0xa0000, 0xbffff) AM_ROMBANK("bank1")
-	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m107_vram_w) AM_BASE(m_vram_data)
+	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m107_vram_w) AM_SHARE("vram_data")
 	AM_RANGE(0xe0000, 0xeffff) AM_RAM /* System ram */
-	AM_RANGE(0xf8000, 0xf8fff) AM_RAM AM_BASE(m_spriteram)
-	AM_RANGE(0xf9000, 0xf9fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xf8000, 0xf8fff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xf9000, 0xf9fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM AM_REGION("maincpu", 0x7fff0)
 ADDRESS_MAP_END
 
@@ -761,7 +761,7 @@ static void sound_irq(device_t *device, int state)
 
 static const ym2151_interface ym2151_config =
 {
-	sound_irq
+	DEVCB_LINE(sound_irq)
 };
 
 /***************************************************************************/
@@ -964,9 +964,9 @@ ROM_END
 static DRIVER_INIT( firebarr )
 {
 	m107_state *state = machine.driver_data<m107_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_set_bankptr(machine, "bank1", &ROM[0xa0000]);
+	state->membank("bank1")->set_base(&ROM[0xa0000]);
 
 	state->m_irq_vectorbase = 0x20;
 	state->m_spritesystem = 1;
@@ -975,9 +975,9 @@ static DRIVER_INIT( firebarr )
 static DRIVER_INIT( dsoccr94 )
 {
 	m107_state *state = machine.driver_data<m107_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 4, &ROM[0x80000], 0x20000);
+	state->membank("bank1")->configure_entries(0, 4, &ROM[0x80000], 0x20000);
 	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x06, 0x07, write16_delegate(FUNC(m107_state::m107_bankswitch_w),state));
 
 	state->m_irq_vectorbase = 0x80;

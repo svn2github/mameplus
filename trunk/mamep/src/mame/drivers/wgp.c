@@ -608,7 +608,7 @@ WRITE16_MEMBER(wgp_state::wgp_adinput_w)
 static void reset_sound_region( running_machine &machine )	/* assumes Z80 sandwiched between the 68Ks */
 {
 	wgp_state *state = machine.driver_data<wgp_state>();
-	memory_set_bank(machine, "bank10", state->m_banknum);
+	state->membank("bank10")->set_entry(state->m_banknum);
 }
 
 WRITE8_MEMBER(wgp_state::sound_bankswitch_w)
@@ -643,20 +643,20 @@ READ16_MEMBER(wgp_state::wgp_sound_r)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, wgp_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x100000, 0x10ffff) AM_RAM		/* main CPUA ram */
-	AM_RANGE(0x140000, 0x143fff) AM_RAM AM_BASE_SIZE(m_sharedram, m_sharedram_size)
+	AM_RANGE(0x140000, 0x143fff) AM_RAM AM_SHARE("sharedram")
 	AM_RANGE(0x180000, 0x18000f) AM_DEVREADWRITE8_LEGACY("tc0220ioc", tc0220ioc_r, tc0220ioc_w, 0xff00)
 	AM_RANGE(0x1c0000, 0x1c0001) AM_WRITE(cpua_ctrl_w)
 	AM_RANGE(0x200000, 0x20000f) AM_READWRITE(wgp_adinput_r,wgp_adinput_w)
 	AM_RANGE(0x300000, 0x30ffff) AM_DEVREADWRITE_LEGACY("tc0100scn", tc0100scn_word_r, tc0100scn_word_w)			/* tilemaps */
 	AM_RANGE(0x320000, 0x32000f) AM_DEVREADWRITE_LEGACY("tc0100scn", tc0100scn_ctrl_word_r, tc0100scn_ctrl_word_w)
-	AM_RANGE(0x400000, 0x40bfff) AM_RAM AM_BASE_SIZE(m_spritemap, m_spritemap_size)	/* sprite tilemaps */
-	AM_RANGE(0x40c000, 0x40dfff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)	/* sprite ram */
+	AM_RANGE(0x400000, 0x40bfff) AM_RAM AM_SHARE("spritemap")	/* sprite tilemaps */
+	AM_RANGE(0x40c000, 0x40dfff) AM_RAM AM_SHARE("spriteram")	/* sprite ram */
 	AM_RANGE(0x40fff0, 0x40fff1) AM_WRITENOP	/* ?? (writes 0x8000 and 0 alternately - Wgp2 just 0) */
 	AM_RANGE(0x500000, 0x501fff) AM_RAM					/* unknown/unused */
-	AM_RANGE(0x502000, 0x517fff) AM_READWRITE(wgp_pivram_word_r, wgp_pivram_word_w) AM_BASE(m_pivram) /* piv tilemaps */
-	AM_RANGE(0x520000, 0x52001f) AM_READWRITE(wgp_piv_ctrl_word_r, wgp_piv_ctrl_word_w) AM_BASE(m_piv_ctrlram)
+	AM_RANGE(0x502000, 0x517fff) AM_READWRITE(wgp_pivram_word_r, wgp_pivram_word_w) AM_SHARE("pivram") /* piv tilemaps */
+	AM_RANGE(0x520000, 0x52001f) AM_READWRITE(wgp_piv_ctrl_word_r, wgp_piv_ctrl_word_w) AM_SHARE("piv_ctrlram")
 	AM_RANGE(0x600000, 0x600003) AM_WRITE(rotate_port_w)	/* rotation control ? */
-	AM_RANGE(0x700000, 0x701fff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x700000, 0x701fff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cpu2_map, AS_PROGRAM, 16	/* LAN areas not mapped... */, wgp_state )
@@ -946,7 +946,7 @@ static MACHINE_START( wgp )
 {
 	wgp_state *state = machine.driver_data<wgp_state>();
 
-	memory_configure_bank(machine, "bank10", 0, 4, machine.region("audiocpu")->base() + 0xc000, 0x4000);
+	state->membank("bank10")->configure_entries(0, 4, state->memregion("audiocpu")->base() + 0xc000, 0x4000);
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_audiocpu = machine.device("audiocpu");
@@ -1262,7 +1262,7 @@ static DRIVER_INIT( wgp )
 #if 0
 	/* Patch for coding error that causes corrupt data in
        sprite tilemapping area from $4083c0-847f */
-	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 	ROM[0x25dc / 2] = 0x0602;	// faulty value is 0x0206
 #endif
 }
@@ -1270,7 +1270,7 @@ static DRIVER_INIT( wgp )
 static DRIVER_INIT( wgp2 )
 {
 	/* Code patches to prevent failure in memory checks */
-	UINT16 *ROM = (UINT16 *)machine.region("sub")->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("sub")->base();
 	ROM[0x8008 / 2] = 0x0;
 	ROM[0x8010 / 2] = 0x0;
 }

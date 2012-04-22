@@ -27,7 +27,7 @@
 
 READ8_MEMBER(liberate_state::deco16_bank_r)
 {
-	const UINT8 *ROM = machine().region("user1")->base();
+	const UINT8 *ROM = memregion("user1")->base();
 
 	/* The tilemap bank can be swapped into main memory */
 	if (m_bank)
@@ -76,7 +76,7 @@ WRITE8_MEMBER(liberate_state::deco16_bank_w)
 
 READ8_MEMBER(liberate_state::prosoccr_bank_r)
 {
-	const UINT8 *ROM = machine().region("user1")->base();
+	const UINT8 *ROM = memregion("user1")->base();
 
 	/* The tilemap bank can be swapped into main memory */
 	if (m_bank)
@@ -105,7 +105,7 @@ READ8_MEMBER(liberate_state::prosoccr_bank_r)
 
 READ8_MEMBER(liberate_state::prosoccr_charram_r)
 {
-	UINT8 *SRC_GFX = machine().region("shared_gfx")->base();
+	UINT8 *SRC_GFX = memregion("shared_gfx")->base();
 
 	if (m_gfx_rom_readback)
 	{
@@ -126,7 +126,7 @@ READ8_MEMBER(liberate_state::prosoccr_charram_r)
 
 WRITE8_MEMBER(liberate_state::prosoccr_charram_w)
 {
-	UINT8 *FG_GFX = machine().region("fg_gfx")->base();
+	UINT8 *FG_GFX = memregion("fg_gfx")->base();
 
 	if (m_bank)
 	{
@@ -182,7 +182,7 @@ WRITE8_MEMBER(liberate_state::prosoccr_io_bank_w)
 
 READ8_MEMBER(liberate_state::prosport_charram_r)
 {
-	UINT8 *FG_GFX = machine().region("progolf_fg_gfx")->base();
+	UINT8 *FG_GFX = memregion("progolf_fg_gfx")->base();
 
 	switch (offset & 0x1800)
 	{
@@ -202,7 +202,7 @@ READ8_MEMBER(liberate_state::prosport_charram_r)
 
 WRITE8_MEMBER(liberate_state::prosport_charram_w)
 {
-	UINT8 *FG_GFX = machine().region("progolf_fg_gfx")->base();
+	UINT8 *FG_GFX = memregion("progolf_fg_gfx")->base();
 
 	switch (offset & 0x1800)
 	{
@@ -235,14 +235,14 @@ WRITE8_MEMBER(liberate_state::prosport_charram_w)
  *************************************/
 
 static ADDRESS_MAP_START( prosport_map, AS_PROGRAM, 8, liberate_state )
-	AM_RANGE(0x0200, 0x021f) AM_RAM_WRITE(prosport_paletteram_w) AM_BASE(m_paletteram)
+	AM_RANGE(0x0200, 0x021f) AM_RAM_WRITE(prosport_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0x0000, 0x03ff) AM_MIRROR(0x2000) AM_RAM
-	AM_RANGE(0x0400, 0x07ff) AM_RAM_WRITE(prosport_bg_vram_w) AM_BASE(m_bg_vram)
+	AM_RANGE(0x0400, 0x07ff) AM_RAM_WRITE(prosport_bg_vram_w) AM_SHARE("bg_vram")
 	AM_RANGE(0x0800, 0x1fff) AM_READWRITE(prosport_charram_r,prosport_charram_w) //0x1e00-0x1fff isn't charram!
 	AM_RANGE(0x2400, 0x2fff) AM_RAM
-	AM_RANGE(0x3000, 0x33ff) AM_RAM_WRITE(liberate_colorram_w) AM_BASE(m_colorram)
-	AM_RANGE(0x3400, 0x37ff) AM_RAM_WRITE(liberate_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x3800, 0x3fff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x3000, 0x33ff) AM_RAM_WRITE(liberate_colorram_w) AM_SHARE("colorram")
+	AM_RANGE(0x3400, 0x37ff) AM_RAM_WRITE(liberate_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x3800, 0x3fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x8000, 0x800f) AM_WRITE(prosport_io_w)
 	AM_RANGE(0x8000, 0x800f) AM_ROMBANK("bank1")
 	AM_RANGE(0x4000, 0xffff) AM_ROM
@@ -252,10 +252,10 @@ static ADDRESS_MAP_START( liberate_map, AS_PROGRAM, 8, liberate_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM
 	AM_RANGE(0x1000, 0x3fff) AM_ROM /* Mirror of main rom */
 	AM_RANGE(0x4000, 0x7fff) AM_READ(deco16_bank_r)
-	AM_RANGE(0x4000, 0x43ff) AM_WRITE(liberate_colorram_w) AM_BASE(m_colorram)
-	AM_RANGE(0x4400, 0x47ff) AM_WRITE(liberate_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x4800, 0x4fff) AM_WRITEONLY AM_BASE(m_spriteram)
-	AM_RANGE(0x6200, 0x67ff) AM_RAM AM_BASE(m_scratchram)
+	AM_RANGE(0x4000, 0x43ff) AM_WRITE(liberate_colorram_w) AM_SHARE("colorram")
+	AM_RANGE(0x4400, 0x47ff) AM_WRITE(liberate_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x4800, 0x4fff) AM_WRITEONLY AM_SHARE("spriteram")
+	AM_RANGE(0x6200, 0x67ff) AM_RAM AM_SHARE("scratchram")
 	AM_RANGE(0x8000, 0x800f) AM_WRITE(deco16_io_w)
 	AM_RANGE(0x8000, 0x800f) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -265,10 +265,10 @@ static ADDRESS_MAP_START( prosoccr_map, AS_PROGRAM, 8, liberate_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM
 	AM_RANGE(0x1000, 0x3fff) AM_ROM /* Mirror of main rom */
 	AM_RANGE(0x4000, 0x7fff) AM_READ(prosoccr_bank_r)
-	AM_RANGE(0x4000, 0x43ff) AM_MIRROR(0x800) AM_WRITE(liberate_colorram_w) AM_BASE(m_colorram)
-	AM_RANGE(0x4400, 0x47ff) AM_WRITE(liberate_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x4c00, 0x4fff) AM_WRITEONLY AM_BASE(m_spriteram)
-	AM_RANGE(0x6200, 0x67ff) AM_RAM AM_BASE(m_scratchram)
+	AM_RANGE(0x4000, 0x43ff) AM_MIRROR(0x800) AM_WRITE(liberate_colorram_w) AM_SHARE("colorram")
+	AM_RANGE(0x4400, 0x47ff) AM_WRITE(liberate_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x4c00, 0x4fff) AM_WRITEONLY AM_SHARE("spriteram")
+	AM_RANGE(0x6200, 0x67ff) AM_RAM AM_SHARE("scratchram")
 	AM_RANGE(0x8000, 0x97ff) AM_READWRITE(prosoccr_charram_r, prosoccr_charram_w)
 	AM_RANGE(0x9800, 0x9800) AM_WRITE(prosoccr_char_bank_w)
 	AM_RANGE(0xa000, 0xffff) AM_ROM
@@ -289,10 +289,10 @@ static ADDRESS_MAP_START( liberatb_map, AS_PROGRAM, 8, liberate_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM
 	AM_RANGE(0x1000, 0x3fff) AM_ROM /* Mirror of main rom */
 	AM_RANGE(0x4000, 0x7fff) AM_READ(deco16_bank_r)
-	AM_RANGE(0x4000, 0x43ff) AM_WRITE(liberate_colorram_w) AM_BASE(m_colorram)
-	AM_RANGE(0x4400, 0x47ff) AM_WRITE(liberate_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x4800, 0x4fff) AM_WRITEONLY AM_BASE(m_spriteram)
-	AM_RANGE(0x6200, 0x67ff) AM_WRITEONLY AM_BASE(m_scratchram)
+	AM_RANGE(0x4000, 0x43ff) AM_WRITE(liberate_colorram_w) AM_SHARE("colorram")
+	AM_RANGE(0x4400, 0x47ff) AM_WRITE(liberate_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x4800, 0x4fff) AM_WRITEONLY AM_SHARE("spriteram")
+	AM_RANGE(0x6200, 0x67ff) AM_WRITEONLY AM_SHARE("scratchram")
 	AM_RANGE(0xf000, 0xf00f) AM_WRITE(deco16_io_w)
 	AM_RANGE(0xf000, 0xf000) AM_READ_PORT("IN1")
 	AM_RANGE(0xf001, 0xf001) AM_READ_PORT("IN2")
@@ -314,7 +314,7 @@ static ADDRESS_MAP_START( prosoccr_sound_map, AS_PROGRAM, 8, liberate_state )
 	AM_RANGE(0x4000, 0x4000) AM_DEVWRITE_LEGACY("ay1", ay8910_address_w)
 	AM_RANGE(0x6000, 0x6000) AM_DEVWRITE_LEGACY("ay2", ay8910_data_w)
 	AM_RANGE(0x8000, 0x8000) AM_DEVWRITE_LEGACY("ay2", ay8910_address_w)
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xc000, 0xc000) AM_WRITENOP //irq ack
 	AM_RANGE(0xe000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -326,7 +326,7 @@ static ADDRESS_MAP_START( liberate_sound_map, AS_PROGRAM, 8, liberate_state )
 	AM_RANGE(0x4000, 0x4000) AM_DEVWRITE_LEGACY("ay1", ay8910_address_w)
 	AM_RANGE(0x7000, 0x7000) AM_DEVWRITE_LEGACY("ay2", ay8910_data_w)
 	AM_RANGE(0x8000, 0x8000) AM_DEVWRITE_LEGACY("ay2", ay8910_address_w)
-	AM_RANGE(0xb000, 0xb000) AM_READ(soundlatch_r)
+	AM_RANGE(0xb000, 0xb000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xc000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -1350,7 +1350,7 @@ static void sound_cpu_decrypt(running_machine &machine)
 {
 	address_space *space = machine.device("audiocpu")->memory().space(AS_PROGRAM);
 	UINT8 *decrypted = auto_alloc_array(machine, UINT8, 0x4000);
-	UINT8 *rom = machine.region("audiocpu")->base();
+	UINT8 *rom = machine.root_device().memregion("audiocpu")->base();
 	int i;
 
 	/* Bit swapping on sound cpu - Opcodes only */
@@ -1362,7 +1362,7 @@ static void sound_cpu_decrypt(running_machine &machine)
 
 static DRIVER_INIT( prosport )
 {
-	UINT8 *RAM = machine.region("maincpu")->base();
+	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
 	int i;
 
 	/* Main cpu has the nibbles swapped */
@@ -1384,7 +1384,7 @@ static DRIVER_INIT( liberate )
 	int A;
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	UINT8 *decrypted = auto_alloc_array(machine, UINT8, 0x10000);
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	space->set_decrypted_region(0x0000, 0xffff, decrypted);
 
@@ -1395,7 +1395,7 @@ static DRIVER_INIT( liberate )
 		decrypted[A] = (decrypted[A] & 0x7d) | ((decrypted[A] & 0x02) << 6) | ((decrypted[A] & 0x80) >> 6);
 	}
 
-	memory_configure_bank_decrypted(machine, "bank1", 0, 1, decrypted + 0x8000, 0x10);
+	machine.root_device().membank("bank1")->configure_decrypted_entry(0, decrypted + 0x8000);
 
 	sound_cpu_decrypt(machine);
 }

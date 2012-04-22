@@ -92,7 +92,7 @@ static MACHINE_START( midzeus )
 
 static MACHINE_RESET( midzeus )
 {
-	memcpy(ram_base, machine.region("user1")->base(), 0x40000*4);
+	memcpy(ram_base, machine.root_device().memregion("user1")->base(), 0x40000*4);
 	*ram_base <<= 1;
 	machine.device("maincpu")->reset();
 
@@ -268,7 +268,7 @@ WRITE32_MEMBER(midzeus_state::bitlatches_w)
 
 		/* ROM bank selection on Zeus 2 */
 		case 5:
-			memory_set_bank(machine(), "bank1", bitlatch[offset] & 3);
+			membank("bank1")->set_entry(bitlatch[offset] & 3);
 			break;
 
 		/* unknown purpose; crusnexo/thegrid write 1 at startup */
@@ -420,12 +420,12 @@ WRITE32_MEMBER(midzeus_state::tms32031_control_w)
  *
  *************************************/
 
-static CUSTOM_INPUT( custom_49way_r )
+CUSTOM_INPUT_MEMBER(midzeus_state::custom_49way_r)
 {
 	static const UINT8 translate49[7] = { 0x8, 0xc, 0xe, 0xf, 0x3, 0x1, 0x0 };
 	const char *namex = (const char *)param;
 	const char *namey = namex + strlen(namex) + 1;
-	return (translate49[input_port_read(field.machine(), namey) >> 4] << 4) | translate49[input_port_read(field.machine(), namex) >> 4];
+	return (translate49[input_port_read(machine(), namey) >> 4] << 4) | translate49[input_port_read(machine(), namex) >> 4];
 }
 
 
@@ -436,9 +436,9 @@ WRITE32_MEMBER(midzeus_state::keypad_select_w)
 }
 
 
-static CUSTOM_INPUT( keypad_r )
+CUSTOM_INPUT_MEMBER(midzeus_state::keypad_r)
 {
-	UINT32 bits = input_port_read(field.machine(), (const char *)param);
+	UINT32 bits = input_port_read(machine(), (const char *)param);
 	UINT8 select = keypad_select;
 	while ((select & 1) != 0)
 	{
@@ -931,7 +931,7 @@ static INPUT_PORTS_START( crusnexo )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("IN2")
-	PORT_BIT( 0x0007, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM( keypad_r, "KEYPAD" )
+	PORT_BIT( 0x0007, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, midzeus_state, keypad_r, "KEYPAD" )
 	PORT_BIT( 0xfff8, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("KEYPAD")
@@ -1067,7 +1067,7 @@ static INPUT_PORTS_START( thegrid )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("IN2")
-	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(custom_49way_r, "49WAYX\0" "49WAYY")
+	PORT_BIT( 0x00ff, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, midzeus_state,custom_49way_r, "49WAYX\0" "49WAYY")
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("49WAYX")
@@ -1441,7 +1441,7 @@ static DRIVER_INIT( crusnexo )
 {
 	dcs2_init(machine, 0, 0);
 	midway_ioasic_init(machine, MIDWAY_IOASIC_STANDARD, 472/* or 476,477,478,110 */, 99, NULL);
-	memory_configure_bank(machine, "bank1", 0, 3, machine.region("user2")->base(), 0x400000*4);
+	machine.root_device().membank("bank1")->configure_entries(0, 3, machine.root_device().memregion("user2")->base(), 0x400000*4);
 	midzeus_state *state = machine.driver_data<midzeus_state>();
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x9b0004, 0x9b0007, read32_delegate(FUNC(midzeus_state::crusnexo_leds_r),state), write32_delegate(FUNC(midzeus_state::crusnexo_leds_w),state));
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler    (0x8d0009, 0x8d000a, write32_delegate(FUNC(midzeus_state::keypad_select_w),state));
@@ -1452,7 +1452,7 @@ static DRIVER_INIT( thegrid )
 {
 	dcs2_init(machine, 0, 0);
 	midway_ioasic_init(machine, MIDWAY_IOASIC_STANDARD, 474/* or 491 */, 99, NULL);
-	memory_configure_bank(machine, "bank1", 0, 3, machine.region("user2")->base(), 0x400000*4);
+	machine.root_device().membank("bank1")->configure_entries(0, 3, machine.root_device().memregion("user2")->base(), 0x400000*4);
 }
 
 

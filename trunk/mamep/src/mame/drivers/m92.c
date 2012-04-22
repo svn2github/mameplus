@@ -252,14 +252,14 @@ static TIMER_DEVICE_CALLBACK( m92_scanline_interrupt )
 
 READ16_MEMBER(m92_state::m92_eeprom_r)
 {
-	UINT8 *RAM = machine().region("eeprom")->base();
+	UINT8 *RAM = memregion("eeprom")->base();
 //  logerror("%05x: EEPROM RE %04x\n",cpu_get_pc(&space.device()),offset);
 	return RAM[offset] | 0xff00;
 }
 
 WRITE16_MEMBER(m92_state::m92_eeprom_w)
 {
-	UINT8 *RAM = machine().region("eeprom")->base();
+	UINT8 *RAM = memregion("eeprom")->base();
 //  logerror("%05x: EEPROM WR %04x\n",cpu_get_pc(&space.device()),offset);
 	if (ACCESSING_BITS_0_7)
 		RAM[offset] = data;
@@ -281,16 +281,15 @@ WRITE16_MEMBER(m92_state::m92_bankswitch_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		memory_set_bank(machine(), "bank1", (data & 0x06) >> 1);
+		membank("bank1")->set_entry((data & 0x06) >> 1);
 		if (data & 0xf9)
 			logerror("%05x: bankswitch %04x\n", cpu_get_pc(&space.device()), data);
 	}
 }
 
-static CUSTOM_INPUT( m92_sprite_busy_r )
+CUSTOM_INPUT_MEMBER(m92_state::m92_sprite_busy_r)
 {
-	m92_state *state = field.machine().driver_data<m92_state>();
-	return state->m_sprite_buffer_busy;
+	return m_sprite_buffer_busy;
 }
 
 /*****************************************************************************/
@@ -298,7 +297,7 @@ static CUSTOM_INPUT( m92_sprite_busy_r )
 WRITE16_MEMBER(m92_state::m92_soundlatch_w)
 {
 	cputag_set_input_line(machine(), "soundcpu", NEC_INPUT_LINE_INTP1, ASSERT_LINE);
-	soundlatch_w(space, 0, data & 0xff);
+	soundlatch_byte_w(space, 0, data & 0xff);
 }
 
 READ16_MEMBER(m92_state::m92_sound_status_r)
@@ -310,7 +309,7 @@ READ16_MEMBER(m92_state::m92_sound_status_r)
 READ16_MEMBER(m92_state::m92_soundlatch_r)
 {
 	cputag_set_input_line(machine(), "soundcpu", NEC_INPUT_LINE_INTP1, CLEAR_LINE);
-	return soundlatch_r(space, offset) | 0xff00;
+	return soundlatch_byte_r(space, offset) | 0xff00;
 }
 
 WRITE16_MEMBER(m92_state::m92_sound_irq_ack_w)
@@ -334,11 +333,11 @@ WRITE16_MEMBER(m92_state::m92_sound_reset_w)
 /* appears to be an earlier board */
 static ADDRESS_MAP_START( lethalth_map, AS_PROGRAM, 16, m92_state )
 	AM_RANGE(0x00000, 0x7ffff) AM_ROM
-	AM_RANGE(0x80000, 0x8ffff) AM_RAM_WRITE(m92_vram_w) AM_BASE(m_vram_data)
+	AM_RANGE(0x80000, 0x8ffff) AM_RAM_WRITE(m92_vram_w) AM_SHARE("vram_data")
 	AM_RANGE(0xe0000, 0xeffff) AM_RAM /* System ram */
 	AM_RANGE(0xf8000, 0xf87ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xf8800, 0xf8fff) AM_READWRITE(m92_paletteram_r, m92_paletteram_w)
-	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE(m_spritecontrol)
+	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_SHARE("spritecontrol")
 	AM_RANGE(0xf9800, 0xf9801) AM_WRITE(m92_videocontrol_w)
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM AM_REGION("maincpu", 0x7fff0)
 ADDRESS_MAP_END
@@ -347,11 +346,11 @@ static ADDRESS_MAP_START( m92_map, AS_PROGRAM, 16, m92_state )
 	AM_RANGE(0x00000, 0x9ffff) AM_ROM
 	AM_RANGE(0xa0000, 0xbffff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc0000, 0xcffff) AM_ROM AM_REGION("maincpu", 0x00000)	/* Mirror used by In The Hunt as protection */
-	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m92_vram_w) AM_BASE(m_vram_data)
+	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m92_vram_w) AM_SHARE("vram_data")
 	AM_RANGE(0xe0000, 0xeffff) AM_RAM /* System ram */
 	AM_RANGE(0xf8000, 0xf87ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xf8800, 0xf8fff) AM_READWRITE(m92_paletteram_r, m92_paletteram_w)
-	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_BASE(m_spritecontrol)
+	AM_RANGE(0xf9000, 0xf900f) AM_WRITE(m92_spritecontrol_w) AM_SHARE("spritecontrol")
 	AM_RANGE(0xf9800, 0xf9801) AM_WRITE(m92_videocontrol_w)
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM AM_REGION("maincpu", 0x7fff0)
 ADDRESS_MAP_END
@@ -420,7 +419,7 @@ static INPUT_PORTS_START( m92_2player )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SERVICE )
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(m92_sprite_busy_r, NULL)
+	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, m92_state,m92_sprite_busy_r, NULL)
 	/* DIP switch bank 3 */
 	PORT_DIPUNKNOWN_DIPLOC( 0x0100, 0x0100, "SW3:1" )
 	PORT_DIPUNKNOWN_DIPLOC( 0x0200, 0x0200, "SW3:2" )
@@ -882,7 +881,7 @@ static void sound_irq(device_t *device, int state)
 
 static const ym2151_interface ym2151_config =
 {
-	sound_irq
+	DEVCB_LINE(sound_irq)
 };
 
 /***************************************************************************/
@@ -2061,9 +2060,9 @@ ROM_END
 static DRIVER_INIT( m92 )
 {
 	m92_state *state = machine.driver_data<m92_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_set_bankptr(machine, "bank1", &ROM[0xa0000]);
+	state->membank("bank1")->set_base(&ROM[0xa0000]);
 
 	state->m_game_kludge = 0;
 	state->m_irq_vectorbase = 0x80;
@@ -2073,9 +2072,9 @@ static DRIVER_INIT( m92 )
 static DRIVER_INIT( m92_alt )
 {
 	m92_state *state = machine.driver_data<m92_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_set_bankptr(machine, "bank1", &ROM[0xa0000]);
+	state->membank("bank1")->set_base(&ROM[0xa0000]);
 
 	state->m_game_kludge = 0;
 	state->m_irq_vectorbase = 0x20;
@@ -2094,9 +2093,9 @@ static DRIVER_INIT( lethalth )
 static DRIVER_INIT( m92_bank )
 {
 	m92_state *state = machine.driver_data<m92_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 4, &ROM[0x80000], 0x20000);
+	state->membank("bank1")->configure_entries(0, 4, &ROM[0x80000], 0x20000);
 	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x20, 0x21, write16_delegate(FUNC(m92_state::m92_bankswitch_w),state));
 
 	state->m_game_kludge = 0;
@@ -2107,9 +2106,9 @@ static DRIVER_INIT( m92_bank )
 static DRIVER_INIT( majtitl2 )
 {
 	m92_state *state = machine.driver_data<m92_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 4, &ROM[0x80000], 0x20000);
+	state->membank("bank1")->configure_entries(0, 4, &ROM[0x80000], 0x20000);
 	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x20, 0x21, write16_delegate(FUNC(m92_state::m92_bankswitch_w),state));
 
 	/* This game has an eeprom on the game board */
@@ -2123,8 +2122,8 @@ static DRIVER_INIT( majtitl2 )
 static DRIVER_INIT( ppan )
 {
 	m92_state *state = machine.driver_data<m92_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
-	memory_set_bankptr(machine, "bank1", &ROM[0xa0000]);
+	UINT8 *ROM = state->memregion("maincpu")->base();
+	state->membank("bank1")->set_base(&ROM[0xa0000]);
 
 	state->m_game_kludge = 0;
 	state->m_irq_vectorbase = 0x80;

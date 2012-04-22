@@ -181,13 +181,14 @@ class zr107_state : public driver_device
 {
 public:
 	zr107_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_workram(*this, "workram"){ }
 
 	UINT8 m_led_reg0;
 	UINT8 m_led_reg1;
 	int m_ccu_vcth;
 	int m_ccu_vctl;
-	UINT32 *m_workram;
+	optional_shared_ptr<UINT32> m_workram;
 	UINT32 *m_sharc_dataram;
 	DECLARE_WRITE32_MEMBER(paletteram32_w);
 	DECLARE_READ8_MEMBER(sysreg_r);
@@ -360,7 +361,7 @@ WRITE8_MEMBER(zr107_state::sysreg_w)
                 0x01 = AFE
             */
 			if (data & 0x01)
-				watchdog_reset(machine());
+				machine().watchdog_reset();
 			break;
 
 	}
@@ -408,7 +409,7 @@ static MACHINE_START( zr107 )
 }
 
 static ADDRESS_MAP_START( zr107_map, AS_PROGRAM, 32, zr107_state )
-	AM_RANGE(0x00000000, 0x000fffff) AM_RAM	AM_BASE(m_workram)	/* Work RAM */
+	AM_RANGE(0x00000000, 0x000fffff) AM_RAM	AM_SHARE("workram")	/* Work RAM */
 	AM_RANGE(0x74000000, 0x74003fff) AM_DEVREADWRITE_LEGACY("k056832", k056832_ram_long_r, k056832_ram_long_w)
 	AM_RANGE(0x74020000, 0x7402003f) AM_DEVREADWRITE_LEGACY("k056832", k056832_long_r, k056832_long_w)
 	AM_RANGE(0x74060000, 0x7406003f) AM_READWRITE(ccu_r, ccu_w)
@@ -816,12 +817,11 @@ static MACHINE_CONFIG_START( jetwave, zr107_state )
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("konami1", K054539, 48000)
-	MCFG_SOUND_CONFIG(k054539_config)
+	MCFG_K054539_ADD("konami1", 48000, k054539_config)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.75)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
 
-	MCFG_SOUND_ADD("konami2", K054539, 48000)
+	MCFG_K054539_ADD("konami2", 48000, k054539_config)
 	MCFG_SOUND_CONFIG(k054539_config)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.75)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.75)
@@ -838,7 +838,7 @@ static void init_zr107(running_machine &machine)
 	state->m_led_reg0 = state->m_led_reg1 = 0x7f;
 	state->m_ccu_vcth = state->m_ccu_vctl = 0;
 
-	K001005_preprocess_texture_data(machine.region("gfx1")->base(), machine.region("gfx1")->bytes(), 0);
+	K001005_preprocess_texture_data(machine.root_device().memregion("gfx1")->base(), state->memregion("gfx1")->bytes(), 0);
 }
 
 static DRIVER_INIT(zr107)

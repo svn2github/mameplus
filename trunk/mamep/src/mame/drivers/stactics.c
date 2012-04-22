@@ -53,13 +53,12 @@ Verify Color PROM resistor values (Last 8 colors)
  *
  *************************************/
 
-static CUSTOM_INPUT( get_motor_not_ready )
+CUSTOM_INPUT_MEMBER(stactics_state::get_motor_not_ready)
 {
-	stactics_state *state = field.machine().driver_data<stactics_state>();
 
 	/* if the motor is self-centering, but not centered yet */
-    return ((*state->m_motor_on & 0x01) == 0) &&
-    	   ((state->m_horiz_pos != 0) || (state->m_vert_pos != 0));
+    return ((*m_motor_on & 0x01) == 0) &&
+    	   ((m_horiz_pos != 0) || (m_vert_pos != 0));
 }
 
 
@@ -125,10 +124,10 @@ static void move_motor(running_machine &machine, stactics_state *state)
  *
  *************************************/
 
-static CUSTOM_INPUT( get_rng )
+CUSTOM_INPUT_MEMBER(stactics_state::get_rng)
 {
 	/* this is a 555 timer, but cannot read one of the resistor values */
-	return field.machine().rand() & 0x07;
+	return machine().rand() & 0x07;
 }
 
 
@@ -176,14 +175,14 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, stactics_state )
     AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x0fff) AM_READ_PORT("IN1")
     AM_RANGE(0x6000, 0x6001) AM_MIRROR(0x0f08) AM_WRITE(stactics_coin_lockout_w)
     AM_RANGE(0x6002, 0x6005) AM_MIRROR(0x0f08) AM_WRITENOP
-    AM_RANGE(0x6006, 0x6007) AM_MIRROR(0x0f08) AM_WRITEONLY AM_BASE(m_palette)
+    AM_RANGE(0x6006, 0x6007) AM_MIRROR(0x0f08) AM_WRITEONLY AM_SHARE("palette")
  /* AM_RANGE(0x6010, 0x6017) AM_MIRROR(0x0f08) AM_WRITE_LEGACY(stactics_sound_w) */
-    AM_RANGE(0x6016, 0x6016) AM_MIRROR(0x0f08) AM_WRITEONLY AM_BASE(m_motor_on)  /* Note: This overlaps rocket sound */
-    AM_RANGE(0x6020, 0x6027) AM_MIRROR(0x0f08) AM_WRITEONLY AM_BASE(m_lamps)
+    AM_RANGE(0x6016, 0x6016) AM_MIRROR(0x0f08) AM_WRITEONLY AM_SHARE("motor_on")  /* Note: This overlaps rocket sound */
+    AM_RANGE(0x6020, 0x6027) AM_MIRROR(0x0f08) AM_WRITEONLY AM_SHARE("lamps")
     AM_RANGE(0x6030, 0x6030) AM_MIRROR(0x0f0f) AM_WRITE(stactics_speed_latch_w)
     AM_RANGE(0x6040, 0x6040) AM_MIRROR(0x0f0f) AM_WRITE(stactics_shot_trigger_w)
     AM_RANGE(0x6050, 0x6050) AM_MIRROR(0x0f0f) AM_WRITE(stactics_shot_flag_clear_w)
-    AM_RANGE(0x6060, 0x606f) AM_MIRROR(0x0f00) AM_WRITEONLY AM_BASE(m_display_buffer)
+    AM_RANGE(0x6060, 0x606f) AM_MIRROR(0x0f00) AM_WRITEONLY AM_SHARE("display_buffer")
     AM_RANGE(0x6070, 0x609f) AM_MIRROR(0x0f00) AM_WRITENOP
  /* AM_RANGE(0x60a0, 0x60ef) AM_MIRROR(0x0f00) AM_WRITE_LEGACY(stactics_sound2_w) */
     AM_RANGE(0x60f0, 0x60ff) AM_MIRROR(0x0f00) AM_WRITENOP
@@ -192,11 +191,11 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, stactics_state )
     AM_RANGE(0x8000, 0x87ff) AM_MIRROR(0x0800) AM_WRITE(stactics_scroll_ram_w)
     AM_RANGE(0x9000, 0x9000) AM_MIRROR(0x0fff) AM_READ(vert_pos_r)
     AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x0fff) AM_READ(horiz_pos_r)
-    AM_RANGE(0xb000, 0xbfff) AM_RAM AM_BASE(m_videoram_b)
+    AM_RANGE(0xb000, 0xbfff) AM_RAM AM_SHARE("videoram_b")
     AM_RANGE(0xc000, 0xcfff) AM_NOP
-    AM_RANGE(0xd000, 0xdfff) AM_RAM AM_BASE(m_videoram_d)
-    AM_RANGE(0xe000, 0xefff) AM_RAM AM_BASE(m_videoram_e)
-    AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE(m_videoram_f)
+    AM_RANGE(0xd000, 0xdfff) AM_RAM AM_SHARE("videoram_d")
+    AM_RANGE(0xe000, 0xefff) AM_RAM AM_SHARE("videoram_e")
+    AM_RANGE(0xf000, 0xffff) AM_RAM AM_SHARE("videoram_f")
 ADDRESS_MAP_END
 
 
@@ -216,7 +215,7 @@ static INPUT_PORTS_START( stactics )
     PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON3 )
     PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_START1 )
     PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 )
-    PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(get_motor_not_ready, NULL)
+    PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, stactics_state,get_motor_not_ready, NULL)
 
     PORT_START("IN1")	/* IN1 */
     PORT_DIPNAME( 0x07, 0x07, DEF_STR( Coin_B ) )
@@ -245,8 +244,8 @@ static INPUT_PORTS_START( stactics )
     PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
     PORT_START("IN2")	/* IN2 */
-    PORT_BIT( 0x07, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(get_rng, NULL)
-    PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(stactics_get_frame_count_d3, NULL)
+    PORT_BIT( 0x07, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, stactics_state,get_rng, NULL)
+    PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, stactics_state,stactics_get_frame_count_d3, NULL)
     PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
     PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN2 )
     PORT_DIPNAME( 0x40, 0x40, DEF_STR( Free_Play ) )
@@ -256,7 +255,7 @@ static INPUT_PORTS_START( stactics )
 
     PORT_START("IN3")	/* IN3 */
     PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
-    PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(stactics_get_shot_standby, NULL)
+    PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, stactics_state,stactics_get_shot_standby, NULL)
     PORT_DIPNAME( 0x04, 0x04, "Number of Barriers" )
     PORT_DIPSETTING(    0x04, "4" )
     PORT_DIPSETTING(    0x00, "6" )
@@ -268,7 +267,7 @@ static INPUT_PORTS_START( stactics )
     PORT_DIPSETTING(    0x00, DEF_STR( On ) )
     PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY
     PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY
-    PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(stactics_get_not_shot_arrive, NULL)
+    PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, stactics_state,stactics_get_not_shot_arrive, NULL)
 
 	PORT_START("FAKE")	/* FAKE */
     PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY

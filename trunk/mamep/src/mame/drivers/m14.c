@@ -58,12 +58,14 @@ class m14_state : public driver_device
 {
 public:
 	m14_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_video_ram(*this, "video_ram"),
+		m_color_ram(*this, "color_ram"){ }
 
 	/* video-related */
 	tilemap_t  *m_m14_tilemap;
-	UINT8 *  m_video_ram;
-	UINT8 *  m_color_ram;
+	required_shared_ptr<UINT8> m_video_ram;
+	required_shared_ptr<UINT8> m_color_ram;
 
 	/* input-related */
 	UINT8 m_hop_mux;
@@ -76,6 +78,8 @@ public:
 	DECLARE_READ8_MEMBER(input_buttons_r);
 	DECLARE_WRITE8_MEMBER(test_w);
 	DECLARE_WRITE8_MEMBER(hopper_w);
+	DECLARE_INPUT_CHANGED_MEMBER(left_coin_inserted);
+	DECLARE_INPUT_CHANGED_MEMBER(right_coin_inserted);
 };
 
 
@@ -203,8 +207,8 @@ WRITE8_MEMBER(m14_state::hopper_w)
 static ADDRESS_MAP_START( m14_map, AS_PROGRAM, 8, m14_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x2000, 0x23ff) AM_RAM
-	AM_RANGE(0xe000, 0xe3ff) AM_RAM_WRITE(m14_vram_w) AM_BASE(m_video_ram)
-	AM_RANGE(0xe400, 0xe7ff) AM_RAM_WRITE(m14_cram_w) AM_BASE(m_color_ram)
+	AM_RANGE(0xe000, 0xe3ff) AM_RAM_WRITE(m14_vram_w) AM_SHARE("video_ram")
+	AM_RANGE(0xe400, 0xe7ff) AM_RAM_WRITE(m14_cram_w) AM_SHARE("color_ram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( m14_io_map, AS_IO, 8, m14_state )
@@ -222,20 +226,18 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static INPUT_CHANGED( left_coin_inserted )
+INPUT_CHANGED_MEMBER(m14_state::left_coin_inserted)
 {
-	m14_state *state = field.machine().driver_data<m14_state>();
 	/* left coin insertion causes a rst6.5 (vector 0x34) */
 	if (newval)
-		device_set_input_line(state->m_maincpu, I8085_RST65_LINE, HOLD_LINE);
+		device_set_input_line(m_maincpu, I8085_RST65_LINE, HOLD_LINE);
 }
 
-static INPUT_CHANGED( right_coin_inserted )
+INPUT_CHANGED_MEMBER(m14_state::right_coin_inserted)
 {
-	m14_state *state = field.machine().driver_data<m14_state>();
 	/* right coin insertion causes a rst5.5 (vector 0x2c) */
 	if (newval)
-		device_set_input_line(state->m_maincpu, I8085_RST55_LINE, HOLD_LINE);
+		device_set_input_line(m_maincpu, I8085_RST55_LINE, HOLD_LINE);
 }
 
 static INPUT_PORTS_START( m14 )
@@ -289,8 +291,8 @@ static INPUT_PORTS_START( m14 )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 
 	PORT_START("FAKE")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_IMPULSE(1) PORT_CHANGED(left_coin_inserted, 0) //coin x 5
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_IMPULSE(1) PORT_CHANGED(right_coin_inserted, 0) //coin x 1
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_IMPULSE(1) PORT_CHANGED_MEMBER(DEVICE_SELF, m14_state,left_coin_inserted, 0) //coin x 5
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_IMPULSE(1) PORT_CHANGED_MEMBER(DEVICE_SELF, m14_state,right_coin_inserted, 0) //coin x 1
 INPUT_PORTS_END
 
 static const gfx_layout charlayout =

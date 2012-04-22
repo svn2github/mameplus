@@ -76,21 +76,23 @@ class igspoker_state : public driver_device
 public:
 	igspoker_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this, "maincpu")
-		{ }
+		m_maincpu(*this, "maincpu"),
+		m_bg_tile_ram(*this, "bg_tile_ram"),
+		m_fg_tile_ram(*this, "fg_tile_ram"),
+		m_fg_color_ram(*this, "fg_color_ram"){ }
 
+	required_device<cpu_device> m_maincpu;
+	optional_shared_ptr<UINT8> m_bg_tile_ram;
+	required_shared_ptr<UINT8> m_fg_tile_ram;
+	required_shared_ptr<UINT8> m_fg_color_ram;
 	int m_nmi_enable;
 	int m_bg_enable;
 	int m_hopper;
-	UINT8 *m_fg_tile_ram;
-	UINT8 *m_fg_color_ram;
-	UINT8 *m_bg_tile_ram;
 	tilemap_t *m_fg_tilemap;
 	tilemap_t *m_bg_tilemap;
 	UINT8 m_out[3];
 	size_t m_protection_res;
 
-	required_device<cpu_device> m_maincpu;
 	DECLARE_READ8_MEMBER(igs_irqack_r);
 	DECLARE_WRITE8_MEMBER(igs_irqack_w);
 	DECLARE_WRITE8_MEMBER(bg_tile_w);
@@ -102,6 +104,7 @@ public:
 	DECLARE_WRITE8_MEMBER(custom_io_w);
 	DECLARE_READ8_MEMBER(exp_rom_r);
 	void show_out();
+	DECLARE_CUSTOM_INPUT_MEMBER(hopper_r);
 };
 
 
@@ -332,16 +335,15 @@ WRITE8_MEMBER(igspoker_state::custom_io_w)
 	}
 }
 
-static CUSTOM_INPUT( hopper_r )
+CUSTOM_INPUT_MEMBER(igspoker_state::hopper_r)
 {
-	igspoker_state *state = field.machine().driver_data<igspoker_state>();
-	if (state->m_hopper) return !(field.machine().primary_screen->frame_number()%10);
-	return field.machine().input().code_pressed(KEYCODE_H);
+	if (m_hopper) return !(machine().primary_screen->frame_number()%10);
+	return machine().input().code_pressed(KEYCODE_H);
 }
 
 READ8_MEMBER(igspoker_state::exp_rom_r)
 {
-	UINT8 *rom = machine().region("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 	return rom[offset+0x10000];
 }
 
@@ -351,8 +353,8 @@ static ADDRESS_MAP_START( igspoker_prg_map, AS_PROGRAM, 8, igspoker_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( igspoker_io_map, AS_IO, 8, igspoker_state )
-	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split1_w ) AM_SHARE("paletteram")
-	AM_RANGE(0x2800, 0x2fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split2_w ) AM_SHARE("paletteram2")
+	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_lo_w ) AM_SHARE("paletteram")
+	AM_RANGE(0x2800, 0x2fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_hi_w ) AM_SHARE("paletteram2")
 	AM_RANGE(0x4000, 0x4000) AM_READ_PORT("DSW1")			/* DSW1 */
 	AM_RANGE(0x4001, 0x4001) AM_READ_PORT("DSW2")			/* DSW2 */
 	AM_RANGE(0x4002, 0x4002) AM_READ_PORT("DSW3")			/* DSW3 */
@@ -366,9 +368,9 @@ static ADDRESS_MAP_START( igspoker_io_map, AS_IO, 8, igspoker_state )
 	AM_RANGE(0x50a0, 0x50a0) AM_READ_PORT("BUTTONS2")			/* Not connected */
 	AM_RANGE(0x50b0, 0x50b1) AM_DEVWRITE_LEGACY("ymsnd", ym2413_w)
 	AM_RANGE(0x50c0, 0x50c0) AM_READ(igs_irqack_r) AM_WRITE(igs_irqack_w)
-	AM_RANGE(0x6800, 0x6fff) AM_RAM_WRITE(bg_tile_w )  AM_BASE(m_bg_tile_ram )
-	AM_RANGE(0x7000, 0x77ff) AM_RAM_WRITE(fg_tile_w )  AM_BASE(m_fg_tile_ram )
-	AM_RANGE(0x7800, 0x7fff) AM_RAM_WRITE(fg_color_w ) AM_BASE(m_fg_color_ram )
+	AM_RANGE(0x6800, 0x6fff) AM_RAM_WRITE(bg_tile_w )  AM_SHARE("bg_tile_ram")
+	AM_RANGE(0x7000, 0x77ff) AM_RAM_WRITE(fg_tile_w )  AM_SHARE("fg_tile_ram")
+	AM_RANGE(0x7800, 0x7fff) AM_RAM_WRITE(fg_color_w ) AM_SHARE("fg_color_ram")
 	AM_RANGE(0x0000, 0xffff) AM_READ(exp_rom_r )
 ADDRESS_MAP_END
 
@@ -481,7 +483,7 @@ static INPUT_PORTS_START( cpoker )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("SERVICE")
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL  ) PORT_CUSTOM( hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL  ) PORT_CUSTOM_MEMBER(DEVICE_SELF,igspoker_state,hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_GAMBLE_PAYOUT )
 	PORT_SERVICE_NO_TOGGLE( 0x20, IP_ACTIVE_LOW )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_GAMBLE_BOOK ) PORT_NAME("Statistics")
@@ -615,7 +617,7 @@ static INPUT_PORTS_START( cpokerx )
 	PORT_START("SERVICE")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE ) PORT_CODE(KEYCODE_9) PORT_NAME("Attendent")
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL  ) PORT_CUSTOM( hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL  ) PORT_CUSTOM_MEMBER(DEVICE_SELF,igspoker_state,hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -780,7 +782,7 @@ static INPUT_PORTS_START( csk227 )
 	PORT_START("SERVICE")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNUSED )
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM( hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF,igspoker_state,hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNUSED )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_GAMBLE_PAYOUT )
 	PORT_SERVICE_NO_TOGGLE( 0x20, IP_ACTIVE_LOW )
@@ -925,7 +927,7 @@ static INPUT_PORTS_START( csk234 )
 	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("SERVICE")
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM( hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF,igspoker_state,hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_GAMBLE_PAYOUT )
 	PORT_SERVICE_NO_TOGGLE( 0x20, IP_ACTIVE_LOW )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_GAMBLE_BOOK ) PORT_NAME("Statistics")
@@ -1077,7 +1079,7 @@ static INPUT_PORTS_START( igs_ncs )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
 
 	PORT_START("SERVICE")
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL  ) PORT_CUSTOM( hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL  ) PORT_CUSTOM_MEMBER(DEVICE_SELF,igspoker_state,hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_GAMBLE_PAYOUT )
 	PORT_SERVICE_NO_TOGGLE( 0x20, IP_ACTIVE_LOW )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_GAMBLE_BOOK ) PORT_NAME("Statistics")
@@ -1105,8 +1107,8 @@ INPUT_PORTS_END
 
 
 static ADDRESS_MAP_START( number10_io_map, AS_IO, 8, igspoker_state )
-	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split1_w ) AM_SHARE("paletteram")
-	AM_RANGE(0x2800, 0x2fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split2_w ) AM_SHARE("paletteram2")
+	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_lo_w ) AM_SHARE("paletteram")
+	AM_RANGE(0x2800, 0x2fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_hi_w ) AM_SHARE("paletteram2")
 	AM_RANGE(0x4000, 0x4000) AM_READ_PORT("DSW1")			/* DSW1 */
 	AM_RANGE(0x4001, 0x4001) AM_READ_PORT("DSW2")			/* DSW2 */
 	AM_RANGE(0x4002, 0x4002) AM_READ_PORT("DSW3")			/* DSW3 */
@@ -1122,14 +1124,14 @@ static ADDRESS_MAP_START( number10_io_map, AS_IO, 8, igspoker_state )
 	/* Sound synthesys has been patched out, replaced by ADPCM samples */
 	AM_RANGE(0x50b0, 0x50b0) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0x50c0, 0x50c0) AM_READ(igs_irqack_r) AM_WRITE(igs_irqack_w)
-	AM_RANGE(0x7000, 0x77ff) AM_RAM_WRITE(fg_tile_w )  AM_BASE(m_fg_tile_ram )
-	AM_RANGE(0x7800, 0x7fff) AM_RAM_WRITE(fg_color_w ) AM_BASE(m_fg_color_ram )
+	AM_RANGE(0x7000, 0x77ff) AM_RAM_WRITE(fg_tile_w )  AM_SHARE("fg_tile_ram")
+	AM_RANGE(0x7800, 0x7fff) AM_RAM_WRITE(fg_color_w ) AM_SHARE("fg_color_ram")
 	AM_RANGE(0x0000, 0xffff) AM_READ(exp_rom_r )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cpokerpk_io_map, AS_IO, 8, igspoker_state )
-	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split1_w ) AM_SHARE("paletteram")
-	AM_RANGE(0x2800, 0x2fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split2_w ) AM_SHARE("paletteram2")
+	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_lo_w ) AM_SHARE("paletteram")
+	AM_RANGE(0x2800, 0x2fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_hi_w ) AM_SHARE("paletteram2")
 	AM_RANGE(0x4000, 0x4000) AM_READ_PORT("DSW1")			/* DSW1 */
 	AM_RANGE(0x4001, 0x4001) AM_READ_PORT("DSW2")			/* DSW2 */
 	AM_RANGE(0x4002, 0x4002) AM_READ_PORT("DSW3")			/* DSW3 */
@@ -1144,8 +1146,8 @@ static ADDRESS_MAP_START( cpokerpk_io_map, AS_IO, 8, igspoker_state )
 	/* Sound synthesys has been patched out, replaced by ADPCM samples */
 	AM_RANGE(0x50b0, 0x50b0) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0x50c0, 0x50c0) AM_READ(igs_irqack_r) AM_WRITE(igs_irqack_w)
-	AM_RANGE(0x7000, 0x77ff) AM_RAM_WRITE(fg_tile_w )  AM_BASE(m_fg_tile_ram )
-	AM_RANGE(0x7800, 0x7fff) AM_RAM_WRITE(fg_color_w ) AM_BASE(m_fg_color_ram )
+	AM_RANGE(0x7000, 0x77ff) AM_RAM_WRITE(fg_tile_w )  AM_SHARE("fg_tile_ram")
+	AM_RANGE(0x7800, 0x7fff) AM_RAM_WRITE(fg_color_w ) AM_SHARE("fg_color_ram")
 	AM_RANGE(0x0000, 0xffff) AM_READ(exp_rom_r )
 ADDRESS_MAP_END
 
@@ -1397,7 +1399,7 @@ static INPUT_PORTS_START( cpokerpk )
 	PORT_DIPSETTING(    0x00, "100:1" )
 
 	PORT_START("SERVICE")
-	PORT_BIT( 0x8f, IP_ACTIVE_LOW, IPT_SPECIAL  ) PORT_CUSTOM( hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
+	PORT_BIT( 0x8f, IP_ACTIVE_LOW, IPT_SPECIAL  ) PORT_CUSTOM_MEMBER(DEVICE_SELF,igspoker_state,hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_GAMBLE_PAYOUT )
 	PORT_SERVICE_NO_TOGGLE( 0x20, IP_ACTIVE_LOW )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_GAMBLE_BOOK ) PORT_NAME("Statistics")
@@ -1532,7 +1534,7 @@ static INPUT_PORTS_START( chleague )
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("SERVICE")
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL  ) PORT_CUSTOM( hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL  ) PORT_CUSTOM_MEMBER(DEVICE_SELF,igspoker_state,hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_GAMBLE_PAYOUT )
 	PORT_SERVICE_NO_TOGGLE( 0x20, IP_ACTIVE_LOW )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_GAMBLE_BOOK ) PORT_NAME("Statistics")
@@ -1671,7 +1673,7 @@ static INPUT_PORTS_START( pktet346 )
 
 	PORT_START("SERVICE")
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE ) PORT_CODE(KEYCODE_9)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL  ) PORT_CUSTOM( hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL  ) PORT_CUSTOM_MEMBER(DEVICE_SELF,igspoker_state,hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_GAMBLE_PAYOUT )
 	PORT_SERVICE_NO_TOGGLE( 0x20, IP_ACTIVE_LOW )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_GAMBLE_BOOK ) PORT_NAME("Statistics")
@@ -1917,7 +1919,7 @@ ROM_END
 static DRIVER_INIT( cpoker )
 {
 	int A;
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 
 	for (A = 0;A < 0x10000;A++)
@@ -1931,7 +1933,7 @@ static DRIVER_INIT( cpoker )
 
 static DRIVER_INIT( cpokert )
 {
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 	int i;
 
 	/* decrypt the program ROM */
@@ -1961,7 +1963,7 @@ static DRIVER_INIT( cpokert )
 static DRIVER_INIT( cska )
 {
 	int A;
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 
 	for (A = 0;A < 0x10000;A++)
@@ -1978,7 +1980,7 @@ static DRIVER_INIT( cska )
 static DRIVER_INIT( igs_ncs )
 {
 	int A;
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 
 	for (A = 0;A < 0x10000;A++)
@@ -2139,7 +2141,7 @@ Clocks
 
 static DRIVER_INIT( igs_ncs2 )
 {
-	UINT8 *src = (UINT8 *) (machine.region("maincpu")->base());
+	UINT8 *src = (UINT8 *) (machine.root_device().memregion("maincpu")->base());
 	int i;
 
 	for(i = 0; i < 0x10000; i++)
@@ -2216,8 +2218,8 @@ static DRIVER_INIT( chleague )
 	int length;
 	UINT8 *rom;
 
-	rom = machine.region("maincpu")->base();
-	length = machine.region("maincpu")->bytes();
+	rom = machine.root_device().memregion("maincpu")->base();
+	length = machine.root_device().memregion("maincpu")->bytes();
 	for (A = 0;A < length;A++)
 	{
 		if ((A & 0x09C0) == 0x0880) rom[A] ^= 0x20;
@@ -2280,8 +2282,8 @@ static DRIVER_INIT( number10 )
 	UINT8 *tmp;
 	UINT8 *rom;
 
-	rom = machine.region("maincpu")->base();
-	length = machine.region("maincpu")->bytes();
+	rom = machine.root_device().memregion("maincpu")->base();
+	length = machine.root_device().memregion("maincpu")->bytes();
 	for (A = 0;A < length;A++)
 	{
 		if ((A & 0x09C0) == 0x0880) rom[A] ^= 0x20;
@@ -2310,8 +2312,8 @@ static DRIVER_INIT( number10 )
 	rom[0xeed] = 0xc3;
 
 	/* Descramble graphic */
-	rom = machine.region("gfx1")->base();
-	length = machine.region("gfx1")->bytes();
+	rom = machine.root_device().memregion("gfx1")->base();
+	length = machine.root_device().memregion("gfx1")->bytes();
 	tmp = auto_alloc_array(machine, UINT8, length);
 	memcpy(tmp,rom,length);
 	for (A = 0;A < length;A++)
@@ -2359,7 +2361,7 @@ ROM_END
 static DRIVER_INIT( cpokerpk )
 {
 	int A;
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 	for (A=0x0714; A < 0xF000; A+=0x1000)
 		rom[A] ^= 0x20;
@@ -2413,7 +2415,7 @@ ROM_END
 static DRIVER_INIT( pktet346 )
 {
 	int A;
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 
 	for (A = 0;A < 0x10000;A++)

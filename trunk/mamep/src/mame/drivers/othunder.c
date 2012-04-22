@@ -393,7 +393,7 @@ WRITE16_MEMBER(othunder_state::othunder_lightgun_w)
 static void reset_sound_region( running_machine &machine )
 {
 	othunder_state *state = machine.driver_data<othunder_state>();
-	memory_set_bank(machine, "bank10", state->m_banknum);
+	state->membank("bank10")->set_entry(state->m_banknum);
 }
 
 
@@ -462,7 +462,7 @@ static ADDRESS_MAP_START( othunder_map, AS_PROGRAM, 16, othunder_state )
 	AM_RANGE(0x200000, 0x20ffff) AM_DEVREADWRITE_LEGACY("tc0100scn", tc0100scn_word_r, tc0100scn_word_w)	/* tilemaps */
 	AM_RANGE(0x220000, 0x22000f) AM_DEVREADWRITE_LEGACY("tc0100scn", tc0100scn_ctrl_word_r, tc0100scn_ctrl_word_w)
 	AM_RANGE(0x300000, 0x300003) AM_READWRITE(othunder_sound_r, othunder_sound_w)
-	AM_RANGE(0x400000, 0x4005ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x400000, 0x4005ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x500000, 0x500007) AM_READWRITE(othunder_lightgun_r, othunder_lightgun_w)
 	AM_RANGE(0x600000, 0x600003) AM_WRITE(irq_ack_w)
 ADDRESS_MAP_END
@@ -674,7 +674,7 @@ static MACHINE_START( othunder )
 {
 	othunder_state *state = machine.driver_data<othunder_state>();
 
-	memory_configure_bank(machine, "bank10", 0, 4, machine.region("audiocpu")->base() + 0xc000, 0x4000);
+	state->membank("bank10")->configure_entries(0, 4, state->memregion("audiocpu")->base() + 0xc000, 0x4000);
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_audiocpu = machine.device("audiocpu");

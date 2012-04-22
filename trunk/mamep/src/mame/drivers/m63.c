@@ -125,14 +125,18 @@ class m63_state : public driver_device
 {
 public:
 	m63_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_spriteram(*this, "spriteram"),
+		m_scrollram(*this, "scrollram"),
+		m_videoram2(*this, "videoram2"),
+		m_videoram(*this, "videoram"),
+		m_colorram(*this, "colorram"){ }
 
-	UINT8 *  m_videoram;
-	UINT8 *  m_colorram;
-	UINT8 *  m_spriteram;
-	UINT8 *  m_videoram2;
-	UINT8 *  m_scrollram;
-	size_t   m_spriteram_size;
+	required_shared_ptr<UINT8> m_spriteram;
+	required_shared_ptr<UINT8> m_scrollram;
+	required_shared_ptr<UINT8> m_videoram2;
+	required_shared_ptr<UINT8> m_videoram;
+	required_shared_ptr<UINT8> m_colorram;
 
 	UINT8    m_nmi_mask;
 
@@ -176,6 +180,7 @@ public:
 
 static PALETTE_INIT( m63 )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0; i < 256; i++)
@@ -262,9 +267,9 @@ WRITE8_MEMBER(m63_state::m63_palbank_w)
 
 WRITE8_MEMBER(m63_state::m63_flipscreen_w)
 {
-	if (flip_screen_get(machine()) != (~data & 0x01))
+	if (flip_screen() != (~data & 0x01))
 	{
-		flip_screen_set(machine(), ~data & 0x01);
+		flip_screen_set(~data & 0x01);
 		machine().tilemap().mark_all_dirty();
 	}
 }
@@ -272,8 +277,8 @@ WRITE8_MEMBER(m63_state::m63_flipscreen_w)
 WRITE8_MEMBER(m63_state::fghtbskt_flipscreen_w)
 {
 
-	flip_screen_set(machine(), data);
-	m_fg_flag = flip_screen_get(machine()) ? TILE_FLIPX : 0;
+	flip_screen_set(data);
+	m_fg_flag = flip_screen() ? TILE_FLIPX : 0;
 }
 
 
@@ -313,7 +318,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	m63_state *state = machine.driver_data<m63_state>();
 	int offs;
 
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		int code = state->m_spriteram[offs + 1] | ((state->m_spriteram[offs + 2] & 0x10) << 4);
 		int color = (state->m_spriteram[offs + 2] & 0x0f) + (state->m_pal_bank << 4);
@@ -322,7 +327,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		int sx = state->m_spriteram[offs + 3];
 		int sy = state->m_sy_offset - state->m_spriteram[offs];
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;
 			sy = state->m_sy_offset - sy;
@@ -426,8 +431,8 @@ READ8_MEMBER(m63_state::snddata_r)
 {
 	switch (m_p2 & 0xf0)
 	{
-		case 0x60:	return soundlatch_r(space, 0); ;
-		case 0x70:	return machine().region("user1")->base()[((m_p1 & 0x1f) << 8) | offset];
+		case 0x60:	return soundlatch_byte_r(space, 0); ;
+		case 0x70:	return memregion("user1")->base()[((m_p1 & 0x1f) << 8) | offset];
 	}
 	return 0xff;
 }
@@ -450,16 +455,16 @@ static ADDRESS_MAP_START( m63_map, AS_PROGRAM, 8, m63_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xd000, 0xdfff) AM_RAM
 	AM_RANGE(0xe000, 0xe1ff) AM_RAM
-	AM_RANGE(0xe200, 0xe2ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0xe300, 0xe3ff) AM_RAM AM_BASE(m_scrollram)
-	AM_RANGE(0xe400, 0xe7ff) AM_RAM_WRITE(m63_videoram2_w) AM_BASE(m_videoram2)
-	AM_RANGE(0xe800, 0xebff) AM_RAM_WRITE(m63_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xec00, 0xefff) AM_RAM_WRITE(m63_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0xe200, 0xe2ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xe300, 0xe3ff) AM_RAM AM_SHARE("scrollram")
+	AM_RANGE(0xe400, 0xe7ff) AM_RAM_WRITE(m63_videoram2_w) AM_SHARE("videoram2")
+	AM_RANGE(0xe800, 0xebff) AM_RAM_WRITE(m63_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xec00, 0xefff) AM_RAM_WRITE(m63_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(nmi_mask_w)
 	AM_RANGE(0xf002, 0xf002) AM_WRITE(m63_flipscreen_w)
 	AM_RANGE(0xf003, 0xf003) AM_WRITE(m63_palbank_w)
 	AM_RANGE(0xf006, 0xf007) AM_WRITE(coin_w)
-	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("P1") AM_WRITE(soundlatch_w)
+	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("P1") AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0xf801, 0xf801) AM_READ_PORT("P2") AM_WRITENOP	/* continues game when in stop mode (cleared by NMI handler) */
 	AM_RANGE(0xf802, 0xf802) AM_READ_PORT("DSW1")
 	AM_RANGE(0xf803, 0xf803) AM_WRITE(snd_irq_w)
@@ -471,18 +476,18 @@ static ADDRESS_MAP_START( fghtbskt_map, AS_PROGRAM, 8, m63_state )
 	AM_RANGE(0x8000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 	AM_RANGE(0xd000, 0xd1ff) AM_RAM
-	AM_RANGE(0xd200, 0xd2ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0xd300, 0xd3ff) AM_RAM AM_BASE(m_scrollram)
-	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(m63_videoram2_w) AM_BASE(m_videoram2)
-	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE(m63_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xdc00, 0xdfff) AM_RAM_WRITE(m63_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0xd200, 0xd2ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xd300, 0xd3ff) AM_RAM AM_SHARE("scrollram")
+	AM_RANGE(0xd400, 0xd7ff) AM_RAM_WRITE(m63_videoram2_w) AM_SHARE("videoram2")
+	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE(m63_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xdc00, 0xdfff) AM_RAM_WRITE(m63_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0xf000, 0xf000) AM_READ(snd_status_r)
 	AM_RANGE(0xf001, 0xf001) AM_READ_PORT("P1")
 	AM_RANGE(0xf002, 0xf002) AM_READ_PORT("P2")
 	AM_RANGE(0xf003, 0xf003) AM_READ_PORT("DSW")
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(snd_irq_w)
 	AM_RANGE(0xf001, 0xf001) AM_WRITENOP
-	AM_RANGE(0xf002, 0xf002) AM_WRITE(soundlatch_w)
+	AM_RANGE(0xf002, 0xf002) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0xf800, 0xf800) AM_WRITENOP
 	AM_RANGE(0xf801, 0xf801) AM_WRITE(nmi_mask_w)
 	AM_RANGE(0xf802, 0xf802) AM_WRITE(fghtbskt_flipscreen_w)
@@ -691,8 +696,8 @@ static SAMPLES_START( fghtbskt_sh_start )
 {
 	running_machine &machine = device.machine();
 	m63_state *state = machine.driver_data<m63_state>();
-	int i, len = machine.region("samples")->bytes();
-	UINT8 *ROM = machine.region("samples")->base();
+	int i, len = machine.root_device().memregion("samples")->bytes();
+	UINT8 *ROM = state->memregion("samples")->base();
 
 	state->m_samplebuf = auto_alloc_array(machine, INT16, len);
 	state->save_pointer(NAME(state->m_samplebuf), len);

@@ -78,18 +78,21 @@ class kingdrby_state : public driver_device
 {
 public:
 	kingdrby_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_vram(*this, "vram"),
+		m_attr(*this, "attr"),
+		m_spriteram(*this, "spriteram"){ }
 
 	UINT8 m_sound_cmd;
-	UINT8 *m_vram;
-	UINT8 *m_attr;
+	required_shared_ptr<UINT8> m_vram;
+	required_shared_ptr<UINT8> m_attr;
 	tilemap_t *m_sc0_tilemap;
 	tilemap_t *m_sc0w_tilemap;
 	tilemap_t *m_sc1_tilemap;
 	UINT8 m_p1_hopper;
 	UINT8 m_p2_hopper;
 	UINT8 m_mux_data;
-	UINT8 *m_spriteram;
+	required_shared_ptr<UINT8> m_spriteram;
 	DECLARE_WRITE8_MEMBER(sc0_vram_w);
 	DECLARE_WRITE8_MEMBER(sc0_attr_w);
 	DECLARE_WRITE8_MEMBER(led_array_w);
@@ -281,7 +284,7 @@ static WRITE8_DEVICE_HANDLER( sound_cmd_w )
 	cputag_set_input_line(device->machine(), "soundcpu", INPUT_LINE_NMI, PULSE_LINE);
 	state->m_sound_cmd = data;
 	/* soundlatch is unneeded since we are already using perfect interleave. */
-	// soundlatch_w(space,0, data);
+	// soundlatch_byte_w(space,0, data);
 }
 
 
@@ -386,8 +389,8 @@ WRITE8_MEMBER(kingdrby_state::led_array_w)
 static ADDRESS_MAP_START( master_map, AS_PROGRAM, 8, kingdrby_state )
 	AM_RANGE(0x0000, 0x2fff) AM_ROM
 	AM_RANGE(0x3000, 0x33ff) AM_RAM AM_MIRROR(0xc00) AM_SHARE("share1")
-	AM_RANGE(0x4000, 0x43ff) AM_RAM_WRITE(sc0_vram_w) AM_BASE(m_vram)
-	AM_RANGE(0x5000, 0x53ff) AM_RAM_WRITE(sc0_attr_w) AM_BASE(m_attr)
+	AM_RANGE(0x4000, 0x43ff) AM_RAM_WRITE(sc0_vram_w) AM_SHARE("vram")
+	AM_RANGE(0x5000, 0x53ff) AM_RAM_WRITE(sc0_attr_w) AM_SHARE("attr")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( master_io_map, AS_IO, 8, kingdrby_state )
@@ -402,7 +405,7 @@ static ADDRESS_MAP_START( slave_map, AS_PROGRAM, 8, kingdrby_state )
 	AM_RANGE(0x5000, 0x5003) AM_DEVREADWRITE_LEGACY("ppi8255_0", ppi8255_r, ppi8255_w)	/* I/O Ports */
 	AM_RANGE(0x6000, 0x6003) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)	/* I/O Ports */
 	AM_RANGE(0x7000, 0x73ff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x7400, 0x74ff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x7400, 0x74ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x7600, 0x7600) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0x7601, 0x7601) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
 	AM_RANGE(0x7801, 0x780f) AM_WRITE(led_array_w)
@@ -422,7 +425,7 @@ static ADDRESS_MAP_START( slave_1986_map, AS_PROGRAM, 8, kingdrby_state )
 	AM_RANGE(0x5000, 0x5003) AM_DEVREADWRITE_LEGACY("ppi8255_0", ppi8255_r, ppi8255_w)	/* I/O Ports */
 //  AM_RANGE(0x6000, 0x6003) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w) /* I/O Ports */
 	AM_RANGE(0x7000, 0x73ff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x7400, 0x74ff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x7400, 0x74ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x7600, 0x7600) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0x7601, 0x7601) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
 	AM_RANGE(0x7800, 0x7800) AM_READ_PORT("KEY0")
@@ -951,6 +954,7 @@ static const ym2203_interface cowrace_ym2203_interface =
 
 static PALETTE_INIT(kingdrby)
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int	bit0, bit1, bit2 , r, g, b;
 	int	i;
 
@@ -976,8 +980,8 @@ static PALETTE_INIT(kingdrby)
 
 static PALETTE_INIT(kingdrbb)
 {
-	UINT8 *raw_prom = machine.region("raw_prom")->base();
-	UINT8 *prom = machine.region("proms")->base();
+	UINT8 *raw_prom = machine.root_device().memregion("raw_prom")->base();
+	UINT8 *prom = machine.root_device().memregion("proms")->base();
 	int	bit0, bit1, bit2 , r, g, b;
 	int	i;
 

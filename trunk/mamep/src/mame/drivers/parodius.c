@@ -46,9 +46,9 @@ WRITE8_MEMBER(parodius_state::bankedram_w)
 	if (m_videobank & 0x01)
 	{
 		if (m_videobank & 0x04)
-			paletteram_xBBBBBGGGGGRRRRR_be_w(space, offset + 0x0800, data);
+			paletteram_xBBBBBGGGGGRRRRR_byte_be_w(space, offset + 0x0800, data);
 		else
-			paletteram_xBBBBBGGGGGRRRRR_be_w(space, offset, data);
+			paletteram_xBBBBBGGGGGRRRRR_byte_be_w(space, offset, data);
 	}
 	else
 		m_ram[offset] = data;
@@ -137,7 +137,7 @@ WRITE8_MEMBER(parodius_state::sound_arm_nmi_w)
 /********************************************/
 
 static ADDRESS_MAP_START( parodius_map, AS_PROGRAM, 8, parodius_state )
-	AM_RANGE(0x0000, 0x07ff) AM_READWRITE(bankedram_r, bankedram_w) AM_BASE(m_ram)
+	AM_RANGE(0x0000, 0x07ff) AM_READWRITE(bankedram_r, bankedram_w) AM_SHARE("ram")
 	AM_RANGE(0x0800, 0x1fff) AM_RAM
 	AM_RANGE(0x3f8c, 0x3f8c) AM_READ_PORT("P1")
 	AM_RANGE(0x3f8d, 0x3f8d) AM_READ_PORT("P2")
@@ -248,11 +248,11 @@ static const k05324x_interface parodius_k05324x_intf =
 static MACHINE_START( parodius )
 {
 	parodius_state *state = machine.driver_data<parodius_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 14, &ROM[0x10000], 0x4000);
-	memory_configure_bank(machine, "bank1", 14, 2, &ROM[0x08000], 0x4000);
-	memory_set_bank(machine, "bank1", 0);
+	state->membank("bank1")->configure_entries(0, 14, &ROM[0x10000], 0x4000);
+	state->membank("bank1")->configure_entries(14, 2, &ROM[0x08000], 0x4000);
+	state->membank("bank1")->set_entry(0);
 
 	state->m_generic_paletteram_8.allocate(0x1000);
 
@@ -407,7 +407,7 @@ static KONAMI_SETLINES_CALLBACK( parodius_banking )
 	if (lines & 0xf0)
 		logerror("%04x: setlines %02x\n", cpu_get_pc(device), lines);
 
-	memory_set_bank(device->machine(),  "bank1", (lines & 0x0f) ^ 0x0f);
+	device->machine().root_device().membank("bank1")->set_entry((lines & 0x0f) ^ 0x0f);
 }
 
 GAME( 1990, parodius,  0,        parodius, parodius, 0, ROT0, "Konami", "Parodius DA! (World, set 1)", GAME_SUPPORTS_SAVE )

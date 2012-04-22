@@ -43,19 +43,32 @@ class blitz68k_state : public driver_device
 public:
 	blitz68k_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		  m_nvram(*this, "nvram") { }
+		  m_nvram(*this, "nvram"),
+		  m_frame_buffer(*this, "frame_buffer"),
+		  m_blit_romaddr(*this, "blit_romaddr"),
+		  m_blit_attr1_ram(*this, "blit_attr1_ram"),
+		  m_blit_dst_ram_loword(*this, "blitram_loword"),
+		  m_blit_attr2_ram(*this, "blit_attr2_ram"),
+		  m_blit_dst_ram_hiword(*this, "blitram_hiword"),
+		  m_blit_vregs(*this, "blit_vregs"),
+		  m_blit_transpen(*this, "blit_transpen"),
+		  m_leds0(*this, "leds0"),
+		  m_leds1(*this, "leds1"),
+		  m_leds2(*this, "leds2") { }
 
 	optional_shared_ptr<UINT16>	m_nvram;
 	UINT8 *m_blit_buffer;
-	UINT16 *m_frame_buffer;
-	UINT16 *m_blit_romaddr;
-	UINT16 *m_blit_attr1_ram;
-	UINT16 *m_blit_dst_ram_loword;
-	UINT16 *m_blit_attr2_ram;
-	UINT16 *m_blit_dst_ram_hiword;
-	UINT16 *m_blit_vregs;
-	UINT16 *m_blit_transpen;
-	UINT16 *m_leds[3];
+	optional_shared_ptr<UINT16> m_frame_buffer;
+	optional_shared_ptr<UINT16> m_blit_romaddr;
+	optional_shared_ptr<UINT16> m_blit_attr1_ram;
+	optional_shared_ptr<UINT16> m_blit_dst_ram_loword;
+	optional_shared_ptr<UINT16> m_blit_attr2_ram;
+	optional_shared_ptr<UINT16> m_blit_dst_ram_hiword;
+	optional_shared_ptr<UINT16> m_blit_vregs;
+	optional_shared_ptr<UINT16> m_blit_transpen;
+	optional_shared_ptr<UINT16> m_leds0;
+	optional_shared_ptr<UINT16> m_leds1;
+	optional_shared_ptr<UINT16> m_leds2;
 	DECLARE_WRITE16_MEMBER(blit_copy_w);
 	DECLARE_READ8_MEMBER(blit_status_r);
 	DECLARE_WRITE8_MEMBER(blit_x_w);
@@ -229,7 +242,7 @@ static SCREEN_UPDATE_RGB32(blitz68k_noblit)
 
 WRITE16_MEMBER(blitz68k_state::blit_copy_w)
 {
-	UINT8 *blit_rom = machine().region("blitter")->base();
+	UINT8 *blit_rom = memregion("blitter")->base();
 	UINT32 blit_dst_xpos;
 	UINT32 blit_dst_ypos;
 	int x,y,x_size,y_size;
@@ -417,8 +430,8 @@ WRITE8_MEMBER(blitz68k_state::blit_flags_w)
 
 WRITE8_MEMBER(blitz68k_state::blit_draw_w)
 {
-	UINT8 *blit_rom  = machine().region("blitter")->base();
-	int blit_romsize = machine().region("blitter")->bytes();
+	UINT8 *blit_rom  = memregion("blitter")->base();
+	int blit_romsize = memregion("blitter")->bytes();
 	UINT32 blit_dst_xpos;
 	UINT32 blit_dst_ypos;
 	int x, y, x_size, y_size;
@@ -505,13 +518,13 @@ WRITE8_MEMBER(blitz68k_state::blit_hwyxa_draw_w)
 void blitz68k_state::show_leds123()
 {
 #ifdef MAME_DEBUG
-	popmessage("led %02x %02x %02x", m_leds[0][0]>>8, m_leds[1][0]>>8, m_leds[2][0]>>8);
+	popmessage("led %02x %02x %02x", m_leds0[0]>>8, m_leds1[0]>>8, m_leds2[0]>>8);
 #endif
 }
 void blitz68k_state::show_leds12()
 {
 #ifdef MAME_DEBUG
-	popmessage("led %02x %02x", m_leds[0][0]>>8, m_leds[1][0]>>8);
+	popmessage("led %02x %02x", m_leds0[0]>>8, m_leds1[0]>>8);
 #endif
 }
 
@@ -563,13 +576,13 @@ static ADDRESS_MAP_START( ilpag_map, AS_PROGRAM, 16, blitz68k_state )
 	AM_RANGE(0x900000, 0x900001) AM_DEVWRITE8("ramdac",ramdac_device, index_w, 0xff00 )
 	AM_RANGE(0x900002, 0x900003) AM_DEVWRITE8("ramdac",ramdac_device, pal_w, 0xff00 )
 	AM_RANGE(0x900004, 0x900005) AM_DEVWRITE8("ramdac",ramdac_device, mask_w, 0xff00 )
-	AM_RANGE(0x980000, 0x98000f) AM_RAM AM_BASE(m_blit_transpen) //video registers for the blitter write
-	AM_RANGE(0x990000, 0x990007) AM_RAM AM_BASE(m_blit_vregs) //pens
-	AM_RANGE(0x998000, 0x998001) AM_RAM AM_BASE(m_blit_romaddr)
-	AM_RANGE(0x9a0000, 0x9a0001) AM_RAM AM_BASE(m_blit_attr1_ram)
-	AM_RANGE(0x9a8000, 0x9a8001) AM_RAM AM_BASE(m_blit_dst_ram_loword)
-	AM_RANGE(0x9b0000, 0x9b0001) AM_RAM AM_BASE(m_blit_attr2_ram)
-	AM_RANGE(0x9b8000, 0x9b8001) AM_RAM_WRITE(blit_copy_w ) AM_BASE(m_blit_dst_ram_hiword)
+	AM_RANGE(0x980000, 0x98000f) AM_RAM AM_SHARE("blit_transpen") //video registers for the blitter write
+	AM_RANGE(0x990000, 0x990007) AM_RAM AM_SHARE("blit_vregs") //pens
+	AM_RANGE(0x998000, 0x998001) AM_RAM AM_SHARE("blit_romaddr")
+	AM_RANGE(0x9a0000, 0x9a0001) AM_RAM AM_SHARE("blit_attr1_ram")
+	AM_RANGE(0x9a8000, 0x9a8001) AM_RAM AM_SHARE("blitram_loword")
+	AM_RANGE(0x9b0000, 0x9b0001) AM_RAM AM_SHARE("blit_attr2_ram")
+	AM_RANGE(0x9b8000, 0x9b8001) AM_RAM_WRITE(blit_copy_w ) AM_SHARE("blitram_hiword")
 	AM_RANGE(0x9e0000, 0x9e0001) AM_READ(blitter_status_r)
 
 	AM_RANGE(0xc00000, 0xc00001) AM_WRITE(lamps_w)
@@ -593,13 +606,13 @@ static ADDRESS_MAP_START( steaser_map, AS_PROGRAM, 16, blitz68k_state )
 	AM_RANGE(0x900002, 0x900003) AM_DEVWRITE8("ramdac",ramdac_device, pal_w, 0xff00 )
 	AM_RANGE(0x900004, 0x900005) AM_DEVWRITE8("ramdac",ramdac_device, mask_w, 0xff00 )
 	AM_RANGE(0x940000, 0x940001) AM_WRITENOP //? Seems a dword write for some read, written consecutively
-	AM_RANGE(0x980000, 0x98000f) AM_RAM AM_BASE(m_blit_transpen)//probably transparency pens
-	AM_RANGE(0x990000, 0x990005) AM_RAM AM_BASE(m_blit_vregs)
-	AM_RANGE(0x998000, 0x998001) AM_RAM AM_BASE(m_blit_romaddr)
-	AM_RANGE(0x9a0000, 0x9a0001) AM_RAM AM_BASE(m_blit_attr1_ram)
-	AM_RANGE(0x9a8000, 0x9a8001) AM_RAM AM_BASE(m_blit_dst_ram_loword)
-	AM_RANGE(0x9b0000, 0x9b0001) AM_RAM AM_BASE(m_blit_attr2_ram)
-	AM_RANGE(0x9b8000, 0x9b8001) AM_RAM_WRITE(blit_copy_w ) AM_BASE(m_blit_dst_ram_hiword)
+	AM_RANGE(0x980000, 0x98000f) AM_RAM AM_SHARE("blit_transpen")//probably transparency pens
+	AM_RANGE(0x990000, 0x990005) AM_RAM AM_SHARE("blit_vregs")
+	AM_RANGE(0x998000, 0x998001) AM_RAM AM_SHARE("blit_romaddr")
+	AM_RANGE(0x9a0000, 0x9a0001) AM_RAM AM_SHARE("blit_attr1_ram")
+	AM_RANGE(0x9a8000, 0x9a8001) AM_RAM AM_SHARE("blitram_loword")
+	AM_RANGE(0x9b0000, 0x9b0001) AM_RAM AM_SHARE("blit_attr2_ram")
+	AM_RANGE(0x9b8000, 0x9b8001) AM_RAM_WRITE(blit_copy_w ) AM_SHARE("blitram_hiword")
 	AM_RANGE(0x9c0002, 0x9c0003) AM_READNOP //pen control?
 	AM_RANGE(0x9d0000, 0x9d0001) AM_READNOP //?
 	AM_RANGE(0x9e0000, 0x9e0001) AM_READ(blitter_status_r)
@@ -793,7 +806,7 @@ ADDRESS_MAP_END
 
 WRITE16_MEMBER(blitz68k_state::cjffruit_leds1_w)
 {
-	data = COMBINE_DATA(m_leds[0]);
+	data = COMBINE_DATA(m_leds0);
 	if (ACCESSING_BITS_8_15)
 	{
 		coin_counter_w(machine(), 0, data & 0x0100);	// coin in
@@ -810,7 +823,7 @@ WRITE16_MEMBER(blitz68k_state::cjffruit_leds1_w)
 
 WRITE16_MEMBER(blitz68k_state::cjffruit_leds2_w)
 {
-	data = COMBINE_DATA(m_leds[1]);
+	data = COMBINE_DATA(m_leds1);
 	if (ACCESSING_BITS_8_15)
 	{
 		set_led_status(machine(),  7, data & 0x0100);	// start
@@ -827,7 +840,7 @@ WRITE16_MEMBER(blitz68k_state::cjffruit_leds2_w)
 
 WRITE16_MEMBER(blitz68k_state::cjffruit_leds3_w)
 {
-	data = COMBINE_DATA(m_leds[2]);
+	data = COMBINE_DATA(m_leds2);
 	if (ACCESSING_BITS_8_15)
 	{
 		set_led_status(machine(), 15, data & 0x0100);	// hopper coins?
@@ -902,9 +915,9 @@ static ADDRESS_MAP_START( cjffruit_map, AS_PROGRAM, 16, blitz68k_state )
 
 	AM_RANGE(0x8e0000, 0x8e0001) AM_WRITE(cjffruit_mcu_w )
 
-	AM_RANGE(0x8f8000, 0x8f8001) AM_WRITE(cjffruit_leds1_w) AM_BASE(m_leds[0])
-	AM_RANGE(0x8fa000, 0x8fa001) AM_WRITE(cjffruit_leds2_w) AM_BASE(m_leds[1])
-	AM_RANGE(0x8fc000, 0x8fc001) AM_WRITE(cjffruit_leds3_w) AM_BASE(m_leds[2])
+	AM_RANGE(0x8f8000, 0x8f8001) AM_WRITE(cjffruit_leds1_w) AM_SHARE("leds0")
+	AM_RANGE(0x8fa000, 0x8fa001) AM_WRITE(cjffruit_leds2_w) AM_SHARE("leds1")
+	AM_RANGE(0x8fc000, 0x8fc001) AM_WRITE(cjffruit_leds3_w) AM_SHARE("leds2")
 
 	AM_RANGE(0x8fe000, 0x8fe003) AM_WRITE8(blit_flags_w, 0xffff)	// flipx,y,solid,trans
 	AM_RANGE(0x8fe004, 0x8fe005) AM_WRITEONLY
@@ -932,7 +945,7 @@ WRITE16_MEMBER(blitz68k_state::deucesw2_mcu_w)
 
 WRITE16_MEMBER(blitz68k_state::deucesw2_leds1_w)
 {
-	data = COMBINE_DATA(m_leds[0]);
+	data = COMBINE_DATA(m_leds0);
 	if (ACCESSING_BITS_8_15)
 	{
 		coin_counter_w(machine(), 0, data & 0x0100);	// coin in
@@ -949,7 +962,7 @@ WRITE16_MEMBER(blitz68k_state::deucesw2_leds1_w)
 
 WRITE16_MEMBER(blitz68k_state::deucesw2_leds2_w)
 {
-	data = COMBINE_DATA(m_leds[1]);
+	data = COMBINE_DATA(m_leds1);
 	if (ACCESSING_BITS_8_15)
 	{
 		set_led_status(machine(),  7, data & 0x0100);	// start
@@ -966,7 +979,7 @@ WRITE16_MEMBER(blitz68k_state::deucesw2_leds2_w)
 
 WRITE16_MEMBER(blitz68k_state::deucesw2_leds3_w)
 {
-	data = COMBINE_DATA(m_leds[2]);
+	data = COMBINE_DATA(m_leds2);
 	if (ACCESSING_BITS_8_15)
 	{
 		set_led_status(machine(), 15, data & 0x0100);	// hopper coins?
@@ -1001,9 +1014,9 @@ static ADDRESS_MAP_START( deucesw2_map, AS_PROGRAM, 16, blitz68k_state )
 
 	AM_RANGE(0x896000, 0x896001) AM_WRITE(deucesw2_mcu_w )
 
-	AM_RANGE(0x898000, 0x898001) AM_WRITE(deucesw2_leds1_w) AM_BASE(m_leds[0])
-	AM_RANGE(0x89a000, 0x89a001) AM_WRITE(deucesw2_leds2_w) AM_BASE(m_leds[1])
-	AM_RANGE(0x89c000, 0x89c001) AM_WRITE(deucesw2_leds3_w) AM_BASE(m_leds[2])
+	AM_RANGE(0x898000, 0x898001) AM_WRITE(deucesw2_leds1_w) AM_SHARE("leds0")
+	AM_RANGE(0x89a000, 0x89a001) AM_WRITE(deucesw2_leds2_w) AM_SHARE("leds1")
+	AM_RANGE(0x89c000, 0x89c001) AM_WRITE(deucesw2_leds3_w) AM_SHARE("leds2")
 
 	AM_RANGE(0x89e000, 0x89e003) AM_WRITE8(blit_flags_w, 0xffff)	// flipx,y,solid,trans
 	AM_RANGE(0x89e004, 0x89e005) AM_WRITEONLY
@@ -1122,7 +1135,7 @@ WRITE16_MEMBER(blitz68k_state::hermit_mcu_w)
 
 WRITE16_MEMBER(blitz68k_state::hermit_leds1_w)
 {
-	data = COMBINE_DATA(m_leds[0]);
+	data = COMBINE_DATA(m_leds0);
 	if (ACCESSING_BITS_8_15)
 	{
 		coin_counter_w(machine(), 0, data & 0x0100);	// coin in
@@ -1132,7 +1145,7 @@ WRITE16_MEMBER(blitz68k_state::hermit_leds1_w)
 
 WRITE16_MEMBER(blitz68k_state::hermit_leds2_w)
 {
-	data = COMBINE_DATA(m_leds[1]);
+	data = COMBINE_DATA(m_leds1);
 	if (ACCESSING_BITS_8_15)
 	{
 		set_led_status(machine(),  7, data & 0x0100);	// button
@@ -1176,8 +1189,8 @@ static ADDRESS_MAP_START( hermit_map, AS_PROGRAM, 16, blitz68k_state )
 	AM_RANGE(0x9d0000, 0x9d0001) AM_READ_PORT("IN2")
 	AM_RANGE(0x9d8000, 0x9d8001) AM_READ_PORT("DSW")
 
-	AM_RANGE(0x9e0000, 0x9e0001) AM_WRITE(hermit_leds1_w) AM_BASE(m_leds[0])
-	AM_RANGE(0x9e8000, 0x9e8001) AM_WRITE(hermit_leds2_w) AM_BASE(m_leds[1])
+	AM_RANGE(0x9e0000, 0x9e0001) AM_WRITE(hermit_leds1_w) AM_SHARE("leds0")
+	AM_RANGE(0x9e8000, 0x9e8001) AM_WRITE(hermit_leds2_w) AM_SHARE("leds1")
 
 	AM_RANGE(0x9f0000, 0x9f0003) AM_WRITE8(blit_flags_w, 0xffff)	// flipx,y,solid,trans
 	AM_RANGE(0x9f0004, 0x9f0005) AM_WRITEONLY
@@ -1229,7 +1242,7 @@ static ADDRESS_MAP_START( maxidbl_map, AS_PROGRAM, 16, blitz68k_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM
 
-	AM_RANGE(0x400000, 0x40ffff) AM_RAM AM_BASE(m_frame_buffer)
+	AM_RANGE(0x400000, 0x40ffff) AM_RAM AM_SHARE("frame_buffer")
 
 	AM_RANGE(0x30000c, 0x30000d) AM_WRITENOP	// 0->1 (IRQ3 ack.?)
 	AM_RANGE(0x30000e, 0x30000f) AM_WRITENOP	// 1->0 (MCU related?)
@@ -2677,7 +2690,7 @@ ROM_END
 
 static DRIVER_INIT( bankrob )
 {
-	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xb5e0/2] = 0x6028;
@@ -2692,7 +2705,7 @@ static DRIVER_INIT( bankrob )
 
 static DRIVER_INIT( bankroba )
 {
-	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0x11e4e/2] = 0x6028;
@@ -2707,7 +2720,7 @@ static DRIVER_INIT( bankroba )
 
 static DRIVER_INIT( cjffruit )
 {
-	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xf564/2] = 0x6028;
@@ -2718,7 +2731,7 @@ static DRIVER_INIT( cjffruit )
 
 static DRIVER_INIT( deucesw2 )
 {
-	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0x8fe4/2] = 0x6020;
@@ -2729,7 +2742,7 @@ static DRIVER_INIT( deucesw2 )
 
 static DRIVER_INIT( dualgame )
 {
-	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xa518/2] = 0x6024;
@@ -2740,7 +2753,7 @@ static DRIVER_INIT( dualgame )
 
 static DRIVER_INIT( hermit )
 {
-	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xdeba/2] = 0x602e;
@@ -2757,7 +2770,7 @@ static DRIVER_INIT( hermit )
 
 static DRIVER_INIT( maxidbl )
 {
-	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xb384/2] = 0x6036;
@@ -2768,7 +2781,7 @@ static DRIVER_INIT( maxidbl )
 
 static DRIVER_INIT( megadblj )
 {
-	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xe21c/2] = 0x6040;
@@ -2779,7 +2792,7 @@ static DRIVER_INIT( megadblj )
 
 static DRIVER_INIT( megadble )
 {
-	UINT16 *ROM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	// WRONG C8 #1
 	ROM[0xcfc2/2] = 0x4e71;

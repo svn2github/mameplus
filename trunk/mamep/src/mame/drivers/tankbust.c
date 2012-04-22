@@ -80,7 +80,7 @@ WRITE8_MEMBER(tankbust_state::tankbust_e0xx_w)
 		m_irq_mask = data & 1;
 		break;
 
-	case 1:	/* 0xe001 (value 0 then 1) written right after the soundlatch_w */
+	case 1:	/* 0xe001 (value 0 then 1) written right after the soundlatch_byte_w */
 		machine().scheduler().synchronize(FUNC(soundirqline_callback), data);
 		break;
 
@@ -99,8 +99,8 @@ WRITE8_MEMBER(tankbust_state::tankbust_e0xx_w)
 	case 7: /* 0xe007 bankswitch */
 		/* bank 1 at 0x6000-9fff = from 0x10000 when bit0=0 else from 0x14000 */
 		/* bank 2 at 0xa000-bfff = from 0x18000 when bit0=0 else from 0x1a000 */
-		memory_set_bankptr(machine(),  "bank1", machine().region("maincpu")->base() + 0x10000 + ((data&1) * 0x4000) );
-		memory_set_bankptr(machine(),  "bank2", machine().region("maincpu")->base() + 0x18000 + ((data&1) * 0x2000) ); /* verified (the game will reset after the "game over" otherwise) */
+		membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x10000 + ((data&1) * 0x4000) );
+		membank("bank2")->set_base(machine().root_device().memregion("maincpu")->base() + 0x18000 + ((data&1) * 0x2000) ); /* verified (the game will reset after the "game over" otherwise) */
 		break;
 	}
 }
@@ -115,6 +115,7 @@ READ8_MEMBER(tankbust_state::debug_output_area_r)
 
 static PALETTE_INIT( tankbust )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0; i < 128; i++)
@@ -178,10 +179,10 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, tankbust_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x6000, 0x9fff) AM_ROMBANK("bank1")
 	AM_RANGE(0xa000, 0xbfff) AM_ROMBANK("bank2")
-	AM_RANGE(0xc000, 0xc7ff) AM_READWRITE(tankbust_background_videoram_r, tankbust_background_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(tankbust_background_colorram_r, tankbust_background_colorram_w) AM_BASE(m_colorram)
-	AM_RANGE(0xd000, 0xd7ff) AM_READWRITE(tankbust_txtram_r, tankbust_txtram_w) AM_BASE(m_txtram)
-	AM_RANGE(0xd800, 0xd8ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xc000, 0xc7ff) AM_READWRITE(tankbust_background_videoram_r, tankbust_background_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(tankbust_background_colorram_r, tankbust_background_colorram_w) AM_SHARE("colorram")
+	AM_RANGE(0xd000, 0xd7ff) AM_READWRITE(tankbust_txtram_r, tankbust_txtram_w) AM_SHARE("txtram")
+	AM_RANGE(0xd800, 0xd8ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xe000, 0xe007) AM_READWRITE(debug_output_area_r, tankbust_e0xx_w)
 	AM_RANGE(0xe800, 0xe800) AM_READ_PORT("INPUTS") AM_WRITE(tankbust_yscroll_w)
 	AM_RANGE(0xe801, 0xe801) AM_READ_PORT("SYSTEM")

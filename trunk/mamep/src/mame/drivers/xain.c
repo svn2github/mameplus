@@ -213,17 +213,17 @@ static TIMER_DEVICE_CALLBACK( xain_scanline )
 WRITE8_MEMBER(xain_state::xainCPUA_bankswitch_w)
 {
 	m_pri = data & 0x7;
-	memory_set_bank(machine(), "bank1", (data >> 3) & 1);
+	membank("bank1")->set_entry((data >> 3) & 1);
 }
 
 WRITE8_MEMBER(xain_state::xainCPUB_bankswitch_w)
 {
-	memory_set_bank(machine(), "bank2", data & 1);
+	membank("bank2")->set_entry(data & 1);
 }
 
 WRITE8_MEMBER(xain_state::xain_sound_command_w)
 {
-	soundlatch_w(space,offset,data);
+	soundlatch_byte_w(space,offset,data);
 	cputag_set_input_line(machine(), "audiocpu", M6809_IRQ_LINE, HOLD_LINE);
 }
 
@@ -271,10 +271,9 @@ WRITE8_MEMBER(xain_state::xain_68705_w)
 		cputag_set_input_line(machine(), "mcu", 0, ASSERT_LINE);
 }
 
-static CUSTOM_INPUT( xain_vblank_r )
+CUSTOM_INPUT_MEMBER(xain_state::xain_vblank_r)
 {
-	xain_state *state = field.machine().driver_data<xain_state>();
-	return state->m_vblank;
+	return m_vblank;
 }
 
 
@@ -354,16 +353,15 @@ WRITE8_MEMBER(xain_state::xain_68705_ddr_c_w)
 	m_ddr_c = data;
 }
 
-static CUSTOM_INPUT( mcu_status_r )
+CUSTOM_INPUT_MEMBER(xain_state::mcu_status_r)
 {
-	xain_state *state = field.machine().driver_data<xain_state>();
 	UINT8 res = 0;
 
-	if (field.machine().device("mcu") != NULL)
+	if (machine().device("mcu") != NULL)
 	{
-		if (state->m_mcu_ready == 1)
+		if (m_mcu_ready == 1)
 			res |= 0x01;
-		if (state->m_mcu_accept == 1)
+		if (m_mcu_accept == 1)
 			res |= 0x02;
 	}
 	else
@@ -388,10 +386,10 @@ READ8_MEMBER(xain_state::mcu_comm_reset_r)
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, xain_state )
 	AM_RANGE(0x0000, 0x1fff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(xain_charram_w) AM_BASE(m_charram)
-	AM_RANGE(0x2800, 0x2fff) AM_RAM_WRITE(xain_bgram1_w) AM_BASE(m_bgram1)
-	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(xain_bgram0_w) AM_BASE(m_bgram0)
-	AM_RANGE(0x3800, 0x397f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(xain_charram_w) AM_SHARE("charram")
+	AM_RANGE(0x2800, 0x2fff) AM_RAM_WRITE(xain_bgram1_w) AM_SHARE("bgram1")
+	AM_RANGE(0x3000, 0x37ff) AM_RAM_WRITE(xain_bgram0_w) AM_SHARE("bgram0")
+	AM_RANGE(0x3800, 0x397f) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x3a00, 0x3a00) AM_READ_PORT("P1")
 	AM_RANGE(0x3a00, 0x3a01) AM_WRITE(xain_scrollxP1_w)
 	AM_RANGE(0x3a01, 0x3a01) AM_READ_PORT("P2")
@@ -408,8 +406,8 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, xain_state )
 	AM_RANGE(0x3a0d, 0x3a0d) AM_WRITE(xain_flipscreen_w)
 	AM_RANGE(0x3a0e, 0x3a0e) AM_WRITE(xain_68705_w)
 	AM_RANGE(0x3a0f, 0x3a0f) AM_WRITE(xainCPUA_bankswitch_w)
-	AM_RANGE(0x3c00, 0x3dff) AM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split1_w) AM_SHARE("paletteram")
-	AM_RANGE(0x3e00, 0x3fff) AM_WRITE(paletteram_xxxxBBBBGGGGRRRR_split2_w) AM_SHARE("paletteram2")
+	AM_RANGE(0x3c00, 0x3dff) AM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_lo_w) AM_SHARE("paletteram")
+	AM_RANGE(0x3e00, 0x3fff) AM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_split_hi_w) AM_SHARE("paletteram2")
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -439,7 +437,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, xain_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
-	AM_RANGE(0x1000, 0x1000) AM_READ(soundlatch_r)
+	AM_RANGE(0x1000, 0x1000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x2800, 0x2801) AM_DEVWRITE_LEGACY("ym1", ym2203_w)
 	AM_RANGE(0x3000, 0x3001) AM_DEVWRITE_LEGACY("ym2", ym2203_w)
 	AM_RANGE(0x4000, 0xffff) AM_ROM
@@ -516,8 +514,8 @@ static INPUT_PORTS_START( xsleena )
 	PORT_START("VBLANK")
 	PORT_BIT( 0x03, IP_ACTIVE_LOW,  IPT_UNUSED )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_COIN3 )
-	PORT_BIT( 0x18, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(mcu_status_r, NULL)
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(xain_vblank_r, NULL)	/* VBLANK */
+	PORT_BIT( 0x18, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, xain_state,mcu_status_r, NULL)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, xain_state,xain_vblank_r, NULL)	/* VBLANK */
 	PORT_BIT( 0xc0, IP_ACTIVE_LOW,  IPT_UNUSED )
 INPUT_PORTS_END
 
@@ -570,10 +568,10 @@ static const ym2203_interface ym2203_config =
 
 static MACHINE_START( xsleena )
 {
-	memory_configure_bank(machine, "bank1", 0, 2, machine.region("maincpu")->base() + 0x4000, 0xc000);
-	memory_configure_bank(machine, "bank2", 0, 2, machine.region("sub")->base()  + 0x4000, 0xc000);
-	memory_set_bank(machine, "bank1", 0);
-	memory_set_bank(machine, "bank2", 0);
+	machine.root_device().membank("bank1")->configure_entries(0, 2, machine.root_device().memregion("maincpu")->base() + 0x4000, 0xc000);
+	machine.root_device().membank("bank2")->configure_entries(0, 2, machine.root_device().memregion("sub")->base()  + 0x4000, 0xc000);
+	machine.root_device().membank("bank1")->set_entry(0);
+	machine.root_device().membank("bank2")->set_entry(0);
 }
 
 static MACHINE_CONFIG_START( xsleena, xain_state )

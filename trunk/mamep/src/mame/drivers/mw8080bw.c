@@ -207,7 +207,7 @@ WRITE8_MEMBER(mw8080bw_state::mw8080bw_reversable_shift_count_w)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, mw8080bw_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x7fff)
 	AM_RANGE(0x0000, 0x1fff) AM_ROM AM_WRITENOP
-	AM_RANGE(0x2000, 0x3fff) AM_MIRROR(0x4000) AM_RAM AM_BASE_SIZE(m_main_ram, m_main_ram_size)
+	AM_RANGE(0x2000, 0x3fff) AM_MIRROR(0x4000) AM_RAM AM_SHARE("main_ram")
 	AM_RANGE(0x4000, 0x5fff) AM_ROM AM_WRITENOP
 ADDRESS_MAP_END
 
@@ -313,10 +313,10 @@ WRITE8_MEMBER(mw8080bw_state::seawolf_periscope_lamp_w)
 }
 
 
-static CUSTOM_INPUT( seawolf_erase_input_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::seawolf_erase_input_r)
 {
-	return input_port_read(field.machine(), SEAWOLF_ERASE_SW_PORT_TAG) &
-		   input_port_read(field.machine(), SEAWOLF_ERASE_DIP_PORT_TAG);
+	return input_port_read(machine(), SEAWOLF_ERASE_SW_PORT_TAG) &
+		   input_port_read(machine(), SEAWOLF_ERASE_DIP_PORT_TAG);
 }
 
 
@@ -331,7 +331,7 @@ static ADDRESS_MAP_START( seawolf_io_map, AS_IO, 8, mw8080bw_state )
 	AM_RANGE(0x02, 0x02) AM_WRITE(seawolf_periscope_lamp_w)
 	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
 	AM_RANGE(0x04, 0x04) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x05, 0x05) AM_WRITE_LEGACY(seawolf_audio_w)
+	AM_RANGE(0x05, 0x05) AM_WRITE(seawolf_audio_w)
 ADDRESS_MAP_END
 
 
@@ -371,7 +371,7 @@ static INPUT_PORTS_START( seawolf )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x0c, DEF_STR( 2C_3C ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( 1C_2C ) )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(seawolf_erase_input_r, NULL)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,seawolf_erase_input_r, NULL)
 	PORT_DIPNAME( 0xe0, 0x60, "Extended Time At" ) PORT_DIPLOCATION("G4:6,7,8")
 	PORT_DIPSETTING(    0x00, DEF_STR( None ) )
 	PORT_DIPSETTING(    0x20, "2000" )
@@ -421,7 +421,7 @@ MACHINE_CONFIG_END
 WRITE8_MEMBER(mw8080bw_state::gunfight_io_w)
 {
 	if (offset & 0x01)
-		gunfight_audio_w(&space, 0, data);
+		gunfight_audio_w(space, 0, data);
 
 	if (offset & 0x02)
 		mb14241_shift_count_w(m_mb14241, 0, data);
@@ -552,26 +552,26 @@ UINT8 tornbase_get_cabinet_type(running_machine &machine)
 }
 
 
-static CUSTOM_INPUT( tornbase_hit_left_input_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::tornbase_hit_left_input_r)
 {
-	return input_port_read(field.machine(), TORNBASE_L_HIT_PORT_TAG);
+	return input_port_read(machine(), TORNBASE_L_HIT_PORT_TAG);
 }
 
 
-static CUSTOM_INPUT( tornbase_hit_right_input_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::tornbase_hit_right_input_r)
 {
 	UINT32 ret;
 
-	switch (tornbase_get_cabinet_type(field.machine()))
+	switch (tornbase_get_cabinet_type(machine()))
 	{
 	case TORNBASE_CAB_TYPE_UPRIGHT_OLD:
-		ret = input_port_read(field.machine(), TORNBASE_L_HIT_PORT_TAG);
+		ret = input_port_read(machine(), TORNBASE_L_HIT_PORT_TAG);
 		break;
 
 	case TORNBASE_CAB_TYPE_UPRIGHT_NEW:
 	case TORNBASE_CAB_TYPE_COCKTAIL:
 	default:
-		ret = input_port_read(field.machine(), TORNBASE_R_HIT_PORT_TAG);
+		ret = input_port_read(machine(), TORNBASE_R_HIT_PORT_TAG);
 		break;
 	}
 
@@ -579,20 +579,20 @@ static CUSTOM_INPUT( tornbase_hit_right_input_r )
 }
 
 
-static CUSTOM_INPUT( tornbase_pitch_left_input_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::tornbase_pitch_left_input_r)
 {
 	UINT32 ret;
 
-	switch (tornbase_get_cabinet_type(field.machine()))
+	switch (tornbase_get_cabinet_type(machine()))
 	{
 	case TORNBASE_CAB_TYPE_UPRIGHT_OLD:
 	case TORNBASE_CAB_TYPE_UPRIGHT_NEW:
-		ret = input_port_read(field.machine(), TORNBASE_L_PITCH_PORT_TAG);
+		ret = input_port_read(machine(), TORNBASE_L_PITCH_PORT_TAG);
 		break;
 
 	case TORNBASE_CAB_TYPE_COCKTAIL:
 	default:
-		ret = input_port_read(field.machine(), TORNBASE_R_PITCH_PORT_TAG);
+		ret = input_port_read(machine(), TORNBASE_R_PITCH_PORT_TAG);
 		break;
 	}
 
@@ -600,16 +600,16 @@ static CUSTOM_INPUT( tornbase_pitch_left_input_r )
 }
 
 
-static CUSTOM_INPUT( tornbase_pitch_right_input_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::tornbase_pitch_right_input_r)
 {
-	return input_port_read(field.machine(), TORNBASE_L_PITCH_PORT_TAG);
+	return input_port_read(machine(), TORNBASE_L_PITCH_PORT_TAG);
 }
 
 
-static CUSTOM_INPUT( tornbase_score_input_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::tornbase_score_input_r)
 {
-	return input_port_read(field.machine(), TORNBASE_SCORE_SW_PORT_TAG) &
-		   input_port_read(field.machine(), TORNBASE_SCORE_DIP_PORT_TAG);
+	return input_port_read(machine(), TORNBASE_SCORE_SW_PORT_TAG) &
+		   input_port_read(machine(), TORNBASE_SCORE_DIP_PORT_TAG);
 }
 
 
@@ -641,21 +641,21 @@ ADDRESS_MAP_END
 
 static INPUT_PORTS_START( tornbase )
 	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(tornbase_hit_left_input_r, NULL)
-	PORT_BIT( 0x7e, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(tornbase_pitch_left_input_r, NULL)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,tornbase_hit_left_input_r, NULL)
+	PORT_BIT( 0x7e, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,tornbase_pitch_left_input_r, NULL)
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unused ) ) PORT_CONDITION("IN2", 0x80, PORTCOND_EQUALS, 0x00) PORT_DIPLOCATION("B1:7")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 
 	PORT_START("IN1")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(tornbase_hit_right_input_r, NULL)
-	PORT_BIT( 0x7e, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(tornbase_pitch_right_input_r, NULL)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,tornbase_hit_right_input_r, NULL)
+	PORT_BIT( 0x7e, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,tornbase_pitch_right_input_r, NULL)
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED)  /* not connected */
 
 	PORT_START("IN2")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN )  /* schematics shows it as "START", but not used by the software */
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(tornbase_score_input_r, NULL)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,tornbase_score_input_r, NULL)
 	PORT_DIPNAME( 0x78, 0x40, DEF_STR( Coinage ) ) PORT_CONDITION("IN2", 0x80, PORTCOND_EQUALS, 0x00) PORT_DIPLOCATION("B1:2,3,4,5")
 	PORT_DIPSETTING(    0x18, "4 Coins/1 Inning" )
 	PORT_DIPSETTING(    0x10, "3 Coins/1 Inning" )
@@ -754,10 +754,10 @@ static ADDRESS_MAP_START( zzzap_io_map, AS_IO, 8, mw8080bw_state )
 	AM_RANGE(0x02, 0x02) AM_MIRROR(0x04) AM_READ_PORT("IN2")
 	AM_RANGE(0x03, 0x03) AM_MIRROR(0x04) AM_DEVREAD_LEGACY("mb14241", mb14241_shift_result_r)
 
-	AM_RANGE(0x02, 0x02) AM_WRITE_LEGACY(zzzap_audio_1_w)
+	AM_RANGE(0x02, 0x02) AM_WRITE(zzzap_audio_1_w)
 	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
 	AM_RANGE(0x04, 0x04) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
-	AM_RANGE(0x05, 0x05) AM_WRITE_LEGACY(zzzap_audio_2_w)
+	AM_RANGE(0x05, 0x05) AM_WRITE(zzzap_audio_2_w)
 	AM_RANGE(0x07, 0x07) AM_WRITE(watchdog_reset_w)
 ADDRESS_MAP_END
 
@@ -1185,29 +1185,27 @@ static MACHINE_START( desertgu )
 }
 
 
-static CUSTOM_INPUT( desertgu_gun_input_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::desertgu_gun_input_r)
 {
-	mw8080bw_state *state = field.machine().driver_data<mw8080bw_state>();
 	UINT32 ret;
 
-	if (state->m_desertgun_controller_select)
-		ret = input_port_read(field.machine(), DESERTGU_GUN_X_PORT_TAG);
+	if (m_desertgun_controller_select)
+		ret = input_port_read(machine(), DESERTGU_GUN_X_PORT_TAG);
 	else
-		ret = input_port_read(field.machine(), DESERTGU_GUN_Y_PORT_TAG);
+		ret = input_port_read(machine(), DESERTGU_GUN_Y_PORT_TAG);
 
 	return ret;
 }
 
 
-static CUSTOM_INPUT( desertgu_dip_sw_0_1_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::desertgu_dip_sw_0_1_r)
 {
-	mw8080bw_state *state = field.machine().driver_data<mw8080bw_state>();
 	UINT32 ret;
 
-	if (state->m_desertgun_controller_select)
-		ret = input_port_read(field.machine(), DESERTGU_DIP_SW_0_1_SET_2_TAG);
+	if (m_desertgun_controller_select)
+		ret = input_port_read(machine(), DESERTGU_DIP_SW_0_1_SET_2_TAG);
 	else
-		ret = input_port_read(field.machine(), DESERTGU_DIP_SW_0_1_SET_1_TAG);
+		ret = input_port_read(machine(), DESERTGU_DIP_SW_0_1_SET_1_TAG);
 
 	return ret;
 }
@@ -1232,10 +1230,10 @@ ADDRESS_MAP_END
 
 static INPUT_PORTS_START( desertgu )
 	PORT_START("IN0")
-	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(desertgu_gun_input_r, NULL)
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,desertgu_gun_input_r, NULL)
 
 	PORT_START("IN1")
-	PORT_BIT( 0x03, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(desertgu_dip_sw_0_1_r, NULL)
+	PORT_BIT( 0x03, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,desertgu_dip_sw_0_1_r, NULL)
 	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Language ) ) PORT_CONDITION("IN1", 0x30, PORTCOND_NOTEQUALS, 0x30) PORT_DIPLOCATION("C2:5,6")
 	PORT_DIPSETTING(    0x00, DEF_STR( English ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( German ) )
@@ -1316,22 +1314,22 @@ MACHINE_CONFIG_END
 #define DPLAY_CAB_TYPE_COCKTAIL		(1)
 
 
-static CUSTOM_INPUT( dplay_pitch_left_input_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::dplay_pitch_left_input_r)
 {
 	UINT32 ret;
 
-	if (input_port_read(field.machine(), DPLAY_CAB_TYPE_PORT_TAG) == DPLAY_CAB_TYPE_UPRIGHT)
-		ret = input_port_read(field.machine(), DPLAY_L_PITCH_PORT_TAG);
+	if (input_port_read(machine(), DPLAY_CAB_TYPE_PORT_TAG) == DPLAY_CAB_TYPE_UPRIGHT)
+		ret = input_port_read(machine(), DPLAY_L_PITCH_PORT_TAG);
 	else
-		ret = input_port_read(field.machine(), DPLAY_R_PITCH_PORT_TAG);
+		ret = input_port_read(machine(), DPLAY_R_PITCH_PORT_TAG);
 
 	return ret;
 }
 
 
-static CUSTOM_INPUT( dplay_pitch_right_input_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::dplay_pitch_right_input_r)
 {
-	return input_port_read(field.machine(), DPLAY_L_PITCH_PORT_TAG);
+	return input_port_read(machine(), DPLAY_L_PITCH_PORT_TAG);
 }
 
 
@@ -1354,12 +1352,12 @@ ADDRESS_MAP_END
 static INPUT_PORTS_START( dplay )
 	PORT_START("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("P1 Hit") PORT_PLAYER(1)
-	PORT_BIT( 0x7e, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(dplay_pitch_left_input_r, NULL)
+	PORT_BIT( 0x7e, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,dplay_pitch_left_input_r, NULL)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
 
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("P2 Hit") PORT_PLAYER(2)
-	PORT_BIT( 0x7e, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(dplay_pitch_right_input_r, NULL)
+	PORT_BIT( 0x7e, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,dplay_pitch_right_input_r, NULL)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
 
 	PORT_START("IN2")
@@ -1418,12 +1416,12 @@ INPUT_PORTS_END
 static INPUT_PORTS_START( einning )
 	PORT_START("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("P1 Hit") PORT_PLAYER(1)
-	PORT_BIT( 0x7e, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(dplay_pitch_left_input_r, NULL)
+	PORT_BIT( 0x7e, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,dplay_pitch_left_input_r, NULL)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 )
 
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("P2 Hit") PORT_PLAYER(2)
-	PORT_BIT( 0x7e, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(dplay_pitch_right_input_r, NULL)
+	PORT_BIT( 0x7e, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,dplay_pitch_right_input_r, NULL)
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START2 )
 
 	PORT_START("IN2")
@@ -1522,11 +1520,11 @@ static ADDRESS_MAP_START( gmissile_io_map, AS_IO, 8, mw8080bw_state )
 
 	AM_RANGE(0x01, 0x01) AM_WRITE(mw8080bw_reversable_shift_count_w)
 	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x03, 0x03) AM_WRITE_LEGACY(gmissile_audio_1_w)
+	AM_RANGE(0x03, 0x03) AM_WRITE(gmissile_audio_1_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_WRITE_LEGACY(gmissile_audio_2_w)
+	AM_RANGE(0x05, 0x05) AM_WRITE(gmissile_audio_2_w)
 	/* also writes 0x00 to 0x06, but it is not connected */
-	AM_RANGE(0x07, 0x07) AM_WRITE_LEGACY(gmissile_audio_3_w)
+	AM_RANGE(0x07, 0x07) AM_WRITE(gmissile_audio_3_w)
 ADDRESS_MAP_END
 
 
@@ -1618,9 +1616,9 @@ static ADDRESS_MAP_START( m4_io_map, AS_IO, 8, mw8080bw_state )
 
 	AM_RANGE(0x01, 0x01) AM_WRITE(mw8080bw_reversable_shift_count_w)
 	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x03, 0x03) AM_WRITE_LEGACY(m4_audio_1_w)
+	AM_RANGE(0x03, 0x03) AM_WRITE(m4_audio_1_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_WRITE_LEGACY(m4_audio_2_w)
+	AM_RANGE(0x05, 0x05) AM_WRITE(m4_audio_2_w)
 ADDRESS_MAP_END
 
 
@@ -1707,18 +1705,17 @@ static MACHINE_START( clowns )
 }
 
 
-static CUSTOM_INPUT( clowns_controller_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::clowns_controller_r)
 {
-	mw8080bw_state *state = field.machine().driver_data<mw8080bw_state>();
 	UINT32 ret;
 
-	if (state->m_clowns_controller_select)
+	if (m_clowns_controller_select)
 	{
-		ret = input_port_read(field.machine(), CLOWNS_CONTROLLER_P2_TAG);
+		ret = input_port_read(machine(), CLOWNS_CONTROLLER_P2_TAG);
 	}
 	else
 	{
-		ret = input_port_read(field.machine(), CLOWNS_CONTROLLER_P1_TAG);
+		ret = input_port_read(machine(), CLOWNS_CONTROLLER_P1_TAG);
 	}
 
 	return ret;
@@ -1734,7 +1731,7 @@ static ADDRESS_MAP_START( clowns_io_map, AS_IO, 8, mw8080bw_state )
 
 	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
 	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
-	AM_RANGE(0x03, 0x03) AM_WRITE_LEGACY(clowns_audio_1_w)
+	AM_RANGE(0x03, 0x03) AM_WRITE(clowns_audio_1_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x05, 0x05) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_lo_w)
 	AM_RANGE(0x06, 0x06) AM_DEVWRITE_LEGACY("discrete", midway_tone_generator_hi_w)
@@ -1744,7 +1741,7 @@ ADDRESS_MAP_END
 
 static INPUT_PORTS_START( clowns )
 	PORT_START("IN0")
-	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(clowns_controller_r, NULL)
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,clowns_controller_r, NULL)
 
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )  /* not connected */
@@ -1793,7 +1790,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( clowns1 )
 	PORT_START("IN0")
-	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(clowns_controller_r, NULL)
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,clowns_controller_r, NULL)
 
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1881,7 +1878,7 @@ ADDRESS_MAP_END
 
 static INPUT_PORTS_START( spacwalk )
 	PORT_START("IN0")
-	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(clowns_controller_r, NULL)
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,clowns_controller_r, NULL)
 
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -2315,8 +2312,8 @@ static ADDRESS_MAP_START( phantom2_io_map, AS_IO, 8, mw8080bw_state )
 	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_count_w)
 	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x05, 0x05) AM_WRITE_LEGACY(phantom2_audio_1_w)
-	AM_RANGE(0x06, 0x06) AM_WRITE_LEGACY(phantom2_audio_2_w)
+	AM_RANGE(0x05, 0x05) AM_WRITE(phantom2_audio_1_w)
+	AM_RANGE(0x06, 0x06) AM_WRITE(phantom2_audio_2_w)
 ADDRESS_MAP_END
 
 
@@ -2443,13 +2440,13 @@ static ADDRESS_MAP_START( bowler_io_map, AS_IO, 8, mw8080bw_state )
 	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("mb14241", mb14241_shift_data_w)
 	AM_RANGE(0x04, 0x04) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x05, 0x05) AM_DEVWRITE_LEGACY("discrete", bowler_audio_1_w)
-	AM_RANGE(0x06, 0x06) AM_WRITE_LEGACY(bowler_audio_2_w)
+	AM_RANGE(0x06, 0x06) AM_WRITE(bowler_audio_2_w)
 	AM_RANGE(0x07, 0x07) AM_WRITE(bowler_lights_1_w)
-	AM_RANGE(0x08, 0x08) AM_WRITE_LEGACY(bowler_audio_3_w)
-	AM_RANGE(0x09, 0x09) AM_WRITE_LEGACY(bowler_audio_4_w)
-	AM_RANGE(0x0a, 0x0a) AM_WRITE_LEGACY(bowler_audio_5_w)
+	AM_RANGE(0x08, 0x08) AM_WRITE(bowler_audio_3_w)
+	AM_RANGE(0x09, 0x09) AM_WRITE(bowler_audio_4_w)
+	AM_RANGE(0x0a, 0x0a) AM_WRITE(bowler_audio_5_w)
 	AM_RANGE(0x0e, 0x0e) AM_WRITE(bowler_lights_2_w)
-	AM_RANGE(0x0f, 0x0f) AM_WRITE_LEGACY(bowler_audio_6_w)
+	AM_RANGE(0x0f, 0x0f) AM_WRITE(bowler_audio_6_w)
 ADDRESS_MAP_END
 
 
@@ -2535,81 +2532,81 @@ static MACHINE_START( invaders )
 
 
 
-static CUSTOM_INPUT( invaders_coin_input_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::invaders_coin_input_r)
 {
-	UINT32 ret = input_port_read(field.machine(), INVADERS_COIN_INPUT_PORT_TAG);
+	UINT32 ret = input_port_read(machine(), INVADERS_COIN_INPUT_PORT_TAG);
 
-	coin_counter_w(field.machine(), 0, !ret);
+	coin_counter_w(machine(), 0, !ret);
 
 	return ret;
 }
 
 
-static CUSTOM_INPUT( invaders_sw6_sw7_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::invaders_sw6_sw7_r)
 {
 	UINT32 ret;
 
 	/* upright PCB : switches visible
        cocktail PCB: HI */
 
-	if (invaders_is_cabinet_cocktail(field.machine()))
+	if (invaders_is_cabinet_cocktail(machine()))
 		ret = 0x03;
 	else
-		ret = input_port_read(field.machine(), INVADERS_SW6_SW7_PORT_TAG);
+		ret = input_port_read(machine(), INVADERS_SW6_SW7_PORT_TAG);
 
 	return ret;
 }
 
 
-static CUSTOM_INPUT( invaders_sw5_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::invaders_sw5_r)
 {
 	UINT32 ret;
 
 	/* upright PCB : switch visible
        cocktail PCB: HI */
 
-	if (invaders_is_cabinet_cocktail(field.machine()))
+	if (invaders_is_cabinet_cocktail(machine()))
 		ret = 0x01;
 	else
-		ret = input_port_read(field.machine(), INVADERS_SW5_PORT_TAG);
+		ret = input_port_read(machine(), INVADERS_SW5_PORT_TAG);
 
 	return ret;
 }
 
 
-static CUSTOM_INPUT( invaders_in0_control_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::invaders_in0_control_r)
 {
 	UINT32 ret;
 
 	/* upright PCB : P1 controls
        cocktail PCB: HI */
 
-	if (invaders_is_cabinet_cocktail(field.machine()))
+	if (invaders_is_cabinet_cocktail(machine()))
 		ret = 0x07;
 	else
-		ret = input_port_read(field.machine(), INVADERS_P1_CONTROL_PORT_TAG);
+		ret = input_port_read(machine(), INVADERS_P1_CONTROL_PORT_TAG);
 
 	return ret;
 }
 
 
-CUSTOM_INPUT( invaders_in1_control_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::invaders_in1_control_r)
 {
-	return input_port_read(field.machine(), INVADERS_P1_CONTROL_PORT_TAG);
+	return input_port_read(machine(), INVADERS_P1_CONTROL_PORT_TAG);
 }
 
 
-CUSTOM_INPUT( invaders_in2_control_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::invaders_in2_control_r)
 {
 	UINT32 ret;
 
 	/* upright PCB : P1 controls
        cocktail PCB: P2 controls */
 
-	if (invaders_is_cabinet_cocktail(field.machine()))
-		ret = input_port_read(field.machine(), INVADERS_P2_CONTROL_PORT_TAG);
+	if (invaders_is_cabinet_cocktail(machine()))
+		ret = input_port_read(machine(), INVADERS_P2_CONTROL_PORT_TAG);
 	else
-		ret = input_port_read(field.machine(), INVADERS_P1_CONTROL_PORT_TAG);
+		ret = input_port_read(machine(), INVADERS_P1_CONTROL_PORT_TAG);
 
 	return ret;
 }
@@ -2641,17 +2638,17 @@ static INPUT_PORTS_START( invaders )
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Unknown ) ) PORT_DIPLOCATION("SW:8")
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
-	PORT_BIT( 0x06, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(invaders_sw6_sw7_r, NULL)
+	PORT_BIT( 0x06, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,invaders_sw6_sw7_r, NULL)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNUSED )
-	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(invaders_in0_control_r, NULL)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(invaders_sw5_r, NULL)
+	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,invaders_in0_control_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,invaders_sw5_r, NULL)
 
 	PORT_START("IN1")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(invaders_coin_input_r, NULL)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,invaders_coin_input_r, NULL)
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START2 )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNUSED )
-	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(invaders_in1_control_r, NULL)
+	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,invaders_in1_control_r, NULL)
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )
 
 	PORT_START("IN2")
@@ -2664,7 +2661,7 @@ static INPUT_PORTS_START( invaders )
 	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Bonus_Life ) ) PORT_DIPLOCATION("SW:2")
 	PORT_DIPSETTING(    0x08, "1000" )
 	PORT_DIPSETTING(    0x00, "1500" )
-	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(invaders_in2_control_r, NULL)
+	PORT_BIT( 0x70, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,invaders_in2_control_r, NULL)
 	PORT_DIPNAME( 0x80, 0x00, "Display Coinage" ) PORT_DIPLOCATION("SW:1")
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -2742,11 +2739,11 @@ MACHINE_CONFIG_END
 #define BLUESHRK_COIN_INPUT_PORT_TAG	("COIN")
 
 
-static CUSTOM_INPUT( blueshrk_coin_input_r )
+CUSTOM_INPUT_MEMBER(mw8080bw_state::blueshrk_coin_input_r)
 {
-	UINT32 ret = input_port_read(field.machine(), BLUESHRK_COIN_INPUT_PORT_TAG);
+	UINT32 ret = input_port_read(machine(), BLUESHRK_COIN_INPUT_PORT_TAG);
 
-	coin_counter_w(field.machine(), 0, !ret);
+	coin_counter_w(machine(), 0, !ret);
 
 	return ret;
 }
@@ -2772,7 +2769,7 @@ static INPUT_PORTS_START( blueshrk )
 
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(blueshrk_coin_input_r, NULL)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,blueshrk_coin_input_r, NULL)
 	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unused ) ) PORT_CONDITION("IN1", 0x80, PORTCOND_EQUALS, 0x80) PORT_DIPLOCATION("SW:3")
 	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -2861,7 +2858,7 @@ static INPUT_PORTS_START( invad2ct )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNUSED )
 
 	PORT_START("IN1")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(invaders_coin_input_r, NULL)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mw8080bw_state,invaders_coin_input_r, NULL)
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_START2 )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNUSED )

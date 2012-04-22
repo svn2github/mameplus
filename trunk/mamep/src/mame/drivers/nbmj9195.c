@@ -40,24 +40,24 @@ Notes:
 
 WRITE8_MEMBER(nbmj9195_state::nbmj9195_soundbank_w)
 {
-	UINT8 *SNDROM = machine().region("audiocpu")->base();
+	UINT8 *SNDROM = memregion("audiocpu")->base();
 
-	memory_set_bankptr(machine(), "bank1", &SNDROM[0x08000 + (0x8000 * (data & 0x03))]);
+	membank("bank1")->set_base(&SNDROM[0x08000 + (0x8000 * (data & 0x03))]);
 }
 
 READ8_MEMBER(nbmj9195_state::nbmj9195_sound_r)
 {
-	return soundlatch_r(space, 0);
+	return soundlatch_byte_r(space, 0);
 }
 
 WRITE8_MEMBER(nbmj9195_state::nbmj9195_sound_w)
 {
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 }
 
 WRITE8_MEMBER(nbmj9195_state::nbmj9195_soundclr_w)
 {
-	soundlatch_clear_w(space, 0, 0);
+	soundlatch_clear_byte_w(space, 0, 0);
 }
 
 static void nbmj9195_outcoin_flag_w(address_space *space, int data)
@@ -662,7 +662,7 @@ static DRIVER_INIT( nbmj9195 )
 {
 	nbmj9195_state *state = machine.driver_data<nbmj9195_state>();
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *ROM = machine.region("audiocpu")->base();
+	UINT8 *ROM = state->memregion("audiocpu")->base();
 
 	// sound program patch
 	ROM[0x0213] = 0x00;			// DI -> NOP

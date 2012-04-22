@@ -18,14 +18,14 @@ Quiz Gekiretsu Scramble (Gakuen Paradise 2) (c) 1993 Face
 
 WRITE8_MEMBER(quizdna_state::quizdna_rombank_w)
 {
-	UINT8 *ROM = machine().region("maincpu")->base();
-	memory_set_bankptr(machine(), "bank1",&ROM[0x10000+0x4000*(data & 0x3f)]);
+	UINT8 *ROM = memregion("maincpu")->base();
+	membank("bank1")->set_base(&ROM[0x10000+0x4000*(data & 0x3f)]);
 }
 
 WRITE8_MEMBER(quizdna_state::gekiretu_rombank_w)
 {
-	UINT8 *ROM = machine().region("maincpu")->base();
-	memory_set_bankptr(machine(), "bank1",&ROM[0x10000+0x4000*((data & 0x3f) ^ 0x0a)]);
+	UINT8 *ROM = memregion("maincpu")->base();
+	membank("bank1")->set_base(&ROM[0x10000+0x4000*((data & 0x3f) ^ 0x0a)]);
 }
 
 /****************************************************************************/
@@ -36,7 +36,7 @@ static ADDRESS_MAP_START( quizdna_map, AS_PROGRAM, 8, quizdna_state )
 	AM_RANGE(0x8000, 0x9fff) AM_WRITE(quizdna_fg_ram_w)
 	AM_RANGE(0xa000, 0xbfff) AM_WRITE(quizdna_bg_ram_w)
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xe1ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xe000, 0xe1ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xe200, 0xefff) AM_RAM
 	AM_RANGE(0xf000, 0xffff) AM_RAM_WRITE(paletteram_xBGR_RRRR_GGGG_BBBB_w) AM_SHARE("paletteram")
 ADDRESS_MAP_END
@@ -48,7 +48,7 @@ static ADDRESS_MAP_START( gekiretu_map, AS_PROGRAM, 8, quizdna_state )
 	AM_RANGE(0xa000, 0xbfff) AM_WRITE(quizdna_bg_ram_w)
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
 	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(paletteram_xBGR_RRRR_GGGG_BBBB_w) AM_SHARE("paletteram")
-	AM_RANGE(0xf000, 0xf1ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xf000, 0xf1ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xf200, 0xffff) AM_RAM
 ADDRESS_MAP_END
 

@@ -54,69 +54,69 @@ Capcom, 1996-1999
 From late 1996 to 1999 Capcom developed another hardware platform to rival the CPS2 System and called
 it CP SYSTEM III. Only 6 games were produced. Here's a detailed table of all known releases until now:
 
-                                                           |--------------- Cart ----------------|  |--------------- CD ---------------|
-Game                                                 Year  Part #     Label      Region  CD  NO CD  Part #      Catalog #    Label        Revision
----------------------------------------------------  ----  ---------  ---------  ------  --  -----  ----------  -----------  -----------  --------
-Warzard                                              1996  WZD96a00F  CP300000G  JAPAN   X          CAP-WZD000  CAP-WZD-3    CAP-WZD-3    961023
-Warzard                                                    WZD96a00F  CP300000G  JAPAN   X          CAP-WZD000  CAP-WZD-5    CAP-WZD-5    961121
-Red Earth                                                  WZD96aA0F  CP3000B0G  EUROPE  X          CAP-WZD0A0  CAP-WZD-3    CAP-WZD-3    961023
-Red Earth                                                  WZD96aA0F  CP3000B0G  EUROPE  X          CAP-WZD0A0  CAP-WZD-5    CAP-WZD-5    961121
-Red Earth                                                  WZD96aA0F  CP3000H0G  MEXICO* X          CAP-WZD0A0  CAP-WZD-3    CAP-WZD-3    961023
-Red Earth                                                  WZD96aA0F  CP3000H0G  MEXICO* X          CAP-WZD0A0  CAP-WZD-5    CAP-WZD-5    961121
-Red Earth                                                  WZD96aA0F  CP3000U0G  USA*    X          CAP-WZD0A0  CAP-WZD-3    CAP-WZD-3    961023
-Red Earth                                                  WZD96aA0F  CP3000U0G  USA*    X          CAP-WZD0A0  CAP-WZD-5    CAP-WZD-5    961121
+                                                           |--------------- Cart ----------------|  |-------------- CD ---------------|
+Game                                                 Year  Part #     Label      Region  CD  NO CD  Part #      Catalog #   Label        Revision
+---------------------------------------------------  ----  ---------  ---------  ------  --  -----  ----------  ----------  -----------  --------
+Warzard                                              1996  WZD96a00F  CP300000G  JAPAN   X          CAP-WZD000  CAP-WZD-3   CAP-WZD-3    961023
+Warzard                                                    WZD96a00F  CP300000G  JAPAN   X          CAP-WZD000  CAP-WZD-5   CAP-WZD-5    961121
+Red Earth                                                  WZD96aA0F  CP3000B0G  EUROPE  X          CAP-WZD0A0  CAP-WZD-3   CAP-WZD-3    961023
+Red Earth                                                  WZD96aA0F  CP3000B0G  EUROPE  X          CAP-WZD0A0  CAP-WZD-5   CAP-WZD-5    961121
+Red Earth                                                  WZD96aA0F  CP3000H0G  MEXICO* X          CAP-WZD0A0  CAP-WZD-3   CAP-WZD-3    961023
+Red Earth                                                  WZD96aA0F  CP3000H0G  MEXICO* X          CAP-WZD0A0  CAP-WZD-5   CAP-WZD-5    961121
+Red Earth                                                  WZD96aA0F  CP3000U0G  USA*    X          CAP-WZD0A0  CAP-WZD-3   CAP-WZD-3    961023
+Red Earth                                                  WZD96aA0F  CP3000U0G  USA*    X          CAP-WZD0A0  CAP-WZD-5   CAP-WZD-5    961121
 
-Street Fighter III: New Generation                   1997  SF397200F  CP300000G  JAPAN   X          CAP-SF3000  CAP-SF3-3    CAP-SF3-3    970204
-Street Fighter III: New Generation                         SF397200F  CP300000G  JAPAN   X          CAP-SF3000  ?            ?            970312*
-Street Fighter III: New Generation                         SF397200F  CP300000G  JAPAN   X          CAP-SF3000  ?            ?            970403*
-Street Fighter III: New Generation                         SF3972A0F  CP3000C0G  ASIA        X                                            970204
-Street Fighter III: New Generation                         SF3972A0F  CP3000C0G  ASIA        X                                            970312*
-Street Fighter III: New Generation                         SF3972A0F  CP3000C0G  ASIA        X                                            970403*
-Street Fighter III: New Generation                         SF3972A0F  CP3000H0G  MEXICO  X          CAP-SF30A0  CAP-SF3-3    CAP-SF3-3    970204
-Street Fighter III: New Generation                         SF3972A0F  CP3000H0G  MEXICO  X          CAP-SF30A0  ?            ?            970312*
-Street Fighter III: New Generation                         SF3972A0F  CP3000H0G  MEXICO  X          CAP-SF30A0  ?            ?            970403*
-Street Fighter III: New Generation                         SF3972A0F  CP3000U0G  USA     X          CAP-SF30A0  CAP-SF3-3    CAP-SF3-3    970204
-Street Fighter III: New Generation                         SF3972A0F  CP3000U0G  USA     X          CAP-SF30A0  ?            ?            970312*
-Street Fighter III: New Generation                         SF3972A0F  CP3000U0G  USA     X          CAP-SF30A0  ?            ?            970403*
+Street Fighter III: New Generation                   1997  SF397200F  CP300000G  JAPAN   X          CAP-SF3000  CAP-SF3-3   CAP-SF3-3    970204
+Street Fighter III: New Generation                         SF397200F  CP300000G  JAPAN   X          CAP-SF3000  ?           ?            970312*
+Street Fighter III: New Generation                         SF397200F  CP300000G  JAPAN   X          CAP-SF3000  ?           ?            970403*
+Street Fighter III: New Generation                         SF3972A0F  CP3000C0G  ASIA        X                                           970204
+Street Fighter III: New Generation                         SF3972A0F  CP3000C0G  ASIA        X                                           970312*
+Street Fighter III: New Generation                         SF3972A0F  CP3000C0G  ASIA        X                                           970403*
+Street Fighter III: New Generation                         SF3972A0F  CP3000H0G  MEXICO  X          CAP-SF30A0  CAP-SF3-3   CAP-SF3-3    970204
+Street Fighter III: New Generation                         SF3972A0F  CP3000H0G  MEXICO  X          CAP-SF30A0  ?           ?            970312*
+Street Fighter III: New Generation                         SF3972A0F  CP3000H0G  MEXICO  X          CAP-SF30A0  ?           ?            970403*
+Street Fighter III: New Generation                         SF3972A0F  CP3000U0G  USA     X          CAP-SF30A0  CAP-SF3-3   CAP-SF3-3    970204
+Street Fighter III: New Generation                         SF3972A0F  CP3000U0G  USA     X          CAP-SF30A0  ?           ?            970312*
+Street Fighter III: New Generation                         SF3972A0F  CP3000U0G  USA     X          CAP-SF30A0  ?           ?            970403*
 
-Street Fighter III 2nd Impact: Giant Attack          1997  3GA97a00F  CP300000G  JAPAN   X          CAP-3GA000  CAP-3GA000   CAP-3GA-1    970930
-Street Fighter III 2nd Impact: Giant Attack                3GA97a00F  CP300000G  JAPAN   X          CAP-3GA000  ?            ?            971016*
-Street Fighter III 2nd Impact: Giant Attack                3GA97aA0F  CP3000C0G  ASIA        X                                            970930
-Street Fighter III 2nd Impact: Giant Attack                3GA97aA0F  CP3000C0G  ASIA        X                                            971016*
-Street Fighter III 2nd Impact: Giant Attack                3GA97aA0F  CP3000U0G  USA     X          CAP-3GA0A0  CAP-3GA000   CAP-3GA-1    970930
-Street Fighter III 2nd Impact: Giant Attack                3GA97aA0F  CP3000U0G  USA     X          CAP-3GA0A0  ?            ?            971016*
+Street Fighter III 2nd Impact: Giant Attack          1997  3GA97a00F  CP300000G  JAPAN   X          CAP-3GA000  CAP-3GA000  CAP-3GA-1    970930
+Street Fighter III 2nd Impact: Giant Attack                3GA97a00F  CP300000G  JAPAN   X          CAP-3GA000  ?           ?            971016*
+Street Fighter III 2nd Impact: Giant Attack                3GA97aA0F  CP3000C0G  ASIA        X                                           970930
+Street Fighter III 2nd Impact: Giant Attack                3GA97aA0F  CP3000C0G  ASIA        X                                           971016*
+Street Fighter III 2nd Impact: Giant Attack                3GA97aA0F  CP3000U0G  USA     X          CAP-3GA0A0  CAP-3GA000  CAP-3GA-1    970930
+Street Fighter III 2nd Impact: Giant Attack                3GA97aA0F  CP3000U0G  USA     X          CAP-3GA0A0  ?           ?            971016*
 
-JoJo no Kimyouna Bouken                              1998  JJK98c00F  CP300000G  JAPAN   X          CAP-JJK000  CAP-JJK000   CAP-JJK-140  981202
-JoJo no Kimyouna Bouken                                    JJK98c00F  CP300000G  JAPAN   X          CAP-JJK000  CAP-JJK-2    CAP-JJK-160  990108
-JoJo no Kimyouna Bouken                                    JJK98c00F  CP300000G  JAPAN   X          CAP-JJK000  CAP-JJK-3    CAP-JJK-161  990128
-JoJo's Venture                                             JJK98cA0F  CP3000C0G  ASIA        X                                            981202
-JoJo's Venture                                             JJK98cA0F  CP3000C0G  ASIA        X                                            990108
-JoJo's Venture                                             JJK98cA0F  CP3000C0G  ASIA        X                                            990128
-JoJo's Venture                                             JJK98cA0F  CP3000U0G  USA     X          CAP-JJK0A0  CAP-JJK000   CAP-JJK-140  981202
-JoJo's Venture                                             JJK98cA0F  CP3000U0G  USA     X          CAP-JJK0A0  CAP-JJK-2    CAP-JJK-160  990108
-JoJo's Venture                                             JJK98cA0F  CP3000U0G  USA     X          CAP-JJK0A0  CAP-JJK-3    CAP-JJK-161  990128
+JoJo no Kimyouna Bouken                              1998  JJK98c00F  CP300000G  JAPAN   X          CAP-JJK000  CAP-JJK000  CAP-JJK-140  981202
+JoJo no Kimyouna Bouken                                    JJK98c00F  CP300000G  JAPAN   X          CAP-JJK000  CAP-JJK-2   CAP-JJK-160  990108
+JoJo no Kimyouna Bouken                                    JJK98c00F  CP300000G  JAPAN   X          CAP-JJK000  CAP-JJK-3   CAP-JJK-161  990128
+JoJo's Venture                                             JJK98cA0F  CP3000C0G  ASIA        X                                           981202
+JoJo's Venture                                             JJK98cA0F  CP3000C0G  ASIA        X                                           990108
+JoJo's Venture                                             JJK98cA0F  CP3000C0G  ASIA        X                                           990128
+JoJo's Venture                                             JJK98cA0F  CP3000U0G  USA     X          CAP-JJK0A0  CAP-JJK000  CAP-JJK-140  981202
+JoJo's Venture                                             JJK98cA0F  CP3000U0G  USA     X          CAP-JJK0A0  CAP-JJK-2   CAP-JJK-160  990108
+JoJo's Venture                                             JJK98cA0F  CP3000U0G  USA     X          CAP-JJK0A0  CAP-JJK-3   CAP-JJK-161  990128
 
-Street Fighter III 3rd Strike: Fight for the Future  1999  33S99400F  CP300000G  JAPAN*  X          CAP-33S000  CAP-33S-1    CAP-33S-1    990512
-Street Fighter III 3rd Strike: Fight for the Future        33S99400F  CP300000G  JAPAN*  X          CAP-33S000  CAP-33S-2    CAP-33S-2    990608
-Street Fighter III 3rd Strike: Fight for the Future        33S99400F  CP300000G  JAPAN       X                                            990512
-Street Fighter III 3rd Strike: Fight for the Future        33S99400F  CP300000G  JAPAN       X                                            990608
-Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000B0G  EUROPE  X          CAP-33S0A0  CAP-33S-1    CAP-33S-1    990512
-Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000B0G  EUROPE  X          CAP-33S0A0  CAP-33S-2    CAP-33S-2    990608
-Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000C0G  ASIA*   X          CAP-33S0A0  CAP-33S-1    CAP-33S-1    990512
-Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000C0G  ASIA*   X          CAP-33S0A0  CAP-33S-2    CAP-33S-2    990608
-Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000C0G  ASIA*       X                                            990512
-Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000C0G  ASIA*       X                                            990608
-Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000H0G  MEXICO* ?          CAP-33S0A0  CAP-33S-1    CAP-33S-1    990512
-Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000H0G  MEXICO* ?          CAP-33S0A0  CAP-33S-2    CAP-33S-2    990608
-Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000U0G  USA     X          CAP-33S0A0  CAP-33S-1    CAP-33S-1    990512
-Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000U0G  USA     X          CAP-33S0A0  CAP-33S-2    CAP-33S-2    990608
+Street Fighter III 3rd Strike: Fight for the Future  1999  33S99400F  CP300000G  JAPAN*  X          CAP-33S000  CAP-33S-1   CAP-33S-1    990512
+Street Fighter III 3rd Strike: Fight for the Future        33S99400F  CP300000G  JAPAN*  X          CAP-33S000  CAP-33S-2   CAP-33S-2    990608
+Street Fighter III 3rd Strike: Fight for the Future        33S99400F  CP300000G  JAPAN       X                                           990512
+Street Fighter III 3rd Strike: Fight for the Future        33S99400F  CP300000G  JAPAN       X                                           990608
+Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000B0G  EUROPE  X          CAP-33S0A0  CAP-33S-1   CAP-33S-1    990512
+Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000B0G  EUROPE  X          CAP-33S0A0  CAP-33S-2   CAP-33S-2    990608
+Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000C0G  ASIA*   X          CAP-33S0A0  CAP-33S-1   CAP-33S-1    990512
+Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000C0G  ASIA*   X          CAP-33S0A0  CAP-33S-2   CAP-33S-2    990608
+Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000C0G  ASIA*       X                                           990512
+Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000C0G  ASIA*       X                                           990608
+Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000H0G  MEXICO* ?          CAP-33S0A0  CAP-33S-1   CAP-33S-1    990512
+Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000H0G  MEXICO* ?          CAP-33S0A0  CAP-33S-2   CAP-33S-2    990608
+Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000U0G  USA     X          CAP-33S0A0  CAP-33S-1   CAP-33S-1    990512
+Street Fighter III 3rd Strike: Fight for the Future        33S994A0F  CP3000U0G  USA     X          CAP-33S0A0  CAP-33S-2   CAP-33S-2    990608
 
-JoJo no Kimyouna Bouken: Miraie no Isan              1999  JJM99900F  CP300000G  JAPAN   X          CAP-JJM000  CAP-JJM-0    CAP-JJM-110  990913
-JoJo no Kimyouna Bouken: Miraie no Isan                    JJM99900F  CP300000G  JAPAN   X          CAP-JJM000  CAP-JJM-120  CAP-JJM-120  990927
-JoJo no Kimyouna Bouken: Miraie no Isan                    JJM99900F  CP300000G  JAPAN       X                                            990913
-JoJo no Kimyouna Bouken: Miraie no Isan                    JJM99900F  CP300000G  JAPAN       X                                            990927
-JoJo's Bizarre Adventure                                   JJM999A0F  CP3000B0G  EUROPE      X                                            990913
-JoJo's Bizarre Adventure                                   JJM999A0F  CP3000B0G  EUROPE      X                                            990927
+JoJo no Kimyouna Bouken: Miraie no Isan              1999  JJM99900F  CP300000G  JAPAN   X          CAP-JJM000  CAP-JJM-0   CAP-JJM-110  990913
+JoJo no Kimyouna Bouken: Miraie no Isan                    JJM99900F  CP300000G  JAPAN   X          CAP-JJM000  CAP-JJM-1   CAP-JJM-120  990927
+JoJo no Kimyouna Bouken: Miraie no Isan                    JJM99900F  CP300000G  JAPAN       X                                           990913
+JoJo no Kimyouna Bouken: Miraie no Isan                    JJM99900F  CP300000G  JAPAN       X                                           990927
+JoJo's Bizarre Adventure                                   JJM999A0F  CP3000B0G  EUROPE      X                                           990913
+JoJo's Bizarre Adventure                                   JJM999A0F  CP3000B0G  EUROPE      X                                           990927
 
 * NOT DUMPED but known to exist
 
@@ -624,8 +624,6 @@ INLINE void cps3_drawgfxzoom(bitmap_rgb32 &dest_bmp,const rectangle &clip,const 
 
 
 
-DIRECT_UPDATE_HANDLER( cps3_direct_handler );
-
 /* Encryption */
 
 
@@ -669,9 +667,9 @@ static void cps3_decrypt_bios(running_machine &machine)
 {
 	cps3_state *state = machine.driver_data<cps3_state>();
 	int i;
-	UINT32 *coderegion = (UINT32*)machine.region("user1")->base();
+	UINT32 *coderegion = (UINT32*)machine.root_device().memregion("user1")->base();
 
-	state->m_decrypted_bios = (UINT32*)machine.region("user1")->base();
+	state->m_decrypted_bios = (UINT32*)state->memregion("user1")->base();
 
 	for (i=0;i<0x80000;i+=4)
 	{
@@ -701,8 +699,8 @@ static void cps3_decrypt_bios(running_machine &machine)
 static TIMER_CALLBACK( fastboot_timer_callback )
 {
 	cps3_state *state = machine.driver_data<cps3_state>();
-	UINT32 *rom =  (UINT32*)state->m_decrypted_gamerom;//machine->region("user4")->base();
-	if (state->m_altEncryption) rom = (UINT32*)machine.region("user4")->base();
+	UINT32 *rom =  (UINT32*)state->m_decrypted_gamerom;//machine->root_device().memregion("user4")->base();
+	if (state->m_altEncryption) rom = (UINT32*)machine.root_device().memregion("user4")->base();
 
 	//  printf("fastboot callback %08x %08x", rom[0], rom[1]);
 	cpu_set_reg(machine.device("maincpu"), SH2_PC, rom[0]);
@@ -720,8 +718,8 @@ static void init_common(running_machine &machine, UINT32 key1, UINT32 key2, int 
 	state->m_altEncryption = altEncryption;
 
 	// cache pointers to regions
-	state->m_user4region = machine.region("user4")->base();
-	state->m_user5region = machine.region("user5")->base();
+	state->m_user4region = machine.root_device().memregion("user4")->base();
+	state->m_user5region = state->memregion("user5")->base();
 
 	if (!state->m_user4region) state->m_user4region = auto_alloc_array(machine, UINT8, USER4REGION_LENGTH);
 	if (!state->m_user5region) state->m_user5region = auto_alloc_array(machine, UINT8, USER5REGION_LENGTH);
@@ -741,7 +739,7 @@ static void init_common(running_machine &machine, UINT32 key1, UINT32 key2, int 
 	state->m_0xc0000000_ram_decrypted = auto_alloc_array(machine, UINT32, 0x400/4);
 
 	address_space *main = machine.device<sh2_device>("maincpu")->space(AS_PROGRAM);
-	main->set_direct_update_handler(direct_update_delegate(FUNC(cps3_direct_handler), &machine));
+	main->set_direct_update_handler(direct_update_delegate(FUNC(cps3_state::cps3_direct_handler), state));
 
 	// flash roms
 	astring tempstr;
@@ -804,7 +802,7 @@ static void cps3_set_mame_colours(running_machine &machine, int colournum, UINT1
 {
 	cps3_state *state = machine.driver_data<cps3_state>();
 	int r,g,b;
-	UINT16* dst = (UINT16*)state->m_colourram;
+	UINT16* dst = (UINT16*)state->m_colourram.target();
 
 
 	r = (data >> 0) & 0x1f;
@@ -1304,24 +1302,23 @@ WRITE32_MEMBER(cps3_state::cps3_0xc0000000_ram_w)
 
 
 
-DIRECT_UPDATE_HANDLER( cps3_direct_handler )
+DIRECT_UPDATE_MEMBER(cps3_state::cps3_direct_handler)
 {
-	cps3_state *state = machine.driver_data<cps3_state>();
 //  if(DEBUG_PRINTF) printf("address %04x\n",address);
 
 	/* BIOS ROM */
 	if (address < 0x80000)
 	{
-		direct.explicit_configure(0x00000, 0x7ffff, 0x7ffff, *direct.space().machine().region("user1"));
+		direct.explicit_configure(0x00000, 0x7ffff, 0x7ffff, *direct.space().machine().root_device().memregion("user1"));
 		return ~0;
 	}
 	/* RAM */
 	else if (address >= 0x06000000 && address <= 0x06ffffff)
 	{
-		UINT8 *decrypted = (UINT8*)state->m_decrypted_gamerom;
+		UINT8 *decrypted = (UINT8*)m_decrypted_gamerom;
 		UINT8 *raw = decrypted;
 
-		if (state->m_altEncryption) raw = (UINT8*) state->m_user4region;
+		if (m_altEncryption) raw = (UINT8*) m_user4region;
 
 		direct.explicit_configure(0x06000000, 0x06ffffff, 0x00ffffff, raw, decrypted);
 
@@ -1329,13 +1326,13 @@ DIRECT_UPDATE_HANDLER( cps3_direct_handler )
 	}
 	else if (address >= 0xc0000000 && address <= 0xc00003ff)
 	{
-		//direct->decrypted = (void*)state->m_0xc0000000_ram_decrypted;
-		direct.explicit_configure(0xc0000000, 0xc00003ff, 0x3ff, (UINT8*)state->m_0xc0000000_ram, (UINT8*)state->m_0xc0000000_ram_decrypted);
+		//direct->decrypted = (void*)m_0xc0000000_ram_decrypted;
+		direct.explicit_configure(0xc0000000, 0xc00003ff, 0x3ff, (UINT8*)m_0xc0000000_ram.target(), (UINT8*)m_0xc0000000_ram_decrypted);
 		return ~0;
 	}
 
 	/* anything else falls through to NOPs */
-	direct.explicit_configure(address, address, 0, (UINT8*)state->m_nops, (UINT8*)state->m_nops);
+	direct.explicit_configure(address, address, 0, (UINT8*)m_nops, (UINT8*)m_nops);
 	return ~0;
 }
 
@@ -2145,7 +2142,7 @@ WRITE32_MEMBER(cps3_state::cps3_unk_vidregs_w)
 
 READ32_MEMBER(cps3_state::cps3_colourram_r)
 {
-	UINT16* src = (UINT16*)m_colourram;
+	UINT16* src = (UINT16*)m_colourram.target();
 
 	return src[offset*2+1] | (src[offset*2+0]<<16);
 }
@@ -2169,14 +2166,14 @@ WRITE32_MEMBER(cps3_state::cps3_colourram_w)
 /* there are more unknown writes, but you get the idea */
 static ADDRESS_MAP_START( cps3_map, AS_PROGRAM, 32, cps3_state )
 	AM_RANGE(0x00000000, 0x0007ffff) AM_ROM AM_REGION("user1", 0) // Bios ROM
-	AM_RANGE(0x02000000, 0x0207ffff) AM_RAM AM_BASE(m_mainram) // Main RAM
+	AM_RANGE(0x02000000, 0x0207ffff) AM_RAM AM_SHARE("mainram") // Main RAM
 
 	AM_RANGE(0x03000000, 0x030003ff) AM_RAM // 'FRAM' (SFIII memory test mode ONLY)
 
-//  AM_RANGE(0x04000000, 0x0407dfff) AM_RAM AM_BASE(m_spriteram)//AM_WRITEONLY // Sprite RAM (jojoba tests this size)
-	AM_RANGE(0x04000000, 0x0407ffff) AM_RAM AM_BASE(m_spriteram)//AM_WRITEONLY // Sprite RAM
+//  AM_RANGE(0x04000000, 0x0407dfff) AM_RAM AM_SHARE("spriteram")//AM_WRITEONLY // Sprite RAM (jojoba tests this size)
+	AM_RANGE(0x04000000, 0x0407ffff) AM_RAM AM_SHARE("spriteram")//AM_WRITEONLY // Sprite RAM
 
-	AM_RANGE(0x04080000, 0x040bffff) AM_READWRITE(cps3_colourram_r, cps3_colourram_w) AM_BASE(m_colourram)  // Colour RAM (jojoba tests this size) 0x20000 colours?!
+	AM_RANGE(0x04080000, 0x040bffff) AM_READWRITE(cps3_colourram_r, cps3_colourram_w) AM_SHARE("colourram")  // Colour RAM (jojoba tests this size) 0x20000 colours?!
 
 	// video registers of some kind probably
 	AM_RANGE(0x040C0000, 0x040C0003) AM_READ(cps3_40C0000_r)//?? every frame
@@ -2185,12 +2182,12 @@ static ADDRESS_MAP_START( cps3_map, AS_PROGRAM, 32, cps3_state )
     AM_RANGE(0x040C000c, 0x040C000f) AM_READ(cps3_vbl_r)// AM_WRITENOP/
 
 	AM_RANGE(0x040C0000, 0x040C001f) AM_WRITE(cps3_unk_vidregs_w)
-	AM_RANGE(0x040C0020, 0x040C002b) AM_WRITEONLY AM_BASE(m_tilemap20_regs_base)
-	AM_RANGE(0x040C0030, 0x040C003b) AM_WRITEONLY AM_BASE(m_tilemap30_regs_base)
-	AM_RANGE(0x040C0040, 0x040C004b) AM_WRITEONLY AM_BASE(m_tilemap40_regs_base)
-	AM_RANGE(0x040C0050, 0x040C005b) AM_WRITEONLY AM_BASE(m_tilemap50_regs_base)
+	AM_RANGE(0x040C0020, 0x040C002b) AM_WRITEONLY AM_SHARE("tmap20_regs")
+	AM_RANGE(0x040C0030, 0x040C003b) AM_WRITEONLY AM_SHARE("tmap30_regs")
+	AM_RANGE(0x040C0040, 0x040C004b) AM_WRITEONLY AM_SHARE("tmap40_regs")
+	AM_RANGE(0x040C0050, 0x040C005b) AM_WRITEONLY AM_SHARE("tmap50_regs")
 
-	AM_RANGE(0x040C0060, 0x040C007f) AM_RAM AM_BASE(m_fullscreenzoom)
+	AM_RANGE(0x040C0060, 0x040C007f) AM_RAM AM_SHARE("fullscreenzoom")
 
 
 	AM_RANGE(0x040C0094, 0x040C009b) AM_WRITE(cps3_characterdma_w)
@@ -2229,7 +2226,7 @@ static ADDRESS_MAP_START( cps3_map, AS_PROGRAM, 32, cps3_state )
 	AM_RANGE(0x06000000, 0x067fffff) AM_READWRITE(cps3_flash1_r, cps3_flash1_w ) /* Flash ROMs simm 1 */
 	AM_RANGE(0x06800000, 0x06ffffff) AM_READWRITE(cps3_flash2_r, cps3_flash2_w ) /* Flash ROMs simm 2 */
 
-	AM_RANGE(0xc0000000, 0xc00003ff) AM_RAM_WRITE(cps3_0xc0000000_ram_w ) AM_BASE(m_0xc0000000_ram) /* Executes code from here */
+	AM_RANGE(0xc0000000, 0xc00003ff) AM_RAM_WRITE(cps3_0xc0000000_ram_w ) AM_SHARE("0xc0000000_ram") /* Executes code from here */
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( cps3 )
@@ -2443,7 +2440,7 @@ static MACHINE_RESET( cps3 )
 	state->m_current_table_address = -1;
 
 	{
-		UINT32 *rom = (UINT32*)machine.region("user1")->base();
+		UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
 		UINT32 reg_dip = input_port_read(machine,"REG");
 
 		/* switch region */
@@ -3137,7 +3134,7 @@ MACHINE_CONFIG_END
 	ROM_REGION( 0x200000, "simm5.7", 0 ) ROM_LOAD( "jojoba-simm5.7", 0x00000, 0x200000, CRC(8c8be520) SHA1(c461f3f76a83592b36b29afb316679a7c8972404) ) \
 
 #define JOJOBA_990927_CDROM \
-	DISK_REGION( "cdrom" ) DISK_IMAGE_READONLY( "cap-jjm-120", 0, SHA1(8628d3fa555fbd5f4121082e925c1834b76c5e65) ) \
+	DISK_REGION( "cdrom" ) DISK_IMAGE_READONLY( "cap-jjm-1", 0, SHA1(8628d3fa555fbd5f4121082e925c1834b76c5e65) ) \
 
 #define JOJOBA_990913_FLASH \
 	ROM_REGION( 0x200000, "simm1.0", 0 ) ROM_LOAD( "jojoba(__990913)-simm1.0", 0x00000, 0x200000, CRC(76976231) SHA1(90adde7e5983ec6a4e02789d5cefe9e85c9c52d5) ) \
@@ -3478,7 +3475,7 @@ ROM_END
     OCEANIA 7
     ASIA NCD 8
 
-    UINT32 *rom =  (UINT32*)machine.region ( "user1" )->base();
+    UINT32 *rom =  (UINT32*)machine.root_device().memregion ( "user1" )->base();
     rom[0x1fed8/4]^=0x00000001; // clear region to 0 (invalid)
     rom[0x1fed8/4]^=0x00000008; // region 8 - ASIA NO CD - doesn't actually skip the CD
                                 // test on startup, only during game, must be another flag
@@ -3503,7 +3500,7 @@ ROM_END
 
     // bios rom also lists korea, but game rom does not.
 
-    UINT32 *rom =  (UINT32*)machine.region ( "user1" )->base();
+    UINT32 *rom =  (UINT32*)machine.root_device().memregion ( "user1" )->base();
     rom[0x1fec8/4]^=0x00000001; // region (clear region)
     rom[0x1fec8/4]^=0x00000008; // region
     rom[0x1fecc/4]^=0x01000000; // nocd - this ONLY skips the cd check in the bios test
@@ -3525,7 +3522,7 @@ ROM_END
     OCEANIA 7
     ASIA 8
 
-    UINT32 *rom =  (UINT32*)machine.region ( "user1" )->base();
+    UINT32 *rom =  (UINT32*)machine.root_device().memregion ( "user1" )->base();
     rom[0x1fec8/4]^=0x00000001; // region (clear region)
     rom[0x1fec8/4]^=0x00000008; // region
     rom[0x1fecc/4]^=0x01000000; // nocd - this ONLY skips the cd check in the bios test
@@ -3549,7 +3546,7 @@ ROM_END
 
     DEVELOPMENT VERSION add 0x70 mask!
 
-    UINT32 *rom =  (UINT32*)machine.region ( "user1" )->base();
+    UINT32 *rom =  (UINT32*)machine.root_device().memregion ( "user1" )->base();
     rom[0x1fec8/4]^=0x00000001; // region hack (clear jpn)
 
     rom[0x1fec8/4]^=0x00000004; // region
@@ -3570,7 +3567,7 @@ ROM_END
     BRAZIL 6
     OCEANIA 7
 
-    UINT32 *rom =  (UINT32*)machine.region ( "user1" )->base();
+    UINT32 *rom =  (UINT32*)machine.root_device().memregion ( "user1" )->base();
     rom[0x1fec8/4]^=0x00000004; // region (clear region)
     rom[0x1fec8/4]^=0x00000001; // region
     rom[0x1fecc/4]^=0x01000000; // nocd
@@ -3592,7 +3589,7 @@ ROM_END
 
     DEVELOPMENT VERSION add 0x70 mask!
 
-    UINT32 *rom =  (UINT32*)machine.region ( "user1" )->base();
+    UINT32 *rom =  (UINT32*)machine.root_device().memregion ( "user1" )->base();
     rom[0x1fec8/4]^=0x00000001; // region (clear jpn)
     rom[0x1fec8/4]^=0x00000002; // region
     rom[0x1fec8/4]^=0x00000070; // DEV mode

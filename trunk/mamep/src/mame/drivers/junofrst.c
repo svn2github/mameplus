@@ -143,7 +143,7 @@ WRITE8_MEMBER(junofrst_state::junofrst_blitter_w)
 	if (offset == 3)
 	{
 		int i;
-		UINT8 *gfx_rom = machine().region("gfx1")->base();
+		UINT8 *gfx_rom = memregion("gfx1")->base();
 
 		offs_t src = ((m_blitterdata[2] << 8) | m_blitterdata[3]) & 0xfffc;
 		offs_t dest = (m_blitterdata[0] << 8) | m_blitterdata[1];
@@ -190,7 +190,7 @@ WRITE8_MEMBER(junofrst_state::junofrst_blitter_w)
 
 WRITE8_MEMBER(junofrst_state::junofrst_bankselect_w)
 {
-	memory_set_bank(machine(), "bank1", data & 0x0f);
+	membank("bank1")->set_entry(data & 0x0f);
 }
 
 
@@ -266,8 +266,8 @@ WRITE8_MEMBER(junofrst_state::i8039_irqen_and_status_w)
 WRITE8_MEMBER(junofrst_state::flip_screen_w)
 {
 
-	tutankhm_flip_screen_x_w(*&space, 0, data);
-	tutankhm_flip_screen_y_w(*&space, 0, data);
+	tutankhm_flip_screen_x_w(space, 0, data);
+	tutankhm_flip_screen_y_w(space, 0, data);
 }
 
 
@@ -286,8 +286,8 @@ WRITE8_MEMBER(junofrst_state::junofrst_irq_enable_w)
 }
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, junofrst_state )
-	AM_RANGE(0x0000, 0x7fff) AM_RAM AM_BASE(m_videoram)
-	AM_RANGE(0x8000, 0x800f) AM_RAM AM_BASE(m_paletteram)
+	AM_RANGE(0x0000, 0x7fff) AM_RAM AM_SHARE("videoram")
+	AM_RANGE(0x8000, 0x800f) AM_RAM AM_SHARE("paletteram")
 	AM_RANGE(0x8010, 0x8010) AM_READ_PORT("DSW2")
 	AM_RANGE(0x801c, 0x801c) AM_READ(watchdog_reset_r)
 	AM_RANGE(0x8020, 0x8020) AM_READ_PORT("SYSTEM")
@@ -296,10 +296,10 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, junofrst_state )
 	AM_RANGE(0x802c, 0x802c) AM_READ_PORT("DSW1")
 	AM_RANGE(0x8030, 0x8030) AM_WRITE(junofrst_irq_enable_w)
 	AM_RANGE(0x8031, 0x8032) AM_WRITE(junofrst_coin_counter_w)
-	AM_RANGE(0x8033, 0x8033) AM_WRITEONLY AM_BASE(m_scroll)  /* not used in Juno */
+	AM_RANGE(0x8033, 0x8033) AM_WRITEONLY AM_SHARE("scroll")  /* not used in Juno */
 	AM_RANGE(0x8034, 0x8035) AM_WRITE(flip_screen_w)
 	AM_RANGE(0x8040, 0x8040) AM_WRITE(junofrst_sh_irqtrigger_w)
-	AM_RANGE(0x8050, 0x8050) AM_WRITE(soundlatch_w)
+	AM_RANGE(0x8050, 0x8050) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0x8060, 0x8060) AM_WRITE(junofrst_bankselect_w)
 	AM_RANGE(0x8070, 0x8073) AM_WRITE(junofrst_blitter_w)
 	AM_RANGE(0x8100, 0x8fff) AM_RAM
@@ -311,11 +311,11 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( audio_map, AS_PROGRAM, 8, junofrst_state )
 	AM_RANGE(0x0000, 0x0fff) AM_ROM
 	AM_RANGE(0x2000, 0x23ff) AM_RAM
-	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_r)
+	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x4000, 0x4000) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)
 	AM_RANGE(0x4001, 0x4001) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
 	AM_RANGE(0x4002, 0x4002) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_w)
-	AM_RANGE(0x5000, 0x5000) AM_WRITE(soundlatch2_w)
+	AM_RANGE(0x5000, 0x5000) AM_WRITE(soundlatch2_byte_w)
 	AM_RANGE(0x6000, 0x6000) AM_WRITE(junofrst_i8039_irq_w)
 ADDRESS_MAP_END
 
@@ -326,7 +326,7 @@ ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( mcu_io_map, AS_IO, 8, junofrst_state )
-	AM_RANGE(0x00, 0xff) AM_READ(soundlatch2_r)
+	AM_RANGE(0x00, 0xff) AM_READ(soundlatch2_byte_r)
 	AM_RANGE(MCS48_PORT_P1, MCS48_PORT_P1) AM_DEVWRITE_LEGACY("dac", dac_w)
 	AM_RANGE(MCS48_PORT_P2, MCS48_PORT_P2) AM_WRITE(i8039_irqen_and_status_w)
 ADDRESS_MAP_END
@@ -529,8 +529,8 @@ static DRIVER_INIT( junofrst )
 {
 	UINT8 *decrypted = konami1_decode(machine, "maincpu");
 
-	memory_configure_bank(machine, "bank1", 0, 16, machine.region("maincpu")->base() + 0x10000, 0x1000);
-	memory_configure_bank_decrypted(machine, "bank1", 0, 16, decrypted + 0x10000, 0x1000);
+	machine.root_device().membank("bank1")->configure_entries(0, 16, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x1000);
+	machine.root_device().membank("bank1")->configure_decrypted_entries(0, 16, decrypted + 0x10000, 0x1000);
 }
 
 

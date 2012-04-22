@@ -49,11 +49,12 @@ class sbowling_state : public driver_device
 public:
 	sbowling_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this, "maincpu")
-		{ }
+		m_maincpu(*this, "maincpu"),
+		m_videoram(*this, "videoram"){ }
 
 	int m_bgmap;
-	UINT8 *m_videoram;
+	required_device<cpu_device> m_maincpu;
+	required_shared_ptr<UINT8> m_videoram;
 
 	int m_sbw_system;
 	tilemap_t *m_sb_tilemap;
@@ -62,7 +63,6 @@ public:
 	UINT8 m_pix_sh;
 	UINT8 m_pix[2];
 
-	required_device<cpu_device> m_maincpu;
 	DECLARE_WRITE8_MEMBER(sbw_videoram_w);
 	DECLARE_WRITE8_MEMBER(pix_shift_w);
 	DECLARE_WRITE8_MEMBER(pix_data_w);
@@ -75,7 +75,7 @@ public:
 static TILE_GET_INFO( get_sb_tile_info )
 {
 	sbowling_state *state = machine.driver_data<sbowling_state>();
-	UINT8 *rom = machine.region("user1")->base();
+	UINT8 *rom = state->memregion("user1")->base();
 	int tileno = rom[tile_index + state->m_bgmap * 1024];
 
 	SET_TILE_INFO(0, tileno, 0, 0);
@@ -93,7 +93,7 @@ static void plot_pixel_sbw(bitmap_ind16 *tmpbitmap, int x, int y, int col, int f
 
 WRITE8_MEMBER(sbowling_state::sbw_videoram_w)
 {
-	int flip = flip_screen_get(machine());
+	int flip = flip_screen();
 	int x,y,i,v1,v2;
 
 	m_videoram[offset] = data;
@@ -183,7 +183,7 @@ WRITE8_MEMBER(sbowling_state::system_w)
     */
 
 
-	flip_screen_set(machine(), data&1);
+	flip_screen_set(data&1);
 
 	if ((m_sbw_system^data)&1)
 	{
@@ -223,7 +223,7 @@ READ8_MEMBER(sbowling_state::controls_r)
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, sbowling_state )
 	AM_RANGE(0x0000, 0x2fff) AM_ROM
-	AM_RANGE(0x8000, 0xbfff) AM_RAM_WRITE(sbw_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x8000, 0xbfff) AM_RAM_WRITE(sbw_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0xf800, 0xf801) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w)
 	AM_RANGE(0xf801, 0xf801) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
 	AM_RANGE(0xfc00, 0xffff) AM_RAM
@@ -342,6 +342,7 @@ GFXDECODE_END
 
 static PALETTE_INIT( sbowling )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	static const int resistances_rg[3] = { 470, 270, 100 };

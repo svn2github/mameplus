@@ -24,23 +24,23 @@
 
 WRITE8_MEMBER(pcktgal_state::pcktgal_bank_w)
 {
-	UINT8 *RAM = machine().region("maincpu")->base();
+	UINT8 *RAM = memregion("maincpu")->base();
 
-	if (data & 1) { memory_set_bankptr(machine(), "bank1", &RAM[0x4000]); }
-	else { memory_set_bankptr(machine(), "bank1", &RAM[0x10000]); }
+	if (data & 1) { membank("bank1")->set_base(&RAM[0x4000]); }
+	else { membank("bank1")->set_base(&RAM[0x10000]); }
 
-	if (data & 2) { memory_set_bankptr(machine(), "bank2", &RAM[0x6000]); }
-	else { memory_set_bankptr(machine(), "bank2", &RAM[0x12000]); }
+	if (data & 2) { membank("bank2")->set_base(&RAM[0x6000]); }
+	else { membank("bank2")->set_base(&RAM[0x12000]); }
 }
 
 WRITE8_MEMBER(pcktgal_state::pcktgal_sound_bank_w)
 {
-	memory_set_bank(machine(), "bank3", (data >> 2) & 1);
+	membank("bank3")->set_entry((data >> 2) & 1);
 }
 
 WRITE8_MEMBER(pcktgal_state::pcktgal_sound_w)
 {
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -73,7 +73,7 @@ static READ8_DEVICE_HANDLER( pcktgal_adpcm_reset_r )
 static ADDRESS_MAP_START( pcktgal_map, AS_PROGRAM, 8, pcktgal_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
 	AM_RANGE(0x0800, 0x0fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco_bac06_pf_data_8bit_r, deco_bac06_pf_data_8bit_w)
-	AM_RANGE(0x1000, 0x11ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x1000, 0x11ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x1800, 0x1800) AM_READ_PORT("P1")
 	AM_RANGE(0x1800, 0x1807) AM_DEVWRITE_LEGACY("tilegen1", deco_bac06_pf_control0_8bit_w)
 	AM_RANGE(0x1810, 0x181f) AM_DEVREADWRITE_LEGACY("tilegen1", deco_bac06_pf_control1_8bit_r, deco_bac06_pf_control1_8bit_w)
@@ -94,7 +94,7 @@ static ADDRESS_MAP_START( pcktgal_sound_map, AS_PROGRAM, 8, pcktgal_state )
 	AM_RANGE(0x1000, 0x1001) AM_DEVWRITE_LEGACY("ym2", ym3812_w)
 	AM_RANGE(0x1800, 0x1800) AM_WRITE(pcktgal_adpcm_data_w)	/* ADPCM data for the MSM5205 chip */
 	AM_RANGE(0x2000, 0x2000) AM_WRITE(pcktgal_sound_bank_w)
-	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_r)
+	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x3400, 0x3400) AM_DEVREAD_LEGACY("msm", pcktgal_adpcm_reset_r)	/* ? not sure */
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank3")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -413,7 +413,7 @@ static DRIVER_INIT( deco222 )
 	int A;
 	address_space *space = machine.device("audiocpu")->memory().space(AS_PROGRAM);
 	UINT8 *decrypted = auto_alloc_array(machine, UINT8, 0x10000);
-	UINT8 *rom = machine.region("audiocpu")->base();
+	UINT8 *rom = machine.root_device().memregion("audiocpu")->base();
 
 	space->set_decrypted_region(0x8000, 0xffff, decrypted);
 
@@ -421,17 +421,17 @@ static DRIVER_INIT( deco222 )
 	for (A = 0x8000;A < 0x18000;A++)
 		decrypted[A-0x8000] = (rom[A] & 0x9f) | ((rom[A] & 0x20) << 1) | ((rom[A] & 0x40) >> 1);
 
-	memory_configure_bank(machine, "bank3", 0, 2, machine.region("audiocpu")->base() + 0x10000, 0x4000);
-	memory_configure_bank_decrypted(machine, "bank3", 0, 2, &decrypted[0x8000], 0x4000);
+	machine.root_device().membank("bank3")->configure_entries(0, 2, machine.root_device().memregion("audiocpu")->base() + 0x10000, 0x4000);
+	machine.root_device().membank("bank3")->configure_decrypted_entries(0, 2, &decrypted[0x8000], 0x4000);
 }
 
 static DRIVER_INIT( graphics )
 {
-	UINT8 *rom = machine.region("gfx1")->base();
-	int len = machine.region("gfx1")->bytes();
+	UINT8 *rom = machine.root_device().memregion("gfx1")->base();
+	int len = machine.root_device().memregion("gfx1")->bytes();
 	int i,j,temp[16];
 
-	memory_configure_bank(machine, "bank3", 0, 2, machine.region("audiocpu")->base() + 0x10000, 0x4000);
+	machine.root_device().membank("bank3")->configure_entries(0, 2, machine.root_device().memregion("audiocpu")->base() + 0x10000, 0x4000);
 
 	/* Tile graphics roms have some swapped lines, original version only */
 	for (i = 0x00000;i < len;i += 32)

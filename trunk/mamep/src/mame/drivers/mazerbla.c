@@ -52,12 +52,13 @@ class mazerbla_state : public driver_device
 {
 public:
 	mazerbla_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"),
+		m_cfb_ram(*this, "cfb_ram"){ }
 
 	/* memory pointers */
-	UINT8 *   m_cfb_ram;
-	UINT8 *   m_videoram;
-	size_t    m_videoram_size;
+	required_shared_ptr<UINT8> m_videoram;
+	required_shared_ptr<UINT8> m_cfb_ram;
 
 	/* video-related */
 	bitmap_ind16 m_tmpbitmaps[4];
@@ -360,14 +361,14 @@ WRITE8_MEMBER(mazerbla_state::cfb_rom_bank_sel_w)/* mazer blazer */
 {
 	m_gfx_rom_bank = data;
 
-	memory_set_bankptr(machine(),  "bank1", machine().region("sub2")->base() + (m_gfx_rom_bank * 0x2000) + 0x10000);
+	membank("bank1")->set_base(machine().root_device().memregion("sub2")->base() + (m_gfx_rom_bank * 0x2000) + 0x10000);
 }
 
 WRITE8_MEMBER(mazerbla_state::cfb_rom_bank_sel_w_gg)/* great guns */
 {
 	m_gfx_rom_bank = data >> 1;
 
-	memory_set_bankptr(machine(),  "bank1", machine().region("sub2")->base() + (m_gfx_rom_bank * 0x2000) + 0x10000);
+	membank("bank1")->set_base(machine().root_device().memregion("sub2")->base() + (m_gfx_rom_bank * 0x2000) + 0x10000);
 }
 
 
@@ -410,7 +411,7 @@ READ8_MEMBER(mazerbla_state::vcu_set_cmd_param_r)
 
 READ8_MEMBER(mazerbla_state::vcu_set_gfx_addr_r)
 {
-	UINT8 * rom = machine().region("sub2")->base() + (m_gfx_rom_bank * 0x2000) + 0x10000;
+	UINT8 * rom = memregion("sub2")->base() + (m_gfx_rom_bank * 0x2000) + 0x10000;
 	int offs;
 	int x, y;
 	int bits = 0;
@@ -556,7 +557,7 @@ READ8_MEMBER(mazerbla_state::vcu_set_gfx_addr_r)
 
 READ8_MEMBER(mazerbla_state::vcu_set_clr_addr_r)
 {
-	UINT8 * rom = machine().region("sub2")->base() + (m_gfx_rom_bank * 0x2000) + 0x10000;
+	UINT8 * rom = memregion("sub2")->base() + (m_gfx_rom_bank * 0x2000) + 0x10000;
 	int offs;
 	int x, y;
 	int bits = 0;
@@ -983,7 +984,7 @@ static ADDRESS_MAP_START( mazerbla_map, AS_PROGRAM, 8, mazerbla_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("share1")
 	AM_RANGE(0xd800, 0xd800) AM_READ(cfb_zpu_int_req_clr)
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_BASE_SIZE(m_videoram, m_videoram_size)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("videoram")
 	AM_RANGE(0xe800, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
@@ -1014,7 +1015,7 @@ static ADDRESS_MAP_START( mazerbla_cpu3_map, AS_PROGRAM, 8, mazerbla_state )
 	AM_RANGE(0x3800, 0x3fff) AM_RAM AM_SHARE("share1")
 	AM_RANGE(0x4000, 0x5fff) AM_ROMBANK("bank1")					/* GFX roms */
 	AM_RANGE(0x4000, 0x4003) AM_WRITE(vcu_video_reg_w)
-	AM_RANGE(0x6000, 0x67ff) AM_RAM AM_BASE(m_cfb_ram)		/* Color Frame Buffer PCB, a.k.a. RAM for VCU commands and parameters */
+	AM_RANGE(0x6000, 0x67ff) AM_RAM AM_SHARE("cfb_ram")		/* Color Frame Buffer PCB, a.k.a. RAM for VCU commands and parameters */
 	AM_RANGE(0xa000, 0xa7ff) AM_READ(vcu_set_cmd_param_r)	/* VCU command and parameters LOAD */
 	AM_RANGE(0xc000, 0xdfff) AM_READ(vcu_set_gfx_addr_r)	/* gfx LOAD (blit) */
 	AM_RANGE(0xe000, 0xffff) AM_READ(vcu_set_clr_addr_r)	/* palette? LOAD */
@@ -1712,7 +1713,7 @@ static DRIVER_INIT( mazerbla )
 static DRIVER_INIT( greatgun )
 {
 	mazerbla_state *state = machine.driver_data<mazerbla_state>();
-	UINT8 *rom = machine.region("sub2")->base();
+	UINT8 *rom = state->memregion("sub2")->base();
 
 	state->m_game_id = GREATGUN;
 

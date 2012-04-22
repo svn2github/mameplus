@@ -40,8 +40,8 @@ static INTERRUPT_GEN( fromanc2_interrupt )
 WRITE16_MEMBER(fromanc2_state::fromanc2_sndcmd_w)
 {
 
-	soundlatch_w(space, offset, (data >> 8) & 0xff);	// 1P (LEFT)
-	soundlatch2_w(space, offset, data & 0xff);			// 2P (RIGHT)
+	soundlatch_byte_w(space, offset, (data >> 8) & 0xff);	// 1P (LEFT)
+	soundlatch2_byte_w(space, offset, data & 0xff);			// 2P (RIGHT)
 
 	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
 	m_sndcpu_nmi_flag = 0;
@@ -70,22 +70,19 @@ READ16_MEMBER(fromanc2_state::fromanc2_keymatrix_r)
 	return ret;
 }
 
-static CUSTOM_INPUT( subcpu_int_r )
+CUSTOM_INPUT_MEMBER(fromanc2_state::subcpu_int_r)
 {
-	fromanc2_state *state = field.machine().driver_data<fromanc2_state>();
-	return state->m_subcpu_int_flag & 0x01;
+	return m_subcpu_int_flag & 0x01;
 }
 
-static CUSTOM_INPUT( sndcpu_nmi_r )
+CUSTOM_INPUT_MEMBER(fromanc2_state::sndcpu_nmi_r)
 {
-	fromanc2_state *state = field.machine().driver_data<fromanc2_state>();
-	return state->m_sndcpu_nmi_flag & 0x01;
+	return m_sndcpu_nmi_flag & 0x01;
 }
 
-static CUSTOM_INPUT( subcpu_nmi_r )
+CUSTOM_INPUT_MEMBER(fromanc2_state::subcpu_nmi_r)
 {
-	fromanc2_state *state = field.machine().driver_data<fromanc2_state>();
-	return state->m_subcpu_nmi_flag & 0x01;
+	return m_subcpu_nmi_flag & 0x01;
 }
 
 WRITE16_MEMBER(fromanc2_state::fromanc2_eeprom_w)
@@ -162,10 +159,10 @@ READ8_MEMBER(fromanc2_state::fromanc2_sndcpu_nmi_clr)
 WRITE8_MEMBER(fromanc2_state::fromanc2_subcpu_rombank_w)
 {
 	// Change ROM BANK
-	memory_set_bank(machine(), "bank1", data & 0x03);
+	membank("bank1")->set_entry(data & 0x03);
 
 	// Change RAM BANK
-	memory_set_bank(machine(), "bank2", (data & 0x0c) >> 2);
+	membank("bank2")->set_entry((data & 0x0c) >> 2);
 }
 
 
@@ -295,8 +292,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( fromanc2_sound_io_map, AS_IO, 8, fromanc2_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ(soundlatch_r) AM_WRITENOP			// snd cmd (1P) / ?
-	AM_RANGE(0x04, 0x04) AM_READ(soundlatch2_r)							// snd cmd (2P)
+	AM_RANGE(0x00, 0x00) AM_READ(soundlatch_byte_r) AM_WRITENOP			// snd cmd (1P) / ?
+	AM_RANGE(0x04, 0x04) AM_READ(soundlatch2_byte_r)							// snd cmd (2P)
 	AM_RANGE(0x08, 0x0b) AM_DEVREADWRITE_LEGACY("ymsnd", ym2610_r, ym2610_w)
 	AM_RANGE(0x0c, 0x0c) AM_READ(fromanc2_sndcpu_nmi_clr)
 ADDRESS_MAP_END
@@ -314,9 +311,9 @@ static INPUT_PORTS_START( fromanc2 )
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_COIN4 )
-	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(subcpu_int_r, NULL)		// SUBCPU INT FLAG
-	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(sndcpu_nmi_r, NULL)		// SNDCPU NMI FLAG
-	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(subcpu_nmi_r, NULL)		// SUBCPU NMI FLAG
+	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, fromanc2_state,subcpu_int_r, NULL)		// SUBCPU INT FLAG
+	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, fromanc2_state,sndcpu_nmi_r, NULL)		// SNDCPU NMI FLAG
+	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, fromanc2_state,subcpu_nmi_r, NULL)		// SUBCPU NMI FLAG
 	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_SERVICE ) PORT_NAME( "Service Mode (1P)" ) PORT_CODE(KEYCODE_F2)	// TEST (1P)
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_SERVICE ) PORT_NAME( "Service Mode (2P)" ) PORT_CODE(KEYCODE_F2)	// TEST (2P)
@@ -425,7 +422,7 @@ static INPUT_PORTS_START( fromanc4 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_COIN3 )
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_COIN4 )
-	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(sndcpu_nmi_r, NULL)		// SNDCPU NMI FLAG
+	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, fromanc2_state,sndcpu_nmi_r, NULL)		// SNDCPU NMI FLAG
 	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -527,9 +524,9 @@ static MACHINE_START( fromanc2 )
 {
 	fromanc2_state *state = machine.driver_data<fromanc2_state>();
 
-	memory_configure_bank(machine, "bank1", 0, 4, machine.region("sub")->base(), 0x4000);
-	memory_configure_bank(machine, "bank2", 0, 1, machine.region("sub")->base() + 0x08000, 0x4000);
-	memory_configure_bank(machine, "bank2", 1, 3, machine.region("sub")->base() + 0x14000, 0x4000);
+	state->membank("bank1")->configure_entries(0, 4, machine.root_device().memregion("sub")->base(), 0x4000);
+	state->membank("bank2")->configure_entry(0, machine.root_device().memregion("sub")->base() + 0x08000);
+	state->membank("bank2")->configure_entries(1, 3, state->memregion("sub")->base() + 0x14000, 0x4000);
 
 	MACHINE_START_CALL(fromanc4);
 

@@ -48,7 +48,7 @@ WRITE16_MEMBER(powerins_state::powerins_okibank_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		UINT8 *RAM = machine().region("oki1")->base();
+		UINT8 *RAM = memregion("oki1")->base();
 		int new_bank = data & 0x7;
 
 		if (new_bank != m_oki_bank)
@@ -62,7 +62,7 @@ WRITE16_MEMBER(powerins_state::powerins_okibank_w)
 WRITE16_MEMBER(powerins_state::powerins_soundlatch_w)
 {
 	if (ACCESSING_BITS_0_7)
-		soundlatch_w(space, 0, data & 0xff);
+		soundlatch_byte_w(space, 0, data & 0xff);
 }
 
 READ8_MEMBER(powerins_state::powerinb_fake_ym2203_r)
@@ -83,11 +83,11 @@ static ADDRESS_MAP_START( powerins_map, AS_PROGRAM, 16, powerins_state )
 	AM_RANGE(0x10001e, 0x10001f) AM_WRITE(powerins_soundlatch_w)								// Sound Latch
 	AM_RANGE(0x100030, 0x100031) AM_WRITE(powerins_okibank_w)									// Sound
 	AM_RANGE(0x120000, 0x120fff) AM_RAM_WRITE(powerins_paletteram16_w) AM_SHARE("paletteram")	// Palette
-	AM_RANGE(0x130000, 0x130007) AM_RAM AM_BASE(m_vctrl_0)								// VRAM 0 Control
-	AM_RANGE(0x140000, 0x143fff) AM_RAM_WRITE(powerins_vram_0_w) AM_BASE(m_vram_0)		// VRAM 0
-	AM_RANGE(0x170000, 0x170fff) AM_RAM_WRITE(powerins_vram_1_w) AM_BASE(m_vram_1)		// VRAM 1
+	AM_RANGE(0x130000, 0x130007) AM_RAM AM_SHARE("vctrl_0")								// VRAM 0 Control
+	AM_RANGE(0x140000, 0x143fff) AM_RAM_WRITE(powerins_vram_0_w) AM_SHARE("vram_0")		// VRAM 0
+	AM_RANGE(0x170000, 0x170fff) AM_RAM_WRITE(powerins_vram_1_w) AM_SHARE("vram_1")		// VRAM 1
 	AM_RANGE(0x171000, 0x171fff) AM_WRITE(powerins_vram_1_w)									// Mirror of VRAM 1?
-	AM_RANGE(0x180000, 0x18ffff) AM_RAM AM_BASE(m_spriteram)									// RAM + Sprites
+	AM_RANGE(0x180000, 0x18ffff) AM_RAM AM_SHARE("spriteram")									// RAM + Sprites
 ADDRESS_MAP_END
 
 /* powerina: same as the original one but without the sound cpu (and inferior sound HW) */
@@ -104,17 +104,17 @@ static ADDRESS_MAP_START( powerina_map, AS_PROGRAM, 16, powerins_state )
 	AM_RANGE(0x100030, 0x100031) AM_WRITE(powerins_okibank_w)									// Sound
 	AM_RANGE(0x10003e, 0x10003f) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x00ff)		// (used by powerina)
 	AM_RANGE(0x120000, 0x120fff) AM_RAM_WRITE(powerins_paletteram16_w) AM_SHARE("paletteram")	// Palette
-	AM_RANGE(0x130000, 0x130007) AM_RAM AM_BASE(m_vctrl_0)								// VRAM 0 Control
-	AM_RANGE(0x140000, 0x143fff) AM_RAM_WRITE(powerins_vram_0_w) AM_BASE(m_vram_0)		// VRAM 0
-	AM_RANGE(0x170000, 0x170fff) AM_RAM_WRITE(powerins_vram_1_w) AM_BASE(m_vram_1)		// VRAM 1
+	AM_RANGE(0x130000, 0x130007) AM_RAM AM_SHARE("vctrl_0")								// VRAM 0 Control
+	AM_RANGE(0x140000, 0x143fff) AM_RAM_WRITE(powerins_vram_0_w) AM_SHARE("vram_0")		// VRAM 0
+	AM_RANGE(0x170000, 0x170fff) AM_RAM_WRITE(powerins_vram_1_w) AM_SHARE("vram_1")		// VRAM 1
 	AM_RANGE(0x171000, 0x171fff) AM_WRITE(powerins_vram_1_w)									// Mirror of VRAM 1?
-	AM_RANGE(0x180000, 0x18ffff) AM_RAM AM_BASE(m_spriteram)									// RAM + Sprites
+	AM_RANGE(0x180000, 0x18ffff) AM_RAM AM_SHARE("spriteram")									// RAM + Sprites
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( powerins_sound_map, AS_PROGRAM, 8, powerins_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_r)
+	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 //  AM_RANGE(0xe000, 0xe000) AM_WRITENOP // ? written only once ?
 //  AM_RANGE(0xe001, 0xe001) AM_WRITENOP // ?
 ADDRESS_MAP_END

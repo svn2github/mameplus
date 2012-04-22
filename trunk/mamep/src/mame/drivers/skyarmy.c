@@ -33,12 +33,16 @@ class skyarmy_state : public driver_device
 {
 public:
 	skyarmy_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"),
+		m_colorram(*this, "colorram"),
+		m_spriteram(*this, "spriteram"),
+		m_scrollram(*this, "scrollram"){ }
 
-	UINT8 *m_spriteram;
-	UINT8 *m_videoram;
-	UINT8 *m_colorram;
-	UINT8 *m_scrollram;
+	required_shared_ptr<UINT8> m_videoram;
+	required_shared_ptr<UINT8> m_colorram;
+	required_shared_ptr<UINT8> m_spriteram;
+	required_shared_ptr<UINT8> m_scrollram;
 	tilemap_t* m_tilemap;
 	int m_nmi;
 	DECLARE_WRITE8_MEMBER(skyarmy_flip_screen_x_w);
@@ -50,12 +54,12 @@ public:
 
 WRITE8_MEMBER(skyarmy_state::skyarmy_flip_screen_x_w)
 {
-	flip_screen_x_set(machine(), data & 0x01);
+	flip_screen_x_set(data & 0x01);
 }
 
 WRITE8_MEMBER(skyarmy_state::skyarmy_flip_screen_y_w)
 {
-	flip_screen_y_set(machine(), data & 0x01);
+	flip_screen_y_set(data & 0x01);
 }
 
 static TILE_GET_INFO( get_skyarmy_tile_info )
@@ -83,6 +87,7 @@ WRITE8_MEMBER(skyarmy_state::skyarmy_colorram_w)
 
 static PALETTE_INIT( skyarmy )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0;i < 32;i++)
@@ -167,10 +172,10 @@ WRITE8_MEMBER(skyarmy_state::nmi_enable_w)
 static ADDRESS_MAP_START( skyarmy_map, AS_PROGRAM, 8, skyarmy_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(skyarmy_videoram_w) AM_BASE(m_videoram) /* Video RAM */
-	AM_RANGE(0x9000, 0x93ff) AM_RAM_WRITE(skyarmy_colorram_w) AM_BASE(m_colorram) /* Color RAM */
-	AM_RANGE(0x9800, 0x983f) AM_RAM AM_BASE(m_spriteram) /* Sprites */
-	AM_RANGE(0x9840, 0x985f) AM_RAM AM_BASE(m_scrollram)  /* Scroll RAM */
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(skyarmy_videoram_w) AM_SHARE("videoram") /* Video RAM */
+	AM_RANGE(0x9000, 0x93ff) AM_RAM_WRITE(skyarmy_colorram_w) AM_SHARE("colorram") /* Color RAM */
+	AM_RANGE(0x9800, 0x983f) AM_RAM AM_SHARE("spriteram") /* Sprites */
+	AM_RANGE(0x9840, 0x985f) AM_RAM AM_SHARE("scrollram")  /* Scroll RAM */
 	AM_RANGE(0xa000, 0xa000) AM_READ_PORT("DSW")
 	AM_RANGE(0xa001, 0xa001) AM_READ_PORT("P1")
 	AM_RANGE(0xa002, 0xa002) AM_READ_PORT("P2")

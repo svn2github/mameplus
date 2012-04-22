@@ -52,7 +52,7 @@ WRITE16_MEMBER(deniam_state::sound_command_w)
 {
 	if (ACCESSING_BITS_8_15)
 	{
-		soundlatch_w(space,offset, (data >> 8) & 0xff);
+		soundlatch_byte_w(space,offset, (data >> 8) & 0xff);
 		device_set_input_line(m_audio_cpu, INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
@@ -79,10 +79,10 @@ WRITE16_MEMBER(deniam_state::deniam_irq_ack_w)
 
 static ADDRESS_MAP_START( deniam16b_map, AS_PROGRAM, 16, deniam_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
-	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(deniam_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x410000, 0x410fff) AM_RAM_WRITE(deniam_textram_w) AM_BASE(m_textram)
-	AM_RANGE(0x440000, 0x4407ff) AM_WRITEONLY AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0x840000, 0x840fff) AM_WRITE(deniam_palette_w) AM_BASE(m_paletteram)
+	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(deniam_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x410000, 0x410fff) AM_RAM_WRITE(deniam_textram_w) AM_SHARE("textram")
+	AM_RANGE(0x440000, 0x4407ff) AM_WRITEONLY AM_SHARE("spriteram")
+	AM_RANGE(0x840000, 0x840fff) AM_WRITE(deniam_palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0xc40000, 0xc40001) AM_WRITE(sound_command_w)
 	AM_RANGE(0xc40002, 0xc40003) AM_READWRITE(deniam_coinctrl_r, deniam_coinctrl_w)
 	AM_RANGE(0xc40004, 0xc40005) AM_WRITE(deniam_irq_ack_w)
@@ -101,7 +101,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_io_map, AS_IO, 8, deniam_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x01, 0x01) AM_READ(soundlatch_r)
+	AM_RANGE(0x01, 0x01) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x02, 0x03) AM_DEVWRITE_LEGACY("ymsnd", ym3812_w)
 	AM_RANGE(0x05, 0x05) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0x07, 0x07) AM_DEVWRITE_LEGACY("oki", deniam16b_oki_rom_bank_w)
@@ -110,10 +110,10 @@ ADDRESS_MAP_END
 /* identical to 16b, but handles sound directly */
 static ADDRESS_MAP_START( deniam16c_map, AS_PROGRAM, 16, deniam_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
-	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(deniam_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x410000, 0x410fff) AM_RAM_WRITE(deniam_textram_w) AM_BASE(m_textram)
-	AM_RANGE(0x440000, 0x4407ff) AM_WRITEONLY AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0x840000, 0x840fff) AM_WRITE(deniam_palette_w) AM_BASE(m_paletteram)
+	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(deniam_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x410000, 0x410fff) AM_RAM_WRITE(deniam_textram_w) AM_SHARE("textram")
+	AM_RANGE(0x440000, 0x4407ff) AM_WRITEONLY AM_SHARE("spriteram")
+	AM_RANGE(0x840000, 0x840fff) AM_WRITE(deniam_palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0xc40000, 0xc40001) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0xc40002, 0xc40003) AM_READWRITE(deniam_coinctrl_r, deniam_coinctrl_w)
 	AM_RANGE(0xc40004, 0xc40005) AM_WRITE(deniam_irq_ack_w)

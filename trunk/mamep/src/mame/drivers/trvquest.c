@@ -45,7 +45,7 @@ static READ8_HANDLER( trvquest_question_r )
 {
 	gameplan_state *state = space->machine().driver_data<gameplan_state>();
 
-	return space->machine().region("questions")->base()[*state->m_trvquest_question * 0x2000 + offset];
+	return state->memregion("questions")->base()[*state->m_trvquest_question * 0x2000 + offset];
 }
 
 static WRITE8_DEVICE_HANDLER( trvquest_coin_w )
@@ -68,7 +68,7 @@ static ADDRESS_MAP_START( cpu_map, AS_PROGRAM, 8, gameplan_state )
 	AM_RANGE(0x3840, 0x3841) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
 	AM_RANGE(0x3850, 0x3850) AM_READNOP //watchdog_reset_r ?
 	AM_RANGE(0x8000, 0x9fff) AM_READ_LEGACY(trvquest_question_r)
-	AM_RANGE(0xa000, 0xa000) AM_WRITEONLY AM_BASE(m_trvquest_question)
+	AM_RANGE(0xa000, 0xa000) AM_WRITEONLY AM_SHARE("trvquest_q")
 	AM_RANGE(0xa000, 0xa000) AM_READNOP	// bogus read from the game code when reads question roms
 	AM_RANGE(0xb000, 0xffff) AM_ROM
 ADDRESS_MAP_END

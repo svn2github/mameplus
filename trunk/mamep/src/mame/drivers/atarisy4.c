@@ -24,16 +24,18 @@ class atarisy4_state : public driver_device
 {
 public:
 	atarisy4_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_m68k_ram(*this, "m68k_ram"),
+		m_screen_ram(*this, "screen_ram"){ }
 
 	UINT8 m_r_color_table[256];
 	UINT8 m_g_color_table[256];
 	UINT8 m_b_color_table[256];
 	UINT16 m_dsp_bank[2];
 	UINT8 m_csr[2];
-	UINT16 *m_m68k_ram;
+	required_shared_ptr<UINT16> m_m68k_ram;
 	UINT16 *m_shared_ram[2];
-	UINT16 *m_screen_ram;
+	required_shared_ptr<UINT16> m_screen_ram;
 	poly_manager *m_poly;
 	DECLARE_WRITE16_MEMBER(gpu_w);
 	DECLARE_READ16_MEMBER(gpu_r);
@@ -581,7 +583,7 @@ WRITE16_MEMBER(atarisy4_state::dsp0_bank_w)
 	}
 
 	data &= 0x3800;
-	memory_set_bankptr(machine(), "dsp0_bank1", &m_shared_ram[0][data]);
+	membank("dsp0_bank1")->set_base(&m_shared_ram[0][data]);
 	m_dsp_bank[0] = data;
 }
 
@@ -615,7 +617,7 @@ WRITE16_MEMBER(atarisy4_state::dsp1_bank_w)
 	}
 
 	data &= 0x3800;
-	memory_set_bankptr(machine(), "dsp1_bank1", &m_shared_ram[1][data]);
+	membank("dsp1_bank1")->set_base(&m_shared_ram[1][data]);
 	m_dsp_bank[1] = data;
 }
 
@@ -627,7 +629,7 @@ WRITE16_MEMBER(atarisy4_state::dsp1_bank_w)
  *************************************/
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, atarisy4_state )
-	AM_RANGE(0x000000, 0x00ffff) AM_RAM AM_BASE(m_m68k_ram)
+	AM_RANGE(0x000000, 0x00ffff) AM_RAM AM_SHARE("m68k_ram")
 	AM_RANGE(0x010000, 0x01ffff) AM_RAM
 	AM_RANGE(0x580000, 0x580001) AM_READ_PORT("JOYSTICK")
 	AM_RANGE(0x588000, 0x588001) AM_READ(analog_r)
@@ -636,7 +638,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, atarisy4_state )
 	AM_RANGE(0x7c6000, 0x7c6001) AM_READWRITE(dsp1_status_r, dsp1_control_w)
 	AM_RANGE(0x7f0000, 0x7f4fff) AM_READWRITE(m68k_shared_0_r, m68k_shared_0_w)
 	AM_RANGE(0x7f6000, 0x7f6001) AM_READWRITE(dsp0_status_r, dsp0_control_w)
-	AM_RANGE(0xa00400, 0xbfffff) AM_RAM AM_BASE(m_screen_ram)
+	AM_RANGE(0xa00400, 0xbfffff) AM_RAM AM_SHARE("screen_ram")
 	AM_RANGE(0xff8000, 0xff8fff) AM_READWRITE(gpu_r, gpu_w)
 ADDRESS_MAP_END
 
@@ -967,13 +969,13 @@ static DRIVER_INIT( laststar )
 	state->m_shared_ram[0] = auto_alloc_array_clear(machine, UINT16, 0x2000);
 
 	/* Populate the 68000 address space with data from the HEX files */
-	load_hexfile(main, machine.region("code")->base());
-	load_hexfile(main, machine.region("data")->base());
+	load_hexfile(main, machine.root_device().memregion("code")->base());
+	load_hexfile(main, machine.root_device().memregion("data")->base());
 
 	/* Set up the DSP */
-	memory_set_bankptr(machine, "dsp0_bank0", state->m_shared_ram[0]);
-	memory_set_bankptr(machine, "dsp0_bank1", &state->m_shared_ram[0][0x800]);
-	load_ldafile(machine.device("dsp0")->memory().space(AS_PROGRAM), machine.region("dsp")->base());
+	state->membank("dsp0_bank0")->set_base(state->m_shared_ram[0]);
+	state->membank("dsp0_bank1")->set_base(&state->m_shared_ram[0][0x800]);
+	load_ldafile(machine.device("dsp0")->memory().space(AS_PROGRAM), state->memregion("dsp")->base());
 }
 
 static DRIVER_INIT( airrace )
@@ -984,17 +986,17 @@ static DRIVER_INIT( airrace )
 	state->m_shared_ram[1] = auto_alloc_array_clear(machine, UINT16, 0x4000);
 
 	/* Populate RAM with data from the HEX files */
-	load_hexfile(machine.device("maincpu")->memory().space(AS_PROGRAM), machine.region("code")->base());
+	load_hexfile(machine.device("maincpu")->memory().space(AS_PROGRAM), machine.root_device().memregion("code")->base());
 
 	/* Set up the first DSP */
-	memory_set_bankptr(machine, "dsp0_bank0", state->m_shared_ram[0]);
-	memory_set_bankptr(machine, "dsp0_bank1", &state->m_shared_ram[0][0x800]);
-	load_ldafile(machine.device("dsp0")->memory().space(AS_PROGRAM), machine.region("dsp")->base());
+	state->membank("dsp0_bank0")->set_base(state->m_shared_ram[0]);
+	state->membank("dsp0_bank1")->set_base(&state->m_shared_ram[0][0x800]);
+	load_ldafile(machine.device("dsp0")->memory().space(AS_PROGRAM), machine.root_device().memregion("dsp")->base());
 
 	/* Set up the second DSP */
-	memory_set_bankptr(machine, "dsp1_bank0", state->m_shared_ram[1]);
-	memory_set_bankptr(machine, "dsp1_bank1", &state->m_shared_ram[1][0x800]);
-	load_ldafile(machine.device("dsp1")->memory().space(AS_PROGRAM), machine.region("dsp")->base());
+	state->membank("dsp1_bank0")->set_base(state->m_shared_ram[1]);
+	state->membank("dsp1_bank1")->set_base(&state->m_shared_ram[1][0x800]);
+	load_ldafile(machine.device("dsp1")->memory().space(AS_PROGRAM), state->memregion("dsp")->base());
 }
 
 static MACHINE_RESET( atarisy4 )

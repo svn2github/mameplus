@@ -166,7 +166,7 @@ READ16_MEMBER(dassault_state::dassault_sub_control_r)
 
 WRITE16_MEMBER(dassault_state::dassault_sound_w)
 {
-	soundlatch_w(space, 0, data & 0xff);
+	soundlatch_byte_w(space, 0, data & 0xff);
 	device_set_input_line(m_audiocpu, 0, HOLD_LINE); /* IRQ1 */
 }
 
@@ -219,18 +219,18 @@ static ADDRESS_MAP_START( dassault_map, AS_PROGRAM, 16, dassault_state )
 
 	AM_RANGE(0x200000, 0x201fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x202000, 0x203fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x212000, 0x212fff) AM_WRITEONLY AM_BASE(m_pf2_rowscroll)
+	AM_RANGE(0x212000, 0x212fff) AM_WRITEONLY AM_SHARE("pf2_rowscroll")
 	AM_RANGE(0x220000, 0x22000f) AM_DEVWRITE_LEGACY("tilegen1", deco16ic_pf_control_w)
 
 	AM_RANGE(0x240000, 0x240fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x242000, 0x242fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x252000, 0x252fff) AM_WRITEONLY AM_BASE(m_pf4_rowscroll)
+	AM_RANGE(0x252000, 0x252fff) AM_WRITEONLY AM_SHARE("pf4_rowscroll")
 	AM_RANGE(0x260000, 0x26000f) AM_DEVWRITE_LEGACY("tilegen2", deco16ic_pf_control_w)
 
-	AM_RANGE(0x3f8000, 0x3fbfff) AM_RAM AM_BASE(m_ram) /* Main ram */
+	AM_RANGE(0x3f8000, 0x3fbfff) AM_RAM AM_SHARE("ram") /* Main ram */
 	AM_RANGE(0x3fc000, 0x3fcfff) AM_RAM AM_SHARE("spriteram2") /* Spriteram (2nd) */
 	AM_RANGE(0x3feffc, 0x3fefff) AM_READWRITE(dassault_irq_r, dassault_irq_w)
-	AM_RANGE(0x3fe000, 0x3fefff) AM_READWRITE(shared_ram_r, shared_ram_w) AM_BASE(m_shared_ram) /* Shared ram */
+	AM_RANGE(0x3fe000, 0x3fefff) AM_READWRITE(shared_ram_r, shared_ram_w) AM_SHARE("shared_ram") /* Shared ram */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( dassault_sub_map, AS_PROGRAM, 16, dassault_state )
@@ -240,7 +240,7 @@ static ADDRESS_MAP_START( dassault_sub_map, AS_PROGRAM, 16, dassault_state )
 	AM_RANGE(0x100002, 0x100007) AM_WRITENOP /* ? */
 	AM_RANGE(0x100004, 0x100005) AM_READ(dassault_sub_control_r)
 
-	AM_RANGE(0x3f8000, 0x3fbfff) AM_RAM AM_BASE(m_ram2) /* Sub cpu ram */
+	AM_RANGE(0x3f8000, 0x3fbfff) AM_RAM AM_SHARE("ram2") /* Sub cpu ram */
 	AM_RANGE(0x3fc000, 0x3fcfff) AM_RAM AM_SHARE("spriteram") /* Sprite ram */
 	AM_RANGE(0x3feffc, 0x3fefff) AM_READWRITE(dassault_irq_r, dassault_irq_w)
 	AM_RANGE(0x3fe000, 0x3fefff) AM_READWRITE(shared_ram_r, shared_ram_w)
@@ -254,7 +254,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, dassault_state )
 	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ym2", ym2151_r, ym2151_w)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
-	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_r)
+	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x1f0000, 0x1f1fff) AM_RAMBANK("bank8")
 	AM_RANGE(0x1fec00, 0x1fec01) AM_WRITE_LEGACY(h6280_timer_w)
 	AM_RANGE(0x1ff400, 0x1ff403) AM_WRITE_LEGACY(h6280_irq_status_w)
@@ -518,8 +518,8 @@ static WRITE8_DEVICE_HANDLER( sound_bankswitch_w )
 
 static const ym2151_interface ym2151_config =
 {
-	sound_irq,
-	sound_bankswitch_w
+	DEVCB_LINE(sound_irq),
+	DEVCB_HANDLER(sound_bankswitch_w)
 };
 
 /**********************************************************************************/
@@ -830,8 +830,8 @@ ROM_END
 
 static DRIVER_INIT( dassault )
 {
-	const UINT8 *src = machine.region("gfx1")->base();
-	UINT8 *dst = machine.region("gfx2")->base();
+	const UINT8 *src = machine.root_device().memregion("gfx1")->base();
+	UINT8 *dst = machine.root_device().memregion("gfx2")->base();
 	UINT8 *tmp = auto_alloc_array(machine, UINT8, 0x80000);
 
 	/* Playfield 4 also has access to the char graphics, make things easier
@@ -847,8 +847,8 @@ static DRIVER_INIT( dassault )
 
 static DRIVER_INIT( thndzone )
 {
-	const UINT8 *src = machine.region("gfx1")->base();
-	UINT8 *dst = machine.region("gfx2")->base();
+	const UINT8 *src = machine.root_device().memregion("gfx1")->base();
+	UINT8 *dst = machine.root_device().memregion("gfx2")->base();
 	UINT8 *tmp = auto_alloc_array(machine, UINT8, 0x80000);
 
 	/* Playfield 4 also has access to the char graphics, make things easier

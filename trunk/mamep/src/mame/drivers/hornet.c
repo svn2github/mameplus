@@ -327,12 +327,16 @@ class hornet_state : public driver_device
 {
 public:
 	hornet_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		  m_workram(*this, "workram"),
+		  m_sharc_dataram0(*this, "sharc_dataram0"),
+		  m_sharc_dataram1(*this, "sharc_dataram1") { }
 
 	UINT8 m_led_reg0;
 	UINT8 m_led_reg1;
-	UINT32 *m_workram;
-	UINT32 *m_sharc_dataram[2];
+	required_shared_ptr<UINT32> m_workram;
+	required_shared_ptr<UINT32> m_sharc_dataram0;
+	optional_shared_ptr<UINT32> m_sharc_dataram1;
 	UINT8 *m_jvs_sdata;
 	UINT32 m_jvs_sdata_ptr;
 	emu_timer *m_sound_irq_timer;
@@ -563,7 +567,7 @@ WRITE8_MEMBER(hornet_state::sysreg_w)
                 0x80 = WDTCLK
             */
 			if (data & 0x80)
-				watchdog_reset(machine());
+				machine().watchdog_reset();
 			break;
 
 		case 7:	/* CG Control Register */
@@ -593,9 +597,9 @@ WRITE32_MEMBER(hornet_state::comm1_w)
 WRITE32_MEMBER(hornet_state::comm_rombank_w)
 {
 	int bank = data >> 24;
-	UINT8 *usr3 = machine().region("user3")->base();
+	UINT8 *usr3 = memregion("user3")->base();
 	if (usr3 != NULL)
-		memory_set_bank(machine(), "bank1", bank & 0x7f);
+		membank("bank1")->set_entry(bank & 0x7f);
 }
 
 READ32_MEMBER(hornet_state::comm0_unk_r)
@@ -622,7 +626,7 @@ WRITE32_MEMBER(hornet_state::gun_w)
 /*****************************************************************************/
 
 static ADDRESS_MAP_START( hornet_map, AS_PROGRAM, 32, hornet_state )
-	AM_RANGE(0x00000000, 0x003fffff) AM_RAM AM_BASE(m_workram)		/* Work RAM */
+	AM_RANGE(0x00000000, 0x003fffff) AM_RAM AM_SHARE("workram")		/* Work RAM */
 	AM_RANGE(0x74000000, 0x740000ff) AM_READWRITE(hornet_k037122_reg_r, hornet_k037122_reg_w)
 	AM_RANGE(0x74020000, 0x7403ffff) AM_READWRITE(hornet_k037122_sram_r, hornet_k037122_sram_w)
 	AM_RANGE(0x74040000, 0x7407ffff) AM_READWRITE(hornet_k037122_char_r, hornet_k037122_char_w)
@@ -699,27 +703,27 @@ ADDRESS_MAP_END
 
 READ32_MEMBER(hornet_state::dsp_dataram0_r)
 {
-	return m_sharc_dataram[0][offset] & 0xffff;
+	return m_sharc_dataram0[offset] & 0xffff;
 }
 
 WRITE32_MEMBER(hornet_state::dsp_dataram0_w)
 {
-	m_sharc_dataram[0][offset] = data;
+	m_sharc_dataram0[offset] = data;
 }
 
 READ32_MEMBER(hornet_state::dsp_dataram1_r)
 {
-	return m_sharc_dataram[1][offset] & 0xffff;
+	return m_sharc_dataram1[offset] & 0xffff;
 }
 
 WRITE32_MEMBER(hornet_state::dsp_dataram1_w)
 {
-	m_sharc_dataram[1][offset] = data;
+	m_sharc_dataram1[offset] = data;
 }
 
 static ADDRESS_MAP_START( sharc0_map, AS_DATA, 32, hornet_state )
 	AM_RANGE(0x0400000, 0x041ffff) AM_READWRITE_LEGACY(cgboard_0_shared_sharc_r, cgboard_0_shared_sharc_w)
-	AM_RANGE(0x0500000, 0x05fffff) AM_READWRITE(dsp_dataram0_r, dsp_dataram0_w) AM_BASE(m_sharc_dataram[0])
+	AM_RANGE(0x0500000, 0x05fffff) AM_READWRITE(dsp_dataram0_r, dsp_dataram0_w) AM_SHARE("sharc_dataram0")
 	AM_RANGE(0x1400000, 0x14fffff) AM_RAM
 	AM_RANGE(0x2400000, 0x27fffff) AM_DEVREADWRITE_LEGACY("voodoo0", voodoo_r, voodoo_w)
 	AM_RANGE(0x3400000, 0x34000ff) AM_READWRITE_LEGACY(cgboard_0_comm_sharc_r, cgboard_0_comm_sharc_w)
@@ -729,7 +733,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sharc1_map, AS_DATA, 32, hornet_state )
 	AM_RANGE(0x0400000, 0x041ffff) AM_READWRITE_LEGACY(cgboard_1_shared_sharc_r, cgboard_1_shared_sharc_w)
-	AM_RANGE(0x0500000, 0x05fffff) AM_READWRITE(dsp_dataram1_r, dsp_dataram1_w) AM_BASE(m_sharc_dataram[1])
+	AM_RANGE(0x0500000, 0x05fffff) AM_READWRITE(dsp_dataram1_r, dsp_dataram1_w) AM_SHARE("sharc_dataram1")
 	AM_RANGE(0x1400000, 0x14fffff) AM_RAM
 	AM_RANGE(0x2400000, 0x27fffff) AM_DEVREADWRITE_LEGACY("voodoo1", voodoo_r, voodoo_w)
 	AM_RANGE(0x3400000, 0x34000ff) AM_READWRITE_LEGACY(cgboard_1_comm_sharc_r, cgboard_1_comm_sharc_w)
@@ -889,18 +893,18 @@ static MACHINE_START( hornet )
 
 static MACHINE_RESET( hornet )
 {
-	UINT8 *usr3 = machine.region("user3")->base();
-	UINT8 *usr5 = machine.region("user5")->base();
+	UINT8 *usr3 = machine.root_device().memregion("user3")->base();
+	UINT8 *usr5 = machine.root_device().memregion("user5")->base();
 	if (usr3 != NULL)
 	{
-		memory_configure_bank(machine, "bank1", 0, machine.region("user3")->bytes() / 0x40000, usr3, 0x40000);
-		memory_set_bank(machine, "bank1", 0);
+		machine.root_device().membank("bank1")->configure_entries(0, machine.root_device().memregion("user3")->bytes() / 0x40000, usr3, 0x40000);
+		machine.root_device().membank("bank1")->set_entry(0);
 	}
 
 	cputag_set_input_line(machine, "dsp", INPUT_LINE_RESET, ASSERT_LINE);
 
 	if (usr5)
-		memory_set_bankptr(machine, "bank5", usr5);
+		machine.root_device().membank("bank5")->set_base(usr5);
 }
 
 static double adc12138_input_callback( device_t *device, UINT8 input )
@@ -1010,19 +1014,19 @@ MACHINE_CONFIG_END
 
 static MACHINE_RESET( hornet_2board )
 {
-	UINT8 *usr3 = machine.region("user3")->base();
-	UINT8 *usr5 = machine.region("user5")->base();
+	UINT8 *usr3 = machine.root_device().memregion("user3")->base();
+	UINT8 *usr5 = machine.root_device().memregion("user5")->base();
 
 	if (usr3 != NULL)
 	{
-		memory_configure_bank(machine, "bank1", 0, machine.region("user3")->bytes() / 0x40000, usr3, 0x40000);
-		memory_set_bank(machine, "bank1", 0);
+		machine.root_device().membank("bank1")->configure_entries(0, machine.root_device().memregion("user3")->bytes() / 0x40000, usr3, 0x40000);
+		machine.root_device().membank("bank1")->set_entry(0);
 	}
 	cputag_set_input_line(machine, "dsp", INPUT_LINE_RESET, ASSERT_LINE);
 	cputag_set_input_line(machine, "dsp2", INPUT_LINE_RESET, ASSERT_LINE);
 
 	if (usr5)
-		memory_set_bankptr(machine, "bank5", usr5);
+		machine.root_device().membank("bank5")->set_base(usr5);
 }
 
 static MACHINE_CONFIG_DERIVED( hornet_2board, hornet )
@@ -1240,7 +1244,7 @@ static DRIVER_INIT(hornet)
 {
 	hornet_state *state = machine.driver_data<hornet_state>();
 	init_konami_cgboard(machine, 1, CGBOARD_TYPE_HORNET);
-	set_cgboard_texture_bank(machine, 0, "bank5", machine.region("user5")->base());
+	set_cgboard_texture_bank(machine, 0, "bank5", state->memregion("user5")->base());
 
 	state->m_led_reg0 = state->m_led_reg1 = 0x7f;
 
@@ -1251,8 +1255,8 @@ static DRIVER_INIT(hornet_2board)
 {
 	hornet_state *state = machine.driver_data<hornet_state>();
 	init_konami_cgboard(machine, 2, CGBOARD_TYPE_HORNET);
-	set_cgboard_texture_bank(machine, 0, "bank5", machine.region("user5")->base());
-	set_cgboard_texture_bank(machine, 1, "bank6", machine.region("user5")->base());
+	set_cgboard_texture_bank(machine, 0, "bank5", machine.root_device().memregion("user5")->base());
+	set_cgboard_texture_bank(machine, 1, "bank6", state->memregion("user5")->base());
 
 	state->m_led_reg0 = state->m_led_reg1 = 0x7f;
 

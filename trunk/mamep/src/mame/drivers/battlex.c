@@ -55,14 +55,13 @@ static INTERRUPT_GEN( battlex_interrupt )
 	device_set_input_line(device, 0, ASSERT_LINE);
 }
 
-static CUSTOM_INPUT( battlex_in0_b4_r )
+CUSTOM_INPUT_MEMBER(battlex_state::battlex_in0_b4_r)
 {
-	battlex_state *state = field.machine().driver_data<battlex_state>();
-	UINT32 ret = state->m_in0_b4;
-	if (state->m_in0_b4)
+	UINT32 ret = m_in0_b4;
+	if (m_in0_b4)
 	{
-		cputag_set_input_line(field.machine(), "maincpu", 0, CLEAR_LINE);
-		state->m_in0_b4 = 0;
+		cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+		m_in0_b4 = 0;
 	}
 
 	return ret;
@@ -77,8 +76,8 @@ static CUSTOM_INPUT( battlex_in0_b4_r )
 
 static ADDRESS_MAP_START( battlex_map, AS_PROGRAM, 8, battlex_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
-	AM_RANGE(0x8000, 0x8fff) AM_RAM_WRITE(battlex_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x9000, 0x91ff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x8000, 0x8fff) AM_RAM_WRITE(battlex_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x9000, 0x91ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xa000, 0xa3ff) AM_RAM
 	AM_RANGE(0xe000, 0xe03f) AM_RAM_WRITE(battlex_palette_w)
 ADDRESS_MAP_END
@@ -119,7 +118,7 @@ static INPUT_PORTS_START( battlex )
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Demo_Sounds ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(battlex_in0_b4_r, NULL)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, battlex_state,battlex_in0_b4_r, NULL)
 	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Cabinet ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
@@ -316,9 +315,9 @@ ROM_END
 
 static DRIVER_INIT( battlex )
 {
-	UINT8 *colormask = machine.region("user1")->base();
-	UINT8 *gfxdata = machine.region("user2")->base();
-	UINT8 *dest = machine.region("gfx1")->base();
+	UINT8 *colormask = machine.root_device().memregion("user1")->base();
+	UINT8 *gfxdata = machine.root_device().memregion("user2")->base();
+	UINT8 *dest = machine.root_device().memregion("gfx1")->base();
 
 	int tile, line, bit;
 

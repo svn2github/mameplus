@@ -253,11 +253,10 @@ WRITE8_MEMBER(astrocde_state::seawolf2_sound_2_w)// Port 41
  *
  *************************************/
 
-static CUSTOM_INPUT( ebases_trackball_r )
+CUSTOM_INPUT_MEMBER(astrocde_state::ebases_trackball_r)
 {
-	astrocde_state *state = field.machine().driver_data<astrocde_state>();
 	static const char *const names[] = { "TRACKX2", "TRACKY2", "TRACKX1", "TRACKY1" };
-	return input_port_read(field.machine(), names[state->m_input_select]);
+	return input_port_read(machine(), names[m_input_select]);
 }
 
 
@@ -429,14 +428,14 @@ WRITE8_MEMBER(astrocde_state::profpac_banksw_w)
 
 	/* set the main banking */
 	prog_space->install_read_bank(0x4000, 0xbfff, "bank1");
-	memory_set_bankptr(machine(), "bank1", machine().region("user1")->base() + 0x8000 * bank);
+	membank("bank1")->set_base(machine().root_device().memregion("user1")->base() + 0x8000 * bank);
 
 	/* bank 0 reads video RAM in the 4000-7FFF range */
 	if (bank == 0)
 		prog_space->install_read_handler(0x4000, 0x7fff, read8_delegate(FUNC(astrocde_state::profpac_videoram_r),this));
 
 	/* if we have a 640k EPROM board, map that on top of the 4000-7FFF range if specified */
-	if ((data & 0x80) && machine().region("user2")->base() != NULL)
+	if ((data & 0x80) && memregion("user2")->base() != NULL)
 	{
 		/* Note: There is a jumper which could change the base offset to 0xa8 instead */
 		bank = data - 0x80;
@@ -445,7 +444,7 @@ WRITE8_MEMBER(astrocde_state::profpac_banksw_w)
 		if (bank < 0x28)
 		{
 			prog_space->install_read_bank(0x4000, 0x7fff, "bank2");
-			memory_set_bankptr(machine(), "bank2", machine().region("user2")->base() + 0x4000 * bank);
+			membank("bank2")->set_base(machine().root_device().memregion("user2")->base() + 0x4000 * bank);
 		}
 		else
 			prog_space->unmap_read(0x4000, 0x7fff);
@@ -480,11 +479,10 @@ READ8_MEMBER(astrocde_state::demndrgn_io_r)
 }
 
 
-static CUSTOM_INPUT( demndragn_joystick_r )
+CUSTOM_INPUT_MEMBER(astrocde_state::demndragn_joystick_r)
 {
-	astrocde_state *state = field.machine().driver_data<astrocde_state>();
 	static const char *const names[] = { "MOVEX", "MOVEY" };
-	return input_port_read(field.machine(), names[state->m_input_select]);
+	return input_port_read(machine(), names[m_input_select]);
 }
 
 
@@ -524,7 +522,7 @@ static const ay8910_interface ay8912_interface =
 
 WRITE8_MEMBER(astrocde_state::tenpindx_sound_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	cputag_set_input_line(machine(), "sub", INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -585,7 +583,7 @@ WRITE8_MEMBER(astrocde_state::tenpindx_lights_w)
 static ADDRESS_MAP_START( seawolf2_map, AS_PROGRAM, 8, astrocde_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x0000, 0x3fff) AM_WRITE(astrocade_funcgen_w)
-	AM_RANGE(0x4000, 0x7fff) AM_RAM AM_BASE(m_videoram)
+	AM_RANGE(0x4000, 0x7fff) AM_RAM AM_SHARE("videoram")
 	AM_RANGE(0xc000, 0xc3ff) AM_RAM
 ADDRESS_MAP_END
 
@@ -593,15 +591,15 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( ebases_map, AS_PROGRAM, 8, astrocde_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x0000, 0x3fff) AM_WRITE(astrocade_funcgen_w)
-	AM_RANGE(0x4000, 0x7fff) AM_RAM AM_BASE(m_videoram)
+	AM_RANGE(0x4000, 0x7fff) AM_RAM AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( spacezap_map, AS_PROGRAM, 8, astrocde_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x0000, 0x3fff) AM_WRITE(astrocade_funcgen_w)
-	AM_RANGE(0x4000, 0x7fff) AM_RAM AM_BASE(m_videoram)
-	AM_RANGE(0xd000, 0xd03f) AM_READWRITE(protected_ram_r, protected_ram_w) AM_BASE(m_protected_ram)
+	AM_RANGE(0x4000, 0x7fff) AM_RAM AM_SHARE("videoram")
+	AM_RANGE(0xd000, 0xd03f) AM_READWRITE(protected_ram_r, protected_ram_w) AM_SHARE("protected_ram")
 	AM_RANGE(0xd040, 0xd7ff) AM_RAM
 ADDRESS_MAP_END
 
@@ -609,9 +607,9 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( wow_map, AS_PROGRAM, 8, astrocde_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x0000, 0x3fff) AM_WRITE(astrocade_funcgen_w)
-	AM_RANGE(0x4000, 0x7fff) AM_RAM AM_BASE(m_videoram)
+	AM_RANGE(0x4000, 0x7fff) AM_RAM AM_SHARE("videoram")
 	AM_RANGE(0x8000, 0xcfff) AM_ROM
-	AM_RANGE(0xd000, 0xd03f) AM_READWRITE(protected_ram_r, protected_ram_w) AM_BASE(m_protected_ram)
+	AM_RANGE(0xd000, 0xd03f) AM_READWRITE(protected_ram_r, protected_ram_w) AM_SHARE("protected_ram")
 	AM_RANGE(0xd040, 0xdfff) AM_RAM
 ADDRESS_MAP_END
 
@@ -619,9 +617,9 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( robby_map, AS_PROGRAM, 8, astrocde_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x0000, 0x3fff) AM_WRITE(astrocade_funcgen_w)
-	AM_RANGE(0x4000, 0x7fff) AM_RAM AM_BASE(m_videoram)
+	AM_RANGE(0x4000, 0x7fff) AM_RAM AM_SHARE("videoram")
 	AM_RANGE(0x8000, 0xdfff) AM_ROM
-	AM_RANGE(0xe000, 0xe1ff) AM_READWRITE(protected_ram_r, protected_ram_w) AM_BASE(m_protected_ram)
+	AM_RANGE(0xe000, 0xe1ff) AM_READWRITE(protected_ram_r, protected_ram_w) AM_SHARE("protected_ram")
 	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0xe800, 0xffff) AM_RAM
 ADDRESS_MAP_END
@@ -633,7 +631,7 @@ static ADDRESS_MAP_START( profpac_map, AS_PROGRAM, 8, astrocde_state )
 	AM_RANGE(0x4000, 0x7fff) AM_READWRITE(profpac_videoram_r, profpac_videoram_w)
 	AM_RANGE(0x4000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xdfff) AM_ROM
-	AM_RANGE(0xe000, 0xe1ff) AM_READWRITE(protected_ram_r, protected_ram_w) AM_BASE(m_protected_ram)
+	AM_RANGE(0xe000, 0xe1ff) AM_READWRITE(protected_ram_r, protected_ram_w) AM_SHARE("protected_ram")
 	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0xe800, 0xffff) AM_RAM
 ADDRESS_MAP_END
@@ -710,7 +708,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( tenpin_sub_io_map, AS_IO, 8, astrocde_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x90, 0x93) AM_DEVREADWRITE_LEGACY("ctc", z80ctc_r, z80ctc_w)
-	AM_RANGE(0x97, 0x97) AM_READ(soundlatch_r)
+	AM_RANGE(0x97, 0x97) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x98, 0x98) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)
 	AM_RANGE(0x98, 0x98) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
 	AM_RANGE(0x9a, 0x9a) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_w)
@@ -818,7 +816,7 @@ static INPUT_PORTS_START( ebases )
 	PORT_DIPUNUSED_DIPLOC( 0x80, 0x00, "S1:8" )
 
 	PORT_START("P4HANDLE")
-	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(ebases_trackball_r, NULL)
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, astrocde_state,ebases_trackball_r, NULL)
 
 	PORT_START("TRACKX1")
 	PORT_BIT( 0xff, 0x00, IPT_TRACKBALL_X ) PORT_SENSITIVITY(50) PORT_KEYDELTA(10) PORT_RESET
@@ -834,13 +832,12 @@ static INPUT_PORTS_START( ebases )
 INPUT_PORTS_END
 
 
-static INPUT_CHANGED( spacezap_monitor )
+INPUT_CHANGED_MEMBER(astrocde_state::spacezap_monitor)
 {
-	astrocde_state *state = field.machine().driver_data<astrocde_state>();
 	if (newval)
-		state->m_video_config &= ~AC_MONITOR_BW;
+		m_video_config &= ~AC_MONITOR_BW;
 	else
-		state->m_video_config |= AC_MONITOR_BW;
+		m_video_config |= AC_MONITOR_BW;
 }
 
 static INPUT_PORTS_START( spacezap )
@@ -891,7 +888,7 @@ static INPUT_PORTS_START( spacezap )
 	PORT_START("FAKE")
 	/* Dedicated cabinets had a B/W monitor and color overlay,
        some (unofficial/repaired?) cabinets had a color monitor. */
-	PORT_CONFNAME( 0x01, 0x00, "Monitor" ) PORT_CHANGED(spacezap_monitor, 0)
+	PORT_CONFNAME( 0x01, 0x00, "Monitor" ) PORT_CHANGED_MEMBER(DEVICE_SELF, astrocde_state,spacezap_monitor, 0)
 	PORT_CONFSETTING(    0x00, "B/W" )
 	PORT_CONFSETTING(    0x01, "Color" )
 INPUT_PORTS_END
@@ -1144,7 +1141,7 @@ static INPUT_PORTS_START( demndrgn )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("P2HANDLE")
-	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(demndragn_joystick_r, NULL)
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, astrocde_state,demndragn_joystick_r, NULL)
 
 	PORT_START("P3HANDLE")
 	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_UNUSED )

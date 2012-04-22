@@ -34,12 +34,11 @@ inputs + notes by stephh
 #include "includes/fcombat.h"
 
 
-static INPUT_CHANGED( coin_inserted )
+INPUT_CHANGED_MEMBER(fcombat_state::coin_inserted)
 {
-	fcombat_state *state = field.machine().driver_data<fcombat_state>();
 
 	/* coin insertion causes an NMI */
-	device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
+	device_set_input_line(m_maincpu, INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
 }
 
 
@@ -101,7 +100,7 @@ READ8_MEMBER(fcombat_state::e300_r)
 	int wx = (m_tx + m_fcombat_sh) / 16;
 	int wy = (m_ty * 2 + m_fcombat_sv) / 16;
 
-	return machine().region("user2")->base()[wx * 32 * 16 + wy];
+	return memregion("user2")->base()[wx * 32 * 16 + wy];
 }
 
 WRITE8_MEMBER(fcombat_state::ee00_w)
@@ -112,8 +111,8 @@ WRITE8_MEMBER(fcombat_state::ee00_w)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, fcombat_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_BASE_SIZE(m_videoram, m_videoram_size)
-	AM_RANGE(0xd800, 0xd8ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("videoram")
+	AM_RANGE(0xd800, 0xd8ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xe000, 0xe000) AM_READ(fcombat_port01_r)
 	AM_RANGE(0xe100, 0xe100) AM_READ_PORT("DSW0")
 	AM_RANGE(0xe200, 0xe200) AM_READ_PORT("DSW1")
@@ -126,14 +125,14 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, fcombat_state )
 	AM_RANGE(0xec00, 0xec00) AM_WRITE(ec00_w)
 	AM_RANGE(0xed00, 0xed00) AM_WRITE(ed00_w)
 	AM_RANGE(0xee00, 0xee00) AM_WRITE(ee00_w)	// related to protection ? - doesn't seem to have any effect
-	AM_RANGE(0xef00, 0xef00) AM_WRITE(soundlatch_w)
+	AM_RANGE(0xef00, 0xef00) AM_WRITE(soundlatch_byte_w)
 ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( audio_map, AS_PROGRAM, 8, fcombat_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x47ff) AM_RAM
-	AM_RANGE(0x6000, 0x6000) AM_READ(soundlatch_r)
+	AM_RANGE(0x6000, 0x6000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x8001, 0x8001) AM_DEVREAD_LEGACY("ay1", ay8910_r)
 	AM_RANGE(0x8002, 0x8003) AM_DEVWRITE_LEGACY("ay1", ay8910_data_address_w)
 	AM_RANGE(0xa001, 0xa001) AM_DEVREAD_LEGACY("ay2", ay8910_r)
@@ -207,7 +206,7 @@ static INPUT_PORTS_START( fcombat )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("COIN")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, fcombat_state,coin_inserted, 0)
 INPUT_PORTS_END
 
 
@@ -340,8 +339,8 @@ static DRIVER_INIT( fcombat )
 
 	/* make a temporary copy of the character data */
 	src = temp;
-	dst = machine.region("gfx1")->base();
-	length = machine.region("gfx1")->bytes();
+	dst = machine.root_device().memregion("gfx1")->base();
+	length = machine.root_device().memregion("gfx1")->bytes();
 	memcpy(src, dst, length);
 
 	/* decode the characters */
@@ -358,8 +357,8 @@ static DRIVER_INIT( fcombat )
 
 	/* make a temporary copy of the sprite data */
 	src = temp;
-	dst = machine.region("gfx2")->base();
-	length = machine.region("gfx2")->bytes();
+	dst = machine.root_device().memregion("gfx2")->base();
+	length = machine.root_device().memregion("gfx2")->bytes();
 	memcpy(src, dst, length);
 
 	/* decode the sprites */
@@ -379,8 +378,8 @@ static DRIVER_INIT( fcombat )
 
 	/* make a temporary copy of the character data */
 	src = temp;
-	dst = machine.region("gfx3")->base();
-	length = machine.region("gfx3")->bytes();
+	dst = machine.root_device().memregion("gfx3")->base();
+	length = machine.root_device().memregion("gfx3")->bytes();
 	memcpy(src, dst, length);
 
 	/* decode the characters */
@@ -398,8 +397,8 @@ static DRIVER_INIT( fcombat )
 	}
 
 	src = temp;
-	dst = machine.region("user1")->base();
-	length = machine.region("user1")->bytes();
+	dst = machine.root_device().memregion("user1")->base();
+	length = machine.root_device().memregion("user1")->bytes();
 	memcpy(src, dst, length);
 
 	for (oldaddr = 0; oldaddr < 32; oldaddr++)
@@ -410,8 +409,8 @@ static DRIVER_INIT( fcombat )
 
 
 	src = temp;
-	dst = machine.region("user2")->base();
-	length = machine.region("user2")->bytes();
+	dst = machine.root_device().memregion("user2")->base();
+	length = machine.root_device().memregion("user2")->bytes();
 	memcpy(src, dst, length);
 
 	for (oldaddr = 0; oldaddr < 32; oldaddr++)

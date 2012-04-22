@@ -51,7 +51,7 @@ WRITE8_MEMBER(blockhl_state::bankedram_w)
 {
 
 	if (m_palette_selected)
-		paletteram_xBBBBBGGGGGRRRRR_be_w(space, offset, data);
+		paletteram_xBBBBBGGGGGRRRRR_byte_be_w(space, offset, data);
 	else
 		m_ram[offset] = data;
 }
@@ -92,7 +92,7 @@ WRITE8_MEMBER(blockhl_state::k052109_051960_w)
 
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, blockhl_state )
-	AM_RANGE(0x1f84, 0x1f84) AM_WRITE(soundlatch_w)
+	AM_RANGE(0x1f84, 0x1f84) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0x1f88, 0x1f88) AM_WRITE(blockhl_sh_irqtrigger_w)
 	AM_RANGE(0x1f8c, 0x1f8c) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x1f94, 0x1f94) AM_READ_PORT("DSW3")
@@ -102,7 +102,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, blockhl_state )
 	AM_RANGE(0x1f98, 0x1f98) AM_READ_PORT("DSW2")
 	AM_RANGE(0x0000, 0x3fff) AM_READWRITE(k052109_051960_r, k052109_051960_w)
 	AM_RANGE(0x4000, 0x57ff) AM_RAM
-	AM_RANGE(0x5800, 0x5fff) AM_READWRITE(bankedram_r, bankedram_w) AM_BASE(m_ram)
+	AM_RANGE(0x5800, 0x5fff) AM_READWRITE(bankedram_r, bankedram_w) AM_SHARE("ram")
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -110,7 +110,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( audio_map, AS_PROGRAM, 8, blockhl_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0xe00c, 0xe00d) AM_WRITENOP		/* leftover from missing 007232? */
 ADDRESS_MAP_END
@@ -189,9 +189,9 @@ static const k051960_interface blockhl_k051960_intf =
 static MACHINE_START( blockhl )
 {
 	blockhl_state *state = machine.driver_data<blockhl_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 4, &ROM[0x10000], 0x2000);
+	state->membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x2000);
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_audiocpu = machine.device("audiocpu");
@@ -318,7 +318,7 @@ static KONAMI_SETLINES_CALLBACK( blockhl_banking )
 
 	/* bits 0-1 = ROM bank */
 	state->m_rombank = lines & 0x03;
-	memory_set_bank(device->machine(), "bank1", state->m_rombank);
+	state->membank("bank1")->set_entry(state->m_rombank);
 
 	/* bits 3/4 = coin counters */
 	coin_counter_w(device->machine(), 0, lines & 0x08);

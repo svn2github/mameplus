@@ -74,26 +74,24 @@ static MACHINE_RESET( eprom )
  *
  *************************************/
 
-static READ16_HANDLER( special_port1_r )
+READ16_MEMBER(eprom_state::special_port1_r)
 {
-	eprom_state *state = space->machine().driver_data<eprom_state>();
-	int result = input_port_read(space->machine(), "260010");
+	int result = input_port_read(machine(), "260010");
 
-	if (state->m_sound_to_cpu_ready) result ^= 0x0004;
-	if (state->m_cpu_to_sound_ready) result ^= 0x0008;
+	if (m_sound_to_cpu_ready) result ^= 0x0004;
+	if (m_cpu_to_sound_ready) result ^= 0x0008;
 	result ^= 0x0010;
 
 	return result;
 }
 
 
-static READ16_HANDLER( adc_r )
+READ16_MEMBER(eprom_state::adc_r)
 {
-	eprom_state *state = space->machine().driver_data<eprom_state>();
 	static const char *const adcnames[] = { "ADC0", "ADC1", "ADC2", "ADC3" };
-	int result = input_port_read(space->machine(), adcnames[state->m_last_offset & 3]);
+	int result = input_port_read(machine(), adcnames[m_last_offset & 3]);
 
-	state->m_last_offset = offset;
+	m_last_offset = offset;
 	return result;
 }
 
@@ -105,23 +103,22 @@ static READ16_HANDLER( adc_r )
  *
  *************************************/
 
-static WRITE16_HANDLER( eprom_latch_w )
+WRITE16_MEMBER(eprom_state::eprom_latch_w)
 {
-	eprom_state *state = space->machine().driver_data<eprom_state>();
 
-	if (ACCESSING_BITS_0_7 && (space->machine().device("extra") != NULL))
+	if (ACCESSING_BITS_0_7 && (machine().device("extra") != NULL))
 	{
 		/* bit 0: reset extra CPU */
 		if (data & 1)
-			cputag_set_input_line(space->machine(), "extra", INPUT_LINE_RESET, CLEAR_LINE);
+			cputag_set_input_line(machine(), "extra", INPUT_LINE_RESET, CLEAR_LINE);
 		else
-			cputag_set_input_line(space->machine(), "extra", INPUT_LINE_RESET, ASSERT_LINE);
+			cputag_set_input_line(machine(), "extra", INPUT_LINE_RESET, ASSERT_LINE);
 
 		/* bits 1-4: screen intensity */
-		state->m_screen_intensity = (data & 0x1e) >> 1;
+		m_screen_intensity = (data & 0x1e) >> 1;
 
 		/* bit 5: video disable */
-		state->m_video_disable = (data & 0x20);
+		m_video_disable = (data & 0x20);
 	}
 }
 
@@ -133,23 +130,21 @@ static WRITE16_HANDLER( eprom_latch_w )
  *
  *************************************/
 
-static READ16_HANDLER( sync_r )
+READ16_MEMBER(eprom_state::sync_r)
 {
-	eprom_state *state = space->machine().driver_data<eprom_state>();
-	return state->m_sync_data[offset];
+	return m_sync_data[offset];
 }
 
 
-static WRITE16_HANDLER( sync_w )
+WRITE16_MEMBER(eprom_state::sync_w)
 {
-	eprom_state *state = space->machine().driver_data<eprom_state>();
-	int oldword = state->m_sync_data[offset];
+	int oldword = m_sync_data[offset];
 	int newword = oldword;
 	COMBINE_DATA(&newword);
 
-	state->m_sync_data[offset] = newword;
+	m_sync_data[offset] = newword;
 	if ((oldword & 0xff00) != (newword & 0xff00))
-		device_yield(&space->device());
+		device_yield(&space.device());
 }
 
 
@@ -163,24 +158,24 @@ static WRITE16_HANDLER( sync_w )
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, eprom_state )
 	AM_RANGE(0x000000, 0x09ffff) AM_ROM
 	AM_RANGE(0x0e0000, 0x0e0fff) AM_READWRITE_LEGACY(atarigen_eeprom_r, atarigen_eeprom_w) AM_SHARE("eeprom")
-	AM_RANGE(0x16cc00, 0x16cc01) AM_RAM AM_SHARE("share2")
+	AM_RANGE(0x16cc00, 0x16cc01) AM_RAM AM_SHARE("sync_data")
 	AM_RANGE(0x160000, 0x16ffff) AM_RAM AM_SHARE("share1")
 	AM_RANGE(0x1f0000, 0x1fffff) AM_WRITE_LEGACY(atarigen_eeprom_enable_w)
 	AM_RANGE(0x260000, 0x26000f) AM_READ_PORT("260000")
-	AM_RANGE(0x260010, 0x26001f) AM_READ_LEGACY(special_port1_r)
-	AM_RANGE(0x260020, 0x26002f) AM_READ_LEGACY(adc_r)
+	AM_RANGE(0x260010, 0x26001f) AM_READ(special_port1_r)
+	AM_RANGE(0x260020, 0x26002f) AM_READ(adc_r)
 	AM_RANGE(0x260030, 0x260031) AM_READ_LEGACY(atarigen_sound_r)
 	AM_RANGE(0x2e0000, 0x2e0001) AM_WRITE(watchdog_reset16_w)
 	AM_RANGE(0x360000, 0x360001) AM_WRITE_LEGACY(atarigen_video_int_ack_w)
-	AM_RANGE(0x360010, 0x360011) AM_WRITE_LEGACY(eprom_latch_w)
+	AM_RANGE(0x360010, 0x360011) AM_WRITE(eprom_latch_w)
 	AM_RANGE(0x360020, 0x360021) AM_WRITE_LEGACY(atarigen_sound_reset_w)
 	AM_RANGE(0x360030, 0x360031) AM_WRITE_LEGACY(atarigen_sound_w)
 	AM_RANGE(0x3e0000, 0x3e0fff) AM_RAM AM_SHARE("paletteram")
-	AM_RANGE(0x3f0000, 0x3f1fff) AM_WRITE_LEGACY(atarigen_playfield_w) AM_BASE(m_playfield)
+	AM_RANGE(0x3f0000, 0x3f1fff) AM_WRITE_LEGACY(atarigen_playfield_w) AM_SHARE("playfield")
 	AM_RANGE(0x3f2000, 0x3f3fff) AM_READWRITE_LEGACY(atarimo_0_spriteram_r, atarimo_0_spriteram_w)
-	AM_RANGE(0x3f4000, 0x3f4f7f) AM_WRITE_LEGACY(atarigen_alpha_w) AM_BASE(m_alpha)
+	AM_RANGE(0x3f4000, 0x3f4f7f) AM_WRITE_LEGACY(atarigen_alpha_w) AM_SHARE("alpha")
 	AM_RANGE(0x3f4f80, 0x3f4fff) AM_READWRITE_LEGACY(atarimo_0_slipram_r, atarimo_0_slipram_w)
-	AM_RANGE(0x3f8000, 0x3f9fff) AM_WRITE_LEGACY(atarigen_playfield_upper_w) AM_BASE(m_playfield_upper)
+	AM_RANGE(0x3f8000, 0x3f9fff) AM_WRITE_LEGACY(atarigen_playfield_upper_w) AM_SHARE("playfield_upper")
 	AM_RANGE(0x3f0000, 0x3f9fff) AM_RAM
 ADDRESS_MAP_END
 
@@ -188,23 +183,23 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( guts_map, AS_PROGRAM, 16, eprom_state )
 	AM_RANGE(0x000000, 0x09ffff) AM_ROM
 	AM_RANGE(0x0e0000, 0x0e0fff) AM_READWRITE_LEGACY(atarigen_eeprom_r, atarigen_eeprom_w) AM_SHARE("eeprom")
-	AM_RANGE(0x16cc00, 0x16cc01) AM_RAM AM_SHARE("share2")
+	AM_RANGE(0x16cc00, 0x16cc01) AM_RAM AM_SHARE("sync_data")
 	AM_RANGE(0x160000, 0x16ffff) AM_RAM AM_SHARE("share1")
 	AM_RANGE(0x1f0000, 0x1fffff) AM_WRITE_LEGACY(atarigen_eeprom_enable_w)
 	AM_RANGE(0x260000, 0x26000f) AM_READ_PORT("260000")
-	AM_RANGE(0x260010, 0x26001f) AM_READ_LEGACY(special_port1_r)
-	AM_RANGE(0x260020, 0x26002f) AM_READ_LEGACY(adc_r)
+	AM_RANGE(0x260010, 0x26001f) AM_READ(special_port1_r)
+	AM_RANGE(0x260020, 0x26002f) AM_READ(adc_r)
 	AM_RANGE(0x260030, 0x260031) AM_READ_LEGACY(atarigen_sound_r)
 	AM_RANGE(0x2e0000, 0x2e0001) AM_WRITE(watchdog_reset16_w)
 	AM_RANGE(0x360000, 0x360001) AM_WRITE_LEGACY(atarigen_video_int_ack_w)
-//  AM_RANGE(0x360010, 0x360011) AM_WRITE_LEGACY(eprom_latch_w)
+//  AM_RANGE(0x360010, 0x360011) AM_WRITE(eprom_latch_w)
 	AM_RANGE(0x360020, 0x360021) AM_WRITE_LEGACY(atarigen_sound_reset_w)
 	AM_RANGE(0x360030, 0x360031) AM_WRITE_LEGACY(atarigen_sound_w)
 	AM_RANGE(0x3e0000, 0x3e0fff) AM_RAM AM_SHARE("paletteram")
-	AM_RANGE(0xff0000, 0xff1fff) AM_WRITE_LEGACY(atarigen_playfield_upper_w) AM_BASE(m_playfield_upper)
-	AM_RANGE(0xff8000, 0xff9fff) AM_WRITE_LEGACY(atarigen_playfield_w) AM_BASE(m_playfield)
+	AM_RANGE(0xff0000, 0xff1fff) AM_WRITE_LEGACY(atarigen_playfield_upper_w) AM_SHARE("playfield_upper")
+	AM_RANGE(0xff8000, 0xff9fff) AM_WRITE_LEGACY(atarigen_playfield_w) AM_SHARE("playfield")
 	AM_RANGE(0xffa000, 0xffbfff) AM_READWRITE_LEGACY(atarimo_0_spriteram_r, atarimo_0_spriteram_w)
-	AM_RANGE(0xffc000, 0xffcf7f) AM_WRITE_LEGACY(atarigen_alpha_w) AM_BASE(m_alpha)
+	AM_RANGE(0xffc000, 0xffcf7f) AM_WRITE_LEGACY(atarigen_alpha_w) AM_SHARE("alpha")
 	AM_RANGE(0xffcf80, 0xffcfff) AM_READWRITE_LEGACY(atarimo_0_slipram_r, atarimo_0_slipram_w)
 	AM_RANGE(0xff0000, 0xff1fff) AM_RAM
 	AM_RANGE(0xff8000, 0xffffff) AM_RAM
@@ -220,14 +215,14 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( extra_map, AS_PROGRAM, 16, eprom_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-	AM_RANGE(0x16cc00, 0x16cc01) AM_READWRITE_LEGACY(sync_r, sync_w) AM_SHARE("share2") AM_BASE(m_sync_data)
+	AM_RANGE(0x16cc00, 0x16cc01) AM_READWRITE(sync_r, sync_w) AM_SHARE("sync_data")
 	AM_RANGE(0x160000, 0x16ffff) AM_RAM AM_SHARE("share1")
 	AM_RANGE(0x260000, 0x26000f) AM_READ_PORT("260000")
-	AM_RANGE(0x260010, 0x26001f) AM_READ_LEGACY(special_port1_r)
-	AM_RANGE(0x260020, 0x26002f) AM_READ_LEGACY(adc_r)
+	AM_RANGE(0x260010, 0x26001f) AM_READ(special_port1_r)
+	AM_RANGE(0x260020, 0x26002f) AM_READ(adc_r)
 	AM_RANGE(0x260030, 0x260031) AM_READ_LEGACY(atarigen_sound_r)
 	AM_RANGE(0x360000, 0x360001) AM_WRITE_LEGACY(atarigen_video_int_ack_w)
-	AM_RANGE(0x360010, 0x360011) AM_WRITE_LEGACY(eprom_latch_w)
+	AM_RANGE(0x360010, 0x360011) AM_WRITE(eprom_latch_w)
 	AM_RANGE(0x360020, 0x360021) AM_WRITE_LEGACY(atarigen_sound_reset_w)
 	AM_RANGE(0x360030, 0x360031) AM_WRITE_LEGACY(atarigen_sound_w)
 ADDRESS_MAP_END
@@ -728,8 +723,8 @@ static DRIVER_INIT( eprom )
 	atarijsa_init(machine, "260010", 0x0002);
 
 	/* install CPU synchronization handlers */
-	state->m_sync_data = machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x16cc00, 0x16cc01, FUNC(sync_r), FUNC(sync_w));
-	state->m_sync_data = machine.device("extra")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0x16cc00, 0x16cc01, FUNC(sync_r), FUNC(sync_w));
+	state->m_sync_data = machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x16cc00, 0x16cc01, read16_delegate(FUNC(eprom_state::sync_r),state), write16_delegate(FUNC(eprom_state::sync_w),state));
+	state->m_sync_data = machine.device("extra")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x16cc00, 0x16cc01, read16_delegate(FUNC(eprom_state::sync_r),state), write16_delegate(FUNC(eprom_state::sync_w),state));
 }
 
 

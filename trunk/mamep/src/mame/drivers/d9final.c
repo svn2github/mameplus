@@ -28,11 +28,14 @@ class d9final_state : public driver_device
 {
 public:
 	d9final_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_lo_vram(*this, "lo_vram"),
+		m_hi_vram(*this, "hi_vram"),
+		m_cram(*this, "cram"){ }
 
-	UINT8 *m_lo_vram;
-	UINT8 *m_hi_vram;
-	UINT8 *m_cram;
+	required_shared_ptr<UINT8> m_lo_vram;
+	required_shared_ptr<UINT8> m_hi_vram;
+	required_shared_ptr<UINT8> m_cram;
 	tilemap_t *m_sc0_tilemap;
 	DECLARE_WRITE8_MEMBER(sc0_lovram);
 	DECLARE_WRITE8_MEMBER(sc0_hivram);
@@ -89,11 +92,11 @@ WRITE8_MEMBER(d9final_state::sc0_cram)
 
 WRITE8_MEMBER(d9final_state::d9final_bank_w)
 {
-	UINT8 *ROM = machine().region("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 	UINT32 bankaddress;
 
 	bankaddress = 0x10000+(0x4000 * (data & 0x7));
-	memory_set_bankptr(machine(), "bank1", &ROM[bankaddress]);
+	membank("bank1")->set_base(&ROM[bankaddress]);
 }
 
 /* game checks this after three attract cycles, otherwise coin inputs stop to work. */
@@ -109,11 +112,11 @@ static ADDRESS_MAP_START( d9final_map, AS_PROGRAM, 8, d9final_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xc800, 0xcbff) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_split1_w) AM_SHARE("paletteram")
-	AM_RANGE(0xcc00, 0xcfff) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_split2_w) AM_SHARE("paletteram2")
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(sc0_lovram) AM_BASE(m_lo_vram)
-	AM_RANGE(0xd800, 0xdfff) AM_RAM_WRITE(sc0_hivram) AM_BASE(m_hi_vram)
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(sc0_cram) AM_BASE(m_cram)
+	AM_RANGE(0xc800, 0xcbff) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_byte_split_lo_w) AM_SHARE("paletteram")
+	AM_RANGE(0xcc00, 0xcfff) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_byte_split_hi_w) AM_SHARE("paletteram2")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(sc0_lovram) AM_SHARE("lo_vram")
+	AM_RANGE(0xd800, 0xdfff) AM_RAM_WRITE(sc0_hivram) AM_SHARE("hi_vram")
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(sc0_cram) AM_SHARE("cram")
 	AM_RANGE(0xf000, 0xf000) AM_READ(prot_latch_r)
 ADDRESS_MAP_END
 
@@ -270,9 +273,9 @@ GFXDECODE_END
 
 static MACHINE_RESET( d9final )
 {
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
-	memory_set_bankptr(machine, "bank1", &ROM[0x10000]);
+	machine.root_device().membank("bank1")->set_base(&ROM[0x10000]);
 }
 
 static MACHINE_CONFIG_START( d9final, d9final_state )

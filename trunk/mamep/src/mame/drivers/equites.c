@@ -435,7 +435,7 @@ WRITE8_MEMBER(equites_state::equites_c0f8_w)
 
 		case 1: // c0f9: RST75 trigger (written by NMI handler)
 			// Note: solder pad CP3 on the pcb would allow to disable this
-			generic_pulse_irq_line(m_audio_cpu, I8085_RST75_LINE, 1);
+			generic_pulse_irq_line(m_audio_cpu->execute(), I8085_RST75_LINE, 1);
 			break;
 
 		case 2: // c0fa: INTR trigger (written by NMI handler)
@@ -466,7 +466,7 @@ WRITE8_MEMBER(equites_state::equites_c0f8_w)
 
 		case 7:	// c0ff: sound command latch clear
 			// Note: solder pad CP1 on the pcb would allow to disable this
-			soundlatch_clear_w(space, 0, 0);
+			soundlatch_clear_byte_w(space, 0, 0);
 			break;
 	}
 }
@@ -652,10 +652,9 @@ READ16_MEMBER(equites_state::hvoltage_debug_r)
 #endif
 
 
-static CUSTOM_INPUT( gekisou_unknown_status )
+CUSTOM_INPUT_MEMBER(equites_state::gekisou_unknown_status)
 {
-	equites_state *state = field.machine().driver_data<equites_state>();
-	return state->m_unknown_bit;
+	return m_unknown_bit;
 }
 
 WRITE16_MEMBER(equites_state::gekisou_unknown_0_w)
@@ -707,10 +706,10 @@ static ADDRESS_MAP_START( equites_map, AS_PROGRAM, 16, equites_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM	// ROM area is written several times (dev system?)
 	AM_RANGE(0x040000, 0x040fff) AM_RAM AM_SHARE("nvram")	// nvram is for gekisou only
 	AM_RANGE(0x080000, 0x080fff) AM_READWRITE(equites_fg_videoram_r, equites_fg_videoram_w)	// 8-bit
-	AM_RANGE(0x0c0000, 0x0c01ff) AM_RAM_WRITE(equites_bg_videoram_w) AM_BASE(m_bg_videoram)
+	AM_RANGE(0x0c0000, 0x0c01ff) AM_RAM_WRITE(equites_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0x0c0200, 0x0c0fff) AM_RAM
 	AM_RANGE(0x100000, 0x100001) AM_READ(equites_spriteram_kludge_r)
-	AM_RANGE(0x100000, 0x1001ff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x100000, 0x1001ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x140000, 0x1407ff) AM_READWRITE(mcu_r, mcu_w)	// 8-bit
 	AM_RANGE(0x180000, 0x180001) AM_READ_PORT("IN1") AM_WRITE(soundlatch_word_w) // LSB: sound latch
 	AM_RANGE(0x184000, 0x184001) AM_WRITE(equites_flip0_w)
@@ -728,7 +727,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( splndrbt_map, AS_PROGRAM, 16, equites_state )
 	AM_RANGE(0x000000, 0x00ffff) AM_ROM
-	AM_RANGE(0x040000, 0x040fff) AM_RAM AM_BASE(m_workram) // work RAM
+	AM_RANGE(0x040000, 0x040fff) AM_RAM AM_SHARE("workram") // work RAM
 	AM_RANGE(0x080000, 0x080001) AM_READ_PORT("IN0") // joyport [2211]
 	AM_RANGE(0x0c0000, 0x0c0001) AM_READ_PORT("IN1") AM_WRITE(splndrbt_flip0_w) // [MMLL] MM: bg color register, LL: normal screen
 	AM_RANGE(0x0c4000, 0x0c4001) AM_WRITE(mcu_halt_clear_w) // 8404 control port1
@@ -743,15 +742,15 @@ static ADDRESS_MAP_START( splndrbt_map, AS_PROGRAM, 16, equites_state )
 	AM_RANGE(0x1c0000, 0x1c0001) AM_WRITE(splndrbt_bg_scrolly_w)
 	AM_RANGE(0x180000, 0x1807ff) AM_READWRITE(mcu_r, mcu_w)	// 8-bit
 	AM_RANGE(0x200000, 0x200fff) AM_MIRROR(0x1000) AM_READWRITE(equites_fg_videoram_r, equites_fg_videoram_w)	// 8-bit
-	AM_RANGE(0x400000, 0x4007ff) AM_RAM_WRITE(equites_bg_videoram_w) AM_BASE(m_bg_videoram)
+	AM_RANGE(0x400000, 0x4007ff) AM_RAM_WRITE(equites_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0x400800, 0x400fff) AM_RAM
-	AM_RANGE(0x600000, 0x6000ff) AM_RAM AM_BASE(m_spriteram)	// sprite RAM 0,1
-	AM_RANGE(0x600100, 0x6001ff) AM_RAM AM_BASE(m_spriteram_2)	// sprite RAM 2 (8-bit)
+	AM_RANGE(0x600000, 0x6000ff) AM_RAM AM_SHARE("spriteram")	// sprite RAM 0,1
+	AM_RANGE(0x600100, 0x6001ff) AM_RAM AM_SHARE("spriteram_2")	// sprite RAM 2 (8-bit)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, equites_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
-	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_r)
+	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xc080, 0xc08d) AM_DEVWRITE_LEGACY("msm", msm5232_w)
 	AM_RANGE(0xc0a0, 0xc0a1) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_address_w)
 	AM_RANGE(0xc0b0, 0xc0b0) AM_WRITENOP // n.c.
@@ -768,7 +767,7 @@ ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( mcu_map, AS_PROGRAM, 8, equites_state )
-	AM_RANGE(0x0000, 0x03ff) AM_RAM AM_BASE(m_mcu_ram) /* main CPU shared RAM */
+	AM_RANGE(0x0000, 0x03ff) AM_RAM AM_SHARE("mcu_ram") /* main CPU shared RAM */
 ADDRESS_MAP_END
 
 /******************************************************************************/
@@ -850,7 +849,7 @@ static INPUT_PORTS_START( gekisou )
 	PORT_BIT( 0x1000, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x2000, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_UNKNOWN )
-	PORT_BIT( 0x8000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(gekisou_unknown_status, NULL)
+	PORT_BIT( 0x8000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, equites_state,gekisou_unknown_status, NULL)
 
 	/* this is actually a variable resistor */
 	PORT_START(FRQ_ADJUSTER_TAG)
@@ -1225,7 +1224,7 @@ static MACHINE_RESET( equites )
 {
 	equites_state *state = machine.driver_data<equites_state>();
 
-	flip_screen_set(machine, 0);
+	state->flip_screen_set(0);
 
 	state->m_fg_char_bank = 0;
 	state->m_bgcolor = 0;
@@ -1858,7 +1857,7 @@ ROM_END
 
 static void unpack_block( running_machine &machine, const char *region, int offset, int size )
 {
-	UINT8 *rom = machine.region(region)->base();
+	UINT8 *rom = machine.root_device().memregion(region)->base();
 	int i;
 
 	for (i = 0; i < size; ++i)

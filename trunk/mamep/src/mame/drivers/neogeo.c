@@ -377,9 +377,8 @@ static void select_controller( running_machine &machine, UINT8 data )
 }
 
 
-static CUSTOM_INPUT( multiplexed_controller_r )
+CUSTOM_INPUT_MEMBER(neogeo_state::multiplexed_controller_r)
 {
-	neogeo_state *state = field.machine().driver_data<neogeo_state>();
 	int port = (FPTR)param;
 
 	static const char *const cntrl[2][2] =
@@ -387,13 +386,12 @@ static CUSTOM_INPUT( multiplexed_controller_r )
 			{ "IN0-0", "IN0-1" }, { "IN1-0", "IN1-1" }
 		};
 
-	return input_port_read_safe(field.machine(), cntrl[port][state->m_controller_select & 0x01], 0x00);
+	return input_port_read_safe(machine(), cntrl[port][m_controller_select & 0x01], 0x00);
 }
 
 #if 1 // this needs to be added dynamically somehow
-static CUSTOM_INPUT( mahjong_controller_r )
+CUSTOM_INPUT_MEMBER(neogeo_state::mahjong_controller_r)
 {
-	neogeo_state *state = field.machine().driver_data<neogeo_state>();
 	UINT32 ret;
 
 /*
@@ -403,14 +401,14 @@ cpu #0 (PC=00C18D54): unmapped memory word write to 00380000 = 0024 & 00FF
 cpu #0 (PC=00C18D6C): unmapped memory word write to 00380000 = 0009 & 00FF
 cpu #0 (PC=00C18C40): unmapped memory word write to 00380000 = 0000 & 00FF
 */
-	switch (state->m_controller_select)
+	switch (m_controller_select)
 	{
 	default:
 	case 0x00: ret = 0x0000; break; /* nothing? */
-	case 0x09: ret = input_port_read(field.machine(), "MAHJONG1"); break;
-	case 0x12: ret = input_port_read(field.machine(), "MAHJONG2"); break;
-	case 0x1b: ret = input_port_read(field.machine(), "MAHJONG3"); break; /* player 1 normal inputs? */
-	case 0x24: ret = input_port_read(field.machine(), "MAHJONG4"); break;
+	case 0x09: ret = input_port_read(machine(), "MAHJONG1"); break;
+	case 0x12: ret = input_port_read(machine(), "MAHJONG2"); break;
+	case 0x1b: ret = input_port_read(machine(), "MAHJONG3"); break; /* player 1 normal inputs? */
+	case 0x24: ret = input_port_read(machine(), "MAHJONG4"); break;
 	}
 
 	return ret;
@@ -472,10 +470,9 @@ READ16_MEMBER(neogeo_state::neogeo_unmapped_r)
  *
  *************************************/
 
-static CUSTOM_INPUT( get_calendar_status )
+CUSTOM_INPUT_MEMBER(neogeo_state::get_calendar_status)
 {
-	neogeo_state *state = field.machine().driver_data<neogeo_state>();
-	return (upd4990a_databit_r(state->m_upd4990a, 0) << 1) | upd4990a_testbit_r(state->m_upd4990a, 0);
+	return (upd4990a_databit_r(m_upd4990a, 0) << 1) | upd4990a_testbit_r(m_upd4990a, 0);
 }
 
 
@@ -511,11 +508,11 @@ WRITE16_MEMBER(neogeo_state::save_ram_w)
 #define MEMCARD_SIZE	0x0800
 
 
-static CUSTOM_INPUT( get_memcard_status )
+CUSTOM_INPUT_MEMBER(neogeo_state::get_memcard_status)
 {
 	/* D0 and D1 are memcard presence indicators, D2 indicates memcard
        write protect status (we are always write enabled) */
-	return (memcard_present(field.machine()) == -1) ? 0x07 : 0x00;
+	return (memcard_present(machine()) == -1) ? 0x07 : 0x00;
 }
 
 
@@ -574,7 +571,7 @@ WRITE16_MEMBER(neogeo_state::audio_command_w)
 	/* accessing the LSB only is not mapped */
 	if (mem_mask != 0x00ff)
 	{
-		soundlatch_w(space, 0, data >> 8);
+		soundlatch_byte_w(space, 0, data >> 8);
 
 		audio_cpu_assert_nmi(machine());
 
@@ -588,7 +585,7 @@ WRITE16_MEMBER(neogeo_state::audio_command_w)
 
 READ8_MEMBER(neogeo_state::audio_command_r)
 {
-	UINT8 ret = soundlatch_r(space, 0);
+	UINT8 ret = soundlatch_byte_r(space, 0);
 
 	if (LOG_CPU_COMM) logerror(" AUD CPU PC   %04x: audio_command_r %02x\n", cpu_get_pc(&space.device()), ret);
 
@@ -608,12 +605,11 @@ WRITE8_MEMBER(neogeo_state::audio_result_w)
 }
 
 
-static CUSTOM_INPUT( get_audio_result )
+CUSTOM_INPUT_MEMBER(neogeo_state::get_audio_result)
 {
-	neogeo_state *state = field.machine().driver_data<neogeo_state>();
-	UINT32 ret = state->m_audio_result;
+	UINT32 ret = m_audio_result;
 
-//  if (LOG_CPU_COMM) logerror("MAIN CPU PC %06x: audio_result_r %02x\n", cpu_get_pc(field.machine().device("maincpu")), ret);
+//  if (LOG_CPU_COMM) logerror("MAIN CPU PC %06x: audio_result_r %02x\n", cpu_get_pc(machine().device("maincpu")), ret);
 
 	return ret;
 }
@@ -629,7 +625,7 @@ static CUSTOM_INPUT( get_audio_result )
 static void _set_main_cpu_vector_table_source( running_machine &machine )
 {
 	neogeo_state *state = machine.driver_data<neogeo_state>();
-	memory_set_bank(machine, NEOGEO_BANK_VECTORS, state->m_main_cpu_vector_table_source);
+	state->membank(NEOGEO_BANK_VECTORS)->set_entry(state->m_main_cpu_vector_table_source);
 }
 
 
@@ -645,7 +641,7 @@ static void set_main_cpu_vector_table_source( running_machine &machine, UINT8 da
 static void _set_main_cpu_bank_address( running_machine &machine )
 {
 	neogeo_state *state = machine.driver_data<neogeo_state>();
-	memory_set_bankptr(machine, NEOGEO_BANK_CARTRIDGE, &machine.region("maincpu")->base()[state->m_main_cpu_bank_address]);
+	state->membank(NEOGEO_BANK_CARTRIDGE)->set_base(&state->memregion("maincpu")->base()[state->m_main_cpu_bank_address]);
 }
 
 
@@ -664,7 +660,7 @@ void neogeo_set_main_cpu_bank_address( address_space *space, UINT32 bank_address
 WRITE16_MEMBER(neogeo_state::main_cpu_bank_select_w)
 {
 	UINT32 bank_address;
-	UINT32 len = machine().region("maincpu")->bytes();
+	UINT32 len = memregion("maincpu")->bytes();
 
 	if ((len <= 0x100000) && (data & 0x07))
 		logerror("PC %06x: warning: bankswitch to %02x but no banks available\n", cpu_get_pc(&space.device()), data);
@@ -688,11 +684,11 @@ static void main_cpu_banking_init( running_machine &machine )
 	address_space *mainspace = machine.device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* create vector banks */
-	memory_configure_bank(machine, NEOGEO_BANK_VECTORS, 0, 1, machine.region("mainbios")->base(), 0);
-	memory_configure_bank(machine, NEOGEO_BANK_VECTORS, 1, 1, machine.region("maincpu")->base(), 0);
+	machine.root_device().membank(NEOGEO_BANK_VECTORS)->configure_entry(0, machine.root_device().memregion("mainbios")->base());
+	machine.root_device().membank(NEOGEO_BANK_VECTORS)->configure_entry(1, machine.root_device().memregion("maincpu")->base());
 
 	/* set initial main CPU bank */
-	if (machine.region("maincpu")->bytes() > 0x100000)
+	if (machine.root_device().memregion("maincpu")->bytes() > 0x100000)
 		neogeo_set_main_cpu_bank_address(mainspace, 0x100000);
 	else
 		neogeo_set_main_cpu_bank_address(mainspace, 0x000000);
@@ -712,7 +708,7 @@ static void set_audio_cpu_banking( running_machine &machine )
 	int region;
 
 	for (region = 0; region < 4; region++)
-		memory_set_bank(machine, NEOGEO_BANK_AUDIO_CPU_CART_BANK + region, state->m_audio_cpu_banks[region]);
+		state->membank(NEOGEO_BANK_AUDIO_CPU_CART_BANK + region)->set_entry(state->m_audio_cpu_banks[region]);
 }
 
 
@@ -764,10 +760,10 @@ static void _set_audio_cpu_rom_source( address_space *space )
 {
 	neogeo_state *state = space->machine().driver_data<neogeo_state>();
 
-/*  if (!machine.region("audiobios")->base())   */
+/*  if (!state->memregion("audiobios")->base())   */
 		state->m_audio_cpu_rom_source = 1;
 
-	memory_set_bank(space->machine(), NEOGEO_BANK_AUDIO_CPU_MAIN_BANK, state->m_audio_cpu_rom_source);
+	state->membank(NEOGEO_BANK_AUDIO_CPU_MAIN_BANK)->set_entry(state->m_audio_cpu_rom_source);
 
 	/* reset CPU if the source changed -- this is a guess */
 	if (state->m_audio_cpu_rom_source != state->m_audio_cpu_rom_source_last)
@@ -799,20 +795,20 @@ static void audio_cpu_banking_init( running_machine &machine )
 	UINT32 address_mask;
 
 	/* audio bios/cartridge selection */
-	if (machine.region("audiobios")->base())
-		memory_configure_bank(machine, NEOGEO_BANK_AUDIO_CPU_MAIN_BANK, 0, 1, machine.region("audiobios")->base(), 0);
-	memory_configure_bank(machine, NEOGEO_BANK_AUDIO_CPU_MAIN_BANK, 1, 1, machine.region("audiocpu")->base(), 0);
+	if (machine.root_device().memregion("audiobios")->base())
+		state->membank(NEOGEO_BANK_AUDIO_CPU_MAIN_BANK)->configure_entry(0, machine.root_device().memregion("audiobios")->base());
+	state->membank(NEOGEO_BANK_AUDIO_CPU_MAIN_BANK)->configure_entry(1, machine.root_device().memregion("audiocpu")->base());
 
 	/* audio banking */
-	address_mask = machine.region("audiocpu")->bytes() - 0x10000 - 1;
+	address_mask = machine.root_device().memregion("audiocpu")->bytes() - 0x10000 - 1;
 
-	rgn = machine.region("audiocpu")->base();
+	rgn = state->memregion("audiocpu")->base();
 	for (region = 0; region < 4; region++)
 	{
 		for (bank = 0; bank < 0x100; bank++)
 		{
 			UINT32 bank_address = 0x10000 + (((bank << (11 + region)) & 0x3ffff) & address_mask);
-			memory_configure_bank(machine, NEOGEO_BANK_AUDIO_CPU_CART_BANK + region, bank, 1, &rgn[bank_address], 0);
+			state->membank(NEOGEO_BANK_AUDIO_CPU_CART_BANK + region)->configure_entry(bank, &rgn[bank_address]);
 		}
 	}
 
@@ -994,7 +990,7 @@ static MACHINE_START( neogeo )
 	machine.device<nvram_device>("saveram")->set_base(save_ram, 0x10000);
 
 	/* set the BIOS bank */
-	memory_set_bankptr(machine, NEOGEO_BANK_BIOS, machine.region("mainbios")->base());
+	state->membank(NEOGEO_BANK_BIOS)->set_base(state->memregion("mainbios")->base());
 
 	/* set the initial main CPU bank */
 	main_cpu_banking_init(machine);
@@ -1230,7 +1226,7 @@ static const ym2610_interface ym2610_config =
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Next Game") PORT_CODE(KEYCODE_7)		\
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_START2 )   												\
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Previous Game") PORT_CODE(KEYCODE_8)	\
-	PORT_BIT( 0x7000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(get_memcard_status, NULL)			\
+	PORT_BIT( 0x7000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, neogeo_state,get_memcard_status, NULL)			\
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* In AES 'mode' nitd, kof2000, sengoku3, matrim and mslug5 check if this is ACTIVE_HIGH */
 
 
@@ -1242,8 +1238,8 @@ static const ym2610_interface ym2610_config =
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms; if ACTIVE_HIGH + IN4 bit 6 ACTIVE_HIGH = AES 'mode' */	\
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN ) /* having this ACTIVE_HIGH causes you to start with 2 credits using USA bios roms; if ACTIVE_HIGH + IN4 bit 6 ACTIVE_HIGH = AES 'mode' */	\
 	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_SPECIAL ) /* what is this? When ACTIVE_HIGH + IN4 bit 6 ACTIVE_LOW MVS-4 slot is detected */	\
-	PORT_BIT( 0x00c0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(get_calendar_status, NULL)			\
-	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(get_audio_result, NULL)
+	PORT_BIT( 0x00c0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, neogeo_state,get_calendar_status, NULL)			\
+	PORT_BIT( 0xff00, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, neogeo_state,get_audio_result, NULL)
 
 
 #define STANDARD_IN4																			\
@@ -1286,63 +1282,63 @@ DEVICE_IMAGE_LOAD( neo_cartridge )
 	{
 		// create memory regions
 		size = image.get_software_region_length("maincpu");
-		image.device().machine().region_free(":maincpu");
-		image.device().machine().region_alloc(":maincpu",size, 2, ENDIANNESS_BIG);
-		memcpy(image.device().machine().region("maincpu")->base(),image.get_software_region("maincpu"),size);
+		image.device().machine().memory().region_free(":maincpu");
+		image.device().machine().memory().region_alloc(":maincpu",size, 2, ENDIANNESS_BIG);
+		memcpy(image.device().machine().root_device().memregion("maincpu")->base(),image.get_software_region("maincpu"),size);
 
 		// for whatever reason (intentional, or design flaw) software loaded via software lists is swapped in endianess vs. the standard ROM loading, regardless of the above.  Swap it to keep consistency
 		for (int i=0; i<size/2;i++)
 		{
-			UINT16* ROM = (UINT16*)image.device().machine().region("maincpu")->base();
+			UINT16* ROM = (UINT16*)image.device().machine().root_device().memregion("maincpu")->base();
 			ROM[i] = ((ROM[i]&0xff00)>>8) | ((ROM[i]&0x00ff)<<8);
 		}
 
 		size = image.get_software_region_length("fixed");
-		image.device().machine().region_free(":fixed");
-		image.device().machine().region_alloc(":fixed",size,1, ENDIANNESS_LITTLE);
-		memcpy(image.device().machine().region("fixed")->base(),image.get_software_region("fixed"),size);
+		image.device().machine().memory().region_free(":fixed");
+		image.device().machine().memory().region_alloc(":fixed",size,1, ENDIANNESS_LITTLE);
+		memcpy(image.device().machine().root_device().memregion("fixed")->base(),image.get_software_region("fixed"),size);
 
 		if(image.get_software_region("audiocpu") != NULL)
 		{
 			size = image.get_software_region_length("audiocpu");
-			image.device().machine().region_free(":audiocpu");
-			image.device().machine().region_alloc(":audiocpu",size+0x10000,1, ENDIANNESS_LITTLE);
-			memcpy(image.device().machine().region("audiocpu")->base(),image.get_software_region("audiocpu"),size);
-			memcpy(image.device().machine().region("audiocpu")->base()+0x10000,image.get_software_region("audiocpu"),size); // avoid reloading in XML, should just improve banking instead tho?
+			image.device().machine().memory().region_free(":audiocpu");
+			image.device().machine().memory().region_alloc(":audiocpu",size+0x10000,1, ENDIANNESS_LITTLE);
+			memcpy(image.device().machine().root_device().memregion("audiocpu")->base(),image.get_software_region("audiocpu"),size);
+			memcpy(image.device().machine().root_device().memregion("audiocpu")->base()+0x10000,image.get_software_region("audiocpu"),size); // avoid reloading in XML, should just improve banking instead tho?
 		}
 
 
 		size = image.get_software_region_length("ymsnd");
-		image.device().machine().region_free(":ymsnd");
-		image.device().machine().region_alloc(":ymsnd",size,1, ENDIANNESS_LITTLE);
-		memcpy(image.device().machine().region("ymsnd")->base(),image.get_software_region("ymsnd"),size);
+		image.device().machine().memory().region_free(":ymsnd");
+		image.device().machine().memory().region_alloc(":ymsnd",size,1, ENDIANNESS_LITTLE);
+		memcpy(image.device().machine().root_device().memregion("ymsnd")->base(),image.get_software_region("ymsnd"),size);
 		if(image.get_software_region("ymsnd.deltat") != NULL)
 		{
 			size = image.get_software_region_length("ymsnd.deltat");
-			image.device().machine().region_free(":ymsnd.deltat");
-			image.device().machine().region_alloc(":ymsnd.deltat",size,1, ENDIANNESS_LITTLE);
-			memcpy(image.device().machine().region("ymsnd.deltat")->base(),image.get_software_region("ymsnd.deltat"),size);
+			image.device().machine().memory().region_free(":ymsnd.deltat");
+			image.device().machine().memory().region_alloc(":ymsnd.deltat",size,1, ENDIANNESS_LITTLE);
+			memcpy(image.device().machine().root_device().memregion("ymsnd.deltat")->base(),image.get_software_region("ymsnd.deltat"),size);
 		}
 		else
-			image.device().machine().region_free(":ymsnd.deltat");  // removing the region will fix sound glitches in non-Delta-T games
+			image.device().machine().memory().region_free(":ymsnd.deltat");  // removing the region will fix sound glitches in non-Delta-T games
 		ym->reset();
 		size = image.get_software_region_length("sprites");
-		image.device().machine().region_free(":sprites");
-		image.device().machine().region_alloc(":sprites",size,1, ENDIANNESS_LITTLE);
-		memcpy(image.device().machine().region("sprites")->base(),image.get_software_region("sprites"),size);
+		image.device().machine().memory().region_free(":sprites");
+		image.device().machine().memory().region_alloc(":sprites",size,1, ENDIANNESS_LITTLE);
+		memcpy(image.device().machine().root_device().memregion("sprites")->base(),image.get_software_region("sprites"),size);
 		if(image.get_software_region("audiocrypt") != NULL)  // encrypted Z80 code
 		{
 			size = image.get_software_region_length("audiocrypt");
-			image.device().machine().region_alloc(":audiocrypt",size,1, ENDIANNESS_LITTLE);
-			memcpy(image.device().machine().region("audiocrypt")->base(),image.get_software_region("audiocrypt"),size);
+			image.device().machine().memory().region_alloc(":audiocrypt",size,1, ENDIANNESS_LITTLE);
+			memcpy(image.device().machine().root_device().memregion("audiocrypt")->base(),image.get_software_region("audiocrypt"),size);
 			// allocate the audiocpu region to decrypt data into
-			image.device().machine().region_free(":audiocpu");
-			image.device().machine().region_alloc(":audiocpu",size+0x10000,1, ENDIANNESS_LITTLE);
+			image.device().machine().memory().region_free(":audiocpu");
+			image.device().machine().memory().region_alloc(":audiocpu",size+0x10000,1, ENDIANNESS_LITTLE);
 		}
 
 		// setup cartridge ROM area
 		image.device().machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x000080,0x0fffff,"cart_rom");
-		memory_set_bankptr(image.device().machine(),"cart_rom",&image.device().machine().region("maincpu")->base()[0x80]);
+		image.device().machine().root_device().membank("cart_rom")->set_base(&image.device().machine().root_device().memregion("maincpu")->base()[0x80]);
 
 		// handle possible protection
 		mvs_install_protection(image);

@@ -347,7 +347,7 @@ WRITE16_MEMBER(rbisland_state::jumping_sound_w)
 static ADDRESS_MAP_START( rbisland_map, AS_PROGRAM, 16, rbisland_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x10c000, 0x10ffff) AM_RAM				/* main RAM */
-	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x201000, 0x203fff) AM_RAM				/* r/w in initial checks */
 	AM_RANGE(0x390000, 0x390003) AM_READ_PORT("DSWA")
 	AM_RANGE(0x3a0000, 0x3a0001) AM_WRITE(rbisland_spritectrl_w)
@@ -368,7 +368,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( jumping_map, AS_PROGRAM, 16, rbisland_state )
 	AM_RANGE(0x000000, 0x09ffff) AM_ROM
 	AM_RANGE(0x10c000, 0x10ffff) AM_RAM				/* main RAM */
-	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x200000, 0x200fff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x201000, 0x203fff) AM_RAM				/* r/w in initial checks */
 	AM_RANGE(0x400000, 0x400001) AM_READ_PORT("DSWA")
 	AM_RANGE(0x400002, 0x400003) AM_READ_PORT("DSWB")
@@ -379,7 +379,7 @@ static ADDRESS_MAP_START( jumping_map, AS_PROGRAM, 16, rbisland_state )
 	AM_RANGE(0x400006, 0x400007) AM_WRITE(jumping_sound_w)
 	AM_RANGE(0x420000, 0x420001) AM_READNOP			/* read, but result not used */
 	AM_RANGE(0x430000, 0x430003) AM_DEVWRITE_LEGACY("pc080sn", pc080sn_yscroll_word_w)
-	AM_RANGE(0x440000, 0x4407ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x440000, 0x4407ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x800000, 0x80ffff) AM_WRITENOP		/* original c-chip location (not used) */
 	AM_RANGE(0xc00000, 0xc0ffff) AM_DEVREADWRITE_LEGACY("pc080sn", pc080sn_word_r, pc080sn_word_w)
 	AM_RANGE(0xc20000, 0xc20003) AM_WRITENOP		/* seems it is a leftover from rbisland: scroll y written here too */
@@ -397,7 +397,7 @@ ADDRESS_MAP_END
 
 static WRITE8_DEVICE_HANDLER( bankswitch_w )
 {
-	memory_set_bank(device->machine(), "bank1", data & 3);
+	device->machine().root_device().membank("bank1")->set_entry(data & 3);
 }
 
 READ8_MEMBER(rbisland_state::jumping_latch_r)
@@ -631,8 +631,8 @@ static void irqhandler( device_t *device, int irq )
 
 static const ym2151_interface ym2151_config =
 {
-	irqhandler,
-	bankswitch_w
+	DEVCB_LINE(irqhandler),
+	DEVCB_HANDLER(bankswitch_w)
 };
 
 
@@ -875,18 +875,18 @@ ROM_END
 
 static DRIVER_INIT( rbisland )
 {
-	UINT8 *ROM = machine.region("audiocpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("audiocpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 4, &ROM[0xc000], 0x4000);
+	machine.root_device().membank("bank1")->configure_entries(0, 4, &ROM[0xc000], 0x4000);
 
 	rbisland_cchip_init(machine, 0);
 }
 
 static DRIVER_INIT( rbislande )
 {
-	UINT8 *ROM = machine.region("audiocpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("audiocpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 4, &ROM[0xc000], 0x4000);
+	machine.root_device().membank("bank1")->configure_entries(0, 4, &ROM[0xc000], 0x4000);
 
 	rbisland_cchip_init(machine, 1);
 }

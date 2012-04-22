@@ -132,10 +132,9 @@ e000 - e7ff        R/W      Work RAM
  *************************************/
 
 
-static CUSTOM_INPUT( ninjakun_io_A002_ctrl_r )
+CUSTOM_INPUT_MEMBER(nova2001_state::ninjakun_io_A002_ctrl_r)
 {
-	nova2001_state *state = field.machine().driver_data<nova2001_state>();
-	return state->m_ninjakun_io_a002_ctrl;
+	return m_ninjakun_io_a002_ctrl;
 }
 
 WRITE8_MEMBER(nova2001_state::ninjakun_cpu1_io_A002_w)
@@ -175,9 +174,9 @@ static MACHINE_START( ninjakun )
 
 static ADDRESS_MAP_START( nova2001_map, AS_PROGRAM, 8, nova2001_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0xa000, 0xa7ff) AM_RAM_WRITE(nova2001_fg_videoram_w) AM_BASE(m_fg_videoram)
-	AM_RANGE(0xa800, 0xafff) AM_RAM_WRITE(nova2001_bg_videoram_w) AM_BASE(m_bg_videoram)
-	AM_RANGE(0xb000, 0xb7ff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0xa000, 0xa7ff) AM_RAM_WRITE(nova2001_fg_videoram_w) AM_SHARE("fg_videoram")
+	AM_RANGE(0xa800, 0xafff) AM_RAM_WRITE(nova2001_bg_videoram_w) AM_SHARE("bg_videoram")
+	AM_RANGE(0xb000, 0xb7ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xb800, 0xbfff) AM_WRITE(nova2001_flipscreen_w)
 	AM_RANGE(0xc000, 0xc000) AM_DEVREADWRITE_LEGACY("ay1", ay8910_r, ay8910_data_w)
 	AM_RANGE(0xc001, 0xc001) AM_DEVREADWRITE_LEGACY("ay2", ay8910_r, ay8910_data_w)
@@ -202,10 +201,10 @@ static ADDRESS_MAP_START( ninjakun_cpu1_map, AS_PROGRAM, 8, nova2001_state )
 	AM_RANGE(0xa001, 0xa001) AM_READ_PORT("IN1")
 	AM_RANGE(0xa002, 0xa002) AM_READ_PORT("IN2") AM_WRITE(ninjakun_cpu1_io_A002_w)
 	AM_RANGE(0xa003, 0xa003) AM_WRITE(pkunwar_flipscreen_w)
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE(nova2001_fg_videoram_w) AM_BASE(m_fg_videoram) AM_SHARE("share1")
-	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(ninjakun_bg_videoram_r, ninjakun_bg_videoram_w) AM_BASE(m_bg_videoram) AM_SHARE("share2")
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_BASE(m_spriteram) AM_SHARE("share3")
-	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE(ninjakun_paletteram_w) AM_SHARE("paletteram") AM_SHARE("share4")
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE(nova2001_fg_videoram_w) AM_SHARE("fg_videoram")
+	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(ninjakun_bg_videoram_r, ninjakun_bg_videoram_w) AM_SHARE("bg_videoram")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE(ninjakun_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0xe000, 0xe3ff) AM_RAM AM_SHARE("share5")
 	AM_RANGE(0xe400, 0xe7ff) AM_RAM AM_SHARE("share6")
 ADDRESS_MAP_END
@@ -221,10 +220,10 @@ static ADDRESS_MAP_START( ninjakun_cpu2_map, AS_PROGRAM, 8, nova2001_state )
 	AM_RANGE(0xa001, 0xa001) AM_READ_PORT("IN1")
 	AM_RANGE(0xa002, 0xa002) AM_READ_PORT("IN2") AM_WRITE(ninjakun_cpu2_io_A002_w)
 	AM_RANGE(0xa003, 0xa003) AM_WRITE(nova2001_flipscreen_w)
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE(nova2001_fg_videoram_w) AM_SHARE("share1")
-	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(ninjakun_bg_videoram_r, ninjakun_bg_videoram_w) AM_SHARE("share2")
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE(nova2001_fg_videoram_w) AM_SHARE("fg_videoram")
+	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(ninjakun_bg_videoram_r, ninjakun_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("share3")
-	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE(ninjakun_paletteram_w) AM_SHARE("share4")
+	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE(ninjakun_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0xe000, 0xe3ff) AM_RAM AM_SHARE("share6") /* swapped wrt CPU1 */
 	AM_RANGE(0xe400, 0xe7ff) AM_RAM AM_SHARE("share5") /* swapped wrt CPU1 */
 ADDRESS_MAP_END
@@ -232,8 +231,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( pkunwar_map, AS_PROGRAM, 8, nova2001_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_BASE(m_spriteram)
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(nova2001_bg_videoram_w) AM_BASE(m_bg_videoram)
+	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(nova2001_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xa000, 0xa001) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w)
 	AM_RANGE(0xa001, 0xa001) AM_DEVREAD_LEGACY("ay1", ay8910_r)
 	AM_RANGE(0xa002, 0xa003) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
@@ -250,9 +249,9 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( raiders5_cpu1_map, AS_PROGRAM, 8, nova2001_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_BASE(m_spriteram)
-	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(nova2001_fg_videoram_w) AM_BASE(m_fg_videoram)
-	AM_RANGE(0x9000, 0x97ff) AM_READWRITE(ninjakun_bg_videoram_r, ninjakun_bg_videoram_w) AM_BASE(m_bg_videoram)
+	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x8800, 0x8fff) AM_RAM_WRITE(nova2001_fg_videoram_w) AM_SHARE("fg_videoram")
+	AM_RANGE(0x9000, 0x97ff) AM_READWRITE(ninjakun_bg_videoram_r, ninjakun_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xa000, 0xa000) AM_WRITE(nova2001_scroll_x_w)
 	AM_RANGE(0xa001, 0xa001) AM_WRITE(nova2001_scroll_y_w)
 	AM_RANGE(0xa002, 0xa002) AM_WRITE(pkunwar_flipscreen_w)
@@ -261,7 +260,7 @@ static ADDRESS_MAP_START( raiders5_cpu1_map, AS_PROGRAM, 8, nova2001_state )
 	AM_RANGE(0xc002, 0xc003) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
 	AM_RANGE(0xc003, 0xc003) AM_DEVREAD_LEGACY("ay2", ay8910_r)
 	AM_RANGE(0xd000, 0xd1ff) AM_RAM_WRITE(ninjakun_paletteram_w) AM_SHARE("paletteram")
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("share1")
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("fg_videoram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( raiders5_cpu2_map, AS_PROGRAM, 8, nova2001_state )
@@ -271,7 +270,7 @@ static ADDRESS_MAP_START( raiders5_cpu2_map, AS_PROGRAM, 8, nova2001_state )
 	AM_RANGE(0x8002, 0x8003) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
 	AM_RANGE(0x8003, 0x8003) AM_DEVREAD_LEGACY("ay2", ay8910_r)
 	AM_RANGE(0x9000, 0x9000) AM_READNOP /* unknown */
-	AM_RANGE(0xa000, 0xa7ff) AM_RAM AM_SHARE("share1")
+	AM_RANGE(0xa000, 0xa7ff) AM_RAM AM_SHARE("fg_videoram")
 	AM_RANGE(0xc000, 0xc000) AM_READNOP /* unknown */
 	AM_RANGE(0xc800, 0xc800) AM_READNOP /* unknown */
 	AM_RANGE(0xd000, 0xd000) AM_READNOP /* unknown */
@@ -383,7 +382,7 @@ static INPUT_PORTS_START( ninjakun )
 
 	PORT_START("IN2")	/* 0xa002 */
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_VBLANK )
-	PORT_BIT( 0x0c, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(ninjakun_io_A002_ctrl_r, NULL)
+	PORT_BIT( 0x0c, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, nova2001_state,ninjakun_io_A002_ctrl_r, NULL)
 
 	PORT_START("DSW1") // printed "SW 2"
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Cabinet ) )  PORT_DIPLOCATION("SW2:1")
@@ -981,9 +980,9 @@ This code is overly generic because it is used for several games in ninjakd2.c
 
 static void lineswap_gfx_roms(running_machine &machine, const char *region, const int bit)
 {
-	const int length = machine.region(region)->bytes();
+	const int length = machine.root_device().memregion(region)->bytes();
 
-	UINT8* const src = machine.region(region)->base();
+	UINT8* const src = machine.root_device().memregion(region)->base();
 
 	UINT8* const temp = auto_alloc_array(machine, UINT8, length);
 

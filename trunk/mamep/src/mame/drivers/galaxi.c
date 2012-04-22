@@ -49,14 +49,19 @@ class galaxi_state : public driver_device
 {
 public:
 	galaxi_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_bg1_ram(*this, "bg1_ram"),
+		m_bg2_ram(*this, "bg2_ram"),
+		m_bg3_ram(*this, "bg3_ram"),
+		m_bg4_ram(*this, "bg4_ram"),
+		m_fg_ram(*this, "fg_ram"){ }
 
 	/* memory pointers */
-	UINT16 *  m_bg1_ram;
-	UINT16 *  m_bg2_ram;
-	UINT16 *  m_bg3_ram;
-	UINT16 *  m_bg4_ram;
-	UINT16 *  m_fg_ram;
+	required_shared_ptr<UINT16> m_bg1_ram;
+	required_shared_ptr<UINT16> m_bg2_ram;
+	required_shared_ptr<UINT16> m_bg3_ram;
+	required_shared_ptr<UINT16> m_bg4_ram;
+	required_shared_ptr<UINT16> m_fg_ram;
 //  UINT16 *  m_paletteram;   // currently this uses generic palette handling
 //  UINT16 *  m_nvram;        // currently this uses generic nvram handling
 
@@ -79,6 +84,8 @@ public:
 	DECLARE_WRITE16_MEMBER(galaxi_500000_w);
 	DECLARE_WRITE16_MEMBER(galaxi_500002_w);
 	DECLARE_WRITE16_MEMBER(galaxi_500004_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(ticket_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(hopper_r);
 };
 
 
@@ -259,31 +266,29 @@ WRITE16_MEMBER(galaxi_state::galaxi_500004_w)
 	show_out(machine());
 }
 
-static CUSTOM_INPUT( ticket_r )
+CUSTOM_INPUT_MEMBER(galaxi_state::ticket_r)
 {
-	galaxi_state *state = field.machine().driver_data<galaxi_state>();
-	return state->m_ticket && !(field.machine().primary_screen->frame_number() % 10);
+	return m_ticket && !(machine().primary_screen->frame_number() % 10);
 }
 
-static CUSTOM_INPUT( hopper_r )
+CUSTOM_INPUT_MEMBER(galaxi_state::hopper_r)
 {
-	galaxi_state *state = field.machine().driver_data<galaxi_state>();
-	return state->m_hopper && !(field.machine().primary_screen->frame_number() % 10);
+	return m_hopper && !(machine().primary_screen->frame_number() % 10);
 }
 
 
 static ADDRESS_MAP_START( galaxi_map, AS_PROGRAM, 16, galaxi_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 
-	AM_RANGE(0x100000, 0x1003ff) AM_RAM_WRITE(galaxi_bg1_w) AM_BASE(m_bg1_ram)
-	AM_RANGE(0x100400, 0x1007ff) AM_RAM_WRITE(galaxi_bg2_w) AM_BASE(m_bg2_ram)
-	AM_RANGE(0x100800, 0x100bff) AM_RAM_WRITE(galaxi_bg3_w) AM_BASE(m_bg3_ram)
-	AM_RANGE(0x100c00, 0x100fff) AM_RAM_WRITE(galaxi_bg4_w) AM_BASE(m_bg4_ram)
+	AM_RANGE(0x100000, 0x1003ff) AM_RAM_WRITE(galaxi_bg1_w) AM_SHARE("bg1_ram")
+	AM_RANGE(0x100400, 0x1007ff) AM_RAM_WRITE(galaxi_bg2_w) AM_SHARE("bg2_ram")
+	AM_RANGE(0x100800, 0x100bff) AM_RAM_WRITE(galaxi_bg3_w) AM_SHARE("bg3_ram")
+	AM_RANGE(0x100c00, 0x100fff) AM_RAM_WRITE(galaxi_bg4_w) AM_SHARE("bg4_ram")
 
-	AM_RANGE(0x101000, 0x101fff) AM_RAM_WRITE(galaxi_fg_w ) AM_BASE(m_fg_ram)
+	AM_RANGE(0x101000, 0x101fff) AM_RAM_WRITE(galaxi_fg_w ) AM_SHARE("fg_ram")
 	AM_RANGE(0x102000, 0x1047ff) AM_READNOP	// unknown
 
-	AM_RANGE(0x300000, 0x3007ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x300000, 0x3007ff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
 
 	AM_RANGE(0x500000, 0x500001) AM_READ_PORT("INPUTS")
 	AM_RANGE(0x500000, 0x500001) AM_WRITE(galaxi_500000_w)
@@ -308,11 +313,11 @@ static INPUT_PORTS_START( galaxi )
 	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_POKER_HOLD5 )
 	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_GAMBLE_PAYOUT )
-	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM( hopper_r, (void *)0 )	// hopper sensor
+	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, galaxi_state,hopper_r, (void *)0 )	// hopper sensor
 	PORT_BIT( 0x0100, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_IMPULSE(5)	// coin a
 	PORT_BIT( 0x0200, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_IMPULSE(5)	// coin b (token)
 	PORT_BIT( 0x0400, IP_ACTIVE_HIGH, IPT_COIN3 )	// pin 25LC
-	PORT_BIT( 0x0800, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( ticket_r, (void *)0 )	// ticket sensor
+	PORT_BIT( 0x0800, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, galaxi_state,ticket_r, (void *)0 )	// ticket sensor
 	PORT_BIT( 0x1000, IP_ACTIVE_HIGH, IPT_SPECIAL )	// hopper out (pin 14LS)
 	PORT_SERVICE_NO_TOGGLE( 0x2000, IP_ACTIVE_HIGH )	// test
 	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_SPECIAL )	// (pin 26LC)
@@ -328,11 +333,11 @@ static INPUT_PORTS_START( magjoker )
 	PORT_BIT( 0x0010, IP_ACTIVE_HIGH, IPT_POKER_HOLD5 )
 	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_GAMBLE_PAYOUT )
-	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( hopper_r, (void *)0 )	// hopper sensor
+	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL )PORT_CUSTOM_MEMBER(DEVICE_SELF, galaxi_state,hopper_r, (void *)0 )	// hopper sensor
 	PORT_BIT( 0x0100, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_IMPULSE(5)	// coin a
 	PORT_BIT( 0x0200, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_IMPULSE(5)	// coin b (token)
 	PORT_BIT( 0x0400, IP_ACTIVE_HIGH, IPT_SERVICE ) PORT_NAME("Hopper Refill") PORT_CODE(KEYCODE_H)
-	PORT_BIT( 0x0800, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( ticket_r, (void *)0 )	// ticket sensor
+	PORT_BIT( 0x0800, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, galaxi_state,ticket_r, (void *)0 )	// ticket sensor
 	PORT_BIT( 0x1000, IP_ACTIVE_HIGH, IPT_SPECIAL )	// hopper out (pin 14LS)
 	PORT_SERVICE_NO_TOGGLE( 0x2000, IP_ACTIVE_HIGH )	// test
 	PORT_BIT( 0x4000, IP_ACTIVE_HIGH, IPT_GAMBLE_KEYOUT )	// (pin 26LC)

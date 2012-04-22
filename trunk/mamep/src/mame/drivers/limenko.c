@@ -34,19 +34,25 @@ class limenko_state : public driver_device
 {
 public:
 	limenko_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_mainram(*this, "mainram"),
+		m_fg_videoram(*this, "fg_videoram"),
+		m_md_videoram(*this, "md_videoram"),
+		m_bg_videoram(*this, "bg_videoram"),
+		m_spriteram(*this, "spriteram"),
+		m_spriteram2(*this, "spriteram2"),
+		m_videoreg(*this, "videoreg"){ }
 
-	UINT32 *m_spriteram;
-	UINT32 *m_spriteram2;
-	size_t m_spriteram_size;
+	required_shared_ptr<UINT32> m_mainram;
+	required_shared_ptr<UINT32> m_fg_videoram;
+	required_shared_ptr<UINT32> m_md_videoram;
+	required_shared_ptr<UINT32> m_bg_videoram;
+	required_shared_ptr<UINT32> m_spriteram;
+	required_shared_ptr<UINT32> m_spriteram2;
+	required_shared_ptr<UINT32> m_videoreg;
 	tilemap_t *m_bg_tilemap;
 	tilemap_t *m_md_tilemap;
 	tilemap_t *m_fg_tilemap;
-	UINT32 *m_bg_videoram;
-	UINT32 *m_md_videoram;
-	UINT32 *m_fg_videoram;
-	UINT32 *m_videoreg;
-	UINT32 *m_mainram;
 	int m_spriteram_bit;
 	bitmap_ind16 m_sprites_bitmap;
 	bitmap_ind8 m_sprites_bitmap_pri;
@@ -66,6 +72,7 @@ public:
 	DECLARE_READ32_MEMBER(legendoh_speedup_r);
 	DECLARE_READ32_MEMBER(sb2003_speedup_r);
 	DECLARE_READ32_MEMBER(spotty_speedup_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(spriteram_bit_r);
 };
 
 
@@ -118,13 +125,12 @@ WRITE32_MEMBER(limenko_state::fg_videoram_w)
 
 WRITE32_MEMBER(limenko_state::spotty_soundlatch_w)
 {
-	soundlatch_w(space, 0, (data >> 16) & 0xff);
+	soundlatch_byte_w(space, 0, (data >> 16) & 0xff);
 }
 
-static CUSTOM_INPUT( spriteram_bit_r )
+CUSTOM_INPUT_MEMBER(limenko_state::spriteram_bit_r)
 {
-	limenko_state *state = field.machine().driver_data<limenko_state>();
-	return state->m_spriteram_bit;
+	return m_spriteram_bit;
 }
 
 WRITE32_MEMBER(limenko_state::spriteram_buffer_w)
@@ -157,16 +163,16 @@ WRITE32_MEMBER(limenko_state::spriteram_buffer_w)
 *****************************************************************************************************/
 
 static ADDRESS_MAP_START( limenko_map, AS_PROGRAM, 32, limenko_state )
-	AM_RANGE(0x00000000, 0x001fffff) AM_RAM	AM_BASE(m_mainram)
+	AM_RANGE(0x00000000, 0x001fffff) AM_RAM	AM_SHARE("mainram")
 	AM_RANGE(0x40000000, 0x403fffff) AM_ROM AM_REGION("user2",0)
-	AM_RANGE(0x80000000, 0x80007fff) AM_RAM_WRITE(fg_videoram_w) AM_BASE(m_fg_videoram)
-	AM_RANGE(0x80008000, 0x8000ffff) AM_RAM_WRITE(md_videoram_w) AM_BASE(m_md_videoram)
-	AM_RANGE(0x80010000, 0x80017fff) AM_RAM_WRITE(bg_videoram_w) AM_BASE(m_bg_videoram)
-	AM_RANGE(0x80018000, 0x80018fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0x80019000, 0x80019fff) AM_RAM AM_BASE(m_spriteram2)
+	AM_RANGE(0x80000000, 0x80007fff) AM_RAM_WRITE(fg_videoram_w) AM_SHARE("fg_videoram")
+	AM_RANGE(0x80008000, 0x8000ffff) AM_RAM_WRITE(md_videoram_w) AM_SHARE("md_videoram")
+	AM_RANGE(0x80010000, 0x80017fff) AM_RAM_WRITE(bg_videoram_w) AM_SHARE("bg_videoram")
+	AM_RANGE(0x80018000, 0x80018fff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x80019000, 0x80019fff) AM_RAM AM_SHARE("spriteram2")
 	AM_RANGE(0x8001c000, 0x8001dfff) AM_RAM_WRITE(limenko_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0x8001e000, 0x8001ebff) AM_RAM // ? not used
-	AM_RANGE(0x8001ffec, 0x8001ffff) AM_RAM AM_BASE(m_videoreg)
+	AM_RANGE(0x8001ffec, 0x8001ffff) AM_RAM AM_SHARE("videoreg")
 	AM_RANGE(0x8003e000, 0x8003e003) AM_WRITE(spriteram_buffer_w)
 	AM_RANGE(0xffe00000, 0xffffffff) AM_ROM AM_REGION("user1",0)
 ADDRESS_MAP_END
@@ -184,16 +190,16 @@ ADDRESS_MAP_END
 /* Spotty memory map */
 
 static ADDRESS_MAP_START( spotty_map, AS_PROGRAM, 32, limenko_state )
-	AM_RANGE(0x00000000, 0x001fffff) AM_RAM	AM_BASE(m_mainram)
+	AM_RANGE(0x00000000, 0x001fffff) AM_RAM	AM_SHARE("mainram")
 	AM_RANGE(0x40002000, 0x400024d3) AM_RAM //?
-	AM_RANGE(0x80000000, 0x80007fff) AM_RAM_WRITE(fg_videoram_w) AM_BASE(m_fg_videoram)
-	AM_RANGE(0x80008000, 0x8000ffff) AM_RAM_WRITE(md_videoram_w) AM_BASE(m_md_videoram)
-	AM_RANGE(0x80010000, 0x80017fff) AM_RAM_WRITE(bg_videoram_w) AM_BASE(m_bg_videoram)
-	AM_RANGE(0x80018000, 0x80018fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0x80019000, 0x80019fff) AM_RAM AM_BASE(m_spriteram2)
+	AM_RANGE(0x80000000, 0x80007fff) AM_RAM_WRITE(fg_videoram_w) AM_SHARE("fg_videoram")
+	AM_RANGE(0x80008000, 0x8000ffff) AM_RAM_WRITE(md_videoram_w) AM_SHARE("md_videoram")
+	AM_RANGE(0x80010000, 0x80017fff) AM_RAM_WRITE(bg_videoram_w) AM_SHARE("bg_videoram")
+	AM_RANGE(0x80018000, 0x80018fff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x80019000, 0x80019fff) AM_RAM AM_SHARE("spriteram2")
 	AM_RANGE(0x8001c000, 0x8001dfff) AM_RAM_WRITE(limenko_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0x8001e000, 0x8001ebff) AM_RAM // ? not used
-	AM_RANGE(0x8001ffec, 0x8001ffff) AM_RAM AM_BASE(m_videoreg)
+	AM_RANGE(0x8001ffec, 0x8001ffff) AM_RAM AM_SHARE("videoreg")
 	AM_RANGE(0x8003e000, 0x8003e003) AM_WRITE(spriteram_buffer_w)
 	AM_RANGE(0xfff00000, 0xffffffff) AM_ROM AM_REGION("user1",0)
 ADDRESS_MAP_END
@@ -222,7 +228,7 @@ READ8_MEMBER(limenko_state::spotty_sound_r)
 	// check m_spotty_sound_cmd bits...
 
 	if(m_spotty_sound_cmd == 0xf7)
-		return soundlatch_r(space,0);
+		return soundlatch_byte_r(space,0);
 	else
 		return machine().device<okim6295_device>("oki")->read(space,0);
 }
@@ -365,8 +371,8 @@ static void draw_sprites(running_machine &machine, UINT32 *sprites, const rectan
 	limenko_state *state = machine.driver_data<limenko_state>();
 	int i;
 
-	UINT8 *base_gfx	= machine.region("gfx1")->base();
-	UINT8 *gfx_max	= base_gfx + machine.region("gfx1")->bytes();
+	UINT8 *base_gfx	= machine.root_device().memregion("gfx1")->base();
+	UINT8 *gfx_max	= base_gfx + state->memregion("gfx1")->bytes();
 
 	UINT8 *gfxdata;
 	gfx_element gfx(machine);
@@ -545,7 +551,7 @@ static INPUT_PORTS_START( legendoh )
 	PORT_DIPNAME( 0x20000000, 0x00000000, "Sound Enable" )
 	PORT_DIPSETTING(          0x20000000, DEF_STR( Off ) )
 	PORT_DIPSETTING(          0x00000000, DEF_STR( On ) )
-	PORT_BIT( 0x80000000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(spriteram_bit_r, NULL) //changes spriteram location
+	PORT_BIT( 0x80000000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, limenko_state,spriteram_bit_r, NULL) //changes spriteram location
 	PORT_BIT( 0x4000ffff, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START( "EEPROMOUT" )
@@ -589,7 +595,7 @@ static INPUT_PORTS_START( sb2003 )
 	PORT_DIPNAME( 0x20000000, 0x00000000, "Sound Enable" )
 	PORT_DIPSETTING(          0x20000000, DEF_STR( Off ) )
 	PORT_DIPSETTING(          0x00000000, DEF_STR( On ) )
-	PORT_BIT( 0x80000000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(spriteram_bit_r, NULL) //changes spriteram location
+	PORT_BIT( 0x80000000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, limenko_state,spriteram_bit_r, NULL) //changes spriteram location
 	PORT_BIT( 0x00100000, IP_ACTIVE_LOW, IPT_SERVICE1 ) // checked in dynabomb I/O test, but doesn't work in game
 	PORT_BIT( 0x5f00ffff, IP_ACTIVE_LOW, IPT_UNUSED )
 
@@ -627,7 +633,7 @@ static INPUT_PORTS_START( spotty )
 	PORT_BIT( 0x00010000, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x00020000, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00040000, IP_ACTIVE_LOW, IPT_COIN1 )
-	PORT_BIT( 0x00080000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(spriteram_bit_r, NULL) //changes spriteram location
+	PORT_BIT( 0x00080000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, limenko_state,spriteram_bit_r, NULL) //changes spriteram location
 	PORT_SERVICE_NO_TOGGLE( 0x00200000, IP_ACTIVE_LOW )
 	PORT_BIT( 0x00400000, IP_ACTIVE_LOW, IPT_SPECIAL ) //security bit
 	PORT_BIT( 0x00800000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
@@ -1060,8 +1066,8 @@ static DRIVER_INIT( sb2003 )
 static DRIVER_INIT( spotty )
 {
 	limenko_state *state = machine.driver_data<limenko_state>();
-	UINT8 *dst    = machine.region("gfx1")->base();
-	UINT8 *src    = machine.region("user2")->base();
+	UINT8 *dst    = machine.root_device().memregion("gfx1")->base();
+	UINT8 *src    = state->memregion("user2")->base();
 	int x;
 
 	/* expand 4bpp roms to 8bpp space */

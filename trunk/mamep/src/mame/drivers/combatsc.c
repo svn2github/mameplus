@@ -110,7 +110,7 @@ SOUND CPU:
 9000        uPD7759
 b000        uPD7759
 c000        uPD7759
-d000        soundlatch_r
+d000        soundlatch_byte_r
 e000-e001   YM2203
 
 
@@ -150,7 +150,7 @@ WRITE8_MEMBER(combatsc_state::combatsc_vreg_w)
 
 WRITE8_MEMBER(combatsc_state::combatscb_sh_irqtrigger_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -199,9 +199,9 @@ WRITE8_MEMBER(combatsc_state::combatsc_bankselect_w)
 	}
 
 	if (data & 0x10)
-		memory_set_bank(machine(), "bank1", (data & 0x0e) >> 1);
+		membank("bank1")->set_entry((data & 0x0e) >> 1);
 	else
-		memory_set_bank(machine(), "bank1", 8 + (data & 1));
+		membank("bank1")->set_entry(8 + (data & 1));
 }
 
 WRITE8_MEMBER(combatsc_state::combatscb_io_w)
@@ -237,13 +237,13 @@ WRITE8_MEMBER(combatsc_state::combatscb_bankselect_w)
 		m_bank_select = data;
 
 		if (data & 0x10)
-			memory_set_bank(machine(), "bank1", (data & 0x0e) >> 1);
+			membank("bank1")->set_entry((data & 0x0e) >> 1);
 		else
-			memory_set_bank(machine(), "bank1", 8 + (data & 1));
+			membank("bank1")->set_entry(8 + (data & 1));
 
 		if (data == 0x1f)
 		{
-			memory_set_bank(machine(), "bank1", 8 + (data & 1));
+			membank("bank1")->set_entry(8 + (data & 1));
 			space.install_write_handler(0x4000, 0x7fff, write8_delegate(FUNC(combatsc_state::combatscb_io_w),this));
 			space.install_read_handler(0x4400, 0x4403, read8_delegate(FUNC(combatsc_state::combatscb_io_r),this));/* IO RAM & Video Registers */
 		}
@@ -389,11 +389,11 @@ static ADDRESS_MAP_START( combatsc_map, AS_PROGRAM, 8, combatsc_state )
 	AM_RANGE(0x0408, 0x0408) AM_WRITE(combatsc_coin_counter_w)	/* coin counters */
 	AM_RANGE(0x040c, 0x040c) AM_WRITE(combatsc_vreg_w)
 	AM_RANGE(0x0410, 0x0410) AM_WRITE(combatsc_bankselect_w)
-	AM_RANGE(0x0414, 0x0414) AM_WRITE(soundlatch_w)
+	AM_RANGE(0x0414, 0x0414) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0x0418, 0x0418) AM_WRITE(combatsc_sh_irqtrigger_w)
 	AM_RANGE(0x041c, 0x041c) AM_WRITE(watchdog_reset_w)			/* watchdog reset? */
 
-	AM_RANGE(0x0600, 0x06ff) AM_RAM AM_BASE(m_paletteram)		/* palette */
+	AM_RANGE(0x0600, 0x06ff) AM_RAM AM_SHARE("paletteram")		/* palette */
 	AM_RANGE(0x0800, 0x1fff) AM_RAM								/* RAM */
 	AM_RANGE(0x2000, 0x3fff) AM_READWRITE(combatsc_video_r, combatsc_video_w)
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")						/* banked ROM area */
@@ -403,7 +403,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( combatscb_map, AS_PROGRAM, 8, combatsc_state )
 	AM_RANGE(0x0000, 0x04ff) AM_RAM
 	AM_RANGE(0x0500, 0x0500) AM_WRITE(combatscb_bankselect_w)
-	AM_RANGE(0x0600, 0x06ff) AM_RAM AM_BASE(m_paletteram)		/* palette */
+	AM_RANGE(0x0600, 0x06ff) AM_RAM AM_SHARE("paletteram")		/* palette */
 	AM_RANGE(0x0800, 0x1fff) AM_RAM
 	AM_RANGE(0x2000, 0x3fff) AM_READWRITE(combatsc_video_r, combatsc_video_w)
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank1")						/* banked ROM/RAM area */
@@ -419,7 +419,7 @@ static ADDRESS_MAP_START( combatsc_sound_map, AS_PROGRAM, 8, combatsc_state )
 	AM_RANGE(0xb000, 0xb000) AM_DEVREAD_LEGACY("upd", combatsc_busy_r)					/* upd7759 busy? */
 	AM_RANGE(0xc000, 0xc000) AM_DEVWRITE_LEGACY("upd", combatsc_voice_reset_w)			/* upd7759 reset? */
 
-	AM_RANGE(0xd000, 0xd000) AM_READ(soundlatch_r)								/* soundlatch_r? */
+	AM_RANGE(0xd000, 0xd000) AM_READ(soundlatch_byte_r)								/* soundlatch_byte_r? */
 	AM_RANGE(0xe000, 0xe001) AM_DEVREADWRITE_LEGACY("ymsnd", combatsc_ym2203_r, ym2203_w)	/* YM 2203 intercepted */
 ADDRESS_MAP_END
 
@@ -440,7 +440,7 @@ static ADDRESS_MAP_START( combatscb_sound_map, AS_PROGRAM, 8, combatsc_state )
 	AM_RANGE(0x9000, 0x9001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)	/* YM 2203 */
 	AM_RANGE(0x9008, 0x9009) AM_DEVREAD_LEGACY("ymsnd", ym2203_r)					/* ??? */
 	AM_RANGE(0x9800, 0x9800) AM_DEVWRITE_LEGACY("msm5205",combatscb_dac_w)
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)						/* soundlatch_r? */
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)						/* soundlatch_byte_r? */
 ADDRESS_MAP_END
 
 /*************************************
@@ -690,7 +690,7 @@ static const ym2203_interface ym2203_bootleg_config =
 static MACHINE_START( combatsc )
 {
 	combatsc_state *state = machine.driver_data<combatsc_state>();
-	UINT8 *MEM = machine.region("maincpu")->base() + 0x38000;
+	UINT8 *MEM = machine.root_device().memregion("maincpu")->base() + 0x38000;
 
 	state->m_io_ram  = MEM + 0x0000;
 	state->m_page[0] = MEM + 0x4000;
@@ -702,7 +702,7 @@ static MACHINE_START( combatsc )
 	state->m_k007121_1 = machine.device("k007121_1");
 	state->m_k007121_2 = machine.device("k007121_2");
 
-	memory_configure_bank(machine, "bank1", 0, 10, machine.region("maincpu")->base() + 0x10000, 0x4000);
+	state->membank("bank1")->configure_entries(0, 10, state->memregion("maincpu")->base() + 0x10000, 0x4000);
 
 	state->save_item(NAME(state->m_priority));
 	state->save_item(NAME(state->m_vreg));

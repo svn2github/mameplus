@@ -64,7 +64,7 @@ Notes:
 
 WRITE8_MEMBER(sprcros2_state::sprcros2_m_port7_w)
 {
-	UINT8 *RAM = machine().region("master")->base();
+	UINT8 *RAM = memregion("master")->base();
 
 	//76543210
 	//x------- unused
@@ -76,7 +76,7 @@ WRITE8_MEMBER(sprcros2_state::sprcros2_m_port7_w)
 	//-------x nmi enable
 
 	if((m_port7^data)&0x40)
-		memory_set_bankptr(machine(), "bank1",&RAM[0x10000+((data&0x40)<<7)]);
+		membank("bank1")->set_base(&RAM[0x10000+((data&0x40)<<7)]);
 
 	machine().tilemap().set_flip_all(data&0x02?(TILEMAP_FLIPX|TILEMAP_FLIPY):0 );
 
@@ -85,7 +85,7 @@ WRITE8_MEMBER(sprcros2_state::sprcros2_m_port7_w)
 
 WRITE8_MEMBER(sprcros2_state::sprcros2_s_port3_w)
 {
-	UINT8 *RAM = machine().region("slave")->base();
+	UINT8 *RAM = memregion("slave")->base();
 
 	//76543210
 	//xxxx---- unused
@@ -94,7 +94,7 @@ WRITE8_MEMBER(sprcros2_state::sprcros2_s_port3_w)
 	//-------x nmi enable
 
 	if((m_s_port3^data)&0x08)
-		memory_set_bankptr(machine(), "bank2",&RAM[0x10000+((data&0x08)<<10)]);
+		membank("bank2")->set_base(&RAM[0x10000+((data&0x08)<<10)]);
 
 	m_s_port3 = data;
 }
@@ -102,9 +102,9 @@ WRITE8_MEMBER(sprcros2_state::sprcros2_s_port3_w)
 static ADDRESS_MAP_START( sprcros2_master_map, AS_PROGRAM, 8, sprcros2_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xdfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(sprcros2_fgvideoram_w) AM_BASE(m_fgvideoram)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(sprcros2_fgvideoram_w) AM_SHARE("fgvideoram")
 	AM_RANGE(0xe800, 0xe817) AM_RAM						//always zero
-	AM_RANGE(0xe818, 0xe83f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xe818, 0xe83f) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xe840, 0xefff) AM_RAM						//always zero
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
 	AM_RANGE(0xf800, 0xffff) AM_RAM AM_SHARE("share1")			//shared with slave cpu
@@ -123,7 +123,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sprcros2_slave_map, AS_PROGRAM, 8, sprcros2_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xdfff) AM_ROMBANK("bank2")
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(sprcros2_bgvideoram_w) AM_BASE(m_bgvideoram)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(sprcros2_bgvideoram_w) AM_SHARE("bgvideoram")
 	AM_RANGE(0xe800, 0xefff) AM_RAM						//always zero
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
 	AM_RANGE(0xf800, 0xffff) AM_RAM AM_SHARE("share1")

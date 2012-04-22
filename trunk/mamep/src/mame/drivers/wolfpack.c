@@ -30,10 +30,10 @@ static MACHINE_RESET( wolfpack )
 }
 
 
-static CUSTOM_INPUT( wolfpack_dial_r )
+CUSTOM_INPUT_MEMBER(wolfpack_state::wolfpack_dial_r)
 {
 	int bit = (FPTR)param;
-	return ((input_port_read(field.machine(), "DIAL") + bit) / 2) & 0x01;
+	return ((input_port_read(machine(), "DIAL") + bit) / 2) & 0x01;
 }
 
 
@@ -110,7 +110,7 @@ WRITE8_MEMBER(wolfpack_state::wolfpack_coldetres_w)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, wolfpack_state )
 	AM_RANGE(0x0000, 0x00ff) AM_RAM AM_MIRROR(0x100)
 	AM_RANGE(0x1000, 0x1000) AM_READ_PORT("INPUTS")
-	AM_RANGE(0x1000, 0x10ff) AM_WRITEONLY AM_BASE(m_alpha_num_ram)
+	AM_RANGE(0x1000, 0x10ff) AM_WRITEONLY AM_SHARE("alpha_num_ram")
 	AM_RANGE(0x2000, 0x2000) AM_READ(wolfpack_misc_r)
 	AM_RANGE(0x2000, 0x2000) AM_WRITE(wolfpack_high_explo_w)
 	AM_RANGE(0x2001, 0x2001) AM_WRITE(wolfpack_sonar_ping_w)
@@ -149,8 +149,8 @@ ADDRESS_MAP_END
 
 static INPUT_PORTS_START( wolfpack )
 	PORT_START("INPUTS")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(wolfpack_dial_r, (void *)0)	/* dial connects here */
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(wolfpack_dial_r, (void *)1)	/* dial connects here */
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, wolfpack_state,wolfpack_dial_r, (void *)0)	/* dial connects here */
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, wolfpack_state,wolfpack_dial_r, (void *)1)	/* dial connects here */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_SERVICE( 0x10, IP_ACTIVE_HIGH )

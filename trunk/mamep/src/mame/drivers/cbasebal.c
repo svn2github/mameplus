@@ -32,7 +32,7 @@ WRITE8_MEMBER(cbasebal_state::cbasebal_bankswitch_w)
 
 	/* bits 0-4 select ROM bank */
 	//logerror("%04x: bankswitch %02x\n", cpu_get_pc(&space.device()), data);
-	memory_set_bank(machine(), "bank1", data & 0x1f);
+	membank("bank1")->set_entry(data & 0x1f);
 
 	/* bit 5 used but unknown */
 
@@ -69,7 +69,7 @@ WRITE8_MEMBER(cbasebal_state::bankedram_w)
 		break;
 	case 1:
 		if (offset < 0x800)
-			paletteram_xxxxBBBBRRRRGGGG_le_w(space, offset, data);
+			paletteram_xxxxBBBBRRRRGGGG_byte_le_w(space, offset, data);
 		break;
 	default:
 		cbasebal_scrollram_w(space, offset, data);
@@ -113,7 +113,7 @@ static ADDRESS_MAP_START( cbasebal_map, AS_PROGRAM, 8, cbasebal_state )
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xcfff) AM_READWRITE(bankedram_r, bankedram_w) AM_SHARE("paletteram")	/* palette + vram + scrollram */
 	AM_RANGE(0xe000, 0xfdff) AM_RAM		/* work RAM */
-	AM_RANGE(0xfe00, 0xffff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xfe00, 0xffff) AM_RAM AM_SHARE("spriteram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cbasebal_portmap, AS_IO, 8, cbasebal_state )
@@ -243,7 +243,7 @@ static MACHINE_START( cbasebal )
 {
 	cbasebal_state *state = machine.driver_data<cbasebal_state>();
 
-	memory_configure_bank(machine, "bank1", 0, 32, machine.region("maincpu")->base() + 0x10000, 0x4000);
+	state->membank("bank1")->configure_entries(0, 32, state->memregion("maincpu")->base() + 0x10000, 0x4000);
 
 	state->save_item(NAME(state->m_rambank));
 	state->save_item(NAME(state->m_tilebank));

@@ -664,7 +664,7 @@ WRITE16_MEMBER(model1_state::bank_w)
 	if(ACCESSING_BITS_0_7) {
 		switch(data & 0xf) {
 		case 0x1: // 100000-1fffff data roms banking
-			memory_set_bankptr(machine(), "bank1", machine().region("maincpu")->base() + 0x1000000 + 0x100000*((data >> 4) & 0xf));
+			membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base() + 0x1000000 + 0x100000*((data >> 4) & 0xf));
 			logerror("BANK %x\n", 0x1000000 + 0x100000*((data >> 4) & 0xf));
 			break;
 		case 0x2: // 200000-2fffff data roms banking (unused, all known games have only one bank)
@@ -735,7 +735,7 @@ static TIMER_DEVICE_CALLBACK( model1_interrupt )
 static MACHINE_RESET(model1)
 {
 	model1_state *state = machine.driver_data<model1_state>();
-	memory_set_bankptr(machine, "bank1", machine.region("maincpu")->base() + 0x1000000);
+	state->membank("bank1")->set_base(state->memregion("maincpu")->base() + 0x1000000);
 	irq_init(machine);
 	model1_tgp_reset(machine, !strcmp(machine.system().name, "swa") || !strcmp(machine.system().name, "wingwar") || !strcmp(machine.system().name, "wingwaru") || !strcmp(machine.system().name, "wingwarj"));
 	if (!strcmp(machine.system().name, "swa"))
@@ -755,7 +755,7 @@ static MACHINE_RESET(model1)
 static MACHINE_RESET(model1_vr)
 {
 	model1_state *state = machine.driver_data<model1_state>();
-	memory_set_bankptr(machine, "bank1", machine.region("maincpu")->base() + 0x1000000);
+	state->membank("bank1")->set_base(state->memregion("maincpu")->base() + 0x1000000);
 	irq_init(machine);
 	model1_vr_tgp_reset(machine);
 	state->m_sound_irq = 3;
@@ -798,7 +798,7 @@ WRITE16_MEMBER(model1_state::md0_w)
 WRITE16_MEMBER(model1_state::p_w)
 {
 	UINT16 old = m_generic_paletteram_16[offset];
-	paletteram16_xBBBBBGGGGGRRRRR_word_w(space, offset, data, mem_mask);
+	paletteram_xBBBBBGGGGGRRRRR_word_w(space, offset, data, mem_mask);
 	if(0 && m_generic_paletteram_16[offset] != old)
 		logerror("XVIDEO: p_w %x, %04x @ %04x (%x)\n", offset, data, mem_mask, cpu_get_pc(&space.device()));
 }
@@ -869,11 +869,11 @@ static ADDRESS_MAP_START( model1_mem, AS_PROGRAM, 16, model1_state )
 	AM_RANGE(0x100000, 0x1fffff) AM_ROMBANK("bank1")
 	AM_RANGE(0x200000, 0x2fffff) AM_ROM
 
-	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(mr2_w) AM_BASE(m_mr2)
-	AM_RANGE(0x500000, 0x53ffff) AM_RAM_WRITE(mr_w)  AM_BASE(m_mr)
+	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(mr2_w) AM_SHARE("mr2")
+	AM_RANGE(0x500000, 0x53ffff) AM_RAM_WRITE(mr_w)  AM_SHARE("mr")
 
-	AM_RANGE(0x600000, 0x60ffff) AM_RAM_WRITE(md0_w) AM_BASE(m_display_list0)
-	AM_RANGE(0x610000, 0x61ffff) AM_RAM_WRITE(md1_w) AM_BASE(m_display_list1)
+	AM_RANGE(0x600000, 0x60ffff) AM_RAM_WRITE(md0_w) AM_SHARE("display_list0")
+	AM_RANGE(0x610000, 0x61ffff) AM_RAM_WRITE(md1_w) AM_SHARE("display_list1")
 	AM_RANGE(0x680000, 0x680003) AM_READWRITE(model1_listctl_r, model1_listctl_w)
 
 	AM_RANGE(0x700000, 0x70ffff) AM_DEVREADWRITE("tile", segas24_tile, tile_r, tile_w)
@@ -884,7 +884,7 @@ static ADDRESS_MAP_START( model1_mem, AS_PROGRAM, 16, model1_state )
 	AM_RANGE(0x780000, 0x7fffff) AM_DEVREADWRITE("tile", segas24_tile, char_r, char_w)
 
 	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(p_w) AM_SHARE("paletteram")
-	AM_RANGE(0x910000, 0x91bfff) AM_RAM  AM_BASE(m_color_xlat)
+	AM_RANGE(0x910000, 0x91bfff) AM_RAM  AM_SHARE("color_xlat")
 
 	AM_RANGE(0xc00000, 0xc0003f) AM_READ(io_r) AM_WRITENOP
 
@@ -917,11 +917,11 @@ static ADDRESS_MAP_START( model1_vr_mem, AS_PROGRAM, 16, model1_state )
 	AM_RANGE(0x100000, 0x1fffff) AM_ROMBANK("bank1")
 	AM_RANGE(0x200000, 0x2fffff) AM_ROM
 
-	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(mr2_w) AM_BASE(m_mr2)
-	AM_RANGE(0x500000, 0x53ffff) AM_RAM_WRITE(mr_w)  AM_BASE(m_mr)
+	AM_RANGE(0x400000, 0x40ffff) AM_RAM_WRITE(mr2_w) AM_SHARE("mr2")
+	AM_RANGE(0x500000, 0x53ffff) AM_RAM_WRITE(mr_w)  AM_SHARE("mr")
 
-	AM_RANGE(0x600000, 0x60ffff) AM_RAM_WRITE(md0_w) AM_BASE(m_display_list0)
-	AM_RANGE(0x610000, 0x61ffff) AM_RAM_WRITE(md1_w) AM_BASE(m_display_list1)
+	AM_RANGE(0x600000, 0x60ffff) AM_RAM_WRITE(md0_w) AM_SHARE("display_list0")
+	AM_RANGE(0x610000, 0x61ffff) AM_RAM_WRITE(md1_w) AM_SHARE("display_list1")
 	AM_RANGE(0x680000, 0x680003) AM_READWRITE(model1_listctl_r, model1_listctl_w)
 
 	AM_RANGE(0x700000, 0x70ffff) AM_DEVREADWRITE("tile", segas24_tile, tile_r, tile_w)
@@ -932,7 +932,7 @@ static ADDRESS_MAP_START( model1_vr_mem, AS_PROGRAM, 16, model1_state )
 	AM_RANGE(0x780000, 0x7fffff) AM_DEVREADWRITE("tile", segas24_tile, char_r, char_w)
 
 	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(p_w) AM_SHARE("paletteram")
-	AM_RANGE(0x910000, 0x91bfff) AM_RAM  AM_BASE(m_color_xlat)
+	AM_RANGE(0x910000, 0x91bfff) AM_RAM  AM_SHARE("color_xlat")
 
 	AM_RANGE(0xc00000, 0xc0003f) AM_READ(io_r) AM_WRITENOP
 

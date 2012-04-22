@@ -81,8 +81,8 @@ class sliver_state : public driver_device
 public:
 	sliver_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this, "maincpu")
-		{ }
+		m_maincpu(*this, "maincpu"),
+		m_colorram(*this, "colorram"){ }
 
 	UINT16 m_io_offset;
 	UINT16 m_io_reg[IO_SIZE];
@@ -96,13 +96,13 @@ public:
 	int m_tmp_counter;
 	int m_clr_offset;
 
-	UINT8 *m_colorram;
+	required_device<cpu_device> m_maincpu;
+	required_shared_ptr<UINT8> m_colorram;
 	bitmap_rgb32 m_bitmap_fg;
 	bitmap_rgb32 m_bitmap_bg;
 
 	UINT16 m_tempbuf[8];
 
-	required_device<cpu_device> m_maincpu;
 	DECLARE_WRITE16_MEMBER(fifo_data_w);
 	DECLARE_WRITE16_MEMBER(fifo_clear_w);
 	DECLARE_WRITE16_MEMBER(fifo_flush_w);
@@ -165,7 +165,7 @@ static void blit_gfx(running_machine &machine)
 {
 	sliver_state *state = machine.driver_data<sliver_state>();
 	int tmpptr=0;
-	const UINT8 *rom = machine.region("user1")->base();
+	const UINT8 *rom = state->memregion("user1")->base();
 
 	while (tmpptr < state->m_fptr)
 	{
@@ -239,7 +239,7 @@ static void render_jpeg(running_machine &machine)
 		cinfo.err = jpeg_std_error(&jerr);
 		jpeg_create_decompress(&cinfo);
 
-		jpeg_mem_src(&cinfo, machine.region("user2")->base()+addr, machine.region("user2")->bytes()-addr);
+		jpeg_mem_src(&cinfo, machine.root_device().memregion("user2")->base()+addr, machine.root_device().memregion("user2")->bytes()-addr);
 
 		jpeg_read_header(&cinfo, TRUE);
 		jpeg_start_decompress(&cinfo);
@@ -313,7 +313,7 @@ WRITE16_MEMBER(sliver_state::io_data_w)
 
 WRITE16_MEMBER(sliver_state::sound_w)
 {
-	soundlatch_w(space, 0, data & 0xff);
+	soundlatch_byte_w(space, 0, data & 0xff);
 	cputag_set_input_line(machine(), "audiocpu", MCS51_INT0_LINE, HOLD_LINE);
 }
 
@@ -349,7 +349,7 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER(sliver_state::oki_setbank)
 {
-	UINT8 *sound = machine().region("oki")->base();
+	UINT8 *sound = memregion("oki")->base();
 	int bank=(data^0xff)&3; //xor or not ?
 	memcpy(sound+0x20000, sound+0x100000+0x20000*bank, 0x20000);
 }
@@ -360,7 +360,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( soundmem_io, AS_IO, 8, sliver_state )
 	AM_RANGE(0x0100, 0x0100) AM_DEVREADWRITE("oki", okim6295_device, read, write)
-	AM_RANGE(0x0101, 0x0101) AM_READ(soundlatch_r)
+	AM_RANGE(0x0101, 0x0101) AM_READ(soundlatch_byte_r)
 	/* ports */
 	AM_RANGE(MCS51_PORT_P1, MCS51_PORT_P1) AM_WRITE(oki_setbank )
 ADDRESS_MAP_END
@@ -410,50 +410,52 @@ static INPUT_PORTS_START( sliver )
 	PORT_BIT( 0xffa4, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("DSW")
-	PORT_DIPNAME( 0x000f, 0x000f, DEF_STR( Coin_A ) )
-	PORT_DIPSETTING(	0x000f, DEF_STR( 1C_1C ) )
-	PORT_DIPSETTING(	0x000e, DEF_STR( 1C_2C ) )
-	PORT_DIPSETTING(	0x000d, DEF_STR( 1C_3C ) )
-	PORT_DIPSETTING(	0x000c, DEF_STR( 1C_4C ) )
-	PORT_DIPSETTING(	0x000b, DEF_STR( 1C_5C ) )
-	PORT_DIPSETTING(	0x0000, DEF_STR( Free_Play ) )
-	PORT_DIPNAME( 0x0030, 0x0020, DEF_STR( Lives ) )
-	PORT_DIPSETTING(    0x0030, "2" )
-	PORT_DIPSETTING(    0x0020, "3" )
-	PORT_DIPSETTING(    0x0010, "4" )
-	PORT_DIPSETTING(    0x0000, "5" )
-	PORT_DIPNAME( 0x0040, 0x0040, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0080, 0x0080, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0100, 0x0100, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(      0x0100, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0200, 0x0200, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(      0x0200, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0400, 0x0400, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(      0x0400, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0800, 0x0800, "Demo_Sounds" )
+	PORT_DIPNAME( 0x000f, 0x000f, DEF_STR( Coinage ) )	PORT_DIPLOCATION("SW1:1,2,3,4")
+	PORT_DIPSETTING(      0x0004, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(      0x0003, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(      0x0002, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(      0x0001, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(      0x000f, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(      0x000e, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(      0x000d, DEF_STR( 1C_3C ) )
+	PORT_DIPSETTING(      0x000c, DEF_STR( 1C_4C ) )
+	PORT_DIPSETTING(      0x000b, DEF_STR( 1C_5C ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Free_Play ) )
+	PORT_DIPNAME( 0x0030, 0x0020, DEF_STR( Lives ) )	PORT_DIPLOCATION("SW1:5,6")
+	PORT_DIPSETTING(      0x0030, "2" )
+	PORT_DIPSETTING(      0x0020, "3" )
+	PORT_DIPSETTING(      0x0010, "4" )
+	PORT_DIPSETTING(      0x0000, "5" )
+	PORT_DIPNAME( 0x00c0, 0x00c0, DEF_STR( Game_Time ) )	PORT_DIPLOCATION("SW1:7,8")
+	PORT_DIPSETTING(      0x0000, "Longer" )
+	PORT_DIPSETTING(      0x0040, "Long" )
+	PORT_DIPSETTING(      0x00c0, DEF_STR( Normal ) )
+	PORT_DIPSETTING(      0x0080, "Short" )
+	PORT_DIPNAME( 0x0300, 0x0300, DEF_STR( Difficulty ) )	PORT_DIPLOCATION("SW2:1,2")
+	PORT_DIPSETTING(      0x0200, DEF_STR( Easy ) )
+	PORT_DIPSETTING(      0x0300, DEF_STR( Normal ) )
+	PORT_DIPSETTING(      0x0100, DEF_STR( Hard ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( Hardest ) )
+	PORT_DIPNAME( 0x0400, 0x0400, "2 Player Mode" )		PORT_DIPLOCATION("SW2:3")
+	PORT_DIPSETTING(      0x0400, DEF_STR( Yes ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( No ) )
+	PORT_DIPNAME( 0x0800, 0x0800, DEF_STR( Demo_Sounds ) )	PORT_DIPLOCATION("SW2:4")
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0800, DEF_STR( On ) )
-	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(      0x1000, DEF_STR( Off ) )
+	PORT_DIPNAME( 0x1000, 0x1000, "Draw Insert" )		PORT_DIPLOCATION("SW2:5")
+	PORT_DIPSETTING(      0x1000, DEF_STR( Yes ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( No ) )
+	PORT_DIPNAME( 0x2000, 0x2000, "Joystick Input Mode" )	PORT_DIPLOCATION("SW2:6")
+	PORT_DIPSETTING(      0x2000, "Step" )
+	PORT_DIPSETTING(      0x0000, "Continuous" )
+	PORT_DIPNAME( 0x4000, 0x4000, "Game Paused (Test)" )	PORT_DIPLOCATION("SW2:7")
+	PORT_DIPSETTING(      0x4000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(      0x2000, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN ) // unknown
-	PORT_DIPNAME( 0x8000, 0x8000, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPUNUSED_DIPLOC( 0x8000, 0x0000, "SW2:8" )	/* Listed as "UNUSED (MUST ON)" */
 INPUT_PORTS_END
 
 static ADDRESS_MAP_START( ramdac_map, AS_0, 8, sliver_state )
-	AM_RANGE(0x000, 0x3ff) AM_RAM AM_BASE(m_colorram)
+	AM_RANGE(0x000, 0x3ff) AM_RAM AM_SHARE("colorram")
 ADDRESS_MAP_END
 
 static RAMDAC_INTERFACE( ramdac_intf )

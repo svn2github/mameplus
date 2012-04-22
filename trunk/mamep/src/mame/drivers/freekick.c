@@ -46,9 +46,9 @@ WRITE8_MEMBER(freekick_state::flipscreen_w)
 {
 	/* flip Y/X could be the other way round... */
 	if (offset)
-		flip_screen_y_set(machine(), ~data & 1);
+		flip_screen_y_set(~data & 1);
 	else
-		flip_screen_x_set(machine(), ~data & 1);
+		flip_screen_x_set(~data & 1);
 }
 
 WRITE8_MEMBER(freekick_state::coin_w)
@@ -68,7 +68,7 @@ READ8_MEMBER(freekick_state::spinner_r)
 
 WRITE8_MEMBER(freekick_state::pbillrd_bankswitch_w)
 {
-	memory_set_bank(machine(), "bank1", data & 1);
+	membank("bank1")->set_entry(data & 1);
 }
 
 WRITE8_MEMBER(freekick_state::nmi_enable_w)
@@ -159,8 +159,8 @@ static ADDRESS_MAP_START( pbillrd_map, AS_PROGRAM, 8, freekick_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(freek_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xd800, 0xd8ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(freek_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xd800, 0xd8ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xd900, 0xdfff) AM_RAM
 	AM_RANGE(0xe000, 0xe000) AM_READ_PORT("IN0")
 	AM_RANGE(0xe000, 0xe001) AM_WRITE(flipscreen_w)
@@ -178,8 +178,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( freekickb_map, AS_PROGRAM, 8, freekick_state )
 	AM_RANGE(0x0000, 0xcfff) AM_ROM
 	AM_RANGE(0xd000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(freek_videoram_w) AM_BASE(m_videoram)	// tilemap
-	AM_RANGE(0xe800, 0xe8ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)	// sprites
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(freek_videoram_w) AM_SHARE("videoram")	// tilemap
+	AM_RANGE(0xe800, 0xe8ff) AM_RAM AM_SHARE("spriteram")	// sprites
 	AM_RANGE(0xec00, 0xec03) AM_DEVREADWRITE_LEGACY("ppi8255_0", ppi8255_r, ppi8255_w)
 	AM_RANGE(0xf000, 0xf003) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)
 	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("IN0") AM_WRITE(flipscreen_w)
@@ -198,8 +198,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( gigas_map, AS_PROGRAM, 8, freekick_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(freek_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xd800, 0xd8ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(freek_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xd800, 0xd8ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xd900, 0xdfff) AM_RAM
 	AM_RANGE(0xe000, 0xe000) AM_READ_PORT("IN0") AM_WRITENOP // probably not flipscreen
 	AM_RANGE(0xe002, 0xe003) AM_WRITE(coin_w)
@@ -509,7 +509,7 @@ static WRITE8_DEVICE_HANDLER( snd_rom_addr_h_w )
 static READ8_DEVICE_HANDLER( snd_rom_r )
 {
 	freekick_state *state = device->machine().driver_data<freekick_state>();
-	return device->machine().region("user1")->base()[state->m_romaddr & 0x7fff];
+	return state->memregion("user1")->base()[state->m_romaddr & 0x7fff];
 }
 
 static const ppi8255_interface ppi8255_intf[2] =
@@ -599,7 +599,7 @@ static MACHINE_RESET( freekick )
 
 static MACHINE_START( pbillrd )
 {
-	memory_configure_bank(machine, "bank1", 0, 2, machine.region("maincpu")->base() + 0x10000, 0x4000);
+	machine.root_device().membank("bank1")->configure_entries(0, 2, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
 
 	MACHINE_START_CALL(freekick);
 }
@@ -1100,7 +1100,7 @@ ROM_END
 static DRIVER_INIT(gigasb)
 {
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0xbfff, machine.region("maincpu")->base() + 0x10000);
+	space->set_decrypted_region(0x0000, 0xbfff, machine.root_device().memregion("maincpu")->base() + 0x10000);
 }
 
 

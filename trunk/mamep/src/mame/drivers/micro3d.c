@@ -132,7 +132,7 @@ static INPUT_PORTS_START( botssa )
 	PORT_INCLUDE( micro3d )
 
 	PORT_MODIFY("INPUTS_A_B")
-	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(botssa_hwchk_r, NULL)
+	PORT_BIT( 0x0080, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, micro3d_state,botssa_hwchk_r, NULL)
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON3 )	PORT_NAME("Shield")
 	PORT_SERVICE( 0x0400, IP_ACTIVE_LOW )
@@ -199,7 +199,7 @@ INPUT_PORTS_END
 static ADDRESS_MAP_START( hostmem, AS_PROGRAM, 16, micro3d_state )
 	AM_RANGE(0x000000, 0x143fff) AM_ROM
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x800000, 0x83ffff) AM_RAM AM_BASE(m_shared_ram)
+	AM_RANGE(0x800000, 0x83ffff) AM_RAM AM_SHARE("shared_ram")
 	AM_RANGE(0x900000, 0x900001) AM_WRITE(host_drmath_int_w)
 	AM_RANGE(0x920000, 0x920001) AM_READ_PORT("INPUTS_C_D")
 	AM_RANGE(0x940000, 0x940001) AM_READ_PORT("INPUTS_A_B")
@@ -221,7 +221,7 @@ ADDRESS_MAP_END
  *************************************/
 
 static ADDRESS_MAP_START( vgbmem, AS_PROGRAM, 16, micro3d_state )
-	AM_RANGE(0x00000000, 0x007fffff) AM_RAM AM_BASE(m_micro3d_sprite_vram)
+	AM_RANGE(0x00000000, 0x007fffff) AM_RAM AM_SHARE("sprite_vram")
 	AM_RANGE(0x00800000, 0x00bfffff) AM_RAM
 	AM_RANGE(0x00c00000, 0x00c0000f) AM_READ_PORT("VGB_SW")
 	AM_RANGE(0x00e00000, 0x00e0000f) AM_WRITE(micro3d_xfer3dk_w)
@@ -254,7 +254,7 @@ static ADDRESS_MAP_START( drmath_data, AS_DATA, 32, micro3d_state )
 	AM_RANGE(0x00a00000, 0x00a00003) AM_WRITE(drmath_int_w)
 	AM_RANGE(0x01000000, 0x01000003) AM_WRITE(micro3d_mac1_w)
 	AM_RANGE(0x01000004, 0x01000007) AM_READWRITE(micro3d_mac2_r, micro3d_mac2_w)
-	AM_RANGE(0x01200000, 0x01203fff) AM_RAM AM_BASE(m_mac_sram)
+	AM_RANGE(0x01200000, 0x01203fff) AM_RAM AM_SHARE("mac_sram")
 	AM_RANGE(0x01400000, 0x01400003) AM_READWRITE(micro3d_pipe_r, micro3d_fifo_w)
 	AM_RANGE(0x01600000, 0x01600003) AM_WRITE(drmath_intr2_ack)
 	AM_RANGE(0x01800000, 0x01800003) AM_WRITE(micro3d_alt_fifo_w)
@@ -275,9 +275,9 @@ static ADDRESS_MAP_START( soundmem_io, AS_IO, 8, micro3d_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
 	AM_RANGE(0xfd00, 0xfd01) AM_DEVREADWRITE_LEGACY("ym2151", ym2151_r, ym2151_w)
 	AM_RANGE(0xfe00, 0xfe00) AM_DEVWRITE_LEGACY("upd7759", micro3d_upd7759_w)
-	AM_RANGE(0xff00, 0xff00) AM_WRITE_LEGACY(micro3d_snd_dac_a)
-	AM_RANGE(0xff01, 0xff01) AM_WRITE_LEGACY(micro3d_snd_dac_b)
-	AM_RANGE(MCS51_PORT_P0, MCS51_PORT_P3) AM_READWRITE_LEGACY(micro3d_sound_io_r, micro3d_sound_io_w)
+	AM_RANGE(0xff00, 0xff00) AM_WRITE(micro3d_snd_dac_a)
+	AM_RANGE(0xff01, 0xff01) AM_WRITE(micro3d_snd_dac_b)
+	AM_RANGE(MCS51_PORT_P0, MCS51_PORT_P3) AM_READWRITE(micro3d_sound_io_r, micro3d_sound_io_w)
 ADDRESS_MAP_END
 
 

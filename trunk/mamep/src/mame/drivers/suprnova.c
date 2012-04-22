@@ -431,7 +431,7 @@ static MACHINE_RESET(skns)
 	else
 		hit.disconnect= 0;
 
-	memory_set_bankptr(machine, "bank1",machine.region("user1")->base());
+	state->membank("bank1")->set_base(state->memregion("user1")->base());
 }
 
 
@@ -455,10 +455,10 @@ static TIMER_DEVICE_CALLBACK(skns_irq)
 
 **********************************************************************************/
 
-static CUSTOM_INPUT( paddle_r )
+CUSTOM_INPUT_MEMBER(skns_state::paddle_r)
 {
 	const char *tag = (const char *)param;
-	return input_port_read(field.machine(), tag);
+	return input_port_read(machine(), tag);
 }
 
 static INPUT_PORTS_START( skns )		/* 3 buttons, 2 players */
@@ -513,12 +513,12 @@ static INPUT_PORTS_START( skns )		/* 3 buttons, 2 players */
 	PORT_DIPNAME( 0x00000080, 0x00000080, "Freeze" )
 	PORT_DIPSETTING(          0x00000000, "Freezes the game")
 	PORT_DIPSETTING(          0x00000080, "Right value")
-	PORT_BIT( 0x0000ff00, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(paddle_r, "Paddle C")
-	PORT_BIT( 0x00ff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(paddle_r, "Paddle B")
-	PORT_BIT( 0xff000000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(paddle_r, "Paddle A")
+	PORT_BIT( 0x0000ff00, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, skns_state,paddle_r, "Paddle C")
+	PORT_BIT( 0x00ff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, skns_state,paddle_r, "Paddle B")
+	PORT_BIT( 0xff000000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, skns_state,paddle_r, "Paddle A")
 
 	PORT_START("40000c")
-	PORT_BIT( 0x000000ff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(paddle_r, "Paddle D")
+	PORT_BIT( 0x000000ff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, skns_state,paddle_r, "Paddle D")
 	PORT_BIT( 0xffffff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("Paddle A")
@@ -665,7 +665,7 @@ WRITE32_MEMBER(skns_state::skns_io_w)
 
 WRITE32_MEMBER(skns_state::skns_v3t_w)
 {
-	UINT8 *btiles = machine().region("gfx3")->base();
+	UINT8 *btiles = memregion("gfx3")->base();
 
 	COMBINE_DATA(&m_v3t_ram[offset]);
 
@@ -692,18 +692,18 @@ static ADDRESS_MAP_START( skns_map, AS_PROGRAM, 32, skns_state )
 	AM_RANGE(0x01000000, 0x0100000f) AM_DEVREADWRITE8("rtc", msm6242_device, read, write, 0xffffffff)
 	AM_RANGE(0x01800000, 0x01800003) AM_WRITE(skns_hit2_w)
 	AM_RANGE(0x02000000, 0x02003fff) AM_RAM AM_SHARE("spriteram") /* sprite ram */
-	AM_RANGE(0x02100000, 0x0210003f) AM_RAM AM_BASE(m_spc_regs) /* sprite registers */
-	AM_RANGE(0x02400000, 0x0240007f) AM_RAM_WRITE(skns_v3_regs_w) AM_BASE(m_v3_regs) /* tilemap registers */
-	AM_RANGE(0x02500000, 0x02503fff) AM_RAM_WRITE(skns_tilemapA_w) AM_BASE(m_tilemapA_ram) /* tilemap A */
-	AM_RANGE(0x02504000, 0x02507fff) AM_RAM_WRITE(skns_tilemapB_w) AM_BASE(m_tilemapB_ram) /* tilemap B */
-	AM_RANGE(0x02600000, 0x02607fff) AM_RAM AM_BASE(m_v3slc_ram) /* tilemap linescroll */
-	AM_RANGE(0x02a00000, 0x02a0001f) AM_RAM_WRITE(skns_pal_regs_w) AM_BASE(m_pal_regs)
-	AM_RANGE(0x02a40000, 0x02a5ffff) AM_RAM_WRITE(skns_palette_ram_w) AM_BASE(m_palette_ram)
+	AM_RANGE(0x02100000, 0x0210003f) AM_RAM AM_SHARE("spc_regs") /* sprite registers */
+	AM_RANGE(0x02400000, 0x0240007f) AM_RAM_WRITE(skns_v3_regs_w) AM_SHARE("v3_regs") /* tilemap registers */
+	AM_RANGE(0x02500000, 0x02503fff) AM_RAM_WRITE(skns_tilemapA_w) AM_SHARE("tilemapa_ram") /* tilemap A */
+	AM_RANGE(0x02504000, 0x02507fff) AM_RAM_WRITE(skns_tilemapB_w) AM_SHARE("tilemapb_ram") /* tilemap B */
+	AM_RANGE(0x02600000, 0x02607fff) AM_RAM AM_SHARE("v3slc_ram") /* tilemap linescroll */
+	AM_RANGE(0x02a00000, 0x02a0001f) AM_RAM_WRITE(skns_pal_regs_w) AM_SHARE("pal_regs")
+	AM_RANGE(0x02a40000, 0x02a5ffff) AM_RAM_WRITE(skns_palette_ram_w) AM_SHARE("palette_ram")
 	AM_RANGE(0x02f00000, 0x02f000ff) AM_READWRITE(skns_hit_r, skns_hit_w)
 	AM_RANGE(0x04000000, 0x041fffff) AM_ROMBANK("bank1") /* GAME ROM */
-	AM_RANGE(0x04800000, 0x0483ffff) AM_RAM_WRITE(skns_v3t_w) AM_BASE(m_v3t_ram) /* tilemap b ram based tiles */
-	AM_RANGE(0x06000000, 0x060fffff) AM_RAM AM_BASE(m_main_ram)
-	AM_RANGE(0xc0000000, 0xc0000fff) AM_RAM AM_BASE(m_cache_ram) /* 'cache' RAM */
+	AM_RANGE(0x04800000, 0x0483ffff) AM_RAM_WRITE(skns_v3t_w) AM_SHARE("v3t_ram") /* tilemap b ram based tiles */
+	AM_RANGE(0x06000000, 0x060fffff) AM_RAM AM_SHARE("main_ram")
+	AM_RANGE(0xc0000000, 0xc0000fff) AM_RAM AM_SHARE("cache_ram") /* 'cache' RAM */
 ADDRESS_MAP_END
 
 /***** GFX DECODE *****/

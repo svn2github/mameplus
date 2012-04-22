@@ -30,10 +30,12 @@ class neoprint_state : public driver_device
 {
 public:
 	neoprint_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_npvidram(*this, "npvidram"),
+		m_npvidregs(*this, "npvidregs"){ }
 
-	UINT16* m_npvidram;
-	UINT16* m_npvidregs;
+	required_shared_ptr<UINT16> m_npvidram;
+	required_shared_ptr<UINT16> m_npvidregs;
 	UINT8 m_audio_result;
 	UINT8 m_bank_val;
 	UINT8 m_vblank;
@@ -173,7 +175,7 @@ WRITE16_MEMBER(neoprint_state::audio_command_w)
 	/* accessing the LSB only is not mapped */
 	if (mem_mask != 0x00ff)
 	{
-		soundlatch_w(space, 0, data >> 8);
+		soundlatch_byte_w(space, 0, data >> 8);
 
 		audio_cpu_assert_nmi(machine());
 
@@ -187,7 +189,7 @@ WRITE16_MEMBER(neoprint_state::audio_command_w)
 
 READ8_MEMBER(neoprint_state::audio_command_r)
 {
-	UINT8 ret = soundlatch_r(space, 0);
+	UINT8 ret = soundlatch_byte_r(space, 0);
 
 	//if (LOG_CPU_COMM) logerror(" AUD CPU PC   %04x: audio_command_r %02x\n", cpu_get_pc(&space.device()), ret);
 
@@ -213,8 +215,8 @@ static ADDRESS_MAP_START( neoprint_map, AS_PROGRAM, 16, neoprint_state )
 /*  AM_RANGE(0x100000, 0x17ffff) multi-cart or banking, some writes points here if anything lies there too */
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM
 	AM_RANGE(0x300000, 0x30ffff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x400000, 0x43ffff) AM_RAM AM_BASE(m_npvidram)
-	AM_RANGE(0x500000, 0x51ffff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x400000, 0x43ffff) AM_RAM AM_SHARE("npvidram")
+	AM_RANGE(0x500000, 0x51ffff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x600000, 0x600001) AM_READWRITE(neoprint_audio_result_r,audio_command_w)
 	AM_RANGE(0x600002, 0x600003) AM_READWRITE(neoprint_calendar_r,neoprint_calendar_w)
 	AM_RANGE(0x600004, 0x600005) AM_READ_PORT("SYSTEM") AM_WRITENOP
@@ -224,7 +226,7 @@ static ADDRESS_MAP_START( neoprint_map, AS_PROGRAM, 16, neoprint_state )
 	AM_RANGE(0x60000c, 0x60000d) AM_READ_PORT("DSW2")
 	AM_RANGE(0x60000e, 0x60000f) AM_WRITENOP
 
-	AM_RANGE(0x700000, 0x70001b) AM_RAM AM_BASE(m_npvidregs)
+	AM_RANGE(0x700000, 0x70001b) AM_RAM AM_SHARE("npvidregs")
 
 	AM_RANGE(0x70001e, 0x70001f) AM_WRITENOP //watchdog
 ADDRESS_MAP_END
@@ -271,7 +273,7 @@ WRITE8_MEMBER(neoprint_state::nprsp_bank_w)
 
 READ16_MEMBER(neoprint_state::rom_window_r)
 {
-	UINT16 *rom = (UINT16 *)machine().region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 
 	return rom[offset | 0x80000/2 | m_bank_val*0x40000/2];
 }
@@ -288,12 +290,12 @@ static ADDRESS_MAP_START( nprsp_map, AS_PROGRAM, 16, neoprint_state )
 	AM_RANGE(0x20000c, 0x20000d) AM_READ_PORT("DSW2")
 	AM_RANGE(0x20000e, 0x20000f) AM_WRITENOP
 
-	AM_RANGE(0x240000, 0x24001b) AM_RAM AM_BASE(m_npvidregs)
+	AM_RANGE(0x240000, 0x24001b) AM_RAM AM_SHARE("npvidregs")
 	AM_RANGE(0x24001e, 0x24001f) AM_WRITENOP //watchdog
 
 	AM_RANGE(0x300000, 0x33ffff) AM_RAM AM_SHARE("nvram")
 	AM_RANGE(0x380000, 0x38ffff) AM_RAM
-	AM_RANGE(0x400000, 0x43ffff) AM_RAM AM_BASE(m_npvidram)
+	AM_RANGE(0x400000, 0x43ffff) AM_RAM AM_SHARE("npvidram")
 	AM_RANGE(0x500000, 0x57ffff) AM_RAM_WRITE(nprsp_palette_w) AM_SHARE("paletteram")
 ADDRESS_MAP_END
 
@@ -590,7 +592,7 @@ ROM_END
 /* FIXME: get rid of these two, probably something to do with irq3 and camera / printer devices */
 static DRIVER_INIT( npcartv1 )
 {
-	UINT16 *ROM = (UINT16 *)machine.region( "maincpu" )->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion( "maincpu" )->base();
 
 	ROM[0x1260/2] = 0x4e71;
 
@@ -600,14 +602,14 @@ static DRIVER_INIT( npcartv1 )
 
 static DRIVER_INIT( 98best44 )
 {
-	UINT16 *ROM = (UINT16 *)machine.region( "maincpu" )->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion( "maincpu" )->base();
 
 	ROM[0x1312/2] = 0x4e71;
 }
 
 static DRIVER_INIT( nprsp )
 {
-	UINT16 *ROM = (UINT16 *)machine.region( "maincpu" )->base();
+	UINT16 *ROM = (UINT16 *)machine.root_device().memregion( "maincpu" )->base();
 
 	ROM[0x13a4/2] = 0x4e71;
 	ROM[0x13bc/2] = 0x4e71;

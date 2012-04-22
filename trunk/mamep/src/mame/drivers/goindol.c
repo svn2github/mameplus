@@ -26,7 +26,7 @@ Notes:
 WRITE8_MEMBER(goindol_state::goindol_bankswitch_w)
 {
 
-	memory_set_bank(machine(), "bank1", data & 0x03);
+	membank("bank1")->set_entry(data & 0x03);
 
 	if (m_char_bank != ((data & 0x10) >> 4))
 	{
@@ -34,7 +34,7 @@ WRITE8_MEMBER(goindol_state::goindol_bankswitch_w)
 		machine().tilemap().mark_all_dirty();
 	}
 
-	flip_screen_set(machine(), data & 0x20);
+	flip_screen_set(data & 0x20);
 }
 
 
@@ -84,20 +84,20 @@ WRITE8_MEMBER(goindol_state::prot_fcb0_w)
 static ADDRESS_MAP_START( goindol_map, AS_PROGRAM, 8, goindol_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_BASE(m_ram)
-	AM_RANGE(0xc800, 0xc800) AM_READNOP AM_WRITE(soundlatch_w) // watchdog?
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("ram")
+	AM_RANGE(0xc800, 0xc800) AM_READNOP AM_WRITE(soundlatch_byte_w) // watchdog?
 	AM_RANGE(0xc810, 0xc810) AM_WRITE(goindol_bankswitch_w)
 	AM_RANGE(0xc820, 0xc820) AM_READ_PORT("DIAL")
-	AM_RANGE(0xc820, 0xd820) AM_WRITEONLY AM_BASE(m_fg_scrolly)
+	AM_RANGE(0xc820, 0xd820) AM_WRITEONLY AM_SHARE("fg_scrolly")
 	AM_RANGE(0xc830, 0xc830) AM_READ_PORT("P1")
-	AM_RANGE(0xc830, 0xd830) AM_WRITEONLY AM_BASE(m_fg_scrollx)
+	AM_RANGE(0xc830, 0xd830) AM_WRITEONLY AM_SHARE("fg_scrollx")
 	AM_RANGE(0xc834, 0xc834) AM_READ_PORT("P2")
-	AM_RANGE(0xd000, 0xd03f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd000, 0xd03f) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xd040, 0xd7ff) AM_RAM
-	AM_RANGE(0xd800, 0xdfff) AM_RAM_WRITE(goindol_bg_videoram_w) AM_BASE_SIZE(m_bg_videoram, m_bg_videoram_size)
-	AM_RANGE(0xe000, 0xe03f) AM_RAM AM_BASE(m_spriteram2)
+	AM_RANGE(0xd800, 0xdfff) AM_RAM_WRITE(goindol_bg_videoram_w) AM_SHARE("bg_videoram")
+	AM_RANGE(0xe000, 0xe03f) AM_RAM AM_SHARE("spriteram2")
 	AM_RANGE(0xe040, 0xe7ff) AM_RAM
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goindol_fg_videoram_w) AM_BASE_SIZE(m_fg_videoram, m_fg_videoram_size)
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(goindol_fg_videoram_w) AM_SHARE("fg_videoram")
 	AM_RANGE(0xf000, 0xf000) AM_READ_PORT("DSW1")
 	AM_RANGE(0xf422, 0xf422) AM_READ(prot_f422_r)
 	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("DSW2")
@@ -111,7 +111,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, goindol_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xa000, 0xa001) AM_DEVWRITE_LEGACY("ymsnd", ym2203_w)
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xd800, 0xd800) AM_READ(soundlatch_r)
+	AM_RANGE(0xd800, 0xd800) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
 
@@ -220,9 +220,9 @@ GFXDECODE_END
 static MACHINE_START( goindol )
 {
 	goindol_state *state = machine.driver_data<goindol_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 4, &ROM[0x10000], 0x4000);
+	state->membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x4000);
 
 	state->save_item(NAME(state->m_char_bank));
 	state->save_item(NAME(state->m_prot_toggle));
@@ -383,7 +383,7 @@ ROM_END
 
 static DRIVER_INIT( goindol )
 {
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 
 	/* I hope that's all patches to avoid protection */

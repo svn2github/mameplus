@@ -89,6 +89,7 @@ public:
 /* guess: use the same resistor values as Crazy Climber (needs checking on the real HW) */
 static PALETTE_INIT( jangou )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	static const int resistances_rg[3] = { 1000, 470, 220 };
 	static const int resistances_b [2] = { 470, 220 };
 	double weights_rg[3], weights_b[2];
@@ -167,7 +168,7 @@ w [$17]
 
 static UINT8 jangou_gfx_nibble( running_machine &machine, UINT16 niboffset )
 {
-	const UINT8 *const blit_rom = machine.region("gfx")->base();
+	const UINT8 *const blit_rom = machine.root_device().memregion("gfx")->base();
 
 	if (niboffset & 1)
 		return (blit_rom[(niboffset >> 1) & 0xffff] & 0xf0) >> 4;
@@ -301,14 +302,14 @@ static READ8_DEVICE_HANDLER( input_system_r )
 
 WRITE8_MEMBER(jangou_state::sound_latch_w)
 {
-	soundlatch_w(space, 0, data & 0xff);
+	soundlatch_byte_w(space, 0, data & 0xff);
 	device_set_input_line(m_cpu_1, INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 READ8_MEMBER(jangou_state::sound_latch_r)
 {
 	device_set_input_line(m_cpu_1, INPUT_LINE_NMI, CLEAR_LINE);
-	return soundlatch_r(space, 0);
+	return soundlatch_byte_r(space, 0);
 }
 
 /* Jangou HC-55516 CVSD */
@@ -1370,7 +1371,7 @@ static DRIVER_INIT (luckygrl)
 {
 	// this is WRONG
 	int A;
-	UINT8 *ROM = machine.region("cpu0")->base();
+	UINT8 *ROM = machine.root_device().memregion("cpu0")->base();
 
 	unsigned char patn1[32] = {
 		0x00, 0xA0, 0x00, 0xA0, 0x00, 0xA0, 0x00, 0xA0, 0x00, 0xA0, 0x00, 0xA0, 0x00, 0xA0, 0x00, 0xA0,

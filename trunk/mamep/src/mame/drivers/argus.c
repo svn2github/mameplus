@@ -176,11 +176,11 @@ static const ym2203_interface ym2203_config =
 
 WRITE8_MEMBER(argus_state::argus_bankselect_w)
 {
-	UINT8 *RAM = machine().region("maincpu")->base();
+	UINT8 *RAM = memregion("maincpu")->base();
 	int bankaddress;
 
 	bankaddress = 0x10000 + ((data & 7) * 0x4000);
-	memory_set_bankptr(machine(), "bank1", &RAM[bankaddress]);	 /* Select 8 banks of 16k */
+	membank("bank1")->set_base(&RAM[bankaddress]);	 /* Select 8 banks of 16k */
 }
 
 
@@ -198,19 +198,19 @@ static ADDRESS_MAP_START( argus_map, AS_PROGRAM, 8, argus_state )
 	AM_RANGE(0xc002, 0xc002) AM_READ_PORT("P2")
 	AM_RANGE(0xc003, 0xc003) AM_READ_PORT("DSW1")
 	AM_RANGE(0xc004, 0xc004) AM_READ_PORT("DSW2")
-	AM_RANGE(0xc200, 0xc200) AM_WRITE(soundlatch_w)
+	AM_RANGE(0xc200, 0xc200) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0xc201, 0xc201) AM_WRITE(argus_flipscreen_w)
 	AM_RANGE(0xc202, 0xc202) AM_WRITE(argus_bankselect_w)
-	AM_RANGE(0xc300, 0xc301) AM_RAM AM_BASE(m_bg0_scrollx)
-	AM_RANGE(0xc302, 0xc303) AM_RAM AM_BASE(m_bg0_scrolly)
-	AM_RANGE(0xc308, 0xc309) AM_RAM AM_BASE(m_bg1_scrollx)
-	AM_RANGE(0xc30a, 0xc30b) AM_RAM AM_BASE(m_bg1_scrolly)
+	AM_RANGE(0xc300, 0xc301) AM_RAM AM_SHARE("bg0_scrollx")
+	AM_RANGE(0xc302, 0xc303) AM_RAM AM_SHARE("bg0_scrolly")
+	AM_RANGE(0xc308, 0xc309) AM_RAM AM_SHARE("bg1_scrollx")
+	AM_RANGE(0xc30a, 0xc30b) AM_RAM AM_SHARE("bg1_scrolly")
 	AM_RANGE(0xc30c, 0xc30c) AM_WRITE(argus_bg_status_w)
-	AM_RANGE(0xc400, 0xcfff) AM_READWRITE(argus_paletteram_r, argus_paletteram_w) AM_BASE(m_paletteram)
-	AM_RANGE(0xd000, 0xd7ff) AM_READWRITE(argus_txram_r, argus_txram_w) AM_BASE(m_txram)
-	AM_RANGE(0xd800, 0xdfff) AM_READWRITE(argus_bg1ram_r, argus_bg1ram_w) AM_BASE(m_bg1ram)
+	AM_RANGE(0xc400, 0xcfff) AM_READWRITE(argus_paletteram_r, argus_paletteram_w) AM_SHARE("paletteram")
+	AM_RANGE(0xd000, 0xd7ff) AM_READWRITE(argus_txram_r, argus_txram_w) AM_SHARE("txram")
+	AM_RANGE(0xd800, 0xdfff) AM_READWRITE(argus_bg1ram_r, argus_bg1ram_w) AM_SHARE("bg1ram")
 	AM_RANGE(0xe000, 0xf1ff) AM_RAM
-	AM_RANGE(0xf200, 0xf7ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xf200, 0xf7ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -222,19 +222,19 @@ static ADDRESS_MAP_START( valtric_map, AS_PROGRAM, 8, argus_state )
 	AM_RANGE(0xc002, 0xc002) AM_READ_PORT("P2")
 	AM_RANGE(0xc003, 0xc003) AM_READ_PORT("DSW1")
 	AM_RANGE(0xc004, 0xc004) AM_READ_PORT("DSW2")
-	AM_RANGE(0xc200, 0xc200) AM_WRITE(soundlatch_w)
+	AM_RANGE(0xc200, 0xc200) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0xc201, 0xc201) AM_WRITE(argus_flipscreen_w)
 	AM_RANGE(0xc202, 0xc202) AM_WRITE(argus_bankselect_w)
 	AM_RANGE(0xc300, 0xc300) AM_WRITE(valtric_unknown_w)
-	AM_RANGE(0xc308, 0xc309) AM_RAM AM_BASE(m_bg1_scrollx)
-	AM_RANGE(0xc30a, 0xc30b) AM_RAM AM_BASE(m_bg1_scrolly)
+	AM_RANGE(0xc308, 0xc309) AM_RAM AM_SHARE("bg1_scrollx")
+	AM_RANGE(0xc30a, 0xc30b) AM_RAM AM_SHARE("bg1_scrolly")
 	AM_RANGE(0xc30c, 0xc30c) AM_WRITE(valtric_bg_status_w)
 	AM_RANGE(0xc30d, 0xc30d) AM_WRITE(valtric_mosaic_w)
-	AM_RANGE(0xc400, 0xcfff) AM_READWRITE(argus_paletteram_r, valtric_paletteram_w) AM_BASE(m_paletteram)
-	AM_RANGE(0xd000, 0xd7ff) AM_READWRITE(argus_txram_r, argus_txram_w) AM_BASE(m_txram)
-	AM_RANGE(0xd800, 0xdfff) AM_READWRITE(argus_bg1ram_r, argus_bg1ram_w) AM_BASE(m_bg1ram)
+	AM_RANGE(0xc400, 0xcfff) AM_READWRITE(argus_paletteram_r, valtric_paletteram_w) AM_SHARE("paletteram")
+	AM_RANGE(0xd000, 0xd7ff) AM_READWRITE(argus_txram_r, argus_txram_w) AM_SHARE("txram")
+	AM_RANGE(0xd800, 0xdfff) AM_READWRITE(argus_bg1ram_r, argus_bg1ram_w) AM_SHARE("bg1ram")
 	AM_RANGE(0xe000, 0xf1ff) AM_RAM
-	AM_RANGE(0xf200, 0xf7ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xf200, 0xf7ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -247,34 +247,34 @@ static ADDRESS_MAP_START( butasan_map, AS_PROGRAM, 8, argus_state )
 	AM_RANGE(0xc003, 0xc003) AM_READ_PORT("DSW1")
 	AM_RANGE(0xc004, 0xc004) AM_READ_PORT("DSW2")
 	AM_RANGE(0xc100, 0xc100) AM_WRITE(butasan_unknown_w)
-	AM_RANGE(0xc200, 0xc200) AM_WRITE(soundlatch_w)
+	AM_RANGE(0xc200, 0xc200) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0xc201, 0xc201) AM_WRITE(argus_flipscreen_w)
 	AM_RANGE(0xc202, 0xc202) AM_WRITE(argus_bankselect_w)
 	AM_RANGE(0xc203, 0xc203) AM_WRITE(butasan_pageselect_w)
-	AM_RANGE(0xc300, 0xc301) AM_RAM AM_BASE(m_bg0_scrollx)
-	AM_RANGE(0xc302, 0xc303) AM_RAM AM_BASE(m_bg0_scrolly)
+	AM_RANGE(0xc300, 0xc301) AM_RAM AM_SHARE("bg0_scrollx")
+	AM_RANGE(0xc302, 0xc303) AM_RAM AM_SHARE("bg0_scrolly")
 	AM_RANGE(0xc304, 0xc304) AM_WRITE(butasan_bg0_status_w)
-	AM_RANGE(0xc308, 0xc309) AM_RAM AM_BASE(m_bg1_scrollx)
-	AM_RANGE(0xc30a, 0xc30b) AM_RAM AM_BASE(m_bg1_scrolly)
+	AM_RANGE(0xc308, 0xc309) AM_RAM AM_SHARE("bg1_scrollx")
+	AM_RANGE(0xc30a, 0xc30b) AM_RAM AM_SHARE("bg1_scrolly")
 	AM_RANGE(0xc30c, 0xc30c) AM_WRITE(butasan_bg1_status_w)
-	AM_RANGE(0xc400, 0xc7ff) AM_READWRITE(butasan_bg1ram_r, butasan_bg1ram_w) AM_BASE(m_butasan_bg1ram)
-	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(argus_paletteram_r, butasan_paletteram_w) AM_BASE(m_paletteram)
+	AM_RANGE(0xc400, 0xc7ff) AM_READWRITE(butasan_bg1ram_r, butasan_bg1ram_w) AM_SHARE("butasan_bg1ram")
+	AM_RANGE(0xc800, 0xcfff) AM_READWRITE(argus_paletteram_r, butasan_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0xd000, 0xdfff) AM_READWRITE(butasan_pagedram_r, butasan_pagedram_w)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
-	AM_RANGE(0xf000, 0xf67f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xf000, 0xf67f) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xf680, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_map_a, AS_PROGRAM, 8, argus_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_r)
+	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_map_b, AS_PROGRAM, 8, argus_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_r)
+	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
 #if 0

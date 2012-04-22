@@ -57,14 +57,14 @@ Note about version levels using Mutant Fighter as the example:
 WRITE16_MEMBER(cninja_state::cninja_sound_w)
 {
 
-	soundlatch_w(space, 0, data & 0xff);
+	soundlatch_byte_w(space, 0, data & 0xff);
 	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
 }
 
 WRITE16_MEMBER(cninja_state::stoneage_sound_w)
 {
 
-	soundlatch_w(space, 0, data & 0xff);
+	soundlatch_byte_w(space, 0, data & 0xff);
 	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -166,16 +166,16 @@ static ADDRESS_MAP_START( cninja_map, AS_PROGRAM, 16, cninja_state )
 	AM_RANGE(0x140000, 0x14000f) AM_WRITE(cninja_pf12_control_w)
 	AM_RANGE(0x144000, 0x144fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x146000, 0x146fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x14c000, 0x14c7ff) AM_WRITEONLY AM_BASE(m_pf1_rowscroll)
-	AM_RANGE(0x14e000, 0x14e7ff) AM_RAM AM_BASE(m_pf2_rowscroll)
+	AM_RANGE(0x14c000, 0x14c7ff) AM_WRITEONLY AM_SHARE("pf1_rowscroll")
+	AM_RANGE(0x14e000, 0x14e7ff) AM_RAM AM_SHARE("pf2_rowscroll")
 
 	AM_RANGE(0x150000, 0x15000f) AM_WRITE(cninja_pf34_control_w)
 	AM_RANGE(0x154000, 0x154fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x156000, 0x156fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x15c000, 0x15c7ff) AM_RAM AM_BASE(m_pf3_rowscroll)
-	AM_RANGE(0x15e000, 0x15e7ff) AM_RAM AM_BASE(m_pf4_rowscroll)
+	AM_RANGE(0x15c000, 0x15c7ff) AM_RAM AM_SHARE("pf3_rowscroll")
+	AM_RANGE(0x15e000, 0x15e7ff) AM_RAM AM_SHARE("pf4_rowscroll")
 
-	AM_RANGE(0x184000, 0x187fff) AM_RAM AM_BASE(m_ram)
+	AM_RANGE(0x184000, 0x187fff) AM_RAM AM_SHARE("ram")
 	AM_RANGE(0x190000, 0x190007) AM_READWRITE(cninja_irq_r, cninja_irq_w)
 	AM_RANGE(0x19c000, 0x19dfff) AM_RAM_DEVWRITE_LEGACY("deco_common", decocomn_nonbuffered_palette_w) AM_SHARE("paletteram")
 
@@ -195,14 +195,14 @@ static ADDRESS_MAP_START( cninjabl_map, AS_PROGRAM, 16, cninja_state )
 	AM_RANGE(0x140000, 0x14000f) AM_WRITE(cninja_pf12_control_w)
 	AM_RANGE(0x144000, 0x144fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x146000, 0x146fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x14c000, 0x14c7ff) AM_WRITEONLY AM_BASE(m_pf1_rowscroll)
-	AM_RANGE(0x14e000, 0x14e7ff) AM_RAM AM_BASE(m_pf2_rowscroll)
+	AM_RANGE(0x14c000, 0x14c7ff) AM_WRITEONLY AM_SHARE("pf1_rowscroll")
+	AM_RANGE(0x14e000, 0x14e7ff) AM_RAM AM_SHARE("pf2_rowscroll")
 
 	AM_RANGE(0x150000, 0x15000f) AM_WRITE(cninja_pf34_control_w)	// not used / incorrect on this
 	AM_RANGE(0x154000, 0x154fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x156000, 0x156fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x15c000, 0x15c7ff) AM_RAM AM_BASE(m_pf3_rowscroll)
-	AM_RANGE(0x15e000, 0x15e7ff) AM_RAM AM_BASE(m_pf4_rowscroll)
+	AM_RANGE(0x15c000, 0x15c7ff) AM_RAM AM_SHARE("pf3_rowscroll")
+	AM_RANGE(0x15e000, 0x15e7ff) AM_RAM AM_SHARE("pf4_rowscroll")
 
 	AM_RANGE(0x17ff22, 0x17ff23) AM_READ_PORT("DSW")
 	AM_RANGE(0x17ff28, 0x17ff29) AM_READ_PORT("IN1")
@@ -223,17 +223,17 @@ static ADDRESS_MAP_START( edrandy_map, AS_PROGRAM, 16, cninja_state )
 	AM_RANGE(0x140000, 0x14000f) AM_WRITE(cninja_pf12_control_w)
 	AM_RANGE(0x144000, 0x144fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x146000, 0x146fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x14c000, 0x14c7ff) AM_RAM AM_BASE(m_pf1_rowscroll)
-	AM_RANGE(0x14e000, 0x14e7ff) AM_RAM AM_BASE(m_pf2_rowscroll)
+	AM_RANGE(0x14c000, 0x14c7ff) AM_RAM AM_SHARE("pf1_rowscroll")
+	AM_RANGE(0x14e000, 0x14e7ff) AM_RAM AM_SHARE("pf2_rowscroll")
 
 	AM_RANGE(0x150000, 0x15000f) AM_WRITE(cninja_pf34_control_w)
 	AM_RANGE(0x154000, 0x154fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x156000, 0x156fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x15c000, 0x15c7ff) AM_RAM AM_BASE(m_pf3_rowscroll)
-	AM_RANGE(0x15e000, 0x15e7ff) AM_RAM AM_BASE(m_pf4_rowscroll)
+	AM_RANGE(0x15c000, 0x15c7ff) AM_RAM AM_SHARE("pf3_rowscroll")
+	AM_RANGE(0x15e000, 0x15e7ff) AM_RAM AM_SHARE("pf4_rowscroll")
 
 	AM_RANGE(0x188000, 0x189fff) AM_RAM_DEVWRITE_LEGACY("deco_common", decocomn_nonbuffered_palette_w) AM_SHARE("paletteram")
-	AM_RANGE(0x194000, 0x197fff) AM_RAM AM_BASE(m_ram) /* Main ram */
+	AM_RANGE(0x194000, 0x197fff) AM_RAM AM_SHARE("ram") /* Main ram */
 	AM_RANGE(0x198000, 0x1987ff) AM_READWRITE_LEGACY(deco16_60_prot_r, deco16_60_prot_w) AM_BASE_LEGACY(&deco16_prot_ram) /* Protection device */
 	AM_RANGE(0x199550, 0x199551) AM_WRITENOP /* Looks like a bug in game code, a protection write is referenced off a5 instead of a6 and ends up here */
 	AM_RANGE(0x199750, 0x199751) AM_WRITENOP /* Looks like a bug in game code, a protection write is referenced off a5 instead of a6 and ends up here */
@@ -251,14 +251,14 @@ static ADDRESS_MAP_START( robocop2_map, AS_PROGRAM, 16, cninja_state )
 	AM_RANGE(0x140000, 0x14000f) AM_WRITE(cninja_pf12_control_w)
 	AM_RANGE(0x144000, 0x144fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x146000, 0x146fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x14c000, 0x14c7ff) AM_RAM AM_BASE(m_pf1_rowscroll)
-	AM_RANGE(0x14e000, 0x14e7ff) AM_RAM AM_BASE(m_pf2_rowscroll)
+	AM_RANGE(0x14c000, 0x14c7ff) AM_RAM AM_SHARE("pf1_rowscroll")
+	AM_RANGE(0x14e000, 0x14e7ff) AM_RAM AM_SHARE("pf2_rowscroll")
 
 	AM_RANGE(0x150000, 0x15000f) AM_WRITE(cninja_pf34_control_w)
 	AM_RANGE(0x154000, 0x154fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x156000, 0x156fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x15c000, 0x15c7ff) AM_RAM AM_BASE(m_pf3_rowscroll)
-	AM_RANGE(0x15e000, 0x15e7ff) AM_RAM AM_BASE(m_pf4_rowscroll)
+	AM_RANGE(0x15c000, 0x15c7ff) AM_RAM AM_SHARE("pf3_rowscroll")
+	AM_RANGE(0x15e000, 0x15e7ff) AM_RAM AM_SHARE("pf4_rowscroll")
 
 	AM_RANGE(0x180000, 0x1807ff) AM_RAM AM_SHARE("spriteram")
 //  AM_RANGE(0x18c000, 0x18c0ff) AM_WRITE_LEGACY(cninja_loopback_w) /* Protection writes */
@@ -267,7 +267,7 @@ static ADDRESS_MAP_START( robocop2_map, AS_PROGRAM, 16, cninja_state )
 	AM_RANGE(0x198000, 0x198001) AM_DEVWRITE("spriteram", buffered_spriteram16_device, write) /* DMA flag */
 	AM_RANGE(0x1a8000, 0x1a9fff) AM_RAM_DEVWRITE_LEGACY("deco_common", decocomn_nonbuffered_palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0x1b0000, 0x1b0007) AM_READWRITE(cninja_irq_r, cninja_irq_w)
-	AM_RANGE(0x1b8000, 0x1bbfff) AM_RAM AM_BASE(m_ram) /* Main ram */
+	AM_RANGE(0x1b8000, 0x1bbfff) AM_RAM AM_SHARE("ram") /* Main ram */
 	AM_RANGE(0x1f0000, 0x1f0001) AM_DEVWRITE_LEGACY("deco_common", decocomn_priority_w)
 	AM_RANGE(0x1f8000, 0x1f8001) AM_READ_PORT("DSW3") /* Dipswitch #3 */
 ADDRESS_MAP_END
@@ -287,14 +287,14 @@ static ADDRESS_MAP_START( mutantf_map, AS_PROGRAM, 16, cninja_state )
 	AM_RANGE(0x300000, 0x30000f) AM_WRITE(cninja_pf12_control_w)
 	AM_RANGE(0x304000, 0x305fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x306000, 0x307fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x308000, 0x3087ff) AM_RAM AM_BASE(m_pf1_rowscroll)
-	AM_RANGE(0x30a000, 0x30a7ff) AM_RAM AM_BASE(m_pf2_rowscroll)
+	AM_RANGE(0x308000, 0x3087ff) AM_RAM AM_SHARE("pf1_rowscroll")
+	AM_RANGE(0x30a000, 0x30a7ff) AM_RAM AM_SHARE("pf2_rowscroll")
 
 	AM_RANGE(0x310000, 0x31000f) AM_WRITE(cninja_pf34_control_w)
 	AM_RANGE(0x314000, 0x315fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x316000, 0x317fff) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x318000, 0x3187ff) AM_RAM AM_BASE(m_pf3_rowscroll)
-	AM_RANGE(0x31a000, 0x31a7ff) AM_RAM AM_BASE(m_pf4_rowscroll)
+	AM_RANGE(0x318000, 0x3187ff) AM_RAM AM_SHARE("pf3_rowscroll")
+	AM_RANGE(0x31a000, 0x31a7ff) AM_RAM AM_SHARE("pf4_rowscroll")
 
 	AM_RANGE(0xad00ac, 0xad00ff) AM_READNOP /* Reads from here seem to be a game code bug */
 ADDRESS_MAP_END
@@ -307,7 +307,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, cninja_state )
 	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ym2", ym2151_r, ym2151_w)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
-	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_r)
+	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x1f0000, 0x1f1fff) AM_RAMBANK("bank8")
 	AM_RANGE(0x1fec00, 0x1fec01) AM_WRITE_LEGACY(h6280_timer_w)
 	AM_RANGE(0x1ff400, 0x1ff403) AM_WRITE_LEGACY(h6280_irq_status_w)
@@ -319,7 +319,7 @@ static ADDRESS_MAP_START( sound_map_mutantf, AS_PROGRAM, 8, cninja_state )
 	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
-	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_r)
+	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x1f0000, 0x1f1fff) AM_RAMBANK("bank8")
 	AM_RANGE(0x1fec00, 0x1fec01) AM_WRITE_LEGACY(h6280_timer_w)
 	AM_RANGE(0x1ff400, 0x1ff403) AM_WRITE_LEGACY(h6280_irq_status_w)
@@ -329,7 +329,7 @@ static ADDRESS_MAP_START( stoneage_s_map, AS_PROGRAM, 8, cninja_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x9800, 0x9800) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 ADDRESS_MAP_END
 
@@ -731,13 +731,13 @@ static WRITE8_DEVICE_HANDLER( sound_bankswitch_w )
 
 static const ym2151_interface ym2151_config =
 {
-	sound_irq,
-	sound_bankswitch_w
+	DEVCB_LINE(sound_irq),
+	DEVCB_HANDLER(sound_bankswitch_w)
 };
 
 static const ym2151_interface ym2151_interface2 =
 {
-	sound_irq2
+	DEVCB_LINE(sound_irq2)
 };
 
 /**********************************************************************************/
@@ -2068,7 +2068,7 @@ ROM_END
 
 static void cninja_patch( running_machine &machine )
 {
-	UINT16 *RAM = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 	int i;
 
 	for (i = 0; i < 0x80000 / 2; i++)
@@ -2109,8 +2109,8 @@ static DRIVER_INIT( stoneage )
 
 static DRIVER_INIT( mutantf )
 {
-	const UINT8 *src = machine.region("gfx2")->base();
-	UINT8 *dst = machine.region("gfx1")->base();
+	const UINT8 *src = machine.root_device().memregion("gfx2")->base();
+	UINT8 *dst = machine.root_device().memregion("gfx1")->base();
 
 	/* The 16x16 graphic has some 8x8 chars in it - decode them in GFX1 */
 	memcpy(dst + 0x50000, dst + 0x10000, 0x10000);

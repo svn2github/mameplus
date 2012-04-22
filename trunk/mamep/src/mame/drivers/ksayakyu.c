@@ -81,13 +81,13 @@ WRITE8_MEMBER(ksayakyu_state::bank_select_w)
         xxxxxxx  - unused ?
 
     */
-	memory_set_bank(machine(), "bank1", data & 0x01);
+	membank("bank1")->set_entry(data & 0x01);
 }
 
 WRITE8_MEMBER(ksayakyu_state::latch_w)
 {
 	m_sound_status &= ~0x80;
-	soundlatch_w(space, 0, data | 0x80);
+	soundlatch_byte_w(space, 0, data | 0x80);
 }
 
 READ8_MEMBER(ksayakyu_state::sound_status_r)
@@ -98,7 +98,7 @@ READ8_MEMBER(ksayakyu_state::sound_status_r)
 WRITE8_MEMBER(ksayakyu_state::tomaincpu_w)
 {
 	m_sound_status |= 0x80;
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 }
 
 static ADDRESS_MAP_START( maincpu_map, AS_PROGRAM, 8, ksayakyu_state )
@@ -115,8 +115,8 @@ static ADDRESS_MAP_START( maincpu_map, AS_PROGRAM, 8, ksayakyu_state )
 	AM_RANGE(0xa806, 0xa806) AM_READ(sound_status_r)
 	AM_RANGE(0xa807, 0xa807) AM_READNOP /* watchdog ? */
 	AM_RANGE(0xa808, 0xa808) AM_WRITE(bank_select_w)
-	AM_RANGE(0xb000, 0xb7ff) AM_RAM_WRITE(ksayakyu_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xb800, 0xbfff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xb000, 0xb7ff) AM_RAM_WRITE(ksayakyu_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xb800, 0xbfff) AM_RAM AM_SHARE("spriteram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( soundcpu_map, AS_PROGRAM, 8, ksayakyu_state )
@@ -188,7 +188,7 @@ static const ay8910_interface ay8910_interface_1 =
 {
 	AY8910_LEGACY_OUTPUT,
 	AY8910_DEFAULT_LOADS,
-	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_r),
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r),
 	DEVCB_NULL,
 	DEVCB_NULL,
 	DEVCB_HANDLER(dummy1_w)
@@ -250,9 +250,9 @@ GFXDECODE_END
 static MACHINE_START( ksayakyu )
 {
 	ksayakyu_state *state = machine.driver_data<ksayakyu_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 2, &ROM[0x10000], 0x4000);
+	state->membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x4000);
 
 	state->save_item(NAME(state->m_sound_status));
 	state->save_item(NAME(state->m_video_ctrl));

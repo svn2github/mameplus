@@ -60,13 +60,17 @@ class ddayjlc_state : public driver_device
 {
 public:
 	ddayjlc_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_mainram(*this, "mainram"),
+		m_spriteram(*this, "spriteram"),
+		m_videoram(*this, "videoram"),
+		m_bgram(*this, "bgram"){ }
 
 	/* memory pointers */
-	UINT8 *  m_bgram;
-	UINT8 *  m_mainram;
-	UINT8 *  m_videoram;
-	UINT8 *  m_spriteram;
+	required_shared_ptr<UINT8> m_mainram;
+	required_shared_ptr<UINT8> m_spriteram;
+	required_shared_ptr<UINT8> m_videoram;
+	required_shared_ptr<UINT8> m_bgram;
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
@@ -94,6 +98,7 @@ public:
 	DECLARE_WRITE8_MEMBER(sound_w);
 	DECLARE_WRITE8_MEMBER(i8257_CH0_w);
 	DECLARE_WRITE8_MEMBER(i8257_LMSR_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(prot_r);
 };
 
 
@@ -140,10 +145,9 @@ static const UINT8 prot_data[0x10] =
 	0x03, 0x01, 0x00, 0x03
 };
 
-static CUSTOM_INPUT( prot_r )
+CUSTOM_INPUT_MEMBER(ddayjlc_state::prot_r)
 {
-	ddayjlc_state *state = field.machine().driver_data<ddayjlc_state>();
-	return prot_data[state->m_prot_addr];
+	return prot_data[m_prot_addr];
 }
 
 WRITE8_MEMBER(ddayjlc_state::prot_w)
@@ -199,13 +203,13 @@ WRITE8_MEMBER(ddayjlc_state::bg2_w)
 	if (m_bgadr > 2)
 		m_bgadr = 0;
 
-	memory_set_bank(machine(), "bank1", m_bgadr);
+	membank("bank1")->set_entry(m_bgadr);
 }
 
 WRITE8_MEMBER(ddayjlc_state::sound_w)
 {
 
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
 }
 
@@ -242,10 +246,10 @@ WRITE8_MEMBER(ddayjlc_state::i8257_LMSR_w)
 
 static ADDRESS_MAP_START( main_cpu, AS_PROGRAM, 8, ddayjlc_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0x8000, 0x8fff) AM_RAM AM_BASE(m_mainram)
-	AM_RANGE(0x9000, 0x93ff) AM_RAM AM_BASE(m_spriteram)
-	AM_RANGE(0x9400, 0x97ff) AM_RAM_WRITE(ddayjlc_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x9800, 0x9fff) AM_RAM_WRITE(ddayjlc_bgram_w) AM_BASE(m_bgram) /* 9800-981f - videoregs */
+	AM_RANGE(0x8000, 0x8fff) AM_RAM AM_SHARE("mainram")
+	AM_RANGE(0x9000, 0x93ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x9400, 0x97ff) AM_RAM_WRITE(ddayjlc_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x9800, 0x9fff) AM_RAM_WRITE(ddayjlc_bgram_w) AM_SHARE("bgram") /* 9800-981f - videoregs */
 	AM_RANGE(0xa000, 0xdfff) AM_ROMBANK("bank1") AM_WRITENOP
 	AM_RANGE(0xe000, 0xe003) AM_WRITE(i8257_CH0_w)
 	AM_RANGE(0xe008, 0xe008) AM_WRITENOP
@@ -293,7 +297,7 @@ static INPUT_PORTS_START( ddayjlc )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_COIN2 )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SERVICE1 )
-	PORT_BIT( 0x60, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(prot_r, NULL)
+	PORT_BIT( 0x60, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, ddayjlc_state,prot_r, NULL)
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("DSW1")
@@ -421,7 +425,7 @@ static const ay8910_interface ay8910_config =
 {
 	AY8910_LEGACY_OUTPUT,
 	AY8910_DEFAULT_LOADS,
-	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_r),
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r),
 	DEVCB_NULL,
 	DEVCB_NULL,
 	DEVCB_NULL
@@ -482,6 +486,7 @@ static MACHINE_RESET( ddayjlc )
 
 static PALETTE_INIT( ddayjlc )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i,r,g,b,val;
 	int bit0,bit1,bit2;
 
@@ -670,8 +675,8 @@ static DRIVER_INIT( ddayjlc )
 		UINT8 *src, *dst, *temp;
 		temp = auto_alloc_array(machine, UINT8, 0x10000);
 		src = temp;
-		dst = machine.region("gfx1")->base();
-		length = machine.region("gfx1")->bytes();
+		dst = machine.root_device().memregion("gfx1")->base();
+		length = machine.root_device().memregion("gfx1")->bytes();
 		memcpy(src, dst, length);
 		newadr = 0;
 		oldaddr = 0;
@@ -685,8 +690,8 @@ static DRIVER_INIT( ddayjlc )
 		auto_free(machine, temp);
 	}
 
-	memory_configure_bank(machine, "bank1", 0, 3, machine.region("user1")->base(), 0x4000);
-	memory_set_bank(machine, "bank1", 0);
+	machine.root_device().membank("bank1")->configure_entries(0, 3, machine.root_device().memregion("user1")->base(), 0x4000);
+	machine.root_device().membank("bank1")->set_entry(0);
 }
 
 GAME( 1984, ddayjlc,  0,       ddayjlc, ddayjlc, ddayjlc, ROT90, "Jaleco", "D-Day (Jaleco set 1)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )

@@ -17,30 +17,27 @@ Atari Sprint 4 driver
 #define PIXEL_CLOCK    (MASTER_CLOCK / 2)
 
 
-static CUSTOM_INPUT( get_lever )
+CUSTOM_INPUT_MEMBER(sprint4_state::get_lever)
 {
-	sprint4_state *state = field.machine().driver_data<sprint4_state>();
 	int n = (FPTR) param;
 
-	return 4 * state->m_gear[n] > state->m_da_latch;
+	return 4 * m_gear[n] > m_da_latch;
 }
 
 
-static CUSTOM_INPUT( get_wheel )
+CUSTOM_INPUT_MEMBER(sprint4_state::get_wheel)
 {
-	sprint4_state *state = field.machine().driver_data<sprint4_state>();
 	int n = (FPTR) param;
 
-	return 8 * state->m_steer_FF1[n] + 8 * state->m_steer_FF2[n] > state->m_da_latch;
+	return 8 * m_steer_FF1[n] + 8 * m_steer_FF2[n] > m_da_latch;
 }
 
 
-static CUSTOM_INPUT( get_collision )
+CUSTOM_INPUT_MEMBER(sprint4_state::get_collision)
 {
-	sprint4_state *state = field.machine().driver_data<sprint4_state>();
 	int n = (FPTR) param;
 
-	return state->m_collision[n];
+	return m_collision[n];
 }
 
 
@@ -102,7 +99,7 @@ static TIMER_CALLBACK( nmi_callback	)
 
 	/* NMI and watchdog are disabled during service mode */
 
-	watchdog_enable(machine, input_port_read(machine, "IN0") & 0x40);
+	machine.watchdog_enable(input_port_read(machine, "IN0") & 0x40);
 
 	if (input_port_read(machine, "IN0") & 0x40)
 		cputag_set_input_line(machine, "maincpu", INPUT_LINE_NMI, PULSE_LINE);
@@ -231,7 +228,7 @@ static ADDRESS_MAP_START( sprint4_cpu_map, AS_PROGRAM, 8, sprint4_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x3fff)
 
 	AM_RANGE(0x0080, 0x00ff) AM_MIRROR(0x700) AM_READWRITE(sprint4_wram_r, sprint4_wram_w)
-	AM_RANGE(0x0800, 0x0bff) AM_MIRROR(0x400) AM_RAM_WRITE(sprint4_video_ram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x0800, 0x0bff) AM_MIRROR(0x400) AM_RAM_WRITE(sprint4_video_ram_w) AM_SHARE("videoram")
 
 	AM_RANGE(0x0000, 0x0007) AM_MIRROR(0x718) AM_READ(sprint4_analog_r)
 	AM_RANGE(0x0020, 0x0027) AM_MIRROR(0x718) AM_READ(sprint4_coin_r)
@@ -269,13 +266,13 @@ static INPUT_PORTS_START( sprint4 )
 
 	PORT_START("COLLISION")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("Player 1 Gas") PORT_PLAYER(1)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( get_collision, (void *)0 )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, sprint4_state, get_collision, (void *)0 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("Player 2 Gas") PORT_PLAYER(2)
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( get_collision, (void *)1 )
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, sprint4_state, get_collision, (void *)1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("Player 3 Gas") PORT_PLAYER(3)
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( get_collision, (void *)2 )
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, sprint4_state, get_collision, (void *)2 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_NAME("Player 4 Gas") PORT_PLAYER(4)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( get_collision, (void *)3 )
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, sprint4_state, get_collision, (void *)3 )
 
 	PORT_START("COIN")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -306,14 +303,14 @@ static INPUT_PORTS_START( sprint4 )
 	PORT_DIPSETTING(    0xe0, "150 seconds" )
 
 	PORT_START("ANALOG")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( get_wheel, (void *)0)
-	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( get_lever, (void *)0)
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( get_wheel, (void *)1)
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( get_lever, (void *)1)
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( get_wheel, (void *)2)
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( get_lever, (void *)2)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( get_wheel, (void *)3)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM( get_lever, (void *)3)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, sprint4_state, get_wheel, (void *)0)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, sprint4_state, get_lever, (void *)0)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, sprint4_state, get_wheel, (void *)1)
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, sprint4_state, get_lever, (void *)1)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, sprint4_state, get_wheel, (void *)2)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, sprint4_state, get_lever, (void *)2)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, sprint4_state, get_wheel, (void *)3)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, sprint4_state, get_lever, (void *)3)
 
 	PORT_START("WHEEL1")
 	PORT_BIT( 0xff, 0x00, IPT_DIAL ) PORT_SENSITIVITY(100) PORT_KEYDELTA(16) PORT_PLAYER(1)

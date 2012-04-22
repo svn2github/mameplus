@@ -75,11 +75,13 @@ class hvyunit_state : public driver_device
 {
 public:
 	hvyunit_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"),
+		m_colorram(*this, "colorram"){ }
 
 	/* Video */
-	UINT8			*m_videoram;
-	UINT8			*m_colorram;
+	required_shared_ptr<UINT8> m_videoram;
+	required_shared_ptr<UINT8> m_colorram;
 	tilemap_t		*m_bg_tilemap;
 	UINT16			m_scrollx;
 	UINT16			m_scrolly;
@@ -214,10 +216,10 @@ WRITE8_MEMBER(hvyunit_state::trigger_nmi_on_slave_cpu)
 
 WRITE8_MEMBER(hvyunit_state::master_bankswitch_w)
 {
-	unsigned char *ROM = machine().region("master")->base();
+	unsigned char *ROM = memregion("master")->base();
 	int bank = data & 7;
 	ROM = &ROM[0x4000 * bank];
-	memory_set_bankptr(machine(), "bank1", ROM);
+	membank("bank1")->set_base(ROM);
 }
 
 WRITE8_MEMBER(hvyunit_state::mermaid_data_w)
@@ -252,7 +254,7 @@ READ8_MEMBER(hvyunit_state::mermaid_status_r)
 WRITE8_MEMBER(hvyunit_state::trigger_nmi_on_sound_cpu2)
 {
 
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	device_set_input_line(m_sound_cpu, INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -273,12 +275,12 @@ WRITE8_MEMBER(hvyunit_state::hu_colorram_w)
 WRITE8_MEMBER(hvyunit_state::slave_bankswitch_w)
 {
 
-	unsigned char *ROM = machine().region("slave")->base();
+	unsigned char *ROM = memregion("slave")->base();
 	int bank = (data & 0x03);
 	m_port0_data = data;
 	ROM = &ROM[0x4000 * bank];
 
-	memory_set_bankptr(machine(), "bank2", ROM);
+	membank("bank2")->set_base(ROM);
 }
 
 WRITE8_MEMBER(hvyunit_state::hu_scrollx_w)
@@ -306,11 +308,11 @@ WRITE8_MEMBER(hvyunit_state::coin_count_w)
 
 WRITE8_MEMBER(hvyunit_state::sound_bankswitch_w)
 {
-	unsigned char *ROM = machine().region("soundcpu")->base();
+	unsigned char *ROM = memregion("soundcpu")->base();
 	int bank = data & 0x3;
 	ROM = &ROM[0x4000 * bank];
 
-	memory_set_bankptr(machine(), "bank3", ROM);
+	membank("bank3")->set_base(ROM);
 }
 
 
@@ -431,10 +433,10 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( slave_memory, AS_PROGRAM, 8, hvyunit_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank2")
-	AM_RANGE(0xc000, 0xc3ff) AM_RAM_WRITE(hu_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xc400, 0xc7ff) AM_RAM_WRITE(hu_colorram_w) AM_BASE(m_colorram)
-	AM_RANGE(0xd000, 0xd1ff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_split2_w) AM_SHARE("paletteram2")
-	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_split1_w) AM_SHARE("paletteram")
+	AM_RANGE(0xc000, 0xc3ff) AM_RAM_WRITE(hu_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xc400, 0xc7ff) AM_RAM_WRITE(hu_colorram_w) AM_SHARE("colorram")
+	AM_RANGE(0xd000, 0xd1ff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_byte_split_hi_w) AM_SHARE("paletteram2")
+	AM_RANGE(0xd800, 0xd9ff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_byte_split_lo_w) AM_SHARE("paletteram")
 	AM_RANGE(0xd000, 0xdfff) AM_RAM
 	AM_RANGE(0xe000, 0xffff) AM_RAM AM_SHARE("share1")
 ADDRESS_MAP_END
@@ -464,7 +466,7 @@ static ADDRESS_MAP_START( sound_io, AS_IO, 8, hvyunit_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_WRITE(sound_bankswitch_w)
 	AM_RANGE(0x02, 0x03) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)
-	AM_RANGE(0x04, 0x04) AM_READ(soundlatch_r)
+	AM_RANGE(0x04, 0x04) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
 

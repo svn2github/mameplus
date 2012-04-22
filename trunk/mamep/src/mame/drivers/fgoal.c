@@ -47,6 +47,7 @@ static int intensity(int bits)
 
 static PALETTE_INIT( fgoal )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* for B/W screens PCB can be jumpered to use lower half of PROM */
@@ -103,9 +104,9 @@ READ8_MEMBER(fgoal_state::fgoal_analog_r)
 }
 
 
-static CUSTOM_INPUT( fgoal_80_r )
+CUSTOM_INPUT_MEMBER(fgoal_state::fgoal_80_r)
 {
-	UINT8 ret = (field.machine().primary_screen->vpos() & 0x80) ? 1 : 0;
+	UINT8 ret = (machine().primary_screen->vpos() & 0x80) ? 1 : 0;
 
 	return ret;
 }
@@ -220,7 +221,7 @@ static ADDRESS_MAP_START( cpu_map, AS_PROGRAM, 8, fgoal_state )
 	AM_RANGE(0x00fc, 0x00ff) AM_WRITE(fgoal_sound2_w)
 
 	AM_RANGE(0x0100, 0x03ff) AM_RAM
-	AM_RANGE(0x4000, 0x7fff) AM_RAM AM_BASE(m_video_ram)
+	AM_RANGE(0x4000, 0x7fff) AM_RAM AM_SHARE("video_ram")
 
 	AM_RANGE(0x8000, 0x8000) AM_WRITE(fgoal_ypos_w)
 	AM_RANGE(0x8001, 0x8001) AM_WRITE(fgoal_xpos_w)
@@ -257,7 +258,7 @@ static INPUT_PORTS_START( fgoal )
 	/* extra credit score changes depending on player's performance */
 
 	PORT_START("IN1")
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(fgoal_80_r, NULL) /* 128V */
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, fgoal_state,fgoal_80_r, NULL) /* 128V */
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Cabinet ))
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ))
 	PORT_DIPSETTING(    0x40, DEF_STR( Cocktail ))

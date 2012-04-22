@@ -251,10 +251,9 @@ static const eeprom_interface undrfire_eeprom_interface =
             GAME INPUTS
 **********************************************************/
 
-static CUSTOM_INPUT(frame_counter_r)
+CUSTOM_INPUT_MEMBER(undrfire_state::frame_counter_r)
 {
-	undrfire_state *state = field.machine().driver_data<undrfire_state>();
-	return state->m_frame_counter;
+	return m_frame_counter;
 }
 
 READ32_MEMBER(undrfire_state::undrfire_input_r)
@@ -283,7 +282,7 @@ WRITE32_MEMBER(undrfire_state::undrfire_input_w)
 		{
 			if (ACCESSING_BITS_24_31)	/* $500000 is watchdog */
 			{
-				watchdog_reset(machine());
+				machine().watchdog_reset();
 			}
 
 			if (ACCESSING_BITS_0_7)
@@ -474,8 +473,8 @@ WRITE32_MEMBER(undrfire_state::cbombers_adc_w)
 
 static ADDRESS_MAP_START( undrfire_map, AS_PROGRAM, 32, undrfire_state )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM
-	AM_RANGE(0x200000, 0x21ffff) AM_RAM AM_BASE(m_ram)
-	AM_RANGE(0x300000, 0x303fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x200000, 0x21ffff) AM_RAM AM_SHARE("ram")
+	AM_RANGE(0x300000, 0x303fff) AM_RAM AM_SHARE("spriteram")
 //  AM_RANGE(0x304000, 0x304003) AM_RAM // debugging - doesn't change ???
 //  AM_RANGE(0x304400, 0x304403) AM_RAM // debugging - doesn't change ???
 	AM_RANGE(0x400000, 0x400003) AM_WRITE(motor_control_w)		/* gun vibration */
@@ -496,7 +495,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( cbombers_cpua_map, AS_PROGRAM, 32, undrfire_state )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM
 	AM_RANGE(0x200000, 0x21ffff) AM_RAM
-	AM_RANGE(0x300000, 0x303fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x300000, 0x303fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x400000, 0x400003) AM_WRITE(cbombers_cpua_ctrl_w)
 	AM_RANGE(0x500000, 0x500007) AM_READWRITE(undrfire_input_r, undrfire_input_w)
 	AM_RANGE(0x600000, 0x600007) AM_READWRITE(cbombers_adc_r, cbombers_adc_w)
@@ -509,7 +508,7 @@ static ADDRESS_MAP_START( cbombers_cpua_map, AS_PROGRAM, 32, undrfire_state )
 	AM_RANGE(0xb00000, 0xb0000f) AM_RAM /* ? */
 	AM_RANGE(0xc00000, 0xc00007) AM_RAM /* LAN controller? */
 	AM_RANGE(0xd00000, 0xd00003) AM_WRITE(rotate_control_w)		/* perhaps port based rotate control? */
-	AM_RANGE(0xe00000, 0xe0ffff) AM_RAM AM_BASE(m_shared_ram)
+	AM_RANGE(0xe00000, 0xe0ffff) AM_RAM AM_SHARE("shared_ram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cbombers_cpub_map, AS_PROGRAM, 16, undrfire_state )
@@ -527,7 +526,7 @@ ADDRESS_MAP_END
 
 static INPUT_PORTS_START( undrfire )
 	PORT_START("INPUTS")
-	PORT_BIT( 0x00000001, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(frame_counter_r, NULL)	/* Frame counter */
+	PORT_BIT( 0x00000001, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, undrfire_state,frame_counter_r, NULL)	/* Frame counter */
 	PORT_BIT( 0x00000002, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x00000004, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x00000008, IP_ACTIVE_LOW,  IPT_UNKNOWN )
@@ -595,7 +594,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( cbombers )
 	PORT_START("INPUTS")
-	PORT_BIT( 0x00000001, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(frame_counter_r, NULL)	/* Frame counter */
+	PORT_BIT( 0x00000001, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, undrfire_state,frame_counter_r, NULL)	/* Frame counter */
 	PORT_BIT( 0x00000002, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x00000004, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x00000008, IP_ACTIVE_LOW,  IPT_UNKNOWN )
@@ -971,8 +970,8 @@ ROM_END
 static DRIVER_INIT( undrfire )
 {
 	UINT32 offset,i;
-	UINT8 *gfx = machine.region("gfx3")->base();
-	int size=machine.region("gfx3")->bytes();
+	UINT8 *gfx = machine.root_device().memregion("gfx3")->base();
+	int size=machine.root_device().memregion("gfx3")->bytes();
 	int data;
 
 	/* make piv tile GFX format suitable for gfxdecode */
@@ -1000,8 +999,8 @@ static DRIVER_INIT( undrfire )
 static DRIVER_INIT( cbombers )
 {
 	UINT32 offset,i;
-	UINT8 *gfx = machine.region("gfx3")->base();
-	int size=machine.region("gfx3")->bytes();
+	UINT8 *gfx = machine.root_device().memregion("gfx3")->base();
+	int size=machine.root_device().memregion("gfx3")->bytes();
 	int data;
 
 

@@ -41,21 +41,20 @@
 
 /******************************************************************************/
 
-static CUSTOM_INPUT( f3_analog_r )
+CUSTOM_INPUT_MEMBER(taito_f3_state::f3_analog_r)
 {
 	const char *tag = (const char *)param;
 	UINT32 ipt = 0;
 
-	ipt = ((input_port_read(field.machine(), tag) & 0xf)<<12) | ((input_port_read(field.machine(), tag) & 0xff0)>>4);
+	ipt = ((input_port_read(machine(), tag) & 0xf)<<12) | ((input_port_read(machine(), tag) & 0xff0)>>4);
 
 	return ipt;
 }
 
-static CUSTOM_INPUT( f3_coin_r )
+CUSTOM_INPUT_MEMBER(taito_f3_state::f3_coin_r)
 {
-	taito_f3_state *state = field.machine().driver_data<taito_f3_state>();
 	int num = (FPTR)param;
-	return state->m_coin_word[num];
+	return m_coin_word[num];
 }
 
 READ32_MEMBER(taito_f3_state::f3_control_r)
@@ -74,7 +73,7 @@ WRITE32_MEMBER(taito_f3_state::f3_control_w)
 	switch (offset)
 	{
 		case 0x00: /* Watchdog */
-			watchdog_reset(machine());
+			machine().watchdog_reset();
 			return;
 
 		case 0x01: /* Coin counters & lockouts */
@@ -122,7 +121,7 @@ WRITE32_MEMBER(taito_f3_state::f3_sound_reset_1_w)
 WRITE32_MEMBER(taito_f3_state::f3_sound_bankswitch_w)
 {
 	if (m_f3_game==KIRAMEKI) {
-		UINT16 *rom = (UINT16 *)machine().region("audiocpu")->base();
+		UINT16 *rom = (UINT16 *)machine().root_device().memregion("audiocpu")->base();
 		UINT32 idx;
 
 		idx = (offset << 1) & 0x1e;
@@ -134,7 +133,7 @@ WRITE32_MEMBER(taito_f3_state::f3_sound_bankswitch_w)
 
 		/* Banks are 0x20000 bytes each, divide by two to get data16
         pointer rather than byte pointer */
-		memory_set_bankptr(machine(), "bank2", &rom[(idx*0x20000)/2 + 0x80000]);
+		membank("bank2")->set_base(&rom[(idx*0x20000)/2 + 0x80000]);
 
 	} else {
 		logerror("Sound bankswitch in unsupported game\n");
@@ -190,16 +189,16 @@ WRITE16_MEMBER(taito_f3_state::f3_unk_w)
 static ADDRESS_MAP_START( f3_map, AS_PROGRAM, 32, taito_f3_state )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM
 	AM_RANGE(0x300000, 0x30007f) AM_WRITE(f3_sound_bankswitch_w)
-	AM_RANGE(0x400000, 0x41ffff) AM_MIRROR(0x20000) AM_RAM AM_BASE(m_f3_ram)
+	AM_RANGE(0x400000, 0x41ffff) AM_MIRROR(0x20000) AM_RAM AM_SHARE("f3_ram")
 	AM_RANGE(0x440000, 0x447fff) AM_RAM_WRITE(f3_palette_24bit_w) AM_SHARE("paletteram")
 	AM_RANGE(0x4a0000, 0x4a001f) AM_READWRITE(f3_control_r,  f3_control_w)
 	AM_RANGE(0x4c0000, 0x4c0003) AM_WRITE16(f3_unk_w,0xffffffff)
-	AM_RANGE(0x600000, 0x60ffff) AM_READWRITE16(f3_spriteram_r,f3_spriteram_w,0xffffffff) //AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0x610000, 0x61bfff) AM_READWRITE16(f3_pf_data_r,f3_pf_data_w,0xffffffff)		//AM_BASE(m_f3_pf_data)
-	AM_RANGE(0x61c000, 0x61dfff) AM_READWRITE16(f3_videoram_r,f3_videoram_w,0xffffffff)		//AM_BASE(m_videoram)
-	AM_RANGE(0x61e000, 0x61ffff) AM_READWRITE16(f3_vram_r,f3_vram_w,0xffffffff) 			//AM_BASE(m_f3_vram)
-	AM_RANGE(0x620000, 0x62ffff) AM_READWRITE16(f3_lineram_r,f3_lineram_w,0xffffffff)		//AM_BASE(m_f3_line_ram)
-	AM_RANGE(0x630000, 0x63ffff) AM_READWRITE16(f3_pivot_r,f3_pivot_w,0xffffffff)			//AM_BASE(m_f3_pivot_ram)
+	AM_RANGE(0x600000, 0x60ffff) AM_READWRITE16(f3_spriteram_r,f3_spriteram_w,0xffffffff) //AM_SHARE("spriteram")
+	AM_RANGE(0x610000, 0x61bfff) AM_READWRITE16(f3_pf_data_r,f3_pf_data_w,0xffffffff)		//AM_SHARE("f3_pf_data")
+	AM_RANGE(0x61c000, 0x61dfff) AM_READWRITE16(f3_videoram_r,f3_videoram_w,0xffffffff)		//AM_SHARE("videoram")
+	AM_RANGE(0x61e000, 0x61ffff) AM_READWRITE16(f3_vram_r,f3_vram_w,0xffffffff) 			//AM_SHARE("f3_vram")
+	AM_RANGE(0x620000, 0x62ffff) AM_READWRITE16(f3_lineram_r,f3_lineram_w,0xffffffff)		//AM_SHARE("f3_line_ram")
+	AM_RANGE(0x630000, 0x63ffff) AM_READWRITE16(f3_pivot_r,f3_pivot_w,0xffffffff)			//AM_SHARE("f3_pivot_ram")
 	AM_RANGE(0x660000, 0x66000f) AM_WRITE16(f3_control_0_w,0xffffffff)
 	AM_RANGE(0x660010, 0x66001f) AM_WRITE16(f3_control_1_w,0xffffffff)
 	AM_RANGE(0xc00000, 0xc007ff) AM_RAM AM_SHARE("f3_shared")
@@ -230,8 +229,8 @@ static INPUT_PORTS_START( f3 )
 	PORT_BIT( 0x00002000, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x00004000, IP_ACTIVE_LOW, IPT_START3 )
 	PORT_BIT( 0x00008000, IP_ACTIVE_LOW, IPT_START4 )
-	PORT_BIT( 0x00ff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(custom_port_read, "EEPROMIN")
-	PORT_BIT( 0xff000000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(custom_port_read, "EEPROMIN")
+	PORT_BIT( 0x00ff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, driver_device,custom_port_read, "EEPROMIN")
+	PORT_BIT( 0xff000000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, driver_device,custom_port_read, "EEPROMIN")
 
 	/* MSW: Coin counters/lockouts are readable, LSW: Joysticks (Player 1 & 2) */
 	PORT_START("IN1")
@@ -244,7 +243,7 @@ static INPUT_PORTS_START( f3 )
 	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2)
 	PORT_BIT( 0x00000080, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2)
 	PORT_BIT( 0x0000ff00, IP_ACTIVE_HIGH, IPT_UNKNOWN )	/* These must be high */
-	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(f3_coin_r, (void *)0)
+	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, taito_f3_state,f3_coin_r, (void *)0)
 
 	/* Player 3 & 4 fire buttons (Player 2 top fire buttons in Kaiser Knuckle) */
 	PORT_START("IN2")
@@ -270,16 +269,16 @@ static INPUT_PORTS_START( f3 )
 	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(4)
 	PORT_BIT( 0x00000080, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(4)
 	PORT_BIT( 0x0000ff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(f3_coin_r, (void *)1)
+	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, taito_f3_state,f3_coin_r, (void *)1)
 
 	/* Analog control 1 */
 	PORT_START("AN0")
-	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(f3_analog_r, "DIAL1")
+	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, taito_f3_state,f3_analog_r, "DIAL1")
 	PORT_BIT( 0xffff0000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	/* Analog control 2 */
 	PORT_START("AN1")
-	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(f3_analog_r, "DIAL2")
+	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, taito_f3_state,f3_analog_r, "DIAL2")
 	PORT_BIT( 0xffff0000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	/* These are not read directly, but through PORT_CUSTOMs above */
@@ -3667,8 +3666,8 @@ static void tile_decode(running_machine &machine)
 {
 	UINT8 lsb,msb;
 	UINT32 offset,i;
-	UINT8 *gfx = machine.region("gfx2")->base();
-	int size=machine.region("gfx2")->bytes();
+	UINT8 *gfx = machine.root_device().memregion("gfx2")->base();
+	int size=machine.root_device().memregion("gfx2")->bytes();
 	int data;
 
 	/* Setup ROM formats:
@@ -3700,8 +3699,8 @@ static void tile_decode(running_machine &machine)
 		offset+=4;
 	}
 
-	gfx = machine.region("gfx1")->base();
-	size=machine.region("gfx1")->bytes();
+	gfx = machine.root_device().memregion("gfx1")->base();
+	size=machine.root_device().memregion("gfx1")->bytes();
 
 	offset = size/2;
 	for (i = size/2+size/4; i<size; i++)
@@ -3782,7 +3781,7 @@ static DRIVER_INIT( trstaroj )
 static DRIVER_INIT( scfinals )
 {
 	taito_f3_state *state = machine.driver_data<taito_f3_state>();
-	UINT32 *RAM = (UINT32 *)machine.region("maincpu")->base();
+	UINT32 *RAM = (UINT32 *)state->memregion("maincpu")->base();
 
 	/* Doesn't boot without this - eprom related? */
     RAM[0x5af0/4]=0x4e710000|(RAM[0x5af0/4]&0xffff);
@@ -3869,7 +3868,7 @@ WRITE32_MEMBER(taito_f3_state::bubsympb_oki_w)
 	//if (mem_mask==0x000000ff) downcast<okim6295_device *>(device)->write(0,data&0xff);
 	if (ACCESSING_BITS_16_23)
 	{
-		UINT8 *snd = machine().region("oki")->base();
+		UINT8 *snd = memregion("oki")->base();
 		int bank = (data & 0x000f0000) >> 16;
 		// almost certainly wrong
 		memcpy(snd+0x30000, snd+0x80000+0x30000+bank*0x10000, 0x10000);
@@ -3890,7 +3889,7 @@ static DRIVER_INIT( bubsympb )
 	/* expand gfx rom */
 	{
 		int i;
-		UINT8 *gfx = machine.region("gfx2")->base();
+		UINT8 *gfx = state->memregion("gfx2")->base();
 
 		for (i=0x200000;i<0x400000; i+=4)
 		{
@@ -3942,7 +3941,7 @@ static DRIVER_INIT( landmakr )
 static DRIVER_INIT( landmkrp )
 {
 	taito_f3_state *state = machine.driver_data<taito_f3_state>();
-	UINT32 *RAM = (UINT32 *)machine.region("maincpu")->base();
+	UINT32 *RAM = (UINT32 *)state->memregion("maincpu")->base();
 
 	/* For some reason the least significant byte in the last 2 long words of
     ROM is swapped.  As the roms have been verified ok, I assume this is some
@@ -3990,7 +3989,7 @@ static DRIVER_INIT( pbobbl2p )
 	// which eventually causes the game to crash
 	//  -- protection check?? or some kind of checksum fail?
 
-	UINT32 *ROM = (UINT32 *)machine.region("maincpu")->base();
+	UINT32 *ROM = (UINT32 *)state->memregion("maincpu")->base();
 
 	/* protection? */
     ROM[0x40090/4]=0x00004e71|(ROM[0x40090/4]&0xffff0000);

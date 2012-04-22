@@ -42,10 +42,11 @@ class _2mindril_state : public taito_f3_state
 {
 public:
 	_2mindril_state(const machine_config &mconfig, device_type type, const char *tag)
-		: taito_f3_state(mconfig, type, tag) { }
+		: taito_f3_state(mconfig, type, tag),
+		  m_iodata(*this, "iodata") { }
 
 	/* memory pointers */
-	UINT16 *      m_iodata;
+	required_shared_ptr<UINT16> m_iodata;
 
 	/* input-related */
 	UINT16        m_defender_sensor;
@@ -207,12 +208,12 @@ static ADDRESS_MAP_START( drill_map, AS_PROGRAM, 16, _2mindril_state )
 	AM_RANGE(0x430000, 0x43ffff) AM_READWRITE(f3_pivot_r,f3_pivot_w)
 	AM_RANGE(0x460000, 0x46000f) AM_WRITE(f3_control_0_w)
 	AM_RANGE(0x460010, 0x46001f) AM_WRITE(f3_control_1_w)
-	AM_RANGE(0x500000, 0x501fff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x500000, 0x501fff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x502022, 0x502023) AM_WRITENOP //countinously switches between 0 and 2
 	AM_RANGE(0x600000, 0x600007) AM_DEVREADWRITE8_LEGACY("ymsnd", ym2610_r, ym2610_w, 0x00ff)
 	AM_RANGE(0x60000c, 0x60000d) AM_READWRITE(drill_irq_r,drill_irq_w)
 	AM_RANGE(0x60000e, 0x60000f) AM_RAM // unknown purpose, zeroed at start-up and nothing else
-	AM_RANGE(0x700000, 0x70000f) AM_READWRITE(drill_io_r,drill_io_w) AM_BASE(m_iodata) // i/o
+	AM_RANGE(0x700000, 0x70000f) AM_READWRITE(drill_io_r,drill_io_w) AM_SHARE("iodata") // i/o
 	AM_RANGE(0x800000, 0x800001) AM_WRITE(sensors_w)
 ADDRESS_MAP_END
 
@@ -494,8 +495,8 @@ static void tile_decode(running_machine &machine)
 {
 	UINT8 lsb,msb;
 	UINT32 offset,i;
-	UINT8 *gfx = machine.region("gfx2")->base();
-	int size=machine.region("gfx2")->bytes();
+	UINT8 *gfx = machine.root_device().memregion("gfx2")->base();
+	int size=machine.root_device().memregion("gfx2")->bytes();
 	int data;
 
 	/* Setup ROM formats:
@@ -527,8 +528,8 @@ static void tile_decode(running_machine &machine)
 		offset+=4;
 	}
 
-	gfx = machine.region("gfx1")->base();
-	size=machine.region("gfx1")->bytes();
+	gfx = machine.root_device().memregion("gfx1")->base();
+	size=machine.root_device().memregion("gfx1")->bytes();
 
 	offset = size/2;
 	for (i = size/2+size/4; i<size; i++)

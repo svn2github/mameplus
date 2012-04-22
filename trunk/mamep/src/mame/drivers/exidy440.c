@@ -252,11 +252,11 @@ Who Dunnit           1988  6809
  *
  *************************************/
 
-static INPUT_CHANGED( coin_inserted )
+INPUT_CHANGED_MEMBER(exidy440_state::coin_inserted)
 {
 	/* if we got a coin, set the IRQ on the main CPU */
 	if (newval == 0)
-		cputag_set_input_line(field.machine(), "maincpu", 0, ASSERT_LINE);
+		cputag_set_input_line(machine(), "maincpu", 0, ASSERT_LINE);
 }
 
 
@@ -267,24 +267,22 @@ static INPUT_CHANGED( coin_inserted )
  *
  *************************************/
 
-static CUSTOM_INPUT( firq_beam_r )
+CUSTOM_INPUT_MEMBER(exidy440_state::firq_beam_r)
 {
-	exidy440_state *state = field.machine().driver_data<exidy440_state>();
-	return state->m_firq_beam;
+	return m_firq_beam;
 }
 
 
-static CUSTOM_INPUT( firq_vblank_r )
+CUSTOM_INPUT_MEMBER(exidy440_state::firq_vblank_r)
 {
-	exidy440_state *state = field.machine().driver_data<exidy440_state>();
-	return state->m_firq_vblank;
+	return m_firq_vblank;
 }
 
 
-static CUSTOM_INPUT( hitnmiss_button1_r )
+CUSTOM_INPUT_MEMBER(exidy440_state::hitnmiss_button1_r)
 {
 	/* button 1 shows up in two bits */
-	UINT32 button1 = input_port_read(field.machine(), "HITNMISS_BUTTON1");
+	UINT32 button1 = input_port_read(machine(), "HITNMISS_BUTTON1");
 	return (button1 << 1) | button1;
 }
 
@@ -310,7 +308,7 @@ void exidy440_bank_select(running_machine &machine, UINT8 bank)
 
 	/* select the bank and update the bank pointer */
 	state->m_bank = bank;
-	memory_set_bankptr(machine, "bank1", &machine.region("maincpu")->base()[0x10000 + state->m_bank * 0x4000]);
+	state->membank("bank1")->set_base(&machine.root_device().memregion("maincpu")->base()[0x10000 + state->m_bank * 0x4000]);
 }
 
 
@@ -319,7 +317,7 @@ WRITE8_MEMBER(exidy440_state::bankram_w)
 	/* EEROM lives in the upper 8k of bank 15 */
 	if (m_bank == 15 && offset >= 0x2000)
 	{
-		machine().region("maincpu")->base()[0x10000 + 15 * 0x4000 + offset] = data;
+		memregion("maincpu")->base()[0x10000 + 15 * 0x4000 + offset] = data;
 		logerror("W EEROM[%04X] = %02X\n", offset - 0x2000, data);
 	}
 
@@ -447,7 +445,7 @@ static MACHINE_START( exidy440 )
 {
 	exidy440_state *state = machine.driver_data<exidy440_state>();
 	/* the EEROM lives in the uppermost 8k of the top bank */
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = state->memregion("maincpu")->base();
 
 	state->m_custom = machine.device("custom");
 	machine.device<nvram_device>("nvram")->set_base(&rom[0x10000 + 15 * 0x4000 + 0x2000], 0x2000);
@@ -469,13 +467,13 @@ static MACHINE_RESET( exidy440 )
  *************************************/
 
 static ADDRESS_MAP_START( exidy440_map, AS_PROGRAM, 8, exidy440_state )
-	AM_RANGE(0x0000, 0x1fff) AM_RAM AM_BASE(m_imageram)
-	AM_RANGE(0x2000, 0x209f) AM_RAM_WRITE(exidy440_spriteram_w) AM_BASE(m_spriteram)
+	AM_RANGE(0x0000, 0x1fff) AM_RAM AM_SHARE("imageram")
+	AM_RANGE(0x2000, 0x209f) AM_RAM_WRITE(exidy440_spriteram_w) AM_SHARE("spriteram")
 	AM_RANGE(0x20a0, 0x29ff) AM_RAM
 	AM_RANGE(0x2a00, 0x2aff) AM_READWRITE(exidy440_videoram_r, exidy440_videoram_w)
 	AM_RANGE(0x2b00, 0x2b00) AM_READ(exidy440_vertical_pos_r)
 	AM_RANGE(0x2b01, 0x2b01) AM_READWRITE(exidy440_horizontal_pos_r, exidy440_interrupt_clear_w)
-	AM_RANGE(0x2b02, 0x2b02) AM_RAM AM_BASE(m_scanline)
+	AM_RANGE(0x2b02, 0x2b02) AM_RAM AM_SHARE("scanline")
 	AM_RANGE(0x2b03, 0x2b03) AM_READ_PORT("IN0") AM_WRITE(exidy440_control_w)
 	AM_RANGE(0x2c00, 0x2dff) AM_READWRITE(exidy440_paletteram_r, exidy440_paletteram_w)
 	AM_RANGE(0x2e00, 0x2e1f) AM_RAM_WRITE(sound_command_w)
@@ -532,8 +530,8 @@ static INPUT_PORTS_START( crossbow )
 	PORT_DIPSETTING(    0x30, DEF_STR( Normal ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Hard ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Hardest ) )
-	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(firq_beam_r, NULL)
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(firq_vblank_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_beam_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_vblank_r, NULL)
 
 	PORT_START("IN1")		/* audio board dips */
 	COINAGE
@@ -547,8 +545,8 @@ static INPUT_PORTS_START( crossbow )
 	PORT_BIT( 0xfe, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("IN3")		/* coin counters */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("AN0")		/* fake analog X */
@@ -573,8 +571,8 @@ static INPUT_PORTS_START( cheyenne )
 	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Hard ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Hardest ) )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_beam_r, NULL)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_vblank_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_beam_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_vblank_r, NULL)
 
 	PORT_START("IN1")		/* audio board dips */
 	COINAGE
@@ -588,8 +586,8 @@ static INPUT_PORTS_START( cheyenne )
 	PORT_BIT( 0xfe, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("IN3")		/* coin counters */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("AN0")		/* fake analog X */
@@ -614,8 +612,8 @@ static INPUT_PORTS_START( combat )
 	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Hard ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Hardest ) )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_beam_r, NULL)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_vblank_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_beam_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_vblank_r, NULL)
 
 	PORT_START("IN1")		/* audio board dips */
 	COINAGE
@@ -629,8 +627,8 @@ static INPUT_PORTS_START( combat )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("IN3")		/* coin counters */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("AN0")		/* fake analog X */
@@ -655,8 +653,8 @@ static INPUT_PORTS_START( catch22 )
 	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Hard ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Hardest ) )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_beam_r, NULL)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_vblank_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_beam_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_vblank_r, NULL)
 
 	PORT_START("IN1")		/* audio board dips */
 	COINAGE
@@ -670,8 +668,8 @@ static INPUT_PORTS_START( catch22 )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("IN3")		/* coin counters */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	/* PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN ) */
 	/* PORT_BIT( 0xf8, IP_ACTIVE_LOW,  IPT_UNKNOWN ) */
@@ -698,8 +696,8 @@ static INPUT_PORTS_START( cracksht )
 	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Hard ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Hardest ) )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_beam_r, NULL)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_vblank_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_beam_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_vblank_r, NULL)
 
 	PORT_START("IN1")		/* audio board dips */
 	COINAGE
@@ -713,8 +711,8 @@ static INPUT_PORTS_START( cracksht )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("IN3")		/* coin counters */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0xf8, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
@@ -736,8 +734,8 @@ static INPUT_PORTS_START( claypign )
 	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Hard ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Hardest ) )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_beam_r, NULL)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_vblank_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_beam_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_vblank_r, NULL)
 
 	PORT_START("IN1")		/* audio board dips */
 	COINAGE
@@ -751,8 +749,8 @@ static INPUT_PORTS_START( claypign )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("IN3")		/* coin counters */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0xf8, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
@@ -778,8 +776,8 @@ static INPUT_PORTS_START( chiller )
 	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Hard ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Hardest ) )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_beam_r, NULL)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_vblank_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_beam_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_vblank_r, NULL)
 
 	PORT_START("IN1")		/* audio board dips */
 	COINAGE
@@ -790,8 +788,8 @@ static INPUT_PORTS_START( chiller )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("IN3")		/* coin counters */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0xf8, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
@@ -817,8 +815,8 @@ static INPUT_PORTS_START( topsecex )
 	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Hard ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Hardest ) )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_beam_r, NULL)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_vblank_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_beam_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_vblank_r, NULL)
 
 	PORT_START("IN1")		/* audio board dips */
 	COINAGE
@@ -829,8 +827,8 @@ static INPUT_PORTS_START( topsecex )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("IN3")		/* coin counters */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0xf8, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
@@ -854,7 +852,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( hitnmiss )
 	PORT_START("IN0")		/* player inputs and logic board dips */
-	PORT_BIT( 0x03, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(hitnmiss_button1_r, NULL)
+	PORT_BIT( 0x03, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,hitnmiss_button1_r, NULL)
 	PORT_DIPNAME( 0x0c, 0x00, "Seconds" )
 	PORT_DIPSETTING(    0x04, "20" )
 	PORT_DIPSETTING(    0x00, "30" )
@@ -865,8 +863,8 @@ static INPUT_PORTS_START( hitnmiss )
 	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Hard ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Hardest ) )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_beam_r, NULL)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_vblank_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_beam_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_vblank_r, NULL)
 
 	PORT_START("IN1")		/* audio board dips */
 	COINAGE
@@ -880,8 +878,8 @@ static INPUT_PORTS_START( hitnmiss )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("IN3")		/* coin counters */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0xf8, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
@@ -898,7 +896,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( whodunit )
 	PORT_START("IN0")		/* player inputs and logic board dips */
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_vblank_r, NULL)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_vblank_r, NULL)
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON1 )
 	PORT_DIPNAME( 0x0c, 0x00, DEF_STR( Lives ) )
 	PORT_DIPSETTING(    0x04, "2" )
@@ -910,8 +908,8 @@ static INPUT_PORTS_START( whodunit )
 	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Hard ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Hardest ) )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_beam_r, NULL)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_vblank_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_beam_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_vblank_r, NULL)
 
 	PORT_START("IN1")		/* audio board dips */
 	COINAGE
@@ -922,8 +920,8 @@ static INPUT_PORTS_START( whodunit )
 	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("IN3")		/* coin counters */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0xf8, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
@@ -949,8 +947,8 @@ static INPUT_PORTS_START( showdown )
 	PORT_DIPSETTING(    0x00, DEF_STR( Normal ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( Hard ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( Hardest ) )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_beam_r, NULL)
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(firq_vblank_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_beam_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy440_state,firq_vblank_r, NULL)
 
 	PORT_START("IN1")		/* audio board dips */
 	COINAGE
@@ -978,8 +976,8 @@ static INPUT_PORTS_START( showdown )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 
 	PORT_START("IN3")		/* coin counters */
-	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED(coin_inserted, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED(coin_inserted, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, exidy440_state,coin_inserted, 0)
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_UNKNOWN )
 	PORT_BIT( 0xf8, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 

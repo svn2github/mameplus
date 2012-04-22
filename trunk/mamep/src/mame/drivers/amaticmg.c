@@ -413,6 +413,7 @@ static SCREEN_UPDATE_IND16( amaticmg )
 
 static PALETTE_INIT( amaticmg )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int	bit0, bit1, bit2 , r, g, b;
 	int	i;
 
@@ -439,6 +440,7 @@ static PALETTE_INIT( amaticmg )
 
 static PALETTE_INIT( amaticmg3 )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int	r, g, b;
 	int	i;
 
@@ -722,7 +724,9 @@ MACHINE_CONFIG_END
 ************************************/
 
 ROM_START( am_uslot )
-	ROM_REGION( 0x40000, "maincpu", 0 )	/* encrypted program ROM...*/
+	ROM_REGION( 0x40000, "maincpu", ROMREGION_ERASE00 )
+
+	ROM_REGION( 0x20000, "mainprg", 0 )	/* encrypted program ROM...*/
 	ROM_LOAD( "u3.bin",  0x00000, 0x20000, CRC(29bf4a95) SHA1(a73873f7cd1fdf5accc3e79f4619949f261400b8) )
 
 	ROM_REGION( 0x30000, "gfx1", 0 )
@@ -735,7 +739,9 @@ ROM_END
 
 
 ROM_START( am_mg24 )
-	ROM_REGION( 0x40000, "maincpu", 0 )	/* encrypted program ROM...*/
+	ROM_REGION( 0x40000, "maincpu", ROMREGION_ERASE00 )
+
+	ROM_REGION( 0x40000, "mainprg", 0 )	/* encrypted program ROM...*/
 	ROM_LOAD( "mgi_vger_3.9-i-8201.i6.bin", 0x00000, 0x40000, CRC(9ce159f7) SHA1(101c277d579a69cb03f879288b2cecf838cf1741) )
 
 	ROM_REGION( 0x180000, "gfx1", 0 )
@@ -749,7 +755,9 @@ ROM_START( am_mg24 )
 ROM_END
 
 ROM_START( am_mg3 )
-	ROM_REGION( 0x40000, "maincpu", 0 )	/* encrypted program ROM...*/
+	ROM_REGION( 0x40000, "maincpu", ROMREGION_ERASE00 )
+
+	ROM_REGION( 0x40000, "mainprg", 0 )	/* encrypted program ROM...*/
 	ROM_LOAD( "mg_iii_vger_3.5-i-8205.bin", 0x00000, 0x40000, CRC(21d64029) SHA1(d5c3fde02833a96dd7a43481a489bfc4a5c9609d) )
 
 	ROM_REGION( 0x180000, "gfx1", 0 )
@@ -766,9 +774,44 @@ ROM_END
 *       Driver Initialization       *
 ************************************/
 
+static void encf(UINT8 ciphertext, int address, UINT8 &plaintext, int &newaddress)
+{
+	int aux = address & 0xfff;
+	aux = aux ^ (aux>>6);
+	aux = ((aux<<6) | (aux>>6)) & 0xfff;
+	UINT8 aux2 = BITSWAP8(aux, 9,10,4,1,6,0,7,3);
+	aux2 ^= aux2>>4;
+	aux2 = (aux2<<4) | (aux2>>4);
+	ciphertext ^= ciphertext<<4;
+	plaintext = (ciphertext<<4) | (ciphertext>>4);
+	plaintext ^= aux2;
+	newaddress = (address & ~0xfff) | aux;
+}
+
+static void decrypt(running_machine &machine, int key1, int key2)
+{
+	UINT8 plaintext;
+	int newaddress;
+
+	UINT8 *src = machine.root_device().memregion("mainprg")->base();
+	UINT8 *dest = machine.root_device().memregion("maincpu")->base();
+	int len = machine.root_device().memregion("mainprg")->bytes();
+
+	for (int i = 0; i < len; i++)
+	{
+		encf(src[i], i, plaintext, newaddress);
+		dest[newaddress^key1] = plaintext^key2;
+	}
+}
+
 static DRIVER_INIT( amaticmg )
 {
+	decrypt(machine, 0x4c2, 0xf5);
+}
 
+static DRIVER_INIT( amaticmg3 )
+{
+	decrypt(machine, 0x426, 0x55);
 }
 
 
@@ -778,5 +821,5 @@ static DRIVER_INIT( amaticmg )
 
 /*    YEAR  NAME      PARENT  MACHINE   INPUT     INIT      ROT    COMPANY                FULLNAME                     FLAGS  */
 GAME( 1996, am_uslot, 0,      amaticmg, amaticmg, amaticmg, ROT0, "Amatic Trading GmbH", "Amatic Unknown Slots Game",  GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 2000, am_mg24,  0,      amaticmg3, amaticmg, amaticmg, ROT0, "Amatic Trading GmbH", "Multi Game I (V.Ger 2.4)",   GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 2000, am_mg3,   0,      amaticmg3, amaticmg, amaticmg, ROT0, "Amatic Trading GmbH", "Multi Game III (V.Ger 3.5)", GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 2000, am_mg24,  0,      amaticmg3, amaticmg, amaticmg3, ROT0, "Amatic Trading GmbH", "Multi Game I (V.Ger 2.4)",   GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 2000, am_mg3,   0,      amaticmg3, amaticmg, amaticmg3, ROT0, "Amatic Trading GmbH", "Multi Game III (V.Ger 3.5)", GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )

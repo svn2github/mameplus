@@ -91,7 +91,7 @@ READ8_MEMBER(jackal_state::topgunbl_rotary_r)
 WRITE8_MEMBER(jackal_state::jackal_flipscreen_w)
 {
 	m_irq_enable = data & 0x02;
-	flip_screen_set(machine(), data & 0x08);
+	flip_screen_set(data & 0x08);
 }
 
 READ8_MEMBER(jackal_state::jackal_zram_r)
@@ -114,7 +114,7 @@ READ8_MEMBER(jackal_state::jackal_spriteram_r)
 
 WRITE8_MEMBER(jackal_state::jackal_rambank_w)
 {
-	UINT8 *rgn = machine().region("master")->base();
+	UINT8 *rgn = memregion("master")->base();
 
 	if (data & 0x04)
 		popmessage("jackal_rambank_w %02x", data);
@@ -124,7 +124,7 @@ WRITE8_MEMBER(jackal_state::jackal_rambank_w)
 
 	m_spritebank = &rgn[((data & 0x08) << 13)];
 	m_rambank = &rgn[((data & 0x10) << 12)];
-	memory_set_bank(machine(), "bank1", (data & 0x20) ? 1 : 0);
+	membank("bank1")->set_entry((data & 0x20) ? 1 : 0);
 }
 
 
@@ -156,7 +156,7 @@ WRITE8_MEMBER(jackal_state::jackal_spriteram_w)
  *************************************/
 
 static ADDRESS_MAP_START( master_map, AS_PROGRAM, 8, jackal_state )
-	AM_RANGE(0x0000, 0x0003) AM_RAM AM_BASE(m_videoctrl)	// scroll + other things
+	AM_RANGE(0x0000, 0x0003) AM_RAM AM_SHARE("videoctrl")	// scroll + other things
 	AM_RANGE(0x0004, 0x0004) AM_WRITE(jackal_flipscreen_w)
 	AM_RANGE(0x0010, 0x0010) AM_READ_PORT("DSW1")
 	AM_RANGE(0x0011, 0x0011) AM_READ_PORT("IN1")
@@ -176,7 +176,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( slave_map, AS_PROGRAM, 8, jackal_state )
 	AM_RANGE(0x2000, 0x2001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x4000, 0x43ff) AM_RAM AM_BASE(m_paletteram)	// self test only checks 0x4000-0x423f, 007327 should actually go up to 4fff
+	AM_RANGE(0x4000, 0x43ff) AM_RAM AM_SHARE("paletteram")	// self test only checks 0x4000-0x423f, 007327 should actually go up to 4fff
 	AM_RANGE(0x6000, 0x605f) AM_RAM						// SOUND RAM (Self test check 0x6000-605f, 0x7c00-0x7fff)
 	AM_RANGE(0x6060, 0x7fff) AM_RAM AM_SHARE("share1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
@@ -328,11 +328,11 @@ static INTERRUPT_GEN( jackal_interrupt )
 static MACHINE_START( jackal )
 {
 	jackal_state *state = machine.driver_data<jackal_state>();
-	UINT8 *ROM = machine.region("master")->base();
+	UINT8 *ROM = state->memregion("master")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 1, &ROM[0x04000], 0x8000);
-	memory_configure_bank(machine, "bank1", 1, 1, &ROM[0x14000], 0x8000);
-	memory_set_bank(machine, "bank1", 0);
+	state->membank("bank1")->configure_entry(0, &ROM[0x04000]);
+	state->membank("bank1")->configure_entry(1, &ROM[0x14000]);
+	state->membank("bank1")->set_entry(0);
 
 	state->m_mastercpu = machine.device("master");
 	state->m_slavecpu = machine.device("slave");
@@ -343,7 +343,7 @@ static MACHINE_START( jackal )
 static MACHINE_RESET( jackal )
 {
 	jackal_state *state = machine.driver_data<jackal_state>();
-	UINT8 *rgn = machine.region("master")->base();
+	UINT8 *rgn = state->memregion("master")->base();
 
 	// HACK: running at the nominal clock rate, music stops working
 	// at the beginning of the game. This fixes it.

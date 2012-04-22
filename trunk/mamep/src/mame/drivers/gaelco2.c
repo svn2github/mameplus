@@ -59,7 +59,7 @@ static ADDRESS_MAP_START( maniacsq_map, AS_PROGRAM, 16, gaelco2_state )
 	AM_RANGE(0x202890, 0x2028ff) AM_DEVREADWRITE_LEGACY("gaelco", gaelcosnd_r, gaelcosnd_w)		/* Sound Registers */
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM_WRITE(gaelco2_vram_w) AM_SHARE("spriteram")		/* Video RAM */
 	AM_RANGE(0x210000, 0x211fff) AM_RAM_WRITE(gaelco2_palette_w) AM_SHARE("paletteram")								/* Palette */
-	AM_RANGE(0x218004, 0x218009) AM_RAM AM_BASE(m_vregs)														/* Video Registers */
+	AM_RANGE(0x218004, 0x218009) AM_RAM AM_SHARE("vregs")														/* Video Registers */
 	AM_RANGE(0x300000, 0x300001) AM_READ_PORT("IN0")																/* DSW #1 + Input 1P */
 	AM_RANGE(0x300002, 0x300003) AM_READ_PORT("IN1")																/* DSW #2 + Input 2P */
 	AM_RANGE(0x30004a, 0x30004b) AM_WRITENOP																		/* Sound muting? */
@@ -217,7 +217,7 @@ static ADDRESS_MAP_START( bang_map, AS_PROGRAM, 16, gaelco2_state )
     AM_RANGE(0x200000, 0x20ffff) AM_RAM_WRITE(gaelco2_vram_w) AM_SHARE("spriteram")	/* Video RAM */
     AM_RANGE(0x210000, 0x211fff) AM_RAM_WRITE(gaelco2_palette_w) AM_SHARE("paletteram")							/* Palette */
     AM_RANGE(0x218004, 0x218009) AM_READONLY																/* Video Registers */
-	AM_RANGE(0x218004, 0x218007) AM_WRITEONLY AM_BASE(m_vregs)										/* Video Registers */
+	AM_RANGE(0x218004, 0x218007) AM_WRITEONLY AM_SHARE("vregs")										/* Video Registers */
 	AM_RANGE(0x218008, 0x218009) AM_WRITENOP																	/* CLR INT Video */
     AM_RANGE(0x300000, 0x300001) AM_READ_PORT("P1")
     AM_RANGE(0x300002, 0x300003) AM_READNOP 																	/* Random number generator? */
@@ -434,7 +434,7 @@ static ADDRESS_MAP_START( alighunt_map, AS_PROGRAM, 16, gaelco2_state )
 	AM_RANGE(0x202890, 0x2028ff) AM_DEVREADWRITE_LEGACY("gaelco", gaelcosnd_r, gaelcosnd_w)		/* Sound Registers */
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM_WRITE(gaelco2_vram_w) AM_SHARE("spriteram")		/* Video RAM */
 	AM_RANGE(0x210000, 0x211fff) AM_RAM_WRITE(gaelco2_palette_w) AM_SHARE("paletteram")								/* Palette */
-	AM_RANGE(0x218004, 0x218009) AM_RAM AM_BASE(m_vregs)														/* Video Registers */
+	AM_RANGE(0x218004, 0x218009) AM_RAM AM_SHARE("vregs")														/* Video Registers */
 	AM_RANGE(0x300000, 0x300001) AM_READ_PORT("IN0")																/* DSW #1 + Input 1P */
 	AM_RANGE(0x300002, 0x300003) AM_READ_PORT("IN1")																/* DSW #2 + Input 2P */
 	AM_RANGE(0x320000, 0x320001) AM_READ_PORT("COIN")																/* COINSW + SERVICESW */
@@ -645,7 +645,7 @@ static ADDRESS_MAP_START( touchgo_map, AS_PROGRAM, 16, gaelco2_state )
 	AM_RANGE(0x202890, 0x2028ff) AM_DEVREADWRITE_LEGACY("gaelco", gaelcosnd_r, gaelcosnd_w)			/* Sound Registers */
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM_WRITE(gaelco2_vram_w) AM_SHARE("spriteram")			/* Video RAM */
 	AM_RANGE(0x210000, 0x211fff) AM_RAM_WRITE(gaelco2_palette_w) AM_SHARE("paletteram")									/* Palette */
-	AM_RANGE(0x218004, 0x218009) AM_RAM AM_BASE(m_vregs)															/* Video Registers */
+	AM_RANGE(0x218004, 0x218009) AM_RAM AM_SHARE("vregs")															/* Video Registers */
 	AM_RANGE(0x300000, 0x300001) AM_READ_PORT("IN0")																	/* DSW #1 + Input 1P */
 	AM_RANGE(0x300002, 0x300003) AM_READ_PORT("IN1")																	/* DSW #2 + Input 2P */
 	AM_RANGE(0x300004, 0x300005) AM_READ_PORT("IN2")																	/* COINSW + Input 3P */
@@ -910,7 +910,7 @@ static ADDRESS_MAP_START( snowboar_map, AS_PROGRAM, 16, gaelco2_state )
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM_WRITE(gaelco2_vram_w) AM_SHARE("spriteram")				/* Video RAM */
 	AM_RANGE(0x210000, 0x211fff) AM_RAM_WRITE(gaelco2_palette_w) AM_SHARE("paletteram")										/* Palette */
 	AM_RANGE(0x212000, 0x213fff) AM_RAM																						/* Extra RAM */
-	AM_RANGE(0x218004, 0x218009) AM_RAM AM_BASE(m_vregs)																/* Video Registers */
+	AM_RANGE(0x218004, 0x218009) AM_RAM AM_SHARE("vregs")																/* Video Registers */
 	AM_RANGE(0x300000, 0x300001) AM_READ_PORT("P1")
 	AM_RANGE(0x300000, 0x300003) AM_WRITE(gaelco2_coin2_w)																	/* Coin Counters */
 	AM_RANGE(0x300008, 0x300009) AM_DEVWRITE_LEGACY("eeprom", gaelco2_eeprom_data_w)															/* EEPROM data */
@@ -918,7 +918,7 @@ static ADDRESS_MAP_START( snowboar_map, AS_PROGRAM, 16, gaelco2_state )
 	AM_RANGE(0x30000c, 0x30000d) AM_DEVWRITE_LEGACY("eeprom", gaelco2_eeprom_cs_w)																/* EEPROM chip select */
 	AM_RANGE(0x300010, 0x300011) AM_READ_PORT("P2")
 	AM_RANGE(0x300020, 0x300021) AM_READ_PORT("COIN")
-	AM_RANGE(0x310000, 0x31ffff) AM_READWRITE(snowboar_protection_r,snowboar_protection_w) AM_BASE(m_snowboar_protection)	/* Protection */
+	AM_RANGE(0x310000, 0x31ffff) AM_READWRITE(snowboar_protection_r,snowboar_protection_w) AM_SHARE("snowboar_prot")	/* Protection */
 	AM_RANGE(0xfe0000, 0xfeffff) AM_RAM																						/* Work RAM */
 ADDRESS_MAP_END
 
@@ -1095,7 +1095,7 @@ static ADDRESS_MAP_START( wrally2_map, AS_PROGRAM, 16, gaelco2_state )
 	AM_RANGE(0x200000, 0x20ffff) AM_RAM_WRITE(gaelco2_vram_w) AM_SHARE("spriteram")	/* Video RAM */
 	AM_RANGE(0x210000, 0x211fff) AM_RAM_WRITE(gaelco2_palette_w) AM_SHARE("paletteram")							/* Palette */
 	AM_RANGE(0x212000, 0x213fff) AM_RAM																			/* Extra RAM */
-	AM_RANGE(0x218004, 0x218009) AM_RAM AM_BASE(m_vregs)													/* Video Registers */
+	AM_RANGE(0x218004, 0x218009) AM_RAM AM_SHARE("vregs")													/* Video Registers */
 	AM_RANGE(0x300000, 0x300001) AM_READ_PORT("IN0")															/* DIPSW #2 + Inputs 1P */
 	AM_RANGE(0x300002, 0x300003) AM_READ_PORT("IN1")															/* DIPSW #1 */
 	AM_RANGE(0x300004, 0x300005) AM_READ_PORT("IN2")															/* Inputs 2P + COINSW */
@@ -1115,7 +1115,7 @@ static INPUT_PORTS_START( wrally2 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1) PORT_NAME("P1 Acc.")
 	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_BUTTON2 ) PORT_PLAYER(1) PORT_NAME("P1 Gear") PORT_TOGGLE
-	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(wrally2_analog_bit_r, (void *)0)	/* ADC_1 serial input */
+	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco2_state,wrally2_analog_bit_r, (void *)0)	/* ADC_1 serial input */
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_SERVICE_DIPLOC(  0x0100, IP_ACTIVE_LOW, "SW2:1" )
 	PORT_DIPNAME( 0x0200, 0x0000, "Coin mechanism" ) PORT_DIPLOCATION("SW2:2")
@@ -1173,7 +1173,7 @@ static INPUT_PORTS_START( wrally2 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2)
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2) PORT_NAME("P2 Acc.")
 	PORT_BIT( 0x0020, IP_ACTIVE_HIGH, IPT_BUTTON2 ) PORT_PLAYER(2) PORT_NAME("P2 Gear") PORT_TOGGLE
-	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM(wrally2_analog_bit_r, (void *)1)	/* ADC_2 serial input */
+	PORT_BIT( 0x0040, IP_ACTIVE_HIGH, IPT_SPECIAL) PORT_CUSTOM_MEMBER(DEVICE_SELF, gaelco2_state,wrally2_analog_bit_r, (void *)1)	/* ADC_2 serial input */
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START2 )
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_COIN2 )

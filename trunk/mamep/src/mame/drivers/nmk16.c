@@ -205,7 +205,7 @@ WRITE16_MEMBER(nmk16_state::ssmissin_sound_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		soundlatch_w(space, 0, data & 0xff);
+		soundlatch_byte_w(space, 0, data & 0xff);
 		cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
 	}
 }
@@ -214,7 +214,7 @@ WRITE16_MEMBER(nmk16_state::ssmissin_sound_w)
 
 WRITE8_MEMBER(nmk16_state::ssmissin_soundbank_w)
 {
-	UINT8 *rom = machine().region("oki1")->base();
+	UINT8 *rom = memregion("oki1")->base();
 	int bank;
 
 	bank = data & 0x3;
@@ -270,19 +270,19 @@ WRITE16_MEMBER(nmk16_state::macross2_sound_reset_w)
 WRITE16_MEMBER(nmk16_state::macross2_sound_command_w)
 {
 	if (ACCESSING_BITS_0_7)
-		soundlatch_w(space,0,data & 0xff);
+		soundlatch_byte_w(space,0,data & 0xff);
 }
 
 WRITE8_MEMBER(nmk16_state::macross2_sound_bank_w)
 {
-	UINT8 *rom = machine().region("audiocpu")->base() + 0x10000;
+	UINT8 *rom = memregion("audiocpu")->base() + 0x10000;
 
-	memory_set_bankptr(machine(), "bank1",rom + (data & 0x07) * 0x4000);
+	membank("bank1")->set_base(rom + (data & 0x07) * 0x4000);
 }
 
 WRITE8_MEMBER(nmk16_state::tharrier_oki6295_bankswitch_0_w)
 {
-	UINT8 *rom = machine().region("oki1")->base();
+	UINT8 *rom = memregion("oki1")->base();
 
 	data &= 3;
 	if (data != 3)
@@ -291,7 +291,7 @@ WRITE8_MEMBER(nmk16_state::tharrier_oki6295_bankswitch_0_w)
 
 WRITE8_MEMBER(nmk16_state::tharrier_oki6295_bankswitch_1_w)
 {
-	UINT8 *rom = machine().region("oki2")->base();
+	UINT8 *rom = memregion("oki2")->base();
 
 	data &= 3;
 	if (data != 3)
@@ -302,7 +302,7 @@ WRITE16_MEMBER(nmk16_state::afega_soundlatch_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		soundlatch_w(space, 0, data&0xff);
+		soundlatch_byte_w(space, 0, data&0xff);
 		cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
 	}
 }
@@ -319,12 +319,12 @@ static ADDRESS_MAP_START( vandyke_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP	/* IRQ enable? */
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c007) AM_WRITE(vandyke_scroll_w)
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0x094000, 0x097fff) AM_RAM /* what is this? */
-	AM_RANGE(0x09d000, 0x09d7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_BASE(m_mainram)
+	AM_RANGE(0x09d000, 0x09d7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( vandykeb_map, AS_PROGRAM, 16, nmk16_state )
@@ -338,12 +338,12 @@ static ADDRESS_MAP_START( vandykeb_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x080010, 0x08001d) AM_WRITE(vandykeb_scroll_w) /* 10, 12, 1a, 1c */
 	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c007) AM_WRITENOP	/* just in case... */
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0x094000, 0x097fff) AM_RAM /* what is this? */
-	AM_RANGE(0x09d000, 0x09d7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_BASE(m_mainram)
+	AM_RANGE(0x09d000, 0x09d7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( manybloc_map, AS_PROGRAM, 16, nmk16_state )
@@ -356,11 +356,11 @@ static ADDRESS_MAP_START( manybloc_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x08001c, 0x08001d) AM_WRITENOP			/* See notes at the top of the driver */
 	AM_RANGE(0x08001e, 0x08001f) AM_READWRITE(soundlatch2_word_r,soundlatch_word_w)
-	AM_RANGE(0x088000, 0x0883ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x09c000, 0x09cfff) AM_RAM_WRITE(manybloc_scroll_w) AM_BASE(m_gunnail_scrollram)
-	AM_RANGE(0x09d000, 0x09d7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_BASE(m_mainram)
+	AM_RANGE(0x088000, 0x0883ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x09c000, 0x09cfff) AM_RAM_WRITE(manybloc_scroll_w) AM_SHARE("scrollram")
+	AM_RANGE(0x09d000, 0x09d7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( tharrier_map, AS_PROGRAM, 16, nmk16_state )
@@ -375,18 +375,18 @@ static ADDRESS_MAP_START( tharrier_map, AS_PROGRAM, 16, nmk16_state )
 //  AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x08001e, 0x08001f) AM_WRITE(soundlatch_word_w)
 	AM_RANGE(0x080202, 0x080203) AM_READ_PORT("IN2")
-	AM_RANGE(0x088000, 0x0883ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0883ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 //  AM_RANGE(0x08c000, 0x08c007) AM_WRITE(nmk_scroll_w)
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
 	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM /* Unused txvideoram area? */
-	AM_RANGE(0x09d000, 0x09d7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_BASE(m_mainram)
+	AM_RANGE(0x09d000, 0x09d7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( tharrier_sound_map, AS_PROGRAM, 8, nmk16_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xf000, 0xf000) AM_READWRITE(soundlatch_r,soundlatch2_w)
+	AM_RANGE(0xf000, 0xf000) AM_READWRITE(soundlatch_byte_r,soundlatch2_byte_w)
 	AM_RANGE(0xf400, 0xf400) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0xf500, 0xf500) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
 	AM_RANGE(0xf600, 0xf600) AM_WRITE(tharrier_oki6295_bankswitch_0_w)
@@ -410,12 +410,12 @@ static ADDRESS_MAP_START( mustang_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP	// frame number?
 	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c001) AM_WRITE(mustang_scroll_w)
 	AM_RANGE(0x08c002, 0x08c087) AM_WRITENOP	// ??
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_BASE(m_mainram)
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( mustangb_map, AS_PROGRAM, 16, nmk16_state )
@@ -427,12 +427,12 @@ static ADDRESS_MAP_START( mustangb_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP	// frame number?
 	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(seibu_main_mustb_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c001) AM_WRITE(mustang_scroll_w)
 	AM_RANGE(0x08c002, 0x08c087) AM_WRITENOP	// ??
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_BASE(m_mainram)
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 
@@ -445,18 +445,18 @@ static ADDRESS_MAP_START( twinactn_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP	// frame number?
 	AM_RANGE(0x08001e, 0x08001f) AM_WRITE(afega_soundlatch_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c001) AM_WRITE(mustang_scroll_w)
 	AM_RANGE(0x08c002, 0x08c087) AM_WRITENOP	// ??
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_BASE(m_mainram)
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( acrobatm_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x00000, 0x3ffff) AM_ROM
-	AM_RANGE(0x80000, 0x8ffff) AM_RAM AM_BASE(m_mainram)
+	AM_RANGE(0x80000, 0x8ffff) AM_RAM AM_SHARE("mainram")
 	AM_RANGE(0xc0000, 0xc0001) AM_READ_PORT("IN0")
 	AM_RANGE(0xc0002, 0xc0003) AM_READ_PORT("IN1")
 	AM_RANGE(0xc0008, 0xc0009) AM_READ_PORT("DSW1")
@@ -466,10 +466,10 @@ static ADDRESS_MAP_START( acrobatm_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0xc0016, 0xc0017) AM_WRITENOP
 	AM_RANGE(0xc0018, 0xc0019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0xc001e, 0xc001f) AM_WRITE_LEGACY(NMK004_w)
-	AM_RANGE(0xc4000, 0xc45ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xc4000, 0xc45ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0xc8000, 0xc8007) AM_RAM_WRITE(nmk_scroll_w)
-	AM_RANGE(0xcc000, 0xcffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0xd4000, 0xd47ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
+	AM_RANGE(0xcc000, 0xcffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0xd4000, 0xd47ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( bioship_map, AS_PROGRAM, 16, nmk16_state )
@@ -482,12 +482,12 @@ static ADDRESS_MAP_START( bioship_map, AS_PROGRAM, 16, nmk16_state )
 //  AM_RANGE(0x080014, 0x080015) AM_WRITE(nmk_flipscreen_w)
 	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
 	AM_RANGE(0x084000, 0x084001) AM_WRITE(bioship_bank_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c007) AM_RAM_WRITE(bioshipbg_scroll_w)
 	AM_RANGE(0x08c010, 0x08c017) AM_RAM_WRITE(bioship_scroll_w)
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_BASE(m_mainram)
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 /******************************************************************************************
@@ -662,12 +662,12 @@ static ADDRESS_MAP_START( hachamf_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
 	/* Video Region */
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c007) AM_WRITE(nmk_scroll_w)
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
 	/* Main RAM, inc sprites, shared with MCU */
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(hachamf_mainram_w) AM_BASE(m_mainram) // ram is shared with MCU
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(hachamf_mainram_w) AM_SHARE("mainram") // ram is shared with MCU
 ADDRESS_MAP_END
 
 
@@ -881,11 +881,11 @@ static ADDRESS_MAP_START( tdragon_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x044022, 0x044023) AM_READNOP  /* No Idea */
 //  AM_RANGE(0x0b0000, 0x0b7fff) AM_RAM    /* Work RAM */
-//  AM_RANGE(0x0b8000, 0x0b8fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size) /* Sprite RAM */
+//  AM_RANGE(0x0b8000, 0x0b8fff) AM_RAM AM_SHARE("spriteram") /* Sprite RAM */
 //  AM_RANGE(0x0b9000, 0x0bdfff) AM_RAM AM_BASE_LEGACY(&nmk16_mcu_work_ram)   /* Work RAM */
 //  AM_RANGE(0x0be000, 0x0befff) AM_READWRITE(mcu_shared_r,tdragon_mcu_shared_w) AM_BASE_LEGACY(&nmk16_mcu_shared_ram)  /* Work RAM */
 //  AM_RANGE(0x0bf000, 0x0bffff) AM_RAM    /* Work RAM */
-	AM_RANGE(0x0b0000, 0x0bffff) AM_RAM_WRITE(tdragon_mainram_w ) AM_BASE(m_mainram)
+	AM_RANGE(0x0b0000, 0x0bffff) AM_RAM_WRITE(tdragon_mainram_w ) AM_SHARE("mainram")
 	AM_RANGE(0x0c0000, 0x0c0001) AM_READ_PORT("IN0")
 	AM_RANGE(0x0c0002, 0x0c0003) AM_READ_PORT("IN1")
 	AM_RANGE(0x0c0008, 0x0c0009) AM_READ_PORT("DSW1")
@@ -895,15 +895,15 @@ static ADDRESS_MAP_START( tdragon_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x0c0018, 0x0c0019) AM_WRITE(nmk_tilebank_w) /* Tile Bank ? */
 	AM_RANGE(0x0c001e, 0x0c001f) AM_WRITE_LEGACY(NMK004_w)
 	AM_RANGE(0x0c4000, 0x0c4007) AM_RAM_WRITE(nmk_scroll_w)
-	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x0cc000, 0x0cffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x0d0000, 0x0d07ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
+	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x0cc000, 0x0cffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x0d0000, 0x0d07ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( tdragonb_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x044022, 0x044023) AM_READNOP  /* No Idea */
-	AM_RANGE(0x0b0000, 0x0bffff) AM_RAM AM_BASE(m_mainram)
+	AM_RANGE(0x0b0000, 0x0bffff) AM_RAM AM_SHARE("mainram")
 	AM_RANGE(0x0c0000, 0x0c0001) AM_READ_PORT("IN0")
 	AM_RANGE(0x0c0002, 0x0c0003) AM_READ_PORT("IN1")
 	AM_RANGE(0x0c0008, 0x0c0009) AM_READ_PORT("DSW1")
@@ -912,14 +912,14 @@ static ADDRESS_MAP_START( tdragonb_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x0c0018, 0x0c0019) AM_WRITE(nmk_tilebank_w) /* Tile Bank ? */
 	AM_RANGE(0x0c001e, 0x0c001f) AM_WRITE_LEGACY(seibu_main_mustb_w)
 	AM_RANGE(0x0c4000, 0x0c4007) AM_RAM_WRITE(nmk_scroll_w)
-	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x0cc000, 0x0cffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x0d0000, 0x0d07ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
+	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x0cc000, 0x0cffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x0d0000, 0x0d07ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( ssmissin_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
-	AM_RANGE(0x0b0000, 0x0bffff) AM_RAM AM_BASE(m_mainram)
+	AM_RANGE(0x0b0000, 0x0bffff) AM_RAM AM_SHARE("mainram")
 	AM_RANGE(0x0c0000, 0x0c0001) AM_READ_PORT("IN0")
 	AM_RANGE(0x0c0004, 0x0c0005) AM_READ_PORT("IN1")
 	AM_RANGE(0x0c0006, 0x0c0007) AM_READ_PORT("DSW1")
@@ -928,9 +928,9 @@ static ADDRESS_MAP_START( ssmissin_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x0c0018, 0x0c0019) AM_WRITE(nmk_tilebank_w) /* Tile Bank ? */
 	AM_RANGE(0x0c001e, 0x0c001f) AM_WRITE(ssmissin_sound_w)
 	AM_RANGE(0x0c4000, 0x0c4007) AM_RAM_WRITE(nmk_scroll_w)
-	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x0cc000, 0x0cffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x0d0000, 0x0d07ff) AM_MIRROR(0x1800) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram) //mirror for airattck
+	AM_RANGE(0x0c8000, 0x0c87ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x0cc000, 0x0cffff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x0d0000, 0x0d07ff) AM_MIRROR(0x1800) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram") //mirror for airattck
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( ssmissin_sound_map, AS_PROGRAM, 8, nmk16_state )
@@ -938,7 +938,7 @@ static ADDRESS_MAP_START( ssmissin_sound_map, AS_PROGRAM, 8, nmk16_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x9000, 0x9000) AM_WRITE(ssmissin_soundbank_w)
 	AM_RANGE(0x9800, 0x9800) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( strahl_map, AS_PROGRAM, 16, nmk16_state )
@@ -953,11 +953,11 @@ static ADDRESS_MAP_START( strahl_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x8001e, 0x8001f) AM_WRITE_LEGACY(NMK004_w)
 	AM_RANGE(0x84000, 0x84007) AM_RAM_WRITE(nmk_scroll_w)
 	AM_RANGE(0x88000, 0x88007) AM_RAM_WRITE(nmk_scroll_2_w)
-	AM_RANGE(0x8c000, 0x8c7ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x90000, 0x93fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x94000, 0x97fff) AM_RAM_WRITE(nmk_fgvideoram_w) AM_BASE(m_nmk_fgvideoram)
-	AM_RANGE(0x9c000, 0x9c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
-	AM_RANGE(0xf0000, 0xfffff) AM_RAM AM_BASE(m_mainram)
+	AM_RANGE(0x8c000, 0x8c7ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBxxxx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x90000, 0x93fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x94000, 0x97fff) AM_RAM_WRITE(nmk_fgvideoram_w) AM_SHARE("nmk_fgvideoram")
+	AM_RANGE(0x9c000, 0x9c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
+	AM_RANGE(0xf0000, 0xfffff) AM_RAM AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( macross_map, AS_PROGRAM, 16, nmk16_state )
@@ -971,11 +971,11 @@ static ADDRESS_MAP_START( macross_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP	/* IRQ enable? */
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x08c000, 0x08c007) AM_RAM_WRITE(nmk_scroll_w)
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_BASE(m_mainram)
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( gunnail_map, AS_PROGRAM, 16, nmk16_state )
@@ -989,13 +989,13 @@ static ADDRESS_MAP_START( gunnail_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x080016, 0x080017) AM_WRITENOP	/* IRQ enable? */
 	AM_RANGE(0x080018, 0x080019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x08001e, 0x08001f) AM_WRITE_LEGACY(NMK004_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
-	AM_RANGE(0x08c000, 0x08c1ff) AM_WRITEONLY AM_BASE(m_gunnail_scrollram)
-	AM_RANGE(0x08c200, 0x08c3ff) AM_WRITEONLY AM_BASE(m_gunnail_scrollramy)
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x08c000, 0x08c1ff) AM_WRITEONLY AM_SHARE("scrollram")
+	AM_RANGE(0x08c200, 0x08c3ff) AM_WRITEONLY AM_SHARE("scrollramy")
 	AM_RANGE(0x08c400, 0x08c7ff) AM_WRITEONLY	// unknown
-	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x09c000, 0x09cfff) AM_MIRROR(0x001000) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_BASE(m_mainram)
+	AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x09c000, 0x09cfff) AM_MIRROR(0x001000) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( macross2_map, AS_PROGRAM, 16, nmk16_state )
@@ -1009,19 +1009,19 @@ static ADDRESS_MAP_START( macross2_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x100016, 0x100017) AM_WRITE(macross2_sound_reset_w)	/* Z80 reset */
 	AM_RANGE(0x100018, 0x100019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x10001e, 0x10001f) AM_WRITE(macross2_sound_command_w)	/* to Z80 */
-	AM_RANGE(0x120000, 0x1207ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x120000, 0x1207ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 
-	AM_RANGE(0x130000, 0x1301ff) AM_RAM AM_BASE(m_gunnail_scrollram)
-	AM_RANGE(0x130200, 0x1303ff) AM_RAM AM_BASE(m_gunnail_scrollramy)
+	AM_RANGE(0x130000, 0x1301ff) AM_RAM AM_SHARE("scrollram")
+	AM_RANGE(0x130200, 0x1303ff) AM_RAM AM_SHARE("scrollramy")
 	AM_RANGE(0x130400, 0x1307ff) AM_RAM
 
-	AM_RANGE(0x140000, 0x143fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x144000, 0x147fff) AM_RAM_WRITE(nmk_bgvideoram1_w) AM_BASE(m_nmk_bgvideoram1)
-	AM_RANGE(0x148000, 0x14bfff) AM_RAM_WRITE(nmk_bgvideoram2_w) AM_BASE(m_nmk_bgvideoram2)
-	AM_RANGE(0x14c000, 0x14ffff) AM_RAM_WRITE(nmk_bgvideoram3_w) AM_BASE(m_nmk_bgvideoram3)
+	AM_RANGE(0x140000, 0x143fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x144000, 0x147fff) AM_RAM_WRITE(nmk_bgvideoram1_w) AM_SHARE("nmk_bgvideoram1")
+	AM_RANGE(0x148000, 0x14bfff) AM_RAM_WRITE(nmk_bgvideoram2_w) AM_SHARE("nmk_bgvideoram2")
+	AM_RANGE(0x14c000, 0x14ffff) AM_RAM_WRITE(nmk_bgvideoram3_w) AM_SHARE("nmk_bgvideoram3")
 
-	AM_RANGE(0x170000, 0x170fff) AM_MIRROR(0x1000) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
-	AM_RANGE(0x1f0000, 0x1fffff) AM_RAM AM_BASE(m_mainram)
+	AM_RANGE(0x170000, 0x170fff) AM_MIRROR(0x1000) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
+	AM_RANGE(0x1f0000, 0x1fffff) AM_RAM AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( raphero_map, AS_PROGRAM, 16, nmk16_state )
@@ -1035,20 +1035,20 @@ static ADDRESS_MAP_START( raphero_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x100016, 0x100017) AM_WRITENOP	/* IRQ enable or z80 sound reset like in Macross 2? */
 	AM_RANGE(0x100018, 0x100019) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x10001e, 0x10001f) AM_WRITE(macross2_sound_command_w)	/* to Z80 */
-	AM_RANGE(0x120000, 0x1207ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x120000, 0x1207ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 
-	AM_RANGE(0x130000, 0x1301ff) AM_RAM AM_BASE(m_gunnail_scrollram)
-	AM_RANGE(0x130200, 0x1303ff) AM_RAM AM_BASE(m_gunnail_scrollramy)
+	AM_RANGE(0x130000, 0x1301ff) AM_RAM AM_SHARE("scrollram")
+	AM_RANGE(0x130200, 0x1303ff) AM_RAM AM_SHARE("scrollramy")
 	AM_RANGE(0x130400, 0x1307ff) AM_RAM
 
-	AM_RANGE(0x140000, 0x143fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x144000, 0x147fff) AM_RAM_WRITE(nmk_bgvideoram1_w) AM_BASE(m_nmk_bgvideoram1)
-	AM_RANGE(0x148000, 0x14bfff) AM_RAM_WRITE(nmk_bgvideoram2_w) AM_BASE(m_nmk_bgvideoram2)
-	AM_RANGE(0x14c000, 0x14ffff) AM_RAM_WRITE(nmk_bgvideoram3_w) AM_BASE(m_nmk_bgvideoram3)
+	AM_RANGE(0x140000, 0x143fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x144000, 0x147fff) AM_RAM_WRITE(nmk_bgvideoram1_w) AM_SHARE("nmk_bgvideoram1")
+	AM_RANGE(0x148000, 0x14bfff) AM_RAM_WRITE(nmk_bgvideoram2_w) AM_SHARE("nmk_bgvideoram2")
+	AM_RANGE(0x14c000, 0x14ffff) AM_RAM_WRITE(nmk_bgvideoram3_w) AM_SHARE("nmk_bgvideoram3")
 
 
-	AM_RANGE(0x170000, 0x170fff) AM_MIRROR(0x1000) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)
-	AM_RANGE(0x1f0000, 0x1fffff) AM_RAM AM_BASE(m_mainram)
+	AM_RANGE(0x170000, 0x170fff) AM_MIRROR(0x1000) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")
+	AM_RANGE(0x1f0000, 0x1fffff) AM_RAM AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 #if 0
@@ -1067,7 +1067,7 @@ WRITE8_MEMBER(nmk16_state::okibank_w)
 
 WRITE8_MEMBER(nmk16_state::raphero_sound_rombank_w)
 {
-	memory_set_bankptr(machine(), "bank1",machine().region("audiocpu")->base() + 0x10000 + (data & 0x07) * 0x4000);
+	membank("bank1")->set_base(machine().root_device().memregion("audiocpu")->base() + 0x10000 + (data & 0x07) * 0x4000);
 }
 
 static ADDRESS_MAP_START( raphero_sound_mem_map, AS_PROGRAM, 8, nmk16_state )
@@ -1079,7 +1079,7 @@ static ADDRESS_MAP_START( raphero_sound_mem_map, AS_PROGRAM, 8, nmk16_state )
 	AM_RANGE(0xc810, 0xc817) AM_DEVWRITE_LEGACY("nmk112", nmk112_okibank_w)
 //  AM_RANGE(0xc810, 0xc817) AM_WRITE(okibank_w)
 	AM_RANGE(0xd000, 0xd000) AM_WRITE(raphero_sound_rombank_w)
-	AM_RANGE(0xd800, 0xd800) AM_READWRITE(soundlatch_r, soundlatch2_w)	// main cpu
+	AM_RANGE(0xd800, 0xd800) AM_READWRITE(soundlatch_byte_r, soundlatch2_byte_w)	// main cpu
 	AM_RANGE(0xe000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -1089,7 +1089,7 @@ static ADDRESS_MAP_START( macross2_sound_map, AS_PROGRAM, 8, nmk16_state )
 	AM_RANGE(0xa000, 0xa000) AM_READNOP	/* IRQ ack? watchdog? */
 	AM_RANGE(0xc000, 0xdfff) AM_RAM
 	AM_RANGE(0xe001, 0xe001) AM_WRITE(macross2_sound_bank_w)
-	AM_RANGE(0xf000, 0xf000) AM_READWRITE(soundlatch_r,soundlatch2_w)	/* from 68000 */
+	AM_RANGE(0xf000, 0xf000) AM_READWRITE(soundlatch_byte_r,soundlatch2_byte_w)	/* from 68000 */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( macross2_sound_io_map, AS_IO, 8, nmk16_state )
@@ -1110,11 +1110,11 @@ static ADDRESS_MAP_START( bjtwin_map, AS_PROGRAM, 16, nmk16_state )
 	AM_RANGE(0x084000, 0x084001) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x084010, 0x084011) AM_DEVREADWRITE8("oki2", okim6295_device, read, write, 0x00ff)
 	AM_RANGE(0x084020, 0x08402f) AM_DEVWRITE_LEGACY("nmk112", nmk112_okibank_lsb_w)
-	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x088000, 0x0887ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x094000, 0x094001) AM_WRITE(nmk_tilebank_w)
 	AM_RANGE(0x094002, 0x094003) AM_WRITENOP	/* IRQ enable? */
-	AM_RANGE(0x09c000, 0x09cfff) AM_MIRROR(0x1000) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_BASE(m_mainram)
+	AM_RANGE(0x09c000, 0x09cfff) AM_MIRROR(0x1000) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( vandyke )
@@ -4406,16 +4406,16 @@ static void decode_gfx(running_machine &machine)
 
 
 	/* background */
-	rom = machine.region("gfx2")->base();
-	len = machine.region("gfx2")->bytes();
+	rom = machine.root_device().memregion("gfx2")->base();
+	len = machine.root_device().memregion("gfx2")->bytes();
 	for (A = 0;A < len;A++)
 	{
 		rom[A] = decode_byte( rom[A], decode_data_bg[bjtwin_address_map_bg0(A)]);
 	}
 
 	/* sprites */
-	rom = machine.region("gfx3")->base();
-	len = machine.region("gfx3")->bytes();
+	rom = machine.root_device().memregion("gfx3")->base();
+	len = machine.root_device().memregion("gfx3")->bytes();
 	for (A = 0;A < len;A += 2)
 	{
 		UINT16 tmp = decode_word( rom[A+1]*256 + rom[A], decode_data_sprite[bjtwin_address_map_sprites(A)]);
@@ -4444,8 +4444,8 @@ static void decode_tdragonb(running_machine &machine)
 		{0x7,0x6,0x5,0x3,0x4,0x2,0x1,0x0},
 	};
 
-	rom = machine.region("maincpu")->base();
-	len = machine.region("maincpu")->bytes();
+	rom = machine.root_device().memregion("maincpu")->base();
+	len = machine.root_device().memregion("maincpu")->bytes();
 	for (A = 0;A < len;A += 2)
 	{
 		int h = A+NATIVE_ENDIAN_VALUE_LE_BE(1,0), l = A+NATIVE_ENDIAN_VALUE_LE_BE(0,1);
@@ -4454,15 +4454,15 @@ static void decode_tdragonb(running_machine &machine)
 		rom[l] = tmp & 0xff;
 	}
 
-	rom = machine.region("gfx2")->base();
-	len = machine.region("gfx2")->bytes();
+	rom = machine.root_device().memregion("gfx2")->base();
+	len = machine.root_device().memregion("gfx2")->bytes();
 	for (A = 0;A < len;A++)
 	{
 		rom[A] = decode_byte( rom[A], decode_data_tdragonbgfx[0]);
 	}
 
-	rom = machine.region("gfx3")->base();
-	len = machine.region("gfx3")->bytes();
+	rom = machine.root_device().memregion("gfx3")->base();
+	len = machine.root_device().memregion("gfx3")->bytes();
 	for (A = 0;A < len;A++)
 	{
 		rom[A] = decode_byte( rom[A], decode_data_tdragonbgfx[0]);
@@ -4481,15 +4481,15 @@ static void decode_ssmissin(running_machine &machine)
 		{0x7,0x6,0x5,0x3,0x4,0x2,0x1,0x0},
 	};
 
-	rom = machine.region("gfx2")->base();
-	len = machine.region("gfx2")->bytes();
+	rom = machine.root_device().memregion("gfx2")->base();
+	len = machine.root_device().memregion("gfx2")->bytes();
 	for (A = 0;A < len;A++)
 	{
 		rom[A] = decode_byte( rom[A], decode_data_tdragonbgfx[0]);
 	}
 
-	rom = machine.region("gfx3")->base();
-	len = machine.region("gfx3")->bytes();
+	rom = machine.root_device().memregion("gfx3")->base();
+	len = machine.root_device().memregion("gfx3")->bytes();
 	for (A = 0;A < len;A++)
 	{
 		rom[A] = decode_byte( rom[A], decode_data_tdragonbgfx[0]);
@@ -4504,7 +4504,7 @@ static DRIVER_INIT( nmk )
 
 static DRIVER_INIT( hachamf )
 {
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	//rom[0x0006/2] = 0x7dc2;   /* replace reset vector with the "real" one */
 
@@ -4515,7 +4515,7 @@ static DRIVER_INIT( hachamf )
 
 static DRIVER_INIT( tdragonb )
 {
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	decode_tdragonb(machine);
 
@@ -4526,7 +4526,7 @@ static DRIVER_INIT( tdragonb )
 
 static DRIVER_INIT( tdragon )
 {
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 
 	//rom[0x94b0/2] = 0; /* Patch out JMP to shared memory (protection) */
 	//rom[0x94b2/2] = 0x92f4;
@@ -4560,7 +4560,7 @@ static DRIVER_INIT( bjtwin )
  *  008F7E: 207C 000F 9000           movea.l #$f9000, A0
  */
 #if 0
-	UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 	rom[0x09172/2] = 0x6006;    /* patch checksum error */
 	rom[0x08f74/2] = 0x4e71;
 #endif
@@ -4624,16 +4624,16 @@ static ADDRESS_MAP_START( afega, AS_PROGRAM, 16, nmk16_state )
 /**/AM_RANGE(0x084000, 0x084003) AM_RAM_WRITE(afega_scroll0_w)	// Scroll on redhawkb (mirror or changed?..)
 /**/AM_RANGE(0x084004, 0x084007) AM_RAM_WRITE(afega_scroll1_w)	// Scroll on redhawkb (mirror or changed?..)
 	AM_RANGE(0x080020, 0x087fff) AM_WRITEONLY				//
-/**/AM_RANGE(0x088000, 0x0885ff) AM_RAM_WRITE(paletteram16_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram") // Palette
+/**/AM_RANGE(0x088000, 0x0885ff) AM_RAM_WRITE(paletteram_RRRRGGGGBBBBRGBx_word_w) AM_SHARE("paletteram") // Palette
 	AM_RANGE(0x088600, 0x08bfff) AM_WRITEONLY				//
-/**/AM_RANGE(0x08c000, 0x08c003) AM_RAM_WRITE(afega_scroll0_w) AM_BASE(m_afega_scroll_0)	// Scroll
-/**/AM_RANGE(0x08c004, 0x08c007) AM_RAM_WRITE(afega_scroll1_w) AM_BASE(m_afega_scroll_1)	//
+/**/AM_RANGE(0x08c000, 0x08c003) AM_RAM_WRITE(afega_scroll0_w) AM_SHARE("afega_scroll_0")	// Scroll
+/**/AM_RANGE(0x08c004, 0x08c007) AM_RAM_WRITE(afega_scroll1_w) AM_SHARE("afega_scroll_1")	//
 	AM_RANGE(0x08c008, 0x08ffff) AM_WRITEONLY				//
-/**/AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_BASE(m_nmk_bgvideoram0)	// Layer 0                  // ?
-/**/AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_BASE(m_nmk_txvideoram)	// Layer 1
+/**/AM_RANGE(0x090000, 0x093fff) AM_RAM_WRITE(nmk_bgvideoram0_w) AM_SHARE("nmk_bgvideoram0")	// Layer 0                  // ?
+/**/AM_RANGE(0x09c000, 0x09c7ff) AM_RAM_WRITE(nmk_txvideoram_w) AM_SHARE("nmk_txvideoram")	// Layer 1
 
-	AM_RANGE(0x0c0000, 0x0cffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_SHARE("share1") AM_BASE(m_mainram)
-	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_SHARE("share1")
+	AM_RANGE(0x0c0000, 0x0cffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_SHARE("mainram")
+	AM_RANGE(0x0f0000, 0x0fffff) AM_RAM_WRITE(nmk16_mainram_strange_w) AM_SHARE("mainram")
 ADDRESS_MAP_END
 
 
@@ -4657,7 +4657,7 @@ WRITE16_MEMBER(nmk16_state::twinactn_scroll1_w)
 WRITE16_MEMBER(nmk16_state::twinactn_flipscreen_w)
 {
 	if (ACCESSING_BITS_0_7)
-		flip_screen_set(machine(), data & 1);
+		flip_screen_set(data & 1);
 
 	if (data & (~1))
 		logerror("%06x: unknown flip screen bit written %04x\n", cpu_get_pc(&space.device()), data);
@@ -4684,7 +4684,7 @@ static ADDRESS_MAP_START( afega_sound_cpu, AS_PROGRAM, 8, nmk16_state )
 	AM_RANGE(0x0004, 0x0004) AM_WRITENOP // bug in sound prg?
 	AM_RANGE(0x0000, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM									// RAM
-	AM_RANGE(0xf800, 0xf800) AM_READ(soundlatch_r)					// From Main CPU
+	AM_RANGE(0xf800, 0xf800) AM_READ(soundlatch_byte_r)					// From Main CPU
 	AM_RANGE(0xf808, 0xf809) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)	// YM2151
 	AM_RANGE(0xf80a, 0xf80a) AM_DEVREADWRITE("oki1", okim6295_device, read, write)		// M6295
 ADDRESS_MAP_END
@@ -4692,7 +4692,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( firehawk_sound_cpu, AS_PROGRAM, 8, nmk16_state )
 	AM_RANGE(0x0000, 0xefff) AM_ROM
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
-	AM_RANGE(0xfff0, 0xfff0) AM_READ(soundlatch_r)
+	AM_RANGE(0xfff0, 0xfff0) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xfff2, 0xfff2) AM_DEVWRITE_LEGACY("oki2", spec2k_oki1_banking_w )
 	AM_RANGE(0xfff8, 0xfff8) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
 	AM_RANGE(0xfffa, 0xfffa) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
@@ -4715,7 +4715,7 @@ static ADDRESS_MAP_START( twinactn_sound_cpu, AS_PROGRAM, 8, nmk16_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x9000, 0x9000) AM_DEVWRITE_LEGACY("oki1", twinactn_oki_bank_w)
 	AM_RANGE(0x9800, 0x9800) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)		// From Main CPU
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)		// From Main CPU
 ADDRESS_MAP_END
 
 /***************************************************************************
@@ -4805,7 +4805,7 @@ static void irq_handler(device_t *device, int irq)
 
 static const ym2151_interface afega_ym2151_intf =
 {
-	irq_handler
+	DEVCB_LINE(irq_handler)
 };
 
 
@@ -4974,8 +4974,8 @@ static void decryptcode( running_machine &machine, int a23, int a22, int a21, in
 	int a11, int a10, int a9, int a8, int a7, int a6, int a5, int a4, int a3, int a2, int a1, int a0 )
 {
 	int i;
-	UINT8 *RAM = machine.region( "maincpu" )->base();
-	size_t  size = machine.region( "maincpu" )->bytes();
+	UINT8 *RAM = machine.root_device().memregion( "maincpu" )->base();
+	size_t  size = machine.root_device().memregion( "maincpu" )->bytes();
 	UINT8 *buffer = auto_alloc_array(machine, UINT8,  size );
 
 	memcpy( buffer, RAM, size );

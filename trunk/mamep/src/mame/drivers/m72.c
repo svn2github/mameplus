@@ -299,7 +299,7 @@ static INTERRUPT_GEN( m72_mcu_int )
 READ8_MEMBER(m72_state::m72_mcu_sample_r)
 {
 	UINT8 sample;
-	sample = machine().region("samples")->base()[m_mcu_sample_addr++];
+	sample = memregion("samples")->base()[m_mcu_sample_addr++];
 	return sample;
 }
 
@@ -366,7 +366,7 @@ INLINE DRIVER_INIT( m72_8751 )
 	state->m_protection_ram = auto_alloc_array(machine, UINT16, 0x10000/2);
 	program->install_read_bank(0xb0000, 0xbffff, "bank1");
 	program->install_write_handler(0xb0000, 0xb0fff, write16_delegate(FUNC(m72_state::m72_main_mcu_w),state));
-	memory_set_bankptr(machine, "bank1", state->m_protection_ram);
+	state->membank("bank1")->set_base(state->m_protection_ram);
 
 	//io->install_legacy_write_handler(0xc0, 0xc1, FUNC(loht_sample_trigger_w));
 	io->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::m72_main_mcu_sound_w),state));
@@ -383,7 +383,7 @@ INLINE DRIVER_INIT( m72_8751 )
      * prefetching on the V30.
      */
 	{
-		UINT8 *rom=machine.region("mcu")->base();
+		UINT8 *rom=state->memregion("mcu")->base();
 
 		rom[0x12d+5] += 1; printf(" 5: %d\n", rom[0x12d+5]);
 		rom[0x12d+8] += 5;  printf(" 8: %d\n", rom[0x12d+8]);
@@ -423,8 +423,8 @@ the NMI handler in the other games.
 #if 0
 static int find_sample(int num)
 {
-	UINT8 *rom = machine.region("samples")->base();
-	int len = machine.region("samples")->bytes();
+	UINT8 *rom = machine.root_device().memregion("samples")->base();
+	int len = machine.root_device().memregion("samples")->bytes();
 	int addr = 0;
 
 	while (num--)
@@ -740,7 +740,7 @@ static void install_protection_handler(running_machine &machine, const UINT8 *co
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xb0000, 0xb0fff, "bank1");
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xb0ffa, 0xb0ffb, read16_delegate(FUNC(m72_state::protection_r),state));
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xb0000, 0xb0fff, write16_delegate(FUNC(m72_state::protection_w),state));
-	memory_set_bankptr(machine, "bank1", state->m_protection_ram);
+	state->membank("bank1")->set_base(state->m_protection_ram);
 }
 
 static DRIVER_INIT( bchopper )
@@ -870,11 +870,11 @@ READ16_MEMBER(m72_state::poundfor_trackball_r)
 static ADDRESS_MAP_START( NAME##_map, AS_PROGRAM, 16 , m72_state )		\
 	AM_RANGE(0x00000, ROMSIZE-1) AM_ROM									\
 	AM_RANGE(WORKRAM, WORKRAM+0x3fff) AM_RAM	/* work RAM */			\
-	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)	\
+	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_SHARE("spriteram")	\
 	AM_RANGE(0xc8000, 0xc8bff) AM_READWRITE(m72_palette1_r, m72_palette1_w) AM_SHARE("paletteram")			\
 	AM_RANGE(0xcc000, 0xccbff) AM_READWRITE(m72_palette2_r, m72_palette2_w) AM_SHARE("paletteram2")		\
-	AM_RANGE(0xd0000, 0xd3fff) AM_RAM_WRITE(m72_videoram1_w) AM_BASE(m_videoram1)		\
-	AM_RANGE(0xd8000, 0xdbfff) AM_RAM_WRITE(m72_videoram2_w) AM_BASE(m_videoram2)		\
+	AM_RANGE(0xd0000, 0xd3fff) AM_RAM_WRITE(m72_videoram1_w) AM_SHARE("videoram1")		\
+	AM_RANGE(0xd8000, 0xdbfff) AM_RAM_WRITE(m72_videoram2_w) AM_SHARE("videoram2")		\
 	AM_RANGE(0xe0000, 0xeffff) AM_READWRITE(soundram_r, soundram_w)							\
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM									\
 ADDRESS_MAP_END
@@ -890,11 +890,11 @@ static ADDRESS_MAP_START( xmultipl_map, AS_PROGRAM, 16, m72_state )
 	AM_RANGE(0x00000, 0x7ffff) AM_ROM
 	AM_RANGE(0x9c000, 0x9ffff) AM_RAM	/* work RAM */
 	AM_RANGE(0xb0ffe, 0xb0fff) AM_WRITEONLY	/* leftover from protection?? */
-	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xc8000, 0xc8bff) AM_READWRITE(m72_palette1_r, m72_palette1_w) AM_SHARE("paletteram")
 	AM_RANGE(0xcc000, 0xccbff) AM_READWRITE(m72_palette2_r, m72_palette2_w) AM_SHARE("paletteram2")
-	AM_RANGE(0xd0000, 0xd3fff) AM_RAM_WRITE(m72_videoram1_w) AM_BASE(m_videoram1)
-	AM_RANGE(0xd8000, 0xdbfff) AM_RAM_WRITE(m72_videoram2_w) AM_BASE(m_videoram2)
+	AM_RANGE(0xd0000, 0xd3fff) AM_RAM_WRITE(m72_videoram1_w) AM_SHARE("videoram1")
+	AM_RANGE(0xd8000, 0xdbfff) AM_RAM_WRITE(m72_videoram2_w) AM_SHARE("videoram2")
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -902,11 +902,11 @@ static ADDRESS_MAP_START( dbreed_map, AS_PROGRAM, 16, m72_state )
 	AM_RANGE(0x00000, 0x7ffff) AM_ROM
 	AM_RANGE(0x88000, 0x8bfff) AM_RAM	/* work RAM */
 	AM_RANGE(0xb0ffe, 0xb0fff) AM_WRITEONLY	/* leftover from protection?? */
-	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xc8000, 0xc8bff) AM_READWRITE(m72_palette1_r, m72_palette1_w) AM_SHARE("paletteram")
 	AM_RANGE(0xcc000, 0xccbff) AM_READWRITE(m72_palette2_r, m72_palette2_w) AM_SHARE("paletteram2")
-	AM_RANGE(0xd0000, 0xd3fff) AM_RAM_WRITE(m72_videoram1_w) AM_BASE(m_videoram1)
-	AM_RANGE(0xd8000, 0xdbfff) AM_RAM_WRITE(m72_videoram2_w) AM_BASE(m_videoram2)
+	AM_RANGE(0xd0000, 0xd3fff) AM_RAM_WRITE(m72_videoram1_w) AM_SHARE("videoram1")
+	AM_RANGE(0xd8000, 0xdbfff) AM_RAM_WRITE(m72_videoram2_w) AM_SHARE("videoram2")
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -914,10 +914,10 @@ static ADDRESS_MAP_START( rtype2_map, AS_PROGRAM, 16, m72_state )
 	AM_RANGE(0x00000, 0x7ffff) AM_ROM
 	AM_RANGE(0xb0000, 0xb0001) AM_WRITE(m72_irq_line_w)
 	AM_RANGE(0xbc000, 0xbc001) AM_WRITE(m72_dmaon_w)
-	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xc8000, 0xc8bff) AM_READWRITE(m72_palette1_r, m72_palette1_w) AM_SHARE("paletteram")
-	AM_RANGE(0xd0000, 0xd3fff) AM_RAM_WRITE(m72_videoram1_w) AM_BASE(m_videoram1)
-	AM_RANGE(0xd4000, 0xd7fff) AM_RAM_WRITE(m72_videoram2_w) AM_BASE(m_videoram2)
+	AM_RANGE(0xd0000, 0xd3fff) AM_RAM_WRITE(m72_videoram1_w) AM_SHARE("videoram1")
+	AM_RANGE(0xd4000, 0xd7fff) AM_RAM_WRITE(m72_videoram2_w) AM_SHARE("videoram2")
 	AM_RANGE(0xd8000, 0xd8bff) AM_READWRITE(m72_palette2_r, m72_palette2_w) AM_SHARE("paletteram2")
 	AM_RANGE(0xe0000, 0xe3fff) AM_RAM	/* work RAM */
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
@@ -925,12 +925,12 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( majtitle_map, AS_PROGRAM, 16, m72_state )
 	AM_RANGE(0x00000, 0x7ffff) AM_ROM
-	AM_RANGE(0xa0000, 0xa03ff) AM_RAM AM_BASE(m_majtitle_rowscrollram)
+	AM_RANGE(0xa0000, 0xa03ff) AM_RAM AM_SHARE("majtitle_rowscr")
 	AM_RANGE(0xa4000, 0xa4bff) AM_READWRITE(m72_palette2_r, m72_palette2_w) AM_SHARE("paletteram2")
-	AM_RANGE(0xac000, 0xaffff) AM_RAM_WRITE(m72_videoram1_w) AM_BASE(m_videoram1)
-	AM_RANGE(0xb0000, 0xbffff) AM_RAM_WRITE(m72_videoram2_w) AM_BASE(m_videoram2)	/* larger than the other games */
-	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0xc8000, 0xc83ff) AM_RAM AM_BASE(m_spriteram2)
+	AM_RANGE(0xac000, 0xaffff) AM_RAM_WRITE(m72_videoram1_w) AM_SHARE("videoram1")
+	AM_RANGE(0xb0000, 0xbffff) AM_RAM_WRITE(m72_videoram2_w) AM_SHARE("videoram2")	/* larger than the other games */
+	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xc8000, 0xc83ff) AM_RAM AM_SHARE("spriteram2")
 	AM_RANGE(0xcc000, 0xccbff) AM_READWRITE(m72_palette1_r, m72_palette1_w) AM_SHARE("paletteram")
 	AM_RANGE(0xd0000, 0xd3fff) AM_RAM	/* work RAM */
 	AM_RANGE(0xe0000, 0xe0001) AM_WRITE(m72_irq_line_w)
@@ -943,11 +943,11 @@ static ADDRESS_MAP_START( hharry_map, AS_PROGRAM, 16, m72_state )
 	AM_RANGE(0x00000, 0x7ffff) AM_ROM
 	AM_RANGE(0xa0000, 0xa3fff) AM_RAM	/* work RAM */
 	AM_RANGE(0xb0ffe, 0xb0fff) AM_WRITEONLY	/* leftover from protection?? */
-	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xc8000, 0xc8bff) AM_READWRITE(m72_palette1_r, m72_palette1_w) AM_SHARE("paletteram")
 	AM_RANGE(0xcc000, 0xccbff) AM_READWRITE(m72_palette2_r, m72_palette2_w) AM_SHARE("paletteram2")
-	AM_RANGE(0xd0000, 0xd3fff) AM_RAM_WRITE(m72_videoram1_w) AM_BASE(m_videoram1)
-	AM_RANGE(0xd8000, 0xdbfff) AM_RAM_WRITE(m72_videoram2_w) AM_BASE(m_videoram2)
+	AM_RANGE(0xd0000, 0xd3fff) AM_RAM_WRITE(m72_videoram1_w) AM_SHARE("videoram1")
+	AM_RANGE(0xd8000, 0xdbfff) AM_RAM_WRITE(m72_videoram2_w) AM_SHARE("videoram2")
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -958,9 +958,9 @@ static ADDRESS_MAP_START( hharryu_map, AS_PROGRAM, 16, m72_state )
 	AM_RANGE(0xb0000, 0xb0001) AM_WRITE(m72_irq_line_w)
 	AM_RANGE(0xbc000, 0xbc001) AM_WRITE(m72_dmaon_w)
 	AM_RANGE(0xb0ffe, 0xb0fff) AM_WRITEONLY	/* leftover from protection?? */
-	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0xd0000, 0xd3fff) AM_RAM_WRITE(m72_videoram1_w) AM_BASE(m_videoram1)
-	AM_RANGE(0xd4000, 0xd7fff) AM_RAM_WRITE(m72_videoram2_w) AM_BASE(m_videoram2)
+	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xd0000, 0xd3fff) AM_RAM_WRITE(m72_videoram1_w) AM_SHARE("videoram1")
+	AM_RANGE(0xd4000, 0xd7fff) AM_RAM_WRITE(m72_videoram2_w) AM_SHARE("videoram2")
 	AM_RANGE(0xe0000, 0xe3fff) AM_RAM	/* work RAM */
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
@@ -972,9 +972,9 @@ static ADDRESS_MAP_START( kengo_map, AS_PROGRAM, 16, m72_state )
 	AM_RANGE(0xb0000, 0xb0001) AM_WRITE(m72_irq_line_w)
 	AM_RANGE(0xb4000, 0xb4001) AM_WRITENOP	/* ??? */
 	AM_RANGE(0xbc000, 0xbc001) AM_WRITE(m72_dmaon_w)
-	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0x80000, 0x83fff) AM_RAM_WRITE(m72_videoram1_w) AM_BASE(m_videoram1)
-	AM_RANGE(0x84000, 0x87fff) AM_RAM_WRITE(m72_videoram2_w) AM_BASE(m_videoram2)
+	AM_RANGE(0xc0000, 0xc03ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x80000, 0x83fff) AM_RAM_WRITE(m72_videoram1_w) AM_SHARE("videoram1")
+	AM_RANGE(0x84000, 0x87fff) AM_RAM_WRITE(m72_videoram2_w) AM_SHARE("videoram2")
 	AM_RANGE(0xe0000, 0xe3fff) AM_RAM	/* work RAM */
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
@@ -1065,7 +1065,7 @@ ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( sound_ram_map, AS_PROGRAM, 8, m72_state )
-	AM_RANGE(0x0000, 0xffff) AM_RAM AM_BASE(m_soundram)
+	AM_RANGE(0x0000, 0xffff) AM_RAM AM_SHARE("soundram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_rom_map, AS_PROGRAM, 8, m72_state )
@@ -1076,7 +1076,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( rtype_sound_portmap, AS_IO, 8, m72_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x02, 0x02) AM_READ(soundlatch_r)
+	AM_RANGE(0x02, 0x02) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x06, 0x06) AM_DEVWRITE_LEGACY("m72", m72_sound_irq_ack_w)
 	AM_RANGE(0x84, 0x84) AM_DEVREAD_LEGACY("m72", m72_sample_r)
 ADDRESS_MAP_END
@@ -1084,7 +1084,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_portmap, AS_IO, 8, m72_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x02, 0x02) AM_READ(soundlatch_r)
+	AM_RANGE(0x02, 0x02) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x06, 0x06) AM_DEVWRITE_LEGACY("m72", m72_sound_irq_ack_w)
 	AM_RANGE(0x82, 0x82) AM_DEVWRITE_LEGACY("m72", m72_sample_w)
 	AM_RANGE(0x84, 0x84) AM_DEVREAD_LEGACY("m72", m72_sample_r)
@@ -1093,7 +1093,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( rtype2_sound_portmap, AS_IO, 8, m72_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x80, 0x80) AM_READ(soundlatch_r)
+	AM_RANGE(0x80, 0x80) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x80, 0x81) AM_DEVWRITE_LEGACY("m72", rtype2_sample_addr_w)
 	AM_RANGE(0x82, 0x82) AM_DEVWRITE_LEGACY("m72", m72_sample_w)
 	AM_RANGE(0x83, 0x83) AM_DEVWRITE_LEGACY("m72", m72_sound_irq_ack_w)
@@ -1105,7 +1105,7 @@ static ADDRESS_MAP_START( poundfor_sound_portmap, AS_IO, 8, m72_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x10, 0x13) AM_DEVWRITE_LEGACY("m72", poundfor_sample_addr_w)
 	AM_RANGE(0x40, 0x41) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x42, 0x42) AM_READ(soundlatch_r)
+	AM_RANGE(0x42, 0x42) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x42, 0x42) AM_DEVWRITE_LEGACY("m72", m72_sound_irq_ack_w)
 ADDRESS_MAP_END
 
@@ -1825,7 +1825,7 @@ GFXDECODE_END
 
 static const ym2151_interface ym2151_config =
 {
-	m72_ym2151_irq_handler
+	DEVCB_LINE(m72_ym2151_irq_handler)
 };
 
 

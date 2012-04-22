@@ -136,24 +136,26 @@ class wardner_state : public twincobr_state
 {
 public:
 	wardner_state(const machine_config &mconfig, device_type type, const char *tag)
-		: twincobr_state(mconfig, type,tag) { }
+		: twincobr_state(mconfig, type,tag),
+		  m_rambase_ae00(*this, "rambase_ae00"),
+		  m_rambase_c000(*this, "rambase_c000") { }
 
-	UINT8 *m_rambase_ae00;
-	UINT8 *m_rambase_c000;
+	required_shared_ptr<UINT8> m_rambase_ae00;
+	required_shared_ptr<UINT8> m_rambase_c000;
+	DECLARE_WRITE8_MEMBER(wardner_ramrom_bank_sw);
 };
 
 
-static WRITE8_HANDLER( wardner_ramrom_bank_sw )
+WRITE8_MEMBER(wardner_state::wardner_ramrom_bank_sw)
 {
-	wardner_state *state = space->machine().driver_data<wardner_state>();
-	if (state->m_wardner_membank != data) {
+	if (m_wardner_membank != data) {
 		int bankaddress = 0;
 
 		address_space *mainspace;
-		UINT8 *RAM = space->machine().region("maincpu")->base();
+		UINT8 *RAM = memregion("maincpu")->base();
 
-		mainspace = space->machine().device("maincpu")->memory().space(AS_PROGRAM);
-		state->m_wardner_membank = data;
+		mainspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
+		m_wardner_membank = data;
 
 		if (data)
 		{
@@ -169,18 +171,18 @@ static WRITE8_HANDLER( wardner_ramrom_bank_sw )
 				case 6:  bankaddress = 0x30000; break; /* not used */
 				default: bankaddress = 0x00000; break; /* not used */
 			}
-			memory_set_bankptr(space->machine(), "bank1",&RAM[bankaddress]);
+			membank("bank1")->set_base(&RAM[bankaddress]);
 		}
 		else
 		{
-			mainspace->install_read_handler(0x8000, 0x8fff, read8_delegate(FUNC(wardner_state::wardner_sprite_r),state));
+			mainspace->install_read_handler(0x8000, 0x8fff, read8_delegate(FUNC(wardner_state::wardner_sprite_r),this));
 			mainspace->install_read_bank(0xa000, 0xadff, "bank4");
 			mainspace->install_read_bank(0xae00, 0xafff, "bank2");
 			mainspace->install_read_bank(0xc000, 0xc7ff, "bank3");
-			memory_set_bankptr(space->machine(), "bank1", &RAM[0x0000]);
-			memory_set_bankptr(space->machine(), "bank2", state->m_rambase_ae00);
-			memory_set_bankptr(space->machine(), "bank3", state->m_rambase_c000);
-			memory_set_bankptr(space->machine(), "bank4", state->m_generic_paletteram_8);
+			membank("bank1")->set_base(&RAM[0x0000]);
+			membank("bank2")->set_base(m_rambase_ae00);
+			membank("bank3")->set_base(m_rambase_c000);
+			membank("bank4")->set_base(m_generic_paletteram_8);
 		}
 	}
 }
@@ -190,8 +192,8 @@ void wardner_restore_bank(running_machine &machine)
 	wardner_state *state = machine.driver_data<wardner_state>();
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 
-	wardner_ramrom_bank_sw(space,0,1);	/* Dummy value to ensure restoration */
-	wardner_ramrom_bank_sw(space,0,state->m_wardner_membank);
+	state->wardner_ramrom_bank_sw(*space,0,1);	/* Dummy value to ensure restoration */
+	state->wardner_ramrom_bank_sw(*space,0,state->m_wardner_membank);
 }
 
 
@@ -205,10 +207,10 @@ static ADDRESS_MAP_START( main_program_map, AS_PROGRAM, 8, wardner_state )
 
 	AM_RANGE(0x8000, 0x8fff) AM_WRITE(wardner_sprite_w) AM_SHARE("spriteram")
 	AM_RANGE(0x9000, 0x9fff) AM_ROM
-	AM_RANGE(0xa000, 0xadff) AM_WRITE(paletteram_xBBBBBGGGGGRRRRR_le_w) AM_SHARE("paletteram")
-	AM_RANGE(0xae00, 0xafff) AM_RAM AM_BASE(m_rambase_ae00)
+	AM_RANGE(0xa000, 0xadff) AM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_le_w) AM_SHARE("paletteram")
+	AM_RANGE(0xae00, 0xafff) AM_RAM AM_SHARE("rambase_ae00")
 	AM_RANGE(0xb000, 0xbfff) AM_ROM
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_BASE(m_rambase_c000) AM_SHARE("share1")	/* Shared RAM with Sound Z80 */
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("rambase_c000") /* Shared RAM with Sound Z80 */
 	AM_RANGE(0xc800, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -231,7 +233,7 @@ static ADDRESS_MAP_START( main_io_map, AS_IO, 8, wardner_state )
 	AM_RANGE(0x5a, 0x5a) AM_WRITE(wardner_coin_dsp_w)		/* Machine system control */
 	AM_RANGE(0x5c, 0x5c) AM_WRITE(wardner_control_w)		/* Machine system control */
 	AM_RANGE(0x60, 0x65) AM_READWRITE(wardner_videoram_r, wardner_videoram_w)		/* data from video layer RAM */
-	AM_RANGE(0x70, 0x70) AM_WRITE_LEGACY(wardner_ramrom_bank_sw)	/* ROM bank select */
+	AM_RANGE(0x70, 0x70) AM_WRITE(wardner_ramrom_bank_sw)	/* ROM bank select */
 ADDRESS_MAP_END
 
 
@@ -240,7 +242,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_program_map, AS_PROGRAM, 8, wardner_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x807f) AM_RAM
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("share1")	/* Shared RAM with Main Z80 */
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("rambase_c000")	/* Shared RAM with Main Z80 */
 	AM_RANGE(0xc800, 0xcfff) AM_RAM
 
 ADDRESS_MAP_END

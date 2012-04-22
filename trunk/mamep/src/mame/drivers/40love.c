@@ -236,7 +236,7 @@ static TIMER_CALLBACK( nmi_callback )
 
 WRITE8_MEMBER(fortyl_state::sound_command_w)
 {
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	machine().scheduler().synchronize(FUNC(nmi_callback), data);
 }
 
@@ -274,7 +274,7 @@ WRITE8_MEMBER(fortyl_state::bank_select_w)
 //      popmessage("WRONG BANK SELECT = %x !!!!\n",data);
 	}
 
-	memory_set_bank(machine(), "bank1", data & 1);
+	membank("bank1")->set_entry(data & 1);
 }
 
 WRITE8_MEMBER(fortyl_state::pix1_w)
@@ -566,8 +566,8 @@ READ8_MEMBER(fortyl_state::undoukai_mcu_status_r)
 static DRIVER_INIT( undoukai )
 {
 	fortyl_state *state = machine.driver_data<fortyl_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
-	memory_configure_bank(machine, "bank1", 0, 2, &ROM[0x10000], 0x2000);
+	UINT8 *ROM = state->memregion("maincpu")->base();
+	state->membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x2000);
 
 	state->m_pix_color[0] = 0x000;
 	state->m_pix_color[1] = 0x1e3;
@@ -578,14 +578,14 @@ static DRIVER_INIT( undoukai )
 static DRIVER_INIT( 40love )
 {
 	fortyl_state *state = machine.driver_data<fortyl_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
-	memory_configure_bank(machine, "bank1", 0, 2, &ROM[0x10000], 0x2000);
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	state->membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x2000);
 
 	#if 0
 		/* character ROM hack
             to show a white line on the opponent side */
 
-		UINT8 *ROM = machine.region("gfx2")->base();
+		UINT8 *ROM = state->memregion("gfx2")->base();
 		int adr = 0x10 * 0x022b;
 		ROM[adr + 0x000a] = 0x00;
 		ROM[adr + 0x000b] = 0x00;
@@ -636,11 +636,11 @@ static ADDRESS_MAP_START( 40love_map, AS_PROGRAM, 8, fortyl_state )
 	AM_RANGE(0x880b, 0x880b) AM_READ_PORT("P2")
 	AM_RANGE(0x880c, 0x880c) AM_READ_PORT("DSW1") AM_WRITE(fortyl_pixram_sel_w) /* pixram bank select */
 	AM_RANGE(0x880d, 0x880d) AM_READ_PORT("DSW2") AM_WRITENOP /* unknown */
-	AM_RANGE(0x9000, 0x97ff) AM_READWRITE(fortyl_bg_videoram_r, fortyl_bg_videoram_w) AM_BASE(m_videoram)		/* #1 M5517P on video board */
-	AM_RANGE(0x9800, 0x983f) AM_RAM AM_BASE(m_video_ctrl)			/* video control area */
-	AM_RANGE(0x9840, 0x987f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)	/* sprites part 1 */
-	AM_RANGE(0x9880, 0x98bf) AM_READWRITE(fortyl_bg_colorram_r, fortyl_bg_colorram_w) AM_BASE(m_colorram)		/* background attributes (2 bytes per line) */
-	AM_RANGE(0x98c0, 0x98ff) AM_RAM AM_BASE_SIZE(m_spriteram2, m_spriteram2_size)/* sprites part 2 */
+	AM_RANGE(0x9000, 0x97ff) AM_READWRITE(fortyl_bg_videoram_r, fortyl_bg_videoram_w) AM_SHARE("videoram")		/* #1 M5517P on video board */
+	AM_RANGE(0x9800, 0x983f) AM_RAM AM_SHARE("video_ctrl")			/* video control area */
+	AM_RANGE(0x9840, 0x987f) AM_RAM AM_SHARE("spriteram")	/* sprites part 1 */
+	AM_RANGE(0x9880, 0x98bf) AM_READWRITE(fortyl_bg_colorram_r, fortyl_bg_colorram_w) AM_SHARE("colorram")		/* background attributes (2 bytes per line) */
+	AM_RANGE(0x98c0, 0x98ff) AM_RAM AM_SHARE("spriteram2")/* sprites part 2 */
 	AM_RANGE(0xa000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xffff) AM_READWRITE(fortyl_pixram_r, fortyl_pixram_w) /* banked pixel layer */
 ADDRESS_MAP_END
@@ -648,7 +648,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( undoukai_map, AS_PROGRAM, 8, fortyl_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x9fff) AM_ROMBANK("bank1")
-	AM_RANGE(0xa000, 0xa7ff) AM_RAM AM_BASE(m_mcu_ram) /* M5517P on main board */
+	AM_RANGE(0xa000, 0xa7ff) AM_RAM AM_SHARE("mcu_ram") /* M5517P on main board */
 	AM_RANGE(0xa800, 0xa800) AM_READWRITE(undoukai_mcu_r, undoukai_mcu_w)
 	AM_RANGE(0xa801, 0xa801) AM_READWRITE(undoukai_mcu_status_r, pix1_w)		//pixel layer related
 	AM_RANGE(0xa802, 0xa802) AM_WRITE(bank_select_w)
@@ -662,11 +662,11 @@ static ADDRESS_MAP_START( undoukai_map, AS_PROGRAM, 8, fortyl_state )
 	AM_RANGE(0xa80b, 0xa80b) AM_READ_PORT("P2")
 	AM_RANGE(0xa80c, 0xa80c) AM_READ_PORT("DSW1") AM_WRITE(fortyl_pixram_sel_w) /* pixram bank select */
 	AM_RANGE(0xa80d, 0xa80d) AM_READ_PORT("DSW2") AM_WRITENOP /* unknown */
-	AM_RANGE(0xb000, 0xb7ff) AM_READWRITE(fortyl_bg_videoram_r, fortyl_bg_videoram_w) AM_BASE(m_videoram)		/* #1 M5517P on video board */
-	AM_RANGE(0xb800, 0xb83f) AM_RAM AM_BASE(m_video_ctrl)			/* video control area */
-	AM_RANGE(0xb840, 0xb87f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)	/* sprites part 1 */
-	AM_RANGE(0xb880, 0xb8bf) AM_READWRITE(fortyl_bg_colorram_r, fortyl_bg_colorram_w) AM_BASE(m_colorram)		/* background attributes (2 bytes per line) */
-	AM_RANGE(0xb8e0, 0xb8ff) AM_RAM AM_BASE_SIZE(m_spriteram2, m_spriteram2_size) /* sprites part 2 */
+	AM_RANGE(0xb000, 0xb7ff) AM_READWRITE(fortyl_bg_videoram_r, fortyl_bg_videoram_w) AM_SHARE("videoram")		/* #1 M5517P on video board */
+	AM_RANGE(0xb800, 0xb83f) AM_RAM AM_SHARE("video_ctrl")			/* video control area */
+	AM_RANGE(0xb840, 0xb87f) AM_RAM AM_SHARE("spriteram")	/* sprites part 1 */
+	AM_RANGE(0xb880, 0xb8bf) AM_READWRITE(fortyl_bg_colorram_r, fortyl_bg_colorram_w) AM_SHARE("colorram")		/* background attributes (2 bytes per line) */
+	AM_RANGE(0xb8e0, 0xb8ff) AM_RAM AM_SHARE("spriteram2") /* sprites part 2 */
 	AM_RANGE(0xc000, 0xffff) AM_READWRITE(fortyl_pixram_r, fortyl_pixram_w)
 ADDRESS_MAP_END
 
@@ -750,7 +750,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, fortyl_state )
 	AM_RANGE(0xca00, 0xca0d) AM_DEVWRITE_LEGACY("msm", msm5232_w)
 	AM_RANGE(0xcc00, 0xcc00) AM_DEVWRITE_LEGACY("msm", sound_control_0_w)
 	AM_RANGE(0xce00, 0xce00) AM_DEVWRITE_LEGACY("msm", sound_control_1_w)
-	AM_RANGE(0xd800, 0xd800) AM_READ(soundlatch_r) AM_WRITE(to_main_w)
+	AM_RANGE(0xd800, 0xd800) AM_READ(soundlatch_byte_r) AM_WRITE(to_main_w)
 	AM_RANGE(0xda00, 0xda00) AM_READNOP AM_WRITE(nmi_enable_w) /* unknown read */
 	AM_RANGE(0xdc00, 0xdc00) AM_WRITE(nmi_disable_w)
 	AM_RANGE(0xde00, 0xde00) AM_READNOP AM_DEVWRITE_LEGACY("dac", dac_signed_w)		/* signed 8-bit DAC - unknown read */

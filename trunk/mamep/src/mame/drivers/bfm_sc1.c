@@ -192,7 +192,7 @@ static int Scorpion1_GetSwitchState(bfm_sc1_state *drvstate, int strobe, int dat
 WRITE8_MEMBER(bfm_sc1_state::bankswitch_w)
 {
 //  printf("bankswitch %02x\n", data);
-	memory_set_bank(machine(),"bank1",data & 0x03);
+	membank("bank1")->set_entry(data & 0x03);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -303,7 +303,7 @@ WRITE8_MEMBER(bfm_sc1_state::mmtr_w)
 			if ( changed & (1 << i) )
 			{
 				MechMtr_update(i, data & (1 << i) );
-				generic_pulse_irq_line(machine().device("maincpu"), M6809_FIRQ_LINE, 1);
+				generic_pulse_irq_line(machine().device("maincpu")->execute(), M6809_FIRQ_LINE, 1);
 			}
 		}
 	}
@@ -668,10 +668,10 @@ static MACHINE_RESET( bfm_sc1 )
 
 // init rom bank ////////////////////////////////////////////////////////////////////
 	{
-		UINT8 *rom = machine.region("maincpu")->base();
+		UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
-		memory_configure_bank(machine,"bank1", 0, 4, &rom[0x0000], 0x02000);
-		memory_set_bank(machine,"bank1",state->m_defaultbank);
+		state->membank("bank1")->configure_entries(0, 4, &rom[0x0000], 0x02000);
+		state->membank("bank1")->set_entry(state->m_defaultbank);
 	}
 }
 
@@ -695,7 +695,7 @@ static ADDRESS_MAP_START( sc1_base, AS_PROGRAM, 8, bfm_sc1_state )
 
 	AM_RANGE(0x2E00, 0x2E00) AM_READ(irqlatch_r)			// irq latch
 
-	AM_RANGE(0x3001, 0x3001) AM_READ(soundlatch_r)
+	AM_RANGE(0x3001, 0x3001) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x3001, 0x3001) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_w)
 	AM_RANGE(0x3101, 0x3201) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)
 

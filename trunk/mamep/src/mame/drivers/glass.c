@@ -54,7 +54,7 @@ GFXDECODE_END
 
 WRITE16_MEMBER(glass_state::OKIM6295_bankswitch_w)
 {
-	UINT8 *RAM = machine().region("oki")->base();
+	UINT8 *RAM = memregion("oki")->base();
 
 	if (ACCESSING_BITS_0_7)
 		memcpy(&RAM[0x30000], &RAM[0x40000 + (data & 0x0f) * 0x10000], 0x10000);
@@ -79,12 +79,12 @@ WRITE16_MEMBER(glass_state::glass_coin_w)
 
 static ADDRESS_MAP_START( glass_map, AS_PROGRAM, 16, glass_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM																		/* ROM */
-	AM_RANGE(0x100000, 0x101fff) AM_RAM_WRITE(glass_vram_w) AM_BASE(m_videoram)						/* Video RAM */
+	AM_RANGE(0x100000, 0x101fff) AM_RAM_WRITE(glass_vram_w) AM_SHARE("videoram")						/* Video RAM */
 	AM_RANGE(0x102000, 0x102fff) AM_RAM																		/* Extra Video RAM */
-	AM_RANGE(0x108000, 0x108007) AM_WRITEONLY AM_BASE(m_vregs)									/* Video Registers */
+	AM_RANGE(0x108000, 0x108007) AM_WRITEONLY AM_SHARE("vregs")									/* Video Registers */
 	AM_RANGE(0x108008, 0x108009) AM_WRITE(clr_int_w)														/* CLR INT Video */
-	AM_RANGE(0x200000, 0x2007ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")	/* Palette */
-	AM_RANGE(0x440000, 0x440fff) AM_RAM AM_BASE(m_spriteram)											/* Sprite RAM */
+	AM_RANGE(0x200000, 0x2007ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")	/* Palette */
+	AM_RANGE(0x440000, 0x440fff) AM_RAM AM_SHARE("spriteram")											/* Sprite RAM */
 	AM_RANGE(0x700000, 0x700001) AM_READ_PORT("DSW2")
 	AM_RANGE(0x700002, 0x700003) AM_READ_PORT("DSW1")
 	AM_RANGE(0x700004, 0x700005) AM_READ_PORT("P1")
@@ -297,10 +297,10 @@ static void glass_ROM16_split_gfx( running_machine &machine, const char *src_reg
 	int i;
 
 	/* get a pointer to the source data */
-	UINT8 *src = (UINT8 *)machine.region(src_reg)->base();
+	UINT8 *src = (UINT8 *)machine.root_device().memregion(src_reg)->base();
 
 	/* get a pointer to the destination data */
-	UINT8 *dst = (UINT8 *)machine.region(dst_reg)->base();
+	UINT8 *dst = (UINT8 *)machine.root_device().memregion(dst_reg)->base();
 
 	/* fill destination areas with the proper data */
 	for (i = 0; i < length / 2; i++)

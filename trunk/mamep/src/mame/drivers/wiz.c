@@ -180,7 +180,7 @@ WRITE8_MEMBER(wiz_state::sound_command_w)
 	{
 		// 0x90 triggers a jump to non-existant address(development system?) and must be filtered
 		case 0x00:
-			if (data != 0x90) soundlatch_w(space, 0, data);
+			if (data != 0x90) soundlatch_byte_w(space, 0, data);
 		break;
 
 		// explosion sound trigger(analog?)
@@ -224,18 +224,18 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, wiz_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 	AM_RANGE(0xc800, 0xc801) AM_WRITE(wiz_coin_counter_w)
-	AM_RANGE(0xd000, 0xd3ff) AM_BASE(m_videoram2)					/* Fallthrough */
-	AM_RANGE(0xd400, 0xd7ff) AM_BASE(m_colorram2)
-	AM_RANGE(0xd800, 0xd83f) AM_BASE(m_attributesram2)
-	AM_RANGE(0xd840, 0xd85f) AM_BASE(m_spriteram2) AM_SIZE(m_spriteram_size)
+	AM_RANGE(0xd000, 0xd3ff) AM_SHARE("videoram2")					/* Fallthrough */
+	AM_RANGE(0xd400, 0xd7ff) AM_SHARE("colorram2")
+	AM_RANGE(0xd800, 0xd83f) AM_SHARE("attributesram2")
+	AM_RANGE(0xd840, 0xd85f) AM_SHARE("spriteram2")
 	AM_RANGE(0xd000, 0xd85f) AM_RAM
-	AM_RANGE(0xe000, 0xe3ff) AM_BASE(m_videoram)	/* Fallthrough */
+	AM_RANGE(0xe000, 0xe3ff) AM_SHARE("videoram")	/* Fallthrough */
 	AM_RANGE(0xe400, 0xe7ff) AM_RAM
-	AM_RANGE(0xe800, 0xe83f) AM_BASE(m_attributesram)
-	AM_RANGE(0xe840, 0xe85f) AM_BASE(m_spriteram)
+	AM_RANGE(0xe800, 0xe83f) AM_SHARE("attributesram")
+	AM_RANGE(0xe840, 0xe85f) AM_SHARE("spriteram")
 	AM_RANGE(0xe000, 0xe85f) AM_RAM
 	AM_RANGE(0xf000, 0xf000) AM_READ_PORT("DSW0")
-	AM_RANGE(0xf000, 0xf000) AM_RAM AM_BASE(m_sprite_bank)
+	AM_RANGE(0xf000, 0xf000) AM_RAM AM_SHARE("sprite_bank")
 	AM_RANGE(0xf001, 0xf001) AM_WRITE(wiz_main_nmi_mask_w)
 	AM_RANGE(0xf002, 0xf003) AM_WRITE(wiz_palettebank_w)
 	AM_RANGE(0xf004, 0xf005) AM_WRITE(wiz_char_bank_select_w)
@@ -261,20 +261,20 @@ WRITE8_MEMBER(wiz_state::wiz_sound_nmi_mask_w)
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, wiz_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x2000, 0x23ff) AM_RAM
-	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_r) AM_WRITE(wiz_sound_nmi_mask_w)	/* Stinger/Scion */
+	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_byte_r) AM_WRITE(wiz_sound_nmi_mask_w)	/* Stinger/Scion */
 	AM_RANGE(0x4000, 0x4001) AM_DEVWRITE_LEGACY("8910.3", ay8910_address_data_w)
 	AM_RANGE(0x5000, 0x5001) AM_DEVWRITE_LEGACY("8910.1", ay8910_address_data_w)
 	AM_RANGE(0x6000, 0x6001) AM_DEVWRITE_LEGACY("8910.2", ay8910_address_data_w)		/* Wiz only */
-	AM_RANGE(0x7000, 0x7000) AM_READ(soundlatch_r) AM_WRITE(wiz_sound_nmi_mask_w)	/* Wiz */
+	AM_RANGE(0x7000, 0x7000) AM_READ(soundlatch_byte_r) AM_WRITE(wiz_sound_nmi_mask_w)	/* Wiz */
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( stinger_sound_map, AS_PROGRAM, 8, wiz_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x2000, 0x23ff) AM_RAM
-	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_r) AM_WRITE(wiz_sound_nmi_mask_w)	/* Stinger/Scion */
+	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_byte_r) AM_WRITE(wiz_sound_nmi_mask_w)	/* Stinger/Scion */
 	AM_RANGE(0x5000, 0x5001) AM_DEVWRITE_LEGACY("8910.1", ay8910_address_data_w)
 	AM_RANGE(0x6000, 0x6001) AM_DEVWRITE_LEGACY("8910.2", ay8910_address_data_w)		/* Wiz only */
-	AM_RANGE(0x7000, 0x7000) AM_READ(soundlatch_r) AM_WRITE(wiz_sound_nmi_mask_w)	/* Wiz */
+	AM_RANGE(0x7000, 0x7000) AM_READ(soundlatch_byte_r) AM_WRITE(wiz_sound_nmi_mask_w)	/* Wiz */
 ADDRESS_MAP_END
 
 
@@ -1070,8 +1070,8 @@ static DRIVER_INIT( stinger )
 		{ 5,7,3, 0x28 }
 	};
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *rom = machine.region("maincpu")->base();
-	int size = machine.region("maincpu")->bytes();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	int size = machine.root_device().memregion("maincpu")->bytes();
 	UINT8 *decrypt = auto_alloc_array(machine, UINT8, size);
 	int A;
 	const UINT8 *tbl;

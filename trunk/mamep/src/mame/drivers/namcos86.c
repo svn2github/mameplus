@@ -184,29 +184,29 @@ TODO:
 
 WRITE8_MEMBER(namcos86_state::bankswitch1_w)
 {
-	UINT8 *base = machine().region("cpu1")->base() + 0x10000;
+	UINT8 *base = memregion("cpu1")->base() + 0x10000;
 
 	/* if the ROM expansion module is available, don't do anything. This avoids conflict */
 	/* with bankswitch1_ext_w() in wndrmomo */
-	if (machine().region("user1")->base()) return;
+	if (machine().root_device().memregion("user1")->base()) return;
 
-	memory_set_bankptr(machine(), "bank1",base + ((data & 0x03) * 0x2000));
+	membank("bank1")->set_base(base + ((data & 0x03) * 0x2000));
 }
 
 WRITE8_MEMBER(namcos86_state::bankswitch1_ext_w)
 {
-	UINT8 *base = machine().region("user1")->base();
+	UINT8 *base = memregion("user1")->base();
 
 	if (base == 0) return;
 
-	memory_set_bankptr(machine(), "bank1",base + ((data & 0x1f) * 0x2000));
+	membank("bank1")->set_base(base + ((data & 0x1f) * 0x2000));
 }
 
 WRITE8_MEMBER(namcos86_state::bankswitch2_w)
 {
-	UINT8 *base = machine().region("cpu2")->base() + 0x10000;
+	UINT8 *base = memregion("cpu2")->base() + 0x10000;
 
-	memory_set_bankptr(machine(), "bank2",base + ((data & 0x03) * 0x2000));
+	membank("bank2")->set_base(base + ((data & 0x03) * 0x2000));
 }
 
 /* Stubs to pass the correct Dip Switch setup to the MCU */
@@ -294,7 +294,7 @@ WRITE8_MEMBER(namcos86_state::namcos86_led_w)
 WRITE8_MEMBER(namcos86_state::cus115_w)
 {
 	/* make sure the expansion board is present */
-	if (!machine().region("user1")->base())
+	if (!machine().root_device().memregion("user1")->base())
 	{
 		popmessage("expansion board not present");
 		return;
@@ -324,16 +324,16 @@ WRITE8_MEMBER(namcos86_state::cus115_w)
 
 static MACHINE_RESET( namco86 )
 {
-	UINT8 *base = machine.region("cpu1")->base() + 0x10000;
+	UINT8 *base = machine.root_device().memregion("cpu1")->base() + 0x10000;
 
-	memory_set_bankptr(machine, "bank1",base);
+	machine.root_device().membank("bank1")->set_base(base);
 }
 
 
 
 static ADDRESS_MAP_START( cpu1_map, AS_PROGRAM, 8, namcos86_state )
-	AM_RANGE(0x0000, 0x1fff) AM_READWRITE(rthunder_videoram1_r,rthunder_videoram1_w) AM_BASE(m_rthunder_videoram1)
-	AM_RANGE(0x2000, 0x3fff) AM_READWRITE(rthunder_videoram2_r,rthunder_videoram2_w) AM_BASE(m_rthunder_videoram2)
+	AM_RANGE(0x0000, 0x1fff) AM_READWRITE(rthunder_videoram1_r,rthunder_videoram1_w) AM_SHARE("videoram1")
+	AM_RANGE(0x2000, 0x3fff) AM_READWRITE(rthunder_videoram2_r,rthunder_videoram2_w) AM_SHARE("videoram2")
 
 	AM_RANGE(0x4000, 0x43ff) AM_DEVREADWRITE_LEGACY("namco", namcos1_cus30_r, namcos1_cus30_w) /* PSG device, shared RAM */
 
@@ -363,7 +363,7 @@ ADDRESS_MAP_END
 
 #define CPU2_MEMORY(NAME,ADDR_SPRITE,ADDR_VIDEO1,ADDR_VIDEO2,ADDR_ROM,ADDR_BANK,ADDR_WDOG,ADDR_INT)	\
 static ADDRESS_MAP_START( NAME##_cpu2_map, AS_PROGRAM, 8, namcos86_state )							\
-	AM_RANGE(ADDR_SPRITE+0x0000, ADDR_SPRITE+0x1fff) AM_READWRITE(rthunder_spriteram_r,rthunder_spriteram_w) AM_BASE(m_rthunder_spriteram)	\
+	AM_RANGE(ADDR_SPRITE+0x0000, ADDR_SPRITE+0x1fff) AM_READWRITE(rthunder_spriteram_r,rthunder_spriteram_w) AM_SHARE("spriteram")	\
 	AM_RANGE(ADDR_VIDEO1+0x0000, ADDR_VIDEO1+0x1fff) AM_READWRITE(rthunder_videoram1_r,rthunder_videoram1_w)	\
 	AM_RANGE(ADDR_VIDEO2+0x0000, ADDR_VIDEO2+0x1fff) AM_READWRITE(rthunder_videoram2_r,rthunder_videoram2_w)	\
 	AM_RANGE(ADDR_ROM+0x0000, ADDR_ROM+0x1fff) AM_ROMBANK("bank2")								\
@@ -1471,8 +1471,8 @@ static DRIVER_INIT( namco86 )
 	UINT8 *buffer;
 
 	/* shuffle tile ROMs so regular gfx unpack routines can be used */
-	gfx = machine.region("gfx1")->base();
-	size = machine.region("gfx1")->bytes() * 2 / 3;
+	gfx = machine.root_device().memregion("gfx1")->base();
+	size = machine.root_device().memregion("gfx1")->bytes() * 2 / 3;
 	buffer = auto_alloc_array(machine, UINT8,  size );
 
 	{
@@ -1496,8 +1496,8 @@ static DRIVER_INIT( namco86 )
 		auto_free( machine, buffer );
 	}
 
-	gfx = machine.region("gfx2")->base();
-	size = machine.region("gfx2")->bytes() * 2 / 3;
+	gfx = machine.root_device().memregion("gfx2")->base();
+	size = machine.root_device().memregion("gfx2")->bytes() * 2 / 3;
 	buffer = auto_alloc_array(machine, UINT8,  size );
 
 	{

@@ -101,11 +101,14 @@ class sigmab98_state : public driver_device
 public:
 	sigmab98_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this,"maincpu")
-		{ }
+		m_maincpu(*this,"maincpu"),
+		m_spriteram(*this, "spriteram"),
+		m_nvram(*this, "nvram"){ }
 
-	UINT8 *m_spriteram;
-	size_t m_spriteram_size;
+	required_device<cpu_device> m_maincpu;
+	optional_shared_ptr<UINT8> m_spriteram;
+	required_shared_ptr<UINT8> m_nvram;
+
 	UINT8 m_reg;
 	UINT8 m_rombank;
 	UINT8 m_reg2;
@@ -116,9 +119,7 @@ public:
 	UINT8 m_c8;
 	UINT8 m_vblank;
 	UINT8 m_out[3];
-	UINT8 *m_nvram;
 
-	required_device<cpu_device> m_maincpu;
 	UINT8 m_vblank_vector;
 	UINT8 m_timer0_vector;
 	UINT8 m_timer1_vector;
@@ -213,7 +214,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 {
 	sigmab98_state *state = machine.driver_data<sigmab98_state>();
 	UINT8 *end		=	state->m_spriteram - 0x10;
-	UINT8 *s		=	end + state->m_spriteram_size;
+	UINT8 *s		=	end + state->m_spriteram.bytes();
 
 	for ( ; s != end; s -= 0x10 )
 	{
@@ -346,7 +347,7 @@ WRITE8_MEMBER(sigmab98_state::regs_w)
 			if (data >= 0x18)
 				logerror("%s: unknown rom bank = %02x\n", machine().describe_context(), data);
 			else
-				memory_set_bank(machine(), "rombank", data);
+				membank("rombank")->set_entry(data);
 			break;
 
 		default:
@@ -385,10 +386,10 @@ WRITE8_MEMBER(sigmab98_state::regs2_w)
 			switch (data)
 			{
 				case 0x32:
-					memory_set_bank(machine(), "rambank", 0);
+					membank("rambank")->set_entry(0);
 					break;
 				case 0x36:
-					memory_set_bank(machine(), "rambank", 1);
+					membank("rambank")->set_entry(1);
 					break;
 				default:
 					logerror("%s: unknown ram bank = %02x\n", machine().describe_context(), data);
@@ -479,7 +480,7 @@ WRITE8_MEMBER(sigmab98_state::c6_w)
 // 02 hopper motor on (active low)?
 WRITE8_MEMBER(sigmab98_state::c8_w)
 {
-	ticket_dispenser_w(machine().device("hopper"), 0, (!(data & 0x02) && (data & 0x01)) ? 0x00 : 0x80);
+	machine().device<ticket_dispenser_device>("hopper")->write(space, 0, (!(data & 0x02) && (data & 0x01)) ? 0x00 : 0x80);
 
 	m_c8 = data;
 	show_outputs();
@@ -489,9 +490,9 @@ static ADDRESS_MAP_START( gegege_mem_map, AS_PROGRAM, 8, sigmab98_state )
 	AM_RANGE( 0x0000, 0x7fff ) AM_ROM
 	AM_RANGE( 0x8000, 0x9fff ) AM_ROMBANK("rombank")
 
-	AM_RANGE( 0xa000, 0xafff ) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE( 0xa000, 0xafff ) AM_RAM AM_SHARE("spriteram")
 
-	AM_RANGE( 0xc000, 0xc1ff ) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_be_w) AM_SHARE("paletteram")
+	AM_RANGE( 0xc000, 0xc1ff ) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_byte_be_w) AM_SHARE("paletteram")
 
 	AM_RANGE( 0xc800, 0xc87f ) AM_RAM
 
@@ -541,16 +542,16 @@ WRITE8_MEMBER(sigmab98_state::animalc_rombank_w)
 		return;
 	}
 
-	UINT8 *rom = machine().region("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 	switch ( m_reg )
 	{
 		case 0x0f:
 			m_rombank = data;
 			switch (data)
 			{
-				case 0x10:	memory_set_bankptr(machine(), "rombank", rom + 0x400 + 0x4000);	break;
-				case 0x14:	memory_set_bankptr(machine(), "rombank", rom + 0x400 + 0x8000);	break;
-				case 0x18:	memory_set_bankptr(machine(), "rombank", rom + 0x400 + 0xc000);	break;
+				case 0x10:	membank("rombank")->set_base(rom + 0x400 + 0x4000);	break;
+				case 0x14:	membank("rombank")->set_base(rom + 0x400 + 0x8000);	break;
+				case 0x18:	membank("rombank")->set_base(rom + 0x400 + 0xc000);	break;
 				default:
 					logerror("%s: unknown rom bank = %02x, reg = %02x\n", machine().describe_context(), data, m_reg);
 			}
@@ -601,9 +602,9 @@ WRITE8_MEMBER(sigmab98_state::animalc_rambank_w)
 					logerror("%s: unknown ram bank = %02x, reg2 = %02x\n", machine().describe_context(), data, m_reg2);
 					return;
 			}
-			memory_set_bank(machine(), "rambank", bank);
+			membank("rambank")->set_entry(bank);
 			if ( (bank == 1) || (bank == 2) || (bank == 3) )
-				memory_set_bank(machine(), "sprbank", bank-1);
+				membank("sprbank")->set_entry(bank-1);
 			break;
 
 		default:
@@ -712,7 +713,7 @@ WRITE8_MEMBER(sigmab98_state::sammymdl_leds_w)
 // 01 hopper motor on (active low)?
 WRITE8_MEMBER(sigmab98_state::sammymdl_hopper_w)
 {
-	ticket_dispenser_w(machine().device("hopper"), 0, (!(data & 0x01) && (data & 0x02)) ? 0x00 : 0x80);
+	machine().device<ticket_dispenser_device>("hopper")->write(space, 0, (!(data & 0x01) && (data & 0x02)) ? 0x00 : 0x80);
 
 	m_out[2] = data;
 	show_3_outputs();
@@ -722,7 +723,7 @@ READ8_MEMBER(sigmab98_state::sammymdl_coin_hopper_r)
 {
 	UINT8 ret = input_port_read(machine(), "COIN");
 
-//  if ( !ticket_dispenser_r(machine().device("hopper"), 0) )
+//  if ( !machine().device<ticket_dispenser_device>("hopper")->read(0) )
 //      ret &= ~0x01;
 
 	return ret;
@@ -731,13 +732,13 @@ READ8_MEMBER(sigmab98_state::sammymdl_coin_hopper_r)
 static ADDRESS_MAP_START( animalc_map, AS_PROGRAM, 8, sigmab98_state )
 	AM_RANGE( 0x0000, 0x3fff ) AM_ROM
 	AM_RANGE( 0x4000, 0x7fff ) AM_ROMBANK( "rombank" )
-	AM_RANGE( 0x8000, 0x8fff ) AM_RAMBANK( "rambank" ) AM_SHARE( "nvram" ) AM_BASE(m_nvram )
+	AM_RANGE( 0x8000, 0x8fff ) AM_RAMBANK( "rambank" ) AM_SHARE( "nvram" )
 
 	AM_RANGE( 0x9000, 0x9fff ) AM_RAM
 	AM_RANGE( 0xa000, 0xafff ) AM_RAM
 	AM_RANGE( 0xb000, 0xbfff ) AM_RAMBANK("sprbank")
 
-	AM_RANGE( 0xd000, 0xd1ff ) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_be_w ) AM_SHARE("paletteram")
+	AM_RANGE( 0xd000, 0xd1ff ) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_byte_be_w ) AM_SHARE("paletteram")
 	AM_RANGE( 0xd800, 0xd87f ) AM_RAM	// table?
 
 	AM_RANGE( 0xe011, 0xe011 ) AM_WRITENOP	// IRQ Enable? Screen disable?
@@ -897,7 +898,7 @@ READ8_MEMBER(sigmab98_state::haekaka_b000_r)
 		case 0x1d:
 		case 0x1e:
 		case 0x1f:
-			return machine().region("maincpu")->base()[offset + 0xb400 + 0x1000 * (m_rombank-0x10)];
+			return memregion("maincpu")->base()[offset + 0xb400 + 0x1000 * (m_rombank-0x10)];
 
 		case 0x65:	// SPRITERAM
 			if (offset < 0x1000)
@@ -930,7 +931,7 @@ WRITE8_MEMBER(sigmab98_state::haekaka_b000_w)
 		case 0x67:	// PALETTERAM + TABLE? + REGS
 			if (offset < 0x200)
 			{
-				paletteram_xRRRRRGGGGGBBBBB_be_w(space, offset, data);
+				paletteram_xRRRRRGGGGGBBBBB_byte_be_w(space, offset, data);
 //              m_generic_paletteram_8[offset] = data;
 				return;
 			}
@@ -975,7 +976,7 @@ WRITE8_MEMBER(sigmab98_state::haekaka_coin_w)
 static ADDRESS_MAP_START( haekaka_map, AS_PROGRAM, 8, sigmab98_state )
 	AM_RANGE( 0x0000, 0x7fff ) AM_ROM
 	AM_RANGE( 0xb000, 0xcfff ) AM_READWRITE(haekaka_b000_r, haekaka_b000_w )
-	AM_RANGE( 0xd000, 0xefff ) AM_RAM AM_SHARE( "nvram" ) AM_BASE(m_nvram )
+	AM_RANGE( 0xd000, 0xefff ) AM_RAM AM_SHARE( "nvram" )
 	AM_RANGE( 0xfe00, 0xffff ) AM_RAM	// High speed internal RAM
 ADDRESS_MAP_END
 
@@ -1009,7 +1010,7 @@ WRITE8_MEMBER(sigmab98_state::itazuram_rombank_w)
 		return;
 	}
 
-	UINT8 *rom = machine().region("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 	switch ( m_reg )
 	{
 		case 0x0d:
@@ -1017,10 +1018,10 @@ WRITE8_MEMBER(sigmab98_state::itazuram_rombank_w)
 			switch (data)
 			{
 				case 0x11:	// 3800 IS ROM
-					memory_set_bankptr(machine(), "rombank0", rom + 0x4c00);
-					memory_set_bankptr(machine(), "rombank1", rom + 0x5c00);
-					memory_set_bankptr(machine(), "sprbank0", m_spriteram + 0x1000*4);	// scratch
-					memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*4);	// scratch
+					membank("rombank0")->set_base(rom + 0x4c00);
+					membank("rombank1")->set_base(rom + 0x5c00);
+					membank("sprbank0")->set_base(m_spriteram + 0x1000*4);	// scratch
+					membank("sprbank1")->set_base(m_spriteram + 0x1000*4);	// scratch
 					break;
 
 				default:
@@ -1033,10 +1034,10 @@ WRITE8_MEMBER(sigmab98_state::itazuram_rombank_w)
 			switch (data)
 			{
 				case 0x14:	// 3800 IS ROM
-					memory_set_bankptr(machine(), "rombank0", rom + 0x8000);
-					memory_set_bankptr(machine(), "rombank1", rom + 0x9000);
-					memory_set_bankptr(machine(), "sprbank0", m_spriteram + 0x1000*4);	// scratch
-					memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*4);	// scratch
+					membank("rombank0")->set_base(rom + 0x8000);
+					membank("rombank1")->set_base(rom + 0x9000);
+					membank("sprbank0")->set_base(m_spriteram + 0x1000*4);	// scratch
+					membank("sprbank1")->set_base(m_spriteram + 0x1000*4);	// scratch
 					break;
 
 				default:
@@ -1049,33 +1050,33 @@ WRITE8_MEMBER(sigmab98_state::itazuram_rombank_w)
 			switch (data)
 			{
 				case 0x0f:	// 3800 IS ROM
-					memory_set_bankptr(machine(), "rombank0", rom + 0x3400);
-					memory_set_bankptr(machine(), "rombank1", rom + 0x4400);
-					memory_set_bankptr(machine(), "sprbank0", m_spriteram + 0x1000*4);	// scratch
-					memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*4);	// scratch
+					membank("rombank0")->set_base(rom + 0x3400);
+					membank("rombank1")->set_base(rom + 0x4400);
+					membank("sprbank0")->set_base(m_spriteram + 0x1000*4);	// scratch
+					membank("sprbank1")->set_base(m_spriteram + 0x1000*4);	// scratch
 					break;
 
 				case 0x12:	// 3800 IS ROM
-					memory_set_bankptr(machine(), "rombank0", rom + 0x6400);
-					memory_set_bankptr(machine(), "rombank1", rom + 0x7400);
-					memory_set_bankptr(machine(), "sprbank0", m_spriteram + 0x1000*4);	// scratch
-					memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*4);	// scratch
+					membank("rombank0")->set_base(rom + 0x6400);
+					membank("rombank1")->set_base(rom + 0x7400);
+					membank("sprbank0")->set_base(m_spriteram + 0x1000*4);	// scratch
+					membank("sprbank1")->set_base(m_spriteram + 0x1000*4);	// scratch
 					break;
 
 				// used in test mode:
-//              case 0x5c:  memory_set_bankptr(machine(), "rombank", rom + 0x400 + 0x0000);    break;  // 3800 IS RAM! (8000 bytes)
+//              case 0x5c:  membank("rombank")->set_base(rom + 0x400 + 0x0000);    break;  // 3800 IS RAM! (8000 bytes)
 
 				case 0x5e:	// 3800 IS RAM! (1404 bytes)
-					memory_set_bankptr(machine(), "rombank0", m_spriteram + 0x1000*1);
-					memory_set_bankptr(machine(), "sprbank0", m_spriteram + 0x1000*1);
-					memory_set_bankptr(machine(), "rombank1", m_spriteram + 0x1000*2);
-					memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*2);
+					membank("rombank0")->set_base(m_spriteram + 0x1000*1);
+					membank("sprbank0")->set_base(m_spriteram + 0x1000*1);
+					membank("rombank1")->set_base(m_spriteram + 0x1000*2);
+					membank("sprbank1")->set_base(m_spriteram + 0x1000*2);
 					break;
 
 				case 0x6c:	// 3800 IS RAM! (1000 bytes) - SPRITERAM
-					memory_set_bankptr(machine(), "rombank0", m_spriteram);
-					memory_set_bankptr(machine(), "sprbank0", m_spriteram);
-//                  memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*4);    // scratch
+					membank("rombank0")->set_base(m_spriteram);
+					membank("sprbank0")->set_base(m_spriteram);
+//                  membank("sprbank1")->set_base(m_spriteram + 0x1000*4);    // scratch
 					break;
 
 				default:
@@ -1088,10 +1089,10 @@ WRITE8_MEMBER(sigmab98_state::itazuram_rombank_w)
 			switch (data)
 			{
 				case 0x14:	// 3800 IS ROM
-					memory_set_bankptr(machine(), "rombank0", rom + 0x8800);
-					memory_set_bankptr(machine(), "rombank1", rom + 0x9800);
-					memory_set_bankptr(machine(), "sprbank0", m_spriteram + 0x1000*4);	// scratch
-					memory_set_bankptr(machine(), "sprbank1", m_spriteram + 0x1000*4);	// scratch
+					membank("rombank0")->set_base(rom + 0x8800);
+					membank("rombank1")->set_base(rom + 0x9800);
+					membank("sprbank0")->set_base(m_spriteram + 0x1000*4);	// scratch
+					membank("sprbank1")->set_base(m_spriteram + 0x1000*4);	// scratch
 					break;
 
 				default:
@@ -1138,8 +1139,8 @@ WRITE8_MEMBER(sigmab98_state::itazuram_rambank_w)
 			m_rambank = data;
 			switch (data)
 			{
-				case 0x52:	memory_set_bankptr(machine(), "palbank", m_nvram);									break;
-				case 0x64:	memory_set_bankptr(machine(), "palbank", m_generic_paletteram_8);	break;
+				case 0x52:	membank("palbank")->set_base(m_nvram);									break;
+				case 0x64:	membank("palbank")->set_base(m_generic_paletteram_8);	break;
 				default:
 					logerror("%s: unknown ram bank = %02x, reg2 = %02x\n", machine().describe_context(), data, m_reg2);
 					return;
@@ -1171,7 +1172,7 @@ WRITE8_MEMBER(sigmab98_state::itazuram_nvram_palette_w)
 {
 	if (m_rambank == 0x64)
 	{
-		paletteram_xRRRRRGGGGGBBBBB_be_w(space, offset, data);
+		paletteram_xRRRRRGGGGGBBBBB_byte_be_w(space, offset, data);
 //      m_generic_paletteram_8[offset] = data;
 	}
 	else if (m_rambank == 0x52)
@@ -1189,7 +1190,7 @@ WRITE8_MEMBER(sigmab98_state::itazuram_palette_w)
 	if (m_rombank == 0x6c)
 	{
 		if (offset < 0x200)
-			paletteram_xRRRRRGGGGGBBBBB_be_w(space, offset, data);
+			paletteram_xRRRRRGGGGGBBBBB_byte_be_w(space, offset, data);
 //          m_generic_paletteram_8[offset] = data;
 	}
 	else
@@ -1213,7 +1214,7 @@ static ADDRESS_MAP_START( itazuram_map, AS_PROGRAM, 8, sigmab98_state )
 
 	AM_RANGE( 0x6811, 0x6811 ) AM_WRITENOP	// IRQ Enable? Screen disable?
 	AM_RANGE( 0x6813, 0x6813 ) AM_WRITENOP	// IRQ Ack?
-	AM_RANGE( 0xdc00, 0xfdff ) AM_READ_BANK( "palbank" ) AM_WRITE(itazuram_nvram_palette_w ) AM_SHARE( "nvram" ) AM_BASE(m_nvram )	// nvram | paletteram
+	AM_RANGE( 0xdc00, 0xfdff ) AM_READ_BANK( "palbank" ) AM_WRITE(itazuram_nvram_palette_w ) AM_SHARE( "nvram" )	// nvram | paletteram
 
 	AM_RANGE( 0xfe00, 0xffff ) AM_RAM	// High speed internal RAM
 ADDRESS_MAP_END
@@ -1373,7 +1374,7 @@ READ8_MEMBER(sigmab98_state::tdoboon_c000_r)
 		case 0x1d:
 		case 0x1e:
 		case 0x1f:
-			return machine().region("maincpu")->base()[offset + 0xc400 + 0x1000 * (m_rombank-0x10)];
+			return memregion("maincpu")->base()[offset + 0xc400 + 0x1000 * (m_rombank-0x10)];
 
 		case 0x64:	// SPRITERAM
 			if (offset < 0x1000)
@@ -1410,7 +1411,7 @@ WRITE8_MEMBER(sigmab98_state::tdoboon_c000_w)
 		case 0x66:	// PALETTERAM + TABLE?
 			if (offset < 0x200)
 			{
-				paletteram_xRRRRRGGGGGBBBBB_be_w(space, offset, data);
+				paletteram_xRRRRRGGGGGBBBBB_byte_be_w(space, offset, data);
 //              m_generic_paletteram_8[offset] = data;
 				return;
 			}
@@ -1428,7 +1429,7 @@ WRITE8_MEMBER(sigmab98_state::tdoboon_c000_w)
 static ADDRESS_MAP_START( tdoboon_map, AS_PROGRAM, 8, sigmab98_state )
 	AM_RANGE( 0x0000, 0xbfff ) AM_ROM
 	AM_RANGE( 0xc000, 0xcfff ) AM_READWRITE(tdoboon_c000_r, tdoboon_c000_w )
-	AM_RANGE( 0xd000, 0xefff ) AM_RAM AM_SHARE( "nvram" ) AM_BASE(m_nvram )
+	AM_RANGE( 0xd000, 0xefff ) AM_RAM AM_SHARE( "nvram" )
 	AM_RANGE( 0xfe00, 0xffff ) AM_RAM	// High speed internal RAM
 ADDRESS_MAP_END
 
@@ -1509,7 +1510,7 @@ static INPUT_PORTS_START( gegege )
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN2   ) PORT_IMPULSE(5)	// ? (coin error, pulses mask 4 of port c6)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN1   ) PORT_IMPULSE(5) PORT_NAME("Medal")	// coin/medal in (coin error)
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE("hopper", ticket_dispenser_line_r)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("hopper", ticket_dispenser_device, line_r)
 	PORT_SERVICE( 0x08, IP_ACTIVE_LOW )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_BUTTON2 ) PORT_NAME("Bet")	// bet / select in test menu
 	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_BUTTON1 ) PORT_NAME("Play")	// play game / select in test menu
@@ -1547,7 +1548,7 @@ static INPUT_PORTS_START( pepsiman )
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN2   ) PORT_IMPULSE(5)	// ? (coin error, pulses mask 4 of port c6)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN1   ) PORT_IMPULSE(5) PORT_NAME("Medal")	// coin/medal in (coin error)
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE("hopper", ticket_dispenser_line_r)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("hopper", ticket_dispenser_device, line_r)
 	PORT_SERVICE( 0x08, IP_ACTIVE_LOW )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_GAMBLE_BET ) PORT_CODE(KEYCODE_1)	// bet / select in test menu
 	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_BUTTON1 ) PORT_NAME("Rock (Gu)")
@@ -1585,7 +1586,7 @@ static INPUT_PORTS_START( ucytokyu )
 	PORT_START("IN1")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_COIN2   ) PORT_IMPULSE(10)	// ? (coin error, pulses mask 4 of port c6)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_COIN1   ) PORT_IMPULSE(10) PORT_NAME("Medal")	// coin/medal in (coin error)
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE("hopper", ticket_dispenser_line_r)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("hopper", ticket_dispenser_device, line_r)
 	PORT_SERVICE( 0x08, IP_ACTIVE_LOW )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_GAMBLE_BET ) PORT_CODE(KEYCODE_1)	// bet / enter in test menu
 	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_JOYSTICK_DOWN  )
@@ -1625,7 +1626,7 @@ static INPUT_PORTS_START( sammymdl )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_COIN3   ) PORT_IMPULSE(5) PORT_NAME("Medal")	// medal in
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_SERVICE )	// test sw
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE("hopper", ticket_dispenser_line_r)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("hopper", ticket_dispenser_device, line_r)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 INPUT_PORTS_END
@@ -1647,7 +1648,7 @@ static INPUT_PORTS_START( haekaka )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN  )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_SERVICE  )	// test sw
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_BUTTON1  )	// button
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL  ) PORT_READ_LINE_DEVICE("hopper", ticket_dispenser_line_r)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL  ) PORT_READ_LINE_DEVICE_MEMBER("hopper", ticket_dispenser_device, line_r)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_SERVICE1 )	// service coin / set in test mode
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN  )
 INPUT_PORTS_END
@@ -1690,7 +1691,7 @@ static MACHINE_CONFIG_START( gegege, sigmab98_state )
 	MCFG_NVRAM_ADD_0FILL("nvram")
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
-	MCFG_TICKET_DISPENSER_ADD("hopper", 200, TICKET_MOTOR_ACTIVE_LOW, TICKET_STATUS_ACTIVE_LOW )
+	MCFG_TICKET_DISPENSER_ADD("hopper", attotime::from_msec(200), TICKET_MOTOR_ACTIVE_LOW, TICKET_STATUS_ACTIVE_LOW )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)					// ?
@@ -1744,7 +1745,7 @@ static MACHINE_CONFIG_START( sammymdl, sigmab98_state )
 	MCFG_NVRAM_ADD_0FILL("nvram")	// battery
 	MCFG_EEPROM_ADD("eeprom", eeprom_interface_93C46_8bit)
 
-	MCFG_TICKET_DISPENSER_ADD("hopper", 200, TICKET_MOTOR_ACTIVE_LOW, TICKET_STATUS_ACTIVE_LOW )
+	MCFG_TICKET_DISPENSER_ADD("hopper", attotime::from_msec(200), TICKET_MOTOR_ACTIVE_LOW, TICKET_STATUS_ACTIVE_LOW )
 
 	// video hardware
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1896,7 +1897,7 @@ ROM_END
 
 static DRIVER_INIT( gegege )
 {
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 	// Protection?
 	rom[0x0bdd] = 0xc9;
@@ -1914,14 +1915,14 @@ static DRIVER_INIT( gegege )
 	rom[0x8165] = 0x00;
 
 	// ROM banks
-	memory_configure_bank(machine, "rombank", 0, 0x18, rom + 0x8000, 0x1000);
-	memory_set_bank(machine, "rombank", 0);
+	machine.root_device().membank("rombank")->configure_entries(0, 0x18, rom + 0x8000, 0x1000);
+	machine.root_device().membank("rombank")->set_entry(0);
 
 	// RAM banks
 	UINT8 *bankedram = auto_alloc_array(machine, UINT8, 0x800 * 2);
 
-	memory_configure_bank(machine, "rambank", 0, 2, bankedram, 0x800);
-	memory_set_bank(machine, "rambank", 0);
+	machine.root_device().membank("rambank")->configure_entries(0, 2, bankedram, 0x800);
+	machine.root_device().membank("rambank")->set_entry(0);
 }
 
 
@@ -1945,7 +1946,7 @@ ROM_END
 
 static DRIVER_INIT( pepsiman )
 {
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 	// Protection?
 	rom[0x058a] = 0xc9;
@@ -1963,14 +1964,14 @@ static DRIVER_INIT( pepsiman )
 	rom[0x8165] = 0x00;
 
 	// ROM banks
-	memory_configure_bank(machine, "rombank", 0, 0x18, rom + 0x8000, 0x1000);
-	memory_set_bank(machine, "rombank", 0);
+	machine.root_device().membank("rombank")->configure_entries(0, 0x18, rom + 0x8000, 0x1000);
+	machine.root_device().membank("rombank")->set_entry(0);
 
 	// RAM banks
 	UINT8 *bankedram = auto_alloc_array(machine, UINT8, 0x800 * 2);
 
-	memory_configure_bank(machine, "rambank", 0, 2, bankedram, 0x800);
-	memory_set_bank(machine, "rambank", 0);
+	machine.root_device().membank("rambank")->configure_entries(0, 2, bankedram, 0x800);
+	machine.root_device().membank("rambank")->set_entry(0);
 }
 
 
@@ -1996,7 +1997,7 @@ ROM_END
 
 static DRIVER_INIT( ucytokyu )
 {
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 	// Protection?
 	rom[0x0bfa] = 0xc9;
@@ -2014,14 +2015,14 @@ static DRIVER_INIT( ucytokyu )
 	rom[0x8165] = 0x00;
 
 	// ROM banks
-	memory_configure_bank(machine, "rombank", 0, 0x18, rom + 0x8000, 0x1000);
-	memory_set_bank(machine, "rombank", 0);
+	machine.root_device().membank("rombank")->configure_entries(0, 0x18, rom + 0x8000, 0x1000);
+	machine.root_device().membank("rombank")->set_entry(0);
 
 	// RAM banks
 	UINT8 *bankedram = auto_alloc_array(machine, UINT8, 0x800 * 2);
 
-	memory_configure_bank(machine, "rambank", 0, 2, bankedram, 0x800);
-	memory_set_bank(machine, "rambank", 0);
+	machine.root_device().membank("rambank")->configure_entries(0, 2, bankedram, 0x800);
+	machine.root_device().membank("rambank")->set_entry(0);
 }
 
 
@@ -2109,15 +2110,14 @@ static DRIVER_INIT( animalc )
 	sigmab98_state *state = machine.driver_data<sigmab98_state>();
 	// RAM banks
 	UINT8 *bankedram = auto_alloc_array(machine, UINT8, 0x1000 * 5);
-	memory_configure_bank(machine, "rambank", 0, 1, state->m_nvram,     0x1000);
-	memory_configure_bank(machine, "rambank", 1, 4, bankedram, 0x1000);
-	memory_set_bank(machine, "rambank", 0);
+	state->membank("rambank")->configure_entry(0, state->m_nvram);
+	state->membank("rambank")->configure_entries(1, 4, bankedram, 0x1000);
+	state->membank("rambank")->set_entry(0);
 
-	state->m_spriteram = auto_alloc_array(machine, UINT8, 0x1000 * 5);
+	state->m_spriteram.allocate(0x1000 * 5);
 	memset(state->m_spriteram, 0, 0x1000 * 5);
-	state->m_spriteram_size = 0x1000;
-	memory_configure_bank(machine, "sprbank", 0, 5, state->m_spriteram, 0x1000);
-	memory_set_bank(machine, "sprbank", 0);
+	state->membank("sprbank")->configure_entries(0, 5, state->m_spriteram, 0x1000);
+	state->membank("sprbank")->set_entry(0);
 
 	state->m_vblank_vector = 0x00; // increment counter
 	state->m_timer0_vector = 0x1c; // read hopper state
@@ -2150,22 +2150,21 @@ static DRIVER_INIT( itazuram )
 {
 	sigmab98_state *state = machine.driver_data<sigmab98_state>();
 	// ROM banks
-	UINT8 *rom = machine.region("maincpu")->base();
-	memory_set_bankptr(machine, "rombank0", rom + 0x3400);
-	memory_set_bankptr(machine, "rombank1", rom + 0x4400);
+	UINT8 *rom = state->memregion("maincpu")->base();
+	state->membank("rombank0")->set_base(rom + 0x3400);
+	state->membank("rombank1")->set_base(rom + 0x4400);
 	state->m_rombank = 0x0f;
 
 	// RAM banks
 	state->m_generic_paletteram_8.allocate(0x3000);
 	memset(state->m_generic_paletteram_8, 0, 0x3000);
-	memory_set_bankptr(machine, "palbank", state->m_generic_paletteram_8);
+	state->membank("palbank")->set_base(state->m_generic_paletteram_8);
 	state->m_rambank = 0x64;
 
-	state->m_spriteram = auto_alloc_array(machine, UINT8, 0x1000 * 5);
+	state->m_spriteram.allocate(0x1000 * 5);
 	memset(state->m_spriteram, 0, 0x1000 * 5);
-	state->m_spriteram_size = 0x1000;
-	memory_set_bankptr(machine, "sprbank0",  state->m_spriteram + 0x1000*4);	// scratch
-	memory_set_bankptr(machine, "sprbank1",  state->m_spriteram + 0x1000*4);	// scratch
+	state->membank("sprbank0")->set_base(state->m_spriteram + 0x1000*4);	// scratch
+	state->membank("sprbank1")->set_base(state->m_spriteram + 0x1000*4);	// scratch
 
 	state->m_vblank_vector = 0x00;
 	state->m_timer0_vector = 0x02;
@@ -2273,9 +2272,8 @@ static DRIVER_INIT( haekaka )
 	state->m_generic_paletteram_8.allocate(0x200);
 	memset(state->m_generic_paletteram_8, 0, 0x200);
 
-	state->m_spriteram = auto_alloc_array(machine, UINT8, 0x1000);
+	state->m_spriteram.allocate(0x1000);
 	memset(state->m_spriteram, 0, 0x1000);
-	state->m_spriteram_size = 0x1000;
 
 	state->m_rombank = 0x65;
 	state->m_rambank = 0x53;

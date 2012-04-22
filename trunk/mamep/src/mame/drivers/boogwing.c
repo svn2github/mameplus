@@ -110,14 +110,14 @@ static ADDRESS_MAP_START( boogwing_map, AS_PROGRAM, 16, boogwing_state )
 	AM_RANGE(0x260000, 0x26000f) AM_DEVWRITE_LEGACY("tilegen1", deco16ic_pf_control_w)
 	AM_RANGE(0x264000, 0x265fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf1_data_r, deco16ic_pf1_data_w)
 	AM_RANGE(0x266000, 0x267fff) AM_DEVREADWRITE_LEGACY("tilegen1", deco16ic_pf2_data_r, deco16ic_pf2_data_w)
-	AM_RANGE(0x268000, 0x268fff) AM_RAM AM_BASE(m_pf1_rowscroll)
-	AM_RANGE(0x26a000, 0x26afff) AM_RAM AM_BASE(m_pf2_rowscroll)
+	AM_RANGE(0x268000, 0x268fff) AM_RAM AM_SHARE("pf1_rowscroll")
+	AM_RANGE(0x26a000, 0x26afff) AM_RAM AM_SHARE("pf2_rowscroll")
 
 	AM_RANGE(0x270000, 0x27000f) AM_DEVWRITE_LEGACY("tilegen2", deco16ic_pf_control_w)
 	AM_RANGE(0x274000, 0x275fff) AM_RAM_DEVWRITE_LEGACY("tilegen2", deco16ic_pf1_data_w)
 	AM_RANGE(0x276000, 0x277fff) AM_RAM_DEVWRITE_LEGACY("tilegen2", deco16ic_pf2_data_w)
-	AM_RANGE(0x278000, 0x278fff) AM_RAM AM_BASE(m_pf3_rowscroll)
-	AM_RANGE(0x27a000, 0x27afff) AM_RAM AM_BASE(m_pf4_rowscroll)
+	AM_RANGE(0x278000, 0x278fff) AM_RAM AM_SHARE("pf3_rowscroll")
+	AM_RANGE(0x27a000, 0x27afff) AM_RAM AM_SHARE("pf4_rowscroll")
 
 	AM_RANGE(0x280000, 0x28000f) AM_NOP // ?
 	AM_RANGE(0x282000, 0x282001) AM_NOP // Palette setup?
@@ -134,7 +134,7 @@ static ADDRESS_MAP_START( audio_map, AS_PROGRAM, 8, boogwing_state )
 	AM_RANGE(0x110000, 0x110001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0x120000, 0x120001) AM_DEVREADWRITE("oki1", okim6295_device, read, write)
 	AM_RANGE(0x130000, 0x130001) AM_DEVREADWRITE("oki2", okim6295_device, read, write)
-	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_r)
+	AM_RANGE(0x140000, 0x140001) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x1f0000, 0x1f1fff) AM_RAMBANK("bank8")
 	AM_RANGE(0x1fec00, 0x1fec01) AM_WRITE_LEGACY(h6280_timer_w)
 	AM_RANGE(0x1ff400, 0x1ff403) AM_WRITE_LEGACY(h6280_irq_status_w)
@@ -290,8 +290,8 @@ static WRITE8_DEVICE_HANDLER( sound_bankswitch_w )
 
 static const ym2151_interface ym2151_config =
 {
-	sound_irq,
-	sound_bankswitch_w
+	DEVCB_LINE(sound_irq),
+	DEVCB_HANDLER(sound_bankswitch_w)
 };
 
 
@@ -573,8 +573,8 @@ ROM_END
 
 static DRIVER_INIT( boogwing )
 {
-	const UINT8* src = machine.region("gfx6")->base();
-	UINT8* dst = machine.region("tiles2")->base() + 0x200000;
+	const UINT8* src = machine.root_device().memregion("gfx6")->base();
+	UINT8* dst = machine.root_device().memregion("tiles2")->base() + 0x200000;
 
 	deco56_decrypt_gfx(machine, "tiles1");
 	deco56_decrypt_gfx(machine, "tiles2");

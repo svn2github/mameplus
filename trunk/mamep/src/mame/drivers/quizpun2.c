@@ -92,11 +92,13 @@ class quizpun2_state : public driver_device
 {
 public:
 	quizpun2_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_fg_ram(*this, "fg_ram"),
+		m_bg_ram(*this, "bg_ram"){ }
 
 	struct prot_t m_prot;
-	UINT8 *m_bg_ram;
-	UINT8 *m_fg_ram;
+	required_shared_ptr<UINT8> m_fg_ram;
+	required_shared_ptr<UINT8> m_bg_ram;
 	tilemap_t *m_bg_tmap;
 	tilemap_t *m_fg_tmap;
 	DECLARE_WRITE8_MEMBER(bg_ram_w);
@@ -247,7 +249,7 @@ READ8_MEMBER(quizpun2_state::quizpun2_protection_r)
 
 		case STATE_EEPROM_R:		// EEPROM read
 		{
-			UINT8 *eeprom = machine().region("eeprom")->base();
+			UINT8 *eeprom = memregion("eeprom")->base();
 			ret = eeprom[prot.addr];
 			break;
 		}
@@ -274,7 +276,7 @@ WRITE8_MEMBER(quizpun2_state::quizpun2_protection_w)
 	{
 		case STATE_EEPROM_W:
 		{
-			UINT8 *eeprom = machine().region("eeprom")->base();
+			UINT8 *eeprom = memregion("eeprom")->base();
 			eeprom[prot.addr] = data;
 			prot.addr++;
 			if ((prot.addr % 8) == 0)
@@ -341,8 +343,8 @@ WRITE8_MEMBER(quizpun2_state::quizpun2_protection_w)
 
 WRITE8_MEMBER(quizpun2_state::quizpun2_rombank_w)
 {
-	UINT8 *ROM = machine().region("maincpu")->base();
-	memory_set_bankptr(machine(),  "bank1", &ROM[ 0x10000 + 0x2000 * (data & 0x1f) ] );
+	UINT8 *ROM = memregion("maincpu")->base();
+	membank("bank1")->set_base(&ROM[ 0x10000 + 0x2000 * (data & 0x1f) ] );
 }
 
 WRITE8_MEMBER(quizpun2_state::quizpun2_irq_ack)
@@ -352,7 +354,7 @@ WRITE8_MEMBER(quizpun2_state::quizpun2_irq_ack)
 
 WRITE8_MEMBER(quizpun2_state::quizpun2_soundlatch_w)
 {
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -360,11 +362,11 @@ static ADDRESS_MAP_START( quizpun2_map, AS_PROGRAM, 8, quizpun2_state )
 	AM_RANGE( 0x0000, 0x7fff ) AM_ROM
 	AM_RANGE( 0x8000, 0x9fff ) AM_ROMBANK("bank1")
 
-	AM_RANGE( 0xa000, 0xbfff ) AM_RAM_WRITE(fg_ram_w ) AM_BASE(m_fg_ram )	// 4 * 800
-	AM_RANGE( 0xc000, 0xc7ff ) AM_RAM_WRITE(bg_ram_w ) AM_BASE(m_bg_ram )	// 4 * 400
+	AM_RANGE( 0xa000, 0xbfff ) AM_RAM_WRITE(fg_ram_w ) AM_SHARE("fg_ram")	// 4 * 800
+	AM_RANGE( 0xc000, 0xc7ff ) AM_RAM_WRITE(bg_ram_w ) AM_SHARE("bg_ram")	// 4 * 400
 	AM_RANGE( 0xc800, 0xcfff ) AM_RAM										//
 
-	AM_RANGE( 0xd000, 0xd3ff ) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_le_w )  AM_SHARE("paletteram")
+	AM_RANGE( 0xd000, 0xd3ff ) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_byte_le_w )  AM_SHARE("paletteram")
 	AM_RANGE( 0xe000, 0xffff ) AM_RAM
 ADDRESS_MAP_END
 
@@ -393,7 +395,7 @@ static ADDRESS_MAP_START( quizpun2_sound_io_map, AS_IO, 8, quizpun2_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE( 0x00, 0x00 ) AM_WRITENOP	// IRQ end
 	AM_RANGE( 0x20, 0x20 ) AM_WRITENOP	// NMI end
-	AM_RANGE( 0x40, 0x40 ) AM_READ(soundlatch_r )
+	AM_RANGE( 0x40, 0x40 ) AM_READ(soundlatch_byte_r )
 	AM_RANGE( 0x60, 0x61 ) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w )
 ADDRESS_MAP_END
 

@@ -211,6 +211,7 @@ public:
 	DECLARE_WRITE8_MEMBER(multfish_counters_w);
 	DECLARE_WRITE8_MEMBER(multfish_f3_w);
 	DECLARE_WRITE8_MEMBER(multfish_dispenable_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(multfish_hopper_r);
 };
 
 static TILE_GET_INFO( get_multfish_tile_info )
@@ -332,7 +333,7 @@ WRITE8_MEMBER(multfish_state::multfish_vid_w)
 
 WRITE8_MEMBER(multfish_state::multfish_bank_w)
 {
-	memory_set_bank(machine(), "bank1", data & 0x0f);
+	membank("bank1")->set_entry(data & 0x0f);
 }
 
 static READ8_DEVICE_HANDLER( multfish_timekeeper_r )
@@ -386,14 +387,13 @@ READ8_MEMBER(multfish_state::ray_r)
 	return machine().primary_screen->vpos();
 }
 
-static CUSTOM_INPUT( multfish_hopper_r )
+CUSTOM_INPUT_MEMBER(multfish_state::multfish_hopper_r)
 {
-	multfish_state *state = field.machine().driver_data<multfish_state>();
 
-	if ( state->m_hopper_motor != 0 )
+	if ( m_hopper_motor != 0 )
 	{
-			state->m_hopper++;
-			return state->m_hopper>>4;
+			m_hopper++;
+			return m_hopper>>4;
 	}
 	else
 	{
@@ -471,7 +471,7 @@ A12 <-> A13
 */
 
 	UINT32 i,j,jscr,romoffset;
-	UINT8 *multfish_gfx = machine.region("gfx")->base();
+	UINT8 *multfish_gfx = machine.root_device().memregion("gfx")->base();
 	UINT8 *temprom = auto_alloc_array(machine, UINT8, multfish_ROM_SIZE);
 
 
@@ -543,7 +543,7 @@ INLINE void rom_decodeh(UINT8 *romptr, UINT8 *tmprom, UINT8 xor_data, UINT32 xor
 
 static void lottery_decode(running_machine &machine, UINT8 xor12, UINT8 xor34, UINT8 xor56, UINT8 xor78, UINT32 xor_addr)
 {
-	UINT8 *multfish_gfx = machine.region("gfx")->base();
+	UINT8 *multfish_gfx = machine.root_device().memregion("gfx")->base();
 	UINT8 *temprom = auto_alloc_array(machine, UINT8, multfish_ROM_SIZE);
 
 	/* ROMs decode */
@@ -584,7 +584,7 @@ INLINE void roment_decodeh(UINT8 *romptr, UINT8 *tmprom, UINT8 xor_data, UINT32 
 
 static void ent_decode(running_machine &machine, UINT8 xor12, UINT8 xor34, UINT8 xor56, UINT8 xor78, UINT32 xor_addr)
 {
-	UINT8 *multfish_gfx = machine.region("gfx")->base();
+	UINT8 *multfish_gfx = machine.root_device().memregion("gfx")->base();
 	UINT8 *temprom = auto_alloc_array(machine, UINT8, multfish_ROM_SIZE);
 
 	/* ROMs decode */
@@ -704,7 +704,7 @@ static INPUT_PORTS_START( multfish )
 	PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNUSED ) // unused?
 
 	PORT_START("IN1")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM ( multfish_hopper_r, NULL )// Hopper SW (22 B)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, multfish_state,multfish_hopper_r, NULL )// Hopper SW (22 B)
 	PORT_DIPNAME(     0x02, 0x02, "BK Door (17 A)"  )
 	PORT_DIPSETTING(  0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(  0x00, DEF_STR( On ) )
@@ -797,7 +797,7 @@ static INPUT_PORTS_START( rollfr )
 	PORT_BIT( 0xfc, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("IN1")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM ( multfish_hopper_r, NULL )// Hopper SW (22 B)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, multfish_state,multfish_hopper_r, NULL )// Hopper SW (22 B)
 	PORT_DIPNAME(     0x02, 0x02, "BK Door (17 A)"  )
 	PORT_DIPSETTING(  0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(  0x00, DEF_STR( On ) )
@@ -1009,8 +1009,8 @@ static MACHINE_RESET( multfish )
 {
 	multfish_state *state = machine.driver_data<multfish_state>();
 
-	memory_configure_bank(machine, "bank1", 0, 16, machine.region("maincpu")->base(), 0x4000);
-	memory_set_bank(machine, "bank1", 0);
+	state->membank("bank1")->configure_entries(0, 16, state->memregion("maincpu")->base(), 0x4000);
+	state->membank("bank1")->set_entry(0);
 
 	state->m_disp_enable = 0;
 	state->m_rambk = 0;

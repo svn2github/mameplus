@@ -69,12 +69,14 @@ class meijinsn_state : public driver_device
 public:
 	meijinsn_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this,"maincpu")
-		{ }
+		m_maincpu(*this,"maincpu"),
+		m_videoram(*this, "videoram"),
+		m_shared_ram(*this, "shared_ram"){ }
 
+	required_device<cpu_device> m_maincpu;
 	/* memory pointers */
-	UINT16 *   m_shared_ram;
-	UINT16 *   m_videoram;
+	required_shared_ptr<UINT16> m_videoram;
+	required_shared_ptr<UINT16> m_shared_ram;
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
@@ -88,7 +90,6 @@ public:
 	UINT8 m_coinvalue;
 	int m_mcu_latch;
 
-	required_device<cpu_device> m_maincpu;
 	DECLARE_WRITE16_MEMBER(sound_w);
 	DECLARE_READ16_MEMBER(alpha_mcu_r);
 };
@@ -98,7 +99,7 @@ public:
 WRITE16_MEMBER(meijinsn_state::sound_w)
 {
 	if (ACCESSING_BITS_0_7)
-		soundlatch_w(space, 0, data & 0xff);
+		soundlatch_byte_w(space, 0, data & 0xff);
 }
 
 READ16_MEMBER(meijinsn_state::alpha_mcu_r)
@@ -173,9 +174,9 @@ READ16_MEMBER(meijinsn_state::alpha_mcu_r)
 static ADDRESS_MAP_START( meijinsn_map, AS_PROGRAM, 16, meijinsn_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x080e00, 0x080fff) AM_READ(alpha_mcu_r) AM_WRITENOP
-	AM_RANGE(0x100000, 0x107fff) AM_RAM AM_BASE(m_videoram)
+	AM_RANGE(0x100000, 0x107fff) AM_RAM AM_SHARE("videoram")
 	AM_RANGE(0x180000, 0x180dff) AM_RAM
-	AM_RANGE(0x180e00, 0x180fff) AM_RAM AM_BASE(m_shared_ram)
+	AM_RANGE(0x180e00, 0x180fff) AM_RAM AM_SHARE("shared_ram")
 	AM_RANGE(0x181000, 0x181fff) AM_RAM
 	AM_RANGE(0x1c0000, 0x1c0001) AM_READ_PORT("P2")
 	AM_RANGE(0x1a0000, 0x1a0001) AM_READ_PORT("P1") AM_WRITE(sound_w)
@@ -190,7 +191,7 @@ static ADDRESS_MAP_START( meijinsn_sound_io_map, AS_IO, 8, meijinsn_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w)
 	AM_RANGE(0x01, 0x01) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
-	AM_RANGE(0x02, 0x02) AM_WRITE(soundlatch_clear_w)
+	AM_RANGE(0x02, 0x02) AM_WRITE(soundlatch_clear_byte_w)
 	AM_RANGE(0x06, 0x06) AM_WRITENOP
 ADDRESS_MAP_END
 
@@ -247,6 +248,7 @@ static VIDEO_START(meijinsn)
 
 static PALETTE_INIT( meijinsn )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 	static const int resistances_b[2]  = { 470, 220 };
 	static const int resistances_rg[3] = { 1000, 470, 220 };
@@ -326,7 +328,7 @@ static const ay8910_interface ay8910_config =
 {
 	AY8910_LEGACY_OUTPUT,
 	AY8910_DEFAULT_LOADS,
-	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_r)
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r)
 };
 
 static MACHINE_START( meijinsn )

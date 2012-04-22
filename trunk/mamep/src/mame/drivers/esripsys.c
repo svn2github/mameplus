@@ -104,12 +104,12 @@ READ8_MEMBER(esripsys_state::g_status_r)
 WRITE8_MEMBER(esripsys_state::g_status_w)
 {
 	int bankaddress;
-	UINT8 *rom = machine().region("game_cpu")->base();
+	UINT8 *rom = memregion("game_cpu")->base();
 
 	m_g_status = data;
 
 	bankaddress = 0x10000 + (data & 0x03) * 0x10000;
-	memory_set_bankptr(machine(), "bank1", &rom[bankaddress]);
+	membank("bank1")->set_base(&rom[bankaddress]);
 
 	cputag_set_input_line(machine(), "frame_cpu", M6809_FIRQ_LINE, data & 0x10 ? CLEAR_LINE : ASSERT_LINE);
 	cputag_set_input_line(machine(), "frame_cpu", INPUT_LINE_NMI,  data & 0x80 ? CLEAR_LINE : ASSERT_LINE);
@@ -402,25 +402,23 @@ WRITE8_MEMBER(esripsys_state::g_ioadd_w)
 	}
 }
 
-static INPUT_CHANGED( keypad_interrupt )
+INPUT_CHANGED_MEMBER(esripsys_state::keypad_interrupt)
 {
-	esripsys_state *state = field.machine().driver_data<esripsys_state>();
 	if (newval == 0)
 	{
-		state->m_io_firq_status |= 2;
-		state->m_keypad_status |= 0x20;
-		cputag_set_input_line(field.machine(), "game_cpu", M6809_FIRQ_LINE, HOLD_LINE);
+		m_io_firq_status |= 2;
+		m_keypad_status |= 0x20;
+		cputag_set_input_line(machine(), "game_cpu", M6809_FIRQ_LINE, HOLD_LINE);
 	}
 }
 
-static INPUT_CHANGED( coin_interrupt )
+INPUT_CHANGED_MEMBER(esripsys_state::coin_interrupt)
 {
-	esripsys_state *state = field.machine().driver_data<esripsys_state>();
 	if (newval == 1)
 	{
-		state->m_io_firq_status |= 2;
-		state->m_coin_latch = input_port_read(field.machine(), "COINS") << 2;
-		cputag_set_input_line(field.machine(), "game_cpu", M6809_FIRQ_LINE, HOLD_LINE);
+		m_io_firq_status |= 2;
+		m_coin_latch = input_port_read(machine(), "COINS") << 2;
+		cputag_set_input_line(machine(), "game_cpu", M6809_FIRQ_LINE, HOLD_LINE);
 	}
 }
 
@@ -432,24 +430,24 @@ static INPUT_CHANGED( coin_interrupt )
 
 static INPUT_PORTS_START( turbosub )
 	PORT_START("KEYPAD_A")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_0_PAD) PORT_NAME("Keypad 0") PORT_CHANGED(keypad_interrupt, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_1_PAD) PORT_NAME("Keypad 1") PORT_CHANGED(keypad_interrupt, 0)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_2_PAD) PORT_NAME("Keypad 2") PORT_CHANGED(keypad_interrupt, 0)
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON4 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_3_PAD) PORT_NAME("Keypad 3") PORT_CHANGED(keypad_interrupt, 0)
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON5 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_4_PAD) PORT_NAME("Keypad 4") PORT_CHANGED(keypad_interrupt, 0)
-	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON6 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_5_PAD) PORT_NAME("Keypad 5") PORT_CHANGED(keypad_interrupt, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_0_PAD) PORT_NAME("Keypad 0") PORT_CHANGED_MEMBER(DEVICE_SELF, esripsys_state,keypad_interrupt, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_1_PAD) PORT_NAME("Keypad 1") PORT_CHANGED_MEMBER(DEVICE_SELF, esripsys_state,keypad_interrupt, 0)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_2_PAD) PORT_NAME("Keypad 2") PORT_CHANGED_MEMBER(DEVICE_SELF, esripsys_state,keypad_interrupt, 0)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON4 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_3_PAD) PORT_NAME("Keypad 3") PORT_CHANGED_MEMBER(DEVICE_SELF, esripsys_state,keypad_interrupt, 0)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON5 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_4_PAD) PORT_NAME("Keypad 4") PORT_CHANGED_MEMBER(DEVICE_SELF, esripsys_state,keypad_interrupt, 0)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON6 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_5_PAD) PORT_NAME("Keypad 5") PORT_CHANGED_MEMBER(DEVICE_SELF, esripsys_state,keypad_interrupt, 0)
 
 	PORT_START("KEYPAD_B")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON7 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_6_PAD) PORT_NAME("Keypad 6") PORT_CHANGED(keypad_interrupt, 0)
-	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON8 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_7_PAD) PORT_NAME("Keypad 7") PORT_CHANGED(keypad_interrupt, 0)
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON9 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_8_PAD) PORT_NAME("Keypad 8") PORT_CHANGED(keypad_interrupt, 0)
-	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON10 ) PORT_PLAYER(3) PORT_CODE(KEYCODE_9_PAD) PORT_NAME("Keypad 9") PORT_CHANGED(keypad_interrupt, 0)
-	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON11 ) PORT_PLAYER(3) PORT_CODE(KEYCODE_ASTERISK) PORT_NAME("Keypad *") PORT_CHANGED(keypad_interrupt, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON7 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_6_PAD) PORT_NAME("Keypad 6") PORT_CHANGED_MEMBER(DEVICE_SELF, esripsys_state,keypad_interrupt, 0)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON8 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_7_PAD) PORT_NAME("Keypad 7") PORT_CHANGED_MEMBER(DEVICE_SELF, esripsys_state,keypad_interrupt, 0)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON9 )  PORT_PLAYER(3) PORT_CODE(KEYCODE_8_PAD) PORT_NAME("Keypad 8") PORT_CHANGED_MEMBER(DEVICE_SELF, esripsys_state,keypad_interrupt, 0)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON10 ) PORT_PLAYER(3) PORT_CODE(KEYCODE_9_PAD) PORT_NAME("Keypad 9") PORT_CHANGED_MEMBER(DEVICE_SELF, esripsys_state,keypad_interrupt, 0)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON11 ) PORT_PLAYER(3) PORT_CODE(KEYCODE_ASTERISK) PORT_NAME("Keypad *") PORT_CHANGED_MEMBER(DEVICE_SELF, esripsys_state,keypad_interrupt, 0)
 
 	PORT_START("COINS")
 	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_UNUSED )
-	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_CHANGED(coin_interrupt, 0)
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED(coin_interrupt, 0)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, esripsys_state,coin_interrupt, 0)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, esripsys_state,coin_interrupt, 0)
 	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_UNUSED )
 
 	PORT_START("IO_1")
@@ -493,7 +491,7 @@ WRITE8_MEMBER(esripsys_state::s_200e_w)
 
 WRITE8_MEMBER(esripsys_state::s_200f_w)
 {
-	UINT8 *rom = machine().region("sound_data")->base();
+	UINT8 *rom = memregion("sound_data")->base();
 	int rombank = data & 0x20 ? 0x2000 : 0;
 
 	/* Bit 6 -> Reset latch U56A */
@@ -508,9 +506,9 @@ WRITE8_MEMBER(esripsys_state::s_200f_w)
 		m_u56b = 1;
 
 	/* Speech data resides in the upper 8kB of the ROMs */
-	memory_set_bankptr(machine(), "bank2", &rom[0x0000 + rombank]);
-	memory_set_bankptr(machine(), "bank3", &rom[0x4000 + rombank]);
-	memory_set_bankptr(machine(), "bank4", &rom[0x8000 + rombank]);
+	membank("bank2")->set_base(&rom[0x0000 + rombank]);
+	membank("bank3")->set_base(&rom[0x4000 + rombank]);
+	membank("bank4")->set_base(&rom[0x8000 + rombank]);
 
 	m_s_to_g_latch2 = data;
 }
@@ -594,7 +592,7 @@ WRITE8_MEMBER(esripsys_state::volume_dac_w)
 
 static ADDRESS_MAP_START( game_cpu_map, AS_PROGRAM, 8, esripsys_state )
 	AM_RANGE(0x0000, 0x3fff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0x4000, 0x42ff) AM_RAM AM_BASE(m_pal_ram)
+	AM_RANGE(0x4000, 0x42ff) AM_RAM AM_SHARE("pal_ram")
 	AM_RANGE(0x4300, 0x4300) AM_WRITE(esripsys_bg_intensity_w)
 	AM_RANGE(0x4400, 0x47ff) AM_NOP /* Collision detection RAM */
 	AM_RANGE(0x4800, 0x4bff) AM_READWRITE(g_status_r, g_status_w)
@@ -647,7 +645,7 @@ ADDRESS_MAP_END
 static DRIVER_INIT( esripsys )
 {
 	esripsys_state *state = machine.driver_data<esripsys_state>();
-	UINT8 *rom = machine.region("sound_data")->base();
+	UINT8 *rom = state->memregion("sound_data")->base();
 
 	state->m_fdt_a = auto_alloc_array(machine, UINT8, FDT_RAM_SIZE);
 	state->m_fdt_b = auto_alloc_array(machine, UINT8, FDT_RAM_SIZE);
@@ -655,9 +653,9 @@ static DRIVER_INIT( esripsys )
 
 	machine.device<nvram_device>("nvram")->set_base(state->m_cmos_ram, CMOS_RAM_SIZE);
 
-	memory_set_bankptr(machine, "bank2", &rom[0x0000]);
-	memory_set_bankptr(machine, "bank3", &rom[0x4000]);
-	memory_set_bankptr(machine, "bank4", &rom[0x8000]);
+	state->membank("bank2")->set_base(&rom[0x0000]);
+	state->membank("bank3")->set_base(&rom[0x4000]);
+	state->membank("bank4")->set_base(&rom[0x8000]);
 
 	/* Register stuff for state saving */
 	state_save_register_global_pointer(machine, state->m_fdt_a, FDT_RAM_SIZE);

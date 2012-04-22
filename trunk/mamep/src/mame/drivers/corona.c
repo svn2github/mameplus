@@ -353,6 +353,7 @@ public:
 
 static PALETTE_INIT( winner )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int bit6, bit7, bit0, bit1, r, g, b;
 	int i;
 
@@ -486,14 +487,14 @@ static SCREEN_UPDATE_IND16(luckyrlt)
 
 WRITE8_MEMBER(corona_state::sound_latch_w)
 {
-	soundlatch_w(space, 0, data & 0xff);
+	soundlatch_byte_w(space, 0, data & 0xff);
 	cputag_set_input_line(machine(), "soundcpu", 0, ASSERT_LINE);
 }
 
 READ8_MEMBER(corona_state::sound_latch_r)
 {
 	cputag_set_input_line(machine(), "soundcpu", 0, CLEAR_LINE);
-	return soundlatch_r(space, 0);
+	return soundlatch_byte_r(space, 0);
 }
 
 

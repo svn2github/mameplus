@@ -44,7 +44,7 @@ WRITE16_MEMBER(sf_state::soundcmd_w)
 
 	if (ACCESSING_BITS_0_7)
 	{
-		soundlatch_w(space, offset, data & 0xff);
+		soundlatch_byte_w(space, offset, data & 0xff);
 		device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
@@ -173,7 +173,7 @@ READ16_MEMBER(sf_state::button2_r)
 
 WRITE8_MEMBER(sf_state::sound2_bank_w)
 {
-	memory_set_bankptr(machine(), "bank1", machine().region("audio2")->base() + 0x8000 * (data + 1));
+	membank("bank1")->set_base(machine().root_device().memregion("audio2")->base() + 0x8000 * (data + 1));
 }
 
 
@@ -190,8 +190,8 @@ static WRITE8_DEVICE_HANDLER( msm5205_w )
 
 static ADDRESS_MAP_START( sf_map, AS_PROGRAM, 16, sf_state )
 	AM_RANGE(0x000000, 0x04ffff) AM_ROM
-	AM_RANGE(0x800000, 0x800fff) AM_RAM_WRITE(sf_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
-	AM_RANGE(0xb00000, 0xb007ff) AM_RAM_WRITE(paletteram16_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x800000, 0x800fff) AM_RAM_WRITE(sf_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xb00000, 0xb007ff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0xc00000, 0xc00001) AM_READ_PORT("COINS")
 	AM_RANGE(0xc00002, 0xc00003) AM_READ_PORT("IN0")
 	AM_RANGE(0xc00004, 0xc00005) AM_READ(button1_r)
@@ -207,13 +207,13 @@ static ADDRESS_MAP_START( sf_map, AS_PROGRAM, 16, sf_state )
 	AM_RANGE(0xc0001c, 0xc0001d) AM_WRITE(soundcmd_w)
 //  AM_RANGE(0xc0001e, 0xc0001f) AM_WRITE(protection_w)
 	AM_RANGE(0xff8000, 0xffdfff) AM_RAM
-	AM_RANGE(0xffe000, 0xffffff) AM_RAM AM_BASE(m_objectram)
+	AM_RANGE(0xffe000, 0xffffff) AM_RAM AM_SHARE("objectram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sfus_map, AS_PROGRAM, 16, sf_state )
 	AM_RANGE(0x000000, 0x04ffff) AM_ROM
-	AM_RANGE(0x800000, 0x800fff) AM_RAM_WRITE(sf_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
-	AM_RANGE(0xb00000, 0xb007ff) AM_RAM_WRITE(paletteram16_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x800000, 0x800fff) AM_RAM_WRITE(sf_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xb00000, 0xb007ff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0xc00000, 0xc00001) AM_READ_PORT("IN0")
 	AM_RANGE(0xc00002, 0xc00003) AM_READ_PORT("IN1")
 	AM_RANGE(0xc00004, 0xc00005) AM_READ(dummy_r)
@@ -229,13 +229,13 @@ static ADDRESS_MAP_START( sfus_map, AS_PROGRAM, 16, sf_state )
 	AM_RANGE(0xc0001c, 0xc0001d) AM_WRITE(soundcmd_w)
 //  AM_RANGE(0xc0001e, 0xc0001f) AM_WRITE(protection_w)
 	AM_RANGE(0xff8000, 0xffdfff) AM_RAM
-	AM_RANGE(0xffe000, 0xffffff) AM_RAM AM_BASE(m_objectram)
+	AM_RANGE(0xffe000, 0xffffff) AM_RAM AM_SHARE("objectram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sfjp_map, AS_PROGRAM, 16, sf_state )
 	AM_RANGE(0x000000, 0x04ffff) AM_ROM
-	AM_RANGE(0x800000, 0x800fff) AM_RAM_WRITE(sf_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
-	AM_RANGE(0xb00000, 0xb007ff) AM_RAM_WRITE(paletteram16_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x800000, 0x800fff) AM_RAM_WRITE(sf_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xb00000, 0xb007ff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0xc00000, 0xc00001) AM_READ_PORT("COINS")
 	AM_RANGE(0xc00002, 0xc00003) AM_READ_PORT("P1")
 	AM_RANGE(0xc00004, 0xc00005) AM_READ_PORT("P2")
@@ -251,13 +251,13 @@ static ADDRESS_MAP_START( sfjp_map, AS_PROGRAM, 16, sf_state )
 	AM_RANGE(0xc0001c, 0xc0001d) AM_WRITE(soundcmd_w)
 	AM_RANGE(0xc0001e, 0xc0001f) AM_WRITE(protection_w)
 	AM_RANGE(0xff8000, 0xffdfff) AM_RAM
-	AM_RANGE(0xffe000, 0xffffff) AM_RAM AM_BASE(m_objectram)
+	AM_RANGE(0xffe000, 0xffffff) AM_RAM AM_SHARE("objectram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, sf_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xc800, 0xc800) AM_READ(soundlatch_r)
+	AM_RANGE(0xc800, 0xc800) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xe000, 0xe001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)
 ADDRESS_MAP_END
 
@@ -272,7 +272,7 @@ static ADDRESS_MAP_START( sound2_io_map, AS_IO, 8, sf_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_DEVWRITE_LEGACY("msm1", msm5205_w)
 	AM_RANGE(0x01, 0x01) AM_DEVWRITE_LEGACY("msm2", msm5205_w)
-	AM_RANGE(0x01, 0x01) AM_READ(soundlatch_r)
+	AM_RANGE(0x01, 0x01) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x02, 0x02) AM_WRITE(sound2_bank_w)
 ADDRESS_MAP_END
 
@@ -794,7 +794,7 @@ static void irq_handler( device_t *device, int irq )
 
 static const ym2151_interface ym2151_config =
 {
-	irq_handler
+	DEVCB_LINE(irq_handler)
 };
 
 static const msm5205_interface msm5205_config =

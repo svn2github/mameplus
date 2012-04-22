@@ -51,14 +51,14 @@ WRITE16_MEMBER(m90_state::m90_coincounter_w)
 WRITE16_MEMBER(m90_state::quizf1_bankswitch_w)
 {
 	if (ACCESSING_BITS_0_7)
-		memory_set_bank(machine(), "bank1", data & 0xf);
+		membank("bank1")->set_entry(data & 0xf);
 }
 
 WRITE16_MEMBER(m90_state::dynablsb_sound_command_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		soundlatch_w(space, offset, data);
+		soundlatch_byte_w(space, offset, data);
 		cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
@@ -76,26 +76,26 @@ static ADDRESS_MAP_START( m90_main_cpu_map, AS_PROGRAM, 16, m90_state )
 	AM_RANGE(0x00000, 0x7ffff) AM_ROM
 	AM_RANGE(0x80000, 0x8ffff) AM_ROMBANK("bank1")	/* Quiz F1 only */
 	AM_RANGE(0xa0000, 0xa3fff) AM_RAM
-	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m90_video_w) AM_BASE(m_video_data)
-	AM_RANGE(0xe0000, 0xe03ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m90_video_w) AM_SHARE("video_data")
+	AM_RANGE(0xe0000, 0xe03ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( dynablsb_main_cpu_map, AS_PROGRAM, 16, m90_state )
 	AM_RANGE(0x00000, 0x3ffff) AM_ROM
-	AM_RANGE(0x6000e, 0x60fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x6000e, 0x60fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xa0000, 0xa3fff) AM_RAM
-	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m90_video_w) AM_BASE(m_video_data)
-	AM_RANGE(0xe0000, 0xe03ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m90_video_w) AM_SHARE("video_data")
+	AM_RANGE(0xe0000, 0xe03ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( bomblord_main_cpu_map, AS_PROGRAM, 16, m90_state )
 	AM_RANGE(0x00000, 0x7ffff) AM_ROM
 	AM_RANGE(0xa0000, 0xa3fff) AM_RAM
-	AM_RANGE(0xc000e, 0xc0fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m90_video_w) AM_BASE(m_video_data)
-	AM_RANGE(0xe0000, 0xe03ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0xc000e, 0xc0fff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xd0000, 0xdffff) AM_RAM_WRITE(m90_video_w) AM_SHARE("video_data")
+	AM_RANGE(0xe0000, 0xe03ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0xffff0, 0xfffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -131,7 +131,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( m90_sound_cpu_io_map, AS_IO, 8, m90_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x80, 0x80) AM_READ(soundlatch_r)
+	AM_RANGE(0x80, 0x80) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x80, 0x81) AM_DEVWRITE_LEGACY("m72", rtype2_sample_addr_w)
 	AM_RANGE(0x82, 0x82) AM_DEVWRITE_LEGACY("m72", m72_sample_w)
 	AM_RANGE(0x83, 0x83) AM_DEVWRITE_LEGACY("m72", m72_sound_irq_ack_w)
@@ -141,7 +141,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( dynablsb_sound_cpu_io_map, AS_IO, 8, m90_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x80, 0x80) AM_READ(soundlatch_r)
+	AM_RANGE(0x80, 0x80) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x82, 0x82) AM_DEVWRITE_LEGACY("dac", dac_signed_w)
 ADDRESS_MAP_END
 
@@ -149,7 +149,7 @@ static ADDRESS_MAP_START( m99_sound_cpu_io_map, AS_IO, 8, m90_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE_LEGACY("m72", poundfor_sample_addr_w)
 	AM_RANGE(0x40, 0x41) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x42, 0x42) AM_READ(soundlatch_r)
+	AM_RANGE(0x42, 0x42) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x42, 0x42) AM_DEVWRITE_LEGACY("m72", m72_sound_irq_ack_w)
 ADDRESS_MAP_END
 
@@ -669,13 +669,13 @@ GFXDECODE_END
 
 static const ym2151_interface ym2151_config =
 {
-	m72_ym2151_irq_handler
+	DEVCB_LINE(m72_ym2151_irq_handler)
 };
 
 /* this bootleg polls the YM2151 instead of taking interrupts from it */
 static const ym2151_interface dynablsb_ym2151_config =
 {
-	NULL
+	DEVCB_NULL
 };
 
 static INTERRUPT_GEN( fake_nmi )
@@ -1186,7 +1186,7 @@ ROM_END
 static DRIVER_INIT( quizf1 )
 {
 	m90_state *state = machine.driver_data<m90_state>();
-	memory_configure_bank(machine, "bank1", 0, 16, machine.region("user1")->base(), 0x10000);
+	state->membank("bank1")->configure_entries(0, 16, state->memregion("user1")->base(), 0x10000);
 	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x04, 0x05, write16_delegate(FUNC(m90_state::quizf1_bankswitch_w),state));
 }
 
@@ -1194,7 +1194,7 @@ static DRIVER_INIT( quizf1 )
 
 static DRIVER_INIT( bomblord )
 {
-	UINT16 *ROM = (UINT16 *)(machine.region("maincpu")->base());
+	UINT16 *ROM = (UINT16 *)(machine.root_device().memregion("maincpu")->base());
 
 	for (int i = 0; i < 0x100000 / 2; i += 4)
 	{

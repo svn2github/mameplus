@@ -21,16 +21,19 @@ class ultrsprt_state : public driver_device
 {
 public:
 	ultrsprt_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_vram(*this, "vram"),
+		m_workram(*this, "workram"){ }
 
-	UINT32 *m_vram;
-	UINT32 *m_workram;
+	required_shared_ptr<UINT32> m_vram;
+	required_shared_ptr<UINT32> m_workram;
 	DECLARE_WRITE32_MEMBER(palette_w);
 	DECLARE_READ32_MEMBER(eeprom_r);
 	DECLARE_WRITE32_MEMBER(eeprom_w);
 	DECLARE_WRITE32_MEMBER(int_ack_w);
 	DECLARE_READ16_MEMBER(K056800_68k_r);
 	DECLARE_WRITE16_MEMBER(K056800_68k_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(analog_ctrl_r);
 };
 
 
@@ -41,7 +44,7 @@ static SCREEN_UPDATE_IND16( ultrsprt )
 	ultrsprt_state *state = screen.machine().driver_data<ultrsprt_state>();
 	int i, j;
 
-	UINT8 *ram = (UINT8 *)state->m_vram;
+	UINT8 *ram = reinterpret_cast<UINT8 *>(state->m_vram.target());
 
 	for (j=0; j < 400; j++)
 	{
@@ -86,10 +89,10 @@ WRITE32_MEMBER(ultrsprt_state::eeprom_w)
 		input_port_write(machine(), "EEPROMOUT", data, 0xffffffff);
 }
 
-static CUSTOM_INPUT( analog_ctrl_r )
+CUSTOM_INPUT_MEMBER(ultrsprt_state::analog_ctrl_r)
 {
 	const char *tag = (const char *)param;
-	return input_port_read(field.machine(), tag) & 0xfff;
+	return input_port_read(machine(), tag) & 0xfff;
 }
 
 WRITE32_MEMBER(ultrsprt_state::int_ack_w)
@@ -111,14 +114,14 @@ static MACHINE_START( ultrsprt )
 
 
 static ADDRESS_MAP_START( ultrsprt_map, AS_PROGRAM, 32, ultrsprt_state )
-	AM_RANGE(0x00000000, 0x0007ffff) AM_RAM AM_BASE(m_vram)
+	AM_RANGE(0x00000000, 0x0007ffff) AM_RAM AM_SHARE("vram")
 	AM_RANGE(0x70000000, 0x70000003) AM_READWRITE(eeprom_r, eeprom_w)
 	AM_RANGE(0x70000020, 0x70000023) AM_READ_PORT("P1")
 	AM_RANGE(0x70000040, 0x70000043) AM_READ_PORT("P2")
 	AM_RANGE(0x70000080, 0x70000087) AM_DEVWRITE_LEGACY("k056800", k056800_host_w)
 	AM_RANGE(0x70000088, 0x7000008f) AM_DEVREAD_LEGACY("k056800", k056800_host_r)
 	AM_RANGE(0x700000e0, 0x700000e3) AM_WRITE(int_ack_w)
-	AM_RANGE(0x7f000000, 0x7f01ffff) AM_RAM AM_BASE(m_workram)
+	AM_RANGE(0x7f000000, 0x7f01ffff) AM_RAM AM_SHARE("workram")
 	AM_RANGE(0x7f700000, 0x7f703fff) AM_RAM_WRITE(palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0x7f800000, 0x7f9fffff) AM_MIRROR(0x00600000) AM_ROM AM_REGION("user1", 0)
 ADDRESS_MAP_END
@@ -164,15 +167,15 @@ ADDRESS_MAP_END
 
 static INPUT_PORTS_START( ultrsprt )
 	PORT_START("P1")
-	PORT_BIT( 0x00000fff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(analog_ctrl_r, "STICKY1")
-	PORT_BIT( 0x0fff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(analog_ctrl_r, "STICKX1")
+	PORT_BIT( 0x00000fff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, ultrsprt_state,analog_ctrl_r, "STICKY1")
+	PORT_BIT( 0x0fff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, ultrsprt_state,analog_ctrl_r, "STICKX1")
 	PORT_BIT( 0x40000000, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x20000000, IP_ACTIVE_HIGH, IPT_BUTTON1 ) PORT_PLAYER(1)
 	PORT_BIT( 0x10000000, IP_ACTIVE_HIGH, IPT_START1 )
 
 	PORT_START("P2")
-	PORT_BIT( 0x00000fff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(analog_ctrl_r, "STICKY2")
-	PORT_BIT( 0x0fff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(analog_ctrl_r, "STICKX2")
+	PORT_BIT( 0x00000fff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, ultrsprt_state,analog_ctrl_r, "STICKY2")
+	PORT_BIT( 0x0fff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, ultrsprt_state,analog_ctrl_r, "STICKX2")
 	PORT_BIT( 0x40000000, IP_ACTIVE_HIGH, IPT_SERVICE1 )
 	PORT_BIT( 0x20000000, IP_ACTIVE_HIGH, IPT_BUTTON1 ) PORT_PLAYER(2)
 	PORT_BIT( 0x10000000, IP_ACTIVE_HIGH, IPT_START2 )

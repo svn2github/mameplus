@@ -31,7 +31,8 @@ class nightgal_state : public driver_device
 {
 public:
 	nightgal_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_comms_ram(*this, "comms_ram"){ }
 
 	/* video-related */
 	UINT8 m_blit_raw_data[3];
@@ -44,7 +45,7 @@ public:
 	UINT8 m_z80_latch;
 	UINT8 m_mux_data;
 
-	UINT8 *m_comms_ram;
+	required_shared_ptr<UINT8> m_comms_ram;
 
 	/* devices */
 	device_t *m_maincpu;
@@ -111,7 +112,7 @@ static SCREEN_UPDATE_IND16( nightgal )
 
 static UINT8 nightgal_gfx_nibble( running_machine &machine, int niboffset )
 {
-	UINT8 *blit_rom = machine.region("gfx1")->base();
+	UINT8 *blit_rom = machine.root_device().memregion("gfx1")->base();
 
 	if (niboffset & 1)
 	{
@@ -249,6 +250,7 @@ WRITE8_MEMBER(nightgal_state::sexygal_nsc_true_blitter_w)
 /* guess: use the same resistor values as Crazy Climber (needs checking on the real HW) */
 static PALETTE_INIT( nightgal )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	static const int resistances_rg[3] = { 1000, 470, 220 };
 	static const int resistances_b [2] = { 470, 220 };
 	double weights_rg[3], weights_b[2];
@@ -509,7 +511,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sexygal_map, AS_PROGRAM, 8, nightgal_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_RAM //???
-	AM_RANGE(0xe000, 0xefff) AM_READWRITE(royalqn_comm_r, royalqn_comm_w) AM_BASE(m_comms_ram)
+	AM_RANGE(0xe000, 0xefff) AM_READWRITE(royalqn_comm_r, royalqn_comm_w) AM_SHARE("comms_ram")
 	AM_RANGE(0xf000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -533,7 +535,7 @@ static ADDRESS_MAP_START( sexygal_nsc_map, AS_PROGRAM, 8, nightgal_state )
 	AM_RANGE(0x00a0, 0x00af) AM_WRITE(blit_true_vregs_w)
 	AM_RANGE(0x00b0, 0x00b0) AM_WRITENOP // bltflip register
 
-	AM_RANGE(0x1000, 0x13ff) AM_MIRROR(0x2c00) AM_READWRITE(royalqn_comm_r, royalqn_comm_w) AM_BASE(m_comms_ram)
+	AM_RANGE(0x1000, 0x13ff) AM_MIRROR(0x2c00) AM_READWRITE(royalqn_comm_r, royalqn_comm_w) AM_SHARE("comms_ram")
 	AM_RANGE(0xc000, 0xffff) AM_ROM AM_WRITENOP
 ADDRESS_MAP_END
 
@@ -544,7 +546,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( royalqn_map, AS_PROGRAM, 8, nightgal_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_NOP
-	AM_RANGE(0xc000, 0xdfff) AM_READWRITE(royalqn_comm_r, royalqn_comm_w) AM_BASE(m_comms_ram)
+	AM_RANGE(0xc000, 0xdfff) AM_READWRITE(royalqn_comm_r, royalqn_comm_w) AM_SHARE("comms_ram")
 	AM_RANGE(0xe000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -1224,7 +1226,7 @@ ROM_END
 
 static DRIVER_INIT( royalqn )
 {
-	UINT8 *ROM = machine.region("sub")->base();
+	UINT8 *ROM = machine.root_device().memregion("sub")->base();
 
 	/* patch open bus / protection */
 	ROM[0xc27e] = 0x02;
@@ -1233,7 +1235,7 @@ static DRIVER_INIT( royalqn )
 
 static DRIVER_INIT( ngalsumr )
 {
-	UINT8 *ROM = machine.region("sub")->base();
+	UINT8 *ROM = machine.root_device().memregion("sub")->base();
 
 	/* patch protection */
 	ROM[0xd6ce] = 0x02;

@@ -55,16 +55,16 @@ f80b      ????
 WRITE8_MEMBER(tecmo_state::tecmo_bankswitch_w)
 {
 	int bankaddress;
-	UINT8 *RAM = machine().region("maincpu")->base();
+	UINT8 *RAM = memregion("maincpu")->base();
 
 
 	bankaddress = 0x10000 + ((data & 0xf8) << 8);
-	memory_set_bankptr(machine(), "bank1", &RAM[bankaddress]);
+	membank("bank1")->set_base(&RAM[bankaddress]);
 }
 
 WRITE8_MEMBER(tecmo_state::tecmo_sound_command_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	cputag_set_input_line(machine(), "soundcpu",INPUT_LINE_NMI,PULSE_LINE);
 }
 
@@ -86,7 +86,7 @@ static void tecmo_adpcm_int(device_t *device)
 {
 	tecmo_state *state = device->machine().driver_data<tecmo_state>();
 	if (state->m_adpcm_pos >= state->m_adpcm_end ||
-				state->m_adpcm_pos >= device->machine().region("adpcm")->bytes())
+				state->m_adpcm_pos >= state->memregion("adpcm")->bytes())
 		msm5205_reset_w(device,1);
 	else if (state->m_adpcm_data != -1)
 	{
@@ -95,7 +95,7 @@ static void tecmo_adpcm_int(device_t *device)
 	}
 	else
 	{
-		UINT8 *ROM = device->machine().region("adpcm")->base();
+		UINT8 *ROM = device->machine().root_device().memregion("adpcm")->base();
 
 		state->m_adpcm_data = ROM[state->m_adpcm_pos++];
 		msm5205_data_w(device,state->m_adpcm_data >> 4);
@@ -135,11 +135,11 @@ READ8_MEMBER(tecmo_state::tecmo_dswb_h_r)
 static ADDRESS_MAP_START( rygar_map, AS_PROGRAM, 8, tecmo_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(tecmo_txvideoram_w) AM_BASE(m_txvideoram)
-	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE(tecmo_fgvideoram_w) AM_BASE(m_fgvideoram)
-	AM_RANGE(0xdc00, 0xdfff) AM_RAM_WRITE(tecmo_bgvideoram_w) AM_BASE(m_bgvideoram)
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(tecmo_txvideoram_w) AM_SHARE("txvideoram")
+	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE(tecmo_fgvideoram_w) AM_SHARE("fgvideoram")
+	AM_RANGE(0xdc00, 0xdfff) AM_RAM_WRITE(tecmo_bgvideoram_w) AM_SHARE("bgvideoram")
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_byte_be_w) AM_SHARE("paletteram")
 	AM_RANGE(0xf000, 0xf7ff) AM_ROMBANK("bank1")
 	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("JOY1")
 	AM_RANGE(0xf801, 0xf801) AM_READ_PORT("BUTTONS1")
@@ -163,11 +163,11 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( gemini_map, AS_PROGRAM, 8, tecmo_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(tecmo_txvideoram_w) AM_BASE(m_txvideoram)
-	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE(tecmo_fgvideoram_w) AM_BASE(m_fgvideoram)
-	AM_RANGE(0xdc00, 0xdfff) AM_RAM_WRITE(tecmo_bgvideoram_w) AM_BASE(m_bgvideoram)
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_be_w) AM_SHARE("paletteram")
-	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(tecmo_txvideoram_w) AM_SHARE("txvideoram")
+	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE(tecmo_fgvideoram_w) AM_SHARE("fgvideoram")
+	AM_RANGE(0xdc00, 0xdfff) AM_RAM_WRITE(tecmo_bgvideoram_w) AM_SHARE("bgvideoram")
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_byte_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xf000, 0xf7ff) AM_ROMBANK("bank1")
 	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("JOY1")
 	AM_RANGE(0xf801, 0xf801) AM_READ_PORT("BUTTONS1")
@@ -190,12 +190,12 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( silkworm_map, AS_PROGRAM, 8, tecmo_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
-	AM_RANGE(0xc000, 0xc3ff) AM_RAM_WRITE(tecmo_bgvideoram_w) AM_BASE(m_bgvideoram)
-	AM_RANGE(0xc400, 0xc7ff) AM_RAM_WRITE(tecmo_fgvideoram_w) AM_BASE(m_fgvideoram)
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(tecmo_txvideoram_w) AM_BASE(m_txvideoram)
+	AM_RANGE(0xc000, 0xc3ff) AM_RAM_WRITE(tecmo_bgvideoram_w) AM_SHARE("bgvideoram")
+	AM_RANGE(0xc400, 0xc7ff) AM_RAM_WRITE(tecmo_fgvideoram_w) AM_SHARE("fgvideoram")
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(tecmo_txvideoram_w) AM_SHARE("txvideoram")
 	AM_RANGE(0xd000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_byte_be_w) AM_SHARE("paletteram")
 	AM_RANGE(0xf000, 0xf7ff) AM_ROMBANK("bank1")
 	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("JOY1")
 	AM_RANGE(0xf801, 0xf801) AM_READ_PORT("BUTTONS1")
@@ -221,7 +221,7 @@ static ADDRESS_MAP_START( rygar_sound_map, AS_PROGRAM, 8, tecmo_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x47ff) AM_RAM
 	AM_RANGE(0x8000, 0x8001) AM_DEVWRITE_LEGACY("ymsnd", ym3812_w)
-	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_r) AM_DEVWRITE_LEGACY("msm", tecmo_adpcm_start_w)
+	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_byte_r) AM_DEVWRITE_LEGACY("msm", tecmo_adpcm_start_w)
 	AM_RANGE(0xd000, 0xd000) AM_WRITE(tecmo_adpcm_end_w)
 	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE_LEGACY("msm", tecmo_adpcm_vol_w)
 	AM_RANGE(0xf000, 0xf000) AM_WRITENOP	/* NMI acknowledge */
@@ -233,7 +233,7 @@ static ADDRESS_MAP_START( tecmo_sound_map, AS_PROGRAM, 8, tecmo_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0xa000, 0xa001) AM_DEVWRITE_LEGACY("ymsnd", ym3812_w)
-	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_r) AM_DEVWRITE_LEGACY("msm", tecmo_adpcm_start_w)
+	AM_RANGE(0xc000, 0xc000) AM_READ(soundlatch_byte_r) AM_DEVWRITE_LEGACY("msm", tecmo_adpcm_start_w)
 	AM_RANGE(0xc400, 0xc400) AM_WRITE(tecmo_adpcm_end_w)
 	AM_RANGE(0xc800, 0xc800) AM_DEVWRITE_LEGACY("msm", tecmo_adpcm_vol_w)
 	AM_RANGE(0xcc00, 0xcc00) AM_WRITENOP	/* NMI acknowledge */

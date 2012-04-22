@@ -319,7 +319,7 @@ static MACHINE_RESET( psychic5 )
 {
 	psychic5_state *state = machine.driver_data<psychic5_state>();
 	state->m_bank_latch = 0xff;
-	flip_screen_set(machine, 0);
+	state->flip_screen_set(0);
 }
 
 /***************************************************************************
@@ -354,27 +354,27 @@ READ8_MEMBER(psychic5_state::psychic5_bankselect_r)
 
 WRITE8_MEMBER(psychic5_state::psychic5_bankselect_w)
 {
-	UINT8 *RAM = machine().region("maincpu")->base();
+	UINT8 *RAM = memregion("maincpu")->base();
 	int bankaddress;
 
 	if (m_bank_latch != data)
 	{
 		m_bank_latch = data;
 		bankaddress = 0x10000 + ((data & 3) * 0x4000);
-		memory_set_bankptr(machine(), "bank1",&RAM[bankaddress]);	 /* Select 4 banks of 16k */
+		membank("bank1")->set_base(&RAM[bankaddress]);	 /* Select 4 banks of 16k */
 	}
 }
 
 WRITE8_MEMBER(psychic5_state::bombsa_bankselect_w)
 {
-	UINT8 *RAM = machine().region("maincpu")->base();
+	UINT8 *RAM = memregion("maincpu")->base();
 	int bankaddress;
 
 	if (m_bank_latch != data)
 	{
 		m_bank_latch = data;
 		bankaddress = 0x10000 + ((data & 7) * 0x4000);
-		memory_set_bankptr(machine(), "bank1", &RAM[bankaddress]);	 /* Select 8 banks of 16k */
+		membank("bank1")->set_base(&RAM[bankaddress]);	 /* Select 8 banks of 16k */
 	}
 }
 
@@ -386,7 +386,7 @@ WRITE8_MEMBER(psychic5_state::psychic5_coin_counter_w)
 	// bit 7 toggles flip screen
 	if (data & 0x80)
 	{
-		flip_screen_set(machine(), !flip_screen_get(machine()));
+		flip_screen_set(!flip_screen());
 	}
 }
 
@@ -395,7 +395,7 @@ WRITE8_MEMBER(psychic5_state::bombsa_flipscreen_w)
 	// bit 7 toggles flip screen
 	if (data & 0x80)
 	{
-		flip_screen_set(machine(), !flip_screen_get(machine()));
+		flip_screen_set(!flip_screen());
 	}
 }
 
@@ -411,21 +411,21 @@ static ADDRESS_MAP_START( psychic5_main_map, AS_PROGRAM, 8, psychic5_state )
 	AM_RANGE(0x8000, 0xbfff) AM_RAMBANK("bank1")
 	AM_RANGE(0xc000, 0xdfff) AM_READWRITE(psychic5_paged_ram_r, psychic5_paged_ram_w)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
-	AM_RANGE(0xf000, 0xf000) AM_RAM_WRITE(soundlatch_w)
+	AM_RANGE(0xf000, 0xf000) AM_RAM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0xf001, 0xf001) AM_READNOP AM_WRITE(psychic5_coin_counter_w)
 	AM_RANGE(0xf002, 0xf002) AM_READWRITE(psychic5_bankselect_r, psychic5_bankselect_w)
 	AM_RANGE(0xf003, 0xf003) AM_READWRITE(psychic5_vram_page_select_r, psychic5_vram_page_select_w)
 	AM_RANGE(0xf004, 0xf004) AM_NOP	// ???
 	AM_RANGE(0xf005, 0xf005) AM_READNOP AM_WRITE(psychic5_title_screen_w)
 	AM_RANGE(0xf006, 0xf1ff) AM_NOP
-	AM_RANGE(0xf200, 0xf7ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xf200, 0xf7ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( psychic5_sound_map, AS_PROGRAM, 8, psychic5_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_r)
+	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( psychic5_soundport_map, AS_IO, 8, psychic5_state )
@@ -441,14 +441,14 @@ static ADDRESS_MAP_START( bombsa_main_map, AS_PROGRAM, 8, psychic5_state )
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
 
 	/* ports look like the other games */
-	AM_RANGE(0xd000, 0xd000) AM_WRITE(soundlatch_w) // confirmed
+	AM_RANGE(0xd000, 0xd000) AM_WRITE(soundlatch_byte_w) // confirmed
 	AM_RANGE(0xd001, 0xd001) AM_WRITE(bombsa_flipscreen_w)
 	AM_RANGE(0xd002, 0xd002) AM_READWRITE(psychic5_bankselect_r, bombsa_bankselect_w)
 	AM_RANGE(0xd003, 0xd003) AM_READWRITE(psychic5_vram_page_select_r, psychic5_vram_page_select_w)
 	AM_RANGE(0xd005, 0xd005) AM_WRITE(bombsa_unknown_w) // ?
 
 	AM_RANGE(0xd000, 0xd1ff) AM_RAM
-	AM_RANGE(0xd200, 0xd7ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd200, 0xd7ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM
 
 	AM_RANGE(0xe000, 0xffff) AM_READWRITE(psychic5_paged_ram_r, bombsa_paged_ram_w)
@@ -457,7 +457,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( bombsa_sound_map, AS_PROGRAM, 8, psychic5_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_r)
+	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xf000, 0xf000) AM_WRITEONLY								// Is this a confirm of some sort?
 ADDRESS_MAP_END
 

@@ -356,13 +356,13 @@ static const UINT8 cc_ex[0x100] = {
 static MACHINE_START( system1 )
 {
 	system1_state *state = machine.driver_data<system1_state>();
-	UINT32 numbanks = (machine.region("maincpu")->bytes() - 0x10000) / 0x4000;
+	UINT32 numbanks = (machine.root_device().memregion("maincpu")->bytes() - 0x10000) / 0x4000;
 
 	if (numbanks > 0)
-		memory_configure_bank(machine, "bank1", 0, numbanks, machine.region("maincpu")->base() + 0x10000, 0x4000);
+		state->membank("bank1")->configure_entries(0, numbanks, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
 	else
-		memory_configure_bank(machine, "bank1", 0, 1, machine.region("maincpu")->base() + 0x8000, 0);
-	memory_set_bank(machine, "bank1", 0);
+		state->membank("bank1")->configure_entry(0, state->memregion("maincpu")->base() + 0x8000);
+	state->membank("bank1")->set_entry(0);
 
 	z80_set_cycle_tables(machine.device("maincpu"), cc_op, cc_cb, cc_ed, cc_xy, cc_xycb, cc_ex);
 
@@ -400,14 +400,14 @@ static MACHINE_RESET( system1 )
 static void bank44_custom_w(running_machine &machine, UINT8 data, UINT8 prevdata)
 {
 	/* bank bits are bits 6 and 2 */
-	memory_set_bank(machine, "bank1", ((data & 0x40) >> 5) | ((data & 0x04) >> 2));
+	machine.root_device().membank("bank1")->set_entry(((data & 0x40) >> 5) | ((data & 0x04) >> 2));
 }
 
 
 static void bank0c_custom_w(running_machine &machine, UINT8 data, UINT8 prevdata)
 {
 	/* bank bits are bits 3 and 2 */
-	memory_set_bank(machine, "bank1", (data & 0x0c) >> 2);
+	machine.root_device().membank("bank1")->set_entry((data & 0x0c) >> 2);
 }
 
 
@@ -439,19 +439,17 @@ WRITE8_MEMBER(system1_state::videomode_w)
  *
  *************************************/
 
-static CUSTOM_INPUT( dakkochn_mux_data_r )
+CUSTOM_INPUT_MEMBER(system1_state::dakkochn_mux_data_r)
 {
-	system1_state *state = field.machine().driver_data<system1_state>();
 	static const char *const ports[] = { "KEY0", "KEY1", "KEY2", "KEY3", "KEY4", "KEY5", "KEY6" };
-	return input_port_read(field.machine(), ports[state->m_dakkochn_mux_data]);
+	return input_port_read(machine(), ports[m_dakkochn_mux_data]);
 }
 
 
-static CUSTOM_INPUT( dakkochn_mux_status_r )
+CUSTOM_INPUT_MEMBER(system1_state::dakkochn_mux_status_r)
 {
-	system1_state *state = field.machine().driver_data<system1_state>();
 	/* reads from here indicate which mux port is selected */
-	return 1 << (state->m_dakkochn_mux_data);
+	return 1 << (m_dakkochn_mux_data);
 }
 
 
@@ -501,7 +499,7 @@ READ8_MEMBER(system1_state::sound_data_r)
 		UINT8 initial_value = ppi8255_get_port_c(ppi);
 		ppi8255_set_port_c(ppi, initial_value & ~0x40);
 		ppi8255_set_port_c(ppi, initial_value |  0x40);
-		return soundlatch_r(space, offset);
+		return soundlatch_byte_r(space, offset);
 	}
 
 	/* if we have a Z80 PIO, get the data from the port and toggle the strobe */
@@ -520,7 +518,7 @@ READ8_MEMBER(system1_state::sound_data_r)
 WRITE8_MEMBER(system1_state::soundport_w)
 {
 	/* boost interleave when communicating with the sound CPU */
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
 
@@ -585,7 +583,7 @@ READ8_MEMBER(system1_state::mcu_io_r)
 			return machine().device<z80_device>("maincpu")->space(AS_PROGRAM)->read_byte(offset);
 
 		case 1:
-			return machine().region("maincpu")->base()[offset + 0x10000];
+			return memregion("maincpu")->base()[offset + 0x10000];
 
 		case 2:
 			return machine().device<z80_device>("maincpu")->space(AS_IO)->read_byte(offset);
@@ -719,8 +717,8 @@ WRITE8_MEMBER(system1_state::nobb_outport24_w)
 static ADDRESS_MAP_START( system1_map, AS_PROGRAM, 8, system1_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xcfff) AM_RAM AM_BASE(m_ram)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0xc000, 0xcfff) AM_RAM AM_SHARE("ram")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM_WRITE(system1_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0xe000, 0xefff) AM_READWRITE(system1_videoram_r, system1_videoram_w)
 	AM_RANGE(0xf000, 0xf3ff) AM_READWRITE(system1_mixer_collision_r, system1_mixer_collision_w)
@@ -737,10 +735,10 @@ static ADDRESS_MAP_START( nobo_map, AS_PROGRAM, 8, system1_state )
 	AM_RANGE(0xc400, 0xc7ff) AM_WRITE(system1_mixer_collision_reset_w)
 	AM_RANGE(0xc800, 0xcbff) AM_READWRITE(system1_sprite_collision_r, system1_sprite_collision_w)
 	AM_RANGE(0xcc00, 0xcfff) AM_WRITE(system1_sprite_collision_reset_w)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM_WRITE(system1_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0xe000, 0xefff) AM_READWRITE(system1_videoram_r, system1_videoram_w)
-	AM_RANGE(0xf000, 0xffff) AM_RAM AM_BASE(m_ram)
+	AM_RANGE(0xf000, 0xffff) AM_RAM AM_SHARE("ram")
 ADDRESS_MAP_END
 
 /* I/O map for systems with an 8255 PPI */
@@ -800,8 +798,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( nob_mcu_io_map, AS_IO, 8, system1_state )
 	ADDRESS_MAP_UNMAP_HIGH
-	AM_RANGE(MCS51_PORT_P0, MCS51_PORT_P0) AM_RAM AM_BASE(m_nob_mcu_latch)
-	AM_RANGE(MCS51_PORT_P1, MCS51_PORT_P1) AM_WRITEONLY AM_BASE(m_nob_mcu_status)
+	AM_RANGE(MCS51_PORT_P0, MCS51_PORT_P0) AM_RAM AM_SHARE("nob_mcu_latch")
+	AM_RANGE(MCS51_PORT_P1, MCS51_PORT_P1) AM_WRITEONLY AM_SHARE("nob_mcu_status")
 	AM_RANGE(MCS51_PORT_P2, MCS51_PORT_P2) AM_WRITE(nob_mcu_control_p2_w)
 ADDRESS_MAP_END
 
@@ -1955,10 +1953,10 @@ static INPUT_PORTS_START( dakkochn )
 	PORT_INCLUDE( choplift )
 
 	PORT_MODIFY("P1")
-	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(dakkochn_mux_data_r, NULL)
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, system1_state,dakkochn_mux_data_r, NULL)
 
 	PORT_MODIFY("P2")
-	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(dakkochn_mux_status_r, NULL)
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, system1_state,dakkochn_mux_status_r, NULL)
 
 	PORT_MODIFY("SYSTEM")
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED ) 	/* start 1 & 2 not connected. */
@@ -4653,12 +4651,12 @@ static DRIVER_INIT( myherok )
 
 	/* additionally to the usual protection, all the program ROMs have data lines */
 	/* D0 and D1 swapped. */
-	rom = machine.region("maincpu")->base();
+	rom = machine.root_device().memregion("maincpu")->base();
 	for (A = 0;A < 0xc000;A++)
 		rom[A] = (rom[A] & 0xfc) | ((rom[A] & 1) << 1) | ((rom[A] & 2) >> 1);
 
 	/* the tile gfx ROMs are mangled as well: */
-	rom = machine.region("tiles")->base();
+	rom = machine.root_device().memregion("tiles")->base();
 
 	/* the first ROM has data lines D0 and D6 swapped. */
 	for (A = 0x0000;A < 0x4000;A++)
@@ -4693,7 +4691,7 @@ static DRIVER_INIT( myherok )
 READ8_MEMBER(system1_state::nob_start_r)
 {
 	/* in reality, it's likely some M1-dependent behavior */
-	return (cpu_get_pc(&space.device()) <= 0x0003) ? 0x80 : machine().region("maincpu")->base()[1];
+	return (cpu_get_pc(&space.device()) <= 0x0003) ? 0x80 : memregion("maincpu")->base()[1];
 }
 
 static DRIVER_INIT( nob )
@@ -4719,7 +4717,7 @@ static DRIVER_INIT( nobb )
 	/* Patch to get PRG ROMS ('T', 'R' and 'S) status as "GOOD" in the "test mode" */
 	/* not really needed */
 
-//  UINT8 *ROM = machine.region("maincpu")->base();
+//  UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 //  ROM[0x3296] = 0x18;     // 'jr' instead of 'jr z' - 'T' (PRG Main ROM)
 //  ROM[0x32be] = 0x18;     // 'jr' instead of 'jr z' - 'R' (Banked ROM 1)
@@ -4732,7 +4730,7 @@ static DRIVER_INIT( nobb )
 
 	/* Patch to get sound in later levels(the program enters into a tight loop)*/
 	address_space *iospace = machine.device("maincpu")->memory().space(AS_IO);
-	UINT8 *ROM2 = machine.region("soundcpu")->base();
+	UINT8 *ROM2 = machine.root_device().memregion("soundcpu")->base();
 
 	ROM2[0x02f9] = 0x28;//'jr z' instead of 'jr'
 
@@ -4749,7 +4747,7 @@ static DRIVER_INIT( nobb )
 static DRIVER_INIT( bootleg )
 {
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0x7fff, machine.region("maincpu")->base() + 0x10000);
+	space->set_decrypted_region(0x0000, 0x7fff, machine.root_device().memregion("maincpu")->base() + 0x10000);
 	DRIVER_INIT_CALL(bank00);
 }
 
@@ -4757,14 +4755,14 @@ static DRIVER_INIT( bootleg )
 static DRIVER_INIT( bootsys2 )
 {
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0x7fff, machine.region("maincpu")->base() + 0x20000);
-	memory_configure_bank_decrypted(machine, "bank1", 0, 4, machine.region("maincpu")->base() + 0x30000, 0x4000);
+	space->set_decrypted_region(0x0000, 0x7fff, machine.root_device().memregion("maincpu")->base() + 0x20000);
+	machine.root_device().membank("bank1")->configure_decrypted_entries(0, 4, machine.root_device().memregion("maincpu")->base() + 0x30000, 0x4000);
 	DRIVER_INIT_CALL(bank0c);
 }
 
 static DRIVER_INIT( choplift )
 {
-	UINT8 *mcurom = machine.region("mcu")->base();
+	UINT8 *mcurom = machine.root_device().memregion("mcu")->base();
 
 	/* the ROM dump we have is bad; the following patches make it work */
 	mcurom[0x100] = 0x55;		/* D5 in current dump */

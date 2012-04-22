@@ -45,8 +45,8 @@ WRITE8_MEMBER(shisen_state::sichuan2_coin_w)
 static ADDRESS_MAP_START( shisen_map, AS_PROGRAM, 8, shisen_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc800, 0xcaff) AM_RAM_WRITE(sichuan2_paletteram_w) AM_BASE(m_paletteram)
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(sichuan2_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0xc800, 0xcaff) AM_RAM_WRITE(sichuan2_paletteram_w) AM_SHARE("paletteram")
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(sichuan2_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0xe000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -67,7 +67,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( shisen_sound_io_map, AS_IO, 8, shisen_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
-	AM_RANGE(0x80, 0x80) AM_READ(soundlatch_r)
+	AM_RANGE(0x80, 0x80) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x80, 0x81) AM_DEVWRITE_LEGACY("m72", shisen_sample_addr_w)
 	AM_RANGE(0x82, 0x82) AM_DEVWRITE_LEGACY("m72", m72_sample_w)
 	AM_RANGE(0x83, 0x83) AM_DEVWRITE_LEGACY("m72", m72_sound_irq_ack_w)
@@ -204,7 +204,7 @@ GFXDECODE_END
 
 static const ym2151_interface ym2151_config =
 {
-	m72_ym2151_irq_handler
+	DEVCB_LINE(m72_ym2151_irq_handler)
 };
 
 

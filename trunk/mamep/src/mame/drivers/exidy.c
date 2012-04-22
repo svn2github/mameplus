@@ -155,22 +155,21 @@ Fax                  1982  6502   FXL, FLA
  *
  *************************************/
 
-static CUSTOM_INPUT( teetert_input_r )
+CUSTOM_INPUT_MEMBER(exidy_state::teetert_input_r)
 {
-	exidy_state *state = field.machine().driver_data<exidy_state>();
-	UINT8 dial = input_port_read(field.machine(), "DIAL");
+	UINT8 dial = input_port_read(machine(), "DIAL");
 	int result = 0;
 
-	result = (dial != state->m_last_dial) << 4;
+	result = (dial != m_last_dial) << 4;
 	if (result != 0)
 	{
-		if (((dial - state->m_last_dial) & 0xff) < 0x80)
+		if (((dial - m_last_dial) & 0xff) < 0x80)
 		{
 			result |= 1;
-			state->m_last_dial++;
+			m_last_dial++;
 		}
 		else
-			state->m_last_dial--;
+			m_last_dial--;
 	}
 
 	return result;
@@ -186,9 +185,9 @@ static CUSTOM_INPUT( teetert_input_r )
 
 WRITE8_MEMBER(exidy_state::fax_bank_select_w)
 {
-	UINT8 *RAM = machine().region("maincpu")->base();
+	UINT8 *RAM = memregion("maincpu")->base();
 
-	memory_set_bankptr(machine(), "bank1", &RAM[0x10000 + (0x2000 * (data & 0x1f))]);
+	membank("bank1")->set_base(&RAM[0x10000 + (0x2000 * (data & 0x1f))]);
 	if ((data & 0x1f) > 0x17)
 		logerror("Banking to unpopulated ROM bank %02X!\n",data & 0x1f);
 }
@@ -203,24 +202,24 @@ WRITE8_MEMBER(exidy_state::fax_bank_select_w)
 
 static ADDRESS_MAP_START( exidy_map, AS_PROGRAM, 8, exidy_state )
 	AM_RANGE(0x0000, 0x03ff) AM_RAM
-	AM_RANGE(0x4000, 0x43ff) AM_MIRROR(0x0400) AM_RAM AM_BASE(m_videoram)
-	AM_RANGE(0x5000, 0x5000) AM_MIRROR(0x003f) AM_WRITEONLY AM_BASE(m_sprite1_xpos)
-	AM_RANGE(0x5040, 0x5040) AM_MIRROR(0x003f) AM_WRITEONLY AM_BASE(m_sprite1_ypos)
-	AM_RANGE(0x5080, 0x5080) AM_MIRROR(0x003f) AM_WRITEONLY AM_BASE(m_sprite2_xpos)
-	AM_RANGE(0x50c0, 0x50c0) AM_MIRROR(0x003f) AM_WRITEONLY AM_BASE(m_sprite2_ypos)
+	AM_RANGE(0x4000, 0x43ff) AM_MIRROR(0x0400) AM_RAM AM_SHARE("videoram")
+	AM_RANGE(0x5000, 0x5000) AM_MIRROR(0x003f) AM_WRITEONLY AM_SHARE("sprite1_xpos")
+	AM_RANGE(0x5040, 0x5040) AM_MIRROR(0x003f) AM_WRITEONLY AM_SHARE("sprite1_ypos")
+	AM_RANGE(0x5080, 0x5080) AM_MIRROR(0x003f) AM_WRITEONLY AM_SHARE("sprite2_xpos")
+	AM_RANGE(0x50c0, 0x50c0) AM_MIRROR(0x003f) AM_WRITEONLY AM_SHARE("sprite2_ypos")
 	AM_RANGE(0x5100, 0x5100) AM_MIRROR(0x00fc) AM_READ_PORT("DSW")
-	AM_RANGE(0x5100, 0x5100) AM_MIRROR(0x00fc) AM_WRITEONLY AM_BASE(m_spriteno)
+	AM_RANGE(0x5100, 0x5100) AM_MIRROR(0x00fc) AM_WRITEONLY AM_SHARE("spriteno")
 	AM_RANGE(0x5101, 0x5101) AM_MIRROR(0x00fc) AM_READ_PORT("IN0")
-	AM_RANGE(0x5101, 0x5101) AM_MIRROR(0x00fc) AM_WRITEONLY AM_BASE(m_sprite_enable)
+	AM_RANGE(0x5101, 0x5101) AM_MIRROR(0x00fc) AM_WRITEONLY AM_SHARE("sprite_enable")
 	AM_RANGE(0x5103, 0x5103) AM_MIRROR(0x00fc) AM_READ(exidy_interrupt_r)
-	AM_RANGE(0x5210, 0x5212) AM_WRITEONLY AM_BASE(m_color_latch)
+	AM_RANGE(0x5210, 0x5212) AM_WRITEONLY AM_SHARE("color_latch")
 	AM_RANGE(0x5213, 0x5213) AM_READ_PORT("IN2")
 ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( sidetrac_map, AS_PROGRAM, 8, exidy_state )
 	AM_RANGE(0x0800, 0x3fff) AM_ROM
-	AM_RANGE(0x4800, 0x4fff) AM_ROM AM_BASE(m_characterram)
+	AM_RANGE(0x4800, 0x4fff) AM_ROM AM_SHARE("characterram")
 	AM_RANGE(0x5200, 0x5200) AM_WRITE_LEGACY(targ_audio_1_w)
 	AM_RANGE(0x5201, 0x5201) AM_WRITE_LEGACY(spectar_audio_2_w)
 	AM_RANGE(0xff00, 0xffff) AM_ROM AM_REGION("maincpu", 0x3f00)
@@ -230,7 +229,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( targ_map, AS_PROGRAM, 8, exidy_state )
 	AM_RANGE(0x0800, 0x3fff) AM_ROM
-	AM_RANGE(0x4800, 0x4fff) AM_RAM AM_BASE(m_characterram)
+	AM_RANGE(0x4800, 0x4fff) AM_RAM AM_SHARE("characterram")
 	AM_RANGE(0x5200, 0x5200) AM_WRITE_LEGACY(targ_audio_1_w)
 	AM_RANGE(0x5201, 0x5201) AM_WRITE_LEGACY(targ_audio_2_w)
 	AM_RANGE(0xff00, 0xffff) AM_ROM AM_REGION("maincpu", 0x3f00)
@@ -240,7 +239,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( spectar_map, AS_PROGRAM, 8, exidy_state )
 	AM_RANGE(0x0800, 0x3fff) AM_ROM
-	AM_RANGE(0x4800, 0x4fff) AM_RAM AM_BASE(m_characterram)
+	AM_RANGE(0x4800, 0x4fff) AM_RAM AM_SHARE("characterram")
 	AM_RANGE(0x5200, 0x5200) AM_WRITE_LEGACY(targ_audio_1_w)
 	AM_RANGE(0x5201, 0x5201) AM_WRITE_LEGACY(spectar_audio_2_w)
 	AM_RANGE(0xff00, 0xffff) AM_ROM AM_REGION("maincpu", 0x3f00)
@@ -251,27 +250,27 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( rallys_map, AS_PROGRAM, 8, exidy_state )
 	AM_RANGE(0x0000, 0x03ff) AM_RAM
 	AM_RANGE(0x0800, 0x3fff) AM_ROM
-	AM_RANGE(0x4000, 0x43ff) AM_MIRROR(0x0400) AM_RAM AM_BASE(m_videoram)
-	AM_RANGE(0x4800, 0x4fff) AM_RAM AM_BASE(m_characterram)
-	AM_RANGE(0x5000, 0x5000) AM_WRITEONLY AM_BASE(m_sprite1_xpos)
-	AM_RANGE(0x5001, 0x5001) AM_WRITEONLY AM_BASE(m_sprite1_ypos)
+	AM_RANGE(0x4000, 0x43ff) AM_MIRROR(0x0400) AM_RAM AM_SHARE("videoram")
+	AM_RANGE(0x4800, 0x4fff) AM_RAM AM_SHARE("characterram")
+	AM_RANGE(0x5000, 0x5000) AM_WRITEONLY AM_SHARE("sprite1_xpos")
+	AM_RANGE(0x5001, 0x5001) AM_WRITEONLY AM_SHARE("sprite1_ypos")
 	AM_RANGE(0x5100, 0x5100) AM_MIRROR(0x00fc) AM_READ_PORT("DSW")
-	AM_RANGE(0x5100, 0x5100) AM_MIRROR(0x00fc) AM_WRITEONLY AM_BASE(m_spriteno)
+	AM_RANGE(0x5100, 0x5100) AM_MIRROR(0x00fc) AM_WRITEONLY AM_SHARE("spriteno")
 	AM_RANGE(0x5101, 0x5101) AM_MIRROR(0x00fc) AM_READ_PORT("IN0")
-	AM_RANGE(0x5101, 0x5101) AM_MIRROR(0x00fc) AM_WRITEONLY AM_BASE(m_sprite_enable)
+	AM_RANGE(0x5101, 0x5101) AM_MIRROR(0x00fc) AM_WRITEONLY AM_SHARE("sprite_enable")
 	AM_RANGE(0x5103, 0x5103) AM_MIRROR(0x00fc) AM_READ(exidy_interrupt_r)
 	AM_RANGE(0x5200, 0x5200) AM_WRITE_LEGACY(targ_audio_1_w)
 	AM_RANGE(0x5201, 0x5201) AM_WRITE_LEGACY(spectar_audio_2_w)
-	AM_RANGE(0x5210, 0x5212) AM_WRITEONLY AM_BASE(m_color_latch)
+	AM_RANGE(0x5210, 0x5212) AM_WRITEONLY AM_SHARE("color_latch")
 	AM_RANGE(0x5213, 0x5213) AM_READ_PORT("IN2")
-	AM_RANGE(0x5300, 0x5300) AM_WRITEONLY AM_BASE(m_sprite2_xpos)
-	AM_RANGE(0x5301, 0x5301) AM_WRITEONLY AM_BASE(m_sprite2_ypos)
+	AM_RANGE(0x5300, 0x5300) AM_WRITEONLY AM_SHARE("sprite2_xpos")
+	AM_RANGE(0x5301, 0x5301) AM_WRITEONLY AM_SHARE("sprite2_ypos")
 	AM_RANGE(0xff00, 0xffff) AM_ROM AM_REGION("maincpu", 0x3f00)
 ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( venture_map, AS_PROGRAM, 8, exidy_state )
-	AM_RANGE(0x4800, 0x4fff) AM_RAM AM_BASE(m_characterram)
+	AM_RANGE(0x4800, 0x4fff) AM_RAM AM_SHARE("characterram")
 	AM_RANGE(0x5200, 0x520f) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 	AM_IMPORT_FROM(exidy_map)
@@ -281,7 +280,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( pepper2_map, AS_PROGRAM, 8, exidy_state )
 	AM_RANGE(0x4800, 0x4fff) AM_NOP
 	AM_RANGE(0x5200, 0x520f) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
-	AM_RANGE(0x6000, 0x6fff) AM_RAM AM_BASE(m_characterram)
+	AM_RANGE(0x6000, 0x6fff) AM_RAM AM_SHARE("characterram")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 	AM_IMPORT_FROM(exidy_map)
 ADDRESS_MAP_END
@@ -295,7 +294,7 @@ static ADDRESS_MAP_START( fax_map, AS_PROGRAM, 8, exidy_state )
 	AM_RANGE(0x2000, 0x3fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x5200, 0x520f) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
 	AM_RANGE(0x5213, 0x5217) AM_WRITENOP		/* empty control lines on color/sound board */
-	AM_RANGE(0x6000, 0x6fff) AM_RAM AM_BASE(m_characterram)
+	AM_RANGE(0x6000, 0x6fff) AM_RAM AM_SHARE("characterram")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 	AM_IMPORT_FROM(exidy_map)
 ADDRESS_MAP_END
@@ -603,7 +602,7 @@ static INPUT_PORTS_START( teetert )
 	PORT_START("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_START2 )
-	PORT_BIT( 0x44, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(teetert_input_r, NULL)
+	PORT_BIT( 0x44, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, exidy_state,teetert_input_r, NULL)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -1471,7 +1470,7 @@ static DRIVER_INIT( phantoma )
 
 	/* the ROM is actually mapped high */
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xf800, 0xffff, "bank1");
-	memory_set_bankptr(machine, "bank1", machine.region("maincpu")->base() + 0xf800);
+	state->membank("bank1")->set_base(state->memregion("maincpu")->base() + 0xf800);
 }
 
 

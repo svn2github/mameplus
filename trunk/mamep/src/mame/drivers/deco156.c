@@ -68,9 +68,8 @@ static VIDEO_START( wcvol95 )
 static SCREEN_UPDATE_RGB32( wcvol95 )
 {
 	//FIXME: flip_screen_x should not be written!
-	flip_screen_set_no_update(screen.machine(), 1);
-
 	deco156_state *state = screen.machine().driver_data<deco156_state>();
+	state->flip_screen_set_no_update(1);
 
 	screen.machine().priority_bitmap.fill(0);
 	bitmap.fill(0);
@@ -614,8 +613,8 @@ ROM_END
 
 static void descramble_sound( running_machine &machine, const char *tag )
 {
-	UINT8 *rom = machine.region(tag)->base();
-	int length = machine.region(tag)->bytes();
+	UINT8 *rom = machine.root_device().memregion(tag)->base();
+	int length = machine.root_device().memregion(tag)->bytes();
 	UINT8 *buf1 = auto_alloc_array(machine, UINT8, length);
 	UINT32 x;
 

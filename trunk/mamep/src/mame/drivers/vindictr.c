@@ -63,12 +63,11 @@ static MACHINE_RESET( vindictr )
  *
  *************************************/
 
-static READ16_HANDLER( port1_r )
+READ16_MEMBER(vindictr_state::port1_r)
 {
-	vindictr_state *state = space->machine().driver_data<vindictr_state>();
-	int result = input_port_read(space->machine(), "260010");
-	if (state->m_sound_to_cpu_ready) result ^= 0x0004;
-	if (state->m_cpu_to_sound_ready) result ^= 0x0008;
+	int result = input_port_read(machine(), "260010");
+	if (m_sound_to_cpu_ready) result ^= 0x0004;
+	if (m_cpu_to_sound_ready) result ^= 0x0008;
 	result ^= 0x0010;
 	return result;
 }
@@ -88,7 +87,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, vindictr_state )
 	AM_RANGE(0x0e0000, 0x0e0fff) AM_READWRITE_LEGACY(atarigen_eeprom_r, atarigen_eeprom_w) AM_SHARE("eeprom")
 	AM_RANGE(0x1f0000, 0x1fffff) AM_WRITE_LEGACY(atarigen_eeprom_enable_w)
 	AM_RANGE(0x260000, 0x26000f) AM_READ_PORT("260000")
-	AM_RANGE(0x260010, 0x26001f) AM_READ_LEGACY(port1_r)
+	AM_RANGE(0x260010, 0x26001f) AM_READ(port1_r)
 	AM_RANGE(0x260020, 0x26002f) AM_READ_PORT("260020")
 	AM_RANGE(0x260030, 0x260031) AM_READ_LEGACY(atarigen_sound_r)
 	AM_RANGE(0x2e0000, 0x2e0001) AM_WRITE(watchdog_reset16_w)
@@ -97,9 +96,9 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, vindictr_state )
 	AM_RANGE(0x360020, 0x360021) AM_WRITE_LEGACY(atarigen_sound_reset_w)
 	AM_RANGE(0x360030, 0x360031) AM_WRITE_LEGACY(atarigen_sound_w)
 	AM_RANGE(0x3e0000, 0x3e0fff) AM_RAM_WRITE_LEGACY(vindictr_paletteram_w) AM_SHARE("paletteram")
-	AM_RANGE(0x3f0000, 0x3f1fff) AM_MIRROR(0x8000) AM_RAM_WRITE_LEGACY(atarigen_playfield_w) AM_BASE(m_playfield)
+	AM_RANGE(0x3f0000, 0x3f1fff) AM_MIRROR(0x8000) AM_RAM_WRITE_LEGACY(atarigen_playfield_w) AM_SHARE("playfield")
 	AM_RANGE(0x3f2000, 0x3f3fff) AM_MIRROR(0x8000) AM_READWRITE_LEGACY(atarimo_0_spriteram_r, atarimo_0_spriteram_w)
-	AM_RANGE(0x3f4000, 0x3f4f7f) AM_MIRROR(0x8000) AM_RAM_WRITE_LEGACY(atarigen_alpha_w) AM_BASE(m_alpha)
+	AM_RANGE(0x3f4000, 0x3f4f7f) AM_MIRROR(0x8000) AM_RAM_WRITE_LEGACY(atarigen_alpha_w) AM_SHARE("alpha")
 	AM_RANGE(0x3f4f80, 0x3f4fff) AM_MIRROR(0x8000) AM_READWRITE_LEGACY(atarimo_0_slipram_r, atarimo_0_slipram_w)
 	AM_RANGE(0x3f5000, 0x3f7fff) AM_MIRROR(0x8000) AM_RAM
 ADDRESS_MAP_END

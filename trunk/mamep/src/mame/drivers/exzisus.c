@@ -48,34 +48,34 @@ TODO:
 
 WRITE8_MEMBER(exzisus_state::exzisus_cpua_bankswitch_w)
 {
-	UINT8 *RAM = machine().region("cpua")->base();
+	UINT8 *RAM = memregion("cpua")->base();
 
 	if ( (data & 0x0f) != m_cpua_bank )
 	{
 		m_cpua_bank = data & 0x0f;
 		if (m_cpua_bank >= 2)
 		{
-			memory_set_bankptr(machine(),  "bank2", &RAM[ 0x10000 + ( (m_cpua_bank - 2) * 0x4000 ) ] );
+			membank("bank2")->set_base(&RAM[ 0x10000 + ( (m_cpua_bank - 2) * 0x4000 ) ] );
 		}
 	}
 
-	flip_screen_set(machine(), data & 0x40);
+	flip_screen_set(data & 0x40);
 }
 
 WRITE8_MEMBER(exzisus_state::exzisus_cpub_bankswitch_w)
 {
-	UINT8 *RAM = machine().region("cpub")->base();
+	UINT8 *RAM = memregion("cpub")->base();
 
 	if ( (data & 0x0f) != m_cpub_bank )
 	{
 		m_cpub_bank = data & 0x0f;
 		if (m_cpub_bank >= 2)
 		{
-			memory_set_bankptr(machine(),  "bank1", &RAM[ 0x10000 + ( (m_cpub_bank - 2) * 0x4000 ) ] );
+			membank("bank1")->set_base(&RAM[ 0x10000 + ( (m_cpub_bank - 2) * 0x4000 ) ] );
 		}
 	}
 
-	flip_screen_set(machine(), data & 0x40);
+	flip_screen_set(data & 0x40);
 }
 
 WRITE8_MEMBER(exzisus_state::exzisus_coincounter_w)
@@ -117,7 +117,7 @@ WRITE8_MEMBER(exzisus_state::exzisus_cpub_reset_w)
 // the RAM check to work
 static DRIVER_INIT( exzisus )
 {
-	UINT8 *RAM = machine.region("cpua")->base();
+	UINT8 *RAM = machine.root_device().memregion("cpua")->base();
 
 	/* Fix WORK RAM error */
 	RAM[0x67fd] = 0x18;
@@ -137,19 +137,19 @@ static DRIVER_INIT( exzisus )
 static ADDRESS_MAP_START( cpua_map, AS_PROGRAM, 8, exzisus_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank2")
-	AM_RANGE(0xc000, 0xc5ff) AM_READWRITE(exzisus_objectram_1_r, exzisus_objectram_1_w) AM_BASE(m_objectram1) AM_SIZE(m_objectram_size1)
-	AM_RANGE(0xc600, 0xdfff) AM_READWRITE(exzisus_videoram_1_r, exzisus_videoram_1_w) AM_BASE(m_videoram1)
-	AM_RANGE(0xe000, 0xefff) AM_READWRITE(exzisus_sharedram_ac_r, exzisus_sharedram_ac_w) AM_BASE(m_sharedram_ac)
+	AM_RANGE(0xc000, 0xc5ff) AM_READWRITE(exzisus_objectram_1_r, exzisus_objectram_1_w) AM_SHARE("objectram1")
+	AM_RANGE(0xc600, 0xdfff) AM_READWRITE(exzisus_videoram_1_r, exzisus_videoram_1_w) AM_SHARE("videoram1")
+	AM_RANGE(0xe000, 0xefff) AM_READWRITE(exzisus_sharedram_ac_r, exzisus_sharedram_ac_w) AM_SHARE("sharedram_ac")
 	AM_RANGE(0xf400, 0xf400) AM_WRITE(exzisus_cpua_bankswitch_w)
 	AM_RANGE(0xf404, 0xf404) AM_WRITE(exzisus_cpub_reset_w) // ??
-	AM_RANGE(0xf800, 0xffff) AM_READWRITE(exzisus_sharedram_ab_r, exzisus_sharedram_ab_w) AM_BASE(m_sharedram_ab)
+	AM_RANGE(0xf800, 0xffff) AM_READWRITE(exzisus_sharedram_ab_r, exzisus_sharedram_ab_w) AM_SHARE("sharedram_ab")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cpub_map, AS_PROGRAM, 8, exzisus_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xc5ff) AM_READWRITE(exzisus_objectram_0_r, exzisus_objectram_0_w) AM_BASE(m_objectram0) AM_SIZE(m_objectram_size0)
-	AM_RANGE(0xc600, 0xdfff) AM_READWRITE(exzisus_videoram_0_r, exzisus_videoram_0_w) AM_BASE(m_videoram0)
+	AM_RANGE(0xc000, 0xc5ff) AM_READWRITE(exzisus_objectram_0_r, exzisus_objectram_0_w) AM_SHARE("objectram0")
+	AM_RANGE(0xc600, 0xdfff) AM_READWRITE(exzisus_videoram_0_r, exzisus_videoram_0_w) AM_SHARE("videoram0")
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 	AM_RANGE(0xf000, 0xf000) AM_READNOP AM_DEVWRITE_LEGACY("tc0140syt", tc0140syt_port_w)
 	AM_RANGE(0xf001, 0xf001) AM_DEVREADWRITE_LEGACY("tc0140syt", tc0140syt_comm_r, tc0140syt_comm_w)
@@ -259,7 +259,7 @@ static void irqhandler(device_t *device, int irq)
 
 static const ym2151_interface ym2151_config =
 {
-	irqhandler
+	DEVCB_LINE(irqhandler)
 };
 
 

@@ -57,7 +57,7 @@ WRITE8_MEMBER(mainevt_state::mainevt_bankswitch_w)
 {
 
 	/* bit 0-1 ROM bank select */
-	memory_set_bank(machine(), "bank1", data & 0x03);
+	membank("bank1")->set_entry(data & 0x03);
 
 	/* TODO: bit 5 = select work RAM or palette? */
 	//palette_selected = data & 0x20;
@@ -162,7 +162,7 @@ WRITE8_MEMBER(mainevt_state::k052109_051960_w)
 
 static ADDRESS_MAP_START( mainevt_map, AS_PROGRAM, 8, mainevt_state )
 	AM_RANGE(0x1f80, 0x1f80) AM_WRITE(mainevt_bankswitch_w)
-	AM_RANGE(0x1f84, 0x1f84) AM_WRITE(soundlatch_w)				/* probably */
+	AM_RANGE(0x1f84, 0x1f84) AM_WRITE(soundlatch_byte_w)				/* probably */
 	AM_RANGE(0x1f88, 0x1f88) AM_WRITE(mainevt_sh_irqtrigger_w)	/* probably */
 	AM_RANGE(0x1f8c, 0x1f8d) AM_WRITENOP	/* ??? */
 	AM_RANGE(0x1f90, 0x1f90) AM_WRITE(mainevt_coin_w)	/* coin counters + lamps */
@@ -179,7 +179,7 @@ static ADDRESS_MAP_START( mainevt_map, AS_PROGRAM, 8, mainevt_state )
 	AM_RANGE(0x0000, 0x3fff) AM_READWRITE(k052109_051960_r, k052109_051960_w)
 
 	AM_RANGE(0x4000, 0x5dff) AM_RAM
-	AM_RANGE(0x5e00, 0x5fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0x5e00, 0x5fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_be_w) AM_SHARE("paletteram")
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -187,7 +187,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( devstors_map, AS_PROGRAM, 8, mainevt_state )
 	AM_RANGE(0x1f80, 0x1f80) AM_WRITE(mainevt_bankswitch_w)
-	AM_RANGE(0x1f84, 0x1f84) AM_WRITE(soundlatch_w)				/* probably */
+	AM_RANGE(0x1f84, 0x1f84) AM_WRITE(soundlatch_byte_w)				/* probably */
 	AM_RANGE(0x1f88, 0x1f88) AM_WRITE(mainevt_sh_irqtrigger_w)	/* probably */
 	AM_RANGE(0x1f90, 0x1f90) AM_WRITE(mainevt_coin_w)	/* coin counters + lamps */
 	AM_RANGE(0x1fb2, 0x1fb2) AM_WRITE(dv_nmienable_w)
@@ -203,7 +203,7 @@ static ADDRESS_MAP_START( devstors_map, AS_PROGRAM, 8, mainevt_state )
 	AM_RANGE(0x0000, 0x3fff) AM_READWRITE(k052109_051960_r, k052109_051960_w)
 
 	AM_RANGE(0x4000, 0x5dff) AM_RAM
-	AM_RANGE(0x5e00, 0x5fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0x5e00, 0x5fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_be_w) AM_SHARE("paletteram")
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -213,7 +213,7 @@ static ADDRESS_MAP_START( mainevt_sound_map, AS_PROGRAM, 8, mainevt_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x83ff) AM_RAM
 	AM_RANGE(0x9000, 0x9000) AM_DEVWRITE_LEGACY("upd", upd7759_port_w)
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r,k007232_w)
 	AM_RANGE(0xd000, 0xd000) AM_DEVREAD_LEGACY("upd", mainevt_sh_busy_r)
 	AM_RANGE(0xe000, 0xe000) AM_WRITE(mainevt_sh_irqcontrol_w)
@@ -223,7 +223,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( devstors_sound_map, AS_PROGRAM, 8, mainevt_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x83ff) AM_RAM
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r,k007232_w)
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)
 	AM_RANGE(0xe000, 0xe000) AM_WRITE(devstor_sh_irqcontrol_w)
@@ -412,9 +412,9 @@ static const k051960_interface mainevt_k051960_intf =
 static MACHINE_START( mainevt )
 {
 	mainevt_state *state = machine.driver_data<mainevt_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 4, &ROM[0x10000], 0x2000);
+	state->membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x2000);
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_audiocpu = machine.device("audiocpu");

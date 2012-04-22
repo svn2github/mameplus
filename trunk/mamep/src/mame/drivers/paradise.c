@@ -31,6 +31,54 @@ paradise: I'm not sure it's working correctly:
 penky: we need to delay the irqs at startup or it won't boot. Either one of
        ports 0x2003.r or 0x2005.w starts up the irq timer (confirmed via trojan)
 
+Alternate dipswitch settings for Penky as found in scanned Pins & Dip manual:
+
+DIPSW-A
+--------------------------------------------------------------------
+    DipSwitch Title   |  Function  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+--------------------------------------------------------------------
+                      |   70 Sec   |off|off|                       |*
+      Game Time       |   60 Sec   |on |off|                       |
+                      |   50 Sec   |off|on |                       |
+                      |   40 Sec   |on |on |                       |
+--------------------------------------------------------------------
+     Strip-Tease      |     On     |       |off|                   |*
+                      |     Off    |       |on |                   |
+--------------------------------------------------------------------
+                      |    Easy    |           |off|off|           |
+      Difficulty      |   Normal   |           |on |off|           |*
+                      |    Hard    |           |off|on |           |
+                      | Very Hard  |           |on |on |           |
+--------------------------------------------------------------------
+                      |    99%     |                   |off|off|   |*
+ Minimum Percetage to |    90%     |                   |on |off|   |
+ Complete for Win or  |    80%     |                   |off|on |   |
+majority @ end of time|    70%     |                   |on |on |   |
+--------------------------------------------------------------------
+      Not Used                                                 |off|*
+--------------------------------------------------------------------
+
+DIPSW-B
+--------------------------------------------------------------------
+    DipSwitch Title   |  Function  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+--------------------------------------------------------------------
+                      | 1cn / 1pl  |off|off|                       |*
+        Coinage       | 1cn / 2pl  |on |off|                       |
+                      | 1cn / 3pl  |off|on |                       |
+                      | 2cn / 3pl  |on |on |                       |
+--------------------------------------------------------------------
+      Not Used                             |off|off|off|           |*
+--------------------------------------------------------------------
+  Competition Mode    | 1Bout 1Win |                   |off|       |*
+                      |3Bouts 2Wins|                   |on |       |
+--------------------------------------------------------------------
+    Demo Sounds       |    Yes     |                       |off|   |*
+                      |     No     |                       |on |   |
+--------------------------------------------------------------------
+       TV Test        |    Game    |                           |off|*
+    (Slide Show)      |    Test    |                           |on |
+--------------------------------------------------------------------
+
 ***************************************************************************/
 
 #include "emu.h"
@@ -47,7 +95,7 @@ penky: we need to delay the irqs at startup or it won't boot. Either one of
 WRITE8_MEMBER(paradise_state::paradise_rombank_w)
 {
 	int bank = data;
-	int bank_n = machine().region("maincpu")->bytes() / 0x4000 - 1;
+	int bank_n = memregion("maincpu")->bytes() / 0x4000 - 1;
 
 	if (bank >= bank_n)
 	{
@@ -55,7 +103,7 @@ WRITE8_MEMBER(paradise_state::paradise_rombank_w)
 		bank %= bank_n;
 	}
 
-	memory_set_bank(machine(), "bank1", bank);
+	membank("bank1")->set_entry(bank);
 }
 
 static WRITE8_DEVICE_HANDLER( paradise_okibank_w )
@@ -74,33 +122,33 @@ WRITE8_MEMBER(paradise_state::torus_coin_counter_w)
 #define STANDARD_MAP	\
 	AM_RANGE(0x0000, 0x7fff) AM_ROM	/* ROM */	\
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")	/* ROM (banked) */ \
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE(paradise_vram_2_w) AM_BASE(m_vram_2)	/* Background */ \
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(paradise_vram_1_w) AM_BASE(m_vram_1)	/* Midground */ \
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(paradise_vram_0_w) AM_BASE(m_vram_0)	/* Foreground */ \
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE(paradise_vram_2_w) AM_SHARE("vram_2")	/* Background */ \
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(paradise_vram_1_w) AM_SHARE("vram_1")	/* Midground */ \
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(paradise_vram_0_w) AM_SHARE("vram_0")	/* Foreground */ \
 
 
 static ADDRESS_MAP_START( paradise_map, AS_PROGRAM, 8, paradise_state )
 	STANDARD_MAP
 	AM_RANGE(0xd800, 0xd8ff) AM_RAM	// RAM
-	AM_RANGE(0xd900, 0xe0ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)	// Sprites
+	AM_RANGE(0xd900, 0xe0ff) AM_RAM AM_SHARE("spriteram")	// Sprites
 	AM_RANGE(0xe100, 0xffff) AM_RAM	// RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( tgtball_map, AS_PROGRAM, 8, paradise_state )
 	STANDARD_MAP
 	AM_RANGE(0xd800, 0xd8ff) AM_RAM	// RAM
-	AM_RANGE(0xd900, 0xd9ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)	// Sprites
+	AM_RANGE(0xd900, 0xd9ff) AM_RAM AM_SHARE("spriteram")	// Sprites
 	AM_RANGE(0xda00, 0xffff) AM_RAM	// RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( torus_map, AS_PROGRAM, 8, paradise_state )
 	STANDARD_MAP
-	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)	// Sprites
+	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("spriteram")	// Sprites
 	AM_RANGE(0xe000, 0xffff) AM_RAM	// RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( paradise_io_map, AS_IO, 8, paradise_state )
-	AM_RANGE(0x0000, 0x17ff) AM_RAM_WRITE(paradise_palette_w) AM_BASE(m_paletteram)	// Palette
+	AM_RANGE(0x0000, 0x17ff) AM_RAM_WRITE(paradise_palette_w) AM_SHARE("paletteram")	// Palette
 	AM_RANGE(0x1800, 0x1800) AM_WRITE(paradise_priority_w)	// Layers priority
 	AM_RANGE(0x2001, 0x2001) AM_WRITE(paradise_flipscreen_w)	// Flip Screen
 	AM_RANGE(0x2004, 0x2004) AM_WRITE(paradise_palbank_w)	// Layers palette bank
@@ -113,11 +161,11 @@ static ADDRESS_MAP_START( paradise_io_map, AS_IO, 8, paradise_state )
 	AM_RANGE(0x2023, 0x2023) AM_READ_PORT("P2")
 	AM_RANGE(0x2024, 0x2024) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x2030, 0x2030) AM_DEVREADWRITE("oki2", okim6295_device, read, write)	// OKI 1
-	AM_RANGE(0x8000, 0xffff) AM_RAM_WRITE(paradise_pixmap_w) AM_BASE(m_videoram)	// Pixmap
+	AM_RANGE(0x8000, 0xffff) AM_RAM_WRITE(paradise_pixmap_w) AM_SHARE("videoram")	// Pixmap
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( torus_io_map, AS_IO, 8, paradise_state )
-	AM_RANGE(0x0000, 0x17ff) AM_RAM_WRITE(paradise_palette_w) AM_BASE(m_paletteram)	// Palette
+	AM_RANGE(0x0000, 0x17ff) AM_RAM_WRITE(paradise_palette_w) AM_SHARE("paletteram")	// Palette
 	AM_RANGE(0x1800, 0x1800) AM_WRITE(paradise_priority_w)	// Layers priority
 	AM_RANGE(0x2001, 0x2001) AM_WRITE(paradise_flipscreen_w)	// Flip Screen
 	AM_RANGE(0x2004, 0x2004) AM_WRITE(paradise_palbank_w)	// Layers palette bank
@@ -128,7 +176,7 @@ static ADDRESS_MAP_START( torus_io_map, AS_IO, 8, paradise_state )
 	AM_RANGE(0x2022, 0x2022) AM_READ_PORT("P1")
 	AM_RANGE(0x2023, 0x2023) AM_READ_PORT("P2")
 	AM_RANGE(0x2024, 0x2024) AM_READ_PORT("SYSTEM")
-	AM_RANGE(0x8000, 0xffff) AM_RAM_WRITE(paradise_pixmap_w) AM_BASE(m_videoram)	// Pixmap
+	AM_RANGE(0x8000, 0xffff) AM_RAM_WRITE(paradise_pixmap_w) AM_SHARE("videoram")	// Pixmap
 ADDRESS_MAP_END
 
 
@@ -311,21 +359,20 @@ static INPUT_PORTS_START( penky )
 	PORT_DIPSETTING(    0x01, "0:50" )
 	PORT_DIPSETTING(    0x02, "1:00" )
 	PORT_DIPSETTING(    0x03, "1:10" )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )		PORT_DIPLOCATION("SW1:3") /* One of these sets/pairs should be diffculty or timer speed */
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )		PORT_DIPLOCATION("SW1:4")
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0c, 0x08, DEF_STR( Difficulty ) )	PORT_DIPLOCATION("SW1:3,4")
+	PORT_DIPSETTING(    0x0c, DEF_STR( Easy ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Normal ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Hard ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Very_Hard ) )
 	PORT_DIPNAME( 0x30, 0x30, "Fill % to Win" )		PORT_DIPLOCATION("SW1:5,6")
 	PORT_DIPSETTING(    0x30, "Majority at Time or 99.9%" )
 	PORT_DIPSETTING(    0x20, "Majority at Time or 90%" )
 	PORT_DIPSETTING(    0x10, "Majority at Time or 85%" )
 	PORT_DIPSETTING(    0x00, "Majority at Time or 80%" )
-	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )		PORT_DIPLOCATION("SW1:7")
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )		PORT_DIPLOCATION("SW1:7") /* One of these likely disables the nude pics */
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )		PORT_DIPLOCATION("SW1:8")
+	PORT_DIPNAME( 0x80, 0x80, DEF_STR( Unknown ) )		PORT_DIPLOCATION("SW1:8") /* One of these likely disables the nude pics */
 	PORT_DIPSETTING(    0x80, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
@@ -335,12 +382,8 @@ static INPUT_PORTS_START( penky )
 	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(    0x03, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )		PORT_DIPLOCATION("SW2:3")
-	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )		PORT_DIPLOCATION("SW2:4")
-	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPUNUSED_DIPLOC( 0x04, 0x04, "SW2:3" )		/* Listed as "Unused" */
+	PORT_DIPUNUSED_DIPLOC( 0x08, 0x08, "SW2:4" )		/* Listed as "Unused" */
 	PORT_DIPNAME( 0x10, 0x10, "Vs. Matches" )		PORT_DIPLOCATION("SW2:5")
 	PORT_DIPSETTING(    0x00, "2" )
 	PORT_DIPSETTING(    0x10, "3" )
@@ -629,11 +672,11 @@ GFXDECODE_END
 static MACHINE_START( paradise )
 {
 	paradise_state *state = machine.driver_data<paradise_state>();
-	int bank_n = machine.region("maincpu")->bytes() / 0x4000 - 1;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	int bank_n = machine.root_device().memregion("maincpu")->bytes() / 0x4000 - 1;
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 3, &ROM[0x00000], 0x4000);
-	memory_configure_bank(machine, "bank1", 3, bank_n - 3, &ROM[0x10000], 0x4000);
+	state->membank("bank1")->configure_entries(0, 3, &ROM[0x00000], 0x4000);
+	state->membank("bank1")->configure_entries(3, bank_n - 3, &ROM[0x10000], 0x4000);
 
 	state->save_item(NAME(state->m_palbank));
 	state->save_item(NAME(state->m_priority));

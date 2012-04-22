@@ -64,24 +64,23 @@ WRITE8_MEMBER(starshp1_state::starshp1_collision_reset_w)
 }
 
 
-static CUSTOM_INPUT( starshp1_analog_r )
+CUSTOM_INPUT_MEMBER(starshp1_state::starshp1_analog_r)
 {
-	starshp1_state *state = field.machine().driver_data<starshp1_state>();
 	int val = 0;
 
-	switch (state->m_analog_in_select)
+	switch (m_analog_in_select)
 	{
 	case 0:
-		val = input_port_read(field.machine(), "STICKY");
+		val = input_port_read(machine(), "STICKY");
 		break;
 	case 1:
-		val = input_port_read(field.machine(), "STICKX");
+		val = input_port_read(machine(), "STICKX");
 		break;
 	case 2:
 		val = 0x20; /* DAC feedback, not used */
 		break;
 	case 3:
-		val = input_port_read(field.machine(), "PLAYTIME");
+		val = input_port_read(machine(), "PLAYTIME");
 		break;
 	}
 
@@ -89,10 +88,9 @@ static CUSTOM_INPUT( starshp1_analog_r )
 }
 
 
-static CUSTOM_INPUT( collision_latch_r )
+CUSTOM_INPUT_MEMBER(starshp1_state::collision_latch_r)
 {
-	starshp1_state *state = field.machine().driver_data<starshp1_state>();
-	return state->m_collision_latch & 0x0f;
+	return m_collision_latch & 0x0f;
 }
 
 
@@ -174,10 +172,10 @@ static ADDRESS_MAP_START( starshp1_map, AS_PROGRAM, 8, starshp1_state )
 	AM_RANGE(0xc300, 0xc3ff) AM_WRITE(starshp1_sspic_w) /* spaceship picture */
 	AM_RANGE(0xc400, 0xc400) AM_READ_PORT("COINAGE")
 	AM_RANGE(0xc400, 0xc4ff) AM_WRITE(starshp1_ssadd_w) /* spaceship address */
-	AM_RANGE(0xc800, 0xc9ff) AM_RAM_WRITE(starshp1_playfield_w) AM_BASE(m_playfield_ram)
-	AM_RANGE(0xcc00, 0xcc0f) AM_WRITEONLY AM_BASE(m_hpos_ram)
-	AM_RANGE(0xd000, 0xd00f) AM_WRITEONLY AM_BASE(m_vpos_ram)
-	AM_RANGE(0xd400, 0xd40f) AM_WRITEONLY AM_BASE(m_obj_ram)
+	AM_RANGE(0xc800, 0xc9ff) AM_RAM_WRITE(starshp1_playfield_w) AM_SHARE("playfield_ram")
+	AM_RANGE(0xcc00, 0xcc0f) AM_WRITEONLY AM_SHARE("hpos_ram")
+	AM_RANGE(0xd000, 0xd00f) AM_WRITEONLY AM_SHARE("vpos_ram")
+	AM_RANGE(0xd400, 0xd40f) AM_WRITEONLY AM_SHARE("obj_ram")
 	AM_RANGE(0xd800, 0xd800) AM_READ(starshp1_rng_r)
 	AM_RANGE(0xd800, 0xd80f) AM_WRITE(starshp1_collision_reset_w)
 	AM_RANGE(0xdc00, 0xdc0f) AM_WRITE(starshp1_misc_w)
@@ -202,12 +200,12 @@ static INPUT_PORTS_START( starshp1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_COIN1 )
 
 	PORT_START("VBLANK")
-	PORT_BIT( 0x3f, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(starshp1_analog_r, NULL)	/* analog in */
+	PORT_BIT( 0x3f, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, starshp1_state,starshp1_analog_r, NULL)	/* analog in */
 	PORT_SERVICE( 0x40, IP_ACTIVE_LOW )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_VBLANK )
 
 	PORT_START("COINAGE")
-	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(collision_latch_r, NULL)	/* collision latch */
+	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, starshp1_state,collision_latch_r, NULL)	/* collision latch */
 	PORT_DIPNAME( 0x70, 0x20, DEF_STR( Coinage ) )
 	PORT_DIPSETTING(	0x10, DEF_STR( 2C_1C ) )
 	PORT_DIPSETTING(	0x20, DEF_STR( 1C_1C ) )

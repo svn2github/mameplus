@@ -21,9 +21,10 @@ class wink_state : public driver_device
 {
 public:
 	wink_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"){ }
 
-	UINT8 *m_videoram;
+	required_shared_ptr<UINT8> m_videoram;
 	tilemap_t *m_bg_tilemap;
 	UINT8 m_sound_flag;
 	UINT8 m_tile_bank;
@@ -113,7 +114,7 @@ static ADDRESS_MAP_START( wink_map, AS_PROGRAM, 8, wink_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x9000, 0x97ff) AM_RAM	AM_SHARE("nvram")
-	AM_RANGE(0xa000, 0xa3ff) AM_RAM_WRITE(bgram_w) AM_BASE(m_videoram)
+	AM_RANGE(0xa000, 0xa3ff) AM_RAM_WRITE(bgram_w) AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 
@@ -144,14 +145,14 @@ WRITE8_MEMBER(wink_state::prot_w)
 
 static ADDRESS_MAP_START( wink_io, AS_IO, 8, wink_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x1f) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_le_w) AM_SHARE("paletteram") //0x10-0x1f is likely to be something else
+	AM_RANGE(0x00, 0x1f) AM_RAM_WRITE(paletteram_xxxxBBBBRRRRGGGG_byte_le_w) AM_SHARE("paletteram") //0x10-0x1f is likely to be something else
 //  AM_RANGE(0x20, 0x20) AM_WRITENOP                //??? seems unused..
 	AM_RANGE(0x21, 0x21) AM_WRITE(player_mux_w)		//??? no mux on the pcb.
 	AM_RANGE(0x22, 0x22) AM_WRITE(tile_banking_w)
 //  AM_RANGE(0x23, 0x23) AM_WRITENOP                //?
 //  AM_RANGE(0x24, 0x24) AM_WRITENOP                //cab Knocker like in q-bert!
 	AM_RANGE(0x25, 0x27) AM_WRITE(wink_coin_counter_w)
-	AM_RANGE(0x40, 0x40) AM_WRITE(soundlatch_w)
+	AM_RANGE(0x40, 0x40) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0x60, 0x60) AM_WRITE(sound_irq_w)
 	AM_RANGE(0x80, 0x80) AM_READ(analog_port_r)
 	AM_RANGE(0xa0, 0xa0) AM_READ(player_inputs_r)
@@ -168,7 +169,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( wink_sound_map, AS_PROGRAM, 8, wink_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x4000, 0x43ff) AM_RAM
-	AM_RANGE(0x8000, 0x8000) AM_READ(soundlatch_r)
+	AM_RANGE(0x8000, 0x8000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( wink_sound_io, AS_IO, 8, wink_state )
@@ -410,7 +411,7 @@ ROM_END
 static DRIVER_INIT( wink )
 {
 	UINT32 i;
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	UINT8 *buffer = auto_alloc_array(machine, UINT8, 0x8000);
 
 	// protection module reverse engineered by HIGHWAYMAN

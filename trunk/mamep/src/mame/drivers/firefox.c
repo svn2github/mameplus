@@ -40,15 +40,20 @@ class firefox_state : public driver_device
 public:
 	firefox_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		  m_laserdisc(*this, "laserdisc") { }
+		  m_laserdisc(*this, "laserdisc") ,
+		m_tileram(*this, "tileram"),
+		m_spriteram(*this, "spriteram"),
+		m_sprite_palette(*this, "sprite_palette"),
+		m_tile_palette(*this, "tile_palette"){ }
 
 	required_device<phillips_22vp931_device> m_laserdisc;
+	required_shared_ptr<unsigned char> m_tileram;
+	required_shared_ptr<UINT8> m_spriteram;
+	required_shared_ptr<unsigned char> m_sprite_palette;
+	required_shared_ptr<unsigned char> m_tile_palette;
 	int m_n_disc_lock;
 	int m_n_disc_data;
 	int m_n_disc_read_data;
-	unsigned char *m_tileram;
-	unsigned char *m_tile_palette;
-	unsigned char *m_sprite_palette;
 	x2212_device *m_nvram_1c;
 	x2212_device *m_nvram_1d;
 	tilemap_t *m_bgtiles;
@@ -56,7 +61,6 @@ public:
 	UINT8 m_sound_to_main_flag;
 	UINT8 m_main_to_sound_flag;
 	int m_sprite_bank;
-	UINT8 *m_spriteram;
 	DECLARE_READ8_MEMBER(firefox_disc_status_r);
 	DECLARE_READ8_MEMBER(firefox_disc_data_r);
 	DECLARE_WRITE8_MEMBER(firefox_disc_read_w);
@@ -86,6 +90,8 @@ public:
 	DECLARE_WRITE8_MEMBER(self_reset_w);
 	DECLARE_WRITE8_MEMBER(led_w);
 	DECLARE_WRITE8_MEMBER(firefox_coin_counter_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(mainflag_r);
+	DECLARE_CUSTOM_INPUT_MEMBER(soundflag_r);
 };
 
 
@@ -282,28 +288,26 @@ WRITE8_MEMBER(firefox_state::firefox_objram_bank_w)
  *
  *************************************/
 
-static CUSTOM_INPUT( mainflag_r )
+CUSTOM_INPUT_MEMBER(firefox_state::mainflag_r)
 {
-	firefox_state *state = field.machine().driver_data<firefox_state>();
-	return state->m_main_to_sound_flag;
+	return m_main_to_sound_flag;
 }
 
-static CUSTOM_INPUT( soundflag_r )
+CUSTOM_INPUT_MEMBER(firefox_state::soundflag_r)
 {
-	firefox_state *state = field.machine().driver_data<firefox_state>();
-	return state->m_sound_to_main_flag;
+	return m_sound_to_main_flag;
 }
 
 READ8_MEMBER(firefox_state::sound_to_main_r)
 {
 	m_sound_to_main_flag = 0;
-	return soundlatch2_r(space, 0);
+	return soundlatch2_byte_r(space, 0);
 }
 
 WRITE8_MEMBER(firefox_state::main_to_sound_w)
 {
 	m_main_to_sound_flag = 1;
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -317,13 +321,13 @@ WRITE8_MEMBER(firefox_state::sound_reset_w)
 READ8_MEMBER(firefox_state::main_to_sound_r)
 {
 	m_main_to_sound_flag = 0;
-	return soundlatch_r(space, 0);
+	return soundlatch_byte_r(space, 0);
 }
 
 WRITE8_MEMBER(firefox_state::sound_to_main_w)
 {
 	m_sound_to_main_flag = 1;
-	soundlatch2_w(space, 0, data);
+	soundlatch2_byte_w(space, 0, data);
 }
 
 
@@ -429,7 +433,7 @@ WRITE8_MEMBER(firefox_state::novram_store_w)
 
 WRITE8_MEMBER(firefox_state::rom_bank_w)
 {
-	memory_set_bank(machine(), "bank1", data & 0x1f);
+	membank("bank1")->set_entry(data & 0x1f);
 }
 
 WRITE8_MEMBER(firefox_state::main_irq_clear_w)
@@ -477,7 +481,7 @@ static void firq_gen(running_machine &machine, phillips_22vp931_device &laserdis
 static MACHINE_START( firefox )
 {
 	firefox_state *state = machine.driver_data<firefox_state>();
-	memory_configure_bank(machine, "bank1", 0, 32, machine.region("maincpu")->base() + 0x10000, 0x1000);
+	state->membank("bank1")->configure_entries(0, 32, state->memregion("maincpu")->base() + 0x10000, 0x1000);
 	state->m_nvram_1c = machine.device<x2212_device>("nvram_1c");
 	state->m_nvram_1d = machine.device<x2212_device>("nvram_1d");
 
@@ -496,11 +500,11 @@ static MACHINE_START( firefox )
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, firefox_state )
 	AM_RANGE(0x0000, 0x0fff) AM_RAM
-	AM_RANGE(0x1000, 0x1fff) AM_RAM_WRITE(tileram_w) AM_BASE(m_tileram)
-	AM_RANGE(0x2000, 0x27ff) AM_RAM AM_BASE(m_spriteram)
-	AM_RANGE(0x2800, 0x2aff) AM_RAM_WRITE(sprite_palette_w) AM_BASE(m_sprite_palette)
+	AM_RANGE(0x1000, 0x1fff) AM_RAM_WRITE(tileram_w) AM_SHARE("tileram")
+	AM_RANGE(0x2000, 0x27ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x2800, 0x2aff) AM_RAM_WRITE(sprite_palette_w) AM_SHARE("sprite_palette")
 	AM_RANGE(0x2b00, 0x2b00) AM_MIRROR(0x04ff) AM_WRITE(firefox_objram_bank_w)
-	AM_RANGE(0x2c00, 0x2eff) AM_RAM_WRITE(tile_palette_w) AM_BASE(m_tile_palette)
+	AM_RANGE(0x2c00, 0x2eff) AM_RAM_WRITE(tile_palette_w) AM_SHARE("tile_palette")
 	AM_RANGE(0x3000, 0x3fff) AM_ROMBANK("bank1")
 	AM_RANGE(0x4000, 0x40ff) AM_READWRITE(nvram_r, nvram_w)						/* NOVRAM */
 	AM_RANGE(0x4100, 0x4100) AM_MIRROR(0x00f8) AM_READ_PORT("rdin0")			/* RDIN0 */
@@ -573,8 +577,8 @@ static INPUT_PORTS_START( firefox )
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_UNUSED )
 
 	PORT_START("rdin1")
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(mainflag_r, NULL)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(soundflag_r, NULL)
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, firefox_state,mainflag_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, firefox_state,soundflag_r, NULL)
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_VBLANK )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_UNUSED )

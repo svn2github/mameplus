@@ -93,7 +93,7 @@ WRITE8_MEMBER(bottom9_state::bottom9_bankedram2_w)
 	if (m_k052109_selected)
 		k052109_051960_w(space, offset + 0x2000, data);
 	else
-		paletteram_xBBBBBGGGGGRRRRR_be_w(space, offset, data);
+		paletteram_xBBBBBGGGGGRRRRR_byte_be_w(space, offset, data);
 }
 
 WRITE8_MEMBER(bottom9_state::bankswitch_w)
@@ -110,7 +110,7 @@ WRITE8_MEMBER(bottom9_state::bankswitch_w)
 	else
 		bank = ((data & 0x0e) >> 1);
 
-	memory_set_bank(machine(), "bank1", bank);
+	membank("bank1")->set_entry(bank);
 }
 
 WRITE8_MEMBER(bottom9_state::bottom9_1f90_w)
@@ -169,7 +169,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, bottom9_state )
 	AM_RANGE(0x1f80, 0x1f80) AM_WRITE(bankswitch_w)
 	AM_RANGE(0x1f90, 0x1f90) AM_WRITE(bottom9_1f90_w)
 	AM_RANGE(0x1fa0, 0x1fa0) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0x1fb0, 0x1fb0) AM_WRITE(soundlatch_w)
+	AM_RANGE(0x1fb0, 0x1fb0) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0x1fc0, 0x1fc0) AM_WRITE(bottom9_sh_irqtrigger_w)
 	AM_RANGE(0x1fd0, 0x1fd0) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0x1fd1, 0x1fd1) AM_READ_PORT("P1")
@@ -190,7 +190,7 @@ static ADDRESS_MAP_START( audio_map, AS_PROGRAM, 8, bottom9_state )
 	AM_RANGE(0x9000, 0x9000) AM_WRITE(sound_bank_w)
 	AM_RANGE(0xa000, 0xa00d) AM_DEVREADWRITE_LEGACY("k007232_1", k007232_r, k007232_w)
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232_2", k007232_r, k007232_w)
-	AM_RANGE(0xd000, 0xd000) AM_READ(soundlatch_r)
+	AM_RANGE(0xd000, 0xd000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(nmi_enable_w)
 ADDRESS_MAP_END
 
@@ -322,9 +322,9 @@ static const k051316_interface bottom9_k051316_intf =
 static MACHINE_START( bottom9 )
 {
 	bottom9_state *state = machine.driver_data<bottom9_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = state->memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 12, &ROM[0x10000], 0x2000);
+	state->membank("bank1")->configure_entries(0, 12, &ROM[0x10000], 0x2000);
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_audiocpu = machine.device("audiocpu");

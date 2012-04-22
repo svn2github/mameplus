@@ -142,7 +142,7 @@ static void sound_w(running_machine &machine, UINT8 data)
 	segas1x_state *state = machine.driver_data<segas1x_state>();
 	address_space *space = state->m_maincpu->memory().space(AS_PROGRAM);
 
-	state->soundlatch_w(*space, 0, data & 0xff);
+	state->soundlatch_byte_w(*space, 0, data & 0xff);
 	device_set_input_line(state->m_soundcpu, INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -429,7 +429,7 @@ static WRITE16_HANDLER( rom_5987_bank_w )
 	/* sprite banking */
 	else
 	{
-		int maxbanks = space->machine().region("gfx2")->bytes() / 0x40000;
+		int maxbanks = space->machine().root_device().memregion("gfx2")->bytes() / 0x40000;
 		if (data >= maxbanks)
 			data = 255;
 		segaic16_sprites_set_bank(space->machine(), 0, (offset - 8) * 2 + 0, data * 2 + 0);
@@ -587,7 +587,7 @@ static WRITE16_HANDLER( wwally_custom_io_w )
 
 static WRITE8_HANDLER( soundbank_w )
 {
-	memory_set_bankptr(space->machine(), "bank1", space->machine().region("soundcpu")->base() + 0x10000 + 0x2000 * data);
+	space->machine().root_device().membank("bank1")->set_base(space->machine().root_device().memregion("soundcpu")->base() + 0x10000 + 0x2000 * data);
 }
 
 
@@ -634,7 +634,7 @@ static ADDRESS_MAP_START( sound_portmap, AS_IO, 8, segas1x_state )
 	AM_RANGE(0x80, 0x83) AM_MIRROR(0x0c) AM_DEVREADWRITE_LEGACY("ym1", ym3438_r, ym3438_w)
 	AM_RANGE(0x90, 0x93) AM_MIRROR(0x0c) AM_DEVREADWRITE_LEGACY("ym2", ym3438_r, ym3438_w)
 	AM_RANGE(0xa0, 0xa0) AM_MIRROR(0x1f) AM_WRITE_LEGACY(soundbank_w)
-	AM_RANGE(0xc0, 0xc0) AM_MIRROR(0x1f) AM_READ(soundlatch_r) AM_WRITE_LEGACY(mcu_data_w)
+	AM_RANGE(0xc0, 0xc0) AM_MIRROR(0x1f) AM_READ(soundlatch_byte_r) AM_WRITE_LEGACY(mcu_data_w)
 ADDRESS_MAP_END
 
 

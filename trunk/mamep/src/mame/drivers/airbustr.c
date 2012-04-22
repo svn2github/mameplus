@@ -266,15 +266,15 @@ WRITE8_MEMBER(airbustr_state::master_nmi_trigger_w)
 
 WRITE8_MEMBER(airbustr_state::master_bankswitch_w)
 {
-	memory_set_bank(machine(), "bank1", data & 0x07);
+	membank("bank1")->set_entry(data & 0x07);
 }
 
 WRITE8_MEMBER(airbustr_state::slave_bankswitch_w)
 {
 
-	memory_set_bank(machine(), "bank2", data & 0x07);
+	membank("bank2")->set_entry(data & 0x07);
 
-	flip_screen_set(machine(), data & 0x10);
+	flip_screen_set(data & 0x10);
 
 	// used at the end of levels, after defeating the boss, to leave trails
 	pandora_set_clear_bitmap(m_pandora, data & 0x20);
@@ -282,7 +282,7 @@ WRITE8_MEMBER(airbustr_state::slave_bankswitch_w)
 
 WRITE8_MEMBER(airbustr_state::sound_bankswitch_w)
 {
-	memory_set_bank(machine(), "bank3", data & 0x07);
+	membank("bank3")->set_entry(data & 0x07);
 }
 
 READ8_MEMBER(airbustr_state::soundcommand_status_r)
@@ -295,25 +295,25 @@ READ8_MEMBER(airbustr_state::soundcommand_status_r)
 READ8_MEMBER(airbustr_state::soundcommand_r)
 {
 	m_soundlatch_status = 0;	// soundlatch has been read
-	return soundlatch_r(space, 0);
+	return soundlatch_byte_r(space, 0);
 }
 
 READ8_MEMBER(airbustr_state::soundcommand2_r)
 {
 	m_soundlatch2_status = 0;	// soundlatch2 has been read
-	return soundlatch2_r(space, 0);
+	return soundlatch2_byte_r(space, 0);
 }
 
 WRITE8_MEMBER(airbustr_state::soundcommand_w)
 {
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	m_soundlatch_status = 1;	// soundlatch has been written
 	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);	// cause a nmi to sub cpu
 }
 
 WRITE8_MEMBER(airbustr_state::soundcommand2_w)
 {
-	soundlatch2_w(space, 0, data);
+	soundlatch2_byte_w(space, 0, data);
 	m_soundlatch2_status = 1;	// soundlatch2 has been written
 }
 
@@ -345,7 +345,7 @@ static ADDRESS_MAP_START( master_map, AS_PROGRAM, 8, airbustr_state )
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank1")
 	AM_RANGE(0xc000, 0xcfff) AM_DEVREADWRITE_LEGACY("pandora", pandora_spriteram_r, pandora_spriteram_w)
 	AM_RANGE(0xd000, 0xdfff) AM_RAM
-	AM_RANGE(0xe000, 0xefff) AM_RAM AM_BASE(m_devram) // shared with protection device
+	AM_RANGE(0xe000, 0xefff) AM_RAM AM_SHARE("devram") // shared with protection device
 	AM_RANGE(0xf000, 0xffff) AM_RAM AM_SHARE("share1")
 ADDRESS_MAP_END
 
@@ -359,11 +359,11 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( slave_map, AS_PROGRAM, 8, airbustr_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank2")
-	AM_RANGE(0xc000, 0xc3ff) AM_RAM_WRITE(airbustr_videoram2_w) AM_BASE(m_videoram2)
-	AM_RANGE(0xc400, 0xc7ff) AM_RAM_WRITE(airbustr_colorram2_w) AM_BASE(m_colorram2)
-	AM_RANGE(0xc800, 0xcbff) AM_RAM_WRITE(airbustr_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xcc00, 0xcfff) AM_RAM_WRITE(airbustr_colorram_w) AM_BASE(m_colorram)
-	AM_RANGE(0xd000, 0xd5ff) AM_RAM_WRITE(airbustr_paletteram_w) AM_BASE(m_paletteram)
+	AM_RANGE(0xc000, 0xc3ff) AM_RAM_WRITE(airbustr_videoram2_w) AM_SHARE("videoram2")
+	AM_RANGE(0xc400, 0xc7ff) AM_RAM_WRITE(airbustr_colorram2_w) AM_SHARE("colorram2")
+	AM_RANGE(0xc800, 0xcbff) AM_RAM_WRITE(airbustr_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xcc00, 0xcfff) AM_RAM_WRITE(airbustr_colorram_w) AM_SHARE("colorram")
+	AM_RANGE(0xd000, 0xd5ff) AM_RAM_WRITE(airbustr_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0xd600, 0xdfff) AM_RAM
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 	AM_RANGE(0xf000, 0xffff) AM_RAM AM_SHARE("share1")
@@ -571,16 +571,16 @@ static INTERRUPT_GEN( slave_interrupt )
 static MACHINE_START( airbustr )
 {
 	airbustr_state *state = machine.driver_data<airbustr_state>();
-	UINT8 *MASTER = machine.region("master")->base();
-	UINT8 *SLAVE = machine.region("slave")->base();
-	UINT8 *AUDIO = machine.region("audiocpu")->base();
+	UINT8 *MASTER = machine.root_device().memregion("master")->base();
+	UINT8 *SLAVE = machine.root_device().memregion("slave")->base();
+	UINT8 *AUDIO = state->memregion("audiocpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 3, &MASTER[0x00000], 0x4000);
-	memory_configure_bank(machine, "bank1", 3, 5, &MASTER[0x10000], 0x4000);
-	memory_configure_bank(machine, "bank2", 0, 3, &SLAVE[0x00000], 0x4000);
-	memory_configure_bank(machine, "bank2", 3, 5, &SLAVE[0x10000], 0x4000);
-	memory_configure_bank(machine, "bank3", 0, 3, &AUDIO[0x00000], 0x4000);
-	memory_configure_bank(machine, "bank3", 3, 5, &AUDIO[0x10000], 0x4000);
+	state->membank("bank1")->configure_entries(0, 3, &MASTER[0x00000], 0x4000);
+	state->membank("bank1")->configure_entries(3, 5, &MASTER[0x10000], 0x4000);
+	state->membank("bank2")->configure_entries(0, 3, &SLAVE[0x00000], 0x4000);
+	state->membank("bank2")->configure_entries(3, 5, &SLAVE[0x10000], 0x4000);
+	state->membank("bank3")->configure_entries(0, 3, &AUDIO[0x00000], 0x4000);
+	state->membank("bank3")->configure_entries(3, 5, &AUDIO[0x10000], 0x4000);
 
 	state->m_master = machine.device("master");
 	state->m_slave = machine.device("slave");
@@ -607,9 +607,9 @@ static MACHINE_RESET( airbustr )
 	state->m_fg_scrolly = 0;
 	state->m_highbits = 0;
 
-	memory_set_bank(machine, "bank1", 0x02);
-	memory_set_bank(machine, "bank2", 0x02);
-	memory_set_bank(machine, "bank3", 0x02);
+	state->membank("bank1")->set_entry(0x02);
+	state->membank("bank2")->set_entry(0x02);
+	state->membank("bank3")->set_entry(0x02);
 }
 
 /* Machine Driver */

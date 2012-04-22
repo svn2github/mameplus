@@ -170,6 +170,7 @@ public:
 	DECLARE_WRITE8_MEMBER(c001_w);
 	DECLARE_READ8_MEMBER(atamanot_prot_r);
 	DECLARE_WRITE8_MEMBER(atamanot_prot_w);
+	DECLARE_CUSTOM_INPUT_MEMBER(controls_r);
 };
 
 //fake palette
@@ -192,7 +193,7 @@ static MC6845_UPDATE_ROW( ssingles_update_row )
 	UINT32 tile_address;
 	UINT16 cell,palette;
 	UINT8 b0,b1;
-	const UINT8 *gfx = device->machine().region("gfx1")->base();
+	const UINT8 *gfx = state->memregion("gfx1")->base();
 
 	for(cx=0;cx<x_count;++cx)
 	{
@@ -230,7 +231,7 @@ static MC6845_UPDATE_ROW( atamanot_update_row )
 	UINT32 tile_address;
 	UINT16 cell,palette;
 	UINT8 b0,b1;
-	const UINT8 *gfx = device->machine().region("gfx1")->base();
+	const UINT8 *gfx = state->memregion("gfx1")->base();
 
 	for(cx=0;cx<x_count;++cx)
 	{
@@ -292,14 +293,14 @@ static const mc6845_interface atamanot_mc6845_intf =
 
 WRITE8_MEMBER(ssingles_state::ssingles_videoram_w)
 {
-	UINT8 *vram = machine().region("vram")->base();
+	UINT8 *vram = memregion("vram")->base();
 	vram[offset] = data;
 	m_videoram[offset]=data;
 }
 
 WRITE8_MEMBER(ssingles_state::ssingles_colorram_w)
 {
-	UINT8 *cram = machine().region("cram")->base();
+	UINT8 *cram = memregion("cram")->base();
 	cram[offset] = data;
 	m_colorram[offset]=data;
 }
@@ -338,10 +339,10 @@ WRITE8_MEMBER(ssingles_state::c001_w)
 	m_prot_data^=data^0x11;
 }
 
-static CUSTOM_INPUT(controls_r)
+CUSTOM_INPUT_MEMBER(ssingles_state::controls_r)
 {
 	int data = 7;
-	switch(input_port_read(field.machine(), "EXTRA"))		//multiplexed
+	switch(input_port_read(machine(), "EXTRA"))		//multiplexed
 	{
 		case 0x01: data = 1; break;
 		case 0x02: data = 2; break;
@@ -441,7 +442,7 @@ static INPUT_PORTS_START( ssingles )
 	PORT_START("INPUTS")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_UNKNOWN ) //must be LOW
-	PORT_BIT( 0x1c, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(controls_r, NULL)
+	PORT_BIT( 0x1c, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, ssingles_state,controls_r, NULL)
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON4 )
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON2 )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON3 )

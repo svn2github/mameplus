@@ -959,10 +959,12 @@ class goldnpkr_state : public driver_device
 {
 public:
 	goldnpkr_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"),
+		m_colorram(*this, "colorram"){ }
 
-	UINT8 *m_videoram;
-	UINT8 *m_colorram;
+	required_shared_ptr<UINT8> m_videoram;
+	required_shared_ptr<UINT8> m_colorram;
 	tilemap_t *m_bg_tilemap;
 	UINT8 m_mux_data;
 	UINT8 m_pia0_PA_data;
@@ -1047,6 +1049,7 @@ static SCREEN_UPDATE_IND16( goldnpkr )
 
 static PALETTE_INIT( goldnpkr )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 /*  prom bits
     7654 3210
     ---- ---x   red component.
@@ -1090,6 +1093,7 @@ static PALETTE_INIT( goldnpkr )
 
 static PALETTE_INIT( witchcrd )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 /*
     This hardware has a feature called BLUE KILLER.
     Using the original intensity line, the PCB has a bridge
@@ -1137,6 +1141,7 @@ static PALETTE_INIT( witchcrd )
 
 static PALETTE_INIT( wcrdxtnd )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 /*
     Using the original intensity line, the PCB has a bridge
     that allow (as default) turn the background dark blue.
@@ -1345,8 +1350,8 @@ static ADDRESS_MAP_START( goldnpkr_map, AS_PROGRAM, 8, goldnpkr_state )
 	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_device, read, write)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0x2000, 0x7fff) AM_ROM /* superdbl uses 0x2000..0x3fff address space */
 ADDRESS_MAP_END
 
@@ -1357,8 +1362,8 @@ static ADDRESS_MAP_START( pottnpkr_map, AS_PROGRAM, 8, goldnpkr_state )
 	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_device, read, write)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0x2000, 0x3fff) AM_ROM
 ADDRESS_MAP_END
 
@@ -1369,8 +1374,8 @@ static ADDRESS_MAP_START( witchcrd_map, AS_PROGRAM, 8, goldnpkr_state )
 	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_device, read, write)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("SW2")
 //  AM_RANGE(0x2108, 0x210b) AM_NOP /* unknown 40-pin device */
 	AM_RANGE(0x2800, 0x2fff) AM_RAM
@@ -1394,8 +1399,8 @@ static ADDRESS_MAP_START( witchcrd_falcon_map, AS_PROGRAM, 8, goldnpkr_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("nvram")	/* battery backed RAM */
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_device, read, write)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("SW2")
 	AM_RANGE(0x2100, 0x2100) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0x2101, 0x2101) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
@@ -1409,8 +1414,8 @@ static ADDRESS_MAP_START( wildcard_map, AS_PROGRAM, 8, goldnpkr_state )
 	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_device, read, write)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("SW2")
 	AM_RANGE(0x2200, 0x27ff) AM_ROM	/* for VK set */
 	AM_RANGE(0x2800, 0x2fff) AM_RAM	/* for VK set */
@@ -1430,8 +1435,8 @@ static ADDRESS_MAP_START( wcrdxtnd_map, AS_PROGRAM, 8, goldnpkr_state )
 	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_device, read, write)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("SW2")
 	AM_RANGE(0x2200, 0x27ff) AM_ROM	/* for VK hardware */
 	AM_RANGE(0x2800, 0x2fff) AM_RAM	AM_SHARE("nvram")	/* Dallas ds1210 + battery backed RAM */
@@ -1449,8 +1454,8 @@ static ADDRESS_MAP_START( wildcrdb_map, AS_PROGRAM, 8, goldnpkr_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("nvram")	/* battery backed RAM */
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_device, read, write)
-	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x1000, 0x13ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x1800, 0x1bff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("SW2")
 	AM_RANGE(0x2100, 0x2100) AM_DEVWRITE("crtc", mc6845_device, address_w)
 	AM_RANGE(0x2101, 0x2101) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
@@ -1484,8 +1489,8 @@ static ADDRESS_MAP_START( genie_map, AS_PROGRAM, 8, goldnpkr_state )
 	AM_RANGE(0x0801, 0x0801) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
 	AM_RANGE(0x0844, 0x0847) AM_DEVREADWRITE("pia0", pia6821_device, read, write)
 	AM_RANGE(0x0848, 0x084b) AM_DEVREADWRITE("pia1", pia6821_device, read, write)
-	AM_RANGE(0x1000, 0x17ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_BASE(m_colorram)
+	AM_RANGE(0x1000, 0x17ff) AM_RAM_WRITE(goldnpkr_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0x1800, 0x1fff) AM_RAM_WRITE(goldnpkr_colorram_w) AM_SHARE("colorram")
 	AM_RANGE(0x2000, 0x3fff) AM_ROM
 ADDRESS_MAP_END
 
@@ -9363,7 +9368,7 @@ static DRIVER_INIT( royale )
 {
     /* $60bb, NOPing the ORA #$F0 (after read the PIA1 port B */
 
-//  UINT8 *ROM = machine.region("maincpu")->base();
+//  UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 //  ROM[0x60bb] = 0xea;
 //  ROM[0x60bc] = 0xea;
@@ -9393,8 +9398,8 @@ static DRIVER_INIT( flcnw )
 
     /* Attempt to decrypt the MCU program (we're sooo close!) */
 
-	UINT8 *ROM = machine.region("mcu")->base();
-	int size = machine.region("mcu")->bytes();
+	UINT8 *ROM = machine.root_device().memregion("mcu")->base();
+	int size = machine.root_device().memregion("mcu")->bytes();
 	int start = 0x0000;
 	int i;
 
@@ -9412,7 +9417,7 @@ static DRIVER_INIT( vkdlsa )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xe097] = 0xea;
 	ROM[0xe098] = 0xea;
@@ -9424,7 +9429,7 @@ static DRIVER_INIT( vkdlsb )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xe87b] = 0xea;
 	ROM[0xe87c] = 0xea;
@@ -9436,7 +9441,7 @@ static DRIVER_INIT( vkdlsc )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0x453a] = 0xea;
 	ROM[0x453b] = 0xea;
@@ -9448,7 +9453,7 @@ static DRIVER_INIT( vkdlsww )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xf2c9] = 0xea;
 	ROM[0xf2ca] = 0xea;
@@ -9460,7 +9465,7 @@ static DRIVER_INIT( vkdlswwa )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xdf80] = 0xea;
 	ROM[0xdf81] = 0xea;
@@ -9472,7 +9477,7 @@ static DRIVER_INIT( vkdlswwc )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xe42f] = 0xea;
 	ROM[0xe430] = 0xea;
@@ -9484,7 +9489,7 @@ static DRIVER_INIT( vkdlswwd )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xe442] = 0xea;
 	ROM[0xe443] = 0xea;
@@ -9496,7 +9501,7 @@ static DRIVER_INIT( vkdlswwh )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xe4d5] = 0xea;
 	ROM[0xe4d6] = 0xea;
@@ -9508,7 +9513,7 @@ static DRIVER_INIT( vkdlswwl )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xe87c] = 0xea;
 	ROM[0xe87d] = 0xea;
@@ -9520,7 +9525,7 @@ static DRIVER_INIT( vkdlswwo )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xe7d5] = 0xea;
 	ROM[0xe7d6] = 0xea;
@@ -9532,7 +9537,7 @@ static DRIVER_INIT( vkdlswwp )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xe7d9] = 0xea;
 	ROM[0xe7da] = 0xea;
@@ -9544,7 +9549,7 @@ static DRIVER_INIT( vkdlswwr )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xe7f7] = 0xea;
 	ROM[0xe7f8] = 0xea;
@@ -9556,7 +9561,7 @@ static DRIVER_INIT( vkdlswws )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xe8a5] = 0xea;
 	ROM[0xe8a6] = 0xea;
@@ -9568,7 +9573,7 @@ static DRIVER_INIT( vkdlswwt )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xe955] = 0xea;
 	ROM[0xe956] = 0xea;
@@ -9580,7 +9585,7 @@ static DRIVER_INIT( vkdlswwu )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xee6b] = 0xea;
 	ROM[0xee6c] = 0xea;
@@ -9592,7 +9597,7 @@ static DRIVER_INIT( vkdlswwv )
        after compare with Dallas TK data
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xf052] = 0xea;
 	ROM[0xf053] = 0xea;
@@ -9724,7 +9729,7 @@ static DRIVER_INIT( wstrike )
        after compare with a string inside the Dallas TK RAM
     */
 
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
 	ROM[0xf2e1] = 0xea;
 	ROM[0xf2e2] = 0xea;

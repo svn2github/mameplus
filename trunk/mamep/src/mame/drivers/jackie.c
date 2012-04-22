@@ -53,21 +53,28 @@ class jackie_state : public driver_device
 public:
 	jackie_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this,"maincpu")
-		{ }
+		m_maincpu(*this,"maincpu"),
+		m_bg_scroll2(*this, "bg_scroll2"),
+		m_bg_scroll(*this, "bg_scroll"),
+		m_reel1_ram(*this, "reel1_ram"),
+		m_reel2_ram(*this, "reel2_ram"),
+		m_reel3_ram(*this, "reel3_ram"),
+		m_fg_tile_ram(*this, "fg_tile_ram"),
+		m_fg_color_ram(*this, "fg_color_ram"){ }
 
+	required_device<cpu_device> m_maincpu;
+	required_shared_ptr<UINT8> m_bg_scroll2;
+	required_shared_ptr<UINT8> m_bg_scroll;
+	required_shared_ptr<UINT8> m_reel1_ram;
+	required_shared_ptr<UINT8> m_reel2_ram;
+	required_shared_ptr<UINT8> m_reel3_ram;
+	required_shared_ptr<UINT8> m_fg_tile_ram;
+	required_shared_ptr<UINT8> m_fg_color_ram;
 	int m_exp_bank;
-	UINT8 *m_fg_tile_ram;
-	UINT8 *m_fg_color_ram;
 	tilemap_t *m_fg_tilemap;
-	UINT8 *m_bg_scroll;
-	UINT8 *m_bg_scroll2;
 	tilemap_t *m_reel1_tilemap;
-	UINT8 *m_reel1_ram;
 	tilemap_t *m_reel2_tilemap;
-	UINT8 *m_reel2_ram;
 	tilemap_t *m_reel3_tilemap;
-	UINT8 *m_reel3_ram;
 	int m_irq_enable;
 	int m_nmi_enable;
 	int m_bg_enable;
@@ -75,7 +82,6 @@ public:
 	UINT8 m_out[3];
 	UINT16 m_unk_reg[3][5];
 
-	required_device<cpu_device> m_maincpu;
 	DECLARE_WRITE8_MEMBER(fg_tile_w);
 	DECLARE_WRITE8_MEMBER(fg_color_w);
 	DECLARE_WRITE8_MEMBER(bg_scroll_w);
@@ -96,6 +102,7 @@ public:
 	void jackie_unk_reg_lo_w( int offset, UINT8 data, int reg );
 	void jackie_unk_reg_hi_w( int offset, UINT8 data, int reg );
 	void show_out();
+	DECLARE_CUSTOM_INPUT_MEMBER(hopper_r);
 };
 
 
@@ -339,7 +346,7 @@ WRITE8_MEMBER(jackie_state::igs_irqack_w)
 
 READ8_MEMBER(jackie_state::expram_r)
 {
-	UINT8 *rom = machine().region("gfx3")->base();
+	UINT8 *rom = memregion("gfx3")->base();
 
 	offset += m_exp_bank * 0x8000;
 //  logerror("PC %06X: %04x = %02x\n",cpu_get_pc(&space.device()),offset,rom[offset]);
@@ -359,9 +366,9 @@ static ADDRESS_MAP_START( jackie_io_map, AS_IO, 8, jackie_state )
 	AM_RANGE(0x0d60, 0x0d64) AM_WRITE(jackie_unk_reg2_hi_w)
 	AM_RANGE(0x05a0, 0x05a4) AM_WRITE(jackie_unk_reg3_lo_w)
 	AM_RANGE(0x0da0, 0x0da4) AM_WRITE(jackie_unk_reg3_hi_w)
-	AM_RANGE(0x1000, 0x1107) AM_RAM AM_BASE(m_bg_scroll2 )
-	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split1_w ) AM_SHARE("paletteram")
-	AM_RANGE(0x2800, 0x2fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_split2_w ) AM_SHARE("paletteram2")
+	AM_RANGE(0x1000, 0x1107) AM_RAM AM_SHARE("bg_scroll2")
+	AM_RANGE(0x2000, 0x27ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_lo_w ) AM_SHARE("paletteram")
+	AM_RANGE(0x2800, 0x2fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_byte_split_hi_w ) AM_SHARE("paletteram2")
 	AM_RANGE(0x4000, 0x4000) AM_READ_PORT("DSW1")			/* DSW1 */
 	AM_RANGE(0x4001, 0x4001) AM_READ_PORT("DSW2")			/* DSW2 */
 	AM_RANGE(0x4002, 0x4002) AM_READ_PORT("DSW3")			/* DSW3 */
@@ -375,20 +382,19 @@ static ADDRESS_MAP_START( jackie_io_map, AS_IO, 8, jackie_state )
 	AM_RANGE(0x50a0, 0x50a0) AM_READ_PORT("BUTTONS2")
 	AM_RANGE(0x50b0, 0x50b1) AM_DEVWRITE_LEGACY("ymsnd", ym2413_w)
 	AM_RANGE(0x50c0, 0x50c0) AM_READ(igs_irqack_r) AM_WRITE(igs_irqack_w)
-	AM_RANGE(0x6000, 0x60ff) AM_RAM_WRITE(bg_scroll_w ) AM_BASE(m_bg_scroll )
-	AM_RANGE(0x6800, 0x69ff) AM_RAM_WRITE(jackie_reel1_ram_w )  AM_BASE(m_reel1_ram )
-	AM_RANGE(0x6a00, 0x6bff) AM_RAM_WRITE(jackie_reel2_ram_w )  AM_BASE(m_reel2_ram )
-	AM_RANGE(0x6c00, 0x6dff) AM_RAM_WRITE(jackie_reel3_ram_w )  AM_BASE(m_reel3_ram )
-	AM_RANGE(0x7000, 0x77ff) AM_RAM_WRITE(fg_tile_w )  AM_BASE(m_fg_tile_ram )
-	AM_RANGE(0x7800, 0x7fff) AM_RAM_WRITE(fg_color_w ) AM_BASE(m_fg_color_ram )
+	AM_RANGE(0x6000, 0x60ff) AM_RAM_WRITE(bg_scroll_w ) AM_SHARE("bg_scroll")
+	AM_RANGE(0x6800, 0x69ff) AM_RAM_WRITE(jackie_reel1_ram_w )  AM_SHARE("reel1_ram")
+	AM_RANGE(0x6a00, 0x6bff) AM_RAM_WRITE(jackie_reel2_ram_w )  AM_SHARE("reel2_ram")
+	AM_RANGE(0x6c00, 0x6dff) AM_RAM_WRITE(jackie_reel3_ram_w )  AM_SHARE("reel3_ram")
+	AM_RANGE(0x7000, 0x77ff) AM_RAM_WRITE(fg_tile_w )  AM_SHARE("fg_tile_ram")
+	AM_RANGE(0x7800, 0x7fff) AM_RAM_WRITE(fg_color_w ) AM_SHARE("fg_color_ram")
 	AM_RANGE(0x8000, 0xffff) AM_READ(expram_r)
 ADDRESS_MAP_END
 
-static CUSTOM_INPUT( hopper_r )
+CUSTOM_INPUT_MEMBER(jackie_state::hopper_r)
 {
-	jackie_state *state = field.machine().driver_data<jackie_state>();
-	if (state->m_hopper) return !(field.machine().primary_screen->frame_number()%10);
-	return field.machine().input().code_pressed(KEYCODE_H);
+	if (m_hopper) return !(machine().primary_screen->frame_number()%10);
+	return machine().input().code_pressed(KEYCODE_H);
 }
 
 static INPUT_PORTS_START( jackie )
@@ -464,7 +470,7 @@ static INPUT_PORTS_START( jackie )
 
 	PORT_START("SERVICE")
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OTHER ) PORT_CODE(KEYCODE_9) PORT_NAME("Attendent")
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM( hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF,jackie_state,hopper_r, (void *)0 ) PORT_NAME("HPSW")	// hopper sensor
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_GAMBLE_PAYOUT )
 	PORT_SERVICE_NO_TOGGLE( 0x20, IP_ACTIVE_LOW )	// test (press during boot)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_GAMBLE_BOOK ) PORT_NAME("Statistics")
@@ -534,7 +540,7 @@ static DRIVER_INIT( jackie )
 {
 
 	int A;
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 
 	for (A = 0;A < 0xf000;A++)
 	{

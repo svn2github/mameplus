@@ -88,7 +88,7 @@ WRITE16_MEMBER(twin16_state::videoram16_w)
 
 READ16_MEMBER(twin16_state::extra_rom_r)
 {
-	return ((UINT16 *)machine().region("gfx3")->base())[offset];
+	return ((UINT16 *)machine().root_device().memregion("gfx3")->base())[offset];
 }
 
 READ16_MEMBER(twin16_state::twin16_gfx_rom1_r)
@@ -104,7 +104,7 @@ READ16_MEMBER(twin16_state::twin16_gfx_rom2_r)
 WRITE16_MEMBER(twin16_state::sound_command_w)
 {
 	COMBINE_DATA(&m_sound_command);
-	soundlatch_w(space, 0, m_sound_command&0xff );
+	soundlatch_byte_w(space, 0, m_sound_command&0xff );
 }
 
 WRITE16_MEMBER(twin16_state::twin16_CPUA_register_w)
@@ -224,7 +224,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, twin16_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x8fff) AM_RAM
 	AM_RANGE(0x9000, 0x9000) AM_DEVWRITE_LEGACY("upd", twin16_upd_reset_w)
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("konami", k007232_r, k007232_w)
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0xd000, 0xd000) AM_DEVWRITE_LEGACY("upd", upd7759_port_w)
@@ -247,9 +247,9 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, twin16_state )
 	AM_RANGE(0x0b0400, 0x0b0401) AM_WRITE(cuebrickj_nvram_bank_w)
 	AM_RANGE(0x0c0000, 0x0c000f) AM_WRITE(twin16_video_register_w)
 	AM_RANGE(0x0c000e, 0x0c000f) AM_READ(twin16_sprite_status_r)
-	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(twin16_text_ram_w) AM_BASE(m_text_ram)
+	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(twin16_text_ram_w) AM_SHARE("text_ram")
 //  AM_RANGE(0x104000, 0x105fff) AM_NOP             // miaj
-	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_BASE(m_videoram)
+	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_SHARE("videoram")
 	AM_RANGE(0x140000, 0x143fff) AM_RAM AM_SHARE("spriteram")
 ADDRESS_MAP_END
 
@@ -262,10 +262,10 @@ static ADDRESS_MAP_START( sub_map, AS_PROGRAM, 16, twin16_state )
 	AM_RANGE(0x0a0000, 0x0a0001) AM_WRITE(twin16_CPUB_register_w)
 	AM_RANGE(0x400000, 0x403fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x480000, 0x483fff) AM_READWRITE(videoram16_r, videoram16_w)
-	AM_RANGE(0x500000, 0x53ffff) AM_RAM AM_BASE(m_tile_gfx_ram)
+	AM_RANGE(0x500000, 0x53ffff) AM_RAM AM_SHARE("tile_gfx_ram")
 	AM_RANGE(0x600000, 0x6fffff) AM_READ(twin16_gfx_rom1_r)
 	AM_RANGE(0x700000, 0x77ffff) AM_READ(twin16_gfx_rom2_r)
-	AM_RANGE(0x780000, 0x79ffff) AM_RAM AM_BASE(m_sprite_gfx_ram)
+	AM_RANGE(0x780000, 0x79ffff) AM_RAM AM_SHARE("sprite_gfx_ram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( fround_map, AS_PROGRAM, 16, twin16_state )
@@ -280,8 +280,8 @@ static ADDRESS_MAP_START( fround_map, AS_PROGRAM, 16, twin16_state )
 	AM_RANGE(0x0c0000, 0x0c000f) AM_WRITE(twin16_video_register_w)
 	AM_RANGE(0x0c000e, 0x0c000f) AM_READ(twin16_sprite_status_r)
 	AM_RANGE(0x0e0000, 0x0e0001) AM_WRITE(fround_gfx_bank_w)
-	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(twin16_text_ram_w) AM_BASE(m_text_ram)
-	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_BASE(m_videoram)
+	AM_RANGE(0x100000, 0x103fff) AM_RAM_WRITE(twin16_text_ram_w) AM_SHARE("text_ram")
+	AM_RANGE(0x120000, 0x123fff) AM_RAM AM_SHARE("videoram")
 	AM_RANGE(0x140000, 0x143fff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x500000, 0x6fffff) AM_READ(twin16_gfx_rom1_r)
 ADDRESS_MAP_END
@@ -1305,7 +1305,7 @@ static void gfx_untangle( running_machine &machine )
 	int i;
 	UINT16 *temp = auto_alloc_array(machine, UINT16, 0x200000/2);
 
-	state->m_gfx_rom = (UINT16 *)machine.region("gfx2")->base();
+	state->m_gfx_rom = (UINT16 *)state->memregion("gfx2")->base();
 	memcpy( temp, state->m_gfx_rom, 0x200000 );
 
 	for( i=0; i<0x080000; i++ )

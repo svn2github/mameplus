@@ -146,13 +146,13 @@ WRITE16_MEMBER(rungun_state::rng_sysregs_w)
 WRITE16_MEMBER(rungun_state::sound_cmd1_w)
 {
 	if (ACCESSING_BITS_8_15)
-		soundlatch_w(space, 0, data >> 8);
+		soundlatch_byte_w(space, 0, data >> 8);
 }
 
 WRITE16_MEMBER(rungun_state::sound_cmd2_w)
 {
 	if (ACCESSING_BITS_8_15)
-		soundlatch2_w(space, 0, data >> 8);
+		soundlatch2_byte_w(space, 0, data >> 8);
 }
 
 WRITE16_MEMBER(rungun_state::sound_irq_w)
@@ -181,10 +181,10 @@ static INTERRUPT_GEN(rng_interrupt)
 
 static ADDRESS_MAP_START( rungun_map, AS_PROGRAM, 16, rungun_state )
 	AM_RANGE(0x000000, 0x2fffff) AM_ROM											// main program + data
-	AM_RANGE(0x300000, 0x3007ff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x300000, 0x3007ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x380000, 0x39ffff) AM_RAM											// work RAM
 	AM_RANGE(0x400000, 0x43ffff) AM_READNOP	// AM_READ_LEGACY(K053936_0_rom_r )       // '936 ROM readback window
-	AM_RANGE(0x480000, 0x48001f) AM_READWRITE(rng_sysregs_r, rng_sysregs_w) AM_BASE(m_sysreg)
+	AM_RANGE(0x480000, 0x48001f) AM_READWRITE(rng_sysregs_r, rng_sysregs_w) AM_SHARE("sysreg")
 	AM_RANGE(0x4c0000, 0x4c001f) AM_DEVREADWRITE8_LEGACY("k053252", k053252_r, k053252_w,0x00ff)						// CCU (for scanline and vblank polling)
 	AM_RANGE(0x540000, 0x540001) AM_WRITE(sound_irq_w)
 	AM_RANGE(0x58000c, 0x58000d) AM_WRITE(sound_cmd1_w)
@@ -197,7 +197,7 @@ static ADDRESS_MAP_START( rungun_map, AS_PROGRAM, 16, rungun_state )
 	AM_RANGE(0x601000, 0x601fff) AM_RAM											// communication? second monitor buffer?
 	AM_RANGE(0x640000, 0x640007) AM_DEVWRITE_LEGACY("k055673", k053246_word_w)						// '246A registers
 	AM_RANGE(0x680000, 0x68001f) AM_DEVWRITE_LEGACY("k053936", k053936_ctrl_w)			// '936 registers
-	AM_RANGE(0x6c0000, 0x6cffff) AM_RAM_WRITE(rng_936_videoram_w) AM_BASE(m_936_videoram)	// PSAC2 ('936) RAM (34v + 35v)
+	AM_RANGE(0x6c0000, 0x6cffff) AM_RAM_WRITE(rng_936_videoram_w) AM_SHARE("936_videoram")	// PSAC2 ('936) RAM (34v + 35v)
 	AM_RANGE(0x700000, 0x7007ff) AM_DEVREADWRITE_LEGACY("k053936", k053936_linectrl_r, k053936_linectrl_w)			// PSAC "Line RAM"
 	AM_RANGE(0x740000, 0x741fff) AM_READWRITE(rng_ttl_ram_r, rng_ttl_ram_w)		// text plane RAM
 	AM_RANGE(0x7c0000, 0x7c0001) AM_WRITENOP									// watchdog
@@ -220,7 +220,7 @@ WRITE8_MEMBER(rungun_state::z80ctrl_w)
 
 	m_z80_control = data;
 
-	memory_set_bank(machine(), "bank2", data & 0x07);
+	membank("bank2")->set_entry(data & 0x07);
 
 	if (data & 0x10)
 		device_set_input_line(m_audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
@@ -247,8 +247,8 @@ static ADDRESS_MAP_START( rungun_sound_map, AS_PROGRAM, 8, rungun_state )
 	AM_RANGE(0xe400, 0xe62f) AM_DEVREADWRITE("k054539_1", k054539_device, read, write)
 	AM_RANGE(0xe630, 0xe7ff) AM_RAM
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(sound_status_w)
-	AM_RANGE(0xf002, 0xf002) AM_READ(soundlatch_r)
-	AM_RANGE(0xf003, 0xf003) AM_READ(soundlatch2_r)
+	AM_RANGE(0xf002, 0xf002) AM_READ(soundlatch_byte_r)
+	AM_RANGE(0xf003, 0xf003) AM_READ(soundlatch2_byte_r)
 	AM_RANGE(0xf800, 0xf800) AM_WRITE(z80ctrl_w)
 	AM_RANGE(0xfff0, 0xfff3) AM_WRITENOP
 ADDRESS_MAP_END
@@ -366,9 +366,9 @@ static const k053252_interface rng_k053252_intf =
 static MACHINE_START( rng )
 {
 	rungun_state *state = machine.driver_data<rungun_state>();
-	UINT8 *ROM = machine.region("soundcpu")->base();
+	UINT8 *ROM = state->memregion("soundcpu")->base();
 
-	memory_configure_bank(machine, "bank2", 0, 8, &ROM[0x10000], 0x4000);
+	state->membank("bank2")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
 
 	state->m_maincpu = machine.device("maincpu");
 	state->m_audiocpu = machine.device("soundcpu");
@@ -380,7 +380,6 @@ static MACHINE_START( rng )
 
 	state->save_item(NAME(state->m_z80_control));
 	state->save_item(NAME(state->m_sound_status));
-	state->save_item(NAME(state->m_sysreg));
 	state->save_item(NAME(state->m_ttl_vram));
 }
 

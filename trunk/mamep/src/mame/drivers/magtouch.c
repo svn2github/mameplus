@@ -95,6 +95,8 @@ public:
 
 	DECLARE_WRITE_LINE_MEMBER(microtouch_out);
 	DECLARE_WRITE_LINE_MEMBER(microtouch_in);
+	DECLARE_READ8_MEMBER(magtouch_io_r);
+	DECLARE_WRITE8_MEMBER(magtouch_io_w);
 };
 
 
@@ -140,23 +142,23 @@ static const microtouch_serial_interface magtouch_microtouch_interface =
  *
  *************************************/
 
-static READ8_HANDLER(magtouch_io_r)
+READ8_MEMBER(magtouch_state::magtouch_io_r)
 {
 	switch(offset)
 	{
 		case 1:
-			return input_port_read(space->machine(), "IN0");
+			return input_port_read(machine(), "IN0");
 		default:
 			return 0;
 	}
 }
 
-static WRITE8_HANDLER(magtouch_io_w)
+WRITE8_MEMBER(magtouch_state::magtouch_io_w)
 {
 	switch(offset)
 	{
 		case 6:
-			memory_set_bank(space->machine(), "rombank", data & 0x7f );
+			membank("rombank")->set_entry(data & 0x7f );
 			break;
 	}
 }
@@ -173,7 +175,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( magtouch_io, AS_IO, 32, magtouch_state )
 	AM_IMPORT_FROM(pcat32_io_common)
-	AM_RANGE(0x02e0, 0x02e7) AM_READWRITE8_LEGACY(magtouch_io_r, magtouch_io_w, 0xffffffff)
+	AM_RANGE(0x02e0, 0x02e7) AM_READWRITE8(magtouch_io_r, magtouch_io_w, 0xffffffff)
 	AM_RANGE(0x03f8, 0x03ff) AM_DEVREADWRITE8("ns16450_0", ns16450_device, ins8250_r, ins8250_w, 0xffffffff)
 ADDRESS_MAP_END
 
@@ -199,8 +201,8 @@ static MACHINE_START( magtouch )
 
 	init_pc_common(machine, PCCOMMON_KEYBOARD_AT, magtouch_set_keyb_int);
 
-	memory_configure_bank(machine, "rombank", 0, 0x80, machine.region("game_prg")->base(), 0x8000 );
-	memory_set_bank(machine, "rombank", 0);
+	machine.root_device().membank("rombank")->configure_entries(0, 0x80, machine.root_device().memregion("game_prg")->base(), 0x8000 );
+	machine.root_device().membank("rombank")->set_entry(0);
 
 //  microtouch_init(machine, magtouch_microtouch_tx_callback, NULL);
 }

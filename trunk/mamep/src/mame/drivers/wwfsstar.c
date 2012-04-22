@@ -161,10 +161,10 @@ Notes:
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, wwfsstar_state )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
-	AM_RANGE(0x080000, 0x080fff) AM_RAM_WRITE(wwfsstar_fg0_videoram_w) AM_BASE(m_fg0_videoram)	/* FG0 Ram */
-	AM_RANGE(0x0c0000, 0x0c0fff) AM_RAM_WRITE(wwfsstar_bg0_videoram_w) AM_BASE(m_bg0_videoram)	/* BG0 Ram */
-	AM_RANGE(0x100000, 0x1003ff) AM_RAM AM_BASE(m_spriteram)		/* SPR Ram */
-	AM_RANGE(0x140000, 0x140fff) AM_WRITE(paletteram16_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x080000, 0x080fff) AM_RAM_WRITE(wwfsstar_fg0_videoram_w) AM_SHARE("fg0_videoram")	/* FG0 Ram */
+	AM_RANGE(0x0c0000, 0x0c0fff) AM_RAM_WRITE(wwfsstar_bg0_videoram_w) AM_SHARE("bg0_videoram")	/* BG0 Ram */
+	AM_RANGE(0x100000, 0x1003ff) AM_RAM AM_SHARE("spriteram")		/* SPR Ram */
+	AM_RANGE(0x140000, 0x140fff) AM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x180000, 0x180003) AM_WRITE(wwfsstar_irqack_w)
 	AM_RANGE(0x180000, 0x180001) AM_READ_PORT("DSW1")
 	AM_RANGE(0x180002, 0x180003) AM_READ_PORT("DSW2")
@@ -182,7 +182,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, wwfsstar_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0x8800, 0x8801) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0x9800, 0x9800) AM_DEVREADWRITE("oki", okim6295_device, read, write)
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
 
@@ -208,13 +208,13 @@ WRITE16_MEMBER(wwfsstar_state::wwfsstar_scrollwrite)
 
 WRITE16_MEMBER(wwfsstar_state::wwfsstar_soundwrite)
 {
-	soundlatch_w(space, 1, data & 0xff);
+	soundlatch_byte_w(space, 1, data & 0xff);
 	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE );
 }
 
 WRITE16_MEMBER(wwfsstar_state::wwfsstar_flipscreen_w)
 {
-	flip_screen_set(machine(), data & 1);
+	flip_screen_set(data & 1);
 }
 
 WRITE16_MEMBER(wwfsstar_state::wwfsstar_irqack_w)
@@ -271,11 +271,10 @@ static TIMER_DEVICE_CALLBACK( wwfsstar_scanline )
 	}
 }
 
-static CUSTOM_INPUT( wwfsstar_vblank_r )
+CUSTOM_INPUT_MEMBER(wwfsstar_state::wwfsstar_vblank_r)
 {
-	wwfsstar_state *state = field.machine().driver_data<wwfsstar_state>();
 
-	return state->m_vblank;
+	return m_vblank;
 }
 
 /*******************************************************************************
@@ -308,7 +307,7 @@ static INPUT_PORTS_START( wwfsstar )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START2 ) PORT_NAME("Button B (1P VS 2P - Buy-in)")
 
 	PORT_START("SYSTEM")
-	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(wwfsstar_vblank_r, NULL)	/* VBlank */
+	PORT_BIT( 0x0001, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, wwfsstar_state,wwfsstar_vblank_r, NULL)	/* VBlank */
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -415,7 +414,7 @@ static void wwfsstar_ymirq_handler(device_t *device, int irq)
 
 static const ym2151_interface ym2151_config =
 {
-	wwfsstar_ymirq_handler
+	DEVCB_LINE(wwfsstar_ymirq_handler)
 };
 
 /*******************************************************************************

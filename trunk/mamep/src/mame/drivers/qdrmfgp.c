@@ -37,15 +37,14 @@ GP1 HDD data contents:
  *
  *************************************/
 
-static CUSTOM_INPUT( inputs_r )
+CUSTOM_INPUT_MEMBER(qdrmfgp_state::inputs_r)
 {
-	qdrmfgp_state *state = field.machine().driver_data<qdrmfgp_state>();
 	const char *tag1 = (const char *)param;
 	const char *tag2 = tag1 + strlen(tag1) + 1;
-	return input_port_read(field.machine(), (state->m_control & 0x0080) ? tag1 : tag2);
+	return input_port_read(machine(), (m_control & 0x0080) ? tag1 : tag2);
 }
 
-static CUSTOM_INPUT( battery_sensor_r )
+CUSTOM_INPUT_MEMBER(qdrmfgp_state::battery_sensor_r)
 {
 	/* bit 0-1  battery power sensor: 3=good, 2=low, other=bad */
 	return 0x0003;
@@ -120,7 +119,7 @@ WRITE16_MEMBER(qdrmfgp_state::gp2_control_w)
 READ16_MEMBER(qdrmfgp_state::v_rom_r)
 {
 	device_t *k056832 = machine().device("k056832");
-	UINT8 *mem8 = machine().region("gfx1")->base();
+	UINT8 *mem8 = memregion("gfx1")->base();
 	int bank = k056832_word_r(k056832, 0x34/2, 0xffff);
 
 	offset += bank * 0x800 * 4;
@@ -333,9 +332,9 @@ static void gp2_ide_interrupt(device_t *device, int state)
 
 static ADDRESS_MAP_START( qdrmfgp_map, AS_PROGRAM, 16, qdrmfgp_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
-	AM_RANGE(0x100000, 0x10ffff) AM_RAM AM_BASE(m_workram)										/* work ram */
+	AM_RANGE(0x100000, 0x10ffff) AM_RAM AM_SHARE("workram")										/* work ram */
 	AM_RANGE(0x180000, 0x183fff) AM_RAM AM_SHARE("nvram")	/* backup ram */
-	AM_RANGE(0x280000, 0x280fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x280000, 0x280fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x300000, 0x30003f) AM_DEVWRITE_LEGACY("k056832", k056832_word_w)										/* video reg */
 	AM_RANGE(0x320000, 0x32001f) AM_DEVREADWRITE8_LEGACY("k053252", k053252_r, k053252_w,0x00ff)					/* ccu */
 	AM_RANGE(0x330000, 0x330001) AM_READ_PORT("SENSOR")											/* battery power & service sw */
@@ -356,9 +355,9 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( qdrmfgp2_map, AS_PROGRAM, 16, qdrmfgp_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
-	AM_RANGE(0x100000, 0x110fff) AM_RAM AM_BASE(m_workram)										/* work ram */
+	AM_RANGE(0x100000, 0x110fff) AM_RAM AM_SHARE("workram")										/* work ram */
 	AM_RANGE(0x180000, 0x183fff) AM_RAM AM_SHARE("nvram")	/* backup ram */
-	AM_RANGE(0x280000, 0x280fff) AM_RAM_WRITE(paletteram16_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x280000, 0x280fff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x300000, 0x30003f) AM_DEVWRITE_LEGACY("k056832", k056832_word_w)										/* video reg */
 	AM_RANGE(0x320000, 0x32001f) AM_DEVREADWRITE8_LEGACY("k053252", k053252_r, k053252_w,0xff00)					/* ccu */
 	AM_RANGE(0x330000, 0x330001) AM_READ_PORT("SENSOR")											/* battery power & service */
@@ -385,7 +384,7 @@ ADDRESS_MAP_END
 
 static INPUT_PORTS_START( qdrmfgp )
 	PORT_START("340000")
-	PORT_BIT( 0xffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(inputs_r, "INPUTS\0DSW")
+	PORT_BIT( 0xffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, qdrmfgp_state,inputs_r, "INPUTS\0DSW")
 
 	PORT_START("INPUTS")
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_START1 )
@@ -460,7 +459,7 @@ static INPUT_PORTS_START( qdrmfgp )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Very_Hard ) )
 
 	PORT_START("SENSOR")
-	PORT_BIT( 0x0003, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(battery_sensor_r, NULL)	/* battery power sensor */
+	PORT_BIT( 0x0003, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, qdrmfgp_state,battery_sensor_r, NULL)	/* battery power sensor */
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE2 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_SERVICE3 )
 	PORT_BIT( 0xfff0, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -468,7 +467,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( qdrmfgp2 )
 	PORT_START("340000")
-	PORT_BIT( 0xffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(inputs_r, "INPUTS\0DSW")
+	PORT_BIT( 0xffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, qdrmfgp_state,inputs_r, "INPUTS\0DSW")
 
 	PORT_START("INPUTS")
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_START1 )
@@ -543,7 +542,7 @@ static INPUT_PORTS_START( qdrmfgp2 )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Very_Hard ) )
 
 	PORT_START("SENSOR")
-	PORT_BIT( 0x0003, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(battery_sensor_r, NULL)	/* battery power sensor */
+	PORT_BIT( 0x0003, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, qdrmfgp_state,battery_sensor_r, NULL)	/* battery power sensor */
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_SERVICE2 )
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_SERVICE3 )
 	PORT_BIT( 0xfff0, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -651,7 +650,7 @@ static MACHINE_START( qdrmfgp2 )
 static MACHINE_RESET( qdrmfgp )
 {
 	qdrmfgp_state *state = machine.driver_data<qdrmfgp_state>();
-	state->m_sndram = machine.region("konami")->base() + 0x100000;
+	state->m_sndram = state->memregion("konami")->base() + 0x100000;
 
 	/* reset the IDE controller */
 	state->m_gp2_irq_control = 0;

@@ -116,13 +116,13 @@ WRITE8_MEMBER(mainsnk_state::sound_command_w)
 {
 
 	m_sound_cpu_busy = 1;
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
 READ8_MEMBER(mainsnk_state::sound_command_r)
 {
-	return soundlatch_r(space, 0);
+	return soundlatch_byte_r(space, 0);
 }
 
 READ8_MEMBER(mainsnk_state::sound_ack_r)
@@ -132,11 +132,10 @@ READ8_MEMBER(mainsnk_state::sound_ack_r)
 	return 0xff;
 }
 
-static CUSTOM_INPUT( mainsnk_sound_r )
+CUSTOM_INPUT_MEMBER(mainsnk_state::mainsnk_sound_r)
 {
-	mainsnk_state *state = field.machine().driver_data<mainsnk_state>();
 
-	return (state->m_sound_cpu_busy) ? 0x01 : 0x00;
+	return (m_sound_cpu_busy) ? 0x01 : 0x00;
 }
 
 
@@ -151,10 +150,10 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, mainsnk_state )
 	AM_RANGE(0xc500, 0xc500) AM_READ_PORT("DSW2")
 	AM_RANGE(0xc600, 0xc600) AM_WRITE(mainsnk_c600_w)
 	AM_RANGE(0xc700, 0xc700) AM_WRITE(sound_command_w)
-	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE(mainsnk_bgram_w) AM_BASE(m_bgram)
+	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE(mainsnk_bgram_w) AM_SHARE("bgram")
 	AM_RANGE(0xdc00, 0xe7ff) AM_RAM
-	AM_RANGE(0xe800, 0xefff) AM_RAM AM_BASE(m_spriteram)
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(mainsnk_fgram_w) AM_BASE(m_fgram)	// + work RAM
+	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(mainsnk_fgram_w) AM_SHARE("fgram")	// + work RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, mainsnk_state )
@@ -181,7 +180,7 @@ static INPUT_PORTS_START( mainsnk )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SERVICE1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(mainsnk_sound_r, NULL)	/* sound CPU status */
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mainsnk_state,mainsnk_sound_r, NULL)	/* sound CPU status */
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_SERVICE )
 
@@ -275,7 +274,7 @@ static INPUT_PORTS_START( canvas )
 	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SERVICE1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(mainsnk_sound_r, NULL)	/* sound CPU status */
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, mainsnk_state,mainsnk_sound_r, NULL)	/* sound CPU status */
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_SERVICE )
 

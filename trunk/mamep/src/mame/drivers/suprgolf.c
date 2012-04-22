@@ -30,10 +30,11 @@ class suprgolf_state : public driver_device
 {
 public:
 	suprgolf_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"){ }
 
 	tilemap_t *m_tilemap;
-	UINT8 *m_videoram;
+	required_shared_ptr<UINT8> m_videoram;
 	UINT8 *m_paletteram;
 	UINT8 *m_bg_vram;
 	UINT16 *m_bg_fb;
@@ -256,25 +257,25 @@ static READ8_DEVICE_HANDLER( rom_bank_select_r )
 static WRITE8_DEVICE_HANDLER( rom_bank_select_w )
 {
 	suprgolf_state *state = device->machine().driver_data<suprgolf_state>();
-	UINT8 *region_base = device->machine().region("user1")->base();
+	UINT8 *region_base = state->memregion("user1")->base();
 
 	state->m_rom_bank = data;
 
 	//popmessage("%08x %02x",((data & 0x3f) * 0x4000),data);
 
 //  mame_printf_debug("ROM_BANK 0x8000 - %X @%X\n",data,cpu_get_previouspc(&space->device()));
-	memory_set_bankptr(device->machine(), "bank2", region_base + (data&0x3f ) * 0x4000);
+	state->membank("bank2")->set_base(region_base + (data&0x3f ) * 0x4000);
 
 	state->m_msm_nmi_mask = data & 0x40;
-	flip_screen_set(device->machine(), data & 0x80);
+	state->flip_screen_set(data & 0x80);
 }
 
 WRITE8_MEMBER(suprgolf_state::rom2_bank_select_w)
 {
-	UINT8 *region_base = machine().region("user2")->base();
+	UINT8 *region_base = memregion("user2")->base();
 //  mame_printf_debug("ROM_BANK 0x4000 - %X @%X\n",data,cpu_get_previouspc(&space.device()));
 
-	memory_set_bankptr(machine(), "bank1", region_base + (data&0x0f) * 0x4000);
+	membank("bank1")->set_base(region_base + (data&0x0f) * 0x4000);
 
 	if(data & 0xf0)
 		printf("Rom bank select 2 with data %02x activated\n",data);
@@ -306,7 +307,7 @@ static ADDRESS_MAP_START( suprgolf_map, AS_PROGRAM, 8, suprgolf_state )
 	AM_RANGE(0x4000, 0x4000) AM_WRITE(rom2_bank_select_w )
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK("bank2")
 	AM_RANGE(0xc000, 0xdfff) AM_READWRITE(suprgolf_bg_vram_r, suprgolf_bg_vram_w ) // banked background vram
-	AM_RANGE(0xe000, 0xefff) AM_READWRITE(suprgolf_videoram_r, suprgolf_videoram_w ) AM_BASE(m_videoram) //foreground vram + paletteram
+	AM_RANGE(0xe000, 0xefff) AM_READWRITE(suprgolf_videoram_r, suprgolf_videoram_w ) AM_SHARE("videoram") //foreground vram + paletteram
 	AM_RANGE(0xf000, 0xf000) AM_WRITE(suprgolf_pen_w )
 	AM_RANGE(0xf800, 0xffff) AM_RAM
 ADDRESS_MAP_END
@@ -637,7 +638,7 @@ ROM_END
 
 static DRIVER_INIT( suprgolf )
 {
-	UINT8 *ROM = machine.region("user2")->base();
+	UINT8 *ROM = machine.root_device().memregion("user2")->base();
 
 	ROM[0x74f4-0x4000] = 0x00;
 	ROM[0x74f5-0x4000] = 0x00;

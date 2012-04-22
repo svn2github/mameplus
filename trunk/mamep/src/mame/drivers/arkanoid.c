@@ -563,8 +563,8 @@ static ADDRESS_MAP_START( arkanoid_map, AS_PROGRAM, 8, arkanoid_state )
 	AM_RANGE(0xd00c, 0xd00c) AM_READ_PORT("SYSTEM")		/* 2 bits from the 68705 */
 	AM_RANGE(0xd010, 0xd010) AM_READ_PORT("BUTTONS") AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0xd018, 0xd018) AM_READWRITE(arkanoid_Z80_mcu_r, arkanoid_Z80_mcu_w)  /* input from the 68705 */
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(arkanoid_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xe800, 0xe83f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(arkanoid_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xe800, 0xe83f) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xe840, 0xefff) AM_RAM
 	AM_RANGE(0xf000, 0xffff) AM_READNOP	/* fixes instant death in final level */
 ADDRESS_MAP_END
@@ -578,8 +578,8 @@ static ADDRESS_MAP_START( bootleg_map, AS_PROGRAM, 8, arkanoid_state )
 	AM_RANGE(0xd00c, 0xd00c) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0xd010, 0xd010) AM_READ_PORT("BUTTONS") AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0xd018, 0xd018) AM_READ_PORT("MUX") AM_WRITENOP
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(arkanoid_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xe800, 0xe83f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(arkanoid_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xe800, 0xe83f) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xe840, 0xefff) AM_RAM
 	AM_RANGE(0xf000, 0xffff) AM_READNOP	/* fixes instant death in final level */
 ADDRESS_MAP_END
@@ -592,7 +592,7 @@ static ADDRESS_MAP_START( hexa_map, AS_PROGRAM, 8, arkanoid_state )
 	AM_RANGE(0xd000, 0xd001) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w)
 	AM_RANGE(0xd008, 0xd008) AM_WRITE(hexa_d008_w)
 	AM_RANGE(0xd010, 0xd010) AM_WRITE(watchdog_reset_w)	/* or IRQ acknowledge, or both */
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(arkanoid_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(arkanoid_videoram_w) AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( brixian_map, AS_PROGRAM, 8, arkanoid_state )
@@ -604,8 +604,8 @@ static ADDRESS_MAP_START( brixian_map, AS_PROGRAM, 8, arkanoid_state )
 	AM_RANGE(0xd00c, 0xd00c) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0xd010, 0xd010) AM_READ_PORT("BUTTONS") AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0xd018, 0xd018) AM_READ_PORT("MUX") AM_WRITENOP
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(arkanoid_videoram_w) AM_BASE(m_videoram)
-	AM_RANGE(0xe800, 0xe83f) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(arkanoid_videoram_w) AM_SHARE("videoram")
+	AM_RANGE(0xe800, 0xe83f) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xe840, 0xefff) AM_RAM
 	AM_RANGE(0xf000, 0xffff) AM_READNOP	/* fixes instant death in final level */
 // Interesting locations:
@@ -639,7 +639,7 @@ static INPUT_PORTS_START( arkanoid )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_TILT )
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_COIN1 )
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_COIN2 )
-	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(arkanoid_68705_input_r, NULL)	/* Inputs from the 68705 */
+	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, arkanoid_state,arkanoid_68705_input_r, NULL)	/* Inputs from the 68705 */
 
 	PORT_START("BUTTONS")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 )
@@ -648,7 +648,7 @@ static INPUT_PORTS_START( arkanoid )
 	PORT_BIT( 0xf8, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
 	PORT_START("MUX")
-	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(arkanoid_input_mux, "P1\0P2")
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, arkanoid_state,arkanoid_input_mux, "P1\0P2")
 
 	PORT_START("DSW")
 	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Allow_Continue ) )	PORT_DIPLOCATION("SW1:8")
@@ -1580,7 +1580,7 @@ static DRIVER_INIT( block2 )
 	arkanoid_state *state = machine.driver_data<arkanoid_state>();
 	// the graphics on this bootleg have the data scrambled
 	int tile;
-	UINT8* srcgfx = machine.region("gfx1")->base();
+	UINT8* srcgfx = state->memregion("gfx1")->base();
 	UINT8* buffer = auto_alloc_array(machine, UINT8, 0x18000);
 
 	for (tile = 0; tile < 0x3000; tile++)
@@ -1643,7 +1643,7 @@ static DRIVER_INIT( paddle2 )
 static DRIVER_INIT( tetrsark )
 {
 	arkanoid_state *state = machine.driver_data<arkanoid_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 	int x;
 
 	for (x = 0; x < 0x8000; x++)
@@ -1657,7 +1657,7 @@ static DRIVER_INIT( tetrsark )
 
 static DRIVER_INIT( hexa )
 {
-	UINT8 *RAM = machine.region("maincpu")->base();
+	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
 #if 0
 
 
@@ -1671,7 +1671,7 @@ static DRIVER_INIT( hexa )
 	RAM[0x0126] = 0x00;
 #endif
 
-	memory_configure_bank(machine, "bank1", 0, 2, &RAM[0x10000], 0x4000);
+	machine.root_device().membank("bank1")->configure_entries(0, 2, &RAM[0x10000], 0x4000);
 }
 
 

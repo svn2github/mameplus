@@ -440,7 +440,7 @@ WRITE32_MEMBER(konamigx_state::esc_w)
 /**********************************************************************************/
 /* EEPROM handlers */
 
-static CUSTOM_INPUT( gx_rdport1_3_r )
+CUSTOM_INPUT_MEMBER(konamigx_state::gx_rdport1_3_r)
 {
 	return (gx_rdport1_3 >> 1);
 }
@@ -923,14 +923,14 @@ READ32_MEMBER(konamigx_state::gx6bppspr_r)
 
 READ32_MEMBER(konamigx_state::type1_roz_r1)
 {
-	UINT32 *ROM = (UINT32 *)machine().region("gfx3")->base();
+	UINT32 *ROM = (UINT32 *)machine().root_device().memregion("gfx3")->base();
 
 	return ROM[offset];
 }
 
 READ32_MEMBER(konamigx_state::type1_roz_r2)
 {
-	UINT32 *ROM = (UINT32 *)machine().region("gfx3")->base();
+	UINT32 *ROM = (UINT32 *)machine().root_device().memregion("gfx3")->base();
 
 	ROM += (0x600000/2);
 
@@ -1369,7 +1369,7 @@ static INPUT_PORTS_START( common )
 
 	// note: racin' force expects bit 1 of the eeprom port to toggle
 	PORT_BIT( 0x00000001, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
-	PORT_BIT( 0x000000fe, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(gx_rdport1_3_r, NULL)
+	PORT_BIT( 0x000000fe, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, konamigx_state,gx_rdport1_3_r, NULL)
 	PORT_BIT( 0x00000100, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x00000200, IP_ACTIVE_LOW, IPT_COIN2 )
 	PORT_BIT( 0x00000400, IP_ACTIVE_LOW, IPT_UNKNOWN )
@@ -3754,7 +3754,7 @@ static DRIVER_INIT(konamigx)
 
 				case 2:	// tkmmpzdm hack
 	{
-		UINT32 *rom = (UINT32*)machine.region("maincpu")->base();
+		UINT32 *rom = (UINT32*)state->memregion("maincpu")->base();
 
 		// The display is initialized after POST but the copyright screen disabled
 		// planes B,C,D and didn't bother restoring them. I've spent a good

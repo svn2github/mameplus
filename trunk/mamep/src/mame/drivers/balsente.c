@@ -243,8 +243,8 @@ DIP locations verified for:
  *************************************/
 
 static ADDRESS_MAP_START( cpu1_map, AS_PROGRAM, 8, balsente_state )
-	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_BASE(m_spriteram)
-	AM_RANGE(0x0800, 0x7fff) AM_RAM_WRITE(balsente_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x0000, 0x07ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x0800, 0x7fff) AM_RAM_WRITE(balsente_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x8000, 0x8fff) AM_RAM_WRITE(balsente_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0x9000, 0x9007) AM_WRITE(balsente_adc_select_w)
 	AM_RANGE(0x9400, 0x9401) AM_READ(balsente_adc_data_r)
@@ -301,8 +301,8 @@ ADDRESS_MAP_END
 /* CPU 1 read addresses */
 static ADDRESS_MAP_START( shrike68k_map, AS_PROGRAM, 16, balsente_state )
 	AM_RANGE(0x000000, 0x003fff) AM_ROM
-	AM_RANGE(0x010000, 0x01001f) AM_RAM AM_BASE(m_shrike_io)
-	AM_RANGE(0x018000, 0x018fff) AM_RAM AM_BASE(m_shrike_shared)
+	AM_RANGE(0x010000, 0x01001f) AM_RAM AM_SHARE("shrike_io")
+	AM_RANGE(0x018000, 0x018fff) AM_RAM AM_SHARE("shrike_shared")
 ADDRESS_MAP_END
 
 
@@ -877,7 +877,7 @@ static INPUT_PORTS_START( nstocker )
 	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "G1:7" )
 
 	PORT_MODIFY("IN0")
-	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(nstocker_bits_r, NULL)
+	PORT_BIT( 0x0f, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, balsente_state,nstocker_bits_r, NULL)
 
 	/* cheese alert -- we have to map this to player 2 so that it doesn't interfere with
        the crosshair controls */
@@ -2079,8 +2079,8 @@ static void expand_roms(running_machine &machine, UINT8 cd_rom_mask)
 
 	UINT8 *temp = auto_alloc_array(machine, UINT8, 0x20000);
 	{
-		UINT8 *rom = machine.region("maincpu")->base();
-		UINT32 len = machine.region("maincpu")->bytes();
+		UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+		UINT32 len = machine.root_device().memregion("maincpu")->bytes();
 		UINT32 base;
 
 		for (base = 0x10000; base < len; base += 0x30000)
@@ -2154,7 +2154,7 @@ static DRIVER_INIT( stocker )  { expand_roms(machine, EXPAND_ALL);  config_shoot
 static DRIVER_INIT( triviag1 ) { expand_roms(machine, EXPAND_ALL);  config_shooter_adc(machine, FALSE, 0 /* noanalog */); }
 static DRIVER_INIT( triviag2 )
 {
-	UINT8 *rom = machine.region("maincpu")->base();
+	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
 	memcpy(&rom[0x20000], &rom[0x28000], 0x4000);
 	memcpy(&rom[0x24000], &rom[0x28000], 0x4000);
 	expand_roms(machine, EXPAND_NONE); config_shooter_adc(machine, FALSE, 0 /* noanalog */);

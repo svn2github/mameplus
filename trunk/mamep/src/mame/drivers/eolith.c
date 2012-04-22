@@ -167,7 +167,7 @@ static INPUT_PORTS_START( common )
 	PORT_BIT( 0x00000008, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
 	PORT_BIT( 0x00000010, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x00000020, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(eolith_speedup_getvblank, NULL)
+	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, eolith_state, eolith_speedup_getvblank, NULL)
 	PORT_BIT( 0x00003f80, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00004000, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x00008000, IP_ACTIVE_LOW )
@@ -205,7 +205,7 @@ static INPUT_PORTS_START( ironfort )
 	PORT_BIT( 0x00000008, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
 	PORT_BIT( 0x00000010, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x00000020, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(eolith_speedup_getvblank, NULL)
+	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, eolith_state, eolith_speedup_getvblank, NULL)
 	PORT_BIT( 0x00003f80, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00004000, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00008000, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -388,7 +388,7 @@ static INPUT_PORTS_START( stealsee )
 	PORT_BIT( 0x00000008, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("eeprom", eeprom_device, read_bit)
 	PORT_BIT( 0x00000010, IP_ACTIVE_LOW, IPT_COIN1 )
 	PORT_BIT( 0x00000020, IP_ACTIVE_LOW, IPT_UNUSED )
-	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(stealsee_speedup_getvblank, NULL)
+	PORT_BIT( 0x00000040, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, eolith_state, stealsee_speedup_getvblank, NULL)
 	PORT_BIT( 0x00003f80, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x00004000, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_SERVICE_NO_TOGGLE( 0x00008000, IP_ACTIVE_LOW )
@@ -1309,7 +1309,7 @@ static DRIVER_INIT( landbrka )
 	//it fails compares with memories:
 	//$4002d338 -> $4002d348 .... $4002d33f -> $4002d34f
 	//related with bits 0x100 - 0x200 read at startup from input(0) ?
-	UINT32 *rombase = (UINT32*)machine.region("maincpu")->base();
+	UINT32 *rombase = (UINT32*)state->memregion("maincpu")->base();
 	rombase[0x14f00/4] = (rombase[0x14f00/4] & 0xffff) | 0x03000000; /* Change BR to NOP */
 
 	state->m_coin_counter_bit = 0x2000;
@@ -1319,7 +1319,7 @@ static DRIVER_INIT( landbrka )
 static DRIVER_INIT( hidctch2 )
 {
 	//it fails compares in memory like in landbrka
-	UINT32 *rombase = (UINT32*)machine.region("maincpu")->base();
+	UINT32 *rombase = (UINT32*)machine.root_device().memregion("maincpu")->base();
 	rombase[0xbcc8/4] = (rombase[0xbcc8/4] & 0xffff) | 0x03000000; /* Change BR to NOP */
 	init_eolith_speedup(machine);
 }

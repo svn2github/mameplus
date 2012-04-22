@@ -78,6 +78,7 @@ public:
 	DECLARE_READ16_MEMBER(unk_r);
 	DECLARE_WRITE16_MEMBER(mux_w);
 	DECLARE_READ16_MEMBER(mux_r);
+	DECLARE_INPUT_CHANGED_MEMBER(touchscreen_press);
 };
 
 
@@ -248,9 +249,9 @@ static void sys5_draw_lamps(jpmsys5_state *state)
 
 WRITE16_MEMBER(jpmsys5_state::rombank_w)
 {
-	UINT8 *rom = machine().region("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 	data &= 0x1f;
-	memory_set_bankptr(machine(), "bank1", &rom[0x20000 + 0x20000 * data]);
+	membank("bank1")->set_base(&rom[0x20000 + 0x20000 * data]);
 }
 
 READ16_MEMBER(jpmsys5_state::coins_r)
@@ -401,22 +402,21 @@ static TIMER_CALLBACK( touch_cb )
 	}
 }
 
-static INPUT_CHANGED( touchscreen_press )
+INPUT_CHANGED_MEMBER(jpmsys5_state::touchscreen_press)
 {
-	jpmsys5_state *state = field.machine().driver_data<jpmsys5_state>();
 	if (newval == 0)
 	{
 		attotime rx_period = attotime::from_hz(10000) * 16;
 
 		/* Each touch screen packet is 3 bytes */
-		state->m_touch_data[0] = 0x2a;
-		state->m_touch_data[1] = 0x7 - (input_port_read(field.machine(), "TOUCH_Y") >> 5) + 0x30;
-		state->m_touch_data[2] = (input_port_read(field.machine(), "TOUCH_X") >> 5) + 0x30;
+		m_touch_data[0] = 0x2a;
+		m_touch_data[1] = 0x7 - (input_port_read(machine(), "TOUCH_Y") >> 5) + 0x30;
+		m_touch_data[2] = (input_port_read(machine(), "TOUCH_X") >> 5) + 0x30;
 
 		/* Start sending the data to the 68000 serially */
-		state->m_touch_data_count = 0;
-		state->m_touch_state = START;
-		state->m_touch_timer->adjust(rx_period, 0, rx_period);
+		m_touch_data_count = 0;
+		m_touch_state = START;
+		m_touch_timer->adjust(rx_period, 0, rx_period);
 	}
 }
 
@@ -481,7 +481,7 @@ static INPUT_PORTS_START( monopoly )
 	PORT_BIT( 0xc3, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("TOUCH_PUSH")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_CHANGED(touchscreen_press, NULL)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, jpmsys5_state,touchscreen_press, NULL)
 
 	PORT_START("TOUCH_X")
 	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_X ) PORT_CROSSHAIR(X, 1.0, 0.0, 0) PORT_SENSITIVITY(45) PORT_KEYDELTA(15)
@@ -643,7 +643,7 @@ static ACIA6850_INTERFACE( acia2_if )
 static MACHINE_START( jpmsys5v )
 {
 	jpmsys5_state *state = machine.driver_data<jpmsys5_state>();
-	memory_set_bankptr(machine, "bank1", machine.region("maincpu")->base()+0x20000);
+	state->membank("bank1")->set_base(state->memregion("maincpu")->base()+0x20000);
 	state->m_touch_timer = machine.scheduler().timer_alloc(FUNC(touch_cb));
 }
 
@@ -794,7 +794,7 @@ INPUT_PORTS_END
 
 static MACHINE_START( jpmsys5 )
 {
-	memory_set_bankptr(machine, "bank1", machine.region("maincpu")->base()+0x20000);
+	machine.root_device().membank("bank1")->set_base(machine.root_device().memregion("maincpu")->base()+0x20000);
 }
 
 static MACHINE_RESET( jpmsys5 )

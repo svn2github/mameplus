@@ -49,7 +49,7 @@ Stephh's notes (based on the game Z80 code and some tests) :
 
 WRITE8_MEMBER(momoko_state::momoko_bg_read_bank_w)
 {
-	memory_set_bank(machine(), "bank1", data & 0x1f);
+	membank("bank1")->set_entry(data & 0x1f);
 }
 
 /****************************************************************************/
@@ -57,22 +57,22 @@ WRITE8_MEMBER(momoko_state::momoko_bg_read_bank_w)
 static ADDRESS_MAP_START( momoko_map, AS_PROGRAM, 8, momoko_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
-	AM_RANGE(0xd064, 0xd0ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0xd064, 0xd0ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xd400, 0xd400) AM_READ_PORT("IN0") AM_WRITENOP /* interrupt ack? */
 	AM_RANGE(0xd402, 0xd402) AM_READ_PORT("IN1") AM_WRITE(momoko_flipscreen_w)
 	AM_RANGE(0xd404, 0xd404) AM_WRITE(watchdog_reset_w)
-	AM_RANGE(0xd406, 0xd406) AM_READ_PORT("DSW0") AM_WRITE(soundlatch_w)
+	AM_RANGE(0xd406, 0xd406) AM_READ_PORT("DSW0") AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0xd407, 0xd407) AM_READ_PORT("DSW1")
-	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_be_w) AM_SHARE("paletteram")
+	AM_RANGE(0xd800, 0xdbff) AM_RAM_WRITE(paletteram_xxxxRRRRGGGGBBBB_byte_be_w) AM_SHARE("paletteram")
 	AM_RANGE(0xdc00, 0xdc00) AM_WRITE(momoko_fg_scrolly_w)
 	AM_RANGE(0xdc01, 0xdc01) AM_WRITE(momoko_fg_scrollx_w)
 	AM_RANGE(0xdc02, 0xdc02) AM_WRITE(momoko_fg_select_w)
-	AM_RANGE(0xe000, 0xe3ff) AM_RAM AM_BASE_SIZE(m_videoram, m_videoram_size)
+	AM_RANGE(0xe000, 0xe3ff) AM_RAM AM_SHARE("videoram")
 	AM_RANGE(0xe800, 0xe800) AM_WRITE(momoko_text_scrolly_w)
 	AM_RANGE(0xe801, 0xe801) AM_WRITE(momoko_text_mode_w)
 	AM_RANGE(0xf000, 0xffff) AM_ROMBANK("bank1")
-	AM_RANGE(0xf000, 0xf001) AM_WRITE(momoko_bg_scrolly_w) AM_BASE(m_bg_scrolly)
-	AM_RANGE(0xf002, 0xf003) AM_WRITE(momoko_bg_scrollx_w) AM_BASE(m_bg_scrollx)
+	AM_RANGE(0xf000, 0xf001) AM_WRITE(momoko_bg_scrolly_w) AM_SHARE("bg_scrolly")
+	AM_RANGE(0xf002, 0xf003) AM_WRITE(momoko_bg_scrollx_w) AM_SHARE("bg_scrollx")
 	AM_RANGE(0xf004, 0xf004) AM_WRITE(momoko_bg_read_bank_w)
 	AM_RANGE(0xf006, 0xf006) AM_WRITE(momoko_bg_select_w)
 	AM_RANGE(0xf007, 0xf007) AM_WRITE(momoko_bg_priority_w)
@@ -217,7 +217,7 @@ static const ym2203_interface ym2203_config =
 	{
 		AY8910_LEGACY_OUTPUT,
 		AY8910_DEFAULT_LOADS,
-		DEVCB_DRIVER_MEMBER(driver_device, soundlatch_r),
+		DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r),
 		DEVCB_NULL,
 		DEVCB_NULL,
 		DEVCB_NULL
@@ -228,9 +228,9 @@ static const ym2203_interface ym2203_config =
 static MACHINE_START( momoko )
 {
 	momoko_state *state = machine.driver_data<momoko_state>();
-	UINT8 *BG_MAP = machine.region("user1")->base();
+	UINT8 *BG_MAP = state->memregion("user1")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 32, &BG_MAP[0x0000], 0x1000);
+	state->membank("bank1")->configure_entries(0, 32, &BG_MAP[0x0000], 0x1000);
 
 	state->save_item(NAME(state->m_fg_scrollx));
 	state->save_item(NAME(state->m_fg_scrolly));

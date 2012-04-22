@@ -98,12 +98,15 @@ class looping_state : public driver_device
 {
 public:
 	looping_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_videoram(*this, "videoram"),
+		m_colorram(*this, "colorram"),
+		m_spriteram(*this, "spriteram"){ }
 
 	/* memory pointers */
-	UINT8 *		m_videoram;
-	UINT8 *		m_colorram;
-	UINT8 *		m_spriteram;
+	required_shared_ptr<UINT8> m_videoram;
+	required_shared_ptr<UINT8> m_colorram;
+	required_shared_ptr<UINT8> m_spriteram;
 	UINT8 *		m_cop_io;
 
 	/* tilemaps */
@@ -142,6 +145,7 @@ public:
 
 static PALETTE_INIT( looping )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	static const int resistances[3] = { 1000, 470, 220 };
 	double rweights[3], gweights[3], bweights[2];
 	int i;
@@ -214,15 +218,15 @@ static VIDEO_START( looping )
 
 WRITE8_MEMBER(looping_state::flip_screen_x_w)
 {
-	flip_screen_x_set(machine(), ~data & 0x01);
-	m_bg_tilemap->set_scrollx(0, flip_screen_get(machine()) ? 128 : 0);
+	flip_screen_x_set(~data & 0x01);
+	m_bg_tilemap->set_scrollx(0, flip_screen() ? 128 : 0);
 }
 
 
 WRITE8_MEMBER(looping_state::flip_screen_y_w)
 {
-	flip_screen_y_set(machine(), ~data & 0x01);
-	m_bg_tilemap->set_scrollx(0, flip_screen_get(machine()) ? 128 : 0);
+	flip_screen_y_set(~data & 0x01);
+	m_bg_tilemap->set_scrollx(0, flip_screen() ? 128 : 0);
 }
 
 
@@ -275,13 +279,13 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 		int code  = source[1] & 0x3f;
 		int color = source[2];
 
-		if (flip_screen_x_get(machine))
+		if (state->flip_screen_x())
 		{
 			sx = 240 - sx;
 			flipx = !flipx;
 		}
 
-		if (flip_screen_y_get(machine))
+		if (state->flip_screen_y())
 		{
 			sy = 240 - sy;
 			flipy = !flipy;
@@ -358,7 +362,7 @@ static WRITE_LINE_DEVICE_HANDLER( looping_spcint )
 
 WRITE8_MEMBER(looping_state::looping_soundlatch_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	cputag_set_input_line_and_vector(machine(), "audiocpu", 0, ASSERT_LINE, 4);
 }
 
@@ -496,10 +500,10 @@ READ8_MEMBER(looping_state::protection_r)
 static ADDRESS_MAP_START( looping_map, AS_PROGRAM, 8, looping_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 
-	AM_RANGE(0x9000, 0x93ff) AM_RAM_WRITE(looping_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x9000, 0x93ff) AM_RAM_WRITE(looping_videoram_w) AM_SHARE("videoram")
 
-	AM_RANGE(0x9800, 0x983f) AM_MIRROR(0x0700) AM_RAM_WRITE(looping_colorram_w) AM_BASE(m_colorram)
-	AM_RANGE(0x9840, 0x987f) AM_MIRROR(0x0700) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x9800, 0x983f) AM_MIRROR(0x0700) AM_RAM_WRITE(looping_colorram_w) AM_SHARE("colorram")
+	AM_RANGE(0x9840, 0x987f) AM_MIRROR(0x0700) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x9880, 0x98ff) AM_MIRROR(0x0700) AM_RAM
 
 	AM_RANGE(0xb001, 0xb001) AM_MIRROR(0x07f8) AM_WRITE(level2_irq_set)
@@ -605,7 +609,7 @@ static const ay8910_interface ay8910_config =
 {
 	AY8910_LEGACY_OUTPUT,
 	AY8910_DEFAULT_LOADS,
-	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_r),
+	DEVCB_DRIVER_MEMBER(driver_device, soundlatch_byte_r),
 	DEVCB_NULL,
 	DEVCB_NULL,
 	DEVCB_NULL
@@ -896,8 +900,8 @@ ROM_END
 static DRIVER_INIT( looping )
 {
 	looping_state *state = machine.driver_data<looping_state>();
-	int length = machine.region("maincpu")->bytes();
-	UINT8 *rom = machine.region("maincpu")->base();
+	int length = machine.root_device().memregion("maincpu")->bytes();
+	UINT8 *rom = state->memregion("maincpu")->base();
 	int i;
 
 	state->m_cop_io = auto_alloc_array(machine, UINT8, 0x08);

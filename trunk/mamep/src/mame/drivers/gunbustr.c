@@ -78,10 +78,9 @@ WRITE32_MEMBER(gunbustr_state::gunbustr_palette_w)
 	palette_set_color_rgb(machine(),offset*2+1,pal5bit(a >> 10),pal5bit(a >> 5),pal5bit(a >> 0));
 }
 
-static CUSTOM_INPUT( coin_word_r )
+CUSTOM_INPUT_MEMBER(gunbustr_state::coin_word_r)
 {
-	gunbustr_state *state = field.machine().driver_data<gunbustr_state>();
-	return state->m_coin_word;
+	return m_coin_word;
 }
 
 WRITE32_MEMBER(gunbustr_state::gunbustr_input_w)
@@ -103,7 +102,7 @@ popmessage(t);
 		{
 			if (ACCESSING_BITS_24_31)	/* $400000 is watchdog */
 			{
-				watchdog_reset(machine());
+				machine().watchdog_reset();
 			}
 
 			if (ACCESSING_BITS_0_7)
@@ -192,8 +191,8 @@ WRITE32_MEMBER(gunbustr_state::gunbustr_gun_w)
 
 static ADDRESS_MAP_START( gunbustr_map, AS_PROGRAM, 32, gunbustr_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
-	AM_RANGE(0x200000, 0x21ffff) AM_RAM AM_BASE(m_ram)										/* main CPUA ram */
-	AM_RANGE(0x300000, 0x301fff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)				/* Sprite ram */
+	AM_RANGE(0x200000, 0x21ffff) AM_RAM AM_SHARE("ram")										/* main CPUA ram */
+	AM_RANGE(0x300000, 0x301fff) AM_RAM AM_SHARE("spriteram")				/* Sprite ram */
 	AM_RANGE(0x380000, 0x380003) AM_WRITE(motor_control_w)											/* motor, lamps etc. */
 	AM_RANGE(0x390000, 0x3907ff) AM_RAM AM_SHARE("f3_shared")										/* Sound shared ram */
 	AM_RANGE(0x400000, 0x400003) AM_READ_PORT("P1_P2")
@@ -263,7 +262,7 @@ static INPUT_PORTS_START( gunbustr )
 	PORT_BIT( 0x00002000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x00004000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x00008000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(coin_word_r, NULL)
+	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, gunbustr_state,coin_word_r, NULL)
 
 	/* Light gun inputs */
 

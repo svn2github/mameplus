@@ -289,9 +289,9 @@ WRITE8_MEMBER(homedata_state::mrokumei_keyboard_select_w)
 READ8_MEMBER(homedata_state::mrokumei_sound_io_r)
 {
 	if (m_sndbank & 4)
-		return(soundlatch_r(space, 0));
+		return(soundlatch_byte_r(space, 0));
 	else
-		return machine().region("audiocpu")->base()[0x10000 + offset + (m_sndbank & 1) * 0x10000];
+		return memregion("audiocpu")->base()[0x10000 + offset + (m_sndbank & 1) * 0x10000];
 }
 
 WRITE8_MEMBER(homedata_state::mrokumei_sound_bank_w)
@@ -317,7 +317,7 @@ WRITE8_MEMBER(homedata_state::mrokumei_sound_io_w)
 
 WRITE8_MEMBER(homedata_state::mrokumei_sound_cmd_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
 }
 
@@ -355,7 +355,7 @@ WRITE8_MEMBER(homedata_state::reikaids_upd7807_portc_w)
       */
 //  logerror("%04x: port C wr %02x (STATUS %d DATA %d)\n", cpu_get_pc(&space.device()), data, BIT(data, 2), BIT(data, 6));
 
-	memory_set_bank(machine(), "bank2", data & 0x03);
+	membank("bank2")->set_entry(data & 0x03);
 
 	coin_counter_w(machine(), 0, ~data & 0x80);
 
@@ -494,7 +494,7 @@ WRITE8_MEMBER(homedata_state::pteacher_upd7807_portc_w)
 
 	//  logerror("%04x: port C wr %02x\n", cpu_get_pc(&space.device()), data);
 
-	memory_set_bank(machine(), "bank2", (data & 0x0c) >> 2);
+	membank("bank2")->set_entry((data & 0x0c) >> 2);
 
 	coin_counter_w(machine(), 0, ~data & 0x80);
 
@@ -509,13 +509,13 @@ WRITE8_MEMBER(homedata_state::pteacher_upd7807_portc_w)
 
 WRITE8_MEMBER(homedata_state::bankswitch_w)
 {
-	int last_bank = (machine().region("maincpu")->bytes() - 0x10000) / 0x4000;
+	int last_bank = (machine().root_device().memregion("maincpu")->bytes() - 0x10000) / 0x4000;
 
 	/* last bank is fixed and is #0 for us, other banks start from #1 (hence data+1 below)*/
 	if (data < last_bank)
-		memory_set_bank(machine(), "bank1", data + 1);
+		membank("bank1")->set_entry(data + 1);
 	else
-		memory_set_bank(machine(), "bank1", 0);
+		membank("bank1")->set_entry(0);
 }
 
 
@@ -523,7 +523,7 @@ WRITE8_MEMBER(homedata_state::bankswitch_w)
 
 
 static ADDRESS_MAP_START( mrokumei_map, AS_PROGRAM, 8, homedata_state )
-	AM_RANGE(0x0000, 0x3fff) AM_RAM_WRITE(mrokumei_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x0000, 0x3fff) AM_RAM_WRITE(mrokumei_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x4000, 0x5fff) AM_RAM
 	AM_RANGE(0x6000, 0x6fff) AM_RAM /* work ram */
 	AM_RANGE(0x7000, 0x77ff) AM_RAM /* hourouki expects this to act as RAM */
@@ -532,7 +532,7 @@ static ADDRESS_MAP_START( mrokumei_map, AS_PROGRAM, 8, homedata_state )
 	AM_RANGE(0x7803, 0x7803) AM_READ_PORT("IN0")			// coin, service
 	AM_RANGE(0x7804, 0x7804) AM_READ_PORT("DSW1")			// DSW1
 	AM_RANGE(0x7805, 0x7805) AM_READ_PORT("DSW2")			// DSW2
-	AM_RANGE(0x7ff0, 0x7ffd) AM_WRITEONLY AM_BASE(m_vreg)
+	AM_RANGE(0x7ff0, 0x7ffd) AM_WRITEONLY AM_SHARE("vreg")
 	AM_RANGE(0x7ffe, 0x7ffe) AM_READNOP	// ??? read every vblank, value discarded
 	AM_RANGE(0x8000, 0x8000) AM_WRITE(mrokumei_blitter_start_w)	// in some games also ROM bank switch to access service ROM
 	AM_RANGE(0x8001, 0x8001) AM_WRITE(mrokumei_keyboard_select_w)
@@ -557,14 +557,14 @@ ADDRESS_MAP_END
 /********************************************************************************/
 
 static ADDRESS_MAP_START( reikaids_map, AS_PROGRAM, 8, homedata_state )
-	AM_RANGE(0x0000, 0x3fff) AM_RAM_WRITE(reikaids_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x0000, 0x3fff) AM_RAM_WRITE(reikaids_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x4000, 0x5fff) AM_RAM
 	AM_RANGE(0x6000, 0x6fff) AM_RAM	/* work RAM */
 	AM_RANGE(0x7800, 0x7800) AM_RAM	/* behaves as normal RAM */
 	AM_RANGE(0x7801, 0x7801) AM_READ_PORT("IN0")
 	AM_RANGE(0x7802, 0x7802) AM_READ_PORT("IN1")
 	AM_RANGE(0x7803, 0x7803) AM_READ(reikaids_io_r)	// coin, blitter, upd7807
-	AM_RANGE(0x7ff0, 0x7ffd) AM_WRITEONLY AM_BASE(m_vreg)
+	AM_RANGE(0x7ff0, 0x7ffd) AM_WRITEONLY AM_SHARE("vreg")
 	AM_RANGE(0x7ffe, 0x7ffe) AM_WRITE(reikaids_blitter_bank_w)
 	AM_RANGE(0x7fff, 0x7fff) AM_WRITE(reikaids_blitter_start_w)
 	AM_RANGE(0x8000, 0x8000) AM_WRITE(bankswitch_w)
@@ -591,14 +591,14 @@ ADDRESS_MAP_END
 
 
 static ADDRESS_MAP_START( pteacher_map, AS_PROGRAM, 8, homedata_state )
-	AM_RANGE(0x0000, 0x3fff) AM_RAM_WRITE(mrokumei_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x0000, 0x3fff) AM_RAM_WRITE(mrokumei_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x4000, 0x5eff) AM_RAM
 	AM_RANGE(0x5f00, 0x5fff) AM_RAM
 	AM_RANGE(0x6000, 0x6fff) AM_RAM /* work ram */
 	AM_RANGE(0x7800, 0x7800) AM_RAM /* behaves as normal RAM */
 	AM_RANGE(0x7801, 0x7801) AM_READ(pteacher_io_r)	// vblank, visible page
 	AM_RANGE(0x7ff2, 0x7ff2) AM_READ(pteacher_snd_r)
-	AM_RANGE(0x7ff0, 0x7ffd) AM_WRITEONLY AM_BASE(m_vreg)
+	AM_RANGE(0x7ff0, 0x7ffd) AM_WRITEONLY AM_SHARE("vreg")
 	AM_RANGE(0x7fff, 0x7fff) AM_WRITE(pteacher_blitter_start_w)
 	AM_RANGE(0x8000, 0x8000) AM_WRITE(bankswitch_w)
 	AM_RANGE(0x8002, 0x8002) AM_WRITE(pteacher_snd_command_w)
@@ -1149,10 +1149,10 @@ static MACHINE_START( homedata )
 static MACHINE_START( reikaids )
 {
 	homedata_state *state = machine.driver_data<homedata_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 8, &ROM[0xc000], 0x4000);
-	memory_configure_bank(machine, "bank2", 0, 4, machine.region("audiocpu")->base(), 0x10000);
+	state->membank("bank1")->configure_entries(0, 8, &ROM[0xc000], 0x4000);
+	state->membank("bank2")->configure_entries(0, 4, state->memregion("audiocpu")->base(), 0x10000);
 
 	MACHINE_START_CALL(homedata);
 
@@ -1166,10 +1166,10 @@ static MACHINE_START( reikaids )
 static MACHINE_START( pteacher )
 {
 	homedata_state *state = machine.driver_data<homedata_state>();
-	UINT8 *ROM = machine.region("maincpu")->base();
+	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
 
-	memory_configure_bank(machine, "bank1", 0, 4, &ROM[0xc000], 0x4000);
-	memory_configure_bank(machine, "bank2", 0, 4, machine.region("audiocpu")->base(), 0x10000);
+	state->membank("bank1")->configure_entries(0, 4, &ROM[0xc000], 0x4000);
+	state->membank("bank2")->configure_entries(0, 4, state->memregion("audiocpu")->base(), 0x10000);
 
 	MACHINE_START_CALL(homedata);
 
@@ -1437,7 +1437,7 @@ WRITE8_MEMBER(homedata_state::mirderby_prot_w)
 
 
 static ADDRESS_MAP_START( cpu2_map, AS_PROGRAM, 8, homedata_state )
-	AM_RANGE(0x0000, 0x3fff) AM_RAM_WRITE(mrokumei_videoram_w) AM_BASE(m_videoram)
+	AM_RANGE(0x0000, 0x3fff) AM_RAM_WRITE(mrokumei_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x4000, 0x5fff) AM_RAM
 	AM_RANGE(0x6000, 0x6fff) AM_RAM /* work ram */
 	AM_RANGE(0x7000, 0x77ff) AM_RAM

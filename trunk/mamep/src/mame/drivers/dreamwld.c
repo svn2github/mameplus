@@ -125,15 +125,21 @@ class dreamwld_state : public driver_device
 {
 public:
 	dreamwld_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_spriteram(*this, "spriteram"),
+		m_paletteram(*this, "paletteram"),
+		m_bg_videoram(*this, "bg_videoram"),
+		m_bg2_videoram(*this, "bg2_videoram"),
+		m_vregs(*this, "vregs"),
+		m_workram(*this, "workram"){ }
 
 	/* memory pointers */
-	UINT32 *  m_bg_videoram;
-	UINT32 *  m_bg2_videoram;
-	UINT32 *  m_vregs;
-	UINT32 *  m_paletteram;
-	UINT32 *  m_spriteram;
-	UINT32 *  m_workram;
+	required_shared_ptr<UINT32> m_spriteram;
+	required_shared_ptr<UINT32> m_paletteram;
+	required_shared_ptr<UINT32> m_bg_videoram;
+	required_shared_ptr<UINT32> m_bg2_videoram;
+	required_shared_ptr<UINT32> m_vregs;
+	required_shared_ptr<UINT32> m_workram;
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
@@ -162,7 +168,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	const gfx_element *gfx = machine.gfx[0];
 	UINT32 *source = state->m_spritebuf1;
 	UINT32 *finish = state->m_spritebuf1 + 0x1000 / 4;
-	UINT16 *redirect = (UINT16 *)machine.region("spritelut")->base();
+	UINT16 *redirect = (UINT16 *)state->memregion("spritelut")->base();
 
 	while (source < finish)
 	{
@@ -334,14 +340,15 @@ static SCREEN_UPDATE_IND16( dreamwld )
 		int x0 = 0, x1 = 0;
 
 		/* layer 0 */
+		UINT16 *vregs = reinterpret_cast<UINT16 *>(state->m_vregs.target());
 		if (layer0_ctrl & 0x0300)
 		{
 			if (layer0_ctrl & 0x0200)
 				/* per-tile rowscroll */
-				x0 = ((UINT16 *)state->m_vregs)[BYTE_XOR_BE(0x000/2 + i/16)];
+				x0 = vregs[BYTE_XOR_BE(0x000/2 + i/16)];
 			else
 				/* per-line rowscroll */
-				x0 = ((UINT16 *)state->m_vregs)[BYTE_XOR_BE(0x000/2 + ((i + layer0_scrolly)&0xff))]; // different handling to psikyo.c? ( + scrolly )
+				x0 = vregs[BYTE_XOR_BE(0x000/2 + ((i + layer0_scrolly)&0xff))]; // different handling to psikyo.c? ( + scrolly )
 		}
 
 
@@ -355,10 +362,10 @@ static SCREEN_UPDATE_IND16( dreamwld )
 		{
 			if (layer1_ctrl & 0x0200)
 				/* per-tile rowscroll */
-				x1 = ((UINT16 *)state->m_vregs)[BYTE_XOR_BE(0x200/2 + i/16)];
+				x1 = vregs[BYTE_XOR_BE(0x200/2 + i/16)];
 			else
 				/* per-line rowscroll */
-				x1 = ((UINT16 *)state->m_vregs)[BYTE_XOR_BE(0x200/2 + ((i + layer1_scrolly)&0xff))];  // different handling to psikyo.c? ( + scrolly )
+				x1 = vregs[BYTE_XOR_BE(0x200/2 + ((i + layer1_scrolly)&0xff))];  // different handling to psikyo.c? ( + scrolly )
 		}
 
 
@@ -401,8 +408,8 @@ READ32_MEMBER(dreamwld_state::dreamwld_protdata_r)
 	//printf("protection read %04x\n", count);
 	//count++;
 
-	UINT8 *protdata = machine().region("user1")->base();
-	size_t protsize = machine().region("user1")->bytes();
+	UINT8 *protdata = memregion("user1")->base();
+	size_t protsize = memregion("user1")->bytes();
 	UINT8 dat = protdata[(m_protindex++) % protsize];
 
 	// real hw returns 00 after end of data, I haven't checked if it's possible to overflow the read counter
@@ -414,7 +421,7 @@ READ32_MEMBER(dreamwld_state::dreamwld_protdata_r)
 
 WRITE32_MEMBER(dreamwld_state::dreamwld_6295_0_bank_w)
 {
-	UINT8 *sound = machine().region("oki1")->base();
+	UINT8 *sound = memregion("oki1")->base();
 
 	if (ACCESSING_BITS_0_7)
 		memcpy(sound + 0x30000, sound + 0xb0000 + 0x10000 * (data&0x3), 0x10000);
@@ -424,7 +431,7 @@ WRITE32_MEMBER(dreamwld_state::dreamwld_6295_0_bank_w)
 
 WRITE32_MEMBER(dreamwld_state::dreamwld_6295_1_bank_w)
 {
-	UINT8 *sound = machine().region("oki2")->base();
+	UINT8 *sound = memregion("oki2")->base();
 
 	if (ACCESSING_BITS_0_7)
 		memcpy(sound + 0x30000, sound + 0xb0000 + 0x10000 * (data&0x3), 0x10000);
@@ -432,7 +439,7 @@ WRITE32_MEMBER(dreamwld_state::dreamwld_6295_1_bank_w)
 		logerror("OKI1: unk bank write %x mem_mask %8x\n", data, mem_mask);
 }
 
-// why doesn't using paletteram16_xRRRRRGGGGGBBBBB_word_w with a 16-bit handler work? colours are
+// why doesn't using paletteram_xRRRRRGGGGGBBBBB_word_w with a 16-bit handler work? colours are
 // severely corrupt on dream world's semicom screen + many sprites, seems palette values get duplicated.
 WRITE32_MEMBER(dreamwld_state::dreamwld_palette_w)
 {
@@ -454,11 +461,11 @@ WRITE32_MEMBER(dreamwld_state::dreamwld_palette_w)
 static ADDRESS_MAP_START( baryon_map, AS_PROGRAM, 32, dreamwld_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM  AM_WRITENOP
 
-	AM_RANGE(0x400000, 0x401fff) AM_RAM AM_BASE(m_spriteram)
-	AM_RANGE(0x600000, 0x601fff) AM_RAM AM_WRITE(dreamwld_palette_w) AM_BASE(m_paletteram)
-	AM_RANGE(0x800000, 0x801fff) AM_RAM_WRITE(dreamwld_bg_videoram_w ) AM_BASE(m_bg_videoram)
-	AM_RANGE(0x802000, 0x803fff) AM_RAM_WRITE(dreamwld_bg2_videoram_w ) AM_BASE(m_bg2_videoram)
-	AM_RANGE(0x804000, 0x805fff) AM_RAM AM_BASE(m_vregs)  // scroll regs etc.
+	AM_RANGE(0x400000, 0x401fff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x600000, 0x601fff) AM_RAM AM_WRITE(dreamwld_palette_w) AM_SHARE("paletteram")
+	AM_RANGE(0x800000, 0x801fff) AM_RAM_WRITE(dreamwld_bg_videoram_w ) AM_SHARE("bg_videoram")
+	AM_RANGE(0x802000, 0x803fff) AM_RAM_WRITE(dreamwld_bg2_videoram_w ) AM_SHARE("bg2_videoram")
+	AM_RANGE(0x804000, 0x805fff) AM_RAM AM_SHARE("vregs")  // scroll regs etc.
 
 	AM_RANGE(0xc00000, 0xc00003) AM_READ_PORT("INPUTS")
 	AM_RANGE(0xc00004, 0xc00007) AM_READ_PORT("c00004")
@@ -468,7 +475,7 @@ static ADDRESS_MAP_START( baryon_map, AS_PROGRAM, 32, dreamwld_state )
 
 	AM_RANGE(0xc00030, 0xc00033) AM_READ(dreamwld_protdata_r) // it reads protection data (irq code) from here and puts it at ffd000
 
-	AM_RANGE(0xfe0000, 0xffffff) AM_RAM AM_BASE(m_workram) // work ram
+	AM_RANGE(0xfe0000, 0xffffff) AM_RAM AM_SHARE("workram") // work ram
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( dreamwld_map, AS_PROGRAM, 32, dreamwld_state )
@@ -502,8 +509,8 @@ static INPUT_PORTS_START( dreamwld )
 	PORT_BIT( 0x80000000, IP_ACTIVE_LOW, IPT_JOYSTICK_UP )    PORT_PLAYER(1)
 
 	PORT_START("c00004")
-	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(custom_port_read, "DSW")
-	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(custom_port_read, "DSW")
+	PORT_BIT( 0x0000ffff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, driver_device,custom_port_read, "DSW")
+	PORT_BIT( 0xffff0000, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, driver_device,custom_port_read, "DSW")
 
 	PORT_START("DSW")
 	PORT_DIPNAME( 0x0003, 0x0003, DEF_STR( Lives ) )        PORT_DIPLOCATION("SW2:1,2")

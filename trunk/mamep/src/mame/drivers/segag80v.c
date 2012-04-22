@@ -158,11 +158,11 @@
  *
  *************************************/
 
-static INPUT_CHANGED( service_switch )
+INPUT_CHANGED_MEMBER(segag80v_state::service_switch)
 {
 	/* pressing the service switch sends an NMI */
 	if (newval)
-		cputag_set_input_line(field.machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -287,9 +287,9 @@ READ8_MEMBER(segag80v_state::spinner_input_r)
  *
  *************************************/
 
-static CUSTOM_INPUT( elim4_joint_coin_r )
+CUSTOM_INPUT_MEMBER(segag80v_state::elim4_joint_coin_r)
 {
-	return (input_port_read(field.machine(), "COINS") & 0xf) != 0xf;
+	return (input_port_read(machine(), "COINS") & 0xf) != 0xf;
 }
 
 
@@ -376,8 +376,8 @@ WRITE8_MEMBER(segag80v_state::unknown_w)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, segag80v_state )
 	AM_RANGE(0x0000, 0x07ff) AM_ROM		/* CPU board ROM */
 	AM_RANGE(0x0800, 0xbfff) AM_ROM		/* PROM board ROM area */
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(mainram_w) AM_BASE(m_mainram)
-	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(vectorram_w) AM_BASE(m_vectorram) AM_SIZE(m_vectorram_size)
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(mainram_w) AM_SHARE("mainram")
+	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(vectorram_w) AM_SHARE("vectorram")
 ADDRESS_MAP_END
 
 
@@ -480,7 +480,7 @@ static INPUT_PORTS_START( g80v_generic )
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_UNUSED )				/* P1.30 */
 
 	PORT_START("SERVICESW")
-	PORT_SERVICE_NO_TOGGLE( 0x01, IP_ACTIVE_HIGH ) PORT_CHANGED(service_switch, 0)
+	PORT_SERVICE_NO_TOGGLE( 0x01, IP_ACTIVE_HIGH ) PORT_CHANGED_MEMBER(DEVICE_SELF, segag80v_state,service_switch, 0)
 INPUT_PORTS_END
 
 
@@ -555,7 +555,7 @@ static INPUT_PORTS_START( elim4 )
 	PORT_INCLUDE( g80v_generic )
 
 	PORT_MODIFY("D7D6")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM(elim4_joint_coin_r, NULL)	/* combination of all four coin inputs */
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, segag80v_state,elim4_joint_coin_r, NULL)	/* combination of all four coin inputs */
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
 
@@ -1298,8 +1298,8 @@ static DRIVER_INIT( elim2 )
 
 	/* configure sound */
 	state->m_usb = NULL;
-	iospace->install_legacy_write_handler(0x3e, 0x3e, FUNC(elim1_sh_w));
-	iospace->install_legacy_write_handler(0x3f, 0x3f, FUNC(elim2_sh_w));
+	iospace->install_write_handler(0x3e, 0x3e, write8_delegate(FUNC(segag80v_state::elim1_sh_w),state));
+	iospace->install_write_handler(0x3f, 0x3f, write8_delegate(FUNC(segag80v_state::elim2_sh_w),state));
 }
 
 
@@ -1313,8 +1313,8 @@ static DRIVER_INIT( elim4 )
 
 	/* configure sound */
 	state->m_usb = NULL;
-	iospace->install_legacy_write_handler(0x3e, 0x3e, FUNC(elim1_sh_w));
-	iospace->install_legacy_write_handler(0x3f, 0x3f, FUNC(elim2_sh_w));
+	iospace->install_write_handler(0x3e, 0x3e, write8_delegate(FUNC(segag80v_state::elim1_sh_w),state));
+	iospace->install_write_handler(0x3f, 0x3f, write8_delegate(FUNC(segag80v_state::elim2_sh_w),state));
 
 	/* configure inputs */
 	iospace->install_write_handler(0xf8, 0xf8, write8_delegate(FUNC(segag80v_state::spinner_select_w),state));
@@ -1334,8 +1334,8 @@ static DRIVER_INIT( spacfury )
 	state->m_usb = NULL;
 	iospace->install_legacy_write_handler(*machine.device("segaspeech"), 0x38, 0x38, FUNC(sega_speech_data_w));
 	iospace->install_legacy_write_handler(*machine.device("segaspeech"), 0x3b, 0x3b, FUNC(sega_speech_control_w));
-	iospace->install_legacy_write_handler(0x3e, 0x3e, FUNC(spacfury1_sh_w));
-	iospace->install_legacy_write_handler(0x3f, 0x3f, FUNC(spacfury2_sh_w));
+	iospace->install_write_handler(0x3e, 0x3e, write8_delegate(FUNC(segag80v_state::spacfury1_sh_w),state));
+	iospace->install_write_handler(0x3f, 0x3f, write8_delegate(FUNC(segag80v_state::spacfury2_sh_w),state));
 }
 
 
@@ -1353,8 +1353,8 @@ static DRIVER_INIT( zektor )
 	iospace->install_legacy_write_handler(*machine.device("segaspeech"), 0x38, 0x38, FUNC(sega_speech_data_w));
 	iospace->install_legacy_write_handler(*machine.device("segaspeech"), 0x3b, 0x3b, FUNC(sega_speech_control_w));
 	iospace->install_legacy_write_handler(*ay, 0x3c, 0x3d, FUNC(ay8910_address_data_w));
-	iospace->install_legacy_write_handler(0x3e, 0x3e, FUNC(zektor1_sh_w));
-	iospace->install_legacy_write_handler(0x3f, 0x3f, FUNC(zektor2_sh_w));
+	iospace->install_write_handler(0x3e, 0x3e, write8_delegate(FUNC(segag80v_state::zektor1_sh_w),state));
+	iospace->install_write_handler(0x3f, 0x3f, write8_delegate(FUNC(segag80v_state::zektor2_sh_w),state));
 
 	/* configure inputs */
 	iospace->install_write_handler(0xf8, 0xf8, write8_delegate(FUNC(segag80v_state::spinner_select_w),state));

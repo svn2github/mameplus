@@ -85,12 +85,15 @@ class igs011_state : public driver_device
 public:
 	igs011_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this, "maincpu")
-		{ }
+		m_maincpu(*this, "maincpu"),
+		m_priority_ram(*this, "priority_ram"),
+		m_vbowl_trackball(*this, "vbowl_trackball"){ }
 
+	required_device<cpu_device> m_maincpu;
+	required_shared_ptr<UINT16> m_priority_ram;
+	optional_shared_ptr<UINT16> m_vbowl_trackball;
 	UINT8 *m_layer[8];
 	UINT16 m_priority;
-	UINT16 *m_priority_ram;
 	UINT8 m_lhb2_pen_hi;
 	UINT16 m_igs_dips_sel;
 	UINT16 m_igs_input_sel;
@@ -104,10 +107,8 @@ public:
 	UINT8 m_igs012_prot_mode;
 	UINT16 m_igs003_reg[2];
 	UINT16 m_lhb_irq_enable;
-	UINT16 *m_vbowl_trackball;
 	blitter_t m_blitter;
 
-	required_device<cpu_device> m_maincpu;
 	DECLARE_WRITE16_MEMBER(igs011_priority_w);
 	DECLARE_READ16_MEMBER(igs011_layers_r);
 	DECLARE_WRITE16_MEMBER(igs011_layers_w);
@@ -173,6 +174,7 @@ public:
 	DECLARE_WRITE16_MEMBER(vbowl_link_2_w);
 	DECLARE_WRITE16_MEMBER(vbowl_link_3_w);
 	UINT16 igs_dips_r(int NUM);
+	DECLARE_CUSTOM_INPUT_MEMBER(igs_hopper_r);
 };
 
 
@@ -413,10 +415,10 @@ WRITE16_MEMBER(igs011_state::igs011_blit_flags_w)
 	UINT8 trans_pen, clear_pen, pen_hi, *dest;
 	UINT8 pen = 0;
 
-	UINT8 *gfx		=	machine().region("blitter")->base();
-	UINT8 *gfx2		=	machine().region("blitter_hi")->base();
-	int gfx_size	=	machine().region("blitter")->bytes();
-	int gfx2_size	=	machine().region("blitter_hi")->bytes();
+	UINT8 *gfx		=	memregion("blitter")->base();
+	UINT8 *gfx2		=	memregion("blitter_hi")->base();
+	int gfx_size	=	memregion("blitter")->bytes();
+	int gfx2_size	=	memregion("blitter_hi")->bytes();
 
 	const rectangle &clip = machine().primary_screen->visible_area();
 
@@ -520,10 +522,9 @@ WRITE16_MEMBER(igs011_state::igs011_blit_flags_w)
 // Inputs
 
 
-static CUSTOM_INPUT( igs_hopper_r )
+CUSTOM_INPUT_MEMBER(igs011_state::igs_hopper_r)
 {
-	igs011_state *state = field.machine().driver_data<igs011_state>();
-	return (state->m_igs_hopper && ((field.machine().primary_screen->frame_number()/5)&1)) ? 0x0000 : 0x0001;
+	return (m_igs_hopper && ((machine().primary_screen->frame_number()/5)&1)) ? 0x0000 : 0x0001;
 }
 
 WRITE16_MEMBER(igs011_state::igs_dips_w)
@@ -558,7 +559,7 @@ READ16_MEMBER(igs011_state::igs_5_dips_r){ return igs_dips_r(5); }
 static void wlcc_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) (machine.region("maincpu")->base());
+	UINT16 *src = (UINT16 *) (machine.root_device().memregion("maincpu")->base());
 
 	int rom_size = 0x80000;
 
@@ -582,7 +583,7 @@ static void wlcc_decrypt(running_machine &machine)
 static void lhb_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) (machine.region("maincpu")->base());
+	UINT16 *src = (UINT16 *) (machine.root_device().memregion("maincpu")->base());
 
 	int rom_size = 0x80000;
 
@@ -607,7 +608,7 @@ static void lhb_decrypt(running_machine &machine)
 static void drgnwrld_type3_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) (machine.region("maincpu")->base());
+	UINT16 *src = (UINT16 *) (machine.root_device().memregion("maincpu")->base());
 
 	int rom_size = 0x80000;
 
@@ -635,7 +636,7 @@ static void drgnwrld_type3_decrypt(running_machine &machine)
 static void drgnwrld_type2_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) (machine.region("maincpu")->base());
+	UINT16 *src = (UINT16 *) (machine.root_device().memregion("maincpu")->base());
 
 	int rom_size = 0x80000;
 
@@ -668,7 +669,7 @@ static void drgnwrld_type2_decrypt(running_machine &machine)
 static void drgnwrld_type1_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) (machine.region("maincpu")->base());
+	UINT16 *src = (UINT16 *) (machine.root_device().memregion("maincpu")->base());
 
 	int rom_size = 0x80000;
 
@@ -698,7 +699,7 @@ static void lhb2_decrypt(running_machine &machine)
 {
 	int i,j;
 	int rom_size = 0x80000;
-	UINT16 *src = (UINT16 *) (machine.region("maincpu")->base());
+	UINT16 *src = (UINT16 *) (machine.root_device().memregion("maincpu")->base());
 	UINT16 *result_data = auto_alloc_array(machine, UINT16, rom_size/2);
 
 	for (i=0; i<rom_size/2; i++)
@@ -739,7 +740,7 @@ static void nkishusp_decrypt(running_machine &machine)
 
 	int i,j;
 	int rom_size = 0x80000;
-	UINT16 *src = (UINT16 *) (machine.region("maincpu")->base());
+	UINT16 *src = (UINT16 *) (machine.root_device().memregion("maincpu")->base());
 	UINT16 *result_data = auto_alloc_array(machine, UINT16, rom_size/2);
 
 	for (i=0; i<rom_size/2; i++)
@@ -769,7 +770,7 @@ static void nkishusp_decrypt(running_machine &machine)
 static void vbowlj_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) (machine.region("maincpu")->base());
+	UINT16 *src = (UINT16 *) (machine.root_device().memregion("maincpu")->base());
 
 	int rom_size = 0x80000;
 
@@ -803,7 +804,7 @@ static void vbowlj_decrypt(running_machine &machine)
 static void dbc_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) (machine.region("maincpu")->base());
+	UINT16 *src = (UINT16 *) (machine.root_device().memregion("maincpu")->base());
 
 	int rom_size = 0x80000;
 
@@ -853,7 +854,7 @@ static void dbc_decrypt(running_machine &machine)
 static void ryukobou_decrypt(running_machine &machine)
 {
 	int i;
-	UINT16 *src = (UINT16 *) machine.region("maincpu")->base();
+	UINT16 *src = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 	int rom_size = 0x80000;
 
 	for (i=0; i<rom_size/2; i++)
@@ -885,7 +886,7 @@ static void lhb2_decrypt_gfx(running_machine &machine)
 {
 	int i;
 	unsigned rom_size = 0x200000;
-	UINT8 *src = (UINT8 *) (machine.region("blitter")->base());
+	UINT8 *src = (UINT8 *) (machine.root_device().memregion("blitter")->base());
 	UINT8 *result_data = auto_alloc_array(machine, UINT8, rom_size);
 
 	for (i=0; i<rom_size; i++)
@@ -900,7 +901,7 @@ static void drgnwrld_gfx_decrypt(running_machine &machine)
 {
 	int i;
 	unsigned rom_size = 0x400000;
-	UINT8 *src = (UINT8 *) (machine.region("blitter")->base());
+	UINT8 *src = (UINT8 *) (machine.root_device().memregion("blitter")->base());
 	UINT8 *result_data = auto_alloc_array(machine, UINT8, rom_size);
 
 	for (i=0; i<rom_size; i++)
@@ -1013,7 +1014,7 @@ WRITE16_MEMBER(igs011_state::igs011_prot_addr_w)
 //  m_prot2 = 0x00;
 
 	address_space *sp = machine().device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *rom = machine().region("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 
 	// Plug previous address range with ROM access
 	sp->install_rom(m_prot1_addr + 0, m_prot1_addr + 9, rom + m_prot1_addr);
@@ -1756,7 +1757,7 @@ READ16_MEMBER(igs011_state::vbowl_igs003_r)
 // V0400O
 static DRIVER_INIT( drgnwrld )
 {
-//  UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
+//  UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 
 	drgnwrld_type1_decrypt(machine);
 	drgnwrld_gfx_decrypt(machine);
@@ -1782,7 +1783,7 @@ static DRIVER_INIT( drgnwrld )
 
 static DRIVER_INIT( drgnwrldv30 )
 {
-//  UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
+//  UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 
 	drgnwrld_type1_decrypt(machine);
 	drgnwrld_gfx_decrypt(machine);
@@ -1807,7 +1808,7 @@ static DRIVER_INIT( drgnwrldv30 )
 
 static DRIVER_INIT( drgnwrldv21 )
 {
-//  UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
+//  UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 
 	drgnwrld_type2_decrypt(machine);
 	drgnwrld_gfx_decrypt(machine);
@@ -1837,7 +1838,7 @@ static DRIVER_INIT( drgnwrldv21 )
 
 static DRIVER_INIT( drgnwrldv21j )
 {
-//  UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
+//  UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 
 	drgnwrld_type3_decrypt(machine);
 	drgnwrld_gfx_decrypt(machine);
@@ -1864,7 +1865,7 @@ static DRIVER_INIT( drgnwrldv21j )
 
 static DRIVER_INIT( drgnwrldv20j )
 {
-//  UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
+//  UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 
 	drgnwrld_type3_decrypt(machine);
 	drgnwrld_gfx_decrypt(machine);
@@ -1902,7 +1903,7 @@ static DRIVER_INIT( drgnwrldv11h )
 
 static DRIVER_INIT( drgnwrldv10c )
 {
-//  UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
+//  UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 
 	drgnwrld_type1_decrypt(machine);
 	drgnwrld_gfx_decrypt(machine);
@@ -1928,7 +1929,7 @@ static DRIVER_INIT( drgnwrldv10c )
 
 static DRIVER_INIT( lhb )
 {
-//  UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
+//  UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 
 	lhb_decrypt(machine);
 
@@ -1938,7 +1939,7 @@ static DRIVER_INIT( lhb )
 
 static DRIVER_INIT( lhbv33c )
 {
-//  UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
+//  UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 
 	lhb_decrypt(machine);
 
@@ -1948,7 +1949,7 @@ static DRIVER_INIT( lhbv33c )
 
 static DRIVER_INIT( dbc )
 {
-//  UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
+//  UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 
 	dbc_decrypt(machine);
 
@@ -1978,7 +1979,7 @@ static DRIVER_INIT( dbc )
 
 static DRIVER_INIT( ryukobou )
 {
-//  UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
+//  UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 
 	ryukobou_decrypt(machine);
 
@@ -1992,7 +1993,7 @@ static DRIVER_INIT( ryukobou )
 
 static DRIVER_INIT( xymg )
 {
-//  UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
+//  UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 
 	lhb_decrypt(machine);
 /*
@@ -2026,7 +2027,7 @@ static DRIVER_INIT( xymg )
 
 static DRIVER_INIT( wlcc )
 {
-//  UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
+//  UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 
 	wlcc_decrypt(machine);
 /*
@@ -2050,7 +2051,7 @@ static DRIVER_INIT( wlcc )
 
 static DRIVER_INIT( lhb2 )
 {
-	UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
+	UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
 
 	lhb2_decrypt(machine);
 	lhb2_decrypt_gfx(machine);
@@ -2072,8 +2073,8 @@ static DRIVER_INIT( lhb2 )
 
 static DRIVER_INIT( vbowl )
 {
-	UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
-	UINT8  *gfx = (UINT8 *)  machine.region("blitter")->base();
+	UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
+	UINT8  *gfx = (UINT8 *)  machine.root_device().memregion("blitter")->base();
 	int i;
 
 	vbowlj_decrypt(machine);
@@ -2097,8 +2098,8 @@ static DRIVER_INIT( vbowl )
 
 static DRIVER_INIT( vbowlj )
 {
-	UINT16 *rom = (UINT16 *) machine.region("maincpu")->base();
-	UINT8  *gfx = (UINT8 *)  machine.region("blitter")->base();
+	UINT16 *rom = (UINT16 *) machine.root_device().memregion("maincpu")->base();
+	UINT8  *gfx = (UINT8 *)  machine.root_device().memregion("blitter")->base();
 	int i;
 
 	vbowlj_decrypt(machine);
@@ -2138,7 +2139,7 @@ static ADDRESS_MAP_START( drgnwrld, AS_PROGRAM, 16, igs011_state )
 
 	AM_RANGE( 0x000000, 0x07ffff ) AM_ROM
 	AM_RANGE( 0x100000, 0x103fff ) AM_RAM AM_SHARE("nvram")
-	AM_RANGE( 0x200000, 0x200fff ) AM_RAM AM_BASE(m_priority_ram )
+	AM_RANGE( 0x200000, 0x200fff ) AM_RAM AM_SHARE("priority_ram")
 	AM_RANGE( 0x400000, 0x401fff ) AM_RAM_WRITE(igs011_palette ) AM_SHARE("paletteram")
 	AM_RANGE( 0x500000, 0x500001 ) AM_READ_PORT( "COIN" )
 	AM_RANGE( 0x600000, 0x600001 ) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff )
@@ -2223,7 +2224,7 @@ static ADDRESS_MAP_START( lhb, AS_PROGRAM, 16, igs011_state )
 
 	AM_RANGE( 0x000000, 0x07ffff ) AM_ROM
 	AM_RANGE( 0x100000, 0x103fff ) AM_RAM AM_SHARE("nvram")
-	AM_RANGE( 0x200000, 0x200fff ) AM_RAM AM_BASE(m_priority_ram )
+	AM_RANGE( 0x200000, 0x200fff ) AM_RAM AM_SHARE("priority_ram")
 	AM_RANGE( 0x300000, 0x3fffff ) AM_READWRITE(igs011_layers_r, igs011_layers_w )
 	AM_RANGE( 0x400000, 0x401fff ) AM_RAM_WRITE(igs011_palette ) AM_SHARE("paletteram")
 	AM_RANGE( 0x600000, 0x600001 ) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff )
@@ -2264,7 +2265,7 @@ static ADDRESS_MAP_START( xymg, AS_PROGRAM, 16, igs011_state )
 	AM_RANGE( 0x000000, 0x07ffff ) AM_ROM
 	AM_RANGE( 0x100000, 0x103fff ) AM_RAM
 	AM_RANGE( 0x1f0000, 0x1f3fff ) AM_RAM AM_SHARE("nvram") // extra ram
-	AM_RANGE( 0x200000, 0x200fff ) AM_RAM AM_BASE(m_priority_ram )
+	AM_RANGE( 0x200000, 0x200fff ) AM_RAM AM_SHARE("priority_ram")
 	AM_RANGE( 0x300000, 0x3fffff ) AM_READWRITE(igs011_layers_r, igs011_layers_w )
 	AM_RANGE( 0x400000, 0x401fff ) AM_RAM_WRITE(igs011_palette ) AM_SHARE("paletteram")
 	AM_RANGE( 0x600000, 0x600001 ) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0x00ff )
@@ -2300,7 +2301,7 @@ static ADDRESS_MAP_START( wlcc, AS_PROGRAM, 16, igs011_state )
 
 	AM_RANGE( 0x000000, 0x07ffff ) AM_ROM
 	AM_RANGE( 0x100000, 0x103fff ) AM_RAM AM_SHARE("nvram")
-	AM_RANGE( 0x200000, 0x200fff ) AM_RAM AM_BASE(m_priority_ram )
+	AM_RANGE( 0x200000, 0x200fff ) AM_RAM AM_SHARE("priority_ram")
 	AM_RANGE( 0x300000, 0x3fffff ) AM_READWRITE(igs011_layers_r, igs011_layers_w )
 	AM_RANGE( 0x400000, 0x401fff ) AM_RAM_WRITE(igs011_palette ) AM_SHARE("paletteram")
 	AM_RANGE( 0x520000, 0x520001 ) AM_READ_PORT( "COIN" )
@@ -2343,7 +2344,7 @@ static ADDRESS_MAP_START( lhb2, AS_PROGRAM, 16, igs011_state )
 	AM_RANGE( 0x204000, 0x204003 ) AM_DEVWRITE8_LEGACY("ymsnd", ym2413_w, 0x00ff )
 	AM_RANGE( 0x208000, 0x208003 ) AM_WRITE(lhb2_igs003_w )
 	AM_RANGE( 0x208002, 0x208003 ) AM_READ(lhb2_igs003_r )
-	AM_RANGE( 0x20c000, 0x20cfff ) AM_RAM AM_BASE(m_priority_ram)
+	AM_RANGE( 0x20c000, 0x20cfff ) AM_RAM AM_SHARE("priority_ram")
 	AM_RANGE( 0x210000, 0x211fff ) AM_RAM_WRITE(igs011_palette ) AM_SHARE("paletteram")
 	AM_RANGE( 0x214000, 0x214001 ) AM_READ_PORT( "COIN" )
 	AM_RANGE( 0x300000, 0x3fffff ) AM_READWRITE(igs011_layers_r, igs011_layers_w )
@@ -2457,12 +2458,12 @@ static ADDRESS_MAP_START( vbowl, AS_PROGRAM, 16, igs011_state )
 
 	AM_RANGE( 0x000000, 0x07ffff ) AM_ROM
 	AM_RANGE( 0x100000, 0x103fff ) AM_RAM AM_SHARE("nvram")
-	AM_RANGE( 0x200000, 0x200fff ) AM_RAM AM_BASE(m_priority_ram )
+	AM_RANGE( 0x200000, 0x200fff ) AM_RAM AM_SHARE("priority_ram")
 	AM_RANGE( 0x300000, 0x3fffff ) AM_READWRITE(igs011_layers_r, igs011_layers_w )
 	AM_RANGE( 0x400000, 0x401fff ) AM_RAM_WRITE(igs011_palette ) AM_SHARE("paletteram")
 	AM_RANGE( 0x520000, 0x520001 ) AM_READ_PORT( "COIN" )
 	AM_RANGE( 0x600000, 0x600007 ) AM_DEVREADWRITE_LEGACY("ics", ics2115_word_r, ics2115_word_w )
-	AM_RANGE( 0x700000, 0x700003 ) AM_RAM AM_BASE(m_vbowl_trackball )
+	AM_RANGE( 0x700000, 0x700003 ) AM_RAM AM_SHARE("vbowl_trackball")
 	AM_RANGE( 0x700004, 0x700005 ) AM_WRITE(vbowl_pen_hi_w )
 	AM_RANGE( 0x800000, 0x800003 ) AM_WRITE(vbowl_igs003_w )
 	AM_RANGE( 0x800002, 0x800003 ) AM_READ(vbowl_igs003_r )
@@ -2857,7 +2858,7 @@ static INPUT_PORTS_START( lhb2 )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1    )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE1 )	// data clear
 	PORT_SERVICE_NO_TOGGLE( 0x04, IP_ACTIVE_LOW )	// keep pressed while booting
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(igs_hopper_r, (void *)0)	// hopper switch
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, igs011_state,igs_hopper_r, (void *)0)	// hopper switch
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_SERVICE2 )	// stats
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER    ) PORT_NAME("Pay Out") PORT_CODE(KEYCODE_O)	// clear coin
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN  )
@@ -2986,7 +2987,7 @@ static INPUT_PORTS_START( wlcc )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_SERVICE2  )	// shown in test mode
 	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_UNKNOWN   )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_OTHER     ) PORT_NAME("Pay Out") PORT_CODE(KEYCODE_O)	// clear coin
-	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL   ) PORT_CUSTOM(igs_hopper_r, (void *)0)	// hopper switch
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL   ) PORT_CUSTOM_MEMBER(DEVICE_SELF, igs011_state,igs_hopper_r, (void *)0)	// hopper switch
 
 	PORT_START("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START1 )
@@ -3115,7 +3116,7 @@ static INPUT_PORTS_START( lhb )
 	PORT_DIPUNKNOWN( 0x80, 0x80 )
 
 	PORT_START("COIN")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(igs_hopper_r, (void *)0)	// hopper switch
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, igs011_state,igs_hopper_r, (void *)0)	// hopper switch
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SERVICE2 )	// system reset
 	PORT_SERVICE_NO_TOGGLE( 0x04, IP_ACTIVE_LOW )	// keep pressed while booting
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )	// stats
@@ -3442,7 +3443,7 @@ static INPUT_PORTS_START( xymg )
 	PORT_DIPUNKNOWN( 0x80, 0x80 )
 
 	PORT_START("COIN")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(igs_hopper_r, (void *)0)	// hopper switch
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, igs011_state,igs_hopper_r, (void *)0)	// hopper switch
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_SERVICE_NO_TOGGLE( 0x04, IP_ACTIVE_LOW )	// keep pressed while booting
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SERVICE1 )	// stats

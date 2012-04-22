@@ -1028,39 +1028,39 @@ WRITE32_MEMBER(hng64_state::hng64_sprite_clear_odd_w)
 */
 static ADDRESS_MAP_START( hng_map, AS_PROGRAM, 32, hng64_state )
 
-	AM_RANGE(0x00000000, 0x00ffffff) AM_RAM AM_BASE(m_mainram)
-	AM_RANGE(0x04000000, 0x05ffffff) AM_WRITENOP AM_ROM AM_REGION("user3", 0) AM_BASE(m_cart)
+	AM_RANGE(0x00000000, 0x00ffffff) AM_RAM AM_SHARE("mainram")
+	AM_RANGE(0x04000000, 0x05ffffff) AM_WRITENOP AM_ROM AM_REGION("user3", 0) AM_SHARE("cart")
 
 	// Ports
-	AM_RANGE(0x1f700000, 0x1f702fff) AM_READWRITE(hng64_sysregs_r, hng64_sysregs_w) AM_BASE(m_sysregs)
+	AM_RANGE(0x1f700000, 0x1f702fff) AM_READWRITE(hng64_sysregs_r, hng64_sysregs_w) AM_SHARE("sysregs")
 
 	// SRAM.  Coin data, Player Statistics, etc.
 	AM_RANGE(0x1F800000, 0x1F803fff) AM_RAM AM_SHARE("nvram")
 
 	// Dualport RAM
-	AM_RANGE(0x1F808000, 0x1F8087ff) AM_READWRITE(hng64_dualport_r, hng64_dualport_w) AM_BASE(m_dualport)
+	AM_RANGE(0x1F808000, 0x1F8087ff) AM_READWRITE(hng64_dualport_r, hng64_dualport_w) AM_SHARE("dualport")
 
 	// BIOS
-	AM_RANGE(0x1fc00000, 0x1fc7ffff) AM_WRITENOP AM_ROM AM_REGION("user1", 0) AM_BASE(m_rombase)
+	AM_RANGE(0x1fc00000, 0x1fc7ffff) AM_WRITENOP AM_ROM AM_REGION("user1", 0) AM_SHARE("rombase")
 
 	// Video
-	AM_RANGE(0x20000000, 0x2000bfff) AM_RAM AM_BASE(m_spriteram)
+	AM_RANGE(0x20000000, 0x2000bfff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x2000d800, 0x2000e3ff) AM_WRITE(hng64_sprite_clear_even_w)
 	AM_RANGE(0x2000e400, 0x2000efff) AM_WRITE(hng64_sprite_clear_odd_w)
-	AM_RANGE(0x20010000, 0x20010013) AM_RAM AM_BASE(m_spriteregs)
-	AM_RANGE(0x20100000, 0x2017ffff) AM_RAM_WRITE(hng64_videoram_w) AM_BASE(m_videoram)	// Tilemap
-	AM_RANGE(0x20190000, 0x20190037) AM_RAM AM_BASE(m_videoregs)
+	AM_RANGE(0x20010000, 0x20010013) AM_RAM AM_SHARE("spriteregs")
+	AM_RANGE(0x20100000, 0x2017ffff) AM_RAM_WRITE(hng64_videoram_w) AM_SHARE("videoram")	// Tilemap
+	AM_RANGE(0x20190000, 0x20190037) AM_RAM AM_SHARE("videoregs")
 	AM_RANGE(0x20200000, 0x20203fff) AM_RAM_WRITE(hng64_pal_w) AM_SHARE("paletteram")
-	AM_RANGE(0x20208000, 0x2020805f) AM_READWRITE(tcram_r, tcram_w) AM_BASE(m_tcram)	// Transition Control
-	AM_RANGE(0x20300000, 0x203001ff) AM_RAM_WRITE(dl_w) AM_BASE(m_dl)	// 3d Display List
-//  AM_RANGE(0x20300200, 0x20300213) AM_RAM_WRITE_LEGACY(xxxx) AM_BASE(m_xxxxxxxx)  // 3d Display List Upload?
+	AM_RANGE(0x20208000, 0x2020805f) AM_READWRITE(tcram_r, tcram_w) AM_SHARE("tcram")	// Transition Control
+	AM_RANGE(0x20300000, 0x203001ff) AM_RAM_WRITE(dl_w) AM_SHARE("dl")	// 3d Display List
+//  AM_RANGE(0x20300200, 0x20300213) AM_RAM_WRITE_LEGACY(xxxx) AM_SHARE("xxxxxxxx")  // 3d Display List Upload?
 	AM_RANGE(0x20300214, 0x20300217) AM_WRITE(dl_control_w)
 	AM_RANGE(0x20300218, 0x2030021b) AM_READ(unk_vreg_r)
 
 	// 3d?
-	AM_RANGE(0x30000000, 0x3000002f) AM_RAM AM_BASE(m_3dregs)
-	AM_RANGE(0x30100000, 0x3015ffff) AM_READWRITE(hng64_3d_1_r, hng64_3d_2_w) AM_BASE(m_3d_1)	// 3D Display Buffer A
-	AM_RANGE(0x30200000, 0x3025ffff) AM_READWRITE(hng64_3d_2_r, hng64_3d_2_w) AM_BASE(m_3d_2)	// 3D Display Buffer B
+	AM_RANGE(0x30000000, 0x3000002f) AM_RAM AM_SHARE("3dregs")
+	AM_RANGE(0x30100000, 0x3015ffff) AM_READWRITE(hng64_3d_1_r, hng64_3d_2_w) AM_SHARE("3d_1")	// 3D Display Buffer A
+	AM_RANGE(0x30200000, 0x3025ffff) AM_READWRITE(hng64_3d_2_r, hng64_3d_2_w) AM_SHARE("3d_2")	// 3D Display Buffer B
 
 	// Sound
 	AM_RANGE(0x60000000, 0x601fffff) AM_RAM												// Sound ??
@@ -1073,7 +1073,7 @@ static ADDRESS_MAP_START( hng_map, AS_PROGRAM, 32, hng64_state )
 //  AM_RANGE(0x6f000000, 0x6f000003) AM_WRITENOP    // halt / reset line for the sound CPU
 
 	// Communications
-	AM_RANGE(0xc0000000, 0xc0000fff) AM_READWRITE(hng64_com_r, hng64_com_w) AM_BASE(m_com_ram)
+	AM_RANGE(0xc0000000, 0xc0000fff) AM_READWRITE(hng64_com_r, hng64_com_w) AM_SHARE("com_ram")
 	AM_RANGE(0xc0001000, 0xc0001007) AM_READWRITE(hng64_com_share_r, hng64_com_share_w)
 
 	/* 6e000000-6fffffff */
@@ -1090,11 +1090,9 @@ ADDRESS_MAP_END
 #define KL5C_MMU_A(xxx) ( (xxx == 0) ? 0x0000 : (state->m_com_mmu_mem[((xxx-1)*2)+1] << 2) | ((state->m_com_mmu_mem[(xxx-1)*2] & 0xc0) >> 6) )
 #define KL5C_MMU_B(xxx) ( (xxx == 0) ? 0x0000 : (state->m_com_mmu_mem[(xxx-1)*2] & 0x3f) )
 
-DIRECT_UPDATE_HANDLER( KL5C80_direct_handler )
+DIRECT_UPDATE_MEMBER(hng64_state::KL5C80_direct_handler)
 {
-	hng64_state *state = machine.driver_data<hng64_state>();
-
-	direct.explicit_configure(0x0000, 0xffff, 0xffff, state->m_com_op_base);
+	direct.explicit_configure(0x0000, 0xffff, 0xffff, m_com_op_base);
 	return ~0;
 }
 
@@ -1245,7 +1243,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( hng_comm_io_map, AS_IO, 8, hng64_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	/* Reserved for the KL5C80 internal hardware */
-	AM_RANGE(0x00, 0x07) AM_WRITE(hng64_comm_io_mmu ) AM_BASE(m_com_mmu_mem)
+	AM_RANGE(0x00, 0x07) AM_WRITE(hng64_comm_io_mmu ) AM_SHARE("com_mmu_mem")
 //  AM_RANGE(0x08,0x1f) AM_NOP              /* Reserved */
 //  AM_RANGE(0x20,0x25) AM_READWRITE        /* Timer/Counter B */           /* hng64 writes here */
 //  AM_RANGE(0x27,0x27) AM_NOP              /* Reserved */
@@ -1525,14 +1523,14 @@ static void hng64_reorder(running_machine &machine, UINT8* gfxregion, size_t gfx
 
 static DRIVER_INIT( hng64_reorder_gfx )
 {
-	hng64_reorder(machine, machine.region("scrtile")->base(), machine.region("scrtile")->bytes());
+	hng64_reorder(machine, machine.root_device().memregion("scrtile")->base(), machine.root_device().memregion("scrtile")->bytes());
 }
 
 #define HACK_REGION
 #ifdef HACK_REGION
 static void hng64_patch_bios_region(running_machine& machine, int region)
 {
-	UINT8 *rom = machine.region("user1")->base();
+	UINT8 *rom = machine.root_device().memregion("user1")->base();
 
 	if ((rom[0x4000]==0xff) && (rom[0x4001] == 0xff))
 	{
@@ -1578,7 +1576,7 @@ static DRIVER_INIT( fatfurwa )
 {
 	hng64_state *state = machine.driver_data<hng64_state>();
 
-	/* FILE* fp = fopen("/tmp/test.bin", "wb"); fwrite(machine.region("verts")->base(), 1, 0x0c00000*2, fp); fclose(fp); */
+	/* FILE* fp = fopen("/tmp/test.bin", "wb"); fwrite(state->memregion("verts")->base(), 1, 0x0c00000*2, fp); fclose(fp); */
 	DRIVER_INIT_CALL(hng64_fght);
 	state->m_mcu_type = FIGHT_MCU;
 }
@@ -1663,12 +1661,12 @@ static MACHINE_RESET(hyperneo)
 {
 	hng64_state *state = machine.driver_data<hng64_state>();
 	int i;
-	const UINT8 *rom = machine.region("user2")->base();
+	const UINT8 *rom = state->memregion("user2")->base();
 
 	/* Sound CPU */
 	UINT8 *RAM = (UINT8*)state->m_soundram;
-	memory_set_bankptr(machine, "bank1",&RAM[0x1e0000]);
-	memory_set_bankptr(machine, "bank2",&RAM[0x001000]); // where..
+	state->membank("bank1")->set_base(&RAM[0x1e0000]);
+	state->membank("bank2")->set_base(&RAM[0x001000]); // where..
 	cputag_set_input_line(machine, "audiocpu", INPUT_LINE_HALT, ASSERT_LINE);
 	cputag_set_input_line(machine, "audiocpu", INPUT_LINE_RESET, ASSERT_LINE);
 
@@ -1682,7 +1680,7 @@ static MACHINE_RESET(hyperneo)
 	KL5C80_virtual_mem_sync(state);
 
 	address_space *space = machine.device<z80_device>("comm")->space(AS_PROGRAM);
-	space->set_direct_update_handler(direct_update_delegate(FUNC(KL5C80_direct_handler), &machine));
+	space->set_direct_update_handler(direct_update_delegate(FUNC(hng64_state::KL5C80_direct_handler), state));
 
 	cputag_set_input_line(machine, "comm", INPUT_LINE_RESET, PULSE_LINE);     // reset the CPU and let 'er rip
 //  cputag_set_input_line(machine, "comm", INPUT_LINE_HALT, ASSERT_LINE);     // hold on there pardner...

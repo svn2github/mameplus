@@ -195,22 +195,21 @@ static INTERRUPT_GEN(psikyosh_interrupt)
 	device_set_input_line(device, 4, HOLD_LINE);
 }
 
-static CUSTOM_INPUT( system_port_r )
+CUSTOM_INPUT_MEMBER(psikyo4_state::system_port_r)
 {
-	return input_port_read(field.machine(), "SYSTEM");
+	return input_port_read(machine(), "SYSTEM");
 }
 
-static CUSTOM_INPUT( mahjong_ctrl_r ) /* used by hotgmck/hgkairak */
+CUSTOM_INPUT_MEMBER(psikyo4_state::mahjong_ctrl_r)/* used by hotgmck/hgkairak */
 {
-	psikyo4_state *state = field.machine().driver_data<psikyo4_state>();
 	int player = (FPTR)param;
-	int sel = (state->m_io_select[0] & 0x0000ff00) >> 8;
+	int sel = (m_io_select[0] & 0x0000ff00) >> 8;
 	int ret = 0xff;
 
-	if (sel & 1) ret &= input_port_read(field.machine(), player ? "KEY4" : "KEY0" );
-	if (sel & 2) ret &= input_port_read(field.machine(), player ? "KEY5" : "KEY1" );
-	if (sel & 4) ret &= input_port_read(field.machine(), player ? "KEY6" : "KEY2" );
-	if (sel & 8) ret &= input_port_read(field.machine(), player ? "KEY7" : "KEY3" );
+	if (sel & 1) ret &= input_port_read(machine(), player ? "KEY4" : "KEY0" );
+	if (sel & 2) ret &= input_port_read(machine(), player ? "KEY5" : "KEY1" );
+	if (sel & 4) ret &= input_port_read(machine(), player ? "KEY6" : "KEY2" );
+	if (sel & 8) ret &= input_port_read(machine(), player ? "KEY7" : "KEY3" );
 
 	return ret;
 }
@@ -320,7 +319,7 @@ WRITE32_MEMBER(psikyo4_state::ps4_vidregs_w)
 	if (offset == 2) /* Configure bank for gfx test */
 	{
 		if (ACCESSING_BITS_0_15)	// Bank
-			memory_set_bankptr(machine(), "bank2", machine().region("gfx1")->base() + 0x2000 * (m_vidregs[offset] & 0x1fff)); /* Bank comes from vidregs */
+			membank("bank2")->set_base(machine().root_device().memregion("gfx1")->base() + 0x2000 * (m_vidregs[offset] & 0x1fff)); /* Bank comes from vidregs */
 	}
 }
 
@@ -329,8 +328,8 @@ WRITE32_MEMBER(psikyo4_state::ps4_vidregs_w)
 static void set_hotgmck_pcm_bank( running_machine &machine, int n )
 {
 	psikyo4_state *state = machine.driver_data<psikyo4_state>();
-	UINT8 *ymf_pcmbank = machine.region("ymf")->base() + 0x200000;
-	UINT8 *pcm_rom = machine.region("ymfsource")->base();
+	UINT8 *ymf_pcmbank = machine.root_device().memregion("ymf")->base() + 0x200000;
+	UINT8 *pcm_rom = state->memregion("ymfsource")->base();
 
 	memcpy(ymf_pcmbank + n * 0x100000, pcm_rom + PCM_BANK_NO_LEGACY(n) * 0x100000, 0x100000);
 }
@@ -356,37 +355,37 @@ WRITE32_MEMBER(psikyo4_state::hotgmck_pcm_bank_w)
 static ADDRESS_MAP_START( ps4_map, AS_PROGRAM, 32, psikyo4_state )
 	AM_RANGE(0x00000000, 0x000fffff) AM_ROM		// program ROM (1 meg)
 	AM_RANGE(0x02000000, 0x021fffff) AM_ROMBANK("bank1") // data ROM
-	AM_RANGE(0x03000000, 0x030037ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)
+	AM_RANGE(0x03000000, 0x030037ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0x03003fe0, 0x03003fe3) AM_DEVREADWRITE_LEGACY("eeprom", ps4_eeprom_r,ps4_eeprom_w)
 	AM_RANGE(0x03003fe4, 0x03003fe7) AM_READNOP // also writes to this address - might be vblank?
 //  AM_RANGE(0x03003fe4, 0x03003fe7) AM_WRITENOP // might be vblank?
-	AM_RANGE(0x03003fe4, 0x03003fef) AM_RAM_WRITE(ps4_vidregs_w) AM_BASE(m_vidregs) // vid regs?
+	AM_RANGE(0x03003fe4, 0x03003fef) AM_RAM_WRITE(ps4_vidregs_w) AM_SHARE("vidregs") // vid regs?
 	AM_RANGE(0x03003ff0, 0x03003ff3) AM_WRITE(ps4_screen1_brt_w) // screen 1 brightness
-	AM_RANGE(0x03003ff4, 0x03003ff7) AM_WRITE(ps4_bgpen_1_dword_w) AM_BASE(m_bgpen_1) // screen 1 clear colour
+	AM_RANGE(0x03003ff4, 0x03003ff7) AM_WRITE(ps4_bgpen_1_dword_w) AM_SHARE("bgpen_1") // screen 1 clear colour
 	AM_RANGE(0x03003ff8, 0x03003ffb) AM_WRITE(ps4_screen2_brt_w) // screen 2 brightness
-	AM_RANGE(0x03003ffc, 0x03003fff) AM_WRITE(ps4_bgpen_2_dword_w) AM_BASE(m_bgpen_2) // screen 2 clear colour
-	AM_RANGE(0x03004000, 0x03005fff) AM_RAM_WRITE(ps4_paletteram32_RRRRRRRRGGGGGGGGBBBBBBBBxxxxxxxx_dword_w) AM_BASE(m_paletteram) // palette
+	AM_RANGE(0x03003ffc, 0x03003fff) AM_WRITE(ps4_bgpen_2_dword_w) AM_SHARE("bgpen_2") // screen 2 clear colour
+	AM_RANGE(0x03004000, 0x03005fff) AM_RAM_WRITE(ps4_paletteram32_RRRRRRRRGGGGGGGGBBBBBBBBxxxxxxxx_dword_w) AM_SHARE("paletteram") // palette
 	AM_RANGE(0x03006000, 0x03007fff) AM_ROMBANK("bank2") // data for rom tests (gfx), data is controlled by vidreg
 	AM_RANGE(0x05000000, 0x05000007) AM_DEVREADWRITE8_LEGACY("ymf", ymf278b_r, ymf278b_w, 0xffffffff)
 	AM_RANGE(0x05800000, 0x05800003) AM_READ_PORT("P1_P2")
 	AM_RANGE(0x05800004, 0x05800007) AM_READ_PORT("P3_P4")
-	AM_RANGE(0x05800008, 0x0580000b) AM_WRITEONLY AM_BASE(m_io_select) // Used by Mahjong games to choose input (also maps normal loderndf inputs to offsets)
+	AM_RANGE(0x05800008, 0x0580000b) AM_WRITEONLY AM_SHARE("io_select") // Used by Mahjong games to choose input (also maps normal loderndf inputs to offsets)
 
-	AM_RANGE(0x06000000, 0x060fffff) AM_RAM AM_BASE(m_ram) // main RAM (1 meg)
+	AM_RANGE(0x06000000, 0x060fffff) AM_RAM AM_SHARE("ram") // main RAM (1 meg)
 
 ADDRESS_MAP_END
 
 
 static INPUT_PORTS_START( hotgmck )
 	PORT_START("P1_P2")
-	PORT_BIT( 0x000000ff, IP_ACTIVE_HIGH, IPT_UNKNOWN ) PORT_CUSTOM(system_port_r, NULL)
+	PORT_BIT( 0x000000ff, IP_ACTIVE_HIGH, IPT_UNKNOWN ) PORT_CUSTOM_MEMBER(DEVICE_SELF, psikyo4_state,system_port_r, NULL)
 	PORT_BIT( 0x00ffff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0xff000000, IP_ACTIVE_HIGH, IPT_UNKNOWN ) PORT_CUSTOM(mahjong_ctrl_r, (void *)0)
+	PORT_BIT( 0xff000000, IP_ACTIVE_HIGH, IPT_UNKNOWN ) PORT_CUSTOM_MEMBER(DEVICE_SELF, psikyo4_state,mahjong_ctrl_r, (void *)0)
 
 	PORT_START("P3_P4")
-	PORT_BIT( 0x000000ff, IP_ACTIVE_HIGH, IPT_UNKNOWN ) PORT_CUSTOM(system_port_r, NULL)
+	PORT_BIT( 0x000000ff, IP_ACTIVE_HIGH, IPT_UNKNOWN ) PORT_CUSTOM_MEMBER(DEVICE_SELF, psikyo4_state,system_port_r, NULL)
 	PORT_BIT( 0x00ffff00, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0xff000000, IP_ACTIVE_HIGH, IPT_UNKNOWN ) PORT_CUSTOM(mahjong_ctrl_r, (void *)1)
+	PORT_BIT( 0xff000000, IP_ACTIVE_HIGH, IPT_UNKNOWN ) PORT_CUSTOM_MEMBER(DEVICE_SELF, psikyo4_state,mahjong_ctrl_r, (void *)1)
 
 	PORT_START("JP4")/* jumper pads 'JP4' on the PCB */
 	/* EEPROM is read here */
@@ -956,8 +955,8 @@ static void hotgmck_pcm_bank_postload(running_machine &machine)
 static void install_hotgmck_pcm_bank(running_machine &machine)
 {
 	psikyo4_state *state = machine.driver_data<psikyo4_state>();
-	UINT8 *ymf_pcm = machine.region("ymf")->base();
-	UINT8 *pcm_rom = machine.region("ymfsource")->base();
+	UINT8 *ymf_pcm = machine.root_device().memregion("ymf")->base();
+	UINT8 *pcm_rom = state->memregion("ymfsource")->base();
 
 	memcpy(ymf_pcm, pcm_rom, 0x200000);
 
@@ -971,8 +970,8 @@ static void install_hotgmck_pcm_bank(running_machine &machine)
 
 static DRIVER_INIT( hotgmck )
 {
-	UINT8 *RAM = machine.region("maincpu")->base();
-	memory_set_bankptr(machine, "bank1", &RAM[0x100000]);
+	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
+	machine.root_device().membank("bank1")->set_base(&RAM[0x100000]);
 	install_hotgmck_pcm_bank(machine);	// Banked PCM ROM
 }
 

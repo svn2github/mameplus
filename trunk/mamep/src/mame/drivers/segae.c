@@ -427,40 +427,40 @@ WRITE8_MEMBER( systeme_state::bank_write )
 {
 	m_f7_bank_value = data;
 
-	memory_set_bankptr(machine(), "vdp1_bank", m_vdp1_vram->base() + ( ( data & 0x80 ) ? 0x4000 : 0 ) );
-	memory_set_bankptr(machine(), "vdp2_bank", m_vdp2_vram->base() + ( ( data & 0x40 ) ? 0x4000 : 0 ) );
+	membank("vdp1_bank")->set_base(m_vdp1_vram->base() + ( ( data & 0x80 ) ? 0x4000 : 0 ) );
+	membank("vdp2_bank")->set_base(m_vdp2_vram->base() + ( ( data & 0x40 ) ? 0x4000 : 0 ) );
 
-	memory_set_bank(machine(), "bank1", data & 0x0f);
+	membank("bank1")->set_entry(data & 0x0f);
 }
 
 
 void systeme_state::driver_start()
 {
 	/* Allocate video RAM */
-	m_vdp1_vram = machine().region_alloc("vdp1_vram", 2 * 0x4000, 1, ENDIANNESS_LITTLE);
-	m_vdp2_vram = machine().region_alloc("vdp2_vram", 2 * 0x4000, 1, ENDIANNESS_LITTLE);
+	m_vdp1_vram = machine().memory().region_alloc("vdp1_vram", 2 * 0x4000, 1, ENDIANNESS_LITTLE);
+	m_vdp2_vram = machine().memory().region_alloc("vdp2_vram", 2 * 0x4000, 1, ENDIANNESS_LITTLE);
 
-	memory_configure_bank(machine(), "bank1", 0, 16, machine().region("maincpu")->base() + 0x10000, 0x4000);
+	membank("bank1")->configure_entries(0, 16, memregion("maincpu")->base() + 0x10000, 0x4000);
 
-	if ( !strcmp( m_system->name, "ridleofp" ) )
+	if ( !strcmp( system().name, "ridleofp" ) )
 	{
 		m_maincpu->memory().space(AS_IO)->install_read_handler(0xf8, 0xf8, read8_delegate(FUNC(systeme_state::ridleofp_port_f8_read), this));
 		m_maincpu->memory().space(AS_IO)->install_write_handler(0xfa, 0xfa, write8_delegate(FUNC(systeme_state::ridleofp_port_fa_write), this));
 	}
-	else if ( !strcmp( m_system->name, "hangonjr" ) )
+	else if ( !strcmp( system().name, "hangonjr" ) )
 	{
 		m_maincpu->memory().space(AS_IO)->install_read_handler(0xf8, 0xf8, read8_delegate(FUNC(systeme_state::hangonjr_port_f8_read), this));
 		m_maincpu->memory().space(AS_IO)->install_write_handler(0xfa, 0xfa, write8_delegate(FUNC(systeme_state::hangonjr_port_fa_write), this));
 	}
-	else if ( !strcmp( m_system->name, "opaopa" ) )
+	else if ( !strcmp( system().name, "opaopa" ) )
 	{
 		mc8123_decrypt_rom(machine(), "maincpu", "user1", "bank1", 8);
 	}
-	else if ( !strcmp( m_system->name, "fantzn2" ) )
+	else if ( !strcmp( system().name, "fantzn2" ) )
 	{
 		mc8123_decrypt_rom(machine(), "maincpu", "user1", NULL, 0);
 	}
-	else if ( !strcmp( m_system->name, "astrofl" ) )
+	else if ( !strcmp( system().name, "astrofl" ) )
 	{
 		sega_315_5177_decode(machine(), "maincpu");
 	}

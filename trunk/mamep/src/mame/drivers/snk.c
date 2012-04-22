@@ -89,7 +89,7 @@ Notes:
   a bug. The service mode functionality is very limited anyway. To get past the
   failed ROM test and see the service mode, use this ROM patch:
 
-    UINT8 *mem = machine.region("maincpu")->base();
+    UINT8 *mem = machine.root_device().memregion("maincpu")->base();
     mem[0x3a5d] = mem[0x3a5e] = mem[0x3a5f] = 0;
 
 - The "SNK Wave" custom sound circuitry is only actually used by marvins and
@@ -318,7 +318,7 @@ WRITE8_MEMBER(snk_state::marvins_soundlatch_w)
 {
 
 	m_marvins_sound_busy_flag = 1;
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
 }
 
@@ -326,14 +326,13 @@ READ8_MEMBER(snk_state::marvins_soundlatch_r)
 {
 
 	m_marvins_sound_busy_flag = 0;
-	return soundlatch_r(space, 0);
+	return soundlatch_byte_r(space, 0);
 }
 
-static CUSTOM_INPUT( marvins_sound_busy )
+CUSTOM_INPUT_MEMBER(snk_state::marvins_sound_busy)
 {
-	snk_state *state = field.machine().driver_data<snk_state>();
 
-	return state->m_marvins_sound_busy_flag;
+	return m_marvins_sound_busy_flag;
 }
 
 READ8_MEMBER(snk_state::marvins_sound_nmi_ack_r)
@@ -369,14 +368,14 @@ static TIMER_CALLBACK( sgladiat_sndirq_update_callback )
 
 WRITE8_MEMBER(snk_state::sgladiat_soundlatch_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	machine().scheduler().synchronize(FUNC(sgladiat_sndirq_update_callback), CMDIRQ_BUSY_ASSERT);
 }
 
 READ8_MEMBER(snk_state::sgladiat_soundlatch_r)
 {
 	machine().scheduler().synchronize(FUNC(sgladiat_sndirq_update_callback), BUSY_CLEAR);
-	return soundlatch_r(space,0);
+	return soundlatch_byte_r(space,0);
 }
 
 READ8_MEMBER(snk_state::sgladiat_sound_nmi_ack_r)
@@ -492,15 +491,14 @@ static const y8950_interface y8950_config_2 =
 
 WRITE8_MEMBER(snk_state::snk_soundlatch_w)
 {
-	soundlatch_w(space, offset, data);
+	soundlatch_byte_w(space, offset, data);
 	machine().scheduler().synchronize(FUNC(sndirq_update_callback), CMDIRQ_BUSY_ASSERT);
 }
 
-static CUSTOM_INPUT( snk_sound_busy )
+CUSTOM_INPUT_MEMBER(snk_state::snk_sound_busy)
 {
-	snk_state *state = field.machine().driver_data<snk_state>();
 
-	return (state->m_sound_status & 4) ? 1 : 0;
+	return (m_sound_status & 4) ? 1 : 0;
 }
 
 
@@ -543,7 +541,7 @@ READ8_MEMBER(snk_state::tnk3_ymirq_ack_r)
 READ8_MEMBER(snk_state::tnk3_busy_clear_r)
 {
 	// it's uncertain whether the latch should be cleared here or when it's read
-	soundlatch_clear_w(space, 0, 0);
+	soundlatch_clear_byte_w(space, 0, 0);
 	machine().scheduler().synchronize(FUNC(sndirq_update_callback), BUSY_CLEAR);
 	return 0xff;
 }
@@ -739,29 +737,28 @@ hand, always returning 0xf inbetween valid values confuses the game.
 
 *****************************************************************************/
 
-static CUSTOM_INPUT( gwar_rotary )
+CUSTOM_INPUT_MEMBER(snk_state::gwar_rotary)
 {
-	snk_state *state = field.machine().driver_data<snk_state>();
 	static const char *const ports[] = { "P1ROT", "P2ROT" };
 	int which = (int)(FPTR)param;
-	int value = input_port_read(field.machine(), ports[which]);
+	int value = input_port_read(machine(), ports[which]);
 
-	if ((state->m_last_value[which] == 0x5 && value == 0x6) || (state->m_last_value[which] == 0x6 && value == 0x5))
+	if ((m_last_value[which] == 0x5 && value == 0x6) || (m_last_value[which] == 0x6 && value == 0x5))
 	{
-		if (!state->m_cp_count[which])
+		if (!m_cp_count[which])
 			value = 0xf;
-		state->m_cp_count[which] = (state->m_cp_count[which] + 1) & 0x07;
+		m_cp_count[which] = (m_cp_count[which] + 1) & 0x07;
 	}
-	state->m_last_value[which] = value;
+	m_last_value[which] = value;
 
 	return value;
 }
 
-static CUSTOM_INPUT( gwarb_rotary )
+CUSTOM_INPUT_MEMBER(snk_state::gwarb_rotary)
 {
-	if (input_port_read(field.machine(), "JOYSTICK_MODE") == 1)
+	if (input_port_read(machine(), "JOYSTICK_MODE") == 1)
 	{
-		return gwar_rotary(device, field, param);
+		return gwar_rotary(field, param);
 	}
 	else
 	{
@@ -805,38 +802,36 @@ WRITE8_MEMBER(snk_state::countryc_trackball_w)
 	m_countryc_trackball = data & 1;
 }
 
-static CUSTOM_INPUT( countryc_trackball_x )
+CUSTOM_INPUT_MEMBER(snk_state::countryc_trackball_x)
 {
-	snk_state *state = field.machine().driver_data<snk_state>();
 
-	return input_port_read(field.machine(), state->m_countryc_trackball ? "TRACKBALLX2" : "TRACKBALLX1");
+	return input_port_read(machine(), m_countryc_trackball ? "TRACKBALLX2" : "TRACKBALLX1");
 }
 
-static CUSTOM_INPUT( countryc_trackball_y )
+CUSTOM_INPUT_MEMBER(snk_state::countryc_trackball_y)
 {
-	snk_state *state = field.machine().driver_data<snk_state>();
 
-	return input_port_read(field.machine(), state->m_countryc_trackball ? "TRACKBALLY2" : "TRACKBALLY1");
+	return input_port_read(machine(), m_countryc_trackball ? "TRACKBALLY2" : "TRACKBALLY1");
 }
 
 
 /************************************************************************/
 
-static CUSTOM_INPUT( snk_bonus_r )
+CUSTOM_INPUT_MEMBER(snk_state::snk_bonus_r)
 {
 	int bit_mask = (FPTR)param;
 
 	switch (bit_mask)
 	{
 		case 0x01:  /* older games : "Occurrence" Dip Switch (DSW2:1) */
-			return ((input_port_read(field.machine(), "BONUS") & bit_mask) >> 0);
+			return ((input_port_read(machine(), "BONUS") & bit_mask) >> 0);
 		case 0xc0:  /* older games : "Bonus Life" Dip Switches (DSW1:7,8) */
-			return ((input_port_read(field.machine(), "BONUS") & bit_mask) >> 6);
+			return ((input_port_read(machine(), "BONUS") & bit_mask) >> 6);
 
 		case 0x04:  /* later games : "Occurrence" Dip Switch (DSW1:3) */
-			return ((input_port_read(field.machine(), "BONUS") & bit_mask) >> 2);
+			return ((input_port_read(machine(), "BONUS") & bit_mask) >> 2);
 		case 0x30:  /* later games : "Bonus Life" Dip Switches (DSW2:5,6) */
-			return ((input_port_read(field.machine(), "BONUS") & bit_mask) >> 4);
+			return ((input_port_read(machine(), "BONUS") & bit_mask) >> 4);
 
 		default:
 			logerror("snk_bonus_r : invalid %02X bit_mask\n",bit_mask);
@@ -857,12 +852,12 @@ static ADDRESS_MAP_START( marvins_cpuA_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x8500, 0x8500) AM_READ_PORT("DSW2")
 	AM_RANGE(0x8600, 0x8600) AM_WRITE(marvins_flipscreen_w)
 	AM_RANGE(0x8700, 0x8700) AM_READWRITE(snk_cpuB_nmi_trigger_r, snk_cpuA_nmi_ack_w)
-	AM_RANGE(0xc000, 0xcfff) AM_RAM AM_BASE(m_spriteram) AM_SHARE("share1")	// + work ram
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(marvins_fg_videoram_w) AM_SHARE("share2") AM_BASE(m_fg_videoram)
+	AM_RANGE(0xc000, 0xcfff) AM_RAM AM_SHARE("spriteram")	// + work ram
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(marvins_fg_videoram_w) AM_SHARE("fg_videoram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("share3")
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share4") AM_BASE(m_bg_videoram)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("share5")
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share6") AM_BASE(m_tx_videoram)	// + work RAM
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")	// + work RAM
 	AM_RANGE(0xf800, 0xf800) AM_WRITE(snk_sp16_scrolly_w)
 	AM_RANGE(0xf900, 0xf900) AM_WRITE(snk_sp16_scrollx_w)
 	AM_RANGE(0xfa00, 0xfa00) AM_WRITE(snk_fg_scrolly_w)
@@ -876,12 +871,12 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( marvins_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x8700, 0x8700) AM_READWRITE(snk_cpuA_nmi_trigger_r, snk_cpuB_nmi_ack_w)
-	AM_RANGE(0xc000, 0xcfff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(marvins_fg_videoram_w) AM_SHARE("share2")
+	AM_RANGE(0xc000, 0xcfff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(marvins_fg_videoram_w) AM_SHARE("fg_videoram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("share3")
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share4")
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("share5")
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share6")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
 	AM_RANGE(0xf800, 0xf800) AM_WRITE(snk_sp16_scrolly_w)
 	AM_RANGE(0xf900, 0xf900) AM_WRITE(snk_sp16_scrollx_w)
 	AM_RANGE(0xfa00, 0xfa00) AM_WRITE(snk_fg_scrolly_w)
@@ -904,13 +899,13 @@ static ADDRESS_MAP_START( madcrash_cpuA_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x8500, 0x8500) AM_READ_PORT("DSW2")
 	AM_RANGE(0x8600, 0x8600) AM_MIRROR(0xff) AM_WRITE(marvins_flipscreen_w)
 	AM_RANGE(0x8700, 0x8700) AM_READWRITE(snk_cpuB_nmi_trigger_r, snk_cpuA_nmi_ack_w)
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_BASE(m_spriteram) AM_SHARE("share1")	// + work ram
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("spriteram") // + work ram
 	AM_RANGE(0xc800, 0xc800) AM_MIRROR(0xff) AM_WRITE(marvins_palette_bank_w)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share2") AM_BASE(m_bg_videoram)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("share3")
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(marvins_fg_videoram_w) AM_SHARE("share4") AM_BASE(m_fg_videoram)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(marvins_fg_videoram_w) AM_SHARE("fg_videoram")
 	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("share5")
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share6") AM_BASE(m_tx_videoram)	// + work RAM
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")	// + work RAM
 	AM_RANGE(0xf800, 0xf800) AM_MIRROR(0xff) AM_WRITE(snk_bg_scrolly_w)
 	AM_RANGE(0xf900, 0xf900) AM_MIRROR(0xff) AM_WRITE(snk_bg_scrollx_w)
 	AM_RANGE(0xfa00, 0xfa00) AM_MIRROR(0xff) AM_WRITE(snk_sprite_split_point_w)
@@ -925,9 +920,9 @@ static ADDRESS_MAP_START( madcrash_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x8700, 0x8700) AM_WRITE(snk_cpuB_nmi_ack_w)	// vangrd2
 	AM_RANGE(0x0000, 0x9fff) AM_ROM
 	AM_RANGE(0xa000, 0xa000) AM_WRITE(snk_cpuB_nmi_ack_w)	// madcrash
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE(marvins_fg_videoram_w) AM_SHARE("share4")
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM_WRITE(marvins_fg_videoram_w) AM_SHARE("fg_videoram")
 	AM_RANGE(0xc800, 0xcfff) AM_RAM AM_SHARE("share5")
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share6")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
 	AM_RANGE(0xd800, 0xd800) AM_WRITE(snk_bg_scrolly_w)
 	AM_RANGE(0xd900, 0xd900) AM_WRITE(snk_bg_scrollx_w)
 	AM_RANGE(0xda00, 0xda00) AM_WRITE(snk_sprite_split_point_w)
@@ -936,8 +931,8 @@ static ADDRESS_MAP_START( madcrash_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xdd00, 0xdd00) AM_WRITE(snk_sp16_scrollx_w)
 	AM_RANGE(0xde00, 0xde00) AM_WRITE(snk_fg_scrolly_w)
 	AM_RANGE(0xdf00, 0xdf00) AM_WRITE(snk_fg_scrollx_w)
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share2")
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xf800, 0xffff) AM_RAM AM_SHARE("share3")
 ADDRESS_MAP_END
 
@@ -951,13 +946,13 @@ static ADDRESS_MAP_START( madcrush_cpuA_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x8500, 0x8500) AM_READ_PORT("DSW2")
 	AM_RANGE(0x8600, 0x8600) AM_MIRROR(0xff) AM_WRITE(marvins_flipscreen_w)
 	AM_RANGE(0x8700, 0x8700) AM_READWRITE(snk_cpuB_nmi_trigger_r, snk_cpuA_nmi_ack_w)
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_BASE(m_spriteram) AM_SHARE("share1")	// + work ram
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(marvins_fg_videoram_w) AM_SHARE("share4") AM_BASE(m_fg_videoram)
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("spriteram") // + work ram
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(marvins_fg_videoram_w) AM_SHARE("fg_videoram")
 	AM_RANGE(0xc800, 0xc800) AM_MIRROR(0xff) AM_WRITE(marvins_palette_bank_w)
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("share5")
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share2") AM_BASE(m_bg_videoram)
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("share3")
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share6") AM_BASE(m_tx_videoram)
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
 	AM_RANGE(0xf800, 0xf800) AM_WRITE(snk_sp16_scrolly_w)
 	AM_RANGE(0xf900, 0xf900) AM_WRITE(snk_sp16_scrollx_w)
 	AM_RANGE(0xfa00, 0xfa00) AM_WRITE(snk_fg_scrolly_w)
@@ -971,13 +966,13 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( madcrush_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0x9fff) AM_ROM
 	AM_RANGE(0xa000, 0xa000) AM_WRITE(snk_cpuB_nmi_ack_w)
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("share1")	// + work ram
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("spriteram")	// + work ram
 	AM_RANGE(0xc800, 0xc800) AM_MIRROR(0xff) AM_WRITE(marvins_palette_bank_w)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(marvins_fg_videoram_w) AM_SHARE("share4")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(marvins_fg_videoram_w) AM_SHARE("fg_videoram")
 	AM_RANGE(0xc800, 0xcfff) AM_RAM AM_SHARE("share5")
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share2") // ??
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram") // ??
 	AM_RANGE(0xe800, 0xefff) AM_RAM AM_SHARE("share3")
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share6")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
 	AM_RANGE(0xf800, 0xf800) AM_WRITE(snk_sp16_scrolly_w)
 	AM_RANGE(0xf900, 0xf900) AM_WRITE(snk_sp16_scrollx_w)
 	AM_RANGE(0xfa00, 0xfa00) AM_WRITE(snk_fg_scrolly_w)
@@ -1004,18 +999,18 @@ static ADDRESS_MAP_START( jcross_cpuA_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xd500, 0xd500) AM_WRITE(snk_sp16_scrollx_w)
 	AM_RANGE(0xd600, 0xd600) AM_WRITE(snk_bg_scrolly_w)
 	AM_RANGE(0xd700, 0xd700) AM_WRITE(snk_bg_scrollx_w)
-	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_BASE(m_spriteram) AM_SHARE("share1")	// + work ram
-	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share2") AM_BASE(m_bg_videoram)
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share3") AM_BASE(m_tx_videoram)	// + work RAM
+	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("spriteram") // + work ram
+	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram")
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")	// + work RAM
 	AM_RANGE(0xffff, 0xffff) AM_WRITENOP	// simply a program patch to not write to two not existing video registers?
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( jcross_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xa700, 0xa700) AM_READWRITE(snk_cpuA_nmi_trigger_r, snk_cpuB_nmi_ack_w)
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0xc800, 0xd7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share2")
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share3")
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xc800, 0xd7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram")
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
 ADDRESS_MAP_END
 
 
@@ -1035,25 +1030,25 @@ static ADDRESS_MAP_START( sgladiat_cpuA_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xd500, 0xd500) AM_WRITE(snk_sp16_scrollx_w)
 	AM_RANGE(0xd600, 0xd600) AM_WRITE(snk_bg_scrolly_w)
 	AM_RANGE(0xd700, 0xd700) AM_WRITE(snk_bg_scrollx_w)
-	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_BASE(m_spriteram) AM_SHARE("share1")	// + work ram
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share2") AM_BASE(m_bg_videoram)
+	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("spriteram") // + work ram
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xe800, 0xefff) AM_RAM
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share3") AM_BASE(m_tx_videoram)	// + work RAM
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")	// + work RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sgladiat_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xa000, 0xa000) AM_READWRITE(snk_cpuA_nmi_trigger_r, snk_cpuB_nmi_ack_w)
 	AM_RANGE(0xa600, 0xa600) AM_WRITE(sgladiat_flipscreen_w)	// flip screen, bg palette bank
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share2")
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xda00, 0xda00) AM_WRITENOP	// unknown
 	AM_RANGE(0xdb00, 0xdb00) AM_WRITE(sgladiat_scroll_msb_w)
 	AM_RANGE(0xdc00, 0xdc00) AM_WRITE(snk_sp16_scrolly_w)
 	AM_RANGE(0xdd00, 0xdd00) AM_WRITE(snk_sp16_scrollx_w)
 	AM_RANGE(0xde00, 0xde00) AM_WRITE(snk_bg_scrolly_w)
 	AM_RANGE(0xdf00, 0xdf00) AM_WRITE(snk_bg_scrollx_w)
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share3")
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
 ADDRESS_MAP_END
 
 
@@ -1072,17 +1067,17 @@ static ADDRESS_MAP_START( hal21_cpuA_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xd500, 0xd500) AM_WRITE(snk_sp16_scrollx_w)
 	AM_RANGE(0xd600, 0xd600) AM_WRITE(snk_bg_scrolly_w)
 	AM_RANGE(0xd700, 0xd700) AM_WRITE(snk_bg_scrollx_w)
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_BASE(m_spriteram) AM_SHARE("share1")	// + work ram
-	AM_RANGE(0xe800, 0xf7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share2") AM_BASE(m_bg_videoram)
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share3") AM_BASE(m_tx_videoram)	// + work RAM
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("spriteram") // + work ram
+	AM_RANGE(0xe800, 0xf7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram")
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")	// + work RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( hal21_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0x9fff) AM_ROM
 	AM_RANGE(0xa000, 0xa000) AM_WRITE(snk_cpuB_nmi_ack_w)
-	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share2")
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share3")
+	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xd000, 0xdfff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram")
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
 ADDRESS_MAP_END
 
 
@@ -1103,18 +1098,18 @@ static ADDRESS_MAP_START( aso_cpuA_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xce00, 0xce00) AM_WRITENOP	// always 05?
 	AM_RANGE(0xcf00, 0xcf00) AM_WRITE(aso_bg_bank_w)	// tile and palette bank
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("share2") AM_BASE(m_spriteram)	// + work ram
-	AM_RANGE(0xe800, 0xf7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share3") AM_BASE(m_bg_videoram)
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share4") AM_BASE(m_tx_videoram)	// + work RAM
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM AM_SHARE("spriteram")	// + work ram
+	AM_RANGE(0xe800, 0xf7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram")
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")	// + work RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( aso_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc000) AM_READWRITE(snk_cpuA_nmi_trigger_r, snk_cpuB_nmi_ack_w)
 	AM_RANGE(0xc800, 0xcfff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("share2")
-	AM_RANGE(0xd800, 0xe7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("share3")
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share4")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xd800, 0xe7ff) AM_RAM_WRITE(marvins_bg_videoram_w) AM_SHARE("bg_videoram")
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
 ADDRESS_MAP_END
 
 
@@ -1136,19 +1131,19 @@ static ADDRESS_MAP_START( tnk3_cpuA_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xcb00, 0xcb00) AM_WRITE(snk_bg_scrolly_w)
 	AM_RANGE(0xcc00, 0xcc00) AM_WRITE(snk_bg_scrollx_w)
 	AM_RANGE(0xcf00, 0xcf00) AM_WRITENOP	// fitegolf/countryc only. Either 0 or 1. Video related?
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("share1") AM_BASE(m_spriteram)	// + work ram
-	AM_RANGE(0xd800, 0xf7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("share2") AM_BASE(m_bg_videoram)
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share3") AM_BASE(m_tx_videoram)	// + work RAM
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM AM_SHARE("spriteram") // + work ram
+	AM_RANGE(0xd800, 0xf7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("bg_videoram")
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")	// + work RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( tnk3_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc000) AM_READWRITE(snk_cpuA_nmi_trigger_r, snk_cpuB_nmi_ack_w)	// tnk3, athena
 	AM_RANGE(0xc700, 0xc700) AM_READWRITE(snk_cpuA_nmi_trigger_r, snk_cpuB_nmi_ack_w)	// fitegolf
-	AM_RANGE(0xc800, 0xcfff) AM_RAM AM_SHARE("share1")
-	AM_RANGE(0xd000, 0xefff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("share2")
+	AM_RANGE(0xc800, 0xcfff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xd000, 0xefff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xf000, 0xf7ff) AM_RAM
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share3")
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
 ADDRESS_MAP_END
 
 
@@ -1182,9 +1177,9 @@ static ADDRESS_MAP_START( ikari_cpuA_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xcea0, 0xcea0) AM_READ(hardflags6_r)
 	AM_RANGE(0xcee0, 0xcee0) AM_READ(hardflags7_r)
 	// note the mirror. ikari and victroad use d800, ikarijp uses d000
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_MIRROR(0x0800) AM_SHARE("share2") AM_BASE(m_bg_videoram)
-	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("share3") AM_BASE(m_spriteram)	// + work ram
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share4") AM_BASE(m_tx_videoram)	// + work RAM
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_MIRROR(0x0800) AM_SHARE("bg_videoram")
+	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("spriteram")	// + work ram
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")	// + work RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( ikari_cpuB_map, AS_PROGRAM, 8, snk_state )
@@ -1201,9 +1196,9 @@ static ADDRESS_MAP_START( ikari_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xce80, 0xce80) AM_READ(hardflags5_r)
 	AM_RANGE(0xcea0, 0xcea0) AM_READ(hardflags6_r)
 	AM_RANGE(0xcee0, 0xcee0) AM_READ(hardflags7_r)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_MIRROR(0x0800) AM_SHARE("share2")
-	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("share3")
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share4")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_MIRROR(0x0800) AM_SHARE("bg_videoram")
+	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
 ADDRESS_MAP_END
 
 
@@ -1245,10 +1240,10 @@ static ADDRESS_MAP_START( bermudat_cpuA_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xccd0, 0xccd0) AM_READ(turbocheck32_2_r)
 	AM_RANGE(0xcce0, 0xcce0) AM_READ(turbocheck32_3_r)
 	AM_RANGE(0xccf0, 0xccf0) AM_READ(turbocheck32_4_r)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("share1") AM_BASE(m_bg_videoram)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("share2")
-	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("share3") AM_BASE(m_spriteram)	// + work ram
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share4") AM_BASE(m_tx_videoram)	// + work RAM
+	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("spriteram")	// + work ram
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")	// + work RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( bermudat_cpuB_map, AS_PROGRAM, 8, snk_state )
@@ -1263,10 +1258,10 @@ static ADDRESS_MAP_START( bermudat_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xc980, 0xc980) AM_WRITE(snk_sp32_scrolly_w)
 	AM_RANGE(0xc9c0, 0xc9c0) AM_WRITE(snk_sp32_scrollx_w)
 	AM_RANGE(0xca80, 0xca80) AM_WRITE(gwara_sp_scroll_msb_w)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("share1")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("share2")
-	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("share3")
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share4")
+	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
 ADDRESS_MAP_END
 
 
@@ -1291,20 +1286,20 @@ static ADDRESS_MAP_START( gwar_cpuA_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xca00, 0xca00) AM_WRITENOP	// always 0?
 	AM_RANGE(0xca40, 0xca40) AM_WRITENOP	// always 0?
 	AM_RANGE(0xcac0, 0xcac0) AM_WRITE(snk_sprite_split_point_w)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("share1") AM_BASE(m_bg_videoram)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("share2")
-	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("share3") AM_BASE(m_spriteram)	// + work ram
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share4") AM_BASE(m_tx_videoram)	// + work RAM
+	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("spriteram")	// + work ram
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")	// + work RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( gwar_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc000) AM_READWRITE(snk_cpuA_nmi_trigger_r, snk_cpuB_nmi_ack_w)
 	AM_RANGE(0xc8c0, 0xc8c0) AM_WRITE(gwar_tx_bank_w)	// char and palette bank
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("share1")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("share2")
-	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("share3")
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share4")
+	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
 ADDRESS_MAP_END
 
 
@@ -1318,10 +1313,10 @@ static ADDRESS_MAP_START( gwara_cpuA_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xc500, 0xc500) AM_READ_PORT("DSW1")
 	AM_RANGE(0xc600, 0xc600) AM_READ_PORT("DSW2")
 	AM_RANGE(0xc700, 0xc700) AM_READWRITE(snk_cpuB_nmi_trigger_r, snk_cpuA_nmi_ack_w)
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share1") AM_BASE(m_tx_videoram)	// + work RAM
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("share2") AM_BASE(m_bg_videoram)
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")	// + work RAM
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("share3")
-	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("share4") AM_BASE(m_spriteram)	// + work ram
+	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("spriteram")	// + work ram
 	AM_RANGE(0xf800, 0xf800) AM_WRITE(snk_bg_scrolly_w)
 	AM_RANGE(0xf840, 0xf840) AM_WRITE(snk_bg_scrollx_w)
 	AM_RANGE(0xf880, 0xf880) AM_WRITE(gwara_videoattrs_w)	// flip screen, scroll msb
@@ -1337,10 +1332,10 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( gwara_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc000) AM_READWRITE(snk_cpuA_nmi_trigger_r, snk_cpuB_nmi_ack_w)
-	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share1")
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("share2")
+	AM_RANGE(0xc800, 0xcfff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("share3")
-	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("share4") AM_BASE(m_spriteram)	// + work ram
+	AM_RANGE(0xe000, 0xf7ff) AM_RAM AM_SHARE("spriteram")	// + work ram
 	AM_RANGE(0xf8c0, 0xf8c0) AM_WRITE(gwar_tx_bank_w)	// char and palette bank
 ADDRESS_MAP_END
 
@@ -1369,10 +1364,10 @@ static ADDRESS_MAP_START( tdfever_cpuA_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xc900, 0xc900) AM_WRITE(tdfever_sp_scroll_msb_w)
 	AM_RANGE(0xc980, 0xc980) AM_WRITE(snk_sp32_scrolly_w)
 	AM_RANGE(0xc9c0, 0xc9c0) AM_WRITE(snk_sp32_scrollx_w)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("share1") AM_BASE(m_bg_videoram)
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("share2")
-	AM_RANGE(0xe000, 0xf7ff) AM_RAM_WRITE(tdfever_spriteram_w) AM_SHARE("share3") AM_BASE(m_spriteram)	// + work ram
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share4") AM_BASE(m_tx_videoram)	// + work RAM
+	AM_RANGE(0xe000, 0xf7ff) AM_RAM_WRITE(tdfever_spriteram_w) AM_SHARE("spriteram")	// + work ram
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")	// + work RAM
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( tdfever_cpuB_map, AS_PROGRAM, 8, snk_state )
@@ -1380,10 +1375,10 @@ static ADDRESS_MAP_START( tdfever_cpuB_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0xc000, 0xc000) AM_READWRITE(snk_cpuA_nmi_trigger_r, snk_cpuB_nmi_ack_w)	// tdfever, tdfever2
 	AM_RANGE(0xc700, 0xc700) AM_READWRITE(snk_cpuA_nmi_trigger_r, snk_cpuB_nmi_ack_w)	// fsoccer
 	AM_RANGE(0xc8c0, 0xc8c0) AM_WRITE(gwar_tx_bank_w)	// char and palette bank
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("share1")
+	AM_RANGE(0xd000, 0xd7ff) AM_RAM_WRITE(snk_bg_videoram_w) AM_SHARE("bg_videoram")
 	AM_RANGE(0xd800, 0xdfff) AM_RAM AM_SHARE("share2")
-	AM_RANGE(0xe000, 0xf7ff) AM_RAM_WRITE(tdfever_spriteram_w) AM_SHARE("share3")
-	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("share4")
+	AM_RANGE(0xe000, 0xf7ff) AM_RAM_WRITE(tdfever_spriteram_w) AM_SHARE("spriteram")
+	AM_RANGE(0xf800, 0xffff) AM_RAM_WRITE(snk_tx_videoram_w) AM_SHARE("tx_videoram")
 ADDRESS_MAP_END
 
 /***********************************************************************/
@@ -1439,7 +1434,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( tnk3_YM3526_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_r)
+	AM_RANGE(0xa000, 0xa000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xc000, 0xc000) AM_READ(tnk3_busy_clear_r)
 	AM_RANGE(0xe000, 0xe001) AM_DEVREADWRITE_LEGACY("ym1", ym3526_r, ym3526_w)
 	AM_RANGE(0xe004, 0xe004) AM_READ(tnk3_cmdirq_ack_r)
@@ -1449,7 +1444,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( aso_YM3526_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
-	AM_RANGE(0xd000, 0xd000) AM_READ(soundlatch_r)
+	AM_RANGE(0xd000, 0xd000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xe000, 0xe000) AM_READ(tnk3_busy_clear_r)
 	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE_LEGACY("ym1", ym3526_r, ym3526_w)
 //  AM_RANGE(0xf002, 0xf002) AM_READNOP unknown
@@ -1460,7 +1455,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( YM3526_YM3526_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
-	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_r)
+	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE_LEGACY("ym1", ym3526_status_port_r, ym3526_control_port_w)
 	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE_LEGACY("ym1", ym3526_write_port_w)
 	AM_RANGE(0xf000, 0xf000) AM_DEVREADWRITE_LEGACY("ym2", ym3526_status_port_r, ym3526_control_port_w)
@@ -1471,7 +1466,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( YM3812_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
-	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_r)
+	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE_LEGACY("ym1", ym3812_status_port_r, ym3812_control_port_w)
 	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE_LEGACY("ym1", ym3812_write_port_w)
 	AM_RANGE(0xf800, 0xf800) AM_READWRITE(snk_sound_status_r, snk_sound_status_w)
@@ -1480,7 +1475,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( YM3526_Y8950_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
-	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_r)
+	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE_LEGACY("ym1", ym3526_status_port_r, ym3526_control_port_w)
 	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE_LEGACY("ym1", ym3526_write_port_w)
 	AM_RANGE(0xf000, 0xf000) AM_DEVREADWRITE_LEGACY("ym2", y8950_status_port_r, y8950_control_port_w)
@@ -1491,7 +1486,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( YM3812_Y8950_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
-	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_r)
+	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xe800, 0xe800) AM_DEVREADWRITE_LEGACY("ym1", ym3812_status_port_r, ym3812_control_port_w)
 	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE_LEGACY("ym1", ym3812_write_port_w)
 	AM_RANGE(0xf000, 0xf000) AM_DEVREADWRITE_LEGACY("ym2", y8950_status_port_r, y8950_control_port_w)
@@ -1502,7 +1497,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( Y8950_sound_map, AS_PROGRAM, 8, snk_state )
 	AM_RANGE(0x0000, 0xbfff) AM_ROM
 	AM_RANGE(0xc000, 0xcfff) AM_RAM
-	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_r)
+	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xf000, 0xf000) AM_DEVREADWRITE_LEGACY("ym2", y8950_status_port_r, y8950_control_port_w)
 	AM_RANGE(0xf400, 0xf400) AM_DEVWRITE_LEGACY("ym2", y8950_write_port_w)
 	AM_RANGE(0xf800, 0xf800) AM_READWRITE(snk_sound_status_r, snk_sound_status_w)
@@ -1518,7 +1513,7 @@ static INPUT_PORTS_START( marvins )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_START2 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_UNKNOWN )
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(marvins_sound_busy, NULL) /* sound CPU status */
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,marvins_sound_busy, NULL) /* sound CPU status */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )	// service switch according to schematics, see code at 0x0453. Goes to garbage.
 
 	PORT_START("IN1")
@@ -1600,7 +1595,7 @@ static INPUT_PORTS_START( vangrd2 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(marvins_sound_busy, NULL) /* sound CPU status */
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,marvins_sound_busy, NULL) /* sound CPU status */
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
@@ -1684,8 +1679,8 @@ static INPUT_PORTS_START( madcrash )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(marvins_sound_busy, NULL) /* sound CPU status */
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(marvins_sound_busy, NULL) /* sound CPU status */
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,marvins_sound_busy, NULL) /* sound CPU status */
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,marvins_sound_busy, NULL) /* sound CPU status */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_SERVICE )
 
 	PORT_START("IN1")
@@ -1762,7 +1757,7 @@ static INPUT_PORTS_START( jcross )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
@@ -1805,10 +1800,10 @@ static INPUT_PORTS_START( jcross )
 	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
 //  PORT_DIPSETTING(    0x10, "INVALID !" )                 /* settings table at 0x0378 is only 5 bytes wide */
 //  PORT_DIPSETTING(    0x08, "INVALID !" )                 /* settings table at 0x0378 is only 5 bytes wide */
-	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0xc0)
+	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0xc0)
 
 	PORT_START("DSW2")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x01)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x01)
 	PORT_DIPNAME( 0x06, 0x06, DEF_STR( Difficulty ) )       PORT_DIPLOCATION("DSW2:2,3")
 	PORT_DIPSETTING(    0x06, DEF_STR( Easy ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Normal ) )
@@ -1847,7 +1842,7 @@ static INPUT_PORTS_START( sgladiat )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_SERVICE )            /* code at 0x054e */
 
@@ -1888,10 +1883,10 @@ static INPUT_PORTS_START( sgladiat )
 	PORT_DIPSETTING(    0x30, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
-	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0xc0)
+	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0xc0)
 
 	PORT_START("DSW2")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x01)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x01)
 	PORT_DIPNAME( 0x02, 0x02, "Time" )                      PORT_DIPLOCATION("DSW2:2")
 	PORT_DIPSETTING(    0x02, "More" )                      /* Hazard race 2:30 / Chariot race 3:30 */
 	PORT_DIPSETTING(    0x00, "Less" )                      /* Hazard race 2:00 / Chariot race 3:00 */
@@ -1931,7 +1926,7 @@ static INPUT_PORTS_START( hal21 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
@@ -1972,10 +1967,10 @@ static INPUT_PORTS_START( hal21 )
 	PORT_DIPSETTING(    0x30, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
-	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0xc0)
+	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0xc0)
 
 	PORT_START("DSW2")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x01)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x01)
 	PORT_DIPNAME( 0x06, 0x06, DEF_STR( Difficulty ) )       PORT_DIPLOCATION("DSW2:2,3")
 	PORT_DIPSETTING(    0x06, DEF_STR( Easy ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Normal ) )
@@ -2014,7 +2009,7 @@ static INPUT_PORTS_START( aso )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 )           /* uses "Coinage" settings - code at 0x2e04 */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
@@ -2057,10 +2052,10 @@ static INPUT_PORTS_START( aso )
 	PORT_DIPSETTING(    0x10, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( 1C_4C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( 1C_6C ) )
-	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0xc0)
+	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0xc0)
 
 	PORT_START("DSW2")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x01)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x01)
 	PORT_DIPNAME( 0x06, 0x06, DEF_STR( Difficulty ) )       PORT_DIPLOCATION("DSW2:2,3")
 	PORT_DIPSETTING(    0x06, DEF_STR( Easy ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Normal ) )
@@ -2100,7 +2095,7 @@ static INPUT_PORTS_START( alphamis )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 )           /* uses "Coin A" settings - code at 0x2e17 */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
@@ -2147,7 +2142,7 @@ static INPUT_PORTS_START( alphamis )
 	PORT_DIPUNUSED_DIPLOC( 0x80, 0x80, "DSW1:8" )
 
 	PORT_START("DSW2")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x01)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x01)
 	PORT_DIPNAME( 0x06, 0x06, DEF_STR( Difficulty ) )       PORT_DIPLOCATION("DSW2:2,3")
 	PORT_DIPSETTING(    0x06, DEF_STR( Easy ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Normal ) )
@@ -2182,7 +2177,7 @@ static INPUT_PORTS_START( tnk3 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 
@@ -2229,10 +2224,10 @@ static INPUT_PORTS_START( tnk3 )
 	PORT_DIPSETTING(    0x30, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x28, DEF_STR( 1C_3C ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
-	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0xc0)
+	PORT_BIT( 0xc0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0xc0)
 
 	PORT_START("DSW2")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x01)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x01)
 	PORT_DIPNAME( 0x06, 0x06, DEF_STR( Difficulty ) )       PORT_DIPLOCATION("DSW2:2,3")
 	PORT_DIPSETTING(    0x06, DEF_STR( Easy ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( Normal ) )
@@ -2266,7 +2261,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( athena )
 	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_SERVICE1 )           /* uses "Coin A" settings - code at 0x09d4 */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN )
@@ -2303,7 +2298,7 @@ static INPUT_PORTS_START( athena )
 	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Cabinet ) )          PORT_DIPLOCATION("DSW1:2")
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )          /* Single Controls */
 	PORT_DIPSETTING(    0x02, DEF_STR( Cocktail ) )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x04)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x04)
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Lives ) )            PORT_DIPLOCATION("DSW1:4")
 	PORT_DIPSETTING(    0x08, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
@@ -2330,7 +2325,7 @@ static INPUT_PORTS_START( athena )
 	PORT_DIPNAME( 0x08, 0x08, "Freeze" )                    PORT_DIPLOCATION("DSW2:4")
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x30)
+	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x30)
 	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "DSW2:7" )
 	PORT_DIPNAME( 0x80, 0x80, "Energy" )                    PORT_DIPLOCATION("DSW2:8")
 	PORT_DIPSETTING(    0x80, "12" )
@@ -2351,7 +2346,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( fitegolf )
 	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_SERVICE1 )          /* uses "Coin A" settings - code at 0x045b */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_TILT )              /* reset */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_SERVICE )	        /* same as the dip switch */
@@ -2436,7 +2431,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( countryc )
 	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_SERVICE1 )          /* uses "Coin A" settings - code at 0x0450 */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_TILT )              /* reset */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_SERVICE )	        /* same as the dip switch */
@@ -2446,10 +2441,10 @@ static INPUT_PORTS_START( countryc )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_START1 )
 
 	PORT_START("IN1")
-	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(countryc_trackball_x, 0)
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,countryc_trackball_x, 0)
 
 	PORT_START("IN2")
-	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(countryc_trackball_y, 0)
+	PORT_BIT( 0xff, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,countryc_trackball_y, 0)
 
 	PORT_START("IN3")
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -2518,7 +2513,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( ikari )
 	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_SERVICE1 )          /* adds 1 credit - code at 0x0a15 */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN )
@@ -2558,7 +2553,7 @@ static INPUT_PORTS_START( ikari )
 	PORT_DIPNAME( 0x02, 0x02, "P1 & P2 Fire Buttons" )      PORT_DIPLOCATION("DSW1:2")
 	PORT_DIPSETTING(    0x02, "Separate" )
 	PORT_DIPSETTING(    0x00, "Common" )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x04)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x04)
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Lives ) )            PORT_DIPLOCATION("DSW1:4")
 	PORT_DIPSETTING(    0x08, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
@@ -2584,7 +2579,7 @@ static INPUT_PORTS_START( ikari )
 	PORT_DIPSETTING(    0x08, "Demo Sounds On" )
 	PORT_DIPSETTING(    0x04, "Freeze" )
 	PORT_DIPSETTING(    0x00, "Infinite Lives (Cheat)")
-	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x30)
+	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x30)
 	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "DSW2:7" )           /* read at 0x07c4, but strange test at 0x07cc */
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Allow_Continue ) )   PORT_DIPLOCATION("DSW2:8")
 	PORT_DIPSETTING(    0x80, DEF_STR( No ) )
@@ -2613,7 +2608,7 @@ static INPUT_PORTS_START( ikaria )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 )          /* adds 1 credit - code at 0x0a00 */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_START1 )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_START2 )
-	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_TILT )              /* reset */
 INPUT_PORTS_END
@@ -2650,7 +2645,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( victroad )
 	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_SERVICE1 )          /* adds 1 credit - code at 0x0a19 */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_TILT )              /* reset */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN )
@@ -2690,7 +2685,7 @@ static INPUT_PORTS_START( victroad )
 	PORT_DIPNAME( 0x02, 0x02, "P1 & P2 Fire Buttons" )      PORT_DIPLOCATION("DSW1:2")
 	PORT_DIPSETTING(    0x02, "Separate" )
 	PORT_DIPSETTING(    0x00, "Common" )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x04)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x04)
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Lives ) )            PORT_DIPLOCATION("DSW1:4")
 	PORT_DIPSETTING(    0x08, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
@@ -2716,7 +2711,7 @@ static INPUT_PORTS_START( victroad )
 	PORT_DIPSETTING(    0x08, "Demo Sounds On" )
 	PORT_DIPSETTING(    0x00, "Freeze" )
 	PORT_DIPSETTING(    0x04, "Infinite Lives (Cheat)")
-	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x30)
+	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x30)
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Allow_Continue ) )   PORT_DIPLOCATION("DSW2:7")
 	PORT_DIPSETTING(    0x40, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
@@ -2754,7 +2749,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( bermudat )
 	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_SERVICE1 )          /* uses "Coin A" settings - code at 0x0a0a */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_TILT )              /* reset */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN )
@@ -2792,7 +2787,7 @@ static INPUT_PORTS_START( bermudat )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Flip_Screen ) )      PORT_DIPLOCATION("DSW1:2")
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x04)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x04)
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Lives ) )            PORT_DIPLOCATION("DSW1:4")
 	PORT_DIPSETTING(    0x08, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
@@ -2818,7 +2813,7 @@ static INPUT_PORTS_START( bermudat )
 	PORT_DIPSETTING(    0x08, "Demo Sounds On" )
 	PORT_DIPSETTING(    0x00, "Freeze" )
 	PORT_DIPSETTING(    0x04, "Infinite Lives (Cheat)")
-	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x30)
+	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x30)
 	PORT_DIPNAME( 0xc0, 0x80, "Game Style" )                PORT_DIPLOCATION("DSW2:7,8")
 	PORT_DIPSETTING(    0xc0, "Normal without continue" )
 	PORT_DIPSETTING(    0x80, "Normal with continue" )
@@ -2883,7 +2878,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( psychos )
 	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_TILT )              /* reset */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_UNKNOWN )
@@ -2920,7 +2915,7 @@ static INPUT_PORTS_START( psychos )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Flip_Screen ) )      PORT_DIPLOCATION("DSW1:2")
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x04)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x04)
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Lives ) )            PORT_DIPLOCATION("DSW1:4")
 	PORT_DIPSETTING(    0x08, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
@@ -2947,7 +2942,7 @@ static INPUT_PORTS_START( psychos )
 	PORT_DIPNAME( 0x08, 0x08, "Freeze" )                    PORT_DIPLOCATION("DSW2:4")
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x30)
+	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x30)
 	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Allow_Continue ) )   PORT_DIPLOCATION("DSW2:7")
 	PORT_DIPSETTING(    0x40, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
@@ -2968,7 +2963,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( gwar )
 	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_SERVICE1 )          /* uses "Coin A" settings - code at 0x08c8 */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_TILT )              /* reset */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_SERVICE )
@@ -2982,7 +2977,7 @@ static INPUT_PORTS_START( gwar )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )  PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )  PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1)
-	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(gwar_rotary, (void*)0)
+	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,gwar_rotary, (void*)0)
 
 	PORT_START("P1ROT")
 	PORT_BIT( 0x0f, 0x00, IPT_POSITIONAL ) PORT_POSITIONS(12) PORT_WRAPS PORT_SENSITIVITY(15) PORT_KEYDELTA(1) PORT_CODE_DEC(KEYCODE_Z) PORT_CODE_INC(KEYCODE_X) PORT_REVERSE PORT_FULL_TURN_COUNT(12)
@@ -2992,7 +2987,7 @@ static INPUT_PORTS_START( gwar )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN )  PORT_8WAY PORT_PLAYER(2)
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT )  PORT_8WAY PORT_PLAYER(2)
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2)
-	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(gwar_rotary, (void*)1)
+	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,gwar_rotary, (void*)1)
 
 	PORT_START("P2ROT")
 	PORT_BIT( 0x0f, 0x00, IPT_POSITIONAL ) PORT_POSITIONS(12) PORT_WRAPS PORT_SENSITIVITY(15) PORT_KEYDELTA(1) PORT_CODE_DEC(KEYCODE_N) PORT_CODE_INC(KEYCODE_M) PORT_PLAYER(2) PORT_REVERSE PORT_FULL_TURN_COUNT(12)
@@ -3014,7 +3009,7 @@ static INPUT_PORTS_START( gwar )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Flip_Screen ) )      PORT_DIPLOCATION("DSW1:2")
 	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x04)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x04)
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Lives ) )            PORT_DIPLOCATION("DSW1:4")
 	PORT_DIPSETTING(    0x08, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
@@ -3040,7 +3035,7 @@ static INPUT_PORTS_START( gwar )
 	PORT_DIPSETTING(    0x08, "Demo Sounds On" )
 	PORT_DIPSETTING(    0x00, "Freeze" )
 	PORT_DIPSETTING(    0x04, "Infinite Lives (Cheat)")
-	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x30)
+	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x30)
 	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "DSW2:7" )
 	PORT_DIPUNUSED_DIPLOC( 0x80, 0x80, "DSW2:8" )
 
@@ -3063,10 +3058,10 @@ static INPUT_PORTS_START( gwarb )
 	// connected. If rotary is not connected, player fires in the direction he's facing.
 
 	PORT_MODIFY("IN1")
-	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(gwarb_rotary, (void*)0)
+	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,gwarb_rotary, (void*)0)
 
 	PORT_MODIFY("IN2")
-	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(gwarb_rotary, (void*)1)
+	PORT_BIT( 0xf0, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,gwarb_rotary, (void*)1)
 
 	PORT_START("JOYSTICK_MODE")
 	PORT_CONFNAME( 0x01, 0x00, "Joystick mode" )
@@ -3077,7 +3072,7 @@ INPUT_PORTS_END
 
 static INPUT_PORTS_START( chopper )
 	PORT_START("IN0")
-	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_SERVICE1 )          /* uses "Coin A" settings - code at 0x0849 */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_TILT )              /* reset */
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_SERVICE )
@@ -3116,7 +3111,7 @@ static INPUT_PORTS_START( chopper )
 	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Cabinet ) )          PORT_DIPLOCATION("DSW1:2")
 	PORT_DIPSETTING(    0x02, DEF_STR( Upright ) )          /* Single Controls */
 	PORT_DIPSETTING(    0x00, DEF_STR( Cocktail ) )
-	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x04)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x04)
 	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Lives ) )            PORT_DIPLOCATION("DSW1:4")
 	PORT_DIPSETTING(    0x08, "3" )
 	PORT_DIPSETTING(    0x00, "5" )
@@ -3142,7 +3137,7 @@ static INPUT_PORTS_START( chopper )
 	PORT_DIPSETTING(    0x0c, "Demo Sounds On" )
 	PORT_DIPSETTING(    0x00, "Freeze" )
 	PORT_DIPSETTING(    0x04, "Infinite Lives (Cheat)")
-	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_bonus_r, (void *)0x30)
+	PORT_BIT( 0x30, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_bonus_r, (void *)0x30)
 	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Allow_Continue ) )   PORT_DIPLOCATION("DSW2:7")
 	PORT_DIPSETTING(    0x00, DEF_STR( No ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( Yes ) )
@@ -3198,7 +3193,7 @@ static INPUT_PORTS_START( tdfever )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_SERVICE )           /* also reset - code at 0x074a */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 )          /* adds 1 credit - code at 0x1065 */
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_COIN1 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_COIN2 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_START1 ) PORT_NAME("Start Game A")
@@ -3339,7 +3334,7 @@ static INPUT_PORTS_START( fsoccer )
 	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_UNKNOWN )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW,  IPT_SERVICE )	        /* same as the dip switch / also reset - code at 0x00cc */
 	PORT_BIT( 0x04, IP_ACTIVE_LOW,  IPT_SERVICE1 )          /* uses "Coin A" settings - code at 0x677f */
-	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM(snk_sound_busy, 0)
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, snk_state,snk_sound_busy, 0)
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_COIN1 )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_COIN2 )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_START1 ) PORT_NAME("Start Game A")

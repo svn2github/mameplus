@@ -188,7 +188,7 @@ static WRITE8_HANDLER( pipedrm_bankswitch_w )
     */
 
 	/* set the memory bank on the Z80 using the low 3 bits */
-	memory_set_bank(space->machine(), "bank1", data & 0x7);
+	state->membank("bank1")->set_entry(data & 0x7);
 
 	/* map to the fromance gfx register */
 	state->fromance_gfxreg_w(*space, offset, ((data >> 6) & 0x01) | 	/* flipscreen */
@@ -198,7 +198,7 @@ static WRITE8_HANDLER( pipedrm_bankswitch_w )
 
 static WRITE8_HANDLER( sound_bankswitch_w )
 {
-	memory_set_bank(space->machine(), "bank2", data & 0x01);
+	space->machine().root_device().membank("bank2")->set_entry(data & 0x01);
 }
 
 
@@ -268,8 +268,8 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, fromance_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x9fff) AM_RAM
 	AM_RANGE(0xa000, 0xbfff) AM_ROMBANK("bank1")
-	AM_RANGE(0xc000, 0xcfff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_le_w) AM_SHARE("paletteram")
-	AM_RANGE(0xd000, 0xffff) AM_READWRITE(fromance_videoram_r, fromance_videoram_w) AM_BASE_SIZE(m_videoram, m_videoram_size)
+	AM_RANGE(0xc000, 0xcfff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_byte_le_w) AM_SHARE("paletteram")
+	AM_RANGE(0xd000, 0xffff) AM_READWRITE(fromance_videoram_r, fromance_videoram_w) AM_SHARE("videoram")
 ADDRESS_MAP_END
 
 
@@ -595,12 +595,12 @@ static MACHINE_START( pipedrm )
 	state->m_subcpu = machine.device("sub");
 
 	/* initialize main Z80 bank */
-	memory_configure_bank(machine, "bank1", 0, 8, machine.region("maincpu")->base() + 0x10000, 0x2000);
-	memory_set_bank(machine, "bank1", 0);
+	state->membank("bank1")->configure_entries(0, 8, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x2000);
+	state->membank("bank1")->set_entry(0);
 
 	/* initialize sound bank */
-	memory_configure_bank(machine, "bank2", 0, 2, machine.region("sub")->base() + 0x10000, 0x8000);
-	memory_set_bank(machine, "bank2", 0);
+	state->membank("bank2")->configure_entries(0, 2, state->memregion("sub")->base() + 0x10000, 0x8000);
+	state->membank("bank2")->set_entry(0);
 
 	/* state save */
 	state->save_item(NAME(state->m_pending_command));
@@ -879,8 +879,7 @@ static DRIVER_INIT( pipedrm )
 	fromance_state *state = machine.driver_data<fromance_state>();
 
 	/* sprite RAM lives at the end of palette RAM */
-	state->m_spriteram = &state->m_generic_paletteram_8[0xc00];
-	state->m_spriteram_size = 0x400;
+	state->m_spriteram.set_target(&state->m_generic_paletteram_8[0xc00], 0x400);
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_ram(0xcc00, 0xcfff, state->m_spriteram);
 }
 

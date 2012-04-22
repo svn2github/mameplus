@@ -45,7 +45,7 @@ WRITE8_MEMBER(thedeep_state::thedeep_nmi_w)
 
 WRITE8_MEMBER(thedeep_state::thedeep_sound_w)
 {
-	soundlatch_w(space, 0, data);
+	soundlatch_byte_w(space, 0, data);
 	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 }
 
@@ -53,7 +53,7 @@ WRITE8_MEMBER(thedeep_state::thedeep_sound_w)
 static MACHINE_RESET( thedeep )
 {
 	thedeep_state *state = machine.driver_data<thedeep_state>();
-	memory_set_bankptr(machine, "bank1", machine.region("maincpu")->base() + 0x10000 + 0 * 0x4000);
+	state->membank("bank1")->set_base(state->memregion("maincpu")->base() + 0x10000 + 0 * 0x4000);
 	state->m_scroll[0] = 0;
 	state->m_scroll[1] = 0;
 	state->m_scroll[2] = 0;
@@ -70,11 +70,11 @@ WRITE8_MEMBER(thedeep_state::thedeep_protection_w)
 	switch (m_protection_command)
 	{
 		case 0x11:
-			flip_screen_set(machine(), 1);
+			flip_screen_set(1);
 		break;
 
 		case 0x20:
-			flip_screen_set(machine(), 0);
+			flip_screen_set(0);
 		break;
 
 		case 0x30:
@@ -86,8 +86,8 @@ WRITE8_MEMBER(thedeep_state::thedeep_protection_w)
 			int new_rombank = m_protection_command & 3;
 			if (m_rombank == new_rombank)	break;
 			m_rombank = new_rombank;
-			rom = machine().region("maincpu")->base();
-			memory_set_bankptr(machine(), "bank1", rom + 0x10000 + m_rombank * 0x4000);
+			rom = memregion("maincpu")->base();
+			membank("bank1")->set_base(rom + 0x10000 + m_rombank * 0x4000);
 			/* there's code which falls through from the fixed ROM to bank #1, I have to */
 			/* copy it there otherwise the CPU bank switching support will not catch it. */
 			memcpy(rom + 0x08000, rom + 0x10000 + m_rombank * 0x4000, 0x4000);
@@ -116,7 +116,7 @@ WRITE8_MEMBER(thedeep_state::thedeep_protection_w)
 // d166-d174:   hl = (hl + 2*a)
 // d175-d181:   hl *= e (e must be non zero)
 // d182-d19a:   hl /= de
-				m_protection_data = machine().region("mcu")->base()[0x185+m_protection_index++];
+				m_protection_data = memregion("mcu")->base()[0x185+m_protection_index++];
 			else
 				m_protection_data = 0xc9;
 
@@ -159,11 +159,11 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, thedeep_state )
 	AM_RANGE(0xe00b, 0xe00b) AM_READ_PORT("e00b")			// DSW2
 	AM_RANGE(0xe00c, 0xe00c) AM_WRITE(thedeep_sound_w)	// To Sound CPU
 	AM_RANGE(0xe100, 0xe100) AM_WRITE(thedeep_e100_w)	// ?
-	AM_RANGE(0xe210, 0xe213) AM_WRITEONLY AM_BASE(m_scroll)	// Scroll
-	AM_RANGE(0xe400, 0xe7ff) AM_RAM AM_BASE_SIZE(m_spriteram, m_spriteram_size)	// Sprites
-	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(thedeep_vram_1_w) AM_BASE(m_vram_1)	// Text Layer
-	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(thedeep_vram_0_w) AM_BASE(m_vram_0)	// Background Layer
-	AM_RANGE(0xf800, 0xf83f) AM_RAM AM_BASE(m_scroll2				)	// Column Scroll
+	AM_RANGE(0xe210, 0xe213) AM_WRITEONLY AM_SHARE("scroll")	// Scroll
+	AM_RANGE(0xe400, 0xe7ff) AM_RAM AM_SHARE("spriteram")	// Sprites
+	AM_RANGE(0xe800, 0xefff) AM_RAM_WRITE(thedeep_vram_1_w) AM_SHARE("vram_1")	// Text Layer
+	AM_RANGE(0xf000, 0xf7ff) AM_RAM_WRITE(thedeep_vram_0_w) AM_SHARE("vram_0")	// Background Layer
+	AM_RANGE(0xf800, 0xf83f) AM_RAM AM_SHARE("scroll2")	// Column Scroll
 	AM_RANGE(0xf840, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -177,7 +177,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( audio_map, AS_PROGRAM, 8, thedeep_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
 	AM_RANGE(0x0800, 0x0801) AM_DEVWRITE_LEGACY("ymsnd", ym2203_w)	//
-	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_r)	// From Main CPU
+	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_byte_r)	// From Main CPU
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
@@ -197,8 +197,8 @@ static void thedeep_maincpu_bankswitch(running_machine &machine,UINT8 bank_trig)
 	if (state->m_rombank == new_rombank)
 		return;
 	state->m_rombank = new_rombank;
-	rom = machine.region("maincpu")->base();
-	memory_set_bankptr(machine, "bank1", rom + 0x10000 + state->m_rombank * 0x4000);
+	rom = state->memregion("maincpu")->base();
+	state->membank("bank1")->set_base(rom + 0x10000 + state->m_rombank * 0x4000);
 	/* there's code which falls through from the fixed ROM to bank #1, I have to */
 	/* copy it there otherwise the CPU bank switching support will not catch it. */
 	memcpy(rom + 0x08000, rom + 0x10000 + state->m_rombank * 0x4000, 0x4000);
@@ -207,7 +207,7 @@ static void thedeep_maincpu_bankswitch(running_machine &machine,UINT8 bank_trig)
 
 WRITE8_MEMBER(thedeep_state::thedeep_p1_w)
 {
-	flip_screen_set(machine(), (data & 1) ^ 1);
+	flip_screen_set((data & 1) ^ 1);
 	thedeep_maincpu_bankswitch(machine(),(data & 6) >> 1);
 	logerror("P1 %02x\n",data);
 }
