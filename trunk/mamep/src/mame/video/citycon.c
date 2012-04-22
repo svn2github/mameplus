@@ -35,7 +35,7 @@ static TILE_GET_INFO( get_fg_tile_info )
 static TILE_GET_INFO( get_bg_tile_info )
 {
 	citycon_state *state = machine.driver_data<citycon_state>();
-	UINT8 *rom = machine.region("gfx4")->base();
+	UINT8 *rom = state->memregion("gfx4")->base();
 	int code = rom[0x1000 * state->m_bg_image + tile_index];
 	SET_TILE_INFO(
 			3 + state->m_bg_image,
@@ -95,7 +95,7 @@ WRITE8_MEMBER(citycon_state::citycon_background_w)
 
 	/* bit 0 flips screen */
 	/* it is also used to multiplex player 1 and player 2 controls */
-	flip_screen_set(machine(), data & 0x01);
+	flip_screen_set(data & 0x01);
 
 	/* bits 1-3 are unknown */
 //  if ((data & 0x0e) != 0) logerror("background register = %02x\n", data);
@@ -108,14 +108,14 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	citycon_state *state = machine.driver_data<citycon_state>();
 	int offs;
 
-	for (offs = state->m_spriteram_size - 4; offs >= 0; offs -= 4)
+	for (offs = state->m_spriteram.bytes() - 4; offs >= 0; offs -= 4)
 	{
 		int sx, sy, flipx;
 
 		sx = state->m_spriteram[offs + 3];
 		sy = 239 - state->m_spriteram[offs];
 		flipx = ~state->m_spriteram[offs + 2] & 0x10;
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;
 			sy = 238 - sy;
@@ -125,7 +125,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		drawgfx_transpen(bitmap, cliprect, machine.gfx[state->m_spriteram[offs + 1] & 0x80 ? 2 : 1],
 				state->m_spriteram[offs + 1] & 0x7f,
 				state->m_spriteram[offs + 2] & 0x0f,
-				flipx,flip_screen_get(machine),
+				flipx,state->flip_screen(),
 				sx, sy, 0);
 	}
 }

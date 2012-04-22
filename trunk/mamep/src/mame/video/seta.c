@@ -290,8 +290,8 @@ WRITE16_MEMBER(seta_state::seta_vregs_w)
 
 				if (new_bank != m_samples_bank)
 				{
-					UINT8 *rom = machine().region("x1snd")->base();
-					int samples_len = machine().region("x1snd")->bytes();
+					UINT8 *rom = memregion("x1snd")->base();
+					int samples_len = memregion("x1snd")->bytes();
 					int addr;
 
 					m_samples_bank = new_bank;
@@ -665,6 +665,7 @@ PALETTE_INIT( zingzip )
 // color prom
 PALETTE_INIT( inttoote )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int x;
 	for (x = 0; x < 0x200 ; x++)
 	{
@@ -683,6 +684,7 @@ PALETTE_INIT( setaroul )
 
 PALETTE_INIT( usclssic )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int color, pen;
 	int x;
 
@@ -716,7 +718,7 @@ static void set_pens(running_machine &machine)
 	seta_state *state = machine.driver_data<seta_state>();
 	offs_t i;
 
-	for (i = 0; i < state->m_paletteram_size / 2; i++)
+	for (i = 0; i < state->m_paletteram.bytes() / 2; i++)
 	{
 		UINT16 data = state->m_paletteram[i];
 
@@ -730,16 +732,16 @@ static void set_pens(running_machine &machine)
 
 	if(state->m_paletteram2 != NULL)
 	{
-		for (i = 0; i < state->m_paletteram2_size / 2; i++)
+		for (i = 0; i < state->m_paletteram2.bytes() / 2; i++)
 		{
 			UINT16 data = state->m_paletteram2[i];
 
 			rgb_t color = MAKE_RGB(pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
 
 			if (machine.colortable != NULL)
-				colortable_palette_set_color(machine.colortable, i + state->m_paletteram_size / 2, color);
+				colortable_palette_set_color(machine.colortable, i + state->m_paletteram.bytes() / 2, color);
 			else
-				palette_set_color(machine, i + state->m_paletteram_size / 2, color);
+				palette_set_color(machine, i + state->m_paletteram.bytes() / 2, color);
 		}
 	}
 }

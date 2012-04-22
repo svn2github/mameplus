@@ -5,6 +5,7 @@
 ***************************************************************************/
 
 #include "emu.h"
+#include "includes/mcr.h"
 #include "includes/mcr68.h"
 
 
@@ -70,7 +71,7 @@ VIDEO_START( mcr68 )
 VIDEO_START( zwackery )
 {
 	mcr68_state *state = machine.driver_data<mcr68_state>();
-	const UINT8 *colordatabase = (const UINT8 *)machine.region("gfx3")->base();
+	const UINT8 *colordatabase = (const UINT8 *)state->memregion("gfx3")->base();
 	gfx_element *gfx0 = machine.gfx[0];
 	gfx_element *gfx2 = machine.gfx[2];
 	UINT8 *srcdata0, *dest0;
@@ -213,7 +214,7 @@ static void mcr68_update_sprites(running_machine &machine, bitmap_ind16 &bitmap,
 {
 	mcr68_state *state = machine.driver_data<mcr68_state>();
 	rectangle sprite_clip = machine.primary_screen->visible_area();
-	UINT16 *spriteram16 = state->m_spriteram;
+	UINT16 *spriteram = state->m_spriteram;
 	int offs;
 
 	/* adjust for clipping */
@@ -224,12 +225,12 @@ static void mcr68_update_sprites(running_machine &machine, bitmap_ind16 &bitmap,
 	machine.priority_bitmap.fill(1, sprite_clip);
 
 	/* loop over sprite RAM */
-	for (offs = state->m_spriteram_size / 2 - 4;offs >= 0;offs -= 4)
+	for (offs = state->m_spriteram.bytes() / 2 - 4;offs >= 0;offs -= 4)
 	{
 		int code, color, flipx, flipy, x, y, flags;
 
-		flags = LOW_BYTE(spriteram16[offs + 1]);
-		code = LOW_BYTE(spriteram16[offs + 2]) + 256 * ((flags >> 3) & 0x01) + 512 * ((flags >> 6) & 0x03);
+		flags = LOW_BYTE(spriteram[offs + 1]);
+		code = LOW_BYTE(spriteram[offs + 2]) + 256 * ((flags >> 3) & 0x01) + 512 * ((flags >> 6) & 0x03);
 
 		/* skip if zero */
 		if (code == 0)
@@ -243,8 +244,8 @@ static void mcr68_update_sprites(running_machine &machine, bitmap_ind16 &bitmap,
 		color = ~flags & 0x03;
 		flipx = flags & 0x10;
 		flipy = flags & 0x20;
-		x = LOW_BYTE(spriteram16[offs + 3]) * 2 + state->m_sprite_xoffset;
-		y = (241 - LOW_BYTE(spriteram16[offs])) * 2;
+		x = LOW_BYTE(spriteram[offs + 3]) * 2 + state->m_sprite_xoffset;
+		y = (241 - LOW_BYTE(spriteram[offs])) * 2;
 
 		/* allow sprites to clip off the left side */
 		if (x > 0x1f0) x -= 0x200;
@@ -266,23 +267,23 @@ static void mcr68_update_sprites(running_machine &machine, bitmap_ind16 &bitmap,
 static void zwackery_update_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int priority)
 {
 	mcr68_state *state = machine.driver_data<mcr68_state>();
-	UINT16 *spriteram16 = state->m_spriteram;
+	UINT16 *spriteram = state->m_spriteram;
 	int offs;
 
 	machine.priority_bitmap.fill(1, cliprect);
 
 	/* loop over sprite RAM */
-	for (offs = state->m_spriteram_size / 2 - 4;offs >= 0;offs -= 4)
+	for (offs = state->m_spriteram.bytes() / 2 - 4;offs >= 0;offs -= 4)
 	{
 		int code, color, flipx, flipy, x, y, flags;
 
 		/* get the code and skip if zero */
-		code = LOW_BYTE(spriteram16[offs + 2]);
+		code = LOW_BYTE(spriteram[offs + 2]);
 		if (code == 0)
 			continue;
 
 		/* extract the flag bits and determine the color */
-		flags = LOW_BYTE(spriteram16[offs + 1]);
+		flags = LOW_BYTE(spriteram[offs + 1]);
 		color = ((~flags >> 2) & 0x0f) | ((flags & 0x02) << 3);
 
 		/* for low priority, draw everything but color 7 */
@@ -302,8 +303,8 @@ static void zwackery_update_sprites(running_machine &machine, bitmap_ind16 &bitm
 		/* determine flipping and coordinates */
 		flipx = ~flags & 0x40;
 		flipy = flags & 0x80;
-		x = (231 - LOW_BYTE(spriteram16[offs + 3])) * 2;
-		y = (241 - LOW_BYTE(spriteram16[offs])) * 2;
+		x = (231 - LOW_BYTE(spriteram[offs + 3])) * 2;
+		y = (241 - LOW_BYTE(spriteram[offs])) * 2;
 
 		if (x <= -32) x += 512;
 

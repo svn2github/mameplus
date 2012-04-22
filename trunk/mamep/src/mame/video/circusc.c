@@ -32,6 +32,7 @@
 
 PALETTE_INIT( circusc )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	static const int resistances_rg[3] = { 1000, 470, 220 };
 	static const int resistances_b [2] = { 470, 220 };
 	double rweights[3], gweights[3], bweights[2];
@@ -148,7 +149,7 @@ WRITE8_MEMBER(circusc_state::circusc_colorram_w)
 
 WRITE8_MEMBER(circusc_state::circusc_flipscreen_w)
 {
-	flip_screen_set(machine(), data & 1);
+	flip_screen_set(data & 1);
 }
 
 
@@ -170,7 +171,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	else
 		sr = state->m_spriteram_2;
 
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		int code = sr[offs + 0] + 8 * (sr[offs + 1] & 0x20);
 		int color = sr[offs + 1] & 0x0f;
@@ -179,7 +180,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		int flipx = sr[offs + 1] & 0x40;
 		int flipy = sr[offs + 1] & 0x80;
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;
 			sy = 240 - sy;

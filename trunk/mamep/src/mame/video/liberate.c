@@ -40,7 +40,7 @@ static TILEMAP_MAPPER( fix_scan )
 static TILE_GET_INFO( get_back_tile_info )
 {
 	liberate_state *state = machine.driver_data<liberate_state>();
-	const UINT8 *RAM = machine.region("user1")->base();
+	const UINT8 *RAM = state->memregion("user1")->base();
 	int tile, bank;
 
 	/* Convert tile index of 512x512 to paged format */
@@ -117,7 +117,7 @@ WRITE8_MEMBER(liberate_state::deco16_io_w)
 				m_back_tilemap->mark_all_dirty();
 			}
 			m_background_disable = data & 0x4;
-			flip_screen_set(machine(), data & 0x01);
+			flip_screen_set(data & 0x01);
 			break;
 		case 7: /* Background palette resistors? */
 			/* Todo */
@@ -126,7 +126,7 @@ WRITE8_MEMBER(liberate_state::deco16_io_w)
 			device_set_input_line(m_maincpu, DECO16_IRQ_LINE, CLEAR_LINE);
 			break;
 		case 9: /* Sound */
-			soundlatch_w(space, 0, data);
+			soundlatch_byte_w(space, 0, data);
 			device_set_input_line(m_audiocpu, M6502_IRQ_LINE, HOLD_LINE);
 			break;
 	}
@@ -154,7 +154,7 @@ WRITE8_MEMBER(liberate_state::prosoccr_io_w)
 			device_set_input_line(m_maincpu, DECO16_IRQ_LINE, CLEAR_LINE);
 			break;
 		case 9: /* Sound */
-			soundlatch_w(space, 0, data);
+			soundlatch_byte_w(space, 0, data);
 			device_set_input_line(m_audiocpu, M6502_IRQ_LINE, HOLD_LINE);
 			break;
 	}
@@ -169,11 +169,11 @@ WRITE8_MEMBER(liberate_state::prosport_io_w)
 	{
 		case 0:
 			//background_disable = ~data & 0x80;
-			flip_screen_set(machine(), data & 0x80);
+			flip_screen_set(data & 0x80);
 			m_back_tilemap->mark_all_dirty();
 			break;
 		case 2: /* Sound */
-			soundlatch_w(space, 0, data);
+			soundlatch_byte_w(space, 0, data);
 			device_set_input_line(m_audiocpu, M6502_IRQ_LINE, HOLD_LINE);
 			break;
 		case 4: /* Irq ack */
@@ -253,6 +253,7 @@ WRITE8_MEMBER(liberate_state::prosport_paletteram_w)
 
 PALETTE_INIT( liberate )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i, bit0, bit1, bit2, g, r, b;
 
 	for (i = 0;i < 32;i++)
@@ -319,7 +320,7 @@ static void liberate_draw_sprites( running_machine &machine, bitmap_ind16 &bitma
 		if (multi && fy == 0)
 			sy -= 16;
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sy = 240 - sy;
 			sx = 240 - sx;
@@ -390,7 +391,7 @@ static void prosport_draw_sprites( running_machine &machine, bitmap_ind16 &bitma
 //      if (multi) sy -= 16;
 		if ((fy && multi) || (fx && multi)) { code2 = code; code++; }
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sy = 240 - sy;
 			sx = 240 - sx;
@@ -451,7 +452,7 @@ static void boomrang_draw_sprites( running_machine &machine, bitmap_ind16 &bitma
 //      if (multi) sy -= 16;
 		if (fy && multi) { code2 = code; code++; }
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sy = 240 - sy;
 			sx = 240 - sx;

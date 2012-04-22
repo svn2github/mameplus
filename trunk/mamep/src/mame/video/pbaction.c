@@ -36,7 +36,7 @@ WRITE8_MEMBER(pbaction_state::pbaction_colorram2_w)
 WRITE8_MEMBER(pbaction_state::pbaction_scroll_w)
 {
 	m_scroll = data - 3;
-	if (flip_screen_get(machine()))
+	if (flip_screen())
 		m_scroll = -m_scroll;
 
 	m_bg_tilemap->set_scrollx(0, m_scroll);
@@ -45,7 +45,7 @@ WRITE8_MEMBER(pbaction_state::pbaction_scroll_w)
 
 WRITE8_MEMBER(pbaction_state::pbaction_flipscreen_w)
 {
-	flip_screen_set(machine(), data & 0x01);
+	flip_screen_set(data & 0x01);
 }
 
 static TILE_GET_INFO( get_bg_tile_info )
@@ -85,7 +85,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	UINT8 *spriteram = state->m_spriteram;
 	int offs;
 
-	for (offs = state->m_spriteram_size - 4; offs >= 0; offs -= 4)
+	for (offs = state->m_spriteram.bytes() - 4; offs >= 0; offs -= 4)
 	{
 		int sx, sy, flipx, flipy;
 
@@ -103,7 +103,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		flipx = spriteram[offs + 1] & 0x40;
 		flipy = spriteram[offs + 1] & 0x80;
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			if (spriteram[offs] & 0x80)
 			{
@@ -123,7 +123,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 				spriteram[offs],
 				spriteram[offs + 1] & 0x0f,
 				flipx,flipy,
-				sx + (flip_screen_get(machine) ? state->m_scroll : -state->m_scroll), sy,0);
+				sx + (state->flip_screen() ? state->m_scroll : -state->m_scroll), sy,0);
 	}
 }
 

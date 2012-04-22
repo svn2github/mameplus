@@ -110,37 +110,6 @@ const int DEBUG_FLAG_OSD_ENABLED	= 0x00001000;		// The OSD debugger is enabled
 //  MACROS
 //**************************************************************************
 
-// macros to wrap legacy callbacks
-#define MACHINE_START_NAME(name)	machine_start_##name
-#define MACHINE_START(name)			void MACHINE_START_NAME(name)(running_machine &machine)
-#define MACHINE_START_CALL(name)	MACHINE_START_NAME(name)(machine)
-
-#define MACHINE_RESET_NAME(name)	machine_reset_##name
-#define MACHINE_RESET(name)			void MACHINE_RESET_NAME(name)(running_machine &machine)
-#define MACHINE_RESET_CALL(name)	MACHINE_RESET_NAME(name)(machine)
-
-#define SOUND_START_NAME(name)		sound_start_##name
-#define SOUND_START(name)			void SOUND_START_NAME(name)(running_machine &machine)
-#define SOUND_START_CALL(name)		SOUND_START_NAME(name)(machine)
-
-#define SOUND_RESET_NAME(name)		sound_reset_##name
-#define SOUND_RESET(name)			void SOUND_RESET_NAME(name)(running_machine &machine)
-#define SOUND_RESET_CALL(name)		SOUND_RESET_NAME(name)(machine)
-
-#define VIDEO_START_NAME(name)		video_start_##name
-#define VIDEO_START(name)			void VIDEO_START_NAME(name)(running_machine &machine)
-#define VIDEO_START_CALL(name)		VIDEO_START_NAME(name)(machine)
-
-#define VIDEO_RESET_NAME(name)		video_reset_##name
-#define VIDEO_RESET(name)			void VIDEO_RESET_NAME(name)(running_machine &machine)
-#define VIDEO_RESET_CALL(name)		VIDEO_RESET_NAME(name)(machine)
-
-#define PALETTE_INIT_NAME(name)		palette_init_##name
-#define PALETTE_INIT(name)			void PALETTE_INIT_NAME(name)(running_machine &machine, const UINT8 *color_prom)
-#define PALETTE_INIT_CALL(name)		PALETTE_INIT_NAME(name)(machine, color_prom)
-
-
-
 // NULL versions
 #define machine_start_0 			NULL
 #define machine_reset_0 			NULL
@@ -185,76 +154,9 @@ class osd_interface;
 
 typedef struct _palette_private palette_private;
 typedef struct _romload_private romload_private;
-typedef struct _input_port_private input_port_private;
 typedef struct _ui_input_private ui_input_private;
 typedef struct _debugcpu_private debugcpu_private;
 typedef struct _generic_machine_private generic_machine_private;
-typedef struct _generic_video_private generic_video_private;
-typedef struct _generic_audio_private generic_audio_private;
-
-
-// legacy callback functions
-typedef void   (*legacy_callback_func)(running_machine &machine);
-typedef void   (*palette_init_func)(running_machine &machine, const UINT8 *color_prom);
-
-
-
-// ======================> memory_region
-
-// memory region object; should eventually be renamed memory_region
-class memory_region
-{
-	DISABLE_COPYING(memory_region);
-
-	friend class running_machine;
-	friend class simple_list<memory_region>;
-	friend resource_pool_object<memory_region>::~resource_pool_object();
-
-	// construction/destruction
-	memory_region(running_machine &machine, const char *name, UINT32 length, UINT8 width, endianness_t endian);
-	~memory_region();
-
-public:
-	// getters
-	running_machine &machine() const { return m_machine; }
-	memory_region *next() const { return m_next; }
-	UINT8 *base() const { return (this != NULL) ? m_base.u8 : NULL; }
-	UINT8 *end() const { return (this != NULL) ? m_base.u8 + m_length : NULL; }
-	UINT32 bytes() const { return (this != NULL) ? m_length : 0; }
-	const char *name() const { return m_name; }
-
-	// flag expansion
-	endianness_t endianness() const { return m_endianness; }
-	UINT8 width() const { return m_width; }
-
-	// data access
-	UINT8 &u8(offs_t offset = 0) const { return m_base.u8[offset]; }
-	UINT16 &u16(offs_t offset = 0) const { return m_base.u16[offset]; }
-	UINT32 &u32(offs_t offset = 0) const { return m_base.u32[offset]; }
-	UINT64 &u64(offs_t offset = 0) const { return m_base.u64[offset]; }
-
-	// allow passing a region for any common pointer
-	operator void *() const { return (this != NULL) ? m_base.v : NULL; }
-	operator INT8 *() const { return (this != NULL) ? m_base.i8 : NULL; }
-	operator UINT8 *() const { return (this != NULL) ? m_base.u8 : NULL; }
-	operator INT16 *() const { return (this != NULL) ? m_base.i16 : NULL; }
-	operator UINT16 *() const { return (this != NULL) ? m_base.u16 : NULL; }
-	operator INT32 *() const { return (this != NULL) ? m_base.i32 : NULL; }
-	operator UINT32 *() const { return (this != NULL) ? m_base.u32 : NULL; }
-	operator INT64 *() const { return (this != NULL) ? m_base.i64 : NULL; }
-	operator UINT64 *() const { return (this != NULL) ? m_base.u64 : NULL; }
-
-private:
-	// internal data
-	running_machine &		m_machine;
-	memory_region *			m_next;
-	astring					m_name;
-	generic_ptr				m_base;
-	UINT32					m_length;
-	UINT8					m_width;
-	endianness_t			m_endianness;
-};
-
 
 
 // ======================> system_time
@@ -318,7 +220,8 @@ public:
 	resource_pool &respool() { return m_respool; }
 	device_scheduler &scheduler() { return m_scheduler; }
 	save_manager &save() { return m_save; }
-	memory_manager &memory() { assert(m_memory != NULL); return *m_memory; }
+	memory_manager &memory() { return m_memory; }
+	ioport_manager &ioport() { return m_ioport; }
 	cheat_manager &cheat() const { assert(m_cheat != NULL); return *m_cheat; }
 	render_manager &render() const { assert(m_render != NULL); return *m_render; }
 	input_manager &input() const { assert(m_input != NULL); return *m_input; }
@@ -341,15 +244,12 @@ public:
 
 	// additional helpers
 	emu_options &options() const { return m_config.options(); }
-	memory_region *first_region() const { return m_regionlist.first(); }
 	attotime time() const { return m_scheduler.time(); }
 	bool scheduled_event_pending() const { return m_exit_pending || m_hard_reset_pending; }
 
 	// fetch items by name
 	inline device_t *device(const char *tag) { return root_device().subdevice(tag); }
 	template<class _DeviceClass> inline _DeviceClass *device(const char *tag) { return downcast<_DeviceClass *>(device(tag)); }
-	inline const input_port_config *port(const char *tag);
-	inline const memory_region *region(const char *tag);
 
 	// configuration helpers
 	device_t &add_dynamic_device(device_t &owner, device_type type, const char *tag, UINT32 clock);
@@ -376,18 +276,15 @@ public:
 	void base_datetime(system_time &systime);
 	void current_datetime(system_time &systime);
 
-	// regions
-	memory_region *region_alloc(const char *name, UINT32 length, UINT8 width, endianness_t endian);
-	void region_free(const char *name);
+	// watchdog control
+	void watchdog_reset();
+	void watchdog_enable(bool enable = true);
 
 	// misc
 	void CLIB_DECL logerror(const char *format, ...);
 	void CLIB_DECL vlogerror(const char *format, va_list args);
 	UINT32 rand();
 	const char *describe_context();
-
-	// internals
-	ioport_list				m_portlist;			// points to a list of input port configurations
 
 	// CPU information
 #ifdef USE_HISCORE
@@ -412,12 +309,9 @@ public:
 	// internal core information
 	palette_private *		palette_data;		// internal data from palette.c
 	romload_private *		romload_data;		// internal data from romload.c
-	input_port_private *	input_port_data;	// internal data from inptport.c
 	ui_input_private *		ui_input_data;		// internal data from uiinput.c
 	debugcpu_private *		debugcpu_data;		// internal data from debugcpu.c
 	generic_machine_private *generic_machine_data; // internal data from machine/generic.c
-	generic_video_private *	generic_video_data;	// internal data from video/generic.c
-	generic_audio_private *	generic_audio_data;	// internal data from audio/generic.c
 
 private:
 	// internal helpers
@@ -426,6 +320,8 @@ private:
 	void fill_systime(system_time &systime, time_t t);
 	void handle_saveload();
 	void soft_reset(void *ptr = NULL, INT32 param = 0);
+	void watchdog_fired(void *ptr = NULL, INT32 param = 0);
+	void watchdog_vblank(screen_device &screen, bool vblank_state);
 
 	// internal callbacks
 	static void logfile_callback(running_machine &machine, const char *buffer);
@@ -442,13 +338,7 @@ private:
 	const game_driver &		m_system;				// reference to the definition of the game machine
 	osd_interface &			m_osd;					// reference to OSD system
 
-	// embedded managers and objects
-	tagged_list<memory_region> m_regionlist;		// list of memory regions
-	save_manager			m_save;					// save manager
-	device_scheduler		m_scheduler;			// scheduler object
-
 	// managers
-	memory_manager *		m_memory;				// internal data from memory.c
 	cheat_manager *			m_cheat;				// internal data from cheat.c
 	render_manager *		m_render;				// internal data from render.c
 	input_manager *			m_input;				// internal data from input.c
@@ -465,6 +355,11 @@ private:
 	bool					m_exit_to_game_select;	// when we exit, go we go back to the game select?
 	const game_driver *		m_new_driver_pending;	// pointer to the next pending driver
 	emu_timer *				m_soft_reset_timer;		// timer used to schedule a soft reset
+
+	// watchdog state
+	bool					m_watchdog_enabled;		// is the watchdog enabled?
+	INT32					m_watchdog_counter;		// counter for watchdog tracking
+	emu_timer *				m_watchdog_timer;		// timer for watchdog tracking
 
 	// misc state
 	UINT32					m_rand_seed;			// current random number seed
@@ -517,35 +412,13 @@ private:
 		logerror_callback			m_func;
 	};
 	simple_list<logerror_callback_item> m_logerror_list;
+
+	// embedded managers and objects
+	save_manager			m_save;					// save manager
+	memory_manager			m_memory;				// memory manager
+	ioport_manager			m_ioport;				// I/O port manager
+	device_scheduler		m_scheduler;			// scheduler object
 };
-
-
-
-//**************************************************************************
-//  INLINE FUNCTIONS
-//**************************************************************************
-
-inline const input_port_config *running_machine::port(const char *tag)
-{
-	// if tag begins with a :, it's absolute
-	if (tag[0] == ':')
-		return m_portlist.find(tag);
-
-	// otherwise, compute it relative to the root device
-	astring fulltag;
-	return m_portlist.find(root_device().subtag(fulltag, tag).cstr());
-}
-
-inline const memory_region *running_machine::region(const char *tag)
-{
-	// if tag begins with a :, it's absolute
-	if (tag[0] == ':')
-		return m_regionlist.find(tag);
-
-	// otherwise, compute it relative to the root device
-	astring fulltag;
-	return m_regionlist.find(root_device().subtag(fulltag, tag).cstr());
-}
 
 
 #endif	/* __MACHINE_H__ */

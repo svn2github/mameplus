@@ -26,6 +26,7 @@
 
 PALETTE_INIT( 1942 )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	rgb_t palette[256];
 	int i, colorbase;
 
@@ -183,7 +184,7 @@ WRITE8_MEMBER(_1942_state::c1942_c804_w)
 
 	device_set_input_line(m_audiocpu, INPUT_LINE_RESET, (data & 0x10) ? ASSERT_LINE : CLEAR_LINE);
 
-	flip_screen_set(machine(), data & 0x80);
+	flip_screen_set(data & 0x80);
 }
 
 
@@ -198,7 +199,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	_1942_state *state = machine.driver_data<_1942_state>();
 	int offs;
 
-	for (offs = state->m_spriteram_size - 4; offs >= 0; offs -= 4)
+	for (offs = state->m_spriteram.bytes() - 4; offs >= 0; offs -= 4)
 	{
 		int i, code, col, sx, sy, dir;
 
@@ -209,7 +210,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		sy = state->m_spriteram[offs + 2];
 		dir = 1;
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;
 			sy = 240 - sy;
@@ -225,7 +226,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		{
 			drawgfx_transpen(bitmap,cliprect,machine.gfx[2],
 					code + i,col,
-					flip_screen_get(machine),flip_screen_get(machine),
+					state->flip_screen(),state->flip_screen(),
 					sx,sy + 16 * i * dir,15);
 
 			i--;

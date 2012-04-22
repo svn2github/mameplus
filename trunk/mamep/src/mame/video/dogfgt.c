@@ -13,6 +13,7 @@
 
 PALETTE_INIT( dogfgt )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* first 16 colors are RAM */
@@ -119,7 +120,7 @@ WRITE8_MEMBER(dogfgt_state::internal_bitmapram_w)
 		for (i = 0; i < 3; i++)
 			color |= ((m_bitmapram[offset + BITMAPRAM_SIZE / 3 * i] >> subx) & 1) << i;
 
-		if (flip_screen_get(machine()))
+		if (flip_screen())
 			m_pixbitmap.pix16(y ^ 0xff, (x + subx) ^ 0xff) = PIXMAP_COLOR_BASE + 8 * m_pixcolor + color;
 		else
 			m_pixbitmap.pix16(y, x + subx) = PIXMAP_COLOR_BASE + 8 * m_pixcolor + color;
@@ -164,7 +165,7 @@ WRITE8_MEMBER(dogfgt_state::dogfgt_1800_w)
 	coin_counter_w(machine(), 1, data & 0x20);
 
 	/* bit 7 is screen flip */
-	flip_screen_set(machine(), data & 0x80);
+	flip_screen_set(data & 0x80);
 
 	/* other bits unused? */
 	logerror("PC %04x: 1800 = %02x\n", cpu_get_pc(&space.device()), data);
@@ -182,7 +183,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap,const r
 	dogfgt_state *state = machine.driver_data<dogfgt_state>();
 	int offs;
 
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		if (state->m_spriteram[offs] & 0x01)
 		{
@@ -192,7 +193,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap,const r
 			sy = (240 - state->m_spriteram[offs + 2]) & 0xff;
 			flipx = state->m_spriteram[offs] & 0x04;
 			flipy = state->m_spriteram[offs] & 0x02;
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				sx = 240 - sx;
 				sy = 240 - sy;
@@ -215,11 +216,11 @@ SCREEN_UPDATE_IND16( dogfgt )
 	dogfgt_state *state = screen.machine().driver_data<dogfgt_state>();
 	int offs;
 
-	if (state->m_lastflip != flip_screen_get(screen.machine()) || state->m_lastpixcolor != state->m_pixcolor)
+	if (state->m_lastflip != state->flip_screen() || state->m_lastpixcolor != state->m_pixcolor)
 	{
 		address_space *space = screen.machine().device("maincpu")->memory().space(AS_PROGRAM);
 
-		state->m_lastflip = flip_screen_get(screen.machine());
+		state->m_lastflip = state->flip_screen();
 		state->m_lastpixcolor = state->m_pixcolor;
 
 		for (offs = 0; offs < BITMAPRAM_SIZE; offs++)

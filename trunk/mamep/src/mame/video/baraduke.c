@@ -17,6 +17,7 @@
 
 PALETTE_INIT( baraduke )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 	int bit0,bit1,bit2,bit3,r,g,b;
 
@@ -260,7 +261,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 
 			sy -= 16 * sizey;
 
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				sx = 496+3 - 16 * sizex - sx;
 				sy = 240 - 16 * sizey - sy;
@@ -295,7 +296,7 @@ static void set_scroll(running_machine &machine, int layer)
 
 	scrollx = state->m_xscroll[layer] + xdisp[layer];
 	scrolly = state->m_yscroll[layer] + 9;
-	if (flip_screen_get(machine))
+	if (state->flip_screen())
 	{
 		scrollx = -scrollx + 3;
 		scrolly = -scrolly;
@@ -313,9 +314,9 @@ SCREEN_UPDATE_IND16( baraduke )
 	int back;
 
 	/* flip screen is embedded in the sprite control registers */
-	/* can't use flip_screen_set(screen.machine(), ) because the visible area is asymmetrical */
-	flip_screen_set_no_update(screen.machine(), spriteram[0x07f6] & 0x01);
-	screen.machine().tilemap().set_flip_all(flip_screen_get(screen.machine()) ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0);
+	/* can't use state->flip_screen_set() because the visible area is asymmetrical */
+	state->flip_screen_set_no_update(spriteram[0x07f6] & 0x01);
+	screen.machine().tilemap().set_flip_all(state->flip_screen() ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0);
 	set_scroll(screen.machine(), 0);
 	set_scroll(screen.machine(), 1);
 

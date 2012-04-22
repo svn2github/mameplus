@@ -33,7 +33,7 @@ static void gigas_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, 
 	freekick_state *state = machine.driver_data<freekick_state>();
 	int offs;
 
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		int xpos = state->m_spriteram[offs + 3];
 		int ypos = state->m_spriteram[offs + 2];
@@ -43,12 +43,12 @@ static void gigas_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, 
 		int flipy = 0;
 		int color = state->m_spriteram[offs + 1] & 0x1f;
 
-		if (flip_screen_x_get(machine))
+		if (state->flip_screen_x())
 		{
 			xpos = 240 - xpos;
 			flipx = !flipx;
 		}
-		if (flip_screen_y_get(machine))
+		if (state->flip_screen_y())
 		{
 			ypos = 256 - ypos;
 			flipy = !flipy;
@@ -68,7 +68,7 @@ static void pbillrd_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap
 	freekick_state *state = machine.driver_data<freekick_state>();
 	int offs;
 
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		int xpos = state->m_spriteram[offs + 3];
 		int ypos = state->m_spriteram[offs + 2];
@@ -78,12 +78,12 @@ static void pbillrd_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap
 		int flipy = 0;//state->m_spriteram[offs + 0] & 0x40;
 		int color = state->m_spriteram[offs + 1] & 0x0f;
 
-		if (flip_screen_x_get(machine))
+		if (state->flip_screen_x())
 		{
 			xpos = 240 - xpos;
 			flipx = !flipx;
 		}
-		if (flip_screen_y_get(machine))
+		if (state->flip_screen_y())
 		{
 			ypos = 256 - ypos;
 			flipy = !flipy;
@@ -104,7 +104,7 @@ static void freekick_draw_sprites( running_machine &machine, bitmap_ind16 &bitma
 	freekick_state *state = machine.driver_data<freekick_state>();
 	int offs;
 
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		int xpos = state->m_spriteram[offs + 3];
 		int ypos = state->m_spriteram[offs + 0];
@@ -114,12 +114,12 @@ static void freekick_draw_sprites( running_machine &machine, bitmap_ind16 &bitma
 		int flipy = state->m_spriteram[offs + 2] & 0x40;
 		int color = state->m_spriteram[offs + 2] & 0x1f;
 
-		if (flip_screen_x_get(machine))
+		if (state->flip_screen_x())
 		{
 			xpos = 240 - xpos;
 			flipx = !flipx;
 		}
-		if (flip_screen_y_get(machine))
+		if (state->flip_screen_y())
 		{
 			ypos = 256 - ypos;
 			flipy = !flipy;

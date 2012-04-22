@@ -4,6 +4,7 @@
 
 PALETTE_INIT( mermaid )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -34,6 +35,7 @@ PALETTE_INIT( mermaid )
 
 PALETTE_INIT( rougien )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -83,12 +85,12 @@ WRITE8_MEMBER(mermaid_state::mermaid_colorram_w)
 
 WRITE8_MEMBER(mermaid_state::mermaid_flip_screen_x_w)
 {
-	flip_screen_x_set(machine(), data & 0x01);
+	flip_screen_x_set(data & 0x01);
 }
 
 WRITE8_MEMBER(mermaid_state::mermaid_flip_screen_y_w)
 {
-	flip_screen_y_set(machine(), data & 0x01);
+	flip_screen_y_set(data & 0x01);
 }
 
 WRITE8_MEMBER(mermaid_state::mermaid_bg_scroll_w)
@@ -189,7 +191,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	UINT8 *spriteram = state->m_spriteram;
 	int offs;
 
-	for (offs = state->m_spriteram_size - 4; offs >= 0; offs -= 4)
+	for (offs = state->m_spriteram.bytes() - 4; offs >= 0; offs -= 4)
 	{
 		int attr = spriteram[offs + 2];
 		int bank = (attr & 0x30) >> 4;
@@ -205,19 +207,19 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		code |= state->m_rougien_gfxbank1 * 0x2800;
 		code |= state->m_rougien_gfxbank2 * 0x2400;
 
-		if (flip_screen_x_get(machine))
+		if (state->flip_screen_x())
 		{
 			flipx = !flipx;
 			sx = 240 - sx;
 		}
 
-		if (flip_screen_y_get(machine))
+		if (state->flip_screen_y())
 		{
 			flipy = !flipy;
 			sy = 240 - sy;
 		}
 
-		drawgfx_transpen(bitmap, (flip_screen_x_get(machine) ? flip_spritevisiblearea : spritevisiblearea),
+		drawgfx_transpen(bitmap, (state->flip_screen_x() ? flip_spritevisiblearea : spritevisiblearea),
 			machine.gfx[1], code, color, flipx, flipy, sx, sy, 0);
 	}
 }
@@ -273,7 +275,7 @@ SCREEN_VBLANK( mermaid )
 
 		// check for bit 0 (sprite-sprite), 1 (sprite-foreground), 2 (sprite-background)
 
-		for (offs = state->m_spriteram_size - 4; offs >= 0; offs -= 4)
+		for (offs = state->m_spriteram.bytes() - 4; offs >= 0; offs -= 4)
 		{
 			int attr = spriteram[offs + 2];
 			int bank = (attr & 0x30) >> 4;
@@ -291,13 +293,13 @@ SCREEN_VBLANK( mermaid )
 			code |= state->m_rougien_gfxbank1 * 0x2800;
 			code |= state->m_rougien_gfxbank2 * 0x2400;
 
-			if (flip_screen_x_get(screen.machine()))
+			if (state->flip_screen_x())
 			{
 				flipx = !flipx;
 				sx = 240 - sx;
 			}
 
-			if (flip_screen_y_get(screen.machine()))
+			if (state->flip_screen_y())
 			{
 				flipy = !flipy;
 				sy = 240 - sy;
@@ -337,7 +339,7 @@ SCREEN_VBLANK( mermaid )
 			state->m_helper.fill(0, rect);
 			state->m_helper2.fill(0, rect);
 
-			for (offs2 = state->m_spriteram_size - 4; offs2 >= 0; offs2 -= 4)
+			for (offs2 = state->m_spriteram.bytes() - 4; offs2 >= 0; offs2 -= 4)
 				if (offs != offs2)
 				{
 					int attr2 = spriteram[offs2 + 2];
@@ -354,13 +356,13 @@ SCREEN_VBLANK( mermaid )
 					code2 |= state->m_rougien_gfxbank1 * 0x2800;
 					code2 |= state->m_rougien_gfxbank2 * 0x2400;
 
-					if (flip_screen_x_get(screen.machine()))
+					if (state->flip_screen_x())
 					{
 						flipx2 = !flipx2;
 						sx2 = 240 - sx2;
 					}
 
-					if (flip_screen_y_get(screen.machine()))
+					if (state->flip_screen_y())
 					{
 						flipy2 = !flipy2;
 						sy2 = 240 - sy2;
@@ -376,7 +378,7 @@ SCREEN_VBLANK( mermaid )
 
 		// check for bit 3 (sprite-sprite)
 
-		for (offs = state->m_spriteram_size - 4; offs >= 0; offs -= 4)
+		for (offs = state->m_spriteram.bytes() - 4; offs >= 0; offs -= 4)
 		{
 			int attr = spriteram[offs + 2];
 			int bank = (attr & 0x30) >> 4;
@@ -394,13 +396,13 @@ SCREEN_VBLANK( mermaid )
 			code |= state->m_rougien_gfxbank1 * 0x2800;
 			code |= state->m_rougien_gfxbank2 * 0x2400;
 
-			if (flip_screen_x_get(screen.machine()))
+			if (state->flip_screen_x())
 			{
 				flipx = !flipx;
 				sx = 240 - sx;
 			}
 
-			if (flip_screen_y_get(screen.machine()))
+			if (state->flip_screen_y())
 			{
 				flipy = !flipy;
 				sy = 240 - sy;
@@ -418,7 +420,7 @@ SCREEN_VBLANK( mermaid )
 			state->m_helper.fill(0, rect);
 			state->m_helper2.fill(0, rect);
 
-			for (offs2 = state->m_spriteram_size - 4; offs2 >= 0; offs2 -= 4)
+			for (offs2 = state->m_spriteram.bytes() - 4; offs2 >= 0; offs2 -= 4)
 				if (offs != offs2)
 				{
 					int attr2 = spriteram[offs2 + 2];
@@ -435,13 +437,13 @@ SCREEN_VBLANK( mermaid )
 					code2 |= state->m_rougien_gfxbank1 * 0x2800;
 					code2 |= state->m_rougien_gfxbank2 * 0x2400;
 
-					if (flip_screen_x_get(screen.machine()))
+					if (state->flip_screen_x())
 					{
 						flipx2 = !flipx2;
 						sx2 = 240 - sx2;
 					}
 
-					if (flip_screen_y_get(screen.machine()))
+					if (state->flip_screen_y())
 					{
 						flipy2 = !flipy2;
 						sy2 = 240 - sy2;
@@ -457,7 +459,7 @@ SCREEN_VBLANK( mermaid )
 
 		// check for bit 6
 
-		for (offs = state->m_spriteram_size - 4; offs >= 0; offs -= 4)
+		for (offs = state->m_spriteram.bytes() - 4; offs >= 0; offs -= 4)
 		{
 			int attr = spriteram[offs + 2];
 			int bank = (attr & 0x30) >> 4;
@@ -475,13 +477,13 @@ SCREEN_VBLANK( mermaid )
 			code |= state->m_rougien_gfxbank1 * 0x2800;
 			code |= state->m_rougien_gfxbank2 * 0x2400;
 
-			if (flip_screen_x_get(screen.machine()))
+			if (state->flip_screen_x())
 			{
 				flipx = !flipx;
 				sx = 240 - sx;
 			}
 
-			if (flip_screen_y_get(screen.machine()))
+			if (state->flip_screen_y())
 			{
 				flipy = !flipy;
 				sy = 240 - sy;
@@ -499,7 +501,7 @@ SCREEN_VBLANK( mermaid )
 			state->m_helper.fill(0, rect);
 			state->m_helper2.fill(0, rect);
 
-			for (offs2 = state->m_spriteram_size - 4; offs2 >= 0; offs2 -= 4)
+			for (offs2 = state->m_spriteram.bytes() - 4; offs2 >= 0; offs2 -= 4)
 				if (offs != offs2)
 				{
 					int attr2 = spriteram[offs2 + 2];
@@ -516,13 +518,13 @@ SCREEN_VBLANK( mermaid )
 					code2 |= state->m_rougien_gfxbank1 * 0x2800;
 					code2 |= state->m_rougien_gfxbank2 * 0x2400;
 
-					if (flip_screen_x_get(screen.machine()))
+					if (state->flip_screen_x())
 					{
 						flipx2 = !flipx2;
 						sx2 = 240 - sx2;
 					}
 
-					if (flip_screen_y_get(screen.machine()))
+					if (state->flip_screen_y())
 					{
 						flipy2 = !flipy2;
 						sy2 = 240 - sy2;

@@ -101,10 +101,10 @@ typedef void (*m68k_cmpild_func)(device_t *device, UINT32 data, UINT8 reg);
 typedef void (*m68k_rte_func)(device_t *device);
 typedef int (*m68k_tas_func)(device_t *device);
 
-typedef UINT8 (*m68307_porta_read_callback)(address_space *space, offs_t offset);
-typedef void (*m68307_porta_write_callback)(address_space *space, offs_t offset, UINT8 data);
-typedef UINT16 (*m68307_portb_read_callback)(address_space *space, offs_t offset, UINT16 mem_mask);
-typedef void (*m68307_portb_write_callback)(address_space *space, offs_t offset, UINT16 data, UINT16 mem_mask);
+typedef UINT8 (*m68307_porta_read_callback)(address_space *space, bool dedicated, UINT8 line_mask);
+typedef void (*m68307_porta_write_callback)(address_space *space, bool dedicated, UINT8 data, UINT8 line_mask);
+typedef UINT16 (*m68307_portb_read_callback)(address_space *space, bool dedicated, UINT16 line_mask);
+typedef void (*m68307_portb_write_callback)(address_space *space, bool dedicated, UINT16 data, UINT16 line_mask);
 
 
 
@@ -145,11 +145,11 @@ UINT16 m68307_get_cs(device_t *device, offs_t address);
 void m68307_set_interrupt(device_t *device, int level, int vector);
 void m68307_timer0_interrupt(legacy_cpu_device *cpudev);
 void m68307_timer1_interrupt(legacy_cpu_device *cpudev);
-void m68307_serial_interrupt(legacy_cpu_device *cpudev);
+void m68307_serial_interrupt(legacy_cpu_device *cpudev, int vector);
 void m68307_mbus_interrupt(legacy_cpu_device *cpudev);
 void m68307_licr2_interrupt(legacy_cpu_device *cpudev);
 
-
+void m68307_set_duart68681(device_t* cpudev, device_t* duart68681);
 
 typedef int (*instruction_hook_t)(device_t *device, offs_t curpc);
 void m68k_set_instruction_hook(device_t *device, instruction_hook_t ihook);

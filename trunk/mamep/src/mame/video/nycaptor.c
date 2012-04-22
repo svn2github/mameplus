@@ -23,6 +23,8 @@ static int nycaptor_spot( running_machine &machine )
 		return state->m_sharedram[0x299] ? state->m_sharedram[0x298] : 0;
 	else
 		return 0;
+
+    return 0;
 }
 
 WRITE8_MEMBER(nycaptor_state::nycaptor_spriteram_w)
@@ -107,9 +109,9 @@ WRITE8_MEMBER(nycaptor_state::nycaptor_palette_w)
 		return;
 
 	if (offset & 0x100)
-		paletteram_xxxxBBBBGGGGRRRR_split2_w(space, (offset & 0xff) + (m_palette_bank << 8), data);
+		paletteram_xxxxBBBBGGGGRRRR_byte_split_hi_w(space, (offset & 0xff) + (m_palette_bank << 8), data);
 	else
-		paletteram_xxxxBBBBGGGGRRRR_split1_w(space, (offset & 0xff) + (m_palette_bank << 8), data);
+		paletteram_xxxxBBBBGGGGRRRR_byte_split_lo_w(space, (offset & 0xff) + (m_palette_bank << 8), data);
 }
 
 READ8_MEMBER(nycaptor_state::nycaptor_palette_r)
@@ -263,7 +265,7 @@ SCREEN_UPDATE_IND16( nycaptor )
 		draw_sprites(screen.machine(), bitmap, cliprect, 7);
 	}
 	else
-	#endif
+#endif
 	switch (nycaptor_spot(screen.machine()) & 3)
 	{
 	case 0:

@@ -124,8 +124,8 @@ static DEVICE_START( m72_audio )
 {
 	m72_audio_state *state = get_safe_token(device);
 
-	state->samples = device->machine().region("samples")->base();
-	state->samples_size = device->machine().region("samples")->bytes();
+	state->samples = device->machine().root_device().memregion("samples")->base();
+	state->samples_size = device->machine().root_device().memregion("samples")->bytes();
 	state->space = device->machine().device("soundcpu")->memory().space(AS_IO);
 	state->dac = device->machine().device("dac");
 
@@ -154,7 +154,7 @@ WRITE16_DEVICE_HANDLER( m72_sound_command_w )
 	{
 		m72_audio_state *state = get_safe_token(device);
 		driver_device *drvstate = device->machine().driver_data<driver_device>();
-		drvstate->soundlatch_w(*state->space, offset, data);
+		drvstate->soundlatch_byte_w(*state->space, offset, data);
 		device->machine().scheduler().synchronize(FUNC(setvector_callback), Z80_ASSERT, state);
 	}
 }
@@ -163,7 +163,7 @@ WRITE8_DEVICE_HANDLER( m72_sound_command_byte_w )
 {
 	m72_audio_state *state = get_safe_token(device);
 	driver_device *drvstate = device->machine().driver_data<driver_device>();
-	drvstate->soundlatch_w(*state->space, offset, data);
+	drvstate->soundlatch_byte_w(*state->space, offset, data);
 	device->machine().scheduler().synchronize(FUNC(setvector_callback), Z80_ASSERT, state);
 }
 

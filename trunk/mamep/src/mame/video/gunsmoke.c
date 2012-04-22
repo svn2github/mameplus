@@ -18,6 +18,7 @@
 
 PALETTE_INIT( gunsmoke )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -78,12 +79,12 @@ WRITE8_MEMBER(gunsmoke_state::gunsmoke_c804_w)
 	coin_counter_w(machine(), 0, data & 0x02);
 
 	/* bits 2 and 3 select the ROM bank */
-	memory_set_bank(machine(), "bank1", (data & 0x0c) >> 2);
+	membank("bank1")->set_entry((data & 0x0c) >> 2);
 
 	/* bit 5 resets the sound CPU? - we ignore it */
 
 	/* bit 6 flips screen */
-	flip_screen_set(machine(), data & 0x40);
+	flip_screen_set(data & 0x40);
 
 	/* bit 7 enables characters? */
 	m_chon = data & 0x80;
@@ -104,7 +105,7 @@ WRITE8_MEMBER(gunsmoke_state::gunsmoke_d806_w)
 
 static TILE_GET_INFO( get_bg_tile_info )
 {
-	UINT8 *tilerom = machine.region("gfx4")->base();
+	UINT8 *tilerom = machine.root_device().memregion("gfx4")->base();
 
 	int offs = tile_index * 2;
 	int attr = tilerom[offs + 1];
@@ -142,7 +143,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	UINT8 *spriteram = state->m_spriteram;
 	int offs;
 
-	for (offs = state->m_spriteram_size - 32; offs >= 0; offs -= 32)
+	for (offs = state->m_spriteram.bytes() - 32; offs >= 0; offs -= 32)
 	{
 		int attr = spriteram[offs + 1];
 		int bank = (attr & 0xc0) >> 6;
@@ -158,7 +159,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 
 		code += 256 * bank;
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;
 			sy = 240 - sy;

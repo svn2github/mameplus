@@ -366,7 +366,7 @@ WRITE16_MEMBER(nmk16_state::manybloc_scroll_w)
 WRITE16_MEMBER(nmk16_state::nmk_flipscreen_w)
 {
 	if (ACCESSING_BITS_0_7)
-		flip_screen_set(machine(), data & 0x01);
+		flip_screen_set(data & 0x01);
 }
 
 WRITE16_MEMBER(nmk16_state::nmk_tilebank_w)
@@ -411,98 +411,98 @@ WRITE16_MEMBER(nmk16_state::bioship_bank_w)
 
 static inline void nmk16_draw_sprite(nmk16_state *state, running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int priority, UINT16 *spr)
 {
-	if ((spr[0] & 0x0001))
-	{
-		int sx    = (spr[4] & 0x1ff) + state->m_videoshift;
-		int sy    =  spr[6] & 0x1ff;
-		int code  =  spr[3];
-		int color =  spr[7];
-		int w     =  spr[1] & 0x00f;
-		int h     = (spr[1] & 0x0f0) >> 4;
-		int pri   = (spr[0] & 0x0c0) >> 6;
-		int xx,yy,x;
-		int delta = 16;
+  if ((spr[0] & 0x0001))
+  {
+    int sx    = (spr[4] & 0x1FF) + state->m_videoshift;
+    int sy    =  spr[6] & 0x1FF;
+    int code  =  spr[3];
+    int color =  spr[7];
+    int w     =  spr[1] & 0x00F;
+    int h     = (spr[1] & 0x0F0) >> 4;
+    int pri   = (spr[0] & 0x0C0) >> 6;
+    int xx,yy,x;
+    int delta = 16;
 
-		if(pri != priority)
-			return;
+    if(pri != priority)
+      return;
 
-		if (flip_screen_get(machine))
-		{
-			sx = 368 - sx;
-			sy = 240 - sy;
-			delta = -16;
-		}
+    if (state->flip_screen())
+    {
+      sx = 368 - sx;
+      sy = 240 - sy;
+      delta = -16;
+    }
 
-		yy = h;
-		do
-		{
-			x = sx;
-			xx = w;
-			do
-			{
-				drawgfx_transpen(bitmap,cliprect,machine.gfx[2],
-							code,
-							color,
-							flip_screen_get(machine), flip_screen_get(machine),
-				((x + 16) & 0x1ff) - 16,sy & 0x1ff,15);
-				code++;
-				x += delta;
-			} while (--xx >= 0);
+    yy = h;
+    do
+    {
+      x = sx;
+      xx = w;
+      do
+      {
+        drawgfx_transpen(bitmap,cliprect,machine.gfx[2],
+            code,
+            color,
+            state->flip_screen(), state->flip_screen(),
+            ((x + 16) & 0x1FF) - 16,sy & 0x1FF,15);
+        code++;
+        x += delta;
+      } while (--xx >= 0);
 
-			sy += delta;
-		} while (--yy >= 0);
-	}
+      sy += delta;
+    } while (--yy >= 0);
+  }
 }
 
 static inline void nmk16_draw_sprite_flipsupported(nmk16_state *state, running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int priority, UINT16 *spr)
 {
-	if ((spr[0] & 0x0001))
-	{
-		int sx    = (spr[4] & 0x1ff) + state->m_videoshift;
-		int sy    =  spr[6] & 0x1ff;
-		int code  =  spr[3];
-		int color =  spr[7];
-		int w     =  spr[1] & 0x00f;
-		int h     = (spr[1] & 0x0f0) >> 4;
-		int pri   = (spr[0] & 0x0c0) >> 6;
-		int flipy = (spr[1] & 0x200) >> 9;
-		int flipx = (spr[1] & 0x100) >> 8;
+  if ((spr[0] & 0x0001))
+  {
+    int sx    = (spr[4] & 0x1FF) + state->m_videoshift;
+    int sy    =  spr[6] & 0x1FF;
+    int code  =  spr[3];
+    int color =  spr[7];
+    int w     =  spr[1] & 0x00F;
+    int h     = (spr[1] & 0x0F0) >> 4;
+    int pri   = (spr[0] & 0x0C0) >> 6;
+    int flipy = (spr[1] & 0x200) >> 9;
+    int flipx = (spr[1] & 0x100) >> 8;
 
-		int xx,yy,x;
-		int delta = 16;
+    int xx,yy,x;
+    int delta = 16;
 
-		if(pri != priority)
-			return;
+    if(pri != priority)
+      return;
 
-		flipx ^= flip_screen_get(machine);
-		flipy ^= flip_screen_get(machine);
+    flipx ^= state->flip_screen();
+    flipy ^= state->flip_screen();
 
-		if (flip_screen_get(machine))
-		{
-			sx = 368 - sx;
-			sy = 240 - sy;
-			delta = -16;
-		}
+    if (state->flip_screen())
+    {
+      sx = 368 - sx;
+      sy = 240 - sy;
+      delta = -16;
+    }
 
-		yy = h;
-		sy+=flipy?(delta*h):0;
-		do
-		{
-			x = sx+(flipx?(delta*w):0);
-			xx = w;
-			do
-			{
-				drawgfx_transpen(bitmap,cliprect,machine.gfx[2],
-						code,
-						color,
-						flipx, flipy,
-						((x + 16) & 0x1ff) - 16,sy & 0x1ff,15);
-					code++;
-					x +=delta * ( flipx?-1:1 );
-				} while (--xx >= 0);
-				sy += delta * ( flipy?-1:1);
-		} while (--yy >= 0);
-	}
+    yy = h;
+    sy += flipy ? (delta*h) : 0;
+    do
+    {
+      x = sx + (flipx ? (delta*w) : 0);
+      xx = w;
+      do
+      {
+        drawgfx_transpen(bitmap,cliprect,machine.gfx[2],
+            code,
+            color,
+            flipx, flipy,
+            ((x + 16) & 0x1FF) - 16,sy & 0x1FF,15);
+        code++;
+        x += delta * (flipx ? -1 : 1);
+      } while (--xx >= 0);
+      sy += delta * (flipy ? -1 : 1);
+    } while (--yy >= 0);
+  }
 }
 
 static void nmk16_draw_sprites_swap(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int *bittbl)
@@ -511,14 +511,14 @@ static void nmk16_draw_sprites_swap(running_machine &machine, bitmap_ind16 &bitm
 	int i, prio;
 
 	// Priority level (4 levels, 0x100 sprites)
-		for ( prio = 3; prio >= 0; prio-- )
-		{
-			// Sprite
+    for ( prio = 3; prio >= 0; prio-- )
+    {
+      // Sprite
 		for ( i = 0; i < 0x100; i++ )
-			{
+      {
 			int spr = BITSWAP8(i, bittbl[0], bittbl[1], bittbl[2], bittbl[3], bittbl[4], bittbl[5], bittbl[6], bittbl[7]);
 			nmk16_draw_sprite(state, machine, bitmap, cliprect, prio, state->m_spriteram_old2 + (spr * 8));
-		}
+    }
 	}
 }
 
@@ -528,14 +528,14 @@ static void nmk16_draw_sprites_swap_flipsupported(running_machine &machine, bitm
 	int i, prio;
 
 	// Priority level (4 levels, 0x100 sprites)
-	for ( prio = 3; prio >= 0; prio-- )
-	{
-		// Sprite
+    for ( prio = 3; prio >= 0; prio-- )
+    {
+      // Sprite
 		for ( i = 0; i < 0x100; i++ )
-		{
+      {
 			int spr = BITSWAP8(i, bittbl[0], bittbl[1], bittbl[2], bittbl[3], bittbl[4], bittbl[5], bittbl[6], bittbl[7]);
 			nmk16_draw_sprite_flipsupported(state, machine, bitmap, cliprect, prio, state->m_spriteram_old2 + (spr * 16/2));
-		}
+    }
 	}
 }
 
@@ -611,8 +611,8 @@ int nmk16_bg_spr_tx_update(screen_device &screen, bitmap_ind16 &bitmap, const re
 	state->m_bg_tilemap0->draw(bitmap, cliprect, 0,0);
 
 	nmk16_draw_sprites(screen.machine(), bitmap,cliprect,3);
-	nmk16_draw_sprites(screen.machine(), bitmap,cliprect,2);
-	nmk16_draw_sprites(screen.machine(), bitmap,cliprect,1);
+    nmk16_draw_sprites(screen.machine(), bitmap,cliprect,2);
+    nmk16_draw_sprites(screen.machine(), bitmap,cliprect,1);
 	nmk16_draw_sprites(screen.machine(), bitmap,cliprect,0);
 
 	state->m_tx_tilemap->draw(bitmap, cliprect, 0,0);
@@ -638,7 +638,7 @@ int nmk16_bg_sprflip_tx_update(screen_device &screen, bitmap_ind16 &bitmap, cons
 int nmk16_bioshipbg_sprflip_tx_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	nmk16_state *state = screen.machine().driver_data<nmk16_state>();
-	UINT16 *tilerom = (UINT16 *)screen.machine().region("gfx5")->base();
+	UINT16 *tilerom = (UINT16 *)state->memregion("gfx5")->base();
 	int scrollx=-(state->m_bioship_scroll[1] + state->m_bioship_scroll[0]*256);
 	int scrolly=-(state->m_bioship_scroll[3] + state->m_bioship_scroll[2]*256);
 
@@ -723,10 +723,10 @@ int nmk16_complexbg_sprswap_tx_update(screen_device &screen, bitmap_ind16 &bitma
 	// supported by tilemaps so we have to draw the tilemap one line at a time
 	if (!state->m_simple_scroll)
 	{
-		int i=16;
-		int y1;
-		rectangle bgclip = cliprect;
-		y1 = cliprect.min_y;
+    int i=16;
+    int y1;
+    rectangle bgclip = cliprect;
+    y1 = cliprect.min_y;
 		while (y1 <= cliprect.max_y)
 		{
 			int const yscroll = state->m_gunnail_scrollramy[0] + state->m_gunnail_scrollramy[y1];
@@ -799,12 +799,12 @@ int nmk16_complexbg_sprswap_tx_update(screen_device &screen, bitmap_ind16 &bitma
 
 SCREEN_UPDATE_IND16( macross )
 {
-	return nmk16_bg_spr_tx_update(screen, bitmap, cliprect);
+  return nmk16_bg_spr_tx_update(screen, bitmap, cliprect);
 }
 
 SCREEN_UPDATE_IND16( manybloc )
 {
-	return nmk16_bg_sprflip_tx_update(screen, bitmap, cliprect);
+  return nmk16_bg_sprflip_tx_update(screen, bitmap, cliprect);
 }
 
 SCREEN_UPDATE_IND16( tharrier )
@@ -815,13 +815,13 @@ SCREEN_UPDATE_IND16( tharrier )
 
 	state->m_bg_tilemap0->set_scrollx(0,tharrier_scroll);
 
-	return nmk16_bg_sprflip_tx_update(screen, bitmap, cliprect);
+  return nmk16_bg_sprflip_tx_update(screen, bitmap, cliprect);
 }
 
 SCREEN_UPDATE_IND16( tdragon2 )
 {
 	static int bittbl[8] = {
-	4, 6, 5, 7, 3, 2, 1, 0
+    4, 6, 5, 7, 3, 2, 1, 0
 	};
 
   return nmk16_complexbg_sprswap_tx_update(screen, bitmap, cliprect, bittbl);
@@ -830,25 +830,25 @@ SCREEN_UPDATE_IND16( tdragon2 )
 SCREEN_UPDATE_IND16( gunnail )
 {
 	static int bittbl[8] = {
-	7, 6, 5, 4, 3, 2, 1, 0
+    7, 6, 5, 4, 3, 2, 1, 0
 	};
 
-	return nmk16_complexbg_sprswap_tx_update(screen, bitmap, cliprect, bittbl);
+  return nmk16_complexbg_sprswap_tx_update(screen, bitmap, cliprect, bittbl);
 }
 
 SCREEN_UPDATE_IND16( bioship )
 {
-	return nmk16_bioshipbg_sprflip_tx_update(screen, bitmap, cliprect);
+  return nmk16_bioshipbg_sprflip_tx_update(screen, bitmap, cliprect);
 }
 
 SCREEN_UPDATE_IND16( strahl )
 {
-	return nmk16_bg_fg_spr_tx_update(screen, bitmap, cliprect);
+  return nmk16_bg_fg_spr_tx_update(screen, bitmap, cliprect);
 }
 
 SCREEN_UPDATE_IND16( bjtwin )
 {
-	return nmk16_bg_spr_update(screen, bitmap, cliprect);
+  return nmk16_bg_spr_update(screen, bitmap, cliprect);
 }
 
 SCREEN_VBLANK( nmk )
@@ -979,8 +979,8 @@ static void video_update(running_machine &machine, bitmap_ind16 &bitmap, const r
 	if (dsw_flipscreen)
 	{
 
-		flip_screen_x_set(machine, ~input_port_read(machine, "DSW1") & 0x0100);
-		flip_screen_y_set(machine, ~input_port_read(machine, "DSW1") & 0x0200);
+		state->flip_screen_x_set(~input_port_read(machine, "DSW1") & 0x0100);
+		state->flip_screen_y_set(~input_port_read(machine, "DSW1") & 0x0200);
 	}
 
 

@@ -147,7 +147,7 @@ confirmed
 static void contcirc_draw_sprites_16x8( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs )
 {
 	taitoz_state *state = machine.driver_data<taitoz_state>();
-	UINT16 *spritemap = (UINT16 *)machine.region("user1")->base();
+	UINT16 *spritemap = (UINT16 *)state->memregion("user1")->base();
 	UINT16 *spriteram = state->m_spriteram;
 	int offs, data, tilenum, color, flipx, flipy;
 	int x, y, priority, curx, cury;
@@ -157,7 +157,7 @@ static void contcirc_draw_sprites_16x8( running_machine &machine, bitmap_ind16 &
 	int bad_chunks;
 	static const int primasks[2] = { 0xf0, 0xfc };
 
-	for (offs = 0; offs < state->m_spriteram_size / 2; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes() / 2; offs += 4)
 	{
 		data = spriteram[offs + 0];
 		zoomy = (data & 0xfe00) >> 9;
@@ -242,7 +242,7 @@ static void contcirc_draw_sprites_16x8( running_machine &machine, bitmap_ind16 &
 static void chasehq_draw_sprites_16x16( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs )
 {
 	taitoz_state *state = machine.driver_data<taitoz_state>();
-	UINT16 *spritemap = (UINT16 *)machine.region("user1")->base();
+	UINT16 *spritemap = (UINT16 *)state->memregion("user1")->base();
 	UINT16 *spriteram = state->m_spriteram;
 	int offs, data, tilenum, color, flipx, flipy;
 	int x, y, priority, curx, cury;
@@ -252,7 +252,7 @@ static void chasehq_draw_sprites_16x16( running_machine &machine, bitmap_ind16 &
 	int bad_chunks;
 	static const int primasks[2] = { 0xf0, 0xfc };
 
-	for (offs = state->m_spriteram_size / 2 - 4; offs >= 0; offs -= 4)
+	for (offs = state->m_spriteram.bytes() / 2 - 4; offs >= 0; offs -= 4)
 	{
 		data = spriteram[offs + 0];
 		zoomy = (data & 0xfe00) >> 9;
@@ -428,7 +428,7 @@ static void chasehq_draw_sprites_16x16( running_machine &machine, bitmap_ind16 &
 static void bshark_draw_sprites_16x8( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs )
 {
 	taitoz_state *state = machine.driver_data<taitoz_state>();
-	UINT16 *spritemap = (UINT16 *)machine.region("user1")->base();
+	UINT16 *spritemap = (UINT16 *)state->memregion("user1")->base();
 	UINT16 *spriteram = state->m_spriteram;
 	int offs, data, tilenum, color, flipx, flipy;
 	int x, y, priority, curx, cury;
@@ -438,7 +438,7 @@ static void bshark_draw_sprites_16x8( running_machine &machine, bitmap_ind16 &bi
 	int bad_chunks;
 	static const int primasks[2] = { 0xf0, 0xfc };
 
-	for (offs = state->m_spriteram_size / 2 - 4; offs >= 0; offs -= 4)
+	for (offs = state->m_spriteram.bytes() / 2 - 4; offs >= 0; offs -= 4)
 	{
 		data = spriteram[offs + 0];
 		zoomy = (data & 0x7e00) >> 9;
@@ -524,7 +524,7 @@ static void bshark_draw_sprites_16x8( running_machine &machine, bitmap_ind16 &bi
 static void sci_draw_sprites_16x8( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int y_offs )
 {
 	taitoz_state *state = machine.driver_data<taitoz_state>();
-	UINT16 *spritemap = (UINT16 *)machine.region("user1")->base();
+	UINT16 *spritemap = (UINT16 *)state->memregion("user1")->base();
 	UINT16 *spriteram = state->m_spriteram;
 	int offs, start_offs, data, tilenum, color, flipx, flipy;
 	int x, y, priority, curx, cury;
@@ -629,7 +629,7 @@ static void sci_draw_sprites_16x8( running_machine &machine, bitmap_ind16 &bitma
 static void aquajack_draw_sprites_16x8(running_machine &machine, bitmap_ind16 &bitmap,const rectangle &cliprect,int y_offs)
 {
 	taitoz_state *state = machine.driver_data<taitoz_state>();
-	UINT16 *spritemap = (UINT16 *)machine.region("user1")->base();
+	UINT16 *spritemap = (UINT16 *)state->memregion("user1")->base();
 	UINT16 *spriteram = state->m_spriteram;
 	int offs, data, tilenum, color, flipx, flipy;
 	int x, y, priority, curx, cury;
@@ -639,7 +639,7 @@ static void aquajack_draw_sprites_16x8(running_machine &machine, bitmap_ind16 &b
 	int bad_chunks;
 	static const int primasks[2] = { 0xf0, 0xfc };
 
-	for (offs = 0; offs < state->m_spriteram_size / 2; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes() / 2; offs += 4)
 	{
 		data = spriteram[offs + 0];
 		zoomy = (data & 0x7e00) >> 9;
@@ -724,7 +724,7 @@ static void aquajack_draw_sprites_16x8(running_machine &machine, bitmap_ind16 &b
 static void spacegun_draw_sprites_16x8(running_machine &machine, bitmap_ind16 &bitmap,const rectangle &cliprect,int y_offs)
 {
 	taitoz_state *state = machine.driver_data<taitoz_state>();
-	UINT16 *spritemap = (UINT16 *)machine.region("user1")->base();
+	UINT16 *spritemap = (UINT16 *)state->memregion("user1")->base();
 	UINT16 *spriteram = state->m_spriteram;
 	int offs, data, tilenum, color, flipx, flipy;
 	int x, y, priority, curx, cury;
@@ -734,7 +734,7 @@ static void spacegun_draw_sprites_16x8(running_machine &machine, bitmap_ind16 &b
 	int bad_chunks;
 	static const int primasks[2] = { 0xf0, 0xfc };
 
-	for (offs = 0; offs < state->m_spriteram_size / 2 - 4; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes() / 2 - 4; offs += 4)
 	{
 		data = spriteram[offs + 0];
 		zoomy = (data & 0xfe00) >> 9;

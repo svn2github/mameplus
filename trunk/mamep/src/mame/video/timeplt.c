@@ -39,6 +39,7 @@
 
 PALETTE_INIT( timeplt )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	rgb_t palette[32];
 	int i;
 
@@ -157,7 +158,7 @@ WRITE8_MEMBER(timeplt_state::timeplt_colorram_w)
 
 WRITE8_MEMBER(timeplt_state::timeplt_flipscreen_w)
 {
-	flip_screen_set(machine(), ~data & 1);
+	flip_screen_set(~data & 1);
 }
 
 

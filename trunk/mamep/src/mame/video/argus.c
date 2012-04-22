@@ -369,8 +369,8 @@ static void argus_write_dummy_rams(running_machine &machine, int dramoffs, int v
 	int voffs;
 	int offs;
 
-	UINT8 *VROM1 = machine.region("user1")->base();		/* "ag_15.bin" */
-	UINT8 *VROM2 = machine.region("user2")->base();		/* "ag_16.bin" */
+	UINT8 *VROM1 = machine.root_device().memregion("user1")->base();		/* "ag_15.bin" */
+	UINT8 *VROM2 = state->memregion("user2")->base();		/* "ag_16.bin" */
 
 	/* offset in pattern data */
 	offs = VROM1[vromoffs] | (VROM1[vromoffs + 1] << 8);
@@ -837,7 +837,7 @@ static void argus_draw_sprites(running_machine &machine, bitmap_rgb32 &bitmap, c
 	int offs;
 
 	/* Draw the sprites */
-	for (offs = 0; offs < state->m_spriteram_size; offs += 16)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 16)
 	{
 		if (!(spriteram[offs+15] == 0 && spriteram[offs+11] == 0xf0))
 		{
@@ -970,7 +970,7 @@ static void valtric_draw_sprites(running_machine &machine, bitmap_rgb32 &bitmap,
 	int offs;
 
 	/* Draw the sprites */
-	for (offs = 0; offs < state->m_spriteram_size; offs += 16)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 16)
 	{
 		if (!(spriteram[offs+15] == 0 && spriteram[offs+11] == 0xf0))
 		{
@@ -1010,7 +1010,7 @@ static void butasan_draw_sprites(running_machine &machine, bitmap_rgb32 &bitmap,
 	int offs;
 
 	/* Draw the sprites */
-	for (offs = 0; offs < state->m_spriteram_size; offs += 16)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 16)
 	{
 		int sx, sy, tile, flipx, flipy, color;
 		int fx, fy;
@@ -1127,7 +1127,7 @@ static void butasan_log_vram(running_machine &machine)
 		logerror("\nSprite RAM\n");
 		logerror("---------------------------------------\n");
 		logerror("       +0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +a +b +c +d +e +f\n");
-		for (offs = 0; offs < state->m_spriteram_size; offs += 16)
+		for (offs = 0; offs < state->m_spriteram.bytes(); offs += 16)
 		{
 			for (i = 0; i < 16; i++)
 			{

@@ -25,8 +25,8 @@
 static void get_pens( running_machine &machine, pen_t *pens )
 {
 	offs_t i;
-	const UINT8 *prom = machine.region("proms")->base();
-	int len = machine.region("proms")->bytes();
+	const UINT8 *prom = machine.root_device().memregion("proms")->base();
+	int len = machine.root_device().memregion("proms")->bytes();
 
 	for (i = 0; i < len; i++)
 	{
@@ -79,7 +79,7 @@ SCREEN_UPDATE_RGB32( epos )
 
 	get_pens(screen.machine(), pens);
 
-	for (offs = 0; offs < state->m_videoram_size; offs++)
+	for (offs = 0; offs < state->m_videoram.bytes(); offs++)
 	{
 		UINT8 data = state->m_videoram[offs];
 

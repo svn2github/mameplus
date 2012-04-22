@@ -110,9 +110,6 @@ void generic_pulse_irq_line(device_t *device, int irqline, int cycles);
 void generic_pulse_irq_line_and_vector(device_t *device, int irqline, int vector, int cycles);
 
 
-
-/* ----- common interrupt callbacks ----- */
-
 INTERRUPT_GEN( nmi_line_pulse );
 INTERRUPT_GEN( nmi_line_assert );
 
@@ -147,12 +144,5 @@ INTERRUPT_GEN( irq6_line_assert );
 INTERRUPT_GEN( irq7_line_hold );
 INTERRUPT_GEN( irq7_line_pulse );
 INTERRUPT_GEN( irq7_line_assert );
-
-
-
-/* ----- generic input port helpers ----- */
-
-/* custom handler */
-CUSTOM_INPUT( custom_port_read );
 
 #endif	/* __MACHINE_GENERIC_H__ */

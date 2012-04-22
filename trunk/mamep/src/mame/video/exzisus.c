@@ -80,7 +80,7 @@ SCREEN_UPDATE_IND16( exzisus )
 
 	/* ---------- 1st TC0010VCU ---------- */
 	sx = 0;
-	for (offs = 0 ; offs < state->m_objectram_size0 ; offs += 4)
+	for (offs = 0 ; offs < state->m_objectram0.bytes() ; offs += 4)
     {
 		int height;
 
@@ -131,7 +131,7 @@ SCREEN_UPDATE_IND16( exzisus )
 				x = (sx + (xc << 3)) & 0xff;
 				y = (sy + (yc << 3)) & 0xff;
 
-				if (flip_screen_get(screen.machine()))
+				if (state->flip_screen())
 				{
 					x = 248 - x;
 					y = 248 - y;
@@ -140,7 +140,7 @@ SCREEN_UPDATE_IND16( exzisus )
 				drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[0],
 						code & 0x3fff,
 						color,
-						flip_screen_get(screen.machine()), flip_screen_get(screen.machine()),
+						state->flip_screen(), state->flip_screen(),
 						x, y, 15);
 				goffs += 2;
 			}
@@ -150,7 +150,7 @@ SCREEN_UPDATE_IND16( exzisus )
 
 	/* ---------- 2nd TC0010VCU ---------- */
 	sx = 0;
-	for (offs = 0 ; offs < state->m_objectram_size1 ; offs += 4)
+	for (offs = 0 ; offs < state->m_objectram1.bytes() ; offs += 4)
     {
 		int height;
 
@@ -200,7 +200,7 @@ SCREEN_UPDATE_IND16( exzisus )
 				x = (sx + (xc << 3)) & 0xff;
 				y = (sy + (yc << 3)) & 0xff;
 
-				if (flip_screen_get(screen.machine()))
+				if (state->flip_screen())
 				{
 					x = 248 - x;
 					y = 248 - y;
@@ -209,7 +209,7 @@ SCREEN_UPDATE_IND16( exzisus )
 				drawgfx_transpen(bitmap, cliprect, screen.machine().gfx[1],
 						code & 0x3fff,
 						color,
-						flip_screen_get(screen.machine()), flip_screen_get(screen.machine()),
+						state->flip_screen(), state->flip_screen(),
 						x, y, 15);
 				goffs += 2;
 			}

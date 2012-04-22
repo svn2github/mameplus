@@ -28,6 +28,7 @@
 
 PALETTE_INIT( mikie )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	static const int resistances[4] = { 2200, 1000, 470, 220 };
 	double rweights[4], gweights[4], bweights[4];
 	int i;
@@ -113,9 +114,9 @@ WRITE8_MEMBER(mikie_state::mikie_palettebank_w)
 
 WRITE8_MEMBER(mikie_state::mikie_flipscreen_w)
 {
-	if (flip_screen_get(machine()) != (data & 0x01))
+	if (flip_screen() != (data & 0x01))
 	{
-		flip_screen_set(machine(), data & 0x01);
+		flip_screen_set(data & 0x01);
 		machine().tilemap().mark_all_dirty();
 	}
 }
@@ -148,7 +149,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	UINT8 *spriteram = state->m_spriteram;
 	int offs;
 
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		int gfxbank = (spriteram[offs + 2] & 0x40) ? 2 : 1;
 		int code = (spriteram[offs + 2] & 0x3f) + ((spriteram[offs + 2] & 0x80) >> 1) + ((spriteram[offs] & 0x40) << 1);
@@ -158,7 +159,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 		int flipx = ~spriteram[offs] & 0x10;
 		int flipy = spriteram[offs] & 0x20;
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sy = 242 - sy;
 			flipy = !flipy;

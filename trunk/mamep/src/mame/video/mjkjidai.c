@@ -49,7 +49,7 @@ WRITE8_MEMBER(mjkjidai_state::mjkjidai_videoram_w)
 
 WRITE8_MEMBER(mjkjidai_state::mjkjidai_ctrl_w)
 {
-	UINT8 *rom = machine().region("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 
 //  logerror("%04x: port c0 = %02x\n",cpu_get_pc(&space.device()),data);
 
@@ -57,7 +57,7 @@ WRITE8_MEMBER(mjkjidai_state::mjkjidai_ctrl_w)
 	m_nmi_mask = data & 1;
 
 	/* bit 1 = flip screen */
-	flip_screen_set(machine(), data & 0x02);
+	flip_screen_set(data & 0x02);
 
 	/* bit 2 =display enable */
 	m_display_enable = data & 0x04;
@@ -68,12 +68,12 @@ WRITE8_MEMBER(mjkjidai_state::mjkjidai_ctrl_w)
 	/* bits 6-7 select ROM bank */
 	if (data & 0xc0)
 	{
-		memory_set_bankptr(machine(), "bank1",rom + 0x10000-0x4000 + ((data & 0xc0) << 8));
+		membank("bank1")->set_base(rom + 0x10000-0x4000 + ((data & 0xc0) << 8));
 	}
 	else
 	{
 		/* there is code flowing from 7fff to this bank so they have to be contiguous in memory */
-		memory_set_bankptr(machine(), "bank1",rom + 0x08000);
+		membank("bank1")->set_base(rom + 0x08000);
 	}
 }
 
@@ -106,7 +106,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,const re
 
 		sx += (spriteram_2[offs] & 0x20) >> 5;	// not sure about this
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 496 - sx;
 			sy = 240 - sy;

@@ -21,6 +21,7 @@ WRITE8_MEMBER(higemaru_state::higemaru_colorram_w)
 
 PALETTE_INIT( higemaru )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -81,9 +82,9 @@ WRITE8_MEMBER(higemaru_state::higemaru_c800_w)
 	coin_counter_w(machine(), 1,data & 1);
 
 	/* bit 7 flips screen */
-	if (flip_screen_get(machine()) != (data & 0x80))
+	if (flip_screen() != (data & 0x80))
 	{
-		flip_screen_set(machine(), data & 0x80);
+		flip_screen_set(data & 0x80);
 		m_bg_tilemap->mark_all_dirty();
 	}
 }
@@ -109,7 +110,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	UINT8 *spriteram = state->m_spriteram;
 	int offs;
 
-	for (offs = state->m_spriteram_size - 16; offs >= 0; offs -= 16)
+	for (offs = state->m_spriteram.bytes() - 16; offs >= 0; offs -= 16)
 	{
 		int code,col,sx,sy,flipx,flipy;
 
@@ -119,7 +120,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		sy = spriteram[offs + 8];
 		flipx = spriteram[offs + 4] & 0x10;
 		flipy = spriteram[offs + 4] & 0x20;
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;
 			sy = 240 - sy;

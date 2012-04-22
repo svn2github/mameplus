@@ -19,14 +19,14 @@
 WRITE8_MEMBER(amspdwy_state::amspdwy_paletteram_w)
 {
 	data ^= 0xff;
-	paletteram_BBGGGRRR_w(space, offset, data);
-//  paletteram_RRRGGGBB_w(offset, data);
+	paletteram_BBGGGRRR_byte_w(space, offset, data);
+//  paletteram_RRRGGGBB_byte_w(offset, data);
 }
 
 WRITE8_MEMBER(amspdwy_state::amspdwy_flipscreen_w)
 {
 	m_flipscreen ^= 1;
-	flip_screen_set(machine(), m_flipscreen);
+	flip_screen_set(m_flipscreen);
 }
 
 /***************************************************************************
@@ -108,7 +108,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	int max_x = machine.primary_screen->width()  - 1;
 	int max_y = machine.primary_screen->height() - 1;
 
-	for (i = 0; i < state->m_spriteram_size ; i += 4)
+	for (i = 0; i < state->m_spriteram.bytes() ; i += 4)
 	{
 		int y = spriteram[i + 0];
 		int x = spriteram[i + 1];
@@ -117,7 +117,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		int flipx = attr & 0x80;
 		int flipy = attr & 0x40;
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			x = max_x - x - 8;
 			y = max_y - y - 8;

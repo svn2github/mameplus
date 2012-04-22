@@ -42,12 +42,12 @@ VIDEO_START( pang )
 	state->m_bg_tilemap->set_transparent_pen(15);
 
 	/* OBJ RAM */
-	state->m_objram = auto_alloc_array_clear(machine, UINT8, state->m_videoram_size);
+	state->m_objram = auto_alloc_array_clear(machine, UINT8, state->m_videoram.bytes());
 
 	/* Palette RAM */
 	state->m_generic_paletteram_8.allocate(2 * machine.total_colors());
 
-	state->save_pointer(NAME(state->m_objram), state->m_videoram_size);
+	state->save_pointer(NAME(state->m_objram), state->m_videoram.bytes());
 }
 
 
@@ -252,9 +252,9 @@ WRITE8_MEMBER(mitchell_state::pang_paletteram_w)
 {
 
 	if (m_paletteram_bank)
-		paletteram_xxxxRRRRGGGGBBBB_le_w(space, offset + 0x800, data);
+		paletteram_xxxxRRRRGGGGBBBB_byte_le_w(space, offset + 0x800, data);
 	else
-		paletteram_xxxxRRRRGGGGBBBB_le_w(space, offset, data);
+		paletteram_xxxxRRRRGGGGBBBB_byte_le_w(space, offset, data);
 }
 
 READ8_MEMBER(mitchell_state::pang_paletteram_r)
@@ -268,7 +268,7 @@ READ8_MEMBER(mitchell_state::pang_paletteram_r)
 
 WRITE8_MEMBER(mitchell_state::mgakuen_paletteram_w)
 {
-	paletteram_xxxxRRRRGGGGBBBB_le_w(space, offset, data);
+	paletteram_xxxxRRRRGGGGBBBB_byte_le_w(space, offset, data);
 }
 
 READ8_MEMBER(mitchell_state::mgakuen_paletteram_r)

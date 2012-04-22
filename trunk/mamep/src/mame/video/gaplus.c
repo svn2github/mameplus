@@ -25,6 +25,7 @@
 
 PALETTE_INIT( gaplus )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -279,7 +280,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 			int duplicate = spriteram_3[offs] & 0x80;
 			int x,y;
 
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				flipx ^= 1;
 				flipy ^= 1;
@@ -308,7 +309,7 @@ SCREEN_UPDATE_IND16( gaplus )
 {
 	gaplus_state *state = screen.machine().driver_data<gaplus_state>();
 	/* flip screen control is embedded in RAM */
-	flip_screen_set(screen.machine(), state->m_spriteram[0x1f7f-0x800] & 1);
+	state->flip_screen_set(state->m_spriteram[0x1f7f-0x800] & 1);
 
 	bitmap.fill(0, cliprect);
 

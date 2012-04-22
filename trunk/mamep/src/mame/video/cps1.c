@@ -1551,14 +1551,14 @@ static MACHINE_RESET( cps )
 	if (strcmp(gamename, "sf2rb") == 0)
 	{
 		/* Patch out protection check */
-		UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+		UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 		rom[0xe5464 / 2] = 0x6012;
 	}
 
 	if (strcmp(gamename, "sf2rb2") == 0)
 	{
 		/* Patch out protection check */
-		UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+		UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 		rom[0xe5332 / 2] = 0x6014;
 	}
 
@@ -1569,13 +1569,13 @@ static MACHINE_RESET( cps )
            by the cpu core as a 32-bit branch. This branch would make the
            game crash (address error, since it would branch to an odd address)
            if location 180ca6 (outside ROM space) isn't 0. Protection check? */
-		UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+		UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 		rom[0x11756 / 2] = 0x4e71;
 	}
 	else if (strcmp(gamename, "ghouls") == 0)
 	{
 		/* Patch out self-test... it takes forever */
-		UINT16 *rom = (UINT16 *)machine.region("maincpu")->base();
+		UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
 		rom[0x61964 / 2] = 0x4ef9;
 		rom[0x61966 / 2] = 0x0000;
 		rom[0x61968 / 2] = 0x0400;
@@ -1747,9 +1747,9 @@ INLINE int cps2_port( running_machine &machine, int offset )
 
 static void cps1_gfx_decode( running_machine &machine )
 {
-	int size = machine.region("gfx")->bytes();
+	int size = machine.root_device().memregion("gfx")->bytes();
 	int i, j, gfxsize;
-	UINT8 *cps1_gfx = machine.region("gfx")->base();
+	UINT8 *cps1_gfx = machine.root_device().memregion("gfx")->base();
 
 	gfxsize = size / 4;
 
@@ -1803,11 +1803,11 @@ static void unshuffle( UINT64 *buf, int len )
 static void cps2_gfx_decode( running_machine &machine )
 {
 	const int banksize = 0x200000;
-	int size = machine.region("gfx")->bytes();
+	int size = machine.root_device().memregion("gfx")->bytes();
 	int i;
 
 	for (i = 0; i < size; i += banksize)
-		unshuffle((UINT64 *)(machine.region("gfx")->base() + i), banksize / 8);
+		unshuffle((UINT64 *)(machine.root_device().memregion("gfx")->base() + i), banksize / 8);
 
 	cps1_gfx_decode(machine);
 }
@@ -2189,7 +2189,7 @@ static VIDEO_START( cps )
 		state->m_cps2_buffered_obj = auto_alloc_array_clear(machine, UINT16, state->m_cps2_obj_size / 2);
 
 	/* clear RAM regions */
-	memset(state->m_gfxram, 0, state->m_gfxram_size);   /* Clear GFX RAM */
+	memset(state->m_gfxram, 0, state->m_gfxram.bytes());   /* Clear GFX RAM */
 	memset(state->m_cps_a_regs, 0, 0x40);   /* Clear CPS-A registers */
 	memset(state->m_cps_b_regs, 0, 0x40);   /* Clear CPS-B registers */
 
@@ -2381,7 +2381,7 @@ static void cps1_render_sprites( running_machine &machine, bitmap_ind16 &bitmap,
 
 #define DRAWSPRITE(CODE,COLOR,FLIPX,FLIPY,SX,SY)					\
 {																	\
-	if (flip_screen_get(machine))											\
+	if (state->flip_screen())											\
 		pdrawgfx_transpen(bitmap,\
 				cliprect,machine.gfx[2],							\
 				CODE,												\
@@ -2619,7 +2619,7 @@ static void cps2_render_sprites( running_machine &machine, bitmap_ind16 &bitmap,
 
 #define DRAWSPRITE(CODE,COLOR,FLIPX,FLIPY,SX,SY)									\
 {																					\
-	if (flip_screen_get(machine))															\
+	if (state->flip_screen())															\
 		pdrawgfx_transpen(bitmap,\
 				cliprect,machine.gfx[2],											\
 				CODE,																\
@@ -2766,7 +2766,7 @@ static void cps1_render_stars( screen_device &screen, bitmap_ind16 &bitmap, cons
 {
 	cps_state *state = screen.machine().driver_data<cps_state>();
 	int offs;
-	UINT8 *stars_rom = screen.machine().region("stars")->base();
+	UINT8 *stars_rom = state->memregion("stars")->base();
 
 	if (!stars_rom && (state->m_stars_enabled[0] || state->m_stars_enabled[1]))
 	{
@@ -2787,7 +2787,7 @@ static void cps1_render_stars( screen_device &screen, bitmap_ind16 &bitmap, cons
 				int sy = (offs % 256);
 				sx = (sx - state->m_stars2x + (col & 0x1f)) & 0x1ff;
 				sy = (sy - state->m_stars2y) & 0xff;
-				if (flip_screen_get(screen.machine()))
+				if (state->flip_screen())
 				{
 					sx = 511 - sx;
 					sy = 255 - sy;
@@ -2812,7 +2812,7 @@ static void cps1_render_stars( screen_device &screen, bitmap_ind16 &bitmap, cons
 				int sy = (offs % 256);
 				sx = (sx - state->m_stars1x + (col & 0x1f)) & 0x1ff;
 				sy = (sy - state->m_stars1y) & 0xff;
-				if (flip_screen_get(screen.machine()))
+				if (state->flip_screen())
 				{
 					sx = 511 - sx;
 					sy = 255 - sy;
@@ -2874,7 +2874,7 @@ SCREEN_UPDATE_IND16( cps1 )
 	int layercontrol, l0, l1, l2, l3;
 	int videocontrol = state->m_cps_a_regs[CPS1_VIDEOCONTROL];
 
-	flip_screen_set(screen.machine(), videocontrol & 0x8000);
+	state->flip_screen_set(videocontrol & 0x8000);
 
 	layercontrol = state->m_cps_b_regs[state->m_game_config->layer_control / 2];
 

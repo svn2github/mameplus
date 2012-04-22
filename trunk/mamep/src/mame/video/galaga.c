@@ -326,6 +326,7 @@ const struct star star_seed_tab[252]=
 
 PALETTE_INIT( galaga )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	machine.colortable = colortable_alloc(machine, 32+64);
@@ -416,9 +417,9 @@ static TILE_GET_INFO( get_tile_info )
     int color = state->m_videoram[tile_index + 0x400] & 0x3f;
 	SET_TILE_INFO(
 			0,
-			(state->m_videoram[tile_index] & 0x7f) | (flip_screen_get(machine) ? 0x80 : 0) | (state->m_galaga_gfxbank << 8),
+			(state->m_videoram[tile_index] & 0x7f) | (state->flip_screen() ? 0x80 : 0) | (state->m_galaga_gfxbank << 8),
 			color,
-			flip_screen_get(machine) ? TILE_FLIPX : 0);
+			state->flip_screen() ? TILE_FLIPX : 0);
 	tileinfo.group = color;
 }
 
@@ -504,7 +505,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 		sy -= 16 * sizey;
 		sy = (sy & 0xff) - 32;	// fix wraparound
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			flipx ^= 1;
 			flipy ^= 1;
@@ -537,7 +538,7 @@ static void draw_stars(running_machine &machine, bitmap_ind16 &bitmap, const rec
 	if ( (state->m_galaga_starcontrol[5] & 1) == 1 )
 	{
 		int y_align = 112; /* 112 is a tweak to get alignment about perfect */
-		int x_align = flip_screen_get(machine) ? 112 : 16;
+		int x_align = state->flip_screen() ? 112 : 16;
 
 		int star_cntr;
 		int set_a, set_b;

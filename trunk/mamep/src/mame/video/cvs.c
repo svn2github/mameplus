@@ -27,6 +27,7 @@
 
 PALETTE_INIT( cvs )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i, attr;
 
 	/* allocate the colortable */
@@ -331,10 +332,10 @@ void cvs_update_stars(running_machine &machine, bitmap_ind16 &bitmap, const rect
 
 		if ((y & 1) ^ ((x >> 4) & 1))
 		{
-			if (flip_screen_x_get(machine))
+			if (state->flip_screen_x())
 				x = ~x;
 
-			if (flip_screen_y_get(machine))
+			if (state->flip_screen_y())
 				y = ~y;
 
 			if ((y >= cliprect.min_y) && (y <= cliprect.max_y) &&

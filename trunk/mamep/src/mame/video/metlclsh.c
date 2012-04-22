@@ -28,12 +28,12 @@ WRITE8_MEMBER(metlclsh_state::metlclsh_rambank_w)
 	if (data & 1)
 	{
 		m_write_mask = 0;
-		memory_set_bankptr(machine(), "bank1", m_bgram);
+		membank("bank1")->set_base(m_bgram);
 	}
 	else
 	{
 		m_write_mask = 1 << (data >> 1);
-		memory_set_bankptr(machine(), "bank1", m_otherram);
+		membank("bank1")->set_base(m_otherram);
 	}
 }
 
@@ -177,7 +177,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	gfx_element *gfx = machine.gfx[0];
 	int offs;
 
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		int attr, code, color, sx, sy, flipx, flipy, wrapy, sizey;
 
@@ -197,7 +197,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 
 		sy = 240 - spriteram[offs + 2];
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;	flipx = !flipx;
 			sy = 240 - sy;	flipy = !flipy;		if (sizey)	sy += 16;
@@ -249,7 +249,7 @@ SCREEN_UPDATE_IND16( metlclsh )
 	if (state->m_scrollx[0] & 0x08)					// background (if enabled)
 	{
 		/* The background seems to be always flipped along x */
-		state->m_bg_tilemap->set_flip((flip_screen_get(screen.machine()) ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0) ^ TILEMAP_FLIPX);
+		state->m_bg_tilemap->set_flip((state->flip_screen() ? (TILEMAP_FLIPX | TILEMAP_FLIPY) : 0) ^ TILEMAP_FLIPX);
 		state->m_bg_tilemap->set_scrollx(0, state->m_scrollx[1] + ((state->m_scrollx[0] & 0x02) << 7) );
 		state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 	}

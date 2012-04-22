@@ -77,6 +77,7 @@ sprites.
 
 PALETTE_INIT( ghostb )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0; i < machine.total_colors(); i++)
@@ -139,7 +140,7 @@ WRITE8_MEMBER(dec8_state::srdarwin_control_w)
 	switch (offset)
 	{
 	case 0: /* Top 3 bits - bank switch, bottom 4 - scroll MSB */
-		memory_set_bank(machine(), "bank1", (data >> 5));
+		membank("bank1")->set_entry((data >> 5));
 		m_scroll2[0] = data & 0xf;
 		return;
 
@@ -159,7 +160,7 @@ WRITE8_MEMBER(dec8_state::lastmisn_control_w)
         Bit 0x40 - Y scroll MSB
         Bit 0x80 - Hold subcpu reset line high if clear, else low
     */
-	memory_set_bank(machine(), "bank1", data & 0x0f);
+	membank("bank1")->set_entry(data & 0x0f);
 
 	m_scroll2[0] = (data >> 5) & 1;
 	m_scroll2[2] = (data >> 6) & 1;
@@ -174,7 +175,7 @@ WRITE8_MEMBER(dec8_state::shackled_control_w)
 {
 
 	/* Bottom 4 bits - bank switch, Bits 4 & 5 - Scroll MSBs */
-	memory_set_bank(machine(), "bank1", data & 0x0f);
+	membank("bank1")->set_entry(data & 0x0f);
 
 	m_scroll2[0] = (data >> 5) & 1;
 	m_scroll2[2] = (data >> 6) & 1;
@@ -237,7 +238,7 @@ static void srdarwin_draw_sprites( running_machine& machine, bitmap_ind16 &bitma
 		fx = buffered_spriteram[offs + 1] & 0x04;
 		multi = buffered_spriteram[offs + 1] & 0x10;
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sy = 240 - sy;
 			sx = 240 - sx;
@@ -249,13 +250,13 @@ static void srdarwin_draw_sprites( running_machine& machine, bitmap_ind16 &bitma
 		drawgfx_transpen(bitmap,cliprect,machine.gfx[1],
         			code,
 				color,
-				fx,flip_screen_get(machine),
+				fx,state->flip_screen(),
 				sx,sy,0);
         if (multi)
     		drawgfx_transpen(bitmap,cliprect,machine.gfx[1],
 				code+1,
 				color,
-				fx,flip_screen_get(machine),
+				fx,state->flip_screen(),
 				sx,sy2,0);
 	}
 }
@@ -266,7 +267,7 @@ SCREEN_UPDATE_IND16( cobracom )
 {
 	dec8_state *state = screen.machine().driver_data<dec8_state>();
 
-	flip_screen_set(screen.machine(), state->m_bg_control[0] >> 7);
+	state->flip_screen_set(state->m_bg_control[0] >> 7);
 
 	screen.machine().device<deco_bac06_device>("tilegen1")->deco_bac06_pf_draw(screen.machine(),bitmap,cliprect,TILEMAP_DRAW_OPAQUE, 0x00, 0x00, 0x00, 0x00);
 	screen.machine().device<deco_mxc06_device>("spritegen")->draw_sprites(screen.machine(), bitmap, cliprect, state->m_buffered_spriteram16, 0x04, 0x00, 0x03);
@@ -346,7 +347,7 @@ VIDEO_START( ghostb )
 SCREEN_UPDATE_IND16( oscar )
 {
 	dec8_state *state = screen.machine().driver_data<dec8_state>();
-	flip_screen_set(screen.machine(), state->m_bg_control[1] >> 7);
+	state->flip_screen_set(state->m_bg_control[1] >> 7);
 
 	// we mimic the priority scheme in dec0.c, this was originally a bit different, so this could be wrong
 	screen.machine().device<deco_bac06_device>("tilegen1")->deco_bac06_pf_draw(screen.machine(),bitmap,cliprect,TILEMAP_DRAW_OPAQUE, 0x00, 0x00, 0x00, 0x00);

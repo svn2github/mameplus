@@ -15,7 +15,7 @@ static TILEMAP_MAPPER( background_scan_rows )
 
 static TILE_GET_INFO( get_back_tile_info )
 {
-	UINT8 *bg_map = machine.region("gfx4")->base();
+	UINT8 *bg_map = machine.root_device().memregion("gfx4")->base();
 	int tile;
 
 	tile = bg_map[tile_index << 1] + (bg_map[(tile_index << 1) + 1] << 8);
@@ -105,7 +105,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		flipx = spriteram[offs + 1] & 2;
 		flipy = spriteram[offs + 1] & 1;	/* flip y untested */
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			x = 240 - x;
 			y = 240 - y;

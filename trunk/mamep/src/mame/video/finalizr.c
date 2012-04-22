@@ -12,6 +12,7 @@
 
 PALETTE_INIT( finalizr )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -103,7 +104,7 @@ SCREEN_UPDATE_IND16( finalizr )
 		UINT8 *sr = state->m_spriterambank ? state->m_spriteram_2 : state->m_spriteram;
 
 
-		for (offs = 0; offs <= state->m_spriteram_size - 5; offs += 5)
+		for (offs = 0; offs <= state->m_spriteram.bytes() - 5; offs += 5)
 		{
 			int sx, sy, flipx, flipy, code, color, size;
 
@@ -121,7 +122,7 @@ SCREEN_UPDATE_IND16( finalizr )
 
 			if (size >= 0x10)	/* 32x32 */
 			{
-				if (flip_screen_get(screen.machine()))
+				if (state->flip_screen())
 				{
 					sx = 256 - sx;
 					sy = 224 - sy;
@@ -152,7 +153,7 @@ SCREEN_UPDATE_IND16( finalizr )
 			}
 			else
 			{
-				if (flip_screen_get(screen.machine()))
+				if (state->flip_screen())
 				{
 					sx = ((size & 0x08) ? 280:272) - sx;
 					sy = ((size & 0x04) ? 248:240) - sy;

@@ -14,6 +14,7 @@ Driver by Takahiro Nogi (nogi@kt.rim.or.jp) 1999/10/04
 
 PALETTE_INIT( ssozumo )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int	bit0, bit1, bit2, bit3, r, g, b;
 	int	i;
 
@@ -109,7 +110,7 @@ WRITE8_MEMBER(ssozumo_state::ssozumo_scroll_w)
 
 WRITE8_MEMBER(ssozumo_state::ssozumo_flipscreen_w)
 {
-	flip_screen_set(machine(), data & 0x80);
+	flip_screen_set(data & 0x80);
 }
 
 static TILE_GET_INFO( get_bg_tile_info )
@@ -150,7 +151,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	UINT8 *spriteram = state->m_spriteram;
 	int offs;
 
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		if (spriteram[offs] & 0x01)
 		{
@@ -161,7 +162,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 			int sx = 239 - spriteram[offs + 3];
 			int sy = (240 - spriteram[offs + 2]) & 0xff;
 
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				sx = 240 - sx;
 				sy = 240 - sy;

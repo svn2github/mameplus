@@ -186,8 +186,8 @@ WRITE8_MEMBER(st0016_state::st0016_vregs_w)
 		UINT32 srcadr=(st0016_vregs[0xa0]|(st0016_vregs[0xa1]<<8)|(st0016_vregs[0xa2]<<16))<<1;
 		UINT32 dstadr=(st0016_vregs[0xa3]|(st0016_vregs[0xa4]<<8)|(st0016_vregs[0xa5]<<16))<<1;
 		UINT32 length=((st0016_vregs[0xa6]|(st0016_vregs[0xa7]<<8)|((st0016_vregs[0xa8]&0x1f)<<16))+1)<<1;
-		UINT32 srclen = (machine().region("maincpu")->bytes()-0x10000);
-		UINT8 *mem = machine().region("maincpu")->base();
+		UINT32 srclen = (machine().root_device().memregion("maincpu")->bytes()-0x10000);
+		UINT8 *mem = memregion("maincpu")->base();
 
 		srcadr += macs_cart_slot*0x400000;
 
@@ -425,7 +425,7 @@ static void st0016_save_init(running_machine &machine)
 	state_save_register_global(machine, st0016_spr2_bank);
 	state_save_register_global(machine, st0016_pal_bank);
 	state_save_register_global(machine, st0016_char_bank);
-	state_save_register_global(machine, st0016_rom_bank);
+	//state_save_register_global(machine, st0016_rom_bank);
 	state_save_register_global_array(machine, st0016_vregs);
 	state_save_register_global_pointer(machine, st0016_charram, ST0016_MAX_CHAR_BANK*ST0016_CHAR_BANK_SIZE);
 	state_save_register_global_pointer(machine, st0016_paletteram, ST0016_MAX_PAL_BANK*ST0016_PAL_BANK_SIZE);

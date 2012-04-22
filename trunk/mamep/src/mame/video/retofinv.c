@@ -12,6 +12,7 @@
 
 PALETTE_INIT( retofinv )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -137,7 +138,7 @@ WRITE8_MEMBER(retofinv_state::retofinv_gfx_ctrl_w)
 	switch (offset)
 	{
 		case 0:
-			flip_screen_set(machine(), data & 1);
+			flip_screen_set(data & 1);
 			break;
 
 		case 1:
@@ -196,7 +197,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap)
 		sprite &= ~sizex;
 		sprite &= ~(sizey << 1);
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			flipx ^= 1;
 			flipy ^= 1;

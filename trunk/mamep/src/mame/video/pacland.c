@@ -90,6 +90,7 @@ static void switch_palette(running_machine &machine)
 
 PALETTE_INIT( pacland )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	pacland_state *state = machine.driver_data<pacland_state>();
 	int i;
 
@@ -252,10 +253,10 @@ WRITE8_MEMBER(pacland_state::pacland_scroll1_w)
 WRITE8_MEMBER(pacland_state::pacland_bankswitch_w)
 {
 	int bankaddress;
-	UINT8 *RAM = machine().region("maincpu")->base();
+	UINT8 *RAM = memregion("maincpu")->base();
 
 	bankaddress = 0x10000 + ((data & 0x07) << 13);
-	memory_set_bankptr(machine(), "bank1",&RAM[bankaddress]);
+	membank("bank1")->set_base(&RAM[bankaddress]);
 
 //  pbc = data & 0x20;
 
@@ -303,7 +304,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 		sprite &= ~sizex;
 		sprite &= ~(sizey << 1);
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			flipx ^= 1;
 			flipy ^= 1;
@@ -374,8 +375,8 @@ SCREEN_UPDATE_IND16( pacland )
 	int row;
 
 	for (row = 5; row < 29; row++)
-		state->m_fg_tilemap->set_scrollx(row, flip_screen_get(screen.machine()) ? state->m_scroll0-7 : state->m_scroll0);
-	state->m_bg_tilemap->set_scrollx(0, flip_screen_get(screen.machine()) ? state->m_scroll1-4 : state->m_scroll1-3);
+		state->m_fg_tilemap->set_scrollx(row, state->flip_screen() ? state->m_scroll0-7 : state->m_scroll0);
+	state->m_bg_tilemap->set_scrollx(0, state->flip_screen() ? state->m_scroll1-4 : state->m_scroll1-3);
 
 	/* draw high priority sprite pixels, setting priority bitmap to non-zero
        wherever there is a high-priority pixel; note that we draw to the bitmap

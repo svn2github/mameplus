@@ -47,6 +47,7 @@ other 2 bits (output & 0x0c) unknown
 
 PALETTE_INIT( 1943 )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -140,12 +141,12 @@ WRITE8_MEMBER(_1943_state::c1943_c804_w)
 	coin_counter_w(machine(), 1, data & 0x02);
 
 	/* bits 2, 3 and 4 select the ROM bank */
-	memory_set_bank(machine(), "bank1", (data & 0x1c) >> 2);
+	membank("bank1")->set_entry((data & 0x1c) >> 2);
 
 	/* bit 5 resets the sound CPU - we ignore it */
 
 	/* bit 6 flips screen */
-	flip_screen_set(machine(), data & 0x40);
+	flip_screen_set(data & 0x40);
 
 	/* bit 7 enables characters */
 	m_char_on = data & 0x80;
@@ -166,7 +167,7 @@ WRITE8_MEMBER(_1943_state::c1943_d806_w)
 
 static TILE_GET_INFO( c1943_get_bg2_tile_info )
 {
-	UINT8 *tilerom = machine.region("gfx5")->base() + 0x8000;
+	UINT8 *tilerom = machine.root_device().memregion("gfx5")->base() + 0x8000;
 
 	int offs = tile_index * 2;
 	int attr = tilerom[offs + 1];
@@ -179,7 +180,7 @@ static TILE_GET_INFO( c1943_get_bg2_tile_info )
 
 static TILE_GET_INFO( c1943_get_bg_tile_info )
 {
-	UINT8 *tilerom = machine.region("gfx5")->base();
+	UINT8 *tilerom = machine.root_device().memregion("gfx5")->base();
 
 	int offs = tile_index * 2;
 	int attr = tilerom[offs + 1];
@@ -222,7 +223,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	_1943_state *state = machine.driver_data<_1943_state>();
 	int offs;
 
-	for (offs = state->m_spriteram_size - 32; offs >= 0; offs -= 32)
+	for (offs = state->m_spriteram.bytes() - 32; offs >= 0; offs -= 32)
 	{
 		int attr = state->m_spriteram[offs + 1];
 		int code = state->m_spriteram[offs] + ((attr & 0xe0) << 3);
@@ -230,7 +231,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		int sx = state->m_spriteram[offs + 3] - ((attr & 0x10) << 4);
 		int sy = state->m_spriteram[offs + 2];
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;
 			sy = 240 - sy;
@@ -240,12 +241,12 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		if (priority)
 		{
 			if (color != 0x0a && color != 0x0b)
-				drawgfx_transpen(bitmap, cliprect, machine.gfx[3], code, color, flip_screen_get(machine), flip_screen_get(machine), sx, sy, 0);
+				drawgfx_transpen(bitmap, cliprect, machine.gfx[3], code, color, state->flip_screen(), state->flip_screen(), sx, sy, 0);
 		}
 		else
 		{
 			if (color == 0x0a || color == 0x0b)
-				drawgfx_transpen(bitmap, cliprect, machine.gfx[3], code, color, flip_screen_get(machine), flip_screen_get(machine), sx, sy, 0);
+				drawgfx_transpen(bitmap, cliprect, machine.gfx[3], code, color, state->flip_screen(), state->flip_screen(), sx, sy, 0);
 		}
 	}
 }

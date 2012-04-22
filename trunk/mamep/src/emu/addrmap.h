@@ -113,7 +113,7 @@ public:
 	void set_read_type(map_handler_type _type) { m_read.m_type = _type; }
 	void set_write_type(map_handler_type _type) { m_write.m_type = _type; }
 	void set_region(const char *tag, offs_t offset) { m_region = tag; m_rgnoffs = offset; }
-	void set_share(const char *tag) { m_share = tag; }
+	void set_share(const char *tag) { assert(m_share == NULL); m_share = tag; }
 	void set_sizeptr(size_t *_sizeptr) { m_sizeptr = _sizeptr; }
 	void set_member_baseptr(FPTR offs) { m_baseptroffs_plus1 = offs + 1; }
 	void set_member_sizeptr(FPTR offs) { m_sizeptroffs_plus1 = offs + 1; }
@@ -741,15 +741,8 @@ void _class :: _name(address_map &map, const device_t &device) \
 #define AM_BASE_LEGACY(_base) \
 	curentry->set_baseptr(_base); \
 
-#define myoffsetof(_struct, _member)  ((FPTR)&((_struct *)0x1000)->_member - 0x1000)
-#define AM_BASE(_member) \
-	curentry->set_member_baseptr(myoffsetof(drivdata_class, _member)); \
-
 #define AM_SIZE_LEGACY(_size) \
 	curentry->set_sizeptr(_size); \
-
-#define AM_SIZE(_member) \
-	curentry->set_member_sizeptr(myoffsetof(drivdata_class, _member)); \
 
 
 // common shortcuts
@@ -763,8 +756,6 @@ void _class :: _name(address_map &map, const device_t &device) \
 #define AM_RAM_READ_LEGACY(_read)			AM_READ_LEGACY(_read) AM_WRITEONLY
 #define AM_RAM_WRITE_LEGACY(_write)			AM_READONLY AM_WRITE_LEGACY(_write)
 #define AM_RAM_DEVWRITE_LEGACY(_tag, _write) AM_READONLY AM_DEVWRITE_LEGACY(_tag, _write)
-
-#define AM_BASE_SIZE(_base, _size)			AM_BASE(_base) AM_SIZE(_size)
 
 
 

@@ -16,9 +16,9 @@ WRITE8_MEMBER(exprraid_state::exprraid_colorram_w)
 
 WRITE8_MEMBER(exprraid_state::exprraid_flipscreen_w)
 {
-	if (flip_screen_get(machine()) != (data & 0x01))
+	if (flip_screen() != (data & 0x01))
 	{
-		flip_screen_set(machine(), data & 0x01);
+		flip_screen_set(data & 0x01);
 		machine().tilemap().mark_all_dirty();
 	}
 }
@@ -45,7 +45,7 @@ WRITE8_MEMBER(exprraid_state::exprraid_scrolly_w)
 static TILE_GET_INFO( get_bg_tile_info )
 {
 	exprraid_state *state = machine.driver_data<exprraid_state>();
-	UINT8 *tilerom = machine.region("gfx4")->base();
+	UINT8 *tilerom = state->memregion("gfx4")->base();
 
 	int data, attr, bank, code, color, flags;
 	int quadrant = 0, offs;
@@ -96,7 +96,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	exprraid_state *state = machine.driver_data<exprraid_state>();
 	int offs;
 
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		int attr = state->m_spriteram[offs + 1];
 		int code = state->m_spriteram[offs + 3] + ((attr & 0xe0) << 3);
@@ -106,7 +106,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		int sx = ((248 - state->m_spriteram[offs + 2]) & 0xff) - 8;
 		int sy = state->m_spriteram[offs];
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;
 			sy = 240 - sy;
@@ -126,7 +126,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 			drawgfx_transpen(bitmap,cliprect, machine.gfx[1],
 				code + 1, color,
 				flipx, flipy,
-				sx, sy + (flip_screen_get(machine) ? -16 : 16), 0);
+				sx, sy + (state->flip_screen() ? -16 : 16), 0);
 		}
 	}
 }

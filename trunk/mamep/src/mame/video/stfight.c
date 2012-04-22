@@ -32,6 +32,7 @@
 
 PALETTE_INIT( stfight )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -96,7 +97,7 @@ static TILEMAP_MAPPER( fg_scan )
 
 static TILE_GET_INFO( get_fg_tile_info )
 {
-	UINT8   *fgMap = machine.region("gfx5")->base();
+	UINT8   *fgMap = machine.root_device().memregion("gfx5")->base();
 	int attr,tile_base;
 
 	attr = fgMap[0x8000+tile_index];
@@ -119,7 +120,7 @@ static TILEMAP_MAPPER( bg_scan )
 
 static TILE_GET_INFO( get_bg_tile_info )
 {
-	UINT8   *bgMap = machine.region("gfx6")->base();
+	UINT8   *bgMap = machine.root_device().memregion("gfx6")->base();
 	int attr,tile_bank,tile_base;
 
 	attr = bgMap[0x8000+tile_index];
@@ -230,7 +231,7 @@ WRITE8_MEMBER(stfight_state::stfight_vh_latch_w)
 			/* 0x40 = sprites */
 			m_bg_tilemap->enable(data & 0x20);
 			m_fg_tilemap->enable(data & 0x10);
-			flip_screen_set(machine(), data & 0x01);
+			flip_screen_set(data & 0x01);
 			break;
 	}
 }
@@ -268,7 +269,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 				    sx -= 0x100;
 			}
 
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				sx = 240 - sx;
 				sy = 240 - sy;
@@ -280,7 +281,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 			pdrawgfx_transpen(bitmap,cliprect,machine.gfx[4],
 				     code,
 					 color,
-					 flipx,flip_screen_get(machine),
+					 flipx,state->flip_screen(),
 					 sx,sy,
 				     machine.priority_bitmap,
 					 pri ? 0x02 : 0,0x0f);

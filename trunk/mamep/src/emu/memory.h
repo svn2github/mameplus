@@ -679,8 +679,10 @@ public:
 	void set_base_decrypted(void *base);
 
 	// configure and set entries
-	void configure(int entrynum, void *base);
-	void configure_decrypted(int entrynum, void *base);
+	void configure_entry(int entrynum, void *base);
+	void configure_entries(int startentry, int numentries, void *base, offs_t stride);
+	void configure_decrypted_entry(int entrynum, void *base);
+	void configure_decrypted_entries(int startentry, int numentries, void *base, offs_t stride);
 	void set_entry(int entrynum);
 
 private:
@@ -722,7 +724,7 @@ public:
 
 	// getters
 	memory_share *next() const { return m_next; }
-	void *ptr() const { return m_ptr; }
+	void *ptr() const { if (this == NULL) return NULL; return m_ptr; }
 	size_t bytes() const { return m_bytes; }
 	UINT8 width() const { return m_width; }
 
@@ -738,45 +740,81 @@ private:
 };
 
 
+// ======================> memory_region
+
+// memory region object
+class memory_region
+{
+	DISABLE_COPYING(memory_region);
+
+	friend class memory_manager;
+	friend class simple_list<memory_region>;
+	friend resource_pool_object<memory_region>::~resource_pool_object();
+
+	// construction/destruction
+	memory_region(running_machine &machine, const char *name, UINT32 length, UINT8 width, endianness_t endian);
+
+public:
+	// getters
+	running_machine &machine() const { return m_machine; }
+	memory_region *next() const { return m_next; }
+	UINT8 *base() { return (this != NULL) ? &m_buffer[0] : NULL; }
+	UINT8 *end() { return (this != NULL) ? base() + m_buffer.count() : NULL; }
+	UINT32 bytes() const { return (this != NULL) ? m_buffer.count() : 0; }
+	const char *name() const { return m_name; }
+
+	// flag expansion
+	endianness_t endianness() const { return m_endianness; }
+	UINT8 width() const { return m_width; }
+
+	// data access
+	UINT8 &u8(offs_t offset = 0) { return m_buffer[offset]; }
+	UINT16 &u16(offs_t offset = 0) { return reinterpret_cast<UINT16 *>(base())[offset]; }
+	UINT32 &u32(offs_t offset = 0) { return reinterpret_cast<UINT32 *>(base())[offset]; }
+	UINT64 &u64(offs_t offset = 0) { return reinterpret_cast<UINT64 *>(base())[offset]; }
+
+	// allow passing a region for any common pointer
+	operator void *() { return (this != NULL) ? reinterpret_cast<void *>(base()) : NULL; }
+	operator INT8 *() { return (this != NULL) ? reinterpret_cast<INT8 *>(base()) : NULL; }
+	operator UINT8 *() { return (this != NULL) ? reinterpret_cast<UINT8 *>(base()) : NULL; }
+	operator INT16 *() { return (this != NULL) ? reinterpret_cast<INT16 *>(base()) : NULL; }
+	operator UINT16 *() { return (this != NULL) ? reinterpret_cast<UINT16 *>(base()) : NULL; }
+	operator INT32 *() { return (this != NULL) ? reinterpret_cast<INT32 *>(base()) : NULL; }
+	operator UINT32 *() { return (this != NULL) ? reinterpret_cast<UINT32 *>(base()) : NULL; }
+	operator INT64 *() { return (this != NULL) ? reinterpret_cast<INT64 *>(base()) : NULL; }
+	operator UINT64 *() { return (this != NULL) ? reinterpret_cast<UINT64 *>(base()) : NULL; }
+
+private:
+	// internal data
+	running_machine &		m_machine;
+	memory_region *			m_next;
+	astring					m_name;
+	dynamic_buffer			m_buffer;
+	UINT8					m_width;
+	endianness_t			m_endianness;
+};
+
+
+
 // ======================> memory_manager
 
 // holds internal state for the memory system
 class memory_manager
 {
 	friend class address_space;
+	friend class address_table;
+	friend class device_t;
+	friend class memory_block;
 
 public:
 	// construction/destruction
 	memory_manager(running_machine &machine);
+	void initialize();
 
 	// getters
 	running_machine &machine() const { return m_machine; }
 	address_space *first_space() const { return m_spacelist.first(); }
-	memory_bank *first_bank() const { return m_banklist.first(); }
-
-	// configure the addresses for a bank
-	void configure_bank(const char *tag, int startentry, int numentries, void *base, offs_t stride);
-	void configure_bank(device_t &device, const char *tag, int startentry, int numentries, void *base, offs_t stride);
-
-	// configure the decrypted addresses for a bank
-	void configure_bank_decrypted(const char *tag, int startentry, int numentries, void *base, offs_t stride);
-	void configure_bank_decrypted(device_t &device, const char *tag, int startentry, int numentries, void *base, offs_t stride);
-
-	// select one pre-configured entry to be the new bank base
-	void set_bank(const char *tag, int entrynum);
-	void set_bank(device_t &device, const char *tag, int entrynum);
-
-	// return the currently selected bank
-	int bank(const char *tag);
-	int bank(device_t &device, const char *tag);
-
-	// set the absolute address of a bank base
-	void set_bankptr(const char *tag, void *base) ATTR_NONNULL(3);
-	void set_bankptr(device_t &device, const char *tag, void *base) ATTR_NONNULL(3);
-
-	// get a pointer to a shared memory region by tag
-	memory_share *shared(const char *tag);
-	memory_share *shared(device_t &device, const char *tag);
+	memory_region *first_region() const { return m_regionlist.first(); }
 
 	// dump the internal memory tables to the given file
 	void dump(FILE *file);
@@ -784,8 +822,16 @@ public:
 	// pointers to a bank pointer (internal usage only)
 	UINT8 **bank_pointer_addr(UINT8 index, bool decrypted = false) { return decrypted ? &m_bankd_ptr[index] : &m_bank_ptr[index]; }
 
+	// regions
+	memory_region *region_alloc(const char *name, UINT32 length, UINT8 width, endianness_t endian);
+	void region_free(const char *name);
+
 private:
 	// internal helpers
+	memory_bank *first_bank() const { return m_banklist.first(); }
+	memory_bank *bank(const char *tag) const { return m_bankmap.find(tag); }
+	memory_region *region(const char *tag) { return m_regionlist.find(tag); }
+	memory_share *shared(const char *tag) { return m_sharelist.find(tag); }
 	void bank_reattach();
 
 	// internal state
@@ -803,6 +849,8 @@ private:
 	UINT8						m_banknext;				// next bank to allocate
 
 	tagged_list<memory_share>	m_sharelist;			// map for share lookups
+
+	tagged_list<memory_region>	m_regionlist;			// list of memory regions
 };
 
 
@@ -814,6 +862,7 @@ private:
 // opcode base adjustment handler function macro
 #define DIRECT_UPDATE_MEMBER(name)		offs_t name(ATTR_UNUSED direct_read_data &direct, ATTR_UNUSED offs_t address)
 #define DIRECT_UPDATE_HANDLER(name)		offs_t name(ATTR_UNUSED running_machine &machine, ATTR_UNUSED direct_read_data &direct, ATTR_UNUSED offs_t address)
+#define DECLARE_DIRECT_UPDATE_MEMBER(name)	offs_t name(ATTR_UNUSED direct_read_data &direct, ATTR_UNUSED offs_t address)
 
 
 // space read/write handler function macros
@@ -904,36 +953,6 @@ private:
 // read/write a dword to a 64-bit space
 #define DWORD_XOR_BE(a) 				((a) ^ NATIVE_ENDIAN_VALUE_LE_BE(4,0))
 #define DWORD_XOR_LE(a) 				((a) ^ NATIVE_ENDIAN_VALUE_LE_BE(0,4))
-
-
-
-//**************************************************************************
-//  GLOBAL VARIABLES
-//**************************************************************************
-
-extern const char *const address_space_names[ADDRESS_SPACES];
-
-
-
-//**************************************************************************
-//  FUNCTION PROTOTYPES FOR CORE MEMORY FUNCTIONS
-//**************************************************************************
-
-// configure the addresses for a bank
-void memory_configure_bank(running_machine &machine, const char *tag, int startentry, int numentries, void *base, offs_t stride) ATTR_NONNULL(5);
-void memory_configure_bank(device_t &device, const char *tag, int startentry, int numentries, void *base, offs_t stride) ATTR_NONNULL(5);
-
-// configure the decrypted addresses for a bank
-void memory_configure_bank_decrypted(running_machine &machine, const char *tag, int startentry, int numentries, void *base, offs_t stride) ATTR_NONNULL(5);
-void memory_configure_bank_decrypted(device_t &device, const char *tag, int startentry, int numentries, void *base, offs_t stride) ATTR_NONNULL(5);
-
-// select one pre-configured entry to be the new bank base
-void memory_set_bank(running_machine &machine, const char *tag, int entrynum);
-void memory_set_bank(device_t &device, const char *tag, int entrynum);
-
-// set the absolute address of a bank base
-void memory_set_bankptr(running_machine &machine, const char *tag, void *base) ATTR_NONNULL(3);
-void memory_set_bankptr(device_t &device, const char *tag, void *base) ATTR_NONNULL(3);
 
 
 

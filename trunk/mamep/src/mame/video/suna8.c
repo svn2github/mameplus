@@ -83,7 +83,7 @@ static TILE_GET_INFO( get_tile_info )
 
 	if (machine.input().code_pressed(KEYCODE_X))
 	{
-		UINT8 *rom = machine.region("maincpu")->base() + 0x10000 + 0x4000 * state->m_trombank;
+		UINT8 *rom = state->memregion("maincpu")->base() + 0x10000 + 0x4000 * state->m_trombank;
 		code = rom[ 2 * tile_index + 0 ];
 		attr = rom[ 2 * tile_index + 1 ];
 	}
@@ -170,7 +170,7 @@ static void suna8_vh_start_common(running_machine &machine, int dim)
 	if (!(state->m_text_dim > 0))
 	{
 		state->m_generic_paletteram_8.allocate(0x200 * 2);
-		state->m_spriteram = auto_alloc_array(machine, UINT8, 0x2000 * 2);
+		state->m_spriteram.allocate(0x2000 * 2);
 		state->m_spritebank  = 0;
 		state->m_palettebank = 0;
 	}
@@ -313,7 +313,7 @@ static void draw_normal_sprites(running_machine &machine, bitmap_ind16 &bitmap,c
 				if (flipx)	tile_flipx = !tile_flipx;
 				if (flipy)	tile_flipy = !tile_flipy;
 
-				if (flip_screen_get(machine))
+				if (state->flip_screen())
 				{
 					sx = max_x - sx;	tile_flipx = !tile_flipx;
 					sy = max_y - sy;	tile_flipy = !tile_flipy;
@@ -381,7 +381,7 @@ static void draw_text_sprites(running_machine &machine, bitmap_ind16 &bitmap,con
 				int sx		=	 x + tx * 8;
 				int sy		=	(y + real_ty * 8) & 0xff;
 
-				if (flip_screen_get(machine))
+				if (state->flip_screen())
 				{
 					sx = max_x - sx;	flipx = !flipx;
 					sy = max_y - sy;	flipy = !flipy;
@@ -416,7 +416,7 @@ SCREEN_UPDATE_IND16( suna8 )
 	if (screen.machine().input().code_pressed(KEYCODE_Z) || screen.machine().input().code_pressed(KEYCODE_X))
 	{
 		suna8_state *state = screen.machine().driver_data<suna8_state>();
-		int max_tiles = screen.machine().region("gfx1")->bytes() / (0x400 * 0x20);
+		int max_tiles = state->memregion("gfx1")->bytes() / (0x400 * 0x20);
 
 		if (screen.machine().input().code_pressed_once(KEYCODE_Q))	{ state->m_page--;	screen.machine().tilemap().mark_all_dirty();	}
 		if (screen.machine().input().code_pressed_once(KEYCODE_W))	{ state->m_page++;	screen.machine().tilemap().mark_all_dirty();	}

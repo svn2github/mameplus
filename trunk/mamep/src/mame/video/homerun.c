@@ -15,7 +15,7 @@ WRITE8_DEVICE_HANDLER(homerun_banking_w)
 	state->m_tilemap->mark_all_dirty();
 
 	data >>= 5;
-	memory_set_bank(device->machine(), "bank1", data & 0x07);
+	state->membank("bank1")->set_entry(data & 0x07);
 }
 
 WRITE8_MEMBER(homerun_state::homerun_videoram_w)
@@ -64,7 +64,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	UINT8 *spriteram = state->m_spriteram;
 	int offs;
 
-	for (offs = state->m_spriteram_size - 4; offs >=0; offs -= 4)
+	for (offs = state->m_spriteram.bytes() - 4; offs >=0; offs -= 4)
 	{
 		int code, color, sx, sy, flipx, flipy;
 		sx = spriteram[offs + 3];

@@ -9,6 +9,7 @@
 
 PALETTE_INIT( shootout )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 
@@ -121,7 +122,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 				int flipx = (attributes & 0x04);
 				int flipy = 0;
 
-				if (flip_screen_get(machine)) {
+				if (state->flip_screen()) {
 					flipx = !flipx;
 					flipy = !flipy;
 				}
@@ -132,7 +133,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 
 					vx = sx;
 					vy = sy;
-					if (flip_screen_get(machine)) {
+					if (state->flip_screen()) {
 						vx = 240 - vx;
 						vy = 240 - vy;
 					}
@@ -151,7 +152,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 
 				vx = sx;
 				vy = sy;
-				if (flip_screen_get(machine)) {
+				if (state->flip_screen()) {
 					vx = 240 - vx;
 					vy = 240 - vy;
 				}

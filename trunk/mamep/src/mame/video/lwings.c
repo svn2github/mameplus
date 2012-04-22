@@ -63,8 +63,8 @@ static TILE_GET_INFO( get_bg2_tile_info )
 {
 	lwings_state *state = machine.driver_data<lwings_state>();
 	int code, color;
-	UINT8 *rom = machine.region("gfx5")->base();
-	int mask = machine.region("gfx5")->bytes() - 1;
+	UINT8 *rom = machine.root_device().memregion("gfx5")->base();
+	int mask = state->memregion("gfx5")->bytes() - 1;
 
 	tile_index = (tile_index + state->m_bg2_image * 0x20) & mask;
 	code = rom[tile_index];
@@ -199,7 +199,7 @@ static void lwings_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap,
 			flipx = buffered_spriteram[offs + 1] & 0x02;
 			flipy = buffered_spriteram[offs + 1] & 0x04;
 
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				sx = 240 - sx;
 				sy = 240 - sy;
@@ -248,7 +248,7 @@ static void trojan_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap,
 				flipy = 1;
 			}
 
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				sx = 240 - sx;
 				sy = 240 - sy;

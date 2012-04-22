@@ -41,6 +41,7 @@
 
 PALETTE_INIT( sonson )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -116,7 +117,7 @@ WRITE8_MEMBER(sonson_state::sonson_scrollx_w)
 
 WRITE8_MEMBER(sonson_state::sonson_flipscreen_w)
 {
-	flip_screen_set(machine(), ~data & 0x01);
+	flip_screen_set(~data & 0x01);
 }
 
 static TILE_GET_INFO( get_bg_tile_info )
@@ -143,7 +144,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	UINT8 *spriteram = state->m_spriteram;
 	int offs;
 
-	for (offs = state->m_spriteram_size - 4; offs >= 0; offs -= 4)
+	for (offs = state->m_spriteram.bytes() - 4; offs >= 0; offs -= 4)
 	{
 		int code = spriteram[offs + 2] + ((spriteram[offs + 1] & 0x20) << 3);
 		int color = spriteram[offs + 1] & 0x1f;
@@ -152,7 +153,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		int sx = spriteram[offs + 3];
 		int sy = spriteram[offs + 0];
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;
 			sy = 240 - sy;

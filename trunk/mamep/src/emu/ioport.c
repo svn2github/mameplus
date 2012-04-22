@@ -120,8 +120,6 @@
     CONSTANTS
 ***************************************************************************/
 
-#define DIGITAL_JOYSTICKS_PER_PLAYER	3
-
 /* these constants must match the order of the joystick directions in the IPT definition */
 #define JOYDIR_UP			0
 #define JOYDIR_DOWN			1
@@ -138,7 +136,6 @@
 #define AUTOFIRE_TOGGLE		2	/* Autofire toggle enable bit */
 #endif /* USE_AUTOFIRE */
 
-#define NUM_SIMUL_KEYS	(UCHAR_SHIFT_END - UCHAR_SHIFT_BEGIN + 1)
 #define LOG_INPUTX		0
 #define SPACE_COUNT		3
 #define INVALID_CHAR	'?'
@@ -196,18 +193,6 @@ struct _analog_field_state
 };
 
 
-/* shared digital joystick state */
-typedef struct _digital_joystick_state digital_joystick_state;
-struct _digital_joystick_state
-{
-	const input_field_config *	field[4];			/* input field for up, down, left, right respectively */
-	UINT8						inuse;				/* is this joystick used? */
-	UINT8						current;			/* current value */
-	UINT8						current4way;		/* current 4-way value */
-	UINT8						previous;			/* previous value */
-};
-
-
 /* live device field information */
 typedef struct _device_field_info device_field_info;
 struct _device_field_info
@@ -252,24 +237,7 @@ struct _input_port_state
 };
 
 
-typedef struct _inputx_code inputx_code;
-struct _inputx_code
-{
-	unicode_char ch;
-	const input_field_config * field[NUM_SIMUL_KEYS];
-};
-
 #define KEY_BUFFER_SIZE	4096
-
-typedef struct _key_buffer key_buffer;
-struct _key_buffer
-{
-	int begin_pos;
-	int end_pos;
-	unsigned int status_keydown : 1;
-	int size;
-	unicode_char *buffer;
-};
 
 typedef struct _char_info char_info;
 struct _char_info
@@ -277,43 +245,6 @@ struct _char_info
 	unicode_char ch;
 	const char *name;
 	const char *alternate;	/* alternative string, in UTF-8 */
-};
-
-
-/* private input port state */
-struct _input_port_private
-{
-	/* global state */
-	UINT8						safe_to_read;		/* clear at start; set after state is loaded */
-
-	/* types */
-	simple_list<input_type_entry> typelist;		/* list of live type states */
-	input_type_entry *			type_to_entry[__ipt_max][MAX_PLAYERS]; /* map from type/player to type state */
-
-	/* specific special global input states */
-	digital_joystick_state		joystick_info[MAX_PLAYERS][DIGITAL_JOYSTICKS_PER_PLAYER]; /* joystick states */
-
-	/* frame time tracking */
-	attotime					last_frame_time;	/* time of the last frame callback */
-	attoseconds_t				last_delta_nsec;	/* nanoseconds that passed since the previous callback */
-
-	/* playback/record information */
-	emu_file *					record_file;		/* recording file (NULL if not recording) */
-	emu_file *					playback_file;		/* playback file (NULL if not recording) */
-#ifdef INP_CAPTION
-	emu_file *					caption_file;		/* caption file for playback (NULL if not playing) */
-#endif /* INP_CAPTION */
-	UINT64						playback_accumulated_speed;/* accumulated speed during playback */
-	UINT32						playback_accumulated_frames;/* accumulated frames during playback */
-
-	/* inputx */
-	inputx_code *codes;
-	key_buffer keybuffer;
-	emu_timer *inputx_timer;
-	int (*queue_chars)(running_machine &machine, const unicode_char *text, size_t text_len);
-	int (*accept_char)(running_machine &machine, unicode_char ch);
-	int (*charqueue_empty)(running_machine &machine);
-	attotime current_rate;
 };
 
 
@@ -939,21 +870,31 @@ INLINE int condition_equal(const input_condition *cond1, const input_condition *
     system
 -------------------------------------------------*/
 
-time_t input_port_init(running_machine &machine)
+ioport_manager::ioport_manager(running_machine &machine)
+	: safe_to_read(false),
+	  last_frame_time(attotime::zero),
+	  last_delta_nsec(0),
+	  record_file(NULL),
+	  playback_file(NULL),
+	  playback_accumulated_speed(0),
+	  playback_accumulated_frames(0),
+	  codes(NULL),
+	  inputx_timer(NULL),
+	  queue_chars(NULL),
+	  accept_char(NULL),
+	  charqueue_empty(NULL),
+	  current_rate(attotime::zero),
+	  m_machine(machine)
 {
-	//input_port_private *portdata;
-	time_t basetime;
-#ifdef USE_AUTOFIRE
-	int player;
-#endif /* USE_AUTOFIRE */
+	memset(type_to_entry, 0, sizeof(type_to_entry));
+	memset(joystick_info, 0, sizeof(joystick_info));
+}
 
-	/* allocate memory for our data structure */
-	machine.input_port_data = auto_alloc_clear(machine, input_port_private);
-	//portdata = machine.input_port_data;
-
+time_t ioport_manager::initialize()
+{
 	/* add an exit callback and a frame callback */
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(input_port_exit), &machine));
-	machine.add_notifier(MACHINE_NOTIFY_FRAME, machine_notify_delegate(FUNC(frame_update_callback), &machine));
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(input_port_exit), &machine()));
+	machine().add_notifier(MACHINE_NOTIFY_FRAME, machine_notify_delegate(FUNC(frame_update_callback), &machine()));
 
 #ifdef USE_AUTOFIRE
 	for (player = 0; player < MAX_PLAYERS; player++)
@@ -969,29 +910,29 @@ time_t input_port_init(running_machine &machine)
 #endif /* USE_CUSTOM_BUTTON */
 
 	/* initialize the default port info from the OSD */
-	init_port_types(machine);
+	init_port_types(machine());
 
 	/* if we have a token list, proceed */
-	device_iterator iter(machine.root_device());
+	device_iterator iter(machine().root_device());
 	for (device_t *device = iter.first(); device != NULL; device = iter.next())
 	{
 		astring errors;
 #ifdef USE_CUSTOM_BUTTON
-		input_port_list_custom(*device, machine.m_portlist, errors);
+		input_port_list_custom(*device, m_portlist, errors);
 #else /* USE_CUSTOM_BUTTON */
-		input_port_list_init(*device, machine.m_portlist, errors);
+		input_port_list_init(*device, m_portlist, errors);
 #endif /* USE_CUSTOM_BUTTON */
 		if (errors)
 			mame_printf_error("Input port errors:\n%s", errors.cstr());
 	}
 
-	init_port_state(machine);
+	init_port_state(machine());
 	/* register callbacks for when we load configurations */
-	config_register(machine, "input", config_saveload_delegate(FUNC(load_config_callback), &machine), config_saveload_delegate(FUNC(save_config_callback), &machine));
+	config_register(machine(), "input", config_saveload_delegate(FUNC(load_config_callback), &machine()), config_saveload_delegate(FUNC(save_config_callback), &machine()));
 
 	/* open playback and record files if specified */
-	basetime = playback_init(machine);
-	record_init(machine);
+	time_t basetime = playback_init(machine());
+	record_init(machine());
 
 	return basetime;
 }
@@ -1191,7 +1132,7 @@ static void input_port_list_custom(device_t &device, ioport_list &portlist, astr
 
 const input_field_config *input_field_by_tag_and_mask(running_machine &machine, const char *tag, input_port_value mask)
 {
-	const input_port_config *port = machine.port(tag);
+	const input_port_config *port = machine.root_device().ioport(tag);
 
 	/* if we got the port, look for the field */
 	if (port != NULL)
@@ -1496,8 +1437,8 @@ int input_type_is_analog(int type)
 const char *input_type_name(running_machine &machine, int type, int player)
 {
 	/* if we have a machine, use the live state and quick lookup */
-	input_port_private *portdata = machine.input_port_data;
-	input_type_entry *entry = portdata->type_to_entry[type][player];
+	ioport_manager &portdata = machine.ioport();
+	input_type_entry *entry = portdata.type_to_entry[type][player];
 	if (entry != NULL)
 		return entry->name;
 
@@ -1513,8 +1454,8 @@ const char *input_type_name(running_machine &machine, int type, int player)
 
 int input_type_group(running_machine &machine, int type, int player)
 {
-	input_port_private *portdata = machine.input_port_data;
-	input_type_entry *entry = portdata->type_to_entry[type][player];
+	ioport_manager &portdata = machine.ioport();
+	input_type_entry *entry = portdata.type_to_entry[type][player];
 	if (entry != NULL)
 		return entry->group;
 
@@ -1534,8 +1475,8 @@ const input_seq &input_type_seq(running_machine &machine, int type, int player, 
 	assert(player >= 0 && player < MAX_PLAYERS);
 
 	/* if we have a machine, use the live state and quick lookup */
-	input_port_private *portdata = machine.input_port_data;
-	input_type_entry *entry = portdata->type_to_entry[type][player];
+	ioport_manager &portdata = machine.ioport();
+	input_type_entry *entry = portdata.type_to_entry[type][player];
 	if (entry != NULL)
 		return entry->seq[seqtype];
 
@@ -1551,8 +1492,8 @@ const input_seq &input_type_seq(running_machine &machine, int type, int player, 
 
 void input_type_set_seq(running_machine &machine, int type, int player, input_seq_type seqtype, const input_seq *newseq)
 {
-	input_port_private *portdata = machine.input_port_data;
-	input_type_entry *entry = portdata->type_to_entry[type][player];
+	ioport_manager &portdata = machine.ioport();
+	input_type_entry *entry = portdata.type_to_entry[type][player];
 	if (entry != NULL)
 		entry->seq[seqtype] = *newseq;
 }
@@ -1576,20 +1517,20 @@ int input_type_pressed(running_machine &machine, int type, int player)
 
 const simple_list<input_type_entry> &input_type_list(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
-	return portdata->typelist;
+	ioport_manager &portdata = machine.ioport();
+	return portdata.typelist;
 }
 
 
 int has_record_file(running_machine &machine)
 {
-	return machine.input_port_data->record_file != NULL;
+	return machine.ioport()->record_file != NULL;
 }
 
 
 int has_playback_file(running_machine &machine)
 {
-	return machine.input_port_data->playback_file != NULL;
+	return machine.ioport()->playback_file != NULL;
 }
 
 
@@ -1606,7 +1547,7 @@ int has_playback_file(running_machine &machine)
 
 bool input_port_exists(running_machine &machine, const char *tag)
 {
-	return machine.port(tag) != 0;
+	return machine.root_device().ioport(tag) != 0;
 }
 
 
@@ -1618,7 +1559,7 @@ bool input_port_exists(running_machine &machine, const char *tag)
 
 input_port_value input_port_active(running_machine &machine, const char *tag)
 {
-	const input_port_config *port = machine.port(tag);
+	const input_port_config *port = machine.root_device().ioport(tag);
 	if (port == NULL)
 		fatalerror("Unable to locate input port '%s'", tag);
 	return port->active;
@@ -1634,7 +1575,7 @@ input_port_value input_port_active(running_machine &machine, const char *tag)
 
 input_port_value input_port_active_safe(running_machine &machine, const char *tag, input_port_value defvalue)
 {
-	const input_port_config *port = machine.port(tag);
+	const input_port_config *port = machine.root_device().ioport(tag);
 	return port == NULL ? defvalue : port->active;
 }
 
@@ -1653,12 +1594,12 @@ input_port_value input_port_read_direct(const input_port_config *port)
 {
 	assert(port != NULL);
 
-	input_port_private *portdata = port->machine().input_port_data;
+	ioport_manager &portdata = port->machine().ioport();
 	analog_field_state *analog;
 	device_field_info *device_field;
 	input_port_value result;
 
-	assert_always(portdata->safe_to_read, "Input ports cannot be read at init time!");
+	assert_always(portdata.safe_to_read, "Input ports cannot be read at init time!");
 
 	/* start with the digital */
 	result = port->state->digital;
@@ -1693,10 +1634,10 @@ input_port_value input_port_read_direct(const input_port_config *port)
 			INT32 value = analog->accum;
 
 			/* interpolate if appropriate and if time has passed since the last update */
-			if (analog->interpolate && !(analog->field->flags & ANALOG_FLAG_RESET) && portdata->last_delta_nsec != 0)
+			if (analog->interpolate && !(analog->field->flags & ANALOG_FLAG_RESET) && portdata.last_delta_nsec != 0)
 			{
-				attoseconds_t nsec_since_last = (port->machine().time() - portdata->last_frame_time).as_attoseconds() / ATTOSECONDS_PER_NANOSECOND;
-				value = analog->previous + ((INT64)(analog->accum - analog->previous) * nsec_since_last / portdata->last_delta_nsec);
+				attoseconds_t nsec_since_last = (port->machine().time() - portdata.last_frame_time).as_attoseconds() / ATTOSECONDS_PER_NANOSECOND;
+				value = analog->previous + ((INT64)(analog->accum - analog->previous) * nsec_since_last / portdata.last_delta_nsec);
 			}
 
 			/* apply standard analog settings */
@@ -1725,7 +1666,7 @@ input_port_value input_port_read_direct(const input_port_config *port)
 
 input_port_value input_port_read(running_machine &machine, const char *tag)
 {
-	const input_port_config *port = machine.port(tag);
+	const input_port_config *port = machine.root_device().ioport(tag);
 	if (port == NULL)
 		fatalerror(_("Unable to locate input port '%s'"), tag);
 	return input_port_read_direct(port);
@@ -1739,8 +1680,7 @@ input_port_value input_port_read(running_machine &machine, const char *tag)
 
 input_port_value input_port_read(device_t &device, const char *tag)
 {
-	astring fullpath;
-	const input_port_config *port = device.machine().port(device.subtag(fullpath, tag));
+	const input_port_config *port = device.ioport(tag);
 	if (port == NULL)
 		fatalerror("Unable to locate input port '%s'", tag);
 	return input_port_read_direct(port);
@@ -1755,7 +1695,7 @@ input_port_value input_port_read(device_t &device, const char *tag)
 
 input_port_value input_port_read_safe(running_machine &machine, const char *tag, UINT32 defvalue)
 {
-	const input_port_config *port = machine.port(tag);
+	const input_port_config *port = machine.root_device().ioport(tag);
 	return (port == NULL) ? defvalue : input_port_read_direct(port);
 }
 
@@ -1773,7 +1713,7 @@ int input_port_get_crosshair_position(running_machine &machine, int player, floa
 	int gotx = FALSE, goty = FALSE;
 
 	/* read all the lightgun values */
-	for (port = machine.m_portlist.first(); port != NULL; port = port->next())
+	for (port = machine.ioport().first_port(); port != NULL; port = port->next())
 		for (field = port->first_field(); field != NULL; field = field->next())
 			if (field->player == player && field->crossaxis != CROSSHAIR_AXIS_NONE)
 				if (input_condition_true(machine, &field->condition, port->owner()))
@@ -1842,7 +1782,7 @@ void input_port_update_defaults(running_machine &machine)
 		const input_port_config *port;
 
 		/* loop over all input ports */
-		for (port = machine.m_portlist.first(); port != NULL; port = port->next())
+		for (port = machine.ioport().first_port(); port != NULL; port = port->next())
 		{
 			const input_field_config *field;
 
@@ -1928,7 +1868,7 @@ void input_port_write_direct(const input_port_config *port, input_port_value dat
 
 void input_port_write(running_machine &machine, const char *tag, input_port_value value, input_port_value mask)
 {
-	const input_port_config *port = machine.port(tag);
+	const input_port_config *port = machine.root_device().ioport(tag);
 	if (port == NULL)
 		fatalerror(_("Unable to locate input port '%s'"), tag);
 	input_port_write_direct(port, value, mask);
@@ -1942,7 +1882,7 @@ void input_port_write(running_machine &machine, const char *tag, input_port_valu
 
 void input_port_write_safe(running_machine &machine, const char *tag, input_port_value value, input_port_value mask)
 {
-	const input_port_config *port = machine.port(tag);
+	const input_port_config *port = machine.root_device().ioport(tag);
 	if (port != NULL)
 		input_port_write_direct(port, value, mask);
 }
@@ -2042,23 +1982,23 @@ const char *input_port_string_from_token(const char *string)
 
 static void init_port_types(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 
 	/* convert the array into a list of type states that can be modified */
-	construct_core_types(portdata->typelist);
+	construct_core_types(portdata.typelist);
 
 	/* ask the OSD to customize the list */
-	machine.osd().customize_input_type_list(portdata->typelist);
+	machine.osd().customize_input_type_list(portdata.typelist);
 
 	/* now iterate over the OSD-modified types */
-	for (input_type_entry *curtype = portdata->typelist.first(); curtype != NULL; curtype = curtype->next())
+	for (input_type_entry *curtype = portdata.typelist.first(); curtype != NULL; curtype = curtype->next())
 	{
 		/* first copy all the OSD-updated sequences into our current state */
 		for (int seqtype = 0; seqtype < ARRAY_LENGTH(curtype->seq); seqtype++)
 			curtype->seq[seqtype] = curtype->defseq[seqtype];
 
 		/* also make a lookup table mapping type/player to the appropriate type list entry */
-		portdata->type_to_entry[curtype->type][curtype->player] = curtype;
+		portdata.type_to_entry[curtype->type][curtype->player] = curtype;
 	}
 }
 
@@ -2179,12 +2119,12 @@ static astring &get_keyboard_key_name(astring &name, const input_field_config *f
 static void init_port_state(running_machine &machine)
 {
 	const char *joystick_map_default = machine.options().joystick_map();
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	input_field_config *field;
 	input_port_config *port;
 
 	/* allocate live structures to mirror the configuration */
-	for (port = machine.m_portlist.first(); port != NULL; port = port->next())
+	for (port = machine.ioport().first_port(); port != NULL; port = port->next())
 	{
 		analog_field_state **analogstatetail;
 		device_field_info **readdevicetail;
@@ -2230,7 +2170,7 @@ static void init_port_state(running_machine &machine)
 			/* if this is a digital joystick field, make a note of it */
 			if (field->type >= __ipt_digital_joystick_start && field->type <= __ipt_digital_joystick_end)
 			{
-				fieldstate->joystick = &portdata->joystick_info[field->player][(field->type - __ipt_digital_joystick_start) / 4];
+				fieldstate->joystick = &portdata.joystick_info[field->player][(field->type - __ipt_digital_joystick_start) / 4];
 				fieldstate->joydir = (field->type - __ipt_digital_joystick_start) % 4;
 				fieldstate->joystick->field[fieldstate->joydir] = field;
 				fieldstate->joystick->inuse = TRUE;
@@ -2285,7 +2225,7 @@ static void init_port_state(running_machine &machine)
 
 	/* look for 4-way joysticks and change the default map if we find any */
 	if (joystick_map_default[0] == 0 || strcmp(joystick_map_default, "auto") == 0)
-		for (port = machine.m_portlist.first(); port != NULL; port = port->next())
+		for (port = machine.ioport().first_port(); port != NULL; port = port->next())
 			for (field = port->first_field(); field != NULL; field = field->next())
 				if (field->state->joystick != NULL && field->way == 4)
 				{
@@ -2303,7 +2243,6 @@ static void init_port_state(running_machine &machine)
 
 static void init_autoselect_devices(running_machine &machine, int type1, int type2, int type3, const char *option, const char *ananame)
 {
-	const ioport_list &portlist = machine.m_portlist;
 	const char *stemp = machine.options().value(option);
 	input_device_class autoenable = DEVICE_CLASS_KEYBOARD;
 	const char *autostring = "keyboard";
@@ -2339,8 +2278,8 @@ static void init_autoselect_devices(running_machine &machine, int type1, int typ
 		mame_printf_error(_("Invalid %s value %s; reverting to keyboard\n"), option, stemp);
 
 	/* only scan the list if we haven't already enabled this class of control */
-	if (portlist.first() != NULL && !machine.input().device_class(autoenable).enabled())
-		for (port = portlist.first(); port != NULL; port = port->next())
+	if (machine.ioport().first_port() != NULL && !machine.input().device_class(autoenable).enabled())
+		for (port = machine.ioport().first_port(); port != NULL; port = port->next())
 			for (field = port->first_field(); field != NULL; field = field->next())
 
 				/* if this port type is in use, apply the autoselect criteria */
@@ -2574,9 +2513,9 @@ static void frame_update_callback(running_machine &machine)
 
 static key_buffer *get_buffer(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	assert(inputx_can_post(machine));
-	return (key_buffer *)&portdata->keybuffer;
+	return (key_buffer *)&portdata.keybuffer;
 }
 
 
@@ -2601,7 +2540,7 @@ static const inputx_code *find_code(inputx_code *codes, unicode_char ch)
 
 static void input_port_update_hook(running_machine &machine, const input_port_config *port, input_port_value *digital)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	const key_buffer *keybuf;
 	const inputx_code *code;
 	unicode_char ch;
@@ -2617,7 +2556,7 @@ static void input_port_update_hook(running_machine &machine, const input_port_co
 		{
 			/* identify the character that is down right now, and its component codes */
 			ch = keybuf->buffer[keybuf->begin_pos];
-			code = find_code(portdata->codes, ch);
+			code = find_code(portdata.codes, ch);
 
 			/* loop through this character's component codes */
 			if (code != NULL)
@@ -2643,7 +2582,7 @@ static void input_port_update_hook(running_machine &machine, const input_port_co
 
 static void frame_update(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	const input_field_config *mouse_field = NULL;
 	int ui_visible = ui_is_menu_active();
 	attotime curtime = machine.time();
@@ -2660,8 +2599,8 @@ g_profiler.start(PROFILER_INPUT);
 	record_frame(machine, curtime);
 
 	/* track the duration of the previous frame */
-	portdata->last_delta_nsec = (curtime - portdata->last_frame_time).as_attoseconds() / ATTOSECONDS_PER_NANOSECOND;
-	portdata->last_frame_time = curtime;
+	portdata.last_delta_nsec = (curtime - portdata.last_frame_time).as_attoseconds() / ATTOSECONDS_PER_NANOSECOND;
+	portdata.last_frame_time = curtime;
 
 	/* update the digital joysticks */
 	frame_update_digital_joysticks(machine);
@@ -2681,7 +2620,7 @@ g_profiler.start(PROFILER_INPUT);
 	}
 
 	/* loop over all input ports */
-	for (port = machine.m_portlist.first(); port != NULL; port = port->next())
+	for (port = machine.ioport().first_port(); port != NULL; port = port->next())
 	{
 		const input_field_config *field;
 		device_field_info *device_field;
@@ -2754,7 +2693,7 @@ g_profiler.start(PROFILER_INPUT);
 
 #ifdef USE_SHOW_INPUT_LOG
 	/* show input log */
-	if (show_input_log && (portdata->playback_file == NULL))
+	if (show_input_log && (portdata.playback_file == NULL))
 		make_input_log(machine);
 #endif /* USE_SHOW_INPUT_LOG */
 
@@ -2770,14 +2709,14 @@ g_profiler.stop();
 
 static void frame_update_digital_joysticks(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	int player, joyindex;
 
 	/* loop over all the joysticks */
 	for (player = 0; player < MAX_PLAYERS; player++)
 		for (joyindex = 0; joyindex < DIGITAL_JOYSTICKS_PER_PLAYER; joyindex++)
 		{
-			digital_joystick_state *joystick = &portdata->joystick_info[player][joyindex];
+			digital_joystick_state *joystick = &portdata.joystick_info[player][joyindex];
 			if (joystick->inuse)
 			{
 				joystick->previous = joystick->current;
@@ -3367,7 +3306,7 @@ void diplocation_list_alloc(input_field_config &field, const char *location, ast
 
 static int token_to_input_field_type(running_machine &machine, const char *string, int *player)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	int ipnum;
 
 	/* check for our failsafe case first */
@@ -3375,7 +3314,7 @@ static int token_to_input_field_type(running_machine &machine, const char *strin
 		return ipnum;
 
 	/* find the token in the list */
-	for (input_type_entry *entry = portdata->typelist.first(); entry != NULL; entry = entry->next())
+	for (input_type_entry *entry = portdata.typelist.first(); entry != NULL; entry = entry->next())
 		if (entry->token != NULL && !strcmp(entry->token, string))
 		{
 			*player = entry->player;
@@ -3395,11 +3334,11 @@ static int token_to_input_field_type(running_machine &machine, const char *strin
 
 static const char *input_field_type_to_token(running_machine &machine, int type, int player)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	static char tempbuf[32];
 
 	/* look up the port and return the token */
-	input_type_entry *entry = portdata->type_to_entry[type][player];
+	input_type_entry *entry = portdata.type_to_entry[type][player];
 	if (entry != NULL)
 		return entry->token;
 
@@ -3439,14 +3378,14 @@ static int token_to_seq_type(const char *string)
 
 static void load_config_callback(running_machine &machine, int config_type, xml_data_node *parentnode)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	xml_data_node *portnode;
 	int seqtype;
 
 	/* in the completion phase, we finish the initialization with the final ports */
 	if (config_type == CONFIG_TYPE_FINAL)
 	{
-		portdata->safe_to_read = TRUE;
+		portdata.safe_to_read = TRUE;
 		frame_update(machine);
 	}
 
@@ -3509,7 +3448,7 @@ static void load_config_callback(running_machine &machine, int config_type, xml_
 	/* after applying the controller config, push that back into the backup, since that is */
 	/* what we will diff against */
 	if (config_type == CONFIG_TYPE_CONTROLLER)
-		for (input_type_entry *entry = portdata->typelist.first(); entry != NULL; entry = entry->next())
+		for (input_type_entry *entry = portdata.typelist.first(); entry != NULL; entry = entry->next())
 			for (seqtype = 0; seqtype < ARRAY_LENGTH(entry->seq); seqtype++)
 				entry->defseq[seqtype] = entry->seq[seqtype];
 }
@@ -3522,7 +3461,7 @@ static void load_config_callback(running_machine &machine, int config_type, xml_
 
 static void load_remap_table(running_machine &machine, xml_data_node *parentnode)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	input_code *oldtable, *newtable;
 	xml_data_node *remapnode;
 	int count;
@@ -3562,7 +3501,7 @@ static void load_remap_table(running_machine &machine, xml_data_node *parentnode
 			input_code newcode = newtable[remapnum];
 
 			/* loop over all default ports, remapping the requested keys */
-			for (input_type_entry *entry = portdata->typelist.first(); entry != NULL; entry = entry->next())
+			for (input_type_entry *entry = portdata.typelist.first(); entry != NULL; entry = entry->next())
 			{
 				/* remap anything in the default sequences */
 				for (int seqtype = 0; seqtype < ARRAY_LENGTH(entry->seq); seqtype++)
@@ -3584,10 +3523,10 @@ static void load_remap_table(running_machine &machine, xml_data_node *parentnode
 
 static int load_default_config(running_machine &machine, xml_data_node *portnode, int type, int player, const input_seq *newseq)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 
 	/* find a matching port in the list */
-	for (input_type_entry *entry = portdata->typelist.first(); entry != NULL; entry = entry->next())
+	for (input_type_entry *entry = portdata.typelist.first(); entry != NULL; entry = entry->next())
 		if (entry->type == type && entry->player == player)
 		{
 			for (int seqtype = 0; seqtype < ARRAY_LENGTH(entry->seq); seqtype++)
@@ -3619,7 +3558,7 @@ static int load_game_config(running_machine &machine, xml_data_node *portnode, i
 	defvalue = xml_get_attribute_int(portnode, "defvalue", 0);
 
 	/* find the port we want; if no tag, search them all */
-	for (port = machine.m_portlist.first(); port != NULL; port = port->next())
+	for (port = machine.ioport().first_port(); port != NULL; port = port->next())
 		if (tag == NULL || strcmp(get_port_tag(port, tempbuffer), tag) == 0)
 			for (field = port->first_field(); field != NULL; field = field->next())
 
@@ -3748,11 +3687,11 @@ static int save_this_input_field_type(int type)
 
 static void save_default_inputs(running_machine &machine, xml_data_node *parentnode)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	input_type_entry *entry;
 
 	/* iterate over ports */
-	for (entry = portdata->typelist.first(); entry != NULL; entry = entry->next())
+	for (entry = portdata.typelist.first(); entry != NULL; entry = entry->next())
 	{
 		/* only save if this port is a type we save */
 		if (save_this_input_field_type(entry->type))
@@ -3799,7 +3738,7 @@ static void save_game_inputs(running_machine &machine, xml_data_node *parentnode
 #endif /* USE_AUTOFIRE */
 
 	/* iterate over ports */
-	for (port = machine.m_portlist.first(); port != NULL; port = port->next())
+	for (port = machine.ioport().first_port(); port != NULL; port = port->next())
 		for (field = port->first_field(); field != NULL; field = field->next())
 			if (save_this_input_field_type(field->type))
 			{
@@ -3917,15 +3856,15 @@ static void save_game_inputs(running_machine &machine, xml_data_node *parentnode
 
 static UINT8 playback_read_uint8(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	UINT8 result;
 
 	/* protect against NULL handles if previous reads fail */
-	if (portdata->playback_file == NULL)
+	if (portdata.playback_file == NULL)
 		return 0;
 
 	/* read the value; if we fail, end playback */
-	if (portdata->playback_file->read(&result, sizeof(result)) != sizeof(result))
+	if (portdata.playback_file->read(&result, sizeof(result)) != sizeof(result))
 	{
 		playback_end(machine, _("End of file"));
 		return 0;
@@ -3943,15 +3882,15 @@ static UINT8 playback_read_uint8(running_machine &machine)
 
 static UINT32 playback_read_uint32(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	UINT32 result;
 
 	/* protect against NULL handles if previous reads fail */
-	if (portdata->playback_file == NULL)
+	if (portdata.playback_file == NULL)
 		return 0;
 
 	/* read the value; if we fail, end playback */
-	if (portdata->playback_file->read(&result, sizeof(result)) != sizeof(result))
+	if (portdata.playback_file->read(&result, sizeof(result)) != sizeof(result))
 	{
 		playback_end(machine, _("End of file"));
 		return 0;
@@ -3969,15 +3908,15 @@ static UINT32 playback_read_uint32(running_machine &machine)
 
 static UINT64 playback_read_uint64(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	UINT64 result;
 
 	/* protect against NULL handles if previous reads fail */
-	if (portdata->playback_file == NULL)
+	if (portdata.playback_file == NULL)
 		return 0;
 
 	/* read the value; if we fail, end playback */
-	if (portdata->playback_file->read(&result, sizeof(result)) != sizeof(result))
+	if (portdata.playback_file->read(&result, sizeof(result)) != sizeof(result))
 	{
 		playback_end(machine, _("End of file"));
 		return 0;
@@ -3995,7 +3934,7 @@ static UINT64 playback_read_uint64(running_machine &machine)
 static time_t playback_init(running_machine &machine)
 {
 	const char *filename = machine.options().playback();
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	UINT8 header[INP_HEADER_SIZE];
 	time_t basetime;
 
@@ -4009,12 +3948,12 @@ static time_t playback_init(running_machine &machine)
 		return 0;
 
 	/* open the playback file */
-	portdata->playback_file = auto_alloc(machine, emu_file(machine.options().input_directory(), OPEN_FLAG_READ));
-	file_error filerr = portdata->playback_file->open(filename);
-	assert_always(filerr == FILERR_NONE, _("Failed to open file for playback"));
+	portdata.playback_file = auto_alloc(machine, emu_file(machine.options().input_directory(), OPEN_FLAG_READ));
+	file_error filerr = portdata.playback_file->open(filename);
+	assert_always(filerr == FILERR_NONE, "Failed to open file for playback");
 
 	/* read the header and verify that it is a modern version; if not, print an error */
-	if (portdata->playback_file->read(header, sizeof(header)) != sizeof(header))
+	if (portdata.playback_file->read(header, sizeof(header)) != sizeof(header))
 		fatalerror(_("Input file is corrupt or invalid (missing header)"));
 	if (memcmp(header, "MAMEINP\0", 8) != 0)
 		fatalerror(_("Input file invalid or in an older, unsupported format"));
@@ -4041,15 +3980,15 @@ static time_t playback_init(running_machine &machine)
 		if (fname)
 		{
 			strcpy(fname + strlen(fname) - 4, ".cap");
-			portdata->caption_file = auto_alloc(machine, emu_file(machine.options().input_directory(), OPEN_FLAG_READ));
-			filerr = portdata->caption_file->open(fname);
+			portdata.caption_file = auto_alloc(machine, emu_file(machine.options().input_directory(), OPEN_FLAG_READ));
+			filerr = portdata.caption_file->open(fname);
 			osd_free(fname);
 		}
 	}
 #endif /* INP_CAPTION */
 
 	/* enable compression */
-	portdata->playback_file->compress(FCOMPRESS_MEDIUM);
+	portdata.playback_file->compress(FCOMPRESS_MEDIUM);
 
 	return basetime;
 }
@@ -4061,20 +4000,20 @@ static time_t playback_init(running_machine &machine)
 
 static void playback_end(running_machine &machine, const char *message)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 
 	/* only applies if we have a live file */
-	if (portdata->playback_file != NULL)
+	if (portdata.playback_file != NULL)
 	{
 		/* close the file */
-		auto_free(machine, portdata->playback_file);
-		portdata->playback_file = NULL;
+		auto_free(machine, portdata.playback_file);
+		portdata.playback_file = NULL;
 
 #ifdef INP_CAPTION
-		if (portdata->caption_file != NULL)
+		if (portdata.caption_file != NULL)
 		{
-			auto_free(machine, portdata->caption_file);
-			portdata->caption_file = NULL;
+			auto_free(machine, portdata.caption_file);
+			portdata.caption_file = NULL;
 		}
 #endif /* INP_CAPTION */
 
@@ -4088,9 +4027,9 @@ static void playback_end(running_machine &machine, const char *message)
 #endif /* PLAYBACK_END_PAUSE */
 
 		/* display speed stats */
-		portdata->playback_accumulated_speed /= portdata->playback_accumulated_frames;
-		mame_printf_info(_("Total playback frames: %d\n"), (UINT32)portdata->playback_accumulated_frames);
-		mame_printf_info(_("Average recorded speed: %d%%\n"), (UINT32)((portdata->playback_accumulated_speed * 200 + 1) >> 21));
+		portdata.playback_accumulated_speed /= portdata.playback_accumulated_frames;
+		mame_printf_info(_("Total playback frames: %d\n"), (UINT32)portdata.playback_accumulated_frames);
+		mame_printf_info(_("Average recorded speed: %d%%\n"), (UINT32)((portdata.playback_accumulated_speed * 200 + 1) >> 21));
 	}
 }
 
@@ -4102,10 +4041,10 @@ static void playback_end(running_machine &machine, const char *message)
 
 static void playback_frame(running_machine &machine, attotime curtime)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 
 	/* if playing back, fetch the information and verify */
-	if (portdata->playback_file != NULL)
+	if (portdata.playback_file != NULL)
 	{
 		attotime readtime;
 
@@ -4116,8 +4055,8 @@ static void playback_frame(running_machine &machine, attotime curtime)
 			playback_end(machine, _("Out of sync"));
 
 		/* then the speed */
-		portdata->playback_accumulated_speed += playback_read_uint32(machine);
-		portdata->playback_accumulated_frames++;
+		portdata.playback_accumulated_speed += playback_read_uint32(machine);
+		portdata.playback_accumulated_frames++;
 	}
 }
 
@@ -4128,10 +4067,10 @@ static void playback_frame(running_machine &machine, attotime curtime)
 
 static void playback_port(const input_port_config *port)
 {
-	input_port_private *portdata = port->machine().input_port_data;
+	ioport_manager &portdata = port->machine().ioport();
 
 	/* if playing back, fetch information about this port */
-	if (portdata->playback_file != NULL)
+	if (portdata.playback_file != NULL)
 	{
 		analog_field_state *analog;
 
@@ -4166,15 +4105,15 @@ static void playback_port(const input_port_config *port)
 
 static void record_write_uint8(running_machine &machine, UINT8 data)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	UINT8 result = data;
 
 	/* protect against NULL handles if previous reads fail */
-	if (portdata->record_file == NULL)
+	if (portdata.record_file == NULL)
 		return;
 
 	/* read the value; if we fail, end playback */
-	if (portdata->record_file->write(&result, sizeof(result)) != sizeof(result))
+	if (portdata.record_file->write(&result, sizeof(result)) != sizeof(result))
 		record_end(machine, _("Out of space"));
 }
 
@@ -4186,15 +4125,15 @@ static void record_write_uint8(running_machine &machine, UINT8 data)
 
 static void record_write_uint32(running_machine &machine, UINT32 data)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	UINT32 result = LITTLE_ENDIANIZE_INT32(data);
 
 	/* protect against NULL handles if previous reads fail */
-	if (portdata->record_file == NULL)
+	if (portdata.record_file == NULL)
 		return;
 
 	/* read the value; if we fail, end playback */
-	if (portdata->record_file->write(&result, sizeof(result)) != sizeof(result))
+	if (portdata.record_file->write(&result, sizeof(result)) != sizeof(result))
 		record_end(machine, _("Out of space"));
 }
 
@@ -4206,15 +4145,15 @@ static void record_write_uint32(running_machine &machine, UINT32 data)
 
 static void record_write_uint64(running_machine &machine, UINT64 data)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	UINT64 result = LITTLE_ENDIANIZE_INT64(data);
 
 	/* protect against NULL handles if previous reads fail */
-	if (portdata->record_file == NULL)
+	if (portdata.record_file == NULL)
 		return;
 
 	/* read the value; if we fail, end playback */
-	if (portdata->record_file->write(&result, sizeof(result)) != sizeof(result))
+	if (portdata.record_file->write(&result, sizeof(result)) != sizeof(result))
 		record_end(machine, _("Out of space"));
 }
 
@@ -4226,7 +4165,7 @@ static void record_write_uint64(running_machine &machine, UINT64 data)
 static void record_init(running_machine &machine)
 {
 	const char *filename = machine.options().record();
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	UINT8 header[INP_HEADER_SIZE];
 	system_time systime;
 
@@ -4235,8 +4174,8 @@ static void record_init(running_machine &machine)
 		return;
 
 	/* open the record file  */
-	portdata->record_file = auto_alloc(machine, emu_file(machine.options().input_directory(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS));
-	file_error filerr = portdata->record_file->open(filename);
+	portdata.record_file = auto_alloc(machine, emu_file(machine.options().input_directory(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS));
+	file_error filerr = portdata.record_file->open(filename);
 	assert_always(filerr == FILERR_NONE, "Failed to open file for recording");
 
 	/* get the base time */
@@ -4259,10 +4198,10 @@ static void record_init(running_machine &machine)
 	sprintf((char *)header + 0x20, "%s %s", emulator_info::get_appname(), build_version);
 
 	/* write it */
-	portdata->record_file->write(header, sizeof(header));
+	portdata.record_file->write(header, sizeof(header));
 
 	/* enable compression */
-	portdata->record_file->compress(FCOMPRESS_MEDIUM);
+	portdata.record_file->compress(FCOMPRESS_MEDIUM);
 }
 
 
@@ -4272,14 +4211,14 @@ static void record_init(running_machine &machine)
 
 static void record_end(running_machine &machine, const char *message)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 
 	/* only applies if we have a live file */
-	if (portdata->record_file != NULL)
+	if (portdata.record_file != NULL)
 	{
 		/* close the file */
-		auto_free(machine, portdata->record_file);
-		portdata->record_file = NULL;
+		auto_free(machine, portdata.record_file);
+		portdata.record_file = NULL;
 
 		/* pop a message */
 		if (message != NULL)
@@ -4295,10 +4234,10 @@ static void record_end(running_machine &machine, const char *message)
 
 static void record_frame(running_machine &machine, attotime curtime)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 
 	/* if recording, record information about the current frame */
-	if (portdata->record_file != NULL)
+	if (portdata.record_file != NULL)
 	{
 		/* first the absolute time */
 		record_write_uint32(machine, curtime.seconds);
@@ -4316,10 +4255,10 @@ static void record_frame(running_machine &machine, attotime curtime)
 
 static void record_port(const input_port_config *port)
 {
-	input_port_private *portdata = port->machine().input_port_data;
+	ioport_manager &portdata = port->machine().ioport();
 
 	/* if recording, store information about this port */
-	if (portdata->record_file != NULL)
+	if (portdata.record_file != NULL)
 	{
 		analog_field_state *analog;
 
@@ -4346,12 +4285,12 @@ int input_machine_has_keyboard(running_machine &machine)
 	int have_keyboard = FALSE;
 	const input_field_config *field;
 	const input_port_config *port;
-	for (port = machine.m_portlist.first(); port != NULL; port = port->next())
+	for (port = machine.ioport().first_port(); port != NULL; port = port->next())
 	{
 		for (field = port->first_field(); field != NULL; field = field->next())
 		{
 			// if we are at init, check IPT_KEYBOARD for inputx_init
-			if (!port->machine().input_port_data->safe_to_read && field->type == IPT_KEYBOARD)
+			if (!port->machine().ioport().safe_to_read && field->type == IPT_KEYBOARD)
 			{
 				have_keyboard = TRUE;
 				break;
@@ -4556,23 +4495,23 @@ int validate_natural_keyboard_statics(void)
 
 static void clear_keybuffer(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
-	portdata->keybuffer.buffer = NULL;
-	portdata->queue_chars = NULL;
-	portdata->codes = NULL;
+	ioport_manager &portdata = machine.ioport();
+	portdata.keybuffer.buffer = NULL;
+	portdata.queue_chars = NULL;
+	portdata.codes = NULL;
 }
 
 
 
 static void setup_keybuffer(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
-	portdata->inputx_timer = machine.scheduler().timer_alloc(FUNC(inputx_timerproc));
-	portdata->keybuffer.begin_pos = 0;
-	portdata->keybuffer.end_pos = 0;
-	portdata->keybuffer.status_keydown = 0;
-	portdata->keybuffer.size = KEY_BUFFER_SIZE;
-	portdata->keybuffer.buffer = auto_alloc_array(machine, unicode_char, portdata->keybuffer.size);
+	ioport_manager &portdata = machine.ioport();
+	portdata.inputx_timer = machine.scheduler().timer_alloc(FUNC(inputx_timerproc));
+	portdata.keybuffer.begin_pos = 0;
+	portdata.keybuffer.end_pos = 0;
+	portdata.keybuffer.status_keydown = 0;
+	portdata.keybuffer.size = KEY_BUFFER_SIZE;
+	portdata.keybuffer.buffer = auto_alloc_array(machine, unicode_char, portdata.keybuffer.size);
 	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(clear_keybuffer), &machine));
 }
 
@@ -4580,10 +4519,10 @@ static void setup_keybuffer(running_machine &machine)
 
 void inputx_init(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
-	portdata->inputx_timer = NULL;
-	portdata->accept_char = NULL;
-	portdata->charqueue_empty = NULL;
+	ioport_manager &portdata = machine.ioport();
+	portdata.inputx_timer = NULL;
+	portdata.accept_char = NULL;
+	portdata.charqueue_empty = NULL;
 	clear_keybuffer(machine);
 
 	if (machine.debug_flags & DEBUG_FLAG_ENABLED)
@@ -4595,7 +4534,7 @@ void inputx_init(running_machine &machine)
 	/* posting keys directly only makes sense for a computer */
 	if (input_machine_has_keyboard(machine))
 	{
-		portdata->codes = build_codes(machine, machine.m_portlist.first());
+		portdata.codes = build_codes(machine, machine.ioport().first_port());
 		setup_keybuffer(machine);
 	}
 }
@@ -4608,32 +4547,32 @@ void inputx_setup_natural_keyboard(
 	int (*accept_char)(running_machine &machine, unicode_char ch),
 	int (*charqueue_empty)(running_machine &machine))
 {
-	input_port_private *portdata = machine.input_port_data;
-	portdata->queue_chars = queue_chars;
-	portdata->accept_char = accept_char;
-	portdata->charqueue_empty = charqueue_empty;
+	ioport_manager &portdata = machine.ioport();
+	portdata.queue_chars = queue_chars;
+	portdata.accept_char = accept_char;
+	portdata.charqueue_empty = charqueue_empty;
 }
 
 int inputx_can_post(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
-	return portdata->queue_chars || portdata->codes;
+	ioport_manager &portdata = machine.ioport();
+	return portdata.queue_chars || portdata.codes;
 }
 
 
 static int can_post_key_directly(running_machine &machine, unicode_char ch)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	int rc = FALSE;
 	const inputx_code *code;
 
-	if (portdata->queue_chars)
+	if (portdata.queue_chars)
 	{
-		rc = portdata->accept_char ? (*portdata->accept_char)(machine, ch) : TRUE;
+		rc = portdata.accept_char ? (*portdata.accept_char)(machine, ch) : TRUE;
 	}
 	else
 	{
-		code = find_code(portdata->codes, ch);
+		code = find_code(portdata.codes, ch);
 		if (code)
 			rc = code->field[0] != NULL;
 	}
@@ -4666,13 +4605,13 @@ static int can_post_key_alternate(running_machine &machine, unicode_char ch)
 	return 1;
 }
 
-static attotime choose_delay(input_port_private *portdata, unicode_char ch)
+static attotime choose_delay(ioport_manager &portdata, unicode_char ch)
 {
-	if (portdata->current_rate != attotime::zero)
-		return portdata->current_rate;
+	if (portdata.current_rate != attotime::zero)
+		return portdata.current_rate;
 
 	attotime delay = attotime::zero;
-	if (portdata->queue_chars)
+	if (portdata.queue_chars)
 	{
 		/* systems with queue_chars can afford a much smaller delay */
 		delay = attotime::from_msec(10);
@@ -4696,7 +4635,7 @@ static attotime choose_delay(input_port_private *portdata, unicode_char ch)
 
 static void internal_post_key(running_machine &machine, unicode_char ch)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	key_buffer *keybuf;
 
 	keybuf = get_buffer(machine);
@@ -4704,7 +4643,7 @@ static void internal_post_key(running_machine &machine, unicode_char ch)
 	/* need to start up the timer? */
 	if (keybuf->begin_pos == keybuf->end_pos)
 	{
-		portdata->inputx_timer->adjust(choose_delay(portdata, ch));
+		portdata.inputx_timer->adjust(choose_delay(portdata, ch));
 		keybuf->status_keydown = 0;
 	}
 
@@ -4737,14 +4676,14 @@ static int buffer_full(running_machine &machine)
 
 static void inputx_postn_rate(running_machine &machine, const unicode_char *text, size_t text_len, attotime rate)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	int last_cr = 0;
 	unicode_char ch;
 	const char *s;
 	const char_info *ci;
 	const inputx_code *code;
 
-	portdata->current_rate = rate;
+	portdata.current_rate = rate;
 
 	if (inputx_can_post(machine))
 	{
@@ -4763,7 +4702,7 @@ static void inputx_postn_rate(running_machine &machine, const unicode_char *text
 
 				if (LOG_INPUTX)
 				{
-					code = find_code(portdata->codes, ch);
+					code = find_code(portdata.codes, ch);
 					logerror("inputx_postn(): code=%i (%s) field->name='%s'\n", (int) ch, code_point_string(machine, ch), (code && code->field[0]) ? code->field[0]->name : "<null>");
 				}
 
@@ -4797,21 +4736,21 @@ static void inputx_postn_rate(running_machine &machine, const unicode_char *text
 
 static TIMER_CALLBACK(inputx_timerproc)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	key_buffer *keybuf;
 	attotime delay;
 
 	keybuf = get_buffer(machine);
 
-	if (portdata->queue_chars)
+	if (portdata.queue_chars)
 	{
 		/* the driver has a queue_chars handler */
-		while((keybuf->begin_pos != keybuf->end_pos) && (*portdata->queue_chars)(machine, &keybuf->buffer[keybuf->begin_pos], 1))
+		while((keybuf->begin_pos != keybuf->end_pos) && (*portdata.queue_chars)(machine, &keybuf->buffer[keybuf->begin_pos], 1))
 		{
 			keybuf->begin_pos++;
 			keybuf->begin_pos %= keybuf->size;
 
-			if (portdata->current_rate != attotime::zero)
+			if (portdata.current_rate != attotime::zero)
 				break;
 		}
 	}
@@ -4834,16 +4773,16 @@ static TIMER_CALLBACK(inputx_timerproc)
 	if (keybuf->begin_pos != keybuf->end_pos)
 	{
 		delay = choose_delay(portdata, keybuf->buffer[keybuf->begin_pos]);
-		portdata->inputx_timer->adjust(delay);
+		portdata.inputx_timer->adjust(delay);
 	}
 }
 
 int inputx_is_posting(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	const key_buffer *keybuf;
 	keybuf = get_buffer(machine);
-	return (keybuf->begin_pos != keybuf->end_pos) || (portdata->charqueue_empty && !(*portdata->charqueue_empty)(machine));
+	return (keybuf->begin_pos != keybuf->end_pos) || (portdata.charqueue_empty && !(*portdata.charqueue_empty)(machine));
 }
 
 /***************************************************************************
@@ -5073,7 +5012,7 @@ int input_has_input_class(running_machine &machine, int inputclass)
 	const input_port_config *port;
 	const input_field_config *field;
 
-	for (port = machine.m_portlist.first(); port != NULL; port = port->next())
+	for (port = machine.ioport().first_port(); port != NULL; port = port->next())
 	{
 		for (field = port->first_field(); field != NULL; field = field->next())
 		{
@@ -5098,7 +5037,7 @@ int input_count_players(running_machine &machine)
 	int joystick_count;
 
 	joystick_count = 0;
-	for (port = machine.m_portlist.first(); port != NULL; port = port->next())
+	for (port = machine.ioport().first_port(); port != NULL; port = port->next())
 	{
 		for (field = port->first_field(); field != NULL; field = field->next())
 		{
@@ -5137,7 +5076,7 @@ static void execute_input(running_machine &machine, int ref, int params, const c
 
 static void execute_dumpkbd(running_machine &machine, int ref, int params, const char *param[])
 {
-	inputx_code *codes = machine.input_port_data->codes;
+	inputx_code *codes = machine.ioport().codes;
 	const char *filename;
 	FILE *file = NULL;
 	const inputx_code *code;
@@ -5209,7 +5148,6 @@ input_port_config *ioconfig_alloc_port(ioport_list &portlist, device_t &device, 
 {
 	astring fulltag;
 	device.subtag(fulltag, tag);
-	mame_printf_verbose("ioport '%s' created\n", fulltag.cstr());
 	return &portlist.append(fulltag, *global_alloc(input_port_config(device, fulltag)));
 }
 
@@ -5425,7 +5363,7 @@ INLINE void copy_command_buffer(running_machine &machine, char log)
 
 static void make_input_log(running_machine &machine)
 {
-	input_port_private *portdata = machine.input_port_data;
+	input_port_private *portdata = machine.ioport();
 	const input_port_config *port;
 #ifdef USE_CUSTOM_BUTTON
 	int i;

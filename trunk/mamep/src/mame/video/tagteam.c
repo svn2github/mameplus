@@ -34,6 +34,7 @@ static const res_net_decode_info tagteam_decode_info =
 
 PALETTE_INIT( tagteam )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	rgb_t *rgb;
 
 	rgb = compute_res_net_all(machine, color_prom, &tagteam_decode_info, &tagteam_net_info);
@@ -115,9 +116,9 @@ WRITE8_MEMBER(tagteam_state::tagteam_control_w)
 WRITE8_MEMBER(tagteam_state::tagteam_flipscreen_w)
 {
 	// d0: flip screen
-	if (flip_screen_get(machine()) != (data &0x01))
+	if (flip_screen() != (data &0x01))
 	{
-		flip_screen_set(machine(), data & 0x01);
+		flip_screen_set(data & 0x01);
 		machine().tilemap().mark_all_dirty();
 	}
 
@@ -159,7 +160,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 
 		if (!(state->m_videoram[offs] & 0x01)) continue;
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;
 			sy = 240 - sy;
@@ -177,7 +178,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 
 		code = state->m_videoram[offs + 0x20] + 256 * spritebank;
 		color = state->m_palettebank;
-		sy += (flip_screen_get(machine) ? -256 : 256);
+		sy += (state->flip_screen() ? -256 : 256);
 
 		drawgfx_transpen(bitmap, cliprect,
 			machine.gfx[1],

@@ -12,6 +12,7 @@
 
 PALETTE_INIT( cop01 )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -151,7 +152,7 @@ WRITE8_MEMBER(cop01_state::cop01_vreg_w)
 	{
 		coin_counter_w(machine(), 0, data & 1);
 		coin_counter_w(machine(), 1, data & 2);
-		flip_screen_set(machine(), data & 4);
+		flip_screen_set(data & 4);
 	}
 }
 
@@ -168,7 +169,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	cop01_state *state = machine.driver_data<cop01_state>();
 	int offs, code, attr, sx, sy, flipx, flipy, color;
 
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		code = state->m_spriteram[offs + 1];
 		attr = state->m_spriteram[offs + 2];
@@ -183,7 +184,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 		sx = (state->m_spriteram[offs + 3] - 0x80) + 256 * (attr & 0x01);
 		sy = 240 - state->m_spriteram[offs];
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;
 			sy = 240 - sy;

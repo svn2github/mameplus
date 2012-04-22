@@ -62,7 +62,7 @@ VIDEO_START( tail2nos )
 
 	state->m_bg_tilemap->set_transparent_pen(15);
 
-	state->m_zoomdata = (UINT16 *)machine.region("gfx3")->base();
+	state->m_zoomdata = (UINT16 *)state->memregion("gfx3")->base();
 
 	state->save_pointer(NAME(state->m_zoomdata), 0x20000 / 2);
 	machine.save().register_postload(save_prepost_delegate(FUNC(tail2nos_postload), &machine));
@@ -149,7 +149,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	int offs;
 
 
-	for (offs = 0; offs < state->m_spriteram_size / 2; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes() / 2; offs += 4)
 	{
 		int sx, sy, flipx, flipy, code, color;
 

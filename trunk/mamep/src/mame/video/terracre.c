@@ -34,7 +34,7 @@ TILE_GET_INFO( get_fg_tile_info )
 static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	terracre_state *state = machine.driver_data<terracre_state>();
-	const UINT8 *spritepalettebank = machine.region("user1")->base();
+	const UINT8 *spritepalettebank = state->memregion("user1")->base();
 	const gfx_element *pGfx = machine.gfx[2];
 	const UINT16 *pSource = state->m_spriteram;
 	int i;
@@ -78,7 +78,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 			color += 16 * (spritepalettebank[(tile>>1)&0xff] & 0x0f);
 		}
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 				sx=240-sx;
 				sy=240-sy;
@@ -95,6 +95,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 
 PALETTE_INIT( amazon )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -170,7 +171,7 @@ WRITE16_MEMBER(terracre_state::amazon_flipscreen_w)
 	{
 		coin_counter_w( machine(), 0, data&0x01 );
 		coin_counter_w( machine(), 1, (data&0x02)>>1 );
-		flip_screen_set(machine(), data&0x04);
+		flip_screen_set(data&0x04);
 	}
 }
 

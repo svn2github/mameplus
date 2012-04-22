@@ -22,7 +22,7 @@ WRITE8_MEMBER(ksayakyu_state::ksayakyu_videoctrl_w)
 	m_video_ctrl = data;
 
 	m_flipscreen = data & 4;
-	flip_screen_set(machine(), m_flipscreen);
+	flip_screen_set(m_flipscreen);
 	m_tilemap->set_scrolly(0, (data & 0xe0) << 3);
 	if(m_flipscreen)
 		m_tilemap->set_flip((data & 2) ? TILEMAP_FLIPY : TILEMAP_FLIPX | TILEMAP_FLIPY);
@@ -32,7 +32,7 @@ WRITE8_MEMBER(ksayakyu_state::ksayakyu_videoctrl_w)
 
 PALETTE_INIT( ksayakyu )
 {
-	const UINT8 *prom = machine.region("proms")->base();
+	const UINT8 *prom = machine.root_device().memregion("proms")->base();
 	int r, g, b, i;
 
 	for (i = 0; i < 0x100; i++)
@@ -47,8 +47,8 @@ PALETTE_INIT( ksayakyu )
 
 static TILE_GET_INFO( get_ksayakyu_tile_info )
 {
-	int code = machine.region("user1")->base()[tile_index];
-	int attr = machine.region("user1")->base()[tile_index + 0x2000];
+	int code = machine.root_device().memregion("user1")->base()[tile_index];
+	int attr = machine.root_device().memregion("user1")->base()[tile_index + 0x2000];
 	code += (attr & 3) << 8;
 	SET_TILE_INFO(1, code, ((attr >> 2) & 0x0f) * 2, (attr & 0x80) ? TILE_FLIPX : 0);
 }
@@ -82,7 +82,7 @@ static TILE_GET_INFO( get_text_tile_info )
 static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	ksayakyu_state *state = machine.driver_data<ksayakyu_state>();
-	const UINT8 *source = state->m_spriteram + state->m_spriteram_size - 4;
+	const UINT8 *source = state->m_spriteram + state->m_spriteram.bytes() - 4;
 	const UINT8 *finish = state->m_spriteram;
 
 	while (source>=finish) /* is order correct ? */

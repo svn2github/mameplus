@@ -7,7 +7,7 @@
 #include "emu.h"
 #include "includes/galaxold.h"
 
-#define STARS_COLOR_BASE		(machine.region("proms")->bytes())
+#define STARS_COLOR_BASE		(machine.root_device().memregion("proms")->bytes())
 #define BULLETS_COLOR_BASE		(STARS_COLOR_BASE + 64)
 #define BACKGROUND_COLOR_BASE	(BULLETS_COLOR_BASE + 2)
 
@@ -94,11 +94,12 @@ static void dambustr_draw_background(running_machine &machine, bitmap_ind16 &bit
 ***************************************************************************/
 PALETTE_INIT( galaxold )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i, len;
 
 
 	/* first, the character/sprite palette */
-	len = machine.region("proms")->bytes();
+	len = machine.root_device().memregion("proms")->bytes();
 	for (i = 0;i < len;i++)
 	{
 		int bit0,bit1,bit2,r,g,b;
@@ -168,11 +169,12 @@ PALETTE_INIT( stratgyx )
 
 PALETTE_INIT( rockclim )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i, len;
 
 
 	/* first, the character/sprite palette */
-	len = machine.region("proms")->bytes();
+	len = machine.root_device().memregion("proms")->bytes();
 	for (i = 0;i < len;i++)
 	{
 		int bit0,bit1,bit2,r,g,b;
@@ -216,6 +218,7 @@ PALETTE_INIT( rockclim )
 ***************************************************************************/
 PALETTE_INIT( darkplnt )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 
@@ -335,11 +338,12 @@ PALETTE_INIT( mariner )
 /* swapped r/g/b hook-up */
 PALETTE_INIT( dambustr )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int base = BACKGROUND_COLOR_BASE;
 	int i, len;
 
 	/* first, the character/sprite palette */
-	len = machine.region("proms")->bytes();
+	len = machine.root_device().memregion("proms")->bytes();
 
 	for (i = 0;i < len;i++)
 	{
@@ -1039,7 +1043,7 @@ static void mariner_modify_charcode(running_machine &machine, UINT16 *code, UINT
 
 	/* bit 0 of the PROM controls character banking */
 
-	prom = machine.region("user2")->base();
+	prom = machine.root_device().memregion("user2")->base();
 
 	*code |= ((prom[x] & 0x01) << 8);
 }
@@ -1159,9 +1163,10 @@ static void darkplnt_draw_bullets(running_machine &machine, bitmap_ind16 &bitmap
 
 static void dambustr_draw_bullets(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int offs, int x, int y)
 {
+	galaxold_state *state = machine.driver_data<galaxold_state>();
 	int i, color;
 
-	if (flip_screen_x_get(machine))  x++;
+	if (state->flip_screen_x())  x++;
 
 	x = x - 6;
 
@@ -1225,7 +1230,7 @@ static void stratgyx_draw_background(running_machine &machine, bitmap_ind16 &bit
                  the green gun if BCG is asserted
        bits 2-7 are unconnected */
 
-	prom = machine.region("user1")->base();
+	prom = state->memregion("user1")->base();
 
 	for (x = 0; x < 32; x++)
 	{
@@ -1300,7 +1305,7 @@ static void mariner_draw_background(running_machine &machine, bitmap_ind16 &bitm
        line (column) of the screen.  The first 0x20 bytes for unflipped,
        and the 2nd 0x20 bytes for flipped screen. */
 
-	prom = machine.region("user1")->base();
+	prom = state->memregion("user1")->base();
 
 	if (state->m_flipscreen_x)
 	{
@@ -1339,7 +1344,7 @@ static void dambustr_draw_background(running_machine &machine, bitmap_ind16 &bit
 	int col1 = base + state->m_dambustr_bg_color_1;
 	int col2 = base + state->m_dambustr_bg_color_2;
 
-	if (flip_screen_x_get(machine))
+	if (state->flip_screen_x())
 	{
 		bitmap.plot_box(  0, 0, 256-state->m_dambustr_bg_split_line, 256, col2);
 		bitmap.plot_box(256-state->m_dambustr_bg_split_line, 0, state->m_dambustr_bg_split_line, 256, col1);
@@ -1356,7 +1361,7 @@ static void dambustr_draw_upper_background(running_machine &machine, bitmap_ind1
 {
 	galaxold_state *state = machine.driver_data<galaxold_state>();
 
-	if (flip_screen_x_get(machine))
+	if (state->flip_screen_x())
 	{
 		rectangle clip(254 - state->m_dambustr_bg_split_line, state->m_dambustr_bg_split_line, 0, 255);
 		copybitmap(bitmap, *state->m_dambustr_tmpbitmap, 0, 0, 0, 0, clip);
@@ -1601,7 +1606,7 @@ static void mariner_draw_stars(running_machine &machine, bitmap_ind16 &bitmap, c
 
 	/* bit 2 of the PROM controls star visibility */
 
-	prom = machine.region("user2")->base();
+	prom = machine.root_device().memregion("user2")->base();
 
 	for (offs = 0;offs < STAR_COUNT;offs++)
 	{
@@ -1689,7 +1694,7 @@ static void draw_bullets_common(running_machine &machine, bitmap_ind16 &bitmap, 
 	int offs;
 
 
-	for (offs = 0;offs < state->m_bulletsram_size;offs += 4)
+	for (offs = 0;offs < state->m_bulletsram.bytes();offs += 4)
 	{
 		UINT8 sx,sy;
 
@@ -1792,11 +1797,11 @@ SCREEN_UPDATE_IND16( galaxold )
 	}
 
 
-	draw_sprites(screen.machine(), bitmap, state->m_spriteram, state->m_spriteram_size);
+	draw_sprites(screen.machine(), bitmap, state->m_spriteram, state->m_spriteram.bytes());
 
 	if (state->m_spriteram2_present)
 	{
-		draw_sprites(screen.machine(), bitmap, state->m_spriteram2, state->m_spriteram2_size);
+		draw_sprites(screen.machine(), bitmap, state->m_spriteram2, state->m_spriteram2.bytes());
 	}
 	return 0;
 }
@@ -1825,7 +1830,7 @@ SCREEN_UPDATE_IND16( dambustr )
 		draw_bullets_common(screen.machine(), bitmap, cliprect);
 	}
 
-	draw_sprites(screen.machine(), bitmap, state->m_spriteram, state->m_spriteram_size);
+	draw_sprites(screen.machine(), bitmap, state->m_spriteram, state->m_spriteram.bytes());
 
 	if (state->m_dambustr_bg_priority)
 	{

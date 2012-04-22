@@ -73,9 +73,9 @@ const int TRIGGER_SUSPENDTIME	= -4000;
 device_execute_interface::device_execute_interface(const machine_config &mconfig, device_t &device)
 	: device_interface(device),
 	  m_disabled(false),
-	  m_vblank_interrupt(NULL),
+	  m_vblank_interrupt_legacy(NULL),
 	  m_vblank_interrupt_screen(NULL),
-	  m_timed_interrupt(NULL),
+	  m_timed_interrupt_legacy(NULL),
 	  m_timed_interrupt_period(attotime::zero),
 	  m_is_octal(false),
 	  m_nextexec(NULL),
@@ -137,7 +137,17 @@ void device_execute_interface::static_set_vblank_int(device_t &device, device_in
 	device_execute_interface *exec;
 	if (!device.interface(exec))
 		throw emu_fatalerror("MCFG_DEVICE_VBLANK_INT called on device '%s' with no execute interface", device.tag());
+	exec->m_vblank_interrupt_legacy = function;
+	exec->m_vblank_interrupt_screen = tag;
+}
+
+void device_execute_interface::static_set_vblank_int(device_t &device, device_interrupt_delegate function, const char *tag, int rate)
+{
+	device_execute_interface *exec;
+	if (!device.interface(exec))
+		throw emu_fatalerror("MCFG_DEVICE_VBLANK_INT called on device '%s' with no execute interface", device.tag());
 	exec->m_vblank_interrupt = function;
+	exec->m_vblank_interrupt_legacy = NULL;
 	exec->m_vblank_interrupt_screen = tag;
 }
 
@@ -152,7 +162,17 @@ void device_execute_interface::static_set_periodic_int(device_t &device, device_
 	device_execute_interface *exec;
 	if (!device.interface(exec))
 		throw emu_fatalerror("MCFG_DEVICE_PERIODIC_INT called on device '%s' with no execute interface", device.tag());
+	exec->m_timed_interrupt_legacy = function;
+	exec->m_timed_interrupt_period = rate;
+}
+
+void device_execute_interface::static_set_periodic_int(device_t &device, device_interrupt_delegate function, attotime rate)
+{
+	device_execute_interface *exec;
+	if (!device.interface(exec))
+		throw emu_fatalerror("MCFG_DEVICE_PERIODIC_INT called on device '%s' with no execute interface", device.tag());
 	exec->m_timed_interrupt = function;
+	exec->m_timed_interrupt_legacy = NULL;
 	exec->m_timed_interrupt_period = rate;
 }
 
@@ -237,11 +257,11 @@ void device_execute_interface::abort_timeslice()
 
 
 //-------------------------------------------------
-//  set_irq_callback - install a driver-specific
+//  set_irq_acknowledge_callback - install a driver-specific
 //  callback for IRQ acknowledge
 //-------------------------------------------------
 
-void device_execute_interface::set_irq_callback(device_irq_callback callback)
+void device_execute_interface::set_irq_acknowledge_callback(device_irq_acknowledge_callback callback)
 {
 	m_driver_irq = callback;
 }
@@ -485,7 +505,7 @@ void device_execute_interface::execute_set_input(int linenum, int state)
 void device_execute_interface::interface_validity_check(validity_checker &valid) const
 {
 	// validate the interrupts
-	if (m_vblank_interrupt != NULL)
+	if (!m_vblank_interrupt.isnull() || m_vblank_interrupt_legacy != NULL)
 	{
 		screen_device_iterator iter(device().mconfig().root_device());
 		if (iter.first() == NULL)
@@ -494,9 +514,9 @@ void device_execute_interface::interface_validity_check(validity_checker &valid)
 			mame_printf_error("VBLANK interrupt references a non-existant screen tag '%s'\n", m_vblank_interrupt_screen);
 	}
 
-	if (m_timed_interrupt != NULL && m_timed_interrupt_period == attotime::zero)
+	if ((!m_timed_interrupt.isnull() || m_timed_interrupt_legacy != NULL) && m_timed_interrupt_period == attotime::zero)
 		mame_printf_error("Timed interrupt handler specified with 0 period\n");
-	else if (m_timed_interrupt == NULL && m_timed_interrupt_period != attotime::zero)
+	else if ((m_timed_interrupt.isnull() && m_timed_interrupt_legacy == NULL) && m_timed_interrupt_period != attotime::zero)
 		mame_printf_error("No timer interrupt handler specified, but has a non-0 period given\n");
 }
 
@@ -508,6 +528,11 @@ void device_execute_interface::interface_validity_check(validity_checker &valid)
 
 void device_execute_interface::interface_pre_start()
 {
+	// bind delegates
+	m_vblank_interrupt.bind_relative_to(device());
+	m_timed_interrupt.bind_relative_to(device());
+//  m_driver_irq.bind_relative_to(device());
+
 	// fill in the initial states
 	execute_interface_iterator iter(device().machine().root_device());
 	int index = iter.indexof(*this);
@@ -698,7 +723,12 @@ void device_execute_interface::on_vblank(screen_device &screen, bool vblank_stat
 
 	// generate the interrupt callback
 	if (!suspended(SUSPEND_REASON_HALT | SUSPEND_REASON_RESET | SUSPEND_REASON_DISABLE))
-		(*m_vblank_interrupt)(&device());
+	{
+		if (m_vblank_interrupt_legacy != NULL)
+			(*m_vblank_interrupt_legacy)(&device());
+		else if (!m_vblank_interrupt.isnull())
+			m_vblank_interrupt(device());
+	}
 }
 
 
@@ -715,8 +745,13 @@ TIMER_CALLBACK( device_execute_interface::static_trigger_periodic_interrupt )
 void device_execute_interface::trigger_periodic_interrupt()
 {
 	// bail if there is no routine
-	if (m_timed_interrupt != NULL && !suspended(SUSPEND_REASON_HALT | SUSPEND_REASON_RESET | SUSPEND_REASON_DISABLE))
-		(*m_timed_interrupt)(&device());
+	if (!suspended(SUSPEND_REASON_HALT | SUSPEND_REASON_RESET | SUSPEND_REASON_DISABLE))
+	{
+		if (m_timed_interrupt_legacy != NULL)
+			(*m_timed_interrupt_legacy)(&device());
+		else if (!m_timed_interrupt.isnull())
+			m_timed_interrupt(device());
+	}
 }
 
 

@@ -155,7 +155,7 @@ static DEVICE_START( speech_sound )
 {
 	speech_state *state = get_safe_speech(device);
 
-	state->speech = device->machine().region("speech")->base();
+	state->speech = device->machine().root_device().memregion("speech")->base();
 }
 
 
@@ -736,7 +736,7 @@ static DEVICE_START( usb_sound )
 	assert(usb->cpu != NULL);
 
 	/* allocate RAM */
-	usb->program_ram = (UINT8 *)machine.memory().shared("pgmram")->ptr();
+	usb->program_ram = (UINT8 *)machine.root_device().memshare("pgmram")->ptr();
 	usb->work_ram = auto_alloc_array(machine, UINT8, 0x400);
 
 	/* create a sound stream */

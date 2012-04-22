@@ -178,26 +178,6 @@
         specify the share 'tag' will use its memory as backing for all
         future buckets that specify AM_SHARE with the same 'tag'.
 
-    AM_BASE(base)
-        Specifies a pointer to a pointer to the base of the memory backing
-        the current bucket.
-
-    AM_SIZE(size)
-        Specifies a pointer to a size_t variable which will be filled in
-        with the size, in bytes, of the current bucket.
-
-    AM_BASE_MEMBER(struct, basefield)
-    AM_SIZE_MEMBER(struct, sizefield)
-        Specifies a field within a given struct as where to store the base
-        or size of the current bucket. The struct is assumed to be hanging
-        off of the machine.driver_data pointer.
-
-    AM_BASE_GENERIC(basefield)
-    AM_SIZE_GENERIC(sizefield)
-        Specifies a field within the global generic_pointers struct as
-        where to store the base or size of the current bucket. The global
-        generic_pointer struct lives in machine.generic.
-
 ***************************************************************************/
 
 #include <list>
@@ -1519,11 +1499,11 @@ static void generate_memdump(running_machine &machine);
 
 
 //**************************************************************************
-//  CORE SYSTEM OPERATIONS
+//  MEMORY MANAGER
 //**************************************************************************
 
 //-------------------------------------------------
-//  memory_init - initialize the memory system
+//  memory_manager - constructor
 //-------------------------------------------------
 
 memory_manager::memory_manager(running_machine &machine)
@@ -1533,9 +1513,17 @@ memory_manager::memory_manager(running_machine &machine)
 {
 	memset(m_bank_ptr, 0, sizeof(m_bank_ptr));
 	memset(m_bankd_ptr, 0, sizeof(m_bankd_ptr));
+}
 
+
+//-------------------------------------------------
+//  initialize - initialize the memory system
+//-------------------------------------------------
+
+void memory_manager::initialize()
+{
 	// loop over devices and spaces within each device
-	memory_interface_iterator iter(machine.root_device());
+	memory_interface_iterator iter(machine().root_device());
 	for (device_memory_interface *memory = iter.first(); memory != NULL; memory = iter.next())
 		for (address_spacenum spacenum = AS_0; spacenum < ADDRESS_SPACES; spacenum++)
 		{
@@ -1562,154 +1550,13 @@ memory_manager::memory_manager(running_machine &machine)
 		space->locate_memory();
 
 	// register a callback to reset banks when reloading state
-	machine.save().register_postload(save_prepost_delegate(FUNC(memory_manager::bank_reattach), this));
+	machine().save().register_postload(save_prepost_delegate(FUNC(memory_manager::bank_reattach), this));
 
 	// dump the final memory configuration
-	generate_memdump(machine);
+	generate_memdump(machine());
 
 	// we are now initialized
 	m_initialized = true;
-}
-
-
-
-//**************************************************************************
-//  MEMORY BANKING
-//**************************************************************************
-
-//-------------------------------------------------
-//  configure_bank - configure the addresses for a
-//  bank
-//-------------------------------------------------
-
-void memory_manager::configure_bank(const char *tag, int startentry, int numentries, void *base, offs_t stride)
-{
-	configure_bank(machine().root_device(), tag, startentry, numentries, base, stride);
-}
-
-void memory_manager::configure_bank(device_t &device, const char *tag, int startentry, int numentries, void *base, offs_t stride)
-{
-	// validation checks
-	astring fulltag;
-	memory_bank *bank = m_bankmap.find_hash_only(device.subtag(fulltag, tag));
-	if (bank == NULL)
-		fatalerror("configure_bank called for unknown bank '%s'", fulltag.cstr());
-	if (base == NULL)
-		fatalerror("configure_bank called NULL base");
-
-	// fill in the requested bank entries (backwards to improve allocation)
-	for (int entrynum = startentry + numentries - 1; entrynum >= startentry; entrynum--)
-		bank->configure(entrynum, reinterpret_cast<UINT8 *>(base) + (entrynum - startentry) * stride);
-}
-
-
-//-------------------------------------------------
-//  configure_bank_decrypted - configure the
-//  decrypted addresses for a bank
-//-------------------------------------------------
-
-void memory_manager::configure_bank_decrypted(const char *tag, int startentry, int numentries, void *base, offs_t stride)
-{
-	memory_configure_bank_decrypted(machine().root_device(), tag, startentry, numentries, base, stride);
-}
-
-void memory_manager::configure_bank_decrypted(device_t &device, const char *tag, int startentry, int numentries, void *base, offs_t stride)
-{
-	// validation checks
-	astring fulltag;
-	memory_bank *bank = m_bankmap.find_hash_only(device.subtag(fulltag, tag));
-	if (bank == NULL)
-		fatalerror("configure_bank_decrypted called for unknown bank '%s'", fulltag.cstr());
-	if (base == NULL)
-		fatalerror("configure_bank_decrypted called NULL base");
-
-	// fill in the requested bank entries (backwards to improve allocation)
-	for (int entrynum = startentry + numentries - 1; entrynum >= startentry; entrynum--)
-		bank->configure_decrypted(entrynum, reinterpret_cast<UINT8 *>(base) + (entrynum - startentry) * stride);
-}
-
-
-//-------------------------------------------------
-//  set_bank - select one pre-configured entry to
-//  be the new bank base
-//-------------------------------------------------
-
-void memory_manager::set_bank(const char *tag, int entrynum)
-{
-	set_bank(machine().root_device(), tag, entrynum);
-}
-
-void memory_manager::set_bank(device_t &device, const char *tag, int entrynum)
-{
-	// validation checks
-	astring fulltag;
-	memory_bank *bank = m_bankmap.find_hash_only(device.subtag(fulltag, tag));
-	if (bank == NULL)
-		fatalerror("set_bank called for unknown bank '%s'", fulltag.cstr());
-
-	// set the base
-	bank->set_entry(entrynum);
-}
-
-
-//-------------------------------------------------
-//  get_bank - return the currently selected bank
-//-------------------------------------------------
-
-int memory_manager::bank(const char *tag)
-{
-	return bank(machine().root_device(), tag);
-}
-
-int memory_manager::bank(device_t &device, const char *tag)
-{
-	// validation checks
-	astring fulltag;
-	memory_bank *bank = m_bankmap.find_hash_only(device.subtag(fulltag, tag));
-	if (bank == NULL)
-		fatalerror("bank() called for unknown bank '%s'", fulltag.cstr());
-
-	// return the current entry
-	return bank->entry();
-}
-
-
-//-------------------------------------------------
-//  set_bankptr - set the base of a bank
-//-------------------------------------------------
-
-void memory_manager::set_bankptr(const char *tag, void *base)
-{
-	set_bankptr(machine().root_device(), tag, base);
-}
-
-void memory_manager::set_bankptr(device_t &device, const char *tag, void *base)
-{
-	// validation checks
-	astring fulltag;
-	memory_bank *bank = m_bankmap.find_hash_only(device.subtag(fulltag, tag));
-	if (bank == NULL)
-		throw emu_fatalerror("memory_set_bankptr called for unknown bank '%s'", fulltag.cstr());
-
-	// set the base
-	bank->set_base(base);
-}
-
-
-//-------------------------------------------------
-//  shared - get a pointer to a shared memory
-//  region by tag
-//-------------------------------------------------
-
-memory_share *memory_manager::shared(const char *tag)
-{
-	return shared(machine().root_device(), tag);
-}
-
-memory_share *memory_manager::shared(device_t &device, const char *tag)
-{
-	astring fulltag;
-	return m_sharelist.find(device.subtag(fulltag, tag).cstr());
 }
 
 
@@ -1739,6 +1586,33 @@ void memory_manager::dump(FILE *file)
 		              "====================================================\n", space->device().tag(), space->name());
 		space->dump_map(file, ROW_WRITE);
 	}
+}
+
+
+//-------------------------------------------------
+//  region_alloc - allocates memory for a region
+//-------------------------------------------------
+
+memory_region *memory_manager::region_alloc(const char *name, UINT32 length, UINT8 width, endianness_t endian)
+{
+mame_printf_verbose("Region '%s' created\n", name);
+    // make sure we don't have a region of the same name; also find the end of the list
+    memory_region *info = m_regionlist.find(name);
+    if (info != NULL)
+		fatalerror("region_alloc called with duplicate region name \"%s\"\n", name);
+
+	// allocate the region
+	return &m_regionlist.append(name, *global_alloc(memory_region(machine(), name, length, width, endian)));
+}
+
+
+//-------------------------------------------------
+//  region_free - releases memory for a region
+//-------------------------------------------------
+
+void memory_manager::region_free(const char *name)
+{
+	m_regionlist.remove(name);
 }
 
 
@@ -1928,7 +1802,7 @@ inline void address_space::adjust_addresses(offs_t &start, offs_t &end, offs_t &
 
 void address_space::prepare_map()
 {
-	const memory_region *devregion = (m_spacenum == AS_0) ? machine().region(m_device.tag()) : NULL;
+	memory_region *devregion = (m_spacenum == AS_0) ? machine().root_device().memregion(m_device.tag()) : NULL;
 	UINT32 devregionsize = (devregion != NULL) ? devregion->bytes() : 0;
 
 	// allocate the address map
@@ -1987,7 +1861,7 @@ void address_space::prepare_map()
 			device().siblingtag(fulltag, entry->m_region);
 
 			// find the region
-			const memory_region *region = machine().region(fulltag);
+			memory_region *region = machine().root_device().memregion(fulltag);
 			if (region == NULL)
 				fatalerror("Error: device '%s' %s space memory map entry %X-%X references non-existant region \"%s\"", m_device.tag(), m_name, entry->m_addrstart, entry->m_addrend, entry->m_region);
 
@@ -2004,7 +1878,7 @@ void address_space::prepare_map()
 			device().siblingtag(fulltag, entry->m_region);
 
 			// set the memory address
-			entry->m_memory = machine().region(fulltag.cstr())->base() + entry->m_rgnoffs;
+			entry->m_memory = machine().root_device().memregion(fulltag.cstr())->base() + entry->m_rgnoffs;
 		}
 	}
 
@@ -2449,8 +2323,7 @@ void address_space::install_readwrite_port(offs_t addrstart, offs_t addrend, off
 	{
 		// find the port
 		astring fulltag;
-		device().siblingtag(fulltag, rtag);
-		const input_port_config *port = machine().port(fulltag);
+		input_port_config *port = machine().root_device().ioport(device().siblingtag(fulltag, rtag));
 		if (port == NULL)
 			throw emu_fatalerror("Attempted to map non-existent port '%s' for read in space %s of device '%s'\n", rtag, m_name, m_device.tag());
 
@@ -2462,8 +2335,7 @@ void address_space::install_readwrite_port(offs_t addrstart, offs_t addrend, off
 	{
 		// find the port
 		astring fulltag;
-		device().siblingtag(fulltag, wtag);
-		const input_port_config *port = machine().port(fulltag);
+		input_port_config *port = machine().root_device().ioport(device().siblingtag(fulltag, wtag));
 		if (port == NULL)
 			fatalerror("Attempted to map non-existent port '%s' for write in space %s of device '%s'\n", wtag, m_name, m_device.tag());
 
@@ -3004,7 +2876,7 @@ bool address_space::needs_backing_store(const address_map_entry *entry)
 		return true;
 
 	// if we're reading from RAM or from ROM outside of address space 0 or its region, then yes, we do need backing
-	const memory_region *region = machine().region(m_device.tag());
+	memory_region *region = machine().root_device().memregion(m_device.tag());
 	if (entry->m_read.m_type == AMH_RAM ||
 		(entry->m_read.m_type == AMH_ROM && (m_spacenum != AS_0 || region == NULL || entry->m_addrstart >= region->bytes())))
 		return true;
@@ -3035,18 +2907,18 @@ memory_bank &address_space::bank_find_or_allocate(const char *tag, offs_t addrst
 	adjust_addresses(bytestart, byteend, bytemask, bytemirror);
 
 	// if this bank is named, look it up
-	memory_bank *bank = NULL;
+	memory_bank *membank = NULL;
 	if (tag != NULL)
-		bank = manager().m_bankmap.find_hash_only(tag);
+		membank = manager().bank(tag);
 
 	// else try to find an exact match
 	else
-		for (bank = manager().m_banklist.first(); bank != NULL; bank = bank->next())
-			if (bank->anonymous() && bank->references_space(*this, ROW_READWRITE) && bank->matches_exactly(bytestart, byteend))
+		for (membank = manager().m_banklist.first(); membank != NULL; membank = membank->next())
+			if (membank->anonymous() && membank->references_space(*this, ROW_READWRITE) && membank->matches_exactly(bytestart, byteend))
 				break;
 
 	// if we don't have a bank yet, find a free one
-	if (bank == NULL)
+	if (membank == NULL)
 	{
 		// handle failure
 		int banknum = manager().m_banknext++;
@@ -3059,17 +2931,17 @@ memory_bank &address_space::bank_find_or_allocate(const char *tag, offs_t addrst
 		}
 
 		// allocate the bank
-		bank = global_alloc(memory_bank(*this, banknum, bytestart, byteend, tag));
-		manager().m_banklist.append(*bank);
+		membank = global_alloc(memory_bank(*this, banknum, bytestart, byteend, tag));
+		manager().m_banklist.append(*membank);
 
 		// for named banks, add to the map and register for save states
 		if (tag != NULL)
-			manager().m_bankmap.add_unique_hash(tag, bank, false);
+			manager().m_bankmap.add_unique_hash(tag, membank, false);
 	}
 
 	// add a reference for this space
-	bank->add_reference(*this, readorwrite);
-	return *bank;
+	membank->add_reference(*this, readorwrite);
+	return *membank;
 }
 
 
@@ -4282,8 +4154,8 @@ memory_block::memory_block(address_space &space, offs_t bytestart, offs_t byteen
 	}
 
 	// register for saving, but only if we're not part of a memory region
-	const memory_region *region;
-	for (region = space.machine().first_region(); region != NULL; region = region->next())
+	memory_region *region;
+	for (region = space.machine().memory().first_region(); region != NULL; region = region->next())
 		if (m_data >= region->base() && (m_data + (byteend - bytestart + 1)) < region->end())
 		{
 			VPRINTF(("skipping save of this memory block as it is covered by a memory region\n"));
@@ -4483,14 +4355,14 @@ void memory_bank::expand_entries(int entrynum)
 
 
 //-------------------------------------------------
-//  configure - configure an entry
+//  configure_entry - configure an entry
 //-------------------------------------------------
 
-void memory_bank::configure(int entrynum, void *base)
+void memory_bank::configure_entry(int entrynum, void *base)
 {
 	// must be positive
 	if (entrynum < 0)
-		throw emu_fatalerror("memory_bank::configure called with out-of-range entry %d", entrynum);
+		throw emu_fatalerror("memory_bank::configure_entry called with out-of-range entry %d", entrynum);
 
 	// if we haven't allocated this many entries yet, expand our array
 	if (entrynum >= m_entry_count)
@@ -4506,15 +4378,27 @@ void memory_bank::configure(int entrynum, void *base)
 
 
 //-------------------------------------------------
-//  configure_decrypted - configure a decrypted
-//  entry
+//  configure_entries - configure multiple entries
 //-------------------------------------------------
 
-void memory_bank::configure_decrypted(int entrynum, void *base)
+void memory_bank::configure_entries(int startentry, int numentries, void *base, offs_t stride)
+{
+	// fill in the requested bank entries (backwards to improve allocation)
+	for (int entrynum = startentry + numentries - 1; entrynum >= startentry; entrynum--)
+		configure_entry(entrynum, reinterpret_cast<UINT8 *>(base) + (entrynum - startentry) * stride);
+}
+
+
+//-------------------------------------------------
+//  configure_decrypted_entry - configure a
+//  decrypted entry
+//-------------------------------------------------
+
+void memory_bank::configure_decrypted_entry(int entrynum, void *base)
 {
 	// must be positive
 	if (entrynum < 0)
-		throw emu_fatalerror("memory_bank::configure called with out-of-range entry %d", entrynum);
+		throw emu_fatalerror("memory_bank::configure_decrypted_entry called with out-of-range entry %d", entrynum);
 
 	// if we haven't allocated this many entries yet, expand our array
 	if (entrynum >= m_entry_count)
@@ -4526,6 +4410,39 @@ void memory_bank::configure_decrypted(int entrynum, void *base)
 	// if the bank base is not configured, and we're the first entry, set us up
 	if (*m_basedptr == NULL && entrynum == 0)
 		*m_basedptr = m_entry[entrynum].m_decrypted;
+}
+
+
+//-------------------------------------------------
+//  configure_decrypted_entries - configure
+//  multiple decrypted entries
+//-------------------------------------------------
+
+void memory_bank::configure_decrypted_entries(int startentry, int numentries, void *base, offs_t stride)
+{
+	// fill in the requested bank entries (backwards to improve allocation)
+	for (int entrynum = startentry + numentries - 1; entrynum >= startentry; entrynum--)
+		configure_decrypted_entry(entrynum, reinterpret_cast<UINT8 *>(base) + (entrynum - startentry) * stride);
+}
+
+
+//**************************************************************************
+//  MEMORY REGIONS
+//**************************************************************************
+
+//-------------------------------------------------
+//  memory_region - constructor
+//-------------------------------------------------
+
+memory_region::memory_region(running_machine &machine, const char *name, UINT32 length, UINT8 width, endianness_t endian)
+	: m_machine(machine),
+	  m_next(NULL),
+	  m_name(name),
+	  m_buffer(length),
+	  m_width(width),
+	  m_endianness(endian)
+{
+	assert(width == 1 || width == 2 || width == 4 || width == 8);
 }
 
 
@@ -5653,21 +5570,3 @@ void handler_entry_write::write_stub_legacy(address_space &space, offs_t offset,
 {
 	m_legacy_info.handler.space64(m_legacy_info.object.space, offset, data, mask);
 }
-
-
-
-// configure the addresses for a bank
-void memory_configure_bank(running_machine &machine, const char *tag, int startentry, int numentries, void *base, offs_t stride) { machine.memory().configure_bank(tag, startentry, numentries, base, stride); }
-void memory_configure_bank(device_t &device, const char *tag, int startentry, int numentries, void *base, offs_t stride) { device.machine().memory().configure_bank(device, tag, startentry, numentries, base, stride); }
-
-// configure the decrypted addresses for a bank
-void memory_configure_bank_decrypted(running_machine &machine, const char *tag, int startentry, int numentries, void *base, offs_t stride) { machine.memory().configure_bank_decrypted(tag, startentry, numentries, base, stride); }
-void memory_configure_bank_decrypted(device_t &device, const char *tag, int startentry, int numentries, void *base, offs_t stride) { device.machine().memory().configure_bank_decrypted(device, tag, startentry, numentries, base, stride); }
-
-// select one pre-configured entry to be the new bank base
-void memory_set_bank(running_machine &machine, const char *tag, int entrynum) { machine.memory().set_bank(tag, entrynum); }
-void memory_set_bank(device_t &device, const char *tag, int entrynum) { device.machine().memory().set_bank(device, tag, entrynum); }
-
-// set the absolute address of a bank base
-void memory_set_bankptr(running_machine &machine, const char *tag, void *base) { machine.memory().set_bankptr(tag, base); }
-void memory_set_bankptr(device_t &device, const char *tag, void *base) { device.machine().memory().set_bankptr(device, tag, base); }

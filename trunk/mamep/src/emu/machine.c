@@ -62,14 +62,11 @@
                 - calls render_init() [render.c] to initialize the rendering system
                 - calls ui_init() [ui.c] to initialize the user interface
                 - calls generic_machine_init() [machine/generic.c] to initialize generic machine structures
-                - calls generic_video_init() [video/generic.c] to initialize generic video structures
-                - calls generic_sound_init() [audio/generic.c] to initialize generic sound structures
                 - calls timer_init() [timer.c] to reset the timer system
                 - calls osd_init() [osdepend.h] to do platform-specific initialization
                 - calls input_port_init() [inptport.c] to set up the input ports
                 - calls rom_init() [romload.c] to load the game's ROMs
                 - calls memory_init() [memory.c] to process the game's memory maps
-                - calls watchdog_init() [watchdog.c] to initialize the watchdog system
                 - calls the driver's DRIVER_INIT callback
                 - calls device_list_start() [devintrf.c] to start any devices
                 - calls video_init() [video.c] to start the video system
@@ -148,20 +145,13 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 	  debug_flags(0),
 	  palette_data(NULL),
 	  romload_data(NULL),
-	  input_port_data(NULL),
 	  ui_input_data(NULL),
 	  debugcpu_data(NULL),
 	  generic_machine_data(NULL),
-	  generic_video_data(NULL),
-	  generic_audio_data(NULL),
 
 	  m_config(_config),
 	  m_system(_config.gamedrv()),
 	  m_osd(osd),
-	  m_regionlist(m_respool),
-	  m_save(*this),
-	  m_scheduler(*this),
-	  m_memory(NULL),
 	  m_cheat(NULL),
 	  m_render(NULL),
 	  m_input(NULL),
@@ -184,7 +174,12 @@ running_machine::running_machine(const machine_config &_config, osd_interface &o
 	  m_saveload_schedule(SLS_NONE),
 	  m_saveload_schedule_time(attotime::zero),
 	  m_saveload_searchpath(NULL),
-	  m_logerror_list(m_respool)
+	  m_logerror_list(m_respool),
+
+	  m_save(*this),
+	  m_memory(*this),
+	  m_ioport(*this),
+	  m_scheduler(*this)
 {
 	memset(gfx, 0, sizeof(gfx));
 	memset(&m_base_time, 0, sizeof(m_base_time));
@@ -262,8 +257,6 @@ void running_machine::start()
 	palette_init(*this);
 	m_render = auto_alloc(*this, render_manager(*this));
 	generic_machine_init(*this);
-	generic_sound_init(*this);
-	generic_video_init(*this);
 
 	// allocate a soft_reset timer
 	m_soft_reset_timer = m_scheduler.timer_alloc(timer_expired_delegate(FUNC(running_machine::soft_reset), this));
@@ -281,7 +274,7 @@ void running_machine::start()
 	// initialize the input system and input ports for the game
 	// this must be done before memory_init in order to allow specifying
 	// callbacks based on input port tags
-	time_t newbase = input_port_init(*this);
+	time_t newbase = m_ioport.initialize();
 	if (newbase != 0)
 		m_base_time = newbase;
 
@@ -294,8 +287,10 @@ void running_machine::start()
 	// first load ROMs, then populate memory, and finally initialize CPUs
 	// these operations must proceed in this order
 	rom_init(*this);
-	m_memory = auto_alloc(*this, memory_manager(*this));
-	watchdog_init(*this);
+	m_memory.initialize();
+	m_watchdog_timer = m_scheduler.timer_alloc(timer_expired_delegate(FUNC(running_machine::watchdog_fired), this));
+	save().save_item(NAME(m_watchdog_enabled));
+	save().save_item(NAME(m_watchdog_counter));
 
 	// allocate the gfx elements prior to device initialization
 	gfx_init(*this);
@@ -629,33 +624,6 @@ void running_machine::resume()
 
 
 //-------------------------------------------------
-//  region_alloc - allocates memory for a region
-//-------------------------------------------------
-
-memory_region *running_machine::region_alloc(const char *name, UINT32 length, UINT8 width, endianness_t endian)
-{
-	mame_printf_verbose("Region '%s' created\n", name);
-	// make sure we don't have a region of the same name; also find the end of the list
-	memory_region *info = m_regionlist.find(name);
-	if (info != NULL)
-		fatalerror("region_alloc called with duplicate region name \"%s\"\n", name);
-
-	// allocate the region
-	return &m_regionlist.append(name, *auto_alloc(*this, memory_region(*this, name, length, width, endian)));
-}
-
-
-//-------------------------------------------------
-//  region_free - releases memory for a region
-//-------------------------------------------------
-
-void running_machine::region_free(const char *name)
-{
-	m_regionlist.remove(name);
-}
-
-
-//-------------------------------------------------
 //  add_notifier - add a notifier of the
 //  given type
 //-------------------------------------------------
@@ -870,11 +838,97 @@ void running_machine::soft_reset(void *ptr, INT32 param)
 	// temporarily in the reset phase
 	m_current_phase = MACHINE_PHASE_RESET;
 
+	// set up the watchdog timer; only start off enabled if explicitly configured
+	m_watchdog_enabled = (config().m_watchdog_vblank_count != 0 || config().m_watchdog_time != attotime::zero);
+	watchdog_reset();
+	m_watchdog_enabled = true;
+
 	// call all registered reset callbacks
 	call_notifiers(MACHINE_NOTIFY_RESET);
 
 	// now we're running
 	m_current_phase = MACHINE_PHASE_RUNNING;
+}
+
+
+//-------------------------------------------------
+//  watchdog_reset - reset the watchdog timer
+//-------------------------------------------------
+
+void running_machine::watchdog_reset()
+{
+	// if we're not enabled, skip it
+	if (!m_watchdog_enabled)
+		m_watchdog_timer->adjust(attotime::never);
+
+	// VBLANK-based watchdog?
+	else if (config().m_watchdog_vblank_count != 0)
+	{
+		// register a VBLANK callback for the primary screen
+		m_watchdog_counter = config().m_watchdog_vblank_count;
+		if (primary_screen != NULL)
+			primary_screen->register_vblank_callback(vblank_state_delegate(FUNC(running_machine::watchdog_vblank), this));
+	}
+
+	// timer-based watchdog?
+	else if (config().m_watchdog_time != attotime::zero)
+		m_watchdog_timer->adjust(config().m_watchdog_time);
+
+	// default to an obscene amount of time (3 seconds)
+	else
+		m_watchdog_timer->adjust(attotime::from_seconds(3));
+}
+
+
+//-------------------------------------------------
+//  watchdog_enable - reset the watchdog timer
+//-------------------------------------------------
+
+void running_machine::watchdog_enable(bool enable)
+{
+	// when re-enabled, we reset our state
+	if (m_watchdog_enabled != enable)
+	{
+		m_watchdog_enabled = enable;
+		watchdog_reset();
+	}
+}
+
+
+//-------------------------------------------------
+//  watchdog_fired - watchdog timer callback
+//-------------------------------------------------
+
+void running_machine::watchdog_fired(void *ptr, INT32 param)
+{
+	logerror("Reset caused by the watchdog!!!\n");
+
+	bool verbose = options().verbose();
+#ifdef MAME_DEBUG
+	verbose = true;
+#endif
+	if (verbose)
+		popmessage("Reset caused by the watchdog!!!\n");
+
+	schedule_soft_reset();
+}
+
+
+//-------------------------------------------------
+//  watchdog_vblank - VBLANK state callback for
+//  watchdog timers
+//-------------------------------------------------
+
+void running_machine::watchdog_vblank(screen_device &screen, bool vblank_state)
+{
+	// VBLANK starting
+	if (vblank_state && m_watchdog_enabled)
+	{
+		// check the watchdog
+		if (config().m_watchdog_vblank_count != 0)
+			if (--m_watchdog_counter == 0)
+				watchdog_fired();
+	}
 }
 
 
@@ -992,38 +1046,6 @@ void running_machine::postload_all_devices()
 	device_iterator iter(root_device());
 	for (device_t *device = iter.first(); device != NULL; device = iter.next())
 		device->post_load();
-}
-
-
-
-/***************************************************************************
-    MEMORY REGIONS
-***************************************************************************/
-
-//-------------------------------------------------
-//  memory_region - constructor
-//-------------------------------------------------
-
-memory_region::memory_region(running_machine &machine, const char *name, UINT32 length, UINT8 width, endianness_t endian)
-	: m_machine(machine),
-	  m_next(NULL),
-	  m_name(name),
-	  m_length(length),
-	  m_width(width),
-	  m_endianness(endian)
-{
-	assert(width == 1 || width == 2 || width == 4 || width == 8);
-	m_base.u8 = auto_alloc_array(machine, UINT8, length);
-}
-
-
-//-------------------------------------------------
-//  ~memory_region - destructor
-//-------------------------------------------------
-
-memory_region::~memory_region()
-{
-	auto_free(machine(), m_base.v);
 }
 
 

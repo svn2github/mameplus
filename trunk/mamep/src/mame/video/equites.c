@@ -10,6 +10,7 @@
 
 PALETTE_INIT( equites )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	machine.colortable = colortable_alloc(machine, 256);
@@ -29,6 +30,7 @@ PALETTE_INIT( equites )
 
 PALETTE_INIT( splndrbt )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	machine.colortable = colortable_alloc(machine, 256);
@@ -208,18 +210,18 @@ WRITE16_MEMBER(equites_state::splndrbt_selchar1_w)
 
 WRITE16_MEMBER(equites_state::equites_flip0_w)
 {
-	flip_screen_set(machine(), 0);
+	flip_screen_set(0);
 }
 
 WRITE16_MEMBER(equites_state::equites_flip1_w)
 {
-	flip_screen_set(machine(), 1);
+	flip_screen_set(1);
 }
 
 WRITE16_MEMBER(equites_state::splndrbt_flip0_w)
 {
 	if (ACCESSING_BITS_0_7)
-		flip_screen_set(machine(), 0);
+		flip_screen_set(0);
 
 	if (ACCESSING_BITS_8_15)
 		m_bgcolor = data >> 8;
@@ -228,7 +230,7 @@ WRITE16_MEMBER(equites_state::splndrbt_flip0_w)
 WRITE16_MEMBER(equites_state::splndrbt_flip1_w)
 {
 	if (ACCESSING_BITS_0_7)
-		flip_screen_set(machine(), 1);
+		flip_screen_set(1);
 }
 
 WRITE16_MEMBER(equites_state::splndrbt_bg_scrollx_w)
@@ -266,7 +268,7 @@ static void equites_draw_sprites_block( running_machine &machine, bitmap_ind16 &
 			int sy = (state->m_spriteram[offs] & 0x00ff);
 			int transmask = colortable_get_transpen_mask(machine.colortable, machine.gfx[2], color, 0);
 
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				sx = 240 - sx;
 				sy = 240 - sy;
@@ -325,7 +327,7 @@ Also, note that sprites are 30x30, not 32x32.
 static void splndrbt_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	equites_state *state = machine.driver_data<equites_state>();
-	const UINT8 * const xrom = machine.region("user2")->base();
+	const UINT8 * const xrom = state->memregion("user2")->base();
 	const UINT8 * const yrom = xrom + 0x100;
 	const gfx_element* const gfx = machine.gfx[2];
 	int offs;
@@ -354,7 +356,7 @@ static void splndrbt_draw_sprites( running_machine &machine, bitmap_ind16 &bitma
 
 		sy += 16;
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			// sx NOT inverted
 			fx = fx ^ 1;
@@ -403,15 +405,15 @@ static void splndrbt_copy_bg( running_machine &machine, bitmap_ind16 &dst_bitmap
 	equites_state *state = machine.driver_data<equites_state>();
 	bitmap_ind16 &src_bitmap = state->m_bg_tilemap->pixmap();
 	bitmap_ind8 &flags_bitmap = state->m_bg_tilemap->flagsmap();
-	const UINT8 * const xrom = machine.region("user1")->base();
+	const UINT8 * const xrom = state->memregion("user1")->base();
 	const UINT8 * const yrom = xrom + 0x2000;
 	int scroll_x = state->m_splndrbt_bg_scrollx;
 	int scroll_y = state->m_splndrbt_bg_scrolly;
-	int const dinvert = flip_screen_get(machine) ? 0xff : 0x00;
+	int const dinvert = state->flip_screen() ? 0xff : 0x00;
 	int src_y = 0;
 	int dst_y;
 
-	if (flip_screen_get(machine))
+	if (state->flip_screen())
 	{
 		scroll_x = -scroll_x - 8;
 		scroll_y = -scroll_y;

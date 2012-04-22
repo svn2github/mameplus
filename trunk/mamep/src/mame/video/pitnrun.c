@@ -100,7 +100,7 @@ static void pitnrun_spotlights(running_machine &machine)
 {
 	pitnrun_state *state = machine.driver_data<pitnrun_state>();
 	int x,y,i,b,datapix;
-	UINT8 *ROM = machine.region("user1")->base();
+	UINT8 *ROM = state->memregion("user1")->base();
 	for(i=0;i<4;i++)
 	 for(y=0;y<128;y++)
 	  for(x=0;x<16;x++)
@@ -117,6 +117,7 @@ static void pitnrun_spotlights(running_machine &machine)
 
 PALETTE_INIT (pitnrun)
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 	int bit0,bit1,bit2,r,g,b;
 	for (i = 0;i < 32*3; i++)
@@ -190,12 +191,12 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 		flipy = (spriteram[offs+1]&0x80)>>7;
 		flipx = (spriteram[offs+1]&0x40)>>6;
 
-		if (flip_screen_x_get(machine))
+		if (state->flip_screen_x())
 		{
 			sx = 256 - sx;
 			flipx = !flipx;
 		}
-		if (flip_screen_y_get(machine))
+		if (state->flip_screen_y())
 		{
 			sy = 240 - sy;
 			flipy = !flipy;
@@ -218,19 +219,19 @@ SCREEN_UPDATE_IND16( pitnrun )
 #ifdef MAME_DEBUG
 	if (screen.machine().input().code_pressed_once(KEYCODE_Q))
 	{
-		UINT8 *ROM = screen.machine().region("maincpu")->base();
+		UINT8 *ROM = state->memregion("maincpu")->base();
 		ROM[0x84f6]=0; /* lap 0 - normal */
 	}
 
 	if (screen.machine().input().code_pressed_once(KEYCODE_W))
 	{
-		UINT8 *ROM = screen.machine().region("maincpu")->base();
+		UINT8 *ROM = screen.machine().root_device().memregion("maincpu")->base();
 		ROM[0x84f6]=6; /* lap 6 = spotlight */
 	}
 
 	if (screen.machine().input().code_pressed_once(KEYCODE_E))
 	{
-		UINT8 *ROM = screen.machine().region("maincpu")->base();
+		UINT8 *ROM = screen.machine().root_device().memregion("maincpu")->base();
 		ROM[0x84f6]=2; /* lap 3 (trial 2)= lightnings */
 		ROM[0x8102]=1;
 	}
@@ -245,10 +246,10 @@ SCREEN_UPDATE_IND16( pitnrun )
 		dx=128-state->m_h_heed+((state->m_ha&8)<<5)+3;
 		dy=128-state->m_v_heed+((state->m_ha&0x10)<<4);
 
-		if (flip_screen_x_get(screen.machine()))
+		if (state->flip_screen_x())
 			dx=128-dx+16;
 
-		if (flip_screen_y_get(screen.machine()))
+		if (state->flip_screen_y())
 			dy=128-dy;
 
 		myclip.set(dx, dx+127, dy, dy+127);
@@ -260,7 +261,7 @@ SCREEN_UPDATE_IND16( pitnrun )
 	draw_sprites(screen.machine(),bitmap,myclip);
 
 	if(state->m_ha&4)
-		copybitmap_trans(bitmap,*state->m_tmp_bitmap[state->m_ha&3],flip_screen_x_get(screen.machine()),flip_screen_y_get(screen.machine()),dx,dy,myclip, 1);
+		copybitmap_trans(bitmap,*state->m_tmp_bitmap[state->m_ha&3],state->flip_screen_x(),state->flip_screen_y(),dx,dy,myclip, 1);
 	state->m_fg->draw(bitmap, cliprect, 0,0);
 	return 0;
 }

@@ -64,7 +64,7 @@ WRITE16_MEMBER(cabal_state::cabal_flipscreen_w)
 		m_background_layer->set_flip(flip);
 		m_text_layer->set_flip(flip);
 
-		flip_screen_set(machine(), data & 0x20);
+		flip_screen_set(data & 0x20);
 	}
 }
 
@@ -108,7 +108,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	int offs,data0,data1,data2;
 	UINT16 *spriteram16 = state->m_spriteram;
 
-	for( offs = state->m_spriteram_size/2 - 4; offs >= 0; offs -= 4 )
+	for( offs = state->m_spriteram.bytes()/2 - 4; offs >= 0; offs -= 4 )
 	{
 		data0 = spriteram16[offs];
 		data1 = spriteram16[offs+1];
@@ -125,7 +125,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 
 			if ( sx>256 )   sx -= 512;
 
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				sx = 240 - sx;
 				sy = 240 - sy;

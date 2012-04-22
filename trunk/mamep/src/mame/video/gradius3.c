@@ -86,7 +86,7 @@ VIDEO_START( gradius3 )
 	for (i = 0; i < TOTAL_SPRITES; i++)
 		gfx_element_mark_dirty(machine.gfx[1], i);
 
-	gfx_element_set_source(machine.gfx[0], (UINT8 *)state->m_gfxram);
+	gfx_element_set_source(machine.gfx[0], (UINT8 *)state->m_gfxram.target());
 
 	machine.save().register_postload(save_prepost_delegate(FUNC(gradius3_postload), &machine));
 }
@@ -101,7 +101,7 @@ VIDEO_START( gradius3 )
 
 READ16_MEMBER(gradius3_state::gradius3_gfxrom_r)
 {
-	UINT8 *gfxdata = machine().region("gfx2")->base();
+	UINT8 *gfxdata = memregion("gfx2")->base();
 
 	return (gfxdata[2 * offset + 1] << 8) | gfxdata[2 * offset];
 }

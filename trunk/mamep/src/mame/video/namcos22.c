@@ -861,7 +861,7 @@ ApplyGamma( running_machine &machine, bitmap_rgb32 &bitmap )
 	}
 	else
 	{ /* system 22 */
-		const UINT8 *rlut = 0x000+(const UINT8 *)machine.region("user1")->base();
+		const UINT8 *rlut = 0x000+(const UINT8 *)machine.root_device().memregion("user1")->base();
 		const UINT8 *glut = 0x100+rlut;
 		const UINT8 *blut = 0x200+rlut;
 		for( y=0; y<bitmap.height(); y++ )
@@ -2610,7 +2610,7 @@ static void
 SimulateSlaveDSP( running_machine &machine, bitmap_rgb32 &bitmap )
 {
 	namcos22_state *state = machine.driver_data<namcos22_state>();
-	const INT32 *pSource = 0x300 + (INT32 *)state->m_polygonram;
+	const INT32 *pSource = 0x300 + (INT32 *)state->m_polygonram.target();
 	INT16 len;
 
 	matrix3d_Identity( state->m_mViewMatrix );
@@ -2649,7 +2649,7 @@ SimulateSlaveDSP( running_machine &machine, bitmap_rgb32 &bitmap )
 			break;
 
 		default:
-			logerror( "unk 3d data(%d) addr=0x%x!", len, (int)(pSource-(INT32*)state->m_polygonram) );
+			logerror( "unk 3d data(%d) addr=0x%x!", len, (int)(pSource-(INT32*)state->m_polygonram.target()) );
 			{
 				int i;
 				for( i=0; i<len; i++ )
@@ -2665,7 +2665,7 @@ SimulateSlaveDSP( running_machine &machine, bitmap_rgb32 &bitmap )
 		pSource += len;
 		pSource++; /* always 0xffff */
 		next = (INT16)*pSource++; /* link to next command */
-		if( (next&0x7fff) != (pSource - (INT32 *)state->m_polygonram) )
+		if( (next&0x7fff) != (pSource - (INT32 *)state->m_polygonram.target()) )
 		{ /* end of list */
 			break;
 		}
@@ -2741,10 +2741,10 @@ static VIDEO_START( common )
 	for (code = 0; code < machine.gfx[GFX_TEXTURE_TILE]->total_elements; code++)
 		gfx_element_decode(machine.gfx[GFX_TEXTURE_TILE], code);
 
-	Prepare3dTexture(machine, machine.region("textilemap")->base(), machine.gfx[GFX_TEXTURE_TILE]->gfxdata );
+	Prepare3dTexture(machine, machine.root_device().memregion("textilemap")->base(), machine.gfx[GFX_TEXTURE_TILE]->gfxdata );
 	state->m_dirtypal = auto_alloc_array(machine, UINT8, NAMCOS22_PALETTE_SIZE/4);
-	state->m_mPtRomSize = machine.region("pointrom")->bytes()/3;
-	state->m_mpPolyL = machine.region("pointrom")->base();
+	state->m_mPtRomSize = machine.root_device().memregion("pointrom")->bytes()/3;
+	state->m_mpPolyL = state->memregion("pointrom")->base();
 	state->m_mpPolyM = state->m_mpPolyL + state->m_mPtRomSize;
 	state->m_mpPolyH = state->m_mpPolyM + state->m_mPtRomSize;
 
@@ -2752,7 +2752,7 @@ static VIDEO_START( common )
 	machine.add_notifier(MACHINE_NOTIFY_RESET, machine_notify_delegate(FUNC(namcos22_reset), &machine));
 	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(namcos22_exit), &machine));
 
-	gfx_element_set_source(machine.gfx[GFX_CHAR], (UINT8 *)state->m_cgram);
+	gfx_element_set_source(machine.gfx[GFX_CHAR], (UINT8 *)state->m_cgram.target());
 }
 
 VIDEO_START( namcos22 )

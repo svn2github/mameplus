@@ -118,13 +118,13 @@ WRITE8_MEMBER(dooyong_state::lastday_ctrl_w)
 	m_sprites_disabled = data & 0x10;
 
 	/* bit 6 is flip screen */
-	flip_screen_set(machine(), data & 0x40);
+	flip_screen_set(data & 0x40);
 }
 
 WRITE8_MEMBER(dooyong_state::pollux_ctrl_w)
 {
 	/* bit 0 is flip screen */
-	flip_screen_set(machine(), data & 0x01);
+	flip_screen_set(data & 0x01);
 
 	/* bits 6 and 7 are coin counters */
 	coin_counter_w(machine(), 0, data & 0x80);
@@ -139,13 +139,13 @@ WRITE8_MEMBER(dooyong_state::pollux_ctrl_w)
 WRITE8_MEMBER(dooyong_state::primella_ctrl_w)
 {
 	/* bits 0-2 select ROM bank */
-	memory_set_bank(machine(), "bank1", data & 0x07);
+	membank("bank1")->set_entry(data & 0x07);
 
 	/* bit 3 disables tx layer */
 	m_tx_pri = data & 0x08;
 
 	/* bit 4 flips screen */
-	flip_screen_set(machine(), data & 0x10);
+	flip_screen_set(data & 0x10);
 
 	/* bit 5 used but unknown */
 
@@ -166,7 +166,7 @@ WRITE8_MEMBER(dooyong_state::paletteram_flytiger_w)
 WRITE8_MEMBER(dooyong_state::flytiger_ctrl_w)
 {
 	/* bit 0 is flip screen */
-	flip_screen_set(machine(), data & 0x01);
+	flip_screen_set(data & 0x01);
 
 	/* bits 1, 2 used but unknown */
 
@@ -183,7 +183,7 @@ WRITE16_MEMBER(dooyong_state::rshark_ctrl_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		/* bit 0 flips screen */
-		flip_screen_set(machine(), data & 0x0001);
+		flip_screen_set(data & 0x0001);
 
 		/* bit 4 changes tilemaps priority */
 		m_rshark_pri = data & 0x0010;
@@ -410,7 +410,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 			}
 		}
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 498 - sx;
 			sy = 240 - (16 * height) - sy;
@@ -475,7 +475,7 @@ static void rshark_draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, 
 			width = buffered_spriteram16[offs+1] & 0x000f;
 			height = (buffered_spriteram16[offs+1] & 0x00f0) >> 4;
 
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				sx = 498 - (16 * width) - sx;
 				sy = 240 - (16 * height) - sy;
@@ -629,8 +629,8 @@ VIDEO_START( lastday )
 {
 	dooyong_state *state = machine.driver_data<dooyong_state>();
 	/* Configure tilemap callbacks */
-	state->m_bg_tilerom = machine.region("gfx5")->base();
-	state->m_fg_tilerom = machine.region("gfx6")->base();
+	state->m_bg_tilerom = machine.root_device().memregion("gfx5")->base();
+	state->m_fg_tilerom = state->memregion("gfx6")->base();
 	state->m_bg_tilerom2 = NULL;
 	state->m_fg_tilerom2 = NULL;
 	state->m_bg_gfx = 2;
@@ -669,8 +669,8 @@ VIDEO_START( gulfstrm )
 {
 	dooyong_state *state = machine.driver_data<dooyong_state>();
 	/* Configure tilemap callbacks */
-	state->m_bg_tilerom = machine.region("gfx5")->base();
-	state->m_fg_tilerom = machine.region("gfx6")->base();
+	state->m_bg_tilerom = machine.root_device().memregion("gfx5")->base();
+	state->m_fg_tilerom = state->memregion("gfx6")->base();
 	state->m_bg_tilerom2 = NULL;
 	state->m_fg_tilerom2 = NULL;
 	state->m_bg_gfx = 2;
@@ -708,8 +708,8 @@ VIDEO_START( pollux )
 {
 	dooyong_state *state = machine.driver_data<dooyong_state>();
 	/* Configure tilemap callbacks */
-	state->m_bg_tilerom = machine.region("gfx5")->base();
-	state->m_fg_tilerom = machine.region("gfx6")->base();
+	state->m_bg_tilerom = machine.root_device().memregion("gfx5")->base();
+	state->m_fg_tilerom = state->memregion("gfx6")->base();
 	state->m_bg_tilerom2 = NULL;
 	state->m_fg_tilerom2 = NULL;
 	state->m_bg_gfx = 2;
@@ -744,9 +744,9 @@ VIDEO_START( bluehawk )
 {
 	dooyong_state *state = machine.driver_data<dooyong_state>();
 	/* Configure tilemap callbacks */
-	state->m_bg_tilerom = machine.region("gfx3")->base() + 0x78000;
-	state->m_fg_tilerom = machine.region("gfx4")->base() + 0x78000;
-	state->m_fg2_tilerom = machine.region("gfx5")->base() + 0x38000;
+	state->m_bg_tilerom = machine.root_device().memregion("gfx3")->base() + 0x78000;
+	state->m_fg_tilerom = machine.root_device().memregion("gfx4")->base() + 0x78000;
+	state->m_fg2_tilerom = state->memregion("gfx5")->base() + 0x38000;
 	state->m_bg_tilerom2 = NULL;
 	state->m_fg_tilerom2 = NULL;
 	state->m_fg2_tilerom2 = NULL;
@@ -785,8 +785,8 @@ VIDEO_START( flytiger )
 {
 	dooyong_state *state = machine.driver_data<dooyong_state>();
 	/* Configure tilemap callbacks */
-	state->m_bg_tilerom = machine.region("gfx3")->base() + 0x78000;
-	state->m_fg_tilerom = machine.region("gfx4")->base() + 0x78000;
+	state->m_bg_tilerom = machine.root_device().memregion("gfx3")->base() + 0x78000;
+	state->m_fg_tilerom = state->memregion("gfx4")->base() + 0x78000;
 	state->m_bg_tilerom2 = NULL;
 	state->m_fg_tilerom2 = NULL;
 	state->m_bg_gfx = 2;
@@ -821,8 +821,8 @@ VIDEO_START( primella )
 {
 	dooyong_state *state = machine.driver_data<dooyong_state>();
 	/* Configure tilemap callbacks */
-	state->m_bg_tilerom = machine.region("gfx2")->base() + machine.region("gfx2")->bytes() - 0x8000;
-	state->m_fg_tilerom = machine.region("gfx3")->base() + machine.region("gfx3")->bytes() - 0x8000;
+	state->m_bg_tilerom = machine.root_device().memregion("gfx2")->base() + machine.root_device().memregion("gfx2")->bytes() - 0x8000;
+	state->m_fg_tilerom = machine.root_device().memregion("gfx3")->base() + state->memregion("gfx3")->bytes() - 0x8000;
 	state->m_bg_tilerom2 = NULL;
 	state->m_fg_tilerom2 = NULL;
 	state->m_bg_gfx = 1;
@@ -856,14 +856,14 @@ VIDEO_START( rshark )
 {
 	dooyong_state *state = machine.driver_data<dooyong_state>();
 	/* Configure tilemap callbacks */
-	state->m_bg_tilerom = machine.region("gfx5")->base();
-	state->m_bg2_tilerom = machine.region("gfx4")->base();
-	state->m_fg_tilerom = machine.region("gfx3")->base();
-	state->m_fg2_tilerom = machine.region("gfx2")->base();
-	state->m_bg_tilerom2 = machine.region("gfx6")->base() + 0x60000;
-	state->m_bg2_tilerom2 = machine.region("gfx6")->base() + 0x40000;
-	state->m_fg_tilerom2 = machine.region("gfx6")->base() + 0x20000;
-	state->m_fg2_tilerom2 = machine.region("gfx6")->base() + 0x00000;
+	state->m_bg_tilerom = machine.root_device().memregion("gfx5")->base();
+	state->m_bg2_tilerom = machine.root_device().memregion("gfx4")->base();
+	state->m_fg_tilerom = machine.root_device().memregion("gfx3")->base();
+	state->m_fg2_tilerom = machine.root_device().memregion("gfx2")->base();
+	state->m_bg_tilerom2 = machine.root_device().memregion("gfx6")->base() + 0x60000;
+	state->m_bg2_tilerom2 = machine.root_device().memregion("gfx6")->base() + 0x40000;
+	state->m_fg_tilerom2 = machine.root_device().memregion("gfx6")->base() + 0x20000;
+	state->m_fg2_tilerom2 = state->memregion("gfx6")->base() + 0x00000;
 	state->m_bg_gfx = 4;
 	state->m_bg2_gfx = 3;
 	state->m_fg_gfx = 2;
@@ -901,7 +901,7 @@ VIDEO_START( popbingo )
 {
 	dooyong_state *state = machine.driver_data<dooyong_state>();
 	/* Configure tilemap callbacks */
-	state->m_bg_tilerom = machine.region("gfx2")->base();
+	state->m_bg_tilerom = state->memregion("gfx2")->base();
 	state->m_bg_gfx = 1;
 
 	/* Create tilemaps */

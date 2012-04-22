@@ -23,6 +23,7 @@
 
 PALETTE_INIT( gberet )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
@@ -150,7 +151,7 @@ static void gberet_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap,
 			int flipx = attr & 0x10;
 			int flipy = attr & 0x20;
 
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				sx = 240 - sx;
 				sy = 240 - sy;
@@ -193,7 +194,7 @@ static void gberetb_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap
 	UINT8 *spriteram = state->m_spriteram;
 	int offs;
 
-	for (offs = state->m_spriteram_size - 4; offs >= 0; offs -= 4)
+	for (offs = state->m_spriteram.bytes() - 4; offs >= 0; offs -= 4)
 	{
 		if (spriteram[offs + 1])
 		{
@@ -205,7 +206,7 @@ static void gberetb_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap
 			int flipx = attr & 0x10;
 			int flipy = attr & 0x20;
 
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				sx = 240 - sx;
 				sy = 240 - sy;

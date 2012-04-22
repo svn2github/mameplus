@@ -59,6 +59,7 @@ tilt the mirror up and down, and the monitor left and right.
 
 static PALETTE_INIT( stactics )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0; i < 0x400; i++)
@@ -111,11 +112,10 @@ WRITE8_MEMBER(stactics_state::stactics_scroll_ram_w)
  *
  *************************************/
 
-CUSTOM_INPUT( stactics_get_frame_count_d3 )
+CUSTOM_INPUT_MEMBER(stactics_state::stactics_get_frame_count_d3)
 {
-	stactics_state *state = field.machine().driver_data<stactics_state>();
 
-	return (state->m_frame_count >> 3) & 0x01;
+	return (m_frame_count >> 3) & 0x01;
 }
 
 
@@ -166,19 +166,17 @@ WRITE8_MEMBER(stactics_state::stactics_shot_flag_clear_w)
 }
 
 
-CUSTOM_INPUT( stactics_get_shot_standby )
+CUSTOM_INPUT_MEMBER(stactics_state::stactics_get_shot_standby)
 {
-	stactics_state *state = field.machine().driver_data<stactics_state>();
 
-	return state->m_shot_standby;
+	return m_shot_standby;
 }
 
 
-CUSTOM_INPUT( stactics_get_not_shot_arrive )
+CUSTOM_INPUT_MEMBER(stactics_state::stactics_get_not_shot_arrive)
 {
-	stactics_state *state = field.machine().driver_data<stactics_state>();
 
-	return !state->m_shot_arrive;
+	return !m_shot_arrive;
 }
 
 
@@ -308,7 +306,7 @@ static void set_indicator_leds(int data, const char *output_name, int base_index
 static void update_artwork(running_machine &machine, stactics_state *state)
 {
 	int i;
-	UINT8 *beam_region = machine.region("user1")->base();
+	UINT8 *beam_region = machine.root_device().memregion("user1")->base();
 
 	/* set the lamps first */
 	output_set_indexed_value("base_lamp", 4, state->m_lamps[0] & 0x01);

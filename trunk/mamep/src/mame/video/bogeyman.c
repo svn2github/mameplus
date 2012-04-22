@@ -4,6 +4,7 @@
 
 PALETTE_INIT( bogeyman )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	/* first 16 colors are RAM */
@@ -66,7 +67,7 @@ WRITE8_MEMBER(bogeyman_state::bogeyman_colorram2_w)
 WRITE8_MEMBER(bogeyman_state::bogeyman_paletteram_w)
 {
 	/* RGB output is inverted */
-	paletteram_BBGGGRRR_w(space, offset, ~data);
+	paletteram_BBGGGRRR_byte_w(space, offset, ~data);
 }
 
 static TILE_GET_INFO( get_bg_tile_info )
@@ -105,7 +106,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	bogeyman_state *state = machine.driver_data<bogeyman_state>();
 	int offs;
 
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		int attr = state->m_spriteram[offs];
 
@@ -121,7 +122,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 
 			if (multi) sy -= 16;
 
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				sx = 240 - sx;
 				sy = 240 - sy;
@@ -141,7 +142,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 					machine.gfx[2],
 					code + 1, color,
 					flipx, flipy,
-					sx, sy + (flip_screen_get(machine) ? -16 : 16), 0);
+					sx, sy + (state->flip_screen() ? -16 : 16), 0);
 			}
 		}
 	}

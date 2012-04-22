@@ -12,6 +12,7 @@
 
 PALETTE_INIT(mustache)
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0;i < 256;i++)
@@ -52,9 +53,9 @@ WRITE8_MEMBER(mustache_state::mustache_videoram_w)
 
 WRITE8_MEMBER(mustache_state::mustache_video_control_w)
 {
-	if (flip_screen_get(machine()) != (data & 0x01))
+	if (flip_screen() != (data & 0x01))
 	{
-		flip_screen_set(machine(), data & 0x01);
+		flip_screen_set(data & 0x01);
 		machine().tilemap().mark_all_dirty();
 	}
 
@@ -106,7 +107,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	UINT8 *spriteram = state->m_spriteram;
 	int offs;
 
-	for (offs = 0;offs < state->m_spriteram_size;offs += 4)
+	for (offs = 0;offs < state->m_spriteram.bytes();offs += 4)
 	{
 		int sy = 240-spriteram[offs];
 		int sx = 240-spriteram[offs+3];
@@ -121,12 +122,12 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 		if ((state->m_control_byte & 0xa))
 			clip.max_y = visarea.max_y;
 		else
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 				clip.min_y = visarea.min_y + 56;
 			else
 				clip.max_y = visarea.max_y - 56;
 
-		if (flip_screen_get(machine))
+		if (state->flip_screen())
 		{
 			sx = 240 - sx;
 			sy = 240 - sy;
@@ -135,7 +136,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 		drawgfx_transpen(bitmap,clip,gfx,
 				code,
 				color,
-				flip_screen_get(machine),flip_screen_get(machine),
+				state->flip_screen(),state->flip_screen(),
 				sx,sy,0);
 	}
 }

@@ -12,6 +12,7 @@
 
 PALETTE_INIT( fortyl )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0; i < machine.total_colors(); i++)
@@ -160,7 +161,7 @@ WRITE8_MEMBER(fortyl_state::fortyl_pixram_sel_w)
 	if (m_flipscreen != f)
 	{
 		m_flipscreen = f;
-		flip_screen_set(machine(), m_flipscreen);
+		flip_screen_set(m_flipscreen);
 		m_pix_redraw = 1;
 
 		for (offs = 0; offs < 32; offs++)
@@ -275,7 +276,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	int offs;
 
 	/* spriteram #1 */
-	for (offs = 0; offs < state->m_spriteram_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram.bytes(); offs += 4)
 	{
 		int code, color, sx, sy, flipx, flipy;
 
@@ -303,7 +304,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	}
 
 	/* spriteram #2 */
-	for (offs = 0; offs < state->m_spriteram2_size; offs += 4)
+	for (offs = 0; offs < state->m_spriteram2.bytes(); offs += 4)
 	{
 		int code, color, sx, sy, flipx, flipy;
 

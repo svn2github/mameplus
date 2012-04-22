@@ -20,6 +20,7 @@
 
 PALETTE_INIT( toypop )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	/* allocate the colortable */
 	machine.colortable = colortable_alloc(machine, 256);
 
@@ -216,6 +217,7 @@ static void draw_background(running_machine &machine, bitmap_ind16 &bitmap)
 
 void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, UINT8 *spriteram_base)
 {
+	toypop_state *state = machine.driver_data<toypop_state>();
 	UINT8 *spriteram = spriteram_base + 0x780;
 	UINT8 *spriteram_2 = spriteram + 0x800;
 	UINT8 *spriteram_3 = spriteram_2 + 0x800;
@@ -246,7 +248,7 @@ void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangl
 			sy -= 16 * sizey;
 			sy = (sy & 0xff) - 32;	// fix wraparound
 
-			if (flip_screen_get(machine))
+			if (state->flip_screen())
 			{
 				flipx ^= 1;
 				flipy ^= 1;

@@ -31,6 +31,7 @@
 
 PALETTE_INIT( rocnrope )
 {
+	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
 	static const int resistances_rg[3] = { 1000, 470, 220 };
 	static const int resistances_b [2] = { 470, 220 };
 	double rweights[3], gweights[3], bweights[2];
@@ -96,9 +97,9 @@ WRITE8_MEMBER(rocnrope_state::rocnrope_colorram_w)
 
 WRITE8_MEMBER(rocnrope_state::rocnrope_flipscreen_w)
 {
-	if (flip_screen_get(machine()) != (~data & 0x01))
+	if (flip_screen() != (~data & 0x01))
 	{
-		flip_screen_set(machine(), ~data & 0x01);
+		flip_screen_set(~data & 0x01);
 		machine().tilemap().mark_all_dirty();
 	}
 }
@@ -127,7 +128,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	UINT8 *spriteram_2 = state->m_spriteram2;
 	int offs;
 
-	for (offs = state->m_spriteram_size - 2;offs >= 0;offs -= 2)
+	for (offs = state->m_spriteram.bytes() - 2;offs >= 0;offs -= 2)
 	{
 		int color = spriteram_2[offs] & 0x0f;
 

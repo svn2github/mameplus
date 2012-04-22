@@ -193,6 +193,7 @@ void upd1990a_device::device_start()
 	save_item(NAME(m_c));
 	save_item(NAME(m_clk));
 	save_item(NAME(m_tp));
+	save_item(NAME(m_c_unlatched));
 }
 
 
@@ -298,6 +299,8 @@ WRITE_LINE_MEMBER( upd1990a_device::stb_w )
 
 	if (m_cs && m_stb && !m_clk)
 	{
+		m_c = m_c_unlatched;		// if STB = 1, latch in the command bits
+
 		switch (m_c)
 		{
 		case MODE_REGISTER_HOLD:
@@ -466,7 +469,7 @@ WRITE_LINE_MEMBER( upd1990a_device::c0_w )
 {
 	if (LOG) logerror("uPD1990A '%s' C0 %u\n", tag(), state);
 
-	m_c = (m_c & 0x06) | state;
+	m_c_unlatched = (m_c_unlatched & 0x06) | state;
 }
 
 
@@ -478,7 +481,7 @@ WRITE_LINE_MEMBER( upd1990a_device::c1_w )
 {
 	if (LOG) logerror("uPD1990A '%s' C1 %u\n", tag(), state);
 
-	m_c = (m_c & 0x05) | (state << 1);
+	m_c_unlatched = (m_c_unlatched & 0x05) | (state << 1);
 }
 
 
@@ -490,7 +493,7 @@ WRITE_LINE_MEMBER( upd1990a_device::c2_w )
 {
 	if (LOG) logerror("uPD1990A '%s' C2 %u\n", tag(), state);
 
-	m_c = (m_c & 0x03) | (state << 2);
+	m_c_unlatched = (m_c_unlatched & 0x03) | (state << 2);
 }
 
 
