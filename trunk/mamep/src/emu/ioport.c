@@ -897,7 +897,7 @@ time_t ioport_manager::initialize()
 	machine().add_notifier(MACHINE_NOTIFY_FRAME, machine_notify_delegate(FUNC(frame_update_callback), &machine()));
 
 #ifdef USE_AUTOFIRE
-	for (player = 0; player < MAX_PLAYERS; player++)
+	for (int player = 0; player < MAX_PLAYERS; player++)
 	{
 		autofiredelay[player] = 3;	//mamep: 1 is too short for some games
 		autofiretoggle[player] = 1;
@@ -1524,13 +1524,13 @@ const simple_list<input_type_entry> &input_type_list(running_machine &machine)
 
 int has_record_file(running_machine &machine)
 {
-	return machine.ioport()->record_file != NULL;
+	return machine.ioport().record_file != NULL;
 }
 
 
 int has_playback_file(running_machine &machine)
 {
-	return machine.ioport()->playback_file != NULL;
+	return machine.ioport().playback_file != NULL;
 }
 
 
@@ -5363,7 +5363,7 @@ INLINE void copy_command_buffer(running_machine &machine, char log)
 
 static void make_input_log(running_machine &machine)
 {
-	input_port_private *portdata = machine.ioport();
+	ioport_manager &portdata = machine.ioport();
 	const input_port_config *port;
 #ifdef USE_CUSTOM_BUTTON
 	int i;
@@ -5380,7 +5380,7 @@ static void make_input_log(running_machine &machine)
 
 		for (joyindex = 0; joyindex < DIGITAL_JOYSTICKS_PER_PLAYER; joyindex++)
 		{
-			digital_joystick_state *joystick = &portdata->joystick_info[player][joyindex];
+			digital_joystick_state *joystick = &portdata.joystick_info[player][joyindex];
 
 			if (joystick->inuse)
 			{
@@ -5452,7 +5452,7 @@ static void make_input_log(running_machine &machine)
 
 		now_btn = 0;
 
-		for (port = machine.m_portlist.first(); port != NULL; port = port->next())
+		for (port = machine.ioport().first_port(); port != NULL; port = port->next())
 		{
 			const input_field_config *field;
 
@@ -5535,18 +5535,18 @@ static void make_input_log(running_machine &machine)
 #ifdef INP_CAPTION
 void draw_caption(running_machine &machine, render_container *container)
 {
-	input_port_private *portdata = machine.input_port_data;
+	ioport_manager &portdata = machine.ioport();
 	static char next_caption[512], caption_text[512];
 	static int next_caption_timer;
 
-	if (portdata->caption_file && next_caption_frame < 0)
+	if (portdata.caption_file && next_caption_frame < 0)
 	{
 		char	read_buf[512];
 skip_comment:
-		if (portdata->caption_file->gets(read_buf, 511) == NULL)
+		if (portdata.caption_file->gets(read_buf, 511) == NULL)
 		{
-			auto_free(machine, portdata->caption_file);
-			portdata->caption_file = NULL;
+			auto_free(machine, portdata.caption_file);
+			portdata.caption_file = NULL;
 		}
 		else
 		{
@@ -5573,8 +5573,8 @@ skip_comment:
 			{
 				next_caption_frame = (int)machine.primary_screen->frame_number();
 				strcpy(next_caption, _("Error: illegal caption file"));
-				auto_free(machine, portdata->caption_file);
-				portdata->caption_file = NULL;
+				auto_free(machine, portdata.caption_file);
+				portdata.caption_file = NULL;
 			}
 
 			for (;;i++)

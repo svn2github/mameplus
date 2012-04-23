@@ -984,6 +984,9 @@ public:
 	/* playback/record information */
 	emu_file *					record_file;		/* recording file (NULL if not recording) */
 	emu_file *					playback_file;		/* playback file (NULL if not recording) */
+#ifdef INP_CAPTION
+	emu_file *					caption_file;		/* caption file for playback (NULL if not playing) */
+#endif /* INP_CAPTION */
 	UINT64						playback_accumulated_speed;/* accumulated speed during playback */
 	UINT32						playback_accumulated_frames;/* accumulated frames during playback */
 
