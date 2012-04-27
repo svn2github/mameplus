@@ -876,6 +876,9 @@ ioport_manager::ioport_manager(running_machine &machine)
 	  last_delta_nsec(0),
 	  record_file(NULL),
 	  playback_file(NULL),
+#ifdef INP_CAPTION
+	  caption_file(NULL),
+#endif /* INP_CAPTION */
 	  playback_accumulated_speed(0),
 	  playback_accumulated_frames(0),
 	  codes(NULL),

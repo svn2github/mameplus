@@ -680,8 +680,10 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 	case OPTIONS_VECTOR:
 	case OPTIONS_VERTICAL:
 	case OPTIONS_HORIZONTAL:
-	case OPTIONS_SOURCE:
 		t_description = GetFolderByID(g_nFolder)->m_lpTitle;
+		break;
+	case OPTIONS_SOURCE:
+		t_description = (WCHAR *)GetDriverFilename(g_nGame);
 		break;
 	case OPTIONS_GLOBAL:
 		t_description = _UIW(TEXT("Default Settings"));
