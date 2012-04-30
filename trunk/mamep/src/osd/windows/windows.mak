@@ -242,17 +242,12 @@ endif
 # add our prefix files to the mix
 CCOMFLAGS += -include $(WINSRC)/winprefix.h
 
-# for 32-bit apps, add unicows for Unicode support on Win9x
-ifneq ($(PTR64),1)
-LIBS += -lunicows
-endif
-
 # ensure we statically link the gcc runtime lib
 LDFLAGS += -static-libgcc
 TEST_GCC = $(shell gcc --version)
 ifeq ($(findstring 4.4,$(TEST_GCC)),)
 	#if we use new tools
-	LDFLAGS += -static-libstdc++
+	LDFLAGS += -static -static-libstdc++
 endif
 
 # add the windows libraries

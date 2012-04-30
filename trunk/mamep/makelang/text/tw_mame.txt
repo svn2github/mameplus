@@ -1,8 +1,8 @@
-# emu/romload.c: 424
+# emu/romload.c: 422
        FOUND: %s\n
         找到: %s\n
 
-# emu/romload.c: 423
+# emu/romload.c: 421
     EXPECTED: %s\n
         需要: %s\n
 
@@ -10,7 +10,7 @@
    FOUND: %s\n
    找到: %s\n
 
-# emu/machine.c: 926
+# emu/machine.c: 979
   (missing dependencies; rescheduling)\n
   (遺失依存關係; 正在重新安排)\n
 
@@ -18,7 +18,7 @@
  (%d bytes)
  (%d 位元組)
 
-# emu/uimain.c: 1493
+# emu/uimain.c: 1576
  (locked)
  (已鎖定)
 
@@ -26,7 +26,7 @@
  BAD
  錯誤
 
-# emu/sound.c: 197
+# emu/sound.c: 210
  Ch.%d
  聲道 %d
 
@@ -46,7 +46,7 @@
  SYSTEM      SLOT NAME    SLOT OPTIONS    SLOT DEVICE NAME     \n
  系統        插槽名稱     插槽選項        插槽裝置名稱         \n
 
-# emu/ui.c: 2349
+# emu/ui.c: 2346
  Volume
  音量
 
@@ -62,7 +62,7 @@
  may not run correctly.\n
  可能無法正確執行。\n
 
-# emu/romload.c: 515
+# emu/romload.c: 513
  might not run correctly.
  可能無法正確執行。
 
@@ -90,103 +90,103 @@
 %dD Glasses Side-by-Side
 %dD 眼鏡左右
 
-# emu/uimain.c: 929
+# emu/uimain.c: 1012
 %s Analog
 %s 類比控制
 
-# emu/uimain.c: 931
+# emu/uimain.c: 1014
 %s Analog Dec
 %s 類比控制 減少
 
-# emu/uimain.c: 930
+# emu/uimain.c: 1013
 %s Analog Inc
 %s 類比控制 增加
 
-# emu/uimain.c: 1383
+# emu/uimain.c: 1466
 %s Autocenter Speed
 %s 自動置中速度
 
-# emu/ui.c: 2397
+# emu/ui.c: 2394
 %s Brightness
 %s 亮度值
 
-# emu/romload.c: 1192
+# emu/romload.c: 1190
 %s CHD ERROR: %s\n
 %s CHD 錯誤: %s\n
 
-# emu/romload.c: 1218
+# emu/romload.c: 1216
 %s CHD NEEDS REDUMP\n
 %s CHD 需要重新 DUMP\n
 
-# emu/ui.c: 2400
+# emu/ui.c: 2397
 %s Contrast
 %s 對比值
 
-# emu/romload.c: 1229
+# emu/romload.c: 1227
 %s DIFF CHD ERROR: %s\n
 %s 差異 CHD 錯誤: %s\n
 
-# emu/uimain.c: 1374
+# emu/uimain.c: 1457
 %s Digital Speed
 %s 數位速度
 
-# emu/ui.c: 2403
+# emu/ui.c: 2400
 %s Gamma
 %s Gamma 值
 
-# emu/ui.c: 2411
+# emu/ui.c: 2408
 %s Horiz Position
 %s 水平位置
 
-# emu/ui.c: 2408
+# emu/ui.c: 2405
 %s Horiz Stretch
 %s 水平延展
 
-# emu/uimain.c: 161
+# emu/uimain.c: 167
 %s Information
 %s資訊
 
-# emu/romload.c: 452
+# emu/romload.c: 450
 %s NO GOOD DUMP KNOWN\n
 %s 已知尚無正確的 DUMP\n
 
-# emu/romload.c: 401
+# emu/romload.c: 399
 %s NOT FOUND (NO GOOD DUMP KNOWN)\n
 %s 找不到 (已知尚無正確的 DUMP)\n
 
-# emu/romload.c: 408, 1190
+# emu/romload.c: 406, 1188
 %s NOT FOUND\n
 %s 找不到\n
 
-# emu/romload.c: 466
+# emu/romload.c: 464
 %s ROM NEEDS REDUMP\n
 %s ROM 需要重新 DUMP\n
 
-# emu/ui.c: 2391
+# emu/ui.c: 2388
 %s Refresh Rate
 %s 更新頻率
 
-# emu/uimain.c: 1392
+# emu/uimain.c: 1475
 %s Reverse
 %s 反轉
 
-# emu/uimain.c: 1401
+# emu/uimain.c: 1484
 %s Sensitivity
 %s 靈敏度
 
-# emu/ui.c: 2417
+# emu/ui.c: 2414
 %s Vert Position
 %s 垂直位置
 
-# emu/ui.c: 2414
+# emu/ui.c: 2411
 %s Vert Stretch
 %s 垂直延展
 
-# emu/romload.c: 459, 1212
+# emu/romload.c: 457, 1210
 %s WRONG CHECKSUMS:\n
 %s 錯誤的檢查碼:\n
 
-# emu/romload.c: 443
+# emu/romload.c: 441
 %s WRONG LENGTH (expected: %08x found: %08x)\n
 %s 錯誤的長度 (需要: %08x 找到: %08x)\n
 
@@ -194,7 +194,7 @@
 %s'File is not a valid savestate file for game '%s'.
 %s'檔案不是遊戲 '%s' 的有效儲存狀態檔。
 
-# emu/romload.c: 334
+# emu/romload.c: 332
 %s: invalid bios\n
 %s: 無效的 bios\n
 
@@ -210,7 +210,7 @@
 (BAD) 
 (錯誤) 
 
-# emu/ioport.c: 2023
+# emu/ioport.c: 1966
 (Unknown Default)
 (未知的預設)
 
@@ -238,39 +238,39 @@
 **Use ScrLock to toggle**
 **使用 ScrLock 鍵切換**
 
-# emu/ioport.c: 701
+# emu/ioport.c: 632
 1 Coin/1 Credit
 1 幣/1 局
 
-# emu/ioport.c: 707
+# emu/ioport.c: 638
 1 Coin/2 Credits
 1 幣/2 局
 
-# emu/ioport.c: 710
+# emu/ioport.c: 641
 1 Coin/3 Credits
 1 幣/3 局
 
-# emu/ioport.c: 713
+# emu/ioport.c: 644
 1 Coin/4 Credits
 1 幣/4 局
 
-# emu/ioport.c: 714
+# emu/ioport.c: 645
 1 Coin/5 Credits
 1 幣/5 局
 
-# emu/ioport.c: 715
+# emu/ioport.c: 646
 1 Coin/6 Credits
 1 幣/6 局
 
-# emu/ioport.c: 716
+# emu/ioport.c: 647
 1 Coin/7 Credits
 1 幣/7 局
 
-# emu/ioport.c: 717
+# emu/ioport.c: 648
 1 Coin/8 Credits
 1 幣/8 局
 
-# emu/ioport.c: 718
+# emu/ioport.c: 649
 1 Coin/9 Credits
 1 幣/9 局
 
@@ -278,39 +278,39 @@
 1 Player Start
 1 玩家開始
 
-# mame/drivers/marineb.c: 187, 383 mame/drivers/nova2001.c: 330 mame/drivers/omegrace.c: 392 mame/drivers/snk.c: 1582
+# mame/drivers/marineb.c: 186, 382 mame/drivers/nova2001.c: 327 mame/drivers/omegrace.c: 396 mame/drivers/snk.c: 1565
 1st Bonus Life
 第一次獎勵生命
 
-# emu/ioport.c: 694
+# emu/ioport.c: 625
 2 Coins/1 Credit
 2 幣/1 局
 
-# emu/ioport.c: 700
+# emu/ioport.c: 631
 2 Coins/2 Credits
 2 幣/2 局
 
-# emu/ioport.c: 704
+# emu/ioport.c: 635
 2 Coins/3 Credits
 2 幣/3 局
 
-# emu/ioport.c: 706
+# emu/ioport.c: 637
 2 Coins/4 Credits
 2 幣/4 局
 
-# emu/ioport.c: 708
+# emu/ioport.c: 639
 2 Coins/5 Credits
 2 幣/5 局
 
-# emu/ioport.c: 709
+# emu/ioport.c: 640
 2 Coins/6 Credits
 2 幣/6 局
 
-# emu/ioport.c: 711
+# emu/ioport.c: 642
 2 Coins/7 Credits
 2 幣/7 局
 
-# emu/ioport.c: 712
+# emu/ioport.c: 643
 2 Coins/8 Credits
 2 幣/8 局
 
@@ -318,23 +318,23 @@
 2 Players Start
 2 玩家開始
 
-# mame/drivers/marineb.c: 190, 378 mame/drivers/snk.c: 1591
+# mame/drivers/marineb.c: 189, 377 mame/drivers/snk.c: 1574
 2nd Bonus Life
 第二次獎勵生命
 
-# emu/ioport.c: 691
+# emu/ioport.c: 622
 3 Coins/1 Credit
 3 幣/1 局
 
-# emu/ioport.c: 696
+# emu/ioport.c: 627
 3 Coins/2 Credits
 3 幣/2 局
 
-# emu/ioport.c: 699
+# emu/ioport.c: 630
 3 Coins/3 Credits
 3 幣/3 局
 
-# emu/ioport.c: 703
+# emu/ioport.c: 634
 3 Coins/4 Credits
 3 幣/4 局
 
@@ -342,27 +342,27 @@
 3 Players Start
 3 玩家開始
 
-# emu/ioport.c: 690
+# emu/ioport.c: 621
 4 Coins/1 Credit
 4 幣/1 局
 
-# emu/ioport.c: 693
+# emu/ioport.c: 624
 4 Coins/2 Credits
 4 幣/2 局
 
-# emu/ioport.c: 697
+# emu/ioport.c: 628
 4 Coins/3 Credits
 4 幣/3 局
 
-# emu/ioport.c: 698
+# emu/ioport.c: 629
 4 Coins/4 Credits
 4 幣/4 局
 
-# emu/ioport.c: 702
+# emu/ioport.c: 633
 4 Coins/5 Credits
 4 幣/5 局
 
-# emu/ioport.c: 705
+# emu/ioport.c: 636
 4 Coins/7 Credits
 4 幣/7 局
 
@@ -370,11 +370,11 @@
 4 Players Start
 4 玩家開始
 
-# emu/ioport.c: 689
+# emu/ioport.c: 620
 5 Coins/1 Credit
 5 幣/1 局
 
-# emu/ioport.c: 695
+# emu/ioport.c: 626
 5 Coins/3 Credits
 5 幣/3 局
 
@@ -382,7 +382,7 @@
 5 Players Start
 5 玩家開始
 
-# emu/ioport.c: 688
+# emu/ioport.c: 619
 6 Coins/1 Credit
 6 幣/1 局
 
@@ -390,7 +390,7 @@
 6 Players Start
 6 玩家開始
 
-# emu/ioport.c: 687
+# emu/ioport.c: 618
 7 Coins/1 Credit
 7 幣/1 局
 
@@ -398,11 +398,11 @@
 7 Players Start
 7 玩家開始
 
-# emu/ioport.c: 686
+# emu/ioport.c: 617
 8 Coins/1 Credit
 8 幣/1 局
 
-# emu/ioport.c: 692
+# emu/ioport.c: 623
 8 Coins/3 Credits
 8 幣/3 局
 
@@ -410,7 +410,7 @@
 8 Players Start
 8 玩家開始
 
-# emu/ioport.c: 685
+# emu/ioport.c: 616
 9 Coins/1 Credit
 9 幣/1 局
 
@@ -510,7 +510,7 @@ AD 搖桿 Z 7
 AD Stick Z 8
 AD 搖桿 Z 8
 
-# mame/layout/awpvid14.lay: 410 mame/layout/awpvid16.lay: 410 mame/layout/bfm_sc1.lay: 1249 mame/layout/mpu4.lay: 414 mame/layout/mpu4ext.lay: 414
+# mame/layout/awpvid14.lay: 410 mame/layout/awpvid16.lay: 410 mame/layout/bfm_sc1.lay: 1249 mame/layout/bfm_sc4.lay: 98 mame/layout/mpu4.lay: 414 mame/layout/mpu4ext.lay: 414
 AWP Simulated Video (No Artwork)
 AWP 仿真視訊 (無 Artwork)
 
@@ -526,31 +526,31 @@ Activated\n %s = %s
 Adder %d Output Only (%d:%d)
 僅顯示加算器 %d 的輸出 (%d:%d)
 
-# emu/video.c: 978
+# emu/video.c: 970
 Adjusting target speed to %.1f%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n
 正在調整目標速度至 %.1f%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n
 
-# mame/drivers/mcr68.c: 862 
+# mame/drivers/mcr68.c: 854 
 Advanced
 進階
 
-# emu/uimain.c: 1684
+# emu/uimain.c: 1767
 All cheats reloaded
 全部作弊碼已重新載入
 
-# emu/ioport.c: 782
+# emu/ioport.c: 713
 Allow Continue
 允許\接關
 
-# emu/ioport.c: 791
+# emu/ioport.c: 722
 Alternate
 替代
 
-# emu/uimain.c: 155
+# emu/uimain.c: 161
 Analog Controls
 類比控制
 
-# mame/drivers/epos.c: 155 mame/drivers/lethal.c: 512
+# mame/drivers/epos.c: 156 mame/drivers/lethal.c: 508
 Arcade
 業務機
 
@@ -558,63 +558,63 @@ Arcade
 Are you sure you want to quit?\n\n
 確定要退出嗎?\n\n
 
-# emu/ioport.c: 734
+# emu/ioport.c: 665
 Asia
 亞洲版
 
-# emu/uimain.c: 2391 mame/drivers/5clown.c: 944 mame/drivers/bottom9.c: 254 mame/drivers/btime.c: 793 mame/drivers/galaga.c: 1052, 1114 mame/drivers/goldnpkr.c: 1417, 1486, 1557, 1626, 1710, 1901, 1952, 2385, 2515 mame/drivers/igspoker.c: 421, 553, 699, 858, 998, 1196, 1330, 1470, 1646 mame/drivers/lucky74.c: 1047 mame/drivers/pacman.c: 2983 mame/drivers/pinkiri8.c: 781, 978 mame/drivers/seta.c: 5113 mess/drivers/msx.c: 421 
+# emu/uimain.c: 2474 mame/drivers/5clown.c: 948 mame/drivers/bottom9.c: 244 mame/drivers/btime.c: 781 mame/drivers/galaga.c: 1052, 1114 mame/drivers/goldnpkr.c: 1558, 1627, 1698, 1767, 1851, 2042, 2093, 2813, 2943 mame/drivers/igspoker.c: 426, 558, 704, 863, 1003, 1201, 1335, 1475, 1651 mame/drivers/lucky74.c: 1043 mame/drivers/pacman.c: 2970 mame/drivers/pinkiri8.c: 793, 990 mame/drivers/seta.c: 5091 mess/drivers/msx.c: 420 
 Auto
 自動
 
-# mame/drivers/neogeo.c: 1179
+# mame/drivers/neogeo.c: 1175
 Autofire (in some games)
 連射功\能 (部分遊戲)
 
-# emu/uimain.c: 2721
+# emu/uimain.c: 2804
 Autofire Delay
 連射延遲
 
-# emu/uimain.c: 143
+# emu/uimain.c: 149
 Autofire Setting
 連射設定
 
-# mame/drivers/cb2001.c: 614 mame/drivers/dynax.c: 3299, 3424, 3549 mame/drivers/ertictac.c: 165 mame/drivers/goldstar.c: 644, 806, 968, 1130, 1292, 1454, 1753, 1925, 2097, 2269 mame/drivers/majorpkr.c: 869 mame/drivers/segas32.c: 1877 mame/drivers/snookr10.c: 585, 615 mame/drivers/speedspn.c: 216 mame/drivers/tonton.c: 152 
+# mame/drivers/cb2001.c: 616 mame/drivers/dynax.c: 3242, 3367, 3492 mame/drivers/ertictac.c: 168 mame/drivers/goldstar.c: 640, 802, 964, 1126, 1288, 1450, 1749, 1921, 2093, 2265 mame/drivers/majorpkr.c: 871 mame/drivers/segas32.c: 1856 mame/drivers/snookr10.c: 583, 613 mame/drivers/speedspn.c: 216 mame/drivers/tonton.c: 153 
 Automatic
 自動
 
-# mame/drivers/ssv.c: 1826 
+# mame/drivers/ssv.c: 1800 
 Available
 可用的
 
-# emu/ioport.c: 4093
+# emu/ioport.c: 4035
 Average recorded speed: %d%%\n
 平均錄製速度: %d%%\n
 
-# emu/video.c: 555
+# emu/video.c: 547
 Average speed: %.2f%% (%d seconds)\n
 平均速度: %.2f%% (%d 秒)\n
 
-# mame/drivers/playch10.c: 383, 413 
+# mame/drivers/playch10.c: 379, 409 
 BIOS
 BIOS
 
-# emu/uimain.c: 2237 
+# emu/uimain.c: 2320 
 Backdrops
 背景圖
 
-# emu/ui.c: 2455
+# emu/ui.c: 2452
 Beam Width
 光束寬度
 
-# mame/drivers/metro.c: 2265 mame/drivers/nbmj8891.c: 2044 mame/drivers/pacman.c: 2967
+# mame/drivers/metro.c: 2246 mame/drivers/nbmj8891.c: 2044 mame/drivers/pacman.c: 2954
 Beginner
 初學者
 
-# emu/inpttype.h: 141, 154 mame/drivers/astrocorp.c: 420 mame/drivers/big10.c: 185 mame/drivers/bmcbowl.c: 373 mame/drivers/cardline.c: 146 mame/drivers/cave.c: 1538 mame/drivers/dynax.c: 4191 mame/drivers/goldnpkr.c: 2583 mame/drivers/igs017.c: 1720 mame/drivers/limenko.c: 601 mame/drivers/magicfly.c: 715 mame/drivers/megadrvb.c: 554 mame/drivers/nmg5.c: 720 mame/drivers/re900.c: 259 mame/drivers/sderby.c: 348 mame/drivers/sigmab98.c: 1507 mame/drivers/slotcarn.c: 249 mame/drivers/sms.c: 334 mame/drivers/statriv2.c: 326 mame/drivers/subsino.c: 1894 mame/drivers/subsino2.c: 1965 mame/drivers/witch.c: 564 mame/drivers/wldarrow.c: 252
+# emu/inpttype.h: 141, 154 mame/drivers/astrocorp.c: 425 mame/drivers/big10.c: 185 mame/drivers/bmcbowl.c: 378 mame/drivers/cardline.c: 149 mame/drivers/cave.c: 1533 mame/drivers/dynax.c: 4134 mame/drivers/goldnpkr.c: 3011 mame/drivers/igs017.c: 2136, 2834 mame/drivers/limenko.c: 615 mame/drivers/magicfly.c: 717 mame/drivers/megadrvb.c: 554 mame/drivers/meyc8080.c: 389, 570 mame/drivers/nmg5.c: 724 mame/drivers/re900.c: 262 mame/drivers/sderby.c: 367 mame/drivers/sigmab98.c: 1515 mame/drivers/slotcarn.c: 252 mame/drivers/sms.c: 336 mame/drivers/statriv2.c: 330 mame/drivers/subsino.c: 1907 mame/drivers/subsino2.c: 1971 mame/drivers/witch.c: 570
 Bet
 押注
 
-# emu/uimain.c: 2245 
+# emu/uimain.c: 2328 
 Bezels
 外框圖
 
@@ -622,7 +622,11 @@ Bezels
 Bill 1
 投鈔 1
 
-# emu/ioport.c: 679 mame/drivers/cclimber.c: 469 mame/drivers/karnov.c: 633
+# emu/uimain.c: 191
+Bios Selection
+選擇 BIOS
+
+# emu/ioport.c: 610 mame/drivers/cclimber.c: 463 mame/drivers/karnov.c: 631
 Bonus Life
 獎勵分數
 
@@ -630,11 +634,11 @@ Bonus Life
 Book-Keeping
 收入計算
 
-# mame/drivers/berzerk.c: 719 mame/drivers/coinmstr.c: 281 mame/drivers/funworld.c: 2023 mame/drivers/goldnpkr.c: 2672, 2742 
+# mame/drivers/berzerk.c: 729 mame/drivers/coinmstr.c: 286 mame/drivers/funworld.c: 2023 mame/drivers/goldnpkr.c: 3100, 3170 
 Bookkeeping
 收入
 
-# emu/uimain.c: 158 mame/drivers/cardline.c: 152 mame/drivers/polyplay.c: 173
+# emu/uimain.c: 164 mame/drivers/cardline.c: 155 mame/drivers/polyplay.c: 173
 Bookkeeping Info
 收入資訊
 
@@ -642,31 +646,31 @@ Bookkeeping Info
 Break in Debugger
 中斷除錯程式
 
-# mame/drivers/namcos1.c: 626
+# mame/drivers/namcos1.c: 623
 Brightness
 亮度
 
-# mame/drivers/m107.c: 337 mame/drivers/m92.c: 807 mame/drivers/usgames.c: 103 
+# mame/drivers/m107.c: 335 mame/drivers/m92.c: 804 mame/drivers/usgames.c: 103 
 Button 1
 按鈕 1
 
-# mame/layout/3bagflnz.lay: 238 mame/layout/3bagflvt.lay: 265 mame/layout/ampoker2.lay: 107 mame/layout/arcwins.lay: 265 mame/layout/arimk4nz.lay: 265 mame/layout/aristmk4.lay: 265 mame/layout/babydad.lay: 123 mame/layout/babypkr.lay: 123 mame/layout/bigdeal.lay: 114 mame/layout/bingowng.lay: 70 mame/layout/blckjack.lay: 52 mame/layout/cardline.lay: 83 mame/layout/cgold2.lay: 238 mame/layout/crsbingo.lay: 127 mame/layout/eforest.lay: 265 mame/layout/fashion.lay: 82 mame/layout/fhunter.lay: 238 mame/layout/fortecrd.lay: 120 mame/layout/galaxi.lay: 82 mame/layout/gldnpkr.lay: 225 mame/layout/goldenc.lay: 265 mame/layout/goldnpkr.lay: 107 mame/layout/igspoker.lay: 82 mame/layout/jollycrd.lay: 106 mame/layout/kgbird.lay: 265 mame/layout/luckgrln.lay: 159 mame/layout/lucky74.lay: 159 mame/layout/lucky8.lay: 86 mame/layout/majorpkr.lay: 180 mame/layout/mil4000.lay: 94 mame/layout/mpoker.lay: 120 mame/layout/musicsrt.lay: 123 mame/layout/noraut11.lay: 185 mame/layout/noraut12.lay: 162 mame/layout/novoplay.lay: 122 mame/layout/pirpok2.lay: 105 mame/layout/pmpoker.lay: 81 mame/layout/pmroulet.lay: 31 mame/layout/poker41.lay: 121 mame/layout/pulltabs.lay: 55 mame/layout/royalcrd.lay: 110 mame/layout/saiyukip.lay: 86 mame/layout/sderby.lay: 44 mame/layout/sgsafari.lay: 107 mame/layout/sharkpy.lay: 123 mame/layout/sharkpye.lay: 114 mame/layout/sigmapkr.lay: 107 mame/layout/smoto.lay: 135 mame/layout/snookr10.lay: 98 mame/layout/spacewin.lay: 95 mame/layout/stisub.lay: 114 mame/layout/tisub.lay: 123 mame/layout/topgear.lay: 186 mame/layout/victor21.lay: 115 mame/layout/victor5.lay: 123 mame/layout/videocba.lay: 22 mame/layout/videodad.lay: 86 mame/layout/videopkr.lay: 120 mame/layout/wildone.lay: 238
+# mame/layout/3bagflnz.lay: 238 mame/layout/3bagflvt.lay: 265 mame/layout/ampoker2.lay: 107 mame/layout/arcwins.lay: 265 mame/layout/arimk4nz.lay: 265 mame/layout/aristmk4.lay: 265 mame/layout/babydad.lay: 123 mame/layout/babypkr.lay: 123 mame/layout/bigdeal.lay: 114 mame/layout/bingowng.lay: 70 mame/layout/blckjack.lay: 52 mame/layout/cardline.lay: 83 mame/layout/cgold2.lay: 238 mame/layout/crsbingo.lay: 127 mame/layout/eforest.lay: 265 mame/layout/fashion.lay: 82 mame/layout/fhunter.lay: 238 mame/layout/fortecrd.lay: 120 mame/layout/galaxi.lay: 82 mame/layout/gldnpkr.lay: 225 mame/layout/goldenc.lay: 265 mame/layout/goldnpkr.lay: 107 mame/layout/igspoker.lay: 82 mame/layout/jollycrd.lay: 106 mame/layout/kgbird.lay: 265 mame/layout/luckgrln.lay: 159 mame/layout/lucky74.lay: 159 mame/layout/lucky8.lay: 86 mame/layout/majorpkr.lay: 180 mame/layout/mdrawpkr.lay: 122 mame/layout/meybjack.lay: 109 mame/layout/mil4000.lay: 94 mame/layout/mpoker.lay: 120 mame/layout/musicsrt.lay: 123 mame/layout/noraut11.lay: 185 mame/layout/noraut12.lay: 162 mame/layout/novoplay.lay: 122 mame/layout/pirpok2.lay: 105 mame/layout/pmpoker.lay: 81 mame/layout/pmroulet.lay: 31 mame/layout/poker41.lay: 121 mame/layout/pulltabs.lay: 55 mame/layout/royalcrd.lay: 110 mame/layout/saiyukip.lay: 86 mame/layout/sderby.lay: 44 mame/layout/sgsafari.lay: 107 mame/layout/sharkpy.lay: 123 mame/layout/sharkpye.lay: 114 mame/layout/sigmapkr.lay: 107 mame/layout/smoto.lay: 135 mame/layout/snookr10.lay: 98 mame/layout/spacewin.lay: 95 mame/layout/stisub.lay: 114 mame/layout/suprstar.lay: 103 mame/layout/tisub.lay: 123 mame/layout/topgear.lay: 186 mame/layout/upndown.lay: 68 mame/layout/victor21.lay: 115 mame/layout/victor5.lay: 123 mame/layout/videocba.lay: 22 mame/layout/videodad.lay: 86 mame/layout/videopkr.lay: 120 mame/layout/wildone.lay: 238 mame/layout/wldarrow.lay: 70
 Button Lamps
 按鈕燈光
 
-# mame/drivers/equites.c: 826 mame/drivers/fitfight.c: 522, 654 mame/drivers/lordgun.c: 552 mame/drivers/m90.c: 448 mame/drivers/megasys1.c: 1320 mame/drivers/taitosj.c: 1655 mame/layout/splus.lay: 92
+# mame/drivers/equites.c: 813 mame/drivers/fitfight.c: 524, 656 mame/drivers/lordgun.c: 547 mame/drivers/m90.c: 448 mame/drivers/megasys1.c: 1318 mame/drivers/taitosj.c: 1652 mame/layout/splus.lay: 92
 Buttons
 按鈕
 
-# emu/uimain.c: 2231
+# emu/uimain.c: 2314
 CCW 90
 逆時針旋轉 90°
 
-# mame/drivers/neodrvr.c: 10613 mame/drivers/neogeo.c: 1179
+# mame/drivers/neodrvr.c: 10893 mame/drivers/neogeo.c: 1175
 COMM Setting (Cabinet No.)
 COMM 通訊設定 (筐體 No.)
 
-# mame/drivers/neodrvr.c: 10618 mame/drivers/neogeo.c: 1179
+# mame/drivers/neodrvr.c: 10898 mame/drivers/neogeo.c: 1175
 COMM Setting (Link Enable)
 COMM 通訊設定 (連結啟用)
 
@@ -674,7 +678,7 @@ COMM 通訊設定 (連結啟用)
 CONFIGURATION COMMANDS
 設定指令
 
-# emu/emuopts.c: 144
+# emu/emuopts.c: 145
 CORE ARTWORK OPTIONS
 核心裝飾圖選項
 
@@ -682,67 +686,67 @@ CORE ARTWORK OPTIONS
 CORE COMMANDS
 核心指令
 
-# emu/emuopts.c: 62
+# emu/emuopts.c: 63
 CORE CONFIGURATION OPTIONS
 核心組態選項
 
-# emu/emuopts.c: 206
+# emu/emuopts.c: 207
 CORE DEBUGGING OPTIONS
 核心除錯程式選項
 
-# emu/emuopts.c: 101
+# emu/emuopts.c: 102
 CORE FILENAME OPTIONS
 核心檔名選項
 
-# emu/emuopts.c: 195
+# emu/emuopts.c: 196
 CORE INPUT AUTOMATIC ENABLE OPTIONS
 核心輸入自動啟用選項
 
-# emu/emuopts.c: 177
+# emu/emuopts.c: 178
 CORE INPUT OPTIONS
 核心輸入選項
 
-# emu/emuopts.c: 253
+# emu/emuopts.c: 254
 CORE LANGUAGE OPTIONS
 核心語言選項
 
-# emu/emuopts.c: 215
+# emu/emuopts.c: 216
 CORE MISC OPTIONS
 核心雜項選項
 
-# emu/emuopts.c: 87
+# emu/emuopts.c: 88
 CORE OUTPUT DIRECTORY OPTIONS
 核心輸出目錄選項
 
-# emu/emuopts.c: 234
+# emu/emuopts.c: 235
 CORE PALETTE OPTIONS
 核心色盤選項
 
-# emu/emuopts.c: 124
+# emu/emuopts.c: 125
 CORE PERFORMANCE OPTIONS
 核心效能選項
 
-# emu/emuopts.c: 134
+# emu/emuopts.c: 135
 CORE ROTATION OPTIONS
 核心旋轉選項
 
-# emu/emuopts.c: 153
+# emu/emuopts.c: 154
 CORE SCREEN OPTIONS
 核心畫面選項
 
-# emu/emuopts.c: 71
+# emu/emuopts.c: 72
 CORE SEARCH PATH OPTIONS
 核心搜尋路徑選項
 
-# emu/emuopts.c: 170
+# emu/emuopts.c: 171
 CORE SOUND OPTIONS
 核心聲音選項
 
-# emu/emuopts.c: 110
+# emu/emuopts.c: 111
 CORE STATE/PLAYBACK OPTIONS
 核心狀態/播放選項
 
-# emu/emuopts.c: 164
+# emu/emuopts.c: 165
 CORE VECTOR OPTIONS
 核心向量選項
 
@@ -750,7 +754,7 @@ CORE VECTOR OPTIONS
 CPU
 CPU
 
-# emu/uimain.c: 2249
+# emu/uimain.c: 2332
 CPanels
 操作檯
 
@@ -758,23 +762,23 @@ CPanels
 CRC-32s
 CRC-32
 
-# emu/uimain.c: 2229
+# emu/uimain.c: 2312
 CW 90
 順時針旋轉 90°
 
-# emu/ioport.c: 720 
+# emu/ioport.c: 651 
 Cabinet
 筐體
 
-# mame/drivers/gstriker.c: 401 mame/drivers/segaxbd.c: 877, 922, 954, 996 mame/drivers/taito_f2.c: 1651, 1962
+# mame/drivers/gstriker.c: 397 mame/drivers/segaxbd.c: 877, 922, 954, 996 mame/drivers/taito_f2.c: 1643, 1954
 Cabinet Type
 筐體類型
 
-# emu/inpttype.h: 153 mame/drivers/acefruit.c: 395 mame/drivers/bfm_sc1.c: 858 mame/drivers/bfm_sc2.c: 2756, 2907, 3218, 3374 mame/drivers/gei.c: 656 mame/drivers/goldnpkr.c: 2587 mame/drivers/magicfly.c: 648 mame/drivers/maygay1b.c: 685 mame/drivers/mpu3.c: 650 mame/drivers/mpu4.c: 1730 mame/drivers/segac2.c: 1145, 1191 mame/drivers/slotcarn.c: 227 mame/drivers/sms.c: 348 mame/drivers/tetrisp2.c: 674 
+# emu/inpttype.h: 153 mame/drivers/acefruit.c: 405 mame/drivers/bfm_sc1.c: 871 mame/drivers/bfm_sc2.c: 2776, 2927, 3238, 3394 mame/drivers/gei.c: 679 mame/drivers/goldnpkr.c: 3015 mame/drivers/magicfly.c: 650 mame/drivers/maygay1b.c: 694 mame/drivers/mpu3.c: 654 mame/drivers/mpu4.c: 1727 mame/drivers/segac2.c: 1145, 1191 mame/drivers/slotcarn.c: 230 mame/drivers/sms.c: 350 mame/drivers/tetrisp2.c: 825 
 Cancel
 取消
 
-# emu/uimain.c: 1817
+# emu/uimain.c: 1900
 Card Number:
 記憶卡編號:
 
@@ -790,7 +794,7 @@ Cassette
 Cdrom
 光碟機
 
-# mame/drivers/atarisy2.c: 980 mame/drivers/cischeat.c: 1402
+# mame/drivers/atarisy2.c: 965 mame/drivers/cischeat.c: 1395
 Center
 中心
 
@@ -798,11 +802,11 @@ Center
 Centronics
 Centronics
 
-# emu/uimain.c: 219
+# emu/uimain.c: 228
 Cheat
 作弊引擎
 
-# emu/uimain.c: 1671
+# emu/uimain.c: 1754
 Cheat Comment:\n%s
 作弊碼註解:\n%s
 
@@ -814,11 +818,11 @@ Cheats Disabled
 Cheats Enabled
 作弊碼 已啟用
 
-# emu/ioport.c: 735
+# emu/ioport.c: 666
 China
 中國版
 
-# emu/ioport.c: 744
+# emu/ioport.c: 675
 Chinese
 中華
 
@@ -826,7 +830,7 @@ Chinese
 Christopher Kirmse and the MAMEUI team
 Christopher Kirmse 與 MAMEUI 開發團隊
 
-# mame/drivers/st0016.c: 403
+# mame/drivers/st0016.c: 401
 Classic
 傳統
 
@@ -834,19 +838,19 @@ Classic
 Classic graphics and VFD
 傳統畫面及 VFD
 
-# emu/ioport.c: 722 emu/layout/dualhovu.lay: 63 emu/layout/dualhsxs.lay: 63 emu/layout/dualhuov.lay: 63 emu/layout/horizont.lay: 15 emu/layout/vertical.lay: 15 
+# emu/ioport.c: 653 emu/layout/dualhovu.lay: 63 emu/layout/dualhsxs.lay: 63 emu/layout/dualhuov.lay: 63 emu/layout/horizont.lay: 15 emu/layout/vertical.lay: 15 
 Cocktail
 檯面型
 
-# mame/drivers/igs011.c: 3086 mame/drivers/subsino2.c: 1739, 1758, 1761, 2023
+# mame/drivers/igs011.c: 3098 mame/drivers/subsino2.c: 1745, 1764, 1767, 2029
 Coin
 投幣器
 
-# emu/uimain.c: 1483
+# emu/uimain.c: 1566
 Coin %c: 
 投幣器 %c: 
 
-# emu/inpttype.h: 489 mame/drivers/cdi.c: 176 mame/drivers/goldnpkr.c: 1566 mame/drivers/magic10.c: 638 mame/drivers/mexico86.c: 312 mame/drivers/murogmbl.c: 122 mame/drivers/roul.c: 227
+# emu/inpttype.h: 489 mame/drivers/cdi.c: 175 mame/drivers/goldnpkr.c: 1707 mame/drivers/magic10.c: 646 mame/drivers/mexico86.c: 312 mame/drivers/murogmbl.c: 124 mame/drivers/roul.c: 230
 Coin 1
 投幣 1
 
@@ -862,11 +866,11 @@ Coin 11
 Coin 12
 投幣 12
 
-# emu/inpttype.h: 490 mame/drivers/centiped.c: 1370 mame/drivers/magic10.c: 639 mame/drivers/mexico86.c: 317 mame/drivers/murogmbl.c: 123
+# emu/inpttype.h: 490 mame/drivers/centiped.c: 1365 mame/drivers/magic10.c: 647 mame/drivers/mexico86.c: 317 mame/drivers/murogmbl.c: 125
 Coin 2
 投幣 2
 
-# emu/inpttype.h: 491 mame/drivers/centiped.c: 1375
+# emu/inpttype.h: 491 mame/drivers/centiped.c: 1370
 Coin 3
 投幣 3
 
@@ -894,43 +898,43 @@ Coin 8
 Coin 9
 投幣 9
 
-# emu/ioport.c: 683
+# emu/ioport.c: 614
 Coin A
 投幣 A
 
-# emu/ioport.c: 684
+# emu/ioport.c: 615
 Coin B
 投幣 B
 
-# mame/drivers/marinedt.c: 390 mame/drivers/markham.c: 73 mame/drivers/mcr68.c: 805 mame/drivers/powerins.c: 204 mame/drivers/segas18.c: 758, 786 mame/drivers/system16.c: 1914
+# mame/drivers/marinedt.c: 398 mame/drivers/markham.c: 73 mame/drivers/mcr68.c: 797 mame/drivers/powerins.c: 203 mame/drivers/segas18.c: 758, 786 mame/drivers/system16.c: 1878
 Coin Chutes
 投幣裝置
 
-# mame/drivers/neodrvr.c: 10607 mame/drivers/neogeo.c: 1179
+# mame/drivers/neodrvr.c: 10887 mame/drivers/neogeo.c: 1175
 Coin Chutes?
 投幣裝置?
 
-# mame/drivers/airbustr.c: 447 mame/drivers/asteroid.c: 421 mame/drivers/asuka.c: 691 mame/drivers/bloodbro.c: 160 mame/drivers/cabal.c: 281 mame/drivers/dynduke.c: 139 mame/drivers/exidy.c: 430 mame/drivers/exprraid.c: 316 mame/drivers/holeland.c: 93, 160 mame/drivers/hvyunit.c: 522 mame/drivers/m107.c: 241 mame/drivers/m52.c: 151 mame/drivers/m57.c: 131 mame/drivers/m58.c: 95 mame/drivers/m62.c: 413 mame/drivers/m63.c: 577 mame/drivers/m72.c: 1235, 1289, 1332, 1375, 1413, 1457, 1497, 1538, 1584, 1644, 1706, 1760, 1796 mame/drivers/m90.c: 199, 248, 298, 353, 402, 463, 518, 575, 625 mame/drivers/m92.c: 459 mame/drivers/mcatadv.c: 279 mame/drivers/midzeus.c: 870 mame/drivers/playch10.c: 594 mame/drivers/playmark.c: 421, 520, 668, 763, 859 mame/drivers/powerbal.c: 234 mame/drivers/raiden.c: 137 mame/drivers/rainbow.c: 474 mame/drivers/rallyx.c: 670 mame/drivers/sshangha.c: 286 mame/drivers/system16.c: 1959 mame/drivers/tagteam.c: 158 mame/drivers/taito_l.c: 1554 mame/drivers/travrusa.c: 139 mame/drivers/vigilant.c: 180, 252 mame/drivers/welltris.c: 527 mame/includes/galpnipt.h: 92, 116
+# mame/drivers/airbustr.c: 438 mame/drivers/asteroid.c: 421 mame/drivers/asuka.c: 690 mame/drivers/bloodbro.c: 172 mame/drivers/cabal.c: 276 mame/drivers/dynduke.c: 139 mame/drivers/exidy.c: 429 mame/drivers/exprraid.c: 312 mame/drivers/holeland.c: 93, 160 mame/drivers/hvyunit.c: 528 mame/drivers/m107.c: 239 mame/drivers/m52.c: 151 mame/drivers/m57.c: 131 mame/drivers/m58.c: 95 mame/drivers/m62.c: 411 mame/drivers/m63.c: 584 mame/drivers/m72.c: 1211, 1265, 1308, 1351, 1389, 1433, 1473, 1514, 1560, 1620, 1682, 1736, 1772 mame/drivers/m90.c: 199, 248, 298, 353, 402, 463, 518, 575, 625 mame/drivers/m92.c: 456 mame/drivers/mcatadv.c: 278 mame/drivers/midzeus.c: 866 mame/drivers/playch10.c: 590 mame/drivers/playmark.c: 414, 513, 661, 756, 852 mame/drivers/powerbal.c: 234 mame/drivers/progolf.c: 347 mame/drivers/raiden.c: 137 mame/drivers/rainbow.c: 472 mame/drivers/rallyx.c: 666 mame/drivers/sshangha.c: 277 mame/drivers/system16.c: 1923 mame/drivers/tagteam.c: 157 mame/drivers/taito_l.c: 1531 mame/drivers/travrusa.c: 139 mame/drivers/vigilant.c: 180, 252 mame/drivers/welltris.c: 524 mame/includes/galpnipt.h: 92, 116
 Coin Mode
 投幣模式
 
-# mame/drivers/aerofgt.c: 659, 846, 912, 1001 mame/drivers/crshrace.c: 274 mame/drivers/gaelco2.c: 677 mame/drivers/lgp.c: 261 mame/drivers/taotaido.c: 220 mame/drivers/tatsumi.c: 581, 706
+# mame/drivers/aerofgt.c: 654, 841, 907, 996 mame/drivers/crshrace.c: 271 mame/drivers/gaelco2.c: 677 mame/drivers/lgp.c: 263 mame/drivers/taotaido.c: 217 mame/drivers/tatsumi.c: 575, 700
 Coin Slot
 投幣口
 
-# mame/drivers/alpha68k.c: 1454 mame/drivers/armedf.c: 887 mame/drivers/bbusters.c: 464, 520 mame/drivers/boogwing.c: 188 mame/drivers/buggychl.c: 259 mame/drivers/cps1.c: 1510, 1936, 2101, 2319, 2555, 2920 mame/drivers/cshooter.c: 370 mame/drivers/deco32.c: 1189 mame/drivers/fcrash.c: 599 mame/drivers/flstory.c: 559 mame/drivers/freekick.c: 448 mame/drivers/galaxold.c: 1004 mame/drivers/halleys.c: 1780, 1874 mame/drivers/itech8.c: 1526 mame/drivers/kaneko16.c: 1666 mame/drivers/lkage.c: 278 mame/drivers/lordgun.c: 440, 524 mame/drivers/m107.c: 238 mame/drivers/m90.c: 622 mame/drivers/m92.c: 456 mame/drivers/nycaptor.c: 637 mame/drivers/punchout.c: 875 mame/drivers/sslam.c: 561 mame/drivers/suprslam.c: 198
+# mame/drivers/alpha68k.c: 1445 mame/drivers/armedf.c: 875 mame/drivers/bbusters.c: 459, 515 mame/drivers/boogwing.c: 188 mame/drivers/buggychl.c: 257 mame/drivers/cps1.c: 1500, 1926, 2091, 2309, 2545, 2910 mame/drivers/cshooter.c: 380 mame/drivers/deco32.c: 1173 mame/drivers/fcrash.c: 599 mame/drivers/flstory.c: 551 mame/drivers/freekick.c: 441 mame/drivers/galaxold.c: 1003 mame/drivers/halleys.c: 1785, 1879 mame/drivers/itech8.c: 1528 mame/drivers/kaneko16.c: 1666 mame/drivers/lkage.c: 276 mame/drivers/lordgun.c: 435, 519 mame/drivers/m107.c: 236 mame/drivers/m90.c: 622 mame/drivers/m92.c: 453 mame/drivers/nycaptor.c: 625 mame/drivers/punchout.c: 872 mame/drivers/sslam.c: 553 mame/drivers/suprslam.c: 195
 Coin Slots
 投幣口
 
-# emu/ioport.c: 682 mame/drivers/angelkds.c: 218
+# emu/ioport.c: 613 mame/drivers/angelkds.c: 218
 Coinage
 投幣數
 
-# emu/ioport.c: 3088
+# emu/ioport.c: 3030
 Coinlock disabled %s.
 投幣鎖已停用 %s。
 
-# emu/layout/ho20ffff.lay: 10 emu/layout/ho2eff2e.lay: 10 emu/layout/ho4f893d.lay: 11 emu/layout/ho88ffff.lay: 10 emu/layout/hoa0a0ff.lay: 10 emu/layout/hoffe457.lay: 10 emu/layout/hoffff20.lay: 10 emu/layout/voffff20.lay: 10 mame/layout/avalnche.lay: 26 mame/layout/beaminv.lay: 22 mame/layout/bzone.lay: 14 mame/layout/circus.lay: 26 mame/layout/clowns.lay: 26 mame/layout/copsnrob.lay: 18 mame/layout/cosmicm.lay: 18 mame/layout/crash.lay: 26 mame/layout/deadeye.lay: 34 mame/layout/geebee.lay: 68 mame/layout/gypsyjug.lay: 38 mame/layout/invad2ct.lay: 46 mame/layout/invaders.lay: 22 mame/layout/invrvnge.lay: 18 mame/layout/lazercmd.lay: 30 mame/layout/navarone.lay: 28 mame/layout/sbrkout.lay: 34 mame/layout/solarq.lay: 18 mame/layout/sos.lay: 18 mame/layout/spacwalk.lay: 49 mame/layout/starcas.lay: 22 mame/layout/tinv2650.lay: 22
+# emu/layout/ho20ffff.lay: 10 emu/layout/ho2eff2e.lay: 10 emu/layout/ho4f893d.lay: 11 emu/layout/ho88ffff.lay: 10 emu/layout/hoa0a0ff.lay: 10 emu/layout/hoffe457.lay: 10 emu/layout/hoffff20.lay: 10 emu/layout/voffff20.lay: 10 mame/layout/avalnche.lay: 26 mame/layout/beaminv.lay: 22 mame/layout/bzone.lay: 14 mame/layout/circus.lay: 26 mame/layout/clowns.lay: 26 mame/layout/copsnrob.lay: 18 mame/layout/cosmicm.lay: 18 mame/layout/crash.lay: 26 mame/layout/deadeye.lay: 34 mame/layout/geebee.lay: 68 mame/layout/gypsyjug.lay: 38 mame/layout/invad2ct.lay: 46 mame/layout/invaders.lay: 22 mame/layout/invrvnge.lay: 18 mame/layout/lazercmd.lay: 30 mame/layout/navarone.lay: 28 mame/layout/quizshow.lay: 34 mame/layout/sbrkout.lay: 34 mame/layout/solarq.lay: 18 mame/layout/sos.lay: 18 mame/layout/spacwalk.lay: 49 mame/layout/starcas.lay: 22 mame/layout/tinv2650.lay: 22
 Color Overlay
 色彩覆疊
 
@@ -938,7 +942,7 @@ Color Overlay
 Color_Overlay
 色彩覆疊
 
-# mame/drivers/armedf.c: 888 mame/drivers/bbusters.c: 465, 521 mame/drivers/boogwing.c: 189 mame/drivers/deco32.c: 1190 mame/drivers/gaelco2.c: 679, 1122 mame/drivers/gijoe.c: 239 mame/drivers/itech8.c: 1527 mame/drivers/konamigq.c: 441 mame/drivers/konamigx.c: 1484 mame/drivers/lethal.c: 514 mame/drivers/m107.c: 239 mame/drivers/m90.c: 623 mame/drivers/m92.c: 457 mame/drivers/marinedt.c: 391 mame/drivers/markham.c: 75 mame/drivers/mcr68.c: 807 mame/drivers/moo.c: 396 mame/drivers/mystwarr.c: 629, 670, 716 mame/drivers/onetwo.c: 249 mame/drivers/segac2.c: 998 mame/drivers/segas18.c: 862, 918, 972, 1034, 1098, 1119, 1165 mame/drivers/segas24.c: 1396, 1459, 1487, 1801 mame/drivers/shisen.c: 156 mame/drivers/snk.c: 2572, 2704 mame/drivers/sslam.c: 562 mame/drivers/suprslam.c: 199 mame/drivers/system16.c: 1960
+# mame/drivers/armedf.c: 876 mame/drivers/bbusters.c: 460, 516 mame/drivers/boogwing.c: 189 mame/drivers/deco32.c: 1174 mame/drivers/gaelco2.c: 679, 1122 mame/drivers/gijoe.c: 236 mame/drivers/itech8.c: 1529 mame/drivers/konamigq.c: 454 mame/drivers/konamigx.c: 1484 mame/drivers/lethal.c: 510 mame/drivers/m107.c: 237 mame/drivers/m90.c: 623 mame/drivers/m92.c: 454 mame/drivers/marinedt.c: 399 mame/drivers/markham.c: 75 mame/drivers/mcr68.c: 799 mame/drivers/moo.c: 390 mame/drivers/mystwarr.c: 621, 662, 708 mame/drivers/onetwo.c: 254 mame/drivers/segac2.c: 998 mame/drivers/segas18.c: 862, 918, 972, 1034, 1098, 1119, 1165 mame/drivers/segas24.c: 1395, 1458, 1486, 1800 mame/drivers/shisen.c: 156 mame/drivers/snk.c: 2555, 2687 mame/drivers/sslam.c: 554 mame/drivers/suprslam.c: 196 mame/drivers/system16.c: 1924
 Common
 普通
 
@@ -946,23 +950,23 @@ Common
 Config Menu
 設定選單
 
-# emu/uimain.c: 3026
+# emu/uimain.c: 3109
 Configure General Inputs
 設定一般輸入
 
-# mame/drivers/bfcobra.c: 1497 mame/drivers/blackt96.c: 382 mame/drivers/ksayakyu.c: 168 mame/drivers/merit.c: 783 mame/drivers/metro.c: 2466 mame/drivers/mpu4vid.c: 1618, 1733 mame/drivers/nemesis.c: 1231 mame/drivers/pipeline.c: 274 mame/drivers/seta.c: 3461 mame/drivers/tecmo.c: 472 mame/drivers/tmnt.c: 1529
+# mame/drivers/bfcobra.c: 1500 mame/drivers/blackt96.c: 392 mame/drivers/ksayakyu.c: 165 mame/drivers/merit.c: 788 mame/drivers/metro.c: 2447 mame/drivers/mpu4vid.c: 1618, 1733 mame/drivers/nemesis.c: 1220 mame/drivers/pipeline.c: 276 mame/drivers/seta.c: 3439 mame/drivers/tecmo.c: 471 mame/drivers/tmnt.c: 1504
 Continue
 繼續
 
-# emu/ioport.c: 776
+# emu/ioport.c: 707
 Continue Price
 接關投幣
 
-# emu/ioport.c: 781
+# emu/ioport.c: 712
 Continues
 接關
 
-# mame/drivers/brkthru.c: 207 mame/drivers/btime.c: 620, 770, 842, 981, 1124 mame/drivers/ddenlovr.c: 6387, 7112 mame/drivers/metro.c: 2282 mame/drivers/speglsht.c: 290 mame/drivers/tail2nos.c: 138 
+# mame/drivers/brkthru.c: 203 mame/drivers/btime.c: 608, 758, 830, 969, 1112 mame/drivers/ddenlovr.c: 6285, 7010 mame/drivers/metro.c: 2263 mame/drivers/speglsht.c: 294 mame/drivers/tail2nos.c: 137 
 Control Panel
 控制面板
 
@@ -970,15 +974,15 @@ Control Panel
 Control Panel / Laser LEDs
 操作面版 / 雷射 LED
 
-# mame/drivers/nbmj8891.c: 875, 961 mame/drivers/taitosj.c: 1653 mame/drivers/tumbleb.c: 1718 
+# mame/drivers/goldnpkr.c: 2487 mame/drivers/nbmj8891.c: 875, 961 mame/drivers/taitosj.c: 1650 mame/drivers/tumbleb.c: 1714 
 Control Type
 控制類型
 
-# emu/ioport.c: 777
+# emu/ioport.c: 708
 Controller
 控制器
 
-# emu/ioport.c: 772 mame/drivers/fantland.c: 190, 249, 597, 598, 599, 600, 601, 602, 603, 604, 607, 608, 609, 610, 611, 612, 613, 614, 617, 618, 619, 620, 621, 622, 623, 624, 627, 628, 629, 630, 631, 632, 633, 634, 637, 638, 639, 640, 641, 642, 643, 644, 647, 648, 649, 650, 651, 652, 653, 654, 683 mess/drivers/ngp.c: 213, 568
+# emu/ioport.c: 703 mame/drivers/fantland.c: 182, 241, 588, 589, 590, 591, 592, 593, 594, 595, 598, 599, 600, 601, 602, 603, 604, 605, 608, 609, 610, 611, 612, 613, 614, 615, 618, 619, 620, 621, 622, 623, 624, 625, 628, 629, 630, 631, 632, 633, 634, 635, 638, 639, 640, 641, 642, 643, 644, 645, 674 mess/drivers/ngp.c: 212, 567
 Controls
 控制
 
@@ -990,79 +994,79 @@ Copyright Nicola Salmoria and the MAME team
 Copyright Nicola Salmoria\nand the MAME team\nhttp://mamedev.org
 著作權 (C) Nicola Salmoria\n與 MAME 開發團隊\nhttp://mamedev.org
 
-# emu/config.c: 121, 125
+# emu/config.c: 122, 126
 Could not load controller file %s.cfg
 無法載入控制器檔案 %s.cfg
 
-# mame/drivers/bwing.c: 254 mame/drivers/cischeat.c: 1017 mame/drivers/ddenlovr.c: 5778 mame/drivers/kaneko16.c: 1045 mame/drivers/midtunit.c: 352, 455, 558 mame/drivers/midwunit.c: 392, 571 mame/drivers/midxunit.c: 183 mame/drivers/midyunit.c: 352, 816 mame/drivers/seta.c: 3646, 4315, 4636, 4805 mame/drivers/speglsht.c: 293 mame/drivers/suprslam.c: 241 mame/drivers/tail2nos.c: 141
+# mame/drivers/bwing.c: 247 mame/drivers/cischeat.c: 1010 mame/drivers/ddenlovr.c: 5676 mame/drivers/kaneko16.c: 1045 mame/drivers/midtunit.c: 350, 453, 556 mame/drivers/midwunit.c: 392, 571 mame/drivers/midxunit.c: 183 mame/drivers/midyunit.c: 351, 815 mame/drivers/seta.c: 3624, 4293, 4614, 4783 mame/drivers/speglsht.c: 297 mame/drivers/suprslam.c: 238 mame/drivers/tail2nos.c: 140
 Country
 國別
 
-# emu/uimain.c: 1823
+# emu/uimain.c: 1906
 Create New Card
 建立新的記憶卡
 
-# emu/ioport.c: 4029
+# emu/ioport.c: 3971
 Created %s
 已建立 %s
 
-# emu/uimain.c: 2257
+# emu/uimain.c: 2340
 Cropped
 裁切
 
-# emu/ui.c: 2900
+# emu/ui.c: 2897
 Crosshair Offset
 十字準星位移
 
-# emu/ui.c: 2470
+# emu/ui.c: 2467
 Crosshair Offset %s
 十字準星位移 %s
 
-# emu/uimain.c: 215
+# emu/uimain.c: 224
 Crosshair Options
 十字準星選項
 
-# emu/ui.c: 2881
+# emu/ui.c: 2878
 Crosshair Scale
 十字準星尺度
 
-# emu/ui.c: 2467
+# emu/ui.c: 2464
 Crosshair Scale %s
 十字準星尺度 %s
 
-# emu/ioport.c: 623
+# emu/ioport.c: 554
 Cursor Down
 游標 向下
 
-# emu/ioport.c: 620
+# emu/ioport.c: 551
 Cursor Left
 游標 向左
 
-# emu/ioport.c: 621
+# emu/ioport.c: 552
 Cursor Right
 游標 向右
 
-# emu/ioport.c: 622
+# emu/ioport.c: 553
 Cursor Up
 游標 向上
 
-# mame/drivers/tickee.c: 528 
+# mame/drivers/tickee.c: 533 
 Custom
 自訂
 
-# emu/uimain.c: 146
+# emu/uimain.c: 152
 Custom Buttons
 自訂按鈕
 
-# emu/input.c: 2071, 2117 emu/uimain.c: 2490
+# emu/input.c: 2071, 2117 emu/uimain.c: 2573
 DEFAULT
 預設
 
-# mame/drivers/aztarac.c: 85, 126 mame/drivers/cinemat.c: 256, 834 mame/drivers/exidy.c: 161, 634 mame/drivers/goindol.c: 96, 145 mame/drivers/mcr.c: 388, 1059 mame/drivers/mgolf.c: 144, 148, 246 mame/drivers/mhavoc.c: 271, 296, 359, 450 mame/drivers/scobra.c: 368, 385 mame/drivers/sfkick.c: 92, 382 mame/drivers/turbo.c: 644, 651, 905 mame/drivers/victory.c: 145, 180 mame/drivers/wallc.c: 169, 191 mame/drivers/wolfpack.c: 36, 186
+# mame/drivers/aztarac.c: 84, 125 mame/drivers/cinemat.c: 250, 828 mame/drivers/exidy.c: 160, 633 mame/drivers/goindol.c: 90, 139 mame/drivers/mcr.c: 409, 1080 mame/drivers/mgolf.c: 148, 152, 249 mame/drivers/mhavoc.c: 271, 296, 359, 450 mame/drivers/scobra.c: 372, 389 mame/drivers/sfkick.c: 96, 382 mame/drivers/turbo.c: 507, 513, 769 mame/drivers/victory.c: 145, 180 mame/drivers/wallc.c: 172, 194 mame/drivers/wolfpack.c: 36, 184
 DIAL
 方向盤
 
-# emu/layout/vertical.lay: 28 mame/drivers/aerofgt.c: 490, 560 mame/drivers/cinemat.c: 931 mame/drivers/cps3.c: 2405 mame/drivers/psikyo4.c: 409, 503, 587 mame/drivers/psikyosh.c: 570, 687, 739 
+# emu/layout/vertical.lay: 28 mame/drivers/aerofgt.c: 485, 555 mame/drivers/cinemat.c: 925 mame/drivers/cps3.c: 2382 mame/drivers/psikyo4.c: 401, 495, 579 mame/drivers/psikyosh.c: 567, 684, 736 
 Debug
 除錯
 
@@ -1070,15 +1074,15 @@ Debug
 Decrypting %d%%
 正在解密 %d%%
 
-# emu/video/pc_cga.c: 133 mame/drivers/asuka.c: 611 mame/drivers/bwing.c: 299 mame/drivers/cps1.c: 1097 mame/drivers/cps3.c: 2295, 2316, 2346, 2388 mame/drivers/fgoal.c: 256 mame/drivers/mcr68.c: 737 mame/drivers/ms32.c: 1037, 1049 mame/drivers/wwfsstar.c: 359 
+# emu/video/pc_cga.c: 133 mame/drivers/asuka.c: 610 mame/drivers/bwing.c: 292 mame/drivers/cps1.c: 1087 mame/drivers/cps3.c: 2272, 2293, 2323, 2365 mame/drivers/fgoal.c: 248 mame/drivers/mcr68.c: 729 mame/drivers/ms32.c: 1016, 1028 mame/drivers/wwfsstar.c: 357 
 Default
 預設
 
-# emu/ioport.c: 615 
+# emu/ioport.c: 546 
 Delete
 Delete
 
-# emu/ioport.c: 681 mame/drivers/dreamwld.c: 519
+# emu/ioport.c: 612 mame/drivers/dreamwld.c: 529
 Demo Sounds
 展示音效
 
@@ -1086,7 +1090,7 @@ Demo Sounds
 Device %s load (%s) failed: %s
 裝置 %s 載入 (%s) 失敗: %s
 
-# emu/inpttype.h: 582 mame/drivers/ssv.c: 2320 
+# emu/inpttype.h: 582 mame/drivers/ssv.c: 2294 
 Dial
 方向盤
 
@@ -1150,31 +1154,31 @@ Dial V 7
 Dial V 8
 方向盤 V 8
 
-# emu/ioport.c: 680 mame/drivers/crospang.c: 212, 269 mame/drivers/dreamwld.c: 529, 530, 531 mame/drivers/pktgaldx.c: 220
+# emu/ioport.c: 611 mame/drivers/crospang.c: 212, 269 mame/drivers/dreamwld.c: 539, 540, 541 mame/drivers/pktgaldx.c: 220
 Difficulty
 難度
 
-# mame/drivers/cps1.c: 2019 mame/drivers/dominob.c: 226 mame/drivers/speedbal.c: 141 mame/drivers/taito_b.c: 1798
+# mame/drivers/cps1.c: 2009 mame/drivers/dominob.c: 230 mame/drivers/speedbal.c: 141 mame/drivers/taito_b.c: 1790
 Difficulty 1
 難度 1
 
-# mame/drivers/cps1.c: 2028 mame/drivers/dominob.c: 231 mame/drivers/speedbal.c: 146 mame/drivers/taito_b.c: 1801
+# mame/drivers/cps1.c: 2018 mame/drivers/dominob.c: 235 mame/drivers/speedbal.c: 146 mame/drivers/taito_b.c: 1793
 Difficulty 2
 難度 2
 
-# emu/uimain.c: 151
+# emu/uimain.c: 157
 Dip Switches
 機台設定開關
 
-# emu/machine/z8536.c: 159 emu/uimain.c: 2237, 2241, 2245, 2249, 2253 mame/drivers/blockade.c: 313 mame/drivers/gei.c: 752 mame/drivers/lvcards.c: 328, 406 mame/drivers/magic10.c: 569 mame/drivers/metro.c: 2291 mame/drivers/midvunit.c: 858 mame/drivers/nemesis.c: 1038 mame/drivers/seattle.c: 2432 mame/drivers/tapatune.c: 246, 255
+# emu/machine/z8536.c: 159 emu/uimain.c: 2320, 2324, 2328, 2332, 2336 mame/drivers/blockade.c: 311 mame/drivers/gei.c: 775 mame/drivers/icecold.c: 98 mame/drivers/lvcards.c: 325, 403 mame/drivers/magic10.c: 577 mame/drivers/metro.c: 2272 mame/drivers/midvunit.c: 844 mame/drivers/nemesis.c: 1027 mame/drivers/seattle.c: 2441 mame/drivers/tapatune.c: 251, 260
 Disabled
 停用
 
-# mame/drivers/seta.c: 6065 mame/drivers/tail2nos.c: 142
+# mame/drivers/seta.c: 6043 mame/drivers/tail2nos.c: 141
 Domestic
 國內版
 
-# emu/inpttype.h: 145 mame/drivers/magic10.c: 541 mame/drivers/mlanding.c: 634 mame/drivers/sengokmj.c: 232 mame/drivers/splus.c: 627
+# emu/inpttype.h: 145 mame/drivers/magic10.c: 549 mame/drivers/mlanding.c: 649 mame/drivers/sengokmj.c: 232 mame/drivers/splus.c: 635
 Door
 機門
 
@@ -1182,11 +1186,11 @@ Door
 Door Interlock
 機門連鎖
 
-# emu/inpttype.h: 138 mame/drivers/big10.c: 188 mame/drivers/blitz68k.c: 1510 mame/drivers/dunhuang.c: 628 mame/drivers/igs017.c: 1785 mame/drivers/nbmj8891.c: 1189 mame/drivers/subsino.c: 1604 mame/drivers/subsino2.c: 1636, 1780, 2048 mame/drivers/witch.c: 562
+# emu/inpttype.h: 138 mame/drivers/big10.c: 188 mame/drivers/blitz68k.c: 1589 mame/drivers/dunhuang.c: 629 mame/drivers/goldnpkr.c: 2370, 2604, 2701 mame/drivers/igs017.c: 2423 mame/drivers/nbmj8891.c: 1189 mame/drivers/subsino.c: 1617 mame/drivers/subsino2.c: 1642, 1786, 2054 mame/drivers/witch.c: 568
 Double Up
 比倍
 
-# emu/input.c: 252 mame/drivers/re900.c: 263 mess/drivers/gb.c: 553 mess/drivers/ngp.c: 570
+# emu/input.c: 252 mame/drivers/re900.c: 266 mess/drivers/gb.c: 553 mess/drivers/ngp.c: 569
 Down
 下
 
@@ -1194,11 +1198,11 @@ Down
 Driver %s (%s):\n
 驅動 %s (%s):\n
 
-# emu/uimain.c: 153
+# emu/uimain.c: 159
 Driver Configuration
 驅動設定
 
-# emu/machine.c: 1068
+# emu/driver.c: 53
 Driver Device
 驅動裝置
 
@@ -1206,7 +1210,7 @@ Driver Device
 Driver requires that device \"%s\" must have an image to load
 驅動程式需要 \"%s\" 裝置的映像檔才能載入
 
-# emu/ioport.c: 773
+# emu/ioport.c: 704
 Dual
 雙人
 
@@ -1234,7 +1238,7 @@ Dual Under-Over
 Dual Under-Over (Gapless)
 雙畫面 下上 (無間隙)
 
-# emu/machine/eeprom.c: 96 mame/drivers/sigmab98.c: 480, 1492, 1530, 1568 mame/drivers/tmnt.c: 466, 481, 702, 1670, 1814, 1852, 1892, 1931, 1981 mame/drivers/toaplan2.c: 1543, 2118 mame/drivers/vendetta.c: 249, 270, 328, 384 mame/drivers/xexex.c: 352, 403 mame/drivers/xmen.c: 128, 163, 214, 241, 280
+# emu/machine/eeprom.c: 96 mame/drivers/sigmab98.c: 516, 1500, 1538, 1576 mame/drivers/tmnt.c: 451, 465, 680, 1645, 1789, 1827, 1867, 1906, 1956 mame/drivers/toaplan2.c: 1521, 2096 mame/drivers/vendetta.c: 242, 263, 321, 377 mame/drivers/xexex.c: 342, 393 mame/drivers/xmen.c: 124, 159, 210, 237, 275
 EEPROM
 EEPROM
 
@@ -1274,7 +1278,7 @@ ERROR: IPS is not enough memory\n
 ERROR: ROM entry \"%s\" is not found for IPS file \"%s\"\n
 錯誤: 找不到 ROM \"%s\" 來用於 IPS 檔案 \"%s\"\n
 
-# emu/romload.c: 507
+# emu/romload.c: 505
 ERROR: required files are missing, the %s cannot be run.
 錯誤: 必要的檔案遺失，%s 無法執行。
 
@@ -1286,43 +1290,43 @@ ERROR: wrong CRC for ROM entry \"%s\"\n
 EXPECTED: %s\n
 需要: %s\n
 
-# emu/ioport.c: 752
+# emu/ioport.c: 683
 Easier
 更容易
 
-# emu/ioport.c: 751
+# emu/ioport.c: 682
 Easiest
 最容易
 
-# emu/ioport.c: 753 mame/drivers/yunsun16.c: 399
+# emu/ioport.c: 684 mame/drivers/yunsun16.c: 399
 Easy
 簡單
 
-# emu/uimain.c: 1822
+# emu/uimain.c: 1905
 Eject Current Card
 退出目前的記憶卡
 
-# emu/uimain.c: 375
+# emu/uimain.c: 388
 Emulated
 模擬
 
-# emu/sound/sn76477.c: 647 emu/uimain.c: 2237, 2241, 2245, 2249, 2253 mame/drivers/gei.c: 753 mame/drivers/lvcards.c: 329, 407 mame/drivers/magic10.c: 570 mame/drivers/midvunit.c: 859 mame/drivers/seattle.c: 2431
+# emu/sound/sn76477.c: 647 emu/uimain.c: 2320, 2324, 2328, 2332, 2336 mame/drivers/gei.c: 776 mame/drivers/lvcards.c: 326, 404 mame/drivers/magic10.c: 578 mame/drivers/midvunit.c: 845 mame/drivers/seattle.c: 2440
 Enabled
 啟用
 
-# emu/ioport.c: 3930, 3956, 3982
+# emu/ioport.c: 3872, 3898, 3924
 End of file
 檔案結束
 
-# mame/drivers/kaneko16.c: 1046 mame/drivers/nmk16.c: 2731
+# mame/drivers/kaneko16.c: 1046 mame/drivers/nmk16.c: 2726
 England
 英國版
 
-# emu/ioport.c: 742 mame/drivers/snowbros.c: 869
+# emu/ioport.c: 673 mame/drivers/snowbros.c: 869
 English
 英文
 
-# mame/drivers/neodrvr.c: 10714 mame/drivers/neogeo.c: 1254
+# mame/drivers/neodrvr.c: 10994 mame/drivers/neogeo.c: 1250
 Enter BIOS
 進入 BIOS
 
@@ -1330,15 +1334,15 @@ Enter BIOS
 Error
 錯誤
 
-# emu/video.c: 445 
+# emu/video.c: 437 
 Error creating AVI: %s\n
 建立 AVI 時發生錯誤: %s\n
 
-# emu/uimain.c: 1770
+# emu/uimain.c: 1853
 Error creating memory card\n(Card may already exist)
 建立記憶卡時發生錯誤\n(記憶卡可能已經存在)
 
-# emu/video.c: 345
+# emu/video.c: 337
 Error generating PNG for snapshot: png_error = %d\n
 正在產生 PNG 擷圖時發生錯誤: png_error = %d\n
 
@@ -1346,7 +1350,7 @@ Error generating PNG for snapshot: png_error = %d\n
 Error in command line:\n%s\n
 命令列發生錯誤:\n%s\n
 
-# emu/uimain.c: 1756
+# emu/uimain.c: 1839
 Error loading memory card
 載入記憶卡時發生錯誤
 
@@ -1354,31 +1358,31 @@ Error loading memory card
 Error: 
 錯誤:
 
-# emu/machine.c: 852
+# emu/machine.c: 819
 Error: Failed to open file for %s operation.
 錯誤: 無法開啟檔案用於%s作業。
 
-# emu/machine.c: 828
+# emu/machine.c: 795
 Error: Unable to %s state due to a read error (file is likely corrupt).
 錯誤: 無法%s狀態，因為讀取錯誤 (檔案可能損毀)。
 
-# emu/machine.c: 832
+# emu/machine.c: 799
 Error: Unable to %s state due to a write error. Verify there is enough disk space.
 錯誤: 無法%s狀態，因為寫入錯誤。請檢查有無足夠的磁碟空間。
 
-# emu/machine.c: 824
+# emu/machine.c: 791
 Error: Unable to %s state due to an invalid header. Make sure the save state is correct for this game.
 錯誤: 無法%s狀態，因為檔頭無效。請確認此儲存狀態是否符合這個遊戲。
 
-# emu/machine.c: 820
+# emu/machine.c: 787
 Error: Unable to %s state due to illegal registrations. See error.log for details.
 錯誤: 無法%s狀態，因為非法記錄。請查閱\ error.log 以取得詳細資料。
 
-# emu/machine.c: 843
+# emu/machine.c: 810
 Error: Unknown error during state %s.
 錯誤: 狀態%s時發生未知的錯誤。
 
-# emu/ioport.c: 5637
+# emu/ioport.c: 5578
 Error: illegal caption file
 錯誤: 非法字幕檔
 
@@ -1390,7 +1394,7 @@ Error: option %s expected a parameter\n
 Error: unknown option: %s\n
 錯誤: 未知的選項: %s\n
 
-# emu/ioport.c: 733
+# emu/ioport.c: 664
 Europe
 歐洲版
 
@@ -1398,7 +1402,7 @@ Europe
 Exit
 結束
 
-# mame/drivers/megaplay.c: 369 mame/drivers/metro.c: 2271 mame/drivers/nbmj8891.c: 2045
+# mame/drivers/megaplay.c: 369 mame/drivers/metro.c: 2252 mame/drivers/nbmj8891.c: 2045
 Expert
 高手
 
@@ -1406,15 +1410,15 @@ Expert
 FRONTEND COMMANDS
 前端指令
 
-# emu/ioport.c: 4014
+# emu/ioport.c: 3956
 Failed to open file for playback
 無法開啟檔案來播放
 
-# emu/ioport.c: 4240
+# emu/ioport.c: 4182
 Failed to open file for recording
 無法開啟檔案來記錄
 
-# mame/drivers/4enraya.c: 192 mame/drivers/angelkds.c: 432 mame/drivers/arkanoid.c: 911 mame/drivers/bestleag.c: 317 mame/drivers/bigstrkb.c: 133 mame/drivers/brkthru.c: 203, 206 mame/drivers/btime.c: 1145 mame/drivers/cclimber.c: 810 mame/drivers/cninja.c: 562, 571, 602 mame/drivers/cps1.c: 1249, 1461 mame/drivers/darius.c: 656, 690, 724 mame/drivers/ddenlovr.c: 3886 mame/drivers/ddragon3.c: 418 mame/drivers/dec0.c: 823 mame/drivers/decocass.c: 371, 453, 555 mame/drivers/deniam.c: 192 mame/drivers/epos.c: 144, 147, 150 mame/drivers/flower.c: 158 mame/drivers/fuukifg3.c: 381 mame/drivers/galdrvr.c: 1102, 1893 mame/drivers/gameplan.c: 320, 710 mame/drivers/goldstar.c: 3787 mame/drivers/halleys.c: 1759 mame/drivers/hyperspt.c: 201, 206 mame/drivers/karnov.c: 539 mame/drivers/m62.c: 468, 496, 523, 550, 579, 613, 642, 702, 732 mame/drivers/mcr.c: 1226 mame/drivers/megaplay.c: 248 mame/drivers/metro.c: 2526, 3032, 3361 mame/drivers/ninjaw.c: 582 mame/drivers/nmg5.c: 473, 533, 626, 633, 668, 673 mame/drivers/nmk16.c: 2805 mame/drivers/norautp.c: 1153 mame/drivers/paradise.c: 397 mame/drivers/phoenix.c: 184 mame/drivers/pipeline.c: 272 mame/drivers/quizdna.c: 137, 225, 327 mame/drivers/rohga.c: 374, 442 mame/drivers/safarir.c: 378 mame/drivers/segas16a.c: 1336, 1687 mame/drivers/segas16b.c: 2848 mame/drivers/seta.c: 6421 mame/drivers/sidepckt.c: 201 mame/drivers/skylncr.c: 555 mame/drivers/slapfght.c: 519 mame/drivers/snk.c: 1753 mame/drivers/snowbros.c: 680 mame/drivers/sstrangr.c: 258 mame/drivers/ssv.c: 2260 mame/drivers/supdrapo.c: 366 mame/drivers/suprridr.c: 266 mame/drivers/system1.c: 1169, 1554 mame/drivers/system16.c: 1466 mame/drivers/taito_f2.c: 2186 mame/drivers/taito_l.c: 1452, 1588 mame/drivers/taito_z.c: 2307, 2381 mame/drivers/tbowl.c: 341 mame/drivers/tecmo16.c: 143 mame/drivers/thepit.c: 261, 316, 357 mame/drivers/trackfld.c: 539, 550 mame/drivers/tumbleb.c: 1391 mame/drivers/vigilant.c: 170 mame/drivers/vsnes.c: 865, 1162, 1365, 1403 mame/drivers/wallc.c: 211 mame/drivers/warriorb.c: 294 mame/drivers/wc90b.c: 233 mame/drivers/xain.c: 516 mame/drivers/zac2650.c: 54 mame/drivers/zerozone.c: 116
+# mame/drivers/4enraya.c: 188 mame/drivers/angelkds.c: 432 mame/drivers/arkanoid.c: 911 mame/drivers/bestleag.c: 321 mame/drivers/bigstrkb.c: 133 mame/drivers/brkthru.c: 199, 202 mame/drivers/btime.c: 1133 mame/drivers/cclimber.c: 804 mame/drivers/cninja.c: 556, 565, 596 mame/drivers/cps1.c: 1239, 1451 mame/drivers/darius.c: 643, 677, 711 mame/drivers/ddenlovr.c: 3784 mame/drivers/ddragon3.c: 417 mame/drivers/dec0.c: 820 mame/drivers/decocass.c: 371, 453, 555 mame/drivers/deniam.c: 191 mame/drivers/epos.c: 145, 148, 151 mame/drivers/flower.c: 157 mame/drivers/fuukifg3.c: 375 mame/drivers/galdrvr.c: 1102, 1957 mame/drivers/gameplan.c: 321, 711 mame/drivers/goldstar.c: 3783 mame/drivers/halleys.c: 1764 mame/drivers/hyperspt.c: 200, 205 mame/drivers/icecold.c: 117 mame/drivers/karnov.c: 537 mame/drivers/m62.c: 466, 494, 521, 548, 577, 611, 640, 700, 730 mame/drivers/mcr.c: 1247 mame/drivers/megaplay.c: 248 mame/drivers/metro.c: 2507, 3013, 3342 mame/drivers/ninjaw.c: 576 mame/drivers/nmg5.c: 477, 537, 630, 637, 672, 677 mame/drivers/nmk16.c: 2800 mame/drivers/norautp.c: 1150 mame/drivers/paradise.c: 440 mame/drivers/phoenix.c: 184 mame/drivers/pipeline.c: 274 mame/drivers/quizdna.c: 137, 225, 327 mame/drivers/rohga.c: 372, 440 mame/drivers/safarir.c: 381 mame/drivers/segas16a.c: 1336, 1687 mame/drivers/segas16b.c: 2848 mame/drivers/seta.c: 6399 mame/drivers/sidepckt.c: 302, 302, 342 mame/drivers/skylncr.c: 572 mame/drivers/slapfght.c: 519 mame/drivers/snk.c: 1736 mame/drivers/snowbros.c: 680 mame/drivers/sstrangr.c: 259 mame/drivers/ssv.c: 2234 mame/drivers/supdrapo.c: 376 mame/drivers/suprridr.c: 265 mame/drivers/system1.c: 1157, 1542 mame/drivers/system16.c: 1430 mame/drivers/taito_f2.c: 2178 mame/drivers/taito_l.c: 1429, 1565 mame/drivers/taito_z.c: 2295, 2369 mame/drivers/tbowl.c: 337 mame/drivers/tecmo16.c: 143 mame/drivers/thepit.c: 259, 314, 355 mame/drivers/trackfld.c: 537, 548 mame/drivers/tumbleb.c: 1387 mame/drivers/vigilant.c: 170 mame/drivers/vsnes.c: 863, 1160, 1363, 1401 mame/drivers/wallc.c: 214 mame/drivers/warriorb.c: 289 mame/drivers/wc90b.c: 232 mame/drivers/xain.c: 501 mame/drivers/zac2650.c: 54 mame/drivers/zerozone.c: 115
 Fast
 較快
 
@@ -1430,15 +1434,15 @@ Fatal error: %s (%s:%d)
 Fatal error: %s\nCaused by assert: %s:%d: %s
 嚴重錯誤: %s\n判斷原因: %s:%d: %s
 
-# emu/uimain.c: 171
+# emu/uimain.c: 177
 File Manager
 檔案管理員
 
-# mame/drivers/nova2001.c: 399 mame/drivers/rocnrope.c: 123 mame/drivers/xxmissio.c: 191
+# mame/drivers/nova2001.c: 396 mame/drivers/rocnrope.c: 122 mame/drivers/xxmissio.c: 188
 First Bonus
 第一次獎勵
 
-# emu/ioport.c: 723
+# emu/ioport.c: 654
 Flip Screen
 翻轉畫面
 
@@ -1446,7 +1450,7 @@ Flip Screen
 Floppy Disk
 軟碟
 
-# mame/drivers/seta.c: 6066
+# mame/drivers/seta.c: 6044
 Foreign
 國外版
 
@@ -1462,43 +1466,43 @@ Frameskip Dec
 Frameskip Inc
 增加略過畫格
 
-# mame/drivers/carjmbre.c: 135 mame/drivers/igspoker.c: 1589 mame/drivers/lvcards.c: 317 mame/drivers/pgm.c: 901 mame/drivers/segas16a.c: 1639 mame/drivers/segas16b.c: 2800 mame/drivers/taito_z.c: 2082
+# mame/drivers/carjmbre.c: 134 mame/drivers/igspoker.c: 1594 mame/drivers/lvcards.c: 314 mame/drivers/pgm.c: 426 mame/drivers/segas16a.c: 1639 mame/drivers/segas16b.c: 2800 mame/drivers/taito_z.c: 2070
 Free
 免費執行
 
-# emu/ioport.c: 719 mame/drivers/alpha68k.c: 1115
+# emu/ioport.c: 650 mame/drivers/alpha68k.c: 1106
 Free Play
 免費執行
 
-# mame/drivers/40love.c: 905 mame/drivers/aerofgt.c: 677 mame/drivers/airbustr.c: 476 mame/drivers/alpha68k.c: 1080, 1365, 1437, 1488, 1584 mame/drivers/atetris.c: 253 mame/drivers/baraduke.c: 249, 318 mame/drivers/bbusters.c: 478, 550 mame/drivers/bionicc.c: 232 mame/drivers/blktiger.c: 221 mame/drivers/bwing.c: 251 mame/drivers/champbwl.c: 390 mame/drivers/compgolf.c: 133 mame/drivers/cps1.c: 885, 1002, 1063, 1105, 1143, 1205, 1360, 1424, 1475, 1524, 1583, 1651, 1706, 1757, 1801, 1877, 1971, 2049, 2117, 2167, 2227, 2261, 2292, 2362, 2422, 2532, 2578, 2641, 2733, 2796, 3108 mame/drivers/dec8.c: 1127, 1461 mame/drivers/docastle.c: 341 mame/drivers/exedexes.c: 112 mame/drivers/fcrash.c: 550, 634 mame/drivers/flstory.c: 659 mame/drivers/funkybee.c: 119, 180 mame/drivers/funkyjet.c: 194, 239 mame/drivers/galaga.c: 1059, 1121, 1162, 1312, 1354, 1427 mame/drivers/galaxia.c: 177 mame/drivers/galdrvr.c: 2816 mame/drivers/gei.c: 756, 914 mame/drivers/ginganin.c: 170 mame/drivers/gunsmoke.c: 179 mame/drivers/higemaru.c: 72 mame/drivers/ikki.c: 132 mame/drivers/karnov.c: 668 mame/drivers/kingobox.c: 193, 278 mame/drivers/kyugo.c: 256, 285, 321, 362, 391, 420 mame/drivers/ladybug.c: 261, 526 mame/drivers/laserbat.c: 357 mame/drivers/legionna.c: 302, 411 mame/drivers/lsasquad.c: 281, 450 mame/drivers/m14.c: 255 mame/drivers/mainsnk.c: 266, 346 mame/drivers/majorpkr.c: 966 mame/drivers/mappy.c: 1038, 1163, 1296, 1357, 1409 mame/drivers/markham.c: 107 mame/drivers/midas.c: 430, 563 mame/drivers/midtunit.c: 344 mame/drivers/midvunit.c: 593 mame/drivers/mitchell.c: 572 mame/drivers/ms32.c: 815, 861, 904 mame/drivers/mugsmash.c: 270, 352 mame/drivers/munchmo.c: 210 mame/drivers/mwarr.c: 261 mame/drivers/namcond1.c: 112 mame/drivers/namcos1.c: 557, 623, 701, 749, 811, 833, 870, 968, 978, 1000, 1010 mame/drivers/namcos12.c: 1691 mame/drivers/namcos86.c: 552, 630, 694, 768, 847, 921 mame/drivers/neodrvr.c: 10624 mame/drivers/neogeo.c: 1179 mame/drivers/ninjaw.c: 544 mame/drivers/nycaptor.c: 617 mame/drivers/ohmygod.c: 259 mame/drivers/onetwo.c: 264 mame/drivers/pacland.c: 323 mame/drivers/pandoras.c: 227 mame/drivers/prehisle.c: 133 mame/drivers/pturn.c: 446 mame/drivers/rollrace.c: 133 mame/drivers/rungun.c: 273 mame/drivers/sauro.c: 275 mame/drivers/seta2.c: 800 mame/drivers/sf.c: 326, 504, 642 mame/drivers/sfkick.c: 414 mame/drivers/shootout.c: 153 mame/drivers/sidearms.c: 184 mame/drivers/skykid.c: 162, 237, 312 mame/drivers/snk.c: 1577, 1668, 1758, 1832, 1914, 1999, 2256, 2342, 2435, 2501, 2597, 2729, 2831, 2959, 3053, 3155, 3317, 3458 mame/drivers/snk68.c: 261, 351, 437, 535 mame/drivers/sonson.c: 190 mame/drivers/ssrj.c: 107 mame/drivers/starwars.c: 257 mame/drivers/statriv2.c: 455 mame/drivers/strnskil.c: 173, 253 mame/drivers/superqix.c: 690, 828 mame/drivers/suprnova.c: 516 mame/drivers/taitogn.c: 1051 mame/drivers/tceptor.c: 267 mame/drivers/tmnt.c: 1481, 1719 mame/drivers/toypop.c: 342, 422 mame/drivers/tsamurai.c: 400, 602 mame/drivers/tumbleb.c: 1226 mame/drivers/vastar.c: 203 mame/drivers/warriorb.c: 333 mame/drivers/wgp.c: 783 mame/drivers/zaccaria.c: 365 mame/drivers/zn.c: 2673 mame/drivers/zodiack.c: 275
+# mame/drivers/40love.c: 894 mame/drivers/aerofgt.c: 672 mame/drivers/airbustr.c: 467 mame/drivers/alpha68k.c: 1071, 1356, 1428, 1479, 1575 mame/drivers/atetris.c: 250 mame/drivers/baraduke.c: 246, 315 mame/drivers/bbusters.c: 473, 545 mame/drivers/bionicc.c: 227 mame/drivers/blktiger.c: 217 mame/drivers/bwing.c: 244 mame/drivers/champbwl.c: 392 mame/drivers/compgolf.c: 132 mame/drivers/cps1.c: 875, 992, 1053, 1095, 1133, 1195, 1350, 1414, 1465, 1514, 1573, 1641, 1696, 1747, 1791, 1867, 1961, 2039, 2107, 2157, 2217, 2251, 2282, 2352, 2412, 2522, 2568, 2631, 2723, 2786, 3098 mame/drivers/dec8.c: 1112, 1446 mame/drivers/docastle.c: 341 mame/drivers/exedexes.c: 112 mame/drivers/fcrash.c: 550, 634 mame/drivers/flstory.c: 651 mame/drivers/funkybee.c: 119, 180 mame/drivers/funkyjet.c: 194, 239 mame/drivers/galaga.c: 1059, 1121, 1162, 1312, 1354, 1427 mame/drivers/galdrvr.c: 2879 mame/drivers/gei.c: 779, 937 mame/drivers/ginganin.c: 170 mame/drivers/gunsmoke.c: 179 mame/drivers/higemaru.c: 72 mame/drivers/ikki.c: 131 mame/drivers/karnov.c: 666 mame/drivers/kingobox.c: 189, 274 mame/drivers/kyugo.c: 254, 283, 319, 360, 389, 418 mame/drivers/ladybug.c: 254, 519 mame/drivers/laserbat.c: 352 mame/drivers/legionna.c: 302, 411 mame/drivers/lsasquad.c: 281, 450 mame/drivers/m14.c: 259 mame/drivers/mainsnk.c: 263, 343 mame/drivers/majorpkr.c: 968 mame/drivers/mappy.c: 1038, 1163, 1296, 1357, 1409 mame/drivers/markham.c: 107 mame/drivers/midas.c: 437, 570 mame/drivers/midtunit.c: 342 mame/drivers/midvunit.c: 579 mame/drivers/mitchell.c: 563 mame/drivers/ms32.c: 794, 840, 883 mame/drivers/mugsmash.c: 269, 351 mame/drivers/munchmo.c: 207 mame/drivers/mwarr.c: 271 mame/drivers/namcond1.c: 112 mame/drivers/namcos1.c: 554, 620, 698, 746, 808, 830, 867, 965, 975, 997, 1007 mame/drivers/namcos12.c: 1701 mame/drivers/namcos86.c: 550, 628, 692, 766, 845, 919 mame/drivers/neodrvr.c: 10904 mame/drivers/neogeo.c: 1175 mame/drivers/ninjaw.c: 538 mame/drivers/nycaptor.c: 605 mame/drivers/ohmygod.c: 258 mame/drivers/onetwo.c: 269 mame/drivers/pacland.c: 321 mame/drivers/pandoras.c: 221 mame/drivers/prehisle.c: 133 mame/drivers/pturn.c: 452 mame/drivers/rollrace.c: 131 mame/drivers/rungun.c: 267 mame/drivers/sauro.c: 275 mame/drivers/seta2.c: 774 mame/drivers/sf.c: 325, 503, 641 mame/drivers/sfkick.c: 414 mame/drivers/shootout.c: 153 mame/drivers/sidearms.c: 184 mame/drivers/skykid.c: 158, 233, 308 mame/drivers/snk.c: 1560, 1651, 1741, 1815, 1897, 1982, 2239, 2325, 2418, 2484, 2580, 2712, 2814, 2942, 3036, 3138, 3300, 3441 mame/drivers/snk68.c: 257, 347, 433, 531 mame/drivers/sonson.c: 189 mame/drivers/ssrj.c: 106 mame/drivers/starwars.c: 255 mame/drivers/statriv2.c: 459 mame/drivers/strnskil.c: 172, 252 mame/drivers/superqix.c: 676, 814 mame/drivers/suprnova.c: 513 mame/drivers/taitogn.c: 1056 mame/drivers/tceptor.c: 260 mame/drivers/tmnt.c: 1456, 1694 mame/drivers/toypop.c: 333, 413 mame/drivers/tsamurai.c: 392, 594 mame/drivers/tumbleb.c: 1222 mame/drivers/vastar.c: 200 mame/drivers/warriorb.c: 328 mame/drivers/wgp.c: 776 mame/drivers/zaccaria.c: 362 mame/drivers/zn.c: 2708 mame/drivers/zodiack.c: 274
 Freeze
 鎖住遊戲
 
-# emu/ioport.c: 745 emu/uilang.c: 34 
+# emu/ioport.c: 676 emu/uilang.c: 34 
 French
 法文
 
-# emu/uimain.c: 2257 mame/drivers/cultures.c: 245 mame/drivers/funybubl.c: 167 mame/drivers/metro.c: 2389, 2705 mame/drivers/skykid.c: 339 mame/drivers/warriorb.c: 376
+# emu/uimain.c: 2340 mame/drivers/cultures.c: 252 mame/drivers/funybubl.c: 166 mame/drivers/metro.c: 2370, 2686 mame/drivers/skykid.c: 335 mame/drivers/warriorb.c: 371
 Full
 全部
 
-# mame/drivers/pacman.c: 377, 1522, 1586 mame/mame.c: 19, 19, 43
+# mame/drivers/pacman.c: 377, 1509, 1573 mame/mame.c: 19, 19, 43
 GAME
 遊戲
 
-# mame/drivers/bublbobl.c: 561, 579 mame/drivers/cps1.c: 927, 1121, 1161, 1232, 1373, 1437, 1488, 1596, 1664, 1719, 1770, 1814, 1924, 1984, 2062, 2130, 2180, 2240, 2375, 2589, 2654, 2746, 2874 mame/drivers/fcrash.c: 563, 647 mame/drivers/funworld.c: 2062 mame/drivers/ksys573.c: 3307 mame/drivers/macs.c: 284 mame/drivers/missile.c: 961 mame/drivers/multigam.c: 1022 mame/drivers/pacman.c: 1523 mame/drivers/tapatune.c: 243 mame/drivers/turbo.c: 979 mame/drivers/vegas.c: 2034 mame/mame.c: 20, 20, 44 
+# mame/drivers/bublbobl.c: 561, 579 mame/drivers/cps1.c: 917, 1111, 1151, 1222, 1363, 1427, 1478, 1586, 1654, 1709, 1760, 1804, 1914, 1974, 2052, 2120, 2170, 2230, 2365, 2579, 2644, 2736, 2864 mame/drivers/fcrash.c: 563, 647 mame/drivers/funworld.c: 2062 mame/drivers/ksys573.c: 3408 mame/drivers/macs.c: 286 mame/drivers/missile.c: 963 mame/drivers/multigam.c: 1026 mame/drivers/pacman.c: 1510 mame/drivers/tapatune.c: 248 mame/drivers/turbo.c: 843 mame/drivers/vegas.c: 2036 mame/mame.c: 20, 20, 44 
 Game
 遊戲
 
-# mame/drivers/albazc.c: 219 mame/drivers/alpha68k.c: 1076, 1583, 1588 mame/drivers/aristmk5.c: 354 mame/drivers/artmagic.c: 711 mame/drivers/bbusters.c: 474, 546 mame/drivers/cps1.c: 926, 1120, 1160, 1231, 1372, 1436, 1487, 1595, 1663, 1718, 1769, 1813, 1923, 1983, 2061, 2129, 2179, 2239, 2374, 2588, 2653, 2745, 2873 mame/drivers/epos.c: 154 mame/drivers/f1gp.c: 277 mame/drivers/fcrash.c: 562, 646 mame/drivers/goldnpkr.c: 2637 mame/drivers/hyprduel.c: 600 mame/drivers/m107.c: 326 mame/drivers/m92.c: 796 mame/drivers/mastboy.c: 765 mame/drivers/midas.c: 546 mame/drivers/nbmj8891.c: 2043 mame/drivers/prehisle.c: 130 mame/drivers/segas16b.c: 3260 mame/drivers/seta.c: 4371 mame/drivers/snk.c: 1911, 2253, 2432, 2498, 2594, 2726, 2828, 3050, 3152, 3314, 3455 mame/drivers/snk68.c: 258, 348, 434, 532 mame/drivers/tail2nos.c: 132 mame/drivers/turbo.c: 852
+# mame/drivers/albazc.c: 226 mame/drivers/alpha68k.c: 1067, 1574, 1579 mame/drivers/aristmk5.c: 357 mame/drivers/artmagic.c: 707 mame/drivers/bbusters.c: 469, 541 mame/drivers/cps1.c: 916, 1110, 1150, 1221, 1362, 1426, 1477, 1585, 1653, 1708, 1759, 1803, 1913, 1973, 2051, 2119, 2169, 2229, 2364, 2578, 2643, 2735, 2863 mame/drivers/epos.c: 155 mame/drivers/f1gp.c: 272 mame/drivers/fcrash.c: 562, 646 mame/drivers/goldnpkr.c: 3065 mame/drivers/hyprduel.c: 591 mame/drivers/m107.c: 324 mame/drivers/m92.c: 793 mame/drivers/mastboy.c: 770 mame/drivers/midas.c: 553 mame/drivers/nbmj8891.c: 2043 mame/drivers/prehisle.c: 130 mame/drivers/segas16b.c: 3260 mame/drivers/seta.c: 4349 mame/drivers/snk.c: 1894, 2236, 2415, 2481, 2577, 2709, 2811, 3033, 3135, 3297, 3438 mame/drivers/snk68.c: 254, 344, 430, 528 mame/drivers/tail2nos.c: 131 mame/drivers/turbo.c: 716
 Game Mode
 遊戲模式
 
-# emu/ioport.c: 775
+# emu/ioport.c: 706
 Game Time
 遊戲時間
 
-# mame/drivers/midzeus.c: 869 
+# mame/drivers/midzeus.c: 865 
 General
 一般
 
@@ -1506,19 +1510,19 @@ General
 Generating cached BDF font...\n
 正在產生 BDF 字型快取...\n
 
-# emu/ioport.c: 746 emu/uilang.c: 35 
+# emu/ioport.c: 677 emu/uilang.c: 35 
 German
 德文
 
-# mame/drivers/kaneko16.c: 1048 mame/drivers/midzeus.c: 851 mame/drivers/nmk16.c: 2726
+# mame/drivers/kaneko16.c: 1048 mame/drivers/midzeus.c: 847 mame/drivers/nmk16.c: 2721
 Germany
 德國版
 
-# emu/uimain.c: 3164
+# emu/uimain.c: 3247
 Gfx: %s, Sound: %s
 圖形資料: %s, 聲音: %s
 
-# mame/drivers/royalmah.c: 2083, 2889
+# mame/drivers/royalmah.c: 2102, 2908
 Gray
 灰階
 
@@ -1526,55 +1530,55 @@ Gray
 Gun
 光線槍
 
-# emu/ioport.c: 758
+# emu/ioport.c: 689
 Hard
 難
 
-# emu/ioport.c: 759
+# emu/ioport.c: 690
 Harder
 更困難
 
-# emu/ioport.c: 760
+# emu/ioport.c: 691
 Hardest
 極難
 
-# mame/drivers/multfish.c: 743 mame/drivers/shanghai.c: 310 
+# mame/drivers/multfish.c: 753 mame/drivers/shanghai.c: 312 
 Help
 說明
 
-# emu/inpttype.h: 134 emu/ioport.c: 767
+# emu/inpttype.h: 134 emu/ioport.c: 698
 High
 高
 
-# mame/drivers/balsente.c: 349, 640, 714 mame/drivers/zaccaria.c: 383, 475 
+# mame/drivers/balsente.c: 349, 640, 714 mame/drivers/zaccaria.c: 380, 472 
 High Scores
 最高分
 
-# emu/ioport.c: 768
+# emu/ioport.c: 699
 Higher
 更高
 
-# emu/ioport.c: 769
+# emu/ioport.c: 700
 Highest
 最高
 
-# mame/drivers/cps3.c: 2300, 2321, 2351, 2393
+# mame/drivers/cps3.c: 2277, 2298, 2328, 2370
 Hispanic
 西班牙版
 
-# emu/inpttype.h: 148 mame/drivers/acefruit.c: 454 mame/drivers/bfm_sc1.c: 859 mame/drivers/bfm_sc2.c: 2757, 2908, 3064, 3375, 3530 mame/drivers/calomega.c: 1381 mame/drivers/funworld.c: 1285, 1347, 1650, 1711, 1772, 1833, 2115 mame/drivers/igspoker.c: 633 mame/drivers/limenko.c: 597 mame/drivers/maygay1b.c: 686 mame/drivers/mpu3.c: 678 mame/drivers/mpu4.c: 1731, 2200 mame/drivers/subsino.c: 1528
+# emu/inpttype.h: 148 mame/drivers/acefruit.c: 464 mame/drivers/bfm_sc1.c: 872 mame/drivers/bfm_sc2.c: 2777, 2928, 3084, 3395, 3550 mame/drivers/calomega.c: 1381 mame/drivers/funworld.c: 1285, 1347, 1650, 1711, 1772, 1833, 2115 mame/drivers/igspoker.c: 638 mame/drivers/limenko.c: 611 mame/drivers/maygay1b.c: 695 mame/drivers/mpu3.c: 682 mame/drivers/mpu4.c: 1728, 2197 mame/drivers/subsino.c: 1541
 Hold 1
 保留 1
 
-# emu/inpttype.h: 149 mame/drivers/acefruit.c: 463 mame/drivers/bfm_sc1.c: 860 mame/drivers/bfm_sc2.c: 3376 mame/drivers/calomega.c: 1382 mame/drivers/limenko.c: 598 mame/drivers/maygay1b.c: 687 mame/drivers/mpu3.c: 679 mame/drivers/mpu4.c: 1732, 2201
+# emu/inpttype.h: 149 mame/drivers/acefruit.c: 473 mame/drivers/bfm_sc1.c: 873 mame/drivers/bfm_sc2.c: 3396 mame/drivers/calomega.c: 1382 mame/drivers/limenko.c: 612 mame/drivers/maygay1b.c: 696 mame/drivers/mpu3.c: 683 mame/drivers/mpu4.c: 1729, 2198
 Hold 2
 保留 2
 
-# emu/inpttype.h: 150 mame/drivers/acefruit.c: 472 mame/drivers/bfm_sc1.c: 861 mame/drivers/bfm_sc2.c: 3377 mame/drivers/calomega.c: 1383 mame/drivers/funworld.c: 1357, 1660, 1721, 1782, 1843, 2125 mame/drivers/igspoker.c: 635 mame/drivers/limenko.c: 599 mame/drivers/maygay1b.c: 688 mame/drivers/mpu3.c: 680 mame/drivers/mpu4.c: 1733, 2202
+# emu/inpttype.h: 150 mame/drivers/acefruit.c: 482 mame/drivers/bfm_sc1.c: 874 mame/drivers/bfm_sc2.c: 3397 mame/drivers/calomega.c: 1383 mame/drivers/funworld.c: 1357, 1660, 1721, 1782, 1843, 2125 mame/drivers/igspoker.c: 640 mame/drivers/limenko.c: 613 mame/drivers/maygay1b.c: 697 mame/drivers/mpu3.c: 684 mame/drivers/mpu4.c: 1730, 2199
 Hold 3
 保留 3
 
-# emu/inpttype.h: 151 mame/drivers/acefruit.c: 483 mame/drivers/bfm_sc1.c: 862 mame/drivers/calomega.c: 1384 mame/drivers/limenko.c: 600 mame/drivers/maygay1b.c: 689 mame/drivers/mpu4.c: 1734
+# emu/inpttype.h: 151 mame/drivers/acefruit.c: 493 mame/drivers/bfm_sc1.c: 875 mame/drivers/calomega.c: 1384 mame/drivers/limenko.c: 614 mame/drivers/maygay1b.c: 698 mame/drivers/mpu4.c: 1731
 Hold 4
 保留 4
 
@@ -1582,15 +1586,15 @@ Hold 4
 Hold 5
 保留 5
 
-# emu/ioport.c: 736
+# emu/ioport.c: 667
 Hong Kong
 香港版
 
-# mame/drivers/gameplan.c: 431, 570 mame/drivers/gei.c: 746, 774, 804, 834 mame/drivers/jack.c: 686 mame/drivers/thepit.c: 536 
+# mame/drivers/gameplan.c: 432, 571 mame/drivers/gei.c: 769, 797, 827, 857 mame/drivers/jack.c: 682 mame/drivers/thepit.c: 534 
 Horizontal
 水平
 
-# mame/drivers/nmk16.c: 2925, 3004
+# mame/drivers/nmk16.c: 2920, 2999
 Horizontally
 水平
 
@@ -1606,11 +1610,11 @@ INCORRECT CHECKSUM:\n
 INCORRECT LENGTH: %d bytes\n
 不正確的長度: %d 位元組\n
 
-# emu/ioport.c: 4026
+# emu/ioport.c: 3968
 INP version %d.%d\n
 INP 版本 %d.%d\n
 
-# emu/ioport.c: 1343
+# emu/ioport.c: 1287
 INVALID
 無效的
 
@@ -1626,59 +1630,59 @@ IPS: 正在解析 ips \"%s/%s%s\"\n
 Ignoring duplicate cheat '%s' from file %s\n
 正在略過重複的作弊碼 '%s' 來自檔案 %s\n
 
-# emu/driver.c: 111 emu/ui.c: 374 
+# emu/drivenum.c: 112 emu/ui.c: 374 
 Illegal value for %s = %s\n
 非法的 %s 值= %s\n
 
-# emu/uimain.c: 210 
+# emu/uimain.c: 219 
 Image Enhancement
 影像增強
 
-# emu/uimain.c: 168
+# emu/uimain.c: 174
 Image Information
 映像檔資訊
 
-# emu/uimain.c: 3153, 3160 
+# emu/uimain.c: 3236, 3243 
 Imperfect
 不完美
 
-# emu/ioport.c: 784 mame/drivers/firetrap.c: 496
+# emu/ioport.c: 715 mame/drivers/firetrap.c: 488
 Infinite
 無限
 
-# mame/drivers/calorie.c: 351 mame/drivers/cinemat.c: 936 mame/drivers/clshroad.c: 158 mame/drivers/flstory.c: 907 mame/drivers/ginganin.c: 143 mame/drivers/halleys.c: 1862 mame/drivers/jack.c: 582 mame/drivers/ninjakd2.c: 671 mame/drivers/prehisle.c: 134 mame/drivers/superdq.c: 265 mame/drivers/vicdual.c: 1641, 1698, 2106
+# mame/drivers/calorie.c: 356 mame/drivers/cinemat.c: 930 mame/drivers/clshroad.c: 159 mame/drivers/flstory.c: 899 mame/drivers/ginganin.c: 143 mame/drivers/halleys.c: 1867 mame/drivers/jack.c: 578 mame/drivers/ninjakd2.c: 668 mame/drivers/prehisle.c: 134 mame/drivers/superdq.c: 267 mame/drivers/vicdual.c: 1638, 1695, 2101
 Infinite Lives
 無限生命
 
-# emu/machine.c: 320
+# emu/machine.c: 314
 Initializing...
 正在初始化...
 
-# emu/uimain.c: 138
+# emu/uimain.c: 144
 Input (general)
 輸入設定(一般)
 
-# emu/uimain.c: 140
+# emu/uimain.c: 146
 Input (this %s)
 輸入設定 (本%s)
 
-# emu/ioport.c: 4022 
+# emu/ioport.c: 3964 
 Input file format version mismatch
 輸入檔格式版本相符
 
-# emu/ioport.c: 4020 
+# emu/ioport.c: 3962 
 Input file invalid or in an older, unsupported format
 輸入檔無效或太舊，不支援的格式
 
-# emu/ioport.c: 4018 
+# emu/ioport.c: 3960 
 Input file is corrupt or invalid (missing header)
 輸入檔損毀或無效 (遺失檔頭)
 
-# emu/ioport.c: 4025 
+# emu/ioport.c: 3967 
 Input file: %s\n
 輸入檔: %s\n
 
-# emu/ioport.c: 985
+# emu/ioport.c: 929
 Input port errors:\n%s
 輸入連接埠錯誤:\n%s
 
@@ -1686,19 +1690,19 @@ Input port errors:\n%s
 Input: Adding %s #%d: %s\n
 輸入: 正在加入 %s #%d: %s\n
 
-# emu/ioport.c: 2351
+# emu/ioport.c: 2293
 Input: Autoenabling %s due to presence of a %s\n
 輸入: 自動啟用%s，因為存在%s\n
 
-# emu/ioport.c: 614 mame/drivers/funworld.c: 1025, 1449 
+# emu/ioport.c: 545 mame/drivers/funworld.c: 1025, 1449 
 Insert
 Insert
 
-# emu/ioport.c: 730
+# emu/ioport.c: 661
 International
 國際版
 
-# emu/ioport.c: 2339
+# emu/ioport.c: 2281
 Invalid %s value %s; reverting to keyboard\n
 無效的 %s 值  %s; 還原成鍵盤\n
 
@@ -1710,31 +1714,31 @@ Invalid joystick map: %s\n
 Invalid language value %s; reverting to %s\n
 無效的 language 值 %s; 還原成 %s\n
 
-# mame/drivers/ajax.c: 101 mame/drivers/taito_z.c: 2745, 2762
+# mame/drivers/ajax.c: 101 mame/drivers/taito_z.c: 2733, 2750
 Inverted
 翻轉
 
-# mame/drivers/bwing.c: 229 mame/drivers/cop01.c: 351 mame/drivers/halleys.c: 1859 mame/drivers/liberate.c: 463 mame/drivers/runaway.c: 224
+# mame/drivers/bwing.c: 222 mame/drivers/cop01.c: 346 mame/drivers/halleys.c: 1864 mame/drivers/liberate.c: 456 mame/drivers/runaway.c: 224
 Invincibility
 無敵
 
-# mame/drivers/cischeat.c: 879 mame/drivers/cps1.c: 1044, 1211 mame/drivers/crbaloon.c: 281 mame/drivers/equites.c: 1012 mame/drivers/fantland.c: 476, 550 mame/drivers/m72.c: 1248, 1302, 1345, 1425 mame/drivers/namcos1.c: 746 mame/drivers/namcos86.c: 765, 844 mame/drivers/oneshot.c: 246 mame/drivers/seicross.c: 343 mame/drivers/snowbros.c: 603 mame/drivers/system1.c: 2080 mame/drivers/tecmo.c: 475 mame/drivers/toaplan1.c: 875, 931, 1035, 1119, 1257, 1351
+# mame/drivers/cischeat.c: 872 mame/drivers/cps1.c: 1034, 1201 mame/drivers/crbaloon.c: 278 mame/drivers/equites.c: 999 mame/drivers/fantland.c: 467, 541 mame/drivers/m72.c: 1224, 1278, 1321, 1401 mame/drivers/namcos1.c: 743 mame/drivers/namcos86.c: 763, 842 mame/drivers/oneshot.c: 241 mame/drivers/seicross.c: 343 mame/drivers/snowbros.c: 603 mame/drivers/system1.c: 2068 mame/drivers/tecmo.c: 474 mame/drivers/toaplan1.c: 875, 931, 1035, 1119, 1257, 1351
 Invulnerability
 耐久力
 
-# emu/ioport.c: 747 emu/uilang.c: 36 
+# emu/ioport.c: 678 emu/uilang.c: 36 
 Italian
 意大利文
 
-# mame/drivers/kaneko16.c: 1047 mame/drivers/midyunit.c: 895 mame/drivers/midzeus.c: 855 
+# mame/drivers/kaneko16.c: 1047 mame/drivers/midyunit.c: 894 mame/drivers/midzeus.c: 851 
 Italy
 意大利版
 
-# emu/ioport.c: 731 
+# emu/ioport.c: 662 
 Japan
 日版
 
-# emu/ioport.c: 743 emu/uilang.c: 37 
+# emu/ioport.c: 674 emu/uilang.c: 37 
 Japanese
 日文
 
@@ -1742,7 +1746,7 @@ Japanese
 Joy
 搖桿
 
-# emu/ioport.c: 779 mame/drivers/atarisy2.c: 1003 mame/drivers/saturn.c: 1557 mess/drivers/a2600.c: 1691 
+# emu/ioport.c: 710 mame/drivers/atarisy2.c: 988 mame/drivers/saturn.c: 1553 mess/drivers/a2600.c: 1713 
 Joystick
 搖桿
 
@@ -1750,7 +1754,7 @@ Joystick
 Kbd
 鍵盤
 
-# emu/inpttype.h: 682 mame/drivers/ddenlovr.c: 4731, 4954, 6167 mame/drivers/igs017.c: 1792, 1909, 2023 mame/drivers/ltcasino.c: 557 mame/drivers/rbmk.c: 200 mame/drivers/ssv.c: 1538, 1640, 1882 mame/drivers/subsino2.c: 1425 osd/osdmini/minimain.c: 140 
+# emu/inpttype.h: 682 mame/drivers/ddenlovr.c: 4629, 4852, 6065 mame/drivers/igs017.c: 2430, 2547, 2661 mame/drivers/ltcasino.c: 559 mame/drivers/rbmk.c: 203 mame/drivers/ssv.c: 1512, 1614, 1856 mame/drivers/subsino2.c: 1431 osd/osdmini/minimain.c: 140 
 Keyboard
 鍵盤
 
@@ -1758,23 +1762,23 @@ Keyboard
 Keyboard Emulation Status
 鍵盤模擬狀態
 
-# emu/uimain.c: 200
+# emu/uimain.c: 209
 Keyboard Mode
 鍵盤模式
 
-# emu/uimain.c: 375
+# emu/uimain.c: 388
 Keyboard Mode:
 鍵盤模式:
 
-# emu/inpttype.h: 681 mess/drivers/a2600.c: 79
+# emu/inpttype.h: 681 mess/drivers/a2600.c: 125
 Keypad
 數字鍵盤
 
-# emu/ioport.c: 737
+# emu/ioport.c: 668
 Korea
 韓國版
 
-# emu/ioport.c: 748 emu/uilang.c: 38 mame/drivers/snowbros.c: 869 
+# emu/ioport.c: 679 emu/uilang.c: 38 mame/drivers/snowbros.c: 869 
 Korean
 韓國
 
@@ -1798,19 +1802,19 @@ LCD%d 像素長寬 (%d:%d)
 LCD%d Standard (%d:%d)
 LCD%d 標準 (%d:%d)
 
-# emu/ioport.c: 741 lib/formats/tzx_cas.c: 292 mame/drivers/snowbros.c: 869, 930
+# emu/ioport.c: 672 lib/formats/tzx_cas.c: 292 mame/drivers/snowbros.c: 869, 930
 Language
 語系
 
-# emu/input.c: 249 mame/drivers/balsente.c: 1026 mame/drivers/bfm_sc2.c: 1517 mame/drivers/re900.c: 260 mame/drivers/statriv2.c: 405 mess/drivers/gb.c: 550 mess/drivers/ngp.c: 571
+# emu/input.c: 249 mame/drivers/balsente.c: 1026 mame/drivers/bfm_sc2.c: 1537 mame/drivers/re900.c: 263 mame/drivers/statriv2.c: 409 mess/drivers/gb.c: 550 mess/drivers/ngp.c: 570
 Left
 左
 
-# emu/ioport.c: 646
+# emu/ioport.c: 577
 Left Alt
 左邊 Alt
 
-# emu/ioport.c: 644
+# emu/ioport.c: 575
 Left Ctrl
 左邊 Ctrl
 
@@ -1818,27 +1822,27 @@ Left Ctrl
 Left Half
 左半畫面
 
-# emu/ioport.c: 642
+# emu/ioport.c: 573
 Left Shift
 左邊 Shift
 
-# emu/ioport.c: 651
+# emu/ioport.c: 582
 Left Win
 左邊 Win
 
-# mame/drivers/cninja.c: 556, 565, 612 mame/drivers/compgolf.c: 124 mame/drivers/dec0.c: 940 mame/drivers/drtomy.c: 236, 239 mame/drivers/jalmah.c: 1141 mame/drivers/nmg5.c: 502, 566, 569 mame/drivers/snk.c: 1909 mame/drivers/taito_x.c: 726 mame/drivers/vsnes.c: 1102 mame/drivers/warriorb.c: 358
+# mame/drivers/cninja.c: 550, 559, 606 mame/drivers/compgolf.c: 123 mame/drivers/dec0.c: 937 mame/drivers/drtomy.c: 239, 242 mame/drivers/jalmah.c: 1157 mame/drivers/nmg5.c: 506, 570, 573 mame/drivers/snk.c: 1892 mame/drivers/taito_x.c: 730 mame/drivers/vsnes.c: 1100 mame/drivers/warriorb.c: 353
 Less
 小於
 
-# emu/ioport.c: 783
+# emu/ioport.c: 714
 Level Select
 選擇生命數
 
-# emu/ioport.c: 778
+# emu/ioport.c: 709
 Light Gun
 光線槍
 
-# mame/drivers/fantland.c: 686 mess/drivers/a2600.c: 79 
+# mame/drivers/fantland.c: 677 mess/drivers/a2600.c: 125 
 Lightgun
 光線槍
 
@@ -1906,11 +1910,11 @@ Lightgun Y 7
 Lightgun Y 8
 光線槍 Y 8
 
-# emu/ioport.c: 678 mame/drivers/taito_f2.c: 2347
+# emu/ioport.c: 609 mame/drivers/taito_f2.c: 2339
 Lives
 生命
 
-# emu/uimain.c: 1820
+# emu/uimain.c: 1903
 Load Selected Card
 載入選定的記憶卡
 
@@ -1926,7 +1930,7 @@ Load cancelled
 Load from position %c
 載入位置 %c
 
-# emu/romload.c: 484
+# emu/romload.c: 482
 Loading (%d%%)
 正在載入 (%d%%)
 
@@ -1934,7 +1938,7 @@ Loading (%d%%)
 Loading BDF font... (%d characters loaded)\n
 正在載入 BDF 字型... (已載入 %d 個字元)\n
 
-# emu/romload.c: 486
+# emu/romload.c: 484
 Loading Complete
 載入完成
 
@@ -1942,11 +1946,11 @@ Loading Complete
 Loading cheats file from %s\n
 正在載入作弊碼檔案來自 %s\n
 
-# mame/drivers/taito_z.c: 2083 mame/drivers/tonton.c: 149
+# mame/drivers/taito_z.c: 2071 mame/drivers/tonton.c: 150
 Locked
 已鎖定
 
-# emu/inpttype.h: 135 emu/ioport.c: 766
+# emu/inpttype.h: 135 emu/ioport.c: 697
 Low
 低
 
@@ -1954,7 +1958,7 @@ Low
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
 MAME 是一套模擬器：或多或少忠實的重現了部分業務機台的效能，但是沒有軟體的硬體是\n毫無用處的，所以必須要有 ROM 映像檔配合執行，這種 ROM 檔跟其它任何一種商業軟體\n一樣都具有版權，因此如果您並不擁有原始機台而去使用它們，乃是違法的行為。不言而\n喻，這些 ROM 檔不能連同 MAME 一起散佈，將 MAME 和 ROM 映像檔一起散佈的行為已經\n違反了著作權法，應該盡速向這些作者回報，以便採取適當的法律措施。\n
 
-# mame/drivers/neodrvr.c: 10610
+# mame/drivers/neodrvr.c: 10890
 Mahjong Control Panel
 麻將操作面版
 
@@ -1974,11 +1978,11 @@ Main Screen Pixel Aspect (%d:%d)
 Main Screen Standard (%d:%d)
 主畫面標準 (%d:%d)
 
-# mame/drivers/alpha68k.c: 1241 mame/drivers/freekick.c: 439 mame/drivers/liberate.c: 400, 507 
+# mame/drivers/alpha68k.c: 1232 mame/drivers/freekick.c: 432 mame/drivers/liberate.c: 393, 500 
 Manufacturer
 製造廠商
 
-# emu/uimain.c: 2253 
+# emu/uimain.c: 2336 
 Marquees
 機檯標題
 
@@ -1986,35 +1990,35 @@ Marquees
 Master Volume
 主音量
 
-# mame/drivers/bwing.c: 303 mame/drivers/holeland.c: 115 mame/drivers/megaplay.c: 249 mame/drivers/travrusa.c: 109
+# mame/drivers/bwing.c: 296 mame/drivers/holeland.c: 115 mame/drivers/megaplay.c: 249 mame/drivers/travrusa.c: 109
 Max
 最大
 
-# mame/drivers/dassault.c: 361, 413
+# mame/drivers/dassault.c: 356, 408
 Max Players
 最大玩家數
 
-# emu/ioport.c: 756
+# emu/ioport.c: 687
 Medium
 適中
 
-# emu/uimain.c: 223 
+# emu/uimain.c: 232 
 Memory Card
 記憶卡
 
-# emu/uimain.c: 1768
+# emu/uimain.c: 1851
 Memory card created
 記憶卡建立完成
 
-# emu/uimain.c: 1762
+# emu/uimain.c: 1845
 Memory card ejected
 記憶卡退出完成
 
-# emu/uimain.c: 1752
+# emu/uimain.c: 1835
 Memory card loaded
 記憶卡載入完成
 
-# mame/drivers/tempest.c: 495
+# mame/drivers/tempest.c: 498
 Minimum
 簡易
 
@@ -2026,15 +2030,15 @@ Mode: FULL Emulation
 Mode: PARTIAL Emulation
 模式: 部分模擬
 
-# mame/drivers/astrocde.c: 788, 809, 904 mame/drivers/hitpoker.c: 286 mame/drivers/jack.c: 685 mame/drivers/mario.c: 229 mame/drivers/naomi.c: 1857 mame/drivers/thepit.c: 534 mame/drivers/wldarrow.c: 202
+# mame/drivers/astrocde.c: 776, 797, 891 mame/drivers/hitpoker.c: 289 mame/drivers/jack.c: 681 mame/drivers/mario.c: 228 mame/drivers/meyc8080.c: 349 mame/drivers/naomi.c: 1857 mame/drivers/thepit.c: 532
 Monitor
 顯示器
 
-# emu/ioport.c: 786
+# emu/ioport.c: 717
 Mono
 單聲道
 
-# emu/input.c: 226 mess/drivers/msx.c: 397, 409 mess/drivers/snes.c: 296, 303 
+# emu/input.c: 226 mess/drivers/msx.c: 396, 408 mess/drivers/snes.c: 296, 303 
 Mouse
 滑鼠
 
@@ -2102,11 +2106,11 @@ Mouse Y 7
 Mouse Y 8
 滑鼠 Y 8
 
-# mame/drivers/centiped.c: 1253 mame/drivers/ertictac.c: 100 mame/drivers/kangaroo.c: 360 mame/drivers/m57.c: 187 mame/drivers/mcr.c: 819, 855, 1092 mame/drivers/mitchell.c: 588 mame/drivers/mosaic.c: 168 mame/drivers/nbmj8688.c: 1281 mame/drivers/nbmj9195.c: 1362 mame/drivers/pacman.c: 2995 mame/drivers/pgm.c: 895 mame/drivers/seattle.c: 1956 mame/drivers/toaplan2.c: 2562, 2698, 2827
+# mame/drivers/centiped.c: 1248 mame/drivers/ertictac.c: 103 mame/drivers/kangaroo.c: 359 mame/drivers/m57.c: 187 mame/drivers/mcr.c: 840, 876, 1113 mame/drivers/mitchell.c: 579 mame/drivers/mosaic.c: 164 mame/drivers/nbmj8688.c: 1281 mame/drivers/nbmj9195.c: 1341 mame/drivers/pacman.c: 2982 mame/drivers/pgm.c: 420 mame/drivers/seattle.c: 1965 mame/drivers/toaplan2.c: 2540, 2676, 2805
 Music
 音樂
 
-# emu/uimain.c: 1487
+# emu/uimain.c: 1570
 NA
 NA
 
@@ -2158,15 +2162,15 @@ Name:             Description:\n
 Name:            Clone of:\n
 名稱:            原作:\n
 
-# emu/uimain.c: 375
+# emu/uimain.c: 388
 Natural
 自然
 
-# emu/uimain.c: 195
+# emu/uimain.c: 204
 Network Devices
 網路裝置
 
-# mame/drivers/neodrvr.c: 10824 mame/drivers/neogeo.c: 1231
+# mame/drivers/neodrvr.c: 11104 mame/drivers/neogeo.c: 1227
 Next Game
 下一個遊戲
 
@@ -2178,11 +2182,11 @@ Nicola Salmoria 與 MAME 開發團隊
 Nihongo
 日文
 
-# emu/ioport.c: 676 emu/uiimage.c: 164 mame/drivers/jaguar.c: 1637 mess/machine/nes.c: 1493, 1494, 1495 
+# emu/ioport.c: 607 emu/uiimage.c: 164 mame/drivers/jaguar.c: 1690 mess/machine/nes.c: 1490, 1491, 1492 
 No
 否
 
-# emu/uimain.c: 2995
+# emu/uimain.c: 3078
 No %s found. Please check the rompath specified in the %s.ini file.\n\nIf this is your first time using %s, please see the config.txt file in the docs directory for information on configuring %s.
 找不到 %s。請檢查 %s.ini 檔案中的 rompath 設定。\n\n如果這是您第一次使用 %s 的話，請查閱\ docs 目錄的 config.txt 檔案以取得設定 %s 的資訊。
 
@@ -2198,7 +2202,7 @@ No Tape Image loaded
 No matching games found for '%s'
 找不到符合 '%s' 的遊戲
 
-# emu/input.c: 2019 emu/ioport.c: 792 emu/uimain.c: 2228, 2571 mame/drivers/saturn.c: 1182 
+# emu/input.c: 2019 emu/ioport.c: 723 emu/uimain.c: 2311, 2654 mame/drivers/saturn.c: 1178 
 None
 無
 
@@ -2206,23 +2210,23 @@ None
 None\n
 無\n
 
-# emu/ioport.c: 755 mame/drivers/atarisy4.c: 421 mame/drivers/lordgun.c: 536 mame/drivers/metro.c: 2660 mame/drivers/nmk16.c: 1331 mame/drivers/yunsun16.c: 399 mame/video/midzeus.c: 657
+# emu/ioport.c: 686 mame/drivers/atarisy4.c: 438 mame/drivers/galdrvr.c: 1272 mame/drivers/lordgun.c: 531 mame/drivers/metro.c: 2641 mame/drivers/nmk16.c: 1326 mame/drivers/sidepckt.c: 300 mame/drivers/yunsun16.c: 399 mame/video/midzeus.c: 657
 Normal
 標準
 
-# emu/uimain.c: 3155, 3162 mame/drivers/cd32.c: 616, 623, 701, 716 mame/drivers/magic10.c: 549 mame/drivers/tetrisp2.c: 673 
+# emu/uimain.c: 3238, 3245 lib/formats/ap2_dsk.c: 737, 737, 838, 838 mame/drivers/cd32.c: 615, 622, 700, 715 mame/drivers/magic10.c: 557 mame/drivers/tetrisp2.c: 824 
 OK
 OK
 
-# emu/romload.c: 394
+# emu/romload.c: 392
 OPTIONAL %s NOT FOUND\n
 非必要的 %s 找不到\n
 
-# emu/cheat.c: 1018, 1027 emu/ioport.c: 674 emu/uimain.c: 1393, 2391, 2710 mame/drivers/alpha68k.c: 1081
+# emu/cheat.c: 1018, 1027 emu/ioport.c: 605 emu/uimain.c: 1476, 2474, 2793 mame/drivers/alpha68k.c: 1072
 Off
 關
 
-# emu/cheat.c: 1018 emu/ioport.c: 675 emu/uimain.c: 1393, 2391, 2711
+# emu/cheat.c: 1018 emu/ioport.c: 606 emu/uimain.c: 1476, 2474, 2794
 On
 開
 
@@ -2238,15 +2242,15 @@ One or more ROMs/CHDs for this
 One or more ROMs/CHDs for this game are incorrect. The 
 這個遊戲有一個或更多的 ROM/CHD 是不正確的。
 
-# mame/drivers/fgoal.c: 252 
+# mame/drivers/fgoal.c: 244 
 Options
 選項
 
-# mame/drivers/gei.c: 803
+# mame/drivers/gei.c: 826
 Orientation
 方向
 
-# emu/uimain.c: 593
+# emu/uimain.c: 676
 Other Controls
 其它控制
 
@@ -2254,51 +2258,51 @@ Other Controls
 Otherwise, type OK or move the joystick left then right to continue
 否則，請鍵入 OK 或移動搖桿的左、右方向繼續
 
-# emu/diimage.c: 281 lib/formats/flopimg.c: 922 lib/util/opresolv.c: 551
+# emu/diimage.c: 282 lib/formats/flopimg.c: 922 lib/util/opresolv.c: 551
 Out of memory
 記憶體不足
 
-# emu/clifront.c: 308 emu/machine.c: 451 
+# emu/clifront.c: 308 emu/machine.c: 445 
 Out of memory!\n
 記憶體不足!\n
 
-# emu/ioport.c: 4178, 4198, 4218
+# emu/ioport.c: 4120, 4140, 4160
 Out of space
 空間不足
 
-# emu/ioport.c: 4116
+# emu/ioport.c: 4058
 Out of sync
 不同步
 
-# emu/uimain.c: 3145
+# emu/uimain.c: 3228
 Overall: NOT WORKING
 整體: 不可執行
 
-# emu/uimain.c: 3147
+# emu/uimain.c: 3230
 Overall: Unemulated Protection
 整體: 未模擬保護
 
-# emu/uimain.c: 3149
+# emu/uimain.c: 3232
 Overall: Working
 整體: 可以執行
 
-# emu/ui.c: 2371
+# emu/ui.c: 2368
 Overclock CPU %s
 超頻 CPU %s
 
-# emu/uimain.c: 2241 
+# emu/uimain.c: 2324 
 Overlays
 覆疊圖
 
-# mame/drivers/deadang.c: 152 mame/drivers/tail2nos.c: 143
+# mame/drivers/deadang.c: 152 mame/drivers/tail2nos.c: 142
 Overseas
 海外版
 
-# emu/uimain.c: 2489
+# emu/uimain.c: 2572
 P%d Crosshair
 P%d 十字準星
 
-# emu/uimain.c: 2412
+# emu/uimain.c: 2495
 P%d Visibility
 P%d 可見度
 
@@ -2382,7 +2386,7 @@ P1 自定 3
 P1 Custom 4
 P1 自定 4
 
-# emu/inpttype.h: 57 mame/drivers/4enraya.c: 207 mame/drivers/galaxold.c: 1768 mame/drivers/naomi.c: 2285
+# emu/inpttype.h: 57 mame/drivers/4enraya.c: 203 mame/drivers/galaxold.c: 1767 mame/drivers/naomi.c: 2285
 P1 Down
 P1 下
 
@@ -2426,7 +2430,7 @@ P1 花札 否
 P1 Hanafuda Yes
 P1 花札 是
 
-# emu/inpttype.h: 58 mame/drivers/speedatk.c: 229
+# emu/inpttype.h: 58 mame/drivers/speedatk.c: 225
 P1 Left
 P1 左
 
@@ -2486,7 +2490,7 @@ P1 麻將 E
 P1 Mahjong F
 P1 麻將 F
 
-# emu/inpttype.h: 121 mame/drivers/jalmah.c: 1230, 1267
+# emu/inpttype.h: 121 mame/drivers/jalmah.c: 1246, 1283
 P1 Mahjong Flip Flop
 P1 麻將 交換牌
 
@@ -2574,7 +2578,7 @@ P1 踏板 2
 P1 Pedal 3
 P1 踏板 3
 
-# emu/inpttype.h: 59 mame/drivers/speedatk.c: 233
+# emu/inpttype.h: 59 mame/drivers/speedatk.c: 229
 P1 Right
 P1 右
 
@@ -2594,11 +2598,11 @@ P1 右搖桿/右
 P1 Right/Up
 P1 右搖桿/上
 
-# emu/inpttype.h: 94 mame/drivers/lemmings.c: 130 mame/drivers/nss.c: 522 mame/drivers/sfcbox.c: 103 mame/drivers/snesb.c: 317 mess/drivers/pce.c: 123, 178 mess/drivers/snes.c: 186
+# emu/inpttype.h: 94 mame/drivers/lemmings.c: 126 mame/drivers/nss.c: 532 mame/drivers/sfcbox.c: 160 mame/drivers/snesb.c: 268 mess/drivers/pce.c: 123, 178 mess/drivers/snes.c: 186
 P1 Select
 P1 選擇
 
-# emu/inpttype.h: 93 mame/drivers/albazg.c: 281, 297 mame/drivers/nss.c: 523 mame/drivers/sfcbox.c: 104 mame/drivers/snesb.c: 318 mess/drivers/snes.c: 187
+# emu/inpttype.h: 93 mame/drivers/albazg.c: 285, 301 mame/drivers/nss.c: 533 mame/drivers/sfcbox.c: 161 mame/drivers/snesb.c: 269 mess/drivers/snes.c: 187
 P1 Start
 P1 開始
 
@@ -2690,7 +2694,7 @@ P2 自定 3
 P2 Custom 4
 P2 自定 4
 
-# emu/inpttype.h: 162 mame/drivers/4enraya.c: 209 mame/drivers/galaxold.c: 1767 mame/drivers/naomi.c: 2295
+# emu/inpttype.h: 162 mame/drivers/4enraya.c: 205 mame/drivers/galaxold.c: 1766 mame/drivers/naomi.c: 2295
 P2 Down
 P2 下
 
@@ -2734,7 +2738,7 @@ P2 花札 否
 P2 Hanafuda Yes
 P2 花札 是
 
-# emu/inpttype.h: 163 mame/drivers/speedatk.c: 249
+# emu/inpttype.h: 163 mame/drivers/speedatk.c: 245
 P2 Left
 P2 左
 
@@ -2882,7 +2886,7 @@ P2 踏板 2
 P2 Pedal 3
 P2 踏板 3
 
-# emu/inpttype.h: 164 mame/drivers/speedatk.c: 253
+# emu/inpttype.h: 164 mame/drivers/speedatk.c: 249
 P2 Right
 P2 右
 
@@ -2902,11 +2906,11 @@ P2 右搖桿/右
 P2 Right/Up
 P2 右搖桿/上
 
-# emu/inpttype.h: 199 mame/drivers/lemmings.c: 133 mame/drivers/nss.c: 537 mame/drivers/sfcbox.c: 118 mame/drivers/snesb.c: 332 mess/drivers/pce.c: 134, 194 mess/drivers/snes.c: 201
+# emu/inpttype.h: 199 mame/drivers/lemmings.c: 129 mame/drivers/nss.c: 547 mame/drivers/sfcbox.c: 175 mame/drivers/snesb.c: 283 mess/drivers/pce.c: 134, 194 mess/drivers/snes.c: 201
 P2 Select
 P2 選擇
 
-# emu/inpttype.h: 198 mame/drivers/nss.c: 538 mame/drivers/sfcbox.c: 119 mame/drivers/snesb.c: 333 mess/drivers/snes.c: 202
+# emu/inpttype.h: 198 mame/drivers/nss.c: 548 mame/drivers/sfcbox.c: 176 mame/drivers/snesb.c: 284 mess/drivers/snes.c: 202
 P2 Start
 P2 開始
 
@@ -3830,7 +3834,7 @@ P8 切換連射
 P8 Up
 P8 上
 
-# emu/inpttype.h: 546 mame/drivers/taito_f2.c: 2010 
+# emu/inpttype.h: 546 mame/drivers/taito_f2.c: 2002 
 Paddle
 操縱桿
 
@@ -3894,11 +3898,11 @@ Paddle V 7
 Paddle V 8
 操縱桿 V 8
 
-# emu/emuopts.c: 617
+# emu/emuopts.c: 618
 Parsing %s.ini\n
 正在解析 %s.ini\n
 
-# emu/inpttype.h: 687 emu/ioport.c: 641, 725 mame/machine/megadriv.c: 4871
+# emu/inpttype.h: 687 emu/ioport.c: 572, 656 mame/machine/megadriv.c: 4871
 Pause
 暫停
 
@@ -3906,7 +3910,7 @@ Pause
 Pause/Stop
 暫停/停止
 
-# mame/drivers/turbo.c: 1036 
+# mame/drivers/turbo.c: 900 
 Pedal
 踏板
 
@@ -3914,15 +3918,15 @@ Pedal
 Pixel Aspect (%d:%d)
 像素長寬 (%d:%d)
 
-# emu/uiimage.c: 1100 mame/drivers/albazc.c: 179 mame/drivers/funworld.c: 1015, 1076, 1137, 1257, 1378, 1439, 1619 mame/drivers/gei.c: 755, 915 mame/drivers/goldnpkr.c: 2674 mame/drivers/holeland.c: 118, 186 mame/drivers/itech8.c: 1311 mame/drivers/luckgrln.c: 615 mame/drivers/merit.c: 936, 1000 mame/drivers/mpu4.c: 1915 mame/drivers/sigmab98.c: 1508 mame/drivers/subsino2.c: 1829 mame/machine/megadriv.c: 4868 
+# emu/uiimage.c: 1100 mame/drivers/albazc.c: 186 mame/drivers/funworld.c: 1015, 1076, 1137, 1257, 1378, 1439, 1619 mame/drivers/gei.c: 778, 938 mame/drivers/goldnpkr.c: 3102 mame/drivers/holeland.c: 118, 186 mame/drivers/itech8.c: 1313 mame/drivers/luckgrln.c: 636 mame/drivers/merit.c: 941, 1005 mame/drivers/mpu4.c: 1912 mame/drivers/sigmab98.c: 1516 mame/drivers/subsino2.c: 1835 mame/machine/megadriv.c: 4868 
 Play
 執行
 
-# mame/drivers/astrocde.c: 775 mame/drivers/bottom9.c: 219 mame/drivers/deniam.c: 189 mame/drivers/destroyr.c: 303 mame/drivers/firetrk.c: 437, 504, 581 mame/drivers/galpanic.c: 476 mame/drivers/gstriker.c: 454 mame/drivers/m79amb.c: 153 mame/drivers/pinkiri8.c: 725 mame/drivers/quizpun2.c: 411 mame/drivers/skyraid.c: 104 mame/drivers/sprint2.c: 308, 380 mame/drivers/sprint4.c: 306 mame/drivers/sprint8.c: 238, 377 mame/drivers/sspeedr.c: 142 mame/drivers/starshp1.c: 221 mame/drivers/suna16.c: 684 mame/drivers/suprslam.c: 229 mame/drivers/tank8.c: 220 mame/drivers/triplhnt.c: 166 mame/drivers/wolfpack.c: 172 
+# mame/drivers/astrocde.c: 763 mame/drivers/bottom9.c: 209 mame/drivers/deniam.c: 188 mame/drivers/destroyr.c: 308 mame/drivers/firetrk.c: 421, 488, 565 mame/drivers/galpanic.c: 476 mame/drivers/gstriker.c: 450 mame/drivers/m79amb.c: 156 mame/drivers/pinkiri8.c: 737 mame/drivers/quizpun2.c: 416 mame/drivers/skyraid.c: 100 mame/drivers/sprint2.c: 299, 371 mame/drivers/sprint4.c: 299 mame/drivers/sprint8.c: 235, 374 mame/drivers/sspeedr.c: 140 mame/drivers/starshp1.c: 216 mame/drivers/suna16.c: 683 mame/drivers/suprslam.c: 226 mame/drivers/tank8.c: 218 mame/drivers/triplhnt.c: 163 mame/drivers/wolfpack.c: 170 
 Play Time
 遊戲時間
 
-# emu/ioport.c: 4083
+# emu/ioport.c: 4025
 Playback Ended\nReason: %s
 播放結束\n原因: %s
 
@@ -3930,11 +3934,11 @@ Playback Ended\nReason: %s
 Player %d
 玩家 %d
 
-# emu/uimain.c: 590
+# emu/uimain.c: 673
 Player %d Controls
 玩家 %d 控制
 
-# emu/ioport.c: 771
+# emu/ioport.c: 702
 Players
 玩家數
 
@@ -4010,11 +4014,11 @@ Press ''UI Cancel'' (default: Esc) to return to emulation.
 Press ''UI Select'' (default: Enter) to quit,\n
 按「UI 確定鍵」(預設按鍵: Enter) 退出，\n
 
-# mame/drivers/neodrvr.c: 10826 mame/drivers/neogeo.c: 1231
+# mame/drivers/neodrvr.c: 11106 mame/drivers/neogeo.c: 1227
 Previous Game
 上一個遊戲
 
-# emu/imagedev/bitbngr.c: 80 emu/imagedev/printer.c: 21 mame/drivers/taito_f2.c: 2629
+# emu/imagedev/bitbngr.c: 80 emu/imagedev/printer.c: 21 mame/drivers/taito_f2.c: 2621
 Printer
 印表機
 
@@ -4026,7 +4030,7 @@ REC START
 REC STOP
 錄製停止
 
-# emu/romload.c: 591
+# emu/romload.c: 589
 ROM %s: has ips\n
 ROM %s 有 ips\n
 
@@ -4034,11 +4038,11 @@ ROM %s 有 ips\n
 ROMs required for driver \"%s\".\nName                    Size Checksum\n
 驅動程式 \"%s\" 需要 ROM。\n名稱                    大小 檢查碼\n
 
-# mame/drivers/m107.c: 286 mame/drivers/ssv.c: 2210 mame/drivers/toaplan2.c: 1951
+# mame/drivers/m107.c: 284 mame/drivers/ssv.c: 2184 mame/drivers/toaplan2.c: 1929
 Rapid Fire
 連續射擊
 
-# emu/uiimage.c: 1103 mame/drivers/5clown.c: 813 
+# emu/uiimage.c: 1103 mame/drivers/5clown.c: 817 
 Record
 記錄
 
@@ -4046,35 +4050,35 @@ Record
 Record Movie
 錄製影片
 
-# emu/ioport.c: 4030
+# emu/ioport.c: 3972
 Recorded using %s\n
 正在使用 %s 錄製\n
 
-# emu/ioport.c: 4286
+# emu/ioport.c: 4228
 Recording Ended\nReason: %s
 錄製結束\n原因: %s
 
-# emu/ioport.c: 729 mame/drivers/pgm.c: 334, 577, 917, 924, 946, 959, 970, 980, 999, 1012, 1025, 1042, 1058, 1077, 1091, 1104, 1118, 1234, 1247, 4633, 4642, 4651, 4660, 4934, 5321, 5502, 5755 mame/machine/pgmprot.c: 114, 285, 329, 338, 453, 926
+# emu/ioport.c: 660 mame/drivers/pgm.c: 442 mame/machine/pgmprot.c: 24, 63, 65, 182, 193 mame/machine/pgmprot1.c: 1391, 1401, 1566, 1579, 1593, 1606, 1619, 1634 mame/machine/pgmprot2.c: 430 mame/machine/pgmprot4.c: 337, 517, 582, 601 mame/machine/pgmprot6.c: 123, 236
 Region
 區域
 
-# emu/uimain.c: 1721
+# emu/uimain.c: 1804
 Reload All
 全部重新載入
 
-# emu/uimain.c: 487 mame/drivers/albazc.c: 176 mame/drivers/arcadia.c: 226 mame/drivers/astrocde.c: 1083, 1204 mame/drivers/bartop52.c: 66 mame/drivers/big10.c: 159 mame/drivers/cd32.c: 291, 294, 297, 300, 303, 306, 309, 312, 317, 320, 323, 326, 329, 332, 335, 338, 1394, 1397, 1400, 1403, 1406, 1409, 1412, 1415, 1420, 1423, 1426, 1429, 1432, 1435, 1438, 1441 mame/drivers/corona.c: 1317 mame/drivers/d9final.c: 133 mame/drivers/deco32.c: 1280, 1374 mame/drivers/djmain.c: 510, 1079 mame/drivers/feversoc.c: 241 mame/drivers/highvdeo.c: 547, 608, 637 mame/drivers/jpmsys5.c: 462, 766 mame/drivers/laserbat.c: 246, 325, 399 mame/drivers/lastfght.c: 461 mame/drivers/luckgrln.c: 659 mame/drivers/murogem.c: 160 mame/drivers/playch10.c: 416 mame/drivers/sengokmj.c: 239 mame/drivers/skylncr.c: 530 mame/drivers/subsino.c: 1305, 1413, 1549, 1683, 1818, 1910, 2112, 2206 mame/drivers/subsino2.c: 1421, 1580, 1727, 1858, 1926, 1992, 2139 mame/drivers/taito_o.c: 90 mame/drivers/trvquest.c: 80 mess/drivers/a7800.c: 79 mess/drivers/atari400.c: 584 
+# emu/uimain.c: 500, 558 mame/drivers/albazc.c: 183 mame/drivers/arcadia.c: 227 mame/drivers/astrocde.c: 1070, 1191 mame/drivers/bartop52.c: 66 mame/drivers/big10.c: 159 mame/drivers/cd32.c: 290, 293, 296, 299, 302, 305, 308, 311, 316, 319, 322, 325, 328, 331, 334, 337, 1393, 1396, 1399, 1402, 1405, 1408, 1411, 1414, 1419, 1422, 1425, 1428, 1431, 1434, 1437, 1440 mame/drivers/corona.c: 1323 mame/drivers/d9final.c: 138 mame/drivers/deco32.c: 1264, 1358 mame/drivers/djmain.c: 500, 1069 mame/drivers/feversoc.c: 244 mame/drivers/highvdeo.c: 560, 621, 650 mame/drivers/jpmsys5.c: 469, 773 mame/drivers/laserbat.c: 241, 320, 394 mame/drivers/lastfght.c: 467 mame/drivers/luckgrln.c: 680 mame/drivers/murogem.c: 162 mame/drivers/playch10.c: 412 mame/drivers/sengokmj.c: 239 mame/drivers/skylncr.c: 547 mame/drivers/subsino.c: 1318, 1426, 1562, 1696, 1831, 1923, 2125, 2219 mame/drivers/subsino2.c: 1427, 1586, 1733, 1864, 1932, 1998, 2145 mame/drivers/taito_o.c: 90 mame/drivers/trvquest.c: 80 mess/drivers/a7800.c: 79 mess/drivers/atari400.c: 592 
 Reset
 重設
 
-# emu/uimain.c: 1718 mame/drivers/lvcards.c: 362
+# emu/uimain.c: 1801 mame/drivers/lvcards.c: 359
 Reset All
 全部重設
 
-# emu/inpttype.h: 688 mess/drivers/a2600.c: 2084
+# emu/inpttype.h: 688 mess/drivers/a2600.c: 2106
 Reset Game
 重新啟動遊戲
 
-# mame/drivers/seattle.c: 1928, 2322, 2420 mame/drivers/vegas.c: 1858, 1890, 1904, 1934, 1978, 2074 
+# mame/drivers/seattle.c: 1937, 2331, 2429 mame/drivers/vegas.c: 1860, 1892, 1906, 1936, 1980, 2076 
 Resolution
 解析度
 
@@ -4086,7 +4090,7 @@ Return to %s
 Return to Prior Menu
 回上一層選單
 
-# emu/ioport.c: 790
+# emu/ioport.c: 721
 Reverse
 反轉
 
@@ -4094,15 +4098,15 @@ Reverse
 Rewind
 倒帶
 
-# emu/input.c: 250 mame/drivers/balsente.c: 1024 mame/drivers/bfm_sc2.c: 1524 mame/drivers/re900.c: 261 mame/drivers/statriv2.c: 397 mame/drivers/umipoker.c: 505 mess/drivers/gb.c: 551 mess/drivers/ngp.c: 572
+# emu/input.c: 250 mame/drivers/balsente.c: 1024 mame/drivers/bfm_sc2.c: 1544 mame/drivers/re900.c: 264 mame/drivers/statriv2.c: 401 mame/drivers/umipoker.c: 519 mess/drivers/gb.c: 551 mess/drivers/ngp.c: 571
 Right
 右
 
-# emu/ioport.c: 647
+# emu/ioport.c: 578
 Right Alt
 右邊 Alt
 
-# emu/ioport.c: 645
+# emu/ioport.c: 576
 Right Ctrl
 右邊 Ctrl
 
@@ -4110,11 +4114,11 @@ Right Ctrl
 Right Half
 右半畫面
 
-# emu/ioport.c: 643
+# emu/ioport.c: 574
 Right Shift
 右邊 Shift
 
-# emu/ioport.c: 652
+# emu/ioport.c: 583
 Right Win
 右邊 Win
 
@@ -4122,11 +4126,11 @@ Right Win
 Rockn Megasession Custom
 Rockn Megasession 自訂畫面
 
-# emu/uimain.c: 2233 mame/drivers/atarisy2.c: 987
+# emu/uimain.c: 2316 mame/drivers/atarisy2.c: 972
 Rotate
 旋轉
 
-# mame/drivers/epos.c: 148 
+# mame/drivers/epos.c: 149 
 Rotation
 旋轉
 
@@ -4154,11 +4158,11 @@ Save cancelled
 Save to position %c
 儲存位置 %c
 
-# emu/ui.c: 2863 mame/drivers/gei.c: 745, 773, 833 mame/drivers/turbo.c: 976 
+# emu/ui.c: 2860 mame/drivers/gei.c: 768, 796, 856 mame/drivers/turbo.c: 840 
 Screen
 畫面
 
-# emu/uimain.c: 2085
+# emu/uimain.c: 2168
 Screen #%d
 畫面 #%d
 
@@ -4182,7 +4186,7 @@ Screen %d Stretched (%dx%d)
 Screen %d Widescreen (%d:%d)
 畫面 %d 寬螢幕 (%d:%d)
 
-# emu/ui.c: 2861
+# emu/ui.c: 2858
 Screen '%s'
 畫面 '%s'
 
@@ -4190,7 +4194,7 @@ Screen '%s'
 Screen flipping in cocktail mode is not supported.\n
 尚未支援檯面型筐體模式的畫面翻轉。\n
 
-# mame/drivers/nova2001.c: 402 mame/drivers/royalmah.c: 2786
+# mame/drivers/nova2001.c: 399 mame/drivers/royalmah.c: 2805
 Second Bonus
 第二次獎勵
 
@@ -4218,11 +4222,11 @@ SegaScope 右 LCD 長寬比例 (%d:%d)
 SegaScope Right LCD Standard (%d:%d)
 SegaScope 右 LCD 標準 (%d:%d)
 
-# mame/drivers/astrocorp.c: 361, 384 mame/drivers/big10.c: 181 mame/drivers/bwidow.c: 680 mame/drivers/cclimber.c: 588 mame/drivers/guab.c: 727 mame/drivers/koftball.c: 203 mame/drivers/maxaflex.c: 302 mame/drivers/megaplay.c: 114 mame/drivers/megatech.c: 87 mame/drivers/mpu4.c: 1912 mame/drivers/nbmj8688.c: 2531 mame/drivers/pacman.c: 3018 mame/drivers/pingpong.c: 334 mame/drivers/slotcarn.c: 228 mame/drivers/trackfld.c: 616 mess/drivers/a7800.c: 80 mess/drivers/gb.c: 557
+# mame/drivers/astrocorp.c: 366, 389 mame/drivers/big10.c: 181 mame/drivers/bwidow.c: 683 mame/drivers/cclimber.c: 582 mame/drivers/guab.c: 731 mame/drivers/koftball.c: 206 mame/drivers/maxaflex.c: 304 mame/drivers/megaplay.c: 114 mame/drivers/megatech.c: 87 mame/drivers/mpu4.c: 1909 mame/drivers/nbmj8688.c: 2531 mame/drivers/pacman.c: 3005 mame/drivers/pingpong.c: 331 mame/drivers/slotcarn.c: 231 mame/drivers/trackfld.c: 614 mess/drivers/a7800.c: 80 mess/drivers/gb.c: 557
 Select
 選擇
 
-# emu/uimain.c: 231
+# emu/uimain.c: 240
 Select New %s
 選擇新的%s
 
@@ -4234,7 +4238,7 @@ Select position to load from
 Select position to save to
 選擇要儲存的位置
 
-# emu/inpttype.h: 146, 513 mame/drivers/calomega.c: 2022, 2114, 2206 mame/drivers/cdi.c: 184 mame/drivers/djmain.c: 509, 1078, 1271 mame/drivers/firebeat.c: 1812, 1845, 1934 mame/drivers/liberate.c: 540 mame/drivers/lucky74.c: 934 mame/drivers/pgm.c: 701, 873 mame/drivers/roul.c: 229 mame/drivers/vpoker.c: 198, 409 mame/drivers/wallc.c: 213
+# emu/inpttype.h: 146, 513 mame/drivers/calomega.c: 2022, 2114, 2206 mame/drivers/cdi.c: 183 mame/drivers/djmain.c: 499, 1068, 1261 mame/drivers/firebeat.c: 1813, 1846, 1935 mame/drivers/goldnpkr.c: 2398, 2537, 2633, 2729 mame/drivers/liberate.c: 533 mame/drivers/lucky74.c: 930 mame/drivers/pgm.c: 338, 398 mame/drivers/roul.c: 232 mame/drivers/vpoker.c: 199, 410 mame/drivers/wallc.c: 216
 Service
 業務模式
 
@@ -4254,7 +4258,7 @@ Service 3
 Service 4
 業務開關 4
 
-# emu/ioport.c: 724
+# emu/ioport.c: 655
 Service Mode
 業務模式
 
@@ -4262,7 +4266,7 @@ Service Mode
 Service Mode/Free Play
 業務模式/免費執行
 
-# emu/cheat.c: 1013, 1027 mame/drivers/arcadia.c: 227 mame/drivers/cd32.c: 292, 295, 298, 301, 304, 307, 310, 313, 318, 321, 324, 327, 330, 333, 336, 339, 1395, 1398, 1401, 1404, 1407, 1410, 1413, 1416, 1421, 1424, 1427, 1430, 1433, 1436, 1439, 1442 mame/drivers/pingpong.c: 339 mame/drivers/trackfld.c: 606
+# emu/cheat.c: 1013, 1027 mame/drivers/arcadia.c: 228 mame/drivers/cd32.c: 291, 294, 297, 300, 303, 306, 309, 312, 317, 320, 323, 326, 329, 332, 335, 338, 1394, 1397, 1400, 1403, 1406, 1409, 1412, 1415, 1420, 1423, 1426, 1429, 1432, 1435, 1438, 1441 mame/drivers/pingpong.c: 336 mame/drivers/trackfld.c: 604
 Set
 配置
 
@@ -4270,7 +4274,7 @@ Set
 Show Button Input
 顯示按鍵輸入
 
-# emu/uimain.c: 227
+# emu/uimain.c: 236
 Show Command List
 顯示招式表
 
@@ -4294,19 +4298,19 @@ Show Profiler
 Simple LEDs
 單一 LED
 
-# emu/ioport.c: 774 mame/drivers/segas24.c: 1487
+# emu/ioport.c: 705 mame/drivers/segas24.c: 1486
 Single
 單人
 
-# emu/uimain.c: 203
+# emu/uimain.c: 212
 Slider Controls
 參數調整
 
-# emu/uimain.c: 188
+# emu/uimain.c: 197
 Slot Devices
 插槽裝置
 
-# mame/drivers/4enraya.c: 191 mame/drivers/aleck64.c: 543 mame/drivers/alpha68k.c: 1411 mame/drivers/angelkds.c: 430 mame/drivers/arkanoid.c: 910 mame/drivers/bestleag.c: 315 mame/drivers/bigstrkb.c: 131 mame/drivers/brkthru.c: 202, 205 mame/drivers/btime.c: 860, 1144 mame/drivers/cabaret.c: 214 mame/drivers/cclimber.c: 809 mame/drivers/cninja.c: 560, 600 mame/drivers/cps1.c: 1247, 1460 mame/drivers/ddenlovr.c: 3884 mame/drivers/decocass.c: 370, 452 mame/drivers/deniam.c: 190 mame/drivers/epos.c: 143, 146, 149 mame/drivers/flower.c: 157 mame/drivers/fuukifg3.c: 379 mame/drivers/galdrvr.c: 1101, 1892 mame/drivers/gameplan.c: 319, 709 mame/drivers/goldstar.c: 3786 mame/drivers/halleys.c: 1758 mame/drivers/hyperspt.c: 202, 204 mame/drivers/igspoker.c: 1611 mame/drivers/m62.c: 467, 494, 521, 549, 578, 612, 641, 700, 730 mame/drivers/m63.c: 628 mame/drivers/mcr.c: 1227 mame/drivers/megaplay.c: 246 mame/drivers/metro.c: 3030 mame/drivers/nmg5.c: 472, 532, 625, 632, 667, 672 mame/drivers/nmk16.c: 2803 mame/drivers/norautp.c: 1152 mame/drivers/phoenix.c: 181 mame/drivers/pipeline.c: 271 mame/drivers/portrait.c: 195 mame/drivers/quizdna.c: 135, 223, 325 mame/drivers/rohga.c: 372, 440 mame/drivers/safarir.c: 377 mame/drivers/segas16a.c: 1335, 1686 mame/drivers/segas16b.c: 2847 mame/drivers/sf.c: 321, 499, 637 mame/drivers/sidepckt.c: 199 mame/drivers/skylncr.c: 554 mame/drivers/snk.c: 1751 mame/drivers/solomon.c: 147 mame/drivers/sstrangr.c: 257 mame/drivers/supdrapo.c: 365 mame/drivers/suprridr.c: 264 mame/drivers/system1.c: 1553 mame/drivers/system16.c: 1465 mame/drivers/taito_z.c: 2305, 2379 mame/drivers/tbowl.c: 339 mame/drivers/tecmo16.c: 145 mame/drivers/thepit.c: 260, 315, 356 mame/drivers/trackfld.c: 549 mame/drivers/tumbleb.c: 1389 mame/drivers/vigilant.c: 169 mame/drivers/vsnes.c: 863, 1161, 1364, 1402 mame/drivers/wallc.c: 209 mame/drivers/xain.c: 514 mame/drivers/zac2650.c: 53
+# mame/drivers/4enraya.c: 187 mame/drivers/aleck64.c: 543 mame/drivers/alpha68k.c: 1402 mame/drivers/angelkds.c: 430 mame/drivers/arkanoid.c: 910 mame/drivers/bestleag.c: 319 mame/drivers/bigstrkb.c: 131 mame/drivers/brkthru.c: 198, 201 mame/drivers/btime.c: 848, 1132 mame/drivers/cabaret.c: 219 mame/drivers/cclimber.c: 803 mame/drivers/cninja.c: 554, 594 mame/drivers/cps1.c: 1237, 1450 mame/drivers/ddenlovr.c: 3782 mame/drivers/decocass.c: 370, 452 mame/drivers/deniam.c: 189 mame/drivers/epos.c: 144, 147, 150 mame/drivers/flower.c: 156 mame/drivers/fuukifg3.c: 373 mame/drivers/galdrvr.c: 1101, 1956 mame/drivers/gameplan.c: 320, 710 mame/drivers/goldstar.c: 3782 mame/drivers/halleys.c: 1763 mame/drivers/hyperspt.c: 201, 203 mame/drivers/icecold.c: 115 mame/drivers/igspoker.c: 1616 mame/drivers/m62.c: 465, 492, 519, 547, 576, 610, 639, 698, 728 mame/drivers/m63.c: 635 mame/drivers/mcr.c: 1248 mame/drivers/megaplay.c: 246 mame/drivers/metro.c: 3011 mame/drivers/nmg5.c: 476, 536, 629, 636, 671, 676 mame/drivers/nmk16.c: 2798 mame/drivers/norautp.c: 1149 mame/drivers/phoenix.c: 181 mame/drivers/pipeline.c: 273 mame/drivers/portrait.c: 193 mame/drivers/quizdna.c: 135, 223, 325 mame/drivers/rohga.c: 370, 438 mame/drivers/safarir.c: 380 mame/drivers/segas16a.c: 1335, 1686 mame/drivers/segas16b.c: 2847 mame/drivers/sf.c: 320, 498, 636 mame/drivers/sidepckt.c: 300 mame/drivers/skylncr.c: 571 mame/drivers/snk.c: 1734 mame/drivers/solomon.c: 146 mame/drivers/sstrangr.c: 258 mame/drivers/supdrapo.c: 375 mame/drivers/suprridr.c: 263 mame/drivers/system1.c: 1541 mame/drivers/system16.c: 1429 mame/drivers/taito_z.c: 2293, 2367 mame/drivers/tbowl.c: 335 mame/drivers/tecmo16.c: 145 mame/drivers/thepit.c: 258, 313, 354 mame/drivers/trackfld.c: 547 mame/drivers/tumbleb.c: 1385 mame/drivers/vigilant.c: 169 mame/drivers/vsnes.c: 861, 1159, 1362, 1400 mame/drivers/wallc.c: 212 mame/drivers/xain.c: 499 mame/drivers/zac2650.c: 53
 Slow
 較慢
 
@@ -4318,7 +4322,7 @@ Snapshot
 Soft Reset
 軟體重新啟動
 
-# emu/screen.c: 1330 emu/video.c: 338, 1258 
+# emu/screen.c: 1330 emu/video.c: 330, 1250 
 Software
 軟體
 
@@ -4326,7 +4330,7 @@ Software
 Software lists
 軟體清單
 
-# mame/drivers/balsente.c: 634 mame/drivers/contra.c: 154 mame/drivers/cps1.c: 2460 mame/drivers/gijoe.c: 234 mame/drivers/jchan.c: 620 mame/drivers/merit.c: 1083 mame/drivers/mosaic.c: 171 mame/drivers/tmnt.c: 1634, 1690, 2032 mame/drivers/zaxxon.c: 550 
+# mame/drivers/balsente.c: 634 mame/drivers/contra.c: 153 mame/drivers/cps1.c: 2450 mame/drivers/gijoe.c: 231 mame/drivers/jchan.c: 640 mame/drivers/merit.c: 1088 mame/drivers/mosaic.c: 167 mame/drivers/tmnt.c: 1609, 1665, 2007 mame/drivers/zaxxon.c: 542 
 Sound
 聲音
 
@@ -4334,11 +4338,11 @@ Sound
 Source file:     Name:            Parent:\n
 來源檔案:     名稱:            主檔:\n
 
-# emu/ioport.c: 738
+# emu/ioport.c: 669
 Southeast Asia
 東南亞
 
-# emu/ioport.c: 749 emu/uilang.c: 39 
+# emu/ioport.c: 680 emu/uilang.c: 39 
 Spanish
 西班牙文
 
@@ -4350,7 +4354,7 @@ Speaker
 Speaker \"%s\" - max = %d (gain *= %f) - %d%% samples clipped\n
 喇叭 \"%s\" - max = %d (gain *= %f) - %d%% samples clipped\n
 
-# emu/ioport.c: 789 mame/layout/peyper.lay: 41 mess/layout/wswan.lay: 3 
+# emu/ioport.c: 720 mame/layout/peyper.lay: 41 mess/layout/wswan.lay: 3 
 Standard
 標準
 
@@ -4358,7 +4362,7 @@ Standard
 Standard (%d:%d)
 標準 (%d:%d)
 
-# emu/machine.c: 918
+# emu/machine.c: 971
 Starting %s '%s'\n
 正在啟動 %s '%s'\n
 
@@ -4366,31 +4370,31 @@ Starting %s '%s'\n
 State
 狀態
 
-# emu/machine.c: 839
+# emu/machine.c: 806
 State successfully %s.
 狀態順利%s。
 
-# emu/machine.c: 837
+# emu/machine.c: 804
 State successfully %s.\nWarning: Save states are not officially supported for this game.
 狀態順利%s。\n警告: 這個遊戲尚未正式支援儲存狀態。
 
-# emu/ioport.c: 785 
+# emu/ioport.c: 716 
 Stereo
 立體聲
 
-# mame/drivers/bfm_sc2.c: 3222, 3378 mame/drivers/bmcbowl.c: 369 mame/drivers/holeland.c: 117, 185 mame/drivers/igs009.c: 572 mame/drivers/jackie.c: 478 mame/drivers/limenko.c: 602 mame/drivers/pgm.c: 904 mame/drivers/popper.c: 271 mame/drivers/turbo.c: 974 mess/drivers/nes.c: 147
+# mame/drivers/bfm_sc2.c: 3242, 3398 mame/drivers/bmcbowl.c: 374 mame/drivers/holeland.c: 117, 185 mame/drivers/igs009.c: 581 mame/drivers/jackie.c: 491 mame/drivers/limenko.c: 616 mame/drivers/pgm.c: 429 mame/drivers/popper.c: 269 mame/drivers/turbo.c: 838 mess/drivers/nes.c: 146
 Stop
 停止
 
-# emu/ioport.c: 739
+# emu/ioport.c: 670
 Taiwan
 台灣版
 
-# emu/inpttype.h: 139 mame/drivers/bmcbowl.c: 378 mame/drivers/goldnpkr.c: 2595 mame/drivers/magicfly.c: 693 mame/drivers/witch.c: 561
+# emu/inpttype.h: 139 mame/drivers/bmcbowl.c: 383 mame/drivers/goldnpkr.c: 2380, 2519, 2615, 2711, 3023 mame/drivers/magicfly.c: 695 mame/drivers/witch.c: 567
 Take
 得分
 
-# emu/uimain.c: 176
+# emu/uimain.c: 182
 Tape Control
 磁帶控制
 
@@ -4398,19 +4402,19 @@ Tape Control
 Territory
 區域
 
-# emu/ioport.c: 726 mame/drivers/lasso.c: 269
+# emu/ioport.c: 657 mame/drivers/lasso.c: 265
 Test
 測試
 
-# mame/drivers/aleck64.c: 386, 605, 656 mame/drivers/bnstars.c: 1006 mame/drivers/btime.c: 837 mame/drivers/calomega.c: 1245, 1374, 1634, 1766, 1895, 2040, 2132, 2224 mame/drivers/coinmstr.c: 415 mame/drivers/deshoros.c: 156 mame/drivers/ertictac.c: 97 mame/drivers/funworld.c: 1498, 1558, 2144 mame/drivers/galpani3.c: 410 mame/drivers/homedata.c: 854 mame/drivers/hornet.c: 760, 812 mame/drivers/hyprduel.c: 601 mame/drivers/jangou.c: 836 mame/drivers/koikoi.c: 264 mame/drivers/laserbas.c: 173 mame/drivers/liberate.c: 543 mame/drivers/lucky74.c: 923 mame/drivers/macs.c: 296 mame/drivers/megasys1.c: 622, 639, 666 mame/drivers/mlanding.c: 587 mame/drivers/mw8080bw.c: 386, 794, 1254, 2261 mame/drivers/nmk16.c: 1325 mame/drivers/nwk-tr.c: 571 mame/drivers/ohmygod.c: 159 mame/drivers/peyper.c: 278, 325, 358, 418, 461, 511 mame/drivers/poo.c: 257 mame/drivers/quasar.c: 202 mame/drivers/quizo.c: 185 mame/drivers/r2dx_v33.c: 537, 576 mame/drivers/royalmah.c: 1895 mame/drivers/segas16a.c: 1922 mame/drivers/segas16b.c: 3162 mame/drivers/seicross.c: 180 mame/drivers/sfkick.c: 408 mame/drivers/srmp2.c: 797 mame/drivers/ssfindo.c: 630, 705 mame/drivers/suprnova.c: 557 mame/drivers/system1.c: 1607, 1956, 1993 mame/drivers/system16.c: 1573 mame/drivers/vegas.c: 2066
+# mame/drivers/aleck64.c: 386, 605, 656 mame/drivers/bnstars.c: 1023 mame/drivers/btime.c: 825 mame/drivers/calomega.c: 1245, 1374, 1634, 1766, 1895, 2040, 2132, 2224 mame/drivers/coinmstr.c: 420 mame/drivers/deshoros.c: 158 mame/drivers/ertictac.c: 100 mame/drivers/funworld.c: 1498, 1558, 2144 mame/drivers/galpani3.c: 461 mame/drivers/homedata.c: 834 mame/drivers/hornet.c: 775, 827 mame/drivers/hyprduel.c: 592 mame/drivers/jangou.c: 839 mame/drivers/koikoi.c: 266 mame/drivers/laserbas.c: 174 mame/drivers/liberate.c: 536 mame/drivers/lucky74.c: 919 mame/drivers/macs.c: 298 mame/drivers/megasys1.c: 620, 637, 664 mame/drivers/mlanding.c: 602 mame/drivers/mw8080bw.c: 383, 789, 1246, 2251 mame/drivers/nmk16.c: 1320 mame/drivers/nwk-tr.c: 575 mame/drivers/ohmygod.c: 158 mame/drivers/peyper.c: 283, 330, 363, 423, 466, 516 mame/drivers/poo.c: 266 mame/drivers/quasar.c: 197 mame/drivers/quizo.c: 186 mame/drivers/r2dx_v33.c: 552, 591 mame/drivers/royalmah.c: 1914 mame/drivers/segas16a.c: 1922 mame/drivers/segas16b.c: 3162 mame/drivers/seicross.c: 180 mame/drivers/sfkick.c: 408 mame/drivers/srmp2.c: 789 mame/drivers/ssfindo.c: 637, 712 mame/drivers/suprnova.c: 554 mame/drivers/system1.c: 1595, 1944, 1981 mame/drivers/system16.c: 1537 mame/drivers/vegas.c: 2068
 Test Mode
 測試模式
 
-# mame/drivers/kinst.c: 521, 630 mame/drivers/mcr68.c: 802 mame/drivers/midtunit.c: 112, 220, 323, 426, 529 mame/drivers/midvunit.c: 960 mame/drivers/midwunit.c: 160, 313, 375, 499, 552 mame/drivers/midxunit.c: 203 mame/drivers/midyunit.c: 335, 548, 614, 709, 798 mame/drivers/midzeus.c: 672, 777, 875 mame/drivers/mpu4.c: 1907 mame/drivers/neodrvr.c: 10604 mame/drivers/neogeo.c: 1179 mame/drivers/seattle.c: 2213, 2338, 2436 mame/drivers/vegas.c: 2056 mame/includes/toaplipt.h: 265, 270
+# mame/drivers/kinst.c: 525, 634 mame/drivers/mcr68.c: 794 mame/drivers/midtunit.c: 110, 218, 321, 424, 527 mame/drivers/midvunit.c: 946 mame/drivers/midwunit.c: 160, 313, 375, 499, 552 mame/drivers/midxunit.c: 203 mame/drivers/midyunit.c: 334, 547, 613, 708, 797 mame/drivers/midzeus.c: 668, 773, 871 mame/drivers/mpu4.c: 1904 mame/drivers/neodrvr.c: 10884 mame/drivers/neogeo.c: 1175 mame/drivers/seattle.c: 2222, 2347, 2445 mame/drivers/vegas.c: 2058 mame/includes/toaplipt.h: 265, 270
 Test Switch
 測試開關
 
-# mame/drivers/megasys1.c: 1020
+# mame/drivers/megasys1.c: 1018
 Text
 文件
 
@@ -4438,7 +4442,7 @@ The game requires external artwork files\n
 The keyboard emulation may not be 100% accurate.\n
 鍵盤模擬可能未達到 100% 精確。\n
 
-# emu/uimain.c: 2963
+# emu/uimain.c: 3046
 The selected game is missing one or more required ROM or CHD images. Please select a different game.\n\nPress any key to continue.
 選定的遊戲缺少一個至多個必要的 ROM 或 CHD 映像檔，請選擇其他遊戲。\n\n請按任意鍵繼續。
 
@@ -4458,11 +4462,11 @@ There are known problems with this
 Throttle
 限制速度
 
-# emu/uimain.c: 1475
+# emu/uimain.c: 1558
 Tickets dispensed: %d\n\n
 彩票分配數: %d\n\n
 
-# emu/inpttype.h: 514 emu/ioport.c: 727
+# emu/inpttype.h: 514 emu/ioport.c: 658
 Tilt
 碰撞機台
 
@@ -4482,19 +4486,19 @@ Tilt 3
 Tilt 4
 碰撞機台 4
 
-# mame/drivers/cinemat.c: 362, 382, 536 mame/drivers/cninja.c: 536 mame/drivers/cps1.c: 2847 mame/drivers/dkong.c: 1235 mame/drivers/drtomy.c: 235 mame/drivers/fitfight.c: 308, 440, 578 mame/drivers/gomoku.c: 88 mame/drivers/homedata.c: 798, 851 mame/drivers/lazercmd.c: 513 mame/drivers/m107.c: 316 mame/drivers/m57.c: 177 mame/drivers/m92.c: 786 mame/drivers/megaplay.c: 262 mame/drivers/megasys1.c: 722, 984 mame/drivers/metlclsh.c: 198 mame/drivers/metro.c: 2569, 2659 mame/drivers/mw8080bw.c: 2262 mame/drivers/nbmj8688.c: 2007, 2071 mame/drivers/pachifev.c: 200 mame/drivers/pacman.c: 2376, 2477 mame/drivers/paradise.c: 160, 309 mame/drivers/pcktgal.c: 143 mame/drivers/pktgaldx.c: 220 mame/drivers/pokechmp.c: 182 mame/drivers/punchout.c: 411 mame/drivers/realbrk.c: 296 mame/drivers/segaxbd.c: 960, 1002, 1094, 1175 mame/drivers/shougi.c: 362 mame/drivers/snk.c: 1907 mame/drivers/snowbros.c: 1215, 1292 mame/drivers/starfire.c: 171, 220 mame/drivers/supbtime.c: 244 mame/drivers/system1.c: 1167, 1236 mame/drivers/taito_f2.c: 2342 mame/drivers/taito_l.c: 1035, 1439, 1578, 1578 mame/drivers/taitosj.c: 792, 877, 1324 mame/drivers/tattack.c: 111 mame/drivers/tubep.c: 838 mame/drivers/tumbleb.c: 1088, 1648 mame/drivers/uapce.c: 264 mame/drivers/vicdual.c: 447 mame/drivers/vsnes.c: 675, 1094 mame/drivers/wwfsstar.c: 357 mame/drivers/yunsun16.c: 480 mame/drivers/zac2650.c: 117
+# mame/drivers/cinemat.c: 356, 376, 530 mame/drivers/cninja.c: 530 mame/drivers/cps1.c: 2837 mame/drivers/dkong.c: 1225 mame/drivers/drtomy.c: 238 mame/drivers/fitfight.c: 310, 442, 580 mame/drivers/gomoku.c: 88 mame/drivers/homedata.c: 778, 831 mame/drivers/lazercmd.c: 509 mame/drivers/m107.c: 314 mame/drivers/m57.c: 177 mame/drivers/m92.c: 783 mame/drivers/megaplay.c: 262 mame/drivers/megasys1.c: 720, 982 mame/drivers/metlclsh.c: 193 mame/drivers/metro.c: 2550, 2640 mame/drivers/mw8080bw.c: 2252 mame/drivers/nbmj8688.c: 2007, 2071 mame/drivers/pachifev.c: 201 mame/drivers/pacman.c: 2363, 2464 mame/drivers/paradise.c: 208, 357 mame/drivers/pcktgal.c: 142 mame/drivers/pktgaldx.c: 220 mame/drivers/punchout.c: 408 mame/drivers/realbrk.c: 291 mame/drivers/segaxbd.c: 960, 1002, 1094, 1175 mame/drivers/shougi.c: 372 mame/drivers/snk.c: 1890 mame/drivers/snowbros.c: 1284, 1361 mame/drivers/starfire.c: 168, 217 mame/drivers/supbtime.c: 243 mame/drivers/system1.c: 1155, 1224 mame/drivers/taito_f2.c: 2334 mame/drivers/taito_l.c: 1012, 1416, 1555, 1555 mame/drivers/taitosj.c: 789, 874, 1321 mame/drivers/tattack.c: 113 mame/drivers/tubep.c: 831 mame/drivers/tumbleb.c: 1084, 1644 mame/drivers/uapce.c: 265 mame/drivers/vicdual.c: 444 mame/drivers/vsnes.c: 673, 1092 mame/drivers/wwfsstar.c: 355 mame/drivers/yunsun16.c: 480 mame/drivers/zac2650.c: 117
 Time
 時間
 
-# emu/timer.c: 65 mame/drivers/chinagat.c: 433 mame/drivers/ddragon.c: 729 mame/drivers/dec0.c: 821 mame/drivers/fuukifg3.c: 378 mame/drivers/jollyjgr.c: 250 mame/drivers/m62.c: 520, 548, 577, 611 mame/drivers/megaplay.c: 224 mame/drivers/metro.c: 2659 mame/drivers/onetwo.c: 203 mame/drivers/quizdna.c: 134, 222, 324 mame/drivers/segae.c: 793 mame/drivers/segas16a.c: 1286, 1312 mame/drivers/segas16b.c: 2056, 2082, 2366 mame/drivers/shisen.c: 110 mame/drivers/sothello.c: 275 mame/drivers/st0016.c: 392 mame/drivers/system16.c: 1706 mame/drivers/taito_f2.c: 1369, 2262 mame/drivers/toaplan2.c: 2706, 2835 mame/drivers/vsnes.c: 1160, 1401
+# emu/timer.c: 65 mame/drivers/chinagat.c: 433 mame/drivers/ddragon.c: 713 mame/drivers/dec0.c: 818 mame/drivers/fuukifg3.c: 372 mame/drivers/jollyjgr.c: 256 mame/drivers/m62.c: 518, 546, 575, 609 mame/drivers/megaplay.c: 224 mame/drivers/metro.c: 2640 mame/drivers/onetwo.c: 208 mame/drivers/quizdna.c: 134, 222, 324 mame/drivers/segae.c: 792 mame/drivers/segas16a.c: 1286, 1312 mame/drivers/segas16b.c: 2056, 2082, 2366 mame/drivers/shisen.c: 110 mame/drivers/sothello.c: 279 mame/drivers/st0016.c: 390 mame/drivers/system16.c: 1670 mame/drivers/taito_f2.c: 1361, 2254 mame/drivers/toaplan2.c: 2684, 2813 mame/drivers/vsnes.c: 1158, 1399
 Timer
 計時器
 
-# mame/drivers/chqflag.c: 235 mame/drivers/dynax.c: 3554 mame/drivers/gaiden.c: 565 mame/drivers/megaplay.c: 338 mame/drivers/seta.c: 3488, 3726, 5716 mame/drivers/seta2.c: 908 mame/drivers/travrusa.c: 149 mame/drivers/yunsung8.c: 198 
+# mame/drivers/chqflag.c: 229 mame/drivers/dynax.c: 3497 mame/drivers/gaiden.c: 559 mame/drivers/goldnpkr.c: 2685 mame/drivers/megaplay.c: 338 mame/drivers/seta.c: 3466, 3704, 5694 mame/drivers/seta2.c: 882 mame/drivers/travrusa.c: 149 mame/drivers/yunsung8.c: 196 
 Title
 標題
 
-# emu/uimain.c: 2712
+# emu/uimain.c: 2795
 Toggle
 切換
 
@@ -4506,7 +4510,7 @@ Toggle Cheat
 Toggle Debugger
 切換除錯程式
 
-# emu/ioport.c: 4092
+# emu/ioport.c: 4034
 Total playback frames: %d\n
 總計播放畫格: %d\n
 
@@ -4574,7 +4578,7 @@ Track Y 7
 Track Y 8
 軌跡球 Y 8
 
-# emu/ioport.c: 780 mame/drivers/saturn.c: 1196 
+# emu/ioport.c: 711 mame/drivers/saturn.c: 1192 
 Trackball
 軌跡球
 
@@ -4590,11 +4594,11 @@ Triple Side-by-Side
 Triple Side-by-Side (Gapless)
 三畫面 並排 (無間隙)
 
-# emu/uimain.c: 3099
+# emu/uimain.c: 3182
 Type name or select: %s_
 輸入名稱或選擇: %s_
 
-# emu/uimain.c: 3101
+# emu/uimain.c: 3184
 Type name or select: (random)
 輸入名稱或選擇: (任意)
 
@@ -4682,7 +4686,7 @@ UI:   Disabled
 UI:   Enabled
 選單:   已啟用
 
-# emu/input.c: 1604 emu/video/v9938.c: 39 lib/util/cdrom.c: 665 mame/drivers/segahang.c: 182, 237, 563, 579 mame/drivers/segaorun.c: 665, 735, 855, 990 mame/drivers/superchs.c: 213, 300 mame/drivers/wgp.c: 533 mess/machine/gb.c: 1490, 1493, 1496, 1500, 1506, 1507, 1508, 1509, 1510 mess/machine/nes_pcb.c: 619
+# emu/input.c: 1604 emu/video/v9938.c: 39 lib/util/cdrom.c: 685 mame/drivers/segahang.c: 182, 237, 563, 579 mame/drivers/segaorun.c: 665, 735, 855, 990 mame/drivers/superchs.c: 208, 295 mame/drivers/wgp.c: 529 mess/machine/gb.c: 1470, 1473, 1476, 1480, 1486, 1487, 1488, 1489, 1490 mess/machine/nes_pcb.c: 620
 UNKNOWN
 未知的
 
@@ -4690,11 +4694,11 @@ UNKNOWN
 US
 美版
 
-# emu/ioport.c: 732 
+# emu/ioport.c: 663 
 USA
 美版
 
-# emu/machine.c: 803
+# emu/machine.c: 770
 Unable to %s due to pending anonymous timers. See error.log for details.
 無法%s，因為擱置匿名計時器。請查閱\ error.log 以取得詳細資料。
 
@@ -4702,15 +4706,15 @@ Unable to %s due to pending anonymous timers. See error.log for details.
 Unable to load effect PNG file '%s'\n
 無法載入視覺效果 PNG 檔案 '%s'\n
 
-# emu/ioport.c: 1623, 1730, 1745, 1933
+# emu/ioport.c: 1567, 1674, 1688, 1876
 Unable to locate input port '%s'
 無法查出輸入連接埠 '%s'
 
-# emu/uimain.c: 3158
+# emu/uimain.c: 3241
 Unimplemented
 無法執行
 
-# emu/ioport.c: 788 lib/formats/flopimg.c: 1054 mame/drivers/psattack.c: 138 mess/machine/snescart.c: 18 mess/machine/wswan.c: 24, 1307 
+# emu/ioport.c: 719 lib/formats/flopimg.c: 1054 mame/drivers/psattack.c: 139 mess/machine/snescart.c: 18 mess/machine/wswan.c: 24, 1307 
 Unknown
 未知的
 
@@ -4718,19 +4722,19 @@ Unknown
 Unknown system '%s'
 未知的系統 '%s'
 
-# mame/drivers/cb2001.c: 644, 652, 694 mame/drivers/goldstar.c: 674, 682, 724, 836, 844, 886, 998, 1006, 1048, 1160, 1168, 1210, 1322, 1330, 1372, 1484, 1492, 1534, 1644, 1652, 1676, 1783, 1791, 1833, 1955, 1963, 2005, 2127, 2135, 2177, 2299, 2307, 2349 mame/drivers/igspoker.c: 675, 974, 1623 mame/drivers/lucky74.c: 1051 mame/drivers/segas16a.c: 1251 mame/drivers/segas16b.c: 3122, 3123 mame/drivers/spy.c: 460 mame/drivers/system16.c: 1648, 1649
+# mame/drivers/cb2001.c: 646, 654, 696 mame/drivers/goldstar.c: 670, 678, 720, 832, 840, 882, 994, 1002, 1044, 1156, 1164, 1206, 1318, 1326, 1368, 1480, 1488, 1530, 1640, 1648, 1672, 1779, 1787, 1829, 1951, 1959, 2001, 2123, 2131, 2173, 2295, 2303, 2345 mame/drivers/igspoker.c: 680, 979, 1628 mame/drivers/lucky74.c: 1047 mame/drivers/segas16a.c: 1251 mame/drivers/segas16b.c: 3122, 3123 mame/drivers/spy.c: 453 mame/drivers/system16.c: 1612, 1613
 Unlimited
 無限
 
-# emu/ioport.c: 787 mame/drivers/actfancr.c: 174, 196, 200, 201, 227 mame/drivers/aeroboto.c: 142, 169, 170, 171 mame/drivers/aerofgt.c: 462, 463, 876, 877 mame/drivers/aliens.c: 166, 167, 168, 182, 184 mame/drivers/alpha68k.c: 1073, 1074, 1075, 1114, 1161, 1164, 1349, 1360, 1448, 1558, 1562 mame/drivers/amspdwy.c: 150, 151, 152, 170, 171, 203 mame/drivers/angelkds.c: 437 mame/drivers/appoooh.c: 306 mame/drivers/argus.c: 357, 358, 430, 431 mame/drivers/armedf.c: 876, 877, 883, 901, 928, 958, 1011, 1020, 1023 mame/drivers/artmagic.c: 580, 743, 772 mame/drivers/asteroid.c: 474, 511, 511, 583 mame/drivers/astrocde.c: 1088, 1094 mame/drivers/asuka.c: 690 mame/drivers/atarifb.c: 252, 253, 326, 327, 336, 337, 413 mame/drivers/atarisy2.c: 950, 951 mame/drivers/avalnche.c: 158, 159 mame/drivers/baraduke.c: 255, 321, 322, 323, 324 mame/drivers/battlera.c: 161, 165, 166, 182, 183, 184 mame/drivers/bbusters.c: 479, 480, 481, 520, 536, 551, 552, 553 mame/drivers/bionicc.c: 232 mame/drivers/bking.c: 304, 335 mame/drivers/bladestl.c: 225, 226, 229 mame/drivers/blockhl.c: 145, 146, 147, 148, 166, 168 mame/drivers/blockout.c: 205, 206, 217, 218, 219, 220, 221 mame/drivers/blueprnt.c: 144, 159, 162, 170, 179, 180 mame/drivers/changela.c: 361 mame/drivers/clshroad.c: 101, 102, 118, 119, 120, 121, 122, 123, 124, 125 mame/drivers/f1gp.c: 248, 285, 286, 287, 288, 298, 299, 300, 301, 302 mame/drivers/flkatck.c: 158 mame/drivers/fuukifg2.c: 219 mame/drivers/gaelco.c: 392 mame/drivers/galaga.c: 1062, 1063, 1158, 1168 mame/drivers/gaplus.c: 370 mame/drivers/gberet.c: 283, 284 mame/drivers/gbusters.c: 226, 228 mame/drivers/gijoe.c: 248 mame/drivers/gladiatr.c: 501, 521, 522, 523 mame/drivers/glass.c: 145 mame/drivers/gng.c: 157 mame/drivers/hcastle.c: 105, 106 mame/drivers/kaneko16.c: 913, 914, 915, 916, 917, 918, 1014, 1094, 1095, 1488, 1489, 1490, 1491, 1492, 1493 mame/drivers/lasso.c: 257, 268 mame/drivers/lordgun.c: 560, 561, 562, 563, 564 mame/drivers/m58.c: 117, 121, 124, 146 mame/drivers/m63.c: 580, 585 mame/drivers/m92.c: 608 mame/drivers/mainevt.c: 285, 286, 287, 288, 291, 292, 293, 312, 314, 373 mame/drivers/mcatadv.c: 393 mame/drivers/megasys1.c: 797, 1077, 1127, 1151 mame/drivers/metro.c: 2628, 2629, 2662 mame/drivers/mystston.c: 157, 158, 159, 160, 161, 174 mame/drivers/nmk16.c: 1155, 1158, 1161, 1164, 1165, 1890, 1898, 1901, 1932, 1972, 1975, 1983, 2012, 2402, 2486, 2494, 2508, 2568, 2571, 2653, 2656, 2666, 2826, 2829, 2832, 2835, 2838, 3043, 3044, 3176 mame/drivers/paradise.c: 175, 176, 177 mame/drivers/punchout.c: 422 mame/drivers/segag80r.c: 419, 420, 421, 422, 423, 424, 425, 426, 504 mame/drivers/segas16a.c: 1850, 1851, 1852 mame/drivers/segas16b.c: 3040, 3041, 3042 mame/drivers/seta.c: 3369, 3508, 3509, 3513, 4197, 4200, 4500, 4524, 5047, 5048, 5049, 5070, 5071, 5319, 5325, 5326, 6137, 6140, 6143, 6144, 6145, 6288, 6289, 6290, 6291, 6347, 6348, 6349, 6350, 6351, 6354, 6355 mame/drivers/seta2.c: 796, 800, 803, 1157, 1158, 1193, 1194, 1195, 1243, 1244, 1279, 1280, 1281, 1282 mame/drivers/sshangha.c: 317, 319 mame/drivers/ssv.c: 1218, 1276, 1277, 1330, 1341, 1855, 1856, 1994, 2013, 2026, 2030 mame/drivers/system16.c: 1558, 1576, 1625, 1626, 1690, 1753, 1757, 1758, 1813, 1819, 1820, 1826, 1827 mame/drivers/taito_b.c: 816, 858, 942, 943, 944, 945, 946, 947, 1010, 1024, 1033, 1034, 1035, 1104, 1111, 1112, 1113, 1173, 1180, 1181, 1182, 1443, 1444, 1445, 1446, 1447, 1448, 1481, 1482, 1606, 1607, 1652, 1653, 1654, 1655 mame/drivers/taito_f2.c: 1226, 1227, 1228, 1229, 1230, 1231, 1279, 1280, 1331, 1372, 2013, 2014, 2015, 2016, 2244, 2245, 2246, 2247, 2248, 2249, 2367, 2368, 2369, 2370, 2371, 2372, 2414, 2415, 2416, 2417 mame/drivers/taito_h.c: 329 mame/drivers/taito_l.c: 1294 mame/drivers/ultraman.c: 140, 141 mame/drivers/vulgus.c: 139, 140 mame/drivers/wallc.c: 233, 234 mame/drivers/xxmissio.c: 180, 183, 199, 200, 201
+# emu/ioport.c: 718 mame/drivers/actfancr.c: 170, 192, 196, 197, 223 mame/drivers/aeroboto.c: 139, 166, 167, 168 mame/drivers/aerofgt.c: 457, 458, 871, 872 mame/drivers/aliens.c: 161, 162, 163, 177, 179 mame/drivers/alpha68k.c: 1064, 1065, 1066, 1105, 1152, 1155, 1340, 1351, 1439, 1549, 1553 mame/drivers/amspdwy.c: 149, 150, 151, 169, 170, 202 mame/drivers/angelkds.c: 437 mame/drivers/appoooh.c: 305 mame/drivers/argus.c: 357, 358, 430, 431 mame/drivers/armedf.c: 864, 865, 871, 889, 916, 946, 999, 1008, 1011 mame/drivers/artmagic.c: 576, 739, 768 mame/drivers/asteroid.c: 474, 511, 511, 583 mame/drivers/astrocde.c: 1075, 1081 mame/drivers/asuka.c: 689 mame/drivers/atarifb.c: 252, 253, 326, 327, 336, 337, 413 mame/drivers/atarisy2.c: 935, 936 mame/drivers/avalnche.c: 157, 158 mame/drivers/baraduke.c: 252, 318, 319, 320, 321 mame/drivers/battlera.c: 158, 162, 163, 179, 180, 181 mame/drivers/bbusters.c: 474, 475, 476, 515, 531, 546, 547, 548 mame/drivers/bionicc.c: 227 mame/drivers/bking.c: 292, 323 mame/drivers/bladestl.c: 222, 223, 226 mame/drivers/blockhl.c: 140, 141, 142, 143, 161, 163 mame/drivers/blockout.c: 202, 203, 214, 215, 216, 217, 218 mame/drivers/blueprnt.c: 142, 157, 160, 168, 177, 178 mame/drivers/changela.c: 344 mame/drivers/clshroad.c: 102, 103, 119, 120, 121, 122, 123, 124, 125, 126 mame/drivers/f1gp.c: 243, 280, 281, 282, 283, 293, 294, 295, 296, 297 mame/drivers/flkatck.c: 155 mame/drivers/fuukifg2.c: 217 mame/drivers/gaelco.c: 387 mame/drivers/galaga.c: 1062, 1063, 1158, 1168 mame/drivers/gaplus.c: 365 mame/drivers/gberet.c: 281, 282 mame/drivers/gbusters.c: 219, 221 mame/drivers/gijoe.c: 245 mame/drivers/gladiatr.c: 497, 517, 518, 519 mame/drivers/glass.c: 144 mame/drivers/gng.c: 157 mame/drivers/hcastle.c: 104, 105 mame/drivers/kaneko16.c: 913, 914, 915, 916, 917, 918, 1014, 1094, 1095, 1488, 1489, 1490, 1491, 1492, 1493 mame/drivers/lasso.c: 253, 264 mame/drivers/lordgun.c: 555, 556, 557, 558, 559 mame/drivers/m58.c: 117, 121, 124, 146 mame/drivers/m63.c: 587, 592 mame/drivers/m92.c: 605 mame/drivers/mainevt.c: 277, 278, 279, 280, 283, 284, 285, 304, 306, 365 mame/drivers/mcatadv.c: 392 mame/drivers/megasys1.c: 795, 1075, 1125, 1149 mame/drivers/metro.c: 2609, 2610, 2643 mame/drivers/mystston.c: 156, 157, 158, 159, 160, 173 mame/drivers/nmk16.c: 1150, 1153, 1156, 1159, 1160, 1885, 1893, 1896, 1927, 1967, 1970, 1978, 2007, 2397, 2481, 2489, 2503, 2563, 2566, 2648, 2651, 2661, 2821, 2824, 2827, 2830, 2833, 3038, 3039, 3171 mame/drivers/paradise.c: 223, 224, 225, 385, 386 mame/drivers/punchout.c: 419 mame/drivers/segag80r.c: 419, 420, 421, 422, 423, 424, 425, 426, 504 mame/drivers/segas16a.c: 1850, 1851, 1852 mame/drivers/segas16b.c: 3040, 3041, 3042 mame/drivers/seta.c: 3347, 3486, 3487, 3491, 4175, 4178, 4478, 4502, 5025, 5026, 5027, 5048, 5049, 5297, 5303, 5304, 6115, 6118, 6121, 6122, 6123, 6266, 6267, 6268, 6269, 6325, 6326, 6327, 6328, 6329, 6332, 6333 mame/drivers/seta2.c: 770, 774, 777, 1131, 1132, 1167, 1168, 1169, 1217, 1218, 1253, 1254, 1255, 1256 mame/drivers/sshangha.c: 308, 310 mame/drivers/ssv.c: 1192, 1250, 1251, 1304, 1315, 1829, 1830, 1968, 1987, 2000, 2004 mame/drivers/system16.c: 1522, 1540, 1589, 1590, 1654, 1717, 1721, 1722, 1777, 1783, 1784, 1790, 1791 mame/drivers/taito_b.c: 808, 850, 934, 935, 936, 937, 938, 939, 1002, 1016, 1025, 1026, 1027, 1096, 1103, 1104, 1105, 1165, 1172, 1173, 1174, 1435, 1436, 1437, 1438, 1439, 1440, 1473, 1474, 1598, 1599, 1644, 1645, 1646, 1647 mame/drivers/taito_f2.c: 1218, 1219, 1220, 1221, 1222, 1223, 1271, 1272, 1323, 1364, 2005, 2006, 2007, 2008, 2236, 2237, 2238, 2239, 2240, 2241, 2359, 2360, 2361, 2362, 2363, 2364, 2406, 2407, 2408, 2409 mame/drivers/taito_h.c: 327 mame/drivers/taito_l.c: 1271 mame/drivers/ultraman.c: 139, 140 mame/drivers/vulgus.c: 139, 140 mame/drivers/wallc.c: 236, 237 mame/drivers/xxmissio.c: 177, 180, 196, 197, 198
 Unused
 未使用
 
-# emu/input.c: 251 mame/drivers/bfm_sc2.c: 1518 mame/drivers/re900.c: 262 mess/drivers/gb.c: 552 mess/drivers/ngp.c: 569
+# emu/input.c: 251 mame/drivers/bfm_sc2.c: 1538 mame/drivers/re900.c: 265 mess/drivers/gb.c: 552 mess/drivers/ngp.c: 568
 Up
 上
 
-# emu/ioport.c: 721
+# emu/ioport.c: 652
 Upright
 直立型
 
@@ -4738,11 +4742,11 @@ Upright
 Upright 1
 直立型 1
 
-# emu/uimain.c: 1469
+# emu/uimain.c: 1552
 Uptime: %d:%02d:%02d\n\n
 執行時間: %d:%02d:%02d\n\n
 
-# emu/uimain.c: 1471
+# emu/uimain.c: 1554
 Uptime: %d:%02d\n\n
 執行時間: %d:%02d\n\n
 
@@ -4754,15 +4758,15 @@ Usage of emulators in conjunction with ROMs you don't own is forbidden by copyri
 Usage:  %s [%s] [options]
 用法:  %s [%s] [選項]
 
-# emu/uimain.c: 586
+# emu/uimain.c: 669
 User Interface
 使用者介面
 
-# emu/romload.c: 342
+# emu/romload.c: 340
 Using System BIOS: %d\n
 正在使用系統 BIOS: %d\n
 
-# emu/ui.c: 2453
+# emu/ui.c: 2450
 Vector Flicker
 向量閃爍度
 
@@ -4770,39 +4774,39 @@ Vector Flicker
 Vector\n
 向量\n
 
-# emu/ioport.c: 728
+# emu/ioport.c: 659
 Version
 版本
 
-# mame/drivers/gameplan.c: 432, 571 mame/drivers/gei.c: 747, 775, 805, 835 mame/drivers/jack.c: 687 mame/drivers/thepit.c: 535 
+# mame/drivers/gameplan.c: 433, 572 mame/drivers/gei.c: 770, 798, 828, 858 mame/drivers/jack.c: 683 mame/drivers/thepit.c: 533 
 Vertical
 垂直
 
-# mame/drivers/nmk16.c: 2926, 3005
+# mame/drivers/nmk16.c: 2921, 3000
 Vertically
 垂直
 
-# emu/ioport.c: 750
+# emu/ioport.c: 681
 Very Easy
 很容易
 
-# emu/ioport.c: 761
+# emu/ioport.c: 692
 Very Hard
 很困難
 
-# emu/ioport.c: 770
+# emu/ioport.c: 701
 Very High
 最高
 
-# emu/ioport.c: 765
+# emu/ioport.c: 696
 Very Low
 很低
 
-# mame/drivers/cps1.c: 1459 mame/drivers/m62.c: 640 mame/drivers/rohga.c: 439
+# mame/drivers/cps1.c: 1449 mame/drivers/m62.c: 638 mame/drivers/rohga.c: 437
 Very Slow
 最慢
 
-# emu/uimain.c: 206
+# emu/uimain.c: 215
 Video Options
 視訊選項
 
@@ -4810,15 +4814,15 @@ Video Options
 Video Screen
 視訊畫面
 
-# emu/uimain.c: 2257 mame/drivers/naomi.c: 2130
+# emu/uimain.c: 2340 mame/drivers/naomi.c: 2130
 View
 檢視方式
 
-# emu/uimain.c: 2514
+# emu/uimain.c: 2597
 Visible Delay
 可見度延遲
 
-# mame/drivers/cps1.c: 2854 mame/drivers/ms32.c: 821, 867, 915 mame/drivers/pgm.c: 898 mame/drivers/pinkiri8.c: 739, 874 mame/drivers/ssv.c: 1701, 1877 mame/drivers/stepstag.c: 194 mame/drivers/tetrisp2.c: 622
+# mame/drivers/cps1.c: 2844 mame/drivers/ms32.c: 800, 846, 894 mame/drivers/pgm.c: 423 mame/drivers/pinkiri8.c: 751, 886 mame/drivers/ssv.c: 1675, 1851 mame/drivers/tetrisp2.c: 773
 Voice
 語音
 
@@ -4830,7 +4834,7 @@ Volume Down
 Volume Up
 音量升高
 
-# emu/romload.c: 513
+# emu/romload.c: 511
 WARNING: the 
 警告: 這個
 
@@ -4850,7 +4854,7 @@ Warning: invalid line in INI: %s
 Warning: unknown option in INI: %s\n
 警告: 未知的選項在 INI 檔: %s\n
 
-# emu/ioport.c: 740 mame/drivers/seta.c: 5801 mame/drivers/tetrisp2.c: 647, 650, 656
+# emu/ioport.c: 671 mame/drivers/seta.c: 5779 mame/drivers/tetrisp2.c: 798, 801, 807
 World
 世界版
 
@@ -4858,7 +4862,7 @@ World
 XOR
 XOR
 
-# emu/ioport.c: 677 emu/uiimage.c: 165 mame/drivers/jaguar.c: 1636 mess/machine/nes.c: 1493, 1494, 1495 
+# emu/ioport.c: 608 emu/uiimage.c: 165 mame/drivers/jaguar.c: 1689 mess/machine/nes.c: 1490, 1491, 1492 
 Yes
 是
 
@@ -4894,7 +4898,7 @@ Zoom Auto
 [software list]
 [軟體清單]
 
-# emu/video.c: 315
+# emu/video.c: 307
 \n%d partial updates
 \n%d 部分更新
 
@@ -4938,7 +4942,7 @@ Zoom Auto
 all available info on driver in XML format
 驅動中的全部可用資訊 (XML 格式)
 
-# emu/emuopts.c: 157
+# emu/emuopts.c: 158
 amount to scale the screen brightness when paused
 暫停時的畫面亮度
 
@@ -4946,23 +4950,23 @@ amount to scale the screen brightness when paused
 assert: %s:%d: %s
 判斷: %s:%d: %s
 
-# emu/video.c: 299
+# emu/video.c: 291
 auto%2d/%d
 自動%2d/%d
 
-# emu/emuopts.c: 223
+# emu/emuopts.c: 224
 automatic pause when playback ended
 輸入檔播放結束時自動暫停
 
-# emu/emuopts.c: 131
+# emu/emuopts.c: 132
 automatically adjusts the speed of gameplay to keep the refresh rate lower than the screen
 自動調整遊戲執行速度以維持更新頻率低於畫面
 
-# emu/emuopts.c: 138
+# emu/emuopts.c: 139
 automatically rotate screen clockwise 90 degrees if vertical
 如果是垂直畫面，自動順時針旋轉畫面 90 度
 
-# emu/emuopts.c: 139
+# emu/emuopts.c: 140
 automatically rotate screen counterclockwise 90 degrees if vertical
 如果是垂直畫面，自動逆時針旋轉畫面 90 度
 
@@ -4970,51 +4974,51 @@ automatically rotate screen counterclockwise 90 degrees if vertical
 automount
 自動掛載
 
-# emu/emuopts.c: 246
+# emu/emuopts.c: 247
 button color (aqua)
 按鈕色彩 (S 或 7)
 
-# emu/emuopts.c: 243
+# emu/emuopts.c: 244
 button color (blue)
 按鈕色彩 (D 或 4)
 
-# emu/emuopts.c: 242
+# emu/emuopts.c: 243
 button color (green)
 按鈕色彩 (C 或 3)
 
-# emu/emuopts.c: 249
+# emu/emuopts.c: 250
 button color (lime)
 按鈕色彩 (10)
 
-# emu/emuopts.c: 248
+# emu/emuopts.c: 249
 button color (navy)
 按鈕色彩 (9)
 
-# emu/emuopts.c: 245
+# emu/emuopts.c: 246
 button color (pink)
 按鈕色彩 (P 或 6)
 
-# emu/emuopts.c: 244
+# emu/emuopts.c: 245
 button color (purple)
 按鈕色彩 (K 或 5)
 
-# emu/emuopts.c: 240
+# emu/emuopts.c: 241
 button color (red)
 按鈕色彩 (A 或 1)
 
-# emu/emuopts.c: 247
+# emu/emuopts.c: 248
 button color (silver)
 按鈕色彩 (8)
 
-# emu/emuopts.c: 241
+# emu/emuopts.c: 242
 button color (yellow)
 按鈕色彩 (B 或 2)
 
-# emu/emuopts.c: 188
+# emu/emuopts.c: 189
 center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
 搖桿的中心無反應區範圍，在此範圍的變化將被忽略 (0.0 - 1.0)
 
-# emu/emuopts.c: 103
+# emu/emuopts.c: 104
 command list database name
 招式表資料庫名稱
 
@@ -5022,15 +5026,15 @@ command list database name
 compare files with known MAME roms
 與已知的 MAME ROM 檔比較
 
-# emu/emuopts.c: 130
+# emu/emuopts.c: 131
 controls the speed of gameplay, relative to realtime; smaller numbers are slower
 控制遊戲執行速度，即時相應; 數字越小將越慢
 
-# emu/emuopts.c: 186
+# emu/emuopts.c: 187
 convert lightgun button 2 into offscreen reload
 轉換光線槍按鈕 2 為射擊畫面外區域重新填補
 
-# emu/emuopts.c: 121
+# emu/emuopts.c: 122
 create burn-in snapshots for each screen
 為每個畫面建立烙印擷圖
 
@@ -5038,79 +5042,79 @@ create burn-in snapshots for each screen
 create the default configuration file
 建立預設設定檔
 
-# emu/emuopts.c: 145
+# emu/emuopts.c: 146
 crop artwork to game screen size
 裁切裝飾圖至遊戲原始畫面大小
 
-# emu/emuopts.c: 239
+# emu/emuopts.c: 240
 cursor background color (floating)
 游標背景色彩 (浮動)
 
-# emu/emuopts.c: 237
+# emu/emuopts.c: 238
 cursor background color (selected)
 游標背景色彩 (選定)
 
-# emu/emuopts.c: 238
+# emu/emuopts.c: 239
 cursor text color (floating)
 游標文字色彩 (浮動)
 
-# emu/emuopts.c: 236
+# emu/emuopts.c: 237
 cursor text color (selected)
 游標文字色彩 (選定)
 
-# emu/emuopts.c: 154
+# emu/emuopts.c: 155
 default game screen brightness correction
 預設遊戲畫面亮度值修正
 
-# emu/emuopts.c: 155
+# emu/emuopts.c: 156
 default game screen contrast correction
 預設遊戲畫面對比值修正
 
-# emu/emuopts.c: 156
+# emu/emuopts.c: 157
 default game screen gamma correction
 預設遊戲畫面 Gamma 值修正
 
-# emu/emuopts.c: 88
+# emu/emuopts.c: 89
 directory to save configurations
 儲存組態檔的目錄
 
-# emu/emuopts.c: 95
+# emu/emuopts.c: 96
 directory to save debugger comments
 儲存除錯程式註解檔的目錄
 
-# emu/emuopts.c: 94
+# emu/emuopts.c: 95
 directory to save hard drive image difference files
 儲存硬碟映像差異檔的目錄
 
-# emu/emuopts.c: 97
+# emu/emuopts.c: 98
 directory to save hiscores
 儲存高分檔的目錄
 
-# emu/emuopts.c: 91
+# emu/emuopts.c: 92
 directory to save input device logs
 儲存輸入裝置記錄的目錄
 
-# emu/emuopts.c: 90
+# emu/emuopts.c: 91
 directory to save memory card contents
 儲存記憶卡內容的目錄
 
-# emu/emuopts.c: 89
+# emu/emuopts.c: 90
 directory to save nvram contents
 儲存 nvram 內容的目錄
 
-# emu/emuopts.c: 93
+# emu/emuopts.c: 94
 directory to save screenshots
 儲存畫面擷圖的目錄
 
-# emu/emuopts.c: 92
+# emu/emuopts.c: 93
 directory to save states
 儲存狀態檔的目錄
 
-# emu/emuopts.c: 208
+# emu/emuopts.c: 209
 display additional diagnostic information
 顯示附加的診斷資訊
 
-# emu/emuopts.c: 221
+# emu/emuopts.c: 222
 display confirm quit screen on exit
 離開遊戲時顯示確認退出畫面
 
@@ -5122,131 +5126,131 @@ display running parameters
 driver sourcefile
 驅動來源檔案
 
-# emu/emuopts.c: 199
+# emu/emuopts.c: 200
 enable (none|keyboard|mouse|lightgun|joystick) if a dial control is present
 啟用 (none|keyboard|mouse|lightgun|joystick) 於方向盤控制
 
-# emu/emuopts.c: 201
+# emu/emuopts.c: 202
 enable (none|keyboard|mouse|lightgun|joystick) if a lightgun control is present
 啟用 (none|keyboard|mouse|lightgun|joystick) 於光線槍控制
 
-# emu/emuopts.c: 203
+# emu/emuopts.c: 204
 enable (none|keyboard|mouse|lightgun|joystick) if a mouse control is present
 啟用 (none|keyboard|mouse|lightgun|joystick) 於滑鼠控制
 
-# emu/emuopts.c: 196
+# emu/emuopts.c: 197
 enable (none|keyboard|mouse|lightgun|joystick) if a paddle control is present
 啟用 (none|keyboard|mouse|lightgun|joystick) 於操縱桿控制
 
-# emu/emuopts.c: 198
+# emu/emuopts.c: 199
 enable (none|keyboard|mouse|lightgun|joystick) if a pedal control is present
 啟用 (none|keyboard|mouse|lightgun|joystick) 於踏板控制
 
-# emu/emuopts.c: 202
+# emu/emuopts.c: 203
 enable (none|keyboard|mouse|lightgun|joystick) if a positional control is present
 啟用 (none|keyboard|mouse|lightgun|joystick) 於定位器控制
 
-# emu/emuopts.c: 200
+# emu/emuopts.c: 201
 enable (none|keyboard|mouse|lightgun|joystick) if a trackball control is present
 啟用 (none|keyboard|mouse|lightgun|joystick) 於軌跡球控制
 
-# emu/emuopts.c: 197
+# emu/emuopts.c: 198
 enable (none|keyboard|mouse|lightgun|joystick) if an analog joystick control is present
 啟用 (none|keyboard|mouse|lightgun|joystick) 於類比搖桿
 
-# emu/emuopts.c: 125
+# emu/emuopts.c: 126
 enable automatic frameskip selection
 啟用自動略過畫格
 
-# emu/emuopts.c: 112
+# emu/emuopts.c: 113
 enable automatic restore at startup, and automatic save at exit time
 啟用在啟動時自動載入狀態，並在結束時自動儲存狀態
 
-# emu/emuopts.c: 146
+# emu/emuopts.c: 147
 enable backdrops if artwork is enabled and available
 啟用背景圖 (如果裝飾圖已啟用且可用)
 
-# emu/emuopts.c: 148
+# emu/emuopts.c: 149
 enable bezels if artwork is enabled and available
 啟用外框圖 (如果裝飾圖已啟用且可用)
 
-# emu/emuopts.c: 217
+# emu/emuopts.c: 218
 enable cheat subsystem
 啟用作弊引擎子系統
 
-# emu/emuopts.c: 178
+# emu/emuopts.c: 179
 enable coin lockouts to actually lock out coins
 啟用投幣鎖定來實際關閉投幣裝置
 
-# emu/emuopts.c: 191
+# emu/emuopts.c: 192
 enable contradictory direction digital joystick input at the same time
 啟用數位搖桿同時可輸入對立方向
 
-# emu/emuopts.c: 149
+# emu/emuopts.c: 150
 enable cpanels if artwork is enabled and available
 啟用操作檯圖 (如果裝飾圖已啟用且可用)
 
-# emu/emuopts.c: 181
+# emu/emuopts.c: 182
 enable joystick input
 啟用搖桿輸入
 
-# emu/emuopts.c: 182
+# emu/emuopts.c: 183
 enable lightgun input
 啟用光線槍輸入
 
-# emu/emuopts.c: 63
+# emu/emuopts.c: 64
 enable loading of configuration files
 啟用載入設定檔
 
-# emu/emuopts.c: 150
+# emu/emuopts.c: 151
 enable marquees if artwork is enabled and available
 啟用機檯標題圖 (如果裝飾圖已啟用且可用)
 
-# emu/emuopts.c: 180
+# emu/emuopts.c: 181
 enable mouse input
 啟用滑鼠輸入
 
-# emu/emuopts.c: 147
+# emu/emuopts.c: 148
 enable overlays if artwork is enabled and available
 啟用覆疊圖 (如果裝飾圖已啟用且可用)
 
-# emu/emuopts.c: 183
+# emu/emuopts.c: 184
 enable separate input from each keyboard device (if present)
 啟用每個鍵盤裝置分別輸入 (如果存在)
 
-# emu/emuopts.c: 184
+# emu/emuopts.c: 185
 enable separate input from each mouse device (if present)
 啟用每個滑鼠裝置分別輸入 (如果存在)
 
-# emu/emuopts.c: 129
+# emu/emuopts.c: 130
 enable sleeping, which gives time back to other applications when idle
 啟用休眠，可在閒置時釋放佔用中的系統資源給其它應用程式
 
-# emu/emuopts.c: 171
+# emu/emuopts.c: 172
 enable sound output
 啟用聲音輸出
 
-# emu/emuopts.c: 185
+# emu/emuopts.c: 186
 enable steadykey support
 啟用多個按鍵同時輸入支援
 
-# emu/emuopts.c: 173
+# emu/emuopts.c: 174
 enable the use of external samples if available
 啟用外部樣本檔 (如果可用)
 
-# emu/emuopts.c: 128
+# emu/emuopts.c: 129
 enable throttling to keep game running in sync with real time
 啟用限制速度以維持遊戲即時同步執行
 
-# emu/emuopts.c: 210
+# emu/emuopts.c: 211
 enable/disable debugger
 啟用/停用 除錯程式
 
-# emu/emuopts.c: 255
+# emu/emuopts.c: 256
 enable/disable local language game list
 啟用/停用 當地語言遊戲清單
 
-# emu/emuopts.c: 189
+# emu/emuopts.c: 190
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
 搖桿的末端軸飽和值範圍，在此範圍的變化將被忽略 (0.0 - 1.0)
 
@@ -5254,27 +5258,27 @@ end of axis saturation range for joystick where change is ignored (0.0 center, 1
 error: invalid value for palette: %s\n
 錯誤: 無效的 palette 值: %s\n
 
-# emu/emuopts.c: 187
+# emu/emuopts.c: 188
 explicit joystick map, or auto to auto-select
 詳細設置搖桿對應，或設為 auto 自動選擇
 
-# emu/video.c: 295
+# emu/video.c: 287
 fast 
 快轉 
 
-# emu/emuopts.c: 140
+# emu/emuopts.c: 141
 flip screen left-right
 左右翻轉畫面
 
-# emu/emuopts.c: 141
+# emu/emuopts.c: 142
 flip screen upside-down
 上下翻轉畫面
 
-# emu/video.c: 285
+# emu/video.c: 277
 frame:%ld 
 畫格:%ld 
 
-# mame/drivers/bwidow.c: 670 mame/drivers/pengadvb.c: 85, 86, 101, 102, 317, 326 mame/mame.c: 21, 21, 34, 45 
+# mame/drivers/bwidow.c: 673 mame/drivers/cavesh3.c: 6080, 6103, 6138, 6139, 6224, 6237, 6250, 6263, 6276, 6289, 6302, 6315, 6328, 6341, 6354, 6367, 6380, 6393, 6406, 6419, 6432 mame/drivers/pengadvb.c: 86, 87, 102, 103, 317, 326 mame/mame.c: 21, 21, 34, 45 
 game
 遊戲
 
@@ -5282,23 +5286,23 @@ game
 games
 遊戲
 
-# emu/emuopts.c: 207
+# emu/emuopts.c: 208
 generate an error.log file
 建立 error.log 檔案
 
-# emu/emuopts.c: 106
+# emu/emuopts.c: 107
 high score database name
 高分檔資料庫名稱
 
-# emu/emuopts.c: 160
+# emu/emuopts.c: 161
 image enhancement effect
 影像增強效果
 
-# emu/machine/ldv1000.c: 204 emu/memory.c: 4116
+# emu/machine/ldv1000.c: 203 emu/memory.c: 3748
 invalid
 無效的
 
-# emu/emuopts.c: 229
+# emu/emuopts.c: 230
 ips datafile name
 IPS 資料檔名稱
 
@@ -5314,7 +5318,7 @@ is best available\n
 is good\n
 正確\n
 
-# emu/emuopts.c: 209
+# emu/emuopts.c: 210
 keep calling video updates while in pause
 暫停期間持續更新主畫面視訊
 
@@ -5338,15 +5342,15 @@ list optional samples for a driver
 list required roms for a driver
 列出指定驅動的必要 ROM 檔
 
-# emu/diimage.c: 938, 940 emu/machine.c: 788
+# emu/diimage.c: 939, 941 emu/machine.c: 755
 load
 載入
 
-# emu/diimage.c: 953, 955 emu/machine.c: 787
+# emu/diimage.c: 954, 956 emu/machine.c: 754
 loaded
 載入
 
-# emu/emuopts.c: 235
+# emu/emuopts.c: 236
 main background color
 主背景色彩
 
@@ -5354,7 +5358,7 @@ main background color
 n/a
 n/a
 
-# emu/emuopts.c: 158
+# emu/emuopts.c: 159
 name of a PNG file to use for visual effects, or 'none'
 設定要使用的視覺效果 PNG 檔案名稱，或設為 none
 
@@ -5362,19 +5366,19 @@ name of a PNG file to use for visual effects, or 'none'
 not
 無
 
-# emu/emuopts.c: 127
+# emu/emuopts.c: 128
 number of emulated seconds to run before automatically exiting
 在自動結束之前執行的模擬秒數
 
-# emu/emuopts.c: 115
+# emu/emuopts.c: 116
 optional filename to write a MNG movie of the current session
 指定目前所要錄製的 MNG 視訊檔名
 
-# emu/emuopts.c: 117
+# emu/emuopts.c: 118
 optional filename to write a WAV file of the current session
 指定目前所要錄製的 WAV 音訊檔名
 
-# emu/emuopts.c: 116
+# emu/emuopts.c: 117
 optional filename to write an AVI movie of the current session
 指定目前所要錄製的 AVI 影片檔名
 
@@ -5382,55 +5386,55 @@ optional filename to write an AVI movie of the current session
 or
 或
 
-# emu/emuopts.c: 118
+# emu/emuopts.c: 119
 override of the default snapshot/movie naming; %g == gamename, %i == index
 指定擷圖/錄影命名方式; %g == 遊戲名稱, %i == 索引編號
 
-# emu/emuopts.c: 72
+# emu/emuopts.c: 73
 path to ROMsets and hard disk images
 ROM 集合和 CHD 檔案的路徑
 
-# emu/emuopts.c: 75
+# emu/emuopts.c: 76
 path to artwork files
 裝飾圖檔案的路徑
 
-# emu/emuopts.c: 79
+# emu/emuopts.c: 80
 path to cheat files
 作弊碼檔案的路徑
 
-# emu/emuopts.c: 76
+# emu/emuopts.c: 77
 path to controller definitions
 控制器定義檔的路徑
 
-# emu/emuopts.c: 80
+# emu/emuopts.c: 81
 path to crosshair files
 十字準星檔案的路徑
 
-# emu/emuopts.c: 78
+# emu/emuopts.c: 79
 path to font files
 字型檔的路徑
 
-# emu/emuopts.c: 73
+# emu/emuopts.c: 74
 path to hash files
 HASH 檔案的路徑
 
-# emu/emuopts.c: 77 
+# emu/emuopts.c: 78 
 path to ini files
 INI 檔案的路徑
 
-# emu/emuopts.c: 83
+# emu/emuopts.c: 84
 path to ips files
 IPS 檔案的路徑
 
-# emu/emuopts.c: 81
+# emu/emuopts.c: 82
 path to localized languages and datafiles
 當地化語言和資料檔的路徑
 
-# emu/emuopts.c: 74
+# emu/emuopts.c: 75
 path to samplesets
 樣本檔集合的路徑
 
-# emu/video.c: 291
+# emu/video.c: 283
 paused
 暫停
 
@@ -5438,7 +5442,7 @@ paused
 perform driver validation on all game drivers
 執行全部遊戲驅動的驅動檢查
 
-# emu/emuopts.c: 113
+# emu/emuopts.c: 114
 playback an input file
 播放輸入檔
 
@@ -5446,11 +5450,11 @@ playback an input file
 playing
 正在執行
 
-# emu/emuopts.c: 179
+# emu/emuopts.c: 180
 preconfigure for specified controller
 特定控制器的預先設定
 
-# emu/emuopts.c: 114
+# emu/emuopts.c: 115
 record an input file
 記錄輸入檔
 
@@ -5478,15 +5482,15 @@ ROM 集合 \"%s\" 沒有 rom!\n
 romset \"%s\" not found!\n
 ROM 集合 \"%s\" 找不到!\n
 
-# emu/emuopts.c: 136
+# emu/emuopts.c: 137
 rotate screen clockwise 90 degrees
 順時針旋轉畫面 90 度
 
-# emu/emuopts.c: 137
+# emu/emuopts.c: 138
 rotate screen counterclockwise 90 degrees
 逆時針旋轉畫面 90 度
 
-# emu/emuopts.c: 135
+# emu/emuopts.c: 136
 rotate the game screen according to the game's orientation needs it
 根據遊戲需要的方向設定遊戲畫面旋轉
 
@@ -5506,19 +5510,19 @@ sampleset \"%s\" not found!\n
 sampleset \"%s\" not required!\n
 樣本檔集合 \"%s\" 不需要!\n
 
-# emu/machine.c: 788
+# emu/machine.c: 755
 save
 儲存
 
-# emu/machine.c: 787 emu/video/v9938.c: 2174 mame/video/konicdev.c: 2557, 3192, 3776, 4026
+# emu/machine.c: 754 emu/video/v9938.c: 2174 mame/video/konicdev.c: 2557, 3192, 3776, 4026
 saved
 儲存
 
-# emu/emuopts.c: 111
+# emu/emuopts.c: 112
 saved state to load
 載入儲存狀態
 
-# emu/uimain.c: 2554
+# emu/uimain.c: 2637
 scale effect: %s\n
 影像增強: %s\n
 
@@ -5526,31 +5530,31 @@ scale effect: %s\n
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
 影像增強 \"%s\" 無法支援 15 位元和 32 位元的色深。已停用影像增強。
 
-# emu/emuopts.c: 211
+# emu/emuopts.c: 212
 script for debugger
 除錯程式腳本
 
-# emu/emuopts.c: 216
+# emu/emuopts.c: 217
 select the system BIOS to use
 選擇要使用的系統 BIOS
 
-# emu/emuopts.c: 254
+# emu/emuopts.c: 255
 select translation language
 選擇翻譯語言
 
-# emu/emuopts.c: 126
+# emu/emuopts.c: 127
 set frameskip to fixed value, 0-10 (autoframeskip must be disabled)
 設定略過畫格為固定值 0-10 (必須停用自動略過畫格)
 
-# emu/emuopts.c: 172
+# emu/emuopts.c: 173
 set sound output sample rate
 設定聲音輸出取樣頻率
 
-# emu/emuopts.c: 166
+# emu/emuopts.c: 167
 set vector beam width
 設定向量光束寬度
 
-# emu/emuopts.c: 167
+# emu/emuopts.c: 168
 set vector flicker effect
 設定向量閃爍效果
 
@@ -5574,15 +5578,15 @@ show help message
 show this help
 顯示說明
 
-# emu/emuopts.c: 220
+# emu/emuopts.c: 221
 size of RAM (if supported by driver)
 RAM 大小 (如果驅動支援)
 
-# emu/video.c: 303
+# emu/video.c: 295
 skip %d/%d
 略過 %d/%d
 
-# emu/emuopts.c: 218
+# emu/emuopts.c: 219
 skip displaying the information screen at startup
 啟動時略過顯示資訊畫面
 
@@ -5590,23 +5594,23 @@ skip displaying the information screen at startup
 sound
 聲音
 
-# emu/emuopts.c: 174
+# emu/emuopts.c: 175
 sound volume in decibels (-32 min, 0 max)
 音量分貝 (最小 -32，最大 0)
 
-# emu/emuopts.c: 190
+# emu/emuopts.c: 191
 specifies whether to use a natural keyboard or not
 指定是否使用自然鍵盤
 
-# emu/emuopts.c: 219
+# emu/emuopts.c: 220
 specify a font to use
 指定要使用的字型
 
-# emu/emuopts.c: 119
+# emu/emuopts.c: 120
 specify snapshot/movie resolution (<width>x<height>) or 'auto' to use minimal size 
 指定 擷圖/錄影 解析度 (<寬>x<高>)，或設為 auto 使用最小解析度
 
-# emu/emuopts.c: 120
+# emu/emuopts.c: 121
 specify snapshot/movie view or 'internal' to use internal pixel-aspect views
 指定 擷圖/錄影 檢視方式，或設為 internal 使用內定像素長寬檢視
 
@@ -5614,27 +5618,27 @@ specify snapshot/movie view or 'internal' to use internal pixel-aspect views
 stopped
 已停止
 
-# emu/emuopts.c: 66
+# emu/emuopts.c: 67
 switch drivers
 驅動開關
 
-# emu/emuopts.c: 226
+# emu/emuopts.c: 227
 transparency in-game UI [0-255]
 遊戲中選單的透明度 [0-255]
 
-# emu/machine.c: 388
+# emu/machine.c: 382
 unable to open log file
 無法開啟記錄檔
 
-# emu/emuopts.c: 165
+# emu/emuopts.c: 166
 use antialiasing when drawing vectors
 使用反鋸齒描繪向量圖形
 
-# emu/emuopts.c: 212
+# emu/emuopts.c: 213
 use the internal debugger for debugging
 除錯時使用內部除錯程式
 
-# emu/emuopts.c: 64
+# emu/emuopts.c: 65
 writes configuration to (driver).ini on exit
 結束時寫入設定資料至 (驅動).ini
 
@@ -5666,7 +5670,7 @@ Adder,VFD and Lamp Matrix
 Adder,VFD and Lamps
 
 
-# mame/drivers/igspoker.c: 1016 mame/drivers/nss.c: 578, 582, 586, 590, 607 mame/drivers/sfcbox.c: 159, 163, 167, 171, 188 mame/drivers/snesb.c: 352, 356, 360, 364, 381 mess/drivers/snes.c: 320, 324, 328, 332, 349 
+# mame/drivers/igspoker.c: 1021 mame/drivers/nss.c: 588, 592, 596, 600, 617 mame/drivers/sfcbox.c: 216, 220, 224, 228, 245 mame/drivers/snesb.c: 303, 307, 311, 315, 332 mess/drivers/snes.c: 320, 324, 328, 332, 349 
 All
 
 
@@ -5706,7 +5710,7 @@ DMD Only
 Debug Lamps
 
 
-# mame/drivers/cclimber.c: 569 mame/drivers/nmk16.c: 1331 mame/drivers/pacman.c: 3022 
+# mame/drivers/cclimber.c: 563 mame/drivers/nmk16.c: 1326 mame/drivers/pacman.c: 3009 
 Display
 
 
@@ -5718,7 +5722,7 @@ Full Output
 Gamball AWP Simulated Video (No Artwork)
 
 
-# mame/drivers/mitchell.c: 567 mame/machine/ticket.c: 163
+# mame/drivers/mitchell.c: 558
 Generic
 
 
@@ -5726,11 +5730,11 @@ Generic
 Green Overlay
 
 
-# mame/layout/30test.lay: 155 mame/layout/kungfur.lay: 172
+# mame/layout/30test.lay: 155 mame/layout/jankenmn.lay: 191 mame/layout/kungfur.lay: 172
 Internal Layout
 
 
-# mame/drivers/grchamp.c: 659
+# mame/drivers/grchamp.c: 650
 LEDs
 
 
@@ -5754,7 +5758,7 @@ Multiple Arcade Machine Emulator
 No screens attached
 
 
-# emu/inpttype.h: 144 mame/drivers/ampoker2.c: 785, 870 mame/drivers/astrocorp.c: 352, 381 mame/drivers/big10.c: 160 mame/drivers/cardline.c: 156 mame/drivers/d9final.c: 176 mame/drivers/ddenlovr.c: 5129, 5362, 5910, 6524, 6705, 7309, 7550 mame/drivers/dunhuang.c: 561 mame/drivers/fortecar.c: 631 mame/drivers/funworld.c: 1037, 1098, 1158, 1219, 1277, 1339, 1400, 1461, 1642, 1703, 1764, 1825, 1886 mame/drivers/gei.c: 644, 916 mame/drivers/ggconnie.c: 73 mame/drivers/goldnpkr.c: 1437, 1506, 1577, 1659, 1722, 1773, 1991, 2065, 2158, 2238, 2594, 2752 mame/drivers/igspoker.c: 419, 551, 697, 856, 996, 1194, 1328, 1468, 1644 mame/drivers/magic10.c: 619 mame/drivers/magicfly.c: 629, 692 mame/drivers/majorpkr.c: 868 mame/drivers/roul.c: 234 mame/drivers/royalmah.c: 1345, 2278, 2499 mame/drivers/seibuspi.c: 1405 mame/drivers/seta.c: 6681 mame/drivers/slotcarn.c: 250 mame/drivers/srmp2.c: 795 mame/drivers/ssv.c: 1967 mame/drivers/supdrapo.c: 316 mame/drivers/taito_o.c: 82 mame/drivers/videopkr.c: 1080 mame/drivers/vroulet.c: 152
+# emu/inpttype.h: 144 mame/drivers/ampoker2.c: 785, 870 mame/drivers/astrocorp.c: 357, 386 mame/drivers/big10.c: 160 mame/drivers/cardline.c: 159 mame/drivers/d9final.c: 181 mame/drivers/ddenlovr.c: 5027, 5260, 5808, 6422, 6603, 7207, 7448 mame/drivers/dunhuang.c: 562 mame/drivers/fortecar.c: 630 mame/drivers/funworld.c: 1037, 1098, 1158, 1219, 1277, 1339, 1400, 1461, 1642, 1703, 1764, 1825, 1886 mame/drivers/gei.c: 667, 939 mame/drivers/ggconnie.c: 75 mame/drivers/goldnpkr.c: 1578, 1647, 1718, 1800, 1863, 1914, 2132, 2206, 2299, 2379, 2518, 2614, 2710, 3022, 3180 mame/drivers/igspoker.c: 424, 556, 702, 861, 1001, 1199, 1333, 1473, 1649 mame/drivers/magic10.c: 627 mame/drivers/magicfly.c: 631, 694 mame/drivers/majorpkr.c: 870 mame/drivers/roul.c: 237 mame/drivers/royalmah.c: 1364, 2297, 2518 mame/drivers/seibuspi.c: 1396 mame/drivers/seta.c: 6659 mame/drivers/slotcarn.c: 253 mame/drivers/srmp2.c: 787 mame/drivers/ssv.c: 1941 mame/drivers/supdrapo.c: 326 mame/drivers/taito_o.c: 82 mame/drivers/videopkr.c: 1084 mame/drivers/vroulet.c: 156
 Payout
 
 
@@ -5806,7 +5810,11 @@ Shifter-L
 Shifter-R
 
 
-# emu/inpttype.h: 140 mame/drivers/calomega.c: 1514 mame/drivers/gei.c: 657 mame/drivers/lvcards.c: 374 mame/drivers/magicfly.c: 711 mame/drivers/peplus.c: 899 mame/drivers/sms.c: 349 mame/drivers/statriv2.c: 329, 369 mame/drivers/videopkr.c: 1017
+# mame/drivers/ssv.c: 1918 mame/layout/icecold.lay: 36
+Simple
+
+
+# emu/inpttype.h: 140 mame/drivers/calomega.c: 1514 mame/drivers/gei.c: 680 mame/drivers/lvcards.c: 371 mame/drivers/magicfly.c: 713 mame/drivers/meyc8080.c: 569 mame/drivers/peplus.c: 918 mame/drivers/sms.c: 351 mame/drivers/statriv2.c: 333, 373 mame/drivers/videopkr.c: 1021
 Stand
 
 
@@ -5818,15 +5826,15 @@ Stepping Stage Custom
 Stop All Reels
 
 
-# emu/inpttype.h: 155 mame/drivers/wldarrow.c: 250
+# emu/inpttype.h: 155 mame/drivers/meyc8080.c: 387
 Stop Reel 1
 
 
-# emu/inpttype.h: 156 mame/drivers/wldarrow.c: 249
+# emu/inpttype.h: 156 mame/drivers/meyc8080.c: 386
 Stop Reel 2
 
 
-# emu/inpttype.h: 157 mame/drivers/wldarrow.c: 248
+# emu/inpttype.h: 157 mame/drivers/meyc8080.c: 385
 Stop Reel 3
 
 
@@ -5834,7 +5842,11 @@ Stop Reel 3
 Stop Reel 4
 
 
-# mame/layout/awpvid14.lay: 1247 mame/layout/awpvid16.lay: 1247 mame/layout/mpu4.lay: 890 mame/layout/mpu4ext.lay: 1277
+# mame/layout/globalfr.lay: 9
+VFD
+
+
+# mame/layout/awpvid14.lay: 1247 mame/layout/awpvid16.lay: 1247 mame/layout/bfm_sc4.lay: 1886 mame/layout/mpu4.lay: 890 mame/layout/mpu4ext.lay: 1277
 VFD Display Output Only
 
 
@@ -5850,7 +5862,7 @@ With LEDs
 Yellow Overlay
 
 
-# emu/emuopts.c: 192
+# emu/emuopts.c: 193
 set coin impulse time (n<0 disable impulse, n==0 obey driver, 0<n set time n)
 
 

@@ -286,143 +286,143 @@ Direct3D: 無法重新建立裝置資源; 永久失敗\n
 Direct3D: resetting device\n
 Direct3D: 正在重設裝置\n
 
-# osd/windows/drawdd.c: 821
+# osd/windows/drawdd.c: 794
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %s 已建立介面: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1158
+# osd/windows/drawdd.c: 1131
 DirectDraw: Configuring device %s\n
 Direct3D: 正在設定裝置 %s\n
 
-# osd/windows/drawdd.c: 649
+# osd/windows/drawdd.c: 622
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: 試圖設定 gamma 值修正時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 532
+# osd/windows/drawdd.c: 505
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: 試圖設定視訊模式 %dx%d@%d 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 1118
+# osd/windows/drawdd.c: 1091
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: blit 到畫面時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 1085, 1094, 1103, 1112
+# osd/windows/drawdd.c: 1058, 1067, 1076, 1085
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: 清除畫面時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 806
+# osd/windows/drawdd.c: 779
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: 建立 %s 介面時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 847
+# osd/windows/drawdd.c: 820
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: 建立 clipper 時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 497, 1147
+# osd/windows/drawdd.c: 470, 1120
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: DirectDrawCreateEx 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 1244
+# osd/windows/drawdd.c: 1217
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: DirectDrawEnumerateEx 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 1363
+# osd/windows/drawdd.c: 1336
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: EnumDisplayModes 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 748
+# osd/windows/drawdd.c: 721
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: IDirectDraw7_GetCaps 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 522
+# osd/windows/drawdd.c: 495
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 516
+# osd/windows/drawdd.c: 489
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 814
+# osd/windows/drawdd.c: 787
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: 取得 %s 介面描述時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 581
+# osd/windows/drawdd.c: 554
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: 取得附加區塊介面時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 1166
+# osd/windows/drawdd.c: 1139
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: 取得目前顯示模式時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 390
+# osd/windows/drawdd.c: 363
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: 鎖定 blit 介面時發生錯 %08X\n
 
-# osd/windows/drawdd.c: 855
+# osd/windows/drawdd.c: 828
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: 設定 clipper hwnd 時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 863
+# osd/windows/drawdd.c: 836
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: 設定主要介面的 clipper 時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 463
+# osd/windows/drawdd.c: 436
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: 解鎖 blit 介面時發生錯 %08X\n
 
-# osd/windows/drawdd.c: 469, 1124
+# osd/windows/drawdd.c: 442, 1097
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: 等待 VBLANK 時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 505
+# osd/windows/drawdd.c: 478
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: 警告 - 裝置不符合 DirectDraw 描繪的最低要求\n
 
-# osd/windows/drawdd.c: 384
+# osd/windows/drawdd.c: 357
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: 遺失介面; 正在刪除並重試下一個畫格\n
 
-# osd/windows/drawdd.c: 1364
+# osd/windows/drawdd.c: 1337
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: 模式選定 = %4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 959
+# osd/windows/drawdd.c: 932
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: 新的 blit 大小 = %dx%d\n
 
-# osd/windows/drawdd.c: 1361
+# osd/windows/drawdd.c: 1334
 DirectDraw: Selecting video mode...\n
 DirectDraw: 正在選取視訊模式...\n
 
-# osd/windows/drawdd.c: 229
+# osd/windows/drawdd.c: 202
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: 無法存取 ddraw.dll\n
 
-# osd/windows/drawdd.c: 237
+# osd/windows/drawdd.c: 210
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: 無法找到 DirectDrawCreateEx\n
 
-# osd/windows/drawdd.c: 247
+# osd/windows/drawdd.c: 220
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: 無法找到 DirectDrawEnumerateExA\n
 
-# osd/windows/drawdd.c: 419, 455, 1200
+# osd/windows/drawdd.c: 392, 428, 1173
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: 未知的目標模式: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 262
+# osd/windows/drawdd.c: 235
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: 正在使用 DirectDraw 7\n
 
-# osd/windows/drawdd.c: 755
+# osd/windows/drawdd.c: 728
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: 警告 - 裝置不支援硬體延展\n
 
-# osd/windows/drawdd.c: 509
+# osd/windows/drawdd.c: 482
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: 警告 - 裝置可能無法正常配合 DirectDraw 描繪\n
 
-# osd/windows/drawdd.c: 632
+# osd/windows/drawdd.c: 605
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告 - 裝置不支援全螢幕 gamma 值修正。\n
 
@@ -478,7 +478,7 @@ Error getting DirectSound capabilities: %08x\n
 Error getting identifier for adapter #%d\n
 為介面卡取得識別資訊時發生錯誤 #%d\n
 
-# osd/windows/drawdd.c: 1155
+# osd/windows/drawdd.c: 1128
 Error getting identifier for device\n
 為裝置取得識別資訊時發生錯誤 \n
 
@@ -722,7 +722,7 @@ Unable to get network devices: %s\n
 Unable to initialize Direct3D.\n
 無法初始化 Direct3D\n
 
-# osd/windows/drawdd.c: 304
+# osd/windows/drawdd.c: 277
 Unable to initialize DirectDraw.\n
 無法初始化 DirectDraw\n
 

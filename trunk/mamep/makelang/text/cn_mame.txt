@@ -5854,3 +5854,6 @@ s%d
 set coin impulse time (n<0 disable impulse, n==0 obey driver, 0<n set time n)
 
 
+# emu/uimain.c: 191
+Bios Selection
+Ñ¡Ôñ BIOS

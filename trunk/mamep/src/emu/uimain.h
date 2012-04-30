@@ -59,6 +59,7 @@ private:
 		COMMAND,
 //#endif /* CMD_LIST */
 		SELECT_GAME,
+		BIOS_SELECTION,
 	};
 };
 
@@ -374,6 +375,16 @@ private:
 	driver_enumerator *drivlist;
 
 	void build_driver_list();
+};
+
+class ui_menu_bios_selection : public ui_menu {
+public:
+	ui_menu_bios_selection(running_machine &machine, render_container *container);
+	virtual ~ui_menu_bios_selection();
+	virtual void populate();
+	virtual void handle();
+
+private:
 };
 
 #ifdef USE_AUTOFIRE

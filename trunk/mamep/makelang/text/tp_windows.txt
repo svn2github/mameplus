@@ -354,143 +354,143 @@ Direct3D: failed to recreate resources for device; failing permanently\n
 Direct3D: resetting device\n
 
 
-# osd/windows/drawdd.c: 821
+# osd/windows/drawdd.c: 794
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
 
-# osd/windows/drawdd.c: 1158
+# osd/windows/drawdd.c: 1131
 DirectDraw: Configuring device %s\n
 
 
-# osd/windows/drawdd.c: 649
+# osd/windows/drawdd.c: 622
 DirectDraw: Error %08X attempting to set gamma correction.\n
 
 
-# osd/windows/drawdd.c: 532
+# osd/windows/drawdd.c: 505
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 
 
-# osd/windows/drawdd.c: 1118
+# osd/windows/drawdd.c: 1091
 DirectDraw: Error %08X blitting to the screen\n
 
 
-# osd/windows/drawdd.c: 1085, 1094, 1103, 1112
+# osd/windows/drawdd.c: 1058, 1067, 1076, 1085
 DirectDraw: Error %08X clearing the screen\n
 
 
-# osd/windows/drawdd.c: 806
+# osd/windows/drawdd.c: 779
 DirectDraw: Error %08X creating %s surface\n
 
 
-# osd/windows/drawdd.c: 847
+# osd/windows/drawdd.c: 820
 DirectDraw: Error %08X creating clipper\n
 
 
-# osd/windows/drawdd.c: 497, 1147
+# osd/windows/drawdd.c: 470, 1120
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 
 
-# osd/windows/drawdd.c: 1244
+# osd/windows/drawdd.c: 1217
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 
 
-# osd/windows/drawdd.c: 1363
+# osd/windows/drawdd.c: 1336
 DirectDraw: Error %08X during EnumDisplayModes call\n
 
 
-# osd/windows/drawdd.c: 748
+# osd/windows/drawdd.c: 721
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 
 
-# osd/windows/drawdd.c: 522
+# osd/windows/drawdd.c: 495
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 
 
-# osd/windows/drawdd.c: 516
+# osd/windows/drawdd.c: 489
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 
 
-# osd/windows/drawdd.c: 814
+# osd/windows/drawdd.c: 787
 DirectDraw: Error %08X getting %s surface desciption\n
 
 
-# osd/windows/drawdd.c: 581
+# osd/windows/drawdd.c: 554
 DirectDraw: Error %08X getting attached back surface\n
 
 
-# osd/windows/drawdd.c: 1166
+# osd/windows/drawdd.c: 1139
 DirectDraw: Error %08X getting current display mode\n
 
 
-# osd/windows/drawdd.c: 390
+# osd/windows/drawdd.c: 363
 DirectDraw: Error %08X locking blit surface\n
 
 
-# osd/windows/drawdd.c: 855
+# osd/windows/drawdd.c: 828
 DirectDraw: Error %08X setting clipper hwnd\n
 
 
-# osd/windows/drawdd.c: 863
+# osd/windows/drawdd.c: 836
 DirectDraw: Error %08X setting clipper on primary surface\n
 
 
-# osd/windows/drawdd.c: 463
+# osd/windows/drawdd.c: 436
 DirectDraw: Error %08X unlocking blit surface\n
 
 
-# osd/windows/drawdd.c: 469, 1124
+# osd/windows/drawdd.c: 442, 1097
 DirectDraw: Error %08X waiting for VBLANK\n
 
 
-# osd/windows/drawdd.c: 505
+# osd/windows/drawdd.c: 478
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 
 
-# osd/windows/drawdd.c: 384
+# osd/windows/drawdd.c: 357
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 
 
-# osd/windows/drawdd.c: 1364
+# osd/windows/drawdd.c: 1337
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 
 
-# osd/windows/drawdd.c: 959
+# osd/windows/drawdd.c: 932
 DirectDraw: New blit size = %dx%d\n
 
 
-# osd/windows/drawdd.c: 1361
+# osd/windows/drawdd.c: 1334
 DirectDraw: Selecting video mode...\n
 
 
-# osd/windows/drawdd.c: 229
+# osd/windows/drawdd.c: 202
 DirectDraw: Unable to access ddraw.dll\n
 
 
-# osd/windows/drawdd.c: 237
+# osd/windows/drawdd.c: 210
 DirectDraw: Unable to find DirectDrawCreateEx\n
 
 
-# osd/windows/drawdd.c: 247
+# osd/windows/drawdd.c: 220
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 
 
-# osd/windows/drawdd.c: 419, 455, 1200
+# osd/windows/drawdd.c: 392, 428, 1173
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 
 
-# osd/windows/drawdd.c: 262
+# osd/windows/drawdd.c: 235
 DirectDraw: Using DirectDraw 7\n
 
 
-# osd/windows/drawdd.c: 755
+# osd/windows/drawdd.c: 728
 DirectDraw: Warning - Device does not support hardware stretching\n
 
 
-# osd/windows/drawdd.c: 509
+# osd/windows/drawdd.c: 482
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 
 
-# osd/windows/drawdd.c: 632
+# osd/windows/drawdd.c: 605
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 
 
@@ -558,7 +558,7 @@ Error getting DirectSound capabilities: %08x\n
 Error getting identifier for adapter #%d\n
 
 
-# osd/windows/drawdd.c: 1155
+# osd/windows/drawdd.c: 1128
 Error getting identifier for device\n
 
 
@@ -918,7 +918,7 @@ Unable to get network devices: %s\n
 Unable to initialize Direct3D.\n
 
 
-# osd/windows/drawdd.c: 304
+# osd/windows/drawdd.c: 277
 Unable to initialize DirectDraw.\n
 
 
