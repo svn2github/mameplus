@@ -334,7 +334,7 @@ static READ16_HANDLER( killbld_igs025_prot_r )
 			}
 			else
 			{
-				UINT32 protvalue = 0x89911400 | input_port_read(space->machine(), "Region");
+				UINT32 protvalue = 0x89911400 | space->machine().root_device().ioport("Region")->read();
 				ret = (protvalue >> (8 * (state->m_kb_ptr - 1))) & 0xff;
 			}
 
@@ -514,7 +514,7 @@ static READ16_HANDLER( drgw3_igs025_prot_r )
 		else if(state->m_kb_cmd==5)
 		{
 			UINT32 protvalue;
-			protvalue = 0x60000|input_port_read(space->machine(), "Region");
+			protvalue = 0x60000|space->machine().root_device().ioport("Region")->read();
 			res=(protvalue>>(8*(ptr-1)))&0xff;
 
 
@@ -580,7 +580,7 @@ INPUT_PORTS_START( killbld )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_DIPNAME( 0x00ff, 0x0016, "Region (not currently working)" ) // different regions supply different protection code sequences, we only have the China one ATM
+	PORT_DIPNAME( 0x00ff, 0x0021, "Region (not currently working)" ) // different regions supply different protection code sequences, we only have the China one ATM
 	PORT_DIPSETTING(      0x0016, DEF_STR( Taiwan ) )
 	PORT_DIPSETTING(      0x0017, DEF_STR( China ) )
 	PORT_DIPSETTING(      0x0018, DEF_STR( Hong_Kong ) )

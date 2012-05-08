@@ -11656,7 +11656,7 @@ static DRIVER_INIT( mslug5hd )
 
 static TIMER_CALLBACK( ms5pcb_bios_timer_callback )
 {
-	int harddip3 = input_port_read(machine, "HARDDIP") & 1;
+	int harddip3 = machine.root_device().ioport("HARDDIP")->read() & 1;
 	machine.root_device().membank(NEOGEO_BANK_BIOS)->set_base(machine.root_device().memregion("mainbios")->base() + 0x20000 + harddip3 * 0x20000);
 }
 
@@ -11693,7 +11693,7 @@ static DRIVER_INIT( ms5plus )
 
 static TIMER_CALLBACK( svcpcb_bios_timer_callback )
 {
-	int harddip3 = input_port_read(machine, "HARDDIP") & 1;
+	int harddip3 = machine.root_device().ioport("HARDDIP")->read() & 1;
 	machine.root_device().membank(NEOGEO_BANK_BIOS)->set_base(machine.root_device().memregion("mainbios")->base() + 0x20000 + harddip3 * 0x20000);
 }
 

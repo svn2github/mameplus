@@ -98,9 +98,8 @@ WRITE8_MEMBER(brkthru_state::brkthru_soundlatch_w)
 
 INPUT_CHANGED_MEMBER(brkthru_state::coin_inserted)
 {
-
 	/* coin insertion causes an IRQ */
-	if(oldval)
+	if (newval)
 		device_set_input_line(m_maincpu, 0, ASSERT_LINE);
 }
 
@@ -181,7 +180,7 @@ static INPUT_PORTS_START( brkthru )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_COCKTAIL
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_COCKTAIL
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_VBLANK )	/* used only by the self test */
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_CUSTOM ) PORT_VBLANK("screen")	/* used only by the self test */
 
 	PORT_START("DSW1")
 	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coin_A ) ) PORT_DIPLOCATION("SW1:1,2")

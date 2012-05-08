@@ -504,27 +504,27 @@ READ32_MEMBER(twinkle_state::twinkle_io_r)
 		switch( m_io_offset )
 		{
 			case 0x07:
-				data |= input_port_read( machine(), "IN0" );
+				data |= ioport( "IN0" )->read();
 				break;
 
 			case 0x0f:
-				data |= input_port_read( machine(), "IN1" );
+				data |= ioport( "IN1" )->read();
 				break;
 
 			case 0x17:
-				data |= input_port_read( machine(), "IN2" );
+				data |= ioport( "IN2" )->read();
 				break;
 
 			case 0x1f:
-				data |= input_port_read( machine(), "IN3" );
+				data |= ioport( "IN3" )->read();
 				break;
 
 			case 0x27:
-				data |= input_port_read( machine(), "IN4" );
+				data |= ioport( "IN4" )->read();
 				break;
 
 			case 0x2f:
-				data |= input_port_read( machine(), "IN5" );
+				data |= ioport( "IN5" )->read();
 				break;
 
 			default:
@@ -1001,10 +1001,10 @@ ROM_START( bmiidx )
 	TWINKLE_BIOS
 
 	DISK_REGION( "cdrom0" )	// program
-	DISK_IMAGE_READONLY("863jaa01", 0, SHA1(aee12de1dc5dd44e5bf7b62133ed695b80999390) )
+	DISK_IMAGE_READONLY("863jaa01", 0, BAD_DUMP SHA1(aee12de1dc5dd44e5bf7b62133ed695b80999390) )
 
 	DISK_REGION( "cdrom1" ) // video CD
-	DISK_IMAGE_READONLY("863jaa04", 0, SHA1(8f6a0d2e191153032c9388b5298d8ee531b22a41) )
+	DISK_IMAGE_READONLY("863jaa04", 0, BAD_DUMP SHA1(8f6a0d2e191153032c9388b5298d8ee531b22a41) )
 
 	DISK_REGION( "drive_0" )
 	DISK_IMAGE_READONLY("c44jaa03", 0, SHA1(53e9bd25d1674a04aeec81c0224b4e4e44af802a) )	// was part of a 1st mix machine, but "c44" indicates 8th mix?
@@ -1077,7 +1077,7 @@ ROM_START( bmiidxc )
 	ROM_LOAD( "896j.pd",      0x000000, 0x000100, BAD_DUMP CRC(1e5caf37) SHA1(75b378662b651cb322e41564d3bae68cc9edadc5) )
 
 	DISK_REGION( "cdrom0" )
-	DISK_IMAGE_READONLY( "896jaabm", 0, SHA1(af008e5bcf18da4e9aea752a712c843e37a74be5) )
+	DISK_IMAGE_READONLY( "896jaabm", 0, BAD_DUMP SHA1(af008e5bcf18da4e9aea752a712c843e37a74be5) )
 //  DISK_IMAGE_READONLY( "abmjaahd", 1, NO_DUMP )
 //  DISK_IMAGE_READONLY( "abmjaa02", 2, NO_DUMP )
 ROM_END
@@ -1089,7 +1089,7 @@ ROM_START( bmiidxc2 )
 	ROM_LOAD( "984j.pd",      0x000000, 0x000100, BAD_DUMP CRC(213843e5) SHA1(5571db155a60fa4087dd996af48e8e27fc1c518c) )
 
 	DISK_REGION( "cdrom0" )
-	DISK_IMAGE_READONLY( "984a01bm", 0, SHA1(d9b7d74a72a76e4e9cf7725e0fb8dafcc1c87187) )
+	DISK_IMAGE_READONLY( "984a01bm", 0, BAD_DUMP SHA1(d9b7d74a72a76e4e9cf7725e0fb8dafcc1c87187) )
 //  DISK_IMAGE_READONLY( "abmjaahd", 1, NO_DUMP )
 //  DISK_IMAGE_READONLY( "abmjaa02", 2, NO_DUMP )
 ROM_END
@@ -1101,7 +1101,7 @@ ROM_START( bmiidxca )
 	ROM_LOAD( "896j.pd",      0x000000, 0x000100, BAD_DUMP CRC(1e5caf37) SHA1(75b378662b651cb322e41564d3bae68cc9edadc5) )
 
 	DISK_REGION( "cdrom0" )
-	DISK_IMAGE_READONLY( "896jabbm", 0, SHA1(117ae4c876207bbaf9e8fe0fdf5bb161155c1bdb) )
+	DISK_IMAGE_READONLY( "896jabbm", 0, BAD_DUMP SHA1(117ae4c876207bbaf9e8fe0fdf5bb161155c1bdb) )
 //  DISK_IMAGE_READONLY( "abmjaahd", 1, NO_DUMP )
 //  DISK_IMAGE_READONLY( "abmjaa02", 2, NO_DUMP )
 ROM_END

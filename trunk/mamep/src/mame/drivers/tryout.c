@@ -83,7 +83,7 @@ ADDRESS_MAP_END
 
 INPUT_CHANGED_MEMBER(tryout_state::coin_inserted)
 {
-	if(newval != oldval)
+	if (newval)
 		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, ASSERT_LINE);
 }
 
@@ -140,7 +140,7 @@ static INPUT_PORTS_START( tryout )
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN2 ) PORT_CHANGED_MEMBER(DEVICE_SELF, tryout_state,coin_inserted, 0)
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
-	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_VBLANK )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_CUSTOM ) PORT_VBLANK("screen")
 INPUT_PORTS_END
 
 static const gfx_layout charlayout =

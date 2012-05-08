@@ -161,7 +161,7 @@ public:
 	UINT8     m_OldPort4;
 
 	device_t *m_maincpu;
-	device_t *m_ds1302;
+	ds1302_device *m_ds1302;
 	device_t *m_vr0video;
 	DECLARE_READ32_MEMBER(FlipCount_r);
 	DECLARE_WRITE32_MEMBER(FlipCount_w);
@@ -233,18 +233,18 @@ READ32_MEMBER(crystal_state::Input_r)
 {
 
 	if (offset == 0)
-		return input_port_read(machine(), "P1_P2");
+		return ioport("P1_P2")->read();
 	else if (offset == 1)
-		return input_port_read(machine(), "P3_P4");
+		return ioport("P3_P4")->read();
 	else if( offset == 2)
 	{
-		UINT8 Port4 = input_port_read(machine(), "SYSTEM");
+		UINT8 Port4 = ioport("SYSTEM")->read();
 		if (!(Port4 & 0x10) && ((m_OldPort4 ^ Port4) & 0x10))	//coin buttons trigger IRQs
 			IntReq(machine(), 12);
 		if (!(Port4 & 0x20) && ((m_OldPort4 ^ Port4) & 0x20))
 			IntReq(machine(), 19);
 		m_OldPort4 = Port4;
-		return /*dips*/input_port_read(machine(), "DSW") | (Port4 << 16);
+		return /*dips*/ioport("DSW")->read() | (Port4 << 16);
 	}
 	return 0;
 }
@@ -400,13 +400,11 @@ WRITE32_MEMBER(crystal_state::PIO_w)
 	UINT32 CLK = data & 0x02000000;
 	UINT32 DAT = data & 0x10000000;
 
-	if (!RST)
-		m_ds1302->reset();
+	m_ds1302->ce_w(RST ? 1 : 0);
+	m_ds1302->io_w(DAT ? 1 : 0);
+	m_ds1302->sclk_w(CLK ? 1 : 0);
 
-	ds1302_dat_w(m_ds1302, 0, DAT ? 1 : 0);
-	ds1302_clk_w(m_ds1302, 0, CLK ? 1 : 0);
-
-	if (ds1302_read(m_ds1302, 0))
+	if (m_ds1302->io_r())
 		space.write_dword(0x01802008, space.read_dword(0x01802008) | 0x10000000);
 	else
 		space.write_dword(0x01802008, space.read_dword(0x01802008) & (~0x10000000));
@@ -567,7 +565,7 @@ static void crystal_banksw_postload(running_machine &machine)
 	crystal_state *state = machine.driver_data<crystal_state>();
 
 	if (state->m_Bank <= 2)
-		state->membank("bank1")->set_base(machine.root_device().memregion("user1")->base() + state->m_Bank * 0x1000000);
+		state->membank("bank1")->set_base(state->memregion("user1")->base() + state->m_Bank * 0x1000000);
 	else
 		state->membank("bank1")->set_base(state->memregion("user2")->base());
 }
@@ -578,7 +576,7 @@ static MACHINE_START( crystal )
 	int i;
 
 	state->m_maincpu = machine.device("maincpu");
-	state->m_ds1302 = machine.device("rtc");
+	state->m_ds1302 = machine.device<ds1302_device>("rtc");
 	state->m_vr0video = machine.device("vr0");
 
 	device_set_irq_callback(machine.device("maincpu"), icallback);
@@ -859,7 +857,7 @@ static MACHINE_CONFIG_START( crystal, crystal_state )
 	MCFG_PALETTE_INIT(RRRRR_GGGGGG_BBBBB)
 	MCFG_PALETTE_LENGTH(65536)
 
-	MCFG_DS1302_ADD("rtc")
+	MCFG_DS1302_ADD("rtc", XTAL_32_768kHz)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

@@ -348,7 +348,6 @@ int numberOfScreens(const machine_config *config)
 }
 
 
-
 struct control_cache_t
 {
 	ioport_constructor ipt;
@@ -573,6 +572,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 					}
 
 			gameinfo->usesSamples = FALSE;
+
 			samples_device_iterator iter(config.root_device());
 			if (iter.first() != NULL)
 				gameinfo->usesSamples = TRUE;
@@ -629,21 +629,21 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			gameinfo->usesLightGun = FALSE;
 			if (gamedrv->ipt != NULL)
 			{
-				input_port_config *port;
+				ioport_port *port;
 				ioport_list portlist;
 				astring errors;
 				device_iterator iter(config.root_device());
-				for (device_t *device = iter.first(); device != NULL; device = iter.next())
-					if (device->input_ports()!=NULL)
-						input_port_list_init(*device, portlist, errors);
+				for (device_t *cfg = iter.first(); cfg; cfg = iter.next())
+					if (cfg->input_ports())
+						portlist.append(*cfg, errors);
 
-				for (port = portlist.first(); port != NULL; port = port->next())
+				for (port = portlist.first(); port; port = port->next())
 				{
-					const input_field_config *field;
-					for (field = port->first_field(); field != NULL; field = field->next())
+					ioport_field *field;
+					for (field = port->first_field(); field; field = field->next())
  					{
 						UINT32 type;
-						type = field->type;
+						type = field->type();
 						if (type == IPT_END)
 							break;
 						if (type == IPT_DIAL || type == IPT_PADDLE ||

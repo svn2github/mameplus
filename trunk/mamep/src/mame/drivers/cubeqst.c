@@ -329,7 +329,7 @@ WRITE16_MEMBER(cubeqst_state::io_w)
 
 READ16_MEMBER(cubeqst_state::io_r)
 {
-	UINT16 port_data = input_port_read(machine(), "IO");
+	UINT16 port_data = ioport("IO")->read();
 
 	/*
          Certain bits depend on Q7 of the IO latch:
@@ -350,7 +350,7 @@ READ16_MEMBER(cubeqst_state::io_r)
 /* Trackball ('CHOP') */
 READ16_MEMBER(cubeqst_state::chop_r)
 {
-	return (input_port_read(machine(), "TRACK_X") << 8) | input_port_read(machine(), "TRACK_Y");
+	return (ioport("TRACK_X")->read() << 8) | ioport("TRACK_Y")->read();
 }
 
 
@@ -535,8 +535,8 @@ static MACHINE_CONFIG_START( cubeqst, cubeqst_state )
 	MCFG_LASERDISC_SIMUTREK_ADD("laserdisc")
 	MCFG_LASERDISC_OVERLAY_STATIC(CUBEQST_HBLANK, CUBEQST_VCOUNT, cubeqst)
 	MCFG_LASERDISC_OVERLAY_CLIP(0, 320-1, 0, 256-8)
-	MCFG_LASERDISC_OVERLAY_POSITION(0.002, -0.018)
-	MCFG_LASERDISC_OVERLAY_SCALE(1.0, 1.030)
+	MCFG_LASERDISC_OVERLAY_POSITION(0.002f, -0.018f)
+	MCFG_LASERDISC_OVERLAY_SCALE(1.0f, 1.030f)
 
 	MCFG_LASERDISC_SCREEN_ADD_NTSC("screen", "laserdisc")
 

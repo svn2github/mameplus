@@ -220,11 +220,11 @@ READ16_MEMBER(seta2_state::mj4simai_p1_r)
 
 	switch (m_keyboard_row)
 	{
-		case 0x01: return input_port_read(machine(), "P1_KEY0");
-		case 0x02: return input_port_read(machine(), "P1_KEY1");
-		case 0x04: return input_port_read(machine(), "P1_KEY2");
-		case 0x08: return input_port_read(machine(), "P1_KEY3");
-		case 0x10: return input_port_read(machine(), "P1_KEY4");
+		case 0x01: return ioport("P1_KEY0")->read();
+		case 0x02: return ioport("P1_KEY1")->read();
+		case 0x04: return ioport("P1_KEY2")->read();
+		case 0x08: return ioport("P1_KEY3")->read();
+		case 0x10: return ioport("P1_KEY4")->read();
 		default:   logerror("p1_r with keyboard_row = %02x\n", m_keyboard_row); return 0xffff;
 	}
 }
@@ -234,11 +234,11 @@ READ16_MEMBER(seta2_state::mj4simai_p2_r)
 
 	switch (m_keyboard_row)
 	{
-		case 0x01: return input_port_read(machine(), "P2_KEY0");
-		case 0x02: return input_port_read(machine(), "P2_KEY1");
-		case 0x04: return input_port_read(machine(), "P2_KEY2");
-		case 0x08: return input_port_read(machine(), "P2_KEY3");
-		case 0x10: return input_port_read(machine(), "P2_KEY4");
+		case 0x01: return ioport("P2_KEY0")->read();
+		case 0x02: return ioport("P2_KEY1")->read();
+		case 0x04: return ioport("P2_KEY2")->read();
+		case 0x08: return ioport("P2_KEY3")->read();
+		case 0x10: return ioport("P2_KEY4")->read();
 		default:   logerror("p2_r with keyboard_row = %02x\n", m_keyboard_row); return 0xffff;
 	}
 }
@@ -330,7 +330,7 @@ READ16_MEMBER(seta2_state::pzlbowl_protection_r)
 
 READ16_MEMBER(seta2_state::pzlbowl_coins_r)
 {
-	return input_port_read(machine(), "SYSTEM") | (machine().rand() & 0x80 );
+	return ioport("SYSTEM")->read() | (machine().rand() & 0x80 );
 }
 
 WRITE16_MEMBER(seta2_state::pzlbowl_coin_counter_w)
@@ -567,7 +567,7 @@ READ32_MEMBER(seta2_state::coldfire_regs_r)
 			return machine().rand();
 
 		case CF_PPDAT:
-			return input_port_read(machine(), "BATTERY") << 16;
+			return ioport("BATTERY")->read() << 16;
 	}
 
 	return m_coldfire_regs[offset];
@@ -575,7 +575,7 @@ READ32_MEMBER(seta2_state::coldfire_regs_r)
 
 READ32_MEMBER(seta2_state::funcube_debug_r)
 {
-	UINT32 ret = input_port_read(machine(),"DEBUG");
+	UINT32 ret = ioport("DEBUG")->read();
 
 	// This bits let you move the crosshair in the inputs / touch panel test with a joystick
 	if (!(machine().primary_screen->frame_number() % 3))
@@ -638,7 +638,7 @@ ADDRESS_MAP_END
 
 READ8_MEMBER(seta2_state::funcube_coins_r)
 {
-	UINT8 ret = input_port_read(machine(),"SWITCH");
+	UINT8 ret = ioport("SWITCH")->read();
 	UINT8 coin_bit0 = 1;	// active low
 	UINT8 coin_bit1 = 1;
 
@@ -684,10 +684,11 @@ READ8_MEMBER(seta2_state::funcube_serial_r)
 	return ret;
 }
 
-static void funcube_debug_outputs(void)
+static void funcube_debug_outputs(running_machine &machine)
 {
 #ifdef MAME_DEBUG
-//  popmessage("LED: %02x OUT: %02x", (int)*funcube_leds, (int)*funcube_outputs);
+//	seta2_state *state = machine.driver_data<seta2_state>();
+//	popmessage("LED: %02x OUT: %02x", (int)*state->m_funcube_leds, (int)*state->m_funcube_outputs);
 #endif
 }
 
@@ -705,7 +706,7 @@ WRITE8_MEMBER(seta2_state::funcube_leds_w)
 	set_led_status( machine(), 4, (~data) & 0x40 );
 	set_led_status( machine(), 5, (~data) & 0x80 );
 
-	funcube_debug_outputs();
+	funcube_debug_outputs(space.machine());
 }
 
 READ8_MEMBER(seta2_state::funcube_outputs_r)
@@ -730,7 +731,7 @@ WRITE8_MEMBER(seta2_state::funcube_outputs_w)
 	// Bit 3: low after coining up, blinks on pay out
 	set_led_status( machine(), 6, (~data) & 0x08 );
 
-	funcube_debug_outputs();
+	funcube_debug_outputs(space.machine());
 }
 
 
@@ -2152,14 +2153,14 @@ static INTERRUPT_GEN( funcube_sub_timer_irq )
 	}
 	else
 	{
-		UINT8 press   = input_port_read(device->machine(),"TOUCH_PRESS");
+		UINT8 press   = device->machine().root_device().ioport("TOUCH_PRESS")->read();
 		UINT8 release = state->m_funcube_press && !press;
 
 		if ( press || release )
 		{
 			state->m_funcube_serial_fifo[0] = press ? 0xfe : 0xfd;
-			state->m_funcube_serial_fifo[1] = input_port_read(device->machine(),"TOUCH_X");
-			state->m_funcube_serial_fifo[2] = input_port_read(device->machine(),"TOUCH_Y");
+			state->m_funcube_serial_fifo[1] = device->machine().root_device().ioport("TOUCH_X")->read();
+			state->m_funcube_serial_fifo[2] = device->machine().root_device().ioport("TOUCH_Y")->read();
 			state->m_funcube_serial_fifo[3] = 0xff;
 			state->m_funcube_serial_count = 4;
 		}
@@ -2404,6 +2405,24 @@ ROM_START( funcube4 )
 
 	ROM_REGION( 0x1000000, "oki", ROMREGION_ERASE00 )
 	ROM_LOAD( "fc41_snd0.u47", 0x000000, 0x200000, CRC(e6f7d2bc) SHA1(638c73d439eaaff8097cb0aa2684f9f7111bcade) )
+ROM_END
+
+ROM_START( funcube5 )
+	ROM_REGION( 0x80000, "maincpu", 0 ) // XCF5206 Code
+	ROM_LOAD( "fc51_prg-0.u4", 0x00000, 0x80000, CRC(4e34c2d8) SHA1(1ace4f6edab291e69e5c36b15193fba62f4a6773) )
+
+	ROM_REGION( 0x20000, "sub", 0 )		// H8/3007 Code
+	ROM_LOAD( "fc21_iopr-0.u49", 0x00000, 0x20000, CRC(314555ef) SHA1(b17e3926c8ef7f599856c198c330d2051aae13ad) )
+
+	ROM_REGION( 0x300, "pic", 0 )		// PIC12C508? Code
+	ROM_LOAD( "fc51a.u57", 0x000, 0x300, NO_DUMP )
+
+	ROM_REGION( 0x800000, "sprites", 0 )
+	ROM_LOAD32_WORD( "fc51_obj-0.u43", 0x000000, 0x400000, CRC(116624b3) SHA1(c0b3dbe0ea4a0808222616c3ef77b2d1194a970a) )
+	ROM_LOAD32_WORD( "fc51_obj-1.u42", 0x000002, 0x400000, CRC(35c6ec61) SHA1(424c9b66a2cdd5217d8a577d0179d1228112ee5b) )
+
+	ROM_REGION( 0x1000000, "oki", ROMREGION_ERASE00 )
+	ROM_LOAD( "fc51_snd-0.u47", 0x000000, 0x200000, CRC(2a504fe1) SHA1(911ad650bf48aa78d9cb3c64284aa526ceb519ba) )
 ROM_END
 
 static DRIVER_INIT( funcube2 )
@@ -3271,4 +3290,5 @@ GAME( 2002, trophyh,  0,        samshoot, trophyh,  0,        ROT0, "Sammy USA C
 GAME( 2001, funcube2, 0,        funcube,  funcube,  funcube2, ROT0, "Namco",                 "Funcube 2 (v1.1)",                             GAME_NO_COCKTAIL )
 GAME( 2001, funcube3, 0,        funcube3, funcube,  funcube3, ROT0, "Namco",                 "Funcube 3 (v1.1)",                             GAME_NO_COCKTAIL )
 GAME( 2001, funcube4, 0,        funcube,  funcube,  funcube2, ROT0, "Namco",                 "Funcube 4 (v1.0)",                             GAME_NO_COCKTAIL )
+GAME( 2002, funcube5, 0,        funcube,  funcube,  funcube2, ROT0, "Namco",                 "Funcube 5 (v1.0)",                             GAME_NO_COCKTAIL )
 GAME( ????, reelquak, 0,        reelquak, reelquak, 0,        ROT0, "<unknown>",             "Reel'N Quake! (Ver. 1.05)",                    GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )

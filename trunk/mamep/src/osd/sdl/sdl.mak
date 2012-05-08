@@ -210,6 +210,7 @@ else
 CCOMFLAGS += -arch ppc
 LDFLAGS += -arch ppc
 endif
+$(OBJ)/emu/cpu/tms57002/tms57002.o : CCOMFLAGS += -O0
 else	# BIGENDIAN
 ifeq ($(PTR64),1)
 CCOMFLAGS += -arch x86_64
@@ -447,7 +448,7 @@ LDFLAGS += -static-libgcc
 TEST_GCC = $(shell gcc --version)
 ifeq ($(findstring 4.4,$(TEST_GCC)),)
 	#if we use new tools
-	LDFLAGS += -static -static-libstdc++
+	LDFLAGS += -static-libstdc++
 endif
 LIBS += -lSDL.dll
 LIBS += -luser32 -lgdi32 -lddraw -ldsound -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi

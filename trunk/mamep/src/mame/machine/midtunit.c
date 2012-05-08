@@ -105,7 +105,7 @@ READ16_MEMBER(midtunit_state::midtunit_input_r)
 {
 	static const char *const portnames[] = { "IN0", "IN1", "IN2", "DSW" };
 
-	return input_port_read(machine(), portnames[offset]);
+	return ioport(portnames[offset])->read();
 }
 
 
@@ -526,7 +526,7 @@ DRIVER_INIT( jdreddp )
 	/* sound chip protection (hidden RAM) */
 	machine.device("adpcm:cpu")->memory().space(AS_PROGRAM)->install_read_bank(0xfbcf, 0xfbf9, "bank7");
 	machine.device("adpcm:cpu")->memory().space(AS_PROGRAM)->install_write_bank(0xfbcf, 0xfbf9, "bank9");
-	state->membank("bank9")->set_base(auto_alloc_array(machine, UINT8, 0x80));
+	state->membank("adpcm:bank9")->set_base(auto_alloc_array(machine, UINT8, 0x80));
 
 #if ENABLE_ALL_JDREDD_LEVELS
 	/* how about the final levels? */
