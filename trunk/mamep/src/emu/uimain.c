@@ -2703,7 +2703,7 @@ void ui_menu_autofire::handle()
 			//autofire delay
 			if (player >= 0 && player < MAX_PLAYERS)
 			{
-				int autofire_delay = get_autofiredelay(player);
+				int autofire_delay = machine().ioport().get_autofiredelay(player);
 
 				if (menu_event->iptkey == IPT_UI_LEFT)
 				{
@@ -2718,17 +2718,17 @@ void ui_menu_autofire::handle()
 						autofire_delay = 99;
 				}
 
-				set_autofiredelay(player, autofire_delay);
+				machine().ioport().set_autofiredelay(player, autofire_delay);
 
 				changed = true;
 			}
 			//anything else is a toggle item
 			else
 			{
-				const input_field_config *field = (const input_field_config *)menu_event->itemref;
-				input_field_user_settings settings;
+				ioport_field *field = (ioport_field *)menu_event->itemref;
+				ioport_field::user_settings settings;
 				int selected_value;
-				input_field_get_user_settings(field, &settings);
+				field->get_user_settings(settings);
 				selected_value = settings.autofire;
 
 				if (menu_event->iptkey == IPT_UI_LEFT)
@@ -2743,7 +2743,7 @@ void ui_menu_autofire::handle()
 				}
 
 				settings.autofire = selected_value;
-				input_field_set_user_settings(field, &settings);
+				field->set_user_settings(settings);
 
 				changed = true;
 			}
@@ -2765,8 +2765,8 @@ void ui_menu_autofire::populate()
 {
 	astring subtext;
 	astring text;
-	const input_field_config *field;
-	const input_port_config *port;
+	ioport_field *field;
+	ioport_port *port;
 	int players = 0;
 	int i;
 
@@ -2774,21 +2774,21 @@ void ui_menu_autofire::populate()
 	for (port = machine().ioport().first_port(); port != NULL; port = port->next())
 		for (field = port->first_field(); field != NULL; field = field->next())
 		{
-			const char *name = input_field_name(field);
+			const char *name = field->name();
 
 			if (name != NULL && (
-			    (field->type >= IPT_BUTTON1 && field->type < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
+			    (field->type() >= IPT_BUTTON1 && field->type() < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
 #ifdef USE_CUSTOM_BUTTON
-			    || (field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
+			    || (field->type() >= IPT_CUSTOM1 && field->type() < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
 #endif /* USE_CUSTOM_BUTTON */
 			   ))
 			{
-				input_field_user_settings settings;
-				input_field_get_user_settings(field, &settings);
+				ioport_field::user_settings settings;
+				field->get_user_settings(settings);
 //				entry[menu_items] = field;
 
-				if (players < field->player + 1)
-					players = field->player + 1;
+				if (players < field->player() + 1)
+					players = field->player() + 1;
 
 				/* add an autofire item */
 				switch (settings.autofire)
@@ -2797,7 +2797,7 @@ void ui_menu_autofire::populate()
 					case 1:	subtext.cpy(_("On"));		break;
 					case 2:	subtext.cpy(_("Toggle"));	break;
 				}
-				item_append(_(input_field_name(field)), subtext, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)field);
+				item_append(_(field->name()), subtext, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)field);
 			}
 		}
 	
@@ -2805,7 +2805,7 @@ void ui_menu_autofire::populate()
 	for (i = 0; i < players; i++)
 	{
 		text.printf(_("P%d %s"), i + 1, _("Autofire Delay"));
-		subtext.printf("%d", get_autofiredelay(i));
+		subtext.printf("%d", machine().ioport().get_autofiredelay(i));
 
 		/* append a menu item */
 		item_append(text, subtext, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)(i + AUTOFIRE_ITEM_P1_DELAY));
@@ -2834,8 +2834,8 @@ void ui_menu_custom_button::handle()
 	const ui_menu_event *menu_event = process(0);
 	bool changed = false;
 	int custom_buttons_count = 0;
-	const input_field_config *field;
-	const input_port_config *port;
+	ioport_field *field;
+	ioport_port *port;
 
 	/* handle events */
 	if (menu_event != NULL && menu_event->itemref != NULL)
@@ -2847,7 +2847,7 @@ void ui_menu_custom_button::handle()
 		for (port = machine().ioport().first_port(); port != NULL; port = port->next())
 			for (field = port->first_field(); field != NULL; field = field->next())
 			{
-				int type = field->type;
+				int type = field->type();
 
 				if (type >= IPT_BUTTON1 && type < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
 				{
@@ -2888,8 +2888,8 @@ void ui_menu_custom_button::populate()
 {
 	astring subtext;
 	astring text;
-	const input_field_config *field;
-	const input_port_config *port;
+	ioport_field *field;
+	ioport_port *port;
 	int menu_items = 0;
 	int is_neogeo = !mame_stricmp(machine().system().source_file+17, "neodrvr.c");
 	int i;
@@ -2901,9 +2901,9 @@ void ui_menu_custom_button::populate()
 	for (port = machine().ioport().first_port(); port != NULL; port = port->next())
 		for (field = port->first_field(); field != NULL; field = field->next())
 		{
-			int player = field->player;
-			int type = field->type;
-			const char *name = input_field_name(field);
+			int player = field->player();
+			int type = field->type();
+			const char *name = field->name();
 
 			if (name != NULL && type >= IPT_CUSTOM1 && type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
 			{
@@ -2916,7 +2916,7 @@ void ui_menu_custom_button::populate()
 
 				//unpack the custom button value
 				for (i = 0; i < MAX_NORMAL_BUTTONS; i++, n <<= 1)
-					if (custom_button[player][type] & n)
+					if (machine().ioport().m_custom_button[player][type] & n)
 					{
 						if (subtext.len() > 0)
 							subtext.cat("_+");
@@ -2925,7 +2925,7 @@ void ui_menu_custom_button::populate()
 
 				strcpy(commandbuf, subtext);
 				convert_command_glyph(commandbuf, ARRAY_LENGTH(commandbuf));
-				item_append(_(name), commandbuf, 0, (void *)(FPTR)&custom_button[player][type]);
+				item_append(_(name), commandbuf, 0, (void *)(FPTR)&machine().ioport().m_custom_button[player][type]);
 
 				menu_items++;
 			}

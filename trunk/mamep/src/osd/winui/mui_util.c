@@ -392,7 +392,7 @@ static void UpdateController(void)
 
 		if (cache[i].ipt != last_ipt)
 		{
-			const input_port_config *port;
+			ioport_port *port;
 			ioport_list portlist;
 			astring errors;
 
@@ -409,85 +409,87 @@ static void UpdateController(void)
 			machine_config config(driver_list::driver(i), MameUIGlobal());
 			device_iterator iter(config.root_device());
 			for (device_t *device = iter.first(); device != NULL; device = iter.next())
-				if (device->input_ports()!=NULL)
-					input_port_list_init(*device, portlist, errors);
+				if (device->input_ports())
+						portlist.append(*device, errors);
 
 			for (port = portlist.first(); port != NULL; port = port->next())
 			{
-				const input_field_config *field;
+				ioport_field *field;
 				for (field = port->first_field(); field != NULL; field = field->next())
 				{
-				    int n;
+					int n;
 
-				    if (p < field->player + 1)
-					    p = field->player + 1;
+					if (p < field->player() + 1)
+						p = field->player() + 1;
 
-				    n = field->type - IPT_BUTTON1 + 1;
-				    if (n >= 1 && n <= MAX_NORMAL_BUTTONS && n > b)
-				    {
-					    b = n;
-					    continue;
-				    }
+					n = field->type() - IPT_BUTTON1 + 1;
+					if (n >= 1 && n <= MAX_NORMAL_BUTTONS && n > b)
+					{
+						b = n;
+						continue;
+					}
 
-				    switch (field->type)
-				    {
-				    case IPT_JOYSTICKRIGHT_LEFT:
-				    case IPT_JOYSTICKRIGHT_RIGHT:
-				    case IPT_JOYSTICKLEFT_LEFT:
-				    case IPT_JOYSTICKLEFT_RIGHT:
-					    dual = TRUE;
+					switch (field->type())
+					{
+					case IPT_JOYSTICKRIGHT_LEFT:
+					case IPT_JOYSTICKRIGHT_RIGHT:
+					case IPT_JOYSTICKLEFT_LEFT:
+					case IPT_JOYSTICKLEFT_RIGHT:
+						dual = TRUE;
 
-				    case IPT_JOYSTICK_LEFT:
-				    case IPT_JOYSTICK_RIGHT:
-					    lr = TRUE;
+					case IPT_JOYSTICK_LEFT:
+					case IPT_JOYSTICK_RIGHT:
+						lr = TRUE;
 
-					    if (field->way == 4)
-						    w = CONTROLLER_JOY4WAY;
-					    else if (field->way == 16)
-						    w = CONTROLLER_JOY16WAY;
-					    break;
+						if (field->way() == 4)
+							w = CONTROLLER_JOY4WAY;
+						else if (field->way() == 16)
+							w = CONTROLLER_JOY16WAY;
+						break;
 
-				    case IPT_JOYSTICKRIGHT_UP:
-				    case IPT_JOYSTICKRIGHT_DOWN:
-				    case IPT_JOYSTICKLEFT_UP:
-				    case IPT_JOYSTICKLEFT_DOWN:
-					    dual = TRUE;
+					case IPT_JOYSTICKRIGHT_UP:
+					case IPT_JOYSTICKRIGHT_DOWN:
+					case IPT_JOYSTICKLEFT_UP:
+					case IPT_JOYSTICKLEFT_DOWN:
+						dual = TRUE;
 
-				    case IPT_JOYSTICK_UP:
-				    case IPT_JOYSTICK_DOWN:
-					    ud = TRUE;
+					case IPT_JOYSTICK_UP:
+					case IPT_JOYSTICK_DOWN:
+						ud = TRUE;
 
-					    if (field->way == 4)
-						    w = CONTROLLER_JOY4WAY;
-					    else if (field->way == 16)
-						    w = CONTROLLER_JOY16WAY;
-					    break;
+						if (field->way() == 4)
+							w = CONTROLLER_JOY4WAY;
+						else if (field->way() == 16)
+							w = CONTROLLER_JOY16WAY;
+						break;
 
-				    case IPT_PADDLE:
-					    flags[CONTROLLER_PADDLE] = TRUE;
-					    break;
+					case IPT_PADDLE:
+						flags[CONTROLLER_PADDLE] = TRUE;
+						break;
 
-				    case IPT_DIAL:
-					    flags[CONTROLLER_DIAL] = TRUE;
-					    break;
+					case IPT_DIAL:
+						flags[CONTROLLER_DIAL] = TRUE;
+						break;
 
-				    case IPT_TRACKBALL_X:
-				    case IPT_TRACKBALL_Y:
-					    flags[CONTROLLER_TRACKBALL] = TRUE;
-					    break;
+					case IPT_TRACKBALL_X:
+					case IPT_TRACKBALL_Y:
+						flags[CONTROLLER_TRACKBALL] = TRUE;
+						break;
 
-				    case IPT_AD_STICK_X:
-				    case IPT_AD_STICK_Y:
-					    flags[CONTROLLER_ADSTICK] = TRUE;
-					    break;
+					case IPT_AD_STICK_X:
+					case IPT_AD_STICK_Y:
+						flags[CONTROLLER_ADSTICK] = TRUE;
+						break;
 
-				    case IPT_LIGHTGUN_X:
-				    case IPT_LIGHTGUN_Y:
-					    flags[CONTROLLER_LIGHTGUN] = TRUE;
-					    break;
-				    case IPT_PEDAL:
-					    flags[CONTROLLER_PEDAL] = TRUE;
-					    break;
+					case IPT_LIGHTGUN_X:
+					case IPT_LIGHTGUN_Y:
+						flags[CONTROLLER_LIGHTGUN] = TRUE;
+						break;
+					case IPT_PEDAL:
+						flags[CONTROLLER_PEDAL] = TRUE;
+						break;
+					default:
+						break;
 				    }
 				}
 			}

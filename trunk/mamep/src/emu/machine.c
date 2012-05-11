@@ -422,7 +422,7 @@ int running_machine::run(bool firstrun)
 		sound().ui_mute(true);
 		nvram_save(*this);
 		// mamep: dont save settings during playback
-		if (!has_playback_file(*this))
+		if (!ioport().has_playback_file())
 		config_save_settings(*this);
 	}
 	catch (emu_fatalerror &fatal)

@@ -343,7 +343,7 @@ void nvram_load(running_machine &machine)
 void nvram_save(running_machine &machine)
 {
 	// mamep: dont save nvram during playback
-	if (has_playback_file(machine))
+	if (machine.ioport().has_playback_file())
 		return;
 
 	if (machine.config().m_nvram_handler != NULL)
@@ -532,7 +532,7 @@ void set_led_status(running_machine &machine, int num, int on)
 CUSTOM_INPUT_MEMBER( driver_device::custom_port_read )
 {
 	const char *tag = (const char *)param;
-	return input_port_read(machine(), tag);
+	return ioport(tag)->read();
 }
 
 

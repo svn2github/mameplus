@@ -2441,7 +2441,7 @@ static MACHINE_RESET( cps3 )
 
 	{
 		UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
-		UINT32 reg_dip = input_port_read(machine,"REG");
+		UINT32 reg_dip = machine.root_device().ioport("REG")->read();
 
 		/* switch region */
 		if(rom[0x1fed4/4] == 0x575a442d)
@@ -2459,14 +2459,14 @@ static MACHINE_RESET( cps3 )
 		/* switch version */
 		if(rom[0x1fed4/4] == 0x575a442d)
 		{
-			UINT32 ver_dip = input_port_read(machine,"VER");
+			UINT32 ver_dip = machine.root_device().ioport("VER")->read();
 			if (!ver_dip) ver_dip = rom[0x1fed8/4] & 0x000000f0;
 			rom[0x1fed8/4] &= 0xffffff0f;
 			rom[0x1fed8/4] |= ver_dip;
 		}
 		else if (rom[0x1fec4/4] == 0x4a4a4b2d || rom[0x1fec4/4] == 0x4a4a4d2d)
 		{
-			UINT32 ver_dip = input_port_read(machine,"VER");
+			UINT32 ver_dip = machine.root_device().ioport("VER")->read();
 			if (!ver_dip) ver_dip = rom[0x1fec8/4] & 0x000000f0;
 			rom[0x1fec8/4] &= 0xffffff0f;
 			rom[0x1fec8/4] |= ver_dip;
@@ -2474,7 +2474,7 @@ static MACHINE_RESET( cps3 )
 		/* switch screen mode */
 		if (rom[0x1fec4/4] == 0x5346332d || rom[0x1fec4/4] == 0x3347412d)
 		{
-			UINT32 ws_dip = input_port_read(machine,"WS");
+			UINT32 ws_dip = machine.root_device().ioport("WS")->read();
 			if (!ws_dip) ws_dip = 0x00000000;
 			state->m_eeprom[0x020/4] &= 0xf0ffffff;
 			state->m_eeprom[0x050/4] &= 0xf0ffffff;
