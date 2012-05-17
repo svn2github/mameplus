@@ -1868,7 +1868,7 @@ static void ui_display_input_log(running_machine &machine, render_container *con
 	double time_fadeout = attotime::from_msec(1000).as_double();
 	float curx;
 	int i;
-	struct ioport_manager::input_log *command_buffer = machine.ioport().m_command_buffer;
+	struct ioport_manager::input_log *command_buffer = machine.ioport().command_buffer();
 
 	if (!command_buffer[0].code)
 		return;
@@ -2106,12 +2106,12 @@ static UINT32 handler_ingame(running_machine &machine, render_container *contain
 #ifdef USE_SHOW_INPUT_LOG
 	if (ui_input_pressed(machine, IPT_UI_SHOW_INPUT_LOG))
 	{
-		machine.ioport().m_show_input_log ^= 1;
-		machine.ioport().m_command_buffer[0].code = '\0';
+		machine.ioport().show_input_log() ^= 1;
+		machine.ioport().command_buffer()[0].code = '\0';
 	}
 
 	/* show popup message if input exist any log */
-	if (machine.ioport().m_show_input_log)
+	if (machine.ioport().show_input_log())
 		ui_display_input_log(machine, container);
 #endif /* USE_SHOW_INPUT_LOG */
 

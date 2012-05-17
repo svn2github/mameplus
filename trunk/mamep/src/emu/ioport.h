@@ -231,12 +231,12 @@ enum ioport_type
 	IPT_BUTTON16,
 
 #ifdef USE_AUTOFIRE
-	/* autofire control buttons */
+	// autofire control buttons
 	IPT_TOGGLE_AUTOFIRE,
 #endif /* USE_AUTOFIRE */
 
 #ifdef USE_CUSTOM_BUTTON
-	/* custom action buttons */
+	// custom action buttons
 	IPT_CUSTOM1,
 	IPT_CUSTOM2,
 	IPT_CUSTOM3,
@@ -1311,7 +1311,6 @@ public:
 	int get_autofiredelay(int player) { return m_autofiredelay[player]; };
 	void set_autofiredelay(int player, int delay) { m_autofiredelay[player] = delay; };
 #endif /* USE_AUTOFIRE */
-
 #ifdef USE_CUSTOM_BUTTON
 	UINT16					m_custom_button[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
 #endif /* USE_CUSTOM_BUTTON */
@@ -1321,8 +1320,9 @@ public:
 	{
 		unicode_char code;
 		double time;
-	}						m_command_buffer[COMMAND_LOG_BUFSIZE];
-	int						m_show_input_log;
+	};
+	struct input_log *		command_buffer() { return m_command_buffer; };
+	int &					show_input_log() { return m_show_input_log; };
 #endif /* USE_SHOW_INPUT_LOG */
 
 private:
@@ -1377,6 +1377,10 @@ private:
 	int						m_autofiredelay[MAX_PLAYERS];
 	int						m_autofiretoggle[MAX_PLAYERS];
 #endif /* USE_AUTOFIRE */
+#ifdef USE_SHOW_INPUT_LOG
+	struct input_log		m_command_buffer[COMMAND_LOG_BUFSIZE];
+	int						m_show_input_log;
+#endif /* USE_SHOW_INPUT_LOG */
 
 	// types
 	simple_list<input_type_entry> m_typelist;		// list of live type states

@@ -2773,12 +2773,12 @@ ioport_port_live::ioport_port_live(ioport_port &port)
 ioport_manager::ioport_manager(running_machine &machine)
 	: m_machine(machine),
 	  m_safe_to_read(false),
+#ifdef USE_SHOW_INPUT_LOG
+	  m_show_input_log(0),
+#endif /* USE_SHOW_INPUT_LOG */
 	  m_natkeyboard(machine),
 	  m_last_frame_time(attotime::zero),
 	  m_last_delta_nsec(0),
-#ifdef USE_SHOW_INPUT_LOG
-//	  m_show_input_log(0),
-#endif /* USE_SHOW_INPUT_LOG */
 	  m_record_file(machine.options().input_directory(), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS),
 	  m_playback_file(machine.options().input_directory(), OPEN_FLAG_READ),
 #ifdef INP_CAPTION

@@ -429,7 +429,8 @@ static void UpdateController(void)
 						continue;
 					}
 
-					switch (field->type())
+					UINT32 type = field->type();
+					switch (type)
 					{
 					case IPT_JOYSTICKRIGHT_LEFT:
 					case IPT_JOYSTICKRIGHT_RIGHT:
@@ -487,8 +488,6 @@ static void UpdateController(void)
 						break;
 					case IPT_PEDAL:
 						flags[CONTROLLER_PEDAL] = TRUE;
-						break;
-					default:
 						break;
 				    }
 				}
