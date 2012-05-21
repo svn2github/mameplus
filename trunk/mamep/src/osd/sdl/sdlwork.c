@@ -310,7 +310,7 @@ int osd_work_queue_wait(osd_work_queue *queue, osd_ticks_t timeout)
 void osd_work_queue_free(osd_work_queue *queue)
 {
 	// if we have threads, clean them up
-	if (queue->threads >= 0 && queue->thread != NULL)
+	if (queue->thread != NULL)
 	{
 		int threadnum;
 
@@ -569,7 +569,7 @@ static int effective_num_processors(void)
 	int numprocs = 0;
 	int physprocs = osd_get_num_processors();
 
-	// osd_num_processors == 0 for 'auto'
+    // osd_num_processors == 0 for 'auto'
 	if (osd_num_processors > 0)
 		return MIN(4 * physprocs, osd_num_processors);
 	else

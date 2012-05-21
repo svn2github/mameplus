@@ -57,7 +57,7 @@ the main program is 9th October 1990.
 #include "emu.h"
 #include "cpu/i86/i86.h"
 #include "machine/pit8253.h"
-#include "machine/8255ppi.h"
+#include "machine/i8255.h"
 #include "machine/8237dma.h"
 #include "machine/pic8259.h"
 #include "machine/mc146818.h"
@@ -70,7 +70,11 @@ class pcxt_state : public driver_device
 {
 public:
 	pcxt_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		  m_pit8253(*this,"pit8253"),
+		  m_pic8259_1(*this,"pic8259_1"),
+		  m_pic8259_2(*this,"pic8259_2"),
+		  m_dma8237_1(*this,"dma8237_1") { }
 
 	UINT8 m_bg_bank;
 	int m_bank;
@@ -86,11 +90,11 @@ public:
 	UINT8 m_at_pages[0x10];
 	UINT8 m_pc_spkrdata, m_pc_input;
 
-	device_t	*m_pit8253;
-	device_t	*m_pic8259_1;
-	device_t	*m_pic8259_2;
-	device_t	*m_dma8237_1;
-	device_t	*m_dma8237_2;
+	required_device<device_t> m_pit8253;
+	required_device<device_t> m_pic8259_1;
+	required_device<device_t> m_pic8259_2;
+	required_device<device_t> m_dma8237_1;
+
 	DECLARE_READ8_MEMBER(disk_iobank_r);
 	DECLARE_WRITE8_MEMBER(disk_iobank_w);
 	DECLARE_READ8_MEMBER(fdc765_status_r);
@@ -340,26 +344,26 @@ static WRITE8_DEVICE_HANDLER( sys_reset_w )
 	cputag_set_input_line(device->machine(), "maincpu", INPUT_LINE_RESET, PULSE_LINE);
 }
 
-
-static const ppi8255_interface filetto_ppi8255_intf[2] =
+static I8255A_INTERFACE( ppi8255_0_intf )
 {
-	{
-		DEVCB_HANDLER(port_a_r),		/* Port A read */
-		DEVCB_HANDLER(port_b_r),		/* Port B read */
-		DEVCB_HANDLER(port_c_r),		/* Port C read */
-		DEVCB_NULL, 					/* Port A write */
-		DEVCB_HANDLER(port_b_w),		/* Port B write */
-		DEVCB_NULL						/* Port C write */
-	},
-	{
-		DEVCB_NULL,						/* Port A read */
-		DEVCB_NULL,						/* Port B read */
-		DEVCB_NULL,						/* Port C read */
-		DEVCB_HANDLER(wss_1_w),			/* Port A write */
-		DEVCB_HANDLER(wss_2_w),			/* Port B write */
-		DEVCB_HANDLER(sys_reset_w)		/* Port C write */
-	}
+	DEVCB_HANDLER(port_a_r),			/* Port A read */
+	DEVCB_NULL,							/* Port A write */
+	DEVCB_HANDLER(port_b_r),			/* Port B read */
+	DEVCB_HANDLER(port_b_w),			/* Port B write */
+	DEVCB_HANDLER(port_c_r),			/* Port C read */
+	DEVCB_NULL							/* Port C write */
 };
+
+static I8255A_INTERFACE( ppi8255_1_intf )
+{
+	DEVCB_NULL,							/* Port A read */
+	DEVCB_HANDLER(wss_1_w),				/* Port A write */
+	DEVCB_NULL,							/* Port B read */
+	DEVCB_HANDLER(wss_2_w),				/* Port B write */
+	DEVCB_NULL,							/* Port C read */
+	DEVCB_HANDLER(sys_reset_w)			/* Port C write */
+};
+
 
 /*Floppy Disk Controller 765 device*/
 /*Currently we only emulate it at a point that the BIOS will pass the checks*/
@@ -547,8 +551,8 @@ static ADDRESS_MAP_START( pcxt_io_common, AS_IO, 8, pcxt_state )
 	AM_RANGE(0x0000, 0x000f) AM_DEVREADWRITE_LEGACY("dma8237_1", i8237_r, i8237_w ) //8237 DMA Controller
 	AM_RANGE(0x0020, 0x002f) AM_DEVREADWRITE_LEGACY("pic8259_1", pic8259_r, pic8259_w ) //8259 Interrupt control
 	AM_RANGE(0x0040, 0x0043) AM_DEVREADWRITE_LEGACY("pit8253", pit8253_r, pit8253_w)    //8253 PIT
-	AM_RANGE(0x0060, 0x0063) AM_DEVREADWRITE_LEGACY("ppi8255_0", ppi8255_r, ppi8255_w)  //PPI 8255
-	AM_RANGE(0x0064, 0x0066) AM_DEVREADWRITE_LEGACY("ppi8255_1", ppi8255_r, ppi8255_w)  //PPI 8255
+	AM_RANGE(0x0060, 0x0063) AM_DEVREADWRITE("ppi8255_0", i8255_device, read, write)  //PPI 8255
+	AM_RANGE(0x0064, 0x0066) AM_DEVREADWRITE("ppi8255_1", i8255_device, read, write)  //PPI 8255
 	AM_RANGE(0x0070, 0x007f) AM_DEVREADWRITE("rtc", mc146818_device, read, write)
 	AM_RANGE(0x0080, 0x0087) AM_READWRITE(dma_page_select_r,dma_page_select_w)
 	AM_RANGE(0x00a0, 0x00af) AM_DEVREADWRITE_LEGACY("pic8259_2", pic8259_r, pic8259_w )
@@ -706,11 +710,6 @@ static MACHINE_RESET( filetto )
 	state->m_bank = -1;
 	state->m_lastvalue = -1;
 	device_set_irq_callback(machine.device("maincpu"), irq_callback);
-	state->m_pit8253 = machine.device( "pit8253" );
-	state->m_pic8259_1 = machine.device( "pic8259_1" );
-	state->m_pic8259_2 = machine.device( "pic8259_2" );
-	state->m_dma8237_1 = machine.device( "dma8237_1" );
-	state->m_dma8237_2 = machine.device( "dma8237_2" );
 
 	state->m_pc_spkrdata = 0;
 	state->m_pc_input = 0;
@@ -727,8 +726,8 @@ static MACHINE_CONFIG_START( filetto, pcxt_state )
 
 	MCFG_PIT8253_ADD( "pit8253", pc_pit8253_config )
 
-	MCFG_PPI8255_ADD( "ppi8255_0", filetto_ppi8255_intf[0] )
-	MCFG_PPI8255_ADD( "ppi8255_1", filetto_ppi8255_intf[1] )
+	MCFG_I8255A_ADD( "ppi8255_0", ppi8255_0_intf )
+	MCFG_I8255A_ADD( "ppi8255_1", ppi8255_1_intf )
 
 	MCFG_I8237_ADD( "dma8237_1", XTAL_14_31818MHz/3, dma8237_1_config )
 

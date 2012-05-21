@@ -699,7 +699,7 @@ ROM_START( starforc )
 	ROM_LOAD( "4.8lm",   0x08000, 0x4000, CRC(dd9d68a4) SHA1(34c60d2b34c7980bf65a5ebadb9c73f89128141f) )
 
 	ROM_REGION( 0x0020, "proms", 0 )	/* PROMs */
-	ROM_LOAD( "07b.bin",    0x0000, 0x0020, CRC(68db8300) SHA1(33cd6b5ed92d7b73a708f2e4b12b6e7f6496d0c6) )	/* unknown - timing? */
+	ROM_LOAD( "07b.bin", 0x0000, 0x0020, CRC(68db8300) SHA1(33cd6b5ed92d7b73a708f2e4b12b6e7f6496d0c6) )	/* unknown - timing? */
 ROM_END
 
 ROM_START( starforcb )
@@ -822,21 +822,21 @@ ROM_START( starforce )
 	ROM_LOAD( "4.8lm",   0x08000, 0x4000, CRC(dd9d68a4) SHA1(34c60d2b34c7980bf65a5ebadb9c73f89128141f) )
 
 	ROM_REGION( 0x0020, "proms", 0 )	/* PROMs */
-	ROM_LOAD( "07b.bin",    0x0000, 0x0020, CRC(68db8300) SHA1(33cd6b5ed92d7b73a708f2e4b12b6e7f6496d0c6) )	/* unknown - timing? */
+	ROM_LOAD( "07b.bin", 0x0000, 0x0020, CRC(68db8300) SHA1(33cd6b5ed92d7b73a708f2e4b12b6e7f6496d0c6) )	/* unknown - timing? */
 ROM_END
 
 ROM_START( megaforc )
 	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "mf3.bin",      0x0000, 0x4000, CRC(d3ea82ec) SHA1(e15fda65ba24517cc04abc55b5d079a33327553c) )
-	ROM_LOAD( "mf2.bin",      0x4000, 0x4000, CRC(aa320718) SHA1(cbbf8e4d06a1ecf77d776058d965afdaa7f5b47f) )
+	ROM_LOAD( "mf3.bin",  0x0000, 0x4000, CRC(d3ea82ec) SHA1(e15fda65ba24517cc04abc55b5d079a33327553c) )
+	ROM_LOAD( "mf2.bin",  0x4000, 0x4000, CRC(aa320718) SHA1(cbbf8e4d06a1ecf77d776058d965afdaa7f5b47f) )
 
 	ROM_REGION( 0x10000, "sub", 0 )     /* 64k for sound board */
 	ROM_LOAD( "1.3hj",    0x0000, 0x2000, CRC(2735bb22) SHA1(1bd0558e05b41aebab3911991969512df904fea5) )
 
 	ROM_REGION( 0x03000, "gfx1", 0 )
-	ROM_LOAD( "mf7.bin",      0x00000, 0x1000, CRC(43ef8d20) SHA1(07ebe3e10fa56b671788a122cdc02e661b624f40) )	/* fg */
-	ROM_LOAD( "mf8.bin",      0x01000, 0x1000, CRC(c36fb746) SHA1(01960e068046bcc0e3e9370fdfe73f9fd64491ae) )
-	ROM_LOAD( "mf9.bin",      0x02000, 0x1000, CRC(62e7c9ec) SHA1(24dd1de3e268865c36c732714dc257c58cb88d67) )
+	ROM_LOAD( "mf7.bin",  0x00000, 0x1000, CRC(43ef8d20) SHA1(07ebe3e10fa56b671788a122cdc02e661b624f40) )	/* fg */
+	ROM_LOAD( "mf8.bin",  0x01000, 0x1000, CRC(c36fb746) SHA1(01960e068046bcc0e3e9370fdfe73f9fd64491ae) )
+	ROM_LOAD( "mf9.bin",  0x02000, 0x1000, CRC(62e7c9ec) SHA1(24dd1de3e268865c36c732714dc257c58cb88d67) )
 
 	ROM_REGION( 0x06000, "gfx2", 0 )
 	ROM_LOAD( "15.10jk",  0x00000, 0x2000, CRC(c3bda12f) SHA1(3748ea8e34222a31a365a02ec77430f268b0b397) )	/* bg1 */
@@ -859,7 +859,7 @@ ROM_START( megaforc )
 	ROM_LOAD( "4.8lm",    0x08000, 0x4000, CRC(dd9d68a4) SHA1(34c60d2b34c7980bf65a5ebadb9c73f89128141f) )
 
 	ROM_REGION( 0x0020, "proms", 0 )	/* PROMs */
-	ROM_LOAD( "07b.bin",    0x0000, 0x0020, CRC(68db8300) SHA1(33cd6b5ed92d7b73a708f2e4b12b6e7f6496d0c6) )	/* unknown - timing? */
+	ROM_LOAD( "07b.bin",  0x0000, 0x0020, CRC(68db8300) SHA1(33cd6b5ed92d7b73a708f2e4b12b6e7f6496d0c6) )	/* unknown - timing? */
 ROM_END
 
 ROM_START( baluba )

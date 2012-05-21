@@ -182,6 +182,7 @@ SOUNDS += OKIM6376
 SOUNDS += OKIM9810
 SOUNDS += UPD7759
 SOUNDS += HC55516
+SOUNDS += TC8830F
 SOUNDS += K005289
 SOUNDS += K007232
 SOUNDS += K051649
@@ -1212,6 +1213,10 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/hshavoc.o \
 	$(DRIVERS)/kopunch.o $(VIDEO)/kopunch.o \
 	$(MACHINE)/megadriv.o \
+	$(MACHINE)/megacd.o \
+	$(MACHINE)/mega32x.o \
+	$(MACHINE)/megasvp.o \
+	$(MACHINE)/megavdp.o \
 	$(MACHINE)/md_cart.o \
 	$(DRIVERS)/megadrvb.o \
 	$(DRIVERS)/megaplay.o \
@@ -1972,6 +1977,8 @@ $(DRIVERS)/bzone.o:	$(LAYOUT)/bzone.lh
 $(DRIVERS)/cardline.o:	$(LAYOUT)/cardline.lh
 
 $(DRIVERS)/cdi.o:	$(LAYOUT)/cdi.lh
+
+$(DRIVERS)/chance32.o:	$(LAYOUT)/chance32.lh
 
 $(DRIVERS)/changela.o:	$(LAYOUT)/changela.lh
 

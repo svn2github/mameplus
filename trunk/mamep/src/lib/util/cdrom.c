@@ -899,7 +899,7 @@ chd_error cdrom_write_metadata(chd_file *chd, const cdrom_toc *toc)
 
 //-------------------------------------------------
 //  ECC lookup tables
-//	pre-calculated tables for ECC data calcs
+//  pre-calculated tables for ECC data calcs
 //-------------------------------------------------
 
 static const UINT8 ecclow[256] =

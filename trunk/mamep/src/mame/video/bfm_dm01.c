@@ -30,36 +30,19 @@ Standard dm01 memorymap
 -----------+---+-----------------+-----------------------------------------
 
   TODO: - find out clockspeed of CPU
+        - sometimes screen isn't cleared, is the a clear bit missing?
 
 ***************************************************************************/
 
 #include "emu.h"
 #include "cpu/m6809/m6809.h"
 #include "bfm_dm01.h"
-// local prototypes ///////////////////////////////////////////////////////
-
-extern void Scorpion2_SetSwitchState(running_machine &machine, int strobe, int data, int state);
-extern int  Scorpion2_GetSwitchState(running_machine &machine, int strobe, int data);
 
 // local vars /////////////////////////////////////////////////////////////
 
 #define DM_BYTESPERROW 9
 #define DM_MAXLINES    21
 
-#define FEEDBACK_STROBE 4
-#define FEEDBACK_DATA   4
-
-static int   control;
-static int   xcounter;
-static int   busy;
-static int   data_avail;
-
-static UINT8 scanline[DM_BYTESPERROW];
-
-static UINT8 comdata;
-
-//static int   read_index;
-//static int   write_index;
 
 #ifdef MAME_DEBUG
 #define VERBOSE 1
@@ -69,13 +52,39 @@ static UINT8 comdata;
 
 #define LOG(x) do { if (VERBOSE) logerror x; } while (0)
 
+typedef struct _dm01
+{
+	const bfmdm01_interface *intf;
+	int		 data_avail,
+		        control,
+			  xcounter,
+		segbuffer[65],
+				  busy;
+
+UINT8 scanline[DM_BYTESPERROW],
+		comdata;
+
+} bfmdm01;
+
+static bfmdm01 dm01;
+///////////////////////////////////////////////////////////////////////////
+
+void BFM_dm01_config(running_machine &machine, const bfmdm01_interface *intf)
+{
+	assert_always(machine.phase() == MACHINE_PHASE_INIT, "Can only call BFM_dm01_config at init time!");
+	assert_always(intf, "BFM_dm01_config called with an invalid interface!");
+	dm01.intf = intf;
+	BFM_dm01_reset(machine);
+
+}
+
 ///////////////////////////////////////////////////////////////////////////
 
 static int read_data(void)
 {
-	int data = comdata;
+	int data = dm01.comdata;
 
-	data_avail = 0;
+	dm01.data_avail = 0;
 
 	return data;
 }
@@ -91,9 +100,9 @@ static READ8_HANDLER( control_r )
 
 static WRITE8_HANDLER( control_w )
 {
-	int changed = control ^ data;
+	int changed = dm01.control ^ data;
 
-	control = data;
+	dm01.control = data;
 
 	if ( changed & 2 )
 	{	// reset horizontal counter
@@ -101,16 +110,16 @@ static WRITE8_HANDLER( control_w )
 		{
 			//int offset = 0;
 
-			xcounter = 0;
+			dm01.xcounter = 0;
 		}
 	}
 
 	if ( changed & 8 )
 	{ // bit 3 changed = BUSY line
-		if ( data & 8 )	  busy = 0;
-		else			  busy = 1;
+		if ( data & 8 )	  dm01.busy = 0;
+		else			  dm01.busy = 1;
 
-		Scorpion2_SetSwitchState(space->machine(), FEEDBACK_STROBE,FEEDBACK_DATA, busy?0:1);
+		dm01.intf->busy_func(space->machine(),dm01.busy);
 	}
 }
 
@@ -125,48 +134,39 @@ static READ8_HANDLER( mux_r )
 
 static WRITE8_HANDLER( mux_w )
 {
-	int x = xcounter;
 
-	if ( x < DM_BYTESPERROW )
+	if ( dm01.xcounter < DM_BYTESPERROW )
 	{
-		scanline[xcounter++] = data;
+		dm01.scanline[dm01.xcounter] = data;
+		dm01.xcounter++;
 	}
-
-	if ( x == 8 )
+	if ( dm01.xcounter == 9 )
 	{
     	int row = ((0xFF^data) & 0x7C) >> 2;	// 7C = 000001111100
-
-		scanline[x] &= 0x80;
+		dm01.scanline[8] &= 0x80;//filter all other bits
 		if ( (row >= 0)  && (row < DM_MAXLINES) )
 		{
-			int p,dots;
-
-			x = 0;
-			p = 0;
-			dots = 0;
+			int p = 0;
 
 			while ( p < (DM_BYTESPERROW) )
 			{
 
-				UINT8 d = scanline[p];
-				if (d & 0x80) dots |= 0x01;
-				else          dots &=~0x01;
-				if (d & 0x40) dots |= 0x02;
-				else          dots &=~0x02;
-				if (d & 0x20) dots |= 0x04;
-				else          dots &=~0x04;
-				if (d & 0x10) dots |= 0x08;
-				else          dots &=~0x08;
-				if (d & 0x08) dots |= 0x10;
-				else          dots &=~0x10;
-				if (d & 0x04) dots |= 0x20;
-				else          dots &=~0x20;
-				if (d & 0x02) dots |= 0x40;
-				else          dots &=~0x40;
-				if (d & 0x01) dots |= 0x80;
-				else          dots &=~0x80;
-				output_set_indexed_value("matrix", p +(8*row), dots);
+				UINT8 d = dm01.scanline[p];
+
+				for (int bitpos=0; bitpos <8; bitpos++)
+				{
+					if (((p*8)+bitpos) <65)
+					{
+						if (d & 1<<(7-bitpos)) dm01.segbuffer[(p*8)+bitpos]=1;
+						else dm01.segbuffer[(p*8)+bitpos]=0;
+					}
+				}
 				p++;
+			}
+
+			for (int pos=0;pos<65;pos++)
+			{
+				output_set_indexed_value("dotmatrix", pos +(65*row), dm01.segbuffer[(pos)]);
 			}
 		}
 	}
@@ -178,12 +178,12 @@ static READ8_HANDLER( comm_r )
 {
 	int result = 0;
 
-	if ( data_avail )
+	if ( dm01.data_avail )
 	{
 		result = read_data();
 
 		#ifdef UNUSED_FUNCTION
-		if ( data_avail() )
+		if ( dm01.data_avail() )
 		{
 			cpu_set_irq_line(1, M6809_IRQ_LINE, ASSERT_LINE );	// trigger IRQ
 		}
@@ -227,8 +227,8 @@ ADDRESS_MAP_END
 
 void BFM_dm01_writedata(running_machine &machine, UINT8 data)
 {
-	comdata = data;
-	data_avail = 1;
+	dm01.comdata = data;
+	dm01.data_avail = 1;
 
   //pulse IRQ line
 	cputag_set_input_line(machine, "matrix", M6809_IRQ_LINE, HOLD_LINE ); // trigger IRQ
@@ -244,15 +244,15 @@ INTERRUPT_GEN( bfm_dm01_vbl )
 ///////////////////////////////////////////////////////////////////////////
 int BFM_dm01_busy(void)
 {
-	return data_avail;
+	return dm01.data_avail;
 }
 
 void BFM_dm01_reset(running_machine &machine)
 {
-	busy     = 0;
-	control  = 0;
-	xcounter = 0;
-	data_avail = 0;
+	dm01.busy     = 0;
+	dm01.control  = 0;
+	dm01.xcounter = 0;
+	dm01.data_avail = 0;
 
-	Scorpion2_SetSwitchState(machine, FEEDBACK_STROBE,FEEDBACK_DATA, busy?0:1);
+	dm01.intf->busy_func(machine,dm01.busy);
 }

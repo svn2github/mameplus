@@ -3,6 +3,7 @@
 
     Written by Mariusz Wojcieszek
     Updated by Jonathan Gevaryahu AKA Lord Nightmare
+    Improved interrupt handling by R. Belmont
 */
 
 #include "emu.h"
@@ -230,9 +231,17 @@ static void duart68681_update_interrupts(duart68681_state *duart68681)
 		if ( duart68681->duart_config->irq_handler )
 		{
 			LOG(( "68681: Interrupt line active (IMR & ISR = %02X)\n", (duart68681->ISR & duart68681->IMR) ));
-			duart68681->duart_config->irq_handler( duart68681->device, duart68681->IVR );
+			duart68681->duart_config->irq_handler( duart68681->device, ASSERT_LINE, duart68681->IVR );
 		}
 	}
+    else
+    {
+		if ( duart68681->duart_config->irq_handler )
+		{
+			LOG(( "68681: Interrupt line not active (IMR & ISR = %02X)\n", (duart68681->ISR & duart68681->IMR) ));
+			duart68681->duart_config->irq_handler( duart68681->device, CLEAR_LINE, duart68681->IVR );
+		}
+    }
 };
 
 static TIMER_CALLBACK( duart_timer_callback )
@@ -336,7 +345,7 @@ static void duart68681_write_CR(duart68681_state *duart68681, int ch, UINT8 data
 			else
 				duart68681->ISR &= ~INT_TXRDYB;
 			duart68681->channel[ch].tx_timer->adjust(attotime::never, ch);
-			break;
+            break;
 		case 4: /* Reset Error Status */
 			duart68681->channel[ch].SR &= ~(STATUS_RECEIVED_BREAK | STATUS_FRAMING_ERROR | STATUS_PARITY_ERROR | STATUS_OVERRUN_ERROR);
 			break;
@@ -355,7 +364,6 @@ static void duart68681_write_CR(duart68681_state *duart68681, int ch, UINT8 data
 			LOG(( "68681: Unhandled command (%x) in CR%d\n", (data >> 4) & 0x07, ch ));
 			break;
 	}
-	duart68681_update_interrupts(duart68681);
 
 	if (BIT(data, 0)) {
 		duart68681->channel[ch].rx_enabled = 1;
@@ -384,6 +392,7 @@ static void duart68681_write_CR(duart68681_state *duart68681, int ch, UINT8 data
 			duart68681->ISR &= ~INT_TXRDYB;
 	}
 
+    duart68681_update_interrupts(duart68681);
 };
 
 static UINT8 duart68681_read_rx_fifo(duart68681_state *duart68681, int ch)
@@ -562,28 +571,6 @@ READ8_DEVICE_HANDLER(duart68681_r)
 						duart68681->duart_timer->adjust(rate, 0, rate);
 					}
 					break;
-				case 0x06: /* Timer, CLK/1 */
-					{
-						attotime rate = attotime::from_hz(2*device->clock()/(2*16*duart68681->CTR.w.l));
-						duart68681->duart_timer->adjust(rate, 0, rate);
-					}
-					break;
-				case 0x07: /* Timer, CLK/16 */
-					{
-						//double hz;
-						//attotime rate = attotime::from_hz(duart68681->clock) * (16*duart68681->CTR.w.l);
-						attotime rate = attotime::from_hz(2*device->clock()/(2*16*16*duart68681->CTR.w.l));
-						//hz = ATTOSECONDS_TO_HZ(rate.attoseconds);
-
-						// workaround for maygay1b locking up MAME
-						if ((2*device->clock()/(2*16*16*duart68681->CTR.w.l)) == 0)
-						{
-							rate = attotime::from_hz(1);
-						}
-
-						duart68681->duart_timer->adjust(rate, 0, rate);
-					}
-					break;
 			}
 			break;
 		case 0x0f: /* Stop counter command */
@@ -631,8 +618,54 @@ WRITE8_DEVICE_HANDLER(duart68681_w)
 				case 0: case 1: case 2: case 4: case 5: // TODO: handle these cases!
 				logerror( "68681 (%s): Unhandled timer/counter mode %d\n", device->tag(), (data >> 4) & 0x07);
 				break;
-				case 3: case 6: case 7:
+            case 3:
 				break;
+            case 0x06: /* Timer, CLK/1 */       // Timer modes start without reading address 0xe, as per the Freescale 68681 manual
+                {
+                    attotime rate;
+                    if (duart68681->CTR.w.l > 0)
+                    {
+                        rate = attotime::from_hz(2*device->clock()/(2*16*duart68681->CTR.w.l));
+                    }
+                    else
+                    {
+                        rate = attotime::from_hz(2*device->clock()/(2*16*0x10000));
+                    }
+                    duart68681->duart_timer->adjust(rate, 0, rate);
+                }
+                break;
+            case 0x07: /* Timer, CLK/16 */
+                {
+                    //double hz;
+                    //attotime rate = attotime::from_hz(duart68681->clock) * (16*duart68681->CTR.w.l);
+                    attotime rate;
+                    if (duart68681->CTR.w.l > 0)
+                    {
+                        rate = attotime::from_hz(2*device->clock()/(2*16*16*duart68681->CTR.w.l));
+
+                        // workaround for maygay1b locking up MAME
+                        if ((2*device->clock()/(2*16*16*duart68681->CTR.w.l)) == 0)
+                        {
+                            rate = attotime::from_hz(1);
+                        }
+                    }
+                    else
+                    {
+                        if (2*device->clock()/(2*16*16*0x10000) == 0)
+                        {
+                            rate = attotime::from_hz(1);
+                        }
+                        else
+                        {
+                            rate = attotime::from_hz(2*device->clock()/(2*16*16*0x10000));
+                        }
+                    }
+
+                    //hz = ATTOSECONDS_TO_HZ(rate.attoseconds);
+
+                    duart68681->duart_timer->adjust(rate, 0, rate);
+                }
+                break;
 			}
 			duart68681_write_CSR(duart68681, 0, duart68681->channel[0].CSR, data);
 			duart68681_write_CSR(duart68681, 1, duart68681->channel[1].CSR, data);

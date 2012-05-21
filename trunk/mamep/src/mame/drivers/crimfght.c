@@ -23,16 +23,12 @@
 /* prototypes */
 static KONAMI_SETLINES_CALLBACK( crimfght_banking );
 
-
-static TIMER_DEVICE_CALLBACK( crimfght_scanline )
+static INTERRUPT_GEN( crimfght_interrupt )
 {
-	crimfght_state *state = timer.machine().driver_data<crimfght_state>();
-	int scanline = param;
+	crimfght_state *state = device->machine().driver_data<crimfght_state>();
 
-	if(scanline == 240 && k051960_is_irq_enabled(state->m_k051960)) // vblank irq
-		cputag_set_input_line(timer.machine(), "maincpu", KONAMI_IRQ_LINE, HOLD_LINE);
-	else if(((scanline % 32) == 0) && (k051960_is_nmi_enabled(state->m_k051960))) // timer irq
-		cputag_set_input_line(timer.machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+	if (k051960_is_irq_enabled(state->m_k051960))
+		device_set_input_line(device, KONAMI_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(crimfght_state::crimfght_coin_w)
@@ -286,14 +282,12 @@ static MACHINE_RESET( crimfght )
 static MACHINE_CONFIG_START( crimfght, crimfght_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", KONAMI,XTAL_24MHz/8)		/* 052001 (verified on pcb) */
+	MCFG_CPU_ADD("maincpu", KONAMI, XTAL_24MHz/8)		/* 052001 (verified on pcb) */
 	MCFG_CPU_PROGRAM_MAP(crimfght_map)
-	MCFG_TIMER_ADD_SCANLINE("scantimer", crimfght_scanline, "screen", 0, 1)
+	MCFG_CPU_VBLANK_INT("screen", crimfght_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz) 	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(crimfght_sound_map)
-
-	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
 	MCFG_MACHINE_START(crimfght)
 	MCFG_MACHINE_RESET(crimfght)
@@ -318,12 +312,12 @@ static MACHINE_CONFIG_START( crimfght, crimfght_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_3_579545MHz) 	/* verified on pcb */
+	MCFG_SOUND_ADD("ymsnd", YM2151, XTAL_3_579545MHz)	/* verified on pcb */
 	MCFG_SOUND_CONFIG(ym2151_config)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("k007232", K007232, XTAL_3_579545MHz) 	/* verified on pcb */
+	MCFG_SOUND_ADD("k007232", K007232, XTAL_3_579545MHz)	/* verified on pcb */
 	MCFG_SOUND_CONFIG(k007232_config)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.20)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 0.20)

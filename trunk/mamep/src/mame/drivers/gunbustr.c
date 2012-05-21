@@ -1,6 +1,6 @@
 /****************************************************************************
 
-    Gunbuster                           (c) 1992 Taito
+    Gunbuster (c) 1992 Taito
 
     Driver by Bryan McPhail & David Graves.
 
@@ -38,9 +38,6 @@
         and the floor in the Doom levels has horizontal scrolling where it shouldn't.
 
         No networked machine support
-
-        Coin lockout not working (see gunbustr_input_w): perhaps this
-        was a prototype version without proper coin handling?
 
 ***************************************************************************/
 
@@ -85,23 +82,13 @@ CUSTOM_INPUT_MEMBER(gunbustr_state::coin_word_r)
 
 WRITE32_MEMBER(gunbustr_state::gunbustr_input_w)
 {
-
-#if 0
-{
-char t[64];
-COMBINE_DATA(&m_mem[offset]);
-
-sprintf(t,"%08x %08x",m_mem[0],m_mem[1]);
-popmessage(t);
-}
-#endif
-
 	switch (offset)
 	{
 		case 0x00:
 		{
-			if (ACCESSING_BITS_24_31)	/* $400000 is watchdog */
+			if (ACCESSING_BITS_24_31)
 			{
+				/* $400000 is watchdog */
 				machine().watchdog_reset();
 			}
 
@@ -111,63 +98,38 @@ popmessage(t);
 				eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
 				eeprom->write_bit(data & 0x40);
 				eeprom->set_cs_line((data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
-				return;
 			}
-			return;
+			break;
 		}
 
 		case 0x01:
 		{
 			if (ACCESSING_BITS_24_31)
 			{
-				/* game does not write a separate counter for coin 2!
-                   It should disable both coins when 9 credits reached
-                   see code $1d8a-f6... but for some reason it's not */
-				coin_lockout_w(machine(), 0, data & 0x01000000);
-				coin_lockout_w(machine(), 1, data & 0x02000000);
+				if (m_coin_lockout)
+				{
+					coin_lockout_w(machine(), 0, ~data & 0x01000000);
+					coin_lockout_w(machine(), 1, ~data & 0x02000000);
+				}
+
+				// game does not write a separate counter for coin 2! maybe in linked mode?
 				coin_counter_w(machine(), 0, data & 0x04000000);
 				coin_counter_w(machine(), 1, data & 0x04000000);
 				m_coin_word = (data >> 16) &0xffff;
 			}
-//logerror("CPU #0 PC %06x: write input %06x\n",cpu_get_pc(&device()),offset);
+			//logerror("CPU #0 PC %06x: write input %06x\n",cpu_get_pc(&device()),offset);
+			break;
 		}
 	}
 }
 
 WRITE32_MEMBER(gunbustr_state::motor_control_w)
 {
-/*
-    Standard value poked into MSW is 0x3c00
-    (0x2000 and zero are written at startup)
-
-*/
-	if (data & 0x1000000)
-	{
-	output_set_value("Player1_Gun_Recoil",1);
-	}
-	else
-	{
-	output_set_value("Player1_Gun_Recoil",0);
-	}
-
-	if (data & 0x10000)
-	{
-	output_set_value("Player2_Gun_Recoil",1);
-	}
-	else
-	{
-	output_set_value("Player2_Gun_Recoil",0);
-	}
-
-	if (data & 0x40000)
-	{
-	output_set_value("Hit_lamp",1);
-	}
-	else
-	{
-	output_set_value("Hit_lamp",0);
-	}
-
+    // Standard value poked into MSW is 0x3c00
+    // (0x2000 and zero are written at startup)
+	output_set_value("Player1_Gun_Recoil", (data & 0x1000000) ? 1 : 0);
+	output_set_value("Player2_Gun_Recoil", (data & 0x10000) ? 1 : 0);
+	output_set_value("Hit_lamp", (data & 0x40000) ? 1 : 0);
 }
 
 
@@ -330,18 +292,18 @@ static const eeprom_interface gunbustr_eeprom_interface =
 
 static const tc0480scp_interface gunbustr_tc0480scp_intf =
 {
-	1, 2,		/* gfxnum, txnum */
-	0,		/* pixels */
+	1, 2,			/* gfxnum, txnum */
+	0,				/* pixels */
 	0x20, 0x07,		/* x_offset, y_offset */
-	-1, -1,		/* text_xoff, text_yoff */
-	-1, 0,		/* flip_xoff, flip_yoff */
-	0		/* col_base */
+	-1, -1,			/* text_xoff, text_yoff */
+	-1, 0,			/* flip_xoff, flip_yoff */
+	0				/* col_base */
 };
 
 static MACHINE_CONFIG_START( gunbustr, gunbustr_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", M68EC020, 16000000)	/* 16 MHz */
+	MCFG_CPU_ADD("maincpu", M68EC020, XTAL_16MHz)
 	MCFG_CPU_PROGRAM_MAP(gunbustr_map)
 	MCFG_CPU_VBLANK_INT("screen", gunbustr_interrupt) /* VBL */
 
@@ -399,7 +361,7 @@ ROM_START( gunbustr )
 	ROM_LOAD16_BYTE( "d27-10.bin", 0x600000, 0x100000, CRC(ed894fe1) SHA1(5bf2fb6abdcf25bc525a2c3b29dbf7aca0b18fea) ) // -std-
 
 	ROM_REGION16_BE( 0x80, "eeprom", 0 )
-	ROM_LOAD16_WORD( "eeprom-gunbustr.bin", 0x0000, 0x0080, CRC(af7dc017) SHA1(5ff106cccd2679025cdd81fbc133d32148e2818c) )
+	ROM_LOAD16_WORD( "eeprom-gunbustr.bin", 0x0000, 0x0080, CRC(ef3685a1) SHA1(899b4b6dd2fd78be3a2ce00a2ef1840de9f122c3) )
 ROM_END
 
 ROM_START( gunbustru )
@@ -433,7 +395,7 @@ ROM_START( gunbustru )
 	ROM_LOAD16_BYTE( "d27-10.bin", 0x600000, 0x100000, CRC(ed894fe1) SHA1(5bf2fb6abdcf25bc525a2c3b29dbf7aca0b18fea) ) // -std-
 
 	ROM_REGION16_BE( 0x80, "eeprom", 0 )
-	ROM_LOAD16_WORD( "eeprom-gunbustr.bin", 0x0000, 0x0080, CRC(af7dc017) SHA1(5ff106cccd2679025cdd81fbc133d32148e2818c) )
+	ROM_LOAD16_WORD( "eeprom-gunbustr.bin", 0x0000, 0x0080, CRC(ef3685a1) SHA1(899b4b6dd2fd78be3a2ce00a2ef1840de9f122c3) )
 ROM_END
 
 ROM_START( gunbustrj )
@@ -467,7 +429,7 @@ ROM_START( gunbustrj )
 	ROM_LOAD16_BYTE( "d27-10.bin", 0x600000, 0x100000, CRC(ed894fe1) SHA1(5bf2fb6abdcf25bc525a2c3b29dbf7aca0b18fea) ) // -std-
 
 	ROM_REGION16_BE( 0x80, "eeprom", 0 )
-	ROM_LOAD16_WORD( "eeprom-gunbustr.bin", 0x0000, 0x0080, CRC(af7dc017) SHA1(5ff106cccd2679025cdd81fbc133d32148e2818c) )
+	ROM_LOAD16_WORD( "eeprom-gunbustr.bin", 0x0000, 0x0080, CRC(ef3685a1) SHA1(899b4b6dd2fd78be3a2ce00a2ef1840de9f122c3) )
 ROM_END
 
 READ32_MEMBER(gunbustr_state::main_cycle_r)
@@ -482,9 +444,18 @@ static DRIVER_INIT( gunbustr )
 {
 	/* Speedup handler */
 	gunbustr_state *state = machine.driver_data<gunbustr_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x203acc, 0x203acf, read32_delegate(FUNC(gunbustr_state::main_cycle_r),state));
+	state->m_maincpu->memory().space(AS_PROGRAM)->install_read_handler(0x203acc, 0x203acf, read32_delegate(FUNC(gunbustr_state::main_cycle_r),state));
+}
+
+static DRIVER_INIT( gunbustrj )
+{
+	DRIVER_INIT_CALL(gunbustr);
+
+	// no coin lockout, perhaps this was a prototype version without proper coin handling?
+	gunbustr_state *state = machine.driver_data<gunbustr_state>();
+	state->m_coin_lockout = false;
 }
 
 GAME( 1992, gunbustr,  0,        gunbustr, gunbustr, gunbustr, ORIENTATION_FLIP_X, "Taito Corporation Japan", "Gunbuster (World)", 0 )
 GAME( 1992, gunbustru, gunbustr, gunbustr, gunbustr, gunbustr, ORIENTATION_FLIP_X, "Taito America Corporation", "Gunbuster (US)", 0 )
-GAME( 1992, gunbustrj, gunbustr, gunbustr, gunbustr, gunbustr, ORIENTATION_FLIP_X, "Taito Corporation", "Gunbuster (Japan)", 0 )
+GAME( 1992, gunbustrj, gunbustr, gunbustr, gunbustr, gunbustrj,ORIENTATION_FLIP_X, "Taito Corporation", "Gunbuster (Japan)", 0 )

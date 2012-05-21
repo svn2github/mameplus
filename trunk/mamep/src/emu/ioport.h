@@ -866,11 +866,13 @@ public:
 	// construction/destruction
 	natural_keyboard(running_machine &machine);
 
+	void initialize();
+
 	// getters and queries
 	running_machine &machine() const { return m_machine; }
 	bool empty() const { return (m_bufbegin == m_bufend); }
 	bool full() const { return ((m_bufend + 1) % m_buffer.count()) == m_bufbegin; }
-	bool can_post() const { return (!m_queue_chars.isnull() || m_keycode_map.count() == 0); }
+	bool can_post() const { return (!m_queue_chars.isnull() || m_keycode_map.count() != 0); }
 	bool is_posting() const { return (!empty() || (!m_charqueue_empty.isnull() && !m_charqueue_empty())); }
 
 	// configuration

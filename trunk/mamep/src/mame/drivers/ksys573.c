@@ -108,7 +108,9 @@ N GUITARFREAKS 10thMIX                          2003.10    GCD10 JA          D10
 N *GUITARFREAKS 11thMIX                         2004.04
 G *Gun Mania                                    2000.07    G?906 JA          (no CD)
 ? *Gun Mania Zone Plus                          2000.10
-P Hyper Bishi Bashi Champ                       1998.07    GC908 JA          908    A02
+P Handle Champ                                  1997.12    GQ710 JA          (no CD)
+P Hyper Bishi Bashi Champ                       1998.07    GC876 EA          (no CD)
+P Hyper Bishi Bashi Champ - 2 Player            1999.08    GC908 JA          908    A02
 P Jikkyou Powerful Pro Yakyuu EX                1998.04    GX802 JA          802 JA B02
 P *Jikkyou Powerful Pro Yakyuu EX 98            1998.08
 ? *Kick & Kick                                  2001
@@ -3611,7 +3613,34 @@ static INPUT_PORTS_START( gunmania )
 	PORT_BIT( 0x00000080, IP_ACTIVE_HIGH, IPT_BUTTON8 ) PORT_PLAYER(4) PORT_CODE(KEYCODE_I)
 INPUT_PORTS_END
 
+static INPUT_PORTS_START( hndlchmp )
+	PORT_INCLUDE( konami573 )
+
+	PORT_START( "analog0" )
+	PORT_BIT( 0xff, 0xc0, IPT_PEDAL ) PORT_MINMAX( 0xc0, 0xf0 ) PORT_SENSITIVITY( 100 ) PORT_KEYDELTA( 20 ) PORT_PLAYER( 2 )
+
+	PORT_START( "analog1" )
+	PORT_BIT( 0xff, 0xc0, IPT_PEDAL ) PORT_MINMAX( 0xc0, 0xf0 ) PORT_SENSITIVITY( 100 ) PORT_KEYDELTA( 20 ) PORT_PLAYER( 1 )
+
+	PORT_START( "analog2" )
+	PORT_BIT( 0xff, 0x7f, IPT_PADDLE ) PORT_MINMAX( 0x48, 0xb7 ) PORT_SENSITIVITY( 25 ) PORT_KEYDELTA( 30 ) PORT_PLAYER( 2 )
+
+	PORT_START( "analog3" )
+	PORT_BIT( 0xff, 0x7f, IPT_PADDLE ) PORT_MINMAX( 0x48, 0xb7 ) PORT_SENSITIVITY( 25 ) PORT_KEYDELTA( 30 ) PORT_PLAYER( 1 )
+INPUT_PORTS_END
+
 static INPUT_PORTS_START( hyperbbc )
+	PORT_INCLUDE( konami573 )
+
+	PORT_MODIFY("IN2")
+
+	PORT_BIT( 0x00000100, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(3) /* P1 LEFT */
+	PORT_BIT( 0x00000200, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(3) /* P1 RIGHT */
+	PORT_BIT( 0x00000400, IP_ACTIVE_LOW, IPT_START3 ) /* P1 UP */
+	PORT_BIT( 0x00000800, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(3) /* P1 DOWN */
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( hypbbc2p )
 	PORT_INCLUDE( konami573 )
 
 	PORT_MODIFY("IN2")
@@ -3687,7 +3716,12 @@ INPUT_PORTS_END
 
 #define SYS573_BIOS_A \
 	ROM_REGION32_LE( 0x080000, "bios", 0 ) \
-	ROM_LOAD( "700a01.22g",   0x0000000, 0x080000, CRC(11812ef8) SHA1(e1284add4aaddd5337bd7f4e27614460d52b5b48))
+	ROM_SYSTEM_BIOS( 0, "std",        "Standard" ) \
+	ROMX_LOAD( "700a01.22g",   0x0000000, 0x080000, CRC(11812ef8) SHA1(e1284add4aaddd5337bd7f4e27614460d52b5b48), ROM_BIOS(1) ) \
+	ROM_SYSTEM_BIOS( 1, "gchgchmp",   "Found on Gachagachamp" ) \
+	ROMX_LOAD( "700_a01.22g",  0x000000,  0x080000, CRC(39ebb0ca) SHA1(9aab8c637dd2be84d79007e52f108abe92bf29dd), ROM_BIOS(2) ) \
+	ROM_SYSTEM_BIOS( 2, "dsem2",      "Found on Dancing Stage Euro Mix 2" ) \
+	ROMX_LOAD( "700b01.22g",   0x0000000, 0x080000, CRC(6cf852af) NO_DUMP, ROM_BIOS(3) )
 
 #define SYS573_DIGITAL_ID \
 	ROM_REGION( 0x000008, "digital_id", 0 ) /* digital board id */		\
@@ -4805,6 +4839,30 @@ ROM_START( fghtmnu )
 	DISK_IMAGE_READONLY( "918xxb02", 0, BAD_DUMP SHA1(8ced8952fff3e70ce0621a491f0973af5a6ccd82) )
 ROM_END
 
+ROM_START( hndlchmp )
+	SYS573_BIOS_A
+
+	ROM_REGION( 0x200000, "onboard.0", 0 ) /* onboard flash */
+	ROM_LOAD( "710ja.31m",    0x000000, 0x200000, CRC(f5f71b1d) SHA1(7d518e5333f44e6ec921a1e882df970953814b6e) )
+	ROM_REGION( 0x200000, "onboard.1", 0 ) /* onboard flash */
+	ROM_LOAD( "710ja.27m",    0x000000, 0x200000, CRC(b3d8c037) SHA1(678b88c37111d1fde8996c7d71b66ec1c4f161fe) )
+	ROM_REGION( 0x200000, "onboard.2", 0 ) /* onboard flash */
+	ROM_LOAD( "710ja.31l",    0x000000, 0x200000, CRC(78e8556c) SHA1(9f6bb651ddeb042ebf1ba057d4932494149f47d6) )
+	ROM_REGION( 0x200000, "onboard.3", 0 ) /* onboard flash */
+	ROM_LOAD( "710ja.27l",    0x000000, 0x200000, CRC(f6a87155) SHA1(269bfdf05ee4ab2e4b87b6e92045e56d0557a576) )
+	ROM_REGION( 0x200000, "onboard.4", 0 ) /* onboard flash */
+	ROM_LOAD( "710ja.31j",    0x000000, 0x200000, CRC(bdc05d16) SHA1(ee397950f7e7e910fdc05737f99604e43d288719) )
+	ROM_REGION( 0x200000, "onboard.5", 0 ) /* onboard flash */
+	ROM_LOAD( "710ja.27j",    0x000000, 0x200000, CRC(ad925ed3) SHA1(e3222308961851cccee2de9da804f74854907451) )
+	ROM_REGION( 0x200000, "onboard.6", 0 ) /* onboard flash */
+	ROM_LOAD( "710ja.31h",    0x000000, 0x200000, CRC(a0293108) SHA1(2e5651a4c1b8e021cc3060db138c9fe7c28caa3b) )
+	ROM_REGION( 0x200000, "onboard.7", 0 ) /* onboard flash */
+	ROM_LOAD( "710ja.27h",    0x000000, 0x200000, CRC(aed26efe) SHA1(20b6fccd0bc5495d8258b976f72d330d6315c6f6) )
+
+	ROM_REGION( 0x002000, "m48t58", 0 ) /* timekeeper */
+	ROM_LOAD( "710ja.22h",    0x000000, 0x002000, CRC(b784de91) SHA1(048157e9ad6df46656dbac6349b0c821254e1c37) )
+ROM_END
+
 ROM_START( gtrfrks )
 	SYS573_BIOS_A
 
@@ -5158,6 +5216,54 @@ ROM_END
 ROM_START( hyperbbc )
 	SYS573_BIOS_A
 
+	ROM_REGION( 0x200000, "onboard.0", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.31m",    0x000000, 0x200000, CRC(a76043cb) SHA1(1c37034298abf3219d0bba29f4fcea8d83782926) )
+	ROM_REGION( 0x200000, "onboard.1", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.27m",    0x000000, 0x200000, CRC(689ddd94) SHA1(512ca1529695f4f79ca8c1b8f64bb0067137e430) )
+	ROM_REGION( 0x200000, "onboard.2", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.31l",    0x000000, 0x200000, CRC(d011c7a5) SHA1(8861b62c8b654b8e719600a37337ae44e6438899) )
+	ROM_REGION( 0x200000, "onboard.3", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.27l",    0x000000, 0x200000, CRC(950a5267) SHA1(373a7305a090d1e347bfeb62cc2db55cde2a106e) )
+	ROM_REGION( 0x200000, "onboard.4", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.31j",    0x000000, 0x200000, CRC(ae497ebc) SHA1(ef131e60726db94f0d9ceab70bce02c0de080ede) )
+	ROM_REGION( 0x200000, "onboard.5", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.27j",    0x000000, 0x200000, CRC(9c156b1b) SHA1(bf07d71cc1f7e9e14beb9f9dfb71667ef2b54f8d) )
+	ROM_REGION( 0x200000, "onboard.6", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.31h",    0x000000, 0x200000, CRC(368372fb) SHA1(5cc4cb72e182c9e4d0737352e029fd703ba2f516) )
+	ROM_REGION( 0x200000, "onboard.7", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.27h",    0x000000, 0x200000, CRC(49175f99) SHA1(0154f6332ed210b6f0af20ba622133cde0994b7f) )
+
+	ROM_REGION( 0x002000, "m48t58", 0 ) /* timekeeper */
+	ROM_LOAD( "876ea.22h",    0x000000, 0x002000, CRC(8e11d196) SHA1(e7442fdd611f4290d531b1ebdc9f487e323fd531) )
+ROM_END
+
+ROM_START( hyperbbca )
+	SYS573_BIOS_A
+
+	ROM_REGION( 0x200000, "onboard.0", 0 ) /* onboard flash */
+	ROM_LOAD( "876aa.31m",    0x000000, 0x200000, CRC(677f8b0a) SHA1(a4c1029a70f5733f64a4f4dde4a568d2cb4dd11d) )
+	ROM_REGION( 0x200000, "onboard.1", 0 ) /* onboard flash */
+	ROM_LOAD( "876aa.27m",    0x000000, 0x200000, CRC(0af35a7d) SHA1(086ad70c8bf4bbe5d9748e4d47c639b4250270fc) )
+	ROM_REGION( 0x200000, "onboard.2", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.31l",    0x000000, 0x200000, CRC(d011c7a5) SHA1(8861b62c8b654b8e719600a37337ae44e6438899) )
+	ROM_REGION( 0x200000, "onboard.3", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.27l",    0x000000, 0x200000, CRC(950a5267) SHA1(373a7305a090d1e347bfeb62cc2db55cde2a106e) )
+	ROM_REGION( 0x200000, "onboard.4", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.31j",    0x000000, 0x200000, CRC(ae497ebc) SHA1(ef131e60726db94f0d9ceab70bce02c0de080ede) )
+	ROM_REGION( 0x200000, "onboard.5", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.27j",    0x000000, 0x200000, CRC(9c156b1b) SHA1(bf07d71cc1f7e9e14beb9f9dfb71667ef2b54f8d) )
+	ROM_REGION( 0x200000, "onboard.6", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.31h",    0x000000, 0x200000, CRC(368372fb) SHA1(5cc4cb72e182c9e4d0737352e029fd703ba2f516) )
+	ROM_REGION( 0x200000, "onboard.7", 0 ) /* onboard flash */
+	ROM_LOAD( "876ea.27h",    0x000000, 0x200000, CRC(49175f99) SHA1(0154f6332ed210b6f0af20ba622133cde0994b7f) )
+
+	ROM_REGION( 0x002000, "m48t58", 0 ) /* timekeeper */
+	ROM_LOAD( "876aa.22h",    0x000000, 0x002000, CRC(3c17f026) SHA1(8ed33aca99f5d09d5792e136e700e3ac628018e8) )
+ROM_END
+
+ROM_START( hypbbc2p )
+	SYS573_BIOS_A
+
 	ROM_REGION( 0x0000084, "install_eeprom", 0 ) /* security cart eeprom */
 	ROM_LOAD( "gx908ja.u1",  0x000000, 0x000084, BAD_DUMP CRC(fb6c0635) SHA1(0d974462a0a244ffb1a651adb316242cde427756) )
 
@@ -5165,7 +5271,7 @@ ROM_START( hyperbbc )
 	DISK_IMAGE_READONLY( "908a02", 0, SHA1(573194ca9938c30415fc88dcc0c0152dd3024d71) )
 ROM_END
 
-ROM_START( hyperbbck )
+ROM_START( hypbbc2pk )
 	SYS573_BIOS_A
 
 	ROM_REGION( 0x0000084, "install_eeprom", 0 ) /* security cart eeprom */
@@ -5349,9 +5455,9 @@ ROM_START( salarymc )
 	DISK_IMAGE_READONLY( "gca18jaa", 0, SHA1(8adcc8ef76cbfb9f47fec5702b0b200565b5c561) )
 ROM_END
 
-// System 573 BIOS (we're missing the later version that boots up with a pseudo-GUI)
-GAME( 1998, sys573,   0,        konami573,    konami573, konami573,  ROT0, "Konami", "System 573 BIOS", GAME_IS_BIOS_ROOT )
+GAME( 1997, sys573,   0,        konami573,    konami573, konami573,  ROT0, "Konami", "System 573 BIOS", GAME_IS_BIOS_ROOT )
 
+GAME( 1997, hndlchmp, sys573,   konami573,    hndlchmp,  konami573,  ROT0, "Konami", "Handle Champ (GQ710 VER. JAB)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1998, darkhleg, sys573,   konami573x,   konami573, konami573,  ROT0, "Konami", "Dark Horse Legend (GX706 VER. JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1998, fbaitbc,  sys573,   k573baitx,    fbaitbc,   ge765pwbba, ROT0, "Konami", "Fisherman's Bait - A Bass Challenge (GE765 VER. UAB)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1998, bassangl, fbaitbc,  k573baitx,    fbaitbc,   ge765pwbba, ROT0, "Konami", "Bass Angler (GE765 VER. JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
@@ -5369,6 +5475,8 @@ GAME( 1998, ddrjb,    dstage,   konami573x,   ddr,       ddr,        ROT0, "Kona
 GAME( 1999, ddra,     dstage,   konami573x,   ddr,       ddr,        ROT0, "Konami", "Dance Dance Revolution (GN845 VER. AAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1998, fbait2bc, sys573,   k573baitx,    fbaitbc,   ge765pwbba, ROT0, "Konami", "Fisherman's Bait 2 - A Bass Challenge (GE865 VER. UAB)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1998, bassang2, fbait2bc, k573baitx,    fbaitbc,   ge765pwbba, ROT0, "Konami", "Bass Angler 2 (GE865 VER. JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, hyperbbc, sys573,   konami573,    hyperbbc,  konami573,  ROT0, "Konami", "Hyper Bishi Bashi Champ (GQ876 VER. EAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, hyperbbca,hyperbbc, konami573,    hyperbbc,  konami573,  ROT0, "Konami", "Hyper Bishi Bashi Champ (GQ876 VER. AAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1999, drmn,     sys573,   konami573x,   drmn,      drmn,       ROT0, "Konami", "DrumMania (GQ881 VER. JAD)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
 GAME( 1999, gtrfrks,  sys573,   konami573x,   gtrfrks,   gtrfrks,    ROT0, "Konami", "Guitar Freaks (GQ886 VER. EAC)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1999, gtrfrksu, gtrfrks,  konami573x,   gtrfrks,   gtrfrks,    ROT0, "Konami", "Guitar Freaks (GQ886 VER. UAC)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
@@ -5395,8 +5503,8 @@ GAME( 1999, ddr3mj,   ddr3mk,   pccard2dyyi,  ddr,       ddrdigital, ROT0, "Kona
 GAME( 1999, ddrsbm,   sys573,   k573dyi,      ddrsolo,   ddrsolo,    ROT0, "Konami", "Dance Dance Revolution Solo Bass Mix (GQ894 VER. JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
 GAME( 1999, ddrs2k,   sys573,   k573dyyi,     ddrsolo,   ddrsolo,    ROT0, "Konami", "Dance Dance Revolution Solo 2000 (GC905 VER. AAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) /* BOOT VER 1.3 */
 GAME( 1999, ddrs2kj,  ddrs2k,   k573dyyi,     ddrsolo,   ddrsolo,    ROT0, "Konami", "Dance Dance Revolution Solo 2000 (GC905 VER. JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) /* BOOT VER 1.2 */
-GAME( 1999, hyperbbc, sys573,   konami573y,   hyperbbc,  hyperbbc,   ROT0, "Konami", "Hyper Bishi Bashi Champ (GX908 1999/08/24 VER. JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1999, hyperbbck,hyperbbc, konami573y,   hyperbbc,  hyperbbc,   ROT0, "Konami", "Hyper Bishi Bashi Champ (GX908 1999/08/24 VER. KAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1999, hypbbc2p, sys573,   konami573y,   hypbbc2p,  hyperbbc,   ROT0, "Konami", "Hyper Bishi Bashi Champ - 2 Player (GX908 1999/08/24 VER. JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1999, hypbbc2pk,hypbbc2p, konami573y,   hypbbc2p,  hyperbbc,   ROT0, "Konami", "Hyper Bishi Bashi Champ - 2 Player (GX908 1999/08/24 VER. KAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1999, dsfdct,   sys573,   pccard2dyyi,  ddr,       ddrdigital, ROT0, "Konami", "Dancing Stage featuring Dreams Come True (GC910 VER. JCA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
 GAME( 1999, dsfdcta,  dsfdct,   pccard2yyi,   ddr,       ddr,        ROT0, "Konami", "Dancing Stage featuring Dreams Come True (GC910 VER. JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1999, drmn2m,   sys573,   k573dxzi,     drmn,      drmndigital,ROT0, "Konami", "DrumMania 2nd Mix (GE912 VER. JAB)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) /* BOOT VER 1.5 */
@@ -5415,7 +5523,7 @@ GAME( 2000, gtrfrk3m, sys573,   pccard1dxzi,  gtrfrks,   gtrfrkdigital,ROT0, "Ko
 GAME( 2000, gtfrk3ma, gtrfrk3m, pccard1dxzi,  gtrfrks,   gtrfrkdigital,ROT0, "Konami", "Guitar Freaks 3rd Mix (GE949 VER. JAB)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) /* BOOT VER 1.4 */
 GAME( 2000, gtfrk3mb, gtrfrk3m, pccard1dzi,   gtrfrks,   gtrfrkdigital,ROT0, "Konami", "Guitar Freaks 3rd Mix - security cassette versionup (949JAZ02)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) /* BOOT VER 1.4 */
 GAME( 2000, pnchmn2,  sys573,   punchmania2,  punchmania,punchmania, ROT0, "Konami", "Punch Mania 2: Hokuto No Ken (GQA09 JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) /* motor/artwork/network */
-GAME( 2000, salarymc, sys573,   konami573yi,  hyperbbc,  salarymc,   ROT0, "Konami", "Salary Man Champ (GCA18 VER. JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 2000, salarymc, sys573,   konami573yi,  hypbbc2p,  salarymc,   ROT0, "Konami", "Salary Man Champ (GCA18 VER. JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 2000, ddr3mp,   sys573,   pccard2dxzi,  ddr,       ddrdigital, ROT0, "Konami", "Dance Dance Revolution 3rd Mix Plus (G*A22 VER. JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) /* BOOT VER 1.6 */
 GAME( 2000, pcnfrk3m, sys573,   k573dxzi,     drmn,      drmndigital,ROT0, "Konami", "Percussion Freaks 3rd Mix (G*A23 VER. KAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) /* BOOT VER 1.8 */
 GAME( 2000, drmn3m,   pcnfrk3m, k573dxzi,     drmn,      drmndigital,ROT0, "Konami", "DrumMania 3rd Mix (G*A23 VER. JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) /* BOOT VER 1.8 */

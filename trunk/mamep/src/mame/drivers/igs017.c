@@ -44,7 +44,7 @@ Notes:
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
 #include "cpu/z180/z180.h"
-#include "machine/8255ppi.h"
+#include "machine/i8255.h"
 #include "sound/2413intf.h"
 #include "sound/okim6295.h"
 
@@ -80,8 +80,12 @@ public:
 	UINT8 m_hopper;
 	UINT16 m_igs_magic[2];
 	UINT8 m_scramble_data;
-	UINT8 m_prot[2];
 	int m_irq1_enable;
+
+	// lhzb2a protection:
+	UINT16 m_prot_regs[2], m_prot_val, m_prot_word, m_prot_m3, m_prot_mf;
+	UINT8 m_prot2;
+
 	int m_irq2_enable;
 	DECLARE_WRITE8_MEMBER(video_disable_w);
 	DECLARE_WRITE16_MEMBER(video_disable_lsb_w);
@@ -116,8 +120,15 @@ public:
 	DECLARE_READ16_MEMBER(lhzb2a_input_r);
 	DECLARE_WRITE16_MEMBER(lhzb2a_input_addr_w);
 	DECLARE_WRITE16_MEMBER(lhzb2a_input_select_w);
-	DECLARE_WRITE16_MEMBER(lhzb2a_magic_w);
-	DECLARE_READ16_MEMBER(lhzb2a_magic_r);
+
+	DECLARE_WRITE16_MEMBER(lhzb2a_prot_w);
+	DECLARE_READ16_MEMBER(lhzb2a_prot_r);
+
+	DECLARE_WRITE16_MEMBER(lhzb2a_prot2_reset_w);
+	DECLARE_WRITE16_MEMBER(lhzb2a_prot2_inc_w);
+	DECLARE_WRITE16_MEMBER(lhzb2a_prot2_dec_w);
+	DECLARE_READ16_MEMBER(lhzb2a_prot2_r);
+
 	DECLARE_WRITE16_MEMBER(lhzb2_magic_w);
 	DECLARE_READ16_MEMBER(lhzb2_magic_r);
 	DECLARE_WRITE16_MEMBER(slqz2_paletteram_w);
@@ -1031,21 +1042,6 @@ static DRIVER_INIT( lhzb2 )
 
 //lhzb2a
 
-static void lhzb2a_patch_rom(running_machine &machine)
-{
-	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
-
-	// Prot. checks:
-	rom[0x09c52/2] = 0x6026;	// 009C52: 6726    beq $9c7a
-	rom[0x0c62c/2] = 0x6026;	// 00C62C: 6726    beq $c654
-	rom[0x0ea10/2] = 0x6030;	// 00EA10: 6730    beq $ea42
-	rom[0x23472/2] = 0x6026;	// 023472: 6726    beq $2349a
-	rom[0x6601a/2] = 0x6024;	// 06601A: 6724    beq $66040
-
-	// ROM check:
-	rom[0x32ab6/2] = 0x604e;	// 032AB6: 674E    beq $32b06
-}
-
 static DRIVER_INIT( lhzb2a )
 {
 	int i;
@@ -1106,7 +1102,6 @@ static DRIVER_INIT( lhzb2a )
 
 	lhzb2_decrypt_tiles(machine);
 	lhzb2_decrypt_sprites(machine);
-	lhzb2a_patch_rom(machine);
 }
 
 
@@ -1302,7 +1297,7 @@ static ADDRESS_MAP_START( iqblocka_io, AS_IO, 8, igs017_state )
 
 //  AM_RANGE(0x200a, 0x200a) AM_WRITENOP
 
-	AM_RANGE( 0x2010, 0x2013 ) AM_DEVREAD_LEGACY("ppi8255", ppi8255_r)
+	AM_RANGE( 0x2010, 0x2013 ) AM_DEVREAD("ppi8255", i8255_device, read)
 	AM_RANGE( 0x2012, 0x2012 ) AM_WRITE(video_disable_w )
 
 	AM_RANGE( 0x2014, 0x2014 ) AM_WRITE(nmi_enable_w )
@@ -1424,7 +1419,7 @@ static ADDRESS_MAP_START( mgcs, AS_PROGRAM, 16, igs017_state )
 	AM_RANGE( 0x49c002, 0x49c003 ) AM_READ(mgcs_magic_r )
 	AM_RANGE( 0xa02000, 0xa02fff ) AM_READWRITE(spriteram_lsb_r, spriteram_lsb_w ) AM_SHARE("spriteram")
 	AM_RANGE( 0xa03000, 0xa037ff ) AM_RAM_WRITE(mgcs_paletteram_w ) AM_SHARE("paletteram")
-	AM_RANGE( 0xa04020, 0xa04027 ) AM_DEVREAD8_LEGACY("ppi8255", ppi8255_r, 0x00ff )
+	AM_RANGE( 0xa04020, 0xa04027 ) AM_DEVREAD8("ppi8255", i8255_device, read, 0x00ff)
 	AM_RANGE( 0xa04024, 0xa04025 ) AM_WRITE(video_disable_lsb_w )
 	AM_RANGE( 0xa04028, 0xa04029 ) AM_WRITE(irq2_enable_w )
 	AM_RANGE( 0xa0402a, 0xa0402b ) AM_WRITE(irq1_enable_w )
@@ -1521,7 +1516,7 @@ static ADDRESS_MAP_START( sdmg2, AS_PROGRAM, 16, igs017_state )
 	AM_RANGE(0x1f0000, 0x1fffff) AM_RAM
 	AM_RANGE(0x202000, 0x202fff) AM_READWRITE(spriteram_lsb_r, spriteram_lsb_w ) AM_SHARE("spriteram")
 	AM_RANGE(0x203000, 0x2037ff) AM_RAM_WRITE(sdmg2_paletteram_w ) AM_SHARE("paletteram")
-	AM_RANGE(0x204020, 0x204027) AM_DEVREAD8_LEGACY("ppi8255", ppi8255_r, 0x00ff )
+	AM_RANGE(0x204020, 0x204027) AM_DEVREAD8("ppi8255", i8255_device, read, 0x00ff)
 	AM_RANGE(0x204024, 0x204025) AM_WRITE(video_disable_lsb_w )
 	AM_RANGE(0x204028, 0x204029) AM_WRITE(irq2_enable_w )
 	AM_RANGE(0x20402a, 0x20402b) AM_WRITE(irq1_enable_w )
@@ -1643,7 +1638,7 @@ static ADDRESS_MAP_START( mgdha_map, AS_PROGRAM, 16, igs017_state )
 	AM_RANGE(0xa02000, 0xa02fff) AM_READWRITE(spriteram_lsb_r, spriteram_lsb_w ) AM_SHARE("spriteram")
 	AM_RANGE(0xa03000, 0xa037ff) AM_RAM_WRITE(sdmg2_paletteram_w ) AM_SHARE("paletteram")
 //  AM_RANGE(0xa04014, 0xa04015) // written with FF at boot
-	AM_RANGE(0xa04020, 0xa04027) AM_DEVREAD8_LEGACY("ppi8255", ppi8255_r, 0x00ff )
+	AM_RANGE(0xa04020, 0xa04027) AM_DEVREAD8("ppi8255", i8255_device, read, 0x00ff)
 	AM_RANGE(0xa04024, 0xa04025) AM_WRITE(video_disable_lsb_w )
 	AM_RANGE(0xa04028, 0xa04029) AM_WRITE(irq2_enable_w )
 	AM_RANGE(0xa0402a, 0xa0402b) AM_WRITE(irq1_enable_w )
@@ -1735,7 +1730,7 @@ static ADDRESS_MAP_START( tjsb_io, AS_IO, 8, igs017_state )
 
 //  AM_RANGE(0x200a, 0x200a) AM_WRITENOP
 
-	AM_RANGE( 0x2010, 0x2013 ) AM_DEVREAD_LEGACY("ppi8255", ppi8255_r)
+	AM_RANGE( 0x2010, 0x2013 ) AM_DEVREAD("ppi8255", i8255_device, read)
 	AM_RANGE( 0x2012, 0x2012 ) AM_WRITE(video_disable_w )
 
 	AM_RANGE( 0x2014, 0x2014 ) AM_WRITE(nmi_enable_w )
@@ -1819,7 +1814,7 @@ static ADDRESS_MAP_START( lhzb2, AS_PROGRAM, 16, igs017_state )
 	AM_RANGE(0x910002, 0x910003) AM_READ( lhzb2_magic_r )
 	AM_RANGE(0xb02000, 0xb02fff) AM_READWRITE( spriteram_lsb_r, spriteram_lsb_w ) AM_SHARE("spriteram")
 	AM_RANGE(0xb03000, 0xb037ff) AM_RAM_WRITE( lhzb2a_paletteram_w ) AM_SHARE("paletteram")
-	AM_RANGE(0xb04020, 0xb04027) AM_DEVREAD8_LEGACY( "ppi8255", ppi8255_r, 0x00ff )
+	AM_RANGE(0xb04020, 0xb04027) AM_DEVREAD8("ppi8255", i8255_device, read, 0x00ff)
 	AM_RANGE(0xb04024, 0xb04025) AM_WRITE( video_disable_lsb_w )
 	AM_RANGE(0xb04028, 0xb04029) AM_WRITE( irq2_enable_w )
 	AM_RANGE(0xb0402a, 0xb0402b) AM_WRITE( irq1_enable_w )
@@ -1832,40 +1827,237 @@ ADDRESS_MAP_END
 // lhzb2a
 // To do: what devices are on this PCB?
 
+/***************************************************************************
 
-WRITE16_MEMBER(igs017_state::lhzb2a_magic_w)
+    LHZB2A Protection (similar to that found in igs011.c)
+
+    ---- Protection 1 (parametric bitswaps) ----
+
+    An address base register (xx = F0 at reset) determines where this protection device,
+    as well as game inputs and the address base register itself are mapped in memory:
+    inputs are mapped at xx8000, protection at xx4000 and base register at xxc000.
+
+    The protection involves an internal 16-bit value (val), two mode registers
+    (mode_f = 0..f, mode_3 = 0..3) and 8 x 16-bit registers (word).
+
+    The two modes affect the bitswap, and are set by loading the (same) mode-specific value
+    to all the word registers, and then writing to the mode_f or mode_3 trigger register.
+
+    The bitswap of the internal value is then performed writing to one of 8 trigger registers,
+    according to the modes, trigger register and value written.
+
+    The result is read through a fixed bitswap of the internal value.
+
+    ---- Protection 2 (simple inc,dec + bitswapped read) ----
+
+    The chip holds an internal 8-bit value. It is manipulated by issuing commands,
+    where each command is assigned a specific address range, and is triggered
+    by writing FF to that range. Possible commands:
+
+    - INC:   increment value
+    - DEC:   decrement value
+    - RESET: value = 0
+
+    The protection value is read from an additional address range:
+
+    - READ:  read bitswap(value). Only 4 bits are checked.
+
+***************************************************************************/
+
+// Bitswap protection
+
+WRITE16_MEMBER(igs017_state::lhzb2a_prot_w)
 {
-	COMBINE_DATA(&m_igs_magic[offset]);
+	COMBINE_DATA(&m_prot_regs[offset]);
 
 	if (offset == 0)
 		return;
 
-	switch(m_igs_magic[0])
+	switch(m_prot_regs[0])
 	{
-		// to do: m_prot values
-		default:
-			logerror("%s: warning, writing to igs_magic %02x = %02x\n", machine().describe_context(), m_igs_magic[0], data);
-	}
-}
-
-READ16_MEMBER(igs017_state::lhzb2a_magic_r)
-{
-	switch(m_igs_magic[0])
-	{
-		case 0x03:
+		case 0x40:	// prot_word
 		{
-			UINT8 a = BITSWAP8((UINT16)m_prot[0], 9,9,1,9,2,5,4,7);	// 9 means 0 value
-			UINT8 b = BITSWAP8((UINT16)m_prot[1], 5,2,9,7,9,9,9,9);
-			return a | b;
+			m_prot_word = (m_prot_word << 8) | (m_prot_regs[1] & 0xff);
+			break;
+		}
+		case 0x41:
+		case 0x42:
+		case 0x43:
+		case 0x44:
+		case 0x45:
+		case 0x46:
+		case 0x47:
+			// same value as reg 0x40
+			break;
+
+		case 0x48:	// mode_f
+		{
+			switch (m_prot_word)
+			{
+				case 0x9a96:	m_prot_mf = 0x0;	break;
+				case 0x9a06:	m_prot_mf = 0x1;	break;
+				case 0x9a90:	m_prot_mf = 0x2;	break;
+				case 0x9a00:	m_prot_mf = 0x3;	break;
+				case 0x0a96:	m_prot_mf = 0x4;	break;
+				case 0x0a06:	m_prot_mf = 0x5;	break;
+				case 0x0a90:	m_prot_mf = 0x6;	break;
+				case 0x0a00:	m_prot_mf = 0x7;	break;
+				case 0x9096:	m_prot_mf = 0x8;	break;
+				case 0x9006:	m_prot_mf = 0x9;	break;
+				case 0x9090:	m_prot_mf = 0xa;	break;
+				case 0x9000:	m_prot_mf = 0xb;	break;
+				case 0x0096:	m_prot_mf = 0xc;	break;
+				case 0x0006:	m_prot_mf = 0xd;	break;
+				case 0x0090:	m_prot_mf = 0xe;	break;
+				case 0x0000:	m_prot_mf = 0xf;	break;
+				default:
+					m_prot_mf = 0;
+					logerror("%s: warning, setting mode_f with unknown prot_word = %02x\n", machine().describe_context(), m_prot_word);
+					return;
+			}
+
+			logerror("%s: mode_f = %02x\n", machine().describe_context(), m_prot_mf);
+			break;
+		}
+
+		case 0x50:	// mode_3
+		{
+			switch (m_prot_word & 0xff)
+			{
+				case 0x53:	m_prot_m3 = 0x0;	break;
+				case 0x03:	m_prot_m3 = 0x1;	break;
+				case 0x50:	m_prot_m3 = 0x2;	break;
+				case 0x00:	m_prot_m3 = 0x3;	break;
+				default:
+					m_prot_m3 = 0;
+					logerror("%s: warning, setting mode_3 with unknown prot_word = %02x\n", machine().describe_context(), m_prot_word);
+					return;
+			}
+
+			logerror("%s: mode_3 = %02x\n", machine().describe_context(), m_prot_m3);
+			break;
+		}
+
+		case 0x80:	// do bitswap
+		case 0x81:
+		case 0x82:
+		case 0x83:
+		case 0x84:
+		case 0x85:
+		case 0x86:
+		case 0x87:
+		{
+			UINT16 x  = m_prot_val;
+			UINT16 mf = m_prot_mf;
+
+			UINT16 bit0 = 0;
+			switch (m_prot_m3)
+			{
+				case 0:	bit0 = BIT(~x,12) ^ BIT(~x,15) ^ BIT( x, 8) ^ BIT(~x, 3);	break;
+				case 1:	bit0 = BIT(~x, 6) ^ BIT(~x,15) ^ BIT(~x, 3) ^ BIT(~x, 9);	break;
+				case 2:	bit0 = BIT(~x, 3) ^ BIT(~x,15) ^ BIT(~x, 5) ^ BIT( x, 4);	break;
+				case 3:	bit0 = BIT(~x,15) ^ BIT(~x, 9) ^ BIT( x,12) ^ BIT(~x,11);	break;
+			}
+
+			UINT16 xor0 = BIT(m_prot_regs[1], m_prot_regs[0] - 0x80);
+			bit0 ^= xor0;
+
+			m_prot_val	=	(	 BIT( x,14)					<< 15	) |
+							(	(BIT(~x,13) ^ BIT(mf,3))	<< 14	) |
+							(	 BIT( x,12)					<< 13	) |
+							(	 BIT(~x,11)					<< 12	) |
+							(	(BIT( x,10) ^ BIT(mf,2))	<< 11	) |
+							(	 BIT( x, 9)					<< 10	) |
+							(	 BIT( x, 8)					<<  9	) |
+							(	(BIT(~x, 7) ^ BIT(mf,1))	<<  8	) |
+							(	 BIT( x, 6)					<<  7	) |
+							(	 BIT( x, 5)					<<  6	) |
+							(	(BIT(~x, 4) ^ BIT(mf,0))	<<  5	) |
+							(	 BIT(~x, 3)					<<  4	) |
+							(	 BIT( x, 2)					<<  3	) |
+							(	 BIT(~x, 1)					<<  2	) |
+							(	 BIT( x, 0)					<<  1	) |
+							(	 bit0						<<  0	) ;
+
+			logerror("%s: exec bitswap - mode_3 %02x, mode_f %02x, xor0 %x, val %04x -> %04x\n", machine().describe_context(), m_prot_m3, m_prot_mf, xor0, x, m_prot_val);
+
+			break;
+		}
+
+		case 0xa0:	// reset
+		{
+			m_prot_val = 0;
+			break;
 		}
 
 		default:
-			logerror("%s: warning, reading with igs_magic = %02x\n", machine().describe_context(), m_igs_magic[0]);
+			logerror("%s: warning, writing to prot_reg %02x = %02x\n", machine().describe_context(), m_prot_regs[0], m_prot_regs[1]);
+	}
+}
+
+READ16_MEMBER(igs017_state::lhzb2a_prot_r)
+{
+	switch(m_prot_regs[0])
+	{
+		case 0x03:	// result
+		{
+			UINT16 x = m_prot_val;
+			UINT16 res	=	(BIT(x, 5) << 7) |
+							(BIT(x, 2) << 6) |
+							(BIT(x, 9) << 5) |
+							(BIT(x, 7) << 4) |
+							(BIT(x,10) << 3) |
+							(BIT(x,13) << 2) |
+							(BIT(x,12) << 1) |
+							(BIT(x,15) << 0) ;
+
+			logerror("%s: read bitswap - val %04x -> %02x\n", machine().describe_context(), m_prot_val, res);
+			return res;
+
+			break;
+		}
+
+		default:
+			logerror("%s: warning, reading with prot_reg = %02x\n", machine().describe_context(), m_prot_regs[0]);
 			break;
 	}
 
 	return 0xffff;
 }
+
+// Protection 2
+
+WRITE16_MEMBER(igs017_state::lhzb2a_prot2_reset_w)
+{
+	m_prot2 = 0x00;
+	logerror("%s: prot2 reset -> %02x\n", machine().describe_context(), m_prot2);
+}
+
+WRITE16_MEMBER(igs017_state::lhzb2a_prot2_inc_w)
+{
+	m_prot2++;
+	logerror("%s: prot2 inc -> %02x\n", machine().describe_context(), m_prot2);
+}
+
+WRITE16_MEMBER(igs017_state::lhzb2a_prot2_dec_w)
+{
+	m_prot2--;
+	logerror("%s: prot2 dec -> %02x\n", machine().describe_context(), m_prot2);
+}
+
+READ16_MEMBER(igs017_state::lhzb2a_prot2_r)
+{
+	UINT8 x		=	m_prot2;
+	UINT8 res	=	(BIT(x, 0) << 7) |
+					(BIT(x, 3) << 5) |
+					(BIT(x, 2) << 4) |
+					(BIT(x, 1) << 2) ;
+
+	logerror("%s: prot2 read, %02x -> %02x\n", machine().describe_context(), m_prot2, res);
+	return res;
+}
+
+
 
 WRITE16_MEMBER(igs017_state::lhzb2a_paletteram_w)
 {
@@ -1921,9 +2113,11 @@ WRITE16_MEMBER(igs017_state::lhzb2a_input_addr_w)
 	m_input_addr = data & 0xff;
 
 	// Add new memory ranges
-	space.install_readwrite_handler (m_input_addr * 0x10000 + 0x4000, m_input_addr * 0x10000 + 0x4003, read16_delegate (FUNC(igs017_state::lhzb2a_magic_r),      this), write16_delegate (FUNC(igs017_state::lhzb2a_magic_w),      this));
+	space.install_readwrite_handler (m_input_addr * 0x10000 + 0x4000, m_input_addr * 0x10000 + 0x4003, read16_delegate (FUNC(igs017_state::lhzb2a_prot_r),      this), write16_delegate (FUNC(igs017_state::lhzb2a_prot_w),      this));
 	space.install_read_handler      (m_input_addr * 0x10000 + 0x8000, m_input_addr * 0x10000 + 0x8005, read16_delegate (FUNC(igs017_state::lhzb2a_input_r),      this));
 	space.install_write_handler     (m_input_addr * 0x10000 + 0xc000, m_input_addr * 0x10000 + 0xc001, write16_delegate(FUNC(igs017_state::lhzb2a_input_addr_w), this));
+
+	logerror("%s: inputs and protection remapped at %02xxxxx\n", machine().describe_context(), m_input_addr);
 }
 
 WRITE16_MEMBER(igs017_state::lhzb2a_input_select_w)
@@ -1946,9 +2140,15 @@ WRITE16_MEMBER(igs017_state::lhzb2a_input_select_w)
 }
 
 static ADDRESS_MAP_START( lhzb2a, AS_PROGRAM, 16, igs017_state )
+	// prot2
+	AM_RANGE(0x003200, 0x003201) AM_WRITE( lhzb2a_prot2_reset_w )
+	AM_RANGE(0x003202, 0x003203) AM_WRITE( lhzb2a_prot2_dec_w )
+	AM_RANGE(0x003206, 0x003207) AM_WRITE( lhzb2a_prot2_inc_w )
+	AM_RANGE(0x00320a, 0x00320b) AM_READ( lhzb2a_prot2_r )
+
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x500000, 0x503fff) AM_RAM
-//  AM_RANGE(0x910000, 0x910003) protection
+//  AM_RANGE(0x910000, 0x910003) accesses appear to be from leftover code where the final checks were disabled
 	AM_RANGE(0xb02000, 0xb02fff) AM_READWRITE( spriteram_lsb_r, spriteram_lsb_w ) AM_SHARE("spriteram")
 	AM_RANGE(0xb03000, 0xb037ff) AM_RAM_WRITE( lhzb2a_paletteram_w ) AM_SHARE("paletteram")
 	AM_RANGE(0xb04024, 0xb04025) AM_WRITE( video_disable_lsb_w )
@@ -2032,7 +2232,7 @@ static ADDRESS_MAP_START( slqz2, AS_PROGRAM, 16, igs017_state )
 	AM_RANGE(0x602002, 0x602003) AM_READ( slqz2_magic_r )
 	AM_RANGE(0x902000, 0x902fff) AM_READWRITE( spriteram_lsb_r, spriteram_lsb_w ) AM_SHARE("spriteram")
 	AM_RANGE(0x903000, 0x9037ff) AM_RAM_WRITE( slqz2_paletteram_w ) AM_SHARE("paletteram")
-	AM_RANGE(0x904020, 0x904027) AM_DEVREAD8_LEGACY( "ppi8255", ppi8255_r, 0x00ff )
+	AM_RANGE(0x904020, 0x904027) AM_DEVREAD8("ppi8255", i8255_device, read, 0x00ff)
 	AM_RANGE(0x904024, 0x904025) AM_WRITE( video_disable_lsb_w )
 	AM_RANGE(0x904028, 0x904029) AM_WRITE( irq2_enable_w )
 	AM_RANGE(0x90402a, 0x90402b) AM_WRITE( irq1_enable_w )
@@ -2327,12 +2527,14 @@ static INPUT_PORTS_START( lhzb2a )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 
 	PORT_START("COINS")
-	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_SERVICE2  )	// shown in test mode
+	PORT_BIT( 0x01, IP_ACTIVE_LOW,  IPT_UNKNOWN   )
 	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_SPECIAL   )	// hopper switch
 	PORT_SERVICE_NO_TOGGLE( 0x04,   IP_ACTIVE_LOW )	// keep pressed while booting
 	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_SERVICE1  ) PORT_NAME("Statistics") // press with the above for sound test
 	PORT_BIT( 0x10, IP_ACTIVE_LOW,  IPT_COIN1     ) PORT_IMPULSE(2)
 	PORT_BIT( 0x20, IP_ACTIVE_LOW,  IPT_OTHER     ) PORT_NAME("Pay Out") PORT_CODE(KEYCODE_O)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW,  IPT_SERVICE3  )	// shown in test mode
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNKNOWN   )
 
 	PORT_START("KEY0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_MAHJONG_A )
@@ -3018,16 +3220,16 @@ static TIMER_DEVICE_CALLBACK( irqblocka_interrupt )
 
 
 // Dips are read through the 8255
-static const ppi8255_interface iqblocka_ppi8255_intf =
+static I8255A_INTERFACE( iqblocka_ppi8255_intf )
 {
-	DEVCB_INPUT_PORT("DSW1"),	// Port A read
-	DEVCB_INPUT_PORT("DSW2"),	// Port B read
-	DEVCB_INPUT_PORT("DSW3"),	// Port C read
-
-	DEVCB_NULL,					// Port A write
-	DEVCB_NULL,					// Port B write
-	DEVCB_NULL					// Port C write
+	DEVCB_INPUT_PORT("DSW1"),			/* Port A read */
+	DEVCB_NULL,							/* Port A write */
+	DEVCB_INPUT_PORT("DSW2"),			/* Port B read */
+	DEVCB_NULL,							/* Port B write */
+	DEVCB_INPUT_PORT("DSW3"),			/* Port C read */
+	DEVCB_NULL							/* Port C write */
 };
+
 
 static MACHINE_RESET( iqblocka )
 {
@@ -3043,7 +3245,7 @@ static MACHINE_CONFIG_START( iqblocka, igs017_state )
 	MCFG_CPU_IO_MAP(iqblocka_io)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", irqblocka_interrupt, "screen", 0, 1)
 
-	MCFG_PPI8255_ADD( "ppi8255", iqblocka_ppi8255_intf )
+	MCFG_I8255A_ADD( "ppi8255", iqblocka_ppi8255_intf )
 
 	MCFG_MACHINE_RESET(iqblocka)
 
@@ -3096,15 +3298,14 @@ static MACHINE_RESET( mgcs )
 	memset(state->m_igs_magic, 0, sizeof(state->m_igs_magic));
 }
 
-static const ppi8255_interface mgcs_ppi8255_intf =
+static I8255A_INTERFACE( mgcs_ppi8255_intf )
 {
-	DEVCB_INPUT_PORT("COINS"),	// Port A read
-	DEVCB_HANDLER(mgcs_keys_r),	// Port B read
-	DEVCB_NULL,					// Port C read (see code at 1C83A)
-
-	DEVCB_NULL,					// Port A write
-	DEVCB_NULL,					// Port B write
-	DEVCB_NULL					// Port C write
+	DEVCB_INPUT_PORT("COINS"),			/* Port A read */
+	DEVCB_NULL,							/* Port A write */
+	DEVCB_HANDLER(mgcs_keys_r),			/* Port B read */
+	DEVCB_NULL,							/* Port B write */
+	DEVCB_NULL,							/* Port C read */
+	DEVCB_NULL							/* Port C write */
 };
 
 static MACHINE_CONFIG_START( mgcs, igs017_state )
@@ -3114,7 +3315,7 @@ static MACHINE_CONFIG_START( mgcs, igs017_state )
 
 	MCFG_MACHINE_RESET(mgcs)
 
-	MCFG_PPI8255_ADD( "ppi8255", mgcs_ppi8255_intf )
+	MCFG_I8255A_ADD( "ppi8255", mgcs_ppi8255_intf )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -3139,16 +3340,14 @@ MACHINE_CONFIG_END
 
 
 // lhzb2
-
-static const ppi8255_interface lhzb2_ppi8255_intf =
+static I8255A_INTERFACE( lhzb2_ppi8255_intf )
 {
-	DEVCB_INPUT_PORT("COINS"),	// Port A read
-	DEVCB_INPUT_PORT("DSW1"),	// Port B read
-	DEVCB_INPUT_PORT("DSW2"),	// Port C read
-
-	DEVCB_NULL,					// Port A write
-	DEVCB_NULL,					// Port B write
-	DEVCB_NULL					// Port C write
+	DEVCB_INPUT_PORT("COINS"),			/* Port A read */
+	DEVCB_NULL,							/* Port A write */
+	DEVCB_INPUT_PORT("DSW1"),			/* Port B read */
+	DEVCB_NULL,							/* Port B write */
+	DEVCB_INPUT_PORT("DSW2"),			/* Port C read */
+	DEVCB_NULL							/* Port C write */
 };
 
 static MACHINE_CONFIG_START( lhzb2, igs017_state )
@@ -3158,7 +3357,7 @@ static MACHINE_CONFIG_START( lhzb2, igs017_state )
 
 	MCFG_MACHINE_RESET(mgcs)
 
-	MCFG_PPI8255_ADD( "ppi8255", lhzb2_ppi8255_intf )
+	MCFG_I8255A_ADD( "ppi8255", lhzb2_ppi8255_intf )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -3198,7 +3397,7 @@ static MACHINE_CONFIG_START( lhzb2a, igs017_state )
 
 	MCFG_MACHINE_RESET(lhzb2a)
 
-//  MCFG_PPI8255_ADD( "ppi8255", sdmg2_ppi8255_intf )
+//  MCFG_I8255A_ADD( "ppi8255", sdmg2_ppi8255_intf )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -3231,7 +3430,7 @@ static MACHINE_CONFIG_START( slqz2, igs017_state )
 
 	MCFG_MACHINE_RESET(mgcs)
 
-	MCFG_PPI8255_ADD( "ppi8255", lhzb2_ppi8255_intf )
+	MCFG_I8255A_ADD( "ppi8255", lhzb2_ppi8255_intf )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -3256,16 +3455,14 @@ MACHINE_CONFIG_END
 
 
 // sdmg2
-
-static const ppi8255_interface sdmg2_ppi8255_intf =
+static I8255A_INTERFACE( sdmg2_ppi8255_intf )
 {
-	DEVCB_INPUT_PORT("DSW1"),	// Port A read
-	DEVCB_INPUT_PORT("DSW2"),	// Port B read
-	DEVCB_NULL,					// Port C read
-
-	DEVCB_NULL,					// Port A write
-	DEVCB_NULL,					// Port B write
-	DEVCB_NULL					// Port C write
+	DEVCB_INPUT_PORT("DSW1"),			/* Port A read */
+	DEVCB_NULL,							/* Port A write */
+	DEVCB_INPUT_PORT("DSW2"),			/* Port B read */
+	DEVCB_NULL,							/* Port B write */
+	DEVCB_NULL,							/* Port C read */
+	DEVCB_NULL							/* Port C write */
 };
 
 static MACHINE_CONFIG_START( sdmg2, igs017_state )
@@ -3275,7 +3472,7 @@ static MACHINE_CONFIG_START( sdmg2, igs017_state )
 
 	MCFG_MACHINE_RESET(mgcs)
 
-	MCFG_PPI8255_ADD( "ppi8255", sdmg2_ppi8255_intf )
+	MCFG_I8255A_ADD( "ppi8255", sdmg2_ppi8255_intf )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -3312,15 +3509,14 @@ static TIMER_DEVICE_CALLBACK( mgdh_interrupt )
 		device_set_input_line(state->m_maincpu, 3, HOLD_LINE); // lev 3 instead of 2
 }
 
-static const ppi8255_interface mgdh_ppi8255_intf =
+static I8255A_INTERFACE( mgdh_ppi8255_intf )
 {
-	DEVCB_INPUT_PORT("DSW1"),	// Port A read
-	DEVCB_NULL,					// Port B read
-	DEVCB_NULL,					// Port C read
-
-	DEVCB_NULL,					// Port A write
-	DEVCB_NULL,					// Port B write
-	DEVCB_NULL					// Port C write
+	DEVCB_INPUT_PORT("DSW1"),			/* Port A read */
+	DEVCB_NULL,							/* Port A write */
+	DEVCB_NULL,							/* Port B read */
+	DEVCB_NULL,							/* Port B write */
+	DEVCB_NULL,							/* Port C read */
+	DEVCB_NULL							/* Port C write */
 };
 
 static MACHINE_CONFIG_START( mgdha, igs017_state )
@@ -3330,7 +3526,7 @@ static MACHINE_CONFIG_START( mgdha, igs017_state )
 
 	MCFG_MACHINE_RESET(mgcs)
 
-	MCFG_PPI8255_ADD( "ppi8255", mgdh_ppi8255_intf )
+	MCFG_I8255A_ADD( "ppi8255", mgdh_ppi8255_intf )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -3361,7 +3557,7 @@ static MACHINE_CONFIG_START( tjsb, igs017_state )
 	MCFG_CPU_IO_MAP(tjsb_io)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", irqblocka_interrupt, "screen", 0, 1)
 
-	MCFG_PPI8255_ADD( "ppi8255", iqblocka_ppi8255_intf )
+	MCFG_I8255A_ADD( "ppi8255", iqblocka_ppi8255_intf )
 
 	MCFG_MACHINE_RESET(iqblocka)
 

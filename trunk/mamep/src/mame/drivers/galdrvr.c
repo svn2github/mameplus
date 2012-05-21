@@ -4209,7 +4209,7 @@ ROM_START( mooncrstuku )
 	ROM_LOAD( "smc2f",        0x0800, 0x0800, CRC(410ab430) SHA1(d89abff6ac4afbf69377a1d63043d629a634aab7) )
 	ROM_LOAD( "smc3f",        0x1000, 0x0800, CRC(a6b4144b) SHA1(2b27ad54d716286c0dc9476d47df182ae01bcfd7) )
 	ROM_LOAD( "smc4f",        0x1800, 0x0800, CRC(4cc046fe) SHA1(465eaacd50967d768babadd09ab9cad35380f6bf) )
-	ROM_LOAD( "smc5f",     	  0x2000, 0x0800, CRC(06d378a6) SHA1(99dbe9fc7f95f8fdce86eb5c32bd1ca1bea0ca3c) )
+	ROM_LOAD( "smc5f",  	  0x2000, 0x0800, CRC(06d378a6) SHA1(99dbe9fc7f95f8fdce86eb5c32bd1ca1bea0ca3c) )
 	ROM_LOAD( "smc6f",        0x2800, 0x0800, CRC(6e84a927) SHA1(82e8e825d157c3c947a3a222bca059a735169c7d) )
 	ROM_LOAD( "smc7f",        0x3000, 0x0800, CRC(b45af1e8) SHA1(d7020774707234acdaef5c655f667d5ee9e54a13) )
 	ROM_LOAD( "smc8f_uk",     0x3800, 0x0800, CRC(b968b2ff) SHA1(40105423f48d2260e85597c3c1e4d8fe947db793) )
@@ -6376,7 +6376,7 @@ GAME( 1980, supergx,  galaxian, galaxian, superg,   galaxian, ROT90,  "Nichibuts
 GAME( 19??, tst_galx, galaxian, galaxian, galaxian, galaxian, ROT90,  "<unknown>", "Galaxian Test ROM", GAME_SUPPORTS_SAVE )
 
 /* other games on basic galaxian hardware */
-GAME( 1981, blkhole,  0,        galaxian, blkhole,  galaxian, ROT90,  "TDS", "Black Hole", GAME_SUPPORTS_SAVE )
+GAME( 1981, blkhole,  0,        galaxian, blkhole,  galaxian, ROT90,  "TDS & MINTS", "Black Hole", GAME_SUPPORTS_SAVE )
 GAME( 1982, orbitron, 0,        galaxian, orbitron, galaxian, ROT270, "Signatron USA", "Orbitron", GAME_SUPPORTS_SAVE )
 GAME( 1980, luctoday, 0,        galaxian, luctoday, galaxian, ROT270, "Sigma", "Lucky Today",GAME_WRONG_COLORS | GAME_SUPPORTS_SAVE )
 GAME( 19??, chewing,  luctoday, galaxian, luctoday, galaxian, ROT90,  "<unknown>", "Chewing Gum", GAME_SUPPORTS_SAVE )
