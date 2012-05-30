@@ -2494,6 +2494,11 @@ ioport_field_live::ioport_field_live(ioport_field &field, analog_field *analog)
 	  impulse(0),
 	  last(0),
 	  joydir(digital_joystick::JOYDIR_COUNT)
+#ifdef USE_AUTOFIRE
+	  ,toggle(0)
+	  ,autofire(0)
+	  ,autopressed(0)
+#endif /* USE_AUTOFIRE */
 {
 	// fill in the basic values
 	for (input_seq_type seqtype = SEQ_TYPE_STANDARD; seqtype < SEQ_TYPE_TOTAL; seqtype++)
