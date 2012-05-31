@@ -97,6 +97,9 @@ endif
 ifeq ($(firstword $(filter Darwin,$(UNAME))),Darwin)
 TARGETOS = macosx
 endif
+ifeq ($(firstword $(filter Haiku,$(UNAME))),Haiku)
+TARGETOS = haiku
+endif
 
 ifndef TARGETOS
 $(error Unable to detect TARGETOS from uname -a: $(UNAME))
@@ -866,7 +869,9 @@ endif
 
 ifeq ($(TARGETOS),win32)
 ifdef SYMBOLS
+ifndef MSVC_BUILD
 	$(OBJDUMP) --section=.text --line-numbers --syms --demangle $@ >$(FULLNAME).sym
+endif
 endif
 endif
 
