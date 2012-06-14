@@ -429,7 +429,7 @@ $(MAMEOBJ)/atari.a: \
 	$(DRIVERS)/blstroid.o $(VIDEO)/blstroid.o \
 	$(DRIVERS)/boxer.o \
 	$(DRIVERS)/bsktball.o $(MACHINE)/bsktball.o $(AUDIO)/bsktball.o $(VIDEO)/bsktball.o \
-	$(DRIVERS)/bwidow.o \
+	$(DRIVERS)/bwidow.o $(AUDIO)/bwidow.o \
 	$(DRIVERS)/bzone.o $(AUDIO)/bzone.o \
 	$(DRIVERS)/canyon.o $(AUDIO)/canyon.o $(VIDEO)/canyon.o \
 	$(DRIVERS)/cball.o \
@@ -462,6 +462,7 @@ $(MAMEOBJ)/atari.a: \
 	$(DRIVERS)/nitedrvr.o $(MACHINE)/nitedrvr.o $(AUDIO)/nitedrvr.o $(VIDEO)/nitedrvr.o \
 	$(DRIVERS)/offtwall.o $(VIDEO)/offtwall.o \
 	$(DRIVERS)/orbit.o $(AUDIO)/orbit.o $(VIDEO)/orbit.o \
+	$(DRIVERS)/pong.o \
 	$(DRIVERS)/poolshrk.o $(AUDIO)/poolshrk.o $(VIDEO)/poolshrk.o \
 	$(DRIVERS)/quantum.o \
 	$(DRIVERS)/quizshow.o \
@@ -892,6 +893,7 @@ $(MAMEOBJ)/konami.a: \
 	$(DRIVERS)/konamigx.o $(MACHINE)/konamigx.o $(VIDEO)/konamigx.o \
 	$(DRIVERS)/konamim2.o \
 	$(DRIVERS)/kongambl.o \
+	$(DRIVERS)/kontest.o \
 	$(DRIVERS)/konendev.o \
 	$(DRIVERS)/ksys573.o $(MACHINE)/zs01.o \
 	$(DRIVERS)/labyrunr.o $(VIDEO)/labyrunr.o \
@@ -1739,6 +1741,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/esh.o \
 	$(DRIVERS)/esripsys.o $(VIDEO)/esripsys.o \
 	$(DRIVERS)/ettrivia.o \
+	$(DRIVERS)/flipjack.o \
 	$(DRIVERS)/flower.o $(AUDIO)/flower.o $(VIDEO)/flower.o \
 	$(DRIVERS)/fortecar.o \
 	$(DRIVERS)/freekick.o $(VIDEO)/freekick.o \
@@ -1964,9 +1967,11 @@ $(DRIVERS)/bfm_sc2.o:	$(LAYOUT)/bfm_sc2.lh \
 			$(LAYOUT)/sltblgpo.lh \
 			$(LAYOUT)/sltblgtk.lh
 
-$(DRIVERS)/bfm_sc4.o:	$(LAYOUT)/bfm_sc4.lh
+$(DRIVERS)/bfm_sc4.o:	$(LAYOUT)/bfm_sc4.lh \
+			$(LAYOUT)/sc4_dmd.lh
 
-$(DRIVERS)/bfm_sc4h.o:	$(LAYOUT)/bfm_sc4.lh
+$(DRIVERS)/bfm_sc4h.o:	$(LAYOUT)/bfm_sc4.lh \
+			$(LAYOUT)/sc4_dmd.lh
 
 $(DRIVERS)/blockade.o:	$(LAYOUT)/blockade.lh
 

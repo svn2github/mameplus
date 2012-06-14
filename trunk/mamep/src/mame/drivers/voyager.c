@@ -14,8 +14,6 @@ TODO: VIA KT133a chipset support, GeForce 2MX video support, lots of things ;-)
 
 #include "emu.h"
 #include "cpu/i386/i386.h"
-#include "memconv.h"
-#include "devconv.h"
 #include "machine/8237dma.h"
 #include "machine/pic8259.h"
 #include "machine/pit8253.h"
@@ -55,33 +53,36 @@ public:
 	DECLARE_READ8_MEMBER(pc_dma_read_byte);
 	DECLARE_WRITE8_MEMBER(pc_dma_write_byte);
 	DECLARE_WRITE32_MEMBER(bios_ram_w);
+	DECLARE_READ8_MEMBER(at_dma8237_2_r);
+	DECLARE_WRITE8_MEMBER(at_dma8237_2_w);
+	DECLARE_WRITE_LINE_MEMBER(pc_dma_hrq_changed);
+	DECLARE_WRITE_LINE_MEMBER(pc_dack0_w);
+	DECLARE_WRITE_LINE_MEMBER(pc_dack1_w);
+	DECLARE_WRITE_LINE_MEMBER(pc_dack2_w);
+	DECLARE_WRITE_LINE_MEMBER(pc_dack3_w);
+	DECLARE_READ32_MEMBER(ide_r);
+	DECLARE_WRITE32_MEMBER(ide_w);
+	DECLARE_READ32_MEMBER(fdc_r);
+	DECLARE_WRITE32_MEMBER(fdc_w);
+	DECLARE_WRITE_LINE_MEMBER(voyager_pic8259_1_set_int_line);
+	DECLARE_READ8_MEMBER(get_slave_ack);
 };
 
 
 static void ide_interrupt(device_t *device, int state);
 
 
-static READ8_DEVICE_HANDLER(at_dma8237_2_r)
+READ8_MEMBER(voyager_state::at_dma8237_2_r)
 {
+	device_t *device = machine().device("dma8237_2");
 	return i8237_r(device, offset / 2);
 }
 
-static WRITE8_DEVICE_HANDLER(at_dma8237_2_w)
+WRITE8_MEMBER(voyager_state::at_dma8237_2_w)
 {
+	device_t *device = machine().device("dma8237_2");
 	i8237_w(device, offset / 2, data);
 }
-
-static READ32_DEVICE_HANDLER(at32_dma8237_2_r)
-{
-	return read32le_with_read8_device_handler(at_dma8237_2_r, device, offset, mem_mask);
-}
-
-static WRITE32_DEVICE_HANDLER(at32_dma8237_2_w)
-{
-	write32le_with_write8_device_handler(at_dma8237_2_w, device, offset, data, mem_mask);
-}
-
-
 
 READ8_MEMBER(voyager_state::at_page8_r)
 {
@@ -126,12 +127,12 @@ WRITE8_MEMBER(voyager_state::at_page8_w)
 }
 
 
-static WRITE_LINE_DEVICE_HANDLER( pc_dma_hrq_changed )
+WRITE_LINE_MEMBER(voyager_state::pc_dma_hrq_changed)
 {
-	cputag_set_input_line(device->machine(), "maincpu", INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
+	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
 
 	/* Assert HLDA */
-	i8237_hlda_w( device, state );
+	i8237_hlda_w( m_dma8237_1, state );
 }
 
 
@@ -158,20 +159,20 @@ static void set_dma_channel(device_t *device, int channel, int state)
 	if (!state) drvstate->m_dma_channel = channel;
 }
 
-static WRITE_LINE_DEVICE_HANDLER( pc_dack0_w ) { set_dma_channel(device, 0, state); }
-static WRITE_LINE_DEVICE_HANDLER( pc_dack1_w ) { set_dma_channel(device, 1, state); }
-static WRITE_LINE_DEVICE_HANDLER( pc_dack2_w ) { set_dma_channel(device, 2, state); }
-static WRITE_LINE_DEVICE_HANDLER( pc_dack3_w ) { set_dma_channel(device, 3, state); }
+WRITE_LINE_MEMBER(voyager_state::pc_dack0_w){ set_dma_channel(m_dma8237_1, 0, state); }
+WRITE_LINE_MEMBER(voyager_state::pc_dack1_w){ set_dma_channel(m_dma8237_1, 1, state); }
+WRITE_LINE_MEMBER(voyager_state::pc_dack2_w){ set_dma_channel(m_dma8237_1, 2, state); }
+WRITE_LINE_MEMBER(voyager_state::pc_dack3_w){ set_dma_channel(m_dma8237_1, 3, state); }
 
 static I8237_INTERFACE( dma8237_1_config )
 {
-	DEVCB_LINE(pc_dma_hrq_changed),
+	DEVCB_DRIVER_LINE_MEMBER(voyager_state,pc_dma_hrq_changed),
 	DEVCB_NULL,
 	DEVCB_DRIVER_MEMBER(voyager_state, pc_dma_read_byte),
 	DEVCB_DRIVER_MEMBER(voyager_state, pc_dma_write_byte),
 	{ DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL },
 	{ DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL },
-	{ DEVCB_LINE(pc_dack0_w), DEVCB_LINE(pc_dack1_w), DEVCB_LINE(pc_dack2_w), DEVCB_LINE(pc_dack3_w) }
+	{ DEVCB_DRIVER_LINE_MEMBER(voyager_state,pc_dack0_w), DEVCB_DRIVER_LINE_MEMBER(voyager_state,pc_dack1_w), DEVCB_DRIVER_LINE_MEMBER(voyager_state,pc_dack2_w), DEVCB_DRIVER_LINE_MEMBER(voyager_state,pc_dack3_w) }
 };
 
 static I8237_INTERFACE( dma8237_2_config )
@@ -185,13 +186,15 @@ static I8237_INTERFACE( dma8237_2_config )
 	{ DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL }
 };
 
-static READ32_DEVICE_HANDLER( ide_r )
+READ32_MEMBER(voyager_state::ide_r)
 {
+	device_t *device = machine().device("ide");
 	return ide_controller32_r(device, 0x1f0/4 + offset, mem_mask);
 }
 
-static WRITE32_DEVICE_HANDLER( ide_w )
+WRITE32_MEMBER(voyager_state::ide_w)
 {
+	device_t *device = machine().device("ide");
 	ide_controller32_w(device, 0x1f0/4 + offset, data, mem_mask);
 }
 
@@ -199,13 +202,15 @@ static WRITE32_DEVICE_HANDLER( ide_w )
 
 
 
-static READ32_DEVICE_HANDLER( fdc_r )
+READ32_MEMBER(voyager_state::fdc_r)
 {
+	device_t *device = machine().device("ide");
 	return ide_controller32_r(device, 0x3f0/4 + offset, mem_mask);
 }
 
-static WRITE32_DEVICE_HANDLER( fdc_w )
+WRITE32_MEMBER(voyager_state::fdc_w)
 {
+	device_t *device = machine().device("ide");
 	//mame_printf_debug("FDC: write %08X, %08X, %08X\n", data, offset, mem_mask);
 	ide_controller32_w(device, 0x3f0/4 + offset, data, mem_mask);
 }
@@ -417,15 +422,15 @@ static ADDRESS_MAP_START( voyager_io, AS_IO, 32, voyager_state )
 	AM_RANGE(0x0000, 0x001f) AM_DEVREADWRITE8_LEGACY("dma8237_1", i8237_r, i8237_w, 0xffffffff)
 	AM_RANGE(0x0020, 0x003f) AM_DEVREADWRITE8_LEGACY("pic8259_1", pic8259_r, pic8259_w, 0xffffffff)
 	AM_RANGE(0x0040, 0x005f) AM_DEVREADWRITE8_LEGACY("pit8254", pit8253_r, pit8253_w, 0xffffffff)
-	AM_RANGE(0x0060, 0x006f) AM_READWRITE_LEGACY(kbdc8042_32le_r,			kbdc8042_32le_w)
+	AM_RANGE(0x0060, 0x006f) AM_READWRITE8_LEGACY(kbdc8042_8_r, kbdc8042_8_w, 0xffffffff)
 	AM_RANGE(0x0070, 0x007f) AM_DEVREADWRITE8("rtc", mc146818_device, read, write, 0xffffffff) /* todo: nvram (CMOS Setup Save)*/
 	AM_RANGE(0x0080, 0x009f) AM_READWRITE8(at_page8_r, at_page8_w, 0xffffffff)
 	AM_RANGE(0x00a0, 0x00bf) AM_DEVREADWRITE8_LEGACY("pic8259_2", pic8259_r, pic8259_w, 0xffffffff)
-	AM_RANGE(0x00c0, 0x00df) AM_DEVREADWRITE_LEGACY("dma8237_2", at32_dma8237_2_r, at32_dma8237_2_w)
+	AM_RANGE(0x00c0, 0x00df) AM_READWRITE8(at_dma8237_2_r, at_dma8237_2_w, 0xffffffff)
 	//AM_RANGE(0x00e8, 0x00eb) AM_NOP
 	AM_RANGE(0x00e8, 0x00ef) AM_NOP //AMI BIOS write to this ports as delays between I/O ports operations sending al value -> NEWIODELAY
 	AM_RANGE(0x0170, 0x0177) AM_NOP //To debug
-	AM_RANGE(0x01f0, 0x01f7) AM_DEVREADWRITE_LEGACY("ide", ide_r, ide_w)
+	AM_RANGE(0x01f0, 0x01f7) AM_READWRITE(ide_r, ide_w)
 	AM_RANGE(0x0200, 0x021f) AM_NOP //To debug
 	AM_RANGE(0x0260, 0x026f) AM_NOP //To debug
 	AM_RANGE(0x0278, 0x027b) AM_WRITENOP//AM_WRITE_LEGACY(pnp_config_w)
@@ -441,7 +446,7 @@ static ADDRESS_MAP_START( voyager_io, AS_IO, 32, voyager_state )
 	AM_RANGE(0x0378, 0x037f) AM_NOP //To debug
 	// AM_RANGE(0x0300, 0x03af) AM_NOP
 	// AM_RANGE(0x03b0, 0x03df) AM_NOP
-	AM_RANGE(0x03f0, 0x03f7) AM_DEVREADWRITE_LEGACY("ide", fdc_r, fdc_w)
+	AM_RANGE(0x03f0, 0x03f7) AM_READWRITE(fdc_r, fdc_w)
 	AM_RANGE(0x03f8, 0x03ff) AM_NOP // To debug Serial Port COM1:
 	AM_RANGE(0x0a78, 0x0a7b) AM_WRITENOP//AM_WRITE_LEGACY(pnp_data_w)
 	AM_RANGE(0x0cf8, 0x0cff) AM_DEVREADWRITE_LEGACY("pcibus", pci_32le_r,	pci_32le_w)
@@ -662,25 +667,24 @@ static MACHINE_START(voyager)
  *
  *************************************************************/
 
-static WRITE_LINE_DEVICE_HANDLER( voyager_pic8259_1_set_int_line )
+WRITE_LINE_MEMBER(voyager_state::voyager_pic8259_1_set_int_line)
 {
-	cputag_set_input_line(device->machine(), "maincpu", 0, state ? HOLD_LINE : CLEAR_LINE);
+	cputag_set_input_line(machine(), "maincpu", 0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
-static READ8_DEVICE_HANDLER( get_slave_ack )
+READ8_MEMBER(voyager_state::get_slave_ack)
 {
-	voyager_state *state = device->machine().driver_data<voyager_state>();
 	if (offset==2) {
-		return pic8259_acknowledge(state->m_pic8259_2);
+		return pic8259_acknowledge(m_pic8259_2);
 	}
 	return 0x00;
 }
 
 static const struct pic8259_interface voyager_pic8259_1_config =
 {
-	DEVCB_LINE(voyager_pic8259_1_set_int_line),
+	DEVCB_DRIVER_LINE_MEMBER(voyager_state,voyager_pic8259_1_set_int_line),
 	DEVCB_LINE_VCC,
-	DEVCB_HANDLER(get_slave_ack)
+	DEVCB_DRIVER_MEMBER(voyager_state,get_slave_ack)
 };
 
 static const struct pic8259_interface voyager_pic8259_2_config =
@@ -771,7 +775,7 @@ static MACHINE_CONFIG_START( voyager, voyager_state )
 	MCFG_I8237_ADD( "dma8237_2", XTAL_14_31818MHz/3, dma8237_2_config )
 	MCFG_PIC8259_ADD( "pic8259_1", voyager_pic8259_1_config )
 	MCFG_PIC8259_ADD( "pic8259_2", voyager_pic8259_2_config )
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_interrupt, ide_devices, "hdd", NULL)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_interrupt, ide_devices, "hdd", NULL, true)
 
 	MCFG_MC146818_ADD( "rtc", MC146818_STANDARD )
 	MCFG_PCI_BUS_ADD("pcibus", 0)

@@ -2205,7 +2205,7 @@ SCREEN_UPDATE_RGB32( sms1 )
 		sscope = screen.machine().root_device().ioport("SEGASCOPE")->read_safe(0x00);
 		if (!sscope)
 		{
-		occluded_view = 1;
+			occluded_view = 1;
 		}
 		else if (&screen == state->m_left_lcd)
 		{
@@ -2234,12 +2234,12 @@ SCREEN_UPDATE_RGB32( sms1 )
 			if (&screen == state->m_left_lcd)
 			{
 				if (sscope_binocular_hack & 0x01)
-			copybitmap(state->m_prevleft_bitmap, bitmap, 0, 0, 0, 0, cliprect);
+					copybitmap(state->m_prevleft_bitmap, bitmap, 0, 0, 0, 0, cliprect);
 			}
 			else // it's right LCD
 			{
 				if (sscope_binocular_hack & 0x02)
-				copybitmap(state->m_prevright_bitmap, bitmap, 0, 0, 0, 0, cliprect);
+					copybitmap(state->m_prevright_bitmap, bitmap, 0, 0, 0, 0, cliprect);
 			}
 		}
 	}

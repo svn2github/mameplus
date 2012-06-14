@@ -180,6 +180,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/adc1038.o		\
 	$(EMUMACHINE)/adc1213x.o	\
 	$(EMUMACHINE)/am53cf96.o	\
+	$(EMUMACHINE)/am9517a.o		\
 	$(EMUMACHINE)/amigafdc.o	\
 	$(EMUMACHINE)/at28c16.o		\
 	$(EMUMACHINE)/cdp1852.o		\
@@ -225,6 +226,7 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/mb3773.o		\
 	$(EMUMACHINE)/mb87078.o		\
 	$(EMUMACHINE)/mc146818.o	\
+	$(EMUMACHINE)/mc2661.o		\
 	$(EMUMACHINE)/mc6852.o		\
 	$(EMUMACHINE)/mc68901.o		\
 	$(EMUMACHINE)/mccs1850.o	\

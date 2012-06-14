@@ -1,6 +1,6 @@
 /***************************************************************************
 
-    Atari Clay Shoot hardware
+    Allied Leisure Clay Shoot hardware
 
     driver by Zsolt Vasvari
 
@@ -8,7 +8,9 @@
         * Clay Shoot
 
     Known issues:
-        * none at this time
+        * no sound
+        * cocktail mode, dipswitch or alternate romset?
+          (cocktail set has a color overlay, upright set has a backdrop)
 
 ****************************************************************************/
 
@@ -21,8 +23,9 @@ class clayshoo_state : public driver_device
 {
 public:
 	clayshoo_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
-		m_videoram(*this, "videoram"){ }
+		: driver_device(mconfig, type, tag),
+		m_videoram(*this, "videoram")
+	{ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -33,6 +36,8 @@ public:
 	UINT8 m_analog_port_val;
 	DECLARE_WRITE8_MEMBER(analog_reset_w);
 	DECLARE_READ8_MEMBER(analog_r);
+	DECLARE_WRITE8_MEMBER(input_port_select_w);
+	DECLARE_READ8_MEMBER(input_port_r);
 };
 
 
@@ -42,10 +47,9 @@ public:
  *
  *************************************/
 
-static WRITE8_DEVICE_HANDLER( input_port_select_w )
+WRITE8_MEMBER(clayshoo_state::input_port_select_w)
 {
-	clayshoo_state *state = device->machine().driver_data<clayshoo_state>();
-	state->m_input_port_select = data;
+	m_input_port_select = data;
 }
 
 
@@ -67,21 +71,20 @@ static UINT8 difficulty_input_port_r( running_machine &machine, int bit )
 }
 
 
-static READ8_DEVICE_HANDLER( input_port_r )
+READ8_MEMBER(clayshoo_state::input_port_r)
 {
-	clayshoo_state *state = device->machine().driver_data<clayshoo_state>();
 	UINT8 ret = 0;
 
-	switch (state->m_input_port_select)
+	switch (m_input_port_select)
 	{
-	case 0x01:	ret = state->ioport("IN0")->read(); break;
-	case 0x02:	ret = state->ioport("IN1")->read(); break;
-	case 0x04:	ret = (state->ioport("IN2")->read() & 0xf0) | difficulty_input_port_r(device->machine(), 0) |
-					  (difficulty_input_port_r(device->machine(), 3) << 2); break;
-	case 0x08:	ret = state->ioport("IN3")->read(); break;
+	case 0x01:	ret = ioport("IN0")->read(); break;
+	case 0x02:	ret = ioport("IN1")->read(); break;
+	case 0x04:	ret = (ioport("IN2")->read() & 0xf0) | difficulty_input_port_r(machine(), 0) |
+					  (difficulty_input_port_r(machine(), 3) << 2); break;
+	case 0x08:	ret = ioport("IN3")->read(); break;
 	case 0x10:
 	case 0x20:	break;	/* these two are not really used */
-	default: logerror("Unexpected port read: %02X\n", state->m_input_port_select);
+	default: logerror("Unexpected port read: %02X\n", m_input_port_select);
 	}
 	return ret;
 }
@@ -111,7 +114,6 @@ static attotime compute_duration( device_t *device, int analog_pos )
 
 WRITE8_MEMBER(clayshoo_state::analog_reset_w)
 {
-
 	/* reset the analog value, and start the two times that will fire
        off in a short period proportional to the position of the
        analog control and set the appropriate bit. */
@@ -157,8 +159,8 @@ static I8255A_INTERFACE( ppi8255_0_intf )
 static I8255A_INTERFACE( ppi8255_1_intf )
 {
 	DEVCB_NULL,							/* Port A read */
-	DEVCB_HANDLER(input_port_select_w),	/* Port A write */
-	DEVCB_HANDLER(input_port_r),		/* Port B read */
+	DEVCB_DRIVER_MEMBER(clayshoo_state,input_port_select_w),	/* Port A write */
+	DEVCB_DRIVER_MEMBER(clayshoo_state,input_port_r),		/* Port B read */
 	DEVCB_NULL,							/* Port B write */
 	DEVCB_NULL,							/* Port C read */
 	DEVCB_NULL							/* Port C write */
@@ -237,6 +239,9 @@ static ADDRESS_MAP_START( main_io_map, AS_IO, 8, clayshoo_state )
 	AM_RANGE(0x00, 0x00) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x20, 0x23) AM_DEVREADWRITE("ppi8255_0", i8255_device, read, write)
 	AM_RANGE(0x30, 0x33) AM_DEVREADWRITE("ppi8255_1", i8255_device, read, write)
+//  AM_RANGE(0x40, 0x43) AM_NOP // 8253 for sound?
+//  AM_RANGE(0x50, 0x50) AM_NOP // ?
+//  AM_RANGE(0x60, 0x60) AM_NOP // ?
 ADDRESS_MAP_END
 
 

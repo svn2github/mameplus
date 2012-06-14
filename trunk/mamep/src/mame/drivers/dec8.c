@@ -493,8 +493,9 @@ static void csilver_adpcm_int( device_t *device )
 	state->m_msm5205next <<= 4;
 }
 
-static READ8_DEVICE_HANDLER( csilver_adpcm_reset_r )
+READ8_MEMBER(dec8_state::csilver_adpcm_reset_r)
 {
+	device_t *device = machine().device("msm");
 	msm5205_reset_w(device, 0);
 	return 0;
 }
@@ -903,7 +904,7 @@ static ADDRESS_MAP_START( csilver_s_map, AS_PROGRAM, 8, dec8_state )
 	AM_RANGE(0x1800, 0x1800) AM_WRITE(csilver_adpcm_data_w)	/* ADPCM data for the MSM5205 chip */
 	AM_RANGE(0x2000, 0x2000) AM_WRITE(csilver_sound_bank_w)
 	AM_RANGE(0x3000, 0x3000) AM_READ(soundlatch_byte_r)
-	AM_RANGE(0x3400, 0x3400) AM_DEVREAD_LEGACY("msm", csilver_adpcm_reset_r)	/* ? not sure */
+	AM_RANGE(0x3400, 0x3400) AM_READ(csilver_adpcm_reset_r)	/* ? not sure */
 	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK("bank3")
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -3661,11 +3662,11 @@ GAME( 1987, meikyuh,  ghostb,   ghostb,   meikyuh,   meikyuh,     ROT0,   "Data 
 GAME( 1987, meikyuha, ghostb,   ghostb,   meikyuh,   meikyuh,     ROT0,   "Data East Corporation", "Meikyuu Hunter G (Japan, set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1987, csilver,  0,        csilver,  csilver,   csilver,     ROT0,   "Data East Corporation", "Captain Silver (World)", GAME_SUPPORTS_SAVE )
 GAME( 1987, csilverj, csilver,  csilver,  csilverj,  csilver,     ROT0,   "Data East Corporation", "Captain Silver (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1987, oscar,    0,        oscar,    oscar,     oscar,       ROT0,   "Data East Corporation", "Psycho-Nics Oscar (World revision 0)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
-GAME( 1988, oscaru,   oscar,    oscar,    oscarj,    oscar,       ROT0,   "Data East USA", "Psycho-Nics Oscar (US)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
-GAME( 1987, oscarj1,  oscar,    oscar,    oscarj,    oscar,       ROT0,   "Data East Corporation", "Psycho-Nics Oscar (Japan revision 1)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
-GAME( 1987, oscarj2,  oscar,    oscar,    oscarj,    oscar,       ROT0,   "Data East Corporation", "Psycho-Nics Oscar (Japan revision 2)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+GAME( 1987, oscar,    0,        oscar,    oscar,     oscar,       ROT0,   "Data East Corporation", "Psycho-Nics Oscar (World revision 0)", GAME_SUPPORTS_SAVE )
+GAME( 1988, oscaru,   oscar,    oscar,    oscarj,    oscar,       ROT0,   "Data East USA", "Psycho-Nics Oscar (US)", GAME_SUPPORTS_SAVE )
+GAME( 1987, oscarj1,  oscar,    oscar,    oscarj,    oscar,       ROT0,   "Data East Corporation", "Psycho-Nics Oscar (Japan revision 1)", GAME_SUPPORTS_SAVE )
+GAME( 1987, oscarj2,  oscar,    oscar,    oscarj,    oscar,       ROT0,   "Data East Corporation", "Psycho-Nics Oscar (Japan revision 2)", GAME_SUPPORTS_SAVE )
 GAME( 1987, srdarwin, 0,        srdarwin, srdarwin,  srdarwin,    ROT270, "Data East Corporation", "Super Real Darwin (World)", GAME_SUPPORTS_SAVE )
 GAME( 1987, srdarwinj,srdarwin, srdarwin, srdarwinj, srdarwin,    ROT270, "Data East Corporation", "Super Real Darwin (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1988, cobracom, 0,        cobracom, cobracom,  cobracom,    ROT0,   "Data East Corporation", "Cobra-Command (World revision 5)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
-GAME( 1988, cobracomj,cobracom, cobracom, cobracom,  cobracom,    ROT0,   "Data East Corporation", "Cobra-Command (Japan)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+GAME( 1988, cobracom, 0,        cobracom, cobracom,  cobracom,    ROT0,   "Data East Corporation", "Cobra-Command (World revision 5)", GAME_SUPPORTS_SAVE )
+GAME( 1988, cobracomj,cobracom, cobracom, cobracom,  cobracom,    ROT0,   "Data East Corporation", "Cobra-Command (Japan)", GAME_SUPPORTS_SAVE )

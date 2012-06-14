@@ -295,6 +295,7 @@ bool emu_options::add_slot_options(bool isfirst)
 	slot_interface_iterator iter(config.root_device());
 	for (const device_slot_interface *slot = iter.first(); slot != NULL; slot = iter.next())
 	{
+		if (slot->fixed()) continue;
 		// first device? add the header as to be pretty
 		if (first && isfirst)
 		{
@@ -313,7 +314,7 @@ bool emu_options::add_slot_options(bool isfirst)
 			entry[0].name = slot->device().tag() + 1;
 			entry[0].description = NULL;
 			entry[0].flags = OPTION_STRING | OPTION_FLAG_DEVICE;
-			entry[0].defvalue = (slot->get_slot_interfaces() != NULL) ? slot->get_default_card(config,*this) : NULL;
+			entry[0].defvalue = (slot->get_slot_interfaces() != NULL) ? slot->get_default_card() : NULL;
 			add_entries(entry, true);
 
 			added = true;
@@ -463,6 +464,8 @@ bool emu_options::parse_command_line(int argc, char *argv[], astring &error_stri
 		// remove any existing device options
 		remove_device_options();
 		result = parse_slot_devices(argc, argv, error_string, NULL, NULL);
+		if (exists(OPTION_RAMSIZE) && old_system_name.len()!=0)
+			set_value(OPTION_RAMSIZE, "", OPTION_PRIORITY_CMDLINE, error_string);
 	}
 	return result;
 }

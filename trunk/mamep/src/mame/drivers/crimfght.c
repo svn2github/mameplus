@@ -43,16 +43,15 @@ WRITE8_MEMBER(crimfght_state::crimfght_sh_irqtrigger_w)
 	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
 }
 
-static WRITE8_DEVICE_HANDLER( crimfght_snd_bankswitch_w )
+WRITE8_MEMBER(crimfght_state::crimfght_snd_bankswitch_w)
 {
 	/* b1: bank for channel A */
 	/* b0: bank for channel B */
 
-	crimfght_state *state = device->machine().driver_data<crimfght_state>();
 	int bank_A = BIT(data, 1);
 	int bank_B = BIT(data, 0);
 
-	k007232_set_bank(state->m_k007232, bank_A, bank_B );
+	k007232_set_bank(m_k007232, bank_A, bank_B );
 }
 
 READ8_MEMBER(crimfght_state::k052109_051960_r)
@@ -228,7 +227,7 @@ INPUT_PORTS_END
 static const ym2151_interface ym2151_config =
 {
 	DEVCB_NULL,
-	DEVCB_HANDLER(crimfght_snd_bankswitch_w)
+	DEVCB_DRIVER_MEMBER(crimfght_state,crimfght_snd_bankswitch_w)
 };
 
 static void volume_callback( device_t *device, int v )
@@ -356,7 +355,7 @@ ROM_END
 
 ROM_START( crimfghtj )
 	ROM_REGION( 0x28000, "maincpu", 0 ) /* code + banked roms */
-	ROM_LOAD( "821p02.bin", 0x10000, 0x18000, CRC(f33fa2e1) SHA1(00fc9e8250fa51386f3af2fca0f137bec9e1c220) )
+	ROM_LOAD( "821p02.f24", 0x10000, 0x18000, CRC(f33fa2e1) SHA1(00fc9e8250fa51386f3af2fca0f137bec9e1c220) )
 	ROM_CONTINUE(           0x08000, 0x08000 )
 
 	ROM_REGION( 0x10000, "audiocpu", 0 ) /* 64k for the sound CPU */
@@ -379,7 +378,7 @@ ROM_END
 
 ROM_START( crimfght2 )
 ROM_REGION( 0x28000, "maincpu", 0 ) /* code + banked roms */
-	ROM_LOAD( "crimefb.r02", 0x10000, 0x18000, CRC(4ecdd923) SHA1(78e5260c4bb9b18d7818fb6300d7e1d3a577fb63) )
+	ROM_LOAD( "821r02.f24", 0x10000, 0x18000, CRC(4ecdd923) SHA1(78e5260c4bb9b18d7818fb6300d7e1d3a577fb63) )
 	ROM_CONTINUE(           0x08000, 0x08000 )
 
 	ROM_REGION( 0x10000, "audiocpu", 0 ) /* 64k for the sound CPU */

@@ -193,14 +193,8 @@ void ui_menu_main::populate()
 	slot_interface_iterator slotiter(machine().root_device());
 	if (slotiter.first() != NULL)
 	{
-		bool display = false;
-		for (const device_slot_interface *slot = slotiter.first(); slot != NULL; slot = slotiter.next())
-		{
-			if (slot->fixed()) continue;
-			display = true;
-		}
-		/* add image info menu */
-		if (display) item_append(_("Slot Devices"), NULL, 0, (void *)SLOT_DEVICES);
+		/* add slot info menu */
+		item_append(_("Slot Devices"), NULL, 0, (void *)SLOT_DEVICES);
 	}
 
 	network_interface_iterator netiter(machine().root_device());
@@ -465,7 +459,7 @@ const char *ui_menu_slot_devices::slot_get_prev(device_slot_interface *slot)
 		if (idx==-2) idx = slot_get_length(slot) -1;
 		if (idx==-1) return "";
 		if (slot->get_slot_interfaces()[idx].internal) idx--;
-	} while (slot->get_slot_interfaces()[idx].internal);	
+	} while (slot->get_slot_interfaces()[idx].internal);
 	return slot->get_slot_interfaces()[idx].name;
 }
 
@@ -505,11 +499,12 @@ void ui_menu_slot_devices::populate()
 	slot_interface_iterator iter(machine().root_device());
 	for (device_slot_interface *slot = iter.first(); slot != NULL; slot = iter.next())
 	{
-		// do no display fixed slots
-		if (slot->fixed()) continue;
 		/* record the menu item */
 		const char *title = get_slot_device(slot);
-		item_append(slot->device().tag()+1, strcmp(title,"")==0 ? "------" : title, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)slot);
+		// do no display fixed slots
+		if (slot->fixed()) title = slot->get_default_card();
+		if (title==NULL) title = "";
+		item_append(slot->device().tag()+1, strcmp(title,"")==0 ? "------" : title, slot->fixed() ? 0 : (MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW), (void *)slot);
 	}
 	item_append(MENU_SEPARATOR_ITEM, NULL, 0, NULL);
 	item_append(_("Reset"),  NULL, 0, NULL);
@@ -1242,7 +1237,7 @@ void ui_menu_settings_dip_switches::custom_render(void *selectedref, float top, 
 	ioport_field *field = (ioport_field *)selectedref;
 	dip_descriptor *dip;
 
-	if (field!=NULL && field->first_diplocation() == NULL)
+	if (field==NULL || field->first_diplocation() == NULL)
 		return;
 
 	/* add borders */

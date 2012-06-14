@@ -68,24 +68,21 @@ inline void im6402_device::set_tre(int state)
 
 
 //-------------------------------------------------
-//  receive -
+//  receive_bit -
 //-------------------------------------------------
 
-inline void im6402_device::receive()
+inline void im6402_device::receive_bit(int state)
 {
-	if (m_in_rri_func.isnull())
-	{
-		receive_register_update_bit(get_in_data_bit());
-	}
-	else
-	{
-		receive_register_update_bit(m_in_rri_func());
-	}
+	if (LOG) logerror("IM6402 '%s' Receive Bit %u\n", tag(), state);
+
+	receive_register_update_bit(state);
 
 	if (is_receive_register_full())
 	{
 		receive_register_extract();
 		m_rbr = get_received_char();
+
+		if (LOG) logerror("IM6402 '%s' Receive Data %02x\n", tag(), m_rbr);
 
 		if (m_dr)
 		{
@@ -98,6 +95,27 @@ inline void im6402_device::receive()
 
 
 //-------------------------------------------------
+//  receive -
+//-------------------------------------------------
+
+inline void im6402_device::receive()
+{
+	int bit = 1;
+
+	if (m_in_rri_func.isnull())
+	{
+		bit = get_in_data_bit();
+	}
+	else
+	{
+		bit = m_in_rri_func();
+	}
+
+	receive_bit(bit);
+}
+
+
+//-------------------------------------------------
 //  transmit -
 //-------------------------------------------------
 
@@ -105,6 +123,8 @@ inline void im6402_device::transmit()
 {
 	if (is_transmit_register_empty() && !m_tbre)
 	{
+		if (LOG) logerror("IM6402 '%s' Transmit Data %02x\n", tag(), m_tbr);
+
 		transmit_register_setup(m_tbr);
 
 		set_tbre(ASSERT_LINE);
@@ -113,10 +133,11 @@ inline void im6402_device::transmit()
 
 	if (!is_transmit_register_empty())
 	{
-		int bit = transmit_register_get_data_bit();
+		int bit = transmit_register_send_bit();
+
+		if (LOG) logerror("IM6402 '%s' Transmit Bit %u\n", tag(), bit);
 
 		m_out_tro_func(bit);
-		serial_connection_out();
 
 		if (is_transmit_register_empty())
 		{
@@ -219,6 +240,9 @@ void im6402_device::device_start()
 
 void im6402_device::device_reset()
 {
+	transmit_register_reset();
+	receive_register_reset();
+
 	m_rrc_count = 0;
 	m_trc_count = 0;
 
@@ -258,6 +282,9 @@ void im6402_device::device_timer(emu_timer &timer, device_timer_id id, int param
 
 void im6402_device::input_callback(UINT8 state)
 {
+	int bit = (state & SERIAL_STATE_RX_DATA) ? 1 : 0;
+
+	receive_bit(bit);
 }
 
 
@@ -277,6 +304,8 @@ READ8_MEMBER( im6402_device::read )
 
 WRITE8_MEMBER( im6402_device::write )
 {
+	if (LOG) logerror("IM6402 '%s' Transmit Buffer Register %02x\n", tag(), data);
+
 	m_tbr = data;
 
 	set_tbre(CLEAR_LINE);
@@ -433,8 +462,10 @@ WRITE_LINE_MEMBER( im6402_device::crl_w )
 {
 	if (state)
 	{
+		if (LOG) logerror("IM6402 '%s' Control Register Load\n", tag());
+
 		int word_length = 5 + ((m_cls2 << 1) | m_cls1);
-		int stop_bits = 1 + m_sbs ? ((word_length == 5) ? 0.5 : 1) : 0;
+		float stop_bits = 1 + (m_sbs ? ((word_length == 5) ? 0.5 : 1) : 0);
 		int parity_code;
 
 		if (m_pi) parity_code = SERIAL_PARITY_NONE;
@@ -452,6 +483,8 @@ WRITE_LINE_MEMBER( im6402_device::crl_w )
 
 WRITE_LINE_MEMBER( im6402_device::pi_w )
 {
+	if (LOG) logerror("IM6402 '%s' Parity Inhibit %u\n", tag(), state);
+
 	m_pi = state;
 }
 
@@ -462,6 +495,8 @@ WRITE_LINE_MEMBER( im6402_device::pi_w )
 
 WRITE_LINE_MEMBER( im6402_device::sbs_w )
 {
+	if (LOG) logerror("IM6402 '%s' Stop Bit Select %u\n", tag(), state);
+
 	m_sbs = state;
 }
 
@@ -472,6 +507,8 @@ WRITE_LINE_MEMBER( im6402_device::sbs_w )
 
 WRITE_LINE_MEMBER( im6402_device::cls1_w )
 {
+	if (LOG) logerror("IM6402 '%s' Character Length Select 1 %u\n", tag(), state);
+
 	m_cls1 = state;
 }
 
@@ -482,6 +519,8 @@ WRITE_LINE_MEMBER( im6402_device::cls1_w )
 
 WRITE_LINE_MEMBER( im6402_device::cls2_w )
 {
+	if (LOG) logerror("IM6402 '%s' Character Length Select 2 %u\n", tag(), state);
+
 	m_cls2 = state;
 }
 
@@ -492,5 +531,7 @@ WRITE_LINE_MEMBER( im6402_device::cls2_w )
 
 WRITE_LINE_MEMBER( im6402_device::epe_w )
 {
+	if (LOG) logerror("IM6402 '%s' Even Parity Enable %u\n", tag(), state);
+
 	m_epe = state;
 }

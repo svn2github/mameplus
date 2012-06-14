@@ -17,7 +17,9 @@
 #else
 #include <SDL/SDL_ttf.h>
 #endif
+#ifndef SDLMAME_HAIKU
 #include <fontconfig/fontconfig.h>
+#endif
 #endif
 #ifdef SDLMAME_MACOSX
 #include <Carbon/Carbon.h>
@@ -113,7 +115,7 @@ const options_entry sdl_options::s_option_entries[] =
 	{ SDLOPTION_CENTERV,                      "1",        OPTION_BOOLEAN,    "center vertically within the view area" },
 	#if (SDL_VERSION_ATLEAST(1,2,10))
 	{ SDLOPTION_WAITVSYNC ";vs",              "0",        OPTION_BOOLEAN,    "enable waiting for the start of VBLANK before flipping screens; reduces tearing effects" },
-	{ SDLOPTION_SYNCREFRESH ";sr",            "0",        OPTION_BOOLEAN,    "enable using the start of VBLANK for throttling instead of the game time" },
+	{ SDLOPTION_SYNCREFRESH ";srf",           "0",        OPTION_BOOLEAN,    "enable using the start of VBLANK for throttling instead of the game time" },
 	#endif
 #if (SDLMAME_SDL2)
 	{ SDLOPTION_SCALEMODE ";sm",         SDLOPTVAL_NONE,  OPTION_STRING,     "Scale mode: none, hwblit, hwbest, yv12, yuy2, yv12x2, yuy2x2 (-video soft only)" },
@@ -315,7 +317,7 @@ int main(int argc, char *argv[])
 	setvbuf(stderr, (char *) NULL, _IONBF, 0);
 
 	#ifdef SDLMAME_UNIX
-	#ifndef SDLMAME_MACOSX
+	#if (!defined(SDLMAME_MACOSX)) && (!defined(SDLMAME_HAIKU))
 	if (TTF_Init() == -1)
 	{
 		printf("SDL_ttf failed: %s\n", TTF_GetError());
@@ -365,7 +367,7 @@ int main(int argc, char *argv[])
 	//SDL_Quit();
 
 	#ifdef SDLMAME_UNIX
-	#ifndef SDLMAME_MACOSX
+	#if (!defined(SDLMAME_MACOSX)) && (!defined(SDLMAME_HAIKU))
 	TTF_Quit();
 	FcFini();
 	#endif
@@ -877,6 +879,7 @@ static bool BDF_Check_Magic(astring name)
     return false;
 }
 
+#ifndef SDLMAME_HAIKU
 static TTF_Font *search_font_config(astring name, bool bold, bool italic, bool underline, bool &bakedstyles)
 {
 	TTF_Font *font = (TTF_Font *)NULL;
@@ -984,6 +987,7 @@ static TTF_Font *search_font_config(astring name, bool bold, bool italic, bool u
 	FcFontSetDestroy(fontset);
 	return font;
 }
+#endif
 
 //-------------------------------------------------
 //  font_open - attempt to "open" a handle to the
@@ -1028,10 +1032,12 @@ osd_font sdl_osd_interface::font_open(const char *_name, int &height)
 	}
 
 	// if that didn't work, crank up the FontConfig database
+#ifndef SDLMAME_HAIKU
 	if (!font)
 	{
 		font = search_font_config(name, bold, italic, underline, bakedstyles);
 	}
+#endif
 
 	if (!font)
 	{

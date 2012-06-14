@@ -104,7 +104,11 @@ class bfm_sc1_state : public driver_device
 {
 public:
 	bfm_sc1_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		  m_vfd0(*this, "vfd0")
+		{ }
+
+	optional_device<bfm_bd1_t> m_vfd0;
 
 	int m_mmtr_latch;
 	int m_triac_latch;
@@ -159,6 +163,10 @@ public:
 	DECLARE_WRITE8_MEMBER(vid_uart_ctrl_w);
 	DECLARE_READ8_MEMBER(vid_uart_rx_r);
 	DECLARE_READ8_MEMBER(vid_uart_ctrl_r);
+	DECLARE_READ8_MEMBER(nec_r);
+	DECLARE_WRITE8_MEMBER(nec_reset_w);
+	DECLARE_WRITE8_MEMBER(nec_latch_w);
+
 };
 
 #define VFD_RESET  0x20
@@ -325,7 +333,7 @@ READ8_MEMBER(bfm_sc1_state::dipcoin_r)
 
 ///////////////////////////////////////////////////////////////////////////
 
-static READ8_DEVICE_HANDLER( nec_r )
+READ8_MEMBER(bfm_sc1_state::nec_r)
 {
 	return 1;
 }
@@ -344,21 +352,16 @@ WRITE8_MEMBER(bfm_sc1_state::vfd_w)
 		{ // vfd reset line changed
 			if ( !(data & VFD_RESET) )
 			{ // reset the vfd
-				BFM_BD1_reset(0);
-				BFM_BD1_reset(1);
-				BFM_BD1_reset(2);
+			m_vfd0->reset();
 			}
 		}
 		if ( changed & VFD_CLOCK1 )
 		{ // clock line changed
 			if ( !(data & VFD_CLOCK1) && (data & VFD_RESET) )
 			{ // new data clocked into vfd
-				BFM_BD1_shift_data(0, data & VFD_DATA );
+				m_vfd0->shift_data(data & VFD_DATA );
 			}
 		}
-		BFM_BD1_draw(0);
-		BFM_BD1_draw(1);
-		BFM_BD1_draw(2);
 	}
 }
 
@@ -581,15 +584,16 @@ READ8_MEMBER(bfm_sc1_state::triac_r)
 
 /////////////////////////////////////////////////////////////////////////////////////
 #ifdef UNUSED_FUNCTION
-static WRITE8_DEVICE_HANDLER( nec_reset_w )
+WRITE8_MEMBER(bfm_sc1_state::nec_reset_w)
 {
 	upd7759_start_w(device, 0);
 	upd7759_reset_w(device, data);
 }
 #endif
 /////////////////////////////////////////////////////////////////////////////////////
-static WRITE8_DEVICE_HANDLER( nec_latch_w )
+WRITE8_MEMBER(bfm_sc1_state::nec_latch_w)
 {
+	device_t *device = machine().device("upd");
 	upd7759_port_w (device, 0, data&0x3F);	// setup sample
 	upd7759_start_w(device, 0);
 	upd7759_start_w(device, 1);			// start
@@ -629,7 +633,6 @@ READ8_MEMBER(bfm_sc1_state::vid_uart_ctrl_r)
 static MACHINE_RESET( bfm_sc1 )
 {
 	bfm_sc1_state *state = machine.driver_data<bfm_sc1_state>();
-	BFM_BD1_init(0);
 	state->m_vfd_latch         = 0;
 	state->m_mmtr_latch        = 0;
 	state->m_triac_latch       = 0;
@@ -645,9 +648,7 @@ static MACHINE_RESET( bfm_sc1 )
 	state->m_mux2_datahi		  = 0;
 	state->m_mux2_input        = 0;
 
-	BFM_BD1_reset(0);	// reset display1
-	BFM_BD1_reset(1);	// reset display2
-	BFM_BD1_reset(2);	// reset display3
+	state->m_vfd0->reset();
 
 // reset stepper motors /////////////////////////////////////////////////////////////
 	{
@@ -735,8 +736,8 @@ static ADDRESS_MAP_START( sc1_viper, AS_PROGRAM, 8, bfm_sc1_state )
 	AM_IMPORT_FROM( sc1_base )
 
 	AM_RANGE(0x3404, 0x3404) AM_READ(dipcoin_r ) // coin input on gamecard
-	AM_RANGE(0x3801, 0x3801) AM_DEVREAD_LEGACY("upd", nec_r)
-	AM_RANGE(0x3800, 0x39FF) AM_DEVWRITE_LEGACY("upd", nec_latch_w)
+	AM_RANGE(0x3801, 0x3801) AM_READ(nec_r)
+	AM_RANGE(0x3800, 0x39FF) AM_WRITE(nec_latch_w)
 ADDRESS_MAP_END
 
 // input ports for scorpion1 board //////////////////////////////////////////////////
@@ -1091,6 +1092,7 @@ static MACHINE_CONFIG_START( scorpion1, bfm_sc1_state )
 	MCFG_CPU_PERIODIC_INT(timer_irq, 1000 )				// generate 1000 IRQ's per second
 	MCFG_WATCHDOG_TIME_INIT(PERIOD_OF_555_MONOSTABLE(120000,100e-9))
 
+	MCFG_BFMBD1_ADD("vfd0",0)
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("aysnd",AY8912, MASTER_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
@@ -1164,26 +1166,18 @@ static DRIVER_INIT(toppoker)
 	sc1_common_init(machine,3,1, 3);
 	adder2_decode_char_roms(machine);	// decode GFX roms
 	MechMtr_config(machine,8);
-
-	BFM_BD1_init(0);
 }
 
 static DRIVER_INIT(lotse)
 {
 	sc1_common_init(machine,6,1, 3);
 	MechMtr_config(machine,8);
-
-	BFM_BD1_init(0);
-	BFM_BD1_init(1);
 }
 
 static DRIVER_INIT(lotse_bank0)
 {
 	sc1_common_init(machine,6,1, 0);
 	MechMtr_config(machine,8);
-
-	BFM_BD1_init(0);
-	BFM_BD1_init(1);
 }
 
 
@@ -1191,18 +1185,12 @@ static DRIVER_INIT(nocrypt)
 {
 	sc1_common_init(machine,6,0, 3);
 	MechMtr_config(machine,8);
-
-	BFM_BD1_init(0);
-	BFM_BD1_init(1);
 }
 
 static DRIVER_INIT(nocrypt_bank0)
 {
 	sc1_common_init(machine,6,0, 0);
 	MechMtr_config(machine,8);
-
-	BFM_BD1_init(0);
-	BFM_BD1_init(1);
 }
 
 
@@ -1212,8 +1200,6 @@ static DRIVER_INIT(rou029)
 {
 	sc1_common_init(machine,6,0, 3);
 	MechMtr_config(machine,8);
-
-	BFM_BD1_init(0);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -1223,8 +1209,6 @@ static DRIVER_INIT(clatt)
 	bfm_sc1_state *state = machine.driver_data<bfm_sc1_state>();
 	sc1_common_init(machine,6,1, 3);
 	MechMtr_config(machine,8);
-
-	BFM_BD1_init(0);
 
 	Scorpion1_SetSwitchState(state,3,2,1);
 	Scorpion1_SetSwitchState(state,3,3,1);

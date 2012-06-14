@@ -37,8 +37,12 @@
 #include "sound/ymz280b.h"
 #include "machine/68681.h"
 #include "bfm_sc4.lh"
-#include "machine/bfm_bd1.h"
 #include "video/awpvid.h"
+//DMD01
+#include "video/bfm_dm01.h"
+#include "cpu/m6809/m6809.h"
+#include "sc4_dmd.lh"
+
 
 UINT8 read_input_matrix(running_machine &machine, int row)
 {
@@ -451,8 +455,7 @@ void bfm_sc4_reset_serial_vfd(running_machine &machine)
 {
 	sc4_state *state = machine.driver_data<sc4_state>();
 
-	BFM_BD1_reset(0);
-	BFM_BD1_draw(0);
+	state->m_vfd0->reset();
 	state->vfd_old_clock = false;
 }
 
@@ -476,6 +479,8 @@ void bfm_sc4_write_serial_vfd(running_machine &machine, bool cs, bool clock, boo
 			{
 				if ( !clock )
 				{
+				//Should move to the internal serial process when DM01 is device-ified
+//                  m_vfd0->shift_data(!data);
 					state->vfd_ser_value <<= 1;
 					if (data) state->vfd_ser_value |= 1;
 
@@ -483,8 +488,14 @@ void bfm_sc4_write_serial_vfd(running_machine &machine, bool cs, bool clock, boo
 					if ( state->vfd_ser_count == 8 )
 					{
 						state->vfd_ser_count = 0;
-						BFM_BD1_newdata(0, state->vfd_ser_value);
-						BFM_BD1_draw(0);
+						if (machine.device("matrix"))
+						{
+							BFM_dm01_writedata(machine,state->vfd_ser_value);
+						}
+						else
+						{
+							state->m_vfd0->write_char(state->vfd_ser_value);
+						}
 					}
 				}
 				state->vfd_old_clock = clock;
@@ -630,8 +641,6 @@ static MACHINE_START( sc4 )
 		bfm_sc4_68307_portb_w );
 	m68307_set_duart68681(machine.device("maincpu"),machine.device("m68307_68681"));
 
-	BFM_BD1_init(0);
-
 	int reels = 6;
 	state->m_reels=reels;
 
@@ -659,10 +668,10 @@ void bfm_sc4_duart_irq_handler(device_t *device, int state, UINT8 vector)
 	// triggers after reel tests on luckb, at the start on dnd...
 	// not sure this is right, causes some games to crash
 	logerror("bfm_sc4_duart_irq_handler\n");
-    if (state == ASSERT_LINE)
-    {
-        m68307_licr2_interrupt((legacy_cpu_device*)device->machine().device("maincpu"));
-    }
+	if (state == ASSERT_LINE)
+	{
+		m68307_licr2_interrupt((legacy_cpu_device*)device->machine().device("maincpu"));
+	}
 };
 
 void bfm_sc4_duart_tx(device_t *device, int channel, UINT8 data)
@@ -712,10 +721,10 @@ static const duart68681_config bfm_sc4_duart68681_config =
 void m68307_duart_irq_handler(device_t *device, int state, UINT8 vector)
 {
 	logerror("m68307_duart_irq_handler\n");
-    if (state == ASSERT_LINE)
-    {
-        m68307_serial_interrupt((legacy_cpu_device*)device->machine().device("maincpu"), vector);
-    }
+	if (state == ASSERT_LINE)
+	{
+		m68307_serial_interrupt((legacy_cpu_device*)device->machine().device("maincpu"), vector);
+	}
 };
 
 void m68307_duart_tx(device_t *device, int channel, UINT8 data)
@@ -770,6 +779,7 @@ MACHINE_CONFIG_START( sc4, sc4_state )
 
 	MCFG_DUART68681_ADD("duart68681", 16000000/4, bfm_sc4_duart68681_config) // ?? Mhz
 
+	MCFG_BFMBD1_ADD("vfd0",0)
 
 	MCFG_DEFAULT_LAYOUT(layout_bfm_sc4)
 
@@ -791,10 +801,22 @@ static MACHINE_START( adder4 )
 MACHINE_CONFIG_DERIVED_CLASS( sc4_adder4, sc4, sc4_adder4_state )
 	MCFG_CPU_ADD("adder4", M68340, 25175000)	 // 68340 (CPU32 core)
 	MCFG_CPU_PROGRAM_MAP(sc4_adder4_map)
+	MCFG_BFMBD1_ADD("vfd0",0)
 
 	MCFG_MACHINE_START( adder4 )
 MACHINE_CONFIG_END
 
+MACHINE_CONFIG_DERIVED_CLASS( sc4dmd, sc4, sc4_state )
+	/* video hardware */
+	MCFG_BFMBD1_REMOVE("vfd0")
+
+	MCFG_DEFAULT_LAYOUT(layout_sc4_dmd)
+	MCFG_CPU_ADD("matrix", M6809, 2000000 )				/* matrix board 6809 CPU at 2 Mhz ?? I don't know the exact freq.*/
+	MCFG_CPU_PROGRAM_MAP(bfm_dm01_memmap)
+	MCFG_CPU_PERIODIC_INT(bfm_dm01_vbl, 1500 )			/* generate 1500 NMI's per second ?? what is the exact freq?? */
+
+	MCFG_MACHINE_START( sc4 )
+MACHINE_CONFIG_END
 
 INPUT_PORTS_START( sc4_base )
 	PORT_START("IN-0")

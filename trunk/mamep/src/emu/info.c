@@ -1280,7 +1280,7 @@ void info_xml_creator::output_slots(device_t &device, const char *root_tag)
              */
 
 			const slot_interface* intf = slot->get_slot_interfaces();
-			for (int i = 0; intf && intf[i].name != NULL; i++)
+			for (int i = 0; intf && intf[i].name != NULL && !intf[i].internal; i++)
 			{
 				device_t *dev = const_cast<machine_config &>(m_drivlist.config()).device_add(&m_drivlist.config().root_device(), "dummy", intf[i].devtype, 0);
 				if (!dev->configured())
@@ -1289,9 +1289,9 @@ void info_xml_creator::output_slots(device_t &device, const char *root_tag)
 				fprintf(m_output, "\t\t\t<slotoption");
 				fprintf(m_output, " name=\"%s\"", xml_normalize_string(intf[i].name));
 				fprintf(m_output, " devname=\"%s\"", xml_normalize_string(dev->shortname()));
-				if (slot->get_default_card(m_drivlist.config(), m_drivlist.options()))
+				if (slot->get_default_card())
 				{
-					if (strcmp(slot->get_default_card(m_drivlist.config(), m_drivlist.options()),intf[i].name)==0)
+					if (strcmp(slot->get_default_card(),intf[i].name)==0)
 						fprintf(m_output, " default=\"yes\"");
 				}
 				fprintf(m_output, "/>\n");

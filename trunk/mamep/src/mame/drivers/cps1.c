@@ -295,8 +295,9 @@ WRITE8_MEMBER(cps_state::cps1_snd_bankswitch_w)
 	membank("bank1")->set_entry(data & 0x01);
 }
 
-static WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w )
+WRITE8_MEMBER(cps_state::cps1_oki_pin7_w)
 {
+	device_t *device = machine().device("oki");
 	downcast<okim6295_device *>(device)->set_pin7(data & 1);
 }
 
@@ -604,7 +605,7 @@ static ADDRESS_MAP_START( sub_map, AS_PROGRAM, 8, cps_state )
 	AM_RANGE(0xf000, 0xf001) AM_DEVREADWRITE_LEGACY("2151", ym2151_r, ym2151_w)
 	AM_RANGE(0xf002, 0xf002) AM_DEVREADWRITE("oki", okim6295_device, read, write)
 	AM_RANGE(0xf004, 0xf004) AM_WRITE(cps1_snd_bankswitch_w)
-	AM_RANGE(0xf006, 0xf006) AM_DEVWRITE_LEGACY("oki", cps1_oki_pin7_w) /* controls pin 7 of OKI chip */
+	AM_RANGE(0xf006, 0xf006) AM_WRITE(cps1_oki_pin7_w) /* controls pin 7 of OKI chip */
 	AM_RANGE(0xf008, 0xf008) AM_READ(soundlatch_byte_r)	/* Sound command */
 	AM_RANGE(0xf00a, 0xf00a) AM_READ(soundlatch2_byte_r) /* Sound timer fade */
 ADDRESS_MAP_END
@@ -5963,7 +5964,7 @@ ROM_START( cawingj )
 	ROM_LOAD( "sou1",         0x0000, 0x0117, CRC(84f4b2fe) SHA1(dcc9e86cc36316fe42eace02d6df75d08bc8bb6d) )
 
 	ROM_REGION( 0x0200, "bboardplds", 0 )
-	ROM_LOAD( "ca22b.1a",     0x0000, 0x0117, NO_DUMP )
+	ROM_LOAD( "ca22b.1a",     0x0000, 0x0117, CRC(5152e678) SHA1(ac61df30cd073b26f2145e3ea0c513ec804d047a) )
 	ROM_LOAD( "iob1.12e",     0x0000, 0x0117, CRC(3abc0700) SHA1(973043aa46ec6d5d1db20dc9d5937005a0f9f6ae) )	/* seen the same pcb with LWIO.12E */
 ROM_END
 

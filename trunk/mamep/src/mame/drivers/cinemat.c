@@ -1122,7 +1122,7 @@ MACHINE_CONFIG_END
 
 
 static MACHINE_CONFIG_DERIVED( wotwc, cinemat_jmi_16k )
-	MCFG_FRAGMENT_ADD(wotwc_sound)
+	MCFG_FRAGMENT_ADD(wotw_sound)
 	MCFG_VIDEO_START(cinemat_color)
 MACHINE_CONFIG_END
 

@@ -19,56 +19,125 @@
 #ifndef __POKEY_H__
 #define __POKEY_H__
 
-#include "devlegcy.h"
+#include "machine/rescap.h"
 
-/* uncomment the line below for MESS to avoid breaking compile
- * please migrate as soon as possible to new device so that we can get rid of the legacy */
-
-//#define OLDDEVICE_FOR_MESS 1
-
-//#define POKEY_EXEC_INTERFACE
+/*
+ *  ATARI Pokey (CO12294) pin-out
+ *
+                 +-----------------+
+        VSS      |  1           40 |  D2
+        D3       |  2           39 |  D1
+        D4       |  3           38 |  D0
+        D5       |  4           37 |  AUD
+        D6       |  5           36 |  A0
+        D7       |  6           35 |  A1
+        PHI2     |  7           34 |  A2
+        P6       |  8           33 |  A3
+        P7       |  9           32 |  R / /W
+        P4       | 10           31 |  CS1
+        P5       | 11           30 |  /CS0
+        P2       | 12           29 |  IRQ
+        P3       | 13           28 |  SOD
+        P0       | 14           27 |  ACLK
+        P1       | 15           26 |  BCLK
+        /KR2     | 16           25 |  /KR1
+        VCC      | 17           24 |  SID
+        /K5      | 18           23 |  /K0
+        /K4      | 19           22 |  /K1
+        /K3      | 20           21 |  /K2
+                 +-----------------+
+ *
+ */
 
 /* CONSTANT DEFINITIONS */
-
 
 /* exact 1.79 MHz clock freq (of the Atari 800 that is) */
 #define FREQ_17_EXACT   1789790
 
+//**************************************************************************
+//  CALLBACK HANDLERS
+//**************************************************************************
 
-/*****************************************************************************
- * pot0_r to pot7_r:
- *  Handlers for reading the pot values. Some Atari games use
- *  ALLPOT to return dipswitch settings and other things.
- * serin_r, serout_w, interrupt_cb:
- *  New function pointers for serial input/output and a interrupt callback.
- *****************************************************************************/
+#define POKEY_KEYBOARD_HANDLER(_name) UINT8 _name(pokey_device *device, UINT8 k543210)
+#define POKEY_INTERRUPT_HANDLER(_name) void _name(pokey_device *device, int mask)
 
-class pokeyn_device;
 
-typedef struct _pokey_interface pokey_interface;
-struct _pokey_interface
-{
-	devcb_read8 pot_r[8];
-	devcb_read8 allpot_r;
-	devcb_read8 serin_r;
-	devcb_write8 serout_w;
-	void (*interrupt_cb)(pokeyn_device *device, int mask);
-};
+//**************************************************************************
+//  INTERFACE CONFIGURATION MACROS
+//**************************************************************************
 
+#define MCFG_POKEY_ADD(_tag, _clock) \
+	MCFG_DEVICE_ADD(_tag, POKEY, _clock)
+
+#define MCFG_POKEY_REPLACE(_tag, _clock) \
+	MCFG_DEVICE_REPLACE(_tag, POKEY, _clock)
+
+#define MCFG_POKEY_CONFIG(_intf) \
+	MCFG_DEVICE_CONFIG(_intf)
+
+/* k543210 = k5 ... k0 returns bit0: kr1, bit1: kr2 */
+/* all are, in contrast to actual hardware, ACTIVE_HIGH */
+#define MCFG_POKEY_KEYBOARD_HANDLER(_kbd) \
+	(downcast<pokey_device *>(device))->m_kbd_r = _kbd;
+
+#define MCFG_POKEY_INTERRUPT_HANDLER(_irqf) \
+	(downcast<pokey_device *>(device))->m_irq_f = _irqf;
+
+#define MCFG_POKEY_OUTPUT_RC(_R, _C, _V) \
+	(downcast<pokey_device *>(device))->m_output_type = pokey_device::RC_LOWPASS; \
+	(downcast<pokey_device *>(device))->m_r_pullup = (_R); \
+	(downcast<pokey_device *>(device))->m_cap = (_C); \
+	(downcast<pokey_device *>(device))->m_v_ref = (_V);
+
+/* C ignored, please see pokey.c */
+
+#define MCFG_POKEY_OUTPUT_OPAMP(_R, _C, _V) \
+	(downcast<pokey_device *>(device))->m_output_type = pokey_device::OPAMP_C_TO_GROUND; \
+	(downcast<pokey_device *>(device))->m_r_pullup = (_R); \
+	(downcast<pokey_device *>(device))->m_cap = (_C); \
+	(downcast<pokey_device *>(device))->m_v_ref = (_V);
+
+#define MCFG_POKEY_OUTPUT_OPAMP_LOW_PASS(_R, _C, _V) \
+	(downcast<pokey_device *>(device))->m_output_type = pokey_device::OPAMP_LOW_PASS; \
+	(downcast<pokey_device *>(device))->m_r_pullup = (_R); \
+	(downcast<pokey_device *>(device))->m_cap = (_C); \
+	(downcast<pokey_device *>(device))->m_v_ref = (_V);
+
+#define MCFG_POKEY_OUTPUT_DISCRETE() \
+	(downcast<pokey_device *>(device))->m_output_type = pokey_device::DISCRETE_VAR_R;
 
 //**************************************************************************
 //  TYPE DEFINITIONS
 //**************************************************************************
 
+// ======================> pokey_interface
+
+typedef struct _pokey_interface pokey_interface;
+struct _pokey_interface
+{
+	devcb_read8 m_pot_r_cb[8];
+	devcb_read8 m_allpot_r_cb;
+	devcb_read8 m_serin_r_cb;
+	devcb_write8 m_serout_w_cb;
+};
+
+
 // ======================> pokey_device
 
-class pokeyn_device : public device_t,
-					  public device_sound_interface
-#ifdef POKEY_EXEC_INTERFACE
-					  public ,device_execute_interface
-#endif
+class pokey_device : public device_t,
+					  public device_sound_interface,
+					  public device_execute_interface,
+					  public device_state_interface,
+					  public pokey_interface
 {
 public:
+
+	enum
+	{
+		POK_KEY_BREAK = 0x30,
+		POK_KEY_SHIFT = 0x20,
+		POK_KEY_CTRL  = 0x00
+	};
 
 	enum
 	{
@@ -109,8 +178,25 @@ public:
 		SKSTAT_C =  0x0F
 	};
 
+	enum /* sync-operations */
+	{
+		SYNC_NOOP		= 11,
+		SYNC_SET_IRQST	= 12,
+		SYNC_POT		= 13,
+		SYNC_WRITE		= 14
+	};
+
+	enum output_type
+	{
+		LEGACY_LINEAR = 0,
+		RC_LOWPASS,
+		OPAMP_C_TO_GROUND,
+		OPAMP_LOW_PASS,
+		DISCRETE_VAR_R
+	};
+
 	// construction/destruction
-	pokeyn_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	pokey_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
 
 	DECLARE_READ8_MEMBER( read );
 	DECLARE_WRITE8_MEMBER( write );
@@ -119,11 +205,22 @@ public:
 	void  write(offs_t offset, UINT8 data);
 
 	void serin_ready(int after);
-	void break_w(int shift);
-	void kbcode_w(int kbcode, int make);
+
+	// internal configuration
+
+	POKEY_KEYBOARD_HANDLER((*m_kbd_r));
+	POKEY_INTERRUPT_HANDLER((*m_irq_f));
+
+	// analog output configuration
+
+	output_type  m_output_type;
+	double m_r_pullup;
+	double m_cap;
+	double m_v_ref;
 
 protected:
 	// device-level overrides
+	virtual void device_config_complete();
 	virtual void device_start();
 	virtual void device_reset();
 	virtual void device_post_load();
@@ -133,13 +230,9 @@ protected:
 	// device_sound_interface overrides
 	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
 
-#ifdef POKEY_EXEC_INTERFACE
-	virtual void execute_run() { m_icount = 0; } //printf("execute: %d\n", m_icount); m_icount = 0; }
-#endif
+	virtual void execute_run();
 
-	// configuration state
-	pokey_interface m_intf;
-
+	//virtual UINT32 execute_min_cycles() const { return 114; }
 	// other internal states
     int m_icount;
 
@@ -150,22 +243,33 @@ private:
     {
     public:
     	pokey_channel();
+    	pokey_device *m_parent;
+    	UINT8 m_INTMask;
     	UINT8 m_AUDF;           /* AUDFx (D200, D202, D204, D206) */
     	UINT8 m_AUDC;			/* AUDCx (D201, D203, D205, D207) */
     	INT32 m_borrow_cnt;		/* borrow counter */
     	INT32 m_counter;		/* channel counter */
-    	UINT32 m_volume;		/* channel volume - derived */
     	UINT8 m_output;			/* channel output signal (1 active, 0 inactive) */
     	UINT8 m_filter_sample;  /* high-pass filter sample */
+    	UINT8 m_div2;			/* division by 2 */
 
     	inline void sample(void)			{ m_filter_sample = m_output; }
     	inline void reset_channel(void)		{ m_counter = m_AUDF ^ 0xff; }
-    	inline void inc_chan(void)
+
+    	inline void inc_chan()
     	{
     		m_counter = (m_counter + 1) & 0xff;
     		if (m_counter == 0 && m_borrow_cnt == 0)
+    		{
     			m_borrow_cnt = 3;
+    			if (m_parent->m_IRQEN & m_INTMask)
+    			{
+    				/* Exposed state has changed: This should only be updated after a resync ... */
+    				m_parent->synchronize(SYNC_SET_IRQST, m_INTMask);
+    			}
+    		}
     	}
+
     	inline int check_borrow()
     	{
     		if (m_borrow_cnt > 0)
@@ -179,61 +283,68 @@ private:
 
 	static const int POKEY_CHANNELS = 4;
 
+	UINT32 step_one_clock();
+	void step_keyboard();
+	void step_pot();
+
 	void poly_init_4_5(UINT32 *poly, int size, int xorbit, int invert);
 	void poly_init_9_17(UINT32 *poly, int size);
+	void vol_init();
+
 	inline void process_channel(int ch);
 	void pokey_potgo(void);
 	char *audc2str(int val);
 	char *audctl2str(int val);
+
+	void write_internal(offs_t offset, UINT8 data);
 
 	// internal state
 	sound_stream* m_stream;
 
 	pokey_channel m_channel[POKEY_CHANNELS];
 
-	INT32 m_divisor[4];		/* channel divisor (modulo value) */
+	UINT32 m_output;		/* raw output */
+	double m_out_filter;	/* filtered output */
+
 	INT32 m_clock_cnt[3];		/* clock counters */
 	UINT32 m_p4;              /* poly4 index */
 	UINT32 m_p5;              /* poly5 index */
 	UINT32 m_p9;              /* poly9 index */
 	UINT32 m_p17;             /* poly17 index */
-	UINT32 m_r9;				/* rand9 index */
-	UINT32 m_r17;             /* rand17 index */
-	UINT32 m_clockmult;		/* clock multiplier */
-	emu_timer *m_timer[3];	/* timers for channel 1,2 and 4 events */
-	attotime m_timer_period[3];	/* computed periods for these timers */
-	int m_timer_param[3];		/* computed parameters for these timers */
-	emu_timer *m_rtimer;     /* timer for calculating the random offset */
-	emu_timer *m_ptimer[8];	/* pot timers */
+
 	devcb_resolved_read8 m_pot_r[8];
 	devcb_resolved_read8 m_allpot_r;
 	devcb_resolved_read8 m_serin_r;
 	devcb_resolved_write8 m_serout_w;
-	void (*m_interrupt_cb)(pokeyn_device *device, int mask);
-	UINT8 m_POTx[8];			/* POTx   (R/D200-D207) */
+
+	UINT8 m_POTx[8];		/* POTx   (R/D200-D207) */
 	UINT8 m_AUDCTL;			/* AUDCTL (W/D208) */
 	UINT8 m_ALLPOT;			/* ALLPOT (R/D208) */
 	UINT8 m_KBCODE;			/* KBCODE (R/D209) */
-	UINT8 m_RANDOM;			/* RANDOM (R/D20A) */
 	UINT8 m_SERIN;			/* SERIN  (R/D20D) */
 	UINT8 m_SEROUT;			/* SEROUT (W/D20D) */
 	UINT8 m_IRQST;			/* IRQST  (R/D20E) */
 	UINT8 m_IRQEN;			/* IRQEN  (W/D20E) */
 	UINT8 m_SKSTAT;			/* SKSTAT (R/D20F) */
 	UINT8 m_SKCTL;			/* SKCTL  (W/D20F) */
+
+	UINT8 m_pot_counter;
+	UINT8 m_kbd_cnt;
+	UINT8 m_kbd_latch;
+	UINT8 m_kbd_state;
+
 	attotime m_clock_period;
-	attotime m_ad_time_fast;
-	attotime m_ad_time_slow;
 
 	UINT32 m_poly4[0x0f];
 	UINT32 m_poly5[0x1f];
 	UINT32 m_poly9[0x1ff];
 	UINT32 m_poly17[0x1ffff];
+	UINT32 m_voltab[0x10000];
 };
 
 
 // device type definition
-extern const device_type POKEYN;
+extern const device_type POKEY;
 
 
 /* fix me: eventually this should be a single device with pokey subdevices */

@@ -222,6 +222,7 @@ static const nes_pcb pcb_list[] =
 	{ "HVC-TFROM",        STD_TXROM },
 	{ "HVC-TGROM",        STD_TXROM },
 	{ "HVC-TKROM",        STD_TXROM },
+	{ "HVC-TKEPROM",      STD_TXROM },
 	{ "HVC-TL1ROM",       STD_TXROM },
 	{ "HVC-TL2ROM",       STD_TXROM },
 	{ "HVC-TLROM",        STD_TXROM },
@@ -235,6 +236,7 @@ static const nes_pcb pcb_list[] =
 	{ "NES-TFROM",        STD_TXROM },
 	{ "NES-TGROM",        STD_TXROM },
 	{ "NES-TKROM",        STD_TXROM },
+	{ "NES-TKEPROM",      STD_TXROM },
 	{ "NES-TL1ROM",       STD_TXROM },
 	{ "NES-TL2ROM",       STD_TXROM },
 	{ "NES-TLROM",        STD_TXROM },
@@ -401,6 +403,7 @@ static const nes_pcb pcb_list[] =
 	{ "UNL-SA-016-1M",    AVE_NINA06 },
 	{ "CAMERICA-ALGN",    CAMERICA_BF9093 },
 	{ "CAMERICA-BF9093",  CAMERICA_BF9093 },
+	{ "CODEMASTERS-NR8N", CAMERICA_BF9093 },
 	{ "NR8NV1-1",         CAMERICA_BF9093 },
 	{ "CAMERICA-BF9097",  CAMERICA_BF9097 },
 	{ "CAMERICA-ALGQ",    CAMERICA_BF9096 },
@@ -472,7 +475,7 @@ static const nes_pcb pcb_list[] =
 	{ "SUBOR-BOARD-1",    SUBOR_TYPE1 },
 	{ "SOMERITEAM-SL-12", SOMERI_SL12 }, // mapper 116
 	{ "UNL-CONY",         CONY_BOARD },
-	{ "UNL-YOKO",         CONY_BOARD },	// not exactly the same, needs better support
+	{ "UNL-YOKO",         YOKO_BOARD },
 	{ "UNL-GOUDER",       GOUDER_37017 },
 	{ "UNL-NITRA",        NITRA_TDA },
 	{ "UNL-HOSENKAN",     HOSENKAN_BOARD },
@@ -527,10 +530,11 @@ static const nes_pcb pcb_list[] =
 	{ "UNL-AX5705",       UNL_AX5705 },
 	{ "UNL-CC-21",        UNL_CC21 },
 	{ "UNL-KOF97",        UNL_KOF97 },
+	{ "UNL-KS7057",       UNL_KS7057 },	// mapper 196 alt (for Street Fighter VI / Fight Street VI)
 	{ "UNL-T-230",        UNL_T230 },
 	{ "UNL-STUDYNGAME",   UNL_STUDYNGAME },	// mapper 39
 	{ "UNL-OneBus",       UNSUPPORTED_BOARD },
-	{ "UNL-FS304",        UNSUPPORTED_BOARD },	// used in Zelda 3 by Waixing (support missing atm)
+	{ "UNL-FS304",        UNL_FS304 },	// used in Zelda 3 by Waixing
 	{ "UNL-43272",        UNSUPPORTED_BOARD },	// used in Gaau Hok Gwong Cheung (support missing atm)
 	{ "UNL-LH10",         UNSUPPORTED_BOARD },	// used in Fuuun Shaolin Kyo (FDS Conversion) (support missing atm)
 //
@@ -565,6 +569,7 @@ static const nes_pcb pcb_list[] =
 	{ "BMC-SUPERHIK-4IN1",   BMC_SUPERHIK_4IN1 },
 	{ "BMC-BALLGAMES-11IN1", BMC_BALLGAMES_11IN1 },
 	{ "BMC-MARIOPARTY-7IN1", BMC_MARIOPARTY_7IN1 },
+	{ "BMC-GOLD-7IN1",       BMC_GOLD_7IN1 },
 	{ "BMC-GKA",             BMC_GKA },
 	{ "BMC-GKB",             BMC_GKB },
 	{ "BMC-SUPER700IN1",     BMC_SUPER_700IN1 },
@@ -4898,6 +4903,114 @@ static WRITE8_HANDLER( cony_w )
 
 /*************************************************************
 
+ Yoko Bootleg Board
+
+ Games: Mortal Kombat II, Master Figther VI'
+
+
+ Very similar to Cony board
+
+ In MESS: Supported.
+
+ *************************************************************/
+
+static WRITE8_HANDLER( yoko_l_w )
+{
+	nes_state *state = space->machine().driver_data<nes_state>();
+	LOG_MMC(("cony_l_w, offset: %04x, data: %02x\n", offset, data));
+
+	if (offset >= 0x1300) // from 0x5400
+		state->m_mapper83_low_reg[offset & 0x03] = data;
+}
+
+static READ8_HANDLER( yoko_l_r )
+{
+	nes_state *state = space->machine().driver_data<nes_state>();
+	LOG_MMC(("cony_l_r, offset: %04x\n", offset));
+
+	if (offset >= 0x0f00 && offset < 0x1300)	// 0x5000
+	{
+		// read dipswitch bit! - currently unimplemented
+	}
+	if (offset >= 0x1300) // from 0x5400
+		return state->m_mapper83_low_reg[offset & 0x03];
+	else
+		return 0x00;
+}
+
+static void yoko_set_prg( running_machine &machine )
+{
+	nes_state *state = machine.driver_data<nes_state>();
+	if (state->m_mmc_reg[0] & 0x10)
+	{
+		int base = (state->m_mmc_reg[1] & 0x08) << 1;
+		prg8_89(machine, base | (state->m_mapper83_reg[0] & 0x0f));
+		prg8_ab(machine, base | (state->m_mapper83_reg[1] & 0x0f));
+		prg8_cd(machine, base | (state->m_mapper83_reg[2] & 0x0f));
+		prg8_ef(machine, base | 0x0f);
+	}
+	else if (state->m_mmc_reg[0] & 0x08)
+		prg32(machine, state->m_mmc_reg[1] >> 1);
+	else
+	{
+		prg16_89ab(machine, state->m_mmc_reg[1]);
+		prg16_cdef(machine, 0xff);
+	}
+}
+
+static void yoko_set_chr( running_machine &machine )
+{
+	nes_state *state = machine.driver_data<nes_state>();
+	chr2_0(machine, state->m_mapper83_reg[4], CHRROM);
+	chr2_2(machine, state->m_mapper83_reg[5], CHRROM);
+	chr2_4(machine, state->m_mapper83_reg[6], CHRROM);
+	chr2_6(machine, state->m_mapper83_reg[7], CHRROM);
+}
+
+static WRITE8_HANDLER( yoko_w )
+{
+	nes_state *state = space->machine().driver_data<nes_state>();
+	LOG_MMC(("yoko_w, offset: %04x, data: %02x\n", offset, data));
+
+	switch (offset & 0x0c17)
+	{
+		case 0x0000:
+			state->m_mmc_reg[1] = data;
+			yoko_set_prg(space->machine());
+			break;
+		case 0x400:
+			state->m_mmc_reg[0] = data;
+			if (data & 1)
+				set_nt_mirroring(space->machine(), PPU_MIRROR_HORZ);
+			else
+				set_nt_mirroring(space->machine(), PPU_MIRROR_VERT);
+			yoko_set_prg(space->machine());
+			break;
+		case 0x0800:
+			state->m_IRQ_count = (state->m_IRQ_count & 0xff00) | data;
+			break;
+		case 0x0801:
+			state->m_IRQ_enable = state->m_mmc_reg[0] & 0x80;
+			state->m_IRQ_count = (data << 8) | (state->m_IRQ_count & 0xff);
+			break;
+		case 0x0c00:
+		case 0x0c01:
+		case 0x0c02:
+			state->m_mapper83_reg[offset & 3] = data;
+			yoko_set_prg(space->machine());
+			break;
+		case 0x0c10:
+		case 0x0c11:
+		case 0x0c16:
+		case 0x0c17:
+			state->m_mapper83_reg[4 + (offset & 3)] = data;
+			yoko_set_chr(space->machine());
+			break;
+	}
+}
+
+/*************************************************************
+
  Board DREAMTECH01
 
  Games: Korean Igo
@@ -5984,40 +6097,67 @@ static WRITE8_HANDLER( ntdec_fh_m_w )
 
  In MESS: Supported.
 
+ Notes: Metal Force and Buzz & Waldog only use the the first
+ 4 regs and no mirroring. Janggun ui Adeul uses all features
+
  *************************************************************/
 
 static WRITE8_HANDLER( daou306_w )
 {
+	nes_state *state = space->machine().driver_data<nes_state>();
 	LOG_MMC(("daou306_w, offset: %04x, data: %02x\n", offset, data));
+	int reg = BIT(offset, 2) ? 8 : 0;
 
 	switch (offset)
 	{
 		case 0x4000:
-			chr1_0(space->machine(), data, CHRROM);
+		case 0x4004:
+			state->m_mmc_reg[reg + 0] = data;
+			chr1_0(space->machine(), state->m_mmc_reg[0] | (state->m_mmc_reg[8] << 8), CHRROM);
 			break;
 		case 0x4001:
-			chr1_1(space->machine(), data, CHRROM);
+		case 0x4005:
+			state->m_mmc_reg[reg + 1] = data;
+			chr1_1(space->machine(), state->m_mmc_reg[1] | (state->m_mmc_reg[9] << 8), CHRROM);
 			break;
 		case 0x4002:
-			chr1_2(space->machine(), data, CHRROM);
+		case 0x4006:
+			state->m_mmc_reg[reg + 2] = data;
+			chr1_2(space->machine(), state->m_mmc_reg[2] | (state->m_mmc_reg[10] << 8), CHRROM);
 			break;
 		case 0x4003:
-			chr1_3(space->machine(), data, CHRROM);
+		case 0x4007:
+			state->m_mmc_reg[reg + 3] = data;
+			chr1_3(space->machine(), state->m_mmc_reg[3] | (state->m_mmc_reg[11] << 8), CHRROM);
 			break;
 		case 0x4008:
-			chr1_4(space->machine(), data, CHRROM);
+		case 0x400c:
+			state->m_mmc_reg[reg + 4] = data;
+			chr1_4(space->machine(), state->m_mmc_reg[4] | (state->m_mmc_reg[12] << 8), CHRROM);
 			break;
 		case 0x4009:
-			chr1_5(space->machine(), data, CHRROM);
+		case 0x400d:
+			state->m_mmc_reg[reg + 5] = data;
+			chr1_5(space->machine(), state->m_mmc_reg[5] | (state->m_mmc_reg[13] << 8), CHRROM);
 			break;
 		case 0x400a:
-			chr1_6(space->machine(), data, CHRROM);
+		case 0x400e:
+			state->m_mmc_reg[reg + 6] = data;
+			chr1_6(space->machine(), state->m_mmc_reg[6] | (state->m_mmc_reg[14] << 8), CHRROM);
 			break;
 		case 0x400b:
-			chr1_7(space->machine(), data, CHRROM);
+		case 0x400f:
+			state->m_mmc_reg[reg + 7] = data;
+			chr1_7(space->machine(), state->m_mmc_reg[7] | (state->m_mmc_reg[15] << 8), CHRROM);
 			break;
 		case 0x4010:
 			prg16_89ab(space->machine(), data);
+			break;
+		case 0x4014:
+			if (data & 1)
+				set_nt_mirroring(space->machine(), PPU_MIRROR_HORZ);
+			else
+				set_nt_mirroring(space->machine(), PPU_MIRROR_VERT);
 			break;
 	}
 }
@@ -8437,6 +8577,25 @@ static WRITE8_HANDLER( unl_kof97_w )
 
 /*************************************************************
 
+ Board UNL-KS7057
+
+ Games: Street Fighter VI / Fight Street VI
+
+ MMC3 clone (identical, but for switched address lines)
+
+ In MESS: Supported
+
+ *************************************************************/
+
+static WRITE8_HANDLER( ks7057_w )
+{
+	LOG_MMC(("ks7057_w, offset: %04x, data: %02x\n", offset, data));
+	offset = (BIT(offset, 0) << 1) | BIT(offset, 1) | (offset & ~0x03);
+	txrom_w(space, offset, data);
+}
+
+/*************************************************************
+
  Board UNL-T-230
 
  Games: Dragon Ball Z IV (Unl)
@@ -9077,6 +9236,36 @@ static WRITE8_HANDLER( unl_racmate_w )
 	}
 }
 
+
+/*************************************************************
+
+ Board UNL-FS304
+
+ Games: A Link to the Past by Waixing
+
+ iNES: mapper 162? (only found in UNIF format)
+
+ In MESS: Supported.
+
+ *************************************************************/
+
+static WRITE8_HANDLER( unl_fs304_l_w )
+{
+	nes_state *state = space->machine().driver_data<nes_state>();
+	LOG_MMC(("unl_fs304_l_w, offset: %04x, data: %02x\n", offset, data));
+	int bank;
+	offset += 0x100;
+
+	if (offset >= 0x1000)
+	{
+		state->m_mmc_reg[(offset >> 8) & 3] = data;
+		bank = ((state->m_mmc_reg[2] & 0x0f) << 4) | BIT(state->m_mmc_reg[1], 1) | (state->m_mmc_reg[0] & 0x0e);
+		prg32(space->machine(), bank);
+		chr8(space->machine(), 0, CHRRAM);
+	}
+}
+
+
 /*************************************************************
 
         BOOTLEG CART VERSIONS OF FDS GAMES
@@ -9502,8 +9691,8 @@ static void fk23c_set_prg( running_machine &machine )
 			prg8_cd(machine, state->m_mmc_reg[4]);
 			prg8_ef(machine, state->m_mmc_reg[5]);
 		}
-
-		mmc3_set_prg(machine, state->m_mmc_prg_base, state->m_mmc_prg_mask);
+		else
+			mmc3_set_prg(machine, state->m_mmc_prg_base, state->m_mmc_prg_mask);
 	}
 }
 
@@ -9521,8 +9710,8 @@ static void fk23c_set_chr( running_machine &machine )
 			chr1_x(machine, 1, base | state->m_mmc_reg[6], state->m_mmc_chr_source);
 			chr1_x(machine, 3, base | state->m_mmc_reg[7], state->m_mmc_chr_source);
 		}
-
-		mmc3_set_chr(machine, state->m_mmc_chr_source, state->m_mmc_chr_base, state->m_mmc_chr_mask);
+		else
+			mmc3_set_chr(machine, state->m_mmc_chr_source, state->m_mmc_chr_base, state->m_mmc_chr_mask);
 	}
 }
 
@@ -10667,7 +10856,7 @@ static WRITE8_HANDLER( bmc_mario7in1_m_w )
 	LOG_MMC(("bmc_mario7in1_m_w, offset: %04x, data: %02x\n", offset, data));
 
 	/* mid writes only work when WRAM is enabled. not sure if I should
-     change the condition to state->m_mmc_latch2==0x80 (i.e. what is the effect of
+     change the condition to state->m_map52_reg_written == 0x80 (i.e. what is the effect of
      the read-only bit?) and it only can happen once! */
 	if ((state->m_mmc3_wram_protect & 0x80) && !state->m_map52_reg_written)
 	{
@@ -10682,6 +10871,46 @@ static WRITE8_HANDLER( bmc_mario7in1_m_w )
 		mmc3_set_chr(space->machine(), state->m_mmc_chr_source, state->m_mmc_chr_base, state->m_mmc_chr_mask);
 
 		state->m_map52_reg_written = 1;
+	}
+	else
+		state->m_wram[offset] = data;
+}
+
+/*************************************************************
+
+ BMC-GOLD-7IN1
+
+ Known Boards: Unknown Multigame Bootleg Board
+ Games: Super HIK Gold 7 in 1, Golden 7 in 1 and many more
+
+ MMC3 clone, same as BMC-MARIOPARTY-7IN1 but with switched CHR
+ bank lines
+
+ iNES: mapper 52
+
+ In MESS: Supported.
+
+ *************************************************************/
+
+static WRITE8_HANDLER( bmc_gold7in1_m_w )
+{
+	nes_state *state = space->machine().driver_data<nes_state>();
+	UINT8 map52_helper1, map52_helper2;
+	LOG_MMC(("bmc_gold7in1_m_w, offset: %04x, data: %02x\n", offset, data));
+
+	if ((state->m_mmc3_wram_protect & 0x80) && !state->m_map52_reg_written)
+	{
+		map52_helper1 = (data & 0x08);
+		map52_helper2 = (data & 0x40);
+
+		state->m_mmc_prg_base = map52_helper1 ? ((data & 0x07) << 4) : ((data & 0x06) << 4);
+		state->m_mmc_prg_mask = map52_helper1 ? 0x0f : 0x1f;
+		state->m_mmc_chr_base = ((data & 0x20) << 3) | ((data & 0x04) << 7) | (map52_helper2 ? ((data & 0x10) << 3) : 0);
+		state->m_mmc_chr_mask = map52_helper2 ? 0x7f : 0xff;
+		mmc3_set_prg(space->machine(), state->m_mmc_prg_base, state->m_mmc_prg_mask);
+		mmc3_set_chr(space->machine(), state->m_mmc_chr_source, state->m_mmc_chr_base, state->m_mmc_chr_mask);
+
+		state->m_map52_reg_written = BIT(data, 7);	// mc_2hikg & mc_s3nt3 write here multiple time
 	}
 	else
 		state->m_wram[offset] = data;
@@ -11810,6 +12039,7 @@ static const nes_pcb_intf nes_intf_list[] =
 	{ CAMERICA_BF9096,      NES_NOACCESS, NES_WRITEONLY(bf9096_w), NES_WRITEONLY(bf9096_w),   NULL, NULL, NULL },
 	{ CAMERICA_GOLDENFIVE,  NES_NOACCESS, NES_NOACCESS, NES_WRITEONLY(golden5_w),             NULL, NULL, NULL },
 	{ CONY_BOARD,           {FUNC(cony_l_w), FUNC(cony_l_r)}, NES_NOACCESS, NES_WRITEONLY(cony_w),        NULL, NULL, sunsoft3_irq },
+	{ YOKO_BOARD,           {FUNC(yoko_l_w), FUNC(yoko_l_r)}, NES_NOACCESS, NES_WRITEONLY(yoko_w),        NULL, NULL, sunsoft3_irq },
 	{ DREAMTECH_BOARD,      NES_WRITEONLY(dreamtech_l_w), NES_NOACCESS, NES_NOACCESS,         NULL, NULL, NULL },
 	{ FUTUREMEDIA_BOARD,    NES_NOACCESS, NES_NOACCESS, NES_WRITEONLY(futuremedia_w),         NULL, NULL, futuremedia_irq },
 	{ FUKUTAKE_BOARD,       {FUNC(fukutake_l_w), FUNC(fukutake_l_r)}, NES_NOACCESS, NES_NOACCESS,         NULL, NULL, NULL },
@@ -11888,6 +12118,7 @@ static const nes_pcb_intf nes_intf_list[] =
 	{ UNL_AX5705,           NES_NOACCESS, NES_NOACCESS, NES_WRITEONLY(unl_ax5705_w),          NULL, NULL, NULL },
 	{ UNL_CC21,             NES_NOACCESS, NES_NOACCESS, NES_WRITEONLY(unl_cc21_w),            NULL, NULL, NULL },
 	{ UNL_KOF97,            NES_NOACCESS, NES_NOACCESS, NES_WRITEONLY(unl_kof97_w),           NULL, NULL, mmc3_irq },
+	{ UNL_KS7057,           NES_NOACCESS, NES_NOACCESS, NES_WRITEONLY(ks7057_w),              NULL, NULL, mmc3_irq },
 	{ UNL_T230,             NES_NOACCESS, NES_NOACCESS, NES_WRITEONLY(unl_t230_w),            NULL, NULL, konami_irq },
 	{ UNL_KOF96,            {FUNC(kof96_l_w), FUNC(kof96_l_r)}, NES_NOACCESS, NES_WRITEONLY(kof96_w),     NULL, NULL, mmc3_irq },
 	{ UNL_MK2,              NES_NOACCESS, NES_WRITEONLY(mk2_m_w), NES_NOACCESS,               NULL, NULL, mmc3_irq },
@@ -11902,6 +12133,7 @@ static const nes_pcb_intf nes_intf_list[] =
 	{ UNL_EDU2K,            NES_NOACCESS, NES_NOACCESS, NES_WRITEONLY(edu2k_w),               NULL, NULL, NULL },
 	{ UNL_SHJY3,            NES_NOACCESS, NES_NOACCESS, NES_WRITEONLY(shjy3_w),               NULL, NULL, shjy3_irq },
 	{ UNL_H2288,            {FUNC(h2288_l_w), FUNC(h2288_l_r)}, NES_NOACCESS, NES_WRITEONLY(h2288_w),     NULL, NULL, mmc3_irq },
+	{ UNL_FS304,            NES_WRITEONLY(unl_fs304_l_w), NES_NOACCESS, NES_NOACCESS,         NULL, NULL, NULL },
 	//
 	{ BTL_AISENSHINICOL,    NES_NOACCESS, NES_NOACCESS, NES_WRITEONLY(btl_mariobaby_w),       NULL, NULL, NULL },
 	{ BTL_DRAGONNINJA,      NES_NOACCESS, NES_NOACCESS, NES_WRITEONLY(btl_dn_w),              NULL, NULL, btl_dn_irq },
@@ -11946,6 +12178,7 @@ static const nes_pcb_intf nes_intf_list[] =
 	{ BMC_SUPERHIK_4IN1,    NES_NOACCESS, NES_WRITEONLY(bmc_hik4in1_m_w), NES_WRITEONLY(txrom_w), NULL, NULL, mmc3_irq },
 	{ BMC_SUPERBIG_7IN1,    NES_NOACCESS, NES_NOACCESS, NES_WRITEONLY(bmc_sbig7_w),           NULL, NULL, mmc3_irq },
 	{ BMC_MARIOPARTY_7IN1,  NES_NOACCESS, NES_WRITEONLY(bmc_mario7in1_m_w), NES_WRITEONLY(txrom_w), NULL, NULL, mmc3_irq },
+	{ BMC_GOLD_7IN1,        NES_NOACCESS, NES_WRITEONLY(bmc_gold7in1_m_w), NES_WRITEONLY(txrom_w), NULL, NULL, mmc3_irq },
 	{ BMC_FAMILY_4646B,     NES_NOACCESS, NES_WRITEONLY(bmc_family4646_m_w), NES_WRITEONLY(txrom_w), NULL, NULL, mmc3_irq },
 	{ BMC_15IN1,            NES_NOACCESS, NES_WRITEONLY(bmc_15in1_m_w), NES_WRITEONLY(txrom_w), NULL, NULL, mmc3_irq },
 	{ BMC_BALLGAMES_11IN1,  NES_NOACCESS, NES_WRITEONLY(bmc_ball11_m_w), NES_WRITEONLY(bmc_ball11_w), NULL, NULL, NULL },
@@ -12087,6 +12320,7 @@ void pcb_handlers_setup( running_machine &machine )
 			state->m_mmc3_chr_cb = kay_pp_chr_cb;
 			break;
 		case BMC_FK23C:
+		case BMC_FK23CA:
 			state->m_mmc3_prg_cb = fk23c_prg_cb;
 			state->m_mmc3_chr_cb = fk23c_chr_cb;
 			break;
@@ -12313,6 +12547,7 @@ static int pcb_initialize( running_machine &machine, int idx )
 		case WAIXING_TYPE_E:	// mapper 195
 		case WAIXING_TYPE_H:	// mapper 245
 		case BTL_SUPERBROS11:	// mapper 196
+		case UNL_KS7057:		// mapper 196 alt (for Street Fighter VI / Fight Street VI)
 		case UNL_H2288:		// mapper 123
 		case UNL_KOF97:
 		case UNL_603_5052:
@@ -12490,6 +12725,7 @@ static int pcb_initialize( running_machine &machine, int idx )
 			break;
 			// mapper 52
 		case BMC_MARIOPARTY_7IN1:
+		case BMC_GOLD_7IN1:
 			state->m_map52_reg_written = 0;
 			mmc3_common_initialize(machine, 0x1f, 0xff, 0);
 			break;
@@ -12524,6 +12760,7 @@ static int pcb_initialize( running_machine &machine, int idx )
 
 			// mapper 83
 		case CONY_BOARD:
+		case YOKO_BOARD:
 			state->m_mapper83_reg[9] = 0x0f;
 			prg8_cd(machine, 0x1e);
 			prg8_ef(machine, 0x1f);

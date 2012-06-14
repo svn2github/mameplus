@@ -21,6 +21,7 @@ tokimosh   Tokimeki Memorial Oshiete    ?              GE755   JAA          97.0
 tokimosp   Tokimeki Memorial Oshiete    ?              GE756   JAB          97.09.27   9:10
            Your Heart Seal version PLUS
 nagano98   Winter Olypmics in Nagano 98 GV999          GX720   EAA01 1.03   98.01.08  10:45
+naganoj    Hyper Olympic in Nagano      GV999          GX720   JAA01 1.02   98.01.07  01:10
 simpbowl   Simpsons Bowling             GV999          GQ829   UAA          ?
 
 PCB Layouts
@@ -125,6 +126,7 @@ Notes:
 #include "machine/eeprom.h"
 #include "machine/intelfsh.h"
 #include "machine/am53cf96.h"
+#include "machine/scsicd.h"
 #include "sound/spu.h"
 #include "sound/cdda.h"
 
@@ -158,12 +160,14 @@ public:
 	DECLARE_READ32_MEMBER(tokimeki_serial_r);
 	DECLARE_WRITE32_MEMBER(tokimeki_serial_w);
 	DECLARE_WRITE32_MEMBER(kdeadeye_0_w);
+	DECLARE_WRITE32_MEMBER(eeprom_w);
 };
 
 /* EEPROM handlers */
 
-static WRITE32_DEVICE_HANDLER( eeprom_w )
+WRITE32_MEMBER(konamigv_state::eeprom_w)
 {
+	device_t *device = machine().device("eeprom");
 	eeprom_device *eeprom = downcast<eeprom_device *>(device);
 	eeprom->write_bit((data&0x01) ? 1 : 0);
 	eeprom->set_clock_line((data&0x04) ? ASSERT_LINE : CLEAR_LINE);
@@ -185,7 +189,7 @@ static ADDRESS_MAP_START( konamigv_map, AS_PROGRAM, 32, konamigv_state )
 	AM_RANGE(0x1f100000, 0x1f100003) AM_READ_PORT("P1")
 	AM_RANGE(0x1f100004, 0x1f100007) AM_READ_PORT("P2")
 	AM_RANGE(0x1f100008, 0x1f10000b) AM_READ_PORT("P3_P4")
-	AM_RANGE(0x1f180000, 0x1f180003) AM_DEVWRITE_LEGACY("eeprom", eeprom_w)
+	AM_RANGE(0x1f180000, 0x1f180003) AM_WRITE(eeprom_w)
 	AM_RANGE(0x1f680000, 0x1f68001f) AM_READWRITE(mb89371_r, mb89371_w)
 	AM_RANGE(0x1f780000, 0x1f780003) AM_WRITENOP /* watchdog? */
 	AM_RANGE(0x1fc00000, 0x1fc7ffff) AM_ROM AM_SHARE("share2") AM_REGION("user1", 0) /* bios */
@@ -287,7 +291,7 @@ static const SCSIConfigTable dev_table =
 {
 	1, /* 1 SCSI device */
 	{
-		{ SCSI_ID_4, ":cdrom", SCSI_DEVICE_CDROM } /* SCSI ID 4, using CHD 0, and it's a CD-ROM */
+		{ SCSI_ID_4, ":cdrom", } /* SCSI ID 4, CD-ROM */
 	}
 };
 
@@ -297,18 +301,12 @@ static const struct AM53CF96interface scsi_intf =
 	&scsi_irq,		/* command completion IRQ */
 };
 
-static void konamigv_exit(running_machine &machine)
-{
-	am53cf96_exit(&scsi_intf);
-}
-
 static DRIVER_INIT( konamigv )
 {
 	psx_driver_init(machine);
 
 	/* init the scsi controller and hook up it's DMA */
 	am53cf96_init(machine, &scsi_intf);
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(konamigv_exit), &machine));
 }
 
 static MACHINE_START( konamigv )
@@ -349,6 +347,8 @@ static MACHINE_CONFIG_START( konamigv, konamigv_state )
 	MCFG_MACHINE_RESET( konamigv )
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
+
+	MCFG_DEVICE_ADD("cdrom", SCSICD, 0)
 
 	/* video hardware */
 	MCFG_PSXGPU_ADD( "maincpu", "gpu", CXD8514Q, 0x100000, XTAL_53_693175MHz )
@@ -846,11 +846,21 @@ ROM_START( nagano98 )
 	DISK_IMAGE_READONLY( "nagano98", 0, BAD_DUMP SHA1(1be7bd4531f249ff2233dd40a206c8d60054a8c6) )
 ROM_END
 
+ROM_START( naganoj )
+	GV_BIOS
+
+	ROM_REGION16_BE( 0x0000080, "eeprom", 0 ) /* default eeprom */
+	ROM_LOAD( "720ja.25c",  0x000000, 0x000080, CRC(34c473ba) SHA1(768225b04a293bdbc114a092d14dee28d52044e9) )
+
+	DISK_REGION( "cdrom" )
+	DISK_IMAGE_READONLY( "720jaa01", 0, SHA1(437160996551ef4dfca43899d1d14beca62eb4c9) )
+ROM_END
+
 ROM_START( tokimosh )
 	GV_BIOS
 
 	ROM_REGION16_BE( 0x0000080, "eeprom", 0 ) /* default eeprom */
-        ROM_LOAD( "tokimosh.25c", 0x000000, 0x000080, CRC(e57b833f) SHA1(f18a0974a6be69dc179706643aab837ff61c2738) )
+	ROM_LOAD( "tokimosh.25c", 0x000000, 0x000080, CRC(e57b833f) SHA1(f18a0974a6be69dc179706643aab837ff61c2738) )
 
 	DISK_REGION( "cdrom" )
 	DISK_IMAGE_READONLY( "755jaa01", 0, BAD_DUMP SHA1(4af080f9650e34d1ddb91bb763469d5fb3c754bd) )
@@ -878,4 +888,5 @@ GAME( 1997, weddingr, konamigv, konamigv, konamigv, konamigv, ROT0, "Konami", "W
 GAME( 1997, tokimosh, konamigv, konamigv, konamigv, tokimosh, ROT0, "Konami", "Tokimeki Memorial Oshiete Your Heart (GE755 JAA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
 GAME( 1997, tokimosp, konamigv, konamigv, konamigv, tokimosh, ROT0, "Konami", "Tokimeki Memorial Oshiete Your Heart Seal version PLUS (GE756 JAB)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
 GAME( 1998, nagano98, konamigv, konamigv, konamigv, konamigv, ROT0, "Konami", "Nagano Winter Olympics '98 (GX720 EAA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE)
+GAME( 1998, naganoj,  nagano98, konamigv, konamigv, konamigv, ROT0, "Konami", "Hyper Olympic in Nagano (GX720 JAA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE)
 GAME( 2000, simpbowl, konamigv, simpbowl, simpbowl, simpbowl, ROT0, "Konami", "Simpsons Bowling (GQ829 UAA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE)

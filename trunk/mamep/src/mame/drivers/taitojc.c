@@ -366,7 +366,6 @@ Notes:
 
 READ32_MEMBER(taitojc_state::taitojc_palette_r)
 {
-
 	return m_palette_ram[offset];
 }
 
@@ -452,7 +451,6 @@ READ32_MEMBER(taitojc_state::jc_control_r)
 
 WRITE32_MEMBER(taitojc_state::jc_coin_counters_w)
 {
-
 	COMBINE_DATA(&m_outputs);
 
 	coin_lockout_w(machine(), 0, !(data & 0x01000000));
@@ -743,8 +741,7 @@ static void debug_dsp_command(running_machine &machine)
 
 WRITE32_MEMBER(taitojc_state::dsp_shared_w)
 {
-
-	//mame_printf_debug("dsp_shared_ram: %08X, %04X at %08X\n", offset, data >> 16, cpu_get_pc(&space.device()));
+	//mame_printf_debug("dsp_shared: %08X, %04X at %08X\n", offset, data >> 16, cpu_get_pc(&space.device()));
 	if (ACCESSING_BITS_24_31)
 	{
 		m_dsp_shared_ram[offset] &= 0x00ff;
@@ -764,7 +761,7 @@ WRITE32_MEMBER(taitojc_state::dsp_shared_w)
 #endif
 
 	if (offset == 0x1ff8/4)
-		cputag_set_input_line(machine(), "maincpu", 6, CLEAR_LINE);
+		device_set_input_line(m_maincpu, 6, CLEAR_LINE);
 
 	if (offset == 0x1ffc/4)
 	{
@@ -782,46 +779,45 @@ WRITE32_MEMBER(taitojc_state::dsp_shared_w)
             */
 			if (!m_first_dsp_reset || !m_has_dsp_hack)
 			{
-				cputag_set_input_line(machine(), "dsp", INPUT_LINE_RESET, CLEAR_LINE);
+				device_set_input_line(m_dsp, INPUT_LINE_RESET, CLEAR_LINE);
 			}
 			m_first_dsp_reset = 0;
 		}
 		else
 		{
-			cputag_set_input_line(machine(), "dsp", INPUT_LINE_RESET, ASSERT_LINE);
+			device_set_input_line(m_dsp, INPUT_LINE_RESET, ASSERT_LINE);
 		}
 	}
 }
 
-READ32_MEMBER(taitojc_state::f3_share_r)
+READ32_MEMBER(taitojc_state::snd_share_r)
 {
 	switch (offset & 3)
 	{
-		case 0: return (m_f3_shared_ram[(offset/4)] <<  0) & 0xff000000;
-		case 1: return (m_f3_shared_ram[(offset/4)] <<  8) & 0xff000000;
-		case 2: return (m_f3_shared_ram[(offset/4)] << 16) & 0xff000000;
-		case 3: return (m_f3_shared_ram[(offset/4)] << 24) & 0xff000000;
+		case 0: return (m_snd_shared_ram[(offset/4)] <<  0) & 0xff000000;
+		case 1: return (m_snd_shared_ram[(offset/4)] <<  8) & 0xff000000;
+		case 2: return (m_snd_shared_ram[(offset/4)] << 16) & 0xff000000;
+		case 3: return (m_snd_shared_ram[(offset/4)] << 24) & 0xff000000;
 	}
 
 	return 0;
 }
 
-WRITE32_MEMBER(taitojc_state::f3_share_w)
+WRITE32_MEMBER(taitojc_state::snd_share_w)
 {
 	UINT32 d = (data >> 24) & 0xff;
 
 	switch (offset & 3)
 	{
-		case 0: m_f3_shared_ram[(offset/4)] &= ~0xff000000; m_f3_shared_ram[(offset/4)] |= d << 24; break;
-		case 1: m_f3_shared_ram[(offset/4)] &= ~0x00ff0000; m_f3_shared_ram[(offset/4)] |= d << 16; break;
-		case 2: m_f3_shared_ram[(offset/4)] &= ~0x0000ff00; m_f3_shared_ram[(offset/4)] |= d <<  8; break;
-		case 3: m_f3_shared_ram[(offset/4)] &= ~0x000000ff; m_f3_shared_ram[(offset/4)] |= d <<  0; break;
+		case 0: m_snd_shared_ram[(offset/4)] &= ~0xff000000; m_snd_shared_ram[(offset/4)] |= d << 24; break;
+		case 1: m_snd_shared_ram[(offset/4)] &= ~0x00ff0000; m_snd_shared_ram[(offset/4)] |= d << 16; break;
+		case 2: m_snd_shared_ram[(offset/4)] &= ~0x0000ff00; m_snd_shared_ram[(offset/4)] |= d <<  8; break;
+		case 3: m_snd_shared_ram[(offset/4)] &= ~0x000000ff; m_snd_shared_ram[(offset/4)] |= d <<  0; break;
 	}
 }
 
 WRITE32_MEMBER(taitojc_state::jc_meters_w)
 {
-
 	// printf("jc_output_w: %08x, %08x %08x\n", offset, data,mem_mask);
 	if(offset == 0 && ACCESSING_BITS_16_31)
 		m_speed_meter = taitojc_odometer_table[(data >> 16) & 0xff];
@@ -858,7 +854,7 @@ static ADDRESS_MAP_START( taitojc_map, AS_PROGRAM, 32, taitojc_state )
 	AM_RANGE(0x06600010, 0x06600013) AM_WRITE(jc_coin_counters_w)
 	AM_RANGE(0x06600040, 0x0660004f) AM_WRITE(jc_control_w)
 	//AM_RANGE(0x06800000, 0x06801fff) AM_NOP       // unknown
-	AM_RANGE(0x06a00000, 0x06a01fff) AM_READWRITE(f3_share_r, f3_share_w) AM_SHARE("f3_shared")
+	AM_RANGE(0x06a00000, 0x06a01fff) AM_READWRITE(snd_share_r, snd_share_w) AM_SHARE("snd_shared")
 	AM_RANGE(0x06c00000, 0x06c0001f) AM_READ(jc_lan_r) AM_WRITENOP // Dangerous Curves
 	AM_RANGE(0x06e00000, 0x06e00007) AM_WRITE(jc_meters_w)
 	AM_RANGE(0x08000000, 0x080fffff) AM_RAM AM_SHARE("main_ram")
@@ -870,18 +866,15 @@ ADDRESS_MAP_END
 
 READ8_MEMBER(taitojc_state::hc11_comm_r)
 {
-
 	return m_mcu_comm_hc11;
 }
 
 WRITE8_MEMBER(taitojc_state::hc11_comm_w)
 {
-
 }
 
 READ8_MEMBER(taitojc_state::hc11_data_r)
 {
-
 	m_mcu_comm_hc11 |= 0x04;
 	m_mcu_comm_main |= 0x20;
 	return m_mcu_data_hc11;
@@ -889,7 +882,6 @@ READ8_MEMBER(taitojc_state::hc11_data_r)
 
 WRITE8_MEMBER(taitojc_state::hc11_data_w)
 {
-
 	m_mcu_data_main = data;
 }
 
@@ -928,7 +920,6 @@ READ16_MEMBER(taitojc_state::dsp_rom_r)
 
 WRITE16_MEMBER(taitojc_state::dsp_rom_w)
 {
-
 	if (offset == 0)
 	{
 		m_dsp_rom_pos &= 0xffff;
@@ -961,13 +952,11 @@ WRITE16_MEMBER(taitojc_state::dsp_texture_w)
 
 READ16_MEMBER(taitojc_state::dsp_texaddr_r)
 {
-
 	return m_dsp_tex_address;
 }
 
 WRITE16_MEMBER(taitojc_state::dsp_texaddr_w)
 {
-
 	m_dsp_tex_address = data;
 //  mame_printf_debug("texaddr = %08X at %08X\n", data, cpu_get_pc(&space.device()));
 
@@ -996,13 +985,11 @@ READ16_MEMBER(taitojc_state::dsp_unk_r)
 
 WRITE16_MEMBER(taitojc_state::dsp_viewport_w)
 {
-
 	m_viewport_data[offset] = (INT16)(data);
 }
 
 WRITE16_MEMBER(taitojc_state::dsp_projection_w)
 {
-
 	m_projection_data[offset] = (INT16)(data);
 
 	if (offset == 2)
@@ -1022,7 +1009,6 @@ WRITE16_MEMBER(taitojc_state::dsp_projection_w)
 
 READ16_MEMBER(taitojc_state::dsp_projection_r)
 {
-
 	if (offset == 0)
 	{
 		return m_projected_point_y;
@@ -1037,7 +1023,6 @@ READ16_MEMBER(taitojc_state::dsp_projection_r)
 
 WRITE16_MEMBER(taitojc_state::dsp_unk2_w)
 {
-
 	if (offset == 0)
 	{
 		taitojc_clear_frame(machine());
@@ -1049,13 +1034,11 @@ WRITE16_MEMBER(taitojc_state::dsp_unk2_w)
 
 WRITE16_MEMBER(taitojc_state::dsp_intersection_w)
 {
-
 	m_intersection_data[offset] = (INT32)(INT16)(data);
 }
 
 READ16_MEMBER(taitojc_state::dsp_intersection_r)
 {
-
 	return (INT16)((m_intersection_data[0] * m_intersection_data[1]) / m_intersection_data[2]);
 }
 
@@ -1082,14 +1065,12 @@ READ16_MEMBER(taitojc_state::dsp_intersection_r)
 
 READ16_MEMBER(taitojc_state::dsp_to_main_r)
 {
-
 	return m_dsp_shared_ram[0x7fe];
 }
 
 WRITE16_MEMBER(taitojc_state::dsp_to_main_w)
 {
-
-	cputag_set_input_line(machine(), "maincpu", 6, ASSERT_LINE);
+	device_set_input_line(m_maincpu, 6, ASSERT_LINE);
 
 	COMBINE_DATA(&m_dsp_shared_ram[0x7fe]);
 }
@@ -1113,7 +1094,7 @@ static ADDRESS_MAP_START( tms_data_map, AS_DATA, 16, taitojc_state )
 	AM_RANGE(0x701d, 0x701f) AM_READ(dsp_projection_r)
 	AM_RANGE(0x7022, 0x7022) AM_READ(dsp_unk_r)
 	AM_RANGE(0x7ffe, 0x7ffe) AM_READWRITE(dsp_to_main_r,dsp_to_main_w)
-	AM_RANGE(0x7800, 0x7fff) AM_RAM AM_SHARE("dsp_shared_ram")
+	AM_RANGE(0x7800, 0x7fff) AM_RAM AM_SHARE("dsp_shared")
 	AM_RANGE(0x8000, 0xffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -1365,7 +1346,7 @@ static MACHINE_RESET( taitojc )
 	memset(state->m_intersection_data, 0, sizeof(state->m_intersection_data));
 
 	// hold the TMS in reset until we have code
-	cputag_set_input_line(machine, "dsp", INPUT_LINE_RESET, ASSERT_LINE);
+	device_set_input_line(state->m_dsp, INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 static INTERRUPT_GEN( taitojc_vblank )
@@ -1414,7 +1395,7 @@ static MACHINE_CONFIG_START( taitojc, taitojc_state )
 	MCFG_VIDEO_START(taitojc)
 
 	/* sound hardware */
-	MCFG_FRAGMENT_ADD(taito_f3_sound)
+	MCFG_FRAGMENT_ADD(taito_en_sound)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( dendego, taitojc )
@@ -1425,7 +1406,6 @@ MACHINE_CONFIG_END
 
 READ16_MEMBER(taitojc_state::taitojc_dsp_idle_skip_r)
 {
-
 	if(cpu_get_pc(&space.device())==0x404c)
 		device_spin_until_time(&space.device(), attotime::from_usec(500));
 
@@ -1434,7 +1414,6 @@ READ16_MEMBER(taitojc_state::taitojc_dsp_idle_skip_r)
 
 READ16_MEMBER(taitojc_state::dendego2_dsp_idle_skip_r)
 {
-
 	if(cpu_get_pc(&space.device())==0x402e)
 		device_spin_until_time(&space.device(), attotime::from_usec(500));
 
@@ -1443,7 +1422,6 @@ READ16_MEMBER(taitojc_state::dendego2_dsp_idle_skip_r)
 
 WRITE16_MEMBER(taitojc_state::dsp_idle_skip_w)
 {
-
 	COMBINE_DATA(&m_dsp_shared_ram[0x7f0]);
 }
 

@@ -222,24 +222,12 @@
 #include "video/avgdvg.h"
 #include "machine/atari_vg.h"
 #include "sound/pokey.h"
+#include "sound/discrete.h"
+
+#include "includes/bwidow.h"
 
 
-class bwidow_state : public driver_device
-{
-public:
-	bwidow_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
 
-	int m_lastdata;
-	DECLARE_READ8_MEMBER(spacduel_IN3_r);
-	DECLARE_WRITE8_MEMBER(bwidow_misc_w);
-	DECLARE_WRITE8_MEMBER(irq_ack_w);
-	DECLARE_CUSTOM_INPUT_MEMBER(clock_r);
-};
-
-
-#define MASTER_CLOCK (12096000)
-#define CLOCK_3KHZ  (MASTER_CLOCK / 4096)
 
 #define IN_LEFT	(1 << 0)
 #define IN_RIGHT (1 << 1)
@@ -369,8 +357,8 @@ static ADDRESS_MAP_START( bwidow_map, AS_PROGRAM, 8, bwidow_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
 	AM_RANGE(0x2000, 0x27ff) AM_RAM AM_BASE_LEGACY(&avgdvg_vectorram) AM_SIZE_LEGACY(&avgdvg_vectorram_size) AM_REGION("maincpu", 0x2000)
 	AM_RANGE(0x2800, 0x5fff) AM_ROM
-	AM_RANGE(0x6000, 0x67ff) AM_DEVREADWRITE("pokey1", pokeyn_device, read, write)
-	AM_RANGE(0x6800, 0x6fff) AM_DEVREADWRITE("pokey2", pokeyn_device, read, write)
+	AM_RANGE(0x6000, 0x67ff) AM_DEVREADWRITE("pokey1", pokey_device, read, write)
+	AM_RANGE(0x6800, 0x6fff) AM_DEVREADWRITE("pokey2", pokey_device, read, write)
 	AM_RANGE(0x7000, 0x7000) AM_DEVREAD("earom", atari_vg_earom_device, read)
 	AM_RANGE(0x7800, 0x7800) AM_READ_PORT("IN0")
 	AM_RANGE(0x8000, 0x8000) AM_READ_PORT("IN3")
@@ -399,8 +387,8 @@ static ADDRESS_MAP_START( spacduel_map, AS_PROGRAM, 8, bwidow_state )
 	AM_RANGE(0x0e00, 0x0e00) AM_WRITE(irq_ack_w) /* interrupt acknowledge */
 	AM_RANGE(0x0e80, 0x0e80) AM_DEVWRITE("earom", atari_vg_earom_device, ctrl_w)
 	AM_RANGE(0x0f00, 0x0f3f) AM_DEVWRITE("earom", atari_vg_earom_device, write)
-	AM_RANGE(0x1000, 0x100f) AM_DEVREADWRITE("pokey1", pokeyn_device, read, write)
-	AM_RANGE(0x1400, 0x140f) AM_DEVREADWRITE("pokey2", pokeyn_device, read, write)
+	AM_RANGE(0x1000, 0x100f) AM_DEVREADWRITE("pokey1", pokey_device, read, write)
+	AM_RANGE(0x1400, 0x140f) AM_DEVREADWRITE("pokey2", pokey_device, read, write)
 	AM_RANGE(0x2000, 0x27ff) AM_RAM AM_BASE_LEGACY(&avgdvg_vectorram) AM_SIZE_LEGACY(&avgdvg_vectorram_size) AM_REGION("maincpu", 0x2000)
 	AM_RANGE(0x2800, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0xffff) AM_ROM
@@ -696,26 +684,6 @@ INPUT_PORTS_END
 
 
 
-/*************************************
- *
- *  Sound interfaces
- *
- *************************************/
-
-static const pokey_interface pokey_interface_1 =
-{
-	{ DEVCB_NULL },
-	DEVCB_INPUT_PORT("DSW0")
-};
-
-
-static const pokey_interface pokey_interface_2 =
-{
-	{ DEVCB_NULL },
-	DEVCB_INPUT_PORT("DSW1")
-};
-
-
 
 /*************************************
  *
@@ -741,18 +709,10 @@ static MACHINE_CONFIG_START( bwidow, bwidow_state )
 
 	MCFG_VIDEO_START(avg)
 
-	/* sound hardware */
-	MCFG_SPEAKER_STANDARD_MONO("mono")
+    /* sound hardware */
+    MCFG_FRAGMENT_ADD(bwidow_audio)
 
-	MCFG_SOUND_ADD("pokey1", POKEYN, MASTER_CLOCK / 8)
-	MCFG_SOUND_CONFIG(pokey_interface_1)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
-
-	MCFG_SOUND_ADD("pokey2", POKEYN, MASTER_CLOCK / 8)
-	MCFG_SOUND_CONFIG(pokey_interface_2)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
-
 
 static MACHINE_CONFIG_DERIVED( gravitar, bwidow )
 
@@ -761,6 +721,9 @@ static MACHINE_CONFIG_DERIVED( gravitar, bwidow )
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 420, 0, 400)
+
+    /* sound hardware */
+	MCFG_FRAGMENT_ADD(gravitar_audio)
 MACHINE_CONFIG_END
 
 

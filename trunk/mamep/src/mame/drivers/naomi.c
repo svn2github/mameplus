@@ -21,24 +21,22 @@ Sega Naomi is Dreamcast based Arcade hardware.
 
 TODO (general):
     - all games that uses YUV just updates one frame then dies, why?
-    - SH to ARM sound streaming doesn't work (used by ADX compression system)
+    - Some SH to ARM sound streaming doesn't work (used by ADX compression system)
     - ngdup23a, ngdup23c: missing DIMM emulation, hence they can't possibly work, emulate the DIMM means to add an extra SH-4 ...
+    - games using "m4" decryption have never successfully worked, may be
+      an issue there.
 
-    - Following games doesn't boot, any attempt makes it to return to the system test mode (almost likely to be JVS related):
-    * Death Crimson OX
-    * La Keyboard
-    * Lupin the Third
-    * Moeru Casinyo
-    * Puyo Puyo DA!
-    * Puyo Puyo Fever
-    * Samba de Amigo
-    * Samba de Amigo Ver. 2000
-    * Shootout Pool
+    - Following games doesn't boot, any attempt makes it to return to the system test mode (note these are also "m4" type games)
+    * Illvelo
+    * Akatsuki Blitzkampf Ausf Achse
+
+    - Doesn't boot
+    * Shootout Pool (all 3 Shootout Pool games show an animated loading screen and then lock up)
     * Shootout Pool Medal
     * Shootout Pool Prize
+
+    - Boots and accepts coin, but won't accept start button
     * Usagi Yamashiro Hen
-    * Virtual On
-    * WWF Royal Rumble
 
     - missing inputs (needs rotary channels):
     * Crakin' DJ
@@ -51,12 +49,13 @@ TODO (general):
     * Sega Marine Fishing
     * Wave Runner GP
 
-    - doesn't boot consistently (JVS checksum error?):
-    * Cannon Spike;
-    * Heavy Metal GeoMatrix;
-    * Moeru Justice Gakuen;
-    * Power Stone 2;
-    * Spawn;
+    - "com error occured between Naomi BD and I/O BD"
+    * Samba de Amigo
+    * Samba de Amigo Ver. 2000
+
+    - other issues:
+    * Death Crimson OX (boots now, but dies in YUV-mode movie; coining up before it appears to freeze the game)
+    * La Keyboard (boots fine & attract mode looks OK, but no keyboard)
 
 TODO (game-specific):
     - 18th Wheeler Deluxe: "MOTOR NETWORK ERR IN 01 OUT FF" msg pops up during gameplay;
@@ -493,7 +492,7 @@ Touch De Zunou (Rev A)                 840-0166C  not present  2 (512Mb)   prese
 
 
 
-MASK B-F2X (C) Namco 2000
+MASK B (C) Namco 2000
 |-------------------------------------------------------------------------------------|
 |                                                               ----CN2----            -|
 |                                                                                       |
@@ -534,15 +533,16 @@ Notes:
    CN1/2/3  - connectors joining to main board
 
    Games known to use this PCB include....
-                                   Sticker   FL0-FL3   FLASHROMs   X76F100      EPM7064   EPM7064   315-5581      Game
- Game                              on cart   FLASHROM  # of SOP48  IC @ 1F      IC @ 1H   IC @ 2K   IC @ 1M       code       Notes
------------------------------------------------------------------------------------------------------------------------------------------------
+                                   Cart  Sticker   FL0-FL3   FLASHROMs   X76F100      EPM7064   EPM7064   315-5581      Game
+ Game                              Type  on cart   FLASHROM  # of SOP48  IC @ 1F      IC @ 1H   IC @ 2K   IC @ 1M       code (1)   Notes
+----------------------------------------------------------------------------------------------------------------------------------------------------
 /Gun Survivor 2 Biohazard
-\Code: Veronica                    25709801  1 (64Mb)  14 (128Mb)  not present  NAODEC2A  NAODEC1B  317-5075-COM  BHF1
-/Shin Nihon Prowrestling                                                                                                     /FL0 & FL1 have pin55 raised from PCB.
-\Toukon Retsuden 4 Arcade Edition  25349801  2 (64Mb)  15 (128Mb)  not present  NAODEC2A  NAODEC1B  317-5040-COM  TRF1Ver.A  \They are connected togheter and go to pin89 on 2K.
-World Kicks                        25209801  2 (32Mb)  10 (128Mb)  not present  NAODEC2A  NAODEC1A  317-5040-COM  WK3 Ver.A  317-5040-COM is confirmed.
+\Code: Veronica                    F1X   25709801  1 (64Mb)  14 (128Mb)  not present  NAODEC2A  NAODEC1B  317-5075-COM  BHF1
+/Shin Nihon Prowrestling                                                                                                           /FL0 & FL1 have pin55 raised from PCB.
+\Toukon Retsuden 4 Arcade Edition  F2X   25349801  2 (64Mb)  15 (128Mb)  not present  NAODEC2A  NAODEC1B  317-5040-COM  TRF1Ver.A  \They are connected togheter and go to pin89 on 2K.
+World Kicks                        F2X   25209801  2 (32Mb)  10 (128Mb)  not present  NAODEC2A  NAODEC1A  317-5040-COM  WK2 Ver.A
 
+(1) note: the number in the game code has the following meaning: 1 = Japan, 2 = Asia, 3 = US, 4 = World.
 
 
 MASK C (C) Namco 2000
@@ -570,7 +570,7 @@ MASK C (C) Namco 2000
 Notes:
       The female side of the cart PCB only has traces
 
-        JP1 - JUMPER silkscreened OPEN
+        JP1 - JUMPER silkscreened VPEN
          1F - FLASHROM (SOIC8) Xicor X76F100 Secure SerialFlash. Silkscreened X76F100
          2H - oscillator 28.000MHz
          3J - NAODEC3 (QFP100) Cypres CY37128. Silkscreened NAODEC3
@@ -583,12 +583,13 @@ Notes:
    CN1/2/3  - connectors joining to main board
 
    Games known to use this PCB include....
-                           Sticker   FL0-FL3   FLASHROMs   X76F100  CY37128  315-5581      Game
- Game                      on cart   FLASHROM  # of SOP48  IC @ 1F  IC @ 3J  IC @ 1M       code        Notes
---------------------------------------------------------------------------------------------------------------------
-Mazan: Flash of the Blade  25869812  1 (64Mb)   8 (128Mb)  present  NAODEC3  317-0056-COM  MAZ1
-Ninja Assault              25469801  3 (64Mb)   9 (128Mb)  present  NAODEC3  317-5068-COM  NJA3 Ver.A
+                           Cart  Sticker   FL0-FL3   FLASHROMs   X76F100  CY37128  315-5581      Game
+ Game                      Type  on cart   FLASHROM  # of SOP48  IC @ 1F  IC @ 3J  IC @ 1M       code (1)    Notes
+----------------------------------------------------------------------------------------------------------------------
+Mazan: Flash of the Blade  F1X   25869812  1 (64Mb)   8 (128Mb)  present  NAODEC3  317-0266-COM  MAZ2 Ver.A
+Ninja Assault              F2X   25469801  3 (64Mb)   9 (128Mb)  present  NAODEC3  317-5068-COM  NJA3 Ver.A
 
+(1) note: the number in the game code has the following meaning: 1 = Japan, 2 = Asia, 3 = US, 4 = World.
 
 
 
@@ -1848,12 +1849,12 @@ static INPUT_PORTS_START( naomi_debug )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( naomi_mie )
-	PORT_START("MIE:3")
+	PORT_START("MIE.3")
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("mie_eeprom", eeprom_device, write_bit)
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("mie_eeprom", eeprom_device, set_cs_line)
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("mie_eeprom", eeprom_device, set_clock_line)
 
-	PORT_START("MIE:5")
+	PORT_START("MIE.5")
 	PORT_DIPNAME( 0x01, 0x00, "Monitor" ) PORT_DIPLOCATION("SW1:1")
 	PORT_DIPSETTING(    0x01, "31 kHz" )
 	PORT_DIPSETTING(    0x00, "15 kHz" )
@@ -2407,7 +2408,7 @@ INPUT_PORTS_END
 
 // 2 joysticks variant
 static INPUT_PORTS_START( aw2c )
-	PORT_START("P1:0")
+	PORT_START("P1.0")
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(1)
@@ -2416,7 +2417,7 @@ static INPUT_PORTS_START( aw2c )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1)
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)
-	PORT_START("P1:1")
+	PORT_START("P1.1")
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_SERVICE_NO_TOGGLE( 0x40, IP_ACTIVE_LOW )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE1 )
@@ -2426,7 +2427,7 @@ static INPUT_PORTS_START( aw2c )
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_PLAYER(1)
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON6 ) PORT_PLAYER(1)
 
-	PORT_START("P2:0")
+	PORT_START("P2.0")
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2)
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2)
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(2)
@@ -2435,7 +2436,7 @@ static INPUT_PORTS_START( aw2c )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
-	PORT_START("P2:1")
+	PORT_START("P2.1")
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE2 )
@@ -2454,33 +2455,33 @@ INPUT_PORTS_END
 
 // Single-player wheel variant
 static INPUT_PORTS_START( aw1w )
-	PORT_START("P1:0")
+	PORT_START("P1.0")
 	PORT_BIT( 0xf1, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 )
 	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1)
 
-	PORT_START("P1:1")
+	PORT_START("P1.1")
 	PORT_SERVICE_NO_TOGGLE( 0x40, IP_ACTIVE_LOW )
 	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_SERVICE1 )
 	PORT_BIT( 0x9f, IP_ACTIVE_LOW, IPT_UNUSED )
 
-	PORT_START("P2:A0") /* steering */
+	PORT_START("P2.A0") /* steering */
 	PORT_BIT( 0xff, 0x80, IPT_PADDLE ) PORT_SENSITIVITY(100) PORT_KEYDELTA(4)
 
-	PORT_START("P2:A1")	/* gas pedal */
+	PORT_START("P2.A1")	/* gas pedal */
 	PORT_BIT( 0xff, 0x00, IPT_PEDAL ) PORT_SENSITIVITY(100) PORT_KEYDELTA(20)
 
-	PORT_START("P2:A2")	/* brake */
+	PORT_START("P2.A2")	/* brake */
 	PORT_BIT( 0xff, 0x00, IPT_PEDAL2 ) PORT_SENSITIVITY(100) PORT_KEYDELTA(40)
 
-	PORT_START("P2:A3") /* steering */
+	PORT_START("P2.A3") /* steering */
 	PORT_BIT( 0xff, 0x80, IPT_PADDLE ) PORT_SENSITIVITY(100) PORT_KEYDELTA(4)
 
-	PORT_START("P2:A4")	/* gas pedal */
+	PORT_START("P2.A4")	/* gas pedal */
 	PORT_BIT( 0xff, 0x00, IPT_PEDAL ) PORT_SENSITIVITY(100) PORT_KEYDELTA(20)
 
-	PORT_START("P2:A5")	/* brake */
+	PORT_START("P2.A5")	/* brake */
 	PORT_BIT( 0xff, 0x00, IPT_PEDAL2 ) PORT_SENSITIVITY(100) PORT_KEYDELTA(40)
 
 	PORT_START("COINS")
@@ -2540,8 +2541,8 @@ static MACHINE_CONFIG_START( naomi_aw_base, dc_state )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( naomi_base, naomi_aw_base )
-	MCFG_MIE_ADD("mie", 4000000, "maple_dc", 0, 0, 0, 0, "MIE:3", 0, "MIE:5", 0, 0) // Actual frequency unknown
-	MCFG_SEGA_837_13551_DEVICE_ADD("837_13551", "mie", "TILT", "P1", "P2", "A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "OUTPUT")
+	MCFG_MIE_ADD("mie", 4000000, "maple_dc", 0, 0, 0, 0, ":MIE.3", 0, ":MIE.5", 0, 0) // Actual frequency unknown
+	MCFG_SEGA_837_13551_DEVICE_ADD("837_13551", "mie", ":TILT", ":P1", ":P2", ":A0", ":A1", ":A2", ":A3", ":A4", ":A5", ":A6", ":A7", ":OUTPUT")
 	MCFG_EEPROM_93C46_8BIT_ADD("mie_eeprom")
 
 	MCFG_X76F100_ADD("naomibd_eeprom")
@@ -2635,13 +2636,13 @@ static MACHINE_CONFIG_DERIVED( aw_base, naomi_aw_base )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( aw1c, aw_base )
-	MCFG_DC_CONTROLLER_ADD("dcctrl0", "maple_dc", 0, "P1:0", "P1:1", "P1:A0", "P1:A1", "P1:A2", "P1:A3", "P1:A4", "P1:A5")
-	MCFG_DC_CONTROLLER_ADD("dcctrl1", "maple_dc", 1, "P2:0", "P2:1", "P2:A0", "P2:A1", "P2:A2", "P2:A3", "P2:A4", "P2:A5")
+	MCFG_DC_CONTROLLER_ADD("dcctrl0", "maple_dc", 0, ":P1.0", ":P1.1", ":P1.A0", ":P1.A1", ":P1.A2", ":P1.A3", ":P1.A4", ":P1.A5")
+	MCFG_DC_CONTROLLER_ADD("dcctrl1", "maple_dc", 1, ":P2.0", ":P2.1", ":P2.A0", ":P2.A1", ":P2.A2", ":P2.A3", ":P2.A4", ":P2.A5")
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( aw2c, aw_base )
-	MCFG_DC_CONTROLLER_ADD("dcctrl0", "maple_dc", 0, "P1:0", "P1:1", "P1:A0", "P1:A1", "P1:A2", "P1:A3", "P1:A4", "P1:A5")
-	MCFG_DC_CONTROLLER_ADD("dcctrl1", "maple_dc", 1, "P2:0", "P2:1", "P2:A0", "P2:A1", "P2:A2", "P2:A3", "P2:A4", "P2:A5")
+	MCFG_DC_CONTROLLER_ADD("dcctrl0", "maple_dc", 0, ":P1.0", ":P1.1", ":P1.A0", ":P1.A1", ":P1.A2", ":P1.A3", ":P1.A4", ":P1.A5")
+	MCFG_DC_CONTROLLER_ADD("dcctrl1", "maple_dc", 1, ":P2.0", ":P2.1", ":P2.A0", ":P2.A1", ":P2.A2", ":P2.A3", ":P2.A4", ":P2.A5")
 MACHINE_CONFIG_END
 
 #define ROM_LOAD16_WORD_SWAP_BIOS(bios,name,offset,length,hash) \
@@ -7938,11 +7939,11 @@ ROM_END
 /* HMG016007 */ GAME( 2001, hmgeo, naomi,   naomim2, naomi,    naomi,    ROT0, "Capcom",          "Heavy Metal Geomatrix (JPN, USA, EUR, ASI, AUS) (Rev A)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
 
 /* Cart games on Namco custom ROM board */
-/* 25209801 */ GAME( 2000, wldkicks, naomi, naomim2, naomi,    naomi,    ROT0, "Capcom / Namco", "World Kicks (WK1 Ver. A)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
+/* 25209801 */ GAME( 2000, wldkicks, naomi, naomim2, naomi,    naomi,    ROT0, "Capcom / Namco", "World Kicks (WK2 Ver. A)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
 /* 25349801 */ GAME( 2000, toukon4,  naomi, naomim2, naomi,    naomi,    ROT0, "Capcom / Namco", "Shin Nihon Pro Wrestling Toukon Retsuden 4 Arcade Edition (TRF1 Ver. A)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
 /* 25469801 */ GAME( 2000, ninjaslt, naomi, naomim2, naomi,    naomi,    ROT0, "Capcom / Namco", "Ninja Assault (NJA3 Ver. A)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
-/* 25709801 */ GAME( 2001, gunsur2,  naomi, naomi,   naomi,    naomi,    ROT0, "Capcom / Namco", "Gun Survivor 2 Biohazard Code: Veronica (BHF1 Ver. A)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
-/* 25869812 */ GAME( 2002, mazan,    naomi, naomim2, naomi,    naomi,    ROT0, "Capcom / Namco", "Mazan: Flash of the Blade (MAZ1 Ver. A)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
+/* 25709801 */ GAME( 2001, gunsur2,  naomi, naomi,   naomi,    naomi,    ROT0, "Capcom / Namco", "Gun Survivor 2 Biohazard Code: Veronica (BHF1)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
+/* 25869812 */ GAME( 2002, mazan,    naomi, naomim2, naomi,    naomi,    ROT0, "Capcom / Namco", "Mazan: Flash of the Blade (MAZ2 Ver. A)", GAME_UNEMULATED_PROTECTION|GAME_FLAGS )
 
 /* GDS-xxxx (Sega GD-ROM games) */
 /* 0001  */ GAME( 2000, confmiss,  naomigd,  naomigd, hotd2,    naomigd,    ROT0, "Sega", "Confidential Mission (GDS-0001)", GAME_FLAGS )

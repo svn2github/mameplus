@@ -1141,15 +1141,17 @@ WRITE8_MEMBER(segas32_state::sound_bank_hi_w)
 }
 
 
-static WRITE8_DEVICE_HANDLER( multipcm_bank_w )
+WRITE8_MEMBER(segas32_state::multipcm_bank_w)
 {
+	device_t *device = machine().device("sega");
 	multipcm_set_bank(device, 0x80000 * ((data >> 3) & 7), 0x80000 * (data & 7));
 }
 
 
-static WRITE8_DEVICE_HANDLER( scross_bank_w )
+WRITE8_MEMBER(segas32_state::scross_bank_w)
 {
-	multipcm_set_bank(device, 0x80000 * (data & 7), 0x80000 * (data & 7));
+	multipcm_device *multipcm = machine().device<multipcm_device>("sega");
+	multipcm_set_bank(multipcm, 0x80000 * (data & 7), 0x80000 * (data & 7));
 }
 
 
@@ -1260,7 +1262,7 @@ static ADDRESS_MAP_START( multi32_sound_portmap, AS_IO, 8, segas32_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x80, 0x83) AM_MIRROR(0x0c) AM_DEVREADWRITE_LEGACY("ymsnd", ym3438_r, ym3438_w)
 	AM_RANGE(0xa0, 0xaf) AM_WRITE(sound_bank_lo_w)
-	AM_RANGE(0xb0, 0xbf) AM_DEVWRITE_LEGACY("sega", multipcm_bank_w)
+	AM_RANGE(0xb0, 0xbf) AM_WRITE(multipcm_bank_w)
 	AM_RANGE(0xc0, 0xcf) AM_WRITE(sound_int_control_lo_w)
 	AM_RANGE(0xd0, 0xd3) AM_MIRROR(0x04) AM_WRITE(sound_int_control_hi_w)
 	AM_RANGE(0xf1, 0xf1) AM_READWRITE(sound_dummy_r, sound_dummy_w)
@@ -2327,6 +2329,16 @@ MACHINE_CONFIG_END
  **************************************************************************************************************************
  **************************************************************************************************************************
     Air Rescue
+    Sega Game ID codes:
+       Game BD: 833-8508-01 AIR RESCUE (US)
+                833-8508-02 AIR RESCUE (Export)
+                833-8508-03 AIR RESCUE (Japan)
+    Rom PCB No: 834-8526-01 (US)
+                834-8526-02 (Export)
+                834-8526-03 (Japan)
+
+Japan set not dumped, but program roms are EPR-14515.ic13 & EPR-14514.ic6
+
     requires 2 linked system32 pcbs
     requires additional math DSP to be emulated
 */
@@ -2369,8 +2381,13 @@ ROM_END
  **************************************************************************************************************************
     Alien 3: The Gun
     not protected
-    Rom PCB No: 837-9878-02
-    Main PCB: 837-7428-03
+    Sega Game ID codes:
+       Game BD: 834-9877-01 (USA)
+                834-9877-02 (Export)
+    Rom PCB No: 837-9878-01 (USA)
+                837-9878-02 (Export)
+      Main PCB: 837-7428-03 (SYSTEM 32 COM)
+     A/D BD NO. 837-7536
 */
 ROM_START( alien3 )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code + data */
@@ -2402,6 +2419,11 @@ ROM_START( alien3 )
 	ROM_REGION16_BE( 0x80, "eeprom", 0 )
 	ROM_LOAD16_WORD( "eeprom-alien3.bin", 0x0000, 0x0080, CRC(6e1d9df3) SHA1(2fd818bc393fb96e945fa37a63c8a3c4aff2f79f) )
 ROM_END
+
+/**************************************************************************************************************************
+    Alien 3: The Gun (U.S.)
+    not protected
+*/
 
 ROM_START( alien3u )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code + data */
@@ -2472,6 +2494,11 @@ ROM_START( arabfgt )
 	ROMX_LOAD( "mpr-14605.ic27",  0x800004, 0x200000, CRC(aaf52697) SHA1(b502a37ae68fc08b60cdf0e2b744898b3474d3b9) , ROM_SKIP(6)|ROM_GROUPWORD )
 	ROMX_LOAD( "mpr-14607.ic25",  0x800006, 0x200000, CRC(b70b0735) SHA1(9ef2da6f710bc5c2c7ee30dc144409a61dbe6646) , ROM_SKIP(6)|ROM_GROUPWORD )
 ROM_END
+
+/**************************************************************************************************************************
+    Arabian Fight (U.S.)
+    protected via a custom V25 with encrypted code
+*/
 
 ROM_START( arabfgtu )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code + data */
@@ -2594,8 +2621,8 @@ ROM_START( brivalj )
        are suspicious, the changes are very similar but the part numbers haven't changed.  We really
        need a 3rd board to verify */
 	ROM_REGION( 0x400000, "gfx1", 0 ) /* tiles */
-	ROM_LOAD16_BYTE( "mpr-14599f.ic14", 0x000000, 0x200000, CRC(1de17e83) SHA1(04ee14b863f93b42a5bd1b6da71cff54ef11d4b7) )
-	ROM_LOAD16_BYTE( "mpr-14598f.ic5",  0x000001, 0x200000, CRC(cafb0de9) SHA1(94c6bfc7a4081dee373e9466a7b6f80889696087) )
+	ROM_LOAD16_BYTE( "mpr-14599f.ic14", 0x000000, 0x200000, CRC(1de17e83) SHA1(04ee14b863f93b42a5bd1b6da71cff54ef11d4b7) ) /* Rom # matches tile rom # from Arabian Fight ??? */
+	ROM_LOAD16_BYTE( "mpr-14598f.ic5",  0x000001, 0x200000, CRC(cafb0de9) SHA1(94c6bfc7a4081dee373e9466a7b6f80889696087) ) /* Rom # matchrs tile rom # from Arabian Fight ??? */
 
 	ROM_REGION32_BE( 0x1000000, "gfx2", 0 ) /* sprites */
 	ROMX_LOAD( "brivalj_mp15637.32", 0x000000, 0x200000, CRC(f39844c0) SHA1(c48dc8cccdd9d3756cf99a983c6a89ed43fcda22) , ROM_SKIP(6)|ROM_GROUPWORD )
@@ -2708,6 +2735,16 @@ ROM_END
  **************************************************************************************************************************
     F1 Exhaust Note
     to display the title screen this will require 2 linked system32 boards to be emulated
+
+    Sega Game ID codes:
+     GAME BD NO. 833-8389-01 EXHAUST NOTE (USA)
+                 833-8389-02 EXHAUST NOTE (World)
+                 833-8389-03 EXHAUST NOTE (Japan)
+         ROM BD. 834-8439-01 (USA)
+                 834-8439-02 (World)
+                 834-8439-03 (Japan)
+        MAIN BD. 837-7428 (SYSTEM 32 COM)
+      A/D BD NO. 837-7536
 */
 ROM_START( f1en )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code + data */
@@ -3077,6 +3114,17 @@ ROM_END
  **************************************************************************************************************************
     Outrunners (Multi-32)
     not protected
+
+    Sega Game ID codes:
+     GAME BD NO. 834-9559-01 (USA)
+                 834-9559-02 (World)
+                 834-9559-03 (Japan)
+         ROM BD. 837-9560-01 (USA)
+                 837-9560-02 (World)
+                 837-9560-03 (Japan)
+        MAIN BD. 837-8676 (SYSTEM MULTI)
+      A/D BD NO. 837-7536
+        COMM BD. 837-8792
 */
 ROM_START( orunners )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code */
@@ -3107,6 +3155,11 @@ ROM_START( orunners )
 	ROM_LOAD( "mpr15552.bin", 0x200000, 0x200000, CRC(1c4b5e73) SHA1(50a8e9a200575a3522a51bf094aa0e87b90bb0a3) )
 ROM_END
 
+/**************************************************************************************************************************
+    Outrunners (U.S.)
+    not protected
+*/
+
 ROM_START( orunnersu )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code */
 	ROM_LOAD32_WORD_x4( "epr15618.37", 0x000000, 0x020000, CRC(25647f76) SHA1(9f882921ebb2f078350295c322b263f75812c053) )
@@ -3135,6 +3188,11 @@ ROM_START( orunnersu )
 	ROM_LOAD( "mpr15551.bin", 0x000000, 0x200000, CRC(4894bc73) SHA1(351f5c03fb430fd87df915dfe3a377b5ada622c4) )
 	ROM_LOAD( "mpr15552.bin", 0x200000, 0x200000, CRC(1c4b5e73) SHA1(50a8e9a200575a3522a51bf094aa0e87b90bb0a3) )
 ROM_END
+
+/**************************************************************************************************************************
+    Outrunners (Japan)
+    not protected
+*/
 
 ROM_START( orunnersj )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code */
@@ -3169,13 +3227,29 @@ ROM_END
 /**************************************************************************************************************************
  **************************************************************************************************************************
  **************************************************************************************************************************
-    Rad Mobile
+    Rad Mobile Deluxe Cabinet (Export)
     not protected
 
-    GAME BD NO. 833-7738-02
-     1. ROM BD. 834-7739-02
-     2. MAIN BD. 837-7428
+    Sega Game ID codes:
+    GAME BD NO. 833-7738-01 RAD MOBILE (USA)
+                833-7738-02 RAD MOBILE (Export)
+                833-7738-03 RAD MOBILE (Japan)
+        ROM BD. 834-7739-01 (USA)
+                834-7739-02 (Export)
+                834-7739-03 (Japan)
+      MAIN BD. 837-7428
     A/D BD NO. 837-7536
+
+    Upright Cabinet:
+  USA:  EPR-13690.ic21 (dumped)
+        EPR-13691.ic37 (not dumped)
+        EPR-13692.ic38 (not dumped)
+
+Exprot: EPR-13693.ic21 (dumped)
+        EPR-13694.ic37 (not dumped)
+        EPR-13695.ic38 (not dumped)
+
+    Japanese version is undumped. There is likely a Japanese specific sound rom at IC20 (EPR-13524.ic20 ??)
 */
 ROM_START( radm )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code + data */
@@ -3187,7 +3261,7 @@ ROM_START( radm )
 	ROM_LOAD_x8( "epr-13527.ic9",  0x100000, 0x020000, CRC(a2e3fbbe) SHA1(2787bbef696ab3f2b7855ac991867837d3de54cd) )
 	ROM_LOAD_x2( "epr-13523.ic14", 0x200000, 0x080000, CRC(d5563697) SHA1(eb3fd3dbfea383ac1bb5d2e1552723994cb4693d) )
 	ROM_LOAD_x2( "epr-13699.ic20", 0x300000, 0x080000, CRC(33fd2913) SHA1(60b664559b4989446b1c7d875432e53a36fe27df) )
-	ROM_LOAD_x2( "epr-13523.ic22", 0x400000, 0x080000, CRC(d5563697) SHA1(eb3fd3dbfea383ac1bb5d2e1552723994cb4693d) )
+	ROM_LOAD_x2( "epr-13523.ic22", 0x400000, 0x080000, CRC(d5563697) SHA1(eb3fd3dbfea383ac1bb5d2e1552723994cb4693d) ) /* Deluxe or Upright manuals don't show this rom */
 
 	ROM_REGION( 0x200000, "gfx1", 0 ) /* tiles */
 	ROM_LOAD32_BYTE( "mpr-13519.ic3",  0x000000, 0x080000, CRC(bedc9534) SHA1(7b3f7a47b6c0ca6707dc3c1167f3564d43adb32f) )
@@ -3213,13 +3287,8 @@ ROM_START( radm )
 ROM_END
 
 /**************************************************************************************************************************
-    Rad Mobile (U.S.)
+    Rad Mobile Deluxe Cabinet (U.S.)
     not protected
-
-    GAME BD NO. 833-7738-01
-     1. ROM BD. 834-7739-01
-     2. MAIN BD. 837-7428
-    A/D BD NO. 837-7536
 */
 ROM_START( radmu )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code + data */
@@ -3231,7 +3300,7 @@ ROM_START( radmu )
 	ROM_LOAD_x8( "epr-13527.ic9",  0x100000, 0x020000, CRC(a2e3fbbe) SHA1(2787bbef696ab3f2b7855ac991867837d3de54cd) )
 	ROM_LOAD_x2( "epr-13523.ic14", 0x200000, 0x080000, CRC(d5563697) SHA1(eb3fd3dbfea383ac1bb5d2e1552723994cb4693d) )
 	ROM_LOAD_x2( "epr-13699.ic20", 0x300000, 0x080000, CRC(33fd2913) SHA1(60b664559b4989446b1c7d875432e53a36fe27df) )
-	ROM_LOAD_x2( "epr-13523.ic22", 0x400000, 0x080000, CRC(d5563697) SHA1(eb3fd3dbfea383ac1bb5d2e1552723994cb4693d) )
+	ROM_LOAD_x2( "epr-13523.ic22", 0x400000, 0x080000, CRC(d5563697) SHA1(eb3fd3dbfea383ac1bb5d2e1552723994cb4693d) ) /* Deluxe or Upright manuals don't show this rom */
 
 	ROM_REGION( 0x200000, "gfx1", 0 ) /* tiles */
 	ROM_LOAD32_BYTE( "mpr-13519.ic3",  0x000000, 0x080000, CRC(bedc9534) SHA1(7b3f7a47b6c0ca6707dc3c1167f3564d43adb32f) )
@@ -3262,6 +3331,16 @@ ROM_END
  **************************************************************************************************************************
     Rad Rally
     not protected
+
+    Sega Game ID codes:
+     Game: 833-8110-01 RAD RALLY (USA)
+           833-8110-02 RAD RALLY (Export)
+           833-8110-03 RAD RALLY (Japan)
+Rom board: 833-8111-01 (USA)
+           833-8111-02 (Export)
+           833-8111-03 (Japan)
+A/D BD NO. 837-7536
+
 */
 ROM_START( radr )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code + data */
@@ -3340,10 +3419,6 @@ ROM_END
 /**************************************************************************************************************************
     Rad Rally (Japan)
     not protected
-    Sega Game ID codes:
-     Game: 833-8110-03 RAD RALLY
-Rom board: 833-8111-03
-A/D BD NO. 837-7536
 */
 ROM_START( radrj )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code + data */
@@ -3633,6 +3708,11 @@ ROM_START( scross )
 	ROM_LOAD("epr-15032.bin", 0x200000, 0x200000, CRC(cb709f3d) SHA1(3962c8b5907d1f8f611f58ddac693cc47364a79c) )
 ROM_END
 
+/**************************************************************************************************************************
+    Stadium Cross (U.S.)
+    not protected
+*/
+
 ROM_START( scrossu )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code */
 	ROM_LOAD32_WORD_x2( "epr-15091.bin", 0x000000, 0x040000, CRC(2c572293) SHA1(6377a6eb6084f7332ce6eeaaf0c37200da792d0c) )
@@ -3771,9 +3851,15 @@ ROM_END
     Title Fight (Multi-32)
     not protected
 
-    GAME BOARD NO. 834-9324-02
-     1. ROM BD NO. 834-9413-02
-     2. MAIN BD NO. 837-8676 (SYSTEM MULTI 32)
+    Sega Game ID codes:
+     Game: 834-9324-01 TITLE FIGHT (USA)
+           834-9324-02 TITLE FIGHT (Export)
+           834-9324-03 TITLE FIGHT (Japan)
+Rom board: 834-9413-01 (USA)
+           834-9413-02 (Export)
+           834-9413-03 (Japan)
+  Main BD: 837-8676 (SYSTEM MULTI 32)
+
 */
 ROM_START( titlef )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code */
@@ -3804,10 +3890,6 @@ ROM_END
 /**************************************************************************************************************************
     Title Fight (US)
     not protected
-
-    GAME BOARD NO. 834-9324-01
-     1. ROM BD NO. 834-9413-01
-     2. MAIN BD NO. 837-8676 (SYSTEM MULTI 32)
 */
 ROM_START( titlefu )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code */
@@ -4215,9 +4297,8 @@ static DRIVER_INIT( radr )
 static DRIVER_INIT( scross )
 {
 	segas32_state *state = machine.driver_data<segas32_state>();
-	multipcm_device *multipcm = machine.device<multipcm_device>("sega");
 	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::analog_custom_io_r),state), write16_delegate(FUNC(segas32_state::analog_custom_io_w),state));
-	machine.device("soundcpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(*multipcm, 0xb0, 0xbf, FUNC(scross_bank_w));
+	machine.device("soundcpu")->memory().space(AS_PROGRAM)->install_write_handler(0xb0, 0xbf, write8_delegate(FUNC(segas32_state::scross_bank_w),state));
 
 	state->m_sw1_output = scross_sw1_output;
 	state->m_sw2_output = scross_sw2_output;

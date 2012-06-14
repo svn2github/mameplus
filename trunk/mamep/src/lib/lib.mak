@@ -117,6 +117,7 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/dfi_dsk.o		\
 	$(LIBOBJ)/formats/dim_dsk.o		\
 	$(LIBOBJ)/formats/dsk_dsk.o		\
+	$(LIBOBJ)/formats/esq16_dsk.o	\
 	$(LIBOBJ)/formats/fdi_dsk.o		\
 	$(LIBOBJ)/formats/fm7_cas.o		\
 	$(LIBOBJ)/formats/fmsx_cas.o	\
@@ -155,6 +156,7 @@ FORMATSOBJS = \
 	$(LIBOBJ)/formats/trd_dsk.o		\
 	$(LIBOBJ)/formats/trs_cas.o		\
 	$(LIBOBJ)/formats/trs_dsk.o		\
+	$(LIBOBJ)/formats/tvc_cas.o		\
 	$(LIBOBJ)/formats/tzx_cas.o		\
 	$(LIBOBJ)/formats/uef_cas.o		\
 	$(LIBOBJ)/formats/vg5k_cas.o	\

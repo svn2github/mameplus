@@ -26,6 +26,10 @@ modified by Hau
 03/27/2009
  spthx to Unagi,rassy,hina,nori,Tobikage,Tommy,Crimson,yasuken,cupmen,zoo
 
+modified by hap
+06/09/2012
+ Special thx 2 Neusneus, Audrey Tautou, my water bottle, chair, sleepyness
+
 Notes:
 - blkpnthr:
 There are sprite priority problems in upper part of the screen ,
@@ -60,55 +64,6 @@ static INTERRUPT_GEN( nemesis_interrupt )
 		device_set_input_line(device, 1, HOLD_LINE);
 }
 
-static TIMER_DEVICE_CALLBACK( konamigt_interrupt )
-{
-	nemesis_state *state = timer.machine().driver_data<nemesis_state>();
-	int scanline = param;
-
-	if(scanline == 240)
-	{
-		if ((state->m_irq_on) && ((timer.machine().primary_screen->frame_number() & 1) == 0))
-			device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
-	}
-	else if(scanline == 0)
-	{
-		if (state->m_irq2_on)
-			device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
-	}
-}
-
-static TIMER_DEVICE_CALLBACK( gx400_interrupt )
-{
-	nemesis_state *state = timer.machine().driver_data<nemesis_state>();
-	int scanline = param;
-
-	if(scanline == 240)
-	{
-		if ((state->m_irq_on) && ((timer.machine().primary_screen->frame_number() & 1) == 0))
-			device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
-	}
-
-	if(scanline == 0)
-	{
-		if (state->m_irq2_on)
-			device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
-	}
-
-	if(scanline == 120)
-	{
-		if (state->m_irq4_on)
-			device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
-	}
-}
-
-static INTERRUPT_GEN( salamand_interrupt )
-{
-	nemesis_state *state = device->machine().driver_data<nemesis_state>();
-
-	if (state->m_irq_on)
-		device_set_input_line(device, 1, HOLD_LINE);
-}
-
 static INTERRUPT_GEN( blkpnthr_interrupt )
 {
 	nemesis_state *state = device->machine().driver_data<nemesis_state>();
@@ -117,10 +72,36 @@ static INTERRUPT_GEN( blkpnthr_interrupt )
 		device_set_input_line(device, 2, HOLD_LINE);
 }
 
+static TIMER_DEVICE_CALLBACK( konamigt_interrupt )
+{
+	nemesis_state *state = timer.machine().driver_data<nemesis_state>();
+	int scanline = param;
+
+	if (scanline == 240 && state->m_irq_on && (timer.machine().primary_screen->frame_number() & 1) == 0)
+		device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
+
+	if (scanline == 0 && state->m_irq2_on)
+		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+}
+
+static TIMER_DEVICE_CALLBACK( gx400_interrupt )
+{
+	nemesis_state *state = timer.machine().driver_data<nemesis_state>();
+	int scanline = param;
+
+	if (scanline == 240 && state->m_irq1_on && (timer.machine().primary_screen->frame_number() & 1) == 0)
+		device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
+
+	if (scanline == 0 && state->m_irq2_on)
+		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+
+	if (scanline == 120 && state->m_irq4_on)
+		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+}
+
 
 WRITE16_MEMBER(nemesis_state::gx400_irq1_enable_word_w)
 {
-
 	if (ACCESSING_BITS_0_7)
 		m_irq1_on = data & 0x0001;
 
@@ -130,7 +111,6 @@ WRITE16_MEMBER(nemesis_state::gx400_irq1_enable_word_w)
 
 WRITE16_MEMBER(nemesis_state::gx400_irq2_enable_word_w)
 {
-
 	if (ACCESSING_BITS_0_7)
 		m_irq2_on = data & 0x0001;
 
@@ -140,14 +120,12 @@ WRITE16_MEMBER(nemesis_state::gx400_irq2_enable_word_w)
 
 WRITE16_MEMBER(nemesis_state::gx400_irq4_enable_word_w)
 {
-
 	if (ACCESSING_BITS_8_15)
 		m_irq4_on = data & 0x0100;
 }
 
 WRITE16_MEMBER(nemesis_state::nemesis_irq_enable_word_w)
 {
-
 	if (ACCESSING_BITS_0_7)
 		m_irq_on = data & 0xff;
 
@@ -157,7 +135,6 @@ WRITE16_MEMBER(nemesis_state::nemesis_irq_enable_word_w)
 
 WRITE16_MEMBER(nemesis_state::konamigt_irq_enable_word_w)
 {
-
 	if (ACCESSING_BITS_0_7)
 		m_irq_on = data & 0xff;
 
@@ -167,7 +144,6 @@ WRITE16_MEMBER(nemesis_state::konamigt_irq_enable_word_w)
 
 WRITE16_MEMBER(nemesis_state::konamigt_irq2_enable_word_w)
 {
-
 	if (ACCESSING_BITS_0_7)
 		m_irq2_on = data & 0xff;
 
@@ -183,7 +159,6 @@ READ16_MEMBER(nemesis_state::gx400_sharedram_word_r)
 
 WRITE16_MEMBER(nemesis_state::gx400_sharedram_word_w)
 {
-
 	if (ACCESSING_BITS_0_7)
 		m_gx400_shared_ram[offset] = data;
 }
@@ -218,14 +193,12 @@ READ16_MEMBER(nemesis_state::konamigt_input_word_r)
 
 WRITE16_MEMBER(nemesis_state::selected_ip_word_w)
 {
-
 	if (ACCESSING_BITS_0_7)
 		m_selected_ip = data & 0xff;	// latch the value
 }
 
 READ16_MEMBER(nemesis_state::selected_ip_word_r)
 {
-
 	switch (m_selected_ip & 0xf)
 	{												// From WEC Le Mans Schems:
 		case 0xc:  return ioport("ACCEL")->read();	// Accel - Schems: Accelevr
@@ -244,23 +217,24 @@ WRITE16_MEMBER(nemesis_state::nemesis_soundlatch_word_w)
 		soundlatch_byte_w(space, offset, data & 0xff);
 }
 
-static WRITE8_DEVICE_HANDLER( gx400_speech_start_w )
+WRITE8_MEMBER(nemesis_state::gx400_speech_start_w)
 {
-	nemesis_state *state = device->machine().driver_data<nemesis_state>();
+	device_t *device = machine().device("vlm");
 
 	/* the voice data is not in a rom but in sound RAM at $8000 */
-	vlm5030_set_rom(device, state->m_gx400_shared_ram + 0x4000);
+	vlm5030_set_rom(device, m_gx400_shared_ram + 0x4000);
 	vlm5030_st(device, 1);
 	vlm5030_st(device, 0);
 }
 
-static WRITE8_DEVICE_HANDLER( salamand_speech_start_w )
+WRITE8_MEMBER(nemesis_state::salamand_speech_start_w)
 {
+	device_t *device = machine().device("vlm");
 	vlm5030_st(device, 1);
 	vlm5030_st(device, 0);
 }
 
-static READ8_DEVICE_HANDLER( nemesis_portA_r )
+READ8_MEMBER(nemesis_state::nemesis_portA_r)
 {
 /*
    bit 0-3:   timer
@@ -268,19 +242,19 @@ static READ8_DEVICE_HANDLER( nemesis_portA_r )
    bit 5:     vlm5030 busy
    bit 7:     unused by this software version. Bubble Memory version uses this bit.
 */
-	nemesis_state *state = device->machine().driver_data<nemesis_state>();
-	int res = (state->m_audiocpu->total_cycles() / 1024) & 0x2f; // this should be 0x0f, but it doesn't work
+	int res = (m_audiocpu->total_cycles() / 1024) & 0x2f; // this should be 0x0f, but it doesn't work
 
 	res |= 0xd0;
 
-	if (state->m_vlm != NULL && vlm5030_bsy(state->m_vlm))
+	if (m_vlm != NULL && vlm5030_bsy(m_vlm))
 		res |= 0x20;
 
 	return res;
 }
 
-static WRITE8_DEVICE_HANDLER( city_sound_bank_w )
+WRITE8_MEMBER(nemesis_state::city_sound_bank_w)
 {
+	device_t *device = machine().device("k007232");
 	int bank_A = (data & 0x03);
 	int bank_B = ((data >> 2) & 0x03);
 	k007232_set_bank(device, bank_A, bank_B);
@@ -448,7 +422,7 @@ static ADDRESS_MAP_START( gx400_sound_map, AS_PROGRAM, 8, nemesis_state )
 	AM_RANGE(0xe004, 0xe004) AM_DEVWRITE_LEGACY("k007232", k005289_keylatch_B_w)
 	AM_RANGE(0xe005, 0xe005) AM_DEVWRITE_LEGACY("ay2", ay8910_address_w)
 	AM_RANGE(0xe006, 0xe006) AM_DEVWRITE_LEGACY("ay1", ay8910_address_w)
-	AM_RANGE(0xe030, 0xe030) AM_DEVWRITE_LEGACY("vlm", gx400_speech_start_w)
+	AM_RANGE(0xe030, 0xe030) AM_WRITE(gx400_speech_start_w)
 	AM_RANGE(0xe086, 0xe086) AM_DEVREAD_LEGACY("ay1", ay8910_r)
 	AM_RANGE(0xe106, 0xe106) AM_DEVWRITE_LEGACY("ay1", ay8910_data_w)
 	AM_RANGE(0xe205, 0xe205) AM_DEVREAD_LEGACY("ay2", ay8910_r)
@@ -574,7 +548,7 @@ static ADDRESS_MAP_START( sal_sound_map, AS_PROGRAM, 8, nemesis_state )
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w)
 	AM_RANGE(0xd000, 0xd000) AM_DEVWRITE_LEGACY("vlm", vlm5030_data_w)
 	AM_RANGE(0xe000, 0xe000) AM_READ(wd_r) /* watchdog?? */
-	AM_RANGE(0xf000, 0xf000) AM_DEVWRITE_LEGACY("vlm", salamand_speech_start_w)
+	AM_RANGE(0xf000, 0xf000) AM_WRITE(salamand_speech_start_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( blkpnthr_sound_map, AS_PROGRAM, 8, nemesis_state )
@@ -596,7 +570,7 @@ static ADDRESS_MAP_START( city_sound_map, AS_PROGRAM, 8, nemesis_state )
 	AM_RANGE(0x98e0, 0x98ff) AM_DEVREADWRITE_LEGACY("k051649", k051649_test_r, k051649_test_w)
 	AM_RANGE(0xa000, 0xa001) AM_DEVREADWRITE_LEGACY("ymsnd", ym3812_r, ym3812_w)
 	AM_RANGE(0xb000, 0xb00d) AM_DEVREADWRITE_LEGACY("k007232", k007232_r, k007232_w)
-	AM_RANGE(0xc000, 0xc000) AM_DEVWRITE_LEGACY("k007232", city_sound_bank_w) /* 7232 bankswitch */
+	AM_RANGE(0xc000, 0xc000) AM_WRITE(city_sound_bank_w) /* 7232 bankswitch */
 	AM_RANGE(0xd000, 0xd000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
@@ -1588,7 +1562,7 @@ static const ay8910_interface ay8910_interface_1 =
 {
 	AY8910_LEGACY_OUTPUT,
 	AY8910_DEFAULT_LOADS,
-	DEVCB_HANDLER(nemesis_portA_r),
+	DEVCB_DRIVER_MEMBER(nemesis_state,nemesis_portA_r),
 	DEVCB_NULL,
 	DEVCB_NULL,
 	DEVCB_NULL
@@ -1857,7 +1831,7 @@ static MACHINE_CONFIG_START( salamand, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)       /* 9.216MHz */
 	MCFG_CPU_PROGRAM_MAP(salamand_map)
-	MCFG_CPU_VBLANK_INT("screen", salamand_interrupt)
+	MCFG_CPU_VBLANK_INT("screen", nemesis_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)         /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(sal_sound_map)
@@ -1951,7 +1925,7 @@ static MACHINE_CONFIG_START( citybomb, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)         /* 9.216 MHz? */
 	MCFG_CPU_PROGRAM_MAP(citybomb_map)
-	MCFG_CPU_VBLANK_INT("screen", salamand_interrupt)
+	MCFG_CPU_VBLANK_INT("screen", nemesis_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)        /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(city_sound_map)
@@ -2000,7 +1974,7 @@ static MACHINE_CONFIG_START( nyanpani, nemesis_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M68000,18432000/2)         /* 9.216 MHz? */
 	MCFG_CPU_PROGRAM_MAP(nyanpani_map)
-	MCFG_CPU_VBLANK_INT("screen", salamand_interrupt)
+	MCFG_CPU_VBLANK_INT("screen", nemesis_interrupt)
 
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)        /* 3.579545 MHz */
 	MCFG_CPU_PROGRAM_MAP(city_sound_map)

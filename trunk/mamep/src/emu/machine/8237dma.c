@@ -19,7 +19,6 @@
 **********************************************************************/
 
 #include "emu.h"
-#include "memconv.h"
 #include "8237dma.h"
 #include "devhelpr.h"
 
@@ -694,7 +693,6 @@ void i8237_device::i8237_drq_write(int channel, int state)
 	}
 
 	m_timer->enable( ( m_command & 0x04 ) ? 0 : 1 );
-
 }
 
 
