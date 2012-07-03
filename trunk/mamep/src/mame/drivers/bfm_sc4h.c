@@ -801,14 +801,12 @@ static MACHINE_START( adder4 )
 MACHINE_CONFIG_DERIVED_CLASS( sc4_adder4, sc4, sc4_adder4_state )
 	MCFG_CPU_ADD("adder4", M68340, 25175000)	 // 68340 (CPU32 core)
 	MCFG_CPU_PROGRAM_MAP(sc4_adder4_map)
-	MCFG_BFMBD1_ADD("vfd0",0)
 
 	MCFG_MACHINE_START( adder4 )
 MACHINE_CONFIG_END
 
 MACHINE_CONFIG_DERIVED_CLASS( sc4dmd, sc4, sc4_state )
 	/* video hardware */
-	MCFG_BFMBD1_REMOVE("vfd0")
 
 	MCFG_DEFAULT_LAYOUT(layout_sc4_dmd)
 	MCFG_CPU_ADD("matrix", M6809, 2000000 )				/* matrix board 6809 CPU at 2 Mhz ?? I don't know the exact freq.*/

@@ -137,7 +137,7 @@ public:
 
 	required_device<cpu_device>			m_mips;
 	required_device<adsp2181_device>	m_adsp;
-	required_device<pci_bus_device>		m_pci;
+	required_device<pci_bus_legacy_device>		m_pci;
 
 
 	/* ASIC */
@@ -614,12 +614,12 @@ WRITE32_MEMBER( magictg_state::f0_w )
 		}
 		case 0xcf8:
 		{
-			pci_32le_w(m_pci, 0, data, mem_mask);
+			m_pci->write(space, 0, data, mem_mask);
 			break;
 		}
 		case 0xcfc:
 		{
-			pci_32le_w(m_pci, 1, data, mem_mask);
+			m_pci->write(space, 1, data, mem_mask);
 			break;
 		}
 //      default:
@@ -651,12 +651,12 @@ READ32_MEMBER( magictg_state::f0_r )
 
 		case 0xcf8:
 		{
-			val = pci_32le_r(m_pci, 0, FLIPENDIAN_INT32(mem_mask));
+			val = m_pci->read(space, 0, FLIPENDIAN_INT32(mem_mask));
 			break;
 		}
 		case 0xcfc:
 		{
-			val = pci_32le_r(m_pci, 1, FLIPENDIAN_INT32(mem_mask));
+			val = m_pci->read(space, 1, FLIPENDIAN_INT32(mem_mask));
 			break;
 		}
 //      default:
@@ -924,14 +924,14 @@ static MACHINE_CONFIG_START( magictg, magictg_state )
 	MCFG_SOUND_ADD("dac2", DMADAC, 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 
-	MCFG_PCI_BUS_ADD("pcibus", 0)
-	MCFG_PCI_BUS_DEVICE(0, NULL, pci_dev0_r, pci_dev0_w)
-	MCFG_PCI_BUS_DEVICE(7, "voodoo_0", voodoo_0_pci_r, voodoo_0_pci_w)
+	MCFG_PCI_BUS_LEGACY_ADD("pcibus", 0)
+	MCFG_PCI_BUS_LEGACY_DEVICE(0, NULL, pci_dev0_r, pci_dev0_w)
+	MCFG_PCI_BUS_LEGACY_DEVICE(7, "voodoo_0", voodoo_0_pci_r, voodoo_0_pci_w)
 
 #if defined(USE_TWO_3DFX)
-	MCFG_PCI_BUS_DEVICE(8, "voodoo_1", voodoo_1_pci_r, voodoo_1_pci_w)
+	MCFG_PCI_BUS_LEGACY_DEVICE(8, "voodoo_1", voodoo_1_pci_r, voodoo_1_pci_w)
 #endif
-	MCFG_PCI_BUS_DEVICE(9, "zr36120", zr36120_pci_r, zr36120_pci_w)
+	MCFG_PCI_BUS_LEGACY_DEVICE(9, "zr36120", zr36120_pci_r, zr36120_pci_w)
 
 	MCFG_3DFX_VOODOO_1_ADD("voodoo_0", STD_VOODOO_1_CLOCK, 2, "screen")
 	MCFG_3DFX_VOODOO_CPU("mips")

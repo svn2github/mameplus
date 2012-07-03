@@ -345,6 +345,16 @@ INCPATH += -include $(SDLSRC)/sdlprefix.h
 SDLOS_TARGETOS = $(BASE_TARGETOS)
 
 #-------------------------------------------------
+# TEST_GCC for GCC version-specific stuff
+#-------------------------------------------------
+
+TEST_GCC = $(shell gcc --version)
+
+ifeq ($(findstring 4.7,$(TEST_GCC)),4.7)
+	CCOMFLAGS += -Wno-narrowing -Wno-attributes
+endif
+
+#-------------------------------------------------
 # Unix
 #-------------------------------------------------
 ifeq ($(BASE_TARGETOS),unix)
@@ -458,7 +468,6 @@ endif
 # Static linking
 
 LDFLAGS += -static-libgcc
-TEST_GCC = $(shell gcc --version)
 ifeq ($(findstring 4.4,$(TEST_GCC)),)
 	#if we use new tools
 	LDFLAGS += -static-libstdc++

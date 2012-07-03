@@ -224,10 +224,16 @@ MACHINE_CONFIG_FRAGMENT( pcvideo_poisk2 )
 MACHINE_CONFIG_END
 
 MACHINE_CONFIG_FRAGMENT( pcvideo_mc1502 )
-	MCFG_FRAGMENT_ADD( pcvideo_cga )
-	MCFG_VIDEO_START( cga_mc1502 )
-	MCFG_SCREEN_MODIFY(CGA_SCREEN_NAME)
+	MCFG_SCREEN_ADD(CGA_SCREEN_NAME, RASTER)
+	MCFG_SCREEN_RAW_PARAMS(XTAL_16MHz,912,0,640,262,0,200)
 	MCFG_SCREEN_UPDATE_STATIC( cga_poisk2 )
+
+	MCFG_PALETTE_LENGTH(/* CGA_PALETTE_SETS * 16*/ 65536 )
+	MCFG_PALETTE_INIT(pc_cga)
+
+	MCFG_MC6845_ADD(CGA_MC6845_NAME, MC6845, XTAL_16MHz/8, mc6845_cga_intf)
+
+	MCFG_VIDEO_START( cga_mc1502 )
 MACHINE_CONFIG_END
 
 MACHINE_CONFIG_FRAGMENT( pcvideo_pc1512 )
@@ -602,7 +608,7 @@ static MC6845_UPDATE_ROW( cga_text_blink_update_row )
 		UINT8 attr = videoram[ offset +1 ];
 		UINT8 data = cga.chr_gen[ chr * 8 + ra ];
 		UINT16 fg = attr & 0x0F;
-		UINT16 bg = attr >> 4;
+		UINT16 bg = (attr >> 4) & 0x07;
 
 		if ( i == cursor_x )
 		{
@@ -646,7 +652,7 @@ static MC6845_UPDATE_ROW( cga_text_blink_update_row_si )
 		UINT8 attr = videoram[ offset +1 ];
 		UINT8 data = cga.chr_gen[ chr * 8 + ra ];
 		UINT16 fg = attr & 0x0F;
-		UINT16 bg = attr >> 4;
+		UINT16 bg = (attr >> 4) & 0x07;
 		UINT8 xi;
 
 		if ( i == cursor_x )

@@ -983,6 +983,7 @@ $(MAMEOBJ)/midw8080.a: \
 
 $(MAMEOBJ)/midway.a: \
 	$(DRIVERS)/astrocde.o $(VIDEO)/astrocde.o \
+	$(DRIVERS)/atlantis.o \
 	$(DRIVERS)/balsente.o $(MACHINE)/balsente.o $(VIDEO)/balsente.o \
 	$(DRIVERS)/gridlee.o $(AUDIO)/gridlee.o $(VIDEO)/gridlee.o \
 	$(DRIVERS)/mcr.o $(MACHINE)/mcr.o $(VIDEO)/mcr.o \
@@ -1905,6 +1906,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/tmspoker.o \
 	$(DRIVERS)/manohman.o \
 	$(DRIVERS)/jankenmn.o \
+	$(DRIVERS)/wildpkr.o \
 
 
 #-------------------------------------------------

@@ -2656,12 +2656,6 @@ void ioport_port::frame_update(ioport_field *mouse_field)
 
 	// hook for MESS's natural keyboard support
 	manager().natkeyboard().frame_update(*this, m_live->digital);
-
-	// call device line write handlers
-	ioport_value newvalue = read();
-	for (dynamic_field *dynfield = m_live->writelist.first(); dynfield != NULL; dynfield = dynfield->next())
-		if (dynfield->field().type() != IPT_OUTPUT)
-			dynfield->write(newvalue);
 }
 
 
@@ -2860,18 +2854,36 @@ time_t ioport_manager::initialize()
 			mame_printf_error("Input port errors:\n%s", errors.cstr());
 	}
 
+	// renumber player numbers for controller ports
+	int player_offset = 0;
+	for (device_t *device = iter.first(); device != NULL; device = iter.next())
+	{
+		int players = 0;
+		for (ioport_port *port = first_port(); port != NULL; port = port->next())
+		{
+			if (&port->device()==device)
+			{
+				port->init_live_state();
+				for (ioport_field *field = port->first_field(); field != NULL; field = field->next())
+				{
+					if (field->type_class()==INPUT_CLASS_CONTROLLER)
+					{
+						if (players < field->player() + 1) players = field->player() + 1;
+						field->set_player(field->player() + player_offset);
+					}
+#ifdef USE_CUSTOM_BUTTON
+					if (field->type() >= IPT_CUSTOM1 && field->type() < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
+						m_custom_button_info[field->player()][field->type() - IPT_CUSTOM1] = field;
+#endif /* USE_CUSTOM_BUTTON */
+				}
+			}
+		}
+		player_offset += players;
+	}
+
 	// allocate live structures to mirror the configuration
 	for (ioport_port *port = first_port(); port != NULL; port = port->next())
-	{
 		port->init_live_state();
-#ifdef USE_CUSTOM_BUTTON
-		for (ioport_field *field = port->first_field(); field != NULL; field = field->next())
-		{
-			if (field->type() >= IPT_CUSTOM1 && field->type() < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
-				m_custom_button_info[field->player()][field->type() - IPT_CUSTOM1] = field;
-		}
-#endif /* USE_CUSTOM_BUTTON */
-	}
 
 	// handle autoselection of devices
 	init_autoselect_devices(IPT_AD_STICK_X,  IPT_AD_STICK_Y,   IPT_AD_STICK_Z, OPTION_ADSTICK_DEVICE,    "analog joystick");
@@ -3287,6 +3299,12 @@ g_profiler.start(PROFILER_INPUT);
 		// handle playback/record
 		playback_port(*port);
 		record_port(*port);
+
+		// call device line write handlers
+		ioport_value newvalue = port->read();
+		for (dynamic_field *dynfield = port->live().writelist.first(); dynfield != NULL; dynfield = dynfield->next())
+			if (dynfield->field().type() != IPT_OUTPUT)
+				dynfield->write(newvalue);
 	}
 
 #ifdef USE_SHOW_INPUT_LOG
