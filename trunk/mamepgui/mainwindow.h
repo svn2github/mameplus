@@ -163,6 +163,7 @@ private:
 #else
 #define EXEC_EXT ""
 #endif
+#define FAV_INI "Favorites" INI_EXT
 
 extern QString CFG_PREFIX;
 

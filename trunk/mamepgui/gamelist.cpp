@@ -2829,6 +2829,39 @@ void Gamelist::initFolders()
 	QString folderPath = utils->getPath(pGuiSettings->value("folder_directory", "folders").toString());
 	QStringList dirPaths = folderPath.split(";");
 
+	bool doCreateFavorite = true;
+	foreach (QString _dirPath, dirPaths)
+	{
+		QDir dir(_dirPath);
+
+		QStringList folderFiles = dir.entryList((QStringList() << "*" INI_EXT), QDir::Files | QDir::Readable);
+
+		foreach (QString folderFile, folderFiles)
+		{
+			if (folderFile == FAV_INI)
+			{
+				doCreateFavorite = false;
+				break;
+			}
+		}
+		if (!doCreateFavorite) break;
+	}
+	if (doCreateFavorite)
+	{
+		QDir dir(dirPaths.at(0));
+		if (!dir.exists())
+		{
+			QDir().mkpath(dir.path());
+		}
+		QFile f(dir.filePath(FAV_INI));
+		if (f.open(QIODevice::ReadWrite | QIODevice::Text))
+		{
+			const char data[] = "[FOLDER_SETTINGS]\nRootFolderIcon golden\nSubFolderIcon cust2\n\n[ROOT_FOLDER]\n";
+			f.write(data, sizeof(data));
+			f.close();
+		}
+	}
+
 	extFolderNames.clear();
 	foreach (QString _dirPath, dirPaths)
 	{
