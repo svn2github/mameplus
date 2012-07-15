@@ -35,7 +35,7 @@ class mw8080bw_state : public driver_device
 {
 public:
 	mw8080bw_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_maincpu(*this,"maincpu"),
 		m_main_ram(*this, "main_ram"),
 		m_colorram(*this, "colorram")

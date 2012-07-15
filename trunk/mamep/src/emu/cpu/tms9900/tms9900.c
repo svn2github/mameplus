@@ -1154,7 +1154,7 @@ void tms99xx_device::execute_run()
 				}
 			}
 		}
-	} while (m_icount>0);
+	} while (m_icount>0 && !m_reset);
 	if (VERBOSE>6) LOG("tms99xx: cycles expired; will return soon.\n");
 }
 
@@ -1165,22 +1165,29 @@ void tms99xx_device::execute_run()
 */
 void tms99xx_device::execute_set_input(int irqline, int state)
 {
-	if (irqline == INPUT_LINE_NMI)
+	if (irqline==INPUT_LINE_99XX_RESET && state==ASSERT_LINE)
 	{
-		m_load_state = (state==ASSERT_LINE);
-		m_irq_level = -1;
+		m_reset = true;
 	}
 	else
 	{
-		m_irq_state = (state==ASSERT_LINE);
-		if (state==ASSERT_LINE)
+		if (irqline == INPUT_LINE_NMI)
 		{
-			m_irq_level = get_intlevel(state);
-			if (VERBOSE>6) LOG("tms99xx: interrupt line %d = %d, level=%d, ST=%04x\n", irqline, state, m_irq_level, ST);
+			m_load_state = (state==ASSERT_LINE);
+			m_irq_level = -1;
 		}
 		else
 		{
-			if (VERBOSE>6) LOG("tms99xx: cleared interrupt line %d\n", irqline);
+			m_irq_state = (state==ASSERT_LINE);
+			if (state==ASSERT_LINE)
+			{
+				m_irq_level = get_intlevel(state);
+				if (VERBOSE>6) LOG("tms99xx: interrupt line %d = %d, level=%d, ST=%04x\n", irqline, state, m_irq_level, ST);
+			}
+			else
+			{
+				if (VERBOSE>6) LOG("tms99xx: cleared interrupt line %d\n", irqline);
+			}
 		}
 	}
 }
@@ -1301,6 +1308,7 @@ void tms99xx_device::decode(UINT16 inst)
 	m_state = 0;
 	IR = inst;
 	m_get_destination = false;
+	m_byteop = false;
 
 	while (!complete)
 	{
@@ -1329,6 +1337,10 @@ void tms99xx_device::decode(UINT16 inst)
 		MPC = -1;
 		m_command = decoded->id;
 		if (VERBOSE>7) LOG("tms99xx: Command decoded as id %d, %s, base opcode %04x\n", m_command, opname[m_command], decoded->opcode);
+		// Byte operations are either format 1 with the byte flag set
+		// or format 4 (CRU multi bit operations) with 1-8 bits to transfer.
+		m_byteop = ((decoded->format==1 && ((IR & 0x1000)!=0))
+				|| (decoded->format==4 && (((IR >> 6)&0x000f) > 0) && (((IR >> 6)&0x000f) > 9)));
 	}
 	m_pass = 1;
 }
@@ -1530,7 +1542,7 @@ void tms99xx_device::data_derivation_subprogram()
 	MPC = ircopy & 0x0030;
 
 	if (((MPC == 0x0020) && (m_regnumber != 0))			// indexed
-		|| ((MPC == 0x0030) && ((IR & 0x1000)!=0)))		// byte flag
+		|| ((MPC == 0x0030) && m_byteop))		// byte operation
 	{
 		MPC += 8;	// the second option
 	}
@@ -1921,7 +1933,7 @@ void tms99xx_device::alu_xop()
 		m_address = 0x0040 + ((IR >> 4) & 0x003c);
 		break;
 	case 1:
-		m_value = WP;							// save the old WP
+		m_value_copy = WP;						// save the old WP
 		WP = m_current_value & m_prgaddr_mask;	// the new WP has been read in the previous microoperation
 		m_current_value = m_address_saved;		// we saved the address of the source operand; retrieve it
 		m_address = WP + 0x0016;				// Next register is R11
@@ -1936,7 +1948,7 @@ void tms99xx_device::alu_xop()
 		break;
 	case 4:
 		m_address = WP + 0x001a;
-		m_current_value = m_value;						// old WP into new R13
+		m_current_value = m_value_copy;			// old WP into new R13
 		break;
 	case 5:
 		m_address =  0x0042 + ((IR >> 4) & 0x003c);		// location of new PC
@@ -1977,7 +1989,7 @@ void tms99xx_device::alu_clr_swpb()
 		check_ov = false;
 		break;
 	case NEG:
-		// LAEO
+		// LAECO
 		// Overflow occurs for value=0x8000
 		dest_new = ((~src_val) & 0x0000ffff) + 1;
 		check_ov = false;
@@ -2037,7 +2049,7 @@ void tms99xx_device::alu_abs()
 
 	if ((m_current_value & 0x8000)!=0)
 	{
-		m_current_value = (-m_current_value) & 0xffff;
+		m_current_value = (((~m_current_value) & 0x0000ffff) + 1) & 0xffff;
 		pulse_clock(2);		// If ABS is performed it takes one machine cycle more
 	}
 	else
@@ -2543,7 +2555,7 @@ UINT32 tms99xx_device::execute_max_cycles() const
 
 UINT32 tms99xx_device::execute_input_lines() const
 {
-	return 1;
+	return 2;
 }
 
 // clocks to cycles, cycles to clocks = id

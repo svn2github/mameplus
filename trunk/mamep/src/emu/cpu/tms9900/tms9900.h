@@ -47,6 +47,22 @@
 #include "emu.h"
 #include "debugger.h"
 
+/*
+    Define symbols for interrupt lines.
+
+    We use a separate RESET signal which is not captured by the core.
+
+    Caution: Check irqline in set_input_line of each driver using this CPU.
+    Values have changed. Use these symbols instead.
+*/
+enum
+{
+	INPUT_LINE_99XX_RESET = 0,
+	INPUT_LINE_99XX_INTREQ = 1,
+	INPUT_LINE_99XX_INT1 = 2,
+	INPUT_LINE_99XX_INT4 = 3
+};
+
 enum
 {
 	LOAD_INT = -1,
@@ -176,6 +192,10 @@ protected:
 
 	// Decoded command
 	UINT16	m_command;
+
+	// Is it a byte operation? Only format 1 commands with the byte flag set
+	// and CRU commands with less than 9 bits to transfer are byte operations.
+	bool m_byteop;
 
 	// Issue clock pulses. Note that each machine cycle has two clock cycles.
 	void pulse_clock(int count);

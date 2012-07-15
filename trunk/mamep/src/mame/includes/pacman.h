@@ -10,9 +10,9 @@ public:
 	pacman_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this, "maincpu"),
-		  m_spriteram(*this, "spriteram"),
-		  m_spriteram2(*this, "spriteram2"),
-		  m_s2650_spriteram(*this, "s2650_spriteram") ,
+		m_spriteram(*this, "spriteram"),
+		m_spriteram2(*this, "spriteram2"),
+		m_s2650_spriteram(*this, "s2650_spriteram"),
 		m_videoram(*this, "videoram"),
 		m_colorram(*this, "colorram"),
 		m_s2650games_tileram(*this, "s2650_tileram"),
