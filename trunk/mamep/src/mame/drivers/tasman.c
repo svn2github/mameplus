@@ -11,16 +11,7 @@
 
   Thanks to palindrome for PCB scans.
 
-  4e226
-  2bfb8 <- 0x109a7c / 0x109a84 VRAM DATA ROM
-    0x4e5f6
-  0x4ef08
-
-  0x10a1d4
-
-    ...
-    0x55e42
-
+    0x38606
 */
 
 #include "emu.h"
@@ -29,13 +20,17 @@
 #include "cpu/m68000/m68000.h"
 #include "machine/eeprom.h"
 
+#define CUSTOM_DRAW 1
 
 class kongambl_state : public konamigx_state
 {
 public:
 	kongambl_state(const machine_config &mconfig, device_type type, const char *tag)
-		: konamigx_state(mconfig, type, tag) { }
+		: konamigx_state(mconfig, type, tag),
+		m_vram(*this, "vram")
+		{ }
 
+	optional_shared_ptr<UINT32> m_vram;
 	DECLARE_READ32_MEMBER(eeprom_r);
 	DECLARE_WRITE32_MEMBER(eeprom_w);
 	DECLARE_WRITE8_MEMBER(kongambl_ff_w);
@@ -44,6 +39,9 @@ public:
 
 static VIDEO_START(kongambl)
 {
+	#if CUSTOM_DRAW
+
+	#else
 	device_t *k056832 = machine.device("k056832");
 
 	k056832_set_layer_association(k056832, 0);
@@ -51,10 +49,48 @@ static VIDEO_START(kongambl)
 	k056832_set_layer_offs(k056832, 1,  2, 0);
 	k056832_set_layer_offs(k056832, 2,  4, 0);
 	k056832_set_layer_offs(k056832, 3,  6, 0);
+	#endif
 }
 
 static SCREEN_UPDATE_IND16(kongambl)
 {
+	#if CUSTOM_DRAW
+	kongambl_state *state = screen.machine().driver_data<kongambl_state>();
+	const gfx_element *gfx = screen.machine().gfx[0];
+	UINT32 count;
+
+	count = 0;
+
+	for (int y=0;y<64;y++)
+	{
+		for (int x=0;x<128;x++)
+		{
+			UINT32 tile = state->m_vram[count] & 0xffff;
+
+			if(screen.machine().primary_screen->visible_area().contains(x*8, y*8))
+				drawgfx_opaque(bitmap,cliprect,gfx,tile,0,0,0,x*8,y*8);
+
+			count++;
+		}
+	}
+
+	count = 0x8000/4;
+
+	for (int y=0;y<64;y++)
+	{
+		for (int x=0;x<128;x++)
+		{
+			UINT32 tile = state->m_vram[count] & 0xffff;
+
+			if(screen.machine().primary_screen->visible_area().contains(x*8, y*8))
+				drawgfx_transpen(bitmap,cliprect,gfx,tile,0,0,0,x*8,y*8,0);
+
+			count++;
+		}
+	}
+
+
+	#else
 	device_t *k056832 = screen.machine().device("k056832");
 
 	bitmap.fill(0, cliprect);
@@ -64,6 +100,7 @@ static SCREEN_UPDATE_IND16(kongambl)
 	k056832_tilemap_draw(k056832, bitmap, cliprect, 2, 0, 0);
 	k056832_tilemap_draw(k056832, bitmap, cliprect, 1, 0, 0);
 	k056832_tilemap_draw(k056832, bitmap, cliprect, 0, 0, 0);
+	#endif
 	return 0;
 }
 
@@ -101,6 +138,13 @@ static READ32_HANDLER( test_r )
 	return -1;//space->machine().rand();
 }
 
+/*
+ static READ32_HANDLER( rng_r )
+{
+    return space->machine().rand();
+}
+*/
+
 WRITE8_MEMBER(kongambl_state::kongambl_ff_w)
 {
 	/* enables thru 0->1 */
@@ -120,15 +164,19 @@ static ADDRESS_MAP_START( kongambl_map, AS_PROGRAM, 32, kongambl_state )
 
 	//0x400000 0x400001 "13M" even addresses
 	//0x400002,0x400003 "13J" odd addresses
+	#if CUSTOM_DRAW
+	AM_RANGE(0x400000, 0x401fff) AM_ROM AM_REGION("gfx1",0)
+	AM_RANGE(0x420000, 0x43ffff) AM_RAM AM_SHARE("vram")
+	AM_RANGE(0x480000, 0x48003f) AM_RAM // vregs
+	#else
 	AM_RANGE(0x400000, 0x401fff) AM_DEVREAD_LEGACY("k056832", k056832_rom_long_r)
-
 	AM_RANGE(0x420000, 0x43ffff) AM_DEVREADWRITE_LEGACY("k056832", k056832_unpaged_ram_long_r, k056832_unpaged_ram_long_w)
+	AM_RANGE(0x480000, 0x48003f) AM_DEVWRITE_LEGACY("k056832", k056832_long_w)
+	#endif
 
 	AM_RANGE(0x440000, 0x443fff) AM_RAM // OBJ RAM
 
 	AM_RANGE(0x460000, 0x47ffff) AM_RAM_WRITE(konamigx_palette_w) AM_SHARE("paletteram")
-
-	AM_RANGE(0x480000, 0x48003f) AM_DEVWRITE_LEGACY("k056832", k056832_long_w)
 
 	AM_RANGE(0x4b001c, 0x4b001f) AM_WRITENOP
 
@@ -147,10 +195,13 @@ static ADDRESS_MAP_START( kongambl_map, AS_PROGRAM, 32, kongambl_state )
 	AM_RANGE(0x4d0000, 0x4d0003) AM_WRITE8(kongambl_ff_w,0xff000000)
 
 	AM_RANGE(0x500380, 0x500383) AM_READ_LEGACY(test_r)
-	AM_RANGE(0x500400, 0x500403) AM_NOP //dual port?
-	AM_RANGE(0x500420, 0x500423) AM_NOP //dual port?
-	AM_RANGE(0x500500, 0x500503) AM_NOP // reads sound ROM in here, polled from m68k?
+	AM_RANGE(0x500000, 0x5007ff) AM_RAM
+//  AM_RANGE(0x500400, 0x500403) AM_NOP //dual port?
+//  AM_RANGE(0x500420, 0x500423) AM_NOP //dual port?
+//  AM_RANGE(0x500500, 0x500503) AM_NOP // reads sound ROM in here, polled from m68k?
 	AM_RANGE(0x580000, 0x580007) AM_READ_LEGACY(test_r)
+
+	AM_RANGE(0x600000, 0x60000f) AM_READ_LEGACY(test_r)
 
 	AM_RANGE(0x700000, 0x700003) AM_READ(eeprom_r)
 	AM_RANGE(0x700004, 0x700007) AM_READ_PORT("IN1")
@@ -206,10 +257,10 @@ static INPUT_PORTS_START( kongambl )
 	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) )
-	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
-	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) ) // "RESET SIGNAL"
+	PORT_DIPNAME( 0x04, 0x00, "Reset Backup RAM" )
+	PORT_DIPSETTING(    0x00, DEF_STR( Yes ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( No ) )
+	PORT_DIPNAME( 0x08, 0x08, "Reset Signal" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
 	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) )
@@ -229,22 +280,22 @@ static INPUT_PORTS_START( kongambl )
 	PORT_DIPNAME( 0x01, 0x00, "SYSB" )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) ) // "NO BATTERY"
+	PORT_DIPNAME( 0x02, 0x02, "No Battery - 1" ) // "NO BATTERY"
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) ) // "NO BATTERY"
+	PORT_DIPNAME( 0x04, 0x04, "No Battery - 2" ) // "NO BATTERY"
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
 	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) ) // IFU
+	PORT_DIPNAME( 0x10, 0x00, "IFU signal" ) // IFU
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) ) // LCU
+	PORT_DIPNAME( 0x20, 0x00, "LCU signal" ) // LCU
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) ) // VSB
+	PORT_DIPNAME( 0x40, 0x00, "VSB signal" ) // VSB
 	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
 	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) )
@@ -483,10 +534,29 @@ static void kongambl_sprite_callback( running_machine &machine, int *code, int *
 {
 }
 
+#if !CUSTOM_DRAW
 static void kongambl_tile_callback( running_machine &machine, int layer, int *code, int *color, int *flags )
 {
 }
+#endif
 
+#if CUSTOM_DRAW
+static const gfx_layout charlayout8_tasman =
+{
+	8,8,
+	RGN_FRAC(1,1),
+	8,
+	{ 0,8,16,24,32,40,48,56 },
+	{ 0,1,2,3,4,5,6,7 },	// bit order probably not exact - note ramp in first 16 tiles
+	{ 0*64, 1*64, 2*64, 3*64, 4*64, 5*64, 6*64, 7*64},
+	8*64
+};
+
+static GFXDECODE_START( tasman )
+	GFXDECODE_ENTRY( "gfx1", 0, charlayout8_tasman, 0, 0x8000/256 )
+GFXDECODE_END
+
+#else
 static const k056832_interface k056832_intf =
 {
 	"gfx1", 0,
@@ -495,6 +565,7 @@ static const k056832_interface k056832_intf =
 	KONAMI_ROM_DEINTERLEAVE_NONE,
 	kongambl_tile_callback, "none"
 };
+#endif
 
 static const k053247_interface k053247_intf =
 {
@@ -511,7 +582,7 @@ static TIMER_DEVICE_CALLBACK( kongambl_vblank )
 	kongambl_state *state = timer.machine().driver_data<kongambl_state>();
 	int scanline = param;
 
-	if(scanline == 256)
+	if(scanline == 512)
 		device_set_input_line(state->m_maincpu, 1, HOLD_LINE); // vblank?
 
 	if(scanline == 0)
@@ -532,8 +603,8 @@ static MACHINE_CONFIG_START( kongambl, kongambl_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
-	MCFG_SCREEN_SIZE(64*8, 32*8+16)
-	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 32*8-1)
+	MCFG_SCREEN_SIZE(96*8, 64*8+16)
+	MCFG_SCREEN_VISIBLE_AREA(0*8, 80*8-1, 0*8, 64*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(kongambl)
 
 	MCFG_PALETTE_LENGTH(0x8000)
@@ -541,7 +612,11 @@ static MACHINE_CONFIG_START( kongambl, kongambl_state )
 	MCFG_VIDEO_START(kongambl)
 
 	MCFG_K053247_ADD("k053246", k053247_intf)
+	#if CUSTOM_DRAW
+	MCFG_GFXDECODE(tasman)
+	#else
 	MCFG_K056832_ADD("k056832", k056832_intf)
+	#endif
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 MACHINE_CONFIG_END

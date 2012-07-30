@@ -586,7 +586,7 @@ void ui_menu_bios_selection::handle()
 		if (menu_event->iptkey == IPT_UI_LEFT || menu_event->iptkey == IPT_UI_RIGHT) {
 			device_t *dev = (device_t *)menu_event->itemref;
 			int cnt = 0;
-			for (const rom_entry *rom = dev->rom_region(); !ROMENTRY_ISEND(rom); rom++) 
+			for (const rom_entry *rom = dev->rom_region(); !ROMENTRY_ISEND(rom); rom++)
 			{
 				if (ROMENTRY_ISSYSTEM_BIOS(rom)) cnt ++;
 			}
@@ -1445,7 +1445,7 @@ void ui_menu_analog::populate()
 					case IPT_PEDAL3:
 						use_autocenter = true;
 						break;
-					
+
 					default:
 						break;
 				}
@@ -2529,7 +2529,7 @@ void ui_menu_crosshair::populate()
 			int found = false;
 
 			/* if we are using the default, then we just need to find the first in the list */
-			if (strlen(settings.name) == 0)
+			if (*(settings.name) == 0)
 				using_default = true;
 
 			/* look for the current name, then remember the name before */

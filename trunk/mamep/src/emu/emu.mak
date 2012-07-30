@@ -237,6 +237,8 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/msm58321.o	\
 	$(EMUMACHINE)/msm6242.o		\
 	$(EMUMACHINE)/ncr539x.o 	\
+	$(EMUMACHINE)/netlist.o		\
+	$(EMUMACHINE)/net_lib.o		\
 	$(EMUMACHINE)/nmc9306.o		\
 	$(EMUMACHINE)/nscsi_bus.o	\
 	$(EMUMACHINE)/nscsi_cd.o	\
@@ -264,9 +266,12 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/scsihd.o		\
 	$(EMUMACHINE)/secflash.o	\
 	$(EMUMACHINE)/smc91c9x.o	\
+	$(EMUMACHINE)/tc009xlvc.o	\
 	$(EMUMACHINE)/timekpr.o		\
 	$(EMUMACHINE)/tmp68301.o	\
 	$(EMUMACHINE)/tms6100.o		\
+	$(EMUMACHINE)/tms9901.o		\
+	$(EMUMACHINE)/tms9902.o		\
 	$(EMUMACHINE)/upd1990a.o	\
 	$(EMUMACHINE)/upd4701.o		\
 	$(EMUMACHINE)/upd7201.o		\

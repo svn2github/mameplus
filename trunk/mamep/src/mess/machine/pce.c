@@ -291,10 +291,13 @@ MACHINE_RESET( mess_pce )
 	pce_cd.adpcm_write_buf = 0;
 
 	// TODO: add CD-DA stop command here
+	//pce_cd.cdda_status = PCE_CD_CDDA_OFF;
+	//cdda_stop_audio( machine.device( "cdda" ) );
 
 	pce_cd.regs[0x0c] |= PCE_CD_ADPCM_STOP_FLAG;
 	pce_cd.regs[0x0c] &= ~PCE_CD_ADPCM_PLAY_FLAG;
 	//pce_cd.regs[0x03] = (pce_cd.regs[0x03] & ~0x0c) | (PCE_CD_SAMPLE_STOP_PLAY);
+	pce_cd.msm_idle = 1;
 
 	/* Note: Arcade Card BIOS contents are the same as System 3, only internal HW differs.
        We use a category to select between modes (some games can be run in either S-CD or A-CD modes) */
@@ -1363,6 +1366,8 @@ WRITE8_MEMBER(pce_state::pce_cd_intf_w)
 				/* bit 3 - ?? irq */
 				/* bit 2 - ?? irq */
 		pce_cd.scsi_ACK = data & 0x80;
+		/* Update register now otherwise it won't catch the irq enable/disable change */
+		pce_cd.regs[0x02] = data;
 		/* Don't set or reset any irq lines, but just verify the current state */
 		pce_cd_set_irq_line( machine(), 0, 0 );
 		break;

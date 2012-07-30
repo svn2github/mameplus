@@ -389,7 +389,7 @@ static void	drawsdl_show_info(sdl_window_info *window, struct SDL_RendererInfo *
 static int drawsdl_window_create(sdl_window_info *window, int width, int height)
 {
 	sdl_info *sdl;
-	const sdl_scale_mode *sm = &scale_modes[video_config.scale_mode];
+    const sdl_scale_mode *sm = &scale_modes[video_config.scale_mode];
 
 	// allocate memory for our structures
 	sdl = (sdl_info *) osd_malloc(sizeof(sdl_info));

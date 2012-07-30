@@ -13,9 +13,12 @@ INLINE UINT16 POP_STACK(tms32051_state *cpustate)
 	return pc;
 }
 
-INLINE INT32 SUB(tms32051_state *cpustate, UINT32 a, UINT32 b, int shift16)
+INLINE INT32 SUB(tms32051_state *cpustate, UINT32 a, UINT32 b)
 {
 	UINT32 res = a - b;
+
+	// C is cleared if borrow was generated
+	cpustate->st1.c = (b > a) ? 0 : 1;
 
 	// check overflow
 	if ((a ^ b) & (a ^ res) & 0x80000000)
@@ -29,28 +32,16 @@ INLINE INT32 SUB(tms32051_state *cpustate, UINT32 a, UINT32 b, int shift16)
 		cpustate->st0.ov = 1;
 	}
 
-	// set carry
-	if (!shift16)
-	{
-		// C is cleared if borrow was generated
-		cpustate->st1.c = (b > a) ? 0 : 1;
-	}
-	else
-	{
-		// if 16-bit shift, C is cleared if borrow was generated, otherwise C is unaffected
-		if (b > a)
-		{
-			cpustate->st1.c = 0;
-		}
-	}
-
 	return (INT32)(res);
 }
 
-INLINE INT32 ADD(tms32051_state *cpustate, UINT32 a, UINT32 b, int shift16)
+INLINE INT32 ADD(tms32051_state *cpustate, UINT32 a, UINT32 b)
 {
 	UINT32 res = a + b;
-	
+
+	// C is set if carry was generated
+	cpustate->st1.c = (a > res) ? 1 : 0;
+
 	// check overflow
 	if ((a ^ res) & (b ^ res) & 0x80000000)
 	{
@@ -61,21 +52,6 @@ INLINE INT32 ADD(tms32051_state *cpustate, UINT32 a, UINT32 b, int shift16)
 
 		// set OV, this is a sticky flag
 		cpustate->st0.ov = 1;
-	}
-
-	// check carry
-	if (!shift16)
-	{
-		// C is set if carry was generated
-		cpustate->st1.c = (((UINT64)(a) + (UINT64)(b)) & U64(0x100000000)) ? 1 : 0;
-	}
-	else
-	{
-		// if 16-bit shift, C is set carry was generated, otherwise C is unaffected
-		if (((UINT64)(a) + (UINT64)(b)) & U64(0x100000000))
-		{
-			cpustate->st1.c = 1;
-		}
 	}
 
 	return (INT32)(res);
@@ -91,7 +67,7 @@ INLINE void UPDATE_AR(tms32051_state *cpustate, int ar, int step)
 
 	if (cenb1 && ar == car1)
 	{
-		// update circular buffer 1
+		// update circular buffer 1, note that it only checks ==
 		if (cpustate->ar[ar] == cpustate->cber1)
 		{
 			cpustate->ar[ar] = cpustate->cbsr1;
@@ -103,7 +79,7 @@ INLINE void UPDATE_AR(tms32051_state *cpustate, int ar, int step)
 	}
 	else if (cenb2 && ar == car2)
 	{
-		// update circular buffer 2
+		// update circular buffer 2, note that it only checks ==
 		if (cpustate->ar[ar] == cpustate->cber2)
 		{
 			cpustate->ar[ar] = cpustate->cbsr2;
@@ -204,6 +180,25 @@ static UINT16 GET_ADDRESS(tms32051_state *cpustate)
 
 INLINE int GET_ZLVC_CONDITION(tms32051_state *cpustate, int zlvc, int zlvc_mask)
 {
+	if (zlvc_mask & 0x2)		// OV-bit
+	{
+		if ((zlvc & 0x2) && cpustate->st0.ov)							// OV
+		{
+			// clear OV
+			cpustate->st0.ov = 0;
+
+			return 1;
+		}
+		else if ((zlvc & 0x2) == 0 && cpustate->st0.ov == 0)			// NOV
+			return 1;
+	}
+	if (zlvc_mask & 0x1)		// C-bit
+	{
+		if ((zlvc & 0x1) && cpustate->st1.c)							// C
+			return 1;
+		else if ((zlvc & 0x1) == 0 && cpustate->st1.c == 0)			// NC
+			return 1;
+	}
 	if (zlvc_mask & 0x8)		// Z-bit
 	{
 		if ((zlvc & 0x8) && (INT32)(cpustate->acc) == 0)				// EQ
@@ -216,20 +211,6 @@ INLINE int GET_ZLVC_CONDITION(tms32051_state *cpustate, int zlvc, int zlvc_mask)
 		if ((zlvc & 0x4) && (INT32)(cpustate->acc) < 0)				// LT
 			return 1;
 		else if ((zlvc & 0x4) == 0 && (INT32)(cpustate->acc) > 0)		// GT
-			return 1;
-	}
-	if (zlvc_mask & 0x2)		// OV-bit
-	{
-		if ((zlvc & 0x2) && cpustate->st0.ov)							// OV
-			return 1;
-		else if ((zlvc & 0x2) == 0 && cpustate->st0.ov == 0)			// NOV
-			return 1;
-	}
-	if (zlvc_mask & 0x1)		// C-bit
-	{
-		if ((zlvc & 0x1) && cpustate->st1.c)							// C
-			return 1;
-		else if ((zlvc & 0x1) == 0 && cpustate->st1.c == 0)			// NC
 			return 1;
 	}
 	return 0;
@@ -250,7 +231,7 @@ INLINE int GET_TP_CONDITION(tms32051_state *cpustate, int tp)
 		}
 		case 2:		// TC = 0
 		{
-			return !cpustate->st1.tc;
+			return cpustate->st1.tc ^ 1;
 		}
 		case 3:		// always false
 		{
@@ -322,7 +303,7 @@ static void op_add_mem(tms32051_state *cpustate)
 		d = (UINT32)(UINT16)(data) << shift;
 	}
 
-	cpustate->acc = ADD(cpustate, cpustate->acc, d, 0);
+	cpustate->acc = ADD(cpustate, cpustate->acc, d);
 
 	CYCLES(1);
 }
@@ -331,7 +312,7 @@ static void op_add_simm(tms32051_state *cpustate)
 {
 	UINT16 imm = cpustate->op & 0xff;
 
-	cpustate->acc = ADD(cpustate, cpustate->acc, imm, 0);
+	cpustate->acc = ADD(cpustate, cpustate->acc, imm);
 
 	CYCLES(1);
 }
@@ -351,7 +332,7 @@ static void op_add_limm(tms32051_state *cpustate)
 		d = (UINT32)(UINT16)(imm) << shift;
 	}
 
-	cpustate->acc = ADD(cpustate, cpustate->acc, d, 0);
+	cpustate->acc = ADD(cpustate, cpustate->acc, d);
 
 	CYCLES(2);
 }
@@ -363,7 +344,7 @@ static void op_add_s16_mem(tms32051_state *cpustate)
 
 static void op_addb(tms32051_state *cpustate)
 {
-	cpustate->acc = ADD(cpustate, cpustate->acc, cpustate->accb, 0);
+	cpustate->acc = ADD(cpustate, cpustate->acc, cpustate->accb);
 
 	CYCLES(1);
 }
@@ -426,26 +407,22 @@ static void op_bsar(tms32051_state *cpustate)
 
 static void op_cmpl(tms32051_state *cpustate)
 {
-	cpustate->acc = ~cpustate->acc;
+	cpustate->acc = ~(UINT32)(cpustate->acc);
 
 	CYCLES(1);
 }
 
 static void op_crgt(tms32051_state *cpustate)
 {
-	if (cpustate->acc > cpustate->accb)
+	if (cpustate->acc >= cpustate->accb)
 	{
 		cpustate->accb = cpustate->acc;
 		cpustate->st1.c = 1;
 	}
-	else if (cpustate->acc < cpustate->accb)
+	else
 	{
 		cpustate->acc = cpustate->accb;
 		cpustate->st1.c = 0;
-	}
-	else
-	{
-		cpustate->st1.c = 1;
 	}
 
 	CYCLES(1);
@@ -453,19 +430,15 @@ static void op_crgt(tms32051_state *cpustate)
 
 static void op_crlt(tms32051_state *cpustate)
 {
-	if (cpustate->acc < cpustate->accb)
-	{
-		cpustate->accb = cpustate->acc;
-		cpustate->st1.c = 1;
-	}
-	else if (cpustate->acc > cpustate->accb)
+	if (cpustate->acc >= cpustate->accb)
 	{
 		cpustate->acc = cpustate->accb;
 		cpustate->st1.c = 0;
 	}
 	else
 	{
-		cpustate->st1.c = 0;
+		cpustate->accb = cpustate->acc;
+		cpustate->st1.c = 1;
 	}
 
 	CYCLES(1);
@@ -525,15 +498,7 @@ static void op_lacc_limm(tms32051_state *cpustate)
 static void op_lacc_s16_mem(tms32051_state *cpustate)
 {
 	UINT16 ea = GET_ADDRESS(cpustate);
-
-	if (cpustate->st1.sxm)
-	{
-		cpustate->acc = (INT32)(INT16)(DM_READ16(cpustate, ea)) << 16;
-	}
-	else
-	{
-		cpustate->acc = (UINT32)(DM_READ16(cpustate, ea)) << 16;
-	}
+	cpustate->acc = DM_READ16(cpustate, ea) << 16;
 
 	CYCLES(1);
 }
@@ -560,10 +525,9 @@ static void op_lact(tms32051_state *cpustate)
 
 static void op_lamm(tms32051_state *cpustate)
 {
-	UINT16 ea = GET_ADDRESS(cpustate);
-	ea &= 0x7f;
-
+	UINT16 ea = GET_ADDRESS(cpustate) & 0x7f;
 	cpustate->acc = DM_READ16(cpustate, ea) & 0xffff;
+
 	CYCLES(1);
 }
 
@@ -695,7 +659,7 @@ static void op_satl(tms32051_state *cpustate)
 
 static void op_sbb(tms32051_state *cpustate)
 {
-	cpustate->acc = SUB(cpustate, cpustate->acc, cpustate->accb, 0);
+	cpustate->acc = SUB(cpustate, cpustate->acc, cpustate->accb);
 
 	CYCLES(1);
 }
@@ -762,7 +726,7 @@ static void op_sub_mem(tms32051_state *cpustate)
 		d = (UINT32)(UINT16)(data) << shift;
 	}
 
-	cpustate->acc = SUB(cpustate, cpustate->acc, d, 0);
+	cpustate->acc = SUB(cpustate, cpustate->acc, d);
 
 	CYCLES(1);
 }
@@ -776,7 +740,7 @@ static void op_sub_simm(tms32051_state *cpustate)
 {
 	UINT16 imm = cpustate->op & 0xff;
 
-	cpustate->acc = SUB(cpustate, cpustate->acc, imm, 0);
+	cpustate->acc = SUB(cpustate, cpustate->acc, imm);
 
 	CYCLES(1);
 }
@@ -796,7 +760,7 @@ static void op_sub_limm(tms32051_state *cpustate)
 		d = (UINT32)(UINT16)(imm) << shift;
 	}
 
-	cpustate->acc = SUB(cpustate, cpustate->acc, d, 0);
+	cpustate->acc = SUB(cpustate, cpustate->acc, d);
 
 	CYCLES(2);
 }
@@ -1038,7 +1002,7 @@ static void op_bcnd(tms32051_state *cpustate)
 {
 	UINT16 pma = ROPCODE(cpustate);
 
-	if (GET_TP_CONDITION(cpustate, (cpustate->op >> 8) & 0x3) || GET_ZLVC_CONDITION(cpustate, (cpustate->op >> 4) & 0xf, cpustate->op & 0xf))
+	if (GET_ZLVC_CONDITION(cpustate, (cpustate->op >> 4) & 0xf, cpustate->op & 0xf) || GET_TP_CONDITION(cpustate, (cpustate->op >> 8) & 0x3))
 	{
 		CHANGE_PC(cpustate, pma);
 		CYCLES(4);
@@ -1053,7 +1017,7 @@ static void op_bcndd(tms32051_state *cpustate)
 {
 	UINT16 pma = ROPCODE(cpustate);
 
-	if (GET_TP_CONDITION(cpustate, (cpustate->op >> 8) & 0x3) || GET_ZLVC_CONDITION(cpustate, (cpustate->op >> 4) & 0xf, cpustate->op & 0xf))
+	if (GET_ZLVC_CONDITION(cpustate, (cpustate->op >> 4) & 0xf, cpustate->op & 0xf) || GET_TP_CONDITION(cpustate, (cpustate->op >> 8) & 0x3))
 	{
 		delay_slot(cpustate, cpustate->pc);
 		CHANGE_PC(cpustate, pma);
@@ -1127,7 +1091,7 @@ static void op_ccd(tms32051_state *cpustate)
 {
 	UINT16 pma = ROPCODE(cpustate);
 
-	if (GET_TP_CONDITION(cpustate, (cpustate->op >> 8) & 0x3) || GET_ZLVC_CONDITION(cpustate, (cpustate->op >> 4) & 0xf, cpustate->op & 0xf))
+	if (GET_ZLVC_CONDITION(cpustate, (cpustate->op >> 4) & 0xf, cpustate->op & 0xf) || GET_TP_CONDITION(cpustate, (cpustate->op >> 8) & 0x3))
 	{
 		PUSH_STACK(cpustate, cpustate->pc+2);
 
@@ -1150,7 +1114,7 @@ static void op_nmi(tms32051_state *cpustate)
 
 static void op_retc(tms32051_state *cpustate)
 {
-	if ((cpustate->op & 0x3ff) == 0x300 || GET_TP_CONDITION(cpustate, (cpustate->op >> 8) & 0x3) || GET_ZLVC_CONDITION(cpustate, (cpustate->op >> 4) & 0xf, cpustate->op & 0xf))
+	if ((cpustate->op & 0x3ff) == 0x300 || GET_ZLVC_CONDITION(cpustate, (cpustate->op >> 4) & 0xf, cpustate->op & 0xf) || GET_TP_CONDITION(cpustate, (cpustate->op >> 8) & 0x3))
 	{
 		UINT16 pc = POP_STACK(cpustate);
 		CHANGE_PC(cpustate, pc);
@@ -1164,7 +1128,7 @@ static void op_retc(tms32051_state *cpustate)
 
 static void op_retcd(tms32051_state *cpustate)
 {
-	if ((cpustate->op & 0x3ff) == 0x300 || GET_TP_CONDITION(cpustate, (cpustate->op >> 8) & 0x3) || GET_ZLVC_CONDITION(cpustate, (cpustate->op >> 4) & 0xf, cpustate->op & 0xf))
+	if ((cpustate->op & 0x3ff) == 0x300 || GET_ZLVC_CONDITION(cpustate, (cpustate->op >> 4) & 0xf, cpustate->op & 0xf) || GET_TP_CONDITION(cpustate, (cpustate->op >> 8) & 0x3))
 	{
 		UINT16 pc = POP_STACK(cpustate);
 		delay_slot(cpustate, cpustate->pc);
@@ -1201,7 +1165,7 @@ static void op_trap(tms32051_state *cpustate)
 
 static void op_xc(tms32051_state *cpustate)
 {
-	if (GET_TP_CONDITION(cpustate, (cpustate->op >> 8) & 0x3) || GET_ZLVC_CONDITION(cpustate, (cpustate->op >> 4) & 0xf, cpustate->op & 0xf))
+	if (GET_ZLVC_CONDITION(cpustate, (cpustate->op >> 4) & 0xf, cpustate->op & 0xf) || GET_TP_CONDITION(cpustate, (cpustate->op >> 8) & 0x3))
 	{
 		CYCLES(1);
 	}
@@ -1418,14 +1382,7 @@ static void op_cpl_imm(tms32051_state *cpustate)
 	UINT16 ea = GET_ADDRESS(cpustate);
 	UINT16 data = DM_READ16(cpustate, ea);
 
-	if (data == imm)
-	{
-		cpustate->st1.tc = 1;
-	}
-	else
-	{
-		cpustate->st1.tc = 0;
-	}
+	cpustate->st1.tc = (data == imm) ? 1 : 0;
 
 	CYCLES(1);
 }
@@ -1472,7 +1429,7 @@ static void op_xpl_imm(tms32051_state *cpustate)
 static void op_apac(tms32051_state *cpustate)
 {
 	INT32 spreg = PREG_PSCALER(cpustate, cpustate->preg);
-	cpustate->acc = ADD(cpustate, cpustate->acc, spreg, 0);
+	cpustate->acc = ADD(cpustate, cpustate->acc, spreg);
 
 	CYCLES(1);
 }
@@ -1488,6 +1445,11 @@ static void op_lt(tms32051_state *cpustate)
 	UINT16 data = DM_READ16(cpustate, ea);
 
 	cpustate->treg0 = data;
+	if (cpustate->pmst.trm == 0)
+	{
+		cpustate->treg1 = data;
+		cpustate->treg2 = data;
+	}
 
 	CYCLES(1);
 }
@@ -1500,7 +1462,12 @@ static void op_lta(tms32051_state *cpustate)
 
 	cpustate->treg0 = data;
 	spreg = PREG_PSCALER(cpustate, cpustate->preg);
-	cpustate->acc = ADD(cpustate, cpustate->acc, spreg, 0);
+	cpustate->acc = ADD(cpustate, cpustate->acc, spreg);
+	if (cpustate->pmst.trm == 0)
+	{
+		cpustate->treg1 = data;
+		cpustate->treg2 = data;
+	}
 
 	CYCLES(1);
 }
@@ -1625,16 +1592,8 @@ static void op_bit(tms32051_state *cpustate)
 {
 	UINT16 ea = GET_ADDRESS(cpustate);
 	UINT16 data = DM_READ16(cpustate, ea);
-	int bit = 15 - ((cpustate->op >> 8) & 0xf);
 
-	if (data & (1 << bit))
-	{
-		cpustate->st1.tc = 1;
-	}
-	else
-	{
-		cpustate->st1.tc = 0;
-	}
+	cpustate->st1.tc = (data >> (~cpustate->op >> 8 & 0xf)) & 1;
 
 	CYCLES(1);
 }
@@ -1643,16 +1602,8 @@ static void op_bitt(tms32051_state *cpustate)
 {
 	UINT16 ea = GET_ADDRESS(cpustate);
 	UINT16 data = DM_READ16(cpustate, ea);
-	int bit = 15 - (cpustate->treg2 & 0xf);
 
-	if (data & (1 << bit))
-	{
-		cpustate->st1.tc = 1;
-	}
-	else
-	{
-		cpustate->st1.tc = 0;
-	}
+	cpustate->st1.tc = (data >> (~cpustate->treg2 & 0xf)) & 1;
 
 	CYCLES(1);
 }
