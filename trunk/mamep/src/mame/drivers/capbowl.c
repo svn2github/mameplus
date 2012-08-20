@@ -263,7 +263,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, capbowl_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
 	AM_RANGE(0x1000, 0x1001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2203_r, ym2203_w)
 	AM_RANGE(0x2000, 0x2000) AM_WRITENOP				/* Not hooked up according to the schematics */
-	AM_RANGE(0x6000, 0x6000) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0x6000, 0x6000) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0x7000, 0x7000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -323,7 +323,7 @@ static const ym2203_interface ym2203_config =
 		DEVCB_NULL,
 		DEVCB_DEVICE_MEMBER("ticket", ticket_dispenser_device, write),  /* Also a status LED. See memory map above */
 	},
-	firqhandler
+	DEVCB_LINE(firqhandler)
 };
 
 
@@ -393,7 +393,7 @@ static MACHINE_CONFIG_START( capbowl, capbowl_state )
 	MCFG_SOUND_ROUTE(2, "mono", 0.07)
 	MCFG_SOUND_ROUTE(3, "mono", 0.75)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -497,12 +497,12 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( capbowl )
+DRIVER_INIT_MEMBER(capbowl_state,capbowl)
 {
-	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 
 	/* configure ROM banks in 0x0000-0x3fff */
-	machine.root_device().membank("bank1")->configure_entries(0, 6, &ROM[0x10000], 0x4000);
+	machine().root_device().membank("bank1")->configure_entries(0, 6, &ROM[0x10000], 0x4000);
 }
 
 
@@ -512,9 +512,9 @@ static DRIVER_INIT( capbowl )
  *
  *************************************/
 
-GAME( 1988, capbowl,  0,       capbowl,  capbowl, capbowl,  ROT270, "Incredible Technologies / Capcom", "Capcom Bowling (set 1)", 0 )
-GAME( 1988, capbowl2, capbowl, capbowl,  capbowl, capbowl,  ROT270, "Incredible Technologies / Capcom", "Capcom Bowling (set 2)", 0 )
-GAME( 1988, capbowl3, capbowl, capbowl,  capbowl, capbowl,  ROT270, "Incredible Technologies / Capcom", "Capcom Bowling (set 3)", 0 )
-GAME( 1988, capbowl4, capbowl, capbowl,  capbowl, capbowl,  ROT270, "Incredible Technologies / Capcom", "Capcom Bowling (set 4)", 0 )
-GAME( 1989, clbowl,   capbowl, capbowl,  capbowl, capbowl,  ROT270, "Incredible Technologies / Capcom", "Coors Light Bowling", 0 )
-GAME( 1991, bowlrama, 0,       bowlrama, capbowl, 0,        ROT270, "P&P Marketing", "Bowl-O-Rama", 0 )
+GAME( 1988, capbowl,  0,       capbowl,  capbowl, capbowl_state, capbowl,  ROT270, "Incredible Technologies / Capcom", "Capcom Bowling (set 1)", 0 )
+GAME( 1988, capbowl2, capbowl, capbowl,  capbowl, capbowl_state, capbowl,  ROT270, "Incredible Technologies / Capcom", "Capcom Bowling (set 2)", 0 )
+GAME( 1988, capbowl3, capbowl, capbowl,  capbowl, capbowl_state, capbowl,  ROT270, "Incredible Technologies / Capcom", "Capcom Bowling (set 3)", 0 )
+GAME( 1988, capbowl4, capbowl, capbowl,  capbowl, capbowl_state, capbowl,  ROT270, "Incredible Technologies / Capcom", "Capcom Bowling (set 4)", 0 )
+GAME( 1989, clbowl,   capbowl, capbowl,  capbowl, capbowl_state, capbowl,  ROT270, "Incredible Technologies / Capcom", "Coors Light Bowling", 0 )
+GAME( 1991, bowlrama, 0,       bowlrama, capbowl, driver_device, 0,        ROT270, "P&P Marketing", "Bowl-O-Rama", 0 )

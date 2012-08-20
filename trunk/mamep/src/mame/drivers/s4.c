@@ -21,6 +21,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(williams_s4);
 };
 
 static ADDRESS_MAP_START( williams_s4_map, AS_PROGRAM, 8, williams_s4_state )
@@ -34,7 +36,7 @@ void williams_s4_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( williams_s4 )
+DRIVER_INIT_MEMBER(williams_s4_state,williams_s4)
 {
 }
 
@@ -244,16 +246,16 @@ ROM_START(tstrk_l1)
 ROM_END
 
 
-GAME(1979,	flash_l1,		0,			williams_s4,	williams_s4,	williams_s4,	ROT0,	"Williams",				"Flash (L-1)",						GAME_IS_SKELETON_MECHANICAL)
-GAME(1979,	flash_t1,		flash_l1,	williams_s4,	williams_s4,	williams_s4,	ROT0,	"Williams",				"Flash (T-1) Ted Estes",			GAME_IS_SKELETON_MECHANICAL)
-GAME(1978,	phnix_l1,		0,			williams_s4,	williams_s4,	williams_s4,	ROT0,	"Williams",				"Phoenix (L-1)",					GAME_IS_SKELETON_MECHANICAL)
-GAME(1978,	pkrno_l1,		0,			williams_s4,	williams_s4,	williams_s4,	ROT0,	"Williams",				"Pokerino (L-1)",					GAME_IS_SKELETON_MECHANICAL)
-GAME(1979,	stlwr_l2,		0,			williams_s4,	williams_s4,	williams_s4,	ROT0,	"Williams",				"Stellar Wars (L-2)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1978,	pomp_l1,		0,			williams_s4,	williams_s4,	williams_s4,	ROT0,	"Williams",				"Pompeii (Shuffle) (L-1)",			GAME_IS_SKELETON_MECHANICAL)
-GAME(1978,	arist_l1,		0,			williams_s4,	williams_s4,	williams_s4,	ROT0,	"Williams",				"Aristocrat (Shuffle) (L-1)",			GAME_IS_SKELETON_MECHANICAL)
-GAME(1978,	topaz_l1,		0,			williams_s4,	williams_s4,	williams_s4,	ROT0,	"Williams",				"Topaz (Shuffle) (L-1)",			GAME_IS_SKELETON_MECHANICAL)
-GAME(1979,	taurs_l1,		0,			williams_s4,	williams_s4,	williams_s4,	ROT0,	"Williams",				"Taurus (Shuffle) (L-1)",			GAME_IS_SKELETON_MECHANICAL)
-GAME(1979,	kingt_l1,		0,			williams_s4,	williams_s4,	williams_s4,	ROT0,	"Williams",				"King Tut (Shuffle) (L-1)",			GAME_IS_SKELETON_MECHANICAL)
-GAME(1980,	omni_l1,		0,			williams_s4,	williams_s4,	williams_s4,	ROT0,	"Williams",				"Omni (Shuffle) (L-1)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1983,	bstrk_l1,		0,			williams_s4,	williams_s4,	williams_s4,	ROT0,	"Williams",				"Big Strike (Shuffle) (L-1)",		GAME_IS_SKELETON_MECHANICAL)
-GAME(1983,	tstrk_l1,		0,			williams_s4,	williams_s4,	williams_s4,	ROT0,	"Williams",				"Triple Strike (Shuffle) (L-1)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(1979,	flash_l1,		0,			williams_s4,	williams_s4, williams_s4_state,	williams_s4,	ROT0,	"Williams",				"Flash (L-1)",						GAME_IS_SKELETON_MECHANICAL)
+GAME(1979,	flash_t1,		flash_l1,	williams_s4,	williams_s4, williams_s4_state,	williams_s4,	ROT0,	"Williams",				"Flash (T-1) Ted Estes",			GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	phnix_l1,		0,			williams_s4,	williams_s4, williams_s4_state,	williams_s4,	ROT0,	"Williams",				"Phoenix (L-1)",					GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	pkrno_l1,		0,			williams_s4,	williams_s4, williams_s4_state,	williams_s4,	ROT0,	"Williams",				"Pokerino (L-1)",					GAME_IS_SKELETON_MECHANICAL)
+GAME(1979,	stlwr_l2,		0,			williams_s4,	williams_s4, williams_s4_state,	williams_s4,	ROT0,	"Williams",				"Stellar Wars (L-2)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	pomp_l1,		0,			williams_s4,	williams_s4, williams_s4_state,	williams_s4,	ROT0,	"Williams",				"Pompeii (Shuffle) (L-1)",			GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	arist_l1,		0,			williams_s4,	williams_s4, williams_s4_state,	williams_s4,	ROT0,	"Williams",				"Aristocrat (Shuffle) (L-1)",			GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	topaz_l1,		0,			williams_s4,	williams_s4, williams_s4_state,	williams_s4,	ROT0,	"Williams",				"Topaz (Shuffle) (L-1)",			GAME_IS_SKELETON_MECHANICAL)
+GAME(1979,	taurs_l1,		0,			williams_s4,	williams_s4, williams_s4_state,	williams_s4,	ROT0,	"Williams",				"Taurus (Shuffle) (L-1)",			GAME_IS_SKELETON_MECHANICAL)
+GAME(1979,	kingt_l1,		0,			williams_s4,	williams_s4, williams_s4_state,	williams_s4,	ROT0,	"Williams",				"King Tut (Shuffle) (L-1)",			GAME_IS_SKELETON_MECHANICAL)
+GAME(1980,	omni_l1,		0,			williams_s4,	williams_s4, williams_s4_state,	williams_s4,	ROT0,	"Williams",				"Omni (Shuffle) (L-1)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1983,	bstrk_l1,		0,			williams_s4,	williams_s4, williams_s4_state,	williams_s4,	ROT0,	"Williams",				"Big Strike (Shuffle) (L-1)",		GAME_IS_SKELETON_MECHANICAL)
+GAME(1983,	tstrk_l1,		0,			williams_s4,	williams_s4, williams_s4_state,	williams_s4,	ROT0,	"Williams",				"Triple Strike (Shuffle) (L-1)",	GAME_IS_SKELETON_MECHANICAL)

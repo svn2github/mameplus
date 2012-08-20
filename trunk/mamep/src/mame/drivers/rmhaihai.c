@@ -55,6 +55,7 @@ public:
 	DECLARE_WRITE8_MEMBER(ctrl_w);
 	DECLARE_WRITE8_MEMBER(themj_rombank_w);
 	DECLARE_WRITE8_MEMBER(adpcm_w);
+	DECLARE_DRIVER_INIT(rmhaihai);
 };
 
 
@@ -665,10 +666,10 @@ ROM_START( themj )
 ROM_END
 
 
-static DRIVER_INIT( rmhaihai )
+DRIVER_INIT_MEMBER(rmhaihai_state,rmhaihai)
 {
-	UINT8 *rom = machine.root_device().memregion("gfx1")->base();
-	int size = machine.root_device().memregion("gfx1")->bytes();
+	UINT8 *rom = machine().root_device().memregion("gfx1")->base();
+	int size = machine().root_device().memregion("gfx1")->bytes();
 	int a,b;
 
 	size /= 2;
@@ -687,8 +688,8 @@ static DRIVER_INIT( rmhaihai )
 }
 
 
-GAME( 1985, rmhaihai, 0,        rmhaihai, rmhaihai, rmhaihai, ROT0, "Alba",  "Real Mahjong Haihai (Japan)", 0 )
-GAME( 1985, rmhaihib, rmhaihai, rmhaihai, rmhaihib, rmhaihai, ROT0, "Alba",  "Real Mahjong Haihai [BET] (Japan)", 0 )
-GAME( 1986, rmhaijin, 0,        rmhaihai, rmhaihai, rmhaihai, ROT0, "Alba",  "Real Mahjong Haihai Jinji Idou Hen (Japan)", 0 )
-GAME( 1986, rmhaisei, 0,        rmhaisei, rmhaihai, rmhaihai, ROT0, "Visco", "Real Mahjong Haihai Seichouhen (Japan)", 0 )
-GAME( 1987, themj,    0,        themj,    rmhaihai, rmhaihai, ROT0, "Visco", "The Mah-jong (Japan)", 0 )
+GAME( 1985, rmhaihai, 0,        rmhaihai, rmhaihai, rmhaihai_state, rmhaihai, ROT0, "Alba",  "Real Mahjong Haihai (Japan)", 0 )
+GAME( 1985, rmhaihib, rmhaihai, rmhaihai, rmhaihib, rmhaihai_state, rmhaihai, ROT0, "Alba",  "Real Mahjong Haihai [BET] (Japan)", 0 )
+GAME( 1986, rmhaijin, 0,        rmhaihai, rmhaihai, rmhaihai_state, rmhaihai, ROT0, "Alba",  "Real Mahjong Haihai Jinji Idou Hen (Japan)", 0 )
+GAME( 1986, rmhaisei, 0,        rmhaisei, rmhaihai, rmhaihai_state, rmhaihai, ROT0, "Visco", "Real Mahjong Haihai Seichouhen (Japan)", 0 )
+GAME( 1987, themj,    0,        themj,    rmhaihai, rmhaihai_state, rmhaihai, ROT0, "Visco", "The Mah-jong (Japan)", 0 )

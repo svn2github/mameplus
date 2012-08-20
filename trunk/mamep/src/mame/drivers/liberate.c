@@ -1360,31 +1360,31 @@ static void sound_cpu_decrypt(running_machine &machine)
 	space->set_decrypted_region(0xc000, 0xffff, decrypted);
 }
 
-static DRIVER_INIT( prosport )
+DRIVER_INIT_MEMBER(liberate_state,prosport)
 {
-	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *RAM = machine().root_device().memregion("maincpu")->base();
 	int i;
 
 	/* Main cpu has the nibbles swapped */
 	for (i = 0; i < 0x10000; i++)
 		RAM[i] = ((RAM[i] & 0x0f) << 4) | ((RAM[i] & 0xf0) >> 4);
 
-	sound_cpu_decrypt(machine);
+	sound_cpu_decrypt(machine());
 }
 
-static DRIVER_INIT( yellowcb )
+DRIVER_INIT_MEMBER(liberate_state,yellowcb)
 {
 	DRIVER_INIT_CALL(prosport);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xa000, 0xa000, "IN0");
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xa000, 0xa000, "IN0");
 }
 
-static DRIVER_INIT( liberate )
+DRIVER_INIT_MEMBER(liberate_state,liberate)
 {
 	int A;
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *decrypted = auto_alloc_array(machine, UINT8, 0x10000);
-	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	UINT8 *decrypted = auto_alloc_array(machine(), UINT8, 0x10000);
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 
 	space->set_decrypted_region(0x0000, 0xffff, decrypted);
 
@@ -1395,9 +1395,9 @@ static DRIVER_INIT( liberate )
 		decrypted[A] = (decrypted[A] & 0x7d) | ((decrypted[A] & 0x02) << 6) | ((decrypted[A] & 0x80) >> 6);
 	}
 
-	machine.root_device().membank("bank1")->configure_decrypted_entry(0, decrypted + 0x8000);
+	machine().root_device().membank("bank1")->configure_decrypted_entry(0, decrypted + 0x8000);
 
-	sound_cpu_decrypt(machine);
+	sound_cpu_decrypt(machine());
 }
 
 /*************************************
@@ -1406,14 +1406,14 @@ static DRIVER_INIT( liberate )
  *
  *************************************/
 
-GAME( 1983, prosoccr,  0,        prosoccr,  prosoccr, prosport, ROT270, "Data East Corporation", "Pro Soccer", GAME_SUPPORTS_SAVE )
-GAME( 1983, prosport,  0,        prosport,  prosport, prosport, ROT270, "Data East Corporation", "Pro Sports - Bowling, Tennis, and Golf (set 1)", GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1983, prosporta, prosport, prosport,  prosport, prosport, ROT270, "Data East Corporation", "Pro Sports - Bowling, Tennis, and Golf (set 2)", GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1983, boomrang,  0,        boomrang,  boomrang, prosport, ROT270, "Data East Corporation", "Boomer Rang'r / Genesis (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1983, boomranga, boomrang, boomrang,  boomrang, prosport, ROT270, "Data East Corporation", "Boomer Rang'r / Genesis (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1984, kamikcab,  0,        boomrang,  kamikcab, prosport, ROT270, "Data East Corporation", "Kamikaze Cabbie", GAME_SUPPORTS_SAVE )
-GAME( 1984, yellowcbj, kamikcab, boomrang,  yellowcb, yellowcb, ROT270, "Data East Corporation", "Yellow Cab (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1984, yellowcbb, kamikcab, boomrang,  yellowcb, yellowcb, ROT270, "bootleg",               "Yellow Cab (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1984, liberate,  0,        liberate,  liberate, liberate, ROT270, "Data East Corporation", "Liberation", GAME_SUPPORTS_SAVE )
-GAME( 1984, dualaslt,  liberate, liberate,  dualaslt, liberate, ROT270, "Data East USA",         "Dual Assault", GAME_SUPPORTS_SAVE )
-GAME( 1984, liberateb, liberate, liberatb,  liberatb, prosport, ROT270, "bootleg",               "Liberation (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1983, prosoccr,  0,        prosoccr,  prosoccr, liberate_state, prosport, ROT270, "Data East Corporation", "Pro Soccer", GAME_SUPPORTS_SAVE )
+GAME( 1983, prosport,  0,        prosport,  prosport, liberate_state, prosport, ROT270, "Data East Corporation", "Pro Sports - Bowling, Tennis, and Golf (set 1)", GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1983, prosporta, prosport, prosport,  prosport, liberate_state, prosport, ROT270, "Data East Corporation", "Pro Sports - Bowling, Tennis, and Golf (set 2)", GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1983, boomrang,  0,        boomrang,  boomrang, liberate_state, prosport, ROT270, "Data East Corporation", "Boomer Rang'r / Genesis (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1983, boomranga, boomrang, boomrang,  boomrang, liberate_state, prosport, ROT270, "Data East Corporation", "Boomer Rang'r / Genesis (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1984, kamikcab,  0,        boomrang,  kamikcab, liberate_state, prosport, ROT270, "Data East Corporation", "Kamikaze Cabbie", GAME_SUPPORTS_SAVE )
+GAME( 1984, yellowcbj, kamikcab, boomrang,  yellowcb, liberate_state, yellowcb, ROT270, "Data East Corporation", "Yellow Cab (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1984, yellowcbb, kamikcab, boomrang,  yellowcb, liberate_state, yellowcb, ROT270, "bootleg",               "Yellow Cab (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1984, liberate,  0,        liberate,  liberate, liberate_state, liberate, ROT270, "Data East Corporation", "Liberation", GAME_SUPPORTS_SAVE )
+GAME( 1984, dualaslt,  liberate, liberate,  dualaslt, liberate_state, liberate, ROT270, "Data East USA",         "Dual Assault", GAME_SUPPORTS_SAVE )
+GAME( 1984, liberateb, liberate, liberatb,  liberatb, liberate_state, prosport, ROT270, "bootleg",               "Liberation (bootleg)", GAME_SUPPORTS_SAVE )

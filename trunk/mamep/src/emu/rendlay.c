@@ -83,6 +83,7 @@
 #include "rendutil.h"
 #include "xmlfile.h"
 #include "png.h"
+#include "ui.h"
 
 
 

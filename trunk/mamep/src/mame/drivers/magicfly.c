@@ -583,7 +583,7 @@ WRITE8_MEMBER(magicfly_state::mux_port_w)
 */
 	m_input_selector = data & 0x0f;	/* Input Selector */
 
-	dac_data_w(machine().device("dac"), data & 0x80);		/* Sound DAC */
+	machine().device<dac_device>("dac")->write_unsigned8(data & 0x80);		/* Sound DAC */
 
 	coin_counter_w(machine(), 0, data & 0x40);	/* Coin1 */
 	coin_counter_w(machine(), 1, data & 0x10);	/* Coin2 */
@@ -825,7 +825,7 @@ static MACHINE_CONFIG_START( magicfly, magicfly_state )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -894,5 +894,5 @@ ROM_END
 *************************/
 
 /*    YEAR  NAME      PARENT  MACHINE   INPUT     INIT   ROT    COMPANY      FULLNAME    FLAGS... */
-GAME( 198?, magicfly, 0,      magicfly, magicfly, 0,     ROT0, "P&A Games", "Magic Fly", 0 )
-GAME( 198?, 7mezzo,   0,      7mezzo,   7mezzo,   0,     ROT0, "<unknown>", "7 e Mezzo", 0 )
+GAME( 198?, magicfly, 0,      magicfly, magicfly, driver_device, 0,     ROT0, "P&A Games", "Magic Fly", 0 )
+GAME( 198?, 7mezzo,   0,      7mezzo,   7mezzo, driver_device,   0,     ROT0, "<unknown>", "7 e Mezzo", 0 )

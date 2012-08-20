@@ -346,9 +346,9 @@ WRITE8_MEMBER(m72_state::m72_mcu_high_w)
 
 WRITE8_MEMBER(m72_state::m72_snd_cpu_sample_w)
 {
-	device_t *device = machine().device("dac");
-	//dac_signed_data_w(device, data);
-	dac_data_w(device, data);
+	dac_device *device = machine().device<dac_device>("dac");
+	//device->write_signed8(data);
+	device->write_unsigned8(data);
 }
 
 READ8_MEMBER(m72_state::m72_snd_cpu_sample_r)
@@ -356,24 +356,23 @@ READ8_MEMBER(m72_state::m72_snd_cpu_sample_r)
 	return m_mcu_sample_latch;
 }
 
-INLINE DRIVER_INIT( m72_8751 )
+DRIVER_INIT_MEMBER(m72_state,m72_8751)
 {
-	m72_state *state = machine.driver_data<m72_state>();
-	address_space *program = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	address_space *io = machine.device("maincpu")->memory().space(AS_IO);
-	address_space *sndio = machine.device("soundcpu")->memory().space(AS_IO);
+	address_space *program = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *io = machine().device("maincpu")->memory().space(AS_IO);
+	address_space *sndio = machine().device("soundcpu")->memory().space(AS_IO);
 
-	state->m_protection_ram = auto_alloc_array(machine, UINT16, 0x10000/2);
+	m_protection_ram = auto_alloc_array(machine(), UINT16, 0x10000/2);
 	program->install_read_bank(0xb0000, 0xbffff, "bank1");
-	program->install_write_handler(0xb0000, 0xb0fff, write16_delegate(FUNC(m72_state::m72_main_mcu_w),state));
-	state->membank("bank1")->set_base(state->m_protection_ram);
+	program->install_write_handler(0xb0000, 0xb0fff, write16_delegate(FUNC(m72_state::m72_main_mcu_w),this));
+	membank("bank1")->set_base(m_protection_ram);
 
 	//io->install_legacy_write_handler(0xc0, 0xc1, FUNC(loht_sample_trigger_w));
-	io->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::m72_main_mcu_sound_w),state));
+	io->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::m72_main_mcu_sound_w),this));
 
 	/* sound cpu */
-	sndio->install_write_handler(0x82, 0x82, 0xff, 0, write8_delegate(FUNC(m72_state::m72_snd_cpu_sample_w),state));
-	sndio->install_read_handler (0x84, 0x84, 0xff, 0, read8_delegate(FUNC(m72_state::m72_snd_cpu_sample_r),state));
+	sndio->install_write_handler(0x82, 0x82, 0xff, 0, write8_delegate(FUNC(m72_state::m72_snd_cpu_sample_w),this));
+	sndio->install_read_handler (0x84, 0x84, 0xff, 0, read8_delegate(FUNC(m72_state::m72_snd_cpu_sample_r),this));
 
 	/* lohtb2 */
 #if 0
@@ -383,7 +382,7 @@ INLINE DRIVER_INIT( m72_8751 )
      * prefetching on the V30.
      */
 	{
-		UINT8 *rom=state->memregion("mcu")->base();
+		UINT8 *rom=memregion("mcu")->base();
 
 		rom[0x12d+5] += 1; printf(" 5: %d\n", rom[0x12d+5]);
 		rom[0x12d+8] += 5;  printf(" 8: %d\n", rom[0x12d+8]);
@@ -730,77 +729,67 @@ static void install_protection_handler(running_machine &machine, const UINT8 *co
 	state->membank("bank1")->set_base(state->m_protection_ram);
 }
 
-static DRIVER_INIT( bchopper )
+DRIVER_INIT_MEMBER(m72_state,bchopper)
 {
-	install_protection_handler(machine, bchopper_code,bchopper_crc);
-	m72_state *state = machine.driver_data<m72_state>();
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::bchopper_sample_trigger_w),state));
+	install_protection_handler(machine(), bchopper_code,bchopper_crc);
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::bchopper_sample_trigger_w),this));
 }
 
-static DRIVER_INIT( mrheli )
+DRIVER_INIT_MEMBER(m72_state,mrheli)
 {
-	install_protection_handler(machine, bchopper_code,mrheli_crc);
-	m72_state *state = machine.driver_data<m72_state>();
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::bchopper_sample_trigger_w),state));
+	install_protection_handler(machine(), bchopper_code,mrheli_crc);
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::bchopper_sample_trigger_w),this));
 }
 
-static DRIVER_INIT( nspirit )
+DRIVER_INIT_MEMBER(m72_state,nspirit)
 {
-	install_protection_handler(machine, nspirit_code,nspirit_crc);
-	m72_state *state = machine.driver_data<m72_state>();
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::nspirit_sample_trigger_w),state));
+	install_protection_handler(machine(), nspirit_code,nspirit_crc);
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::nspirit_sample_trigger_w),this));
 }
 
-static DRIVER_INIT( imgfight )
+DRIVER_INIT_MEMBER(m72_state,imgfight)
 {
-	install_protection_handler(machine, imgfight_code,imgfightj_crc);
-	m72_state *state = machine.driver_data<m72_state>();
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::imgfight_sample_trigger_w),state));
+	install_protection_handler(machine(), imgfight_code,imgfightj_crc);
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::imgfight_sample_trigger_w),this));
 }
 
-static DRIVER_INIT( loht )
+DRIVER_INIT_MEMBER(m72_state,loht)
 {
-	m72_state *state = machine.driver_data<m72_state>();
-	install_protection_handler(machine, loht_code,loht_crc);
+	install_protection_handler(machine(), loht_code,loht_crc);
 
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::loht_sample_trigger_w),state));
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::loht_sample_trigger_w),this));
 
 	/* since we skip the startup tests, clear video RAM to prevent garbage on title screen */
-	memset(state->m_videoram2,0,0x4000);
+	memset(m_videoram2,0,0x4000);
 }
 
-static DRIVER_INIT( xmultiplm72 )
+DRIVER_INIT_MEMBER(m72_state,xmultiplm72)
 {
-	install_protection_handler(machine, xmultiplm72_code,xmultiplm72_crc);
-	m72_state *state = machine.driver_data<m72_state>();
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::xmultiplm72_sample_trigger_w),state));
+	install_protection_handler(machine(), xmultiplm72_code,xmultiplm72_crc);
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::xmultiplm72_sample_trigger_w),this));
 }
 
-static DRIVER_INIT( dbreedm72 )
+DRIVER_INIT_MEMBER(m72_state,dbreedm72)
 {
-	install_protection_handler(machine, dbreedm72_code,dbreedm72_crc);
-	m72_state *state = machine.driver_data<m72_state>();
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::dbreedm72_sample_trigger_w),state));
+	install_protection_handler(machine(), dbreedm72_code,dbreedm72_crc);
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::dbreedm72_sample_trigger_w),this));
 }
 
-static DRIVER_INIT( airduel )
+DRIVER_INIT_MEMBER(m72_state,airduel)
 {
-	install_protection_handler(machine, airduel_code,airduel_crc);
-	m72_state *state = machine.driver_data<m72_state>();
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::airduel_sample_trigger_w),state));
+	install_protection_handler(machine(), airduel_code,airduel_crc);
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::airduel_sample_trigger_w),this));
 }
 
-static DRIVER_INIT( dkgenm72 )
+DRIVER_INIT_MEMBER(m72_state,dkgenm72)
 {
-	install_protection_handler(machine, dkgenm72_code,dkgenm72_crc);
-	m72_state *state = machine.driver_data<m72_state>();
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::dkgenm72_sample_trigger_w),state));
+	install_protection_handler(machine(), dkgenm72_code,dkgenm72_crc);
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::dkgenm72_sample_trigger_w),this));
 }
 
-static DRIVER_INIT( gallop )
+DRIVER_INIT_MEMBER(m72_state,gallop)
 {
-	m72_state *state = machine.driver_data<m72_state>();
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::gallop_sample_trigger_w),state));
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0xc0, 0xc1, write16_delegate(FUNC(m72_state::gallop_sample_trigger_w),this));
 }
 
 
@@ -1851,7 +1840,7 @@ static MACHINE_CONFIG_START( m72_base, m72_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
@@ -1943,7 +1932,7 @@ static MACHINE_CONFIG_START( xmultipl, m72_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
@@ -1984,7 +1973,7 @@ static MACHINE_CONFIG_START( xmultiplm72, m72_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
@@ -2025,7 +2014,7 @@ static MACHINE_CONFIG_START( dbreed, m72_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
@@ -2066,7 +2055,7 @@ static MACHINE_CONFIG_START( dbreedm72, m72_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
@@ -2107,7 +2096,7 @@ static MACHINE_CONFIG_START( rtype2, m72_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
@@ -2148,7 +2137,7 @@ static MACHINE_CONFIG_START( majtitle, m72_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
@@ -2189,7 +2178,7 @@ static MACHINE_CONFIG_START( hharry, m72_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
@@ -2230,7 +2219,7 @@ static MACHINE_CONFIG_START( hharryu, m72_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
@@ -2271,7 +2260,7 @@ static MACHINE_CONFIG_START( dkgenm72, m72_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
@@ -2312,7 +2301,7 @@ static MACHINE_CONFIG_START( poundfor, m72_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
@@ -2353,7 +2342,7 @@ static MACHINE_CONFIG_START( cosmccop, m72_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
@@ -3634,38 +3623,38 @@ ROM_END
 // the program roms failing their tests.  This is why we still have simulation code for many games
 // despite having Japanese version MCU roms for several of them.  See notes next to the sets
 
-GAME( 1987, rtype,       0,        rtype,       rtype,    0,           ROT0,   "Irem", "R-Type (World)", GAME_NO_COCKTAIL )
-GAME( 1987, rtypej,      rtype,    rtype,       rtype,    0,           ROT0,   "Irem", "R-Type (Japan)", GAME_NO_COCKTAIL )
-GAME( 1987, rtypejp,     rtype,    rtype,       rtypep,   0,           ROT0,   "Irem", "R-Type (Japan prototype)", GAME_NO_COCKTAIL )
-GAME( 1987, rtypeu,      rtype,    rtype,       rtype,    0,           ROT0,   "Irem (Nintendo of America license)", "R-Type (US)", GAME_NO_COCKTAIL )
-GAME( 1987, rtypeb,      rtype,    rtype,       rtype,    0,           ROT0,   "bootleg", "R-Type (World bootleg)", GAME_NO_COCKTAIL )
-GAME( 1987, bchopper,    0,        m72,         bchopper, bchopper,    ROT0,   "Irem", "Battle Chopper", GAME_NO_COCKTAIL )
-GAME( 1987, mrheli,      bchopper, m72,         bchopper, mrheli,      ROT0,   "Irem", "Mr. HELI no Dai-Bouken", GAME_NO_COCKTAIL )
-GAME( 1988, nspirit,     0,        m72,         nspirit,  nspirit,     ROT0,   "Irem", "Ninja Spirit", GAME_NO_COCKTAIL )                 // doesn't wait / check for japan warning string.. fails rom check if used with japanese mcu rom (World version?)
-GAME( 1988, nspiritj,    nspirit,  m72_8751,    nspirit,  m72_8751,    ROT0,   "Irem", "Saigo no Nindou (Japan)", GAME_NO_COCKTAIL )      // waits for japan warning screen, works with our mcu dump, corrupt warning screen due to priority / mixing errors (Japan Version)
-GAME( 1988, imgfight,    0,        m72,         imgfight, imgfight,    ROT270, "Irem", "Image Fight (World, revision A)", 0 )             // doesn't wait / check for japan warning string.. fails rom check if used with japanese mcu rom (World version?)
-GAME( 1988, imgfightj,   imgfight, m72_8751,    imgfight, m72_8751,    ROT270, "Irem", "Image Fight (Japan)", 0 )                         // waits for japan warning screen, works with our mcu dump, can't actually see warning screen due to priority / mixing errors, check tilemap viewer (Japan Version)
-GAME( 1989, loht,        0,        m72,         loht,     loht,        ROT0,   "Irem", "Legend of Hero Tonma", GAME_NO_COCKTAIL )         // fails rom check if used with Japan MCU rom (World version?)
-GAME( 1989, lohtj,       loht,     m72_8751,    loht,     m72_8751,    ROT0,   "Irem", "Legend of Hero Tonma (Japan)", GAME_NO_COCKTAIL ) // waits for japan warning screen, works with our mcu dump (Japan Version)
-GAME( 1989, lohtb2,      loht,     m72_8751,    loht,     m72_8751,    ROT0,   "bootleg", "Legend of Hero Tonma (Japan, bootleg with i8751)", GAME_NO_COCKTAIL ) // works like above, mcu code is the same as the real code, probably just an alt revision on a bootleg board
-GAME( 1989, lohtb,       loht,     m72,         loht,     0,           ROT0,   "bootleg", "Legend of Hero Tonma (unprotected bootleg)", GAME_NOT_WORKING| GAME_NO_COCKTAIL )
-GAME( 1989, xmultipl,    0,        xmultipl,    xmultipl, 0,           ROT0,   "Irem", "X Multiply (World, M81)", GAME_NO_COCKTAIL )
-GAME( 1989, xmultiplm72, xmultipl, xmultiplm72, xmultipl, xmultiplm72, ROT0,   "Irem", "X Multiply (Japan, M72)", GAME_NO_COCKTAIL )
-GAME( 1989, dbreed,      0,        dbreed,      dbreed,   0,           ROT0,   "Irem", "Dragon Breed (M81 PCB version)", GAME_NO_COCKTAIL )
-GAME( 1989, dbreedm72,   dbreed,   dbreedm72,   dbreed,   dbreedm72,   ROT0,   "Irem", "Dragon Breed (M72 PCB version)", GAME_NO_COCKTAIL )
-GAME( 1989, rtype2,      0,        rtype2,      rtype2,   0,           ROT0,   "Irem", "R-Type II", GAME_NO_COCKTAIL )
-GAME( 1989, rtype2j,     rtype2,   rtype2,      rtype2,   0,           ROT0,   "Irem", "R-Type II (Japan)", GAME_NO_COCKTAIL )
-GAME( 1989, rtype2jc,    rtype2,   rtype2,      rtype2,   0,           ROT0,   "Irem", "R-Type II (Japan, revision C)", GAME_NO_COCKTAIL )
-GAME( 1990, majtitle,    0,        majtitle,    rtype2,   0,           ROT0,   "Irem", "Major Title (World)", GAME_NO_COCKTAIL )
-GAME( 1990, majtitlej,   majtitle, majtitle,    rtype2,   0,           ROT0,   "Irem", "Major Title (Japan)", GAME_NO_COCKTAIL )
-GAME( 1990, hharry,      0,        hharry,      hharry,   0,           ROT0,   "Irem", "Hammerin' Harry (World)", GAME_NO_COCKTAIL )
-GAME( 1990, hharryu,     hharry,   hharryu,     hharry,   0,           ROT0,   "Irem America", "Hammerin' Harry (US)", GAME_NO_COCKTAIL )
-GAME( 1990, dkgensan,    hharry,   hharryu,     hharry,   0,           ROT0,   "Irem", "Daiku no Gensan (Japan, M82)", GAME_NO_COCKTAIL )
-GAME( 1990, dkgensanm72, hharry,   dkgenm72,    hharry,   dkgenm72,    ROT0,   "Irem", "Daiku no Gensan (Japan, M72)", GAME_NO_COCKTAIL )
-GAME( 1990, poundfor,    0,        poundfor,    poundfor, 0,           ROT270, "Irem", "Pound for Pound (World)", GAME_NO_COCKTAIL )
-GAME( 1990, poundforj,   poundfor, poundfor,    poundfor, 0,           ROT270, "Irem", "Pound for Pound (Japan)", GAME_NO_COCKTAIL )
-GAME( 1990, poundforu,   poundfor, poundfor,    poundfor, 0,           ROT270, "Irem America", "Pound for Pound (US)", GAME_NO_COCKTAIL )
-GAME( 1990, airduel,     0,        m72,         airduel,  airduel,     ROT270, "Irem", "Air Duel (Japan)", 0 )
-GAME( 1991, cosmccop,    0,        cosmccop,    gallop,   0,           ROT0,   "Irem", "Cosmic Cop (World)", GAME_NO_COCKTAIL )
-GAME( 1991, gallop,      cosmccop, m72,         gallop,   gallop,      ROT0,   "Irem", "Gallop - Armed Police Unit (Japan)", GAME_NO_COCKTAIL )
-GAME( 1991, kengo,       0,        kengo,       kengo,    0,           ROT0,   "Irem", "Ken-Go", GAME_NO_COCKTAIL )
+GAME( 1987, rtype,       0,        rtype,       rtype, driver_device,    0,           ROT0,   "Irem", "R-Type (World)", GAME_NO_COCKTAIL )
+GAME( 1987, rtypej,      rtype,    rtype,       rtype, driver_device,    0,           ROT0,   "Irem", "R-Type (Japan)", GAME_NO_COCKTAIL )
+GAME( 1987, rtypejp,     rtype,    rtype,       rtypep, driver_device,   0,           ROT0,   "Irem", "R-Type (Japan prototype)", GAME_NO_COCKTAIL )
+GAME( 1987, rtypeu,      rtype,    rtype,       rtype, driver_device,    0,           ROT0,   "Irem (Nintendo of America license)", "R-Type (US)", GAME_NO_COCKTAIL )
+GAME( 1987, rtypeb,      rtype,    rtype,       rtype, driver_device,    0,           ROT0,   "bootleg", "R-Type (World bootleg)", GAME_NO_COCKTAIL )
+GAME( 1987, bchopper,    0,        m72,         bchopper, m72_state, bchopper,    ROT0,   "Irem", "Battle Chopper", GAME_NO_COCKTAIL )
+GAME( 1987, mrheli,      bchopper, m72,         bchopper, m72_state, mrheli,      ROT0,   "Irem", "Mr. HELI no Daibouken", GAME_NO_COCKTAIL )
+GAME( 1988, nspirit,     0,        m72,         nspirit, m72_state,  nspirit,     ROT0,   "Irem", "Ninja Spirit", GAME_NO_COCKTAIL )                 // doesn't wait / check for japan warning string.. fails rom check if used with japanese mcu rom (World version?)
+GAME( 1988, nspiritj,    nspirit,  m72_8751,    nspirit, m72_state,  m72_8751,    ROT0,   "Irem", "Saigo no Nindou (Japan)", GAME_NO_COCKTAIL )      // waits for japan warning screen, works with our mcu dump, corrupt warning screen due to priority / mixing errors (Japan Version)
+GAME( 1988, imgfight,    0,        m72,         imgfight, m72_state, imgfight,    ROT270, "Irem", "Image Fight (World, revision A)", 0 )             // doesn't wait / check for japan warning string.. fails rom check if used with japanese mcu rom (World version?)
+GAME( 1988, imgfightj,   imgfight, m72_8751,    imgfight, m72_state, m72_8751,    ROT270, "Irem", "Image Fight (Japan)", 0 )                         // waits for japan warning screen, works with our mcu dump, can't actually see warning screen due to priority / mixing errors, check tilemap viewer (Japan Version)
+GAME( 1989, loht,        0,        m72,         loht, m72_state,     loht,        ROT0,   "Irem", "Legend of Hero Tonma", GAME_NO_COCKTAIL )         // fails rom check if used with Japan MCU rom (World version?)
+GAME( 1989, lohtj,       loht,     m72_8751,    loht, m72_state,     m72_8751,    ROT0,   "Irem", "Legend of Hero Tonma (Japan)", GAME_NO_COCKTAIL ) // waits for japan warning screen, works with our mcu dump (Japan Version)
+GAME( 1989, lohtb2,      loht,     m72_8751,    loht, m72_state,     m72_8751,    ROT0,   "bootleg", "Legend of Hero Tonma (Japan, bootleg with i8751)", GAME_NO_COCKTAIL ) // works like above, mcu code is the same as the real code, probably just an alt revision on a bootleg board
+GAME( 1989, lohtb,       loht,     m72,         loht, driver_device,     0,           ROT0,   "bootleg", "Legend of Hero Tonma (unprotected bootleg)", GAME_NOT_WORKING| GAME_NO_COCKTAIL )
+GAME( 1989, xmultipl,    0,        xmultipl,    xmultipl, driver_device, 0,           ROT0,   "Irem", "X Multiply (World, M81)", GAME_NO_COCKTAIL )
+GAME( 1989, xmultiplm72, xmultipl, xmultiplm72, xmultipl, m72_state, xmultiplm72, ROT0,   "Irem", "X Multiply (Japan, M72)", GAME_NO_COCKTAIL )
+GAME( 1989, dbreed,      0,        dbreed,      dbreed, driver_device,   0,           ROT0,   "Irem", "Dragon Breed (M81 PCB version)", GAME_NO_COCKTAIL )
+GAME( 1989, dbreedm72,   dbreed,   dbreedm72,   dbreed, m72_state,   dbreedm72,   ROT0,   "Irem", "Dragon Breed (M72 PCB version)", GAME_NO_COCKTAIL )
+GAME( 1989, rtype2,      0,        rtype2,      rtype2, driver_device,   0,           ROT0,   "Irem", "R-Type II", GAME_NO_COCKTAIL )
+GAME( 1989, rtype2j,     rtype2,   rtype2,      rtype2, driver_device,   0,           ROT0,   "Irem", "R-Type II (Japan)", GAME_NO_COCKTAIL )
+GAME( 1989, rtype2jc,    rtype2,   rtype2,      rtype2, driver_device,   0,           ROT0,   "Irem", "R-Type II (Japan, revision C)", GAME_NO_COCKTAIL )
+GAME( 1990, majtitle,    0,        majtitle,    rtype2, driver_device,   0,           ROT0,   "Irem", "Major Title (World)", GAME_NO_COCKTAIL )
+GAME( 1990, majtitlej,   majtitle, majtitle,    rtype2, driver_device,   0,           ROT0,   "Irem", "Major Title (Japan)", GAME_NO_COCKTAIL )
+GAME( 1990, hharry,      0,        hharry,      hharry, driver_device,   0,           ROT0,   "Irem", "Hammerin' Harry (World)", GAME_NO_COCKTAIL )
+GAME( 1990, hharryu,     hharry,   hharryu,     hharry, driver_device,   0,           ROT0,   "Irem America", "Hammerin' Harry (US)", GAME_NO_COCKTAIL )
+GAME( 1990, dkgensan,    hharry,   hharryu,     hharry, driver_device,   0,           ROT0,   "Irem", "Daiku no Gensan (Japan, M82)", GAME_NO_COCKTAIL )
+GAME( 1990, dkgensanm72, hharry,   dkgenm72,    hharry, m72_state,   dkgenm72,    ROT0,   "Irem", "Daiku no Gensan (Japan, M72)", GAME_NO_COCKTAIL )
+GAME( 1990, poundfor,    0,        poundfor,    poundfor, driver_device, 0,           ROT270, "Irem", "Pound for Pound (World)", GAME_NO_COCKTAIL )
+GAME( 1990, poundforj,   poundfor, poundfor,    poundfor, driver_device, 0,           ROT270, "Irem", "Pound for Pound (Japan)", GAME_NO_COCKTAIL )
+GAME( 1990, poundforu,   poundfor, poundfor,    poundfor, driver_device, 0,           ROT270, "Irem America", "Pound for Pound (US)", GAME_NO_COCKTAIL )
+GAME( 1990, airduel,     0,        m72,         airduel, m72_state,  airduel,     ROT270, "Irem", "Air Duel (Japan)", 0 )
+GAME( 1991, cosmccop,    0,        cosmccop,    gallop, driver_device,   0,           ROT0,   "Irem", "Cosmic Cop (World)", GAME_NO_COCKTAIL )
+GAME( 1991, gallop,      cosmccop, m72,         gallop, m72_state,   gallop,      ROT0,   "Irem", "Gallop - Armed Police Unit (Japan)", GAME_NO_COCKTAIL )
+GAME( 1991, kengo,       0,        kengo,       kengo, driver_device,    0,           ROT0,   "Irem", "Ken-Go", GAME_NO_COCKTAIL )

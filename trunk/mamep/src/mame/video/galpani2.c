@@ -8,7 +8,6 @@
 ***************************************************************************/
 
 #include "emu.h"
-#include "includes/kaneko16.h"
 #include "includes/galpani2.h"
 
 /*
@@ -128,8 +127,6 @@ VIDEO_START( galpani2 )
 	state->m_bg15_bitmap  = auto_bitmap_ind16_alloc(machine, 256*8, 256);
 	state->m_bg8_bitmap[0] = auto_bitmap_ind16_alloc(machine, 512, 256);
 	state->m_bg8_bitmap[1] = auto_bitmap_ind16_alloc(machine, 512, 256);
-
-	VIDEO_START_CALL(kaneko16_sprites);
 }
 
 
@@ -194,6 +191,6 @@ if (screen.machine().input().code_pressed(KEYCODE_Z))
 							   cliprect,0x4000 + 0);
 	}
 
-	if (layers_ctrl & 0x8)	kaneko16_draw_sprites(screen.machine(), bitmap, cliprect);
+	if (layers_ctrl & 0x8) state->m_kaneko_spr->kaneko16_render_sprites(screen.machine(), bitmap, cliprect, state->m_spriteram, state->m_spriteram.bytes());
 	return 0;
 }

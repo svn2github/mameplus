@@ -1040,22 +1040,22 @@ ROM_END
 
 /******************************************************************************/
 
-static DRIVER_INIT( searchar )
+DRIVER_INIT_MEMBER(snk68_state,searchar)
 {
-	machine.root_device().membank("bank1")->set_base(machine.root_device().memregion("user1")->base());
+	machine().root_device().membank("bank1")->set_base(machine().root_device().memregion("user1")->base());
 }
 
 /******************************************************************************/
 
-GAME( 1988, pow,      0,        pow,      pow,      0,        ROT0,  "SNK", "P.O.W. - Prisoners of War (US version 1)", 0 )
-GAME( 1988, powj,     pow,      pow,      powj,     0,        ROT0,  "SNK", "Datsugoku - Prisoners of War (Japan)", 0 )
-GAME( 1989, streetsm, 0,        pow,      streetsm, 0,        ROT0,  "SNK", "Street Smart (US version 2)", 0 )
-GAME( 1989, streetsm1,streetsm, searchar, streetsm, 0,        ROT0,  "SNK", "Street Smart (US version 1)", 0 )
-GAME( 1989, streetsmw,streetsm, searchar, streetsj, 0,        ROT0,  "SNK", "Street Smart (World version 1)", 0 )
-GAME( 1989, streetsmj,streetsm, searchar, streetsj, 0,        ROT0,  "SNK", "Street Smart (Japan version 1)", 0 )
-GAME( 1989, ikari3,   0,        searchar, ikari3,   searchar, ROT0,  "SNK", "Ikari III - The Rescue (World, 8-Way Joystick)", 0 )
-GAME( 1989, ikari3u,  ikari3,   searchar, ikari3,   searchar, ROT0,  "SNK", "Ikari III - The Rescue (US, Rotary Joystick)", 0 )
-GAME( 1989, ikari3j,  ikari3,   searchar, ikari3,   searchar, ROT0,  "SNK", "Ikari Three (Japan, Rotary Joystick)", 0 )
-GAME( 1989, searchar, 0,        searchar, searchar, searchar, ROT90, "SNK", "SAR - Search And Rescue (World)", 0 )
-GAME( 1989, searcharu,searchar, searchar, searchar, searchar, ROT90, "SNK", "SAR - Search And Rescue (US)", 0 )
-GAME( 1989, searcharj,searchar, searchar, searchar, searchar, ROT90, "SNK", "SAR - Search And Rescue (Japan)", 0 )
+GAME( 1988, pow,      0,        pow,      pow, driver_device,      0,        ROT0,  "SNK", "P.O.W. - Prisoners of War (US version 1)", 0 )
+GAME( 1988, powj,     pow,      pow,      powj, driver_device,     0,        ROT0,  "SNK", "Datsugoku - Prisoners of War (Japan)", 0 )
+GAME( 1989, streetsm, 0,        pow,      streetsm, driver_device, 0,        ROT0,  "SNK", "Street Smart (US version 2)", 0 )
+GAME( 1989, streetsm1,streetsm, searchar, streetsm, driver_device, 0,        ROT0,  "SNK", "Street Smart (US version 1)", 0 )
+GAME( 1989, streetsmw,streetsm, searchar, streetsj, driver_device, 0,        ROT0,  "SNK", "Street Smart (World version 1)", 0 )
+GAME( 1989, streetsmj,streetsm, searchar, streetsj, driver_device, 0,        ROT0,  "SNK", "Street Smart (Japan version 1)", 0 )
+GAME( 1989, ikari3,   0,        searchar, ikari3, snk68_state,   searchar, ROT0,  "SNK", "Ikari III - The Rescue (World, 8-Way Joystick)", 0 )
+GAME( 1989, ikari3u,  ikari3,   searchar, ikari3, snk68_state,   searchar, ROT0,  "SNK", "Ikari III - The Rescue (US, Rotary Joystick)", 0 )
+GAME( 1989, ikari3j,  ikari3,   searchar, ikari3, snk68_state,   searchar, ROT0,  "SNK", "Ikari Three (Japan, Rotary Joystick)", 0 )
+GAME( 1989, searchar, 0,        searchar, searchar, snk68_state, searchar, ROT90, "SNK", "SAR - Search And Rescue (World)", 0 )
+GAME( 1989, searcharu,searchar, searchar, searchar, snk68_state, searchar, ROT90, "SNK", "SAR - Search And Rescue (US)", 0 )
+GAME( 1989, searcharj,searchar, searchar, searchar, snk68_state, searchar, ROT90, "SNK", "SAR - Search And Rescue (Japan)", 0 )

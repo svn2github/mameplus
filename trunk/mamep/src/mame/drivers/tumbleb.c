@@ -1889,7 +1889,7 @@ static MACHINE_RESET( tumbleb )
 	state->m_music_is_playing = 0;
 	state->m_flipscreen = 0;
 	state->m_tilebank = 0;
-	memset(state->m_control_0, 0, ARRAY_LENGTH(state->m_control_0));
+	memset(state->m_control_0, 0, sizeof(state->m_control_0));
 }
 
 static MACHINE_CONFIG_START( tumblepb, tumbleb_state )
@@ -3105,44 +3105,43 @@ static void tumblepb_gfx1_rearrange(running_machine &machine)
 	}
 }
 
-static DRIVER_INIT( tumblepb )
+DRIVER_INIT_MEMBER(tumbleb_state,tumblepb)
 {
-	tumblepb_gfx1_rearrange(machine);
+	tumblepb_gfx1_rearrange(machine());
 
 	#if TUMBLEP_HACK
-	tumblepb_patch_code(machine, 0x000132);
+	tumblepb_patch_code(machine(), 0x000132);
 	#endif
 }
 
-static DRIVER_INIT( tumbleb2 )
+DRIVER_INIT_MEMBER(tumbleb_state,tumbleb2)
 {
-	tumblepb_gfx1_rearrange(machine);
+	tumblepb_gfx1_rearrange(machine());
 
 	#if TUMBLEP_HACK
-	tumblepb_patch_code(machine, 0x000132);
+	tumblepb_patch_code(machine(), 0x000132);
 	#endif
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x100000, 0x100001, write16_delegate(FUNC(tumbleb_state::tumbleb2_soundmcu_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x100000, 0x100001, write16_delegate(FUNC(tumbleb_state::tumbleb2_soundmcu_w),this));
 
 }
 
-static DRIVER_INIT( jumpkids )
+DRIVER_INIT_MEMBER(tumbleb_state,jumpkids)
 {
-	tumblepb_gfx1_rearrange(machine);
+	tumblepb_gfx1_rearrange(machine());
 
 	#if TUMBLEP_HACK
-	tumblepb_patch_code(machine, 0x00013a);
+	tumblepb_patch_code(machine(), 0x00013a);
 	#endif
 }
 
-static DRIVER_INIT( fncywld )
+DRIVER_INIT_MEMBER(tumbleb_state,fncywld)
 {
-	tumblepb_gfx1_rearrange(machine);
+	tumblepb_gfx1_rearrange(machine());
 
 	#if FNCYWLD_HACK
 	/* This is a hack to allow you to use the extra features
        of the 2 first "Unused" Dip Switch (see notes above). */
-	UINT16 *RAM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 	RAM[0x0005fa/2] = 0x4e71;
 	RAM[0x00060a/2] = 0x4e71;
 	#endif
@@ -3157,21 +3156,19 @@ READ16_MEMBER(tumbleb_state::bcstory_1a0_read)
 	else return ioport("SYSTEM")->read();
 }
 
-static DRIVER_INIT ( bcstory )
+DRIVER_INIT_MEMBER(tumbleb_state,bcstory)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
-	tumblepb_gfx1_rearrange(machine);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x180008, 0x180009, read16_delegate(FUNC(tumbleb_state::bcstory_1a0_read),state)); // io should be here??
+	tumblepb_gfx1_rearrange(machine());
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x180008, 0x180009, read16_delegate(FUNC(tumbleb_state::bcstory_1a0_read),this)); // io should be here??
 }
 
 
-static DRIVER_INIT( htchctch )
+DRIVER_INIT_MEMBER(tumbleb_state,htchctch)
 {
 
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
-//  UINT16 *HCROM = (UINT16*)state->memregion("maincpu")->base();
-	UINT16 *PROTDATA = (UINT16*)state->memregion("user1")->base();
-	int i, len = state->memregion("user1")->bytes();
+//  UINT16 *HCROM = (UINT16*)memregion("maincpu")->base();
+	UINT16 *PROTDATA = (UINT16*)memregion("user1")->base();
+	int i, len = memregion("user1")->bytes();
 	/* simulate RAM initialization done by the protection MCU */
 	/* verified on real hardware */
 //  static const UINT16 htchctch_mcu68k[] =
@@ -3181,14 +3178,14 @@ static DRIVER_INIT( htchctch )
 
 
 //  for (i = 0; i < sizeof(htchctch_mcu68k) / sizeof(htchctch_mcu68k[0]); i++)
-//      state->m_mainram[0x000/2 + i] = htchctch_mcu68k[i];
+//      m_mainram[0x000/2 + i] = htchctch_mcu68k[i];
 
 	for (i = 0; i < len / 2; i++)
-		state->m_mainram[0x000/2 + i] = PROTDATA[i];
+		m_mainram[0x000/2 + i] = PROTDATA[i];
 
 
 
-	tumblepb_gfx1_rearrange(machine);
+	tumblepb_gfx1_rearrange(machine());
 
 /* trojan.. */
 #if 0
@@ -3403,7 +3400,7 @@ static DRIVER_INIT( htchctch )
 
 	HCROM[0x1e228/2] = 0x4e75;
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0x140000, 0x1407ff); // kill palette writes as the interrupt code we don't have controls them
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0x140000, 0x1407ff); // kill palette writes as the interrupt code we don't have controls them
 
 
 	{
@@ -3456,65 +3453,62 @@ static void suprtrio_decrypt_gfx(running_machine &machine)
 	auto_free(machine, buf);
 }
 
-static DRIVER_INIT( suprtrio )
+DRIVER_INIT_MEMBER(tumbleb_state,suprtrio)
 {
-	suprtrio_decrypt_code(machine);
-	suprtrio_decrypt_gfx(machine);
+	suprtrio_decrypt_code(machine());
+	suprtrio_decrypt_gfx(machine());
 }
 
-static DRIVER_INIT( chokchok )
+DRIVER_INIT_MEMBER(tumbleb_state,chokchok)
 {
 	DRIVER_INIT_CALL(htchctch);
 
 	/* different palette format, closer to tumblep -- is this controlled by a register? the palette was right with the hatch catch trojan */
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x140000, 0x140fff, write16_delegate(FUNC(tumbleb_state::paletteram_xxxxBBBBGGGGRRRR_word_w), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x140000, 0x140fff, write16_delegate(FUNC(tumbleb_state::paletteram_xxxxBBBBGGGGRRRR_word_w), this));
 
 	/* slightly different banking */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::chokchok_tilebank_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::chokchok_tilebank_w),this));
 }
 
-static DRIVER_INIT( wlstar )
+DRIVER_INIT_MEMBER(tumbleb_state,wlstar)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
-	tumblepb_gfx1_rearrange(machine);
+	tumblepb_gfx1_rearrange(machine());
 
 	/* slightly different banking */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::wlstar_tilebank_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x100002, 0x100003, write16_delegate(FUNC(tumbleb_state::wlstar_tilebank_w),this));
 
-	state->m_protbase = 0x0000;
+	m_protbase = 0x0000;
 }
 
-static DRIVER_INIT( wondl96 )
+DRIVER_INIT_MEMBER(tumbleb_state,wondl96)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
-	DRIVER_INIT_CALL( wlstar );
-	state->m_protbase = 0x0200;
+	DRIVER_INIT_CALL(wlstar);
+	m_protbase = 0x0200;
 }
 
-static DRIVER_INIT ( dquizgo )
+DRIVER_INIT_MEMBER(tumbleb_state,dquizgo)
 {
-	tumblepb_gfx1_rearrange(machine);
+	tumblepb_gfx1_rearrange(machine());
 }
 
 
 /******************************************************************************/
 
-GAME( 1991, tumbleb,  tumblep, tumblepb,    tumblepb, tumblepb, ROT0, "bootleg", "Tumble Pop (bootleg set 1)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  )
-GAME( 1991, tumbleb2, tumblep, tumbleb2,    tumblepb, tumbleb2, ROT0, "bootleg", "Tumble Pop (bootleg set 2)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  ) // PIC is protected, sound simulation not 100%
-GAME( 1993, jumpkids, 0,       jumpkids,    tumblepb, jumpkids, ROT0, "Comad",    "Jump Kids", GAME_SUPPORTS_SAVE )
-GAME( 1994, metlsavr, 0,       metlsavr,    metlsavr, chokchok, ROT0, "First Amusement", "Metal Saver", GAME_SUPPORTS_SAVE )
-GAME( 1994, pangpang, 0,       pangpang,    tumblepb, tumbleb2, ROT0, "Dong Gue La Mi Ltd.", "Pang Pang", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  ) // PIC is protected, sound simulation not 100%
-GAME( 1994, suprtrio, 0,       suprtrio,    suprtrio, suprtrio, ROT0, "Gameace", "Super Trio", GAME_SUPPORTS_SAVE )
-GAME( 1996, fncywld,  0,       fncywld,     fncywld,  fncywld,  ROT0, "Unico",   "Fancy World - Earth of Crisis" , GAME_SUPPORTS_SAVE ) // game says 1996, testmode 1995?
+GAME( 1991, tumbleb,  tumblep, tumblepb,    tumblepb, tumbleb_state, tumblepb, ROT0, "bootleg", "Tumble Pop (bootleg set 1)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  )
+GAME( 1991, tumbleb2, tumblep, tumbleb2,    tumblepb, tumbleb_state, tumbleb2, ROT0, "bootleg", "Tumble Pop (bootleg set 2)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  ) // PIC is protected, sound simulation not 100%
+GAME( 1993, jumpkids, 0,       jumpkids,    tumblepb, tumbleb_state, jumpkids, ROT0, "Comad",    "Jump Kids", GAME_SUPPORTS_SAVE )
+GAME( 1994, metlsavr, 0,       metlsavr,    metlsavr, tumbleb_state, chokchok, ROT0, "First Amusement", "Metal Saver", GAME_SUPPORTS_SAVE )
+GAME( 1994, pangpang, 0,       pangpang,    tumblepb, tumbleb_state, tumbleb2, ROT0, "Dong Gue La Mi Ltd.", "Pang Pang", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  ) // PIC is protected, sound simulation not 100%
+GAME( 1994, suprtrio, 0,       suprtrio,    suprtrio, tumbleb_state, suprtrio, ROT0, "Gameace", "Super Trio", GAME_SUPPORTS_SAVE )
+GAME( 1996, fncywld,  0,       fncywld,     fncywld, tumbleb_state,  fncywld,  ROT0, "Unico",   "Fancy World - Earth of Crisis" , GAME_SUPPORTS_SAVE ) // game says 1996, testmode 1995?
 // Should also be 'Magicball Fighting' (c)1994
-GAME( 1995, wlstar,   0,       cookbib_mcu, wlstar,   wlstar,   ROT0, "Mijin",   "Wonder League Star - Sok-Magicball Fighting (Korea)", GAME_SUPPORTS_SAVE ) // translates to 'Wonder League Star - Return of Magicball Fighting'
-GAME( 1995, htchctch, 0,       htchctch,    htchctch, htchctch, ROT0, "SemiCom", "Hatch Catch" , GAME_SUPPORTS_SAVE ) // not 100% sure about gfx offsets
-GAME( 1995, cookbib,  0,       cookbib,     cookbib,  htchctch, ROT0, "SemiCom", "Cookie & Bibi" , GAME_SUPPORTS_SAVE ) // not 100% sure about gfx offsets
-GAME( 1995, chokchok, 0,       cookbib,     chokchok, chokchok, ROT0, "SemiCom", "Choky! Choky!", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE  ) // corruption during attract mode (tmap disable?)
-GAME( 1996, wondl96,  0,       cookbib_mcu, wondl96,  wondl96,  ROT0, "SemiCom", "Wonder League '96 (Korea)", GAME_SUPPORTS_SAVE )
-GAME( 1996, sdfight,  0,       sdfight,     sdfight,  bcstory,  ROT0, "SemiCom", "SD Fighters (Korea)", GAME_SUPPORTS_SAVE )
-GAME( 1997, bcstry,   0,       bcstory,     bcstory,  bcstory,  ROT0, "SemiCom", "B.C. Story (set 1)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // gfx offsets?
-GAME( 1997, bcstrya,  bcstry,  bcstory,     bcstory,  bcstory,  ROT0, "SemiCom", "B.C. Story (set 2)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // gfx offsets?
-GAME( 1997, semibase, 0,       semibase,    semibase, bcstory,  ROT0, "SemiCom", "MuHanSeungBu (SemiCom Baseball) (Korea)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )// sprite offsets..
-GAME( 1998, dquizgo,  0,       cookbib,     dquizgo,  dquizgo,  ROT0, "SemiCom", "Date Quiz Go Go (Korea)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // check layer offsets
+GAME( 1995, wlstar,   0,       cookbib_mcu, wlstar, tumbleb_state,   wlstar,   ROT0, "Mijin",   "Wonder League Star - Sok-Magicball Fighting (Korea)", GAME_SUPPORTS_SAVE ) // translates to 'Wonder League Star - Return of Magicball Fighting'
+GAME( 1995, htchctch, 0,       htchctch,    htchctch, tumbleb_state, htchctch, ROT0, "SemiCom", "Hatch Catch" , GAME_SUPPORTS_SAVE ) // not 100% sure about gfx offsets
+GAME( 1995, cookbib,  0,       cookbib,     cookbib, tumbleb_state,  htchctch, ROT0, "SemiCom", "Cookie & Bibi" , GAME_SUPPORTS_SAVE ) // not 100% sure about gfx offsets
+GAME( 1995, chokchok, 0,       cookbib,     chokchok, tumbleb_state, chokchok, ROT0, "SemiCom", "Choky! Choky!", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE  ) // corruption during attract mode (tmap disable?)
+GAME( 1996, wondl96,  0,       cookbib_mcu, wondl96, tumbleb_state,  wondl96,  ROT0, "SemiCom", "Wonder League '96 (Korea)", GAME_SUPPORTS_SAVE )
+GAME( 1996, sdfight,  0,       sdfight,     sdfight, tumbleb_state,  bcstory,  ROT0, "SemiCom", "SD Fighters (Korea)", GAME_SUPPORTS_SAVE )
+GAME( 1997, bcstry,   0,       bcstory,     bcstory, tumbleb_state,  bcstory,  ROT0, "SemiCom", "B.C. Story (set 1)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // gfx offsets?
+GAME( 1997, bcstrya,  bcstry,  bcstory,     bcstory, tumbleb_state,  bcstory,  ROT0, "SemiCom", "B.C. Story (set 2)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // gfx offsets?
+GAME( 1997, semibase, 0,       semibase,    semibase, tumbleb_state, bcstory,  ROT0, "SemiCom", "MuHanSeungBu (SemiCom Baseball) (Korea)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )// sprite offsets..
+GAME( 1998, dquizgo,  0,       cookbib,     dquizgo, tumbleb_state,  dquizgo,  ROT0, "SemiCom", "Date Quiz Go Go (Korea)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // check layer offsets

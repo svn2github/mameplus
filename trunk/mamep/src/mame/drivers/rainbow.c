@@ -873,33 +873,32 @@ ROM_START( jumping )
 ROM_END
 
 
-static DRIVER_INIT( rbisland )
+DRIVER_INIT_MEMBER(rbisland_state,rbisland)
 {
-	UINT8 *ROM = machine.root_device().memregion("audiocpu")->base();
+	UINT8 *ROM = machine().root_device().memregion("audiocpu")->base();
 
-	machine.root_device().membank("bank1")->configure_entries(0, 4, &ROM[0xc000], 0x4000);
+	machine().root_device().membank("bank1")->configure_entries(0, 4, &ROM[0xc000], 0x4000);
 
-	rbisland_cchip_init(machine, 0);
+	rbisland_cchip_init(machine(), 0);
 }
 
-static DRIVER_INIT( rbislande )
+DRIVER_INIT_MEMBER(rbisland_state,rbislande)
 {
-	UINT8 *ROM = machine.root_device().memregion("audiocpu")->base();
+	UINT8 *ROM = machine().root_device().memregion("audiocpu")->base();
 
-	machine.root_device().membank("bank1")->configure_entries(0, 4, &ROM[0xc000], 0x4000);
+	machine().root_device().membank("bank1")->configure_entries(0, 4, &ROM[0xc000], 0x4000);
 
-	rbisland_cchip_init(machine, 1);
+	rbisland_cchip_init(machine(), 1);
 }
 
-static DRIVER_INIT( jumping )
+DRIVER_INIT_MEMBER(rbisland_state,jumping)
 {
-	rbisland_state *state = machine.driver_data<rbisland_state>();
-	state->m_jumping_latch = 0;
-	state->save_item(NAME(state->m_jumping_latch));
+	m_jumping_latch = 0;
+	save_item(NAME(m_jumping_latch));
 }
 
 
-GAME( 1987, rbisland,  0,        rbisland, rbisland, rbisland,  ROT0, "Taito Corporation", "Rainbow Islands (new version)", GAME_SUPPORTS_SAVE )
-GAME( 1987, rbislando, rbisland, rbisland, rbisland, rbisland,  ROT0, "Taito Corporation", "Rainbow Islands (old version)", GAME_SUPPORTS_SAVE )
-GAME( 1988, rbislande, rbisland, rbisland, rbisland, rbislande, ROT0, "Taito Corporation", "Rainbow Islands (Extra)", GAME_SUPPORTS_SAVE )
-GAME( 1989, jumping,   rbisland, jumping,  jumping,  jumping,   ROT0, "bootleg", "Jumping", GAME_SUPPORTS_SAVE )
+GAME( 1987, rbisland,  0,        rbisland, rbisland, rbisland_state, rbisland,  ROT0, "Taito Corporation", "Rainbow Islands (new version)", GAME_SUPPORTS_SAVE )
+GAME( 1987, rbislando, rbisland, rbisland, rbisland, rbisland_state, rbisland,  ROT0, "Taito Corporation", "Rainbow Islands (old version)", GAME_SUPPORTS_SAVE )
+GAME( 1988, rbislande, rbisland, rbisland, rbisland, rbisland_state, rbislande, ROT0, "Taito Corporation", "Rainbow Islands (Extra)", GAME_SUPPORTS_SAVE )
+GAME( 1989, jumping,   rbisland, jumping,  jumping, rbisland_state,  jumping,   ROT0, "bootleg", "Jumping", GAME_SUPPORTS_SAVE )

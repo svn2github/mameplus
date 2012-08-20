@@ -322,6 +322,130 @@ public:
 	DECLARE_WRITE8_MEMBER(sfbonus_3000_w);
 	DECLARE_WRITE8_MEMBER(sfbonus_2801_w);
 	DECLARE_WRITE8_MEMBER(sfbonus_2c01_w);
+	DECLARE_DRIVER_INIT(hldspin2d);
+	DECLARE_DRIVER_INIT(ch2000v3);
+	DECLARE_DRIVER_INIT(fb5v);
+	DECLARE_DRIVER_INIT(suprball);
+	DECLARE_DRIVER_INIT(ch2000v2);
+	DECLARE_DRIVER_INIT(act2000v3);
+	DECLARE_DRIVER_INIT(classiced3);
+	DECLARE_DRIVER_INIT(fb6v3);
+	DECLARE_DRIVER_INIT(fb4d);
+	DECLARE_DRIVER_INIT(dblchal);
+	DECLARE_DRIVER_INIT(tighookv2);
+	DECLARE_DRIVER_INIT(funriverv);
+	DECLARE_DRIVER_INIT(pir2002);
+	DECLARE_DRIVER_INIT(moneymacd);
+	DECLARE_DRIVER_INIT(classice);
+	DECLARE_DRIVER_INIT(fb6);
+	DECLARE_DRIVER_INIT(classicev3);
+	DECLARE_DRIVER_INIT(fb4);
+	DECLARE_DRIVER_INIT(ch2000c);
+	DECLARE_DRIVER_INIT(pir2001);
+	DECLARE_DRIVER_INIT(version4);
+	DECLARE_DRIVER_INIT(pir2002v);
+	DECLARE_DRIVER_INIT(act2000v2);
+	DECLARE_DRIVER_INIT(fb6s);
+	DECLARE_DRIVER_INIT(abnudge);
+	DECLARE_DRIVER_INIT(fb2genv3);
+	DECLARE_DRIVER_INIT(robadv2d);
+	DECLARE_DRIVER_INIT(pir2002d);
+	DECLARE_DRIVER_INIT(bugfeverv);
+	DECLARE_DRIVER_INIT(anithunt);
+	DECLARE_DRIVER_INIT(fb2genv);
+	DECLARE_DRIVER_INIT(bugfeverv2);
+	DECLARE_DRIVER_INIT(tighookd);
+	DECLARE_DRIVER_INIT(fb6v);
+	DECLARE_DRIVER_INIT(pir2002v2);
+	DECLARE_DRIVER_INIT(sfruitbv);
+	DECLARE_DRIVER_INIT(sfbonus);
+	DECLARE_DRIVER_INIT(pirpok2v2);
+	DECLARE_DRIVER_INIT(parrot3v2);
+	DECLARE_DRIVER_INIT(fb4v3);
+	DECLARE_DRIVER_INIT(sfbonus_common);
+	DECLARE_DRIVER_INIT(seawld);
+	DECLARE_DRIVER_INIT(moneymacv);
+	DECLARE_DRIVER_INIT(fb3g);
+	DECLARE_DRIVER_INIT(act2000);
+	DECLARE_DRIVER_INIT(robadv2v1);
+	DECLARE_DRIVER_INIT(moneymac);
+	DECLARE_DRIVER_INIT(pickwinv);
+	DECLARE_DRIVER_INIT(version4v);
+	DECLARE_DRIVER_INIT(pir2001v2);
+	DECLARE_DRIVER_INIT(spooky);
+	DECLARE_DRIVER_INIT(pickwinv2);
+	DECLARE_DRIVER_INIT(pickwin);
+	DECLARE_DRIVER_INIT(act2000v);
+	DECLARE_DRIVER_INIT(fb6d);
+	DECLARE_DRIVER_INIT(fb5d);
+	DECLARE_DRIVER_INIT(seawldv);
+	DECLARE_DRIVER_INIT(anibonusv);
+	DECLARE_DRIVER_INIT(getrich);
+	DECLARE_DRIVER_INIT(anibonus);
+	DECLARE_DRIVER_INIT(atworld);
+	DECLARE_DRIVER_INIT(anibonusd);
+	DECLARE_DRIVER_INIT(fb2gen);
+	DECLARE_DRIVER_INIT(atworldd);
+	DECLARE_DRIVER_INIT(fb2gend);
+	DECLARE_DRIVER_INIT(sfruitbd);
+	DECLARE_DRIVER_INIT(anithuntv);
+	DECLARE_DRIVER_INIT(version4d2);
+	DECLARE_DRIVER_INIT(classiced);
+	DECLARE_DRIVER_INIT(fb5);
+	DECLARE_DRIVER_INIT(fruitcar2);
+	DECLARE_DRIVER_INIT(fruitcar3);
+	DECLARE_DRIVER_INIT(sfbonusd);
+	DECLARE_DRIVER_INIT(dblchald);
+	DECLARE_DRIVER_INIT(pirpok2);
+	DECLARE_DRIVER_INIT(anithuntd);
+	DECLARE_DRIVER_INIT(fb2ndv);
+	DECLARE_DRIVER_INIT(ch2000v);
+	DECLARE_DRIVER_INIT(funriver);
+	DECLARE_DRIVER_INIT(pickwind);
+	DECLARE_DRIVER_INIT(fruitcar);
+	DECLARE_DRIVER_INIT(hldspin1);
+	DECLARE_DRIVER_INIT(sfruitb);
+	DECLARE_DRIVER_INIT(hldspin1v);
+	DECLARE_DRIVER_INIT(sfbonusv);
+	DECLARE_DRIVER_INIT(dblchalv);
+	DECLARE_DRIVER_INIT(act2000d);
+	DECLARE_DRIVER_INIT(sfruitbv2);
+	DECLARE_DRIVER_INIT(robadv2v4);
+	DECLARE_DRIVER_INIT(anibonus3);
+	DECLARE_DRIVER_INIT(fb2ndd);
+	DECLARE_DRIVER_INIT(classicev);
+	DECLARE_DRIVER_INIT(hldspin1d);
+	DECLARE_DRIVER_INIT(fb4v);
+	DECLARE_DRIVER_INIT(abnudgev);
+	DECLARE_DRIVER_INIT(bugfeverd);
+	DECLARE_DRIVER_INIT(dvisland);
+	DECLARE_DRIVER_INIT(fb2nd);
+	DECLARE_DRIVER_INIT(version4v2);
+	DECLARE_DRIVER_INIT(ch2000);
+	DECLARE_DRIVER_INIT(ch2000d);
+	DECLARE_DRIVER_INIT(abnudged);
+	DECLARE_DRIVER_INIT(anibonusv3);
+	DECLARE_DRIVER_INIT(fbdeluxe);
+	DECLARE_DRIVER_INIT(bugfever);
+	DECLARE_DRIVER_INIT(parrot3v);
+	DECLARE_DRIVER_INIT(pir2001v);
+	DECLARE_DRIVER_INIT(tighook);
+	DECLARE_DRIVER_INIT(hldspin2);
+	DECLARE_DRIVER_INIT(hldspin2v);
+	DECLARE_DRIVER_INIT(pirpok2v);
+	DECLARE_DRIVER_INIT(parrot3d);
+	DECLARE_DRIVER_INIT(pir2001d);
+	DECLARE_DRIVER_INIT(tighookv);
+	DECLARE_DRIVER_INIT(robadv);
+	DECLARE_DRIVER_INIT(pirpok2d);
+	void sfbonus_bitswap(UINT8 xor0, UINT8 b00, UINT8 b01, UINT8 b02, UINT8 b03, UINT8 b04, UINT8 b05, UINT8 b06,UINT8 b07,
+                        UINT8 xor1, UINT8 b10, UINT8 b11, UINT8 b12, UINT8 b13, UINT8 b14, UINT8 b15, UINT8 b16,UINT8 b17,
+	                    UINT8 xor2, UINT8 b20, UINT8 b21, UINT8 b22, UINT8 b23, UINT8 b24, UINT8 b25, UINT8 b26,UINT8 b27,
+		                UINT8 xor3, UINT8 b30, UINT8 b31, UINT8 b32, UINT8 b33, UINT8 b34, UINT8 b35, UINT8 b36,UINT8 b37,
+			            UINT8 xor4, UINT8 b40, UINT8 b41, UINT8 b42, UINT8 b43, UINT8 b44, UINT8 b45, UINT8 b46,UINT8 b47,
+				        UINT8 xor5, UINT8 b50, UINT8 b51, UINT8 b52, UINT8 b53, UINT8 b54, UINT8 b55, UINT8 b56,UINT8 b57,
+				        UINT8 xor6, UINT8 b60, UINT8 b61, UINT8 b62, UINT8 b63, UINT8 b64, UINT8 b65, UINT8 b66,UINT8 b67,
+				        UINT8 xor7, UINT8 b70, UINT8 b71, UINT8 b72, UINT8 b73, UINT8 b74, UINT8 b75, UINT8 b76,UINT8 b77 );
 };
 
 
@@ -5686,40 +5810,39 @@ ROM_END
 //ROM_REGION( 0x80000, "user1", 0 ) /* Z80 Code */
 //ROM_LOAD( "dummy.rom", 0x00000, 0x40000, CRC(1) SHA1(1) )
 
-static DRIVER_INIT( sfbonus_common)
+DRIVER_INIT_MEMBER(sfbonus_state,sfbonus_common)
 {
-	sfbonus_state *state = machine.driver_data<sfbonus_state>();
-	state->m_tilemap_ram = auto_alloc_array(machine, UINT8, 0x4000);
-	memset(state->m_tilemap_ram, 0xff, 0x4000);
-	state_save_register_global_pointer(machine, state->m_tilemap_ram , 0x4000);
+	m_tilemap_ram = auto_alloc_array(machine(), UINT8, 0x4000);
+	memset(m_tilemap_ram, 0xff, 0x4000);
+	state_save_register_global_pointer(machine(), m_tilemap_ram , 0x4000);
 
-	state->m_reel_ram = auto_alloc_array(machine, UINT8, 0x0800);
-	memset(state->m_reel_ram, 0xff ,0x0800);
-	state_save_register_global_pointer(machine, state->m_reel_ram , 0x0800);
+	m_reel_ram = auto_alloc_array(machine(), UINT8, 0x0800);
+	memset(m_reel_ram, 0xff ,0x0800);
+	state_save_register_global_pointer(machine(), m_reel_ram , 0x0800);
 
-	state->m_reel2_ram = auto_alloc_array(machine, UINT8, 0x0800);
-	memset(state->m_reel2_ram, 0xff, 0x0800);
-	state_save_register_global_pointer(machine, state->m_reel2_ram , 0x0800);
+	m_reel2_ram = auto_alloc_array(machine(), UINT8, 0x0800);
+	memset(m_reel2_ram, 0xff, 0x0800);
+	state_save_register_global_pointer(machine(), m_reel2_ram , 0x0800);
 
-	state->m_reel3_ram = auto_alloc_array(machine, UINT8, 0x0800);
-	memset(state->m_reel3_ram, 0xff, 0x0800);
-	state_save_register_global_pointer(machine, state->m_reel3_ram , 0x0800);
+	m_reel3_ram = auto_alloc_array(machine(), UINT8, 0x0800);
+	memset(m_reel3_ram, 0xff, 0x0800);
+	state_save_register_global_pointer(machine(), m_reel3_ram , 0x0800);
 
-	state->m_reel4_ram = auto_alloc_array(machine, UINT8, 0x0800);
-	memset(state->m_reel4_ram, 0xff, 0x0800);
-	state_save_register_global_pointer(machine, state->m_reel4_ram , 0x0800);
+	m_reel4_ram = auto_alloc_array(machine(), UINT8, 0x0800);
+	memset(m_reel4_ram, 0xff, 0x0800);
+	state_save_register_global_pointer(machine(), m_reel4_ram , 0x0800);
 
-	state->m_videoram = auto_alloc_array(machine, UINT8, 0x10000);
+	m_videoram = auto_alloc_array(machine(), UINT8, 0x10000);
 
-	memset(state->m_videoram, 0xff, 0x10000);
+	memset(m_videoram, 0xff, 0x10000);
 
-	state_save_register_global_pointer(machine, state->m_videoram, 0x10000);
+	state_save_register_global_pointer(machine(), m_videoram, 0x10000);
 
 	// dummy.rom helper
 	{
-		UINT8 *ROM = state->memregion("maincpu")->base();
-		int length = state->memregion("maincpu")->bytes();
-		UINT8* ROM2 = state->memregion("user1")->base();
+		UINT8 *ROM = memregion("maincpu")->base();
+		int length = memregion("maincpu")->bytes();
+		UINT8* ROM2 = memregion("user1")->base();
 
 		if (ROM2)
 		{
@@ -5745,7 +5868,7 @@ static DRIVER_INIT( sfbonus_common)
 			{
 				FILE *fp;
 				char filename[256];
-				sprintf(filename,"decr_%s", machine.system().name);
+				sprintf(filename,"decr_%s", machine().system().name);
 				fp = fopen(filename, "w+b");
 				if (fp)
 				{
@@ -5757,7 +5880,7 @@ static DRIVER_INIT( sfbonus_common)
 	}
 }
 
-static void sfbonus_bitswap( running_machine& machine,
+void sfbonus_state::sfbonus_bitswap(
 						UINT8 xor0, UINT8 b00, UINT8 b01, UINT8 b02, UINT8 b03, UINT8 b04, UINT8 b05, UINT8 b06,UINT8 b07,
                         UINT8 xor1, UINT8 b10, UINT8 b11, UINT8 b12, UINT8 b13, UINT8 b14, UINT8 b15, UINT8 b16,UINT8 b17,
 	                    UINT8 xor2, UINT8 b20, UINT8 b21, UINT8 b22, UINT8 b23, UINT8 b24, UINT8 b25, UINT8 b26,UINT8 b27,
@@ -5769,9 +5892,9 @@ static void sfbonus_bitswap( running_machine& machine,
 {
 
 	int i;
-	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 
-	for(i = 0; i < machine.root_device().memregion("maincpu")->bytes(); i++)
+	for(i = 0; i < machine().root_device().memregion("maincpu")->bytes(); i++)
 	{
 		UINT8 x = ROM[i];
 
@@ -5789,400 +5912,400 @@ static void sfbonus_bitswap( running_machine& machine,
 
 		ROM[i] = x;
 	}
-	DRIVER_INIT_CALL(sfbonus_common);
+	init_sfbonus_common();
 }
 
 //static DRIVER_INIT(helper) { sfbonus_bitswap(machine,  0xff, 7,6,5,4,3,2,1,0, 0xff, 7,6,5,4,3,2,1,0, 0xff, 7,6,5,4,3,2,1,0, 0xff, 7,6,5,4,3,2,1,0, 0xff, 7,6,5,4,3,2,1,0, 0xff, 7,6,5,4,3,2,1,0, 0xff, 7,6,5,4,3,2,1,0, 0xff, 7,6,5,4,3,2,1,0); }
 
-static DRIVER_INIT(abnudge) { sfbonus_bitswap(machine,    0x33, 0,3,7,6,5,2,1,4, 0xff, 3,7,6,5,1,0,4,2, 0x36, 4,2,3,7,6,5,1,0, 0xa8, 3,2,4,0,1,7,6,5, 0x2c, 0,1,7,6,5,2,4,3, 0xff, 3,7,6,5,1,0,4,2, 0x26, 2,4,3,7,6,5,1,0, 0xbe, 4,1,3,0,2,7,6,5); }
-static DRIVER_INIT(abnudged) { sfbonus_bitswap(machine,   0x3b, 0,1,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x21, 0,2,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3d, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x21, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(abnudgev) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 0,1,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(act2000) { sfbonus_bitswap(machine,    0x25, 1,2,7,6,5,4,3,0, 0xE6, 1,7,6,5,4,3,0,2, 0x20, 2,4,1,7,6,5,0,3, 0xBF, 0,3,1,2,4,7,6,5, 0x2E, 1,3,7,6,5,2,0,4, 0xE0, 3,7,6,5,2,0,4,1, 0x2D, 4,1,2,7,6,5,0,3, 0xB2, 2,0,4,1,3,7,6,5); }
-static DRIVER_INIT(act2000d) { sfbonus_bitswap(machine,   0x3d, 0,2,7,6,5,4,3,1, 0xef, 1,7,6,5,4,3,2,0, 0x27, 0,2,1,7,6,5,4,3, 0xad, 4,3,0,1,2,7,6,5, 0x3b, 2,1,7,6,5,4,3,0, 0xed, 0,7,6,5,4,3,2,1, 0x27, 0,2,1,7,6,5,4,3, 0xaa, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(act2000v) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(act2000v2) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(act2000v3) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(anibonus) { sfbonus_bitswap(machine,   0x33, 0,3,7,6,5,2,1,4, 0xe7, 2,7,6,5,3,4,1,0, 0x3a, 4,2,3,7,6,5,1,0, 0xa8, 3,4,2,0,1,7,6,5, 0x3d, 2,3,7,6,5,1,0,4, 0xff, 3,7,6,5,1,0,2,4, 0x3a, 4,2,3,7,6,5,1,0, 0xbe, 3,4,1,0,2,7,6,5); }
-static DRIVER_INIT(anibonus3) { sfbonus_bitswap(machine,  0x33, 0,3,7,6,5,2,1,4, 0xff, 3,7,6,5,1,0,4,2, 0x36, 4,2,3,7,6,5,1,0, 0xa8, 3,2,4,0,1,7,6,5, 0x2c, 0,1,7,6,5,2,4,3, 0xff, 3,7,6,5,1,0,4,2, 0x26, 2,4,3,7,6,5,1,0, 0xbe, 4,1,3,0,2,7,6,5); }
-static DRIVER_INIT(anibonusd) { sfbonus_bitswap(machine,  0x3b, 0,1,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x21, 0,2,1,7,6,5,4,3, 0xa8, 4,3,0,1,2,7,6,5, 0x3d, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x21, 0,2,1,7,6,5,4,3, 0xaa, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(anibonusv) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 0,1,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(anibonusv3) { sfbonus_bitswap(machine, 0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x21, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 0,1,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(anithunt) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xe7, 4,7,6,5,0,3,1,2, 0x33, 0,2,1,7,6,5,4,3, 0xb3, 0,3,4,2,1,7,6,5, 0x2a, 1,3,7,6,5,2,0,4, 0xe4, 3,7,6,5,2,0,4,1, 0x2d, 4,1,3,7,6,5,2,0, 0xb6, 0,3,2,1,4,7,6,5); }
-static DRIVER_INIT(anithuntd) { sfbonus_bitswap(machine,  0x3c, 0,1,7,6,5,4,3,2, 0xee, 0,7,6,5,4,3,2,1, 0x21, 0,2,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3d, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x21, 0,2,1,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(anithuntv) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(atworld) { sfbonus_bitswap(machine,    0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x26, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,0,2, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
-static DRIVER_INIT(atworldd) { sfbonus_bitswap(machine,   0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x26, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 0,1,7,6,5,4,3,2, 0xe8, 1,7,6,5,4,3,0,2, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
-static DRIVER_INIT(ch2000) { sfbonus_bitswap(machine,     0x29, 2,3,7,6,5,0,4,1, 0xfe, 2,7,6,5,1,0,3,4, 0x33, 0,1,3,7,6,5,2,4, 0xa6, 1,0,3,4,2,7,6,5, 0x25, 4,1,7,6,5,3,2,0, 0xfe, 2,7,6,5,1,0,3,4, 0x35, 0,1,4,7,6,5,3,2, 0xbe, 1,0,4,2,3,7,6,5); }
-static DRIVER_INIT(ch2000c) { sfbonus_bitswap(machine,    0x29, 2,3,7,6,5,0,4,1, 0xfe, 2,7,6,5,1,0,3,4, 0x33, 0,1,3,7,6,5,2,4, 0xa6, 1,0,3,4,2,7,6,5, 0x25, 4,1,7,6,5,3,2,0, 0xfe, 2,7,6,5,1,0,3,4, 0x35, 0,1,4,7,6,5,3,2, 0xbe, 1,0,4,2,3,7,6,5); }
-static DRIVER_INIT(ch2000d) { sfbonus_bitswap(machine,    0x38, 0,2,7,6,5,4,3,1, 0xed, 0,7,6,5,4,3,2,1, 0x25, 2,0,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3c, 0,1,7,6,5,4,3,2, 0xed, 1,7,6,5,4,3,0,2, 0x25, 2,0,1,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(ch2000v) { sfbonus_bitswap(machine,    0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 1,0,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(ch2000v2) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3e, 2,1,7,6,5,4,3,0, 0xec, 0,7,6,5,4,3,2,1, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(ch2000v3) { sfbonus_bitswap(machine,   0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 1,0,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(classice) { sfbonus_bitswap(machine,   0x3f, 2,0,7,6,5,4,3,1, 0xe9, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xab, 4,3,2,0,1,7,6,5, 0x3e, 2,1,7,6,5,4,3,0, 0xeb, 2,7,6,5,4,3,0,1, 0x22, 0,2,1,7,6,5,4,3, 0xad, 4,3,0,2,1,7,6,5); }
-static DRIVER_INIT(classiced) { sfbonus_bitswap(machine,  0x38, 0,2,7,6,5,4,3,1, 0xea, 2,7,6,5,4,3,0,1, 0x24, 2,1,0,7,6,5,4,3, 0xaa, 4,3,2,0,1,7,6,5, 0x3e, 1,0,7,6,5,4,3,2, 0xe8, 0,7,6,5,4,3,1,2, 0x24, 2,1,0,7,6,5,4,3, 0xa8, 4,3,0,2,1,7,6,5); }
-static DRIVER_INIT(classiced3) { sfbonus_bitswap(machine, 0x3b, 2,1,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x24, 2,1,0,7,6,5,4,3, 0xaa, 4,3,2,0,1,7,6,5, 0x3e, 1,0,7,6,5,4,3,2, 0xe8, 0,7,6,5,4,3,1,2, 0x24, 2,1,0,7,6,5,4,3, 0xae, 4,3,1,0,2,7,6,5); }
-static DRIVER_INIT(classicev) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 2,1,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(classicev3) { sfbonus_bitswap(machine, 0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xe9, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(dblchal) { sfbonus_bitswap(machine,    0x3D, 0,3,7,6,5,2,1,4, 0xF3, 3,7,6,5,1,0,4,2, 0x3D, 2,0,1,7,6,5,3,4, 0xA8, 3,4,2,0,1,7,6,5, 0x3D, 2,3,7,6,5,1,0,4, 0xEF, 2,7,6,5,1,0,3,4, 0x3A, 4,2,3,7,6,5,1,0, 0xBA, 2,4,1,0,3,7,6,5); }
-static DRIVER_INIT(dblchald) { sfbonus_bitswap(machine,   0x3c, 0,1,7,6,5,4,3,2, 0xed, 0,7,6,5,4,3,2,1, 0x27, 0,2,1,7,6,5,4,3, 0xae, 4,3,1,0,2,7,6,5, 0x3b, 2,1,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x27, 0,2,1,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(dblchalv) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 1,0,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fb2gen) { sfbonus_bitswap(machine,     0x35, 0,3,7,6,5,2,1,4, 0xe8, 2,7,6,5,4,3,1,0, 0x23, 4,3,2,7,6,5,1,0, 0xb8, 2,1,4,0,3,7,6,5, 0x2d, 0,1,7,6,5,4,2,3, 0xf8, 2,7,6,5,1,4,3,0, 0x23, 4,0,3,7,6,5,2,1, 0xb8, 2,1,4,0,3,7,6,5); }
-static DRIVER_INIT(fb2gend) { sfbonus_bitswap(machine,    0x3d, 2,0,7,6,5,4,3,1, 0xeb, 1,7,6,5,4,3,0,2, 0x25, 2,0,1,7,6,5,4,3, 0xad, 4,3,0,1,2,7,6,5, 0x3c, 0,1,7,6,5,4,3,2, 0xeb, 2,7,6,5,4,3,1,0, 0x25, 2,0,1,7,6,5,4,3, 0xac, 4,3,2,1,0,7,6,5); }
-static DRIVER_INIT(fb2genv) { sfbonus_bitswap(machine,    0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xea, 0,7,6,5,4,3,2,1, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fb2genv3) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xeb, 0,7,6,5,4,3,2,1, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fb2nd) { sfbonus_bitswap(machine,      0x2f, 0,2,7,6,5,3,4,1, 0xff, 2,7,6,5,3,0,4,1, 0x3e, 4,0,1,7,6,5,2,3, 0xad, 3,0,4,1,2,7,6,5, 0x35, 4,3,7,6,5,1,0,2, 0xfd, 4,7,6,5,3,1,2,0, 0x3a, 4,1,2,7,6,5,3,0, 0xbd, 3,4,2,0,1,7,6,5); }
-static DRIVER_INIT(fb2ndv) { sfbonus_bitswap(machine,     0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 2,1,7,6,5,4,3,0, 0xec, 0,7,6,5,4,3,2,1, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fb2ndd) { sfbonus_bitswap(machine,     0x3b, 1,0,7,6,5,4,3,2, 0xeb, 1,7,6,5,4,3,0,2, 0x25, 2,0,1,7,6,5,4,3, 0xad, 4,3,0,1,2,7,6,5, 0x3c, 0,1,7,6,5,4,3,2, 0xeb, 2,7,6,5,4,3,1,0, 0x25, 2,0,1,7,6,5,4,3, 0xaa, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(fb4) { sfbonus_bitswap(machine,        0x37, 1,2,7,6,5,4,3,0, 0xeb, 1,7,6,5,4,0,2,3, 0x2d, 4,0,2,7,6,5,3,1, 0xbd, 2,0,4,1,3,7,6,5, 0x29, 4,1,7,6,5,2,3,0, 0xff, 1,7,6,5,2,3,0,4, 0x3f, 1,0,4,7,6,5,3,2, 0xae, 2,3,0,4,1,7,6,5); }
-static DRIVER_INIT(fb4d) { sfbonus_bitswap(machine,       0x3d, 2,0,7,6,5,4,3,1, 0xeb, 1,7,6,5,4,3,0,2, 0x25, 2,0,1,7,6,5,4,3, 0xad, 4,3,2,1,0,7,6,5, 0x3c, 0,1,7,6,5,4,3,2, 0xeb, 2,7,6,5,4,3,1,0, 0x25, 2,0,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fb4v) { sfbonus_bitswap(machine,       0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xeb, 0,7,6,5,4,3,2,1, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fb4v3) { sfbonus_bitswap(machine,      0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3e, 2,1,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fb5) { sfbonus_bitswap(machine,        0x20, 0,3,7,6,5,1,4,2, 0xf1, 1,7,6,5,3,2,4,0, 0x33, 2,3,1,7,6,5,0,4, 0xaf, 2,0,1,4,3,7,6,5, 0x2d, 2,4,7,6,5,1,0,3, 0xfb, 4,7,6,5,1,0,3,2, 0x34, 2,0,4,7,6,5,3,1, 0xb7, 1,0,3,2,4,7,6,5); }
-static DRIVER_INIT(fb5d) { sfbonus_bitswap(machine,       0x3e, 2,1,7,6,5,4,3,0, 0xef, 1,7,6,5,4,3,2,0, 0x24, 2,1,0,7,6,5,4,3, 0xad, 4,3,0,1,2,7,6,5, 0x3e, 1,0,7,6,5,4,3,2, 0xeb, 2,7,6,5,4,3,1,0, 0x24, 2,1,0,7,6,5,4,3, 0xaa, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(fb5v) { sfbonus_bitswap(machine,       0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 1,0,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fb6) { sfbonus_bitswap(machine,        0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fb6d) { sfbonus_bitswap(machine,       0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fb6s) { sfbonus_bitswap(machine,       0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x24, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xec, 0,7,6,5,4,3,2,1, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fb6v) { sfbonus_bitswap(machine,       0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xed, 2,7,6,5,4,3,1,0, 0x23, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fb6v3) { sfbonus_bitswap(machine,      0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xea, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fruitcar) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 0,1,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fruitcar2) { sfbonus_bitswap(machine,  0x33, 0,3,7,6,5,2,1,4, 0xff, 3,7,6,5,1,0,4,2, 0x36, 4,2,3,7,6,5,1,0, 0xa8, 3,2,4,0,1,7,6,5, 0x2c, 0,1,7,6,5,2,4,3, 0xff, 3,7,6,5,1,0,4,2, 0x26, 2,4,3,7,6,5,1,0, 0xbe, 4,1,3,0,2,7,6,5); }
-static DRIVER_INIT(fruitcar3) { sfbonus_bitswap(machine,  0x3b, 0,1,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x21, 0,2,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3d, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x21, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(hldspin1) { sfbonus_bitswap(machine,   0x21, 0,2,7,6,5,4,3,1, 0xe1, 1,7,6,5,4,3,2,0, 0x31, 1,4,3,7,6,5,2,0, 0xbc, 0,3,4,2,1,7,6,5, 0x24, 4,3,7,6,5,2,0,1, 0xf8, 3,7,6,5,2,0,1,4, 0x39, 1,4,2,7,6,5,0,3, 0xaf, 0,3,2,1,4,7,6,5); }
-static DRIVER_INIT(hldspin1d) { sfbonus_bitswap(machine,  0x38, 0,1,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x27, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3e, 0,2,7,6,5,4,3,1, 0xeb, 1,7,6,5,4,3,0,2, 0x27, 1,0,2,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(hldspin1v) { sfbonus_bitswap(machine,  0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x26, 2,1,0,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(hldspin2) { sfbonus_bitswap(machine,   0x21, 1,3,7,6,5,0,4,2, 0xfe, 2,7,6,5,1,0,4,3, 0x33, 1,0,3,7,6,5,2,4, 0xa6, 1,0,4,3,2,7,6,5, 0x37, 0,1,7,6,5,3,2,4, 0xfe, 2,7,6,5,1,0,4,3, 0x36, 1,0,4,7,6,5,3,2, 0xa2, 1,0,2,4,3,7,6,5); }
-static DRIVER_INIT(hldspin2d) { sfbonus_bitswap(machine,  0x3b, 0,1,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x27, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3e, 0,2,7,6,5,4,3,1, 0xeb, 1,7,6,5,4,3,0,2, 0x27, 1,0,2,7,6,5,4,3, 0xab, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(hldspin2v) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x23, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(moneymac) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xeb, 0,7,6,5,4,3,2,1, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(moneymacv) { sfbonus_bitswap(machine,  0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x23, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xeb, 0,7,6,5,4,3,2,1, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(moneymacd) { sfbonus_bitswap(machine,  0x3a, 1,0,7,6,5,4,3,2, 0xe9, 0,7,6,5,4,3,1,2, 0x26, 0,2,1,7,6,5,4,3, 0xaf, 4,3,1,2,0,7,6,5, 0x3d, 0,2,7,6,5,4,3,1, 0xe9, 0,7,6,5,4,3,1,2, 0x23, 0,1,2,7,6,5,4,3, 0xae, 4,3,2,0,1,7,6,5); }
-static DRIVER_INIT(parrot3d) { sfbonus_bitswap(machine,   0x3b, 0,1,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x27, 0,2,1,7,6,5,4,3, 0xad, 4,3,0,1,2,7,6,5, 0x3b, 2,1,7,6,5,4,3,0, 0xee, 2,7,6,5,4,3,1,0, 0x27, 0,2,1,7,6,5,4,3, 0xaa, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(parrot3v) { sfbonus_bitswap(machine,   0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x26, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
-static DRIVER_INIT(parrot3v2) { sfbonus_bitswap(machine,  0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xe9, 2,7,6,5,4,3,1,0, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
-static DRIVER_INIT(pickwin) { sfbonus_bitswap(machine,    0x20, 1,3,7,6,5,2,4,0, 0xfa, 2,7,6,5,4,0,1,3, 0x37, 1,0,3,7,6,5,2,4, 0xb0, 4,0,1,3,2,7,6,5, 0x34, 0,1,7,6,5,3,2,4, 0xef, 3,7,6,5,2,0,1,4, 0x27, 1,0,4,7,6,5,3,2, 0xb0, 4,0,1,3,2,7,6,5); }
-static DRIVER_INIT(pickwind) { sfbonus_bitswap(machine,   0x3c, 0,1,7,6,5,4,3,2, 0xed, 0,7,6,5,4,3,2,1, 0x27, 0,2,1,7,6,5,4,3, 0xae, 4,3,1,0,2,7,6,5, 0x3b, 2,1,7,6,5,4,3,0, 0xe8, 0,7,6,5,4,3,1,2, 0x27, 0,2,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(pickwinv) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(pickwinv2) { sfbonus_bitswap(machine,  0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x26, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(pir2001) { sfbonus_bitswap(machine,    0x3a, 1,2,7,6,5,4,3,0, 0xfa, 3,7,6,5,2,0,4,1, 0x33, 4,1,3,7,6,5,2,0, 0xa8, 2,0,4,1,3,7,6,5, 0x2a, 2,4,7,6,5,0,3,1, 0xf7, 1,7,6,5,4,3,0,2, 0x27, 4,1,2,7,6,5,0,3, 0xaf, 0,3,2,4,1,7,6,5); }
-static DRIVER_INIT(pir2001v) { sfbonus_bitswap(machine,   0x39, 1,0,7,6,5,4,3,2, 0xea, 0,7,6,5,4,3,2,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x23, 0,1,2,7,6,5,4,3, 0xac, 4,3,2,1,0,7,6,5); }
-static DRIVER_INIT(pir2001v2) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x39, 1,0,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(pir2001d) { sfbonus_bitswap(machine,   0x3c, 0,1,7,6,5,4,3,2, 0xeb, 0,7,6,5,4,3,2,1, 0x27, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3e, 0,2,7,6,5,4,3,1, 0xeb, 1,7,6,5,4,3,0,2, 0x27, 1,0,2,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(pir2002) { sfbonus_bitswap(machine,    0x30, 3,2,7,6,5,4,0,1, 0xec, 2,7,6,5,4,0,1,3, 0x2d, 1,4,3,7,6,5,2,0, 0xa6, 4,0,1,3,2,7,6,5, 0x20, 4,1,7,6,5,2,3,0, 0xf9, 2,7,6,5,4,3,0,1, 0x3a, 4,1,2,7,6,5,0,3, 0xb7, 1,0,3,2,4,7,6,5); }
-static DRIVER_INIT(pir2002d) { sfbonus_bitswap(machine,   0x3d, 2,0,7,6,5,4,3,1, 0xef, 1,7,6,5,4,3,2,0, 0x27, 0,2,1,7,6,5,4,3, 0xae, 4,3,1,0,2,7,6,5, 0x3b, 2,1,7,6,5,4,3,0, 0xed, 0,7,6,5,4,3,2,1, 0x27, 0,2,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(pir2002v) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(pir2002v2) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(pirpok2) { sfbonus_bitswap(machine,    0x26, 1,2,7,6,5,4,3,0, 0xf6, 1,7,6,5,4,3,0,2, 0x29, 4,0,1,7,6,5,2,3, 0xad, 0,3,1,2,4,7,6,5, 0x2e, 1,3,7,6,5,2,0,4, 0xe0, 3,7,6,5,2,0,4,1, 0x39, 4,1,2,7,6,5,0,3, 0xb2, 2,0,4,1,3,7,6,5); }
-static DRIVER_INIT(pirpok2d) { sfbonus_bitswap(machine,   0x3c, 0,1,7,6,5,4,3,2, 0xed, 0,7,6,5,4,3,2,1, 0x21, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x38, 0,2,7,6,5,4,3,1, 0xed, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(pirpok2v) { sfbonus_bitswap(machine,   0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x23, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3e, 2,1,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,1,0, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
-static DRIVER_INIT(pirpok2v2) { sfbonus_bitswap(machine,  0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 2,1,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,1,0, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
-static DRIVER_INIT(robadv) { sfbonus_bitswap(machine,     0x31, 0,3,7,6,5,2,1,4, 0xe0, 1,7,6,5,3,2,4,0, 0x2f, 4,0,2,7,6,5,3,1, 0xa7, 1,0,3,4,2,7,6,5, 0x33, 1,3,7,6,5,2,0,4, 0xed, 2,7,6,5,1,4,3,0, 0x34, 4,1,3,7,6,5,2,0, 0xaf, 2,0,4,1,3,7,6,5); }
-static DRIVER_INIT(robadv2d) { sfbonus_bitswap(machine,   0x3c, 0,1,7,6,5,4,3,2, 0xe8, 0,7,6,5,4,3,1,2, 0x24, 2,1,0,7,6,5,4,3, 0xae, 4,3,1,0,2,7,6,5, 0x3e, 1,0,7,6,5,4,3,2, 0xed, 1,7,6,5,4,3,0,2, 0x24, 2,1,0,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(robadv2v1) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(robadv2v4) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(seawld) { sfbonus_bitswap(machine,     0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x24, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,2,0, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(seawldv) { sfbonus_bitswap(machine,    0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 0,1,7,6,5,4,3,2, 0xea, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(sfbonus) { sfbonus_bitswap(machine,    0x2a, 1,3,7,6,5,2,0,4, 0xe4, 3,7,6,5,2,0,4,1, 0x2d, 4,1,3,7,6,5,2,0, 0xba, 4,3,0,2,1,7,6,5, 0x30, 2,1,7,6,5,0,3,4, 0xf1, 2,7,6,5,1,3,4,0, 0x3d, 2,1,4,7,6,5,3,0, 0xba, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(sfbonusd) { sfbonus_bitswap(machine,   0x3b, 0,1,7,6,5,4,3,2, 0xef, 1,7,6,5,4,3,0,2, 0x24, 2,1,0,7,6,5,4,3, 0xad, 4,3,0,1,2,7,6,5, 0x3e, 1,0,7,6,5,4,3,2, 0xeb, 2,7,6,5,4,3,1,0, 0x24, 2,1,0,7,6,5,4,3, 0xaa, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(sfbonusv) { sfbonus_bitswap(machine,   0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x25, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(sfruitb) { sfbonus_bitswap(machine,    0x3e, 2,1,7,6,5,4,3,0, 0xfd, 1,7,6,5,0,3,2,4, 0x37, 4,1,3,7,6,5,2,0, 0xac, 2,0,4,1,3,7,6,5, 0x35, 2,3,7,6,5,1,0,4, 0xf6, 3,7,6,5,2,0,1,4, 0x37, 4,1,3,7,6,5,2,0, 0xb9, 0,3,4,1,2,7,6,5); }
-static DRIVER_INIT(sfruitbd) { sfbonus_bitswap(machine,   0x3e, 1,0,7,6,5,4,3,2, 0xed, 1,7,6,5,4,3,0,2, 0x25, 2,0,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3c, 0,1,7,6,5,4,3,2, 0xed, 2,7,6,5,4,3,1,0, 0x25, 2,0,1,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(sfruitbv) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x25, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(sfruitbv2) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x25, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(suprball) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xe7, 4,7,6,5,0,3,1,2, 0x33, 0,2,1,7,6,5,4,3, 0xb3, 0,3,4,2,1,7,6,5, 0x2a, 1,3,7,6,5,2,0,4, 0xe4, 3,7,6,5,2,0,4,1, 0x2d, 4,1,3,7,6,5,2,0, 0xb6, 0,3,2,1,4,7,6,5); }
-static DRIVER_INIT(tighook) { sfbonus_bitswap(machine,    0x33, 0,1,7,6,5,2,3,4, 0xf3, 3,7,6,5,1,0,4,2, 0x2e, 4,0,2,7,6,5,3,1, 0xa7, 1,0,4,2,3,7,6,5, 0x2d, 1,2,7,6,5,3,4,0, 0xff, 2,7,6,5,1,0,3,4, 0x27, 1,0,2,7,6,5,3,4, 0xa7, 1,0,4,2,3,7,6,5); }
-static DRIVER_INIT(tighookd) { sfbonus_bitswap(machine,   0x3d, 0,1,7,6,5,4,3,2, 0xed, 1,7,6,5,4,3,0,2, 0x26, 2,1,0,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3c, 1,0,7,6,5,4,3,2, 0xed, 2,7,6,5,4,3,1,0, 0x26, 2,1,0,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
-static DRIVER_INIT(tighookv) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xec, 0,7,6,5,4,3,2,1, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(tighookv2) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xea, 0,7,6,5,4,3,2,1, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(bugfever) { sfbonus_bitswap(machine,   0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x22, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(bugfeverd) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 0,1,7,6,5,4,3,2, 0xe8, 1,7,6,5,4,3,0,2, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(bugfeverv) { sfbonus_bitswap(machine,  0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x22, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 0,1,7,6,5,4,3,2, 0xea, 2,7,6,5,4,3,1,0, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
-static DRIVER_INIT(bugfeverv2) { sfbonus_bitswap(machine, 0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x23, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xed, 2,7,6,5,4,3,1,0, 0x26, 2,1,0,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(version4) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,0,2, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(version4v2) { sfbonus_bitswap(machine, 0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x26, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xea, 2,7,6,5,4,3,1,0, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
-static DRIVER_INIT(version4d2) { sfbonus_bitswap(machine, 0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x25, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(version4v)  { sfbonus_bitswap(machine, 0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x26, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(dvisland) { sfbonus_bitswap(machine,   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x23, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(funriver) { sfbonus_bitswap(machine,   0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x24, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xec, 0,7,6,5,4,3,2,1, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(funriverv) { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xea, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(spooky)    { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x39, 1,0,7,6,5,4,3,2, 0xe8, 1,7,6,5,4,3,2,0, 0x23, 0,2,1,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fbdeluxe)  { sfbonus_bitswap(machine,  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,2,0, 0x26, 0,2,1,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(fb3g)       { sfbonus_bitswap(machine, 0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x25, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,2,0, 0x24, 0,2,1,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
-static DRIVER_INIT(getrich)   { sfbonus_bitswap(machine,  0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x23, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,2,0, 0x24, 0,2,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,abnudge)          { sfbonus_bitswap(    0x33, 0,3,7,6,5,2,1,4, 0xff, 3,7,6,5,1,0,4,2, 0x36, 4,2,3,7,6,5,1,0, 0xa8, 3,2,4,0,1,7,6,5, 0x2c, 0,1,7,6,5,2,4,3, 0xff, 3,7,6,5,1,0,4,2, 0x26, 2,4,3,7,6,5,1,0, 0xbe, 4,1,3,0,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,abnudged)         { sfbonus_bitswap(   0x3b, 0,1,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x21, 0,2,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3d, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x21, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,abnudgev)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 0,1,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,act2000)          { sfbonus_bitswap(    0x25, 1,2,7,6,5,4,3,0, 0xE6, 1,7,6,5,4,3,0,2, 0x20, 2,4,1,7,6,5,0,3, 0xBF, 0,3,1,2,4,7,6,5, 0x2E, 1,3,7,6,5,2,0,4, 0xE0, 3,7,6,5,2,0,4,1, 0x2D, 4,1,2,7,6,5,0,3, 0xB2, 2,0,4,1,3,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,act2000d)         { sfbonus_bitswap(   0x3d, 0,2,7,6,5,4,3,1, 0xef, 1,7,6,5,4,3,2,0, 0x27, 0,2,1,7,6,5,4,3, 0xad, 4,3,0,1,2,7,6,5, 0x3b, 2,1,7,6,5,4,3,0, 0xed, 0,7,6,5,4,3,2,1, 0x27, 0,2,1,7,6,5,4,3, 0xaa, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,act2000v)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,act2000v2)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,act2000v3)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,anibonus)         { sfbonus_bitswap(   0x33, 0,3,7,6,5,2,1,4, 0xe7, 2,7,6,5,3,4,1,0, 0x3a, 4,2,3,7,6,5,1,0, 0xa8, 3,4,2,0,1,7,6,5, 0x3d, 2,3,7,6,5,1,0,4, 0xff, 3,7,6,5,1,0,2,4, 0x3a, 4,2,3,7,6,5,1,0, 0xbe, 3,4,1,0,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,anibonus3)        { sfbonus_bitswap(  0x33, 0,3,7,6,5,2,1,4, 0xff, 3,7,6,5,1,0,4,2, 0x36, 4,2,3,7,6,5,1,0, 0xa8, 3,2,4,0,1,7,6,5, 0x2c, 0,1,7,6,5,2,4,3, 0xff, 3,7,6,5,1,0,4,2, 0x26, 2,4,3,7,6,5,1,0, 0xbe, 4,1,3,0,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,anibonusd)        { sfbonus_bitswap(  0x3b, 0,1,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x21, 0,2,1,7,6,5,4,3, 0xa8, 4,3,0,1,2,7,6,5, 0x3d, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x21, 0,2,1,7,6,5,4,3, 0xaa, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,anibonusv)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 0,1,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,anibonusv3)       { sfbonus_bitswap( 0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x21, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 0,1,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,anithunt)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xe7, 4,7,6,5,0,3,1,2, 0x33, 0,2,1,7,6,5,4,3, 0xb3, 0,3,4,2,1,7,6,5, 0x2a, 1,3,7,6,5,2,0,4, 0xe4, 3,7,6,5,2,0,4,1, 0x2d, 4,1,3,7,6,5,2,0, 0xb6, 0,3,2,1,4,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,anithuntd)        { sfbonus_bitswap(  0x3c, 0,1,7,6,5,4,3,2, 0xee, 0,7,6,5,4,3,2,1, 0x21, 0,2,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3d, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x21, 0,2,1,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,anithuntv)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,atworld)          { sfbonus_bitswap(    0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x26, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,0,2, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,atworldd)         { sfbonus_bitswap(   0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x26, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 0,1,7,6,5,4,3,2, 0xe8, 1,7,6,5,4,3,0,2, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,ch2000)           { sfbonus_bitswap(     0x29, 2,3,7,6,5,0,4,1, 0xfe, 2,7,6,5,1,0,3,4, 0x33, 0,1,3,7,6,5,2,4, 0xa6, 1,0,3,4,2,7,6,5, 0x25, 4,1,7,6,5,3,2,0, 0xfe, 2,7,6,5,1,0,3,4, 0x35, 0,1,4,7,6,5,3,2, 0xbe, 1,0,4,2,3,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,ch2000c)          { sfbonus_bitswap(    0x29, 2,3,7,6,5,0,4,1, 0xfe, 2,7,6,5,1,0,3,4, 0x33, 0,1,3,7,6,5,2,4, 0xa6, 1,0,3,4,2,7,6,5, 0x25, 4,1,7,6,5,3,2,0, 0xfe, 2,7,6,5,1,0,3,4, 0x35, 0,1,4,7,6,5,3,2, 0xbe, 1,0,4,2,3,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,ch2000d)          { sfbonus_bitswap(    0x38, 0,2,7,6,5,4,3,1, 0xed, 0,7,6,5,4,3,2,1, 0x25, 2,0,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3c, 0,1,7,6,5,4,3,2, 0xed, 1,7,6,5,4,3,0,2, 0x25, 2,0,1,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,ch2000v)          { sfbonus_bitswap(    0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 1,0,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,ch2000v2)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3e, 2,1,7,6,5,4,3,0, 0xec, 0,7,6,5,4,3,2,1, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,ch2000v3)         { sfbonus_bitswap(   0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 1,0,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,classice)         { sfbonus_bitswap(   0x3f, 2,0,7,6,5,4,3,1, 0xe9, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xab, 4,3,2,0,1,7,6,5, 0x3e, 2,1,7,6,5,4,3,0, 0xeb, 2,7,6,5,4,3,0,1, 0x22, 0,2,1,7,6,5,4,3, 0xad, 4,3,0,2,1,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,classiced)        { sfbonus_bitswap(  0x38, 0,2,7,6,5,4,3,1, 0xea, 2,7,6,5,4,3,0,1, 0x24, 2,1,0,7,6,5,4,3, 0xaa, 4,3,2,0,1,7,6,5, 0x3e, 1,0,7,6,5,4,3,2, 0xe8, 0,7,6,5,4,3,1,2, 0x24, 2,1,0,7,6,5,4,3, 0xa8, 4,3,0,2,1,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,classiced3)       { sfbonus_bitswap( 0x3b, 2,1,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x24, 2,1,0,7,6,5,4,3, 0xaa, 4,3,2,0,1,7,6,5, 0x3e, 1,0,7,6,5,4,3,2, 0xe8, 0,7,6,5,4,3,1,2, 0x24, 2,1,0,7,6,5,4,3, 0xae, 4,3,1,0,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,classicev)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 2,1,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,classicev3)       { sfbonus_bitswap( 0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xe9, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,dblchal)          { sfbonus_bitswap(    0x3D, 0,3,7,6,5,2,1,4, 0xF3, 3,7,6,5,1,0,4,2, 0x3D, 2,0,1,7,6,5,3,4, 0xA8, 3,4,2,0,1,7,6,5, 0x3D, 2,3,7,6,5,1,0,4, 0xEF, 2,7,6,5,1,0,3,4, 0x3A, 4,2,3,7,6,5,1,0, 0xBA, 2,4,1,0,3,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,dblchald)         { sfbonus_bitswap(   0x3c, 0,1,7,6,5,4,3,2, 0xed, 0,7,6,5,4,3,2,1, 0x27, 0,2,1,7,6,5,4,3, 0xae, 4,3,1,0,2,7,6,5, 0x3b, 2,1,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x27, 0,2,1,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,dblchalv)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 1,0,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb2gen)           { sfbonus_bitswap(     0x35, 0,3,7,6,5,2,1,4, 0xe8, 2,7,6,5,4,3,1,0, 0x23, 4,3,2,7,6,5,1,0, 0xb8, 2,1,4,0,3,7,6,5, 0x2d, 0,1,7,6,5,4,2,3, 0xf8, 2,7,6,5,1,4,3,0, 0x23, 4,0,3,7,6,5,2,1, 0xb8, 2,1,4,0,3,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb2gend)          { sfbonus_bitswap(    0x3d, 2,0,7,6,5,4,3,1, 0xeb, 1,7,6,5,4,3,0,2, 0x25, 2,0,1,7,6,5,4,3, 0xad, 4,3,0,1,2,7,6,5, 0x3c, 0,1,7,6,5,4,3,2, 0xeb, 2,7,6,5,4,3,1,0, 0x25, 2,0,1,7,6,5,4,3, 0xac, 4,3,2,1,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb2genv)          { sfbonus_bitswap(    0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xea, 0,7,6,5,4,3,2,1, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb2genv3)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xeb, 0,7,6,5,4,3,2,1, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb2nd)            { sfbonus_bitswap(      0x2f, 0,2,7,6,5,3,4,1, 0xff, 2,7,6,5,3,0,4,1, 0x3e, 4,0,1,7,6,5,2,3, 0xad, 3,0,4,1,2,7,6,5, 0x35, 4,3,7,6,5,1,0,2, 0xfd, 4,7,6,5,3,1,2,0, 0x3a, 4,1,2,7,6,5,3,0, 0xbd, 3,4,2,0,1,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb2ndv)           { sfbonus_bitswap(     0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 2,1,7,6,5,4,3,0, 0xec, 0,7,6,5,4,3,2,1, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb2ndd)           { sfbonus_bitswap(     0x3b, 1,0,7,6,5,4,3,2, 0xeb, 1,7,6,5,4,3,0,2, 0x25, 2,0,1,7,6,5,4,3, 0xad, 4,3,0,1,2,7,6,5, 0x3c, 0,1,7,6,5,4,3,2, 0xeb, 2,7,6,5,4,3,1,0, 0x25, 2,0,1,7,6,5,4,3, 0xaa, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb4)              { sfbonus_bitswap(        0x37, 1,2,7,6,5,4,3,0, 0xeb, 1,7,6,5,4,0,2,3, 0x2d, 4,0,2,7,6,5,3,1, 0xbd, 2,0,4,1,3,7,6,5, 0x29, 4,1,7,6,5,2,3,0, 0xff, 1,7,6,5,2,3,0,4, 0x3f, 1,0,4,7,6,5,3,2, 0xae, 2,3,0,4,1,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb4d)             { sfbonus_bitswap(       0x3d, 2,0,7,6,5,4,3,1, 0xeb, 1,7,6,5,4,3,0,2, 0x25, 2,0,1,7,6,5,4,3, 0xad, 4,3,2,1,0,7,6,5, 0x3c, 0,1,7,6,5,4,3,2, 0xeb, 2,7,6,5,4,3,1,0, 0x25, 2,0,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb4v)             { sfbonus_bitswap(       0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xeb, 0,7,6,5,4,3,2,1, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb4v3)            { sfbonus_bitswap(      0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3e, 2,1,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb5)              { sfbonus_bitswap(        0x20, 0,3,7,6,5,1,4,2, 0xf1, 1,7,6,5,3,2,4,0, 0x33, 2,3,1,7,6,5,0,4, 0xaf, 2,0,1,4,3,7,6,5, 0x2d, 2,4,7,6,5,1,0,3, 0xfb, 4,7,6,5,1,0,3,2, 0x34, 2,0,4,7,6,5,3,1, 0xb7, 1,0,3,2,4,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb5d)             { sfbonus_bitswap(       0x3e, 2,1,7,6,5,4,3,0, 0xef, 1,7,6,5,4,3,2,0, 0x24, 2,1,0,7,6,5,4,3, 0xad, 4,3,0,1,2,7,6,5, 0x3e, 1,0,7,6,5,4,3,2, 0xeb, 2,7,6,5,4,3,1,0, 0x24, 2,1,0,7,6,5,4,3, 0xaa, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb5v)             { sfbonus_bitswap(       0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 1,0,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb6)              { sfbonus_bitswap(        0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb6d)             { sfbonus_bitswap(       0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb6s)             { sfbonus_bitswap(       0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x24, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xec, 0,7,6,5,4,3,2,1, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb6v)             { sfbonus_bitswap(       0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xed, 2,7,6,5,4,3,1,0, 0x23, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb6v3)            { sfbonus_bitswap(      0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xea, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fruitcar)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 0,1,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fruitcar2)        { sfbonus_bitswap(  0x33, 0,3,7,6,5,2,1,4, 0xff, 3,7,6,5,1,0,4,2, 0x36, 4,2,3,7,6,5,1,0, 0xa8, 3,2,4,0,1,7,6,5, 0x2c, 0,1,7,6,5,2,4,3, 0xff, 3,7,6,5,1,0,4,2, 0x26, 2,4,3,7,6,5,1,0, 0xbe, 4,1,3,0,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fruitcar3)        { sfbonus_bitswap(  0x3b, 0,1,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x21, 0,2,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3d, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x21, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,hldspin1)         { sfbonus_bitswap(   0x21, 0,2,7,6,5,4,3,1, 0xe1, 1,7,6,5,4,3,2,0, 0x31, 1,4,3,7,6,5,2,0, 0xbc, 0,3,4,2,1,7,6,5, 0x24, 4,3,7,6,5,2,0,1, 0xf8, 3,7,6,5,2,0,1,4, 0x39, 1,4,2,7,6,5,0,3, 0xaf, 0,3,2,1,4,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,hldspin1d)        { sfbonus_bitswap(  0x38, 0,1,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x27, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3e, 0,2,7,6,5,4,3,1, 0xeb, 1,7,6,5,4,3,0,2, 0x27, 1,0,2,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,hldspin1v)        { sfbonus_bitswap(  0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x26, 2,1,0,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,hldspin2)         { sfbonus_bitswap(   0x21, 1,3,7,6,5,0,4,2, 0xfe, 2,7,6,5,1,0,4,3, 0x33, 1,0,3,7,6,5,2,4, 0xa6, 1,0,4,3,2,7,6,5, 0x37, 0,1,7,6,5,3,2,4, 0xfe, 2,7,6,5,1,0,4,3, 0x36, 1,0,4,7,6,5,3,2, 0xa2, 1,0,2,4,3,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,hldspin2d)        { sfbonus_bitswap(  0x3b, 0,1,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x27, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3e, 0,2,7,6,5,4,3,1, 0xeb, 1,7,6,5,4,3,0,2, 0x27, 1,0,2,7,6,5,4,3, 0xab, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,hldspin2v)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x23, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,moneymac)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xeb, 0,7,6,5,4,3,2,1, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,moneymacv)        { sfbonus_bitswap(  0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x23, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xeb, 0,7,6,5,4,3,2,1, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,moneymacd)        { sfbonus_bitswap(  0x3a, 1,0,7,6,5,4,3,2, 0xe9, 0,7,6,5,4,3,1,2, 0x26, 0,2,1,7,6,5,4,3, 0xaf, 4,3,1,2,0,7,6,5, 0x3d, 0,2,7,6,5,4,3,1, 0xe9, 0,7,6,5,4,3,1,2, 0x23, 0,1,2,7,6,5,4,3, 0xae, 4,3,2,0,1,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,parrot3d)         { sfbonus_bitswap(   0x3b, 0,1,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x27, 0,2,1,7,6,5,4,3, 0xad, 4,3,0,1,2,7,6,5, 0x3b, 2,1,7,6,5,4,3,0, 0xee, 2,7,6,5,4,3,1,0, 0x27, 0,2,1,7,6,5,4,3, 0xaa, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,parrot3v)         { sfbonus_bitswap(   0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x26, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,parrot3v2)        { sfbonus_bitswap(  0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xe9, 2,7,6,5,4,3,1,0, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pickwin)          { sfbonus_bitswap(    0x20, 1,3,7,6,5,2,4,0, 0xfa, 2,7,6,5,4,0,1,3, 0x37, 1,0,3,7,6,5,2,4, 0xb0, 4,0,1,3,2,7,6,5, 0x34, 0,1,7,6,5,3,2,4, 0xef, 3,7,6,5,2,0,1,4, 0x27, 1,0,4,7,6,5,3,2, 0xb0, 4,0,1,3,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pickwind)         { sfbonus_bitswap(   0x3c, 0,1,7,6,5,4,3,2, 0xed, 0,7,6,5,4,3,2,1, 0x27, 0,2,1,7,6,5,4,3, 0xae, 4,3,1,0,2,7,6,5, 0x3b, 2,1,7,6,5,4,3,0, 0xe8, 0,7,6,5,4,3,1,2, 0x27, 0,2,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pickwinv)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pickwinv2)        { sfbonus_bitswap(  0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x26, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pir2001)          { sfbonus_bitswap(    0x3a, 1,2,7,6,5,4,3,0, 0xfa, 3,7,6,5,2,0,4,1, 0x33, 4,1,3,7,6,5,2,0, 0xa8, 2,0,4,1,3,7,6,5, 0x2a, 2,4,7,6,5,0,3,1, 0xf7, 1,7,6,5,4,3,0,2, 0x27, 4,1,2,7,6,5,0,3, 0xaf, 0,3,2,4,1,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pir2001v)         { sfbonus_bitswap(   0x39, 1,0,7,6,5,4,3,2, 0xea, 0,7,6,5,4,3,2,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3f, 2,1,7,6,5,4,3,0, 0xed, 2,7,6,5,4,3,1,0, 0x23, 0,1,2,7,6,5,4,3, 0xac, 4,3,2,1,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pir2001v2)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x39, 1,0,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pir2001d)         { sfbonus_bitswap(   0x3c, 0,1,7,6,5,4,3,2, 0xeb, 0,7,6,5,4,3,2,1, 0x27, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3e, 0,2,7,6,5,4,3,1, 0xeb, 1,7,6,5,4,3,0,2, 0x27, 1,0,2,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pir2002)          { sfbonus_bitswap(    0x30, 3,2,7,6,5,4,0,1, 0xec, 2,7,6,5,4,0,1,3, 0x2d, 1,4,3,7,6,5,2,0, 0xa6, 4,0,1,3,2,7,6,5, 0x20, 4,1,7,6,5,2,3,0, 0xf9, 2,7,6,5,4,3,0,1, 0x3a, 4,1,2,7,6,5,0,3, 0xb7, 1,0,3,2,4,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pir2002d)         { sfbonus_bitswap(   0x3d, 2,0,7,6,5,4,3,1, 0xef, 1,7,6,5,4,3,2,0, 0x27, 0,2,1,7,6,5,4,3, 0xae, 4,3,1,0,2,7,6,5, 0x3b, 2,1,7,6,5,4,3,0, 0xed, 0,7,6,5,4,3,2,1, 0x27, 0,2,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pir2002v)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pir2002v2)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pirpok2)          { sfbonus_bitswap(    0x26, 1,2,7,6,5,4,3,0, 0xf6, 1,7,6,5,4,3,0,2, 0x29, 4,0,1,7,6,5,2,3, 0xad, 0,3,1,2,4,7,6,5, 0x2e, 1,3,7,6,5,2,0,4, 0xe0, 3,7,6,5,2,0,4,1, 0x39, 4,1,2,7,6,5,0,3, 0xb2, 2,0,4,1,3,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pirpok2d)         { sfbonus_bitswap(   0x3c, 0,1,7,6,5,4,3,2, 0xed, 0,7,6,5,4,3,2,1, 0x21, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x38, 0,2,7,6,5,4,3,1, 0xed, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pirpok2v)         { sfbonus_bitswap(   0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x23, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3e, 2,1,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,1,0, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,pirpok2v2)        { sfbonus_bitswap(  0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x22, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 2,1,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,1,0, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,robadv)           { sfbonus_bitswap(     0x31, 0,3,7,6,5,2,1,4, 0xe0, 1,7,6,5,3,2,4,0, 0x2f, 4,0,2,7,6,5,3,1, 0xa7, 1,0,3,4,2,7,6,5, 0x33, 1,3,7,6,5,2,0,4, 0xed, 2,7,6,5,1,4,3,0, 0x34, 4,1,3,7,6,5,2,0, 0xaf, 2,0,4,1,3,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,robadv2d)         { sfbonus_bitswap(   0x3c, 0,1,7,6,5,4,3,2, 0xe8, 0,7,6,5,4,3,1,2, 0x24, 2,1,0,7,6,5,4,3, 0xae, 4,3,1,0,2,7,6,5, 0x3e, 1,0,7,6,5,4,3,2, 0xed, 1,7,6,5,4,3,0,2, 0x24, 2,1,0,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,robadv2v1)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,robadv2v4)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,seawld)           { sfbonus_bitswap(     0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x24, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,2,0, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,seawldv)          { sfbonus_bitswap(    0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x22, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 0,1,7,6,5,4,3,2, 0xea, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,sfbonus)          { sfbonus_bitswap(    0x2a, 1,3,7,6,5,2,0,4, 0xe4, 3,7,6,5,2,0,4,1, 0x2d, 4,1,3,7,6,5,2,0, 0xba, 4,3,0,2,1,7,6,5, 0x30, 2,1,7,6,5,0,3,4, 0xf1, 2,7,6,5,1,3,4,0, 0x3d, 2,1,4,7,6,5,3,0, 0xba, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,sfbonusd)         { sfbonus_bitswap(   0x3b, 0,1,7,6,5,4,3,2, 0xef, 1,7,6,5,4,3,0,2, 0x24, 2,1,0,7,6,5,4,3, 0xad, 4,3,0,1,2,7,6,5, 0x3e, 1,0,7,6,5,4,3,2, 0xeb, 2,7,6,5,4,3,1,0, 0x24, 2,1,0,7,6,5,4,3, 0xaa, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,sfbonusv)         { sfbonus_bitswap(   0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x25, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,sfruitb)          { sfbonus_bitswap(    0x3e, 2,1,7,6,5,4,3,0, 0xfd, 1,7,6,5,0,3,2,4, 0x37, 4,1,3,7,6,5,2,0, 0xac, 2,0,4,1,3,7,6,5, 0x35, 2,3,7,6,5,1,0,4, 0xf6, 3,7,6,5,2,0,1,4, 0x37, 4,1,3,7,6,5,2,0, 0xb9, 0,3,4,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,sfruitbd)         { sfbonus_bitswap(   0x3e, 1,0,7,6,5,4,3,2, 0xed, 1,7,6,5,4,3,0,2, 0x25, 2,0,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3c, 0,1,7,6,5,4,3,2, 0xed, 2,7,6,5,4,3,1,0, 0x25, 2,0,1,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,sfruitbv)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x25, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,0,2, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,sfruitbv2)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x25, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x25, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,suprball)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xe7, 4,7,6,5,0,3,1,2, 0x33, 0,2,1,7,6,5,4,3, 0xb3, 0,3,4,2,1,7,6,5, 0x2a, 1,3,7,6,5,2,0,4, 0xe4, 3,7,6,5,2,0,4,1, 0x2d, 4,1,3,7,6,5,2,0, 0xb6, 0,3,2,1,4,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,tighook)          { sfbonus_bitswap(    0x33, 0,1,7,6,5,2,3,4, 0xf3, 3,7,6,5,1,0,4,2, 0x2e, 4,0,2,7,6,5,3,1, 0xa7, 1,0,4,2,3,7,6,5, 0x2d, 1,2,7,6,5,3,4,0, 0xff, 2,7,6,5,1,0,3,4, 0x27, 1,0,2,7,6,5,3,4, 0xa7, 1,0,4,2,3,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,tighookd)         { sfbonus_bitswap(   0x3d, 0,1,7,6,5,4,3,2, 0xed, 1,7,6,5,4,3,0,2, 0x26, 2,1,0,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5, 0x3c, 1,0,7,6,5,4,3,2, 0xed, 2,7,6,5,4,3,1,0, 0x26, 2,1,0,7,6,5,4,3, 0xae, 4,3,1,2,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,tighookv)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xec, 0,7,6,5,4,3,2,1, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,tighookv2)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x23, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xea, 0,7,6,5,4,3,2,1, 0x21, 1,0,2,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,bugfever)         { sfbonus_bitswap(   0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x22, 2,1,0,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,bugfeverd)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 0,1,7,6,5,4,3,2, 0xe8, 1,7,6,5,4,3,0,2, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,bugfeverv)        { sfbonus_bitswap(  0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x22, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3a, 0,1,7,6,5,4,3,2, 0xea, 2,7,6,5,4,3,1,0, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,bugfeverv2)       { sfbonus_bitswap( 0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x23, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xed, 2,7,6,5,4,3,1,0, 0x26, 2,1,0,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,version4)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,0,2, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,version4v2)       { sfbonus_bitswap( 0x3c, 1,0,7,6,5,4,3,2, 0xef, 0,7,6,5,4,3,2,1, 0x26, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xea, 2,7,6,5,4,3,1,0, 0x22, 0,1,2,7,6,5,4,3, 0xa9, 4,3,2,1,0,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,version4d2)       { sfbonus_bitswap( 0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x25, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,version4v)        { sfbonus_bitswap( 0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x26, 2,0,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xee, 1,7,6,5,4,3,0,2, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,dvisland)         { sfbonus_bitswap(   0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xe9, 1,7,6,5,4,3,0,2, 0x23, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,funriver)         { sfbonus_bitswap(   0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x24, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xec, 0,7,6,5,4,3,2,1, 0x23, 1,0,2,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,funriverv)        { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x26, 0,2,1,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 0,1,7,6,5,4,3,2, 0xea, 2,7,6,5,4,3,1,0, 0x22, 2,1,0,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,spooky)           { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x39, 1,0,7,6,5,4,3,2, 0xe8, 1,7,6,5,4,3,2,0, 0x23, 0,2,1,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fbdeluxe)         { sfbonus_bitswap(  0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x21, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,2,0, 0x26, 0,2,1,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,fb3g)             { sfbonus_bitswap( 0x39, 1,2,7,6,5,4,3,0, 0xef, 2,7,6,5,4,3,0,1, 0x25, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,2,0, 0x24, 0,2,1,7,6,5,4,3, 0xac, 4,3,0,1,2,7,6,5); }
+DRIVER_INIT_MEMBER(sfbonus_state,getrich)          { sfbonus_bitswap(  0x3c, 1,2,7,6,5,4,3,0, 0xea, 2,7,6,5,4,3,0,1, 0x23, 1,0,2,7,6,5,4,3, 0xa8, 4,3,1,2,0,7,6,5, 0x3b, 1,0,7,6,5,4,3,2, 0xec, 1,7,6,5,4,3,2,0, 0x24, 0,2,1,7,6,5,4,3, 0xa9, 4,3,0,1,2,7,6,5); }
 
 
-GAME( 2002, suprball,    0,        sfbonus,    amcoe2_reels3,    suprball,        ROT0,  "Amcoe", "Super Ball (Version 1.3)", 0)
+GAME( 2002, suprball,    0,        sfbonus,    amcoe2_reels3, sfbonus_state,    suprball,        ROT0,  "Amcoe", "Super Ball (Version 1.3)", 0)
 
-GAME( 2003, sfbonus,     0,        sfbonus,    amcoe2_reels3,    sfbonus,         ROT0,  "Amcoe", "Skill Fruit Bonus (Version 1.9R, set 1)", 0)
-GAME( 2003, sfbonusd1,   sfbonus,  sfbonus,    amcoe1_reels3,    sfbonusd,        ROT0,  "Amcoe", "Skill Fruit Bonus (Version 1.9R, set 2)", 0)
-GAME( 2003, sfbonusv1,   sfbonus,  sfbonus,    amcoe1_reels3,    sfbonusv,        ROT0,  "Amcoe", "Skill Fruit Bonus (Version 1.9R Dual)", 0)
-GAME( 2003, sfbonuso,    sfbonus,  sfbonus,    amcoe2_reels3,    sfbonus,         ROT0,  "Amcoe", "Skill Fruit Bonus (Version 1.7)", 0)
-GAME( 2003, sfbonuso2,   sfbonus,  sfbonus,    amcoe2_reels3,    sfbonus,         ROT0,  "Amcoe", "Skill Fruit Bonus (Version 1.6)", 0)
+GAME( 2003, sfbonus,     0,        sfbonus,    amcoe2_reels3, sfbonus_state,    sfbonus,         ROT0,  "Amcoe", "Skill Fruit Bonus (Version 1.9R, set 1)", 0)
+GAME( 2003, sfbonusd1,   sfbonus,  sfbonus,    amcoe1_reels3, sfbonus_state,    sfbonusd,        ROT0,  "Amcoe", "Skill Fruit Bonus (Version 1.9R, set 2)", 0)
+GAME( 2003, sfbonusv1,   sfbonus,  sfbonus,    amcoe1_reels3, sfbonus_state,    sfbonusv,        ROT0,  "Amcoe", "Skill Fruit Bonus (Version 1.9R Dual)", 0)
+GAME( 2003, sfbonuso,    sfbonus,  sfbonus,    amcoe2_reels3, sfbonus_state,    sfbonus,         ROT0,  "Amcoe", "Skill Fruit Bonus (Version 1.7)", 0)
+GAME( 2003, sfbonuso2,   sfbonus,  sfbonus,    amcoe2_reels3, sfbonus_state,    sfbonus,         ROT0,  "Amcoe", "Skill Fruit Bonus (Version 1.6)", 0)
 
-GAMEL( 2004, parrot3,    0,        sfbonus,    amcoe1_poker,    parrot3v,        ROT0,  "Amcoe", "Parrot Poker III (Version 2.6E Dual)", 0, layout_pirpok2)
-GAMEL( 2004, parrot3b1,  parrot3,  sfbonus,    amcoe2_poker,    pirpok2,         ROT0,  "Amcoe", "Parrot Poker III (Version 2.6R, set 1)", 0, layout_pirpok2)
-GAMEL( 2004, parrot3d1,  parrot3,  sfbonus,    amcoe1_poker,    parrot3d,        ROT0,  "Amcoe", "Parrot Poker III (Version 2.6R, set 2)", 0, layout_pirpok2)
-GAMEL( 2004, parrot3v1,  parrot3,  sfbonus,    amcoe1_poker,    parrot3v2,       ROT0,  "Amcoe", "Parrot Poker III (Version 2.6R Dual)", 0, layout_pirpok2)
-GAMEL( 2003, parrot3o,   parrot3,  sfbonus,    amcoe2_poker,    pirpok2,         ROT0,  "Amcoe", "Parrot Poker III (Version 2.4)", 0, layout_pirpok2)
+GAMEL( 2004, parrot3,    0,        sfbonus,    amcoe1_poker, sfbonus_state,    parrot3v,        ROT0,  "Amcoe", "Parrot Poker III (Version 2.6E Dual)", 0, layout_pirpok2)
+GAMEL( 2004, parrot3b1,  parrot3,  sfbonus,    amcoe2_poker, sfbonus_state,    pirpok2,         ROT0,  "Amcoe", "Parrot Poker III (Version 2.6R, set 1)", 0, layout_pirpok2)
+GAMEL( 2004, parrot3d1,  parrot3,  sfbonus,    amcoe1_poker, sfbonus_state,    parrot3d,        ROT0,  "Amcoe", "Parrot Poker III (Version 2.6R, set 2)", 0, layout_pirpok2)
+GAMEL( 2004, parrot3v1,  parrot3,  sfbonus,    amcoe1_poker, sfbonus_state,    parrot3v2,       ROT0,  "Amcoe", "Parrot Poker III (Version 2.6R Dual)", 0, layout_pirpok2)
+GAMEL( 2003, parrot3o,   parrot3,  sfbonus,    amcoe2_poker, sfbonus_state,    pirpok2,         ROT0,  "Amcoe", "Parrot Poker III (Version 2.4)", 0, layout_pirpok2)
 
-GAME( 2000, hldspin1,    0,        sfbonus,    amcoe2_reels3,    hldspin1,        ROT0,  "Amcoe", "Hold & Spin I (Version 2.7T, set 1)", 0)
-GAME( 2000, hldspin1dt,  hldspin1, sfbonus,    amcoe1_reels3,    hldspin1d,       ROT0,  "Amcoe", "Hold & Spin I (Version 2.7T, set 2)", 0)
-GAME( 2000, hldspin1vt,  hldspin1, sfbonus,    amcoe1_reels3,    hldspin1v,       ROT0,  "Amcoe", "Hold & Spin I (Version 2.7T Dual)", 0)
-GAME( 2000, hldspin1o,   hldspin1, sfbonus,    amcoe2_reels3,    hldspin1,        ROT0,  "Amcoe", "Hold & Spin I (Version 2.5T)", 0)
+GAME( 2000, hldspin1,    0,        sfbonus,    amcoe2_reels3, sfbonus_state,    hldspin1,        ROT0,  "Amcoe", "Hold & Spin I (Version 2.7T, set 1)", 0)
+GAME( 2000, hldspin1dt,  hldspin1, sfbonus,    amcoe1_reels3, sfbonus_state,    hldspin1d,       ROT0,  "Amcoe", "Hold & Spin I (Version 2.7T, set 2)", 0)
+GAME( 2000, hldspin1vt,  hldspin1, sfbonus,    amcoe1_reels3, sfbonus_state,    hldspin1v,       ROT0,  "Amcoe", "Hold & Spin I (Version 2.7T Dual)", 0)
+GAME( 2000, hldspin1o,   hldspin1, sfbonus,    amcoe2_reels3, sfbonus_state,    hldspin1,        ROT0,  "Amcoe", "Hold & Spin I (Version 2.5T)", 0)
 
-GAME( 2000, hldspin2,    0,        sfbonus,    amcoe2_reels3,    hldspin2,        ROT0,  "Amcoe", "Hold & Spin II (Version 2.8R, set 1)", 0)
-GAME( 2000, hldspin2d1,  hldspin2, sfbonus,    amcoe1_reels3,    hldspin2d,       ROT0,  "Amcoe", "Hold & Spin II (Version 2.8R, set 2)", 0) // some text corruption on first reset (MIN PLAY etc. real game bug?)
-GAME( 2000, hldspin2v1,  hldspin2, sfbonus,    amcoe1_reels3,    hldspin2v,       ROT0,  "Amcoe", "Hold & Spin II (Version 2.8R Dual)", 0)  // some text corruption on first reset (MIN PLAY etc. real game bug?)
-GAME( 2000, hldspin2o,   hldspin2, sfbonus,    amcoe2_reels3,    hldspin2,        ROT0,  "Amcoe", "Hold & Spin II (Version 2.6)", 0)
+GAME( 2000, hldspin2,    0,        sfbonus,    amcoe2_reels3, sfbonus_state,    hldspin2,        ROT0,  "Amcoe", "Hold & Spin II (Version 2.8R, set 1)", 0)
+GAME( 2000, hldspin2d1,  hldspin2, sfbonus,    amcoe1_reels3, sfbonus_state,    hldspin2d,       ROT0,  "Amcoe", "Hold & Spin II (Version 2.8R, set 2)", 0) // some text corruption on first reset (MIN PLAY etc. real game bug?)
+GAME( 2000, hldspin2v1,  hldspin2, sfbonus,    amcoe1_reels3, sfbonus_state,    hldspin2v,       ROT0,  "Amcoe", "Hold & Spin II (Version 2.8R Dual)", 0)  // some text corruption on first reset (MIN PLAY etc. real game bug?)
+GAME( 2000, hldspin2o,   hldspin2, sfbonus,    amcoe2_reels3, sfbonus_state,    hldspin2,        ROT0,  "Amcoe", "Hold & Spin II (Version 2.6)", 0)
 
-GAME( 2003, fcnudge,     0,        sfbonus,    amcoe1_reels3,    fruitcar,        ROT0,  "Amcoe", "Fruit Carnival Nudge (Version 2.1 Dual)", 0)
-GAME( 2003, fcnudgeo,    fcnudge,  sfbonus,    amcoe2_reels3,    fruitcar2,       ROT0,  "Amcoe", "Fruit Carnival Nudge (Version 2.0, set 1)", 0)
-GAME( 2003, fcnudgeo2,   fcnudge,  sfbonus,    amcoe1_reels3,    fruitcar3,       ROT0,  "Amcoe", "Fruit Carnival Nudge (Version 2.0, set 2)", 0)
-GAME( 2003, fcnudgeo3,   fcnudge,  sfbonus,    amcoe2_reels3,    abnudge,         ROT0,  "Amcoe", "Fruit Carnival Nudge (Version 1.7)", 0)
+GAME( 2003, fcnudge,     0,        sfbonus,    amcoe1_reels3, sfbonus_state,    fruitcar,        ROT0,  "Amcoe", "Fruit Carnival Nudge (Version 2.1 Dual)", 0)
+GAME( 2003, fcnudgeo,    fcnudge,  sfbonus,    amcoe2_reels3, sfbonus_state,    fruitcar2,       ROT0,  "Amcoe", "Fruit Carnival Nudge (Version 2.0, set 1)", 0)
+GAME( 2003, fcnudgeo2,   fcnudge,  sfbonus,    amcoe1_reels3, sfbonus_state,    fruitcar3,       ROT0,  "Amcoe", "Fruit Carnival Nudge (Version 2.0, set 2)", 0)
+GAME( 2003, fcnudgeo3,   fcnudge,  sfbonus,    amcoe2_reels3, sfbonus_state,    abnudge,         ROT0,  "Amcoe", "Fruit Carnival Nudge (Version 1.7)", 0)
 
-GAME( 2001, pickwin,     0,        sfbonus,    amcoe1_reels4,    pickwinv2,       ROT0,  "Amcoe", "Pick 'n Win (Version 2.9E Dual)", 0)
-GAME( 2001, pickwinb1,   pickwin,  sfbonus,    amcoe2_reels4,    pickwin,         ROT0,  "Amcoe", "Pick 'n Win (Version 2.9R, set 1)", 0)
-GAME( 2001, pickwind1,   pickwin,  sfbonus,    amcoe1_reels4,    pickwind,        ROT0,  "Amcoe", "Pick 'n Win (Version 2.9R, set 2)", 0)
-GAME( 2001, pickwinv1,   pickwin,  sfbonus,    amcoe1_reels4,    pickwinv,        ROT0,  "Amcoe", "Pick 'n Win (Version 2.9R Dual)", 0)
-GAME( 2001, pickwinbt,   pickwin,  sfbonus,    amcoe2_reels4,    pickwin,         ROT0,  "Amcoe", "Pick 'n Win (Version 2.8T, set 1)", 0)
-GAME( 2001, pickwindt,   pickwin,  sfbonus,    amcoe1_reels4,    pickwind,        ROT0,  "Amcoe", "Pick 'n Win (Version 2.8T, set 2)", 0)
-GAME( 2001, pickwinvt,   pickwin,  sfbonus,    amcoe1_reels4,    pickwinv,        ROT0,  "Amcoe", "Pick 'n Win (Version 2.8T, Dual)", 0)
-GAME( 2001, pickwino,    pickwin,  sfbonus,    amcoe2_reels4,    pickwin,         ROT0,  "Amcoe", "Pick 'n Win (Version 2.6)", 0)
-GAME( 2001, pickwino2,   pickwin,  sfbonus,    amcoe2_reels4,    pickwin,         ROT0,  "Amcoe", "Pick 'n Win (Version 2.5T)", 0)
+GAME( 2001, pickwin,     0,        sfbonus,    amcoe1_reels4, sfbonus_state,    pickwinv2,       ROT0,  "Amcoe", "Pick 'n Win (Version 2.9E Dual)", 0)
+GAME( 2001, pickwinb1,   pickwin,  sfbonus,    amcoe2_reels4, sfbonus_state,    pickwin,         ROT0,  "Amcoe", "Pick 'n Win (Version 2.9R, set 1)", 0)
+GAME( 2001, pickwind1,   pickwin,  sfbonus,    amcoe1_reels4, sfbonus_state,    pickwind,        ROT0,  "Amcoe", "Pick 'n Win (Version 2.9R, set 2)", 0)
+GAME( 2001, pickwinv1,   pickwin,  sfbonus,    amcoe1_reels4, sfbonus_state,    pickwinv,        ROT0,  "Amcoe", "Pick 'n Win (Version 2.9R Dual)", 0)
+GAME( 2001, pickwinbt,   pickwin,  sfbonus,    amcoe2_reels4, sfbonus_state,    pickwin,         ROT0,  "Amcoe", "Pick 'n Win (Version 2.8T, set 1)", 0)
+GAME( 2001, pickwindt,   pickwin,  sfbonus,    amcoe1_reels4, sfbonus_state,    pickwind,        ROT0,  "Amcoe", "Pick 'n Win (Version 2.8T, set 2)", 0)
+GAME( 2001, pickwinvt,   pickwin,  sfbonus,    amcoe1_reels4, sfbonus_state,    pickwinv,        ROT0,  "Amcoe", "Pick 'n Win (Version 2.8T, Dual)", 0)
+GAME( 2001, pickwino,    pickwin,  sfbonus,    amcoe2_reels4, sfbonus_state,    pickwin,         ROT0,  "Amcoe", "Pick 'n Win (Version 2.6)", 0)
+GAME( 2001, pickwino2,   pickwin,  sfbonus,    amcoe2_reels4, sfbonus_state,    pickwin,         ROT0,  "Amcoe", "Pick 'n Win (Version 2.5T)", 0)
 
-GAME( 2004, tighook,     0,        sfbonus,    amcoe1_reels3,    tighookv2,       ROT0,  "Amcoe", "Tiger Hook (Version 2.1E Dual)", 0)
-GAME( 2004, tighookc1,   tighook,  sfbonus,    amcoe1_reels3,    tighook,         ROT0,  "Amcoe", "Tiger Hook (Version 2.1R, set 1)", 0)
-GAME( 2004, tighookd1,   tighook,  sfbonus,    amcoe1_reels3,    tighookd,        ROT0,  "Amcoe", "Tiger Hook (Version 2.1R, set 2)", 0)
-GAME( 2004, tighookv1,   tighook,  sfbonus,    amcoe1_reels3,    tighookv,        ROT0,  "Amcoe", "Tiger Hook (Version 2.1R Dual)", 0)
-GAME( 2004, tighookc2,   tighook,  sfbonus,    amcoe1_reels3,    tighook,         ROT0,  "Amcoe", "Tiger Hook (Version 2.0LT, set 1)", 0)
-GAME( 2004, tighookd2,   tighook,  sfbonus,    amcoe1_reels3,    tighookd,        ROT0,  "Amcoe", "Tiger Hook (Version 2.0LT, set 2)", 0)
-GAME( 2004, tighookv2,   tighook,  sfbonus,    amcoe1_reels3,    tighookv,        ROT0,  "Amcoe", "Tiger Hook (Version 2.0LT Dual)", 0)
-GAME( 2004, tighooko,    tighook,  sfbonus,    amcoe1_reels3,    tighook,         ROT0,  "Amcoe", "Tiger Hook (Version 1.7XT)", 0)
-GAME( 2004, tighooko2,   tighook,  sfbonus,    amcoe1_reels3,    tighook,         ROT0,  "Amcoe", "Tiger Hook (Version 1.7)", 0)
+GAME( 2004, tighook,     0,        sfbonus,    amcoe1_reels3, sfbonus_state,    tighookv2,       ROT0,  "Amcoe", "Tiger Hook (Version 2.1E Dual)", 0)
+GAME( 2004, tighookc1,   tighook,  sfbonus,    amcoe1_reels3, sfbonus_state,    tighook,         ROT0,  "Amcoe", "Tiger Hook (Version 2.1R, set 1)", 0)
+GAME( 2004, tighookd1,   tighook,  sfbonus,    amcoe1_reels3, sfbonus_state,    tighookd,        ROT0,  "Amcoe", "Tiger Hook (Version 2.1R, set 2)", 0)
+GAME( 2004, tighookv1,   tighook,  sfbonus,    amcoe1_reels3, sfbonus_state,    tighookv,        ROT0,  "Amcoe", "Tiger Hook (Version 2.1R Dual)", 0)
+GAME( 2004, tighookc2,   tighook,  sfbonus,    amcoe1_reels3, sfbonus_state,    tighook,         ROT0,  "Amcoe", "Tiger Hook (Version 2.0LT, set 1)", 0)
+GAME( 2004, tighookd2,   tighook,  sfbonus,    amcoe1_reels3, sfbonus_state,    tighookd,        ROT0,  "Amcoe", "Tiger Hook (Version 2.0LT, set 2)", 0)
+GAME( 2004, tighookv2,   tighook,  sfbonus,    amcoe1_reels3, sfbonus_state,    tighookv,        ROT0,  "Amcoe", "Tiger Hook (Version 2.0LT Dual)", 0)
+GAME( 2004, tighooko,    tighook,  sfbonus,    amcoe1_reels3, sfbonus_state,    tighook,         ROT0,  "Amcoe", "Tiger Hook (Version 1.7XT)", 0)
+GAME( 2004, tighooko2,   tighook,  sfbonus,    amcoe1_reels3, sfbonus_state,    tighook,         ROT0,  "Amcoe", "Tiger Hook (Version 1.7)", 0)
 
-GAME( 2004, robadv,      0,        sfbonus,    amcoe1_reels3,    robadv2v4,       ROT0,  "Amcoe", "Robin's Adventure (Version 1.7E Dual)", 0)
-GAME( 2004, robadvc1,    robadv,   sfbonus,    amcoe1_reels3,    robadv,          ROT0,  "Amcoe", "Robin's Adventure (Version 1.7R, set 1)", 0)
-GAME( 2004, robadvd1,    robadv,   sfbonus,    amcoe1_reels3,    robadv2d,        ROT0,  "Amcoe", "Robin's Adventure (Version 1.7R, set 2)", 0)
-GAME( 2004, robadvv1,    robadv,   sfbonus,    amcoe1_reels3,    robadv2v1,       ROT0,  "Amcoe", "Robin's Adventure (Version 1.7R Dual)", 0)
-GAME( 2004, robadvo,     robadv,   sfbonus,    amcoe1_reels3,    robadv,          ROT0,  "Amcoe", "Robin's Adventure (Version 1.5)", 0)
+GAME( 2004, robadv,      0,        sfbonus,    amcoe1_reels3, sfbonus_state,    robadv2v4,       ROT0,  "Amcoe", "Robin's Adventure (Version 1.7E Dual)", 0)
+GAME( 2004, robadvc1,    robadv,   sfbonus,    amcoe1_reels3, sfbonus_state,    robadv,          ROT0,  "Amcoe", "Robin's Adventure (Version 1.7R, set 1)", 0)
+GAME( 2004, robadvd1,    robadv,   sfbonus,    amcoe1_reels3, sfbonus_state,    robadv2d,        ROT0,  "Amcoe", "Robin's Adventure (Version 1.7R, set 2)", 0)
+GAME( 2004, robadvv1,    robadv,   sfbonus,    amcoe1_reels3, sfbonus_state,    robadv2v1,       ROT0,  "Amcoe", "Robin's Adventure (Version 1.7R Dual)", 0)
+GAME( 2004, robadvo,     robadv,   sfbonus,    amcoe1_reels3, sfbonus_state,    robadv,          ROT0,  "Amcoe", "Robin's Adventure (Version 1.5)", 0)
 
-GAME( 2004, robadv2,     0,        sfbonus,    amcoe1_reels3,    robadv2v4,       ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7E Dual)", 0)
-GAME( 2004, robadv2c1,   robadv2,  sfbonus,    amcoe1_reels3,    robadv,          ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7R, set 1)", 0)
-GAME( 2004, robadv2d1,   robadv2,  sfbonus,    amcoe1_reels3,    robadv2d,        ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7R, set 2)", 0)
-GAME( 2004, robadv2v1,   robadv2,  sfbonus,    amcoe1_reels3,    robadv2v1,       ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7R Dual)", 0)
-GAME( 2004, robadv2c2,   robadv2,  sfbonus,    amcoe1_reels3,    robadv,          ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7LT, set 1)", 0)
-GAME( 2004, robadv2d2,   robadv2,  sfbonus,    amcoe1_reels3,    robadv2d,        ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7LT, set 2)", 0)
-GAME( 2004, robadv2v2,   robadv2,  sfbonus,    amcoe1_reels3,    robadv2v1,       ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7LT Dual)", 0)
-GAME( 2004, robadv2c3,   robadv2,  sfbonus,    amcoe1_reels3,    robadv,          ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7SH, set 1)", 0)
-GAME( 2004, robadv2d3,   robadv2,  sfbonus,    amcoe1_reels3,    robadv2d,        ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7SH, set 2)", 0)
-GAME( 2004, robadv2v3,   robadv2,  sfbonus,    amcoe1_reels3,    robadv2v1,       ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7SH Dual)", 0)
-GAME( 2004, robadv2o,    robadv2,  sfbonus,    amcoe1_reels3,    robadv,          ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.5SH)", 0)
-GAME( 2004, robadv2o2,   robadv2,  sfbonus,    amcoe1_reels3,    robadv,          ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.5)", 0)
+GAME( 2004, robadv2,     0,        sfbonus,    amcoe1_reels3, sfbonus_state,    robadv2v4,       ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7E Dual)", 0)
+GAME( 2004, robadv2c1,   robadv2,  sfbonus,    amcoe1_reels3, sfbonus_state,    robadv,          ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7R, set 1)", 0)
+GAME( 2004, robadv2d1,   robadv2,  sfbonus,    amcoe1_reels3, sfbonus_state,    robadv2d,        ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7R, set 2)", 0)
+GAME( 2004, robadv2v1,   robadv2,  sfbonus,    amcoe1_reels3, sfbonus_state,    robadv2v1,       ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7R Dual)", 0)
+GAME( 2004, robadv2c2,   robadv2,  sfbonus,    amcoe1_reels3, sfbonus_state,    robadv,          ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7LT, set 1)", 0)
+GAME( 2004, robadv2d2,   robadv2,  sfbonus,    amcoe1_reels3, sfbonus_state,    robadv2d,        ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7LT, set 2)", 0)
+GAME( 2004, robadv2v2,   robadv2,  sfbonus,    amcoe1_reels3, sfbonus_state,    robadv2v1,       ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7LT Dual)", 0)
+GAME( 2004, robadv2c3,   robadv2,  sfbonus,    amcoe1_reels3, sfbonus_state,    robadv,          ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7SH, set 1)", 0)
+GAME( 2004, robadv2d3,   robadv2,  sfbonus,    amcoe1_reels3, sfbonus_state,    robadv2d,        ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7SH, set 2)", 0)
+GAME( 2004, robadv2v3,   robadv2,  sfbonus,    amcoe1_reels3, sfbonus_state,    robadv2v1,       ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.7SH Dual)", 0)
+GAME( 2004, robadv2o,    robadv2,  sfbonus,    amcoe1_reels3, sfbonus_state,    robadv,          ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.5SH)", 0)
+GAME( 2004, robadv2o2,   robadv2,  sfbonus,    amcoe1_reels3, sfbonus_state,    robadv,          ROT0,  "Amcoe", "Robin's Adventure 2 (Version 1.5)", 0)
 
-GAMEL( 2003, pirpok2,    0,        sfbonus,    amcoe1_poker,    pirpok2v2,       ROT0,  "Amcoe", "Pirate Poker II (Version 2.4E Dual)", 0, layout_pirpok2)
-GAMEL( 2003, pirpok2b1,  pirpok2,  sfbonus,    amcoe2_poker,    pirpok2,         ROT0,  "Amcoe", "Pirate Poker II (Version 2.2R, set 1)", 0, layout_pirpok2)
-GAMEL( 2003, pirpok2d1,  pirpok2,  sfbonus,    amcoe1_poker,    pirpok2d,        ROT0,  "Amcoe", "Pirate Poker II (Version 2.2R, set 2)", 0, layout_pirpok2)
-GAMEL( 2003, pirpok2v1,  pirpok2,  sfbonus,    amcoe1_poker,    pirpok2v,        ROT0,  "Amcoe", "Pirate Poker II (Version 2.2R Dual)", 0, layout_pirpok2)
-GAMEL( 2003, pirpok2o,   pirpok2,  sfbonus,    amcoe2_poker,    pirpok2,         ROT0,  "Amcoe", "Pirate Poker II (Version 2.0)", 0, layout_pirpok2)
+GAMEL( 2003, pirpok2,    0,        sfbonus,    amcoe1_poker, sfbonus_state,    pirpok2v2,       ROT0,  "Amcoe", "Pirate Poker II (Version 2.4E Dual)", 0, layout_pirpok2)
+GAMEL( 2003, pirpok2b1,  pirpok2,  sfbonus,    amcoe2_poker, sfbonus_state,    pirpok2,         ROT0,  "Amcoe", "Pirate Poker II (Version 2.2R, set 1)", 0, layout_pirpok2)
+GAMEL( 2003, pirpok2d1,  pirpok2,  sfbonus,    amcoe1_poker, sfbonus_state,    pirpok2d,        ROT0,  "Amcoe", "Pirate Poker II (Version 2.2R, set 2)", 0, layout_pirpok2)
+GAMEL( 2003, pirpok2v1,  pirpok2,  sfbonus,    amcoe1_poker, sfbonus_state,    pirpok2v,        ROT0,  "Amcoe", "Pirate Poker II (Version 2.2R Dual)", 0, layout_pirpok2)
+GAMEL( 2003, pirpok2o,   pirpok2,  sfbonus,    amcoe2_poker, sfbonus_state,    pirpok2,         ROT0,  "Amcoe", "Pirate Poker II (Version 2.0)", 0, layout_pirpok2)
 
-GAME( 2003, anibonus,    0,        sfbonus,    amcoe1_reels3,    anibonusv3,      ROT0,  "Amcoe", "Animal Bonus (Version 1.8E Dual)", 0)
-GAME( 2003, anibonusv1,  anibonus, sfbonus,    amcoe1_reels3,    anibonusv,       ROT0,  "Amcoe", "Animal Bonus (Version 1.8R Dual)", 0)
-GAME( 2003, anibonusv2,  anibonus, sfbonus,    amcoe1_reels3,    anibonusv,       ROT0,  "Amcoe", "Animal Bonus (Version 1.8LT Dual)", 0)
-GAME( 2003, anibonusb1,  anibonus, sfbonus,    amcoe2_reels3,    anibonus,        ROT0,  "Amcoe", "Animal Bonus (Version 1.7R, set 1)", 0)
-GAME( 2003, anibonusd1,  anibonus, sfbonus,    amcoe1_reels3,    anibonusd,       ROT0,  "Amcoe", "Animal Bonus (Version 1.7R, set 2)", 0)
-GAME( 2003, anibonusb2,  anibonus, sfbonus,    amcoe2_reels3,    anibonus,        ROT0,  "Amcoe", "Animal Bonus (Version 1.7LT, set 1)", 0)
-GAME( 2003, anibonusd2,  anibonus, sfbonus,    amcoe1_reels3,    anibonusd,       ROT0,  "Amcoe", "Animal Bonus (Version 1.7LT, set 2)", 0)
-GAME( 2003, anibonuso,   anibonus, sfbonus,    amcoe2_reels3,    anibonus,        ROT0,  "Amcoe", "Animal Bonus (Version 1.5)", 0)
-GAME( 2003, anibonuso2,  anibonus, sfbonus,    amcoe2_reels3,    anibonus3,       ROT0,  "Amcoe", "Animal Bonus (Version 1.4, set 1)", 0)
-GAME( 2003, anibonuso3,  anibonus, sfbonus,    amcoe2_reels3,    anibonus,        ROT0,  "Amcoe", "Animal Bonus (Version 1.4, set 2)", 0)
-GAME( 2003, anibonusxo,  anibonus, sfbonus,    amcoe2_reels3,    anibonus,        ROT0,  "Amcoe", "Animal Bonus (Version 1.50XT)", 0)
-GAME( 2003, anibonusxo2, anibonus, sfbonus,    amcoe2_reels3,    anibonus3,       ROT0,  "Amcoe", "Animal Bonus (Version 1.40XT, set 1)", 0)
-GAME( 2003, anibonusxo3, anibonus, sfbonus,    amcoe2_reels3,    anibonus,        ROT0,  "Amcoe", "Animal Bonus (Version 1.40XT, set 2)", 0)
+GAME( 2003, anibonus,    0,        sfbonus,    amcoe1_reels3, sfbonus_state,    anibonusv3,      ROT0,  "Amcoe", "Animal Bonus (Version 1.8E Dual)", 0)
+GAME( 2003, anibonusv1,  anibonus, sfbonus,    amcoe1_reels3, sfbonus_state,    anibonusv,       ROT0,  "Amcoe", "Animal Bonus (Version 1.8R Dual)", 0)
+GAME( 2003, anibonusv2,  anibonus, sfbonus,    amcoe1_reels3, sfbonus_state,    anibonusv,       ROT0,  "Amcoe", "Animal Bonus (Version 1.8LT Dual)", 0)
+GAME( 2003, anibonusb1,  anibonus, sfbonus,    amcoe2_reels3, sfbonus_state,    anibonus,        ROT0,  "Amcoe", "Animal Bonus (Version 1.7R, set 1)", 0)
+GAME( 2003, anibonusd1,  anibonus, sfbonus,    amcoe1_reels3, sfbonus_state,    anibonusd,       ROT0,  "Amcoe", "Animal Bonus (Version 1.7R, set 2)", 0)
+GAME( 2003, anibonusb2,  anibonus, sfbonus,    amcoe2_reels3, sfbonus_state,    anibonus,        ROT0,  "Amcoe", "Animal Bonus (Version 1.7LT, set 1)", 0)
+GAME( 2003, anibonusd2,  anibonus, sfbonus,    amcoe1_reels3, sfbonus_state,    anibonusd,       ROT0,  "Amcoe", "Animal Bonus (Version 1.7LT, set 2)", 0)
+GAME( 2003, anibonuso,   anibonus, sfbonus,    amcoe2_reels3, sfbonus_state,    anibonus,        ROT0,  "Amcoe", "Animal Bonus (Version 1.5)", 0)
+GAME( 2003, anibonuso2,  anibonus, sfbonus,    amcoe2_reels3, sfbonus_state,    anibonus3,       ROT0,  "Amcoe", "Animal Bonus (Version 1.4, set 1)", 0)
+GAME( 2003, anibonuso3,  anibonus, sfbonus,    amcoe2_reels3, sfbonus_state,    anibonus,        ROT0,  "Amcoe", "Animal Bonus (Version 1.4, set 2)", 0)
+GAME( 2003, anibonusxo,  anibonus, sfbonus,    amcoe2_reels3, sfbonus_state,    anibonus,        ROT0,  "Amcoe", "Animal Bonus (Version 1.50XT)", 0)
+GAME( 2003, anibonusxo2, anibonus, sfbonus,    amcoe2_reels3, sfbonus_state,    anibonus3,       ROT0,  "Amcoe", "Animal Bonus (Version 1.40XT, set 1)", 0)
+GAME( 2003, anibonusxo3, anibonus, sfbonus,    amcoe2_reels3, sfbonus_state,    anibonus,        ROT0,  "Amcoe", "Animal Bonus (Version 1.40XT, set 2)", 0)
 
-GAME( 2003, abnudge,     0,        sfbonus,    amcoe1_reels3,    abnudgev,        ROT0,  "Amcoe", "Animal Bonus Nudge (Version 2.1 Dual)", 0)
-GAME( 2003, abnudgeb,    abnudge,  sfbonus,    amcoe2_reels3,    abnudge,         ROT0,  "Amcoe", "Animal Bonus Nudge (Version 2.0, set 1)", 0)
-GAME( 2003, abnudged,    abnudge,  sfbonus,    amcoe1_reels3,    abnudged,        ROT0,  "Amcoe", "Animal Bonus Nudge (Version 2.0, set 2)", 0)
-GAME( 2003, abnudgeo,    abnudge,  sfbonus,    amcoe2_reels3,    abnudge,         ROT0,  "Amcoe", "Animal Bonus Nudge (Version 1.7)", 0)
+GAME( 2003, abnudge,     0,        sfbonus,    amcoe1_reels3, sfbonus_state,    abnudgev,        ROT0,  "Amcoe", "Animal Bonus Nudge (Version 2.1 Dual)", 0)
+GAME( 2003, abnudgeb,    abnudge,  sfbonus,    amcoe2_reels3, sfbonus_state,    abnudge,         ROT0,  "Amcoe", "Animal Bonus Nudge (Version 2.0, set 1)", 0)
+GAME( 2003, abnudged,    abnudge,  sfbonus,    amcoe1_reels3, sfbonus_state,    abnudged,        ROT0,  "Amcoe", "Animal Bonus Nudge (Version 2.0, set 2)", 0)
+GAME( 2003, abnudgeo,    abnudge,  sfbonus,    amcoe2_reels3, sfbonus_state,    abnudge,         ROT0,  "Amcoe", "Animal Bonus Nudge (Version 1.7)", 0)
 
-GAME( 2003, dblchal,     0,        sfbonus,    amcoe2_reels3,    dblchal,         ROT0,  "Amcoe", "Double Challenge (Version 1.5R, set 1)", 0)
-GAME( 2003, dblchalc1,   dblchal,  sfbonus,    amcoe1_reels3,    dblchal,         ROT0,  "Amcoe", "Double Challenge (Version 1.5R, set 2)", 0)
-GAME( 2003, dblchald1,   dblchal,  sfbonus,    amcoe1_reels3,    dblchald,        ROT0,  "Amcoe", "Double Challenge (Version 1.5R, set 3)", 0)
-GAME( 2003, dblchalv1,   dblchal,  sfbonus,    amcoe1_reels3,    dblchalv,        ROT0,  "Amcoe", "Double Challenge (Version 1.5R Dual)", 0)
-GAME( 2003, dblchalo,    dblchal,  sfbonus,    amcoe2_reels3,    dblchal,         ROT0,  "Amcoe", "Double Challenge (Version 1.1)", 0)
+GAME( 2003, dblchal,     0,        sfbonus,    amcoe2_reels3, sfbonus_state,    dblchal,         ROT0,  "Amcoe", "Double Challenge (Version 1.5R, set 1)", 0)
+GAME( 2003, dblchalc1,   dblchal,  sfbonus,    amcoe1_reels3, sfbonus_state,    dblchal,         ROT0,  "Amcoe", "Double Challenge (Version 1.5R, set 2)", 0)
+GAME( 2003, dblchald1,   dblchal,  sfbonus,    amcoe1_reels3, sfbonus_state,    dblchald,        ROT0,  "Amcoe", "Double Challenge (Version 1.5R, set 3)", 0)
+GAME( 2003, dblchalv1,   dblchal,  sfbonus,    amcoe1_reels3, sfbonus_state,    dblchalv,        ROT0,  "Amcoe", "Double Challenge (Version 1.5R Dual)", 0)
+GAME( 2003, dblchalo,    dblchal,  sfbonus,    amcoe2_reels3, sfbonus_state,    dblchal,         ROT0,  "Amcoe", "Double Challenge (Version 1.1)", 0)
 
-GAME( 2003, anithunt,    0,        sfbonus,    amcoe2_reels3,    anithunt,        ROT0,  "Amcoe", "Animal Treasure Hunt (Version 1.9R, set 1)", 0)
-GAME( 2003, anithuntd1,  anithunt, sfbonus,    amcoe1_reels3,    anithuntd,       ROT0,  "Amcoe", "Animal Treasure Hunt (Version 1.9R, set 2)", 0)
-GAME( 2003, anithuntv1,  anithunt, sfbonus,    amcoe1_reels3,    anithuntv,       ROT0,  "Amcoe", "Animal Treasure Hunt (Version 1.9R Dual)", 0)
-GAME( 2003, anithunto,   anithunt, sfbonus,    amcoe2_reels3,    anithunt,        ROT0,  "Amcoe", "Animal Treasure Hunt (Version 1.7)", 0)
-GAME( 2003, anithunto2,  anithunt, sfbonus,    amcoe2_reels3,    anithunt,        ROT0,  "Amcoe", "Animal Treasure Hunt (Version 1.5)", 0)
+GAME( 2003, anithunt,    0,        sfbonus,    amcoe2_reels3, sfbonus_state,    anithunt,        ROT0,  "Amcoe", "Animal Treasure Hunt (Version 1.9R, set 1)", 0)
+GAME( 2003, anithuntd1,  anithunt, sfbonus,    amcoe1_reels3, sfbonus_state,    anithuntd,       ROT0,  "Amcoe", "Animal Treasure Hunt (Version 1.9R, set 2)", 0)
+GAME( 2003, anithuntv1,  anithunt, sfbonus,    amcoe1_reels3, sfbonus_state,    anithuntv,       ROT0,  "Amcoe", "Animal Treasure Hunt (Version 1.9R Dual)", 0)
+GAME( 2003, anithunto,   anithunt, sfbonus,    amcoe2_reels3, sfbonus_state,    anithunt,        ROT0,  "Amcoe", "Animal Treasure Hunt (Version 1.7)", 0)
+GAME( 2003, anithunto2,  anithunt, sfbonus,    amcoe2_reels3, sfbonus_state,    anithunt,        ROT0,  "Amcoe", "Animal Treasure Hunt (Version 1.5)", 0)
 
-GAME( 2002, sfruitb,     0,        sfbonus,    amcoe1_reels3,    sfruitbv2,       ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.5E Dual)", 0)
-GAME( 2002, sfruitbb1,   sfruitb,  sfbonus,    amcoe2_reels3,    sfruitb,         ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.5R, set 1)", 0)
-GAME( 2002, sfruitbd1,   sfruitb,  sfbonus,    amcoe1_reels3,    sfruitbd,        ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.5R, set 2)", 0)
-GAME( 2002, sfruitbv1,   sfruitb,  sfbonus,    amcoe1_reels3,    sfruitbv,        ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.5R Dual)", 0)
-GAME( 2002, sfruitbb2,   sfruitb,  sfbonus,    amcoe2_reels3,    sfruitb,         ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.0LT, set 1)", 0)
-GAME( 2002, sfruitbd2,   sfruitb,  sfbonus,    amcoe1_reels3,    sfruitbd,        ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.0LT, set 2)", 0)
-GAME( 2002, sfruitbv2,   sfruitb,  sfbonus,    amcoe1_reels3,    sfruitbv,        ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.0LT Dual)", 0)
-GAME( 2002, sfruitbo,    sfruitb,  sfbonus,    amcoe2_reels3,    sfruitb,         ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.0)", 0)
-GAME( 2002, sfruitbo2,   sfruitb,  sfbonus,    amcoe2_reels3,    sfruitb,         ROT0,  "Amcoe", "Super Fruit Bonus (Version 1.80XT)", 0)
+GAME( 2002, sfruitb,     0,        sfbonus,    amcoe1_reels3, sfbonus_state,    sfruitbv2,       ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.5E Dual)", 0)
+GAME( 2002, sfruitbb1,   sfruitb,  sfbonus,    amcoe2_reels3, sfbonus_state,    sfruitb,         ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.5R, set 1)", 0)
+GAME( 2002, sfruitbd1,   sfruitb,  sfbonus,    amcoe1_reels3, sfbonus_state,    sfruitbd,        ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.5R, set 2)", 0)
+GAME( 2002, sfruitbv1,   sfruitb,  sfbonus,    amcoe1_reels3, sfbonus_state,    sfruitbv,        ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.5R Dual)", 0)
+GAME( 2002, sfruitbb2,   sfruitb,  sfbonus,    amcoe2_reels3, sfbonus_state,    sfruitb,         ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.0LT, set 1)", 0)
+GAME( 2002, sfruitbd2,   sfruitb,  sfbonus,    amcoe1_reels3, sfbonus_state,    sfruitbd,        ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.0LT, set 2)", 0)
+GAME( 2002, sfruitbv2,   sfruitb,  sfbonus,    amcoe1_reels3, sfbonus_state,    sfruitbv,        ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.0LT Dual)", 0)
+GAME( 2002, sfruitbo,    sfruitb,  sfbonus,    amcoe2_reels3, sfbonus_state,    sfruitb,         ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.0)", 0)
+GAME( 2002, sfruitbo2,   sfruitb,  sfbonus,    amcoe2_reels3, sfbonus_state,    sfruitb,         ROT0,  "Amcoe", "Super Fruit Bonus (Version 1.80XT)", 0)
 
-GAME( 2002, sfruitbh,    sfruitb,  sfbonus,    amcoe1_reels3,    sfruitbv2,       ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.2EB Dual)", 0)
-GAME( 2002, sfruitbbh,   sfruitb,  sfbonus,    amcoe2_reels3,    sfruitb,         ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.2B, set 1)", 0)
-GAME( 2002, sfruitbdh,   sfruitb,  sfbonus,    amcoe1_reels3,    sfruitbd,        ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.2B, set 2)", 0)
-GAME( 2002, sfruitbvh,   sfruitb,  sfbonus,    amcoe1_reels3,    sfruitbv,        ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.2B Dual)", 0)
-GAME( 2002, sfruitboh,   sfruitb,  sfbonus,    amcoe2_reels3,    sfruitb,         ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.0B)", 0)
+GAME( 2002, sfruitbh,    sfruitb,  sfbonus,    amcoe1_reels3, sfbonus_state,    sfruitbv2,       ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.2EB Dual)", 0)
+GAME( 2002, sfruitbbh,   sfruitb,  sfbonus,    amcoe2_reels3, sfbonus_state,    sfruitb,         ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.2B, set 1)", 0)
+GAME( 2002, sfruitbdh,   sfruitb,  sfbonus,    amcoe1_reels3, sfbonus_state,    sfruitbd,        ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.2B, set 2)", 0)
+GAME( 2002, sfruitbvh,   sfruitb,  sfbonus,    amcoe1_reels3, sfbonus_state,    sfruitbv,        ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.2B Dual)", 0)
+GAME( 2002, sfruitboh,   sfruitb,  sfbonus,    amcoe2_reels3, sfbonus_state,    sfruitb,         ROT0,  "Amcoe", "Super Fruit Bonus (Version 2.0B)", 0)
 
-GAME( 2004, fb2gen,      0,        sfbonus,    amcoe1_reels3,    fb2genv3,        ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8E Dual)", 0)
-GAME( 2004, fb2genc1,    fb2gen,   sfbonus,    amcoe1_reels3,    fb2gen,          ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8R, set 1)", 0)
-GAME( 2004, fb2gend1,    fb2gen,   sfbonus,    amcoe1_reels3,    fb2gend,         ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8R, set 2)", 0)
-GAME( 2004, fb2genv1,    fb2gen,   sfbonus,    amcoe1_reels3,    fb2genv,         ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8R Dual)", 0)
-GAME( 2004, fb2genc2,    fb2gen,   sfbonus,    amcoe1_reels3,    fb2gen,          ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8LT, set 1)", 0)
-GAME( 2004, fb2gend2,    fb2gen,   sfbonus,    amcoe1_reels3,    fb2gend,         ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8LT, set 2)", 0)
-GAME( 2004, fb2genv2,    fb2gen,   sfbonus,    amcoe1_reels3,    fb2genv,         ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8LT Dual)", 0)
-GAME( 2004, fb2geno,     fb2gen,   sfbonus,    amcoe1_reels3,    fb2gen,          ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.6XT)", 0)
-GAME( 2004, fb2geno2,    fb2gen,   sfbonus,    amcoe1_reels3,    fb2gen,          ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.5)", 0)
+GAME( 2004, fb2gen,      0,        sfbonus,    amcoe1_reels3, sfbonus_state,    fb2genv3,        ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8E Dual)", 0)
+GAME( 2004, fb2genc1,    fb2gen,   sfbonus,    amcoe1_reels3, sfbonus_state,    fb2gen,          ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8R, set 1)", 0)
+GAME( 2004, fb2gend1,    fb2gen,   sfbonus,    amcoe1_reels3, sfbonus_state,    fb2gend,         ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8R, set 2)", 0)
+GAME( 2004, fb2genv1,    fb2gen,   sfbonus,    amcoe1_reels3, sfbonus_state,    fb2genv,         ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8R Dual)", 0)
+GAME( 2004, fb2genc2,    fb2gen,   sfbonus,    amcoe1_reels3, sfbonus_state,    fb2gen,          ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8LT, set 1)", 0)
+GAME( 2004, fb2gend2,    fb2gen,   sfbonus,    amcoe1_reels3, sfbonus_state,    fb2gend,         ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8LT, set 2)", 0)
+GAME( 2004, fb2genv2,    fb2gen,   sfbonus,    amcoe1_reels3, sfbonus_state,    fb2genv,         ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.8LT Dual)", 0)
+GAME( 2004, fb2geno,     fb2gen,   sfbonus,    amcoe1_reels3, sfbonus_state,    fb2gen,          ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.6XT)", 0)
+GAME( 2004, fb2geno2,    fb2gen,   sfbonus,    amcoe1_reels3, sfbonus_state,    fb2gen,          ROT0,  "Amcoe", "Fruit Bonus 2nd Generation (Version 1.5)", 0)
 
-GAME( 2004, fb2nd,       0,        sfbonus,    amcoe1_reels3,    fb2nd,           ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.8R, set 1)", 0)
-GAME( 2004, fb2ndd1,     fb2nd,    sfbonus,    amcoe1_reels3,    fb2ndd,          ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.8R, set 2)", 0)
-GAME( 2004, fb2ndv1,     fb2nd,    sfbonus,    amcoe1_reels3,    fb2ndv,          ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.8R Dual)", 0)
-GAME( 2004, fb2ndc2,     fb2nd,    sfbonus,    amcoe1_reels3,    fb2nd,           ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.8LT, set 1)", 0)
-GAME( 2004, fb2ndd2,     fb2nd,    sfbonus,    amcoe1_reels3,    fb2ndd,          ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.8LT, set 2)", 0)
-GAME( 2004, fb2ndv2,     fb2nd,    sfbonus,    amcoe1_reels3,    fb2ndv,          ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.8LT Dual)", 0)
-GAME( 2004, fb2ndo,      fb2nd,    sfbonus,    amcoe1_reels3,    fb2nd,           ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.5)", 0)
+GAME( 2004, fb2nd,       0,        sfbonus,    amcoe1_reels3, sfbonus_state,    fb2nd,           ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.8R, set 1)", 0)
+GAME( 2004, fb2ndd1,     fb2nd,    sfbonus,    amcoe1_reels3, sfbonus_state,    fb2ndd,          ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.8R, set 2)", 0)
+GAME( 2004, fb2ndv1,     fb2nd,    sfbonus,    amcoe1_reels3, sfbonus_state,    fb2ndv,          ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.8R Dual)", 0)
+GAME( 2004, fb2ndc2,     fb2nd,    sfbonus,    amcoe1_reels3, sfbonus_state,    fb2nd,           ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.8LT, set 1)", 0)
+GAME( 2004, fb2ndd2,     fb2nd,    sfbonus,    amcoe1_reels3, sfbonus_state,    fb2ndd,          ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.8LT, set 2)", 0)
+GAME( 2004, fb2ndv2,     fb2nd,    sfbonus,    amcoe1_reels3, sfbonus_state,    fb2ndv,          ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.8LT Dual)", 0)
+GAME( 2004, fb2ndo,      fb2nd,    sfbonus,    amcoe1_reels3, sfbonus_state,    fb2nd,           ROT0,  "Amcoe", "Fruit Bonus 2nd Edition (Version 1.5)", 0)
 
-GAME( 2004, fb4,         0,        sfbonus,    amcoe2_reels3,    fb4,             ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5R, set 1)", 0)
-GAME( 2004, fb4c1,       fb4,      sfbonus,    amcoe1_reels3,    fb4,             ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5R, set 2)", 0)
-GAME( 2004, fb4d1,       fb4,      sfbonus,    amcoe1_reels3,    fb4d,            ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5R, set 3)", 0)
-GAME( 2004, fb4v1,       fb4,      sfbonus,    amcoe1_reels3,    fb4v,            ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5R Dual)", 0)
-GAME( 2004, fb4exp,      fb4,      sfbonus,    amcoe1_reels3,    fb4v3,           ROT0,  "Amcoe", "Fruit Bonus 2005 (2004 Export - Version 1.5E Dual)", 0) // the export version has '2005' title, but is considered the same game as fb4 and labeled as such
-GAME( 2004, fb4b2,       fb4,      sfbonus,    amcoe2_reels3,    fb4,             ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5LT, set 1)", 0)
-GAME( 2004, fb4c2,       fb4,      sfbonus,    amcoe1_reels3,    fb4,             ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5LT, set 2)", 0)
-GAME( 2004, fb4d2,       fb4,      sfbonus,    amcoe1_reels3,    fb4d,            ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5LT, set 3)", 0)
-GAME( 2004, fb4v2,       fb4,      sfbonus,    amcoe1_reels3,    fb4v,            ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5LT Dual)", 0)
-GAME( 2004, fb4o,        fb4,      sfbonus,    amcoe2_reels3,    fb4,             ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.3XT)", 0)
-GAME( 2004, fb4o2,       fb4,      sfbonus,    amcoe2_reels3,    fb4,             ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.2)", 0)
+GAME( 2004, fb4,         0,        sfbonus,    amcoe2_reels3, sfbonus_state,    fb4,             ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5R, set 1)", 0)
+GAME( 2004, fb4c1,       fb4,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb4,             ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5R, set 2)", 0)
+GAME( 2004, fb4d1,       fb4,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb4d,            ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5R, set 3)", 0)
+GAME( 2004, fb4v1,       fb4,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb4v,            ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5R Dual)", 0)
+GAME( 2004, fb4exp,      fb4,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb4v3,           ROT0,  "Amcoe", "Fruit Bonus 2005 (2004 Export - Version 1.5E Dual)", 0) // the export version has '2005' title, but is considered the same game as fb4 and labeled as such
+GAME( 2004, fb4b2,       fb4,      sfbonus,    amcoe2_reels3, sfbonus_state,    fb4,             ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5LT, set 1)", 0)
+GAME( 2004, fb4c2,       fb4,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb4,             ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5LT, set 2)", 0)
+GAME( 2004, fb4d2,       fb4,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb4d,            ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5LT, set 3)", 0)
+GAME( 2004, fb4v2,       fb4,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb4v,            ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.5LT Dual)", 0)
+GAME( 2004, fb4o,        fb4,      sfbonus,    amcoe2_reels3, sfbonus_state,    fb4,             ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.3XT)", 0)
+GAME( 2004, fb4o2,       fb4,      sfbonus,    amcoe2_reels3, sfbonus_state,    fb4,             ROT0,  "Amcoe", "Fruit Bonus 2004 (Version 1.2)", 0)
 
-GAME( 1999, act2000,     0,        sfbonus,    amcoe1_reels3,    act2000v2,       ROT0,  "Amcoe", "Action 2000 (Version 3.5E Dual)", 0)
-GAME( 1999, act2000v1,   act2000,  sfbonus,    amcoe1_reels3,    act2000v,        ROT0,  "Amcoe", "Action 2000 (Version 3.5R Dual)", 0)
-GAME( 1999, act2000d1,   act2000,  sfbonus,    amcoe1_reels3,    act2000d,        ROT0,  "Amcoe", "Action 2000 (Version 3.5R, set 1)", 0)
-GAME( 1999, act2000b1,   act2000,  sfbonus,    amcoe2_reels3,    act2000,         ROT0,  "Amcoe", "Action 2000 (Version 3.5R, set 2)", 0)
-GAME( 1999, act2000vx,   act2000,  sfbonus,    amcoe1_reels3,    act2000v3,       ROT0,  "Amcoe", "Action 2000 (Version 3.30XT Dual)", 0)
-GAME( 1999, act2000dx,   act2000,  sfbonus,    amcoe1_reels3,    act2000d,        ROT0,  "Amcoe", "Action 2000 (Version 3.30XT, set 1)", 0)
-GAME( 1999, act2000bx,   act2000,  sfbonus,    amcoe2_reels3,    act2000,         ROT0,  "Amcoe", "Action 2000 (Version 3.30XT, set 2)", 0)
-GAME( 1999, act2000o,    act2000,  sfbonus,    amcoe2_reels3,    act2000,         ROT0,  "Amcoe", "Action 2000 (Version 3.3)", 0)
-GAME( 1999, act2000o2,   act2000,  sfbonus,    amcoe2_reels3,    act2000,         ROT0,  "Amcoe", "Action 2000 (Version 3.10XT)", 0)
-GAME( 1999, act2000o3,   act2000,  sfbonus,    amcoe2_reels3,    act2000,         ROT0,  "Amcoe", "Action 2000 (Version 1.2)", 0)
+GAME( 1999, act2000,     0,        sfbonus,    amcoe1_reels3, sfbonus_state,    act2000v2,       ROT0,  "Amcoe", "Action 2000 (Version 3.5E Dual)", 0)
+GAME( 1999, act2000v1,   act2000,  sfbonus,    amcoe1_reels3, sfbonus_state,    act2000v,        ROT0,  "Amcoe", "Action 2000 (Version 3.5R Dual)", 0)
+GAME( 1999, act2000d1,   act2000,  sfbonus,    amcoe1_reels3, sfbonus_state,    act2000d,        ROT0,  "Amcoe", "Action 2000 (Version 3.5R, set 1)", 0)
+GAME( 1999, act2000b1,   act2000,  sfbonus,    amcoe2_reels3, sfbonus_state,    act2000,         ROT0,  "Amcoe", "Action 2000 (Version 3.5R, set 2)", 0)
+GAME( 1999, act2000vx,   act2000,  sfbonus,    amcoe1_reels3, sfbonus_state,    act2000v3,       ROT0,  "Amcoe", "Action 2000 (Version 3.30XT Dual)", 0)
+GAME( 1999, act2000dx,   act2000,  sfbonus,    amcoe1_reels3, sfbonus_state,    act2000d,        ROT0,  "Amcoe", "Action 2000 (Version 3.30XT, set 1)", 0)
+GAME( 1999, act2000bx,   act2000,  sfbonus,    amcoe2_reels3, sfbonus_state,    act2000,         ROT0,  "Amcoe", "Action 2000 (Version 3.30XT, set 2)", 0)
+GAME( 1999, act2000o,    act2000,  sfbonus,    amcoe2_reels3, sfbonus_state,    act2000,         ROT0,  "Amcoe", "Action 2000 (Version 3.3)", 0)
+GAME( 1999, act2000o2,   act2000,  sfbonus,    amcoe2_reels3, sfbonus_state,    act2000,         ROT0,  "Amcoe", "Action 2000 (Version 3.10XT)", 0)
+GAME( 1999, act2000o3,   act2000,  sfbonus,    amcoe2_reels3, sfbonus_state,    act2000,         ROT0,  "Amcoe", "Action 2000 (Version 1.2)", 0)
 
-GAME( 2000, ch2000,      0,        sfbonus,    amcoe1_reels3,    ch2000v2,        ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.4E Dual)", 0)
-GAME( 2000, ch2000b1,    ch2000,   sfbonus,    amcoe2_reels3,    ch2000,          ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.4R, set 1)", 0)
-GAME( 2000, ch2000c1,    ch2000,   sfbonus,    amcoe1_reels3,    ch2000c,         ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.4R, set 2)", 0)
-GAME( 2000, ch2000d1,    ch2000,   sfbonus,    amcoe1_reels3,    ch2000d,         ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.4R, set 3)", 0)
-GAME( 2000, ch2000v1,    ch2000,   sfbonus,    amcoe1_reels3,    ch2000v,         ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.4R Dual)", 0)
-GAME( 2000, ch2000b2,    ch2000,   sfbonus,    amcoe2_reels3,    ch2000,          ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.1LT, set 1)", 0)
-GAME( 2000, ch2000c2,    ch2000,   sfbonus,    amcoe1_reels3,    ch2000c,         ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.1LT, set 2)", 0)
-GAME( 2000, ch2000d2,    ch2000,   sfbonus,    amcoe1_reels3,    ch2000d,         ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.1LT, set 3)", 0)
-GAME( 2000, ch2000v2,    ch2000,   sfbonus,    amcoe1_reels3,    ch2000v3,        ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.1LT Dual)", 0)
-GAME( 2000, ch2000o,     ch2000,   sfbonus,    amcoe2_reels3,    ch2000,          ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 3.9XT)", 0)
-GAME( 2000, ch2000o2,    ch2000,   sfbonus,    amcoe2_reels3,    ch2000,          ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 3.9D)", 0)
-GAME( 2000, ch2000o3,    ch2000,   sfbonus,    amcoe2_reels3,    ch2000,          ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 3.9)", 0)
+GAME( 2000, ch2000,      0,        sfbonus,    amcoe1_reels3, sfbonus_state,    ch2000v2,        ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.4E Dual)", 0)
+GAME( 2000, ch2000b1,    ch2000,   sfbonus,    amcoe2_reels3, sfbonus_state,    ch2000,          ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.4R, set 1)", 0)
+GAME( 2000, ch2000c1,    ch2000,   sfbonus,    amcoe1_reels3, sfbonus_state,    ch2000c,         ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.4R, set 2)", 0)
+GAME( 2000, ch2000d1,    ch2000,   sfbonus,    amcoe1_reels3, sfbonus_state,    ch2000d,         ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.4R, set 3)", 0)
+GAME( 2000, ch2000v1,    ch2000,   sfbonus,    amcoe1_reels3, sfbonus_state,    ch2000v,         ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.4R Dual)", 0)
+GAME( 2000, ch2000b2,    ch2000,   sfbonus,    amcoe2_reels3, sfbonus_state,    ch2000,          ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.1LT, set 1)", 0)
+GAME( 2000, ch2000c2,    ch2000,   sfbonus,    amcoe1_reels3, sfbonus_state,    ch2000c,         ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.1LT, set 2)", 0)
+GAME( 2000, ch2000d2,    ch2000,   sfbonus,    amcoe1_reels3, sfbonus_state,    ch2000d,         ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.1LT, set 3)", 0)
+GAME( 2000, ch2000v2,    ch2000,   sfbonus,    amcoe1_reels3, sfbonus_state,    ch2000v3,        ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 4.1LT Dual)", 0)
+GAME( 2000, ch2000o,     ch2000,   sfbonus,    amcoe2_reels3, sfbonus_state,    ch2000,          ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 3.9XT)", 0)
+GAME( 2000, ch2000o2,    ch2000,   sfbonus,    amcoe2_reels3, sfbonus_state,    ch2000,          ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 3.9D)", 0)
+GAME( 2000, ch2000o3,    ch2000,   sfbonus,    amcoe2_reels3, sfbonus_state,    ch2000,          ROT0,  "Amcoe", "Fruit Bonus 2000 / New Cherry 2000 (Version 3.9)", 0)
 
-GAME( 2001, pir2001,     0,        sfbonus,    amcoe1_reels3,    pir2001v2,       ROT0,  "Amcoe", "Pirate 2001 (Version 2.5E Dual)", 0)
-GAME( 2001, pir2001b1,   pir2001,  sfbonus,    amcoe2_reels3,    pir2001,         ROT0,  "Amcoe", "Pirate 2001 (Version 2.5R, set 1)", 0)
-GAME( 2001, pir2001d1,   pir2001,  sfbonus,    amcoe1_reels3,    pir2001d,        ROT0,  "Amcoe", "Pirate 2001 (Version 2.5R, set 2)", 0)
-GAME( 2001, pir2001v1,   pir2001,  sfbonus,    amcoe1_reels3,    pir2001v,        ROT0,  "Amcoe", "Pirate 2001 (Version 2.5R Dual)", 0)
-GAME( 2001, pir2001bx,   pir2001,  sfbonus,    amcoe2_reels3,    pir2001,         ROT0,  "Amcoe", "Pirate 2001 (Version 2.40XT, set 1)", 0)
-GAME( 2001, pir2001dx,   pir2001,  sfbonus,    amcoe1_reels3,    pir2001d,        ROT0,  "Amcoe", "Pirate 2001 (Version 2.40XT, set 2)", 0)
-GAME( 2001, pir2001vx,   pir2001,  sfbonus,    amcoe1_reels3,    pir2001v,        ROT0,  "Amcoe", "Pirate 2001 (Version 2.40XT Dual)", 0)
-GAME( 2001, pir2001o,    pir2001,  sfbonus,    amcoe2_reels3,    pir2001,         ROT0,  "Amcoe", "Pirate 2001 (Version 2.3N)", 0)
-GAME( 2001, pir2001o2,   pir2001,  sfbonus,    amcoe2_reels3,    pir2001,         ROT0,  "Amcoe", "Pirate 2001 (Version 2.3)", 0)
-GAME( 2001, pir2001o3,   pir2001,  sfbonus,    amcoe2_reels3,    pir2001,         ROT0,  "Amcoe", "Pirate 2001 (Version 2.20XT)", 0)
+GAME( 2001, pir2001,     0,        sfbonus,    amcoe1_reels3, sfbonus_state,    pir2001v2,       ROT0,  "Amcoe", "Pirate 2001 (Version 2.5E Dual)", 0)
+GAME( 2001, pir2001b1,   pir2001,  sfbonus,    amcoe2_reels3, sfbonus_state,    pir2001,         ROT0,  "Amcoe", "Pirate 2001 (Version 2.5R, set 1)", 0)
+GAME( 2001, pir2001d1,   pir2001,  sfbonus,    amcoe1_reels3, sfbonus_state,    pir2001d,        ROT0,  "Amcoe", "Pirate 2001 (Version 2.5R, set 2)", 0)
+GAME( 2001, pir2001v1,   pir2001,  sfbonus,    amcoe1_reels3, sfbonus_state,    pir2001v,        ROT0,  "Amcoe", "Pirate 2001 (Version 2.5R Dual)", 0)
+GAME( 2001, pir2001bx,   pir2001,  sfbonus,    amcoe2_reels3, sfbonus_state,    pir2001,         ROT0,  "Amcoe", "Pirate 2001 (Version 2.40XT, set 1)", 0)
+GAME( 2001, pir2001dx,   pir2001,  sfbonus,    amcoe1_reels3, sfbonus_state,    pir2001d,        ROT0,  "Amcoe", "Pirate 2001 (Version 2.40XT, set 2)", 0)
+GAME( 2001, pir2001vx,   pir2001,  sfbonus,    amcoe1_reels3, sfbonus_state,    pir2001v,        ROT0,  "Amcoe", "Pirate 2001 (Version 2.40XT Dual)", 0)
+GAME( 2001, pir2001o,    pir2001,  sfbonus,    amcoe2_reels3, sfbonus_state,    pir2001,         ROT0,  "Amcoe", "Pirate 2001 (Version 2.3N)", 0)
+GAME( 2001, pir2001o2,   pir2001,  sfbonus,    amcoe2_reels3, sfbonus_state,    pir2001,         ROT0,  "Amcoe", "Pirate 2001 (Version 2.3)", 0)
+GAME( 2001, pir2001o3,   pir2001,  sfbonus,    amcoe2_reels3, sfbonus_state,    pir2001,         ROT0,  "Amcoe", "Pirate 2001 (Version 2.20XT)", 0)
 
-GAME( 2001, pir2002,     0,        sfbonus,    amcoe1_reels3,    pir2002v2,       ROT0,  "Amcoe", "Pirate 2002 (Version 2.0E Dual)", 0)
-GAME( 2001, pir2002b1,   pir2002,  sfbonus,    amcoe2_reels3,    pir2002,         ROT0,  "Amcoe", "Pirate 2002 (Version 2.0R, set 1)", 0)
-GAME( 2001, pir2002d1,   pir2002,  sfbonus,    amcoe1_reels3,    pir2002d,        ROT0,  "Amcoe", "Pirate 2002 (Version 2.0R, set 2)", 0)
-GAME( 2001, pir2002v1,   pir2002,  sfbonus,    amcoe1_reels3,    pir2002v,        ROT0,  "Amcoe", "Pirate 2002 (Version 2.0R Dual)", 0)
-GAME( 2001, pir2002bx,   pir2002,  sfbonus,    amcoe2_reels3,    pir2002,         ROT0,  "Amcoe", "Pirate 2002 (Version 1.90XT, set 1)", 0)
-GAME( 2001, pir2002dx,   pir2002,  sfbonus,    amcoe1_reels3,    pir2002d,        ROT0,  "Amcoe", "Pirate 2002 (Version 1.90XT, set 2)", 0)
-GAME( 2001, pir2002vx,   pir2002,  sfbonus,    amcoe1_reels3,    pir2002v,        ROT0,  "Amcoe", "Pirate 2002 (Version 1.90XT Dual)", 0)
-GAME( 2001, pir2002o,    pir2002,  sfbonus,    amcoe2_reels3,    pir2002,         ROT0,  "Amcoe", "Pirate 2002 (Version 1.8N)", 0)
-GAME( 2001, pir2002o2,   pir2002,  sfbonus,    amcoe2_reels3,    pir2002,         ROT0,  "Amcoe", "Pirate 2002 (Version 1.8)", 0)
-GAME( 2001, pir2002o3,   pir2002,  sfbonus,    amcoe2_reels3,    pir2002,         ROT0,  "Amcoe", "Pirate 2002 (Version 1.70XT)", 0)
+GAME( 2001, pir2002,     0,        sfbonus,    amcoe1_reels3, sfbonus_state,    pir2002v2,       ROT0,  "Amcoe", "Pirate 2002 (Version 2.0E Dual)", 0)
+GAME( 2001, pir2002b1,   pir2002,  sfbonus,    amcoe2_reels3, sfbonus_state,    pir2002,         ROT0,  "Amcoe", "Pirate 2002 (Version 2.0R, set 1)", 0)
+GAME( 2001, pir2002d1,   pir2002,  sfbonus,    amcoe1_reels3, sfbonus_state,    pir2002d,        ROT0,  "Amcoe", "Pirate 2002 (Version 2.0R, set 2)", 0)
+GAME( 2001, pir2002v1,   pir2002,  sfbonus,    amcoe1_reels3, sfbonus_state,    pir2002v,        ROT0,  "Amcoe", "Pirate 2002 (Version 2.0R Dual)", 0)
+GAME( 2001, pir2002bx,   pir2002,  sfbonus,    amcoe2_reels3, sfbonus_state,    pir2002,         ROT0,  "Amcoe", "Pirate 2002 (Version 1.90XT, set 1)", 0)
+GAME( 2001, pir2002dx,   pir2002,  sfbonus,    amcoe1_reels3, sfbonus_state,    pir2002d,        ROT0,  "Amcoe", "Pirate 2002 (Version 1.90XT, set 2)", 0)
+GAME( 2001, pir2002vx,   pir2002,  sfbonus,    amcoe1_reels3, sfbonus_state,    pir2002v,        ROT0,  "Amcoe", "Pirate 2002 (Version 1.90XT Dual)", 0)
+GAME( 2001, pir2002o,    pir2002,  sfbonus,    amcoe2_reels3, sfbonus_state,    pir2002,         ROT0,  "Amcoe", "Pirate 2002 (Version 1.8N)", 0)
+GAME( 2001, pir2002o2,   pir2002,  sfbonus,    amcoe2_reels3, sfbonus_state,    pir2002,         ROT0,  "Amcoe", "Pirate 2002 (Version 1.8)", 0)
+GAME( 2001, pir2002o3,   pir2002,  sfbonus,    amcoe2_reels3, sfbonus_state,    pir2002,         ROT0,  "Amcoe", "Pirate 2002 (Version 1.70XT)", 0)
 
-GAME( 2004, classice,    0,        sfbonus,    amcoe1_reels3,    classiced3,      ROT0,  "Amcoe", "Classic Edition (Version 1.6E)", 0)
-GAME( 2004, classicev,   classice, sfbonus,    amcoe1_reels3,    classicev3,      ROT0,  "Amcoe", "Classic Edition (Version 1.6E Dual)", 0)
-GAME( 2004, classice1,   classice, sfbonus,    amcoe1_reels3,    classice,        ROT0,  "Amcoe", "Classic Edition (Version 1.6R, set 1)", 0)
-GAME( 2004, classiced1,  classice, sfbonus,    amcoe1_reels3,    classiced,       ROT0,  "Amcoe", "Classic Edition (Version 1.6R, set 2)", 0)
-GAME( 2004, classicev1,  classice, sfbonus,    amcoe1_reels3,    classicev,       ROT0,  "Amcoe", "Classic Edition (Version 1.6R Dual)", 0)
-GAME( 2004, classice2,   classice, sfbonus,    amcoe1_reels3,    classice,        ROT0,  "Amcoe", "Classic Edition (Version 1.6LT, set 1)", 0)
-GAME( 2004, classiced2,  classice, sfbonus,    amcoe1_reels3,    classiced,       ROT0,  "Amcoe", "Classic Edition (Version 1.6LT, set 2)", 0)
-GAME( 2004, classicev2,  classice, sfbonus,    amcoe1_reels3,    classicev,       ROT0,  "Amcoe", "Classic Edition (Version 1.6LT Dual)", 0)
+GAME( 2004, classice,    0,        sfbonus,    amcoe1_reels3, sfbonus_state,    classiced3,      ROT0,  "Amcoe", "Classic Edition (Version 1.6E)", 0)
+GAME( 2004, classicev,   classice, sfbonus,    amcoe1_reels3, sfbonus_state,    classicev3,      ROT0,  "Amcoe", "Classic Edition (Version 1.6E Dual)", 0)
+GAME( 2004, classice1,   classice, sfbonus,    amcoe1_reels3, sfbonus_state,    classice,        ROT0,  "Amcoe", "Classic Edition (Version 1.6R, set 1)", 0)
+GAME( 2004, classiced1,  classice, sfbonus,    amcoe1_reels3, sfbonus_state,    classiced,       ROT0,  "Amcoe", "Classic Edition (Version 1.6R, set 2)", 0)
+GAME( 2004, classicev1,  classice, sfbonus,    amcoe1_reels3, sfbonus_state,    classicev,       ROT0,  "Amcoe", "Classic Edition (Version 1.6R Dual)", 0)
+GAME( 2004, classice2,   classice, sfbonus,    amcoe1_reels3, sfbonus_state,    classice,        ROT0,  "Amcoe", "Classic Edition (Version 1.6LT, set 1)", 0)
+GAME( 2004, classiced2,  classice, sfbonus,    amcoe1_reels3, sfbonus_state,    classiced,       ROT0,  "Amcoe", "Classic Edition (Version 1.6LT, set 2)", 0)
+GAME( 2004, classicev2,  classice, sfbonus,    amcoe1_reels3, sfbonus_state,    classicev,       ROT0,  "Amcoe", "Classic Edition (Version 1.6LT Dual)", 0)
 
-GAME( 2005, seawld,      0,        sfbonus,    amcoe1_reels3,    seawldv,         ROT0,  "Amcoe", "Sea World (Version 1.6E Dual)", 0)
-GAME( 2005, seawldd1,    seawld,   sfbonus,    amcoe1_reels3,    seawld,          ROT0,  "Amcoe", "Sea World (Version 1.6R CGA)", 0)
+GAME( 2005, seawld,      0,        sfbonus,    amcoe1_reels3, sfbonus_state,    seawldv,         ROT0,  "Amcoe", "Sea World (Version 1.6E Dual)", 0)
+GAME( 2005, seawldd1,    seawld,   sfbonus,    amcoe1_reels3, sfbonus_state,    seawld,          ROT0,  "Amcoe", "Sea World (Version 1.6R CGA)", 0)
 
-GAME( 2005, moneymac,    0,        sfbonus,    amcoe1_reels3,    moneymacv,       ROT0,  "Amcoe", "Money Machine (Version 1.7E Dual)", 0)
-GAME( 2005, moneymacd1,  moneymac, sfbonus,    amcoe1_reels3,    moneymacd,       ROT0,  "Amcoe", "Money Machine (Version 1.7R)", 0)
-GAME( 2005, moneymacv1,  moneymac, sfbonus,    amcoe1_reels3,    moneymac,        ROT0,  "Amcoe", "Money Machine (Version 1.7R Dual)", 0)
-GAME( 2005, moneymacd2,  moneymac, sfbonus,    amcoe1_reels3,    moneymacd,       ROT0,  "Amcoe", "Money Machine (Version 1.7LT)", 0)
-GAME( 2005, moneymacv2,  moneymac, sfbonus,    amcoe1_reels3,    moneymac,        ROT0,  "Amcoe", "Money Machine (Version 1.7LT Dual)", 0)
+GAME( 2005, moneymac,    0,        sfbonus,    amcoe1_reels3, sfbonus_state,    moneymacv,       ROT0,  "Amcoe", "Money Machine (Version 1.7E Dual)", 0)
+GAME( 2005, moneymacd1,  moneymac, sfbonus,    amcoe1_reels3, sfbonus_state,    moneymacd,       ROT0,  "Amcoe", "Money Machine (Version 1.7R)", 0)
+GAME( 2005, moneymacv1,  moneymac, sfbonus,    amcoe1_reels3, sfbonus_state,    moneymac,        ROT0,  "Amcoe", "Money Machine (Version 1.7R Dual)", 0)
+GAME( 2005, moneymacd2,  moneymac, sfbonus,    amcoe1_reels3, sfbonus_state,    moneymacd,       ROT0,  "Amcoe", "Money Machine (Version 1.7LT)", 0)
+GAME( 2005, moneymacv2,  moneymac, sfbonus,    amcoe1_reels3, sfbonus_state,    moneymac,        ROT0,  "Amcoe", "Money Machine (Version 1.7LT Dual)", 0)
 
-GAME( 2005, fb5,         0,        sfbonus,    amcoe2_reels3,    fb5,             ROT0,  "Amcoe", "Fruit Bonus 2005 (Version 1.5SH, set 1)", 0)
-GAME( 2005, fb5c,        fb5,      sfbonus,    amcoe1_reels3,    fb5,             ROT0,  "Amcoe", "Fruit Bonus 2005 (Version 1.5SH, set 2)", 0)
-GAME( 2005, fb5d,        fb5,      sfbonus,    amcoe1_reels3,    fb5d,            ROT0,  "Amcoe", "Fruit Bonus 2005 (Version 1.5SH, set 3)", 0)
-GAME( 2005, fb5v,        fb5,      sfbonus,    amcoe1_reels3,    fb5v,            ROT0,  "Amcoe", "Fruit Bonus 2005 (Version 1.5SH Dual)", 0)
+GAME( 2005, fb5,         0,        sfbonus,    amcoe2_reels3, sfbonus_state,    fb5,             ROT0,  "Amcoe", "Fruit Bonus 2005 (Version 1.5SH, set 1)", 0)
+GAME( 2005, fb5c,        fb5,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb5,             ROT0,  "Amcoe", "Fruit Bonus 2005 (Version 1.5SH, set 2)", 0)
+GAME( 2005, fb5d,        fb5,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb5d,            ROT0,  "Amcoe", "Fruit Bonus 2005 (Version 1.5SH, set 3)", 0)
+GAME( 2005, fb5v,        fb5,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb5v,            ROT0,  "Amcoe", "Fruit Bonus 2005 (Version 1.5SH Dual)", 0)
 
-GAME( 2005, funriver,    0,        sfbonus,    amcoe1_reels3,    funriver,        ROT0,  "Amcoe", "Fun River (Version 1.4R CGA)", 0)
-GAME( 2005, funriverv,   funriver, sfbonus,    amcoe1_reels3,    funriverv,       ROT0,  "Amcoe", "Fun River (Version 1.4R Dual)", 0)
-GAME( 2005, funriverd1,  funriver, sfbonus,    amcoe1_reels3,    funriver,        ROT0,  "Amcoe", "Fun River (Version 1.3R CGA)", 0)
+GAME( 2005, funriver,    0,        sfbonus,    amcoe1_reels3, sfbonus_state,    funriver,        ROT0,  "Amcoe", "Fun River (Version 1.4R CGA)", 0)
+GAME( 2005, funriverv,   funriver, sfbonus,    amcoe1_reels3, sfbonus_state,    funriverv,       ROT0,  "Amcoe", "Fun River (Version 1.4R Dual)", 0)
+GAME( 2005, funriverd1,  funriver, sfbonus,    amcoe1_reels3, sfbonus_state,    funriver,        ROT0,  "Amcoe", "Fun River (Version 1.3R CGA)", 0)
 
-GAME( 2006, fb6,         0,        sfbonus,    amcoe1_reels3,    fb6,             ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7E CGA)", 0)
-GAME( 2006, fb6v,        fb6,      sfbonus,    amcoe1_reels3,    fb6v3,           ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7E Dual)", 0)
-GAME( 2006, fb6d1,       fb6,      sfbonus,    amcoe1_reels3,    fb6d,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7R CGA)", 0)
-GAME( 2006, fb6s1,       fb6,      sfbonus,    amcoe1_reels3,    fb6s,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7R CGA, Compact PCB)", 0)
-GAME( 2006, fb6v1,       fb6,      sfbonus,    amcoe1_reels3,    fb6v,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7R Dual)", 0)
-GAME( 2006, fb6d2,       fb6,      sfbonus,    amcoe1_reels3,    fb6d,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7LT CGA)", 0)
-GAME( 2006, fb6s2,       fb6,      sfbonus,    amcoe1_reels3,    fb6s,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7LT CGA, Compact PCB)", 0)
-GAME( 2006, fb6v2,       fb6,      sfbonus,    amcoe1_reels3,    fb6v,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7LT Dual)", 0)
-GAME( 2006, fb6s3,       fb6,      sfbonus,    amcoe1_reels3,    fb6s,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.3R CGA, Compact PCB)", 0)
+GAME( 2006, fb6,         0,        sfbonus,    amcoe1_reels3, sfbonus_state,    fb6,             ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7E CGA)", 0)
+GAME( 2006, fb6v,        fb6,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb6v3,           ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7E Dual)", 0)
+GAME( 2006, fb6d1,       fb6,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb6d,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7R CGA)", 0)
+GAME( 2006, fb6s1,       fb6,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb6s,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7R CGA, Compact PCB)", 0)
+GAME( 2006, fb6v1,       fb6,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb6v,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7R Dual)", 0)
+GAME( 2006, fb6d2,       fb6,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb6d,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7LT CGA)", 0)
+GAME( 2006, fb6s2,       fb6,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb6s,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7LT CGA, Compact PCB)", 0)
+GAME( 2006, fb6v2,       fb6,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb6v,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.7LT Dual)", 0)
+GAME( 2006, fb6s3,       fb6,      sfbonus,    amcoe1_reels3, sfbonus_state,    fb6s,            ROT0,  "Amcoe", "Fruit Bonus '06 - 10th anniversary (Version 1.3R CGA, Compact PCB)", 0)
 
-GAME( 2006, fb6se,       0,        sfbonus,    amcoe1_reels3,    fb6,             ROT0,  "Amcoe", "Fruit Bonus 2006 Special Edition (Version 1.4E CGA)", 0) /* Released August 2006 according to Amcoe web site */
-GAME( 2006, fb6sev,      fb6se,    sfbonus,    amcoe1_reels3,    fb6v3,           ROT0,  "Amcoe", "Fruit Bonus 2006 Special Edition (Version 1.4E Dual)", 0)
-GAME( 2006, fb6sed1,     fb6se,    sfbonus,    amcoe1_reels3,    fb6d,            ROT0,  "Amcoe", "Fruit Bonus 2006 Special Edition (Version 1.4R CGA)", 0)
-GAME( 2006, fb6sev1,     fb6se,    sfbonus,    amcoe1_reels3,    fb6v,            ROT0,  "Amcoe", "Fruit Bonus 2006 Special Edition (Version 1.4R Dual)", 0)
-GAME( 2006, fb6sed2,     fb6se,    sfbonus,    amcoe1_reels3,    fb6d,            ROT0,  "Amcoe", "Fruit Bonus 2006 Special Edition (Version 1.4LT CGA)", 0)
-GAME( 2006, fb6sev2,     fb6se,    sfbonus,    amcoe1_reels3,    fb6v,            ROT0,  "Amcoe", "Fruit Bonus 2006 Special Edition (Version 1.4LT Dual)", 0)
+GAME( 2006, fb6se,       0,        sfbonus,    amcoe1_reels3, sfbonus_state,    fb6,             ROT0,  "Amcoe", "Fruit Bonus 2006 Special Edition (Version 1.4E CGA)", 0) /* Released August 2006 according to Amcoe web site */
+GAME( 2006, fb6sev,      fb6se,    sfbonus,    amcoe1_reels3, sfbonus_state,    fb6v3,           ROT0,  "Amcoe", "Fruit Bonus 2006 Special Edition (Version 1.4E Dual)", 0)
+GAME( 2006, fb6sed1,     fb6se,    sfbonus,    amcoe1_reels3, sfbonus_state,    fb6d,            ROT0,  "Amcoe", "Fruit Bonus 2006 Special Edition (Version 1.4R CGA)", 0)
+GAME( 2006, fb6sev1,     fb6se,    sfbonus,    amcoe1_reels3, sfbonus_state,    fb6v,            ROT0,  "Amcoe", "Fruit Bonus 2006 Special Edition (Version 1.4R Dual)", 0)
+GAME( 2006, fb6sed2,     fb6se,    sfbonus,    amcoe1_reels3, sfbonus_state,    fb6d,            ROT0,  "Amcoe", "Fruit Bonus 2006 Special Edition (Version 1.4LT CGA)", 0)
+GAME( 2006, fb6sev2,     fb6se,    sfbonus,    amcoe1_reels3, sfbonus_state,    fb6v,            ROT0,  "Amcoe", "Fruit Bonus 2006 Special Edition (Version 1.4LT Dual)", 0)
 
-GAME( 2006, bugfever,    0,        sfbonus,    amcoe1_reels3,    bugfever,        ROT0,  "Amcoe", "Bugs Fever (Version 1.7R CGA)", 0) /* Released August 2006 according to Amcoe web site */
-GAME( 2006, bugfeverv,   bugfever, sfbonus,    amcoe1_reels3,    bugfeverv,       ROT0,  "Amcoe", "Bugs Fever (Version 1.7R Dual)", 0)
-GAME( 2006, bugfeverd,   bugfever, sfbonus,    amcoe1_reels3,    bugfeverd,       ROT0,  "Amcoe", "Bugs Fever (Version 1.7E CGA)", 0)
-GAME( 2006, bugfeverv2,  bugfever, sfbonus,    amcoe1_reels3,    bugfeverv2,      ROT0,  "Amcoe", "Bugs Fever (Version 1.7E Dual)", 0)
-GAME( 2006, bugfevero,   bugfever, sfbonus,    amcoe1_reels3,    bugfever,        ROT0,  "Amcoe", "Bugs Fever (Version 1.6R CGA)", 0)
+GAME( 2006, bugfever,    0,        sfbonus,    amcoe1_reels3, sfbonus_state,    bugfever,        ROT0,  "Amcoe", "Bugs Fever (Version 1.7R CGA)", 0) /* Released August 2006 according to Amcoe web site */
+GAME( 2006, bugfeverv,   bugfever, sfbonus,    amcoe1_reels3, sfbonus_state,    bugfeverv,       ROT0,  "Amcoe", "Bugs Fever (Version 1.7R Dual)", 0)
+GAME( 2006, bugfeverd,   bugfever, sfbonus,    amcoe1_reels3, sfbonus_state,    bugfeverd,       ROT0,  "Amcoe", "Bugs Fever (Version 1.7E CGA)", 0)
+GAME( 2006, bugfeverv2,  bugfever, sfbonus,    amcoe1_reels3, sfbonus_state,    bugfeverv2,      ROT0,  "Amcoe", "Bugs Fever (Version 1.7E Dual)", 0)
+GAME( 2006, bugfevero,   bugfever, sfbonus,    amcoe1_reels3, sfbonus_state,    bugfever,        ROT0,  "Amcoe", "Bugs Fever (Version 1.6R CGA)", 0)
 
-GAME( 2006, dvisland,    0,        sfbonus,    amcoe1_reels3,    dvisland,        ROT0,  "Amcoe", "Devil Island (Version 1.4R CGA)", 0)
-GAME( 2006, dvislando,   dvisland, sfbonus,    amcoe1_reels3,    dvisland,        ROT0,  "Amcoe", "Devil Island (Version 1.0R CGA)", 0)
+GAME( 2006, dvisland,    0,        sfbonus,    amcoe1_reels3, sfbonus_state,    dvisland,        ROT0,  "Amcoe", "Devil Island (Version 1.4R CGA)", 0)
+GAME( 2006, dvislando,   dvisland, sfbonus,    amcoe1_reels3, sfbonus_state,    dvisland,        ROT0,  "Amcoe", "Devil Island (Version 1.0R CGA)", 0)
 
-GAME( 2007, atworld,     0,        sfbonus,    newlk1_reels3,    atworldd,        ROT0,  "Amcoe", "Around The World (Version 1.4R CGA)", 0) /* Year according to Amcoe web site */
-GAME( 2007, atworlde1,   atworld,  sfbonus,    newlk1_reels3,    atworld,         ROT0,  "Amcoe", "Around The World (Version 1.3E CGA)", 0) /* Year according to Amcoe web site */
-GAME( 2007, atworldd1,   atworld,  sfbonus,    newlk1_reels3,    atworldd,        ROT0,  "Amcoe", "Around The World (Version 1.3R CGA)", 0) /* Year according to Amcoe web site */
+GAME( 2007, atworld,     0,        sfbonus,    newlk1_reels3, sfbonus_state,    atworldd,        ROT0,  "Amcoe", "Around The World (Version 1.4R CGA)", 0) /* Year according to Amcoe web site */
+GAME( 2007, atworlde1,   atworld,  sfbonus,    newlk1_reels3, sfbonus_state,    atworld,         ROT0,  "Amcoe", "Around The World (Version 1.3E CGA)", 0) /* Year according to Amcoe web site */
+GAME( 2007, atworldd1,   atworld,  sfbonus,    newlk1_reels3, sfbonus_state,    atworldd,        ROT0,  "Amcoe", "Around The World (Version 1.3R CGA)", 0) /* Year according to Amcoe web site */
 
-GAME( 200?, fbdeluxe,    0,        sfbonus,    newer1_reels3,    fbdeluxe,        ROT0,  "Amcoe", "Fruit Bonus Deluxe (Version 1.0.9)", 0) /* After Around The World */
-GAME( 200?, fbdeluxeo,   fbdeluxe, sfbonus,    newer1_reels3,    fbdeluxe,        ROT0,  "Amcoe", "Fruit Bonus Deluxe (Version 1.0.7)", 0) /* After Around The World */
+GAME( 200?, fbdeluxe,    0,        sfbonus,    newer1_reels3, sfbonus_state,    fbdeluxe,        ROT0,  "Amcoe", "Fruit Bonus Deluxe (Version 1.0.9)", 0) /* After Around The World */
+GAME( 200?, fbdeluxeo,   fbdeluxe, sfbonus,    newer1_reels3, sfbonus_state,    fbdeluxe,        ROT0,  "Amcoe", "Fruit Bonus Deluxe (Version 1.0.7)", 0) /* After Around The World */
 
-GAME( 200?, fb3g,        0,        sfbonus,    newer1_reels3,    fb3g,            ROT0,  "Amcoe", "Fruit Bonus 3G (Version 1.0.3)", 0) /* After Around The World */
+GAME( 200?, fb3g,        0,        sfbonus,    newer1_reels3, sfbonus_state,    fb3g,            ROT0,  "Amcoe", "Fruit Bonus 3G (Version 1.0.3)", 0) /* After Around The World */
 
-GAME( 200?, getrich,     0,        sfbonus,    newer1_reels3,    getrich,         ROT0,  "Amcoe", "Get Rich (Version 1.0.1)", 0) /* After Around The World */
+GAME( 200?, getrich,     0,        sfbonus,    newer1_reels3, sfbonus_state,    getrich,         ROT0,  "Amcoe", "Get Rich (Version 1.0.1)", 0) /* After Around The World */
 
 // no graphic / sound roms dumped for these sets, but functional program roms & descramble are in place
 /* Version 4 is a multi-game that has New Fruit Bonus ?96 Special Edition Ver. 4, New Cherry ?96 Special Edition Ver. 4 or Skill Cherry ?97 Ver. 4 */
-GAME( 2006, version4,    0,        sfbonus,    amcoe1_reels3,    version4,        ROT0,  "Amcoe", "Version 4 (Version 4.3R CGA)",  GAME_NOT_WORKING)
-GAME( 2006, version4v,   version4, sfbonus,    amcoe1_reels3,    version4v,       ROT0,  "Amcoe", "Version 4 (Version 4.3R Dual)", GAME_NOT_WORKING)
-GAME( 2006, version4d2,  version4, sfbonus,    amcoe1_reels3,    version4d2,      ROT0,  "Amcoe", "Version 4 (Version 4.3E CGA)",  GAME_NOT_WORKING)
-GAME( 2006, version4v2,  version4, sfbonus,    amcoe1_reels3,    version4v2,      ROT0,  "Amcoe", "Version 4 (Version 4.3E Dual)", GAME_NOT_WORKING)
-GAME( 2006, version4d3,  version4, sfbonus,    amcoe1_reels3,    version4,        ROT0,  "Amcoe", "Version 4 (Version 4.3LT CGA)", GAME_NOT_WORKING)
-GAME( 2006, version4v3,  version4, sfbonus,    amcoe1_reels3,    version4v,       ROT0,  "Amcoe", "Version 4 (Version 4.3LT Dual)",GAME_NOT_WORKING)
-GAME( 2006, version4o,   version4, sfbonus,    amcoe1_reels3,    version4,        ROT0,  "Amcoe", "Version 4 (Version 4.2R CGA)", GAME_NOT_WORKING)
+GAME( 2006, version4,    0,        sfbonus,    amcoe1_reels3, sfbonus_state,    version4,        ROT0,  "Amcoe", "Version 4 (Version 4.3R CGA)",  GAME_NOT_WORKING)
+GAME( 2006, version4v,   version4, sfbonus,    amcoe1_reels3, sfbonus_state,    version4v,       ROT0,  "Amcoe", "Version 4 (Version 4.3R Dual)", GAME_NOT_WORKING)
+GAME( 2006, version4d2,  version4, sfbonus,    amcoe1_reels3, sfbonus_state,    version4d2,      ROT0,  "Amcoe", "Version 4 (Version 4.3E CGA)",  GAME_NOT_WORKING)
+GAME( 2006, version4v2,  version4, sfbonus,    amcoe1_reels3, sfbonus_state,    version4v2,      ROT0,  "Amcoe", "Version 4 (Version 4.3E Dual)", GAME_NOT_WORKING)
+GAME( 2006, version4d3,  version4, sfbonus,    amcoe1_reels3, sfbonus_state,    version4,        ROT0,  "Amcoe", "Version 4 (Version 4.3LT CGA)", GAME_NOT_WORKING)
+GAME( 2006, version4v3,  version4, sfbonus,    amcoe1_reels3, sfbonus_state,    version4v,       ROT0,  "Amcoe", "Version 4 (Version 4.3LT Dual)",GAME_NOT_WORKING)
+GAME( 2006, version4o,   version4, sfbonus,    amcoe1_reels3, sfbonus_state,    version4,        ROT0,  "Amcoe", "Version 4 (Version 4.2R CGA)", GAME_NOT_WORKING)
 
-GAME( 200?, spooky,      0,        sfbonus,    newer1_reels3,    spooky,          ROT0,  "Amcoe", "Spooky Night (2nd edition) (Version 2.0.4)", GAME_NOT_WORKING) /* After Around The World */
+GAME( 200?, spooky,      0,        sfbonus,    newer1_reels3, sfbonus_state,    spooky,          ROT0,  "Amcoe", "Spooky Night (2nd edition) (Version 2.0.4)", GAME_NOT_WORKING) /* After Around The World */
 
 
 // Known sets but no roms dumped at all for these:
@@ -6192,4 +6315,4 @@ GAME( 200?, spooky,      0,        sfbonus,    newer1_reels3,    spooky,        
 
 
 // ?? what is this
-GAME( 200?, amclink,     0,        sfbonus,    amcoe1_reels3,    sfbonus_common,  ROT0,  "Amcoe", "Amcoe Link Control Box (Version 2.2)", GAME_NOT_WORKING)
+GAME( 200?, amclink,     0,        sfbonus,    amcoe1_reels3, sfbonus_state,    sfbonus_common,  ROT0,  "Amcoe", "Amcoe Link Control Box (Version 2.2)", GAME_NOT_WORKING)

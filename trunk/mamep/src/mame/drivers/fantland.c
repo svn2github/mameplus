@@ -294,7 +294,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( fantland_sound_iomap, AS_IO, 8, fantland_state )
 	AM_RANGE( 0x0080, 0x0080 ) AM_READ(soundlatch_byte_r )
 	AM_RANGE( 0x0100, 0x0101 ) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r, ym2151_w )
-	AM_RANGE( 0x0180, 0x0180 ) AM_DEVWRITE_LEGACY("dac", dac_w )
+	AM_RANGE( 0x0180, 0x0180 ) AM_DEVWRITE("dac", dac_device, write_unsigned8 )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( galaxygn_sound_iomap, AS_IO, 8, fantland_state )
@@ -880,7 +880,7 @@ static MACHINE_CONFIG_START( fantland, fantland_state )
 	MCFG_SOUND_ROUTE(0, "mono", 0.35)
 	MCFG_SOUND_ROUTE(1, "mono", 0.35)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -1429,8 +1429,8 @@ ROM_START( wheelrun )
 ROM_END
 
 
-GAME( 19??, borntofi,  0,        borntofi, borntofi, 0, ROT0,  "International Games",       "Born To Fight",        GAME_SUPPORTS_SAVE )
-GAME( 19??, fantland,  0,        fantland, fantland, 0, ROT0,  "Electronic Devices Italy",  "Fantasy Land (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 19??, fantlanda, fantland, fantland, fantland, 0, ROT0,  "Electronic Devices Italy",  "Fantasy Land (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 19??, wheelrun,  0,        wheelrun, wheelrun, 0, ROT0,  "International Games",       "Wheels Runner",        GAME_SUPPORTS_SAVE )
-GAME( 1989, galaxygn,  0,        galaxygn, galaxygn, 0, ROT90, "Electronic Devices Italy",  "Galaxy Gunners",       GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 19??, borntofi,  0,        borntofi, borntofi, driver_device, 0, ROT0,  "International Games",       "Born To Fight",        GAME_SUPPORTS_SAVE )
+GAME( 19??, fantland,  0,        fantland, fantland, driver_device, 0, ROT0,  "Electronic Devices Italy",  "Fantasy Land (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 19??, fantlanda, fantland, fantland, fantland, driver_device, 0, ROT0,  "Electronic Devices Italy",  "Fantasy Land (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 19??, wheelrun,  0,        wheelrun, wheelrun, driver_device, 0, ROT0,  "International Games",       "Wheels Runner",        GAME_SUPPORTS_SAVE )
+GAME( 1989, galaxygn,  0,        galaxygn, galaxygn, driver_device, 0, ROT90, "Electronic Devices Italy",  "Galaxy Gunners",       GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )

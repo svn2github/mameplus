@@ -17,6 +17,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(nsm);
 };
 
 
@@ -31,7 +33,7 @@ void nsm_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( nsm )
+DRIVER_INIT_MEMBER(nsm_state,nsm)
 {
 }
 
@@ -63,4 +65,4 @@ ROM_END
 / The Games (1985)
 /-------------------------------------------------------------------*/
 
-GAME(1985,  firebird,  0,  nsm,  nsm,  nsm,  ROT0,  "NSM",    "Hot Fire Birds",     GAME_NOT_WORKING | GAME_NO_SOUND | GAME_MECHANICAL)
+GAME(1985,  firebird,  0,  nsm,  nsm, nsm_state,  nsm,  ROT0,  "NSM",    "Hot Fire Birds",     GAME_NOT_WORKING | GAME_NO_SOUND | GAME_MECHANICAL)

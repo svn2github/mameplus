@@ -185,6 +185,7 @@ struct _romload_private
 	memory_region *	region;				/* info about current region */
 
 	astring			errorstring;		/* error string */
+	astring			softwarningstring;	/* software warning string */
 };
 
 
@@ -317,6 +318,7 @@ void rom_init(running_machine &machine);
 
 /* return the number of warnings we generated */
 int rom_load_warnings(running_machine &machine);
+astring& software_load_warnings_message(running_machine &machine);
 
 /* return the number of BAD_DUMP/NO_DUMP warnings we generated */
 int rom_load_knownbad(running_machine &machine);

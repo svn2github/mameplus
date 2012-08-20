@@ -215,7 +215,7 @@ WRITE8_MEMBER(ppmast93_state::ppmast_sound_w)
 	{
 		case 0:
 		case 1: ym2413_w(machine().device("ymsnd"),offset,data); break;
-		case 2: dac_data_w(machine().device("dac"),data);break;
+		case 2: machine().device<dac_device>("dac")->write_unsigned8(data);break;
 		default: logerror("%x %x - %x\n",offset,data,cpu_get_previouspc(&space.device()));
 	}
 }
@@ -393,7 +393,7 @@ static MACHINE_CONFIG_START( ppmast93, ppmast93_state )
 	MCFG_SOUND_ADD("ymsnd", YM2413, 5000000/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.60)
 
 MACHINE_CONFIG_END
@@ -415,4 +415,4 @@ ROM_START( ppmast93 )
 	ROM_LOAD( "prom1.ug26", 0x200, 0x100, CRC(d979c64e) SHA1(172c9579013d58e35a5b4f732e360811ac36295e) )
 ROM_END
 
-GAME( 1993, ppmast93, 0, ppmast93, ppmast93, 0, ROT0, "Electronic Devices S.R.L.", "Ping Pong Masters '93", GAME_IMPERFECT_SOUND )
+GAME( 1993, ppmast93, 0, ppmast93, ppmast93, driver_device, 0, ROT0, "Electronic Devices S.R.L.", "Ping Pong Masters '93", GAME_IMPERFECT_SOUND )

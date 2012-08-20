@@ -17,6 +17,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(jeutel);
 };
 
 
@@ -31,7 +33,7 @@ void jeutel_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( jeutel )
+DRIVER_INIT_MEMBER(jeutel_state,jeutel)
 {
 }
 
@@ -82,5 +84,5 @@ ROM_START(olympic)
 ROM_END
 
 
-GAME(1983,  leking,   0,  jeutel,  jeutel,  jeutel,  ROT0,  "Jeutel",    "Le King",          GAME_IS_SKELETON_MECHANICAL)
-GAME(1984,  olympic,  0,  jeutel,  jeutel,  jeutel,  ROT0,  "Jeutel",    "Olympic Games",    GAME_IS_SKELETON_MECHANICAL)
+GAME(1983,  leking,   0,  jeutel,  jeutel, jeutel_state,  jeutel,  ROT0,  "Jeutel",    "Le King",          GAME_IS_SKELETON_MECHANICAL)
+GAME(1984,  olympic,  0,  jeutel,  jeutel, jeutel_state,  jeutel,  ROT0,  "Jeutel",    "Olympic Games",    GAME_IS_SKELETON_MECHANICAL)

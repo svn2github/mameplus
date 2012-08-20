@@ -512,9 +512,22 @@ $(MAMEOBJ)/atlus.a: \
 $(MAMEOBJ)/barcrest.a: \
 	$(DRIVERS)/mpu2.o \
 	$(DRIVERS)/mpu3.o \
-	$(DRIVERS)/mpu4.o \
+	$(DRIVERS)/mpu4hw.o $(DRIVERS)/mpu4sw.o $(DRIVERS)/mpu4.o \
+	$(DRIVERS)/mpu4mod2sw.o \
+	$(DRIVERS)/mpu4mod4yam.o \
+	$(DRIVERS)/mpu4plasma.o \
+	$(DRIVERS)/mpu4dealem.o \
 	$(DRIVERS)/mpu4vid.o \
-	$(DRIVERS)/mpu5.o \
+	$(DRIVERS)/mpu4avan.o \
+	$(DRIVERS)/mpu4union.o \
+	$(DRIVERS)/mpu4concept.o \
+	$(DRIVERS)/mpu4empire.o \
+	$(DRIVERS)/mpu4mdm.o \
+	$(DRIVERS)/mpu4crystal.o \
+	$(DRIVERS)/mpu4bwb.o \
+	$(DRIVERS)/mpu4misc.o \
+	$(VIDEO)/scn2674.o \
+	$(DRIVERS)/mpu5hw.o $(DRIVERS)/mpu5.o \
 	$(VIDEO)/awpvid.o \
 	$(MACHINE)/meters.o \
 	$(MACHINE)/steppers.o \
@@ -836,6 +849,9 @@ $(MAMEOBJ)/jpm.a: \
 	$(DRIVERS)/jpmimpct.o $(VIDEO)/jpmimpct.o \
 	$(DRIVERS)/pluto5.o \
 	$(DRIVERS)/jpmsys7.o \
+	$(VIDEO)/awpvid.o \
+	$(MACHINE)/meters.o \
+	$(MACHINE)/steppers.o \
 
 $(MAMEOBJ)/kaneko.a: \
 	$(DRIVERS)/airbustr.o $(VIDEO)/airbustr.o \
@@ -844,9 +860,15 @@ $(MAMEOBJ)/kaneko.a: \
 	$(DRIVERS)/galpanic.o $(VIDEO)/galpanic.o \
 	$(DRIVERS)/galpani2.o $(VIDEO)/galpani2.o \
 	$(DRIVERS)/galpani3.o \
+	$(VIDEO)/kaneko_grap2.o \
 	$(DRIVERS)/hvyunit.o \
 	$(DRIVERS)/jchan.o \
-	$(DRIVERS)/kaneko16.o $(MACHINE)/kaneko16.o $(VIDEO)/kaneko16.o \
+	$(DRIVERS)/kaneko16.o $(VIDEO)/kaneko16.o \
+	$(VIDEO)/kaneko_tmap.o \
+	$(VIDEO)/kaneko_spr.o \
+	$(MACHINE)/kaneko_hit.o \
+	$(MACHINE)/kaneko_calc3.o \
+	$(MACHINE)/kaneko_toybox.o \
 	$(DRIVERS)/sandscrp.o \
 	$(DRIVERS)/suprnova.o $(VIDEO)/suprnova.o \
 	$(VIDEO)/sknsspr.o \
@@ -1264,8 +1286,6 @@ $(MAMEOBJ)/sega.a: \
 	$(MACHINE)/fd1094.o \
 	$(MACHINE)/fddebug.o \
 	$(MACHINE)/mc8123.o \
-	$(MACHINE)/s16fd.o \
-	$(MACHINE)/s24fd.o \
 	$(MACHINE)/scudsp.o \
 	$(MACHINE)/segaic16.o \
 	$(AUDIO)/carnival.o \
@@ -1318,6 +1338,7 @@ $(MAMEOBJ)/seta.a: \
 	$(DRIVERS)/srmp5.o \
 	$(DRIVERS)/srmp6.o \
 	$(DRIVERS)/ssv.o $(VIDEO)/ssv.o \
+	$(VIDEO)/st0020.o \
 	$(DRIVERS)/st0016.o $(VIDEO)/st0016.o \
 	$(VIDEO)/seta001.o \
 
@@ -1408,6 +1429,7 @@ $(MAMEOBJ)/taito.a: \
 	$(DRIVERS)/gsword.o $(MACHINE)/tait8741.o $(VIDEO)/gsword.o \
 	$(DRIVERS)/gunbustr.o $(VIDEO)/gunbustr.o \
 	$(DRIVERS)/halleys.o \
+	$(DRIVERS)/invqix.o \
 	$(DRIVERS)/jollyjgr.o \
 	$(DRIVERS)/ksayakyu.o $(VIDEO)/ksayakyu.o \
 	$(DRIVERS)/lgp.o \
@@ -2048,6 +2070,10 @@ $(DRIVERS)/igspoker.o:	$(LAYOUT)/igspoker.lh
 
 $(DRIVERS)/jankenmn.o:	$(LAYOUT)/jankenmn.lh
 
+$(DRIVERS)/jpmimpct.o:	$(LAYOUT)/awpvid16.lh
+
+$(DRIVERS)/jpmsys5.o:	$(LAYOUT)/awpvid16.lh
+
 $(DRIVERS)/kas89.o:	$(LAYOUT)/kas89.lh
 
 $(DRIVERS)/kingdrby.o:	$(LAYOUT)/kingdrby.lh
@@ -2071,13 +2097,18 @@ $(DRIVERS)/mcr3.o:	$(LAYOUT)/turbotag.lh
 
 $(DRIVERS)/mpoker.o:	$(LAYOUT)/mpoker.lh
 
-$(DRIVERS)/mpu4.o:	$(LAYOUT)/mpu4.lh \
-			$(LAYOUT)/connect4.lh \
-			$(LAYOUT)/mpu4ext.lh \
-			$(LAYOUT)/gamball.lh
+$(DRIVERS)/mpu4mod2sw.o:	$(LAYOUT)/connect4.lh \
+
+$(DRIVERS)/mpu4mod4yam.o: $(LAYOUT)/gamball.lh \
+
+$(DRIVERS)/mpu4hw.o:	$(LAYOUT)/mpu4.lh \
+			$(LAYOUT)/mpu4ext.lh
 
 $(DRIVERS)/mpu4vid.o:	$(LAYOUT)/crmaze2p.lh \
 			$(LAYOUT)/crmaze4p.lh
+
+$(DRIVERS)/mpu4plasma.o: $(LAYOUT)/mpu4plasma.lh \
+
 
 $(DRIVERS)/mw18w.o:	$(LAYOUT)/18w.lh
 

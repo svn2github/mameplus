@@ -1429,144 +1429,137 @@ static void monsterb_expand_gfx(running_machine &machine, const char *region)
  *
  *************************************/
 
-static DRIVER_INIT( astrob )
+DRIVER_INIT_MEMBER(segag80r_state,astrob)
 {
-	segag80r_state *state = machine.driver_data<segag80r_state>();
-	device_t *speech = machine.device("segaspeech");
-	address_space *iospace = machine.device("maincpu")->memory().space(AS_IO);
+	device_t *speech = machine().device("segaspeech");
+	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
 
 	/* configure the 315-0062 security chip */
-	state->m_decrypt = segag80_security(62);
+	m_decrypt = segag80_security(62);
 
 	/* configure video */
-	state->m_background_pcb = G80_BACKGROUND_NONE;
+	m_background_pcb = G80_BACKGROUND_NONE;
 
 	/* install speech board */
 	iospace->install_legacy_write_handler(*speech, 0x38, 0x38, FUNC(sega_speech_data_w));
 	iospace->install_legacy_write_handler(*speech, 0x3b, 0x3b, FUNC(sega_speech_control_w));
 
 	/* install Astro Blaster sound board */
-	iospace->install_write_handler(0x3e, 0x3f, write8_delegate(FUNC(segag80r_state::astrob_sound_w),state));
+	iospace->install_write_handler(0x3e, 0x3f, write8_delegate(FUNC(segag80r_state::astrob_sound_w),this));
 }
 
 
-static DRIVER_INIT( 005 )
+DRIVER_INIT_MEMBER(segag80r_state,005)
 {
-	segag80r_state *state = machine.driver_data<segag80r_state>();
 
 	/* configure the 315-0070 security chip */
-	state->m_decrypt = segag80_security(70);
+	m_decrypt = segag80_security(70);
 
 	/* configure video */
-	state->m_background_pcb = G80_BACKGROUND_NONE;
+	m_background_pcb = G80_BACKGROUND_NONE;
 }
 
 
-static DRIVER_INIT( spaceod )
+DRIVER_INIT_MEMBER(segag80r_state,spaceod)
 {
-	segag80r_state *state = machine.driver_data<segag80r_state>();
-	address_space *iospace = machine.device("maincpu")->memory().space(AS_IO);
+	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
 
 	/* configure the 315-0063 security chip */
-	state->m_decrypt = segag80_security(63);
+	m_decrypt = segag80_security(63);
 
 	/* configure video */
-	state->m_background_pcb = G80_BACKGROUND_SPACEOD;
+	m_background_pcb = G80_BACKGROUND_SPACEOD;
 
 	/* configure ports for the background board */
-	iospace->install_readwrite_handler(0x08, 0x0f, read8_delegate(FUNC(segag80r_state::spaceod_back_port_r),state), write8_delegate(FUNC(segag80r_state::spaceod_back_port_w),state));
+	iospace->install_readwrite_handler(0x08, 0x0f, read8_delegate(FUNC(segag80r_state::spaceod_back_port_r),this), write8_delegate(FUNC(segag80r_state::spaceod_back_port_w),this));
 
 	/* install Space Odyssey sound board */
-	iospace->install_write_handler(0x0e, 0x0f, write8_delegate(FUNC(segag80r_state::spaceod_sound_w),state));
+	iospace->install_write_handler(0x0e, 0x0f, write8_delegate(FUNC(segag80r_state::spaceod_sound_w),this));
 
 	/* install our wacky mangled ports */
-	iospace->install_read_handler(0xf8, 0xfb, read8_delegate(FUNC(segag80r_state::spaceod_mangled_ports_r),state));
-	iospace->install_read_handler(0xfc, 0xfc, read8_delegate(FUNC(segag80r_state::spaceod_port_fc_r),state));
+	iospace->install_read_handler(0xf8, 0xfb, read8_delegate(FUNC(segag80r_state::spaceod_mangled_ports_r),this));
+	iospace->install_read_handler(0xfc, 0xfc, read8_delegate(FUNC(segag80r_state::spaceod_port_fc_r),this));
 }
 
 
-static DRIVER_INIT( monsterb )
+DRIVER_INIT_MEMBER(segag80r_state,monsterb)
 {
-	segag80r_state *state = machine.driver_data<segag80r_state>();
-	address_space *iospace = machine.device("maincpu")->memory().space(AS_IO);
-	address_space *pgmspace = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space *pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* configure the 315-0082 security chip */
-	state->m_decrypt = segag80_security(82);
+	m_decrypt = segag80_security(82);
 
 	/* configure video */
-	state->m_background_pcb = G80_BACKGROUND_MONSTERB;
-	monsterb_expand_gfx(machine, "gfx1");
+	m_background_pcb = G80_BACKGROUND_MONSTERB;
+	monsterb_expand_gfx(machine(), "gfx1");
 
 	/* install background board handlers */
-	iospace->install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::monsterb_back_port_w),state));
-	pgmspace->install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::monsterb_vidram_w),state));
+	iospace->install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::monsterb_back_port_w),this));
+	pgmspace->install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::monsterb_vidram_w),this));
 }
 
 
-static DRIVER_INIT( monster2 )
+DRIVER_INIT_MEMBER(segag80r_state,monster2)
 {
-	segag80r_state *state = machine.driver_data<segag80r_state>();
-	address_space *iospace = machine.device("maincpu")->memory().space(AS_IO);
-	address_space *pgmspace = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space *pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* configure the 315-5006 security chip */
-	spatter_decode(machine, "maincpu");
-	state->m_decrypt = segag80_security(0);
+	spatter_decode(machine(), "maincpu");
+	m_decrypt = segag80_security(0);
 
 	/* configure video */
-	state->m_background_pcb = G80_BACKGROUND_PIGNEWT;
-	monsterb_expand_gfx(machine, "gfx1");
+	m_background_pcb = G80_BACKGROUND_PIGNEWT;
+	monsterb_expand_gfx(machine(), "gfx1");
 
 	/* install background board handlers */
-	iospace->install_write_handler(0xb4, 0xb5, write8_delegate(FUNC(segag80r_state::pignewt_back_color_w),state));
-	iospace->install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::pignewt_back_port_w),state));
-	pgmspace->install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::pignewt_vidram_w),state));
+	iospace->install_write_handler(0xb4, 0xb5, write8_delegate(FUNC(segag80r_state::pignewt_back_color_w),this));
+	iospace->install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::pignewt_back_port_w),this));
+	pgmspace->install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::pignewt_vidram_w),this));
 }
 
 
-static DRIVER_INIT( pignewt )
+DRIVER_INIT_MEMBER(segag80r_state,pignewt)
 {
-	segag80r_state *state = machine.driver_data<segag80r_state>();
-	device_t *usbsnd = machine.device("usbsnd");
-	address_space *iospace = machine.device("maincpu")->memory().space(AS_IO);
-	address_space *pgmspace = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	device_t *usbsnd = machine().device("usbsnd");
+	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space *pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* configure the 315-0063? security chip */
-	state->m_decrypt = segag80_security(63);
+	m_decrypt = segag80_security(63);
 
 	/* configure video */
-	state->m_background_pcb = G80_BACKGROUND_PIGNEWT;
-	monsterb_expand_gfx(machine, "gfx1");
+	m_background_pcb = G80_BACKGROUND_PIGNEWT;
+	monsterb_expand_gfx(machine(), "gfx1");
 
 	/* install background board handlers */
-	iospace->install_write_handler(0xb4, 0xb5, write8_delegate(FUNC(segag80r_state::pignewt_back_color_w),state));
-	iospace->install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::pignewt_back_port_w),state));
-	pgmspace->install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::pignewt_vidram_w),state));
+	iospace->install_write_handler(0xb4, 0xb5, write8_delegate(FUNC(segag80r_state::pignewt_back_color_w),this));
+	iospace->install_write_handler(0xb8, 0xbd, write8_delegate(FUNC(segag80r_state::pignewt_back_port_w),this));
+	pgmspace->install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::pignewt_vidram_w),this));
 
 	/* install Universal sound board */
 	iospace->install_legacy_readwrite_handler(*usbsnd, 0x3f, 0x3f, FUNC(sega_usb_status_r), FUNC(sega_usb_data_w));
 	pgmspace->install_legacy_read_handler(*usbsnd, 0xd000, 0xdfff, FUNC(sega_usb_ram_r));
-	pgmspace->install_write_handler(0xd000, 0xdfff, write8_delegate(FUNC(segag80r_state::usb_ram_w),state));
+	pgmspace->install_write_handler(0xd000, 0xdfff, write8_delegate(FUNC(segag80r_state::usb_ram_w),this));
 }
 
 
-static DRIVER_INIT( sindbadm )
+DRIVER_INIT_MEMBER(segag80r_state,sindbadm)
 {
-	segag80r_state *state = machine.driver_data<segag80r_state>();
-	address_space *iospace = machine.device("maincpu")->memory().space(AS_IO);
-	address_space *pgmspace = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
+	address_space *pgmspace = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* configure the encrypted Z80 */
-	sindbadm_decode(machine, "maincpu");
-	state->m_decrypt = segag80_security(0);
+	sindbadm_decode(machine(), "maincpu");
+	m_decrypt = segag80_security(0);
 
 	/* configure video */
-	state->m_background_pcb = G80_BACKGROUND_SINDBADM;
+	m_background_pcb = G80_BACKGROUND_SINDBADM;
 
 	/* install background board handlers */
-	iospace->install_write_handler(0x40, 0x41, write8_delegate(FUNC(segag80r_state::sindbadm_back_port_w),state));
-	pgmspace->install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::sindbadm_vidram_w),state));
+	iospace->install_write_handler(0x40, 0x41, write8_delegate(FUNC(segag80r_state::sindbadm_back_port_w),this));
+	pgmspace->install_write_handler(0xe000, 0xffff, write8_delegate(FUNC(segag80r_state::sindbadm_vidram_w),this));
 }
 
 
@@ -1579,21 +1572,21 @@ static DRIVER_INIT( sindbadm )
 
 //    YEAR, NAME,      PARENT,   MACHINE,  INPUT,    INIT,     MONITOR,COMPANY,FULLNAME,FLAGS
 /* basic G-80 system with: CPU board, PROM board, Video I board, custom sound boards */
-GAME( 1981, astrob,    0,        astrob,   astrob,   astrob,   ROT270, "Sega", "Astro Blaster (version 3)", GAME_IMPERFECT_SOUND )
-GAME( 1981, astrob2,   astrob,   astrob,   astrob2,  astrob,   ROT270, "Sega", "Astro Blaster (version 2)", GAME_IMPERFECT_SOUND )
-GAME( 1981, astrob2a,  astrob,   astrob,   astrob2,  astrob,   ROT270, "Sega", "Astro Blaster (version 2a)", GAME_IMPERFECT_SOUND )
-GAME( 1981, astrob1,   astrob,   astrob,   astrob,   astrob,   ROT270, "Sega", "Astro Blaster (version 1)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) // instant death if you start game with 1 credit, protection?, bad dump?
-GAME( 1981, astrobg,   astrob,   astrob,   astrob,   astrob,   ROT270, "Sega", "Astro Blaster (German)", GAME_IMPERFECT_SOUND )
-GAME( 1981, 005,       0,        005,      005,      005,      ROT270, "Sega", "005", GAME_IMPERFECT_SOUND )
+GAME( 1981, astrob,    0,        astrob,   astrob, segag80r_state,   astrob,   ROT270, "Sega", "Astro Blaster (version 3)", GAME_IMPERFECT_SOUND )
+GAME( 1981, astrob2,   astrob,   astrob,   astrob2, segag80r_state,  astrob,   ROT270, "Sega", "Astro Blaster (version 2)", GAME_IMPERFECT_SOUND )
+GAME( 1981, astrob2a,  astrob,   astrob,   astrob2, segag80r_state,  astrob,   ROT270, "Sega", "Astro Blaster (version 2a)", GAME_IMPERFECT_SOUND )
+GAME( 1981, astrob1,   astrob,   astrob,   astrob, segag80r_state,   astrob,   ROT270, "Sega", "Astro Blaster (version 1)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) // instant death if you start game with 1 credit, protection?, bad dump?
+GAME( 1981, astrobg,   astrob,   astrob,   astrob, segag80r_state,   astrob,   ROT270, "Sega", "Astro Blaster (German)", GAME_IMPERFECT_SOUND )
+GAME( 1981, 005,       0,        005,      005, segag80r_state,      005,      ROT270, "Sega", "005", GAME_IMPERFECT_SOUND )
 
 
 /* basic G-80 system with individual background boards */
-GAME( 1981, spaceod,   0,        spaceod,  spaceod,  spaceod,  ROT270, "Sega", "Space Odyssey (version 2)", GAME_IMPERFECT_SOUND )
-GAME( 1981, spaceod2,  spaceod,  spaceod,  spaceod,  spaceod,  ROT270, "Sega", "Space Odyssey (version 1)", GAME_IMPERFECT_SOUND )
-GAME( 1982, monsterb,  0,        monsterb, monsterb, monsterb, ROT270, "Sega", "Monster Bash", GAME_IMPERFECT_SOUND )
+GAME( 1981, spaceod,   0,        spaceod,  spaceod, segag80r_state,  spaceod,  ROT270, "Sega", "Space Odyssey (version 2)", GAME_IMPERFECT_SOUND )
+GAME( 1981, spaceod2,  spaceod,  spaceod,  spaceod, segag80r_state,  spaceod,  ROT270, "Sega", "Space Odyssey (version 1)", GAME_IMPERFECT_SOUND )
+GAME( 1982, monsterb,  0,        monsterb, monsterb, segag80r_state, monsterb, ROT270, "Sega", "Monster Bash", GAME_IMPERFECT_SOUND )
 
 /* 2-board G-80 system */
-GAME( 1982, monsterb2, monsterb, monsterb, monsterb, monster2, ROT270, "Sega", "Monster Bash (2 board version)", GAME_IMPERFECT_SOUND )
-GAME( 1983, pignewt,   0,        pignewt,  pignewt,  pignewt,  ROT270, "Sega", "Pig Newton (version C)", GAME_IMPERFECT_SOUND )
-GAME( 1983, pignewta,  pignewt,  pignewt,  pignewta, pignewt,  ROT270, "Sega", "Pig Newton (version A)", GAME_IMPERFECT_SOUND )
-GAME( 1983, sindbadm,  0,        sindbadm, sindbadm, sindbadm, ROT270, "Sega", "Sindbad Mystery", 0 )
+GAME( 1982, monsterb2, monsterb, monsterb, monsterb, segag80r_state, monster2, ROT270, "Sega", "Monster Bash (2 board version)", GAME_IMPERFECT_SOUND )
+GAME( 1983, pignewt,   0,        pignewt,  pignewt, segag80r_state,  pignewt,  ROT270, "Sega", "Pig Newton (version C)", GAME_IMPERFECT_SOUND )
+GAME( 1983, pignewta,  pignewt,  pignewt,  pignewta, segag80r_state, pignewt,  ROT270, "Sega", "Pig Newton (version A)", GAME_IMPERFECT_SOUND )
+GAME( 1983, sindbadm,  0,        sindbadm, sindbadm, segag80r_state, sindbadm, ROT270, "Sega", "Sindbad Mystery", 0 )

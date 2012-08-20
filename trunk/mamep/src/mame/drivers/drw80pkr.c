@@ -65,6 +65,7 @@ public:
 	DECLARE_READ8_MEMBER(p2_r);
 	DECLARE_READ8_MEMBER(bus_r);
 	DECLARE_READ8_MEMBER(drw80pkr_io_r);
+	DECLARE_DRIVER_INIT(drw80pkr);
 };
 
 
@@ -403,9 +404,9 @@ GFXDECODE_END
 * Driver Init *
 ***************/
 
-static DRIVER_INIT( drw80pkr )
+DRIVER_INIT_MEMBER(drw80pkr_state,drw80pkr)
 {
-	machine.root_device().membank("bank1")->configure_entries(0, 2, machine.root_device().memregion("maincpu")->base(), 0x1000);
+	machine().root_device().membank("bank1")->configure_entries(0, 2, machine().root_device().memregion("maincpu")->base(), 0x1000);
 }
 
 
@@ -528,5 +529,5 @@ ROM_END
 *************************/
 
 /*    YEAR  NAME      PARENT  MACHINE   INPUT     INIT      ROT    COMPANY                                  FULLNAME                FLAGS   */
-GAME( 1982, drw80pkr, 0,      drw80pkr, drw80pkr, drw80pkr, ROT0,  "IGT - International Gaming Technology", "Draw 80 Poker",        GAME_NOT_WORKING )
-GAME( 1983, drw80pk2, 0,      drw80pkr, drw80pkr, drw80pkr, ROT0,  "IGT - International Gaming Technology", "Draw 80 Poker - Minn", GAME_NOT_WORKING )
+GAME( 1982, drw80pkr, 0,      drw80pkr, drw80pkr, drw80pkr_state, drw80pkr, ROT0,  "IGT - International Gaming Technology", "Draw 80 Poker",        GAME_NOT_WORKING )
+GAME( 1983, drw80pk2, 0,      drw80pkr, drw80pkr, drw80pkr_state, drw80pkr, ROT0,  "IGT - International Gaming Technology", "Draw 80 Poker - Minn", GAME_NOT_WORKING )

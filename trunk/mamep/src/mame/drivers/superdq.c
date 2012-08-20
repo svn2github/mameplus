@@ -63,7 +63,7 @@ static VIDEO_START( superdq )
 	state->m_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
 }
 
-static SCREEN_UPDATE_IND16( superdq )
+static SCREEN_UPDATE_RGB32( superdq )
 {
 	superdq_state *state = screen.machine().driver_data<superdq_state>();
 
@@ -414,6 +414,6 @@ ROM_END
  *
  *************************************/
 
-GAME( 1984, superdq,  0,		superdq, superdq, 0, ROT0, "Universal", "Super Don Quix-ote (Long Scenes)", GAME_NOT_WORKING )
-GAME( 1984, superdqs, superdq,  superdq, superdq, 0, ROT0, "Universal", "Super Don Quix-ote (Short Scenes)", GAME_NOT_WORKING )
-GAME( 1984, superdqa, superdq,  superdq, superdq, 0, ROT0, "Universal", "Super Don Quix-ote (Short Scenes, Alt)", GAME_NOT_WORKING )
+GAME( 1984, superdq,  0,		superdq, superdq, driver_device, 0, ROT0, "Universal", "Super Don Quix-ote (Long Scenes)", GAME_NOT_WORKING )
+GAME( 1984, superdqs, superdq,  superdq, superdq, driver_device, 0, ROT0, "Universal", "Super Don Quix-ote (Short Scenes)", GAME_NOT_WORKING )
+GAME( 1984, superdqa, superdq,  superdq, superdq, driver_device, 0, ROT0, "Universal", "Super Don Quix-ote (Short Scenes, Alt)", GAME_NOT_WORKING )

@@ -324,17 +324,17 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( carpolo )
+DRIVER_INIT_MEMBER(carpolo_state,carpolo)
 {
 	size_t i, len;
 	UINT8 *ROM;
 
 
 	/* invert gfx PROM since the bits are active LO */
-	ROM = machine.root_device().memregion("gfx2")->base();
-	len = machine.root_device().memregion("gfx2")->bytes();
+	ROM = machine().root_device().memregion("gfx2")->base();
+	len = machine().root_device().memregion("gfx2")->bytes();
 	for (i = 0;i < len; i++)
 		ROM[i] ^= 0x0f;
 }
 
-GAME( 1977, carpolo, 0, carpolo, carpolo, carpolo, ROT0, "Exidy", "Car Polo", GAME_SUPPORTS_SAVE | GAME_NO_SOUND )
+GAME( 1977, carpolo, 0, carpolo, carpolo, carpolo_state, carpolo, ROT0, "Exidy", "Car Polo", GAME_SUPPORTS_SAVE | GAME_NO_SOUND )

@@ -505,7 +505,7 @@ static const ym2203_interface ym2203_config =
 			AY8910_DEFAULT_LOADS,
 			DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL,
 	},
-	irqhandler
+	DEVCB_LINE(irqhandler)
 };
 
 static const msm5205_interface msm5205_config =
@@ -763,24 +763,22 @@ ROM_END
 
 
 
-static DRIVER_INIT( tigeroad )
+DRIVER_INIT_MEMBER(tigeroad_state,tigeroad)
 {
-	tigeroad_state *state = machine.driver_data<tigeroad_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xfe4002, 0xfe4003, write16_delegate(FUNC(tigeroad_state::tigeroad_soundcmd_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xfe4002, 0xfe4003, write16_delegate(FUNC(tigeroad_state::tigeroad_soundcmd_w),this));
 }
 
-static DRIVER_INIT( f1dream )
+DRIVER_INIT_MEMBER(tigeroad_state,f1dream)
 {
-	tigeroad_state *state = machine.driver_data<tigeroad_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xfe4002, 0xfe4003, write16_delegate(FUNC(tigeroad_state::f1dream_control_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xfe4002, 0xfe4003, write16_delegate(FUNC(tigeroad_state::f1dream_control_w),this));
 }
 
 
 
-GAME( 1987, tigeroad, 0,        tigeroad, tigeroad, tigeroad, ROT0, "Capcom (Romstar license)", "Tiger Road (US)", 0 )
-GAME( 1987, toramich, tigeroad, toramich, toramich, tigeroad, ROT0, "Capcom", "Tora-he no Michi (Japan)", 0 )
-GAME( 1987, tigeroadb,tigeroad, tigeroad, tigeroad, tigeroad, ROT0, "bootleg", "Tiger Road (US bootleg)", 0 )
+GAME( 1987, tigeroad, 0,        tigeroad, tigeroad, tigeroad_state, tigeroad, ROT0, "Capcom (Romstar license)", "Tiger Road (US)", 0 )
+GAME( 1987, toramich, tigeroad, toramich, toramich, tigeroad_state, tigeroad, ROT0, "Capcom", "Tora-he no Michi (Japan)", 0 )
+GAME( 1987, tigeroadb,tigeroad, tigeroad, tigeroad, tigeroad_state, tigeroad, ROT0, "bootleg", "Tiger Road (US bootleg)", 0 )
 
 /* F1 Dream has an Intel 8751 microcontroller for protection */
-GAME( 1988, f1dream,  0,        tigeroad, f1dream,  f1dream,  ROT0, "Capcom (Romstar license)", "F-1 Dream", 0 )
-GAME( 1988, f1dreamb, f1dream,  tigeroad, f1dream,  tigeroad, ROT0, "bootleg", "F-1 Dream (bootleg)", 0 )
+GAME( 1988, f1dream,  0,        tigeroad, f1dream, tigeroad_state,  f1dream,  ROT0, "Capcom (Romstar license)", "F-1 Dream", 0 )
+GAME( 1988, f1dreamb, f1dream,  tigeroad, f1dream, tigeroad_state,  tigeroad, ROT0, "bootleg", "F-1 Dream (bootleg)", 0 )

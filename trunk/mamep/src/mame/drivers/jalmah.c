@@ -185,6 +185,12 @@ public:
 	DECLARE_WRITE16_MEMBER(mjzoomin_mcu_w);
 	DECLARE_READ16_MEMBER(kakumei_mcu_r);
 	DECLARE_READ16_MEMBER(suchipi_mcu_r);
+	DECLARE_DRIVER_INIT(suchipi);
+	DECLARE_DRIVER_INIT(kakumei);
+	DECLARE_DRIVER_INIT(urashima);
+	DECLARE_DRIVER_INIT(kakumei2);
+	DECLARE_DRIVER_INIT(daireika);
+	DECLARE_DRIVER_INIT(mjzoomin);
 };
 
 
@@ -2409,61 +2415,55 @@ READ16_MEMBER(jalmah_state::suchipi_mcu_r)
 	return res;
 }
 
-static DRIVER_INIT( urashima )
+DRIVER_INIT_MEMBER(jalmah_state,urashima)
 {
-	jalmah_state *state = machine.driver_data<jalmah_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::urashima_mcu_r), state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x80012, 0x80013, write16_delegate(FUNC(jalmah_state::urashima_mcu_w), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::urashima_mcu_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x80012, 0x80013, write16_delegate(FUNC(jalmah_state::urashima_mcu_w), this));
 
-	state->m_mcu_prg = 0x12;
+	m_mcu_prg = 0x12;
 }
 
-static DRIVER_INIT( daireika )
+DRIVER_INIT_MEMBER(jalmah_state,daireika)
 {
-	jalmah_state *state = machine.driver_data<jalmah_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::daireika_mcu_r), state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x80012, 0x80013, write16_delegate(FUNC(jalmah_state::daireika_mcu_w), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::daireika_mcu_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x80012, 0x80013, write16_delegate(FUNC(jalmah_state::daireika_mcu_w), this));
 
-	state->m_mcu_prg = 0x11;
+	m_mcu_prg = 0x11;
 }
 
-static DRIVER_INIT( mjzoomin )
+DRIVER_INIT_MEMBER(jalmah_state,mjzoomin)
 {
-	jalmah_state *state = machine.driver_data<jalmah_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::mjzoomin_mcu_r), state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x80012, 0x80013, write16_delegate(FUNC(jalmah_state::mjzoomin_mcu_w), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::mjzoomin_mcu_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x80012, 0x80013, write16_delegate(FUNC(jalmah_state::mjzoomin_mcu_w), this));
 
-	state->m_mcu_prg = 0x13;
+	m_mcu_prg = 0x13;
 }
 
-static DRIVER_INIT( kakumei )
+DRIVER_INIT_MEMBER(jalmah_state,kakumei)
 {
-	jalmah_state *state = machine.driver_data<jalmah_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::kakumei_mcu_r), state));
-	state->m_mcu_prg = 0x21;
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::kakumei_mcu_r), this));
+	m_mcu_prg = 0x21;
 }
 
-static DRIVER_INIT( kakumei2 )
+DRIVER_INIT_MEMBER(jalmah_state,kakumei2)
 {
-	jalmah_state *state = machine.driver_data<jalmah_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::kakumei_mcu_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::kakumei_mcu_r), this));
 
-	state->m_mcu_prg = 0x22;
+	m_mcu_prg = 0x22;
 }
 
-static DRIVER_INIT( suchipi )
+DRIVER_INIT_MEMBER(jalmah_state,suchipi)
 {
-	jalmah_state *state = machine.driver_data<jalmah_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::suchipi_mcu_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80004, 0x80005, read16_delegate(FUNC(jalmah_state::suchipi_mcu_r), this));
 
-	state->m_mcu_prg = 0x23;
+	m_mcu_prg = 0x23;
 }
 
 /*First version of the MCU*/
-GAME( 1989, urashima, 0, urashima,  urashima,   urashima, ROT0, "UPL",          "Otogizoushi Urashima Mahjong (Japan)",         GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1989, daireika, 0, jalmah,    daireika,   daireika, ROT0, "Jaleco / NMK", "Mahjong Daireikai (Japan)",                    GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1990, mjzoomin, 0, jalmah,    mjzoomin,   mjzoomin, ROT0, "Jaleco",       "Mahjong Channel Zoom In (Japan)",              GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1989, urashima, 0, urashima,  urashima, jalmah_state,   urashima, ROT0, "UPL",          "Otogizoushi Urashima Mahjong (Japan)",         GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1989, daireika, 0, jalmah,    daireika, jalmah_state,   daireika, ROT0, "Jaleco / NMK", "Mahjong Daireikai (Japan)",                    GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1990, mjzoomin, 0, jalmah,    mjzoomin, jalmah_state,   mjzoomin, ROT0, "Jaleco",       "Mahjong Channel Zoom In (Japan)",              GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 /*Second version of the MCU*/
-GAME( 1990, kakumei,  0, jalmah,    kakumei,    kakumei,  ROT0, "Jaleco",       "Mahjong Kakumei (Japan)",                      GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, kakumei2, 0, jalmah,    kakumei2,   kakumei2, ROT0, "Jaleco",       "Mahjong Kakumei 2 - Princess League (Japan)",  GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, suchipi,  0, jalmah,    suchipi,    suchipi,  ROT0, "Jaleco",       "Idol Janshi Suchie-Pai Special (Japan)",       GAME_IMPERFECT_GRAPHICS )
+GAME( 1990, kakumei,  0, jalmah,    kakumei, jalmah_state,    kakumei,  ROT0, "Jaleco",       "Mahjong Kakumei (Japan)",                      GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, kakumei2, 0, jalmah,    kakumei2, jalmah_state,   kakumei2, ROT0, "Jaleco",       "Mahjong Kakumei 2 - Princess League (Japan)",  GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, suchipi,  0, jalmah,    suchipi, jalmah_state,    suchipi,  ROT0, "Jaleco",       "Idol Janshi Suchie-Pai Special (Japan)",       GAME_IMPERFECT_GRAPHICS )

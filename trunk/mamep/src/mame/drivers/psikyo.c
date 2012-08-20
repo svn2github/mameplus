@@ -1806,13 +1806,12 @@ ROM_END
 
 ***************************************************************************/
 
-static DRIVER_INIT( sngkace )
+DRIVER_INIT_MEMBER(psikyo_state,sngkace)
 {
-	psikyo_state *state = machine.driver_data<psikyo_state>();
 
 	{
-		UINT8 *RAM = state->memregion("ymsnd")->base();
-		int len = state->memregion("ymsnd")->bytes();
+		UINT8 *RAM = memregion("ymsnd")->base();
+		int len = memregion("ymsnd")->bytes();
 		int i;
 
 		/* Bit 6&7 of the samples are swapped. Naughty, naughty... */
@@ -1824,21 +1823,21 @@ static DRIVER_INIT( sngkace )
 	}
 
 	/* input ports */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::sngkace_input_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::sngkace_input_r),this));
 
 	/* sound latch */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::psikyo_soundlatch_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::psikyo_soundlatch_w),this));
 
-	state->m_ka302c_banking = 0; // SH201B doesn't have any gfx banking
+	m_ka302c_banking = 0; // SH201B doesn't have any gfx banking
 
 	/* setup audiocpu banks */
-	state->membank("bank1")->configure_entries(0, 4, machine.root_device().memregion("audiocpu")->base() + 0x10000, 0x8000);
+	membank("bank1")->configure_entries(0, 4, machine().root_device().memregion("audiocpu")->base() + 0x10000, 0x8000);
 
 	/* Enable other regions */
 #if 0
-	if (!strcmp(machine.system().name,"sngkace"))
+	if (!strcmp(machine().system().name,"sngkace"))
 	{
-		UINT8 *ROM	=	machine.root_device().memregion("maincpu")->base();
+		UINT8 *ROM	=	machine().root_device().memregion("maincpu")->base();
 		ROM[0x995] = 0x4e;
 		ROM[0x994] = 0x71;
 		ROM[0x997] = 0x4e;
@@ -1872,147 +1871,140 @@ static void s1945_mcu_init( running_machine &machine )
 	state->save_item(NAME(state->m_s1945_mcu_bctrl));
 }
 
-static DRIVER_INIT( tengai )
+DRIVER_INIT_MEMBER(psikyo_state,tengai)
 {
-	psikyo_state *state = machine.driver_data<psikyo_state>();
 
 	/* input ports */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::s1945_input_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::s1945_input_r),this));
 
 	/* sound latch */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::s1945_soundlatch_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::s1945_soundlatch_w),this));
 
 	/* protection */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00004, 0xc0000b, write32_delegate(FUNC(psikyo_state::s1945_mcu_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00004, 0xc0000b, write32_delegate(FUNC(psikyo_state::s1945_mcu_w),this));
 
-	s1945_mcu_init(machine);
-	state->m_s1945_mcu_table = 0;
+	s1945_mcu_init(machine());
+	m_s1945_mcu_table = 0;
 
-	state->m_ka302c_banking = 0; // Banking is controlled by mcu
-
-	/* setup audiocpu banks */
-	/* The banked rom is seen at 8200-ffff, so the last 0x200 bytes of the rom not reachable. */
-	state->membank("bank1")->configure_entries(0, 4, state->memregion("audiocpu")->base() + 0x10000 + 0x200, 0x8000);
-}
-
-static DRIVER_INIT( gunbird )
-{
-	psikyo_state *state = machine.driver_data<psikyo_state>();
-
-	/* input ports */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::gunbird_input_r),state));
-
-	/* sound latch */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::psikyo_soundlatch_w),state));
-
-	state->m_ka302c_banking = 1;
+	m_ka302c_banking = 0; // Banking is controlled by mcu
 
 	/* setup audiocpu banks */
 	/* The banked rom is seen at 8200-ffff, so the last 0x200 bytes of the rom not reachable. */
-	state->membank("bank1")->configure_entries(0, 4, state->memregion("audiocpu")->base() + 0x10000 + 0x200, 0x8000);
+	membank("bank1")->configure_entries(0, 4, memregion("audiocpu")->base() + 0x10000 + 0x200, 0x8000);
+}
+
+DRIVER_INIT_MEMBER(psikyo_state,gunbird)
+{
+
+	/* input ports */
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::gunbird_input_r),this));
+
+	/* sound latch */
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::psikyo_soundlatch_w),this));
+
+	m_ka302c_banking = 1;
+
+	/* setup audiocpu banks */
+	/* The banked rom is seen at 8200-ffff, so the last 0x200 bytes of the rom not reachable. */
+	membank("bank1")->configure_entries(0, 4, memregion("audiocpu")->base() + 0x10000 + 0x200, 0x8000);
 }
 
 
-static DRIVER_INIT( s1945 )
+DRIVER_INIT_MEMBER(psikyo_state,s1945)
 {
-	psikyo_state *state = machine.driver_data<psikyo_state>();
 
 	/* input ports */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::s1945_input_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::s1945_input_r),this));
 
 	/* sound latch */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::s1945_soundlatch_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::s1945_soundlatch_w),this));
 
 	/* protection and tile bank switching */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00004, 0xc0000b, write32_delegate(FUNC(psikyo_state::s1945_mcu_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00004, 0xc0000b, write32_delegate(FUNC(psikyo_state::s1945_mcu_w),this));
 
-	s1945_mcu_init(machine);
-	state->m_s1945_mcu_table = s1945_table;
+	s1945_mcu_init(machine());
+	m_s1945_mcu_table = s1945_table;
 
-	state->m_ka302c_banking = 0; // Banking is controlled by mcu
+	m_ka302c_banking = 0; // Banking is controlled by mcu
 
 	/* setup audiocpu banks */
 	/* The banked rom is seen at 8200-ffff, so the last 0x200 bytes of the rom not reachable. */
-	state->membank("bank1")->configure_entries(0, 4, state->memregion("audiocpu")->base() + 0x10000 + 0x200, 0x8000);
+	membank("bank1")->configure_entries(0, 4, memregion("audiocpu")->base() + 0x10000 + 0x200, 0x8000);
 }
 
-static DRIVER_INIT( s1945a )
+DRIVER_INIT_MEMBER(psikyo_state,s1945a)
 {
-	psikyo_state *state = machine.driver_data<psikyo_state>();
 
 	/* input ports */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::s1945_input_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::s1945_input_r),this));
 
 	/* sound latch */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::s1945_soundlatch_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::s1945_soundlatch_w),this));
 
 	/* protection and tile bank switching */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00004, 0xc0000b, write32_delegate(FUNC(psikyo_state::s1945_mcu_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00004, 0xc0000b, write32_delegate(FUNC(psikyo_state::s1945_mcu_w),this));
 
-	s1945_mcu_init(machine);
-	state->m_s1945_mcu_table = s1945a_table;
+	s1945_mcu_init(machine());
+	m_s1945_mcu_table = s1945a_table;
 
-	state->m_ka302c_banking = 0; // Banking is controlled by mcu
+	m_ka302c_banking = 0; // Banking is controlled by mcu
 
 	/* setup audiocpu banks */
 	/* The banked rom is seen at 8200-ffff, so the last 0x200 bytes of the rom not reachable. */
-	state->membank("bank1")->configure_entries(0, 4, state->memregion("audiocpu")->base() + 0x10000 + 0x200, 0x8000);
+	membank("bank1")->configure_entries(0, 4, memregion("audiocpu")->base() + 0x10000 + 0x200, 0x8000);
 }
 
-static DRIVER_INIT( s1945j )
+DRIVER_INIT_MEMBER(psikyo_state,s1945j)
 {
-	psikyo_state *state = machine.driver_data<psikyo_state>();
 
 	/* input ports*/
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::s1945_input_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::s1945_input_r),this));
 
 	/* sound latch */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::s1945_soundlatch_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::s1945_soundlatch_w),this));
 
 	/* protection and tile bank switching */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00004, 0xc0000b, write32_delegate(FUNC(psikyo_state::s1945_mcu_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00004, 0xc0000b, write32_delegate(FUNC(psikyo_state::s1945_mcu_w),this));
 
-	s1945_mcu_init(machine);
-	state->m_s1945_mcu_table = s1945j_table;
+	s1945_mcu_init(machine());
+	m_s1945_mcu_table = s1945j_table;
 
-	state->m_ka302c_banking = 0; // Banking is controlled by mcu
-
-	/* setup audiocpu banks */
-	/* The banked rom is seen at 8200-ffff, so the last 0x200 bytes of the rom not reachable. */
-	state->membank("bank1")->configure_entries(0, 4, state->memregion("audiocpu")->base() + 0x10000 + 0x200, 0x8000);
-}
-
-static DRIVER_INIT( s1945jn )
-{
-	psikyo_state *state = machine.driver_data<psikyo_state>();
-
-	/* input ports */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::gunbird_input_r),state));
-
-	/* sound latch */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::s1945_soundlatch_w),state));
-
-	state->m_ka302c_banking = 1;
+	m_ka302c_banking = 0; // Banking is controlled by mcu
 
 	/* setup audiocpu banks */
 	/* The banked rom is seen at 8200-ffff, so the last 0x200 bytes of the rom not reachable. */
-	state->membank("bank1")->configure_entries(0, 4, state->memregion("audiocpu")->base() + 0x10000 + 0x200, 0x8000);
+	membank("bank1")->configure_entries(0, 4, memregion("audiocpu")->base() + 0x10000 + 0x200, 0x8000);
 }
 
-static DRIVER_INIT( s1945bl )
+DRIVER_INIT_MEMBER(psikyo_state,s1945jn)
 {
-	psikyo_state *state = machine.driver_data<psikyo_state>();
 
 	/* input ports */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::gunbird_input_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::gunbird_input_r),this));
 
 	/* sound latch */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::s1945_soundlatch_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::s1945_soundlatch_w),this));
 
-	state->m_ka302c_banking = 1;
+	m_ka302c_banking = 1;
 
-	state->membank("okibank")->configure_entries(0, 4, state->memregion("oki")->base() + 0x30000, 0x10000);
-	state->membank("okibank")->set_entry(0);
+	/* setup audiocpu banks */
+	/* The banked rom is seen at 8200-ffff, so the last 0x200 bytes of the rom not reachable. */
+	membank("bank1")->configure_entries(0, 4, memregion("audiocpu")->base() + 0x10000 + 0x200, 0x8000);
+}
+
+DRIVER_INIT_MEMBER(psikyo_state,s1945bl)
+{
+
+	/* input ports */
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc00000, 0xc0000b, read32_delegate(FUNC(psikyo_state::gunbird_input_r),this));
+
+	/* sound latch */
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc00010, 0xc00013, write32_delegate(FUNC(psikyo_state::s1945_soundlatch_w),this));
+
+	m_ka302c_banking = 1;
+
+	membank("okibank")->configure_entries(0, 4, memregion("oki")->base() + 0x30000, 0x10000);
+	membank("okibank")->set_entry(0);
 }
 
 
@@ -2025,17 +2017,17 @@ static DRIVER_INIT( s1945bl )
 ***************************************************************************/
 
 /* Working Games */
-GAME( 1993, samuraia, 0,        sngkace,  samuraia, sngkace,  ROT270, "Psikyo", "Samurai Aces (World)", GAME_SUPPORTS_SAVE ) // Banpresto?
-GAME( 1993, sngkace,  samuraia, sngkace,  sngkace,  sngkace,  ROT270, "Psikyo", "Sengoku Ace (Japan)", GAME_SUPPORTS_SAVE ) // Banpresto?
-GAME( 1994, gunbird,  0,        gunbird,  gunbird,  gunbird,  ROT270, "Psikyo", "Gunbird (World)", GAME_SUPPORTS_SAVE )
-GAME( 1994, gunbirdk, gunbird,  gunbird,  gunbirdj, gunbird,  ROT270, "Psikyo", "Gunbird (Korea)", GAME_SUPPORTS_SAVE )
-GAME( 1994, gunbirdj, gunbird,  gunbird,  gunbirdj, gunbird,  ROT270, "Psikyo", "Gunbird (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1994, btlkroad, 0,        gunbird,  btlkroad, gunbird,  ROT0,   "Psikyo", "Battle K-Road", GAME_SUPPORTS_SAVE )
-GAME( 1995, s1945,    0,        s1945,    s1945,    s1945,    ROT270, "Psikyo", "Strikers 1945 (World)", GAME_SUPPORTS_SAVE )
-GAME( 1995, s1945a,   s1945,    s1945,    s1945a,   s1945a,   ROT270, "Psikyo", "Strikers 1945 (Japan / World)", GAME_SUPPORTS_SAVE ) // Region dip - 0x0f=Japan, anything else=World
-GAME( 1995, s1945j,   s1945,    s1945,    s1945j,   s1945j,   ROT270, "Psikyo", "Strikers 1945 (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1995, s1945jn,  s1945,    gunbird,  s1945j,   s1945jn,  ROT270, "Psikyo", "Strikers 1945 (Japan, unprotected)", GAME_SUPPORTS_SAVE )
-GAME( 1995, s1945k,   s1945,    s1945,    s1945j,   s1945,    ROT270, "Psikyo", "Strikers 1945 (Korea)", GAME_SUPPORTS_SAVE )
-GAME( 1995, s1945bl,  s1945,    s1945bl,  s1945bl,  s1945bl,  ROT270, "bootleg","Strikers 1945 (Hong Kong, bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1996, tengai,   0,        s1945,    tengai,   tengai,   ROT0,   "Psikyo", "Tengai (World)", GAME_SUPPORTS_SAVE )
-GAME( 1996, tengaij,  tengai,   s1945,    tengaij,  tengai,   ROT0,   "Psikyo", "Sengoku Blade: Sengoku Ace Episode II / Tengai", GAME_SUPPORTS_SAVE ) // Region dip - 0x0f=Japan, anything else=World
+GAME( 1993, samuraia, 0,        sngkace,  samuraia, psikyo_state, sngkace,  ROT270, "Psikyo", "Samurai Aces (World)", GAME_SUPPORTS_SAVE ) // Banpresto?
+GAME( 1993, sngkace,  samuraia, sngkace,  sngkace, psikyo_state,  sngkace,  ROT270, "Psikyo", "Sengoku Ace (Japan)", GAME_SUPPORTS_SAVE ) // Banpresto?
+GAME( 1994, gunbird,  0,        gunbird,  gunbird, psikyo_state,  gunbird,  ROT270, "Psikyo", "Gunbird (World)", GAME_SUPPORTS_SAVE )
+GAME( 1994, gunbirdk, gunbird,  gunbird,  gunbirdj, psikyo_state, gunbird,  ROT270, "Psikyo", "Gunbird (Korea)", GAME_SUPPORTS_SAVE )
+GAME( 1994, gunbirdj, gunbird,  gunbird,  gunbirdj, psikyo_state, gunbird,  ROT270, "Psikyo", "Gunbird (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1994, btlkroad, 0,        gunbird,  btlkroad, psikyo_state, gunbird,  ROT0,   "Psikyo", "Battle K-Road", GAME_SUPPORTS_SAVE )
+GAME( 1995, s1945,    0,        s1945,    s1945, psikyo_state,    s1945,    ROT270, "Psikyo", "Strikers 1945 (World)", GAME_SUPPORTS_SAVE )
+GAME( 1995, s1945a,   s1945,    s1945,    s1945a, psikyo_state,   s1945a,   ROT270, "Psikyo", "Strikers 1945 (Japan / World)", GAME_SUPPORTS_SAVE ) // Region dip - 0x0f=Japan, anything else=World
+GAME( 1995, s1945j,   s1945,    s1945,    s1945j, psikyo_state,   s1945j,   ROT270, "Psikyo", "Strikers 1945 (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1995, s1945jn,  s1945,    gunbird,  s1945j, psikyo_state,   s1945jn,  ROT270, "Psikyo", "Strikers 1945 (Japan, unprotected)", GAME_SUPPORTS_SAVE )
+GAME( 1995, s1945k,   s1945,    s1945,    s1945j, psikyo_state,   s1945,    ROT270, "Psikyo", "Strikers 1945 (Korea)", GAME_SUPPORTS_SAVE )
+GAME( 1995, s1945bl,  s1945,    s1945bl,  s1945bl, psikyo_state,  s1945bl,  ROT270, "bootleg","Strikers 1945 (Hong Kong, bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1996, tengai,   0,        s1945,    tengai, psikyo_state,   tengai,   ROT0,   "Psikyo", "Tengai (World)", GAME_SUPPORTS_SAVE )
+GAME( 1996, tengaij,  tengai,   s1945,    tengaij, psikyo_state,  tengai,   ROT0,   "Psikyo", "Sengoku Blade: Sengoku Ace Episode II / Tengai", GAME_SUPPORTS_SAVE ) // Region dip - 0x0f=Japan, anything else=World

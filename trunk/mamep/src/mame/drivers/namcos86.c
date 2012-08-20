@@ -1464,16 +1464,16 @@ ROM_END
 
 
 
-static DRIVER_INIT( namco86 )
+DRIVER_INIT_MEMBER(namcos86_state,namco86)
 {
 	int size;
 	UINT8 *gfx;
 	UINT8 *buffer;
 
 	/* shuffle tile ROMs so regular gfx unpack routines can be used */
-	gfx = machine.root_device().memregion("gfx1")->base();
-	size = machine.root_device().memregion("gfx1")->bytes() * 2 / 3;
-	buffer = auto_alloc_array(machine, UINT8,  size );
+	gfx = machine().root_device().memregion("gfx1")->base();
+	size = machine().root_device().memregion("gfx1")->bytes() * 2 / 3;
+	buffer = auto_alloc_array(machine(), UINT8,  size );
 
 	{
 		UINT8 *dest1 = gfx;
@@ -1493,12 +1493,12 @@ static DRIVER_INIT( namco86 )
 			*mono ^= 0xff; mono++;
 		}
 
-		auto_free( machine, buffer );
+		auto_free( machine(), buffer );
 	}
 
-	gfx = machine.root_device().memregion("gfx2")->base();
-	size = machine.root_device().memregion("gfx2")->bytes() * 2 / 3;
-	buffer = auto_alloc_array(machine, UINT8,  size );
+	gfx = machine().root_device().memregion("gfx2")->base();
+	size = machine().root_device().memregion("gfx2")->bytes() * 2 / 3;
+	buffer = auto_alloc_array(machine(), UINT8,  size );
 
 	{
 		UINT8 *dest1 = gfx;
@@ -1518,17 +1518,17 @@ static DRIVER_INIT( namco86 )
 			*mono ^= 0xff; mono++;
 		}
 
-		auto_free( machine, buffer );
+		auto_free( machine(), buffer );
 	}
 }
 
 
 
-GAME( 1986, skykiddx, 0,        skykiddx, skykiddx, namco86, ROT180, "Namco", "Sky Kid Deluxe (set 1)", 0 )
-GAME( 1986, skykiddxo,skykiddx, skykiddx, skykiddx, namco86, ROT180, "Namco", "Sky Kid Deluxe (set 2)", 0 )
-GAME( 1986, hopmappy, 0,        hopmappy, hopmappy, namco86, ROT0,   "Namco", "Hopping Mappy", 0 )
-GAME( 1986, roishtar, 0,        roishtar, roishtar, namco86, ROT0,   "Namco", "The Return of Ishtar", 0 )
-GAME( 1986, genpeitd, 0,        genpeitd, genpeitd, namco86, ROT0,   "Namco", "Genpei ToumaDen", 0 )
-GAME( 1986, rthunder, 0,        rthunder, rthunder, namco86, ROT0,   "Namco", "Rolling Thunder (new version)", 0 )
-GAME( 1986, rthundero,rthunder, rthunder, rthundro, namco86, ROT0,   "Namco", "Rolling Thunder (old version)", 0 )
-GAME( 1987, wndrmomo, 0,        wndrmomo, wndrmomo, namco86, ROT0,   "Namco", "Wonder Momo", GAME_IMPERFECT_GRAPHICS )
+GAME( 1986, skykiddx, 0,        skykiddx, skykiddx, namcos86_state, namco86, ROT180, "Namco", "Sky Kid Deluxe (set 1)", 0 )
+GAME( 1986, skykiddxo,skykiddx, skykiddx, skykiddx, namcos86_state, namco86, ROT180, "Namco", "Sky Kid Deluxe (set 2)", 0 )
+GAME( 1986, hopmappy, 0,        hopmappy, hopmappy, namcos86_state, namco86, ROT0,   "Namco", "Hopping Mappy", 0 )
+GAME( 1986, roishtar, 0,        roishtar, roishtar, namcos86_state, namco86, ROT0,   "Namco", "The Return of Ishtar", 0 )
+GAME( 1986, genpeitd, 0,        genpeitd, genpeitd, namcos86_state, namco86, ROT0,   "Namco", "Genpei ToumaDen", 0 )
+GAME( 1986, rthunder, 0,        rthunder, rthunder, namcos86_state, namco86, ROT0,   "Namco", "Rolling Thunder (new version)", 0 )
+GAME( 1986, rthundero,rthunder, rthunder, rthundro, namcos86_state, namco86, ROT0,   "Namco", "Rolling Thunder (old version)", 0 )
+GAME( 1987, wndrmomo, 0,        wndrmomo, wndrmomo, namcos86_state, namco86, ROT0,   "Namco", "Wonder Momo", GAME_IMPERFECT_GRAPHICS )

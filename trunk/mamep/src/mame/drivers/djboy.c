@@ -731,19 +731,17 @@ ROM_START( djboyj )
 ROM_END
 
 
-static DRIVER_INIT( djboy )
+DRIVER_INIT_MEMBER(djboy_state,djboy)
 {
-	djboy_state *state = machine.driver_data<djboy_state>();
-	state->m_bankxor = 0x00;
+	m_bankxor = 0x00;
 }
 
-static DRIVER_INIT( djboyj )
+DRIVER_INIT_MEMBER(djboy_state,djboyj)
 {
-	djboy_state *state = machine.driver_data<djboy_state>();
-	state->m_bankxor = 0x1f;
+	m_bankxor = 0x1f;
 }
 
 /*     YEAR, NAME,  PARENT, MACHINE, INPUT, INIT, MNTR,  COMPANY, FULLNAME, FLAGS */
-GAME( 1989, djboy,  0,      djboy,   djboy, djboy,    ROT0, "Kaneko (American Sammy license)", "DJ Boy (set 1)", GAME_SUPPORTS_SAVE) // Sammy & Williams logos in FG ROM
-GAME( 1989, djboya, djboy,  djboy,   djboy, djboy,    ROT0, "Kaneko (American Sammy license)", "DJ Boy (set 2)", GAME_SUPPORTS_SAVE) // Sammy & Williams logos in FG ROM
-GAME( 1989, djboyj, djboy,  djboy,   djboy, djboyj,   ROT0, "Kaneko (Sega license)", "DJ Boy (Japan)", GAME_SUPPORTS_SAVE ) // Sega logo in FG ROM
+GAME( 1989, djboy,  0,      djboy,   djboy, djboy_state, djboy,    ROT0, "Kaneko (American Sammy license)", "DJ Boy (set 1)", GAME_SUPPORTS_SAVE) // Sammy & Williams logos in FG ROM
+GAME( 1989, djboya, djboy,  djboy,   djboy, djboy_state, djboy,    ROT0, "Kaneko (American Sammy license)", "DJ Boy (set 2)", GAME_SUPPORTS_SAVE) // Sammy & Williams logos in FG ROM
+GAME( 1989, djboyj, djboy,  djboy,   djboy, djboy_state, djboyj,   ROT0, "Kaneko (Sega license)", "DJ Boy (Japan)", GAME_SUPPORTS_SAVE ) // Sega logo in FG ROM

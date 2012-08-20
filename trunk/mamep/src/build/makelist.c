@@ -304,9 +304,6 @@ int main(int argc, char *argv[])
 #endif /* DRIVER_SWITCH */
 	}
 
-	// add a reference to the ___empty driver
-	drivlist[drivcount++] = "___empty";
-
 	// output a count
 	if (drivcount == 0)
 	{
@@ -314,6 +311,9 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 	fprintf(stderr, "%d drivers found\n", drivcount);
+
+	// add a reference to the ___empty driver
+	drivlist[drivcount++] = "___empty";
 
 	// sort the list
 	qsort(drivlist, drivcount, sizeof(*drivlist), sort_callback);

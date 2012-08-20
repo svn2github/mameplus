@@ -112,10 +112,10 @@ WRITE8_MEMBER(niyanpai_state::tmpz84c011_pio_w)
 			niyanpai_soundbank_w(machine(), data & 0x03);
 			break;
 		case 1:			/* PB_0 */
-			dac_w(machine().device("dac1"), 0, data);
+			machine().device<dac_device>("dac1")->write_unsigned8(data);
 			break;
 		case 2:			/* PC_0 */
-			dac_w(machine().device("dac2"), 0, data);
+			machine().device<dac_device>("dac2")->write_unsigned8(data);
 			break;
 		case 3:			/* PD_0 */
 			break;
@@ -237,9 +237,8 @@ WRITE8_MEMBER(niyanpai_state::tmpz84c011_0_dir_pe_w)
 
 static Z80CTC_INTERFACE( ctc_intf )
 {
-	0,							/* timer disables */
 	DEVCB_CPU_INPUT_LINE("audiocpu", INPUT_LINE_IRQ0),/* interrupt handler */
-	DEVCB_LINE(z80ctc_trg3_w),	/* ZC/TO0 callback ctc1.zc0 -> ctc1.trg3 */
+	DEVCB_DEVICE_LINE_MEMBER("ctc", z80ctc_device, trg3),	/* ZC/TO0 callback ctc1.zc0 -> ctc1.trg3 */
 	DEVCB_NULL,					/* ZC/TO1 callback */
 	DEVCB_NULL					/* ZC/TO2 callback */
 };
@@ -258,19 +257,18 @@ static MACHINE_RESET( niyanpai )
 	}
 }
 
-static DRIVER_INIT( niyanpai )
+DRIVER_INIT_MEMBER(niyanpai_state,niyanpai)
 {
-	niyanpai_state *state = machine.driver_data<niyanpai_state>();
-	UINT8 *SNDROM = state->memregion("audiocpu")->base();
+	UINT8 *SNDROM = memregion("audiocpu")->base();
 
 	// sound program patch
 	SNDROM[0x0213] = 0x00;			// DI -> NOP
 
 	// initialize sound rom bank
-	niyanpai_soundbank_w(machine, 0);
+	niyanpai_soundbank_w(machine(), 0);
 
 	// initialize out coin flag (musobana)
-	state->m_musobana_outcoin_flag = 1;
+	m_musobana_outcoin_flag = 1;
 }
 
 
@@ -497,7 +495,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( niyanpai_sound_io_map, AS_IO, 8, niyanpai_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE_LEGACY("ctc", z80ctc_r, z80ctc_w)
+	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE("ctc", z80ctc_device, read, write)
 	AM_RANGE(0x50, 0x50) AM_READWRITE(tmpz84c011_0_pa_r, tmpz84c011_0_pa_w)
 	AM_RANGE(0x51, 0x51) AM_READWRITE(tmpz84c011_0_pb_r, tmpz84c011_0_pb_w)
 	AM_RANGE(0x52, 0x52) AM_READWRITE(tmpz84c011_0_pc_r, tmpz84c011_0_pc_w)
@@ -976,10 +974,10 @@ static MACHINE_CONFIG_START( niyanpai, niyanpai_state )
 	MCFG_SOUND_ADD("ymsnd", YM3812, 4000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 MACHINE_CONFIG_END
 
@@ -1099,8 +1097,8 @@ ROM_START( zokumahj )
 ROM_END
 
 
-GAME( 1996, niyanpai, 0,        niyanpai, niyanpai, niyanpai, ROT0, "Nichibutsu", "Niyanpai (Japan)", 0 )
-GAME( 1995, musobana, 0,        musobana, musobana, niyanpai, ROT0, "Nichibutsu / Yubis", "Musoubana (Japan)", 0 )
-GAME( 1994, 4psimasy, 0,        musobana, 4psimasy, niyanpai, ROT0, "Sphinx / AV Japan", "Mahjong 4P Simasyo (Japan)", 0 )
-GAME( 199?, mhhonban, 0,        mhhonban, mhhonban, niyanpai, ROT0, "Nichibutsu?", "Mahjong Housoukyoku Honbanchuu (Japan)", 0 )
-GAME( 199?, zokumahj, mhhonban, zokumahj, zokumahj, niyanpai, ROT0, "Nichibutsu?", "Zoku Mahjong Housoukyoku (Japan)", 0 )
+GAME( 1996, niyanpai, 0,        niyanpai, niyanpai, niyanpai_state, niyanpai, ROT0, "Nichibutsu", "Niyanpai (Japan)", 0 )
+GAME( 1995, musobana, 0,        musobana, musobana, niyanpai_state, niyanpai, ROT0, "Nichibutsu / Yubis", "Musoubana (Japan)", 0 )
+GAME( 1994, 4psimasy, 0,        musobana, 4psimasy, niyanpai_state, niyanpai, ROT0, "Sphinx / AV Japan", "Mahjong 4P Simasyo (Japan)", 0 )
+GAME( 199?, mhhonban, 0,        mhhonban, mhhonban, niyanpai_state, niyanpai, ROT0, "Nichibutsu?", "Mahjong Housoukyoku Honbanchuu (Japan)", 0 )
+GAME( 199?, zokumahj, mhhonban, zokumahj, zokumahj, niyanpai_state, niyanpai, ROT0, "Nichibutsu?", "Zoku Mahjong Housoukyoku (Japan)", 0 )

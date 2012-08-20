@@ -146,6 +146,7 @@ public:
 
 	DECLARE_WRITE8_MEMBER(wardner_ramrom_bank_sw);
 	DECLARE_READ8_MEMBER(wardner_bank_r);
+	DECLARE_DRIVER_INIT(wardner);
 };
 
 
@@ -593,15 +594,14 @@ ROM_START( wardnerj )
 ROM_END
 
 
-static DRIVER_INIT( wardner )
+DRIVER_INIT_MEMBER(wardner_state,wardner)
 {
-	wardner_state *state = machine.driver_data<wardner_state>();
-	state->m_ROM = machine.root_device().memregion("maincpu")->base();
-	twincobr_driver_savestate(machine);	/* Save-State stuff in src/machine/twincobr.c */
+	m_ROM = machine().root_device().memregion("maincpu")->base();
+	twincobr_driver_savestate(machine());	/* Save-State stuff in src/machine/twincobr.c */
 }
 
 
 
-GAME( 1987, wardner,  0,       wardner, wardner,  wardner, ROT0, "Toaplan / Taito Corporation Japan", "Wardner (World)", GAME_SUPPORTS_SAVE )
-GAME( 1987, pyros,    wardner, wardner, pyros,    wardner, ROT0, "Toaplan / Taito America Corporation", "Pyros (US)", GAME_SUPPORTS_SAVE )
-GAME( 1987, wardnerj, wardner, wardner, wardnerj, wardner, ROT0, "Toaplan / Taito Corporation", "Wardner no Mori (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1987, wardner,  0,       wardner, wardner, wardner_state,  wardner, ROT0, "Toaplan / Taito Corporation Japan", "Wardner (World)", GAME_SUPPORTS_SAVE )
+GAME( 1987, pyros,    wardner, wardner, pyros, wardner_state,    wardner, ROT0, "Toaplan / Taito America Corporation", "Pyros (US)", GAME_SUPPORTS_SAVE )
+GAME( 1987, wardnerj, wardner, wardner, wardnerj, wardner_state, wardner, ROT0, "Toaplan / Taito Corporation", "Wardner no Mori (Japan)", GAME_SUPPORTS_SAVE )

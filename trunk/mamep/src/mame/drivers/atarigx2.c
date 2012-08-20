@@ -2186,23 +2186,21 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( spclords )
+DRIVER_INIT_MEMBER(atarigx2_state,spclords)
 {
-	atarigx2_state *state = machine.driver_data<atarigx2_state>();
 
-	atarijsa_init(machine, "SERVICE", 0x0040);
+	atarijsa_init(machine(), "SERVICE", 0x0040);
 
-	state->m_playfield_base = 0x000;
+	m_playfield_base = 0x000;
 }
 
 
-static DRIVER_INIT( motofren )
+DRIVER_INIT_MEMBER(atarigx2_state,motofren)
 {
-	atarigx2_state *state = machine.driver_data<atarigx2_state>();
 
-	atarijsa_init(machine, "SERVICE", 0x0040);
+	atarijsa_init(machine(), "SERVICE", 0x0040);
 
-	state->m_playfield_base = 0x400;
+	m_playfield_base = 0x400;
 /*
 L/W=!68.A23*!E.A22*!E.A21                                       = 000x xxxx = 000000-1fffff
    +68.A23*E.A22*E.A21*68.A20*68.A19*68.A18*68.A17              = 1111 111x = fe0000-ffffff
@@ -2232,15 +2230,14 @@ READ32_MEMBER(atarigx2_state::rrreveng_prot_r)
 	return 0;
 }
 
-static DRIVER_INIT( rrreveng )
+DRIVER_INIT_MEMBER(atarigx2_state,rrreveng)
 {
-	atarigx2_state *state = machine.driver_data<atarigx2_state>();
 
-	atarijsa_init(machine, "SERVICE", 0x0040);
+	atarijsa_init(machine(), "SERVICE", 0x0040);
 
-	state->m_playfield_base = 0x000;
+	m_playfield_base = 0x000;
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xca0fc0, 0xca0fc3, read32_delegate(FUNC(atarigx2_state::rrreveng_prot_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xca0fc0, 0xca0fc3, read32_delegate(FUNC(atarigx2_state::rrreveng_prot_r),this));
 }
 
 
@@ -2251,16 +2248,16 @@ static DRIVER_INIT( rrreveng )
  *
  *************************************/
 
-GAME( 1992, spclords,  0,        atarigx2_0x400, spclords, spclords, ROT0, "Atari Games", "Space Lords (rev C)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, spclordsb, spclords, atarigx2_0x400, spclords, spclords, ROT0, "Atari Games", "Space Lords (rev B)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, spclordsg, spclords, atarigx2_0x400, spclords, spclords, ROT0, "Atari Games", "Space Lords (rev A, German)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, spclordsa, spclords, atarigx2_0x400, spclords, spclords, ROT0, "Atari Games", "Space Lords (rev A)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, spclords,  0,        atarigx2_0x400, spclords, atarigx2_state, spclords, ROT0, "Atari Games", "Space Lords (rev C)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, spclordsb, spclords, atarigx2_0x400, spclords, atarigx2_state, spclords, ROT0, "Atari Games", "Space Lords (rev B)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, spclordsg, spclords, atarigx2_0x400, spclords, atarigx2_state, spclords, ROT0, "Atari Games", "Space Lords (rev A, German)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, spclordsa, spclords, atarigx2_0x400, spclords, atarigx2_state, spclords, ROT0, "Atari Games", "Space Lords (rev A)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 
-GAME( 1992, motofren,   0,        atarigx2_0x200, motofren, motofren, ROT0, "Atari Games", "Moto Frenzy", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, motofrenmd, motofren, atarigx2_0x200, motofren, motofren, ROT0, "Atari Games", "Moto Frenzy (Mini Deluxe)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, motofrenft, motofren, atarigx2_0x200, motofren, motofren, ROT0, "Atari Games", "Moto Frenzy (Field Test Version)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, motofrenmf, motofren, atarigx2_0x200, motofren, motofren, ROT0, "Atari Games", "Moto Frenzy (Mini Deluxe Field Test Version)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, motofren,   0,        atarigx2_0x200, motofren, atarigx2_state, motofren, ROT0, "Atari Games", "Moto Frenzy", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, motofrenmd, motofren, atarigx2_0x200, motofren, atarigx2_state, motofren, ROT0, "Atari Games", "Moto Frenzy (Mini Deluxe)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, motofrenft, motofren, atarigx2_0x200, motofren, atarigx2_state, motofren, ROT0, "Atari Games", "Moto Frenzy (Field Test Version)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, motofrenmf, motofren, atarigx2_0x200, motofren, atarigx2_state, motofren, ROT0, "Atari Games", "Moto Frenzy (Mini Deluxe Field Test Version)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 
-GAME( 1993, rrreveng,  0,        atarigx2_0x400, rrreveng, rrreveng, ROT0, "Atari Games", "Road Riot's Revenge (prototype, Sep 06, 1994)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1993, rrrevenga, rrreveng, atarigx2_0x400, rrreveng, rrreveng, ROT0, "Atari Games", "Road Riot's Revenge (prototype, Jan 27, 1994, set 1)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1993, rrrevengb, rrreveng, atarigx2_0x400, rrreveng, rrreveng, ROT0, "Atari Games", "Road Riot's Revenge (prototype, Jan 27, 1994, set 2)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1993, rrreveng,  0,        atarigx2_0x400, rrreveng, atarigx2_state, rrreveng, ROT0, "Atari Games", "Road Riot's Revenge (prototype, Sep 06, 1994)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1993, rrrevenga, rrreveng, atarigx2_0x400, rrreveng, atarigx2_state, rrreveng, ROT0, "Atari Games", "Road Riot's Revenge (prototype, Jan 27, 1994, set 1)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1993, rrrevengb, rrreveng, atarigx2_0x400, rrreveng, atarigx2_state, rrreveng, ROT0, "Atari Games", "Road Riot's Revenge (prototype, Jan 27, 1994, set 2)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )

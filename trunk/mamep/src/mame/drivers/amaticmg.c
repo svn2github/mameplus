@@ -5,8 +5,7 @@
 
   Encrypted gambling hardware based on a custom CPU.
 
-  Driver by Roberto Fresca & Angelo Salese.
-
+  Driver by Roberto Fresca & Angelo Salese
 
 ***********************************************************************************
 
@@ -362,6 +361,11 @@
 ***********************************************************************************
 
 
+  [2012/08/15]
+
+  - Added dynamic length to the color PROMs decode routines based on ROM region length.
+    This fixes a horrible hang/crash in DEBUG=1 builds.
+
   [2012/04/27]
 
   - Reworked the decryption function.
@@ -439,6 +443,10 @@ public:
 	UINT8 m_nmi_mask;
 	DECLARE_WRITE8_MEMBER(out_a_w);
 	DECLARE_WRITE8_MEMBER(out_c_w);
+	DECLARE_DRIVER_INIT(ama8000_3_o);
+	DECLARE_DRIVER_INIT(ama8000_2_i);
+	DECLARE_DRIVER_INIT(ama8000_2_v);
+	DECLARE_DRIVER_INIT(ama8000_1_x);
 };
 
 
@@ -534,7 +542,7 @@ static PALETTE_INIT( amaticmg2 )
 	int	r, g, b;
 	int	i;
 
-	for (i = 0; i < 0x20000; i+=2)
+	for (i = 0; i < machine.root_device().memregion("proms")->bytes(); i+=2)
 	{
 		b = ((color_prom[1] & 0xf8) >> 3);
 		g = ((color_prom[0] & 0xc0) >> 6) | ((color_prom[1] & 0x7) << 2);
@@ -604,7 +612,7 @@ WRITE8_MEMBER(amaticmg_state::out_c_w)
 
 WRITE8_MEMBER( amaticmg_state::unk80_w )
 {
-//  dac_data_w(machine().device("dac"), data & 0x01);       /* Sound DAC */
+//  machine().device<dac_device>("dac")->write_unsigned8(data & 0x01);       /* Sound DAC */
 }
 
 
@@ -632,9 +640,9 @@ static ADDRESS_MAP_START( amaticmg_portmap, AS_IO, 8, amaticmg_state )
 	AM_RANGE(0x61, 0x61) AM_DEVREADWRITE("crtc", mc6845_device, register_r, register_w)
 	AM_RANGE(0x80, 0x80) AM_WRITE(unk80_w)
 	AM_RANGE(0xc0, 0xc0) AM_WRITE(rombank_w)
-//  AM_RANGE(0x00, 0x00) AM_DEVREADWRITE_LEGACY("ppi8255_2", ppi8255_r, ppi8255_w)
-//  AM_RANGE(0x00, 0x00) AM_DEVWRITE_LEGACY("dac1", dac_signed_w)
-//  AM_RANGE(0x00, 0x00) AM_DEVWRITE_LEGACY("dac2", dac_signed_w)
+//  AM_RANGE(0x00, 0x00) AM_DEVREADWRITE("ppi8255_2", ppi8255_device, read, write)
+//  AM_RANGE(0x00, 0x00) AM_DEVWRITE("dac1", dac_device, write_signed8)
+//  AM_RANGE(0x00, 0x00) AM_DEVWRITE("dac2", dac_device, write_signed8)
 
 ADDRESS_MAP_END
 
@@ -824,6 +832,11 @@ static I8255A_INTERFACE( ppi8255_intf_1 )
 	DEVCB_DRIVER_MEMBER(amaticmg_state,out_c_w)			/* Port C write */
 };
 
+
+/************************************
+*       Machine Start & Reset       *
+************************************/
+
 static MACHINE_START( amaticmg )
 {
 	UINT8 *rombank = machine.root_device().memregion("maincpu")->base();
@@ -838,6 +851,7 @@ static MACHINE_RESET( amaticmg )
 	state->membank("bank1")->set_entry(0);
 	state->m_nmi_mask = 0;
 }
+
 
 /************************************
 *          Machine Drivers          *
@@ -883,7 +897,7 @@ static MACHINE_CONFIG_START( amaticmg, amaticmg_state )
 	MCFG_SOUND_CONFIG(ym3812_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-//  MCFG_SOUND_ADD("dac", DAC, 0)   /* Y3014B */
+//  MCFG_DAC_ADD("dac")   /* Y3014B */
 //  MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 MACHINE_CONFIG_END
@@ -1077,24 +1091,24 @@ static void decrypt(running_machine &machine, int key1, int key2)
 	}
 }
 
-static DRIVER_INIT( ama8000_1_x )
+DRIVER_INIT_MEMBER(amaticmg_state,ama8000_1_x)
 {
-	decrypt(machine, 0x4d1, 0xf5);
+	decrypt(machine(), 0x4d1, 0xf5);
 }
 
-static DRIVER_INIT( ama8000_2_i )
+DRIVER_INIT_MEMBER(amaticmg_state,ama8000_2_i)
 {
-	decrypt(machine, 0x436, 0x55);
+	decrypt(machine(), 0x436, 0x55);
 }
 
-static DRIVER_INIT( ama8000_2_v )
+DRIVER_INIT_MEMBER(amaticmg_state,ama8000_2_v)
 {
-	decrypt(machine, 0x703, 0xaf);
+	decrypt(machine(), 0x703, 0xaf);
 }
 
-static DRIVER_INIT( ama8000_3_o )
+DRIVER_INIT_MEMBER(amaticmg_state,ama8000_3_o)
 {
-	decrypt(machine, 0x56e, 0xa7);
+	decrypt(machine(), 0x56e, 0xa7);
 }
 
 
@@ -1102,12 +1116,12 @@ static DRIVER_INIT( ama8000_3_o )
 *           Game Drivers            *
 ************************************/
 
-/*     YEAR  NAME      PARENT    MACHINE    INPUT     INIT         ROT     COMPANY                FULLNAME                      FLAGS                                                                                                        LAYOUT */
-GAMEL( 1996, suprstar, 0,        amaticmg,  amaticmg, ama8000_1_x, ROT90, "Amatic Trading GmbH", "Super Stars",                 GAME_IMPERFECT_SOUND,                                                                                        layout_suprstar )
-GAME(  2000, am_mg24,  0,        amaticmg2, amaticmg, ama8000_2_i, ROT0,  "Amatic Trading GmbH", "Multi Game I (V.Ger 2.4)",    GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME(  2000, am_mg3,   0,        amaticmg2, amaticmg, ama8000_2_i, ROT0,  "Amatic Trading GmbH", "Multi Game III (V.Ger 3.5)",  GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME(  2000, am_mg3a,  0,        amaticmg2, amaticmg, ama8000_2_v, ROT0,  "Amatic Trading GmbH", "Multi Game III (V.Ger 3.64)", GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME(  2000, am_mg35i, 0,        amaticmg2, amaticmg, ama8000_3_o, ROT0,  "Amatic Trading GmbH", "Multi Game III (S.Ita 3.5)",  GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME(  2000, am_mg34i, am_mg35i, amaticmg2, amaticmg, ama8000_3_o, ROT0,  "Amatic Trading GmbH", "Multi Game III (S.Ita 3.4)",  GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME(  2000, am_mg33i, am_mg35i, amaticmg2, amaticmg, ama8000_3_o, ROT0,  "Amatic Trading GmbH", "Multi Game III (S.Ita 3.3)",  GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME(  2000, am_mg31i, am_mg35i, amaticmg2, amaticmg, ama8000_3_o, ROT0,  "Amatic Trading GmbH", "Multi Game III (S.Ita 3.1)",  GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+/*     YEAR  NAME      PARENT    MACHINE    INPUT     STATE           INIT         ROT     COMPANY                FULLNAME                      FLAGS                                                                                                        LAYOUT */
+GAMEL( 1996, suprstar, 0,        amaticmg,  amaticmg, amaticmg_state, ama8000_1_x, ROT90, "Amatic Trading GmbH", "Super Stars",                 GAME_IMPERFECT_SOUND,                                                                                        layout_suprstar )
+GAME(  2000, am_mg24,  0,        amaticmg2, amaticmg, amaticmg_state, ama8000_2_i, ROT0,  "Amatic Trading GmbH", "Multi Game I (V.Ger 2.4)",    GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME(  2000, am_mg3,   0,        amaticmg2, amaticmg, amaticmg_state, ama8000_2_i, ROT0,  "Amatic Trading GmbH", "Multi Game III (V.Ger 3.5)",  GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME(  2000, am_mg3a,  0,        amaticmg2, amaticmg, amaticmg_state, ama8000_2_v, ROT0,  "Amatic Trading GmbH", "Multi Game III (V.Ger 3.64)", GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME(  2000, am_mg35i, 0,        amaticmg2, amaticmg, amaticmg_state, ama8000_3_o, ROT0,  "Amatic Trading GmbH", "Multi Game III (S.Ita 3.5)",  GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME(  2000, am_mg34i, am_mg35i, amaticmg2, amaticmg, amaticmg_state, ama8000_3_o, ROT0,  "Amatic Trading GmbH", "Multi Game III (S.Ita 3.4)",  GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME(  2000, am_mg33i, am_mg35i, amaticmg2, amaticmg, amaticmg_state, ama8000_3_o, ROT0,  "Amatic Trading GmbH", "Multi Game III (S.Ita 3.3)",  GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME(  2000, am_mg31i, am_mg35i, amaticmg2, amaticmg, amaticmg_state, ama8000_3_o, ROT0,  "Amatic Trading GmbH", "Multi Game III (S.Ita 3.1)",  GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )

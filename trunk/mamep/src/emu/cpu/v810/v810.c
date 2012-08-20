@@ -927,6 +927,38 @@ static void opCVTW(v810_state *cpustate,UINT32 op)
 	SETREG(cpustate,GET2,f2u(val1));
 }
 
+static void opMPYHW(v810_state *cpustate,UINT32 op)
+{
+	int val1=(GETREG(cpustate,GET1) & 0xffff);
+	int val2=(GETREG(cpustate,GET2) & 0xffff);
+	SET_OV(0);
+	val2*=val1;
+	SET_Z((val2==0.0)?1:0);
+	SET_S((val2<0.0)?1:0);
+	SETREG(cpustate,GET2,val2);
+}
+
+static void opXB(v810_state *cpustate,UINT32 op)
+{
+	int val=GETREG(cpustate,GET2);
+	SET_OV(0);
+	val = (val & 0xffff0000) | ((val & 0xff) << 8) | ((val & 0xff00) >> 8);
+	SET_Z((val==0.0)?1:0);
+	SET_S((val<0.0)?1:0);
+	SETREG(cpustate,GET2,val);
+}
+
+
+static void opXH(v810_state *cpustate,UINT32 op)
+{
+	int val=GETREG(cpustate,GET2);
+	SET_OV(0);
+	val = ((val & 0xffff0000)>>16) | ((val & 0xffff)<<16);
+	SET_Z((val==0.0)?1:0);
+	SET_S((val<0.0)?1:0);
+	SETREG(cpustate,GET2,val);
+}
+
 static UINT32 opFpoint(v810_state *cpustate,UINT32 op)
 {
 	UINT32 tmp=R_OP(cpustate,cpustate->PC);
@@ -940,9 +972,89 @@ static UINT32 opFpoint(v810_state *cpustate,UINT32 op)
 			case 0x5: opSUBF(cpustate,op);break;
 			case 0x6: opMULF(cpustate,op);break;
 			case 0x7: opDIVF(cpustate,op);break;
+			case 0x8: opXB(cpustate,op);  break; // *
+			case 0x9: opXH(cpustate,op);  break; // *
 			case 0xb: opTRNC(cpustate,op);break;
+			case 0xc: opMPYHW(cpustate,op); break; // *
+			// * <- Virtual Boy specific?
+			default: printf("Floating point %02x\n",(tmp&0xfc00) >> 10);break;
 	}
 	return clkIF+1;
+}
+
+/* TODO: clocks */
+static UINT32 opBSU(v810_state *cpustate,UINT32 op)
+{
+	if(!(op & 8))
+		fatalerror("V810: unknown BSU opcode %04x",op);
+
+	{
+		UINT32 srcbit,dstbit,src,dst,size;
+		UINT32 dsttmp,tmp;
+		UINT8 srctmp;
+
+//      printf("BDST %08x BSRC %08x SIZE %08x DST %08x SRC %08x\n",cpustate->R26,cpustate->R27,cpustate->R28,cpustate->R29,cpustate->R30);
+
+		dstbit = cpustate->R26;
+		srcbit = cpustate->R27;
+		size =  cpustate->R28;
+		dst = cpustate->R29 & ~3;
+		src = cpustate->R30 & ~3;
+
+		switch(op & 0xf)
+		{
+			case 0x8: // ORBSU
+				srctmp = (R_W(cpustate,src) >> srcbit) & 1;
+				dsttmp = R_W(cpustate,dst);
+
+				tmp = dsttmp | (srctmp << dstbit);
+
+				W_W(cpustate,dst,tmp);
+				break;
+			case 0xb: // MOVBSU
+				srctmp = (R_W(cpustate,src) >> srcbit) & 1;
+				dsttmp = (R_W(cpustate,dst) & ~(1 << dstbit));
+
+				tmp = (srctmp << dstbit) | dsttmp;
+
+				W_W(cpustate,dst,tmp);
+				break;
+			case 0xd: // ANDNBSU
+				srctmp = (R_W(cpustate,src) >> srcbit) & 1;
+				dsttmp = R_W(cpustate,dst);
+
+				tmp = dsttmp & (~(srctmp << dstbit));
+
+				W_W(cpustate,dst,tmp);
+				break;
+			default: fatalerror("V810: unemulated BSU opcode %04x\n",op);
+		}
+
+		srcbit++;
+		dstbit++;
+
+		srcbit&=0x1f;
+		dstbit&=0x1f;
+
+		if(srcbit == 0)
+			src+=4;
+
+		if(dstbit == 0)
+			dst+=4;
+
+		size --;
+
+		cpustate->R26 = dstbit;
+		cpustate->R27 = srcbit;
+		cpustate->R28 = size;
+		cpustate->R29 = dst;
+		cpustate->R30 = src;
+
+		if(size != 0)
+			cpustate->PC-=2;
+	}
+
+	return clkIF+1; //TODO: correct?
 }
 
 static UINT32 (*const OpCodeTable[64])(v810_state *cpustate,UINT32 op) =
@@ -978,7 +1090,7 @@ static UINT32 (*const OpCodeTable[64])(v810_state *cpustate,UINT32 op) =
 	/* 0x1c */ opLDSR,  	// ldsr reg2,regID          2
 	/* 0x1d */ opSTSR,  	// stsr regID,reg2          2
 	/* 0x1e */ opDI,	// DI               2
-	/* 0x1f */ opUNDEF,
+	/* 0x1f */ opBSU,
 	/* 0x20 */ opB, 	// Branch (7 bit opcode)
 	/* 0x21 */ opB, 	// Branch (7 bit opcode)
 	/* 0x22 */ opB, 	// Branch (7 bit opcode)

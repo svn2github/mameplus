@@ -570,20 +570,20 @@ ROM_START( ragtimea ) /* VER 1.3 JPN 92.11.26 */
 	ROM_LOAD( "kj-00.15n",    0x000000, 0x00400, CRC(add4d50b) SHA1(080e5a8192a146d5141aef5c8d9996ddf8cd3ab4) )
 ROM_END
 
-static DRIVER_INIT( boogwing )
+DRIVER_INIT_MEMBER(boogwing_state,boogwing)
 {
-	const UINT8* src = machine.root_device().memregion("gfx6")->base();
-	UINT8* dst = machine.root_device().memregion("tiles2")->base() + 0x200000;
+	const UINT8* src = machine().root_device().memregion("gfx6")->base();
+	UINT8* dst = machine().root_device().memregion("tiles2")->base() + 0x200000;
 
-	deco56_decrypt_gfx(machine, "tiles1");
-	deco56_decrypt_gfx(machine, "tiles2");
-	deco56_decrypt_gfx(machine, "tiles3");
-	deco56_remap_gfx(machine, "gfx6");
-	deco102_decrypt_cpu(machine, "maincpu", 0x42ba, 0x00, 0x18);
+	deco56_decrypt_gfx(machine(), "tiles1");
+	deco56_decrypt_gfx(machine(), "tiles2");
+	deco56_decrypt_gfx(machine(), "tiles3");
+	deco56_remap_gfx(machine(), "gfx6");
+	deco102_decrypt_cpu(machine(), "maincpu", 0x42ba, 0x00, 0x18);
 	memcpy(dst, src, 0x100000);
 }
 
-GAME( 1992, boogwing, 0,        boogwing, boogwing,  boogwing,  ROT0, "Data East Corporation", "Boogie Wings (Euro v1.5, 92.12.07)", GAME_SUPPORTS_SAVE )
-GAME( 1992, boogwinga,boogwing, boogwing, boogwing,  boogwing,  ROT0, "Data East Corporation", "Boogie Wings (Asia v1.5, 92.12.07)", GAME_SUPPORTS_SAVE )
-GAME( 1992, ragtime,  boogwing, boogwing, boogwing,  boogwing,  ROT0, "Data East Corporation", "The Great Ragtime Show (Japan v1.5, 92.12.07)", GAME_SUPPORTS_SAVE )
-GAME( 1992, ragtimea, boogwing, boogwing, boogwing,  boogwing,  ROT0, "Data East Corporation", "The Great Ragtime Show (Japan v1.3, 92.11.26)", GAME_SUPPORTS_SAVE )
+GAME( 1992, boogwing, 0,        boogwing, boogwing, boogwing_state,  boogwing,  ROT0, "Data East Corporation", "Boogie Wings (Euro v1.5, 92.12.07)", GAME_SUPPORTS_SAVE )
+GAME( 1992, boogwinga,boogwing, boogwing, boogwing, boogwing_state,  boogwing,  ROT0, "Data East Corporation", "Boogie Wings (Asia v1.5, 92.12.07)", GAME_SUPPORTS_SAVE )
+GAME( 1992, ragtime,  boogwing, boogwing, boogwing, boogwing_state,  boogwing,  ROT0, "Data East Corporation", "The Great Ragtime Show (Japan v1.5, 92.12.07)", GAME_SUPPORTS_SAVE )
+GAME( 1992, ragtimea, boogwing, boogwing, boogwing, boogwing_state,  boogwing,  ROT0, "Data East Corporation", "The Great Ragtime Show (Japan v1.3, 92.11.26)", GAME_SUPPORTS_SAVE )

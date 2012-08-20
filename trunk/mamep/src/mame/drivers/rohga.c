@@ -1531,53 +1531,53 @@ ROM_END
 
 /**********************************************************************************/
 
-static DRIVER_INIT( rohga )
+DRIVER_INIT_MEMBER(rohga_state,rohga)
 {
-	deco56_decrypt_gfx(machine, "gfx1");
-	deco56_decrypt_gfx(machine, "gfx2");
+	deco56_decrypt_gfx(machine(), "gfx1");
+	deco56_decrypt_gfx(machine(), "gfx2");
 
-	decoprot_reset(machine);
+	decoprot_reset(machine());
 }
 
-static DRIVER_INIT( wizdfire )
+DRIVER_INIT_MEMBER(rohga_state,wizdfire)
 {
-	deco74_decrypt_gfx(machine, "gfx1");
-	deco74_decrypt_gfx(machine, "gfx2");
-	deco74_decrypt_gfx(machine, "gfx3");
+	deco74_decrypt_gfx(machine(), "gfx1");
+	deco74_decrypt_gfx(machine(), "gfx2");
+	deco74_decrypt_gfx(machine(), "gfx3");
 }
 
-static DRIVER_INIT( nitrobal )
+DRIVER_INIT_MEMBER(rohga_state,nitrobal)
 {
-	deco56_decrypt_gfx(machine, "gfx1");
-	deco56_decrypt_gfx(machine, "gfx2");
-	deco74_decrypt_gfx(machine, "gfx3");
+	deco56_decrypt_gfx(machine(), "gfx1");
+	deco56_decrypt_gfx(machine(), "gfx2");
+	deco74_decrypt_gfx(machine(), "gfx3");
 
-	decoprot_reset(machine);
+	decoprot_reset(machine());
 }
 
-static DRIVER_INIT( schmeisr )
+DRIVER_INIT_MEMBER(rohga_state,schmeisr)
 {
-	const UINT8 *src = machine.root_device().memregion("gfx2")->base();
-	UINT8 *dst = machine.root_device().memregion("gfx1")->base();
+	const UINT8 *src = machine().root_device().memregion("gfx2")->base();
+	UINT8 *dst = machine().root_device().memregion("gfx1")->base();
 
 	memcpy(dst, src, 0x20000);
 	memcpy(dst + 0x20000, src + 0x80000, 0x20000);
 
-	deco74_decrypt_gfx(machine, "gfx1");
-	deco74_decrypt_gfx(machine, "gfx2");
+	deco74_decrypt_gfx(machine(), "gfx1");
+	deco74_decrypt_gfx(machine(), "gfx2");
 
-	decoprot_reset(machine);
+	decoprot_reset(machine());
 }
 
-GAME( 1991, rohga,     0,        rohga,    rohga,    rohga,    ROT0,   "Data East Corporation", "Rohga Armor Force (Asia/Europe v5.0)", GAME_SUPPORTS_SAVE )
-GAME( 1991, rohga1,    rohga,    rohga,    rohga,    rohga,    ROT0,   "Data East Corporation", "Rohga Armor Force (Asia/Europe v3.0 set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1991, rohga2,    rohga,    rohga,    rohga,    rohga,    ROT0,   "Data East Corporation", "Rohga Armor Force (Asia/Europe v3.0 set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1991, rohgah,    rohga,    rohga,    rohga,    rohga,    ROT0,   "Data East Corporation", "Rohga Armor Force (Hong Kong v3.0)", GAME_SUPPORTS_SAVE )
-GAME( 1991, rohgau,    rohga,    rohga,    rohga,    rohga,    ROT0,   "Data East Corporation", "Rohga Armor Force (US v1.0)", GAME_SUPPORTS_SAVE )
-GAME( 1991, wolffang,  rohga,    rohga,    rohga,    rohga,    ROT0,   "Data East Corporation", "Wolf Fang -Kuhga 2001- (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1992, wizdfire,  0,        wizdfire, wizdfire, wizdfire, ROT0,   "Data East Corporation", "Wizard Fire (Over Sea v2.1)", GAME_SUPPORTS_SAVE )
-GAME( 1992, wizdfireu, wizdfire, wizdfire, wizdfire, wizdfire, ROT0,   "Data East Corporation", "Wizard Fire (US v1.1)", GAME_SUPPORTS_SAVE )
-GAME( 1992, darkseal2, wizdfire, wizdfire, wizdfire, wizdfire, ROT0,   "Data East Corporation", "Dark Seal 2 (Japan v2.1)", GAME_SUPPORTS_SAVE )
-GAME( 1992, nitrobal,  0,        nitrobal, nitrobal, nitrobal, ROT270, "Data East Corporation", "Nitro Ball (US)", GAME_SUPPORTS_SAVE )
-GAME( 1992, gunball,   nitrobal, nitrobal, nitrobal, nitrobal, ROT270, "Data East Corporation", "Gun Ball (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1993, schmeisr,  0,        schmeisr, schmeisr, schmeisr, ROT0,   "Hot-B",                 "Schmeiser Robo (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1991, rohga,     0,        rohga,    rohga, rohga_state,    rohga,    ROT0,   "Data East Corporation", "Rohga Armor Force (Asia/Europe v5.0)", GAME_SUPPORTS_SAVE )
+GAME( 1991, rohga1,    rohga,    rohga,    rohga, rohga_state,    rohga,    ROT0,   "Data East Corporation", "Rohga Armor Force (Asia/Europe v3.0 set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1991, rohga2,    rohga,    rohga,    rohga, rohga_state,    rohga,    ROT0,   "Data East Corporation", "Rohga Armor Force (Asia/Europe v3.0 set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1991, rohgah,    rohga,    rohga,    rohga, rohga_state,    rohga,    ROT0,   "Data East Corporation", "Rohga Armor Force (Hong Kong v3.0)", GAME_SUPPORTS_SAVE )
+GAME( 1991, rohgau,    rohga,    rohga,    rohga, rohga_state,    rohga,    ROT0,   "Data East Corporation", "Rohga Armor Force (US v1.0)", GAME_SUPPORTS_SAVE )
+GAME( 1991, wolffang,  rohga,    rohga,    rohga, rohga_state,    rohga,    ROT0,   "Data East Corporation", "Wolf Fang -Kuhga 2001- (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1992, wizdfire,  0,        wizdfire, wizdfire, rohga_state, wizdfire, ROT0,   "Data East Corporation", "Wizard Fire (Over Sea v2.1)", GAME_SUPPORTS_SAVE )
+GAME( 1992, wizdfireu, wizdfire, wizdfire, wizdfire, rohga_state, wizdfire, ROT0,   "Data East Corporation", "Wizard Fire (US v1.1)", GAME_SUPPORTS_SAVE )
+GAME( 1992, darkseal2, wizdfire, wizdfire, wizdfire, rohga_state, wizdfire, ROT0,   "Data East Corporation", "Dark Seal 2 (Japan v2.1)", GAME_SUPPORTS_SAVE )
+GAME( 1992, nitrobal,  0,        nitrobal, nitrobal, rohga_state, nitrobal, ROT270, "Data East Corporation", "Nitro Ball (US)", GAME_SUPPORTS_SAVE )
+GAME( 1992, gunball,   nitrobal, nitrobal, nitrobal, rohga_state, nitrobal, ROT270, "Data East Corporation", "Gun Ball (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1993, schmeisr,  0,        schmeisr, schmeisr, rohga_state, schmeisr, ROT0,   "Hot-B",                 "Schmeiser Robo (Japan)", GAME_SUPPORTS_SAVE )

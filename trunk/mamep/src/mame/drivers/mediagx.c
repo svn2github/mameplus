@@ -182,6 +182,7 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(pc_dack3_w);
 	DECLARE_WRITE_LINE_MEMBER(mediagx_pic8259_1_set_int_line);
 	DECLARE_READ8_MEMBER(get_slave_ack);
+	DECLARE_DRIVER_INIT(a51site4);
 };
 
 // Display controller registers
@@ -1331,12 +1332,12 @@ static const speedup_entry a51site4_speedups[] =
 
 #endif
 
-static DRIVER_INIT( a51site4 )
+DRIVER_INIT_MEMBER(mediagx_state,a51site4)
 {
-	init_mediagx(machine);
+	init_mediagx(machine());
 
 #if SPEEDUP_HACKS
-	install_speedups(machine, a51site4_speedups, ARRAY_LENGTH(a51site4_speedups));
+	install_speedups(machine(), a51site4_speedups, ARRAY_LENGTH(a51site4_speedups));
 #endif
 }
 
@@ -1373,5 +1374,5 @@ ROM_END
 
 /*****************************************************************************/
 
-GAME( 1998, a51site4, 0       , mediagx, mediagx, a51site4,	ROT0,   "Atari Games",  "Area 51: Site 4 (HD Rev 2.01, September 7, 1998)", GAME_NOT_WORKING )
-GAME( 1998, a51site4a,a51site4,	mediagx, mediagx, a51site4,	ROT0,   "Atari Games",  "Area 51: Site 4 (HD Rev 2.0, September 11, 1998)", GAME_NOT_WORKING )
+GAME( 1998, a51site4, 0       , mediagx, mediagx, mediagx_state, a51site4,	ROT0,   "Atari Games",  "Area 51: Site 4 (HD Rev 2.01, September 7, 1998)", GAME_NOT_WORKING )
+GAME( 1998, a51site4a,a51site4,	mediagx, mediagx, mediagx_state, a51site4,	ROT0,   "Atari Games",  "Area 51: Site 4 (HD Rev 2.0, September 11, 1998)", GAME_NOT_WORKING )

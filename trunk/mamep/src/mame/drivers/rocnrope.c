@@ -343,16 +343,16 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( rocnrope )
+DRIVER_INIT_MEMBER(rocnrope_state,rocnrope)
 {
-	UINT8 *decrypted = konami1_decode(machine, "maincpu");
+	UINT8 *decrypted = konami1_decode(machine(), "maincpu");
 
 	decrypted[0x703d] = 0x98;	/* fix one instruction */
 }
 
-static DRIVER_INIT( rocnropk )
+DRIVER_INIT_MEMBER(rocnrope_state,rocnropk)
 {
-	konami1_decode(machine, "maincpu");
+	konami1_decode(machine(), "maincpu");
 }
 
 
@@ -362,6 +362,6 @@ static DRIVER_INIT( rocnropk )
  *
  *************************************/
 
-GAME( 1983, rocnrope, 0,        rocnrope, rocnrope, rocnrope, ROT270, "Konami", "Roc'n Rope", GAME_SUPPORTS_SAVE )
-GAME( 1983, rocnropek,rocnrope, rocnrope, rocnrope, rocnropk, ROT270, "Konami / Kosuka", "Roc'n Rope (Kosuka)", GAME_SUPPORTS_SAVE )
-GAME( 1983, ropeman,  rocnrope, rocnrope, rocnrope, rocnrope, ROT270, "bootleg", "Ropeman (bootleg of Roc'n Rope)", GAME_SUPPORTS_SAVE )
+GAME( 1983, rocnrope, 0,        rocnrope, rocnrope, rocnrope_state, rocnrope, ROT270, "Konami", "Roc'n Rope", GAME_SUPPORTS_SAVE )
+GAME( 1983, rocnropek,rocnrope, rocnrope, rocnrope, rocnrope_state, rocnropk, ROT270, "Konami / Kosuka", "Roc'n Rope (Kosuka)", GAME_SUPPORTS_SAVE )
+GAME( 1983, ropeman,  rocnrope, rocnrope, rocnrope, rocnrope_state, rocnrope, ROT270, "bootleg", "Ropeman (bootleg of Roc'n Rope)", GAME_SUPPORTS_SAVE )

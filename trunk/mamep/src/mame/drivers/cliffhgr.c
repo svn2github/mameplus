@@ -109,6 +109,7 @@ public:
 	DECLARE_WRITE8_MEMBER(cliff_ldwire_w);
 	DECLARE_WRITE8_MEMBER(cliff_sound_overlay_w);
 	DECLARE_WRITE_LINE_MEMBER(vdp_interrupt);
+	DECLARE_DRIVER_INIT(cliff);
 };
 
 
@@ -773,7 +774,7 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( cliff )
+DRIVER_INIT_MEMBER(cliffhgr_state,cliff)
 {
 }
 
@@ -785,6 +786,6 @@ static DRIVER_INIT( cliff )
  *
  *************************************/
 
-GAME( 1983, cliffhgr, 0,        cliffhgr, cliffhgr,  cliff, ROT0, "Stern Electronics", "Cliff Hanger (set 1)", 0)
-GAME( 1983, cliffhgra,cliffhgr, cliffhgr, cliffhgra, cliff, ROT0, "Stern Electronics", "Cliff Hanger (set 2)", 0)
-GAME( 1983, goaltogo, 0,        cliffhgr, goaltogo,  cliff, ROT0, "Stern Electronics", "Goal To Go", GAME_NOT_WORKING)
+GAME( 1983, cliffhgr, 0,        cliffhgr, cliffhgr, cliffhgr_state,  cliff, ROT0, "Stern Electronics", "Cliff Hanger (set 1)", 0)
+GAME( 1983, cliffhgra,cliffhgr, cliffhgr, cliffhgra, cliffhgr_state, cliff, ROT0, "Stern Electronics", "Cliff Hanger (set 2)", 0)
+GAME( 1983, goaltogo, 0,        cliffhgr, goaltogo, cliffhgr_state,  cliff, ROT0, "Stern Electronics", "Goal To Go", GAME_NOT_WORKING)

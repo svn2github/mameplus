@@ -1256,26 +1256,23 @@ ROM_START( madballn ) /* Even numbered stages show topless models.  Is nudity co
 	ROM_LOAD( "s.u28", 0x00000, 0x80000, CRC(78f02584) SHA1(70542e126db73a573db9ef41399d3a07fb7ea94b) )
 ROM_END
 
-static DRIVER_INIT (paradise)
+DRIVER_INIT_MEMBER(paradise_state,paradise)
 {
-	paradise_state *state = machine.driver_data<paradise_state>();
-	state->m_sprite_inc = 0x20;
+	m_sprite_inc = 0x20;
 }
 
 // Inverted flipscreen and sprites are packed in less memory (same number though)
-static DRIVER_INIT (tgtball)
+DRIVER_INIT_MEMBER(paradise_state,tgtball)
 {
-	paradise_state *state = machine.driver_data<paradise_state>();
-	state->m_sprite_inc = 4;
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x2001, 0x2001, write8_delegate(FUNC(paradise_state::tgtball_flipscreen_w),state));
+	m_sprite_inc = 4;
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x2001, 0x2001, write8_delegate(FUNC(paradise_state::tgtball_flipscreen_w),this));
 
 }
 
-static DRIVER_INIT (torus)
+DRIVER_INIT_MEMBER(paradise_state,torus)
 {
-	paradise_state *state = machine.driver_data<paradise_state>();
-	state->m_sprite_inc = 4;
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x2070, 0x2070, write8_delegate(FUNC(paradise_state::torus_coin_counter_w),state));
+	m_sprite_inc = 4;
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x2070, 0x2070, write8_delegate(FUNC(paradise_state::torus_coin_counter_w),this));
 }
 
 
@@ -1285,12 +1282,12 @@ static DRIVER_INIT (torus)
 
 ***************************************************************************/
 
-GAME( 199?,  paradise, 0,       paradise, paradise, paradise, ROT90, "Yun Sung", "Paradise", GAME_SUPPORTS_SAVE )	// year not shown, but should be >=1994
-GAME( 199?,  paradlx,  0,       paradise, paradise, paradise, ROT90, "Yun Sung", "Paradise Deluxe", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )		// "
-GAME( 199?,  para2dx,  0,       paradise, para2dx,  paradise, ROT90, "Yun Sung", "Paradise 2 Deluxe", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )	// "
-GAME( 1995,  tgtball,  0,       tgtball,  tgtball,  tgtball,  ROT0,  "Yun Sung", "Target Ball (Nude)", GAME_SUPPORTS_SAVE )
-GAME( 1995,  tgtballa, tgtball, tgtball,  tgtball,  tgtball,  ROT0,  "Yun Sung", "Target Ball", GAME_SUPPORTS_SAVE )
-GAME( 1996,  penky,    0,       penky,    penky,    tgtball,  ROT0,  "Yun Sung", "Penky", GAME_SUPPORTS_SAVE )
-GAME( 1996,  torus,    0,       torus,    torus,    torus,    ROT90, "Yun Sung", "Torus", GAME_SUPPORTS_SAVE )
-GAME( 1998,  madball,  0,       madball,  madball,  tgtball,  ROT0,  "Yun Sung", "Mad Ball V2.0", GAME_SUPPORTS_SAVE )
-GAME( 1997,  madballn, madball, madball,  madball,  tgtball,  ROT0,  "Yun Sung", "Mad Ball V2.0 (With Nudity)", GAME_SUPPORTS_SAVE )
+GAME( 199?,  paradise, 0,       paradise, paradise, paradise_state, paradise, ROT90, "Yun Sung", "Paradise", GAME_SUPPORTS_SAVE )	// year not shown, but should be >=1994
+GAME( 199?,  paradlx,  0,       paradise, paradise, paradise_state, paradise, ROT90, "Yun Sung", "Paradise Deluxe", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )		// "
+GAME( 199?,  para2dx,  0,       paradise, para2dx, paradise_state,  paradise, ROT90, "Yun Sung", "Paradise 2 Deluxe", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )	// "
+GAME( 1995,  tgtball,  0,       tgtball,  tgtball, paradise_state,  tgtball,  ROT0,  "Yun Sung", "Target Ball (Nude)", GAME_SUPPORTS_SAVE )
+GAME( 1995,  tgtballa, tgtball, tgtball,  tgtball, paradise_state,  tgtball,  ROT0,  "Yun Sung", "Target Ball", GAME_SUPPORTS_SAVE )
+GAME( 1996,  penky,    0,       penky,    penky, paradise_state,    tgtball,  ROT0,  "Yun Sung", "Penky", GAME_SUPPORTS_SAVE )
+GAME( 1996,  torus,    0,       torus,    torus, paradise_state,    torus,    ROT90, "Yun Sung", "Torus", GAME_SUPPORTS_SAVE )
+GAME( 1998,  madball,  0,       madball,  madball, paradise_state,  tgtball,  ROT0,  "Yun Sung", "Mad Ball V2.0", GAME_SUPPORTS_SAVE )
+GAME( 1997,  madballn, madball, madball,  madball, paradise_state,  tgtball,  ROT0,  "Yun Sung", "Mad Ball V2.0 (With Nudity)", GAME_SUPPORTS_SAVE )

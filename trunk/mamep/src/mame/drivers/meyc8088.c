@@ -276,7 +276,7 @@ WRITE8_MEMBER(meyc8088_state::meyc8088_common_w)
 
 WRITE_LINE_MEMBER(meyc8088_state::meyc8088_sound_out)
 {
-	dac_signed_w(machine().device("dac"), 0, state ? 0x7f : 0);
+	machine().device<dac_device>("dac")->write_signed8(state ? 0x7f : 0);
 }
 
 
@@ -394,7 +394,7 @@ static MACHINE_CONFIG_START( meyc8088, meyc8088_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 MACHINE_CONFIG_END
 
@@ -410,4 +410,4 @@ ROM_START( gldarrow )
 ROM_END
 
 
-GAMEL(1984, gldarrow, 0,        meyc8088, gldarrow, 0, ROT0,  "Meyco Games, Inc.", "Golden Arrow (Standard G8-03)", 0, layout_gldarrow )
+GAMEL(1984, gldarrow, 0,        meyc8088, gldarrow, driver_device, 0, ROT0,  "Meyco Games, Inc.", "Golden Arrow (Standard G8-03)", 0, layout_gldarrow )

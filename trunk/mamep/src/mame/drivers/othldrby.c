@@ -236,7 +236,7 @@ static MACHINE_RESET( othldrby )
 	state->m_vram_addr = 0;
 	state->m_vreg_addr = 0;
 
-	memset(state->m_vreg, 0, ARRAY_LENGTH(state->m_vreg));
+	memset(state->m_vreg, 0, sizeof(state->m_vreg));
 }
 
 static MACHINE_CONFIG_START( othldrby, othldrby_state )
@@ -290,4 +290,4 @@ ROM_START( othldrby )
 	ROM_LOAD( "db0.4",        0x00000, 0x80000, CRC(a9701868) SHA1(9ee89556666d358e8d3915622573b3ba660048b8) )
 ROM_END
 
-GAME( 1995, othldrby, 0, othldrby, othldrby, 0, ROT0, "Sunwise", "Othello Derby (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1995, othldrby, 0, othldrby, othldrby, driver_device, 0, ROT0, "Sunwise", "Othello Derby (Japan)", GAME_SUPPORTS_SAVE )

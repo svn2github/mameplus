@@ -80,6 +80,7 @@ public:
 	DECLARE_WRITE32_MEMBER(mk5_ioc_w);
 	DECLARE_READ32_MEMBER(Ns5r50);
 	DECLARE_WRITE32_MEMBER(sram_banksel_w);
+	DECLARE_DRIVER_INIT(aristmk5);
 };
 
 
@@ -357,15 +358,15 @@ static INPUT_PORTS_START( aristmk5 )
 	PORT_CONFSETTING(    0x03, "Game Mode" )
 INPUT_PORTS_END
 
-static DRIVER_INIT( aristmk5 )
+DRIVER_INIT_MEMBER(aristmk5_state,aristmk5)
 {
-	UINT8 *SRAM    = machine.root_device().memregion("sram")->base();
-	UINT8 *SRAM_NZ = machine.root_device().memregion("sram")->base();
+	UINT8 *SRAM    = machine().root_device().memregion("sram")->base();
+	UINT8 *SRAM_NZ = machine().root_device().memregion("sram")->base();
 
-	archimedes_driver_init(machine);
+	archimedes_driver_init(machine());
 
-	machine.root_device().membank("sram_bank")->configure_entries(0, 4,    &SRAM[0],    0x20000);
-	machine.root_device().membank("sram_bank_nz")->configure_entries(0, 4, &SRAM_NZ[0], 0x20000);
+	machine().root_device().membank("sram_bank")->configure_entries(0, 4,    &SRAM[0],    0x20000);
+	machine().root_device().membank("sram_bank_nz")->configure_entries(0, 4, &SRAM_NZ[0], 0x20000);
 }
 
 
@@ -375,7 +376,7 @@ static MACHINE_START( aristmk5 )
 	archimedes_init(machine);
 
 	// reset the DAC to centerline
-	//dac_signed_data_w(machine.device("dac"), 0x80);
+	//machine.device<dac_device>("dac")->write_signed8(0x80);
 
 	state->m_mk5_2KHz_timer = machine.scheduler().timer_alloc(FUNC(mk5_2KHz_callback));
 	state->m_mk5_VSYNC_timer = machine.scheduler().timer_alloc(FUNC(mk5_VSYNC_callback));
@@ -440,28 +441,28 @@ static MACHINE_CONFIG_START( aristmk5, aristmk5_state )
 	MCFG_SCREEN_UPDATE_STATIC(archimds_vidc)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("dac0", DAC, 0)
+	MCFG_DAC_ADD("dac0")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac3", DAC, 0)
+	MCFG_DAC_ADD("dac3")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac4", DAC, 0)
+	MCFG_DAC_ADD("dac4")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac5", DAC, 0)
+	MCFG_DAC_ADD("dac5")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac6", DAC, 0)
+	MCFG_DAC_ADD("dac6")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac7", DAC, 0)
+	MCFG_DAC_ADD("dac7")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 MACHINE_CONFIG_END
 
@@ -486,28 +487,28 @@ static MACHINE_CONFIG_START( aristmk5_usa, aristmk5_state )
 	MCFG_SCREEN_UPDATE_STATIC(archimds_vidc)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("dac0", DAC, 0)
+	MCFG_DAC_ADD("dac0")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac3", DAC, 0)
+	MCFG_DAC_ADD("dac3")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac4", DAC, 0)
+	MCFG_DAC_ADD("dac4")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac5", DAC, 0)
+	MCFG_DAC_ADD("dac5")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac6", DAC, 0)
+	MCFG_DAC_ADD("dac6")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 
-	MCFG_SOUND_ADD("dac7", DAC, 0)
+	MCFG_DAC_ADD("dac7")
 	MCFG_SOUND_ROUTE(0, "mono", 0.10)
 MACHINE_CONFIG_END
 
@@ -735,20 +736,20 @@ ROM_START( magicmsk )
 	ROM_REGION( 0x20000*4, "sram", ROMREGION_ERASE00 )
 ROM_END
 
-GAME( 1995, aristmk5, 0,        aristmk5, aristmk5, aristmk5, ROT0,  "Aristocrat", "MKV Set/Clear Chips (USA)", GAME_NOT_WORKING|GAME_IS_BIOS_ROOT )
+GAME( 1995, aristmk5, 0,        aristmk5, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "MKV Set/Clear Chips (USA)", GAME_NOT_WORKING|GAME_IS_BIOS_ROOT )
 
 // Dates listed below are for the combination (reel layout), not release dates
-GAME( 1995, enchfrst, 0,        aristmk5, aristmk5, aristmk5, ROT0,  "Aristocrat", "Enchanted Forest (0400122V, Local)",                   GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 570/3,  E - 23/06/95
-GAME( 1995, swthrt2v, 0,        aristmk5, aristmk5, aristmk5, ROT0,  "Aristocrat", "Sweet Hearts II (01J01986, Venezuela)",                GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 577/1,  C - 07/09/95
-GAME( 1996, dolphntr, 0,        aristmk5, aristmk5, aristmk5, ROT0,  "Aristocrat", "Dolphin Treasure (0200424V, NSW/ACT)",                 GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 602/1,  B - 06/12/96
-GAME( 1996, dolphtra, dolphntr, aristmk5, aristmk5, aristmk5, ROT0,  "Aristocrat", "Dolphin Treasure (0100424V, NSW/ACT)",                 GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 602/1,  B - 06/12/96
-GAME( 1997, goldprmd, aristmk5, aristmk5_usa, aristmk5, aristmk5, ROT0,  "Aristocrat", "Golden Pyramids (MV4091, USA)",                        GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// MV4091, B - 13/05/97
-GAME( 1997, qotn,     0,        aristmk5, aristmk5, aristmk5, ROT0,  "Aristocrat", "Queen of the Nile (0200439V, NSW/ACT)",                GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 602/4,  B - 13/05/97
-GAME( 1997, dmdtouch, 0,        aristmk5, aristmk5, aristmk5, ROT0,  "Aristocrat", "Diamond Touch (0400433V, Local)",                      GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 604,    E - 30/06/97
-GAME( 1998, adonis,   0,        aristmk5, aristmk5, aristmk5, ROT0,  "Aristocrat", "Adonis (0200751V, NSW/ACT)",                           GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 602/9,  A - 25/05/98
-GAME( 1998, reelrock, 0,        aristmk5, aristmk5, aristmk5, ROT0,  "Aristocrat", "Reelin-n-Rockin (0100779V, Local)",                    GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 628,    A - 13/07/98
-GAME( 1998, indiandr, 0,        aristmk5, aristmk5, aristmk5, ROT0,  "Aristocrat", "Indian Dreaming (0100845V, Local)",                    GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 628/1,  B - 15/12/98
-GAME( 1999, wtiger,   0,        aristmk5, aristmk5, aristmk5, ROT0,  "Aristocrat", "White Tiger Classic (0200954V, NSW/ACT)",              GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 638/1,  B - 08/07/99
-GAME( 2000, magicmsk, aristmk5, aristmk5_usa, aristmk5, aristmk5, ROT0,  "Aristocrat", "Magic Mask (MV4115, Export)",                          GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// MV4115, A - 09/05/2000
-GAME( 2000, margmgc,  0,        aristmk5, aristmk5, aristmk5, ROT0,  "Aristocrat", "Margarita Magic (01J00101, NSW/ACT)",                  GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// JB005,  A - 07/07/2000
-GAME( 2001, geishanz, 0,        aristmk5, aristmk5, aristmk5, ROT0,  "Aristocrat", "Geisha (0101408V, New Zealand)",                       GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// MV4127, A - 05/03/01
+GAME( 1995, enchfrst, 0,        aristmk5, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "Enchanted Forest (0400122V, Local)",                   GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 570/3,  E - 23/06/95
+GAME( 1995, swthrt2v, 0,        aristmk5, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "Sweet Hearts II (01J01986, Venezuela)",                GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 577/1,  C - 07/09/95
+GAME( 1996, dolphntr, 0,        aristmk5, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "Dolphin Treasure (0200424V, NSW/ACT)",                 GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 602/1,  B - 06/12/96
+GAME( 1996, dolphtra, dolphntr, aristmk5, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "Dolphin Treasure (0100424V, NSW/ACT)",                 GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 602/1,  B - 06/12/96
+GAME( 1997, goldprmd, aristmk5, aristmk5_usa, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "Golden Pyramids (MV4091, USA)",                        GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// MV4091, B - 13/05/97
+GAME( 1997, qotn,     0,        aristmk5, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "Queen of the Nile (0200439V, NSW/ACT)",                GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 602/4,  B - 13/05/97
+GAME( 1997, dmdtouch, 0,        aristmk5, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "Diamond Touch (0400433V, Local)",                      GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 604,    E - 30/06/97
+GAME( 1998, adonis,   0,        aristmk5, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "Adonis (0200751V, NSW/ACT)",                           GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 602/9,  A - 25/05/98
+GAME( 1998, reelrock, 0,        aristmk5, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "Reelin-n-Rockin (0100779V, Local)",                    GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 628,    A - 13/07/98
+GAME( 1998, indiandr, 0,        aristmk5, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "Indian Dreaming (0100845V, Local)",                    GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 628/1,  B - 15/12/98
+GAME( 1999, wtiger,   0,        aristmk5, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "White Tiger Classic (0200954V, NSW/ACT)",              GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// 638/1,  B - 08/07/99
+GAME( 2000, magicmsk, aristmk5, aristmk5_usa, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "Magic Mask (MV4115, Export)",                          GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// MV4115, A - 09/05/2000
+GAME( 2000, margmgc,  0,        aristmk5, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "Margarita Magic (01J00101, NSW/ACT)",                  GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// JB005,  A - 07/07/2000
+GAME( 2001, geishanz, 0,        aristmk5, aristmk5, aristmk5_state, aristmk5, ROT0,  "Aristocrat", "Geisha (0101408V, New Zealand)",                       GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )	// MV4127, A - 05/03/01

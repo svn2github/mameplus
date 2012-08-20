@@ -384,7 +384,7 @@ static const ay8910_interface ay8910_config =
 	AY8910_DEFAULT_LOADS,
 	DEVCB_NULL,
 	DEVCB_NULL,
-	DEVCB_DEVICE_HANDLER("dac", dac_signed_w),
+	DEVCB_DEVICE_MEMBER("dac", dac_device, write_signed8),
 	DEVCB_DRIVER_MEMBER(bking_state,port_b_w)
 };
 
@@ -510,7 +510,7 @@ static MACHINE_CONFIG_START( bking, bking_state )
 	MCFG_SOUND_CONFIG(ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 MACHINE_CONFIG_END
 
@@ -818,6 +818,6 @@ ROM_START( bking3 )
 ROM_END
 
 
-GAME( 1982, bking,  0, bking,  bking,  0, ROT270, "Taito Corporation", "Birdie King", GAME_SUPPORTS_SAVE )
-GAME( 1983, bking2, 0, bking,  bking2, 0, ROT90,  "Taito Corporation", "Birdie King 2", GAME_SUPPORTS_SAVE )
-GAME( 1984, bking3, 0, bking3, bking2, 0, ROT90,  "Taito Corporation", "Birdie King 3", GAME_SUPPORTS_SAVE )
+GAME( 1982, bking,  0, bking,  bking, driver_device,  0, ROT270, "Taito Corporation", "Birdie King", GAME_SUPPORTS_SAVE )
+GAME( 1983, bking2, 0, bking,  bking2, driver_device, 0, ROT90,  "Taito Corporation", "Birdie King 2", GAME_SUPPORTS_SAVE )
+GAME( 1984, bking3, 0, bking3, bking2, driver_device, 0, ROT90,  "Taito Corporation", "Birdie King 3", GAME_SUPPORTS_SAVE )

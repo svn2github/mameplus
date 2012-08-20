@@ -115,6 +115,7 @@ public:
 	DECLARE_WRITE8_MEMBER(junofrst_irq_enable_w);
 	DECLARE_READ8_MEMBER(junofrst_portA_r);
 	DECLARE_WRITE8_MEMBER(junofrst_portB_w);
+	DECLARE_DRIVER_INIT(junofrst);
 };
 
 
@@ -327,7 +328,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( mcu_io_map, AS_IO, 8, junofrst_state )
 	AM_RANGE(0x00, 0xff) AM_READ(soundlatch2_byte_r)
-	AM_RANGE(MCS48_PORT_P1, MCS48_PORT_P1) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(MCS48_PORT_P1, MCS48_PORT_P1) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(MCS48_PORT_P2, MCS48_PORT_P2) AM_WRITE(i8039_irqen_and_status_w)
 ADDRESS_MAP_END
 
@@ -461,7 +462,7 @@ static MACHINE_CONFIG_START( junofrst, junofrst_state )
 	MCFG_SOUND_ROUTE(1, "filter.0.1", 0.30)
 	MCFG_SOUND_ROUTE(2, "filter.0.2", 0.30)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	MCFG_SOUND_ADD("filter.0.0", FILTER_RC, 0)
@@ -525,14 +526,14 @@ ROM_END
 
 
 
-static DRIVER_INIT( junofrst )
+DRIVER_INIT_MEMBER(junofrst_state,junofrst)
 {
-	UINT8 *decrypted = konami1_decode(machine, "maincpu");
+	UINT8 *decrypted = konami1_decode(machine(), "maincpu");
 
-	machine.root_device().membank("bank1")->configure_entries(0, 16, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x1000);
-	machine.root_device().membank("bank1")->configure_decrypted_entries(0, 16, decrypted + 0x10000, 0x1000);
+	machine().root_device().membank("bank1")->configure_entries(0, 16, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x1000);
+	machine().root_device().membank("bank1")->configure_decrypted_entries(0, 16, decrypted + 0x10000, 0x1000);
 }
 
 
-GAME( 1983, junofrst, 0,        junofrst, junofrst, junofrst, ROT90, "Konami", "Juno First", 0 )
-GAME( 1983, junofrstg,junofrst, junofrst, junofrst, junofrst, ROT90, "Konami (Gottlieb license)", "Juno First (Gottlieb)", 0 )
+GAME( 1983, junofrst, 0,        junofrst, junofrst, junofrst_state, junofrst, ROT90, "Konami", "Juno First", 0 )
+GAME( 1983, junofrstg,junofrst, junofrst, junofrst, junofrst_state, junofrst, ROT90, "Konami (Gottlieb license)", "Juno First (Gottlieb)", 0 )

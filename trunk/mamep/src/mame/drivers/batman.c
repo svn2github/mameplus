@@ -330,9 +330,9 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( batman )
+DRIVER_INIT_MEMBER(batman_state,batman)
 {
-	atarijsa_init(machine, "260010", 0x0040);
+	atarijsa_init(machine(), "260010", 0x0040);
 }
 
 
@@ -343,4 +343,4 @@ static DRIVER_INIT( batman )
  *
  *************************************/
 
-GAME( 1991, batman, 0, batman, batman, batman, ROT0, "Atari Games", "Batman", GAME_SUPPORTS_SAVE )
+GAME( 1991, batman, 0, batman, batman, batman_state, batman, ROT0, "Atari Games", "Batman", GAME_SUPPORTS_SAVE )

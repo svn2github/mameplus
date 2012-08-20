@@ -21,6 +21,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(williams_s6a);
 };
 
 
@@ -35,7 +37,7 @@ void williams_s6a_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( williams_s6a )
+DRIVER_INIT_MEMBER(williams_s6a_state,williams_s6a)
 {
 }
 
@@ -124,7 +126,7 @@ ROM_START(alpok_f6)
 ROM_END
 
 
-GAME(1980,	algar_l1,		0,			williams_s6a,	williams_s6a,	williams_s6a,	ROT0,	"Williams",				"Algar (L-1)",								GAME_IS_SKELETON_MECHANICAL)
-GAME(1980,	alpok_l6,		0,			williams_s6a,	williams_s6a,	williams_s6a,	ROT0,	"Williams",				"Alien Poker (L-6)",						GAME_IS_SKELETON_MECHANICAL)
-GAME(1980,	alpok_l2,		alpok_l6,	williams_s6a,	williams_s6a,	williams_s6a,	ROT0,	"Williams",				"Alien Poker (L-2)",						GAME_IS_SKELETON_MECHANICAL)
-GAME(1980,	alpok_f6,		alpok_l6,	williams_s6a,	williams_s6a,	williams_s6a,	ROT0,	"Williams",				"Alien Poker (L-6 French speech)",			GAME_IS_SKELETON_MECHANICAL)
+GAME(1980,	algar_l1,		0,			williams_s6a,	williams_s6a, williams_s6a_state,	williams_s6a,	ROT0,	"Williams",				"Algar (L-1)",								GAME_IS_SKELETON_MECHANICAL)
+GAME(1980,	alpok_l6,		0,			williams_s6a,	williams_s6a, williams_s6a_state,	williams_s6a,	ROT0,	"Williams",				"Alien Poker (L-6)",						GAME_IS_SKELETON_MECHANICAL)
+GAME(1980,	alpok_l2,		alpok_l6,	williams_s6a,	williams_s6a, williams_s6a_state,	williams_s6a,	ROT0,	"Williams",				"Alien Poker (L-2)",						GAME_IS_SKELETON_MECHANICAL)
+GAME(1980,	alpok_f6,		alpok_l6,	williams_s6a,	williams_s6a, williams_s6a_state,	williams_s6a,	ROT0,	"Williams",				"Alien Poker (L-6 French speech)",			GAME_IS_SKELETON_MECHANICAL)

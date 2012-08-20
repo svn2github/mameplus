@@ -151,7 +151,6 @@
 #endif /* USE_AUDIO_SYNC */
 
 // input options
-#define WINOPTION_HIDE_CURSOR			"hide_cursor"
 #define WINOPTION_DUAL_LIGHTGUN			"dual_lightgun"
 
 #ifdef JOYSTICK_ID
@@ -282,7 +281,6 @@ public:
 	int audio_latency() const { return int_value(WINOPTION_AUDIO_LATENCY); }
 
 	// input options
-	bool hide_cursor() const { return bool_value(WINOPTION_HIDE_CURSOR); }
 	bool dual_lightgun() const { return bool_value(WINOPTION_DUAL_LIGHTGUN); }
 
 private:

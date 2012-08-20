@@ -1844,7 +1844,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	irqhandler
+	DEVCB_LINE(irqhandler)
 };
 
 /***************************************************************************
@@ -4450,199 +4450,188 @@ static void init_cave(running_machine &machine)
 }
 
 
-static DRIVER_INIT( agallet )
+DRIVER_INIT_MEMBER(cave_state,agallet)
 {
-	UINT8 *ROM = machine.root_device().memregion("audiocpu")->base();
-	init_cave(machine);
+	UINT8 *ROM = machine().root_device().memregion("audiocpu")->base();
+	init_cave(machine());
 
-	machine.root_device().membank("bank1")->configure_entries(0, 0x02, &ROM[0x00000], 0x4000);
-	machine.root_device().membank("bank1")->configure_entries(2, 0x1e, &ROM[0x10000], 0x4000);
+	machine().root_device().membank("bank1")->configure_entries(0, 0x02, &ROM[0x00000], 0x4000);
+	machine().root_device().membank("bank1")->configure_entries(2, 0x1e, &ROM[0x10000], 0x4000);
 
-	ROM = machine.root_device().memregion("oki1")->base();
-	machine.root_device().membank("bank3")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
-	machine.root_device().membank("bank4")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
+	ROM = machine().root_device().memregion("oki1")->base();
+	machine().root_device().membank("bank3")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
+	machine().root_device().membank("bank4")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
 
-	ROM = machine.root_device().memregion("oki2")->base();
-	machine.root_device().membank("bank5")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
-	machine.root_device().membank("bank6")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
+	ROM = machine().root_device().memregion("oki2")->base();
+	machine().root_device().membank("bank5")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
+	machine().root_device().membank("bank6")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
 
-	sailormn_unpack_tiles(machine, "layer2");
+	sailormn_unpack_tiles(machine(), "layer2");
 
-	unpack_sprites(machine);
+	unpack_sprites(machine());
 }
 
-static DRIVER_INIT( dfeveron )
+DRIVER_INIT_MEMBER(cave_state,dfeveron)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	init_cave(machine);
+	init_cave(machine());
 
-	unpack_sprites(machine);
-	state->m_kludge = 2;
+	unpack_sprites(machine());
+	m_kludge = 2;
 }
 
-static DRIVER_INIT( feversos )
+DRIVER_INIT_MEMBER(cave_state,feversos)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	init_cave(machine);
+	init_cave(machine());
 
-	unpack_sprites(machine);
-	state->m_kludge = 2;
+	unpack_sprites(machine());
+	m_kludge = 2;
 }
 
-static DRIVER_INIT( ddonpach )
+DRIVER_INIT_MEMBER(cave_state,ddonpach)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	init_cave(machine);
+	init_cave(machine());
 
-	ddonpach_unpack_sprites(machine);
-	state->m_spritetype[0] = 1;	// "different" sprites (no zooming?)
-	state->m_time_vblank_irq = 90;
+	ddonpach_unpack_sprites(machine());
+	m_spritetype[0] = 1;	// "different" sprites (no zooming?)
+	m_time_vblank_irq = 90;
 }
 
-static DRIVER_INIT( donpachi )
+DRIVER_INIT_MEMBER(cave_state,donpachi)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	init_cave(machine);
+	init_cave(machine());
 
-	ddonpach_unpack_sprites(machine);
-	state->m_spritetype[0] = 1;	// "different" sprites (no zooming?)
-	state->m_time_vblank_irq = 90;
+	ddonpach_unpack_sprites(machine());
+	m_spritetype[0] = 1;	// "different" sprites (no zooming?)
+	m_time_vblank_irq = 90;
 }
 
 
-static DRIVER_INIT( esprade )
+DRIVER_INIT_MEMBER(cave_state,esprade)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	init_cave(machine);
+	init_cave(machine());
 
-	esprade_unpack_sprites(machine);
-	state->m_time_vblank_irq = 2000;	/**/
+	esprade_unpack_sprites(machine());
+	m_time_vblank_irq = 2000;	/**/
 
 #if 0		//ROM PATCH
 	{
-		UINT16 *rom = (UINT16 *)state->memregion("maincpu")->base();
+		UINT16 *rom = (UINT16 *)memregion("maincpu")->base();
 		rom[0x118A/2] = 0x4e71;			//palette fix   118A: 5548              SUBQ.W  #2,A0       --> NOP
 	}
 #endif
 }
 
-static DRIVER_INIT( gaia )
+DRIVER_INIT_MEMBER(cave_state,gaia)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	init_cave(machine);
+	init_cave(machine());
 
 	/* No EEPROM */
 
-	unpack_sprites(machine);
-	state->m_spritetype[0] = 2;	// Normal sprites with different position handling
-	state->m_time_vblank_irq = 2000;	/**/
+	unpack_sprites(machine());
+	m_spritetype[0] = 2;	// Normal sprites with different position handling
+	m_time_vblank_irq = 2000;	/**/
 }
 
-static DRIVER_INIT( guwange )
+DRIVER_INIT_MEMBER(cave_state,guwange)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	init_cave(machine);
+	init_cave(machine());
 
-	esprade_unpack_sprites(machine);
-	state->m_time_vblank_irq = 2000;	/**/
+	esprade_unpack_sprites(machine());
+	m_time_vblank_irq = 2000;	/**/
 }
 
-static DRIVER_INIT( hotdogst )
+DRIVER_INIT_MEMBER(cave_state,hotdogst)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	UINT8 *ROM = state->memregion("audiocpu")->base();
+	UINT8 *ROM = memregion("audiocpu")->base();
 
-	init_cave(machine);
+	init_cave(machine());
 
-	state->membank("bank2")->configure_entries(0, 0x2, &ROM[0x00000], 0x4000);
-	state->membank("bank2")->configure_entries(2, 0xe, &ROM[0x10000], 0x4000);
+	membank("bank2")->configure_entries(0, 0x2, &ROM[0x00000], 0x4000);
+	membank("bank2")->configure_entries(2, 0xe, &ROM[0x10000], 0x4000);
 
-	ROM = state->memregion("oki")->base();
-	state->membank("bank3")->configure_entries(0, 4, &ROM[0x00000], 0x20000);
-	state->membank("bank4")->configure_entries(0, 4, &ROM[0x00000], 0x20000);
+	ROM = memregion("oki")->base();
+	membank("bank3")->configure_entries(0, 4, &ROM[0x00000], 0x20000);
+	membank("bank4")->configure_entries(0, 4, &ROM[0x00000], 0x20000);
 
-	unpack_sprites(machine);
-	state->m_spritetype[0] = 2;	// Normal sprites with different position handling
-	state->m_time_vblank_irq = 2000;	/**/
+	unpack_sprites(machine());
+	m_spritetype[0] = 2;	// Normal sprites with different position handling
+	m_time_vblank_irq = 2000;	/**/
 }
 
-static DRIVER_INIT( mazinger )
+DRIVER_INIT_MEMBER(cave_state,mazinger)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	UINT8 *ROM = state->memregion("audiocpu")->base();
+	UINT8 *ROM = memregion("audiocpu")->base();
 	UINT8 *buffer;
-	UINT8 *src = state->memregion("sprites")->base();
-	int len = state->memregion("sprites")->bytes();
+	UINT8 *src = memregion("sprites")->base();
+	int len = memregion("sprites")->bytes();
 
-	init_cave(machine);
+	init_cave(machine());
 
-	state->membank("bank2")->configure_entries(0, 2, &ROM[0x00000], 0x4000);
-	state->membank("bank2")->configure_entries(2, 6, &ROM[0x10000], 0x4000);
+	membank("bank2")->configure_entries(0, 2, &ROM[0x00000], 0x4000);
+	membank("bank2")->configure_entries(2, 6, &ROM[0x10000], 0x4000);
 
-	ROM = state->memregion("oki")->base();
-	state->membank("bank3")->configure_entries(0, 4, &ROM[0x00000], 0x20000);
-	state->membank("bank4")->configure_entries(0, 4, &ROM[0x00000], 0x20000);
+	ROM = memregion("oki")->base();
+	membank("bank3")->configure_entries(0, 4, &ROM[0x00000], 0x20000);
+	membank("bank4")->configure_entries(0, 4, &ROM[0x00000], 0x20000);
 
 	/* decrypt sprites */
-	buffer = auto_alloc_array(machine, UINT8, len);
+	buffer = auto_alloc_array(machine(), UINT8, len);
 	{
 		int i;
 		for (i = 0; i < len; i++)
 			buffer[i ^ 0xdf88] = src[BITSWAP24(i,23,22,21,20,19,9,7,3,15,4,17,14,18,2,16,5,11,8,6,13,1,10,12,0)];
 		memcpy(src, buffer, len);
-		auto_free(machine, buffer);
+		auto_free(machine(), buffer);
 	}
 
-	unpack_sprites(machine);
-	state->m_spritetype[0] = 2;	// Normal sprites with different position handling
-	state->m_kludge = 3;
-	state->m_time_vblank_irq = 2100;
+	unpack_sprites(machine());
+	m_spritetype[0] = 2;	// Normal sprites with different position handling
+	m_kludge = 3;
+	m_time_vblank_irq = 2100;
 
 	/* setup extra ROM */
-	state->membank("bank1")->set_base(machine.root_device().memregion("user1")->base());
+	membank("bank1")->set_base(machine().root_device().memregion("user1")->base());
 }
 
 
-static DRIVER_INIT( metmqstr )
+DRIVER_INIT_MEMBER(cave_state,metmqstr)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	UINT8 *ROM = state->memregion("audiocpu")->base();
+	UINT8 *ROM = memregion("audiocpu")->base();
 
-	init_cave(machine);
+	init_cave(machine());
 
-	state->membank("bank1")->configure_entries(0, 0x2, &ROM[0x00000], 0x4000);
-	state->membank("bank1")->configure_entries(2, 0xe, &ROM[0x10000], 0x4000);
+	membank("bank1")->configure_entries(0, 0x2, &ROM[0x00000], 0x4000);
+	membank("bank1")->configure_entries(2, 0xe, &ROM[0x10000], 0x4000);
 
-	ROM = state->memregion("oki1")->base();
-	state->membank("bank3")->configure_entries(0, 8, &ROM[0x00000], 0x20000);
-	state->membank("bank4")->configure_entries(0, 8, &ROM[0x00000], 0x20000);
+	ROM = memregion("oki1")->base();
+	membank("bank3")->configure_entries(0, 8, &ROM[0x00000], 0x20000);
+	membank("bank4")->configure_entries(0, 8, &ROM[0x00000], 0x20000);
 
-	ROM = state->memregion("oki2")->base();
-	state->membank("bank5")->configure_entries(0, 8, &ROM[0x00000], 0x20000);
-	state->membank("bank6")->configure_entries(0, 8, &ROM[0x00000], 0x20000);
+	ROM = memregion("oki2")->base();
+	membank("bank5")->configure_entries(0, 8, &ROM[0x00000], 0x20000);
+	membank("bank6")->configure_entries(0, 8, &ROM[0x00000], 0x20000);
 
-	unpack_sprites(machine);
-	state->m_spritetype[0] = 2;	// Normal sprites with different position handling
-	state->m_kludge = 3;
-	state->m_time_vblank_irq = 17376;
+	unpack_sprites(machine());
+	m_spritetype[0] = 2;	// Normal sprites with different position handling
+	m_kludge = 3;
+	m_time_vblank_irq = 17376;
 }
 
 
-static DRIVER_INIT( pwrinst2j )
+DRIVER_INIT_MEMBER(cave_state,pwrinst2j)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	UINT8 *ROM = state->memregion("audiocpu")->base();
+	UINT8 *ROM = memregion("audiocpu")->base();
 	UINT8 *buffer;
-	UINT8 *src = state->memregion("sprites")->base();
-	int len = state->memregion("sprites")->bytes();
+	UINT8 *src = memregion("sprites")->base();
+	int len = memregion("sprites")->bytes();
 	int i, j;
 
-	init_cave(machine);
+	init_cave(machine());
 
-	state->membank("bank1")->configure_entries(0, 3, &ROM[0x00000], 0x4000);
-	state->membank("bank1")->configure_entries(3, 5, &ROM[0x10000], 0x4000);
+	membank("bank1")->configure_entries(0, 3, &ROM[0x00000], 0x4000);
+	membank("bank1")->configure_entries(3, 5, &ROM[0x10000], 0x4000);
 
-	buffer = auto_alloc_array(machine, UINT8, len);
+	buffer = auto_alloc_array(machine(), UINT8, len);
 	{
 		for(i = 0; i < len/2; i++)
 		{
@@ -4653,16 +4642,16 @@ static DRIVER_INIT( pwrinst2j )
 		}
 
 		memcpy(src,buffer,len);
-		auto_free(machine, buffer);
+		auto_free(machine(), buffer);
 	}
 
-	unpack_sprites(machine);
-	state->m_spritetype[0] = 3;
-	state->m_kludge = 4;
-	state->m_time_vblank_irq = 2000;	/**/
+	unpack_sprites(machine());
+	m_spritetype[0] = 3;
+	m_kludge = 4;
+	m_time_vblank_irq = 2000;	/**/
 }
 
-static DRIVER_INIT( pwrinst2 )
+DRIVER_INIT_MEMBER(cave_state,pwrinst2)
 {
 	/* this patch fixes on of the moves, why is it needed? is the rom bad or is there another
        problem? does the Japan set need it or not? */
@@ -4670,94 +4659,90 @@ static DRIVER_INIT( pwrinst2 )
 
 #if 1		//ROM PATCH
 	{
-		UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+		UINT16 *rom = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 		rom[0xd46c / 2] = 0xd482;			// kurara dash fix  0xd400 -> 0xd482
 	}
 #endif
 
 }
 
-static DRIVER_INIT( sailormn )
+DRIVER_INIT_MEMBER(cave_state,sailormn)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	UINT8 *ROM = state->memregion("audiocpu")->base();
+	UINT8 *ROM = memregion("audiocpu")->base();
 	UINT8 *buffer;
-	UINT8 *src = state->memregion("sprites")->base();
-	int len = state->memregion("sprites")->bytes();
+	UINT8 *src = memregion("sprites")->base();
+	int len = memregion("sprites")->bytes();
 
-	init_cave(machine);
+	init_cave(machine());
 
-	state->membank("bank1")->configure_entries(0, 0x02, &ROM[0x00000], 0x4000);
-	state->membank("bank1")->configure_entries(2, 0x1e, &ROM[0x10000], 0x4000);
+	membank("bank1")->configure_entries(0, 0x02, &ROM[0x00000], 0x4000);
+	membank("bank1")->configure_entries(2, 0x1e, &ROM[0x10000], 0x4000);
 
-	ROM = state->memregion("oki1")->base();
-	state->membank("bank3")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
-	state->membank("bank4")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
+	ROM = memregion("oki1")->base();
+	membank("bank3")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
+	membank("bank4")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
 
-	ROM = state->memregion("oki2")->base();
-	state->membank("bank5")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
-	state->membank("bank6")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
+	ROM = memregion("oki2")->base();
+	membank("bank5")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
+	membank("bank6")->configure_entries(0, 0x10, &ROM[0x00000], 0x20000);
 
 	/* decrypt sprites */
-	buffer = auto_alloc_array(machine, UINT8, len);
+	buffer = auto_alloc_array(machine(), UINT8, len);
 	{
 		int i;
 		for (i = 0; i < len; i++)
 			buffer[i ^ 0x950c4] = src[BITSWAP24(i,23,22,21,20,15,10,12,6,11,1,13,3,16,17,2,5,14,7,18,8,4,19,9,0)];
 		memcpy(src, buffer, len);
-		auto_free(machine, buffer);
+		auto_free(machine(), buffer);
 	}
 
-	sailormn_unpack_tiles( machine, "layer2" );
+	sailormn_unpack_tiles( machine(), "layer2" );
 
-	unpack_sprites(machine);
-	state->m_spritetype[0] = 2;	// Normal sprites with different position handling
-	state->m_kludge = 1;
-	state->m_time_vblank_irq = 2000;
+	unpack_sprites(machine());
+	m_spritetype[0] = 2;	// Normal sprites with different position handling
+	m_kludge = 1;
+	m_time_vblank_irq = 2000;
 
-	state->m_sailormn_tilebank = 0;
-	state->save_item(NAME(state->m_sailormn_tilebank));
+	m_sailormn_tilebank = 0;
+	save_item(NAME(m_sailormn_tilebank));
 }
 
-static DRIVER_INIT( tjumpman )
+DRIVER_INIT_MEMBER(cave_state,tjumpman)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	init_cave(machine);
+	init_cave(machine());
 
-	unpack_sprites(machine);
-	state->m_spritetype[0] = 2;	// Normal sprites with different position handling
-	state->m_kludge = 3;
-	state->m_time_vblank_irq = 17376;
+	unpack_sprites(machine());
+	m_spritetype[0] = 2;	// Normal sprites with different position handling
+	m_kludge = 3;
+	m_time_vblank_irq = 17376;
 
-	state->m_hopper = 0;
-	state->save_item(NAME(state->m_hopper));
+	m_hopper = 0;
+	save_item(NAME(m_hopper));
 }
 
-static DRIVER_INIT( uopoko )
+DRIVER_INIT_MEMBER(cave_state,uopoko)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	init_cave(machine);
+	init_cave(machine());
 
-	unpack_sprites(machine);
-	state->m_kludge = 2;
-	state->m_time_vblank_irq = 2000;	/**/
+	unpack_sprites(machine());
+	m_kludge = 2;
+	m_time_vblank_irq = 2000;	/**/
 }
 
-static DRIVER_INIT( korokoro )
+DRIVER_INIT_MEMBER(cave_state,korokoro)
 {
-	cave_state *state = machine.driver_data<cave_state>();
-	init_cave(machine);
+	init_cave(machine());
 
-	state->m_irq_level = 2;
+	m_irq_level = 2;
 
-	unpack_sprites(machine);
-	state->m_time_vblank_irq = 2000;	/**/
+	unpack_sprites(machine());
+	m_time_vblank_irq = 2000;	/**/
 
-	state->m_leds[0] = 0;
-	state->m_leds[1] = 0;
-	state->m_hopper = 0;
-	state->save_item(NAME(state->m_leds));
-	state->save_item(NAME(state->m_hopper));
+	m_leds[0] = 0;
+	m_leds[1] = 0;
+	m_hopper = 0;
+	save_item(NAME(m_leds));
+	save_item(NAME(m_hopper));
 }
 
 /***************************************************************************
@@ -4768,72 +4753,72 @@ static DRIVER_INIT( korokoro )
 
 ***************************************************************************/
 
-GAME( 1994, pwrinst2,   0,        pwrinst2, metmqstr, pwrinst2, ROT0,   "Atlus",                                  "Power Instinct 2 (US, Ver. 94/04/08)",         GAME_SUPPORTS_SAVE )
-GAME( 1994, pwrinst2j,  pwrinst2, pwrinst2, metmqstr, pwrinst2j,ROT0,   "Atlus",                                  "Gouketsuji Ichizoku 2 (Japan, Ver. 94/04/08)", GAME_SUPPORTS_SAVE )
+GAME( 1994, pwrinst2,   0,        pwrinst2, metmqstr, cave_state, pwrinst2, ROT0,   "Atlus",                                  "Power Instinct 2 (US, Ver. 94/04/08)",         GAME_SUPPORTS_SAVE )
+GAME( 1994, pwrinst2j,  pwrinst2, pwrinst2, metmqstr, cave_state, pwrinst2j,ROT0,   "Atlus",                                  "Gouketsuji Ichizoku 2 (Japan, Ver. 94/04/08)", GAME_SUPPORTS_SAVE )
 
 // The EEPROM determines the region, program roms are the same between sets
-GAME( 1994, mazinger,   0,        mazinger, cave,     mazinger, ROT90,  "Banpresto / Dynamic Pl. Toei Animation", "Mazinger Z (World)", GAME_SUPPORTS_SAVE )
-GAME( 1994, mazingerj,  mazinger, mazinger, cave,     mazinger, ROT90,  "Banpresto / Dynamic Pl. Toei Animation", "Mazinger Z (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1994, mazinger,   0,        mazinger, cave, cave_state,     mazinger, ROT90,  "Banpresto / Dynamic Pl. Toei Animation", "Mazinger Z (World)", GAME_SUPPORTS_SAVE )
+GAME( 1994, mazingerj,  mazinger, mazinger, cave, cave_state,     mazinger, ROT90,  "Banpresto / Dynamic Pl. Toei Animation", "Mazinger Z (Japan)", GAME_SUPPORTS_SAVE )
 
-GAME( 1995, donpachi,   0,        donpachi, cave,     donpachi, ROT270, "Cave (Atlus license)",                   "DonPachi (US)",        GAME_SUPPORTS_SAVE )
-GAME( 1995, donpachij,  donpachi, donpachi, cave,     donpachi, ROT270, "Cave (Atlus license)",                   "DonPachi (Japan)",     GAME_SUPPORTS_SAVE )
-GAME( 1995, donpachikr, donpachi, donpachi, cave,     donpachi, ROT270, "Cave (Atlus license)",                   "DonPachi (Korea)",     GAME_SUPPORTS_SAVE )
-GAME( 1995, donpachihk, donpachi, donpachi, cave,     donpachi, ROT270, "Cave (Atlus license)",                   "DonPachi (Hong Kong)", GAME_SUPPORTS_SAVE )
+GAME( 1995, donpachi,   0,        donpachi, cave, cave_state,     donpachi, ROT270, "Cave (Atlus license)",                   "DonPachi (US)",        GAME_SUPPORTS_SAVE )
+GAME( 1995, donpachij,  donpachi, donpachi, cave, cave_state,     donpachi, ROT270, "Cave (Atlus license)",                   "DonPachi (Japan)",     GAME_SUPPORTS_SAVE )
+GAME( 1995, donpachikr, donpachi, donpachi, cave, cave_state,     donpachi, ROT270, "Cave (Atlus license)",                   "DonPachi (Korea)",     GAME_SUPPORTS_SAVE )
+GAME( 1995, donpachihk, donpachi, donpachi, cave, cave_state,     donpachi, ROT270, "Cave (Atlus license)",                   "DonPachi (Hong Kong)", GAME_SUPPORTS_SAVE )
 
-GAME( 1995, metmqstr,   0,        metmqstr, metmqstr, metmqstr, ROT0,   "Banpresto / Pandorabox",                 "Metamoqester (International)",   GAME_SUPPORTS_SAVE )
-GAME( 1995, nmaster,    metmqstr, metmqstr, metmqstr, metmqstr, ROT0,   "Banpresto / Pandorabox",                 "Oni - The Ninja Master (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1995, metmqstr,   0,        metmqstr, metmqstr, cave_state, metmqstr, ROT0,   "Banpresto / Pandorabox",                 "Metamoqester (International)",   GAME_SUPPORTS_SAVE )
+GAME( 1995, nmaster,    metmqstr, metmqstr, metmqstr, cave_state, metmqstr, ROT0,   "Banpresto / Pandorabox",                 "Oni - The Ninja Master (Japan)", GAME_SUPPORTS_SAVE )
 
-GAME( 1995, plegends,   0,        pwrinst2, metmqstr, pwrinst2j,ROT0,   "Atlus",                                  "Gogetsuji Legends (US, Ver. 95/06/20)",                       GAME_SUPPORTS_SAVE )
-GAME( 1995, plegendsj,  plegends, pwrinst2, metmqstr, pwrinst2j,ROT0,   "Atlus",                                  "Gouketsuji Gaiden - Saikyou Densetsu (Japan, Ver. 95/06/20)", GAME_SUPPORTS_SAVE )
-
-// The EEPROM determines the region, program roms are the same between sets
-GAME( 1995, sailormn,   0,        sailormn, cave,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22B, Europe)",    GAME_SUPPORTS_SAVE )
-GAME( 1995, sailormnu,  sailormn, sailormn, cave,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22B, USA)",       GAME_SUPPORTS_SAVE )
-GAME( 1995, sailormnj,  sailormn, sailormn, cave,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22B, Japan)",     GAME_SUPPORTS_SAVE )
-GAME( 1995, sailormnk,  sailormn, sailormn, cave,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22B, Korea)",     GAME_SUPPORTS_SAVE )
-GAME( 1995, sailormnt,  sailormn, sailormn, cave,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22B, Taiwan)",    GAME_SUPPORTS_SAVE )
-GAME( 1995, sailormnh,  sailormn, sailormn, cave,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22B, Hong Kong)", GAME_SUPPORTS_SAVE )
-GAME( 1995, sailormno,  sailormn, sailormn, cave,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22, Europe)",     GAME_SUPPORTS_SAVE )
-GAME( 1995, sailormnou, sailormn, sailormn, cave,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22, USA)",        GAME_SUPPORTS_SAVE )
-GAME( 1995, sailormnoj, sailormn, sailormn, cave,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22, Japan)",      GAME_SUPPORTS_SAVE )
-GAME( 1995, sailormnok, sailormn, sailormn, cave,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22, Korea)",      GAME_SUPPORTS_SAVE )
-GAME( 1995, sailormnot, sailormn, sailormn, cave,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22, Taiwan)",     GAME_SUPPORTS_SAVE )
-GAME( 1995, sailormnoh, sailormn, sailormn, cave,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22, Hong Kong)",	GAME_SUPPORTS_SAVE )
+GAME( 1995, plegends,   0,        pwrinst2, metmqstr, cave_state, pwrinst2j,ROT0,   "Atlus",                                  "Gogetsuji Legends (US, Ver. 95/06/20)",                       GAME_SUPPORTS_SAVE )
+GAME( 1995, plegendsj,  plegends, pwrinst2, metmqstr, cave_state, pwrinst2j,ROT0,   "Atlus",                                  "Gouketsuji Gaiden - Saikyou Densetsu (Japan, Ver. 95/06/20)", GAME_SUPPORTS_SAVE )
 
 // The EEPROM determines the region, program roms are the same between sets
-GAME( 1996, agallet,    0,        sailormn, cave,     agallet,  ROT270, "Banpresto / Gazelle",                    "Air Gallet (Europe)",    GAME_SUPPORTS_SAVE )
-GAME( 1996, agalletu,   agallet,  sailormn, cave,     agallet,  ROT270, "Banpresto / Gazelle",                    "Air Gallet (USA)",       GAME_SUPPORTS_SAVE )
-GAME( 1996, agalletj,   agallet,  sailormn, cave,     agallet,  ROT270, "Banpresto / Gazelle",                    "Akuu Gallet (Japan)",    GAME_SUPPORTS_SAVE )
-GAME( 1996, agalletk,   agallet,  sailormn, cave,     agallet,  ROT270, "Banpresto / Gazelle",                    "Air Gallet (Korea)",     GAME_SUPPORTS_SAVE )
-GAME( 1996, agallett,   agallet,  sailormn, cave,     agallet,  ROT270, "Banpresto / Gazelle",                    "Air Gallet (Taiwan)",    GAME_SUPPORTS_SAVE )
-GAME( 1996, agalleth,   agallet,  sailormn, cave,     agallet,  ROT270, "Banpresto / Gazelle",                    "Air Gallet (Hong Kong)", GAME_SUPPORTS_SAVE )
+GAME( 1995, sailormn,   0,        sailormn, cave, cave_state,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22B, Europe)",    GAME_SUPPORTS_SAVE )
+GAME( 1995, sailormnu,  sailormn, sailormn, cave, cave_state,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22B, USA)",       GAME_SUPPORTS_SAVE )
+GAME( 1995, sailormnj,  sailormn, sailormn, cave, cave_state,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22B, Japan)",     GAME_SUPPORTS_SAVE )
+GAME( 1995, sailormnk,  sailormn, sailormn, cave, cave_state,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22B, Korea)",     GAME_SUPPORTS_SAVE )
+GAME( 1995, sailormnt,  sailormn, sailormn, cave, cave_state,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22B, Taiwan)",    GAME_SUPPORTS_SAVE )
+GAME( 1995, sailormnh,  sailormn, sailormn, cave, cave_state,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22B, Hong Kong)", GAME_SUPPORTS_SAVE )
+GAME( 1995, sailormno,  sailormn, sailormn, cave, cave_state,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22, Europe)",     GAME_SUPPORTS_SAVE )
+GAME( 1995, sailormnou, sailormn, sailormn, cave, cave_state,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22, USA)",        GAME_SUPPORTS_SAVE )
+GAME( 1995, sailormnoj, sailormn, sailormn, cave, cave_state,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22, Japan)",      GAME_SUPPORTS_SAVE )
+GAME( 1995, sailormnok, sailormn, sailormn, cave, cave_state,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22, Korea)",      GAME_SUPPORTS_SAVE )
+GAME( 1995, sailormnot, sailormn, sailormn, cave, cave_state,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22, Taiwan)",     GAME_SUPPORTS_SAVE )
+GAME( 1995, sailormnoh, sailormn, sailormn, cave, cave_state,     sailormn, ROT0,   "Banpresto",                              "Pretty Soldier Sailor Moon (Ver. 95/03/22, Hong Kong)",	GAME_SUPPORTS_SAVE )
 
-GAME( 1996, hotdogst,   0,        hotdogst, cave,     hotdogst, ROT90,  "Marble",                                 "Hotdog Storm (International)", GAME_SUPPORTS_SAVE )
+// The EEPROM determines the region, program roms are the same between sets
+GAME( 1996, agallet,    0,        sailormn, cave, cave_state,     agallet,  ROT270, "Banpresto / Gazelle",                    "Air Gallet (Europe)",    GAME_SUPPORTS_SAVE )
+GAME( 1996, agalletu,   agallet,  sailormn, cave, cave_state,     agallet,  ROT270, "Banpresto / Gazelle",                    "Air Gallet (USA)",       GAME_SUPPORTS_SAVE )
+GAME( 1996, agalletj,   agallet,  sailormn, cave, cave_state,     agallet,  ROT270, "Banpresto / Gazelle",                    "Akuu Gallet (Japan)",    GAME_SUPPORTS_SAVE )
+GAME( 1996, agalletk,   agallet,  sailormn, cave, cave_state,     agallet,  ROT270, "Banpresto / Gazelle",                    "Air Gallet (Korea)",     GAME_SUPPORTS_SAVE )
+GAME( 1996, agallett,   agallet,  sailormn, cave, cave_state,     agallet,  ROT270, "Banpresto / Gazelle",                    "Air Gallet (Taiwan)",    GAME_SUPPORTS_SAVE )
+GAME( 1996, agalleth,   agallet,  sailormn, cave, cave_state,     agallet,  ROT270, "Banpresto / Gazelle",                    "Air Gallet (Hong Kong)", GAME_SUPPORTS_SAVE )
 
-GAME( 1996, pacslot,    0,        pacslot,  pacslot,  tjumpman, ROT0,   "Namco",                                  "Pac-Slot", GAME_SUPPORTS_SAVE )
+GAME( 1996, hotdogst,   0,        hotdogst, cave, cave_state,     hotdogst, ROT90,  "Marble",                                 "Hotdog Storm (International)", GAME_SUPPORTS_SAVE )
 
-GAME( 1997, ddonpach,   0,        ddonpach, cave,     ddonpach, ROT270, "Cave (Atlus license)",                   "DoDonPachi (International, Master Ver. 97/02/05)", GAME_SUPPORTS_SAVE )
-GAME( 1997, ddonpachj,  ddonpach, ddonpach, cave,     ddonpach, ROT270, "Cave (Atlus license)",                   "DoDonPachi (Japan, Master Ver. 97/02/05)",         GAME_SUPPORTS_SAVE )
+GAME( 1996, pacslot,    0,        pacslot,  pacslot, cave_state,  tjumpman, ROT0,   "Namco",                                  "Pac-Slot", GAME_SUPPORTS_SAVE )
 
-GAME( 1998, dfeveron,   feversos, dfeveron, cave,     dfeveron, ROT270, "Cave (Nihon System license)",            "Dangan Feveron (Japan, Ver. 98/09/17)",    GAME_SUPPORTS_SAVE )
-GAME( 1998, feversos,   0,        dfeveron, cave,     feversos, ROT270, "Cave (Nihon System license)",            "Fever SOS (International, Ver. 98/09/25)", GAME_SUPPORTS_SAVE )
+GAME( 1997, ddonpach,   0,        ddonpach, cave, cave_state,     ddonpach, ROT270, "Cave (Atlus license)",                   "DoDonPachi (International, Master Ver. 97/02/05)", GAME_SUPPORTS_SAVE )
+GAME( 1997, ddonpachj,  ddonpach, ddonpach, cave, cave_state,     ddonpach, ROT270, "Cave (Atlus license)",                   "DoDonPachi (Japan, Master Ver. 97/02/05)",         GAME_SUPPORTS_SAVE )
 
-GAME( 1998, esprade,    0,        esprade,  cave,     esprade,  ROT270, "Cave (Atlus license)",                   "ESP Ra.De. (International, Ver. 98/04/22)", GAME_SUPPORTS_SAVE )
-GAME( 1998, espradej,   esprade,  esprade,  cave,     esprade,  ROT270, "Cave (Atlus license)",                   "ESP Ra.De. (Japan, Ver. 98/04/21)",         GAME_SUPPORTS_SAVE )
-GAME( 1998, espradejo,  esprade,  esprade,  cave,     esprade,  ROT270, "Cave (Atlus license)",                   "ESP Ra.De. (Japan, Ver. 98/04/14)",         GAME_SUPPORTS_SAVE )
+GAME( 1998, dfeveron,   feversos, dfeveron, cave, cave_state,     dfeveron, ROT270, "Cave (Nihon System license)",            "Dangan Feveron (Japan, Ver. 98/09/17)",    GAME_SUPPORTS_SAVE )
+GAME( 1998, feversos,   0,        dfeveron, cave, cave_state,     feversos, ROT270, "Cave (Nihon System license)",            "Fever SOS (International, Ver. 98/09/25)", GAME_SUPPORTS_SAVE )
 
-GAME( 1998, uopoko,     0,        uopoko,   cave,     uopoko,   ROT0,   "Cave (Jaleco license)",                  "Puzzle Uo Poko (International)", GAME_SUPPORTS_SAVE )
-GAME( 1998, uopokoj,    uopoko,   uopoko,   cave,     uopoko,   ROT0,   "Cave (Jaleco license)",                  "Puzzle Uo Poko (Japan)",         GAME_SUPPORTS_SAVE )
+GAME( 1998, esprade,    0,        esprade,  cave, cave_state,     esprade,  ROT270, "Cave (Atlus license)",                   "ESP Ra.De. (International, Ver. 98/04/22)", GAME_SUPPORTS_SAVE )
+GAME( 1998, espradej,   esprade,  esprade,  cave, cave_state,     esprade,  ROT270, "Cave (Atlus license)",                   "ESP Ra.De. (Japan, Ver. 98/04/21)",         GAME_SUPPORTS_SAVE )
+GAME( 1998, espradejo,  esprade,  esprade,  cave, cave_state,     esprade,  ROT270, "Cave (Atlus license)",                   "ESP Ra.De. (Japan, Ver. 98/04/14)",         GAME_SUPPORTS_SAVE )
 
-GAME( 1999, guwange,    0,        guwange,  guwange,  guwange,  ROT270, "Cave (Atlus license)",                   "Guwange (Japan, Master Ver. 99/06/24)",  GAME_SUPPORTS_SAVE )
-GAME( 1999, guwanges,   guwange,  guwange,  guwange,  guwange,  ROT270, "Cave (Atlus license)",                   "Guwange (Japan, Special Ver. 00/01/01)", GAME_SUPPORTS_SAVE )
+GAME( 1998, uopoko,     0,        uopoko,   cave, cave_state,     uopoko,   ROT0,   "Cave (Jaleco license)",                  "Puzzle Uo Poko (International)", GAME_SUPPORTS_SAVE )
+GAME( 1998, uopokoj,    uopoko,   uopoko,   cave, cave_state,     uopoko,   ROT0,   "Cave (Jaleco license)",                  "Puzzle Uo Poko (Japan)",         GAME_SUPPORTS_SAVE )
 
-GAME( 1999, gaia,       0,        gaia,     gaia,     gaia,     ROT0,   "Noise Factory",                          "Gaia Crusaders", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND ) // cuts out occasionally
+GAME( 1999, guwange,    0,        guwange,  guwange, cave_state,  guwange,  ROT270, "Cave (Atlus license)",                   "Guwange (Japan, Master Ver. 99/06/24)",  GAME_SUPPORTS_SAVE )
+GAME( 1999, guwanges,   guwange,  guwange,  guwange, cave_state,  guwange,  ROT270, "Cave (Atlus license)",                   "Guwange (Japan, Special Ver. 00/01/01)", GAME_SUPPORTS_SAVE )
 
-GAME( 2001, theroes,    0,        gaia,     theroes,  gaia,     ROT0,   "Primetek Investments",                   "Thunder Heroes",	GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND ) // cuts out occasionally
+GAME( 1999, gaia,       0,        gaia,     gaia, cave_state,     gaia,     ROT0,   "Noise Factory",                          "Gaia Crusaders", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND ) // cuts out occasionally
 
-GAME( 1999, korokoro,   0,        korokoro, korokoro, korokoro, ROT0,   "Takumi",                                 "Koro Koro Quest (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 2001, theroes,    0,        gaia,     theroes, cave_state,  gaia,     ROT0,   "Primetek Investments",                   "Thunder Heroes",	GAME_SUPPORTS_SAVE | GAME_IMPERFECT_SOUND ) // cuts out occasionally
 
-GAME( 1999, crusherm,   0,        crusherm, korokoro, korokoro, ROT0,   "Takumi",                                 "Crusher Makochan (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1999, korokoro,   0,        korokoro, korokoro, cave_state, korokoro, ROT0,   "Takumi",                                 "Koro Koro Quest (Japan)", GAME_SUPPORTS_SAVE )
 
-GAME( 1999, tjumpman,   0,        tjumpman, tjumpman, tjumpman, ROT0,   "Namco",                                  "Tobikose! Jumpman", GAME_SUPPORTS_SAVE )
+GAME( 1999, crusherm,   0,        crusherm, korokoro, cave_state, korokoro, ROT0,   "Takumi",                                 "Crusher Makochan (Japan)", GAME_SUPPORTS_SAVE )
+
+GAME( 1999, tjumpman,   0,        tjumpman, tjumpman, cave_state, tjumpman, ROT0,   "Namco",                                  "Tobikose! Jumpman", GAME_SUPPORTS_SAVE )

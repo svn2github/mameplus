@@ -1458,7 +1458,7 @@ static MACHINE_CONFIG_START( defender, williams_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("wmsdac", DAC, 0)
+	MCFG_DAC_ADD("wmsdac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	/* pia */
@@ -1613,9 +1613,9 @@ static MACHINE_CONFIG_DERIVED( blaster, blastkit )
 	MCFG_DEVICE_REMOVE("mono")
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
-	MCFG_SOUND_ADD("wmsdac", DAC, 0)
+	MCFG_DAC_ADD("wmsdac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.50)
-	MCFG_SOUND_ADD("wmsdac_b", DAC, 0)
+	MCFG_DAC_ADD("wmsdac_b")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.50)
 MACHINE_CONFIG_END
 
@@ -1650,7 +1650,7 @@ static MACHINE_CONFIG_START( williams2, williams_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("wmsdac", DAC, 0)
+	MCFG_DAC_ADD("wmsdac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	/* pia */
@@ -2706,11 +2706,11 @@ ROM_END
  *************************************/
 
 #define CONFIGURE_BLITTER(x,c) \
-	state->m_blitter_config = x; \
-	state->m_blitter_clip_address = c
+	m_blitter_config = x; \
+	m_blitter_clip_address = c
 
 #define CONFIGURE_TILEMAP(x) \
-	state->m_williams2_tilemap_config = x
+	m_williams2_tilemap_config = x
 
 
 
@@ -2720,17 +2720,15 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( defender )
+DRIVER_INIT_MEMBER(williams_state,defender)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_NONE, 0x0000);
 }
 
 
-static DRIVER_INIT( defndjeu )
+DRIVER_INIT_MEMBER(williams_state,defndjeu)
 {
-	williams_state *state = machine.driver_data<williams_state>();
-	UINT8 *rom = state->memregion("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 	int i;
 
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_NONE, 0x0000);
@@ -2741,13 +2739,12 @@ static DRIVER_INIT( defndjeu )
 }
 
 
-static DRIVER_INIT( mayday )
+DRIVER_INIT_MEMBER(williams_state,mayday)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_NONE, 0x0000);
 
 	/* install a handler to catch protection checks */
-	state->m_mayday_protection = machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xa190, 0xa191, read8_delegate(FUNC(williams_state::mayday_protection_r),state));
+	m_mayday_protection = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xa190, 0xa191, read8_delegate(FUNC(williams_state::mayday_protection_r),this));
 }
 
 
@@ -2758,102 +2755,90 @@ static DRIVER_INIT( mayday )
  *
  *************************************/
 
-static DRIVER_INIT( stargate )
+DRIVER_INIT_MEMBER(williams_state,stargate)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_NONE, 0x0000);
 }
 
 
-static DRIVER_INIT( robotron )
+DRIVER_INIT_MEMBER(williams_state,robotron)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0xc000);
 }
 
 
-static DRIVER_INIT( joust )
+DRIVER_INIT_MEMBER(williams_state,joust)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0xc000);
 }
 
 
-static DRIVER_INIT( bubbles )
+DRIVER_INIT_MEMBER(williams_state,bubbles)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0xc000);
 
 	/* bubbles has a full 8-bit-wide CMOS */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xcc00, 0xcfff, write8_delegate(FUNC(williams_state::bubbles_cmos_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xcc00, 0xcfff, write8_delegate(FUNC(williams_state::bubbles_cmos_w),this));
 }
 
 
-static DRIVER_INIT( splat )
+DRIVER_INIT_MEMBER(williams_state,splat)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC02, 0xc000);
 }
 
 
-static DRIVER_INIT( sinistar )
+DRIVER_INIT_MEMBER(williams_state,sinistar)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0x7400);
 }
 
 
-static DRIVER_INIT( playball )
+DRIVER_INIT_MEMBER(williams_state,playball)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0xc000);
 }
 
 
-static DRIVER_INIT( blaster )
+DRIVER_INIT_MEMBER(williams_state,blaster)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC02, 0x9700);
 }
 
 
-static DRIVER_INIT( spdball )
+DRIVER_INIT_MEMBER(williams_state,spdball)
 {
-	williams_state *state = machine.driver_data<williams_state>();
-	pia6821_device *pia_3 = machine.device<pia6821_device>("pia_3");
+	pia6821_device *pia_3 = machine().device<pia6821_device>("pia_3");
 
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0xc000);
 
 	/* add a third PIA */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc808, 0xc80b, read8_delegate(FUNC(pia6821_device::read), pia_3), write8_delegate(FUNC(pia6821_device::write), pia_3));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc808, 0xc80b, read8_delegate(FUNC(pia6821_device::read), pia_3), write8_delegate(FUNC(pia6821_device::write), pia_3));
 
 	/* install extra input handlers */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xc800, 0xc800, "AN0");
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xc801, 0xc801, "AN1");
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xc802, 0xc802, "AN2");
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xc803, 0xc803, "AN3");
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xc800, 0xc800, "AN0");
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xc801, 0xc801, "AN1");
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xc802, 0xc802, "AN2");
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_port(0xc803, 0xc803, "AN3");
 }
 
 
-static DRIVER_INIT( alienar )
+DRIVER_INIT_MEMBER(williams_state,alienar)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0xc000);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xcbff, 0xcbff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xcbff, 0xcbff);
 }
 
 
-static DRIVER_INIT( alienaru )
+DRIVER_INIT_MEMBER(williams_state,alienaru)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0xc000);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xcbff, 0xcbff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xcbff, 0xcbff);
 }
 
 
-static DRIVER_INIT( lottofun )
+DRIVER_INIT_MEMBER(williams_state,lottofun)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC01, 0xc000);
 }
 
@@ -2865,33 +2850,29 @@ static DRIVER_INIT( lottofun )
  *
  *************************************/
 
-static DRIVER_INIT( mysticm )
+DRIVER_INIT_MEMBER(williams_state,mysticm)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC02, 0x9000);
 	CONFIGURE_TILEMAP(WILLIAMS_TILEMAP_MYSTICM);
 }
 
 
-static DRIVER_INIT( tshoot )
+DRIVER_INIT_MEMBER(williams_state,tshoot)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC02, 0x9000);
 	CONFIGURE_TILEMAP(WILLIAMS_TILEMAP_TSHOOT);
 }
 
 
-static DRIVER_INIT( inferno )
+DRIVER_INIT_MEMBER(williams_state,inferno)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC02, 0x9000);
 	CONFIGURE_TILEMAP(WILLIAMS_TILEMAP_TSHOOT);
 }
 
 
-static DRIVER_INIT( joust2 )
+DRIVER_INIT_MEMBER(joust2_state,joust2)
 {
-	williams_state *state = machine.driver_data<williams_state>();
 	CONFIGURE_BLITTER(WILLIAMS_BLITTER_SC02, 0x9000);
 	CONFIGURE_TILEMAP(WILLIAMS_TILEMAP_JOUST2);
 }
@@ -2905,50 +2886,50 @@ static DRIVER_INIT( joust2 )
  *************************************/
 
 /* Defender hardware games */
-GAME( 1980, defender,   0,        defender,            defender, defender, ROT0,   "Williams", "Defender (Red label)", GAME_SUPPORTS_SAVE ) // developers left Williams in 1981 and formed Vid Kidz
-GAME( 1980, defenderg,  defender, defender,            defender, defender, ROT0,   "Williams", "Defender (Green label)", GAME_SUPPORTS_SAVE )
-GAME( 1980, defenderb,  defender, defender,            defender, defender, ROT0,   "Williams", "Defender (Blue label)", GAME_SUPPORTS_SAVE )
-GAME( 1980, defenderw,  defender, defender,            defender, defender, ROT0,   "Williams", "Defender (White label)", GAME_SUPPORTS_SAVE )
-GAME( 1980, defndjeu,   defender, defender,            defender, defndjeu, ROT0,   "bootleg (Jeutel)", "Defender (bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 1980, tornado1,   defender, defender,            defender, defndjeu, ROT0,   "bootleg (Jeutel)", "Tornado (set 1, Defender bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1980, tornado2,   defender, defender,            defender, defndjeu, ROT0,   "bootleg (Jeutel)", "Tornado (set 2, Defender bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // bad dump?
-GAME( 1980, zero,       defender, defender,            defender, defndjeu, ROT0,   "bootleg (Jeutel)", "Zero (set 1, Defender bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1980, zero2,      defender, defender,            defender, defndjeu, ROT0,   "bootleg (Amtec)", "Zero (set 2, Defender bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1980, defcmnd,    defender, defender,            defender, defender, ROT0,   "bootleg", "Defense Command (Defender bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1981, defence,    defender, defender,            defender, defender, ROT0,   "bootleg (Outer Limits)", "Defence Command (Defender bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1981, startrkd,   defender, defender,            defender, defender, ROT0,   "bootleg", "Star Trek (Defender bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1980, mayday,     0,        defender,            mayday,   mayday,   ROT0,   "Hoei", "Mayday (set 1)", GAME_SUPPORTS_SAVE ) // original by Hoei, which one of these 3 sets is bootleg/licensed/original is unknown
-GAME( 1980, maydaya,    mayday,   defender,            mayday,   mayday,   ROT0,   "Hoei", "Mayday (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1980, maydayb,    mayday,   defender,            mayday,   mayday,   ROT0,   "Hoei", "Mayday (set 3)", GAME_SUPPORTS_SAVE )
-GAME( 1981, colony7,    0,        defender,            colony7,  defender, ROT270, "Taito", "Colony 7 (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1981, colony7a,   colony7,  defender,            colony7,  defender, ROT270, "Taito", "Colony 7 (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1982, jin,        0,        jin,                 jin,      defender, ROT90,  "Falcon", "Jin", GAME_SUPPORTS_SAVE )
+GAME( 1980, defender,   0,        defender,            defender, williams_state, defender, ROT0,   "Williams", "Defender (Red label)", GAME_SUPPORTS_SAVE ) // developers left Williams in 1981 and formed Vid Kidz
+GAME( 1980, defenderg,  defender, defender,            defender, williams_state, defender, ROT0,   "Williams", "Defender (Green label)", GAME_SUPPORTS_SAVE )
+GAME( 1980, defenderb,  defender, defender,            defender, williams_state, defender, ROT0,   "Williams", "Defender (Blue label)", GAME_SUPPORTS_SAVE )
+GAME( 1980, defenderw,  defender, defender,            defender, williams_state, defender, ROT0,   "Williams", "Defender (White label)", GAME_SUPPORTS_SAVE )
+GAME( 1980, defndjeu,   defender, defender,            defender, williams_state, defndjeu, ROT0,   "bootleg (Jeutel)", "Defender (bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1980, tornado1,   defender, defender,            defender, williams_state, defndjeu, ROT0,   "bootleg (Jeutel)", "Tornado (set 1, Defender bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1980, tornado2,   defender, defender,            defender, williams_state, defndjeu, ROT0,   "bootleg (Jeutel)", "Tornado (set 2, Defender bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // bad dump?
+GAME( 1980, zero,       defender, defender,            defender, williams_state, defndjeu, ROT0,   "bootleg (Jeutel)", "Zero (set 1, Defender bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1980, zero2,      defender, defender,            defender, williams_state, defndjeu, ROT0,   "bootleg (Amtec)", "Zero (set 2, Defender bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1980, defcmnd,    defender, defender,            defender, williams_state, defender, ROT0,   "bootleg", "Defense Command (Defender bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1981, defence,    defender, defender,            defender, williams_state, defender, ROT0,   "bootleg (Outer Limits)", "Defence Command (Defender bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1981, startrkd,   defender, defender,            defender, williams_state, defender, ROT0,   "bootleg", "Star Trek (Defender bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1980, mayday,     0,        defender,            mayday, williams_state,   mayday,   ROT0,   "Hoei", "Mayday (set 1)", GAME_SUPPORTS_SAVE ) // original by Hoei, which one of these 3 sets is bootleg/licensed/original is unknown
+GAME( 1980, maydaya,    mayday,   defender,            mayday, williams_state,   mayday,   ROT0,   "Hoei", "Mayday (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1980, maydayb,    mayday,   defender,            mayday, williams_state,   mayday,   ROT0,   "Hoei", "Mayday (set 3)", GAME_SUPPORTS_SAVE )
+GAME( 1981, colony7,    0,        defender,            colony7, williams_state,  defender, ROT270, "Taito", "Colony 7 (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1981, colony7a,   colony7,  defender,            colony7, williams_state,  defender, ROT270, "Taito", "Colony 7 (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1982, jin,        0,        jin,                 jin, williams_state,      defender, ROT90,  "Falcon", "Jin", GAME_SUPPORTS_SAVE )
 
 /* Standard Williams hardware */
-GAME( 1981, stargate,   0,        williams,            stargate, stargate, ROT0,   "Williams / Vid Kidz", "Stargate", GAME_SUPPORTS_SAVE )
-GAME( 1982, robotron,   0,        williams,            robotron, robotron, ROT0,   "Williams / Vid Kidz", "Robotron: 2084 (Solid Blue label)", GAME_SUPPORTS_SAVE )
-GAME( 1982, robotronyo, robotron, williams,            robotron, robotron, ROT0,   "Williams / Vid Kidz", "Robotron: 2084 (Yellow/Orange label)", GAME_SUPPORTS_SAVE )
-GAME( 1982, joust,      0,        williams_muxed,      joust,    joust,    ROT0,   "Williams", "Joust (White/Green label)", GAME_SUPPORTS_SAVE )
-GAME( 1982, joustr,     joust,    williams_muxed,      joust,    joust,    ROT0,   "Williams", "Joust (Solid Red label)", GAME_SUPPORTS_SAVE )
-GAME( 1982, joustwr,    joust,    williams_muxed,      joust,    joust,    ROT0,   "Williams", "Joust (White/Red label)", GAME_SUPPORTS_SAVE )
-GAME( 1982, bubbles,    0,        williams,            bubbles,  bubbles,  ROT0,   "Williams", "Bubbles", GAME_SUPPORTS_SAVE )
-GAME( 1982, bubblesr,   bubbles,  williams,            bubbles,  bubbles,  ROT0,   "Williams", "Bubbles (Solid Red label)", GAME_SUPPORTS_SAVE )
-GAME( 1982, bubblesp,   bubbles,  williams,            bubbles,  bubbles,  ROT0,   "Williams", "Bubbles (prototype version)", GAME_SUPPORTS_SAVE )
-GAME( 1982, splat,      0,        williams_muxed,      splat,    splat,    ROT0,   "Williams", "Splat!", GAME_SUPPORTS_SAVE )
-GAME( 1982, sinistar,   0,        sinistar,            sinistar, sinistar, ROT270, "Williams", "Sinistar (revision 3)", GAME_SUPPORTS_SAVE )
-GAME( 1982, sinistar1,  sinistar, sinistar,            sinistar, sinistar, ROT270, "Williams", "Sinistar (prototype version)", GAME_SUPPORTS_SAVE )
-GAME( 1982, sinistar2,  sinistar, sinistar,            sinistar, sinistar, ROT270, "Williams", "Sinistar (revision 2)", GAME_SUPPORTS_SAVE )
-GAME( 1983, playball,   0,        playball,            playball, playball, ROT270, "Williams", "PlayBall! (prototype)", GAME_SUPPORTS_SAVE )
-GAME( 1983, blaster,    0,        blaster,             blaster,  blaster,  ROT0,   "Williams / Vid Kidz", "Blaster", GAME_SUPPORTS_SAVE )
-GAME( 1983, blastero,   blaster,  blaster,             blaster,  blaster,  ROT0,   "Williams / Vid Kidz", "Blaster (location test)", GAME_SUPPORTS_SAVE )
-GAME( 1983, blasterkit, blaster,  blastkit,            blastkit, blaster,  ROT0,   "Williams / Vid Kidz", "Blaster (conversion kit)", GAME_SUPPORTS_SAVE ) // mono sound
-GAME( 1985, spdball,    0,        spdball,             spdball,  spdball,  ROT0,   "Williams", "Speed Ball (prototype)", GAME_SUPPORTS_SAVE )
-GAME( 1985, alienar,    0,        alienar,             alienar,  alienar,  ROT0,   "Duncan Brown", "Alien Arena", GAME_SUPPORTS_SAVE )
-GAME( 1985, alienaru,   alienar,  alienar,             alienar,  alienaru, ROT0,   "Duncan Brown", "Alien Arena (Stargate upgrade)", GAME_SUPPORTS_SAVE )
-GAME( 1987, lottofun,   0,        lottofun,            lottofun, lottofun, ROT0,   "H.A.R. Management", "Lotto Fun", GAME_SUPPORTS_SAVE )
+GAME( 1981, stargate,   0,        williams,            stargate, williams_state, stargate, ROT0,   "Williams / Vid Kidz", "Stargate", GAME_SUPPORTS_SAVE )
+GAME( 1982, robotron,   0,        williams,            robotron, williams_state, robotron, ROT0,   "Williams / Vid Kidz", "Robotron: 2084 (Solid Blue label)", GAME_SUPPORTS_SAVE )
+GAME( 1982, robotronyo, robotron, williams,            robotron, williams_state, robotron, ROT0,   "Williams / Vid Kidz", "Robotron: 2084 (Yellow/Orange label)", GAME_SUPPORTS_SAVE )
+GAME( 1982, joust,      0,        williams_muxed,      joust, williams_state,    joust,    ROT0,   "Williams", "Joust (White/Green label)", GAME_SUPPORTS_SAVE )
+GAME( 1982, joustr,     joust,    williams_muxed,      joust, williams_state,    joust,    ROT0,   "Williams", "Joust (Solid Red label)", GAME_SUPPORTS_SAVE )
+GAME( 1982, joustwr,    joust,    williams_muxed,      joust, williams_state,    joust,    ROT0,   "Williams", "Joust (White/Red label)", GAME_SUPPORTS_SAVE )
+GAME( 1982, bubbles,    0,        williams,            bubbles, williams_state,  bubbles,  ROT0,   "Williams", "Bubbles", GAME_SUPPORTS_SAVE )
+GAME( 1982, bubblesr,   bubbles,  williams,            bubbles, williams_state,  bubbles,  ROT0,   "Williams", "Bubbles (Solid Red label)", GAME_SUPPORTS_SAVE )
+GAME( 1982, bubblesp,   bubbles,  williams,            bubbles, williams_state,  bubbles,  ROT0,   "Williams", "Bubbles (prototype version)", GAME_SUPPORTS_SAVE )
+GAME( 1982, splat,      0,        williams_muxed,      splat, williams_state,    splat,    ROT0,   "Williams", "Splat!", GAME_SUPPORTS_SAVE )
+GAME( 1982, sinistar,   0,        sinistar,            sinistar, williams_state, sinistar, ROT270, "Williams", "Sinistar (revision 3)", GAME_SUPPORTS_SAVE )
+GAME( 1982, sinistar1,  sinistar, sinistar,            sinistar, williams_state, sinistar, ROT270, "Williams", "Sinistar (prototype version)", GAME_SUPPORTS_SAVE )
+GAME( 1982, sinistar2,  sinistar, sinistar,            sinistar, williams_state, sinistar, ROT270, "Williams", "Sinistar (revision 2)", GAME_SUPPORTS_SAVE )
+GAME( 1983, playball,   0,        playball,            playball, williams_state, playball, ROT270, "Williams", "PlayBall! (prototype)", GAME_SUPPORTS_SAVE )
+GAME( 1983, blaster,    0,        blaster,             blaster, williams_state,  blaster,  ROT0,   "Williams / Vid Kidz", "Blaster", GAME_SUPPORTS_SAVE )
+GAME( 1983, blastero,   blaster,  blaster,             blaster, williams_state,  blaster,  ROT0,   "Williams / Vid Kidz", "Blaster (location test)", GAME_SUPPORTS_SAVE )
+GAME( 1983, blasterkit, blaster,  blastkit,            blastkit, williams_state, blaster,  ROT0,   "Williams / Vid Kidz", "Blaster (conversion kit)", GAME_SUPPORTS_SAVE ) // mono sound
+GAME( 1985, spdball,    0,        spdball,             spdball, williams_state,  spdball,  ROT0,   "Williams", "Speed Ball (prototype)", GAME_SUPPORTS_SAVE )
+GAME( 1985, alienar,    0,        alienar,             alienar, williams_state,  alienar,  ROT0,   "Duncan Brown", "Alien Arena", GAME_SUPPORTS_SAVE )
+GAME( 1985, alienaru,   alienar,  alienar,             alienar, williams_state,  alienaru, ROT0,   "Duncan Brown", "Alien Arena (Stargate upgrade)", GAME_SUPPORTS_SAVE )
+GAME( 1987, lottofun,   0,        lottofun,            lottofun, williams_state, lottofun, ROT0,   "H.A.R. Management", "Lotto Fun", GAME_SUPPORTS_SAVE )
 
 /* 2nd Generation Williams hardware with tilemaps */
-GAME( 1983, mysticm,    0,        mysticm,             mysticm,  mysticm,  ROT0,   "Williams", "Mystic Marathon", GAME_SUPPORTS_SAVE )
-GAME( 1984, tshoot,     0,        tshoot,              tshoot,   tshoot,   ROT0,   "Williams", "Turkey Shoot", GAME_SUPPORTS_SAVE )
-GAME( 1984, inferno,    0,        williams2_extra_ram, inferno,  inferno,  ROT0,   "Williams", "Inferno (Williams)", GAME_SUPPORTS_SAVE )
-GAME( 1986, joust2,     0,        joust2,              joust2,   joust2,   ROT270, "Williams", "Joust 2 - Survival of the Fittest", GAME_SUPPORTS_SAVE )
+GAME( 1983, mysticm,    0,        mysticm,             mysticm, williams_state,  mysticm,  ROT0,   "Williams", "Mystic Marathon", GAME_SUPPORTS_SAVE )
+GAME( 1984, tshoot,     0,        tshoot,              tshoot, williams_state,   tshoot,   ROT0,   "Williams", "Turkey Shoot", GAME_SUPPORTS_SAVE )
+GAME( 1984, inferno,    0,        williams2_extra_ram, inferno, williams_state,  inferno,  ROT0,   "Williams", "Inferno (Williams)", GAME_SUPPORTS_SAVE )
+GAME( 1986, joust2,     0,        joust2,              joust2, joust2_state,   joust2,   ROT270, "Williams", "Joust 2 - Survival of the Fittest", GAME_SUPPORTS_SAVE )

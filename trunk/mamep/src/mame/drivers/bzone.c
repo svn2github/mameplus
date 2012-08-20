@@ -73,9 +73,9 @@
     XXXX01XX   Missile appears after 20,000 points
     XXXX00XX   Missile appears after 30,000 points
     XX11XXXX   No bonus tank
-    XX10XXXX   Bonus taks at 15,000 and 100,000 points  $
-    XX01XXXX   Bonus taks at 20,000 and 100,000 points
-    XX00XXXX   Bonus taks at 50,000 and 100,000 points
+    XX10XXXX   Bonus tanks at 15,000 and 100,000 points  $
+    XX01XXXX   Bonus tanks at 25,000 and 100,000 points
+    XX00XXXX   Bonus tanks at 50,000 and 100,000 points
     11XXXXXX   English language
     10XXXXXX   French language
     01XXXXXX   German language
@@ -379,7 +379,7 @@ ADDRESS_MAP_END
 	PORT_DIPSETTING(	0x0c, "30000" )\
 	PORT_DIPNAME( 0x30, 0x10, DEF_STR( Bonus_Life ) ) PORT_DIPLOCATION("M10:5,6")\
 	PORT_DIPSETTING(	0x10, "15k and 100k" )\
-	PORT_DIPSETTING(	0x20, "20k and 100k" )\
+	PORT_DIPSETTING(	0x20, "25k and 100k" )\
 	PORT_DIPSETTING(	0x30, "50k and 100k" )\
 	PORT_DIPSETTING(	0x00, DEF_STR( None ) )\
 	PORT_DIPNAME( 0xc0, 0x00, DEF_STR( Language ) ) PORT_DIPLOCATION("M10:7,8")\
@@ -878,15 +878,14 @@ WRITE8_MEMBER(bzone_state::analog_select_w)
 }
 
 
-static DRIVER_INIT( bradley )
+DRIVER_INIT_MEMBER(bzone_state,bradley)
 {
-	bzone_state *state = machine.driver_data<bzone_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	space->install_ram(0x400, 0x7ff);
 	space->install_read_port(0x1808, 0x1808, "1808");
 	space->install_read_port(0x1809, 0x1809, "1809");
-	space->install_read_handler(0x180a, 0x180a, read8_delegate(FUNC(bzone_state::analog_data_r),state));
-	space->install_write_handler(0x1848, 0x1850, write8_delegate(FUNC(bzone_state::analog_select_w),state));
+	space->install_read_handler(0x180a, 0x180a, read8_delegate(FUNC(bzone_state::analog_data_r),this));
+	space->install_write_handler(0x1848, 0x1850, write8_delegate(FUNC(bzone_state::analog_select_w),this));
 }
 
 
@@ -897,9 +896,9 @@ static DRIVER_INIT( bradley )
  *
  *************************************/
 
-GAMEL(1980, bzone,     0,        bzone,    bzone,    0,       ROT0, "Atari", "Battle Zone (rev 2)", GAME_SUPPORTS_SAVE, layout_bzone )
-GAMEL(1980, bzonea,    bzone,    bzone,    bzone,    0,       ROT0, "Atari", "Battle Zone (rev 1)", GAME_SUPPORTS_SAVE, layout_bzone )
-GAMEL(1980, bzonec,    bzone,    bzone,    bzone,    0,       ROT0, "Atari", "Battle Zone (cocktail)", GAME_SUPPORTS_SAVE|GAME_NO_COCKTAIL, layout_bzone )
-GAME( 1980, bradley,   0,        bzone,    bradley,  bradley, ROT0, "Atari", "Bradley Trainer", GAME_SUPPORTS_SAVE )
-GAMEL(1980, redbaron,  0,        redbaron, redbaron, 0,       ROT0, "Atari", "Red Baron (Revised Hardware)", GAME_SUPPORTS_SAVE, layout_ho88ffff )
-GAMEL(1980, redbarona, redbaron, redbaron, redbaron, 0,       ROT0, "Atari", "Red Baron", GAME_SUPPORTS_SAVE, layout_ho88ffff )
+GAMEL(1980, bzone,     0,        bzone,    bzone, driver_device,    0,       ROT0, "Atari", "Battle Zone (rev 2)", GAME_SUPPORTS_SAVE, layout_bzone )
+GAMEL(1980, bzonea,    bzone,    bzone,    bzone, driver_device,    0,       ROT0, "Atari", "Battle Zone (rev 1)", GAME_SUPPORTS_SAVE, layout_bzone )
+GAMEL(1980, bzonec,    bzone,    bzone,    bzone, driver_device,    0,       ROT0, "Atari", "Battle Zone (cocktail)", GAME_SUPPORTS_SAVE|GAME_NO_COCKTAIL, layout_bzone )
+GAME( 1980, bradley,   0,        bzone,    bradley, bzone_state,  bradley, ROT0, "Atari", "Bradley Trainer", GAME_SUPPORTS_SAVE )
+GAMEL(1980, redbaron,  0,        redbaron, redbaron, driver_device, 0,       ROT0, "Atari", "Red Baron (Revised Hardware)", GAME_SUPPORTS_SAVE, layout_ho88ffff )
+GAMEL(1980, redbarona, redbaron, redbaron, redbaron, driver_device, 0,       ROT0, "Atari", "Red Baron", GAME_SUPPORTS_SAVE, layout_ho88ffff )

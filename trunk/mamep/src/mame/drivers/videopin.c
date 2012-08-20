@@ -399,4 +399,4 @@ ROM_END
  *
  *************************************/
 
-GAMEL( 1979, videopin, 0, videopin, videopin, 0, ROT270, "Atari", "Video Pinball", 0, layout_videopin )
+GAMEL( 1979, videopin, 0, videopin, videopin, driver_device, 0, ROT270, "Atari", "Video Pinball", 0, layout_videopin )

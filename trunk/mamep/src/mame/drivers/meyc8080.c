@@ -271,29 +271,29 @@ WRITE8_MEMBER(meyc8080_state::counters_w)
 
 WRITE8_MEMBER(meyc8080_state::meyc8080_dac_1_w)
 {
-	device_t *device = machine().device("dac");
-	dac_data_w(device, 0x00);
+	dac_device *device = machine().device<dac_device>("dac");
+	device->write_unsigned8(0x00);
 }
 
 
 WRITE8_MEMBER(meyc8080_state::meyc8080_dac_2_w)
 {
-	device_t *device = machine().device("dac");
-	dac_data_w(device, 0x55);
+	dac_device *device = machine().device<dac_device>("dac");
+	device->write_unsigned8(0x55);
 }
 
 
 WRITE8_MEMBER(meyc8080_state::meyc8080_dac_3_w)
 {
-	device_t *device = machine().device("dac");
-	dac_data_w(device, 0xaa);
+	dac_device *device = machine().device<dac_device>("dac");
+	device->write_unsigned8(0xaa);
 }
 
 
 WRITE8_MEMBER(meyc8080_state::meyc8080_dac_4_w)
 {
-	device_t *device = machine().device("dac");
-	dac_data_w(device, 0xff);
+	dac_device *device = machine().device<dac_device>("dac");
+	device->write_unsigned8(0xff);
 }
 
 
@@ -592,7 +592,7 @@ static MACHINE_CONFIG_START( meyc8080, meyc8080_state )
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 MACHINE_CONFIG_END
@@ -727,7 +727,7 @@ ROM_END
  *************************************/
 
 /*    YEAR  NAME       PARENT    MACHINE   INPUT      INIT  ROT    COMPANY              FULLNAME                                    FLAGS                                      LAYOUT  */
-GAMEL(1982, wldarrow,  0,        meyc8080, wldarrow,  0,    ROT0, "Meyco Games, Inc.", "Wild Arrow (color, Standard V4.8)",         GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_wldarrow ) // B&W version not dumped yet
-GAMEL(1984, mdrawpkr,  0,        meyc8080, mdrawpkr,  0,    ROT0, "Meyco Games, Inc.", "Draw Poker - Joker's Wild (Standard)",      GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_mdrawpkr ) // year not shown, but it is in mdrawpkra
-GAMEL(1984, mdrawpkra, mdrawpkr, meyc8080, mdrawpkra, 0,    ROT0, "Meyco Games, Inc.", "Draw Poker - Joker's Wild (02-11)",         GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_mdrawpkr )
-GAMEL(1983, casbjack,  0,        meyc8080, casbjack,  0,    ROT0, "Meyco Games, Inc.", "Casino Black Jack (color, Standard 00-05)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_meybjack ) // B&W version not dumped yet
+GAMEL(1982, wldarrow,  0,        meyc8080, wldarrow, driver_device,  0,    ROT0, "Meyco Games, Inc.", "Wild Arrow (color, Standard V4.8)",         GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_wldarrow ) // B&W version not dumped yet
+GAMEL(1984, mdrawpkr,  0,        meyc8080, mdrawpkr, driver_device,  0,    ROT0, "Meyco Games, Inc.", "Draw Poker - Joker's Wild (Standard)",      GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_mdrawpkr ) // year not shown, but it is in mdrawpkra
+GAMEL(1984, mdrawpkra, mdrawpkr, meyc8080, mdrawpkra, driver_device, 0,    ROT0, "Meyco Games, Inc.", "Draw Poker - Joker's Wild (02-11)",         GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_mdrawpkr )
+GAMEL(1983, casbjack,  0,        meyc8080, casbjack, driver_device,  0,    ROT0, "Meyco Games, Inc.", "Casino Black Jack (color, Standard 00-05)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_meybjack ) // B&W version not dumped yet

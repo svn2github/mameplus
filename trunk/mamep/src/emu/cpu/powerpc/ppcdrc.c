@@ -2452,7 +2452,7 @@ static int generate_opcode(powerpc_state *ppc, drcuml_block *block, compiler_sta
 
 		case 0x0b:	/* CMPI */
 			UML_CMP(block, R32(G_RA(op)), (INT16)G_SIMM(op));							// cmp     ra,uimm
-			UML_GETFLGS(block, I0, FLAG_Z | FLAG_C | FLAG_S);							// getflgs i0,zcs
+			UML_GETFLGS(block, I0, FLAG_Z | FLAG_V | FLAG_C | FLAG_S);							// getflgs i0,zvcs
 			UML_LOAD(block, I0, ppc->impstate->cmp_cr_table, I0, SIZE_BYTE, SCALE_x1);// load    i0,cmp_cr_table,i0,byte
 			UML_OR(block, CR32(G_CRFD(op)), I0, XERSO32);								// or      [crn],i0,[xerso]
 			return TRUE;
@@ -3061,7 +3061,7 @@ static int generate_instruction_1f(powerpc_state *ppc, drcuml_block *block, comp
 
 		case 0x000:	/* CMP */
 			UML_CMP(block, R32(G_RA(op)), R32(G_RB(op)));									// cmp     ra,rb
-			UML_GETFLGS(block, I0, FLAG_Z | FLAG_C | FLAG_S);							// getflgs i0,zcs
+			UML_GETFLGS(block, I0, FLAG_Z | FLAG_V | FLAG_C | FLAG_S);							// getflgs i0,zvcs
 			UML_LOAD(block, I0, ppc->impstate->cmp_cr_table, I0, SIZE_BYTE, SCALE_x1);// load    i0,cmp_cr_table,i0,byte
 			UML_OR(block, CR32(G_CRFD(op)), I0, XERSO32);								// or      [crn],i0,[xerso]
 			return TRUE;
@@ -3264,21 +3264,35 @@ static int generate_instruction_1f(powerpc_state *ppc, drcuml_block *block, comp
             UML_LABEL(block, compiler->labelnum++);             // 1:
 			return TRUE;
 
-		case 0x318:	/* SRAWx */
-			UML_MOV(block, I2, R32(G_RB(op)));											// mov     i2,rb
-			UML_TEST(block, I2, 0x20);											// test    i2,0x20
-			UML_MOVc(block, COND_NZ, I2, 31);										// mov     i2,31,nz
-			if (DISABLE_FLAG_OPTIMIZATIONS || (desc->regreq[3] & REGFLAG_XER_CA))
-			{
-				UML_SHL(block, I1, 0xffffffff, I2);							// shl     i1,0xffffffff,i2
-				UML_XOR(block, I1, I1, ~0);									// xor     i1,i1,~0
-				UML_AND(block, I0, R32(G_RS(op)), I1);							// and     i0,rs,i1
-				UML_SAR(block, I1, R32(G_RS(op)), 31);							// sar     i1,rs,31
-				UML_TEST(block, I0, I1);											// test    i0,i1
-				UML_SETc(block, COND_NZ, I0);											// set     i0,nz
-				UML_ROLINS(block, SPR32(SPR_XER), I0, 29, XER_CA);			// rolins  [xer],i0,29,XER_CA
-			}
-			UML_SAR(block, R32(G_RA(op)), R32(G_RS(op)), I2);							// sar     ra,rs,i2
+        case 0x318:	/* SRAWx */
+            UML_AND(block, I2, R32(G_RB(op)), 0x3f);            // and i2,rb,0x3f
+            UML_CMP(block, I2, 0x00000020);                     // cmp rb,0x20
+            UML_JMPc(block, COND_S, compiler->labelnum);        // bs 1:
+
+            if (DISABLE_FLAG_OPTIMIZATIONS || (desc->regreq[3] & REGFLAG_XER_CA))
+            {
+                // for shift amt > 32, carry flag is the sign bit of Rs and the sign bit fills all bit positions
+                UML_TEST(block, R32(G_RS(op)), 0x80000000);
+                UML_SETc(block, COND_NZ, I0);
+                UML_ROLINS(block, SPR32(SPR_XER), I0, 29, XER_CA);			// rolins  [xer],i0,29,XER_CA
+                UML_SAR(block, R32(G_RA(op)), R32(G_RS(op)), 31);							// sar     ra,rs,31
+            }
+            UML_JMP(block, compiler->labelnum+1);               // bra 2:
+
+            UML_LABEL(block, compiler->labelnum++);             // 1:
+            if (DISABLE_FLAG_OPTIMIZATIONS || (desc->regreq[3] & REGFLAG_XER_CA))
+            {
+                UML_SHL(block, I1, 0xffffffff, I2);							// shl     i1,0xffffffff,i2
+                UML_XOR(block, I1, I1, ~0);									// xor     i1,i1,~0
+                UML_AND(block, I0, R32(G_RS(op)), I1);							// and     i0,rs,i1
+                UML_SAR(block, I1, R32(G_RS(op)), 31);							// sar     i1,rs,31
+                UML_TEST(block, I0, I1);											// test    i0,i1
+                UML_SETc(block, COND_NZ, I0);											// set     i0,nz
+                UML_ROLINS(block, SPR32(SPR_XER), I0, 29, XER_CA);			// rolins  [xer],i0,29,XER_CA
+            }
+            UML_SAR(block, R32(G_RA(op)), R32(G_RS(op)), I2);							// sar     ra,rs,i2
+
+            UML_LABEL(block, compiler->labelnum++);             // 2:
 			generate_compute_flags(ppc, block, desc, op & M_RC, 0, FALSE);					// <update flags>
 			return TRUE;
 

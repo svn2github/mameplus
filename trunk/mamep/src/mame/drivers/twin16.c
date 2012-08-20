@@ -1319,43 +1319,40 @@ static void gfx_untangle( running_machine &machine )
 	auto_free( machine, temp );
 }
 
-static DRIVER_INIT( twin16 )
+DRIVER_INIT_MEMBER(twin16_state,twin16)
 {
-	twin16_state *state = machine.driver_data<twin16_state>();
-	gfx_untangle(machine);
-	state->m_custom_video = 0;
+	gfx_untangle(machine());
+	m_custom_video = 0;
 }
 
-static DRIVER_INIT( fround )
+DRIVER_INIT_MEMBER(twin16_state,fround)
 {
-	twin16_state *state = machine.driver_data<twin16_state>();
-	gfx_untangle(machine);
-	state->m_custom_video = 1;
+	gfx_untangle(machine());
+	m_custom_video = 1;
 }
 
-static DRIVER_INIT( cuebrickj )
+DRIVER_INIT_MEMBER(twin16_state,cuebrickj)
 {
-	twin16_state *state = machine.driver_data<twin16_state>();
-	gfx_untangle(machine);
+	gfx_untangle(machine());
 
-	machine.device<nvram_device>("nvram")->set_base(state->m_cuebrickj_nvram, 0x400*0x20);
+	machine().device<nvram_device>("nvram")->set_base(m_cuebrickj_nvram, 0x400*0x20);
 }
 
 /* Game Drivers */
 
 //    YEAR, NAME,      PARENT,   MACHINE,   INPUT,     INIT,      MONITOR,COMPANY,FULLNAME,FLAGS
-GAME( 1987, devilw,    0,        devilw,    devilw,    twin16,    ROT0,   "Konami", "Devil World", GAME_SUPPORTS_SAVE )
-GAME( 1987, majuu,     devilw,   devilw,    devilw,    twin16,    ROT0,   "Konami", "Majuu no Ohkoku", GAME_SUPPORTS_SAVE )
-GAME( 1987, darkadv,   devilw,   devilw,    darkadv,   twin16,    ROT0,   "Konami", "Dark Adventure", GAME_SUPPORTS_SAVE )
-GAME( 1988, vulcan,    0,        twin16,    vulcan,    twin16,    ROT0,   "Konami", "Vulcan Venture (New)", GAME_SUPPORTS_SAVE )
-GAME( 1988, vulcana,   vulcan,   twin16,    gradius2,  twin16,    ROT0,   "Konami", "Vulcan Venture (Old)", GAME_SUPPORTS_SAVE )
-GAME( 1988, vulcanb,   vulcan,   twin16,    gradius2,  twin16,    ROT0,   "Konami", "Vulcan Venture (Oldest)", GAME_SUPPORTS_SAVE )
-GAME( 1988, gradius2,  vulcan,   twin16,    gradius2,  twin16,    ROT0,   "Konami", "Gradius II - GOFER no Yabou (Japan New Ver.)", GAME_SUPPORTS_SAVE )
-GAME( 1988, gradius2a, vulcan,   twin16,    vulcan,    twin16,    ROT0,   "Konami", "Gradius II - GOFER no Yabou (Japan Old Ver.)", GAME_SUPPORTS_SAVE )
-GAME( 1988, gradius2b, vulcan,   twin16,    vulcan,    twin16,    ROT0,   "Konami", "Gradius II - GOFER no Yabou (Japan Older Ver.)", GAME_SUPPORTS_SAVE )
+GAME( 1987, devilw,    0,        devilw,    devilw, twin16_state,    twin16,    ROT0,   "Konami", "Devil World", GAME_SUPPORTS_SAVE )
+GAME( 1987, majuu,     devilw,   devilw,    devilw, twin16_state,    twin16,    ROT0,   "Konami", "Majuu no Ohkoku", GAME_SUPPORTS_SAVE )
+GAME( 1987, darkadv,   devilw,   devilw,    darkadv, twin16_state,   twin16,    ROT0,   "Konami", "Dark Adventure", GAME_SUPPORTS_SAVE )
+GAME( 1988, vulcan,    0,        twin16,    vulcan, twin16_state,    twin16,    ROT0,   "Konami", "Vulcan Venture (New)", GAME_SUPPORTS_SAVE )
+GAME( 1988, vulcana,   vulcan,   twin16,    gradius2, twin16_state,  twin16,    ROT0,   "Konami", "Vulcan Venture (Old)", GAME_SUPPORTS_SAVE )
+GAME( 1988, vulcanb,   vulcan,   twin16,    gradius2, twin16_state,  twin16,    ROT0,   "Konami", "Vulcan Venture (Oldest)", GAME_SUPPORTS_SAVE )
+GAME( 1988, gradius2,  vulcan,   twin16,    gradius2, twin16_state,  twin16,    ROT0,   "Konami", "Gradius II - GOFER no Yabou (Japan New Ver.)", GAME_SUPPORTS_SAVE )
+GAME( 1988, gradius2a, vulcan,   twin16,    vulcan, twin16_state,    twin16,    ROT0,   "Konami", "Gradius II - GOFER no Yabou (Japan Old Ver.)", GAME_SUPPORTS_SAVE )
+GAME( 1988, gradius2b, vulcan,   twin16,    vulcan, twin16_state,    twin16,    ROT0,   "Konami", "Gradius II - GOFER no Yabou (Japan Older Ver.)", GAME_SUPPORTS_SAVE )
 
-GAME( 1988, fround,    0,        fround,    fround,    fround,    ROT0,   "Konami", "The Final Round (version M)", GAME_SUPPORTS_SAVE )
-GAME( 1988, froundl,   fround,   fround,    fround,    fround,    ROT0,   "Konami", "The Final Round (version L)", GAME_SUPPORTS_SAVE )
-GAME( 1988, hpuncher,  fround,   twin16,    fround,    twin16,    ROT0,   "Konami", "Hard Puncher (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1989, miaj,      mia,      miaj,      miaj,      twin16,    ROT0,   "Konami", "M.I.A. - Missing in Action (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1989, cuebrickj, cuebrick, cuebrickj, cuebrickj, cuebrickj, ROT0,   "Konami", "Cue Brick (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1988, fround,    0,        fround,    fround, twin16_state,    fround,    ROT0,   "Konami", "The Final Round (version M)", GAME_SUPPORTS_SAVE )
+GAME( 1988, froundl,   fround,   fround,    fround, twin16_state,    fround,    ROT0,   "Konami", "The Final Round (version L)", GAME_SUPPORTS_SAVE )
+GAME( 1988, hpuncher,  fround,   twin16,    fround, twin16_state,    twin16,    ROT0,   "Konami", "Hard Puncher (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1989, miaj,      mia,      miaj,      miaj, twin16_state,      twin16,    ROT0,   "Konami", "M.I.A. - Missing in Action (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1989, cuebrickj, cuebrick, cuebrickj, cuebrickj, twin16_state, cuebrickj, ROT0,   "Konami", "Cue Brick (Japan)", GAME_SUPPORTS_SAVE )

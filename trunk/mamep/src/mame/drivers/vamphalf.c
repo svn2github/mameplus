@@ -146,6 +146,24 @@ public:
 
 	DECLARE_READ8_MEMBER(qs1000_p1_r);
 	DECLARE_WRITE8_MEMBER(qs1000_p3_w);
+	DECLARE_DRIVER_INIT(vamphafk);
+	DECLARE_DRIVER_INIT(coolmini);
+	DECLARE_DRIVER_INIT(mrkicker);
+	DECLARE_DRIVER_INIT(mrdig);
+	DECLARE_DRIVER_INIT(jmpbreak);
+	DECLARE_DRIVER_INIT(dtfamily);
+	DECLARE_DRIVER_INIT(dquizgo2);
+	DECLARE_DRIVER_INIT(puzlbang);
+	DECLARE_DRIVER_INIT(luplup29);
+	DECLARE_DRIVER_INIT(toyland);
+	DECLARE_DRIVER_INIT(aoh);
+	DECLARE_DRIVER_INIT(finalgdr);
+	DECLARE_DRIVER_INIT(suplup);
+	DECLARE_DRIVER_INIT(misncrft);
+	DECLARE_DRIVER_INIT(boonggab);
+	DECLARE_DRIVER_INIT(vamphalf);
+	DECLARE_DRIVER_INIT(wyvernwg);
+	DECLARE_DRIVER_INIT(luplup);
 };
 
 READ16_MEMBER(vamphalf_state::eeprom_r)
@@ -592,6 +610,12 @@ static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap)
 			clip.max_y = ((16-(block/0x800))*16)+15;
 		}
 
+		if (clip.min_y < screen.visible_area().min_y)
+			clip.min_y = screen.visible_area().min_y;
+
+		if (clip.max_y > screen.visible_area().max_y)
+			clip.max_y = screen.visible_area().max_y;
+
 		for (cnt=0; cnt<0x800; cnt+=8)
 		{
 			offs = (block + cnt) / 2;
@@ -671,6 +695,13 @@ static void draw_sprites_aoh(screen_device &screen, bitmap_ind16 &bitmap)
 			clip.min_y = (16-(block/0x800))*16;
 			clip.max_y = ((16-(block/0x800))*16)+15;
 		}
+
+		if (clip.min_y < screen.visible_area().min_y)
+			clip.min_y = screen.visible_area().min_y;
+
+		if (clip.max_y > screen.visible_area().max_y)
+			clip.max_y = screen.visible_area().max_y;
+
 
 		for (cnt=0; cnt<0x800; cnt+=8)
 		{
@@ -2436,215 +2467,197 @@ READ16_MEMBER(vamphalf_state::boonggab_speedup_r)
 	return m_wram[(0xf1b7c / 2)+offset];
 }
 
-static DRIVER_INIT( vamphalf )
+DRIVER_INIT_MEMBER(vamphalf_state,vamphalf)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0004a840, 0x0004a843, read16_delegate(FUNC(vamphalf_state::vamphalf_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0004a840, 0x0004a843, read16_delegate(FUNC(vamphalf_state::vamphalf_speedup_r), this));
 
-	state->m_palshift = 0;
-	state->m_flip_bit = 0x80;
+	m_palshift = 0;
+	m_flip_bit = 0x80;
 }
 
-static DRIVER_INIT( vamphafk )
+DRIVER_INIT_MEMBER(vamphalf_state,vamphafk)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0004a6d0, 0x0004a6d3, read16_delegate(FUNC(vamphalf_state::vamphafk_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0004a6d0, 0x0004a6d3, read16_delegate(FUNC(vamphalf_state::vamphafk_speedup_r), this));
 
-	state->m_palshift = 0;
-	state->m_flip_bit = 0x80;
+	m_palshift = 0;
+	m_flip_bit = 0x80;
 }
 
-static DRIVER_INIT( misncrft )
+DRIVER_INIT_MEMBER(vamphalf_state,misncrft)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00072eb4, 0x00072eb7, read16_delegate(FUNC(vamphalf_state::misncrft_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00072eb4, 0x00072eb7, read16_delegate(FUNC(vamphalf_state::misncrft_speedup_r), this));
 
-	state->m_palshift = 0;
-	state->m_flip_bit = 1;
+	m_palshift = 0;
+	m_flip_bit = 1;
 
 	// Configure the QS1000 ROM banking. Care must be taken not to overlap the 256b internal RAM
-	machine.device("qs1000:cpu")->memory().space(AS_IO)->install_read_bank(0x0100, 0xffff, "data");
-	state->membank("qs1000:data")->configure_entries(0, 16, state->memregion("qs1000:cpu")->base()+0x100, 0x8000-0x100);
+	machine().device("qs1000:cpu")->memory().space(AS_IO)->install_read_bank(0x0100, 0xffff, "data");
+	membank("qs1000:data")->configure_entries(0, 16, memregion("qs1000:cpu")->base()+0x100, 0x8000-0x100);
 }
 
-static DRIVER_INIT( coolmini )
+DRIVER_INIT_MEMBER(vamphalf_state,coolmini)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x000d2e80, 0x000d2e83, read16_delegate(FUNC(vamphalf_state::coolmini_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x000d2e80, 0x000d2e83, read16_delegate(FUNC(vamphalf_state::coolmini_speedup_r), this));
 
-	state->m_palshift = 0;
-	state->m_flip_bit = 1;
+	m_palshift = 0;
+	m_flip_bit = 1;
 }
 
-static DRIVER_INIT( suplup )
+DRIVER_INIT_MEMBER(vamphalf_state,suplup)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0011605c, 0x0011605f, read16_delegate(FUNC(vamphalf_state::suplup_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0011605c, 0x0011605f, read16_delegate(FUNC(vamphalf_state::suplup_speedup_r), this));
 
-	state->m_palshift = 8;
+	m_palshift = 8;
 	/* no flipscreen */
 }
 
-static DRIVER_INIT( luplup )
+DRIVER_INIT_MEMBER(vamphalf_state,luplup)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00115e84, 0x00115e87, read16_delegate(FUNC(vamphalf_state::luplup_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00115e84, 0x00115e87, read16_delegate(FUNC(vamphalf_state::luplup_speedup_r), this));
 
-	state->m_palshift = 8;
+	m_palshift = 8;
 	/* no flipscreen */
 }
 
-static DRIVER_INIT( luplup29 )
+DRIVER_INIT_MEMBER(vamphalf_state,luplup29)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00113f08, 0x00113f0b, read16_delegate(FUNC(vamphalf_state::luplup29_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00113f08, 0x00113f0b, read16_delegate(FUNC(vamphalf_state::luplup29_speedup_r), this));
 
-	state->m_palshift = 8;
+	m_palshift = 8;
 	/* no flipscreen */
 }
 
-static DRIVER_INIT( puzlbang )
+DRIVER_INIT_MEMBER(vamphalf_state,puzlbang)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00113ecc, 0x00113ecf, read16_delegate(FUNC(vamphalf_state::puzlbang_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00113ecc, 0x00113ecf, read16_delegate(FUNC(vamphalf_state::puzlbang_speedup_r), this));
 
-	state->m_palshift = 8;
+	m_palshift = 8;
 	/* no flipscreen */
 }
 
-static DRIVER_INIT( wyvernwg )
+DRIVER_INIT_MEMBER(vamphalf_state,wyvernwg)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00b56fc, 0x00b56ff, read32_delegate(FUNC(vamphalf_state::wyvernwg_speedup_r), state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00b74f8, 0x00b74fb, read32_delegate(FUNC(vamphalf_state::wyvernwga_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00b56fc, 0x00b56ff, read32_delegate(FUNC(vamphalf_state::wyvernwg_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00b74f8, 0x00b74fb, read32_delegate(FUNC(vamphalf_state::wyvernwga_speedup_r), this));
 
-	state->m_palshift = 0;
-	state->m_flip_bit = 1;
+	m_palshift = 0;
+	m_flip_bit = 1;
 
-	state->m_semicom_prot_idx = 8;
-	state->m_semicom_prot_data[0] = 2;
-	state->m_semicom_prot_data[1] = 1;
+	m_semicom_prot_idx = 8;
+	m_semicom_prot_data[0] = 2;
+	m_semicom_prot_data[1] = 1;
 
 	// Configure the QS1000 ROM banking. Care must be taken not to overlap the 256b internal RAM
-	machine.device("qs1000:cpu")->memory().space(AS_IO)->install_read_bank(0x0100, 0xffff, "data");
-	state->membank("qs1000:data")->configure_entries(0, 16, state->memregion("qs1000:cpu")->base()+0x100, 0x8000-0x100);
+	machine().device("qs1000:cpu")->memory().space(AS_IO)->install_read_bank(0x0100, 0xffff, "data");
+	membank("qs1000:data")->configure_entries(0, 16, memregion("qs1000:cpu")->base()+0x100, 0x8000-0x100);
 }
 
-static DRIVER_INIT( finalgdr )
+DRIVER_INIT_MEMBER(vamphalf_state,finalgdr)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	state->m_finalgdr_backupram_bank = 1;
-	state->m_finalgdr_backupram = auto_alloc_array(machine, UINT8, 0x80*0x100);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x005e874, 0x005e877, read32_delegate(FUNC(vamphalf_state::finalgdr_speedup_r), state));
-	machine.device<nvram_device>("nvram")->set_base(state->m_finalgdr_backupram, 0x80*0x100);
+	m_finalgdr_backupram_bank = 1;
+	m_finalgdr_backupram = auto_alloc_array(machine(), UINT8, 0x80*0x100);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x005e874, 0x005e877, read32_delegate(FUNC(vamphalf_state::finalgdr_speedup_r), this));
+	machine().device<nvram_device>("nvram")->set_base(m_finalgdr_backupram, 0x80*0x100);
 
-	state->m_palshift = 0;
-	state->m_flip_bit = 1; //?
+	m_palshift = 0;
+	m_flip_bit = 1; //?
 
-	state->m_semicom_prot_idx = 8;
-	state->m_semicom_prot_data[0] = 2;
-	state->m_semicom_prot_data[1] = 3;
+	m_semicom_prot_idx = 8;
+	m_semicom_prot_data[0] = 2;
+	m_semicom_prot_data[1] = 3;
 }
 
-static DRIVER_INIT( mrkicker )
+DRIVER_INIT_MEMBER(vamphalf_state,mrkicker)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
 	// backup ram isn't used
-	state->m_finalgdr_backupram_bank = 1;
-	state->m_finalgdr_backupram = auto_alloc_array(machine, UINT8, 0x80*0x100);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00701a4, 0x00701a7, read32_delegate(FUNC(vamphalf_state::mrkicker_speedup_r), state));
-	machine.device<nvram_device>("nvram")->set_base(state->m_finalgdr_backupram, 0x80*0x100);
+	m_finalgdr_backupram_bank = 1;
+	m_finalgdr_backupram = auto_alloc_array(machine(), UINT8, 0x80*0x100);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00701a4, 0x00701a7, read32_delegate(FUNC(vamphalf_state::mrkicker_speedup_r), this));
+	machine().device<nvram_device>("nvram")->set_base(m_finalgdr_backupram, 0x80*0x100);
 
-	state->m_palshift = 0;
-	state->m_flip_bit = 1; //?
+	m_palshift = 0;
+	m_flip_bit = 1; //?
 
-	state->m_semicom_prot_idx = 8;
-	state->m_semicom_prot_data[0] = 2;
-	state->m_semicom_prot_data[1] = 3;
+	m_semicom_prot_idx = 8;
+	m_semicom_prot_data[0] = 2;
+	m_semicom_prot_data[1] = 3;
 }
 
-static DRIVER_INIT( dquizgo2 )
+DRIVER_INIT_MEMBER(vamphalf_state,dquizgo2)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00cde70, 0x00cde73, read16_delegate(FUNC(vamphalf_state::dquizgo2_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00cde70, 0x00cde73, read16_delegate(FUNC(vamphalf_state::dquizgo2_speedup_r), this));
 
-	state->m_palshift = 0;
-	state->m_flip_bit = 1;
+	m_palshift = 0;
+	m_flip_bit = 1;
 }
 
-static DRIVER_INIT( dtfamily )
+DRIVER_INIT_MEMBER(vamphalf_state,dtfamily)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xcc2a8, 0xcc2a9, read16_delegate(FUNC(vamphalf_state::dtfamily_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xcc2a8, 0xcc2a9, read16_delegate(FUNC(vamphalf_state::dtfamily_speedup_r), this));
 
-	state->m_palshift = 0;
-	state->m_flip_bit = 1;
+	m_palshift = 0;
+	m_flip_bit = 1;
 }
 
 
-static DRIVER_INIT( toyland )
+DRIVER_INIT_MEMBER(vamphalf_state,toyland)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x780d8, 0x780d9, read16_delegate(FUNC(vamphalf_state::toyland_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x780d8, 0x780d9, read16_delegate(FUNC(vamphalf_state::toyland_speedup_r), this));
 
-	state->m_palshift = 0;
-	state->m_flip_bit = 1;
+	m_palshift = 0;
+	m_flip_bit = 1;
 }
 
-static DRIVER_INIT( aoh )
+DRIVER_INIT_MEMBER(vamphalf_state,aoh)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x028a09c, 0x028a09f, read32_delegate(FUNC(vamphalf_state::aoh_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x028a09c, 0x028a09f, read32_delegate(FUNC(vamphalf_state::aoh_speedup_r), this));
 
-	state->m_palshift = 0;
+	m_palshift = 0;
 	/* no flipscreen */
 }
 
-static DRIVER_INIT( jmpbreak )
+DRIVER_INIT_MEMBER(vamphalf_state,jmpbreak)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00906fc, 0x00906ff, read16_delegate(FUNC(vamphalf_state::jmpbreak_speedup_r), state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xe0000000, 0xe0000003, write16_delegate(FUNC(vamphalf_state::jmpbreak_flipscreen_w), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00906fc, 0x00906ff, read16_delegate(FUNC(vamphalf_state::jmpbreak_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xe0000000, 0xe0000003, write16_delegate(FUNC(vamphalf_state::jmpbreak_flipscreen_w), this));
 
-	state->m_palshift = 0;
+	m_palshift = 0;
 }
 
-static DRIVER_INIT( mrdig )
+DRIVER_INIT_MEMBER(vamphalf_state,mrdig)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00a99c, 0x00a99f, read16_delegate(FUNC(vamphalf_state::mrdig_speedup_r), state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xe0000000, 0xe0000003, write16_delegate(FUNC(vamphalf_state::jmpbreak_flipscreen_w), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00a99c, 0x00a99f, read16_delegate(FUNC(vamphalf_state::mrdig_speedup_r), this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xe0000000, 0xe0000003, write16_delegate(FUNC(vamphalf_state::jmpbreak_flipscreen_w), this));
 
-	state->m_palshift = 0;
+	m_palshift = 0;
 }
 
 
-static DRIVER_INIT( boonggab )
+DRIVER_INIT_MEMBER(vamphalf_state,boonggab)
 {
-	vamphalf_state *state = machine.driver_data<vamphalf_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x000f1b7c, 0x000f1b7f, read16_delegate(FUNC(vamphalf_state::boonggab_speedup_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x000f1b7c, 0x000f1b7f, read16_delegate(FUNC(vamphalf_state::boonggab_speedup_r), this));
 
-	state->m_palshift = 0;
-	state->m_has_extra_gfx = 1;
-	state->m_flip_bit = 1;
+	m_palshift = 0;
+	m_has_extra_gfx = 1;
+	m_flip_bit = 1;
 }
 
-GAME( 1999, coolmini, 0,        coolmini, common,   coolmini, ROT0,   "SemiCom",           "Cool Minigame Collection", 0 )
-GAME( 1999, jmpbreak, 0,        jmpbreak, common,   jmpbreak, ROT0,   "F2 System",         "Jumping Break" , 0 )
-GAME( 1999, suplup,   0,        suplup,   common,   suplup,   ROT0,   "Omega System",      "Super Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 4.0 / 990518)" , 0 )
-GAME( 1999, luplup,   suplup,   suplup,   common,   luplup,   ROT0,   "Omega System",      "Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 3.0 / 990128)", 0 )
-GAME( 1999, luplup29, suplup,   suplup,   common,   luplup29, ROT0,   "Omega System",      "Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 2.9 / 990108)", 0 )
-GAME( 1999, puzlbang, suplup,   suplup,   common,   puzlbang, ROT0,   "Omega System",      "Puzzle Bang Bang (Korea, version 2.8 / 990106)", 0 )
-GAME( 1999, vamphalf, 0,        vamphalf, common,   vamphalf, ROT0,   "Danbi / F2 System", "Vamf x1/2 (Europe)", 0 )
-GAME( 1999, vamphalfk,vamphalf, vamphalf, common,   vamphafk, ROT0,   "Danbi / F2 System", "Vamp x1/2 (Korea)", 0 )
-GAME( 2000, dquizgo2, 0,        coolmini, common,   dquizgo2, ROT0,   "SemiCom",           "Date Quiz Go Go Episode 2" , 0)
-GAME( 2000, misncrft, 0,        misncrft, common,   misncrft, ROT90,  "Sun",               "Mission Craft (version 2.4)", GAME_IMPERFECT_SOUND )
-GAME( 2000, mrdig,    0,        mrdig,    common,   mrdig,    ROT0,   "Sun",               "Mr. Dig", 0 )
-GAME( 2001, dtfamily, 0,        coolmini, common,   dtfamily, ROT0,   "SemiCom",           "Diet Family", 0 )
-GAME( 2001, finalgdr, 0,        finalgdr, finalgdr, finalgdr, ROT0,   "SemiCom",           "Final Godori (Korea, version 2.20.5915)", 0 )
-GAME( 2001, mrkicker, 0,        mrkicker, finalgdr, mrkicker, ROT0,   "SemiCom",           "Mr. Kicker", GAME_NOT_WORKING ) // game stops booting / working properly after you get a high score, or if you don't have a default eeprom with 'valid data.  It's never worked properly, CPU core issue?
-GAME( 2001, toyland,  0,        coolmini, common,   toyland,  ROT0,   "SemiCom",           "Toy Land Adventure", 0 )
-GAME( 2001, wyvernwg, 0,        wyvernwg, common,   wyvernwg, ROT270, "SemiCom (Game Vision license)", "Wyvern Wings (set 1)", GAME_IMPERFECT_SOUND )
-GAME( 2001, wyvernwga,wyvernwg, wyvernwg, common,   wyvernwg, ROT270, "SemiCom (Game Vision license)", "Wyvern Wings (set 2)", GAME_IMPERFECT_SOUND )
-GAME( 2001, aoh,      0,        aoh,      aoh,      aoh,      ROT0,   "Unico",             "Age Of Heroes - Silkroad 2 (v0.63 - 2001/02/07)", 0 )
-GAME( 2001, boonggab, 0,        boonggab, boonggab, boonggab, ROT270, "Taff System",	   "Boong-Ga Boong-Ga (Spank'em!)", 0 )
+GAME( 1999, coolmini, 0,        coolmini, common, vamphalf_state,   coolmini, ROT0,   "SemiCom",           "Cool Minigame Collection", 0 )
+GAME( 1999, jmpbreak, 0,        jmpbreak, common, vamphalf_state,   jmpbreak, ROT0,   "F2 System",         "Jumping Break" , 0 )
+GAME( 1999, suplup,   0,        suplup,   common, vamphalf_state,   suplup,   ROT0,   "Omega System",      "Super Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 4.0 / 990518)" , 0 )
+GAME( 1999, luplup,   suplup,   suplup,   common, vamphalf_state,   luplup,   ROT0,   "Omega System",      "Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 3.0 / 990128)", 0 )
+GAME( 1999, luplup29, suplup,   suplup,   common, vamphalf_state,   luplup29, ROT0,   "Omega System",      "Lup Lup Puzzle / Zhuan Zhuan Puzzle (version 2.9 / 990108)", 0 )
+GAME( 1999, puzlbang, suplup,   suplup,   common, vamphalf_state,   puzlbang, ROT0,   "Omega System",      "Puzzle Bang Bang (Korea, version 2.8 / 990106)", 0 )
+GAME( 1999, vamphalf, 0,        vamphalf, common, vamphalf_state,   vamphalf, ROT0,   "Danbi / F2 System", "Vamf x1/2 (Europe)", 0 )
+GAME( 1999, vamphalfk,vamphalf, vamphalf, common, vamphalf_state,   vamphafk, ROT0,   "Danbi / F2 System", "Vamp x1/2 (Korea)", 0 )
+GAME( 2000, dquizgo2, 0,        coolmini, common, vamphalf_state,   dquizgo2, ROT0,   "SemiCom",           "Date Quiz Go Go Episode 2" , 0)
+GAME( 2000, misncrft, 0,        misncrft, common, vamphalf_state,   misncrft, ROT90,  "Sun",               "Mission Craft (version 2.4)", GAME_IMPERFECT_SOUND )
+GAME( 2000, mrdig,    0,        mrdig,    common, vamphalf_state,   mrdig,    ROT0,   "Sun",               "Mr. Dig", 0 )
+GAME( 2001, dtfamily, 0,        coolmini, common, vamphalf_state,   dtfamily, ROT0,   "SemiCom",           "Diet Family", 0 )
+GAME( 2001, finalgdr, 0,        finalgdr, finalgdr, vamphalf_state, finalgdr, ROT0,   "SemiCom",           "Final Godori (Korea, version 2.20.5915)", 0 )
+GAME( 2001, mrkicker, 0,        mrkicker, finalgdr, vamphalf_state, mrkicker, ROT0,   "SemiCom",           "Mr. Kicker", GAME_NOT_WORKING ) // game stops booting / working properly after you get a high score, or if you don't have a default eeprom with 'valid data.  It's never worked properly, CPU core issue?
+GAME( 2001, toyland,  0,        coolmini, common, vamphalf_state,   toyland,  ROT0,   "SemiCom",           "Toy Land Adventure", 0 )
+GAME( 2001, wyvernwg, 0,        wyvernwg, common, vamphalf_state,   wyvernwg, ROT270, "SemiCom (Game Vision license)", "Wyvern Wings (set 1)", GAME_IMPERFECT_SOUND )
+GAME( 2001, wyvernwga,wyvernwg, wyvernwg, common, vamphalf_state,   wyvernwg, ROT270, "SemiCom (Game Vision license)", "Wyvern Wings (set 2)", GAME_IMPERFECT_SOUND )
+GAME( 2001, aoh,      0,        aoh,      aoh, vamphalf_state,      aoh,      ROT0,   "Unico",             "Age Of Heroes - Silkroad 2 (v0.63 - 2001/02/07)", 0 )
+GAME( 2001, boonggab, 0,        boonggab, boonggab, vamphalf_state, boonggab, ROT270, "Taff System",	   "Boong-Ga Boong-Ga (Spank'em!)", 0 )

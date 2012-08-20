@@ -410,26 +410,25 @@ ROM_END
 
 /* Driver Initialization */
 
-static DRIVER_INIT( deadang )
+DRIVER_INIT_MEMBER(deadang_state,deadang)
 {
-	seibu_sound_decrypt(machine, "audiocpu", 0x2000);
-	seibu_adpcm_decrypt(machine, "adpcm1");
-	seibu_adpcm_decrypt(machine, "adpcm2");
+	seibu_sound_decrypt(machine(), "audiocpu", 0x2000);
+	seibu_adpcm_decrypt(machine(), "adpcm1");
+	seibu_adpcm_decrypt(machine(), "adpcm2");
 }
 
-static DRIVER_INIT( ghunter )
+DRIVER_INIT_MEMBER(deadang_state,ghunter)
 {
-	seibu_sound_decrypt(machine, "audiocpu", 0x2000);
-	seibu_adpcm_decrypt(machine, "adpcm1");
-	seibu_adpcm_decrypt(machine, "adpcm2");
+	seibu_sound_decrypt(machine(), "audiocpu", 0x2000);
+	seibu_adpcm_decrypt(machine(), "adpcm1");
+	seibu_adpcm_decrypt(machine(), "adpcm2");
 
-	deadang_state *state = machine.driver_data<deadang_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80000, 0x80001, read16_delegate(FUNC(deadang_state::ghunter_trackball_low_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xb0000, 0xb0001, read16_delegate(FUNC(deadang_state::ghunter_trackball_high_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x80000, 0x80001, read16_delegate(FUNC(deadang_state::ghunter_trackball_low_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xb0000, 0xb0001, read16_delegate(FUNC(deadang_state::ghunter_trackball_high_r),this));
 }
 
 /* Game Drivers */
 
-GAME( 1988, deadang, 0,       deadang, deadang, deadang, ROT0, "Seibu Kaihatsu", "Dead Angle", 0 )
-GAME( 1988, leadang, deadang, deadang, deadang, deadang, ROT0, "Seibu Kaihatsu", "Lead Angle (Japan)", 0 )
-GAME( 1988, ghunter, deadang, deadang, ghunter, ghunter, ROT0, "Seibu Kaihatsu (Segasa/Sonic license)", "Gang Hunter (Spain)", 0 )
+GAME( 1988, deadang, 0,       deadang, deadang, deadang_state, deadang, ROT0, "Seibu Kaihatsu", "Dead Angle", 0 )
+GAME( 1988, leadang, deadang, deadang, deadang, deadang_state, deadang, ROT0, "Seibu Kaihatsu", "Lead Angle (Japan)", 0 )
+GAME( 1988, ghunter, deadang, deadang, ghunter, deadang_state, ghunter, ROT0, "Seibu Kaihatsu (Segasa/Sonic license)", "Gang Hunter (Spain)", 0 )

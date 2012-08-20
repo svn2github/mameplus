@@ -870,28 +870,27 @@ static WRITE16_HANDLER( megadriv_68k_write_z80_extra_ram )
 }
 
 
-static DRIVER_INIT(megaplay)
+DRIVER_INIT_MEMBER(mplay_state,megaplay)
 {
-	mplay_state *state = machine.driver_data<mplay_state>();
 	/* to support the old code.. */
-	state->m_ic36_ram = auto_alloc_array(machine, UINT16, 0x10000 / 2);
-	state->m_ic37_ram = auto_alloc_array(machine, UINT8, 0x10000);
-	state->m_genesis_io_ram = auto_alloc_array(machine, UINT16, 0x20 / 2);
+	m_ic36_ram = auto_alloc_array(machine(), UINT16, 0x10000 / 2);
+	m_ic37_ram = auto_alloc_array(machine(), UINT8, 0x10000);
+	m_genesis_io_ram = auto_alloc_array(machine(), UINT16, 0x20 / 2);
 
 	DRIVER_INIT_CALL(mpnew);
 
-	mplay_start(machine);
+	mplay_start(machine());
 
 	/* for now ... */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0xa10000, 0xa1001f, FUNC(megaplay_io_read), FUNC(megaplay_io_write));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0xa10000, 0xa1001f, FUNC(megaplay_io_read), FUNC(megaplay_io_write));
 
 	/* megaplay has ram shared with the bios cpu here */
-	machine.device("genesis_snd_z80")->memory().space(AS_PROGRAM)->install_ram(0x2000, 0x3fff, &state->m_ic36_ram[0]);
+	machine().device("genesis_snd_z80")->memory().space(AS_PROGRAM)->install_ram(0x2000, 0x3fff, &m_ic36_ram[0]);
 
 	/* instead of a RAM mirror the 68k sees the extra ram of the 2nd z80 too */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0xa02000, 0xa03fff, FUNC(megadriv_68k_read_z80_extra_ram), FUNC(megadriv_68k_write_z80_extra_ram));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_readwrite_handler(0xa02000, 0xa03fff, FUNC(megadriv_68k_read_z80_extra_ram), FUNC(megadriv_68k_write_z80_extra_ram));
 
-	DRIVER_INIT_CALL(megatech_bios); // create the SMS vdp etc.
+	init_megatech_bios(machine());
 
 }
 
@@ -923,20 +922,20 @@ Mazin Wars           171-6215A   837-9165-11       610-0297-11          MPR-1646
 didn't have original Sega part numbers it's probably a converted TWC cart
 */
 
-/* -- */ GAME( 1993, megaplay, 0,        megaplay, megaplay, megaplay, ROT0, "Sega",                  "Mega Play BIOS", GAME_IS_BIOS_ROOT )
-/* 01 */ GAME( 1993, mp_sonic, megaplay, megaplay, mp_sonic, megaplay, ROT0, "Sega",                  "Sonic The Hedgehog (Mega Play)" , 0 )
-/* 02 */ GAME( 1993, mp_gaxe2, megaplay, megaplay, mp_gaxe2, megaplay, ROT0, "Sega",                  "Golden Axe II (Mega Play)" , 0 )
-/* 03 */ GAME( 1993, mp_gslam, megaplay, megaplay, mp_gslam, megaplay, ROT0, "Sega",                  "Grand Slam (Mega Play)",0  )
-/* 04 */ GAME( 1993, mp_twc,   megaplay, megaplay, mp_twc,   megaplay, ROT0, "Sega",                  "Tecmo World Cup (Mega Play)" , 0 )
-/* 05 */ GAME( 1993, mp_sor2,  megaplay, megaplay, mp_sor2,  megaplay, ROT0, "Sega",                  "Streets of Rage II (Mega Play)" , 0 )
-/* 06 */ GAME( 1993, mp_bio,   megaplay, megaplay, mp_bio,   megaplay, ROT0, "Sega",                  "Bio-hazard Battle (Mega Play)" , 0 )
-/* 07 */ GAME( 1993, mp_soni2, megaplay, megaplay, mp_soni2, megaplay, ROT0, "Sega",                  "Sonic The Hedgehog 2 (Mega Play)" , 0 )
+/* -- */ GAME( 1993, megaplay, 0,        megaplay, megaplay, mplay_state, megaplay, ROT0, "Sega",                  "Mega Play BIOS", GAME_IS_BIOS_ROOT )
+/* 01 */ GAME( 1993, mp_sonic, megaplay, megaplay, mp_sonic, mplay_state, megaplay, ROT0, "Sega",                  "Sonic The Hedgehog (Mega Play)" , 0 )
+/* 02 */ GAME( 1993, mp_gaxe2, megaplay, megaplay, mp_gaxe2, mplay_state, megaplay, ROT0, "Sega",                  "Golden Axe II (Mega Play)" , 0 )
+/* 03 */ GAME( 1993, mp_gslam, megaplay, megaplay, mp_gslam, mplay_state, megaplay, ROT0, "Sega",                  "Grand Slam (Mega Play)",0  )
+/* 04 */ GAME( 1993, mp_twc,   megaplay, megaplay, mp_twc, mplay_state,   megaplay, ROT0, "Sega",                  "Tecmo World Cup (Mega Play)" , 0 )
+/* 05 */ GAME( 1993, mp_sor2,  megaplay, megaplay, mp_sor2, mplay_state,  megaplay, ROT0, "Sega",                  "Streets of Rage II (Mega Play)" , 0 )
+/* 06 */ GAME( 1993, mp_bio,   megaplay, megaplay, mp_bio, mplay_state,   megaplay, ROT0, "Sega",                  "Bio-hazard Battle (Mega Play)" , 0 )
+/* 07 */ GAME( 1993, mp_soni2, megaplay, megaplay, mp_soni2, mplay_state, megaplay, ROT0, "Sega",                  "Sonic The Hedgehog 2 (Mega Play)" , 0 )
 /* 08 */
-/* 09 */ GAME( 1993, mp_shnb3, megaplay, megaplay, mp_shnb3, megaplay, ROT0, "Sega",                  "Shinobi III (Mega Play)" , 0 )
+/* 09 */ GAME( 1993, mp_shnb3, megaplay, megaplay, mp_shnb3, mplay_state, megaplay, ROT0, "Sega",                  "Shinobi III (Mega Play)" , 0 )
 /* 10 */
-/* 11 */ GAME( 1993, mp_mazin, megaplay, megaplay, mp_mazin, megaplay, ROT0, "Sega",                  "Mazin Wars / Mazin Saga (Mega Play)",0  )
+/* 11 */ GAME( 1993, mp_mazin, megaplay, megaplay, mp_mazin, mplay_state, megaplay, ROT0, "Sega",                  "Mazin Wars / Mazin Saga (Mega Play)",0  )
 
-/* ?? */ GAME( 1993, mp_col3,  megaplay, megaplay, megaplay, megaplay, ROT0, "Sega",                  "Columns III (Mega Play)" , 0 )
+/* ?? */ GAME( 1993, mp_col3,  megaplay, megaplay, megaplay, mplay_state, megaplay, ROT0, "Sega",                  "Columns III (Mega Play)" , 0 )
 
 
 /* Also confirmed to exist:

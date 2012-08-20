@@ -25,6 +25,8 @@ protected:
 
 	// devices
 	required_device<cpu_device> m_maincpu;
+public:
+	DECLARE_DRIVER_INIT(astropc);
 };
 
 static ADDRESS_MAP_START( astropc_map, AS_PROGRAM, 32, astropc_state )
@@ -154,20 +156,20 @@ ROM_START( rasce )
 ROM_END
 
 
-static DRIVER_INIT(astropc)
+DRIVER_INIT_MEMBER(astropc_state,astropc)
 {
 
 }
 
-GAME( 2002, blackbd,   0,		 astropc, astropc, astropc, ROT0, "Astro", "Black Beard (Russia, set 1)", GAME_IS_SKELETON )
-GAME( 2002, blackbda,  blackbd,  astropc, astropc, astropc, ROT0, "Astro", "Black Beard (Russia, set 2)", GAME_IS_SKELETON )
-GAME( 2002, blackbdb,  blackbd,  astropc, astropc, astropc, ROT0, "Astro", "Black Beard (Russia, set 3)", GAME_IS_SKELETON )
+GAME( 2002, blackbd,   0,		 astropc, astropc, astropc_state, astropc, ROT0, "Astro", "Black Beard (Russia, set 1)", GAME_IS_SKELETON )
+GAME( 2002, blackbda,  blackbd,  astropc, astropc, astropc_state, astropc, ROT0, "Astro", "Black Beard (Russia, set 2)", GAME_IS_SKELETON )
+GAME( 2002, blackbdb,  blackbd,  astropc, astropc, astropc_state, astropc, ROT0, "Astro", "Black Beard (Russia, set 3)", GAME_IS_SKELETON )
 
-GAME( 2002, dslayrr,   0,		 astropc, astropc, astropc, ROT0, "Astro", "Dragon Slayer (Russia, set 1)", GAME_IS_SKELETON )
-GAME( 2002, dslayrra,  dslayrr,	 astropc, astropc, astropc, ROT0, "Astro", "Dragon Slayer (Russia, set 2)", GAME_IS_SKELETON )
+GAME( 2002, dslayrr,   0,		 astropc, astropc, astropc_state, astropc, ROT0, "Astro", "Dragon Slayer (Russia, set 1)", GAME_IS_SKELETON )
+GAME( 2002, dslayrra,  dslayrr,	 astropc, astropc, astropc_state, astropc, ROT0, "Astro", "Dragon Slayer (Russia, set 2)", GAME_IS_SKELETON )
 
-GAME( 2002, hawaii,	   0,	     astropc, astropc, astropc, ROT0, "Astro", "Hawaii (Russia)", GAME_IS_SKELETON )
+GAME( 2002, hawaii,	   0,	     astropc, astropc, astropc_state, astropc, ROT0, "Astro", "Hawaii (Russia)", GAME_IS_SKELETON )
 
-GAME( 2002, oligam,	   0,	     astropc, astropc, astropc, ROT0, "Astro", "Olympian Games (Russia)", GAME_IS_SKELETON )
+GAME( 2002, oligam,	   0,	     astropc, astropc, astropc_state, astropc, ROT0, "Astro", "Olympian Games (Russia)", GAME_IS_SKELETON )
 
-GAME( 2002, rasce,	   0,	     astropc, astropc, astropc, ROT0, "Astro", "Ra Sceptor (Russia)", GAME_IS_SKELETON )
+GAME( 2002, rasce,	   0,	     astropc, astropc, astropc_state, astropc, ROT0, "Astro", "Ra Sceptor (Russia)", GAME_IS_SKELETON )

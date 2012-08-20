@@ -54,10 +54,10 @@ Notes:
 
 ***************************************************************************/
 
-static DRIVER_INIT( lordgun )
+DRIVER_INIT_MEMBER(lordgun_state,lordgun)
 {
 	int i;
-	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 
 	// Decryption
 
@@ -80,9 +80,9 @@ static DRIVER_INIT( lordgun )
 
 
 // From XingXing:
-static DRIVER_INIT( aliencha )
+DRIVER_INIT_MEMBER(lordgun_state,aliencha)
 {
-	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 
 	// Protection
 
@@ -104,9 +104,9 @@ static DRIVER_INIT( aliencha )
 }
 
 
-static DRIVER_INIT( alienchac )
+DRIVER_INIT_MEMBER(lordgun_state,alienchac)
 {
-	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 
 	// Protection
 
@@ -1041,6 +1041,6 @@ ROM_END
 
 ***************************************************************************/
 
-GAME( 1994, lordgun,   0,        lordgun,  lordgun,  lordgun,   ROT0, "IGS", "Lord of Gun (USA)",       GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, aliencha,  0,        aliencha, aliencha, aliencha,  ROT0, "IGS", "Alien Challenge (World)", GAME_UNEMULATED_PROTECTION )
-GAME( 1994, alienchac, aliencha, aliencha, aliencha, alienchac, ROT0, "IGS", "Alien Challenge (China)", GAME_UNEMULATED_PROTECTION )
+GAME( 1994, lordgun,   0,        lordgun,  lordgun, lordgun_state,  lordgun,   ROT0, "IGS", "Lord of Gun (USA)",       GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, aliencha,  0,        aliencha, aliencha, lordgun_state, aliencha,  ROT0, "IGS", "Alien Challenge (World)", GAME_UNEMULATED_PROTECTION )
+GAME( 1994, alienchac, aliencha, aliencha, aliencha, lordgun_state, alienchac, ROT0, "IGS", "Alien Challenge (China)", GAME_UNEMULATED_PROTECTION )

@@ -14,6 +14,9 @@
 #include "machine/nvram.h"
 #include "cpu/ssp1601/ssp1601.h"
 
+#include "machine/megavdp.h"
+#include "video/315_5124.h"
+
 #define MASTER_CLOCK_NTSC 53693175
 #define MASTER_CLOCK_PAL  53203424
 #define SEGACD_CLOCK      12500000
@@ -21,13 +24,6 @@
 
 
 /*----------- defined in machine/megadriv.c -----------*/
-
-extern DRIVER_INIT( megadriv_c2 );
-extern DRIVER_INIT( megadrie );
-extern DRIVER_INIT( megadriv );
-extern DRIVER_INIT( megadrij );
-extern DRIVER_INIT( _32x );
-extern DRIVER_INIT( mpnew );
 
 INPUT_PORTS_EXTERN( md_common );
 INPUT_PORTS_EXTERN( megadriv );
@@ -56,15 +52,12 @@ MACHINE_CONFIG_EXTERN( md_bootleg );	// for topshoot.c & hshavoc.c
 
 extern UINT16* megadriv_backupram;
 extern int megadriv_backupram_length;
-extern UINT16* megadrive_ram;
 
 extern UINT8 megatech_bios_port_cc_dc_r(running_machine &machine, int offset, int ctrl);
-extern void megadriv_stop_scanline_timer(void);
+extern void megadriv_stop_scanline_timer(running_machine &machine);
 
 void megatech_set_megadrive_z80_as_megadrive_z80(running_machine &machine, const char* tag);
 
-extern READ16_HANDLER( megadriv_vdp_r );
-extern WRITE16_HANDLER( megadriv_vdp_w );
 
 /* These handlers are needed by megaplay.c */
 extern READ16_HANDLER( megadriv_68k_io_read );
@@ -88,31 +81,10 @@ SCREEN_UPDATE_RGB32( megadriv );
 SCREEN_VBLANK( megadriv );
 
 
-struct genesis_z80_vars
-{
-	int z80_is_reset;
-	int z80_has_bus;
-	UINT32 z80_bank_addr;
-	UINT8* z80_prgram;
-};
 
-extern genesis_z80_vars genz80;
 
-extern UINT16* megadrive_vdp_palette_lookup;
-extern UINT16* megadrive_vdp_palette_lookup_sprite; // for C2
-extern UINT16* megadrive_vdp_palette_lookup_shadow;
-extern UINT16* megadrive_vdp_palette_lookup_highlight;
-
-extern int segac2_bg_pal_lookup[4];
-extern int segac2_sp_pal_lookup[4];
-
-extern int genvdp_use_cram;
-extern int genesis_always_irq6;
-extern int genesis_other_hacks;
 
 extern int megadrive_6buttons_pad;
-extern int megadrive_region_export;
-extern int megadrive_region_pal;
 
 /* Megaplay - Megatech specific */
 /* It might be possible to move the following structs in the drivers */
@@ -124,7 +96,16 @@ class md_base_state : public driver_device
 {
 public:
 	md_base_state(const machine_config &mconfig, device_type type, const char *tag)
-	: driver_device(mconfig, type, tag) { }
+	: driver_device(mconfig, type, tag),
+		m_vdp(*this,"gen_vdp")
+	{ }
+	required_device<sega_genesis_vdp_device> m_vdp;
+
+	DECLARE_DRIVER_INIT(megadriv_c2);
+	DECLARE_DRIVER_INIT(megadrie);
+	DECLARE_DRIVER_INIT(megadriv);
+	DECLARE_DRIVER_INIT(megadrij);
+	DECLARE_DRIVER_INIT(mpnew);
 };
 
 class md_boot_state : public md_base_state
@@ -208,6 +189,13 @@ public:
 		m_protcount = 0;
 		return ret;
 	}
+
+	DECLARE_DRIVER_INIT(aladmdb);
+	DECLARE_DRIVER_INIT(mk3mdb);
+	DECLARE_DRIVER_INIT(ssf2mdb);
+	DECLARE_DRIVER_INIT(srmdb);
+	DECLARE_DRIVER_INIT(topshoot);
+	DECLARE_DRIVER_INIT(puckpkmn);
 };
 
 class segac2_state : public md_base_state
@@ -240,6 +228,33 @@ public:
 
 	/* sound-related variables */
 	UINT8		m_sound_banks;		/* number of sound banks */
+
+	DECLARE_DRIVER_INIT(c2boot);
+	DECLARE_DRIVER_INIT(bloxeedc);
+	DECLARE_DRIVER_INIT(columns);
+	DECLARE_DRIVER_INIT(columns2);
+	DECLARE_DRIVER_INIT(tfrceac);
+	DECLARE_DRIVER_INIT(tfrceacb);
+	DECLARE_DRIVER_INIT(borench);
+	DECLARE_DRIVER_INIT(twinsqua);
+	DECLARE_DRIVER_INIT(ribbit);
+	DECLARE_DRIVER_INIT(puyo);
+	DECLARE_DRIVER_INIT(tantr);
+	DECLARE_DRIVER_INIT(tantrkor);
+	DECLARE_DRIVER_INIT(potopoto);
+	DECLARE_DRIVER_INIT(stkclmns);
+	DECLARE_DRIVER_INIT(stkclmnj);
+	DECLARE_DRIVER_INIT(ichir);
+	DECLARE_DRIVER_INIT(ichirk);
+	DECLARE_DRIVER_INIT(ichirj);
+	DECLARE_DRIVER_INIT(ichirjbl);
+	DECLARE_DRIVER_INIT(puyopuy2);
+	DECLARE_DRIVER_INIT(zunkyou);
+	DECLARE_DRIVER_INIT(pclub);
+	DECLARE_DRIVER_INIT(pclubjv2);
+	DECLARE_DRIVER_INIT(pclubjv4);
+	DECLARE_DRIVER_INIT(pclubjv5);
+	void segac2_common_init(running_machine& machine, int (*func)(int in));
 };
 
 class mplay_state : public md_base_state
@@ -247,7 +262,12 @@ class mplay_state : public md_base_state
 public:
 	mplay_state(const machine_config &mconfig, device_type type, const char *tag)
 	: md_base_state(mconfig, type, tag),
-	m_ic3_ram(*this, "ic3_ram") { }
+	m_ic3_ram(*this, "ic3_ram"),
+	m_vdp1(*this, "vdp1"),
+	m_bioscpu(*this, "mtbios")
+
+
+	{ }
 
 	UINT32 m_bios_mode;  // determines whether ROM banks or Game data
 	// is to read from 0x8000-0xffff
@@ -265,15 +285,30 @@ public:
 
 	UINT16 *m_genesis_io_ram;
 	required_shared_ptr<UINT8> m_ic3_ram;
+	optional_device<sega315_5124_device> m_vdp1;
+	required_device<cpu_device>          m_bioscpu;
 	UINT8* m_ic37_ram;
 	UINT16 *m_ic36_ram;
+	DECLARE_WRITE_LINE_MEMBER( int_callback );
+	DECLARE_DRIVER_INIT(megaplay);
 };
 
 class mtech_state : public md_base_state
 {
 public:
 	mtech_state(const machine_config &mconfig, device_type type, const char *tag)
-	: md_base_state(mconfig, type, tag) { }
+	: md_base_state(mconfig, type, tag),
+		m_vdp1(*this, "vdp1"),
+		m_bioscpu(*this, "mtbios")
+	{ }
+
+
+	required_device<sega315_5124_device> m_vdp1;
+	required_device<cpu_device>          m_bioscpu;
+
+
+	DECLARE_WRITE_LINE_MEMBER( int_callback );
+
 
 	UINT8 m_mt_cart_select_reg;
 	UINT32 m_bios_port_ctrl;
@@ -287,6 +322,8 @@ public:
 
 	/* Megatech BIOS specific */
 	UINT8* m_megatech_banked_ram;
+	DECLARE_DRIVER_INIT(mt_crt);
+	DECLARE_DRIVER_INIT(mt_slot);
 };
 
 typedef struct _megadriv_cart  megadriv_cart;
@@ -327,6 +364,18 @@ public:
 	UINT8 m_jcart_io_data[2];
 
 	megadriv_cart m_md_cart;
+
+	DECLARE_DRIVER_INIT(hshavoc);
+	DECLARE_DRIVER_INIT(topshoot);
+
+	DECLARE_DRIVER_INIT(genesis);
+	DECLARE_DRIVER_INIT(mess_md_common);
+	DECLARE_DRIVER_INIT(_32x);
+	DECLARE_DRIVER_INIT(md_eur);
+	DECLARE_DRIVER_INIT(md_jpn);
+	DECLARE_DRIVER_INIT(mess_32x);
+	DECLARE_DRIVER_INIT(mess_32x_eur);
+	DECLARE_DRIVER_INIT(mess_32x_jpn);
 };
 
 class pico_state : public md_cons_state
@@ -368,6 +417,7 @@ class _32x_state : public md_base_state
 public:
 	_32x_state(const machine_config &mconfig, device_type type, const char *tag)
 	: md_base_state(mconfig, type, tag) { }
+
 };
 
 // Fifa96 needs the CPUs swapped for the gameplay to enter due to some race conditions
@@ -380,9 +430,6 @@ extern cpu_device *_32x_master_cpu;
 extern cpu_device *_32x_slave_cpu;
 
 // called from out main scanline timers...
-extern void _32x_scanline_cb0(running_machine& machine);
-extern void _32x_scanline_cb1(void);
-extern void _32x_check_framebuffer_swap(void);
 
 extern int _32x_fifo_available_callback(device_t *device, UINT32 src, UINT32 dst, UINT32 data, int size);
 extern MACHINE_RESET( _32x );
@@ -390,13 +437,8 @@ ADDRESS_MAP_EXTERN( sh2_main_map, driver_device );
 ADDRESS_MAP_EXTERN( sh2_slave_map, driver_device );
 extern emu_timer *_32x_pwm_timer;
 extern TIMER_CALLBACK( _32x_pwm_callback );
-UINT32* _32x_render_videobuffer_to_screenbuffer_helper(running_machine &machine, int scanline);
 
-extern int _32x_displaymode;
-extern int _32x_videopriority;
-extern int _32x_hcount_compare_val;
 extern int megadrive_vblank_flag;
-extern UINT16 get_hposition(void);
 extern int genesis_scanline_counter;
 
 class segacd_state : public _32x_state	// use _32x_state as base to make easier the combo 32X + SCD
@@ -428,25 +470,24 @@ MACHINE_START( md_sram );
 extern WRITE16_HANDLER( jcart_ctrl_w );
 extern READ16_HANDLER( jcart_ctrl_r );
 
-/* vdp / video */
-extern UINT16 (*vdp_get_word_from_68k_mem)(running_machine &machine, UINT32 source);
-extern UINT16 vdp_get_word_from_68k_mem_default(running_machine &machine, UINT32 source);
-extern int megadrive_visible_scanlines;
-extern int megadrive_irq6_scanline;
-extern int megadrive_z80irq_scanline;
-extern int megadrive_imode;
+/* machine/megavdp.c */
+extern UINT16 (*vdp_get_word_from_68k_mem)(running_machine &machine, UINT32 source, address_space* space);
+extern UINT16 vdp_get_word_from_68k_mem_default(running_machine &machine, UINT32 source, address_space* space);
 extern int megadriv_framerate;
 extern int megadrive_total_scanlines;
 extern int megadrive_vblank_flag;
 extern int genesis_scanline_counter;
-extern timer_device* megadriv_render_timer;
+extern UINT16* megadrive_vdp_palette_lookup;
+extern UINT16* megadrive_vdp_palette_lookup_sprite; // for C2
+extern UINT16* megadrive_vdp_palette_lookup_shadow;
+extern UINT16* megadrive_vdp_palette_lookup_highlight;
+extern int segac2_bg_pal_lookup[4];
+extern int segac2_sp_pal_lookup[4];
+extern int genvdp_use_cram;
+extern int megadrive_region_export;
+extern int megadrive_region_pal;
+TIMER_DEVICE_CALLBACK( megadriv_scanline_timer_callback );
+
+/* machine/megadriv.c */
 extern TIMER_DEVICE_CALLBACK( megadriv_scanline_timer_callback );
-extern TIMER_DEVICE_CALLBACK( megadriv_render_timer_callback );
-extern TIMER_DEVICE_CALLBACK( irq6_on_callback );
-extern int megadrive_irq6_pending;
-extern int megadrive_irq4_pending;
-extern bitmap_ind16* megadriv_render_bitmap;
 extern timer_device* megadriv_scanline_timer;
-extern timer_device* irq6_on_timer;
-extern timer_device* irq4_on_timer;
-extern void megadriv_reset_vdp(void);

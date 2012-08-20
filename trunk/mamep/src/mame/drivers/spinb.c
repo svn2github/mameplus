@@ -17,6 +17,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(spinb);
 };
 
 
@@ -31,7 +33,7 @@ void spinb_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( spinb )
+DRIVER_INIT_MEMBER(spinb_state,spinb)
 {
 }
 
@@ -127,7 +129,7 @@ ROM_END
 / Verne's World (1996)
 /-------------------------------------------------------------------*/
 
-GAME(1993,  bushido,   0,       spinb,  spinb,  spinb,  ROT0,  "Inder/Spinball",    "Bushido (set 1)",			GAME_IS_SKELETON_MECHANICAL)
-GAME(1993,  bushidoa,  bushido, spinb,  spinb,  spinb,  ROT0,  "Inder/Spinball",    "Bushido (set 2)",			GAME_IS_SKELETON_MECHANICAL)
-GAME(1996,  jolypark,  0,       spinb,  spinb,  spinb,  ROT0,  "Spinball",          "Jolly Park",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1995,  mach2,     0,       spinb,  spinb,  spinb,  ROT0,  "Spinball",          "Mach 2",					GAME_IS_SKELETON_MECHANICAL)
+GAME(1993,  bushido,   0,       spinb,  spinb, spinb_state,  spinb,  ROT0,  "Inder/Spinball",    "Bushido (set 1)",			GAME_IS_SKELETON_MECHANICAL)
+GAME(1993,  bushidoa,  bushido, spinb,  spinb, spinb_state,  spinb,  ROT0,  "Inder/Spinball",    "Bushido (set 2)",			GAME_IS_SKELETON_MECHANICAL)
+GAME(1996,  jolypark,  0,       spinb,  spinb, spinb_state,  spinb,  ROT0,  "Spinball",          "Jolly Park",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1995,  mach2,     0,       spinb,  spinb, spinb_state,  spinb,  ROT0,  "Spinball",          "Mach 2",					GAME_IS_SKELETON_MECHANICAL)

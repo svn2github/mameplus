@@ -127,7 +127,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_io_map, AS_IO, 8, finalizr_state )
 	AM_RANGE(0x00, 0xff)                   AM_READ(soundlatch_byte_r)
-	AM_RANGE(MCS48_PORT_P1, MCS48_PORT_P1) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(MCS48_PORT_P1, MCS48_PORT_P1) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(MCS48_PORT_P2, MCS48_PORT_P2) AM_WRITE(i8039_irqen_w)
 	AM_RANGE(MCS48_PORT_T0, MCS48_PORT_T0) AM_WRITE(i8039_T0_w)
 	AM_RANGE(MCS48_PORT_T1, MCS48_PORT_T1) AM_READ(i8039_T1_r)
@@ -294,7 +294,7 @@ static MACHINE_CONFIG_START( finalizr, finalizr_state )
 	MCFG_SOUND_ADD("snsnd", SN76489A, XTAL_18_432MHz/12)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.65)
 MACHINE_CONFIG_END
 
@@ -356,11 +356,11 @@ ROM_START( finalizrb )
 ROM_END
 
 
-static DRIVER_INIT( finalizr )
+DRIVER_INIT_MEMBER(finalizr_state,finalizr)
 {
-	konami1_decode(machine, "maincpu");
+	konami1_decode(machine(), "maincpu");
 }
 
 
-GAME( 1985, finalizr,  0,        finalizr, finalizr,  finalizr, ROT90, "Konami",  "Finalizer - Super Transformation", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1985, finalizrb, finalizr, finalizr, finalizrb, finalizr, ROT90, "bootleg", "Finalizer - Super Transformation (bootleg)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1985, finalizr,  0,        finalizr, finalizr, finalizr_state,  finalizr, ROT90, "Konami",  "Finalizer - Super Transformation", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1985, finalizrb, finalizr, finalizr, finalizrb, finalizr_state, finalizr, ROT90, "bootleg", "Finalizer - Super Transformation (bootleg)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )

@@ -25,6 +25,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(g627);
 };
 
 
@@ -39,7 +41,7 @@ void g627_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( g627 )
+DRIVER_INIT_MEMBER(g627_state,g627)
 {
 }
 
@@ -60,4 +62,4 @@ ROM_START(rotation)
 ROM_END
 
 
-GAME(1978,  rotation,  0,  g627,  g627,  g627,  ROT0,  "Midway",    "Rotation VIII",      GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,  rotation,  0,  g627,  g627, g627_state,  g627,  ROT0,  "Midway",    "Rotation VIII",      GAME_IS_SKELETON_MECHANICAL)

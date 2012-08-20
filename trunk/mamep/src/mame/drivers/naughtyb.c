@@ -833,14 +833,13 @@ ROM_START( trvgns )
 ROM_END
 
 
-static DRIVER_INIT( popflame )
+DRIVER_INIT_MEMBER(naughtyb_state,popflame)
 {
 	/* install a handler to catch protection checks */
-	naughtyb_state *state = machine.driver_data<naughtyb_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x9000, 0x9000, read8_delegate(FUNC(naughtyb_state::popflame_protection_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x9090, 0x9090, read8_delegate(FUNC(naughtyb_state::popflame_protection_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x9000, 0x9000, read8_delegate(FUNC(naughtyb_state::popflame_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x9090, 0x9090, read8_delegate(FUNC(naughtyb_state::popflame_protection_r),this));
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xb000, 0xb0ff, write8_delegate(FUNC(naughtyb_state::popflame_protection_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xb000, 0xb0ff, write8_delegate(FUNC(naughtyb_state::popflame_protection_w),this));
 }
 
 
@@ -865,23 +864,22 @@ WRITE8_MEMBER(naughtyb_state::trvmstr_questions_w)
 	}
 }
 
-static DRIVER_INIT( trvmstr )
+DRIVER_INIT_MEMBER(naughtyb_state,trvmstr)
 {
 	/* install questions' handlers  */
-	naughtyb_state *state = machine.driver_data<naughtyb_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc000, 0xc002, read8_delegate(FUNC(naughtyb_state::trvmstr_questions_r),state), write8_delegate(FUNC(naughtyb_state::trvmstr_questions_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc000, 0xc002, read8_delegate(FUNC(naughtyb_state::trvmstr_questions_r),this), write8_delegate(FUNC(naughtyb_state::trvmstr_questions_w),this));
 }
 
 
-GAME( 1982, naughtyb, 0,		naughtyb, naughtyb, 0,        ROT90, "Jaleco", "Naughty Boy", 0 )
-GAME( 1982, naughtyba,naughtyb, naughtyb, naughtyb, 0,        ROT90, "bootleg", "Naughty Boy (bootleg)", 0 )
-GAME( 1982, naughtybc,naughtyb, naughtyb, naughtyb, 0,        ROT90, "Jaleco (Cinematronics license)", "Naughty Boy (Cinematronics)", 0 )
-GAME( 1982, popflame, 0,		popflame, naughtyb, popflame, ROT90, "Jaleco", "Pop Flamer (protected)", 0 )
-GAME( 1982, popflamea,popflame, popflame, naughtyb, 0,        ROT90, "Jaleco", "Pop Flamer (not protected)", 0 )
-GAME( 1982, popflameb,popflame, popflame, naughtyb, 0,        ROT90, "Jaleco", "Pop Flamer (hack?)", 0 )
-GAME( 1982, popflamen,popflame, naughtyb, naughtyb, 0,        ROT90, "Jaleco", "Pop Flamer (bootleg on Naughty Boy PCB)", 0 )
-GAME( 1985, trvmstr,  0,		naughtyb, trvmstr,  trvmstr,  ROT90, "Enerdyne Technologies Inc.", "Trivia Master (set 1)", 0 )
-GAME( 1985, trvmstra, trvmstr,  naughtyb, trvmstr,  trvmstr,  ROT90, "Enerdyne Technologies Inc.", "Trivia Master (set 2)", 0 )
-GAME( 1985, trvmstrb, trvmstr,  naughtyb, trvmstr,  trvmstr,  ROT90, "Enerdyne Technologies Inc.", "Trivia Master (set 3)", 0 )
-GAME( 1985, trvmstrc, trvmstr,  naughtyb, trvmstr,  trvmstr,  ROT90, "Enerdyne Technologies Inc.", "Trivia Master (set 4)", 0 )
-GAME( 1985, trvgns,   trvmstr,	naughtyb, trvmstr,  trvmstr,  ROT90, "bootleg", "Trivia Genius", 0 )
+GAME( 1982, naughtyb, 0,		naughtyb, naughtyb, driver_device, 0,        ROT90, "Jaleco", "Naughty Boy", 0 )
+GAME( 1982, naughtyba,naughtyb, naughtyb, naughtyb, driver_device, 0,        ROT90, "bootleg", "Naughty Boy (bootleg)", 0 )
+GAME( 1982, naughtybc,naughtyb, naughtyb, naughtyb, driver_device, 0,        ROT90, "Jaleco (Cinematronics license)", "Naughty Boy (Cinematronics)", 0 )
+GAME( 1982, popflame, 0,		popflame, naughtyb, naughtyb_state, popflame, ROT90, "Jaleco", "Pop Flamer (protected)", 0 )
+GAME( 1982, popflamea,popflame, popflame, naughtyb, driver_device, 0,        ROT90, "Jaleco", "Pop Flamer (not protected)", 0 )
+GAME( 1982, popflameb,popflame, popflame, naughtyb, driver_device, 0,        ROT90, "Jaleco", "Pop Flamer (hack?)", 0 )
+GAME( 1982, popflamen,popflame, naughtyb, naughtyb, driver_device, 0,        ROT90, "Jaleco", "Pop Flamer (bootleg on Naughty Boy PCB)", 0 )
+GAME( 1985, trvmstr,  0,		naughtyb, trvmstr, naughtyb_state,  trvmstr,  ROT90, "Enerdyne Technologies Inc.", "Trivia Master (set 1)", 0 )
+GAME( 1985, trvmstra, trvmstr,  naughtyb, trvmstr, naughtyb_state,  trvmstr,  ROT90, "Enerdyne Technologies Inc.", "Trivia Master (set 2)", 0 )
+GAME( 1985, trvmstrb, trvmstr,  naughtyb, trvmstr, naughtyb_state,  trvmstr,  ROT90, "Enerdyne Technologies Inc.", "Trivia Master (set 3)", 0 )
+GAME( 1985, trvmstrc, trvmstr,  naughtyb, trvmstr, naughtyb_state,  trvmstr,  ROT90, "Enerdyne Technologies Inc.", "Trivia Master (set 4)", 0 )
+GAME( 1985, trvgns,   trvmstr,	naughtyb, trvmstr, naughtyb_state,  trvmstr,  ROT90, "bootleg", "Trivia Genius", 0 )

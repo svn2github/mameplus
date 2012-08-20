@@ -302,9 +302,9 @@ WRITE8_MEMBER(lazercmd_state::lazercmd_hardware_w)
 		case 0: /* audio channels */
 			m_dac_data = (data & 0x80) ^ ((data & 0x40) << 1) ^ ((data & 0x20) << 2) ^ ((data & 0x10) << 3);
 			if (m_dac_data)
-				dac_data_w(m_dac, 0xff);
+				m_dac->write_unsigned8(0xff);
 			else
-				dac_data_w(m_dac, 0);
+				m_dac->write_unsigned8(0);
 			break;
 		case 1: /* marker Y position */
 			m_marker_y = data;
@@ -328,9 +328,9 @@ WRITE8_MEMBER(lazercmd_state::medlanes_hardware_w)
 			/* at the moment they are routed through the dac */
 			m_dac_data = ((data & 0x20) << 2) ^ ((data & 0x10) << 3);
 			if (m_dac_data)
-				dac_data_w(m_dac, 0xff);
+				m_dac->write_unsigned8(0xff);
 			else
-				dac_data_w(m_dac, 0);
+				m_dac->write_unsigned8(0);
 			break;
 		case 1: /* marker Y position */
 			m_marker_y = data;
@@ -354,9 +354,9 @@ WRITE8_MEMBER(lazercmd_state::bbonk_hardware_w)
 			/* at the moment they are routed through the dac */
 			m_dac_data = ((data & 0x20) << 2) ^ ((data & 0x10) << 3);
 			if (m_dac_data)
-				dac_data_w(m_dac, 0xff);
+				m_dac->write_unsigned8(0xff);
 			else
-				dac_data_w(m_dac, 0);
+				m_dac->write_unsigned8(0);
 			break;
 		case 3: /* D4 clears coin detected and D0 toggles on attract mode */
 			break;
@@ -606,7 +606,7 @@ static MACHINE_START( lazercmd )
 {
 	lazercmd_state *state = machine.driver_data<lazercmd_state>();
 
-	state->m_dac = machine.device("dac");
+	state->m_dac = machine.device<dac_device>("dac");
 
 	state->save_item(NAME(state->m_marker_x));
 	state->save_item(NAME(state->m_marker_y));
@@ -659,7 +659,7 @@ static MACHINE_CONFIG_START( lazercmd, lazercmd_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -696,7 +696,7 @@ static MACHINE_CONFIG_START( medlanes, lazercmd_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -733,7 +733,7 @@ static MACHINE_CONFIG_START( bbonk, lazercmd_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -786,10 +786,10 @@ ROM_START( bbonk )
 ROM_END
 
 
-static DRIVER_INIT( lazercmd )
+DRIVER_INIT_MEMBER(lazercmd_state,lazercmd)
 {
 	int i, y;
-	UINT8 *gfx = machine.root_device().memregion("gfx1")->base();
+	UINT8 *gfx = machine().root_device().memregion("gfx1")->base();
 
 /******************************************************************
  * To show the maze bit #6 and #7 of the video ram are used.
@@ -815,10 +815,10 @@ static DRIVER_INIT( lazercmd )
 	}
 }
 
-static DRIVER_INIT( medlanes )
+DRIVER_INIT_MEMBER(lazercmd_state,medlanes)
 {
 	int i, y;
-	UINT8 *gfx = machine.root_device().memregion("gfx1")->base();
+	UINT8 *gfx = machine().root_device().memregion("gfx1")->base();
 
 /******************************************************************
  * To show the maze bit #6 and #7 of the video ram are used.
@@ -844,10 +844,10 @@ static DRIVER_INIT( medlanes )
 	}
 }
 
-static DRIVER_INIT( bbonk )
+DRIVER_INIT_MEMBER(lazercmd_state,bbonk)
 {
 	int i, y;
-	UINT8 *gfx = machine.root_device().memregion("gfx1")->base();
+	UINT8 *gfx = machine().root_device().memregion("gfx1")->base();
 
 /******************************************************************
  * To show the maze bit #6 and #7 of the video ram are used.
@@ -875,6 +875,6 @@ static DRIVER_INIT( bbonk )
 
 
 
-GAMEL( 1976, lazercmd, 0, lazercmd, lazercmd, lazercmd, ROT0, "Meadows Games, Inc.", "Lazer Command", GAME_SUPPORTS_SAVE, layout_lazercmd )
-GAMEL( 1977, medlanes, 0, medlanes, medlanes, medlanes, ROT0, "Meadows Games, Inc.", "Meadows Lanes", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_ho2eff2e )
-GAME ( 1976, bbonk,    0, bbonk,    bbonk,    bbonk,    ROT0, "Meadows Games, Inc.", "Bigfoot Bonkers", GAME_SUPPORTS_SAVE )
+GAMEL( 1976, lazercmd, 0, lazercmd, lazercmd, lazercmd_state, lazercmd, ROT0, "Meadows Games, Inc.", "Lazer Command", GAME_SUPPORTS_SAVE, layout_lazercmd )
+GAMEL( 1977, medlanes, 0, medlanes, medlanes, lazercmd_state, medlanes, ROT0, "Meadows Games, Inc.", "Meadows Lanes", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_ho2eff2e )
+GAME ( 1976, bbonk,    0, bbonk,    bbonk, lazercmd_state,    bbonk,    ROT0, "Meadows Games, Inc.", "Bigfoot Bonkers", GAME_SUPPORTS_SAVE )

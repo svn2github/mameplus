@@ -746,7 +746,7 @@ static ADDRESS_MAP_START( kyros_sound_map, AS_PROGRAM, 8, alpha68k_state )
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xe002, 0xe002) AM_WRITE(soundlatch_clear_byte_w)
-	AM_RANGE(0xe004, 0xe004) AM_DEVWRITE_LEGACY("dac", dac_signed_w)
+	AM_RANGE(0xe004, 0xe004) AM_DEVWRITE("dac", dac_device, write_signed8)
 	AM_RANGE(0xe006, 0xe00e) AM_WRITENOP // soundboard I/O's, ignored
 /* reference only
     AM_RANGE(0xe006, 0xe006) AM_WRITENOP // NMI: diminishing saw-tooth
@@ -762,7 +762,7 @@ static ADDRESS_MAP_START( sstingry_sound_map, AS_PROGRAM, 8, alpha68k_state )
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
 	AM_RANGE(0xc100, 0xc100) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0xc102, 0xc102) AM_WRITE(soundlatch_clear_byte_w)
-	AM_RANGE(0xc104, 0xc104) AM_DEVWRITE_LEGACY("dac", dac_signed_w)
+	AM_RANGE(0xc104, 0xc104) AM_DEVWRITE("dac", dac_device, write_signed8)
 	AM_RANGE(0xc106, 0xc10e) AM_WRITENOP // soundboard I/O's, ignored
 ADDRESS_MAP_END
 
@@ -790,7 +790,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_portmap, AS_IO, 8, alpha68k_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x00) AM_READWRITE(soundlatch_byte_r, soundlatch_clear_byte_w)
-	AM_RANGE(0x08, 0x08) AM_DEVWRITE_LEGACY("dac", dac_signed_w)
+	AM_RANGE(0x08, 0x08) AM_DEVWRITE("dac", dac_device, write_signed8)
 	AM_RANGE(0x0a, 0x0b) AM_DEVWRITE_LEGACY("ym2", ym2413_w)
 	AM_RANGE(0x0c, 0x0d) AM_DEVWRITE_LEGACY("ym1", ym2203_w)
 	AM_RANGE(0x0e, 0x0e) AM_WRITE(sound_bank_w)
@@ -1845,7 +1845,7 @@ static const ym2203_interface ym2203_config =
 		DEVCB_DRIVER_MEMBER(alpha68k_state, porta_w),
 		DEVCB_NULL
 	},
-	NULL
+	DEVCB_NULL
 };
 
 static void YM3812_irq( device_t *device, int param )
@@ -2002,7 +2002,7 @@ static MACHINE_CONFIG_START( sstingry, alpha68k_state )
 	MCFG_SOUND_ADD("ym3", YM2203, 3000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 MACHINE_CONFIG_END
 
@@ -2048,7 +2048,7 @@ static MACHINE_CONFIG_START( kyros, alpha68k_state )
 	MCFG_SOUND_ADD("ym3", YM2203, XTAL_24MHz/12)	/* Verified on bootleg PCB */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 MACHINE_CONFIG_END
 
@@ -2169,7 +2169,7 @@ static MACHINE_CONFIG_START( alpha68k_II, alpha68k_state )
 	MCFG_SOUND_ADD("ym2", YM2413, 3579545)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 MACHINE_CONFIG_END
 
@@ -2218,7 +2218,7 @@ static MACHINE_CONFIG_START( alpha68k_II_gm, alpha68k_state )
 	MCFG_SOUND_ADD("ym2", YM2413, 3579545)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 MACHINE_CONFIG_END
 //ZT
@@ -2261,7 +2261,7 @@ static MACHINE_CONFIG_START( alpha68k_V, alpha68k_state )
 	MCFG_SOUND_ADD("ym2", YM2413, 3579545)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 MACHINE_CONFIG_END
 
@@ -2303,7 +2303,7 @@ static MACHINE_CONFIG_START( alpha68k_V_sb, alpha68k_state )
 	MCFG_SOUND_ADD("ym2", YM2413, 3579545)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 MACHINE_CONFIG_END
 
@@ -3140,149 +3140,133 @@ ROM_END
 
 /******************************************************************************/
 
-static DRIVER_INIT( sstingry )
+DRIVER_INIT_MEMBER(alpha68k_state,sstingry)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->m_invert_controls = 0;
-	state->m_microcontroller_id = 0x00ff;
-	state->m_coin_id = 0x22 | (0x22 << 8);
-	state->m_game_id = 0;
+	m_invert_controls = 0;
+	m_microcontroller_id = 0x00ff;
+	m_coin_id = 0x22 | (0x22 << 8);
+	m_game_id = 0;
 }
 
-static DRIVER_INIT( kyros )
+DRIVER_INIT_MEMBER(alpha68k_state,kyros)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->m_invert_controls = 0;
-	state->m_microcontroller_id = 0x0012;
-	state->m_coin_id = 0x22 | (0x22 << 8);
-	state->m_game_id = ALPHA68K_KYROS;
+	m_invert_controls = 0;
+	m_microcontroller_id = 0x0012;
+	m_coin_id = 0x22 | (0x22 << 8);
+	m_game_id = ALPHA68K_KYROS;
 }
 
-static DRIVER_INIT( jongbou )
+DRIVER_INIT_MEMBER(alpha68k_state,jongbou)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0c0000, 0x0c0001, read16_delegate(FUNC(alpha68k_state::jongbou_inputs_r),state));
-	state->m_invert_controls = 0;
-	state->m_microcontroller_id = 0x00ff;
-	state->m_coin_id = 0x23 | (0x24 << 8);
-	state->m_game_id = ALPHA68K_JONGBOU;
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0c0000, 0x0c0001, read16_delegate(FUNC(alpha68k_state::jongbou_inputs_r),this));
+	m_invert_controls = 0;
+	m_microcontroller_id = 0x00ff;
+	m_coin_id = 0x23 | (0x24 << 8);
+	m_game_id = ALPHA68K_JONGBOU;
 }
 
-static DRIVER_INIT( paddlema )
+DRIVER_INIT_MEMBER(alpha68k_state,paddlema)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->m_microcontroller_id = 0;
-	state->m_coin_id = 0;				// Not needed !
-	state->m_game_id = 0;
+	m_microcontroller_id = 0;
+	m_coin_id = 0;				// Not needed !
+	m_game_id = 0;
 }
 
-static DRIVER_INIT( timesold )
+DRIVER_INIT_MEMBER(alpha68k_state,timesold)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->m_invert_controls = 0;
-	state->m_microcontroller_id = 0;
-	state->m_coin_id = 0x22 | (0x22 << 8);
-	state->m_game_id = 0;
+	m_invert_controls = 0;
+	m_microcontroller_id = 0;
+	m_coin_id = 0x22 | (0x22 << 8);
+	m_game_id = 0;
 }
 
-static DRIVER_INIT( timesold1 )
+DRIVER_INIT_MEMBER(alpha68k_state,timesold1)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->m_invert_controls = 1;
-	state->m_microcontroller_id = 0;
-	state->m_coin_id = 0x22 | (0x22 << 8);
-	state->m_game_id = 0;
+	m_invert_controls = 1;
+	m_microcontroller_id = 0;
+	m_coin_id = 0x22 | (0x22 << 8);
+	m_game_id = 0;
 }
 
-static DRIVER_INIT( btlfield )
+DRIVER_INIT_MEMBER(alpha68k_state,btlfield)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->m_invert_controls = 1;
-	state->m_microcontroller_id = 0;
-	state->m_coin_id = 0x22 | (0x22 << 8);
-	state->m_game_id = 0;
+	m_invert_controls = 1;
+	m_microcontroller_id = 0;
+	m_coin_id = 0x22 | (0x22 << 8);
+	m_game_id = 0;
 }
 
-static DRIVER_INIT( btlfieldb )
+DRIVER_INIT_MEMBER(alpha68k_state,btlfieldb)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->m_invert_controls = 1;
-	state->m_microcontroller_id = 0;
-	state->m_coin_id = 0x22 | (0x22 << 8); //not checked
-	state->m_game_id = ALPHA68K_BTLFIELDB;
+	m_invert_controls = 1;
+	m_microcontroller_id = 0;
+	m_coin_id = 0x22 | (0x22 << 8); //not checked
+	m_game_id = ALPHA68K_BTLFIELDB;
 }
 
-static DRIVER_INIT( skysoldr )
+DRIVER_INIT_MEMBER(alpha68k_state,skysoldr)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->membank("bank8")->set_base((state->memregion("user1")->base()) + 0x40000);
-	state->m_invert_controls = 0;
-	state->m_microcontroller_id = 0;
-	state->m_coin_id = 0x22 | (0x22 << 8);
-	state->m_game_id = 0;
+	membank("bank8")->set_base((memregion("user1")->base()) + 0x40000);
+	m_invert_controls = 0;
+	m_microcontroller_id = 0;
+	m_coin_id = 0x22 | (0x22 << 8);
+	m_game_id = 0;
 }
 
-static DRIVER_INIT( goldmedl )
+DRIVER_INIT_MEMBER(alpha68k_state,goldmedl)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->m_invert_controls = 0;
-	state->m_microcontroller_id = 0x8803; //AT
-	state->m_coin_id = 0x23 | (0x24 << 8);
-	state->m_game_id = 0;
+	m_invert_controls = 0;
+	m_microcontroller_id = 0x8803; //AT
+	m_coin_id = 0x23 | (0x24 << 8);
+	m_game_id = 0;
 }
 
-static DRIVER_INIT( goldmedla )
+DRIVER_INIT_MEMBER(alpha68k_state,goldmedla)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->membank("bank8")->set_base(state->memregion("maincpu")->base() + 0x20000);
-	state->m_invert_controls = 0;
-	state->m_microcontroller_id = 0x8803; //Guess - routine to handle coinage is the same as in 'goldmedl'
-	state->m_coin_id = 0x23 | (0x24 << 8);
-	state->m_game_id = 0;
+	membank("bank8")->set_base(memregion("maincpu")->base() + 0x20000);
+	m_invert_controls = 0;
+	m_microcontroller_id = 0x8803; //Guess - routine to handle coinage is the same as in 'goldmedl'
+	m_coin_id = 0x23 | (0x24 << 8);
+	m_game_id = 0;
 }
 
-static DRIVER_INIT( skyadvnt )
+DRIVER_INIT_MEMBER(alpha68k_state,skyadvnt)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->m_invert_controls = 0;
-	state->m_microcontroller_id = 0x8814;
-	state->m_coin_id = 0x22 | (0x22 << 8);
-	state->m_game_id = 0;
+	m_invert_controls = 0;
+	m_microcontroller_id = 0x8814;
+	m_coin_id = 0x22 | (0x22 << 8);
+	m_game_id = 0;
 }
 
-static DRIVER_INIT( skyadvntu )
+DRIVER_INIT_MEMBER(alpha68k_state,skyadvntu)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->m_invert_controls = 0;
-	state->m_microcontroller_id = 0x8814;
-	state->m_coin_id = 0x23 | (0x24 << 8);
-	state->m_game_id = 0;
+	m_invert_controls = 0;
+	m_microcontroller_id = 0x8814;
+	m_coin_id = 0x23 | (0x24 << 8);
+	m_game_id = 0;
 }
 
-static DRIVER_INIT( gangwarsu )
+DRIVER_INIT_MEMBER(alpha68k_state,gangwarsu)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->membank("bank8")->set_base(state->memregion("user1")->base());
-	state->m_invert_controls = 0;
-	state->m_microcontroller_id = 0x8512;
-	state->m_coin_id = 0x23 | (0x24 << 8);
-	state->m_game_id = 0;
+	membank("bank8")->set_base(memregion("user1")->base());
+	m_invert_controls = 0;
+	m_microcontroller_id = 0x8512;
+	m_coin_id = 0x23 | (0x24 << 8);
+	m_game_id = 0;
 }
 
-static DRIVER_INIT( gangwars )
+DRIVER_INIT_MEMBER(alpha68k_state,gangwars)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->membank("bank8")->set_base(state->memregion("user1")->base());
-	state->m_invert_controls = 0;
-	state->m_microcontroller_id = 0x8512;
-	state->m_coin_id = 0x23 | (0x24 << 8);
-	state->m_game_id = 0;
+	membank("bank8")->set_base(memregion("user1")->base());
+	m_invert_controls = 0;
+	m_microcontroller_id = 0x8512;
+	m_coin_id = 0x23 | (0x24 << 8);
+	m_game_id = 0;
 }
 
-static DRIVER_INIT( sbasebal )
+DRIVER_INIT_MEMBER(alpha68k_state,sbasebal)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	UINT16 *rom = (UINT16 *)state->memregion("maincpu")->base();
+	UINT16 *rom = (UINT16 *)memregion("maincpu")->base();
 
 	/* Patch protection check, it does a divide by zero because the MCU is trying to
        calculate the ball speed when a strike is scored, notice that current emulation
@@ -3303,52 +3287,51 @@ static DRIVER_INIT( sbasebal )
 	rom[0x2b6/2] = 0x4e71;
 #endif
 
-	state->m_invert_controls = 0;
-	state->m_microcontroller_id = 0x8512;	// Same as 'gangwars' ?
-	state->m_coin_id = 0x23 | (0x24 << 8);
-	state->m_game_id = 0;
+	m_invert_controls = 0;
+	m_microcontroller_id = 0x8512;	// Same as 'gangwars' ?
+	m_coin_id = 0x23 | (0x24 << 8);
+	m_game_id = 0;
 }
 
-static DRIVER_INIT( tnextspc )
+DRIVER_INIT_MEMBER(alpha68k_state,tnextspc)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	state->m_invert_controls = 0;
-	state->m_microcontroller_id = 0x890a;
-	state->m_coin_id = 0;				// Not needed !
-	state->m_game_id = 0;
+	m_invert_controls = 0;
+	m_microcontroller_id = 0x890a;
+	m_coin_id = 0;				// Not needed !
+	m_game_id = 0;
 }
 
 /******************************************************************************/
 
-GAME( 1986, sstingry,  0,        sstingry,       sstingry, sstingry, ROT90, "Alpha Denshi Co.",                                  "Super Stingray (Japan)", GAME_SUPPORTS_SAVE | GAME_UNEMULATED_PROTECTION )
+GAME( 1986, sstingry,  0,        sstingry,       sstingry, alpha68k_state, sstingry, ROT90, "Alpha Denshi Co.",                                  "Super Stingray (Japan)", GAME_SUPPORTS_SAVE | GAME_UNEMULATED_PROTECTION )
 
-GAME( 1987, kyros,     0,        kyros,          kyros,    kyros,    ROT90, "Alpha Denshi Co. (World Games Inc. license)",       "Kyros", GAME_SUPPORTS_SAVE )
-GAME( 1986, kyrosj,    kyros,    kyros,          kyros,    kyros,    ROT90, "Alpha Denshi Co.",                                  "Kyros No Yakata (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1987, kyros,     0,        kyros,          kyros, alpha68k_state,    kyros,    ROT90, "Alpha Denshi Co. (World Games Inc. license)",       "Kyros", GAME_SUPPORTS_SAVE )
+GAME( 1986, kyrosj,    kyros,    kyros,          kyros, alpha68k_state,    kyros,    ROT90, "Alpha Denshi Co.",                                  "Kyros No Yakata (Japan)", GAME_SUPPORTS_SAVE )
 
-GAME( 1987, jongbou,   0,        jongbou,        jongbou,  jongbou,  ROT90, "SNK",                                               "Mahjong Block Jongbou (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1987, jongbou,   0,        jongbou,        jongbou, alpha68k_state,  jongbou,  ROT90, "SNK",                                               "Mahjong Block Jongbou (Japan)", GAME_SUPPORTS_SAVE )
 
-GAME( 1988, paddlema,  0,        alpha68k_I,     paddlema, paddlema, ROT90, "SNK",                                               "Paddle Mania", GAME_SUPPORTS_SAVE )
+GAME( 1988, paddlema,  0,        alpha68k_I,     paddlema, alpha68k_state, paddlema, ROT90, "SNK",                                               "Paddle Mania", GAME_SUPPORTS_SAVE )
 
-GAME( 1987, timesold,  0,        alpha68k_II,    timesold, timesold, ROT90, "Alpha Denshi Co. (SNK/Romstar license)",            "Time Soldiers (US Rev 3)", GAME_SUPPORTS_SAVE )
-GAME( 1987, timesold1, timesold, alpha68k_II,    timesold, timesold1,ROT90, "Alpha Denshi Co. (SNK/Romstar license)",            "Time Soldiers (US Rev 1)", GAME_SUPPORTS_SAVE )
+GAME( 1987, timesold,  0,        alpha68k_II,    timesold, alpha68k_state, timesold, ROT90, "Alpha Denshi Co. (SNK/Romstar license)",            "Time Soldiers (US Rev 3)", GAME_SUPPORTS_SAVE )
+GAME( 1987, timesold1, timesold, alpha68k_II,    timesold, alpha68k_state, timesold1,ROT90, "Alpha Denshi Co. (SNK/Romstar license)",            "Time Soldiers (US Rev 1)", GAME_SUPPORTS_SAVE )
 
-GAME( 1987, btlfield,  timesold, alpha68k_II,    btlfield, btlfield, ROT90, "Alpha Denshi Co. (SNK license)",                    "Battle Field (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1987, btlfieldb, timesold, btlfieldb,      btlfieldb,btlfieldb,ROT90, "bootleg",                                           "Battle Field (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1987, btlfield,  timesold, alpha68k_II,    btlfield, alpha68k_state, btlfield, ROT90, "Alpha Denshi Co. (SNK license)",                    "Battle Field (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1987, btlfieldb, timesold, btlfieldb,      btlfieldb, alpha68k_state,btlfieldb,ROT90, "bootleg",                                           "Battle Field (bootleg)", GAME_SUPPORTS_SAVE )
 
-GAME( 1988, skysoldr,  0,        alpha68k_II,    skysoldr, skysoldr, ROT90, "Alpha Denshi Co. (SNK of America/Romstar license)", "Sky Soldiers (US)", GAME_SUPPORTS_SAVE )
+GAME( 1988, skysoldr,  0,        alpha68k_II,    skysoldr, alpha68k_state, skysoldr, ROT90, "Alpha Denshi Co. (SNK of America/Romstar license)", "Sky Soldiers (US)", GAME_SUPPORTS_SAVE )
 
-GAME( 1988, goldmedl,  0,        alpha68k_II_gm, goldmedl, goldmedl, ROT0,  "SNK",                                               "Gold Medalist (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1988, goldmedla, goldmedl, alpha68k_II_gm, goldmedl, goldmedla,ROT0,  "SNK",                                               "Gold Medalist (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1988, goldmedlb, goldmedl, alpha68k_II_gm, goldmedl, goldmedla,ROT0,  "bootleg",                                           "Gold Medalist (bootleg)", GAME_NOT_WORKING )
+GAME( 1988, goldmedl,  0,        alpha68k_II_gm, goldmedl, alpha68k_state, goldmedl, ROT0,  "SNK",                                               "Gold Medalist (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1988, goldmedla, goldmedl, alpha68k_II_gm, goldmedl, alpha68k_state, goldmedla,ROT0,  "SNK",                                               "Gold Medalist (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1988, goldmedlb, goldmedl, alpha68k_II_gm, goldmedl, alpha68k_state, goldmedla,ROT0,  "bootleg",                                           "Gold Medalist (bootleg)", GAME_NOT_WORKING )
 
-GAME( 1989, skyadvnt,  0,        alpha68k_V,     skyadvnt, skyadvnt, ROT90, "Alpha Denshi Co.",                                  "Sky Adventure (World)", GAME_SUPPORTS_SAVE )
-GAME( 1989, skyadvntu, skyadvnt, alpha68k_V,     skyadvntu,skyadvntu,ROT90, "Alpha Denshi Co. (SNK of America license)",         "Sky Adventure (US)", GAME_SUPPORTS_SAVE )
-GAME( 1989, skyadvntj, skyadvnt, alpha68k_V,     skyadvnt, skyadvnt, ROT90, "Alpha Denshi Co.",                                  "Sky Adventure (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1989, skyadvnt,  0,        alpha68k_V,     skyadvnt, alpha68k_state, skyadvnt, ROT90, "Alpha Denshi Co.",                                  "Sky Adventure (World)", GAME_SUPPORTS_SAVE )
+GAME( 1989, skyadvntu, skyadvnt, alpha68k_V,     skyadvntu, alpha68k_state,skyadvntu,ROT90, "Alpha Denshi Co. (SNK of America license)",         "Sky Adventure (US)", GAME_SUPPORTS_SAVE )
+GAME( 1989, skyadvntj, skyadvnt, alpha68k_V,     skyadvnt, alpha68k_state, skyadvnt, ROT90, "Alpha Denshi Co.",                                  "Sky Adventure (Japan)", GAME_SUPPORTS_SAVE )
 
-GAME( 1989, gangwars,  0,        alpha68k_V,     gangwars, gangwars, ROT0,  "Alpha Denshi Co.",                                  "Gang Wars", GAME_SUPPORTS_SAVE )
-GAME( 1989, gangwarsu, gangwars, alpha68k_V,     gangwarsu,gangwarsu,ROT0,  "Alpha Denshi Co.",                                  "Gang Wars (US)", GAME_SUPPORTS_SAVE )
+GAME( 1989, gangwars,  0,        alpha68k_V,     gangwars, alpha68k_state, gangwars, ROT0,  "Alpha Denshi Co.",                                  "Gang Wars", GAME_SUPPORTS_SAVE )
+GAME( 1989, gangwarsu, gangwars, alpha68k_V,     gangwarsu, alpha68k_state,gangwarsu,ROT0,  "Alpha Denshi Co.",                                  "Gang Wars (US)", GAME_SUPPORTS_SAVE )
 
-GAME( 1989, sbasebal,  0,        alpha68k_V_sb,  sbasebal, sbasebal, ROT0,  "Alpha Denshi Co. (SNK of America license)",         "Super Champion Baseball (US)", GAME_SUPPORTS_SAVE | GAME_UNEMULATED_PROTECTION )
+GAME( 1989, sbasebal,  0,        alpha68k_V_sb,  sbasebal, alpha68k_state, sbasebal, ROT0,  "Alpha Denshi Co. (SNK of America license)",         "Super Champion Baseball (US)", GAME_SUPPORTS_SAVE | GAME_UNEMULATED_PROTECTION )
 
-GAME( 1989, tnextspc,  0,        tnextspc,       tnextspc, tnextspc, ROT90, "SNK",                                               "The Next Space", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
-GAME( 1989, tnextspcj, tnextspc, tnextspc,       tnextspc, tnextspc, ROT90, "SNK (Pasadena International Corp. license)",        "The Next Space (Japan)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+GAME( 1989, tnextspc,  0,        tnextspc,       tnextspc, alpha68k_state, tnextspc, ROT90, "SNK",                                               "The Next Space", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+GAME( 1989, tnextspcj, tnextspc, tnextspc,       tnextspc, alpha68k_state, tnextspc, ROT90, "SNK (Pasadena International Corp. license)",        "The Next Space (Japan)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )

@@ -450,16 +450,15 @@ READ32_MEMBER(groundfx_state::irq_speedup_r_groundfx)
 }
 
 
-static DRIVER_INIT( groundfx )
+DRIVER_INIT_MEMBER(groundfx_state,groundfx)
 {
 	UINT32 offset,i;
-	UINT8 *gfx = machine.root_device().memregion("gfx3")->base();
-	int size=machine.root_device().memregion("gfx3")->bytes();
+	UINT8 *gfx = machine().root_device().memregion("gfx3")->base();
+	int size=machine().root_device().memregion("gfx3")->bytes();
 	int data;
 
 	/* Speedup handlers */
-	groundfx_state *state = machine.driver_data<groundfx_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x20b574, 0x20b577, read32_delegate(FUNC(groundfx_state::irq_speedup_r_groundfx),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x20b574, 0x20b577, read32_delegate(FUNC(groundfx_state::irq_speedup_r_groundfx),this));
 
 	/* make piv tile GFX format suitable for gfxdecode */
 	offset = size/2;
@@ -483,4 +482,4 @@ static DRIVER_INIT( groundfx )
 }
 
 
-GAME( 1992, groundfx, 0, groundfx, groundfx, groundfx, ROT0, "Taito Corporation", "Ground Effects / Super Ground Effects (Japan)", 0 )
+GAME( 1992, groundfx, 0, groundfx, groundfx, groundfx_state, groundfx, ROT0, "Taito Corporation", "Ground Effects / Super Ground Effects (Japan)", 0 )

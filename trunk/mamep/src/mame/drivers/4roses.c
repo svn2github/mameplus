@@ -186,6 +186,7 @@ public:
 	_4roses_state(const machine_config &mconfig, device_type type, const char *tag)
 		: funworld_state(mconfig, type, tag) { }
 
+	DECLARE_DRIVER_INIT(4roses);
 };
 
 
@@ -459,7 +460,7 @@ ROM_END
 *  Driver Initialization  *
 **************************/
 
-static DRIVER_INIT( 4roses )
+DRIVER_INIT_MEMBER(_4roses_state,4roses)
 {
 
 }
@@ -470,5 +471,5 @@ static DRIVER_INIT( 4roses )
 *************************/
 
 /*    YEAR  NAME     PARENT  MACHINE  INPUT   INIT    ROT    COMPANY    FULLNAME                        FLAGS  */
-GAME( 1999, 4roses,  0,      4roses,  4roses, 4roses, ROT0, "<unknown>", "Four Roses (encrypted, set 1)", GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 1999, 4rosesa, 4roses, 4roses,  4roses, 4roses, ROT0, "<unknown>", "Four Roses (encrypted, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 1999, 4roses,  0,      4roses,  4roses, _4roses_state, 4roses, ROT0, "<unknown>", "Four Roses (encrypted, set 1)", GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 1999, 4rosesa, 4roses, 4roses,  4roses, _4roses_state, 4roses, ROT0, "<unknown>", "Four Roses (encrypted, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS | GAME_UNEMULATED_PROTECTION | GAME_NO_SOUND | GAME_NOT_WORKING )

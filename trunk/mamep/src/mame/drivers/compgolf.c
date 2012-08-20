@@ -213,7 +213,7 @@ static const ym2203_interface ym2203_config =
 			DEVCB_DRIVER_MEMBER(compgolf_state,compgolf_scrollx_lo_w),
 			DEVCB_DRIVER_MEMBER(compgolf_state,compgolf_scrolly_lo_w),
 	},
-	sound_irq
+	DEVCB_LINE(sound_irq)
 };
 
 
@@ -356,10 +356,10 @@ static void compgolf_expand_bg(running_machine &machine)
 	}
 }
 
-static DRIVER_INIT( compgolf )
+DRIVER_INIT_MEMBER(compgolf_state,compgolf)
 {
-	machine.root_device().membank("bank1")->configure_entries(0, 2, machine.root_device().memregion("user1")->base(), 0x4000);
-	compgolf_expand_bg(machine);
+	machine().root_device().membank("bank1")->configure_entries(0, 2, machine().root_device().memregion("user1")->base(), 0x4000);
+	compgolf_expand_bg(machine());
 }
 
 
@@ -369,5 +369,5 @@ static DRIVER_INIT( compgolf )
  *
  *************************************/
 
-GAME( 1986, compgolf, 0,        compgolf, compgolf, compgolf, ROT0, "Data East", "Competition Golf Final Round (revision 3)", GAME_SUPPORTS_SAVE )
-GAME( 1985, compgolfo,compgolf, compgolf, compgolf, compgolf, ROT0, "Data East", "Competition Golf Final Round (old version)", GAME_SUPPORTS_SAVE )
+GAME( 1986, compgolf, 0,        compgolf, compgolf, compgolf_state, compgolf, ROT0, "Data East", "Competition Golf Final Round (revision 3)", GAME_SUPPORTS_SAVE )
+GAME( 1985, compgolfo,compgolf, compgolf, compgolf, compgolf_state, compgolf, ROT0, "Data East", "Competition Golf Final Round (old version)", GAME_SUPPORTS_SAVE )

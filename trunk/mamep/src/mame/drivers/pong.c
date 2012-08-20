@@ -471,7 +471,7 @@ public:
 
 	void sound_cb(net_sig_t newval)
 	{
-		dac_w(m_dac, 0, 128*(!newval));
+		m_dac->write_unsigned8(128*(!newval));
 	}
 
 	void video_cb(net_sig_t newval)
@@ -671,5 +671,5 @@ ROM_START( pongf ) /* dummy to satisfy game entry*/
 ROM_END
 
 
-GAME( 1972, pong,  0, pong, pong,  0, ROT0, "Atari", "Pong (Rev E)", 0 )
-GAME( 1972, pongf,  0, pongf, pong,  0, ROT0, "Atari", "Pong (Rev E), no subcycles", 0 )
+GAME( 1972, pong,  0, pong, pong, driver_device,  0, ROT0, "Atari", "Pong (Rev E)", 0 )
+GAME( 1972, pongf,  0, pongf, pong, driver_device,  0, ROT0, "Atari", "Pong (Rev E), no subcycles", 0 )

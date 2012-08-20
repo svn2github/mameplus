@@ -64,7 +64,7 @@ static MACHINE_START( circusc )
 	state->m_audiocpu = machine.device<cpu_device>("audiocpu");
 	state->m_sn1 = machine.device("sn1");
 	state->m_sn2 = machine.device("sn2");
-	state->m_dac = machine.device("dac");
+	state->m_dac = machine.device<dac_device>("dac");
 	state->m_discrete = machine.device("fltdisc");
 
 	state->save_item(NAME(state->m_sn_latch));
@@ -128,7 +128,7 @@ WRITE8_MEMBER(circusc_state::circusc_sound_w)
 
 		/* CS5 */
 		case 3:
-			dac_w(m_dac, 0, data);
+			m_dac->write_unsigned8(data);
 			break;
 
 		/* CS6 */
@@ -377,7 +377,7 @@ static MACHINE_CONFIG_START( circusc, circusc_state )
 	MCFG_SOUND_ADD("sn2", SN76496, XTAL_14_31818MHz/8)
 	MCFG_SOUND_ROUTE_EX(0, "fltdisc", 1.0, 1)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE_EX(0, "fltdisc", 1.0, 2)
 
 	MCFG_SOUND_ADD("fltdisc", DISCRETE, 0)
@@ -546,14 +546,14 @@ ROM_START( circusce ) /* Version P */
 ROM_END
 
 
-static DRIVER_INIT( circusc )
+DRIVER_INIT_MEMBER(circusc_state,circusc)
 {
-	konami1_decode(machine, "maincpu");
+	konami1_decode(machine(), "maincpu");
 }
 
 
-GAME( 1984, circusc,  0,       circusc, circusc, circusc, ROT90, "Konami", "Circus Charlie (level select, set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1984, circusc2, circusc, circusc, circusc, circusc, ROT90, "Konami", "Circus Charlie (level select, set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1984, circusc3, circusc, circusc, circusc, circusc, ROT90, "Konami", "Circus Charlie (no level select)", GAME_SUPPORTS_SAVE )
-GAME( 1984, circuscc, circusc, circusc, circusc, circusc, ROT90, "Konami (Centuri license)", "Circus Charlie (Centuri)", GAME_SUPPORTS_SAVE )
-GAME( 1984, circusce, circusc, circusc, circusc, circusc, ROT90, "Konami (Centuri license)", "Circus Charlie (Centuri, earlier)", GAME_SUPPORTS_SAVE )
+GAME( 1984, circusc,  0,       circusc, circusc, circusc_state, circusc, ROT90, "Konami", "Circus Charlie (level select, set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1984, circusc2, circusc, circusc, circusc, circusc_state, circusc, ROT90, "Konami", "Circus Charlie (level select, set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1984, circusc3, circusc, circusc, circusc, circusc_state, circusc, ROT90, "Konami", "Circus Charlie (no level select)", GAME_SUPPORTS_SAVE )
+GAME( 1984, circuscc, circusc, circusc, circusc, circusc_state, circusc, ROT90, "Konami (Centuri license)", "Circus Charlie (Centuri)", GAME_SUPPORTS_SAVE )
+GAME( 1984, circusce, circusc, circusc, circusc, circusc_state, circusc, ROT90, "Konami (Centuri license)", "Circus Charlie (Centuri, earlier)", GAME_SUPPORTS_SAVE )

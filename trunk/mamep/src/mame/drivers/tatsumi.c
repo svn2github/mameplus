@@ -1281,12 +1281,11 @@ ROM_END
 
 /***************************************************************************/
 
-static DRIVER_INIT( apache3 )
+DRIVER_INIT_MEMBER(tatsumi_state,apache3)
 {
-	tatsumi_state *state = machine.driver_data<tatsumi_state>();
-	UINT8 *dst = state->memregion("gfx1")->base();
-	UINT8 *src1 = state->memregion("gfx2")->base();
-	UINT8 *src2 = state->memregion("gfx3")->base();
+	UINT8 *dst = memregion("gfx1")->base();
+	UINT8 *src1 = memregion("gfx2")->base();
+	UINT8 *src2 = memregion("gfx3")->base();
 	int i;
 
 	for (i=0; i<0x100000; i+=32) {
@@ -1299,22 +1298,21 @@ static DRIVER_INIT( apache3 )
 	}
 
 	// Copy sprite & palette data out of GFX rom area
-	state->m_rom_sprite_lookup1 = machine.root_device().memregion("gfx2")->base();
-	state->m_rom_sprite_lookup2 = machine.root_device().memregion("gfx3")->base();
-	state->m_rom_clut0 = machine.root_device().memregion("gfx2")->base()+ 0x100000 - 0x800;
-	state->m_rom_clut1 = machine.root_device().memregion("gfx3")->base()+ 0x100000 - 0x800;
+	m_rom_sprite_lookup1 = machine().root_device().memregion("gfx2")->base();
+	m_rom_sprite_lookup2 = machine().root_device().memregion("gfx3")->base();
+	m_rom_clut0 = machine().root_device().memregion("gfx2")->base()+ 0x100000 - 0x800;
+	m_rom_clut1 = machine().root_device().memregion("gfx3")->base()+ 0x100000 - 0x800;
 
-	tatsumi_reset(machine);
+	tatsumi_reset(machine());
 
 	// TODO: ym2151_set_port_write_handler for CT1/CT2 outputs
 }
 
-static DRIVER_INIT( roundup5 )
+DRIVER_INIT_MEMBER(tatsumi_state,roundup5)
 {
-	tatsumi_state *state = machine.driver_data<tatsumi_state>();
-	UINT8 *dst = state->memregion("gfx1")->base();
-	UINT8 *src1 = state->memregion("gfx2")->base();
-	UINT8 *src2 = state->memregion("gfx3")->base();
+	UINT8 *dst = memregion("gfx1")->base();
+	UINT8 *src1 = memregion("gfx2")->base();
+	UINT8 *src2 = memregion("gfx3")->base();
 	int i;
 
 	for (i=0; i<0xc0000; i+=32) {
@@ -1327,22 +1325,21 @@ static DRIVER_INIT( roundup5 )
 	}
 
 	// Copy sprite & palette data out of GFX rom area
-	state->m_rom_sprite_lookup1 = machine.root_device().memregion("gfx2")->base();
-	state->m_rom_sprite_lookup2 = machine.root_device().memregion("gfx3")->base();
-	state->m_rom_clut0 = machine.root_device().memregion("gfx2")->base()+ 0xc0000 - 0x800;
-	state->m_rom_clut1 = machine.root_device().memregion("gfx3")->base()+ 0xc0000 - 0x800;
+	m_rom_sprite_lookup1 = machine().root_device().memregion("gfx2")->base();
+	m_rom_sprite_lookup2 = machine().root_device().memregion("gfx3")->base();
+	m_rom_clut0 = machine().root_device().memregion("gfx2")->base()+ 0xc0000 - 0x800;
+	m_rom_clut1 = machine().root_device().memregion("gfx3")->base()+ 0xc0000 - 0x800;
 
-	tatsumi_reset(machine);
+	tatsumi_reset(machine());
 }
 
-static DRIVER_INIT( cyclwarr )
+DRIVER_INIT_MEMBER(tatsumi_state,cyclwarr)
 {
-	tatsumi_state *state = machine.driver_data<tatsumi_state>();
-	UINT8 *dst = state->memregion("gfx1")->base();
-	UINT8 *src1 = state->memregion("gfx2")->base();
-	int len1 = state->memregion("gfx2")->bytes();
-	UINT8 *src2 = state->memregion("gfx3")->base();
-	int len2 = state->memregion("gfx3")->bytes();
+	UINT8 *dst = memregion("gfx1")->base();
+	UINT8 *src1 = memregion("gfx2")->base();
+	int len1 = memregion("gfx2")->bytes();
+	UINT8 *src2 = memregion("gfx3")->base();
+	int len2 = memregion("gfx3")->bytes();
 	int i;
 	for (i=0; i<len1; i+=32) {
 		memcpy(dst,src1,32);
@@ -1353,21 +1350,21 @@ static DRIVER_INIT( cyclwarr )
 		src2+=32;
 	}
 
-	dst = machine.root_device().memregion("maincpu")->base();
-	memcpy(state->m_cyclwarr_cpua_ram,dst,8);
-	state->membank("bank1")->set_base(dst);
+	dst = machine().root_device().memregion("maincpu")->base();
+	memcpy(m_cyclwarr_cpua_ram,dst,8);
+	membank("bank1")->set_base(dst);
 
-	dst = machine.root_device().memregion("sub")->base();
-	memcpy(state->m_cyclwarr_cpub_ram,dst,8);
-	state->membank("bank2")->set_base(dst);
+	dst = machine().root_device().memregion("sub")->base();
+	memcpy(m_cyclwarr_cpub_ram,dst,8);
+	membank("bank2")->set_base(dst);
 
 	// Copy sprite & palette data out of GFX rom area
-	state->m_rom_sprite_lookup1 = machine.root_device().memregion("gfx2")->base();
-	state->m_rom_sprite_lookup2 = machine.root_device().memregion("gfx3")->base();
-	state->m_rom_clut0 = machine.root_device().memregion("gfx2")->base() + len1 - 0x1000;
-	state->m_rom_clut1 = machine.root_device().memregion("gfx3")->base() + len2 - 0x1000;
+	m_rom_sprite_lookup1 = machine().root_device().memregion("gfx2")->base();
+	m_rom_sprite_lookup2 = machine().root_device().memregion("gfx3")->base();
+	m_rom_clut0 = machine().root_device().memregion("gfx2")->base() + len1 - 0x1000;
+	m_rom_clut1 = machine().root_device().memregion("gfx3")->base() + len2 - 0x1000;
 
-	tatsumi_reset(machine);
+	tatsumi_reset(machine());
 }
 
 /***************************************************************************/
@@ -1375,8 +1372,8 @@ static DRIVER_INIT( cyclwarr )
 /* http://www.tatsu-mi.co.jp/game/trace/index.html */
 
 /* 1987 Gray Out */
-GAME( 1988, apache3,  0,       apache3,   apache3,  apache3,  ROT0, "Tatsumi", "Apache 3", GAME_IMPERFECT_GRAPHICS )
-GAME( 1988, apache3a, apache3, apache3,   apache3,  apache3,  ROT0, "Tatsumi (Kana Corporation license)", "Apache 3 (Kana Corporation license)", GAME_IMPERFECT_GRAPHICS )
-GAMEL(1989, roundup5, 0,       roundup5,  roundup5, roundup5, ROT0, "Tatsumi", "Round Up 5 - Super Delta Force", GAME_IMPERFECT_GRAPHICS, layout_roundup5 )
-GAME( 1991, cyclwarr, 0,       cyclwarr,  cyclwarr, cyclwarr, ROT0, "Tatsumi", "Cycle Warriors", GAME_IMPERFECT_GRAPHICS)
-GAME( 1992, bigfight, 0,       bigfight,  bigfight, cyclwarr, ROT0, "Tatsumi", "Big Fight - Big Trouble In The Atlantic Ocean", GAME_IMPERFECT_GRAPHICS)
+GAME( 1988, apache3,  0,       apache3,   apache3, tatsumi_state,  apache3,  ROT0, "Tatsumi", "Apache 3", GAME_IMPERFECT_GRAPHICS )
+GAME( 1988, apache3a, apache3, apache3,   apache3, tatsumi_state,  apache3,  ROT0, "Tatsumi (Kana Corporation license)", "Apache 3 (Kana Corporation license)", GAME_IMPERFECT_GRAPHICS )
+GAMEL(1989, roundup5, 0,       roundup5,  roundup5, tatsumi_state, roundup5, ROT0, "Tatsumi", "Round Up 5 - Super Delta Force", GAME_IMPERFECT_GRAPHICS, layout_roundup5 )
+GAME( 1991, cyclwarr, 0,       cyclwarr,  cyclwarr, tatsumi_state, cyclwarr, ROT0, "Tatsumi", "Cycle Warriors", GAME_IMPERFECT_GRAPHICS)
+GAME( 1992, bigfight, 0,       bigfight,  bigfight, tatsumi_state, cyclwarr, ROT0, "Tatsumi", "Big Fight - Big Trouble In The Atlantic Ocean", GAME_IMPERFECT_GRAPHICS)

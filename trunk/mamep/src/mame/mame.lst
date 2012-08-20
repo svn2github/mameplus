@@ -1785,7 +1785,7 @@ vidvince		// GV-??? (c) 1984 Mylstar - never released
 wizwarz			// GV-??? (c) 1984 Mylstar - never released
 
 // Taito "Qix hardware" games
-qix				// LK  (c) 1981 Taito America Corporation
+qix			// LK  (c) 1981 Taito America Corporation
 qixa			// LK  (c) 1981 Taito America Corporation
 qixb			// LK  (c) 1981 Taito America Corporation
 qixo			// LK  (c) 1981 Taito America Corporation
@@ -1857,7 +1857,7 @@ lkageb			// bootleg
 lkageb2			// bootleg
 lkageb3			// bootleg
 skydest			// PD0 (c) 1985 Taito Corporation
-bygone			// prototype ? A53 (c) 1985 Taito Corporation
+bygone			// A53 (c) 1985 Taito Corporation - prototype ?
 msisaac			// A34 (c) 1985 Taito Corporation
 retofinv		// A37 (c) 1985 Taito Corporation
 retofinv1		// bootleg
@@ -2185,9 +2185,9 @@ pwheelsj		// C78 (c) 1991 Taito Corporation (Japan)
 racingb			// C84 (c) 1991 Taito Coropration ..
 
 // Taito Air System games
+mlanding		// ??? (c) 1987 Taito America Corporation (US)
 topland			// B62 (c) 1988 Taito Coporation Japan (World)
 ainferno		// C45 (c) 1990 Taito America Corporation (US)
-mlanding		// ??? (c) 1990 Taito America Corporation (US)
 
 // enhanced Z-System hardware games
 gunbustr		// D27 (c) 1992 Taito Corporation Japan (World)
@@ -2382,6 +2382,8 @@ landhigh		// E82 (c) 1999 Taito
 batlgr2			// E87 (c) 2000 Taito (2.04J)
 batlgr2a		// E87 (c) 2000 Taito (2.01J)
 
+invqix			// F34 (c) 2003 Taito Corporation
+
 // Toaplan games
 perfrman		// (c) 1985 Data East Corporation (Japan)
 perfrmanu		// (c) 1985 Data East USA (US)
@@ -2445,7 +2447,7 @@ snowbrosc		// MIN16-02 (c) 1990 Toaplan + Romstar license
 snowbrosj		// MIN16-02 (c) 1990 Toaplan
 snowbrosd		// MIN16-02 (c) 1990 Toaplan + Dooyong license
 wintbob			// bootleg
-// modifeid snowbros 'clone' hardware
+// modified snowbros 'clone' hardware
 honeydol		// (c) 1995 Barko Corp
 twinadv			// (c) 1995 Barko Corp
 twinadvk		// (c) 1995 Barko Corp
@@ -2525,47 +2527,47 @@ bbakraidj		// (c) 1999 8ing
 bbakraidja		// (c) 1999 8ing
 
 /*
-Toa Plan's board list
-(translated from http://www.aianet.ne.jp/~eisetu/rom/rom_toha.html)
+  Toa Plan's board list
+  (translated from http://www.aianet.ne.jp/~eisetu/rom/rom_toha.html)
 
-Title              ROMno.   Remark(1)   Remark(2)
---------------------------------------------------
-Tiger Heli           A47      GX-551
-Hishouzame           B02      TP-007
-Kyukyoku Tiger       B30      TP-011
-Dash Yarou           B45      TP-012
-Tatsujin             B65      TP-013B   M6100649A
-Zero Wing            O15      TP-015
-Horror Story         O16      TP-016
-Same!Same!Same!      O17      TP-017
-Out Zone                      TP-018
-Vimana                        TP-019
-Teki Paki            O20      TP-020
-Ghox               TP-21      TP-021
-Dogyuun                       TP-022
-Tatsujin Oh                   TP-024    *1
-Fixeight                      TP-026
-V-V                           TP-027
+  Title              ROMno.   Remark(1)   Remark(2)
+  --------------------------------------------------
+  Tiger Heli           A47      GX-551
+  Hishouzame           B02      TP-007
+  Kyukyoku Tiger       B30      TP-011
+  Dash Yarou           B45      TP-012
+  Tatsujin             B65      TP-013B   M6100649A
+  Zero Wing            O15      TP-015
+  Horror Story         O16      TP-016
+  Same!Same!Same!      O17      TP-017
+  Out Zone                      TP-018
+  Vimana                        TP-019
+  Teki Paki            O20      TP-020
+  Ghox               TP-21      TP-021
+  Dogyuun                       TP-022
+  Tatsujin Oh                   TP-024    *1
+  Fixeight                      TP-026
+  V-V                           TP-027
 
-*1 There is a doubt this game uses TP-024 board and TP-025 romsets.
+  *1 There is a doubt this game uses TP-024 board and TP-025 romsets.
 
-86 Mahjong Sisters                                 Kit 2P 8W+2B     HC    Mahjong TP-
-88 Dash                                            Kit 2P 8W+2B                   TP-
-89 Fire Shark                                      Kit 2P 8W+2B     VC    Shooter TP-017
-89 Twin Hawk                                       Kit 2P 8W+2B     VC    Shooter TP-
-91 Whoopie                                         Kit 2P 8W+2B     HC    Action
-92 Teki Paki                                       Kit 2P                         TP-020
-92 Ghox                                            Kit 2P Paddle+1B VC    Action  TP-021
-10/92 Dogyuun                                         Kit 2P 8W+2B     VC    Shooter TP-022
-92/93 Knuckle Bash                 Atari Games        Kit 2P 8W+2B     HC    Action  TP-023
-10/92 Tatsujin II/Truxton II       Taito              Kit 2P 8W+2B     VC    Shooter TP-024
-10/92 Truxton II/Tatsujin II       Taito              Kit 2P 8W+2B     VC    Shooter TP-024
- Pipi & Bipi                                                                    TP-025
-92 Fix Eight                                       Kit 2P 8W+2B     VC    Action  TP-026
-12/92 V  -  V (5)/Grind Stormer                       Kit 2P 8W+2B     VC    Shooter TP-027
-1/93 Grind Stormer/V - V (Five)                      Kit 2P 8W+2B     VC    Shooter TP-027
-2/94 Batsugun                                        Kit 2P 8W+2B     VC            TP-
-4/94 Snow Bros. 2                                    Kit 2P 8W+2B     HC    Action  TP-
+  86 Mahjong Sisters                                 Kit 2P 8W+2B     HC    Mahjong TP-
+  88 Dash                                            Kit 2P 8W+2B                   TP-
+  89 Fire Shark                                      Kit 2P 8W+2B     VC    Shooter TP-017
+  89 Twin Hawk                                       Kit 2P 8W+2B     VC    Shooter TP-
+  91 Whoopie                                         Kit 2P 8W+2B     HC    Action
+  92 Teki Paki                                       Kit 2P                         TP-020
+  92 Ghox                                            Kit 2P Paddle+1B VC    Action  TP-021
+  10/92 Dogyuun                                      Kit 2P 8W+2B     VC    Shooter TP-022
+  92/93 Knuckle Bash                 Atari Games     Kit 2P 8W+2B     HC    Action  TP-023
+  10/92 Tatsujin II/Truxton II       Taito           Kit 2P 8W+2B     VC    Shooter TP-024
+  10/92 Truxton II/Tatsujin II       Taito           Kit 2P 8W+2B     VC    Shooter TP-024
+        Pipi & Bipi                                                                    TP-025
+  92 Fix Eight                                       Kit 2P 8W+2B     VC    Action  TP-026
+  12/92 V  -  V (5)/Grind Stormer                    Kit 2P 8W+2B     VC    Shooter TP-027
+  1/93 Grind Stormer/V - V (Five)                    Kit 2P 8W+2B     VC    Shooter TP-027
+  2/94 Batsugun                                      Kit 2P 8W+2B     VC            TP-
+  4/94 Snow Bros. 2                                  Kit 2P 8W+2B     HC    Action  TP-
 */
 
 // Cave games
@@ -2728,6 +2730,7 @@ gunsmokej		// 11/1985 (c) 1985 (Japan)
 sectionz		// 12/1985 (c) 1985
 sectionza		// 12/1985 (c) 1985
 trojan			//  4/1986 (c) 1986 (US)
+trojana			//  4/1986 (c) 1986 (US)
 trojanr			//  4/1986 (c) 1986 + Romstar
 trojanj			//  4/1986 (c) 1986 (Japan)
 srumbler		//  9/1986 (c) 1986
@@ -3798,6 +3801,8 @@ bloodstm		// (c) 1994 Strata/Incredible Technologies
 bloodstm22		// (c) 1994 Strata/Incredible Technologies
 bloodstm21		// (c) 1994 Strata/Incredible Technologies
 bloodstm11		// (c) 1994 Strata/Incredible Technologies
+bloodstm10		// (c) 1994 Strata/Incredible Technologies
+pairsred		// (c) 1994 Strata/Incredible Technologies
 pairs			// (c) 1994 Strata/Incredible Technologies
 pairsa			// (c) 1994 Strata/Incredible Technologies
 hotmemry		// (c) 1994 Tuning/Incredible Technologies
@@ -4077,10 +4082,10 @@ dakkochn		// 836-6483 (S2)
 ufosensi		// 834-6659 (S2)
 ufosensib		// bootleg
 /*
-other System 1 / System 2 games:
+  other System 1 / System 2 games:
 
-WarBall
-DokiDoki Penguin Land *not confirmed
+  WarBall
+  DokiDoki Penguin Land *not confirmed
 */
 
 // Sega System E games (Master System hardware)
@@ -4096,6 +4101,7 @@ tetrisse		// (c) 1988
 shtzone			// (c) 1987
 
 // other Sega 8-bit games
+stactics		// (c) 1981 Sega
 turbo			// (c) 1981 Sega
 turboa			// (c) 1981 Sega
 turbob			// (c) 1981 Sega
@@ -4341,7 +4347,7 @@ aburner			// 1987.07 After Burner (Japan)
 aburner2		// 1987.09 After Burner II (Japan)
 thndrbld1		// 1987.12 Thunder Blade (Japan, deluxe/standard)
 thndrbld		// 1988.02 Thunder Blade (US?, upright, FD1094, decrypted)
-				// 1989.01 Last Survivor (Japan)
+lastsurv		// 1989.01 Last Survivor (Japan)
 smgpj			// 1989.06 Super Monaco GP (Japan, FD1094, decrypted)
 smgpja			// 1989.06 Super Monaco GP (Japan, FD1094, decrypted)
 smgp			// 1989.?? Super Monaco GP (World, FD1094, decrypted)
@@ -4356,8 +4362,8 @@ loffireu		// 1990.04 Line of Fire (US, FD1094, decrypted)
 				// 1990.03 Racing Hero (Japan)
 rachero			// 1990.?? Racing Hero (World, FD1094, decrypted)
 abcop			// 1990.?? A.B.Cop (World, FD1094, decrypted)
-				// 1991.01 A.B.Cop (Japan)
-				// 1990.10 GP Rider (Japan)
+abcopj			// 1991.01 A.B.Cop (Japan, FD1094, decrypted)
+gpriderj		// 1990.10 GP Rider (Japan, FD1094, decrypted)
 gprider			// 1990.?? GP Rider (World, FD1094, decrypted)
 gprideru		// 1990.12 GP Rider (US, FD1094, decrypted)
 rascot			// 1991.?? Royal Ascot (Japan)
@@ -4579,8 +4585,9 @@ vcopa			// 1994.09 Virtua Cop (Revision A)
 vf2o			// 1994.11 Virtua Fighter 2
 vf2a			// 1995.?? Virtua Fighter 2 (Revision A)
 vf2b			// 1995.?? Virtua Fighter 2 (Revision B)
-srallyc			// 1995.02 Sega Rally Championship (Revision C)
-srallycb		// 1995.02 Sega Rally Championship (Revision B)
+srallyc			// 1995.02 Sega Rally Championship TWIN (Revision C)
+srallycb		// 1995.02 Sega Rally Championship TWIN (Revision B)
+srallyca		// 1995.02 Sega Rally Championship DX (Revision A)
 vcop2			// 1995.09 Virtua Cop 2
 vf2			// 1995.09 Virtua Fighter (Version 2.1)
 skytargt		// 1995.10 Sky Target
@@ -4699,18 +4706,18 @@ karianx			// (c) 1996 Deniam
 logicpr2		// (c) 1997 Deniam (Japan)
 
 /*
-Deniam is a Korean company (http://deniam.co.kr).
+  Deniam is a Korean company (http://deniam.co.kr).
 
-Game list:
-Title            System     Date
----------------- ---------- ----------
-GO!GO!           deniam-16b 1995/10/11
-Logic Pro        deniam-16b 1996/10/20
-Karian Cross     deniam-16b 1997/04/17
-LOTTERY GAME     deniam-16c 1997/05/21
-Logic Pro 2      deniam-16c 1997/06/20
-Propose          deniam-16c 1997/06/21
-BOMULEUL CHAJARA SEGA ST-V  1997/04/11
+  Game list:
+  Title            System     Date
+  ---------------- ---------- ----------
+  GO!GO!           deniam-16b 1995/10/11
+  Logic Pro        deniam-16b 1996/10/20
+  Karian Cross     deniam-16b 1997/04/17
+  LOTTERY GAME     deniam-16c 1997/05/21
+  Logic Pro 2      deniam-16c 1997/06/20
+  Propose          deniam-16c 1997/06/21
+  BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 */
 
 // System C games
@@ -4881,6 +4888,7 @@ otrigger		// 1999.11 OutTrigger
 				// 1999.12 Mars TV
 puyoda			// 1999.12 Puyo Puyo Da!
 samba			// 1999.12 Samba de Amigo (Rev B)
+sambap			// 1999.?? Samba de Amigo (prototype)
 vtennisg		// 1999.?? Virtua Tennis / Power Smash (GD-ROM)
 vtennis			// 1999.12 Virtua Tennis / Power Smash (cartridge)
 alpiltdx		// 1999.?? Airline Pilots Deluxe (Rev B)
@@ -5031,6 +5039,7 @@ mbaa			// 2008.09 Melty Blood Actress Again
 				// 2009.?? Project Cerberus (planned to be released in 2009)
 ngdup23a		// DIMM Firmware Updater (Rev A)
 ngdup23c        // DIMM Firmware Updater (Rev C)
+ngdup23e        // DIMM Firmware Updater (Rev E)
 
 // NAOMI based (System SP)
 				// 2004.10 Oshare Majo Love and Berry / Fashionable Witch Love and Berry
@@ -5088,7 +5097,7 @@ vf4tuned		// 2004.12 Virtua Fighter 4 Final Tuned (Rev F)
 				// 2006.03 World Club Champion Football European Clubs 2004-2005 Ver 1.2
 				// 2006.08 World Club Champion Football European Clubs 2005-2006
 				// 2006.10 World Club Champion Football European Clubs 2005-2006 bugfix
-				// 2006.?? Initial D Arcade Stage Ver. 3 Cycraft Edition (Rev B)
+inidv3cy		// 2006.?? Initial D Arcade Stage Ver. 3 Cycraft Edition (Rev B)
 
 // Atomiswave (Dreamcast-based) games
 awbios          // 2002.?? Atomiswave BIOS
@@ -5188,6 +5197,7 @@ wangmd2b		// 2005.10 Wangan Midnight Maximum Tune 2 (Japan) (Rev A)
 				// 2005.12 Quest of D Gofu no Keisyousya ver.2.00
 				// 2005.12 Mobile Suit Gundam 0079 Card Builder
 mj3				// 2005.12 Sega Network Taisen Mahjong MJ 3 (Rev D)
+mj3f			// 2005.12 Sega Network Taisen Mahjong MJ 3 (Rev F)
 				// 2005.12 Quest of D Gofu no Keisyousya ver.2.01
 scg06nt			// 2005.12 Sega Golf Club 2006: Next Tours (Rev A)
 				// 2006.02 Sangokushi Taisen Ranse no Gunrou ver.1.12
@@ -5484,6 +5494,8 @@ robocop2		// MAH (c) 1991 Data East Corporation (World)
 robocop2u		// MAH (c) 1991 Data East Corporation (US)
 robocop2j		// MAH (c) 1991 Data East Corporation (Japan)
 thndzone		// MAJ (c) 1991 Data East Corporation (World)
+thndzonea		// MAJ (c) 1991 Data East Corporation (World)
+thndzonej		// MAJ (c) 1991 Data East Corporation (Japan) - Some MASK ROMS stamped MAL
 dassault		// MAJ (c) 1991 Data East Corporation (US)
 dassault4		// MAJ (c) 1991 Data East Corporation (US)
 chinatwn		// MAK (c) 1991 Data East Corporation (Japan)
@@ -5843,8 +5855,9 @@ suratk			// GX911 (c) 1990 (World)
 suratka			// GX911 (c) 1990 (Asia)
 suratkj			// GX911 (c) 1990 (Japan)
 parodius		// GX955 (c) 1990 (World)
-parodiusa		// GX955 (c) 1990 (World)
+parodiuse		// GX955 (c) 1990 (World)
 parodiusj		// GX955 (c) 1990 (Japan)
+parodiusa		// GX955 (c) 1990 (Asia)
 rollerg			// GX999 (c) 1991 (US)
 rollergj		// GX999 (c) 1991 (Japan)
 simpsons		// GX072 (c) 1991
@@ -6161,6 +6174,7 @@ thunderh		// GX680 (c)1996 Euro EAA
 thunderhu		// GX680 (c)1996 USA UAA
 slrasslt		// GX792 (c)1996
 gticlub			// GX688 (c)1996 Euro EAA
+gticlubu		// GX688 (c)1996 USA UAA
 gticluba		// GX688 (c)1996 Asia AAA
 gticlubj		// GX688 (c)1996 Japan JAA
 hangplt			// GX685 (c)1997
@@ -7732,6 +7746,7 @@ cshooter		// (c) 1987 Taito
 cshootere		// (c) 1987 JKH (bootleg)
 airraid			// (c) 1987 Seibu Kaihatsu
 panicr			// Seibu / Taito
+panicrg			// Seibu / TV-Tuning (Germany)
 deadang			// (c) 1988 Seibu Kaihatsu
 leadang			// (c) 1988 Seibu Kaihatsu
 ghunter			// (c) 1988 Seibu Kaihatsu + Segasa/Sonic license
@@ -7848,8 +7863,9 @@ tokia			// (c) 1989 Tad (World)
 tokiu			// (c) 1989 Tad + Fabtek license (US)
 tokiua			// (c) 1989 Tad + Fabtek license (US)
 tokib			// bootleg
+jujub			// bootleg
 juju			// (c) 1989 Tad (Japan)
-jujub			// (c) 1989 Tad (Japan)
+jujuba			// bootleg
 bloodbro		// (c) 1990 Tad
 bloodbroa		// (c) 1990 Tad
 bloodbrob		// (c) 1990 Tad
@@ -7872,6 +7888,7 @@ cupsocs2		// (c) 1992 Seibu
 cupsocsb		// bootleg
 cupsocsb2		// bootleg
 olysoc92		// (c) 1992 Seibu
+olysoc92a		// (c) 1992 Seibu
 goal92			// bootleg
 
 // Jaleco games
@@ -7914,6 +7931,7 @@ tetrisp2		// (c) 1997 Jaleco
 tetrisp2j		// (c) 1997 Jaleco
 tetrisp2ja		// (c) 1997 Jaleco
 nndmseal		// (c) 1997 I'Max/Jaleco
+nndmseala		// (c) 1997 I'Max/Jaleco
 stepstag		// (c) 1999 Jaleco
 step3			// (c) 1999 Jaleco
 rockn			// (c) 1999 Jaleco
@@ -8123,12 +8141,12 @@ netwars			// (c) 1983 Orca + Esco Trading Co license
 vastar			// (c) 1983 Sesame Japan
 vastar2			// (c) 1983 Sesame Japan
 /*
-other Orca games:
-82 Battle Cross                         Kit 2P
-82 River Patrol Empire Mfg/Kerstens Ind Ded 2P        HC Action
-82 Slalom                               Kit 2P        HC Action
-83 Net Wars                                 2P
-83 Super Crush                          Kit 2P           Action
+  other Orca games:
+  82 Battle Cross                         Kit 2P
+  82 River Patrol Empire Mfg/Kerstens Ind Ded 2P        HC Action
+  82 Slalom                               Kit 2P        HC Action
+  83 Net Wars                                 2P
+  83 Super Crush                          Kit 2P           Action
 */
 
 // Gaelco 2D games
@@ -8184,11 +8202,11 @@ atvtrack		// (c) 2002 - Ref 020419
 atvtracka		// (c) 2002 - Ref 020419
 
 /*
-Remaining Gaelco Games:
-=======================
-1999: Rolling Extreme
-2000: Football Power
-2001: Smashing Drive
+  Remaining Gaelco Games:
+  =======================
+  1999: Rolling Extreme
+  2000: Football Power
+  2001: Smashing Drive
 */
 
 // Galeco PC based games
@@ -8362,6 +8380,7 @@ grdians			// (c) 1995 Banpresto
 mj4simai		// (c) 1996 Maboroshi Ware
 myangel			// (c) 1996 Namco
 myangel2		// (c) 1997 Namco
+reelquak		// (c) 1997 <unknown>
 pzlbowl			// (c) 1999 Nihon System / Moss
 namcostr		// (c) 2000 Namco
 penbros			// (c) 2000 Subsino
@@ -8380,7 +8399,6 @@ funcube3		// (c) 2001 Namco
 funcube4		// (c) 2001 Namco
 funcube5		// (c) 2002 Namco
 trophyh			// (c) 2002 Sammy USA Corporation
-reelquak		// (c) ???? <unknown>
 
 // SSV System (Seta, Sammy, Visco) games
 srmp4			// (c) 1993 Seta
@@ -8491,13 +8509,13 @@ shangha3		// (c) 1993 Sunsoft
 heberpop		// (c) 1994 Sunsoft / Atlus
 blocken			// (c) 1994 KID / Visco
 /*
-Other Sun games
-1978.11 (GT)Block Perfect
-1978.12 (GT)Block Challenger
-1979.04 Galaxy Force
-1979.07 Run Away
-1979.12 Warp 1
-1980.10 Cosmo Police (Cosmopolis?)
+  Other Sun games
+  1978.11 (GT)Block Perfect
+  1978.12 (GT)Block Challenger
+  1979.04 Galaxy Force
+  1979.07 Run Away
+  1979.12 Warp 1
+  1980.10 Cosmo Police (Cosmopolis?)
 */
 
 // SunA games
@@ -9355,7 +9373,6 @@ j80myspn	// Mystery Spin (Jpm)
 j80nudg2	// Nudge Double Up MkII (Jpm)
 j80rr		// Road Runner (Jpm)
 j80rra		//
-j80r66		// Route 66 (Jpm)
 j80supst	// Supa Steppa (Jpm)
 j80supbk	// Superbank (Jpm)
 j80topsp	// Top Sprint (Jpm)
@@ -9604,6 +9621,7 @@ j5cira		//
 j5cirb		//
 j5circ		//
 j5cird		//
+j5cire		//
 j5clbnud	// Club Nudger (Jpm)
 j5clbnuda	//
 j5daytn		// Daytona (Jpm)
@@ -10030,7 +10048,7 @@ deltrace		// bootleg
 monzagp			// (c) 1981 Olympia
 dday			// (c) 1982 Olympia
 ddayc			// (c) 1982 Olympia + Centuri license
-stactics		// [1981 Sega]
+flipjack		// 1983? Jackson Co., Ltd.
 exterm			// (c) 1989 Premier Technology - a Gottlieb game
 flower			// (c) 1986 Komax license
 flowerj			// 834-5998 (c) 1986 Sega / Alpha license?
@@ -10062,6 +10080,7 @@ blkbustr		// (c) 1983 Kiwako + ECI license
 polyplay
 amspdwy			// no copyright notice, but (c) 1987 Enerdyne Technologies, Inc.
 amspdwya		// no copyright notice, but (c) 1987 Enerdyne Technologies, Inc.
+jankenmn		// (c) 1985 Sunwise
 othldrby		// (c) 1995 Sunwise
 quizpun 		// (c) 1989 Space Computer System of Korea
 quizpun2		// (c) 1989 Space Computer System of Korea
@@ -10316,6 +10335,7 @@ ssingles		// Yachiyo?
 tcl			// (c) 1995 Uniwang
 othello			// (c) 1984 Success
 sothello		// (c) 1986 Success / Fujiwara
+tonton			// 199?, Success.
 quake			// (c) 19?? Lazer-Tron / iD Software
 majorpkr		// (c) 1994 PAL System.
 su2000			// (c) 1993 Virtuality
@@ -10398,6 +10418,7 @@ megat4			// (c) 1996 Merit
 megat4a			// (c) 1996 Merit
 megat4b			// (c) 1996 Merit
 megat4c			// (c) 1996 Merit
+megat4d			// (c) 1996 Merit
 megat4s			// (c) 1996 Merit
 megat4smn		// (c) 1996 Merit
 megat4snj		// (c) 1996 Merit
@@ -10820,7 +10841,7 @@ miniboy7a		// (c) 1983, Bonanza Enterprises
 48in1			// MAME based bootleg
 48in1a			// MAME based bootleg
 kingpin			// (c) 1983 American Communications Laboratories Inc.
-kingpinm		// (c) 1983 American Communications Laboratories Inc.
+maxideal		// (c) 1983 American Communications Laboratories Inc.
 thayers			// (c) 1983 RDI Video Systems
 thayersa		// (c) 1983 RDI Video Systems
 istellar		// (c) 1983 Funai / Gakken
@@ -11465,6 +11486,9 @@ crzmon_5		// (c) 2003
 crzmon_7		// (c) 2003
 crzmon_8		// (c) 2003
 crzmon_9		// (c) 2003
+//crzmon_10		// (c) 2003
+//crzmon_11		// (c) 2003
+//crzmon_12		// (c) 2003
 
 // Fruit Cocktail
 //fcockt		// (c) 2003
@@ -11479,6 +11503,8 @@ fcockt_9		// (c) 2003
 fcockt_10		// (c) 2003
 fcockt_11		// (c) 2003
 fcockt_12		// (c) 2003
+//fcockt_13		// (c) 2003
+fcockt_14		// (c) 2003
 
 // Lucky Haunter
 //lhaunt		// (c) 2003
@@ -11489,6 +11515,8 @@ lhaunt_5		// (c) 2003
 lhaunt_6		// (c) 2003
 lhaunt_7		// (c) 2003
 lhaunt_8		// (c) 2003
+//lhaunt_9		// (c) 2003
+lhaunt_10		// (c) 2003
 
 // Rollfruit
 //rollfr		// (c) 2003
@@ -11504,6 +11532,8 @@ garage_4		// (c) 2004
 garage_5		// (c) 2004
 garage_6		// (c) 2004
 garage_7		// (c) 2004
+//garage_8		// (c) 2004
+garage_9		// (c) 2004
 
 // Rock Climber
 //rclimb_2  	// (c) 2004
@@ -11511,6 +11541,8 @@ rclimb			// (c) 2004
 rclimb_3		// (c) 2004
 rclimb_4		// (c) 2004
 rclimb_5		// (c) 2004
+//rclimb_6		// (c) 2004
+rclimb_7		// (c) 2004
 
 // Sweet Life
 sweetl			// (c) 2004
@@ -11520,6 +11552,8 @@ sweetl_2		// (c) 2004
 resdnt			// (c) 2004
 resdnt_2		// (c) 2004
 resdnt_3		// (c) 2004
+//resdnt_4		// (c) 2004
+//resdnt_5		// (c) 2004
 
 // Island
 island			// (c) 2005
@@ -11535,24 +11569,37 @@ pirate_4		// (c) 2005
 island2			// (c) 2006
 island2_3		// (c) 2006
 island2_4		// (c) 2006
+island2_5		// (c) 2006
+island2_6		// (c) 2006
 
 // Pirate 2
 pirate2			// (c) 2006
 pirate2_2		// (c) 2006
+pirate2_3		// (c) 2006
+pirate2_4		// (c) 2006
 
 // Keks
 keks			// (c) 2006
 keks_2			// (c) 2006
 keks_3			// (c) 2006
+keks_4			// (c) 2006
+keks_5			// (c) 2006
 
 // Gnome
 gnome			// (c) 2007
 gnome_2			// (c) 2007
 gnome_3			// (c) 2007
+gnome_4			// (c) 2007
+gnome_5			// (c) 2007
+//gnome_6			// (c) 2007
+gnome_7			// (c) 2007
+//gnome_8			// (c) 2007
 
 // Sweet Life 2
 sweetl2			// (c) 2007
 sweetl2_2		// (c) 2007
+sweetl2_3		// (c) 2007
+sweetl2_4		// (c) 2007
 
 // Fruit Cocktail 2
 fcockt2			// (c) 2008
@@ -11560,6 +11607,8 @@ fcockt2			// (c) 2008
 fcockt2_3		// (c) 2008
 fcockt2_4		// (c) 2008
 fcockt2_5		// (c) 2008
+fcockt2_6		// (c) 2008
+fcockt2_7		// (c) 2008
 
 
 // Igrosoft bootleg sets
@@ -11659,6 +11708,8 @@ gnome_2a		// bootleg
 gnome_3a		// bootleg
 gnome_3b		// bootleg
 gnome_3c		// bootleg
+gnome_5a		// bootleg
+gnome_5b		// bootleg
 sweetl2_2a		// bootleg - Sweet Life 2
 sweetl2_2b		// bootleg
 sweetl2_2c		// bootleg
@@ -11991,6 +12042,123 @@ raaspec			// (c) Roy Abel & Associates 1984
 //3do_pal
 orbatak
 
+// Global VR
+hyperv2			// Hyper V2 (Global VR) Install - 06/12/02
+hyperv2a		// Hyper V2 (Global VR) Install - 09/30/01
+gvrxpsys		// Global VR XP OS Install - 09/30/01
+gvrxpsup		// Global VR XP OS Update/Install - 06/11/02
+
+bhead2k			// Beach Head 2000 Install - 05/27/03
+bhead2ka		// Beach Head 2000 Install - 09/16/01
+bhead2k2		// Beach Head 2002 Install - 05/27/03
+bhead2k3		// Beach Head 2003 Desert War Install - 05/27/03
+nfsug			// Need For Speed: Underground Install (2 Discs) (v1.1)
+
+// Leisure Ent.
+roul			// (c) 1990
+
+// Accept LTD.
+hitpoker		// (c) 1997
+
+// Videotronics
+vpoker			// (c) 198?
+5acespkr		// (c) 198?
+
+// Play Mechanix
+specfrce		// (c) 2002 ICE/Play Mechanix
+jnero			// (c) 2004 ICE/Play Mechanix
+
+// Amatic Trading GMBH
+suprstar		// (c) 1996 Amatic
+am_mg24			// (c) 2000 Amatic
+am_mg3			// (c) 2000 Amatic
+am_mg3a			// (c) 2000 Amatic
+am_mg35i		// (c) Amatic
+am_mg34i		// (c) Amatic
+am_mg33i		// (c) Amatic
+am_mg31i		// (c) Amatic
+
+
+neptunp2
+rgum
+
+// Extrema Systems International Ltd.
+poker72
+
+// Blitz System Inc.
+megadpkr		// (c) 1990 Blitz System Inc
+megadpkrb		// (c) 1990 Blitz System Inc
+
+// Blitz System Inc. 68k + Blitter Hardware
+megadblj		// (c) 1990 Blitz Systems Inc.
+megadble		// (c) 1990 Blitz Systems Inc.
+maxidbl			// (c) 1992 Blitz Systems Inc.
+bankrob			// (c) 1993 Entertainment Technology Corp.
+bankroba		// (c) 1993 Entertainment Technology Corp.
+poker52			// (c) 1993 Blitz Systems Inc. ?
+steaser			// (c) 1993 unknown
+dualgame		// (c) 1995 Labtronix Technologies
+hermit			// (c) 1995 Dugamex
+deucesw2		// (c) 1997
+cj3play			// (c) 1998 Cadillac Jack
+cjffruit		// (c) 1998 Cadillac Jack
+ilpag			// (c) 199? unknown
+
+// Olympic Video Gaming
+hotstuff
+
+// Interactive Light
+savquest
+
+// Jamie System Development
+xtom3d
+
+// Jubilee
+jubileep
+
+// Golden Games / C+M Technics AG
+swisspkr		// (c) 1990 Golden Games
+moviecrd		// (c) 1998 Golden Games
+
+// NSM
+nsmpoker
+
+// Advanced Video Technologies
+avtsym14		// (c) 1985 AVT
+avtsym25		// (c) 1985 AVT
+avtbingo		// (c) 1985 AVT
+avtnfl			// (c) 1989 AVT
+
+// Corona hardware
+winner81		// (c) 1981 Corona Co, Ltd.
+winner81b		// (c) 1981 Corona Co, Ltd.
+winner82		// (c) 1982 Corona Co, Ltd.
+re800ea			// (c) 1991 Entretenimientos GEMINIS
+re800v1			// (c) 1991 Entretenimientos GEMINIS
+re800v3			// (c) 1992 Entretenimientos GEMINIS
+rcirulet		// (c) 199? Entretenimientos GEMINIS
+luckyrlt		// (c) 1990 unknown
+
+dfruit
+
+umipoker
+saiyukip
+
+tmspoker
+kas89			// 1989, SFC S.R.L.
+caspoker		// 1987, PM / Beck Elektronik.
+wildpkr			// 199?, TAB Austria.
+
+manohman		// 199?, Merkur.
+
+
+// TTL logic games
+pong			// (c) 1972 Atari
+pongf			// (c) 1972 Atari - no subcycles
+
+
+
+
 /* Drivers below are mostly mechanical games, usually with no video display, requiring external artwork to function. */
 
 /* Bellfruit Hardware */
@@ -12068,7 +12236,6 @@ sc1cexpld
 sc1cshwz	// Cash Wise (Bellfruit)
 sc1cshwza
 sc1cshwzb
-sc1cshwzc
 sc1cshin	// Cashino (Bellfruit) (Dutch)
 sc1china	// China Town Club (Bellfruit)
 sc1chinap
@@ -12253,6 +12420,7 @@ sc1chaina
 sc1potp		// Pick Of The Pack (Bellfruit)
 sc1potpa	// Double Dealer (Bellfruit)?
 sc1scunk	//
+sc1wud		// What's Up Dr
 
 // Scorpion 1 + Adder Video board
 
@@ -12321,7 +12489,6 @@ sc2catms1p
 sc2catms2
 sc2catms2p
 sc2catms3
-sc2catms4
 sc2ctms2	// Cat & Mouse (Mark 2 - Bellfruit)
 sc2ctms21
 sc2ctms21p
@@ -12631,7 +12798,6 @@ sc2luvv1
 sc2luvv1p
 sc2luvv2
 sc2luvv2p
-sc2luvv3
 sc2luvv4
 sc2luvv5p
 sc2luvv6p
@@ -12664,7 +12830,6 @@ sc2ptytm1
 sc2ptytm1p
 sc2cops		// Cops 'n' Robbers (Bellfruit)
 sc2copsp
-sc2cops1
 sc2cops1p
 sc2cops2
 sc2cops3
@@ -13222,6 +13387,47 @@ sc4cfcaso	//
 sc4cfcasp	//
 sc4cfcasq	//
 sc4cfcasr	//
+sc4czfrg
+sc4cfqpsl
+sc4cfqpsm
+sc4czfrh
+sc4czfri
+sc4czfrj
+sc4czfrk
+sc4cfqpsn
+sc4cfqpso
+sc4cfcass
+sc4cfcast
+sc4cfcasu
+sc4cfcasv
+sc4cfcasw
+sc4cfcasx
+sc4cfcasy
+sc4cfcasz
+sc4cfcas0
+sc4cfcas1
+sc4cfcas2
+sc4cfcas8
+sc4cfcas9
+sc4cfcas3
+sc4cfcas4
+sc4cfcas5
+sc4cfcas6
+sc4cfcas7
+sc4cfcasaa
+sc4cfcasab
+sc4cfcasac
+sc4cfcasad
+sc4cfcasae
+sc4cfcasaf
+sc4cfcasag
+sc4cfcasah
+sc4cfcasai
+sc4cfqpsp
+sc4cfcasaj
+sc4cfcasak
+sc4cfcasal
+sc4cfcasam
 sc4cfcla	// Crazy Fruits Classic (Bellfruit)
 sc4cfclab	//
 sc4cfclac	//
@@ -14969,6 +15175,8 @@ sc4czfra	//
 sc4czfrb	//
 sc4czfrc	//
 sc4czfrd	//
+sc4czfre	//
+sc4czfrf	//
 sc4crnjw	// Crown Jewels (Bellfruit)
 sc4crnjwa	//
 sc4dnd		// Deal Or No Deal (Bellfruit)
@@ -15815,13 +16023,12 @@ sc4nunsmg	//
 sc4nunsmh	//
 sc4nunsmi	//
 sc4nunsmj	//
-sc_unsrt	//
-ad4film		//
-ad4filma	//
 
 /* Scorpion 4 + Adder 4 */
 
 ad4skill	// Skill Dice (BFM)
+ad4film		//
+ad4filma	//
 
 // Scorpion 5
 
@@ -15927,6 +16134,23 @@ sc5cfcpe	//
 sc5cfpt		// Crazy Fruits Party Time (Bellfruit)
 sc5cfpta	//
 sc5cfptb	//
+sc5cfptc
+sc5cfptd
+sc5cfptj
+sc5cfpte
+sc5cfptf
+sc5cfptk
+sc5cfptn
+sc5cfpti
+sc5cfpto
+sc5cfptg
+sc5cfptl
+sc5cfpth
+sc5cfptm
+sc5cfptp
+sc5cfptq
+sc5cfptr
+sc5cfpts
 sc5cknig	// Crazy Knights (Bellfruit)
 sc5ckniga	//
 sc5cpays	// Crazy Pays (Bellfruit)
@@ -17787,201 +18011,792 @@ mg_kf		// Krypton Factor
 
 // Maygay EPOCH hardware
 ep_simp		// The Simpsons (Maygay)
+ep_simpa	//
+ep_simpb	//
+ep_simpc	//
+ep_simpd	//
+ep_simpe	//
+ep_simpf	//
+ep_simpg	//
+ep_simph	//
+ep_simpj	//
+ep_simpk	//
+ep_simpl	//
+ep_simpm	//
 ep_dblim	// Double Impact (Maygay - Impulse)
+ep_dblima	//
+ep_dblimb	//
+ep_dblimc	//
+ep_dblimd	//
 ep_itjb3	// Italian Job 3 (Maygay)
-ep_itj3a	//
+ep_itjb3a	//
 ep_merln	// Merlin's Magic (Maygay)
 ep_wipeo	// Wipeout (Maygay)
+ep_wipeoa	//
+ep_wipeob	//
+ep_wipeoc	//
+ep_wipeoe	//
 ep_bingb	// Bingo Belle (Maygay)
+ep_bingba	//
 ep_calyp	// Calypso (Maygay)
+ep_calypa	//
 ep_cow		// Carry On Winning (Maygay)
+ep_cowa		//
 ep_cfall	// Cash Falls (Maygay)
+ep_cfalla	//
+ep_cfallb	//
+ep_cfallc	//
+ep_cfalld	//
+ep_cfalle	//
+ep_cfallf	//
 ep_cflow	// Cash Flow (Maygay)
+ep_cflowa	//
+ep_cflowc	//
+ep_cflowd	//
 ep_doubl	// Double Top (Maygay)
+ep_doubla	//
+ep_doublb	//
+ep_doublc	//
+ep_doubld	//
 ep_evil		// Evil Streak (Maygay)
+ep_evila	//
+ep_evilb	//
 ep_nyny		// New York New York (Maygay)
+ep_nynya	//
+ep_nynyb	//
+ep_nynyc	//
+ep_nynyd	//
+ep_nynye	//
+ep_nynyf	//
 ep_pizza	// Pizza The Action (Maygay)
+ep_pizzaa	//
+ep_pizzab	//
+ep_pizzac	//
 ep_crazy	// Reel Crazy (Maygay)
+ep_crazya	//
+ep_crazyb	//
+ep_crazyc	//
+ep_crazyd	//
+ep_crazye	//
 ep_mario	// Super Mario (Maygay)
+ep_marioa	//
+ep_mariob	//
+ep_marioc	//
+ep_mariod	//
+ep_marioe	//
+ep_mariof	//
+ep_mariog	//
+ep_marioh	//
 ep_tincn	// Tin Can Alley (Maygay)
+ep_tincna	//
 ep_tonfn	// Tons Of Fun (Maygay)
+ep_tonfna	//
 ep_tcrwn	// Triple Crown (Maygay)
+ep_tcrwna	//
+ep_tcrwnb	//
+ep_tcrwnc	//
+ep_tcrwnd	//
+ep_tcrwne	//
 ep_word		// Word Up (Maygay)
+ep_worda	//
+ep_wordb	//
+ep_wordc	//
+ep_wordd	//
+ep_worde	//
+ep_wordf	//
+ep_wordg	//
 ep_xtra		// X-tra X-tra (Maygay)
+ep_xtraa	//
 ep_25crt	// 25 Carrot Gold (Maygay)
+ep_25crta	//
+ep_25crtb	//
+ep_25crtc	//
+ep_25crtd	//
 ep_bartk	// Bar Trekkin (Maygay)
+ep_bartka	//
+ep_bartkb	//
+ep_bartkc	//
+ep_bartkd	//
+ep_bartke	//
+ep_bartkf	//
 ep_batls	// Battleships (Maygay)
+ep_batlsa	//
+ep_batlsb	//
+ep_batlsc	//
 ep_bbonz	// Bingo Bonanza (Maygay - Union)
+ep_bbonza	//
 ep_bubsq	// Bubble & Squeak (Extreme)
+ep_bubsqa	//
+ep_bubsqb	//
+ep_bubsqc	//
+ep_bubsqd	//
 ep_cdspn	// Cardinal Spin (Maygay)
+ep_cdspna	//
 ep_cosc		// Carry On Screaming (Maygay)
+ep_cosca	//
 ep_cahoy	// Cash Ahoy (Maygay)
+ep_cahoya	//
+ep_cahoyb	//
 ep_ccock	// Cash Cocktail (Maygay)
+ep_ccocka	//
+ep_ccockb	//
+ep_ccockc	//
 ep_cgord	// Cash Gordon (Maygay)
+ep_cgorda	//
+ep_cgordb	//
+ep_cgordc	//
 ep_cshpn	// Cash In The Pan (Maygay)
+ep_cshpna	//
 ep_ctit		// Cash Of The Titans (Maygay)
+ep_ctita	//
 ep_cashn	// Cashino (Maygay - Extreme)
+ep_cashna	//
 ep_casgc	// Casino Grand Club (Maygay)
+ep_casgca	//
+ep_casgcb	//
+ep_casgcc	//
 ep_casrd	// Casino Royale Deluxe Club (Maygay)
+ep_casrda	//
 ep_chock	// Chocks Away (Maygay)
+ep_chocka	//
+ep_chockb	//
 ep_cock		// Cock A Doodle Dosh (Maygay - Union)
+ep_cocka	//
+ep_cockb	//
+ep_cockc	//
+ep_cockd	//
+ep_cocke	//
 ep_commd	// Complete Madness (Maygay)
+ep_commda	//
+ep_commdb	//
+ep_commdc	//
+ep_commdd	//
 ep_cor2		// Coronation Street 2 (Maygay)
+ep_cor2a	//
+ep_cor2b	//
+ep_cor2c	//
 ep_cormn	// Coronation Street Monopoly Club (Maygay)
+ep_cormna	//
 ep_cycl		// Cyclone Club (Maygay)
+ep_cycla	//
+ep_cyclb	//
 ep_duff		// Duff Beer Guide (Maygay)
+ep_duffa	//
+ep_duffb	//
+ep_duffc	//
 ep_flash	// Flashback (Maygay - Impulse)
+ep_flasha	//
+ep_flashb	//
+ep_flashc	//
+ep_flashd	//
+ep_flashe	//
+ep_flashf	//
 ep_fortg	// Fortune & Glory (Maygay - Impulse)
+ep_fortga	//
+ep_fortgb	//
 ep_fran		// Frantic (Maygay)
+ep_frana	//
 ep_fnclb	// Fruit & Nudge Club (Maygay)
+ep_fnclba	//
 ep_fgods	// Fruit Of The Gods (Maygay)
+ep_fgodsa	//
+ep_fgodsb	//
+ep_fgodsc	//
+ep_fgodsd	//
+ep_fgodse	//
+ep_fgodsf	//
+ep_fgodsg	//
 ep_fullm	// Full Moon Fever (Maygay - Impulse)
+ep_fullma	//
+ep_fullmb	//
+ep_fullmc	//
+ep_fullmd	//
+ep_fullme	//
+ep_fullmf	//
 ep_funny	// Funny Money (Maygay)
+ep_funnya	//
+ep_funnyb	//
+ep_funnyc	//
+ep_funnyd	//
+ep_funnye	//
+ep_funnyf	//
+ep_funnyg	//
 ep_geron	// Geronimo (Maygay - Impulse)
+ep_gerona	//
+ep_geronb	//
+ep_geronc	//
+ep_gerond	//
+ep_gerone	//
 ep_gldtp	// Gold Top (Maygay)
+ep_gldtpa	//
 ep_gesc2	// Great Escape 2 (Maygay)
+ep_gesc2a	//
 ep_geclb	// Great Escape Club (Maygay)
+ep_geclba	//
+ep_geclbb	//
 ep_gresc	// Great Escape (Maygay)
+ep_gresca	//
 ep_gridr	// Gridrunner (Maygay - Impulse)
+ep_gridra	//
+ep_gridrb	//
+ep_gridrc	//
+ep_gridrd	//
 ep_hhclb	// Haunted House Club (Maygay)
+ep_hhclba	//
+ep_hhclbb	//
+ep_hhclbc	//
 ep_hvns		// Heavens Above (Maygay)
+ep_hvnsa	//
 ep_highv	// High Voltage (Maygay - Impulse)
+ep_highva	//
+ep_highvb	//
+ep_highvc	//
+ep_highvd	//
+ep_highve	//
+ep_highvf	//
 ep_hogmn	// Hog Money (Maygay - Impulse)
-ep_hmmlt	// Homer's Meltdown (Maygay)
+ep_hogmna	//
+ep_hogmnb	//
+ep_homer	// Homer's Meltdown (Maygay)
+ep_homera	//
+ep_homerb	//
+ep_homerc	//
+ep_homerd	//
+ep_homere	//
+ep_homerf	//
+ep_homerg	//
+ep_homerh	//
+ep_homeri	//
 ep_htdgs	// Hot Dogs (Maygay)
+ep_htdgsa	//
 ep_hubbl	// Hubble Bubble (Maygay)
+ep_hubbla	//
 ep_huric	// Hurricane (Maygay - Impulse)
+ep_hurica	//
+ep_huricb	//
+ep_huricc	//
+ep_huricd	//
+ep_hurice	//
 ep_hyst		// Hysteria (Maygay - Impulse)
+ep_hysta	//
 ep_icebg	// Ice Burger (Maygay)
+ep_icebga	//
+ep_icebgb	//
+ep_icebgc	//
+ep_icebgd	//
+ep_icebge	//
+ep_icebgf	//
+ep_icebgg	//
+ep_icebgh	//
+ep_icebgi	//
 ep_inca		// Inca Dinka Do (Maygay - Extreme)
+ep_incaa	//
+ep_incab	//
 ep_itjb2	// Italian Job 2 (Maygay)
+ep_itjb2a	//
+ep_itjb2b	//
+ep_itjb2c	//
 ep_ijcl		// Italian Job Club (Maygay)
-ep_ijob		// Italian Job (Maygay) v2.1
-ep_ijoba	// Italian Job (Maygay) v1.1
+ep_ijcla	//
+ep_ijob		// Italian Job (Maygay)
+ep_ijoba	//
 ep_jakbn	// Jackpot & The Beanstreak (Extreme)
+ep_jakbna	//
+ep_jakbnb	//
+ep_jakbnc	//
 ep_jsttt	// Just The Ticket (Maygay)
+ep_jsttta	//
+ep_jstttb	//
+ep_jstttc	//
+ep_jstttd	//
+ep_jsttte	//
+ep_jstttf	//
+ep_jstttg	//
 ep_loadd	// Loaded (Maygay)
+ep_loadda	//
 ep_lukld	// Lucky Ladders (Maygay)
+ep_luklda	//
 ep_manic	// Manic Miner (Maygay - Impulse)
+ep_manica	//
+ep_manicb	//
+ep_manicc	//
+ep_manicd	//
+ep_manice	//
+ep_manicf	//
 ep_mkart	// Mario Kart (Maygay)
+ep_mkarta	//
+ep_mkartb	//
+ep_mkartc	//
+ep_mkartd	//
+ep_mkarte	//
 ep_matrx	// Matrix (Maygay - Impulse)
 ep_midas	// Midas Touch Club (Maygay)
+ep_midasa	//
 ep_monbs	// Monte Carlo Or Bust (Maygay)
+ep_monbsa	//
 ep_mwom		// Mortal Wombat (Maygay)
+ep_mwoma	//
+ep_mwomb	//
+ep_mwomc	//
+ep_mwomd	//
 ep_mrmus	// Mr Muscle (Maygay)
+ep_mrmusa	//
 ep_noter	// Note Runner (Maygay)
+ep_notera	//
+ep_noterb	//
+ep_noterc	//
+ep_noterd	//
+ep_notere	//
 ep_nuns		// Nuns Of Navarone (Maygay)
+ep_nunsa	//
 ep_otm		// Over The Moon (Maygay)
+ep_otma		//
 ep_otmcl	// Over The Moon Club (Maygay)
+ep_otmcla	//
 ep_ozzie	// Ozzie Ozzie Ozzie (Maygay)
+ep_ozziea	//
+ep_ozzieb	//
+ep_ozziec	//
+ep_ozzied	//
+ep_ozziee	//
+ep_ozzief	//
+ep_ozzieg	//
+ep_ozzieh	//
 ep_pascl	// Passport To Riches Classic Club (Maygay)
+ep_pascla	//
 ep_passp	// Passport To Riches Club (Maygay)
+ep_passpa	//
+ep_passpb	//
+ep_passpc	//
 ep_pharo	// Pharaoh's Treasure (Maygay)
+ep_pharoa	//
 ep_pesos	// Pick Yer Pesos (Maygay - Impulse)
+ep_pesosa	//
+ep_pesosb	//
+ep_pesosc	//
 ep_baskr	// Pounds Of The Baskervilles (Maygay)
+ep_baskra	//
+ep_baskrb	//
+ep_baskrc	//
+ep_baskrd	//
+ep_baskre	//
 ep_pwrpl	// Power Play (Maygay)
+ep_pwrpla	//
 ep_rags		// Rags To Riches Club (Maygay)
+ep_ragsa	//
 ep_react	// Reactor (Maygay - Impulse)
+ep_reacta	//
+ep_reactb	//
+ep_reactc	//
+ep_reactd	//
+ep_reacte	//
 ep_roost	// Roosters Millions (Maygay)
+ep_roosta	//
 ep_rtt		// Round The Twist (Maygay)
+ep_rtta		//
 ep_royrl	// Royal Roulette (Maygay)
+ep_royrla	//
+ep_royrlb	//
+ep_royrlc	//
+ep_royrld	//
+ep_royrle	//
 ep_scrm		// Screamin Demon (Maygay)
+ep_scrma	//
+ep_scrmb	//
+ep_scrmc	//
 ep_secag	// Secret Agent (Maygay)
+ep_secaga	//
+ep_secagb	//
 ep_simfr	// Simply Fruits (Maygay)
-ep_simbg	// The Simpsons Beer Guide (Maygay)
+ep_simfra	//
 ep_srwin	// Sir Winalot (Maygay)
+ep_srwina	//
+ep_srwinb	//
+ep_srwinc	//
+ep_srwind	//
 ep_spart	// Spartacash (Maygay - Impulse)
+ep_sparta	//
+ep_spartb	//
 ep_spcbw	// Special Brew (Maygay)
+ep_spcbwa	//
+ep_spcbwb	//
+ep_spcbwc	//
+ep_spcbwd	//
+ep_spcbwe	//
+ep_spcbwf	//
+ep_spcbwg	//
+ep_spcbwh	//
+ep_spcbwi	//
+ep_spcbwj	//
+ep_spcbwk	//
+ep_spcbwl	//
+ep_spcbwm	//
 ep_spec		// Spectre (Maygay)
+ep_speca	//
+ep_specb	//
 ep_spntn	// Spin & Tonic (Maygay - Impulse)
+ep_spntna	//
+ep_spntnb	//
+ep_spntnc	//
 ep_spin		// Spin On It (Maygay - Impulse)
+ep_spina	//
+ep_spinb	//
+ep_spinc	//
+ep_spind	//
+ep_spine	//
 ep_step		// Stepping Stones (Maygay)
+ep_stepa	//
 ep_strat	// Stratagem (Maygay)
+ep_strata	//
 ep_subb		// Subbuteo (Maygay)
+ep_subba	//
+ep_subbb	//
+ep_subbc	//
+ep_subbd	//
+ep_subbe	//
+ep_subbf	//
+ep_subbg	//
 ep_snw		// Super Nudge Wink (Maygay - Union)
+ep_snwa		//
+ep_snwb		//
+ep_snwc		//
+ep_snwd		//
 ep_survi	// Survival (Maygay)
+ep_survia	//
 ep_tak5		// Take Five (Maygay - Union)
+ep_tak5a	//
 ep_tits		// Title Shot Club (Maygay)
+ep_titsa	//
+ep_titsb	//
 ep_tortr	// Torture TV (Maygay)
+ep_tortra	//
 ep_trail	// Trailblazer (Maygay - Impulse)
+ep_traila	//
+ep_trailb	//
 ep_tree		// Tree Amigos (Maygay)
+ep_treea	//
 ep_trics	// Triple Cash (Maygay - Union)
+ep_tricsa	//
 ep_tp		// Trivial Pursuit (Maygay)
+ep_tpa		//
+ep_tpb		//
 ep_tp2		// Trivial Pursuit 2 (Maygay)
+ep_tp2a		//
 ep_tutcl	// Tutankhamun Club (Maygay)
+ep_tutcla	//
+ep_tutclb	//
 ep_21clb	// Twenty One Club (Maygay)
+ep_21clba	//
 ep_vipjv	// Viper Jive (Maygay - Extreme)
+ep_vipjva	//
+ep_vipjvb	//
+ep_vipjvc	//
+ep_vipjvd	//
 ep_wildf	// Wildfire (Maygay - Impulse)
+ep_wildfa	//
 ep_xspot	// X Marks The Spot (Maygay)
+ep_xspota	//
+ep_xspotb	//
 ep_braid	// Bank Raid (Unk)
+ep_braida	//
+ep_braidb	//
+ep_braidc	//
+ep_braidd	//
+ep_braide	//
 ep_bathl	// Bat Outa Hell (Global)
+ep_bathla	//
+ep_bathlb	//
+ep_bathlc	//
+ep_bathld	//
+ep_bathle	//
+ep_bathlf	//
+ep_bathlg	//
+ep_bathlh	//
 ep_beavr	// Casino Beaver Las Vegas (Global)
 ep_beavra	//
+ep_beavrb	//
+ep_beavrc	//
+ep_beavrd	//
+ep_beavre	//
+ep_beavrf	//
+ep_beavrg	//
+ep_beavrh	//
+ep_beavri	//
+ep_beavrj	//
+ep_beavrk	//
+ep_beavrl	//
+ep_beavrm	//
+ep_beavrn	//
+ep_beavro	//
+ep_beav3	//
+ep_beav3a	//
+ep_beav3b	//
+ep_beav3c	//
 ep_bvrcl	// Beaver Las Vegas Club (Global)
+ep_bvrcla	//
+ep_bvrclb	//
+ep_bvrclc	//
+ep_bvrcld	//
+ep_bvrcle	//
+ep_bvrclf	//
+ep_bvrclg	//
+ep_bvrclh	//
+ep_bvrcli	//
+ep_bvrclj	//
+ep_bvrclk	//
 ep_bvruc	// Beaver Uncovered (Global)
+ep_bvruca	//
+ep_bvrucb	//
+ep_bvrucc	//
 ep_bjclb	// Blackjack Club, The (Global)
 ep_cbrun	// Cannonball Run (Global)
+ep_cbruna	//
+ep_cbrunb	//
+ep_cbrunc	//
+ep_cbrund	//
+ep_cbrune	//
 ep_cbrcl	// Cannonball Run Club (Global)
+ep_cbrcla	//
+ep_cbrclb	//
+ep_cbrclc	//
+ep_cbrcld	//
+ep_cbrcle	//
+ep_cbrclf	//
+ep_cbrclg	//
+ep_cbrclh	//
+ep_cbrcli	//
+ep_cbrclj	//
+ep_cbrclk	//
 ep_cclas	// Casino Classic (Global)
+ep_cclasa	//
 ep_cgrc		// Casino Grand Classic (Unk)
+ep_cgrca	//
 ep_cgred	// Club Greed (Global)
+ep_cgreda	//
 ep_cstrk	// Crazy Streak Club (Global)
+ep_cstrka	//
+ep_cstrkb	//
+ep_cstrkc	//
+ep_cstrkd	//
+ep_cstrke	//
+ep_cstrkf	//
+ep_cstrkg	//
 ep_ctc		// Cut Throat Cash (Global)
+ep_ctca		//
 ep_cyc		// Cyclone (Unk)
+ep_cyca		//
+ep_cycb		//
+ep_cycc		//
+ep_cycd		//
+ep_cyce		//
 ep_dmbus	// Dambusters (Impulse)
+ep_dmbusa	//
+ep_dmbusb	//
+ep_dmbusc	//
+ep_dmbusd	//
+ep_dmbuse	//
+ep_dmbusf	//
 ep_ddq		// Dungeons & Drag Queens (Global)
+ep_ddqa		//
+ep_ddqb		//
+ep_ddqc		//
+ep_ddqd		//
+ep_ddqe		//
+ep_ddqf		//
+ep_ddqg		//
+ep_ddqh		//
+ep_ddqi		//
 ep_ddqcl	// Dungeons & Drag Queens Club (Global)
+ep_ddqcla	//
+ep_ddqclb	//
+ep_ddqclc	//
+ep_ddqcld	//
+ep_ddqcle	//
+ep_ddqclf	//
+ep_ddqclg	//
 ep_fog		// Fields of Gold (Global)
+ep_foga		//
 ep_fmf		// Full Moon Fever (Global)
+ep_fmfa		//
 ep_gtrot	// Globe Trotter (Unk)
+ep_gtrota	//
 ep_greed	// Greed (Global)
+ep_greeda	//
 ep_grun		// Grid Runner (Global)
+ep_gruna	//
 ep_grncl	// Grid Runner Club (Global)
+ep_grncla	//
+ep_grnclb	//
+ep_grnclc	//
 ep_heybg	// Hey Big Spender (Global)
+ep_heybga	//
+ep_heybgb	//
+ep_heybgc	//
 ep_heybc	// Hey Big Spender Club (Global)
+ep_heybca	//
 ep_hispr	// Hi Spirits (Global)
+ep_hispra	//
+ep_hisprb	//
+ep_hisprc	//
+ep_hisprd	//
+ep_hispre	//
 ep_hiscl	// Hi Spirits Club (Global)
+ep_hiscla	//
 ep_spirt	// High Spirits (Global)
+ep_spirta	//
+ep_spirtb	//
 ep_smoke	// Holy Smoke! (Impulse)
+ep_smokea	//
+ep_smokeb	//
+ep_smokec	//
+ep_smoked	//
+ep_smokee	//
+ep_smokef	//
+ep_smokeg	//
+ep_smokeh	//
+ep_smokei	//
+ep_smokej	//
 ep_hur		// Hurricane (Global)
+ep_hura		//
+ep_hurb		//
 ep_ifern	// Inferno (Impulse)
+ep_iferna	//
 ep_kopcl	// Knockout Punch Club (Global)
+ep_kopcla	//
+ep_kopclb	//
 ep_ltt		// Licence To Thrill (Global)
+ep_ltta		//
 ep_ll		// Lucky Ladders (Unk)
+ep_lla		//
 ep_monrt	// Money Returns Club, The (Global)
+ep_monrta	//
+ep_monrtb	//
+ep_monrtc	//
+ep_monrtd	//
+ep_monrte	//
+ep_monrtf	//
 ep_monsh	// Moonshine Club, The (Unk)
+ep_monsha	//
+ep_monshb	//
+ep_monshc	//
+ep_monshd	//
+ep_monshe	//
+ep_monshf	//
 ep_mummy	// Mummy Talks (Impulse)
+ep_mummya	//
+ep_mummyb	//
+ep_mummyc	//
+ep_mummyd	//
+ep_mummye	//
+ep_mummyf	//
 ep_pkni		// The Phoenix Knights (Global)
+ep_pknia	//
+ep_pknib	//
+ep_pknic	//
+ep_pknid	//
+ep_pknie	//
+ep_pknif	//
 ep_redl		// Red Line (Unk)
+ep_redla	//
 ep_rchik	// Rich Chics Club (Unk)
+ep_rchika	//
 ep_royrc	// Royal Roulette Club (Unk)
+ep_royrca	//
 ep_snbev	// Saturday Night Beaver (Global)
+ep_snbeva	//
+ep_snbevb	//
+ep_snbevc	//
+ep_snbevd	//
+ep_snbeve	//
 ep_spook	// Spooky Hollow (Global)
+ep_spooka	//
+ep_spookb	//
 ep_sdcla	// Spotted Dick Classic (Global)
+ep_sdclaa	//
+ep_sdclab	//
+ep_sdclac	//
+ep_sdclad	//
+ep_sdclae	//
+ep_sdclaf	//
+ep_sdclag	//
 ep_sdclb	// Spotted Dick Club (Global)
+ep_sdclba	//
 ep_stm		// Storm Force (Global)
+ep_stma		//
+ep_stmb		//
+ep_stmc		//
 ep_stmcl	// Storm Force Club (Global)
+ep_stmcla	//
 ep_snset	// Sunset Strip (Unk)
+ep_snseta	//
 ep_twarp	// Time Warp (Unk)
+ep_twarpa	//
+ep_twarpb	//
+ep_twarpc	//
 ep_tod		// Truth Or Dare (Global)
+ep_toda		//
 ep_utnut	// Utter Nutter (Global)
+ep_utnuta	//
+ep_utnutb	//
+ep_utnutc	//
 ep_utncl	// Utter Nutter Club (Global)
+ep_utncla	//
 ep_wleek	// Weakest Leek Club (Global)
+ep_wleeka	//
 ep_wud		// What's Up Doc (Global)
+ep_wuda		//
+ep_wudb		//
+ep_wudc		//
+ep_wudd		//
+ep_wude		//
 ep_milhr	// Who Wants To Be A Millionhare? (Global)
+ep_milhra	//
+ep_milhrb	//
+ep_milhrc	//
+ep_milhrd	//
+ep_milhre	//
+ep_milhrf	//
+ep_milhrg	//
 ep_mlhrc	// Who Whats To Be A Millionhare Club (Global)
+ep_mlhrca	//
+ep_mlhrcb	//
+ep_mlhrcc	//
+ep_mlhrcd	//
+ep_mlhrce	//
 ep_wf		// Wildfire (Global)
+ep_wfa		//
+ep_wfb		//
+ep_wfc		//
+ep_wfd		//
+ep_wfe		//
+ep_wff		//
+ep_wfg		//
 ep_bbars	// Balloon Bars (Maygay)
+ep_bbarsa	//
+ep_bbarsb	//
+ep_bbarsc	//
 ep_cslay	// Cash Slayer (Global)
+ep_cslaya	//
 ep_monky	// Monkey Business (Global)
+ep_monkya	//
 ep_makmv	// Make Your Move (Global)
+ep_makmva	//
 ep_lug		// London Underground (Maygay)
+ep_luga		//
+ep_lugb		//
+ep_lugc		//
 ep_crzbn	// Crazy Bingo (Maygay)
+ep_crzbna	//
+ep_crzbnb	//
+ep_crzbnc	//
 ep_cascz	// Casino Crazy (Global)
+ep_cascza	//
 ep_wside	// Wildside (Global)
+ep_wsidea	//
 ep_goldf	// Gold Fever (Impulse)
 ep_imj		// I'm A Jackpot (Global)
 ep_party
+
 
 // MPU2
 
@@ -18093,328 +18908,3773 @@ m4clr		// MPU4 Meter Clear ROM
 
 
 m4tenten	// 10 X 10 (Barcrest)
+m4tenten__a		//
+m4tenten__b		//
+m4tenten__c		//
+m4tenten__d		//
+m4tenten__e		//
+m4tenten__f		//
+m4tenten__g		//
+m4tenten__h		//
+m4tenten__i		//
+m4tenten__j		//
+m4tenten__k		//
+m4tenten__l		//
+m4tenten__m		//
+m4tenten__n		//
+m4tenten__o		//
+m4tenten__p		//
+m4tenten__q		//
+m4tenten__r		//
+m4tenten__s		//
+m4tenten__t		//
+m4tenten__u		//
+m4tenten__v		//
+m4tenten__w		//
+m4tenten__x		//
+m4tenten__y		//
+m4tenten__z		//
+m4tenten__0		//
+m4tenten__1		//
+m4tenten__2		//
+m4tenten__3		//
+m4tenten__4		//
+m4tenten__5		//
+m4tenten__6		//
+m4tenten__7		//
+m4tenten__8		//
+m4tenten__9		//
+m4tenten__aa	//
+m4tenten__ab	//
+m4tenten__ac	//
+m4tenten__ad	//
+m4tenten__ae	//
+m4tenten__af	//
+m4tenten__ag	//
+m4tenten__ah	//
+m4tenten__ai	//
+m4tenten__aj	//
+m4tenten__ak	//
+m4tenten__al	//
+m4tenten__am	//
+m4tenten__an	//
+m4tenten__ao	//
+m4tenten__ap	//
+m4tenten__aq	//
+m4tenten__ar	//
+m4tenten__as	//
+m4tenten__at	//
+m4tenten__au	//
+m4tenten__av	//
+m4tenten__aw	//
+m4tenten__ax	//
+m4tenten__ay	//
+m4tenten__az	//
+m4tenten__a0	//
+m4tenten__a1	//
+m4tenten__a2	//
 m421club	// 21 Club (Barcrest)
 m4actbnk	// Action Bank (Barcrest)
-m4actbnka
+m4actbnk__a	//
+m4actbnk__b	//
+m4actbnk__c	//
+m4actbnk__d	//
+m4actbnk__e	//
+m4actbnk__f	//
+m4actbnk__g	//
+m4actbnk__h	//
+m4actbnk__i	//
+m4actbnka	//
+m4actbnkb	//
 m4actclb	// Action Club (Barcrest)
+m4actclba	//
 m4actnot	// Action Note (Barcrest)
 m4actpak	// Action Pack (Barcrest)
+m4actpaka	//
 m4addr		// Adders & Ladders (Barcrest)
+m4addr_h1	//
+m4addr6lybd	//
+m4addr6lc	//
+m4addr6ld	//
+m4addr6lyd	//
+m4addr6lk	//
+m4addr_h2	//
+m4addr6ly	//
+m4addr3_d	//
+m4addr10	//
+m4addr3	//
+m4addr4	//
+m4addr5	//
+m4addr5_a	//
+m4addr10yd	//
+m4addr3yd	//
+m4addr4yd	//
+m4addr5yd	//
+m4addr5yd_a	//
+m4addr10d	//
+m4addr3d	//
+m4addr4d	//
+m4addr5d	//
+m4addr5d_a	//
+m4addr10_a	//
+m4addr4_a	//
+m4addr10yd_a	//
+m4addr10d_a	//
+m4addr3_a	//
+m4addr3_b	//
+m4addr3_c	//
+m4addr3yd_a	//
+m4addr3yd_b	//
+m4addr3yd_c	//
+m4addr3d_a	//
+m4addr3d_b	//
+m4addr3d_c	//
+m4addr10c	//
+m4addr4c	//
+m4addr5c	//
+m4addr5c_a	//
+m4addr10c_a	//
+m4addr4c_a	//
+m4addr4c_b	//
 m4addrd		//
 m4addrc		// Adders & Ladders Classic (Barcrest)
+m4addrc__a	//
+m4addrc__b	//
+m4addrc__c	//
+m4addrc__d	//
+m4addrc__e	//
+m4addrc__f	//
+m4addrc__h	//
+m4addrc__i	//
+m4addrc__j	//
+m4addrc__k	//
+m4addrc__l	//
+m4addrc__m	//
+m4addrc__n	//
 m4addrcc	// Adders & Ladders Classic Club (Barcrest)
-m4addrcb	// Adders & Ladders Club (Barcrest)
+m4addrcc__a	//
+m4addrcc__b	//
+m4addrcc__c	//
+m4addrcc__d	//
 m4alladv	// All Cash Advance (Barcrest)
 m4alpha		// Alphabet (Barcrest)
 m4ambass	// Ambassador (Barcrest)
 m4amhiwy	// American Highway (Barcrest)
-m4andycp	// Andy Capp (Barcrest)
-m4andycpd	//
-m4andyfl	// Andy Loves Flo (Barcrest)
+m4andycp		// Andy Capp (Barcrest)
+m4andycpacc_b	//
+m4andycpacc_c	//
+m4andycpaccsd	//
+m4andycpacc_d	//
+m4andycp10c_c	//
+m4andycpc2_a	//
+m4andycp20_b	//
+m4andycpdy_a	//
+m4andycpacc_e	//
+m4andycp10c_a	//
+m4andycp10c_b	//
+m4andycp8ad		//
+m4andycp8b		//
+m4andycp8c		//
+m4andycp8d		//
+m4andycp8kd		//
+m4andycp8yd	//
+m4andycp8k		//
+m4andycp8		//
+m4andycp8y		//
+m4andycpdc		//
+m4andycpdd		//
+m4andycpdyd		//
+m4andycpdk		//
+m4andycpd		//
+m4andycpdy		//
+m4andycpc2ad	//
+m4andycpc2b		//
+m4andycpc2bd	//
+m4andycpc2d		//
+m4andycpc2kd	//
+m4andycpc2rd	//
+m4andycpc2yd	//
+m4andycpc2k		//
+m4andycpc2r		//
+m4andycpc2		//
+m4andycpc2y		//
+m4andycpc5ad	//
+m4andycpc5b		//
+m4andycpc5bd	//
+m4andycpc5d		//
+m4andycpc5kd	//
+m4andycpc5yd	//
+m4andycpc5k		//
+m4andycpc5		//
+m4andycpc5y		//
+m4andycpack		//
+m4andycpac		//
+m4andycpacyd	//
+m4andycpacd		//
+m4andycp10k		//
+m4andycp10yd	//
+m4andycp10d		//
+m4andycpacc_a	//
+m4andycpac_a	//
+m4andycp10c_d	//
+m4andycp10_a	//
+m4andycp20		//
+m4andycp20_a	//
+m4andycpacc		//
+m4andycp10c		//
+m4andycpdut		// (Dutch set)
+m4andyfl		// Andy Loves Flo (Barcrest)
+m4andyfl3ad		//
+m4andyfl3b		//
+m4andyfl3bd		//
+m4andyfl3d		//
+m4andyfl3kd		//
+m4andyfl3yd		//
+m4andyfl3k		//
+m4andyfl3		//
+m4andyfl3y		//
+m4andyfl8ad		//
+m4andyfl8b		//
+m4andyfl8bd		//
+m4andyfl8c		//
+m4andyfl8d		//
+m4andyfl8kd		//
+m4andyfl8k		//
+m4andyfl8		//
+m4andyfl8y		//
+m4andyflfb		//
+m4andyflfc		//
+m4andyflfk		//
+m4andyflfr		//
+m4andyflf		//
+m4andyfltad		//
+m4andyfltb		//
+m4andyfltbd		//
+m4andyfltd		//
+m4andyfltkd		//
+m4andyfltrd		//
+m4andyfltyd		//
+m4andyfltk		//
+m4andyfltr		//
+m4andyflt		//
+m4andyflty		//
+m4andyfluad		//
+m4andyflub		//
+m4andyflubd		//
+m4andyflud		//
+m4andyflukd		//
+m4andyflurd		//
+m4andyfluyd		//
+m4andyfluk		//
+m4andyflur		//
+m4andyflu		//
+m4andyfluy		//
+m4andyfl8bs		//
 m4andybt	// Andy's Big Time Club (Barcrest)
+m4andybt__a	//
+m4andybt__b	//
+m4andybt__c	//
 m4andyfh	// Andy's Full House (Barcrest)
-m4andyge	// Andy's Great Escape (Barcrest)
+m4andyfh__a		//
+m4andyfh__b		//
+m4andyfh__c		//
+m4andyfh__d		//
+m4andyfh__e		//
+m4andyfh__f		//
+m4andyfh__g		//
+m4andyfh__h		//
+m4andyfh__i		//
+m4andyfh__j		//
+m4andyfh__k		//
+m4andyfh__l		//
+m4andyfh__m		//
+m4andyfh__n		//
+m4andyfh__o		//
+m4andyfh__p		//
+m4andyfh__q		//
+m4andyfh__r		//
+m4andyfh__s		//
+m4andyfh__t		//
+m4andyfh__u		//
+m4andyfh__v		//
+m4andyfh__w		//
+m4andyfh__x		//
+m4andyfh__y		//
+m4andyfh__z		//
+m4andyfh__0		//
+m4andyfh__1		//
+m4andyfh__2		//
+m4andyfh__3		//
+m4andyfh__4		//
+m4andyfh__5		//
+m4andyfh__6		//
+m4andyfh__7		//
+m4andyfh__8		//
+m4andyfh__9		//
+m4andyfh__aa	//
+m4andyfh__ab	//
+m4andyfh__ac	//
+m4andyfh__ad	//
+m4andyfh__ae	//
+m4andyfh__af	//
+m4andyfh__ag	//
+m4andyfh__ah	//
+m4andyfh__ai	//
+m4andyfh__aj	//
+m4andyfh__ak	//
+m4andyfh__al	//
+m4andyfh__am	//
+m4andyfh__an	//
+m4andyfh__ao	//
+m4andyfh__ap	//
+m4andyfh__aq	//
+m4andyfh__ar	//
+m4andyfh__as	//
+m4andyfh__at	//
+m4andyfh__au	//
+m4andyfh__av	//
+m4andyfh__aw	//
+m4andyfh__ax	//
+m4andyfh__ay	//
+m4andyfh__az	//
+m4andyfh__a0	//
+m4andyfh__a1	//
+m4andyfh__a2	//
+m4andyfh__a3	//
+m4andyfh__a4	//
+m4andyge		// Andy's Great Escape (Barcrest)
+m4andyge28ad		//
+m4andyge28b		//
+m4andyge28bd		//
+m4andyge28c		//
+m4andyge28d		//
+m4andyge28kd		//
+m4andyge28yd		//
+m4andyge28k		//
+m4andyge28		//
+m4andyge28y		//
+m4andyge2tad		//
+m4andyge2tb		//
+m4andyge2tbd		//
+m4andyge2td		//
+m4andyge2tkd		//
+m4andyge2tyd		//
+m4andyge2tk		//
+m4andyge2t		//
+m4andyge2ty		//
+m4andyge5tad		//
+m4andyge5tb		//
+m4andyge5tbd		//
+m4andyge5td		//
+m4andyge5tkd		//
+m4andyge5tyd		//
+m4andyge5tk		//
+m4andyge5t		//
+m4andyge5ty		//
+m4andyge_hx1		//
+m4andygegc2d		//
+m4andyge_h1		//
+m4andyge_h3		//
+m4andyge_h2		//
+m4andygen2_a		//
+m4andygeg5a		//
+m4andygen2c		//
+m4andygen2d	//
+m4andygen2k	//
+m4andygen2y	//
+m4andygegc2	//
+m4andygeg5k	//
+m4andygeg5	//
+m4andygeg5yd	//
+m4andygeg5d	//
+m4andygeg_2k	//
+m4andygeg_2	//
+m4andygeg_2yd	//
+m4andygeg_2d	//
+m4andyge_hx4	//
+m4andyge_hx5	//
+m4andyge_h4	//
+m4andyge_hx2	//
+m4andyge_hx3	//
+m4andygeg5c	//
+m4andygeg_2c	//
 m4apach		// Apache (Barcrest)
 m4atlan		// Atlantis (Barcrest)
 m4bagtel	// Bagatelle (Barcrest)
+m4bagtel__a		//
+m4bagtel__b		//
+m4bagtel__c		//
+m4bagtel__d		//
+m4bagtel__e		//
+m4bagtel__f		//
+m4bagtel__g		//
+m4bagtel__h		//
+m4bagtel__i		//
+m4bagtel__j		//
+m4bagtel__k		//
+m4bagtel__l		//
+m4bagtel__m		//
+m4bagtel__n		//
+m4bagtel__o		//
+m4bagtel__p		//
+m4bagtel__q		//
+m4bagtel__r		//
+m4bagtel__s		//
+m4bagtel__t		//
+m4bagtel__u		//
+m4bagtel__v		//
+m4bagtel__w		//
+m4bagtel__x		//
+m4bagtel__y		//
+m4bagtel__z		//
+m4bagtel__0		//
+m4bagtel__1		//
+m4bagtel__2		//
+m4bagtel__3		//
+m4bagtel__4		//
+m4bagtel__5		//
+m4bagtel__6		//
+m4bagtel__7		//
+m4bagtel__8		//
+m4bagtel__9		//
+m4bagtel__aa	//
+m4bagtel__ab	//
+m4bagtel__ac	//
+m4bagtel__ad	//
+m4bagtel__ae	//
+m4bagtel__af	//
+m4bagtel__ag	//
 m4bnknot	// Bank A Note (Barcrest)
 m4bnkrol	// Bank Roller Club (Barcrest)
+m4bnkrol__a	//
+m4bnkrol__b	//
+m4bnkrol__c	//
+m4bnkrol__d	//
+m4bnkrol__e	//
 m4btclok	// Beat The Clock (Barcrest)
 m4berser	// Berserk (Barcrest)
+m4berser__a	//
+m4berser__b	//
+m4berser__c	//
+m4berser__d	//
+m4berser__e	//
+m4berser__f	//
+m4berser__g	//
+m4berser__h	//
+m4berser__i	//
+m4berser__j	//
+m4berser__k	//
+m4berser__l	//
+m4berser__m	//
+m4berser__n	//
+m4berser__o	//
+m4berser__p	//
+m4berser__q	//
+m4berser__r	//
+m4berser__s	//
+m4berser__t	//
+m4berser__u	//
+m4berser__v	//
+m4berser__w	//
+m4berser__x	//
+m4berser__y	//
+m4berser__z	//
+m4berser__0	//
+m4berser__1	//
 m4bigbn		// Big Ben (Barcrest)
 m4bigchf	// Big Chief (Barcrest)
-m4bigchfd	//
+m4bigchfa	//
+m4bigchfb	//
+m4bigchfc	//
+m4bigchd	//
 m4blkwhd	// Black & White (Barcrest) [Dutch]
 m4blkbul	// Black Bull (Barcrest)
 m4blkbuld	//
 m4blkcat	// Black Cat (Barcrest)
 m4bj		// Black Jack (Barcrest) [Dutch]
 m4bjc		// Black Jack Club (Barcrest) [Dutch]
-m4bja		// Blackjack (Barcrest)
 m4bjac		// Blackjack Club (Barcrest)
-m4bjack
+m4bjaca		//
+m4bjack		// Blackjack (Barcrest)
+m4bjacka	//
 m4bjsm		// Blackjack Super Multi (Barcrest)
+m4bjsma		//
 m4blstbk	// Blast A Bank (Barcrest)
 m4bluedm	// Blue Diamond (Barcrest)
 m4bluemn	// Blue Moon (Barcrest)
+m4bluemna	//
+m4bluemnb	//
 m4bdash		// Boulder Dash (Barcrest)
+m4bdash__a	//
+m4bdash__b	//
+m4bdash__c	//
+m4bdash__d	//
+m4bdash__e	//
+m4bdash__f	//
+m4bdash__g	//
+m4bdash__h	//
+m4bdash__i	//
+m4bdash__j	//
+m4bdash__k	//
+m4bdash__l	//
+m4bdash__m	//
+m4bdash__n	//
+m4bdash__o	//
+m4bdash__p	//
+m4bdash__q	//
+m4bdash__r	//
+m4bdash__s	//
+m4bdash__t	//
+m4bdash__u	//
+m4bdash__v	//
+m4bdash__w	//
+m4bdash__x	//
+m4bdash__y	//
+m4bdash__z	//
+m4bdash__0	//
+m4bdash__1	//
+m4bdash__2	//
+m4bdash__3	//
+m4bdash__4	//
+m4bdash__5	//
+m4bdash__6	//
+m4bdash__7	//
+m4bdash__8	//
+m4bdash__9	//
+m4bdash__aa	//
+m4bdash__ab	//
+m4bdash__ac	//
+m4bdash__ad	//
+m4bdash__ae	//
+m4bdash__af	//
+m4bdash__ag	//
+m4bdash__ah	//
+m4bdash__ai	//
+m4bdash__aj	//
+m4bdash__ak	//
+m4bdash__al	//
+m4bdash__am	//
+m4bdash__an	//
+m4bdash__ao	//
+m4bdash__ap	//
+m4bdash__aq	//
+m4bdash__ar	//
+m4bdash__as	//
+m4bdash__at	//
+m4bdash__au	//
+m4bdash__av	//
+m4bdash__aw	//
+m4bdash__ax	//
+m4bdash__ay	//
+m4bdash__az	//
+m4bdash__a0	//
+m4bdash__a1	//
+m4bdash__a2	//
+m4bdash__a3	//
+m4bdash__a4	//
 m4brktak	// Break & Take (Barcrest)
 m4brdway	// Broadway (Barcrest) [Dutch]
 m4brook		// Brooklyn (Barcrest)
 m4buc		// Buccaneer (Barcrest)
+m4buc__a	//
+m4buc__b	//
+m4buc__c	//
+m4buc__d	//
+m4buc__e	//
+m4buc__f	//
+m4buc__g	//
+m4buc__h	//
+m4buc__i	//
+m4buc__j	//
+m4buc__k	//
+m4buc__l	//
+m4buc__m	//
+m4buc__n	//
+m4buc__o	//
+m4buc__p	//
+m4buc__q	//
+m4buc__r	//
+m4buc__s	//
+m4buc__t	//
+m4buc__u	//
+m4buc__v	//
+m4buc__w	//
+m4buc__x	//
+m4buc__y	//
+m4buc__z	//
+m4buc__0	//
+m4buc__1	//
+m4buc__2	//
+m4buc__3	//
+m4buc__4	//
+m4buc__5	//
+m4buc__6	//
+m4buc__7	//
+m4buc__8	//
+m4buc__9	//
+m4buc__aa	//
+m4buc__ab	//
+m4buc__ac	//
+m4buc__ad	//
+m4buc__ae	//
+m4buc__af	//
+m4buc__ag	//
+m4buc__ah	//
+m4buc__ai	//
+m4buc__aj	//
+m4buc__ak	//
+m4buc__al	//
+m4buc__am	//
+m4buc__an	//
+m4buc__ao	//
+m4buc__ap	//
+m4buc__aq	//
+m4buc__ar	//
+m4buc__as	//
+m4buc__at	//
+m4buc__au	//
+m4buc__av	//
+m4buc__aw	//
+m4buc__ax	//
+m4buc__ay	//
+m4buc__az	//
 m4bucks		// Bucks Fizz Club (Barcrest)
 m4calama	// Calamari Club (Barcrest)
-m4calamab	//
+m4calama__a	//
+m4calama__b	//
+m4calama__c	//
+m4calama__d	//
+m4calama__e	//
+m4calama__f	//
+m4calama__g	//
+m4calama__h	//
+m4calama__i	//
+m4calama__j	//
 m4calicl	// California Club (Barcrest)
+m4calicla	//
+m4caliclb	//
+m4caliclc	//
+m4calicld	//
 m4cardcs	// Card Cash (Barcrest)
 m4cojok		// Carry On Joker (Barcrest)
+m4cojok__a	//
+m4cojok__b	//
+m4cojok__c	//
+m4cojok__d	//
+m4cojok__e	//
+m4cojok__f	//
 m4cashat	// Cash Attack (Barcrest)
+m4cashat__a		//
+m4cashat__b		//
+m4cashat__c		//
+m4cashat__d		//
+m4cashat__e		//
+m4cashat__f		//
+m4cashat__g		//
+m4cashat__h		//
+m4cashat__i		//
+m4cashat__j		//
+m4cashat__k		//
+m4cashat__l		//
+m4cashat__m		//
+m4cashat__n		//
+m4cashat__o		//
+m4cashat__p		//
+m4cashat__q		//
+m4cashat__r		//
+m4cashat__s		//
+m4cashat__t		//
+m4cashat__u		//
+m4cashat__v		//
+m4cashat__w		//
+m4cashat__x		//
+m4cashat__y		//
+m4cashat__z		//
+m4cashat__0		//
+m4cashat__1		//
+m4cashat__2		//
+m4cashat__3		//
+m4cashat__4		//
+m4cashat__5		//
+m4cashat__6		//
+m4cashat__7		//
+m4cashat__8		//
+m4cashat__9		//
+m4cashat__aa	//
+m4cashat__ab	//
+m4cashat__ac	//
+m4cashat__ad	//
+m4cashat__ae	//
+m4cashat__af	//
+m4cashat__ag	//
+m4cashat__ah	//
+m4cashat__ai	//
+m4cashat__aj	//
+m4cashat__ak	//
+m4cashat__al	//
+m4cashat__am	//
+m4cashat__an	//
+m4cashat__ao	//
+m4cashat__ap	//
+m4cashat__aq	//
+m4cashat__ar	//
 m4cashcn	// Cash Connect (Barcrest)
 m4cashco	// Cash Counter (Barcrest)
+m4cashcoa	//
+m4cashcob	//
+m4cashcoc	//
+m4cashcod	//
 m4cashln	// Cash Lines (Barcrest)
+m4cashln__a		//
+m4cashln__b		//
+m4cashln__c		//
+m4cashln__d		//
+m4cashln__e		//
+m4cashln__f		//
+m4cashln__g		//
+m4cashln__h		//
+m4cashln__i		//
+m4cashln__j		//
+m4cashln__k		//
+m4cashln__l		//
+m4cashln__m		//
+m4cashln__n		//
+m4cashln__o		//
+m4cashln__p		//
+m4cashln__q		//
+m4cashln__r		//
+m4cashln__s		//
+m4cashln__t		//
+m4cashln__u		//
+m4cashln__v		//
+m4cashln__w		//
+m4cashln__x		//
+m4cashln__y		//
+m4cashln__z		//
+m4cashln__0		//
+m4cashln__1		//
+m4cashln__2		//
+m4cashln__3		//
+m4cashln__4		//
+m4cashln__5		//
+m4cashln__6		//
+m4cashln__7		//
+m4cashln__8		//
+m4cashln__9		//
+m4cashln__aa	//
+m4cashln__ab	//
+m4cashln__ac	//
+m4cashln__ad	//
+m4cashln__ae	//
+m4cashln__af	//
+m4cashln__ag	//
+m4cashln__ah	//
+m4cashln__ai	//
+m4cashln__aj	//
+m4cashln__ak	//
+m4cashln__al	//
+m4cashln__am	//
+m4cashln__an	//
+m4cashln__ao	//
+m4cashln__ap	//
+m4cashln__aq	//
+m4cashln__ar	//
+m4cashln__as	//
+m4cashln__at	//
+m4cashln__au	//
+m4cashln__av	//
+m4cashln__aw	//
+m4cashln__ax	//
+m4cashln__ay	//
+m4cashln__az	//
+m4cashln__a0	//
+m4cashln__a1	//
+m4cashln__a2	//
+m4cashln__a3	//
+m4cashln__a4	//
+m4cashln__a5	//
+m4cashln__a6	//
+m4cashln__a7	//
+m4cashln__a8	//
+m4cashln__a9	//
+m4cashln__ba	//
+m4cashln__bb	//
+m4cashln__bc	//
+m4cashln__bd	//
+m4cashln__be	//
+m4cashln__bf	//
+m4cashln__bg	//
+m4cashln__bh	//
+m4cashln__bi	//
+m4cashln__bj	//
 m4cashmn	// Cash Machine (Barcrest)
+m4cashmn__a		//
+m4cashmn__b		//
+m4cashmn__c		//
+m4cashmn__d		//
+m4cashmn__e		//
+m4cashmn__f		//
+m4cashmn__g		//
+m4cashmn__h		//
+m4cashmn__i		//
+m4cashmn__j		//
+m4cashmn__k		//
+m4cashmn__l		//
+m4cashmn__m		//
+m4cashmn__n		//
+m4cashmn__o		//
+m4cashmn__p		//
+m4cashmn__q		//
+m4cashmn__r		//
+m4cashmn__s		//
+m4cashmn__t		//
+m4cashmn__u		//
+m4cashmn__v		//
+m4cashmn__w		//
+m4cashmn__x		//
+m4cashmn__y		//
+m4cashmn__z		//
+m4cashmn__0		//
+m4cashmn__1		//
+m4cashmn__2		//
+m4cashmn__3		//
+m4cashmn__4		//
+m4cashmn__5		//
+m4cashmn__6		//
+m4cashmn__7		//
+m4cashmn__8		//
+m4cashmn__9		//
+m4cashmn__aa	//
+m4cashmn__ab	//
+m4cashmn__ac	//
+m4cashmn__ad	//
+m4cashmn__ae	//
+m4cashmn__af	//
+m4cashmn__ag	//
+m4cashmn__ah	//
+m4cashmn__ai	//
+m4cashmn__aj	//
+m4cashmn__ak	//
+m4cashmn__al	//
+m4cashmn__za	//
+m4cashmn__zb	//
 m4cashmx	// Cash Matrix (Barcrest)
+m4cashmxa	//
 m4cashzn	// Cash Zone (Barcrest)
+m4cashzna	//
 m4casmul	// Casino Multiplay (Barcrest)
 m4celclb	// Celebration Club (Barcrest)
 m4centpt	// Centrepoint (Barcrest)
 m4centpta	// Centrepoint (Barcrest)
 m4ceptr		// Ceptor (Barcrest)
 m4chasei	// Chase Invaders (Barcrest)
+m4chaseia	//
+m4chaseib	//
+m4chaseic	//
+m4chaseid	//
+m4chaseie	//
+m4chaseif	//
 m4cheryo	// Cherryo (Barcrest)
 m4click		// Clickity Click (Barcrest)
 m4c999		// Cloud 999 (Barcrest)
+m4c999a		//
+m4c999b		//
+m4c999c		//
 m4c9		// Cloud Nine (Barcrest)
+m4c9__a		//
+m4c9__b		//
+m4c9__c		//
+m4c9__d		//
+m4c9__e		//
+m4c9__f		//
+m4c9__g		//
+m4c9__h		//
+m4c9__i		//
+m4c9__j		//
+m4c9__k		//
+m4c9__l		//
+m4c9__m		//
+m4c9__n		//
+m4c9__o		//
+m4c9__p		//
+m4c9__q		//
+m4c9__r		//
+m4c9__s		//
+m4c9__t		//
+m4c9__u		//
+m4c9__v		//
+m4c9__w		//
+m4c9__x		//
+m4c9__y		//
+m4c9__z		//
+m4c9__0		//
+m4c9__1		//
+m4c9__2		//
+m4c9__3		//
+m4c9__4		//
+m4c9__5		//
+m4c9__6		//
+m4c9__7		//
+m4c9__8		//
+m4c9__9		//
+m4c9__aa	//
+m4c9__ab	//
+m4c9__ac	//
+m4c9__ad	//
+m4c9__ae	//
+m4c9__af	//
+m4c9__ag	//
+m4c9__ah	//
+m4c9__ai	//
+m4c9__aj	//
+m4c9__ak	//
+m4c9__al	//
+m4c9__am	//
+m4c9__an	//
+m4c9__ao	//
+m4c9__ap	//
+m4c9__aq	//
+m4c9__ar	//
+m4c9__as	//
+m4c9__at	//
+m4c9__au	//
+m4c9__av	//
+m4c9__aw	//
+m4c9__ax	//
+m4c9__ay	//
+m4c9__az	//
+m4c9__a0	//
+m4c9__a1	//
+m4c9__a2	//
+m4c9__a3	//
 m4c9c		// Cloud Nine Club (Barcrest)
 m4clbcls	// Club Classic (Barcrest)
 m4clbclm	// Club Climber (Barcrest)
+m4clbclma	//
 m4clbcnt	// Club Connect (Barcrest)
+m4clbcnta	//
+m4clbcntb	//
+m4clbcntc	//
+m4clbcntd	//
 m4clbdbl	// Club Double (Barcrest)
 m4clbshf	// Club Shuffle (Barcrest)
 m4clbtro	// Club Tropicana (Barcrest)
+m4clbtroa	//
+m4clbtrob	//
+m4clbtroc	//
+m4clbtrod	//
 m4clbveg	// Club Vegas (Barcrest)
+m4clbvega	//
+m4clbvegb	//
+m4clbvegc	//
 m4clbx		// Club X (Barcrest)
+m4clbxa		//
+m4clbxb		//
 m4copcsh	// Coppa Cash (Barcrest)
 m4coscas	// Cosmic Casino (Barcrest)
+m4coscas__a	//
+m4coscas__b	//
+m4coscas__c	//
+m4coscas__d	//
+m4coscas__e	//
+m4coscas__f	//
+m4coscas__g	//
+m4coscas__h	//
+m4coscas__i	//
+m4coscas__j	//
+m4coscas__k	//
+m4coscas__l	//
+m4coscas__m	//
+m4coscas__n	//
+m4coscas__o	//
+m4coscas__p	//
+m4coscas__q	//
+m4coscas__r	//
+m4coscas__s	//
+m4coscas__t	//
+m4coscas__u	//
+m4coscas__v	//
 m4crkpot	// Crackpot Club (Barcrest)
+m4crkpota	//
+m4crkpotb	//
 m4crzjk		// Crazy Jokers (Barcrest)
 m4crzjwl	// Crown Jewels (Barcrest)
+m4crzjwla	//
+m4crzjwlb	//
+m4crzjwlc	//
+m4crzjwld	//
+m4crzjwle	//
+m4crzjwlf	//
+m4crzjwlg	//
+m4crzjwlh	//
 m4crjwl		// Crown Jewels Club (Barcrest)
+m4crjwla	//
+m4crjwlb	//
+m4crjwlc	//
 m4crjwl2	// Crown Jewels Mk II Club (Barcrest)
+m4crjwl2a	//
+m4crjwl2b	//
 m4crdome	// Crystal Dome (Barcrest)
+m4crdome__a	//
+m4crdome__b	//
+m4crdome__c	//
+m4crdome__d	//
+m4crdome__e	//
+m4crdome__f	//
+m4crdome__g	//
+m4crdome__h	//
+m4crdome__i	//
+m4crdome__j	//
+m4crdome__k	//
+m4crdome__l	//
+m4crdome__m	//
+m4crdome__n	//
 m4crmaze	// Crystal Maze (Barcrest)
+m4crmaze__c	//
+m4crmaze__d	//
+m4crmaze__e	//
+m4crmaze__f	//
+m4crmaze__g	//
+m4crmaze__h	//
+m4crmaze__i	//
+m4crmaze__j	//
+m4crmaze__k	//
+m4crmaze__l	//
+m4crmaze__m	//
+m4crmaze__n	//
+m4crmaze__o	//
+m4crmaze__p	//
+m4crmaze__q	//
+m4crmaze__r	//
+m4crmaze__s	//
 m4denmen	// Dennis The Menace (Barcrest)
+m4denmen_h2	//
+m4denmendnc	//
+m4denmendnd	//
+m4denmendnk	//
+m4denmendnb	//
+m4denmendny	//
+m4denmend5ad	//
+m4denmend5b	//
+m4denmend5bd	//
+m4denmend5d	//
+m4denmend5kd	//
+m4denmend5yd	//
+m4denmend5k	//
+m4denmend5	//
+m4denmend5y	//
+m4denmend8c	//
+m4denmend8d	//
+m4denmend8yd	//
+m4denmend8k	//
+m4denmend8	//
+m4denmend8y	//
+m4denmendtad	//
+m4denmendtb	//
+m4denmendtbd	//
+m4denmendtd	//
+m4denmendtkd	//
+m4denmendtyd	//
+m4denmendtk	//
+m4denmendt	//
+m4denmendty	//
+m4denmen_h1	//
+m4denmen_h3	//
 m4dbl9		// Double 9's (Barcrest)
-m4dbldmn	// Double Diamond Club (Barcrest)
+m4dbl9a		//
+m4dbldm		// Double Diamond Club (Barcrest)
+m4dbldm__a	//
+m4dbldm__b	//
+m4dbldm__c	//
 m4dblup		// Double Up (Barcrest)
+m4draca		//
+m4dracb		//
 m4drac		// Dracula (Barcrest - Nova)
-m4dtyfre	// Duty Free (Barcrest)
+m4dtyfre		// Duty Free (Barcrest)
+m4dtyfref5ad		//
+m4dtyfref5b
+m4dtyfref5bd
+m4dtyfref5d
+m4dtyfref5kd
+m4dtyfref5rd
+m4dtyfref5yd
+m4dtyfref5k
+m4dtyfref5r
+m4dtyfref5
+m4dtyfref5y
+m4dtyfref8c
+m4dtyfref8d
+m4dtyfref8yd
+m4dtyfref8k
+m4dtyfref8
+m4dtyfref8y
+m4dtyfre_h1
+m4dtyfreftad
+m4dtyfreftb
+m4dtyfreftbd
+m4dtyfreftd
+m4dtyfreftkd
+m4dtyfreftyd
+m4dtyfreftk
+m4dtyfreft
+m4dtyfrefty
+m4dtyfreutb
+m4dtyfreutc
+m4dtyfre_h2
+m4dtyfrexdad
+m4dtyfrexdb
+m4dtyfrexdbd
+m4dtyfrexdc
+m4dtyfrexdd
+m4dtyfrexdkd
+m4dtyfrexdrd
+m4dtyfrexdyd
+m4dtyfrexdk
+m4dtyfrexdr
+m4dtyfrexd
+m4dtyfrexdy
+m4dtyfrexd_a
+m4dtyfrexfad
+m4dtyfrexfb
+m4dtyfrexfbd
+m4dtyfrexfc
+m4dtyfrexfd
+m4dtyfrexfkd
+m4dtyfrexfrd
+m4dtyfrexfyd
+m4dtyfrexfk
+m4dtyfrexfr
+m4dtyfrexf
+m4dtyfrexfy
+m4dtyfrebwb
+m4dtyfrebwb_a
+m4dtyfrebwb_b
+m4dtyfrebwb_c
+m4dtyfrebwb_d
+m4dtyfrebwb_e
+m4dtyfrebwb_f
+m4dtyfrebwb_g
+m4dtyfrebwb_h
 m4eighth	// Eighth Wonder (Barcrest)
+m4eightha	//
+m4eighthb	//
+m4eighthc	//
+m4eighthd	//
+m4eighthe	//
+m4eighthf	//
+m4eighthg	//
 m4elite		// Elite (Barcrest)
 m4eaw		// Everyone's A Winner (Barcrest)
+m4eaw__a	//
+m4eaw__b	//
+m4eaw__c	//
+m4eaw__d	//
+m4eaw__e	//
+m4eaw__f	//
+m4eaw__g	//
+m4eaw__h	//
+m4eaw__i	//
+m4eaw__j	//
+m4eaw__k	//
+m4eaw__l	//
+m4eaw__m	//
+m4eaw__n	//
+m4eaw__o	//
+m4eaw__p	//
+m4eaw__q	//
+m4eaw__r	//
+m4eaw__s	//
+m4eaw__t	//
+m4eaw__u	//
+m4eaw__v	//
+m4eaw__w	//
+m4eaw__x	//
+m4eaw__y	//
+m4eaw__z	//
+m4eaw__0	//
+m4eaw__1	//
+m4eaw__2	//
+m4eaw__3	//
+m4eaw__4	//
+m4eaw__5	//
+m4eaw__6	//
+m4eaw__7	//
+m4eaw__8	//
+m4eaw__9	//
+m4eaw__aa	//
+m4eaw__ab	//
+m4eaw__ac	//
+m4eaw__ad	//
+m4eaw__ae	//
+m4eaw__af	//
+m4eaw__ag	//
+m4eaw__ah	//
+m4eaw__ai	//
+m4eaw__aj	//
+m4eaw__ak	//
+m4eaw__al	//
+m4eaw__am	//
+m4eaw__an	//
+m4eaw__ao	//
+m4eaw__ap	//
+m4eaw__aq	//
+m4eaw__ar	//
+m4eaw__as	//
+m4eaw__at	//
+m4eaw__au	//
+m4eaw__av	//
+m4eaw__aw	//
+m4eaw__ax	//
+m4eaw__ay	//
+m4eaw__az	//
+m4eaw__a0	//
+m4eaw__a1	//
+m4eaw__a2	//
+m4eaw__a3	//
+m4eaw__a4	//
+m4eaw__a5	//
+m4eaw__a6	//
+m4eaw__a7	//
+m4eaw__a8	//
+m4eaw__a9	//
+m4eaw__ba	//
+m4eaw__bb	//
+m4eaw__bc	//
+m4eaw__bd	//
+m4eaw__be	//
+m4eaw__bf	//
+m4eaw__bg	//
+m4eaw__bh	//
+m4eaw__bi	//
+m4eaw__bj	//
+m4eaw__bk	//
+m4eaw__bl	//
+m4eaw__bm	//
+m4eaw__bn	//
+m4eaw__bo	//
+m4eaw__bp	//
+m4eaw__bq	//
+m4eaw__br	//
+m4eaw__bs	//
+m4eaw__bt	//
+m4eaw__bu	//
+m4eaw__bv	//
+m4eaw__bw	//
+m4eaw__bx	//
+m4eaw__bz	//
 m4exprs		// Express (Barcrest)
 m4exgam		// Extra Game (Fairplay - Barcrest)
 m4fastfw	// Fast Forward (Barcrest - Bwb)
+m4fastfw__a	//
+m4fastfw__b	//
+m4fastfw__c	//
+m4fastfw__d	//
+m4fastfw__e	//
+m4fastfw__f	//
 m4class		// First Class (Barcrest)
+m4classa	//
 m4flash		// Flash Cash (Barcrest)
 m4fortcb	// Fortune Club (Barcrest)
-m4frtlt		// Fruit & Loot (Barcrest)
+m4fortcba	//
+m4fortcbb	//
 m4frtfl		// Fruit Full (Barcrest)
+m4frtfla	//
 m4frtflc	// Fruit Full Club (Barcrest)
 m4frtgm		// Fruit Game (Barcrest)
 m4frtlnk	// Fruit Link Club (Barcrest)
+m4frtlnka	//
 m4frtprs	// Fruit Preserve (Barcrest)
+m4frtprsa	//
 m4gambal	// Gamball (Barcrest)
+m4gambal__a	//
+m4gambal__b	//
+m4gambal__c	//
 m4gb006		// Games Bond 006 (Barcrest)
+m4gb006__a	//
+m4gb006__b	//
+m4gb006__c	//
 m4gbust		// Ghost Buster (Barcrest)
+m4gbust__a	//
+m4gbust__b	//
+m4gbust__c	//
+m4gbust__d	//
+m4gbust__e	//
+m4gbust__f	//
+m4gbust__g	//
+m4gbust__h	//
+m4gbust__i	//
+m4gbust__j	//
+m4gbust__k	//
+m4gbust__l	//
+m4gbust__m	//
+m4gbust__n	//
+m4gbust__o	//
+m4gbust__p	//
+m4gbust__q	//
+m4gbust__r	//
+m4gbust__s	//
+m4gbust__t	//
+m4gbust__u	//
+m4gbust__v	//
+m4gbust__w	//
 m4giant		// Giant (Barcrest)
 m4gclue		// Give Us A Clue (Barcrest)
+m4gclue__a	//
+m4gclue__b	//
+m4gclue__c	//
+m4gclue__d	//
+m4gclue__e	//
+m4gclue__f	//
+m4gclue__g	//
+m4gclue__h	//
+m4gclue__i	//
+m4gclue__j	//
+m4gclue__k	//
+m4gclue__l	//
+m4gclue__m	//
+m4gclue__n	//
+m4gclue__o	//
+m4gclue__p	//
+m4gclue__q	//
+m4gclue__r	//
+m4gclue__s	//
+m4gclue__t	//
+m4gclue__u	//
+m4gclue__v	//
+m4gclue__w	//
 m4gldstr	// Gold Strike (Barcrest)
 m4gldgat	// Golden Gate (Barcrest)
 m4gldjok	// Golden Joker (Barcrest)
-m4gldnud	// Golden Nudger (Barcrest)
 m4grbbnk	// Grab The Bank (Barcrest)
+m4grbbnka	//
+m4grbbnkb	//
 m4graff		// Graffiti (Barcrest)
+m4graff__a	//
+m4graff__b	//
 m4graffd	//
 m4grands	// Grandstand Club (Barcrest)
+m4grandsa	//
 m4gnsmk		// Gun Smoke (Barcrest)
 m4hpyjok	// Happy Joker (Barcrest)
 m4hijinx	// Hi Jinx (Barcrest)
+m4hijinx__a	//
+m4hijinx__b	//
+m4hijinx__c	//
+m4hijinx__d	//
+m4hijinx__e	//
+m4hijinx__f	//
+m4hijinx__g	//
+m4hijinx__h	//
+m4hijinx__i	//
+m4hijinx__j	//
+m4hijinx__k	//
+m4hijinx__l	//
+m4hijinx__m	//
+m4hijinx__n	//
+m4hijinx__o	//
+m4hijinx__p	//
+m4hijinx__q	//
+m4hijinx__r	//
+m4hijinx__s	//
+m4hijinx__t	//
+m4hijinx__u	//
+m4hijinx__v	//
+m4hijinx__w	//
+m4hijinx__x	//
+m4hijinx__y	//
+m4hijinx__z	//
+m4hijinx__0	//
+m4hijinx__1	//
+m4hijinx__2	//
+m4hijinx__3	//
+m4hijinx__4	//
+m4hijinx__5	//
+m4hijinx__6	//
+m4hijinx__7	//
+m4hijinx__8	//
+m4hijinx__9	//
+m4hijinx__aa	//
+m4hijinx__ab	//
 m4hirise	// High Rise (Barcrest)
+m4hirisea	//
+m4hiriseb	//
+m4hirisec	//
+m4hirised	//
+m4hirisee	//
 m4hiroll	// High Roller (Barcrest)
 m4hittop	// Hit The Top (Barcrest)
+m4hittop__a	//
+m4hittop__b	//
+m4hittop__c	//
+m4hittop__d	//
+m4hittop__e	//
+m4hittop__f	//
+m4hittop__g	//
+m4hittop__h	//
+m4hittop__i	//
+m4hittop__j	//
+m4hittop__k	//
+m4hittop__l	//
+m4hittop__m	//
+m4hittop__n	//
+m4hittop__o	//
+m4hittop__p	//
+m4hittop__q	//
+m4hittop__r	//
+m4hittop__s	//
+m4hittop__t	//
+m4hittop__u	//
+m4hittop__v	//
+m4hittop__w	//
+m4hittop__x	//
+m4hittop__y	//
+m4hittop__z	//
+m4hittop__0	//
+m4hittop__1	//
+m4hittop__2	//
+m4hittop__3	//
+m4hittop__4	//
+m4hittop__5	//
+m4hittop__6	//
+m4hittop__7	//
+m4hittop__8	//
+m4hittop__9	//
+m4hittop__aa	//
+m4hittop__ab	//
+m4hittop__ac	//
+m4hittop__ad	//
+m4hittop__ae	//
+m4hittop__af	//
+m4hittop__ag	//
+m4hittop__ah	//
+m4hittop__ai	//
+m4hittop__aj	//
+m4hittop__ak	//
+m4hittop__al	//
+m4hittop__am	//
+m4hittop__an	//
+m4hittop__ao	//
+m4hittop__ap	//
+m4hittop__aq	//
+m4hittop__ar	//
+m4hittop__as	//
+m4hittop__at	//
+m4hittop__au	//
+m4hittop__av	//
+m4hittop__aw	//
+m4hittop__ax	//
+m4hittp2	//
+m4hittp2a	//
 m4thehit	// The Hit (Barcrest)
 m4holdon	// Hold On (Barcrest)
 m4holdtm	// Hold Timer (Barcrest)
 m4hotrod	// Hot Rod (Barcrest)
+m4hotrod__a	//
+m4hotrod__b	//
+m4hotrod__c	//
+m4hotrod__d	//
+m4hotrod__e	//
+m4hotrod__f	//
+m4hotrod__g	//
+m4hotrod__h	//
+m4hotrod__i	//
+m4hotrod__j	//
+m4hotrod__k	//
+m4hotrod__l	//
+m4hotrod__m	//
+m4hotrod__n	//
+m4hotrod__o	//
+m4hotrod__p	//
+m4hotrod__q	//
+m4hotrod__r	//
+m4hotrod__s	//
+m4hotrod__t	//
+m4hotrod__u	//
+m4hotrod__v	//
 m4hypvip	// Hyper Viper (Barcrest)
+m4hypvip__a	//
+m4hypvip__b	//
+m4hypvip__c	//
+m4hypvip__d	//
+m4hypvip__e	//
+m4hypvip__f	//
+m4hypvip__g	//
+m4hypvip__h	//
+m4hypvip__i	//
+m4hypvip__j	//
+m4hypvip__k	//
+m4hypvip__l	//
+m4hypvip__m	//
+m4hypvip__n	//
+m4hypvip__o	//
+m4hypvip__p	//
+m4hypvip__q	//
+m4hypvip__r	//
+m4hypvip__s	//
+m4hypvip__t	//
+m4hypvip__u	//
+m4hypvip__v	//
 m4hypclb	// Hyper Viper Club (Barcrest)
+m4hypclb__a	//
+m4hypclb__b	//
+m4hypclb__c	//
 m4intcep	// Interceptor (Barcrest)
+m4intcepa	//
+m4intcepb	//
 m4jpgem		// Jackpot Gems (Barcrest)
+m4jpgem__a	//
+m4jpgem__b	//
+m4jpgem__c	//
+m4jpgem__d	//
+m4jpgem__e	//
+m4jpgem__f	//
+m4jpgem__g	//
+m4jpgem__h	//
+m4jpgem__i	//
+m4jpgem__j	//
+m4jpgem__k	//
+m4jpgem__l	//
+m4jpgem__m	//
+m4jpgem__n	//
+m4jpgem__o	//
+m4jpgem__p	//
+m4jpgem__q	//
+m4jpgem__r	//
+m4jpgem__s	//
+m4jpgem__t	//
+m4jpgem__u	//
+m4jpgem__v	//
+m4jpgem__w	//
+m4jpgem__x	//
+m4jpgem__y	//
+m4jpgem__z	//
+m4jpgem__0	//
+m4jpgem__1	//
+m4jpgem__2	//
+m4jpgem__3	//
+m4jpgem__4	//
+m4jpgem__5	//
+m4jpgem__6	//
+m4jpgem__7	//
+m4jpgem__8	//
+m4jpgem__9	//
+m4jpgem__aa	//
+m4jpgem__ab	//
+m4jpgem__ac	//
+m4jpgem__ad	//
+m4jpgem__ae	//
+m4jpgem__af	//
+m4jpgem__ag	//
+m4jpgem__ah	//
+m4jpgem__ai	//
+m4jpgem__aj	//
+m4jpgem__ak	//
+m4jpgem__al	//
+m4jpgem__am	//
+m4jpgem__an	//
+m4jpgem__ao	//
+m4jpgem__ap	//
+m4jpgem__aq	//
+m4jpgem__ar	//
+m4jpgem__as	//
+m4jpgem__at	//
+m4jpgem__au	//
+m4jpgem__av	//
+m4jpgem__aw	//
+m4jpgem__ax	//
+m4jpgem__ay	//
+m4jpgem__az	//
+m4jpgem__a0	//
+m4jpgem__a1	//
+m4jpgem__a2	//
+m4jpgem__a3	//
+m4jpgem__a4	//
+m4jpgem__a5	//
+m4jpgem__a6	//
+m4jpgem__a7	//
+m4jpgem__a8	//
+m4jpgem__a9	//
+m4jpgem__ba	//
+m4jpgem__bb	//
+m4jpgem__bc	//
+m4jpgem__bd	//
+m4jpgem__be	//
+m4jpgem__bf	//
+m4jpgem__bg	//
+m4jpgem__bh	//
+m4jpgem__bi	//
+m4jpgem__bj	//
+m4jpgem__bk	//
+m4jpgem__bl	//
+m4jpgem__bm	//
+m4jpgem__bn	//
+m4jpgem__bo	//
+m4jpgem__bp	//
 m4jpgemc	// Jackpot Gems Classic (Barcrest)
+m4jpgemc__a	//
+m4jpgemc__b	//
+m4jpgemc__c	//
+m4jpgemc__d	//
+m4jpgemc__e	//
+m4jpgemc__f	//
+m4jpgemc__g	//
+m4jpgemc__h	//
+m4jpgemc__i	//
+m4jpgemc__j	//
+m4jpgemc__k	//
+m4jpgemc__l	//
+m4jpgemc__m	//
+m4jpgemc__n	//
+m4jpgemc__o	//
+m4jpgemc__p	//
+m4jpgemc__q	//
+m4jpgemc__r	//
+m4jpgemc__s	//
+m4jpgemc__t	//
+m4jpgemc__u	//
+m4jpgemc__v	//
+m4jpgemc__w	//
 m4jpjmp		// Jackpot Jump (Barcrest)
+m4jpjmpa	//
 m4jwlcwn	// Jewel In the Crown (Barcrest)
+m4jwlcwn__a	//
+m4jwlcwn__b	//
+m4jwlcwn__c	//
+m4jwlcwn__d	//
+m4jwlcwn__e	//
+m4jwlcwn__f	//
+m4jwlcwn__g	//
+m4jwlcwn__h	//
+m4jwlcwn__i	//
+m4jwlcwn__j	//
+m4jwlcwn__k	//
+m4jwlcwn__l	//
+m4jwlcwn__m	//
+m4jwlcwn__n	//
+m4jwlcwn__o	//
+m4jwlcwn__p	//
+m4jwlcwn__q	//
+m4jwlcwn__r	//
+m4jwlcwn__s	//
+m4jwlcwn__t	//
+m4jwlcwn__u	//
+m4jwlcwn__v	//
+m4jwlcwn__w	//
+m4jwlcwn__x	//
+m4jwlcwn__y	//
+m4jwlcwn__z	//
+m4jwlcwn__0	//
+m4jwlcwn__1	//
+m4jwlcwn__2	//
+m4jwlcwn__3	//
+m4jwlcwn__4	//
+m4jwlcwn__5	//
+m4jwlcwn__6	//
 m4jok300	// Jokers 300 (Barcrest)
 m4jokmil	// Jokers Millennium (Barcrest)
 m4jolgem	// Jolly Gems (Barcrest)
+m4jolgem__a		//
+m4jolgem__b		//
+m4jolgem__c		//
+m4jolgem__d		//
+m4jolgem__e		//
+m4jolgem__f		//
+m4jolgem__g		//
+m4jolgem__h		//
+m4jolgem__i		//
+m4jolgem__j		//
+m4jolgem__k		//
+m4jolgem__l		//
+m4jolgem__m		//
+m4jolgem__n		//
+m4jolgem__o		//
+m4jolgem__p		//
+m4jolgem__q		//
+m4jolgem__r		//
+m4jolgem__s		//
+m4jolgem__t		//
+m4jolgem__u		//
+m4jolgem__v		//
+m4jolgem__w		//
+m4jolgem__x		//
+m4jolgem__y		//
+m4jolgem__z		//
+m4jolgem__0		//
+m4jolgem__1		//
+m4jolgem__2		//
+m4jolgem__3		//
+m4jolgem__4		//
+m4jolgem__5		//
+m4jolgem__6		//
+m4jolgem__7		//
+m4jolgem__8		//
+m4jolgem__9		//
+m4jolgem__aa	//
+m4jolgem__ab	//
+m4jolgem__ac	//
+m4jolgem__ad	//
+m4jolgem__ae	//
+m4jolgem__af	//
+m4jolgem__ag	//
+m4jolgem__ah	//
+m4jolgem__ai	//
+m4jolgem__aj	//
+m4jolgem__ak	//
+m4jolgem__al	//
+m4jolgem__am	//
+m4jolgem__an	//
+m4jolgem__ao	//
+m4jolgem__ap	//
 m4joljokd	//
 m4joljokh	//
 m4joljok	// Jolly Joker (Barcrest)
 m4joltav	// Jolly Taverner (Barcrest)
-m4lastrp	// Las Vegas Strip (Barcrest)
+m4joltava	//
+m4joltavb	//
 m4goodtm	// Let The Good Times Roll (Barcrest)
+m4goodtm__a		//
+m4goodtm__b		//
+m4goodtm__c		//
+m4goodtm__d		//
+m4goodtm__e		//
+m4goodtm__f		//
+m4goodtm__g		//
+m4goodtm__h		//
+m4goodtm__i		//
+m4goodtm__j		//
+m4goodtm__k		//
+m4goodtm__l		//
+m4goodtm__m		//
+m4goodtm__n		//
+m4goodtm__o		//
+m4goodtm__p		//
+m4goodtm__q		//
+m4goodtm__r		//
+m4goodtm__s		//
+m4goodtm__t		//
+m4goodtm__u		//
+m4goodtm__v		//
+m4goodtm__w		//
+m4goodtm__x		//
+m4goodtm__y		//
+m4goodtm__z		//
+m4goodtm__0		//
+m4goodtm__1		//
+m4goodtm__2		//
+m4goodtm__3		//
+m4goodtm__4		//
+m4goodtm__5		//
+m4goodtm__6		//
+m4goodtm__7		//
+m4goodtm__8		//
+m4goodtm__9		//
+m4goodtm__aa	//
+m4goodtm__ab	//
+m4goodtm__ac	//
+m4goodtm__ad	//
+m4goodtm__ae	//
+m4goodtm__af	//
+m4goodtm__ag	//
+m4goodtm__ah	//
+m4goodtm__ai	//
+m4goodtm__aj	//
+m4goodtm__ak	//
+m4goodtm__al	//
+m4goodtm__am	//
+m4goodtm__an	//
+m4goodtm__ao	//
+m4goodtm__ap	//
+m4goodtm__aq	//
+m4goodtm__ar	//
+m4goodtm__as	//
+m4goodtm__at	//
+m4goodtm__au	//
+m4goodtm__av	//
+m4goodtm__aw	//
+m4goodtm__ax	//
+m4goodtm__ay	//
+m4goodtm__az	//
+m4goodtm__a0	//
+m4goodtm__a1	//
+m4goodtm__a2	//
+m4goodtm__a3	//
+m4goodtm__a4	//
+m4goodtm__a5	//
+m4goodtm__a6	//
 m4libty		// Liberty (Barcrest)
 m4lineup	// Line Up (Bwb - Barcrest)
+m4lineupa	//
 m4loadmn	// Loads A Money (Barcrest)
+m4loadmna	//
+m4loadmnb	//
 m4luck7		// Lucky 7 (Barcrest)
 m4luckdv	// Lucky Devil (Barcrest) [Czech]
 m4luckdvd	//
 m4lucklv	// Lucky Las Vegas (Barcrest)
+m4lucklv__a		//
+m4lucklv__b		//
+m4lucklv__c		//
+m4lucklv__d		//
+m4lucklv__e		//
+m4lucklv__f		//
+m4lucklv__g		//
+m4lucklv__h		//
+m4lucklv__i		//
+m4lucklv__j		//
+m4lucklv__k		//
+m4lucklv__l		//
+m4lucklv__m		//
+m4lucklv__n		//
+m4lucklv__o		//
+m4lucklv__p		//
+m4lucklv__q		//
+m4lucklv__r		//
+m4lucklv__s		//
+m4lucklv__t		//
+m4lucklv__u		//
+m4lucklv__v		//
+m4lucklv__w		//
+m4lucklv__x		//
+m4lucklv__y		//
+m4lucklv__z		//
+m4lucklv__0		//
+m4lucklv__1		//
+m4lucklv__2		//
+m4lucklv__3		//
+m4lucklv__4		//
+m4lucklv__5		//
+m4lucklv__6		//
+m4lucklv__7		//
+m4lucklv__8		//
+m4lucklv__9		//
+m4lucklv__aa	//
+m4lucklv__ab	//
+m4lucklv__ac	//
+m4lucklv__ad	//
+m4lucklv__ae	//
+m4lucklv__af	//
+m4lucklv__ag	//
+m4lucklv__ah	//
+m4lucklv__ai	//
 m4luckst	// Lucky Strike (Barcrest)
+m4luckst__a		//
+m4luckst__b		//
+m4luckst__c		//
+m4luckst__d		//
+m4luckst__e		//
+m4luckst__f		//
+m4luckst__g		//
+m4luckst__h		//
+m4luckst__i		//
+m4luckst__j		//
+m4luckst__k		//
+m4luckst__l		//
+m4luckst__m		//
+m4luckst__n		//
+m4luckst__p		//
+m4luckst__q		//
+m4luckst__r		//
+m4luckst__s		//
+m4luckst__t		//
+m4luckst__u		//
+m4luckst__v		//
+m4luckst__w		//
+m4luckst__x		//
+m4luckst__y		//
+m4luckst__z		//
+m4luckst__0		//
+m4luckst__1		//
+m4luckst__2		//
+m4luckst__3		//
+m4luckst__4		//
+m4luckst__5		//
+m4luckst__6		//
+m4luckst__7		//
+m4luckst__8		//
+m4luckst__9		//
+m4luckst__aa	//
+m4luckst__ab	//
+m4luckst__ac	//
+m4luckst__ad	//
+m4luckst__ae	//
+m4luckst__af	//
+m4luckst__ag	//
+m4luckst__ah	//
+m4luckst__ai	//
+m4luckst__aj	//
+m4luckst__ak	//
+m4luckst__al	//
+m4luckst__am	//
+m4luckst__an	//
+m4luckst__ao	//
+m4luckst__ap	//
+m4luckst__aq	//
+m4luckst__ar	//
+m4luckst__as	//
+m4luckst__at	//
+m4luckst__au	//
+m4luckst__av	//
+m4luckst__aw	//
 m4lucksc	// Lucky Strike Club (Barcrest) [MPU 4]
+m4lucksc__a	//
+m4lucksc__b	//
+m4lucksc__c	//
+m4lucksc__d	//
+m4lucksc__e	//
+m4lucksc__f	//
+m4lucksc__g	//
+m4lucksc__h	//
+m4lucksc__i	//
+m4lucksc__j	//
+m4lucksc__k	//
+m4lucksc__l	//
 m4luckwb	// Lucky Wild Boar (Barcrest)
+m4luckwba	//
+m4luckwbb	//
+m4luckwbc	//
+m4luckwbd	//
+m4luckwbe	//
+m4luckwbf	//
 m4luxor		// Luxor (Barcrest)
+m4luxor__a	//
+m4luxor__b	//
+m4luxor__c	//
+m4luxor__d	//
+m4luxor__e	//
+m4luxor__f	//
+m4luxor__g	//
+m4luxor__h	//
+m4luxor__i	//
+m4luxor__j	//
+m4luxor__k	//
+m4luxor__l	//
+m4luxor__m	//
+m4luxor__n	//
+m4luxor__o	//
+m4luxor__p	//
+m4luxor__q	//
+m4luxor__r	//
+m4luxor__s	//
+m4luxor__t	//
+m4luxor__u	//
+m4luxor__v	//
+m4luxor__w	//
+m4luxor__x	//
+m4luxor__y	//
+m4luxor__z	//
 m4madhse	// Mad House (Barcrest)
+m4madhse__a	//
+m4madhse__b	//
+m4madhse__c	//
+m4madhse__d	//
+m4madhse__e	//
+m4madhse__f	//
+m4madhse__g	//
+m4madhse__h	//
+m4madhse__i	//
+m4madhse__j	//
+m4madhse__k	//
+m4madhse__l	//
+m4madhse__m	//
+m4madhse__n	//
+m4madhse__o	//
+m4madhse__p	//
+m4madhse__q	//
+m4madhse__r	//
+m4madhse__s	//
+m4madhse__t	//
+m4madhse__u	//
+m4madhse__v	//
+m4madhse__w	//
+m4madhse__x	//
+m4madhse__y	//
+m4madhse__z	//
+m4madhse__0	//
 m4magdrg	// Magic Dragon (Barcrest)
+m4magtbo	// Magic Turbo
 m4maglin	// Magic Liner (Barcrest)
 m4magrep	// Magic Replay DeLuxe (Barcrest)
-m4magtbo	// Magic Turbo  (Barcrest)
 m4mag7s		// Magnificent 7's (Barcrest)
+m4mag7s__a	//
+m4mag7s__b	//
+m4mag7s__c	//
+m4mag7s__d	//
+m4mag7s__e	//
+m4mag7s__f	//
+m4mag7s__g	//
+m4mag7s__h	//
+m4mag7s__i	//
+m4mag7s__j	//
+m4mag7s__k	//
+m4mag7s__l	//
+m4mag7s__m	//
+m4mag7s__n	//
+m4mag7s__o	//
+m4mag7s__p	//
+m4mag7s__q	//
+m4mag7s__r	//
+m4mag7s__s	//
+m4mag7s__t	//
+m4mag7s__u	//
+m4mag7s__v	//
+m4mag7s__w	//
+m4mag7s__x	//
+m4mag7s__y	//
+m4mag7s__z	//
+m4mag7s__0	//
+m4mag7s__1	//
+m4mag7s__2	//
+m4mag7s__3	//
+m4mag7s__4	//
+m4mag7s__5	//
+m4mag7s__6	//
+m4mag7s__7	//
+m4mag7s__8	//
+m4mag7s__9	//
+m4mag7s__aa	//
+m4mag7s__ab	//
+m4mag7s__ac	//
+m4mag7s__ad	//
+m4mag7s__ae	//
+m4mag7s__af	//
+m4mag7s__ag	//
+m4mag7s__ah	//
+m4mag7s__ai	//
+m4mag7s__aj	//
+m4mag7s__ak	//
+m4mag7s__al	//
+m4mag7s__am	//
+m4mag7s__an	//
+m4mag7s__ao	//
+m4mag7s__ap	//
+m4mag7s__aq	//
+m4mag7s__ar	//
+m4mag7s__as	//
+m4mag7s__at	//
+m4mag7s__au	//
+m4mag7s__av	//
+m4mag7s__aw	//
+m4mag7s__ax	//
 m4makmnt	// Make A Mint (Barcrest)
+m4makmnt__a		//
+m4makmnt__b		//
+m4makmnt__c		//
+m4makmnt__d		//
+m4makmnt__e		//
+m4makmnt__f		//
+m4makmnt__g		//
+m4makmnt__h		//
+m4makmnt__i		//
+m4makmnt__j		//
+m4makmnt__k		//
+m4makmnt__l		//
+m4makmnt__m		//
+m4makmnt__n		//
+m4makmnt__o		//
+m4makmnt__p		//
+m4makmnt__q		//
+m4makmnt__r		//
+m4makmnt__s		//
+m4makmnt__t		//
+m4makmnt__u		//
+m4makmnt__v		//
+m4makmnt__w		//
+m4makmnt__x		//
+m4makmnt__y		//
+m4makmnt__z		//
+m4makmnt__0		//
+m4makmnt__1		//
+m4makmnt__2		//
+m4makmnt__3		//
+m4makmnt__4		//
+m4makmnt__5		//
+m4makmnt__6		//
+m4makmnt__7		//
+m4makmnt__8		//
+m4makmnt__9		//
+m4makmnt__aa	//
+m4makmnt__ab	//
+m4makmnt__ac	//
+m4makmnt__ad	//
+m4makmnt__ae	//
+m4makmnt__af	//
+m4makmnt__ag	//
+m4makmnt__ah	//
+m4makmnt__ai	//
+m4makmnt__aj	//
+m4makmnt__ak	//
+m4makmnt__al	//
+m4makmnt__am	//
+m4makmnt__an	//
+m4makmnt__ao	//
+m4makmnt__ap	//
+m4makmnt__aq	//
+m4makmnt__ar	//
+m4makmnt__as	//
 m4megbks	// Mega Bucks (Barcrest)
+m4megbksa	//
+m4megbksb	//
+m4megbksc	//
 m4meglnk	// Megalink (Barcrest)
 m4milclb	// Millionaire's Club (Barcrest)
+m4milclba	//
+m4milclbb	//
+m4milclbc	//
+m4milclbd	//
 m4mirage	// Mirage (Barcrest)
 m4moneym	// Money Maker (Barcrest)
 m4monte		// Monte Carlo (Barcrest)
+m4monte__a	//
+m4monte__b	//
+m4monte__c	//
+m4monte__d	//
+m4monte__e	//
+m4monte__f	//
+m4monte__g	//
+m4monte__h	//
+m4monte__i	//
+m4monte__j	//
+m4monte__k	//
+m4monte__l	//
+m4monte__m	//
 m4multcl	// Multiplay Club (Barcrest)
 m4multwy	// Multiway (Barcrest)
 m4nhtt		// New Hit the Top (Barcrest)
+m4nhtt__a	//
+m4nhtt__b	//
+m4nhtt__c	//
+m4nhtt__d	//
+m4nhtt__e	//
+m4nhtt__f	//
+m4nhtt__g	//
+m4nhtt__h	//
+m4nhtt__i	//
+m4nhtt__j	//
 m4nick		// Nickelodeon (Barcrest)
+m4nicka		//
+m4nickb		//
+m4nickc		//
+m4nickd		//
+m4nicke		//
 m4nifty		// Nifty Fifty (Barcrest)
+m4niftya	//
+m4niftyb	//
 m4nspot		// Night Spot Club (Barcrest)
+m4nspota	//
+m4nspotb	//
 m4nile		// Nile Jewels (Barcrest)
-m4nudgew	// Nudge A Win (Barcrest)
 m4nudbnk	// Nudge Banker (Barcrest)
+m4nudbnk__a	//
+m4nudbnk__b	//
+m4nudbnk__c	//
+m4nudbnk__d	//
 m4nnww		// Nudge Nudge Wink Wink (Barcrest)
+m4nnww__a	//
+m4nnww__b	//
+m4nnww__c	//
+m4nnww__d	//
+m4nnww__e	//
+m4nnww__f	//
+m4nnww__g	//
+m4nnww__h	//
+m4nnww__i	//
+m4nnww__j	//
+m4nnww__k	//
+m4nnww__l	//
+m4nnww__m	//
+m4nnww__n	//
+m4nnww__o	//
+m4nnww__p	//
+m4nnww__q	//
+m4nnww__r	//
+m4nnww__s	//
+m4nnww__t	//
+m4nnww__u	//
+m4nnww__v	//
+m4nnww__w	//
+m4nnww__x	//
+m4nnww__y	//
+m4nnww__z	//
+m4nnww__0	//
+m4nnww__1	//
+m4nnww__2	//
+m4nnww__3	//
+m4nnww__4	//
+m4nnww__5	//
+m4nnww__6	//
+m4nnww__7	//
+m4nnww__8	//
+m4nnww__9	//
+m4nnww__aa	//
+m4nnww__ab	//
+m4nnww__ac	//
+m4nnww__ad	//
+m4nnww__ae	//
+m4nnww__af	//
+m4nnww__ag	//
+m4nnww__ah	//
+m4nnww__ai	//
+m4nnww__aj	//
+m4nnww__ak	//
+m4nnww__al	//
+m4nnww__am	//
+m4nnww__an	//
+m4nnww__ao	//
+m4nnww__ap	//
+m4nnww__aq	//
+m4nnww__ar	//
+m4nnww__as	//
+m4nnww__at	//
+m4nnww__au	//
+m4nnww__av	//
+m4nnww__aw	//
+m4nnww__ax	//
+m4nnww__ay	//
+m4nnww__az	//
 m4nnwwc		// Nudge Nudge Wink Wink Classic (Barcrest)
+m4nnwwc__a	//
+m4nnwwc__b	//
+m4nnwwc__c	//
+m4nnwwc__d	//
+m4nnwwc__e	//
+m4nnwwc__f	//
+m4nnwwc__g	//
+m4nnwwc__h	//
+m4nnwwc__i	//
+m4nnwwc__j	//
+m4nnwwc__k	//
+m4nnwwc__l	//
+m4nnwwc__m	//
+m4nnwwc__n	//
+m4nnwwc__o	//
+m4nnwwc__p	//
+m4nnwwc__q	//
+m4nnwwc__r	//
+m4nnwwc__s	//
+m4nnwwc__t	//
+m4nnwwc__u	//
+m4nnwwc__v	//
+m4nnwwc__w	//
+m4nnwwc__x	//
+m4nnwwc__y	//
+m4nnwwc__z	//
+m4nnwwc__0	//
+m4nnwwc__1	//
+m4nnwwc__2	//
+m4nnwwc__3	//
+m4nnwwc__4	//
+m4nnwwc__5	//
+m4nnwwc__6	//
+m4nnwwc__7	//
+m4nnwwc__8	//
+m4nnwwc__9	//
+m4nnwwc__aa	//
+m4nnwwc__ab	//
+m4nnwwc__ac	//
+m4nnwwc__ad	//
 m4nudqst	// Nudge Quest (Barcrest)
 m4nudshf	// Nudge Shuffle (Barcrest)
+m4nudshfa	//
+m4nudshfb	//
+m4nudshfc	//
 m4nudup		// Nudge Up (Barcrest)
 m4num1		// Number One (Barcrest)
 m4oldtmr	// Old Timer (Barcrest)
 m4casot		// Casino Old Timer (Barcrest)
-m4blkwht	// Black & White (Barcrest)
 m4jpmcla	// JPM Classic (Barcrest)
 m4omega		// Omega (Barcrest)
 m4ordmnd	// Oriental Diamonds (Barcrest)
 m4overmn	// Over The Moon (Barcrest)
+m4overmn__a	//
+m4overmn__b	//
+m4overmn__c	//
+m4overmn__d	//
+m4overmn__e	//
+m4overmn__f	//
+m4overmn__g	//
+m4overmn__h	//
+m4overmn__i	//
+m4overmn__j	//
+m4overmn__k	//
+m4overmn__l	//
+m4overmn__m	//
+m4overmn__n	//
+m4overmn__o	//
+m4overmn__p	//
+m4overmn__q	//
+m4overmn__r	//
+m4overmn__s	//
+m4overmn__t	//
+m4overmn__u	//
+m4overmn__v	//
+m4overmn__w	//
+m4overmn__x	//
+m4overmn__y	//
+m4overmn__z	//
+m4overmn__0	//
+m4overmn__1	//
+m4overmn__2	//
+m4overmn__3	//
+m4overmn__4	//
+m4overmn__5	//
+m4overmn__6	//
+m4overmn__7	//
+m4overmn__8	//
 m4placbt	// Place Your Bets (Barcrest)
+m4placbt__a		//
+m4placbt__b		//
+m4placbt__c		//
+m4placbt__d		//
+m4placbt__e		//
+m4placbt__f		//
+m4placbt__g		//
+m4placbt__h		//
+m4placbt__i		//
+m4placbt__j		//
+m4placbt__k		//
+m4placbt__l		//
+m4placbt__m		//
+m4placbt__n		//
+m4placbt__o		//
+m4placbt__p		//
+m4placbt__q		//
+m4placbt__r		//
+m4placbt__s		//
+m4placbt__t		//
+m4placbt__u		//
+m4placbt__v		//
+m4placbt__w		//
+m4placbt__x		//
+m4placbt__y		//
+m4placbt__z		//
+m4placbt__0		//
+m4placbt__1		//
+m4placbt__2		//
+m4placbt__3		//
+m4placbt__4		//
+m4placbt__5		//
+m4placbt__6		//
+m4placbt__7		//
+m4placbt__8		//
+m4placbt__9		//
+m4placbt__aa	//
+m4placbt__ab	//
+m4placbt__ac	//
+m4placbt__ad	//
+m4placbt__ae	//
+m4placbt__af	//
+m4placbt__ag	//
+m4placbt__ah	//
+m4placbt__ai	//
+m4placbt__aj	//
+m4placbt__ak	//
+m4placbt__al	//
+m4placbt__am	//
+m4placbt__an	//
+m4placbt__ao	//
 m4pont		// Pontoon Club (Barcrest)
+m4ponta		//
 m4potblk	// Pot Black (Barcrest)
+m4potblk__a		//
+m4potblk__b		//
+m4potblk__c		//
+m4potblk__d		//
+m4potblk__e		//
+m4potblk__f		//
+m4potblk__g		//
+m4potblk__h		//
+m4potblk__i		//
+m4potblk__j		//
+m4potblk__k		//
+m4potblk__l		//
+m4potblk__m		//
+m4potblk__n		//
+m4potblk__o		//
+m4potblk__p		//
+m4potblk__q		//
+m4potblk__r		//
+m4potblk__s		//
+m4potblk__t		//
+m4potblk__u		//
+m4potblk__v		//
+m4potblk__w		//
+m4potblk__x		//
+m4potblk__y		//
+m4potblk__z		//
+m4potblk__0		//
+m4potblk__1		//
+m4potblk__2		//
+m4potblk__3		//
+m4potblk__4		//
+m4potblk__5		//
+m4potblk__6		//
+m4potblk__7		//
+m4potblk__8		//
+m4potblk__9		//
+m4potblk__aa	//
+m4potblk__ab	//
+m4potblk__ac	//
+m4potblk__ad	//
+m4potblk__ae	//
+m4potblk__af	//
+m4potblk__ag	//
+m4potblk__ah	//
+m4potblk__ai	//
+m4potblk__aj	//
+m4potblk__ak	//
+m4potblk__al	//
+m4potblk__am	//
+m4potblk__an	//
+m4potblk__ao	//
+m4potblk__ap	//
+m4potblk__aq	//
+m4potblk__ar	//
+m4potblk__as	//
+m4potblk__at	//
+m4potblk__au	//
+m4potblk__av	//
+m4potblk__aw	//
+m4potblk__ax	//
 m4ptblkc	// Pot Black Casino (Bwb - Barcrest)
 m4potlck	// Pot Luck Club (Barcrest)
+m4potlcka	//
 m4prem		// Premier (Barcrest)
 m4przdty	// Prize Duty Free (Barcrest)
+m4przdty__a	//
+m4przdty__b	//
+m4przdty__c	//
+m4przdty__d	//
+m4przdty__e	//
+m4przdty__f	//
+m4przdty__g	//
+m4przdty__h	//
+m4przdty__i	//
+m4przdty__j	//
+m4przdty__k	//
+m4przdty__l	//
+m4przdty__m	//
+m4przdty__n	//
+m4przdty__o	//
+m4przdty__p	//
 m4przfrt	// Prize Fruit & Loot (Barcrest)
+m4przfrt__a	//
+m4przfrt__b	//
+m4przfrt__c	//
+m4przfrt__d	//
+m4przfrt__e	//
+m4przfrt__f	//
+m4przfrt__g	//
+m4przfrt__h	//
+m4przfrt__i	//
+m4przfrt__j	//
+m4przfrt__k	//
+m4przfrt__l	//
 m4przhr		// Prize High Roller (Barcrest)
+m4przhr__a	//
+m4przhr__b	//
+m4przhr__c	//
+m4przhr__d	//
+m4przhr__e	//
+m4przhr__f	//
+m4przhr__g	//
+m4przhr__h	//
+m4przhr__i	//
+m4przhr__j	//
+m4przhr__k	//
+m4przhr__l	//
+m4przhr__m	//
+m4przhr__n	//
+m4przhr__o	//
+m4przhr__p	//
 m4przlux	// Prize Luxor (Barcrest)
+m4przlux__a	//
+m4przlux__b	//
+m4przlux__c	//
+m4przlux__d	//
+m4przlux__e	//
+m4przlux__f	//
 m4przmon	// Prize Money (Barcrest)
+m4przmon__a	//
+m4przmon__b	//
+m4przmon__c	//
+m4przmon__d	//
+m4przmon__e	//
+m4przmon__f	//
+m4przmon__g	//
+m4przmon__h	//
+m4przmon__i	//
+m4przmon__j	//
+m4przmon__k	//
+m4przmon__l	//
+m4przmon__m	//
+m4przmon__n	//
+m4przmon__o	//
+m4przmon__p	//
+m4przmon__q	//
+m4przmon__r	//
+m4przmon__s	//
+m4przmon__t	//
+m4przmon__u	//
+m4przmon__v	//
+m4przmon__w	//
+m4przmon__x	//
+m4przmon__y	//
+m4przmon__z	//
+m4przmon__0	//
+m4przmon__1	//
 m4przmns	// Prize Money ShowCase (Barcrest)
+m4przmns__a //
+m4przmns__b //
+m4przmns__c //
+m4przmns__d //
+m4przmns__e //
+m4przmns__f //
+m4przmns__g //
+m4przmns__h //
+m4przmns__i //
+m4przmns__j //
+m4przmns__k //
+m4przmns__l //
+m4przmns__m //
+m4przmns__n //
 m4przmc		// Prize Monte Carlo (Barcrest)
+m4przmc__a	//
+m4przmc__b	//
+m4przmc__c	//
+m4przmc__d	//
+m4przmc__e	//
+m4przmc__f	//
 m4przrf		// Prize Rich And Famous (Barcrest)
+m4przrf__a	//
+m4przrf__b	//
+m4przrf__c	//
+m4przrf__d	//
+m4przrf__e	//
+m4przrf__f	//
+m4przrf__g	//
+m4przrf__h	//
+m4przrf__i	//
+m4przrf__j	//
 m4przrfm	// Prize Run For Your Money (Barcrest)
+m4przrfm__a	//
+m4przrfm__b	//
+m4przrfm__c	//
+m4przrfm__d	//
+m4przrfm__e	//
+m4przrfm__f	//
+m4przrfm__g	//
+m4przrfm__h	//
+m4przrfm__i	//
+m4przrfm__j	//
+m4przrfm__k	//
+m4przrfm__l	//
+m4przrfm__m	//
+m4przrfm__n	//
+m4przrfm__o	//
 m4przsss	// Prize Spend Spend Spend (Barcrest)
+m4przsss__a	//
+m4przsss__b	//
+m4przsss__c	//
+m4przsss__d	//
+m4przsss__e	//
+m4przsss__f	//
+m4przsss__g	//
+m4przsss__h	//
+m4przsss__i	//
+m4przsss__j	//
+m4przsss__k	//
+m4przsss__l	//
+m4przsss__m	//
+m4przsss__n	//
+m4przsss__o	//
+m4przsss__p	//
+m4przsss__q	//
+m4przsss__r	//
+m4przsss__s	//
+m4przsss__t	//
+m4przsss__u	//
+m4przsss__v	//
+m4przsss__w	//
+m4przsss__x	//
+m4przsss__y	//
+m4przsss__z	//
+m4przsss__0	//
 m4przve		// Prize Viva Esapana (Barcrest)
+m4przve__a	//
+m4przve__b	//
+m4przve__c	//
+m4przve__d	//
+m4przve__e	//
+m4przve__f	//
+m4przve__g	//
+m4przve__h	//
+m4przve__i	//
+m4przve__j	//
+m4przve__k	//
+m4przve__l	//
+m4przve__m	//
+m4przve__n	//
+m4przve__o	//
+m4przve__p	//
 m4przwo		// Prize What's On (Barcrest)
+m4przwo__a	//
+m4przwo__b	//
+m4przwo__c	//
+m4przwo__d	//
+m4przwo__e	//
+m4przwo__f	//
 m4przwta	// Prize Winner Takes All (Barcrest)
+m4przwta__a	//
+m4przwta__b	//
+m4przwta__c	//
+m4przwta__d	//
+m4przwta__e	//
+m4przwta__f	//
+m4przwta__g	//
+m4przwta__h	//
+m4przwta__i	//
+m4przwta__j	//
+m4przwta__k	//
+m4przwta__l	//
+m4przwta__m	//
+m4przwta__n	//
+m4przwta__o	//
+m4przwta__p	//
 m4randr		// Random Roulette (Barcrest)
 m4rsg		// Ready Steady Go (Barcrest) (type 1)
-m4rgsa		// Ready Steady Go (Barcrest) (type 2)
+m4rsga		//
+m4ready		// Ready Steady Go (Barcrest) (type 2)
+m4ready__a	//
+m4ready__b	//
+m4ready__c	//
+m4ready__d	//
+m4ready__e	//
+m4ready__f	//
+m4ready__g	//
+m4ready__h	//
+m4ready__i	//
+m4ready__j	//
+m4ready__k	//
+m4ready__l	//
+m4ready__m	//
+m4ready__n	//
+m4ready__o	//
+m4ready__p	//
+m4ready__q	//
+m4ready__r	//
+m4ready__s	//
+m4ready__t	//
+m4ready__u	//
+m4ready__v	//
+m4ready__w	//
+m4ready__x	//
+m4ready__y	//
+m4ready__z	//
+m4ready__0	//
+m4ready__1	//
+m4ready__2	//
+m4ready__3	//
+m4ready__4	//
+m4ready__5	//
+m4ready__6	//
+m4ready__7	//
+m4ready__8	//
+m4ready__9	//
+m4ready__aa	//
+m4ready__ab	//
+m4ready__ac	//
+m4ready__ad	//
+m4ready__ae	//
+m4ready__af	//
+m4ready__ag	//
+m4ready__ah	//
+m4ready__ai	//
+m4ready__aj	//
+m4ready__ak	//
+m4ready__al	//
+m4ready__am	//
+m4ready__an	//
+m4ready__ao	//
+m4ready__ap	//
+m4ready__aq	//
+m4ready__ar	//
+m4ready__as	//
+m4ready__at	//
+m4ready__au	//
+m4ready__av	//
+m4ready__aw	//
+m4ready__ax	//
+m4ready__ay	//
+m4ready__az	//
+m4ready__a0	//
+m4ready__a1	//
+m4ready__a2	//
+m4ready__a3	//
+m4ready__a4	//
+m4ready__a5	//
 m4ra		// Red Alert (Barcrest)
+m4ra__a		//
+m4ra__b		//
+m4ra__c		//
+m4ra__d		//
+m4ra__e		//
+m4ra__f		//
+m4ra__g		//
+m4ra__h		//
+m4ra__i		//
+m4ra__j		//
+m4ra__k		//
+m4ra__l		//
+m4ra__m		//
+m4ra__n		//
+m4ra__o		//
+m4ra__p		//
+m4ra__q		//
+m4ra__r		//
 m4rdht		// Red Heat (Barcrest)
 m4rhr		// Red Hot Roll (Barcrest)
+m4rhr__a	//
+m4rhr__b	//
+m4rhr__c	//
+m4rhr__d	//
+m4rhr__e	//
+m4rhr__f	//
+m4rhr__g	//
+m4rhr__h	//
+m4rhr__i	//
+m4rhr__j	//
+m4rhr__k	//
+m4rhr__l	//
+m4rhr__m	//
+m4rhr__n	//
+m4rhr__o	//
+m4rhr__p	//
+m4rhr__q	//
+m4rhr__r	//
+m4rhr__s	//
+m4rhr__t	//
+m4rhr__u	//
+m4rhr__v	//
+m4rhr__w	//
+m4rhr__x	//
+m4rhr__y	//
+m4rhr__z	//
+m4rhr__0	//
+m4rhr__1	//
+m4rhr__2	//
+m4rhr__3	//
+m4rhr__4	//
+m4rhr__5	//
+m4rhr__6	//
+m4rhr__7	//
+m4rhr__8	//
+m4rhr__9	//
+m4rhr__aa	//
+m4rhr__ab	//
+m4rhr__ac	//
+m4rhr__ad	//
+m4rhr__ae	//
+m4rhr__af	//
+m4rhr__ag	//
+m4rhr__ah	//
+m4rhr__ai	//
+m4rhr__aj	//
+m4rhr__ak	//
+m4rhr__al	//
+m4rhr__am	//
+m4rhr__an	//
+m4rhr__ao	//
+m4rhr__ap	//
+m4rhr__aq	//
+m4rhr__ar	//
+m4rhr__as	//
+m4rhr__at	//
+m4rhr__au	//
+m4rhr__av	//
+m4rhr__aw	//
+m4rhr__ax	//
+m4rhr__ay	//
+m4rhr__az	//
+m4rhr__a0	//
+m4rhr__a1	//
+m4rhr__a2	//
+m4rhr__a3	//
 m4rhrc		// Red Hot Roll Classic (Barcrest)
+m4rhrc__a	//
+m4rhrc__b	//
+m4rhrc__c	//
+m4rhrc__d	//
+m4rhrc__e	//
+m4rhrc__f	//
+m4rhrc__g	//
+m4rhrc__h	//
+m4rhrc__i	//
+m4rhrc__j	//
+m4rhrc__k	//
+m4rhrc__l	//
+m4rhrc__m	//
+m4rhrc__n	//
+m4rhrc__o	//
+m4rhrc__p	//
+m4rhrc__q	//
+m4rhrc__r	//
+m4rhrc__s	//
+m4rhrc__t	//
+m4rhrc__u	//
+m4rhrc__v	//
+m4rhrc__w	//
+m4rhrc__x	//
+m4rhrc__y	//
+m4rhrc__z	//
+m4rhrc__0	//
+m4rhrc__1	//
+m4rhrc__2	//
+m4rhrc__3	//
+m4rhrc__4	//
+m4rhrc__5	//
+m4rhrc__6	//
+m4rhrc__7	//
+m4rhrc__8	//
+m4rhrc__aa	//
 m4rhrcl		// Red Hot Roll Club (Barcrest)
+m4rhrcl__a	//
+m4rhrcl__b	//
+m4rhrcl__c	//
 m4rwb		// Red White & Blue (Barcrest)
 m4r2r		// Reel 2 Reel (Barcrest)
-m4rmtp		// Reel Magic Turbo Play (Barcrest)
-m4rmtpd		// Reel Magic Turbo Play Deluxe (Barcrest)
 m4reelpk	// Reel Poker (Barcrest)
 m4reeltm	// Reel Timer (Barcrest)
 m4richfm	// Rich & Famous (Barcrest)
+m4richfm__a	//
+m4richfm__b	//
+m4richfm__c	//
+m4richfm__d	//
+m4richfm__e	//
+m4richfm__f	//
+m4richfm__g	//
+m4richfm__h	//
+m4richfm__i	//
+m4richfm__j	//
+m4richfm__k	//
+m4richfm__l	//
+m4richfm__m	//
+m4richfm__n	//
+m4richfm__o	//
+m4richfm__p	//
+m4richfm__q	//
+m4richfm__r	//
+m4richfm__s	//
+m4richfm__t	//
+m4richfm__u	//
+m4richfm__v	//
+m4richfm__w	//
+m4richfm__x	//
+m4richfm__y	//
+m4richfm__z	//
+m4richfm__0	//
+m4richfm__1	//
+m4richfm__2	//
+m4richfm__3	//
 m4ringfr	// Ring Of Fire (Barcrest)
 m4rhog		// Road Hog (Barcrest)
+m4rhog_h1	//
+m4rhogr6y_a	//
+m4rhogr3	//
+m4rhr__a4	//
+m4rhog_h2	//
+m4rhog_h8	//
+m4rhog_h9	//
+m4rhog_h15	//
+m4rhog_h12	//
+m4rhog_h3	//
+m4rhog_h4	//
+m4rhogr1k_a	//
+m4rhogr2yd	//
+m4rhog_roc	//
+m4rhogr6ad	//
+m4rhogr6b	//
+m4rhogr6c	//
+m4rhogr6d	//
+m4rhogr6yd	//
+m4rhogr6k	//
+m4rhogr6y	//
+m4rhog_h5	//
+m4rhog_h6	//
+m4rhog_h7	//
+m4rhog_h10	//
+m4rhog_h11	//
+m4rhog_h14	//
+m4rhog_h13	//
+m4rhogr2k	//
+m4rhogr2	//
+m4rhogr2d	//
+m4rhogr2y	//
+m4rhogr1k	//
+m4rhogr1	//
+m4rhogr1yd	//
+m4rhogr1d	//
+m4rhogr1y	//
+m4rhogr2c	//
+m4rhogr1c	//
 m4rhog2		// Road Hog 2 - I'm Back (Barcrest)
+m4rhog2__a	//
+m4rhog2__b	//
+m4rhog2__c	//
+m4rhog2__d	//
+m4rhog2__e	//
+m4rhog2__f	//
+m4rhog2__g	//
+m4rhog2__h	//
+m4rhog2__i	//
+m4rhog2__j	//
+m4rhog2__k	//
+m4rhog2__l	//
+m4rhog2__m	//
 m4rhogc		// Road Hog Club (Barcrest)
+m4rhogc__a	//
+m4rhogc__b	//
 m4roadrn	// Road Runner (Barcrest)
 m4rockmn	// Rocket Money (Barcrest)
+m4rockmn__a	//
+m4rockmn__b	//
+m4rockmn__c	//
+m4rockmn__d	//
+m4rockmn__e	//
+m4rockmn__f	//
+m4rockmn__g	//
+m4rockmn__h	//
+m4rockmn__i	//
+m4rockmn__j	//
+m4rockmn__k	//
 m4royjwl	// Royal Jewels (Barcrest)
 m4rfym		// Run For Your Money (Barcrest)
+m4rfym__a	//
+m4rfym__b	//
+m4rfym__c	//
+m4rfym__d	//
+m4rfym__e	//
+m4rfym__f	//
+m4rfym__g	//
+m4rfym__h	//
+m4rfym__i	//
+m4rfym__j	//
+m4rfym__k	//
+m4rfym__l	//
+m4rfym__m	//
+m4rfym__n	//
+m4rfym__o	//
+m4rfym__p	//
+m4rfym__q	//
+m4rfym__r	//
+m4rfym__s	//
+m4rfym__t	//
+m4rfym__u	//
+m4rfym__v	//
+m4rfym__w	//
+m4rfym__x	//
+m4rfym__y	//
+m4rfym__z	//
+m4rfym__0	//
+m4rfym__1	//
+m4rfym__2	//
+m4rfym__3	//
+m4rfym__4	//
+m4rfym__5	//
+m4rfym__6	//
+m4rfym__7	//
+m4rfym__8	//
+m4rfym__9	//
+m4rfym__aa	//
+m4rfym__ab	//
+m4rfym__ac	//
+m4rfym__ad	//
+m4rfym__ae	//
+m4rfym__af	//
+m4rfym__ag	//
+m4rfym__ah	//
+m4rfym__ai	//
+m4rfym__aj	//
+m4rfym__ak	//
+m4rfym__al	//
+m4rfym__am	//
+m4rfym__an	//
+m4rfym__ao	//
+m4rfym__ap	//
+m4rfym__aq	//
+m4rfym__ar	//
+m4rfym__as	//
+m4rfym__at	//
+m4rfym__au	//
+m4rfym__av	//
+m4rfym__aw	//
+m4rfym__ax	//
+m4rfym__ay	//
+m4rfym__az	//
+m4rfym__a0	//
+m4rfym__a1	//
+m4rfym__a2	//
+m4rfym__a3	//
+m4rfym__a4	//
+m4rfym__a5	//
 m4runawy	// Runaway Trail (Barcrest)
 m4runawyb	//
 m4salsa		// Salsa (Barcrest)
 m4samu		// Samurai (Barcrest)
 m4sayno		// Say No More (Barcrest)
+m4sayno__a	//
+m4sayno__b	//
+m4sayno__c	//
+m4sayno__d	//
 m4showtm	// Show Timer (Barcrest)
 m4shocm		// Showcase Crystal Maze (Barcrest)
+m4shocm__a	//
+m4shocm__b	//
+m4shocm__c	//
+m4shocm__d	//
+m4shocm__e	//
+m4shocm__f	//
+m4shocm__g	//
+m4shocm__h	//
+m4shocm__i	//
+m4shocm__j	//
 m4shodf		// Showcase Duty Free (Barcrest)
+m4shodf__a	//
+m4shodf__b	//
+m4shodf__c	//
+m4shodf__d	//
+m4shodf__e	//
+m4shodf__f	//
+m4shodf__g	//
+m4shodf__h	//
+m4shodf__i	//
+m4shodf__j	//
+m4shodf__k	//
+m4shodf__l	//
 m4silnud	// Silver Nudger (Mdm?)
 m4nud2p		// 2p Nudger (Mdm?)
 m4ctn		// Tuppenny Nudger Classic (Mdm?)
 m4silshd	// Silver Shadow (Barcrest)
+m4silshda	//
+m4silshdb	//
 m4sgrab		// Smash 'n' Grab (Barcrest)
+m4sgraba	//
+m4sgrabb	//
 m4solsil	// Solid Silver Club (Barcrest)
+m4solsila	//
 m4sss		// Spend Spend Spend (Barcrest)
+m4sss__a	//
+m4sss__b	//
+m4sss__c	//
+m4sss__d	//
+m4sss__e	//
+m4sss__f	//
+m4sss__g	//
+m4sss__h	//
+m4sss__i	//
+m4sss__j	//
+m4sss__k	//
+m4sss__l	//
 m4squid		// Squids In (Barcrest)
+m4squid__a	//
+m4squid__b	//
+m4squid__c	//
 m4stakeu	// Stake Up Club (Barcrest)
-m4str300	// Star Play 300 (Barcrest)
+m4stakeua	//
 m4stards	// Stardust (Barcrest)
 m4starbr	// Stars And Bars (Barcrest)
 m4steptm	// Step Timer (Barcrest)
 m4stopcl	// Stop the Clock (Barcrest)
 m4sunset	// Sunset Boulevard (Barcrest)
+m4sunseta	//
+m4sunsetb	//
+m4sunsetc	//
+m4sunsetd	//
+m4sunsete	//
+m4sunsetf	//
+m4sunsetg	//
+m4sunseth	//
+m4sunseti	//
+m4sunsetj	//
+m4sunsetk	//
+m4sunsetl	//
+m4sunsetm	//
+m4sunsetn	//
+m4sunseto	//
+m4sunsetp	//
+m4sunsetq	//
+m4sunsetr	//
+m4sunsets	//
+m4sunsett	//
 m4supslt	// Supa Slot (Barcrest)
 m4suptrn	// Supatron (Barcrest)
-m4supbj		// Super Blackjack (Barcrest)
 m4supbjc	// Super Blackjack Club (Barcrest)
+m4supbjca	//
+m4supbjcb	//
+m4supbjcc	//
+m4supbjcd	//
 m4supbf		// Super Bucks Fizz Club (Barcrest)
+m4supbfa	//
 m4suphv		// Super Hyper Viper (Barcrest)
+m4suphv__a	//
+m4suphv__b	//
+m4suphv__c	//
+m4suphv__d	//
+m4suphv__e	//
+m4suphv__f	//
+m4suphv__g	//
+m4suphv__h	//
+m4suphv__i	//
+m4suphv__j	//
+m4suphv__k	//
+m4suphv__l	//
+m4suphv__m	//
+m4suphv__n	//
+m4suphv__o	//
+m4suphv__p	//
 m4supst		// Super Streak (Barcrest)
+m4supst__a	//
+m4supst__b	//
+m4supst__c	//
+m4supst__d	//
+m4supst__e	//
+m4supst__f	//
+m4supst__g	//
+m4supst__h	//
+m4supst__i	//
+m4supst__j	//
+m4supst__k	//
+m4supst__l	//
+m4supst__m	//
+m4supst__n	//
+m4supst__o	//
+m4supst__p	//
+m4supst__q	//
+m4supst__r	//
+m4supst__s	//
+m4supst__t	//
+m4supst__u	//
+m4supst__v	//
+m4supst__w	//
+m4supst__x	//
+m4supst__y	//
+m4supst__z	//
+m4supst__0	//
+m4supst__1	//
+m4supst__2	//
+m4supst__3	//
+m4supst__4	//
+m4supst__5	//
+m4supst__6	//
+m4supst__7	//
+m4supst__8	//
+m4supst__9	//
+m4supst__aa	//
+m4supst__ab	//
+m4supst__ac	//
+m4supst__ad	//
+m4supst__ae	//
+m4supst__af	//
+m4supst__ag	//
+m4supst__ah	//
+m4supst__ai	//
+m4supst__aj	//
+m4supst__ak	//
+m4supst__al	//
+m4supst__am	//
+m4supst__an	//
+m4supst__ao	//
+m4supst__ap	//
+m4supst__aq	//
+m4supst__ar	//
+m4supst__as	//
+m4supst__at	//
+m4supst__au	//
+m4supst__av	//
+m4supst__aw	//
+m4supst__ax	//
+m4supst__ay	//
+m4supst__az	//
+m4supst__a0	//
+m4supst__a1	//
+m4supst__a2	//
+m4supst__a3	//
+m4supst__a4	//
+m4supst__a5	//
+m4supst__a6	//
+m4supst__a7	//
+m4supst__a8	//
+m4supst__a9	//
+m4supst__ba	//
+m4supst__bb	//
+m4supst__bc	//
+m4supst__bd	//
+m4supst__be	//
+m4supst__bf	//
+m4supst__bg	//
+m4supst__bh	//
+m4supst__bi	//
+m4supst__bj	//
+m4supst__bk	//
+m4supst__bl	//
+m4supst__bm	//
+m4supst__bn	//
+m4supst__bo	//
+m4supst__bp	//
+m4supst__bq	//
+m4supst__br	//
+m4supst__bs	//
+m4supst__bt	//
+m4supst__bu	//
+m4supst__bv	//
+m4supst__bw	//
+m4supst__bx	//
+m4supst__by	//
+m4supst__bz	//
+m4supst__b0	//
+m4supst__b1	//
+m4supst__b2	//
+m4supst__b3	//
+m4supst__b4	//
+m4supst__b5	//
 m4suptub	// Super Tubes (Barcrest)
+m4suptuba	//
 m4suptwo	// Super Two (Barcrest)
 m4swpnot	// Swap-A-Note (Barcrest)
 m4swpnota	// Swap-A-Note (Barcrest)
 m4taj		// Taj Mahal (Barcrest)
 m4take5		// Take 5 (Barcrest)
 m4take2		// Take Two (Barcrest)
+m4take2a	//
 m4takepk	// Take Your Pick (Barcrest)
-m4tpcl		// Take Your Pick Club (Barcrest)
+m4takepk__a	//
+m4takepk__b	//
+m4takepk__c	//
+m4takepk__d	//
+m4takepk__e	//
+m4takepk__f	//
+m4takepk__g	//
+m4takepk__h	//
+m4takepk__i	//
+m4takepk__j	//
+m4takepk__k	//
+m4takepk__l	//
+m4takepk__m	//
+m4takepk__n	//
+m4takepk__o	//
+m4takepk__p	//
+m4takepk__q	//
+m4takepk__r	//
+m4takepk__s	//
+m4takepk__t	//
+m4takepk__u	//
+m4takepk__v	//
+m4takepk__w	//
+m4takepk__x	//
+m4takepk__y	//
+m4takepk__z	//
+m4takepk__0	//
+m4takepk__1	//
+m4typcl		// Take Your Pick Club (Barcrest)
+m4typcl__a	//
+m4typcl__b	//
+m4typcl__c	//
+m4typcl__d	//
 m4techno	// Techno Reel (Barcrest)
+m4technoa	//
 m4toot		// Ten Out Of Ten (Barcrest)
+m4toot__a	//
+m4toot__b	//
+m4toot__c	//
+m4toot__d	//
+m4toot__e	//
+m4toot__f	//
+m4toot__g	//
+m4toot__h	//
+m4toot__i	//
+m4toot__j	//
+m4toot__k	//
+m4toot__l	//
+m4toot__m	//
+m4toot__n	//
+m4toot__o	//
+m4toot__p	//
+m4toot__q	//
+m4toot__r	//
+m4toot__s	//
+m4toot__t	//
+m4toot__u	//
+m4toot__v	//
+m4toot__w	//
+m4toot__x	//
+m4toot__y	//
+m4toot__z	//
+m4toot__0	//
+m4toot__1	//
+m4toot__2	//
+m4toot__3	//
+m4toot__4	//
+m4toot__5	//
+m4toot__6	//
+m4toot__7	//
+m4toot__8	//
+m4toot__9	//
+m4toot__aa	//
+m4toot__ab	//
+m4toot__ac	//
+m4toot__ad	//
+m4toot__ae	//
+m4toot__af	//
+m4toot__ag	//
+m4toot__ah	//
+m4toot__ai	//
+m4toot__aj	//
+m4toot__ak	//
+m4toot__al	//
+m4toot__za	//
+m4toot__zb	//
 m4ttdia		// Ten Ten Do It Again (Barcrest)
+m4ttdia__a	//
+m4ttdia__b	//
+m4ttdia__c	//
+m4ttdia__d	//
+m4ttdia__e	//
+m4ttdia__f	//
+m4ttdia__g	//
+m4ttdia__h	//
+m4ttdia__i	//
+m4ttdia__j	//
+m4ttdia__k	//
+m4ttdia__l	//
+m4ttdia__m	//
 m4tiktak	// Tic Tak Cash (Barcrest)
 m4toma		// Tomahawk (Barcrest)
 m4topact	// Top Action (Barcrest)
+m4topacta	//
 m4topdk		// Top Deck (Barcrest)
 m4topgr		// Top Gear (Barcrest)
 m4toprn		// Top Run (Barcrest)
 m4topst		// Top Stop (Barcrest)
 m4toptak	// Top Take (Barcrest)
 m4topten	// Top Tenner (Barcrest)
+m4topten__a	//
+m4topten__b	//
+m4topten__e	//
+m4topten__f	//
+m4topten__g	//
+m4topten__h	//
+m4topten__i	//
+m4topten__j	//
+m4topten__k	//
+m4topten__l	//
+m4topten__m	//
+m4topten__n	//
+m4topten__o	//
+m4topten__p	//
+m4topten__q	//
+m4topten__r	//
+m4topten__s	//
+m4topten__t	//
+m4topten__u	//
+m4topten__v	//
+m4topten__w	//
+m4topten__x	//
+m4topten__y	//
+m4topten__z	//
+m4topten__0	//
+m4topten__1	//
+m4topten__2	//
+m4topten__3	//
+m4topten__4	//
+m4topten__5	//
+m4topten__6	//
+m4topten__7	//
+m4topten__8	//
+m4topten__9	//
+m4topten__aa	//
+m4topten__ab	//
+m4topten__ac	//
+m4topten__ad	//
+m4topten__ae	//
+m4topten__af	//
+m4topten__ag	//
+m4topten__ah	//
+m4topten__ai	//
+m4topten__aj	//
+m4topten__ak	//
+m4topten__al	//
+m4topten__am	//
+m4topten__an	//
+m4topten__ao	//
+m4topten__ap	//
+m4topten__aq	//
+m4topten__ar	//
+m4topten__as	//
+m4topten__at	//
+m4topten__au	//
+m4topten__av	//
+m4topten__aw	//
+m4topten__ax	//
 m4toptena	//
 m4toplot	// Top The Lot (Barcrest)
 m4toptim	// Top Timer (Barcrest)
+m4toptima	//
 m4tricol	// Tricolor (Barcrest)
 m4tribnk	// Triple Bank (Barcrest)
 m4tridic	// Triple Dice (Barcrest)
 m4tropcl	// Tropicana Club (Barcrest)
+m4tropcla	//
+m4tropclb	//
+m4tropclc	//
+m4tropcld	//
 m4tupen		// Tuppenny Cracker (Barcrest - Bootleg)
 m4tbplay	// Turbo Play (Barcrest)
+m4tbplaya	//
+m4tbplayb	//
 m4tbreel	// Turbo Reel (Barcrest)
 m4tbrldx	// Turbo Reel Deluxe (Barcrest)
 m4tutfrt	// Tutti Fruity (Barcrest)
+m4tutfrt__a		//
+m4tutfrt__b		//
+m4tutfrt__c		//
+m4tutfrt__d		//
+m4tutfrt__e		//
+m4tutfrt__f		//
+m4tutfrt__g		//
+m4tutfrt__h		//
+m4tutfrt__i		//
+m4tutfrt__j		//
+m4tutfrt__k		//
+m4tutfrt__l		//
+m4tutfrt__m		//
+m4tutfrt__n		//
+m4tutfrt__o		//
+m4tutfrt__p		//
+m4tutfrt__q		//
+m4tutfrt__r		//
+m4tutfrt__s		//
+m4tutfrt__t		//
+m4tutfrt__u		//
+m4tutfrt__v		//
+m4tutfrt__w		//
+m4tutfrt__x		//
+m4tutfrt__y		//
+m4tutfrt__z		//
+m4tutfrt__0		//
+m4tutfrt__1		//
+m4tutfrt__2		//
+m4tutfrt__3		//
+m4tutfrt__4		//
+m4tutfrt__5		//
+m4tutfrt__6		//
+m4tutfrt__7		//
+m4tutfrt__8		//
+m4tutfrt__9		//
+m4tutfrt__aa	//
+m4tutfrt__ab	//
+m4tutfrt__ac	//
+m4tutfrt__ad	//
+m4tutfrt__ae	//
+m4tutfrt__af	//
+m4tutfrt__ag	//
+m4tutfrt__ai	//
+m4tutfrt__aj	//
+m4tutfrt__ak	//
+m4tutfrt__al	//
+m4tutfrt__am	//
+m4tutfrt__an	//
+m4tutfrt__ao	//
+m4tutfrt__ap	//
+m4tutfrt__aq	//
+m4tutfrt__ar	//
+m4tutfrt__as	//
+m4tutfrt__at	//
+m4tutfrt__au	//
+m4tutfrt__av	//
+m4tutfrt__aw	//
+m4tutfrt__ax	//
+m4tutfrt__ay	//
+m4tutfrt__az	//
+m4tutfrt__a0	//
+m4tutfrt__a1	//
+m4tutfrt__a2	//
+m4tutfrt__a3	//
+m4tutfrt__a4	//
+m4tutfrt__a5	//
 m4tutcl		// Tutti Fruity Classic (Barcrest)
+m4tutcl__a	//
+m4tutcl__b	//
+m4tutcl__c	//
+m4tutcl__d	//
+m4tutcl__e	//
+m4tutcl__f	//
+m4tutcl__g	//
+m4tutcl__h	//
+m4tutcl__i	//
+m4tutcl__j	//
+m4tutcl__k	//
 m421		// Twenty One (Barcrest)
 m4twilgt	// Twilight (Barcrest)
 m4twintm	// Twin Timer (Barcrest)
 m4twist		// Twist Again (Barcrest)
+m4twista	//
+m4twistb	//
 m4univ		// Universe (Barcrest)
 m4uuaw		// Up Up and Away (Barcrest)
+m4uuaw__a	//
+m4uuaw__b	//
+m4uuaw__c	//
+m4uuaw__d	//
+m4uuaw__e	//
+m4uuaw__f	//
+m4uuaw__g	//
+m4uuaw__h	//
+m4uuaw__i	//
+m4uuaw__j	//
+m4uuaw__k	//
+m4uuaw__l	//
+m4uuaw__m	//
+m4uuaw__n	//
+m4uuaw__o	//
+m4uuaw__p	//
+m4uuaw__q	//
+m4uuaw__r	//
+m4uuaw__s	//
+m4uuaw__t	//
+m4uuaw__u	//
+m4uuaw__v	//
+m4uuaw__w	//
+m4uuaw__x	//
+m4uuaw__y	//
+m4uuaw__z	//
+m4uuaw__0	//
+m4uuaw__1	//
+m4uuaw__2	//
+m4uuaw__3	//
+m4uuaw__4	//
+m4uuaw__5	//
+m4uuaw__6	//
+m4uuaw__7	//
+m4uuaw__8	//
+m4uuaw__9	//
+m4uuaw__aa	//
+m4uuaw__ab	//
+m4uuaw__ac	//
+m4uuaw__ad	//
+m4uuaw__ae	//
+m4uuaw__af	//
+m4uuaw__ag	//
+m4uuaw__ah	//
+m4uuaw__ai	//
+m4uuaw__aj	//
+m4uuaw__ak	//
+m4uuaw__al	//
+m4uuaw__am	//
+m4uuaw__an	//
+m4uuaw__ao	//
+m4uuaw__ap	//
+m4uuaw__aq	//
 m4vegast	// Vegas Strip (Barcrest)
+m4vegast__a	//
+m4vegast__b	//
+m4vegast__c	//
+m4vegast__d	//
+m4vegast__e	//
+m4vegast__f	//
+m4vegast__g	//
+m4vegast__h	//
+m4vegast__i	//
+m4vegast__j	//
+m4vegast__k	//
+m4vegast__l	//
+m4vegast__m	//
+m4vegast__n	//
+m4vegast__o	//
+m4vegast__p	//
+m4vegast__q	//
+m4vegast__r	//
+m4vegast__s	//
+m4vegast__t	//
+m4vegast__u	//
+m4vegast__v	//
+m4vegast__w	//
+m4vegast__x	//
 m4vegastg	//
 m4vivaes	// Viva Espana (Barcrest)
+m4vivaes__a		//
+m4vivaes__b		//
+m4vivaes__c		//
+m4vivaes__d		//
+m4vivaes__e		//
+m4vivaes__f		//
+m4vivaes__g		//
+m4vivaes__h		//
+m4vivaes__i		//
+m4vivaes__j		//
+m4vivaes__k		//
+m4vivaes__l		//
+m4vivaes__m		//
+m4vivaes__n		//
+m4vivaes__o		//
+m4vivaes__p		//
+m4vivaes__q		//
+m4vivaes__r		//
+m4vivaes__s		//
+m4vivaes__t		//
+m4vivaes__u		//
+m4vivaes__v		//
+m4vivaes__w		//
+m4vivaes__x		//
+m4vivaes__y		//
+m4vivaes__z		//
+m4vivaes__0		//
+m4vivaes__1		//
+m4vivaes__2		//
+m4vivaes__3		//
+m4vivaes__4		//
+m4vivaes__5		//
+m4vivaes__6		//
+m4vivaes__7		//
+m4vivaes__8		//
+m4vivaes__9		//
+m4vivaes__aa	//
+m4vivaes__ab	//
+m4vivaes__ac	//
+m4vivaes__ad	//
+m4vivaes__ae	//
+m4vivaes__af	//
+m4vivaes__ag	//
+m4vivaes__ah	//
+m4vivaes__ai	//
+m4vivaes__aj	//
+m4vivaes__ak	//
+m4vivaes__al	//
+m4vivaes__am	//
+m4vivaes__an	//
+m4vivaes__ao	//
+m4vivaes__ap	//
 m4vivess	// Viva Espana Showcase (Barcrest)
+m4vivess__a	//
+m4vivess__b	//
+m4vivess__c	//
+m4vivess__d	//
+m4vivess__f	//
+m4vivess__g	//
+m4vivess__i	//
+m4vivess__j	//
+m4vivess__k	//
+m4vivess__l	//
+m4vivess__m	//
+m4vivess__n	//
+m4vivess__o	//
+m4vivess__p	//
 m4vivalvd	//
 m4vivalv	// Viva Las Vegas (Barcrest)
+m4vivalv__a	//
+m4vivalv__b	//
+m4vivalv__c	//
+m4vivalv__e	//
+m4vivalv__f	//
+m4vivalv__g	//
+m4vivalv__h	//
+m4vivalv__i	//
+m4vivalv__j	//
+m4vivalv__k	//
+m4vivalv__l	//
+m4vivalv__m	//
+m4vivalv__n	//
+m4vivalv__o	//
+m4vivalv__p	//
+m4vivalv__q	//
+m4vivalv__r	//
+m4vivalv__s	//
+m4vivalv__t	//
+m4vivalv__u	//
+m4vivalv__v	//
+m4vivalv__w	//
+m4vivalv__x	//
+m4vivalv__y	//
+m4vivalv__z	//
+m4vivalv__0	//
+m4vivalv__1	//
+m4vivalv__2	//
+m4vivalv__3	//
+m4vivalv__4	//
+m4vivalv__5	//
+m4vivalv__6	//
+m4vivalv__7	//
+m4vivalv__8	//
 m4vivasx	// Viva Las Vegas Six (Barcrest)
 m4viz		// Viz (Barcrest)
+m4viz__a	//
+m4viz__b	//
+m4viz__c	//
+m4viz__d	//
+m4viz__e	//
+m4viz__f	//
+m4viz__g	//
+m4viz__h	//
+m4viz__i	//
+m4viz__j	//
+m4viz__k	//
+m4viz__l	//
+m4viz__m	//
+m4viz__n	//
+m4viz__o	//
+m4viz__p	//
+m4viz__q	//
+m4viz__r	//
+m4viz__s	//
+m4viz__t	//
+m4viz__u	//
+m4viz__v	//
+m4viz__w	//
 m4voodoo	// Voodoo 1000 (Barcrest)
 m4wayin		// Way In (Barcrest)
-m4whaton	// What's On (Barcrest)
+m4wayina	//
 m4wildms	// Wild Mystery (Barcrest)
 m4wildtm	// Wild Timer (Barcrest)
 m4wta		// Winner Takes All (Barcrest)
+m4wta__b	//
+m4wta__d	//
+m4wta__e	//
+m4wta__f	//
+m4wta__g	//
+m4wta__h	//
+m4wta__i	//
+m4wta__j	//
+m4wta__k	//
+m4wta__l	//
+m4wta__m	//
+m4wta__n	//
+m4wta__o	//
+m4wta__p	//
+m4wta__q	//
+m4wta__r	//
+m4wta__s	//
+m4wta__t	//
+m4wta__u	//
+m4wta__v	//
+m4wta__w	//
+m4wta__x	//
+m4wta__y	//
+m4wta__z	//
+m4wta__0	//
+m4wta__1	//
+m4wta__2	//
+m4wta__3	//
+m4wta__4	//
+m4wta__5	//
+m4wta__6	//
+m4wta__7	//
+m4wta__8	//
+m4wta__9	//
+m4wta__aa	//
+m4wta__ab	//
+m4wta__ac	//
+m4wta__ad	//
+m4wta__ae	//
+m4wta__af	//
+m4wta__ag	//
 m4ch30		// Unknown MPU4 'CH30' (Barcrest)
 m4sb5		// Unknown MPU4 'BSB 0.3' (Barcrest)
 m4stc		// Unknown MPU4 'STC 0.1' (Barcrest)
@@ -18422,77 +22682,757 @@ m4stc		// Unknown MPU4 'STC 0.1' (Barcrest)
 /* Bwb */
 
 m4acechs	// Ace Chase (Bwb)
+m4acechs__a	//
+m4acechs__b	//
+m4acechs__c	//
+m4acechs__d	//
+m4acechs__e	//
+m4acechs__f	//
+m4acechs__g	//
+m4acechs__h	//
+m4acechs__i	//
+m4acechs__j	//
+m4acechs__k	//
+m4acechs__l	//
+m4acechs__m	//
+m4acechs__n	//
+m4acechs__o	//
+m4acechs__p	//
+m4acechs__q	//
+m4acechs__r	//
+m4acechs__s	//
+m4acechs__t	//
+m4acechs__u	//
 m4bigmt		// The Big Match (Bwb)
+m4bigmt__a	//
+m4bigmt__b	//
+m4bigmt__c	//
+m4bigmt__d	//
+m4bigmt__e	//
+m4bigmt__f	//
 m4bingbl	// Bingo Belle (Bwb)
+m4bingbl__a	//
+m4bingbl__b	//
+m4bingbl__c	//
+m4bingbl__d	//
+m4bingbl__e	//
+m4bingbl__f	//
+m4bingbl__g	//
 m4bingbs	// Bingo Belle Showcase (Bwb)
+m4bingbs__a	//
+m4bingbs__b	//
+m4bingbs__c	//
+m4bingbs__d	//
+m4bingbs__e	//
+m4bingbs__f	//
 m4bingcl	// Bingo Club (Bwb)
+m4bingcl__a	//
+m4bingcl__b	//
 m4blflsh	// Blue Flash (Bwb)
+m4blflsha	//
+m4blflshb	//
+m4blflshc	//
+m4blflshd	//
+m4blflshe	//
 m4cshenc	// Cash Encounters (Bwb)
+m4cshenc__a	//
+m4cshenc__b	//
+m4cshenc__c	//
+m4cshenc__d	//
 m4czne		// Cash Zone (Bwb)
 m4csoc		// Championship Soccer (Bwb)
+m4csoc__a	//
+m4csoc__b	//
+m4csoc__c	//
+m4csoc__d	//
+m4csoc__e	//
+m4csoc__f	//
+m4csoc__g	//
+m4csoc__h	//
+m4csoc__i	//
+m4csoc__j	//
 m4cpycat	// Copy Cat (Bwb)
+m4cpycat__a	//
+m4cpycat__b	//
+m4cpycat__c	//
+m4cpycat__d	//
+m4cpycat__e	//
+m4cpycat__f	//
+m4cpycat__g	//
+m4cpycat__h	//
+m4cpycat__i	//
+m4cpycat__j	//
+m4cpycat__k	//
+m4cpycat__l	//
+m4cpycat__m	//
+m4cpycat__n	//
+m4cpycat__o	//
+m4cpycat__p	//
+m4cpycat__q	//
+m4cpycat__r	//
+m4cpycat__s	//
+m4cpycat__t	//
+m4cpycat__u	//
+m4cpycat__v	//
+m4cpycat__w	//
+m4cpycat__x	//
+m4cpycat__y	//
+m4cpycat__z	//
+m4cpycat__0	//
+m4cpycat__1	//
+m4cpycat__2	//
+m4cpycat__3	//
+m4cpycat__4	//
+m4cpycat__5	//
+m4cpycat__6	//
+m4cpycat__7	//
+m4cpycat__8	//
 m4cpfinl	// Cup Final (Bwb)
+m4cpfinl__a	//
+m4cpfinl__b	//
+m4cpfinl__c	//
+m4cpfinl__d	//
+m4cpfinl__e	//
+m4cpfinl__f	//
+m4cpfinl__g	//
+m4cpfinl__h	//
+m4cpfinl__i	//
+m4cpfinl__j	//
+m4cpfinl__k	//
 m4danced	// Dancing Diamonds (Bwb)
+m4danced__a	//
+m4danced__b	//
+m4danced__c	//
+m4danced__d	//
+m4danced__e	//
+m4danced__f	//
+m4danced__g	//
+m4danced__h	//
+m4danced__i	//
+m4danced__j	//
+m4danced__k	//
+m4danced__l	//
+m4danced__m	//
+m4danced__n	//
+m4danced__o	//
+m4danced__p	//
+m4danced__q	//
+m4danced__r	//
+m4danced__s	//
+m4danced__t	//
+m4danced__u	//
+m4danced__v	//
+m4danced__w	//
 m4daytn		// Daytona (Bwb)
+m4daytn__a	//
+m4daytn__b	//
+m4daytn__c	//
+m4daytn__d	//
+m4daytn__e	//
+m4daytn__f	//
+m4daytn__g	//
+m4daytn__h	//
+m4daytn__i	//
+m4daytn__j	//
+m4daytn__k	//
+m4daytn__l	//
+m4daytn__m	//
+m4daytn__n	//
 m4excal		// Excalibur (Bwb)
+m4excal__a	//
+m4excal__b	//
+m4excal__c	//
+m4excal__d	//
+m4excal__e	//
+m4excal__f	//
+m4excal__g	//
+m4excal__h	//
+m4excal__i	//
+m4excal__j	//
 m4exotic	// Exotic Fruits (Bwb)
+m4exotic__a	//
+m4exotic__b	//
+m4exotic__c	//
+m4exotic__d	//
+m4exotic__e	//
 m4firice	// Fire & Ice (Bwb)
+m4firice__a	//
+m4firice__b	//
+m4firice__c	//
+m4firice__d	//
+m4firice__e	//
+m4firice__f	//
+m4firice__g	//
+m4firice__h	//
+m4firice__i	//
+m4firice__j	//
 m4flshlt	// Flashlite (Bwb)
+m4flshlta	//
+m4flshltb	//
+m4flshltc	//
+m4flshltd	//
+m4flshlte	//
+m4flshltf	//
+m4flshltg	//
 m4fourmr	// Four More (Bwb)
 m4harle		// Harlequin (Bwb)
+m4harle__a	//
+m4harle__b	//
+m4harle__c	//
+m4harle__d	//
+m4harle__e	//
+m4harle__f	//
+m4harle__g	//
+m4harle__h	//
+m4harle__i	//
+m4harle__j	//
+m4harle__k	//
+m4harle__l	//
+m4harle__m	//
+m4harle__n	//
+m4harle__o	//
+m4harle__p	//
+m4harle__q	//
+m4harle__r	//
+m4harle__s	//
+m4harle__t	//
+m4harle__u	//
+m4harle__v	//
+m4harle__w	//
+m4harle__x	//
 m4hvhel		// Heaven & Hell (Bwb)
+m4hvhel__a	//
+m4hvhel__b	//
+m4hvhel__c	//
+m4hvhel__d	//
+m4hvhel__e	//
+m4hvhel__f	//
+m4hvhel__g	//
+m4hvhel__h	//
 m4holywd	// Hollywood (Bwb)
 m4indycr	// Indy Cars (Bwb)
+m4indycr__a	//
+m4indycr__b	//
+m4indycr__c	//
+m4indycr__d	//
+m4indycr__e	//
+m4indycr__f	//
 m4jakjok	// Jackpot Jokers (Bwb)
+m4jakjok__a	//
+m4jakjok__b	//
+m4jakjok__c	//
 m4jakjoka
 m4jflash	// Jumping Jack Flash (Bwb)
+m4jflash__a	//
+m4jflash__b	//
+m4jflash__c	//
+m4jflash__d	//
+m4jflash__e	//
+m4jflash__f	//
+m4jflash__g	//
+m4jflash__h	//
+m4jflash__i	//
 m4kingq		// Kings & Queens (Bwb)
+m4kingq__a	//
+m4kingq__b	//
+m4kingq__c	//
+m4kingq__d	//
+m4kingq__e	//
+m4kingq__f	//
+m4kingq__g	//
+m4kingq__h	//
+m4kingq__i	//
+m4kingq__j	//
+m4kingq__k	//
+m4kingq__l	//
+m4kingq__m	//
+m4kingq__n	//
+m4kingq__o	//
+m4kingq__p	//
+m4kingq__r	//
+m4kingq__s	//
+m4kingq__t	//
 m4kingqc	// Kings & Queens Classic (Bwb)
+m4kingqc__a	//
+m4kingqc__b	//
+m4kingqc__c	//
+m4kingqc__d	//
+m4kingqc__e	//
+m4kingqc__f	//
+m4kingqc__g	//
+m4kingqc__h	//
+m4kingqc__i	//
+m4kingqc__j	//
+m4kingqc__k	//
+m4kingqc__l	//
+m4kingqc__m	//
+m4kingqc__n	//
+m4kingqc__q	//
+m4kingqc__r	//
+m4kingqc__s	//
+m4kingqc__t	//
+m4kingqc__u	//
+m4kingqc__v	//
+m4kingqc__w	//
+m4kingqc__x	//
+m4kingqc__y	//
+m4kingqc__z	//
+m4kingqc__0	//
+m4kingqc__1	//
+m4kingqc__2	//
+m4kingqc__3	//
+m4kingqc__4	//
+m4kingqc__5	//
 m4lazy		// Lazy Bones (Bwb)
+m4lazya		//
+m4lazyb		//
 m4lvlcl		// Lucky Las Vegas Classic (Bwb)
+m4lvlcl__a	//
+m4lvlcl__b	//
+m4lvlcl__c	//
+m4lvlcl__d	//
+m4lvlcl__e	//
+m4lvlcl__f	//
 m4ln7		// Lucky No7 (Bwb)
+m4ln7__a	//
+m4ln7__b	//
+m4ln7__c	//
+m4ln7__d	//
 m4madmon	// Mad Money (Bwb)
+m4madmon__a	//
+m4madmon__b	//
+m4madmon__c	//
+m4madmon__d	//
+m4madmon__e	//
+m4madmon__f	//
+m4madmon__g	//
+m4madmon__h	//
+m4madmon__i	//
+m4madmon__j	//
+m4madmon__k	//
 m4madmnc	// Mad Money Classic (Bwb)
+m4madmnc__a	//
+m4madmnc__b	//
+m4madmnc__c	//
+m4madmnc__d	//
+m4madmnc__e	//
+m4madmnc__f	//
+m4madmnc__g	//
+m4madmnc__h	//
+m4madmnc__i	//
+m4madmnc__j	//
+m4madmnc__k	//
+m4madmnc__l	//
+m4madmnc__m	//
+m4madmnc__n	//
+m4madmnc__o	//
+m4madmnc__p	//
+m4madmnc__q	//
+m4madmnc__r	//
+m4madmnc__s	//
+m4madmnc__t	//
+m4madmnc__u	//
+m4madmnc__v	//
+m4madmnc__w	//
 m4mmm		// Money Mummy Money (Bwb)
+m4mmm__a	//
+m4mmm__b	//
+m4mmm__c	//
+m4mmm__d	//
+m4mmm__e	//
+m4mmm__f	//
 m4oadrac	// Ooh Aah Dracula (Bwb)
+m4oadrac__a	//
+m4oadrac__b	//
+m4oadrac__c	//
+m4oadrac__d	//
+m4oadrac__e	//
+m4oadrac__f	//
+m4oadrac__g	//
+m4oadrac__h	//
 m4orland	// Orlando Magic (Bwb)
+m4orland__a	//
+m4orland__b	//
+m4orland__c	//
+m4orland__d	//
+m4orland__e	//
+m4orland__f	//
+m4orland__g	//
+m4orland__h	//
 m4pzbing	// Prize Bingo (Bwb)
+m4pzbing__a	//
+m4pzbing__b	//
+m4pzbing__c	//
+m4pzbing__d	//
+m4pzbing__e	//
 m4quidin	// Quids In (Bwb)
+m4quidin__a	//
+m4quidin__b	//
 m4quidis	// Quids In Showcase (Bwb)
+m4quidis__a	//
+m4quidis__b	//
+m4quidis__c	//
+m4quidis__d	//
 m4rackem	// Rack Em Up (Bwb)
+m4rackem__a	//
+m4rackem__b	//
+m4rackem__c	//
+m4rackem__d	//
 m4rbgold	// Rainbow Gold (Bwb)
+m4rbgold__a	//
+m4rbgold__b	//
+m4rbgold__c	//
+m4rbgold__d	//
+m4rbgold__e	//
+m4rbgold__f	//
+m4rbgold__g	//
+m4rbgold__h	//
+m4rbgold__i	//
+m4rbgold__j	//
+m4rbgold__k	//
+m4rbgold__l	//
+m4rbgold__m	//
+m4rbgold__n	//
+m4rbgold__o	//
+m4rbgold__p	//
+m4rbgold__q	//
 m4rhfev		// Red Hot Fever (Bwb)
+m4rhfev__a	//
+m4rhfev__b	//
+m4rhfev__c	//
+m4rhfev__d	//
+m4rhfev__e	//
 m4rhs		// Rocky Horror Show (Bwb)
+m4rhs__a	//
+m4rhs__b	//
+m4rhs__c	//
+m4rhs__d	//
+m4rhs__e	//
+m4rhs__f	//
+m4rhs__g	//
+m4rhs__h	//
+m4rhs__i	//
+m4rhs__j	//
+m4rhs__k	//
+m4rhs__l	//
 m4sinbd		// Sinbad (Bwb)
+m4sinbd__a	//
+m4sinbd__b	//
+m4sinbd__c	//
+m4sinbd__d	//
+m4sinbd__e	//
+m4sinbd__f	//
+m4sinbd__g	//
+m4sinbd__h	//
+m4sinbd__i	//
+m4sinbd__j	//
+m4sinbd__k	//
+m4sinbd__l	//
+m4sinbd__m	//
+m4sinbd__n	//
+m4sinbd__o	//
+m4sinbd__p	//
+m4sinbd__q	//
+m4sinbd__r	//
+m4sinbd__s	//
+m4sinbd__t	//
+m4sinbd__u	//
+m4sinbd__v	//
+m4sinbd__w	//
+m4sinbd__x	//
 m4sky		// Sky Sports (Bwb)
+m4sky__a	//
+m4sky__b	//
+m4sky__c	//
+m4sky__d	//
 m4souls		// Soul Sister (Bwb)
+m4souls__a	//
+m4souls__b	//
+m4souls__c	//
+m4souls__d	//
+m4souls__e	//
+m4souls__f	//
 m4specu		// Speculator Club (Bwb)
 m4spinbt	// Spin The Bottle (Bwb)
+m4spinbt__a	//
+m4spinbt__b	//
+m4spinbt__c	//
+m4spinbt__d	//
+m4spinbt__e	//
+m4spinbt__f	//
+m4spinbt__g	//
 m4starst	// Stars & Stripes (Bwb)
+m4starst__a	//
+m4starst__b	//
+m4starst__c	//
+m4starst__d	//
+m4starst__e	//
+m4starst__f	//
+m4starst__g	//
+m4starst__h	//
+m4starst__i	//
+m4starst__j	//
 m4thestr	// The Streak (Bwb)
+m4thestr__a	//
+m4thestr__b	//
+m4thestr__c	//
+m4thestr__d	//
+m4thestr__e	//
+m4thestr__f	//
+m4thestr__g	//
+m4thestr__h	//
+m4thestr__i	//
+m4thestr__j	//
+m4thestr__k	//
+m4thestr__l	//
+m4thestr__m	//
+m4thestr__n	//
+m4thestr__o	//
+m4thestr__p	//
+m4thestr__q	//
+m4thestr__r	//
+m4thestr__s	//
+m4thestr__t	//
+m4thestr__u	//
+m4thestr__v	//
+m4thestr__w	//
+m4thestr__x	//
+m4thestr__y	//
 m4sunclb	// Sun Club (Bwb)
+m4sunclba	//
 m4sunscl	// Sunset Club (Bwb)
+m4sunscla	//
+m4sunsclb	//
 m4supleg	// Super League (Bwb)
+m4supleg__a	//
+m4supleg__b	//
+m4supleg__c	//
+m4supleg__d	//
+m4suplegw	//
 m4supscr	// Super Soccer (Bwb)
+m4supscr__a	//
+m4supscr__b	//
+m4supscr__c	//
+m4supscr__d	//
+m4supscr__e	//
+m4supscr__f	//
+m4supscr__g	//
+m4supscr__h	//
+m4supscr__i	//
+m4supscr__j	//
+m4supscr__k	//
+m4supscr__l	//
+m4supscr__m	//
+m4supscr__n	//
 m4ssclas	// Super Streak Classic (Bwb)
+m4ssclas__a	//
+m4ssclas__b	//
+m4ssclas__c	//
+m4ssclas__d	//
+m4ssclas__e	//
 m4sure		// Sure Thing (Bwb)
+m4sure__a	//
+m4sure__b	//
+m4sure__c	//
 m4tic		// Tic Tac Toe (Bwb)
+m4tic__a	//
+m4tic__b	//
+m4tic__c	//
+m4tic__d	//
+m4tic__e	//
+m4tic__f	//
+m4tic__g	//
+m4tic__h	//
+m4tic__i	//
+m4tic__j	//
+m4tic__k	//
+m4tic__l	//
+m4tic__m	//
+m4tic__n	//
+m4tic__o	//
+m4tic__p	//
+m4tic__r	//
+m4tic__s	//
 m4ticcla	// Tic Tac Toe Classic (Bwb)
-m4ticgld	// Tic Tac Toe Gold (Bwb)
-m4ticglc	// Tic Tac Toe Gold Classic (Bwb)
+m4ticcla__a	//
+m4ticcla__b	//
+m4ticcla__c	//
+m4ticcla__d	//
+m4ticcla__e	//
+m4ticcla__f	//
+m4ticcla__g	//
+m4ticcla__h	//
+m4ticcla__i	//
+m4ticcla__j	//
+m4ticcla__k	//
+m4ticcla__l	//
+m4ticcla__m	//
+m4ticcla__n	//
+m4ticcla__o	//
+m4ticcla__p	//
+m4ticcla__q	//
+m4ticcla__r	//
+m4ticcla__s	//
+m4ticcla__t	//
+m4ticcla__u	//
+m4ticcla__v	//
+m4ticcla__w	//
+m4ticcla__x	//
+m4ticcla__y	//
+m4ticcla__z	//
+m4ticcla__0	//
+m4ticglc	// Tic Tac Toe Gold (Bwb)
+m4ticglc__a	//
+m4ticglc__b	//
+m4ticglc__c	//
+m4ticglc__d	//
 m4topdog	// Top Dog (Bwb)
+m4topdog__a	//
+m4topdog__b	//
+m4topdog__c	//
+m4topdog__d	//
+m4topdog__e	//
+m4topdog__f	//
+m4topdog__g	//
+m4topdog__h	//
+m4topdog__i	//
+m4topdog__j	//
+m4topdog__k	//
+m4topdog__l	//
+m4topdog__m	//
+m4topdog__n	//
+m4topdog__o	//
+m4topdog__p	//
+m4topdog__q	//
+m4topdog__r	//
+m4topdog__s	//
+m4topdog__t	//
+m4topdog__u	//
+m4topdog__v	//
+m4topdog__w	//
+m4topdog__x	//
+m4topdog__y	//
+m4topdog__z	//
 m4trex		// Trex (Bwb)
+m4trex__a	//
+m4trex__b	//
+m4trex__c	//
+m4trex__d	//
+m4trex__e	//
+m4trex__f	//
+m4trex__g	//
+m4trex__h	//
+m4trex__i	//
+m4trex__j	//
+m4trex__k	//
+m4trex__l	//
 m4volcan	// Volcano (Bwb)
+m4volcan__a	//
+m4volcan__b	//
+m4volcan__c	//
+m4volcan__d	//
+m4volcan__e	//
+m4volcan__f	//
+m4volcan__g //
 m4vdexpr	// Voodoo Express (Bwb)
+m4vdexpr__a	//
+m4vdexpr__b	//
+m4vdexpr__c	//
+m4vdexpr__d	//
 m4xch		// X-change (Bwb)
+m4xch__a	//
+m4xch__b	//
+m4xch__c	//
+m4xch__d	//
+m4xch__e	//
+m4xch__f	//
+m4xch__g	//
+m4xch__h	//
+m4xch__i	//
+m4xch__j	//
+m4xch__k	//
 m4xs		// X-s (Bwb)
+m4xs__a		//
+m4xs__b		//
+m4xs__c		//
+m4xs__d		//
+m4xs__e		//
+m4xs__f		//
 m4xtrm		// X-treme (Bwb)
+m4xtrm__a	//
+m4xtrm__b	//
 
 /* Concept */
 m4rhfevc	// Red Hot Fever (Concept)
+m4rhfevc__a	//
+m4rhfevc__b	//
+m4rhfevc__c	//
+m4rhfevc__d	//
+m4rhfevc__e	//
+m4rhfevc__f	//
+m4rhfevc__g	//
+m4rhfevc__h	//
+m4rhfevc__i	//
+m4rhfevc__j	//
+m4rhfevc__k	//
+m4rhfevc__l	//
+m4rhfevc__m	//
+m4rhfevc__n	//
+m4rhfevc__o	//
+m4rhfevc__p	//
+m4rhfevc__q	//
+m4rhfevc__r	//
+m4rhfevc__s	//
+m4rhfevc__t	//
+m4rhfevc__u	//
+m4rhfevc__v	//
+m4rhfevc__w	//
+m4rhfevc__x	//
+m4rhfevc__y	//
 m4nudgwc	// Nudge a Win (Concept)
+m4nudgwc__a	//
+m4nudgwc__b	//
+m4nudgwc__c	//
+m4nudgwc__d	//
+m4nudgwc__e	//
+m4nudgwc__f	//
+m4nudgwc__g	//
+m4nudgwc__h	//
 m4pulwnc	// Pull-a-Win (Concept)
+m4pulwnc__a	//
+m4pulwnc__b	//
+m4pulwnc__c	//
+m4pulwnc__d	//
+m4pulwnc__e	//
+m4pulwnc__f	//
+m4pulwnc__g	//
+m4pulwnc__h	//
+m4pulwnc__i	//
+m4pulwnc__j	//
+m4pulwnc__k	//
+m4pulwnc__l	//
+m4pulwnc__m	//
+m4pulwnc__n	//
+m4pulwnc__o	//
+m4pulwnc__p	//
+m4pulwnc__q	//
+m4pulwnc__r	//
+m4pulwnc__s	//
+m4pulwnc__t	//
+m4pulwnc__u	//
+m4pulwnc__v	//
+m4pulwnc__w	//
+m4pulwnc__x	//
+m4pulwnc__y	//
+m4pulwnc__z	//
+m4pulwnc__0	//
+m4pulwnc__1	//
+m4pulwnc__2	//
+m4pulwnc__3	//
+m4pulwnc__4	//
 m4spnwnc	// Spin-A-Win (Concept)
+m4spnwnc__a	//
+m4spnwnc__b	//
 
 /* Empire */
 
@@ -18539,6 +23479,7 @@ m4frightb	//
 m4frightc	//
 m4frightd	//
 m4frighte	//
+m4frightf	//
 m4gamblr	// The Gambler (Empire)
 m4gamblra	//
 m4gamblrb	//
@@ -18621,10 +23562,17 @@ m4snklad	// Snakes & Ladders (Mdm)
 
 m4cshino	//Cashino Deluxe (Pcp)
 m4jjc		//Jumping Jack Cash (Pcp)
+m4jjca		//
 m4spton		//Spot On (Pcp)
 m4clbrpl	//Club Replay (PCP)
 m4exlin		//Extra Lines (Pcp)
+m4exlina	//
 m4supjst	//Super Jester (Pcp)
+m4supjsta
+m4supjstb
+m4supjstc
+m4supjstd
+m4supjste
 
 /* Nova - German licensed Barcrest / Bwb sets? */
 
@@ -18683,6 +23631,8 @@ m4vfm		// Value For Money (Global)
 m4bangina	//
 m4banginb	//
 m4wwc		// Wacky Weekend Club (Global)
+m4wwca		//
+m4wwcb		//
 m4screw		// Screwin' Around (Global)
 m4screwp
 m4screwa
@@ -18690,12 +23640,12 @@ m4screwb
 m4bigben	// Big Ben (Coinworld)
 m4bigbena	//
 m4bigbenb	//
-m4bigbenc	//
 m4bigbend	//
 m4bigbene	//
 m4kqclub	// Kings & Queens Club (Newby)
 m4snookr	// Snooker (Eurocoin)
 m4spnwin	// Spin A Win (Cotswold Microsystems)
+m4spnwina	//
 m4stakex	// Stake X (Leisurama)
 m4stakexa	// Stake X (Leisurama)
 m4sstrek	// Super Streak (bootleg)
@@ -18711,35 +23661,104 @@ m4stand2	// Stand To Deliver (DJE)
 m4frkstn	// Frank 'n' Stein (unencrypted)
 m4frkstna	//
 m4frkstnb	//
+m4frkstnc	//
+m4frkstnd	//
+m4frkstne	//
+m4frkstnf	//
+m4frkstng	//
+m4frkstnh	//
 m4aladn		// Aladdin's Cave (Crystal)
+m4aladna	//
+m4aladnb	//
+m4aladnc	//
+m4aladnd	//
+m4aladne	//
+m4aladnf	//
+m4aladng	//
+m4aladnh	//
+m4aladni	//
 m4bagcsh	// Bags Of Cash Club (Crystal)
+m4bagcsha	//
 m4bucclb	// Buccaneer Club (Crystal)
+m4bucclba	//
+m4bucclbb	//
+m4bucclbc	//
 m4bullio	// Bullion Club (Crystal)
+m4bullioa	//
+m4bulliob	//
 m4carou		// Carousel Club (Crystal)
+m4caroua	//
+m4caroub	//
+m4carouc	//
 m4cclimb	// Crazy Climber (Crystal)
+m4cclimba	//
 m4crzcl		// Crazy Climber Club (Crystal)
-m4crzclc	// Crazy Club Climber (Crystal)
+m4crzcla	//
+m4crzclb	//
+m4crzclc	//
+m4crzcld	//
 m4elitc		// Elite Club (Crystal)
+m4elitca	//
 m4fairg		// Fairground (Crystal)
 m4frmani	// Fruit Mania (Crystal)
+m4frmania	//
+m4frmanib	//
+m4frmanic	//
 m4goldxc	// Gold Exchange Club (Crystal)
+m4goldxca	//
+m4goldxcb	//
+m4goldxcc	//
+m4goldxcd	//
+m4goldxce	//
 m4goldfc	// Gold Fever (Crystal)
+m4goldfca	//
+m4goldfcb	//
 m4hirol		// Hi Roller Club (Crystal)
+m4hirola	//
 m4kingqn	// Kings & Queens Club (Crystal)
+m4kingqna	//
 m4lotclb	// Lottery Club (Crystal)
+m4lotclba	//
 m4montrl	// Money Trail (Crystal)
+m4montrla	//
+m4montrlb	//
+m4montrlc	//
+m4montrld	//
 m4mystiq	// Mystique Club (Crystal)
+m4mystiqa	//
+m4mystiqb	//
+m4mystiqc	//
 m4nudwin	// Nudge & Win (Crystal)
+m4nudwina	//
 m4paracl	// Paradise Club (Crystal)
+m4paracla	//
 m4rlpick	// Reel Picks (Crystal)
+m4rlpicka	//
+m4rlpickb	//
+m4rlpickc	//
 m4twstr		// Twister (Crystal)
+m4twstra	//
+m4twstrb	//
+m4twstrc	//
+m4twstrd	//
 m4twstcl	// Twister Club (Crystal)
+m4twstcla	//
+m4twstclb	//
 m4dz		// Danger Zone (Crystal?)
 m4tylb		// Thank Your Lucky Bars (Crystal)
+m4tylba		//
 m4magi7		// Magic 7s (Crystal)
+m4magi7a	//
 m4rags		// Rags to Riches Club (Crystal)
+m4ragsa		//
+m4ragsb		//
+m4ragsc		//
 m4riocr		// Rio Grande (Grystal)
+m4riocra	//
 m4ndup		// Nudge Double Up (Crystal)
+m4ndupa		//
+m4ndupb		//
+m4ndupc		//
 
 /* Unknown */
 
@@ -18747,103 +23766,782 @@ m4barcrz	// Bar Crazy (unknown)
 m4bonzbn	// Bingo Bonanza (unknown)
 m4cld02		// Unknown MPU4 'CLD 0.2C'
 m4dnj		// Double Nudge (unknown)
+m4dnja		//
+m4dnjb		//
 m4matdr		// Matador (unknown)
 m4ttak		// Tic Tac Take (unknown)
 m4hslo		// Unknown MPU4 'HOT 3.0'
 m4sbx		// Super Bear X
+m4sbxa		//
+m4sbxb		//
+m4sbxc		//
+m4sbxd		//
+m4sbxe		//
 m4bclimb	// Bear Climber
 m4captb		// Captain Bear
 m4jungj		// Jungle Japes
+m4jungja	//
+m4jungjb	//
+m4jungjc	//
 m4fsx		// Fun Spot X
+m4fsxa		//
+m4fsxb		//
 m4unkjok	// Unknown MPU4 'Joker'
+m4unkjoka	//
+m4unkjokb	//
+m4unkjokc	//
 m4remag		// Unknown MPU4 'ZTP 0.7'
 m4rmg		// Unknown MPU4 'CTP 0.4'
 m4wnud		// Unknown MPU4 'W Nudge'
 m4t266		// Unknown MPU4 'TTO 1.1'
 m4brnze		// Bronze Voyage (unknown)
+m4brnzea	//
+m4brnzeb	//
 m4riotrp	// Rio Tropico (unknown)
 m4ccop
+m4ccopa
+m4ccopb
 m4ccc
 m4treel
+m4treela
 m4nod
-m4dcrls
+m4dcrls		// Double Crazy Reels (Qps)
+m4dcrls__a	//
+m4dcrls__b	//
+m4dcrls__c	//
+m4dcrls__d	//
+m4dcrls__e	//
+m4dcrls__f	//
+m4dcrls__g	//
+m4dcrls__h	//
+m4dcrls__i	//
+m4dcrls__j	//
+m4dcrls__k	//
+m4dcrls__l	//
+m4dcrls__m	//
+m4dcrls__n	//
+m4dcrls__o	//
+m4dcrls__p	//
+m4dcrls__q	//
+m4dcrls__r	//
 m4aliz		// AlizBaz (Qps)
 m4bluesn	// Blues Boys (Nova)
 m4c2		// Circus Circus 2 (Nova)
 m4coney		// Coney Island (Qps)
 m4cfinln	// Cup Final (Nova)
-m4dcrazy	// D' Crazy Reels (Qps)
+m4cfinln__a	//
 m4ftladn	// Find the Lady (Nova)
 m4goldnn	// Golden Years (Nova)
 m4jungjk	// Jungle Jackpots (Mazooma - Qps)
+m4jungjk__a	//
+m4jungjk__b	//
+m4jungjk__c	//
+m4jungjk__d	//
+m4jungjk__e	//
 m4clab		// Cash Lab (Mazooma - Qps)
+m4clab__a	//
+m4clab__b	//
+m4clab__c	//
+m4clab__d	//
+m4clab__e	//
+m4clab__f	//
+m4clab__g	//
+m4clab__h	//
+m4clab__i	//
+m4clab__j	//
 m4looplt	// Loop The Loot (Qps)
+m4looplt__a	//
+m4looplt__b	//
+m4looplt__c	//
+m4looplt__d	//
+m4looplt__e	//
+m4looplt__f	//
+m4looplt__g	//
+m4looplt__h	//
+m4looplt__i	//
+m4looplt__j	//
+m4looplt__k	//
+m4looplt__l	//
+m4looplt__m	//
 m4mgpn		// Monaco Grand Prix (Nova)
 m4olygn		// Olympic Gold (Nova)
+m4olygn__a	//
 m4rhnote	// Red Hot Notes (Qps)
+m4rhnote__a	//
+m4rhnote__b	//
+m4rhnote__c	//
+m4rhnote__d	//
+m4rhnote__e	//
+m4rhnote__f	//
+m4rhnote__g	//
+m4rhnote__h	//
+m4rhnote__i	//
+m4rhnote__j	//
+m4rhnote__k	//
+m4rhnote__l //
+m4rhnote__m	//
+m4rhnote__n	//
+m4rhnote__o	//
+m4rhnote__p	//
+m4rhnote__q	//
+m4rhnote__r	//
+m4rhnote__s	//
+m4rhnote__t	//
+m4rhnote__u	//
+m4rhnote__v	//
+m4rhnote__w	//
+m4rhnote__x	//
+m4rhnote__y	//
 m4rhrock	// Red Hot Rocks (Qps)
+m4rhrock__a	//
 m4rhwhl		// Red Hot Wheels (Mazooma - Qps)
+m4rhwhl__a	//
+m4rhwhl__b	//
+m4rhwhl__c	//
 m4rdeal		// Reel Deal (Qps)
+m4rdeal__a	//
+m4rdeal__b	//
+m4rdeal__c	//
+m4rdeal__d	//
+m4rdeal__e	//
+m4rdeal__f	//
+m4rdeal__g	//
+m4rdeal__h	//
+m4rdeal__i	//
 m4shoknr	// Shock 'n' Roll (Mazooma - Qps)
+m4shoknr__a	//
+m4shoknr__b	//
+m4shoknr__c	//
+m4shoknr__d	//
 m4shkwav	// Shockwave (Mazooma - Qps)
+m4shkwav__a	//
+m4shkwav__b	//
+m4shkwav__c	//
+m4shkwav__d	//
+m4shkwav__e	//
+m4shkwav__f	//
+m4shkwav__g	//
 m4sinbdn	// Sinbad (Nova)
-m4sinbd2	// Sinbad Deluxe 2 (Nova)
-m4sinbd3	// Sinbad Deluxe 3 (Nova)
-m4sinbdd	// Sinbad Deluxe [Wall Mount] (Nova)
-m4sinbdj	// Sinbad [Jackpot Link] (Nova)
-m4sinbdl	// Sinbad [Jackpot Link] [Wall Mount] (Nova)
-m4sinbdw	// Sinbad [Wall Mount] (Nova)
+m4sinbdn__a	//
+m4sinbdn__b	//
+m4sinbdn__c	//
+m4sinbdn__d	//
+m4sinbdn__e	//
+m4sinbdn__f	//
 m4spotln	// Spotlight (Nova)
 m4sdquid	// Sundance Quid (Qps)
+m4sdquid__a	//
+m4sdquid__b	//
+m4sdquid__c	//
+m4sdquid__d	//
+m4sdquid__e	//
+m4sdquid__f	//
+m4sdquid__g	//
+m4sdquid__h	//
+m4sdquid__i	//
+m4sdquid__j	//
+m4sdquid__k	//
 m4tornad	// Tornado (Qps - Mazooma)
+m4tornad__a	//
+m4tornad__b	//
+m4tornad__c	//
+m4tornad__d	//
+m4tornad__e	//
+m4tornad__f	//
+m4tornad__g	//
 m4vivan		// Viva Las Vegas (Nova)
+m4blsbys		// Blues Boys (Bwb)
+m4blsbys__a		//
+m4blsbys__b		//
+m4blsbys__c		//
+m4blsbys__d		//
+m4blsbys__e		//
+m4blsbys__f		//
+m4blsbys__g		//
+m4blsbys__h		//
+m4blsbys__i		//
+m4blsbys__j		//
+m4blsbys__k		//
+m4blsbys__l		//
+m4blsbys__m		//
+m4blsbys__n		//
+m4blsbys__o		//
+m4blsbys__p		//
+m4blsbys__q		//
+m4blsbys__r		//
+m4blsbys__s		//
+m4blsbys__t		//
+m4blsbys__u		//
+m4blsbys__v		//
+m4blsbys__w		//
+m4blsbys__x		//
+m4blsbys__y		//
+m4blsbys__z		//
+m4blsbys__0		//
+m4blsbys__1		//
+m4blsbys__2		//
+m4blsbys__3		//
+m4blsbys__4		//
+m4blsbys__5		//
+m4blsbys__6		//
+m4blsbys__7		//
+m4blsbys__8		//
+m4blsbys__9		//
+m4blsbys__aa	//
+m4blsbys__ab	//
+m4blsbys__ac	//
+m4blsbys__ad	//
 
 /* Unsorted */
 
-m4blsbys	// Blues Boys (Version 6)
 m4conn4		// Connect 4
 
 m4surf		// Super Surfin' (Gemini)
+m4surfa		//
+m4surfb		//
 m4wife		// Money Or Yer Wife (Gemini)
 m4blkgd		// Black Gold (Gemini)
+m4blkgda	//
 m4excam		// Excalibur (Mdm)
 m4front		// Final Frontier (Mdm)
 m4pick		// Pick A Fruit (Jpm)
 m4safar		// Safari Club (Mdm)
 m4zill		// Zillionare's Challenge (Pure Leisure)
+m4zilla		//
 m4snowbl	//
 m4hstr		// Happy Streak (Coinworld)
+m4hstra		//
+m4hstrb		//
 m4hstrcs	// Casino Happy Streak (Coinworld)
+m4hstrcsa	//
+m4hstrcsb	//
+m4hstrcsc	//
+m4hstrcsd	//
 m4ddb		// Ding Dong Bells (Coinworld)
+m4ddba		//
 m4hapfrt	// Happy Fruits (Coinworld)
+m4hapfrta	//
+m4hapfrtb	//
 m4frcrak	// Fruit Cracker
 m4ewshft	// Each Way Shifter
 m4jiggin	// Jiggin' In The Riggin'
+m4jiggina	//
 m4sunday	// Sunday Sport
 m4jp777		// Jackpot 777
 m4booze		// Booze Cruise
 m4cbing		// Cherry Bingo
 m4supsl
 m4abra		// Abracadabra (Bwb)
+m4abra__a	//
+m4abra__b	//
+m4abra__c	//
 m4wcnov		// World Cup (Nova)
 m4excaln	// Excalibur (Nova)
+m4excaln__a	//
 
 /* Bdd? */
-m4robo
-m4trg
-m4mbel
-m4abeaut
+m4robo		//
+m4robo__a	//
+m4robo__b	//
+m4robo__c	//
+m4robo__d	//
+m4robo__e	//
+m4robo__f	//
+m4robo__g	//
+m4robo__h	//
+m4robo__i	//
+m4robo__j	//
+m4robo__k	//
+m4robo__l	//
+m4robo__m	//
+m4robo__n	//
+m4robo__o	//
+m4robo__p	//
+m4robo__q	//
+m4robo__r	//
+m4robo__s	//
+m4robo__t	//
+m4robo__u	//
+m4robo__v	//
+m4robo__w	//
+m4robo__x	//
+m4robo__y	//
+m4robo__z	//
+m4robo__0	//
+m4robo__1	//
+m4robo__2	//
+m4robo__3	//
+m4robo__4	//
+m4robo__5	//
+m4robo__6	//
+m4robo__7	//
+m4robo__8	//
+m4robo__9	//
+m4robo__aa	//
+m4robo__ab	//
+
+m4trg		//
+m4trg__a	//
+m4trg__b	//
+m4trg__c	//
+m4trg__d	//
+m4trg__e	//
+m4trg__f	//
+m4trg__g	//
+m4trg__h	//
+m4trg__i	//
+m4trg__j	//
+m4trg__k	//
+m4trg__l	//
+m4trg__m	//
+m4trg__n	//
+m4trg__o	//
+m4trg__p	//
+m4trg__q	//
+m4trg__r	//
+m4trg__s	//
+m4trg__t	//
+m4trg__u	//
+m4trg__v	//
+m4trg__w	//
+m4trg__x	//
+m4trg__y	//
+m4trg__z	//
+m4trg__0	//
+m4trg__1	//
+m4trg__2	//
+m4trg__3	//
+m4trg__4	//
+
+m4mbel		//
+m4mbel__a	//
+m4mbel__b	//
+m4mbel__c	//
+m4mbel__d	//
+m4mbel__e	//
+m4mbel__f	//
+m4mbel__g	//
+m4mbel__h	//
+m4mbel__i	//
+m4mbel__j	//
+m4mbel__k	//
+m4mbel__m	//
+m4mbel__n	//
+m4mbel__o	//
+m4mbel__p	//
+m4mbel__q	//
+m4mbel__r	//
+m4mbel__s	//
+m4mbel__t	//
+m4mbel__u	//
+m4mbel__v	//
+m4mbel__w	//
+m4mbel__x	//
+m4mbel__y	//
+m4mbel__z	//
+m4mbel__0	//
+m4mbel__1	//
+m4mbel__2	//
+m4mbel__3	//
+m4mbel__4	//
+m4mbel__5	//
+m4mbel__6	//
+m4mbel__7	//
+m4mbel__8	//
+m4mbel__9	//
+m4mbel__aa	//
+m4mbel__ab	//
+m4mbel__ac	//
+m4mbel__ad	//
+m4mbel__ae	//
+m4mbel__af	//
+m4mbel__ag	//
+m4mbel__ah	//
+m4mbel__ai	//
+m4mbel__aj	//
+m4mbel__ak	//
+m4mbel__al	//
+m4mbel__am	//
+m4mbel__an	//
+m4mbel__ao	//
+m4mbel__ap	//
+m4mbel__aq	//
+m4mbel__ar	//
+m4mbel__as	//
+m4mbel__at	//
+m4mbel__au	//
+m4mbel__av	//
+m4mbel__aw	//
+m4mbel__ax	//
+m4mbel__ay	//
+m4mbel__az	//
+m4mbel__a0	//
+m4abeaut		//
+m4abeaut_1		//
+m4abeaut_2		//
+m4abeaut_3		//
+m4abeaut_4		//
+m4abeaut_5		//
+m4abeaut_6		//
+m4abeaut_7		//
+m4abeaut_8		//
+m4abeaut_9		//
+m4abeaut_u1		//
+m4abeaut_u2		//
+m4abeaut_u3		//
+m4abeaut_u4		//
+m4abeaut_u5		//
+m4abeaut_u6		//
+m4abeaut_u7		//
+m4abeaut_u8		//
+m4abeaut_u9		//
+m4abeaut_u10	//
+m4abeaut_u11	//
+m4abeaut_u12	//
+m4abeaut_u13	//
+m4abeaut_u14	//
+m4abeaut_u15	//
+m4abeaut_u16	//
+m4abeaut_u17	//
+m4abeaut_u18	//
+m4abeaut_u19	//
+m4abeaut_u20	//
+m4abeaut_u21	//
+m4abeaut_u22	//
+m4abeaut_u23	//
+m4abeaut_u24	//
+m4abeaut_u25	//
+m4abeaut_u26	//
+m4abeaut_u27	//
+m4abeaut_u28	//
+m4abeaut_u29	//
+m4abeaut_u30	//
+m4abeaut_u31	//
+m4abeaut_u32	//
+m4abeaut_u33	//
+m4abeaut_u34	//
+m4abeaut_u35	//
+m4abeaut_u36	//
+m4abeaut_u37	//
+m4abeaut_u38	//
+m4abeaut_u39	//
+m4abeaut_u40	//
+m4abeaut_u41	//
+m4abeaut_u42	//
+m4abeaut_u43	//
+m4abeaut_u44	//
+m4abeaut_u45	//
+m4abeaut_u46	//
+m4abeaut_u47	//
+m4abeaut_u48	//
+m4abeaut_u49	//
+m4abeaut_u50	//
+m4abeaut_u51	//
+m4abeaut_u52	//
+m4abeaut_u53	//
+m4abeaut_u54	//
+m4abeaut_u55	//
+m4abeaut_u56	//
+m4abeaut_u57	//
+m4abeaut_u58	//
+m4abeaut_u59	//
+m4abeaut_u60	//
+m4abeaut_u61	//
+m4abeaut_u62	//
+m4abeaut_u63	//
+m4abeaut_u64	//
+m4abeaut_r1		//
+m4abeaut_r2		//
+m4abeaut_r3		//
+m4abeaut_r4		//
+m4abeaut_r5		//
+m4abeaut_r6		//
+m4abeaut_r7		//
+m4abeaut_r8		//
+m4abeaut_r9		//
+m4abeaut_r10	//
+m4abeaut_r11	//
+m4abeaut_r12	//
+m4abeaut_r13	//
+m4abeaut_r14	//
+m4abeaut_l1		//
+m4abeaut_l2		//
+m4abeaut_l3		//
+m4abeaut_l4		//
+m4abeaut_l5		//
+m4abeaut_l6		//
+m4abeaut_l7		//
+m4abeaut_l8		//
+m4abeaut_l9		//
+m4abeaut_l10	//
+m4abeaut_l11	//
+m4abeaut_l12	//
+m4abeaut_l13	//
+m4abeaut_l14	//
+m4abeaut_l15	//
+m4abeaut_l16	//
+m4abeaut_l17	//
+m4abeaut_l18	//
+m4abeaut_l19	//
+m4abeaut_l20	//
+m4abeaut_l21	//
+m4abeaut_l22	//
+m4abeaut_l23	//
+m4abeaut_l24	//
+m4abeaut_l25	//
+m4abeaut_l26	//
+m4abeaut_l27	//
+m4abeaut_l28	//
+m4abeaut_l29	//
+m4abeaut_l30	//
+m4abeaut_l31	//
+m4abeaut_l32	//
+m4abeaut_l33	//
+m4abeaut_l34	//
+m4abeaut_l35	//
+m4abeaut_l36	//
+m4abeaut_l37	//
+m4abeaut_l38	//
+m4abeaut_pb1	//
+m4abeaut_pb2	//
+m4abeaut_i1		//
+m4abeaut_i2		//
+m4abeaut_c1		//
+m4abeaut_c2		//
+m4abeaut_c3		//
+m4abeaut_c4		//
+m4abeaut_c5		//
+m4abeaut_c6		//
+m4abeaut_c7		//
+m4abeaut_c8		//
+m4abeaut_c9		//
+m4abeaut_c10	//
+m4abeaut_c11	//
+m4abeaut_c12	//
+m4abeaut_c13	//
+m4abeaut_c14	//
+m4abeaut_c15	//
+m4abeaut_c16	//
+m4abeaut_c17	//
+m4abeaut_c18	//
+m4abeaut_c19	//
+m4abeaut_c20	//
+m4abeaut_c21	//
+m4abeaut_c22	//
+m4abeaut_c23	//
+m4abeaut_c24	//
+m4abeaut_c25	//
+m4abeaut_c26	//
+m4abeaut_c27	//
+m4abeaut_c28	//
+m4abeaut_c29	//
+m4abeaut_c30	//
+m4abeaut_c31	//
+m4abeaut_s1		//
+m4abeaut_s2		//
+m4abeaut_s3		//
+m4abeaut_s4		//
+m4abeaut_m1		//
+m4abeaut_m2		//
+m4abeaut_m3		//
+m4abeaut_m4		//
+m4abeaut_k1		//
+m4abeaut_k2		//
+m4rmtp		// Reel Magic Turbo Play
+m4rmtp__a	//
+m4rmtp__b	//
+m4rmtp__c	//
+m4rmtp__d	//
+m4rmtp__e	//
+m4rmtp__f	//
+m4rmtp__g	//
+m4rmtpd		// Reel Magic Turbo Play Deluxe
+m4rmtpd__a	//
+m4rmtpd__b	//
+m4rmtpd__c	//
+m4rmtpd__d	//
+m4rmtpd__e	//
+m4rmtpd__f	//
+m4rmtpd__g	//
+m4rmtpd__h	//
+m4rmtpd__i	//
+m4rmtpd__j	//
+m4rmtpd__k	//
+m4rmtpd__l	//
+m4rmtpd__m	//
+m4rmtpd__n	//
+m4rmtpd__o	//
+m4rmtpd__p	//
+m4rmtpd__q	//
+m4rmtpd__r	//
+m4rmtpd__s	//
+m4rmtpd__t	//
+m4rmtpd__u	//
+m4rmtpd__v	//
+m4rmtpd__w	//
+m4rmtpd__x	//
+m4rmtpd__y	//
+m4rmtpd__z	//
+m4rmtpd__0	//
+m4rmtpd__1	//
+m4rmtpd__2	//
+m4rmtpd__3	//
+m4rmtpd__4	//
+m4rmtpd__5	//
+m4rmtpd__6	//
+m4rmtpd__7	//
+m4rmtpd__8	//
+m4rmtpd__9	//
+m4rmtpd__aa	//
+m4rmtpd__ab	//
+m4rmtpd__ac	//
+m4rmtpd__ad	//
+m4rmtpd__ae	//
+m4rmtpd__af	//
+m4rmtpd__ag	//
+m4rmtpd__ah	//
+m4rmtpd__ai	//
+m4rmtpd__aj	//
+m4rmtpd__ak	//
+m4rmtpd__al	//
+m4rmtpd__am	//
 m4cmont
-m4blkmgc
-m4amalad
-m4bben
-m4bbox
-m4frnudg
-m4frmtx
-m4jok2k
-m4mjp
-m4milrou
-m4kingg
+m4cmont_1	//
+m4cmont_2	//
+m4cmont_3	//
+m4cmont_4	//
+m4cmont_5	//
+m4cmont_6	//
+m4cmont_7	//
+m4cmont_8	//
+m4cmont_9	//
+m4cmont_10	//
+m4cmont_11	//
+m4cmont_12	//
+m4cmont_13	//
+m4cmont_u1	//
+m4cmont_u2	//
+m4cmont_u3	//
+m4cmont_u4	//
+m4cmont_u5	//
+m4cmont_u6	//
+m4cmont_u7	//
+m4cmont_u8	//
+m4cmont_u9	//
+m4cmont_u10	//
+m4cmont_u11	//
+m4cmont_u12	//
+m4cmont_u13	//
+m4cmont_u14	//
+m4cmont_u15	//
+m4cmont_u16	//
+m4cmont_u17	//
+m4cmont_u18	//
+m4cmont_u19	//
+m4cmont_u20	//
+m4cmont_u21	//
+m4cmont_u22	//
+m4cmont_u23	//
+m4cmont_u24	//
+m4cmont_u25	//
+m4cmont_u26	//
+m4cmont_u27	//
+m4cmont_l1	//
+m4cmont_l2	//
+m4cmont_l3	//
+m4cmont_l4	//
+m4cmont_l5	//
+m4cmont_l6	//
+m4cmont_l7	//
+m4cmont_l8	//
+m4cmont_l9	//
+m4cmont_l10	//
+m4cmont_l11	//
+m4cmont_l12	//
+m4cmont_l13	//
+m4cmont_l14	//
+m4cmont_l15	//
+m4cmont_l16	//
+m4cmont_r1	//
+m4cmont_r2	//
+m4cmont_r3	//
+m4cmont_r4	//
+m4cmont_r5	//
+m4cmont_r6	//
+m4cmont_r7	//
+m4cmont_r8	//
+m4cmont_gt1	//
+m4cmont_gt2	//
+m4cmont_gt3	//
+m4blkmgc	// Black Magic
+m4blkmgc_1	//
+m4blkmgc_u1	//
+m4blkmgc_u2	//
+m4blkmgc_u3	//
+m4blkmgc_u4	//
+m4blkmgc_u5	//
+m4blkmgc_u6	//
+m4amalad	// American Aladdin
+m4amalad__a	//
+m4amalad__b	//
+m4amalad__c	//
+m4amalad__d	//
+m4amalad__e	//
+m4amalad__f	//
+m4amalad__g	//
+m4amalad__h	//
+m4amalad__i	//
+m4amalad__j	//
+m4amalad__k	//
+m4amalad__l	//
+m4amalad__m	//
+m4amalad__n	//
+m4bben		// Big Ben
+m4bben__a	//
+m4bben__b	//
+m4bben__c	//
+m4bben__d	//
+m4bben__e	//
+m4bben__f	//
+m4bben__g	//
+m4bben__h	//
+m4bben__i	//
+m4bbox		// Brain Box
+m4bbox__a	//
+m4bbox__b	//
+m4bbox__c	//
+m4bbox__d	//
+m4bbox__e	//
+m4bbox__f	//
+m4bbox__g	//
+m4bbox__h	//
+m4bbox__i	//
+m4frnudg	// Fruit & Nudge
+m4frnudg__a	//
+m4frnudg__b	//
+m4frnudg__c	//
+m4frmtx		// Fruit Matrix
+m4frmtx__a	//
+m4frmtx__b	//
+m4frmtx__c	//
+m4frmtx__d	//
+m4frmtx__e	//
+m4frmtx__f	//
+m4jok2k		// Joker 2000
+m4jok2k__a	//
+m4jok2k__b	//
+m4mjp		// Mega Jackpot
+m4mjp__a	//
+m4mjp__b	//
+m4mjp__c	//
+m4mjp__d	//
+m4mjp__e	//
+m4mjp__f	//
+m4mjp__g	//
+m4milrou	// Millennium Roulette
+m4milrou__a	//
+m4kingg		// King George
+m4kingg__a	//
 
 // MPU4 + Video board
 
@@ -19098,11 +24796,17 @@ m5jlyjwl02  //
 m5jlyrog	// Jolly Roger (Barcrest)
 m5jlyroga	//
 m5kkebab	// King Kebab (Barcrest)
+m5kkebab10	//
+m5kkebaba	//
 m5kingko	// King KO (Barcrest)
+m5kingko04	//
+m5kingko05	//
 m5lotta		// Lotta Luck (Barcrest)
 m5mega		// Mega Zone (Barcrest)
 m5martns	// Money Mad Martians (Barcrest)
+m5martns07	//
 m5mmak		// Money Maker (Barcrest)
+m5mmak06	//
 m5monjok	// Monedin Joker (Spanish) (Barcrest)
 m5monjoka	//
 m5monty		// Monty Python (Barcrest)
@@ -19113,53 +24817,106 @@ m5neptun	// Neptunes Treasure (Barcrest)
 m5nnww		// Nudge Nudge Wink Wink (Barcrest)
 m5nnwwgl	// Nudge Nudge Wink Wink Gold (Barcrest)
 m5fiddle	// On The Fiddle (Barcrest)
+m5fiddle03	//
 m5oohaah	// Ooh Aah Dracula (Barcrest)
+m5oohaah01	//
 m5oohrio	// Ooh Ahh Dracula Rio (Barcrest)
 m5openbx	// Open The Box (Barcrest)
+m5openbx06	//
+m5openbx05	//
+m5openbx01	//
 m5overld	// Overload (Barcrest)
+m5overld02	//
+m5overld10	//
+m5overld11	//
 m5ptyani	// Party Animal (Barcrest)
+m5ptyani01	//
 m5peepsh	// Peep Show (Barcrest)
 m5psy2		// Psycho Cash Beast 2 (Barcrest)
 m5qshot		// Quack Shot (Barcrest)
+m5qshot04	//
 m5roof		// Raise The Roof (Barcrest)
 m5roofa		//
 m5razdz		// Razzle Dazzle Club (Barcrest)
+m5razdz10	//
+m5razdz11	//
 m5redrck	// Ready To Rock (Barcrest)
+m5redrck10	//
+m5redrcka	//
 m5rhkni		// Red Hot Knights (Barcrest)
 m5rhrg		// Red Hot Roll Gold (Barcrest)
+m5rhrga		//
 m5rhrgt		// Red Hot Roll Triple (Barcrest)
+m5rhrgt12	//
+m5rhrgt02	//
 m5revo		// Revolution (Barcrest)
+m5revo13	//
+m5revoa		//
 m5rgclb		// Rio Grande Club (Barcrest)
+m5rgclb11	//
+m5rgclb12	//
+m5rgclb20	//
+m5rgclb21	//
+m5rgclb03	//
+m5rgclb01	//
+m5rgclb01a	//
 m5rcx		// Royal Exchange Club (Barcrest)
 m5rcxa		//
 m5rub		// Rubies & Diamonds (Barcrest)
 m5ritj		// Rumble In The Jungle (Barcrest)
 m5rfymc		// Run For Your Money Club (Barcrest)
+m5rfymc06	//
 m5seven		// Seven Deadly Spins (Barcrest)
 m5sheik		// Sheik Yer Money (Barcrest)
 m5showtm	// Showtime (Barcrest)
 m5silver	// Silver Screen (Barcrest)
+m5silver06	//
+m5silver03	//
 m5sondr		// Son Of Dracula (Barcrest)
-m5sondra
+m5sondr05	//
+m5sondra	//
 m5spicer	// The Spice Is Right (Barcrest)
+m5spicer06	//
 m5spiker	// Spiker The Biker (Barcrest)
+m5spiker02	//
+m5spikera	//
 m5spins		// Spinsation (Barcrest)
 m5squids	// Squids In (Barcrest)
+m5squids04a	//
+m5squids05	//
+m5squids06	//
 m5stax		// Stax Of Cash (Barcrest)
 m5scharg	// Super Charged (Barcrest)
+m5scharg05	//
+m5scharg06	//
+m5scharga	//
 m5supstr	// Super Star (Barcrest)
+m5supstra	//
 m5sstrk		// Super Streak (Barcrest)
+m5sstrk02a	//
 m5supnov	// Supernova (Barcrest)
+m5supnova	//
 m5tempt		// Temple Of Treasure (Barcrest)
+m5tempt05	//
+m5tempta	//
+m5temptb	//
 m5tempt2	// Temple Of Treasure 2 (Barcrest)
+m5tempt203	//
+m5tempt2a	//
 m5tempcl	// Temple Of Treasure Club (Barcrest)
 m5tbird		// Thunderbird (Barcrest)
 m5topdog	// Top Dog (Barcrest)
+m5topdog04	//
+m5topdoga	//
 m5trail		// Trailblazer Club (Barcrest)
 m5ultimo	// Ultimo (Barcrest)
+m5ultimo03a	//
+m5ultimo04	//
 m5upover	// Up & Over (Barcrest)
+m5upover15	//
 m5vampup	// Vamp It Up (Barcrest)
 m5wking		// Wild King (Barcrest)
+m5wking05	//
 m5costa		// Costa Del Cash (Barcrest)
 m5ttwo		// Take Two (Barcrest)
 m5horn		// Horn Of Plenty (Barcrest)
@@ -19170,9 +24927,15 @@ m5hotrk		// Hot Rocks (Barcrest)
 m5ashock	// Aftershock (Barcrest - Red Gaming)
 m5ashocka	//
 m5bigsht	// Big Shot (Barcrest - Red Gaming)
+m5bigsht04	//
+m5bigsht11	//
+m5bigsht13	//
+m5bigshta	//
 m5bnkrs		// Bonkers (Barcrest - Red Gaming)
 m5bbank		// Break The Bank (Barcrest - Red Gaming)
+m5bbank13	//
 m5casfev	// Casino Fever (Red Gaming)
+m5casfev12	//
 m5dmnstr	// Demon Streak (Barcrest - Red Gaming)
 m5dmnstra	//
 m5dbubl		// Double Bubble (Barcrest - Red Gaming)
@@ -19181,25 +24944,32 @@ m5dragnda
 m5fnfair	// Funfair (Barcrest - Red Gaming)
 m5fnfaird	//
 m5fusir		// Fruits U Sir (Barcrest - Red Gaming)
-m5fusira	//
+m5fusir11	//
+m5fusir12	//
 m5hypalx	// Hypalinx (Barcrest - Red Gaming)
 m5invad		// Invaders (Barcrest - Red Gaming)
 m5jcptgn	// Jackpot Genie (Barcrest - Red Gaming)
 m5jlstrk	// Jewel Strike (Barcrest - Red Gaming)
 m5lock		// Lock 'n' Load (Barcrest - Red Gaming)
-m5locka		//
+m5lock13	//
+m5lock12	//
 m5lockcl	// Lock 'n' Load Club (Barcrest - Red Gaming)
-m5lockcla	//
+m5lockcl15	//
+m5lockcl14	//
 m5nitro		// Nitro (Barcrest - Red Gaming)
 m5paint		// Paint The Town Red (Barcrest - Red Gaming)
 m5quake		// Quake (Barcrest - Red Gaming)
 m5rainrn	// Rainbow Runner (Barcrest - Red Gaming)
 m5rainrna	//
 m5rampg		// Rampage (Barcrest - Red Gaming)
+m5rampg11	//
+m5rampg12	//
 m5rdwarf	// Red Dwarf (Barcrest - Red Gaming)
 m5redx		// Red X (Barcrest - Red Gaming)
+m5redx12	//
 m5thtsmg	// That's Magic (Barcrest - Red Gaming)
 m5topdol	// Top Dollar (Barcrest - Red Gaming)
+m5topdola	//
 m5zigzag	// Zig Zag
 m5cmass		// Critical Mass (Barcrest - Red Gaming)
 m5sblz		// Snail Blazer (Barcrest - Red Gaming)
@@ -19239,23 +25009,33 @@ m5all41m	//
 m5atlan		// Atlantic (Vivid)
 m5atlana	//
 m5bttf		// Back To The Features (Vivid)
+m5bttfa		//
 m5btlbnk	// Bottle Bank (Vivid)
 m5caesc		// Caesar's Cash (Vivid)
 m5card		// Card Shark (Vivid)
 m5cshkcb	// Card Shark Club (Vivid)
+m5cshkcb12	//
+m5cshkcb13	//
 m5clifhn	// Cliffhanger (Vivid)
 m5cnct4		// Connect 4 (Vivid)
-m5devil		// Devil Of A  Deal (Vivid)
+m5cnct415	//
+m5cnct420	//
+m5devil		// Devil Of A Deal (Vivid)
 m5elband	// El Bandido Club (Vivid)
 m5fair		// Fairground Attraction (Vivid)
 m5ggems		// Giant Gems (Vivid)
+m5ggems20	//
 m5groll		// Golden Roll (Vivid)
 m5hilok		// Hi Lo Karate (Vivid)
 m5hiclau	// High Claudius (Vivid)
 m5honmon	// Honey Money (Vivid)
+m5honmona	//
 m5hopidl	// Hop Idol (Vivid)
 m5hypno		// Hypnotic (Vivid)
 m5jmpjok	// Jumpin Jokers (Vivid)
+m5jmpjok11	//
+m5jmpjoka	//
+m5jmpjokb	//
 m5loony		// Loony Juice (Vivid)
 m5loot		// Loot 'n' Khamun (Vivid)
 m5loota		//
@@ -19268,19 +25048,40 @@ m5mag7se	//
 m5msf		// Manic Streak Features (Vivid)
 m5msfa		//
 m5piefac	// Pie Factory (Vivid)
+m5piefac23	//
+m5piefac12	//
+m5piefaca	//
 m5piefc2	// Pie Factory 2 (Vivid)
+m5piefc2a	//
+m5piefc2b	//
 m5piefcr	// Pie Factory Rio (Vivid)
 m5qdraw		// Quick On The Draw (Vivid)
+m5qdraw12	//
+m5qdraw14	//
+m5qdraw15	//
+m5qdrawa	//
+m5qdrawb	//
 m5redbal	// Random Red Ball (Vivid)
 m5ratpk		// Rat Pack (Vivid)
+m5ratpka	//
 m5rollup	// Roll Up Roll Up (Vivid)
 m5shark		// Shark Raving Mad (Vivid)
+m5sharka	//
 m5speccl	// Spectrum Club (Vivid)
 m5spddmn	// Speed Demon (Vivid)
 m5stars		// Stars & Stripes (Vivid)
+m5stars13a	//
+m5stars26	//
+m5stars25a	//
+m5stars25	//
+m5stars22	//
+m5stars20	//
+m5stars10	//
+m5stars10a	//
 m5starcl	// Stars & Stripes Club (Vivid)
 m5startr	// Stars & Stripes Triple (Vivid)
 m5supro		// Super Roulette (Vivid)
+m5suproa	//
 m5tempp		// Temple Of Pleasure (Vivid)
 m5whdres	// Who Dares Spins (Vivid)
 m5winway	// Winning Ways (Vivid)
@@ -19298,63 +25099,109 @@ m5aceclba	//
 m5aceclbb	//
 m5barxdx	// Bar X Deluxe (Empire)
 m5bnzclb	// Bonanza Club (Empire)
+m5bnzclb11	//
 m5bukroo	// Buckaroo (Empire)
 m5cbrun		// Cannonball Run (Empire)
 m5carou		// Carousel (Empire)
 m5casroc	// Casino Royale Club (Empire)
 m5centcl	// Centurion Club (Empire)
+m5centcl20	//
+m5centcl21	//
+m5centcl21a	//
+m5centcla	//
 m5cworan	// Clockwork Oranges (Empire)
+m5cworan12	//
 m5clbtro	// Club Tropicana (Empire)
+m5clbtro24	//
+m5clbtro25	//
 m5cockdd	// Cock A Doodle Dough! (Empire)
+m5cockdd05	//
 m5coloss	// Colossus Club (Empire)
 m5crocrk	// Crocodile Rock (Empire)
+m5crocrk10	//
 m5croclb	// Crocodile Rock Club (Empire)
 m5crsfir	// Crossfire (Empire)
 m5dmnf		// Diamonds Are Forever (Empire)
+m5dmnf10	//
 m5dmnfcl	// Diamonds Are Forever Club (Empire)
+m5dmnfcl04	//
 m5extrm		// Extreme (Empire)
 m5extrmm	// Extreme Madness (Empire)
+m5extrmm04a	//
+m5extrmm04b	//
+m5extrmm10	//
 m5fatcat	// Fat Cat (Empire)
 m5fishdl	// Fish Full Of Dollars (Empire)
+m5fishdl10	//
 m5fishcl	// Fish Full Of Dollars Club (Empire)
 m5fmonty	// The Full Monty (Empire)
+m5fmonty04a	//
+m5fmonty04b	//
+m5fmonty04c	//
 m5fmount	// Full Mountie (Empire)
 m5gophr		// Gopher Gold (Empire)
 m5gophcl	// Gopher Gold Club (Empire)
 m5hisprt	// High Spirits (Empire)
 m5hocus		// Hocus Pocus (Empire)
+m5hocus10	//
 m5hocscl	// Hocus Pocus Club (Empire)
 m5hotsht	// Hot Shots (Empire)
+m5hotsht07a	//
+m5hotsht08	//
+m5hotsht08a	//
+m5hotsht10	//
+m5hotsht10a	//
 m5hula		// Hula Moolah (Empire)
+m5hula10	//
 m5hulacl	// Hula Moolah Club (Empire)
 m5jackbx	// Jack In The Box (Empire)
+m5jackbx03	//
 m5jcy		// Juicy Fruits (Empire)
 m5jmpgem	// Jumping Gems (Empire)
+m5jmpgem01	//
+m5jmpgem03	//
 m5jmpgmc	// Jumping Gems Club (Empire)
 m5kaleid	// Kaleidoscope Club (Empire)
 m5kcclb		// King Cobra Club (Empire)
+m5kcclb24	//
 m5kingqc	// Kings & Queens Club (Empire)
+m5kingqc06	//
+m5kingqc07	//
+m5kingqc08	//
 m5korma		// Korma Chameleon (Empire)
+m5korma12	//
 m5kormcl	// Korma Chameleon Club (Empire)
 m5monmst	// Money Monster (Empire)
 m5monmsta	//
 m5ramrd		// Ram Raid (Empire)
 m5ramrcl	// Ram Raid Club (Empire)
 m5ronr		// Reel Or No Reel (Empire)
+m5ronr05	//
+m5ronr07	//
 m5resfrg	// Reservoir Frogs (Empire)
 m5rthh		// Return To The Haunted House (Empire)
 m5rollx		// Roll X (Empire)
+m5rollx12	//
 m5skulcl	// Skullduggery Club (Empire)
+m5skulcl20	//
+m5skulcl23	//
 m5tball		// Thunderball (Empire)
 m5tomb		// Tomb Raiders (Empire)
 m5trclb		// Tomb Raiders Club (Empire)
 m5ttop		// Treble Top (Empire)
+m5ttop04	//
+m5ttop10	//
 m5ttopcl	// Treble Top Club (Empire)
 m5tsar		// Tsar Wars (Empire)
 m5vertgo	// Vertigo (Empire)
 m5vertcl	// Vertigo Club (Empire)
 m5wthing	// Wild Thing Club (Empire)
+m5wthing11	//
+m5wthing20	//
 m5xfact		// X Factor (Empire)
+m5xfact02	//
+m5xfact04	//
+m5xfact11	//
 
 /* Bwb */
 m5carwsh	// Car Wash (Bwb)
@@ -19455,14 +25302,11 @@ acefruit	// (c) 1982? ACE
 // Ace System 1
 
 ac1clbmn	// Club Money (Ace)
-ac1clbmna	//
 ac1gogld	// Go For Gold (Ace)
-ac1goglda	//
 ac1hotpf	// Hot Profit (Ace)
 ac1pster	// Pound Sterling (Ace)
 ac1pstrt	// Pound Stretcher (Pcp)
 ac1primt	// Primetime (Ace)
-ac1primta	//
 ac1taklv	// Take It Or Leave It (Ace)
 ac1bbclb	// Big Break Club (Ace)
 ac1bbclba	//
@@ -20002,23 +25846,61 @@ sp_crunb		//
 // Project - PROCONN
 
 pr_lday			// 'L' Of A Day (Project)
+pr_ldaya
 pr_5xcsh		// 5x Cash (Project)
 pr_7hvn			// 777 Heaven (Project)
+pr_7hvna
+pr_7hvnb
+pr_7hvnc
+pr_7hvnd
+pr_7hvne
+pr_7hvnf
+pr_7hvng
+pr_7hvnh
+pr_7hvni
+pr_7hvnj
+pr_7hvnk
+pr_7hvnl
+pr_7hvnm
+pr_7hvnn
+pr_7hvno
+pr_7hvnp
+pr_7hvnq
+pr_7hvnr
+pr_7hvns
+pr_7hvnt
+pr_7hvnu
 pr_alwy9		// Always Nine (Pcp)
+pr_alwy9a
 pr_barbl		// Bars & Bells (Project)
 pr_batls		// Battleships (Project)
+pr_batlsa
+pr_batlsb
 pr_btwar		// Beat The Warden (Project)
+pr_btwara
+pr_btwarb
 pr_bigdp		// Big Dipper (Project)
+pr_bigdpa
 pr_bulls		// Bullseye (Project)
+pr_bullsa
+pr_bullsb
 pr_bulbn		// Bully's Big Night (Project)
+pr_bulbna
+pr_bulbnb
 pr_buljp		// Bully's Jackpot (Project)
+pr_buljpa
 pr_cashb		// Cash Back (Project)
 pr_cas7			// Casino Jackpot 7s (Project)
 pr_chico		// Chico the Bandit (Project)
+pr_chicoa
+pr_chicob
 pr_coolm		// Cool Million (Project)
+pr_coolma
+pr_coolmb
 pr_crz77		// Crazy 777s (Project)
 pr_crzbr		// Crazy Bars (Project)
 pr_coyot		// Crazy Coyote (Pcp)
+pr_coyota
 pr_crzpy		// Crazy Pays (Project)
 pr_dblup		// Double Up (Project)
 pr_fire			// Fircecracker (Project)
@@ -20038,6 +25920,7 @@ pr_hotsp		// Hot Spots (Project)
 pr_jkpt7		// Jackpot 7's (Project)
 pr_jkrwd		// Jokers Wild (Project)
 pr_jumpj		// Jumping Jacks (Project)
+pr_jumpja
 pr_medl			// Medalist (Project)
 pr_megmn		// Mega Money (Project)
 pr_nudxs		// Nudge XS (Project)
@@ -20046,6 +25929,7 @@ pr_rags			// Rags To Riches (Project)
 pr_reflx		// Reflex (Project)
 pr_roadr		// Road Riot (Project)
 pr_roll			// The Roll (Project)
+pr_supbr		// Super Bars (PCP)
 pr_sevab		// Seven's Above (Project)
 pr_sevml		// Sevens & Melons (Project)
 pr_theme		// Theme Park (Project)
@@ -20059,10 +25943,35 @@ pr_wldkn		// Wild Kings (Project)
 pr_nifty		// Nifty Fifty (Project)
 pr_upnun		// Up & Under (Project)
 pr_bears		// Bear Streak (Coinworld)
+pr_bearsa
+pr_bearsb
 pr_bearx		// Bear X (Coinworld)
+pr_bearxa
+pr_bearxb
+pr_bearxc
+pr_bearxd
+pr_bearxe
+pr_bearxf
+pr_bearxg
+pr_bearxh
+pr_bearxi
+pr_bearxj
+pr_bearxk
+pr_bearxl
+pr_bearxlp
+pr_bearxm
 pr_fspot		// Fun Spot (Coinworld)
+pr_fspota
+pr_fspotb
+pr_fspotc
+pr_fspotd
+pr_fspote
+pr_fspotf
+pr_fspotg
 pr_gnuc			// Golden Nugget (Coinworld)
+pr_gnuca
 pr_magln		// Magic Lines (Coinworld)
+pr_maglna
 pr_swop			// Swop It (Ace)
 pr_sptb			// Simply The Best (Pcp)
 
@@ -20254,15 +26163,428 @@ ec_casbxo	// Casino Bar X (older PCB) (Electrocoin)
 // Regular PCB
 
 ec_barx		// Bar X (Electrocoin)
+ec_barx__a	//
+ec_barx__b	//
+ec_barx__c	//
+ec_barx__d	//
+ec_barx__e	//
+ec_barx__f	//
+ec_barx__g	//
+ec_barx__h	//
+ec_barx__i	//
+ec_barx__j	//
+ec_barx__k	//
+ec_barx__l	//
+ec_barx__m	//
+ec_barx__n	//
+ec_barx__o	//
+ec_barx__p	//
+ec_barx__q	//
+ec_barx__r	//
+ec_barx__s	//
+ec_barx__t	//
+ec_barx__u	//
+ec_barx__v	//
+ec_barx__w	//
+ec_barx__x	//
+ec_barx__y	//
+ec_barx__z	//
+ec_barx__0	//
+ec_barx__1	//
+ec_barx__2	//
+ec_barx__3	//
+ec_barx__4	//
+ec_barx__5	//
+ec_barx__6	//
+ec_barx__7	//
+ec_barx__8	//
+ec_barx__9	//
+ec_barx__aa	//
+ec_barx__ab	//
+ec_barx__ac	//
+ec_barx__ad	//
+ec_barx__ae	//
+ec_barx__af	//
+ec_barx__ag	//
+ec_barx__ah	//
+ec_barx__ai	//
+ec_barx__aj	//
+ec_barx__ak	//
+ec_barx__al	//
+ec_barx__am	//
+ec_barx__an	//
+ec_barx__ao	//
+ec_barx__ap	//
+ec_barx__aq	//
+ec_barx__ar	//
+ec_barx__as	//
+ec_barx__at	//
+ec_barx__au	//
+ec_barx__av	//
+ec_barx__aw	//
+ec_barx__ax	//
+ec_barx__ay	//
+ec_barx__az	//
+ec_barx__a0	//
+ec_barx__a1	//
+ec_barx__a2	//
+ec_barx__a3	//
+ec_barx__a4	//
+ec_barx__a5	//
+ec_barx__a6	//
+ec_barx__a7	//
+ec_barx__a8	//
+ec_barx__a9	//
+ec_barx__ba	//
+ec_barx__bb	//
+ec_barx__bc	//
+ec_barx__bd	//
+ec_barx__be	//
+ec_barx__bf	//
+ec_barx__bg	//
+ec_barx__bh	//
+ec_barx__bi	//
+ec_barx__bj	//
+ec_barx__bk	//
+ec_barx__bl	//
+ec_barx__bm	//
+ec_barx__bn	//
+ec_barx__bo	//
+ec_barx__bp	//
+ec_barx__bq	//
+ec_barx__br	//
+ec_barx__bs	//
+ec_barx__bt	//
+ec_barx__bu	//
+ec_barx__bv	//
 ec_mag7s	// Magic 7s / Cool 7 / Bar X 7 (2001 COOL7) (Electrocoin)
+ec_mag7s__a		//
+ec_mag7s__b		//
+ec_mag7s__c		//
+ec_mag7s__d		//
+ec_mag7s__e		//
+ec_mag7s__f		//
+ec_mag7s__g		//
+ec_mag7s__h		//
+ec_mag7s__i		//
+ec_mag7s__j		//
+ec_mag7s__k		//
+ec_mag7s__l		//
+ec_mag7s__m		//
+ec_mag7s__n		//
+ec_mag7s__o		//
+ec_mag7s__p		//
+ec_mag7s__q		//
+ec_mag7s__r		//
+ec_mag7s__s		//
+ec_mag7s__t		//
+ec_mag7s__u		//
+ec_mag7s__v		//
+ec_mag7s__w		//
+ec_mag7s__x		//
+ec_mag7s__y		//
+ec_mag7s__z		//
+ec_mag7s__0		//
+ec_mag7s__1		//
+ec_mag7s__2		//
+ec_mag7s__3		//
+ec_mag7s__4		//
+ec_mag7s__5		//
+ec_mag7s__6		//
+ec_mag7s__7		//
+ec_mag7s__8		//
+ec_mag7s__9		//
+ec_mag7s__aa	//
+ec_mag7s__ab	//
+ec_mag7s__ac	//
+ec_mag7s__ad	//
+ec_mag7s__ae	//
+ec_mag7s__af	//
+ec_mag7s__ag	//
+ec_mag7s__ah	//
+ec_mag7s__ai	//
+ec_mag7s__aj	//
+ec_mag7s__ak	//
+ec_mag7s__al	//
+ec_mag7s__am	//
+ec_mag7s__an	//
+ec_mag7s__ao	//
+ec_mag7s__ap	//
+ec_mag7s__aq	//
+ec_mag7s__ar	//
+ec_mag7s__as	//
+ec_mag7s__at	//
+ec_mag7s__au	//
+ec_mag7s__av	//
+ec_mag7s__aw	//
+ec_mag7s__ax	//
+ec_mag7s__ay	//
+ec_mag7s__az	//
+ec_mag7s__a0	//
 ec_bxd7s	// Bar X Diamond 7s (2006 COOL7) (Electrocoin)
+ec_bxd7s__a		//
+ec_bxd7s__b		//
+ec_bxd7s__c		//
+ec_bxd7s__d		//
 ec_big7		// Big 7 / Super Big 7 (Electrocoin)
+ec_big7__a	//
+ec_big7__b	//
+ec_big7__c	//
+ec_big7__d	//
+ec_big7__e	//
+ec_big7__f	//
+ec_big7__g	//
+ec_big7__h	//
+ec_big7__i	//
+ec_big7__j	//
+ec_big7__k	//
+ec_big7__l	//
+ec_big7__m	//
+ec_big7__n	//
+ec_big7__o	//
+ec_big7__p	//
+ec_big7__q	//
+ec_big7__r	//
+ec_big7__s	//
+ec_big7__t	//
+ec_big7__u	//
+ec_big7__v	//
+ec_big7__w	//
+ec_big7__x	//
+ec_big7__y	//
+ec_big7__z	//
+ec_big7__0	//
+ec_big7__1	//
+ec_big7__2	//
+ec_big7__3	//
+ec_big7__4	//
+ec_big7__5	//
+ec_big7__6	//
+ec_big7__7	//
+ec_big7__8	//
+ec_big7__9	//
+ec_big7__aa	//
+ec_big7__ab	//
+ec_big7__ac	//
+ec_big7__ad	//
+ec_big7__ae	//
+ec_big7__af	//
+ec_big7__ag	//
+ec_big7__ah	//
+ec_big7__ai	//
+ec_big7__aj	//
+ec_big7__ak	//
+ec_big7__al	//
+ec_big7__am	//
+ec_big7__an	//
+ec_big7__ao	//
+ec_big7__ap	//
+ec_big7__aq	//
+ec_big7__ar	//
+ec_big7__as	//
+ec_big7__at	//
+ec_big7__au	//
+ec_big7__av	//
+ec_big7__aw	//
+ec_big7__ax	//
+ec_big7__ay	//
+ec_big7__az	//
+ec_big7__a0	//
+ec_big7__a1	//
+ec_big7__a2	//
 ec_casbx	// Casino Bar X (Electrocoin)
+ec_casbx__a	//
+ec_casbx__b	//
+ec_casbx__c	//
+ec_casbx__d	//
 ec_redbr	// Red Bar (Electrocoin)
-ec_supbx	// Super Bar X (Electrocoin)
-ec_spbxd	// Super Bar X Deluxe (Electrocoin)
-ec_unk1		// Unknown 'Electrocoin' Fruit Machine '300615' (Electrocoin)
+ec_redbr__a		//
+ec_redbr__b		//
+ec_redbr__c		//
+ec_redbr__d		//
+ec_redbr__e		//
+ec_redbr__f		//
+ec_redbr__g		//
+ec_redbr__h		//
+ec_redbr__i		//
+ec_redbr__j		//
+ec_redbr__k		//
+ec_redbr__l		//
+ec_redbr__m		//
+ec_redbr__n		//
+ec_redbr__o		//
+ec_redbr__p		//
+ec_redbr__q		//
+ec_redbr__r		//
+ec_redbr__s		//
+ec_redbr__t		//
+ec_redbr__u		//
+ec_redbr__v		//
+ec_redbr__w		//
+ec_redbr__x		//
+ec_redbr__y		//
+ec_redbr__z		//
+ec_redbr__0		//
+ec_redbr__1		//
+ec_redbr__2		//
+ec_redbr__3		//
+ec_redbr__4		//
+ec_redbr__5		//
+ec_redbr__6		//
+ec_redbr__7		//
+ec_redbr__8		//
+ec_redbr__9		//
+ec_redbr__aa	//
+ec_redbr__ab	//
+ec_redbr__ac	//
+ec_redbr__ad	//
+ec_redbr__ae	//
+ec_redbr__af	//
+ec_redbr__ag	//
+ec_redbr__ah	//
+ec_redbr__ai	//
+ec_redbr__aj	//
+ec_redbr__ak	//
+ec_redbr__al	//
+ec_redbr__am	//
+ec_redbr__an	//
+ec_redbr__ao	//
+ec_redbr__ap	//
+ec_redbr__aq	//
+ec_redbr__ar	//
+ec_redbr__as	//
+ec_redbr__at	//
+ec_redbr__au	//
+ec_redbr__av	//
+ec_redbr__aw	//
+ec_redbr__ax	//
+ec_redbr__ay	//
+ec_redbr__az	//
+ec_redbr__a0	//
+ec_redbr__a1	//
+ec_redbr__a2	//
+ec_redbr__a3	//
+ec_redbr__a4	//
+ec_redbr__a5	//
+ec_redbr__a6	//
+ec_redbr__a7	//
+ec_redbr__a8	//
+ec_redbr__a9	//
+ec_redbr__ba	//
+ec_redbr__bb	//
+ec_redbr__bc	//
+ec_redbr__bd	//
+ec_redbr__be	//
+ec_redbr__bf	//
+ec_redbr__bg	//
+ec_redbr__bh	//
+ec_redbr__bi	//
+ec_redbr__bj	//
+ec_redbr__bk	//
+ec_redbr__bl	//
+ec_redbr__bm	//
+ec_redbr__bn	//
+ec_redbr__bo	//
+ec_redbr__bp	//
+ec_redbr__bq	//
+ec_redbr__br	//
+ec_redbr__bs	//
+ec_redbr__bt	//
+ec_redbr__bu	//
+ec_redbr__bv	//
+ec_redbr__bw	//
+ec_redbr__bx	//
+ec_redbr__by	//
+ec_redbr__b0	//
+ec_redbr__b1	//
+ec_sbarx	// Super Bar X (Electrocoin)
+ec_sbarx__a		//
+ec_sbarx__b		//
+ec_sbarx__c		//
+ec_sbarx__d		//
+ec_sbarx__e		//
+ec_sbarx__f		//
+ec_sbarx__g		//
+ec_sbarx__h		//
+ec_sbarx__i		//
+ec_sbarx__j		//
+ec_sbarx__k		//
+ec_sbarx__l		//
+ec_sbarx__m		//
+ec_sbarx__n		//
+ec_sbarx__o		//
+ec_sbarx__p		//
+ec_sbarx__q		//
+ec_sbarx__r		//
+ec_sbarx__s		//
+ec_sbarx__t		//
+ec_sbarx__u		//
+ec_sbarx__v		//
+ec_sbarx__w		//
+ec_sbarx__x		//
+ec_sbarx__y		//
+ec_sbarx__z		//
+ec_sbarx__0		//
+ec_sbarx__1		//
+ec_sbarx__2		//
+ec_sbarx__3		//
+ec_sbarx__4		//
+ec_sbarx__5		//
+ec_sbarx__6		//
+ec_sbarx__7		//
+ec_sbarx__8		//
+ec_sbarx__9		//
+ec_sbarx__aa	//
+ec_sbarx__ab	//
+ec_sbarx__ac	//
+ec_sbarx__ad	//
+ec_sbarx__ae	//
+ec_sbarx__af	//
+ec_sbarx__ag	//
+ec_sbarx__ah	//
+ec_sbarx__ai	//
+ec_sbarx__aj	//
+ec_sbarx__ak	//
+ec_sbarx__al	//
+ec_sbarx__am	//
+ec_sbarx__an	//
+ec_sbarx__ao	//
+ec_sbarx__ap	//
+ec_sbarx__aq	//
+ec_sbarx__ar	//
+ec_sbarx__as	//
+ec_sbarx__at	//
+ec_sbarx__au	//
+ec_sbarx__av	//
+ec_sbarx__aw	//
+ec_sbarx__ax	//
+ec_sbarx__ay	//
+ec_sbarx__az	//
+ec_sbarx__a0	//
+ec_sbarx__a1	//
+ec_sbarx__a2	//
+ec_sbarx__a3	//
+ec_sbarx__a4	//
+ec_sbarx__a5	//
+ec_sbarx__a6	//
+ec_sbarx__a7	//
+ec_sbarx__a8	//
+ec_sbarx__a9	//
+ec_sbarx__ba	//
+ec_sbarx__bb	//
+ec_sbarx__bc	//
+ec_sbarx__bd	//
+ec_sbarx__be	//
+ec_spbdx	// Super Bar X Deluxe (Electrocoin)
+ec_spbdx__a	//
+ec_spbdx__b	//
+ec_spbdx__c	//
+ec_spbdx__d	//
 ec_unk5		// Unknown 'Electrocoin' Fruit Machine(s) (Electrocoin)
+ec_unk5__a	//
+ec_unk5__b	//
+ec_unk5__c	//
+
 ec_barxmab	// Bar X (MAB PCB) (Electrocoin)
 ec_spbg7mab	// Super Big 7 (MAB PCB) (Electrocoin)
 ec_supbxmab	// Super Bar X (MAB PCB) (Electrocoin)
@@ -20320,6 +26642,10 @@ hg_frd		// Fruit Deuce
 
 /* Global Games 'Stealth' */
 
+gl_snbev
+gl_snbeva
+gl_grncl
+gl_grncla
 gl_dow		// Deals On Wheels (Global)
 gl_dowp
 gl_dowcl	// Deals On Wheels Club (Global)
@@ -20377,93 +26703,6 @@ spss4240
 
 //unkfr
 //unkfra
-
-// Leisure Ent.
-roul			// (c) 1990
-
-// Accept LTD.
-hitpoker		// (c) 1997
-
-// Videotronics
-vpoker			// (c) 198?
-5acespkr		// (c) 198?
-
-// Play Mechanix
-specfrce		// (c) 2002 ICE/Play Mechanix
-jnero			// (c) 2004 ICE/Play Mechanix
-
-// Amatic Trading GMBH
-suprstar		// (c) 1996 Amatic
-am_mg24			// (c) 2000 Amatic
-am_mg3			// (c) 2000 Amatic
-am_mg3a			// (c) 2000 Amatic
-am_mg35i		// (c) Amatic
-am_mg34i		// (c) Amatic
-am_mg33i		// (c) Amatic
-am_mg31i		// (c) Amatic
-
-
-neptunp2
-rgum
-
-// Extrema Systems International Ltd.
-poker72
-
-// Blitz System Inc.
-megadpkr		// (c) 1990 Blitz System Inc
-megadpkrb		// (c) 1990 Blitz System Inc
-
-// Blitz System Inc. 68k + Blitter Hardware
-megadblj		// (c) 1990 Blitz Systems Inc.
-megadble		// (c) 1990 Blitz Systems Inc.
-maxidbl			// (c) 1992 Blitz Systems Inc.
-bankrob			// (c) 1993 Entertainment Technology Corp.
-bankroba		// (c) 1993 Entertainment Technology Corp.
-poker52			// (c) 1993 Blitz Systems Inc. ?
-steaser			// (c) 1993 unknown
-dualgame		// (c) 1995 Labtronix Technologies
-hermit			// (c) 1995 Dugamex
-deucesw2		// (c) 1997
-cj3play			// (c) 1998 Cadillac Jack
-cjffruit		// (c) 1998 Cadillac Jack
-ilpag			// (c) 199? unknown
-
-// Olympic Video Gaming
-hotstuff
-
-// Interactive Light
-savquest
-
-// Jamie System Development
-xtom3d
-
-// Jubilee
-jubileep
-
-// Golden Games / C+M Technics AG
-swisspkr		// (c) 1990 Golden Games
-moviecrd		// (c) 1998 Golden Games
-
-// NSM
-nsmpoker
-
-// Advanced Video Technologies
-avtsym14		// (c) 1985 AVT
-avtsym25		// (c) 1985 AVT
-avtbingo		// (c) 1985 AVT
-avtnfl			// (c) 1989 AVT
-
-// Corona hardware
-winner81		// (c) 1981 Corona Co, Ltd.
-winner81b		// (c) 1981 Corona Co, Ltd.
-winner82		// (c) 1982 Corona Co, Ltd.
-re800ea			// (c) 1991 Entretenimientos GEMINIS
-re800v1			// (c) 1991 Entretenimientos GEMINIS
-re800v3			// (c) 1992 Entretenimientos GEMINIS
-rcirulet		// (c) 199? Entretenimientos GEMINIS
-luckyrlt		// (c) 1990 unknown
-
-dfruit
 
 // allied.c
 allied
@@ -22019,34 +28258,4 @@ skijump
 spacecty
 strike
 
-umipoker
-saiyukip
-
-tmspoker
-tonton			// 199?, Success.
-kas89			// 1989, SFC S.R.L.
-caspoker		// 1987, PM / Beck Elektronik.
-wildpkr			// 199?, TAB Austria.
-
-manohman		// 199?, Merkur.
-jankenmn		// 1985, Sunwise.
-
-flipjack		// 1983? Jackson Co., Ltd.
-
-// Global VR
-hyperv2			// Hyper V2 (Global VR) Install - 06/12/02
-hyperv2a                // Hyper V2 (Global VR) Install - 09/30/01
-gvrxpsys                // Global VR XP OS Install - 09/30/01
-gvrxpsup                // Global VR XP OS Update/Install - 06/11/02
-
-bhead2k                 // Beach Head 2000 Install - 05/27/03
-bhead2ka                // Beach Head 2000 Install - 09/16/01
-bhead2k2                // Beach Head 2002 Install - 05/27/03
-bhead2k3                // Beach Head 2003 Desert War Install - 05/27/03
-nfsug                   // Need For Speed: Underground Install (2 Discs) (v1.1)
-
-
-// TTL logic games
-pong			// (c) 1972 Atari
-pongf			// (c) 1972 Atari - no subcycles
 #endif // !NCP

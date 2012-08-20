@@ -152,6 +152,13 @@ public:
 	DECLARE_WRITE8_MEMBER(xtrain_outputs_w);
 	DECLARE_WRITE8_MEMBER(oki_bank_bit0_w);
 	DECLARE_WRITE8_MEMBER(oki_bank_bit4_w);
+	DECLARE_DRIVER_INIT(bishjan);
+	DECLARE_DRIVER_INIT(xtrain);
+	DECLARE_DRIVER_INIT(expcard);
+	DECLARE_DRIVER_INIT(wtrnymph);
+	DECLARE_DRIVER_INIT(mtrain);
+	DECLARE_DRIVER_INIT(saklove);
+	DECLARE_DRIVER_INIT(xplan);
 };
 
 
@@ -2364,9 +2371,9 @@ ROM_START( bishjan )
 	ROM_LOAD( "2-v201.u9", 0x000000, 0x100000, CRC(ea42764d) SHA1(13fe1cd30e474f4b092949c440068e9ddca79976) )
 ROM_END
 
-static DRIVER_INIT( bishjan )
+DRIVER_INIT_MEMBER(subsino2_state,bishjan)
 {
-	UINT16 *rom = (UINT16*)machine.root_device().memregion("maincpu")->base();
+	UINT16 *rom = (UINT16*)machine().root_device().memregion("maincpu")->base();
 
 	// patch serial protection test (it always enters test mode on boot otherwise)
 	rom[0x042EA/2] = 0x4008;
@@ -2428,9 +2435,9 @@ ROM_START( expcard )
 	ROM_LOAD( "top_card-ve1.u7", 0x00000, 0x80000, CRC(0ca9bd18) SHA1(af791c78ae321104afa738564bc23f520f37e7d5) )
 ROM_END
 
-static DRIVER_INIT( expcard )
+DRIVER_INIT_MEMBER(subsino2_state,expcard)
 {
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 
 	// patch protection test (it always enters test mode on boot otherwise)
 	rom[0xed4dc-0xc0000] = 0xeb;
@@ -2523,12 +2530,12 @@ ROM_END
 
 ***************************************************************************/
 
-DRIVER_INIT( mtrain )
+DRIVER_INIT_MEMBER(subsino2_state,mtrain)
 {
-	subsino_decrypt(machine, crsbingo_bitswaps, crsbingo_xors, 0x8000);
+	subsino_decrypt(machine(), crsbingo_bitswaps, crsbingo_xors, 0x8000);
 
 	// patch serial protection test (it always enters test mode on boot otherwise)
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	rom[0x0cec] = 0x18;
 	rom[0xb037] = 0x18;
 
@@ -2580,9 +2587,9 @@ ROM_START( saklove )
 	ROM_LOAD( "2.u10", 0x00000, 0x80000, CRC(4f70125c) SHA1(edd5e6bd47b9a4fa3c4057cb4a85544241fe483d) )
 ROM_END
 
-static DRIVER_INIT( saklove )
+DRIVER_INIT_MEMBER(subsino2_state,saklove)
 {
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 
 	// patch serial protection test (it always enters test mode on boot otherwise)
 	rom[0x0e029] = 0xeb;
@@ -2640,9 +2647,9 @@ ROM_START( xplan )
 	ROM_LOAD( "x-plan_rom_2_v100.u7", 0x00000, 0x80000, CRC(c742b5c8) SHA1(646960508be738824bfc578c1b21355c17e05010) )
 ROM_END
 
-static DRIVER_INIT( xplan )
+DRIVER_INIT_MEMBER(subsino2_state,xplan)
 {
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 
 	// patch protection test (it always enters test mode on boot otherwise)
 	rom[0xeded9-0xc0000] = 0xeb;
@@ -2700,9 +2707,9 @@ ROM_START( xtrain )
 	ROM_LOAD( "x-train_rom_2_v1.2.u7", 0x00000, 0x80000, CRC(aae563ff) SHA1(97db845d7e3d343bd70352371cb27b16faacca7f) )
 ROM_END
 
-static DRIVER_INIT( xtrain )
+DRIVER_INIT_MEMBER(subsino2_state,xtrain)
 {
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 
 	// patch protection test (it always enters test mode on boot otherwise)
 	rom[0xe190f-0xc0000] = 0xeb;
@@ -2742,22 +2749,22 @@ ROM_START( wtrnymph )
     ROM_LOAD( "gal16v8d.u31", 0x000, 0x117, NO_DUMP )
 ROM_END
 
-DRIVER_INIT( wtrnymph )
+DRIVER_INIT_MEMBER(subsino2_state,wtrnymph)
 {
-	subsino_decrypt(machine, victor5_bitswaps, victor5_xors, 0x8000);
+	subsino_decrypt(machine(), victor5_bitswaps, victor5_xors, 0x8000);
 
 	// patch serial protection test (it always enters test mode on boot otherwise)
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	rom[0x0d79] = 0x18;
 	rom[0xc1cf] = 0x18;
 	rom[0xc2a9] = 0x18;
 	rom[0xc2d7] = 0x18;
 }
 
-GAME( 1996, mtrain,   0,        mtrain,   mtrain,   mtrain,   ROT0, "Subsino",        "Magic Train (Ver. 1.31)",              0 )
-GAME( 1996, wtrnymph, 0,        mtrain,   wtrnymph, wtrnymph, ROT0, "Subsino",        "Water-Nymph (Ver. 1.4)",               0 )
-GAME( 1998, expcard,  0,        expcard,  expcard,  expcard,  ROT0, "American Alpha", "Express Card / Top Card (Ver. 1.5)",   0 )
-GAME( 1998, saklove,  0,        saklove,  saklove,  saklove,  ROT0, "Subsino",        "Ying Hua Lian 2.0 (China, Ver. 1.02)", 0 )
-GAME( 1999, xtrain,   0,        xtrain,   xtrain,   xtrain,   ROT0, "Subsino",        "X-Train (Ver. 1.3)",                   0 )
-GAME( 1999, bishjan,  0,        bishjan,  bishjan,  bishjan,  ROT0, "Subsino",        "Bishou Jan (Japan, Ver. 2.03)",        GAME_NO_SOUND )
-GAME( 2006, xplan,    0,        xplan,    xplan,    xplan,    ROT0, "Subsino",        "X-Plan (Ver. 1.01)",                   0 )
+GAME( 1996, mtrain,   0,        mtrain,   mtrain, subsino2_state,   mtrain,   ROT0, "Subsino",        "Magic Train (Ver. 1.31)",              0 )
+GAME( 1996, wtrnymph, 0,        mtrain,   wtrnymph, subsino2_state, wtrnymph, ROT0, "Subsino",        "Water-Nymph (Ver. 1.4)",               0 )
+GAME( 1998, expcard,  0,        expcard,  expcard, subsino2_state,  expcard,  ROT0, "American Alpha", "Express Card / Top Card (Ver. 1.5)",   0 )
+GAME( 1998, saklove,  0,        saklove,  saklove, subsino2_state,  saklove,  ROT0, "Subsino",        "Ying Hua Lian 2.0 (China, Ver. 1.02)", 0 )
+GAME( 1999, xtrain,   0,        xtrain,   xtrain, subsino2_state,   xtrain,   ROT0, "Subsino",        "X-Train (Ver. 1.3)",                   0 )
+GAME( 1999, bishjan,  0,        bishjan,  bishjan, subsino2_state,  bishjan,  ROT0, "Subsino",        "Bishou Jan (Japan, Ver. 2.03)",        GAME_NO_SOUND )
+GAME( 2006, xplan,    0,        xplan,    xplan, subsino2_state,    xplan,    ROT0, "Subsino",        "X-Plan (Ver. 1.01)",                   0 )

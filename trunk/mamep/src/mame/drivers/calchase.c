@@ -172,6 +172,7 @@ public:
 	DECLARE_WRITE16_MEMBER(calchase_dac_r_w);
 	DECLARE_WRITE_LINE_MEMBER(calchase_pic8259_1_set_int_line);
 	DECLARE_READ8_MEMBER(get_slave_ack);
+	DECLARE_DRIVER_INIT(calchase);
 };
 
 
@@ -527,14 +528,14 @@ READ16_MEMBER(calchase_state::calchase_iocard5_r)
 
 WRITE16_MEMBER(calchase_state::calchase_dac_l_w)
 {
-	device_t *device = machine().device("dac_l");
-	dac_data_16_w(device, ((data & 0xfff) << 4));
+	dac_device *device = machine().device<dac_device>("dac_l");
+	device->write_unsigned16((data & 0xfff) << 4);
 }
 
 WRITE16_MEMBER(calchase_state::calchase_dac_r_w)
 {
-	device_t *device = machine().device("dac_r");
-	dac_data_16_w(device, ((data & 0xfff) << 4));
+	dac_device *device = machine().device<dac_device>("dac_r");
+	device->write_unsigned16((data & 0xfff) << 4);
 }
 
 static ADDRESS_MAP_START( calchase_map, AS_PROGRAM, 32, calchase_state )
@@ -941,10 +942,10 @@ static MACHINE_CONFIG_START( calchase, calchase_state )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker","rspeaker")
-	MCFG_SOUND_ADD("dac_l", DAC, 0)
+	MCFG_DAC_ADD("dac_l")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.5)
 
-	MCFG_SOUND_ADD("dac_r", DAC, 0)
+	MCFG_DAC_ADD("dac_r")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.5)
 
 MACHINE_CONFIG_END
@@ -965,20 +966,19 @@ WRITE32_MEMBER(calchase_state::calchase_idle_skip_w)
 	COMBINE_DATA(&m_idle_skip_ram);
 }
 
-static DRIVER_INIT( calchase )
+DRIVER_INIT_MEMBER(calchase_state,calchase)
 {
-	calchase_state *state = machine.driver_data<calchase_state>();
-	state->m_bios_ram = auto_alloc_array(machine, UINT32, 0x20000/4);
+	m_bios_ram = auto_alloc_array(machine(), UINT32, 0x20000/4);
 
-	pc_vga_init(machine, vga_setting, NULL);
-	pc_svga_trident_io_init(machine, machine.device("maincpu")->memory().space(AS_PROGRAM), 0xa0000, machine.device("maincpu")->memory().space(AS_IO), 0x0000);
-	init_pc_common(machine, PCCOMMON_KEYBOARD_AT, calchase_set_keyb_int);
+	pc_vga_init(machine(), vga_setting, NULL);
+	pc_svga_trident_io_init(machine(), machine().device("maincpu")->memory().space(AS_PROGRAM), 0xa0000, machine().device("maincpu")->memory().space(AS_IO), 0x0000);
+	init_pc_common(machine(), PCCOMMON_KEYBOARD_AT, calchase_set_keyb_int);
 
-	intel82439tx_init(machine);
+	intel82439tx_init(machine());
 
-	kbdc8042_init(machine, &at8042);
+	kbdc8042_init(machine(), &at8042);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x3f0b160, 0x3f0b163, read32_delegate(FUNC(calchase_state::calchase_idle_skip_r),state), write32_delegate(FUNC(calchase_state::calchase_idle_skip_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x3f0b160, 0x3f0b163, read32_delegate(FUNC(calchase_state::calchase_idle_skip_r),this), write32_delegate(FUNC(calchase_state::calchase_idle_skip_w),this));
 }
 
 ROM_START( calchase )
@@ -996,4 +996,4 @@ ROM_START( calchase )
 	DISK_IMAGE_READONLY( "calchase", 0,SHA1(6ae51a9b3f31cf4166322328a98c0235b0874eb3) )
 ROM_END
 
-GAME( 1999, calchase,  0,    calchase, calchase,  calchase, ROT0, "The Game Room", "California Chase", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, calchase,  0,    calchase, calchase, calchase_state,  calchase, ROT0, "The Game Room", "California Chase", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )

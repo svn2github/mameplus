@@ -2,7 +2,38 @@
 
     Atari "Stella on Steroids" hardware
 
-    driver by Aaron Giles
+****************************************************************************
+
+    Copyright Aaron Giles
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are
+    met:
+
+        * Redistributions of source code must retain the above copyright
+          notice, this list of conditions and the following disclaimer.
+        * Redistributions in binary form must reproduce the above copyright
+          notice, this list of conditions and the following disclaimer in
+          the documentation and/or other materials provided with the
+          distribution.
+        * Neither the name 'MAME' nor the names of its contributors may be
+          used to endorse or promote products derived from this software
+          without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY AARON GILES ''AS IS'' AND ANY EXPRESS OR
+    IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL AARON GILES BE LIABLE FOR ANY DIRECT,
+    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+    STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+    IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+
+****************************************************************************
 
     Games supported:
         * BeatHead
@@ -494,16 +525,15 @@ READ32_MEMBER( beathead_state::movie_speedup_r )
  *
  *************************************/
 
-static DRIVER_INIT( beathead )
+DRIVER_INIT_MEMBER(beathead_state,beathead)
 {
-	beathead_state *state = machine.driver_data<beathead_state>();
 
 	/* initialize the common systems */
-	atarijsa_init(machine, "IN2", 0x0040);
+	atarijsa_init(machine(), "IN2", 0x0040);
 
 	/* prepare the speedups */
-	state->m_speedup_data = state->m_maincpu->space(AS_PROGRAM)->install_read_handler(0x00000ae8, 0x00000aeb, 0, 0, read32_delegate(FUNC(beathead_state::speedup_r), state));
-	state->m_movie_speedup_data = state->m_maincpu->space(AS_PROGRAM)->install_read_handler(0x00000804, 0x00000807, 0, 0, read32_delegate(FUNC(beathead_state::movie_speedup_r), state));
+	m_speedup_data = m_maincpu->space(AS_PROGRAM)->install_read_handler(0x00000ae8, 0x00000aeb, 0, 0, read32_delegate(FUNC(beathead_state::speedup_r), this));
+	m_movie_speedup_data = m_maincpu->space(AS_PROGRAM)->install_read_handler(0x00000804, 0x00000807, 0, 0, read32_delegate(FUNC(beathead_state::movie_speedup_r), this));
 }
 
 
@@ -514,4 +544,4 @@ static DRIVER_INIT( beathead )
  *
  *************************************/
 
-GAME( 1993, beathead, 0, beathead, beathead, beathead, ROT0, "Atari Games", "BeatHead (prototype)", 0 )
+GAME( 1993, beathead, 0, beathead, beathead, beathead_state, beathead, ROT0, "Atari Games", "BeatHead (prototype)", 0 )

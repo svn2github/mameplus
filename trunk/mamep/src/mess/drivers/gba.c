@@ -301,15 +301,15 @@ static void audio_tick(running_machine &machine, int ref)
 
 			if (state->m_SOUNDCNT_H & 0x200)
 			{
-				device_t *dac_device = machine.device("direct_a_left");
+				dac_device *dac = machine.device<dac_device>("direct_a_left");
 
-				dac_signed_data_w(dac_device, state->m_fifo_a[state->m_fifo_a_ptr]^0x80);
+				dac->write_signed8(state->m_fifo_a[state->m_fifo_a_ptr]^0x80);
 			}
 			if (state->m_SOUNDCNT_H & 0x100)
 			{
-				device_t *dac_device = machine.device("direct_a_right");
+				dac_device *dac = machine.device<dac_device>("direct_a_right");
 
-				dac_signed_data_w(dac_device, state->m_fifo_a[state->m_fifo_a_ptr]^0x80);
+				dac->write_signed8(state->m_fifo_a[state->m_fifo_a_ptr]^0x80);
 			}
 			state->m_fifo_a_ptr++;
 		}
@@ -341,15 +341,15 @@ static void audio_tick(running_machine &machine, int ref)
 
 			if (state->m_SOUNDCNT_H & 0x2000)
 			{
-				device_t *dac_device = machine.device("direct_b_left");
+				dac_device *dac = machine.device<dac_device>("direct_b_left");
 
-				dac_signed_data_w(dac_device, state->m_fifo_b[state->m_fifo_b_ptr]^0x80);
+				dac->write_signed8(state->m_fifo_b[state->m_fifo_b_ptr]^0x80);
 			}
 			if (state->m_SOUNDCNT_H & 0x1000)
 			{
-				device_t *dac_device = machine.device("direct_b_right");
+				dac_device *dac = machine.device<dac_device>("direct_b_right");
 
-				dac_signed_data_w(dac_device, state->m_fifo_b[state->m_fifo_b_ptr]^0x80);
+				dac->write_signed8(state->m_fifo_b[state->m_fifo_b_ptr]^0x80);
 			}
 			state->m_fifo_b_ptr++;
 		}
@@ -1452,45 +1452,45 @@ WRITE32_MEMBER(gba_state::gba_io_w)
 				// DAC A reset?
 				if (data & 0x0800)
 				{
-					device_t *gb_a_l = machine().device("direct_a_left");
-					device_t *gb_a_r = machine().device("direct_a_right");
+					dac_device *gb_a_l = machine().device<dac_device>("direct_a_left");
+					dac_device *gb_a_r = machine().device<dac_device>("direct_a_right");
 
 					m_fifo_a_ptr = 17;
 					m_fifo_a_in = 17;
-					dac_signed_data_w(gb_a_l, 0x80);
-					dac_signed_data_w(gb_a_r, 0x80);
+					gb_a_l->write_signed8(0x80);
+					gb_a_r->write_signed8(0x80);
 				}
 
 				// DAC B reset?
 				if (data & 0x8000)
 				{
-					device_t *gb_b_l = machine().device("direct_b_left");
-					device_t *gb_b_r = machine().device("direct_b_right");
+					dac_device *gb_b_l = machine().device<dac_device>("direct_b_left");
+					dac_device *gb_b_r = machine().device<dac_device>("direct_b_right");
 
 					m_fifo_b_ptr = 17;
 					m_fifo_b_in = 17;
-					dac_signed_data_w(gb_b_l, 0x80);
-					dac_signed_data_w(gb_b_r, 0x80);
+					gb_b_l->write_signed8(0x80);
+					gb_b_r->write_signed8(0x80);
 				}
 			}
 			break;
 		case 0x0084/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				device_t *gb_a_l = machine().device("direct_a_left");
-				device_t *gb_a_r = machine().device("direct_a_right");
-				device_t *gb_b_l = machine().device("direct_b_left");
-				device_t *gb_b_r = machine().device("direct_b_right");
+				dac_device *gb_a_l = machine().device<dac_device>("direct_a_left");
+				dac_device *gb_a_r = machine().device<dac_device>("direct_a_right");
+				dac_device *gb_b_l = machine().device<dac_device>("direct_b_left");
+				dac_device *gb_b_r = machine().device<dac_device>("direct_b_right");
 
 				gb_sound_w(gb_device, 0x16, data);
 				if ((data & 0x80) && !(m_SOUNDCNT_X & 0x80))
 				{
 					m_fifo_a_ptr = m_fifo_a_in = 17;
 					m_fifo_b_ptr = m_fifo_b_in = 17;
-					dac_signed_data_w(gb_a_l, 0x80);
-					dac_signed_data_w(gb_a_r, 0x80);
-					dac_signed_data_w(gb_b_l, 0x80);
-					dac_signed_data_w(gb_b_r, 0x80);
+					gb_a_l->write_signed8(0x80);
+					gb_a_r->write_signed8(0x80);
+					gb_b_l->write_signed8(0x80);
+					gb_b_r->write_signed8(0x80);
 				}
 				m_SOUNDCNT_X = data;
 			}
@@ -2114,10 +2114,10 @@ static TIMER_CALLBACK( perform_scan )
 
 static MACHINE_RESET( gba )
 {
-	device_t *gb_a_l = machine.device("direct_a_left");
-	device_t *gb_a_r = machine.device("direct_a_right");
-	device_t *gb_b_l = machine.device("direct_b_left");
-	device_t *gb_b_r = machine.device("direct_b_right");
+	dac_device *gb_a_l = machine.device<dac_device>("direct_a_left");
+	dac_device *gb_a_r = machine.device<dac_device>("direct_a_right");
+	dac_device *gb_b_l = machine.device<dac_device>("direct_b_left");
+	dac_device *gb_b_r = machine.device<dac_device>("direct_b_right");
 	gba_state *state = machine.driver_data<gba_state>();
 
 	//memset(state, 0, sizeof(state));
@@ -2153,10 +2153,10 @@ static MACHINE_RESET( gba )
 	state->m_fifo_a_in = state->m_fifo_b_in = 17;
 
 	// and clear the DACs
-	dac_signed_data_w(gb_a_l, 0x80);
-	dac_signed_data_w(gb_a_r, 0x80);
-	dac_signed_data_w(gb_b_l, 0x80);
-	dac_signed_data_w(gb_b_r, 0x80);
+	gb_a_l->write_signed8(0x80);
+	gb_a_r->write_signed8(0x80);
+	gb_b_l->write_signed8(0x80);
+	gb_b_r->write_signed8(0x80);
 
 	if (state->m_flash_battery_load != 0)
 	{
@@ -3207,11 +3207,10 @@ DIRECT_UPDATE_MEMBER(gba_state::gba_direct)
 	return address;
 }
 
-static DRIVER_INIT(gbadv)
+DRIVER_INIT_MEMBER(gba_state,gbadv)
 {
-	gba_state *state = machine.driver_data<gba_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->set_direct_update_handler(direct_update_delegate(FUNC(gba_state::gba_direct), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->set_direct_update_handler(direct_update_delegate(FUNC(gba_state::gba_direct), this));
 }
 
 /*    YEAR  NAME PARENT COMPAT MACHINE INPUT   INIT   COMPANY     FULLNAME */
-CONS( 2001, gba, 0,     0,     gbadv,  gbadv,  gbadv, "Nintendo", "Game Boy Advance", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND)
+CONS( 2001, gba, 0,     0,     gbadv,  gbadv, gba_state,  gbadv, "Nintendo", "Game Boy Advance", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND)

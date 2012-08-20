@@ -799,7 +799,7 @@ static MACHINE_RESET( karnov )
 
 	state->m_flipscreen = 0;
 	state->m_scroll[0] = 0;
-	state->m_scroll[0] = 0;
+	state->m_scroll[1] = 0;
 }
 
 
@@ -1129,56 +1129,50 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( karnov )
+DRIVER_INIT_MEMBER(karnov_state,karnov)
 {
-	karnov_state *state = machine.driver_data<karnov_state>();
-	state->m_microcontroller_id = KARNOV;
-	state->m_coin_mask = 0x07;
+	m_microcontroller_id = KARNOV;
+	m_coin_mask = 0x07;
 }
 
-static DRIVER_INIT( karnovj )
+DRIVER_INIT_MEMBER(karnov_state,karnovj)
 {
-	karnov_state *state = machine.driver_data<karnov_state>();
-	state->m_microcontroller_id = KARNOVJ;
-	state->m_coin_mask = 0x07;
+	m_microcontroller_id = KARNOVJ;
+	m_coin_mask = 0x07;
 }
 
-static DRIVER_INIT( wndrplnt )
+DRIVER_INIT_MEMBER(karnov_state,wndrplnt)
 {
-	karnov_state *state = machine.driver_data<karnov_state>();
-	state->m_microcontroller_id = WNDRPLNT;
-	state->m_coin_mask = 0x00;
+	m_microcontroller_id = WNDRPLNT;
+	m_coin_mask = 0x00;
 }
 
-static DRIVER_INIT( chelnov )
+DRIVER_INIT_MEMBER(karnov_state,chelnov)
 {
-	karnov_state *state = machine.driver_data<karnov_state>();
-	UINT16 *RAM = (UINT16 *)state->memregion("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)memregion("maincpu")->base();
 
-	state->m_microcontroller_id = CHELNOV;
-	state->m_coin_mask = 0xe0;
+	m_microcontroller_id = CHELNOV;
+	m_coin_mask = 0xe0;
 	RAM[0x0a26/2] = 0x4e71;  /* removes a protection lookup table */
 	RAM[0x062a/2] = 0x4e71;  /* hangs waiting on i8751 int */
 }
 
-static DRIVER_INIT( chelnovu )
+DRIVER_INIT_MEMBER(karnov_state,chelnovu)
 {
-	karnov_state *state = machine.driver_data<karnov_state>();
-	UINT16 *RAM = (UINT16 *)state->memregion("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)memregion("maincpu")->base();
 
-	state->m_microcontroller_id = CHELNOVU;
-	state->m_coin_mask = 0xe0;
+	m_microcontroller_id = CHELNOVU;
+	m_coin_mask = 0xe0;
 	RAM[0x0a26/2] = 0x4e71;  /* removes a protection lookup table */
 	RAM[0x062a/2] = 0x4e71;  /* hangs waiting on i8751 int */
 }
 
-static DRIVER_INIT( chelnovj )
+DRIVER_INIT_MEMBER(karnov_state,chelnovj)
 {
-	karnov_state *state = machine.driver_data<karnov_state>();
-	UINT16 *RAM = (UINT16 *)state->memregion("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)memregion("maincpu")->base();
 
-	state->m_microcontroller_id = CHELNOVJ;
-	state->m_coin_mask = 0xe0;
+	m_microcontroller_id = CHELNOVJ;
+	m_coin_mask = 0xe0;
 	RAM[0x0a2e/2] = 0x4e71;  /* removes a protection lookup table */
 	RAM[0x062a/2] = 0x4e71;  /* hangs waiting on i8751 int */
 }
@@ -1190,9 +1184,9 @@ static DRIVER_INIT( chelnovj )
  *
  *************************************/
 
-GAME( 1987, karnov,   0,       karnov,   karnov,   karnov,   ROT0,   "Data East USA",         "Karnov (US)", GAME_SUPPORTS_SAVE )
-GAME( 1987, karnovj,  karnov,  karnov,   karnov,   karnovj,  ROT0,   "Data East Corporation", "Karnov (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1987, wndrplnt, 0,       wndrplnt, wndrplnt, wndrplnt, ROT270, "Data East Corporation", "Wonder Planet (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1988, chelnov,  0,       karnov,   chelnov,  chelnov,  ROT0,   "Data East Corporation", "Chelnov - Atomic Runner (World)", GAME_SUPPORTS_SAVE )
-GAME( 1988, chelnovu, chelnov, karnov,   chelnovu, chelnovu, ROT0,   "Data East USA",         "Chelnov - Atomic Runner (US)", GAME_SUPPORTS_SAVE )
-GAME( 1988, chelnovj, chelnov, karnov,   chelnovj, chelnovj, ROT0,   "Data East Corporation", "Chelnov - Atomic Runner (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1987, karnov,   0,       karnov,   karnov, karnov_state,   karnov,   ROT0,   "Data East USA",         "Karnov (US)", GAME_SUPPORTS_SAVE )
+GAME( 1987, karnovj,  karnov,  karnov,   karnov, karnov_state,   karnovj,  ROT0,   "Data East Corporation", "Karnov (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1987, wndrplnt, 0,       wndrplnt, wndrplnt, karnov_state, wndrplnt, ROT270, "Data East Corporation", "Wonder Planet (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1988, chelnov,  0,       karnov,   chelnov, karnov_state,  chelnov,  ROT0,   "Data East Corporation", "Chelnov - Atomic Runner (World)", GAME_SUPPORTS_SAVE )
+GAME( 1988, chelnovu, chelnov, karnov,   chelnovu, karnov_state, chelnovu, ROT0,   "Data East USA",         "Chelnov - Atomic Runner (US)", GAME_SUPPORTS_SAVE )
+GAME( 1988, chelnovj, chelnov, karnov,   chelnovj, karnov_state, chelnovj, ROT0,   "Data East Corporation", "Chelnov - Atomic Runner (Japan)", GAME_SUPPORTS_SAVE )

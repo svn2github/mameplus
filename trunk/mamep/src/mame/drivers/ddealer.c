@@ -151,6 +151,7 @@ public:
 	DECLARE_WRITE16_MEMBER(ddealer_vregs_w);
 	DECLARE_WRITE16_MEMBER(ddealer_mcu_shared_w);
 	DECLARE_READ16_MEMBER(ddealer_mcu_r);
+	DECLARE_DRIVER_INIT(ddealer);
 };
 
 
@@ -676,10 +677,9 @@ READ16_MEMBER(ddealer_state::ddealer_mcu_r)
 	return res;
 }
 
-static DRIVER_INIT( ddealer )
+DRIVER_INIT_MEMBER(ddealer_state,ddealer)
 {
-	ddealer_state *state = machine.driver_data<ddealer_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xfe01c, 0xfe01d, read16_delegate(FUNC(ddealer_state::ddealer_mcu_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xfe01c, 0xfe01d, read16_delegate(FUNC(ddealer_state::ddealer_mcu_r), this));
 }
 
 ROM_START( ddealer )
@@ -701,4 +701,4 @@ ROM_START( ddealer )
 	ROM_LOAD( "6.ic86", 0x100, 0x100, NO_DUMP )
 ROM_END
 
-GAME( 1991, ddealer,  0, ddealer, ddealer, ddealer,  ROT0, "NMK", "Double Dealer", GAME_SUPPORTS_SAVE )
+GAME( 1991, ddealer,  0, ddealer, ddealer, ddealer_state, ddealer,  ROT0, "NMK", "Double Dealer", GAME_SUPPORTS_SAVE )

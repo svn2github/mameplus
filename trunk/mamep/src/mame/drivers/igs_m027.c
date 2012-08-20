@@ -45,6 +45,16 @@ public:
 	DECLARE_WRITE32_MEMBER(igs_tx_videoram_w);
 	DECLARE_WRITE32_MEMBER(igs_bg_videoram_w);
 	DECLARE_WRITE32_MEMBER(igs_palette32_w);
+	DECLARE_DRIVER_INIT(sdwx);
+	DECLARE_DRIVER_INIT(chessc2);
+	DECLARE_DRIVER_INIT(lhzb4);
+	DECLARE_DRIVER_INIT(mgfx);
+	DECLARE_DRIVER_INIT(lhzb3);
+	DECLARE_DRIVER_INIT(gonefsh2);
+	DECLARE_DRIVER_INIT(sddz);
+	DECLARE_DRIVER_INIT(hauntedh);
+	DECLARE_DRIVER_INIT(bigd2);
+	DECLARE_DRIVER_INIT(klxyj);
 };
 
 
@@ -1215,80 +1225,80 @@ static void lhzb4_decrypt(running_machine &machine)
 
 
 /*
-static DRIVER_INIT( igs_m027 )
+DRIVER_INIT_MEMBER(igs_m027_state,igs_m027)
 {
-    pgm_create_dummy_internal_arm_region(machine);
+    pgm_create_dummy_internal_arm_region(machine());
 }
 */
 
-static DRIVER_INIT( sdwx )
+DRIVER_INIT_MEMBER(igs_m027_state,sdwx)
 {
-	sdwx_decrypt(machine);
-	sdwx_gfx_decrypt(machine);
-	pgm_create_dummy_internal_arm_region(machine);
+	sdwx_decrypt(machine());
+	sdwx_gfx_decrypt(machine());
+	pgm_create_dummy_internal_arm_region(machine());
 }
 
-static DRIVER_INIT( klxyj )
+DRIVER_INIT_MEMBER(igs_m027_state,klxyj)
 {
-	klxyj_decrypt(machine);
-	//sdwx_gfx_decrypt(machine);
-	pgm_create_dummy_internal_arm_region(machine);
+	klxyj_decrypt(machine());
+	//sdwx_gfx_decrypt(machine());
+	pgm_create_dummy_internal_arm_region(machine());
 }
 
-static DRIVER_INIT( chessc2 )
+DRIVER_INIT_MEMBER(igs_m027_state,chessc2)
 {
-	chessc2_decrypt(machine);
-	//sdwx_gfx_decrypt(machine);
-	pgm_create_dummy_internal_arm_region(machine);
+	chessc2_decrypt(machine());
+	//sdwx_gfx_decrypt(machine());
+	pgm_create_dummy_internal_arm_region(machine());
 }
 
-static DRIVER_INIT( hauntedh )
+DRIVER_INIT_MEMBER(igs_m027_state,hauntedh)
 {
-	hauntedh_decrypt(machine);
-	//sdwx_gfx_decrypt(machine);
-	pgm_create_dummy_internal_arm_region(machine);
+	hauntedh_decrypt(machine());
+	//sdwx_gfx_decrypt(machine());
+	pgm_create_dummy_internal_arm_region(machine());
 }
 
-static DRIVER_INIT( lhzb4 )
+DRIVER_INIT_MEMBER(igs_m027_state,lhzb4)
 {
-	lhzb4_decrypt(machine);
-	//sdwx_gfx_decrypt(machine);
-	pgm_create_dummy_internal_arm_region(machine);
+	lhzb4_decrypt(machine());
+	//sdwx_gfx_decrypt(machine());
+	pgm_create_dummy_internal_arm_region(machine());
 }
 
-static DRIVER_INIT( mgfx )
+DRIVER_INIT_MEMBER(igs_m027_state,mgfx)
 {
-	mgfx_decrypt(machine);
-	//sdwx_gfx_decrypt(machine);
-	pgm_create_dummy_internal_arm_region(machine);
+	mgfx_decrypt(machine());
+	//sdwx_gfx_decrypt(machine());
+	pgm_create_dummy_internal_arm_region(machine());
 }
 
-static DRIVER_INIT( lhzb3 )
+DRIVER_INIT_MEMBER(igs_m027_state,lhzb3)
 {
-	lhzb3_decrypt(machine);
-	//sdwx_gfx_decrypt(machine);
-	pgm_create_dummy_internal_arm_region(machine);
+	lhzb3_decrypt(machine());
+	//sdwx_gfx_decrypt(machine());
+	pgm_create_dummy_internal_arm_region(machine());
 }
 
-static DRIVER_INIT( sddz )
+DRIVER_INIT_MEMBER(igs_m027_state,sddz)
 {
-	sddz_decrypt(machine);
-	//sdwx_gfx_decrypt(machine);
-	pgm_create_dummy_internal_arm_region(machine);
+	sddz_decrypt(machine());
+	//sdwx_gfx_decrypt(machine());
+	pgm_create_dummy_internal_arm_region(machine());
 }
 
-static DRIVER_INIT( gonefsh2 )
+DRIVER_INIT_MEMBER(igs_m027_state,gonefsh2)
 {
-	gonefsh2_decrypt(machine);
-	//sdwx_gfx_decrypt(machine);
-	pgm_create_dummy_internal_arm_region(machine);
+	gonefsh2_decrypt(machine());
+	//sdwx_gfx_decrypt(machine());
+	pgm_create_dummy_internal_arm_region(machine());
 }
 
-static DRIVER_INIT( bigd2 )
+DRIVER_INIT_MEMBER(igs_m027_state,bigd2)
 {
-	big2_decrypt(machine);
-	//sdwx_gfx_decrypt(machine);
-	pgm_create_dummy_internal_arm_region(machine);
+	big2_decrypt(machine());
+	//sdwx_gfx_decrypt(machine());
+	pgm_create_dummy_internal_arm_region(machine());
 }
 
 /***************************************************************************
@@ -1297,13 +1307,13 @@ static DRIVER_INIT( bigd2 )
 
 ***************************************************************************/
 
-GAME( 2002,  sdwx,		0, igs_majhong, sdwx, sdwx,        ROT0, "IGS", "Sheng Dan Wu Xian", GAME_NO_SOUND | GAME_NOT_WORKING ) // aka Christmas 5 Line?
-GAME( 200?,  sddz,		0, igs_majhong, sdwx, sddz,        ROT0, "IGS", "Super Dou Di Zhu",  GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 2000,  bigd2,		0, igs_majhong, sdwx, bigd2,       ROT0, "IGS", "Big D2",  GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 200?,  lhzb3,		0, igs_majhong, sdwx, lhzb3,       ROT0, "IGS", "Long Hu Zheng Ba 3", GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 200?,  lhzb4,		0, igs_majhong, sdwx, lhzb4,       ROT0, "IGS", "Long Hu Zheng Ba 4", GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 200?,  klxyj,		0, igs_majhong, sdwx, klxyj,       ROT0, "IGS", "Kuai Le Xi You Ji",  GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 2000,  mgfx,		0, igs_majhong, sdwx, mgfx,        ROT0, "IGS", "Man Guan Fu Xing",   GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 200?,  gonefsh2,	0, igs_majhong, sdwx, gonefsh2,    ROT0, "IGS", "Gone Fishing 2",   GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 200?,  chessc2,	0, igs_majhong, sdwx, chessc2,     ROT0, "IGS", "Chess Challenge 2",   GAME_NO_SOUND | GAME_NOT_WORKING )
-GAME( 200?,  haunthig,	0, igs_majhong, sdwx, hauntedh,    ROT0, "IGS", "Haunted House (IGS)",   GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 2002,  sdwx,		0, igs_majhong, sdwx, igs_m027_state, sdwx,        ROT0, "IGS", "Sheng Dan Wu Xian", GAME_NO_SOUND | GAME_NOT_WORKING ) // aka Christmas 5 Line?
+GAME( 200?,  sddz,		0, igs_majhong, sdwx, igs_m027_state, sddz,        ROT0, "IGS", "Super Dou Di Zhu",  GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 2000,  bigd2,		0, igs_majhong, sdwx, igs_m027_state, bigd2,       ROT0, "IGS", "Big D2",  GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 200?,  lhzb3,		0, igs_majhong, sdwx, igs_m027_state, lhzb3,       ROT0, "IGS", "Long Hu Zheng Ba 3", GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 200?,  lhzb4,		0, igs_majhong, sdwx, igs_m027_state, lhzb4,       ROT0, "IGS", "Long Hu Zheng Ba 4", GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 200?,  klxyj,		0, igs_majhong, sdwx, igs_m027_state, klxyj,       ROT0, "IGS", "Kuai Le Xi You Ji",  GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 2000,  mgfx,		0, igs_majhong, sdwx, igs_m027_state, mgfx,        ROT0, "IGS", "Man Guan Fu Xing",   GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 200?,  gonefsh2,	0, igs_majhong, sdwx, igs_m027_state, gonefsh2,    ROT0, "IGS", "Gone Fishing 2",   GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 200?,  chessc2,	0, igs_majhong, sdwx, igs_m027_state, chessc2,     ROT0, "IGS", "Chess Challenge 2",   GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 200?,  haunthig,	0, igs_majhong, sdwx, igs_m027_state, hauntedh,    ROT0, "IGS", "Haunted House (IGS)",   GAME_NO_SOUND | GAME_NOT_WORKING )

@@ -22,6 +22,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(st_mp100);
 };
 
 
@@ -36,7 +38,7 @@ void st_mp100_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( st_mp100 )
+DRIVER_INIT_MEMBER(st_mp100_state,st_mp100)
 {
 }
 
@@ -166,15 +168,15 @@ ROM_START(wildfyre)
 	ROM_RELOAD( 0xf800, 0x0800)
 ROM_END
 
-GAME(1979,	princess,	0,		st_mp100,	st_mp100,	st_mp100,	ROT0,	"Stern",	"Cosmic Princess",		GAME_IS_SKELETON_MECHANICAL)
-GAME(1979,	dracula,	0,		st_mp100,	st_mp100,	st_mp100,	ROT0,	"Stern",	"Dracula",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1979,	hothand,	0,		st_mp100,	st_mp100,	st_mp100,	ROT0,	"Stern",	"Hot Hand",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1978,	lectrono,	0,		st_mp100,	st_mp100,	st_mp100,	ROT0,	"Stern",	"Lectronamo",			GAME_IS_SKELETON_MECHANICAL)
-GAME(1979,	magic,		0,		st_mp100,	st_mp100,	st_mp100,	ROT0,	"Stern",	"Magic",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1978,	memlane,	0,		st_mp100,	st_mp100,	st_mp100,	ROT0,	"Stern",	"Memory Lane",			GAME_IS_SKELETON_MECHANICAL)
-GAME(1978,	nugent,		0,		st_mp100,	st_mp100,	st_mp100,	ROT0,	"Stern",	"Nugent",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1977,	pinball,	0,		st_mp100,	st_mp100,	st_mp100,	ROT0,	"Stern",	"Pinball",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1978,	stars,		0,		st_mp100,	st_mp100,	st_mp100,	ROT0,	"Stern",	"Stars",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1977,	stingray,	0,		st_mp100,	st_mp100,	st_mp100,	ROT0,	"Stern",	"Stingray",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1979,	trident,	0,		st_mp100,	st_mp100,	st_mp100,	ROT0,	"Stern",	"Trident",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1978,	wildfyre,	0,		st_mp100,	st_mp100,	st_mp100,	ROT0,	"Stern",	"Wildfyre",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1979,	princess,	0,		st_mp100,	st_mp100, st_mp100_state,	st_mp100,	ROT0,	"Stern",	"Cosmic Princess",		GAME_IS_SKELETON_MECHANICAL)
+GAME(1979,	dracula,	0,		st_mp100,	st_mp100, st_mp100_state,	st_mp100,	ROT0,	"Stern",	"Dracula",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1979,	hothand,	0,		st_mp100,	st_mp100, st_mp100_state,	st_mp100,	ROT0,	"Stern",	"Hot Hand",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	lectrono,	0,		st_mp100,	st_mp100, st_mp100_state,	st_mp100,	ROT0,	"Stern",	"Lectronamo",			GAME_IS_SKELETON_MECHANICAL)
+GAME(1979,	magic,		0,		st_mp100,	st_mp100, st_mp100_state,	st_mp100,	ROT0,	"Stern",	"Magic",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	memlane,	0,		st_mp100,	st_mp100, st_mp100_state,	st_mp100,	ROT0,	"Stern",	"Memory Lane",			GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	nugent,		0,		st_mp100,	st_mp100, st_mp100_state,	st_mp100,	ROT0,	"Stern",	"Nugent",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1977,	pinball,	0,		st_mp100,	st_mp100, st_mp100_state,	st_mp100,	ROT0,	"Stern",	"Pinball",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	stars,		0,		st_mp100,	st_mp100, st_mp100_state,	st_mp100,	ROT0,	"Stern",	"Stars",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1977,	stingray,	0,		st_mp100,	st_mp100, st_mp100_state,	st_mp100,	ROT0,	"Stern",	"Stingray",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1979,	trident,	0,		st_mp100,	st_mp100, st_mp100_state,	st_mp100,	ROT0,	"Stern",	"Trident",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	wildfyre,	0,		st_mp100,	st_mp100, st_mp100_state,	st_mp100,	ROT0,	"Stern",	"Wildfyre",				GAME_IS_SKELETON_MECHANICAL)

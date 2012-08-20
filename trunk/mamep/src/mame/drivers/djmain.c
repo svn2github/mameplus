@@ -1999,11 +1999,10 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( beatmania )
+DRIVER_INIT_MEMBER(djmain_state,beatmania)
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
-	state->m_ide_master_password = NULL;
-	state->m_ide_user_password = NULL;
+	m_ide_master_password = NULL;
+	m_ide_user_password = NULL;
 }
 
 static const UINT8 beatmania_master_password[2 + 32] =
@@ -2015,9 +2014,8 @@ static const UINT8 beatmania_master_password[2 + 32] =
 	0x53, 0x45, 0x52, 0x45, 0x45, 0x56, 0x2e, 0x44
 };
 
-static DRIVER_INIT( hmcompmx )
+DRIVER_INIT_MEMBER(djmain_state,hmcompmx)
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
 	static const UINT8 hmcompmx_user_password[2 + 32] =
 	{
 		0x00, 0x00,
@@ -2029,13 +2027,12 @@ static DRIVER_INIT( hmcompmx )
 
 	DRIVER_INIT_CALL(beatmania);
 
-	state->m_ide_master_password = beatmania_master_password;
-	state->m_ide_user_password = hmcompmx_user_password;
+	m_ide_master_password = beatmania_master_password;
+	m_ide_user_password = hmcompmx_user_password;
 }
 
-static DRIVER_INIT( bm4thmix )
+DRIVER_INIT_MEMBER(djmain_state,bm4thmix)
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
 	static const UINT8 bm4thmix_user_password[2 + 32] =
 	{
 		0x00, 0x00,
@@ -2047,12 +2044,11 @@ static DRIVER_INIT( bm4thmix )
 
 	DRIVER_INIT_CALL(beatmania);
 
-	state->m_ide_user_password = bm4thmix_user_password;
+	m_ide_user_password = bm4thmix_user_password;
 }
 
-static DRIVER_INIT( bm5thmix )
+DRIVER_INIT_MEMBER(djmain_state,bm5thmix)
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
 	static const UINT8 bm5thmix_user_password[2 + 32] =
 	{
 		0x00, 0x00,
@@ -2064,13 +2060,12 @@ static DRIVER_INIT( bm5thmix )
 
 	DRIVER_INIT_CALL(beatmania);
 
-	state->m_ide_master_password = beatmania_master_password;
-	state->m_ide_user_password = bm5thmix_user_password;
+	m_ide_master_password = beatmania_master_password;
+	m_ide_user_password = bm5thmix_user_password;
 }
 
-static DRIVER_INIT( bmclubmx )
+DRIVER_INIT_MEMBER(djmain_state,bmclubmx)
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
 	static const UINT8 bmclubmx_user_password[2 + 32] =
 	{
 		0x00, 0x00,
@@ -2082,14 +2077,13 @@ static DRIVER_INIT( bmclubmx )
 
 	DRIVER_INIT_CALL(beatmania);
 
-	state->m_ide_master_password = beatmania_master_password;
-	state->m_ide_user_password = bmclubmx_user_password;
+	m_ide_master_password = beatmania_master_password;
+	m_ide_user_password = bmclubmx_user_password;
 }
 
 
-static DRIVER_INIT( bmcompm2 )
+DRIVER_INIT_MEMBER(djmain_state,bmcompm2)
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
 	static const UINT8 bmcompm2_user_password[2 + 32] =
 	{
 		0x00, 0x00,
@@ -2101,13 +2095,12 @@ static DRIVER_INIT( bmcompm2 )
 
 	DRIVER_INIT_CALL(beatmania);
 
-	state->m_ide_master_password = beatmania_master_password;
-	state->m_ide_user_password = bmcompm2_user_password;
+	m_ide_master_password = beatmania_master_password;
+	m_ide_user_password = bmcompm2_user_password;
 }
 
-static DRIVER_INIT( hmcompm2 )
+DRIVER_INIT_MEMBER(djmain_state,hmcompm2)
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
 	static const UINT8 hmcompm2_user_password[2 + 32] =
 	{
 		0x00, 0x00,
@@ -2119,13 +2112,12 @@ static DRIVER_INIT( hmcompm2 )
 
 	DRIVER_INIT_CALL(beatmania);
 
-	state->m_ide_master_password = beatmania_master_password;
-	state->m_ide_user_password = hmcompm2_user_password;
+	m_ide_master_password = beatmania_master_password;
+	m_ide_user_password = hmcompm2_user_password;
 }
 
-static DRIVER_INIT( bmdct )
+DRIVER_INIT_MEMBER(djmain_state,bmdct)
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
 	static const UINT8 bmdct_user_password[2 + 32] =
 	{
 		0x00, 0x00,
@@ -2137,13 +2129,12 @@ static DRIVER_INIT( bmdct )
 
 	DRIVER_INIT_CALL(beatmania);
 
-	state->m_ide_master_password = beatmania_master_password;
-	state->m_ide_user_password = bmdct_user_password;
+	m_ide_master_password = beatmania_master_password;
+	m_ide_user_password = bmdct_user_password;
 }
 
-static DRIVER_INIT( bmcorerm )
+DRIVER_INIT_MEMBER(djmain_state,bmcorerm)
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
 	static const UINT8 bmcorerm_user_password[2 + 32] =
 	{
 		0x00, 0x00,
@@ -2155,13 +2146,12 @@ static DRIVER_INIT( bmcorerm )
 
 	DRIVER_INIT_CALL(beatmania);
 
-	state->m_ide_master_password = beatmania_master_password;
-	state->m_ide_user_password = bmcorerm_user_password;
+	m_ide_master_password = beatmania_master_password;
+	m_ide_user_password = bmcorerm_user_password;
 }
 
-static DRIVER_INIT( bm6thmix )
+DRIVER_INIT_MEMBER(djmain_state,bm6thmix)
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
 	static const UINT8 bm6thmix_user_password[2 + 32] =
 	{
 		0x00, 0x00,
@@ -2173,13 +2163,12 @@ static DRIVER_INIT( bm6thmix )
 
 	DRIVER_INIT_CALL(beatmania);
 
-	state->m_ide_master_password = beatmania_master_password;
-	state->m_ide_user_password = bm6thmix_user_password;
+	m_ide_master_password = beatmania_master_password;
+	m_ide_user_password = bm6thmix_user_password;
 }
 
-static DRIVER_INIT( bm7thmix )
+DRIVER_INIT_MEMBER(djmain_state,bm7thmix)
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
 	static const UINT8 bm7thmix_user_password[2 + 32] =
 	{
 		0x00, 0x00,
@@ -2191,13 +2180,12 @@ static DRIVER_INIT( bm7thmix )
 
 	DRIVER_INIT_CALL(beatmania);
 
-	state->m_ide_master_password = beatmania_master_password;
-	state->m_ide_user_password = bm7thmix_user_password;
+	m_ide_master_password = beatmania_master_password;
+	m_ide_user_password = bm7thmix_user_password;
 }
 
-static DRIVER_INIT( bmfinal )
+DRIVER_INIT_MEMBER(djmain_state,bmfinal)
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
 	static const UINT8 bmfinal_user_password[2 + 32] =
 	{
 		0x00, 0x00,
@@ -2209,8 +2197,8 @@ static DRIVER_INIT( bmfinal )
 
 	DRIVER_INIT_CALL(beatmania);
 
-	state->m_ide_master_password = beatmania_master_password;
-	state->m_ide_user_password = bmfinal_user_password;
+	m_ide_master_password = beatmania_master_password;
+	m_ide_user_password = bmfinal_user_password;
 }
 
 
@@ -2222,31 +2210,31 @@ static DRIVER_INIT( bmfinal )
 
 // commented out games should also run on this driver
 
-GAME( 1997, bm1stmix, 0,        djmain,   bm1stmix, beatmania, ROT0, "Konami", "beatmania (ver JA-B)", 0 )
-GAME( 1998, bm2ndmix, 0,        djmain,   bm2ndmix, beatmania, ROT0, "Konami", "beatmania 2nd MIX (ver JA-B)", 0 )
-GAME( 1998, bm2ndmxa, bm2ndmix, djmain,   bm2ndmix, beatmania, ROT0, "Konami", "beatmania 2nd MIX (ver JA-A)", 0 )
-GAME( 1998, bm3rdmix, 0,        djmain,   bm3rdmix, beatmania, ROT0, "Konami", "beatmania 3rd MIX (ver JA-A)", 0 )
-GAME( 1999, bmcompmx, 0,        djmain,   bmcompmx, beatmania, ROT0, "Konami", "beatmania complete MIX (ver JA-B)", 0 )
-GAME( 1999, hmcompmx, bmcompmx, djmain,   bmcompmx, hmcompmx,  ROT0, "Konami", "hiphopmania complete MIX (ver UA-B)", 0 )
-GAME( 1999, bm4thmix, 0,        djmain,   bm4thmix, bm4thmix,  ROT0, "Konami", "beatmania 4th MIX (ver JA-A)", 0 )
-GAME( 1999, bm5thmix, 0,        djmain,   bm5thmix, bm5thmix,  ROT0, "Konami", "beatmania 5th MIX (ver JA-A)", 0 )
-GAME( 2000, bmcompm2, 0,        djmain,   bm5thmix, bmcompm2,  ROT0, "Konami", "beatmania complete MIX 2 (ver JA-A)", 0 )
-GAME( 2000, hmcompm2, bmcompm2, djmain,   hmcompm2, hmcompm2,  ROT0, "Konami", "hiphopmania complete MIX 2 (ver UA-A)", 0 )
-GAME( 2000, bmclubmx, 0,        djmain,   bmclubmx, bmclubmx,  ROT0, "Konami", "beatmania Club MIX (ver JA-A)", 0 )
-GAME( 2000, bmdct,    0,        djmain,   bmdct,    bmdct,     ROT0, "Konami", "beatmania featuring Dreams Come True (ver JA-A)", 0 )
-GAME( 2000, bmcorerm, 0,        djmain,   bmcorerm, bmcorerm,  ROT0, "Konami", "beatmania CORE REMIX (ver JA-A)", 0 )
-GAME( 2001, bm6thmix, 0,        djmain,   bm6thmix, bm6thmix,  ROT0, "Konami", "beatmania 6th MIX (ver JA-A)", 0 )
-GAME( 2001, bm7thmix, 0,        djmain,   bm6thmix, bm7thmix,  ROT0, "Konami", "beatmania 7th MIX (ver JA-B)", 0 )
-GAME( 2002, bmfinal,  0,        djmain,   bm6thmix, bmfinal,   ROT0, "Konami", "beatmania THE FINAL (ver JA-A)", 0 )
+GAME( 1997, bm1stmix, 0,        djmain,   bm1stmix, djmain_state, beatmania, ROT0, "Konami", "beatmania (ver JA-B)", 0 )
+GAME( 1998, bm2ndmix, 0,        djmain,   bm2ndmix, djmain_state, beatmania, ROT0, "Konami", "beatmania 2nd MIX (ver JA-B)", 0 )
+GAME( 1998, bm2ndmxa, bm2ndmix, djmain,   bm2ndmix, djmain_state, beatmania, ROT0, "Konami", "beatmania 2nd MIX (ver JA-A)", 0 )
+GAME( 1998, bm3rdmix, 0,        djmain,   bm3rdmix, djmain_state, beatmania, ROT0, "Konami", "beatmania 3rd MIX (ver JA-A)", 0 )
+GAME( 1999, bmcompmx, 0,        djmain,   bmcompmx, djmain_state, beatmania, ROT0, "Konami", "beatmania complete MIX (ver JA-B)", 0 )
+GAME( 1999, hmcompmx, bmcompmx, djmain,   bmcompmx, djmain_state, hmcompmx,  ROT0, "Konami", "hiphopmania complete MIX (ver UA-B)", 0 )
+GAME( 1999, bm4thmix, 0,        djmain,   bm4thmix, djmain_state, bm4thmix,  ROT0, "Konami", "beatmania 4th MIX (ver JA-A)", 0 )
+GAME( 1999, bm5thmix, 0,        djmain,   bm5thmix, djmain_state, bm5thmix,  ROT0, "Konami", "beatmania 5th MIX (ver JA-A)", 0 )
+GAME( 2000, bmcompm2, 0,        djmain,   bm5thmix, djmain_state, bmcompm2,  ROT0, "Konami", "beatmania complete MIX 2 (ver JA-A)", 0 )
+GAME( 2000, hmcompm2, bmcompm2, djmain,   hmcompm2, djmain_state, hmcompm2,  ROT0, "Konami", "hiphopmania complete MIX 2 (ver UA-A)", 0 )
+GAME( 2000, bmclubmx, 0,        djmain,   bmclubmx, djmain_state, bmclubmx,  ROT0, "Konami", "beatmania Club MIX (ver JA-A)", 0 )
+GAME( 2000, bmdct,    0,        djmain,   bmdct, djmain_state,    bmdct,     ROT0, "Konami", "beatmania featuring Dreams Come True (ver JA-A)", 0 )
+GAME( 2000, bmcorerm, 0,        djmain,   bmcorerm, djmain_state, bmcorerm,  ROT0, "Konami", "beatmania CORE REMIX (ver JA-A)", 0 )
+GAME( 2001, bm6thmix, 0,        djmain,   bm6thmix, djmain_state, bm6thmix,  ROT0, "Konami", "beatmania 6th MIX (ver JA-A)", 0 )
+GAME( 2001, bm7thmix, 0,        djmain,   bm6thmix, djmain_state, bm7thmix,  ROT0, "Konami", "beatmania 7th MIX (ver JA-B)", 0 )
+GAME( 2002, bmfinal,  0,        djmain,   bm6thmix, djmain_state, bmfinal,   ROT0, "Konami", "beatmania THE FINAL (ver JA-A)", 0 )
 
-GAME( 1998, popn2,    0,        djmain,   popnmusic, beatmania, ROT0, "Konami", "Pop'n Music 2 (ver JA-A)", 0 )
+GAME( 1998, popn2,    0,        djmain,   popnmusic, djmain_state, beatmania, ROT0, "Konami", "Pop'n Music 2 (ver JA-A)", 0 )
 
 #if 0
 // for reference, these sets have not been verified
-GAME( 1998, bm3rdmxb, bm3rdmix, djmain,   bm3rdmix,  beatmania, ROT0, "Konami", "beatmania 3rd MIX (ver JA-B)", 0 )
+GAME( 1998, bm3rdmxb, bm3rdmix, djmain,   bm3rdmix, djmain_state,  beatmania, ROT0, "Konami", "beatmania 3rd MIX (ver JA-B)", 0 )
 
-GAME( 1998, popn1,    0,        djmain,   popn1,     beatmania, ROT0, "Konami", "Pop'n Music 1 (ver JA-A)", 0 )
-GAME( 1999, popn3,    0,        djmain,   popnmusic, beatmania, ROT0, "Konami", "Pop'n Music 3 (ver JA-A)", 0 )
+GAME( 1998, popn1,    0,        djmain,   popn1, djmain_state,     beatmania, ROT0, "Konami", "Pop'n Music 1 (ver JA-A)", 0 )
+GAME( 1999, popn3,    0,        djmain,   popnmusic, djmain_state, beatmania, ROT0, "Konami", "Pop'n Music 3 (ver JA-A)", 0 )
 
-GAME( 1999, popnstex, 0,        djmain,   popnstex,  beatmania, ROT0, "Konami", "Pop'n Stage EX (ver JB-A)", 0 )
+GAME( 1999, popnstex, 0,        djmain,   popnstex, djmain_state,  beatmania, ROT0, "Konami", "Pop'n Stage EX (ver JB-A)", 0 )
 #endif

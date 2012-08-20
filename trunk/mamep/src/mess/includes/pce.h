@@ -12,6 +12,7 @@
 #include "cdrom.h"
 #include "sound/msm5205.h"
 #include "machine/nvram.h"
+#include "video/huc6260.h"
 
 #define C6280_TAG			"c6280"
 
@@ -109,10 +110,13 @@ public:
 	pce_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag) ,
 		m_cd_ram(*this, "cd_ram"),
-		m_user_ram(*this, "user_ram"){ }
+		m_user_ram(*this, "user_ram"),
+		m_huc6260(*this, "huc6260")
+	{ }
 
 	required_shared_ptr<UINT8> m_cd_ram;
 	required_shared_ptr<unsigned char> m_user_ram;
+	optional_device<huc6260_device> m_huc6260;
 	UINT8 m_io_port_options;
 	UINT8 m_sys3_card;
 	UINT8 m_acard;
@@ -132,6 +136,10 @@ public:
 	DECLARE_WRITE8_MEMBER(pce_cd_acard_w);
 	DECLARE_READ8_MEMBER(pce_cd_acard_wram_r);
 	DECLARE_WRITE8_MEMBER(pce_cd_acard_wram_w);
+	DECLARE_DRIVER_INIT(sgx);
+	DECLARE_DRIVER_INIT(tg16);
+	DECLARE_DRIVER_INIT(mess_pce);
+	UINT32 screen_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
 };
 
 
@@ -141,9 +149,6 @@ DEVICE_IMAGE_LOAD(pce_cart);
 
 extern const msm5205_interface pce_cd_msm5205_interface;
 
-DRIVER_INIT( mess_pce );
-DRIVER_INIT( tg16 );
-DRIVER_INIT( sgx );
 MACHINE_START( pce );
 MACHINE_RESET( mess_pce );
 

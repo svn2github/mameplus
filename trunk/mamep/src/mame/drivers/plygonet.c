@@ -725,32 +725,31 @@ INPUT_PORTS_END
 
 
 /**********************************************************************************/
-static DRIVER_INIT(polygonet)
+DRIVER_INIT_MEMBER(polygonet_state,polygonet)
 {
-	polygonet_state *state = machine.driver_data<polygonet_state>();
 
 	/* Set default bankswitch */
-	state->m_cur_sound_region = 2;
-	reset_sound_region(machine);
+	m_cur_sound_region = 2;
+	reset_sound_region(machine());
 
 	/* Allocate space for the dsp56k banking */
-	memset(state->m_dsp56k_bank00_ram, 0, sizeof(state->m_dsp56k_bank00_ram));
-	memset(state->m_dsp56k_bank01_ram, 0, sizeof(state->m_dsp56k_bank01_ram));
-	memset(state->m_dsp56k_bank02_ram, 0, sizeof(state->m_dsp56k_bank02_ram));
-	memset(state->m_dsp56k_shared_ram_16, 0, sizeof(state->m_dsp56k_shared_ram_16));
-	memset(state->m_dsp56k_bank04_ram, 0, sizeof(state->m_dsp56k_bank04_ram));
+	memset(m_dsp56k_bank00_ram, 0, sizeof(m_dsp56k_bank00_ram));
+	memset(m_dsp56k_bank01_ram, 0, sizeof(m_dsp56k_bank01_ram));
+	memset(m_dsp56k_bank02_ram, 0, sizeof(m_dsp56k_bank02_ram));
+	memset(m_dsp56k_shared_ram_16, 0, sizeof(m_dsp56k_shared_ram_16));
+	memset(m_dsp56k_bank04_ram, 0, sizeof(m_dsp56k_bank04_ram));
 
 	/* The dsp56k occasionally executes out of mapped memory */
-	address_space *space = machine.device<dsp56k_device>("dsp")->space(AS_PROGRAM);
-	state->m_dsp56k_update_handler = space->set_direct_update_handler(direct_update_delegate(FUNC(polygonet_state::plygonet_dsp56k_direct_handler), state));
+	address_space *space = machine().device<dsp56k_device>("dsp")->space(AS_PROGRAM);
+	m_dsp56k_update_handler = space->set_direct_update_handler(direct_update_delegate(FUNC(polygonet_state::plygonet_dsp56k_direct_handler), this));
 
     /* save states */
-	state->save_item(NAME(state->m_dsp56k_bank00_ram));
-	state->save_item(NAME(state->m_dsp56k_bank01_ram));
-	state->save_item(NAME(state->m_dsp56k_bank02_ram));
-	state->save_item(NAME(state->m_dsp56k_shared_ram_16));
-	state->save_item(NAME(state->m_dsp56k_bank04_ram));
-	state->save_item(NAME(state->m_cur_sound_region));
+	save_item(NAME(m_dsp56k_bank00_ram));
+	save_item(NAME(m_dsp56k_bank01_ram));
+	save_item(NAME(m_dsp56k_bank02_ram));
+	save_item(NAME(m_dsp56k_shared_ram_16));
+	save_item(NAME(m_dsp56k_bank04_ram));
+	save_item(NAME(m_cur_sound_region));
 }
 
 
@@ -815,6 +814,6 @@ ROM_START( polynetw )
 ROM_END
 
 /*          ROM       parent   machine   inp        init */
-GAME( 1993, plygonet, 0,       plygonet, polygonet, polygonet, ROT90, "Konami", "Polygonet Commanders (ver UAA)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
-GAME( 1993, polynetw, 0,       plygonet, polynetw,  polygonet, ROT90, "Konami", "Poly-Net Warriors (ver JAA)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1993, plygonet, 0,       plygonet, polygonet, polygonet_state, polygonet, ROT90, "Konami", "Polygonet Commanders (ver UAA)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1993, polynetw, 0,       plygonet, polynetw, polygonet_state,  polygonet, ROT90, "Konami", "Poly-Net Warriors (ver JAA)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 

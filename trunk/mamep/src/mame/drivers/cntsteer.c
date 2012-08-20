@@ -80,6 +80,7 @@ public:
 	DECLARE_READ8_MEMBER(cntsteer_adx_r);
 	DECLARE_WRITE8_MEMBER(nmimask_w);
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
+	DECLARE_DRIVER_INIT(zerotrgt);
 };
 
 
@@ -872,7 +873,7 @@ static const ay8910_interface ay8910_config =
 	AY8910_DEFAULT_LOADS,
 	DEVCB_NULL,
 	DEVCB_NULL,
-	DEVCB_DEVICE_HANDLER("dac", dac_w),
+	DEVCB_DEVICE_MEMBER("dac", dac_device, write_unsigned8),
 	DEVCB_NULL
 };
 
@@ -919,7 +920,7 @@ static MACHINE_CONFIG_START( cntsteer, cntsteer_state )
 	MCFG_SOUND_ADD("ay2", AY8910, 1500000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -1162,28 +1163,28 @@ static void zerotrgt_rearrange_gfx( running_machine &machine, int romsize, int r
 }
 
 #if 0
-static DRIVER_INIT( cntsteer )
+DRIVER_INIT_MEMBER(cntsteer_state,cntsteer)
 {
-	UINT8 *RAM = machine.root_device().memregion("subcpu")->base();
+	UINT8 *RAM = machine().root_device().memregion("subcpu")->base();
 
 	RAM[0xc2cf] = 0x43; /* Patch out Cpu 1 ram test - it never ends..?! */
 	RAM[0xc2d0] = 0x43;
 	RAM[0xc2f1] = 0x43;
 	RAM[0xc2f2] = 0x43;
 
-	zerotrgt_rearrange_gfx(machine, 0x02000, 0x10000);
+	zerotrgt_rearrange_gfx(machine(), 0x02000, 0x10000);
 }
 #endif
 
-static DRIVER_INIT( zerotrgt )
+DRIVER_INIT_MEMBER(cntsteer_state,zerotrgt)
 {
-	zerotrgt_rearrange_gfx(machine, 0x02000, 0x10000);
+	zerotrgt_rearrange_gfx(machine(), 0x02000, 0x10000);
 }
 
 
 /***************************************************************************/
 
-GAME( 1985, zerotrgt,  0,        zerotrgt,  zerotrgt,  zerotrgt, ROT0,   "Data East Corporation", "Zero Target (World, CW)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NO_COCKTAIL|GAME_NOT_WORKING|GAME_SUPPORTS_SAVE )
-GAME( 1985, zerotrgta, zerotrgt, zerotrgt,  zerotrgta, zerotrgt, ROT0,   "Data East Corporation", "Zero Target (World, CT)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NO_COCKTAIL|GAME_NOT_WORKING|GAME_SUPPORTS_SAVE )
-GAME( 1985, gekitsui,  zerotrgt, zerotrgt,  zerotrgta, zerotrgt, ROT0,   "Data East Corporation", "Gekitsui Oh (Japan)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NO_COCKTAIL|GAME_NOT_WORKING|GAME_SUPPORTS_SAVE )
-GAME( 1985, cntsteer,  0,        cntsteer,  cntsteer,  zerotrgt, ROT270, "Data East Corporation", "Counter Steer (Japan)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_WRONG_COLORS|GAME_NO_COCKTAIL|GAME_NOT_WORKING|GAME_SUPPORTS_SAVE )
+GAME( 1985, zerotrgt,  0,        zerotrgt,  zerotrgt, cntsteer_state,  zerotrgt, ROT0,   "Data East Corporation", "Zero Target (World, CW)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NO_COCKTAIL|GAME_NOT_WORKING|GAME_SUPPORTS_SAVE )
+GAME( 1985, zerotrgta, zerotrgt, zerotrgt,  zerotrgta, cntsteer_state, zerotrgt, ROT0,   "Data East Corporation", "Zero Target (World, CT)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NO_COCKTAIL|GAME_NOT_WORKING|GAME_SUPPORTS_SAVE )
+GAME( 1985, gekitsui,  zerotrgt, zerotrgt,  zerotrgta, cntsteer_state, zerotrgt, ROT0,   "Data East Corporation", "Gekitsui Oh (Japan)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NO_COCKTAIL|GAME_NOT_WORKING|GAME_SUPPORTS_SAVE )
+GAME( 1985, cntsteer,  0,        cntsteer,  cntsteer, cntsteer_state,  zerotrgt, ROT270, "Data East Corporation", "Counter Steer (Japan)", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_WRONG_COLORS|GAME_NO_COCKTAIL|GAME_NOT_WORKING|GAME_SUPPORTS_SAVE )

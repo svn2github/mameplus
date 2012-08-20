@@ -144,20 +144,20 @@ static TIMER_CALLBACK( exctsccr_fm_callback )
 // Champion Baseball has only one DAC
 WRITE8_MEMBER(champbas_state::champbas_dac_w)
 {
-	device_t *device = machine().device("dac");
-	dac_signed_data_w(device, data << 2);
+	dac_device *device = machine().device<dac_device>("dac");
+	device->write_signed8(data << 2);
 }
 
 WRITE8_MEMBER(champbas_state::champbas_dac1_w)
 {
-	device_t *device = machine().device("dac1");
-	dac_signed_data_w(device, data << 2);
+	dac_device *device = machine().device<dac_device>("dac1");
+	device->write_signed8(data << 2);
 }
 
 WRITE8_MEMBER(champbas_state::champbas_dac2_w)
 {
-	device_t *device = machine().device("dac2");
-	dac_signed_data_w(device, data << 2);
+	dac_device *device = machine().device<dac_device>("dac2");
+	device->write_signed8(data << 2);
 }
 
 /*************************************
@@ -686,7 +686,7 @@ static MACHINE_CONFIG_START( champbas, champbas_state )
 	MCFG_SOUND_ADD("aysnd", AY8910, XTAL_18_432MHz/12)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.70)
 MACHINE_CONFIG_END
 
@@ -753,10 +753,10 @@ static MACHINE_CONFIG_START( exctsccr, champbas_state )
 	MCFG_SOUND_ADD("ay4", AY8910, XTAL_14_31818MHz/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.08)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_CONFIG_END
 
@@ -794,7 +794,7 @@ static MACHINE_CONFIG_START( exctsccrb, champbas_state )
 	MCFG_SOUND_ADD("aysnd", AY8910, XTAL_18_432MHz/12)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.70)
 MACHINE_CONFIG_END
 
@@ -1186,12 +1186,12 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT(champbas)
+DRIVER_INIT_MEMBER(champbas_state,champbas)
 {
 	// chars and sprites are mixed in the same ROMs, so rearrange them for easier decoding
-	UINT8 *rom1 = machine.root_device().memregion("gfx1")->base();
-	UINT8 *rom2 = machine.root_device().memregion("gfx2")->base();
-	int len = machine.root_device().memregion("gfx1")->bytes();
+	UINT8 *rom1 = machine().root_device().memregion("gfx1")->base();
+	UINT8 *rom2 = machine().root_device().memregion("gfx2")->base();
+	int len = machine().root_device().memregion("gfx1")->bytes();
 	int i;
 
 	for (i = 0; i < len/2; ++i)
@@ -1203,11 +1203,11 @@ static DRIVER_INIT(champbas)
 }
 
 
-static DRIVER_INIT( exctsccr )
+DRIVER_INIT_MEMBER(champbas_state,exctsccr)
 {
 	// chars and sprites are mixed in the same ROMs, so rearrange them for easier decoding
-	UINT8 *rom1 = machine.root_device().memregion("gfx1")->base();
-	UINT8 *rom2 = machine.root_device().memregion("gfx2")->base();
+	UINT8 *rom1 = machine().root_device().memregion("gfx1")->base();
+	UINT8 *rom2 = machine().root_device().memregion("gfx2")->base();
 	int i;
 
 	// planes 0,1
@@ -1238,18 +1238,18 @@ static DRIVER_INIT( exctsccr )
  *
  *************************************/
 
-GAME( 1982, talbot,     0,        talbot,   talbot,   0,        ROT270, "Alpha Denshi Co. (Volt Electronics license)", "Talbot", GAME_SUPPORTS_SAVE )
+GAME( 1982, talbot,     0,        talbot,   talbot, driver_device,   0,        ROT270, "Alpha Denshi Co. (Volt Electronics license)", "Talbot", GAME_SUPPORTS_SAVE )
 
-GAME( 1983, champbas,   0,        champbas, champbas, champbas, ROT0,   "Alpha Denshi Co. (Sega license)", "Champion Base Ball", GAME_SUPPORTS_SAVE )
-GAME( 1983, champbasj,  champbas, champmcu, champbas, champbas, ROT0,   "Alpha Denshi Co.", "Champion Base Ball (Japan set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1983, champbasja, champbas, champbas, champbas, champbas, ROT0,   "Alpha Denshi Co.", "Champion Base Ball (Japan set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1983, champbb2,   0,        champmcu, champbas, champbas, ROT0,   "Alpha Denshi Co. (Sega license)", "Champion Base Ball Part-2: Pair Play (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1983, champbb2a,  champbb2, champmcu, champbas, champbas, ROT0,   "Alpha Denshi Co.", "Champion Baseball II (set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// no dump
-GAME( 1983, champbb2j,  champbb2, champmcu, champbas, champbas, ROT0,   "Alpha Denshi Co.", "Champion Baseball II (Japan)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1983, champbas,   0,        champbas, champbas, champbas_state, champbas, ROT0,   "Alpha Denshi Co. (Sega license)", "Champion Base Ball", GAME_SUPPORTS_SAVE )
+GAME( 1983, champbasj,  champbas, champmcu, champbas, champbas_state, champbas, ROT0,   "Alpha Denshi Co.", "Champion Base Ball (Japan set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1983, champbasja, champbas, champbas, champbas, champbas_state, champbas, ROT0,   "Alpha Denshi Co.", "Champion Base Ball (Japan set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1983, champbb2,   0,        champmcu, champbas, champbas_state, champbas, ROT0,   "Alpha Denshi Co. (Sega license)", "Champion Base Ball Part-2: Pair Play (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1983, champbb2a,  champbb2, champmcu, champbas, champbas_state, champbas, ROT0,   "Alpha Denshi Co.", "Champion Baseball II (set 2)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// no dump
+GAME( 1983, champbb2j,  champbb2, champmcu, champbas, champbas_state, champbas, ROT0,   "Alpha Denshi Co.", "Champion Baseball II (Japan)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 
-GAME( 1983, exctsccr,   0,        exctsccr, exctsccr, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer", GAME_SUPPORTS_SAVE )
-GAME( 1983, exctsccra,  exctsccr, exctsccr, exctsccr, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer (alternate music)", GAME_SUPPORTS_SAVE )
-GAME( 1983, exctsccrj,  exctsccr, exctsccr, exctsccr, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer (Japan set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1983, exctsccrj2, exctsccr, exctsccr, exctsccr, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer (Japan set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1983, exctsccrb,  exctsccr, exctsccrb,exctsccr, exctsccr, ROT270, "bootleg",          "Exciting Soccer (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1984, exctscc2,   0,        exctsccr, exctsccr, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer II", GAME_SUPPORTS_SAVE )
+GAME( 1983, exctsccr,   0,        exctsccr, exctsccr, champbas_state, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer", GAME_SUPPORTS_SAVE )
+GAME( 1983, exctsccra,  exctsccr, exctsccr, exctsccr, champbas_state, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer (alternate music)", GAME_SUPPORTS_SAVE )
+GAME( 1983, exctsccrj,  exctsccr, exctsccr, exctsccr, champbas_state, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer (Japan set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1983, exctsccrj2, exctsccr, exctsccr, exctsccr, champbas_state, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer (Japan set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1983, exctsccrb,  exctsccr, exctsccrb,exctsccr, champbas_state, exctsccr, ROT270, "bootleg",          "Exciting Soccer (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1984, exctscc2,   0,        exctsccr, exctsccr, champbas_state, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer II", GAME_SUPPORTS_SAVE )

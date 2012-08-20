@@ -51,6 +51,8 @@ public:
 	DECLARE_WRITE32_MEMBER(wcvol95_pf2_rowscroll_w);
 	DECLARE_WRITE32_MEMBER(wcvol95_spriteram_w);
 	DECLARE_WRITE32_MEMBER(hvysmsh_oki_0_bank_w);
+	DECLARE_DRIVER_INIT(hvysmsh);
+	DECLARE_DRIVER_INIT(wcvol95);
 };
 
 
@@ -639,24 +641,24 @@ static void descramble_sound( running_machine &machine, const char *tag )
 	auto_free(machine, buf1);
 }
 
-static DRIVER_INIT( hvysmsh )
+DRIVER_INIT_MEMBER(deco156_state,hvysmsh)
 {
-	deco56_decrypt_gfx(machine, "gfx1"); /* 141 */
-	deco156_decrypt(machine);
-	descramble_sound(machine, "oki2");
+	deco56_decrypt_gfx(machine(), "gfx1"); /* 141 */
+	deco156_decrypt(machine());
+	descramble_sound(machine(), "oki2");
 }
 
-static DRIVER_INIT( wcvol95 )
+DRIVER_INIT_MEMBER(deco156_state,wcvol95)
 {
-	deco56_decrypt_gfx(machine, "gfx1"); /* 141 */
-	deco156_decrypt(machine);
-	descramble_sound(machine, "ymz");
+	deco56_decrypt_gfx(machine(), "gfx1"); /* 141 */
+	deco156_decrypt(machine());
+	descramble_sound(machine(), "ymz");
 }
 
 
 /**********************************************************************************/
 
-GAME( 1993, hvysmsh,  0,       hvysmsh, hvysmsh, hvysmsh,  ROT0, "Data East Corporation", "Heavy Smash (Europe version -2)", GAME_SUPPORTS_SAVE )
-GAME( 1993, hvysmsha, hvysmsh, hvysmsh, hvysmsh, hvysmsh,  ROT0, "Data East Corporation", "Heavy Smash (Asia version -4)", GAME_SUPPORTS_SAVE )
-GAME( 1993, hvysmshj, hvysmsh, hvysmsh, hvysmsh, hvysmsh,  ROT0, "Data East Corporation", "Heavy Smash (Japan version -2)", GAME_SUPPORTS_SAVE )
-GAME( 1995, wcvol95,  0,       wcvol95, wcvol95, wcvol95,  ROT0, "Data East Corporation", "World Cup Volley '95 (Japan v1.0)", GAME_SUPPORTS_SAVE )
+GAME( 1993, hvysmsh,  0,       hvysmsh, hvysmsh, deco156_state, hvysmsh,  ROT0, "Data East Corporation", "Heavy Smash (Europe version -2)", GAME_SUPPORTS_SAVE )
+GAME( 1993, hvysmsha, hvysmsh, hvysmsh, hvysmsh, deco156_state, hvysmsh,  ROT0, "Data East Corporation", "Heavy Smash (Asia version -4)", GAME_SUPPORTS_SAVE )
+GAME( 1993, hvysmshj, hvysmsh, hvysmsh, hvysmsh, deco156_state, hvysmsh,  ROT0, "Data East Corporation", "Heavy Smash (Japan version -2)", GAME_SUPPORTS_SAVE )
+GAME( 1995, wcvol95,  0,       wcvol95, wcvol95, deco156_state, wcvol95,  ROT0, "Data East Corporation", "World Cup Volley '95 (Japan v1.0)", GAME_SUPPORTS_SAVE )

@@ -23,7 +23,6 @@ To Do:
 #include "cpu/m68000/m68000.h"
 #include "sound/okim6295.h"
 #include "machine/eeprom.h"
-#include "includes/kaneko16.h"
 #include "includes/galpani2.h"
 
 /***************************************************************************
@@ -73,13 +72,6 @@ WRITE16_MEMBER(galpani2_state::galpani2_eeprom_w)
 
 static MACHINE_RESET( galpani2 )
 {
-	galpani2_state *state = machine.driver_data<galpani2_state>();
-	MACHINE_RESET_CALL(kaneko16);
-
-	state->m_sprite_type = 1;
-
-	state->m_sprite_xoffs = 0x10000 - 0x16c0 + 0xc00;
-	state->m_sprite_yoffs = 0x000;
 	machine.scheduler().boost_interleave(attotime::zero, attotime::from_usec(50)); //initial mcu xchk
 }
 
@@ -295,7 +287,7 @@ static ADDRESS_MAP_START( galpani2_mem1, AS_PROGRAM, 16, galpani2_state )
 	AM_RANGE(0x110000, 0x11000f) AM_RAM												// ? corrupted? stack dumper on POST failure, pc+sr on gp2se
 	AM_RANGE(0x300000, 0x301fff) AM_RAM												// ?
 	AM_RANGE(0x302000, 0x303fff) AM_RAM AM_SHARE("spriteram")	// Sprites
-	AM_RANGE(0x304000, 0x30401f) AM_RAM_WRITE(kaneko16_sprites_regs_w) AM_SHARE("sprites_regs")	// Sprites Regs
+	AM_RANGE(0x304000, 0x30401f) AM_DEVREADWRITE("kan_spr", kaneko16_sprite_device, kaneko16_sprites_regs_r, kaneko16_sprites_regs_w)
 	AM_RANGE(0x308000, 0x308001) AM_WRITENOP										// ? 0 at startup
 	AM_RANGE(0x30c000, 0x30c001) AM_WRITENOP										// ? hblank effect ?
 	AM_RANGE(0x310000, 0x3101ff) AM_RAM_WRITE_LEGACY(galpani2_palette_0_w) AM_SHARE("palette.0")	// ?
@@ -610,6 +602,9 @@ static MACHINE_CONFIG_START( galpani2, galpani2_state )
 
 	MCFG_GFXDECODE(galpani2)
 	MCFG_PALETTE_LENGTH(0x4000 + 0x200 + 0x8000)	// sprites, bg8, bg15
+
+	MCFG_DEVICE_ADD_KC002_SPRITES
+	kaneko16_sprite_device::set_offsets(*device, 0x10000 - 0x16c0 + 0xc00, 0);
 
 	MCFG_PALETTE_INIT(galpani2)
 	MCFG_VIDEO_START(galpani2)
@@ -1009,12 +1004,12 @@ ROM_START( gp2quiz )
 	ROM_LOAD( "gp2-101-0044.u60",  0x200000, 0x100000, CRC(3c45134f) SHA1(a5362bfcc6beb6e776c1bce4544475f8947fccea) )
 ROM_END
 
-GAME( 1993, galpani2,  0,        galpani2, galpani2, 0, ROT90, "Kaneko", "Gals Panic II (Asia)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
-GAME( 1993, galpani2g, galpani2, galpani2, galpani2, 0, ROT90, "Kaneko", "Gals Panic II (Germany)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
-GAME( 1993, galpani2i, galpani2, galpani2, galpani2, 0, ROT90, "Kaneko", "Gals Panic II (Italy)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
-GAME( 1993, galpani2t, galpani2, galpani2, galpani2, 0, ROT90, "Kaneko", "Gals Panic II (Taiwan)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
-GAME( 1993, galpani2j, galpani2, galpani2, galpani2, 0, ROT90, "Kaneko", "Gals Panic II (Japan)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) // it is a 'quiz edition' but the title screen doesn't say, maybe all Japanese versions have the Quiz
+GAME( 1993, galpani2,  0,        galpani2, galpani2, driver_device, 0, ROT90, "Kaneko", "Gals Panic II (Asia)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
+GAME( 1993, galpani2g, galpani2, galpani2, galpani2, driver_device, 0, ROT90, "Kaneko", "Gals Panic II (Germany)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
+GAME( 1993, galpani2i, galpani2, galpani2, galpani2, driver_device, 0, ROT90, "Kaneko", "Gals Panic II (Italy)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
+GAME( 1993, galpani2t, galpani2, galpani2, galpani2, driver_device, 0, ROT90, "Kaneko", "Gals Panic II (Taiwan)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
+GAME( 1993, galpani2j, galpani2, galpani2, galpani2, driver_device, 0, ROT90, "Kaneko", "Gals Panic II (Japan)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) // it is a 'quiz edition' but the title screen doesn't say, maybe all Japanese versions have the Quiz
 
-GAME( 1993, gp2quiz,  0,        galpani2, galpani2, 0, ROT90, "Kaneko", "Gals Panic II - Quiz Version", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) // this one has 'quiz edition' on the title screen
+GAME( 1993, gp2quiz,  0,        galpani2, galpani2, driver_device, 0, ROT90, "Kaneko", "Gals Panic II - Quiz Version", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION ) // this one has 'quiz edition' on the title screen
 
-GAME( 1994, gp2se,    0,        galpani2, gp2se,    0, ROT90, "Kaneko", "Gals Panic II' - Special Edition (Japan)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )
+GAME( 1994, gp2se,    0,        galpani2, gp2se, driver_device,    0, ROT90, "Kaneko", "Gals Panic II' - Special Edition (Japan)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION )

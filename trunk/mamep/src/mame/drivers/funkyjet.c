@@ -405,13 +405,13 @@ ROM_START( sotsugyo )
 	ROM_LOAD( "sb030.15h",    0x00000, 0x20000, CRC(1ea43f48) SHA1(74cc8c740f1c7fa94c2cb460ea4ee7aa0c490ed7) )
 ROM_END
 
-static DRIVER_INIT( funkyjet )
+DRIVER_INIT_MEMBER(funkyjet_state,funkyjet)
 {
-	deco74_decrypt_gfx(machine, "gfx1");
+	deco74_decrypt_gfx(machine(), "gfx1");
 }
 
 /******************************************************************************/
 
-GAME( 1992, funkyjet, 0,        funkyjet, funkyjet, funkyjet, ROT0, "Data East (Mitchell license)", "Funky Jet (World)", GAME_SUPPORTS_SAVE )
-GAME( 1992, funkyjetj,funkyjet, funkyjet, funkyjetj,funkyjet, ROT0, "Data East Corporation", "Funky Jet (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1995, sotsugyo, 0,        funkyjet, sotsugyo, funkyjet, ROT0, "Mitchell (Atlus license)", "Sotsugyo Shousho", GAME_SUPPORTS_SAVE )
+GAME( 1992, funkyjet, 0,        funkyjet, funkyjet, funkyjet_state, funkyjet, ROT0, "Data East (Mitchell license)", "Funky Jet (World)", GAME_SUPPORTS_SAVE )
+GAME( 1992, funkyjetj,funkyjet, funkyjet, funkyjetj, funkyjet_state,funkyjet, ROT0, "Data East Corporation", "Funky Jet (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1995, sotsugyo, 0,        funkyjet, sotsugyo, funkyjet_state, funkyjet, ROT0, "Mitchell (Atlus license)", "Sotsugyo Shousho", GAME_SUPPORTS_SAVE )

@@ -137,6 +137,7 @@ public:
 	DECLARE_WRITE8_MEMBER(looping_sound_sw);
 	DECLARE_WRITE8_MEMBER(ay_enable_w);
 	DECLARE_WRITE8_MEMBER(speech_enable_w);
+	DECLARE_DRIVER_INIT(looping);
 };
 
 
@@ -380,7 +381,7 @@ WRITE8_MEMBER(looping_state::looping_soundlatch_w)
 
 WRITE8_MEMBER(looping_state::looping_sound_sw)
 {
-	device_t *device = machine().device("dac");
+	dac_device *device = machine().device<dac_device>("dac");
 	/* this can be improved by adding the missing signals for decay etc. (see schematics)
 
         0001 = ASOV
@@ -393,7 +394,7 @@ WRITE8_MEMBER(looping_state::looping_sound_sw)
     */
 
 	m_sound[offset + 1] = data ^ 1;
-	dac_data_w(device, ((m_sound[2] << 7) + (m_sound[3] << 6)) * m_sound[7]);
+	device->write_unsigned8(((m_sound[2] << 7) + (m_sound[3] << 6)) * m_sound[7]);
 }
 
 
@@ -676,7 +677,7 @@ static MACHINE_CONFIG_START( looping, looping_state )
 	MCFG_SOUND_CONFIG(tms5220_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_CONFIG_END
 
@@ -903,21 +904,20 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( looping )
+DRIVER_INIT_MEMBER(looping_state,looping)
 {
-	looping_state *state = machine.driver_data<looping_state>();
-	int length = state->memregion("maincpu")->bytes();
-	UINT8 *rom = state->memregion("maincpu")->base();
+	int length = memregion("maincpu")->bytes();
+	UINT8 *rom = memregion("maincpu")->base();
 	int i;
 
-	state->m_cop_io = auto_alloc_array(machine, UINT8, 0x08);
+	m_cop_io = auto_alloc_array(machine(), UINT8, 0x08);
 
 	/* bitswap the TMS9995 ROMs */
 	for (i = 0; i < length; i++)
 		rom[i] = BITSWAP8(rom[i], 0,1,2,3,4,5,6,7);
 
 	/* install protection handlers */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x7000, 0x7007, read8_delegate(FUNC(looping_state::protection_r), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x7000, 0x7007, read8_delegate(FUNC(looping_state::protection_r), this));
 }
 
 
@@ -928,7 +928,7 @@ static DRIVER_INIT( looping )
  *
  *************************************/
 
-GAME( 1982, looping,   0,        looping, looping, looping, ROT90, "Video Games GmbH", "Looping", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1982, loopingv,  looping,  looping, looping, looping, ROT90, "Video Games GmbH (Venture Line license)", "Looping (Venture Line license, set 1)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1982, loopingva, looping,  looping, looping, looping, ROT90, "Video Games GmbH (Venture Line license)", "Looping (Venture Line license, set 2)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1982, skybump,   0,        looping, skybump, looping, ROT90, "Venture Line", "Sky Bumper", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1982, looping,   0,        looping, looping, looping_state, looping, ROT90, "Video Games GmbH", "Looping", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1982, loopingv,  looping,  looping, looping, looping_state, looping, ROT90, "Video Games GmbH (Venture Line license)", "Looping (Venture Line license, set 1)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1982, loopingva, looping,  looping, looping, looping_state, looping, ROT90, "Video Games GmbH (Venture Line license)", "Looping (Venture Line license, set 2)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1982, skybump,   0,        looping, skybump, looping_state, looping, ROT90, "Venture Line", "Sky Bumper", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )

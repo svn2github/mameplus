@@ -5945,56 +5945,52 @@ static void metro_common( running_machine &machine )
 }
 
 
-static DRIVER_INIT( metro )
+DRIVER_INIT_MEMBER(metro_state,metro)
 {
-	metro_state *state = machine.driver_data<metro_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
-	metro_common(machine);
+	metro_common(machine());
 
-	state->m_porta = 0x00;
-	state->m_portb = 0x00;
-	state->m_busy_sndcpu = 0;
-	state->metro_sound_rombank_w(*space, 0, 0x00);
+	m_porta = 0x00;
+	m_portb = 0x00;
+	m_busy_sndcpu = 0;
+	metro_sound_rombank_w(*space, 0, 0x00);
 }
 
-static DRIVER_INIT( karatour )
+DRIVER_INIT_MEMBER(metro_state,karatour)
 {
-	metro_state *state = machine.driver_data<metro_state>();
-	state->m_vram_0.allocate(0x20000/2);
-	state->m_vram_1.allocate(0x20000/2);
-	state->m_vram_2.allocate(0x20000/2);
+	m_vram_0.allocate(0x20000/2);
+	m_vram_1.allocate(0x20000/2);
+	m_vram_2.allocate(0x20000/2);
 	for (int i = 0; i < 0x20000 / 2; i++)
 	{
-		state->m_vram_0[i] = machine.rand();
-		state->m_vram_1[i] = machine.rand();
-		state->m_vram_2[i] = machine.rand();
+		m_vram_0[i] = machine().rand();
+		m_vram_1[i] = machine().rand();
+		m_vram_2[i] = machine().rand();
 	}
 
 	DRIVER_INIT_CALL(metro);
 }
 
-static DRIVER_INIT( daitorid )
+DRIVER_INIT_MEMBER(metro_state,daitorid)
 {
-	metro_state *state = machine.driver_data<metro_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
-	metro_common(machine);
+	metro_common(machine());
 
-	state->m_porta = 0x00;
-	state->m_portb = 0x00;
-	state->m_busy_sndcpu = 0;
-	state->daitorid_sound_rombank_w(*space, 0, 0x00);
+	m_porta = 0x00;
+	m_portb = 0x00;
+	m_busy_sndcpu = 0;
+	daitorid_sound_rombank_w(*space, 0, 0x00);
 }
 
 
 /* Unscramble the GFX ROMs */
-static DRIVER_INIT( balcube )
+DRIVER_INIT_MEMBER(metro_state,balcube)
 {
-	metro_state *state = machine.driver_data<metro_state>();
 
-	const size_t len = state->memregion("gfx1")->bytes();
-	UINT8 *src       = state->memregion("gfx1")->base();
+	const size_t len = memregion("gfx1")->bytes();
+	UINT8 *src       = memregion("gfx1")->base();
 	UINT8 *end       = src + len;
 
 	while (src < end)
@@ -6007,14 +6003,14 @@ static DRIVER_INIT( balcube )
 		src   +=  2;
 	}
 
-	metro_common(machine);
-	state->m_irq_line = 1;
+	metro_common(machine());
+	m_irq_line = 1;
 }
 
 
-static DRIVER_INIT( dharmak )
+DRIVER_INIT_MEMBER(metro_state,dharmak)
 {
-	UINT8 *src = machine.root_device().memregion( "gfx1" )->base();
+	UINT8 *src = machine().root_device().memregion( "gfx1" )->base();
 	int i;
 
 	for (i = 0; i < 0x200000; i += 4)
@@ -6032,38 +6028,34 @@ static DRIVER_INIT( dharmak )
 	DRIVER_INIT_CALL(metro);
 }
 
-static DRIVER_INIT( blzntrnd )
+DRIVER_INIT_MEMBER(metro_state,blzntrnd)
 {
-	metro_state *state = machine.driver_data<metro_state>();
-	metro_common(machine);
-	state->m_irq_line = 1;
+	metro_common(machine());
+	m_irq_line = 1;
 }
 
-static DRIVER_INIT( mouja )
+DRIVER_INIT_MEMBER(metro_state,mouja)
 {
-	metro_state *state = machine.driver_data<metro_state>();
-	metro_common(machine);
-	state->m_irq_line = -1;	/* split interrupt handlers */
-	state->m_vblank_bit = 1;
-	state->m_mouja_irq_timer = machine.scheduler().timer_alloc(FUNC(mouja_irq_callback));
+	metro_common(machine());
+	m_irq_line = -1;	/* split interrupt handlers */
+	m_vblank_bit = 1;
+	m_mouja_irq_timer = machine().scheduler().timer_alloc(FUNC(mouja_irq_callback));
 }
 
-static DRIVER_INIT( gakusai )
+DRIVER_INIT_MEMBER(metro_state,gakusai)
 {
-	metro_state *state = machine.driver_data<metro_state>();
-	metro_common(machine);
-	state->m_irq_line = -1;
-	state->m_vblank_bit = 1;
-	state->m_blitter_bit = 3;
+	metro_common(machine());
+	m_irq_line = -1;
+	m_vblank_bit = 1;
+	m_blitter_bit = 3;
 }
 
-static DRIVER_INIT( puzzlet )
+DRIVER_INIT_MEMBER(metro_state,puzzlet)
 {
-	metro_state *state = machine.driver_data<metro_state>();
-	metro_common(machine);
-	state->m_irq_line = 0;
-	state->m_vblank_bit = 1;
-	state->m_blitter_bit = 0;
+	metro_common(machine());
+	m_irq_line = 0;
+	m_vblank_bit = 1;
+	m_blitter_bit = 0;
 }
 
 /***************************************************************************
@@ -6074,39 +6066,39 @@ static DRIVER_INIT( puzzlet )
 
 ***************************************************************************/
 
-GAME( 1992, karatour,  0,        karatour, karatour, karatour, ROT0,   "Mitchell",                               "The Karate Tournament",             GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1992, pangpoms,  0,        pangpoms, pangpoms, metro,    ROT0,   "Metro",                                  "Pang Pom's",                        GAME_SUPPORTS_SAVE )
-GAME( 1992, pangpomsm, pangpoms, pangpoms, pangpoms, metro,    ROT0,   "Metro (Mitchell license)",               "Pang Pom's (Mitchell)",             GAME_SUPPORTS_SAVE )
-GAME( 1992, skyalert,  0,        skyalert, skyalert, metro,    ROT270, "Metro",                                  "Sky Alert",                         GAME_SUPPORTS_SAVE )
-GAME( 1993, ladykill,  0,        karatour, ladykill, karatour, ROT90,  "Yanyaka (Mitchell license)",             "Lady Killer",                       GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1993, moegonta,  ladykill, karatour, moegonta, karatour, ROT90,  "Yanyaka",                                "Moeyo Gonta!! (Japan)",             GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1993, poitto,    0,        poitto,   poitto,   metro,    ROT0,   "Metro / Able Corp.",                     "Poitto!",                           GAME_SUPPORTS_SAVE )
-GAME( 1994, blzntrnd,  0,        blzntrnd, blzntrnd, blzntrnd, ROT0,   "Human Amusement",                        "Blazing Tornado",                   GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1994, dharma,    0,        dharma,   dharma,   metro,    ROT0,   "Metro",                                  "Dharma Doujou",                     GAME_SUPPORTS_SAVE )
-GAME( 1994, dharmak,   dharma,   dharma,   dharma,   dharmak,  ROT0,   "Metro",                                  "Dharma Doujou (Korea)",             GAME_SUPPORTS_SAVE )
-GAME( 1994, lastfort,  0,        lastfort, lastfort, metro,    ROT0,   "Metro",                                  "Last Fortress - Toride",            GAME_SUPPORTS_SAVE )
-GAME( 1994, lastforte, lastfort, lastfort, lastfero, metro,    ROT0,   "Metro",                                  "Last Fortress - Toride (Erotic, Rev C)", GAME_SUPPORTS_SAVE )
-GAME( 1994, lastfortea,lastfort, lastfort, lastfero, metro,    ROT0,   "Metro",                                  "Last Fortress - Toride (Erotic, Rev A)", GAME_SUPPORTS_SAVE )
-GAME( 1994, lastfortk, lastfort, lastfort, lastfero, metro,    ROT0,   "Metro",                                  "Last Fortress - Toride (Korea)",    GAME_SUPPORTS_SAVE )
-GAME( 1994, lastfortg, lastfort, lastforg, ladykill, metro,    ROT0,   "Metro",                                  "Last Fortress - Toride (German)",   GAME_SUPPORTS_SAVE )
-GAME( 1994, toride2g,  0,        toride2g, toride2g, metro,    ROT0,   "Metro",                                  "Toride II Adauchi Gaiden",          GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1994, toride2gg, toride2g, toride2g, toride2g, metro,    ROT0,   "Metro",                                  "Toride II Adauchi Gaiden (German)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1994, toride2j,  toride2g, toride2g, toride2g, metro,    ROT0,   "Metro",                                  "Toride II (Japan)",                 GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1994, gunmast,   0,        pururun,  gunmast,  daitorid, ROT0,   "Metro",                                  "Gun Master",                        GAME_SUPPORTS_SAVE )
-GAME( 1995, daitorid,  0,        daitorid, daitorid, daitorid, ROT0,   "Metro",                                  "Daitoride",                         GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1996, daitorida, daitorid, daitoa,   daitorid, balcube,  ROT0,   "Metro",                                  "Daitoride (YMF278B version)",       GAME_SUPPORTS_SAVE )
-GAME( 1995, dokyusei,  0,        dokyusei, dokyusei, gakusai,  ROT0,   "Make Software / Elf / Media Trading",    "Mahjong Doukyuusei",                GAME_SUPPORTS_SAVE )
-GAME( 1995, dokyusp,   0,        dokyusp,  gakusai,  gakusai,  ROT0,   "Make Software / Elf / Media Trading",    "Mahjong Doukyuusei Special",        GAME_SUPPORTS_SAVE )
-GAME( 1995, msgogo,    0,        msgogo,   msgogo,   balcube,  ROT0,   "Metro",                                  "Mouse Shooter GoGo",                GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1995, pururun,   0,        pururun,  pururun,  daitorid, ROT0,   "Metro / Banpresto",                      "Pururun",                           GAME_SUPPORTS_SAVE )
-GAME( 1995, puzzli,    0,        daitorid, puzzli,   daitorid, ROT0,   "Metro / Banpresto",                      "Puzzli",                            GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1996, 3kokushi,  0,        3kokushi, 3kokushi, karatour, ROT0,   "Mitchell",                               "Sankokushi (Japan)",                GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1996, balcube,   0,        balcube,  balcube,  balcube,  ROT0,   "Metro",                                  "Bal Cube",                          GAME_SUPPORTS_SAVE )
-GAME( 1996, bangball,  0,        bangball, bangball, balcube,  ROT0,   "Banpresto / Kunihiko Tashiro+Goodhouse", "Bang Bang Ball (v1.05)",            GAME_SUPPORTS_SAVE )
-GAME( 1996, gstrik2,   0,        gstrik2,  gstrik2,  blzntrnd, ROT0,   "Human Amusement",                        "Grand Striker 2 (Europe and Oceania)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1996, gstrik2j,  gstrik2,  gstrik2,  gstrik2,  blzntrnd, ROT0,   "Human Amusement",                        "Grand Striker 2 (Japan)",           GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // priority between rounds
-GAME( 1999, batlbubl,  bangball, batlbubl, batlbubl, balcube,  ROT0,   "Banpresto (Limenko license?)",           "Battle Bubble (v2.00)",             GAME_SUPPORTS_SAVE ) // or bootleg?
-GAME( 1996, mouja,     0,        mouja,    mouja,    mouja,    ROT0,   "Etona",                                  "Mouja (Japan)",                     GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1997, gakusai,   0,        gakusai,  gakusai,  gakusai,  ROT0,   "MakeSoft",                               "Mahjong Gakuensai (Japan)",         GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1998, gakusai2,  0,        gakusai2, gakusai,  gakusai,  ROT0,   "MakeSoft",                               "Mahjong Gakuensai 2 (Japan)",       GAME_SUPPORTS_SAVE )
-GAME( 2000, puzzlet,   0,        puzzlet,  puzzlet,  puzzlet,  ROT0,   "Unies Corporation",                      "Puzzlet (Japan)",                   GAME_NOT_WORKING | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1992, karatour,  0,        karatour, karatour, metro_state, karatour, ROT0,   "Mitchell",                               "The Karate Tournament",             GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1992, pangpoms,  0,        pangpoms, pangpoms, metro_state, metro,    ROT0,   "Metro",                                  "Pang Pom's",                        GAME_SUPPORTS_SAVE )
+GAME( 1992, pangpomsm, pangpoms, pangpoms, pangpoms, metro_state, metro,    ROT0,   "Metro (Mitchell license)",               "Pang Pom's (Mitchell)",             GAME_SUPPORTS_SAVE )
+GAME( 1992, skyalert,  0,        skyalert, skyalert, metro_state, metro,    ROT270, "Metro",                                  "Sky Alert",                         GAME_SUPPORTS_SAVE )
+GAME( 1993, ladykill,  0,        karatour, ladykill, metro_state, karatour, ROT90,  "Yanyaka (Mitchell license)",             "Lady Killer",                       GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1993, moegonta,  ladykill, karatour, moegonta, metro_state, karatour, ROT90,  "Yanyaka",                                "Moeyo Gonta!! (Japan)",             GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1993, poitto,    0,        poitto,   poitto, metro_state,   metro,    ROT0,   "Metro / Able Corp.",                     "Poitto!",                           GAME_SUPPORTS_SAVE )
+GAME( 1994, blzntrnd,  0,        blzntrnd, blzntrnd, metro_state, blzntrnd, ROT0,   "Human Amusement",                        "Blazing Tornado",                   GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1994, dharma,    0,        dharma,   dharma, metro_state,   metro,    ROT0,   "Metro",                                  "Dharma Doujou",                     GAME_SUPPORTS_SAVE )
+GAME( 1994, dharmak,   dharma,   dharma,   dharma, metro_state,   dharmak,  ROT0,   "Metro",                                  "Dharma Doujou (Korea)",             GAME_SUPPORTS_SAVE )
+GAME( 1994, lastfort,  0,        lastfort, lastfort, metro_state, metro,    ROT0,   "Metro",                                  "Last Fortress - Toride",            GAME_SUPPORTS_SAVE )
+GAME( 1994, lastforte, lastfort, lastfort, lastfero, metro_state, metro,    ROT0,   "Metro",                                  "Last Fortress - Toride (Erotic, Rev C)", GAME_SUPPORTS_SAVE )
+GAME( 1994, lastfortea,lastfort, lastfort, lastfero, metro_state, metro,    ROT0,   "Metro",                                  "Last Fortress - Toride (Erotic, Rev A)", GAME_SUPPORTS_SAVE )
+GAME( 1994, lastfortk, lastfort, lastfort, lastfero, metro_state, metro,    ROT0,   "Metro",                                  "Last Fortress - Toride (Korea)",    GAME_SUPPORTS_SAVE )
+GAME( 1994, lastfortg, lastfort, lastforg, ladykill, metro_state, metro,    ROT0,   "Metro",                                  "Last Fortress - Toride (German)",   GAME_SUPPORTS_SAVE )
+GAME( 1994, toride2g,  0,        toride2g, toride2g, metro_state, metro,    ROT0,   "Metro",                                  "Toride II Adauchi Gaiden",          GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1994, toride2gg, toride2g, toride2g, toride2g, metro_state, metro,    ROT0,   "Metro",                                  "Toride II Adauchi Gaiden (German)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1994, toride2j,  toride2g, toride2g, toride2g, metro_state, metro,    ROT0,   "Metro",                                  "Toride II (Japan)",                 GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1994, gunmast,   0,        pururun,  gunmast, metro_state,  daitorid, ROT0,   "Metro",                                  "Gun Master",                        GAME_SUPPORTS_SAVE )
+GAME( 1995, daitorid,  0,        daitorid, daitorid, metro_state, daitorid, ROT0,   "Metro",                                  "Daitoride",                         GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1996, daitorida, daitorid, daitoa,   daitorid, metro_state, balcube,  ROT0,   "Metro",                                  "Daitoride (YMF278B version)",       GAME_SUPPORTS_SAVE )
+GAME( 1995, dokyusei,  0,        dokyusei, dokyusei, metro_state, gakusai,  ROT0,   "Make Software / Elf / Media Trading",    "Mahjong Doukyuusei",                GAME_SUPPORTS_SAVE )
+GAME( 1995, dokyusp,   0,        dokyusp,  gakusai, metro_state,  gakusai,  ROT0,   "Make Software / Elf / Media Trading",    "Mahjong Doukyuusei Special",        GAME_SUPPORTS_SAVE )
+GAME( 1995, msgogo,    0,        msgogo,   msgogo, metro_state,   balcube,  ROT0,   "Metro",                                  "Mouse Shooter GoGo",                GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1995, pururun,   0,        pururun,  pururun, metro_state,  daitorid, ROT0,   "Metro / Banpresto",                      "Pururun",                           GAME_SUPPORTS_SAVE )
+GAME( 1995, puzzli,    0,        daitorid, puzzli, metro_state,   daitorid, ROT0,   "Metro / Banpresto",                      "Puzzli",                            GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1996, 3kokushi,  0,        3kokushi, 3kokushi, metro_state, karatour, ROT0,   "Mitchell",                               "Sankokushi (Japan)",                GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1996, balcube,   0,        balcube,  balcube, metro_state,  balcube,  ROT0,   "Metro",                                  "Bal Cube",                          GAME_SUPPORTS_SAVE )
+GAME( 1996, bangball,  0,        bangball, bangball, metro_state, balcube,  ROT0,   "Banpresto / Kunihiko Tashiro+Goodhouse", "Bang Bang Ball (v1.05)",            GAME_SUPPORTS_SAVE )
+GAME( 1996, gstrik2,   0,        gstrik2,  gstrik2, metro_state,  blzntrnd, ROT0,   "Human Amusement",                        "Grand Striker 2 (Europe and Oceania)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1996, gstrik2j,  gstrik2,  gstrik2,  gstrik2, metro_state,  blzntrnd, ROT0,   "Human Amusement",                        "Grand Striker 2 (Japan)",           GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // priority between rounds
+GAME( 1999, batlbubl,  bangball, batlbubl, batlbubl, metro_state, balcube,  ROT0,   "Banpresto (Limenko license?)",           "Battle Bubble (v2.00)",             GAME_SUPPORTS_SAVE ) // or bootleg?
+GAME( 1996, mouja,     0,        mouja,    mouja, metro_state,    mouja,    ROT0,   "Etona",                                  "Mouja (Japan)",                     GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1997, gakusai,   0,        gakusai,  gakusai, metro_state,  gakusai,  ROT0,   "MakeSoft",                               "Mahjong Gakuensai (Japan)",         GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1998, gakusai2,  0,        gakusai2, gakusai, metro_state,  gakusai,  ROT0,   "MakeSoft",                               "Mahjong Gakuensai 2 (Japan)",       GAME_SUPPORTS_SAVE )
+GAME( 2000, puzzlet,   0,        puzzlet,  puzzlet, metro_state,  puzzlet,  ROT0,   "Unies Corporation",                      "Puzzlet (Japan)",                   GAME_NOT_WORKING | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )

@@ -632,13 +632,13 @@ ROM_END
 
 
 
-static DRIVER_INIT( skykid )
+DRIVER_INIT_MEMBER(skykid_state,skykid)
 {
 	UINT8 *rom;
 	int i;
 
 	/* unpack the third sprite ROM */
-	rom = machine.root_device().memregion("gfx3")->base() + 0x4000;
+	rom = machine().root_device().memregion("gfx3")->base() + 0x4000;
 	for (i = 0;i < 0x2000;i++)
 	{
 		rom[i + 0x4000] = rom[i];		// sprite set #1, plane 3
@@ -648,11 +648,11 @@ static DRIVER_INIT( skykid )
 	}
 }
 
-GAME( 1984, drgnbstr, 0,      skykid, drgnbstr, skykid,  ROT0,   "Namco", "Dragon Buster", GAME_SUPPORTS_SAVE )
-GAME( 1985, skykid,   0,      skykid, skykid,   skykid,  ROT180, "Namco", "Sky Kid (new version)", GAME_SUPPORTS_SAVE ) /* Uses CUS63 aka 63a1 */
-GAME( 1985, skykido,  skykid, skykid, skykid,   skykid,  ROT180, "Namco", "Sky Kid (old version)", GAME_SUPPORTS_SAVE ) /* Uses CUS63 aka 63a1 */
-GAME( 1985, skykidd,  skykid, skykid, skykid,   skykid,  ROT180, "Namco", "Sky Kid (CUS60 version)", GAME_SUPPORTS_SAVE ) /* Uses CUS60 aka 60a1 */
+GAME( 1984, drgnbstr, 0,      skykid, drgnbstr, skykid_state, skykid,  ROT0,   "Namco", "Dragon Buster", GAME_SUPPORTS_SAVE )
+GAME( 1985, skykid,   0,      skykid, skykid, skykid_state,   skykid,  ROT180, "Namco", "Sky Kid (new version)", GAME_SUPPORTS_SAVE ) /* Uses CUS63 aka 63a1 */
+GAME( 1985, skykido,  skykid, skykid, skykid, skykid_state,   skykid,  ROT180, "Namco", "Sky Kid (old version)", GAME_SUPPORTS_SAVE ) /* Uses CUS63 aka 63a1 */
+GAME( 1985, skykidd,  skykid, skykid, skykid, skykid_state,   skykid,  ROT180, "Namco", "Sky Kid (CUS60 version)", GAME_SUPPORTS_SAVE ) /* Uses CUS60 aka 60a1 */
 
 // no license text is displayed but the PCB was licensed by Namco for production by Sipem (formerly Sidam) with Namco supplying the Custom chips (MCU etc.)
 // the level select is handled in a much more user-friendly way in this set and the dip for it is inverted (although this is displayed incorrectly in the test mode)
-GAME( 1985, skykids,  skykid, skykid, skykids,  skykid,  ROT180, "Namco (Sipem license)", "Sky Kid (Sipem)", GAME_SUPPORTS_SAVE ) /* Uses CUS63 aka 63a1 */
+GAME( 1985, skykids,  skykid, skykid, skykids, skykid_state,  skykid,  ROT180, "Namco (Sipem license)", "Sky Kid (Sipem)", GAME_SUPPORTS_SAVE ) /* Uses CUS63 aka 63a1 */

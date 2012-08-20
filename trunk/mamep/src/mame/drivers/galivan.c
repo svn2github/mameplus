@@ -115,8 +115,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_io_map, AS_IO, 8, galivan_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE_LEGACY("ymsnd", ym3526_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("dac1", dac_w)
-	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("dac2", dac_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE("dac1", dac_device, write_unsigned8)
+	AM_RANGE(0x03, 0x03) AM_DEVWRITE("dac2", dac_device, write_unsigned8)
 	AM_RANGE(0x04, 0x04) AM_READ(soundlatch_clear_r)
 	AM_RANGE(0x06, 0x06) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -470,10 +470,10 @@ static MACHINE_CONFIG_START( galivan, galivan_state )
 	MCFG_SOUND_ADD("ymsnd", YM3526, XTAL_8MHz/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -512,10 +512,10 @@ static MACHINE_CONFIG_START( ninjemak, galivan_state )
 	MCFG_SOUND_ADD("ymsnd", YM3526, XTAL_8MHz/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -1080,36 +1080,35 @@ WRITE8_MEMBER(galivan_state::youmab_86_w)
 	m_shift_scroll = 0;
 }
 
-static DRIVER_INIT( youmab )
+DRIVER_INIT_MEMBER(galivan_state,youmab)
 {
-	galivan_state *state = machine.driver_data<galivan_state>();
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x82, 0x82, write8_delegate(FUNC(galivan_state::youmab_extra_bank_w),state)); // banks rom at 0x8000? writes 0xff and 0x00 before executing code there
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x0000, 0x7fff, "bank3");
-	state->membank("bank3")->set_base(state->memregion("maincpu")->base());
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x82, 0x82, write8_delegate(FUNC(galivan_state::youmab_extra_bank_w),this)); // banks rom at 0x8000? writes 0xff and 0x00 before executing code there
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x0000, 0x7fff, "bank3");
+	membank("bank3")->set_base(memregion("maincpu")->base());
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x8000, 0xbfff, "bank2");
-	state->membank("bank2")->configure_entries(0, 2, state->memregion("user2")->base(), 0x4000);
-	state->membank("bank2")->set_entry(0);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0x8000, 0xbfff, "bank2");
+	membank("bank2")->configure_entries(0, 2, memregion("user2")->base(), 0x4000);
+	membank("bank2")->set_entry(0);
 
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x81, 0x81, write8_delegate(FUNC(galivan_state::youmab_81_w),state)); // ?? often, alternating values
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x84, 0x84, write8_delegate(FUNC(galivan_state::youmab_84_w),state)); // ?? often, sequence..
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x81, 0x81, write8_delegate(FUNC(galivan_state::youmab_81_w),this)); // ?? often, alternating values
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x84, 0x84, write8_delegate(FUNC(galivan_state::youmab_84_w),this)); // ?? often, sequence..
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xd800, 0xd81f); // scrolling isn't here..
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xd800, 0xd81f); // scrolling isn't here..
 
-	machine.device("maincpu")->memory().space(AS_IO)->install_read_handler(0x8a, 0x8a, read8_delegate(FUNC(galivan_state::youmab_8a_r),state)); // ???
+	machine().device("maincpu")->memory().space(AS_IO)->install_read_handler(0x8a, 0x8a, read8_delegate(FUNC(galivan_state::youmab_8a_r),this)); // ???
 
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x86, 0x86, write8_delegate(FUNC(galivan_state::youmab_86_w),state));
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x86, 0x86, write8_delegate(FUNC(galivan_state::youmab_86_w),this));
 
 }
 
-GAME( 1985, galivan,  0,        galivan,  galivan,  0, ROT270, "Nichibutsu", "Galivan - Cosmo Police (12/26/1985)", GAME_SUPPORTS_SAVE )
-GAME( 1985, galivan2, galivan,  galivan,  galivan,  0, ROT270, "Nichibutsu", "Galivan - Cosmo Police (12/16/1985)", GAME_SUPPORTS_SAVE )
-GAME( 1985, galivan3, galivan,  galivan,  galivan,  0, ROT270, "Nichibutsu", "Galivan - Cosmo Police (12/11/1985)", GAME_SUPPORTS_SAVE )
-GAME( 1986, dangar,   0,        galivan,  dangar,   0, ROT270, "Nichibutsu", "Dangar - Ufo Robo (12/1/1986)", GAME_SUPPORTS_SAVE )
-GAME( 1986, dangar2,  dangar,   galivan,  dangar2,  0, ROT270, "Nichibutsu", "Dangar - Ufo Robo (9/26/1986)", GAME_SUPPORTS_SAVE )
-GAME( 1986, dangarb,  dangar,   galivan,  dangarb,  0, ROT270, "bootleg", "Dangar - Ufo Robo (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1986, ninjemak, 0,        ninjemak, ninjemak, 0, ROT270, "Nichibutsu", "Ninja Emaki (US)", GAME_SUPPORTS_SAVE|GAME_UNEMULATED_PROTECTION )
-GAME( 1986, youma,    ninjemak, ninjemak, ninjemak, 0, ROT270, "Nichibutsu", "Youma Ninpou Chou (Japan)", GAME_SUPPORTS_SAVE|GAME_UNEMULATED_PROTECTION )
-GAME( 1986, youma2,   ninjemak, ninjemak, ninjemak, 0, ROT270, "Nichibutsu", "Youma Ninpou Chou (Japan, alt)", GAME_SUPPORTS_SAVE|GAME_UNEMULATED_PROTECTION )
-GAME( 1986, youmab,   ninjemak, ninjemak, ninjemak, youmab, ROT270, "bootleg", "Youma Ninpou Chou (Game Electronics bootleg, set 1)", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE|GAME_UNEMULATED_PROTECTION ) // player is invincible
-GAME( 1986, youmab2,  ninjemak, ninjemak, ninjemak, youmab, ROT270, "bootleg", "Youma Ninpou Chou (Game Electronics bootleg, set 2)", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE|GAME_UNEMULATED_PROTECTION ) // ""
+GAME( 1985, galivan,  0,        galivan,  galivan, driver_device,  0, ROT270, "Nichibutsu",   "Cosmo Police Galivan (12/26/1985)", GAME_SUPPORTS_SAVE )
+GAME( 1985, galivan2, galivan,  galivan,  galivan, driver_device,  0, ROT270, "Nichibutsu",   "Cosmo Police Galivan (12/16/1985)", GAME_SUPPORTS_SAVE )
+GAME( 1985, galivan3, galivan,  galivan,  galivan, driver_device,  0, ROT270, "Nichibutsu",   "Cosmo Police Galivan (12/11/1985)", GAME_SUPPORTS_SAVE )
+GAME( 1986, dangar,   0,        galivan,  dangar, driver_device,   0, ROT270, "Nichibutsu",   "Ufo Robo Dangar (12/1/1986)", GAME_SUPPORTS_SAVE )
+GAME( 1986, dangar2,  dangar,   galivan,  dangar2, driver_device,  0, ROT270, "Nichibutsu",   "Ufo Robo Dangar (9/26/1986)", GAME_SUPPORTS_SAVE )
+GAME( 1986, dangarb,  dangar,   galivan,  dangarb, driver_device,  0, ROT270, "bootleg",      "Ufo Robo Dangar (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1986, ninjemak, 0,        ninjemak, ninjemak, driver_device, 0, ROT270, "Nichibutsu",   "Ninja Emaki (US)", GAME_SUPPORTS_SAVE|GAME_UNEMULATED_PROTECTION )
+GAME( 1986, youma,    ninjemak, ninjemak, ninjemak, driver_device, 0, ROT270, "Nichibutsu",   "Youma Ninpou Chou (Japan)", GAME_SUPPORTS_SAVE|GAME_UNEMULATED_PROTECTION )
+GAME( 1986, youma2,   ninjemak, ninjemak, ninjemak, driver_device, 0, ROT270, "Nichibutsu",   "Youma Ninpou Chou (Japan, alt)", GAME_SUPPORTS_SAVE|GAME_UNEMULATED_PROTECTION )
+GAME( 1986, youmab,   ninjemak, ninjemak, ninjemak, galivan_state, youmab, ROT270, "bootleg", "Youma Ninpou Chou (Game Electronics bootleg, set 1)", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE|GAME_UNEMULATED_PROTECTION ) // player is invincible
+GAME( 1986, youmab2,  ninjemak, ninjemak, ninjemak, galivan_state, youmab, ROT270, "bootleg", "Youma Ninpou Chou (Game Electronics bootleg, set 2)", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE|GAME_UNEMULATED_PROTECTION ) // ""

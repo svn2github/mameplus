@@ -83,6 +83,7 @@ public:
 	DECLARE_READ8_MEMBER(psg_4015_r);
 	DECLARE_WRITE8_MEMBER(psg_4015_w);
 	DECLARE_WRITE8_MEMBER(psg_4017_w);
+	DECLARE_DRIVER_INIT(cham24);
 };
 
 
@@ -331,7 +332,7 @@ static MACHINE_START( cham24 )
 	machine.device("ppu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x2000, 0x3eff,read8_delegate(FUNC(cham24_state::nt_r), state), write8_delegate(FUNC(cham24_state::nt_w), state));
 }
 
-static DRIVER_INIT( cham24 )
+DRIVER_INIT_MEMBER(cham24_state,cham24)
 {
 }
 
@@ -369,7 +370,7 @@ static MACHINE_CONFIG_START( cham24, cham24_state )
 	MCFG_SOUND_CONFIG(cham24_interface_1)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -386,4 +387,4 @@ ROM_START( cham24 )
 	ROM_LOAD( "24-3.u3", 0x0000, 0x10000, CRC(e97955fa) SHA1(6d686c5d0967c9c2f40dbd8e6a0c0907606f2c7d) ) // unknown rom
 ROM_END
 
-GAME( 2002, cham24, 0, cham24, cham24, cham24, ROT0, "bootleg", "Chameleon 24", GAME_NOT_WORKING )
+GAME( 2002, cham24, 0, cham24, cham24, cham24_state, cham24, ROT0, "bootleg", "Chameleon 24", GAME_NOT_WORKING )

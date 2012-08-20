@@ -21,6 +21,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(williams_s11);
 };
 
 
@@ -35,7 +37,7 @@ void williams_s11_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( williams_s11 )
+DRIVER_INIT_MEMBER(williams_s11_state,williams_s11)
 {
 }
 
@@ -218,15 +220,15 @@ ROM_START(tts_l1)
 	ROM_LOAD("tts_u22.256", 0x8000, 0x8000, NO_DUMP)
 ROM_END
 
-GAME(1987,	gmine_l2,	0,			williams_s11,	williams_s11,	williams_s11,	ROT0,	"Williams",				"Gold Mine (Shuffle) (L-2)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(1986,	grand_l4,	0,			williams_s11,	williams_s11,	williams_s11,	ROT0,	"Williams",				"Grand Lizard (L-4)",			GAME_IS_SKELETON_MECHANICAL)
-GAME(1986,	hs_l4,		0,			williams_s11,	williams_s11,	williams_s11,	ROT0,	"Williams",				"High Speed (L-4)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1986,	hs_l3,		hs_l4,		williams_s11,	williams_s11,	williams_s11,	ROT0,	"Williams",				"High Speed (L-3)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1986,	rdkng_l4,	0,			williams_s11,	williams_s11,	williams_s11,	ROT0,	"Williams",				"Road Kings (L-4)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1986,	rdkng_l1,	rdkng_l4,	williams_s11,	williams_s11,	williams_s11,	ROT0,	"Williams",				"Road Kings (L-1)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1986,	rdkng_l2,	rdkng_l4,	williams_s11,	williams_s11,	williams_s11,	ROT0,	"Williams",				"Road Kings (L-2)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1986,	rdkng_l3,	rdkng_l4,	williams_s11,	williams_s11,	williams_s11,	ROT0,	"Williams",				"Road Kings (L-3)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1987,	tdawg_l1,	0,			williams_s11,	williams_s11,	williams_s11,	ROT0,	"Williams",				"Top Dawg (Shuffle) (L-1)",		GAME_IS_SKELETON_MECHANICAL)
-GAME(1987,	shfin_l1,	0,			williams_s11,	williams_s11,	williams_s11,	ROT0,	"Williams",				"Shuffle Inn (Shuffle) (L-1)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(1986,	tts_l2,		0,			williams_s11,	williams_s11,	williams_s11,	ROT0,	"Williams",				"Tic-Tac-Strike (Shuffle) (L-2)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(1986,	tts_l1,		tts_l2,		williams_s11,	williams_s11,	williams_s11,	ROT0,	"Williams",				"Tic-Tac-Strike (Shuffle) (L-1)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(1987,	gmine_l2,	0,			williams_s11,	williams_s11, williams_s11_state,	williams_s11,	ROT0,	"Williams",				"Gold Mine (Shuffle) (L-2)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(1986,	grand_l4,	0,			williams_s11,	williams_s11, williams_s11_state,	williams_s11,	ROT0,	"Williams",				"Grand Lizard (L-4)",			GAME_IS_SKELETON_MECHANICAL)
+GAME(1986,	hs_l4,		0,			williams_s11,	williams_s11, williams_s11_state,	williams_s11,	ROT0,	"Williams",				"High Speed (L-4)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1986,	hs_l3,		hs_l4,		williams_s11,	williams_s11, williams_s11_state,	williams_s11,	ROT0,	"Williams",				"High Speed (L-3)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1986,	rdkng_l4,	0,			williams_s11,	williams_s11, williams_s11_state,	williams_s11,	ROT0,	"Williams",				"Road Kings (L-4)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1986,	rdkng_l1,	rdkng_l4,	williams_s11,	williams_s11, williams_s11_state,	williams_s11,	ROT0,	"Williams",				"Road Kings (L-1)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1986,	rdkng_l2,	rdkng_l4,	williams_s11,	williams_s11, williams_s11_state,	williams_s11,	ROT0,	"Williams",				"Road Kings (L-2)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1986,	rdkng_l3,	rdkng_l4,	williams_s11,	williams_s11, williams_s11_state,	williams_s11,	ROT0,	"Williams",				"Road Kings (L-3)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1987,	tdawg_l1,	0,			williams_s11,	williams_s11, williams_s11_state,	williams_s11,	ROT0,	"Williams",				"Top Dawg (Shuffle) (L-1)",		GAME_IS_SKELETON_MECHANICAL)
+GAME(1987,	shfin_l1,	0,			williams_s11,	williams_s11, williams_s11_state,	williams_s11,	ROT0,	"Williams",				"Shuffle Inn (Shuffle) (L-1)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(1986,	tts_l2,		0,			williams_s11,	williams_s11, williams_s11_state,	williams_s11,	ROT0,	"Williams",				"Tic-Tac-Strike (Shuffle) (L-2)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(1986,	tts_l1,		tts_l2,		williams_s11,	williams_s11, williams_s11_state,	williams_s11,	ROT0,	"Williams",				"Tic-Tac-Strike (Shuffle) (L-1)",	GAME_IS_SKELETON_MECHANICAL)

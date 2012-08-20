@@ -41,6 +41,17 @@ public:
 	int         m_m6295_bank;
 	UINT16      m_m6295_key_delay;
 
+	int	m_fg_base;
+
+	int m_bg_base;
+	int m_bg_mask;
+
+	int m_bg2_base;
+	int m_bg2_mask;
+	int m_bg2_region;
+
+	int m_sprbase;
+
 	/* devices */
 	required_device<okim6295_device> m_adpcm;
 	required_device<eeprom_device> m_eeprom;
@@ -51,14 +62,13 @@ public:
 	DECLARE_WRITE16_MEMBER(kickgoal_bg2ram_w);
 	DECLARE_WRITE16_MEMBER(kickgoal_snd_w);
 	DECLARE_WRITE16_MEMBER(actionhw_snd_w);
+	DECLARE_DRIVER_INIT(kickgoal);
 };
 
 
 /*----------- defined in video/kickgoal.c -----------*/
 
-
+VIDEO_START( actionhw );
 VIDEO_START( kickgoal );
 SCREEN_UPDATE_IND16( kickgoal );
 
-VIDEO_START( actionhw );
-SCREEN_UPDATE_IND16( actionhw );

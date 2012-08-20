@@ -606,56 +606,56 @@ static MACHINE_START(namconb)
 	memset(state->m_namconb_cpureg, 0, sizeof(state->m_namconb_cpureg));
 }
 
-static DRIVER_INIT( nebulray )
+DRIVER_INIT_MEMBER(namconb1_state,nebulray)
 {
-	UINT8 *pMem = (UINT8 *)machine.root_device().memregion(NAMCONB1_TILEMASKREGION)->base();
+	UINT8 *pMem = (UINT8 *)machine().root_device().memregion(NAMCONB1_TILEMASKREGION)->base();
 	size_t numBytes = (0xfe7-0xe6f)*8;
 	memset( &pMem[0xe6f*8], 0, numBytes );
 
 	namcos2_gametype = NAMCONB1_NEBULRAY;
 } /* nebulray */
 
-static DRIVER_INIT( gslgr94u )
+DRIVER_INIT_MEMBER(namconb1_state,gslgr94u)
 {
 	namcos2_gametype = NAMCONB1_GSLGR94U;
 } /* gslgr94u */
 
-static DRIVER_INIT( gslgr94j )
+DRIVER_INIT_MEMBER(namconb1_state,gslgr94j)
 {
 	namcos2_gametype = NAMCONB1_GSLGR94J;
 } /* gslgr94j */
 
-static DRIVER_INIT( sws95 )
+DRIVER_INIT_MEMBER(namconb1_state,sws95)
 {
 	namcos2_gametype = NAMCONB1_SWS95;
 } /* sws95 */
 
-static DRIVER_INIT( sws96 )
+DRIVER_INIT_MEMBER(namconb1_state,sws96)
 {
 	namcos2_gametype = NAMCONB1_SWS96;
 } /* sws96 */
 
-static DRIVER_INIT( sws97 )
+DRIVER_INIT_MEMBER(namconb1_state,sws97)
 {
 	namcos2_gametype = NAMCONB1_SWS97;
 } /* sws97 */
 
-static DRIVER_INIT( gunbulet )
+DRIVER_INIT_MEMBER(namconb1_state,gunbulet)
 {
 	namcos2_gametype = NAMCONB1_GUNBULET;
 } /* gunbulet */
 
-static DRIVER_INIT( vshoot )
+DRIVER_INIT_MEMBER(namconb1_state,vshoot)
 {
 	namcos2_gametype = NAMCONB1_VSHOOT;
 } /* vshoot */
 
-static DRIVER_INIT( machbrkr )
+DRIVER_INIT_MEMBER(namconb1_state,machbrkr)
 {
 	namcos2_gametype = NAMCONB2_MACH_BREAKERS;
 }
 
-static DRIVER_INIT( outfxies )
+DRIVER_INIT_MEMBER(namconb1_state,outfxies)
 {
 	namcos2_gametype = NAMCONB2_OUTFOXIES;
 }
@@ -2022,20 +2022,20 @@ static INPUT_PORTS_START( namconb1 )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SERVICE1 )
 INPUT_PORTS_END
 
-GAME( 1994, nebulray, 0,        namconb1, namconb1, nebulray, ROT90, "Namco", "Nebulas Ray (World, NR2)", GAME_IMPERFECT_SOUND )
-GAME( 1994, nebulrayj,nebulray, namconb1, namconb1, nebulray, ROT90, "Namco", "Nebulas Ray (Japan, NR1)", GAME_IMPERFECT_SOUND )
-GAME( 1994, ptblank,  0,        namconb1, gunbulet, gunbulet, ROT0,  "Namco", "Point Blank (World, GN2 Rev B)", GAME_IMPERFECT_SOUND )
-GAME( 1994, gunbuletj,ptblank,  namconb1, gunbulet, gunbulet, ROT0,  "Namco", "Gun Bullet (Japan, GN1)", GAME_IMPERFECT_SOUND )
-GAME( 1994, gunbuletw,ptblank,  namconb1, gunbulet, gunbulet, ROT0,  "Namco", "Gun Bullet (World, GN3 Rev B)", GAME_IMPERFECT_SOUND )
-GAME( 1993, gslugrsj, 0,        namconb1, nbsports, gslgr94u, ROT0,  "Namco", "Great Sluggers (Japan)", GAME_IMPERFECT_SOUND )
-GAME( 1994, gslgr94u, 0,        namconb1, nbsports, gslgr94u, ROT0,  "Namco", "Great Sluggers '94", GAME_IMPERFECT_SOUND )
-GAME( 1994, gslgr94j, gslgr94u, namconb1, nbsports, gslgr94j, ROT0,  "Namco", "Great Sluggers '94 (Japan)", GAME_IMPERFECT_SOUND )
-GAME( 1995, sws95,    0,        namconb1, nbsports, sws95,    ROT0,  "Namco", "Super World Stadium '95 (Japan)", GAME_IMPERFECT_SOUND )
-GAME( 1996, sws96,    0,        namconb1, nbsports, sws96,    ROT0,  "Namco", "Super World Stadium '96 (Japan)", GAME_IMPERFECT_SOUND )
-GAME( 1997, sws97,    0,        namconb1, nbsports, sws97,    ROT0,  "Namco", "Super World Stadium '97 (Japan)", GAME_IMPERFECT_SOUND )
-GAME( 1994, vshoot,   0,        namconb1, namconb1, vshoot,   ROT0,  "Namco", "J-League Soccer V-Shoot (Japan)", GAME_IMPERFECT_SOUND )
+GAME( 1994, nebulray, 0,        namconb1, namconb1, namconb1_state, nebulray, ROT90, "Namco", "Nebulas Ray (World, NR2)", GAME_IMPERFECT_SOUND )
+GAME( 1994, nebulrayj,nebulray, namconb1, namconb1, namconb1_state, nebulray, ROT90, "Namco", "Nebulas Ray (Japan, NR1)", GAME_IMPERFECT_SOUND )
+GAME( 1994, ptblank,  0,        namconb1, gunbulet, namconb1_state, gunbulet, ROT0,  "Namco", "Point Blank (World, GN2 Rev B)", GAME_IMPERFECT_SOUND )
+GAME( 1994, gunbuletj,ptblank,  namconb1, gunbulet, namconb1_state, gunbulet, ROT0,  "Namco", "Gun Bullet (Japan, GN1)", GAME_IMPERFECT_SOUND )
+GAME( 1994, gunbuletw,ptblank,  namconb1, gunbulet, namconb1_state, gunbulet, ROT0,  "Namco", "Gun Bullet (World, GN3 Rev B)", GAME_IMPERFECT_SOUND )
+GAME( 1993, gslugrsj, 0,        namconb1, nbsports, namconb1_state, gslgr94u, ROT0,  "Namco", "Great Sluggers (Japan)", GAME_IMPERFECT_SOUND )
+GAME( 1994, gslgr94u, 0,        namconb1, nbsports, namconb1_state, gslgr94u, ROT0,  "Namco", "Great Sluggers '94", GAME_IMPERFECT_SOUND )
+GAME( 1994, gslgr94j, gslgr94u, namconb1, nbsports, namconb1_state, gslgr94j, ROT0,  "Namco", "Great Sluggers '94 (Japan)", GAME_IMPERFECT_SOUND )
+GAME( 1995, sws95,    0,        namconb1, nbsports, namconb1_state, sws95,    ROT0,  "Namco", "Super World Stadium '95 (Japan)", GAME_IMPERFECT_SOUND )
+GAME( 1996, sws96,    0,        namconb1, nbsports, namconb1_state, sws96,    ROT0,  "Namco", "Super World Stadium '96 (Japan)", GAME_IMPERFECT_SOUND )
+GAME( 1997, sws97,    0,        namconb1, nbsports, namconb1_state, sws97,    ROT0,  "Namco", "Super World Stadium '97 (Japan)", GAME_IMPERFECT_SOUND )
+GAME( 1994, vshoot,   0,        namconb1, namconb1, namconb1_state, vshoot,   ROT0,  "Namco", "J-League Soccer V-Shoot (Japan)", GAME_IMPERFECT_SOUND )
 
 /*     YEAR, NAME,     PARENT,   MACHINE,  INPUT,    INIT,     MNTR,  COMPANY, FULLNAME,   FLAGS */
-GAME( 1994, outfxies, 0,        namconb2, outfxies, outfxies, ROT0, "Namco", "Outfoxies (World, OU2)", GAME_IMPERFECT_SOUND )
-GAME( 1994, outfxiesj,outfxies, namconb2, outfxies, outfxies, ROT0, "Namco", "Outfoxies (Japan, OU1)", GAME_IMPERFECT_SOUND )
-GAME( 1995, machbrkr, 0,        namconb2, namconb1, machbrkr, ROT0, "Namco", "Mach Breakers - Numan Athletics 2 (Japan)", GAME_IMPERFECT_SOUND )
+GAME( 1994, outfxies, 0,        namconb2, outfxies, namconb1_state, outfxies, ROT0, "Namco", "Outfoxies (World, OU2)", GAME_IMPERFECT_SOUND )
+GAME( 1994, outfxiesj,outfxies, namconb2, outfxies, namconb1_state, outfxies, ROT0, "Namco", "Outfoxies (Japan, OU1)", GAME_IMPERFECT_SOUND )
+GAME( 1995, machbrkr, 0,        namconb2, namconb1, namconb1_state, machbrkr, ROT0, "Namco", "Mach Breakers - Numan Athletics 2 (Japan)", GAME_IMPERFECT_SOUND )

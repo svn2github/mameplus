@@ -2099,17 +2099,15 @@ static void init_rom1(running_machine &machine)
 	memcpy(decrypted,rom,0x10000);
 }
 
-static DRIVER_INIT( btime )
+DRIVER_INIT_MEMBER(btime_state,btime)
 {
-	btime_state *state = machine.driver_data<btime_state>();
-	init_rom1(machine);
-	state->m_audio_nmi_enable_type = AUDIO_ENABLE_DIRECT;
+	init_rom1(machine());
+	m_audio_nmi_enable_type = AUDIO_ENABLE_DIRECT;
 }
 
-static DRIVER_INIT( zoar )
+DRIVER_INIT_MEMBER(btime_state,zoar)
 {
-	btime_state *state = machine.driver_data<btime_state>();
-	UINT8 *rom = state->memregion("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 
 	/* At location 0xD50A is what looks like an undocumented opcode. I tried
        implementing it given what opcode 0x23 should do, but it still didn't
@@ -2117,14 +2115,13 @@ static DRIVER_INIT( zoar )
        I'm NOPing it out for now. */
 	memset(&rom[0xd50a],0xea,8);
 
-	init_rom1(machine);
-	state->m_audio_nmi_enable_type = AUDIO_ENABLE_AY8910;
+	init_rom1(machine());
+	m_audio_nmi_enable_type = AUDIO_ENABLE_AY8910;
 }
 
-static DRIVER_INIT( tisland )
+DRIVER_INIT_MEMBER(btime_state,tisland)
 {
-	btime_state *state = machine.driver_data<btime_state>();
-	UINT8 *rom = state->memregion("maincpu")->base();
+	UINT8 *rom = memregion("maincpu")->base();
 
 	/* At location 0xa2b6 there's a strange RLA followed by a BPL that reads from an
     unmapped area that causes the game to fail in several circumstances.On the Cassette
@@ -2132,82 +2129,75 @@ static DRIVER_INIT( tisland )
     wrong going on in the encryption scheme.*/
 	memset(&rom[0xa2b6],0x24,1);
 
-	init_rom1(machine);
-	state->m_audio_nmi_enable_type = AUDIO_ENABLE_DIRECT;
+	init_rom1(machine());
+	m_audio_nmi_enable_type = AUDIO_ENABLE_DIRECT;
 }
 
-static DRIVER_INIT( lnc )
+DRIVER_INIT_MEMBER(btime_state,lnc)
 {
-	btime_state *state = machine.driver_data<btime_state>();
-	decrypt_C10707_cpu(machine, "maincpu");
-	state->m_audio_nmi_enable_type = AUDIO_ENABLE_AY8910;
+	decrypt_C10707_cpu(machine(), "maincpu");
+	m_audio_nmi_enable_type = AUDIO_ENABLE_AY8910;
 }
 
-static DRIVER_INIT( bnj )
+DRIVER_INIT_MEMBER(btime_state,bnj)
 {
-	btime_state *state = machine.driver_data<btime_state>();
-	decrypt_C10707_cpu(machine, "maincpu");
-	state->m_audio_nmi_enable_type = AUDIO_ENABLE_DIRECT;
+	decrypt_C10707_cpu(machine(), "maincpu");
+	m_audio_nmi_enable_type = AUDIO_ENABLE_DIRECT;
 }
 
-static DRIVER_INIT( disco )
+DRIVER_INIT_MEMBER(btime_state,disco)
 {
-	btime_state *state = machine.driver_data<btime_state>();
 	DRIVER_INIT_CALL(btime);
-	state->m_audio_nmi_enable_type = AUDIO_ENABLE_AY8910;
+	m_audio_nmi_enable_type = AUDIO_ENABLE_AY8910;
 }
 
-static DRIVER_INIT( cookrace )
+DRIVER_INIT_MEMBER(btime_state,cookrace)
 {
-	btime_state *state = machine.driver_data<btime_state>();
-	decrypt_C10707_cpu(machine, "maincpu");
+	decrypt_C10707_cpu(machine(), "maincpu");
 
-	machine.device("audiocpu")->memory().space(AS_PROGRAM)->install_read_bank(0x0200, 0x0fff, "bank10");
-	state->membank("bank10")->set_base(state->memregion("audiocpu")->base() + 0xe200);
-	state->m_audio_nmi_enable_type = AUDIO_ENABLE_DIRECT;
+	machine().device("audiocpu")->memory().space(AS_PROGRAM)->install_read_bank(0x0200, 0x0fff, "bank10");
+	membank("bank10")->set_base(memregion("audiocpu")->base() + 0xe200);
+	m_audio_nmi_enable_type = AUDIO_ENABLE_DIRECT;
 }
 
-static DRIVER_INIT( protennb )
+DRIVER_INIT_MEMBER(btime_state,protennb)
 {
-	btime_state *state = machine.driver_data<btime_state>();
 	DRIVER_INIT_CALL(btime);
-	state->m_audio_nmi_enable_type = AUDIO_ENABLE_AY8910;
+	m_audio_nmi_enable_type = AUDIO_ENABLE_AY8910;
 }
 
-static DRIVER_INIT( wtennis )
+DRIVER_INIT_MEMBER(btime_state,wtennis)
 {
-	btime_state *state = machine.driver_data<btime_state>();
-	decrypt_C10707_cpu(machine, "maincpu");
+	decrypt_C10707_cpu(machine(), "maincpu");
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc15f, 0xc15f, read8_delegate(FUNC(btime_state::wtennis_reset_hack_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc15f, 0xc15f, read8_delegate(FUNC(btime_state::wtennis_reset_hack_r),this));
 
-	machine.device("audiocpu")->memory().space(AS_PROGRAM)->install_read_bank(0x0200, 0x0fff, "bank10");
-	state->membank("bank10")->set_base(state->memregion("audiocpu")->base() + 0xe200);
-	state->m_audio_nmi_enable_type = AUDIO_ENABLE_AY8910;
+	machine().device("audiocpu")->memory().space(AS_PROGRAM)->install_read_bank(0x0200, 0x0fff, "bank10");
+	membank("bank10")->set_base(memregion("audiocpu")->base() + 0xe200);
+	m_audio_nmi_enable_type = AUDIO_ENABLE_AY8910;
 }
 
-static DRIVER_INIT( sdtennis )
+DRIVER_INIT_MEMBER(btime_state,sdtennis)
 {
-	btime_state *state = machine.driver_data<btime_state>();
-	decrypt_C10707_cpu(machine, "maincpu");
-	decrypt_C10707_cpu(machine, "audiocpu");
-	state->m_audio_nmi_enable_type = AUDIO_ENABLE_DIRECT;
+	decrypt_C10707_cpu(machine(), "maincpu");
+	decrypt_C10707_cpu(machine(), "audiocpu");
+	m_audio_nmi_enable_type = AUDIO_ENABLE_DIRECT;
 }
 
 
-GAME( 1982, btime,    0,       btime,    btime,    btime,    ROT270, "Data East Corporation", "Burger Time (Data East set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1982, btime2,   btime,   btime,    btime,    btime,    ROT270, "Data East Corporation", "Burger Time (Data East set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1982, btimem,   btime,   btime,    btime,    btime,    ROT270, "Data East (Bally Midway license)", "Burger Time (Midway)", GAME_SUPPORTS_SAVE )
-GAME( 1982, cookrace, btime,   cookrace, cookrace, cookrace, ROT270, "bootleg", "Cook Race", GAME_SUPPORTS_SAVE )
-GAME( 1981, tisland,  0,       tisland,  btime,    tisland,  ROT270, "Data East Corporation", "Treasure Island", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1981, lnc,      0,       lnc,      lnc,      lnc,      ROT270, "Data East Corporation", "Lock'n'Chase", GAME_SUPPORTS_SAVE )
-GAME( 1982, protennb, 0,       disco,    disco,    protennb, ROT270, "bootleg", "Tennis (bootleg of Pro Tennis)", GAME_SUPPORTS_SAVE )
-GAME( 1982, wtennis,  0,       wtennis,  wtennis,  wtennis,  ROT270, "bootleg", "World Tennis", GAME_SUPPORTS_SAVE )
-GAME( 1982, mmonkey,  0,       mmonkey,  mmonkey,  lnc,      ROT270, "Technos Japan / Roller Tron", "Minky Monkey", GAME_SUPPORTS_SAVE )
-GAME( 1982, brubber,  0,       bnj,      bnj,      bnj,      ROT270, "Data East", "Burnin' Rubber", GAME_SUPPORTS_SAVE )
-GAME( 1982, bnj,      brubber, bnj,      bnj,      bnj,      ROT270, "Data East USA (Bally Midway license)", "Bump 'n' Jump", GAME_SUPPORTS_SAVE )
-GAME( 1982, caractn,  brubber, bnj,      bnj,      bnj,      ROT270, "bootleg", "Car Action", GAME_SUPPORTS_SAVE )
-GAME( 1982, zoar,     0,       zoar,     zoar,     zoar,     ROT270, "Data East USA", "Zoar", GAME_SUPPORTS_SAVE )
-GAME( 1982, disco,    0,       disco,    disco,    disco,    ROT270, "Data East", "Disco No.1", GAME_SUPPORTS_SAVE )
-GAME( 1982, discof,   disco,   disco,    disco,    disco,    ROT270, "Data East", "Disco No.1 (Rev.F)", GAME_SUPPORTS_SAVE )
-GAME( 1983, sdtennis, 0,       sdtennis, sdtennis, sdtennis, ROT270, "Data East Corporation", "Super Doubles Tennis", GAME_SUPPORTS_SAVE )
+GAME( 1982, btime,    0,       btime,    btime, btime_state,    btime,    ROT270, "Data East Corporation", "Burger Time (Data East set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1982, btime2,   btime,   btime,    btime, btime_state,    btime,    ROT270, "Data East Corporation", "Burger Time (Data East set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1982, btimem,   btime,   btime,    btime, btime_state,    btime,    ROT270, "Data East (Bally Midway license)", "Burger Time (Midway)", GAME_SUPPORTS_SAVE )
+GAME( 1982, cookrace, btime,   cookrace, cookrace, btime_state, cookrace, ROT270, "bootleg", "Cook Race", GAME_SUPPORTS_SAVE )
+GAME( 1981, tisland,  0,       tisland,  btime, btime_state,    tisland,  ROT270, "Data East Corporation", "Treasure Island", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1981, lnc,      0,       lnc,      lnc, btime_state,      lnc,      ROT270, "Data East Corporation", "Lock'n'Chase", GAME_SUPPORTS_SAVE )
+GAME( 1982, protennb, 0,       disco,    disco, btime_state,    protennb, ROT270, "bootleg", "Tennis (bootleg of Pro Tennis)", GAME_SUPPORTS_SAVE )
+GAME( 1982, wtennis,  0,       wtennis,  wtennis, btime_state,  wtennis,  ROT270, "bootleg", "World Tennis", GAME_SUPPORTS_SAVE )
+GAME( 1982, mmonkey,  0,       mmonkey,  mmonkey, btime_state,  lnc,      ROT270, "Technos Japan / Roller Tron", "Minky Monkey", GAME_SUPPORTS_SAVE )
+GAME( 1982, brubber,  0,       bnj,      bnj, btime_state,      bnj,      ROT270, "Data East", "Burnin' Rubber", GAME_SUPPORTS_SAVE )
+GAME( 1982, bnj,      brubber, bnj,      bnj, btime_state,      bnj,      ROT270, "Data East USA (Bally Midway license)", "Bump 'n' Jump", GAME_SUPPORTS_SAVE )
+GAME( 1982, caractn,  brubber, bnj,      bnj, btime_state,      bnj,      ROT270, "bootleg", "Car Action", GAME_SUPPORTS_SAVE )
+GAME( 1982, zoar,     0,       zoar,     zoar, btime_state,     zoar,     ROT270, "Data East USA", "Zoar", GAME_SUPPORTS_SAVE )
+GAME( 1982, disco,    0,       disco,    disco, btime_state,    disco,    ROT270, "Data East", "Disco No.1", GAME_SUPPORTS_SAVE )
+GAME( 1982, discof,   disco,   disco,    disco, btime_state,    disco,    ROT270, "Data East", "Disco No.1 (Rev.F)", GAME_SUPPORTS_SAVE )
+GAME( 1983, sdtennis, 0,       sdtennis, sdtennis, btime_state, sdtennis, ROT270, "Data East Corporation", "Super Doubles Tennis", GAME_SUPPORTS_SAVE )

@@ -64,7 +64,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_portmap, AS_IO, 8, cchasm_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE_LEGACY("ctc", z80ctc_r, z80ctc_w)
+	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE("ctc", z80ctc_device, read, write)
 ADDRESS_MAP_END
 
 WRITE_LINE_MEMBER(cchasm_state::cchasm_6840_irq)
@@ -186,10 +186,10 @@ static MACHINE_CONFIG_START( cchasm, cchasm_state )
 	MCFG_SOUND_ADD("ay2", AY8910, 1818182)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.20)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	/* 6840 PTM */
@@ -263,5 +263,5 @@ ROM_END
  *
  *************************************/
 
-GAME( 1983, cchasm,  0,      cchasm, cchasm, 0, ROT270, "Cinematronics / GCE", "Cosmic Chasm (set 1)", 0 )
-GAME( 1983, cchasm1, cchasm, cchasm, cchasm, 0, ROT270, "Cinematronics / GCE", "Cosmic Chasm (set 2)", 0 )
+GAME( 1983, cchasm,  0,      cchasm, cchasm, driver_device, 0, ROT270, "Cinematronics / GCE", "Cosmic Chasm (set 1)", 0 )
+GAME( 1983, cchasm1, cchasm, cchasm, cchasm, driver_device, 0, ROT270, "Cinematronics / GCE", "Cosmic Chasm (set 2)", 0 )

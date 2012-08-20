@@ -257,26 +257,24 @@ static MACHINE_START( renegade )
 	machine.save().register_postload(save_prepost_delegate(FUNC(setbank), &machine));
 }
 
-static DRIVER_INIT( renegade )
+DRIVER_INIT_MEMBER(renegade_state,renegade)
 {
-	renegade_state *state = machine.driver_data<renegade_state>();
-	state->m_mcu_sim = FALSE;
+	m_mcu_sim = FALSE;
 }
 
-static DRIVER_INIT( kuniokun )
+DRIVER_INIT_MEMBER(renegade_state,kuniokun)
 {
-	renegade_state *state = machine.driver_data<renegade_state>();
-	state->m_mcu_sim = TRUE;
-	state->m_mcu_checksum = 0x85;
-	state->m_mcu_encrypt_table = kuniokun_xor_table;
-	state->m_mcu_encrypt_table_len = 0x2a;
+	m_mcu_sim = TRUE;
+	m_mcu_checksum = 0x85;
+	m_mcu_encrypt_table = kuniokun_xor_table;
+	m_mcu_encrypt_table_len = 0x2a;
 
-	machine.device<cpu_device>("mcu")->suspend(SUSPEND_REASON_DISABLE, 1);
+	machine().device<cpu_device>("mcu")->suspend(SUSPEND_REASON_DISABLE, 1);
 }
 
-static DRIVER_INIT( kuniokunb )
+DRIVER_INIT_MEMBER(renegade_state,kuniokunb)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* Remove the MCU handlers */
 	space->unmap_readwrite(0x3804, 0x3804);
@@ -1065,6 +1063,6 @@ ROM_END
 
 
 
-GAME( 1986, renegade,  0,        renegade,  renegade, renegade,  ROT0, "Technos Japan (Taito America license)", "Renegade (US)", 0 )
-GAME( 1986, kuniokun,  renegade, renegade,  renegade, kuniokun,  ROT0, "Technos Japan", "Nekketsu Kouha Kunio-kun (Japan)", 0 )
-GAME( 1986, kuniokunb, renegade, kuniokunb, renegade, kuniokunb, ROT0, "bootleg", "Nekketsu Kouha Kunio-kun (Japan bootleg)", 0 )
+GAME( 1986, renegade,  0,        renegade,  renegade, renegade_state, renegade,  ROT0, "Technos Japan (Taito America license)", "Renegade (US)", 0 )
+GAME( 1986, kuniokun,  renegade, renegade,  renegade, renegade_state, kuniokun,  ROT0, "Technos Japan", "Nekketsu Kouha Kunio-kun (Japan)", 0 )
+GAME( 1986, kuniokunb, renegade, kuniokunb, renegade, renegade_state, kuniokunb, ROT0, "bootleg", "Nekketsu Kouha Kunio-kun (Japan bootleg)", 0 )

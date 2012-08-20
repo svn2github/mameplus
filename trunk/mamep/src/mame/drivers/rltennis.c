@@ -142,8 +142,8 @@ static TIMER_CALLBACK( sample_player )
 	}
 	++state->m_dac_counter; /* update low address bits */
 
-	dac_signed_data_w(state->m_dac_1, state->m_samples_1[state->m_sample_rom_offset_1 + ( state->m_dac_counter&0x7ff )]);
-	dac_data_w(state->m_dac_2, state->m_samples_2[state->m_sample_rom_offset_2 + ( state->m_dac_counter&0x7ff )]);
+	state->m_dac_1->write_signed8(state->m_samples_1[state->m_sample_rom_offset_1 + ( state->m_dac_counter&0x7ff )]);
+	state->m_dac_2->write_unsigned8(state->m_samples_2[state->m_sample_rom_offset_2 + ( state->m_dac_counter&0x7ff )]);
 	state->m_timer->adjust(attotime::from_hz( RLT_TIMER_FREQ ));
 }
 
@@ -160,8 +160,8 @@ static MACHINE_START( rltennis )
 	rltennis_state *state = machine.driver_data<rltennis_state>();
 	state->m_maincpu = machine.device( "maincpu");
 	state->m_screen = machine.device(  "screen");
-	state->m_dac_1 = machine.device("dac1");
-	state->m_dac_2 = machine.device("dac2");
+	state->m_dac_1 = machine.device<dac_device>("dac1");
+	state->m_dac_2 = machine.device<dac_device>("dac2");
 	state->m_samples_1 = state->memregion("samples1")->base();
 	state->m_samples_2 = state->memregion("samples2")->base();
 	state->m_gfx =  state->memregion("gfx1")->base();
@@ -206,9 +206,9 @@ static MACHINE_CONFIG_START( rltennis, rltennis_state )
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", .5)
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", .5)
 
 MACHINE_CONFIG_END
@@ -237,4 +237,4 @@ ROM_START( rltennis )
 	ROM_LOAD( "tennis_3.u52", 0x00000, 0x80000, CRC(517dcd0e) SHA1(b2703e185ee8cf7e115ea07151e7bee8be34948b) )
 ROM_END
 
-GAME( 1993, rltennis,    0, rltennis,    rltennis,    0, ROT0,  "TCH", "Reality Tennis", GAME_IMPERFECT_GRAPHICS)
+GAME( 1993, rltennis,    0, rltennis,    rltennis, driver_device,    0, ROT0,  "TCH", "Reality Tennis", GAME_IMPERFECT_GRAPHICS)

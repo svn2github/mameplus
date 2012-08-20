@@ -548,10 +548,10 @@ static void equites_update_dac( running_machine &machine )
 	// Note that PB0 goes through three filters while PB1 only goes through one.
 
 	if (state->m_eq8155_port_b & 1)
-		dac_signed_data_w(state->m_dac_1, state->m_dac_latch);
+		state->m_dac_1->write_signed8(state->m_dac_latch);
 
 	if (state->m_eq8155_port_b & 2)
-		dac_signed_data_w(state->m_dac_2, state->m_dac_latch);
+		state->m_dac_2->write_signed8(state->m_dac_latch);
 }
 
 WRITE8_MEMBER(equites_state::equites_dac_latch_w)
@@ -1176,10 +1176,10 @@ static MACHINE_CONFIG_FRAGMENT( common_sound )
 	MCFG_SOUND_CONFIG(equites_8910intf)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.15)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	MCFG_SAMPLES_ADD("samples", alphamc07_samples_interface)
@@ -1195,8 +1195,8 @@ static MACHINE_START( equites )
 	state->m_mcu = machine.device("mcu");
 	state->m_audio_cpu = machine.device("audiocpu");
 	state->m_msm = machine.device<msm5232_device>("msm");
-	state->m_dac_1 = machine.device("dac1");
-	state->m_dac_2 = machine.device("dac2");
+	state->m_dac_1 = machine.device<dac_device>("dac1");
+	state->m_dac_2 = machine.device<dac_device>("dac2");
 
 	state->save_item(NAME(state->m_fg_char_bank));
 	state->save_item(NAME(state->m_bgcolor));
@@ -1874,46 +1874,45 @@ static void unpack_region( running_machine &machine, const char *region )
 }
 
 
-static DRIVER_INIT( equites )
+DRIVER_INIT_MEMBER(equites_state,equites)
 {
-	unpack_region(machine, "gfx2");
-	unpack_region(machine, "gfx3");
+	unpack_region(machine(), "gfx2");
+	unpack_region(machine(), "gfx3");
 }
 
-static DRIVER_INIT( bullfgtr )
+DRIVER_INIT_MEMBER(equites_state,bullfgtr)
 {
-	unpack_region(machine, "gfx2");
-	unpack_region(machine, "gfx3");
+	unpack_region(machine(), "gfx2");
+	unpack_region(machine(), "gfx3");
 }
 
-static DRIVER_INIT( kouyakyu )
+DRIVER_INIT_MEMBER(equites_state,kouyakyu)
 {
-	unpack_region(machine, "gfx2");
-	unpack_region(machine, "gfx3");
+	unpack_region(machine(), "gfx2");
+	unpack_region(machine(), "gfx3");
 }
 
-static DRIVER_INIT( gekisou )
+DRIVER_INIT_MEMBER(equites_state,gekisou)
 {
-	unpack_region(machine, "gfx2");
-	unpack_region(machine, "gfx3");
+	unpack_region(machine(), "gfx2");
+	unpack_region(machine(), "gfx3");
 
 	// install special handlers for unknown device (protection?)
-	equites_state *state = machine.driver_data<equites_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x580000, 0x580001, write16_delegate(FUNC(equites_state::gekisou_unknown_0_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x5a0000, 0x5a0001, write16_delegate(FUNC(equites_state::gekisou_unknown_1_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x580000, 0x580001, write16_delegate(FUNC(equites_state::gekisou_unknown_0_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x5a0000, 0x5a0001, write16_delegate(FUNC(equites_state::gekisou_unknown_1_w),this));
 }
 
-static DRIVER_INIT( splndrbt )
+DRIVER_INIT_MEMBER(equites_state,splndrbt)
 {
-	unpack_region(machine, "gfx3");
+	unpack_region(machine(), "gfx3");
 }
 
-static DRIVER_INIT( hvoltage )
+DRIVER_INIT_MEMBER(equites_state,hvoltage)
 {
-	unpack_region(machine, "gfx3");
+	unpack_region(machine(), "gfx3");
 
 #if HVOLTAGE_DEBUG
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x000038, 0x000039, read16_delegate(FUNC(equites_state::hvoltage_debug_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x000038, 0x000039, read16_delegate(FUNC(equites_state::hvoltage_debug_r),this));
 #endif
 }
 
@@ -1922,13 +1921,13 @@ static DRIVER_INIT( hvoltage )
 // Game Entries
 
 // Equites Hardware
-GAME( 1984, equites,  0,        equites,  equites,  equites,  ROT90, "Alpha Denshi Co.",                "Equites", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1984, equitess, equites,  equites,  equites,  equites,  ROT90, "Alpha Denshi Co. (Sega license)", "Equites (Sega)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1984, bullfgtr, 0,        equites,  bullfgtr, bullfgtr, ROT90, "Alpha Denshi Co.",                "Bull Fighter", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1984, bullfgtrs,bullfgtr, equites,  bullfgtr, bullfgtr, ROT90, "Alpha Denshi Co. (Sega license)", "Bull Fighter (Sega)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1985, kouyakyu, 0,        equites,  kouyakyu, kouyakyu, ROT0,  "Alpha Denshi Co.",                "The Koukouyakyuh", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1985, gekisou,  0,        gekisou,  gekisou,  gekisou,  ROT90, "Eastern Corp.",                   "Gekisou (Japan)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1984, equites,  0,        equites,  equites, equites_state,  equites,  ROT90, "Alpha Denshi Co.",                "Equites", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1984, equitess, equites,  equites,  equites, equites_state,  equites,  ROT90, "Alpha Denshi Co. (Sega license)", "Equites (Sega)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1984, bullfgtr, 0,        equites,  bullfgtr, equites_state, bullfgtr, ROT90, "Alpha Denshi Co.",                "Bull Fighter", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1984, bullfgtrs,bullfgtr, equites,  bullfgtr, equites_state, bullfgtr, ROT90, "Alpha Denshi Co. (Sega license)", "Bull Fighter (Sega)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1985, kouyakyu, 0,        equites,  kouyakyu, equites_state, kouyakyu, ROT0,  "Alpha Denshi Co.",                "The Koukouyakyuh", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1985, gekisou,  0,        gekisou,  gekisou, equites_state,  gekisou,  ROT90, "Eastern Corp.",                   "Gekisou (Japan)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
 
 // Splendor Blast Hardware
-GAME( 1985, splndrbt, 0,        splndrbt, splndrbt, splndrbt, ROT0,  "Alpha Denshi Co.", "Splendor Blast", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1985, hvoltage, 0,        splndrbt, hvoltage, hvoltage, ROT0,  "Alpha Denshi Co.", "High Voltage", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1985, splndrbt, 0,        splndrbt, splndrbt, equites_state, splndrbt, ROT0,  "Alpha Denshi Co.", "Splendor Blast", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1985, hvoltage, 0,        splndrbt, hvoltage, equites_state, hvoltage, ROT0,  "Alpha Denshi Co.", "High Voltage", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )

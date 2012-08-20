@@ -64,6 +64,8 @@ public:
 	tilemap_t *m_bg_tilemap;
 	DECLARE_WRITE8_MEMBER(wallc_videoram_w);
 	DECLARE_WRITE8_MEMBER(wallc_coin_counter_w);
+	DECLARE_DRIVER_INIT(wallc);
+	DECLARE_DRIVER_INIT(wallca);
 };
 
 
@@ -254,12 +256,12 @@ static GFXDECODE_START( wallc )
 	GFXDECODE_ENTRY( "gfx1", 0     , charlayout, 0, 4 )
 GFXDECODE_END
 
-static DRIVER_INIT( wallc )
+DRIVER_INIT_MEMBER(wallc_state,wallc)
 {
 	UINT8 c;
 	UINT32 i;
 
-	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 
 	for (i=0; i<0x2000*2; i++)
 	{
@@ -269,12 +271,12 @@ static DRIVER_INIT( wallc )
 	}
 }
 
-static DRIVER_INIT( wallca )
+DRIVER_INIT_MEMBER(wallc_state,wallca)
 {
 	UINT8 c;
 	UINT32 i;
 
-	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 
 	for (i=0; i<0x4000; i++)
 	{
@@ -356,5 +358,5 @@ ROM_START( wallca )
 	ROM_LOAD( "74s288.c2",  0x0000, 0x0020, CRC(83e3e293) SHA1(a98c5e63b688de8d175adb6539e0cdc668f313fd) )
 ROM_END
 
-GAME( 1984, wallc,  0,      wallc,  wallc, wallc,  ROT0, "Midcoin", "Wall Crash (set 1)", 0 )
-GAME( 1984, wallca, wallc,  wallc,  wallc, wallca, ROT0, "Midcoin", "Wall Crash (set 2)", 0 )
+GAME( 1984, wallc,  0,      wallc,  wallc, wallc_state, wallc,  ROT0, "Midcoin", "Wall Crash (set 1)", 0 )
+GAME( 1984, wallca, wallc,  wallc,  wallc, wallc_state, wallca, ROT0, "Midcoin", "Wall Crash (set 2)", 0 )

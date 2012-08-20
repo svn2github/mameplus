@@ -104,12 +104,12 @@ WRITE8_MEMBER(senjyo_state::flip_screen_w)
 
 WRITE8_MEMBER(senjyo_state::sound_cmd_w)
 {
-	device_t *device = machine().device("z80pio");
+	z80pio_device *device = machine().device<z80pio_device>("z80pio");
 
 	m_sound_cmd = data;
 
-	z80pio_astb_w(device, 0);
-	z80pio_astb_w(device, 1);
+	device->strobe_a(0);
+	device->strobe_a(1);
 }
 
 WRITE8_MEMBER(senjyo_state::senjyo_paletteram_w)
@@ -174,8 +174,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( senjyo_sound_io_map, AS_IO, 8, senjyo_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE_LEGACY("z80pio", z80pio_ba_cd_r, z80pio_ba_cd_w)
-	AM_RANGE(0x08, 0x0b) AM_DEVREADWRITE_LEGACY("z80ctc", z80ctc_r, z80ctc_w)
+	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE("z80pio", z80pio_device, read_alt, write_alt)
+	AM_RANGE(0x08, 0x0b) AM_DEVREADWRITE("z80ctc", z80ctc_device, read, write)
 ADDRESS_MAP_END
 
 /* For the bootleg */
@@ -552,14 +552,6 @@ GFXDECODE_END
 
 
 
-static const samples_interface senjyo_samples_interface =
-{
-	1,
-	NULL,
-	senjyo_sh_start
-};
-
-
 static MACHINE_CONFIG_START( senjyo, senjyo_state )
 
 	/* basic machine hardware */
@@ -602,8 +594,8 @@ static MACHINE_CONFIG_START( senjyo, senjyo_state )
 	MCFG_SOUND_ADD("sn3", SN76496, 2000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SAMPLES_ADD("samples", senjyo_samples_interface)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.15)
+	MCFG_DAC_ADD("dac")
+	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.05)
 MACHINE_CONFIG_END
 
 
@@ -900,48 +892,44 @@ ROM_START( baluba )
 ROM_END
 
 
-static DRIVER_INIT( starforc )
+DRIVER_INIT_MEMBER(senjyo_state,starforc)
 {
-	senjyo_state *state = machine.driver_data<senjyo_state>();
 
-	state->m_is_senjyo = 0;
-	state->m_scrollhack = 1;
+	m_is_senjyo = 0;
+	m_scrollhack = 1;
 }
-static DRIVER_INIT( starfore )
+DRIVER_INIT_MEMBER(senjyo_state,starfore)
 {
-	senjyo_state *state = machine.driver_data<senjyo_state>();
 
 	/* encrypted CPU */
-	suprloco_decode(machine, "maincpu");
+	suprloco_decode(machine(), "maincpu");
 
-	state->m_is_senjyo = 0;
-	state->m_scrollhack = 0;
+	m_is_senjyo = 0;
+	m_scrollhack = 0;
 }
 
-static DRIVER_INIT( starfora )
+DRIVER_INIT_MEMBER(senjyo_state,starfora)
 {
-	senjyo_state *state = machine.driver_data<senjyo_state>();
 
 	/* encrypted CPU */
-	yamato_decode(machine, "maincpu");
+	yamato_decode(machine(), "maincpu");
 
-	state->m_is_senjyo = 0;
-	state->m_scrollhack = 1;
+	m_is_senjyo = 0;
+	m_scrollhack = 1;
 }
 
-static DRIVER_INIT( senjyo )
+DRIVER_INIT_MEMBER(senjyo_state,senjyo)
 {
-	senjyo_state *state = machine.driver_data<senjyo_state>();
 
-	state->m_is_senjyo = 1;
-	state->m_scrollhack = 0;
+	m_is_senjyo = 1;
+	m_scrollhack = 0;
 }
 
 
-GAME( 1983, senjyo,   0,        senjyo,  senjyo,   senjyo,   ROT90, "Tehkan", "Senjyo", 0 )
-GAME( 1984, starforc, 0,        senjyo,  starforc, starforc, ROT90, "Tehkan", "Star Force", 0 )
-GAME( 1984, starforce,starforc, senjyo,  starforc, starfore, ROT90, "Tehkan", "Star Force (encrypted, set 1)", 0 )
-GAME( 1984, starforcb,starforc, starforb,starforc, starfore, ROT90, "bootleg", "Star Force (encrypted, bootleg)", 0 )
-GAME( 1984, starforca,starforc, senjyo,  starforc, starfora, ROT90, "Tehkan", "Star Force (encrypted, set 2)", 0 )
-GAME( 1985, megaforc, starforc, senjyo,  starforc, starforc, ROT90, "Tehkan (Video Ware license)", "Mega Force", 0 )
-GAME( 1986, baluba,   0,        senjyo,  baluba,   starforc, ROT90, "Able Corp, Ltd.", "Baluba-louk no Densetsu (Japan)", 0 )
+GAME( 1983, senjyo,   0,        senjyo,  senjyo, senjyo_state,   senjyo,   ROT90, "Tehkan", "Senjyo", 0 )
+GAME( 1984, starforc, 0,        senjyo,  starforc, senjyo_state, starforc, ROT90, "Tehkan", "Star Force", 0 )
+GAME( 1984, starforce,starforc, senjyo,  starforc, senjyo_state, starfore, ROT90, "Tehkan", "Star Force (encrypted, set 1)", 0 )
+GAME( 1984, starforcb,starforc, starforb,starforc, senjyo_state, starfore, ROT90, "bootleg", "Star Force (encrypted, bootleg)", 0 )
+GAME( 1984, starforca,starforc, senjyo,  starforc, senjyo_state, starfora, ROT90, "Tehkan", "Star Force (encrypted, set 2)", 0 )
+GAME( 1985, megaforc, starforc, senjyo,  starforc, senjyo_state, starforc, ROT90, "Tehkan (Video Ware license)", "Mega Force", 0 )
+GAME( 1986, baluba,   0,        senjyo,  baluba, senjyo_state,   starforc, ROT90, "Able Corp, Ltd.", "Baluba-louk no Densetsu (Japan)", 0 )

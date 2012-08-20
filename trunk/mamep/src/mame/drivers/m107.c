@@ -961,41 +961,38 @@ ROM_END
 
 /***************************************************************************/
 
-static DRIVER_INIT( firebarr )
+DRIVER_INIT_MEMBER(m107_state,firebarr)
 {
-	m107_state *state = machine.driver_data<m107_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->set_base(&ROM[0xa0000]);
+	membank("bank1")->set_base(&ROM[0xa0000]);
 
-	state->m_irq_vectorbase = 0x20;
-	state->m_spritesystem = 1;
+	m_irq_vectorbase = 0x20;
+	m_spritesystem = 1;
 }
 
-static DRIVER_INIT( dsoccr94 )
+DRIVER_INIT_MEMBER(m107_state,dsoccr94)
 {
-	m107_state *state = machine.driver_data<m107_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 4, &ROM[0x80000], 0x20000);
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x06, 0x07, write16_delegate(FUNC(m107_state::m107_bankswitch_w),state));
+	membank("bank1")->configure_entries(0, 4, &ROM[0x80000], 0x20000);
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x06, 0x07, write16_delegate(FUNC(m107_state::m107_bankswitch_w),this));
 
-	state->m_irq_vectorbase = 0x80;
-	state->m_spritesystem = 0;
+	m_irq_vectorbase = 0x80;
+	m_spritesystem = 0;
 }
 
-static DRIVER_INIT( wpksoc )
+DRIVER_INIT_MEMBER(m107_state,wpksoc)
 {
-	m107_state *state = machine.driver_data<m107_state>();
 
-	state->m_irq_vectorbase = 0x80;
-	state->m_spritesystem = 0;
+	m_irq_vectorbase = 0x80;
+	m_spritesystem = 0;
 }
 
 /***************************************************************************/
 
-GAME( 1993, firebarr,      0, firebarr, firebarr, firebarr, ROT270, "Irem", "Fire Barrel (Japan)", GAME_NO_COCKTAIL )
+GAME( 1993, firebarr,      0, firebarr, firebarr, m107_state, firebarr, ROT270, "Irem", "Fire Barrel (Japan)", GAME_NO_COCKTAIL )
 // Air Assault : World version of Fire Barrel, seen on location at the London Trocadero
-GAME( 1994, dsoccr94,      0, dsoccr94, dsoccr94, dsoccr94, ROT0,   "Irem (Data East Corporation license)", "Dream Soccer '94 (World, M107 hardware)", GAME_NO_COCKTAIL )
-GAME( 1995, wpksoc,        0, wpksoc,   wpksoc,   wpksoc,   ROT0,   "Jaleco", "World PK Soccer", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL | GAME_MECHANICAL )
-GAME( 1994, kftgoal,  wpksoc, wpksoc,   wpksoc,   wpksoc,   ROT0,   "Jaleco", "Kick for the Goal", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL | GAME_MECHANICAL )
+GAME( 1994, dsoccr94,      0, dsoccr94, dsoccr94, m107_state, dsoccr94, ROT0,   "Irem (Data East Corporation license)", "Dream Soccer '94 (World, M107 hardware)", GAME_NO_COCKTAIL )
+GAME( 1995, wpksoc,        0, wpksoc,   wpksoc, m107_state,   wpksoc,   ROT0,   "Jaleco", "World PK Soccer", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL | GAME_MECHANICAL )
+GAME( 1994, kftgoal,  wpksoc, wpksoc,   wpksoc, m107_state,   wpksoc,   ROT0,   "Jaleco", "Kick for the Goal", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL | GAME_MECHANICAL )

@@ -2118,165 +2118,147 @@ static void configure_banks( running_machine &machine )
 }
 
 
-static DRIVER_INIT( dokaben )
+DRIVER_INIT_MEMBER(mitchell_state,dokaben)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 0;
-	state->m_nvram_size = 0;
-	mgakuen2_decode(machine);
-	configure_banks(machine);
+	m_input_type = 0;
+	m_nvram_size = 0;
+	mgakuen2_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( pang )
+DRIVER_INIT_MEMBER(mitchell_state,pang)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 0;
-	state->m_nvram_size = 0;
-	pang_decode(machine);
-	configure_banks(machine);
+	m_input_type = 0;
+	m_nvram_size = 0;
+	pang_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( pangb )
+DRIVER_INIT_MEMBER(mitchell_state,pangb)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 0;
-	state->m_nvram_size = 0;
-	bootleg_decode(machine);
-	configure_banks(machine);
+	m_input_type = 0;
+	m_nvram_size = 0;
+	bootleg_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( cworld )
+DRIVER_INIT_MEMBER(mitchell_state,cworld)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 0;
-	state->m_nvram_size = 0;
-	cworld_decode(machine);
-	configure_banks(machine);
+	m_input_type = 0;
+	m_nvram_size = 0;
+	cworld_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( hatena )
+DRIVER_INIT_MEMBER(mitchell_state,hatena)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 0;
-	state->m_nvram_size = 0;
-	hatena_decode(machine);
-	configure_banks(machine);
+	m_input_type = 0;
+	m_nvram_size = 0;
+	hatena_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( spang )
+DRIVER_INIT_MEMBER(mitchell_state,spang)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 3;
-	state->m_nvram_size = 0x80;
-	state->m_nvram = &state->memregion("maincpu")->base()[0xe000];	/* NVRAM */
-	spang_decode(machine);
-	configure_banks(machine);
+	m_input_type = 3;
+	m_nvram_size = 0x80;
+	m_nvram = &memregion("maincpu")->base()[0xe000];	/* NVRAM */
+	spang_decode(machine());
+	configure_banks(machine());
 }
 
-static DRIVER_INIT( spangbl )
+DRIVER_INIT_MEMBER(mitchell_state,spangbl)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 3;
-	state->m_nvram_size = 0x80;
-	state->m_nvram = &state->memregion("maincpu")->base()[0xe000];	/* NVRAM */
-	bootleg_decode(machine);
-	configure_banks(machine);
+	m_input_type = 3;
+	m_nvram_size = 0x80;
+	m_nvram = &memregion("maincpu")->base()[0xe000];	/* NVRAM */
+	bootleg_decode(machine());
+	configure_banks(machine());
 }
 
-static DRIVER_INIT( spangj )
+DRIVER_INIT_MEMBER(mitchell_state,spangj)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 3;
-	state->m_nvram_size = 0x80;
-	state->m_nvram = &state->memregion("maincpu")->base()[0xe000];	/* NVRAM */
-	spangj_decode(machine);
-	configure_banks(machine);
+	m_input_type = 3;
+	m_nvram_size = 0x80;
+	m_nvram = &memregion("maincpu")->base()[0xe000];	/* NVRAM */
+	spangj_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( sbbros )
+DRIVER_INIT_MEMBER(mitchell_state,sbbros)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 3;
-	state->m_nvram_size = 0x80;
-	state->m_nvram = &state->memregion("maincpu")->base()[0xe000];	/* NVRAM */
-	sbbros_decode(machine);
-	configure_banks(machine);
+	m_input_type = 3;
+	m_nvram_size = 0x80;
+	m_nvram = &memregion("maincpu")->base()[0xe000];	/* NVRAM */
+	sbbros_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( qtono1 )
+DRIVER_INIT_MEMBER(mitchell_state,qtono1)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 0;
-	state->m_nvram_size = 0;
-	qtono1_decode(machine);
-	configure_banks(machine);
+	m_input_type = 0;
+	m_nvram_size = 0;
+	qtono1_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( qsangoku )
+DRIVER_INIT_MEMBER(mitchell_state,qsangoku)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 0;
-	state->m_nvram_size = 0;
-	qsangoku_decode(machine);
-	configure_banks(machine);
+	m_input_type = 0;
+	m_nvram_size = 0;
+	qsangoku_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( mgakuen )
+DRIVER_INIT_MEMBER(mitchell_state,mgakuen)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 1;
-	configure_banks(machine);
-	machine.device("maincpu")->memory().space(AS_IO)->install_read_port(0x03, 0x03, "DSW0");
-	machine.device("maincpu")->memory().space(AS_IO)->install_read_port(0x04, 0x04, "DSW1");
+	m_input_type = 1;
+	configure_banks(machine());
+	machine().device("maincpu")->memory().space(AS_IO)->install_read_port(0x03, 0x03, "DSW0");
+	machine().device("maincpu")->memory().space(AS_IO)->install_read_port(0x04, 0x04, "DSW1");
 }
-static DRIVER_INIT( mgakuen2 )
+DRIVER_INIT_MEMBER(mitchell_state,mgakuen2)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 1;
-	state->m_nvram_size = 0;
-	mgakuen2_decode(machine);
-	configure_banks(machine);
+	m_input_type = 1;
+	m_nvram_size = 0;
+	mgakuen2_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( pkladies )
+DRIVER_INIT_MEMBER(mitchell_state,pkladies)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 1;
-	state->m_nvram_size = 0;
-	mgakuen2_decode(machine);
-	configure_banks(machine);
+	m_input_type = 1;
+	m_nvram_size = 0;
+	mgakuen2_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( pkladiesbl )
+DRIVER_INIT_MEMBER(mitchell_state,pkladiesbl)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 1;
-	state->m_nvram_size = 0;
-	bootleg_decode(machine);
-	configure_banks(machine);
+	m_input_type = 1;
+	m_nvram_size = 0;
+	bootleg_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( marukin )
+DRIVER_INIT_MEMBER(mitchell_state,marukin)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 1;
-	state->m_nvram_size = 0;
-	marukin_decode(machine);
-	configure_banks(machine);
+	m_input_type = 1;
+	m_nvram_size = 0;
+	marukin_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( block )
+DRIVER_INIT_MEMBER(mitchell_state,block)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 2;
-	state->m_nvram_size = 0x80;
-	state->m_nvram = &state->memregion("maincpu")->base()[0xff80];	/* NVRAM */
-	block_decode(machine);
-	configure_banks(machine);
+	m_input_type = 2;
+	m_nvram_size = 0x80;
+	m_nvram = &memregion("maincpu")->base()[0xff80];	/* NVRAM */
+	block_decode(machine());
+	configure_banks(machine());
 }
-static DRIVER_INIT( blockbl )
+DRIVER_INIT_MEMBER(mitchell_state,blockbl)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	state->m_input_type = 2;
-	state->m_nvram_size = 0x80;
-	state->m_nvram = &state->memregion("maincpu")->base()[0xff80];	/* NVRAM */
-	bootleg_decode(machine);
-	configure_banks(machine);
+	m_input_type = 2;
+	m_nvram_size = 0x80;
+	m_nvram = &memregion("maincpu")->base()[0xff80];	/* NVRAM */
+	bootleg_decode(machine());
+	configure_banks(machine());
 }
 
-static DRIVER_INIT( mstworld )
+DRIVER_INIT_MEMBER(mitchell_state,mstworld)
 {
 	/* descramble the program rom .. */
-	int len = machine.root_device().memregion("maincpu")->bytes();
-	UINT8* source = auto_alloc_array(machine, UINT8, len);
-	UINT8* dst = machine.root_device().memregion("maincpu")->base() ;
+	int len = machine().root_device().memregion("maincpu")->bytes();
+	UINT8* source = auto_alloc_array(machine(), UINT8, len);
+	UINT8* dst = machine().root_device().memregion("maincpu")->base() ;
 	int x;
 
 	static const int tablebank[]=
@@ -2312,10 +2294,10 @@ static DRIVER_INIT( mstworld )
 			memcpy(&dst[((x / 2) * 0x4000) + 0x50000],&source[tablebank[x + 1] * 0x4000], 0x4000);
 		}
 	}
-	auto_free(machine, source);
+	auto_free(machine(), source);
 
-	bootleg_decode(machine);
-	configure_banks(machine);
+	bootleg_decode(machine());
+	configure_banks(machine());
 }
 
 
@@ -2325,31 +2307,31 @@ static DRIVER_INIT( mstworld )
  *
  *************************************/
 
-GAME( 1988, mgakuen,   0,        mgakuen, mgakuen,  mgakuen,  ROT0,   "Yuga", "Mahjong Gakuen", GAME_SUPPORTS_SAVE )
-GAME( 1988, 7toitsu,   mgakuen,  mgakuen, mgakuen,  mgakuen,  ROT0,   "Yuga", "Chi-Toitsu", GAME_SUPPORTS_SAVE )
-GAME( 1989, mgakuen2,  0,        marukin, marukin,  mgakuen2, ROT0,   "Face", "Mahjong Gakuen 2 Gakuen-chou no Fukushuu", GAME_SUPPORTS_SAVE )
-GAME( 1989, pkladies,  0,        marukin, pkladies, pkladies, ROT0,   "Mitchell", "Poker Ladies", GAME_SUPPORTS_SAVE )
-GAME( 1989, pkladiesl, pkladies, marukin, pkladies, pkladies, ROT0,   "Leprechaun", "Poker Ladies (Leprechaun ver. 510)", GAME_SUPPORTS_SAVE )
-GAME( 1989, pkladiesla,pkladies, marukin, pkladies, pkladies, ROT0,   "Leprechaun", "Poker Ladies (Leprechaun ver. 401)", GAME_SUPPORTS_SAVE )
-GAME( 1989, pkladiesbl,pkladies, pkladiesbl,pkladies,pkladiesbl,ROT0, "bootleg", "Poker Ladies (Censored bootleg)", GAME_NOT_WORKING ) // by Playmark? need to figure out CPU 'decryption' / ordering
-GAME( 1989, dokaben,   0,        pang,    pang,     dokaben,  ROT0,   "Capcom", "Dokaben (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1989, pang,      0,        pang,    pang,     pang,     ROT0,   "Mitchell", "Pang (World)", GAME_SUPPORTS_SAVE )
-GAME( 1989, pangb,     pang,     pang,    pang,     pangb,    ROT0,   "bootleg", "Pang (bootleg, set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1989, pangbold,  pang,     pang,    pang,     pangb,    ROT0,   "bootleg", "Pang (bootleg, set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1989, pangba,    pang,     spangbl, pang,     pangb,    ROT0,   "bootleg", "Pang (bootleg, set 3)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1989, bbros,     pang,     pang,    pang,     pang,     ROT0,   "Mitchell (Capcom license)", "Buster Bros. (US)", GAME_SUPPORTS_SAVE )
-GAME( 1989, pompingw,  pang,     pang,    pang,     pang,     ROT0,   "Mitchell", "Pomping World (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1989, cworld,    0,        pang,    qtono1,   cworld,   ROT0,   "Capcom", "Capcom World (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1990, hatena,    0,        pang,    qtono1,   hatena,   ROT0,   "Capcom", "Adventure Quiz 2 Hatena Hatena no Dai-Bouken (Japan 900228)", GAME_SUPPORTS_SAVE )
-GAME( 1990, spang,     0,        pang,    pang,     spang,    ROT0,   "Mitchell", "Super Pang (World 900914)", GAME_SUPPORTS_SAVE )
-GAME( 1990, spangj,    spang,    pang,    pang,     spangj,   ROT0,   "Mitchell", "Super Pang (Japan 901023)", GAME_SUPPORTS_SAVE )
-GAME( 1990, spangbl,   spang,    spangbl, spangbl,  spangbl,  ROT0,   "bootleg", "Super Pang (World 900914, bootleg)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE ) // different sound hardware
-GAME( 1994, mstworld,  0,        mstworld,mstworld, mstworld, ROT0,   "bootleg (TCH)", "Monsters World (bootleg of Super Pang)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1990, sbbros,    spang,    pang,    pang,     sbbros,   ROT0,   "Mitchell (Capcom license)", "Super Buster Bros. (US 901001)", GAME_SUPPORTS_SAVE )
-GAME( 1990, marukin,   0,        marukin, marukin,  marukin,  ROT0,   "Yuga", "Super Marukin-Ban (Japan 901017)", GAME_SUPPORTS_SAVE )
-GAME( 1991, qtono1,    0,        pang,    qtono1,   qtono1,   ROT0,   "Capcom", "Quiz Tonosama no Yabou (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1991, qsangoku,  0,        pang,    qtono1,   qsangoku, ROT0,   "Capcom", "Quiz Sangokushi (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1991, block,     0,        pang,    block,    block,    ROT270, "Capcom", "Block Block (World 910910)", GAME_SUPPORTS_SAVE )
-GAME( 1991, blockj,    block,    pang,    block,    block,    ROT270, "Capcom", "Block Block (Japan 910910)", GAME_SUPPORTS_SAVE )
-GAME( 1991, blockjoy,  block,    pang,    blockjoy, block,    ROT270, "Capcom", "Block Block (World 911106 Joystick)", GAME_SUPPORTS_SAVE )
-GAME( 1991, blockbl,   block,    pang,    block,    blockbl,  ROT270, "bootleg", "Block Block (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1988, mgakuen,   0,        mgakuen, mgakuen, mitchell_state,  mgakuen,  ROT0,   "Yuga", "Mahjong Gakuen", GAME_SUPPORTS_SAVE )
+GAME( 1988, 7toitsu,   mgakuen,  mgakuen, mgakuen, mitchell_state,  mgakuen,  ROT0,   "Yuga", "Chi-Toitsu", GAME_SUPPORTS_SAVE )
+GAME( 1989, mgakuen2,  0,        marukin, marukin, mitchell_state,  mgakuen2, ROT0,   "Face", "Mahjong Gakuen 2 Gakuen-chou no Fukushuu", GAME_SUPPORTS_SAVE )
+GAME( 1989, pkladies,  0,        marukin, pkladies, mitchell_state, pkladies, ROT0,   "Mitchell", "Poker Ladies", GAME_SUPPORTS_SAVE )
+GAME( 1989, pkladiesl, pkladies, marukin, pkladies, mitchell_state, pkladies, ROT0,   "Leprechaun", "Poker Ladies (Leprechaun ver. 510)", GAME_SUPPORTS_SAVE )
+GAME( 1989, pkladiesla,pkladies, marukin, pkladies, mitchell_state, pkladies, ROT0,   "Leprechaun", "Poker Ladies (Leprechaun ver. 401)", GAME_SUPPORTS_SAVE )
+GAME( 1989, pkladiesbl,pkladies, pkladiesbl,pkladies, mitchell_state,pkladiesbl,ROT0, "bootleg", "Poker Ladies (Censored bootleg)", GAME_NOT_WORKING ) // by Playmark? need to figure out CPU 'decryption' / ordering
+GAME( 1989, dokaben,   0,        pang,    pang, mitchell_state,     dokaben,  ROT0,   "Capcom", "Dokaben (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1989, pang,      0,        pang,    pang, mitchell_state,     pang,     ROT0,   "Mitchell", "Pang (World)", GAME_SUPPORTS_SAVE )
+GAME( 1989, pangb,     pang,     pang,    pang, mitchell_state,     pangb,    ROT0,   "bootleg", "Pang (bootleg, set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1989, pangbold,  pang,     pang,    pang, mitchell_state,     pangb,    ROT0,   "bootleg", "Pang (bootleg, set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1989, pangba,    pang,     spangbl, pang, mitchell_state,     pangb,    ROT0,   "bootleg", "Pang (bootleg, set 3)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1989, bbros,     pang,     pang,    pang, mitchell_state,     pang,     ROT0,   "Mitchell (Capcom license)", "Buster Bros. (US)", GAME_SUPPORTS_SAVE )
+GAME( 1989, pompingw,  pang,     pang,    pang, mitchell_state,     pang,     ROT0,   "Mitchell", "Pomping World (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1989, cworld,    0,        pang,    qtono1, mitchell_state,   cworld,   ROT0,   "Capcom", "Capcom World (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1990, hatena,    0,        pang,    qtono1, mitchell_state,   hatena,   ROT0,   "Capcom", "Adventure Quiz 2 - Hatena? no Daibouken (Japan 900228)", GAME_SUPPORTS_SAVE )
+GAME( 1990, spang,     0,        pang,    pang, mitchell_state,     spang,    ROT0,   "Mitchell", "Super Pang (World 900914)", GAME_SUPPORTS_SAVE )
+GAME( 1990, spangj,    spang,    pang,    pang, mitchell_state,     spangj,   ROT0,   "Mitchell", "Super Pang (Japan 901023)", GAME_SUPPORTS_SAVE )
+GAME( 1990, spangbl,   spang,    spangbl, spangbl, mitchell_state,  spangbl,  ROT0,   "bootleg", "Super Pang (World 900914, bootleg)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE ) // different sound hardware
+GAME( 1994, mstworld,  0,        mstworld,mstworld, mitchell_state, mstworld, ROT0,   "bootleg (TCH)", "Monsters World (bootleg of Super Pang)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1990, sbbros,    spang,    pang,    pang, mitchell_state,     sbbros,   ROT0,   "Mitchell (Capcom license)", "Super Buster Bros. (US 901001)", GAME_SUPPORTS_SAVE )
+GAME( 1990, marukin,   0,        marukin, marukin, mitchell_state,  marukin,  ROT0,   "Yuga", "Super Marukin-Ban (Japan 901017)", GAME_SUPPORTS_SAVE )
+GAME( 1991, qtono1,    0,        pang,    qtono1, mitchell_state,   qtono1,   ROT0,   "Capcom", "Quiz Tonosama no Yabou (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1991, qsangoku,  0,        pang,    qtono1, mitchell_state,   qsangoku, ROT0,   "Capcom", "Quiz Sangokushi (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1991, block,     0,        pang,    block, mitchell_state,    block,    ROT270, "Capcom", "Block Block (World 910910)", GAME_SUPPORTS_SAVE )
+GAME( 1991, blockj,    block,    pang,    block, mitchell_state,    block,    ROT270, "Capcom", "Block Block (Japan 910910)", GAME_SUPPORTS_SAVE )
+GAME( 1991, blockjoy,  block,    pang,    blockjoy, mitchell_state, block,    ROT270, "Capcom", "Block Block (World 911106 Joystick)", GAME_SUPPORTS_SAVE )
+GAME( 1991, blockbl,   block,    pang,    block, mitchell_state,    blockbl,  ROT270, "bootleg", "Block Block (bootleg)", GAME_SUPPORTS_SAVE )

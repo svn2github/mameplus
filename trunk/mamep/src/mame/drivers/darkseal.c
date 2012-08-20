@@ -469,9 +469,9 @@ ROM_END
 
 /******************************************************************************/
 
-static DRIVER_INIT( darkseal )
+DRIVER_INIT_MEMBER(darkseal_state,darkseal)
 {
-	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *RAM = machine().root_device().memregion("maincpu")->base();
 	int i;
 
 	for (i=0x00000; i<0x80000; i++)
@@ -481,8 +481,8 @@ static DRIVER_INIT( darkseal )
 
 /******************************************************************************/
 
-GAME( 1990, darkseal,  0,        darkseal, darkseal, darkseal, ROT0, "Data East Corporation", "Dark Seal (World revision 3)", 0 )
-GAME( 1990, darkseal1, darkseal, darkseal, darkseal, darkseal, ROT0, "Data East Corporation", "Dark Seal (World revision 1)", 0 )
-GAME( 1990, darksealj, darkseal, darkseal, darkseal, darkseal, ROT0, "Data East Corporation", "Dark Seal (Japan revision 4)", 0 )
-GAME( 1990, gatedoom,  darkseal, darkseal, darkseal, darkseal, ROT0, "Data East Corporation", "Gate of Doom (US revision 4)", 0 )
-GAME( 1990, gatedoom1, darkseal, darkseal, darkseal, darkseal, ROT0, "Data East Corporation", "Gate of Doom (US revision 1)", 0 )
+GAME( 1990, darkseal,  0,        darkseal, darkseal, darkseal_state, darkseal, ROT0, "Data East Corporation", "Dark Seal (World revision 3)", 0 )
+GAME( 1990, darkseal1, darkseal, darkseal, darkseal, darkseal_state, darkseal, ROT0, "Data East Corporation", "Dark Seal (World revision 1)", 0 )
+GAME( 1990, darksealj, darkseal, darkseal, darkseal, darkseal_state, darkseal, ROT0, "Data East Corporation", "Dark Seal (Japan revision 4)", 0 )
+GAME( 1990, gatedoom,  darkseal, darkseal, darkseal, darkseal_state, darkseal, ROT0, "Data East Corporation", "Gate of Doom (US revision 4)", 0 )
+GAME( 1990, gatedoom1, darkseal, darkseal, darkseal, darkseal_state, darkseal, ROT0, "Data East Corporation", "Gate of Doom (US revision 1)", 0 )

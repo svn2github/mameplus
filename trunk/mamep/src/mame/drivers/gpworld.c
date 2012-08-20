@@ -69,6 +69,7 @@ public:
 	DECLARE_WRITE8_MEMBER(misc_io_write);
 	DECLARE_WRITE8_MEMBER(brake_gas_write);
 	DECLARE_WRITE8_MEMBER(palette_write);
+	DECLARE_DRIVER_INIT(gpworld);
 };
 
 
@@ -80,7 +81,7 @@ public:
 
 
 /* VIDEO GOODS */
-static void gpworld_draw_tiles(running_machine &machine, bitmap_ind16 &bitmap,const rectangle &cliprect)
+static void gpworld_draw_tiles(running_machine &machine, bitmap_rgb32 &bitmap,const rectangle &cliprect)
 {
 	gpworld_state *state = machine.driver_data<gpworld_state>();
 	UINT8 characterX, characterY;
@@ -98,7 +99,7 @@ static void gpworld_draw_tiles(running_machine &machine, bitmap_ind16 &bitmap,co
 	}
 }
 
-INLINE void draw_pixel(bitmap_ind16 &bitmap,const rectangle &cliprect,int x,int y,int color,int flip)
+INLINE void draw_pixel(running_machine &machine, bitmap_rgb32 &bitmap,const rectangle &cliprect,int x,int y,int color,int flip)
 {
 	if (flip)
 	{
@@ -107,10 +108,10 @@ INLINE void draw_pixel(bitmap_ind16 &bitmap,const rectangle &cliprect,int x,int 
 	}
 
 	if (cliprect.contains(x, y))
-		bitmap.pix16(y, x) = color;
+		bitmap.pix32(y, x) = machine.pens[color];
 }
 
-static void gpworld_draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect)
+static void gpworld_draw_sprites(running_machine &machine, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	gpworld_state *state = machine.driver_data<gpworld_state>();
 	const int SPR_Y_TOP     = 0;
@@ -198,10 +199,10 @@ static void gpworld_draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,
 					}
 
 					/* Daphne says "don't draw the pixel if it's black". */
-					draw_pixel(bitmap,cliprect,x+0,y,palette_get_color(machine, pixel1 + (sprite_color*0x10 + 0x200)),flip);
-					draw_pixel(bitmap,cliprect,x+1,y,palette_get_color(machine, pixel2 + (sprite_color*0x10 + 0x200)),flip);
-					draw_pixel(bitmap,cliprect,x+2,y,palette_get_color(machine, pixel3 + (sprite_color*0x10 + 0x200)),flip);
-					draw_pixel(bitmap,cliprect,x+3,y,palette_get_color(machine, pixel4 + (sprite_color*0x10 + 0x200)),flip);
+					draw_pixel(machine, bitmap,cliprect,x+0,y,palette_get_color(machine, pixel1 + (sprite_color*0x10 + 0x200)),flip);
+					draw_pixel(machine, bitmap,cliprect,x+1,y,palette_get_color(machine, pixel2 + (sprite_color*0x10 + 0x200)),flip);
+					draw_pixel(machine, bitmap,cliprect,x+2,y,palette_get_color(machine, pixel3 + (sprite_color*0x10 + 0x200)),flip);
+					draw_pixel(machine, bitmap,cliprect,x+3,y,palette_get_color(machine, pixel4 + (sprite_color*0x10 + 0x200)),flip);
 
 					x += 4;
 
@@ -221,7 +222,7 @@ static void gpworld_draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,
 }
 
 
-static SCREEN_UPDATE_IND16( gpworld )
+static SCREEN_UPDATE_RGB32( gpworld )
 {
 	bitmap.fill(0, cliprect);
 
@@ -297,7 +298,7 @@ WRITE8_MEMBER(gpworld_state::palette_write)
 static ADDRESS_MAP_START( mainmem, AS_PROGRAM, 8, gpworld_state )
 	AM_RANGE(0x0000,0xbfff) AM_ROM
 	AM_RANGE(0xc000,0xc7ff) AM_RAM AM_SHARE("sprite_ram")
-	AM_RANGE(0xc800,0xcfff) AM_WRITE(palette_write) AM_SHARE("palette_ram")	/* The memory test reads at 0xc800 */
+	AM_RANGE(0xc800,0xcfff) AM_RAM_WRITE(palette_write) AM_SHARE("palette_ram")	/* The memory test reads at 0xc800 */
 	AM_RANGE(0xd000,0xd7ff) AM_RAM AM_SHARE("tile_ram")
 	AM_RANGE(0xd800,0xd800) AM_READWRITE(ldp_read,ldp_write)
 /*  AM_RANGE(0xd801,0xd801) AM_READ_LEGACY(???) */
@@ -522,15 +523,14 @@ ROM_START( gpworld )
 ROM_END
 
 
-static DRIVER_INIT( gpworld )
+DRIVER_INIT_MEMBER(gpworld_state,gpworld)
 {
-	gpworld_state *state = machine.driver_data<gpworld_state>();
-	state->m_nmi_enable = 0;
-	state->m_start_lamp = 0;
-	state->m_brake_gas = 0;
-	state->m_ldp_write_latch = state->m_ldp_read_latch = 0;
+	m_nmi_enable = 0;
+	m_start_lamp = 0;
+	m_brake_gas = 0;
+	m_ldp_write_latch = m_ldp_read_latch = 0;
 }
 
 
 /*    YEAR  NAME      PARENT   MACHINE  INPUT    INIT     MONITOR  COMPANY  FULLNAME    FLAGS) */
-GAME( 1984, gpworld,  0,       gpworld, gpworld, gpworld, ROT0,    "Sega",  "GP World",	GAME_NOT_WORKING|GAME_NO_SOUND)
+GAME( 1984, gpworld,  0,       gpworld, gpworld, gpworld_state, gpworld, ROT0,    "Sega",  "GP World",	GAME_NOT_WORKING|GAME_NO_SOUND)

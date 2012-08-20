@@ -5495,50 +5495,46 @@ static void alpine_init_common( running_machine &machine, int game_type )
 	state->m_motor_status = 2;
 }
 
-static DRIVER_INIT( alpiner )
+DRIVER_INIT_MEMBER(namcos22_state,alpiner)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	alpine_init_common(machine, NAMCOS22_ALPINE_RACER);
+	alpine_init_common(machine(), NAMCOS22_ALPINE_RACER);
 
-	install_130_speedup(machine);
+	install_130_speedup(machine());
 
-	state->m_keycus_id = 0x0187;
+	m_keycus_id = 0x0187;
 }
 
-static DRIVER_INIT( alpiner2 )
+DRIVER_INIT_MEMBER(namcos22_state,alpiner2)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	alpine_init_common(machine, NAMCOS22_ALPINE_RACER_2);
+	alpine_init_common(machine(), NAMCOS22_ALPINE_RACER_2);
 
-	install_130_speedup(machine);
+	install_130_speedup(machine());
 
-	state->m_keycus_id = 0x0187;
+	m_keycus_id = 0x0187;
 }
 
-static DRIVER_INIT( alpinesa )
+DRIVER_INIT_MEMBER(namcos22_state,alpinesa)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	alpine_init_common(machine, NAMCOS22_ALPINE_SURFER);
+	alpine_init_common(machine(), NAMCOS22_ALPINE_SURFER);
 
-	state->m_maincpu->memory().space(AS_PROGRAM)->install_read_handler (0x200000, 0x200003, read32_delegate(FUNC(namcos22_state::alpinesa_prot_r),state));
-	state->m_maincpu->memory().space(AS_PROGRAM)->install_write_handler(0x300000, 0x300003, write32_delegate(FUNC(namcos22_state::alpinesa_prot_w),state));
-	install_141_speedup(machine);
+	m_maincpu->memory().space(AS_PROGRAM)->install_read_handler (0x200000, 0x200003, read32_delegate(FUNC(namcos22_state::alpinesa_prot_r),this));
+	m_maincpu->memory().space(AS_PROGRAM)->install_write_handler(0x300000, 0x300003, write32_delegate(FUNC(namcos22_state::alpinesa_prot_w),this));
+	install_141_speedup(machine());
 
-	state->m_keycus_id = 0x01a9;
+	m_keycus_id = 0x01a9;
 }
 
-static DRIVER_INIT( airco22 )
+DRIVER_INIT_MEMBER(namcos22_state,airco22)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	namcos22_init(machine, NAMCOS22_AIR_COMBAT22);
+	namcos22_init(machine(), NAMCOS22_AIR_COMBAT22);
 
 	// S22-BIOS ver1.20 namco all rights reserved 94/12/21
-	state->m_mcu->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC7_H, read8_delegate(FUNC(namcos22_state::airco22_mcu_adc_r),state));
+	m_mcu->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC7_H, read8_delegate(FUNC(namcos22_state::airco22_mcu_adc_r),this));
 }
 
-static DRIVER_INIT( propcycl )
+DRIVER_INIT_MEMBER(namcos22_state,propcycl)
 {
-   UINT32 *pROM = (UINT32 *)machine.root_device().memregion("maincpu")->base();
+   UINT32 *pROM = (UINT32 *)machine().root_device().memregion("maincpu")->base();
 
 	/* patch out strange routine (uninitialized-eprom related?) */
 	pROM[0x1992C/4] = 0x4E754E75;
@@ -5555,149 +5551,139 @@ static DRIVER_INIT( propcycl )
 //   pROM[0x22296/4] &= 0xffff0000;
 //   pROM[0x22296/4] |= 0x00004e75;
 
-	namcos22_init(machine, NAMCOS22_PROP_CYCLE);
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	state->m_mcu->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC7_H, read8_delegate(FUNC(namcos22_state::propcycle_mcu_adc_r),state));
-	state->m_mcu->memory().space(AS_IO)->install_write_handler(M37710_PORT5, M37710_PORT5, write8_delegate(FUNC(namcos22_state::propcycle_mcu_port5_w),state));
-	install_141_speedup(machine);
+	namcos22_init(machine(), NAMCOS22_PROP_CYCLE);
+	m_mcu->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC7_H, read8_delegate(FUNC(namcos22_state::propcycle_mcu_adc_r),this));
+	m_mcu->memory().space(AS_IO)->install_write_handler(M37710_PORT5, M37710_PORT5, write8_delegate(FUNC(namcos22_state::propcycle_mcu_port5_w),this));
+	install_141_speedup(machine());
 }
 
-static DRIVER_INIT( ridgeraj )
+DRIVER_INIT_MEMBER(namcos22_state,ridgeraj)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	namcos22_init(machine, NAMCOS22_RIDGE_RACER);
+	namcos22_init(machine(), NAMCOS22_RIDGE_RACER);
 
-	install_c74_speedup(machine);
+	install_c74_speedup(machine());
 
-	state->m_keycus_id = 0x0172;
+	m_keycus_id = 0x0172;
 }
 
-static DRIVER_INIT( ridger2j )
+DRIVER_INIT_MEMBER(namcos22_state,ridger2j)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	namcos22_init(machine, NAMCOS22_RIDGE_RACER2);
+	namcos22_init(machine(), NAMCOS22_RIDGE_RACER2);
 
-	install_c74_speedup(machine);
+	install_c74_speedup(machine());
 
-	state->m_keycus_id = 0x0172;
+	m_keycus_id = 0x0172;
 }
 
-static DRIVER_INIT( acedrvr )
+DRIVER_INIT_MEMBER(namcos22_state,acedrvr)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	namcos22_init(machine, NAMCOS22_ACE_DRIVER);
+	namcos22_init(machine(), NAMCOS22_ACE_DRIVER);
 
-	install_c74_speedup(machine);
+	install_c74_speedup(machine());
 
-	state->m_keycus_id = 0x0173;
+	m_keycus_id = 0x0173;
 }
 
-static DRIVER_INIT( victlap )
+DRIVER_INIT_MEMBER(namcos22_state,victlap)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	namcos22_init(machine, NAMCOS22_VICTORY_LAP);
+	namcos22_init(machine(), NAMCOS22_VICTORY_LAP);
 
-	install_c74_speedup(machine);
+	install_c74_speedup(machine());
 
-	state->m_keycus_id = 0x0188;
+	m_keycus_id = 0x0188;
 }
 
-static DRIVER_INIT( raveracw )
+DRIVER_INIT_MEMBER(namcos22_state,raveracw)
 {
-	namcos22_init(machine, NAMCOS22_RAVE_RACER);
+	namcos22_init(machine(), NAMCOS22_RAVE_RACER);
 
-	install_c74_speedup(machine);
+	install_c74_speedup(machine());
 }
 
-static DRIVER_INIT( cybrcomm )
+DRIVER_INIT_MEMBER(namcos22_state,cybrcomm)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	namcos22_init(machine, NAMCOS22_CYBER_COMMANDO);
+	namcos22_init(machine(), NAMCOS22_CYBER_COMMANDO);
 
-	install_c74_speedup(machine);
+	install_c74_speedup(machine());
 
-	state->m_keycus_id = 0x0185;
+	m_keycus_id = 0x0185;
 }
 
-static DRIVER_INIT( cybrcyc )
+DRIVER_INIT_MEMBER(namcos22_state,cybrcyc)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	namcos22_init(machine, NAMCOS22_CYBER_CYCLES);
+	namcos22_init(machine(), NAMCOS22_CYBER_CYCLES);
 
-	state->m_mcu->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC7_H, read8_delegate(FUNC(namcos22_state::cybrcycc_mcu_adc_r),state));
-	install_130_speedup(machine);
+	m_mcu->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC7_H, read8_delegate(FUNC(namcos22_state::cybrcycc_mcu_adc_r),this));
+	install_130_speedup(machine());
 
-	state->m_keycus_id = 0x0387;
+	m_keycus_id = 0x0387;
 }
 
-static DRIVER_INIT( timecris )
+DRIVER_INIT_MEMBER(namcos22_state,timecris)
 {
-	namcos22_init(machine, NAMCOS22_TIME_CRISIS);
+	namcos22_init(machine(), NAMCOS22_TIME_CRISIS);
 
-	install_130_speedup(machine);
+	install_130_speedup(machine());
 }
 
-static DRIVER_INIT( tokyowar )
+DRIVER_INIT_MEMBER(namcos22_state,tokyowar)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	namcos22_init(machine, NAMCOS22_TOKYO_WARS);
+	namcos22_init(machine(), NAMCOS22_TOKYO_WARS);
 
-	state->m_mcu->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC7_H, read8_delegate(FUNC(namcos22_state::tokyowar_mcu_adc_r),state));
-	install_141_speedup(machine);
+	m_mcu->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC7_H, read8_delegate(FUNC(namcos22_state::tokyowar_mcu_adc_r),this));
+	install_141_speedup(machine());
 
-	state->m_keycus_id = 0x01a8;
+	m_keycus_id = 0x01a8;
 }
 
-static DRIVER_INIT( aquajet )
+DRIVER_INIT_MEMBER(namcos22_state,aquajet)
 {
-	namcos22_init(machine, NAMCOS22_AQUA_JET);
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	state->m_mcu->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC7_H, read8_delegate(FUNC(namcos22_state::aquajet_mcu_adc_r),state));
-	install_141_speedup(machine);
+	namcos22_init(machine(), NAMCOS22_AQUA_JET);
+	m_mcu->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC7_H, read8_delegate(FUNC(namcos22_state::aquajet_mcu_adc_r),this));
+	install_141_speedup(machine());
 }
 
-static DRIVER_INIT( dirtdash )
+DRIVER_INIT_MEMBER(namcos22_state,dirtdash)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	namcos22_init(machine, NAMCOS22_DIRT_DASH);
+	namcos22_init(machine(), NAMCOS22_DIRT_DASH);
 
-	state->m_mcu->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC7_H, read8_delegate(FUNC(namcos22_state::cybrcycc_mcu_adc_r),state));
-	install_141_speedup(machine);
+	m_mcu->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC7_H, read8_delegate(FUNC(namcos22_state::cybrcycc_mcu_adc_r),this));
+	install_141_speedup(machine());
 
-	state->m_keycus_id = 0x01a2;
+	m_keycus_id = 0x01a2;
 }
 
 /************************************************************************************/
 
 /*     YEAR, NAME,    PARENT,    MACHINE,   INPUT,    INIT,     MNTR,  COMPANY, FULLNAME,                                    FLAGS */
 /* System22 games */
-GAME( 1993, ridgerac,  0,        namcos22,  ridgera,  ridgeraj, ROT0, "Namco", "Ridge Racer (Rev. RR3, World)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1994-01-17
-GAME( 1993, ridgerac3, ridgerac, namcos22,  ridgera,  ridgeraj, ROT0, "Namco", "Ridge Racer (Rev. RR2 Ver.B, World, 3-screen?)", GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1993-10-28, no indication that this really is a 3-screen version.
-GAME( 1993, ridgeracb, ridgerac, namcos22,  ridgera,  ridgeraj, ROT0, "Namco", "Ridge Racer (Rev. RR2, World)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1993-10-07
-GAME( 1993, ridgeracj, ridgerac, namcos22,  ridgera,  ridgeraj, ROT0, "Namco", "Ridge Racer (Rev. RR1, Japan)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1993-10-07
-GAME( 1993, ridgeracf, ridgerac, namcos22,  ridgeracf,ridgeraj, ROT0, "Namco", "Ridge Racer Full Scale (World)"            , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING ) // 1993-12-13, very different version, incomplete dump.
-GAME( 1994, ridgera2,  0,        namcos22,  ridgera2, ridger2j, ROT0, "Namco", "Ridge Racer 2 (Rev. RRS2, World)"          , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1994-06-21
-GAME( 1994, ridgera2j, ridgera2, namcos22,  ridgera2, ridger2j, ROT0, "Namco", "Ridge Racer 2 (Rev. RRS1 Ver.B, Japan)"    , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1994-06-21
-GAME( 1994, ridgera2ja,ridgera2, namcos22,  ridgera2, ridger2j, ROT0, "Namco", "Ridge Racer 2 (Rev. RRS1, Japan)"          , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1994-06-13
-GAME( 1994, cybrcomm,  0,        namcos22,  cybrcomm, cybrcomm, ROT0, "Namco", "Cyber Commando (Rev. CY1, Japan)"          , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 10/14/94
-GAME( 1995, raveracw,  0,        namcos22,  raveracw, raveracw, ROT0, "Namco", "Rave Racer (Rev. RV2, World)"              , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 07/16/95
-GAME( 1995, raveracj,  raveracw, namcos22,  raveracw, raveracw, ROT0, "Namco", "Rave Racer (Rev. RV1 Ver.B, Japan)"        , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 07/16/95
-GAME( 1995, raveracja, raveracw, namcos22,  raveracw, raveracw, ROT0, "Namco", "Rave Racer (Rev. RV1, Japan)"              , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 06/29/95
-GAME( 1994, acedrvrw,  0,        namcos22,  acedrvr,  acedrvr,  ROT0, "Namco", "Ace Driver: Racing Evolution (Rev. AD2)"   , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 94/10/20 16:22:25
-GAME( 1996, victlapw,  0,        namcos22,  acedrvr,  victlap,  ROT0, "Namco", "Ace Driver: Victory Lap (Rev. ADV2)"       , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 96/02/13 17:50:06
+GAME( 1993, ridgerac,  0,        namcos22,  ridgera, namcos22_state,  ridgeraj, ROT0, "Namco", "Ridge Racer (Rev. RR3, World)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1994-01-17
+GAME( 1993, ridgerac3, ridgerac, namcos22,  ridgera, namcos22_state,  ridgeraj, ROT0, "Namco", "Ridge Racer (Rev. RR2 Ver.B, World, 3-screen?)", GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1993-10-28, no indication that this really is a 3-screen version.
+GAME( 1993, ridgeracb, ridgerac, namcos22,  ridgera, namcos22_state,  ridgeraj, ROT0, "Namco", "Ridge Racer (Rev. RR2, World)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1993-10-07
+GAME( 1993, ridgeracj, ridgerac, namcos22,  ridgera, namcos22_state,  ridgeraj, ROT0, "Namco", "Ridge Racer (Rev. RR1, Japan)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1993-10-07
+GAME( 1993, ridgeracf, ridgerac, namcos22,  ridgeracf, namcos22_state,ridgeraj, ROT0, "Namco", "Ridge Racer Full Scale (World)"            , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING ) // 1993-12-13, very different version, incomplete dump.
+GAME( 1994, ridgera2,  0,        namcos22,  ridgera2, namcos22_state, ridger2j, ROT0, "Namco", "Ridge Racer 2 (Rev. RRS2, World)"          , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1994-06-21
+GAME( 1994, ridgera2j, ridgera2, namcos22,  ridgera2, namcos22_state, ridger2j, ROT0, "Namco", "Ridge Racer 2 (Rev. RRS1 Ver.B, Japan)"    , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1994-06-21
+GAME( 1994, ridgera2ja,ridgera2, namcos22,  ridgera2, namcos22_state, ridger2j, ROT0, "Namco", "Ridge Racer 2 (Rev. RRS1, Japan)"          , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 1994-06-13
+GAME( 1994, cybrcomm,  0,        namcos22,  cybrcomm, namcos22_state, cybrcomm, ROT0, "Namco", "Cyber Commando (Rev. CY1, Japan)"          , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 10/14/94
+GAME( 1995, raveracw,  0,        namcos22,  raveracw, namcos22_state, raveracw, ROT0, "Namco", "Rave Racer (Rev. RV2, World)"              , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 07/16/95
+GAME( 1995, raveracj,  raveracw, namcos22,  raveracw, namcos22_state, raveracw, ROT0, "Namco", "Rave Racer (Rev. RV1 Ver.B, Japan)"        , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 07/16/95
+GAME( 1995, raveracja, raveracw, namcos22,  raveracw, namcos22_state, raveracw, ROT0, "Namco", "Rave Racer (Rev. RV1, Japan)"              , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 06/29/95
+GAME( 1994, acedrvrw,  0,        namcos22,  acedrvr, namcos22_state,  acedrvr,  ROT0, "Namco", "Ace Driver: Racing Evolution (Rev. AD2)"   , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 94/10/20 16:22:25
+GAME( 1996, victlapw,  0,        namcos22,  acedrvr, namcos22_state,  victlap,  ROT0, "Namco", "Ace Driver: Victory Lap (Rev. ADV2)"       , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 96/02/13 17:50:06
 
 /* Super System22 games */
-GAME( 1994, alpinerd, 0,         namcos22s, alpiner,  alpiner,  ROT0, "Namco", "Alpine Racer (Rev. AR2 Ver.D)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, alpinerc, alpinerd,  namcos22s, alpiner,  alpiner,  ROT0, "Namco", "Alpine Racer (Rev. AR2 Ver.C)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, airco22b, 0,         namcos22s, airco22,  airco22,  ROT0, "Namco", "Air Combat 22 (Rev. ACS1 Ver.B, Japan)"    , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING ) // boots but missing sprite clear DMA?
-GAME( 1995, cybrcycc, 0,         namcos22s, cybrcycc, cybrcyc,  ROT0, "Namco", "Cyber Cycles (Rev. CB2 Ver.C)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 95/04/04
-GAME( 1995, dirtdash, 0,         namcos22s, dirtdash, dirtdash, ROT0, "Namco", "Dirt Dash (Rev. DT2)"                      , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 95/12/20 20:01:56
-GAME( 1995, timecris, 0,         namcos22s, timecris, timecris, ROT0, "Namco", "Time Crisis (Rev. TS2 Ver.B)"              , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 96/04/02 18:48:00
-GAME( 1995, timecrisa,timecris,  namcos22s, timecris, timecris, ROT0, "Namco", "Time Crisis (Rev. TS2 Ver.A)"              , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 96/01/08 18:56:09
-GAME( 1996, propcycl, 0,         namcos22s, propcycl, propcycl, ROT0, "Namco", "Prop Cycle (Rev. PR2 Ver.A)"               , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 96/06/18 21:22:13
-GAME( 1996, alpinesa, 0,         namcos22s, alpiner,  alpinesa, ROT0, "Namco", "Alpine Surfer (Rev. AF2 Ver.A)"            , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING ) // 96/07/01 15:19:23. major gfx problems, slave dsp?
-GAME( 1996, tokyowar, 0,         namcos22s, tokyowar, tokyowar, ROT0, "Namco", "Tokyo Wars (Rev. TW2 Ver.A)"               , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING ) // 96/09/03 14:08:47. near-invincible tanks, maybe related to timecris helicopter bug?
-GAME( 1996, aquajet,  0,         namcos22s, aquajet,  aquajet,  ROT0, "Namco", "Aqua Jet (Rev. AJ2 Ver.B)"                 , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 96/09/20 14:28:30
-GAME( 1996, alpinr2b, 0,         namcos22s, alpiner,  alpiner2, ROT0, "Namco", "Alpine Racer 2 (Rev. ARS2 Ver.B)"          , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 97/01/10 17:10:59
-GAME( 1996, alpinr2a, alpinr2b,  namcos22s, alpiner,  alpiner2, ROT0, "Namco", "Alpine Racer 2 (Rev. ARS2 Ver.A)"          , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 96/12/06 13:45:05
+GAME( 1994, alpinerd, 0,         namcos22s, alpiner, namcos22_state,  alpiner,  ROT0, "Namco", "Alpine Racer (Rev. AR2 Ver.D)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, alpinerc, alpinerd,  namcos22s, alpiner, namcos22_state,  alpiner,  ROT0, "Namco", "Alpine Racer (Rev. AR2 Ver.C)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, airco22b, 0,         namcos22s, airco22, namcos22_state,  airco22,  ROT0, "Namco", "Air Combat 22 (Rev. ACS1 Ver.B, Japan)"    , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING ) // boots but missing sprite clear DMA?
+GAME( 1995, cybrcycc, 0,         namcos22s, cybrcycc, namcos22_state, cybrcyc,  ROT0, "Namco", "Cyber Cycles (Rev. CB2 Ver.C)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 95/04/04
+GAME( 1995, dirtdash, 0,         namcos22s, dirtdash, namcos22_state, dirtdash, ROT0, "Namco", "Dirt Dash (Rev. DT2)"                      , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 95/12/20 20:01:56
+GAME( 1995, timecris, 0,         namcos22s, timecris, namcos22_state, timecris, ROT0, "Namco", "Time Crisis (Rev. TS2 Ver.B)"              , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 96/04/02 18:48:00
+GAME( 1995, timecrisa,timecris,  namcos22s, timecris, namcos22_state, timecris, ROT0, "Namco", "Time Crisis (Rev. TS2 Ver.A)"              , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 96/01/08 18:56:09
+GAME( 1996, propcycl, 0,         namcos22s, propcycl, namcos22_state, propcycl, ROT0, "Namco", "Prop Cycle (Rev. PR2 Ver.A)"               , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 96/06/18 21:22:13
+GAME( 1996, alpinesa, 0,         namcos22s, alpiner, namcos22_state,  alpinesa, ROT0, "Namco", "Alpine Surfer (Rev. AF2 Ver.A)"            , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING ) // 96/07/01 15:19:23. major gfx problems, slave dsp?
+GAME( 1996, tokyowar, 0,         namcos22s, tokyowar, namcos22_state, tokyowar, ROT0, "Namco", "Tokyo Wars (Rev. TW2 Ver.A)"               , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING ) // 96/09/03 14:08:47. near-invincible tanks, maybe related to timecris helicopter bug?
+GAME( 1996, aquajet,  0,         namcos22s, aquajet, namcos22_state,  aquajet,  ROT0, "Namco", "Aqua Jet (Rev. AJ2 Ver.B)"                 , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 96/09/20 14:28:30
+GAME( 1996, alpinr2b, 0,         namcos22s, alpiner, namcos22_state,  alpiner2, ROT0, "Namco", "Alpine Racer 2 (Rev. ARS2 Ver.B)"          , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 97/01/10 17:10:59
+GAME( 1996, alpinr2a, alpinr2b,  namcos22s, alpiner, namcos22_state,  alpiner2, ROT0, "Namco", "Alpine Racer 2 (Rev. ARS2 Ver.A)"          , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS ) // 96/12/06 13:45:05
 //GAME( 1997, armdilox, "Armadillo Racing")

@@ -353,9 +353,9 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( cbasebal )
+DRIVER_INIT_MEMBER(cbasebal_state,cbasebal)
 {
-	pang_decode(machine);
+	pang_decode(machine());
 }
 
 
@@ -365,4 +365,4 @@ static DRIVER_INIT( cbasebal )
  *
  *************************************/
 
-GAME( 1989, cbasebal, 0, cbasebal, cbasebal, cbasebal, ROT0, "Capcom", "Capcom Baseball (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1989, cbasebal, 0, cbasebal, cbasebal, cbasebal_state, cbasebal, ROT0, "Capcom", "Capcom Baseball (Japan)", GAME_SUPPORTS_SAVE )

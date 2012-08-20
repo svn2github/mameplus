@@ -362,21 +362,19 @@ ROM_START( twinbrata )
 	ROM_LOAD( "eeprom-twinbrat.bin", 0x0000, 0x0080, CRC(9366263d) SHA1(ff5155498ed0b349ecc1ce98a39566b642201cf2) )
 ROM_END
 
-static DRIVER_INIT(stlforce)
+DRIVER_INIT_MEMBER(stlforce_state,stlforce)
 {
-	stlforce_state *state = machine.driver_data<stlforce_state>();
 
-	state->m_sprxoffs = 0;
+	m_sprxoffs = 0;
 }
 
-static DRIVER_INIT(twinbrat)
+DRIVER_INIT_MEMBER(stlforce_state,twinbrat)
 {
-	stlforce_state *state = machine.driver_data<stlforce_state>();
 
-	state->m_sprxoffs = 9;
+	m_sprxoffs = 9;
 }
 
 
-GAME( 1994, stlforce, 0,        stlforce, stlforce, stlforce, ROT0, "Electronic Devices Italy / Ecogames S.L. Spain", "Steel Force", 0 )
-GAME( 1995, twinbrat, 0,        twinbrat, stlforce, twinbrat, ROT0, "Elettronica Video-Games S.R.L.", "Twin Brats (set 1)", 0 )
-GAME( 1995, twinbrata,twinbrat, twinbrat, stlforce, twinbrat, ROT0, "Elettronica Video-Games S.R.L.", "Twin Brats (set 2)", 0 )
+GAME( 1994, stlforce, 0,        stlforce, stlforce, stlforce_state, stlforce, ROT0, "Electronic Devices Italy / Ecogames S.L. Spain", "Steel Force", 0 )
+GAME( 1995, twinbrat, 0,        twinbrat, stlforce, stlforce_state, twinbrat, ROT0, "Elettronica Video-Games S.R.L.", "Twin Brats (set 1)", 0 )
+GAME( 1995, twinbrata,twinbrat, twinbrat, stlforce, stlforce_state, twinbrat, ROT0, "Elettronica Video-Games S.R.L.", "Twin Brats (set 2)", 0 )

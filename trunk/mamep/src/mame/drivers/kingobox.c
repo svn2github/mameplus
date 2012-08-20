@@ -90,7 +90,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( kingobox_sound_io_map, AS_IO, 8, kingofb_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0x00, 0x00) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0x08, 0x08) AM_DEVREADWRITE_LEGACY("aysnd", ay8910_r, ay8910_data_w)
 	AM_RANGE(0x0c, 0x0c) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_w)
 ADDRESS_MAP_END
@@ -135,7 +135,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( ringking_sound_io_map, AS_IO, 8, kingofb_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0x00, 0x00) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0x02, 0x02) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
 	AM_RANGE(0x02, 0x03) AM_DEVWRITE_LEGACY("aysnd", ay8910_data_address_w)
 ADDRESS_MAP_END
@@ -516,7 +516,7 @@ static MACHINE_CONFIG_START( kingofb, kingofb_state )
 	MCFG_SOUND_CONFIG(ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 MACHINE_CONFIG_END
 
@@ -568,7 +568,7 @@ static MACHINE_CONFIG_START( ringking, kingofb_state )
 	MCFG_SOUND_CONFIG(ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 MACHINE_CONFIG_END
 
@@ -785,21 +785,21 @@ ROM_START( ringkingw )
 	ROM_LOAD( "prom1.bin",    0x0800, 0x0400, CRC(913f5975) SHA1(3d1e40eeb4d5a3a4bd42ec73d05bfca13b2f1805) ) /* blue component */
 ROM_END
 
-static DRIVER_INIT( ringking3 )
+DRIVER_INIT_MEMBER(kingofb_state,ringking3)
 {
 	int i;
-	UINT8 *RAM = machine.root_device().memregion("proms")->base();
+	UINT8 *RAM = machine().root_device().memregion("proms")->base();
 
 	/* expand the first color PROM to look like the kingofb ones... */
 	for (i = 0; i < 0x100; i++)
 		RAM[i] = RAM[i + 0x100] >> 4;
 }
 
-static DRIVER_INIT( ringkingw )
+DRIVER_INIT_MEMBER(kingofb_state,ringkingw)
 {
 	int i,j,k;
-	UINT8 *PROMS = machine.root_device().memregion("proms")->base();
-	UINT8 *USER1 = machine.root_device().memregion("user1")->base();
+	UINT8 *PROMS = machine().root_device().memregion("proms")->base();
+	UINT8 *USER1 = machine().root_device().memregion("user1")->base();
 
 	/* change the PROMs encode in a simple format to use kingofb decode */
 	for(i = 0, j = 0; j < 0x40; i++, j++)
@@ -817,8 +817,8 @@ static DRIVER_INIT( ringkingw )
 }
 
 
-GAME( 1985, kingofb,   0,       kingofb,  kingofb,  0,        ROT90, "Wood Place Inc.", "King of Boxer (English)", GAME_SUPPORTS_SAVE )
-GAME( 1985, ringking,  kingofb, ringking, ringking, 0,        ROT90, "Wood Place Inc. (Data East USA license)", "Ring King (US set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1985, ringking2, kingofb, ringking, ringking, 0,        ROT90, "Wood Place Inc. (Data East USA license)", "Ring King (US set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1985, ringking3, kingofb, kingofb,  kingofb,  ringking3,ROT90, "Wood Place Inc. (Data East USA license)", "Ring King (US set 3)", GAME_SUPPORTS_SAVE )
-GAME( 1985, ringkingw, kingofb, kingofb,  kingofb,  ringkingw,ROT90, "Wood Place Inc.", "Ring King (US, Wood Place Inc.)", GAME_SUPPORTS_SAVE )
+GAME( 1985, kingofb,   0,       kingofb,  kingofb, driver_device,  0,        ROT90, "Wood Place Inc.", "King of Boxer (English)", GAME_SUPPORTS_SAVE )
+GAME( 1985, ringking,  kingofb, ringking, ringking, driver_device, 0,        ROT90, "Wood Place Inc. (Data East USA license)", "Ring King (US set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1985, ringking2, kingofb, ringking, ringking, driver_device, 0,        ROT90, "Wood Place Inc. (Data East USA license)", "Ring King (US set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1985, ringking3, kingofb, kingofb,  kingofb, kingofb_state,  ringking3,ROT90, "Wood Place Inc. (Data East USA license)", "Ring King (US set 3)", GAME_SUPPORTS_SAVE )
+GAME( 1985, ringkingw, kingofb, kingofb,  kingofb, kingofb_state,  ringkingw,ROT90, "Wood Place Inc.", "Ring King (US, Wood Place Inc.)", GAME_SUPPORTS_SAVE )

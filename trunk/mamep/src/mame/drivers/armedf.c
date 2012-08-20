@@ -755,8 +755,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_portmap, AS_IO, 8, armedf_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x0, 0x1) AM_DEVWRITE_LEGACY("ymsnd", ym3812_w)
-	AM_RANGE(0x2, 0x2) AM_DEVWRITE_LEGACY("dac1", dac_signed_w)
-	AM_RANGE(0x3, 0x3) AM_DEVWRITE_LEGACY("dac2", dac_signed_w)
+	AM_RANGE(0x2, 0x2) AM_DEVWRITE("dac1", dac_device, write_signed8)
+	AM_RANGE(0x3, 0x3) AM_DEVWRITE("dac2", dac_device, write_signed8)
 	AM_RANGE(0x4, 0x4) AM_READ(soundlatch_clear_r)
 	AM_RANGE(0x6, 0x6) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -1214,10 +1214,10 @@ static MACHINE_CONFIG_START( terraf, armedf_state )
 	MCFG_SOUND_ADD("ymsnd", YM3812, XTAL_8MHz/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 MACHINE_CONFIG_END
 
@@ -1262,10 +1262,10 @@ static MACHINE_CONFIG_START( terrafb, armedf_state )
 	MCFG_SOUND_ADD("ymsnd", YM3812, XTAL_8MHz/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 MACHINE_CONFIG_END
 
@@ -1306,10 +1306,10 @@ static MACHINE_CONFIG_START( kozure, armedf_state )
 	MCFG_SOUND_ADD("ymsnd", YM3812, XTAL_8MHz/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 MACHINE_CONFIG_END
 
@@ -1350,10 +1350,10 @@ static MACHINE_CONFIG_START( armedf, armedf_state )
 	MCFG_SOUND_ADD("ymsnd", YM3812, XTAL_8MHz/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -1394,10 +1394,10 @@ static MACHINE_CONFIG_START( cclimbr2, armedf_state )
 	MCFG_SOUND_ADD("ymsnd", YM3812, XTAL_8MHz/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 MACHINE_CONFIG_END
 
@@ -1438,10 +1438,10 @@ static MACHINE_CONFIG_START( legion, armedf_state )
 	MCFG_SOUND_ADD("ymsnd", YM3812, XTAL_8MHz/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 MACHINE_CONFIG_END
 
@@ -1482,10 +1482,10 @@ static MACHINE_CONFIG_START( legiono, armedf_state )
 	MCFG_SOUND_ADD("ymsnd", YM3812, XTAL_8MHz/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 MACHINE_CONFIG_END
 
@@ -1541,10 +1541,10 @@ static MACHINE_CONFIG_START( bigfghtr, bigfghtr_state )
 	MCFG_SOUND_ADD("ymsnd", YM3812, XTAL_8MHz/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -2036,95 +2036,86 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( terraf )
+DRIVER_INIT_MEMBER(armedf_state,terraf)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
-	state->m_scroll_type = 0;
+	m_scroll_type = 0;
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::bootleg_io_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c006, 0x07c007, write16_delegate(FUNC(armedf_state::terraf_fg_scrolly_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c008, 0x07c009, write16_delegate(FUNC(armedf_state::terraf_fg_scrollx_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0c0001, write16_delegate(FUNC(armedf_state::terraf_fg_scroll_msb_arm_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::bootleg_io_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c006, 0x07c007, write16_delegate(FUNC(armedf_state::terraf_fg_scrolly_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c008, 0x07c009, write16_delegate(FUNC(armedf_state::terraf_fg_scrollx_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0c0001, write16_delegate(FUNC(armedf_state::terraf_fg_scroll_msb_arm_w),this));
 }
 
-static DRIVER_INIT( terrafu )
+DRIVER_INIT_MEMBER(armedf_state,terrafu)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
-	state->m_scroll_type = 0;
+	m_scroll_type = 0;
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::terraf_io_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::terraf_io_w),this));
 }
 
-static DRIVER_INIT( terrafb )
+DRIVER_INIT_MEMBER(armedf_state,terrafb)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
-	state->m_scroll_type = 0;
+	m_scroll_type = 0;
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::terrafb_io_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::terrafb_io_w),this));
 }
 
-static DRIVER_INIT( armedf )
+DRIVER_INIT_MEMBER(armedf_state,armedf)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
-	state->m_scroll_type = 1;
+	m_scroll_type = 1;
 }
 
 
-static DRIVER_INIT( kozure )
+DRIVER_INIT_MEMBER(armedf_state,kozure)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
-	state->m_scroll_type = 0;
+	m_scroll_type = 0;
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::terraf_io_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::terraf_io_w),this));
 
 }
 
-static DRIVER_INIT( legion )
+DRIVER_INIT_MEMBER(armedf_state,legion)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
 #if LEGION_HACK
 	/* This is a hack to allow you to use the extra features
          of 3 of the "Unused" Dip Switches (see notes above). */
-	UINT16 *RAM = (UINT16 *)state->memregion("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)memregion("maincpu")->base();
 	RAM[0x0001d6 / 2] = 0x0001;
 	/* To avoid checksum error */
 	RAM[0x000488 / 2] = 0x4e71;
 #endif
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::terraf_io_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::terraf_io_w),this));
 
-	state->m_scroll_type = 2;
+	m_scroll_type = 2;
 }
 
-static DRIVER_INIT( legiono )
+DRIVER_INIT_MEMBER(armedf_state,legiono)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
 #if LEGION_HACK
 	/* This is a hack to allow you to use the extra features
          of 3 of the "Unused" Dip Switches (see notes above). */
-	UINT16 *RAM = (UINT16 *)state->memregion("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)memregion("maincpu")->base();
 	RAM[0x0001d6/2] = 0x0001;
 	/* No need to patch the checksum routine (see notes) ! */
 #endif
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::bootleg_io_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::bootleg_io_w),this));
 
-	state->m_scroll_type = 2;
+	m_scroll_type = 2;
 }
 
-static DRIVER_INIT( cclimbr2 )
+DRIVER_INIT_MEMBER(armedf_state,cclimbr2)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::terraf_io_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07c000, 0x07c001, write16_delegate(FUNC(armedf_state::terraf_io_w),this));
 
-	state->m_scroll_type = 3;
+	m_scroll_type = 3;
 }
 
-static DRIVER_INIT( bigfghtr )
+DRIVER_INIT_MEMBER(bigfghtr_state,bigfghtr)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
-	state->m_scroll_type = 1;
+	m_scroll_type = 1;
 }
 
 /*************************************
@@ -2134,17 +2125,17 @@ static DRIVER_INIT( bigfghtr )
  *************************************/
 
 /*     YEAR, NAME,    PARENT,   MACHINE,  INPUT,    INIT,     MONITOR, COMPANY,                        FULLNAME,                          FLAGS */
-GAME( 1987, legion,   0,        legion,   legion,   legion,   ROT270, "Nichibutsu",                    "Legion - Spinner-87 (World ver 2.03)", GAME_SUPPORTS_SAVE )
-GAME( 1987, legiono,  legion,   legiono,  legion,   legiono,  ROT270, "Nichibutsu",                    "Chouji Meikyuu Legion (Japan bootleg ver 1.05)", GAME_SUPPORTS_SAVE ) /* bootleg? */
-GAME( 1987, terraf,   0,        terraf,   terraf,   terrafu,  ROT0,   "Nichibutsu",                    "Terra Force", GAME_SUPPORTS_SAVE )
-GAME( 1987, terrafu,  terraf,   terraf,   terraf,   terrafu,  ROT0,   "Nichibutsu USA",                "Terra Force (US)", GAME_SUPPORTS_SAVE )
-GAME( 1987, terrafj,  terraf,   terraf,   terraf,   terrafu,  ROT0,   "Nichibutsu Japan",              "Terra Force (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1987, terrafjb, terraf,   terrafb,  terraf,   terrafb,  ROT0,   "bootleg",                       "Terra Force (Japan bootleg with additional Z80)", GAME_SUPPORTS_SAVE )
-GAME( 1987, terrafb,  terraf,   terraf,   terraf,   terraf,   ROT0,   "bootleg",                       "Terra Force (bootleg)", GAME_SUPPORTS_SAVE ) //bootleg of Japan with warning screen hacked
-GAME( 1987, kozure,   0,        kozure,   kozure,   kozure,   ROT0,   "Nichibutsu",                    "Kozure Ookami (Japan)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING )
-GAME( 1988, cclimbr2, 0,        cclimbr2, cclimbr2, cclimbr2, ROT0,   "Nichibutsu",                    "Crazy Climber 2 (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1988, cclimbr2a,cclimbr2, cclimbr2, cclimbr2, cclimbr2, ROT0,   "Nichibutsu",                    "Crazy Climber 2 (Japan, Harder)", GAME_SUPPORTS_SAVE  )
-GAME( 1988, armedf,   0,        armedf,   armedf,   armedf,   ROT270, "Nichibutsu",                    "Armed Formation", GAME_SUPPORTS_SAVE )
-GAME( 1988, armedff,  armedf,   armedf,   armedf,   armedf,   ROT270, "Nichibutsu (Fillmore license)", "Armed Formation (Fillmore license)", GAME_SUPPORTS_SAVE )
-GAME( 1989, skyrobo,  0,        bigfghtr, bigfghtr, bigfghtr, ROT0,   "Nichibutsu",                    "Sky Robo", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_SUPPORTS_SAVE )
-GAME( 1989, bigfghtr, skyrobo,  bigfghtr, bigfghtr, bigfghtr, ROT0,   "Nichibutsu",                    "Tatakae! Big Fighter (Japan)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_SUPPORTS_SAVE )
+GAME( 1987, legion,   0,        legion,   legion, armedf_state,   legion,   ROT270, "Nichibutsu",                    "Legion - Spinner-87 (World ver 2.03)", GAME_SUPPORTS_SAVE )
+GAME( 1987, legiono,  legion,   legiono,  legion, armedf_state,   legiono,  ROT270, "Nichibutsu",                    "Chouji Meikyuu Legion (Japan bootleg ver 1.05)", GAME_SUPPORTS_SAVE ) /* bootleg? */
+GAME( 1987, terraf,   0,        terraf,   terraf, armedf_state,   terrafu,  ROT0,   "Nichibutsu",                    "Terra Force", GAME_SUPPORTS_SAVE )
+GAME( 1987, terrafu,  terraf,   terraf,   terraf, armedf_state,   terrafu,  ROT0,   "Nichibutsu USA",                "Terra Force (US)", GAME_SUPPORTS_SAVE )
+GAME( 1987, terrafj,  terraf,   terraf,   terraf, armedf_state,   terrafu,  ROT0,   "Nichibutsu Japan",              "Terra Force (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1987, terrafjb, terraf,   terrafb,  terraf, armedf_state,   terrafb,  ROT0,   "bootleg",                       "Terra Force (Japan bootleg with additional Z80)", GAME_SUPPORTS_SAVE )
+GAME( 1987, terrafb,  terraf,   terraf,   terraf, armedf_state,   terraf,   ROT0,   "bootleg",                       "Terra Force (bootleg)", GAME_SUPPORTS_SAVE ) //bootleg of Japan with warning screen hacked
+GAME( 1987, kozure,   0,        kozure,   kozure, armedf_state,   kozure,   ROT0,   "Nichibutsu",                    "Kozure Ookami (Japan)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING )
+GAME( 1988, cclimbr2, 0,        cclimbr2, cclimbr2, armedf_state, cclimbr2, ROT0,   "Nichibutsu",                    "Crazy Climber 2 (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1988, cclimbr2a,cclimbr2, cclimbr2, cclimbr2, armedf_state, cclimbr2, ROT0,   "Nichibutsu",                    "Crazy Climber 2 (Japan, Harder)", GAME_SUPPORTS_SAVE  )
+GAME( 1988, armedf,   0,        armedf,   armedf, armedf_state,   armedf,   ROT270, "Nichibutsu",                    "Armed Formation", GAME_SUPPORTS_SAVE )
+GAME( 1988, armedff,  armedf,   armedf,   armedf, armedf_state,   armedf,   ROT270, "Nichibutsu (Fillmore license)", "Armed Formation (Fillmore license)", GAME_SUPPORTS_SAVE )
+GAME( 1989, skyrobo,  0,        bigfghtr, bigfghtr, bigfghtr_state, bigfghtr, ROT0,   "Nichibutsu",                    "Sky Robo", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_SUPPORTS_SAVE )
+GAME( 1989, bigfghtr, skyrobo,  bigfghtr, bigfghtr, bigfghtr_state, bigfghtr, ROT0,   "Nichibutsu",                    "Tatakae! Big Fighter (Japan)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_SUPPORTS_SAVE )

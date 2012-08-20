@@ -21,6 +21,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(de_1);
 };
 
 
@@ -35,7 +37,7 @@ void de_1_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( de_1 )
+DRIVER_INIT_MEMBER(de_1_state,de_1)
 {
 }
 
@@ -73,5 +75,5 @@ ROM_START(lwar_e90)
 ROM_END
 
 
-GAME(1987,  lwar_a83,  0,         de_1,  de_1,  de_1,  ROT0,  "Data East",    "Laser War (8.3)",           GAME_IS_SKELETON_MECHANICAL)
-GAME(1987,  lwar_e90,  lwar_a83,  de_1,  de_1,  de_1,  ROT0,  "Data East",    "Laser War (9.0 Europe)",    GAME_IS_SKELETON_MECHANICAL)
+GAME(1987,  lwar_a83,  0,         de_1,  de_1, de_1_state,  de_1,  ROT0,  "Data East",    "Laser War (8.3)",           GAME_IS_SKELETON_MECHANICAL)
+GAME(1987,  lwar_e90,  lwar_a83,  de_1,  de_1, de_1_state,  de_1,  ROT0,  "Data East",    "Laser War (9.0 Europe)",    GAME_IS_SKELETON_MECHANICAL)

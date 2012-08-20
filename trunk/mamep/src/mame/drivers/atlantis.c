@@ -45,6 +45,7 @@ class atlantis_state : public driver_device
 public:
 	atlantis_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag) {}
+	DECLARE_DRIVER_INIT(mwskins);
 };
 
 
@@ -207,9 +208,9 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( mwskins )
+DRIVER_INIT_MEMBER(atlantis_state,mwskins)
 {
-	dcs2_init(machine, 8, 0);
+	dcs2_init(machine(), 8, 0);
 }
 
 /*************************************
@@ -218,7 +219,7 @@ static DRIVER_INIT( mwskins )
  *
  *************************************/
 
-GAME( 2000, mwskins,    0,      mwskins, mwskins,  mwskins,   ROT0, "Midway", "Skins Game (1.06)", GAME_NOT_WORKING | GAME_NO_SOUND )
-GAME( 2000, mwskinsa, mwskins,  mwskins, mwskins,  mwskins,   ROT0, "Midway", "Skins Game (1.06, alt)", GAME_NOT_WORKING | GAME_NO_SOUND )
-GAME( 2000, mwskinso, mwskins,  mwskins, mwskins,  mwskins,   ROT0, "Midway", "Skins Game (1.04)", GAME_NOT_WORKING | GAME_NO_SOUND )
+GAME( 2000, mwskins,    0,      mwskins, mwskins, atlantis_state,  mwskins,   ROT0, "Midway", "Skins Game (1.06)", GAME_NOT_WORKING | GAME_NO_SOUND )
+GAME( 2000, mwskinsa, mwskins,  mwskins, mwskins, atlantis_state,  mwskins,   ROT0, "Midway", "Skins Game (1.06, alt)", GAME_NOT_WORKING | GAME_NO_SOUND )
+GAME( 2000, mwskinso, mwskins,  mwskins, mwskins, atlantis_state,  mwskins,   ROT0, "Midway", "Skins Game (1.04)", GAME_NOT_WORKING | GAME_NO_SOUND )
 

@@ -198,6 +198,7 @@ public:
 	DECLARE_WRITE8_MEMBER(tourvision_i8155_b_w);
 	DECLARE_WRITE8_MEMBER(tourvision_i8155_c_w);
 	DECLARE_WRITE_LINE_MEMBER(tourvision_timer_out);
+	DECLARE_DRIVER_INIT(tourvision);
 };
 
 
@@ -513,17 +514,17 @@ ROM_START(tvsvball)
 ROM_END
 
 
-static DRIVER_INIT(tourvision)
+DRIVER_INIT_MEMBER(tourvision_state,tourvision)
 {
-	DRIVER_INIT_CALL(pce);
+	init_pce();
 }
 
-GAME( 19??, tourvis,  0,       tourvision, tourvision, tourvision, ROT0, "bootleg (Tourvision)", "Tourvision PCE bootleg", GAME_IS_BIOS_ROOT | GAME_NOT_WORKING )
-GAME( 1988, tvlegaxe, tourvis, tourvision, tourvision, tourvision, ROT0, "bootleg (Tourvision) / Victor Musical Industries, Inc.", "Makyo Densetsu - The Legenary Axe (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1989, tvusapb,  tourvis, tourvision, tourvision, tourvision, ROT0, "bootleg (Tourvision) / Aicom", "USA Pro Basketball (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1989, tvdunexp, tourvis, tourvision, tourvision, tourvision, ROT0, "bootleg (Tourvision) / Hudson / Atlus", "Dungeon Explorer (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1990, tvthbld,  tourvis, tourvision, tourvision, tourvision, ROT0, "bootleg (Tourvision) / Sega / NEC Avenue", "Thunder Blade (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1990, tvrs2,    tourvis, tourvision, tourvision, tourvision, ROT0, "bootleg (Tourvision) / Taito", "Rastan Saga II (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1990, tvsvball, tourvis, tourvision, tourvision, tourvision, ROT0, "bootleg (Tourvision) / Video System", "Super Volley ball (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1991, tvpwlg4,  tourvis, tourvision, tourvision, tourvision, ROT0, "bootleg (Tourvision) / Hudson", "Power League IV (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1991, tvsci,    tourvis, tourvision, tourvision, tourvision, ROT0, "bootleg (Tourvision) / Taito", "Special Criminal Investigation (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 19??, tourvis,  0,       tourvision, tourvision, tourvision_state, tourvision, ROT0, "bootleg (Tourvision)", "Tourvision PCE bootleg", GAME_IS_BIOS_ROOT | GAME_NOT_WORKING )
+GAME( 1988, tvlegaxe, tourvis, tourvision, tourvision, tourvision_state, tourvision, ROT0, "bootleg (Tourvision) / Victor Musical Industries, Inc.", "Makyo Densetsu - The Legenary Axe (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1989, tvusapb,  tourvis, tourvision, tourvision, tourvision_state, tourvision, ROT0, "bootleg (Tourvision) / Aicom", "USA Pro Basketball (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1989, tvdunexp, tourvis, tourvision, tourvision, tourvision_state, tourvision, ROT0, "bootleg (Tourvision) / Hudson / Atlus", "Dungeon Explorer (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1990, tvthbld,  tourvis, tourvision, tourvision, tourvision_state, tourvision, ROT0, "bootleg (Tourvision) / Sega / NEC Avenue", "Thunder Blade (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1990, tvrs2,    tourvis, tourvision, tourvision, tourvision_state, tourvision, ROT0, "bootleg (Tourvision) / Taito", "Rastan Saga II (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1990, tvsvball, tourvis, tourvision, tourvision, tourvision_state, tourvision, ROT0, "bootleg (Tourvision) / Video System", "Super Volley ball (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1991, tvpwlg4,  tourvis, tourvision, tourvision, tourvision_state, tourvision, ROT0, "bootleg (Tourvision) / Hudson", "Power League IV (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1991, tvsci,    tourvis, tourvision, tourvision, tourvision_state, tourvision, ROT0, "bootleg (Tourvision) / Taito", "Special Criminal Investigation (Tourvision PCE bootleg)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )

@@ -341,7 +341,7 @@ static ADDRESS_MAP_START( gat_map, AS_PROGRAM, 8, gatron_state )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
 	AM_RANGE(0x6000, 0x63ff) AM_RAM_WRITE(gat_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("nvram")	/* battery backed RAM */
-	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE_LEGACY("snsnd", sn76496_w)							/* PSG */
+	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE("snsnd", sn76496_new_device, write)							/* PSG */
 	AM_RANGE(0xe000, 0xe000) AM_WRITE(output_port_0_w)										/* lamps */
 ADDRESS_MAP_END
 
@@ -428,6 +428,16 @@ static GFXDECODE_START( gat )
 GFXDECODE_END
 
 
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
+
 /*************************
 *    Machine Drivers     *
 *************************/
@@ -459,8 +469,9 @@ static MACHINE_CONFIG_START( gat, gatron_state )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("snsnd", SN76496, MASTER_CLOCK/8 )	/* 2 MHz, guess */
+	MCFG_SOUND_ADD("snsnd", SN76496_NEW, MASTER_CLOCK/8 )	/* 2 MHz, guess */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 2.00)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 
@@ -495,5 +506,5 @@ ROM_END
 *************************/
 
 /*     YEAR  NAME      PARENT  MACHINE  INPUT      INIT  ROT    COMPANY        FULLNAME     FLAGS  LAYOUT   */
-GAMEL( 1983, poker41,  0,      gat,     poker41,   0,    ROT0, "Game-A-Tron", "Poker 4-1",  0,     layout_poker41  )
-GAMEL( 1983, pulltabs, 0,      gat,     pulltabs,  0,    ROT0, "Game-A-Tron", "Pull Tabs",  0,     layout_pulltabs )
+GAMEL( 1983, poker41,  0,      gat,     poker41, driver_device,   0,    ROT0, "Game-A-Tron", "Poker 4-1",  0,     layout_poker41  )
+GAMEL( 1983, pulltabs, 0,      gat,     pulltabs, driver_device,  0,    ROT0, "Game-A-Tron", "Pull Tabs",  0,     layout_pulltabs )

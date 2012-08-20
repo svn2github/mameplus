@@ -240,16 +240,16 @@ static MACHINE_CONFIG_START( pokechmp, pokechmp_state )
 	MCFG_DEVICE_ADDRESS_MAP(AS_0, pokechmp_oki_map)
 MACHINE_CONFIG_END
 
-static DRIVER_INIT( pokechmp )
+DRIVER_INIT_MEMBER(pokechmp_state,pokechmp)
 {
 	// default sound rom bank
-	machine.root_device().membank("bank3")->configure_entries(0, 2, machine.root_device().memregion("audiocpu")->base() + 0x10000, 0x4000);
+	machine().root_device().membank("bank3")->configure_entries(0, 2, machine().root_device().memregion("audiocpu")->base() + 0x10000, 0x4000);
 
 	// default fixed area for main CPU
-	machine.root_device().membank("fixed")->set_base( machine.root_device().memregion("maincpu")->base() + 0x18000 );
+	machine().root_device().membank("fixed")->set_base( machine().root_device().memregion("maincpu")->base() + 0x18000 );
 
 	// default OKI sample bank
-	machine.root_device().membank("okibank")->set_base( machine.root_device().memregion("oki")->base() + 0x40000 );
+	machine().root_device().membank("okibank")->set_base( machine().root_device().memregion("oki")->base() + 0x40000 );
 }
 
 
@@ -278,4 +278,4 @@ ROM_START( pokechmp )
 	ROM_LOAD( "pokechamp_10_27c040.bin",	   0x00000, 0x80000, CRC(b54806ed) SHA1(c6e1485c263ebd9102ff1e8c09b4c4ca5f63c3da) )
 ROM_END
 
-GAME( 1995, pokechmp, 0, pokechmp, pokechmp, pokechmp, ROT0, "D.G.R.M.", "Poke Champ", 0 )
+GAME( 1995, pokechmp, 0, pokechmp, pokechmp, pokechmp_state, pokechmp, ROT0, "D.G.R.M.", "Poke Champ", 0 )

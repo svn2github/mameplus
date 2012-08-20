@@ -437,6 +437,20 @@ public:
 	DECLARE_WRITE16_MEMBER(jaguar_gpu_clut_w16);
 	DECLARE_READ16_MEMBER(jaguar_gpu_ram_r16);
 	DECLARE_WRITE16_MEMBER(jaguar_gpu_ram_w16);
+	DECLARE_DRIVER_INIT(jaguar);
+	DECLARE_DRIVER_INIT(area51mx);
+	DECLARE_DRIVER_INIT(maxforce);
+	DECLARE_DRIVER_INIT(freezeat);
+	DECLARE_DRIVER_INIT(fishfren);
+	DECLARE_DRIVER_INIT(a51mxr3k);
+	DECLARE_DRIVER_INIT(area51);
+	DECLARE_DRIVER_INIT(freezeat4);
+	DECLARE_DRIVER_INIT(freezeat5);
+	DECLARE_DRIVER_INIT(freezeat6);
+	DECLARE_DRIVER_INIT(vcircle);
+	DECLARE_DRIVER_INIT(freezeat3);
+	DECLARE_DRIVER_INIT(freezeat2);
+	DECLARE_DRIVER_INIT(area51a);
 };
 
 
@@ -1753,10 +1767,10 @@ static MACHINE_CONFIG_START( cojagr3k, cojag_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 MACHINE_CONFIG_END
 
@@ -1800,9 +1814,9 @@ static MACHINE_CONFIG_START( jaguar, cojag_state )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 
 	/* quickload */
@@ -1848,10 +1862,10 @@ static void jaguar_fix_endian( running_machine &machine, UINT32 addr, UINT32 siz
 	}
 }
 
-static DRIVER_INIT( jaguar )
+DRIVER_INIT_MEMBER(cojag_state,jaguar)
 {
 	jaguar_hacks_enabled = false;
-	state_save_register_global(machine, joystick_data);
+	state_save_register_global(machine(), joystick_data);
 	using_cart = 0;
 
 	for (int i=0;i<0x20000/4;i++) // the cd bios is bigger.. check
@@ -2368,100 +2382,94 @@ static void cojag_common_init(running_machine &machine, UINT16 gpu_jump_offs, UI
 }
 
 
-static DRIVER_INIT( area51a )
+DRIVER_INIT_MEMBER(cojag_state,area51a)
 {
 	jaguar_hacks_enabled = true;
-	cojag_common_init(machine, 0x5c4, 0x5a0);
+	cojag_common_init(machine(), 0x5c4, 0x5a0);
 
 #if ENABLE_SPEEDUP_HACKS
 	{
-		cojag_state *state = machine.driver_data<cojag_state>();
 
 		/* install speedup for main CPU */
-		state->m_main_speedup = machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xa02030, 0xa02033, write32_delegate(FUNC(cojag_state::area51_main_speedup_w),state));
+		m_main_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xa02030, 0xa02033, write32_delegate(FUNC(cojag_state::area51_main_speedup_w),this));
 	}
 #endif
 }
 
 
-static DRIVER_INIT( area51 )
+DRIVER_INIT_MEMBER(cojag_state,area51)
 {
 	jaguar_hacks_enabled = true;
-	cojag_common_init(machine, 0x0c0, 0x09e);
+	cojag_common_init(machine(), 0x0c0, 0x09e);
 
 #if ENABLE_SPEEDUP_HACKS
 	{
-		cojag_state *state = machine.driver_data<cojag_state>();
 
 		/* install speedup for main CPU */
-		state->m_main_speedup_max_cycles = 120;
-		state->m_main_speedup = machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x100062e8, 0x100062eb, read32_delegate(FUNC(cojag_state::cojagr3k_main_speedup_r),state));
+		m_main_speedup_max_cycles = 120;
+		m_main_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x100062e8, 0x100062eb, read32_delegate(FUNC(cojag_state::cojagr3k_main_speedup_r),this));
 	}
 #endif
 }
 
-static DRIVER_INIT( maxforce )
+DRIVER_INIT_MEMBER(cojag_state,maxforce)
 {
 	jaguar_hacks_enabled = true;
-	cojag_state *state = machine.driver_data<cojag_state>();
-	cojag_common_init(machine, 0x0c0, 0x09e);
+	cojag_common_init(machine(), 0x0c0, 0x09e);
 
 	/* patch the protection */
-	state->m_rom_base[0x220/4] = 0x03e00008;
+	m_rom_base[0x220/4] = 0x03e00008;
 
 #if ENABLE_SPEEDUP_HACKS
 	/* install speedup for main CPU */
-	state->m_main_speedup_max_cycles = 120;
-	state->m_main_speedup = machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x1000865c, 0x1000865f, read32_delegate(FUNC(cojag_state::cojagr3k_main_speedup_r),state));
+	m_main_speedup_max_cycles = 120;
+	m_main_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x1000865c, 0x1000865f, read32_delegate(FUNC(cojag_state::cojagr3k_main_speedup_r),this));
 #endif
 }
 
 
-static DRIVER_INIT( area51mx )
+DRIVER_INIT_MEMBER(cojag_state,area51mx)
 {
 	jaguar_hacks_enabled = true;
-	cojag_state *state = machine.driver_data<cojag_state>();
-	cojag_common_init(machine, 0x0c0, 0x09e);
+	cojag_common_init(machine(), 0x0c0, 0x09e);
 
 	/* patch the protection */
-	state->m_rom_base[0x418/4] = 0x4e754e75;
+	m_rom_base[0x418/4] = 0x4e754e75;
 
 #if ENABLE_SPEEDUP_HACKS
 	/* install speedup for main CPU */
-	state->m_main_speedup = machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xa19550, 0xa19557, write32_delegate(FUNC(cojag_state::area51mx_main_speedup_w),state));
+	m_main_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xa19550, 0xa19557, write32_delegate(FUNC(cojag_state::area51mx_main_speedup_w),this));
 #endif
 }
 
 
-static DRIVER_INIT( a51mxr3k )
+DRIVER_INIT_MEMBER(cojag_state,a51mxr3k)
 {
 	jaguar_hacks_enabled = true;
-	cojag_state *state = machine.driver_data<cojag_state>();
-	cojag_common_init(machine, 0x0c0, 0x09e);
+	cojag_common_init(machine(), 0x0c0, 0x09e);
 
 	/* patch the protection */
-	state->m_rom_base[0x220/4] = 0x03e00008;
+	m_rom_base[0x220/4] = 0x03e00008;
 
 #if ENABLE_SPEEDUP_HACKS
 	/* install speedup for main CPU */
-	state->m_main_speedup_max_cycles = 120;
-	state->m_main_speedup = machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x10006f0c, 0x10006f0f, read32_delegate(FUNC(cojag_state::cojagr3k_main_speedup_r),state));
+	m_main_speedup_max_cycles = 120;
+	m_main_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x10006f0c, 0x10006f0f, read32_delegate(FUNC(cojag_state::cojagr3k_main_speedup_r),this));
 #endif
 }
 
 
-static DRIVER_INIT( fishfren )
+DRIVER_INIT_MEMBER(cojag_state,fishfren)
 {
 	jaguar_hacks_enabled = true;
-	cojag_common_init(machine, 0x578, 0x554);
+	cojag_common_init(machine(), 0x578, 0x554);
 
 #if ENABLE_SPEEDUP_HACKS
 	{
-		cojag_state *state = machine.driver_data<cojag_state>();
 
 		/* install speedup for main CPU */
-		state->m_main_speedup_max_cycles = 200;
-		state->m_main_speedup = machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x10021b60, 0x10021b63, read32_delegate(FUNC(cojag_state::cojagr3k_main_speedup_r),state));
+		m_main_speedup_max_cycles = 200;
+		m_main_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x10021b60, 0x10021b63, read32_delegate(FUNC(cojag_state::cojagr3k_main_speedup_r),this));
 	}
 #endif
 }
@@ -2484,26 +2492,24 @@ static void init_freeze_common(running_machine &machine, offs_t main_speedup_add
 #endif
 }
 
-static DRIVER_INIT( freezeat ) { jaguar_hacks_enabled = true; init_freeze_common(machine, 0x1001a9f4); }
-static DRIVER_INIT( freezeat2 ) { jaguar_hacks_enabled = true; init_freeze_common(machine, 0x1001a8c4); }
-static DRIVER_INIT( freezeat3 ) { jaguar_hacks_enabled = true; init_freeze_common(machine, 0x1001a134); }
-static DRIVER_INIT( freezeat4 ) { jaguar_hacks_enabled = true; init_freeze_common(machine, 0x1001a134); }
-static DRIVER_INIT( freezeat5 ) { jaguar_hacks_enabled = true; init_freeze_common(machine, 0x10019b34); }
-static DRIVER_INIT( freezeat6 ) { jaguar_hacks_enabled = true; init_freeze_common(machine, 0x10019684); }
+DRIVER_INIT_MEMBER(cojag_state,freezeat) { jaguar_hacks_enabled = true; init_freeze_common(machine(), 0x1001a9f4); }
+DRIVER_INIT_MEMBER(cojag_state,freezeat2) { jaguar_hacks_enabled = true; init_freeze_common(machine(), 0x1001a8c4); }
+DRIVER_INIT_MEMBER(cojag_state,freezeat3) { jaguar_hacks_enabled = true; init_freeze_common(machine(), 0x1001a134); }
+DRIVER_INIT_MEMBER(cojag_state,freezeat4) { jaguar_hacks_enabled = true; init_freeze_common(machine(), 0x1001a134); }
+DRIVER_INIT_MEMBER(cojag_state,freezeat5) { jaguar_hacks_enabled = true; init_freeze_common(machine(), 0x10019b34); }
+DRIVER_INIT_MEMBER(cojag_state,freezeat6) { jaguar_hacks_enabled = true; init_freeze_common(machine(), 0x10019684); }
 
-
-static DRIVER_INIT( vcircle )
+DRIVER_INIT_MEMBER(cojag_state,vcircle)
 {
 	jaguar_hacks_enabled = true;
-	cojag_common_init(machine, 0x5c0, 0x5a0);
+	cojag_common_init(machine(), 0x5c0, 0x5a0);
 
 #if ENABLE_SPEEDUP_HACKS
 	{
-		cojag_state *state = machine.driver_data<cojag_state>();
 
 		/* install speedup for main CPU */
-		state->m_main_speedup_max_cycles = 50;
-		state->m_main_speedup = machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x12005b34, 0x12005b37, read32_delegate(FUNC(cojag_state::cojagr3k_main_speedup_r),state));
+		m_main_speedup_max_cycles = 50;
+		m_main_speedup = machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x12005b34, 0x12005b37, read32_delegate(FUNC(cojag_state::cojagr3k_main_speedup_r),this));
 	}
 #endif
 }
@@ -2517,23 +2523,23 @@ static DRIVER_INIT( vcircle )
  *************************************/
 
 /*    YEAR   NAME      PARENT    COMPAT  MACHINE   INPUT     INIT      COMPANY    FULLNAME */
-CONS( 1993,  jaguar,   0,        0,      jaguar,   jaguar,   jaguar,   "Atari",   "Jaguar", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-CONS( 1995,  jaguarcd, jaguar,   0,      jaguar,   jaguar,   jaguar,   "Atari",   "Jaguar CD", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+CONS( 1993,  jaguar,   0,        0,      jaguar,   jaguar,   cojag_state, jaguar,   "Atari",   "Jaguar", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+CONS( 1995,  jaguarcd, jaguar,   0,      jaguar,   jaguar,   cojag_state, jaguar,   "Atari",   "Jaguar CD", GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
 
-GAME( 1996, area51,    0,        cojagr3k,  area51,   area51,   ROT0, "Atari Games", "Area 51 (R3000)", 0 )
-GAME( 1995, area51t,   area51,   cojag68k,  area51,   area51a,  ROT0, "Atari Games (Time Warner license)", "Area 51 (Time Warner license)", 0 )
-GAME( 1995, area51a,   area51,   cojag68k,  area51,   area51a,  ROT0, "Atari Games", "Area 51 (Atari Games license)", 0 )
-GAME( 1995, fishfren,  0,        cojagr3k,  fishfren, fishfren, ROT0, "Time Warner Interactive", "Fishin' Frenzy (prototype)", 0 )
-GAME( 1996, freezeat,  0,        cojagr3k,  freezeat, freezeat, ROT0, "Atari Games", "Freeze (Atari) (prototype, English voice, 96/10/25)", 0 )
-GAME( 1996, freezeatjp,freezeat, cojagr3k,  freezeat, freezeat, ROT0, "Atari Games", "Freeze (Atari) (prototype, Japanese voice, 96/10/25)", 0 )
-GAME( 1996, freezeat2, freezeat, cojagr3k,  freezeat, freezeat2,ROT0, "Atari Games", "Freeze (Atari) (prototype, 96/10/18)", 0 )
-GAME( 1996, freezeat3, freezeat, cojagr3k,  freezeat, freezeat3,ROT0, "Atari Games", "Freeze (Atari) (prototype, 96/10/07)", 0 )
-GAME( 1996, freezeat4, freezeat, cojagr3k,  freezeat, freezeat4,ROT0, "Atari Games", "Freeze (Atari) (prototype, 96/10/03)", 0 )
-GAME( 1996, freezeat5, freezeat, cojagr3k,  freezeat, freezeat5,ROT0, "Atari Games", "Freeze (Atari) (prototype, 96/09/20, AMOA-96)", 0 )
-GAME( 1996, freezeat6, freezeat, cojagr3k,  freezeat, freezeat6,ROT0, "Atari Games", "Freeze (Atari) (prototype, 96/09/07, Jamma-96)", 0 )
-GAME( 1996, maxforce,  0,        cojagr3k,  area51,   maxforce, ROT0, "Atari Games", "Maximum Force v1.05", 0 )
-GAME( 1996, maxf_102,  maxforce, cojagr3k,  area51,   maxforce, ROT0, "Atari Games", "Maximum Force v1.02", 0 )
-GAME( 1996, maxf_ng,   maxforce, cojagr3k,  area51,   maxforce, ROT0, "Atari Games", "Maximum Force (No Gore version)", 0 )
-GAME( 1998, area51mx,  0,        cojag68k,  area51,   area51mx, ROT0, "Atari Games", "Area 51 / Maximum Force Duo v2.0", 0 )
-GAME( 1998, a51mxr3k,  area51mx, cojagr3k,  area51,   a51mxr3k, ROT0, "Atari Games", "Area 51 / Maximum Force Duo (R3000)", 0 )
-GAME( 1996, vcircle,   0,        cojagr3k,  vcircle,  vcircle,  ROT0, "Atari Games", "Vicious Circle (prototype)", 0 )
+GAME( 1996, area51,    0,        cojagr3k,  area51, cojag_state,   area51,   ROT0, "Atari Games", "Area 51 (R3000)", 0 )
+GAME( 1995, area51t,   area51,   cojag68k,  area51, cojag_state,   area51a,  ROT0, "Atari Games (Time Warner license)", "Area 51 (Time Warner license)", 0 )
+GAME( 1995, area51a,   area51,   cojag68k,  area51, cojag_state,   area51a,  ROT0, "Atari Games", "Area 51 (Atari Games license)", 0 )
+GAME( 1995, fishfren,  0,        cojagr3k,  fishfren, cojag_state, fishfren, ROT0, "Time Warner Interactive", "Fishin' Frenzy (prototype)", 0 )
+GAME( 1996, freezeat,  0,        cojagr3k,  freezeat, cojag_state, freezeat, ROT0, "Atari Games", "Freeze (Atari) (prototype, English voice, 96/10/25)", 0 )
+GAME( 1996, freezeatjp,freezeat, cojagr3k,  freezeat, cojag_state, freezeat, ROT0, "Atari Games", "Freeze (Atari) (prototype, Japanese voice, 96/10/25)", 0 )
+GAME( 1996, freezeat2, freezeat, cojagr3k,  freezeat, cojag_state, freezeat2,ROT0, "Atari Games", "Freeze (Atari) (prototype, 96/10/18)", 0 )
+GAME( 1996, freezeat3, freezeat, cojagr3k,  freezeat, cojag_state, freezeat3,ROT0, "Atari Games", "Freeze (Atari) (prototype, 96/10/07)", 0 )
+GAME( 1996, freezeat4, freezeat, cojagr3k,  freezeat, cojag_state, freezeat4,ROT0, "Atari Games", "Freeze (Atari) (prototype, 96/10/03)", 0 )
+GAME( 1996, freezeat5, freezeat, cojagr3k,  freezeat, cojag_state, freezeat5,ROT0, "Atari Games", "Freeze (Atari) (prototype, 96/09/20, AMOA-96)", 0 )
+GAME( 1996, freezeat6, freezeat, cojagr3k,  freezeat, cojag_state, freezeat6,ROT0, "Atari Games", "Freeze (Atari) (prototype, 96/09/07, Jamma-96)", 0 )
+GAME( 1996, maxforce,  0,        cojagr3k,  area51, cojag_state,   maxforce, ROT0, "Atari Games", "Maximum Force v1.05", 0 )
+GAME( 1996, maxf_102,  maxforce, cojagr3k,  area51, cojag_state,   maxforce, ROT0, "Atari Games", "Maximum Force v1.02", 0 )
+GAME( 1996, maxf_ng,   maxforce, cojagr3k,  area51, cojag_state,   maxforce, ROT0, "Atari Games", "Maximum Force (No Gore version)", 0 )
+GAME( 1998, area51mx,  0,        cojag68k,  area51, cojag_state,   area51mx, ROT0, "Atari Games", "Area 51 / Maximum Force Duo v2.0", 0 )
+GAME( 1998, a51mxr3k,  area51mx, cojagr3k,  area51, cojag_state,   a51mxr3k, ROT0, "Atari Games", "Area 51 / Maximum Force Duo (R3000)", 0 )
+GAME( 1996, vcircle,   0,        cojagr3k,  vcircle, cojag_state,  vcircle,  ROT0, "Atari Games", "Vicious Circle (prototype)", 0 )

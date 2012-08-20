@@ -685,17 +685,17 @@ static const ym2610_interface ym2610_config =
 
 
 
-static DRIVER_INIT( welltris )
+DRIVER_INIT_MEMBER(welltris_state,welltris)
 {
 #if WELLTRIS_4P_HACK
 	/* A Hack which shows 4 player mode in code which is disabled */
-	UINT16 *RAM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 	RAM[0xB91C/2] = 0x4e71;
 	RAM[0xB91E/2] = 0x4e71;
 #endif
 }
 
-static DRIVER_INIT( quiz18k )
+DRIVER_INIT_MEMBER(welltris_state,quiz18k)
 {
 	;
 }
@@ -831,6 +831,6 @@ ROM_END
 
 
 
-GAME( 1991, welltris, 0,        welltris, welltris, welltris, ROT0,   "Video System Co.", "Welltris (World?, 2 players)", GAME_NO_COCKTAIL )
-GAME( 1991, welltrisj,welltris, welltris, welltris, welltris, ROT0,   "Video System Co.", "Welltris (Japan, 2 players)", GAME_NO_COCKTAIL )
-GAME( 1992, quiz18k,  0,        quiz18k,  quiz18k,  quiz18k,  ROT0,   "EIM", "Miyasu Nonki no Quiz 18-Kin", GAME_NO_COCKTAIL )
+GAME( 1991, welltris, 0,        welltris, welltris, welltris_state, welltris, ROT0,   "Video System Co.", "Welltris (World?, 2 players)", GAME_NO_COCKTAIL )
+GAME( 1991, welltrisj,welltris, welltris, welltris, welltris_state, welltris, ROT0,   "Video System Co.", "Welltris (Japan, 2 players)", GAME_NO_COCKTAIL )
+GAME( 1992, quiz18k,  0,        quiz18k,  quiz18k, welltris_state,  quiz18k,  ROT0,   "EIM", "Miyasu Nonki no Quiz 18-Kin", GAME_NO_COCKTAIL )

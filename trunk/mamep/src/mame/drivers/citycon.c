@@ -181,7 +181,7 @@ static const ym2203_interface ym2203_config =
 		DEVCB_NULL,
 		DEVCB_NULL
 	},
-	NULL
+	DEVCB_NULL
 };
 
 
@@ -336,9 +336,9 @@ ROM_END
 
 
 
-static DRIVER_INIT( citycon )
+DRIVER_INIT_MEMBER(citycon_state,citycon)
 {
-	UINT8 *rom = machine.root_device().memregion("gfx1")->base();
+	UINT8 *rom = machine().root_device().memregion("gfx1")->base();
 	int i;
 
 	/*
@@ -363,6 +363,6 @@ static DRIVER_INIT( citycon )
 
 
 
-GAME( 1985, citycon,  0,       citycon, citycon, citycon, ROT0, "Jaleco", "City Connection (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1985, citycona, citycon, citycon, citycon, citycon, ROT0, "Jaleco", "City Connection (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1985, cruisin,  citycon, citycon, citycon, citycon, ROT0, "Jaleco (Kitkorp license)", "Cruisin", GAME_SUPPORTS_SAVE )
+GAME( 1985, citycon,  0,       citycon, citycon, citycon_state, citycon, ROT0, "Jaleco", "City Connection (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1985, citycona, citycon, citycon, citycon, citycon_state, citycon, ROT0, "Jaleco", "City Connection (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1985, cruisin,  citycon, citycon, citycon, citycon_state, citycon, ROT0, "Jaleco (Kitkorp license)", "Cruisin", GAME_SUPPORTS_SAVE )

@@ -208,7 +208,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_port, AS_IO, 8, pipeline_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE_LEGACY("ctc", z80ctc_r, z80ctc_w)
+	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE("ctc", z80ctc_device, read, write)
 	AM_RANGE(0x06, 0x07) AM_NOP
 ADDRESS_MAP_END
 
@@ -314,7 +314,6 @@ GFXDECODE_END
 
 static Z80CTC_INTERFACE( ctc_intf )
 {
-	0,							// timer disables
 	DEVCB_CPU_INPUT_LINE("audiocpu", INPUT_LINE_IRQ0),		// interrupt handler
 	DEVCB_NULL,					// ZC/TO0 callback
 	DEVCB_NULL,					// ZC/TO1 callback
@@ -364,7 +363,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	NULL
+	DEVCB_NULL
 };
 
 static PALETTE_INIT(pipeline)
@@ -461,4 +460,4 @@ ROM_START( pipeline )
 	ROM_LOAD( "82s123.u79", 0x00200, 0x00020,CRC(6df3f972) SHA1(0096a7f7452b70cac6c0752cb62e24b643015b5c) )
 ROM_END
 
-GAME( 1990, pipeline, 0, pipeline, pipeline, 0, ROT0, "Daehyun Electronics", "Pipeline",GAME_NO_SOUND )
+GAME( 1990, pipeline, 0, pipeline, pipeline, driver_device, 0, ROT0, "Daehyun Electronics", "Pipeline",GAME_NO_SOUND )

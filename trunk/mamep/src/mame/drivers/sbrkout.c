@@ -137,7 +137,7 @@ static TIMER_CALLBACK( scanline_callback )
 		cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
 
 	/* update the DAC state */
-	dac_data_w(machine.device("dac"), (videoram[0x380 + 0x11] & (scanline >> 2)) ? 255 : 0);
+	machine.device<dac_device>("dac")->write_unsigned8((videoram[0x380 + 0x11] & (scanline >> 2)) ? 255 : 0);
 
 	/* on the VBLANK, read the pot and schedule an interrupt time for it */
 	if (scanline == machine.primary_screen->visible_area().max_y + 1)
@@ -523,7 +523,7 @@ static MACHINE_CONFIG_START( sbrkout, sbrkout_state )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -591,5 +591,5 @@ ROM_END
  *
  *************************************/
 
-GAMEL( 1978, sbrkout, 0, sbrkout, sbrkout, 0, ROT270, "Atari", "Super Breakout (rev 04)", GAME_SUPPORTS_SAVE, layout_sbrkout )
-GAMEL( 1978, sbrkout3, sbrkout, sbrkout, sbrkout, 0, ROT270, "Atari", "Super Breakout (rev 03)", GAME_SUPPORTS_SAVE, layout_sbrkout )
+GAMEL( 1978, sbrkout, 0, sbrkout, sbrkout, driver_device, 0, ROT270, "Atari", "Super Breakout (rev 04)", GAME_SUPPORTS_SAVE, layout_sbrkout )
+GAMEL( 1978, sbrkout3, sbrkout, sbrkout, sbrkout, driver_device, 0, ROT270, "Atari", "Super Breakout (rev 03)", GAME_SUPPORTS_SAVE, layout_sbrkout )

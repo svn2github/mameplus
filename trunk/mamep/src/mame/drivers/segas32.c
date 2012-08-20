@@ -4120,11 +4120,10 @@ static void scross_sw2_output( int which, UINT16 data )
  *
  *************************************/
 
-static DRIVER_INIT( alien3 )
+DRIVER_INIT_MEMBER(segas32_state,alien3)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::analog_custom_io_r),state), write16_delegate(FUNC(segas32_state::analog_custom_io_w),state));
-	state->m_sw1_output = alien3_sw1_output;
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
+	m_sw1_output = alien3_sw1_output;
 }
 
 READ16_MEMBER(segas32_state::arescue_handshake_r)
@@ -4137,63 +4136,58 @@ READ16_MEMBER(segas32_state::arescue_slavebusy_r)
 	return 0x100; // prevents master trying to synch to slave.
 }
 
-static DRIVER_INIT( arescue )
+DRIVER_INIT_MEMBER(segas32_state,arescue)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::analog_custom_io_r),state), write16_delegate(FUNC(segas32_state::analog_custom_io_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa00007, read16_delegate(FUNC(segas32_state::arescue_dsp_r),state), write16_delegate(FUNC(segas32_state::arescue_dsp_w),state));
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa00007, read16_delegate(FUNC(segas32_state::arescue_dsp_r),this), write16_delegate(FUNC(segas32_state::arescue_dsp_w),this));
 
-	state->m_dual_pcb_comms = auto_alloc_array(machine, UINT16, 0x1000/2);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x810000, 0x810fff, read16_delegate(FUNC(segas32_state::dual_pcb_comms_r),state), write16_delegate(FUNC(segas32_state::dual_pcb_comms_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x818000, 0x818003, read16_delegate(FUNC(segas32_state::dual_pcb_masterslave),state));
+	m_dual_pcb_comms = auto_alloc_array(machine(), UINT16, 0x1000/2);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x810000, 0x810fff, read16_delegate(FUNC(segas32_state::dual_pcb_comms_r),this), write16_delegate(FUNC(segas32_state::dual_pcb_comms_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x818000, 0x818003, read16_delegate(FUNC(segas32_state::dual_pcb_masterslave),this));
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x810000, 0x810001, read16_delegate(FUNC(segas32_state::arescue_handshake_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x81000e, 0x81000f, read16_delegate(FUNC(segas32_state::arescue_slavebusy_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x810000, 0x810001, read16_delegate(FUNC(segas32_state::arescue_handshake_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x81000e, 0x81000f, read16_delegate(FUNC(segas32_state::arescue_slavebusy_r),this));
 
-	state->m_sw1_output = arescue_sw1_output;
+	m_sw1_output = arescue_sw1_output;
 }
 
 
-static DRIVER_INIT( arabfgt )
+DRIVER_INIT_MEMBER(segas32_state,arabfgt)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::extra_custom_io_r),state), write16_delegate());
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::extra_custom_io_r),this), write16_delegate());
 
 	/* install protection handlers */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xa00100, 0xa0011f, read16_delegate(FUNC(segas32_state::arf_wakeup_protection_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa00fff, read16_delegate(FUNC(segas32_state::arabfgt_protection_r),state), write16_delegate(FUNC(segas32_state::arabfgt_protection_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xa00100, 0xa0011f, read16_delegate(FUNC(segas32_state::arf_wakeup_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa00fff, read16_delegate(FUNC(segas32_state::arabfgt_protection_r),this), write16_delegate(FUNC(segas32_state::arabfgt_protection_w),this));
 }
 
 
-static DRIVER_INIT( brival )
+DRIVER_INIT_MEMBER(segas32_state,brival)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::extra_custom_io_r),state), write16_delegate());
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::extra_custom_io_r),this), write16_delegate());
 
 	/* install protection handlers */
-	state->m_system32_protram = auto_alloc_array(machine, UINT16, 0x1000/2);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x20ba00, 0x20ba07, read16_delegate(FUNC(segas32_state::brival_protection_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xa00000, 0xa00fff, write16_delegate(FUNC(segas32_state::brival_protection_w),state));
+	m_system32_protram = auto_alloc_array(machine(), UINT16, 0x1000/2);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x20ba00, 0x20ba07, read16_delegate(FUNC(segas32_state::brival_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xa00000, 0xa00fff, write16_delegate(FUNC(segas32_state::brival_protection_w),this));
 }
 
 
-static DRIVER_INIT( darkedge )
+DRIVER_INIT_MEMBER(segas32_state,darkedge)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::extra_custom_io_r),state), write16_delegate());
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::extra_custom_io_r),this), write16_delegate());
 
 	/* install protection handlers */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa7ffff, read16_delegate(FUNC(segas32_state::darkedge_protection_r),state), write16_delegate(FUNC(segas32_state::darkedge_protection_w),state));
-	state->m_system32_prot_vblank = darkedge_fd1149_vblank;
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa7ffff, read16_delegate(FUNC(segas32_state::darkedge_protection_r),this), write16_delegate(FUNC(segas32_state::darkedge_protection_w),this));
+	m_system32_prot_vblank = darkedge_fd1149_vblank;
 }
 
-static DRIVER_INIT( dbzvrvs )
+DRIVER_INIT_MEMBER(segas32_state,dbzvrvs)
 {
-	segas32_common_init(machine, read16_delegate(), write16_delegate());
+	segas32_common_init(machine(), read16_delegate(), write16_delegate());
 
 	/* install protection handlers */
-	segas32_state *state = machine.driver_data<segas32_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa7ffff, read16_delegate(FUNC(segas32_state::dbzvrvs_protection_r),state), write16_delegate(FUNC(segas32_state::dbzvrvs_protection_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa7ffff, read16_delegate(FUNC(segas32_state::dbzvrvs_protection_r),this), write16_delegate(FUNC(segas32_state::dbzvrvs_protection_w),this));
 }
 
 WRITE16_MEMBER(segas32_state::f1en_comms_echo_w)
@@ -4203,159 +4197,144 @@ WRITE16_MEMBER(segas32_state::f1en_comms_echo_w)
 		space.write_byte( 0x810049, data );
 }
 
-static DRIVER_INIT( f1en )
+DRIVER_INIT_MEMBER(segas32_state,f1en)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::analog_custom_io_r),state), write16_delegate(FUNC(segas32_state::analog_custom_io_w),state));
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
 
-	state->m_dual_pcb_comms = auto_alloc_array(machine, UINT16, 0x1000/2);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x810000, 0x810fff, read16_delegate(FUNC(segas32_state::dual_pcb_comms_r),state), write16_delegate(FUNC(segas32_state::dual_pcb_comms_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x818000, 0x818003, read16_delegate(FUNC(segas32_state::dual_pcb_masterslave),state));
+	m_dual_pcb_comms = auto_alloc_array(machine(), UINT16, 0x1000/2);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x810000, 0x810fff, read16_delegate(FUNC(segas32_state::dual_pcb_comms_r),this), write16_delegate(FUNC(segas32_state::dual_pcb_comms_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x818000, 0x818003, read16_delegate(FUNC(segas32_state::dual_pcb_masterslave),this));
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x810048, 0x810049, write16_delegate(FUNC(segas32_state::f1en_comms_echo_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x810048, 0x810049, write16_delegate(FUNC(segas32_state::f1en_comms_echo_w),this));
 
-	state->m_sw1_output = radm_sw1_output;
+	m_sw1_output = radm_sw1_output;
 }
 
 
-static DRIVER_INIT( f1lap )
+DRIVER_INIT_MEMBER(segas32_state,f1lap)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::analog_custom_io_r),state), write16_delegate(FUNC(segas32_state::analog_custom_io_w),state));
-	state->m_sw1_output = f1lap_sw1_output;
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
+	m_sw1_output = f1lap_sw1_output;
 }
 
 
-static DRIVER_INIT( ga2 )
+DRIVER_INIT_MEMBER(segas32_state,ga2)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::extra_custom_io_r),state), write16_delegate());
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::extra_custom_io_r),this), write16_delegate());
 
-	decrypt_ga2_protrom(machine);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa00fff, read16_delegate(FUNC(segas32_state::ga2_dpram_r),state), write16_delegate(FUNC(segas32_state::ga2_dpram_w),state));
+	decrypt_ga2_protrom(machine());
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xa00000, 0xa00fff, read16_delegate(FUNC(segas32_state::ga2_dpram_r),this), write16_delegate(FUNC(segas32_state::ga2_dpram_w),this));
 }
 
 
-static DRIVER_INIT( harddunk )
+DRIVER_INIT_MEMBER(segas32_state,harddunk)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::extra_custom_io_r),state), write16_delegate());
-	state->m_sw1_output = harddunk_sw1_output;
-	state->m_sw2_output = harddunk_sw2_output;
-	state->m_sw3_output = harddunk_sw3_output;
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::extra_custom_io_r),this), write16_delegate());
+	m_sw1_output = harddunk_sw1_output;
+	m_sw2_output = harddunk_sw2_output;
+	m_sw3_output = harddunk_sw3_output;
 }
 
 
-static DRIVER_INIT( holo )
+DRIVER_INIT_MEMBER(segas32_state,holo)
 {
-	segas32_common_init(machine, read16_delegate(), write16_delegate());
+	segas32_common_init(machine(), read16_delegate(), write16_delegate());
 }
 
 
-static DRIVER_INIT( jpark )
+DRIVER_INIT_MEMBER(segas32_state,jpark)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
 	/* Temp. Patch until we emulate the 'Drive Board', thanks to Malice */
-	UINT16 *pROM = (UINT16 *)state->memregion("maincpu")->base();
+	UINT16 *pROM = (UINT16 *)memregion("maincpu")->base();
 
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::analog_custom_io_r),state), write16_delegate(FUNC(segas32_state::analog_custom_io_w),state));
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
 
 	pROM[0xC15A8/2] = 0xCD70;
 	pROM[0xC15AA/2] = 0xD8CD;
 
-	state->m_sw1_output = jpark_sw1_output;
+	m_sw1_output = jpark_sw1_output;
 }
 
 
-static DRIVER_INIT( orunners )
+DRIVER_INIT_MEMBER(segas32_state,orunners)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::analog_custom_io_r),state), write16_delegate(FUNC(segas32_state::orunners_custom_io_w),state));
-	state->m_sw1_output = orunners_sw1_output;
-	state->m_sw2_output = orunners_sw2_output;
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::orunners_custom_io_w),this));
+	m_sw1_output = orunners_sw1_output;
+	m_sw2_output = orunners_sw2_output;
 }
 
 
-static DRIVER_INIT( radm )
+DRIVER_INIT_MEMBER(segas32_state,radm)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::analog_custom_io_r),state), write16_delegate(FUNC(segas32_state::analog_custom_io_w),state));
-	state->m_sw1_output = radm_sw1_output;
-	state->m_sw2_output = radm_sw2_output;
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
+	m_sw1_output = radm_sw1_output;
+	m_sw2_output = radm_sw2_output;
 }
 
 
-static DRIVER_INIT( radr )
+DRIVER_INIT_MEMBER(segas32_state,radr)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::analog_custom_io_r),state), write16_delegate(FUNC(segas32_state::analog_custom_io_w),state));
-	state->m_sw1_output = radm_sw1_output;
-	state->m_sw2_output = radr_sw2_output;
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
+	m_sw1_output = radm_sw1_output;
+	m_sw2_output = radr_sw2_output;
 }
 
 
-static DRIVER_INIT( scross )
+DRIVER_INIT_MEMBER(segas32_state,scross)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::analog_custom_io_r),state), write16_delegate(FUNC(segas32_state::analog_custom_io_w),state));
-	machine.device("soundcpu")->memory().space(AS_PROGRAM)->install_write_handler(0xb0, 0xbf, write8_delegate(FUNC(segas32_state::scross_bank_w),state));
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
+	machine().device("soundcpu")->memory().space(AS_PROGRAM)->install_write_handler(0xb0, 0xbf, write8_delegate(FUNC(segas32_state::scross_bank_w),this));
 
-	state->m_sw1_output = scross_sw1_output;
-	state->m_sw2_output = scross_sw2_output;
+	m_sw1_output = scross_sw1_output;
+	m_sw2_output = scross_sw2_output;
 }
 
 
-static DRIVER_INIT( slipstrm )
+DRIVER_INIT_MEMBER(segas32_state,slipstrm)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::analog_custom_io_r),state), write16_delegate(FUNC(segas32_state::analog_custom_io_w),state));
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
 }
 
 
-static DRIVER_INIT( sonic )
+DRIVER_INIT_MEMBER(segas32_state,sonic)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::sonic_custom_io_r),state), write16_delegate(FUNC(segas32_state::sonic_custom_io_w),state));
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::sonic_custom_io_r),this), write16_delegate(FUNC(segas32_state::sonic_custom_io_w),this));
 
 	/* install protection handlers */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x20E5C4, 0x20E5C5, write16_delegate(FUNC(segas32_state::sonic_level_load_protection),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x20E5C4, 0x20E5C5, write16_delegate(FUNC(segas32_state::sonic_level_load_protection),this));
 }
 
 
-static DRIVER_INIT( sonicp )
+DRIVER_INIT_MEMBER(segas32_state,sonicp)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::sonic_custom_io_r),state), write16_delegate(FUNC(segas32_state::sonic_custom_io_w),state));
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::sonic_custom_io_r),this), write16_delegate(FUNC(segas32_state::sonic_custom_io_w),this));
 }
 
 
-static DRIVER_INIT( spidman )
+DRIVER_INIT_MEMBER(segas32_state,spidman)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(FUNC(segas32_state::extra_custom_io_r),state), write16_delegate());
+	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::extra_custom_io_r),this), write16_delegate());
 }
 
 
-static DRIVER_INIT( svf )
+DRIVER_INIT_MEMBER(segas32_state,svf)
 {
-	segas32_common_init(machine, read16_delegate(), write16_delegate());
+	segas32_common_init(machine(), read16_delegate(), write16_delegate());
 }
 
 
-static DRIVER_INIT( jleague )
+DRIVER_INIT_MEMBER(segas32_state,jleague)
 {
-	segas32_common_init(machine, read16_delegate(), write16_delegate());
-	segas32_state *state = machine.driver_data<segas32_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x20F700, 0x20F705, write16_delegate(FUNC(segas32_state::jleague_protection_w),state));
+	segas32_common_init(machine(), read16_delegate(), write16_delegate());
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x20F700, 0x20F705, write16_delegate(FUNC(segas32_state::jleague_protection_w),this));
 }
 
 
-static DRIVER_INIT( titlef )
+DRIVER_INIT_MEMBER(segas32_state,titlef)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
-	segas32_common_init(machine, read16_delegate(), write16_delegate());
-	state->m_sw1_output = titlef_sw1_output;
-	state->m_sw2_output = titlef_sw2_output;
+	segas32_common_init(machine(), read16_delegate(), write16_delegate());
+	m_sw1_output = titlef_sw1_output;
+	m_sw2_output = titlef_sw2_output;
 }
 
 
@@ -4366,46 +4345,46 @@ static DRIVER_INIT( titlef )
  *
  *************************************/
 
-GAME( 1992, arescue,  0,        system32,     arescue,  arescue,  ROT0, "Sega",   "Air Rescue", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, alien3,   0,        system32,     alien3,   alien3,   ROT0, "Sega",   "Alien3: The Gun (World)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, alien3u,  alien3,   system32,     alien3,   alien3,   ROT0, "Sega",   "Alien3: The Gun (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1991, arabfgt,  0,        system32,     arabfgt,  arabfgt,  ROT0, "Sega",   "Arabian Fight (World)", GAME_IMPERFECT_GRAPHICS )		/* Released in 03.1992 */
-GAME( 1991, arabfgtu, arabfgt,  system32,     arabfgtu, arabfgt,  ROT0, "Sega",   "Arabian Fight (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1991, arabfgtj, arabfgt,  system32,     arabfgt,  arabfgt,  ROT0, "Sega",   "Arabian Fight (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, brival,   0,        system32,     brival,   brival,   ROT0, "Sega",   "Burning Rival (World)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, brivalj,  brival,   system32,     brival,   brival,   ROT0, "Sega",   "Burning Rival (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, darkedge, 0,        system32,     darkedge, darkedge, ROT0, "Sega",   "Dark Edge (World)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, darkedgej,darkedge, system32,     darkedge, darkedge, ROT0, "Sega",   "Dark Edge (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, dbzvrvs,  0,        system32,     dbzvrvs,  dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_IMPERFECT_GRAPHICS)
-GAME( 1991, f1en,     0,        system32,     f1en,     f1en,     ROT0, "Sega",   "F1 Exhaust Note", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, f1lap,    0,        system32,     f1lap,    f1lap,    ROT0, "Sega",   "F1 Super Lap", GAME_NOT_WORKING )
-GAME( 1992, ga2,      0,        system32_v25, ga2,      ga2,      ROT0, "Sega",   "Golden Axe: The Revenge of Death Adder (World)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, ga2u,     ga2,      system32_v25, ga2u,     ga2,      ROT0, "Sega",   "Golden Axe: The Revenge of Death Adder (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, ga2j,     ga2,      system32_v25, ga2,      ga2,      ROT0, "Sega",   "Golden Axe: The Revenge of Death Adder (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, holo,     0,        system32,     holo,     holo,     ORIENTATION_FLIP_Y, "Sega",   "Holosseum (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, jpark,    0,        system32,     jpark,    jpark,    ROT0, "Sega",   "Jurassic Park", GAME_IMPERFECT_GRAPHICS )				/* Released in 02.1994 */
-GAME( 1994, kokoroj2, 0,        system32,     radr,     radr,     ROT0, "Sega",   "Kokoroji 2", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING) /* uses an Audio CD */
-GAME( 1990, radm,     0,        system32,     radm,     radm,     ROT0, "Sega",   "Rad Mobile (World)", GAME_IMPERFECT_GRAPHICS )			/* Released in 02.1991 */
-GAME( 1990, radmu,    radm,     system32,     radm,     radm,     ROT0, "Sega",   "Rad Mobile (US)", GAME_IMPERFECT_GRAPHICS )
-GAMEL(1991, radr,     0,        system32,     radr,     radr,     ROT0, "Sega",   "Rad Rally (World)", GAME_IMPERFECT_GRAPHICS, layout_radr )
-GAMEL(1991, radru,    radr,     system32,     radr,     radr,     ROT0, "Sega",   "Rad Rally (US)", GAME_IMPERFECT_GRAPHICS, layout_radr )
-GAMEL(1991, radrj,    radr,     system32,     radr,     radr,     ROT0, "Sega",   "Rad Rally (Japan)", GAME_IMPERFECT_GRAPHICS, layout_radr )
-GAMEL(1995, slipstrm, 0,        system32,     slipstrm, slipstrm, ROT0, "Capcom", "Slip Stream (950515 Brazil)", GAME_IMPERFECT_GRAPHICS, layout_radr )
-GAMEL(1995, slipstrmh,slipstrm, system32,     slipstrm, slipstrm, ROT0, "Capcom", "Slip Stream (950515 Hispanic)", GAME_IMPERFECT_GRAPHICS, layout_radr )
-GAME( 1992, sonic,    0,        system32,     sonic,    sonic,    ROT0, "Sega",   "SegaSonic The Hedgehog (Japan, rev. C)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, sonicp,   sonic,    system32,     sonic,    sonicp,   ROT0, "Sega",   "SegaSonic The Hedgehog (Japan, prototype)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1991, spidman,  0,        system32,     spidman,  spidman,  ROT0, "Sega",   "Spider-Man: The Videogame (World)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1991, spidmanu, spidman,  system32,     spidmanu, spidman,  ROT0, "Sega",   "Spider-Man: The Videogame (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, svf,      0,        system32,     svf,      svf,      ROT0, "Sega",   "Super Visual Football: European Sega Cup", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, svs,      svf,      system32,     svf,      svf,      ROT0, "Sega",   "Super Visual Soccer: Sega Cup (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, jleague,  svf,      system32,     svf,      jleague,  ROT0, "Sega",   "The J.League 1994 (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, arescue,  0,        system32,     arescue, segas32_state,  arescue,  ROT0, "Sega",   "Air Rescue", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, alien3,   0,        system32,     alien3, segas32_state,   alien3,   ROT0, "Sega",   "Alien3: The Gun (World)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, alien3u,  alien3,   system32,     alien3, segas32_state,   alien3,   ROT0, "Sega",   "Alien3: The Gun (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1991, arabfgt,  0,        system32,     arabfgt, segas32_state,  arabfgt,  ROT0, "Sega",   "Arabian Fight (World)", GAME_IMPERFECT_GRAPHICS )		/* Released in 03.1992 */
+GAME( 1991, arabfgtu, arabfgt,  system32,     arabfgtu, segas32_state, arabfgt,  ROT0, "Sega",   "Arabian Fight (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1991, arabfgtj, arabfgt,  system32,     arabfgt, segas32_state,  arabfgt,  ROT0, "Sega",   "Arabian Fight (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, brival,   0,        system32,     brival, segas32_state,   brival,   ROT0, "Sega",   "Burning Rival (World)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, brivalj,  brival,   system32,     brival, segas32_state,   brival,   ROT0, "Sega",   "Burning Rival (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, darkedge, 0,        system32,     darkedge, segas32_state, darkedge, ROT0, "Sega",   "Dark Edge (World)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, darkedgej,darkedge, system32,     darkedge, segas32_state, darkedge, ROT0, "Sega",   "Dark Edge (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, dbzvrvs,  0,        system32,     dbzvrvs, segas32_state,  dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_IMPERFECT_GRAPHICS)
+GAME( 1991, f1en,     0,        system32,     f1en, segas32_state,     f1en,     ROT0, "Sega",   "F1 Exhaust Note", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, f1lap,    0,        system32,     f1lap, segas32_state,    f1lap,    ROT0, "Sega",   "F1 Super Lap", GAME_NOT_WORKING )
+GAME( 1992, ga2,      0,        system32_v25, ga2, segas32_state,      ga2,      ROT0, "Sega",   "Golden Axe: The Revenge of Death Adder (World)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, ga2u,     ga2,      system32_v25, ga2u, segas32_state,     ga2,      ROT0, "Sega",   "Golden Axe: The Revenge of Death Adder (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, ga2j,     ga2,      system32_v25, ga2, segas32_state,      ga2,      ROT0, "Sega",   "Golden Axe: The Revenge of Death Adder (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, holo,     0,        system32,     holo, segas32_state,     holo,     ORIENTATION_FLIP_Y, "Sega",   "Holosseum (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, jpark,    0,        system32,     jpark, segas32_state,    jpark,    ROT0, "Sega",   "Jurassic Park", GAME_IMPERFECT_GRAPHICS )				/* Released in 02.1994 */
+GAME( 1994, kokoroj2, 0,        system32,     radr, segas32_state,     radr,     ROT0, "Sega",   "Kokoroji 2", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING) /* uses an Audio CD */
+GAME( 1990, radm,     0,        system32,     radm, segas32_state,     radm,     ROT0, "Sega",   "Rad Mobile (World)", GAME_IMPERFECT_GRAPHICS )			/* Released in 02.1991 */
+GAME( 1990, radmu,    radm,     system32,     radm, segas32_state,     radm,     ROT0, "Sega",   "Rad Mobile (US)", GAME_IMPERFECT_GRAPHICS )
+GAMEL(1991, radr,     0,        system32,     radr, segas32_state,     radr,     ROT0, "Sega",   "Rad Rally (World)", GAME_IMPERFECT_GRAPHICS, layout_radr )
+GAMEL(1991, radru,    radr,     system32,     radr, segas32_state,     radr,     ROT0, "Sega",   "Rad Rally (US)", GAME_IMPERFECT_GRAPHICS, layout_radr )
+GAMEL(1991, radrj,    radr,     system32,     radr, segas32_state,     radr,     ROT0, "Sega",   "Rad Rally (Japan)", GAME_IMPERFECT_GRAPHICS, layout_radr )
+GAMEL(1995, slipstrm, 0,        system32,     slipstrm, segas32_state, slipstrm, ROT0, "Capcom", "Slip Stream (950515 Brazil)", GAME_IMPERFECT_GRAPHICS, layout_radr )
+GAMEL(1995, slipstrmh,slipstrm, system32,     slipstrm, segas32_state, slipstrm, ROT0, "Capcom", "Slip Stream (950515 Hispanic)", GAME_IMPERFECT_GRAPHICS, layout_radr )
+GAME( 1992, sonic,    0,        system32,     sonic, segas32_state,    sonic,    ROT0, "Sega",   "SegaSonic The Hedgehog (Japan, rev. C)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, sonicp,   sonic,    system32,     sonic, segas32_state,    sonicp,   ROT0, "Sega",   "SegaSonic The Hedgehog (Japan, prototype)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1991, spidman,  0,        system32,     spidman, segas32_state,  spidman,  ROT0, "Sega",   "Spider-Man: The Videogame (World)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1991, spidmanu, spidman,  system32,     spidmanu, segas32_state, spidman,  ROT0, "Sega",   "Spider-Man: The Videogame (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, svf,      0,        system32,     svf, segas32_state,      svf,      ROT0, "Sega",   "Super Visual Football: European Sega Cup", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, svs,      svf,      system32,     svf, segas32_state,      svf,      ROT0, "Sega",   "Super Visual Soccer: Sega Cup (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, jleague,  svf,      system32,     svf, segas32_state,      jleague,  ROT0, "Sega",   "The J.League 1994 (Japan)", GAME_IMPERFECT_GRAPHICS )
 
-GAME( 1994, harddunk, 0,        multi32,      harddunk, harddunk, ROT0, "Sega",   "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, harddunkj,harddunk, multi32,      harddunk, harddunk, ROT0, "Sega",   "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, orunners, 0,        multi32,      orunners, orunners, ROT0, "Sega",   "OutRunners (World)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, orunnersu,orunners, multi32,      orunners, orunners, ROT0, "Sega",   "OutRunners (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, orunnersj,orunners, multi32,      orunners, orunners, ROT0, "Sega",   "OutRunners (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, scross,   0,        multi32,      scross,   scross,   ROT0, "Sega",   "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, scrossu,  scross,   multi32,      scross,   scross,   ROT0, "Sega",   "Stadium Cross (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, titlef,   0,        multi32,      titlef,   titlef,   ROT0, "Sega",   "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, titlefu,  titlef,   multi32,      titlef,   titlef,   ROT0, "Sega",   "Title Fight (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, harddunk, 0,        multi32,      harddunk, segas32_state, harddunk, ROT0, "Sega",   "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, harddunkj,harddunk, multi32,      harddunk, segas32_state, harddunk, ROT0, "Sega",   "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, orunners, 0,        multi32,      orunners, segas32_state, orunners, ROT0, "Sega",   "OutRunners (World)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, orunnersu,orunners, multi32,      orunners, segas32_state, orunners, ROT0, "Sega",   "OutRunners (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, orunnersj,orunners, multi32,      orunners, segas32_state, orunners, ROT0, "Sega",   "OutRunners (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, scross,   0,        multi32,      scross, segas32_state,   scross,   ROT0, "Sega",   "Stadium Cross (World)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, scrossu,  scross,   multi32,      scross, segas32_state,   scross,   ROT0, "Sega",   "Stadium Cross (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, titlef,   0,        multi32,      titlef, segas32_state,   titlef,   ROT0, "Sega",   "Title Fight (World)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, titlefu,  titlef,   multi32,      titlef, segas32_state,   titlef,   ROT0, "Sega",   "Title Fight (US)", GAME_IMPERFECT_GRAPHICS )

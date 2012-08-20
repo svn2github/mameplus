@@ -48,6 +48,9 @@ public:
 	DECLARE_WRITE16_MEMBER(mcu_prog_w2);
 	DECLARE_WRITE16_MEMBER(mcu_prog_offs_w);
 	DECLARE_WRITE16_MEMBER(rdx_v33_eeprom_w);
+	DECLARE_DRIVER_INIT(rdx_v33);
+	DECLARE_DRIVER_INIT(nzerotea);
+	DECLARE_DRIVER_INIT(zerotm2k);
 };
 
 
@@ -732,32 +735,32 @@ static MACHINE_CONFIG_START( nzerotea, r2dx_v33_state )
 MACHINE_CONFIG_END
 
 
-static DRIVER_INIT(rdx_v33)
+DRIVER_INIT_MEMBER(r2dx_v33_state,rdx_v33)
 {
-	machine.root_device().membank("bank1")->configure_entries(0, 0x20, machine.root_device().memregion("mainprg")->base(), 0x20000);
+	machine().root_device().membank("bank1")->configure_entries(0, 0x20, machine().root_device().memregion("mainprg")->base(), 0x20000);
 
-	raiden2_decrypt_sprites(machine);
+	raiden2_decrypt_sprites(machine());
 
-	machine.root_device().membank("bank1")->set_entry(1);
+	machine().root_device().membank("bank1")->set_entry(1);
 }
 
-static DRIVER_INIT(nzerotea)
+DRIVER_INIT_MEMBER(r2dx_v33_state,nzerotea)
 {
-	machine.root_device().membank("bank1")->configure_entries(0, 2, machine.root_device().memregion("mainprg")->base(), 0x20000);
+	machine().root_device().membank("bank1")->configure_entries(0, 2, machine().root_device().memregion("mainprg")->base(), 0x20000);
 
-	zeroteam_decrypt_sprites(machine);
+	zeroteam_decrypt_sprites(machine());
 
-	machine.root_device().membank("bank1")->set_entry(1);
+	machine().root_device().membank("bank1")->set_entry(1);
 }
 
-static DRIVER_INIT(zerotm2k)
+DRIVER_INIT_MEMBER(r2dx_v33_state,zerotm2k)
 {
-	machine.root_device().membank("bank1")->configure_entries(0, 2, machine.root_device().memregion("mainprg")->base(), 0x20000);
+	machine().root_device().membank("bank1")->configure_entries(0, 2, machine().root_device().memregion("mainprg")->base(), 0x20000);
 
 	// sprites are NOT encrypted
-	//zeroteam_decrypt_sprites(machine);
+	//zeroteam_decrypt_sprites(machine());
 
-	machine.root_device().membank("bank1")->set_entry(1);
+	machine().root_device().membank("bank1")->set_entry(1);
 
 }
 
@@ -920,10 +923,10 @@ ROM_START( zerotm2k ) /* V33 SYSTEM TYPE_C VER2 hardware, uses SEI333 (AKA COPX-
 ROM_END
 
 // newer PCB, with V33 CPU and COPD3 protection, but weak sound hardware. - was marked as Raiden DX New in the rom dump, but boots as Raiden 2 New version, is it switchable?
-GAME( 1996, r2dx_v33, 0,          rdx_v33,  rdx_v33,  rdx_v33,   ROT270, "Seibu Kaihatsu", "Raiden II / DX (newer V33 PCB)", GAME_NOT_WORKING|GAME_NO_SOUND)
+GAME( 1996, r2dx_v33, 0,          rdx_v33,  rdx_v33, r2dx_v33_state,  rdx_v33,   ROT270, "Seibu Kaihatsu", "Raiden II / DX (newer V33 PCB)", GAME_NOT_WORKING|GAME_NO_SOUND)
 
 // 'V33 system type_b' - uses V33 CPU, COPX-D3 external protection rom, but still has the proper sound system
-GAME( 1997, nzeroteam, zeroteam,  nzerotea, nzerotea, nzerotea,  ROT0,   "Seibu Kaihatsu", "New Zero Team", GAME_NOT_WORKING|GAME_NO_SOUND)
+GAME( 1997, nzeroteam, zeroteam,  nzerotea, nzerotea, r2dx_v33_state, nzerotea,  ROT0,   "Seibu Kaihatsu", "New Zero Team", GAME_NOT_WORKING|GAME_NO_SOUND)
 
 // 'V33 SYSTEM TYPE_C VER2' - uses V33 CPU, COPX-D3 external protection rom, but still has the proper sound system, unencrypted sprites
-GAME( 2000, zerotm2k,  zeroteam,  nzerotea, nzerotea, zerotm2k,  ROT0,   "Seibu Kaihatsu", "Zero Team 2000", GAME_NOT_WORKING|GAME_NO_SOUND)
+GAME( 2000, zerotm2k,  zeroteam,  nzerotea, nzerotea, r2dx_v33_state, zerotm2k,  ROT0,   "Seibu Kaihatsu", "Zero Team 2000", GAME_NOT_WORKING|GAME_NO_SOUND)

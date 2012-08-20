@@ -1,3 +1,5 @@
+#include "machine/msm6242.h"
+
 #define FIGHT_MCU  1
 #define SHOOT_MCU  2
 #define RACING_MCU 3
@@ -9,6 +11,7 @@ public:
 	hng64_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this, "maincpu"),
+		m_rtc(*this, "rtc"),
 		m_mainram(*this, "mainram"),
 		m_cart(*this, "cart"),
 		m_sysregs(*this, "sysregs"),
@@ -27,6 +30,7 @@ public:
 		m_com_mmu_mem(*this, "com_mmu_mem"){ }
 
 	required_device<cpu_device> m_maincpu;
+	required_device<msm6242_device> m_rtc;
 	required_shared_ptr<UINT32> m_mainram;
 	required_shared_ptr<UINT32> m_cart;
 	required_shared_ptr<UINT32> m_sysregs;
@@ -67,7 +71,6 @@ public:
 
 	UINT32 m_activeBuffer;
 	UINT32 m_no_machine_error_code;
-	int m_interrupt_level_request;
 
 	UINT32 m_unk_vreg_toggle;
 	UINT32 m_p1_trig;
@@ -161,6 +164,17 @@ public:
 	DECLARE_WRITE8_MEMBER(hng64_comm_shared_w);
 	DECLARE_WRITE32_MEMBER(hng64_videoram_w);
 	DECLARE_DIRECT_UPDATE_MEMBER(KL5C80_direct_handler);
+	DECLARE_DRIVER_INIT(hng64_race);
+	DECLARE_DRIVER_INIT(fatfurwa);
+	DECLARE_DRIVER_INIT(hng64);
+	DECLARE_DRIVER_INIT(hng64_shoot);
+	DECLARE_DRIVER_INIT(ss64);
+	DECLARE_DRIVER_INIT(hng64_fght);
+	DECLARE_DRIVER_INIT(hng64_reorder_gfx);
+
+	void m_set_irq(UINT32 irq_vector);
+	UINT32 m_irq_pending;
+	int m_irq_level;
 };
 
 

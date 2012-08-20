@@ -492,5 +492,5 @@ ROM_END
  *
  *************************************/
 
-GAME( 1976, flyball,  0,       flyball, flyball, 0, 0, "Atari", "Flyball (rev 2)", GAME_NO_SOUND )
-GAME( 1976, flyball1, flyball, flyball, flyball, 0, 0, "Atari", "Flyball (rev 1)", GAME_NO_SOUND )
+GAME( 1976, flyball,  0,       flyball, flyball, driver_device, 0, 0, "Atari", "Flyball (rev 2)", GAME_NO_SOUND )
+GAME( 1976, flyball1, flyball, flyball, flyball, driver_device, 0, 0, "Atari", "Flyball (rev 1)", GAME_NO_SOUND )

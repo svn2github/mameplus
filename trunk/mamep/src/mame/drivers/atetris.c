@@ -220,9 +220,9 @@ static ADDRESS_MAP_START( atetrisb2_map, AS_PROGRAM, 8, atetris_state )
 	AM_RANGE(0x1000, 0x1fff) AM_RAM_WRITE(atetris_videoram_w) AM_SHARE("videoram")
 	AM_RANGE(0x2000, 0x20ff) AM_RAM_WRITE(paletteram_RRRGGGBB_byte_w) AM_SHARE("paletteram")
 	AM_RANGE(0x2400, 0x25ff) AM_RAM_WRITE(nvram_w) AM_SHARE("nvram")
-	AM_RANGE(0x2802, 0x2802) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0x2804, 0x2804) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
-	AM_RANGE(0x2806, 0x2806) AM_DEVWRITE_LEGACY("sn3", sn76496_w)
+	AM_RANGE(0x2802, 0x2802) AM_DEVWRITE("sn1", sn76496_new_device, write)
+	AM_RANGE(0x2804, 0x2804) AM_DEVWRITE("sn2", sn76496_new_device, write)
+	AM_RANGE(0x2806, 0x2806) AM_DEVWRITE("sn3", sn76496_new_device, write)
 	AM_RANGE(0x2808, 0x2808) AM_READ_PORT("IN0")
 	AM_RANGE(0x2818, 0x2818) AM_READ_PORT("IN1")
 	AM_RANGE(0x3000, 0x3000) AM_WRITE(watchdog_reset_w)
@@ -325,7 +325,14 @@ static const pokey_interface pokey_interface_2 =
 	DEVCB_INPUT_PORT("IN1")
 };
 
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
 
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
 
 /*************************************
  *
@@ -393,14 +400,17 @@ static MACHINE_CONFIG_START( atetrisb2, atetris_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496, BOOTLEG_CLOCK/8)
+	MCFG_SOUND_ADD("sn1", SN76496_NEW, BOOTLEG_CLOCK/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496, BOOTLEG_CLOCK/8)
+	MCFG_SOUND_ADD("sn2", SN76496_NEW, BOOTLEG_CLOCK/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76496, BOOTLEG_CLOCK/8)
+	MCFG_SOUND_ADD("sn3", SN76496_NEW, BOOTLEG_CLOCK/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 
@@ -483,14 +493,13 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( atetris )
+DRIVER_INIT_MEMBER(atetris_state,atetris)
 {
-	atetris_state *state = machine.driver_data<atetris_state>();
-	UINT8 *rgn = state->memregion("maincpu")->base();
+	UINT8 *rgn = memregion("maincpu")->base();
 
-	slapstic_init(machine, 101);
-	state->m_slapstic_source = &rgn[0x10000];
-	state->m_slapstic_base = &rgn[0x04000];
+	slapstic_init(machine(), 101);
+	m_slapstic_source = &rgn[0x10000];
+	m_slapstic_base = &rgn[0x04000];
 }
 
 
@@ -501,9 +510,9 @@ static DRIVER_INIT( atetris )
  *
  *************************************/
 
-GAME( 1988, atetris,  0,       atetris,  atetris,  atetris, ROT0,   "Atari Games", "Tetris (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1988, atetrisa, atetris, atetris,  atetris,  atetris, ROT0,   "Atari Games", "Tetris (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1988, atetrisb, atetris, atetris,  atetris,  atetris, ROT0,   "bootleg",     "Tetris (bootleg set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1988, atetrisb2,atetris, atetrisb2,atetris,  atetris, ROT0,   "bootleg",     "Tetris (bootleg set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1989, atetrisc, atetris, atetris,  atetrisc, atetris, ROT270, "Atari Games", "Tetris (cocktail set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1989, atetrisc2,atetris, atetris,  atetrisc, atetris, ROT270, "Atari Games", "Tetris (cocktail set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1988, atetris,  0,       atetris,  atetris, atetris_state,  atetris, ROT0,   "Atari Games", "Tetris (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1988, atetrisa, atetris, atetris,  atetris, atetris_state,  atetris, ROT0,   "Atari Games", "Tetris (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1988, atetrisb, atetris, atetris,  atetris, atetris_state,  atetris, ROT0,   "bootleg",     "Tetris (bootleg set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1988, atetrisb2,atetris, atetrisb2,atetris, atetris_state,  atetris, ROT0,   "bootleg",     "Tetris (bootleg set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1989, atetrisc, atetris, atetris,  atetrisc, atetris_state, atetris, ROT270, "Atari Games", "Tetris (cocktail set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1989, atetrisc2,atetris, atetris,  atetrisc, atetris_state, atetris, ROT270, "Atari Games", "Tetris (cocktail set 2)", GAME_SUPPORTS_SAVE )

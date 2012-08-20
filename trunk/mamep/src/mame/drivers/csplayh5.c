@@ -69,6 +69,16 @@ public:
 	DECLARE_WRITE8_MEMBER(tmpz84c011_0_dir_pc_w);
 	DECLARE_WRITE8_MEMBER(tmpz84c011_0_dir_pd_w);
 	DECLARE_WRITE8_MEMBER(tmpz84c011_0_dir_pe_w);
+	DECLARE_DRIVER_INIT(mjmania);
+	DECLARE_DRIVER_INIT(csplayh5);
+	DECLARE_DRIVER_INIT(fuudol);
+	DECLARE_DRIVER_INIT(bikiniko);
+	DECLARE_DRIVER_INIT(thenanpa);
+	DECLARE_DRIVER_INIT(junai);
+	DECLARE_DRIVER_INIT(csplayh1);
+	DECLARE_DRIVER_INIT(renaimj);
+	DECLARE_DRIVER_INIT(csplayh7);
+	DECLARE_DRIVER_INIT(junai2);
 };
 
 
@@ -161,9 +171,9 @@ sound HW is identical to Niyanpai
 
 #define SIGNED_DAC	0		// 0:unsigned DAC, 1:signed DAC
 #if SIGNED_DAC
-#define DAC_WRITE	dac_signed_w
+#define DAC_WRITE	write_signed8
 #else
-#define DAC_WRITE	dac_w
+#define DAC_WRITE	write_unsigned8
 #endif
 
 static void csplayh5_soundbank_w(running_machine &machine, int data)
@@ -222,10 +232,10 @@ WRITE8_MEMBER(csplayh5_state::tmpz84c011_pio_w)
 			csplayh5_soundbank_w(machine(), data & 0x03);
 			break;
 		case 1:			/* PB_0 */
-			DAC_WRITE(machine().device("dac2"), 0, data);
+			machine().device<dac_device>("dac2")->DAC_WRITE(data);
 			break;
 		case 2:			/* PC_0 */
-			DAC_WRITE(machine().device("dac1"), 0, data);
+			machine().device<dac_device>("dac1")->DAC_WRITE(data);
 			break;
 		case 3:			/* PD_0 */
 			break;
@@ -357,7 +367,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( csplayh5_sound_io_map, AS_IO, 8, csplayh5_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE_LEGACY("ctc", z80ctc_r, z80ctc_w)
+	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE("ctc", z80ctc_device, read, write)
 	AM_RANGE(0x50, 0x50) AM_READWRITE(tmpz84c011_0_pa_r, tmpz84c011_0_pa_w)
 	AM_RANGE(0x51, 0x51) AM_READWRITE(tmpz84c011_0_pb_r, tmpz84c011_0_pb_w)
 	AM_RANGE(0x52, 0x52) AM_READWRITE(tmpz84c011_0_pc_r, tmpz84c011_0_pc_w)
@@ -565,9 +575,8 @@ GFXDECODE_END
 
 static Z80CTC_INTERFACE( ctc_intf )
 {
-	0,							/* timer disables */
 	DEVCB_CPU_INPUT_LINE("audiocpu", INPUT_LINE_IRQ0),/* interrupt handler */
-	DEVCB_LINE(z80ctc_trg3_w),	/* ZC/TO0 callback ctc1.zc0 -> ctc1.trg3 */
+	DEVCB_DEVICE_LINE_MEMBER("ctc", z80ctc_device, trg3),	/* ZC/TO0 callback ctc1.zc0 -> ctc1.trg3 */
 	DEVCB_NULL,					/* ZC/TO1 callback */
 	DEVCB_NULL					/* ZC/TO2 callback */
 };
@@ -656,10 +665,10 @@ static MACHINE_CONFIG_START( csplayh5, csplayh5_state )
 	MCFG_SOUND_ADD("ymsnd", YM3812, 4000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.70)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
 MACHINE_CONFIG_END
 
@@ -685,16 +694,16 @@ void general_init(running_machine &machine, int patchaddress, int patchvalue)
 
 }
 
-static DRIVER_INIT( csplayh1 ) { general_init(machine, 0x6880/2,0x6020); }
+DRIVER_INIT_MEMBER(csplayh5_state,csplayh1)  { general_init(machine(), 0x6880/2,0x6020); }
 
-static DRIVER_INIT( junai )    { general_init(machine, 0x679c/2,0x6018); }
-static DRIVER_INIT( mjmania )  { general_init(machine, 0x6b96/2,0x6018); }
-static DRIVER_INIT( junai2 )   { general_init(machine, 0x6588/2,0x6018); }
-static DRIVER_INIT( csplayh5 ) { general_init(machine, 0x4cb4/2,0x6018); }
-static DRIVER_INIT( bikiniko ) { general_init(machine, 0x585c/2,0x6018); }
-static DRIVER_INIT( thenanpa ) { general_init(machine, 0x69ec/2,0x6018); }
-static DRIVER_INIT( csplayh7 ) { general_init(machine, 0x7a20/2,0x6018); }
-static DRIVER_INIT( fuudol )   { general_init(machine, 0x9166/2,0x6018); }
+DRIVER_INIT_MEMBER(csplayh5_state,junai)     { general_init(machine(), 0x679c/2,0x6018); }
+DRIVER_INIT_MEMBER(csplayh5_state,mjmania)   { general_init(machine(), 0x6b96/2,0x6018); }
+DRIVER_INIT_MEMBER(csplayh5_state,junai2)    { general_init(machine(), 0x6588/2,0x6018); }
+DRIVER_INIT_MEMBER(csplayh5_state,csplayh5)  { general_init(machine(), 0x4cb4/2,0x6018); }
+DRIVER_INIT_MEMBER(csplayh5_state,bikiniko)  { general_init(machine(), 0x585c/2,0x6018); }
+DRIVER_INIT_MEMBER(csplayh5_state,thenanpa)  { general_init(machine(), 0x69ec/2,0x6018); }
+DRIVER_INIT_MEMBER(csplayh5_state,csplayh7)  { general_init(machine(), 0x7a20/2,0x6018); }
+DRIVER_INIT_MEMBER(csplayh5_state,fuudol)    { general_init(machine(), 0x9166/2,0x6018); }
 
 /* TODO: correct rom labels*/
 ROM_START( csplayh1 )
@@ -892,29 +901,29 @@ ROM_START( fuudol )
 ROM_END
 
 // 1995
-GAME( 1995, csplayh1,   0,   csplayh5,  csplayh5,  csplayh1,                ROT0, "Sphinx/AV Japan/Astro System Japan",   "Super CD Dai8dan Mahjong Hanafuda Cosplay Tengoku (Japan)", GAME_NOT_WORKING )
+GAME( 1995, csplayh1,   0,   csplayh5,  csplayh5, csplayh5_state,  csplayh1,                ROT0, "Sphinx/AV Japan/Astro System Japan",   "Super CD Dai8dan Mahjong Hanafuda Cosplay Tengoku (Japan)", GAME_NOT_WORKING )
 
 // 1998
 // 01 : Mahjong Gal-pri - World Gal-con Grandprix : Nichibutsu/Just&Just
 // 02 : Sengoku Mahjong Kurenai Otome-tai : Nichibutsu/Just&Just
-/* 03 */ GAME( 1998, junai,     0,   csplayh5,  csplayh5,  junai,   		ROT0, "Nichibutsu/eic",   "Junai - Manatsu no First Kiss (Japan)", GAME_NOT_WORKING )
-/* 04 */ GAME( 1998, csplayh5,  0,   csplayh5,  csplayh5,  csplayh5,		ROT0, "Nichibutsu",       "Mahjong Hanafuda Cosplay Tengoku 5 (Japan)", GAME_NOT_WORKING )
-/* 05 */ GAME( 1998, junai2,    0,   csplayh5,  csplayh5,  junai2,  		ROT0, "Nichibutsu/eic",   "Junai 2 - White Love Story (Japan)", GAME_NOT_WORKING )
+/* 03 */ GAME( 1998, junai,     0,   csplayh5,  csplayh5, csplayh5_state,  junai,   		ROT0, "Nichibutsu/eic",   "Junai - Manatsu no First Kiss (Japan)", GAME_NOT_WORKING )
+/* 04 */ GAME( 1998, csplayh5,  0,   csplayh5,  csplayh5, csplayh5_state,  csplayh5,		ROT0, "Nichibutsu",       "Mahjong Hanafuda Cosplay Tengoku 5 (Japan)", GAME_NOT_WORKING )
+/* 05 */ GAME( 1998, junai2,    0,   csplayh5,  csplayh5, csplayh5_state,  junai2,  		ROT0, "Nichibutsu/eic",   "Junai 2 - White Love Story (Japan)", GAME_NOT_WORKING )
 // 06 : Mahjong Mogitate : Nichibutsu/Just&Just/NVS/Astro System/AV Japan
 
 
 // 1999
-/* 07 */ GAME( 1999, mjmania,   0,   csplayh5,  csplayh5,  mjmania,     	ROT0, "Sphinx/Just&Just", "Mahjong Mania - Kairakukan e Youkoso (Japan)", GAME_NOT_WORKING )
-///* 08 */ GAME( 1995, renaimj,   0,   csplayh5,  csplayh5,  renaimj,         ROT0, "Nichibutsu/eic",   "Renai Mahjong Idol Gakuen (Japan)", GAME_NOT_WORKING )
-/* 09 */ GAME( 1999, bikiniko,  0,   csplayh5,  csplayh5,  bikiniko,		ROT0, "Nichibutsu/eic",   "BiKiNikko - Okinawa de Ippai Shichaimashita (Japan)", GAME_NOT_WORKING )
+/* 07 */ GAME( 1999, mjmania,   0,   csplayh5,  csplayh5, csplayh5_state,  mjmania,     	ROT0, "Sphinx/Just&Just", "Mahjong Mania - Kairakukan e Youkoso (Japan)", GAME_NOT_WORKING )
+///* 08 */ GAME( 1995, renaimj,   0,   csplayh5,  csplayh5, csplayh5_state,  renaimj,         ROT0, "Nichibutsu/eic",   "Renai Mahjong Idol Gakuen (Japan)", GAME_NOT_WORKING )
+/* 09 */ GAME( 1999, bikiniko,  0,   csplayh5,  csplayh5, csplayh5_state,  bikiniko,		ROT0, "Nichibutsu/eic",   "BiKiNikko - Okinawa de Ippai Shichaimashita (Japan)", GAME_NOT_WORKING )
 // 10 : Mahjong Hanafuda Cosplay Tengoku 6 - Junai hen : Nichibutsu/eic
-/* 11 */ GAME( 1999, thenanpa,  0,   csplayh5,  csplayh5,  thenanpa,        ROT0, "Nichibutsu/Love Factory/eic", "The Nanpa (Japan)", GAME_NOT_WORKING )
-// 12 GAME( 1999, pokoachu,  0,   csplayh5,  csplayh5,  0,        ROT0, "Nichibutsu/eic", "PokoaPoka Onsen de CHU - Bijin 3 Shimai ni Kiotsukete! (Japan)", GAME_NOT_WORKING )
-/* 13 */ GAME( 1999, csplayh7,  0,   csplayh5,  csplayh5,  csplayh7,        ROT0, "Nichibutsu/eic", "Cosplay Tengoku 7 - Super Kogal Grandprix (Japan)", GAME_NOT_WORKING )
+/* 11 */ GAME( 1999, thenanpa,  0,   csplayh5,  csplayh5, csplayh5_state,  thenanpa,        ROT0, "Nichibutsu/Love Factory/eic", "The Nanpa (Japan)", GAME_NOT_WORKING )
+// 12 GAME( 1999, pokoachu,  0,   csplayh5,  csplayh5, driver_device,  0,        ROT0, "Nichibutsu/eic", "PokoaPoka Onsen de CHU - Bijin 3 Shimai ni Kiotsukete! (Japan)", GAME_NOT_WORKING )
+/* 13 */ GAME( 1999, csplayh7,  0,   csplayh5,  csplayh5, csplayh5_state,  csplayh7,        ROT0, "Nichibutsu/eic", "Cosplay Tengoku 7 - Super Kogal Grandprix (Japan)", GAME_NOT_WORKING )
 // 14 : Ai-mode - Pet Shiiku : Nichibutsu/eic
 
 // 2000
-/* 15 */ GAME( 2000, fuudol,    0,   csplayh5,  csplayh5,  fuudol,      	ROT0, "Nichibutsu/eic", "Fuudol (Japan)", GAME_NOT_WORKING )
+/* 15 */ GAME( 2000, fuudol,    0,   csplayh5,  csplayh5, csplayh5_state,  fuudol,      	ROT0, "Nichibutsu/eic", "Fuudol (Japan)", GAME_NOT_WORKING )
 // 16 : Nurete Mitaino... - Net Idol Hen : Nichibutsu/Love Factory
 // 17 : Tsuugakuro no Yuuwaku : Nichibutsu/Love Factory/Just&Just
 // 18 : Torarechattano - AV Kantoku Hen : Nichibutsu/Love Factory/M Friend

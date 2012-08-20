@@ -971,7 +971,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( bullsdrt_port_map, AS_IO, 8, centiped_state )
 	AM_RANGE(0x00, 0x00) AM_WRITE(bullsdrt_sprites_bank_w)
 	AM_RANGE(0x20, 0x3f) AM_WRITE(bullsdrt_tilesbank_w) AM_SHARE("bullsdrt_bank")
-	AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_READ(bullsdrt_data_port_r) AM_DEVWRITE_LEGACY("snsnd", sn76496_w)
+	AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_READ(bullsdrt_data_port_r) AM_DEVWRITE("snsnd", sn76496_new_device, write)
 ADDRESS_MAP_END
 
 
@@ -1735,6 +1735,15 @@ static const pokey_interface warlords_pokey_interface =
 };
 
 
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
 
 /*************************************
  *
@@ -1920,8 +1929,9 @@ static MACHINE_CONFIG_START( bullsdrt, centiped_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76496, 12096000/8)
+	MCFG_SOUND_ADD("snsnd", SN76496_NEW, 12096000/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 
@@ -2168,18 +2178,17 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( bullsdrt )
+DRIVER_INIT_MEMBER(centiped_state,bullsdrt)
 {
-	centiped_state *state = machine.driver_data<centiped_state>();
 
-	state->m_dsw_select = 0;
+	m_dsw_select = 0;
 }
 
 
-static DRIVER_INIT( multiped )
+DRIVER_INIT_MEMBER(centiped_state,multiped)
 {
-	UINT8 *src = machine.root_device().memregion("user1")->base();
-	UINT8 *dest = machine.root_device().memregion("maincpu")->base();
+	UINT8 *src = machine().root_device().memregion("user1")->base();
+	UINT8 *dest = machine().root_device().memregion("maincpu")->base();
 
 	// descramble rom and put in maincpu region
 	for (int i = 0; i < 0x10000; i++)
@@ -2198,19 +2207,19 @@ static DRIVER_INIT( multiped )
  *
  *************************************/
 
-GAME( 1980, centiped, 0,        centiped, centiped, 0,        ROT270, "Atari",   "Centipede (revision 3)", GAME_SUPPORTS_SAVE)
-GAME( 1980, centiped2,centiped, centiped, centiped, 0,        ROT270, "Atari",   "Centipede (revision 2)", GAME_SUPPORTS_SAVE )
-GAME( 1980, centtime, centiped, centiped, centtime, 0,        ROT270, "Atari",   "Centipede (1 player, timed)", GAME_SUPPORTS_SAVE )
-GAME( 1980, centipdb, centiped, centipdb, centiped, 0,        ROT270, "bootleg", "Centipede (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1989, centipdd, centiped, centiped, centiped, 0,        ROT270, "hack (Two-Bit Score)", "Centipede Dux (hack)", GAME_SUPPORTS_SAVE )
-GAME( 1980, caterplr, centiped, caterplr, caterplr, 0,        ROT270, "bootleg", "Caterpillar (bootleg of Centipede)", GAME_SUPPORTS_SAVE )
-GAME( 1980, millpac,  centiped, centipdb, centiped, 0,        ROT270, "bootleg? (Valadon Automation)", "Millpac (bootleg of Centipede)", GAME_SUPPORTS_SAVE )
-GAME( 1980, magworm,  centiped, magworm,  magworm,  0,        ROT270, "bootleg", "Magic Worm (bootleg of Centipede)", GAME_SUPPORTS_SAVE )
-GAME( 1982, milliped, 0,        milliped, milliped, 0,        ROT270, "Atari",   "Millipede", GAME_SUPPORTS_SAVE )
-GAME( 1989, millipdd, milliped, milliped, milliped, 0,        ROT270, "hack (Two-Bit Score)", "Millipede Dux (hack)", GAME_SUPPORTS_SAVE )
-GAME( 2002, multiped, 0,        multiped, multiped, multiped, ROT270, "hack (Braze Technologies)", "Multipede (Centipede/Millipede multigame kit)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1980, centiped, 0,        centiped, centiped, driver_device, 0,        ROT270, "Atari",   "Centipede (revision 3)", GAME_SUPPORTS_SAVE)
+GAME( 1980, centiped2,centiped, centiped, centiped, driver_device, 0,        ROT270, "Atari",   "Centipede (revision 2)", GAME_SUPPORTS_SAVE )
+GAME( 1980, centtime, centiped, centiped, centtime, driver_device, 0,        ROT270, "Atari",   "Centipede (1 player, timed)", GAME_SUPPORTS_SAVE )
+GAME( 1980, centipdb, centiped, centipdb, centiped, driver_device, 0,        ROT270, "bootleg", "Centipede (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1989, centipdd, centiped, centiped, centiped, driver_device, 0,        ROT270, "hack (Two-Bit Score)", "Centipede Dux (hack)", GAME_SUPPORTS_SAVE )
+GAME( 1980, caterplr, centiped, caterplr, caterplr, driver_device, 0,        ROT270, "bootleg", "Caterpillar (bootleg of Centipede)", GAME_SUPPORTS_SAVE )
+GAME( 1980, millpac,  centiped, centipdb, centiped, driver_device, 0,        ROT270, "bootleg? (Valadon Automation)", "Millpac (bootleg of Centipede)", GAME_SUPPORTS_SAVE )
+GAME( 1980, magworm,  centiped, magworm,  magworm, driver_device,  0,        ROT270, "bootleg", "Magic Worm (bootleg of Centipede)", GAME_SUPPORTS_SAVE )
+GAME( 1982, milliped, 0,        milliped, milliped, driver_device, 0,        ROT270, "Atari",   "Millipede", GAME_SUPPORTS_SAVE )
+GAME( 1989, millipdd, milliped, milliped, milliped, driver_device, 0,        ROT270, "hack (Two-Bit Score)", "Millipede Dux (hack)", GAME_SUPPORTS_SAVE )
+GAME( 2002, multiped, 0,        multiped, multiped, centiped_state, multiped, ROT270, "hack (Braze Technologies)", "Multipede (Centipede/Millipede multigame kit)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 
-GAME( 1980, warlords, 0,        warlords, warlords, 0,        ROT0,   "Atari",   "Warlords", GAME_SUPPORTS_SAVE )
-GAME( 1981, mazeinv,  0,        mazeinv,  mazeinv,  0,        ROT270, "Atari",   "Maze Invaders (prototype)", 0 )
+GAME( 1980, warlords, 0,        warlords, warlords, driver_device, 0,        ROT0,   "Atari",   "Warlords", GAME_SUPPORTS_SAVE )
+GAME( 1981, mazeinv,  0,        mazeinv,  mazeinv, driver_device,  0,        ROT270, "Atari",   "Maze Invaders (prototype)", 0 )
 
-GAME( 1985, bullsdrt, 0,        bullsdrt, bullsdrt, bullsdrt, ROT270, "Shinkai Inc. (Magic Eletronics Inc. license)", "Bulls Eye Darts", GAME_WRONG_COLORS | GAME_SUPPORTS_SAVE )
+GAME( 1985, bullsdrt, 0,        bullsdrt, bullsdrt, centiped_state, bullsdrt, ROT270, "Shinkai Inc. (Magic Eletronics Inc. license)", "Bulls Eye Darts", GAME_WRONG_COLORS | GAME_SUPPORTS_SAVE )

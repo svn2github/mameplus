@@ -61,6 +61,7 @@ public:
 	DECLARE_WRITE16_MEMBER(prot_w);
 	DECLARE_WRITE16_MEMBER(bmc_1_videoram_w);
 	DECLARE_WRITE16_MEMBER(bmc_2_videoram_w);
+	DECLARE_DRIVER_INIT(koftball);
 };
 
 
@@ -305,21 +306,20 @@ static const UINT16 nvram[]=
 };
 
 #endif
-static DRIVER_INIT(koftball)
+DRIVER_INIT_MEMBER(koftball_state,koftball)
 {
-	koftball_state *state = machine.driver_data<koftball_state>();
-	state->m_bmc_colorram = auto_alloc_array(machine, UINT8, 768);
+	m_bmc_colorram = auto_alloc_array(machine(), UINT8, 768);
 
 #if NVRAM_HACK
 	{
 		int offset=0;
 		while(nvram[offset]!=0xffff)
 		{
-			state->m_main_ram[offset]=nvram[offset];
+			m_main_ram[offset]=nvram[offset];
 			++offset;
 		}
 	}
 #endif
 }
 
-GAME( 1995, koftball,    0, koftball,    koftball,    koftball, ROT0,  "BMC", "King of Football", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, koftball,    0, koftball,    koftball, koftball_state,    koftball, ROT0,  "BMC", "King of Football", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS )

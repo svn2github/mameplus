@@ -1001,66 +1001,59 @@ ROM_START( imagoa )
 ROM_END
 
 
-static DRIVER_INIT( flyboy )
+DRIVER_INIT_MEMBER(fastfred_state,flyboy)
 {
-	fastfred_state *state = machine.driver_data<fastfred_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc085, 0xc099, read8_delegate(FUNC(fastfred_state::flyboy_custom1_io_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc8fb, 0xc900, read8_delegate(FUNC(fastfred_state::flyboy_custom2_io_r),state));
-	state->m_hardware_type = 1;
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc085, 0xc099, read8_delegate(FUNC(fastfred_state::flyboy_custom1_io_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc8fb, 0xc900, read8_delegate(FUNC(fastfred_state::flyboy_custom2_io_r),this));
+	m_hardware_type = 1;
 }
 
-static DRIVER_INIT( flyboyb )
+DRIVER_INIT_MEMBER(fastfred_state,flyboyb)
 {
-	fastfred_state *state = machine.driver_data<fastfred_state>();
-	state->m_hardware_type = 1;
+	m_hardware_type = 1;
 }
 
-static DRIVER_INIT( fastfred )
+DRIVER_INIT_MEMBER(fastfred_state,fastfred)
 {
-	fastfred_state *state = machine.driver_data<fastfred_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::fastfred_custom_io_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xcfff);
-	state->m_hardware_type = 1;
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::fastfred_custom_io_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xcfff);
+	m_hardware_type = 1;
 }
 
-static DRIVER_INIT( jumpcoas )
+DRIVER_INIT_MEMBER(fastfred_state,jumpcoas)
 {
-	fastfred_state *state = machine.driver_data<fastfred_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::jumpcoas_custom_io_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xcfff);
-	state->m_hardware_type = 0;
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::jumpcoas_custom_io_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xcfff);
+	m_hardware_type = 0;
 }
 
-static DRIVER_INIT( boggy84b )
+DRIVER_INIT_MEMBER(fastfred_state,boggy84b)
 {
-	fastfred_state *state = machine.driver_data<fastfred_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::jumpcoas_custom_io_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xcfff);
-	state->m_hardware_type = 2;
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::jumpcoas_custom_io_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xcfff);
+	m_hardware_type = 2;
 }
 
-static DRIVER_INIT( boggy84 )
+DRIVER_INIT_MEMBER(fastfred_state,boggy84)
 {
-	fastfred_state *state = machine.driver_data<fastfred_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::boggy84_custom_io_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xcfff);
-	state->m_hardware_type = 2;
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc800, 0xcfff, read8_delegate(FUNC(fastfred_state::boggy84_custom_io_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xcfff);
+	m_hardware_type = 2;
 }
 
 
-static DRIVER_INIT( imago )
+DRIVER_INIT_MEMBER(fastfred_state,imago)
 {
-	fastfred_state *state = machine.driver_data<fastfred_state>();
-	state->m_hardware_type = 3;
+	m_hardware_type = 3;
 }
 
-GAME( 1982, flyboy,   0,        fastfred, flyboy,   flyboy,   ROT90, "Kaneko", "Fly-Boy", 0 )
-GAME( 1982, flyboyb,  flyboy,   fastfred, flyboy,   flyboyb,  ROT90, "bootleg", "Fly-Boy (bootleg)", 0 )
-GAME( 1982, fastfred, flyboy,   fastfred, fastfred, fastfred, ROT90, "Kaneko (Atari license)", "Fast Freddie", 0 )
-GAME( 1983, jumpcoas, 0,        jumpcoas, jumpcoas, jumpcoas, ROT90, "Kaneko", "Jump Coaster", 0 )
-GAME( 1983, jumpcoast,jumpcoas, jumpcoas, jumpcoas, jumpcoas, ROT90, "Kaneko (Taito license)", "Jump Coaster (Taito)", 0 )
-GAME( 1983, boggy84,  0,        jumpcoas, boggy84,  boggy84,  ROT90, "Kaneko", "Boggy '84", 0 )
-GAME( 1983, boggy84b, boggy84,  jumpcoas, boggy84,  boggy84b, ROT90, "bootleg (Eddie's Games)", "Boggy '84 (bootleg)", 0 )
-GAME( 1986, redrobin, 0,        fastfred, redrobin, flyboyb,  ROT90, "Elettronolo", "Red Robin", 0 )
-GAME( 1984, imago,    0,        imago,    imago,    imago,    ROT90, "Acom", "Imago (cocktail set)", 0 )
-GAME( 1983, imagoa,   imago,    imago,    imagoa,   imago,    ROT90, "Acom", "Imago (no cocktail set)", 0 )
+GAME( 1982, flyboy,   0,        fastfred, flyboy, fastfred_state,   flyboy,   ROT90, "Kaneko", "Fly-Boy", 0 )
+GAME( 1982, flyboyb,  flyboy,   fastfred, flyboy, fastfred_state,   flyboyb,  ROT90, "bootleg", "Fly-Boy (bootleg)", 0 )
+GAME( 1982, fastfred, flyboy,   fastfred, fastfred, fastfred_state, fastfred, ROT90, "Kaneko (Atari license)", "Fast Freddie", 0 )
+GAME( 1983, jumpcoas, 0,        jumpcoas, jumpcoas, fastfred_state, jumpcoas, ROT90, "Kaneko", "Jump Coaster", 0 )
+GAME( 1983, jumpcoast,jumpcoas, jumpcoas, jumpcoas, fastfred_state, jumpcoas, ROT90, "Kaneko (Taito license)", "Jump Coaster (Taito)", 0 )
+GAME( 1983, boggy84,  0,        jumpcoas, boggy84, fastfred_state,  boggy84,  ROT90, "Kaneko", "Boggy '84", 0 )
+GAME( 1983, boggy84b, boggy84,  jumpcoas, boggy84, fastfred_state,  boggy84b, ROT90, "bootleg (Eddie's Games)", "Boggy '84 (bootleg)", 0 )
+GAME( 1986, redrobin, 0,        fastfred, redrobin, fastfred_state, flyboyb,  ROT90, "Elettronolo", "Red Robin", 0 )
+GAME( 1984, imago,    0,        imago,    imago, fastfred_state,    imago,    ROT90, "Acom", "Imago (cocktail set)", 0 )
+GAME( 1983, imagoa,   imago,    imago,    imagoa, fastfred_state,   imago,    ROT90, "Acom", "Imago (no cocktail set)", 0 )

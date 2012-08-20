@@ -368,7 +368,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	irqhandler
+	DEVCB_LINE(irqhandler)
 };
 
 static int sshangha_bank_callback( int bank )
@@ -487,12 +487,12 @@ ROM_START( sshanghab )
 ROM_END
 
 
-static DRIVER_INIT( sshangha )
+DRIVER_INIT_MEMBER(sshangha_state,sshangha)
 {
 #if SSHANGHA_HACK
 	/* This is a hack to allow you to use the extra features
          of the first "Unused" Dip Switch (see notes above). */
-	UINT16 *RAM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 	RAM[0x000384/2] = 0x4e71;
 	RAM[0x000386/2] = 0x4e71;
 	RAM[0x000388/2] = 0x4e71;
@@ -504,5 +504,5 @@ static DRIVER_INIT( sshangha )
 }
 
 
-GAME( 1992, sshangha, 0,        sshangha, sshangha, sshangha, ROT0, "Hot-B",   "Super Shanghai Dragon's Eye (Japan)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1992, sshanghab,sshangha, sshanghb, sshangha, sshangha, ROT0, "bootleg", "Super Shanghai Dragon's Eye (World, bootleg)", 0 )
+GAME( 1992, sshangha, 0,        sshangha, sshangha, sshangha_state, sshangha, ROT0, "Hot-B",   "Super Shanghai Dragon's Eye (Japan)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1992, sshanghab,sshangha, sshanghb, sshangha, sshangha_state, sshangha, ROT0, "bootleg", "Super Shanghai Dragon's Eye (World, bootleg)", 0 )

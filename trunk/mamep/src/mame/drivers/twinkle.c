@@ -267,6 +267,7 @@ public:
 	DECLARE_WRITE16_MEMBER(shared_68k_w);
 	DECLARE_READ16_MEMBER(twinkle_ide_r);
 	DECLARE_WRITE16_MEMBER(twinkle_ide_w);
+	DECLARE_DRIVER_INIT(twinkle);
 };
 
 /* RTC */
@@ -861,12 +862,12 @@ static const struct AM53CF96interface scsi_intf =
 	&scsi_irq,		/* command completion IRQ */
 };
 
-static DRIVER_INIT( twinkle )
+DRIVER_INIT_MEMBER(twinkle_state,twinkle)
 {
-	psx_driver_init(machine);
-	am53cf96_init(machine, &scsi_intf);
+	psx_driver_init(machine());
+	am53cf96_init(machine(), &scsi_intf);
 
-	device_t *i2cmem = machine.device("security");
+	device_t *i2cmem = machine().device("security");
 	i2cmem_e0_write( i2cmem, 0 );
 	i2cmem_e1_write( i2cmem, 0 );
 	i2cmem_e2_write( i2cmem, 0 );
@@ -1161,23 +1162,23 @@ ROM_START( bmiidxca )
 	DISK_IMAGE_READONLY( "abmjaahd", 0, NO_DUMP )
 ROM_END
 
-GAME( 1999, gq863,    0,       twinkle, twinkle, twinkle, ROT0, "Konami", "Twinkle System", GAME_IS_BIOS_ROOT )
+GAME( 1999, gq863,    0,       twinkle, twinkle, twinkle_state, twinkle, ROT0, "Konami", "Twinkle System", GAME_IS_BIOS_ROOT )
 
 /* VCD */
-GAME( 1999, bmiidx,   gq863,   twinkle, twinkle, twinkle, ROT0, "Konami", "beatmania IIDX (863 JAA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
+GAME( 1999, bmiidx,   gq863,   twinkle, twinkle, twinkle_state, twinkle, ROT0, "Konami", "beatmania IIDX (863 JAA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
 /* find out what these use for security */
-GAME( 1999, bmiidxc,  gq863,   twinkle, twinkle, twinkle, ROT0, "Konami", "beatmania IIDX with DDR 2nd Club Version (896 JAB)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
-GAME( 1999, bmiidxca, bmiidxc, twinkle, twinkle, twinkle, ROT0, "Konami", "beatmania IIDX with DDR 2nd Club Version (896 JAA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
+GAME( 1999, bmiidxc,  gq863,   twinkle, twinkle, twinkle_state, twinkle, ROT0, "Konami", "beatmania IIDX with DDR 2nd Club Version (896 JAB)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
+GAME( 1999, bmiidxca, bmiidxc, twinkle, twinkle, twinkle_state, twinkle, ROT0, "Konami", "beatmania IIDX with DDR 2nd Club Version (896 JAA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
 /* 1999 - beatmania IIDX substream */
-GAME( 1999, bmiidxc2, gq863,   twinkle, twinkle, twinkle, ROT0, "Konami", "beatmania IIDX Substream 2 with DDR 2nd Club Version (984 A01 BM)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
+GAME( 1999, bmiidxc2, gq863,   twinkle, twinkle, twinkle_state, twinkle, ROT0, "Konami", "beatmania IIDX Substream 2 with DDR 2nd Club Version (984 A01 BM)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
 
 /* these use i2c for security */
-GAME( 1999, bmiidx2,  gq863,   twinkle, twinkle, twinkle, ROT0, "Konami", "beatmania IIDX 2nd style (GC985 JA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
-GAME( 2000, bmiidx3,  gq863,   twinkle, twinkle, twinkle, ROT0, "Konami", "beatmania IIDX 3rd style (GC992 JA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
-GAME( 2000, bmiidx4,  gq863,   twinkle, twinkle, twinkle, ROT0, "Konami", "beatmania IIDX 4th style (GCA03 JA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
+GAME( 1999, bmiidx2,  gq863,   twinkle, twinkle, twinkle_state, twinkle, ROT0, "Konami", "beatmania IIDX 2nd style (GC985 JA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
+GAME( 2000, bmiidx3,  gq863,   twinkle, twinkle, twinkle_state, twinkle, ROT0, "Konami", "beatmania IIDX 3rd style (GC992 JA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
+GAME( 2000, bmiidx4,  gq863,   twinkle, twinkle, twinkle_state, twinkle, ROT0, "Konami", "beatmania IIDX 4th style (GCA03 JA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
 /* 2001 - beatmania IIDX 5th style */
 
 /* DVD */
-GAME( 2001, bmiidx6,  gq863,   twinkle, twinkle, twinkle, ROT0, "Konami", "beatmania IIDX 6th style (GCB4U JA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
-GAME( 2002, bmiidx7,  gq863,   twinkle, twinkle, twinkle, ROT0, "Konami", "beatmania IIDX 7th style (GCB44 JA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
-GAME( 2002, bmiidx8,  gq863,   twinkle, twinkle, twinkle, ROT0, "Konami", "beatmania IIDX 8th style (GCC44 JA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
+GAME( 2001, bmiidx6,  gq863,   twinkle, twinkle, twinkle_state, twinkle, ROT0, "Konami", "beatmania IIDX 6th style (GCB4U JA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
+GAME( 2002, bmiidx7,  gq863,   twinkle, twinkle, twinkle_state, twinkle, ROT0, "Konami", "beatmania IIDX 7th style (GCB44 JA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )
+GAME( 2002, bmiidx8,  gq863,   twinkle, twinkle, twinkle_state, twinkle, ROT0, "Konami", "beatmania IIDX 8th style (GCC44 JA)", GAME_IMPERFECT_SOUND | GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING  )

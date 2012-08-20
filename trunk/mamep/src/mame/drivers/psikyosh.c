@@ -1207,82 +1207,81 @@ ROM_START( tgm2p )
 ROM_END
 
 
-static DRIVER_INIT( soldivid )
+DRIVER_INIT_MEMBER(psikyosh_state,soldivid)
 {
-	sh2drc_set_options(machine.device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
 }
 
-static DRIVER_INIT( s1945ii )
+DRIVER_INIT_MEMBER(psikyosh_state,s1945ii)
 {
-	sh2drc_set_options(machine.device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
 }
 
-static DRIVER_INIT( daraku )
+DRIVER_INIT_MEMBER(psikyosh_state,daraku)
 {
-	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
-	machine.root_device().membank("bank1")->set_base(&RAM[0x100000]);
-	sh2drc_set_options(machine.device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	UINT8 *RAM = machine().root_device().memregion("maincpu")->base();
+	machine().root_device().membank("bank1")->set_base(&RAM[0x100000]);
+	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
 }
 
-static DRIVER_INIT( sbomberb )
+DRIVER_INIT_MEMBER(psikyosh_state,sbomberb)
 {
-	sh2drc_set_options(machine.device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
 }
 
-static DRIVER_INIT( gunbird2 )
+DRIVER_INIT_MEMBER(psikyosh_state,gunbird2)
 {
-	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
-	machine.root_device().membank("bank1")->set_base(&RAM[0x100000]);
-	sh2drc_set_options(machine.device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	UINT8 *RAM = machine().root_device().memregion("maincpu")->base();
+	machine().root_device().membank("bank1")->set_base(&RAM[0x100000]);
+	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
 }
 
-static DRIVER_INIT( s1945iii )
+DRIVER_INIT_MEMBER(psikyosh_state,s1945iii)
 {
-	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
-	machine.root_device().membank("bank1")->set_base(&RAM[0x100000]);
-	sh2drc_set_options(machine.device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	UINT8 *RAM = machine().root_device().memregion("maincpu")->base();
+	machine().root_device().membank("bank1")->set_base(&RAM[0x100000]);
+	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
 }
 
-static DRIVER_INIT( dragnblz )
+DRIVER_INIT_MEMBER(psikyosh_state,dragnblz)
 {
-	sh2drc_set_options(machine.device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
 }
 
-static DRIVER_INIT( gnbarich )
+DRIVER_INIT_MEMBER(psikyosh_state,gnbarich)
 {
-	sh2drc_set_options(machine.device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
 }
 
-static DRIVER_INIT( tgm2 )
+DRIVER_INIT_MEMBER(psikyosh_state,tgm2)
 {
-	sh2drc_set_options(machine.device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
 }
 
-static DRIVER_INIT( mjgtaste )
+DRIVER_INIT_MEMBER(psikyosh_state,mjgtaste)
 {
-	sh2drc_set_options(machine.device("maincpu"), SH2DRC_FASTEST_OPTIONS);
+	sh2drc_set_options(machine().device("maincpu"), SH2DRC_FASTEST_OPTIONS);
 	/* needs to install mahjong controls too (can select joystick in test mode tho) */
-	psikyosh_state *state = machine.driver_data<psikyosh_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x03000000, 0x03000003, read32_delegate(FUNC(psikyosh_state::mjgtaste_input_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x03000000, 0x03000003, read32_delegate(FUNC(psikyosh_state::mjgtaste_input_r),this));
 }
 
 
 /*     YEAR  NAME      PARENT    MACHINE    INPUT     INIT      MONITOR COMPANY   FULLNAME FLAGS */
 
 /* ps3-v1 */
-GAME( 1997, soldivid, 0,        psikyo3v1,   soldivid, soldivid, ROT0,   "Psikyo", "Sol Divide - The Sword Of Darkness", GAME_SUPPORTS_SAVE )
-GAME( 1997, s1945ii,  0,        psikyo3v1,   s1945ii,  s1945ii,  ROT270, "Psikyo", "Strikers 1945 II", GAME_SUPPORTS_SAVE )
-GAME( 1998, daraku,   0,        psikyo3v1,   daraku,   daraku,   ROT0,   "Psikyo", "Daraku Tenshi - The Fallen Angels", GAME_SUPPORTS_SAVE )
-GAME( 1998, sbomber,  0,        psikyo3v1,   sbomberb, sbomberb, ROT270, "Psikyo", "Space Bomber (ver. B)", GAME_SUPPORTS_SAVE )
-GAME( 1998, sbombera, sbomber,  psikyo3v1,   sbomberb, sbomberb, ROT270, "Psikyo", "Space Bomber", GAME_SUPPORTS_SAVE )
+GAME( 1997, soldivid, 0,        psikyo3v1,   soldivid, psikyosh_state, soldivid, ROT0,   "Psikyo", "Sol Divide - The Sword Of Darkness", GAME_SUPPORTS_SAVE )
+GAME( 1997, s1945ii,  0,        psikyo3v1,   s1945ii, psikyosh_state,  s1945ii,  ROT270, "Psikyo", "Strikers 1945 II", GAME_SUPPORTS_SAVE )
+GAME( 1998, daraku,   0,        psikyo3v1,   daraku, psikyosh_state,   daraku,   ROT0,   "Psikyo", "Daraku Tenshi - The Fallen Angels", GAME_SUPPORTS_SAVE )
+GAME( 1998, sbomber,  0,        psikyo3v1,   sbomberb, psikyosh_state, sbomberb, ROT270, "Psikyo", "Space Bomber (ver. B)", GAME_SUPPORTS_SAVE )
+GAME( 1998, sbombera, sbomber,  psikyo3v1,   sbomberb, psikyosh_state, sbomberb, ROT270, "Psikyo", "Space Bomber", GAME_SUPPORTS_SAVE )
 
 /* ps5 */
-GAME( 1998, gunbird2, 0,        psikyo5,     gunbird2, gunbird2, ROT270, "Psikyo", "Gunbird 2", GAME_SUPPORTS_SAVE )
-GAME( 1999, s1945iii, 0,        psikyo5,     s1945iii, s1945iii, ROT270, "Psikyo", "Strikers 1945 III (World) / Strikers 1999 (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1998, gunbird2, 0,        psikyo5,     gunbird2, psikyosh_state, gunbird2, ROT270, "Psikyo", "Gunbird 2", GAME_SUPPORTS_SAVE )
+GAME( 1999, s1945iii, 0,        psikyo5,     s1945iii, psikyosh_state, s1945iii, ROT270, "Psikyo", "Strikers 1945 III (World) / Strikers 1999 (Japan)", GAME_SUPPORTS_SAVE )
 
 /* ps5v2 */
-GAME( 2000, dragnblz, 0,        psikyo5,     dragnblz, dragnblz, ROT270, "Psikyo", "Dragon Blaze", GAME_SUPPORTS_SAVE )
-GAME( 2000, tgm2,     0,        psikyo5_240, tgm2,     tgm2,     ROT0,   "Arika",  "Tetris the Absolute The Grand Master 2", GAME_SUPPORTS_SAVE )
-GAME( 2000, tgm2p,    tgm2,     psikyo5_240, tgm2,     tgm2,     ROT0,   "Arika",  "Tetris the Absolute The Grand Master 2 Plus", GAME_SUPPORTS_SAVE )
-GAME( 2001, gnbarich, 0,        psikyo5,     gnbarich, gnbarich, ROT270, "Psikyo", "Gunbarich", GAME_SUPPORTS_SAVE )
-GAME( 2002, mjgtaste, 0,        psikyo5,     mjgtaste, mjgtaste, ROT0,   "Psikyo", "Mahjong G-Taste", GAME_SUPPORTS_SAVE )
+GAME( 2000, dragnblz, 0,        psikyo5,     dragnblz, psikyosh_state, dragnblz, ROT270, "Psikyo", "Dragon Blaze", GAME_SUPPORTS_SAVE )
+GAME( 2000, tgm2,     0,        psikyo5_240, tgm2, psikyosh_state,     tgm2,     ROT0,   "Arika",  "Tetris the Absolute The Grand Master 2", GAME_SUPPORTS_SAVE )
+GAME( 2000, tgm2p,    tgm2,     psikyo5_240, tgm2, psikyosh_state,     tgm2,     ROT0,   "Arika",  "Tetris the Absolute The Grand Master 2 Plus", GAME_SUPPORTS_SAVE )
+GAME( 2001, gnbarich, 0,        psikyo5,     gnbarich, psikyosh_state, gnbarich, ROT270, "Psikyo", "Gunbarich", GAME_SUPPORTS_SAVE )
+GAME( 2002, mjgtaste, 0,        psikyo5,     mjgtaste, psikyosh_state, mjgtaste, ROT0,   "Psikyo", "Mahjong G-Taste", GAME_SUPPORTS_SAVE )

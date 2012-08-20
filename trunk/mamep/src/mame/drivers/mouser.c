@@ -289,15 +289,15 @@ ROM_START( mouserc )
 ROM_END
 
 
-static DRIVER_INIT( mouser )
+DRIVER_INIT_MEMBER(mouser_state,mouser)
 {
 	/* Decode the opcodes */
 
 	offs_t i;
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
-	UINT8 *decrypted = auto_alloc_array(machine, UINT8, 0x6000);
-	UINT8 *table = machine.root_device().memregion("user1")->base();
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
+	UINT8 *decrypted = auto_alloc_array(machine(), UINT8, 0x6000);
+	UINT8 *table = machine().root_device().memregion("user1")->base();
 
 	space->set_decrypted_region(0x0000, 0x5fff, decrypted);
 
@@ -308,5 +308,5 @@ static DRIVER_INIT( mouser )
 }
 
 
-GAME( 1983, mouser,   0,      mouser, mouser, mouser, ROT90, "UPL", "Mouser", GAME_SUPPORTS_SAVE )
-GAME( 1983, mouserc,  mouser, mouser, mouser, mouser, ROT90, "UPL (Cosmos license)", "Mouser (Cosmos)", GAME_SUPPORTS_SAVE )
+GAME( 1983, mouser,   0,      mouser, mouser, mouser_state, mouser, ROT90, "UPL", "Mouser", GAME_SUPPORTS_SAVE )
+GAME( 1983, mouserc,  mouser, mouser, mouser, mouser_state, mouser, ROT90, "UPL (Cosmos license)", "Mouser (Cosmos)", GAME_SUPPORTS_SAVE )

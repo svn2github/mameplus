@@ -216,7 +216,6 @@ WRITE16_MEMBER(raiden2_state::cop_pgm_data_w)
 			else
 				logerror("sub32 (r%x)\n", reg);
 			break;
-			break;
 		case 0x17:
 			if(off)
 				logerror("addmem16 %x(r%x)\n", off, reg);
@@ -2896,58 +2895,58 @@ ROM_START( xsedae )
 	ROM_REGION( 0x100000, "oki2", ROMREGION_ERASEFF )	/* ADPCM samples */
 ROM_END
 
-static DRIVER_INIT (raiden2)
+DRIVER_INIT_MEMBER(raiden2_state,raiden2)
 {
-	machine.root_device().membank("mainbank")->configure_entries(0, 2, machine.root_device().memregion("mainprg")->base(), 0x20000);
-	raiden2_decrypt_sprites(machine);
+	machine().root_device().membank("mainbank")->configure_entries(0, 2, machine().root_device().memregion("mainprg")->base(), 0x20000);
+	raiden2_decrypt_sprites(machine());
 }
 
-static DRIVER_INIT (raidendx)
+DRIVER_INIT_MEMBER(raiden2_state,raidendx)
 {
-	machine.root_device().membank("mainbank")->configure_entries(0, 0x10, machine.root_device().memregion("mainprg")->base(), 0x20000);
-	raiden2_decrypt_sprites(machine);
+	machine().root_device().membank("mainbank")->configure_entries(0, 0x10, machine().root_device().memregion("mainprg")->base(), 0x20000);
+	raiden2_decrypt_sprites(machine());
 }
 
-static DRIVER_INIT (xsedae)
+DRIVER_INIT_MEMBER(raiden2_state,xsedae)
 {
 	/* doesn't have banking */
-	//machine.root_device().membank("mainbank")->configure_entries(0, 2, machine.root_device().memregion("mainprg")->base(), 0x20000);
+	//machine().root_device().membank("mainbank")->configure_entries(0, 2, machine().root_device().memregion("mainprg")->base(), 0x20000);
 }
 
-static DRIVER_INIT (zeroteam)
+DRIVER_INIT_MEMBER(raiden2_state,zeroteam)
 {
-	machine.root_device().membank("mainbank")->configure_entries(0, 2, machine.root_device().memregion("mainprg")->base(), 0x20000);
-	zeroteam_decrypt_sprites(machine);
+	machine().root_device().membank("mainbank")->configure_entries(0, 2, machine().root_device().memregion("mainprg")->base(), 0x20000);
+	zeroteam_decrypt_sprites(machine());
 }
 
 /* GAME DRIVERS */
 
 // rev numbers at end of the line just indicate which sets are the same code revisions (just a region byte change), they don't reflect the actual order of release
-GAME( 1993, raiden2,  0,       raiden2,  raiden2,  raiden2,  ROT270, "Seibu Kaihatsu (Fabtek license)",        "Raiden II (set 1, US Fabtek)",     GAME_NOT_WORKING) // rev 1
-GAME( 1993, raiden2a, raiden2, raiden2,  raiden2,  raiden2,  ROT270, "Seibu Kaihatsu (Metrotainment license)", "Raiden II (set 2, Metrotainment)", GAME_NOT_WORKING) //  ^
-GAME( 1993, raiden2b, raiden2, raiden2,  raiden2,  raiden2,  ROT270, "Seibu Kaihatsu",                         "Raiden II (set 3, Japan)",         GAME_NOT_WORKING) //  ^
-GAME( 1993, raiden2c, raiden2, raiden2,  raiden2,  raiden2,  ROT270, "Seibu Kaihatsu",                         "Raiden II (set 4, Italy)",         GAME_NOT_WORKING) // rev 2
-GAME( 1993, raiden2d, raiden2, raiden2,  raiden2,  raiden2,  ROT270, "Seibu Kaihatsu",                         "Raiden II (set 5, Easy Version)",  GAME_NOT_WORKING) // rev 3
-GAME( 1993, raiden2e, raiden2, raiden2,  raiden2,  raiden2,  ROT270, "Seibu Kaihatsu",                         "Raiden II (set 6, Easy Version)",  GAME_NOT_WORKING) // rev 4
-GAME( 1993, raiden2f, raiden2, raiden2,  raiden2,  raiden2,  ROT270, "Seibu Kaihatsu (Fabtek license)",        "Raiden II (set 7, US Fabtek, Easy Version)",     GAME_NOT_WORKING) //  ^
-GAME( 1993, raiden2g, raiden2, raiden2,  raiden2,  raiden2,  ROT270, "Seibu Kaihatsu (Fabtek license)",        "Raiden II (set 8, US Fabtek, Easy Version)",         GAME_NOT_WORKING) // rev 3 and 4 mix?
+GAME( 1993, raiden2,  0,       raiden2,  raiden2, raiden2_state,  raiden2,  ROT270, "Seibu Kaihatsu (Fabtek license)",        "Raiden II (set 1, US Fabtek)",     GAME_NOT_WORKING) // rev 1
+GAME( 1993, raiden2a, raiden2, raiden2,  raiden2, raiden2_state,  raiden2,  ROT270, "Seibu Kaihatsu (Metrotainment license)", "Raiden II (set 2, Metrotainment)", GAME_NOT_WORKING) //  ^
+GAME( 1993, raiden2b, raiden2, raiden2,  raiden2, raiden2_state,  raiden2,  ROT270, "Seibu Kaihatsu",                         "Raiden II (set 3, Japan)",         GAME_NOT_WORKING) //  ^
+GAME( 1993, raiden2c, raiden2, raiden2,  raiden2, raiden2_state,  raiden2,  ROT270, "Seibu Kaihatsu",                         "Raiden II (set 4, Italy)",         GAME_NOT_WORKING) // rev 2
+GAME( 1993, raiden2d, raiden2, raiden2,  raiden2, raiden2_state,  raiden2,  ROT270, "Seibu Kaihatsu",                         "Raiden II (set 5, Easy Version)",  GAME_NOT_WORKING) // rev 3
+GAME( 1993, raiden2e, raiden2, raiden2,  raiden2, raiden2_state,  raiden2,  ROT270, "Seibu Kaihatsu",                         "Raiden II (set 6, Easy Version)",  GAME_NOT_WORKING) // rev 4
+GAME( 1993, raiden2f, raiden2, raiden2,  raiden2, raiden2_state,  raiden2,  ROT270, "Seibu Kaihatsu (Fabtek license)",        "Raiden II (set 7, US Fabtek, Easy Version)",     GAME_NOT_WORKING) //  ^
+GAME( 1993, raiden2g, raiden2, raiden2,  raiden2, raiden2_state,  raiden2,  ROT270, "Seibu Kaihatsu (Fabtek license)",        "Raiden II (set 8, US Fabtek, Easy Version)",         GAME_NOT_WORKING) // rev 3 and 4 mix?
 
 
-GAME( 1994, raidndx,  0,       raidendx,  raidendx, raidendx,  ROT270, "Seibu Kaihatsu",                         "Raiden DX (UK)",                   GAME_NOT_WORKING)
-GAME( 1994, raidndxa1,raidndx, raidendx,  raidendx, raidendx,  ROT270, "Seibu Kaihatsu (Metrotainment license)", "Raiden DX (Asia set 1)",           GAME_NOT_WORKING)
-GAME( 1994, raidndxa2,raidndx, raidendx,  raidendx, raidendx,  ROT270, "Seibu Kaihatsu (Metrotainment license)", "Raiden DX (Asia set 2)",           GAME_NOT_WORKING)
-GAME( 1994, raidndxj, raidndx, raidendx,  raidendx, raidendx,  ROT270, "Seibu Kaihatsu",                         "Raiden DX (Japan)",                GAME_NOT_WORKING)
-GAME( 1994, raidndxu, raidndx, raidendx,  raidendx, raidendx,  ROT270, "Seibu Kaihatsu (Fabtek license)",        "Raiden DX (US)",                   GAME_NOT_WORKING)
-GAME( 1994, raidndxg, raidndx, raidendx,  raidendx, raidendx,  ROT270, "Seibu Kaihatsu (Tuning license)",        "Raiden DX (Germany)",              GAME_NOT_WORKING)
+GAME( 1994, raidndx,  0,       raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu",                         "Raiden DX (UK)",                   GAME_NOT_WORKING)
+GAME( 1994, raidndxa1,raidndx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu (Metrotainment license)", "Raiden DX (Asia set 1)",           GAME_NOT_WORKING)
+GAME( 1994, raidndxa2,raidndx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu (Metrotainment license)", "Raiden DX (Asia set 2)",           GAME_NOT_WORKING)
+GAME( 1994, raidndxj, raidndx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu",                         "Raiden DX (Japan)",                GAME_NOT_WORKING)
+GAME( 1994, raidndxu, raidndx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu (Fabtek license)",        "Raiden DX (US)",                   GAME_NOT_WORKING)
+GAME( 1994, raidndxg, raidndx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu (Tuning license)",        "Raiden DX (Germany)",              GAME_NOT_WORKING)
 
-GAME( 1993, zeroteam, 0,       zeroteam, zeroteam,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team USA (set 1, US, Fabtek license)", GAME_NOT_WORKING)
-GAME( 1993, zeroteama,zeroteam,zeroteam, zeroteam,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team (set 2, Japan? (earlier?))", GAME_NOT_WORKING)
-GAME( 1993, zeroteamb,zeroteam,zeroteam, zeroteam,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team (set 3, Japan? (later batteryless))", GAME_NOT_WORKING) // reprograms the sprite decrypt data of the SEI251 on every boot, like raiden2 does. hack?
-GAME( 1993, zeroteamc,zeroteam,zeroteam, zeroteam,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team (set 4, Taiwan, Liang Hwa license)", GAME_NOT_WORKING)
-GAME( 1993, zeroteamd,zeroteam,zeroteam, zeroteam,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team (set 5, Korea, Dream Soft license)", GAME_NOT_WORKING)
-//GAME( 1993, zeroteame,zeroteam,zeroteam, zeroteam,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team Korea (set 6, Korea, Dream Soft license)", GAME_NOT_WORKING) // NOT DUMPED but seen on a board drkitty had
+GAME( 1993, zeroteam, 0,       zeroteam, zeroteam, raiden2_state,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team USA (set 1, US, Fabtek license)", GAME_NOT_WORKING)
+GAME( 1993, zeroteama,zeroteam,zeroteam, zeroteam, raiden2_state,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team (set 2, Japan? (earlier?))", GAME_NOT_WORKING)
+GAME( 1993, zeroteamb,zeroteam,zeroteam, zeroteam, raiden2_state,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team (set 3, Japan? (later batteryless))", GAME_NOT_WORKING) // reprograms the sprite decrypt data of the SEI251 on every boot, like raiden2 does. hack?
+GAME( 1993, zeroteamc,zeroteam,zeroteam, zeroteam, raiden2_state,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team (set 4, Taiwan, Liang Hwa license)", GAME_NOT_WORKING)
+GAME( 1993, zeroteamd,zeroteam,zeroteam, zeroteam, raiden2_state,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team (set 5, Korea, Dream Soft license)", GAME_NOT_WORKING)
+//GAME( 1993, zeroteame,zeroteam,zeroteam, zeroteam, raiden2_state,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team Korea (set 6, Korea, Dream Soft license)", GAME_NOT_WORKING) // NOT DUMPED but seen on a board drkitty had
 
-GAME( 1993, zeroteams,zeroteam,zeroteam, zeroteam,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team Selection", GAME_NOT_WORKING)
-GAME( 1993, zeroteamsr,zeroteam,zeroteam, zeroteam,  zeroteam,  ROT0,  "Seibu Kaihatsu", "Zero Team Suicide Revival Kit", GAME_NOT_WORKING) // reprograms the sprite decrypt data of the SEI251 only, no game code
+GAME( 1993, zeroteams,zeroteam,zeroteam, zeroteam, raiden2_state,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team Selection", GAME_NOT_WORKING)
+GAME( 1993, zeroteamsr,zeroteam,zeroteam, zeroteam, raiden2_state,  zeroteam,  ROT0,  "Seibu Kaihatsu", "Zero Team Suicide Revival Kit", GAME_NOT_WORKING) // reprograms the sprite decrypt data of the SEI251 only, no game code
 
-GAME( 1995, xsedae,   0,       xsedae,   xsedae,  xsedae,   ROT0,   "Dream Island",   "X Se Dae Quiz", GAME_NOT_WORKING)
+GAME( 1995, xsedae,   0,       xsedae,   xsedae, raiden2_state,  xsedae,   ROT0,   "Dream Island",   "X Se Dae Quiz", GAME_NOT_WORKING)

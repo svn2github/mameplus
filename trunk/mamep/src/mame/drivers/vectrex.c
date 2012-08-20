@@ -112,7 +112,7 @@ static MACHINE_CONFIG_START( vectrex, vectrex_state )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 	MCFG_SOUND_ADD("ay8912", AY8912, 1500000)
 	MCFG_SOUND_CONFIG(vectrex_ay8910_interface)
@@ -228,6 +228,6 @@ ROM_END
 ***************************************************************************/
 
 /*    YEAR  NAME      PARENT    COMPAT  MACHINE   INPUT     INIT       COMPANY FULLNAME */
-CONS(1982, vectrex,  0,        0,      vectrex,  vectrex,  vectrex,    "General Consumer Electronics",   "Vectrex" , ROT270)
+CONS(1982, vectrex,  0,        0,      vectrex,  vectrex,  vectrex_state, vectrex,    "General Consumer Electronics",   "Vectrex" , ROT270)
 
-GAME(1984, raaspec,  0,        raaspec,  raaspec,  vectrex, ROT270,    "Roy Abel & Associates",   "Spectrum I+", GAME_NOT_WORKING ) //TODO: button labels & timings, a mandatory artwork too?
+GAME(1984, raaspec,  0,        raaspec,  raaspec, vectrex_state,  vectrex, ROT270,    "Roy Abel & Associates",   "Spectrum I+", GAME_NOT_WORKING ) //TODO: button labels & timings, a mandatory artwork too?

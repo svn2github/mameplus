@@ -218,6 +218,7 @@ enum
 #define OPTION_RAMSIZE				"ramsize"
 
 #define OPTION_CONFIRM_QUIT			"confirm_quit"
+#define OPTION_UI_MOUSE				"ui_mouse"
 #ifdef PLAYBACK_END_PAUSE
 #define OPTION_PLAYBACK_END_PAUSE		"playback_end_pause"
 #endif /* PLAYBACK_END_PAUSE */
@@ -402,6 +403,7 @@ public:
 	const char *ram_size() const { return value(OPTION_RAMSIZE); }
 
 	bool confirm_quit() const { return bool_value(OPTION_CONFIRM_QUIT); }
+	bool ui_mouse() const { return bool_value(OPTION_UI_MOUSE); }
 
 	// device-specific options
 	const char *device_option(device_image_interface &image);

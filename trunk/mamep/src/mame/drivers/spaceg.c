@@ -435,7 +435,7 @@ static MACHINE_CONFIG_START( spaceg, spaceg_state )
 //  MCFG_SOUND_ADD("sn3", SN76496, 15468480/4)
 //  MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-//  MCFG_SOUND_ADD("dac", DAC, 0)
+//  MCFG_DAC_ADD("dac")
 //  MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -473,4 +473,4 @@ ROM_END
  *
  *************************************/
 
-GAME( 1979, spaceg, 0, spaceg, spaceg, 0, ROT270, "Omori Electric Co., Ltd.", "Space Guerrilla", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1979, spaceg, 0, spaceg, spaceg, driver_device, 0, ROT270, "Omori Electric Co., Ltd.", "Space Guerrilla", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND | GAME_SUPPORTS_SAVE )

@@ -42,25 +42,25 @@ TODO:
 #include "machine/nvram.h"
 
 
-static DRIVER_INIT( mjsikaku )
+DRIVER_INIT_MEMBER(nbmj8688_state,mjsikaku)
 {
 	nb1413m3_type = NB1413M3_MJSIKAKU;
 }
 
-static DRIVER_INIT( mmsikaku )
+DRIVER_INIT_MEMBER(nbmj8688_state,mmsikaku)
 {
 	nb1413m3_type = NB1413M3_MMSIKAKU;
 }
 
-static DRIVER_INIT( otonano )
+DRIVER_INIT_MEMBER(nbmj8688_state,otonano)
 {
 	nb1413m3_type = NB1413M3_OTONANO;
 }
 
-static DRIVER_INIT( mjcamera )
+DRIVER_INIT_MEMBER(nbmj8688_state,mjcamera)
 {
-	UINT8 *rom = machine.root_device().memregion("voice")->base() + 0x20000;
-	UINT8 *prot = machine.root_device().memregion("user1")->base();
+	UINT8 *rom = machine().root_device().memregion("voice")->base() + 0x20000;
+	UINT8 *prot = machine().root_device().memregion("user1")->base();
 	int i;
 
 	/* this is one possible way to rearrange the protection ROM data to get the
@@ -76,10 +76,10 @@ static DRIVER_INIT( mjcamera )
 	nb1413m3_type = NB1413M3_MJCAMERA;
 }
 
-static DRIVER_INIT( kanatuen )
+DRIVER_INIT_MEMBER(nbmj8688_state,kanatuen)
 {
 	/* uses the same protection data as mjcamer, but a different check */
-	UINT8 *rom = machine.root_device().memregion("voice")->base() + 0x30000;
+	UINT8 *rom = machine().root_device().memregion("voice")->base() + 0x30000;
 
 	rom[0x0004] = 0x09;
 	rom[0x0103] = 0x0e;
@@ -89,11 +89,11 @@ static DRIVER_INIT( kanatuen )
 	nb1413m3_type = NB1413M3_KANATUEN;
 }
 
-static DRIVER_INIT( kyuhito )
+DRIVER_INIT_MEMBER(nbmj8688_state,kyuhito)
 {
 #if 1
 	/* uses the same protection data as ????, but a different check */
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 
 	rom[0x0149] = 0x00;
 	rom[0x014a] = 0x00;
@@ -103,10 +103,10 @@ static DRIVER_INIT( kyuhito )
 	nb1413m3_type = NB1413M3_KYUHITO;
 }
 
-static DRIVER_INIT( idhimitu )
+DRIVER_INIT_MEMBER(nbmj8688_state,idhimitu)
 {
-	UINT8 *rom = machine.root_device().memregion("voice")->base() + 0x20000;
-	UINT8 *prot = machine.root_device().memregion("user1")->base();
+	UINT8 *rom = machine().root_device().memregion("voice")->base() + 0x20000;
+	UINT8 *prot = machine().root_device().memregion("user1")->base();
 	int i;
 
 	/* this is one possible way to rearrange the protection ROM data to get the
@@ -122,16 +122,16 @@ static DRIVER_INIT( idhimitu )
 	nb1413m3_type = NB1413M3_IDHIMITU;
 }
 
-static DRIVER_INIT( kaguya )
+DRIVER_INIT_MEMBER(nbmj8688_state,kaguya)
 {
 	nb1413m3_type = NB1413M3_KAGUYA;
 
 }
 
-static DRIVER_INIT( kaguya2 )
+DRIVER_INIT_MEMBER(nbmj8688_state,kaguya2)
 {
-	UINT8 *rom = machine.root_device().memregion("voice")->base() + 0x20000;
-	UINT8 *prot = machine.root_device().memregion("user1")->base();
+	UINT8 *rom = machine().root_device().memregion("voice")->base() + 0x20000;
+	UINT8 *prot = machine().root_device().memregion("user1")->base();
 	int i;
 
 	/* this is one possible way to rearrange the protection ROM data to get the
@@ -147,127 +147,127 @@ static DRIVER_INIT( kaguya2 )
 	nb1413m3_type = NB1413M3_KAGUYA2;
 }
 
-static DRIVER_INIT( secolove )
+DRIVER_INIT_MEMBER(nbmj8688_state,secolove)
 {
 	nb1413m3_type = NB1413M3_SECOLOVE;
 }
 
-static DRIVER_INIT( citylove )
+DRIVER_INIT_MEMBER(nbmj8688_state,citylove)
 {
 	nb1413m3_type = NB1413M3_CITYLOVE;
 }
 
-static DRIVER_INIT( mcitylov )
+DRIVER_INIT_MEMBER(nbmj8688_state,mcitylov)
 {
 	nb1413m3_type = NB1413M3_MCITYLOV;
 }
 
-static DRIVER_INIT( seiha )
+DRIVER_INIT_MEMBER(nbmj8688_state,seiha)
 {
 	nb1413m3_type = NB1413M3_SEIHA;
 }
 
-static DRIVER_INIT( seiham )
+DRIVER_INIT_MEMBER(nbmj8688_state,seiham)
 {
 	nb1413m3_type = NB1413M3_SEIHAM;
 }
 
-static DRIVER_INIT( korinai )
+DRIVER_INIT_MEMBER(nbmj8688_state,korinai)
 {
 	nb1413m3_type = NB1413M3_KORINAI;
 }
 
-static DRIVER_INIT( korinaim )
+DRIVER_INIT_MEMBER(nbmj8688_state,korinaim)
 {
 	nb1413m3_type = NB1413M3_KORINAIM;
 }
 
-static DRIVER_INIT( iemoto )
+DRIVER_INIT_MEMBER(nbmj8688_state,iemoto)
 {
 	nb1413m3_type = NB1413M3_IEMOTO;
 }
 
-static DRIVER_INIT( iemotom )
+DRIVER_INIT_MEMBER(nbmj8688_state,iemotom)
 {
 	nb1413m3_type = NB1413M3_IEMOTOM;
 }
 
-static DRIVER_INIT( ryuuha )
+DRIVER_INIT_MEMBER(nbmj8688_state,ryuuha)
 {
 	nb1413m3_type = NB1413M3_RYUUHA;
 }
 
-static DRIVER_INIT( ojousan )
+DRIVER_INIT_MEMBER(nbmj8688_state,ojousan)
 {
 	nb1413m3_type = NB1413M3_OJOUSAN;
 }
 
-static DRIVER_INIT( ojousanm )
+DRIVER_INIT_MEMBER(nbmj8688_state,ojousanm)
 {
 	nb1413m3_type = NB1413M3_OJOUSANM;
 }
 
-static DRIVER_INIT( bijokkoy )
+DRIVER_INIT_MEMBER(nbmj8688_state,bijokkoy)
 {
 	nb1413m3_type = NB1413M3_BIJOKKOY;
 }
 
-static DRIVER_INIT( bijokkog )
+DRIVER_INIT_MEMBER(nbmj8688_state,bijokkog)
 {
 	nb1413m3_type = NB1413M3_BIJOKKOG;
 }
 
-static DRIVER_INIT( housemnq )
+DRIVER_INIT_MEMBER(nbmj8688_state,housemnq)
 {
 	nb1413m3_type = NB1413M3_HOUSEMNQ;
 }
 
-static DRIVER_INIT( housemn2 )
+DRIVER_INIT_MEMBER(nbmj8688_state,housemn2)
 {
 	nb1413m3_type = NB1413M3_HOUSEMN2;
 }
 
-static DRIVER_INIT( orangec )
+DRIVER_INIT_MEMBER(nbmj8688_state,orangec)
 {
 	nb1413m3_type = NB1413M3_ORANGEC;
 }
 
-static DRIVER_INIT( orangeci )
+DRIVER_INIT_MEMBER(nbmj8688_state,orangeci)
 {
 	nb1413m3_type = NB1413M3_ORANGECI;
 }
 
-static DRIVER_INIT( vipclub )
+DRIVER_INIT_MEMBER(nbmj8688_state,vipclub)
 {
 	nb1413m3_type = NB1413M3_VIPCLUB;
 }
 
-static DRIVER_INIT( livegal )
+DRIVER_INIT_MEMBER(nbmj8688_state,livegal)
 {
 	nb1413m3_type = NB1413M3_LIVEGAL;
 }
 
-static DRIVER_INIT( crystalg )
+DRIVER_INIT_MEMBER(nbmj8688_state,crystalg)
 {
 	nb1413m3_type = NB1413M3_CRYSTALG;
 }
 
-static DRIVER_INIT( crystal2 )
+DRIVER_INIT_MEMBER(nbmj8688_state,crystal2)
 {
 	nb1413m3_type = NB1413M3_CRYSTAL2;
 }
 
-static DRIVER_INIT( apparel )
+DRIVER_INIT_MEMBER(nbmj8688_state,apparel)
 {
 	nb1413m3_type = NB1413M3_APPAREL;
 }
 
-static DRIVER_INIT( nightlov )
+DRIVER_INIT_MEMBER(nbmj8688_state,nightlov)
 {
 	nb1413m3_type = NB1413M3_NIGHTLOV;
 }
 
-static DRIVER_INIT( barline )
+DRIVER_INIT_MEMBER(nbmj8688_state,barline)
 {
 	nb1413m3_type = NB1413M3_BARLINE;
 }
@@ -308,7 +308,7 @@ static ADDRESS_MAP_START( secolove_io_map, AS_IO, 8, nbmj8688_state )
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
 	AM_RANGE(0xc0, 0xcf) AM_WRITE(nbmj8688_clut_w)
 	AM_RANGE(0xd0, 0xd0) AM_READ(ff_r)	// irq ack? watchdog?
-	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe0, 0xe0) AM_WRITE(secolove_romsel_w)
 //  AM_RANGE(0xf0, 0xf0) AM_READ_LEGACY(nb1413m3_dipsw1_r)
 //  AM_RANGE(0xf1, 0xf1) AM_READ_LEGACY(nb1413m3_dipsw2_r)
@@ -333,7 +333,7 @@ static ADDRESS_MAP_START( barline_io_map, AS_IO, 8, nbmj8688_state )
 	AM_RANGE(0xb0, 0xb0) AM_READ_LEGACY(nb1413m3_inputport2_r) AM_WRITE(barline_output_w)
 	AM_RANGE(0xc0, 0xcf) AM_WRITE(nbmj8688_clut_w)
 	AM_RANGE(0xd0, 0xd0) AM_READ(ff_r)	// irq ack? watchdog?
-//  AM_RANGE(0xd0, 0xd0) AM_DEVWRITE_LEGACY("dac", dac_w) //not used
+//  AM_RANGE(0xd0, 0xd0) AM_DEVWRITE("dac", dac_device, write_unsigned8) //not used
 	AM_RANGE(0xe0, 0xe0) AM_WRITE(secolove_romsel_w)
 	AM_RANGE(0xf0, 0xf0) AM_READ_LEGACY(nb1413m3_dipsw1_r) AM_WRITE(mjsikaku_scrolly_w)
 	AM_RANGE(0xf1, 0xf1) AM_READ_LEGACY(nb1413m3_dipsw2_r)
@@ -351,7 +351,7 @@ static ADDRESS_MAP_START( crystalg_io_map, AS_IO, 8, nbmj8688_state )
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
 	AM_RANGE(0xc0, 0xcf) AM_WRITE(nbmj8688_clut_w)
 	AM_RANGE(0xd0, 0xd0) AM_READ(ff_r)	// irq ack? watchdog?
-	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe0, 0xe0) AM_WRITE(crystalg_romsel_w)
 //  AM_RANGE(0xf0, 0xf0) AM_READ_LEGACY(nb1413m3_dipsw1_r)
 //  AM_RANGE(0xf0, 0xf0) AM_WRITENOP
@@ -371,7 +371,7 @@ static ADDRESS_MAP_START( otonano_io_map, AS_IO, 8, nbmj8688_state )
 	AM_RANGE(0xa0, 0xa0) AM_READWRITE_LEGACY(nb1413m3_inputport1_r,nb1413m3_inputportsel_w)
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
 	AM_RANGE(0xd0, 0xd0) AM_READ(ff_r)	// irq ack? watchdog?
-	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe0, 0xe0) AM_WRITE(mjsikaku_gfxflag2_w)
 	AM_RANGE(0xf0, 0xf0) AM_READ_LEGACY(nb1413m3_dipsw1_r) AM_WRITE(mjsikaku_scrolly_w)
 	AM_RANGE(0xf1, 0xf1) AM_READ_LEGACY(nb1413m3_dipsw2_r)
@@ -391,7 +391,7 @@ static ADDRESS_MAP_START( kaguya_io_map, AS_IO, 8, nbmj8688_state )
 	AM_RANGE(0xa0, 0xa0) AM_READWRITE_LEGACY(nb1413m3_inputport1_r,nb1413m3_inputportsel_w)
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
 	AM_RANGE(0xd0, 0xd0) AM_READ(ff_r)	// irq ack? watchdog?
-	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe0, 0xe0) AM_WRITE(mjsikaku_gfxflag2_w)
     AM_RANGE(0xf0, 0xf0) AM_READ_LEGACY(nb1413m3_dipsw1_r) AM_WRITE(mjsikaku_scrolly_w)
 	AM_RANGE(0xf1, 0xf1) AM_READ_LEGACY(nb1413m3_dipsw2_r)
@@ -412,7 +412,7 @@ static ADDRESS_MAP_START( iemoto_io_map, AS_IO, 8, nbmj8688_state )
 	AM_RANGE(0xa0, 0xa0) AM_READWRITE_LEGACY(nb1413m3_inputport1_r,nb1413m3_inputportsel_w)
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
 	AM_RANGE(0xd0, 0xd0) AM_READ(ff_r)	// irq ack? watchdog?
-	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe0, 0xe0) AM_WRITE(mjsikaku_gfxflag2_w)
 //  AM_RANGE(0xf0, 0xf0) AM_READ_LEGACY(nb1413m3_dipsw1_r)
 //  AM_RANGE(0xf1, 0xf1) AM_READ_LEGACY(nb1413m3_dipsw2_r)
@@ -434,7 +434,7 @@ static ADDRESS_MAP_START( seiha_io_map, AS_IO, 8, nbmj8688_state )
 	AM_RANGE(0xa0, 0xa0) AM_READWRITE_LEGACY(nb1413m3_inputport1_r,nb1413m3_inputportsel_w)
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
 	AM_RANGE(0xd0, 0xd0) AM_READ(ff_r)	// irq ack? watchdog?
-	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe0, 0xe0) AM_WRITE(mjsikaku_gfxflag2_w)
 //  AM_RANGE(0xf0, 0xf0) AM_READ_LEGACY(nb1413m3_dipsw1_r)
 //  AM_RANGE(0xf1, 0xf1) AM_READ_LEGACY(nb1413m3_dipsw2_r)
@@ -454,7 +454,7 @@ static ADDRESS_MAP_START( mjgaiden_io_map, AS_IO, 8, nbmj8688_state )
 	AM_RANGE(0xa0, 0xa0) AM_READWRITE_LEGACY(nb1413m3_inputport1_r,nb1413m3_inputportsel_w)
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
 	AM_RANGE(0xd0, 0xd0) AM_READ(ff_r)	// irq ack? watchdog?
-	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe0, 0xe0) AM_WRITE(mjsikaku_gfxflag2_w)
 //  AM_RANGE(0xf0, 0xf0) AM_READ_LEGACY(nb1413m3_dipsw1_r)
 //  AM_RANGE(0xf1, 0xf1) AM_READ_LEGACY(nb1413m3_dipsw2_r)
@@ -479,7 +479,7 @@ static ADDRESS_MAP_START( p16bit_LCD_io_map, AS_IO, 8, nbmj8688_state )
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
 	AM_RANGE(0xc0, 0xcf) AM_WRITE(nbmj8688_clut_w)
 	AM_RANGE(0xd0, 0xd0) AM_READ(ff_r)	// irq ack? watchdog?
-	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe0, 0xe0) AM_WRITE(secolove_romsel_w)
 //  AM_RANGE(0xf0, 0xf0) AM_READ_LEGACY(nb1413m3_dipsw1_r)
 //  AM_RANGE(0xf1, 0xf1) AM_READ_LEGACY(nb1413m3_dipsw2_r)
@@ -500,7 +500,7 @@ static ADDRESS_MAP_START( mjsikaku_io_map, AS_IO, 8, nbmj8688_state )
 	AM_RANGE(0xa0, 0xa0) AM_READWRITE_LEGACY(nb1413m3_inputport1_r,nb1413m3_inputportsel_w)
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
 	AM_RANGE(0xd0, 0xd0) AM_READ(ff_r)	// irq ack? watchdog?
-	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe0, 0xe0) AM_WRITE(mjsikaku_gfxflag2_w)
 	AM_RANGE(0xf0, 0xf0) AM_READ_LEGACY(nb1413m3_dipsw1_r)
 	AM_RANGE(0xf1, 0xf1) AM_READ_LEGACY(nb1413m3_dipsw2_r)
@@ -522,7 +522,7 @@ static ADDRESS_MAP_START( mmsikaku_io_map, AS_IO, 8, nbmj8688_state )
 	AM_RANGE(0xa0, 0xa0) AM_READWRITE_LEGACY(nb1413m3_inputport1_r,nb1413m3_inputportsel_w)
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
 	AM_RANGE(0xd0, 0xd0) AM_READ(ff_r)	// irq ack? watchdog?
-	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe0, 0xe0) AM_WRITE(mjsikaku_gfxflag2_w)
 //  AM_RANGE(0xf0, 0xf0) AM_READ_LEGACY(nb1413m3_dipsw1_r)
 //  AM_RANGE(0xf1, 0xf1) AM_READ_LEGACY(nb1413m3_dipsw2_r)
@@ -2935,7 +2935,7 @@ static MACHINE_CONFIG_START( NBMJDRV_4096, nbmj8688_state )
 	MCFG_SOUND_CONFIG(ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.35)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 MACHINE_CONFIG_END
 
@@ -3062,7 +3062,7 @@ static MACHINE_CONFIG_START( mbmj_p16bit_LCD, nbmj8688_state )
 	MCFG_SOUND_CONFIG(ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.35)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 MACHINE_CONFIG_END
 
@@ -4014,52 +4014,52 @@ ROM_END
 
 
 /* 8-bit palette */
-GAME( 1986, crystalg, 0,        crystalg,        crystalg, crystalg, ROT0, "Nichibutsu", "Crystal Gal (Japan 860512)", 0 )
-GAME( 1986, crystal2, 0,        crystalg,        crystal2, crystal2, ROT0, "Nichibutsu", "Crystal Gal 2 (Japan 860620)", 0 )
-GAME( 1986, nightlov, 0,        crystalg,        nightlov, nightlov, ROT0, "Central Denshi", "Night Love (Japan 860705)", GAME_NOT_WORKING )
-GAME( 1986, apparel,  0,        apparel,         apparel,  apparel,  ROT0, "Central Denshi", "Apparel Night (Japan 860929)", 0 )
+GAME( 1986, crystalg, 0,        crystalg,        crystalg, nbmj8688_state, crystalg, ROT0, "Nichibutsu", "Crystal Gal (Japan 860512)", 0 )
+GAME( 1986, crystal2, 0,        crystalg,        crystal2, nbmj8688_state, crystal2, ROT0, "Nichibutsu", "Crystal Gal 2 (Japan 860620)", 0 )
+GAME( 1986, nightlov, 0,        crystalg,        nightlov, nbmj8688_state, nightlov, ROT0, "Central Denshi", "Night Love (Japan 860705)", GAME_NOT_WORKING )
+GAME( 1986, apparel,  0,        apparel,         apparel, nbmj8688_state,  apparel,  ROT0, "Central Denshi", "Apparel Night (Japan 860929)", 0 )
 
 /* hybrid 12-bit palette */
-GAME( 1986, citylove, 0,        mbmj_h12bit,     citylove, citylove, ROT0, "Nichibutsu", "City Love (Japan 860908)", 0 )
-GAME( 1986, mcitylov, citylove, mbmj_h12bit,     mcitylov, mcitylov, ROT0, "Nichibutsu", "City Love [BET] (Japan 860904)", 0 )
-GAME( 1986, secolove, 0,        mbmj_h12bit,     secolove, secolove, ROT0, "Nichibutsu", "Second Love (Japan 861201)", 0 )
-GAME( 1988, barline,  0,    	barline,		 barline,  barline,  ROT180, "Nichibutsu", "Barline (Japan?)",  GAME_IMPERFECT_SOUND )
+GAME( 1986, citylove, 0,        mbmj_h12bit,     citylove, nbmj8688_state, citylove, ROT0, "Nichibutsu", "City Love (Japan 860908)", 0 )
+GAME( 1986, mcitylov, citylove, mbmj_h12bit,     mcitylov, nbmj8688_state, mcitylov, ROT0, "Nichibutsu", "City Love [BET] (Japan 860904)", 0 )
+GAME( 1986, secolove, 0,        mbmj_h12bit,     secolove, nbmj8688_state, secolove, ROT0, "Nichibutsu", "Second Love (Japan 861201)", 0 )
+GAME( 1988, barline,  0,    	barline,		 barline, nbmj8688_state,  barline,  ROT180, "Nichibutsu", "Barline (Japan?)",  GAME_IMPERFECT_SOUND )
 
 /* hybrid 16-bit palette */
-GAME( 1987, seiha,    0,        seiha,           seiha,    seiha,    ROT0, "Nichibutsu",	 "Seiha (Japan 870725)", 0 )
-GAME( 1987, seiham,   seiha,    seiha,           seiham,   seiham,   ROT0, "Nichibutsu",	 "Seiha [BET] (Japan 870723)", 0 )
-GAME( 1987, mjgaiden, 0,        mjgaiden,        ojousan,  ojousan,  ROT0, "Central Denshi", "Mahjong Gaiden [BET] (Japan 870803)", 0 )
-GAME( 1987, iemoto,   0,        iemoto,          iemoto,   iemoto,   ROT0, "Nichibutsu",	 "Iemoto (Japan 871020)", 0 )
-GAME( 1987, iemotom,  iemoto,   ojousan,         iemotom,  iemotom,  ROT0, "Nichibutsu",	 "Iemoto [BET] (Japan 871118)", 0 )
-GAME( 1987, ryuuha,   iemoto,   ojousan,         ryuuha,   ryuuha,   ROT0, "Central Denshi", "Ryuuha [BET] (Japan 871027)", 0 )
-GAME( 1987, ojousan,  0,        ojousan,         ojousan,  ojousan,  ROT0, "Nichibutsu",	 "Ojousan (Japan 871204)", 0 )
-GAME( 1987, ojousanm, ojousan,  ojousan,         ojousanm, ojousanm, ROT0, "Nichibutsu",	 "Ojousan [BET] (Japan 870108)", 0 )
-GAME( 1988, korinai,  0,        ojousan,         korinai,  korinai,  ROT0, "Nichibutsu",	 "Mahjong-zukino Korinai Menmen (Japan 880425)", 0 )
-GAME( 1988, korinaim, korinai,  ojousan,         korinaim, korinaim, ROT0, "Nichibutsu",	 "Mahjong-zukino Korinai Menmen [BET] (Japan 880920)", 0 )
+GAME( 1987, seiha,    0,        seiha,           seiha, nbmj8688_state,    seiha,    ROT0, "Nichibutsu",	 "Seiha (Japan 870725)", 0 )
+GAME( 1987, seiham,   seiha,    seiha,           seiham, nbmj8688_state,   seiham,   ROT0, "Nichibutsu",	 "Seiha [BET] (Japan 870723)", 0 )
+GAME( 1987, mjgaiden, 0,        mjgaiden,        ojousan, nbmj8688_state,  ojousan,  ROT0, "Central Denshi", "Mahjong Gaiden [BET] (Japan 870803)", 0 )
+GAME( 1987, iemoto,   0,        iemoto,          iemoto, nbmj8688_state,   iemoto,   ROT0, "Nichibutsu",	 "Iemoto (Japan 871020)", 0 )
+GAME( 1987, iemotom,  iemoto,   ojousan,         iemotom, nbmj8688_state,  iemotom,  ROT0, "Nichibutsu",	 "Iemoto [BET] (Japan 871118)", 0 )
+GAME( 1987, ryuuha,   iemoto,   ojousan,         ryuuha, nbmj8688_state,   ryuuha,   ROT0, "Central Denshi", "Ryuuha [BET] (Japan 871027)", 0 )
+GAME( 1987, ojousan,  0,        ojousan,         ojousan, nbmj8688_state,  ojousan,  ROT0, "Nichibutsu",	 "Ojousan (Japan 871204)", 0 )
+GAME( 1987, ojousanm, ojousan,  ojousan,         ojousanm, nbmj8688_state, ojousanm, ROT0, "Nichibutsu",	 "Ojousan [BET] (Japan 870108)", 0 )
+GAME( 1988, korinai,  0,        ojousan,         korinai, nbmj8688_state,  korinai,  ROT0, "Nichibutsu",	 "Mahjong-zukino Korinai Menmen (Japan 880425)", 0 )
+GAME( 1988, korinaim, korinai,  ojousan,         korinaim, nbmj8688_state, korinaim, ROT0, "Nichibutsu",	 "Mahjong-zukino Korinai Menmen [BET] (Japan 880920)", 0 )
 
 /* pure 16-bit palette (+ LCD in some) */
-GAME( 1987, housemnq, 0,        mbmj_p16bit_LCD, housemnq, housemnq, ROT0, "Nichibutsu", "House Mannequin (Japan 870217)", 0 )
-GAME( 1987, housemn2, 0,        mbmj_p16bit_LCD, housemn2, housemn2, ROT0, "Nichibutsu", "House Mannequin Roppongi Live hen (Japan 870418)", 0 )
-GAME( 1987, livegal,  0,        mbmj_p16bit_LCD, livegal,  livegal,  ROT0, "Central Denshi", "Live Gal (Japan 870530)", 0 )
-GAME( 1987, bijokkoy, 0,        mbmj_p16bit_LCD, bijokkoy, bijokkoy, ROT0, "Nichibutsu", "Bijokko Yume Monogatari (Japan 870925)", 0 )
-GAME( 1988, bijokkog, 0,        mbmj_p16bit_LCD, bijokkog, bijokkog, ROT0, "Nichibutsu", "Bijokko Gakuen (Japan 880116)", 0 )
-GAME( 1988, orangec,  0,        mbmj_p16bit,     orangec,  orangec,  ROT0, "Daiichi Denshi", "Orange Club - Maruhi Kagai Jugyou (Japan 880213)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1988, orangeci, orangec,  mbmj_p16bit,     orangeci, orangeci, ROT0, "Daiichi Denshi", "Orange Club - Maru-hi Ippatsu Kaihou [BET] (Japan 880221)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1988, vipclub,  orangec,  mbmj_p16bit,     vipclub,  vipclub,  ROT0, "Daiichi Denshi", "Vip Club - Maru-hi Ippatsu Kaihou [BET] (Japan 880310)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1987, housemnq, 0,        mbmj_p16bit_LCD, housemnq, nbmj8688_state, housemnq, ROT0, "Nichibutsu", "House Mannequin (Japan 870217)", 0 )
+GAME( 1987, housemn2, 0,        mbmj_p16bit_LCD, housemn2, nbmj8688_state, housemn2, ROT0, "Nichibutsu", "House Mannequin Roppongi Live hen (Japan 870418)", 0 )
+GAME( 1987, livegal,  0,        mbmj_p16bit_LCD, livegal, nbmj8688_state,  livegal,  ROT0, "Central Denshi", "Live Gal (Japan 870530)", 0 )
+GAME( 1987, bijokkoy, 0,        mbmj_p16bit_LCD, bijokkoy, nbmj8688_state, bijokkoy, ROT0, "Nichibutsu", "Bijokko Yume Monogatari (Japan 870925)", 0 )
+GAME( 1988, bijokkog, 0,        mbmj_p16bit_LCD, bijokkog, nbmj8688_state, bijokkog, ROT0, "Nichibutsu", "Bijokko Gakuen (Japan 880116)", 0 )
+GAME( 1988, orangec,  0,        mbmj_p16bit,     orangec, nbmj8688_state,  orangec,  ROT0, "Daiichi Denshi", "Orange Club - Maruhi Kagai Jugyou (Japan 880213)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1988, orangeci, orangec,  mbmj_p16bit,     orangeci, nbmj8688_state, orangeci, ROT0, "Daiichi Denshi", "Orange Club - Maru-hi Ippatsu Kaihou [BET] (Japan 880221)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1988, vipclub,  orangec,  mbmj_p16bit,     vipclub, nbmj8688_state,  vipclub,  ROT0, "Daiichi Denshi", "Vip Club - Maru-hi Ippatsu Kaihou [BET] (Japan 880310)", GAME_IMPERFECT_GRAPHICS )
 
 /* pure 12-bit palette */
-GAME( 1988, kaguya,   0,        mbmj_p12bit,     kaguya,   kaguya,   ROT0, "Miki Syouji", "Mahjong Kaguyahime [BET] (Japan 880521)", 0 )
-GAME( 1989, kaguya2,  0,        mbmj_p12bit,     kaguya2,  kaguya2,  ROT0, "Miki Syouji", "Mahjong Kaguyahime Sono2 [BET] (Japan 890829)", 0 )
-GAME( 1989, kaguya2f, kaguya2,  mbmj_p12bit,     kaguya2,  kaguya2,  ROT0, "Miki Syouji", "Mahjong Kaguyahime Sono2 Fukkokuban [BET] (Japan 010808)", 0 )
-GAME( 1988, kanatuen, 0,        mbmj_p12bit,     kanatuen, kanatuen, ROT0, "Panac", "Kanatsuen no Onna [BET] (Japan 880905)", 0 )
-GAME( 1988, kyuhito,  kanatuen, mbmj_p12bit,     kyuhito,  kyuhito,  ROT0, "Roller Tron", "Kyukyoku no Hito [BET] (Japan 880824)", 0 )
-GAME( 1989, idhimitu, 0,        mbmj_p12bit,     idhimitu, idhimitu, ROT0, "Digital Soft", "Idol no Himitsu [BET] (Japan 890304)", 0 )
+GAME( 1988, kaguya,   0,        mbmj_p12bit,     kaguya, nbmj8688_state,   kaguya,   ROT0, "Miki Syouji", "Mahjong Kaguyahime [BET] (Japan 880521)", 0 )
+GAME( 1989, kaguya2,  0,        mbmj_p12bit,     kaguya2, nbmj8688_state,  kaguya2,  ROT0, "Miki Syouji", "Mahjong Kaguyahime Sono2 [BET] (Japan 890829)", 0 )
+GAME( 1989, kaguya2f, kaguya2,  mbmj_p12bit,     kaguya2, nbmj8688_state,  kaguya2,  ROT0, "Miki Syouji", "Mahjong Kaguyahime Sono2 Fukkokuban [BET] (Japan 010808)", 0 )
+GAME( 1988, kanatuen, 0,        mbmj_p12bit,     kanatuen, nbmj8688_state, kanatuen, ROT0, "Panac", "Kanatsuen no Onna [BET] (Japan 880905)", 0 )
+GAME( 1988, kyuhito,  kanatuen, mbmj_p12bit,     kyuhito, nbmj8688_state,  kyuhito,  ROT0, "Roller Tron", "Kyukyoku no Hito [BET] (Japan 880824)", 0 )
+GAME( 1989, idhimitu, 0,        mbmj_p12bit,     idhimitu, nbmj8688_state, idhimitu, ROT0, "Digital Soft", "Idol no Himitsu [BET] (Japan 890304)", 0 )
 
 /* pure 12-bit palette + YM3812 instead of AY-3-8910 */
-GAME( 1988, mjsikaku, 0,        mjsikaku,        mjsikaku, mjsikaku, ROT0, "Nichibutsu", "Mahjong Shikaku (Japan 880908)", 0 )
-GAME( 1988, mjsikakb, mjsikaku, mjsikaku,        mjsikaku, mjsikaku, ROT0, "Nichibutsu", "Mahjong Shikaku (Japan 880722)", 0 )
-GAME( 1988, mjsikakc, mjsikaku, mjsikaku,        mjsikaku, mjsikaku, ROT0, "Nichibutsu", "Mahjong Shikaku (Japan 880806)", 0 )
-GAME( 1988, mjsikakd, mjsikaku, mjsikaku,        mjsikaku, mjsikaku, ROT0, "Nichibutsu", "Mahjong Shikaku (Japan 880802)", 0 )
-GAME( 1988, mmsikaku, mjsikaku, mmsikaku,        mmsikaku, mmsikaku, ROT0, "Nichibutsu", "Mahjong Shikaku [BET] (Japan 880929)", 0 )
-GAME( 1988, otonano,  0,        otonano,         otonano,  otonano,  ROT0, "Apple", "Otona no Mahjong (Japan 880628)", 0 )
-GAME( 1988, mjcamera, 0,        otonano,         mjcamera, mjcamera, ROT0, "Miki Syouji", "Mahjong Camera Kozou (set 1) (Japan 881109)", 0 )
+GAME( 1988, mjsikaku, 0,        mjsikaku,        mjsikaku, nbmj8688_state, mjsikaku, ROT0, "Nichibutsu", "Mahjong Shikaku (Japan 880908)", 0 )
+GAME( 1988, mjsikakb, mjsikaku, mjsikaku,        mjsikaku, nbmj8688_state, mjsikaku, ROT0, "Nichibutsu", "Mahjong Shikaku (Japan 880722)", 0 )
+GAME( 1988, mjsikakc, mjsikaku, mjsikaku,        mjsikaku, nbmj8688_state, mjsikaku, ROT0, "Nichibutsu", "Mahjong Shikaku (Japan 880806)", 0 )
+GAME( 1988, mjsikakd, mjsikaku, mjsikaku,        mjsikaku, nbmj8688_state, mjsikaku, ROT0, "Nichibutsu", "Mahjong Shikaku (Japan 880802)", 0 )
+GAME( 1988, mmsikaku, mjsikaku, mmsikaku,        mmsikaku, nbmj8688_state, mmsikaku, ROT0, "Nichibutsu", "Mahjong Shikaku [BET] (Japan 880929)", 0 )
+GAME( 1988, otonano,  0,        otonano,         otonano, nbmj8688_state,  otonano,  ROT0, "Apple", "Otona no Mahjong (Japan 880628)", 0 )
+GAME( 1988, mjcamera, 0,        otonano,         mjcamera, nbmj8688_state, mjcamera, ROT0, "Miki Syouji", "Mahjong Camera Kozou (set 1) (Japan 881109)", 0 )

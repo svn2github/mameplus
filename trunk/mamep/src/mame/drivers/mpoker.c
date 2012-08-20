@@ -467,7 +467,7 @@ WRITE8_MEMBER(mpoker_state::outport7_w)
 
 WRITE8_MEMBER(mpoker_state::sound_w)
 //{
-//  dac_data_w(machine().device("dac"), data);
+//  machine().device<dac_device>("dac")->write_unsigned8(data);
 //}
 */
 
@@ -604,7 +604,7 @@ static MACHINE_CONFIG_START( mpoker, mpoker_state )
 
 	/* sound hardware */
 //  MCFG_SPEAKER_STANDARD_MONO("mono")
-//  MCFG_SOUND_ADD("dac", DAC, 0)
+//  MCFG_DAC_ADD("dac")
 //  MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -630,4 +630,4 @@ ROM_END
 *************************/
 
 /*     YEAR  NAME      PARENT  MACHINE   INPUT     INIT   ROT    COMPANY  FULLNAME      FLAGS...                           LAYOUT  */
-GAMEL( 1981, mpoker,   0,      mpoker,   mpoker,   0,     ROT0, "Merit", "Multi-Poker", GAME_WRONG_COLORS | GAME_NO_SOUND, layout_mpoker )
+GAMEL( 1981, mpoker,   0,      mpoker,   mpoker, driver_device,   0,     ROT0, "Merit", "Multi-Poker", GAME_WRONG_COLORS | GAME_NO_SOUND, layout_mpoker )

@@ -228,10 +228,10 @@ static ADDRESS_MAP_START( docastle_map2, AS_PROGRAM, 8, docastle_state )
 	AM_RANGE(0xc005, 0xc005) AM_MIRROR(0x0080) AM_READ_PORT("BUTTONS")
 	AM_RANGE(0xc007, 0xc007) AM_MIRROR(0x0080) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0xc084, 0xc084) AM_READWRITE(docastle_flipscreen_on_r, docastle_flipscreen_on_w)
-	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0xe400, 0xe400) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
-	AM_RANGE(0xe800, 0xe800) AM_DEVWRITE_LEGACY("sn3", sn76496_w)
-	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE_LEGACY("sn4", sn76496_w)
+	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("sn1", sn76489a_new_device, write)
+	AM_RANGE(0xe400, 0xe400) AM_DEVWRITE("sn2", sn76489a_new_device, write)
+	AM_RANGE(0xe800, 0xe800) AM_DEVWRITE("sn3", sn76489a_new_device, write)
+	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE("sn4", sn76489a_new_device, write)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( docastle_map3, AS_PROGRAM, 8, docastle_state )
@@ -264,10 +264,10 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( dorunrun_map2, AS_PROGRAM, 8, docastle_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0xa400, 0xa400) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
-	AM_RANGE(0xa800, 0xa800) AM_DEVWRITE_LEGACY("sn3", sn76496_w)
-	AM_RANGE(0xac00, 0xac00) AM_DEVWRITE_LEGACY("sn4", sn76496_w)
+	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE("sn1", sn76489a_new_device, write)
+	AM_RANGE(0xa400, 0xa400) AM_DEVWRITE("sn2", sn76489a_new_device, write)
+	AM_RANGE(0xa800, 0xa800) AM_DEVWRITE("sn3", sn76489a_new_device, write)
+	AM_RANGE(0xac00, 0xac00) AM_DEVWRITE("sn4", sn76489a_new_device, write)
 	AM_RANGE(0xc001, 0xc001) AM_MIRROR(0x0080) AM_READ_PORT("DSW2")
 	AM_RANGE(0xc002, 0xc002) AM_MIRROR(0x0080) AM_READ_PORT("DSW1")
 	AM_RANGE(0xc003, 0xc003) AM_MIRROR(0x0080) AM_READ_PORT("JOYS")
@@ -303,10 +303,10 @@ static ADDRESS_MAP_START( idsoccer_map2, AS_PROGRAM, 8, docastle_state )
 	AM_RANGE(0xc005, 0xc005) AM_MIRROR(0x0080) AM_READ_PORT("BUTTONS")
 	AM_RANGE(0xc007, 0xc007) AM_MIRROR(0x0080) AM_READ_PORT("SYSTEM")
 	AM_RANGE(0xc084, 0xc084) AM_READ_PORT("JOYS_RIGHT") AM_WRITE(docastle_flipscreen_on_w)
-	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0xe400, 0xe400) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
-	AM_RANGE(0xe800, 0xe800) AM_DEVWRITE_LEGACY("sn3", sn76496_w)
-	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE_LEGACY("sn4", sn76496_w)
+	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("sn1", sn76489a_new_device, write)
+	AM_RANGE(0xe400, 0xe400) AM_DEVWRITE("sn2", sn76489a_new_device, write)
+	AM_RANGE(0xe800, 0xe800) AM_DEVWRITE("sn3", sn76489a_new_device, write)
+	AM_RANGE(0xec00, 0xec00) AM_DEVWRITE("sn4", sn76489a_new_device, write)
 ADDRESS_MAP_END
 
 /* Input Ports */
@@ -556,6 +556,17 @@ static const msm5205_interface msm5205_config =
 	MSM5205_S64_4B		// 6 kHz    ???
 };
 
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
+
 /* Machine Drivers */
 
 static MACHINE_RESET( docastle )
@@ -625,17 +636,21 @@ static MACHINE_CONFIG_START( docastle, docastle_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489A, XTAL_4MHz)
+	MCFG_SOUND_ADD("sn1", SN76489A_NEW, XTAL_4MHz)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489A, XTAL_4MHz)
+	MCFG_SOUND_ADD("sn2", SN76489A_NEW, XTAL_4MHz)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76489A, XTAL_4MHz)
+	MCFG_SOUND_ADD("sn3", SN76489A_NEW, XTAL_4MHz)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn4", SN76489A, XTAL_4MHz)
+	MCFG_SOUND_ADD("sn4", SN76489A_NEW, XTAL_4MHz)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( dorunrun, docastle )
@@ -1091,18 +1106,18 @@ ROM_END
 
 /* Game Drivers */
 
-GAME( 1983, docastle,  0,        docastle, docastle, 0, ROT270, "Universal", "Mr. Do's Castle (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1983, docastle2, docastle, docastle, docastle, 0, ROT270, "Universal", "Mr. Do's Castle (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1983, docastleo, docastle, docastle, docastle, 0, ROT270, "Universal", "Mr. Do's Castle (older)", GAME_SUPPORTS_SAVE )
-GAME( 1983, douni,     docastle, docastle, docastle, 0, ROT270, "Universal", "Mr. Do vs. Unicorns", GAME_SUPPORTS_SAVE )
-GAME( 1984, dorunrun,  0,        dorunrun, dorunrun, 0, ROT0,   "Universal", "Do! Run Run (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1984, dorunrun2, dorunrun, dorunrun, dorunrun, 0, ROT0,   "Universal", "Do! Run Run (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1984, dorunrunc, dorunrun, docastle, dorunrun, 0, ROT0,   "Universal", "Do! Run Run (Do's Castle hardware, set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1984, dorunrunca,dorunrun, docastle, dorunrun, 0, ROT0,   "Universal", "Do! Run Run (Do's Castle hardware, set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1987, spiero,    dorunrun, dorunrun, dorunrun, 0, ROT0,   "Universal", "Super Pierrot (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1984, dowild,    0,        dorunrun, dowild,   0, ROT0,   "Universal", "Mr. Do's Wild Ride", GAME_SUPPORTS_SAVE )
-GAME( 1984, jjack,     0,        dorunrun, jjack,    0, ROT270, "Universal", "Jumping Jack", GAME_SUPPORTS_SAVE )
-GAME( 1984, kickridr,  0,        dorunrun, kickridr, 0, ROT0,   "Universal", "Kick Rider", GAME_SUPPORTS_SAVE )
-GAME( 1985, idsoccer,  0,        idsoccer, idsoccer, 0, ROT0,   "Universal", "Indoor Soccer (set 1)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
-GAME( 1985, idsoccera, idsoccer, idsoccer, idsoccer, 0, ROT0,   "Universal", "Indoor Soccer (set 2)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )
-GAME( 1987, asoccer,   idsoccer, idsoccer, idsoccer, 0, ROT0,   "Universal", "American Soccer", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )
+GAME( 1983, docastle,  0,        docastle, docastle, driver_device, 0, ROT270, "Universal", "Mr. Do's Castle (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1983, docastle2, docastle, docastle, docastle, driver_device, 0, ROT270, "Universal", "Mr. Do's Castle (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1983, docastleo, docastle, docastle, docastle, driver_device, 0, ROT270, "Universal", "Mr. Do's Castle (older)", GAME_SUPPORTS_SAVE )
+GAME( 1983, douni,     docastle, docastle, docastle, driver_device, 0, ROT270, "Universal", "Mr. Do vs. Unicorns", GAME_SUPPORTS_SAVE )
+GAME( 1984, dorunrun,  0,        dorunrun, dorunrun, driver_device, 0, ROT0,   "Universal", "Do! Run Run (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1984, dorunrun2, dorunrun, dorunrun, dorunrun, driver_device, 0, ROT0,   "Universal", "Do! Run Run (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1984, dorunrunc, dorunrun, docastle, dorunrun, driver_device, 0, ROT0,   "Universal", "Do! Run Run (Do's Castle hardware, set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1984, dorunrunca,dorunrun, docastle, dorunrun, driver_device, 0, ROT0,   "Universal", "Do! Run Run (Do's Castle hardware, set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1987, spiero,    dorunrun, dorunrun, dorunrun, driver_device, 0, ROT0,   "Universal", "Super Pierrot (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1984, dowild,    0,        dorunrun, dowild, driver_device,   0, ROT0,   "Universal", "Mr. Do's Wild Ride", GAME_SUPPORTS_SAVE )
+GAME( 1984, jjack,     0,        dorunrun, jjack, driver_device,    0, ROT270, "Universal", "Jumping Jack", GAME_SUPPORTS_SAVE )
+GAME( 1984, kickridr,  0,        dorunrun, kickridr, driver_device, 0, ROT0,   "Universal", "Kick Rider", GAME_SUPPORTS_SAVE )
+GAME( 1985, idsoccer,  0,        idsoccer, idsoccer, driver_device, 0, ROT0,   "Universal", "Indoor Soccer (set 1)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+GAME( 1985, idsoccera, idsoccer, idsoccer, idsoccer, driver_device, 0, ROT0,   "Universal", "Indoor Soccer (set 2)", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )
+GAME( 1987, asoccer,   idsoccer, idsoccer, idsoccer, driver_device, 0, ROT0,   "Universal", "American Soccer", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )

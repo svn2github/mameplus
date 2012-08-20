@@ -330,6 +330,17 @@ public:
 	DECLARE_READ8_MEMBER(pocketrc_steer_r);
 	DECLARE_READ16_MEMBER(c76_speedup_r);
 	DECLARE_WRITE16_MEMBER(c76_speedup_w);
+	DECLARE_DRIVER_INIT(primglex);
+	DECLARE_DRIVER_INIT(danceyes);
+	DECLARE_DRIVER_INIT(myangel3);
+	DECLARE_DRIVER_INIT(ptblank2ua);
+	DECLARE_DRIVER_INIT(pocketrc);
+	DECLARE_DRIVER_INIT(starswep);
+	DECLARE_DRIVER_INIT(souledge);
+	DECLARE_DRIVER_INIT(dunkmnia);
+	DECLARE_DRIVER_INIT(tekken);
+	DECLARE_DRIVER_INIT(xevi3dg);
+	DECLARE_DRIVER_INIT(tekken2);
 };
 
 INLINE void ATTR_PRINTF(3,4) verboselog( running_machine &machine, int n_level, const char *s_fmt, ... )
@@ -910,85 +921,75 @@ static void namcos11_init_common(running_machine &machine, int n_daughterboard)
 	}
 }
 
-static DRIVER_INIT( tekken )
+DRIVER_INIT_MEMBER(namcos11_state,tekken)
 {
-	namcos11_init_common(machine, 32);
+	namcos11_init_common(machine(), 32);
 }
 
-static DRIVER_INIT( tekken2 )
+DRIVER_INIT_MEMBER(namcos11_state,tekken2)
 {
-	namcos11_state *state = machine.driver_data<namcos11_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c406_r),state));
-	namcos11_init_common(machine, 32);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c406_r),this));
+	namcos11_init_common(machine(), 32);
 }
 
-static DRIVER_INIT( souledge )
+DRIVER_INIT_MEMBER(namcos11_state,souledge)
 {
-	namcos11_state *state = machine.driver_data<namcos11_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c409_r),state));
-	namcos11_init_common(machine, 32);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c409_r),this));
+	namcos11_init_common(machine(), 32);
 }
 
-static DRIVER_INIT( dunkmnia )
+DRIVER_INIT_MEMBER(namcos11_state,dunkmnia)
 {
-	namcos11_state *state = machine.driver_data<namcos11_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c410_r),state));
-	namcos11_init_common(machine, 32);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c410_r),this));
+	namcos11_init_common(machine(), 32);
 }
 
-static DRIVER_INIT( primglex )
+DRIVER_INIT_MEMBER(namcos11_state,primglex)
 {
-	namcos11_state *state = machine.driver_data<namcos11_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c411_r),state));
-	namcos11_init_common(machine, 32);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c411_r),this));
+	namcos11_init_common(machine(), 32);
 }
 
-static DRIVER_INIT( xevi3dg )
+DRIVER_INIT_MEMBER(namcos11_state,xevi3dg)
 {
-	namcos11_state *state = machine.driver_data<namcos11_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c430_r),state));
-	namcos11_init_common(machine, 32);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c430_r),this));
+	namcos11_init_common(machine(), 32);
 }
 
-static DRIVER_INIT( danceyes )
+DRIVER_INIT_MEMBER(namcos11_state,danceyes)
 {
-	namcos11_state *state = machine.driver_data<namcos11_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c431_r),state));
-	namcos11_init_common(machine, 32);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c431_r),this));
+	namcos11_init_common(machine(), 32);
 }
 
-static DRIVER_INIT( pocketrc )
+DRIVER_INIT_MEMBER(namcos11_state,pocketrc)
 {
-	namcos11_state *state = machine.driver_data<namcos11_state>();
-	machine.device("c76")->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC0_L, read8_delegate(FUNC(namcos11_state::pocketrc_steer_r),state));
-	machine.device("c76")->memory().space(AS_IO)->install_read_handler(M37710_ADC1_L, M37710_ADC1_L, read8_delegate(FUNC(namcos11_state::pocketrc_gas_r),state));
+	machine().device("c76")->memory().space(AS_IO)->install_read_handler(M37710_ADC0_L, M37710_ADC0_L, read8_delegate(FUNC(namcos11_state::pocketrc_steer_r),this));
+	machine().device("c76")->memory().space(AS_IO)->install_read_handler(M37710_ADC1_L, M37710_ADC1_L, read8_delegate(FUNC(namcos11_state::pocketrc_gas_r),this));
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c432_r),state));
-	namcos11_init_common(machine, 32);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c432_r),this));
+	namcos11_init_common(machine(), 32);
 }
 
-static DRIVER_INIT( starswep )
+DRIVER_INIT_MEMBER(namcos11_state,starswep)
 {
-	namcos11_state *state = machine.driver_data<namcos11_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c442_r),state));
-	namcos11_init_common(machine, 0);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c442_r),this));
+	namcos11_init_common(machine(), 0);
 }
 
-static DRIVER_INIT( myangel3 )
+DRIVER_INIT_MEMBER(namcos11_state,myangel3)
 {
-	namcos11_state *state = machine.driver_data<namcos11_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c443_r),state));
-	namcos11_init_common(machine, 64);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c443_r),this));
+	namcos11_init_common(machine(), 64);
 }
 
-static DRIVER_INIT( ptblank2ua )
+DRIVER_INIT_MEMBER(namcos11_state,ptblank2ua)
 {
-	namcos11_state *state = machine.driver_data<namcos11_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c443_r),state));
-	namcos11_init_common(machine, 64);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler( 0x1fa20000, 0x1fa2ffff, read32_delegate(FUNC(namcos11_state::keycus_c443_r),this));
+	namcos11_init_common(machine(), 64);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x1f788000, 0x1f788003, write32_delegate(FUNC(namcos11_state::lightgun_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler (0x1f780000, 0x1f78000f, read32_delegate(FUNC(namcos11_state::lightgun_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x1f788000, 0x1f788003, write32_delegate(FUNC(namcos11_state::lightgun_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler (0x1f780000, 0x1f78000f, read32_delegate(FUNC(namcos11_state::lightgun_r),this));
 }
 
 static MACHINE_RESET( namcos11 )
@@ -1858,25 +1859,25 @@ ROM_START( xevi3dg )
 	ROM_RELOAD( 0x800000, 0x400000 )
 ROM_END
 
-GAME( 1994, tekken,    0,        coh100, tekken,    tekken,    ROT0, "Namco", "Tekken (World, TE4/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1994, tekkenac,  tekken,   coh100, tekken,    tekken,    ROT0, "Namco", "Tekken (Asia, TE2/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1994, tekkenab,  tekken,   coh100, tekken,    tekken,    ROT0, "Namco", "Tekken (Asia, TE2/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1994, tekkenjb,  tekken,   coh100, tekken,    tekken,    ROT0, "Namco", "Tekken (Japan, TE1/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1996, tekken2,   0,        coh110, tekken,    tekken2,   ROT0, "Namco", "Tekken 2 Ver.B (US, TES3/VER.D)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1995, tekken2ub, tekken2,  coh100, tekken,    tekken2,   ROT0, "Namco", "Tekken 2 Ver.B (US, TES3/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1995, tekken2ab, tekken2,  coh100, tekken,    tekken2,   ROT0, "Namco", "Tekken 2 Ver.B (Asia, TES2/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1995, tekken2aa, tekken2,  coh100, tekken,    tekken2,   ROT0, "Namco", "Tekken 2 (Asia, TES2/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1996, souledge,  0,        coh110, souledge,  souledge,  ROT0, "Namco", "Soul Edge Ver. II (World, SO4/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1995, souledgeuc,souledge, coh110, souledge,  souledge,  ROT0, "Namco", "Soul Edge Ver. II (US, SO3/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1995, souledgeua,souledge, coh110, souledge,  souledge,  ROT0, "Namco", "Soul Edge (US, SO3/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1995, souledgeaa,souledge, coh110, souledge,  souledge,  ROT0, "Namco", "Soul Edge (Asia, SO2/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1995, souledgeja,souledge, coh110, souledge,  souledge,  ROT0, "Namco", "Soul Edge (Japan, SO1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1995, dunkmnia,  0,        coh110, namcos11,  dunkmnia,  ROT0, "Namco", "Dunk Mania (Asia, DM2/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1995, dunkmniajc,dunkmnia, coh110, namcos11,  dunkmnia,  ROT0, "Namco", "Dunk Mania (Japan, DM1/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1995, xevi3dg,   0,        coh110, namcos11,  xevi3dg,   ROT0, "Namco", "Xevious 3D/G (Japan, XV31/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1996, primglex,  0,        coh110, tekken,    primglex,  ROT0, "Namco", "Prime Goal EX (Japan, PG1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1996, danceyes,  0,        coh110, namcos11,  danceyes,  ROT0, "Namco", "Dancing Eyes (Japan, DC1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1996, pocketrc,  0,        coh110, pocketrc,  pocketrc,  ROT0, "Namco", "Pocket Racer (Japan, PKR1/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, starswep,  0,        coh110, namcos11,  starswep,  ROT0, "Axela/Namco", "Star Sweep (Japan, STP1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, myangel3,  0,        coh110, myangel3,  myangel3,  ROT0, "Namco", "Kosodate Quiz My Angel 3 (Japan, KQT1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1999, ptblank2ua,ptblank2, coh110, ptblank2ua,ptblank2ua,ROT0, "Namco", "Point Blank 2 (US, GNB3/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1994, tekken,    0,        coh100, tekken, namcos11_state,    tekken,    ROT0, "Namco", "Tekken (World, TE4/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1994, tekkenac,  tekken,   coh100, tekken, namcos11_state,    tekken,    ROT0, "Namco", "Tekken (Asia, TE2/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1994, tekkenab,  tekken,   coh100, tekken, namcos11_state,    tekken,    ROT0, "Namco", "Tekken (Asia, TE2/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1994, tekkenjb,  tekken,   coh100, tekken, namcos11_state,    tekken,    ROT0, "Namco", "Tekken (Japan, TE1/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, tekken2,   0,        coh110, tekken, namcos11_state,    tekken2,   ROT0, "Namco", "Tekken 2 Ver.B (US, TES3/VER.D)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1995, tekken2ub, tekken2,  coh100, tekken, namcos11_state,    tekken2,   ROT0, "Namco", "Tekken 2 Ver.B (US, TES3/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1995, tekken2ab, tekken2,  coh100, tekken, namcos11_state,    tekken2,   ROT0, "Namco", "Tekken 2 Ver.B (Asia, TES2/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1995, tekken2aa, tekken2,  coh100, tekken, namcos11_state,    tekken2,   ROT0, "Namco", "Tekken 2 (Asia, TES2/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, souledge,  0,        coh110, souledge, namcos11_state,  souledge,  ROT0, "Namco", "Soul Edge Ver. II (World, SO4/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1995, souledgeuc,souledge, coh110, souledge, namcos11_state,  souledge,  ROT0, "Namco", "Soul Edge Ver. II (US, SO3/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1995, souledgeua,souledge, coh110, souledge, namcos11_state,  souledge,  ROT0, "Namco", "Soul Edge (US, SO3/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1995, souledgeaa,souledge, coh110, souledge, namcos11_state,  souledge,  ROT0, "Namco", "Soul Edge (Asia, SO2/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1995, souledgeja,souledge, coh110, souledge, namcos11_state,  souledge,  ROT0, "Namco", "Soul Edge (Japan, SO1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1995, dunkmnia,  0,        coh110, namcos11, namcos11_state,  dunkmnia,  ROT0, "Namco", "Dunk Mania (Asia, DM2/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1995, dunkmniajc,dunkmnia, coh110, namcos11, namcos11_state,  dunkmnia,  ROT0, "Namco", "Dunk Mania (Japan, DM1/VER.C)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1995, xevi3dg,   0,        coh110, namcos11, namcos11_state,  xevi3dg,   ROT0, "Namco", "Xevious 3D/G (Japan, XV31/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, primglex,  0,        coh110, tekken, namcos11_state,    primglex,  ROT0, "Namco", "Prime Goal EX (Japan, PG1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, danceyes,  0,        coh110, namcos11, namcos11_state,  danceyes,  ROT0, "Namco", "Dancing Eyes (Japan, DC1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, pocketrc,  0,        coh110, pocketrc, namcos11_state,  pocketrc,  ROT0, "Namco", "Pocket Racer (Japan, PKR1/VER.B)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, starswep,  0,        coh110, namcos11, namcos11_state,  starswep,  ROT0, "Axela/Namco", "Star Sweep (Japan, STP1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, myangel3,  0,        coh110, myangel3, namcos11_state,  myangel3,  ROT0, "Namco", "Kosodate Quiz My Angel 3 (Japan, KQT1/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1999, ptblank2ua,ptblank2, coh110, ptblank2ua, namcos11_state,ptblank2ua,ROT0, "Namco", "Point Blank 2 (US, GNB3/VER.A)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )

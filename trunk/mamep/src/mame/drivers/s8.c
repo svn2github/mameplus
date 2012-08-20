@@ -21,6 +21,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(williams_s8);
 };
 
 
@@ -35,7 +37,7 @@ void williams_s8_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( williams_s8 )
+DRIVER_INIT_MEMBER(williams_s8_state,williams_s8)
 {
 }
 
@@ -70,5 +72,5 @@ ROM_START(pfevr_p3)
 	ROM_RELOAD(0x8000, 0x4000)
 ROM_END
 
-GAME(1984,	pfevr_l2,		0,			williams_s8,	williams_s8,	williams_s8,	ROT0,	"Williams",		"Pennant Fever (L-2)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(1984,	pfevr_p3,		pfevr_l2,	williams_s8,	williams_s8,	williams_s8,	ROT0,	"Williams",		"Pennant Fever (P-3)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(1984,	pfevr_l2,		0,			williams_s8,	williams_s8, williams_s8_state,	williams_s8,	ROT0,	"Williams",		"Pennant Fever (L-2)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(1984,	pfevr_p3,		pfevr_l2,	williams_s8,	williams_s8, williams_s8_state,	williams_s8,	ROT0,	"Williams",		"Pennant Fever (P-3)",	GAME_IS_SKELETON_MECHANICAL)

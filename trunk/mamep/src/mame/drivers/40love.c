@@ -567,29 +567,27 @@ READ8_MEMBER(fortyl_state::undoukai_mcu_status_r)
 
 /***************************************************************************/
 
-static DRIVER_INIT( undoukai )
+DRIVER_INIT_MEMBER(fortyl_state,undoukai)
 {
-	fortyl_state *state = machine.driver_data<fortyl_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
-	state->membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x2000);
+	UINT8 *ROM = memregion("maincpu")->base();
+	membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x2000);
 
-	state->m_pix_color[0] = 0x000;
-	state->m_pix_color[1] = 0x1e3;
-	state->m_pix_color[2] = 0x16c;
-	state->m_pix_color[3] = 0x1ec;
+	m_pix_color[0] = 0x000;
+	m_pix_color[1] = 0x1e3;
+	m_pix_color[2] = 0x16c;
+	m_pix_color[3] = 0x1ec;
 }
 
-static DRIVER_INIT( 40love )
+DRIVER_INIT_MEMBER(fortyl_state,40love)
 {
-	fortyl_state *state = machine.driver_data<fortyl_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
-	state->membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x2000);
+	UINT8 *ROM = memregion("maincpu")->base();
+	membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x2000);
 
 	#if 0
 		/* character ROM hack
             to show a white line on the opponent side */
 
-		UINT8 *ROM = state->memregion("gfx2")->base();
+		UINT8 *ROM = memregion("gfx2")->base();
 		int adr = 0x10 * 0x022b;
 		ROM[adr + 0x000a] = 0x00;
 		ROM[adr + 0x000b] = 0x00;
@@ -597,10 +595,10 @@ static DRIVER_INIT( 40love )
 		ROM[adr + 0x400b] = 0x00;
 	#endif
 
-	state->m_pix_color[0] = 0x000;
-	state->m_pix_color[1] = 0x1e3;
-	state->m_pix_color[2] = 0x16c;
-	state->m_pix_color[3] = 0x1ec;
+	m_pix_color[0] = 0x000;
+	m_pix_color[1] = 0x1e3;
+	m_pix_color[2] = 0x16c;
+	m_pix_color[3] = 0x1ec;
 }
 
 /***************************************************************************/
@@ -756,7 +754,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, fortyl_state )
 	AM_RANGE(0xd800, 0xd800) AM_READ(soundlatch_byte_r) AM_WRITE(to_main_w)
 	AM_RANGE(0xda00, 0xda00) AM_READNOP AM_WRITE(nmi_enable_w) /* unknown read */
 	AM_RANGE(0xdc00, 0xdc00) AM_WRITE(nmi_disable_w)
-	AM_RANGE(0xde00, 0xde00) AM_READNOP AM_DEVWRITE_LEGACY("dac", dac_signed_w)		/* signed 8-bit DAC - unknown read */
+	AM_RANGE(0xde00, 0xde00) AM_READNOP AM_DEVWRITE("dac", dac_device, write_signed8)		/* signed 8-bit DAC - unknown read */
 	AM_RANGE(0xe000, 0xefff) AM_ROM /* space for diagnostics ROM */
 ADDRESS_MAP_END
 
@@ -1115,7 +1113,7 @@ static MACHINE_CONFIG_START( 40love, fortyl_state )
 	// pin 2 SOLO 16'       not mapped
 	// pin 22 Noise Output  not mapped
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.20)
 MACHINE_CONFIG_END
 
@@ -1172,7 +1170,7 @@ static MACHINE_CONFIG_START( undoukai, fortyl_state )
 	// pin 2 SOLO 16'       not mapped
 	// pin 22 Noise Output  not mapped
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.20)
 MACHINE_CONFIG_END
 
@@ -1292,6 +1290,6 @@ ROM_START( undoukai )
 	ROM_LOAD( "a17-18.23v", 0x0c00, 0x0400, CRC(3023a1da) SHA1(08ce4c6e99d04b358d66f0588852311d07183619) )	/* ??? */
 ROM_END
 
-GAME( 1984, 40love,   0,        40love,   40love,   40love,   ROT0, "Taito Corporation", "Forty-Love", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
-GAME( 1984, fieldday, 0,        undoukai, undoukai, undoukai, ROT0, "Taito Corporation", "Field Day", GAME_SUPPORTS_SAVE )
-GAME( 1984, undoukai, fieldday, undoukai, undoukai, undoukai, ROT0, "Taito Corporation", "The Undoukai (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1984, 40love,   0,        40love,   40love, fortyl_state,   40love,   ROT0, "Taito Corporation", "Forty-Love", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
+GAME( 1984, fieldday, 0,        undoukai, undoukai, fortyl_state, undoukai, ROT0, "Taito Corporation", "Field Day", GAME_SUPPORTS_SAVE )
+GAME( 1984, undoukai, fieldday, undoukai, undoukai, fortyl_state, undoukai, ROT0, "Taito Corporation", "The Undoukai (Japan)", GAME_SUPPORTS_SAVE )

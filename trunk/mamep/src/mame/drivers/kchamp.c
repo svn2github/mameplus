@@ -185,7 +185,7 @@ static ADDRESS_MAP_START( kchamp_sound_io_map, AS_IO, 8, kchamp_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE_LEGACY("ay1", ay8910_data_address_w)
 	AM_RANGE(0x02, 0x03) AM_DEVWRITE_LEGACY("ay2", ay8910_data_address_w)
-	AM_RANGE(0x04, 0x04) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0x04, 0x04) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0x05, 0x05) AM_WRITE(kc_sound_control_w)
 	AM_RANGE(0x06, 0x06) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -501,7 +501,7 @@ static MACHINE_CONFIG_START( kchamp, kchamp_state )
 	MCFG_SOUND_ADD("ay2", AY8910, 1500000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.15) /* guess: using volume 0.50 makes the sound to clip a lot */
 MACHINE_CONFIG_END
 
@@ -736,11 +736,10 @@ static UINT8 *decrypt_code(running_machine &machine)
 }
 
 
-static DRIVER_INIT( kchampvs )
+DRIVER_INIT_MEMBER(kchamp_state,kchampvs)
 {
-	kchamp_state *state = machine.driver_data<kchamp_state>();
-	UINT8 *rom = state->memregion("maincpu")->base();
-	UINT8 *decrypted = decrypt_code(machine);
+	UINT8 *rom = memregion("maincpu")->base();
+	UINT8 *decrypted = decrypt_code(machine());
 	int A;
 
 	/*
@@ -762,26 +761,25 @@ static DRIVER_INIT( kchampvs )
 	decrypted[A] = rom[A];	/* fix fourth opcode (ld ($xxxx),a */
 	/* and from here on, opcodes are encrypted */
 
-	state->m_counter = 0;
-	state->m_msm_data = 0;
-	state->m_msm_play_lo_nibble = 0;
+	m_counter = 0;
+	m_msm_data = 0;
+	m_msm_play_lo_nibble = 0;
 }
 
 
-static DRIVER_INIT( kchampvs2 )
+DRIVER_INIT_MEMBER(kchamp_state,kchampvs2)
 {
-	kchamp_state *state = machine.driver_data<kchamp_state>();
 
-	decrypt_code(machine);
-	state->m_counter = 0;
-	state->m_msm_data = 0;
-	state->m_msm_play_lo_nibble = 1;
+	decrypt_code(machine());
+	m_counter = 0;
+	m_msm_data = 0;
+	m_msm_play_lo_nibble = 1;
 }
 
 
 
-GAME( 1984, kchamp,    0,      kchamp,   kchamp,   0,         ROT90, "Data East USA",         "Karate Champ (US)", GAME_SUPPORTS_SAVE )
-GAME( 1984, karatedo,  kchamp, kchamp,   kchamp,   0,         ROT90, "Data East Corporation", "Karate Dou (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1984, kchampvs,  kchamp, kchampvs, kchampvs, kchampvs,  ROT90, "Data East USA",         "Karate Champ (US, VS version set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1984, kchampvs2, kchamp, kchampvs, kchampvs, kchampvs2, ROT90, "Data East USA",         "Karate Champ (US, VS version set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1984, karatevs,  kchamp, kchampvs, kchampvs, kchampvs,  ROT90, "Data East Corporation", "Taisen Karate Dou (Japan VS version)", GAME_SUPPORTS_SAVE )
+GAME( 1984, kchamp,    0,      kchamp,   kchamp, driver_device,   0,         ROT90, "Data East USA",         "Karate Champ (US)", GAME_SUPPORTS_SAVE )
+GAME( 1984, karatedo,  kchamp, kchamp,   kchamp, driver_device,   0,         ROT90, "Data East Corporation", "Karate Dou (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1984, kchampvs,  kchamp, kchampvs, kchampvs, kchamp_state, kchampvs,  ROT90, "Data East USA",         "Karate Champ (US, VS version set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1984, kchampvs2, kchamp, kchampvs, kchampvs, kchamp_state, kchampvs2, ROT90, "Data East USA",         "Karate Champ (US, VS version set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1984, karatevs,  kchamp, kchampvs, kchampvs, kchamp_state, kchampvs,  ROT90, "Data East Corporation", "Taisen Karate Dou (Japan VS version)", GAME_SUPPORTS_SAVE )

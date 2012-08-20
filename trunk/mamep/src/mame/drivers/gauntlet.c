@@ -1637,31 +1637,31 @@ static void gauntlet_common_init(running_machine &machine, int slapstic, int vin
 }
 
 
-static DRIVER_INIT( gauntlet )
+DRIVER_INIT_MEMBER(gauntlet_state,gauntlet)
 {
-	gauntlet_common_init(machine, 104, 0);
+	gauntlet_common_init(machine(), 104, 0);
 }
 
 
-static DRIVER_INIT( gaunt2p )
+DRIVER_INIT_MEMBER(gauntlet_state,gaunt2p)
 {
-	gauntlet_common_init(machine, 107, 0);
+	gauntlet_common_init(machine(), 107, 0);
 }
 
 
-static DRIVER_INIT( gauntlet2 )
+DRIVER_INIT_MEMBER(gauntlet_state,gauntlet2)
 {
-	gauntlet_common_init(machine, 106, 0);
+	gauntlet_common_init(machine(), 106, 0);
 }
 
 
-static DRIVER_INIT( vindctr2 )
+DRIVER_INIT_MEMBER(gauntlet_state,vindctr2)
 {
-	UINT8 *gfx2_base = machine.root_device().memregion("gfx2")->base();
-	UINT8 *data = auto_alloc_array(machine, UINT8, 0x8000);
+	UINT8 *gfx2_base = machine().root_device().memregion("gfx2")->base();
+	UINT8 *data = auto_alloc_array(machine(), UINT8, 0x8000);
 	int i;
 
-	gauntlet_common_init(machine, 118, 1);
+	gauntlet_common_init(machine(), 118, 1);
 
 	/* highly strange -- the address bits on the chip at 2J (and only that
        chip) are scrambled -- this is verified on the schematics! */
@@ -1672,7 +1672,7 @@ static DRIVER_INIT( vindctr2 )
 		int srcoffs = (i & 0x4000) | ((i << 11) & 0x3800) | ((i >> 3) & 0x07ff);
 		gfx2_base[0x88000 + i] = data[srcoffs];
 	}
-	auto_free(machine, data);
+	auto_free(machine(), data);
 }
 
 
@@ -1683,35 +1683,35 @@ static DRIVER_INIT( vindctr2 )
  *
  *************************************/
 
-GAME( 1985, gauntlet,    0,        gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 14)", 0 )
-GAME( 1985, gauntlets,   gauntlet, gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (Spanish, rev 15)", 0 )
-GAME( 1985, gauntletj,   gauntlet, gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (Japanese, rev 13)", 0 )
-GAME( 1985, gauntletg,   gauntlet, gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (German, rev 10)", 0 )
-GAME( 1985, gauntletj12, gauntlet, gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (Japanese, rev 12)", 0 )
-GAME( 1985, gauntletr9,  gauntlet, gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 9)", 0 )
-GAME( 1985, gauntletgr8, gauntlet, gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (German, rev 8)", 0 )
-GAME( 1985, gauntletr7,  gauntlet, gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 7)", 0 )
-GAME( 1985, gauntletgr6, gauntlet, gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (German, rev 6)", 0 )
-GAME( 1985, gauntletr5,  gauntlet, gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 5)", 0 )
-GAME( 1985, gauntletr4,  gauntlet, gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 4)", 0 )
-GAME( 1985, gauntletgr3, gauntlet, gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (German, rev 3)", 0 )
-GAME( 1985, gauntletr2,  gauntlet, gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 2)", 0 )
-GAME( 1985, gauntletr1,  gauntlet, gauntlet, gauntlet, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 1)", 0 )
+GAME( 1985, gauntlet,    0,        gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 14)", 0 )
+GAME( 1985, gauntlets,   gauntlet, gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (Spanish, rev 15)", 0 )
+GAME( 1985, gauntletj,   gauntlet, gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (Japanese, rev 13)", 0 )
+GAME( 1985, gauntletg,   gauntlet, gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (German, rev 10)", 0 )
+GAME( 1985, gauntletj12, gauntlet, gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (Japanese, rev 12)", 0 )
+GAME( 1985, gauntletr9,  gauntlet, gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 9)", 0 )
+GAME( 1985, gauntletgr8, gauntlet, gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (German, rev 8)", 0 )
+GAME( 1985, gauntletr7,  gauntlet, gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 7)", 0 )
+GAME( 1985, gauntletgr6, gauntlet, gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (German, rev 6)", 0 )
+GAME( 1985, gauntletr5,  gauntlet, gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 5)", 0 )
+GAME( 1985, gauntletr4,  gauntlet, gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 4)", 0 )
+GAME( 1985, gauntletgr3, gauntlet, gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (German, rev 3)", 0 )
+GAME( 1985, gauntletr2,  gauntlet, gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 2)", 0 )
+GAME( 1985, gauntletr1,  gauntlet, gauntlet, gauntlet, gauntlet_state, gauntlet,  ROT0, "Atari Games", "Gauntlet (rev 1)", 0 )
 
-GAME( 1985, gauntlet2p,   gauntlet, gauntlet, gauntlet, gaunt2p,   ROT0, "Atari Games", "Gauntlet (2 Players, rev 6)", 0 )
-GAME( 1985, gauntlet2pj,  gauntlet, gauntlet, gauntlet, gaunt2p,   ROT0, "Atari Games", "Gauntlet (2 Players, Japanese, rev 5)", 0 )
-GAME( 1985, gauntlet2pg,  gauntlet, gauntlet, gauntlet, gaunt2p,   ROT0, "Atari Games", "Gauntlet (2 Players, German, rev 4)", 0 )
-GAME( 1985, gauntlet2pr3, gauntlet, gauntlet, gauntlet, gaunt2p,   ROT0, "Atari Games", "Gauntlet (2 Players, rev 3)", 0 )
-GAME( 1985, gauntlet2pj2, gauntlet, gauntlet, gauntlet, gaunt2p,   ROT0, "Atari Games", "Gauntlet (2 Players, Japanese, rev 2)", 0 )
-GAME( 1985, gauntlet2pg1, gauntlet, gauntlet, gauntlet, gaunt2p,   ROT0, "Atari Games", "Gauntlet (2 Players, German, rev 1)", 0 )
+GAME( 1985, gauntlet2p,   gauntlet, gauntlet, gauntlet, gauntlet_state, gaunt2p,   ROT0, "Atari Games", "Gauntlet (2 Players, rev 6)", 0 )
+GAME( 1985, gauntlet2pj,  gauntlet, gauntlet, gauntlet, gauntlet_state, gaunt2p,   ROT0, "Atari Games", "Gauntlet (2 Players, Japanese, rev 5)", 0 )
+GAME( 1985, gauntlet2pg,  gauntlet, gauntlet, gauntlet, gauntlet_state, gaunt2p,   ROT0, "Atari Games", "Gauntlet (2 Players, German, rev 4)", 0 )
+GAME( 1985, gauntlet2pr3, gauntlet, gauntlet, gauntlet, gauntlet_state, gaunt2p,   ROT0, "Atari Games", "Gauntlet (2 Players, rev 3)", 0 )
+GAME( 1985, gauntlet2pj2, gauntlet, gauntlet, gauntlet, gauntlet_state, gaunt2p,   ROT0, "Atari Games", "Gauntlet (2 Players, Japanese, rev 2)", 0 )
+GAME( 1985, gauntlet2pg1, gauntlet, gauntlet, gauntlet, gauntlet_state, gaunt2p,   ROT0, "Atari Games", "Gauntlet (2 Players, German, rev 1)", 0 )
 
-GAME( 1986, gaunt2,   0,        gauntlet, gauntlet, gauntlet2, ROT0, "Atari Games", "Gauntlet II", 0 )
-GAME( 1986, gaunt2g,  gaunt2,   gauntlet, gauntlet, gauntlet2, ROT0, "Atari Games", "Gauntlet II (German)", 0 )
+GAME( 1986, gaunt2,   0,        gauntlet, gauntlet, gauntlet_state, gauntlet2, ROT0, "Atari Games", "Gauntlet II", 0 )
+GAME( 1986, gaunt2g,  gaunt2,   gauntlet, gauntlet, gauntlet_state, gauntlet2, ROT0, "Atari Games", "Gauntlet II (German)", 0 )
 
-GAME( 1986, gaunt22p,  gaunt2,   gauntlet, gauntlet, gauntlet2, ROT0, "Atari Games", "Gauntlet II (2 Players, rev 2)", 0 )
-GAME( 1986, gaunt22p1, gaunt2,   gauntlet, gauntlet, gauntlet2, ROT0, "Atari Games", "Gauntlet II (2 Players, rev 1)", 0 )
-GAME( 1986, gaunt22pg, gaunt2,   gauntlet, gauntlet, gauntlet2, ROT0, "Atari Games", "Gauntlet II (2 Players, German)", 0 )
+GAME( 1986, gaunt22p,  gaunt2,   gauntlet, gauntlet, gauntlet_state, gauntlet2, ROT0, "Atari Games", "Gauntlet II (2 Players, rev 2)", 0 )
+GAME( 1986, gaunt22p1, gaunt2,   gauntlet, gauntlet, gauntlet_state, gauntlet2, ROT0, "Atari Games", "Gauntlet II (2 Players, rev 1)", 0 )
+GAME( 1986, gaunt22pg, gaunt2,   gauntlet, gauntlet, gauntlet_state, gauntlet2, ROT0, "Atari Games", "Gauntlet II (2 Players, German)", 0 )
 
-GAME( 1988, vindctr2,   0,        gauntlet, vindctr2, vindctr2,  ROT0, "Atari Games", "Vindicators Part II (rev 3)", 0 )
-GAME( 1988, vindctr2r2, vindctr2, gauntlet, vindctr2, vindctr2,  ROT0, "Atari Games", "Vindicators Part II (rev 2)", 0 )
-GAME( 1988, vindctr2r1, vindctr2, gauntlet, vindctr2, vindctr2,  ROT0, "Atari Games", "Vindicators Part II (rev 1)", 0 )
+GAME( 1988, vindctr2,   0,        gauntlet, vindctr2, gauntlet_state, vindctr2,  ROT0, "Atari Games", "Vindicators Part II (rev 3)", 0 )
+GAME( 1988, vindctr2r2, vindctr2, gauntlet, vindctr2, gauntlet_state, vindctr2,  ROT0, "Atari Games", "Vindicators Part II (rev 2)", 0 )
+GAME( 1988, vindctr2r1, vindctr2, gauntlet, vindctr2, gauntlet_state, vindctr2,  ROT0, "Atari Games", "Vindicators Part II (rev 1)", 0 )

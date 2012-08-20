@@ -2,15 +2,15 @@
 (primary)
 (プライマリ)
 
-# osd/windows/input.c: 1230
+# osd/windows/input.c: 1231
 Assign joystick %s to player %d\n
 ジョイスティック%sをプレイヤー%dに割り当てます\n
 
-# osd/windows/winmain.c: 330
+# osd/windows/winmain.c: 331
 DIRECT3D-SPECIFIC OPTIONS
 Direct3D固有オプション
 
-# osd/windows/winmain.c: 326
+# osd/windows/winmain.c: 327
 DIRECTDRAW-SPECIFIC OPTIONS
 DirectDraw固有オプション
 
@@ -230,159 +230,159 @@ Direct3D: デバイスのリソ\ース再生成が失敗しました。
 Direct3D: resetting device\n
 Direct3D: デバイスをリセットしています\n
 
-# osd/windows/drawdd.c: 821
+# osd/windows/drawdd.c: 794
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %sバッファを作成しました: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1158
+# osd/windows/drawdd.c: 1131
 DirectDraw: Configuring device %s\n
 DirectDraw: デバイス%sを設定中\n
 
-# osd/windows/drawdd.c: 649
+# osd/windows/drawdd.c: 622
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: ガンマ補正の設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 532
+# osd/windows/drawdd.c: 505
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: 描画モードを%dx%d@%dに設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1118
+# osd/windows/drawdd.c: 1091
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: 画面への描画でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1085, 1094, 1103, 1112
+# osd/windows/drawdd.c: 1058, 1067, 1076, 1085
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: 画面の消去でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 806
+# osd/windows/drawdd.c: 779
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: %sバッファの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 847
+# osd/windows/drawdd.c: 820
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: クリッパーの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 497, 1147
+# osd/windows/drawdd.c: 470, 1120
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: DirectDrawCreateEx呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1244
+# osd/windows/drawdd.c: 1217
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: 呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1363
+# osd/windows/drawdd.c: 1336
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: EnumDisplayModes呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 748
+# osd/windows/drawdd.c: 721
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: IDirectDraw7_GetCaps呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 522
+# osd/windows/drawdd.c: 495
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 516
+# osd/windows/drawdd.c: 489
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 814
+# osd/windows/drawdd.c: 787
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: %sバッファの詳細を取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 581
+# osd/windows/drawdd.c: 554
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: 割り当てられた裏画面バッファの取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1166
+# osd/windows/drawdd.c: 1139
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: 現在の画面モード取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 390
+# osd/windows/drawdd.c: 363
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: blitバッファのロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 855
+# osd/windows/drawdd.c: 828
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: ウィンドウのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 863
+# osd/windows/drawdd.c: 836
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: primaryバッファのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 463
+# osd/windows/drawdd.c: 436
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: blitバッファのアンロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 469, 1124
+# osd/windows/drawdd.c: 442, 1097
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: VBLANK待ちでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 505
+# osd/windows/drawdd.c: 478
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: エラー: デバイスはDirectDraw描画に必要最小限の要件をサポートしていません\n
 
-# osd/windows/drawdd.c: 384
+# osd/windows/drawdd.c: 357
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: バッファの消失。次のフレームに削除してやり直します\n
 
-# osd/windows/drawdd.c: 1364
+# osd/windows/drawdd.c: 1337
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: 選択されたモードは%4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 959
+# osd/windows/drawdd.c: 932
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: 新しいバッファサイズは%dx%d\n
 
-# osd/windows/drawdd.c: 1361
+# osd/windows/drawdd.c: 1334
 DirectDraw: Selecting video mode...\n
 DirectDraw: 描画モードを選択中です...\n
 
-# osd/windows/drawdd.c: 229
+# osd/windows/drawdd.c: 202
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: ddraw.dllにアクセス出来ません\n
 
-# osd/windows/drawdd.c: 237
+# osd/windows/drawdd.c: 210
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: DirectDrawCreateExを見つける事が出来ません\n
 
-# osd/windows/drawdd.c: 247
+# osd/windows/drawdd.c: 220
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: DirectDrawEnumerateExAを見つける事が出来ません\n
 
-# osd/windows/drawdd.c: 419, 455, 1200
+# osd/windows/drawdd.c: 392, 428, 1173
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: 不明な画面モード: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 262
+# osd/windows/drawdd.c: 235
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: DirectDraw 7を使用します\n
 
-# osd/windows/drawdd.c: 755
+# osd/windows/drawdd.c: 728
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: 警告: デバイスはハードウェア拡大表\示をサポートしていません\n
 
-# osd/windows/drawdd.c: 509
+# osd/windows/drawdd.c: 482
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: 警告: デバイスはDirectDraw描画にあまり適していないかも知れません\n
 
-# osd/windows/drawdd.c: 632
+# osd/windows/drawdd.c: 605
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告: デバイスはフルスクリーンのガンマ補正をサポートしていません。\n
 
-# osd/windows/input.c: 1214
+# osd/windows/input.c: 1215
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 DirectInput: ジョイスティックの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1199
+# osd/windows/input.c: 1200
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 DirectInput: キーボードの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1208
+# osd/windows/input.c: 1209
 DirectInput: Unable to enumerate mice (result=%08X)\n
 DirectInput: マウスの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1188
+# osd/windows/input.c: 1189
 DirectInput: Using DirectInput %d\n
 DirectInput: DirectInput %dを使用します\n
 
@@ -414,7 +414,7 @@ DirectSoundの情報が取得出来ません: %08x\n
 Error getting identifier for adapter #%d\n
 アダプタ#%dの識別情報の取得でエラーが発生しました\n
 
-# osd/windows/drawdd.c: 1155
+# osd/windows/drawdd.c: 1128
 Error getting identifier for device\n
 デバイスの識別情報の取得でエラーが発生しました\n
 
@@ -454,27 +454,27 @@ Error: Device does not meet minimum requirements for Direct3D rendering\n
 Error: unable to configure a screen texture format\n
 エラー: 画面テクスチャ形式の設定が出来ません\n
 
-# osd/windows/winmain.c: 419
+# osd/windows/winmain.c: 420
 FULL SCREEN OPTIONS
 フルスクリーンオプション
 
 # osd/windows/window.c: 249
-Failed to create pause event
-ポーズイベントの生成が失敗しました
+Failed to create pause event\n
+ポーズイベントの生成が失敗しました\n
 
-# osd/windows/window.c: 901
-Failed to create window class
-ウインドウクラスの生成が失敗しました
-
-# osd/windows/window.c: 263
-Failed to create window thread
-ウインドウスレッドの生成が失敗しました
+# osd/windows/window.c: 900
+Failed to create window class\n
+ウインドウクラスの生成が失敗しました\n
 
 # osd/windows/window.c: 257
-Failed to create window thread ready event
-ウインドウスレッド準備完了イベントの生成が失敗しました
+Failed to create window thread ready event\n
+ウインドウスレッド準備完了イベントの生成が失敗しました\n
 
-# osd/windows/winmain.c: 434
+# osd/windows/window.c: 263
+Failed to create window thread\n
+ウインドウスレッドの生成が失敗しました\n
+
+# osd/windows/winmain.c: 435
 INPUT DEVICE OPTIONS
 入力デバイスオプション
 
@@ -482,7 +482,7 @@ INPUT DEVICE OPTIONS
 Invalid video value %s; reverting to gdi\n
 ビデオの値%sは不正です。GDIに復元します\n
 
-# osd/windows/winmain.c: 392
+# osd/windows/winmain.c: 393
 PER-WINDOW VIDEO OPTIONS
 ウィンドウ毎の画面オプション
 
@@ -490,7 +490,7 @@ PER-WINDOW VIDEO OPTIONS
 Proposed video mode not supported on device %s\n
 指定された画面モードはデバイス%sではサポートされていません\n
 
-# osd/windows/input.c: 1780
+# osd/windows/input.c: 1781
 RawInput: APIs detected\n
 RawInput: APIが検出されました\n
 
@@ -506,7 +506,7 @@ Sound: buffer overflows=%d underflows=%d\n
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 テクスチャが大きすぎます!(要求: %dx%d、最大: %dx%d)\n
 
-# osd/windows/input.c: 835
+# osd/windows/input.c: 834
 Toggle Fullscreen
 フルスクリーン切り替え
 
@@ -514,9 +514,9 @@ Toggle Fullscreen
 Unable to close the keyboard device. (error %d)\n
 キーボードデバイスがクローズ出来ません。(エラー %d)\n
 
-# osd/windows/window.c: 723
-Unable to complete window creation
-ウインドウの生成が完了出来ません
+# osd/windows/window.c: 722
+Unable to complete window creation\n
+ウインドウの生成が完了出来ません\n
 
 # osd/windows/drawd3d.c: 743
 Unable to create the Direct3D device (%08X)\n
@@ -530,7 +530,7 @@ Unable to get network devices: %s\n
 Unable to initialize Direct3D.\n
 Direct3Dを初期化出来ません。\n
 
-# osd/windows/drawdd.c: 304
+# osd/windows/drawdd.c: 277
 Unable to initialize DirectDraw.\n
 DirectDrawを初期化出来ません\n
 
@@ -558,19 +558,19 @@ Using %s scale effect\n
 Video: Monitor %p = \"%s\" %s\n
 ビデオ: モニタ %p = 「%s」%s\n
 
-# osd/windows/winmain.c: 299
+# osd/windows/winmain.c: 300
 WINDOWS DEBUGGING OPTIONS
 Windows版デバッグオプション
 
-# osd/windows/winmain.c: 306
+# osd/windows/winmain.c: 307
 WINDOWS PERFORMANCE OPTIONS
 Windows版パフォーマンスオプション
 
-# osd/windows/winmain.c: 427
+# osd/windows/winmain.c: 428
 WINDOWS SOUND OPTIONS
 Windows版サウンドオプション
 
-# osd/windows/winmain.c: 314
+# osd/windows/winmain.c: 315
 WINDOWS VIDEO OPTIONS
 Windows版ビデオオプション
 
@@ -586,47 +586,47 @@ Warning: Device may not perform well for Direct3D rendering\n
 Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 警告: プロセッサ数 < 1 は理解できません。 自動と仮定します ...\n
 
-# osd/windows/winmain.c: 394
+# osd/windows/winmain.c: 395
 aspect ratio for all screens; 'auto' here will try to make a best guess
 全ての画面のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 399
+# osd/windows/winmain.c: 400
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 １画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 414
+# osd/windows/winmain.c: 415
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 ４画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 404
+# osd/windows/winmain.c: 405
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 ２画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 409
+# osd/windows/winmain.c: 410
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 ３画面目のアスペクト比。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 422
+# osd/windows/winmain.c: 423
 brightness value in full screen mode
 フルスクリーン画面での明るさ
 
-# osd/windows/winmain.c: 319
+# osd/windows/winmain.c: 320
 constrain to the proper aspect ratio
 適切なアスペクト比に制限します
 
-# osd/windows/winmain.c: 423
+# osd/windows/winmain.c: 424
 contrast value in full screen mode
 フルスクリーン画面の値を制限します
 
-# osd/windows/winmain.c: 318
+# osd/windows/winmain.c: 319
 default to maximized windows; otherwise, windows will be minimized
 デフォルトでウィンドウを最大化。無効な場合はウィンドウは最小化されます
 
-# osd/windows/winmain.c: 430
+# osd/windows/winmain.c: 431
 enable audio sync
 音声同期を有効
 
-# osd/windows/winmain.c: 332
+# osd/windows/winmain.c: 333
 enable bilinear filtering on screen output
 画面の出力にバイリニアフィルタを有効
 
@@ -634,123 +634,123 @@ enable bilinear filtering on screen output
 enable dual lightgun input
 デュアル光線銃を使用
 
-# osd/windows/winmain.c: 327
+# osd/windows/winmain.c: 328
 enable hardware stretching
 ハードウェア拡大表\示を有効
 
-# osd/windows/winmain.c: 308
+# osd/windows/winmain.c: 309
 enable multithreading; this enables rendering and blitting on a separate thread
 マルチスレッドを有効。これは描画処理でのスレッド分割を有効にします
 
-# osd/windows/winmain.c: 310
+# osd/windows/winmain.c: 311
 enable profiling, specifying the stack depth to track
 プロファイラ有効, 追跡のためのスタックの深さを指定
 
-# osd/windows/winmain.c: 421
+# osd/windows/winmain.c: 422
 enable resolution switching
 解像度の切り替えを有効
 
-# osd/windows/winmain.c: 420
+# osd/windows/winmain.c: 421
 enable triple buffering
 トリプルバッファリングを有効
 
-# osd/windows/winmain.c: 322
+# osd/windows/winmain.c: 323
 enable using the start of VBLANK for throttling instead of the game time
 速度制限をゲームの実時間の代わりにVBLANK開始で行う
 
-# osd/windows/winmain.c: 321
+# osd/windows/winmain.c: 322
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 画面反転の前にVBLANK開始を待つ。画面のちらつきが減少します
 
-# osd/windows/winmain.c: 317
+# osd/windows/winmain.c: 318
 enable window mode; otherwise, full screen mode is assumed
 ウィンドウモードを有効。無効な場合は当然フルスクリーンです
 
-# osd/windows/winmain.c: 393
+# osd/windows/winmain.c: 394
 explicit name of all screens; 'auto' here will try to make a best guess
 明示的に全ての画面の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 398
+# osd/windows/winmain.c: 399
 explicit name of the first screen; 'auto' here will try to make a best guess
 明示的に１画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 413
+# osd/windows/winmain.c: 414
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 明示的に４画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 403
+# osd/windows/winmain.c: 404
 explicit name of the second screen; 'auto' here will try to make a best guess
 明示的に２画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 408
+# osd/windows/winmain.c: 409
 explicit name of the third screen; 'auto' here will try to make a best guess
 明示的に４画面目の名前を指定。「auto」は最適な設定を試みます
 
-# osd/windows/winmain.c: 301
+# osd/windows/winmain.c: 302
 force the program to terminate if no updates within specified number of seconds
 指定された数秒で更新が無いならばプログラムを強制的に終了
 
-# osd/windows/winmain.c: 424
+# osd/windows/winmain.c: 425
 gamma value in full screen mode
 フルスクリーンのガンマ補正値
 
-# osd/windows/winmain.c: 309
+# osd/windows/winmain.c: 310
 number of processors; this overrides the number the system reports
 プロセッサ数; これはシステムレポートの数値を上書きします。
 
-# osd/windows/winmain.c: 316
+# osd/windows/winmain.c: 317
 number of screens to create; usually, you want just one
 生成する画面の数を指定。通常は１です
 
-# osd/windows/winmain.c: 300
+# osd/windows/winmain.c: 301
 output error.log data to the system debugger
 error.logデータをシステムデバッガに出力
 
-# osd/windows/winmain.c: 395
+# osd/windows/winmain.c: 396
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 全ての画面の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 400
+# osd/windows/winmain.c: 401
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 １画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 415
+# osd/windows/winmain.c: 416
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ４画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 405
+# osd/windows/winmain.c: 406
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ２画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 410
+# osd/windows/winmain.c: 411
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 ３画面目の解像度を指定。形式は<幅>x<高さ>[@<リフレッシュレート>]または「auto」
 
-# osd/windows/winmain.c: 396
+# osd/windows/winmain.c: 397
 preferred view for all screens
 全ての画面のビューを指定
 
-# osd/windows/winmain.c: 401
+# osd/windows/winmain.c: 402
 preferred view for the first screen
 １画面目のビューを指定
 
-# osd/windows/winmain.c: 416
+# osd/windows/winmain.c: 417
 preferred view for the fourth screen
 ４画面目のビューを指定
 
-# osd/windows/winmain.c: 406
+# osd/windows/winmain.c: 407
 preferred view for the second screen
 ２画面目のビューを指定
 
-# osd/windows/winmain.c: 411
+# osd/windows/winmain.c: 412
 preferred view for the third screen
 ３画面目のビューを指定
 
-# osd/windows/winmain.c: 320
+# osd/windows/winmain.c: 321
 scale screen rendering by this amount in software
 指定した割合でソ\フトウェアによる画面描画スケーリングを実行
 
-# osd/windows/winmain.c: 428
+# osd/windows/winmain.c: 429
 set audio latency (increase to reduce glitches)
 オーディオのレイテンシを指定
 
@@ -786,31 +786,31 @@ set joystick ID (Player7)
 set joystick ID (Player8)
 ジョイスティックIDを指定 (プレイヤー8)
 
-# osd/windows/winmain.c: 303
+# osd/windows/winmain.c: 304
 specifies the font size to use for debugging; defaults to 9 pt
 デバッグ時のフォントサイズを指定; デフォルトは 9 pt
 
-# osd/windows/winmain.c: 302
+# osd/windows/winmain.c: 303
 specifies the font to use for debugging; defaults to Lucida Console
 デバッグ時のフォントを指定; デフォルトは Lucida Console
 
-# osd/windows/winmain.c: 331
+# osd/windows/winmain.c: 332
 specify the preferred Direct3D version (8 or 9)
 優先されるDirect3Dのバージョンを指定
 
-# osd/windows/winmain.c: 307
+# osd/windows/winmain.c: 308
 thread priority for the main game thread; range from -15 to 1
 メインのゲームスレッドのプライオリティを指定。-15から1の範囲で指定
 
-# osd/windows/winmain.c: 315
+# osd/windows/winmain.c: 316
 video output method: none, gdi, ddraw, or d3d
 ビデオ描画方法: none、gdi、ddrawまたはd3d
 
-# osd/windows/winmain.c: 380
+# osd/windows/winmain.c: 381
 A value for NTSC signal processing
 
 
-# osd/windows/winmain.c: 381
+# osd/windows/winmain.c: 382
 B value for NTSC signal processing
 
 
@@ -862,7 +862,7 @@ Blue Power
 Blue Scale
 
 
-# osd/windows/winmain.c: 379
+# osd/windows/winmain.c: 380
 Color Carrier frequency for NTSC signal processing
 
 
@@ -930,15 +930,15 @@ Direct3D: Warning - Unable to access d3dx9_43.dll; disabling post-effect renderi
 Direct3D: Warning - Unable to get a handle to D3DXCreateEffectFromFileW; disabling post-effect rendering\n
 
 
-# osd/windows/input.c: 1616
+# osd/windows/input.c: 1617
 DirectInput: Unable to reset saturation for joystick %d (%s)\n
 
 
-# osd/windows/input.c: 1606
+# osd/windows/input.c: 1607
 DirectInput: Unable to set absolute mode for joystick %d (%s)\n
 
 
-# osd/windows/input.c: 1511
+# osd/windows/input.c: 1512
 DirectInput: Unable to set relative mode for mouse %d (%s)\n
 
 
@@ -1002,35 +1002,35 @@ Green Power
 Green Scale
 
 
-# osd/windows/winmain.c: 340
+# osd/windows/winmain.c: 341
 HLSL INI file name for this game
 
 
-# osd/windows/winmain.c: 341
+# osd/windows/winmain.c: 342
 HLSL pre-scale override factor for X (0 for auto)
 
 
-# osd/windows/winmain.c: 342
+# osd/windows/winmain.c: 343
 HLSL pre-scale override factor for Y (0 for auto)
 
 
-# osd/windows/winmain.c: 343
+# osd/windows/winmain.c: 344
 HLSL preset to use (0-3)
 
 
-# osd/windows/winmain.c: 346
+# osd/windows/winmain.c: 347
 HLSL upscaled-snapshot height
 
 
-# osd/windows/winmain.c: 345
+# osd/windows/winmain.c: 346
 HLSL upscaled-snapshot width
 
 
-# osd/windows/winmain.c: 388
+# osd/windows/winmain.c: 389
 Horizontal scanline duration for NTSC signal processing (in usec)
 
 
-# osd/windows/winmain.c: 386
+# osd/windows/winmain.c: 387
 I filter cutoff frequency for NTSC signal processing
 
 
@@ -1062,15 +1062,15 @@ Illegal triple vector value = %s\n
 Image Pincushion
 
 
-# osd/windows/winmain.c: 383
+# osd/windows/winmain.c: 384
 Incoming Pixel Clock scaling value for NTSC signal processing
 
 
-# osd/windows/winmain.c: 382
+# osd/windows/winmain.c: 383
 Outgoing Color Carrier phase offset for NTSC signal processing
 
 
-# osd/windows/winmain.c: 389
+# osd/windows/winmain.c: 390
 Phase Count value for NTSC signal processing
 
 
@@ -1082,11 +1082,11 @@ Phosphor Defocus X
 Phosphor Defocus Y
 
 
-# osd/windows/winmain.c: 387
+# osd/windows/winmain.c: 388
 Q filter cutoff frequency for NTSC signal processing
 
 
-# osd/windows/input.c: 849
+# osd/windows/input.c: 846
 Record Rendered Video
 
 
@@ -1190,67 +1190,63 @@ Shadow Mask X Count
 Shadow Mask Y Count
 
 
-# osd/windows/input.c: 842
+# osd/windows/input.c: 840
 Take Rendered Snapshot
 
 
-# osd/windows/winmain.c: 385
+# osd/windows/winmain.c: 386
 Y filter cutoff frequency for NTSC signal processing
 
 
-# osd/windows/winmain.c: 384
+# osd/windows/winmain.c: 385
 Y filter notch width for NTSC signal processing
 
 
-# osd/windows/winmain.c: 311
+# osd/windows/winmain.c: 312
 benchmark for the given number of emulated seconds; implies -video none -nosound -nothrottle
 
 
-# osd/windows/winmain.c: 370
+# osd/windows/winmain.c: 371
 blue output signal generated by input signal
 
 
-# osd/windows/winmain.c: 363
+# osd/windows/winmain.c: 364
 convergence in screen-relative X direction
 
 
-# osd/windows/winmain.c: 364
+# osd/windows/winmain.c: 365
 convergence in screen-relative Y direction
 
 
-# osd/windows/winmain.c: 344
+# osd/windows/winmain.c: 345
 enable HLSL AVI writing (huge disk bandwidth suggested)
 
 
-# osd/windows/winmain.c: 338
+# osd/windows/winmain.c: 339
 enable HLSL INI reading
 
 
-# osd/windows/winmain.c: 339
+# osd/windows/winmain.c: 340
 enable HLSL INI writing
 
 
-# osd/windows/winmain.c: 336
+# osd/windows/winmain.c: 337
 enable HLSL post-processing (PS3.0 required)
 
 
-# osd/windows/winmain.c: 378
+# osd/windows/winmain.c: 379
 enable YIQ-space HLSL post-processing
 
 
-# osd/windows/winmain.c: 323
+# osd/windows/winmain.c: 324
 enable menu bar if available by UI implementation
 
 
-# osd/windows/winmain.c: 369
+# osd/windows/winmain.c: 370
 green output signal generated by input signal
 
 
-# osd/windows/winmain.c: 435
-hide cursor in full screen or if mouse is enabled
-
-
-# osd/windows/winmain.c: 358
+# osd/windows/winmain.c: 359
 individual height scaling value for scanlines
 
 
@@ -1258,99 +1254,99 @@ individual height scaling value for scanlines
 invalid %s value: joystick #%d is used by player %d\n
 
 
-# osd/windows/winmain.c: 356
+# osd/windows/winmain.c: 357
 overall alpha scaling value for scanlines
 
 
-# osd/windows/winmain.c: 360
+# osd/windows/winmain.c: 361
 overall brightness offset value for scanlines (additive)
 
 
-# osd/windows/winmain.c: 359
+# osd/windows/winmain.c: 360
 overall brightness scaling value for scanlines (multiplicative)
 
 
-# osd/windows/winmain.c: 362
+# osd/windows/winmain.c: 363
 overall defocus value in screen-relative coords
 
 
-# osd/windows/winmain.c: 357
+# osd/windows/winmain.c: 358
 overall height scaling value for scanlines
 
 
-# osd/windows/winmain.c: 361
+# osd/windows/winmain.c: 362
 overall interlace jitter scaling value for scanlines
 
 
-# osd/windows/winmain.c: 337
+# osd/windows/winmain.c: 338
 path to hlsl files
 
 
-# osd/windows/winmain.c: 376
+# osd/windows/winmain.c: 377
 phosphorescence decay rate (0.0 is instant, 1.0 is forever)
 
 
-# osd/windows/winmain.c: 355
+# osd/windows/winmain.c: 356
 pincushion amount
 
 
-# osd/windows/winmain.c: 365
+# osd/windows/winmain.c: 366
 radial convergence in screen-relative X direction
 
 
-# osd/windows/winmain.c: 366
+# osd/windows/winmain.c: 367
 radial convergence in screen-relative Y direction
 
 
-# osd/windows/winmain.c: 368
+# osd/windows/winmain.c: 369
 red output signal generated by input signal
 
 
-# osd/windows/winmain.c: 371
+# osd/windows/winmain.c: 372
 saturation scaling value
 
 
-# osd/windows/winmain.c: 353
+# osd/windows/winmain.c: 354
 screen curvature amount
 
 
-# osd/windows/winmain.c: 347
+# osd/windows/winmain.c: 348
 shadow mask alpha-blend value (1.0 is fully blended, 0.0 is no mask)
 
 
-# osd/windows/winmain.c: 350
+# osd/windows/winmain.c: 351
 shadow mask height, in phosphor dots
 
 
-# osd/windows/winmain.c: 348
+# osd/windows/winmain.c: 349
 shadow mask texture name
 
 
-# osd/windows/winmain.c: 351
+# osd/windows/winmain.c: 352
 shadow mask texture size in U direction
 
 
-# osd/windows/winmain.c: 352
+# osd/windows/winmain.c: 353
 shadow mask texture size in V direction
 
 
-# osd/windows/winmain.c: 349
+# osd/windows/winmain.c: 350
 shadow mask width, in phosphor dots
 
 
-# osd/windows/winmain.c: 375
+# osd/windows/winmain.c: 376
 signal floor level
 
 
-# osd/windows/winmain.c: 372
+# osd/windows/winmain.c: 373
 signal offset value (additive)
 
 
-# osd/windows/winmain.c: 374
+# osd/windows/winmain.c: 375
 signal power value (exponential)
 
 
-# osd/windows/winmain.c: 373
+# osd/windows/winmain.c: 374
 signal scaling value (multiplicative)
 
 

@@ -679,20 +679,18 @@ ROM_START( hotminda )
 	ROM_LOAD( "rom10.rom",       0x00000, 0x40000,  CRC(0bf3a3e5) SHA1(2ae06f37a6bcd20bc5fbaa90d970aba2ebf3cf5a) )
 ROM_END
 
-static DRIVER_INIT( powerbal )
+DRIVER_INIT_MEMBER(playmark_state,powerbal)
 {
-	playmark_state *state = machine.driver_data<playmark_state>();
 
-	state->m_bg_yoffset = 16;
-	state->m_yoffset = -8;
+	m_bg_yoffset = 16;
+	m_yoffset = -8;
 }
 
-static DRIVER_INIT( magicstk )
+DRIVER_INIT_MEMBER(playmark_state,magicstk)
 {
-	playmark_state *state = machine.driver_data<playmark_state>();
 
-	state->m_bg_yoffset = 0;
-	state->m_yoffset = -5;
+	m_bg_yoffset = 0;
+	m_yoffset = -5;
 }
 
 /*************************
@@ -700,6 +698,6 @@ static DRIVER_INIT( magicstk )
 *************************/
 
 /*    YEAR  NAME      PARENT   MACHINE   INPUT     INIT      ROT    COMPANY     FULLNAME                      FLAGS */
-GAME( 1994, powerbal, 0,       powerbal, powerbal, powerbal, ROT0, "Playmark", "Power Balls",                 GAME_SUPPORTS_SAVE )
-GAME( 1995, magicstk, 0,       magicstk, magicstk, magicstk, ROT0, "Playmark", "Magic Sticks",                GAME_SUPPORTS_SAVE )
-GAME( 1995, hotminda, hotmind, magicstk, hotminda, magicstk, ROT0, "Playmark", "Hot Mind (adjustable prize)", GAME_SUPPORTS_SAVE )
+GAME( 1994, powerbal, 0,       powerbal, powerbal, playmark_state, powerbal, ROT0, "Playmark", "Power Balls",                 GAME_SUPPORTS_SAVE )
+GAME( 1995, magicstk, 0,       magicstk, magicstk, playmark_state, magicstk, ROT0, "Playmark", "Magic Sticks",                GAME_SUPPORTS_SAVE )
+GAME( 1995, hotminda, hotmind, magicstk, hotminda, playmark_state, magicstk, ROT0, "Playmark", "Hot Mind (adjustable prize)", GAME_SUPPORTS_SAVE )

@@ -1,502 +1,102 @@
 /***************************************************************************
+ KANEKO CALC3 MCU simulation ( KANEKO CALC3 508 (74 PIN PQFP) )
 
+ shogwarr
+ brapboys
 
-                            MCU Code Simulation
-
-  CALC1 is a 40 pin DIP MCU of unknown type with unknown internal rom
   CALC3 is a NEC uPD78322 series MCU with 16K internal rom & 640 bytes of ram
-TBSOP01 is a NEC uPD78324 series MCU with 32K internal rom & 1024 bytes of ram
-TBSOP02 is likely the same NEC uPD78324 series MCU as the TBS0P01
 
-Currently none of the MCUs' internal roms are dumped so simulation is used
 
 ***************************************************************************/
+
+/*
+    MCU Tasks:
+
+    - Read Dipswitch
+    - Read / Write the EEPROM
+    - Supply code / data snippets to the 68000 by decrypting them from ROM
+
+
+    may also be responsible for the hit detection (kaneko_hit.c)
+
+*/
 
 #include "emu.h"
-#include "includes/kaneko16.h"
-
-#include "kanekotb.h"	// TOYBOX MCU trojaning results
+#include "kaneko_calc3.h"
 #include "machine/eeprom.h"
 
+const device_type KANEKO_CALC3 = &device_creator<kaneko_calc3_device>;
 
-#define CALC3_VERBOSE_OUTPUT 0
+kaneko_calc3_device::kaneko_calc3_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, KANEKO_CALC3, "kaneko_calc3_device", tag, owner, clock)
+{
+	memset(&m_calc3, 0, sizeof m_calc3);
+}
 
-#define MCU_RESPONSE(d) memcpy(&state->m_mcu_ram[mcu_offset], d, sizeof(d))
 
-/***************************************************************************
-                                Gals Panic (set 2)
-                                Gals Panic (set 3)
-                                Sand Scorpion
-                                Bonk's Adventure
-                                Blood Warrior
-***************************************************************************/
+static TIMER_CALLBACK( kaneko_calc3_run_callback )
+{
+	kaneko_calc3_device* dev = (kaneko_calc3_device*)ptr;
+	dev->calc3_mcu_run(machine);
+	dev->reset_run_timer();
+}
+
+void kaneko_calc3_device::device_start()
+{
+	m_calc3_mcuram = (UINT16*)auto_alloc_array_clear(this->machine(), UINT16, 0x10000/2);
+	initial_scan_tables(this->machine());
+	m_runtimer = machine().scheduler().timer_alloc(FUNC(kaneko_calc3_run_callback), (void*)this);
+
+
+	save_item(NAME(m_calc3.mcu_status));
+	save_item(NAME(m_calc3.mcu_command_offset));
+	save_item(NAME(m_calc3.mcu_crc));
+	save_item(NAME(m_calc3.decryption_key_byte));
+	save_item(NAME(m_calc3.alternateswaps));
+	save_item(NAME(m_calc3.shift));
+	save_item(NAME(m_calc3.subtracttype));
+	save_item(NAME(m_calc3.mode));
+	save_item(NAME(m_calc3.blocksize_offset));
+	save_item(NAME(m_calc3.dataend));
+	save_item(NAME(m_calc3.database));
+	save_item(NAME(m_calc3.data_header));
+	save_item(NAME(m_calc3.writeaddress));
+	save_item(NAME(m_calc3.writeaddress_current));
+	save_item(NAME(m_calc3.dsw_addr));
+	save_item(NAME(m_calc3.eeprom_addr));
+	save_item(NAME(m_calc3.poll_addr));
+	save_item(NAME(m_calc3.checksumaddress));
+	save_pointer(NAME(m_calc3_mcuram), 0x10000/2);
+
+
+
+typedef struct
+{
+
+	int data_header[2];
+
+
+} calc3_t;
+
+
+
+
+}
+
+void kaneko_calc3_device::device_reset()
+{
+	calc3_mcu_init(this->machine());
+	reset_run_timer();
+}
+
+void kaneko_calc3_device::reset_run_timer()
+{
+	m_runtimer->adjust(attotime::from_hz(59.1854));
+}
+
+
 
 /*
-    - see notes about this "calculator" implementation in drivers\galpanic.c
-    - bonkadv only uses Random Number, XY Overlap Collision bit and register '0x02'
-*/
-
-
-
-READ16_MEMBER(kaneko16_state::galpanib_calc_r)/* Simulation of the CALC1 MCU */
-{
-	calc1_hit_t &hit = m_hit;
-	UINT16 data = 0;
-
-	switch (offset)
-	{
-		case 0x00/2: // watchdog
-			return watchdog_reset_r(space,0);
-
-		case 0x02/2: // unknown (yet!), used by *MANY* games !!!
-			//popmessage("unknown collision reg");
-			break;
-
-		case 0x04/2: // similar to the hit detection from SuperNova, but much simpler
-
-			// X Absolute Collision
-			if      (hit.x1p >  hit.x2p)	data |= 0x0200;
-			else if (hit.x1p == hit.x2p)	data |= 0x0400;
-			else if (hit.x1p <  hit.x2p)	data |= 0x0800;
-
-			// Y Absolute Collision
-			if      (hit.y1p >  hit.y2p)	data |= 0x2000;
-			else if (hit.y1p == hit.y2p)	data |= 0x4000;
-			else if (hit.y1p <  hit.y2p)	data |= 0x8000;
-
-			// XY Overlap Collision
-			hit.x12 = (hit.x1p) - (hit.x2p + hit.x2s);
-			hit.y12 = (hit.y1p) - (hit.y2p + hit.y2s);
-			hit.x21 = (hit.x1p + hit.x1s) - (hit.x2p);
-			hit.y21 = (hit.y1p + hit.y1s) - (hit.y2p);
-
-			if ((hit.x12 < 0) && (hit.y12 < 0) &&
-				(hit.x21 >= 0) && (hit.y21 >= 0))
-					data |= 0x0001;
-
-			return data;
-
-		case 0x10/2:
-			return (((UINT32)hit.mult_a * (UINT32)hit.mult_b) >> 16);
-		case 0x12/2:
-			return (((UINT32)hit.mult_a * (UINT32)hit.mult_b) & 0xffff);
-
-		case 0x14/2:
-			return (machine().rand() & 0xffff);
-
-		default:
-			logerror("CPU #0 PC %06x: warning - read unmapped calc address %06x\n",cpu_get_pc(&space.device()),offset<<1);
-	}
-
-	return 0;
-}
-
-WRITE16_MEMBER(kaneko16_state::galpanib_calc_w)
-{
-	calc1_hit_t &hit = m_hit;
-
-	switch (offset)
-	{
-		// p is position, s is size
-		case 0x00/2: hit.x1p    = data; break;
-		case 0x02/2: hit.x1s    = data; break;
-		case 0x04/2: hit.y1p    = data; break;
-		case 0x06/2: hit.y1s    = data; break;
-		case 0x08/2: hit.x2p    = data; break;
-		case 0x0a/2: hit.x2s    = data; break;
-		case 0x0c/2: hit.y2p    = data; break;
-		case 0x0e/2: hit.y2s    = data; break;
-		case 0x10/2: hit.mult_a = data; break;
-		case 0x12/2: hit.mult_b = data; break;
-
-		default:
-			logerror("CPU #0 PC %06x: warning - write unmapped hit address %06x\n",cpu_get_pc(&space.device()),offset<<1);
-	}
-}
-
-WRITE16_MEMBER(kaneko16_state::bloodwar_calc_w)
-{
-	calc1_hit_t &hit = m_hit;
-	int isbrap = ( !strcmp(machine().system().name,"brapboysj") || !strcmp(machine().system().name,"brapboysu") || !strcmp(machine().system().name,"brapboys"));
-
-	/* our implementation is incomplete, b.rap boys requires some modifications */
-	if (isbrap)
-	{
-		shogwarr_calc_w(space,offset,data,mem_mask);
-		return;
-	}
-
-	switch (offset)
-	{
-		// p is position, s is size
-		case 0x20/2: hit.x1p = data; break;
-		case 0x22/2: hit.x1s = data; break;
-		case 0x24/2: hit.y1p = data; break;
-		case 0x26/2: hit.y1s = data; break;
-
-		case 0x2c/2: hit.x2p = data; break;
-		case 0x2e/2: hit.x2s = data; break;
-		case 0x30/2: hit.y2p = data; break;
-		case 0x32/2: hit.y2s = data; break;
-
-		// this register is set to zero before any computation,
-		// but it has no effect on inputs or result registers
-		case 0x38/2: break;
-
-		default:
-			logerror("CPU #0 PC %06x: warning - write unmapped hit address %06x\n",cpu_get_pc(&space.device()),offset<<1);
-	}
-}
-
-/*
- collision detection: absolute "distance", negative if no overlap
-         [one inside other] | [ normal overlap ] | [   no overlap   ]
-  rect1   <-------------->  |  <----------->     |  <--->
-  rect2       <----->       |     <----------->  |             <--->
-  result      <---------->  |     <-------->     |       <---->
-*/
-
-static INT16 calc_compute_x(calc1_hit_t &hit)
-{
-	INT16 x_coll;
-
-	// X distance
-	if ((hit.x2p >= hit.x1p) && (hit.x2p < (hit.x1p + hit.x1s)))		// x2p inside x1
-		x_coll = (hit.x1s - (hit.x2p - hit.x1p));
-	else if ((hit.x1p >= hit.x2p) && (hit.x1p < (hit.x2p + hit.x2s)))	// x1p inside x2
-		x_coll = (hit.x2s - (hit.x1p - hit.x2p));
-	else																// normal/no overlap
-		x_coll = ((hit.x1s + hit.x2s)/2) - abs((hit.x1p + hit.x1s/2) - (hit.x2p + hit.x2s/2));
-
-	return x_coll;
-}
-
-static INT16 calc_compute_y(calc1_hit_t &hit)
-{
-	INT16 y_coll;
-
-	// Y distance
-	if ((hit.y2p >= hit.y1p) && (hit.y2p < (hit.y1p + hit.y1s)))		// y2p inside y1
-		y_coll = (hit.y1s - (hit.y2p - hit.y1p));
-	else if ((hit.y1p >= hit.y2p) && (hit.y1p < (hit.y2p + hit.y2s)))	// y1p inside y2
-		y_coll = (hit.y2s - (hit.y1p - hit.y2p));
-	else																// normal/no overlap
-		y_coll = ((hit.y1s + hit.y2s)/2) - abs((hit.y1p + hit.y1s/2) - (hit.y2p + hit.y2s/2));
-
-	return y_coll;
-}
-
-READ16_MEMBER(kaneko16_state::bloodwar_calc_r)
-{
-	calc1_hit_t &hit = m_hit;
-	UINT16 data = 0;
-	INT16 x_coll, y_coll;
-
-	/* our implementation is incomplete, b.rap boys requires some modifications */
-	int isbrap = ( !strcmp(machine().system().name,"brapboysj") || !strcmp(machine().system().name,"brapboysu") || !strcmp(machine().system().name,"brapboys"));
-
-	if (isbrap)
-	{
-		return shogwarr_calc_r(space,offset,mem_mask);
-	}
-
-	x_coll = calc_compute_x(hit);
-	y_coll = calc_compute_y(hit);
-
-	switch (offset)
-	{
-		case 0x00/2: // X distance
-			return x_coll;
-
-		case 0x02/2: // Y distance
-			return y_coll;
-
-		case 0x04/2: // similar to the hit detection from SuperNova, but much simpler
-
-			// 4th nibble: Y Absolute Collision -> possible values = 9,8,4,3,2
-			if      (hit.y1p >  hit.y2p)	data |= 0x2000;
-			else if (hit.y1p == hit.y2p)	data |= 0x4000;
-			else if (hit.y1p <  hit.y2p)	data |= 0x8000;
-			if (y_coll<0) data |= 0x1000;
-
-			// 3rd nibble: X Absolute Collision -> possible values = 9,8,4,3,2
-			if      (hit.x1p >  hit.x2p)	data |= 0x0200;
-			else if (hit.x1p == hit.x2p)	data |= 0x0400;
-			else if (hit.x1p <  hit.x2p)	data |= 0x0800;
-			if (x_coll<0) data |= 0x0100;
-
-			// 2nd nibble: always set to 4
-			data |= 0x0040;
-
-			// 1st nibble: XY Overlap Collision -> possible values = 0,2,4,f
-			if (x_coll>=0) data |= 0x0004;
-			if (y_coll>=0) data |= 0x0002;
-			if ((x_coll>=0)&&(y_coll>=0)) data |= 0x000F;
-
-			return data;
-
-		case 0x14/2:
-			return (machine().rand() & 0xffff);
-
-		case 0x20/2: return hit.x1p;
-		case 0x22/2: return hit.x1s;
-		case 0x24/2: return hit.y1p;
-		case 0x26/2: return hit.y1s;
-
-		case 0x2c/2: return hit.x2p;
-		case 0x2e/2: return hit.x2s;
-		case 0x30/2: return hit.y2p;
-		case 0x32/2: return hit.y2s;
-
-		default:
-			logerror("CPU #0 PC %06x: warning - read unmapped calc address %06x\n",cpu_get_pc(&space.device()),offset<<1);
-	}
-
-	return 0;
-}
-
-/*
-    B Rap Boys
-    Shogun Warriors
-
-*/
-
-
-//calculate simple intersection of two segments
-
-static int shogwarr_calc_compute(int x1, int w1, int x2, int w2)
-{
-	int dist;
-
-	if(x2>=x1 && x2+w2<=(x1+w1))
-	{
-		//x2 inside x1
-		dist=w2;
-	}
-	else
-	{
-		if(x1>=x2 && x1+w1<=(x2+w2))
-		{
-			//x1 inside x2
-			dist=w1;
-		}
-		else
-		{
-			if(x2<x1)
-			{
-				//swap
-				int tmp=x1;
-				x1=x2;
-				x2=tmp;
-				tmp=w1;
-				w1=w2;
-				w2=tmp;
-			}
-			dist=x1+w1-x2;
-		}
-	}
-	return dist;
-}
-
-//calc segment coordinates
-
-static void shogwarr_calc_org(int mode, int x0, int s0,  int* x1, int* s1)
-{
-	switch(mode)
-	{
-		case 0: *x1=x0; *s1=s0; break;
-		case 1: *x1=x0-s0/2; *s1=s0; break;
-		case 2: *x1=x0-s0; *s1=s0; break;
-		case 3:	*x1=x0-s0; *s1=2*s0; break;
-	}
-	//x1 is the left most coord, s1 = width
-}
-
-static void shogwarr_recalc_collisions(calc3_hit_t &hit3)
-{
-	//calculate positions and sizes
-
-	int mode=hit3.mode;
-
-	hit3.flags=0;
-
-	shogwarr_calc_org((mode>>0)&3, hit3.x1po, hit3.x1so, &hit3.x1p, &hit3.x1s);
-	shogwarr_calc_org((mode>>2)&3, hit3.y1po, hit3.y1so, &hit3.y1p, &hit3.y1s);
-	shogwarr_calc_org((mode>>4)&3, hit3.z1po, hit3.z1so, &hit3.z1p, &hit3.z1s);
-
-	shogwarr_calc_org((mode>>8)&3, hit3.x2po, hit3.x2so, &hit3.x2p, &hit3.x2s);
-	shogwarr_calc_org((mode>>10)&3, hit3.y2po, hit3.y2so, &hit3.y2p, &hit3.y2s);
-	shogwarr_calc_org((mode>>12)&3, hit3.z2po, hit3.z2so, &hit3.z2p, &hit3.z2s);
-
-
-	hit3.x1tox2=abs(hit3.x2po-hit3.x1po);
-	hit3.y1toy2=abs(hit3.y2po-hit3.y1po);
-	hit3.z1toz2=abs(hit3.z2po-hit3.z1po);
-
-
-	hit3.x_coll = shogwarr_calc_compute(hit3.x1p, hit3.x1s, hit3.x2p, hit3.x2s);
-	hit3.y_coll = shogwarr_calc_compute(hit3.y1p, hit3.y1s, hit3.y2p, hit3.y2s);
-	hit3.z_coll = shogwarr_calc_compute(hit3.z1p, hit3.z1s, hit3.z2p, hit3.z2s);
-
-
-	// 4th nibble: Y Absolute Collision -> possible values = 9,8,4,3,2
-	if      (hit3.y1p >  hit3.y2p)	hit3.flags |= 0x2000;
-	else if (hit3.y1p == hit3.y2p)	hit3.flags |= 0x4000;
-	else if (hit3.y1p <  hit3.y2p)	hit3.flags |= 0x8000;
-	if (hit3.y_coll<0) hit3.flags |= 0x1000;
-
-	// 3rd nibble: X Absolute Collision -> possible values = 9,8,4,3,2
-	if      (hit3.x1p >  hit3.x2p)	hit3.flags |= 0x0200;
-	else if (hit3.x1p == hit3.x2p)	hit3.flags |= 0x0400;
-	else if (hit3.x1p <  hit3.x2p)	hit3.flags |= 0x0800;
-	if (hit3.x_coll<0) hit3.flags |= 0x0100;
-
-	// 2nd nibble: Z Absolute Collision -> possible values = 9,8,4,3,2
-	if      (hit3.z1p >  hit3.z2p)	hit3.flags |= 0x0020;
-	else if (hit3.z1p == hit3.z2p)	hit3.flags |= 0x0040;
-	else if (hit3.z1p <  hit3.z2p)	hit3.flags |= 0x0080;
-	if (hit3.z_coll<0) hit3.flags |= 0x0010;
-
-	// 1st nibble: XYZ Overlap Collision
-	if ((hit3.x_coll>=0)&&(hit3.y_coll>=0)&&(hit3.z_coll>=0)) hit3.flags |= 0x0008;
-	if ((hit3.x_coll>=0)&&(hit3.z_coll>=0)) hit3.flags |= 0x0004;
-	if ((hit3.y_coll>=0)&&(hit3.z_coll>=0)) hit3.flags |= 0x0002;
-	if ((hit3.x_coll>=0)&&(hit3.y_coll>=0)) hit3.flags |= 0x0001;
-}
-
-
-WRITE16_MEMBER(kaneko16_state::shogwarr_calc_w)
-{
-	calc3_hit_t &hit3 = m_hit3;
-	int idx=offset*4;
-	switch (idx)
-	{
-		// p is position, s is size
-		case 0x00:
-		case 0x28:
-
-					hit3.x1po = data; break;
-
-		case 0x04:
-		case 0x2c:
-					hit3.x1so = data; break;
-
-		case 0x08:
-		case 0x30:
-					hit3.y1po = data; break;
-
-		case 0x0c:
-		case 0x34:
-					hit3.y1so = data; break;
-
-		case 0x10:
-		case 0x58:
-					hit3.x2po = data; break;
-
-		case 0x14:
-		case 0x5c:
-					hit3.x2so = data; break;
-
-		case 0x18:
-		case 0x60:
-					hit3.y2po = data; break;
-
-		case 0x1c:
-		case 0x64:
-					hit3.y2so = data; break;
-
-		case 0x38:
-		case 0x50:
-					hit3.z1po = data; break;
-		case 0x3c:
-		case 0x54:
-					hit3.z1so = data; break;
-
-		case 0x20:
-		case 0x68:
-					hit3.z2po = data; break;
-
-		case 0x24:
-		case 0x6c:
-					hit3.z2so = data; break;
-
-		case 0x70:
-					hit3.mode=data;break;
-
-		default:
-			logerror("CPU #0 PC %06x: warning - write unmapped hit address %06x [ %06x] = %06x\n",cpu_get_pc(&space.device()),offset<<1, idx, data);
-	}
-
-	shogwarr_recalc_collisions(hit3);
-}
-
-
-READ16_MEMBER(kaneko16_state::shogwarr_calc_r)
-{
-	calc3_hit_t &hit3 = m_hit3;
-	int idx=offset*4;
-
-	switch (idx)
-	{
-		case 0x00: // X distance
-		case 0x10:
-			return hit3.x_coll;
-
-		case 0x04: // Y distance
-		case 0x14:
-			return hit3.y_coll;
-
-		case 0x18: // Z distance
-			return hit3.z_coll;
-
-		case 0x08:
-		case 0x1c:
-
-			return hit3.flags;
-
-		case 0x28:
-			return (machine().rand() & 0xffff);
-
-		case 0x40: return hit3.x1po;
-		case 0x44: return hit3.x1so;
-		case 0x48: return hit3.y1po;
-		case 0x4c: return hit3.y1so;
-		case 0x50: return hit3.z1po;
-		case 0x54: return hit3.z1so;
-
-		case 0x58: return hit3.x2po;
-		case 0x5c: return hit3.x2so;
-		case 0x60: return hit3.y2po;
-		case 0x64: return hit3.y2so;
-		case 0x68: return hit3.z2po;
-		case 0x6c: return hit3.z2so;
-
-		case 0x80: return hit3.x1tox2;
-		case 0x84: return hit3.y1toy2;
-		case 0x88: return hit3.z1toz2;
-
-		default:
-			logerror("CPU #0 PC %06x: warning - read unmapped calc address %06x [ %06x]\n",cpu_get_pc(&space.device()),offset<<1, idx);
-	}
-
-	return 0;
-}
-
-/***************************************************************************
-                                CALC3 MCU:
-
-                                Shogun Warriors
-                                Fujiyama Buster
-                                B.Rap Boys
-***************************************************************************/
-/*
----------------------------------------------------------------------------
-                                CALC 3
-
-92  B.Rap Boys              KANEKO CALC3 508 (74 PIN PQFP)
-92  Shogun Warriors
-    Fujiyama Buster         KANEKO CALC3 508 (74 Pin PQFP)
----------------------------------------------------------------------------
 
 MCU Initialization command:
 
@@ -516,51 +116,37 @@ FFFE : probably polled by MCU, needs to be kept alive (cleared by main cpu - IT2
 */
 
 
-void calc3_mcu_init(running_machine &machine)
+void kaneko_calc3_device::calc3_mcu_init(running_machine &machine)
 {
-	kaneko16_state *state = machine.driver_data<kaneko16_state>();
-	calc3_t &calc3 = state->m_calc3;
+	calc3_t &calc3 = m_calc3;
 	calc3.mcu_status = 0;
 	calc3.mcu_command_offset = 0;
 }
 
-WRITE16_MEMBER(kaneko16_state::calc3_mcu_ram_w)
+READ16_MEMBER(kaneko_calc3_device::calc3_mcu_ram_r)
 {
-	COMBINE_DATA(&m_mcu_ram[offset]);
-	//calc3_mcu_run(machine);
+	return m_calc3_mcuram[offset];
 }
 
-void kaneko16_state::calc3_mcu_com_w(offs_t offset, UINT16 data, UINT16 mem_mask, int _n_)
+
+WRITE16_MEMBER(kaneko_calc3_device::calc3_mcu_ram_w)
+{
+	COMBINE_DATA(&m_calc3_mcuram[offset]);
+}
+
+void kaneko_calc3_device::calc3_mcu_com_w(offs_t offset, UINT16 data, UINT16 mem_mask, int _n_)
 {
 	calc3_t &calc3 = m_calc3;
 	logerror("calc3w %d %04x %04x\n", _n_, data, mem_mask);
 	calc3.mcu_status |= (1 << _n_);
 }
 
-WRITE16_MEMBER(kaneko16_state::calc3_mcu_com0_w){ calc3_mcu_com_w(offset, data, mem_mask, 0); }
-WRITE16_MEMBER(kaneko16_state::calc3_mcu_com1_w){ calc3_mcu_com_w(offset, data, mem_mask, 1); }
-WRITE16_MEMBER(kaneko16_state::calc3_mcu_com2_w){ calc3_mcu_com_w(offset, data, mem_mask, 2); }
-WRITE16_MEMBER(kaneko16_state::calc3_mcu_com3_w){ calc3_mcu_com_w(offset, data, mem_mask, 3); }
+WRITE16_MEMBER(kaneko_calc3_device::calc3_mcu_com0_w){ calc3_mcu_com_w(offset, data, mem_mask, 0); }
+WRITE16_MEMBER(kaneko_calc3_device::calc3_mcu_com1_w){ calc3_mcu_com_w(offset, data, mem_mask, 1); }
+WRITE16_MEMBER(kaneko_calc3_device::calc3_mcu_com2_w){ calc3_mcu_com_w(offset, data, mem_mask, 2); }
+WRITE16_MEMBER(kaneko_calc3_device::calc3_mcu_com3_w){ calc3_mcu_com_w(offset, data, mem_mask, 3); }
 
 
-/***************************************************************************
-                                Shogun Warriors
-***************************************************************************/
-
-/* Preliminary simulation: the game doesn't work */
-
-/*
-    MCU Tasks:
-
-    - Read the DSWs
-    - Supply code snippets to the 68000
-*/
-
-
-// protection information for brapboys / shogwarr
-//
-// this is just an analysis of the MCU Data rom, in reality it probably processes this when requested, not pre-decrypts
-//
 
 /*
 
@@ -1637,7 +1223,7 @@ static const INT16 calc3_keydata[0x40*0x100] = {
   -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
 };
 
-static UINT8 shift_bits(UINT8 dat, int bits)
+UINT8 kaneko_calc3_device::shift_bits(UINT8 dat, int bits)
 {
 	bits &=0x7;
 
@@ -1653,20 +1239,20 @@ static UINT8 shift_bits(UINT8 dat, int bits)
 	return dat;
 }
 
-// endian safe? you're having a laugh
-static int calc3_decompress_table(running_machine& machine, int tabnum, UINT8* dstram, int dstoffset)
+
+int kaneko_calc3_device::calc3_decompress_table(running_machine& machine, int tabnum, UINT8* dstram, int dstoffset)
 {
-	kaneko16_state *state = machine.driver_data<kaneko16_state>();
-	calc3_t &calc3 = state->m_calc3;
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8* rom = state->memregion("cpu1")->base();
+	calc3_t &calc3 = m_calc3;
+	address_space *space = machine.device(":maincpu")->memory().space(AS_PROGRAM);
+	UINT8* datarom = memregion(":calc3_rom")->base();
+
 	UINT8 numregions;
 	UINT16 length;
 	int local_counter=0;
 	int x;
 	int offset = 0;
 
-	numregions = rom[offset+0];
+	numregions = datarom[offset+0];
 
 	if (tabnum > numregions)
 	{
@@ -1674,14 +1260,14 @@ static int calc3_decompress_table(running_machine& machine, int tabnum, UINT8* d
 		return 0;
 	}
 
-	rom++;
+	datarom++;
 
 	// scan through the linked list to find the start of the requested table info
 	for (x=0;x<tabnum;x++)
 	{
-		UINT8 blocksize_offset = rom[offset+0]; // location of the 'block length'
+		UINT8 blocksize_offset = datarom[offset+0]; // location of the 'block length'
 		offset+= blocksize_offset+1;
-		length = rom[offset+0] | (rom[offset+1]<<8);
+		length = datarom[offset+0] | (datarom[offset+1]<<8);
 		offset+=length+2;
 	}
 
@@ -1690,15 +1276,15 @@ static int calc3_decompress_table(running_machine& machine, int tabnum, UINT8* d
 		UINT16 inline_table_base = 0;
 		UINT16 inline_table_size = 0;
 		calc3.database = offset;
-		calc3.blocksize_offset =    rom[offset+0]; // location of the 'block length'
-		calc3.mode =                rom[offset+1];
-		calc3.alternateswaps =             rom[offset+2];
+		calc3.blocksize_offset =    datarom[offset+0]; // location of the 'block length'
+		calc3.mode =                datarom[offset+1];
+		calc3.alternateswaps =             datarom[offset+2];
 		calc3.shift = (calc3.alternateswaps &0xf0)>>4;
 		calc3.subtracttype = (calc3.alternateswaps &0x03);
 		calc3.alternateswaps &= 0x0c;
 		calc3.alternateswaps >>=2;
 
-		calc3.decryption_key_byte = rom[offset+3];
+		calc3.decryption_key_byte = datarom[offset+3];
 
 
 		// if blocksize_offset > 3, it appears to specify the encryption table as 'inline' which can be of any size (odd or even) and loops over the bytes to decrypt
@@ -1710,7 +1296,7 @@ static int calc3_decompress_table(running_machine& machine, int tabnum, UINT8* d
 		}
 
 		offset+= calc3.blocksize_offset+1;
-		length = rom[offset+0] | (rom[offset+1]<<8);
+		length = datarom[offset+0] | (datarom[offset+1]<<8);
 		offset+=2;
 
 #if CALC3_VERBOSE_OUTPUT
@@ -1758,7 +1344,7 @@ static int calc3_decompress_table(running_machine& machine, int tabnum, UINT8* d
 					//printf("save to eeprom\n");
 
 					{
-						address_space *eeprom_space = space->machine().device<eeprom_device>("eeprom")->space();
+						address_space *eeprom_space = space->machine().device<eeprom_device>(":eeprom")->space();
 
 						for (i=0;i<0x80;i++)
 						{
@@ -1791,8 +1377,8 @@ static int calc3_decompress_table(running_machine& machine, int tabnum, UINT8* d
 					/* special case for Shogun Warriors table 0x40 */
 					if (calc3.subtracttype==3 && calc3.alternateswaps ==0)
 					{
-						UINT8 inlinet = rom[inline_table_base + (i%inline_table_size)];
-						dat = rom[offset+i];
+						UINT8 inlinet = datarom[inline_table_base + (i%inline_table_size)];
+						dat = datarom[offset+i];
 
 						dat -= inlinet;
 
@@ -1807,16 +1393,16 @@ static int calc3_decompress_table(running_machine& machine, int tabnum, UINT8* d
 						{
 							if (((i%inline_table_size)&1)==1)
 							{
-								UINT8 inlinet = rom[inline_table_base + (i%inline_table_size)];
-								dat = rom[offset+i];
+								UINT8 inlinet = datarom[inline_table_base + (i%inline_table_size)];
+								dat = datarom[offset+i];
 								dat -= inlinet;
 								dat = shift_bits(dat, calc3.shift);
 							}
 							else
 							{
 
-								UINT8 inlinet = rom[inline_table_base + (i%inline_table_size)];
-								dat = rom[offset+i];
+								UINT8 inlinet = datarom[inline_table_base + (i%inline_table_size)];
+								dat = datarom[offset+i];
 
 								if (calc3.subtracttype!=0x02)
 								{
@@ -1836,14 +1422,14 @@ static int calc3_decompress_table(running_machine& machine, int tabnum, UINT8* d
 						{
 							if (((i%inline_table_size)&1)==0)
 							{
-								UINT8 inlinet = rom[inline_table_base + (i%inline_table_size)];
-								dat = rom[offset+i];
+								UINT8 inlinet = datarom[inline_table_base + (i%inline_table_size)];
+								dat = datarom[offset+i];
 								dat -= inlinet;
 								dat = shift_bits(dat, calc3.shift);
 							}
 							else
 							{
-								dat = rom[offset+i];
+								dat = datarom[offset+i];
 
 								if (calc3.subtracttype!=0x02)
 								{
@@ -1888,7 +1474,7 @@ static int calc3_decompress_table(running_machine& machine, int tabnum, UINT8* d
 
 				for (i=0;i<length;i++)
 				{
-					UINT8 dat = rom[offset+i];
+					UINT8 dat = datarom[offset+i];
 					UINT8 keydat = (UINT8)key[i&0x3f];
 
 					{
@@ -1966,22 +1552,21 @@ static int calc3_decompress_table(running_machine& machine, int tabnum, UINT8* d
 
 
 
-DRIVER_INIT(calc3_scantables)
+void kaneko_calc3_device::initial_scan_tables(running_machine& machine)
 {
-	kaneko16_state *state = machine.driver_data<kaneko16_state>();
-	calc3_t &calc3 = state->m_calc3;
-	UINT8* rom = state->memregion("cpu1")->base();
+	calc3_t &calc3 = m_calc3;
 	UINT8 numregions;
+	UINT8* datarom = memregion(":calc3_rom")->base();
 
 	int x;
 
 	calc3.mcu_crc = 0;
 	for (x=0;x<0x20000;x++)
 	{
-		calc3.mcu_crc+=rom[x];
+		calc3.mcu_crc+=datarom[x];
 	}
 	//printf("crc %04x\n",calc3.mcu_crc);
-	numregions = rom[0];
+	numregions = datarom[0];
 
 	for (x=0;x<numregions;x++)
 	{
@@ -2040,7 +1625,7 @@ DRIVER_INIT(calc3_scantables)
 		fp=fopen(filename, "w+b");
 		if (fp)
 		{
-			fwrite(&rom[calc3.dataend], 0x1000, 1, fp);
+			fwrite(&datarom[calc3.dataend], 0x1000, 1, fp);
 			fclose(fp);
 		}
 	}
@@ -2049,22 +1634,21 @@ DRIVER_INIT(calc3_scantables)
 
 
 
-void calc3_mcu_run(running_machine &machine)
+void kaneko_calc3_device::calc3_mcu_run(running_machine &machine)
 {
-	kaneko16_state *state = machine.driver_data<kaneko16_state>();
-	calc3_t &calc3 = state->m_calc3;
+	calc3_t &calc3 = m_calc3;
 	UINT16 mcu_command;
 	int i;
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = machine.device(":maincpu")->memory().space(AS_PROGRAM);
 
 	if ( calc3.mcu_status != (1|2|4|8) )	return;
 
-	if (calc3.dsw_addr) space->write_byte(calc3.dsw_addr+0x200000, ( ~state->ioport("DSW1")->read())&0xff); // // DSW // dsw actually updates in realtime - mcu reads+writes it every frame
+	if (calc3.dsw_addr) space->write_byte(calc3.dsw_addr+0x200000, ( ~ioport(":DSW1")->read())&0xff); // // DSW // dsw actually updates in realtime - mcu reads+writes it every frame
 
 
 	//calc3.mcu_status = 0;
 
-	mcu_command = state->m_mcu_ram[calc3.mcu_command_offset/2 + 0];
+	mcu_command = m_calc3_mcuram[calc3.mcu_command_offset/2 + 0];
 
 	if (mcu_command == 0) return;
 
@@ -2079,16 +1663,16 @@ void calc3_mcu_run(running_machine &machine)
 		{
 
 			// clear old command (handshake to main cpu)
-			state->m_mcu_ram[(calc3.mcu_command_offset>>1)+0] = 0x0000;
+			m_calc3_mcuram[(calc3.mcu_command_offset>>1)+0] = 0x0000;
 
 
-			calc3.dsw_addr =           state->m_mcu_ram[(0>>1) + 1];
-			calc3.eeprom_addr =        state->m_mcu_ram[(0>>1) + 2];
-			calc3.mcu_command_offset = state->m_mcu_ram[(0>>1) + 3];
-			calc3.poll_addr =          state->m_mcu_ram[(0>>1) + 4];
-			calc3.checksumaddress =    state->m_mcu_ram[(0>>1) + 5];
-			calc3.writeaddress =      (state->m_mcu_ram[(0>>1) + 6] << 16) |
-			                          (state->m_mcu_ram[(0>>1) + 7]);
+			calc3.dsw_addr =           m_calc3_mcuram[(0>>1) + 1];
+			calc3.eeprom_addr =        m_calc3_mcuram[(0>>1) + 2];
+			calc3.mcu_command_offset = m_calc3_mcuram[(0>>1) + 3];
+			calc3.poll_addr =          m_calc3_mcuram[(0>>1) + 4];
+			calc3.checksumaddress =    m_calc3_mcuram[(0>>1) + 5];
+			calc3.writeaddress =      (m_calc3_mcuram[(0>>1) + 6] << 16) |
+			                          (m_calc3_mcuram[(0>>1) + 7]);
 
 			// set our current write / stack pointer to the address specified
 			calc3.writeaddress_current = calc3.writeaddress;
@@ -2100,18 +1684,18 @@ void calc3_mcu_run(running_machine &machine)
 			printf("Calc 3 Init Command - %04x ROM Checksum Address\n",  calc3.checksumaddress);
 			printf("Calc 3 Init Command - %08x Data Write Address\n",  calc3.writeaddress);
 #endif
-	//      space->write_byte(calc3.dsw_addr+0x200000, ( ~state->ioport("DSW1")->read())&0xff); // // DSW // dsw actually updates in realtime - mcu reads+writes it every frame
+	//      space->write_byte(calc3.dsw_addr+0x200000, ( ~ioport("DSW1")->read())&0xff); // // DSW // dsw actually updates in realtime - mcu reads+writes it every frame
 
-			state->m_mcu_ram[calc3.checksumaddress / 2] = calc3.mcu_crc;				// MCU Rom Checksum!
+			m_calc3_mcuram[calc3.checksumaddress / 2] = calc3.mcu_crc;				// MCU Rom Checksum!
 
 #if 0
 			for (i=0;i<0x40;i++)
 			{
-				state->m_mcu_ram[(calc3.eeprom_addr / 2)+i] = kaneko16_eeprom_data[i];//((eepromData[i]&0xff00)>>8) |  ((eepromData[i]&0x00ff)<<8);
+				m_calc3_mcuram[(calc3.eeprom_addr / 2)+i] = kaneko16_eeprom_data[i];//((eepromData[i]&0xff00)>>8) |  ((eepromData[i]&0x00ff)<<8);
 			}
 #endif
 			{
-				address_space *eeprom_space = space->machine().device<eeprom_device>("eeprom")->space();
+				address_space *eeprom_space = space->machine().device<eeprom_device>(":eeprom")->space();
 
 				for (i=0;i<0x80;i++)
 				{
@@ -2128,14 +1712,14 @@ void calc3_mcu_run(running_machine &machine)
 			int i;
 
 			// clear old command (handshake to main cpu)
-			state->m_mcu_ram[calc3.mcu_command_offset>>1] = 0x0000;;
+			m_calc3_mcuram[calc3.mcu_command_offset>>1] = 0x0000;;
 
 			logerror("Calc3 transfer request, %d transfers\n", num_transfers);
 
 			for (i=0;i<num_transfers;i++)
 			{
-				int param1 = state->m_mcu_ram[(calc3.mcu_command_offset>>1) + 1 + (2*i)];
-				int param2 = state->m_mcu_ram[(calc3.mcu_command_offset>>1) + 2 + (2*i)];
+				int param1 = m_calc3_mcuram[(calc3.mcu_command_offset>>1) + 1 + (2*i)];
+				int param2 = m_calc3_mcuram[(calc3.mcu_command_offset>>1) + 2 + (2*i)];
 				UINT8  commandtabl = (param1&0xff00) >> 8;
 				UINT16 commandaddr =param2;// (param1&0x00ff) | (param2&0xff00);
 				UINT8  commandunk =  (param1&0x00ff); // brap boys sets.. seems to cause further writebasck address displacement?? (when tested on hw it looked like a simple +, but that doesn't work for brapboys...)
@@ -2169,384 +1753,3 @@ void calc3_mcu_run(running_machine &machine)
 		}
 	}
 }
-
-
-/***************************************************************************
-                                TOYBOX MCU:
-
-                                Bonk's Adventure
-                                Blood Warrior
-                                Great 1000 Miles Rally
-                                ...
-***************************************************************************/
-/*
----------------------------------------------------------------------------
-                                TOYBOX
-
-94  Bonk's Adventure            TOYBOX?            TBSOP01
-94  Blood Warrior               TOYBOX?            TBS0P01 452 9339PK001
-94  Great 1000 Miles Rally      TOYBOX                                                  "MM0525-TOYBOX199","USMM0713-TB1994 "
-95  Great 1000 Miles Rally 2    TOYBOX      KANEKO TBSOP02 454 9451MK002 (74 pin PQFP)  "USMM0713-TB1994 "
-95  Jackie Chan                 TOYBOX                                                  "USMM0713-TB1994 "
-95  Gals Panic 3                TOYBOX?            TBSOP01
----------------------------------------------------------------------------
-
-All the considerations are based on the analysis of jchan, and to a fewer extent galpani3, and make references to the current driver sources:
-
-MCU triggering:
----------------
-
-the 4 JCHAN_MCU_COM_W(...) are in fact 2 groups:
-
-AM_RANGE(0x330000, 0x330001) AM_WRITE(jchan_mcu_com0_w) // _[ these 2 are set to 0xFFFF
-AM_RANGE(0x340000, 0x340001) AM_WRITE(jchan_mcu_com1_w) //  [ for MCU to execute cmd
-
-AM_RANGE(0x350000, 0x350001) AM_WRITE(jchan_mcu_com2_w) // _[ these 2 are set to 0xFFFF
-AM_RANGE(0x360000, 0x360001) AM_WRITE(jchan_mcu_com3_w) //  [ for MCU to return its status
-
-
-MCU parameters:
----------------
-
-mcu_command = kaneko16_mcu_ram[0x0010/2];    // command nb
-mcu_offset  = kaneko16_mcu_ram[0x0012/2]/2;  // offset in shared RAM where MCU will write
-mcu_subcmd  = kaneko16_mcu_ram[0x0014/2];    // sub-command parameter, happens only for command #4
-
-
-    the only MCU commands found in program code are:
-    - 0x04: protection: provide data (see below) and code <<<---!!!
-    - 0x03: read DSW
-    - 0x02: load game settings \ stored in ATMEL AT93C46 chip,
-    - 0x42: save game settings / 128 bytes serial EEPROM
-
-
-Current feeling of devs is that this EEPROM might also play a role in the protection scheme,
-but I (SV) feel that it is very unlikely because of the following, which has been verified:
-if the checksum test fails at most 3 times, then the initial settings, stored in main68k ROM,
-are loaded in RAM then saved with cmd 0x42 (see code @ $5196 & $50d4)
-Note that this is valid for jchan only, other games haven't been looked at.
-
-Others:
--------
-
-There is one interesting MCU cmd $4 in jchan:
--> sub-cmd $3d, MCU writes the string "USMM0713-TB1994 "
-
-The very same string is written by gtmr games (gtmre/gtmrusa/gtmr2) but apparently with no sub-cmd: this string is
-probably the MCU model string, so this one should be in internal MCU ROM (another one for gtmr is "MM0525-TOYBOX199")
-
-TODO: look at this one since this remark is only driver-based.
-*/
-
-
-static const UINT8 toybox_mcu_decryption_table[0x100] = {
-0x7b,0x82,0xf0,0xbc,0x7f,0x1d,0xa2,0xc5,0x2a,0xfa,0x55,0xee,0x1a,0xd0,0x59,0x76,
-0x5e,0x75,0x79,0x16,0xa5,0xf6,0x84,0xed,0x0f,0x2e,0xf2,0x36,0x61,0xac,0xcd,0xab,
-0x01,0x3b,0x01,0x87,0x73,0xab,0xce,0x5d,0xd4,0x1d,0x68,0x2a,0x35,0xea,0x13,0x27,
-0x00,0xaa,0x46,0x36,0x6e,0x65,0x80,0x7e,0x19,0xe2,0x96,0xab,0xac,0xa5,0x6c,0x63,
-0x4a,0x6f,0x87,0xf6,0x6a,0xac,0x38,0xe2,0x1f,0x87,0xf9,0xaa,0xf5,0x41,0x60,0xa6,
-0x42,0xb9,0x30,0xf2,0xc3,0x1c,0x4e,0x4b,0x08,0x10,0x42,0x32,0xbf,0xb2,0xc5,0x0f,
-0x7a,0xab,0x97,0xf6,0xe7,0xb3,0x46,0xf8,0xec,0x2b,0x7d,0x5f,0xb1,0x10,0x03,0xe4,
-0x0f,0x22,0xdf,0x8d,0x10,0x66,0xa7,0x7e,0x96,0xbd,0x5a,0xaf,0xaa,0x43,0xdf,0x10,
-0x7c,0x04,0xe2,0x9d,0x66,0xd7,0xf0,0x02,0x58,0x8a,0x55,0x17,0x16,0xe2,0xe2,0x52,
-0xaf,0xd9,0xf9,0x0d,0x59,0x70,0x86,0x3c,0x05,0xd1,0x52,0xa7,0xf0,0xbf,0x17,0xd0,
-0x23,0x15,0xfe,0x23,0xf2,0x80,0x60,0x6f,0x95,0x89,0x67,0x65,0xc9,0x0e,0xfc,0x16,
-0xd6,0x8a,0x9f,0x25,0x2c,0x0f,0x2d,0xe4,0x51,0xb2,0xa8,0x18,0x3a,0x5d,0x66,0xa0,
-0x9f,0xb0,0x58,0xea,0x78,0x72,0x08,0x6a,0x90,0xb6,0xa4,0xf5,0x08,0x19,0x60,0x4e,
-0x92,0xbd,0xf1,0x05,0x67,0x4f,0x24,0x99,0x69,0x1d,0x0c,0x6d,0xe7,0x74,0x88,0x22,
-0x2d,0x15,0x7a,0xa2,0x37,0xa9,0xa0,0xb0,0x2c,0xfb,0x27,0xe5,0x4f,0xb6,0xcd,0x75,
-0xdc,0x39,0xce,0x6f,0x1f,0xfe,0xcc,0xb5,0xe6,0xda,0xd8,0xee,0x85,0xee,0x2f,0x04,
-};
-
-
-static const UINT8 toybox_mcu_decryption_table_alt[0x100] = {
-0x26,0x17,0xb9,0xcf,0x1a,0xf5,0x14,0x1e,0x0c,0x35,0xb3,0x66,0xa0,0x17,0xe9,0xe4,
-0x90,0xf6,0xd5,0x35,0xac,0x95,0x49,0x43,0x64,0x0c,0x03,0x75,0x4d,0xda,0xb6,0xdf,
-0x06,0xcf,0x83,0x9e,0x35,0x2c,0x71,0x2a,0xab,0xcc,0x65,0xd4,0x1f,0xb0,0x88,0x3c,
-0xb7,0x87,0x35,0xc0,0x41,0x65,0x9f,0xa0,0xd5,0x8c,0x3e,0x06,0x53,0xdb,0x45,0x64,
-0x09,0x1e,0xc5,0x8d,0x50,0x24,0xe2,0x4a,0x9b,0x99,0x77,0x25,0x43,0xa9,0x1d,0xac,
-0x99,0x31,0x75,0xb5,0x53,0xab,0xad,0x5a,0x42,0x14,0xa1,0x52,0xac,0xec,0x5f,0xf8,
-0x8c,0x78,0x05,0x47,0xea,0xb8,0xde,0x69,0x98,0x2d,0x8f,0x9d,0xfc,0x05,0xea,0xee,
-0x77,0xbb,0xa9,0x31,0x01,0x00,0xea,0xd8,0x9c,0x43,0xb5,0x2f,0x4e,0xb5,0x1b,0xd2,
-0x01,0x4b,0xc4,0xf8,0x76,0x92,0x59,0x4f,0x20,0x52,0xd9,0x7f,0xa9,0x19,0xe9,0x7c,
-0x8d,0x3b,0xec,0xe0,0x60,0x08,0x2e,0xbd,0x27,0x8b,0xb2,0xfc,0x29,0xd8,0x39,0x8a,
-0x4f,0x2f,0x6b,0x04,0x10,0xbd,0xa1,0x04,0xde,0xc0,0xd5,0x0f,0x04,0x86,0xd6,0xd8,
-0xfd,0xb1,0x3c,0x4c,0xd1,0xc4,0xf1,0x5b,0xf5,0x8b,0xe3,0xc4,0x89,0x3c,0x39,0x86,
-0xd2,0x92,0xc9,0xe5,0x2c,0x4f,0xe2,0x2f,0x2d,0xc5,0x35,0x09,0x94,0x47,0x3c,0x04,
-0x40,0x8b,0x57,0x08,0xf6,0x74,0xe9,0xb8,0x36,0x4d,0xc5,0x26,0x13,0x3d,0x75,0xa0,
-0xa8,0x29,0x09,0x8c,0x87,0xf7,0x13,0xaf,0x4c,0x38,0x0b,0x8a,0x7f,0x2c,0x62,0x27,
-0x47,0xaa,0xda,0x07,0x92,0x8d,0xfd,0x1f,0xee,0x48,0x1a,0x53,0x3b,0x98,0x6a,0x72,
-};
-
-// I use a byteswapped MCU data rom to make the transfers to the 68k side easier
-//  not sure if it's all 100% endian safe
-DRIVER_INIT( decrypt_toybox_rom )
-{
-
-	UINT8 *src = (UINT8 *)machine.root_device().memregion("mcudata" )->base();
-
-	int i;
-
-	for (i=0;i<0x020000;i++)
-	{
-		src[i] = src[i] + toybox_mcu_decryption_table[(i^1)&0xff];
-	}
-
-	#if 0
-	{
-		FILE *fp;
-		char filename[256];
-		sprintf(filename,"%s.mcudata", machine.system().name);
-		fp=fopen(filename, "w+b");
-		if (fp)
-		{
-			fwrite(src, 0x20000, 1, fp);
-			fclose(fp);
-		}
-	}
-	#endif
-}
-
-DRIVER_INIT( decrypt_toybox_rom_alt )
-{
-
-	UINT8 *src = (UINT8 *)machine.root_device().memregion("mcudata" )->base();
-
-	int i;
-
-	for (i=0;i<0x020000;i++)
-	{
-		src[i] = src[i] + toybox_mcu_decryption_table_alt[(i^1)&0xff];
-	}
-}
-
-void toxboy_handle_04_subcommand(running_machine& machine,UINT8 mcu_subcmd, UINT16*mcu_ram)
-{
-	UINT8 *src = (UINT8 *)machine.root_device().memregion("mcudata")->base()+0x10000;
-	UINT8* dst = (UINT8 *)mcu_ram;
-
-	int offs = (mcu_subcmd&0x3f)*8;
-	int x;
-
-	//UINT16 unused = src[offs+0] | (src[offs+1]<<8);
-	UINT16 romstart = src[offs+2] | (src[offs+3]<<8);
-	UINT16 romlength = src[offs+4] | (src[offs+5]<<8);
-	UINT16 ramdest = mcu_ram[0x0012/2];
-	//UINT16 extra = src[offs+6] | (src[offs+7]<<8); // BONK .. important :-(
-
-	//printf("romstart %04x length %04x\n",romstart,romlength);
-
-	for (x=0;x<romlength;x++)
-	{
-		dst[BYTE_XOR_LE(ramdest+x)] = src[(romstart+x)];
-	}
-}
-
-
-void toybox_mcu_init(running_machine &machine)
-{
-	kaneko16_state *state = machine.driver_data<kaneko16_state>();
-	memset(state->m_toybox_mcu_com, 0, 4 * sizeof( UINT16) );
-}
-
-void kaneko16_state::toybox_mcu_com_w(offs_t offset, UINT16 data, UINT16 mem_mask, int _n_)
-{
-	COMBINE_DATA(&m_toybox_mcu_com[_n_]);
-	if (m_toybox_mcu_com[0] != 0xFFFF)	return;
-	if (m_toybox_mcu_com[1] != 0xFFFF)	return;
-	if (m_toybox_mcu_com[2] != 0xFFFF)	return;
-	if (m_toybox_mcu_com[3] != 0xFFFF)	return;
-
-	memset(m_toybox_mcu_com, 0, 4 * sizeof( UINT16 ) );
-	(*m_toybox_mcu_run)(machine());
-}
-
-WRITE16_MEMBER(kaneko16_state::toybox_mcu_com0_w){ toybox_mcu_com_w(offset, data, mem_mask, 0); }
-WRITE16_MEMBER(kaneko16_state::toybox_mcu_com1_w){ toybox_mcu_com_w(offset, data, mem_mask, 1); }
-WRITE16_MEMBER(kaneko16_state::toybox_mcu_com2_w){ toybox_mcu_com_w(offset, data, mem_mask, 2); }
-WRITE16_MEMBER(kaneko16_state::toybox_mcu_com3_w){ toybox_mcu_com_w(offset, data, mem_mask, 3); }
-
-/*
-    bonkadv and bloodwar test bit 0
-*/
-READ16_MEMBER(kaneko16_state::toybox_mcu_status_r)
-{
-	logerror("CPU %s (PC=%06X) : read MCU status\n", space.device().tag(), cpu_get_previouspc(&space.device()));
-	return 0; // most games test bit 0 for failure
-}
-
-
-/***************************************************************************
-                                Blood Warrior
-***************************************************************************/
-
-void bloodwar_mcu_run(running_machine &machine)
-{
-	kaneko16_state *state = machine.driver_data<kaneko16_state>();
-	UINT16 *kaneko16_mcu_ram = state->m_mcu_ram;
-	UINT16 mcu_command	=	kaneko16_mcu_ram[0x0010/2];
-	UINT16 mcu_offset	=	kaneko16_mcu_ram[0x0012/2] / 2;
-	UINT16 mcu_data		=	kaneko16_mcu_ram[0x0014/2];
-
-	switch (mcu_command >> 8)
-	{
-		case 0x02:	// Read from NVRAM
-		{
-			memcpy(&kaneko16_mcu_ram[mcu_offset], state->m_nvram_save, sizeof(state->m_nvram_save));
-			logerror("%s : MCU executed command: %04X %04X (load NVRAM settings)\n", machine.describe_context(), mcu_command, mcu_offset*2);
-		}
-		break;
-
-		case 0x42:	// Write to NVRAM
-		{
-			memcpy(state->m_nvram_save, &kaneko16_mcu_ram[mcu_offset], sizeof(state->m_nvram_save));
-			logerror("%s : MCU executed command: %04X %04X (save NVRAM settings)\n", machine.describe_context(), mcu_command, mcu_offset*2);
-		}
-		break;
-
-		case 0x03:	// DSW
-		{
-			kaneko16_mcu_ram[mcu_offset] = machine.root_device().ioport("DSW1")->read();
-			logerror("%s : MCU executed command: %04X %04X (read DSW)\n", machine.describe_context(), mcu_command, mcu_offset*2);
-		}
-		break;
-
-		case 0x04:	// Protection
-		{
-			logerror("%s : MCU executed command: %04X %04X %04X\n", machine.describe_context(), mcu_command, mcu_offset*2, mcu_data);
-
-			toxboy_handle_04_subcommand(machine, mcu_data, kaneko16_mcu_ram);
-
-		}
-		break;
-
-		default:
-			logerror("%s : MCU executed command: %04X %04X %04X (UNKNOWN COMMAND)\n", machine.describe_context(), mcu_command, mcu_offset*2, mcu_data);
-		break;
-	}
-}
-
-/***************************************************************************
-                                Bonk's Adventure
-***************************************************************************/
-
-void bonkadv_mcu_run(running_machine &machine)
-{
-	kaneko16_state *state = machine.driver_data<kaneko16_state>();
-	UINT16 *kaneko16_mcu_ram = state->m_mcu_ram;
-	UINT16 mcu_command	=	kaneko16_mcu_ram[0x0010/2];
-	UINT16 mcu_offset	=	kaneko16_mcu_ram[0x0012/2] / 2;
-	UINT16 mcu_data		=	kaneko16_mcu_ram[0x0014/2];
-
-	switch (mcu_command >> 8)
-	{
-
-		case 0x02:	// Read from NVRAM
-		{
-			memcpy(&kaneko16_mcu_ram[mcu_offset], state->m_nvram_save, sizeof(state->m_nvram_save));
-			logerror("%s : MCU executed command: %04X %04X (load NVRAM settings)\n", machine.describe_context(), mcu_command, mcu_offset*2);
-		}
-		break;
-
-		case 0x42:	// Write to NVRAM
-		{
-			memcpy(state->m_nvram_save, &kaneko16_mcu_ram[mcu_offset], sizeof(state->m_nvram_save));
-			logerror("%s : MCU executed command: %04X %04X (save NVRAM settings)\n", machine.describe_context(), mcu_command, mcu_offset*2);
-		}
-		break;
-
-		case 0x43:	// Initialize NVRAM - MCU writes Default Data Set directly to NVRAM
-		{
-			memcpy(state->m_nvram_save, bonkadv_mcu_43, sizeof(bonkadv_mcu_43));
-			logerror("%s : MCU executed command: %04X %04X (restore default NVRAM settings)\n", machine.describe_context(), mcu_command, mcu_offset*2);
-		}
-		break;
-
-		case 0x03:	// DSW
-		{
-			kaneko16_mcu_ram[mcu_offset] = machine.root_device().ioport("DSW1")->read();
-			logerror("%s : MCU executed command: %04X %04X (read DSW)\n", machine.describe_context(), mcu_command, mcu_offset*2);
-		}
-		break;
-
-		case 0x04:	// Protection
-		{
-			logerror("%s : MCU executed command: %04X %04X %04X\n", machine.describe_context(), mcu_command, mcu_offset*2, mcu_data);
-
-
-			switch(mcu_data)
-			{
-				// static, in this order, at boot/reset - these aren't understood, different params in Mcu data rom, data can't be found
-				case 0x34: MCU_RESPONSE(bonkadv_mcu_4_34); break;
-				case 0x30: MCU_RESPONSE(bonkadv_mcu_4_30); break;
-				case 0x31: MCU_RESPONSE(bonkadv_mcu_4_31); break;
-				case 0x32: MCU_RESPONSE(bonkadv_mcu_4_32); break;
-				case 0x33: MCU_RESPONSE(bonkadv_mcu_4_33); break;
-
-				// dynamic, per-level (29), in level order
-				default:
-					toxboy_handle_04_subcommand(machine, mcu_data, kaneko16_mcu_ram);
-					break;
-
-			}
-		}
-		break;
-
-		default:
-			logerror("%s : MCU executed command: %04X %04X %04X (UNKNOWN COMMAND)\n", machine.describe_context(), mcu_command, mcu_offset*2, mcu_data);
-		break;
-	}
-}
-
-/***************************************************************************
-                            Great 1000 Miles Rally
-***************************************************************************/
-
-/*
-    MCU Tasks:
-
-    - Write and ID string to shared RAM.
-    - Access the EEPROM
-    - Read the DSWs
-*/
-
-void gtmr_mcu_run(running_machine &machine)
-{
-	kaneko16_state *state = machine.driver_data<kaneko16_state>();
-	UINT16 *kaneko16_mcu_ram = state->m_mcu_ram;
-	UINT16 mcu_command	=	kaneko16_mcu_ram[0x0010/2];
-	UINT16 mcu_offset	=	kaneko16_mcu_ram[0x0012/2] / 2;
-	UINT16 mcu_data		=	kaneko16_mcu_ram[0x0014/2];
-
-	logerror("%s : MCU executed command: %04X %04X %04X\n", machine.describe_context(), mcu_command, mcu_offset*2, mcu_data);
-
-	switch (mcu_command >> 8)
-	{
-
-		case 0x02:	// Read from NVRAM
-		{
-			memcpy(&kaneko16_mcu_ram[mcu_offset], state->m_nvram_save, sizeof(state->m_nvram_save));
-		}
-		break;
-
-		case 0x42:	// Write to NVRAM
-		{
-			memcpy(state->m_nvram_save, &kaneko16_mcu_ram[mcu_offset], sizeof(state->m_nvram_save));
-		}
-		break;
-
-		case 0x03:	// DSW
-		{
-			kaneko16_mcu_ram[mcu_offset] = machine.root_device().ioport("DSW1")->read();
-		}
-		break;
-
-		case 0x04:	// TEST (2 versions)
-		{
-			toxboy_handle_04_subcommand(machine, mcu_data, kaneko16_mcu_ram);
-		}
-		break;
-	}
-
-}
-

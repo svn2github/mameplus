@@ -709,7 +709,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	irqhandler
+	DEVCB_LINE(irqhandler)
 };
 
 
@@ -1556,39 +1556,36 @@ static void configure_banks( running_machine& machine )
 	machine.root_device().membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
 }
 
-static DRIVER_INIT( bublbobl )
+DRIVER_INIT_MEMBER(bublbobl_state,bublbobl)
 {
-	bublbobl_state *state = machine.driver_data<bublbobl_state>();
 
-	configure_banks(machine);
+	configure_banks(machine());
 
 	/* we init this here, so that it does not conflict with tokio init, below */
-	state->m_video_enable = 0;
+	m_video_enable = 0;
 }
 
-static DRIVER_INIT( tokio )
+DRIVER_INIT_MEMBER(bublbobl_state,tokio)
 {
-	bublbobl_state *state = machine.driver_data<bublbobl_state>();
-	configure_banks(machine);
+	configure_banks(machine());
 
 	/* preemptively enable video, the bit is not mapped for this game and */
 	/* I don't know if it even has it. */
-	state->m_video_enable = 1;
+	m_video_enable = 1;
 }
 
-static DRIVER_INIT( tokiob )
+DRIVER_INIT_MEMBER(bublbobl_state,tokiob)
 {
-	bublbobl_state *state = machine.driver_data<bublbobl_state>();
 	DRIVER_INIT_CALL(tokio);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xfe00, 0xfe00, read8_delegate(FUNC(bublbobl_state::tokiob_mcu_r),state) );
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xfe00, 0xfe00, read8_delegate(FUNC(bublbobl_state::tokiob_mcu_r),this) );
 }
 
-static DRIVER_INIT( dland )
+DRIVER_INIT_MEMBER(bublbobl_state,dland)
 {
 	// rearrange gfx to original format
 	int i;
-	UINT8* src = machine.root_device().memregion("gfx1")->base();
+	UINT8* src = machine().root_device().memregion("gfx1")->base();
 	for (i = 0; i < 0x40000; i++)
 		src[i] = BITSWAP8(src[i],7,6,5,4,0,1,2,3);
 
@@ -1605,20 +1602,20 @@ static DRIVER_INIT( dland )
  *
  *************************************/
 
-GAME( 1986, tokio,      0,        tokio,    tokio,    tokio,    ROT90, "Taito Corporation", "Tokio / Scramble Formation (newer)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_SUPPORTS_SAVE )
-GAME( 1986, tokioo,     tokio,        tokio,    tokio,    tokio,    ROT90, "Taito Corporation", "Tokio / Scramble Formation (older)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_SUPPORTS_SAVE )
-GAME( 1986, tokiou,     tokio,    tokio,    tokio,    tokio,    ROT90, "Taito America Corporation (Romstar license)", "Tokio / Scramble Formation (US)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_SUPPORTS_SAVE )
-GAME( 1986, tokiob,     tokio,    tokio,    tokio,    tokiob,   ROT90, "bootleg", "Tokio / Scramble Formation (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1986, tokio,      0,        tokio,    tokio, bublbobl_state,    tokio,    ROT90, "Taito Corporation", "Tokio / Scramble Formation (newer)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_SUPPORTS_SAVE )
+GAME( 1986, tokioo,     tokio,        tokio,    tokio, bublbobl_state,    tokio,    ROT90, "Taito Corporation", "Tokio / Scramble Formation (older)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_SUPPORTS_SAVE )
+GAME( 1986, tokiou,     tokio,    tokio,    tokio, bublbobl_state,    tokio,    ROT90, "Taito America Corporation (Romstar license)", "Tokio / Scramble Formation (US)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_SUPPORTS_SAVE )
+GAME( 1986, tokiob,     tokio,    tokio,    tokio, bublbobl_state,    tokiob,   ROT90, "bootleg", "Tokio / Scramble Formation (bootleg)", GAME_SUPPORTS_SAVE )
 
-GAME( 1986, bublbobl,   0,        bublbobl, bublbobl, bublbobl, ROT0,  "Taito Corporation", "Bubble Bobble", GAME_SUPPORTS_SAVE )
-GAME( 1986, bublbobl1,  bublbobl, bublbobl, bublbobl, bublbobl, ROT0,  "Taito Corporation", "Bubble Bobble (older)", GAME_SUPPORTS_SAVE )
-GAME( 1986, bublboblr,  bublbobl, bublbobl, bublbobl, bublbobl, ROT0,  "Taito America Corporation (Romstar license)", "Bubble Bobble (US with mode select)", GAME_SUPPORTS_SAVE )
-GAME( 1986, bublboblr1, bublbobl, bublbobl, bublbobl, bublbobl, ROT0,  "Taito America Corporation (Romstar license)", "Bubble Bobble (US)", GAME_SUPPORTS_SAVE )
+GAME( 1986, bublbobl,   0,        bublbobl, bublbobl, bublbobl_state, bublbobl, ROT0,  "Taito Corporation", "Bubble Bobble", GAME_SUPPORTS_SAVE )
+GAME( 1986, bublbobl1,  bublbobl, bublbobl, bublbobl, bublbobl_state, bublbobl, ROT0,  "Taito Corporation", "Bubble Bobble (older)", GAME_SUPPORTS_SAVE )
+GAME( 1986, bublboblr,  bublbobl, bublbobl, bublbobl, bublbobl_state, bublbobl, ROT0,  "Taito America Corporation (Romstar license)", "Bubble Bobble (US with mode select)", GAME_SUPPORTS_SAVE )
+GAME( 1986, bublboblr1, bublbobl, bublbobl, bublbobl, bublbobl_state, bublbobl, ROT0,  "Taito America Corporation (Romstar license)", "Bubble Bobble (US)", GAME_SUPPORTS_SAVE )
 
-GAME( 1986, boblbobl,   bublbobl, boblbobl, boblbobl, bublbobl, ROT0,  "bootleg", "Bobble Bobble", GAME_SUPPORTS_SAVE )
-GAME( 1986, boblbobl2,  bublbobl, boblbobl, boblbobl, bublbobl, ROT0,  "bootleg", "Bobble Bobble (set 2)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING )
-GAME( 1986, sboblboa,   bublbobl, boblbobl, boblbobl, bublbobl, ROT0,  "bootleg", "Super Bobble Bobble (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1986, sboblbob,   bublbobl, boblbobl, sboblbob, bublbobl, ROT0,  "bootleg", "Super Bobble Bobble (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1986, bub68705,   bublbobl, bub68705, bublbobl, bublbobl, ROT0,  "bootleg", "Bubble Bobble (bootleg with 68705)", GAME_SUPPORTS_SAVE )
+GAME( 1986, boblbobl,   bublbobl, boblbobl, boblbobl, bublbobl_state, bublbobl, ROT0,  "bootleg", "Bobble Bobble", GAME_SUPPORTS_SAVE )
+GAME( 1986, boblbobl2,  bublbobl, boblbobl, boblbobl, bublbobl_state, bublbobl, ROT0,  "bootleg", "Bobble Bobble (set 2)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING )
+GAME( 1986, sboblboa,   bublbobl, boblbobl, boblbobl, bublbobl_state, bublbobl, ROT0,  "bootleg", "Super Bobble Bobble (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1986, sboblbob,   bublbobl, boblbobl, sboblbob, bublbobl_state, bublbobl, ROT0,  "bootleg", "Super Bobble Bobble (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1986, bub68705,   bublbobl, bub68705, bublbobl, bublbobl_state, bublbobl, ROT0,  "bootleg", "Bubble Bobble (bootleg with 68705)", GAME_SUPPORTS_SAVE )
 
-GAME( 1987, dland,      bublbobl, boblbobl, dland,    dland,    ROT0,  "bootleg", "Dream Land / Super Dream Land (bootleg of Bubble Bobble)", GAME_SUPPORTS_SAVE )
+GAME( 1987, dland,      bublbobl, boblbobl, dland, bublbobl_state,    dland,    ROT0,  "bootleg", "Dream Land / Super Dream Land (bootleg of Bubble Bobble)", GAME_SUPPORTS_SAVE )

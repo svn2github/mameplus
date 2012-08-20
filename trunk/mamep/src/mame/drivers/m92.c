@@ -2153,115 +2153,109 @@ ROM_END
 
 /***************************************************************************/
 
-static DRIVER_INIT( m92 )
+DRIVER_INIT_MEMBER(m92_state,m92)
 {
-	m92_state *state = machine.driver_data<m92_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->set_base(&ROM[0xa0000]);
+	membank("bank1")->set_base(&ROM[0xa0000]);
 
-	state->m_game_kludge = 0;
-	state->m_irq_vectorbase = 0x80;
+	m_game_kludge = 0;
+	m_irq_vectorbase = 0x80;
 }
 
 /* different vector base */
-static DRIVER_INIT( m92_alt )
+DRIVER_INIT_MEMBER(m92_state,m92_alt)
 {
-	m92_state *state = machine.driver_data<m92_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->set_base(&ROM[0xa0000]);
+	membank("bank1")->set_base(&ROM[0xa0000]);
 
-	state->m_game_kludge = 0;
-	state->m_irq_vectorbase = 0x20;
+	m_game_kludge = 0;
+	m_irq_vectorbase = 0x20;
 }
 
 /* different vector base, different address map (no bank1) */
-static DRIVER_INIT( lethalth )
+DRIVER_INIT_MEMBER(m92_state,lethalth)
 {
-	m92_state *state = machine.driver_data<m92_state>();
 
-	state->m_game_kludge = 0;
-	state->m_irq_vectorbase = 0x20;
+	m_game_kludge = 0;
+	m_irq_vectorbase = 0x20;
 }
 
 /* has bankswitching */
-static DRIVER_INIT( m92_bank )
+DRIVER_INIT_MEMBER(m92_state,m92_bank)
 {
-	m92_state *state = machine.driver_data<m92_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 4, &ROM[0x80000], 0x20000);
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x20, 0x21, write16_delegate(FUNC(m92_state::m92_bankswitch_w),state));
+	membank("bank1")->configure_entries(0, 4, &ROM[0x80000], 0x20000);
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x20, 0x21, write16_delegate(FUNC(m92_state::m92_bankswitch_w),this));
 
-	state->m_game_kludge = 0;
-	state->m_irq_vectorbase = 0x80;
+	m_game_kludge = 0;
+	m_irq_vectorbase = 0x80;
 }
 
 /* has bankswitching, has eeprom, needs sprite kludge */
-static DRIVER_INIT( majtitl2 )
+DRIVER_INIT_MEMBER(m92_state,majtitl2)
 {
-	m92_state *state = machine.driver_data<m92_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 4, &ROM[0x80000], 0x20000);
-	machine.device("maincpu")->memory().space(AS_IO)->install_write_handler(0x20, 0x21, write16_delegate(FUNC(m92_state::m92_bankswitch_w),state));
+	membank("bank1")->configure_entries(0, 4, &ROM[0x80000], 0x20000);
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x20, 0x21, write16_delegate(FUNC(m92_state::m92_bankswitch_w),this));
 
 	/* This game has an eeprom on the game board */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0000, 0xf3fff, read16_delegate(FUNC(m92_state::m92_eeprom_r),state), write16_delegate(FUNC(m92_state::m92_eeprom_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0000, 0xf3fff, read16_delegate(FUNC(m92_state::m92_eeprom_r),this), write16_delegate(FUNC(m92_state::m92_eeprom_w),this));
 
-	state->m_game_kludge = 2;
-	state->m_irq_vectorbase = 0x80;
+	m_game_kludge = 2;
+	m_irq_vectorbase = 0x80;
 }
 
 /* TODO: figure out actual address map and other differences from real Irem h/w */
-static DRIVER_INIT( ppan )
+DRIVER_INIT_MEMBER(m92_state,ppan)
 {
-	m92_state *state = machine.driver_data<m92_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
-	state->membank("bank1")->set_base(&ROM[0xa0000]);
+	UINT8 *ROM = memregion("maincpu")->base();
+	membank("bank1")->set_base(&ROM[0xa0000]);
 
-	state->m_game_kludge = 0;
-	state->m_irq_vectorbase = 0x80;
+	m_game_kludge = 0;
+	m_irq_vectorbase = 0x80;
 }
 
 /***************************************************************************/
 
-GAME( 1991, gunforce, 0,        gunforce,      gunforce, m92,      ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (World)", GAME_SUPPORTS_SAVE )
-GAME( 1991, gunforcej,gunforce, gunforce,      gunforce, m92,      ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1991, gunforceu,gunforce, gunforce,      gunforce, m92,      ROT0,   "Irem America", "Gunforce - Battle Fire Engulfed Terror Island (US)", GAME_SUPPORTS_SAVE )
-GAME( 1991, bmaster,  0,        bmaster,       bmaster,  m92,      ROT0,   "Irem",         "Blade Master (World)", GAME_SUPPORTS_SAVE )
-GAME( 1991, crossbld, bmaster,  bmaster,       bmaster,  m92,      ROT0,   "Irem",         "Cross Blades! (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1991, lethalth, 0,        lethalth,      lethalth, lethalth, ROT270, "Irem",         "Lethal Thunder (World)", GAME_SUPPORTS_SAVE )
-GAME( 1991, thndblst, lethalth, lethalth,      lethalth, lethalth, ROT270, "Irem",         "Thunder Blaster (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1992, uccops,   0,        uccops,        uccops,   m92,      ROT0,   "Irem",         "Undercover Cops (World)", GAME_SUPPORTS_SAVE )
-GAME( 1992, uccopsu,  uccops,   uccops,        uccops,   m92,      ROT0,   "Irem",         "Undercover Cops (US)", GAME_SUPPORTS_SAVE )
-GAME( 1992, uccopsar, uccops,   uccops,        uccops,   m92,      ROT0,   "Irem",         "Undercover Cops (Alpha Renewal Version)", GAME_SUPPORTS_SAVE )
-GAME( 1992, uccopsj,  uccops,   uccops,        uccops,   m92,      ROT0,   "Irem",         "Undercover Cops (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1992, mysticri, 0,        mysticri,      mysticri, m92,      ROT0,   "Irem",         "Mystic Riders (World)", GAME_SUPPORTS_SAVE )
-GAME( 1992, gunhohki, mysticri, mysticri,      mysticri, m92,      ROT0,   "Irem",         "Mahou Keibitai Gun Hohki (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1991, gunforce, 0,        gunforce,      gunforce, m92_state, m92,      ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (World)", GAME_SUPPORTS_SAVE )
+GAME( 1991, gunforcej,gunforce, gunforce,      gunforce, m92_state, m92,      ROT0,   "Irem",         "Gunforce - Battle Fire Engulfed Terror Island (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1991, gunforceu,gunforce, gunforce,      gunforce, m92_state, m92,      ROT0,   "Irem America", "Gunforce - Battle Fire Engulfed Terror Island (US)", GAME_SUPPORTS_SAVE )
+GAME( 1991, bmaster,  0,        bmaster,       bmaster, m92_state,  m92,      ROT0,   "Irem",         "Blade Master (World)", GAME_SUPPORTS_SAVE )
+GAME( 1991, crossbld, bmaster,  bmaster,       bmaster, m92_state,  m92,      ROT0,   "Irem",         "Cross Blades! (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1991, lethalth, 0,        lethalth,      lethalth, m92_state, lethalth, ROT270, "Irem",         "Lethal Thunder (World)", GAME_SUPPORTS_SAVE )
+GAME( 1991, thndblst, lethalth, lethalth,      lethalth, m92_state, lethalth, ROT270, "Irem",         "Thunder Blaster (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1992, uccops,   0,        uccops,        uccops, m92_state,   m92,      ROT0,   "Irem",         "Undercover Cops (World)", GAME_SUPPORTS_SAVE )
+GAME( 1992, uccopsu,  uccops,   uccops,        uccops, m92_state,   m92,      ROT0,   "Irem",         "Undercover Cops (US)", GAME_SUPPORTS_SAVE )
+GAME( 1992, uccopsar, uccops,   uccops,        uccops, m92_state,   m92,      ROT0,   "Irem",         "Undercover Cops (Alpha Renewal Version)", GAME_SUPPORTS_SAVE )
+GAME( 1992, uccopsj,  uccops,   uccops,        uccops, m92_state,   m92,      ROT0,   "Irem",         "Undercover Cops (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1992, mysticri, 0,        mysticri,      mysticri, m92_state, m92,      ROT0,   "Irem",         "Mystic Riders (World)", GAME_SUPPORTS_SAVE )
+GAME( 1992, gunhohki, mysticri, mysticri,      mysticri, m92_state, m92,      ROT0,   "Irem",         "Mahou Keibitai Gun Hohki (Japan)", GAME_SUPPORTS_SAVE )
 // cheaply produced Korean board, has original chips, but lacks any proper labels
 // main code is also significantly different to the supported original set, so it might just be a legitimate early revision on a cheap board
-GAME( 1992, mysticrib,mysticri, mysticri,      mysticri, m92,      ROT0,   "Irem",         "Mystic Riders (bootleg?)", GAME_SUPPORTS_SAVE )
-GAME( 1992, majtitl2, 0,        majtitl2,      majtitl2, majtitl2, ROT0,   "Irem",         "Major Title 2 (World)", GAME_SUPPORTS_SAVE )
-GAME( 1992, majtitl2j,majtitl2, majtitl2,      majtitl2, majtitl2, ROT0,   "Irem",         "Major Title 2 (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1992, skingame, majtitl2, majtitl2,      majtitl2, majtitl2, ROT0,   "Irem America", "The Irem Skins Game (US set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1992, skingame2,majtitl2, majtitl2,      majtitl2, majtitl2, ROT0,   "Irem America", "The Irem Skins Game (US set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1992, hook,     0,        hook,          hook,     m92,      ROT0,   "Irem",         "Hook (World)", GAME_SUPPORTS_SAVE )
-GAME( 1992, hooku,    hook,     hook,          hook,     m92,      ROT0,   "Irem America", "Hook (US)", GAME_SUPPORTS_SAVE )
-GAME( 1992, hookj,    hook,     hook,          hook,     m92,      ROT0,   "Irem",         "Hook (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1992, ppan,     hook,     ppan,          hook,     ppan,     ROT0,   "bootleg",      "Peter Pan (bootleg of Hook)", GAME_IMPERFECT_GRAPHICS ) // PCB marked 'Peter Pan', no title screen, made in Italy?
-GAME( 1992, rtypeleo, 0,        rtypeleo,      rtypeleo, m92_alt,  ROT0,   "Irem",         "R-Type Leo (World)", GAME_SUPPORTS_SAVE )
-GAME( 1992, rtypeleoj,rtypeleo, rtypeleo,      rtypeleo, m92_alt,  ROT0,   "Irem",         "R-Type Leo (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1993, inthunt,  0,        inthunt,       inthunt,  m92,      ROT0,   "Irem",         "In The Hunt (World)", GAME_SUPPORTS_SAVE )
-GAME( 1993, inthuntu, inthunt,  inthunt,       inthunt,  m92,      ROT0,   "Irem America", "In The Hunt (US)", GAME_SUPPORTS_SAVE )
-GAME( 1993, kaiteids, inthunt,  inthunt,       inthunt,  m92,      ROT0,   "Irem",         "Kaitei Daisensou (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1993, nbbatman, 0,        nbbatman,      nbbatman, m92_bank, ROT0,   "Irem",         "Ninja Baseball Bat Man (World)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, nbbatmanu,nbbatman, nbbatman,      nbbatman, m92_bank, ROT0,   "Irem America", "Ninja Baseball Bat Man (US)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, leaguemn, nbbatman, nbbatman,      nbbatman, m92_bank, ROT0,   "Irem",         "Yakyuu Kakutou League-Man (Japan)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, nbbatman2bl,nbbatman,nbbatman2bl,  nbbatman, m92_bank, ROT0,   "bootleg",      "Ninja Baseball Bat Man II (bootleg/hack)", GAME_NO_SOUND | GAME_NOT_WORKING ) // different sprite system, MCU as soundcpu, OKI samples for music/sound
-GAME( 1993, ssoldier, 0,        psoldier,      psoldier, m92_alt,  ROT0,   "Irem America", "Superior Soldiers (US)", GAME_SUPPORTS_SAVE )
-GAME( 1993, psoldier, ssoldier, psoldier,      psoldier, m92_alt,  ROT0,   "Irem",         "Perfect Soldiers (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1994, dsoccr94j,dsoccr94, dsoccr94j,     dsoccr94j,m92_bank, ROT0,   "Irem",         "Dream Soccer '94 (Japan, M92 hardware)", GAME_SUPPORTS_SAVE )
-GAME( 1994, gunforc2, 0,        gunforc2,      gunforc2, m92_bank, ROT0,   "Irem",         "Gun Force II (US)", GAME_SUPPORTS_SAVE )
-GAME( 1994, geostorm, gunforc2, gunforc2,      gunforc2, m92_bank, ROT0,   "Irem",         "Geo Storm (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1992, mysticrib,mysticri, mysticri,      mysticri, m92_state, m92,      ROT0,   "Irem",         "Mystic Riders (bootleg?)", GAME_SUPPORTS_SAVE )
+GAME( 1992, majtitl2, 0,        majtitl2,      majtitl2, m92_state, majtitl2, ROT0,   "Irem",         "Major Title 2 (World)", GAME_SUPPORTS_SAVE )
+GAME( 1992, majtitl2j,majtitl2, majtitl2,      majtitl2, m92_state, majtitl2, ROT0,   "Irem",         "Major Title 2 (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1992, skingame, majtitl2, majtitl2,      majtitl2, m92_state, majtitl2, ROT0,   "Irem America", "The Irem Skins Game (US set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1992, skingame2,majtitl2, majtitl2,      majtitl2, m92_state, majtitl2, ROT0,   "Irem America", "The Irem Skins Game (US set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1992, hook,     0,        hook,          hook, m92_state,     m92,      ROT0,   "Irem",         "Hook (World)", GAME_SUPPORTS_SAVE )
+GAME( 1992, hooku,    hook,     hook,          hook, m92_state,     m92,      ROT0,   "Irem America", "Hook (US)", GAME_SUPPORTS_SAVE )
+GAME( 1992, hookj,    hook,     hook,          hook, m92_state,     m92,      ROT0,   "Irem",         "Hook (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1992, ppan,     hook,     ppan,          hook, m92_state,     ppan,     ROT0,   "bootleg",      "Peter Pan (bootleg of Hook)", GAME_IMPERFECT_GRAPHICS ) // PCB marked 'Peter Pan', no title screen, made in Italy?
+GAME( 1992, rtypeleo, 0,        rtypeleo,      rtypeleo, m92_state, m92_alt,  ROT0,   "Irem",         "R-Type Leo (World)", GAME_SUPPORTS_SAVE )
+GAME( 1992, rtypeleoj,rtypeleo, rtypeleo,      rtypeleo, m92_state, m92_alt,  ROT0,   "Irem",         "R-Type Leo (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1993, inthunt,  0,        inthunt,       inthunt, m92_state,  m92,      ROT0,   "Irem",         "In The Hunt (World)", GAME_SUPPORTS_SAVE )
+GAME( 1993, inthuntu, inthunt,  inthunt,       inthunt, m92_state,  m92,      ROT0,   "Irem America", "In The Hunt (US)", GAME_SUPPORTS_SAVE )
+GAME( 1993, kaiteids, inthunt,  inthunt,       inthunt, m92_state,  m92,      ROT0,   "Irem",         "Kaitei Daisensou (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1993, nbbatman, 0,        nbbatman,      nbbatman, m92_state, m92_bank, ROT0,   "Irem",         "Ninja Baseball Bat Man (World)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, nbbatmanu,nbbatman, nbbatman,      nbbatman, m92_state, m92_bank, ROT0,   "Irem America", "Ninja Baseball Bat Man (US)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, leaguemn, nbbatman, nbbatman,      nbbatman, m92_state, m92_bank, ROT0,   "Irem",         "Yakyuu Kakutou League-Man (Japan)", GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, nbbatman2bl,nbbatman,nbbatman2bl,  nbbatman, m92_state, m92_bank, ROT0,   "bootleg",      "Ninja Baseball Bat Man II (bootleg/hack)", GAME_NO_SOUND | GAME_NOT_WORKING ) // different sprite system, MCU as soundcpu, OKI samples for music/sound
+GAME( 1993, ssoldier, 0,        psoldier,      psoldier, m92_state, m92_alt,  ROT0,   "Irem America", "Superior Soldiers (US)", GAME_SUPPORTS_SAVE )
+GAME( 1993, psoldier, ssoldier, psoldier,      psoldier, m92_state, m92_alt,  ROT0,   "Irem",         "Perfect Soldiers (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1994, dsoccr94j,dsoccr94, dsoccr94j,     dsoccr94j, m92_state,m92_bank, ROT0,   "Irem",         "Dream Soccer '94 (Japan, M92 hardware)", GAME_SUPPORTS_SAVE )
+GAME( 1994, gunforc2, 0,        gunforc2,      gunforc2, m92_state, m92_bank, ROT0,   "Irem",         "Gun Force II (US)", GAME_SUPPORTS_SAVE )
+GAME( 1994, geostorm, gunforc2, gunforc2,      gunforc2, m92_state, m92_bank, ROT0,   "Irem",         "Geo Storm (Japan)", GAME_SUPPORTS_SAVE )

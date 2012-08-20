@@ -1337,28 +1337,24 @@ static void treahunt_decode( running_machine &machine )
 	}
 }
 
-static DRIVER_INIT( jack )
+DRIVER_INIT_MEMBER(jack_state,jack)
 {
-	jack_state *state = machine.driver_data<jack_state>();
-	state->m_timer_rate = 128;
+	m_timer_rate = 128;
 }
 
-static DRIVER_INIT( treahunt )
+DRIVER_INIT_MEMBER(jack_state,treahunt)
 {
-	jack_state *state = machine.driver_data<jack_state>();
-	state->m_timer_rate = 128;
-	treahunt_decode(machine);
+	m_timer_rate = 128;
+	treahunt_decode(machine());
 }
 
-static DRIVER_INIT( zzyzzyxx )
+DRIVER_INIT_MEMBER(jack_state,zzyzzyxx)
 {
-	jack_state *state = machine.driver_data<jack_state>();
-	state->m_timer_rate = 16;
+	m_timer_rate = 16;
 }
 
-static DRIVER_INIT( loverboy )
+DRIVER_INIT_MEMBER(jack_state,loverboy)
 {
-	jack_state *state = machine.driver_data<jack_state>();
 
 	/* this doesn't make sense.. the startup code, and irq0 have jumps to 0..
        I replace the startup jump with another jump to what appears to be
@@ -1371,18 +1367,17 @@ static DRIVER_INIT( loverboy )
        code, the protection device is disabled or changes behaviour via
        writes at 0xf000 and 0xf008. -AS
        */
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 	ROM[0x13] = 0x01;
 	ROM[0x12] = 0x9d;
 
-	state->m_timer_rate = 16;
+	m_timer_rate = 16;
 }
 
 
-static DRIVER_INIT( striv )
+DRIVER_INIT_MEMBER(jack_state,striv)
 {
-	jack_state *state = machine.driver_data<jack_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 	UINT8 data;
 	int A;
 
@@ -1409,12 +1404,12 @@ static DRIVER_INIT( striv )
 	}
 
 	// Set-up the weirdest questions read ever done
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc000, 0xcfff, read8_delegate(FUNC(jack_state::striv_question_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0xc000, 0xcfff, read8_delegate(FUNC(jack_state::striv_question_r),this));
 
 	// Nop out unused sprites writes
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xb000, 0xb0ff);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0xb000, 0xb0ff);
 
-	state->m_timer_rate = 128;
+	m_timer_rate = 128;
 }
 
 /*************************************
@@ -1423,17 +1418,17 @@ static DRIVER_INIT( striv )
  *
  *************************************/
 
-GAME( 1982, jack,     0,        jack,    jack,     jack,     ROT90,  "Cinematronics",               "Jack the Giantkiller (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1982, jack2,    jack,     jack,    jack2,    jack,     ROT90,  "Cinematronics",               "Jack the Giantkiller (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1982, jack3,    jack,     jack,    jack3,    jack,     ROT90,  "Cinematronics",               "Jack the Giantkiller (set 3)", GAME_SUPPORTS_SAVE )
-GAME( 1982, treahunt, jack,     jack,    treahunt, treahunt, ROT90,  "bootleg? (Hara Industries)",  "Treasure Hunt (bootleg?)", GAME_SUPPORTS_SAVE )
-GAME( 1982, zzyzzyxx, 0,        jack,    zzyzzyxx, zzyzzyxx, ROT90,  "Cinematronics / Advanced Microcomputer Systems", "Zzyzzyxx (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1982, zzyzzyxx2,zzyzzyxx, jack,    zzyzzyxx, zzyzzyxx, ROT90,  "Cinematronics / Advanced Microcomputer Systems", "Zzyzzyxx (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1982, brix,     zzyzzyxx, jack,    zzyzzyxx, zzyzzyxx, ROT90,  "Cinematronics / Advanced Microcomputer Systems", "Brix", GAME_SUPPORTS_SAVE )
-GAME( 1984, freeze,   0,        jack,    freeze,   jack,     ROT90,  "Cinematronics",               "Freeze", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
-GAME( 1984, sucasino, 0,        jack,    sucasino, jack,     ROT90,  "Data Amusement",              "Super Casino", GAME_SUPPORTS_SAVE )
-GAME( 1981, tripool,  0,        tripool, tripool,  jack,     ROT90,  "Noma (Casino Tech license)",  "Tri-Pool (Casino Tech)", GAME_SUPPORTS_SAVE )
-GAME( 1981, tripoola, tripool,  tripool, tripool,  jack,     ROT90,  "Noma (Costal Games license)", "Tri-Pool (Costal Games)", GAME_SUPPORTS_SAVE )
-GAME( 1983, joinem,   0,        joinem,  joinem,   zzyzzyxx, ROT90,  "Global Corporation",          "Joinem", GAME_SUPPORTS_SAVE )
-GAME( 1983, loverboy, 0,        loverboy,loverboy, loverboy, ROT90,  "G.T Enterprise Inc",          "Lover Boy", GAME_SUPPORTS_SAVE )
-GAME( 1985, striv,    0,        jack,    striv,    striv,    ROT270, "Hara Industries",             "Super Triv", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1982, jack,     0,        jack,    jack, jack_state,     jack,     ROT90,  "Cinematronics",               "Jack the Giantkiller (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1982, jack2,    jack,     jack,    jack2, jack_state,    jack,     ROT90,  "Cinematronics",               "Jack the Giantkiller (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1982, jack3,    jack,     jack,    jack3, jack_state,    jack,     ROT90,  "Cinematronics",               "Jack the Giantkiller (set 3)", GAME_SUPPORTS_SAVE )
+GAME( 1982, treahunt, jack,     jack,    treahunt, jack_state, treahunt, ROT90,  "bootleg? (Hara Industries)",  "Treasure Hunt (bootleg?)", GAME_SUPPORTS_SAVE )
+GAME( 1982, zzyzzyxx, 0,        jack,    zzyzzyxx, jack_state, zzyzzyxx, ROT90,  "Cinematronics / Advanced Microcomputer Systems", "Zzyzzyxx (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1982, zzyzzyxx2,zzyzzyxx, jack,    zzyzzyxx, jack_state, zzyzzyxx, ROT90,  "Cinematronics / Advanced Microcomputer Systems", "Zzyzzyxx (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1982, brix,     zzyzzyxx, jack,    zzyzzyxx, jack_state, zzyzzyxx, ROT90,  "Cinematronics / Advanced Microcomputer Systems", "Brix", GAME_SUPPORTS_SAVE )
+GAME( 1984, freeze,   0,        jack,    freeze, jack_state,   jack,     ROT90,  "Cinematronics",               "Freeze", GAME_SUPPORTS_SAVE | GAME_NO_COCKTAIL )
+GAME( 1984, sucasino, 0,        jack,    sucasino, jack_state, jack,     ROT90,  "Data Amusement",              "Super Casino", GAME_SUPPORTS_SAVE )
+GAME( 1981, tripool,  0,        tripool, tripool, jack_state,  jack,     ROT90,  "Noma (Casino Tech license)",  "Tri-Pool (Casino Tech)", GAME_SUPPORTS_SAVE )
+GAME( 1981, tripoola, tripool,  tripool, tripool, jack_state,  jack,     ROT90,  "Noma (Costal Games license)", "Tri-Pool (Costal Games)", GAME_SUPPORTS_SAVE )
+GAME( 1983, joinem,   0,        joinem,  joinem, jack_state,   zzyzzyxx, ROT90,  "Global Corporation",          "Joinem", GAME_SUPPORTS_SAVE )
+GAME( 1983, loverboy, 0,        loverboy,loverboy, jack_state, loverboy, ROT90,  "G.T Enterprise Inc",          "Lover Boy", GAME_SUPPORTS_SAVE )
+GAME( 1985, striv,    0,        jack,    striv, jack_state,    striv,    ROT270, "Hara Industries",             "Super Triv", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )

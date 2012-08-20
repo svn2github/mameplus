@@ -58,9 +58,9 @@ Notes:
                                 Hard Head
 ***************************************************************************/
 
-static DRIVER_INIT( hardhead )
+DRIVER_INIT_MEMBER(suna8_state,hardhead)
 {
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	int i;
 
 	for (i = 0; i < 0x8000; i++)
@@ -75,15 +75,15 @@ static DRIVER_INIT( hardhead )
 			rom[i] = BITSWAP8(rom[i], 7,6,5,3,4,2,1,0) ^ 0x58;
 	}
 
-	machine.root_device().membank("bank1")->configure_entries(0, 16, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
+	machine().root_device().membank("bank1")->configure_entries(0, 16, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
 }
 
 /* Non encrypted bootleg */
-static DRIVER_INIT( hardhedb )
+DRIVER_INIT_MEMBER(suna8_state,hardhedb)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0x7fff, machine.root_device().memregion("maincpu")->base() + 0x48000);
-	machine.root_device().membank("bank1")->configure_entries(0, 16, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	space->set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("maincpu")->base() + 0x48000);
+	machine().root_device().membank("bank1")->configure_entries(0, 16, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
 }
 
 /***************************************************************************
@@ -135,10 +135,10 @@ static UINT8 *brickzn_decrypt(running_machine &machine)
 	return decrypt;
 }
 
-static DRIVER_INIT( brickzn )
+DRIVER_INIT_MEMBER(suna8_state,brickzn)
 {
-	UINT8	*RAM	=	machine.root_device().memregion("maincpu")->base();
-	UINT8   *decrypt = brickzn_decrypt(machine);
+	UINT8	*RAM	=	machine().root_device().memregion("maincpu")->base();
+	UINT8   *decrypt = brickzn_decrypt(machine());
 	int i;
 
 	// restore opcodes which for some reason shouldn't be decrypted... */
@@ -162,14 +162,14 @@ static DRIVER_INIT( brickzn )
 	decrypt[0x24b5] = 0x00;	// HALT -> NOP
 	decrypt[0x2583] = 0x00;	// HALT -> NOP
 
-	machine.root_device().membank("bank1")->configure_entries(0, 16, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
-	machine.root_device().membank("bank1")->configure_decrypted_entries(0, 16, decrypt + 0x10000, 0x4000);
+	machine().root_device().membank("bank1")->configure_entries(0, 16, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
+	machine().root_device().membank("bank1")->configure_decrypted_entries(0, 16, decrypt + 0x10000, 0x4000);
 }
 
-static DRIVER_INIT( brickzn3 )
+DRIVER_INIT_MEMBER(suna8_state,brickzn3)
 {
-	UINT8	*RAM	=	machine.root_device().memregion("maincpu")->base();
-	UINT8   *decrypt = brickzn_decrypt(machine);
+	UINT8	*RAM	=	machine().root_device().memregion("maincpu")->base();
+	UINT8   *decrypt = brickzn_decrypt(machine());
 	int i;
 
 	// restore opcodes which for some reason shouldn't be decrypted... */
@@ -193,8 +193,8 @@ static DRIVER_INIT( brickzn3 )
 	decrypt[0x2487] = 0x00;	// HALT -> NOP
 	decrypt[0x256c] = 0x00;	// HALT -> NOP
 
-	machine.root_device().membank("bank1")->configure_entries(0, 16, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
-	machine.root_device().membank("bank1")->configure_decrypted_entries(0, 16, decrypt + 0x10000, 0x4000);
+	machine().root_device().membank("bank1")->configure_entries(0, 16, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
+	machine().root_device().membank("bank1")->configure_decrypted_entries(0, 16, decrypt + 0x10000, 0x4000);
 }
 
 
@@ -202,12 +202,12 @@ static DRIVER_INIT( brickzn3 )
                                 Hard Head 2
 ***************************************************************************/
 
-static DRIVER_INIT( hardhea2 )
+DRIVER_INIT_MEMBER(suna8_state,hardhea2)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8	*RAM	=	machine.root_device().memregion("maincpu")->base();
-	size_t	size	=	machine.root_device().memregion("maincpu")->bytes();
-	UINT8   *decrypt =	auto_alloc_array(machine, UINT8, size);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	UINT8	*RAM	=	machine().root_device().memregion("maincpu")->base();
+	size_t	size	=	machine().root_device().memregion("maincpu")->bytes();
+	UINT8   *decrypt =	auto_alloc_array(machine(), UINT8, size);
 	UINT8 x;
 	int i;
 
@@ -280,8 +280,8 @@ rom13:  0?, 1y, 2n, 3n      ?,?,?,? (palettes)
 			RAM[i] = BITSWAP8(RAM[i], 5,6,7,4,3,2,1,0) ^ 0x41;
 	}
 
-	machine.root_device().membank("bank1")->configure_entries(0, 16, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
-	machine.root_device().membank("bank2")->configure_entries(0, 2, auto_alloc_array(machine, UINT8, 0x2000 * 2), 0x2000);
+	machine().root_device().membank("bank1")->configure_entries(0, 16, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
+	machine().root_device().membank("bank2")->configure_entries(0, 2, auto_alloc_array(machine(), UINT8, 0x2000 * 2), 0x2000);
 }
 
 
@@ -289,12 +289,12 @@ rom13:  0?, 1y, 2n, 3n      ?,?,?,? (palettes)
                                 Star Fighter
 ***************************************************************************/
 
-static DRIVER_INIT( starfigh )
+DRIVER_INIT_MEMBER(suna8_state,starfigh)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8	*RAM	=	machine.root_device().memregion("maincpu")->base();
-	size_t	size	=	machine.root_device().memregion("maincpu")->bytes();
-	UINT8   *decrypt =	auto_alloc_array(machine, UINT8, size);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	UINT8	*RAM	=	machine().root_device().memregion("maincpu")->base();
+	size_t	size	=	machine().root_device().memregion("maincpu")->bytes();
+	UINT8   *decrypt =	auto_alloc_array(machine(), UINT8, size);
 	UINT8 x;
 	int i;
 
@@ -349,7 +349,7 @@ static DRIVER_INIT( starfigh )
 			RAM[i] = BITSWAP8(RAM[i], 5,6,7,4,3,2,1,0) ^ 0x45;
 	}
 
-	machine.root_device().membank("bank1")->configure_entries(0, 16, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
+	machine().root_device().membank("bank1")->configure_entries(0, 16, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
 }
 
 
@@ -357,12 +357,12 @@ static DRIVER_INIT( starfigh )
                                 Spark Man
 ***************************************************************************/
 
-static DRIVER_INIT( sparkman )
+DRIVER_INIT_MEMBER(suna8_state,sparkman)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8	*RAM	=	machine.root_device().memregion("maincpu")->base();
-	size_t	size	=	machine.root_device().memregion("maincpu")->bytes();
-	UINT8   *decrypt =	auto_alloc_array(machine, UINT8, size);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	UINT8	*RAM	=	machine().root_device().memregion("maincpu")->base();
+	size_t	size	=	machine().root_device().memregion("maincpu")->bytes();
+	UINT8   *decrypt =	auto_alloc_array(machine(), UINT8, size);
 	UINT8 x;
 	int i;
 
@@ -417,7 +417,7 @@ static DRIVER_INIT( sparkman )
 			RAM[i] = BITSWAP8(RAM[i], 5,6,7,4,3,2,1,0) ^ 0x44;
 	}
 
-	machine.root_device().membank("bank1")->configure_entries(0, 16, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
+	machine().root_device().membank("bank1")->configure_entries(0, 16, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
 }
 
 /***************************************************************************
@@ -1031,7 +1031,7 @@ ADDRESS_MAP_END
 WRITE8_MEMBER(suna8_state::brickzn_pcm_w)
 {
 	static const char *const dacs[] = { "dac1", "dac2", "dac3", "dac4" };
-	dac_signed_data_w( machine().device(dacs[offset & 3]), (data & 0xf) * 0x11 );
+	machine().device<dac_device>(dacs[offset & 3])->write_signed8( (data & 0xf) * 0x11 );
 }
 
 
@@ -1534,7 +1534,8 @@ static const ym2203_interface rranger_ym2203_interface =
 	DEVCB_NULL,
 	DEVCB_DEVICE_HANDLER("samples", rranger_play_samples_w),
 	DEVCB_DEVICE_HANDLER("samples", suna8_samples_number_w),
-	}
+	},
+	DEVCB_NULL
 };
 
 /* 2203 + 8910 */
@@ -1645,16 +1646,16 @@ static MACHINE_CONFIG_START( brickzn, suna8_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.33)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.33)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.17)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.17)
 
-	MCFG_SOUND_ADD("dac3", DAC, 0)
+	MCFG_DAC_ADD("dac3")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.17)
 
-	MCFG_SOUND_ADD("dac4", DAC, 0)
+	MCFG_DAC_ADD("dac4")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.17)
 MACHINE_CONFIG_END
 
@@ -2353,24 +2354,24 @@ ROM_END
 
 ***************************************************************************/
 
-static DRIVER_INIT( suna8 )
+DRIVER_INIT_MEMBER(suna8_state,suna8)
 {
-	machine.root_device().membank("bank1")->configure_entries(0, 16, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
+	machine().root_device().membank("bank1")->configure_entries(0, 16, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
 }
 
 /* Working Games */
-GAME( 1988, sranger,  0,        rranger,  rranger,  suna8,    ROT0,  "SunA", "Super Ranger (v2.0)", 0 )
-GAME( 1988, rranger,  sranger,  rranger,  rranger,  suna8,    ROT0,  "SunA (Sharp Image license)", "Rough Ranger (v2.0, unprotected, bootleg?)", 0) //protection is patched out in this.
-GAME( 1988, srangerb, sranger,  rranger,  rranger,  suna8,    ROT0,  "bootleg", "Super Ranger (bootleg)", 0 )
-GAME( 1988, srangerw, sranger,  rranger,  rranger,  suna8,    ROT0,  "SunA (WDK license)", "Super Ranger (WDK)", 0 )
-GAME( 1988, hardhead, 0,        hardhead, hardhead, hardhead, ROT0,  "SunA", "Hard Head" , 0)
-GAME( 1988, hardheadb,hardhead, hardhead, hardhead, hardhedb, ROT0,  "bootleg", "Hard Head (bootleg)" , 0)
-GAME( 1988, pop_hh,   hardhead, hardhead, hardhead, hardhedb, ROT0,  "bootleg", "Popper (Hard Head bootleg)" , 0)
-GAME( 1991, hardhea2, 0,        hardhea2, hardhea2, hardhea2, ROT0,  "SunA", "Hard Head 2 (v2.0)" , 0 )
+GAME( 1988, sranger,  0,        rranger,  rranger, suna8_state,  suna8,    ROT0,  "SunA", "Super Ranger (v2.0)", 0 )
+GAME( 1988, rranger,  sranger,  rranger,  rranger, suna8_state,  suna8,    ROT0,  "SunA (Sharp Image license)", "Rough Ranger (v2.0, unprotected, bootleg?)", 0) //protection is patched out in this.
+GAME( 1988, srangerb, sranger,  rranger,  rranger, suna8_state,  suna8,    ROT0,  "bootleg", "Super Ranger (bootleg)", 0 )
+GAME( 1988, srangerw, sranger,  rranger,  rranger, suna8_state,  suna8,    ROT0,  "SunA (WDK license)", "Super Ranger (WDK)", 0 )
+GAME( 1988, hardhead, 0,        hardhead, hardhead, suna8_state, hardhead, ROT0,  "SunA", "Hard Head" , 0)
+GAME( 1988, hardheadb,hardhead, hardhead, hardhead, suna8_state, hardhedb, ROT0,  "bootleg", "Hard Head (bootleg)" , 0)
+GAME( 1988, pop_hh,   hardhead, hardhead, hardhead, suna8_state, hardhedb, ROT0,  "bootleg", "Popper (Hard Head bootleg)" , 0)
+GAME( 1991, hardhea2, 0,        hardhea2, hardhea2, suna8_state, hardhea2, ROT0,  "SunA", "Hard Head 2 (v2.0)" , 0 )
 
 /* Non Working Games */
-GAME( 1989, sparkman, 0,        sparkman, sparkman, sparkman, ROT0,  "SunA", "Spark Man (v 2.0, set 1)", GAME_NOT_WORKING )
-GAME( 1989, sparkmana,sparkman, sparkman, sparkman, sparkman, ROT0,  "SunA", "Spark Man (v 2.0, set 2)", GAME_NOT_WORKING )
-GAME( 1990, starfigh, 0,        starfigh, hardhea2, starfigh, ROT90, "SunA", "Star Fighter (v1)", GAME_NOT_WORKING )
-GAME( 1992, brickzn,  0,        brickzn,  brickzn,  brickzn,  ROT90, "SunA", "Brick Zone (v5.0)", GAME_NOT_WORKING )
-GAME( 1992, brickzn3, brickzn,  brickzn,  brickzn,  brickzn3, ROT90, "SunA", "Brick Zone (v4.0)", GAME_NOT_WORKING )
+GAME( 1989, sparkman, 0,        sparkman, sparkman, suna8_state, sparkman, ROT0,  "SunA", "Spark Man (v 2.0, set 1)", GAME_NOT_WORKING )
+GAME( 1989, sparkmana,sparkman, sparkman, sparkman, suna8_state, sparkman, ROT0,  "SunA", "Spark Man (v 2.0, set 2)", GAME_NOT_WORKING )
+GAME( 1990, starfigh, 0,        starfigh, hardhea2, suna8_state, starfigh, ROT90, "SunA", "Star Fighter (v1)", GAME_NOT_WORKING )
+GAME( 1992, brickzn,  0,        brickzn,  brickzn, suna8_state,  brickzn,  ROT90, "SunA", "Brick Zone (v5.0)", GAME_NOT_WORKING )
+GAME( 1992, brickzn3, brickzn,  brickzn,  brickzn, suna8_state,  brickzn3, ROT90, "SunA", "Brick Zone (v4.0)", GAME_NOT_WORKING )

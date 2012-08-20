@@ -705,82 +705,79 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( ataxx )
+DRIVER_INIT_MEMBER(leland_state,ataxx)
 {
-	leland_rotate_memory(machine, "master");
-	leland_rotate_memory(machine, "slave");
+	leland_rotate_memory(machine(), "master");
+	leland_rotate_memory(machine(), "slave");
 
 	/* set up additional input ports */
-	leland_state *state = machine.driver_data<leland_state>();
-	machine.device("master")->memory().space(AS_IO)->install_read_handler(0x00, 0x03, read8_delegate(FUNC(leland_state::ataxx_trackball_r),state));
+	machine().device("master")->memory().space(AS_IO)->install_read_handler(0x00, 0x03, read8_delegate(FUNC(leland_state::ataxx_trackball_r),this));
 }
 
 
-static DRIVER_INIT( ataxxj )
+DRIVER_INIT_MEMBER(leland_state,ataxxj)
 {
-	leland_rotate_memory(machine, "master");
-	leland_rotate_memory(machine, "slave");
+	leland_rotate_memory(machine(), "master");
+	leland_rotate_memory(machine(), "slave");
 
 	/* set up additional input ports */
-	leland_state *state = machine.driver_data<leland_state>();
-	machine.device("master")->memory().space(AS_IO)->install_read_handler(0x00, 0x03, read8_delegate(FUNC(leland_state::ataxx_trackball_r),state));
+	machine().device("master")->memory().space(AS_IO)->install_read_handler(0x00, 0x03, read8_delegate(FUNC(leland_state::ataxx_trackball_r),this));
 }
 
 
-static DRIVER_INIT( wsf )
+DRIVER_INIT_MEMBER(leland_state,wsf)
 {
-	leland_rotate_memory(machine, "master");
-	leland_rotate_memory(machine, "slave");
+	leland_rotate_memory(machine(), "master");
+	leland_rotate_memory(machine(), "slave");
 
 	/* set up additional input ports */
-	machine.device("master")->memory().space(AS_IO)->install_read_port(0x0d, 0x0d, "P1_P2");
-	machine.device("master")->memory().space(AS_IO)->install_read_port(0x0e, 0x0e, "P3_P4");
-	machine.device("master")->memory().space(AS_IO)->install_read_port(0x0f, 0x0f, "BUTTONS");
+	machine().device("master")->memory().space(AS_IO)->install_read_port(0x0d, 0x0d, "P1_P2");
+	machine().device("master")->memory().space(AS_IO)->install_read_port(0x0e, 0x0e, "P3_P4");
+	machine().device("master")->memory().space(AS_IO)->install_read_port(0x0f, 0x0f, "BUTTONS");
 }
 
 
-static DRIVER_INIT( indyheat )
+DRIVER_INIT_MEMBER(leland_state,indyheat)
 {
-	leland_rotate_memory(machine, "master");
-	leland_rotate_memory(machine, "slave");
+	leland_rotate_memory(machine(), "master");
+	leland_rotate_memory(machine(), "slave");
 
 	/* set up additional input ports */
-	leland_state *state = machine.driver_data<leland_state>();
-	machine.device("master")->memory().space(AS_IO)->install_read_handler(0x00, 0x02, read8_delegate(FUNC(leland_state::indyheat_wheel_r),state));
-	machine.device("master")->memory().space(AS_IO)->install_read_handler(0x08, 0x0b, read8_delegate(FUNC(leland_state::indyheat_analog_r),state));
-	machine.device("master")->memory().space(AS_IO)->install_read_port(0x0d, 0x0d, "P1");
-	machine.device("master")->memory().space(AS_IO)->install_read_port(0x0e, 0x0e, "P2");
-	machine.device("master")->memory().space(AS_IO)->install_read_port(0x0f, 0x0f, "P3");
+	machine().device("master")->memory().space(AS_IO)->install_read_handler(0x00, 0x02, read8_delegate(FUNC(leland_state::indyheat_wheel_r),this));
+	machine().device("master")->memory().space(AS_IO)->install_read_handler(0x08, 0x0b, read8_delegate(FUNC(leland_state::indyheat_analog_r),this));
+	machine().device("master")->memory().space(AS_IO)->install_read_port(0x0d, 0x0d, "P1");
+	machine().device("master")->memory().space(AS_IO)->install_read_port(0x0e, 0x0e, "P2");
+	machine().device("master")->memory().space(AS_IO)->install_read_port(0x0f, 0x0f, "P3");
 
 	/* set up additional output ports */
-	machine.device("master")->memory().space(AS_IO)->install_write_handler(0x08, 0x0b, write8_delegate(FUNC(leland_state::indyheat_analog_w),state));
+	machine().device("master")->memory().space(AS_IO)->install_write_handler(0x08, 0x0b, write8_delegate(FUNC(leland_state::indyheat_analog_w),this));
 }
 
 
-static DRIVER_INIT( brutforc )
+DRIVER_INIT_MEMBER(leland_state,brutforc)
 {
-	leland_rotate_memory(machine, "master");
-	leland_rotate_memory(machine, "slave");
+	leland_rotate_memory(machine(), "master");
+	leland_rotate_memory(machine(), "slave");
 
 	/* set up additional input ports */
-	machine.device("master")->memory().space(AS_IO)->install_read_port(0x0d, 0x0d, "P2");
-	machine.device("master")->memory().space(AS_IO)->install_read_port(0x0e, 0x0e, "P1");
-	machine.device("master")->memory().space(AS_IO)->install_read_port(0x0f, 0x0f, "P3");
+	machine().device("master")->memory().space(AS_IO)->install_read_port(0x0d, 0x0d, "P2");
+	machine().device("master")->memory().space(AS_IO)->install_read_port(0x0e, 0x0e, "P1");
+	machine().device("master")->memory().space(AS_IO)->install_read_port(0x0f, 0x0f, "P3");
 }
 
 
-static DRIVER_INIT( asylum )
+DRIVER_INIT_MEMBER(leland_state,asylum)
 {
-	leland_rotate_memory(machine, "master");
-	leland_rotate_memory(machine, "slave");
+	leland_rotate_memory(machine(), "master");
+	leland_rotate_memory(machine(), "slave");
 
 	/* asylum appears to have some extra RAM for the slave CPU */
-	machine.device("slave")->memory().space(AS_PROGRAM)->install_ram(0xf000, 0xfffb);
+	machine().device("slave")->memory().space(AS_PROGRAM)->install_ram(0xf000, 0xfffb);
 
 	/* set up additional input ports */
-	machine.device("master")->memory().space(AS_IO)->install_read_port(0x0d, 0x0d, "P2");
-	machine.device("master")->memory().space(AS_IO)->install_read_port(0x0e, 0x0e, "P1");
-	machine.device("master")->memory().space(AS_IO)->install_read_port(0x0f, 0x0f, "P3");
+	machine().device("master")->memory().space(AS_IO)->install_read_port(0x0d, 0x0d, "P2");
+	machine().device("master")->memory().space(AS_IO)->install_read_port(0x0e, 0x0e, "P1");
+	machine().device("master")->memory().space(AS_IO)->install_read_port(0x0f, 0x0f, "P3");
 }
 
 
@@ -791,11 +788,11 @@ static DRIVER_INIT( asylum )
  *
  *************************************/
 
-GAME( 1990, ataxx,    0,      ataxx,   ataxx,    ataxx,    ROT0,   "Leland Corp.", "Ataxx (set 1)", 0 )
-GAME( 1990, ataxxa,   ataxx,  ataxx,   ataxx,    ataxx,    ROT0,   "Leland Corp.", "Ataxx (set 2)", 0 )
-GAME( 1990, ataxxe,   ataxx,  ataxx,   ataxx,    ataxx,    ROT0,   "Leland Corp.", "Ataxx (Europe)", 0 )
-GAME( 1990, ataxxj,   ataxx,  ataxx,   ataxx,    ataxxj,   ROT0,   "Leland Corp.", "Ataxx (Japan)", 0 )
-GAME( 1990, wsf,      0,      wsf,     wsf,      wsf,      ROT0,   "Leland Corp.", "World Soccer Finals", 0 )
-GAME( 1991, indyheat, 0,      wsf,     indyheat, indyheat, ROT0,   "Leland Corp.", "Danny Sullivan's Indy Heat", 0 )
-GAME( 1991, brutforc, 0,      wsf,     brutforc, brutforc, ROT0,   "Leland Corp.", "Brute Force", 0 )
-GAME( 1991, asylum,   0,      wsf,     brutforc, asylum,   ROT270, "Leland Corp.", "Asylum (prototype)", 0 )
+GAME( 1990, ataxx,    0,      ataxx,   ataxx, leland_state,    ataxx,    ROT0,   "Leland Corp.", "Ataxx (set 1)", 0 )
+GAME( 1990, ataxxa,   ataxx,  ataxx,   ataxx, leland_state,    ataxx,    ROT0,   "Leland Corp.", "Ataxx (set 2)", 0 )
+GAME( 1990, ataxxe,   ataxx,  ataxx,   ataxx, leland_state,    ataxx,    ROT0,   "Leland Corp.", "Ataxx (Europe)", 0 )
+GAME( 1990, ataxxj,   ataxx,  ataxx,   ataxx, leland_state,    ataxxj,   ROT0,   "Leland Corp.", "Ataxx (Japan)", 0 )
+GAME( 1990, wsf,      0,      wsf,     wsf, leland_state,      wsf,      ROT0,   "Leland Corp.", "World Soccer Finals", 0 )
+GAME( 1991, indyheat, 0,      wsf,     indyheat, leland_state, indyheat, ROT0,   "Leland Corp.", "Danny Sullivan's Indy Heat", 0 )
+GAME( 1991, brutforc, 0,      wsf,     brutforc, leland_state, brutforc, ROT0,   "Leland Corp.", "Brute Force", 0 )
+GAME( 1991, asylum,   0,      wsf,     brutforc, leland_state, asylum,   ROT270, "Leland Corp.", "Asylum (prototype)", 0 )

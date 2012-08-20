@@ -21,6 +21,7 @@ public:
 	DECLARE_WRITE8_MEMBER(ppi8255_intf_e_write_a);
 	DECLARE_WRITE8_MEMBER(ppi8255_intf_e_write_b);
 	DECLARE_WRITE8_MEMBER(ppi8255_intf_e_write_c);
+	DECLARE_DRIVER_INIT(ecoinf3);
 };
 
 
@@ -469,16 +470,16 @@ ROM_START( ec_secrt )
 	// no strange rom in this set
 ROM_END
 
-DRIVER_INIT( ecoinf3 )
+DRIVER_INIT_MEMBER(ecoinf3_state,ecoinf3)
 {
 
 }
 
 
 // another hw type (similar to stuff in ecoinf2.c) (watchdog on port 58?)
-GAME( 19??, ec_pyram,   0		 , ecoinf3_pyramid,   ecoinf3,   ecoinf3,	ROT0,  "Electrocoin", "Pyramid (v6) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_sphin,   0		 , ecoinf3_pyramid,   ecoinf3,   ecoinf3,	ROT0,  "Electrocoin", "Sphinx (v1) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_penni,   0		 , ecoinf3_pyramid,   ecoinf3,   ecoinf3,	ROT0,  "Electrocoin", "Pennies From Heaven (v1) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_laby,    0		 , ecoinf3_pyramid,   ecoinf3,   ecoinf3,	ROT0,  "Electrocoin", "Labyrinth (v8) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
-GAME( 19??, ec_secrt,   0		 , ecoinf3_pyramid,   ecoinf3,   ecoinf3,	ROT0,  "Electrocoin", "Secret Castle (v1) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_pyram,   0		 , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,	ROT0,  "Electrocoin", "Pyramid (v6) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_sphin,   0		 , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,	ROT0,  "Electrocoin", "Sphinx (v1) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_penni,   0		 , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,	ROT0,  "Electrocoin", "Pennies From Heaven (v1) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_laby,    0		 , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,	ROT0,  "Electrocoin", "Labyrinth (v8) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
+GAME( 19??, ec_secrt,   0		 , ecoinf3_pyramid,   ecoinf3, ecoinf3_state,   ecoinf3,	ROT0,  "Electrocoin", "Secret Castle (v1) (Electrocoin)"		, GAME_NO_SOUND|GAME_REQUIRES_ARTWORK|GAME_NOT_WORKING|GAME_MECHANICAL)
 

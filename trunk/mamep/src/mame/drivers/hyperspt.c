@@ -81,7 +81,7 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, hyperspt_state )
 	AM_RANGE(0x8000, 0x8000) AM_READ_LEGACY(hyperspt_sh_timer_r)
 	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE_LEGACY("vlm", vlm5030_data_w) /* speech data */
 	AM_RANGE(0xc000, 0xdfff) AM_DEVWRITE_LEGACY("vlm", hyperspt_sound_w)	  /* speech and output control */
-	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe001, 0xe001) AM_WRITE_LEGACY(konami_SN76496_latch_w)  /* Loads the snd command into the snd latch */
 	AM_RANGE(0xe002, 0xe002) AM_DEVWRITE_LEGACY("snsnd", konami_SN76496_w)	 /* This address triggers the SN chip to read the data port. */
 ADDRESS_MAP_END
@@ -93,7 +93,7 @@ static ADDRESS_MAP_START( soundb_map, AS_PROGRAM, 8, hyperspt_state )
 	AM_RANGE(0x8000, 0x8000) AM_READ_LEGACY(hyperspt_sh_timer_r)
 	AM_RANGE(0xa000, 0xa000) AM_NOP
 	AM_RANGE(0xc000, 0xdfff) AM_DEVWRITE_LEGACY("hyprolyb_adpcm", hyprolyb_adpcm_w)	  /* speech and output control */
-	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe001, 0xe001) AM_WRITE_LEGACY(konami_SN76496_latch_w)  /* Loads the snd command into the snd latch */
 	AM_RANGE(0xe002, 0xe002) AM_DEVWRITE_LEGACY("snsnd", konami_SN76496_w)	 /* This address triggers the SN chip to read the data port. */
 ADDRESS_MAP_END
@@ -312,7 +312,7 @@ static MACHINE_CONFIG_START( hyperspt, hyperspt_state )
 
 	MCFG_SOUND_ADD("trackfld_audio", TRACKFLD_AUDIO, 0)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
 	MCFG_SOUND_ADD("snsnd", SN76496, XTAL_14_31818MHz/8) /* verified on pcb */
@@ -530,14 +530,14 @@ ROM_START( roadf2 )
 ROM_END
 
 
-static DRIVER_INIT( hyperspt )
+DRIVER_INIT_MEMBER(hyperspt_state,hyperspt)
 {
-	konami1_decode(machine, "maincpu");
+	konami1_decode(machine(), "maincpu");
 }
 
 
-GAME( 1984, hyperspt,  0,        hyperspt,  hyperspt, hyperspt, ROT0,  "Konami (Centuri license)", "Hyper Sports", GAME_SUPPORTS_SAVE )
-GAME( 1984, hypersptb, hyperspt, hypersptb, hyperspt, hyperspt, ROT0,  "bootleg", "Hyper Sports (bootleg)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // has ADPCM vis MSM5205 instead of VLM
-GAME( 1984, hpolym84,  hyperspt, hyperspt,  hyperspt, hyperspt, ROT0,  "Konami",  "Hyper Olympic '84", GAME_SUPPORTS_SAVE )
-GAME( 1984, roadf,     0,        roadf,     roadf,    hyperspt, ROT90, "Konami",  "Road Fighter (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1984, roadf2,    roadf,    roadf,     roadf,    hyperspt, ROT90, "Konami",  "Road Fighter (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1984, hyperspt,  0,        hyperspt,  hyperspt, hyperspt_state, hyperspt, ROT0,  "Konami (Centuri license)", "Hyper Sports", GAME_SUPPORTS_SAVE )
+GAME( 1984, hypersptb, hyperspt, hypersptb, hyperspt, hyperspt_state, hyperspt, ROT0,  "bootleg", "Hyper Sports (bootleg)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE ) // has ADPCM vis MSM5205 instead of VLM
+GAME( 1984, hpolym84,  hyperspt, hyperspt,  hyperspt, hyperspt_state, hyperspt, ROT0,  "Konami",  "Hyper Olympic '84", GAME_SUPPORTS_SAVE )
+GAME( 1984, roadf,     0,        roadf,     roadf, hyperspt_state,    hyperspt, ROT90, "Konami",  "Road Fighter (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1984, roadf2,    roadf,    roadf,     roadf, hyperspt_state,    hyperspt, ROT90, "Konami",  "Road Fighter (set 2)", GAME_SUPPORTS_SAVE )

@@ -939,7 +939,7 @@ static MACHINE_RESET( wgp )
 		state->m_piv_scrolly[i] = 0;
 	}
 
-	memset(state->m_rotate_ctrl, 0, 8);
+	memset(state->m_rotate_ctrl, 0, 8 * sizeof(UINT16));
 }
 
 static MACHINE_START( wgp )
@@ -1257,28 +1257,28 @@ ROM_START( wgp2 )
 ROM_END
 
 
-static DRIVER_INIT( wgp )
+DRIVER_INIT_MEMBER(wgp_state,wgp)
 {
 #if 0
 	/* Patch for coding error that causes corrupt data in
        sprite tilemapping area from $4083c0-847f */
-	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 	ROM[0x25dc / 2] = 0x0602;	// faulty value is 0x0206
 #endif
 }
 
-static DRIVER_INIT( wgp2 )
+DRIVER_INIT_MEMBER(wgp_state,wgp2)
 {
 	/* Code patches to prevent failure in memory checks */
-	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("sub")->base();
+	UINT16 *ROM = (UINT16 *)machine().root_device().memregion("sub")->base();
 	ROM[0x8008 / 2] = 0x0;
 	ROM[0x8010 / 2] = 0x0;
 }
 
 /* Working Games with some graphics problems - e.g. missing rotation */
 
-GAME( 1989, wgp,      0,      wgp,    wgp,    wgp,    ROT0, "Taito America Corporation", "World Grand Prix (US)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
-GAME( 1989, wgpj,     wgp,    wgp,    wgpj,   wgp,    ROT0, "Taito Corporation", "World Grand Prix (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
-GAME( 1989, wgpjoy,   wgp,    wgp,    wgpjoy, wgp,    ROT0, "Taito Corporation", "World Grand Prix (joystick version) (Japan, set 1)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
-GAME( 1989, wgpjoya,  wgp,    wgp,    wgpjoy, wgp,    ROT0, "Taito Corporation", "World Grand Prix (joystick version) (Japan, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
-GAME( 1990, wgp2,     wgp,    wgp2,   wgp2,   wgp2,   ROT0, "Taito Corporation", "World Grand Prix 2 (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
+GAME( 1989, wgp,      0,      wgp,    wgp, wgp_state,    wgp,    ROT0, "Taito America Corporation", "World Grand Prix (US)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
+GAME( 1989, wgpj,     wgp,    wgp,    wgpj, wgp_state,   wgp,    ROT0, "Taito Corporation", "World Grand Prix (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
+GAME( 1989, wgpjoy,   wgp,    wgp,    wgpjoy, wgp_state, wgp,    ROT0, "Taito Corporation", "World Grand Prix (joystick version) (Japan, set 1)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
+GAME( 1989, wgpjoya,  wgp,    wgp,    wgpjoy, wgp_state, wgp,    ROT0, "Taito Corporation", "World Grand Prix (joystick version) (Japan, set 2)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
+GAME( 1990, wgp2,     wgp,    wgp2,   wgp2, wgp_state,   wgp2,   ROT0, "Taito Corporation", "World Grand Prix 2 (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )

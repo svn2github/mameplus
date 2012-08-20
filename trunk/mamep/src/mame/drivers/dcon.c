@@ -141,6 +141,9 @@ INPUT_PORTS_END
 static INPUT_PORTS_START( sdgndmps )
 	PORT_INCLUDE( common )
 
+	PORT_MODIFY("SYSTEM")
+	PORT_SERVICE_NO_TOGGLE( 0x0100, IP_ACTIVE_LOW )
+
 	PORT_START("DSW")
 	PORT_DIPNAME( 0x000f, 0x000f, DEF_STR( Coin_B ) )
 	PORT_DIPSETTING(      0x0004, DEF_STR( 4C_1C ) )
@@ -187,7 +190,7 @@ static INPUT_PORTS_START( sdgndmps )
 	PORT_DIPNAME( 0x0800, 0x0800, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x0800, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Unknown ) )
+	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Unknown ) ) // plays a jingle at the game intro (why?)
 	PORT_DIPSETTING(      0x1000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 	PORT_DIPNAME( 0x2000, 0x0000, DEF_STR( Allow_Continue ) )
@@ -373,9 +376,9 @@ ROM_START( sdgndmps )
 ROM_END
 
 /***************************************************************************/
-static DRIVER_INIT( sdgndmps )
+DRIVER_INIT_MEMBER(dcon_state,sdgndmps)
 {
-	UINT16 *RAM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 	RAM[0x1356/2] = 0x4e71; /* beq -> nop */
 	RAM[0x1358/2] = 0x4e71;
 
@@ -385,5 +388,5 @@ static DRIVER_INIT( sdgndmps )
 }
 
 
-GAME( 1991, sdgndmps, 0, sdgndmps, sdgndmps, sdgndmps, ROT0, "Banpresto / Bandai", "SD Gundam Psycho Salamander no Kyoui", GAME_NO_COCKTAIL )
-GAME( 1992, dcon,     0, dcon,     dcon,     0,        ROT0, "Success",            "D-Con", GAME_NO_COCKTAIL )
+GAME( 1991, sdgndmps, 0, sdgndmps, sdgndmps, dcon_state, sdgndmps, ROT0, "Banpresto / Bandai", "SD Gundam Psycho Salamander no Kyoui", GAME_NO_COCKTAIL )
+GAME( 1992, dcon,     0, dcon,     dcon, driver_device,     0,        ROT0, "Success",            "D-Con", GAME_NO_COCKTAIL )

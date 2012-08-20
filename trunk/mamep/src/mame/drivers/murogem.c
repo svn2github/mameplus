@@ -131,7 +131,7 @@ WRITE8_MEMBER(murogem_state::outport_w)
     7654 3210
     ---- x---   Sound DAC.
 */
-	dac_data_w(machine().device("dac"), data & 0x08);
+	machine().device<dac_device>("dac")->write_unsigned8(data & 0x08);
 }
 
 
@@ -265,7 +265,7 @@ static MACHINE_CONFIG_START( murogem, murogem_state )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 12.00)
 MACHINE_CONFIG_END
 
@@ -326,7 +326,7 @@ ROM_START( lasvegas )
 	ROM_LOAD( "a3.1b", 0x0000, 0x0020, CRC(abddfb6b) SHA1(ed78b93701b5a3bf2053d2584e9a354fb6cec203) )	/* 74s288 at 1B */
 ROM_END
 
-GAME( 198?, murogem,  0,       murogem, murogem, 0, ROT0, "<unknown>", "Muroge Monaco (set 1)", GAME_WRONG_COLORS )
-GAME( 198?, murogema, murogem, murogem, murogem, 0, ROT0, "<unknown>", "Muroge Monaco (set 2)", GAME_WRONG_COLORS )
-GAME( 198?, murogemb, murogem, murogem, murogem, 0, ROT0, "<unknown>", "Muroge Monaco (set 3)", GAME_WRONG_COLORS )
-GAME( 198?, lasvegas, murogem, murogem, murogem, 0, ROT0, "hack",      "Las Vegas, Nevada",     GAME_WRONG_COLORS )
+GAME( 198?, murogem,  0,       murogem, murogem, driver_device, 0, ROT0, "<unknown>", "Muroge Monaco (set 1)", GAME_WRONG_COLORS )
+GAME( 198?, murogema, murogem, murogem, murogem, driver_device, 0, ROT0, "<unknown>", "Muroge Monaco (set 2)", GAME_WRONG_COLORS )
+GAME( 198?, murogemb, murogem, murogem, murogem, driver_device, 0, ROT0, "<unknown>", "Muroge Monaco (set 3)", GAME_WRONG_COLORS )
+GAME( 198?, lasvegas, murogem, murogem, murogem, driver_device, 0, ROT0, "hack",      "Las Vegas, Nevada",     GAME_WRONG_COLORS )

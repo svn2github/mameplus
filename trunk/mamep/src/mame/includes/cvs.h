@@ -4,6 +4,7 @@
 
 ****************************************************************************/
 
+#include "sound/dac.h"
 
 #define CVS_S2636_Y_OFFSET     (3)
 #define CVS_S2636_X_OFFSET     (-26)
@@ -57,7 +58,7 @@ public:
 	device_t *m_maincpu;
 	device_t *m_audiocpu;
 	device_t *m_speech;
-	device_t *m_dac3;
+	dac_device *m_dac3;
 	device_t *m_tms;
 	device_t *m_s2636_0;
 	device_t *m_s2636_1;
@@ -94,6 +95,11 @@ public:
 	DECLARE_WRITE8_MEMBER(cvs_unknown_w);
 	DECLARE_WRITE8_MEMBER(cvs_tms5110_ctl_w);
 	DECLARE_WRITE8_MEMBER(cvs_tms5110_pdc_w);
+	DECLARE_DRIVER_INIT(raiders);
+	DECLARE_DRIVER_INIT(huncholy);
+	DECLARE_DRIVER_INIT(hero);
+	DECLARE_DRIVER_INIT(superbik);
+	DECLARE_DRIVER_INIT(hunchbaka);
 };
 
 

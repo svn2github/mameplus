@@ -17,10 +17,9 @@ To Do:
 
 
 
-static DRIVER_INIT( triplhnt )
+DRIVER_INIT_MEMBER(triplhnt_state,triplhnt)
 {
-	triplhnt_state *state = machine.driver_data<triplhnt_state>();
-	machine.device<nvram_device>("nvram")->set_base(state->m_cmos, sizeof(state->m_cmos));
+	machine().device<nvram_device>("nvram")->set_base(m_cmos, sizeof(m_cmos));
 }
 
 
@@ -361,4 +360,4 @@ ROM_START( triplhnt )
 ROM_END
 
 
-GAME( 1977, triplhnt, 0, triplhnt, triplhnt, triplhnt, 0, "Atari", "Triple Hunt", 0 )
+GAME( 1977, triplhnt, 0, triplhnt, triplhnt, triplhnt_state, triplhnt, 0, "Atari", "Triple Hunt", 0 )

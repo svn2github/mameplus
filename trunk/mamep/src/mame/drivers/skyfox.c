@@ -430,10 +430,10 @@ ROM_END
 
 
 /* Untangle the graphics: cut each 32x32x8 tile in 16 8x8x8 tiles */
-static DRIVER_INIT( skyfox )
+DRIVER_INIT_MEMBER(skyfox_state,skyfox)
 {
-	UINT8 *RAM = machine.root_device().memregion("gfx1")->base();
-	UINT8 *end = RAM + machine.root_device().memregion("gfx1")->bytes();
+	UINT8 *RAM = machine().root_device().memregion("gfx1")->base();
+	UINT8 *end = RAM + machine().root_device().memregion("gfx1")->bytes();
 	UINT8 buf[32 * 32];
 
 	while (RAM < end)
@@ -449,6 +449,6 @@ static DRIVER_INIT( skyfox )
 
 
 
-GAME( 1987, skyfox,    0,      skyfox, skyfox, skyfox, ROT90, "Jaleco (Nichibutsu USA license)", "Sky Fox" , GAME_SUPPORTS_SAVE )
-GAME( 1987, exerizer,  skyfox, skyfox, skyfox, skyfox, ROT90, "Jaleco", "Exerizer (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1987, exerizerb, skyfox, skyfox, skyfox, skyfox, ROT90, "bootleg", "Exerizer (Japan) (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1987, skyfox,    0,      skyfox, skyfox, skyfox_state, skyfox, ROT90, "Jaleco (Nichibutsu USA license)", "Sky Fox" , GAME_SUPPORTS_SAVE )
+GAME( 1987, exerizer,  skyfox, skyfox, skyfox, skyfox_state, skyfox, ROT90, "Jaleco", "Exerizer (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1987, exerizerb, skyfox, skyfox, skyfox, skyfox_state, skyfox, ROT90, "bootleg", "Exerizer (Japan) (bootleg)", GAME_SUPPORTS_SAVE )

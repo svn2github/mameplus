@@ -742,10 +742,10 @@ WRITE8_MEMBER(tnzs_state::kabukiz_sound_bank_w)
 
 WRITE8_MEMBER(tnzs_state::kabukiz_sample_w)
 {
-	device_t *device = machine().device("dac");
+	dac_device *device = machine().device<dac_device>("dac");
 	// to avoid the write when the sound chip is initialized
 	if (data != 0xff)
-		dac_data_w(device, data);
+		device->write_unsigned8(data);
 }
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, tnzs_state )
@@ -1561,7 +1561,7 @@ static const ym2203_interface ym2203_config =
 		DEVCB_NULL,
 		DEVCB_NULL
 	},
-	NULL
+	DEVCB_NULL
 };
 
 
@@ -1582,6 +1582,7 @@ static const ym2203_interface kageki_ym2203_interface =
 		DEVCB_NULL,
 		DEVCB_DRIVER_MEMBER(tnzs_state,kageki_csport_w)
 	},
+	DEVCB_NULL
 };
 
 static const ym2203_interface ym2203b_interface =
@@ -1591,7 +1592,7 @@ static const ym2203_interface ym2203b_interface =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	irqhandler
+	DEVCB_LINE(irqhandler)
 };
 
 static const ym2203_interface kabukiz_ym2203_interface =
@@ -1604,7 +1605,7 @@ static const ym2203_interface kabukiz_ym2203_interface =
 		DEVCB_DRIVER_MEMBER(tnzs_state,kabukiz_sound_bank_w),
 		DEVCB_DRIVER_MEMBER(tnzs_state,kabukiz_sample_w)
 	},
-	irqhandler
+	DEVCB_LINE(irqhandler)
 };
 
 static const samples_interface tnzs_samples_interface =
@@ -1881,7 +1882,7 @@ static MACHINE_CONFIG_DERIVED( kabukiz, tnzsb )
 	MCFG_SOUND_MODIFY("ymsnd")
 	MCFG_SOUND_CONFIG(kabukiz_ym2203_interface)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -2679,30 +2680,30 @@ ROM_END
 
 
 //    YEAR, NAME,      PARENT,   MACHINE,  INPUT,    INIT,     MONITOR,COMPANY,FULLNAME,FLAGS
-GAME( 1987, plumppop,  0,        drtoppel, plumppop, plumpop,  ROT0,   "Taito Corporation", "Plump Pop (Japan)", 0 )
-GAME( 1987, extrmatn,  0,        arknoid2, extrmatn, extrmatn, ROT270, "Taito Corporation Japan", "Extermination (World)", 0 )
-GAME( 1987, extrmatnu, extrmatn, arknoid2, extrmatn, extrmatn, ROT270, "Taito (World Games license)", "Extermination (US)", 0 )
-GAME( 1987, extrmatnj, extrmatn, arknoid2, extrmatn, extrmatn, ROT270, "Taito Corporation", "Extermination (Japan)", 0 )
-GAME( 1987, arknoid2,  0,        arknoid2, arknoid2, arknoid2, ROT270, "Taito Corporation Japan", "Arkanoid - Revenge of DOH (World)", 0 )
-GAME( 1987, arknoid2u, arknoid2, arknoid2, arknid2u, arknoid2, ROT270, "Taito America Corporation (Romstar license)", "Arkanoid - Revenge of DOH (US)", 0 )
-GAME( 1987, arknoid2j, arknoid2, arknoid2, arknid2u, arknoid2, ROT270, "Taito Corporation", "Arkanoid - Revenge of DOH (Japan)", 0 )
-GAME( 1987, arknoid2b, arknoid2, arknoid2, arknid2u, arknoid2, ROT270, "bootleg", "Arkanoid - Revenge of DOH (Japan bootleg)", 0 )
-GAME( 1987, drtoppel,  0,        drtoppel, drtoppel, drtoppel, ROT90,  "Kaneko / Taito Corporation Japan", "Dr. Toppel's Adventure (World)", 0 ) /* Possible region hack */
-GAME( 1987, drtoppelu, drtoppel, drtoppel, drtopplu, drtoppel, ROT90,  "Kaneko / Taito America Corporation", "Dr. Toppel's Adventure (US)", 0 ) /* Possible region hack */
-GAME( 1987, drtoppelj, drtoppel, drtoppel, drtopplu, drtoppel, ROT90,  "Kaneko / Taito Corporation", "Dr. Toppel's Tankentai (Japan)", 0 )
-GAME( 1988, kageki,    0,        kageki,   kageki,   kageki,   ROT90,  "Kaneko / Taito America Corporation (Romstar license)", "Kageki (US)", 0 )
-GAME( 1988, kagekij,   kageki,   kageki,   kagekij,  kageki,   ROT90,  "Kaneko / Taito Corporation", "Kageki (Japan)", 0 )
-GAME( 1992, kagekih,   kageki,   kageki,   kageki,   kageki,   ROT90,  "hack", "Kageki (hack)", 0 ) // date is hacked at least, might also be a Japan set hacked to show english
-GAME( 1988, chukatai,  0,        tnzs,     chukatai, chukatai, ROT0,   "Taito Corporation Japan", "Chuka Taisen (World)", 0 ) /* Possible region hack */
-GAME( 1988, chukataiu, chukatai, tnzs,     chukatau, chukatai, ROT0,   "Taito America Corporation", "Chuka Taisen (US)", 0 ) /* Possible region hack */
-GAME( 1988, chukataij, chukatai, tnzs,     chukatau, chukatai, ROT0,   "Taito Corporation", "Chuka Taisen (Japan)", 0 )
-GAME( 1988, tnzs,      0,        tnzsb,    tnzs,     tnzsb,    ROT0,   "Taito Corporation Japan", "The NewZealand Story (World, new version) (newer PCB)", 0 )
-GAME( 1988, tnzsj,     tnzs,     tnzsb,    tnzsj,    tnzsb,    ROT0,   "Taito Corporation", "The NewZealand Story (Japan, new version) (newer PCB)", 0 )
-GAME( 1988, tnzsjo,    tnzs,     tnzs,     tnzsjo,   tnzs,     ROT0,   "Taito Corporation", "The NewZealand Story (Japan, old version) (older PCB)", 0 )
-GAME( 1988, tnzso,     tnzs,     tnzs,     tnzsop,   tnzs,     ROT0,   "Taito Corporation Japan", "The NewZealand Story (World, old version) (older PCB)", 0 )
-GAME( 1988, tnzsop,    tnzs,     tnzs,     tnzsop,   tnzs,     ROT0,   "Taito Corporation Japan", "The NewZealand Story (World, prototype?) (older PCB)", 0 )
-GAME( 1988, kabukiz,   0,        kabukiz,  kabukiz,  kabukiz,  ROT0,   "Kaneko / Taito Corporation Japan", "Kabuki-Z (World)", 0 )
-GAME( 1988, kabukizj,  kabukiz,  kabukiz,  kabukizj, kabukiz,  ROT0,   "Kaneko / Taito Corporation", "Kabuki-Z (Japan)", 0 )
-GAME( 1989, insectx,   0,        insectx,  insectx,  insectx,  ROT0,   "Taito Corporation Japan", "Insector X (World)", 0 )
-GAME( 1989, insectxj,  insectx,  insectx,  insectxj, insectx,  ROT0,   "Taito Corporation", "Insector X (Japan)", 0 )
-GAME( 1992, jpopnics,  0,        jpopnics, jpopnics, 0,        ROT0,   "bootleg (Nics)", "Jumping Pop (Nics, Korean bootleg of Plump Pop)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1987, plumppop,  0,        drtoppel, plumppop, tnzs_state, plumpop,  ROT0,   "Taito Corporation", "Plump Pop (Japan)", 0 )
+GAME( 1987, extrmatn,  0,        arknoid2, extrmatn, tnzs_state, extrmatn, ROT270, "Taito Corporation Japan", "Extermination (World)", 0 )
+GAME( 1987, extrmatnu, extrmatn, arknoid2, extrmatn, tnzs_state, extrmatn, ROT270, "Taito (World Games license)", "Extermination (US)", 0 )
+GAME( 1987, extrmatnj, extrmatn, arknoid2, extrmatn, tnzs_state, extrmatn, ROT270, "Taito Corporation", "Extermination (Japan)", 0 )
+GAME( 1987, arknoid2,  0,        arknoid2, arknoid2, tnzs_state, arknoid2, ROT270, "Taito Corporation Japan", "Arkanoid - Revenge of DOH (World)", 0 )
+GAME( 1987, arknoid2u, arknoid2, arknoid2, arknid2u, tnzs_state, arknoid2, ROT270, "Taito America Corporation (Romstar license)", "Arkanoid - Revenge of DOH (US)", 0 )
+GAME( 1987, arknoid2j, arknoid2, arknoid2, arknid2u, tnzs_state, arknoid2, ROT270, "Taito Corporation", "Arkanoid - Revenge of DOH (Japan)", 0 )
+GAME( 1987, arknoid2b, arknoid2, arknoid2, arknid2u, tnzs_state, arknoid2, ROT270, "bootleg", "Arkanoid - Revenge of DOH (Japan bootleg)", 0 )
+GAME( 1987, drtoppel,  0,        drtoppel, drtoppel, tnzs_state, drtoppel, ROT90,  "Kaneko / Taito Corporation Japan", "Dr. Toppel's Adventure (World)", 0 ) /* Possible region hack */
+GAME( 1987, drtoppelu, drtoppel, drtoppel, drtopplu, tnzs_state, drtoppel, ROT90,  "Kaneko / Taito America Corporation", "Dr. Toppel's Adventure (US)", 0 ) /* Possible region hack */
+GAME( 1987, drtoppelj, drtoppel, drtoppel, drtopplu, tnzs_state, drtoppel, ROT90,  "Kaneko / Taito Corporation", "Dr. Toppel's Tankentai (Japan)", 0 )
+GAME( 1988, kageki,    0,        kageki,   kageki, tnzs_state,   kageki,   ROT90,  "Kaneko / Taito America Corporation (Romstar license)", "Kageki (US)", 0 )
+GAME( 1988, kagekij,   kageki,   kageki,   kagekij, tnzs_state,  kageki,   ROT90,  "Kaneko / Taito Corporation", "Kageki (Japan)", 0 )
+GAME( 1992, kagekih,   kageki,   kageki,   kageki, tnzs_state,   kageki,   ROT90,  "hack", "Kageki (hack)", 0 ) // date is hacked at least, might also be a Japan set hacked to show english
+GAME( 1988, chukatai,  0,        tnzs,     chukatai, tnzs_state, chukatai, ROT0,   "Taito Corporation Japan", "Chuka Taisen (World)", 0 ) /* Possible region hack */
+GAME( 1988, chukataiu, chukatai, tnzs,     chukatau, tnzs_state, chukatai, ROT0,   "Taito America Corporation", "Chuka Taisen (US)", 0 ) /* Possible region hack */
+GAME( 1988, chukataij, chukatai, tnzs,     chukatau, tnzs_state, chukatai, ROT0,   "Taito Corporation", "Chuka Taisen (Japan)", 0 )
+GAME( 1988, tnzs,      0,        tnzsb,    tnzs, tnzs_state,     tnzsb,    ROT0,   "Taito Corporation Japan", "The NewZealand Story (World, new version) (newer PCB)", 0 )
+GAME( 1988, tnzsj,     tnzs,     tnzsb,    tnzsj, tnzs_state,    tnzsb,    ROT0,   "Taito Corporation", "The NewZealand Story (Japan, new version) (newer PCB)", 0 )
+GAME( 1988, tnzsjo,    tnzs,     tnzs,     tnzsjo, tnzs_state,   tnzs,     ROT0,   "Taito Corporation", "The NewZealand Story (Japan, old version) (older PCB)", 0 )
+GAME( 1988, tnzso,     tnzs,     tnzs,     tnzsop, tnzs_state,   tnzs,     ROT0,   "Taito Corporation Japan", "The NewZealand Story (World, old version) (older PCB)", 0 )
+GAME( 1988, tnzsop,    tnzs,     tnzs,     tnzsop, tnzs_state,   tnzs,     ROT0,   "Taito Corporation Japan", "The NewZealand Story (World, prototype?) (older PCB)", 0 )
+GAME( 1988, kabukiz,   0,        kabukiz,  kabukiz, tnzs_state,  kabukiz,  ROT0,   "Kaneko / Taito Corporation Japan", "Kabuki-Z (World)", 0 )
+GAME( 1988, kabukizj,  kabukiz,  kabukiz,  kabukizj, tnzs_state, kabukiz,  ROT0,   "Kaneko / Taito Corporation", "Kabuki-Z (Japan)", 0 )
+GAME( 1989, insectx,   0,        insectx,  insectx, tnzs_state,  insectx,  ROT0,   "Taito Corporation Japan", "Insector X (World)", 0 )
+GAME( 1989, insectxj,  insectx,  insectx,  insectxj, tnzs_state, insectx,  ROT0,   "Taito Corporation", "Insector X (Japan)", 0 )
+GAME( 1992, jpopnics,  0,        jpopnics, jpopnics, driver_device, 0,        ROT0,   "bootleg (Nics)", "Jumping Pop (Nics, Korean bootleg of Plump Pop)", GAME_IMPERFECT_GRAPHICS )

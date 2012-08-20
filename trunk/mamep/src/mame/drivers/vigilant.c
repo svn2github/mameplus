@@ -473,7 +473,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	m72_ym2151_irq_handler
+	DEVCB_LINE(m72_ym2151_irq_handler)
 };
 
 
@@ -514,7 +514,7 @@ static MACHINE_CONFIG_START( vigilant, vigilant_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.55)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.55)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -572,7 +572,7 @@ static MACHINE_CONFIG_START( buccanrs, vigilant_state )
 	MCFG_SOUND_ROUTE(3, "lspeaker",  0.50)
 	MCFG_SOUND_ROUTE(3, "rspeaker", 0.50)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.35)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.35)
 MACHINE_CONFIG_END
@@ -614,7 +614,7 @@ static MACHINE_CONFIG_START( kikcubic, vigilant_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.55)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.55)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 MACHINE_CONFIG_END
@@ -947,12 +947,12 @@ ROM_START( buccanrsa )
 	ROM_LOAD( "prom2.u99",  0x0300, 0x0100, CRC(e0aa8869) SHA1(ac8bdfeba69420ba56ec561bf3d0f1229d02cea2) )
 ROM_END
 
-GAME( 1988, vigilant, 0,        vigilant, vigilant, 0, ROT0, "Irem", "Vigilante (World, set 1)", GAME_NO_COCKTAIL )
-GAME( 1988, vigilant1,vigilant, vigilant, vigilant, 0, ROT0, "Irem", "Vigilante (World, set 2)", GAME_NO_COCKTAIL )
-GAME( 1988, vigilantu,vigilant, vigilant, vigilant, 0, ROT0, "Irem (Data East USA license)", "Vigilante (US)", GAME_NO_COCKTAIL )
-GAME( 1988, vigilantu2,vigilant,vigilant, vigilant, 0, ROT0, "Irem (Data East USA license)", "Vigilante (US) - Rev. G", GAME_NO_COCKTAIL )
-GAME( 1988, vigilantj,vigilant, vigilant, vigilant, 0, ROT0, "Irem", "Vigilante (Japan)", GAME_NO_COCKTAIL )
-GAME( 1988, kikcubic, 0,        kikcubic, kikcubic, 0, ROT0, "Irem", "Meikyu Jima (Japan)", GAME_NO_COCKTAIL )	/* English title is Kickle Cubicle */
-GAME( 1988, kikcubicb,kikcubic, kikcubic, kikcubic, 0, ROT0, "bootleg", "Kickle Cubele", GAME_NO_COCKTAIL )
-GAME( 1989, buccanrs, 0,        buccanrs, buccanrs, 0, ROT0, "Duintronic", "Buccaneers (set 1)", GAME_NO_COCKTAIL )
-GAME( 1989, buccanrsa,buccanrs, buccanrs, buccanra, 0, ROT0, "Duintronic", "Buccaneers (set 2)", GAME_NO_COCKTAIL )
+GAME( 1988, vigilant, 0,        vigilant, vigilant, driver_device, 0, ROT0, "Irem", "Vigilante (World, set 1)", GAME_NO_COCKTAIL )
+GAME( 1988, vigilant1,vigilant, vigilant, vigilant, driver_device, 0, ROT0, "Irem", "Vigilante (World, set 2)", GAME_NO_COCKTAIL )
+GAME( 1988, vigilantu,vigilant, vigilant, vigilant, driver_device, 0, ROT0, "Irem (Data East USA license)", "Vigilante (US)", GAME_NO_COCKTAIL )
+GAME( 1988, vigilantu2,vigilant,vigilant, vigilant, driver_device, 0, ROT0, "Irem (Data East USA license)", "Vigilante (US) - Rev. G", GAME_NO_COCKTAIL )
+GAME( 1988, vigilantj,vigilant, vigilant, vigilant, driver_device, 0, ROT0, "Irem", "Vigilante (Japan)", GAME_NO_COCKTAIL )
+GAME( 1988, kikcubic, 0,        kikcubic, kikcubic, driver_device, 0, ROT0, "Irem", "Meikyu Jima (Japan)", GAME_NO_COCKTAIL )	/* English title is Kickle Cubicle */
+GAME( 1988, kikcubicb,kikcubic, kikcubic, kikcubic, driver_device, 0, ROT0, "bootleg", "Kickle Cubele", GAME_NO_COCKTAIL )
+GAME( 1989, buccanrs, 0,        buccanrs, buccanrs, driver_device, 0, ROT0, "Duintronic", "Buccaneers (set 1)", GAME_NO_COCKTAIL )
+GAME( 1989, buccanrsa,buccanrs, buccanrs, buccanra, driver_device, 0, ROT0, "Duintronic", "Buccaneers (set 2)", GAME_NO_COCKTAIL )

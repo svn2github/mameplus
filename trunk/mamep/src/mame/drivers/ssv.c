@@ -492,92 +492,6 @@ WRITE16_MEMBER(ssv_state::gdfs_eeprom_w)
 }
 
 
-READ16_MEMBER(ssv_state::gdfs_gfxram_r)
-{
-
-	return m_eaglshot_gfxram[offset + m_gdfs_gfxram_bank * 0x100000/2];
-}
-
-WRITE16_MEMBER(ssv_state::gdfs_gfxram_w)
-{
-	offset += m_gdfs_gfxram_bank * 0x100000/2;
-	COMBINE_DATA(&m_eaglshot_gfxram[offset]);
-	gfx_element_mark_dirty(machine().gfx[2], offset / (16*8/2));
-}
-
-READ16_MEMBER(ssv_state::gdfs_blitram_r)
-{
-	switch (offset)
-	{
-		case 0x00/2:
-			// blitter status? (bit C, bit A)
-			return 0;
-	}
-
-	logerror("CPU #0 PC: %06X - Blit reg read: %02X\n",cpu_get_pc(&space.device()),offset*2);
-	return 0;
-}
-
-WRITE16_MEMBER(ssv_state::gdfs_blitram_w)
-{
-	UINT16 *gdfs_blitram = m_gdfs_blitram;
-
-	COMBINE_DATA(&gdfs_blitram[offset]);
-
-	switch (offset)
-	{
-		case 0x8a/2:
-		{
-			if (data & ~0x43)
-				logerror("CPU #0 PC: %06X - Unknown gdfs_gfxram_bank bit written %04X\n",cpu_get_pc(&space.device()),data);
-
-			if (ACCESSING_BITS_0_7)
-				m_gdfs_gfxram_bank = data & 3;
-		}
-		break;
-
-		case 0xc0/2:
-		case 0xc2/2:
-		case 0xc4/2:
-		case 0xc6/2:
-		case 0xc8/2:
-		break;
-
-		case 0xca/2:
-		{
-			UINT32 src	=	(gdfs_blitram[0xc0/2] + (gdfs_blitram[0xc2/2] << 16)) << 1;
-			UINT32 dst	=	(gdfs_blitram[0xc4/2] + (gdfs_blitram[0xc6/2] << 16)) << 4;
-			UINT32 len	=	(gdfs_blitram[0xc8/2]) << 4;
-
-			UINT8 *rom	=	memregion("gfx2")->base();
-			size_t size	=	memregion("gfx2")->bytes();
-
-			if ( (src+len <= size) && (dst+len <= 4 * 0x100000) )
-			{
-				memcpy( &m_eaglshot_gfxram[dst/2], &rom[src], len );
-
-				if (len % (16*8))	len = len / (16*8) + 1;
-				else				len = len / (16*8);
-
-				dst /= 16*8;
-				while (len--)
-				{
-					gfx_element_mark_dirty(machine().gfx[2], dst);
-					dst++;
-				}
-			}
-			else
-			{
-				logerror("CPU #0 PC: %06X - Blit out of range: src %x, dst %x, len %x\n",cpu_get_pc(&space.device()),src,dst,len);
-			}
-		}
-		break;
-
-		default:
-			logerror("CPU #0 PC: %06X - Blit reg written: %02X <- %04X\n",cpu_get_pc(&space.device()),offset*2,data);
-	}
-}
-
 static ADDRESS_MAP_START( gdfs_map, AS_PROGRAM, 16, ssv_state )
 	AM_RANGE(0x400000, 0x41ffff) AM_RAM_WRITE(gdfs_tmapram_w) AM_SHARE("gdfs_tmapram")
 	AM_RANGE(0x420000, 0x43ffff) AM_RAM
@@ -585,9 +499,9 @@ static ADDRESS_MAP_START( gdfs_map, AS_PROGRAM, 16, ssv_state )
 	AM_RANGE(0x500000, 0x500001) AM_WRITE(gdfs_eeprom_w)
 	AM_RANGE(0x540000, 0x540001) AM_READ(gdfs_eeprom_r)
 	AM_RANGE(0x600000, 0x600fff) AM_RAM
-	AM_RANGE(0x800000, 0x87ffff) AM_RAM AM_SHARE("spriteram2")
-	AM_RANGE(0x8c0000, 0x8c00ff) AM_READWRITE(gdfs_blitram_r, gdfs_blitram_w) AM_SHARE("gdfs_blitram")
-	AM_RANGE(0x900000, 0x9fffff) AM_READWRITE(gdfs_gfxram_r, gdfs_gfxram_w)
+	AM_RANGE(0x800000, 0x87ffff) AM_DEVREADWRITE( "st0020_spr", st0020_device, st0020_sprram_r, st0020_sprram_w );
+	AM_RANGE(0x8c0000, 0x8c00ff) AM_DEVREADWRITE( "st0020_spr", st0020_device, st0020_blitram_r, st0020_blitram_w );
+	AM_RANGE(0x900000, 0x9fffff) AM_DEVREADWRITE( "st0020_spr", st0020_device, st0020_gfxram_r, st0020_gfxram_w );
 	SSV_MAP( 0xc00000 )
 ADDRESS_MAP_END
 
@@ -2586,7 +2500,6 @@ static const gfx_layout layout_16x16x8 =
 static GFXDECODE_START( gdfs )
 	GFXDECODE_ENTRY( "gfx1", 0, layout_16x8x8,   0, 0x8000/64  ) // [0] Sprites (256 colors)
 	GFXDECODE_ENTRY( "gfx1", 0, layout_16x8x6,   0, 0x8000/64  ) // [1] Sprites (64 colors)
-	GFXDECODE_ENTRY( "gfx2", 0, layout_16x8x8_2, 0, 0x8000/64  ) // [2] Zooming Sprites (256 colors, decoded from ram)
 	GFXDECODE_ENTRY( "gfx3", 0, layout_16x16x8,  0, 0x8000/256 ) // [3] Tilemap
 GFXDECODE_END
 
@@ -2630,7 +2543,7 @@ static void init_ssv(running_machine &machine, int interrupt_ultrax)
 	state->m_interrupt_ultrax = interrupt_ultrax;
 }
 
-static void init_hypreac2(running_machine &machine)
+static void init_hypreac2_common(running_machine &machine)
 {
 	ssv_state *state = machine.driver_data<ssv_state>();
 	int i;
@@ -2660,30 +2573,30 @@ static void init_st010(running_machine &machine)
 	}
 }
 
-static DRIVER_INIT( drifto94 )		{	init_ssv(machine, 0); init_st010(machine);  }
-static DRIVER_INIT( eaglshot )		{	init_ssv(machine, 0); init_hypreac2(machine);	}
-static DRIVER_INIT( gdfs )			{	init_ssv(machine, 0);	}
-static DRIVER_INIT( hypreact )		{	init_ssv(machine, 0);	}
-static DRIVER_INIT( hypreac2 )		{	init_ssv(machine, 0); init_hypreac2(machine);	}
-static DRIVER_INIT( janjans1 )		{	init_ssv(machine, 0);	}
-static DRIVER_INIT( keithlcy )		{	init_ssv(machine, 0);	}
-static DRIVER_INIT( meosism )			{	init_ssv(machine, 0);	}
-static DRIVER_INIT( mslider )			{	init_ssv(machine, 0);	}
-static DRIVER_INIT( ryorioh )			{	init_ssv(machine, 0);	}
-static DRIVER_INIT( srmp4 )			{	init_ssv(machine, 0);
-//  ((UINT16 *)machine.root_device().memregion("user1")->base())[0x2b38/2] = 0x037a;   /* patch to see gal test mode */
+DRIVER_INIT_MEMBER(ssv_state,drifto94)     {	init_ssv(machine(), 0); init_st010(machine());  }
+DRIVER_INIT_MEMBER(ssv_state,eaglshot)     {	init_ssv(machine(), 0); init_hypreac2_common(machine());	}
+DRIVER_INIT_MEMBER(ssv_state,gdfs)         {	init_ssv(machine(), 0);	}
+DRIVER_INIT_MEMBER(ssv_state,hypreact)     {	init_ssv(machine(), 0);	}
+DRIVER_INIT_MEMBER(ssv_state,hypreac2)     {	init_ssv(machine(), 0); init_hypreac2_common(machine());	}
+DRIVER_INIT_MEMBER(ssv_state,janjans1)     {	init_ssv(machine(), 0);	}
+DRIVER_INIT_MEMBER(ssv_state,keithlcy)     {	init_ssv(machine(), 0);	}
+DRIVER_INIT_MEMBER(ssv_state,meosism)   	{	init_ssv(machine(), 0);	}
+DRIVER_INIT_MEMBER(ssv_state,mslider)   	{	init_ssv(machine(), 0);	}
+DRIVER_INIT_MEMBER(ssv_state,ryorioh)   	{	init_ssv(machine(), 0);	}
+DRIVER_INIT_MEMBER(ssv_state,srmp4)        {	init_ssv(machine(), 0);
+//  ((UINT16 *)machine().root_device().memregion("user1")->base())[0x2b38/2] = 0x037a;   /* patch to see gal test mode */
 }
-static DRIVER_INIT( srmp7 )			{	init_ssv(machine, 0);	}
-static DRIVER_INIT( stmblade )		{	init_ssv(machine, 0); init_st010(machine); }
-static DRIVER_INIT( survarts )		{	init_ssv(machine, 0);	}
-static DRIVER_INIT( dynagear )		{	init_ssv(machine, 0);	}
-static DRIVER_INIT( sxyreact )		{	init_ssv(machine, 0); init_hypreac2(machine);	}
-static DRIVER_INIT( cairblad )		{	init_ssv(machine, 0); init_hypreac2(machine);	}
-static DRIVER_INIT( sxyreac2 )		{	init_ssv(machine, 0); init_hypreac2(machine);	}
-static DRIVER_INIT( twineag2 )		{	init_ssv(machine, 1); init_st010(machine);  }
-static DRIVER_INIT( ultrax )			{	init_ssv(machine, 1);	}
-static DRIVER_INIT( vasara )			{	init_ssv(machine, 0);	}
-static DRIVER_INIT( jsk )			{	init_ssv(machine, 0);	}
+DRIVER_INIT_MEMBER(ssv_state,srmp7)        {	init_ssv(machine(), 0);	}
+DRIVER_INIT_MEMBER(ssv_state,stmblade)     {	init_ssv(machine(), 0); init_st010(machine()); }
+DRIVER_INIT_MEMBER(ssv_state,survarts)     {	init_ssv(machine(), 0);	}
+DRIVER_INIT_MEMBER(ssv_state,dynagear)     {	init_ssv(machine(), 0);	}
+DRIVER_INIT_MEMBER(ssv_state,sxyreact)     {	init_ssv(machine(), 0); init_hypreac2_common(machine());	}
+DRIVER_INIT_MEMBER(ssv_state,cairblad)     {	init_ssv(machine(), 0); init_hypreac2_common(machine());	}
+DRIVER_INIT_MEMBER(ssv_state,sxyreac2)     {	init_ssv(machine(), 0); init_hypreac2_common(machine());	}
+DRIVER_INIT_MEMBER(ssv_state,twineag2)     {	init_ssv(machine(), 1); init_st010(machine());  }
+DRIVER_INIT_MEMBER(ssv_state,ultrax)    	{	init_ssv(machine(), 1);	}
+DRIVER_INIT_MEMBER(ssv_state,vasara)    	{	init_ssv(machine(), 0);	}
+DRIVER_INIT_MEMBER(ssv_state,jsk)          {	init_ssv(machine(), 0);	}
 
 
 static MACHINE_CONFIG_START( ssv, ssv_state )
@@ -2749,6 +2662,8 @@ static MACHINE_CONFIG_DERIVED( gdfs, ssv )
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, (0xd5-0x2c)*2-1, 0, (0x102-0x12)-1)
 	MCFG_SCREEN_UPDATE_STATIC(gdfs)
+
+	MCFG_DEVICE_ADD("st0020_spr", ST0020_SPRITES, 0)
 
 	MCFG_GFXDECODE(gdfs)
 	MCFG_VIDEO_START(gdfs)
@@ -4629,7 +4544,7 @@ ROM_START( gdfs )
 	ROM_LOAD( "vg004-10.u45", 0x200000, 0x200000, CRC(b3c6b1cb) SHA1(c601213e35d8dfd1244921da5c093f82145706d2) )
 	ROM_LOAD( "vg004-11.u48", 0x400000, 0x200000, CRC(1491def1) SHA1(344043302c81b4118cac4f692375b8af7ea68570) )
 
-	ROM_REGION( 0x1000000, "gfx2", /*0*/0 )	// Zooming Sprites, read by a blitter
+	ROM_REGION( 0x1000000, "st0020", /*0*/0 )	// Zooming Sprites, read by a blitter
 	ROM_LOAD( "vg004-01.u33", 0x0000000, 0x200000, CRC(aa9a81c2) SHA1(a7d005f9be199e317aa4c6aed8a2ab322fe82119) )
 	ROM_LOAD( "vg004-02.u34", 0x0200000, 0x200000, CRC(fa40ecb4) SHA1(0513f3b6879dc7d207646d949d6ddb7251f77bcc) )
 	ROM_LOAD( "vg004-03.u35", 0x0400000, 0x200000, CRC(90004023) SHA1(041edb77b34e6677ac5b85ce542d87a9bb1baf31) )
@@ -4666,31 +4581,31 @@ ROM_END
 
 //     year   rom       clone     machine   inputs    init      monitor manufacturer          title                                               flags
 
-GAME( 1993,  dynagear, 0,        dynagear, dynagear, dynagear, ROT0,   "Sammy",              "Dyna Gear",                                        GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
-GAME( 1993,  keithlcy, 0,        keithlcy, keithlcy, keithlcy, ROT0,   "Visco",              "Dramatic Adventure Quiz Keith & Lucy (Japan)",     GAME_NO_COCKTAIL )
-GAME( 1993,  srmp4,    0,        srmp4,    srmp4,    srmp4,    ROT0,   "Seta",               "Super Real Mahjong PIV (Japan)",                   GAME_NO_COCKTAIL )
-GAME( 1993,  srmp4o,   srmp4,    srmp4,    srmp4,    srmp4,    ROT0,   "Seta",               "Super Real Mahjong PIV (Japan, older set)",        GAME_NO_COCKTAIL ) // by the numbering of the program roms this should be older
-GAME( 1993,  survarts, 0,        survarts, survarts, survarts, ROT0,   "Sammy",              "Survival Arts (World)",                            GAME_NO_COCKTAIL )
-GAME( 1993,  survartsu,survarts, survarts, survarts, survarts, ROT0,   "American Sammy",     "Survival Arts (USA)",                              GAME_NO_COCKTAIL )
-GAME( 1994,  drifto94, 0,        drifto94, drifto94, drifto94, ROT0,   "Visco",              "Drift Out '94 - The Hard Order (Japan)",           GAME_NO_COCKTAIL )
-GAME( 1994,  eaglshot, 0,        eaglshot, eaglshot, eaglshot, ROT0,   "Sammy",              "Eagle Shot Golf",                                  GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995,  hypreact, 0,        hypreact, hypreact, hypreact, ROT0,   "Sammy",              "Mahjong Hyper Reaction (Japan)",                   GAME_NO_COCKTAIL )
-GAME( 1994,  twineag2, 0,        twineag2, twineag2, twineag2, ROT270, "Seta",               "Twin Eagle II - The Rescue Mission",               GAME_NO_COCKTAIL )
-GAME( 1995,  gdfs,     0,        gdfs,     gdfs,     gdfs,     ROT0,   "Banpresto",          "Mobil Suit Gundam Final Shooting (Japan)",         GAME_NO_COCKTAIL )
-GAME( 1995,  ultrax,   0,        ultrax,   ultrax,   ultrax,   ROT270, "Banpresto / Tsuburaya Productions", "Ultra X Weapons / Ultra Keibitai",  GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
-GAME( 1996,  janjans1, 0,        janjans1, janjans1, janjans1, ROT0,   "Visco",              "Lovely Pop Mahjong JangJang Shimasho (Japan)",     GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
-GAME( 1996?, meosism,  0,        meosism,  meosism,  meosism,  ROT0,   "Sammy",              "Meosis Magic (Japan)",                             GAME_NO_COCKTAIL )
-GAME( 1996,  stmblade, 0,        stmblade, stmblade, stmblade, ROT270, "Visco",              "Storm Blade (US)",                                 GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
-GAME( 1997,  hypreac2, 0,        hypreac2, hypreac2, hypreac2, ROT0,   "Sammy",              "Mahjong Hyper Reaction 2 (Japan)",                 GAME_NO_COCKTAIL )
-GAME( 1997,  jsk,      0,        jsk,      jsk,      jsk,      ROT0,   "Visco",              "Joryuu Syougi Kyoushitsu (Japan)",                 GAME_NO_COCKTAIL )
-GAME( 1997,  koikois2, 0,        janjans1, koikois2, janjans1, ROT0,   "Visco",              "Koi Koi Shimasho 2 - Super Real Hanafuda (Japan)", GAME_NO_COCKTAIL )
-GAME( 1997,  mslider,  0,        mslider,  mslider,  mslider,  ROT0,   "Visco / Datt Japan", "Monster Slider (Japan)",                           GAME_NO_COCKTAIL )
-GAME( 1997,  srmp7,    0,        srmp7,    srmp7,    srmp7,    ROT0,   "Seta",               "Super Real Mahjong P7 (Japan)",                    GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )
-GAME( 1998,  ryorioh,  0,        ryorioh,  ryorioh,  ryorioh,  ROT0,   "Visco",              "Gourmet Battle Quiz Ryohrioh CooKing (Japan)",     GAME_NO_COCKTAIL )
-GAME( 1998,  sxyreact, 0,        sxyreact, sxyreact, sxyreact, ROT0,   "Sammy",              "Pachinko Sexy Reaction (Japan)",                   GAME_NO_COCKTAIL )
-GAME( 1999,  sxyreac2, 0,        sxyreac2, sxyreact, sxyreac2, ROT0,   "Sammy",              "Pachinko Sexy Reaction 2 (Japan)",                 GAME_NO_COCKTAIL )
-GAME( 1999,  cairblad, 0,        cairblad, cairblad, cairblad, ROT270, "Sammy",              "Change Air Blade (Japan)",                         GAME_NO_COCKTAIL )
-GAME( 2000,  janjans2, 0,        janjans1, janjans2, janjans1, ROT0,   "Visco",              "Lovely Pop Mahjong JangJang Shimasho 2 (Japan)",   GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
-GAME( 2000,  vasara,   0,        vasara,   vasara,   vasara,   ROT270, "Visco",              "Vasara",                                           GAME_NO_COCKTAIL )
-GAME( 2001,  vasara2,  0,        vasara,   vasara2,  vasara,   ROT270, "Visco",              "Vasara 2 (set 1)",                                 GAME_NO_COCKTAIL )
-GAME( 2001,  vasara2a, vasara2,  vasara,   vasara2,  vasara,   ROT270, "Visco",              "Vasara 2 (set 2)",                                 GAME_NO_COCKTAIL )
+GAME( 1993,  dynagear, 0,        dynagear, dynagear, ssv_state, dynagear, ROT0,   "Sammy",              "Dyna Gear",                                        GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAME( 1993,  keithlcy, 0,        keithlcy, keithlcy, ssv_state, keithlcy, ROT0,   "Visco",              "Dramatic Adventure Quiz Keith & Lucy (Japan)",     GAME_NO_COCKTAIL )
+GAME( 1993,  srmp4,    0,        srmp4,    srmp4, ssv_state,    srmp4,    ROT0,   "Seta",               "Super Real Mahjong PIV (Japan)",                   GAME_NO_COCKTAIL )
+GAME( 1993,  srmp4o,   srmp4,    srmp4,    srmp4, ssv_state,    srmp4,    ROT0,   "Seta",               "Super Real Mahjong PIV (Japan, older set)",        GAME_NO_COCKTAIL ) // by the numbering of the program roms this should be older
+GAME( 1993,  survarts, 0,        survarts, survarts, ssv_state, survarts, ROT0,   "Sammy",              "Survival Arts (World)",                            GAME_NO_COCKTAIL )
+GAME( 1993,  survartsu,survarts, survarts, survarts, ssv_state, survarts, ROT0,   "American Sammy",     "Survival Arts (USA)",                              GAME_NO_COCKTAIL )
+GAME( 1994,  drifto94, 0,        drifto94, drifto94, ssv_state, drifto94, ROT0,   "Visco",              "Drift Out '94 - The Hard Order (Japan)",           GAME_NO_COCKTAIL )
+GAME( 1994,  eaglshot, 0,        eaglshot, eaglshot, ssv_state, eaglshot, ROT0,   "Sammy",              "Eagle Shot Golf",                                  GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAME( 1995,  hypreact, 0,        hypreact, hypreact, ssv_state, hypreact, ROT0,   "Sammy",              "Mahjong Hyper Reaction (Japan)",                   GAME_NO_COCKTAIL )
+GAME( 1994,  twineag2, 0,        twineag2, twineag2, ssv_state, twineag2, ROT270, "Seta",               "Twin Eagle II - The Rescue Mission",               GAME_NO_COCKTAIL )
+GAME( 1995,  gdfs,     0,        gdfs,     gdfs, ssv_state,     gdfs,     ROT0,   "Banpresto",          "Mobil Suit Gundam Final Shooting (Japan)",         GAME_NO_COCKTAIL )
+GAME( 1995,  ultrax,   0,        ultrax,   ultrax, ssv_state,   ultrax,   ROT270, "Banpresto / Tsuburaya Productions", "Ultra X Weapons / Ultra Keibitai",  GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996,  janjans1, 0,        janjans1, janjans1, ssv_state, janjans1, ROT0,   "Visco",              "Lovely Pop Mahjong JangJang Shimasho (Japan)",     GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAME( 1996?, meosism,  0,        meosism,  meosism, ssv_state,  meosism,  ROT0,   "Sammy",              "Meosis Magic (Japan)",                             GAME_NO_COCKTAIL )
+GAME( 1996,  stmblade, 0,        stmblade, stmblade, ssv_state, stmblade, ROT270, "Visco",              "Storm Blade (US)",                                 GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAME( 1997,  hypreac2, 0,        hypreac2, hypreac2, ssv_state, hypreac2, ROT0,   "Sammy",              "Mahjong Hyper Reaction 2 (Japan)",                 GAME_NO_COCKTAIL )
+GAME( 1997,  jsk,      0,        jsk,      jsk, ssv_state,      jsk,      ROT0,   "Visco",              "Joryuu Syougi Kyoushitsu (Japan)",                 GAME_NO_COCKTAIL )
+GAME( 1997,  koikois2, 0,        janjans1, koikois2, ssv_state, janjans1, ROT0,   "Visco",              "Koi Koi Shimasho 2 - Super Real Hanafuda (Japan)", GAME_NO_COCKTAIL )
+GAME( 1997,  mslider,  0,        mslider,  mslider, ssv_state,  mslider,  ROT0,   "Visco / Datt Japan", "Monster Slider (Japan)",                           GAME_NO_COCKTAIL )
+GAME( 1997,  srmp7,    0,        srmp7,    srmp7, ssv_state,    srmp7,    ROT0,   "Seta",               "Super Real Mahjong P7 (Japan)",                    GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )
+GAME( 1998,  ryorioh,  0,        ryorioh,  ryorioh, ssv_state,  ryorioh,  ROT0,   "Visco",              "Gourmet Battle Quiz Ryohrioh CooKing (Japan)",     GAME_NO_COCKTAIL )
+GAME( 1998,  sxyreact, 0,        sxyreact, sxyreact, ssv_state, sxyreact, ROT0,   "Sammy",              "Pachinko Sexy Reaction (Japan)",                   GAME_NO_COCKTAIL )
+GAME( 1999,  sxyreac2, 0,        sxyreac2, sxyreact, ssv_state, sxyreac2, ROT0,   "Sammy",              "Pachinko Sexy Reaction 2 (Japan)",                 GAME_NO_COCKTAIL )
+GAME( 1999,  cairblad, 0,        cairblad, cairblad, ssv_state, cairblad, ROT270, "Sammy",              "Change Air Blade (Japan)",                         GAME_NO_COCKTAIL )
+GAME( 2000,  janjans2, 0,        janjans1, janjans2, ssv_state, janjans1, ROT0,   "Visco",              "Lovely Pop Mahjong JangJang Shimasho 2 (Japan)",   GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAME( 2000,  vasara,   0,        vasara,   vasara, ssv_state,   vasara,   ROT270, "Visco",              "Vasara",                                           GAME_NO_COCKTAIL )
+GAME( 2001,  vasara2,  0,        vasara,   vasara2, ssv_state,  vasara,   ROT270, "Visco",              "Vasara 2 (set 1)",                                 GAME_NO_COCKTAIL )
+GAME( 2001,  vasara2a, vasara2,  vasara,   vasara2, ssv_state,  vasara,   ROT270, "Visco",              "Vasara 2 (set 2)",                                 GAME_NO_COCKTAIL )

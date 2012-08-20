@@ -17,6 +17,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(jvh);
 };
 
 
@@ -32,7 +34,7 @@ void jvh_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( jvh )
+DRIVER_INIT_MEMBER(jvh_state,jvh)
 {
 }
 
@@ -69,5 +71,5 @@ ROM_START(movmastr)
 ROM_END
 
 
-GAME(1987,  escape,    0,  jvh,  jvh,  jvh,  ROT0,  "Jac Van Ham (Royal)",    "Escape",             GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,  movmastr,  0,  jvh,  jvh,  jvh,  ROT0,  "Jac Van Ham (Royal)",    "Movie Masters",      GAME_IS_SKELETON_MECHANICAL)
+GAME(1987,  escape,    0,  jvh,  jvh, jvh_state,  jvh,  ROT0,  "Jac Van Ham (Royal)",    "Escape",             GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,  movmastr,  0,  jvh,  jvh, jvh_state,  jvh,  ROT0,  "Jac Van Ham (Royal)",    "Movie Masters",      GAME_IS_SKELETON_MECHANICAL)

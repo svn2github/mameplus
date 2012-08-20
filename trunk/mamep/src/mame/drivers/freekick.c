@@ -169,10 +169,10 @@ static ADDRESS_MAP_START( pbillrd_map, AS_PROGRAM, 8, freekick_state )
 	AM_RANGE(0xe800, 0xe800) AM_READ_PORT("IN1")
 	AM_RANGE(0xf000, 0xf000) AM_READ_PORT("DSW1") AM_WRITE(pbillrd_bankswitch_w)
 	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("DSW2")
-	AM_RANGE(0xfc00, 0xfc00) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0xfc01, 0xfc01) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
-	AM_RANGE(0xfc02, 0xfc02) AM_DEVWRITE_LEGACY("sn3", sn76496_w)
-	AM_RANGE(0xfc03, 0xfc03) AM_DEVWRITE_LEGACY("sn4", sn76496_w)
+	AM_RANGE(0xfc00, 0xfc00) AM_DEVWRITE("sn1", sn76496_new_device, write)
+	AM_RANGE(0xfc01, 0xfc01) AM_DEVWRITE("sn2", sn76496_new_device, write)
+	AM_RANGE(0xfc02, 0xfc02) AM_DEVWRITE("sn3", sn76496_new_device, write)
+	AM_RANGE(0xfc03, 0xfc03) AM_DEVWRITE("sn4", sn76496_new_device, write)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( freekickb_map, AS_PROGRAM, 8, freekick_state )
@@ -189,10 +189,10 @@ static ADDRESS_MAP_START( freekickb_map, AS_PROGRAM, 8, freekick_state )
 	AM_RANGE(0xf802, 0xf803) AM_WRITE(coin_w)
 	AM_RANGE(0xf804, 0xf804) AM_WRITE(nmi_enable_w)
 	AM_RANGE(0xf806, 0xf806) AM_WRITE(spinner_select_w)
-	AM_RANGE(0xfc00, 0xfc00) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0xfc01, 0xfc01) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
-	AM_RANGE(0xfc02, 0xfc02) AM_DEVWRITE_LEGACY("sn3", sn76496_w)
-	AM_RANGE(0xfc03, 0xfc03) AM_DEVWRITE_LEGACY("sn4", sn76496_w)
+	AM_RANGE(0xfc00, 0xfc00) AM_DEVWRITE("sn1", sn76496_new_device, write)
+	AM_RANGE(0xfc01, 0xfc01) AM_DEVWRITE("sn2", sn76496_new_device, write)
+	AM_RANGE(0xfc02, 0xfc02) AM_DEVWRITE("sn3", sn76496_new_device, write)
+	AM_RANGE(0xfc03, 0xfc03) AM_DEVWRITE("sn4", sn76496_new_device, write)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( gigas_map, AS_PROGRAM, 8, freekick_state )
@@ -208,10 +208,10 @@ static ADDRESS_MAP_START( gigas_map, AS_PROGRAM, 8, freekick_state )
 	AM_RANGE(0xe800, 0xe800) AM_READ_PORT("IN1")
 	AM_RANGE(0xf000, 0xf000) AM_READ_PORT("DSW1") AM_WRITENOP //bankswitch ?
 	AM_RANGE(0xf800, 0xf800) AM_READ_PORT("DSW2")
-	AM_RANGE(0xfc00, 0xfc00) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0xfc01, 0xfc01) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
-	AM_RANGE(0xfc02, 0xfc02) AM_DEVWRITE_LEGACY("sn3", sn76496_w)
-	AM_RANGE(0xfc03, 0xfc03) AM_DEVWRITE_LEGACY("sn4", sn76496_w)
+	AM_RANGE(0xfc00, 0xfc00) AM_DEVWRITE("sn1", sn76496_new_device, write)
+	AM_RANGE(0xfc01, 0xfc01) AM_DEVWRITE("sn2", sn76496_new_device, write)
+	AM_RANGE(0xfc02, 0xfc02) AM_DEVWRITE("sn3", sn76496_new_device, write)
+	AM_RANGE(0xfc03, 0xfc03) AM_DEVWRITE("sn4", sn76496_new_device, write)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( gigas_io_map, AS_IO, 8, freekick_state )
@@ -530,6 +530,16 @@ static I8255A_INTERFACE( ppi8255_1_intf )
 };
 
 
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
+
 /*************************************
  *
  *  Graphics definitions
@@ -646,17 +656,21 @@ static MACHINE_CONFIG_START( base, freekick_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496, 12000000/4)
+	MCFG_SOUND_ADD("sn1", SN76496_NEW, 12000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496, 12000000/4)
+	MCFG_SOUND_ADD("sn2", SN76496_NEW, 12000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76496, 12000000/4)
+	MCFG_SOUND_ADD("sn3", SN76496_NEW, 12000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn4", SN76496, 12000000/4)
+	MCFG_SOUND_ADD("sn4", SN76496_NEW, 12000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( pbillrd, base )
@@ -1114,21 +1128,21 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT(gigasb)
+DRIVER_INIT_MEMBER(freekick_state,gigasb)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0xbfff, machine.root_device().memregion("maincpu")->base() + 0x10000);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	space->set_decrypted_region(0x0000, 0xbfff, machine().root_device().memregion("maincpu")->base() + 0x10000);
 }
 
 
-static DRIVER_INIT( pbillrds )
+DRIVER_INIT_MEMBER(freekick_state,pbillrds)
 {
-	mc8123_decrypt_rom(machine, "maincpu", "user1", "bank1", 2);
+	mc8123_decrypt_rom(machine(), "maincpu", "user1", "bank1", 2);
 }
 
-static DRIVER_INIT( gigas )
+DRIVER_INIT_MEMBER(freekick_state,gigas)
 {
-	mc8123_decrypt_rom(machine, "maincpu", "user1", NULL, 1);
+	mc8123_decrypt_rom(machine(), "maincpu", "user1", NULL, 1);
 }
 
 
@@ -1140,17 +1154,17 @@ static DRIVER_INIT( gigas )
  *
  *************************************/
 /*    YEAR  NAME       PARENT    MACHINE    INPUT     INIT      ROT     COMPANY                         FULLNAME        FLAGS  */
-GAME( 1986, gigas,     0,        gigas,     gigas,    gigas,    ROT270, "Sega",                         "Gigas (MC-8123, 317-5002)", GAME_NO_COCKTAIL | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // Missing a dump of one of the program roms
-GAME( 1986, gigasb,    gigas,    gigas,     gigas,    gigasb,   ROT270, "bootleg",                      "Gigas (bootleg)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1986, oigas,     gigas ,   oigas,     gigas,    gigasb,   ROT270, "bootleg",                      "Oigas (bootleg)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1986, gigasm2b,  0,        gigas,     gigasm2,  gigasb,   ROT270, "bootleg",                      "Gigas Mark II (bootleg)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1987, pbillrd,   0,        pbillrd,   pbillrd,  0,        ROT0,   "Nihon System",                 "Perfect Billiard", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1987, pbillrds,  pbillrd,  pbillrd,   pbillrd,  pbillrds, ROT0,   "Nihon System",                 "Perfect Billiard (MC-8123, 317-0030)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1987, freekick,  0,        freekickb, freekck,  0,        ROT270, "Nihon System (Merit license)", "Free Kick (NS6201-A 1987.10)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1987, freekicka, freekick, freekickb, freekck,  0,        ROT270, "Nihon System",                 "Free Kick (NS6201-A 1987.9)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1987, freekickb1,freekick, freekickb, freekck,  0,        ROT270, "bootleg",                      "Free Kick (bootleg set 1)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1987, freekickb2,freekick, freekickb, freekck,  0,        ROT270, "bootleg",                      "Free Kick (bootleg set 2)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1988, countrun,  0,        freekickb, countrun, 0,        ROT0,   "Nihon System (Sega license)",  "Counter Run (NS6201-A 1988.3)", GAME_NO_COCKTAIL | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // CPU module not dumped
-GAME( 1988, countrunb, countrun, freekickb, countrun, 0,        ROT0,   "bootleg",                      "Counter Run (bootleg set 1)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1988, countrunb2,countrun, freekickb, countrun, 0,        ROT0,   "bootleg",                      "Counter Run (bootleg set 2)", GAME_NO_COCKTAIL | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
+GAME( 1986, gigas,     0,        gigas,     gigas, freekick_state,    gigas,    ROT270, "Sega",                         "Gigas (MC-8123, 317-5002)", GAME_NO_COCKTAIL | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // Missing a dump of one of the program roms
+GAME( 1986, gigasb,    gigas,    gigas,     gigas, freekick_state,    gigasb,   ROT270, "bootleg",                      "Gigas (bootleg)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1986, oigas,     gigas ,   oigas,     gigas, freekick_state,    gigasb,   ROT270, "bootleg",                      "Oigas (bootleg)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1986, gigasm2b,  0,        gigas,     gigasm2, freekick_state,  gigasb,   ROT270, "bootleg",                      "Gigas Mark II (bootleg)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1987, pbillrd,   0,        pbillrd,   pbillrd, driver_device,  0,        ROT0,   "Nihon System",                 "Perfect Billiard", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1987, pbillrds,  pbillrd,  pbillrd,   pbillrd, freekick_state,  pbillrds, ROT0,   "Nihon System",                 "Perfect Billiard (MC-8123, 317-0030)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1987, freekick,  0,        freekickb, freekck, driver_device,  0,        ROT270, "Nihon System (Merit license)", "Free Kick (NS6201-A 1987.10)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1987, freekicka, freekick, freekickb, freekck, driver_device,  0,        ROT270, "Nihon System",                 "Free Kick (NS6201-A 1987.9)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1987, freekickb1,freekick, freekickb, freekck, driver_device,  0,        ROT270, "bootleg",                      "Free Kick (bootleg set 1)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1987, freekickb2,freekick, freekickb, freekck, driver_device,  0,        ROT270, "bootleg",                      "Free Kick (bootleg set 2)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1988, countrun,  0,        freekickb, countrun, driver_device, 0,        ROT0,   "Nihon System (Sega license)",  "Counter Run (NS6201-A 1988.3)", GAME_NO_COCKTAIL | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // CPU module not dumped
+GAME( 1988, countrunb, countrun, freekickb, countrun, driver_device, 0,        ROT0,   "bootleg",                      "Counter Run (bootleg set 1)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1988, countrunb2,countrun, freekickb, countrun, driver_device, 0,        ROT0,   "bootleg",                      "Counter Run (bootleg set 2)", GAME_NO_COCKTAIL | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 

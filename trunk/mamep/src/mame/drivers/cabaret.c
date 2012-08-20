@@ -50,6 +50,7 @@ public:
 	DECLARE_WRITE8_MEMBER(fg_color_w);
 	DECLARE_WRITE8_MEMBER(cabaret_nmi_and_coins_w);
 	void show_out();
+	DECLARE_DRIVER_INIT(cabaret);
 };
 
 
@@ -359,9 +360,9 @@ static MACHINE_CONFIG_START( cabaret, cabaret_state )
 MACHINE_CONFIG_END
 
 
-static DRIVER_INIT( cabaret )
+DRIVER_INIT_MEMBER(cabaret_state,cabaret)
 {
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	int i;
 
 	/* decrypt the program ROM */
@@ -400,4 +401,4 @@ ROM_START( cabaret )
 	ROM_LOAD( "cg-7.u98",  0x0000, 0x8000, CRC(b93ae6f8) SHA1(accb87045c278d5d79fff65bb763aa6e8025a945) )	/* background maps, read by the CPU */
 ROM_END
 
-GAME( 1992, cabaret,  0, cabaret,  cabaret, cabaret,  ROT0, "AMT Co. Ltd.", "Cabaret", GAME_NOT_WORKING )
+GAME( 1992, cabaret,  0, cabaret,  cabaret, cabaret_state, cabaret,  ROT0, "AMT Co. Ltd.", "Cabaret", GAME_NOT_WORKING )

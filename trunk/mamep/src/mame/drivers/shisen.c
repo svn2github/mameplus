@@ -245,7 +245,7 @@ static MACHINE_CONFIG_START( shisen, shisen_state )
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.5)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.5)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.25)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.25)
 MACHINE_CONFIG_END
@@ -429,8 +429,8 @@ ROM_START( matchit )
 	/* no samples on this board */
 ROM_END
 
-GAME( 1989, matchit,  0,	     shisen,   matchit,  0, ROT0, "Tamtex",  "Match It", 0 )
-GAME( 1989, shisen,   matchit,   shisen,   shisen,   0, ROT0, "Tamtex",  "Shisensho - Joshiryo-Hen (Japan)", 0 )
-GAME( 1989, sichuan2, matchit,   shisen,   shisen,   0, ROT0, "hack", "Sichuan II (hack, set 1)", 0 )
-GAME( 1989, sichuan2a,matchit,   shisen,   shisen,   0, ROT0, "hack", "Sichuan II (hack, set 2)", 0 )
+GAME( 1989, matchit,  0,	     shisen,   matchit, driver_device,  0, ROT0, "Tamtex",  "Match It", 0 )
+GAME( 1989, shisen,   matchit,   shisen,   shisen, driver_device,   0, ROT0, "Tamtex",  "Shisensho - Joshiryo-Hen (Japan)", 0 )
+GAME( 1989, sichuan2, matchit,   shisen,   shisen, driver_device,   0, ROT0, "hack", "Sichuan II (hack, set 1)", 0 )
+GAME( 1989, sichuan2a,matchit,   shisen,   shisen, driver_device,   0, ROT0, "hack", "Sichuan II (hack, set 2)", 0 )
 

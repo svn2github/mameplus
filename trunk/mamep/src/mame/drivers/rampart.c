@@ -477,12 +477,12 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( rampart )
+DRIVER_INIT_MEMBER(rampart_state,rampart)
 {
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 
 	memcpy(&rom[0x140000], &rom[0x40000], 0x8000);
-	atarigen_slapstic_init(machine.device("maincpu"), 0x140000, 0x438000, 118);
+	atarigen_slapstic_init(machine().device("maincpu"), 0x140000, 0x438000, 118);
 }
 
 
@@ -493,6 +493,6 @@ static DRIVER_INIT( rampart )
  *
  *************************************/
 
-GAME( 1990, rampart,  0,       rampart, rampart,  rampart, ROT0, "Atari Games", "Rampart (Trackball)", GAME_SUPPORTS_SAVE )
-GAME( 1990, rampart2p,rampart, rampart, ramprt2p, rampart, ROT0, "Atari Games", "Rampart (Joystick)", GAME_SUPPORTS_SAVE )
-GAME( 1990, rampartj, rampart, rampart, rampartj, rampart, ROT0, "Atari Games", "Rampart (Japan, Joystick)", GAME_SUPPORTS_SAVE )
+GAME( 1990, rampart,  0,       rampart, rampart, rampart_state,  rampart, ROT0, "Atari Games", "Rampart (Trackball)", GAME_SUPPORTS_SAVE )
+GAME( 1990, rampart2p,rampart, rampart, ramprt2p, rampart_state, rampart, ROT0, "Atari Games", "Rampart (Joystick)", GAME_SUPPORTS_SAVE )
+GAME( 1990, rampartj, rampart, rampart, rampartj, rampart_state, rampart, ROT0, "Atari Games", "Rampart (Japan, Joystick)", GAME_SUPPORTS_SAVE )

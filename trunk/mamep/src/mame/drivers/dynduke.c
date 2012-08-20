@@ -605,16 +605,16 @@ ROM_END
 
 /* Driver Initialization */
 
-static DRIVER_INIT( dynduke )
+DRIVER_INIT_MEMBER(dynduke_state,dynduke)
 {
-	seibu_sound_decrypt(machine,"audiocpu",0x20000);
+	seibu_sound_decrypt(machine(),"audiocpu",0x20000);
 }
 
 /* Game Drivers */
 
-GAME( 1989, dynduke,  0,       dynduke, dynduke, dynduke, ROT0, "Seibu Kaihatsu",                  "Dynamite Duke (Europe set 1)", 0 )
-GAME( 1989, dyndukea, dynduke, dynduke, dynduke, dynduke, ROT0, "Seibu Kaihatsu",                  "Dynamite Duke (Europe set 2)", 0 )
-GAME( 1989, dyndukej, dynduke, dynduke, dynduke, dynduke, ROT0, "Seibu Kaihatsu",                  "Dynamite Duke (Japan)", 0 )
-GAME( 1989, dyndukeu, dynduke, dynduke, dynduke, dynduke, ROT0, "Seibu Kaihatsu (Fabtek license)", "Dynamite Duke (US)", 0 )
-GAME( 1989, dbldynj,  dynduke, dbldyn,  dynduke, dynduke, ROT0, "Seibu Kaihatsu",                  "The Double Dynamites (Japan)", 0 )
-GAME( 1989, dbldynu,  dynduke, dynduke, dynduke, dynduke, ROT0, "Seibu Kaihatsu (Fabtek license)", "The Double Dynamites (US)", 0 )
+GAME( 1989, dynduke,  0,       dynduke, dynduke, dynduke_state, dynduke, ROT0, "Seibu Kaihatsu",                  "Dynamite Duke (Europe set 1)", 0 )
+GAME( 1989, dyndukea, dynduke, dynduke, dynduke, dynduke_state, dynduke, ROT0, "Seibu Kaihatsu",                  "Dynamite Duke (Europe set 2)", 0 )
+GAME( 1989, dyndukej, dynduke, dynduke, dynduke, dynduke_state, dynduke, ROT0, "Seibu Kaihatsu",                  "Dynamite Duke (Japan)", 0 )
+GAME( 1989, dyndukeu, dynduke, dynduke, dynduke, dynduke_state, dynduke, ROT0, "Seibu Kaihatsu (Fabtek license)", "Dynamite Duke (US)", 0 )
+GAME( 1989, dbldynj,  dynduke, dbldyn,  dynduke, dynduke_state, dynduke, ROT0, "Seibu Kaihatsu",                  "The Double Dynamites (Japan)", 0 )
+GAME( 1989, dbldynu,  dynduke, dynduke, dynduke, dynduke_state, dynduke, ROT0, "Seibu Kaihatsu (Fabtek license)", "The Double Dynamites (US)", 0 )

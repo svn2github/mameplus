@@ -56,6 +56,8 @@ protected:
 
 	// devices
 	required_device<cpu_device> m_maincpu;
+public:
+	DECLARE_DRIVER_INIT(speeddrv);
 };
 
 static ADDRESS_MAP_START( speeddrv_map, AS_PROGRAM, 32, speeddrv_state )
@@ -105,10 +107,10 @@ ROM_START( eztouch )
 ROM_END
 
 
-static DRIVER_INIT(speeddrv)
+DRIVER_INIT_MEMBER(speeddrv_state,speeddrv)
 {
 
 }
 
-GAME( 2004,  speeddrv,  0,  speeddrv,  speeddrv,  speeddrv,  ROT0,  "IGS",    "Speed Driver",    GAME_IS_SKELETON )
-GAME( 200?,  eztouch,   0,  speeddrv,  speeddrv,  speeddrv,  ROT0,  "IGS",    "EZ Touch (v116 China)",    GAME_IS_SKELETON )
+GAME( 2004,  speeddrv,  0,  speeddrv,  speeddrv, speeddrv_state,  speeddrv,  ROT0,  "IGS",    "Speed Driver",    GAME_IS_SKELETON )
+GAME( 200?,  eztouch,   0,  speeddrv,  speeddrv, speeddrv_state,  speeddrv,  ROT0,  "IGS",    "EZ Touch (v116 China)",    GAME_IS_SKELETON )

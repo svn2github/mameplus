@@ -19,6 +19,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(bingo);
 };
 
 
@@ -35,7 +37,7 @@ void bingo_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( bingo )
+DRIVER_INIT_MEMBER(bingo_state,bingo)
 {
 }
 
@@ -60,6 +62,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(seeben);
 };
 
 
@@ -73,7 +77,7 @@ void seeben_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( seeben )
+DRIVER_INIT_MEMBER(seeben_state,seeben)
 {
 }
 
@@ -98,6 +102,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(splin);
 };
 
 static ADDRESS_MAP_START( splin_map, AS_PROGRAM, 16, splin_state )
@@ -113,7 +119,7 @@ void splin_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( splin )
+DRIVER_INIT_MEMBER(splin_state,splin)
 {
 }
 
@@ -291,27 +297,27 @@ ROM_START(tripjok)
 ROM_END
 
 
-GAME(1980,	cntinntl,		0,			bingo,	bingo,	bingo,	ROT0,	"Bally",		"Continental (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	goldgame,		0,			splin,	splin,	splin,	ROT0,	"Splin",		"Golden Game (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	goldgkitb,		goldgame,	splin,	splin,	splin,	ROT0,	"Splin",		"Golden Game Kit Bingo Stake 6/10 (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	goldgstake,		goldgame,	splin,	splin,	splin,	ROT0,	"Splin",		"Golden Game Bingo Stake 6/10 (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	goldgnew,		goldgame,	splin,	splin,	splin,	ROT0,	"Splin",		"Golden Game Bingo New (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	goldgkit1,		goldgame,	splin,	splin,	splin,	ROT0,	"Splin",		"Golden Game Kit 1 Generation (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	michigan,		0,			splin,	splin,	splin,	ROT0,	"Splin",		"Michigan (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	michkit1,		michigan,	splin,	splin,	splin,	ROT0,	"Splin",		"Michigan Bingo Kit 1 Generation (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	michkitb,		michigan,	splin,	splin,	splin,	ROT0,	"Splin",		"Michigan Kit Bingo Stake 6/10 (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	michstake,		michigan,	splin,	splin,	splin,	ROT0,	"Splin",		"Michigan Bingo Stake 6/10 (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	michnew,		michigan,	splin,	splin,	splin,	ROT0,	"Splin",		"Michigan Bingo New (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	montana,		0,			splin,	splin,	splin,	ROT0,	"Splin",		"Montana Bingo Stake 6/10 (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	topgame,		0,			splin,	splin,	splin,	ROT0,	"Splin",		"Top Game Laser L10 (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	topgamet,		topgame,	splin,	splin,	splin,	ROT0,	"Splin",		"Top Game Turbo (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	penalty,		0,			seeben,	seeben,	seeben,	ROT0,	"Seeben (Belgium)",	"Penalty (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	brooklyn,		0,			seeben,	seeben,	seeben,	ROT0,	"Seeben (Belgium)",	"Brooklyn (set 1) (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	brooklyna,		brooklyn,	seeben,	seeben,	seeben,	ROT0,	"Seeben (Belgium)",	"Brooklyn (set 2) (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	newdixie,		0,			seeben,	seeben,	seeben,	ROT0,	"Seeben (Belgium)",	"New Dixieland (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	superdix,		0,			seeben,	seeben,	seeben,	ROT0,	"Seeben (Belgium)",	"Super Dixieland (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	cntine31,		0,			seeben,	seeben,	seeben,	ROT0,	"Seeben (Belgium)",	"Continental 3 in 1 (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	domino2,		0,			seeben,	seeben,	seeben,	ROT0,	"Seeben (Belgium)",	"Domino II (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	tripjok,		0,			seeben,	seeben,	seeben,	ROT0,	"Seeben (Belgium)",	"Triple Joker (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	ggate,			0,			seeben,	seeben,	seeben,	ROT0,	"Seeben (Belgium)",	"Golden Gate (set 1) (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(19??,	ggatea,			ggate,		seeben,	seeben,	seeben,	ROT0,	"Seeben (Belgium)",	"Golden Gate (set 2) (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1980,	cntinntl,		0,			bingo,	bingo, bingo_state,	bingo,	ROT0,	"Bally",		"Continental (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	goldgame,		0,			splin,	splin, splin_state,	splin,	ROT0,	"Splin",		"Golden Game (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	goldgkitb,		goldgame,	splin,	splin, splin_state,	splin,	ROT0,	"Splin",		"Golden Game Kit Bingo Stake 6/10 (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	goldgstake,		goldgame,	splin,	splin, splin_state,	splin,	ROT0,	"Splin",		"Golden Game Bingo Stake 6/10 (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	goldgnew,		goldgame,	splin,	splin, splin_state,	splin,	ROT0,	"Splin",		"Golden Game Bingo New (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	goldgkit1,		goldgame,	splin,	splin, splin_state,	splin,	ROT0,	"Splin",		"Golden Game Kit 1 Generation (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	michigan,		0,			splin,	splin, splin_state,	splin,	ROT0,	"Splin",		"Michigan (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	michkit1,		michigan,	splin,	splin, splin_state,	splin,	ROT0,	"Splin",		"Michigan Bingo Kit 1 Generation (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	michkitb,		michigan,	splin,	splin, splin_state,	splin,	ROT0,	"Splin",		"Michigan Kit Bingo Stake 6/10 (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	michstake,		michigan,	splin,	splin, splin_state,	splin,	ROT0,	"Splin",		"Michigan Bingo Stake 6/10 (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	michnew,		michigan,	splin,	splin, splin_state,	splin,	ROT0,	"Splin",		"Michigan Bingo New (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	montana,		0,			splin,	splin, splin_state,	splin,	ROT0,	"Splin",		"Montana Bingo Stake 6/10 (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	topgame,		0,			splin,	splin, splin_state,	splin,	ROT0,	"Splin",		"Top Game Laser L10 (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	topgamet,		topgame,	splin,	splin, splin_state,	splin,	ROT0,	"Splin",		"Top Game Turbo (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	penalty,		0,			seeben,	seeben, seeben_state,	seeben,	ROT0,	"Seeben (Belgium)",	"Penalty (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	brooklyn,		0,			seeben,	seeben, seeben_state,	seeben,	ROT0,	"Seeben (Belgium)",	"Brooklyn (set 1) (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	brooklyna,		brooklyn,	seeben,	seeben, seeben_state,	seeben,	ROT0,	"Seeben (Belgium)",	"Brooklyn (set 2) (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	newdixie,		0,			seeben,	seeben, seeben_state,	seeben,	ROT0,	"Seeben (Belgium)",	"New Dixieland (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	superdix,		0,			seeben,	seeben, seeben_state,	seeben,	ROT0,	"Seeben (Belgium)",	"Super Dixieland (Bingo)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	cntine31,		0,			seeben,	seeben, seeben_state,	seeben,	ROT0,	"Seeben (Belgium)",	"Continental 3 in 1 (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	domino2,		0,			seeben,	seeben, seeben_state,	seeben,	ROT0,	"Seeben (Belgium)",	"Domino II (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	tripjok,		0,			seeben,	seeben, seeben_state,	seeben,	ROT0,	"Seeben (Belgium)",	"Triple Joker (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	ggate,			0,			seeben,	seeben, seeben_state,	seeben,	ROT0,	"Seeben (Belgium)",	"Golden Gate (set 1) (Bingo)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(19??,	ggatea,			ggate,		seeben,	seeben, seeben_state,	seeben,	ROT0,	"Seeben (Belgium)",	"Golden Gate (set 2) (Bingo)",				GAME_IS_SKELETON_MECHANICAL)

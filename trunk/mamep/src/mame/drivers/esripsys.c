@@ -560,7 +560,7 @@ WRITE8_MEMBER(esripsys_state::control_w)
 /* 10-bit MC3410CL DAC */
 WRITE8_MEMBER(esripsys_state::esripsys_dac_w)
 {
-	device_t *device = machine().device("dac");
+	dac_device *device = machine().device<dac_device>("dac");
 	if (offset == 0)
 	{
 		m_dac_msb = data & 3;
@@ -573,7 +573,7 @@ WRITE8_MEMBER(esripsys_state::esripsys_dac_w)
             The 8-bit DAC modulates the 10-bit DAC.
             Shift down to prevent clipping.
         */
-		dac_signed_data_16_w(device, (m_dac_vol * dac_data) >> 1);
+		device->write_signed16((m_dac_vol * dac_data) >> 1);
 	}
 }
 
@@ -642,50 +642,49 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-static DRIVER_INIT( esripsys )
+DRIVER_INIT_MEMBER(esripsys_state,esripsys)
 {
-	esripsys_state *state = machine.driver_data<esripsys_state>();
-	UINT8 *rom = state->memregion("sound_data")->base();
+	UINT8 *rom = memregion("sound_data")->base();
 
-	state->m_fdt_a = auto_alloc_array(machine, UINT8, FDT_RAM_SIZE);
-	state->m_fdt_b = auto_alloc_array(machine, UINT8, FDT_RAM_SIZE);
-	state->m_cmos_ram = auto_alloc_array(machine, UINT8, CMOS_RAM_SIZE);
+	m_fdt_a = auto_alloc_array(machine(), UINT8, FDT_RAM_SIZE);
+	m_fdt_b = auto_alloc_array(machine(), UINT8, FDT_RAM_SIZE);
+	m_cmos_ram = auto_alloc_array(machine(), UINT8, CMOS_RAM_SIZE);
 
-	machine.device<nvram_device>("nvram")->set_base(state->m_cmos_ram, CMOS_RAM_SIZE);
+	machine().device<nvram_device>("nvram")->set_base(m_cmos_ram, CMOS_RAM_SIZE);
 
-	state->membank("bank2")->set_base(&rom[0x0000]);
-	state->membank("bank3")->set_base(&rom[0x4000]);
-	state->membank("bank4")->set_base(&rom[0x8000]);
+	membank("bank2")->set_base(&rom[0x0000]);
+	membank("bank3")->set_base(&rom[0x4000]);
+	membank("bank4")->set_base(&rom[0x8000]);
 
 	/* Register stuff for state saving */
-	state_save_register_global_pointer(machine, state->m_fdt_a, FDT_RAM_SIZE);
-	state_save_register_global_pointer(machine, state->m_fdt_b, FDT_RAM_SIZE);
-	state_save_register_global_pointer(machine, state->m_cmos_ram, CMOS_RAM_SIZE);
+	state_save_register_global_pointer(machine(), m_fdt_a, FDT_RAM_SIZE);
+	state_save_register_global_pointer(machine(), m_fdt_b, FDT_RAM_SIZE);
+	state_save_register_global_pointer(machine(), m_cmos_ram, CMOS_RAM_SIZE);
 
-	state_save_register_global(machine, state->m_g_iodata);
-	state_save_register_global(machine, state->m_g_ioaddr);
-	state_save_register_global(machine, state->m_coin_latch);
-	state_save_register_global(machine, state->m_keypad_status);
-	state_save_register_global(machine, state->m_g_status);
-	state_save_register_global(machine, state->m_f_status);
-	state_save_register_global(machine, state->m_io_firq_status);
-	state_save_register_global(machine, state->m_cmos_ram_a2_0);
-	state_save_register_global(machine, state->m_cmos_ram_a10_3);
+	state_save_register_global(machine(), m_g_iodata);
+	state_save_register_global(machine(), m_g_ioaddr);
+	state_save_register_global(machine(), m_coin_latch);
+	state_save_register_global(machine(), m_keypad_status);
+	state_save_register_global(machine(), m_g_status);
+	state_save_register_global(machine(), m_f_status);
+	state_save_register_global(machine(), m_io_firq_status);
+	state_save_register_global(machine(), m_cmos_ram_a2_0);
+	state_save_register_global(machine(), m_cmos_ram_a10_3);
 
-	state_save_register_global(machine, state->m_u56a);
-	state_save_register_global(machine, state->m_u56b);
-	state_save_register_global(machine, state->m_g_to_s_latch1);
-	state_save_register_global(machine, state->m_g_to_s_latch2);
-	state_save_register_global(machine, state->m_s_to_g_latch1);
-	state_save_register_global(machine, state->m_s_to_g_latch2);
-	state_save_register_global(machine, state->m_dac_msb);
-	state_save_register_global(machine, state->m_dac_vol);
-	state_save_register_global(machine, state->m_tms_data);
+	state_save_register_global(machine(), m_u56a);
+	state_save_register_global(machine(), m_u56b);
+	state_save_register_global(machine(), m_g_to_s_latch1);
+	state_save_register_global(machine(), m_g_to_s_latch2);
+	state_save_register_global(machine(), m_s_to_g_latch1);
+	state_save_register_global(machine(), m_s_to_g_latch2);
+	state_save_register_global(machine(), m_dac_msb);
+	state_save_register_global(machine(), m_dac_vol);
+	state_save_register_global(machine(), m_tms_data);
 
-	state->m_fasel = 0;
-	state->m_fbsel = 1;
-	state_save_register_global(machine, state->m_fasel);
-	state_save_register_global(machine, state->m_fbsel);
+	m_fasel = 0;
+	m_fbsel = 1;
+	state_save_register_global(machine(), m_fasel);
+	state_save_register_global(machine(), m_fbsel);
 }
 
 static const esrip_config rip_config =
@@ -725,7 +724,7 @@ static MACHINE_CONFIG_START( esripsys, esripsys_state )
 	/* Sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	MCFG_SOUND_ADD("tms5220nl", TMS5220, 640000)
@@ -1091,6 +1090,6 @@ ROM_END
  *
  *************************************/
 
-GAME( 1985, turbosub,  0,        esripsys, turbosub, esripsys, ROT0, "Entertainment Sciences", "Turbo Sub (prototype rev. TSCA)", GAME_SUPPORTS_SAVE )
-GAME( 1985, turbosub7, turbosub, esripsys, turbosub, esripsys, ROT0, "Entertainment Sciences", "Turbo Sub (prototype rev. TSC7)", GAME_SUPPORTS_SAVE )
-GAME( 1985, turbosub6, turbosub, esripsys, turbosub, esripsys, ROT0, "Entertainment Sciences", "Turbo Sub (prototype rev. TSC6)", GAME_SUPPORTS_SAVE )
+GAME( 1985, turbosub,  0,        esripsys, turbosub, esripsys_state, esripsys, ROT0, "Entertainment Sciences", "Turbo Sub (prototype rev. TSCA)", GAME_SUPPORTS_SAVE )
+GAME( 1985, turbosub7, turbosub, esripsys, turbosub, esripsys_state, esripsys, ROT0, "Entertainment Sciences", "Turbo Sub (prototype rev. TSC7)", GAME_SUPPORTS_SAVE )
+GAME( 1985, turbosub6, turbosub, esripsys, turbosub, esripsys_state, esripsys, ROT0, "Entertainment Sciences", "Turbo Sub (prototype rev. TSC6)", GAME_SUPPORTS_SAVE )

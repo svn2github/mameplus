@@ -280,6 +280,7 @@ public:
 	DECLARE_WRITE16_MEMBER(wheelfir_snd_w);
 	DECLARE_READ16_MEMBER(wheelfir_snd_r);
 	DECLARE_WRITE16_MEMBER(coin_cnt_w);
+	DECLARE_DRIVER_INIT(wheelfir);
 };
 
 
@@ -686,8 +687,8 @@ static ADDRESS_MAP_START( wheelfir_sub, AS_PROGRAM, 16, wheelfir_state )
 
 	AM_RANGE(0x780000, 0x780001) AM_READ(wheelfir_snd_r)
 
-	AM_RANGE(0x700000, 0x700001) AM_DEVWRITE8_LEGACY("dac1", dac_w, 0xff00) //guess for now
-	AM_RANGE(0x740000, 0x740001) AM_DEVWRITE8_LEGACY("dac2", dac_w, 0xff00)
+	AM_RANGE(0x700000, 0x700001) AM_DEVWRITE8("dac1", dac_device, write_unsigned8, 0xff00) //guess for now
+	AM_RANGE(0x740000, 0x740001) AM_DEVWRITE8("dac2", dac_device, write_unsigned8, 0xff00)
 ADDRESS_MAP_END
 
 
@@ -841,8 +842,8 @@ static MACHINE_CONFIG_START( wheelfir, wheelfir_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac1")
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 MACHINE_CONFIG_END
@@ -868,11 +869,11 @@ ROM_START( wheelfir )
 	ROM_LOAD( "tch12.u59",0x380000, 0x80000, CRC(cce2e675) SHA1(f3d8916077b2e057169d0f254005cd959789a3b3) )
 ROM_END
 
-static DRIVER_INIT(wheelfir)
+DRIVER_INIT_MEMBER(wheelfir_state,wheelfir)
 {
-	UINT16 *RAM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+	UINT16 *RAM = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 	RAM[0xdd3da/2] = 0x4e71; //hack
 }
 
-GAME( 199?, wheelfir,    0, wheelfir,    wheelfir,    wheelfir, ROT0,  "TCH", "Wheels & Fire", GAME_NOT_WORKING|GAME_NO_SOUND )
+GAME( 199?, wheelfir,    0, wheelfir,    wheelfir, wheelfir_state,    wheelfir, ROT0,  "TCH", "Wheels & Fire", GAME_NOT_WORKING|GAME_NO_SOUND )
 

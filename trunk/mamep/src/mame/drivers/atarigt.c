@@ -1261,22 +1261,21 @@ WRITE32_MEMBER(atarigt_state::tmek_pf_w)
 	atarigen_playfield32_w(&space, offset, data, mem_mask);
 }
 
-static DRIVER_INIT( tmek )
+DRIVER_INIT_MEMBER(atarigt_state,tmek)
 {
-	atarigt_state *state = machine.driver_data<atarigt_state>();
 
-	state->m_eeprom_default = NULL;
-	state->m_is_primrage = 0;
+	m_eeprom_default = NULL;
+	m_is_primrage = 0;
 
-	cage_init(machine, 0x4fad);
+	cage_init(machine(), 0x4fad);
 	cage_set_irq_handler(cage_irq_callback);
 
 	/* setup protection */
-	state->m_protection_r = tmek_protection_r;
-	state->m_protection_w = tmek_protection_w;
+	m_protection_r = tmek_protection_r;
+	m_protection_w = tmek_protection_w;
 
 	/* temp hack */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xd72000, 0xd75fff, write32_delegate(FUNC(atarigt_state::tmek_pf_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xd72000, 0xd75fff, write32_delegate(FUNC(atarigt_state::tmek_pf_w),this));
 }
 
 
@@ -1295,10 +1294,8 @@ static void primrage_init_common(running_machine &machine, offs_t cage_speedup)
 	state->m_protection_w = primrage_protection_w;
 }
 
-static DRIVER_INIT( primrage ) { primrage_init_common(machine, 0x42f2); }
-static DRIVER_INIT( primrage20 ) { primrage_init_common(machine, 0x48a4); }
-
-
+DRIVER_INIT_MEMBER(atarigt_state,primrage)  { primrage_init_common(machine(), 0x42f2); }
+DRIVER_INIT_MEMBER(atarigt_state,primrage20) { primrage_init_common(machine(), 0x48a4); }
 
 /*************************************
  *
@@ -1306,10 +1303,10 @@ static DRIVER_INIT( primrage20 ) { primrage_init_common(machine, 0x48a4); }
  *
  *************************************/
 
-GAME( 1994, tmek,       0,        atarigt,  tmek,     tmek,       ROT0, "Atari Games", "T-MEK (v5.1, The Warlords)", GAME_UNEMULATED_PROTECTION )
-GAME( 1994, tmek51p,    tmek,     atarigt,  tmek,     tmek,       ROT0, "Atari Games", "T-MEK (v5.1, prototype)", GAME_UNEMULATED_PROTECTION )
-GAME( 1994, tmek45,     tmek,     atarigt,  tmek,     tmek,       ROT0, "Atari Games", "T-MEK (v4.5)", GAME_UNEMULATED_PROTECTION )
-GAME( 1994, tmek44,     tmek,     atarigt,  tmek,     tmek,       ROT0, "Atari Games", "T-MEK (v4.4)", GAME_UNEMULATED_PROTECTION )
-GAME( 1994, tmek20,     tmek,     atarigt,  tmek,     tmek,       ROT0, "Atari Games", "T-MEK (v2.0, prototype)", 0 )
-GAME( 1994, primrage,   0,        atarigt,  primrage, primrage,   ROT0, "Atari Games", "Primal Rage (version 2.3)", GAME_UNEMULATED_PROTECTION )
-GAME( 1994, primrage20, primrage, atarigt,  primrage, primrage20, ROT0, "Atari Games", "Primal Rage (version 2.0)", GAME_UNEMULATED_PROTECTION )
+GAME( 1994, tmek,       0,        atarigt,  tmek, atarigt_state,     tmek,       ROT0, "Atari Games", "T-MEK (v5.1, The Warlords)", GAME_UNEMULATED_PROTECTION )
+GAME( 1994, tmek51p,    tmek,     atarigt,  tmek, atarigt_state,     tmek,       ROT0, "Atari Games", "T-MEK (v5.1, prototype)", GAME_UNEMULATED_PROTECTION )
+GAME( 1994, tmek45,     tmek,     atarigt,  tmek, atarigt_state,     tmek,       ROT0, "Atari Games", "T-MEK (v4.5)", GAME_UNEMULATED_PROTECTION )
+GAME( 1994, tmek44,     tmek,     atarigt,  tmek, atarigt_state,     tmek,       ROT0, "Atari Games", "T-MEK (v4.4)", GAME_UNEMULATED_PROTECTION )
+GAME( 1994, tmek20,     tmek,     atarigt,  tmek, atarigt_state,     tmek,       ROT0, "Atari Games", "T-MEK (v2.0, prototype)", 0 )
+GAME( 1994, primrage,   0,        atarigt,  primrage, atarigt_state, primrage,   ROT0, "Atari Games", "Primal Rage (version 2.3)", GAME_UNEMULATED_PROTECTION )
+GAME( 1994, primrage20, primrage, atarigt,  primrage, atarigt_state, primrage20, ROT0, "Atari Games", "Primal Rage (version 2.0)", GAME_UNEMULATED_PROTECTION )

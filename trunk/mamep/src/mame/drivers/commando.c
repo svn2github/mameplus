@@ -514,11 +514,11 @@ ROM_END
 
 /* Driver Initialization */
 
-static DRIVER_INIT( commando )
+DRIVER_INIT_MEMBER(commando_state,commando)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
-	UINT8 *decrypt = auto_alloc_array(machine, UINT8, 0xc000);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
+	UINT8 *decrypt = auto_alloc_array(machine(), UINT8, 0xc000);
 	int A;
 
 	space->set_decrypted_region(0x0000, 0xbfff, decrypt);
@@ -534,11 +534,11 @@ static DRIVER_INIT( commando )
 	}
 }
 
-static DRIVER_INIT( spaceinv )
+DRIVER_INIT_MEMBER(commando_state,spaceinv)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
-	UINT8 *decrypt = auto_alloc_array(machine, UINT8, 0xc000);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
+	UINT8 *decrypt = auto_alloc_array(machine(), UINT8, 0xc000);
 	int A;
 
 	space->set_decrypted_region(0x0000, 0xbfff, decrypt);
@@ -555,9 +555,9 @@ static DRIVER_INIT( spaceinv )
 
 /* Game Drivers */
 
-GAME( 1985, commando,  0,        commando, commando, commando, ROT270, "Capcom", "Commando (World)", GAME_SUPPORTS_SAVE )
-GAME( 1985, commandou, commando, commando, commandou,commando, ROT270, "Capcom (Data East USA license)", "Commando (US)", GAME_SUPPORTS_SAVE )
-GAME( 1985, commandoj, commando, commando, commando, commando, ROT270, "Capcom", "Senjou no Ookami", GAME_SUPPORTS_SAVE )
-GAME( 1985, commandob, commando, commando, commando, spaceinv, ROT270, "bootleg", "Commando (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1985, sinvasn,   commando, commando, commando, commando, ROT270, "Capcom", "Space Invasion (Europe)", GAME_SUPPORTS_SAVE )
-GAME( 1985, sinvasnb,  commando, commando, commando, spaceinv, ROT270, "bootleg", "Space Invasion (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1985, commando,  0,        commando, commando, commando_state, commando, ROT270, "Capcom", "Commando (World)", GAME_SUPPORTS_SAVE )
+GAME( 1985, commandou, commando, commando, commandou, commando_state,commando, ROT270, "Capcom (Data East USA license)", "Commando (US)", GAME_SUPPORTS_SAVE )
+GAME( 1985, commandoj, commando, commando, commando, commando_state, commando, ROT270, "Capcom", "Senjou no Ookami", GAME_SUPPORTS_SAVE )
+GAME( 1985, commandob, commando, commando, commando, commando_state, spaceinv, ROT270, "bootleg", "Commando (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1985, sinvasn,   commando, commando, commando, commando_state, commando, ROT270, "Capcom", "Space Invasion (Europe)", GAME_SUPPORTS_SAVE )
+GAME( 1985, sinvasnb,  commando, commando, commando, commando_state, spaceinv, ROT270, "bootleg", "Space Invasion (bootleg)", GAME_SUPPORTS_SAVE )

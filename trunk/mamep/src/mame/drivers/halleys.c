@@ -258,6 +258,9 @@ public:
 	DECLARE_READ8_MEMBER(io_mirror_r);
 	void blit(int offset);
 	DECLARE_WRITE8_MEMBER(sndnmi_msk_w);
+	DECLARE_DRIVER_INIT(halley87);
+	DECLARE_DRIVER_INIT(benberob);
+	DECLARE_DRIVER_INIT(halleys);
 };
 
 
@@ -419,7 +422,7 @@ if (0) {
 
 	// clip objects against the visible area
 	yclip = y; xclip = x; hclip = h; wclip = w;
-	src_yskip = src_xskip = dst_skip = 0;
+	src_yskip = src_xskip = 0;
 	if (yclip < VIS_MINY) { src_yskip = VIS_MINY - yclip; yclip = VIS_MINY; hclip -= src_yskip; }
 	if (yclip + hclip > VIS_MAXY+1) { hclip = VIS_MAXY+1 - yclip; }
 	if (xclip < VIS_MINX) { src_xskip = VIS_MINX - xclip; xclip = VIS_MINX; wclip -= src_xskip; }
@@ -2232,41 +2235,38 @@ static void init_common(running_machine &machine)
 }
 
 
-static DRIVER_INIT( benberob )
+DRIVER_INIT_MEMBER(halleys_state,benberob)
 {
-	halleys_state *state = machine.driver_data<halleys_state>();
-	state->m_game_id = GAME_BENBEROB;
+	m_game_id = GAME_BENBEROB;
 
-	init_common(machine);
+	init_common(machine());
 
-	state->m_blitter_reset_timer = machine.scheduler().timer_alloc(FUNC(blitter_reset));
+	m_blitter_reset_timer = machine().scheduler().timer_alloc(FUNC(blitter_reset));
 }
 
 
-static DRIVER_INIT( halleys )
+DRIVER_INIT_MEMBER(halleys_state,halleys)
 {
-	halleys_state *state = machine.driver_data<halleys_state>();
-	state->m_game_id = GAME_HALLEYS;
-	state->m_collision_detection = 0xb114;
+	m_game_id = GAME_HALLEYS;
+	m_collision_detection = 0xb114;
 
-	init_common(machine);
+	init_common(machine());
 }
 
-static DRIVER_INIT( halley87 )
+DRIVER_INIT_MEMBER(halleys_state,halley87)
 {
-	halleys_state *state = machine.driver_data<halleys_state>();
-	state->m_game_id = GAME_HALLEYS;
-	state->m_collision_detection = 0xb10d;
+	m_game_id = GAME_HALLEYS;
+	m_collision_detection = 0xb10d;
 
-	init_common(machine);
+	init_common(machine());
 }
 
 
 //**************************************************************************
 // Game Definitions
 
-GAME( 1984, benberob, 0,       benberob, benberob, benberob,  ROT0,  "Taito", "Ben Bero Beh (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_COLORS | GAME_NO_COCKTAIL )
-GAME( 1986, halleys,  0,       halleys,  halleys,  halleys,   ROT90, "Taito America Corporation (Coin-It license)", "Halley's Comet (US)", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )
-GAME( 1986, halleysc, halleys, halleys,  halleys,  halleys,   ROT90, "Taito Corporation", "Halley's Comet (Japan, Newer)", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )
-GAME( 1986, halleycj, halleys, halleys,  halleys,  halleys,   ROT90, "Taito Corporation", "Halley's Comet (Japan, Older)", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )
-GAME( 1986, halley87, halleys, halleys,  halleys,  halley87,  ROT90, "Taito Corporation", "Halley's Comet '87", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )
+GAME( 1984, benberob, 0,       benberob, benberob, halleys_state, benberob,  ROT0,  "Taito", "Ben Bero Beh (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_COLORS | GAME_NO_COCKTAIL )
+GAME( 1986, halleys,  0,       halleys,  halleys, halleys_state,  halleys,   ROT90, "Taito America Corporation (Coin-It license)", "Halley's Comet (US)", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )
+GAME( 1986, halleysc, halleys, halleys,  halleys, halleys_state,  halleys,   ROT90, "Taito Corporation", "Halley's Comet (Japan, Newer)", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )
+GAME( 1986, halleycj, halleys, halleys,  halleys, halleys_state,  halleys,   ROT90, "Taito Corporation", "Halley's Comet (Japan, Older)", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )
+GAME( 1986, halley87, halleys, halleys,  halleys, halleys_state,  halley87,  ROT90, "Taito Corporation", "Halley's Comet '87", GAME_IMPERFECT_GRAPHICS | GAME_NO_COCKTAIL )

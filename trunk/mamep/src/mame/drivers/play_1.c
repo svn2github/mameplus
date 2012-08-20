@@ -21,6 +21,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(play_1);
 };
 
 static ADDRESS_MAP_START( play_1_map, AS_PROGRAM, 8, play_1_state )
@@ -34,7 +36,7 @@ void play_1_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( play_1 )
+DRIVER_INIT_MEMBER(play_1_state,play_1)
 {
 }
 
@@ -109,8 +111,8 @@ ROM_END
 
 
 /* Big Town, Last Lap and Party all reportedly share the same roms with different playfield/machine artworks */
-GAME(1978,	bigtown,	0,		play_1,	play_1,	play_1,	ROT0,	"Playmatic",	"Big Town",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1978,	chance,		0,		play_1,	play_1,	play_1,	ROT0,	"Playmatic",	"Chance",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1978,	lastlap,	0,		play_1,	play_1,	play_1,	ROT0,	"Playmatic",	"Last Lap",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1978,	spcgambl,	0,		play_1,	play_1,	play_1,	ROT0,	"Playmatic",	"Space Gambler",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1979,	party,		0,		play_1,	play_1,	play_1,	ROT0,	"Playmatic",	"Party",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	bigtown,	0,		play_1,	play_1, play_1_state,	play_1,	ROT0,	"Playmatic",	"Big Town",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	chance,		0,		play_1,	play_1, play_1_state,	play_1,	ROT0,	"Playmatic",	"Chance",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	lastlap,	0,		play_1,	play_1, play_1_state,	play_1,	ROT0,	"Playmatic",	"Last Lap",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,	spcgambl,	0,		play_1,	play_1, play_1_state,	play_1,	ROT0,	"Playmatic",	"Space Gambler",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1979,	party,		0,		play_1,	play_1, play_1_state,	play_1,	ROT0,	"Playmatic",	"Party",				GAME_IS_SKELETON_MECHANICAL)

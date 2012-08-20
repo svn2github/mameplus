@@ -149,15 +149,28 @@ the layer is misplaced however, different scroll regs?
 
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
-#include "includes/kaneko16.h"
 #include "sound/okim6295.h"
+#include "machine/kaneko_hit.h"
+#include "video/kaneko_tmap.h"
+#include "video/kaneko_spr.h"
 
-
-class expro02_state : public kaneko16_state
+class expro02_state : public driver_device
 {
 public:
 	expro02_state(const machine_config &mconfig, device_type type, const char *tag)
-		: kaneko16_state(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_galsnew_bg_pixram(*this, "galsnew_bgram"),
+		m_galsnew_fg_pixram(*this, "galsnew_fgram"),
+		m_view2_0(*this, "view2_0"),
+		m_kaneko_spr(*this, "kan_spr"),
+		m_spriteram(*this, "spriteram")
+	{ }
+
+	optional_shared_ptr<UINT16> m_galsnew_bg_pixram;
+	optional_shared_ptr<UINT16> m_galsnew_fg_pixram;
+	optional_device<kaneko_view2_tilemap_device> m_view2_0;
+	optional_device<kaneko16_sprite_device> m_kaneko_spr;
+	optional_shared_ptr<UINT16> m_spriteram;
 
 	UINT16 m_vram_0_bank_num;
 	UINT16 m_vram_1_bank_num;
@@ -165,7 +178,80 @@ public:
 	DECLARE_WRITE16_MEMBER(galsnew_paletteram_w);
 	DECLARE_WRITE16_MEMBER(galsnew_vram_0_bank_w);
 	DECLARE_WRITE16_MEMBER(galsnew_vram_1_bank_w);
+	DECLARE_DRIVER_INIT(galsnew);
 };
+
+
+PALETTE_INIT( galsnew )
+{
+	int i;
+
+	/* first 2048 colors are dynamic */
+
+	/* initialize 555 RGB lookup */
+	for (i = 0; i < 32768; i++)
+		palette_set_color_rgb(machine,2048 + i,pal5bit(i >> 5),pal5bit(i >> 10),pal5bit(i >> 0));
+}
+
+SCREEN_UPDATE_IND16( galsnew )
+{
+	expro02_state *state = screen.machine().driver_data<expro02_state>();
+//  kaneko16_fill_bitmap(screen.machine(),bitmap,cliprect);
+	int y,x;
+	int count;
+
+
+	count = 0;
+	for (y=0;y<256;y++)
+	{
+		UINT16 *dest = &bitmap.pix16(y);
+
+		for (x=0;x<256;x++)
+		{
+			UINT16 dat = (state->m_galsnew_fg_pixram[count] & 0xfffe)>>1;
+			dat+=2048;
+			dest[x] = dat;
+			count++;
+		}
+	}
+
+	count = 0;
+	for (y=0;y<256;y++)
+	{
+		UINT16 *dest = &bitmap.pix16(y);
+
+		for (x=0;x<256;x++)
+		{
+			UINT16 dat = (state->m_galsnew_bg_pixram[count]);
+			//dat &=0x3ff;
+			if (dat)
+				dest[x] = dat;
+
+			count++;
+		}
+	}
+
+
+
+	int i;
+
+	screen.machine().priority_bitmap.fill(0, cliprect);
+
+	state->m_view2_0->kaneko16_prepare(bitmap, cliprect);
+
+	for ( i = 0; i < 8; i++ )
+	{
+		state->m_view2_0->render_tilemap_chip(bitmap,cliprect,i);
+	}
+
+	state->m_kaneko_spr->kaneko16_render_sprites(screen.machine(),bitmap,cliprect, state->m_spriteram, state->m_spriteram.bytes());
+	return 0;
+}
+
+VIDEO_START( galsnew )
+{
+
+}
 
 
 /*************************************
@@ -333,39 +419,7 @@ WRITE16_MEMBER(expro02_state::galsnew_paletteram_w)
 }
 
 
-WRITE16_MEMBER(expro02_state::galsnew_vram_0_bank_w)
-{
 
-	int i;
-	if(m_vram_0_bank_num != data)
-	{
-		for(i = 0; i < 0x1000 / 2; i += 2)
-		{
-			if(m_vram[0][i])
-			{
-				kaneko16_vram_0_w(space, i+1, data << 8, 0xFF00);
-			}
-		}
-		m_vram_0_bank_num = data;
-	}
-}
-
-WRITE16_MEMBER(expro02_state::galsnew_vram_1_bank_w)
-{
-
-	int i;
-	if(m_vram_1_bank_num != data)
-	{
-		for(i = 0; i < 0x1000 / 2; i += 2)
-		{
-			if(m_vram[1][i])
-			{
-				kaneko16_vram_1_w(space, i+1, data << 8, 0xFF00);
-			}
-		}
-		m_vram_1_bank_num = data;
-	}
-}
 
 /*************************************
  *
@@ -383,18 +437,15 @@ static ADDRESS_MAP_START( galsnew_map, AS_PROGRAM, 16, expro02_state )
 	AM_RANGE(0x500000, 0x51ffff) AM_RAM AM_SHARE("galsnew_bgram")
 	AM_RANGE(0x520000, 0x53ffff) AM_RAM AM_SHARE("galsnew_fgram")
 
-	AM_RANGE(0x580000, 0x580fff) AM_RAM_WRITE(kaneko16_vram_1_w) AM_SHARE("vram.1")	// Layers 0
-	AM_RANGE(0x581000, 0x581fff) AM_RAM_WRITE(kaneko16_vram_0_w) AM_SHARE("vram.0")	//
-	AM_RANGE(0x582000, 0x582fff) AM_RAM AM_SHARE("vscroll.1")									//
-	AM_RANGE(0x583000, 0x583fff) AM_RAM AM_SHARE("vscroll.0")									//
+	AM_RANGE(0x580000, 0x583fff) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_vram_r, kaneko_tmap_vram_w )
 
 	AM_RANGE(0x600000, 0x600fff) AM_RAM_WRITE(galsnew_paletteram_w) AM_SHARE("paletteram") // palette?
 
-	AM_RANGE(0x680000, 0x68001f) AM_RAM_WRITE(kaneko16_layers_0_regs_w) AM_SHARE("layers_0_regs") // sprite regs? tileregs?
+	AM_RANGE(0x680000, 0x68001f) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_regs_r, kaneko_tmap_regs_w)
 
 	AM_RANGE(0x700000, 0x700fff) AM_RAM AM_SHARE("spriteram")	 // sprites? 0x72f words tested
 
-	AM_RANGE(0x780000, 0x78001f) AM_RAM_WRITE(kaneko16_sprites_regs_w) AM_SHARE("sprites_regs") // sprite regs? tileregs?
+	AM_RANGE(0x780000, 0x78001f) AM_DEVREADWRITE("kan_spr", kaneko16_sprite_device, kaneko16_sprites_regs_r, kaneko16_sprites_regs_w)
 
 	AM_RANGE(0x800000, 0x800001) AM_READ_PORT("DSW1")
 	AM_RANGE(0x800002, 0x800003) AM_READ_PORT("DSW2")
@@ -406,11 +457,11 @@ static ADDRESS_MAP_START( galsnew_map, AS_PROGRAM, 16, expro02_state )
 
 	AM_RANGE(0xc80000, 0xc8ffff) AM_RAM
 
-	AM_RANGE(0xd80000, 0xd80001) AM_WRITE(galsnew_vram_1_bank_w)	/* ??? */
+	AM_RANGE(0xd80000, 0xd80001) AM_DEVWRITE("view2_0",kaneko_view2_tilemap_device,galsnew_vram_1_tilebank_w)	/* ??? */
 
-	AM_RANGE(0xe00000, 0xe00015) AM_READWRITE(galpanib_calc_r,galpanib_calc_w) /* CALC1 MCU interaction (simulated) */
+	AM_RANGE(0xe00000, 0xe00015) AM_DEVREADWRITE("calc1_mcu", kaneko_hit_device, kaneko_hit_r,kaneko_hit_w)
 
-	AM_RANGE(0xe80000, 0xe80001) AM_WRITE(galsnew_vram_0_bank_w)	/* ??? */
+	AM_RANGE(0xe80000, 0xe80001) AM_DEVWRITE("view2_0",kaneko_view2_tilemap_device,galsnew_vram_0_tilebank_w)	/* ??? */
 ADDRESS_MAP_END
 
 
@@ -420,14 +471,11 @@ static ADDRESS_MAP_START( fantasia_map, AS_PROGRAM, 16, expro02_state )
 	AM_RANGE(0x000000, 0x4fffff) AM_ROM
 	AM_RANGE(0x500000, 0x51ffff) AM_RAM AM_SHARE("galsnew_bgram")
 	AM_RANGE(0x520000, 0x53ffff) AM_RAM AM_SHARE("galsnew_fgram")
-	AM_RANGE(0x580000, 0x580fff) AM_RAM_WRITE(kaneko16_vram_1_w) AM_SHARE("vram.1")	// Layers 0
-	AM_RANGE(0x581000, 0x581fff) AM_RAM_WRITE(kaneko16_vram_0_w) AM_SHARE("vram.0")	//
-	AM_RANGE(0x582000, 0x582fff) AM_RAM AM_SHARE("vscroll.1")									//
-	AM_RANGE(0x583000, 0x583fff) AM_RAM AM_SHARE("vscroll.0")									//
+	AM_RANGE(0x580000, 0x583fff) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_vram_r, kaneko_tmap_vram_w )
 	AM_RANGE(0x600000, 0x600fff) AM_RAM_WRITE(galsnew_paletteram_w) AM_SHARE("paletteram") // palette?
-	AM_RANGE(0x680000, 0x68001f) AM_RAM_WRITE(kaneko16_layers_0_regs_w) AM_SHARE("layers_0_regs") // sprite regs? tileregs?
+	AM_RANGE(0x680000, 0x68001f) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_regs_r, kaneko_tmap_regs_w)
 	AM_RANGE(0x700000, 0x700fff) AM_RAM AM_SHARE("spriteram")	 // sprites? 0x72f words tested
-	AM_RANGE(0x780000, 0x78001f) AM_RAM_WRITE(kaneko16_sprites_regs_w) AM_SHARE("sprites_regs") // sprite regs? tileregs?
+	AM_RANGE(0x780000, 0x78001f) AM_DEVREADWRITE("kan_spr", kaneko16_sprite_device, kaneko16_sprites_regs_r, kaneko16_sprites_regs_w)
 	AM_RANGE(0x800000, 0x800001) AM_READ_PORT("DSW1")
 	AM_RANGE(0x800002, 0x800003) AM_READ_PORT("DSW2")
 	AM_RANGE(0x800004, 0x800005) AM_READ_PORT("DSW3")
@@ -435,9 +483,8 @@ static ADDRESS_MAP_START( fantasia_map, AS_PROGRAM, 16, expro02_state )
 	AM_RANGE(0x900000, 0x900001) AM_WRITE(galsnew_6295_bankswitch_w)
 	AM_RANGE(0xa00000, 0xa00001) AM_WRITENOP	/* ??? */
 	AM_RANGE(0xc80000, 0xc8ffff) AM_RAM
-	AM_RANGE(0xd80000, 0xd80001) AM_WRITE(galsnew_vram_1_bank_w)	/* ??? */
-	//AM_RANGE(0xe00000, 0xe00015) AM_READWRITE_LEGACY(galpanib_calc_r,galpanib_calc_w) /* CALC1 MCU interaction (simulated) */
-	AM_RANGE(0xe80000, 0xe80001) AM_WRITE(galsnew_vram_0_bank_w)	/* ??? */
+	AM_RANGE(0xd80000, 0xd80001) AM_DEVWRITE("view2_0",kaneko_view2_tilemap_device,galsnew_vram_1_tilebank_w)	/* ??? */
+	AM_RANGE(0xe80000, 0xe80001) AM_DEVWRITE("view2_0",kaneko_view2_tilemap_device,galsnew_vram_0_tilebank_w)	/* ??? */
 	AM_RANGE(0xf00000, 0xf00001) AM_DEVREADWRITE8("oki", okim6295_device, read, write, 0xff00)
 ADDRESS_MAP_END
 
@@ -461,17 +508,7 @@ static TIMER_DEVICE_CALLBACK( expro02_scanline )
 
 static MACHINE_RESET( galsnew )
 {
-	expro02_state *state = machine.driver_data<expro02_state>();
-	state->m_sprite_type  = 0;
-
-	state->m_sprite_xoffs = 0;
-	state->m_sprite_yoffs = -1*0x40; // align testgrid with bitmap in service mode
-
-	// priorities not verified
-	state->m_priority.sprite[0] = 8;	// above all
-	state->m_priority.sprite[1] = 8;	// above all
-	state->m_priority.sprite[2] = 8;	// above all
-	state->m_priority.sprite[3] = 8;	// above all
+//  expro02_state *state = machine.driver_data<expro02_state>();
 }
 
 /*************************************
@@ -524,8 +561,20 @@ static MACHINE_CONFIG_START( galsnew, expro02_state )
 	MCFG_PALETTE_LENGTH(2048 + 32768)
 	MCFG_MACHINE_RESET( galsnew )
 
+	MCFG_DEVICE_ADD("view2_0", KANEKO_TMAP, 0)
+	kaneko_view2_tilemap_device::set_gfx_region(*device, 1);
+	kaneko_view2_tilemap_device::set_offset(*device, 0x5b, 0x8, 256, 224);
+
+	MCFG_DEVICE_ADD_VU002_SPRITES
+	kaneko16_sprite_device::set_priorities(*device, 8,8,8,8); // above all (not verified)
+	kaneko16_sprite_device::set_offsets(*device, 0, -0x40);
+
+	MCFG_DEVICE_ADD("calc1_mcu", KANEKO_HIT, 0)
+	kaneko_hit_device::set_type(*device, 0);
+
+
 	MCFG_VIDEO_START(galsnew)
-	MCFG_PALETTE_INIT(berlwall)
+	MCFG_PALETTE_INIT(galsnew)
 
 	/* arm watchdog */
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(3))	/* a guess, and certainly wrong */
@@ -544,6 +593,12 @@ static MACHINE_CONFIG_DERIVED( fantasia, galsnew )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(fantasia_map)
+
+	MCFG_DEVICE_MODIFY("view2_0")
+	// these values might not be correct, behavior differs from original boards
+	kaneko_view2_tilemap_device::set_invert_flip(*device, 1);
+	kaneko_view2_tilemap_device::set_offset(*device, -256, -216, 256, 224);
+
 
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(0))	/* a guess, and certainly wrong */
 
@@ -749,10 +804,10 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT(galsnew)
+DRIVER_INIT_MEMBER(expro02_state,galsnew)
 {
-	UINT32 *src = (UINT32 *)machine.root_device().memregion("gfx3" )->base();
-	UINT32 *dst = (UINT32 *)machine.root_device().memregion("gfx2" )->base();
+	UINT32 *src = (UINT32 *)machine().root_device().memregion("gfx3" )->base();
+	UINT32 *dst = (UINT32 *)machine().root_device().memregion("gfx2" )->base();
 	int x, offset;
 
 
@@ -786,9 +841,9 @@ static DRIVER_INIT(galsnew)
  *
  *************************************/
 
-GAME( 1990, galsnew,  0,       galsnew, galsnew,  galsnew, ROT90, "Kaneko", "Gals Panic (US, EXPRO-02 PCB)", GAME_NO_COCKTAIL )
-GAME( 1990, galsnewa, galsnew, galsnew, galsnewa, galsnew, ROT90, "Kaneko", "Gals Panic (Export, EXPRO-02 PCB)", GAME_NO_COCKTAIL )
-GAME( 1990, galsnewj, galsnew, galsnew, galsnewj, galsnew, ROT90, "Kaneko (Taito license)", "Gals Panic (Japan, EXPRO-02 PCB)", GAME_NO_COCKTAIL )
-GAME( 1990, galsnewk, galsnew, galsnew, galsnewj, galsnew, ROT90, "Kaneko (Inter license)", "Gals Panic (Korea, EXPRO-02 PCB)", GAME_NO_COCKTAIL )
+GAME( 1990, galsnew,  0,       galsnew, galsnew, expro02_state,  galsnew, ROT90, "Kaneko", "Gals Panic (US, EXPRO-02 PCB)", GAME_NO_COCKTAIL )
+GAME( 1990, galsnewa, galsnew, galsnew, galsnewa, expro02_state, galsnew, ROT90, "Kaneko", "Gals Panic (Export, EXPRO-02 PCB)", GAME_NO_COCKTAIL )
+GAME( 1990, galsnewj, galsnew, galsnew, galsnewj, expro02_state, galsnew, ROT90, "Kaneko (Taito license)", "Gals Panic (Japan, EXPRO-02 PCB)", GAME_NO_COCKTAIL )
+GAME( 1990, galsnewk, galsnew, galsnew, galsnewj, expro02_state, galsnew, ROT90, "Kaneko (Inter license)", "Gals Panic (Korea, EXPRO-02 PCB)", GAME_NO_COCKTAIL )
 
-GAME( 1994, fantasia, 0,       fantasia,fantasia, galsnew, ROT90, "Comad & New Japan System", "Fantasia", GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, fantasia, 0,       fantasia,fantasia, expro02_state, galsnew, ROT90, "Comad & New Japan System", "Fantasia", GAME_NO_COCKTAIL | GAME_IMPERFECT_GRAPHICS )

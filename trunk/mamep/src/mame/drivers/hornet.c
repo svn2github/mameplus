@@ -364,6 +364,8 @@ public:
 	DECLARE_WRITE32_MEMBER(dsp_dataram0_w);
 	DECLARE_READ32_MEMBER(dsp_dataram1_r);
 	DECLARE_WRITE32_MEMBER(dsp_dataram1_w);
+	DECLARE_DRIVER_INIT(hornet);
+	DECLARE_DRIVER_INIT(hornet_2board);
 };
 
 
@@ -1263,27 +1265,25 @@ static void jamma_jvs_cmd_exec(running_machine &machine)
 /*****************************************************************************/
 
 
-static DRIVER_INIT(hornet)
+DRIVER_INIT_MEMBER(hornet_state,hornet)
 {
-	hornet_state *state = machine.driver_data<hornet_state>();
-	init_konami_cgboard(machine, 1, CGBOARD_TYPE_HORNET);
-	set_cgboard_texture_bank(machine, 0, "bank5", state->memregion("user5")->base());
+	init_konami_cgboard(machine(), 1, CGBOARD_TYPE_HORNET);
+	set_cgboard_texture_bank(machine(), 0, "bank5", memregion("user5")->base());
 
-	state->m_led_reg0 = state->m_led_reg1 = 0x7f;
+	m_led_reg0 = m_led_reg1 = 0x7f;
 
-	ppc4xx_spu_set_tx_handler(machine.device("maincpu"), jamma_jvs_w);
+	ppc4xx_spu_set_tx_handler(machine().device("maincpu"), jamma_jvs_w);
 }
 
-static DRIVER_INIT(hornet_2board)
+DRIVER_INIT_MEMBER(hornet_state,hornet_2board)
 {
-	hornet_state *state = machine.driver_data<hornet_state>();
-	init_konami_cgboard(machine, 2, CGBOARD_TYPE_HORNET);
-	set_cgboard_texture_bank(machine, 0, "bank5", state->memregion("user5")->base());
-	set_cgboard_texture_bank(machine, 1, "bank6", state->memregion("user5")->base());
+	init_konami_cgboard(machine(), 2, CGBOARD_TYPE_HORNET);
+	set_cgboard_texture_bank(machine(), 0, "bank5", memregion("user5")->base());
+	set_cgboard_texture_bank(machine(), 1, "bank6", memregion("user5")->base());
 
-	state->m_led_reg0 = state->m_led_reg1 = 0x7f;
+	m_led_reg0 = m_led_reg1 = 0x7f;
 
-	ppc4xx_spu_set_tx_handler(machine.device("maincpu"), jamma_jvs_w);
+	ppc4xx_spu_set_tx_handler(machine().device("maincpu"), jamma_jvs_w);
 }
 
 /*****************************************************************************/
@@ -1519,17 +1519,17 @@ ROM_END
 
 /*************************************************************************/
 
-GAME(  1998, gradius4,  0,        hornet,           hornet, hornet,        ROT0, "Konami", "Gradius 4: Fukkatsu", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME(  1998, nbapbp,    0,        hornet,           hornet, hornet,        ROT0, "Konami", "NBA Play By Play", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAMEL( 1998, terabrst,  0,        terabrst,         hornet, hornet_2board, ROT0, "Konami", "Teraburst (1998/07/17 ver UEL)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_dualhsxs )
-GAMEL( 1998, terabrsta, terabrst, terabrst,         hornet, hornet_2board, ROT0, "Konami", "Teraburst (1998/02/25 ver AAA)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_dualhsxs )
+GAME(  1998, gradius4,  0,        hornet,           hornet, hornet_state, hornet,        ROT0, "Konami", "Gradius 4: Fukkatsu", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME(  1998, nbapbp,    0,        hornet,           hornet, hornet_state, hornet,        ROT0, "Konami", "NBA Play By Play", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAMEL( 1998, terabrst,  0,        terabrst,         hornet, hornet_state, hornet_2board, ROT0, "Konami", "Teraburst (1998/07/17 ver UEL)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_dualhsxs )
+GAMEL( 1998, terabrsta, terabrst, terabrst,         hornet, hornet_state, hornet_2board, ROT0, "Konami", "Teraburst (1998/02/25 ver AAA)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_dualhsxs )
 
 // The region comes from the Timekeeper NVRAM, without a valid default all sets except 'xxD, Ver 1.33' will init their NVRAM to UAx versions, the xxD set seems to incorrectly init it to JXD, which isn't a valid
 // version, and thus can't be booted.  If you copy the NVRAM from another already initialized set, it will boot as UAD.
 // to get the actual game to boot you must calibrate the guns etc.
-GAMEL( 2000, sscope,    0,        hornet_2board,    sscope, hornet_2board, ROT0, "Konami", "Silent Scope (ver xxD, Ver 1.33)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE, layout_dualhsxs )
-GAMEL( 2000, sscopec,   sscope,   hornet_2board,    sscope, hornet_2board, ROT0, "Konami", "Silent Scope (ver xxC, Ver 1.30)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE, layout_dualhsxs )
-GAMEL( 2000, sscopeb,   sscope,   hornet_2board,    sscope, hornet_2board, ROT0, "Konami", "Silent Scope (ver xxB, Ver 1.20)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE, layout_dualhsxs )
-GAMEL( 2000, sscopea,   sscope,   hornet_2board,    sscope, hornet_2board, ROT0, "Konami", "Silent Scope (ver xxA, Ver 1.00)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE, layout_dualhsxs )
+GAMEL( 2000, sscope,    0,        hornet_2board,    sscope, hornet_state, hornet_2board, ROT0, "Konami", "Silent Scope (ver xxD, Ver 1.33)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE, layout_dualhsxs )
+GAMEL( 2000, sscopec,   sscope,   hornet_2board,    sscope, hornet_state, hornet_2board, ROT0, "Konami", "Silent Scope (ver xxC, Ver 1.30)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE, layout_dualhsxs )
+GAMEL( 2000, sscopeb,   sscope,   hornet_2board,    sscope, hornet_state, hornet_2board, ROT0, "Konami", "Silent Scope (ver xxB, Ver 1.20)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE, layout_dualhsxs )
+GAMEL( 2000, sscopea,   sscope,   hornet_2board,    sscope, hornet_state, hornet_2board, ROT0, "Konami", "Silent Scope (ver xxA, Ver 1.00)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE, layout_dualhsxs )
 
-GAMEL( 2000, sscope2,   0,        sscope2,          sscope, hornet_2board, ROT0, "Konami", "Silent Scope 2", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE, layout_dualhsxs )
+GAMEL( 2000, sscope2,   0,        sscope2,          sscope, hornet_state, hornet_2board, ROT0, "Konami", "Silent Scope 2", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING | GAME_SUPPORTS_SAVE, layout_dualhsxs )

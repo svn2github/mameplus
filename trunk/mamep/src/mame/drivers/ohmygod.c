@@ -389,18 +389,16 @@ ROM_END
 
 
 
-static DRIVER_INIT( ohmygod )
+DRIVER_INIT_MEMBER(ohmygod_state,ohmygod)
 {
-	ohmygod_state *state = machine.driver_data<ohmygod_state>();
-	state->m_adpcm_bank_shift = 4;
+	m_adpcm_bank_shift = 4;
 }
 
-static DRIVER_INIT( naname )
+DRIVER_INIT_MEMBER(ohmygod_state,naname)
 {
-	ohmygod_state *state = machine.driver_data<ohmygod_state>();
-	state->m_adpcm_bank_shift = 0;
+	m_adpcm_bank_shift = 0;
 }
 
 
-GAME( 1993, ohmygod, 0, ohmygod, ohmygod, ohmygod, ROT0, "Atlus", "Oh My God! (Japan)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
-GAME( 1994, naname,  0, ohmygod, naname,  naname,  ROT0, "Atlus", "Naname de Magic! (Japan)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1993, ohmygod, 0, ohmygod, ohmygod, ohmygod_state, ohmygod, ROT0, "Atlus", "Oh My God! (Japan)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )
+GAME( 1994, naname,  0, ohmygod, naname, ohmygod_state,  naname,  ROT0, "Atlus", "Naname de Magic! (Japan)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE )

@@ -57,6 +57,7 @@ public:
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
 	DECLARE_READ8_MEMBER(maxaflex_atari_pia_pa_r);
 	DECLARE_READ8_MEMBER(maxaflex_atari_pia_pb_r);
+	DECLARE_DRIVER_INIT(a600xl);
 };
 
 
@@ -505,14 +506,14 @@ ROM_START(mf_flip)
 	ROM_LOAD("maxprom.prm", 0x0000, 0x0200, CRC(edf5c950) SHA1(9ad046ea41a61585dd8d2f2d4167a3cc39d2928f))	/* for simulating keystrokes ?*/
 ROM_END
 
-static DRIVER_INIT( a600xl )
+DRIVER_INIT_MEMBER(maxaflex_state,a600xl)
 {
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 	memcpy( rom + 0x5000, rom + 0xd000, 0x800 );
 }
 
-GAME( 1984, maxaflex, 0,        maxaflex, a600xl, a600xl, ROT0, "Exidy", "Max-A-Flex", GAME_IS_BIOS_ROOT )
-GAME( 1982, mf_achas, maxaflex, maxaflex, a600xl, a600xl, ROT0, "Exidy / First Star Software", "Astro Chase (Max-A-Flex)", 0 )
-GAME( 1983, mf_brist, maxaflex, maxaflex, a600xl, a600xl, ROT0, "Exidy / First Star Software", "Bristles (Max-A-Flex)", 0 )
-GAME( 1983, mf_flip,  maxaflex, maxaflex, a600xl, a600xl, ROT0, "Exidy / First Star Software", "Flip & Flop (Max-A-Flex)", 0 )
-GAME( 1984, mf_bdash, maxaflex, maxaflex, a600xl, a600xl, ROT0, "Exidy / First Star Software", "Boulder Dash (Max-A-Flex)", 0 )
+GAME( 1984, maxaflex, 0,        maxaflex, a600xl, maxaflex_state, a600xl, ROT0, "Exidy", "Max-A-Flex", GAME_IS_BIOS_ROOT )
+GAME( 1982, mf_achas, maxaflex, maxaflex, a600xl, maxaflex_state, a600xl, ROT0, "Exidy / First Star Software", "Astro Chase (Max-A-Flex)", 0 )
+GAME( 1983, mf_brist, maxaflex, maxaflex, a600xl, maxaflex_state, a600xl, ROT0, "Exidy / First Star Software", "Bristles (Max-A-Flex)", 0 )
+GAME( 1983, mf_flip,  maxaflex, maxaflex, a600xl, maxaflex_state, a600xl, ROT0, "Exidy / First Star Software", "Flip & Flop (Max-A-Flex)", 0 )
+GAME( 1984, mf_bdash, maxaflex, maxaflex, a600xl, maxaflex_state, a600xl, ROT0, "Exidy / First Star Software", "Boulder Dash (Max-A-Flex)", 0 )

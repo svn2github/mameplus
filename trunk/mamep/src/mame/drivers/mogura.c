@@ -22,8 +22,8 @@ public:
 
 	/* devices */
 	device_t *m_maincpu;
-	device_t *m_dac1;
-	device_t *m_dac2;
+	dac_device *m_dac1;
+	dac_device *m_dac2;
 	DECLARE_WRITE8_MEMBER(mogura_tileram_w);
 	DECLARE_WRITE8_MEMBER(mogura_dac_w);
 	DECLARE_WRITE8_MEMBER(mogura_gfxram_w);
@@ -111,8 +111,8 @@ WRITE8_MEMBER(mogura_state::mogura_tileram_w)
 
 WRITE8_MEMBER(mogura_state::mogura_dac_w)
 {
-	dac_data_w(m_dac1, data & 0xf0);	/* left */
-	dac_data_w(m_dac2, (data & 0x0f) << 4);	/* right */
+	m_dac1->write_unsigned8(data & 0xf0);	/* left */
+	m_dac2->write_unsigned8((data & 0x0f) << 4);	/* right */
 }
 
 
@@ -193,8 +193,8 @@ static MACHINE_START( mogura )
 	mogura_state *state = machine.driver_data<mogura_state>();
 
 	state->m_maincpu = machine.device("maincpu");
-	state->m_dac1 = machine.device("dac1");
-	state->m_dac2 = machine.device("dac2");
+	state->m_dac1 = machine.device<dac_device>("dac1");
+	state->m_dac2 = machine.device<dac_device>("dac2");
 }
 
 static MACHINE_CONFIG_START( mogura, mogura_state )
@@ -225,10 +225,10 @@ static MACHINE_CONFIG_START( mogura, mogura_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.50)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.50)
 MACHINE_CONFIG_END
 
@@ -240,4 +240,4 @@ ROM_START( mogura )
 	ROM_LOAD( "gx141.7j", 0x00, 0x20,  CRC(b21c5d5f) SHA1(6913c840dd69a7d4687f4c4cbe3ff12300f62bc2) )
 ROM_END
 
-GAME( 1991, mogura, 0, mogura, mogura, 0, ROT0, "Konami", "Mogura Desse (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1991, mogura, 0, mogura, mogura, driver_device, 0, ROT0, "Konami", "Mogura Desse (Japan)", GAME_SUPPORTS_SAVE )

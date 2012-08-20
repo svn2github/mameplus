@@ -559,20 +559,20 @@ FULL SCREEN OPTIONS
 全屏幕选项
 
 # osd/windows/window.c: 249
-Failed to create pause event
-无法创建暂停事件
+Failed to create pause event\n
+无法创建暂停事件\n
 
 # osd/windows/window.c: 901
-Failed to create window class
-无法创建窗口类别
+Failed to create window class\n
+无法创建窗口类别\n
 
 # osd/windows/window.c: 263
-Failed to create window thread
-无法创建窗口线程
+Failed to create window thread\n
+无法创建窗口线程\n
 
 # osd/windows/window.c: 257
-Failed to create window thread ready event
-无法创建窗口线程预备事件
+Failed to create window thread ready event\n
+无法创建窗口线程预备事件\n
 
 # osd/windows/d3dhlsl.c: 2686
 Green Convergence X
@@ -799,8 +799,8 @@ Unable to close the keyboard device. (error %d)\n
 无法关闭键盘设备。(错误 %d)\n
 
 # osd/windows/window.c: 723
-Unable to complete window creation
-无法完成窗口创建
+Unable to complete window creation\n
+无法完成窗口创建\n
 
 # osd/windows/drawd3d.c: 743
 Unable to create the Direct3D device (%08X)\n

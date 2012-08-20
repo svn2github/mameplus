@@ -33,6 +33,7 @@ public:
 	required_shared_ptr<UINT8> m_videoram;
 	required_shared_ptr<UINT8> m_colorram;
 	tilemap_t *m_tmap;
+	DECLARE_DRIVER_INIT(tattack);
 };
 
 
@@ -235,10 +236,10 @@ ROM_START( tattack )
 
 ROM_END
 
-static DRIVER_INIT(tattack)
+DRIVER_INIT_MEMBER(tattack_state,tattack)
 {
 
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 
 	rom[0x1b4]=0;
 	rom[0x1b5]=0;
@@ -273,4 +274,4 @@ static DRIVER_INIT(tattack)
 
 }
 
-GAME( 198?, tattack, 0, tattack, tattack, tattack, ROT270, "Shonan", "Time Attacker", GAME_NO_SOUND | GAME_IMPERFECT_COLORS | GAME_NOT_WORKING)
+GAME( 198?, tattack, 0, tattack, tattack, tattack_state, tattack, ROT270, "Shonan", "Time Attacker", GAME_NO_SOUND | GAME_IMPERFECT_COLORS | GAME_NOT_WORKING)

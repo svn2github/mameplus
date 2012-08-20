@@ -21,6 +21,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(capcom);
 };
 
 
@@ -35,7 +37,7 @@ void capcom_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( capcom )
+DRIVER_INIT_MEMBER(capcom_state,capcom)
 {
 }
 
@@ -287,17 +289,17 @@ ROM_START(ghv101)
 ROM_END
 
 
-GAME(1996,	abv106,		0,		capcom,	capcom,	capcom,	ROT0,	"Capcom",		"Airborne",						GAME_IS_SKELETON_MECHANICAL)
-GAME(1996,	abv106r,	abv106,	capcom,	capcom,	capcom,	ROT0,	"Capcom",		"Airborne (Redemption)",		GAME_IS_SKELETON_MECHANICAL)
-GAME(1996,	bbb109,		0,		capcom,	capcom,	capcom,	ROT0,	"Capcom",		"Big Bang Bar (Beta 1.9 US)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(1996,	bbb108,		bbb109,	capcom,	capcom,	capcom,	ROT0,	"Capcom",		"Big Bang Bar (Beta 1.8 US)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(1996,	bsv103,		0,		capcom,	capcom,	capcom,	ROT0,	"Capcom",		"Breakshot",					GAME_IS_SKELETON_MECHANICAL)
-GAME(1996,	bsv100r,	bsv103,	capcom,	capcom,	capcom,	ROT0,	"Capcom",		"Breakshot (Redemption 1.0)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(1996,	bsv102r,	bsv103,	capcom,	capcom,	capcom,	ROT0,	"Capcom",		"Breakshot (Redemption 1.2)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(1996,	bsb105,		bsv103,	capcom,	capcom,	capcom,	ROT0,	"Capcom",		"Breakshot (Beta)",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1996,	ffv104,		0,		capcom,	capcom,	capcom,	ROT0,	"Capcom",		"Flipper Football (v1.04)",		GAME_IS_SKELETON_MECHANICAL)
-GAME(1996,	ffv101,		ffv104,	capcom,	capcom,	capcom,	ROT0,	"Capcom",		"Flipper Football (v1.01)",		GAME_IS_SKELETON_MECHANICAL)
-GAME(1996,	kpv106,		0,		capcom,	capcom,	capcom,	ROT0,	"Capcom",		"Kingpin",						GAME_IS_SKELETON_MECHANICAL)
-GAME(1995,	pmv112,		0,		capcom,	capcom,	capcom,	ROT0,	"Capcom",		"Pinball Magic",				GAME_IS_SKELETON_MECHANICAL)
-GAME(1995,	pmv112r,	pmv112,	capcom,	capcom,	capcom,	ROT0,	"Capcom",		"Pinball Magic (Redemption)",	GAME_IS_SKELETON_MECHANICAL)
-GAME(1995,	ghv101,		0,		capcom,	capcom,	capcom,	ROT0,	"Romstar",		"Goofy Hoops",					GAME_IS_SKELETON_MECHANICAL)
+GAME(1996,	abv106,		0,		capcom,	capcom, capcom_state,	capcom,	ROT0,	"Capcom",		"Airborne",						GAME_IS_SKELETON_MECHANICAL)
+GAME(1996,	abv106r,	abv106,	capcom,	capcom, capcom_state,	capcom,	ROT0,	"Capcom",		"Airborne (Redemption)",		GAME_IS_SKELETON_MECHANICAL)
+GAME(1996,	bbb109,		0,		capcom,	capcom, capcom_state,	capcom,	ROT0,	"Capcom",		"Big Bang Bar (Beta 1.9 US)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(1996,	bbb108,		bbb109,	capcom,	capcom, capcom_state,	capcom,	ROT0,	"Capcom",		"Big Bang Bar (Beta 1.8 US)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(1996,	bsv103,		0,		capcom,	capcom, capcom_state,	capcom,	ROT0,	"Capcom",		"Breakshot",					GAME_IS_SKELETON_MECHANICAL)
+GAME(1996,	bsv100r,	bsv103,	capcom,	capcom, capcom_state,	capcom,	ROT0,	"Capcom",		"Breakshot (Redemption 1.0)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(1996,	bsv102r,	bsv103,	capcom,	capcom, capcom_state,	capcom,	ROT0,	"Capcom",		"Breakshot (Redemption 1.2)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(1996,	bsb105,		bsv103,	capcom,	capcom, capcom_state,	capcom,	ROT0,	"Capcom",		"Breakshot (Beta)",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1996,	ffv104,		0,		capcom,	capcom, capcom_state,	capcom,	ROT0,	"Capcom",		"Flipper Football (v1.04)",		GAME_IS_SKELETON_MECHANICAL)
+GAME(1996,	ffv101,		ffv104,	capcom,	capcom, capcom_state,	capcom,	ROT0,	"Capcom",		"Flipper Football (v1.01)",		GAME_IS_SKELETON_MECHANICAL)
+GAME(1996,	kpv106,		0,		capcom,	capcom, capcom_state,	capcom,	ROT0,	"Capcom",		"Kingpin (Pinball)",			GAME_IS_SKELETON_MECHANICAL)
+GAME(1995,	pmv112,		0,		capcom,	capcom, capcom_state,	capcom,	ROT0,	"Capcom",		"Pinball Magic",				GAME_IS_SKELETON_MECHANICAL)
+GAME(1995,	pmv112r,	pmv112,	capcom,	capcom, capcom_state,	capcom,	ROT0,	"Capcom",		"Pinball Magic (Redemption)",	GAME_IS_SKELETON_MECHANICAL)
+GAME(1995,	ghv101,		0,		capcom,	capcom, capcom_state,	capcom,	ROT0,	"Romstar",		"Goofy Hoops",					GAME_IS_SKELETON_MECHANICAL)

@@ -86,6 +86,7 @@ struct _romload_private
 	memory_region *	region;				/* info about current region */
 
 	astring			errorstring;		/* error string */
+	astring			softwarningstring;	/* software warning string */
 };
 #endif
 
@@ -1324,16 +1325,17 @@ void load_software_part_region(device_t *device, char *swlist, char *swname, rom
 	assert(device != NULL);
 
 	romdata->errorstring.reset();
+	romdata->softwarningstring.reset();
 
 	if (software_get_support(device->machine().options(), swlist, swname) == SOFTWARE_SUPPORTED_PARTIAL)
 	{
 		romdata->errorstring.catprintf("WARNING: support for software %s (in list %s) is only partial\n", swname, swlist);
-		romdata->warnings++;
+		romdata->softwarningstring.catprintf("Support for software %s (in list %s) is only partial\n", swname, swlist);
 	}
 	if (software_get_support(device->machine().options(), swlist, swname) == SOFTWARE_SUPPORTED_NO)
 	{
 		romdata->errorstring.catprintf("WARNING: support for software %s (in list %s) is only preliminary\n", swname, swlist);
-		romdata->warnings++;
+		romdata->softwarningstring.catprintf("Support for software %s (in list %s) is only preliminary\n", swname, swlist);
 	}
 
 	/* loop until we hit the end */
@@ -1539,6 +1541,16 @@ int rom_load_warnings(running_machine &machine)
 	return machine.romload_data->warnings;
 }
 
+
+/*-------------------------------------------------
+    software_load_warnings_message - return the
+    software load warnings we generated
+-------------------------------------------------*/
+
+astring& software_load_warnings_message(running_machine &machine)
+{
+	return machine.romload_data->softwarningstring;
+}
 
 /*-------------------------------------------------
     rom_load_knownbad - return the number of

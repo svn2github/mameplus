@@ -301,24 +301,24 @@ static const gfx_layout spritelayout =
 };
 
 static GFXDECODE_START( wc90b )
-	GFXDECODE_ENTRY( "gfx1", 0x00000, charlayout,   	1*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x00000, tilelayout,			2*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x02000, tilelayout,			2*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x04000, tilelayout,			2*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x06000, tilelayout,			2*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x08000, tilelayout,			2*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x0a000, tilelayout,			2*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x0c000, tilelayout,			2*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x0e000, tilelayout,			2*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x10000, tilelayout,			3*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x12000, tilelayout,			3*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x14000, tilelayout,			3*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x16000, tilelayout,			3*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x18000, tilelayout,			3*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x1a000, tilelayout,			3*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x1c000, tilelayout,			3*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx2", 0x1e000, tilelayout,			3*16*16, 16*16 )
-	GFXDECODE_ENTRY( "gfx3", 0x00000, spritelayout,		0*16*16, 16*16 ) // sprites
+	GFXDECODE_ENTRY( "gfx1", 0x00000, charlayout,   	0x100, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x00000, tilelayout,		0x200, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x02000, tilelayout,		0x200, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x04000, tilelayout,		0x200, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x06000, tilelayout,		0x200, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x08000, tilelayout,		0x200, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x0a000, tilelayout,		0x200, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x0c000, tilelayout,		0x200, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x0e000, tilelayout,		0x200, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x10000, tilelayout,		0x300, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x12000, tilelayout,		0x300, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x14000, tilelayout,		0x300, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x16000, tilelayout,		0x300, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x18000, tilelayout,		0x300, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x1a000, tilelayout,		0x300, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x1c000, tilelayout,		0x300, 0x10 )
+	GFXDECODE_ENTRY( "gfx2", 0x1e000, tilelayout,		0x300, 0x10 )
+	GFXDECODE_ENTRY( "gfx3", 0x00000, spritelayout,		0x000, 0x10 ) // sprites
 GFXDECODE_END
 
 
@@ -337,7 +337,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	irqhandler
+	DEVCB_LINE(irqhandler)
 };
 
 static void adpcm_int(device_t *device)
@@ -542,6 +542,6 @@ ROM_END
 #endif
 
 
-GAME( 1989, wc90b1, wc90, wc90b, wc90b, 0, ROT0, "bootleg", "Euro League (Italian hack of Tecmo World Cup '90)", GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )
-GAME( 1989, wc90b2, wc90, wc90b, wc90b, 0, ROT0, "bootleg", "Worldcup '90", GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )
-//GAME( 1989, wc90ba,  wc90, wc90b, wc90b, 0, ROT0, "bootleg", "Euro League (alt version)", GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )
+GAME( 1989, wc90b1, wc90, wc90b, wc90b, driver_device, 0, ROT0, "bootleg", "Euro League (Italian hack of Tecmo World Cup '90)", GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )
+GAME( 1989, wc90b2, wc90, wc90b, wc90b, driver_device, 0, ROT0, "bootleg", "Worldcup '90", GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )
+//GAME( 1989, wc90ba,  wc90, wc90b, wc90b, driver_device, 0, ROT0, "bootleg", "Euro League (alt version)", GAME_NO_COCKTAIL | GAME_IMPERFECT_SOUND )

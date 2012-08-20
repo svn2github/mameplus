@@ -487,6 +487,7 @@ public:
 	DECLARE_WRITE8_MEMBER(lamps_a_w);
 	DECLARE_WRITE8_MEMBER(lamps_b_w);
 	DECLARE_WRITE8_MEMBER(pulses_w);
+	DECLARE_DRIVER_INIT(majorpkr);
 };
 
 
@@ -1081,10 +1082,10 @@ ROM_END
 *      Driver Init       *
 *************************/
 
-static DRIVER_INIT( majorpkr )
+DRIVER_INIT_MEMBER(majorpkr_state,majorpkr)
 {
-	UINT8 * ROM = (UINT8 *)machine.root_device().memregion("maincpu")->base();
-	machine.root_device().membank("rom_bank")->configure_entries(0, 4, &ROM[0x10000], 0x800);
+	UINT8 * ROM = (UINT8 *)machine().root_device().memregion("maincpu")->base();
+	machine().root_device().membank("rom_bank")->configure_entries(0, 4, &ROM[0x10000], 0x800);
 }
 
 
@@ -1093,4 +1094,4 @@ static DRIVER_INIT( majorpkr )
 *************************/
 
 /*     YEAR  NAME      PARENT  MACHINE   INPUT     INIT      ROT    COMPANY       FULLNAME             FLAGS  LAYOUT */
-GAMEL( 1994, majorpkr, 0,      majorpkr, majorpkr, majorpkr, ROT0, "PAL System", "Major Poker (v2.0)", 0,     layout_majorpkr )
+GAMEL( 1994, majorpkr, 0,      majorpkr, majorpkr, majorpkr_state, majorpkr, ROT0, "PAL System", "Major Poker (v2.0)", 0,     layout_majorpkr )

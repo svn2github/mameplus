@@ -130,13 +130,16 @@ class meritm_state : public driver_device
 public:
 	meritm_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
+		  m_z80pio_0(*this, "z80pio_0"),
+		  m_z80pio_1(*this, "z80pio_1"),
 		  m_v9938_0(*this, "v9938_0"),
 		  m_v9938_1(*this, "v9938_1"),
 		  m_microtouch(*this, "microtouch") { }
 
 	DECLARE_WRITE8_MEMBER(microtouch_tx);
 	UINT8* m_ram;
-	device_t *m_z80pio[2];
+	required_device<z80pio_device> m_z80pio_0;
+	required_device<z80pio_device> m_z80pio_1;
 	int m_vint;
 	int m_interrupt_vdp0_state;
 	int m_interrupt_vdp1_state;
@@ -166,6 +169,19 @@ public:
 	DECLARE_WRITE8_MEMBER(meritm_audio_pio_port_b_w);
 	DECLARE_WRITE8_MEMBER(meritm_io_pio_port_a_w);
 	DECLARE_WRITE8_MEMBER(meritm_io_pio_port_b_w);
+	DECLARE_DRIVER_INIT(megat4);
+	DECLARE_DRIVER_INIT(megat4st);
+	DECLARE_DRIVER_INIT(megat3);
+	DECLARE_DRIVER_INIT(pbst30b);
+	DECLARE_DRIVER_INIT(megat4c);
+	DECLARE_DRIVER_INIT(megat5);
+	DECLARE_DRIVER_INIT(megat5t);
+	DECLARE_DRIVER_INIT(megat6);
+	DECLARE_DRIVER_INIT(megat4te);
+	DECLARE_DRIVER_INIT(pitbossm);
+	DECLARE_DRIVER_INIT(megat2);
+	DECLARE_DRIVER_INIT(pbst30);
+	DECLARE_DRIVER_INIT(megat3te);
 };
 
 
@@ -603,8 +619,8 @@ static ADDRESS_MAP_START( meritm_crt250_io_map, AS_IO, 8, meritm_state )
 	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE("v9938_0", v9938_device, read, write)
 	AM_RANGE(0x20, 0x23) AM_DEVREADWRITE("v9938_1", v9938_device, read, write)
 	AM_RANGE(0x30, 0x33) AM_DEVREADWRITE("ppi8255", i8255_device, read, write)
-	AM_RANGE(0x40, 0x43) AM_DEVREADWRITE_LEGACY("z80pio_0", z80pio_cd_ba_r, z80pio_cd_ba_w)
-	AM_RANGE(0x50, 0x53) AM_DEVREADWRITE_LEGACY("z80pio_1", z80pio_cd_ba_r, z80pio_cd_ba_w)
+	AM_RANGE(0x40, 0x43) AM_DEVREADWRITE("z80pio_0", z80pio_device, read, write)
+	AM_RANGE(0x50, 0x53) AM_DEVREADWRITE("z80pio_1", z80pio_device, read, write)
 	AM_RANGE(0x80, 0x80) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
 	AM_RANGE(0x80, 0x81) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w)
 	AM_RANGE(0xff, 0xff) AM_WRITE(meritm_crt250_bank_w)
@@ -615,8 +631,8 @@ static ADDRESS_MAP_START( meritm_crt250_crt258_io_map, AS_IO, 8, meritm_state )
 	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE("v9938_0", v9938_device, read, write)
 	AM_RANGE(0x20, 0x23) AM_DEVREADWRITE("v9938_1", v9938_device, read, write)
 	AM_RANGE(0x30, 0x33) AM_DEVREADWRITE("ppi8255", i8255_device, read, write)
-	AM_RANGE(0x40, 0x43) AM_DEVREADWRITE_LEGACY("z80pio_0", z80pio_cd_ba_r, z80pio_cd_ba_w)
-	AM_RANGE(0x50, 0x53) AM_DEVREADWRITE_LEGACY("z80pio_1", z80pio_cd_ba_r, z80pio_cd_ba_w)
+	AM_RANGE(0x40, 0x43) AM_DEVREADWRITE("z80pio_0", z80pio_device, read, write)
+	AM_RANGE(0x50, 0x53) AM_DEVREADWRITE("z80pio_1", z80pio_device, read, write)
 	AM_RANGE(0x60, 0x67) AM_READWRITE_LEGACY(pc16552d_0_r,pc16552d_0_w)
 	AM_RANGE(0x80, 0x80) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
 	AM_RANGE(0x80, 0x81) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w)
@@ -636,8 +652,8 @@ static ADDRESS_MAP_START( meritm_io_map, AS_IO, 8, meritm_state )
 	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE("v9938_0", v9938_device, read, write)
 	AM_RANGE(0x20, 0x23) AM_DEVREADWRITE("v9938_1", v9938_device, read, write)
 	AM_RANGE(0x30, 0x33) AM_DEVREADWRITE("ppi8255", i8255_device, read, write)
-	AM_RANGE(0x40, 0x43) AM_DEVREADWRITE_LEGACY("z80pio_0", z80pio_cd_ba_r, z80pio_cd_ba_w)
-	AM_RANGE(0x50, 0x53) AM_DEVREADWRITE_LEGACY("z80pio_1", z80pio_cd_ba_r, z80pio_cd_ba_w)
+	AM_RANGE(0x40, 0x43) AM_DEVREADWRITE("z80pio_0", z80pio_device, read, write)
+	AM_RANGE(0x50, 0x53) AM_DEVREADWRITE("z80pio_1", z80pio_device, read, write)
 	AM_RANGE(0x60, 0x67) AM_READWRITE_LEGACY(pc16552d_0_r,pc16552d_0_w)
 	AM_RANGE(0x80, 0x80) AM_DEVREAD_LEGACY("aysnd", ay8910_r)
 	AM_RANGE(0x80, 0x81) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w)
@@ -984,13 +1000,11 @@ static const z80_daisy_config meritm_daisy_chain[] =
 static MACHINE_START(merit_common)
 {
 	meritm_state *state = machine.driver_data<meritm_state>();
-	state->m_z80pio[0] = machine.device( "z80pio_0" );
-	state->m_z80pio[1] = machine.device( "z80pio_1" );
 
-	z80pio_astb_w(state->m_z80pio[0], 1);
-	z80pio_bstb_w(state->m_z80pio[0], 1);
-	z80pio_astb_w(state->m_z80pio[1], 1);
-	z80pio_bstb_w(state->m_z80pio[1], 1);
+	state->m_z80pio_0->strobe_a(1);
+	state->m_z80pio_0->strobe_b(1);
+	state->m_z80pio_1->strobe_a(1);
+	state->m_z80pio_1->strobe_b(1);
 };
 
 static MACHINE_START(meritm_crt250)
@@ -1049,7 +1063,7 @@ static TIMER_DEVICE_CALLBACK( vblank_start_tick )
 	meritm_state *state = timer.machine().driver_data<meritm_state>();
 	/* this is a workaround to signal the v9938 vblank interrupt correctly */
 	state->m_vint = 0x08;
-	z80pio_pa_w(state->m_z80pio[0], 0, state->m_vint);
+	state->m_z80pio_0->port_a_write(state->m_vint);
 }
 
 static TIMER_DEVICE_CALLBACK( vblank_end_tick )
@@ -1057,7 +1071,7 @@ static TIMER_DEVICE_CALLBACK( vblank_end_tick )
 	meritm_state *state = timer.machine().driver_data<meritm_state>();
 	/* this is a workaround to signal the v9938 vblank interrupt correctly */
 	state->m_vint = 0x18;
-	z80pio_pa_w(state->m_z80pio[0], 0, state->m_vint);
+	state->m_z80pio_0->port_a_write(state->m_vint);
 }
 
 static MACHINE_CONFIG_START( meritm_crt250, meritm_state )
@@ -1617,6 +1631,23 @@ ROM_START( megat4c ) /* Dallas DS1204V security key at U5 labeled 9255-40-01 U5-
 	ROM_RELOAD(                     0x180000, 0x80000)
 	ROM_LOAD( "qs9255-02_u37-r0",   0x200000, 0x80000,  CRC(f2e8bb4e) SHA1(5c5475b3c176a6aca9b2c6aa4aee422675d20bd1) ) /* Location U37 */
 	ROM_RELOAD(                     0x280000, 0x80000)
+	ROM_LOAD( "9255-40-01_u38-r0a", 0x300000, 0x80000,  CRC(74188592) SHA1(aaa4cb5eb413e963c4ff3705904449e244b984ca) ) /* Location U38, 04/22/1996 14:31 - Standard Version */
+	ROM_RELOAD(                     0x380000, 0x80000)
+
+	ROM_REGION( 0x1000, "user2", 0 ) // PALs
+	ROM_LOAD( "sc3943.u20",     0x000, 0x117, CRC(5a72fe78) SHA1(4b1a36904eb7048518507fe14bdade5c2589dbd7) )
+	ROM_LOAD( "sc3944-0a.u19",  0x000, 0x2dd, CRC(4cc46c5e) SHA1(0bab970df1539ce905f43603ad13171b05449a01) )
+	ROM_LOAD( "sc3980.u40",     0x000, 0x117, CRC(ee0cdab5) SHA1(216fef50a8a0f6a33b704d3501a4c5c3cbac2bad) )
+	ROM_LOAD( "sc3981-0a.u51",  0x000, 0x117, CRC(4fc750d0) SHA1(d09ff7a8c66aeb5c49e9fec84bd1521e3f5d8d0a) )
+ROM_END
+
+ROM_START( megat4d ) /* Dallas DS1204V security key at U5 labeled 9255-40-01 U5-B-RO1 C1996 MII */
+	ROM_REGION( 0x400000, "maincpu", 0 )
+	ROM_LOAD( "9255-40-01_u32-r0",  0x000000, 0x100000, CRC(08b1b8fe) SHA1(c562f2e065d6d7f753f6fd1d0b8355b01cb089ec) ) /* Location U32 */
+	ROM_LOAD( "qs9255-02_u36-r0",   0x100000, 0x80000,  CRC(57322328) SHA1(12bc604c9d34cde431ef7cd2aa33c7b12ac01833) ) /* Location U36 */
+	ROM_RELOAD(                     0x180000, 0x80000)
+	ROM_LOAD( "qs9255-02_u37-r0",   0x200000, 0x80000,  CRC(f2e8bb4e) SHA1(5c5475b3c176a6aca9b2c6aa4aee422675d20bd1) ) /* Location U37 */
+	ROM_RELOAD(                     0x280000, 0x80000)
 	ROM_LOAD( "9255-40-01_u38-r0",  0x300000, 0x80000,  CRC(ec96813d) SHA1(f93bb08ae89ab5ec1c6b33d5b1040c50d3db9ef5) ) /* Location U38, 04/03/1996 14:01 - Standard Version */
 	ROM_RELOAD(                     0x380000, 0x80000)
 
@@ -1849,7 +1880,7 @@ ROM_START( megat6 ) /* Dallas DS1204V security key at U5 labeled 9255-80 U5-B-RO
 	ROM_LOAD( "sc3981-0a.u51",  0x000, 0x117, CRC(4fc750d0) SHA1(d09ff7a8c66aeb5c49e9fec84bd1521e3f5d8d0a) )
 ROM_END
 
-static DRIVER_INIT(pitbossm)
+DRIVER_INIT_MEMBER(meritm_state,pitbossm)
 {
 	static const UINT8 pitbossm_ds1204_key[8] =
 		{ 0xf0, 0xaa, 0x0f, 0x0f, 0x55, 0x55, 0xff, 0xab };
@@ -1857,11 +1888,11 @@ static DRIVER_INIT(pitbossm)
 	static const UINT8 pitbossm_ds1204_nvram[16] =
 		{ 0x16, 0x90, 0xa0, 0x52, 0xd8, 0x6c, 0x12, 0xaf, 0x36, 0x22, 0x61, 0x35, 0x0d, 0x58, 0x0c, 0x00 };
 
-	ds1204_init(machine, pitbossm_ds1204_key, pitbossm_ds1204_nvram);
+	ds1204_init(machine(), pitbossm_ds1204_key, pitbossm_ds1204_nvram);
 
 };
 
-static DRIVER_INIT(pbst30)
+DRIVER_INIT_MEMBER(meritm_state,pbst30)
 {
 	static const UINT8 pbst30b_ds1204_key[8] =
 		{ 0xf0, 0xaa, 0x0f, 0x0f, 0x55, 0x55, 0xff, 0xab };
@@ -1869,11 +1900,11 @@ static DRIVER_INIT(pbst30)
 	static const UINT8 pbst30b_ds1204_nvram[16] =
 		{ 0x3e, 0x9a, 0x3c, 0x3f, 0x1d, 0x51, 0x72, 0xc9, 0x28, 0x2c, 0x1d, 0x2d, 0x0e, 0x56, 0x41, 0x00 };
 
-	ds1204_init(machine, pbst30b_ds1204_key, pbst30b_ds1204_nvram);
+	ds1204_init(machine(), pbst30b_ds1204_key, pbst30b_ds1204_nvram);
 
 };
 
-static DRIVER_INIT(pbst30b)
+DRIVER_INIT_MEMBER(meritm_state,pbst30b)
 {
 	static const UINT8 pbst30b_ds1204_key[8] =
 		{ 0xf0, 0xaa, 0x0f, 0x0f, 0x55, 0x55, 0xff, 0xab };
@@ -1881,11 +1912,11 @@ static DRIVER_INIT(pbst30b)
 	static const UINT8 pbst30b_ds1204_nvram[16] =
 		{ 0xa9, 0xdb, 0x41, 0xf8, 0xe4, 0x42, 0x20, 0x6e, 0xde, 0xaf, 0x4f, 0x046, 0x3d, 0x55, 0x44, 0x00 };
 
-	ds1204_init(machine, pbst30b_ds1204_key, pbst30b_ds1204_nvram);
+	ds1204_init(machine(), pbst30b_ds1204_key, pbst30b_ds1204_nvram);
 
 };
 
-static DRIVER_INIT(megat2)
+DRIVER_INIT_MEMBER(meritm_state,megat2)
 {
 	static const UINT8 pitbosmt_ds1204_key[8] =
 		{ 0xf0, 0xaa, 0x0f, 0x0f, 0x55, 0x55, 0xff, 0xab };
@@ -1893,11 +1924,11 @@ static DRIVER_INIT(megat2)
 	static const UINT8 pitbosmt_ds1204_nvram[16] =
 		{ 0x00, 0xfe, 0x03, 0x03, 0x08, 0x00, 0xa2, 0x03, 0x4b, 0x07, 0x00, 0xe6, 0x02, 0xd3, 0x05, 0x00 };
 
-	ds1204_init(machine, pitbosmt_ds1204_key, pitbosmt_ds1204_nvram);
+	ds1204_init(machine(), pitbosmt_ds1204_key, pitbosmt_ds1204_nvram);
 
 };
 
-static DRIVER_INIT(megat3)
+DRIVER_INIT_MEMBER(meritm_state,megat3)
 {
 	static const UINT8 megat3_ds1204_key[8] =
 		{ 0xf0, 0xaa, 0x0f, 0x0f, 0x55, 0x55, 0xff, 0xab };
@@ -1905,11 +1936,11 @@ static DRIVER_INIT(megat3)
 	static const UINT8 megat3_ds1204_nvram[16] =
 		{ 0x51, 0xa1, 0xc0, 0x7c, 0x27, 0x6e, 0x51, 0xb9, 0xa5, 0xb2, 0x27, 0x0c, 0xb9, 0x88, 0x82, 0x2c };
 
-	ds1204_init(machine, megat3_ds1204_key, megat3_ds1204_nvram);
+	ds1204_init(machine(), megat3_ds1204_key, megat3_ds1204_nvram);
 
 };
 
-static DRIVER_INIT(megat3te)
+DRIVER_INIT_MEMBER(meritm_state,megat3te)
 {
 	static const UINT8 megat3_ds1204_key[8] =
 		{ 0xf0, 0xaa, 0x0f, 0x0f, 0x55, 0x55, 0xff, 0xab };
@@ -1917,22 +1948,21 @@ static DRIVER_INIT(megat3te)
 	static const UINT8 megat3_ds1204_nvram[16] =
 		{ 0x99, 0x53, 0xfc, 0x29, 0x3a, 0x95, 0x8b, 0x58, 0xca, 0xca, 0x00, 0xc2, 0x30, 0x62, 0x0b, 0x96 };
 
-	ds1204_init(machine, megat3_ds1204_key, megat3_ds1204_nvram);
+	ds1204_init(machine(), megat3_ds1204_key, megat3_ds1204_nvram);
 
-	meritm_state *state = machine.driver_data<meritm_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), state), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
 
 };
 
-static DRIVER_INIT(megat4)
+DRIVER_INIT_MEMBER(meritm_state,megat4)
 {
 	static const UINT8 megat4_ds1204_nvram[16] =
 		{ 0xe3, 0x08, 0x39, 0xd8, 0x4c, 0xbb, 0xc4, 0xf8, 0xf0, 0xe2, 0xd8, 0x77, 0xa8, 0x3d, 0x95, 0x02 };
 
-	ds1204_init(machine, 0, megat4_ds1204_nvram);
+	ds1204_init(machine(), 0, megat4_ds1204_nvram);
 }
 
-static DRIVER_INIT(megat4c) /* First version of MegaTouch IV requires "key" like previous MegaTouch versions */
+DRIVER_INIT_MEMBER(meritm_state,megat4c)
 {
 	static const UINT8 megat4c_ds1204_key[8] =
 		{ 0xf0, 0xaa, 0x0f, 0x0f, 0x55, 0x55, 0xff, 0xab };
@@ -1940,102 +1970,100 @@ static DRIVER_INIT(megat4c) /* First version of MegaTouch IV requires "key" like
 	static const UINT8 megat4_ds1204_nvram[16] =
 		{ 0xe3, 0x08, 0x39, 0xd8, 0x4c, 0xbb, 0xc4, 0xf8, 0xf0, 0xe2, 0xd8, 0x77, 0xa8, 0x3d, 0x95, 0x02 };
 
-	ds1204_init(machine, megat4c_ds1204_key, megat4_ds1204_nvram);
+	ds1204_init(machine(), megat4c_ds1204_key, megat4_ds1204_nvram);
 }
 
-static DRIVER_INIT(megat4te)
+DRIVER_INIT_MEMBER(meritm_state,megat4te)
 {
 	static const UINT8 megat4te_ds1204_nvram[16] =
 		{ 0x05, 0x21, 0x96, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00 };
 
-	ds1204_init(machine, 0, megat4te_ds1204_nvram);
+	ds1204_init(machine(), 0, megat4te_ds1204_nvram);
 
-	meritm_state *state = machine.driver_data<meritm_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), state), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
 
 };
 
-static DRIVER_INIT(megat4st)
+DRIVER_INIT_MEMBER(meritm_state,megat4st)
 {
 	static const UINT8 megat4te_ds1204_nvram[16] =
 		{ 0x11, 0x04, 0x96, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00 };
 
-	ds1204_init(machine, 0, megat4te_ds1204_nvram);
+	ds1204_init(machine(), 0, megat4te_ds1204_nvram);
 
-	meritm_state *state = machine.driver_data<meritm_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), state), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
 
 };
 
-static DRIVER_INIT(megat5)
+DRIVER_INIT_MEMBER(meritm_state,megat5)
 {
 	static const UINT8 megat5_ds1204_nvram[16] =
 		{ 0x06, 0x23, 0x97, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00 };
 
-	ds1204_init(machine, 0, megat5_ds1204_nvram);
+	ds1204_init(machine(), 0, megat5_ds1204_nvram);
 
 }
 
-static DRIVER_INIT(megat5t)
+DRIVER_INIT_MEMBER(meritm_state,megat5t)
 {
 	static const UINT8 megat5_ds1204_nvram[16] =
 		{ 0x08, 0x22, 0x97, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00 };
 
-	ds1204_init(machine, 0, megat5_ds1204_nvram);
+	ds1204_init(machine(), 0, megat5_ds1204_nvram);
 
-	meritm_state *state = machine.driver_data<meritm_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), state), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfff8, 0xffff, read8_delegate(FUNC(meritm_state::meritm_ds1644_r), this), write8_delegate(FUNC(meritm_state::meritm_ds1644_w), this));
 
 }
 
-static DRIVER_INIT(megat6)
+DRIVER_INIT_MEMBER(meritm_state,megat6)
 {
 	static const UINT8 megat6_ds1204_nvram[16] =
 		{ 0x07, 0x15, 0x98, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00 };
 
-	ds1204_init(machine, 0, megat6_ds1204_nvram);
+	ds1204_init(machine(), 0, megat6_ds1204_nvram);
 
 }
 
 /* CRT 250 */
-GAME( 1988, pitboss2,  0,        meritm_crt250, meritm_crt250, 0, ROT0, "Merit", "Pit Boss II", GAME_IMPERFECT_GRAPHICS )
-GAME( 1988, spitboss,  0,        meritm_crt250, meritm_crt250, 0, ROT0, "Merit", "Super Pit Boss", GAME_IMPERFECT_GRAPHICS )
-GAME( 1990, pitbosss,  0,        meritm_crt250, meritm_crt250, 0, ROT0, "Merit", "Pit Boss Superstar (9221-10-00B)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1990, pitbosssa, pitbosss, meritm_crt250, meritm_crt250, 0, ROT0, "Merit", "Pit Boss Superstar (9221-10-00A)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1988, pitboss2,  0,        meritm_crt250, meritm_crt250, driver_device, 0, ROT0, "Merit", "Pit Boss II", GAME_IMPERFECT_GRAPHICS )
+GAME( 1988, spitboss,  0,        meritm_crt250, meritm_crt250, driver_device, 0, ROT0, "Merit", "Super Pit Boss", GAME_IMPERFECT_GRAPHICS )
+GAME( 1990, pitbosss,  0,        meritm_crt250, meritm_crt250, driver_device, 0, ROT0, "Merit", "Pit Boss Superstar (9221-10-00B)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1990, pitbosssa, pitbosss, meritm_crt250, meritm_crt250, driver_device, 0, ROT0, "Merit", "Pit Boss Superstar (9221-10-00A)", GAME_IMPERFECT_GRAPHICS )
 
 /* CRT 250 + CRT 254 + CRT 256 */
-GAME( 1994, pbst30,    0,      meritm_crt250_crt252_crt258, pbst30, pbst30,  ROT0, "Merit", "Pit Boss Supertouch 30 (9234-10-01)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, pbst30b,   pbst30, meritm_crt250_crt252_crt258, pbst30, pbst30b, ROT0, "Merit", "Pit Boss Supertouch 30 (9234-00-01)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, pbst30,    0,      meritm_crt250_crt252_crt258, pbst30, meritm_state, pbst30,  ROT0, "Merit", "Pit Boss Supertouch 30 (9234-10-01)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, pbst30b,   pbst30, meritm_crt250_crt252_crt258, pbst30, meritm_state, pbst30b, ROT0, "Merit", "Pit Boss Supertouch 30 (9234-00-01)", GAME_IMPERFECT_GRAPHICS )
 
 /* CRT 250 + CRT 254 + CRT 256 */
-GAME( 1994, pitbossm,  0,         meritm_crt250_questions, pitbossm, pitbossm, ROT0, "Merit", "Pit Boss Megastar (9244-00-01)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, pitbossma, pitbossm,  meritm_crt250_questions, pitbossa, 0,        ROT0, "Merit", "Pit Boss Megastar (9243-00-01)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, pitbossm,  0,         meritm_crt250_questions, pitbossm, meritm_state, pitbossm, ROT0, "Merit", "Pit Boss Megastar (9244-00-01)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, pitbossma, pitbossm,  meritm_crt250_questions, pitbossa, driver_device, 0,        ROT0, "Merit", "Pit Boss Megastar (9243-00-01)", GAME_IMPERFECT_GRAPHICS )
 
 /* CRT 260 */
-GAME( 1994, megat2,    0,      meritm_crt260, meritm_crt260, megat2,   ROT0, "Merit", "Pit Boss Megatouch II (9255-10-01 ROE, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, megat2a ,  megat2, meritm_crt260, meritm_crt260, megat2,   ROT0, "Merit", "Pit Boss Megatouch II (9255-10-01 ROD, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, megat2mn,  megat2, meritm_crt260, meritm_crt260, megat2,   ROT0, "Merit", "Pit Boss Megatouch II (9255-10-02 ROG, Minnesota version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, megat2ca,  megat2, meritm_crt260, meritm_crt260, megat2,   ROT0, "Merit", "Pit Boss Megatouch II (9255-10-06 ROG, California version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, megat2caa, megat2, meritm_crt260, meritm_crt260, megat2,   ROT0, "Merit", "Pit Boss Megatouch II (9255-10-06 ROE, California version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat3,    0,      meritm_crt260, meritm_crt260, megat3,   ROT0, "Merit", "Megatouch III (9255-20-01 RON, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, megat3a,   megat3, meritm_crt260, meritm_crt260, megat3,   ROT0, "Merit", "Megatouch III (9255-20-01 ROF, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat3ca,  megat3, meritm_crt260, meritm_crt260, megat3,   ROT0, "Merit", "Megatouch III (9255-20-06 RON, California version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, megat3caa, megat3, meritm_crt260, meritm_crt260, megat3,   ROT0, "Merit", "Megatouch III (9255-20-06 ROD, California version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, megat3nj,  megat3, meritm_crt260, meritm_crt260, megat3,   ROT0, "Merit", "Megatouch III (9255-20-07 ROG, New Jersey version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat3te,  megat3, meritm_crt260, meritm_crt260, megat3te, ROT0, "Merit", "Megatouch III Tournament Edition (9255-30-01 ROE, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat4,    0,      meritm_crt260, meritm_crt260, megat4,   ROT0, "Merit", "Megatouch IV (9255-40-01 ROE, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat4a,   megat4, meritm_crt260, meritm_crt260, megat4,   ROT0, "Merit", "Megatouch IV (9255-40-01 ROD, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat4b,   megat4, meritm_crt260, meritm_crt260, megat4,   ROT0, "Merit", "Megatouch IV (9255-40-01 ROB, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat4c,   megat4, meritm_crt260, meritm_crt260, megat4c,  ROT0, "Merit", "Megatouch IV (9255-40-01 RO, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat4s,   megat4, meritm_crt260, meritm_crt260, megat4,   ROT0, "Merit", "Super Megatouch IV (9255-41-01 ROG, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat4smn, megat4, meritm_crt260, meritm_crt260, megat4,   ROT0, "Merit", "Super Megatouch IV (9255-41-02 ROC, Minnesota version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat4snj, megat4, meritm_crt260, meritm_crt260, megat4,   ROT0, "Merit", "Super Megatouch IV (9255-41-07 ROG, New Jersey version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat4te,  megat4, meritm_crt260, meritm_crt260, megat4te, ROT0, "Merit", "Megatouch IV Tournament Edition (9255-50-01 ROD, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat4tea, megat4, meritm_crt260, meritm_crt260, megat4te, ROT0, "Merit", "Megatouch IV Tournament Edition (9255-50-01 ROA, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat4st,  megat4, meritm_crt260, meritm_crt260, megat4st, ROT0, "Merit", "Super Megatouch IV Tournament Edition (9255-51-01 ROB, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, megat4stg, megat4, meritm_crt260, meritm_crt260, megat4st, ROT0, "Merit", "Super Megatouch IV Turnier Version (9255-51-50 ROA, Bi-Lingual GER/ENG version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, megat5,    0,      meritm_crt260, meritm_crt260, megat5,   ROT0, "Merit", "Megatouch 5 (9255-60-01 ROI, Standard version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, megat5a,   megat5, meritm_crt260, meritm_crt260, megat5,   ROT0, "Merit", "Megatouch 5 (9255-60-01 ROC, Standard version)", GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING )
-GAME( 1998, megat5nj,  megat5, meritm_crt260, meritm_crt260, megat5,   ROT0, "Merit", "Megatouch 5 (9255-60-07 RON, New Jersey version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, megat5tg,  megat5, meritm_crt260, meritm_crt260, megat5t,  ROT0, "Merit", "Megatouch 5 Turnier Version (9255-70-50 ROD, Bi-Lingual GER/ENG version)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, megat6,    0,      meritm_crt260, meritm_crt260, megat6,   ROT0, "Merit", "Megatouch 6 (9255-80-01 ROA, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, megat2,    0,      meritm_crt260, meritm_crt260, meritm_state, megat2,   ROT0, "Merit", "Pit Boss Megatouch II (9255-10-01 ROE, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, megat2a ,  megat2, meritm_crt260, meritm_crt260, meritm_state, megat2,   ROT0, "Merit", "Pit Boss Megatouch II (9255-10-01 ROD, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, megat2mn,  megat2, meritm_crt260, meritm_crt260, meritm_state, megat2,   ROT0, "Merit", "Pit Boss Megatouch II (9255-10-02 ROG, Minnesota version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, megat2ca,  megat2, meritm_crt260, meritm_crt260, meritm_state, megat2,   ROT0, "Merit", "Pit Boss Megatouch II (9255-10-06 ROG, California version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, megat2caa, megat2, meritm_crt260, meritm_crt260, meritm_state, megat2,   ROT0, "Merit", "Pit Boss Megatouch II (9255-10-06 ROE, California version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat3,    0,      meritm_crt260, meritm_crt260, meritm_state, megat3,   ROT0, "Merit", "Megatouch III (9255-20-01 RON, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, megat3a,   megat3, meritm_crt260, meritm_crt260, meritm_state, megat3,   ROT0, "Merit", "Megatouch III (9255-20-01 ROF, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat3ca,  megat3, meritm_crt260, meritm_crt260, meritm_state, megat3,   ROT0, "Merit", "Megatouch III (9255-20-06 RON, California version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, megat3caa, megat3, meritm_crt260, meritm_crt260, meritm_state, megat3,   ROT0, "Merit", "Megatouch III (9255-20-06 ROD, California version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, megat3nj,  megat3, meritm_crt260, meritm_crt260, meritm_state, megat3,   ROT0, "Merit", "Megatouch III (9255-20-07 ROG, New Jersey version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat3te,  megat3, meritm_crt260, meritm_crt260, meritm_state, megat3te, ROT0, "Merit", "Megatouch III Tournament Edition (9255-30-01 ROE, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat4,    0,      meritm_crt260, meritm_crt260, meritm_state, megat4,   ROT0, "Merit", "Megatouch IV (9255-40-01 ROE, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat4a,   megat4, meritm_crt260, meritm_crt260, meritm_state, megat4,   ROT0, "Merit", "Megatouch IV (9255-40-01 ROD, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat4b,   megat4, meritm_crt260, meritm_crt260, meritm_state, megat4,   ROT0, "Merit", "Megatouch IV (9255-40-01 ROB, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat4c,   megat4, meritm_crt260, meritm_crt260, meritm_state, megat4c,  ROT0, "Merit", "Megatouch IV (9255-40-01 ROA, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat4d,   megat4, meritm_crt260, meritm_crt260, meritm_state, megat4c,  ROT0, "Merit", "Megatouch IV (9255-40-01 RO, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat4s,   megat4, meritm_crt260, meritm_crt260, meritm_state, megat4,   ROT0, "Merit", "Super Megatouch IV (9255-41-01 ROG, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat4smn, megat4, meritm_crt260, meritm_crt260, meritm_state, megat4,   ROT0, "Merit", "Super Megatouch IV (9255-41-02 ROC, Minnesota version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat4snj, megat4, meritm_crt260, meritm_crt260, meritm_state, megat4,   ROT0, "Merit", "Super Megatouch IV (9255-41-07 ROG, New Jersey version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat4te,  megat4, meritm_crt260, meritm_crt260, meritm_state, megat4te, ROT0, "Merit", "Megatouch IV Tournament Edition (9255-50-01 ROD, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat4tea, megat4, meritm_crt260, meritm_crt260, meritm_state, megat4te, ROT0, "Merit", "Megatouch IV Tournament Edition (9255-50-01 ROA, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat4st,  megat4, meritm_crt260, meritm_crt260, meritm_state, megat4st, ROT0, "Merit", "Super Megatouch IV Tournament Edition (9255-51-01 ROB, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, megat4stg, megat4, meritm_crt260, meritm_crt260, meritm_state, megat4st, ROT0, "Merit", "Super Megatouch IV Turnier Version (9255-51-50 ROA, Bi-Lingual GER/ENG version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, megat5,    0,      meritm_crt260, meritm_crt260, meritm_state, megat5,   ROT0, "Merit", "Megatouch 5 (9255-60-01 ROI, Standard version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, megat5a,   megat5, meritm_crt260, meritm_crt260, meritm_state, megat5,   ROT0, "Merit", "Megatouch 5 (9255-60-01 ROC, Standard version)", GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING )
+GAME( 1998, megat5nj,  megat5, meritm_crt260, meritm_crt260, meritm_state, megat5,   ROT0, "Merit", "Megatouch 5 (9255-60-07 RON, New Jersey version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, megat5tg,  megat5, meritm_crt260, meritm_crt260, meritm_state, megat5t,  ROT0, "Merit", "Megatouch 5 Turnier Version (9255-70-50 ROD, Bi-Lingual GER/ENG version)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, megat6,    0,      meritm_crt260, meritm_crt260, meritm_state, megat6,   ROT0, "Merit", "Megatouch 6 (9255-80-01 ROA, Standard version)", GAME_IMPERFECT_GRAPHICS )

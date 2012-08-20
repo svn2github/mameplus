@@ -130,6 +130,7 @@ public:
 	DECLARE_WRITE32_MEMBER(cop_w);
 	DECLARE_READ32_MEMBER(cop_r);
 	DECLARE_READ32_MEMBER(irq_ack_clear);
+	DECLARE_DRIVER_INIT(speglsht);
 };
 
 
@@ -440,10 +441,10 @@ ROM_END
 
 
 
-static DRIVER_INIT(speglsht)
+DRIVER_INIT_MEMBER(speglsht_state,speglsht)
 {
 	st0016_game=3;
 }
 
 
-GAME( 1994, speglsht, 0, speglsht, speglsht, speglsht, ROT0, "Seta",  "Super Eagle Shot", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, speglsht, 0, speglsht, speglsht, speglsht_state, speglsht, ROT0, "Seta",  "Super Eagle Shot", GAME_IMPERFECT_GRAPHICS )

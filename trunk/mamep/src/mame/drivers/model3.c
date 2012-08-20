@@ -2443,7 +2443,7 @@ ROM_START( scuda )	/* step 1.5, Sega game ID# is 833-13041, ROM board ID# 834-13
 	ROM_LOAD( "epr-19338a.bin", 0x000000, 0x010000, CRC(c9fac464) SHA1(47b9ab7921a685c01629afb592d597faa11d2bd6) )
 ROM_END
 
-ROM_START( scudplus )	/* step 1.5 */
+ROM_START( scudplus )	/* step 1.5, Sega game ID# is 833-13260 SCUD PLUS, ROM board ID# 834-13261 SCUD PLUS */
 	ROM_REGION64_BE( 0x4800000, "user1", 0 ) /* program + data ROMs */
 	// CROM
 	ROM_LOAD64_WORD_SWAP( "epr-20092a.17",  0x0600006,  0x80000, CRC(a94ec57e) SHA1(bda1d9cb38e10a25f7cdde38f30ae13541fdbc5e) )
@@ -2524,7 +2524,7 @@ ROM_START( scudplus )	/* step 1.5 */
 	ROM_LOAD( "epr-19338.bin", 0x000000, 0x010000, CRC(dbf88de6) SHA1(8f5c83e82c26a37a1ed0476d7dfeb698b8417899) )
 ROM_END
 
-ROM_START( scudplusa )	/* step 1.5 */
+ROM_START( scudplusa )	/* step 1.5, Sega game ID# is 833-13260 SCUD PLUS, ROM board ID# 834-13261 SCUD PLUS */
 	ROM_REGION64_BE( 0x4800000, "user1", 0 ) /* program + data ROMs */
 	// CROM
 	ROM_LOAD64_WORD_SWAP( "epr-20092.17",  0x0600006,  0x80000, CRC(6f9161c1) SHA1(b1c66eeb1bb67664aafa78ad62515204f231f09b) )
@@ -2899,7 +2899,7 @@ ROM_START( bass )	/* step 1.0, Sega game ID# is 833-13317, ROM board ID# 834-133
 	ROM_FILL( 0x000000, 0x80000, 0 )
 ROM_END
 
-ROM_START( getbass )	/* step 1.0, Sega game ID# is 833-13416 GET BASS STD */
+ROM_START( getbass )	/* step 1.0, Sega game ID# is 833-13416 GET BASS STD, ROM board ID# 834-13417 */
 	ROM_REGION64_BE( 0x4800000, "user1", 0 ) /* program + data ROMs */
 	// CROM
 	ROM_LOAD64_WORD_SWAP( "epr-20309.17",  0x600006, 0x080000, CRC(a42e1033) SHA1(a834eb973e9529338413220a2d8e66ce98d6cb31) )
@@ -3794,7 +3794,7 @@ ROM_START( von2 )	/* Step 2.0 */
 	ROM_FILL( 0x000000, 0x80000, 0 )
 ROM_END
 
-ROM_START( von254g )	/* Step 2.0 */
+ROM_START( von254g )	/* Step 2.0, Sega game ID# is 833-13789 */
 	ROM_REGION64_BE( 0x4800000, "user1", 0 ) /* program + data ROMs */
 	// CROM
 	ROM_LOAD64_WORD_SWAP( "epr-21788.17",  0x000006, 0x200000, CRC(97066bcf) SHA1(234c45ee1f23b22f61893825eebf31d867cf420f) )
@@ -5492,77 +5492,71 @@ static void interleave_vroms(running_machine &machine)
 	}
 }
 
-static DRIVER_INIT( model3_10 )
+DRIVER_INIT_MEMBER(model3_state,model3_10)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	interleave_vroms(machine);
+	interleave_vroms(machine());
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc0000000, 0xc00000ff, read64_delegate(FUNC(model3_state::scsi_r),state), write64_delegate(FUNC(model3_state::scsi_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc0000000, 0xc00000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc105_addr_r),state), write64_delegate(FUNC(model3_state::mpc105_addr_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc105_data_r),state), write64_delegate(FUNC(model3_state::mpc105_data_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc105_reg_r),state), write64_delegate(FUNC(model3_state::mpc105_reg_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc105_addr_r),this), write64_delegate(FUNC(model3_state::mpc105_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc105_data_r),this), write64_delegate(FUNC(model3_state::mpc105_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc105_reg_r),this), write64_delegate(FUNC(model3_state::mpc105_reg_w),this));
 }
 
-static DRIVER_INIT( model3_15 )
+DRIVER_INIT_MEMBER(model3_state,model3_15)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	interleave_vroms(machine);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	interleave_vroms(machine());
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc105_addr_r),state), write64_delegate(FUNC(model3_state::mpc105_addr_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc105_data_r),state), write64_delegate(FUNC(model3_state::mpc105_data_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc105_reg_r),state), write64_delegate(FUNC(model3_state::mpc105_reg_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc105_addr_r),this), write64_delegate(FUNC(model3_state::mpc105_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc105_data_r),this), write64_delegate(FUNC(model3_state::mpc105_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc105_reg_r),this), write64_delegate(FUNC(model3_state::mpc105_reg_w),this));
 }
 
-static DRIVER_INIT( model3_20 )
+DRIVER_INIT_MEMBER(model3_state,model3_20)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	interleave_vroms(machine);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	interleave_vroms(machine());
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc2000000, 0xc20000ff, read64_delegate(FUNC(model3_state::real3d_dma_r),state), write64_delegate(FUNC(model3_state::real3d_dma_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc2000000, 0xc20000ff, read64_delegate(FUNC(model3_state::real3d_dma_r),this), write64_delegate(FUNC(model3_state::real3d_dma_w),this));
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),state), write64_delegate(FUNC(model3_state::mpc106_addr_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),state), write64_delegate(FUNC(model3_state::mpc106_data_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),state), write64_delegate(FUNC(model3_state::mpc106_reg_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),this), write64_delegate(FUNC(model3_state::mpc106_reg_w),this));
 }
 
-static DRIVER_INIT( lostwsga )
+DRIVER_INIT_MEMBER(model3_state,lostwsga)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	UINT32 *rom = (UINT32*)state->memregion("user1")->base();
+	UINT32 *rom = (UINT32*)memregion("user1")->base();
 
 	DRIVER_INIT_CALL(model3_15);
 	/* TODO: there's an M68K device at 0xC0000000 - FF, maybe lightgun controls ? */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),state), write64_delegate(FUNC(model3_state::scsi_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
 	rom[0x7374f0/4] = 0x38840004;		/* This seems to be an actual bug in the original code */
 }
 
-static DRIVER_INIT( scud )
+DRIVER_INIT_MEMBER(model3_state,scud)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	UINT32 *rom = (UINT32*)state->memregion("user1")->base();
+	UINT32 *rom = (UINT32*)memregion("user1")->base();
 
 	DRIVER_INIT_CALL(model3_15);
 	/* TODO: network device at 0xC0000000 - FF */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),state), write64_delegate(FUNC(model3_state::scsi_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
 	rom[(0x71275c^4)/4] = 0x60000000;
 	rom[(0x71277c^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( scudplus )
+DRIVER_INIT_MEMBER(model3_state,scudplus)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	UINT32 *rom = (UINT32*)state->memregion("user1")->base();
+	UINT32 *rom = (UINT32*)memregion("user1")->base();
 
 	DRIVER_INIT_CALL(model3_15);
 	/* TODO: network device at 0xC0000000 - FF */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),state), write64_delegate(FUNC(model3_state::scsi_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
 	rom[(0x713724^4)/4] = 0x60000000;
 	rom[(0x713744^4)/4] = 0x60000000;
@@ -5573,14 +5567,13 @@ static DRIVER_INIT( scudplus )
 	rom[(0x741efc^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( scudplusa )
+DRIVER_INIT_MEMBER(model3_state,scudplusa)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	//UINT32 *rom = (UINT32*)state->memregion("user1")->base();
+	//UINT32 *rom = (UINT32*)memregion("user1")->base();
 
 	DRIVER_INIT_CALL(model3_15);
 	/* TODO: network device at 0xC0000000 - FF */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),state), write64_delegate(FUNC(model3_state::scsi_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
 	//rom[(0x713724^4)/4] = 0x60000000; // Fix ME!!!! Needs to corrected for the non REV A version!!!!
 	//rom[(0x713744^4)/4] = 0x60000000;
@@ -5591,13 +5584,12 @@ static DRIVER_INIT( scudplusa )
 	//rom[(0x741efc^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( lemans24 )
+DRIVER_INIT_MEMBER(model3_state,lemans24)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	UINT32 *rom = (UINT32*)state->memregion("user1")->base();
+	UINT32 *rom = (UINT32*)memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_15);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),state), write64_delegate(FUNC(model3_state::scsi_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc1000000, 0xc10000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
 	rom[(0x73fe38^4)/4] = 0x38840004;		/* This seems to be an actual bug in the original code */
 
@@ -5606,9 +5598,9 @@ static DRIVER_INIT( lemans24 )
 	rom[(0x73edc4^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( vf3 )
+DRIVER_INIT_MEMBER(model3_state,vf3)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 
 	DRIVER_INIT_CALL(model3_10);
 
@@ -5619,83 +5611,79 @@ static DRIVER_INIT( vf3 )
 
 }
 
-static DRIVER_INIT( vs215 )
+DRIVER_INIT_MEMBER(model3_state,vs215)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	UINT32 *rom = (UINT32*)state->memregion("user1")->base();
+	UINT32 *rom = (UINT32*)memregion("user1")->base();
 
 	rom[(0x70dde0^4)/4] = 0x60000000;
 	rom[(0x70e6f0^4)/4] = 0x60000000;
 	rom[(0x70e710^4)/4] = 0x60000000;
 
-	interleave_vroms(machine);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	interleave_vroms(machine());
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),state), write64_delegate(FUNC(model3_state::scsi_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc106_addr_r),state), write64_delegate(FUNC(model3_state::mpc106_addr_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),state), write64_delegate(FUNC(model3_state::mpc106_addr_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc106_data_r),state), write64_delegate(FUNC(model3_state::mpc106_data_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),state), write64_delegate(FUNC(model3_state::mpc106_data_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),state), write64_delegate(FUNC(model3_state::mpc106_reg_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),this), write64_delegate(FUNC(model3_state::mpc106_reg_w),this));
 }
 
-static DRIVER_INIT( vs29815 )
+DRIVER_INIT_MEMBER(model3_state,vs29815)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	UINT32 *rom = (UINT32*)state->memregion("user1")->base();
+	UINT32 *rom = (UINT32*)memregion("user1")->base();
 
 	rom[(0x6028ec^4)/4] = 0x60000000;
 	rom[(0x60290c^4)/4] = 0x60000000;
 
-	interleave_vroms(machine);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	interleave_vroms(machine());
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),state), write64_delegate(FUNC(model3_state::scsi_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc106_addr_r),state), write64_delegate(FUNC(model3_state::mpc106_addr_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),state), write64_delegate(FUNC(model3_state::mpc106_addr_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc106_data_r),state), write64_delegate(FUNC(model3_state::mpc106_data_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),state), write64_delegate(FUNC(model3_state::mpc106_data_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),state), write64_delegate(FUNC(model3_state::mpc106_reg_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),this), write64_delegate(FUNC(model3_state::mpc106_reg_w),this));
 }
 
-static DRIVER_INIT( bass )
+DRIVER_INIT_MEMBER(model3_state,bass)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	UINT32 *rom = (UINT32*)state->memregion("user1")->base();
+	UINT32 *rom = (UINT32*)memregion("user1")->base();
 
 	rom[(0x7999a8^4)/4] = 0x60000000;
 	rom[(0x7999c8^4)/4] = 0x60000000;
 
-	interleave_vroms(machine);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	interleave_vroms(machine());
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),state), write64_delegate(FUNC(model3_state::scsi_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc106_addr_r),state), write64_delegate(FUNC(model3_state::mpc106_addr_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),state), write64_delegate(FUNC(model3_state::mpc106_addr_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc106_data_r),state), write64_delegate(FUNC(model3_state::mpc106_data_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),state), write64_delegate(FUNC(model3_state::mpc106_data_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),state), write64_delegate(FUNC(model3_state::mpc106_reg_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfec00000, 0xfedfffff, read64_delegate(FUNC(model3_state::mpc106_addr_r),this), write64_delegate(FUNC(model3_state::mpc106_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xfee00000, 0xfeffffff, read64_delegate(FUNC(model3_state::mpc106_data_r),this), write64_delegate(FUNC(model3_state::mpc106_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc106_reg_r),this), write64_delegate(FUNC(model3_state::mpc106_reg_w),this));
 }
 
-static DRIVER_INIT( getbass )
+DRIVER_INIT_MEMBER(model3_state,getbass)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	interleave_vroms(machine);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
+	interleave_vroms(machine());
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xff000000, 0xff7fffff, "bank1" );
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),state), write64_delegate(FUNC(model3_state::scsi_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf9000000, 0xf90000ff, read64_delegate(FUNC(model3_state::scsi_r),this), write64_delegate(FUNC(model3_state::scsi_w),this));
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc105_addr_r),state), write64_delegate(FUNC(model3_state::mpc105_addr_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc105_data_r),state), write64_delegate(FUNC(model3_state::mpc105_data_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc105_reg_r),state), write64_delegate(FUNC(model3_state::mpc105_reg_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0800cf8, 0xf0800cff, read64_delegate(FUNC(model3_state::mpc105_addr_r),this), write64_delegate(FUNC(model3_state::mpc105_addr_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf0c00cf8, 0xf0c00cff, read64_delegate(FUNC(model3_state::mpc105_data_r),this), write64_delegate(FUNC(model3_state::mpc105_data_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xf8fff000, 0xf8fff0ff, read64_delegate(FUNC(model3_state::mpc105_reg_r),this), write64_delegate(FUNC(model3_state::mpc105_reg_w),this));
 }
 
-static DRIVER_INIT( vs2 )
+DRIVER_INIT_MEMBER(model3_state,vs2)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 
 	DRIVER_INIT_CALL(model3_20);
 
@@ -5703,9 +5691,9 @@ static DRIVER_INIT( vs2 )
 	rom[(0x7058a4^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( vs298 )
+DRIVER_INIT_MEMBER(model3_state,vs298)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 
 	DRIVER_INIT_CALL(model3_20);
 
@@ -5714,9 +5702,9 @@ static DRIVER_INIT( vs298 )
 }
 
 
-static DRIVER_INIT( vs2v991 )
+DRIVER_INIT_MEMBER(model3_state,vs2v991)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 
 	DRIVER_INIT_CALL(model3_20);
 
@@ -5724,9 +5712,9 @@ static DRIVER_INIT( vs2v991 )
 	rom[(0x603888^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( vs299b )
+DRIVER_INIT_MEMBER(model3_state,vs299b)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 
 	DRIVER_INIT_CALL(model3_20);
 
@@ -5734,9 +5722,9 @@ static DRIVER_INIT( vs299b )
 	rom[(0x603888^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( vs299a )
+DRIVER_INIT_MEMBER(model3_state,vs299a)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 
 	DRIVER_INIT_CALL(model3_20);
 
@@ -5744,9 +5732,9 @@ static DRIVER_INIT( vs299a )
 	rom[(0x603888^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( vs299 )
+DRIVER_INIT_MEMBER(model3_state,vs299)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 
 	DRIVER_INIT_CALL(model3_20);
 
@@ -5754,14 +5742,13 @@ static DRIVER_INIT( vs299 )
 	rom[(0x603888^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( harley )
+DRIVER_INIT_MEMBER(model3_state,harley)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	UINT32 *rom = (UINT32*)state->memregion("user1")->base();
+	UINT32 *rom = (UINT32*)memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
-	state->m_network_ram = auto_alloc_array_clear(machine, UINT64, 0x10000);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc0000000, 0xc00fffff, read64_delegate(FUNC(model3_state::network_r),state), write64_delegate(FUNC(model3_state::network_w),state));
+	m_network_ram = auto_alloc_array_clear(machine(), UINT64, 0x10000);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc0000000, 0xc00fffff, read64_delegate(FUNC(model3_state::network_r),this), write64_delegate(FUNC(model3_state::network_w),this));
 
 	rom[(0x50ecb4^4)/4] = 0x60000000;
 	rom[(0x50ecd4^4)/4] = 0x60000000;
@@ -5770,14 +5757,13 @@ static DRIVER_INIT( harley )
 	//rom[(0x4f738c^4)/4] = 0x60000000; // Fix ME!! Needs to be updated for the REV B version!!
 }
 
-static DRIVER_INIT( harleya )
+DRIVER_INIT_MEMBER(model3_state,harleya)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	UINT32 *rom = (UINT32*)state->memregion("user1")->base();
+	UINT32 *rom = (UINT32*)memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
-	state->m_network_ram = auto_alloc_array_clear(machine, UINT64, 0x10000);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc0000000, 0xc00fffff, read64_delegate(FUNC(model3_state::network_r),state), write64_delegate(FUNC(model3_state::network_w),state));
+	m_network_ram = auto_alloc_array_clear(machine(), UINT64, 0x10000);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0xc0000000, 0xc00fffff, read64_delegate(FUNC(model3_state::network_r),this), write64_delegate(FUNC(model3_state::network_w),this));
 
 	rom[(0x50e8d4^4)/4] = 0x60000000;
 	rom[(0x50e8f4^4)/4] = 0x60000000;
@@ -5787,9 +5773,9 @@ static DRIVER_INIT( harleya )
 }
 
 
-static DRIVER_INIT( srally2 )
+DRIVER_INIT_MEMBER(model3_state,srally2)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
 	rom[(0x7c0c4^4)/4] = 0x60000000;
@@ -5797,9 +5783,9 @@ static DRIVER_INIT( srally2 )
 	rom[(0x7c0cc^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( swtrilgy )
+DRIVER_INIT_MEMBER(model3_state,swtrilgy)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
 	rom[(0xf0e48^4)/4] = 0x60000000;
@@ -5808,17 +5794,17 @@ static DRIVER_INIT( swtrilgy )
 	rom[(0x02a0c^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( swtrilga )
+DRIVER_INIT_MEMBER(model3_state,swtrilga)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
 	rom[(0xf6dd0^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( von2 )
+DRIVER_INIT_MEMBER(model3_state,von2)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
 	rom[(0x189168^4)/4] = 0x60000000;
@@ -5828,9 +5814,9 @@ static DRIVER_INIT( von2 )
 	rom[(0x1891c8^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( dirtdvls )
+DRIVER_INIT_MEMBER(model3_state,dirtdvls)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
 	rom[(0x0600a0^4)/4] = 0x60000000;
@@ -5841,14 +5827,13 @@ static DRIVER_INIT( dirtdvls )
 	rom[(0x001e24^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( daytona2 )
+DRIVER_INIT_MEMBER(model3_state,daytona2)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	UINT32 *rom = (UINT32*)state->memregion("user1")->base();
+	UINT32 *rom = (UINT32*)memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc3800000, 0xc3800007, write64_delegate(FUNC(model3_state::daytona2_rombank_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xc3000000, 0xc37fffff, "bank2" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc3800000, 0xc3800007, write64_delegate(FUNC(model3_state::daytona2_rombank_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xc3000000, 0xc37fffff, "bank2" );
 
 	//rom[(0x68468c^4)/4] = 0x60000000;
 	rom[(0x6063c4^4)/4] = 0x60000000;
@@ -5856,14 +5841,13 @@ static DRIVER_INIT( daytona2 )
 	rom[(0x69f4e4^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( dayto2pe )
+DRIVER_INIT_MEMBER(model3_state,dayto2pe)
 {
-	model3_state *state = machine.driver_data<model3_state>();
-	UINT32 *rom = (UINT32*)state->memregion("user1")->base();
+	UINT32 *rom = (UINT32*)memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc3800000, 0xc3800007, write64_delegate(FUNC(model3_state::daytona2_rombank_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xc3000000, 0xc37fffff, "bank2" );
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0xc3800000, 0xc3800007, write64_delegate(FUNC(model3_state::daytona2_rombank_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xc3000000, 0xc37fffff, "bank2" );
 
 	rom[(0x606784^4)/4] = 0x60000000;
 	rom[(0x69a3fc^4)/4] = 0x60000000;		// jump to encrypted code
@@ -5872,27 +5856,27 @@ static DRIVER_INIT( dayto2pe )
 	rom[(0x64ca34^4)/4] = 0x60000000;		// dec
 }
 
-static DRIVER_INIT( spikeout )
+DRIVER_INIT_MEMBER(model3_state,spikeout)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
 	rom[(0x6059cc^4)/4] = 0x60000000;
 	rom[(0x6059ec^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( spikeofe )
+DRIVER_INIT_MEMBER(model3_state,spikeofe)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
 	rom[(0x6059cc^4)/4] = 0x60000000;
 	rom[(0x6059ec^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( eca )
+DRIVER_INIT_MEMBER(model3_state,eca)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
 	rom[(0x535580^4)/4] = 0x60000000;
@@ -5900,9 +5884,9 @@ static DRIVER_INIT( eca )
 	rom[(0x5023d4^4)/4] = 0x60000000;
 }
 
-static DRIVER_INIT( skichamp )
+DRIVER_INIT_MEMBER(model3_state,skichamp)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
 	rom[(0x5263c8^4)/4] = 0x60000000;
@@ -5911,9 +5895,9 @@ static DRIVER_INIT( skichamp )
 	rom[(0x516b9c^4)/4] = 0x60000000; // decrementer
 }
 
-static DRIVER_INIT( oceanhun )
+DRIVER_INIT_MEMBER(model3_state,oceanhun)
 {
-	UINT32 *rom = (UINT32*)machine.root_device().memregion("user1")->base();
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
 	DRIVER_INIT_CALL(model3_20);
 
 	rom[(0x57995c^4)/4] = 0x60000000;   // decrementer
@@ -5921,52 +5905,52 @@ static DRIVER_INIT( oceanhun )
 
 
 /* Model 3 Step 1.0 */
-GAME( 1996, vf3,            0, model3_10, model3,        vf3, ROT0, "Sega", "Virtua Fighter 3 (Revision C)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1996, vf3a,         vf3, model3_10, model3,        vf3, ROT0, "Sega", "Virtua Fighter 3 (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1996, vf3tb,        vf3, model3_10, model3,  model3_10, ROT0, "Sega", "Virtua Fighter 3 Team Battle", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, bass,           0, model3_10, bass,         bass, ROT0, "Sega", "Sega Bass Fishing", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, getbass,     bass, model3_10, bass,      getbass, ROT0, "Sega", "Get Bass", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, vf3,            0, model3_10, model3, model3_state,        vf3, ROT0, "Sega", "Virtua Fighter 3 (Revision C)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, vf3a,         vf3, model3_10, model3, model3_state,        vf3, ROT0, "Sega", "Virtua Fighter 3 (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, vf3tb,        vf3, model3_10, model3, model3_state,  model3_10, ROT0, "Sega", "Virtua Fighter 3 Team Battle", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, bass,           0, model3_10, bass, model3_state,         bass, ROT0, "Sega", "Sega Bass Fishing", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, getbass,     bass, model3_10, bass, model3_state,      getbass, ROT0, "Sega", "Get Bass", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
 /* Model 3 Step 1.5 */
-GAME( 1996, scud,           0, model3_15, scud,         scud, ROT0, "Sega", "Scud Race Twin (Australia)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1996, scudj,       scud, model3_15, scud,         scud, ROT0, "Sega", "Scud Race Deluxe (Japan)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1996, scuda,       scud, model3_15, scud,         scud, ROT0, "Sega", "Scud Race Twin (Export)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, scudplus,    scud, model3_15, scud,     scudplus, ROT0, "Sega", "Scud Race Plus (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, scudplusa,   scud, model3_15, scud,    scudplusa, ROT0, "Sega", "Scud Race Plus", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, lostwsga,       0, model3_15, lostwsga, lostwsga, ROT0, "Sega", "The Lost World", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, vs215,        vs2, model3_15, model3,      vs215, ROT0, "Sega", "Virtua Striker 2 (Step 1.5)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, vs215o,       vs2, model3_15, model3,      vs215, ROT0, "Sega", "Virtua Striker 2 (Step 1.5, older)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, lemans24,       0, model3_15, scud,     lemans24, ROT0, "Sega", "LeMans 24", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, vs29815,    vs298, model3_15, model3,    vs29815, ROT0, "Sega", "Virtua Striker 2 '98 (Step 1.5)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, scud,           0, model3_15, scud, model3_state,         scud, ROT0, "Sega", "Scud Race Twin (Australia)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, scudj,       scud, model3_15, scud, model3_state,         scud, ROT0, "Sega", "Scud Race Deluxe (Japan)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, scuda,       scud, model3_15, scud, model3_state,         scud, ROT0, "Sega", "Scud Race Twin (Export)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, scudplus,    scud, model3_15, scud, model3_state,     scudplus, ROT0, "Sega", "Scud Race Plus (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, scudplusa,   scud, model3_15, scud, model3_state,    scudplusa, ROT0, "Sega", "Scud Race Plus", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, lostwsga,       0, model3_15, lostwsga, model3_state, lostwsga, ROT0, "Sega", "The Lost World", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, vs215,        vs2, model3_15, model3, model3_state,      vs215, ROT0, "Sega", "Virtua Striker 2 (Step 1.5)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, vs215o,       vs2, model3_15, model3, model3_state,      vs215, ROT0, "Sega", "Virtua Striker 2 (Step 1.5, older)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, lemans24,       0, model3_15, scud, model3_state,     lemans24, ROT0, "Sega", "LeMans 24", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, vs29815,    vs298, model3_15, model3, model3_state,    vs29815, ROT0, "Sega", "Virtua Striker 2 '98 (Step 1.5)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
 /* Model 3 Step 2.0 */
-GAME( 1997, vs2,            0, model3_20, model3,        vs2, ROT0, "Sega", "Virtua Striker 2 (Step 2.0)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, harley,         0, model3_20, harley,     harley, ROT0, "Sega", "Harley-Davidson and L.A. Riders (Revision B)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1997, harleya,   harley, model3_20, harley,     harleya, ROT0, "Sega", "Harley-Davidson and L.A. Riders (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, lamachin,       0, model3_20, model3,  model3_20, ROT0, "Sega", "L.A. Machineguns", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, oceanhun,       0, model3_20, model3,   oceanhun, ROT0, "Sega", "The Ocean Hunter", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, skichamp,       0, model3_20, skichamp, skichamp, ROT0, "Sega", "Ski Champ", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, srally2,        0, model3_20, scud,      srally2, ROT0, "Sega", "Sega Rally 2", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, srally2x,       0, model3_20, scud,      srally2, ROT0, "Sega", "Sega Rally 2 DX", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, von2,           0, model3_20, model3,       von2, ROT0, "Sega", "Virtual On 2: Oratorio Tangram (Revision B)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, von254g,     von2, model3_20, model3,  model3_20, ROT0, "Sega", "Virtual On 2: Oratorio Tangram (ver 5.4g)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, fvipers2,       0, model3_20, model3,  model3_20, ROT0, "Sega", "Fighting Vipers 2 (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, vs298,          0, model3_20, model3,      vs298, ROT0, "Sega", "Virtua Striker 2 '98 (Step 2.0)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1999, vs2v991,        0, model3_20, model3,    vs2v991, ROT0, "Sega", "Virtua Striker 2 '99.1 (Revision B)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1999, vs299b,   vs2v991, model3_20, model3,     vs299b, ROT0, "Sega", "Virtua Striker 2 '99 (Revision B)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1999, vs299a,   vs2v991, model3_20, model3,     vs299a, ROT0, "Sega", "Virtua Striker 2 '99 (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1999, vs299,    vs2v991, model3_20, model3,      vs299, ROT0, "Sega", "Virtua Striker 2 '99", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, vs2,            0, model3_20, model3, model3_state,        vs2, ROT0, "Sega", "Virtua Striker 2 (Step 2.0)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, harley,         0, model3_20, harley, model3_state,     harley, ROT0, "Sega", "Harley-Davidson and L.A. Riders (Revision B)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1997, harleya,   harley, model3_20, harley, model3_state,     harleya, ROT0, "Sega", "Harley-Davidson and L.A. Riders (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, lamachin,       0, model3_20, model3, model3_state,  model3_20, ROT0, "Sega", "L.A. Machineguns", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, oceanhun,       0, model3_20, model3, model3_state,   oceanhun, ROT0, "Sega", "The Ocean Hunter", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, skichamp,       0, model3_20, skichamp, model3_state, skichamp, ROT0, "Sega", "Ski Champ", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, srally2,        0, model3_20, scud, model3_state,      srally2, ROT0, "Sega", "Sega Rally 2", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, srally2x,       0, model3_20, scud, model3_state,      srally2, ROT0, "Sega", "Sega Rally 2 DX", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, von2,           0, model3_20, model3, model3_state,       von2, ROT0, "Sega", "Virtual On 2: Oratorio Tangram (Revision B)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, von254g,     von2, model3_20, model3, model3_state,  model3_20, ROT0, "Sega", "Virtual On 2: Oratorio Tangram (ver 5.4g)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, fvipers2,       0, model3_20, model3, model3_state,  model3_20, ROT0, "Sega", "Fighting Vipers 2 (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, vs298,          0, model3_20, model3, model3_state,      vs298, ROT0, "Sega", "Virtua Striker 2 '98 (Step 2.0)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1999, vs2v991,        0, model3_20, model3, model3_state,    vs2v991, ROT0, "Sega", "Virtua Striker 2 '99.1 (Revision B)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1999, vs299b,   vs2v991, model3_20, model3, model3_state,     vs299b, ROT0, "Sega", "Virtua Striker 2 '99 (Revision B)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1999, vs299a,   vs2v991, model3_20, model3, model3_state,     vs299a, ROT0, "Sega", "Virtua Striker 2 '99 (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1999, vs299,    vs2v991, model3_20, model3, model3_state,      vs299, ROT0, "Sega", "Virtua Striker 2 '99", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 
 /* Model 3 Step 2.1 */
-GAME( 1998, daytona2,         0, model3_21, daytona2, daytona2, ROT0, "Sega", "Daytona USA 2 (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, dayto2pe,         0, model3_21, daytona2, dayto2pe, ROT0, "Sega", "Daytona USA 2 Power Edition", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, dirtdvls,         0, model3_21, model3,   dirtdvls, ROT0, "Sega", "Dirt Devils (set 1) (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, dirtdvlsa, dirtdvls, model3_21, model3,   dirtdvls, ROT0, "Sega", "Dirt Devils (set 2) (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, swtrilgy,         0, model3_21, swtrilgy, swtrilgy, ROT0, "Sega / LucasArts", "Star Wars Trilogy (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, swtrilgya, swtrilgy, model3_21, swtrilgy, swtrilga, ROT0, "Sega / LucasArts", "Star Wars Trilogy", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, spikeout,         0, model3_21, model3,   spikeout, ROT0, "Sega", "Spikeout (Revision C)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, spikeofe,         0, model3_21, model3,   spikeofe, ROT0, "Sega", "Spikeout Final Edition", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1998, magtruck,         0, model3_21, model3,        eca, ROT0, "Sega", "Magical Truck Adventure", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1999, eca,              0, model3_21, eca,           eca, ROT0, "Sega", "Emergency Call Ambulance", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-GAME( 1999, ecax,           eca, model3_21, eca,           eca, ROT0, "Sega", "Emergency Call Ambulance (Export)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, daytona2,         0, model3_21, daytona2, model3_state, daytona2, ROT0, "Sega", "Daytona USA 2 (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, dayto2pe,         0, model3_21, daytona2, model3_state, dayto2pe, ROT0, "Sega", "Daytona USA 2 Power Edition", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, dirtdvls,         0, model3_21, model3, model3_state,   dirtdvls, ROT0, "Sega", "Dirt Devils (set 1) (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, dirtdvlsa, dirtdvls, model3_21, model3, model3_state,   dirtdvls, ROT0, "Sega", "Dirt Devils (set 2) (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, swtrilgy,         0, model3_21, swtrilgy, model3_state, swtrilgy, ROT0, "Sega / LucasArts", "Star Wars Trilogy (Revision A)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, swtrilgya, swtrilgy, model3_21, swtrilgy, model3_state, swtrilga, ROT0, "Sega / LucasArts", "Star Wars Trilogy", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, spikeout,         0, model3_21, model3, model3_state,   spikeout, ROT0, "Sega", "Spikeout (Revision C)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, spikeofe,         0, model3_21, model3, model3_state,   spikeofe, ROT0, "Sega", "Spikeout Final Edition", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1998, magtruck,         0, model3_21, model3, model3_state,        eca, ROT0, "Sega", "Magical Truck Adventure", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1999, eca,              0, model3_21, eca, model3_state,           eca, ROT0, "Sega", "Emergency Call Ambulance", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1999, ecax,           eca, model3_21, eca, model3_state,           eca, ROT0, "Sega", "Emergency Call Ambulance (Export)", GAME_NOT_WORKING | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 

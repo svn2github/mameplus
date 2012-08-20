@@ -35,6 +35,7 @@ public:
 		: driver_device(mconfig, type, tag) { }
 
 	DECLARE_READ32_MEMBER(ertictac_podule_r);
+	DECLARE_DRIVER_INIT(ertictac);
 };
 
 
@@ -187,9 +188,9 @@ static INPUT_PORTS_START( poizone )
 	PORT_DIPUNKNOWN_DIPLOC( 0x20, 0x20, "DSW2:6" )
 INPUT_PORTS_END
 
-static DRIVER_INIT( ertictac )
+DRIVER_INIT_MEMBER(ertictac_state,ertictac)
 {
-	archimedes_driver_init(machine);
+	archimedes_driver_init(machine());
 }
 
 static MACHINE_START( ertictac )
@@ -197,7 +198,7 @@ static MACHINE_START( ertictac )
 	archimedes_init(machine);
 
 	// reset the DAC to centerline
-	//dac_signed_data_w(machine.device("dac"), 0x80);
+	//machine.device<dac_device>("dac")->write_signed8(0x80);
 }
 
 static MACHINE_RESET( ertictac )
@@ -242,28 +243,28 @@ static MACHINE_CONFIG_START( ertictac, ertictac_state )
 	MCFG_VIDEO_START(archimds_vidc)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("dac0", DAC, 0)
+	MCFG_DAC_ADD("dac0")
 	MCFG_SOUND_ROUTE(0, "mono", 0.05)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(0, "mono", 0.05)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(0, "mono", 0.05)
 
-	MCFG_SOUND_ADD("dac3", DAC, 0)
+	MCFG_DAC_ADD("dac3")
 	MCFG_SOUND_ROUTE(0, "mono", 0.05)
 
-	MCFG_SOUND_ADD("dac4", DAC, 0)
+	MCFG_DAC_ADD("dac4")
 	MCFG_SOUND_ROUTE(0, "mono", 0.05)
 
-	MCFG_SOUND_ADD("dac5", DAC, 0)
+	MCFG_DAC_ADD("dac5")
 	MCFG_SOUND_ROUTE(0, "mono", 0.05)
 
-	MCFG_SOUND_ADD("dac6", DAC, 0)
+	MCFG_DAC_ADD("dac6")
 	MCFG_SOUND_ROUTE(0, "mono", 0.05)
 
-	MCFG_SOUND_ADD("dac7", DAC, 0)
+	MCFG_DAC_ADD("dac7")
 	MCFG_SOUND_ROUTE(0, "mono", 0.05)
 MACHINE_CONFIG_END
 
@@ -335,7 +336,7 @@ ROM_START( poizone )
 	ROM_REGION(0x200000, "vram", ROMREGION_ERASE00)
 ROM_END
 
-GAME( 1990, ertictac,         0, ertictac, ertictac, ertictac, ROT0, "Sisteme", "Erotictac/Tactic" ,GAME_IMPERFECT_SOUND)
-GAME( 1990, ertictaca, ertictac, ertictac, ertictac, ertictac, ROT0, "Sisteme", "Erotictac/Tactic (ver 01)" ,GAME_IMPERFECT_SOUND)
-GAME( 1991, poizone,          0, ertictac, poizone, ertictac,  ROT0, "Eterna" ,"Poizone" ,GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS)
+GAME( 1990, ertictac,         0, ertictac, ertictac, ertictac_state, ertictac, ROT0, "Sisteme", "Erotictac/Tactic" ,GAME_IMPERFECT_SOUND)
+GAME( 1990, ertictaca, ertictac, ertictac, ertictac, ertictac_state, ertictac, ROT0, "Sisteme", "Erotictac/Tactic (ver 01)" ,GAME_IMPERFECT_SOUND)
+GAME( 1991, poizone,          0, ertictac, poizone, ertictac_state, ertictac,  ROT0, "Eterna" ,"Poizone" ,GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS)
 

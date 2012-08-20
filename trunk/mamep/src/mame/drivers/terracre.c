@@ -236,8 +236,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_3526_io_map, AS_IO, 8, terracre_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE_LEGACY("ymsnd", ym3526_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("dac1", dac_signed_w)
-	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("dac2", dac_signed_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE("dac1", dac_device, write_signed8)
+	AM_RANGE(0x03, 0x03) AM_DEVWRITE("dac2", dac_device, write_signed8)
 	AM_RANGE(0x04, 0x04) AM_READ(soundlatch_clear_r)
 	AM_RANGE(0x06, 0x06) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -245,8 +245,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_2203_io_map, AS_IO, 8, terracre_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE_LEGACY("ym1", ym2203_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("dac1", dac_signed_w)
-	AM_RANGE(0x03, 0x03) AM_DEVWRITE_LEGACY("dac2", dac_signed_w)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE("dac1", dac_device, write_signed8)
+	AM_RANGE(0x03, 0x03) AM_DEVWRITE("dac2", dac_device, write_signed8)
 	AM_RANGE(0x04, 0x04) AM_READ(soundlatch_clear_r)
 	AM_RANGE(0x06, 0x06) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -556,10 +556,10 @@ static MACHINE_CONFIG_START( amazon, terracre_state )
 	MCFG_SOUND_ADD("ymsnd", YM3526, XTAL_16MHz/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -591,10 +591,10 @@ static MACHINE_CONFIG_START( ym3526, terracre_state )
 	MCFG_SOUND_ADD("ymsnd", YM3526, XTAL_16MHz/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -635,10 +635,10 @@ static MACHINE_CONFIG_START( ym2203, terracre_state )
 	MCFG_SOUND_ROUTE(2, "mono", 0.20)
 	MCFG_SOUND_ROUTE(3, "mono", 0.40)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -1008,32 +1008,29 @@ ROM_START( boobhack )
 	ROM_LOAD( "kid_prom.4e",  0x000, 0x100, BAD_DUMP CRC(e4fb54ee) SHA1(aba89d347b24dc6680e6f25b4a6c0d6657bb6a83) ) /* ctable */
 ROM_END
 
-static DRIVER_INIT( amazon )
+DRIVER_INIT_MEMBER(terracre_state,amazon)
 {
-	terracre_state *state = machine.driver_data<terracre_state>();
-	state->m_mpProtData = mAmazonProtData;
+	m_mpProtData = mAmazonProtData;
 }
 
-static DRIVER_INIT( amatelas )
+DRIVER_INIT_MEMBER(terracre_state,amatelas)
 {
-	terracre_state *state = machine.driver_data<terracre_state>();
-	state->m_mpProtData = mAmatelasProtData;
+	m_mpProtData = mAmatelasProtData;
 }
 
-static DRIVER_INIT( horekid )
+DRIVER_INIT_MEMBER(terracre_state,horekid)
 {
-	terracre_state *state = machine.driver_data<terracre_state>();
-	state->m_mpProtData = mHoreKidProtData;
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x44004, 0x44005, read16_delegate(FUNC(terracre_state::horekid_IN2_r),state));
+	m_mpProtData = mHoreKidProtData;
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x44004, 0x44005, read16_delegate(FUNC(terracre_state::horekid_IN2_r),this));
 }
 
 /*    YEAR, NAME,   PARENT,     MACHINE, INPUT,    INIT,     MONITOR,  COMPANY,      FULLNAME, FLAGS */
-GAME( 1985, terracre, 0,        ym3526,  terracre, 0,        ROT270,  "Nichibutsu", "Terra Cresta (YM3526 set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1985, terracreo,terracre, ym3526,  terracre, 0,        ROT270,  "Nichibutsu", "Terra Cresta (YM3526 set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1985, terracrea,terracre, ym3526,  terracre, 0,        ROT270,  "Nichibutsu", "Terra Cresta (YM3526 set 3)", GAME_SUPPORTS_SAVE )
-GAME( 1985, terracren,terracre, ym2203,  terracre, 0,        ROT270,  "Nichibutsu", "Terra Cresta (YM2203)", GAME_SUPPORTS_SAVE )
-GAME( 1986, amazon,   0,        amazon,  amazon,   amazon,   ROT270,  "Nichibutsu", "Soldier Girl Amazon", GAME_SUPPORTS_SAVE )
-GAME( 1986, amatelas, amazon,   amazon,  amazon,   amatelas, ROT270,  "Nichibutsu", "Sei Senshi Amatelass", GAME_SUPPORTS_SAVE )
-GAME( 1987, horekid,  0,        amazon,  horekid,  horekid,  ROT270,  "Nichibutsu", "Kid no Hore Hore Daisakusen", GAME_SUPPORTS_SAVE )
-GAME( 1987, horekidb, horekid,  amazon,  horekid,  horekid,  ROT270,  "bootleg", "Kid no Hore Hore Daisakusen (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1987, boobhack, horekid,  amazon,  horekid,  horekid,  ROT270,  "bootleg", "Booby Kids (Italian manufactured graphic hack / bootleg of Kid no Hore Hore Daisakusen (bootleg))", GAME_SUPPORTS_SAVE )
+GAME( 1985, terracre, 0,        ym3526,  terracre, driver_device, 0,        ROT270,  "Nichibutsu", "Terra Cresta (YM3526 set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1985, terracreo,terracre, ym3526,  terracre, driver_device, 0,        ROT270,  "Nichibutsu", "Terra Cresta (YM3526 set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1985, terracrea,terracre, ym3526,  terracre, driver_device, 0,        ROT270,  "Nichibutsu", "Terra Cresta (YM3526 set 3)", GAME_SUPPORTS_SAVE )
+GAME( 1985, terracren,terracre, ym2203,  terracre, driver_device, 0,        ROT270,  "Nichibutsu", "Terra Cresta (YM2203)", GAME_SUPPORTS_SAVE )
+GAME( 1986, amazon,   0,        amazon,  amazon, terracre_state,   amazon,   ROT270,  "Nichibutsu", "Soldier Girl Amazon", GAME_SUPPORTS_SAVE )
+GAME( 1986, amatelas, amazon,   amazon,  amazon, terracre_state,   amatelas, ROT270,  "Nichibutsu", "Sei Senshi Amatelass", GAME_SUPPORTS_SAVE )
+GAME( 1987, horekid,  0,        amazon,  horekid, terracre_state,  horekid,  ROT270,  "Nichibutsu", "Kid no Hore Hore Daisakusen", GAME_SUPPORTS_SAVE )
+GAME( 1987, horekidb, horekid,  amazon,  horekid, terracre_state,  horekid,  ROT270,  "bootleg", "Kid no Hore Hore Daisakusen (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1987, boobhack, horekid,  amazon,  horekid, terracre_state,  horekid,  ROT270,  "bootleg", "Booby Kids (Italian manufactured graphic hack / bootleg of Kid no Hore Hore Daisakusen (bootleg))", GAME_SUPPORTS_SAVE )

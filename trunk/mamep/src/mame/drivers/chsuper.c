@@ -44,6 +44,10 @@ protected:
 	//virtual void machine_reset();
 
 	virtual void video_start();
+public:
+	DECLARE_DRIVER_INIT(chsuper3);
+	DECLARE_DRIVER_INIT(chmpnum);
+	DECLARE_DRIVER_INIT(chsuper2);
 };
 
 
@@ -102,7 +106,7 @@ static ADDRESS_MAP_START( chsuper_portmap, AS_IO, 8, chsuper_state )
 	AM_RANGE( 0x00fd, 0x00fd ) AM_DEVWRITE("ramdac", ramdac_device, pal_w)
 	AM_RANGE( 0x00fe, 0x00fe ) AM_DEVWRITE("ramdac", ramdac_device, mask_w)
 	AM_RANGE( 0x8300, 0x8300 ) AM_READ( ff_r ) //probably data for the dac
-	AM_RANGE( 0xff20, 0xff3f ) AM_DEVWRITE_LEGACY("dac", dac_w) // unk writes
+	AM_RANGE( 0xff20, 0xff3f ) AM_DEVWRITE("dac", dac_device, write_unsigned8) // unk writes
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( chsuper )
@@ -219,7 +223,7 @@ static MACHINE_CONFIG_START( chsuper, chsuper_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -263,22 +267,21 @@ ROM_START( chmpnum )
 	ROM_COPY( "maincpu", 0x10000, 0x00000, 0x70000 )
 ROM_END
 
-static DRIVER_INIT( chsuper2 )
+DRIVER_INIT_MEMBER(chsuper_state,chsuper2)
 {
-	chsuper_state *state = machine.driver_data<chsuper_state>();
 	UINT8 *buffer;
-	UINT8 *rom = state->memregion("gfx1")->base();
+	UINT8 *rom = memregion("gfx1")->base();
 	int i;
 
-	state->m_tilexor = 0x7f00;
+	m_tilexor = 0x7f00;
 
-	buffer = auto_alloc_array(machine, UINT8, 0x100000);
+	buffer = auto_alloc_array(machine(), UINT8, 0x100000);
 
 	for (i=0;i<0x100000;i++)
 	{
 		int j;
 
-		j = i ^ (state->m_tilexor << 5);
+		j = i ^ (m_tilexor << 5);
 
 		buffer[j] = rom[i];
 	}
@@ -286,22 +289,21 @@ static DRIVER_INIT( chsuper2 )
 	memcpy(rom,buffer,0x100000);
 }
 
-static DRIVER_INIT( chsuper3 )
+DRIVER_INIT_MEMBER(chsuper_state,chsuper3)
 {
-	chsuper_state *state = machine.driver_data<chsuper_state>();
 	UINT8 *buffer;
-	UINT8 *rom = state->memregion("gfx1")->base();
+	UINT8 *rom = memregion("gfx1")->base();
 	int i;
 
-	state->m_tilexor = 0x0e00;
+	m_tilexor = 0x0e00;
 
-	buffer = auto_alloc_array(machine, UINT8, 0x100000);
+	buffer = auto_alloc_array(machine(), UINT8, 0x100000);
 
 	for (i=0;i<0x100000;i++)
 	{
 		int j;
 
-		j = i ^ (state->m_tilexor << 5);
+		j = i ^ (m_tilexor << 5);
 
 		buffer[j] = rom[i];
 	}
@@ -309,22 +311,21 @@ static DRIVER_INIT( chsuper3 )
 	memcpy(rom,buffer,0x100000);
 }
 
-static DRIVER_INIT( chmpnum )
+DRIVER_INIT_MEMBER(chsuper_state,chmpnum)
 {
-	chsuper_state *state = machine.driver_data<chsuper_state>();
 	UINT8 *buffer;
-	UINT8 *rom = state->memregion("gfx1")->base();
+	UINT8 *rom = memregion("gfx1")->base();
 	int i;
 
-	state->m_tilexor = 0x1800;
+	m_tilexor = 0x1800;
 
-	buffer = auto_alloc_array(machine, UINT8, 0x100000);
+	buffer = auto_alloc_array(machine(), UINT8, 0x100000);
 
 	for (i=0;i<0x100000;i++)
 	{
 		int j;
 
-		j = i ^ (state->m_tilexor << 5);
+		j = i ^ (m_tilexor << 5);
 
 		j = BITSWAP24(j,23,22,21,20,19,18,17,13, 15,14,16,12, 11,10,9,8, 7,6,5,4, 3,2,1,0);
 		j = BITSWAP24(j,23,22,21,20,19,18,17,14, 15,16,13,12, 11,10,9,8, 7,6,5,4, 3,2,1,0);
@@ -337,6 +338,6 @@ static DRIVER_INIT( chmpnum )
 }
 
 
-GAME( 1999, chsuper3, 0,        chsuper, chsuper,  chsuper3, ROT0, "<unknown>",    "Champion Super 3 (V0.35)", GAME_IMPERFECT_SOUND ) //24/02/99
-GAME( 1999, chsuper2, chsuper3, chsuper, chsuper,  chsuper2, ROT0, "<unknown>",    "Champion Super 2 (V0.13)", GAME_IMPERFECT_SOUND ) //26/01/99
-GAME( 1999, chmpnum,  chsuper3, chsuper, chsuper,  chmpnum,  ROT0, "<unknown>",    "Champion Number (V0.74)",  GAME_IMPERFECT_SOUND ) //10/11/99
+GAME( 1999, chsuper3, 0,        chsuper, chsuper, chsuper_state,  chsuper3, ROT0, "<unknown>",    "Champion Super 3 (V0.35)", GAME_IMPERFECT_SOUND ) //24/02/99
+GAME( 1999, chsuper2, chsuper3, chsuper, chsuper, chsuper_state,  chsuper2, ROT0, "<unknown>",    "Champion Super 2 (V0.13)", GAME_IMPERFECT_SOUND ) //26/01/99
+GAME( 1999, chmpnum,  chsuper3, chsuper, chsuper, chsuper_state,  chmpnum,  ROT0, "<unknown>",    "Champion Number (V0.74)",  GAME_IMPERFECT_SOUND ) //10/11/99

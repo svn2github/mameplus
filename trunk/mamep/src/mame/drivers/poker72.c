@@ -29,6 +29,7 @@ public:
 	DECLARE_WRITE8_MEMBER(poker72_paletteram_w);
 	DECLARE_WRITE8_MEMBER(output_w);
 	DECLARE_WRITE8_MEMBER(tile_bank_w);
+	DECLARE_DRIVER_INIT(poker72);
 };
 
 
@@ -391,11 +392,11 @@ ROM_START( poker72 )
 	ROM_LOAD( "270138.bin", 0x60000, 0x20000, CRC(d689313d) SHA1(8b9661b3af0e2ced7fe9fa487641e445ce7835b8) )
 ROM_END
 
-static DRIVER_INIT( poker72 )
+DRIVER_INIT_MEMBER(poker72_state,poker72)
 {
-	UINT8 *rom = machine.root_device().memregion("maincpu")->base();
+	UINT8 *rom = machine().root_device().memregion("maincpu")->base();
 
 	rom[0x4a9] = 0x28;
 }
 
-GAME( 1995, poker72,  0,    poker72, poker72,  poker72, ROT0, "Extrema Systems International Ltd.", "Poker Monarch (v2.50)", GAME_NOT_WORKING ) // actually unknown, was marked 'slot 72 poker'  Manufacturers logo and 'Lucky Boy' gfx in rom..
+GAME( 1995, poker72,  0,    poker72, poker72, poker72_state,  poker72, ROT0, "Extrema Systems International Ltd.", "Poker Monarch (v2.50)", GAME_NOT_WORKING ) // actually unknown, was marked 'slot 72 poker'  Manufacturers logo and 'Lucky Boy' gfx in rom..

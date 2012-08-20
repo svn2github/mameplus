@@ -76,6 +76,10 @@ public:
 	DECLARE_READ8_MEMBER(macs_input_r);
 	DECLARE_WRITE8_MEMBER(macs_rom_bank_w);
 	DECLARE_WRITE8_MEMBER(macs_output_w);
+	DECLARE_DRIVER_INIT(macs);
+	DECLARE_DRIVER_INIT(kisekaeh);
+	DECLARE_DRIVER_INIT(kisekaem);
+	DECLARE_DRIVER_INIT(macs2);
 };
 
 
@@ -714,44 +718,40 @@ static MACHINE_RESET(macs)
 		state->membank("bank4")->set_base(machine.root_device().memregion("maincpu")->base() );
 }
 
-static DRIVER_INIT(macs)
+DRIVER_INIT_MEMBER(macs_state,macs)
 {
-	macs_state *state = machine.driver_data<macs_state>();
-	state->m_ram1=auto_alloc_array(machine, UINT8, 0x20000);
+	m_ram1=auto_alloc_array(machine(), UINT8, 0x20000);
 	st0016_game=10|0x80;
-	state->m_rev = 1;
+	m_rev = 1;
 }
 
-static DRIVER_INIT(macs2)
+DRIVER_INIT_MEMBER(macs_state,macs2)
 {
-	macs_state *state = machine.driver_data<macs_state>();
-	state->m_ram1=auto_alloc_array(machine, UINT8, 0x20000);
+	m_ram1=auto_alloc_array(machine(), UINT8, 0x20000);
 	st0016_game=10|0x80;
-	state->m_rev = 2;
+	m_rev = 2;
 }
 
-static DRIVER_INIT(kisekaeh)
+DRIVER_INIT_MEMBER(macs_state,kisekaeh)
 {
-	macs_state *state = machine.driver_data<macs_state>();
-	state->m_ram1=auto_alloc_array(machine, UINT8, 0x20000);
+	m_ram1=auto_alloc_array(machine(), UINT8, 0x20000);
 	st0016_game=11|0x180;
-	state->m_rev = 1;
+	m_rev = 1;
 }
 
-static DRIVER_INIT(kisekaem)
+DRIVER_INIT_MEMBER(macs_state,kisekaem)
 {
-	macs_state *state = machine.driver_data<macs_state>();
-	state->m_ram1=auto_alloc_array(machine, UINT8, 0x20000);
+	m_ram1=auto_alloc_array(machine(), UINT8, 0x20000);
 	st0016_game=10|0x180;
-	state->m_rev = 1;
+	m_rev = 1;
 }
 
 
-GAME( 1995, macsbios, 0,        macs, macs_m, macs,     ROT0, "I'Max", "Multi Amenity Cassette System BIOS", GAME_IS_BIOS_ROOT | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1995, mac2bios, 0,        macs, macs_m, macs2,     ROT0, "I'Max", "Multi Amenity Cassette System 2 BIOS", GAME_IS_BIOS_ROOT | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1995, macsbios, 0,        macs, macs_m, macs_state, macs,     ROT0, "I'Max", "Multi Amenity Cassette System BIOS", GAME_IS_BIOS_ROOT | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1995, mac2bios, 0,        macs, macs_m, macs_state, macs2,     ROT0, "I'Max", "Multi Amenity Cassette System 2 BIOS", GAME_IS_BIOS_ROOT | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
 
-GAME( 1995, kisekaem, macsbios, macs, kisekaem, kisekaem,   ROT0, "I'Max", "Kisekae Mahjong",  GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )
-GAME( 1995, kisekaeh, macsbios, macs, macs_h,   kisekaeh,   ROT0, "I'Max", "Kisekae Hanafuda",  GAME_NOT_WORKING |GAME_IMPERFECT_SOUND)
-GAME( 1996, cultname, macsbios, macs, macs_m,   macs,       ROT0, "I'Max", "Seimei-Kantei-Meimei-Ki Cult Name",  GAME_NOT_WORKING |GAME_IMPERFECT_SOUND)
-GAME( 1999, yuka,     macsbios, macs, macs_h,   macs2,      ROT0, "Yubis / T.System", "Yu-Ka",  0 )
-GAME( 1999, yujan,    macsbios, macs, macs_m,   macs2,      ROT0, "Yubis / T.System", "Yu-Jan",  0 )
+GAME( 1995, kisekaem, macsbios, macs, kisekaem, macs_state, kisekaem,   ROT0, "I'Max", "Kisekae Mahjong",  GAME_NOT_WORKING|GAME_IMPERFECT_SOUND )
+GAME( 1995, kisekaeh, macsbios, macs, macs_h, macs_state,   kisekaeh,   ROT0, "I'Max", "Kisekae Hanafuda",  GAME_NOT_WORKING |GAME_IMPERFECT_SOUND)
+GAME( 1996, cultname, macsbios, macs, macs_m, macs_state,   macs,       ROT0, "I'Max", "Seimei-Kantei-Meimei-Ki Cult Name",  GAME_NOT_WORKING |GAME_IMPERFECT_SOUND)
+GAME( 1999, yuka,     macsbios, macs, macs_h, macs_state,   macs2,      ROT0, "Yubis / T.System", "Yu-Ka",  0 )
+GAME( 1999, yujan,    macsbios, macs, macs_m, macs_state,   macs2,      ROT0, "Yubis / T.System", "Yu-Jan",  0 )

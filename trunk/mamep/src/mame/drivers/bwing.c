@@ -172,7 +172,7 @@ ADDRESS_MAP_END
 // Sound CPU
 static ADDRESS_MAP_START( bwp3_map, AS_PROGRAM, 8, bwing_state )
 	AM_RANGE(0x0000, 0x01ff) AM_RAM
-	AM_RANGE(0x0200, 0x0200) AM_DEVWRITE_LEGACY("dac", dac_signed_w)
+	AM_RANGE(0x0200, 0x0200) AM_DEVWRITE("dac", dac_device, write_signed8)
 	AM_RANGE(0x1000, 0x1000) AM_WRITE(bwp3_nmiack_w)
 	AM_RANGE(0x2000, 0x2000) AM_DEVWRITE_LEGACY("ay1", ay8910_data_w)
 	AM_RANGE(0x4000, 0x4000) AM_DEVWRITE_LEGACY("ay1", ay8910_address_w)
@@ -407,7 +407,7 @@ static MACHINE_CONFIG_START( bwing, bwing_state )
 	MCFG_SOUND_ADD("ay2", AY8910, 1500000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.10)
 MACHINE_CONFIG_END
 
@@ -582,23 +582,22 @@ static void fix_bwp3( running_machine &machine )
 }
 
 
-static DRIVER_INIT( bwing )
+DRIVER_INIT_MEMBER(bwing_state,bwing)
 {
-	bwing_state *state = machine.driver_data<bwing_state>();
 
-	state->m_bwp123_membase[0] = state->memregion("maincpu")->base();
-	state->m_bwp123_membase[1] = state->memregion("sub")->base();
-	state->m_bwp123_membase[2] = state->memregion("audiocpu")->base();
+	m_bwp123_membase[0] = memregion("maincpu")->base();
+	m_bwp123_membase[1] = memregion("sub")->base();
+	m_bwp123_membase[2] = memregion("audiocpu")->base();
 
-	fix_bwp3(machine);
+	fix_bwp3(machine());
 }
 
 //****************************************************************************
 // Game Entries
 
-GAME( 1984, bwings,       0, bwing, bwing, bwing, ROT90, "Data East Corporation", "B-Wings (Japan new Ver.)", 0 )
-GAME( 1984, bwingso, bwings, bwing, bwing, bwing, ROT90, "Data East Corporation", "B-Wings (Japan old Ver.)", 0 )
-GAME( 1984, bwingsa, bwings, bwing, bwing, bwing, ROT90, "Data East Corporation", "B-Wings (Alt Ver.?)", 0 )
+GAME( 1984, bwings,       0, bwing, bwing, bwing_state, bwing, ROT90, "Data East Corporation", "B-Wings (Japan new Ver.)", 0 )
+GAME( 1984, bwingso, bwings, bwing, bwing, bwing_state, bwing, ROT90, "Data East Corporation", "B-Wings (Japan old Ver.)", 0 )
+GAME( 1984, bwingsa, bwings, bwing, bwing, bwing_state, bwing, ROT90, "Data East Corporation", "B-Wings (Alt Ver.?)", 0 )
 
-GAME( 1984, zaviga,       0, bwing, bwing, bwing, ROT90, "Data East Corporation", "Zaviga", 0 )
-GAME( 1984, zavigaj, zaviga, bwing, bwing, bwing, ROT90, "Data East Corporation", "Zaviga (Japan)", 0 )
+GAME( 1984, zaviga,       0, bwing, bwing, bwing_state, bwing, ROT90, "Data East Corporation", "Zaviga", 0 )
+GAME( 1984, zavigaj, zaviga, bwing, bwing, bwing_state, bwing, ROT90, "Data East Corporation", "Zaviga (Japan)", 0 )

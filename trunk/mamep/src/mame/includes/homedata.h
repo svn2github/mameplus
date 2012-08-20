@@ -1,3 +1,4 @@
+#include "sound/dac.h"
 
 class homedata_state : public driver_device
 {
@@ -36,7 +37,7 @@ public:
 	/* device */
 	device_t *m_maincpu;
 	device_t *m_audiocpu;
-	device_t *m_dac;
+	dac_device *m_dac;
 	device_t *m_ym;
 	device_t *m_sn;
 	UINT8 m_prot_data;
@@ -74,6 +75,11 @@ public:
 	DECLARE_WRITE8_MEMBER(mrokumei_blitter_start_w);
 	DECLARE_WRITE8_MEMBER(reikaids_blitter_start_w);
 	DECLARE_WRITE8_MEMBER(pteacher_blitter_start_w);
+	DECLARE_DRIVER_INIT(reikaids);
+	DECLARE_DRIVER_INIT(mjikaga);
+	DECLARE_DRIVER_INIT(jogakuen);
+	DECLARE_DRIVER_INIT(battlcry);
+	DECLARE_DRIVER_INIT(mirderby);
 };
 
 

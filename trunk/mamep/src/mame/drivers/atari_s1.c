@@ -22,6 +22,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(atari_s1);
 };
 
 static ADDRESS_MAP_START( atari_s1_map, AS_PROGRAM, 8, atari_s1_state )
@@ -39,7 +41,7 @@ void atari_s1_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( atari_s1 )
+DRIVER_INIT_MEMBER(atari_s1_state,atari_s1)
 {
 }
 
@@ -105,9 +107,9 @@ ROM_START(spcrider)
 ROM_END
 
 
-GAME( 1976, atarians, 0,		atari_s1, atari_s1, atari_s1, ROT0, "Atari","The Atarians", 	GAME_IS_SKELETON_MECHANICAL)
-//GAME( 2002, atarianb, atarians,   atari_s1, atari_s1, atari_s1, ROT0, "Atari / Gaston","The Atarians (working bootleg)",  GAME_IS_SKELETON_MECHANICAL)
-GAME( 1977, time2000, 0,		atari_s1, atari_s1, atari_s1, ROT0, "Atari","Time 2000",		GAME_IS_SKELETON_MECHANICAL)
-GAME( 1977, aavenger, 0,		atari_s1, atari_s1, atari_s1, ROT0, "Atari","Airborne Avenger", GAME_IS_SKELETON_MECHANICAL)
-GAME( 1978, midearth, 0,		atari_s1, atari_s1, atari_s1, ROT0, "Atari","Middle Earth", 	GAME_IS_SKELETON_MECHANICAL)
-GAME( 1978, spcrider, 0,		atari_s1, atari_s1, atari_s1, ROT0, "Atari","Space Riders",		GAME_IS_SKELETON_MECHANICAL)
+GAME( 1976, atarians, 0,		atari_s1, atari_s1, atari_s1_state, atari_s1, ROT0, "Atari","The Atarians", 	GAME_IS_SKELETON_MECHANICAL)
+//GAME( 2002, atarianb, atarians,   atari_s1, atari_s1, atari_s1_state, atari_s1, ROT0, "Atari / Gaston","The Atarians (working bootleg)",  GAME_IS_SKELETON_MECHANICAL)
+GAME( 1977, time2000, 0,		atari_s1, atari_s1, atari_s1_state, atari_s1, ROT0, "Atari","Time 2000",		GAME_IS_SKELETON_MECHANICAL)
+GAME( 1977, aavenger, 0,		atari_s1, atari_s1, atari_s1_state, atari_s1, ROT0, "Atari","Airborne Avenger", GAME_IS_SKELETON_MECHANICAL)
+GAME( 1978, midearth, 0,		atari_s1, atari_s1, atari_s1_state, atari_s1, ROT0, "Atari","Middle Earth", 	GAME_IS_SKELETON_MECHANICAL)
+GAME( 1978, spcrider, 0,		atari_s1, atari_s1, atari_s1_state, atari_s1, ROT0, "Atari","Space Riders",		GAME_IS_SKELETON_MECHANICAL)

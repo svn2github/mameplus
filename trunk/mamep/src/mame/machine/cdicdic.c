@@ -474,7 +474,7 @@ void cdicdic_device::decode_audio_sector(const UINT8 *xa, INT32 triggered)
 			break;
 
 		default:
-			fatalerror("play_xa: unhandled xa mode %08x",hdr[2]);
+			fatalerror("play_xa: unhandled xa mode %08x\n",hdr[2]);
 			return;
 	}
 
@@ -1209,7 +1209,7 @@ void cdicdic_device::device_reset()
 	else
 	{
 		// MAME case
-		m_cd = cdrom_open(get_disk_handle(machine(), "cdrom"));
+		m_cd = cdrom_open(get_disk_handle(machine(), ":cdrom"));
 		cdda_set_cdrom(machine().device("cdda"), m_cd);
 	}
 }

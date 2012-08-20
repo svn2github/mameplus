@@ -237,7 +237,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( jankenmn_port_map, AS_IO, 8, jankenmn_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE_LEGACY("ctc", z80ctc_r, z80ctc_w)
+	AM_RANGE(0x00, 0x03) AM_DEVREADWRITE("ctc", z80ctc_device, read, write)
 	AM_RANGE(0x10, 0x13) AM_DEVREADWRITE("ppi8255_0", i8255_device, read, write)
 	AM_RANGE(0x20, 0x23) AM_DEVREADWRITE("ppi8255_1", i8255_device, read, write)
 	AM_RANGE(0x30, 0x30) AM_WRITENOP // ???
@@ -293,7 +293,6 @@ INPUT_PORTS_END
 
 static Z80CTC_INTERFACE( ctc_intf )
 {
-	0,              	/* timer disables */
 	DEVCB_CPU_INPUT_LINE("maincpu", INPUT_LINE_IRQ0),	/* interrupt handler */
 	DEVCB_NULL,			/* ZC/TO0 callback */
 	DEVCB_NULL,         /* ZC/TO1 callback */
@@ -326,7 +325,7 @@ static I8255_INTERFACE (ppi8255_intf_1)
 {
 	/* (20-23) Mode 0 - Ports A, B, high C & low C set as output. */
 	DEVCB_NULL,
-	DEVCB_DEVICE_HANDLER("dac", dac_w),
+	DEVCB_DEVICE_MEMBER("dac", dac_device, write_unsigned8),
 	DEVCB_NULL,
 	DEVCB_DRIVER_MEMBER(jankenmn_state,jankenmn_lamps1_w),
 	DEVCB_NULL,
@@ -355,7 +354,7 @@ static MACHINE_CONFIG_START( jankenmn, jankenmn_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 
 MACHINE_CONFIG_END
@@ -383,4 +382,4 @@ ROM_END
 *********************************************/
 
 /*     YEAR  NAME      PARENT  MACHINE   INPUT     INIT  ROT    COMPANY    FULLNAME                   FLAGS...  LAYOUT */
-GAMEL( 1991, jankenmn, 0,      jankenmn, jankenmn, 0,    ROT0, "Sunwise", "Janken Man Kattara Ageru", 0,        layout_jankenmn )
+GAMEL( 1991, jankenmn, 0,      jankenmn, jankenmn, driver_device, 0,    ROT0, "Sunwise", "Janken Man Kattara Ageru", 0,        layout_jankenmn )

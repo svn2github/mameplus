@@ -17,6 +17,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(micropin);
 };
 
 
@@ -31,7 +33,7 @@ void micropin_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( micropin )
+DRIVER_INIT_MEMBER(micropin_state,micropin)
 {
 }
 
@@ -65,5 +67,5 @@ ROM_START(pentacup2)
 ROM_END
 
 
-GAME(1978,  pentacup,  0,         micropin,  micropin,  micropin,  ROT0,  "Micropin",    "Pentacup (rev. 1)",     GAME_IS_SKELETON_MECHANICAL)
-GAME(1980,  pentacup2, pentacup,  micropin,  micropin,  micropin,  ROT0,  "Micropin",    "Pentacup (rev. 2)",     GAME_IS_SKELETON_MECHANICAL)
+GAME(1978,  pentacup,  0,         micropin,  micropin, micropin_state,  micropin,  ROT0,  "Micropin",    "Pentacup (rev. 1)",     GAME_IS_SKELETON_MECHANICAL)
+GAME(1980,  pentacup2, pentacup,  micropin,  micropin, micropin_state,  micropin,  ROT0,  "Micropin",    "Pentacup (rev. 2)",     GAME_IS_SKELETON_MECHANICAL)

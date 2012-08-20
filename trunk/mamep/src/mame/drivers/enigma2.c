@@ -86,6 +86,7 @@ public:
 	DECLARE_CUSTOM_INPUT_MEMBER(p2_controls_r);
 	DECLARE_READ8_MEMBER(sound_latch_r);
 	DECLARE_WRITE8_MEMBER(protection_data_w);
+	DECLARE_DRIVER_INIT(enigma2);
 };
 
 
@@ -704,10 +705,10 @@ ROM_START( enigma2b )
 ROM_END
 
 
-static DRIVER_INIT(enigma2)
+DRIVER_INIT_MEMBER(enigma2_state,enigma2)
 {
 	offs_t i;
-	UINT8 *rom = machine.root_device().memregion("audiocpu")->base();
+	UINT8 *rom = machine().root_device().memregion("audiocpu")->base();
 
 	for(i = 0; i < 0x2000; i++)
 	{
@@ -717,6 +718,6 @@ static DRIVER_INIT(enigma2)
 
 
 
-GAME( 1981, enigma2,  0,	   enigma2,  enigma2,  enigma2, ROT270, "Game Plan (Zilec Electronics license)", "Enigma II", GAME_SUPPORTS_SAVE )
-GAME( 1984, enigma2a, enigma2, enigma2a, enigma2a, enigma2, ROT270, "Zilec Electronics", "Enigma II (Space Invaders hardware)", GAME_SUPPORTS_SAVE )
-GAME( 1981, enigma2b, enigma2, enigma2a, enigma2a, enigma2, ROT270, "Zilec Electronics", "Phantoms II (Space Invaders hardware)", GAME_SUPPORTS_SAVE )
+GAME( 1981, enigma2,  0,	   enigma2,  enigma2, enigma2_state,  enigma2, ROT270, "Game Plan (Zilec Electronics license)", "Enigma II", GAME_SUPPORTS_SAVE )
+GAME( 1984, enigma2a, enigma2, enigma2a, enigma2a, enigma2_state, enigma2, ROT270, "Zilec Electronics", "Enigma II (Space Invaders hardware)", GAME_SUPPORTS_SAVE )
+GAME( 1981, enigma2b, enigma2, enigma2a, enigma2a, enigma2_state, enigma2, ROT270, "Zilec Electronics", "Phantoms II (Space Invaders hardware)", GAME_SUPPORTS_SAVE )

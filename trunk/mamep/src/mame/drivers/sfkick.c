@@ -77,6 +77,7 @@ public:
 	DECLARE_READ8_MEMBER(ppi_port_b_r);
 	DECLARE_WRITE8_MEMBER(ppi_port_a_w);
 	DECLARE_WRITE8_MEMBER(ppi_port_c_w);
+	DECLARE_DRIVER_INIT(sfkick);
 };
 
 
@@ -466,7 +467,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL,DEVCB_NULL,DEVCB_NULL,DEVCB_NULL,
 	},
-	irqhandler
+	DEVCB_LINE(irqhandler)
 };
 
 static MACHINE_CONFIG_START( sfkick, sfkick_state )
@@ -510,10 +511,9 @@ static MACHINE_CONFIG_START( sfkick, sfkick_state )
 
 MACHINE_CONFIG_END
 
-static DRIVER_INIT(sfkick)
+DRIVER_INIT_MEMBER(sfkick_state,sfkick)
 {
-	sfkick_state *state = machine.driver_data<sfkick_state>();
-	state->m_main_mem=auto_alloc_array(machine, UINT8, 0x4000);
+	m_main_mem=auto_alloc_array(machine(), UINT8, 0x4000);
 }
 
 
@@ -588,7 +588,7 @@ ROM_START( spinkick )
 ROM_END
 
 
-GAME( 1988, sfkick,   0,      sfkick, sfkick, sfkick, ROT90, "Haesung/HJ Corp", "Super Free Kick (set 1)", 0 )
-GAME( 198?, sfkicka,  sfkick, sfkick, sfkick, sfkick, ROT90, "Haesung", "Super Free Kick (set 2)", 0 )
-GAME( 1988, spinkick, sfkick, sfkick, sfkick, sfkick, ROT90, "Haesung/Seojin", "Hec's Spinkick", 0 )
+GAME( 1988, sfkick,   0,      sfkick, sfkick, sfkick_state, sfkick, ROT90, "Haesung/HJ Corp", "Super Free Kick (set 1)", 0 )
+GAME( 198?, sfkicka,  sfkick, sfkick, sfkick, sfkick_state, sfkick, ROT90, "Haesung", "Super Free Kick (set 2)", 0 )
+GAME( 1988, spinkick, sfkick, sfkick, sfkick, sfkick_state, sfkick, ROT90, "Haesung/Seojin", "Hec's Spinkick", 0 )
 

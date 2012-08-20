@@ -185,7 +185,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( main_cpu2_map, AS_PROGRAM, 8, gyruss_state )
 	AM_RANGE(0x0000, 0x0000) AM_READ(gyruss_scanline_r)
-	AM_RANGE(0x2000, 0x2000) AM_WRITE(slave_irq_mask_w)
+	AM_RANGE(0x2000, 0x2000) AM_WRITE(slave_irq_mask_w) AM_READNOP
 	AM_RANGE(0x4000, 0x403f) AM_RAM
 	AM_RANGE(0x4040, 0x40ff) AM_RAM_WRITE(gyruss_spriteram_w) AM_SHARE("spriteram")
 	AM_RANGE(0x4100, 0x47ff) AM_RAM
@@ -726,13 +726,13 @@ ROM_START( venus )
 ROM_END
 
 
-static DRIVER_INIT( gyruss )
+DRIVER_INIT_MEMBER(gyruss_state,gyruss)
 {
-	konami1_decode(machine, "sub");
+	konami1_decode(machine(), "sub");
 }
 
 
-GAME( 1983, gyruss,   0,        gyruss,   gyruss,   gyruss, ROT90, "Konami", "Gyruss", GAME_SUPPORTS_SAVE )
-GAME( 1983, gyrussce, gyruss,   gyruss,   gyrussce, gyruss, ROT90, "Konami (Centuri license)", "Gyruss (Centuri)", GAME_SUPPORTS_SAVE )
-GAME( 1983, gyrussb,  gyruss,   gyruss,   gyruss,   gyruss, ROT90, "bootleg?", "Gyruss (bootleg?)", GAME_SUPPORTS_SAVE ) /* Supposed Taito NZ license, but (c) Konami */
-GAME( 1983, venus,    gyruss,   gyruss,   gyruss,   gyruss, ROT90, "bootleg", "Venus (bootleg of Gyruss)", GAME_SUPPORTS_SAVE )
+GAME( 1983, gyruss,   0,        gyruss,   gyruss, gyruss_state,   gyruss, ROT90, "Konami", "Gyruss", GAME_SUPPORTS_SAVE )
+GAME( 1983, gyrussce, gyruss,   gyruss,   gyrussce, gyruss_state, gyruss, ROT90, "Konami (Centuri license)", "Gyruss (Centuri)", GAME_SUPPORTS_SAVE )
+GAME( 1983, gyrussb,  gyruss,   gyruss,   gyruss, gyruss_state,   gyruss, ROT90, "bootleg?", "Gyruss (bootleg?)", GAME_SUPPORTS_SAVE ) /* Supposed Taito NZ license, but (c) Konami */
+GAME( 1983, venus,    gyruss,   gyruss,   gyruss, gyruss_state,   gyruss, ROT90, "bootleg", "Venus (bootleg of Gyruss)", GAME_SUPPORTS_SAVE )

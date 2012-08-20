@@ -73,18 +73,24 @@ Is there another alt program rom set labeled 9 & 10?
 #include "emu.h"
 #include "cpu/z80/z80.h"
 #include "cpu/m68000/m68000.h"
-#include "includes/kaneko16.h"
 #include "sound/2203intf.h"
 #include "sound/2151intf.h"
 #include "sound/okim6295.h"
 #include "video/kan_pand.h"
+#include "machine/kaneko_hit.h"
+#include "video/kaneko_tmap.h"
 
 
-class sandscrp_state : public kaneko16_state
+class sandscrp_state : public driver_device
 {
 public:
 	sandscrp_state(const machine_config &mconfig, device_type type, const char *tag)
-		: kaneko16_state(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		m_view2_0(*this, "view2_0")
+	{
+	}
+
+	optional_device<kaneko_view2_tilemap_device> m_view2_0;
 
 	UINT8 m_sprite_irq;
 	UINT8 m_unknown_irq;
@@ -105,19 +111,35 @@ public:
 };
 
 
+
+SCREEN_UPDATE_IND16( sandscrp )
+{
+	sandscrp_state *state = screen.machine().driver_data<sandscrp_state>();
+	device_t *pandora = screen.machine().device("pandora");
+	bitmap.fill(0, cliprect);
+
+	int i;
+
+	screen.machine().priority_bitmap.fill(0, cliprect);
+
+	state->m_view2_0->kaneko16_prepare(bitmap, cliprect);
+
+	for ( i = 0; i < 8; i++ )
+	{
+		state->m_view2_0->render_tilemap_chip(bitmap,cliprect,i);
+	}
+
+	// copy sprite bitmap to screen
+	pandora_update(pandora, bitmap, cliprect);
+	return 0;
+}
+
+
+
+
 static MACHINE_RESET( sandscrp )
 {
-	sandscrp_state *state = machine.driver_data<sandscrp_state>();
-	state->m_sprite_type  = 0;
-
-	state->m_sprite_xoffs = 0;
-	state->m_sprite_yoffs = 0;
-
-	state->m_priority.sprite[0] = 1;	// above tile[0],   below the others
-	state->m_priority.sprite[1] = 2;	// above tile[0-1], below the others
-	state->m_priority.sprite[2] = 3;	// above tile[0-2], below the others
-	state->m_priority.sprite[3] = 8;	// above all
-	state->m_sprite_type = 3;	// "different" sprites layout
+//  sandscrp_state *state = machine.driver_data<sandscrp_state>();
 }
 
 /* Sand Scorpion */
@@ -174,8 +196,8 @@ WRITE16_MEMBER(sandscrp_state::sandscrp_irq_cause_w)
 
 	if (ACCESSING_BITS_0_7)
 	{
-		m_sprite_flipx	=	data & 1;
-		m_sprite_flipy	=	data & 1;
+//      m_sprite_flipx  =   data & 1;
+//      m_sprite_flipy  =   data & 1;
 
 		if (data & 0x08)	m_sprite_irq  = 0;
 		if (data & 0x10)	m_unknown_irq = 0;
@@ -242,12 +264,9 @@ static ADDRESS_MAP_START( sandscrp, AS_PROGRAM, 16, sandscrp_state )
 	AM_RANGE(0x100000, 0x100001) AM_WRITE(sandscrp_irq_cause_w)	// IRQ Ack
 
 	AM_RANGE(0x700000, 0x70ffff) AM_RAM		// RAM
-	AM_RANGE(0x200000, 0x20001f) AM_READWRITE(galpanib_calc_r,galpanib_calc_w)	// Protection
-	AM_RANGE(0x300000, 0x30000f) AM_RAM_WRITE(kaneko16_layers_0_regs_w) AM_SHARE("layers_0_regs")	// Layers 0 Regs
-	AM_RANGE(0x400000, 0x400fff) AM_RAM_WRITE(kaneko16_vram_1_w) AM_SHARE("vram.1")	// Layers 0
-	AM_RANGE(0x401000, 0x401fff) AM_RAM_WRITE(kaneko16_vram_0_w) AM_SHARE("vram.0")	//
-	AM_RANGE(0x402000, 0x402fff) AM_RAM AM_SHARE("vscroll.1")									//
-	AM_RANGE(0x403000, 0x403fff) AM_RAM AM_SHARE("vscroll.0")									//
+	AM_RANGE(0x200000, 0x20001f) AM_DEVREADWRITE("calc1_mcu", kaneko_hit_device, kaneko_hit_r,kaneko_hit_w)
+	AM_RANGE(0x300000, 0x30001f) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_regs_r, kaneko_tmap_regs_w)
+	AM_RANGE(0x400000, 0x403fff) AM_DEVREADWRITE("view2_0", kaneko_view2_tilemap_device,  kaneko_tmap_vram_r, kaneko_tmap_vram_w )
 	AM_RANGE(0x500000, 0x501fff) AM_DEVREADWRITE_LEGACY("pandora", pandora_spriteram_LSB_r, pandora_spriteram_LSB_w ) // sprites
 	AM_RANGE(0x600000, 0x600fff) AM_RAM_WRITE(paletteram_xGGGGGRRRRRBBBBB_word_w) AM_SHARE("paletteram")	// Palette
 	AM_RANGE(0xa00000, 0xa00001) AM_WRITE(sandscrp_coin_counter_w)	// Coin Counters (Lockout unused)
@@ -465,7 +484,7 @@ static const ym2203_interface ym2203_intf_sandscrp =
 		DEVCB_NULL,	/* Port A Write */
 		DEVCB_NULL,	/* Port B Write */
 	},
-	irq_handler	/* IRQ handler */
+	DEVCB_LINE(irq_handler)	/* IRQ handler */
 };
 
 
@@ -503,9 +522,14 @@ static MACHINE_CONFIG_START( sandscrp, sandscrp_state )
 	MCFG_GFXDECODE(sandscrp)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_KANEKO_PANDORA_ADD("pandora", sandscrp_pandora_config)
+	MCFG_DEVICE_ADD("view2_0", KANEKO_TMAP, 0)
+	kaneko_view2_tilemap_device::set_gfx_region(*device, 1);
+	kaneko_view2_tilemap_device::set_offset(*device, 0x5b, 0, 256, 224);
 
-	MCFG_VIDEO_START(sandscrp_1xVIEW2)
+	MCFG_DEVICE_ADD("calc1_mcu", KANEKO_HIT, 0)
+	kaneko_hit_device::set_type(*device, 0);
+
+	MCFG_KANEKO_PANDORA_ADD("pandora", sandscrp_pandora_config)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -592,6 +616,6 @@ ROM_START( sandscrpb ) /* Different rev PCB */
 ROM_END
 
 
-GAME( 1992, sandscrp,  0,        sandscrp, sandscrp, 0,          ROT90, "Face",   "Sand Scorpion", 0 )
-GAME( 1992, sandscrpa, sandscrp, sandscrp, sandscrp, 0,          ROT90, "Face",   "Sand Scorpion (Earlier)", 0 )
-GAME( 1992, sandscrpb, sandscrp, sandscrp, sandscrp, 0,          ROT90, "Face",   "Sand Scorpion (Chinese Title Screen, Revised Hardware)", 0 )
+GAME( 1992, sandscrp,  0,        sandscrp, sandscrp, driver_device, 0,          ROT90, "Face",   "Sand Scorpion", 0 )
+GAME( 1992, sandscrpa, sandscrp, sandscrp, sandscrp, driver_device, 0,          ROT90, "Face",   "Sand Scorpion (Earlier)", 0 )
+GAME( 1992, sandscrpb, sandscrp, sandscrp, sandscrp, driver_device, 0,          ROT90, "Face",   "Sand Scorpion (Chinese Title Screen, Revised Hardware)", 0 )

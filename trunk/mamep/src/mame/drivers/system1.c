@@ -760,7 +760,7 @@ static ADDRESS_MAP_START( system1_pio_io_map, AS_IO, 8, system1_state )
 	AM_RANGE(0x0c, 0x0c) AM_MIRROR(0x02) AM_READ_PORT("SWA")	/* DIP2 */
 	AM_RANGE(0x0d, 0x0d) AM_MIRROR(0x02) AM_READ_PORT("SWB")	/* DIP1 some games read it from here... */
 	AM_RANGE(0x10, 0x10) AM_MIRROR(0x03) AM_READ_PORT("SWB")	/* DIP1 ... and some others from here but there are games which check BOTH! */
-	AM_RANGE(0x18, 0x1b) AM_DEVREADWRITE_LEGACY("pio", z80pio_cd_ba_r, z80pio_cd_ba_w)
+	AM_RANGE(0x18, 0x1b) AM_DEVREADWRITE("pio", z80pio_device, read, write)
 ADDRESS_MAP_END
 
 
@@ -4583,67 +4583,63 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( bank00 )
+DRIVER_INIT_MEMBER(system1_state,bank00)
 {
-	system1_state *state = machine.driver_data<system1_state>();
-	state->m_videomode_custom = NULL;
+	m_videomode_custom = NULL;
 }
-static DRIVER_INIT( bank44 )
+DRIVER_INIT_MEMBER(system1_state,bank44)
 {
-	system1_state *state = machine.driver_data<system1_state>();
-	state->m_videomode_custom = bank44_custom_w;
+	m_videomode_custom = bank44_custom_w;
 }
 
-static DRIVER_INIT( bank0c )
+DRIVER_INIT_MEMBER(system1_state,bank0c)
 {
-	system1_state *state = machine.driver_data<system1_state>();
-	state->m_videomode_custom = bank0c_custom_w;
+	m_videomode_custom = bank0c_custom_w;
 }
 
-static DRIVER_INIT( regulus )	{ DRIVER_INIT_CALL(bank00); regulus_decode(machine, "maincpu"); }
-static DRIVER_INIT( mrviking )	{ DRIVER_INIT_CALL(bank00); mrviking_decode(machine, "maincpu"); }
-static DRIVER_INIT( swat )		{ DRIVER_INIT_CALL(bank00); swat_decode(machine, "maincpu"); }
-static DRIVER_INIT( flicky )	{ DRIVER_INIT_CALL(bank00); flicky_decode(machine, "maincpu"); }
-static DRIVER_INIT( wmatch )	{ DRIVER_INIT_CALL(bank00); wmatch_decode(machine, "maincpu"); }
-static DRIVER_INIT( bullfgtj )	{ DRIVER_INIT_CALL(bank00); bullfgtj_decode(machine, "maincpu"); }
-static DRIVER_INIT( spatter )	{ DRIVER_INIT_CALL(bank00); spatter_decode(machine, "maincpu"); }
-static DRIVER_INIT( pitfall2 )	{ DRIVER_INIT_CALL(bank00); pitfall2_decode(machine, "maincpu"); }
-static DRIVER_INIT( nprinces )	{ DRIVER_INIT_CALL(bank00); nprinces_decode(machine, "maincpu"); }
-static DRIVER_INIT( seganinj )	{ DRIVER_INIT_CALL(bank00); seganinj_decode(machine, "maincpu"); }
-static DRIVER_INIT( imsorry )	{ DRIVER_INIT_CALL(bank00); imsorry_decode(machine, "maincpu"); }
-static DRIVER_INIT( teddybb )	{ DRIVER_INIT_CALL(bank00); teddybb_decode(machine, "maincpu"); }
-static DRIVER_INIT( myheroj )	{ DRIVER_INIT_CALL(bank00); myheroj_decode(machine, "maincpu"); }
-static DRIVER_INIT( 4dwarrio )	{ DRIVER_INIT_CALL(bank00); sega_315_5162_decode(machine, "maincpu"); }
-static DRIVER_INIT( wboy )		{ DRIVER_INIT_CALL(bank00); sega_315_5177_decode(machine, "maincpu"); }
-static DRIVER_INIT( wboy2 )		{ DRIVER_INIT_CALL(bank00); sega_315_5178_decode(machine, "maincpu"); }
-static DRIVER_INIT( wboyo )		{ DRIVER_INIT_CALL(bank00); hvymetal_decode(machine, "maincpu"); }
-static DRIVER_INIT( blockgal )	{ DRIVER_INIT_CALL(bank00); mc8123_decrypt_rom(machine, "maincpu", "key", NULL, 0); }
+DRIVER_INIT_MEMBER(system1_state,regulus)	{ DRIVER_INIT_CALL(bank00); regulus_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,mrviking)	{ DRIVER_INIT_CALL(bank00); mrviking_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,swat)		{ DRIVER_INIT_CALL(bank00); swat_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,flicky)	{ DRIVER_INIT_CALL(bank00); flicky_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,wmatch)	{ DRIVER_INIT_CALL(bank00); wmatch_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,bullfgtj)	{ DRIVER_INIT_CALL(bank00); bullfgtj_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,spatter)	{ DRIVER_INIT_CALL(bank00); spatter_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,pitfall2)	{ DRIVER_INIT_CALL(bank00); pitfall2_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,nprinces)	{ DRIVER_INIT_CALL(bank00); nprinces_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,seganinj)	{ DRIVER_INIT_CALL(bank00); seganinj_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,imsorry)	{ DRIVER_INIT_CALL(bank00); imsorry_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,teddybb)	{ DRIVER_INIT_CALL(bank00); teddybb_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,myheroj)	{ DRIVER_INIT_CALL(bank00); myheroj_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,4dwarrio)	{ DRIVER_INIT_CALL(bank00); sega_315_5162_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,wboy)		{ DRIVER_INIT_CALL(bank00); sega_315_5177_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,wboy2)		{ DRIVER_INIT_CALL(bank00); sega_315_5178_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,wboyo)		{ DRIVER_INIT_CALL(bank00); hvymetal_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,blockgal)	{ DRIVER_INIT_CALL(bank00); mc8123_decrypt_rom(machine(), "maincpu", "key", NULL, 0); }
 
-static DRIVER_INIT( hvymetal )	{ DRIVER_INIT_CALL(bank44); hvymetal_decode(machine, "maincpu"); }
-static DRIVER_INIT( gardia )	{ DRIVER_INIT_CALL(bank44); sega_317_0006_decode(machine, "maincpu"); }
-static DRIVER_INIT( gardiab )	{ DRIVER_INIT_CALL(bank44); sega_317_0007_decode(machine, "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,hvymetal)	{ DRIVER_INIT_CALL(bank44); hvymetal_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,gardia)	{ DRIVER_INIT_CALL(bank44); sega_317_0006_decode(machine(), "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,gardiab)	{ DRIVER_INIT_CALL(bank44); sega_317_0007_decode(machine(), "maincpu"); }
 
-static DRIVER_INIT( wbml )		{ DRIVER_INIT_CALL(bank0c); mc8123_decrypt_rom(machine, "maincpu", "key", "bank1", 4); }
-static DRIVER_INIT( ufosensi )  { DRIVER_INIT_CALL(bank0c); mc8123_decrypt_rom(machine, "maincpu", "key", "bank1", 4); }
-static DRIVER_INIT( wboysys2 )	{ DRIVER_INIT_CALL(bank0c); sega_315_5177_decode(machine, "maincpu"); }
+DRIVER_INIT_MEMBER(system1_state,wbml)		{ DRIVER_INIT_CALL(bank0c); mc8123_decrypt_rom(machine(), "maincpu", "key", "bank1", 4); }
+DRIVER_INIT_MEMBER(system1_state,ufosensi)  { DRIVER_INIT_CALL(bank0c); mc8123_decrypt_rom(machine(), "maincpu", "key", "bank1", 4); }
+DRIVER_INIT_MEMBER(system1_state,wboysys2)	{ DRIVER_INIT_CALL(bank0c); sega_315_5177_decode(machine(), "maincpu"); }
 
 
-static DRIVER_INIT( dakkochn )
+DRIVER_INIT_MEMBER(system1_state,dakkochn)
 {
-	system1_state *state = machine.driver_data<system1_state>();
-	state->m_videomode_custom = dakkochn_custom_w;
+	m_videomode_custom = dakkochn_custom_w;
 
-	mc8123_decrypt_rom(machine, "maincpu", "key", "bank1", 4);
+	mc8123_decrypt_rom(machine(), "maincpu", "key", "bank1", 4);
 
-//  machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x00, 0x00, FUNC(dakkochn_port_00_r));
-//  machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x03, 0x03, FUNC(dakkochn_port_03_r));
-//  machine.device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x04, 0x04, FUNC(dakkochn_port_04_r));
+//  machine().device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x00, 0x00, FUNC(dakkochn_port_00_r));
+//  machine().device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x03, 0x03, FUNC(dakkochn_port_03_r));
+//  machine().device("maincpu")->memory().space(AS_IO)->install_legacy_read_handler(0x04, 0x04, FUNC(dakkochn_port_04_r));
 
-//  machine.device("maincpu")->memory().space(AS_IO)->install_legacy_write_handler(0x15, 0x15, FUNC(dakkochn_port_15_w));
+//  machine().device("maincpu")->memory().space(AS_IO)->install_legacy_write_handler(0x15, 0x15, FUNC(dakkochn_port_15_w));
 }
 
 
-static DRIVER_INIT( myherok )
+DRIVER_INIT_MEMBER(system1_state,myherok)
 {
 	int A;
 	UINT8 *rom;
@@ -4652,12 +4648,12 @@ static DRIVER_INIT( myherok )
 
 	/* additionally to the usual protection, all the program ROMs have data lines */
 	/* D0 and D1 swapped. */
-	rom = machine.root_device().memregion("maincpu")->base();
+	rom = machine().root_device().memregion("maincpu")->base();
 	for (A = 0;A < 0xc000;A++)
 		rom[A] = (rom[A] & 0xfc) | ((rom[A] & 1) << 1) | ((rom[A] & 2) >> 1);
 
 	/* the tile gfx ROMs are mangled as well: */
-	rom = machine.root_device().memregion("tiles")->base();
+	rom = machine().root_device().memregion("tiles")->base();
 
 	/* the first ROM has data lines D0 and D6 swapped. */
 	for (A = 0x0000;A < 0x4000;A++)
@@ -4686,7 +4682,7 @@ static DRIVER_INIT( myherok )
 		}
 	}
 
-	myheroj_decode(machine, "maincpu");
+	myheroj_decode(machine(), "maincpu");
 }
 
 READ8_MEMBER(system1_state::nob_start_r)
@@ -4695,30 +4691,29 @@ READ8_MEMBER(system1_state::nob_start_r)
 	return (cpu_get_pc(&space.device()) <= 0x0003) ? 0x80 : memregion("maincpu")->base()[1];
 }
 
-static DRIVER_INIT( nob )
+DRIVER_INIT_MEMBER(system1_state,nob)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	address_space *iospace = machine.device("maincpu")->memory().space(AS_IO);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
 
 	DRIVER_INIT_CALL(bank44);
 
 	/* hack to fix incorrect JMP at start, which should obviously be to $0080 */
 	/* patching the ROM causes errors in the self-test */
 	/* in real-life, it could be some behavior dependent upon M1 */
-	system1_state *state = machine.driver_data<system1_state>();
-	space->install_read_handler(0x0001, 0x0001, read8_delegate(FUNC(system1_state::nob_start_r),state));
+	space->install_read_handler(0x0001, 0x0001, read8_delegate(FUNC(system1_state::nob_start_r),this));
 
 	/* install MCU communications */
-	iospace->install_readwrite_handler(0x18, 0x18, 0x00, 0x00, read8_delegate(FUNC(system1_state::nob_maincpu_latch_r),state), write8_delegate(FUNC(system1_state::nob_maincpu_latch_w),state));
-	iospace->install_read_handler(0x1c, 0x1c, read8_delegate(FUNC(system1_state::nob_mcu_status_r),state));
+	iospace->install_readwrite_handler(0x18, 0x18, 0x00, 0x00, read8_delegate(FUNC(system1_state::nob_maincpu_latch_r),this), write8_delegate(FUNC(system1_state::nob_maincpu_latch_w),this));
+	iospace->install_read_handler(0x1c, 0x1c, read8_delegate(FUNC(system1_state::nob_mcu_status_r),this));
 }
 
-static DRIVER_INIT( nobb )
+DRIVER_INIT_MEMBER(system1_state,nobb)
 {
 	/* Patch to get PRG ROMS ('T', 'R' and 'S) status as "GOOD" in the "test mode" */
 	/* not really needed */
 
-//  UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+//  UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 
 //  ROM[0x3296] = 0x18;     // 'jr' instead of 'jr z' - 'T' (PRG Main ROM)
 //  ROM[0x32be] = 0x18;     // 'jr' instead of 'jr z' - 'R' (Banked ROM 1)
@@ -4730,40 +4725,39 @@ static DRIVER_INIT( nobb )
 //  ROM[0x10000 + 0 * 0x8000 + 0x3347] = 0x18;  // 'jr' instead of 'jr z'
 
 	/* Patch to get sound in later levels(the program enters into a tight loop)*/
-	address_space *iospace = machine.device("maincpu")->memory().space(AS_IO);
-	UINT8 *ROM2 = machine.root_device().memregion("soundcpu")->base();
+	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
+	UINT8 *ROM2 = machine().root_device().memregion("soundcpu")->base();
 
 	ROM2[0x02f9] = 0x28;//'jr z' instead of 'jr'
 
 	DRIVER_INIT_CALL(bank44);
 
-	system1_state *state = machine.driver_data<system1_state>();
-	iospace->install_read_handler(0x1c, 0x1c, read8_delegate(FUNC(system1_state::nobb_inport1c_r),state));
-	iospace->install_read_handler(0x22, 0x22, read8_delegate(FUNC(system1_state::nobb_inport22_r),state));
-	iospace->install_read_handler(0x23, 0x23, read8_delegate(FUNC(system1_state::nobb_inport23_r),state));
-	iospace->install_write_handler(0x24, 0x24, write8_delegate(FUNC(system1_state::nobb_outport24_w),state));
+	iospace->install_read_handler(0x1c, 0x1c, read8_delegate(FUNC(system1_state::nobb_inport1c_r),this));
+	iospace->install_read_handler(0x22, 0x22, read8_delegate(FUNC(system1_state::nobb_inport22_r),this));
+	iospace->install_read_handler(0x23, 0x23, read8_delegate(FUNC(system1_state::nobb_inport23_r),this));
+	iospace->install_write_handler(0x24, 0x24, write8_delegate(FUNC(system1_state::nobb_outport24_w),this));
 }
 
 
-static DRIVER_INIT( bootleg )
+DRIVER_INIT_MEMBER(system1_state,bootleg)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0x7fff, machine.root_device().memregion("maincpu")->base() + 0x10000);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	space->set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("maincpu")->base() + 0x10000);
 	DRIVER_INIT_CALL(bank00);
 }
 
 
-static DRIVER_INIT( bootsys2 )
+DRIVER_INIT_MEMBER(system1_state,bootsys2)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0x7fff, machine.root_device().memregion("maincpu")->base() + 0x20000);
-	machine.root_device().membank("bank1")->configure_decrypted_entries(0, 4, machine.root_device().memregion("maincpu")->base() + 0x30000, 0x4000);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	space->set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("maincpu")->base() + 0x20000);
+	machine().root_device().membank("bank1")->configure_decrypted_entries(0, 4, machine().root_device().memregion("maincpu")->base() + 0x30000, 0x4000);
 	DRIVER_INIT_CALL(bank0c);
 }
 
-static DRIVER_INIT( choplift )
+DRIVER_INIT_MEMBER(system1_state,choplift)
 {
-	UINT8 *mcurom = machine.root_device().memregion("mcu")->base();
+	UINT8 *mcurom = machine().root_device().memregion("mcu")->base();
 
 	/* the ROM dump we have is bad; the following patches make it work */
 	mcurom[0x100] = 0x55;		/* D5 in current dump */
@@ -4773,9 +4767,9 @@ static DRIVER_INIT( choplift )
 	DRIVER_INIT_CALL(bank0c);
 }
 
-static DRIVER_INIT( shtngmst )
+DRIVER_INIT_MEMBER(system1_state,shtngmst)
 {
-	address_space *iospace = machine.device("maincpu")->memory().space(AS_IO);
+	address_space *iospace = machine().device("maincpu")->memory().space(AS_IO);
 	iospace->install_read_port(0x12, 0x12, 0x00, 0x00, "TRIGGER");
 	iospace->install_read_port(0x18, 0x18, 0x00, 0x03, "18");
 	iospace->install_read_port(0x1c, 0x1c, 0x00, 0x02, "GUNX");
@@ -4792,80 +4786,80 @@ static DRIVER_INIT( shtngmst )
  *************************************/
 
 /* PPI-based System 1 */
-GAME( 1983, starjack,   0,        sys1ppis, starjack,  bank00,   ROT270, "Sega",            "Star Jacker (Sega)", GAME_SUPPORTS_SAVE )
-GAME( 1983, starjacks,  starjack, sys1ppis, starjacks, bank00,   ROT270, "Sega (Stern Electronics license)", "Star Jacker (Stern Electronics)", GAME_SUPPORTS_SAVE )
-GAME( 1983, upndown,    0,        sys1ppi,  upndown,   nprinces, ROT270, "Sega",            "Up'n Down (315-5030)", GAME_SUPPORTS_SAVE )
-GAME( 1983, upndownu,   upndown,  sys1ppi,  upndown,   bank00,   ROT270, "Sega",            "Up'n Down (not encrypted)", GAME_SUPPORTS_SAVE )
-GAME( 1983, regulus,    0,        sys1ppi,  regulus,   regulus,  ROT270, "Sega",            "Regulus (315-5033, Rev A.)", GAME_SUPPORTS_SAVE )
-GAME( 1983, reguluso,   regulus,  sys1ppi,  reguluso,  regulus,  ROT270, "Sega",            "Regulus (315-5033)", GAME_SUPPORTS_SAVE )
-GAME( 1983, regulusu,   regulus,  sys1ppi,  regulus,   bank00,   ROT270, "Sega",            "Regulus (not encrypted)", GAME_SUPPORTS_SAVE )
-GAME( 1984, mrviking,   0,        sys1ppis, mrviking,  mrviking, ROT270, "Sega",            "Mister Viking (315-5041)", GAME_SUPPORTS_SAVE )
-GAME( 1984, mrvikingj,  mrviking, sys1ppis, mrvikingj, mrviking, ROT270, "Sega",            "Mister Viking (315-5041, Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1984, swat,       0,        sys1ppi,  swat,      swat,     ROT270, "Coreland / Sega", "SWAT (315-5048)", GAME_SUPPORTS_SAVE )
-GAME( 1984, flickyo,    flicky,   sys1ppi,  flicky,    flicky,   ROT0,   "Sega",            "Flicky (64k Version, System 1, 315-5051, set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1984, flickys1,   flicky,   sys1ppi,  flickys1,  flicky,   ROT0,   "Sega",            "Flicky (64k Version, System 1, 315-5051, set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1984, wmatch,     0,        sys1ppis, wmatch,    wmatch,   ROT270, "Sega",            "Water Match (315-5064)", GAME_SUPPORTS_SAVE )
-GAME( 1984, bullfgt,    0,        sys1ppi,  bullfgt,   bullfgtj, ROT0,   "Coreland / Sega", "Bullfight (315-5065)", GAME_SUPPORTS_SAVE )
-GAME( 1985, nprinces,   seganinj, sys1ppi,  seganinj,  flicky,   ROT0,   "bootleg?",        "Ninja Princess (315-5051, 64k Ver. bootleg?)", GAME_SUPPORTS_SAVE )
-GAME( 1985, nprincesu,  seganinj, sys1ppi,  seganinj,  bank00,   ROT0,   "Sega",            "Ninja Princess (64k Ver. not encrypted)", GAME_SUPPORTS_SAVE )
-GAME( 1986, wboy2,      wboy,     sys1ppi,  wboy,      wboy2,    ROT0,   "Escape (Sega license)", "Wonder Boy (set 2, 315-5178)", GAME_SUPPORTS_SAVE )
-GAME( 1986, wboy2u,     wboy,     sys1ppi,  wboy,      bank00,   ROT0,   "Escape (Sega license)", "Wonder Boy (set 2, not encrypted)", GAME_SUPPORTS_SAVE )
-GAME( 1986, wbdeluxe,   wboy,     sys1ppi,  wbdeluxe,  bank00,   ROT0,   "Escape (Sega license)", "Wonder Boy Deluxe", GAME_SUPPORTS_SAVE )
-GAME( 1986, nob,        0,        nobm,     nob,       nob,      ROT270, "Coreland / Data East Corporation", "Noboranka (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1986, nobb,       nob,      nob,      nob,       nobb,     ROT270, "bootleg (Game Electronics)", "Noboranka (Japan, bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1983, starjack,   0,        sys1ppis, starjack, system1_state,  bank00,   ROT270, "Sega",            "Star Jacker (Sega)", GAME_SUPPORTS_SAVE )
+GAME( 1983, starjacks,  starjack, sys1ppis, starjacks, system1_state, bank00,   ROT270, "Sega (Stern Electronics license)", "Star Jacker (Stern Electronics)", GAME_SUPPORTS_SAVE )
+GAME( 1983, upndown,    0,        sys1ppi,  upndown, system1_state,   nprinces, ROT270, "Sega",            "Up'n Down (315-5030)", GAME_SUPPORTS_SAVE )
+GAME( 1983, upndownu,   upndown,  sys1ppi,  upndown, system1_state,   bank00,   ROT270, "Sega",            "Up'n Down (not encrypted)", GAME_SUPPORTS_SAVE )
+GAME( 1983, regulus,    0,        sys1ppi,  regulus, system1_state,   regulus,  ROT270, "Sega",            "Regulus (315-5033, Rev A.)", GAME_SUPPORTS_SAVE )
+GAME( 1983, reguluso,   regulus,  sys1ppi,  reguluso, system1_state,  regulus,  ROT270, "Sega",            "Regulus (315-5033)", GAME_SUPPORTS_SAVE )
+GAME( 1983, regulusu,   regulus,  sys1ppi,  regulus, system1_state,   bank00,   ROT270, "Sega",            "Regulus (not encrypted)", GAME_SUPPORTS_SAVE )
+GAME( 1984, mrviking,   0,        sys1ppis, mrviking, system1_state,  mrviking, ROT270, "Sega",            "Mister Viking (315-5041)", GAME_SUPPORTS_SAVE )
+GAME( 1984, mrvikingj,  mrviking, sys1ppis, mrvikingj, system1_state, mrviking, ROT270, "Sega",            "Mister Viking (315-5041, Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1984, swat,       0,        sys1ppi,  swat, system1_state,      swat,     ROT270, "Coreland / Sega", "SWAT (315-5048)", GAME_SUPPORTS_SAVE )
+GAME( 1984, flickyo,    flicky,   sys1ppi,  flicky, system1_state,    flicky,   ROT0,   "Sega",            "Flicky (64k Version, System 1, 315-5051, set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1984, flickys1,   flicky,   sys1ppi,  flickys1, system1_state,  flicky,   ROT0,   "Sega",            "Flicky (64k Version, System 1, 315-5051, set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1984, wmatch,     0,        sys1ppis, wmatch, system1_state,    wmatch,   ROT270, "Sega",            "Water Match (315-5064)", GAME_SUPPORTS_SAVE )
+GAME( 1984, bullfgt,    0,        sys1ppi,  bullfgt, system1_state,   bullfgtj, ROT0,   "Coreland / Sega", "Bullfight (315-5065)", GAME_SUPPORTS_SAVE )
+GAME( 1985, nprinces,   seganinj, sys1ppi,  seganinj, system1_state,  flicky,   ROT0,   "bootleg?",        "Ninja Princess (315-5051, 64k Ver. bootleg?)", GAME_SUPPORTS_SAVE )
+GAME( 1985, nprincesu,  seganinj, sys1ppi,  seganinj, system1_state,  bank00,   ROT0,   "Sega",            "Ninja Princess (64k Ver. not encrypted)", GAME_SUPPORTS_SAVE )
+GAME( 1986, wboy2,      wboy,     sys1ppi,  wboy, system1_state,      wboy2,    ROT0,   "Escape (Sega license)", "Wonder Boy (set 2, 315-5178)", GAME_SUPPORTS_SAVE )
+GAME( 1986, wboy2u,     wboy,     sys1ppi,  wboy, system1_state,      bank00,   ROT0,   "Escape (Sega license)", "Wonder Boy (set 2, not encrypted)", GAME_SUPPORTS_SAVE )
+GAME( 1986, wbdeluxe,   wboy,     sys1ppi,  wbdeluxe, system1_state,  bank00,   ROT0,   "Escape (Sega license)", "Wonder Boy Deluxe", GAME_SUPPORTS_SAVE )
+GAME( 1986, nob,        0,        nobm,     nob, system1_state,       nob,      ROT270, "Coreland / Data East Corporation", "Noboranka (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1986, nobb,       nob,      nob,      nob, system1_state,       nobb,     ROT270, "bootleg (Game Electronics)", "Noboranka (Japan, bootleg)", GAME_SUPPORTS_SAVE )
 
 /* PIO-based System 1 */
-GAME( 1984, flicky,     0,        sys1pio,  flicky,    flicky,   ROT0,   "Sega",            "Flicky (128k Version, System 2, 315-5051)", GAME_SUPPORTS_SAVE )
-GAME( 1984, flickys2,   flicky,   sys1pio,  flickys2,  bank00,   ROT0,   "Sega",            "Flicky (128k Version, System 2, not encrypted)", GAME_SUPPORTS_SAVE )
-GAME( 1984, thetogyu,   bullfgt,  sys1pio,  bullfgt,   bullfgtj, ROT0,   "Coreland / Sega", "The Togyu (315-5065, Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1984, spatter,    0,        sys1pios, spatter,   spatter,  ROT0,   "Sega",            "Spatter", GAME_SUPPORTS_SAVE )
-GAME( 1984, ssanchan,   spatter,  sys1pios, spatter,   spatter,  ROT0,   "Sega",            "Sanrin San Chan (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1985, pitfall2,   0,        sys1pio,  pitfall2,  pitfall2, ROT0,   "Sega",            "Pitfall II (315-5093)", GAME_SUPPORTS_SAVE )
-GAME( 1985, pitfall2a,  pitfall2, sys1pio,  pitfall2,  pitfall2, ROT0,   "Sega",            "Pitfall II (315-5093, Flicky Conversion)", GAME_SUPPORTS_SAVE )
-GAME( 1985, pitfall2u,  pitfall2, sys1pio,  pitfall2u, bank00,   ROT0,   "Sega",            "Pitfall II (not encrypted)", GAME_SUPPORTS_SAVE )
-GAME( 1985, seganinj,   0,        sys1pio,  seganinj,  seganinj, ROT0,   "Sega",            "Sega Ninja (315-5102)", GAME_SUPPORTS_SAVE )
-GAME( 1985, seganinju,  seganinj, sys1pio,  seganinj,  bank00,   ROT0,   "Sega",            "Sega Ninja (not encrypted)", GAME_SUPPORTS_SAVE )
-GAME( 1985, ninja,      seganinj, sys1pio,  seganinj,  seganinj, ROT0,   "Sega",            "Ninja (315-5102)", GAME_SUPPORTS_SAVE )
-GAME( 1985, nprinceso,  seganinj, sys1pio,  seganinj,  nprinces, ROT0,   "Sega",            "Ninja Princess (315-5098, 128k Ver.)", GAME_SUPPORTS_SAVE )
-GAME( 1985, nprincesb,  seganinj, sys1pio,  seganinj,  flicky,   ROT0,   "bootleg?",        "Ninja Princess (315-5051?, 128k Ver. bootleg?)", GAME_SUPPORTS_SAVE )
-GAME( 1985, imsorry,    0,        sys1pio,  imsorry,   imsorry,  ROT0,   "Coreland / Sega", "I'm Sorry (315-5110, US)", GAME_SUPPORTS_SAVE )
-GAME( 1985, imsorryj,   imsorry,  sys1pio,  imsorry,   imsorry,  ROT0,   "Coreland / Sega", "Gonbee no I'm Sorry (315-5110, Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1985, teddybb,    0,        sys1pio,  teddybb,   teddybb,  ROT0,   "Sega",            "TeddyBoy Blues (315-5115, New Ver.)", GAME_SUPPORTS_SAVE )
-GAME( 1985, teddybbo,   teddybb,  sys1pio,  teddybb,   teddybb,  ROT0,   "Sega",            "TeddyBoy Blues (315-5115, Old Ver.)", GAME_SUPPORTS_SAVE )
-GAME( 1985, myhero,     0,        sys1pio,  myhero,    bank00,   ROT0,   "Coreland / Sega", "My Hero (US, not encrypted)", GAME_SUPPORTS_SAVE )
-GAME( 1985, sscandal,   myhero,   sys1pio,  myhero,    myheroj,  ROT0,   "Coreland / Sega", "Seishun Scandal (315-5132, Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1985, myherok,    myhero,   sys1pio,  myhero,    myherok,  ROT0,   "Coreland / Sega", "My Hero (Korea)", GAME_SUPPORTS_SAVE )
-GAME( 1985, 4dwarrio,   0,        sys1pio,  4dwarrio,  4dwarrio, ROT0,   "Coreland / Sega", "4-D Warriors (315-5162)", GAME_SUPPORTS_SAVE )
-GAME( 1986, raflesia,   0,        sys1pio,  raflesia,  4dwarrio, ROT270, "Coreland / Sega", "Rafflesia (315-5162)", GAME_SUPPORTS_SAVE )
-GAME( 1986, wboy,       0,        sys1pio,  wboy,      wboy,     ROT0,   "Escape (Sega license)", "Wonder Boy (set 1, 315-5177)", GAME_SUPPORTS_SAVE )
-GAME( 1986, wboyo,      wboy,     sys1pio,  wboy,      wboyo,    ROT0,   "Escape (Sega license)", "Wonder Boy (set 1, 315-5135)", GAME_SUPPORTS_SAVE )
-GAME( 1986, wboy3,      wboy,     sys1pio,  wboy3,     wboyo,    ROT0,   "Escape (Sega license)", "Wonder Boy (set 3, 315-5135)", GAME_SUPPORTS_SAVE )
-GAME( 1986, wboy4,      wboy,     sys1pio,  wboy,      4dwarrio, ROT0,   "Escape (Sega license)", "Wonder Boy (315-5162, 4-D Warriors Conversion)", GAME_SUPPORTS_SAVE )
-GAME( 1986, wboyu,      wboy,     sys1pio,  wboyu,     bank00,   ROT0,   "Escape (Sega license)", "Wonder Boy (prototype?)", GAME_SUPPORTS_SAVE ) // appears to be a very early / unfinished version.
-GAME( 1986, wboy5,      wboy,     sys1pio,  wboy3,     wboyo,    ROT0,   "bootleg",         "Wonder Boy (set 5, bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1986, wboyub,     wboy,     sys1pio,  wboy,      wboyo,    ROT0,   "bootleg",         "Wonder Boy (US bootleg)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING )
-GAME( 1987, blockgal,   0,        sys1pio,  blockgal,  blockgal, ROT90,  "Sega / Vic Tokai","Block Gal (MC-8123B, 317-0029)", GAME_SUPPORTS_SAVE)
+GAME( 1984, flicky,     0,        sys1pio,  flicky, system1_state,    flicky,   ROT0,   "Sega",            "Flicky (128k Version, System 2, 315-5051)", GAME_SUPPORTS_SAVE )
+GAME( 1984, flickys2,   flicky,   sys1pio,  flickys2, system1_state,  bank00,   ROT0,   "Sega",            "Flicky (128k Version, System 2, not encrypted)", GAME_SUPPORTS_SAVE )
+GAME( 1984, thetogyu,   bullfgt,  sys1pio,  bullfgt, system1_state,   bullfgtj, ROT0,   "Coreland / Sega", "The Togyu (315-5065, Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1984, spatter,    0,        sys1pios, spatter, system1_state,   spatter,  ROT0,   "Sega",            "Spatter", GAME_SUPPORTS_SAVE )
+GAME( 1984, ssanchan,   spatter,  sys1pios, spatter, system1_state,   spatter,  ROT0,   "Sega",            "Sanrin San Chan (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1985, pitfall2,   0,        sys1pio,  pitfall2, system1_state,  pitfall2, ROT0,   "Sega",            "Pitfall II (315-5093)", GAME_SUPPORTS_SAVE )
+GAME( 1985, pitfall2a,  pitfall2, sys1pio,  pitfall2, system1_state,  pitfall2, ROT0,   "Sega",            "Pitfall II (315-5093, Flicky Conversion)", GAME_SUPPORTS_SAVE )
+GAME( 1985, pitfall2u,  pitfall2, sys1pio,  pitfall2u, system1_state, bank00,   ROT0,   "Sega",            "Pitfall II (not encrypted)", GAME_SUPPORTS_SAVE )
+GAME( 1985, seganinj,   0,        sys1pio,  seganinj, system1_state,  seganinj, ROT0,   "Sega",            "Sega Ninja (315-5102)", GAME_SUPPORTS_SAVE )
+GAME( 1985, seganinju,  seganinj, sys1pio,  seganinj, system1_state,  bank00,   ROT0,   "Sega",            "Sega Ninja (not encrypted)", GAME_SUPPORTS_SAVE )
+GAME( 1985, ninja,      seganinj, sys1pio,  seganinj, system1_state,  seganinj, ROT0,   "Sega",            "Ninja (315-5102)", GAME_SUPPORTS_SAVE )
+GAME( 1985, nprinceso,  seganinj, sys1pio,  seganinj, system1_state,  nprinces, ROT0,   "Sega",            "Ninja Princess (315-5098, 128k Ver.)", GAME_SUPPORTS_SAVE )
+GAME( 1985, nprincesb,  seganinj, sys1pio,  seganinj, system1_state,  flicky,   ROT0,   "bootleg?",        "Ninja Princess (315-5051?, 128k Ver. bootleg?)", GAME_SUPPORTS_SAVE )
+GAME( 1985, imsorry,    0,        sys1pio,  imsorry, system1_state,   imsorry,  ROT0,   "Coreland / Sega", "I'm Sorry (315-5110, US)", GAME_SUPPORTS_SAVE )
+GAME( 1985, imsorryj,   imsorry,  sys1pio,  imsorry, system1_state,   imsorry,  ROT0,   "Coreland / Sega", "Gonbee no I'm Sorry (315-5110, Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1985, teddybb,    0,        sys1pio,  teddybb, system1_state,   teddybb,  ROT0,   "Sega",            "TeddyBoy Blues (315-5115, New Ver.)", GAME_SUPPORTS_SAVE )
+GAME( 1985, teddybbo,   teddybb,  sys1pio,  teddybb, system1_state,   teddybb,  ROT0,   "Sega",            "TeddyBoy Blues (315-5115, Old Ver.)", GAME_SUPPORTS_SAVE )
+GAME( 1985, myhero,     0,        sys1pio,  myhero, system1_state,    bank00,   ROT0,   "Coreland / Sega", "My Hero (US, not encrypted)", GAME_SUPPORTS_SAVE )
+GAME( 1985, sscandal,   myhero,   sys1pio,  myhero, system1_state,    myheroj,  ROT0,   "Coreland / Sega", "Seishun Scandal (315-5132, Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1985, myherok,    myhero,   sys1pio,  myhero, system1_state,    myherok,  ROT0,   "Coreland / Sega", "My Hero (Korea)", GAME_SUPPORTS_SAVE )
+GAME( 1985, 4dwarrio,   0,        sys1pio,  4dwarrio, system1_state,  4dwarrio, ROT0,   "Coreland / Sega", "4-D Warriors (315-5162)", GAME_SUPPORTS_SAVE )
+GAME( 1986, raflesia,   0,        sys1pio,  raflesia, system1_state,  4dwarrio, ROT270, "Coreland / Sega", "Rafflesia (315-5162)", GAME_SUPPORTS_SAVE )
+GAME( 1986, wboy,       0,        sys1pio,  wboy, system1_state,      wboy,     ROT0,   "Escape (Sega license)", "Wonder Boy (set 1, 315-5177)", GAME_SUPPORTS_SAVE )
+GAME( 1986, wboyo,      wboy,     sys1pio,  wboy, system1_state,      wboyo,    ROT0,   "Escape (Sega license)", "Wonder Boy (set 1, 315-5135)", GAME_SUPPORTS_SAVE )
+GAME( 1986, wboy3,      wboy,     sys1pio,  wboy3, system1_state,     wboyo,    ROT0,   "Escape (Sega license)", "Wonder Boy (set 3, 315-5135)", GAME_SUPPORTS_SAVE )
+GAME( 1986, wboy4,      wboy,     sys1pio,  wboy, system1_state,      4dwarrio, ROT0,   "Escape (Sega license)", "Wonder Boy (315-5162, 4-D Warriors Conversion)", GAME_SUPPORTS_SAVE )
+GAME( 1986, wboyu,      wboy,     sys1pio,  wboyu, system1_state,     bank00,   ROT0,   "Escape (Sega license)", "Wonder Boy (prototype?)", GAME_SUPPORTS_SAVE ) // appears to be a very early / unfinished version.
+GAME( 1986, wboy5,      wboy,     sys1pio,  wboy3, system1_state,     wboyo,    ROT0,   "bootleg",         "Wonder Boy (set 5, bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1986, wboyub,     wboy,     sys1pio,  wboy, system1_state,      wboyo,    ROT0,   "bootleg",         "Wonder Boy (US bootleg)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING )
+GAME( 1987, blockgal,   0,        sys1pio,  blockgal, system1_state,  blockgal, ROT90,  "Sega / Vic Tokai","Block Gal (MC-8123B, 317-0029)", GAME_SUPPORTS_SAVE)
 
 /* PIO-based System 1 with ROM banking */
-GAME( 1985, hvymetal,   0,        sys1pio,  hvymetal,  hvymetal, ROT0,   "Sega",            "Heavy Metal (315-5135)", GAME_SUPPORTS_SAVE )
-GAME( 1986, gardia,     0,        sys1pio,  gardia,    gardia,   ROT270, "Sega / Coreland", "Gardia (317-0006)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE)
-GAME( 1986, brain,      0,        sys1pio,  brain,     bank44,   ROT0,   "Coreland / Sega", "Brain", GAME_SUPPORTS_SAVE )
+GAME( 1985, hvymetal,   0,        sys1pio,  hvymetal, system1_state,  hvymetal, ROT0,   "Sega",            "Heavy Metal (315-5135)", GAME_SUPPORTS_SAVE )
+GAME( 1986, gardia,     0,        sys1pio,  gardia, system1_state,    gardia,   ROT270, "Sega / Coreland", "Gardia (317-0006)", GAME_NO_COCKTAIL | GAME_SUPPORTS_SAVE)
+GAME( 1986, brain,      0,        sys1pio,  brain, system1_state,     bank44,   ROT0,   "Coreland / Sega", "Brain", GAME_SUPPORTS_SAVE )
 
 /* System 2 */
-GAME( 1985, choplift,   0,        sys2rowm, choplift,  choplift, ROT0,   "Sega",            "Choplifter (8751 315-5151)", GAME_SUPPORTS_SAVE )
-GAME( 1985, chopliftu,  choplift, sys2row,  choplift,  bank0c,   ROT0,   "Sega",            "Choplifter (unprotected)", GAME_SUPPORTS_SAVE )
-GAME( 1985, chopliftbl, choplift, sys2row,  choplift,  bank0c,   ROT0,   "bootleg",         "Choplifter (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1985, shtngmst,   0,        sys2m,    shtngmst,  shtngmst, ROT0,   "Sega",            "Shooting Master (8751 315-5159)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING )
-GAME( 1985, shtngmste,  shtngmst, sys2m,    shtngmst,  shtngmst, ROT0,   "Sega / EVG",      "Shooting Master (EVG, 8751 315-5159a)", GAME_SUPPORTS_SAVE )
-GAME( 1986, gardiab,    gardia,   sys2,     gardia,    gardiab,  ROT270, "bootleg",         "Gardia (317-0007?, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1986, wboysys2,   wboy,     sys2,     wboysys2,  wboysys2, ROT0,   "Escape (Sega license)", "Wonder Boy (system 2)", GAME_SUPPORTS_SAVE )
-GAME( 1987, tokisens,   0,        sys2,     tokisens,  bank0c,   ROT90,  "Sega",            "Toki no Senshi - Chrono Soldier", GAME_SUPPORTS_SAVE )
-GAME( 1987, wbml,       0,        sys2,     wbml,      wbml,     ROT0,   "Sega / Westone",  "Wonder Boy in Monster Land (Japan New Ver., MC-8123, 317-0043)", GAME_SUPPORTS_SAVE )
-GAME( 1987, wbmljo,     wbml,     sys2,     wbml,      wbml,     ROT0,   "Sega / Westone",  "Wonder Boy in Monster Land (Japan Old Ver., MC-8123, 317-0043)", GAME_SUPPORTS_SAVE )
-GAME( 1987, wbmljb,     wbml,     sys2,     wbml,      bootsys2, ROT0,   "bootleg",         "Wonder Boy in Monster Land (Japan not encrypted)", GAME_SUPPORTS_SAVE )
-GAME( 1987, wbmlb,      wbml,     sys2,     wbml,      bootsys2, ROT0,   "bootleg",         "Wonder Boy in Monster Land (English bootleg)", GAME_SUPPORTS_SAVE)
-GAME( 1987, wbmlbg,     wbml,     sys2,     wbml,      bootsys2, ROT0,   "bootleg (Galaxy Electronics)", "Wonder Boy in Monster Land (Galaxy Electronics English bootleg)", GAME_SUPPORTS_SAVE)
-GAME( 1987, dakkochn,   0,        sys2,     dakkochn,  dakkochn, ROT0,   "White Board",     "DakkoChan House (MC-8123B, 317-5014)", GAME_SUPPORTS_SAVE )
-GAME( 1987, blockgalb,  blockgal, sys2,     blockgal,  bootleg,  ROT90,  "bootleg",         "Block Gal (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1988, ufosensi,   0,        sys2row,  ufosensi,  ufosensi, ROT0,   "Sega",            "Ufo Senshi Yohko Chan (MC-8123, 317-0064)", GAME_SUPPORTS_SAVE )
-GAME( 1988, ufosensib,  ufosensi, sys2row,  ufosensi,  bootsys2, ROT0,   "bootleg",         "Ufo Senshi Yohko Chan (not encrypted)", GAME_SUPPORTS_SAVE )
+GAME( 1985, choplift,   0,        sys2rowm, choplift, system1_state,  choplift, ROT0,   "Sega",            "Choplifter (8751 315-5151)", GAME_SUPPORTS_SAVE )
+GAME( 1985, chopliftu,  choplift, sys2row,  choplift, system1_state,  bank0c,   ROT0,   "Sega",            "Choplifter (unprotected)", GAME_SUPPORTS_SAVE )
+GAME( 1985, chopliftbl, choplift, sys2row,  choplift, system1_state,  bank0c,   ROT0,   "bootleg",         "Choplifter (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1985, shtngmst,   0,        sys2m,    shtngmst, system1_state,  shtngmst, ROT0,   "Sega",            "Shooting Master (8751 315-5159)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING )
+GAME( 1985, shtngmste,  shtngmst, sys2m,    shtngmst, system1_state,  shtngmst, ROT0,   "Sega / EVG",      "Shooting Master (EVG, 8751 315-5159a)", GAME_SUPPORTS_SAVE )
+GAME( 1986, gardiab,    gardia,   sys2,     gardia, system1_state,    gardiab,  ROT270, "bootleg",         "Gardia (317-0007?, bootleg)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1986, wboysys2,   wboy,     sys2,     wboysys2, system1_state,  wboysys2, ROT0,   "Escape (Sega license)", "Wonder Boy (system 2)", GAME_SUPPORTS_SAVE )
+GAME( 1987, tokisens,   0,        sys2,     tokisens, system1_state,  bank0c,   ROT90,  "Sega",            "Toki no Senshi - Chrono Soldier", GAME_SUPPORTS_SAVE )
+GAME( 1987, wbml,       0,        sys2,     wbml, system1_state,      wbml,     ROT0,   "Sega / Westone",  "Wonder Boy in Monster Land (Japan New Ver., MC-8123, 317-0043)", GAME_SUPPORTS_SAVE )
+GAME( 1987, wbmljo,     wbml,     sys2,     wbml, system1_state,      wbml,     ROT0,   "Sega / Westone",  "Wonder Boy in Monster Land (Japan Old Ver., MC-8123, 317-0043)", GAME_SUPPORTS_SAVE )
+GAME( 1987, wbmljb,     wbml,     sys2,     wbml, system1_state,      bootsys2, ROT0,   "bootleg",         "Wonder Boy in Monster Land (Japan not encrypted)", GAME_SUPPORTS_SAVE )
+GAME( 1987, wbmlb,      wbml,     sys2,     wbml, system1_state,      bootsys2, ROT0,   "bootleg",         "Wonder Boy in Monster Land (English bootleg)", GAME_SUPPORTS_SAVE)
+GAME( 1987, wbmlbg,     wbml,     sys2,     wbml, system1_state,      bootsys2, ROT0,   "bootleg (Galaxy Electronics)", "Wonder Boy in Monster Land (Galaxy Electronics English bootleg)", GAME_SUPPORTS_SAVE)
+GAME( 1987, dakkochn,   0,        sys2,     dakkochn, system1_state,  dakkochn, ROT0,   "White Board",     "DakkoChan House (MC-8123B, 317-5014)", GAME_SUPPORTS_SAVE )
+GAME( 1987, blockgalb,  blockgal, sys2,     blockgal, system1_state,  bootleg,  ROT90,  "bootleg",         "Block Gal (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1988, ufosensi,   0,        sys2row,  ufosensi, system1_state,  ufosensi, ROT0,   "Sega",            "Ufo Senshi Yohko Chan (MC-8123, 317-0064)", GAME_SUPPORTS_SAVE )
+GAME( 1988, ufosensib,  ufosensi, sys2row,  ufosensi, system1_state,  bootsys2, ROT0,   "bootleg",         "Ufo Senshi Yohko Chan (not encrypted)", GAME_SUPPORTS_SAVE )

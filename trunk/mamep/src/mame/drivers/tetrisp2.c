@@ -1282,51 +1282,45 @@ static void init_rockn_timer(running_machine &machine)
 	state_save_register_global(machine, state->m_rockn_soundvolume);
 }
 
-static DRIVER_INIT( rockn )
+DRIVER_INIT_MEMBER(tetrisp2_state,rockn)
 {
-	tetrisp2_state *state = machine.driver_data<tetrisp2_state>();
-	init_rockn_timer(machine);
-	state->m_rockn_protectdata = 1;
+	init_rockn_timer(machine());
+	m_rockn_protectdata = 1;
 }
 
-static DRIVER_INIT( rockn1 )
+DRIVER_INIT_MEMBER(tetrisp2_state,rockn1)
 {
-	tetrisp2_state *state = machine.driver_data<tetrisp2_state>();
-	init_rockn_timer(machine);
-	state->m_rockn_protectdata = 1;
+	init_rockn_timer(machine());
+	m_rockn_protectdata = 1;
 }
 
-static DRIVER_INIT( rockn2 )
+DRIVER_INIT_MEMBER(tetrisp2_state,rockn2)
 {
-	tetrisp2_state *state = machine.driver_data<tetrisp2_state>();
-	init_rockn_timer(machine);
-	state->m_rockn_protectdata = 2;
+	init_rockn_timer(machine());
+	m_rockn_protectdata = 2;
 }
 
-static DRIVER_INIT( rocknms )
+DRIVER_INIT_MEMBER(tetrisp2_state,rocknms)
 {
-	tetrisp2_state *state = machine.driver_data<tetrisp2_state>();
-	init_rockn_timer(machine);
+	init_rockn_timer(machine());
 
-	machine.scheduler().timer_pulse(attotime::from_msec(32), FUNC(rockn_timer_sub_level1_callback));
-	state->m_rockn_timer_sub_l4 = machine.scheduler().timer_alloc(FUNC(rockn_timer_sub_level4_callback));
+	machine().scheduler().timer_pulse(attotime::from_msec(32), FUNC(rockn_timer_sub_level1_callback));
+	m_rockn_timer_sub_l4 = machine().scheduler().timer_alloc(FUNC(rockn_timer_sub_level4_callback));
 
-	state->m_rockn_protectdata = 3;
+	m_rockn_protectdata = 3;
 
 }
 
-static DRIVER_INIT( rockn3 )
+DRIVER_INIT_MEMBER(tetrisp2_state,rockn3)
 {
-	tetrisp2_state *state = machine.driver_data<tetrisp2_state>();
-	init_rockn_timer(machine);
-	state->m_rockn_protectdata = 4;
+	init_rockn_timer(machine());
+	m_rockn_protectdata = 4;
 }
 
-static DRIVER_INIT( stepstag )
+DRIVER_INIT_MEMBER(stepstag_state,stepstag)
 {
-	tetrisp2_state *state = machine.driver_data<tetrisp2_state>();
-	init_rockn_timer(machine);		// used
-	state->m_rockn_protectdata = 1;	// unused?
+	init_rockn_timer(machine());		// used
+	m_rockn_protectdata = 1;	// unused?
 }
 
 
@@ -1750,6 +1744,65 @@ ROM_START( nndmseal )
 
 	ROM_REGION( 0x200000, "okisource", 0 )	// Samples
 	ROM_LOAD( "mr96017-04.9", 0x000000, 0x200000, CRC(c2e7b444) SHA1(e2b9d3d94720d01beff1108ef3dfbff805ddd1fd) )
+ROM_END
+
+/***************************************************************************
+
+Nandemo Seal Iinkai (Astro Boy ver.)
+(c)1996 1997 I'max/Jaleco
+
+Jaleco game similar to Nandemo Seal.
+It sat at the back of an arcade repair workshop for about 15 years.
+There's an external sound board. No ROMs on it but there's an NEC D78P014 MCU(?)
+and an Altera FPGA and other sound related stuff, plus a Sony CXD1178Q (RGBDAC?)
+
+The game boots here to a message screen and complains and won't go further.
+Probably the external sound PCB is required to boot up.
+It's missing the special cable so I can't connect it.
+
+Mainboard:
+NS-96205
+
+Daughterboard:
+NS-96206A
+
+Sound: M6295 (on daughterboard)
+
+ROMs:(all ROMs are on daughterboard)
+1.1 - Programs (TMS 27C020)
+3.3 /
+(actual label is "Cawaii 1 Ver1.1" & "Cawaii 3 Ver1.1")
+MR97006-01.2 (42pin mask ROM, read as 16M, byte mode)
+IC6 is not populated.
+IC2 and IC5 have a 0-ohm resistor wired to pin32 (A20 on a 32MBit ROM)
+IC5 has it set so pin32 is tied to ground. So IC5 is 16MBit.
+IC2 has it set so it goes to some logic on the main board (pin 12 of a 74LS244).
+IC2 is dumped as 32M with both halves dumped in byte mode, 00's stripped and then interleaved.
+
+***************************************************************************/
+
+ROM_START( nndmseala )
+	ROM_REGION( 0x80000, "maincpu", 0 )		// 68000 Code
+	ROM_LOAD16_BYTE( "1.ic1", 0x00000, 0x40000, CRC(4eab8565) SHA1(07cdf00b60e19339188cbcd9d8e96a683b114f3e) )
+	ROM_LOAD16_BYTE( "3.ic3", 0x00001, 0x40000, CRC(054ba50f) SHA1(11e3c5a6199955d6501ee72a5af62d17440fc306) )
+
+	ROM_REGION( 0x100000, "gfx1", ROMREGION_ERASE )    /* 8x8x8 (Sprites) */
+/* This game doesn't use sprites, but the region needs to be a valid size for at least one sprite 'page' for the init to work. */
+
+	ROM_REGION( 0x200000, "gfx2", 0 )	// 16x16x8 (Background)
+	ROM_LOAD( "mr97032-02.ic5", 0x000000, 0x200000, CRC(460f16bd) SHA1(cdc4efa9897060d2ae3b21915dba68661e76ec03) )
+
+	ROM_REGION( 0x400000, "gfx3", 0 )	// 16x16x8 (Rotation)
+	ROM_LOAD( "mr97032-01.ic2", 0x000000, 0x400000, CRC(18c1a394) SHA1(491a2eb190efb5684f5eddb317adacd55afa727c) )
+
+	ROM_REGION( 0x100000, "gfx4", 0 )	// 8x8x8 (Foreground)
+	ROM_LOAD( "mr97032-03.ic8", 0x000000, 0x100000, CRC(5678a378) SHA1(306a3238590fa6e274e3c2ad334f5f210738dd7d) )
+
+	ROM_REGION( 0x40000, "oki", ROMREGION_ERASE )	// Samples
+	// filled in from "okisource"
+
+	ROM_REGION( 0x200000, "okisource", 0 )	// Samples
+	ROM_LOAD( "mr97016-04.ic9", 0x000000, 0x200000, CRC(f421232b) SHA1(d9cdc911566e795e6968d4b349c008b47132bea3) )
 ROM_END
 
 /***************************************************************************
@@ -2210,23 +2263,23 @@ ROM_END
 
 ***************************************************************************/
 
-GAME( 1997, tetrisp2,  0,        tetrisp2, tetrisp2, 0,     ROT0,   "Jaleco / The Tetris Company", "Tetris Plus 2 (World)",           GAME_SUPPORTS_SAVE )
-GAME( 1997, tetrisp2j, tetrisp2, tetrisp2, tetrisp2j,0,     ROT0,   "Jaleco / The Tetris Company", "Tetris Plus 2 (Japan, V2.2)",     GAME_SUPPORTS_SAVE )
-GAME( 1997, tetrisp2ja,tetrisp2, tetrisp2, tetrisp2j,0,     ROT0,   "Jaleco / The Tetris Company", "Tetris Plus 2 (Japan, V2.1)",     GAME_SUPPORTS_SAVE )
+GAME( 1997, tetrisp2,  0,        tetrisp2, tetrisp2, driver_device, 0,     ROT0,   "Jaleco / The Tetris Company", "Tetris Plus 2 (World)",           GAME_SUPPORTS_SAVE )
+GAME( 1997, tetrisp2j, tetrisp2, tetrisp2, tetrisp2j, driver_device,0,     ROT0,   "Jaleco / The Tetris Company", "Tetris Plus 2 (Japan, V2.2)",     GAME_SUPPORTS_SAVE )
+GAME( 1997, tetrisp2ja,tetrisp2, tetrisp2, tetrisp2j, driver_device,0,     ROT0,   "Jaleco / The Tetris Company", "Tetris Plus 2 (Japan, V2.1)",     GAME_SUPPORTS_SAVE )
 
-GAME( 1997, nndmseal, 0,        nndmseal, nndmseal, rockn,   ROT0 | ORIENTATION_FLIP_X, "I'Max / Jaleco", "Nandemo Seal Iinkai",       GAME_SUPPORTS_SAVE | GAME_NOT_WORKING )
+GAME( 1997, nndmseal, 0,        nndmseal, nndmseal, tetrisp2_state, rockn, ROT0 | ORIENTATION_FLIP_X, "I'Max / Jaleco", "Nandemo Seal Iinkai",                  GAME_SUPPORTS_SAVE | GAME_NOT_WORKING )
+GAME( 1997, nndmseala,nndmseal, nndmseal, nndmseal, tetrisp2_state, rockn, ROT0 | ORIENTATION_FLIP_X, "I'Max / Jaleco", "Nandemo Seal Iinkai (Astro Boy ver.)", GAME_SUPPORTS_SAVE | GAME_NOT_WORKING )
 
-GAME( 1999, rockn,    0,        rockn,    rockn,   rockn,    ROT270, "Jaleco",                      "Rock'n Tread (Japan)",            GAME_SUPPORTS_SAVE )
-GAME( 1999, rockna,   rockn,    rockn,    rockn,   rockn1,   ROT270, "Jaleco",                      "Rock'n Tread (Japan, alternate)", GAME_SUPPORTS_SAVE )
-GAME( 1999, rockn2,   0,        rockn2,   rockn,   rockn2,   ROT270, "Jaleco",                      "Rock'n Tread 2 (Japan)",          GAME_SUPPORTS_SAVE )
-GAME( 1999, rocknms,  0,        rocknms,  rocknms, rocknms,  ROT0,   "Jaleco",                      "Rock'n MegaSession (Japan)",      GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, rockn3,   0,        rockn2,   rockn,   rockn3,   ROT270, "Jaleco",                      "Rock'n 3 (Japan)",                GAME_SUPPORTS_SAVE )
-GAME( 2000, rockn4,   0,        rockn2,   rockn,   rockn3,   ROT270, "Jaleco / PCCWJ",              "Rock'n 4 (Japan, prototype)",     GAME_SUPPORTS_SAVE )
+GAME( 1999, rockn,    0,        rockn,    rockn, tetrisp2_state,   rockn,    ROT270, "Jaleco",                      "Rock'n Tread (Japan)",            GAME_SUPPORTS_SAVE )
+GAME( 1999, rockna,   rockn,    rockn,    rockn, tetrisp2_state,   rockn1,   ROT270, "Jaleco",                      "Rock'n Tread (Japan, alternate)", GAME_SUPPORTS_SAVE )
+GAME( 1999, rockn2,   0,        rockn2,   rockn, tetrisp2_state,   rockn2,   ROT270, "Jaleco",                      "Rock'n Tread 2 (Japan)",          GAME_SUPPORTS_SAVE )
+GAME( 1999, rocknms,  0,        rocknms,  rocknms, tetrisp2_state, rocknms,  ROT0,   "Jaleco",                      "Rock'n MegaSession (Japan)",      GAME_SUPPORTS_SAVE | GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, rockn3,   0,        rockn2,   rockn, tetrisp2_state,   rockn3,   ROT270, "Jaleco",                      "Rock'n 3 (Japan)",                GAME_SUPPORTS_SAVE )
+GAME( 2000, rockn4,   0,        rockn2,   rockn, tetrisp2_state,   rockn3,   ROT270, "Jaleco / PCCWJ",              "Rock'n 4 (Japan, prototype)",     GAME_SUPPORTS_SAVE )
 
 // Undumped:
 // - Stepping Stage <- the original Game
 // - Stepping Stage 2 Supreme
 // Dumped (partly):
-GAME( 1999, stepstag, 0, stepstag, stepstag, stepstag, ROT0, "Jaleco", "Stepping Stage Special", GAME_NO_SOUND| GAME_NOT_WORKING)
-GAME( 1999, step3,    0, stepstag, stepstag, stepstag, ROT0, "Jaleco", "Stepping 3 Superior",    GAME_NO_SOUND| GAME_NOT_WORKING)
-
+GAME( 1999, stepstag, 0, stepstag, stepstag, stepstag_state, stepstag, ROT0, "Jaleco", "Stepping Stage Special", GAME_NO_SOUND| GAME_NOT_WORKING)
+GAME( 1999, step3,    0, stepstag, stepstag, stepstag_state, stepstag, ROT0, "Jaleco", "Stepping 3 Superior",    GAME_NO_SOUND| GAME_NOT_WORKING)

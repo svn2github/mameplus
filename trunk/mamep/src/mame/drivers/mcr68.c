@@ -1197,8 +1197,8 @@ ROM_START( xenophob ) /* Service mode shows "VERSION CO" */
 	ROM_LOAD( "0066-313bx-xxqx.bin", 0x0000B, 0x00001, NO_DUMP ) /* 24 Pin PLD? at 15F */
 
 	/* PLD located on the "Sounds Good" board */
-	ROM_REGION( 0x0001, "snd_pld", 0 )
-	ROM_LOAD( "e36a31axnax00.bin",   0x00000, 0x00001, NO_DUMP ) /* PAL20L10 at U15 */
+	ROM_REGION( 0x00100, "snd_pld", 0 )
+	ROM_LOAD( "e36a31axnaxad.bin",   0x00000, 0x000cc, CRC(33e62608) SHA1(ab89ce32a5a351914a80e0e11830299425a22874) ) /* PAL20L10 at U15 */
 ROM_END
 
 
@@ -1554,116 +1554,108 @@ static void mcr68_common_init(running_machine &machine, int clip, int xoffset)
 }
 
 
-static DRIVER_INIT( zwackery )
+DRIVER_INIT_MEMBER(mcr68_state,zwackery)
 {
-	mcr68_state *state = machine.driver_data<mcr68_state>();
-	mcr68_common_init(machine, 0, 0);
+	mcr68_common_init(machine(), 0, 0);
 
 	/* Zwackery doesn't care too much about this value; currently taken from Blasted */
-	state->m_timing_factor = attotime::from_hz(machine.device("maincpu")->unscaled_clock() / 10) * (256 + 16);
+	m_timing_factor = attotime::from_hz(machine().device("maincpu")->unscaled_clock() / 10) * (256 + 16);
 }
 
 
-static DRIVER_INIT( xenophob )
+DRIVER_INIT_MEMBER(mcr68_state,xenophob)
 {
-	mcr68_state *state = machine.driver_data<mcr68_state>();
-	mcr68_common_init(machine, 0, -4);
+	mcr68_common_init(machine(), 0, -4);
 
 	/* Xenophobe doesn't care too much about this value; currently taken from Blasted */
-	state->m_timing_factor = attotime::from_hz(machine.device("maincpu")->unscaled_clock() / 10) * (256 + 16);
+	m_timing_factor = attotime::from_hz(machine().device("maincpu")->unscaled_clock() / 10) * (256 + 16);
 
 	/* install control port handler */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::xenophobe_control_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::xenophobe_control_w),this));
 }
 
 
-static DRIVER_INIT( spyhunt2 )
+DRIVER_INIT_MEMBER(mcr68_state,spyhunt2)
 {
-	mcr68_state *state = machine.driver_data<mcr68_state>();
-	mcr68_common_init(machine, 0, -6);
+	mcr68_common_init(machine(), 0, -6);
 
 	/* Spy Hunter 2 doesn't care too much about this value; currently taken from Blasted */
-	state->m_timing_factor = attotime::from_hz(machine.device("maincpu")->unscaled_clock() / 10) * (256 + 16);
+	m_timing_factor = attotime::from_hz(machine().device("maincpu")->unscaled_clock() / 10) * (256 + 16);
 
 	/* analog port handling is a bit tricky */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::spyhunt2_control_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0d0000, 0x0dffff, read16_delegate(FUNC(mcr68_state::spyhunt2_port_0_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0e0000, 0x0effff, read16_delegate(FUNC(mcr68_state::spyhunt2_port_1_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::spyhunt2_control_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0d0000, 0x0dffff, read16_delegate(FUNC(mcr68_state::spyhunt2_port_0_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0e0000, 0x0effff, read16_delegate(FUNC(mcr68_state::spyhunt2_port_1_r),this));
 }
 
 
-static DRIVER_INIT( blasted )
+DRIVER_INIT_MEMBER(mcr68_state,blasted)
 {
-	mcr68_state *state = machine.driver_data<mcr68_state>();
-	mcr68_common_init(machine, 0, 0);
+	mcr68_common_init(machine(), 0, 0);
 
 	/* Blasted checks the timing of VBLANK relative to the 493 interrupt */
 	/* VBLANK is required to come within 220-256 E clocks (i.e., 2200-2560 CPU clocks) */
 	/* after the 493; we also allow 16 E clocks for latency  */
-	state->m_timing_factor = attotime::from_hz(machine.device("maincpu")->unscaled_clock() / 10) * (256 + 16);
+	m_timing_factor = attotime::from_hz(machine().device("maincpu")->unscaled_clock() / 10) * (256 + 16);
 
 	/* handle control writes */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::blasted_control_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::blasted_control_w),this));
 
 	/* 6840 is mapped to the lower 8 bits */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x0a0000, 0x0a000f, read16_delegate(FUNC(mcr68_state::mcr68_6840_lower_r),state), write16_delegate(FUNC(mcr68_state::mcr68_6840_lower_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x0a0000, 0x0a000f, read16_delegate(FUNC(mcr68_state::mcr68_6840_lower_r),this), write16_delegate(FUNC(mcr68_state::mcr68_6840_lower_w),this));
 }
 
-static DRIVER_INIT( intlaser )
+DRIVER_INIT_MEMBER(mcr68_state,intlaser)
 {
-	mcr68_state *state = machine.driver_data<mcr68_state>();
-	mcr68_common_init(machine, 0, 0);
+	mcr68_common_init(machine(), 0, 0);
 
 	/* Copied from Blasted */
-	state->m_timing_factor = attotime::from_hz(machine.device("maincpu")->unscaled_clock() / 10) * (256 + 16);
+	m_timing_factor = attotime::from_hz(machine().device("maincpu")->unscaled_clock() / 10) * (256 + 16);
 
 	/* handle control writes */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::blasted_control_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::blasted_control_w),this));
 
 }
 
 
 
-static DRIVER_INIT( archrivl )
+DRIVER_INIT_MEMBER(mcr68_state,archrivl)
 {
-	mcr68_state *state = machine.driver_data<mcr68_state>();
-	mcr68_common_init(machine, 16, 0);
+	mcr68_common_init(machine(), 16, 0);
 
 	/* Arch Rivals doesn't care too much about this value; currently taken from Blasted */
-	state->m_timing_factor = attotime::from_hz(machine.device("maincpu")->unscaled_clock() / 10) * (256 + 16);
+	m_timing_factor = attotime::from_hz(machine().device("maincpu")->unscaled_clock() / 10) * (256 + 16);
 
 	/* handle control writes */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::archrivl_control_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0c0000, 0x0cffff, write16_delegate(FUNC(mcr68_state::archrivl_control_w),this));
 
 	/* 49-way joystick handling is a bit tricky */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0e0000, 0x0effff, read16_delegate(FUNC(mcr68_state::archrivl_port_1_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x0e0000, 0x0effff, read16_delegate(FUNC(mcr68_state::archrivl_port_1_r),this));
 
 	/* 6840 is mapped to the lower 8 bits */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x0a0000, 0x0a000f, read16_delegate(FUNC(mcr68_state::mcr68_6840_lower_r),state), write16_delegate(FUNC(mcr68_state::mcr68_6840_lower_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x0a0000, 0x0a000f, read16_delegate(FUNC(mcr68_state::mcr68_6840_lower_r),this), write16_delegate(FUNC(mcr68_state::mcr68_6840_lower_w),this));
 }
 
 
-static DRIVER_INIT( pigskin )
+DRIVER_INIT_MEMBER(mcr68_state,pigskin)
 {
-	mcr68_state *state = machine.driver_data<mcr68_state>();
-	mcr68_common_init(machine, 16, 0);
+	mcr68_common_init(machine(), 16, 0);
 
 	/* Pigskin doesn't care too much about this value; currently taken from Tri-Sports */
-	state->m_timing_factor = attotime::from_hz(machine.device("maincpu")->unscaled_clock() / 10) * 115;
+	m_timing_factor = attotime::from_hz(machine().device("maincpu")->unscaled_clock() / 10) * 115;
 
-	state_save_register_global_array(machine, state->m_protection_data);
+	state_save_register_global_array(machine(), m_protection_data);
 }
 
 
-static DRIVER_INIT( trisport )
+DRIVER_INIT_MEMBER(mcr68_state,trisport)
 {
-	mcr68_state *state = machine.driver_data<mcr68_state>();
-	mcr68_common_init(machine, 0, 0);
+	mcr68_common_init(machine(), 0, 0);
 
 	/* Tri-Sports checks the timing of VBLANK relative to the 493 interrupt */
 	/* VBLANK is required to come within 87-119 E clocks (i.e., 870-1190 CPU clocks) */
 	/* after the 493 */
-	state->m_timing_factor = attotime::from_hz(machine.device("maincpu")->unscaled_clock() / 10) * 115;
+	m_timing_factor = attotime::from_hz(machine().device("maincpu")->unscaled_clock() / 10) * 115;
 }
 
 
@@ -1674,14 +1666,14 @@ static DRIVER_INIT( trisport )
  *
  *************************************/
 
-GAME( 1984, zwackery, 0,        zwackery, zwackery, zwackery, ROT0,   "Bally Midway", "Zwackery", GAME_SUPPORTS_SAVE )
-GAME( 1987, xenophob, 0,        xenophob, xenophob, xenophob, ROT0,   "Bally Midway", "Xenophobe", GAME_SUPPORTS_SAVE )
-GAME( 1987, spyhunt2, 0,        spyhunt2, spyhunt2, spyhunt2, ROT0,   "Bally Midway", "Spy Hunter 2 (rev 2)", GAME_SUPPORTS_SAVE )
-GAME( 1987, spyhunt2a,spyhunt2, spyhunt2, spyhunt2, spyhunt2, ROT0,   "Bally Midway", "Spy Hunter 2 (rev 1)", GAME_SUPPORTS_SAVE )
-GAME( 1988, blasted,  0,        xenophob, blasted,  blasted,  ROT0,   "Bally Midway", "Blasted", GAME_SUPPORTS_SAVE )
-GAME( 1987, intlaser, blasted,  intlaser, intlaser, intlaser, ROT0,   "Bally Midway", "International Team Laser (prototype)", GAME_SUPPORTS_SAVE )
-GAME( 1989, archrivl, 0,        archrivl, archrivl, archrivl, ROT0,   "Bally Midway", "Arch Rivals (rev 4.0 6/29/89)", GAME_SUPPORTS_SAVE )
-GAME( 1989, archrivl2,archrivl, archrivl, archrivl, archrivl, ROT0,   "Bally Midway", "Arch Rivals (rev 2.0 5/03/89)", GAME_SUPPORTS_SAVE )
-GAME( 1989, trisport, 0,        trisport, trisport, trisport, ROT270, "Bally Midway", "Tri-Sports", GAME_SUPPORTS_SAVE )
-GAME( 1990, pigskin,  0,        pigskin,  pigskin,  pigskin,  ROT0,   "Midway", "Pigskin 621AD (rev 1.1K 8/01/90)", GAME_SUPPORTS_SAVE )
-GAME( 1990, pigskina, pigskin,  pigskin,  pigskin,  pigskin,  ROT0,   "Midway", "Pigskin 621AD (rev 2.0 7/06/90)", GAME_SUPPORTS_SAVE )
+GAME( 1984, zwackery, 0,        zwackery, zwackery, mcr68_state, zwackery, ROT0,   "Bally Midway", "Zwackery", GAME_SUPPORTS_SAVE )
+GAME( 1987, xenophob, 0,        xenophob, xenophob, mcr68_state, xenophob, ROT0,   "Bally Midway", "Xenophobe", GAME_SUPPORTS_SAVE )
+GAME( 1987, spyhunt2, 0,        spyhunt2, spyhunt2, mcr68_state, spyhunt2, ROT0,   "Bally Midway", "Spy Hunter 2 (rev 2)", GAME_SUPPORTS_SAVE )
+GAME( 1987, spyhunt2a,spyhunt2, spyhunt2, spyhunt2, mcr68_state, spyhunt2, ROT0,   "Bally Midway", "Spy Hunter 2 (rev 1)", GAME_SUPPORTS_SAVE )
+GAME( 1988, blasted,  0,        xenophob, blasted, mcr68_state,  blasted,  ROT0,   "Bally Midway", "Blasted", GAME_SUPPORTS_SAVE )
+GAME( 1987, intlaser, blasted,  intlaser, intlaser, mcr68_state, intlaser, ROT0,   "Bally Midway", "International Team Laser (prototype)", GAME_SUPPORTS_SAVE )
+GAME( 1989, archrivl, 0,        archrivl, archrivl, mcr68_state, archrivl, ROT0,   "Bally Midway", "Arch Rivals (rev 4.0 6/29/89)", GAME_SUPPORTS_SAVE )
+GAME( 1989, archrivl2,archrivl, archrivl, archrivl, mcr68_state, archrivl, ROT0,   "Bally Midway", "Arch Rivals (rev 2.0 5/03/89)", GAME_SUPPORTS_SAVE )
+GAME( 1989, trisport, 0,        trisport, trisport, mcr68_state, trisport, ROT270, "Bally Midway", "Tri-Sports", GAME_SUPPORTS_SAVE )
+GAME( 1990, pigskin,  0,        pigskin,  pigskin, mcr68_state,  pigskin,  ROT0,   "Midway", "Pigskin 621AD (rev 1.1K 8/01/90)", GAME_SUPPORTS_SAVE )
+GAME( 1990, pigskina, pigskin,  pigskin,  pigskin, mcr68_state,  pigskin,  ROT0,   "Midway", "Pigskin 621AD (rev 2.0 7/06/90)", GAME_SUPPORTS_SAVE )

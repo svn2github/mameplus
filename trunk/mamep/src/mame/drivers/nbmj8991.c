@@ -68,39 +68,39 @@ static MACHINE_RESET( nbmj8991 )
 	MACHINE_RESET_CALL(nb1413m3);
 }
 
-static DRIVER_INIT( pstadium )
+DRIVER_INIT_MEMBER(nbmj8991_state,pstadium)
 {
 	nb1413m3_type = NB1413M3_PSTADIUM;
 }
 
-static DRIVER_INIT( triplew1 )
+DRIVER_INIT_MEMBER(nbmj8991_state,triplew1)
 {
 	nb1413m3_type = NB1413M3_TRIPLEW1;
 }
 
-static DRIVER_INIT( triplew2 )
+DRIVER_INIT_MEMBER(nbmj8991_state,triplew2)
 {
 	nb1413m3_type = NB1413M3_TRIPLEW2;
 }
 
-static DRIVER_INIT( ntopstar )
+DRIVER_INIT_MEMBER(nbmj8991_state,ntopstar)
 {
 	nb1413m3_type = NB1413M3_NTOPSTAR;
 }
 
-static DRIVER_INIT( mjlstory )
+DRIVER_INIT_MEMBER(nbmj8991_state,mjlstory)
 {
 	nb1413m3_type = NB1413M3_MJLSTORY;
 }
 
-static DRIVER_INIT( vanilla )
+DRIVER_INIT_MEMBER(nbmj8991_state,vanilla)
 {
 	nb1413m3_type = NB1413M3_VANILLA;
 }
 
-static DRIVER_INIT( finalbny )
+DRIVER_INIT_MEMBER(nbmj8991_state,finalbny)
 {
-	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 	int i;
 
 	for (i = 0xf800; i < 0x10000; i++) ROM[i] = 0x00;
@@ -108,25 +108,25 @@ static DRIVER_INIT( finalbny )
 	nb1413m3_type = NB1413M3_FINALBNY;
 }
 
-static DRIVER_INIT( qmhayaku )
+DRIVER_INIT_MEMBER(nbmj8991_state,qmhayaku)
 {
 	nb1413m3_type = NB1413M3_QMHAYAKU;
 }
 
-static DRIVER_INIT( galkoku )
+DRIVER_INIT_MEMBER(nbmj8991_state,galkoku)
 {
 	nb1413m3_type = NB1413M3_GALKOKU;
 }
 
-static DRIVER_INIT( hyouban )
+DRIVER_INIT_MEMBER(nbmj8991_state,hyouban)
 {
 	nb1413m3_type = NB1413M3_HYOUBAN;
 }
 
-static DRIVER_INIT( galkaika )
+DRIVER_INIT_MEMBER(nbmj8991_state,galkaika)
 {
 #if 1
-	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 
 	// Patch to IM2 -> IM1
 	ROM[0x0002] = 0x56;
@@ -134,10 +134,10 @@ static DRIVER_INIT( galkaika )
 	nb1413m3_type = NB1413M3_GALKAIKA;
 }
 
-static DRIVER_INIT( tokyogal )
+DRIVER_INIT_MEMBER(nbmj8991_state,tokyogal)
 {
 #if 1
-	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 
 	// Patch to IM2 -> IM1
 	ROM[0x0002] = 0x56;
@@ -145,10 +145,10 @@ static DRIVER_INIT( tokyogal )
 	nb1413m3_type = NB1413M3_TOKYOGAL;
 }
 
-static DRIVER_INIT( tokimbsj )
+DRIVER_INIT_MEMBER(nbmj8991_state,tokimbsj)
 {
 #if 1
-	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 
 	// Patch to IM2 -> IM1
 	ROM[0x0002] = 0x56;
@@ -156,27 +156,27 @@ static DRIVER_INIT( tokimbsj )
 	nb1413m3_type = NB1413M3_TOKIMBSJ;
 }
 
-static DRIVER_INIT( mcontest )
+DRIVER_INIT_MEMBER(nbmj8991_state,mcontest)
 {
 	nb1413m3_type = NB1413M3_MCONTEST;
 }
 
-static DRIVER_INIT( uchuuai )
+DRIVER_INIT_MEMBER(nbmj8991_state,uchuuai)
 {
 	nb1413m3_type = NB1413M3_UCHUUAI;
 }
 
-static DRIVER_INIT( mjgottub )
+DRIVER_INIT_MEMBER(nbmj8991_state,mjgottub)
 {
 	nb1413m3_type = NB1413M3_MJGOTTUB;
 }
 
-static DRIVER_INIT( av2mj1bb )
+DRIVER_INIT_MEMBER(nbmj8991_state,av2mj1bb)
 {
 	nb1413m3_type = NB1413M3_AV2MJ1BB;
 }
 
-static DRIVER_INIT( av2mj2rg )
+DRIVER_INIT_MEMBER(nbmj8991_state,av2mj2rg)
 {
 	nb1413m3_type = NB1413M3_AV2MJ2RG;
 }
@@ -253,7 +253,7 @@ static ADDRESS_MAP_START( galkoku_io_map, AS_IO, 8, nbmj8991_state )
 	AM_RANGE(0xa0, 0xa0) AM_READWRITE_LEGACY(nb1413m3_inputport1_r,nb1413m3_inputportsel_w)
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
 	AM_RANGE(0xc0, 0xc0) AM_READWRITE_LEGACY(nb1413m3_inputport3_r,nb1413m3_nmi_clock_w)
-	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 //  AM_RANGE(0xe0, 0xe0) AM_WRITENOP
 	AM_RANGE(0xf0, 0xf0) AM_READWRITE_LEGACY(nb1413m3_dipsw1_r,nb1413m3_outcoin_w)
 	AM_RANGE(0xf1, 0xf1) AM_READ_LEGACY(nb1413m3_dipsw2_r)
@@ -268,7 +268,7 @@ static ADDRESS_MAP_START( hyouban_io_map, AS_IO, 8, nbmj8991_state )
 	AM_RANGE(0xa0, 0xa0) AM_READWRITE_LEGACY(nb1413m3_inputport1_r,nb1413m3_inputportsel_w)
 	AM_RANGE(0xb0, 0xb0) AM_READWRITE_LEGACY(nb1413m3_inputport2_r,nb1413m3_sndrombank1_w)
 	AM_RANGE(0xc0, 0xc0) AM_READWRITE_LEGACY(nb1413m3_inputport3_r,nb1413m3_nmi_clock_w)
-	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xd0, 0xd0) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 //  AM_RANGE(0xe0, 0xe0) AM_WRITENOP
 	AM_RANGE(0xf0, 0xf0) AM_READWRITE_LEGACY(nb1413m3_dipsw1_r,nb1413m3_outcoin_w)
 	AM_RANGE(0xf1, 0xf1) AM_READ_LEGACY(nb1413m3_dipsw2_r)
@@ -310,8 +310,8 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( nbmj8991_sound_io_map, AS_IO, 8, nbmj8991_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ(nbmj8991_sound_r) AM_DEVWRITE_LEGACY("dac1", dac_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("dac2", dac_w)
+	AM_RANGE(0x00, 0x00) AM_READ(nbmj8991_sound_r) AM_DEVWRITE("dac1", dac_device, write_unsigned8)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE("dac2", dac_device, write_unsigned8)
 	AM_RANGE(0x04, 0x04) AM_WRITE(nbmj8991_soundbank_w)
 	AM_RANGE(0x06, 0x06) AM_WRITENOP
 	AM_RANGE(0x80, 0x81) AM_DEVWRITE_LEGACY("fmsnd", ym3812_w)
@@ -1494,7 +1494,7 @@ static MACHINE_CONFIG_START( nbmjdrv1, nbmj8991_state )	// galkoku
 	MCFG_SOUND_ADD("fmsnd", YM3812, 25000000/10)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.70)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -1532,10 +1532,10 @@ static MACHINE_CONFIG_START( nbmjdrv2, nbmj8991_state )	// pstadium
 	MCFG_SOUND_ADD("fmsnd", YM3812, 25000000/6.25)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.70)
 
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac2", DAC, 0)
+	MCFG_DAC_ADD("dac2")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -2184,21 +2184,21 @@ ROM_START( av2mj2rg )
 ROM_END
 
 
-GAME( 1989, galkoku,  0,        galkoku,  galkoku,  galkoku,  ROT180, "Nichibutsu / T.R.Tec", "Mahjong Gal no Kokuhaku (Japan)", 0 )
-GAME( 1989, hyouban,  galkoku,  hyouban,  hyouban,  hyouban,  ROT180, "Nichibutsu / T.R.Tec", "Mahjong Hyouban Musume [BET] (Japan)", 0 )
-GAME( 1989, galkaika, 0,        galkaika, galkaika, galkaika, ROT180, "Nichibutsu / T.R.Tec", "Mahjong Gal no Kaika (Japan)", 0 )
-GAME( 1989, tokyogal, 0,        tokyogal, tokyogal, tokyogal, ROT180, "Nichibutsu", "Tokyo Gal Zukan (Japan)", 0 )
-GAME( 1989, tokimbsj, tokyogal, tokimbsj, tokimbsj, tokimbsj, ROT180, "Nichibutsu", "Tokimeki Bishoujo [BET] (Japan)", 0 )
-GAME( 1989, mcontest, 0,        mcontest, mcontest, mcontest, ROT180, "Nichibutsu", "Miss Mahjong Contest (Japan)", 0 )
-GAME( 1989, uchuuai,  0,        uchuuai,  uchuuai,  uchuuai,  ROT180, "Nichibutsu", "Mahjong Uchuu yori Ai wo komete (Japan)", 0 )
-GAME( 1989, triplew1, 0,        triplew1, triplew1, triplew1, ROT180, "Nichibutsu", "Mahjong Triple Wars (Japan)", 0 )
-GAME( 1990, pstadium, 0,        pstadium, pstadium, pstadium, ROT180, "Nichibutsu", "Mahjong Panic Stadium (Japan)", 0 )
-GAME( 1990, triplew2, 0,        triplew2, triplew1, triplew2, ROT180, "Nichibutsu", "Mahjong Triple Wars 2 (Japan)", 0 )
-GAME( 1990, ntopstar, 0,        ntopstar, ntopstar, ntopstar, ROT180, "Nichibutsu", "Mahjong Nerae! Top Star (Japan)", 0 )
-GAME( 1991, mjlstory, 0,        mjlstory, mjlstory, mjlstory, ROT180, "Nichibutsu", "Mahjong Jikken Love Story (Japan)", 0 )
-GAME( 1991, vanilla,  0,        vanilla,  vanilla,  vanilla,  ROT180, "Nichibutsu", "Mahjong Vanilla Syndrome (Japan)", 0 )
-GAME( 1991, finalbny, vanilla,  finalbny, finalbny, finalbny, ROT180, "Nichibutsu", "Mahjong Final Bunny [BET] (Japan)", 0 )
-GAME( 1991, qmhayaku, 0,        qmhayaku, qmhayaku, qmhayaku, ROT180, "Nichibutsu", "Quiz-Mahjong Hayaku Yatteyo! (Japan)", 0 )
-GAME( 1991, mjgottub, 0,        mjgottub, mjgottub, mjgottub, ROT180, "Nichibutsu", "Medal Mahjong Gottsu ee-kanji [BET] (Japan)", 0 )
-GAME( 1991, av2mj1bb, 0,        av2mj1bb, av2mj1bb, av2mj1bb, ROT0,   "Miki Syouji / AV Japan", "AV2Mahjong No.1 Bay Bridge no Seijo (Japan)", GAME_NOT_WORKING )
-GAME( 1991, av2mj2rg, 0,        av2mj2rg, av2mj2rg, av2mj2rg, ROT0,   "Miki Syouji / AV Japan", "AV2Mahjong No.2 Rouge no Kaori (Japan)", GAME_NOT_WORKING )
+GAME( 1989, galkoku,  0,        galkoku,  galkoku, nbmj8991_state,  galkoku,  ROT180, "Nichibutsu / T.R.Tec", "Mahjong Gal no Kokuhaku (Japan)", 0 )
+GAME( 1989, hyouban,  galkoku,  hyouban,  hyouban, nbmj8991_state,  hyouban,  ROT180, "Nichibutsu / T.R.Tec", "Mahjong Hyouban Musume [BET] (Japan)", 0 )
+GAME( 1989, galkaika, 0,        galkaika, galkaika, nbmj8991_state, galkaika, ROT180, "Nichibutsu / T.R.Tec", "Mahjong Gal no Kaika (Japan)", 0 )
+GAME( 1989, tokyogal, 0,        tokyogal, tokyogal, nbmj8991_state, tokyogal, ROT180, "Nichibutsu", "Tokyo Gal Zukan (Japan)", 0 )
+GAME( 1989, tokimbsj, tokyogal, tokimbsj, tokimbsj, nbmj8991_state, tokimbsj, ROT180, "Nichibutsu", "Tokimeki Bishoujo [BET] (Japan)", 0 )
+GAME( 1989, mcontest, 0,        mcontest, mcontest, nbmj8991_state, mcontest, ROT180, "Nichibutsu", "Miss Mahjong Contest (Japan)", 0 )
+GAME( 1989, uchuuai,  0,        uchuuai,  uchuuai, nbmj8991_state,  uchuuai,  ROT180, "Nichibutsu", "Mahjong Uchuu yori Ai wo komete (Japan)", 0 )
+GAME( 1989, triplew1, 0,        triplew1, triplew1, nbmj8991_state, triplew1, ROT180, "Nichibutsu", "Mahjong Triple Wars (Japan)", 0 )
+GAME( 1990, pstadium, 0,        pstadium, pstadium, nbmj8991_state, pstadium, ROT180, "Nichibutsu", "Mahjong Panic Stadium (Japan)", 0 )
+GAME( 1990, triplew2, 0,        triplew2, triplew1, nbmj8991_state, triplew2, ROT180, "Nichibutsu", "Mahjong Triple Wars 2 (Japan)", 0 )
+GAME( 1990, ntopstar, 0,        ntopstar, ntopstar, nbmj8991_state, ntopstar, ROT180, "Nichibutsu", "Mahjong Nerae! Top Star (Japan)", 0 )
+GAME( 1991, mjlstory, 0,        mjlstory, mjlstory, nbmj8991_state, mjlstory, ROT180, "Nichibutsu", "Mahjong Jikken Love Story (Japan)", 0 )
+GAME( 1991, vanilla,  0,        vanilla,  vanilla, nbmj8991_state,  vanilla,  ROT180, "Nichibutsu", "Mahjong Vanilla Syndrome (Japan)", 0 )
+GAME( 1991, finalbny, vanilla,  finalbny, finalbny, nbmj8991_state, finalbny, ROT180, "Nichibutsu", "Mahjong Final Bunny [BET] (Japan)", 0 )
+GAME( 1991, qmhayaku, 0,        qmhayaku, qmhayaku, nbmj8991_state, qmhayaku, ROT180, "Nichibutsu", "Quiz-Mahjong Hayaku Yatteyo! (Japan)", 0 )
+GAME( 1991, mjgottub, 0,        mjgottub, mjgottub, nbmj8991_state, mjgottub, ROT180, "Nichibutsu", "Medal Mahjong Gottsu ee-kanji [BET] (Japan)", 0 )
+GAME( 1991, av2mj1bb, 0,        av2mj1bb, av2mj1bb, nbmj8991_state, av2mj1bb, ROT0,   "Miki Syouji / AV Japan", "AV2Mahjong No.1 Bay Bridge no Seijo (Japan)", GAME_NOT_WORKING )
+GAME( 1991, av2mj2rg, 0,        av2mj2rg, av2mj2rg, nbmj8991_state, av2mj2rg, ROT0,   "Miki Syouji / AV Japan", "AV2Mahjong No.2 Rouge no Kaori (Japan)", GAME_NOT_WORKING )

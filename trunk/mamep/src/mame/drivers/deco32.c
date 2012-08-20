@@ -228,6 +228,7 @@ Notes:
 #include "cpu/arm/arm.h"
 #include "cpu/h6280/h6280.h"
 #include "cpu/m6809/m6809.h"
+#include "cpu/z80/z80.h"
 #include "includes/decocrpt.h"
 #include "includes/decoprot.h"
 #include "machine/eeprom.h"
@@ -905,7 +906,7 @@ static ADDRESS_MAP_START( lockload_map, AS_PROGRAM, 32, dragngun_state )
 
 	AM_RANGE(0x300000, 0x3fffff) AM_ROM
 
-	AM_RANGE(0x400000, 0x400003) AM_DEVREADWRITE8("oki3", okim6295_device, read, write, 0x000000ff)
+//  AM_RANGE(0x400000, 0x400003) AM_DEVREADWRITE8("oki3", okim6295_device, read, write, 0x000000ff)
 	AM_RANGE(0x420000, 0x420003) AM_READWRITE(dragngun_eeprom_r, dragngun_eeprom_w)
 //  AM_RANGE(0x430000, 0x43001f) AM_WRITE(dragngun_lightgun_w)
 //  AM_RANGE(0x438000, 0x438003) AM_READ(dragngun_lightgun_r)
@@ -1032,6 +1033,14 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( nslasher_io_sound, AS_IO, 8, deco32_state )
 	AM_RANGE(0x0000, 0xffff) AM_ROM AM_REGION("audiocpu", 0)
 ADDRESS_MAP_END
+
+
+#if 0
+static ADDRESS_MAP_START( lockload_sound_map, AS_PROGRAM, 8, deco32_state )
+	AM_RANGE(0x000000, 0x00ffff) AM_ROM
+
+ADDRESS_MAP_END
+#endif
 
 /**********************************************************************************/
 
@@ -2009,8 +2018,11 @@ static MACHINE_CONFIG_START( lockload, dragngun_state )
 	MCFG_CPU_PROGRAM_MAP(lockload_map)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", lockload_vbl_irq, "screen", 0, 1)
 
-	MCFG_CPU_ADD("audiocpu", H6280, 32220000/8)
-	MCFG_CPU_PROGRAM_MAP(sound_map)
+	MCFG_CPU_ADD("audiocpu", Z80, 32220000/8)
+	MCFG_CPU_PROGRAM_MAP(nslasher_sound)
+	MCFG_CPU_IO_MAP(nslasher_io_sound)
+
+	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* to improve main<->audio comms */
 
 	MCFG_MACHINE_RESET(deco32)
 	MCFG_EEPROM_93C46_ADD("eeprom")
@@ -2039,7 +2051,7 @@ static MACHINE_CONFIG_START( lockload, dragngun_state )
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
 	MCFG_SOUND_ADD("ymsnd", YM2151, 32220000/9)
-	MCFG_SOUND_CONFIG(ym2151_config)
+	MCFG_SOUND_CONFIG(ym2151_interface_nslasher)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 0.42)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.42)
 
@@ -2047,15 +2059,19 @@ static MACHINE_CONFIG_START( lockload, dragngun_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 
-	MCFG_OKIM6295_ADD("oki2", 32220000/16, OKIM6295_PIN7_HIGH)
+	MCFG_OKIM6295_ADD("oki2", 32220000/32, OKIM6295_PIN7_HIGH)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.35)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.35)
-
-	MCFG_OKIM6295_ADD("oki3", 32220000/32, OKIM6295_PIN7_HIGH)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 1.0)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 1.0)
 MACHINE_CONFIG_END
 
+static MACHINE_CONFIG_DERIVED( lockloadu, lockload )
+	MCFG_CPU_REPLACE("audiocpu", H6280, 32220000/8)
+	MCFG_CPU_PROGRAM_MAP(sound_map)
+
+	MCFG_SOUND_MODIFY("ymsnd")
+	MCFG_SOUND_CONFIG(ym2151_config)
+
+MACHINE_CONFIG_END
 
 static int tattass_bank_callback( int bank )
 {
@@ -2826,9 +2842,7 @@ ROM_START( lockload ) /* Board No. DE-0420-1 + Bottom board DE-0421-0 slightly d
 	ROM_REGION(0x100000, "oki1", 0 )
 	ROM_LOAD( "mbm-06.n17",  0x00000, 0x100000,  CRC(f34d5999) SHA1(265b5f4e8598bcf9183bf9bd95db69b01536acb2) )
 
-	ROM_REGION(0x80000, "oki2", ROMREGION_ERASE00 ) /* Sound data - unique PCB and this region is not used? */
-
-	ROM_REGION(0x80000, "oki3", 0 )
+	ROM_REGION(0x80000, "oki2", 0 )
 	ROM_LOAD( "mbm-07.n19",  0x00000, 0x80000,  CRC(414f3793) SHA1(ed5f63e57390d503193fd1e9f7294ae1da6d3539) ) /* Does this go here or "oki2" ?? */
 ROM_END
 
@@ -2899,9 +2913,7 @@ ROM_START( gunhard ) /* Board No. DE-0420-1 + Bottom board DE-0421-0 slightly di
 	ROM_REGION(0x100000, "oki1", 0 )
 	ROM_LOAD( "mbm-06.n17",  0x00000, 0x100000,  CRC(f34d5999) SHA1(265b5f4e8598bcf9183bf9bd95db69b01536acb2) )
 
-	ROM_REGION(0x80000, "oki2", ROMREGION_ERASE00 ) /* Sound data - unique PCB and this region is not used? */
-
-	ROM_REGION(0x80000, "oki3", 0 )
+	ROM_REGION(0x80000, "oki2", 0 )
 	ROM_LOAD( "mbm-07.n19",  0x00000, 0x80000,  CRC(414f3793) SHA1(ed5f63e57390d503193fd1e9f7294ae1da6d3539) ) /* Does this go here or "oki2" ?? */
 ROM_END
 
@@ -3239,22 +3251,22 @@ ROM_START( nslashers )
 ROM_END
 
 
-static DRIVER_INIT( captaven )
+DRIVER_INIT_MEMBER(deco32_state,captaven)
 {
-	deco56_decrypt_gfx(machine, "gfx1");
-	deco56_decrypt_gfx(machine, "gfx2");
+	deco56_decrypt_gfx(machine(), "gfx1");
+	deco56_decrypt_gfx(machine(), "gfx2");
 }
 
 extern void process_dvi_data(UINT8* dvi_data, int offset, int regionsize);
-static DRIVER_INIT( dragngun )
+DRIVER_INIT_MEMBER(dragngun_state,dragngun)
 {
-	UINT32 *ROM = (UINT32 *)machine.root_device().memregion("maincpu")->base();
-	const UINT8 *SRC_RAM = machine.root_device().memregion("gfx1")->base();
-	UINT8 *DST_RAM = machine.root_device().memregion("gfx2")->base();
+	UINT32 *ROM = (UINT32 *)machine().root_device().memregion("maincpu")->base();
+	const UINT8 *SRC_RAM = machine().root_device().memregion("gfx1")->base();
+	UINT8 *DST_RAM = machine().root_device().memregion("gfx2")->base();
 
-	deco74_decrypt_gfx(machine, "gfx1");
-	deco74_decrypt_gfx(machine, "gfx2");
-	deco74_decrypt_gfx(machine, "gfx3");
+	deco74_decrypt_gfx(machine(), "gfx1");
+	deco74_decrypt_gfx(machine(), "gfx2");
+	deco74_decrypt_gfx(machine(), "gfx3");
 
 	memcpy(DST_RAM+0x80000,SRC_RAM,0x10000);
 	memcpy(DST_RAM+0x110000,SRC_RAM+0x10000,0x10000);
@@ -3263,7 +3275,7 @@ static DRIVER_INIT( dragngun )
 
 #if 0
 	{
-		UINT8 *ROM = machine.root_device().memregion("dvi")->base();
+		UINT8 *ROM = machine().root_device().memregion("dvi")->base();
 
 		FILE *fp;
 		char filename[256];
@@ -3278,30 +3290,30 @@ static DRIVER_INIT( dragngun )
 #endif
 
 	// there are DVI headers at 0x000000, 0x580000, 0x800000, 0xB10000, 0xB80000
-	process_dvi_data(machine.root_device().memregion("dvi")->base(),0x000000, 0x1000000);
-	process_dvi_data(machine.root_device().memregion("dvi")->base(),0x580000, 0x1000000);
-	process_dvi_data(machine.root_device().memregion("dvi")->base(),0x800000, 0x1000000);
-	process_dvi_data(machine.root_device().memregion("dvi")->base(),0xB10000, 0x1000000);
-	process_dvi_data(machine.root_device().memregion("dvi")->base(),0xB80000, 0x1000000);
+	process_dvi_data(machine().root_device().memregion("dvi")->base(),0x000000, 0x1000000);
+	process_dvi_data(machine().root_device().memregion("dvi")->base(),0x580000, 0x1000000);
+	process_dvi_data(machine().root_device().memregion("dvi")->base(),0x800000, 0x1000000);
+	process_dvi_data(machine().root_device().memregion("dvi")->base(),0xB10000, 0x1000000);
+	process_dvi_data(machine().root_device().memregion("dvi")->base(),0xB80000, 0x1000000);
 
 }
 
-static DRIVER_INIT( fghthist )
+DRIVER_INIT_MEMBER(deco32_state,fghthist)
 {
-	deco56_decrypt_gfx(machine, "gfx1");
-	deco74_decrypt_gfx(machine, "gfx2");
+	deco56_decrypt_gfx(machine(), "gfx1");
+	deco74_decrypt_gfx(machine(), "gfx2");
 
-	decoprot_reset(machine);
+	decoprot_reset(machine());
 }
 
-static DRIVER_INIT( lockload )
+DRIVER_INIT_MEMBER(dragngun_state,lockload)
 {
-	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
-//  UINT32 *ROM = (UINT32 *)machine.root_device().memregion("maincpu")->base();
+	UINT8 *RAM = machine().root_device().memregion("maincpu")->base();
+//  UINT32 *ROM = (UINT32 *)machine().root_device().memregion("maincpu")->base();
 
-	deco74_decrypt_gfx(machine, "gfx1");
-	deco74_decrypt_gfx(machine, "gfx2");
-	deco74_decrypt_gfx(machine, "gfx3");
+	deco74_decrypt_gfx(machine(), "gfx1");
+	deco74_decrypt_gfx(machine(), "gfx2");
+	deco74_decrypt_gfx(machine(), "gfx3");
 
 	memcpy(RAM+0x300000,RAM+0x100000,0x100000);
 	memset(RAM+0x100000,0,0x100000);
@@ -3311,51 +3323,50 @@ static DRIVER_INIT( lockload )
 //  ROM[0x3fe40c/4]=0xe1a00000;//  NOP test switch lock
 }
 
-static DRIVER_INIT( tattass )
+DRIVER_INIT_MEMBER(deco32_state,tattass)
 {
-	UINT8 *RAM = machine.root_device().memregion("gfx1")->base();
-	UINT8 *tmp = auto_alloc_array(machine, UINT8, 0x80000);
+	UINT8 *RAM = machine().root_device().memregion("gfx1")->base();
+	UINT8 *tmp = auto_alloc_array(machine(), UINT8, 0x80000);
 
 	/* Reorder bitplanes to make decoding easier */
 	memcpy(tmp,RAM+0x80000,0x80000);
 	memcpy(RAM+0x80000,RAM+0x100000,0x80000);
 	memcpy(RAM+0x100000,tmp,0x80000);
 
-	RAM = machine.root_device().memregion("gfx2")->base();
+	RAM = machine().root_device().memregion("gfx2")->base();
 	memcpy(tmp,RAM+0x80000,0x80000);
 	memcpy(RAM+0x80000,RAM+0x100000,0x80000);
 	memcpy(RAM+0x100000,tmp,0x80000);
 
-	auto_free(machine, tmp);
+	auto_free(machine(), tmp);
 
-	deco56_decrypt_gfx(machine, "gfx1"); /* 141 */
-	deco56_decrypt_gfx(machine, "gfx2"); /* 141 */
+	deco56_decrypt_gfx(machine(), "gfx1"); /* 141 */
+	deco56_decrypt_gfx(machine(), "gfx2"); /* 141 */
 }
 
-static DRIVER_INIT( nslasher )
+DRIVER_INIT_MEMBER(deco32_state,nslasher)
 {
-	UINT8 *RAM = machine.root_device().memregion("gfx1")->base();
-	UINT8 *tmp = auto_alloc_array(machine, UINT8, 0x80000);
+	UINT8 *RAM = machine().root_device().memregion("gfx1")->base();
+	UINT8 *tmp = auto_alloc_array(machine(), UINT8, 0x80000);
 
 	/* Reorder bitplanes to make decoding easier */
 	memcpy(tmp,RAM+0x80000,0x80000);
 	memcpy(RAM+0x80000,RAM+0x100000,0x80000);
 	memcpy(RAM+0x100000,tmp,0x80000);
 
-	RAM = machine.root_device().memregion("gfx2")->base();
+	RAM = machine().root_device().memregion("gfx2")->base();
 	memcpy(tmp,RAM+0x80000,0x80000);
 	memcpy(RAM+0x80000,RAM+0x100000,0x80000);
 	memcpy(RAM+0x100000,tmp,0x80000);
 
-	auto_free(machine, tmp);
+	auto_free(machine(), tmp);
 
-	deco56_decrypt_gfx(machine, "gfx1"); /* 141 */
-	deco74_decrypt_gfx(machine, "gfx2");
+	deco56_decrypt_gfx(machine(), "gfx1"); /* 141 */
+	deco74_decrypt_gfx(machine(), "gfx2");
 
-	deco156_decrypt(machine);
+	deco156_decrypt(machine());
 
-	deco32_state *state = machine.driver_data<deco32_state>();
-	state->soundlatch_setclearedvalue(0xff);
+	soundlatch_setclearedvalue(0xff);
 
 	/* The board for Night Slashers is very close to the Fighter's History and
     Tattoo Assassins boards, but has an encrypted ARM cpu. */
@@ -3364,23 +3375,23 @@ static DRIVER_INIT( nslasher )
 
 /**********************************************************************************/
 
-GAME( 1991, captaven,   0,        captaven, captaven, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (Asia Rev 1.4)", 0 )
-GAME( 1991, captavena,  captaven, captaven, captaven, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (Asia Rev 1.0)", 0 )
-GAME( 1991, captavene,  captaven, captaven, captaven, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (UK Rev 1.4)", 0 )
-GAME( 1991, captavenu,  captaven, captaven, captaven, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (US Rev 1.9)", 0 )
-GAME( 1991, captavenuu, captaven, captaven, captaven, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (US Rev 1.6)", 0 )
-GAME( 1991, captavenua, captaven, captaven, captaven, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (US Rev 1.4)", 0 )
-GAME( 1991, captavenj,  captaven, captaven, captaven, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (Japan Rev 0.2)", 0 )
-GAME( 1993, dragngun,   0,        dragngun, dragngun, dragngun, ROT0, "Data East Corporation", "Dragon Gun (US)", GAME_IMPERFECT_GRAPHICS  )
-GAME( 1993, fghthist,   0,        fghthist, fghthist, fghthist, ROT0, "Data East Corporation", "Fighter's History (World ver 43-07)", GAME_UNEMULATED_PROTECTION )
-GAME( 1993, fghthistu,  fghthist, fghthist, fghthist, fghthist, ROT0, "Data East Corporation", "Fighter's History (US ver 42-03)", GAME_UNEMULATED_PROTECTION )
-GAME( 1993, fghthista,  fghthist, fghthsta, fghthist, fghthist, ROT0, "Data East Corporation", "Fighter's History (US ver 42-05, alternate hardware)", GAME_UNEMULATED_PROTECTION )
-GAME( 1993, fghthistj,  fghthist, fghthist, fghthist, fghthist, ROT0, "Data East Corporation", "Fighter's History (Japan ver 42-03)", GAME_UNEMULATED_PROTECTION )
-GAME( 1994, lockload,   0,        lockload, lockload, lockload, ROT0, "Data East Corporation", "Locked 'n Loaded (World)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
-GAME( 1994, gunhard,    lockload, lockload, lockload, lockload, ROT0, "Data East Corporation", "Gun Hard (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
-GAME( 1994, lockloadu,  lockload, lockload, lockload, lockload, ROT0, "Data East Corporation", "Locked 'n Loaded (US)", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING )
-GAME( 1994, tattass,    0,        tattass,  tattass,  tattass,  ROT0, "Data East Pinball",     "Tattoo Assassins (US prototype)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, tattassa,   tattass,  tattass,  tattass,  tattass,  ROT0, "Data East Pinball",     "Tattoo Assassins (Asia prototype)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, nslasher,   0,        nslasher, nslasher, nslasher, ROT0, "Data East Corporation", "Night Slashers (Korea Rev 1.3)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, nslasherj,  nslasher, nslasher, nslasher, nslasher, ROT0, "Data East Corporation", "Night Slashers (Japan Rev 1.2)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, nslashers,  nslasher, nslasher, nslasher, nslasher, ROT0, "Data East Corporation", "Night Slashers (Over Sea Rev 1.2)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1991, captaven,   0,        captaven, captaven, deco32_state, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (Asia Rev 1.4)", 0 )
+GAME( 1991, captavena,  captaven, captaven, captaven, deco32_state, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (Asia Rev 1.0)", 0 )
+GAME( 1991, captavene,  captaven, captaven, captaven, deco32_state, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (UK Rev 1.4)", 0 )
+GAME( 1991, captavenu,  captaven, captaven, captaven, deco32_state, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (US Rev 1.9)", 0 )
+GAME( 1991, captavenuu, captaven, captaven, captaven, deco32_state, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (US Rev 1.6)", 0 )
+GAME( 1991, captavenua, captaven, captaven, captaven, deco32_state, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (US Rev 1.4)", 0 )
+GAME( 1991, captavenj,  captaven, captaven, captaven, deco32_state, captaven, ROT0, "Data East Corporation", "Captain America and The Avengers (Japan Rev 0.2)", 0 )
+GAME( 1993, dragngun,   0,        dragngun, dragngun, dragngun_state, dragngun, ROT0, "Data East Corporation", "Dragon Gun (US)", GAME_IMPERFECT_GRAPHICS  )
+GAME( 1993, fghthist,   0,        fghthist, fghthist, deco32_state, fghthist, ROT0, "Data East Corporation", "Fighter's History (World ver 43-07)", GAME_UNEMULATED_PROTECTION )
+GAME( 1993, fghthistu,  fghthist, fghthist, fghthist, deco32_state, fghthist, ROT0, "Data East Corporation", "Fighter's History (US ver 42-03)", GAME_UNEMULATED_PROTECTION )
+GAME( 1993, fghthista,  fghthist, fghthsta, fghthist, deco32_state, fghthist, ROT0, "Data East Corporation", "Fighter's History (US ver 42-05, alternate hardware)", GAME_UNEMULATED_PROTECTION )
+GAME( 1993, fghthistj,  fghthist, fghthist, fghthist, deco32_state, fghthist, ROT0, "Data East Corporation", "Fighter's History (Japan ver 42-03)", GAME_UNEMULATED_PROTECTION )
+GAME( 1994, lockload,   0,        lockload, lockload, dragngun_state, lockload, ROT0, "Data East Corporation", "Locked 'n Loaded (World)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1994, gunhard,    lockload, lockload, lockload, dragngun_state, lockload, ROT0, "Data East Corporation", "Gun Hard (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1994, lockloadu,  lockload, lockloadu,lockload, dragngun_state, lockload, ROT0, "Data East Corporation", "Locked 'n Loaded (US)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1994, tattass,    0,        tattass,  tattass, deco32_state,  tattass,  ROT0, "Data East Pinball",     "Tattoo Assassins (US prototype)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, tattassa,   tattass,  tattass,  tattass, deco32_state,  tattass,  ROT0, "Data East Pinball",     "Tattoo Assassins (Asia prototype)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, nslasher,   0,        nslasher, nslasher, deco32_state, nslasher, ROT0, "Data East Corporation", "Night Slashers (Korea Rev 1.3)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, nslasherj,  nslasher, nslasher, nslasher, deco32_state, nslasher, ROT0, "Data East Corporation", "Night Slashers (Japan Rev 1.2)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, nslashers,  nslasher, nslasher, nslasher, deco32_state, nslasher, ROT0, "Data East Corporation", "Night Slashers (Over Sea Rev 1.2)", GAME_IMPERFECT_GRAPHICS )

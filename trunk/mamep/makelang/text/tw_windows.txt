@@ -2,7 +2,7 @@
 (primary)
 (主顯示器)
 
-# osd/windows/input.c: 1230
+# osd/windows/input.c: 1231
 Assign joystick %s to player %d\n
 分配搖桿 %s 到玩家 %d\n
 
@@ -34,11 +34,11 @@ Blue Power
 Blue Scale
 藍色大小
 
-# osd/windows/winmain.c: 330
+# osd/windows/winmain.c: 331
 DIRECT3D-SPECIFIC OPTIONS
 DIRECT3D 特定選項
 
-# osd/windows/winmain.c: 326
+# osd/windows/winmain.c: 327
 DIRECTDRAW-SPECIFIC OPTIONS
 DIRECTDRAW 特定選項
 
@@ -426,19 +426,19 @@ DirectDraw: 警告 - 裝置可能無法正常配合 DirectDraw 描繪\n
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告 - 裝置不支援全螢幕 gamma 值修正。\n
 
-# osd/windows/input.c: 1214
+# osd/windows/input.c: 1215
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 DirectInput: 無法列舉搖桿 (result=%08X)\n
 
-# osd/windows/input.c: 1199
+# osd/windows/input.c: 1200
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 DirectInput: 無法列舉鍵盤 (result=%08X)\n
 
-# osd/windows/input.c: 1208
+# osd/windows/input.c: 1209
 DirectInput: Unable to enumerate mice (result=%08X)\n
 DirectInput: 無法列舉滑鼠 (result=%08X)\n
 
-# osd/windows/input.c: 1188
+# osd/windows/input.c: 1189
 DirectInput: Using DirectInput %d\n
 DirectInput: 正在使用 DirectInput %d\n
 
@@ -518,25 +518,25 @@ Error: Device does not meet minimum requirements for Direct3D rendering\n
 Error: unable to configure a screen texture format\n
 錯誤: 無法設定畫面材質格式\n
 
-# osd/windows/winmain.c: 419
+# osd/windows/winmain.c: 420
 FULL SCREEN OPTIONS
 全螢幕選項
 
 # osd/windows/window.c: 249
-Failed to create pause event
-無法建立暫停事件
+Failed to create pause event\n
+無法建立暫停事件\n
 
-# osd/windows/window.c: 901
-Failed to create window class
-無法建立視窗類別
-
-# osd/windows/window.c: 263
-Failed to create window thread
-無法建立視窗執行緒
+# osd/windows/window.c: 900
+Failed to create window class\n
+無法建立視窗類別\n
 
 # osd/windows/window.c: 257
-Failed to create window thread ready event
-無法建立視窗執行緒預備事件
+Failed to create window thread ready event\n
+無法建立視窗執行緒預備事件\n
+
+# osd/windows/window.c: 263
+Failed to create window thread\n
+無法建立視窗執行緒\n
 
 # osd/windows/d3dhlsl.c: 2686
 Green Convergence X
@@ -566,7 +566,7 @@ Green Power
 Green Scale
 綠色大小
 
-# osd/windows/winmain.c: 434
+# osd/windows/winmain.c: 435
 INPUT DEVICE OPTIONS
 輸入裝置選項
 
@@ -594,7 +594,7 @@ Image Pincushion
 Invalid video value %s; reverting to gdi\n
 無效的視訊值 %s ; 還原成 gdi\n
 
-# osd/windows/winmain.c: 392
+# osd/windows/winmain.c: 393
 PER-WINDOW VIDEO OPTIONS
 各個畫面的視訊選項
 
@@ -610,11 +610,11 @@ Phosphor Defocus Y
 Proposed video mode not supported on device %s\n
 建議的視訊模式無法支援裝置 %s\n
 
-# osd/windows/input.c: 1780
+# osd/windows/input.c: 1781
 RawInput: APIs detected\n
 RawInput: 偵測出 API\n
 
-# osd/windows/input.c: 849
+# osd/windows/input.c: 846
 Record Rendered Video
 拍攝描繪的影片
 
@@ -690,7 +690,7 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 聲音: 緩衝 overflows=%d underflows=%d\n
 
-# osd/windows/input.c: 842
+# osd/windows/input.c: 840
 Take Rendered Snapshot
 拍攝描繪的捉圖
 
@@ -698,7 +698,7 @@ Take Rendered Snapshot
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 材質太大! (要求: %dx%d, 最大 %dx%d)\n
 
-# osd/windows/input.c: 835
+# osd/windows/input.c: 834
 Toggle Fullscreen
 切換全螢幕
 
@@ -706,9 +706,9 @@ Toggle Fullscreen
 Unable to close the keyboard device. (error %d)\n
 無法關閉鍵盤裝置。(錯誤 %d)\n
 
-# osd/windows/window.c: 723
-Unable to complete window creation
-無法完成視窗創建
+# osd/windows/window.c: 722
+Unable to complete window creation\n
+無法完成視窗創建\n
 
 # osd/windows/drawd3d.c: 743
 Unable to create the Direct3D device (%08X)\n
@@ -750,19 +750,19 @@ Using %s scale effect\n
 Video: Monitor %p = \"%s\" %s\n
 視訊: 顯示器 %p = \"%s\" %s\n
 
-# osd/windows/winmain.c: 299
+# osd/windows/winmain.c: 300
 WINDOWS DEBUGGING OPTIONS
 WINDOWS 除錯程式選項
 
-# osd/windows/winmain.c: 306
+# osd/windows/winmain.c: 307
 WINDOWS PERFORMANCE OPTIONS
 WUNDOWS 效能選項
 
-# osd/windows/winmain.c: 427
+# osd/windows/winmain.c: 428
 WINDOWS SOUND OPTIONS
 WINDOWS 聲音選項
 
-# osd/windows/winmain.c: 314
+# osd/windows/winmain.c: 315
 WINDOWS VIDEO OPTIONS
 WINDOWS 視訊選項
 
@@ -778,67 +778,67 @@ Warning: Device may not perform well for Direct3D rendering\n
 Warning: numprocessors < 1 doesn't make much sense. Assuming auto ...\n
 警告: numprocessors < 1 並沒有意義。將假設為 auto ...\n
 
-# osd/windows/winmain.c: 394
+# osd/windows/winmain.c: 395
 aspect ratio for all screens; 'auto' here will try to make a best guess
 全部畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 399
+# osd/windows/winmain.c: 400
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 第一個畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 414
+# osd/windows/winmain.c: 415
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 第四個畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 404
+# osd/windows/winmain.c: 405
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 第二個畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 409
+# osd/windows/winmain.c: 410
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 第三個畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 311
+# osd/windows/winmain.c: 312
 benchmark for the given number of emulated seconds; implies -video none -nosound -nothrottle
 依給予的數字模擬秒數進行評測; 包含 -video none -nosound -nothrottle 參數
 
-# osd/windows/winmain.c: 422
+# osd/windows/winmain.c: 423
 brightness value in full screen mode
 全螢幕模式亮度值
 
-# osd/windows/winmain.c: 319
+# osd/windows/winmain.c: 320
 constrain to the proper aspect ratio
 強制使用合適的長寬比例
 
-# osd/windows/winmain.c: 423
+# osd/windows/winmain.c: 424
 contrast value in full screen mode
 全螢幕模式對比值
 
-# osd/windows/winmain.c: 318
+# osd/windows/winmain.c: 319
 default to maximized windows; otherwise, windows will be minimized
 預設成視窗最大化; 否則將採用視窗最小化模式
 
-# osd/windows/winmain.c: 344
+# osd/windows/winmain.c: 345
 enable HLSL AVI writing (huge disk bandwidth suggested)
 啟用 HLSL AVI 寫入 (建議需大量硬碟頻寬)
 
-# osd/windows/winmain.c: 338
+# osd/windows/winmain.c: 339
 enable HLSL INI reading
 啟用 HLSL INI 讀取
 
-# osd/windows/winmain.c: 339
+# osd/windows/winmain.c: 340
 enable HLSL INI writing
 啟用 HLSL INI 寫入
 
-# osd/windows/winmain.c: 336
+# osd/windows/winmain.c: 337
 enable HLSL post-processing (PS3.0 required)
 啟用 HLSL 預先處理 (需 PS3.0)
 
-# osd/windows/winmain.c: 430
+# osd/windows/winmain.c: 431
 enable audio sync
 啟用音訊同步
 
-# osd/windows/winmain.c: 332
+# osd/windows/winmain.c: 333
 enable bilinear filtering on screen output
 啟用雙線過濾的畫面輸出
 
@@ -846,131 +846,127 @@ enable bilinear filtering on screen output
 enable dual lightgun input
 啟用雙光線槍輸入
 
-# osd/windows/winmain.c: 327
+# osd/windows/winmain.c: 328
 enable hardware stretching
 啟用硬體延展
 
-# osd/windows/winmain.c: 308
+# osd/windows/winmain.c: 309
 enable multithreading; this enables rendering and blitting on a separate thread
 啟用多執行緒; 可以將描繪和 blit 分開處理
 
-# osd/windows/winmain.c: 310
+# osd/windows/winmain.c: 311
 enable profiling, specifying the stack depth to track
 啟用性能分析，指定要追蹤的堆疊深度
 
-# osd/windows/winmain.c: 421
+# osd/windows/winmain.c: 422
 enable resolution switching
 啟用解析度切換
 
-# osd/windows/winmain.c: 420
+# osd/windows/winmain.c: 421
 enable triple buffering
 啟用三重緩衝
 
-# osd/windows/winmain.c: 322
+# osd/windows/winmain.c: 323
 enable using the start of VBLANK for throttling instead of the game time
 啟用 VBLANK 開始限制速度取代遊戲時間
 
-# osd/windows/winmain.c: 321
+# osd/windows/winmain.c: 322
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 啟用畫面翻轉之前等待 VBLANK 開始; 降低破損效果
 
-# osd/windows/winmain.c: 317
+# osd/windows/winmain.c: 318
 enable window mode; otherwise, full screen mode is assumed
 啟用視窗模式; 否則將採用全螢幕模式
 
-# osd/windows/winmain.c: 393
+# osd/windows/winmain.c: 394
 explicit name of all screens; 'auto' here will try to make a best guess
 全部畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 398
+# osd/windows/winmain.c: 399
 explicit name of the first screen; 'auto' here will try to make a best guess
 第一個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 413
+# osd/windows/winmain.c: 414
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 第四個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 403
+# osd/windows/winmain.c: 404
 explicit name of the second screen; 'auto' here will try to make a best guess
 第二個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 408
+# osd/windows/winmain.c: 409
 explicit name of the third screen; 'auto' here will try to make a best guess
 第三個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 301
+# osd/windows/winmain.c: 302
 force the program to terminate if no updates within specified number of seconds
 如果在指定的秒數內沒有更新就強制終止程式
 
-# osd/windows/winmain.c: 424
+# osd/windows/winmain.c: 425
 gamma value in full screen mode
 全螢幕模式 Gamma 值
 
-# osd/windows/winmain.c: 435
-hide cursor in full screen or if mouse is enabled
-於全螢幕模式或滑鼠啟用時隱藏游標
-
-# osd/windows/winmain.c: 309
+# osd/windows/winmain.c: 310
 number of processors; this overrides the number the system reports
 設定處理器數量; 將覆寫系統回報的數量
 
-# osd/windows/winmain.c: 316
+# osd/windows/winmain.c: 317
 number of screens to create; usually, you want just one
 建立的畫面數量; 通常設為一個
 
-# osd/windows/winmain.c: 300
+# osd/windows/winmain.c: 301
 output error.log data to the system debugger
 輸出 error.log 資料到系統除錯程式
 
-# osd/windows/winmain.c: 337
+# osd/windows/winmain.c: 338
 path to hlsl files
 hlsl 檔案的路徑
 
-# osd/windows/winmain.c: 395
+# osd/windows/winmain.c: 396
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 全部畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 400
+# osd/windows/winmain.c: 401
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第一個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 415
+# osd/windows/winmain.c: 416
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第四個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 405
+# osd/windows/winmain.c: 406
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第二個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 410
+# osd/windows/winmain.c: 411
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第三個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 396
+# osd/windows/winmain.c: 397
 preferred view for all screens
 全部畫面的檢視方式
 
-# osd/windows/winmain.c: 401
+# osd/windows/winmain.c: 402
 preferred view for the first screen
 第一個畫面的檢視方式
 
-# osd/windows/winmain.c: 416
+# osd/windows/winmain.c: 417
 preferred view for the fourth screen
 第四個畫面的檢視方式
 
-# osd/windows/winmain.c: 406
+# osd/windows/winmain.c: 407
 preferred view for the second screen
 第二個畫面的檢視方式
 
-# osd/windows/winmain.c: 411
+# osd/windows/winmain.c: 412
 preferred view for the third screen
 第三個畫面的檢視方式
 
-# osd/windows/winmain.c: 320
+# osd/windows/winmain.c: 321
 scale screen rendering by this amount in software
 以此倍數執行軟體縮放畫面描繪
 
-# osd/windows/winmain.c: 428
+# osd/windows/winmain.c: 429
 set audio latency (increase to reduce glitches)
 設定音訊等待時間 (增加值可減少破損)
 
@@ -1006,31 +1002,31 @@ set joystick ID (Player7)
 set joystick ID (Player8)
 設定搖桿 ID (玩家 8)
 
-# osd/windows/winmain.c: 303
+# osd/windows/winmain.c: 304
 specifies the font size to use for debugging; defaults to 9 pt
 指定除錯程式的字型大小; 預設是 9 pt
 
-# osd/windows/winmain.c: 302
+# osd/windows/winmain.c: 303
 specifies the font to use for debugging; defaults to Lucida Console
 指定除錯程式的字型; 預設是 Lucida Console
 
-# osd/windows/winmain.c: 331
+# osd/windows/winmain.c: 332
 specify the preferred Direct3D version (8 or 9)
 指定 Direct3D 版本 (8 或 9)
 
-# osd/windows/winmain.c: 307
+# osd/windows/winmain.c: 308
 thread priority for the main game thread; range from -15 to 1
 主要遊戲的執行緒優先權; 範圍是 -15 至 1
 
-# osd/windows/winmain.c: 315
+# osd/windows/winmain.c: 316
 video output method: none, gdi, ddraw, or d3d
 視訊輸出方式: none, gdi, ddraw 或 d3d
 
-# osd/windows/winmain.c: 380
+# osd/windows/winmain.c: 381
 A value for NTSC signal processing
 
 
-# osd/windows/winmain.c: 381
+# osd/windows/winmain.c: 382
 B value for NTSC signal processing
 
 
@@ -1054,7 +1050,7 @@ Blue Output from Red Input
 Blue Phosphor Life
 
 
-# osd/windows/winmain.c: 379
+# osd/windows/winmain.c: 380
 Color Carrier frequency for NTSC signal processing
 
 
@@ -1094,15 +1090,15 @@ Direct3D: Warning - Unable to access d3dx9_43.dll; disabling post-effect renderi
 Direct3D: Warning - Unable to get a handle to D3DXCreateEffectFromFileW; disabling post-effect rendering\n
 
 
-# osd/windows/input.c: 1616
+# osd/windows/input.c: 1617
 DirectInput: Unable to reset saturation for joystick %d (%s)\n
 
 
-# osd/windows/input.c: 1606
+# osd/windows/input.c: 1607
 DirectInput: Unable to set absolute mode for joystick %d (%s)\n
 
 
-# osd/windows/input.c: 1511
+# osd/windows/input.c: 1512
 DirectInput: Unable to set relative mode for mouse %d (%s)\n
 
 
@@ -1130,35 +1126,35 @@ Green Output from Red Input
 Green Phosphor Life
 
 
-# osd/windows/winmain.c: 340
+# osd/windows/winmain.c: 341
 HLSL INI file name for this game
 
 
-# osd/windows/winmain.c: 341
+# osd/windows/winmain.c: 342
 HLSL pre-scale override factor for X (0 for auto)
 
 
-# osd/windows/winmain.c: 342
+# osd/windows/winmain.c: 343
 HLSL pre-scale override factor for Y (0 for auto)
 
 
-# osd/windows/winmain.c: 343
+# osd/windows/winmain.c: 344
 HLSL preset to use (0-3)
 
 
-# osd/windows/winmain.c: 346
+# osd/windows/winmain.c: 347
 HLSL upscaled-snapshot height
 
 
-# osd/windows/winmain.c: 345
+# osd/windows/winmain.c: 346
 HLSL upscaled-snapshot width
 
 
-# osd/windows/winmain.c: 388
+# osd/windows/winmain.c: 389
 Horizontal scanline duration for NTSC signal processing (in usec)
 
 
-# osd/windows/winmain.c: 386
+# osd/windows/winmain.c: 387
 I filter cutoff frequency for NTSC signal processing
 
 
@@ -1170,19 +1166,19 @@ Illegal aspect ratio value = %s\n
 Illegal resolution value = %s\n
 
 
-# osd/windows/winmain.c: 383
+# osd/windows/winmain.c: 384
 Incoming Pixel Clock scaling value for NTSC signal processing
 
 
-# osd/windows/winmain.c: 382
+# osd/windows/winmain.c: 383
 Outgoing Color Carrier phase offset for NTSC signal processing
 
 
-# osd/windows/winmain.c: 389
+# osd/windows/winmain.c: 390
 Phase Count value for NTSC signal processing
 
 
-# osd/windows/winmain.c: 387
+# osd/windows/winmain.c: 388
 Q filter cutoff frequency for NTSC signal processing
 
 
@@ -1222,39 +1218,39 @@ Shadow Mask X Count
 Shadow Mask Y Count
 
 
-# osd/windows/winmain.c: 385
+# osd/windows/winmain.c: 386
 Y filter cutoff frequency for NTSC signal processing
 
 
-# osd/windows/winmain.c: 384
+# osd/windows/winmain.c: 385
 Y filter notch width for NTSC signal processing
 
 
-# osd/windows/winmain.c: 370
+# osd/windows/winmain.c: 371
 blue output signal generated by input signal
 
 
-# osd/windows/winmain.c: 363
+# osd/windows/winmain.c: 364
 convergence in screen-relative X direction
 
 
-# osd/windows/winmain.c: 364
+# osd/windows/winmain.c: 365
 convergence in screen-relative Y direction
 
 
-# osd/windows/winmain.c: 378
+# osd/windows/winmain.c: 379
 enable YIQ-space HLSL post-processing
 
 
-# osd/windows/winmain.c: 323
+# osd/windows/winmain.c: 324
 enable menu bar if available by UI implementation
 
 
-# osd/windows/winmain.c: 369
+# osd/windows/winmain.c: 370
 green output signal generated by input signal
 
 
-# osd/windows/winmain.c: 358
+# osd/windows/winmain.c: 359
 individual height scaling value for scanlines
 
 
@@ -1262,95 +1258,95 @@ individual height scaling value for scanlines
 invalid %s value: joystick #%d is used by player %d\n
 
 
-# osd/windows/winmain.c: 356
+# osd/windows/winmain.c: 357
 overall alpha scaling value for scanlines
 
 
-# osd/windows/winmain.c: 360
+# osd/windows/winmain.c: 361
 overall brightness offset value for scanlines (additive)
 
 
-# osd/windows/winmain.c: 359
+# osd/windows/winmain.c: 360
 overall brightness scaling value for scanlines (multiplicative)
 
 
-# osd/windows/winmain.c: 362
+# osd/windows/winmain.c: 363
 overall defocus value in screen-relative coords
 
 
-# osd/windows/winmain.c: 357
+# osd/windows/winmain.c: 358
 overall height scaling value for scanlines
 
 
-# osd/windows/winmain.c: 361
+# osd/windows/winmain.c: 362
 overall interlace jitter scaling value for scanlines
 
 
-# osd/windows/winmain.c: 376
+# osd/windows/winmain.c: 377
 phosphorescence decay rate (0.0 is instant, 1.0 is forever)
 
 
-# osd/windows/winmain.c: 355
+# osd/windows/winmain.c: 356
 pincushion amount
 
 
-# osd/windows/winmain.c: 365
+# osd/windows/winmain.c: 366
 radial convergence in screen-relative X direction
 
 
-# osd/windows/winmain.c: 366
+# osd/windows/winmain.c: 367
 radial convergence in screen-relative Y direction
 
 
-# osd/windows/winmain.c: 368
+# osd/windows/winmain.c: 369
 red output signal generated by input signal
 
 
-# osd/windows/winmain.c: 371
+# osd/windows/winmain.c: 372
 saturation scaling value
 
 
-# osd/windows/winmain.c: 353
+# osd/windows/winmain.c: 354
 screen curvature amount
 
 
-# osd/windows/winmain.c: 347
+# osd/windows/winmain.c: 348
 shadow mask alpha-blend value (1.0 is fully blended, 0.0 is no mask)
 
 
-# osd/windows/winmain.c: 350
+# osd/windows/winmain.c: 351
 shadow mask height, in phosphor dots
 
 
-# osd/windows/winmain.c: 348
+# osd/windows/winmain.c: 349
 shadow mask texture name
 
 
-# osd/windows/winmain.c: 351
+# osd/windows/winmain.c: 352
 shadow mask texture size in U direction
 
 
-# osd/windows/winmain.c: 352
+# osd/windows/winmain.c: 353
 shadow mask texture size in V direction
 
 
-# osd/windows/winmain.c: 349
+# osd/windows/winmain.c: 350
 shadow mask width, in phosphor dots
 
 
-# osd/windows/winmain.c: 375
+# osd/windows/winmain.c: 376
 signal floor level
 
 
-# osd/windows/winmain.c: 372
+# osd/windows/winmain.c: 373
 signal offset value (additive)
 
 
-# osd/windows/winmain.c: 374
+# osd/windows/winmain.c: 375
 signal power value (exponential)
 
 
-# osd/windows/winmain.c: 373
+# osd/windows/winmain.c: 374
 signal scaling value (multiplicative)
 
 

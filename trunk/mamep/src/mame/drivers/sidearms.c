@@ -644,7 +644,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL,
 	},
-	irqhandler
+	DEVCB_LINE(irqhandler)
 };
 
 static const ym2151_interface whizz_ym2151_interface =
@@ -1144,41 +1144,37 @@ ROM_START( whizz )	/* Whizz Philko 1989. Original pcb. Boardnumber: 01-90 / Seri
 	ROM_LOAD( "t-7.y8",    0x0000, 0x8000, CRC(a8b5f750) SHA1(94eb7af3cb8bee87ce3d31260e3bde062ebbc8f0) )
 ROM_END
 
-static DRIVER_INIT( sidearms )
+DRIVER_INIT_MEMBER(sidearms_state,sidearms)
 {
-	sidearms_state *state = machine.driver_data<sidearms_state>();
 
-	state->m_gameid = 0;
+	m_gameid = 0;
 }
 
-static DRIVER_INIT( turtship )
+DRIVER_INIT_MEMBER(sidearms_state,turtship)
 {
-	sidearms_state *state = machine.driver_data<sidearms_state>();
 
-	state->m_gameid = 1;
+	m_gameid = 1;
 }
 
-static DRIVER_INIT( dyger )
+DRIVER_INIT_MEMBER(sidearms_state,dyger)
 {
-	sidearms_state *state = machine.driver_data<sidearms_state>();
 
-	state->m_gameid = 2;
+	m_gameid = 2;
 }
 
-static DRIVER_INIT( whizz )
+DRIVER_INIT_MEMBER(sidearms_state,whizz)
 {
-	sidearms_state *state = machine.driver_data<sidearms_state>();
 
-	state->m_gameid = 3;
+	m_gameid = 3;
 }
 
-GAME( 1986, sidearms, 0,        sidearms, sidearms, sidearms, ROT0,   "Capcom", "Side Arms - Hyper Dyne (World)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1986, sidearmsr,sidearms, sidearms, sidearms, sidearms, ROT0,   "Capcom (Romstar license)", "Side Arms - Hyper Dyne (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1986, sidearmsj,sidearms, sidearms, sidearms, sidearms, ROT0,   "Capcom", "Side Arms - Hyper Dyne (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1988, turtship, 0,        turtship, turtship, turtship, ROT0,   "Philko (Sharp Image license)", "Turtle Ship (North America)", 0 )
-GAME( 1988, turtshipj,turtship, turtship, turtship, turtship, ROT0,   "Philko (Pacific Games license)", "Turtle Ship (Japan)", 0 )
-GAME( 1988, turtshipk,turtship, turtship, turtship, turtship, ROT0,   "Philko", "Turtle Ship (Korea)", 0 )
-GAME( 1989, dyger,    0,        turtship, dyger,    dyger,    ROT270, "Philko", "Dyger (Korea set 1)", 0 )
-GAME( 1989, dygera,   dyger,    turtship, dyger,    dyger,    ROT270, "Philko", "Dyger (Korea set 2)", 0 )
-GAME( 1989, twinfalc, 0,        whizz,    whizz,    whizz,    ROT0,   "Philko (Poara Enterprises license)", "Twin Falcons", 0 )
-GAME( 1989, whizz,    twinfalc, whizz,    whizz,    whizz,    ROT0,   "Philko", "Whizz", 0 )
+GAME( 1986, sidearms, 0,        sidearms, sidearms, sidearms_state, sidearms, ROT0,   "Capcom", "Side Arms - Hyper Dyne (World)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1986, sidearmsr,sidearms, sidearms, sidearms, sidearms_state, sidearms, ROT0,   "Capcom (Romstar license)", "Side Arms - Hyper Dyne (US)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1986, sidearmsj,sidearms, sidearms, sidearms, sidearms_state, sidearms, ROT0,   "Capcom", "Side Arms - Hyper Dyne (Japan)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1988, turtship, 0,        turtship, turtship, sidearms_state, turtship, ROT0,   "Philko (Sharp Image license)", "Turtle Ship (North America)", 0 )
+GAME( 1988, turtshipj,turtship, turtship, turtship, sidearms_state, turtship, ROT0,   "Philko (Pacific Games license)", "Turtle Ship (Japan)", 0 )
+GAME( 1988, turtshipk,turtship, turtship, turtship, sidearms_state, turtship, ROT0,   "Philko", "Turtle Ship (Korea)", 0 )
+GAME( 1989, dyger,    0,        turtship, dyger, sidearms_state,    dyger,    ROT270, "Philko", "Dyger (Korea set 1)", 0 )
+GAME( 1989, dygera,   dyger,    turtship, dyger, sidearms_state,    dyger,    ROT270, "Philko", "Dyger (Korea set 2)", 0 )
+GAME( 1989, twinfalc, 0,        whizz,    whizz, sidearms_state,    whizz,    ROT0,   "Philko (Poara Enterprises license)", "Twin Falcons", 0 )
+GAME( 1989, whizz,    twinfalc, whizz,    whizz, sidearms_state,    whizz,    ROT0,   "Philko", "Whizz", 0 )

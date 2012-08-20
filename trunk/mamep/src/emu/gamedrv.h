@@ -71,6 +71,8 @@ const UINT32 GAME_TYPE_ARCADE				= 0x00040000;	// arcade machine (coin operated 
 const UINT32 GAME_TYPE_CONSOLE				= 0x00080000;	// console system
 const UINT32 GAME_TYPE_COMPUTER				= 0x00100000;	// any kind of computer including home computers, minis, calcs,...
 const UINT32 GAME_TYPE_OTHER				= 0x00200000;	// any other emulated system that doesn't fit above (ex. clock, satelite receiver,...)
+const UINT32 GAME_IMPERFECT_KEYBOARD		= 0x00400000;	// keyboard is known to be wrong
+const UINT32 GAME_CLICKABLE_ARTWORK			= 0x00800000;	// marking that artwork is clickable and require mouse cursor
 
 // useful combinations of flags
 const UINT32 GAME_IS_SKELETON				= GAME_NO_SOUND | GAME_NOT_WORKING; // mask for skelly games
@@ -110,22 +112,21 @@ struct game_driver
 //**************************************************************************
 
 // wrappers for the DRIVER_INIT callback
-#define DRIVER_INIT_NAME(name)		driver_init_##name
-#define DRIVER_INIT(name)			void DRIVER_INIT_NAME(name)(running_machine &machine)
-#define DRIVER_INIT_CALL(name)		DRIVER_INIT_NAME(name)(machine)
-
-#define driver_init_0				NULL
+#define DRIVER_INIT_NAME(name)		init_##name
+#define DECLARE_DRIVER_INIT(name)	void DRIVER_INIT_NAME(name)()
+#define DRIVER_INIT_MEMBER(cls,name) void cls::DRIVER_INIT_NAME(name)()
+#define DRIVER_INIT_CALL(name)		DRIVER_INIT_NAME(name)()
 
 // wrappers for declaring and defining game drivers
 #define GAME_NAME(name) driver_##name
 #define GAME_EXTERN(name) extern const game_driver GAME_NAME(name)
 
 // standard GAME() macro
-#define GAME(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS)	\
-	GAMEL(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS,((const char *)0))
+#define GAME(YEAR,NAME,PARENT,MACHINE,INPUT,CLASS,INIT,MONITOR,COMPANY,FULLNAME,FLAGS)	\
+	GAMEL(YEAR,NAME,PARENT,MACHINE,INPUT,CLASS,INIT,MONITOR,COMPANY,FULLNAME,FLAGS,((const char *)0))
 
 // standard macro with additional layout
-#define GAMEL(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS,LAYOUT)	\
+#define GAMEL(YEAR,NAME,PARENT,MACHINE,INPUT,CLASS,INIT,MONITOR,COMPANY,FULLNAME,FLAGS,LAYOUT)	\
 extern const game_driver GAME_NAME(NAME) =	\
 {											\
 	__FILE__,								\
@@ -136,7 +137,7 @@ extern const game_driver GAME_NAME(NAME) =	\
 	COMPANY,								\
 	MACHINE_CONFIG_NAME(MACHINE),			\
 	INPUT_PORTS_NAME(INPUT),				\
-	DRIVER_INIT_NAME(INIT),					\
+	&driver_device::driver_init_wrapper<CLASS, &CLASS::init_##INIT>,	\
 	ROM_NAME(NAME),							\
 	NULL,									\
 	(MONITOR)|(FLAGS)|GAME_TYPE_ARCADE,		\
@@ -144,7 +145,7 @@ extern const game_driver GAME_NAME(NAME) =	\
 };
 
 // standard console definition macro
-#define CONS(YEAR,NAME,PARENT,COMPAT,MACHINE,INPUT,INIT,COMPANY,FULLNAME,FLAGS)	\
+#define CONS(YEAR,NAME,PARENT,COMPAT,MACHINE,INPUT,CLASS,INIT,COMPANY,FULLNAME,FLAGS)	\
 extern const game_driver GAME_NAME(NAME) =	\
 {											\
 	__FILE__,								\
@@ -155,7 +156,7 @@ extern const game_driver GAME_NAME(NAME) =	\
 	COMPANY,								\
 	MACHINE_CONFIG_NAME(MACHINE),			\
 	INPUT_PORTS_NAME(INPUT),				\
-	DRIVER_INIT_NAME(INIT),					\
+	&driver_device::driver_init_wrapper<CLASS, &CLASS::init_##INIT>,	\
 	ROM_NAME(NAME),							\
 	#COMPAT,								\
 	ROT0|(FLAGS)|GAME_TYPE_CONSOLE,			\
@@ -163,7 +164,7 @@ extern const game_driver GAME_NAME(NAME) =	\
 };
 
 // standard computer definition macro
-#define COMP(YEAR,NAME,PARENT,COMPAT,MACHINE,INPUT,INIT,COMPANY,FULLNAME,FLAGS)	\
+#define COMP(YEAR,NAME,PARENT,COMPAT,MACHINE,INPUT,CLASS,INIT,COMPANY,FULLNAME,FLAGS)	\
 extern const game_driver GAME_NAME(NAME) =	\
 {											\
 	__FILE__,								\
@@ -174,7 +175,7 @@ extern const game_driver GAME_NAME(NAME) =	\
 	COMPANY,								\
 	MACHINE_CONFIG_NAME(MACHINE),			\
 	INPUT_PORTS_NAME(INPUT),				\
-	DRIVER_INIT_NAME(INIT),					\
+	&driver_device::driver_init_wrapper<CLASS, &CLASS::init_##INIT>,	\
 	ROM_NAME(NAME),							\
 	#COMPAT,								\
 	ROT0|(FLAGS)|GAME_TYPE_COMPUTER,		\
@@ -182,7 +183,7 @@ extern const game_driver GAME_NAME(NAME) =	\
 };
 
 // standard system definition macro
-#define SYST(YEAR,NAME,PARENT,COMPAT,MACHINE,INPUT,INIT,COMPANY,FULLNAME,FLAGS)	\
+#define SYST(YEAR,NAME,PARENT,COMPAT,MACHINE,INPUT,CLASS,INIT,COMPANY,FULLNAME,FLAGS)	\
 extern const game_driver GAME_NAME(NAME) =	\
 {											\
 	__FILE__,								\
@@ -193,13 +194,12 @@ extern const game_driver GAME_NAME(NAME) =	\
 	COMPANY,								\
 	MACHINE_CONFIG_NAME(MACHINE),			\
 	INPUT_PORTS_NAME(INPUT),				\
-	DRIVER_INIT_NAME(INIT),					\
+	&driver_device::driver_init_wrapper<CLASS, &CLASS::init_##INIT>,	\
 	ROM_NAME(NAME),							\
 	#COMPAT,								\
 	ROT0|(FLAGS)|GAME_TYPE_OTHER,			\
 	NULL									\
 };
-
 
 
 //**************************************************************************

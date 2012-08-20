@@ -277,7 +277,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( stratvox_cpu2_map, AS_PROGRAM, 8, route16_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
-	AM_RANGE(0x2800, 0x2800) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0x2800, 0x2800) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0x4000, 0x43ff) AM_READWRITE(sharedram_r, sharedram_w)
 	AM_RANGE(0x8000, 0xbfff) AM_RAM AM_SHARE("videoram2")
 ADDRESS_MAP_END
@@ -650,7 +650,7 @@ static MACHINE_CONFIG_DERIVED( stratvox, route16 )
 	MCFG_SOUND_CONFIG(sn76477_intf)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -955,9 +955,9 @@ READ8_MEMBER(route16_state::routex_prot_read)
  *
  *************************************/
 
-static DRIVER_INIT( route16 )
+DRIVER_INIT_MEMBER(route16_state,route16)
 {
-	UINT8 *ROM = machine.root_device().memregion("cpu1")->base();
+	UINT8 *ROM = machine().root_device().memregion("cpu1")->base();
 	/* Is this actually a bootleg? some of the protection has
        been removed */
 
@@ -970,9 +970,9 @@ static DRIVER_INIT( route16 )
 }
 
 
-static DRIVER_INIT( route16a )
+DRIVER_INIT_MEMBER(route16_state,route16a)
 {
-	UINT8 *ROM = machine.root_device().memregion("cpu1")->base();
+	UINT8 *ROM = machine().root_device().memregion("cpu1")->base();
 	/* TO DO : Replace these patches with simulation of the protection device */
 
 	/* patch the protection */
@@ -999,14 +999,14 @@ static DRIVER_INIT( route16a )
  *
  *************************************/
 
-GAME( 1981, route16,  0,        route16,  route16,  route16,  ROT270, "Tehkan / Sun Electronics (Centuri license)", "Route 16 (set 1)", 0 )
-GAME( 1981, route16a, route16,  route16,  route16,  route16a, ROT270, "Tehkan / Sun Electronics (Centuri license)", "Route 16 (set 2)", 0 )
-GAME( 1981, route16b, route16,  route16,  route16,  0,        ROT270, "bootleg", "Route 16 (bootleg)", 0 )
-GAME( 1981, routex,   route16,  routex,   route16,  0,        ROT270, "bootleg", "Route X (bootleg)", 0 )
-GAME( 1980, speakres, 0,        speakres, speakres, 0,        ROT270, "Sun Electronics", "Speak & Rescue", 0 )
-GAME( 1980, speakresb,speakres, speakres, speakres, 0,        ROT270, "bootleg", "Speak & Rescue (bootleg)", 0 )
-GAME( 1980, stratvox, speakres, stratvox, stratvox, 0,        ROT270, "Sun Electronics (Taito license)", "Stratovox", 0 )
-GAME( 1980, stratvoxb,speakres, stratvox, stratvox, 0,        ROT270, "bootleg", "Stratovox (bootleg)", 0 )
-GAME( 1980, spacecho, speakres, spacecho, spacecho, 0,        ROT270, "bootleg", "Space Echo (set 1)", 0 )
-GAME( 1980, spacecho2,speakres, spacecho, spacecho, 0,        ROT270, "bootleg", "Space Echo (set 2)", 0 )
-GAME( 1981, ttmahjng, 0,        ttmahjng, ttmahjng, 0,        ROT0,   "Taito", "T.T Mahjong", 0 )
+GAME( 1981, route16,  0,        route16,  route16, route16_state,  route16,  ROT270, "Tehkan / Sun Electronics (Centuri license)", "Route 16 (set 1)", 0 )
+GAME( 1981, route16a, route16,  route16,  route16, route16_state,  route16a, ROT270, "Tehkan / Sun Electronics (Centuri license)", "Route 16 (set 2)", 0 )
+GAME( 1981, route16b, route16,  route16,  route16, driver_device,  0,        ROT270, "bootleg", "Route 16 (bootleg)", 0 )
+GAME( 1981, routex,   route16,  routex,   route16, driver_device,  0,        ROT270, "bootleg", "Route X (bootleg)", 0 )
+GAME( 1980, speakres, 0,        speakres, speakres, driver_device, 0,        ROT270, "Sun Electronics", "Speak & Rescue", 0 )
+GAME( 1980, speakresb,speakres, speakres, speakres, driver_device, 0,        ROT270, "bootleg", "Speak & Rescue (bootleg)", 0 )
+GAME( 1980, stratvox, speakres, stratvox, stratvox, driver_device, 0,        ROT270, "Sun Electronics (Taito license)", "Stratovox", 0 )
+GAME( 1980, stratvoxb,speakres, stratvox, stratvox, driver_device, 0,        ROT270, "bootleg", "Stratovox (bootleg)", 0 )
+GAME( 1980, spacecho, speakres, spacecho, spacecho, driver_device, 0,        ROT270, "bootleg", "Space Echo (set 1)", 0 )
+GAME( 1980, spacecho2,speakres, spacecho, spacecho, driver_device, 0,        ROT270, "bootleg", "Space Echo (set 2)", 0 )
+GAME( 1981, ttmahjng, 0,        ttmahjng, ttmahjng, driver_device, 0,        ROT0,   "Taito", "T.T Mahjong", 0 )

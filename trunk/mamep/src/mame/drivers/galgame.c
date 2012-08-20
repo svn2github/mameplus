@@ -44,6 +44,7 @@ public:
 	DECLARE_READ16_MEMBER(y_r);
 	DECLARE_WRITE16_MEMBER(y_w);
 	DECLARE_WRITE16_MEMBER(clk_w);
+	DECLARE_DRIVER_INIT(galaxygame);
 };
 
 /*************************************
@@ -394,10 +395,10 @@ static UINT8 read_uint8(UINT8 *pval, int pos, const UINT8* line, int linelen)
 	return 1;
 }
 
-static DRIVER_INIT(galaxygame)
+DRIVER_INIT_MEMBER(galaxygame_state,galaxygame)
 {
-	address_space *main = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	UINT8 *code = machine.root_device().memregion("code")->base();
+	address_space *main = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	UINT8 *code = machine().root_device().memregion("code")->base();
 
 	int filepos = 0, linepos, linelen;
 	UINT8 line[256];
@@ -465,4 +466,4 @@ static DRIVER_INIT(galaxygame)
 	main->write_word(8, 000500 - 10);
 }
 
-GAME(1971, galgame, 0, galaxygame, galaxygame, galaxygame, ROT270, "Computer Recreations, Inc", "Galaxy Game", GAME_NO_SOUND_HW )
+GAME(1971, galgame, 0, galaxygame, galaxygame, galaxygame_state, galaxygame, ROT270, "Computer Recreations, Inc", "Galaxy Game", GAME_NO_SOUND_HW )

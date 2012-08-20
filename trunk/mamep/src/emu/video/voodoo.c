@@ -178,7 +178,6 @@ bits(7:4) and bit(24)), X, and Y:
 #include "video/rgbutil.h"
 #include "voodoo.h"
 #include "vooddefs.h"
-#include "ui.h"
 
 
 /*************************************
@@ -3365,7 +3364,6 @@ static INT32 texture_w(voodoo_state *v, offs_t offset, UINT32 data)
 		/* extract info */
 		if (v->type <= VOODOO_2)
 		{
-			tmunum = (offset >> 19) & 0x03;
 			lod = (offset >> 15) & 0x0f;
 			tt = (offset >> 7) & 0xff;
 			ts = (offset << 1) & 0xfe;

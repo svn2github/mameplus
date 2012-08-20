@@ -173,7 +173,6 @@ EMUMACHINEOBJS = \
 	$(EMUMACHINE)/7474.o		\
 	$(EMUMACHINE)/8042kbdc.o	\
 	$(EMUMACHINE)/8237dma.o		\
-	$(EMUMACHINE)/8255ppi.o		\
 	$(EMUMACHINE)/8257dma.o		\
 	$(EMUMACHINE)/adc0808.o		\
 	$(EMUMACHINE)/adc083x.o		\
@@ -303,6 +302,9 @@ EMUVIDEOOBJS = \
 	$(EMUVIDEO)/hd44102.o		\
 	$(EMUVIDEO)/hd61830.o		\
 	$(EMUVIDEO)/hd63484.o		\
+	$(EMUVIDEO)/huc6202.o		\
+	$(EMUVIDEO)/huc6260.o		\
+	$(EMUVIDEO)/huc6270.o		\
 	$(EMUVIDEO)/i8275.o		\
 	$(EMUVIDEO)/k053250.o		\
 	$(EMUVIDEO)/mc6845.o		\

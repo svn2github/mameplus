@@ -74,6 +74,7 @@
 #include "config.h"
 #include "drivenum.h"
 #include "xmlfile.h"
+#include "ui.h"
 #include <ctype.h>
 
 
@@ -1977,6 +1978,15 @@ void render_target::add_element_primitives(render_primitive_list &list, const ob
 
 bool render_target::map_point_internal(INT32 target_x, INT32 target_y, render_container *container, float &mapped_x, float &mapped_y, const char *&mapped_input_tag, ioport_value &mapped_input_mask)
 {
+	// compute the visible width/height
+	INT32 viswidth, visheight;
+	compute_visible_area(m_width, m_height, m_pixel_aspect, m_orientation, viswidth, visheight);
+
+	// create a root transform for the target
+	object_transform root_xform;
+	root_xform.xoffs = (float)(m_width - viswidth) / 2;
+	root_xform.yoffs = (float)(m_height - visheight) / 2;
+
 	// default to point not mapped
 	mapped_x = -1.0;
 	mapped_y = -1.0;
@@ -1984,9 +1994,13 @@ bool render_target::map_point_internal(INT32 target_x, INT32 target_y, render_co
 	mapped_input_mask = 0;
 
 	// convert target coordinates to float
-	float target_fx = (float)target_x / m_width;
-	float target_fy = (float)target_y / m_height;
-
+	float target_fx = (float)(target_x - root_xform.xoffs) / viswidth;
+	float target_fy = (float)(target_y - root_xform.yoffs) / visheight;
+	if (ui_is_menu_active())
+	{
+		target_fx = (float)target_x / m_width;
+		target_fy = (float)target_y / m_height;
+	}
 	// explicitly check for the UI container
 	if (container != NULL && container == &m_manager.ui_container())
 	{
@@ -1994,8 +2008,8 @@ bool render_target::map_point_internal(INT32 target_x, INT32 target_y, render_co
 		if (target_fx >= 0.0 && target_fx < 1.0 && target_fy >= 0.0 && target_fy < 1.0)
 		{
 			// this point was successfully mapped
-			mapped_x = target_fx;
-			mapped_y = target_fy;
+			mapped_x = (float)target_x / m_width;
+			mapped_y = (float)target_y / m_height;
 			return true;
 		}
 		return false;

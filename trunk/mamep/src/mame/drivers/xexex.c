@@ -675,21 +675,20 @@ ROM_START( xexexj ) /* Japan, Version AA */
 ROM_END
 
 
-static DRIVER_INIT( xexex )
+DRIVER_INIT_MEMBER(xexex_state,xexex)
 {
-	xexex_state *state = machine.driver_data<xexex_state>();
 
-	state->m_strip_0x1a = 0;
+	m_strip_0x1a = 0;
 
-	if (!strcmp(machine.system().name, "xexex"))
+	if (!strcmp(machine().system().name, "xexex"))
 	{
 		// Invulnerability
-//      *(UINT16 *)(state->memregion("maincpu")->base() + 0x648d4) = 0x4a79;
-//      *(UINT16 *)(state->memregion("maincpu")->base() + 0x00008) = 0x5500;
-		state->m_strip_0x1a = 1;
+//      *(UINT16 *)(memregion("maincpu")->base() + 0x648d4) = 0x4a79;
+//      *(UINT16 *)(memregion("maincpu")->base() + 0x00008) = 0x5500;
+		m_strip_0x1a = 1;
 	}
 }
 
-GAME( 1991, xexex,  0,     xexex, xexex, xexex, ROT0, "Konami", "Xexex (ver EAA)", GAME_SUPPORTS_SAVE )
-GAME( 1991, xexexa, xexex, xexex, xexex, xexex, ROT0, "Konami", "Xexex (ver AAA)", GAME_SUPPORTS_SAVE )
-GAME( 1991, xexexj, xexex, xexex, xexex, xexex, ROT0, "Konami", "Xexex (ver JAA)", GAME_SUPPORTS_SAVE )
+GAME( 1991, xexex,  0,     xexex, xexex, xexex_state, xexex, ROT0, "Konami", "Xexex (ver EAA)", GAME_SUPPORTS_SAVE )
+GAME( 1991, xexexa, xexex, xexex, xexex, xexex_state, xexex, ROT0, "Konami", "Xexex (ver AAA)", GAME_SUPPORTS_SAVE )
+GAME( 1991, xexexj, xexex, xexex, xexex, xexex_state, xexex, ROT0, "Konami", "Xexex (ver JAA)", GAME_SUPPORTS_SAVE )

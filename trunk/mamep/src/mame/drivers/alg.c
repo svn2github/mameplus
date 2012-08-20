@@ -51,6 +51,11 @@ public:
 	DECLARE_WRITE8_MEMBER(alg_cia_0_portb_w);
 	DECLARE_READ8_MEMBER(alg_cia_1_porta_r);
 	DECLARE_WRITE8_MEMBER(alg_cia_1_porta_w);
+	DECLARE_DRIVER_INIT(aplatoon);
+	DECLARE_DRIVER_INIT(palr3);
+	DECLARE_DRIVER_INIT(palr1);
+	DECLARE_DRIVER_INIT(none);
+	DECLARE_DRIVER_INIT(palr6);
 };
 
 static TIMER_CALLBACK( response_timer );
@@ -715,11 +720,11 @@ static void alg_init(running_machine &machine)
  *
  *************************************/
 
-static DRIVER_INIT( palr1 )
+DRIVER_INIT_MEMBER(alg_state,palr1)
 {
-	UINT32 length = machine.root_device().memregion("user2")->bytes();
-	UINT8 *rom = machine.root_device().memregion("user2")->base();
-	UINT8 *original = auto_alloc_array(machine, UINT8, length);
+	UINT32 length = machine().root_device().memregion("user2")->bytes();
+	UINT8 *rom = machine().root_device().memregion("user2")->base();
+	UINT8 *original = auto_alloc_array(machine(), UINT8, length);
 	UINT32 srcaddr;
 
 	memcpy(original, rom, length);
@@ -730,16 +735,16 @@ static DRIVER_INIT( palr1 )
 		if (srcaddr & 0x8000) dstaddr ^= 0x4000;
 		rom[dstaddr] = original[srcaddr];
 	}
-	auto_free(machine, original);
+	auto_free(machine(), original);
 
-	alg_init(machine);
+	alg_init(machine());
 }
 
-static DRIVER_INIT( palr3 )
+DRIVER_INIT_MEMBER(alg_state,palr3)
 {
-	UINT32 length = machine.root_device().memregion("user2")->bytes();
-	UINT8 *rom = machine.root_device().memregion("user2")->base();
-	UINT8 *original = auto_alloc_array(machine, UINT8, length);
+	UINT32 length = machine().root_device().memregion("user2")->bytes();
+	UINT8 *rom = machine().root_device().memregion("user2")->base();
+	UINT8 *original = auto_alloc_array(machine(), UINT8, length);
 	UINT32 srcaddr;
 
 	memcpy(original, rom, length);
@@ -749,16 +754,16 @@ static DRIVER_INIT( palr3 )
 		if (srcaddr & 0x2000) dstaddr ^= 0x1000;
 		rom[dstaddr] = original[srcaddr];
 	}
-	auto_free(machine, original);
+	auto_free(machine(), original);
 
-	alg_init(machine);
+	alg_init(machine());
 }
 
-static DRIVER_INIT( palr6 )
+DRIVER_INIT_MEMBER(alg_state,palr6)
 {
-	UINT32 length = machine.root_device().memregion("user2")->bytes();
-	UINT8 *rom = machine.root_device().memregion("user2")->base();
-	UINT8 *original = auto_alloc_array(machine, UINT8, length);
+	UINT32 length = machine().root_device().memregion("user2")->bytes();
+	UINT8 *rom = machine().root_device().memregion("user2")->base();
+	UINT8 *original = auto_alloc_array(machine(), UINT8, length);
 	UINT32 srcaddr;
 
 	memcpy(original, rom, length);
@@ -770,16 +775,16 @@ static DRIVER_INIT( palr6 )
 		dstaddr ^= 0x20000;
 		rom[dstaddr] = original[srcaddr];
 	}
-	auto_free(machine, original);
+	auto_free(machine(), original);
 
-	alg_init(machine);
+	alg_init(machine());
 }
 
-static DRIVER_INIT( aplatoon )
+DRIVER_INIT_MEMBER(alg_state,aplatoon)
 {
 	/* NOT DONE TODO FIGURE OUT THE RIGHT ORDER!!!! */
-	UINT8 *rom = machine.root_device().memregion("user2")->base();
-	UINT8 *decrypted = auto_alloc_array(machine, UINT8, 0x40000);
+	UINT8 *rom = machine().root_device().memregion("user2")->base();
+	UINT8 *decrypted = auto_alloc_array(machine(), UINT8, 0x40000);
 	int i;
 
 	static const int shuffle[] =
@@ -792,12 +797,12 @@ static DRIVER_INIT( aplatoon )
 		memcpy(decrypted + i * 0x1000, rom + shuffle[i] * 0x1000, 0x1000);
 	memcpy(rom, decrypted, 0x40000);
 	logerror("decrypt done\n ");
-	alg_init(machine);
+	alg_init(machine());
 }
 
-static DRIVER_INIT( none )
+DRIVER_INIT_MEMBER(alg_state,none)
 {
-	alg_init(machine);
+	alg_init(machine());
 }
 
 
@@ -809,36 +814,36 @@ static DRIVER_INIT( none )
  *************************************/
 
 /* BIOS */
-GAME( 199?, alg_bios, 0, alg_r1,   alg,    none,     ROT0,  "American Laser Games", "American Laser Games BIOS", GAME_IS_BIOS_ROOT )
+GAME( 199?, alg_bios, 0, alg_r1,   alg, alg_state,    none,     ROT0,  "American Laser Games", "American Laser Games BIOS", GAME_IS_BIOS_ROOT )
 
 /* Rev. A board */
 /* PAL R1 */
-GAME( 1990, maddoga,  maddog, alg_r1,   alg,    palr1,    ROT0,  "American Laser Games", "Mad Dog McCree v1C board rev.A", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1990, maddoga,  maddog, alg_r1,   alg, alg_state,    palr1,    ROT0,  "American Laser Games", "Mad Dog McCree v1C board rev.A", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
 
 /* PAL R3 */
-GAME( 1991, wsjr,     alg_bios, alg_r1,   alg,    palr3,    ROT0,  "American Laser Games", "Who Shot Johnny Rock? v1.6", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1991, wsjr15,   wsjr, alg_r1,   alg,    palr3,    ROT0,  "American Laser Games", "Who Shot Johnny Rock? v1.5", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1991, wsjr,     alg_bios, alg_r1,   alg, alg_state,    palr3,    ROT0,  "American Laser Games", "Who Shot Johnny Rock? v1.6", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1991, wsjr15,   wsjr, alg_r1,   alg, alg_state,    palr3,    ROT0,  "American Laser Games", "Who Shot Johnny Rock? v1.5", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
 
 /* Rev. B board */
 /* PAL R6 */
-GAME( 1990, maddog,   alg_bios, alg_r2,   alg_2p, palr6,    ROT0,  "American Laser Games", "Mad Dog McCree v2.03 board rev.B", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1990, maddog,   alg_bios, alg_r2,   alg_2p, alg_state, palr6,    ROT0,  "American Laser Games", "Mad Dog McCree v2.03 board rev.B", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
   /* works ok but uses right player (2) controls only for trigger and holster */
-GAME( 1992, maddog2,  alg_bios, alg_r2,   alg_2p, palr6,    ROT0,  "American Laser Games", "Mad Dog II: The Lost Gold v2.04", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, maddog22, alg_bios, alg_r2,   alg_2p, palr6,    ROT0,  "American Laser Games", "Mad Dog II: The Lost Gold v2.02", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, maddog21, maddog2,  alg_r2,   alg_2p, palr6,    ROT0,  "American Laser Games", "Mad Dog II: The Lost Gold v1.0", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, maddog2,  alg_bios, alg_r2,   alg_2p, alg_state, palr6,    ROT0,  "American Laser Games", "Mad Dog II: The Lost Gold v2.04", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, maddog22, alg_bios, alg_r2,   alg_2p, alg_state, palr6,    ROT0,  "American Laser Games", "Mad Dog II: The Lost Gold v2.02", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, maddog21, maddog2,  alg_r2,   alg_2p, alg_state, palr6,    ROT0,  "American Laser Games", "Mad Dog II: The Lost Gold v1.0", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
   /* works ok but uses right player (2) controls only for trigger and holster */
-GAME( 1992, spacepir, alg_bios, alg_r2,   alg_2p, palr6,    ROT0,  "American Laser Games", "Space Pirates v2.2", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1992, gallgall, alg_bios, alg_r2,   alg_2p, palr6,    ROT0,  "American Laser Games", "Gallagher's Gallery v2.2", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, spacepir, alg_bios, alg_r2,   alg_2p, alg_state, palr6,    ROT0,  "American Laser Games", "Space Pirates v2.2", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1992, gallgall, alg_bios, alg_r2,   alg_2p, alg_state, palr6,    ROT0,  "American Laser Games", "Gallagher's Gallery v2.2", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
   /* all good, but no holster */
-GAME( 1993, crimepat, alg_bios, alg_r2,   alg_2p, palr6,    ROT0,  "American Laser Games", "Crime Patrol v1.4", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, crimep2,  alg_bios, alg_r2,   alg_2p, palr6,    ROT0,  "American Laser Games", "Crime Patrol 2: Drug Wars v1.3", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, crimep211,crimep2,  alg_r2,   alg_2p, palr6,    ROT0,  "American Laser Games", "Crime Patrol 2: Drug Wars v1.1", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, lastbh,   alg_bios, alg_r2,   alg_2p, palr6,    ROT0,  "American Laser Games", "The Last Bounty Hunter v0.06", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
-GAME( 1995, fastdraw, alg_bios, alg_r2,   alg_2p, palr6,    ROT90, "American Laser Games", "Fast Draw Showdown v1.3", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, crimepat, alg_bios, alg_r2,   alg_2p, alg_state, palr6,    ROT0,  "American Laser Games", "Crime Patrol v1.4", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, crimep2,  alg_bios, alg_r2,   alg_2p, alg_state, palr6,    ROT0,  "American Laser Games", "Crime Patrol 2: Drug Wars v1.3", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, crimep211,crimep2,  alg_r2,   alg_2p, alg_state, palr6,    ROT0,  "American Laser Games", "Crime Patrol 2: Drug Wars v1.1", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, lastbh,   alg_bios, alg_r2,   alg_2p, alg_state, palr6,    ROT0,  "American Laser Games", "The Last Bounty Hunter v0.06", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1995, fastdraw, alg_bios, alg_r2,   alg_2p, alg_state, palr6,    ROT90, "American Laser Games", "Fast Draw Showdown v1.3", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
   /* works ok but uses right player (2) controls only for trigger and holster */
 
 /* NOVA games on ALG hardware with own address scramble */
-GAME( 199?, aplatoon, alg_bios, alg_r2,   alg,    aplatoon, ROT0,  "Nova?", "Platoon V.?.? US", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 199?, aplatoon, alg_bios, alg_r2,   alg, alg_state,    aplatoon, ROT0,  "Nova?", "Platoon V.?.? US", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
 
 /* Web Picmatic games PAL tv standard, own rom board */
-GAME( 1993, zortonbr, alg_bios, picmatic, alg,    none,     ROT0,  "Web Picmatic", "Zorton Brothers (Los Justicieros)", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, zortonbr, alg_bios, picmatic, alg, alg_state,    none,     ROT0,  "Web Picmatic", "Zorton Brothers (Los Justicieros)", GAME_NOT_WORKING | GAME_NO_SOUND | GAME_IMPERFECT_GRAPHICS )

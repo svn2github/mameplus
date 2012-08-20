@@ -91,6 +91,8 @@ public:
 	DECLARE_READ32_MEMBER(touryuu_port_10000000_r);
 
 	int m_rom_pagesize;
+	DECLARE_DRIVER_INIT(touryuu);
+	DECLARE_DRIVER_INIT(bballoon);
 };
 
 
@@ -715,18 +717,16 @@ ROM_START( touryuu )
 	ROM_LOAD( "qs1001a.u17",  0x000000, 0x80000, CRC(d13c6407) SHA1(57b14f97c7d4f9b5d9745d3571a0b7115fbe3176) )
 ROM_END
 
-static DRIVER_INIT( bballoon )
+DRIVER_INIT_MEMBER(ghosteo_state,bballoon)
 {
-	ghosteo_state *state = machine.driver_data<ghosteo_state>();
-	state->m_rom_pagesize = 0x200; // extra data is missing from the FLASH dumps and needs to be simulated
+	m_rom_pagesize = 0x200; // extra data is missing from the FLASH dumps and needs to be simulated
 }
 
-static DRIVER_INIT( touryuu )
+DRIVER_INIT_MEMBER(ghosteo_state,touryuu)
 {
-	ghosteo_state *state = machine.driver_data<ghosteo_state>();
-	state->m_rom_pagesize = 0x210;
+	m_rom_pagesize = 0x210;
 }
 
-GAME( 2003, bballoon, 0, bballoon, bballoon, bballoon, ROT0, "Eolith", "BnB Arcade", GAME_NO_SOUND )
-GAME( 2005, hapytour, 0, bballoon, bballoon, bballoon, ROT0, "GAV Company", "Happy Tour", GAME_NO_SOUND )
-GAME( 2005, touryuu,  0, touryuu, touryuu, touryuu, ROT0, "Yuki Enterprise", "Touryuumon (V1.1)?", GAME_NO_SOUND ) // On first boot inputs won't work, TODO: hook-up default eeprom
+GAME( 2003, bballoon, 0, bballoon, bballoon, ghosteo_state, bballoon, ROT0, "Eolith", "BnB Arcade", GAME_NO_SOUND )
+GAME( 2005, hapytour, 0, bballoon, bballoon, ghosteo_state, bballoon, ROT0, "GAV Company", "Happy Tour", GAME_NO_SOUND )
+GAME( 2005, touryuu,  0, touryuu, touryuu, ghosteo_state, touryuu, ROT0, "Yuki Enterprise", "Touryuumon (V1.1)?", GAME_NO_SOUND ) // On first boot inputs won't work, TODO: hook-up default eeprom

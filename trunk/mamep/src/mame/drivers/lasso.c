@@ -166,7 +166,7 @@ static ADDRESS_MAP_START( wwjgtin_audio_map, AS_PROGRAM, 8, lasso_state )
 	AM_RANGE(0x4000, 0x7fff) AM_MIRROR(0x8000) AM_ROM
 	AM_RANGE(0xb000, 0xb000) AM_WRITEONLY AM_SHARE("chip_data")
 	AM_RANGE(0xb001, 0xb001) AM_WRITE(sound_select_w)
-	AM_RANGE(0xb003, 0xb003) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0xb003, 0xb003) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xb004, 0xb004) AM_READ(sound_status_r)
 	AM_RANGE(0xb005, 0xb005) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
@@ -581,7 +581,7 @@ static MACHINE_CONFIG_DERIVED( wwjgtin, base )
 	MCFG_VIDEO_START(wwjgtin)
 
 	/* sound hardware */
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -883,10 +883,10 @@ ROM_END
 
 ***************************************************************************/
 
-GAME( 1982, lasso,    0,       lasso,    lasso,    0, ROT90, "SNK",            "Lasso", GAME_SUPPORTS_SAVE )
-GAME( 1983, chameleo, 0,       chameleo, chameleo, 0, ROT0,  "Jaleco",         "Chameleon", GAME_SUPPORTS_SAVE )
-GAME( 1984, wwjgtin,  0,       wwjgtin,  wwjgtin,  0, ROT0,  "Jaleco / Casio", "Wai Wai Jockey Gate-In!", GAME_SUPPORTS_SAVE )
-GAME( 1991, photof,   wwjgtin, wwjgtin,  wwjgtin,  0, ROT0,  "bootleg?",	   "Photo Finish", GAME_SUPPORTS_SAVE )
-GAME( 1984, pinbo,    0,       pinbo,    pinbo,    0, ROT90, "Jaleco",         "Pinbo (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1984, pinboa,   pinbo,   pinbo,    pinboa,   0, ROT90, "Jaleco",         "Pinbo (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1985, pinbos,   pinbo,   pinbo,    pinboa,   0, ROT90, "bootleg?",       "Pinbo (Strike)", GAME_SUPPORTS_SAVE )
+GAME( 1982, lasso,    0,       lasso,    lasso, driver_device,    0, ROT90, "SNK",            "Lasso", GAME_SUPPORTS_SAVE )
+GAME( 1983, chameleo, 0,       chameleo, chameleo, driver_device, 0, ROT0,  "Jaleco",         "Chameleon", GAME_SUPPORTS_SAVE )
+GAME( 1984, wwjgtin,  0,       wwjgtin,  wwjgtin, driver_device,  0, ROT0,  "Jaleco / Casio", "Wai Wai Jockey Gate-In!", GAME_SUPPORTS_SAVE )
+GAME( 1991, photof,   wwjgtin, wwjgtin,  wwjgtin, driver_device,  0, ROT0,  "bootleg?",	   "Photo Finish", GAME_SUPPORTS_SAVE )
+GAME( 1984, pinbo,    0,       pinbo,    pinbo, driver_device,    0, ROT90, "Jaleco",         "Pinbo (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1984, pinboa,   pinbo,   pinbo,    pinboa, driver_device,   0, ROT90, "Jaleco",         "Pinbo (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1985, pinbos,   pinbo,   pinbo,    pinboa, driver_device,   0, ROT90, "bootleg?",       "Pinbo (Strike)", GAME_SUPPORTS_SAVE )

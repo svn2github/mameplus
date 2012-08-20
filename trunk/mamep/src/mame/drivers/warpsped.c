@@ -101,6 +101,7 @@ public:
 	UINT8		m_regs[0x28];
 	DECLARE_WRITE8_MEMBER(warpspeed_hardware_w);
 	DECLARE_WRITE8_MEMBER(warpspeed_vidram_w);
+	DECLARE_DRIVER_INIT(warpspeed);
 };
 
 WRITE8_MEMBER(warpspeed_state::warpspeed_hardware_w)
@@ -359,8 +360,8 @@ ROM_START( warpsped )
 
 ROM_END
 
-static DRIVER_INIT( warpspeed )
+DRIVER_INIT_MEMBER(warpspeed_state,warpspeed)
 {
 }
 
-GAME( 197?, warpsped,  0,      warpspeed, warpspeed, warpspeed, ROT0, "Meadows Games, Inc.", "Warp Speed (prototype)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_COLORS | GAME_NO_SOUND )
+GAME( 197?, warpsped,  0,      warpspeed, warpspeed, warpspeed_state, warpspeed, ROT0, "Meadows Games, Inc.", "Warp Speed (prototype)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_COLORS | GAME_NO_SOUND )

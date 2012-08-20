@@ -408,9 +408,9 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( thunderj )
+DRIVER_INIT_MEMBER(thunderj_state,thunderj)
 {
-	atarijsa_init(machine, "260012", 0x0002);
+	atarijsa_init(machine(), "260012", 0x0002);
 }
 
 
@@ -421,4 +421,4 @@ static DRIVER_INIT( thunderj )
  *
  *************************************/
 
-GAME( 1990, thunderj, 0, thunderj, thunderj, thunderj, ROT0, "Atari Games", "ThunderJaws", 0 )
+GAME( 1990, thunderj, 0, thunderj, thunderj, thunderj_state, thunderj, ROT0, "Atari Games", "ThunderJaws", 0 )

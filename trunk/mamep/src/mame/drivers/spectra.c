@@ -23,6 +23,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(spectra);
 };
 
 
@@ -37,7 +39,7 @@ void spectra_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( spectra )
+DRIVER_INIT_MEMBER(spectra_state,spectra)
 {
 }
 
@@ -59,4 +61,4 @@ ROM_START(spectra)
 ROM_END
 
 
-GAME(1979,  spectra,  0,  spectra,  spectra,  spectra,  ROT0,  "Valley",    "Spectra IV",     GAME_IS_SKELETON_MECHANICAL)
+GAME(1979,  spectra,  0,  spectra,  spectra, spectra_state,  spectra,  ROT0,  "Valley",    "Spectra IV",     GAME_IS_SKELETON_MECHANICAL)

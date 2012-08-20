@@ -215,6 +215,14 @@ public:
 	UINT64 m_last_coin_out;
 	UINT8 m_coin_out_state;
 	int m_sda_dir;
+	UINT8 m_bv_state;
+	UINT8 m_bv_busy;
+	UINT8 m_bv_pulse;
+	UINT8 m_bv_denomination;
+	UINT64 m_bv_cycles;
+	UINT8 m_bv_last_enable_state;
+	UINT8 m_bv_enable_state;
+	UINT8 m_bv_enable_count;
 	DECLARE_WRITE8_MEMBER(peplus_bgcolor_w);
 	DECLARE_WRITE8_MEMBER(peplus_crtc_display_w);
 	DECLARE_WRITE8_MEMBER(peplus_io_w);
@@ -246,6 +254,10 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(crtc_vsync);
 	DECLARE_WRITE8_MEMBER(i2c_nvram_w);
 	DECLARE_READ8_MEMBER(peplus_input_bank_a_r);
+	DECLARE_READ8_MEMBER(peplus_input0_r);
+	DECLARE_DRIVER_INIT(peplus);
+	DECLARE_DRIVER_INIT(peplussb);
+	DECLARE_DRIVER_INIT(peplussbw);
 };
 
 
@@ -479,6 +491,8 @@ WRITE8_MEMBER(peplus_state::peplus_output_bank_c_w)
 	output_set_value("pe_bnkc5",(data >> 5) & 1); /* SDS Out */
 	output_set_value("pe_bnkc6",(data >> 6) & 1); /* N/A */
 	output_set_value("pe_bnkc7",(data >> 7) & 1); /* Game Meter */
+
+	m_bv_enable_state = (data >> 4) & 1;
 }
 
 WRITE8_MEMBER(peplus_state::i2c_nvram_w)
@@ -554,6 +568,146 @@ READ8_MEMBER(peplus_state::peplus_dropdoor_r)
 READ8_MEMBER(peplus_state::peplus_watchdog_r)
 {
 	return 0x00; // Watchdog
+}
+
+READ8_MEMBER(peplus_state::peplus_input0_r)
+{
+/*
+        Emulating IGT IDO22 Pulse Protocol (IGT Smoke 2.2)
+        ID022 protocol requires a 20ms on/off pulse x times for denomination followed by a 50ms stop pulse.
+        The DBV then waits for at least 3 toggling (ACK) pulses of alternating 20ms each from the game.
+        If no toggling received within 200ms, the bill was rejected by the game (e.g. Max Credits reached).
+        Once toggling received, the DBV stacks the bill and sends two 10ms stacked pulses separated by a 10ms pause.
+
+        TODO: Will need to include IGT IDO23 (IGT 2.5) for Superboard games.
+        PE+ bill validators have a dip switch setting to switch between ID-022 and ID-023 protocols.
+
+        IDO23 Denomination Codes
+        ------------------------
+        0x00 = $1
+        0x02 = $5
+        0x03 = $10
+        0x04 = $20
+        0x06 = $50
+        0x07 = $100
+
+        IDO23 Country Codes
+        ------------------------
+        0x25(37) = USA
+
+        Direction Data
+        --------------
+        A (FA) <-- [FRONT OF BILL] --> (FB) B
+        D (BB) <-- [BACK OF BILL ] --> (BA) C
+
+        Pulses are currently time via cpu cycles.
+        833.3 cycles per millisecond
+        10 ms = 8333 cycles
+*/
+	UINT64 curr_cycles = machine().firstcpu->total_cycles();
+
+	if ((ioport("DBV")->read_safe(0xff) & 0x01) == 0x00) {
+		// If not busy
+		if (m_bv_busy == 0) {
+			m_bv_busy = 1;
+
+			// Fetch Current Denomination
+			m_bv_denomination = ioport("BC")->read();
+
+			m_bv_cycles = curr_cycles;
+			m_bv_pulse = 1;
+
+			if (m_bv_denomination == 0)
+				m_bv_state = 3; // $1 So Skip Credit Pulse
+			else
+				m_bv_state = 1; // Greater than $1 Needs Credit Pulse
+		}
+	}
+
+	switch (m_bv_state)
+	{
+		case 0x00: // Not Active
+			m_bv_busy = 0;
+			break;
+		case 0x01: // Credit Pulse 20ms ON
+			if (curr_cycles - m_bv_cycles >= 833.3 * 20) {
+				m_bv_cycles = curr_cycles;
+				m_bv_pulse = 0;
+				m_bv_state++;
+			}
+			break;
+		case 0x02: // Credit Pulse 20ms OFF
+			if (curr_cycles - m_bv_cycles >= 833.3 * 20) {
+				m_bv_cycles = curr_cycles;
+				m_bv_pulse = 1;
+
+				m_bv_denomination--;
+
+				if (m_bv_denomination == 0)
+					m_bv_state++; // Done with Credit Pulse
+				else
+					m_bv_state = 1; // Continue Pulsing Denomination
+			}
+			break;
+		case 0x03: // Stop Pulse 50ms ON
+			if (curr_cycles - m_bv_cycles >= 833.3 * 50) {
+				m_bv_cycles = curr_cycles;
+				m_bv_pulse = 0;
+
+				// Reset Toggle Details
+				m_bv_last_enable_state = m_bv_enable_state;
+				m_bv_enable_count = 0;
+
+				m_bv_state++;
+			}
+			break;
+		case 0x04: // Begin Toggle Polling
+			if (m_bv_enable_state != m_bv_last_enable_state) {
+				m_bv_enable_count++;
+				m_bv_last_enable_state = m_bv_enable_state;
+
+				// Got Enough Toggles, Advance to Stacking
+				if (m_bv_enable_count == 0x03) {
+					m_bv_cycles = curr_cycles;
+					m_bv_pulse = 1;
+					m_bv_state++;
+				}
+			} else {
+				// No Toggling Found, Game Rejected Bill
+				if (curr_cycles - m_bv_cycles >= 833.3 * 200) {
+					m_bv_pulse = 0;
+					m_bv_state = 0;
+				}
+			}
+			break;
+		case 0x05: // Stacked Pulse 10ms ON
+			if (curr_cycles - m_bv_cycles >= 833.3 * 10) {
+				m_bv_cycles = curr_cycles;
+				m_bv_pulse = 0;
+				m_bv_state++;
+			}
+			break;
+		case 0x06: // Stacked Pulse 10ms OFF
+			if (curr_cycles - m_bv_cycles >= 833.3 * 10) {
+				m_bv_cycles = curr_cycles;
+				m_bv_pulse = 1;
+				m_bv_state++;
+			}
+			break;
+		case 0x07: // Stacked Pulse 10ms ON
+			if (curr_cycles - m_bv_cycles >= 833.3 * 10) {
+				m_bv_cycles = curr_cycles;
+				m_bv_pulse = 0;
+				m_bv_state = 0;
+			}
+			break;
+	}
+
+	if (m_bv_pulse == 1) {
+		return (0x70 || ioport("IN0")->read()); // Add Bill Validator Credit Pulse
+	} else {
+		return ioport("IN0")->read();
+	}
 }
 
 READ8_MEMBER(peplus_state::peplus_input_bank_a_r)
@@ -794,7 +948,7 @@ static ADDRESS_MAP_START( peplus_iomap, AS_IO, 8, peplus_state )
 	AM_RANGE(0x9000, 0x9000) AM_READ(peplus_dropdoor_r) AM_WRITE(i2c_nvram_w)
 
 	// Input Banks B & C, Output Bank B
-	AM_RANGE(0xa000, 0xa000) AM_READ_PORT("IN0") AM_WRITE(peplus_output_bank_b_w)
+	AM_RANGE(0xa000, 0xa000) AM_READ(peplus_input0_r) AM_WRITE(peplus_output_bank_b_w)
 
     // Superboard Data
 	AM_RANGE(0xb000, 0xbfff) AM_READWRITE(peplus_sb000_r, peplus_sb000_w) AM_SHARE("sb000_ram")
@@ -844,6 +998,19 @@ static INPUT_PORTS_START( peplus )
 
 	PORT_START("SENSOR")
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 ) PORT_NAME("Coin In") PORT_IMPULSE(1)
+
+	PORT_START("DBV")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN2 ) PORT_NAME("Bill In") PORT_IMPULSE(1)
+
+	PORT_START("BC")
+	PORT_CONFNAME( 0x1f, 0x00, "Bill Choices" )
+	PORT_CONFSETTING( 0x00, "$1" )
+	PORT_CONFSETTING( 0x01, "$2" )
+	PORT_CONFSETTING( 0x04, "$5" )
+	PORT_CONFSETTING( 0x09, "$10" )
+	PORT_CONFSETTING( 0x13, "$20" )
+	PORT_CONFSETTING( 0x16, "$50" )
+	PORT_CONFSETTING( 0x18, "$100" )
 
 	PORT_START("SW1")
 	PORT_DIPNAME( 0x01, 0x01, "Line Frequency" )
@@ -904,7 +1071,7 @@ static INPUT_PORTS_START( peplus_poker )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Play Credit") PORT_CODE(KEYCODE_R)
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Cashout") PORT_CODE(KEYCODE_T)
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Change Request") PORT_CODE(KEYCODE_Y)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Bill Acceptor") PORT_CODE(KEYCODE_U)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_OTHER ) // Bill Acceptor
 
 	PORT_START("IN0")
 	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, peplus_state,peplus_input_r, "IN_BANK1")
@@ -932,7 +1099,7 @@ static INPUT_PORTS_START( peplus_bjack )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON12 ) PORT_NAME("Play Credit") PORT_CODE(KEYCODE_R)
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON13 ) PORT_NAME("Cashout") PORT_CODE(KEYCODE_T)
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON14 ) PORT_NAME("Change Request") PORT_CODE(KEYCODE_Y)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON15 ) PORT_NAME("Bill Acceptor") PORT_CODE(KEYCODE_U)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON15 ) // Bill Acceptor
 
 	PORT_START("IN0")
 	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, peplus_state,peplus_input_r, "IN_BANK1")
@@ -960,7 +1127,7 @@ static INPUT_PORTS_START( peplus_keno )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON12 ) PORT_NAME("Play Credit") PORT_CODE(KEYCODE_R)
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON13 ) PORT_NAME("Cashout") PORT_CODE(KEYCODE_T)
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON14 ) PORT_NAME("Change Request") PORT_CODE(KEYCODE_Y)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON15 ) PORT_NAME("Bill Acceptor") PORT_CODE(KEYCODE_U)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON15 ) // Bill Acceptor
 
 	PORT_START("TOUCH_X")
 	PORT_BIT( 0xffff, 0x200, IPT_LIGHTGUN_X ) PORT_MINMAX(0x00, 1024) PORT_CROSSHAIR(X, 1.0, 0.0, 0) PORT_SENSITIVITY(25) PORT_KEYDELTA(13)
@@ -993,7 +1160,7 @@ static INPUT_PORTS_START( peplus_slots )
 	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON12 ) PORT_NAME("Play Credit") PORT_CODE(KEYCODE_R)
 	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON13 ) PORT_NAME("Cashout") PORT_CODE(KEYCODE_T)
 	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON14 ) PORT_NAME("Change Request") PORT_CODE(KEYCODE_Y)
-	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON15 ) PORT_NAME("Bill Acceptor") PORT_CODE(KEYCODE_U)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON15 ) // Bill Acceptor
 
 	PORT_START("IN0")
 	PORT_BIT( 0x07, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, peplus_state,peplus_input_r, "IN_BANK1")
@@ -1100,34 +1267,31 @@ static void peplus_init(running_machine &machine)
 *************************/
 
 /* Normal board */
-static DRIVER_INIT( peplus )
+DRIVER_INIT_MEMBER(peplus_state,peplus)
 {
-	peplus_state *state = machine.driver_data<peplus_state>();
-	state->m_wingboard = FALSE;
-	state->m_jumper_e16_e17 = FALSE;
-	peplus_init(machine);
+	m_wingboard = FALSE;
+	m_jumper_e16_e17 = FALSE;
+	peplus_init(machine());
 }
 
 /* Superboard */
-static DRIVER_INIT( peplussb )
+DRIVER_INIT_MEMBER(peplus_state,peplussb)
 {
-	peplus_state *state = machine.driver_data<peplus_state>();
-	state->m_wingboard = FALSE;
-	state->m_jumper_e16_e17 = FALSE;
-	peplus_load_superdata(machine, "user1");
+	m_wingboard = FALSE;
+	m_jumper_e16_e17 = FALSE;
+	peplus_load_superdata(machine(), "user1");
 
-	peplus_init(machine);
+	peplus_init(machine());
 }
 
 /* Superboard with Attached Wingboard */
-static DRIVER_INIT( peplussbw )
+DRIVER_INIT_MEMBER(peplus_state,peplussbw)
 {
-	peplus_state *state = machine.driver_data<peplus_state>();
-	state->m_wingboard = TRUE;
-	state->m_jumper_e16_e17 = TRUE;
-	peplus_load_superdata(machine, "user1");
+	m_wingboard = TRUE;
+	m_jumper_e16_e17 = TRUE;
+	peplus_load_superdata(machine(), "user1");
 
-	peplus_init(machine);
+	peplus_init(machine());
 }
 
 
@@ -1512,43 +1676,43 @@ ROM_END
 /*    YEAR  NAME      PARENT  MACHINE   INPUT         INIT      ROT    COMPANY                                  FULLNAME                                                  FLAGS   LAYOUT */
 
 /* Set chips */
-GAMEL(1987, peset038, 0,      peplus,  peplus_schip, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (Set038) Set Chip",                      0,   layout_pe_schip )
+GAMEL(1987, peset038, 0,      peplus,  peplus_schip, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (Set038) Set Chip",                      0,   layout_pe_schip )
 
 /* Normal board : poker */
-GAMEL(1987, pepp0043, 0,      peplus,  peplus_poker, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0043) 10's or Better",                0,   layout_pe_poker )
-GAMEL(1987, pepp0065, 0,      peplus,  peplus_poker, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0065) Jokers Wild Poker",             0,   layout_pe_poker )
-GAMEL(1987, pepp0158, 0,      peplus,  peplus_pokah, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0158) 4 of a Kind Bonus Poker",       0,   layout_pe_poker )
-GAMEL(1987, pepp0188, 0,      peplus,  peplus_pokah, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0188) Standard Draw Poker",           0,   layout_pe_poker )
-GAMEL(1987, pepp0250, 0,      peplus,  peplus_poker, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0250) Double Down Stud Poker",        0,   layout_pe_poker )
-GAMEL(1987, pepp0447, 0,      peplus,  peplus_poker, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0447) Standard Draw Poker",           0,   layout_pe_poker )
-GAMEL(1987, pepp0516, 0,      peplus,  peplus_pokah, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0516) Double Bonus Poker",            0,   layout_pe_poker )
+GAMEL(1987, pepp0043, 0,      peplus,  peplus_poker, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0043) 10's or Better",                0,   layout_pe_poker )
+GAMEL(1987, pepp0065, 0,      peplus,  peplus_poker, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0065) Jokers Wild Poker",             0,   layout_pe_poker )
+GAMEL(1987, pepp0158, 0,      peplus,  peplus_pokah, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0158) 4 of a Kind Bonus Poker",       0,   layout_pe_poker )
+GAMEL(1987, pepp0188, 0,      peplus,  peplus_pokah, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0188) Standard Draw Poker",           0,   layout_pe_poker )
+GAMEL(1987, pepp0250, 0,      peplus,  peplus_poker, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0250) Double Down Stud Poker",        0,   layout_pe_poker )
+GAMEL(1987, pepp0447, 0,      peplus,  peplus_poker, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0447) Standard Draw Poker",           0,   layout_pe_poker )
+GAMEL(1987, pepp0516, 0,      peplus,  peplus_pokah, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PP0516) Double Bonus Poker",            0,   layout_pe_poker )
 
 /* Normal board : blackjack */
-GAMEL(1994, pebe0014, 0,      peplus,  peplus_bjack, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (BE0014) Blackjack",                     0,   layout_pe_bjack )
+GAMEL(1994, pebe0014, 0,      peplus,  peplus_bjack, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (BE0014) Blackjack",                     0,   layout_pe_bjack )
 
 /* Normal board : keno */
-GAMEL(1994, peke1012, 0,      peplus,  peplus_keno,  peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (KE1012) Keno",                          0,   layout_pe_keno )
+GAMEL(1994, peke1012, 0,      peplus,  peplus_keno, peplus_state,  peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (KE1012) Keno",                          0,   layout_pe_keno )
 
 /* Normal board : slots machine */
-GAMEL(1996, peps0014, 0,      peplus,  peplus_slots, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0014) Super Joker Slots",             0,   layout_pe_slots )
-GAMEL(1996, peps0022, 0,      peplus,  peplus_slots, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0022) Red White & Blue Slots",        0,   layout_pe_slots )
-GAMEL(1996, peps0043, 0,      peplus,  peplus_slots, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0043) Double Diamond Slots",          0,   layout_pe_slots )
-GAMEL(1996, peps0045, 0,      peplus,  peplus_slots, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0045) Red White & Blue Slots",        0,   layout_pe_slots )
-GAMEL(1996, peps0308, 0,      peplus,  peplus_slots, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0308) Double Jackpot Slots",          0,   layout_pe_slots )
-GAMEL(1996, peps0615, 0,      peplus,  peplus_slots, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0615) Chaos Slots",                   0,   layout_pe_slots )
-GAMEL(1996, peps0716, 0,      peplus,  peplus_slots, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0716) River Gambler Slots",           0,   layout_pe_slots )
+GAMEL(1996, peps0014, 0,      peplus,  peplus_slots, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0014) Super Joker Slots",             0,   layout_pe_slots )
+GAMEL(1996, peps0022, 0,      peplus,  peplus_slots, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0022) Red White & Blue Slots",        0,   layout_pe_slots )
+GAMEL(1996, peps0043, 0,      peplus,  peplus_slots, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0043) Double Diamond Slots",          0,   layout_pe_slots )
+GAMEL(1996, peps0045, 0,      peplus,  peplus_slots, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0045) Red White & Blue Slots",        0,   layout_pe_slots )
+GAMEL(1996, peps0308, 0,      peplus,  peplus_slots, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0308) Double Jackpot Slots",          0,   layout_pe_slots )
+GAMEL(1996, peps0615, 0,      peplus,  peplus_slots, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0615) Chaos Slots",                   0,   layout_pe_slots )
+GAMEL(1996, peps0716, 0,      peplus,  peplus_slots, peplus_state, peplus,   ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (PS0716) River Gambler Slots",           0,   layout_pe_slots )
 
 /* Superboard : poker */
-GAMEL(1995, pex2069p, 0,      peplus,  peplus_poker, peplussb, ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (X002069P) Double Double Bonus Poker",   0,   layout_pe_poker )
-GAMEL(1995, pexp0019, 0,      peplus,  peplus_poker, peplussb, ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (XP000019) Deuces Wild Poker",           0,   layout_pe_poker )
-GAMEL(1995, pexp0112, 0,      peplus,  peplus_poker, peplussb, ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (XP000112) White Hot Aces Poker",        0,   layout_pe_poker )
+GAMEL(1995, pex2069p, 0,      peplus,  peplus_poker, peplus_state, peplussb, ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (X002069P) Double Double Bonus Poker",   0,   layout_pe_poker )
+GAMEL(1995, pexp0019, 0,      peplus,  peplus_poker, peplus_state, peplussb, ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (XP000019) Deuces Wild Poker",           0,   layout_pe_poker )
+GAMEL(1995, pexp0112, 0,      peplus,  peplus_poker, peplus_state, peplussb, ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (XP000112) White Hot Aces Poker",        0,   layout_pe_poker )
 
 /* Superboard : multi-poker */
-GAMEL(1995, pexmp006, 0,      peplus,  peplus_poker, peplussb, ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (XMP00006) Multi-Poker",                 0,   layout_pe_poker )
-GAMEL(1995, pexmp024, 0,      peplus,  peplus_poker, peplussb, ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (XMP00024) Multi-Poker",                 0,   layout_pe_poker )
+GAMEL(1995, pexmp006, 0,      peplus,  peplus_poker, peplus_state, peplussb, ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (XMP00006) Multi-Poker",                 0,   layout_pe_poker )
+GAMEL(1995, pexmp024, 0,      peplus,  peplus_poker, peplus_state, peplussb, ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (XMP00024) Multi-Poker",                 0,   layout_pe_poker )
 
 /* Superboard : multi-poker (wingboard) */
-GAMEL(1995, pexmp017, 0,      peplus,  peplus_poker, peplussbw,ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (XMP00017) 5-in-1 Wingboard",            0,   layout_pe_poker )
+GAMEL(1995, pexmp017, 0,      peplus,  peplus_poker, peplus_state, peplussbw,ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (XMP00017) 5-in-1 Wingboard",            0,   layout_pe_poker )
 
 /* Superboard : slots machine */
-GAMEL(1997, pexs0006, 0,      peplus,  peplus_slots, peplussb, ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (XS000006) Triple Triple Diamond Slots", 0,   layout_pe_slots )
+GAMEL(1997, pexs0006, 0,      peplus,  peplus_slots, peplus_state, peplussb, ROT0,  "IGT - International Gaming Technology", "Player's Edge Plus (XS000006) Triple Triple Diamond Slots", 0,   layout_pe_slots )

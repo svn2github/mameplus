@@ -119,20 +119,18 @@ READ8_MEMBER(shangkid_state::shangkid_soundlatch_r)
 
 /***************************************************************************************/
 
-static DRIVER_INIT( chinhero )
+DRIVER_INIT_MEMBER(shangkid_state,chinhero)
 {
-	shangkid_state *state = machine.driver_data<shangkid_state>();
-	state->m_gfx_type = 0;
+	m_gfx_type = 0;
 }
 
-static DRIVER_INIT( shangkid )
+DRIVER_INIT_MEMBER(shangkid_state,shangkid)
 {
-	shangkid_state *state = machine.driver_data<shangkid_state>();
-	state->m_gfx_type = 1;
+	m_gfx_type = 1;
 
 	/* set up banking */
-	state->membank("bank1")->configure_entries(0, 2, state->memregion("maincpu")->base() + 0x8000, 0x8000);
-	state->membank("bank2")->configure_entries(0, 2, state->memregion("audiocpu")->base() + 0x0000, 0x10000);
+	membank("bank1")->configure_entries(0, 2, memregion("maincpu")->base() + 0x8000, 0x8000);
+	membank("bank2")->configure_entries(0, 2, memregion("audiocpu")->base() + 0x0000, 0x10000);
 }
 
 /***************************************************************************************/
@@ -333,7 +331,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_portmap, AS_IO, 8, shangkid_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ(shangkid_soundlatch_r) AM_DEVWRITE_LEGACY("dac", dac_w)
+	AM_RANGE(0x00, 0x00) AM_READ(shangkid_soundlatch_r) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 ADDRESS_MAP_END
 
 /***************************************************************************************/
@@ -397,7 +395,7 @@ static MACHINE_CONFIG_START( chinhero, shangkid_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	MCFG_SOUND_ADD("aysnd", AY8910, XTAL_18_432MHz/12) /* verified on pcb */
@@ -970,9 +968,9 @@ ROM_START( dynamski )
 ROM_END
 
 
-GAME( 1984, dynamski, 0,        dynamski, dynamski, 0,        ROT90, "Taiyo", "Dynamic Ski", GAME_NO_COCKTAIL )
-GAME( 1984, chinhero, 0,        chinhero, chinhero, chinhero, ROT90, "Taiyo", "Chinese Hero", 0 ) // by Nihon Game?
-GAME( 1984, chinhero2,chinhero, chinhero, chinhero, chinhero, ROT90, "Taiyo", "Chinese Hero (older)", 0 )
-GAME( 1984, chinherot,chinhero, chinhero, chinhero, chinhero, ROT90, "Taiyo (Taito license)", "Chinese Heroe (Taito)", 0 )
-GAME( 1985, shangkid, 0,        shangkid, shangkid, shangkid, ROT0,  "Taiyo (Data East license)", "Shanghai Kid", GAME_NO_COCKTAIL )
-GAME( 1985, hiryuken, shangkid, shangkid, shangkid, shangkid, ROT0,  "Taiyo (Taito license)", "Hokuha Syourin Hiryu no Ken", GAME_NO_COCKTAIL )
+GAME( 1984, dynamski, 0,        dynamski, dynamski, driver_device, 0,        ROT90, "Taiyo", "Dynamic Ski", GAME_NO_COCKTAIL )
+GAME( 1984, chinhero, 0,        chinhero, chinhero, shangkid_state, chinhero, ROT90, "Taiyo", "Chinese Hero", 0 ) // by Nihon Game?
+GAME( 1984, chinhero2,chinhero, chinhero, chinhero, shangkid_state, chinhero, ROT90, "Taiyo", "Chinese Hero (older)", 0 )
+GAME( 1984, chinherot,chinhero, chinhero, chinhero, shangkid_state, chinhero, ROT90, "Taiyo (Taito license)", "Chinese Heroe (Taito)", 0 )
+GAME( 1985, shangkid, 0,        shangkid, shangkid, shangkid_state, shangkid, ROT0,  "Taiyo (Data East license)", "Shanghai Kid", GAME_NO_COCKTAIL )
+GAME( 1985, hiryuken, shangkid, shangkid, shangkid, shangkid_state, shangkid, ROT0,  "Taiyo (Taito license)", "Hokuha Syourin Hiryu no Ken", GAME_NO_COCKTAIL )

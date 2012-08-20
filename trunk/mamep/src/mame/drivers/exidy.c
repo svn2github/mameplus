@@ -1412,101 +1412,95 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( sidetrac )
+DRIVER_INIT_MEMBER(exidy_state,sidetrac)
 {
-	exidy_state *state = machine.driver_data<exidy_state>();
-	exidy_video_config(machine, 0x00, 0x00, FALSE);
+	exidy_video_config(machine(), 0x00, 0x00, FALSE);
 
 	/* hard-coded palette controlled via 8x3 DIP switches on the board */
-	state->m_color_latch[2] = 0xf8;
-	state->m_color_latch[1] = 0xdc;
-	state->m_color_latch[0] = 0xb8;
+	m_color_latch[2] = 0xf8;
+	m_color_latch[1] = 0xdc;
+	m_color_latch[0] = 0xb8;
 }
 
 
-static DRIVER_INIT( targ )
+DRIVER_INIT_MEMBER(exidy_state,targ)
 {
-	exidy_state *state = machine.driver_data<exidy_state>();
-	exidy_video_config(machine, 0x00, 0x00, FALSE);
+	exidy_video_config(machine(), 0x00, 0x00, FALSE);
 
 	/* hard-coded palette controlled via 8x3 DIP switches on the board */
-	state->m_color_latch[2] = 0x5c;
-	state->m_color_latch[1] = 0xee;
-	state->m_color_latch[0] = 0x6b;
+	m_color_latch[2] = 0x5c;
+	m_color_latch[1] = 0xee;
+	m_color_latch[0] = 0x6b;
 }
 
 
-static DRIVER_INIT( spectar )
+DRIVER_INIT_MEMBER(exidy_state,spectar)
 {
-	exidy_state *state = machine.driver_data<exidy_state>();
-	exidy_video_config(machine, 0x00, 0x00, FALSE);
+	exidy_video_config(machine(), 0x00, 0x00, FALSE);
 
 	/* hard-coded palette controlled via 8x3 DIP switches on the board */
-	state->m_color_latch[2] = 0x58;
-	state->m_color_latch[1] = 0xee;
-	state->m_color_latch[0] = 0x09;
+	m_color_latch[2] = 0x58;
+	m_color_latch[1] = 0xee;
+	m_color_latch[0] = 0x09;
 }
 
-static DRIVER_INIT( rallys )
+DRIVER_INIT_MEMBER(exidy_state,rallys)
 {
-	exidy_state *state = machine.driver_data<exidy_state>();
-	exidy_video_config(machine, 0x00, 0x00, FALSE);
+	exidy_video_config(machine(), 0x00, 0x00, FALSE);
 
 	/* hard-coded palette controlled via 8x3 DIP switches on the board */
-	state->m_color_latch[2] = 0x58;
-	state->m_color_latch[1] = 0xee;
-	state->m_color_latch[0] = 0x09;
+	m_color_latch[2] = 0x58;
+	m_color_latch[1] = 0xee;
+	m_color_latch[0] = 0x09;
 }
 
-static DRIVER_INIT( phantoma )
+DRIVER_INIT_MEMBER(exidy_state,phantoma)
 {
-	exidy_state *state = machine.driver_data<exidy_state>();
-	exidy_video_config(machine, 0x00, 0x00, FALSE);
+	exidy_video_config(machine(), 0x00, 0x00, FALSE);
 
 	/* hard-coded palette controlled via 8x3 DIP switches on the board */
-	state->m_color_latch[2] = 0x58;
-	state->m_color_latch[1] = 0xee;
-	state->m_color_latch[0] = 0x09;
+	m_color_latch[2] = 0x58;
+	m_color_latch[1] = 0xee;
+	m_color_latch[0] = 0x09;
 
 	/* the ROM is actually mapped high */
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xf800, 0xffff, "bank1");
-	state->membank("bank1")->set_base(state->memregion("maincpu")->base() + 0xf800);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_bank(0xf800, 0xffff, "bank1");
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0xf800);
 }
 
 
-static DRIVER_INIT( mtrap )
+DRIVER_INIT_MEMBER(exidy_state,mtrap)
 {
-	exidy_video_config(machine, 0x14, 0x00, FALSE);
+	exidy_video_config(machine(), 0x14, 0x00, FALSE);
 }
 
 
-static DRIVER_INIT( venture )
+DRIVER_INIT_MEMBER(exidy_state,venture)
 {
-	exidy_video_config(machine, 0x04, 0x04, FALSE);
+	exidy_video_config(machine(), 0x04, 0x04, FALSE);
 }
 
 
-static DRIVER_INIT( teetert )
+DRIVER_INIT_MEMBER(exidy_state,teetert)
 {
-	exidy_video_config(machine, 0x0c, 0x0c, FALSE);
+	exidy_video_config(machine(), 0x0c, 0x0c, FALSE);
 }
 
 
-static DRIVER_INIT( pepper2 )
+DRIVER_INIT_MEMBER(exidy_state,pepper2)
 {
-	exidy_video_config(machine, 0x14, 0x04, TRUE);
+	exidy_video_config(machine(), 0x14, 0x04, TRUE);
 }
 
 
-static DRIVER_INIT( fax )
+DRIVER_INIT_MEMBER(exidy_state,fax)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	exidy_state *state = machine.driver_data<exidy_state>();
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
-	exidy_video_config(machine, 0x04, 0x04, TRUE);
+	exidy_video_config(machine(), 0x04, 0x04, TRUE);
 
 	/* reset the ROM bank */
-	state->fax_bank_select_w(*space,0,0);
+	fax_bank_select_w(*space,0,0);
 }
 
 
@@ -1517,25 +1511,25 @@ static DRIVER_INIT( fax )
  *
  *************************************/
 
-GAME( 1979, sidetrac, 0,       sidetrac, sidetrac, sidetrac, ROT0, "Exidy",   "Side Track", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1980, targ,     0,       targ,     targ,     targ,     ROT0, "Exidy",   "Targ", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1980, targc,    targ,    targ,     targ,     targ,     ROT0, "Exidy",   "Targ (cocktail?)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1980, spectar,  0,       spectar,  spectar,  spectar,  ROT0, "Exidy",   "Spectar (revision 3)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1980, spectar1, spectar, spectar,  spectar,  spectar,  ROT0, "Exidy",   "Spectar (revision 1?)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1980, rallys,   spectar, rallys,   rallys,   rallys,   ROT0, "bootleg (Novar)", "Rallys (bootleg of Spectar)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1980, panzer,   spectar, rallys,   rallys,   rallys,   ROT0, "bootleg (Proel)", "Panzer (bootleg of Spectar)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1980, phantoma, spectar, rallys,   phantoma, phantoma, ROT0, "bootleg (Jeutel)", "Phantomas (bootleg of Spectar)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1980, phantom,  spectar, rallys,   phantoma, phantoma, ROT0, "bootleg (Proel)", "Phantom (bootleg of Spectar)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1979, sidetrac, 0,       sidetrac, sidetrac, exidy_state, sidetrac, ROT0, "Exidy",   "Side Track", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1980, targ,     0,       targ,     targ, exidy_state,     targ,     ROT0, "Exidy",   "Targ", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1980, targc,    targ,    targ,     targ, exidy_state,     targ,     ROT0, "Exidy",   "Targ (cocktail?)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1980, spectar,  0,       spectar,  spectar, exidy_state,  spectar,  ROT0, "Exidy",   "Spectar (revision 3)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1980, spectar1, spectar, spectar,  spectar, exidy_state,  spectar,  ROT0, "Exidy",   "Spectar (revision 1?)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1980, rallys,   spectar, rallys,   rallys, exidy_state,   rallys,   ROT0, "bootleg (Novar)", "Rallys (bootleg of Spectar)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1980, panzer,   spectar, rallys,   rallys, exidy_state,   rallys,   ROT0, "bootleg (Proel)", "Panzer (bootleg of Spectar)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1980, phantoma, spectar, rallys,   phantoma, exidy_state, phantoma, ROT0, "bootleg (Jeutel)", "Phantomas (bootleg of Spectar)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1980, phantom,  spectar, rallys,   phantoma, exidy_state, phantoma, ROT0, "bootleg (Proel)", "Phantom (bootleg of Spectar)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 
-GAME( 1981, mtrap,    0,       mtrap,    mtrap,    mtrap,    ROT0, "Exidy",   "Mouse Trap (version 5)", GAME_SUPPORTS_SAVE )
-GAME( 1981, mtrap3,   mtrap,   mtrap,    mtrap,    mtrap,    ROT0, "Exidy",   "Mouse Trap (version 3)", GAME_SUPPORTS_SAVE )
-GAME( 1981, mtrap4,   mtrap,   mtrap,    mtrap,    mtrap,    ROT0, "Exidy",   "Mouse Trap (version 4)", GAME_SUPPORTS_SAVE )
-GAME( 1981, venture,  0,       venture,  venture,  venture,  ROT0, "Exidy",   "Venture (version 5 set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1981, venture2, venture, venture,  venture,  venture,  ROT0, "Exidy",   "Venture (version 5 set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1981, venture4, venture, venture,  venture,  venture,  ROT0, "Exidy",   "Venture (version 4)", GAME_SUPPORTS_SAVE )
-GAME( 1982, teetert,  0,       teetert,  teetert,  teetert,  ROT0, "Exidy",   "Teeter Torture (prototype)", GAME_SUPPORTS_SAVE )
-GAME( 1982, pepper2,  0,       pepper2,  pepper2,  pepper2,  ROT0, "Exidy",   "Pepper II (version 8)", GAME_SUPPORTS_SAVE )
-GAME( 1982, pepper27, pepper2, pepper2,  pepper2,  pepper2,  ROT0, "Exidy",   "Pepper II (version 7)", GAME_SUPPORTS_SAVE )
-GAME( 1982, hardhat,  0,       pepper2,  pepper2,  pepper2,  ROT0, "Exidy",   "Hard Hat", GAME_SUPPORTS_SAVE )
-GAME( 1983, fax,      0,       fax,      fax,      fax,      ROT0, "Exidy",   "FAX", GAME_SUPPORTS_SAVE )
-GAME( 1983, fax2,     fax,     fax,      fax,      fax,      ROT0, "Exidy",   "FAX 2", GAME_SUPPORTS_SAVE )
+GAME( 1981, mtrap,    0,       mtrap,    mtrap, exidy_state,    mtrap,    ROT0, "Exidy",   "Mouse Trap (version 5)", GAME_SUPPORTS_SAVE )
+GAME( 1981, mtrap3,   mtrap,   mtrap,    mtrap, exidy_state,    mtrap,    ROT0, "Exidy",   "Mouse Trap (version 3)", GAME_SUPPORTS_SAVE )
+GAME( 1981, mtrap4,   mtrap,   mtrap,    mtrap, exidy_state,    mtrap,    ROT0, "Exidy",   "Mouse Trap (version 4)", GAME_SUPPORTS_SAVE )
+GAME( 1981, venture,  0,       venture,  venture, exidy_state,  venture,  ROT0, "Exidy",   "Venture (version 5 set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1981, venture2, venture, venture,  venture, exidy_state,  venture,  ROT0, "Exidy",   "Venture (version 5 set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1981, venture4, venture, venture,  venture, exidy_state,  venture,  ROT0, "Exidy",   "Venture (version 4)", GAME_SUPPORTS_SAVE )
+GAME( 1982, teetert,  0,       teetert,  teetert, exidy_state,  teetert,  ROT0, "Exidy",   "Teeter Torture (prototype)", GAME_SUPPORTS_SAVE )
+GAME( 1982, pepper2,  0,       pepper2,  pepper2, exidy_state,  pepper2,  ROT0, "Exidy",   "Pepper II (version 8)", GAME_SUPPORTS_SAVE )
+GAME( 1982, pepper27, pepper2, pepper2,  pepper2, exidy_state,  pepper2,  ROT0, "Exidy",   "Pepper II (version 7)", GAME_SUPPORTS_SAVE )
+GAME( 1982, hardhat,  0,       pepper2,  pepper2, exidy_state,  pepper2,  ROT0, "Exidy",   "Hard Hat", GAME_SUPPORTS_SAVE )
+GAME( 1983, fax,      0,       fax,      fax, exidy_state,      fax,      ROT0, "Exidy",   "FAX", GAME_SUPPORTS_SAVE )
+GAME( 1983, fax2,     fax,     fax,      fax, exidy_state,      fax,      ROT0, "Exidy",   "FAX 2", GAME_SUPPORTS_SAVE )

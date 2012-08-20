@@ -605,7 +605,7 @@ static MACHINE_CONFIG_START( famibox, famibox_state )
 	MCFG_SOUND_CONFIG(famibox_interface_1)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
@@ -647,5 +647,5 @@ ROM_START(famibox)
 
 ROM_END
 
-GAME( 1986,  famibox,      0,  famibox,  famibox,  0, ROT0, "Nintendo", "FamicomBox", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND)
+GAME( 1986,  famibox,      0,  famibox,  famibox, driver_device,  0, ROT0, "Nintendo", "FamicomBox", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND)
 

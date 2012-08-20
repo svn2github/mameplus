@@ -727,11 +727,11 @@ ROM_START( opwolf3u )
 ROM_END
 
 
-static DRIVER_INIT( slapshot )
+DRIVER_INIT_MEMBER(slapshot_state,slapshot)
 {
 	UINT32 offset,i;
-	UINT8 *gfx = machine.root_device().memregion("gfx2")->base();
-	int size = machine.root_device().memregion("gfx2")->bytes();
+	UINT8 *gfx = machine().root_device().memregion("gfx2")->base();
+	int size = machine().root_device().memregion("gfx2")->bytes();
 	int data;
 
 	offset = size / 2;
@@ -754,6 +754,6 @@ static DRIVER_INIT( slapshot )
 	}
 }
 
-GAME( 1994, slapshot, 0,       slapshot, slapshot, slapshot, ROT0, "Taito Corporation",         "Slap Shot (Japan)", 0 )
-GAME( 1994, opwolf3,  0,       opwolf3,  opwolf3,  slapshot, ROT0, "Taito Corporation Japan",   "Operation Wolf 3 (World)", 0 )
-GAME( 1994, opwolf3u, opwolf3, opwolf3,  opwolf3,  slapshot, ROT0, "Taito America Corporation", "Operation Wolf 3 (US)", 0 )
+GAME( 1994, slapshot, 0,       slapshot, slapshot, slapshot_state, slapshot, ROT0, "Taito Corporation",         "Slap Shot (Japan)", 0 )
+GAME( 1994, opwolf3,  0,       opwolf3,  opwolf3, slapshot_state,  slapshot, ROT0, "Taito Corporation Japan",   "Operation Wolf 3 (World)", 0 )
+GAME( 1994, opwolf3u, opwolf3, opwolf3,  opwolf3, slapshot_state,  slapshot, ROT0, "Taito America Corporation", "Operation Wolf 3 (US)", 0 )

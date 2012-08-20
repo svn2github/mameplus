@@ -4,6 +4,8 @@
 
 *************************************************************************/
 
+#include "sound/dac.h"
+
 class circusc_state : public driver_device
 {
 public:
@@ -34,7 +36,7 @@ public:
 	cpu_device *m_audiocpu;
 	device_t *m_sn1;
 	device_t *m_sn2;
-	device_t *m_dac;
+	dac_device *m_dac;
 	device_t *m_discrete;
 
 	UINT8          m_irq_mask;
@@ -46,6 +48,7 @@ public:
 	DECLARE_WRITE8_MEMBER(circusc_videoram_w);
 	DECLARE_WRITE8_MEMBER(circusc_colorram_w);
 	DECLARE_WRITE8_MEMBER(circusc_flipscreen_w);
+	DECLARE_DRIVER_INIT(circusc);
 };
 
 

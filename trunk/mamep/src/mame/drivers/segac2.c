@@ -78,6 +78,8 @@
 
 #include "includes/megadriv.h"
 
+#include "machine/megavdp.h"
+
 #define XL1_CLOCK			XTAL_640kHz
 #define XL2_CLOCK			XTAL_53_693175MHz
 
@@ -86,6 +88,8 @@
 #define LOG_PALETTE			0
 #define LOG_IOCHIP			0
 
+int segac2_bg_pal_lookup[4];
+int segac2_sp_pal_lookup[4];
 
 static void recompute_palette_tables( running_machine &machine );
 
@@ -111,10 +115,22 @@ static MACHINE_START( segac2 )
 static MACHINE_RESET( segac2 )
 {
 	segac2_state *state = machine.driver_data<segac2_state>();
-	megadrive_ram = reinterpret_cast<UINT16 *>(state->memshare("nvram")->ptr());
+//  megadriv_framerate = 60;
 
-	/* set up interrupts and such */
-	MACHINE_RESET_CALL(megadriv);
+
+//  megadriv_scanline_timer = machine.device<timer_device>("md_scan_timer");
+//  megadriv_scanline_timer->adjust(attotime::zero);
+	segac2_bg_pal_lookup[0] = 0x00;
+	segac2_bg_pal_lookup[1] = 0x10;
+	segac2_bg_pal_lookup[2] = 0x20;
+	segac2_bg_pal_lookup[3] = 0x30;
+
+	segac2_sp_pal_lookup[0] = 0x00;
+	segac2_sp_pal_lookup[1] = 0x10;
+	segac2_sp_pal_lookup[2] = 0x20;
+	segac2_sp_pal_lookup[3] = 0x30;
+
+	megadriv_reset_vdp(machine);
 
 	/* determine how many sound banks */
 	state->m_sound_banks = 0;
@@ -220,19 +236,19 @@ static WRITE16_HANDLER( palette_w )
 	/* set the color */
 	palette_set_color_rgb(space->machine(), offset, pal5bit(r), pal5bit(g), pal5bit(b));
 
-	megadrive_vdp_palette_lookup[offset] = (b) | (g << 5) | (r << 10);
-	megadrive_vdp_palette_lookup_sprite[offset] = (b) | (g << 5) | (r << 10);
+//  megadrive_vdp_palette_lookup[offset] = (b) | (g << 5) | (r << 10);
+//  megadrive_vdp_palette_lookup_sprite[offset] = (b) | (g << 5) | (r << 10);
 
 	tmpr = r >> 1;
 	tmpg = g >> 1;
 	tmpb = b >> 1;
-	megadrive_vdp_palette_lookup_shadow[offset] = (tmpb) | (tmpg << 5) | (tmpr << 10);
+	palette_set_color_rgb(space->machine(), offset + 0x800, pal5bit(tmpr), pal5bit(tmpg), pal5bit(tmpb));
 
 	// how is it calculated on c2?
 	tmpr = tmpr | 0x10;
 	tmpg = tmpg | 0x10;
 	tmpb = tmpb | 0x10;
-	megadrive_vdp_palette_lookup_highlight[offset] = (tmpb) | (tmpg << 5) | (tmpr << 10);
+	palette_set_color_rgb(space->machine(), offset + 0x1000, pal5bit(tmpr), pal5bit(tmpg), pal5bit(tmpb));
 }
 
 
@@ -611,7 +627,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, segac2_state )
 	AM_RANGE(0x840100, 0x840107) AM_MIRROR(0x13fef8) AM_DEVREADWRITE8_LEGACY("ymsnd", ym3438_r, ym3438_w, 0x00ff)
 	AM_RANGE(0x880100, 0x880101) AM_MIRROR(0x13fefe) AM_WRITE_LEGACY(counter_timer_w)
 	AM_RANGE(0x8c0000, 0x8c0fff) AM_MIRROR(0x13f000) AM_READWRITE_LEGACY(palette_r, palette_w) AM_SHARE("paletteram")
-	AM_RANGE(0xc00000, 0xc0001f) AM_MIRROR(0x18ff00) AM_READWRITE_LEGACY(megadriv_vdp_r, megadriv_vdp_w)
+	AM_RANGE(0xc00000, 0xc0001f) AM_MIRROR(0x18ff00) AM_DEVREADWRITE("gen_vdp", sega_genesis_vdp_device, megadriv_vdp_r,megadriv_vdp_w)
 	AM_RANGE(0xe00000, 0xe0ffff) AM_MIRROR(0x1f0000) AM_RAM AM_SHARE("nvram")
 ADDRESS_MAP_END
 
@@ -1255,25 +1271,96 @@ static const ym3438_interface ym3438_intf =
 static VIDEO_START(segac2_new)
 {
 	VIDEO_START_CALL(megadriv);
-
-	megadrive_vdp_palette_lookup = auto_alloc_array(machine, UINT16, 0x1000/2);
-	megadrive_vdp_palette_lookup_sprite = auto_alloc_array(machine, UINT16, 0x1000/2);
-	megadrive_vdp_palette_lookup_shadow = auto_alloc_array(machine, UINT16, 0x1000/2);
-	megadrive_vdp_palette_lookup_highlight = auto_alloc_array(machine, UINT16, 0x1000/2);
 }
 
+// C2 doesn't use the internal VDP CRAM, instead it uses the digital output of the chip
+//  and applies it's own external colour circuity
 static SCREEN_UPDATE_RGB32(segac2_new)
 {
+	const pen_t *paldata = screen.machine().pens;
 	segac2_state *state = screen.machine().driver_data<segac2_state>();
 	if (!state->m_segac2_enable_display)
 	{
-		bitmap.fill(get_black_pen(screen.machine()));
+		bitmap.fill(get_black_pen(screen.machine()), cliprect);
 		return 0;
 	}
 
-	SCREEN_UPDATE32_CALL(megadriv);
+	sega_genesis_vdp_device *vdp = state->m_vdp;
+
+	/* Copy our screen buffer here */
+	for (int y = cliprect.min_y; y <= cliprect.max_y; y++)
+	{
+		UINT32* desty = &bitmap.pix32(y, 0);
+		UINT16* srcy;
+
+		srcy = vdp->m_render_line_raw;
+
+		for (int x = cliprect.min_x; x <= cliprect.max_x; x++)
+		{
+			UINT16 src = srcy[x];
+			switch (src & 0x1c0)
+			{
+				case 0x000:
+					desty[x] = paldata[(src&0x0f) | segac2_bg_pal_lookup[(src & 0x30)>>4] | 0x800];
+					break;
+				case 0x040:
+					desty[x] = paldata[(src&0x0f) | segac2_bg_pal_lookup[(src & 0x30)>>4]];
+					break;
+				case 0x080:
+					desty[x] = paldata[(src&0x0f) | segac2_sp_pal_lookup[(src & 0x30)>>4]];
+					break;
+				case 0x0c0:
+					// bg pen
+					desty[x] = paldata[(src&0x0f) | segac2_bg_pal_lookup[(src & 0x30)>>4] | 0x1000];
+					break;
+				case 0x100:
+					// shadow
+					desty[x] = paldata[(src&0x0f) | segac2_bg_pal_lookup[(src & 0x30)>>4] | 0x800];
+					break;
+				case 0x140:
+					// normal
+					desty[x] = paldata[(src&0x0f) | segac2_bg_pal_lookup[(src & 0x30)>>4]];
+					break;
+				case 0x180:
+					// sprite
+					desty[x] = paldata[(src&0x0f) | segac2_sp_pal_lookup[(src & 0x30)>>4]];
+					break;
+				case 0x1c0:
+					// highlight
+					desty[x] = paldata[(src&0x0f) | segac2_bg_pal_lookup[(src & 0x30)>>4] | 0x1000];
+					break;
+			}
+		}
+	}
+
 	return 0;
 }
+
+
+
+
+// the main interrupt on C2 comes from the vdp line used to drive the z80 interrupt on a regular genesis(!)
+void genesis_vdp_sndirqline_callback_segac2(running_machine &machine, bool state)
+{
+	if (state==true)
+		cputag_set_input_line(machine, "maincpu", 6, HOLD_LINE);
+}
+
+// the line usually used to drive irq6 is not connected
+void genesis_vdp_lv6irqline_callback_segac2(running_machine &machine, bool state)
+{
+	//
+}
+
+// the scanline interrupt seems connected as usual
+void genesis_vdp_lv4irqline_callback_segac2(running_machine &machine, bool state)
+{
+	if (state==true)
+		cputag_set_input_line(machine, "maincpu", 4, HOLD_LINE);
+	else
+		cputag_set_input_line(machine, "maincpu", 4, CLEAR_LINE);
+}
+
 
 
 static MACHINE_CONFIG_START( segac, segac2_state )
@@ -1286,10 +1373,16 @@ static MACHINE_CONFIG_START( segac, segac2_state )
 	MCFG_MACHINE_RESET(segac2)
 	MCFG_NVRAM_ADD_RANDOM_FILL("nvram")
 
-	MCFG_FRAGMENT_ADD(megadriv_timers)
+//  MCFG_FRAGMENT_ADD(megadriv_timers)
 
-	/* video hardware */
-	//MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS)
+	MCFG_DEVICE_ADD("gen_vdp", SEGA_GEN_VDP, 0)
+	sega_genesis_vdp_device::set_genesis_vdp_sndirqline_callback(*device, genesis_vdp_sndirqline_callback_segac2);
+	sega_genesis_vdp_device::set_genesis_vdp_lv6irqline_callback(*device, genesis_vdp_lv6irqline_callback_segac2);
+	sega_genesis_vdp_device::set_genesis_vdp_lv4irqline_callback(*device, genesis_vdp_lv4irqline_callback_segac2);
+	sega_genesis_vdp_device::set_genesis_vdp_alt_timing(*device, 1);
+
+	MCFG_TIMER_ADD_SCANLINE("scantimer", megadriv_scanline_timer_callback_alt_timing, "megadriv", 0, 1)
+
 
 	MCFG_SCREEN_ADD("megadriv", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -1299,7 +1392,7 @@ static MACHINE_CONFIG_START( segac, segac2_state )
 	MCFG_SCREEN_UPDATE_STATIC(segac2_new)
 	MCFG_SCREEN_VBLANK_STATIC( megadriv )
 
-	MCFG_PALETTE_LENGTH(2048)
+	MCFG_PALETTE_LENGTH(2048*3)
 
 	MCFG_VIDEO_START(segac2_new)
 
@@ -1751,18 +1844,16 @@ it should be, otherwise I don't see how the formula could be computed.
 
 ******************************************************************************/
 
-static void segac2_common_init(running_machine& machine, int (*func)(int in))
+void segac2_state::segac2_common_init(running_machine& machine, int (*func)(int in))
 {
 	segac2_state *state = machine.driver_data<segac2_state>();
 	device_t *upd = machine.device("upd");
 
-	DRIVER_INIT_CALL( megadriv_c2 );
+	DRIVER_INIT_CALL(megadriv_c2);
 
 	state->m_prot_func = func;
 
 	genvdp_use_cram = 0;
-	genesis_always_irq6 = 1;
-	genesis_other_hacks = 0;
 
 	if (upd != NULL)
 		machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(*upd, 0x880000, 0x880001, 0, 0x13fefe, FUNC(segac2_upd7759_w));
@@ -1993,152 +2084,152 @@ static int prot_func_pclubjv5(int in)
 
 
 
-static DRIVER_INIT( c2boot )
+DRIVER_INIT_MEMBER(segac2_state,c2boot)
 {
-	segac2_common_init(machine, NULL);
+	segac2_common_init(machine(), NULL);
 }
 
-static DRIVER_INIT( bloxeedc )
+DRIVER_INIT_MEMBER(segac2_state,bloxeedc)
 {
-	segac2_common_init(machine, NULL);
+	segac2_common_init(machine(), NULL);
 }
 
-static DRIVER_INIT( columns )
+DRIVER_INIT_MEMBER(segac2_state,columns)
 {
-	segac2_common_init(machine, prot_func_columns);
+	segac2_common_init(machine(), prot_func_columns);
 }
 
-static DRIVER_INIT( columns2 )
+DRIVER_INIT_MEMBER(segac2_state,columns2)
 {
-	segac2_common_init(machine, prot_func_columns2);
+	segac2_common_init(machine(), prot_func_columns2);
 }
 
-static DRIVER_INIT( tfrceac )
+DRIVER_INIT_MEMBER(segac2_state,tfrceac)
 {
-	segac2_common_init(machine, prot_func_tfrceac);
+	segac2_common_init(machine(), prot_func_tfrceac);
 }
 
-static DRIVER_INIT( tfrceacb )
+DRIVER_INIT_MEMBER(segac2_state,tfrceacb)
 {
 	/* disable the palette bank switching from the protection chip */
-	segac2_common_init(machine, NULL);
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0x800000, 0x800001);
+	segac2_common_init(machine(), NULL);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0x800000, 0x800001);
 }
 
-static DRIVER_INIT( borench )
+DRIVER_INIT_MEMBER(segac2_state,borench)
 {
-	segac2_common_init(machine, prot_func_borench);
+	segac2_common_init(machine(), prot_func_borench);
 }
 
-static DRIVER_INIT( twinsqua )
+DRIVER_INIT_MEMBER(segac2_state,twinsqua)
 {
-	segac2_common_init(machine, prot_func_twinsqua);
+	segac2_common_init(machine(), prot_func_twinsqua);
 }
 
-static DRIVER_INIT( ribbit )
+DRIVER_INIT_MEMBER(segac2_state,ribbit)
 {
-	segac2_common_init(machine, prot_func_ribbit);
+	segac2_common_init(machine(), prot_func_ribbit);
 }
 
-static DRIVER_INIT( puyo )
+DRIVER_INIT_MEMBER(segac2_state,puyo)
 {
-	segac2_common_init(machine, prot_func_puyo);
+	segac2_common_init(machine(), prot_func_puyo);
 }
 
-static DRIVER_INIT( tantr )
+DRIVER_INIT_MEMBER(segac2_state,tantr)
 {
-	segac2_common_init(machine, prot_func_tantr);
+	segac2_common_init(machine(), prot_func_tantr);
 }
 
-static DRIVER_INIT( tantrkor )
+DRIVER_INIT_MEMBER(segac2_state,tantrkor)
 {
-	segac2_common_init(machine, prot_func_tantrkor);
+	segac2_common_init(machine(), prot_func_tantrkor);
 }
 
-static DRIVER_INIT( potopoto )
+DRIVER_INIT_MEMBER(segac2_state,potopoto)
 {
-	segac2_common_init(machine, prot_func_potopoto);
+	segac2_common_init(machine(), prot_func_potopoto);
 }
 
-static DRIVER_INIT( stkclmns )
+DRIVER_INIT_MEMBER(segac2_state,stkclmns)
 {
-	segac2_common_init(machine, prot_func_stkclmns);
+	segac2_common_init(machine(), prot_func_stkclmns);
 }
 
-static DRIVER_INIT( stkclmnj )
+DRIVER_INIT_MEMBER(segac2_state,stkclmnj)
 {
-	segac2_common_init(machine, prot_func_stkclmnj);
+	segac2_common_init(machine(), prot_func_stkclmnj);
 }
 
-static DRIVER_INIT( ichir )
+DRIVER_INIT_MEMBER(segac2_state,ichir)
 {
-	segac2_common_init(machine, prot_func_ichir);
+	segac2_common_init(machine(), prot_func_ichir);
 }
 
-static DRIVER_INIT( ichirk )
+DRIVER_INIT_MEMBER(segac2_state,ichirk)
 {
-	segac2_common_init(machine, prot_func_ichirk);
+	segac2_common_init(machine(), prot_func_ichirk);
 }
 
-static DRIVER_INIT( ichirj )
+DRIVER_INIT_MEMBER(segac2_state,ichirj)
 {
-	segac2_common_init(machine, prot_func_ichirj);
+	segac2_common_init(machine(), prot_func_ichirj);
 }
 
-static DRIVER_INIT( ichirjbl )
+DRIVER_INIT_MEMBER(segac2_state,ichirjbl)
 {
 	/* when did this actually work? - the protection is patched but the new check fails? */
-	UINT16 *rom = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+	UINT16 *rom = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 	rom[0x390/2] = 0x6600;
 
-	segac2_common_init(machine, NULL);
+	segac2_common_init(machine(), NULL);
 }
 
-static DRIVER_INIT( puyopuy2 )
+DRIVER_INIT_MEMBER(segac2_state,puyopuy2)
 {
-	segac2_common_init(machine, prot_func_puyopuy2);
+	segac2_common_init(machine(), prot_func_puyopuy2);
 }
 
-static DRIVER_INIT( zunkyou )
+DRIVER_INIT_MEMBER(segac2_state,zunkyou)
 {
-	segac2_common_init(machine, prot_func_zunkyou);
+	segac2_common_init(machine(), prot_func_zunkyou);
 }
 
 
-static DRIVER_INIT( pclub )
+DRIVER_INIT_MEMBER(segac2_state,pclub)
 {
-	segac2_common_init(machine, prot_func_pclub);
+	segac2_common_init(machine(), prot_func_pclub);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880120, 0x880121, FUNC(printer_r) );/*Print Club Vol.1*/
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880124, 0x880125, FUNC(printer_r) );/*Print Club Vol.2*/
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x880124, 0x880125, FUNC(print_club_camera_w));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880120, 0x880121, FUNC(printer_r) );/*Print Club Vol.1*/
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880124, 0x880125, FUNC(printer_r) );/*Print Club Vol.2*/
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x880124, 0x880125, FUNC(print_club_camera_w));
 }
 
-static DRIVER_INIT( pclubjv2 )
+DRIVER_INIT_MEMBER(segac2_state,pclubjv2)
 {
-	segac2_common_init(machine, prot_func_pclubjv2);
+	segac2_common_init(machine(), prot_func_pclubjv2);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880120, 0x880121, FUNC(printer_r) );/*Print Club Vol.1*/
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880124, 0x880125, FUNC(printer_r) );/*Print Club Vol.2*/
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x880124, 0x880125, FUNC(print_club_camera_w));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880120, 0x880121, FUNC(printer_r) );/*Print Club Vol.1*/
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880124, 0x880125, FUNC(printer_r) );/*Print Club Vol.2*/
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x880124, 0x880125, FUNC(print_club_camera_w));
 }
 
-static DRIVER_INIT( pclubjv4 )
+DRIVER_INIT_MEMBER(segac2_state,pclubjv4)
 {
-	segac2_common_init(machine, prot_func_pclubjv4);
+	segac2_common_init(machine(), prot_func_pclubjv4);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880120, 0x880121, FUNC(printer_r) );/*Print Club Vol.1*/
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880124, 0x880125, FUNC(printer_r) );/*Print Club Vol.2*/
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x880124, 0x880125, FUNC(print_club_camera_w));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880120, 0x880121, FUNC(printer_r) );/*Print Club Vol.1*/
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880124, 0x880125, FUNC(printer_r) );/*Print Club Vol.2*/
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x880124, 0x880125, FUNC(print_club_camera_w));
 }
 
-static DRIVER_INIT( pclubjv5 )
+DRIVER_INIT_MEMBER(segac2_state,pclubjv5)
 {
-	segac2_common_init(machine, prot_func_pclubjv5);
+	segac2_common_init(machine(), prot_func_pclubjv5);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880120, 0x880121, FUNC(printer_r) );/*Print Club Vol.1*/
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880124, 0x880125, FUNC(printer_r) );/*Print Club Vol.2*/
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x880124, 0x880125, FUNC(print_club_camera_w));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880120, 0x880121, FUNC(printer_r) );/*Print Club Vol.1*/
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_read_handler(0x880124, 0x880125, FUNC(printer_r) );/*Print Club Vol.2*/
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_legacy_write_handler(0x880124, 0x880125, FUNC(print_club_camera_w));
 }
 
 
@@ -2162,42 +2253,42 @@ static DRIVER_INIT( pclubjv5 )
 
 //    YEAR, NAME,      PARENT,   MACHINE,INPUT,    INIT,     MONITOR,COMPANY,FULLNAME,FLAGS
 /* System C Games */
-GAME( 1989, bloxeedc,  bloxeed,  segac,  bloxeedc, bloxeedc, ROT0,   "Sega / Elorg", "Bloxeed (World, C System)", 0 )
-GAME( 1989, bloxeedu,  bloxeed,  segac,  bloxeedc, bloxeedc, ROT0,   "Sega / Elorg", "Bloxeed (US, C System)", 0 )
-GAME( 1990, columns,   0,        segac,  columns,  columns,  ROT0,   "Sega", "Columns (World)", 0 )
-GAME( 1990, columnsu,  columns,  segac,  columnsu, columns,  ROT0,   "Sega", "Columns (US, cocktail)", 0 ) // has cocktail mode dsw
-GAME( 1990, columnsj,  columns,  segac,  columns,  columns,  ROT0,   "Sega", "Columns (Japan)", 0 )
-GAME( 1990, columns2,  0,        segac,  columns2, columns2, ROT0,   "Sega", "Columns II: The Voyage Through Time (World)", 0 )
-GAME( 1990, column2j,  columns2, segac,  columns2, columns2, ROT0,   "Sega", "Columns II: The Voyage Through Time (Japan)", 0 )
+GAME( 1989, bloxeedc,  bloxeed,  segac,  bloxeedc, segac2_state, bloxeedc, ROT0,   "Sega / Elorg", "Bloxeed (World, C System)", 0 )
+GAME( 1989, bloxeedu,  bloxeed,  segac,  bloxeedc, segac2_state, bloxeedc, ROT0,   "Sega / Elorg", "Bloxeed (US, C System)", 0 )
+GAME( 1990, columns,   0,        segac,  columns, segac2_state,  columns,  ROT0,   "Sega", "Columns (World)", 0 )
+GAME( 1990, columnsu,  columns,  segac,  columnsu, segac2_state, columns,  ROT0,   "Sega", "Columns (US, cocktail)", 0 ) // has cocktail mode dsw
+GAME( 1990, columnsj,  columns,  segac,  columns, segac2_state,  columns,  ROT0,   "Sega", "Columns (Japan)", 0 )
+GAME( 1990, columns2,  0,        segac,  columns2, segac2_state, columns2, ROT0,   "Sega", "Columns II: The Voyage Through Time (World)", 0 )
+GAME( 1990, column2j,  columns2, segac,  columns2, segac2_state, columns2, ROT0,   "Sega", "Columns II: The Voyage Through Time (Japan)", 0 )
 
 /* System C-2 Games */
-GAME( 1990, tfrceac,   0,        segac2, tfrceac,  tfrceac,  ROT0,   "Sega / Technosoft", "ThunderForce AC", 0 )
-GAME( 1990, tfrceacj,  tfrceac,  segac2, tfrceac,  tfrceac,  ROT0,   "Sega / Technosoft", "ThunderForce AC (Japan)", 0 )
-GAME( 1990, tfrceacb,  tfrceac,  segac2, tfrceac,  tfrceacb, ROT0,   "bootleg", "ThunderForce AC (bootleg)", 0 )
-GAME( 1990, borench,   0,        segac2, borench,  borench,  ROT0,   "Sega", "Borench", 0 )
-GAME( 1991, twinsqua,  0,        segac2, twinsqua, twinsqua, ROT0,   "Sega", "Twin Squash", 0 )
-GAME( 1991, ribbit,    0,        segac2, ribbit,   ribbit,   ROT0,   "Sega", "Ribbit!", 0 )
-GAME( 1992, puyo,      0,        segac2, puyo,     puyo,     ROT0,   "Sega / Compile", "Puyo Puyo (World)", 0 )
-GAME( 1992, puyobl,    puyo,     segac2, puyo,     puyo,     ROT0,   "bootleg", "Puyo Puyo (World, bootleg)", 0 )
-GAME( 1992, puyoj,     puyo,     segac2, puyo,     puyo,     ROT0,   "Sega / Compile", "Puyo Puyo (Japan, Rev B)", 0 )
-GAME( 1992, puyoja,    puyo,     segac2, puyo,     puyo,     ROT0,   "Sega / Compile", "Puyo Puyo (Japan, Rev A)", 0 )
-GAME( 1992, tantr,     0,        segac2, ichir,    tantr,    ROT0,   "Sega", "Puzzle & Action: Tant-R (Japan)", 0 )
-GAME( 1993, tantrkor,  tantr,    segac2, ichir,    tantrkor, ROT0,   "Sega", "Puzzle & Action: Tant-R (Korea)", 0 )
-GAME( 1992, tantrbl,   tantr,    segac2, ichir,    c2boot,   ROT0,   "bootleg", "Puzzle & Action: Tant-R (Japan) (bootleg set 1)", 0 )
-GAME( 1994, tantrbl2,  tantr,    segac,  ichir,    tantr,    ROT0,   "bootleg", "Puzzle & Action: Tant-R (Japan) (bootleg set 2)", 0 ) // Common bootleg in Europe, C board, no samples
-GAME( 1994, tantrbl3,  tantr,    segac,  ichir,    tantr,    ROT0,   "bootleg", "Puzzle & Action: Tant-R (Japan) (bootleg set 3)", 0 ) // Common bootleg in Europe, C board, no samples
-GAME( 1994, potopoto,  0,        segac2, potopoto, potopoto, ROT0,   "Sega", "Poto Poto (Japan)", 0 )
-GAME( 1994, stkclmns,  0,        segac2, stkclmns, stkclmns, ROT0,   "Sega", "Stack Columns (World)", 0 )
-GAME( 1994, stkclmnsj, stkclmns, segac2, stkclmns, stkclmnj, ROT0,   "Sega", "Stack Columns (Japan)", 0 )
-GAME( 1994, ichir,     0,        segac2, ichir,    ichir,    ROT0,   "Sega", "Puzzle & Action: Ichidant-R (World)", 0 )
-GAME( 1994, ichirk,    ichir,    segac2, ichir,    ichirk,   ROT0,   "Sega", "Puzzle & Action: Ichidant-R (Korea)", 0 )
-GAME( 1994, ichirj,    ichir,    segac2, ichir,    ichirj,   ROT0,   "Sega", "Puzzle & Action: Ichidant-R (Japan)", 0 )
-GAME( 1994, ichirjbl,  ichir,    segac,  ichir,    ichirjbl, ROT0,   "bootleg", "Puzzle & Action: Ichidant-R (Japan) (bootleg)", 0 ) // C board, no samples
-GAME( 1994, puyopuy2,  0,        segac2, puyopuy2, puyopuy2, ROT0,   "Compile (Sega license)", "Puyo Puyo 2 (Japan)", 0 )
-GAME( 1994, zunkyou,   0,        segac2, zunkyou,  zunkyou,  ROT0,   "Sega", "Zunzunkyou No Yabou (Japan)", 0 )
+GAME( 1990, tfrceac,   0,        segac2, tfrceac, segac2_state,  tfrceac,  ROT0,   "Sega / Technosoft", "ThunderForce AC", 0 )
+GAME( 1990, tfrceacj,  tfrceac,  segac2, tfrceac, segac2_state,  tfrceac,  ROT0,   "Sega / Technosoft", "ThunderForce AC (Japan)", 0 )
+GAME( 1990, tfrceacb,  tfrceac,  segac2, tfrceac, segac2_state,  tfrceacb, ROT0,   "bootleg", "ThunderForce AC (bootleg)", 0 )
+GAME( 1990, borench,   0,        segac2, borench, segac2_state,  borench,  ROT0,   "Sega", "Borench", 0 )
+GAME( 1991, twinsqua,  0,        segac2, twinsqua, segac2_state, twinsqua, ROT0,   "Sega", "Twin Squash", 0 )
+GAME( 1991, ribbit,    0,        segac2, ribbit, segac2_state,   ribbit,   ROT0,   "Sega", "Ribbit!", 0 )
+GAME( 1992, puyo,      0,        segac2, puyo, segac2_state,     puyo,     ROT0,   "Sega / Compile", "Puyo Puyo (World)", 0 )
+GAME( 1992, puyobl,    puyo,     segac2, puyo, segac2_state,     puyo,     ROT0,   "bootleg", "Puyo Puyo (World, bootleg)", 0 )
+GAME( 1992, puyoj,     puyo,     segac2, puyo, segac2_state,     puyo,     ROT0,   "Sega / Compile", "Puyo Puyo (Japan, Rev B)", 0 )
+GAME( 1992, puyoja,    puyo,     segac2, puyo, segac2_state,     puyo,     ROT0,   "Sega / Compile", "Puyo Puyo (Japan, Rev A)", 0 )
+GAME( 1992, tantr,     0,        segac2, ichir, segac2_state,    tantr,    ROT0,   "Sega", "Puzzle & Action: Tant-R (Japan)", 0 )
+GAME( 1993, tantrkor,  tantr,    segac2, ichir, segac2_state,    tantrkor, ROT0,   "Sega", "Puzzle & Action: Tant-R (Korea)", 0 )
+GAME( 1992, tantrbl,   tantr,    segac2, ichir, segac2_state,    c2boot,   ROT0,   "bootleg", "Puzzle & Action: Tant-R (Japan) (bootleg set 1)", 0 )
+GAME( 1994, tantrbl2,  tantr,    segac,  ichir, segac2_state,    tantr,    ROT0,   "bootleg", "Puzzle & Action: Tant-R (Japan) (bootleg set 2)", 0 ) // Common bootleg in Europe, C board, no samples
+GAME( 1994, tantrbl3,  tantr,    segac,  ichir, segac2_state,    tantr,    ROT0,   "bootleg", "Puzzle & Action: Tant-R (Japan) (bootleg set 3)", 0 ) // Common bootleg in Europe, C board, no samples
+GAME( 1994, potopoto,  0,        segac2, potopoto, segac2_state, potopoto, ROT0,   "Sega", "Poto Poto (Japan)", 0 )
+GAME( 1994, stkclmns,  0,        segac2, stkclmns, segac2_state, stkclmns, ROT0,   "Sega", "Stack Columns (World)", 0 )
+GAME( 1994, stkclmnsj, stkclmns, segac2, stkclmns, segac2_state, stkclmnj, ROT0,   "Sega", "Stack Columns (Japan)", 0 )
+GAME( 1994, ichir,     0,        segac2, ichir, segac2_state,    ichir,    ROT0,   "Sega", "Puzzle & Action: Ichidant-R (World)", 0 )
+GAME( 1994, ichirk,    ichir,    segac2, ichir, segac2_state,    ichirk,   ROT0,   "Sega", "Puzzle & Action: Ichidant-R (Korea)", 0 )
+GAME( 1994, ichirj,    ichir,    segac2, ichir, segac2_state,    ichirj,   ROT0,   "Sega", "Puzzle & Action: Ichidant-R (Japan)", 0 )
+GAME( 1994, ichirjbl,  ichir,    segac,  ichir, segac2_state,    ichirjbl, ROT0,   "bootleg", "Puzzle & Action: Ichidant-R (Japan) (bootleg)", 0 ) // C board, no samples
+GAME( 1994, puyopuy2,  0,        segac2, puyopuy2, segac2_state, puyopuy2, ROT0,   "Compile (Sega license)", "Puyo Puyo 2 (Japan)", 0 )
+GAME( 1994, zunkyou,   0,        segac2, zunkyou, segac2_state,  zunkyou,  ROT0,   "Sega", "Zunzunkyou No Yabou (Japan)", 0 )
 
 /* Atlus Print Club 'Games' (C-2 Hardware, might not be possible to support them because they use camera + printer, really just put here for reference) */
-GAME( 1995, pclubj,    0,        segac2, pclub,    pclub,    ROT0,   "Atlus", "Print Club (Japan Vol.1)", GAME_NOT_WORKING )
-GAME( 1995, pclubjv2,  pclubj,   segac2, pclubjv2, pclubjv2, ROT0,   "Atlus", "Print Club (Japan Vol.2)", GAME_NOT_WORKING )
-GAME( 1996, pclubjv4,  pclubj,   segac2, pclubjv2, pclubjv4, ROT0,   "Atlus", "Print Club (Japan Vol.4)", GAME_NOT_WORKING )
-GAME( 1996, pclubjv5,  pclubj,   segac2, pclubjv2, pclubjv5, ROT0,   "Atlus", "Print Club (Japan Vol.5)", GAME_NOT_WORKING )
+GAME( 1995, pclubj,    0,        segac2, pclub, segac2_state,    pclub,    ROT0,   "Atlus", "Print Club (Japan Vol.1)", GAME_NOT_WORKING )
+GAME( 1995, pclubjv2,  pclubj,   segac2, pclubjv2, segac2_state, pclubjv2, ROT0,   "Atlus", "Print Club (Japan Vol.2)", GAME_NOT_WORKING )
+GAME( 1996, pclubjv4,  pclubj,   segac2, pclubjv2, segac2_state, pclubjv4, ROT0,   "Atlus", "Print Club (Japan Vol.4)", GAME_NOT_WORKING )
+GAME( 1996, pclubjv5,  pclubj,   segac2, pclubjv2, segac2_state, pclubjv5, ROT0,   "Atlus", "Print Club (Japan Vol.5)", GAME_NOT_WORKING )

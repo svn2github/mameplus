@@ -1020,38 +1020,35 @@ static void mcu_init( running_machine &machine )
 	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x20008e, 0x20008f, read16_delegate(FUNC(gstriker_state::twrldc94_prot_reg_r),state));
 }
 
-static DRIVER_INIT( twrldc94 )
+DRIVER_INIT_MEMBER(gstriker_state,twrldc94)
 {
-	gstriker_state *state = machine.driver_data<gstriker_state>();
-	state->m_gametype = 1;
-	mcu_init( machine );
+	m_gametype = 1;
+	mcu_init( machine() );
 }
 
-static DRIVER_INIT( twrldc94a )
+DRIVER_INIT_MEMBER(gstriker_state,twrldc94a)
 {
-	gstriker_state *state = machine.driver_data<gstriker_state>();
-	state->m_gametype = 2;
-	mcu_init( machine );
+	m_gametype = 2;
+	mcu_init( machine() );
 }
 
-static DRIVER_INIT( vgoalsoc )
+DRIVER_INIT_MEMBER(gstriker_state,vgoalsoc)
 {
-	gstriker_state *state = machine.driver_data<gstriker_state>();
-	state->m_gametype = 3;
-	mcu_init( machine );
+	m_gametype = 3;
+	mcu_init( machine() );
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x200090, 0x200091, write16_delegate(FUNC(gstriker_state::vbl_toggle_w),state)); // vblank toggle
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x200090, 0x200091, read16_delegate(FUNC(gstriker_state::vbl_toggle_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x200090, 0x200091, write16_delegate(FUNC(gstriker_state::vbl_toggle_w),this)); // vblank toggle
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x200090, 0x200091, read16_delegate(FUNC(gstriker_state::vbl_toggle_r),this));
 }
 
 /*** GAME DRIVERS ************************************************************/
 
-GAME( 1993, gstriker, 0,        gstriker, gstriker, 0,        ROT0, "Human", "Grand Striker", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, gstrikera, gstriker, gstriker, gstriker, 0,        ROT0, "Human", "Grand Striker (Americas)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, gstriker, 0,        gstriker, gstriker, driver_device, 0,        ROT0, "Human", "Grand Striker", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, gstrikera, gstriker, gstriker, gstriker, driver_device, 0,        ROT0, "Human", "Grand Striker (Americas)", GAME_IMPERFECT_GRAPHICS )
 
 
 /* Similar, but not identical hardware, appear to be protected by an MCU :-( */
-GAME( 1994, vgoalsoc, 0,        vgoal,    vgoalsoc, vgoalsoc,   ROT0, "Tecmo", "V Goal Soccer (set 1)", GAME_NOT_WORKING )
-GAME( 1994, vgoalsca, vgoalsoc, vgoal,    vgoalsoc, vgoalsoc,   ROT0, "Tecmo", "V Goal Soccer (set 2)", GAME_NOT_WORKING )
-GAME( 1994, twrldc94, 0,        twrldc94, twrldc94, twrldc94,   ROT0, "Tecmo", "Tecmo World Cup '94 (set 1)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, twrldc94a,twrldc94, twrldc94, twrldc94, twrldc94a,  ROT0, "Tecmo", "Tecmo World Cup '94 (set 2)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, vgoalsoc, 0,        vgoal,    vgoalsoc, gstriker_state, vgoalsoc,   ROT0, "Tecmo", "V Goal Soccer (set 1)", GAME_NOT_WORKING )
+GAME( 1994, vgoalsca, vgoalsoc, vgoal,    vgoalsoc, gstriker_state, vgoalsoc,   ROT0, "Tecmo", "V Goal Soccer (set 2)", GAME_NOT_WORKING )
+GAME( 1994, twrldc94, 0,        twrldc94, twrldc94, gstriker_state, twrldc94,   ROT0, "Tecmo", "Tecmo World Cup '94 (set 1)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, twrldc94a,twrldc94, twrldc94, twrldc94, gstriker_state, twrldc94a,  ROT0, "Tecmo", "Tecmo World Cup '94 (set 2)", GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS )

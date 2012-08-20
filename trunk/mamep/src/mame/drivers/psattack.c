@@ -86,6 +86,7 @@ public:
 		: driver_device(mconfig, type, tag) { }
 
 	DECLARE_READ32_MEMBER(psattack_unk_r);
+	DECLARE_DRIVER_INIT(psattack);
 };
 
 
@@ -215,10 +216,10 @@ ROM_END
 
 
 
-static DRIVER_INIT(psattack)
+DRIVER_INIT_MEMBER(psattack_state,psattack)
 {
 
 }
 
-GAME( 2004, psattack, 0, psattack, psattack, psattack, ROT0, "Uniana", "P's Attack", GAME_IS_SKELETON )
+GAME( 2004, psattack, 0, psattack, psattack, psattack_state, psattack, ROT0, "Uniana", "P's Attack", GAME_IS_SKELETON )
 

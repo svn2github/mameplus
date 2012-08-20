@@ -21,6 +21,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(kissp);
 };
 
 
@@ -35,7 +37,7 @@ void kissp_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( kissp )
+DRIVER_INIT_MEMBER(kissp_state,kissp)
 {
 }
 
@@ -56,4 +58,4 @@ ROM_START(kissp)
 ROM_END
 
 
-GAME( 1979,  kissp,  kiss,  kissp,  kissp,  kissp,  ROT0,  "Bally",    "Kiss (prototype)",      GAME_NO_SOUND | GAME_MECHANICAL)
+GAME( 1979,  kissp,  kiss,  kissp,  kissp, kissp_state,  kissp,  ROT0,  "Bally",    "Kiss (prototype)",      GAME_NO_SOUND | GAME_MECHANICAL)

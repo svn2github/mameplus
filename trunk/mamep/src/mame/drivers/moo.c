@@ -917,18 +917,17 @@ ROM_START( moomesabl )
 	ROM_LOAD( "moo.nv", 0x0000, 0x080, CRC(7bd904a8) SHA1(8747c5c62d1832e290be8ace73c61b1f228c0bec) )
 ROM_END
 
-static DRIVER_INIT( moo )
+DRIVER_INIT_MEMBER(moo_state,moo)
 {
-	moo_state *state = machine.driver_data<moo_state>();
-	state->m_game_type = (!strcmp(machine.system().name, "bucky") || !strcmp(machine.system().name, "buckyua"));
+	m_game_type = (!strcmp(machine().system().name, "bucky") || !strcmp(machine().system().name, "buckyua"));
 }
 
 
-GAME( 1992, moomesa,    0,       moo,     moo,     moo,      ROT0, "Konami", "Wild West C.O.W.-Boys of Moo Mesa (ver EAB)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1992, moomesauac, moomesa, moo,     moo,     moo,      ROT0, "Konami", "Wild West C.O.W.-Boys of Moo Mesa (ver UAC)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1992, moomesauab, moomesa, moo,     moo,     moo,      ROT0, "Konami", "Wild West C.O.W.-Boys of Moo Mesa (ver UAB)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1992, moomesaaab, moomesa, moo,     moo,     moo,      ROT0, "Konami", "Wild West C.O.W.-Boys of Moo Mesa (ver AAB)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1992, moomesabl,  moomesa, moobl,   moo,     moo,      ROT0, "bootleg", "Wild West C.O.W.-Boys of Moo Mesa (bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// based on Version AA
-GAME( 1992, bucky,      0,       bucky,   bucky,   moo,      ROT0, "Konami", "Bucky O'Hare (ver EAB)", GAME_SUPPORTS_SAVE )
-GAME( 1992, buckyuab,   bucky,   bucky,   bucky,   moo,      ROT0, "Konami", "Bucky O'Hare (ver UAB)", GAME_SUPPORTS_SAVE )
-GAME( 1992, buckyaab,   bucky,   bucky,   bucky,   moo,      ROT0, "Konami", "Bucky O'Hare (ver AAB)", GAME_SUPPORTS_SAVE )
+GAME( 1992, moomesa,    0,       moo,     moo, moo_state,     moo,      ROT0, "Konami", "Wild West C.O.W.-Boys of Moo Mesa (ver EAB)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1992, moomesauac, moomesa, moo,     moo, moo_state,     moo,      ROT0, "Konami", "Wild West C.O.W.-Boys of Moo Mesa (ver UAC)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1992, moomesauab, moomesa, moo,     moo, moo_state,     moo,      ROT0, "Konami", "Wild West C.O.W.-Boys of Moo Mesa (ver UAB)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1992, moomesaaab, moomesa, moo,     moo, moo_state,     moo,      ROT0, "Konami", "Wild West C.O.W.-Boys of Moo Mesa (ver AAB)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1992, moomesabl,  moomesa, moobl,   moo, moo_state,     moo,      ROT0, "bootleg", "Wild West C.O.W.-Boys of Moo Mesa (bootleg)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )	// based on Version AA
+GAME( 1992, bucky,      0,       bucky,   bucky, moo_state,   moo,      ROT0, "Konami", "Bucky O'Hare (ver EAB)", GAME_SUPPORTS_SAVE )
+GAME( 1992, buckyuab,   bucky,   bucky,   bucky, moo_state,   moo,      ROT0, "Konami", "Bucky O'Hare (ver UAB)", GAME_SUPPORTS_SAVE )
+GAME( 1992, buckyaab,   bucky,   bucky,   bucky, moo_state,   moo,      ROT0, "Konami", "Bucky O'Hare (ver AAB)", GAME_SUPPORTS_SAVE )

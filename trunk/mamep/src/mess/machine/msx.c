@@ -518,13 +518,13 @@ static const UINT8 cc_ex[0x100] = {
 };
 
 
-DRIVER_INIT( msx )
+DRIVER_INIT_MEMBER(msx_state,msx)
 {
-	device_set_input_line_vector (machine.device("maincpu"), 0, 0xff);
+	device_set_input_line_vector (machine().device("maincpu"), 0, 0xff);
 
-	msx_memory_init (machine);
+	msx_memory_init (machine());
 
-	z80_set_cycle_tables( machine.device("maincpu"), cc_op, cc_cb, cc_ed, cc_xy, cc_xycb, cc_ex );
+	z80_set_cycle_tables( machine().device("maincpu"), cc_op, cc_cb, cc_ed, cc_xy, cc_xycb, cc_ex );
 }
 
 TIMER_DEVICE_CALLBACK( msx2_interrupt )
@@ -636,7 +636,7 @@ WRITE8_DEVICE_HANDLER( msx_printer_data_w )
 {
 	if (device->machine().root_device().ioport("DSW")->read() & 0x80)
 		/* SIMPL emulation */
-		dac_signed_data_w(device->machine().device("dac"), data);
+		device->machine().device<dac_device>("dac")->write_signed8(data);
 	else
 		device->machine().device<centronics_device>("centronics")->write(*device->machine().memory().first_space(), 0, data);
 }
@@ -776,7 +776,7 @@ WRITE8_MEMBER( msx_state::msx_ppi_port_c_w )
 
 	/* key click */
 	if ( BIT(m_port_c_old ^ data, 7) )
-		dac_signed_data_w (m_dac, BIT(data, 7) ? 0x7f : 0);
+		m_dac->write_signed8(BIT(data, 7) ? 0x7f : 0);
 
 	/* cassette motor on/off */
 	if ( BIT(m_port_c_old ^ data, 4) )

@@ -17,7 +17,7 @@ WRITE8_MEMBER(cchasm_state::cchasm_reset_coin_flag_w)
 	if (m_coin_flag)
 	{
 		m_coin_flag = 0;
-		z80ctc_trg0_w(m_ctc, m_coin_flag);
+		m_ctc->trg0(m_coin_flag);
 	}
 }
 
@@ -26,7 +26,7 @@ INPUT_CHANGED_MEMBER(cchasm_state::cchasm_set_coin_flag )
 	if (!newval && !m_coin_flag)
 	{
 		m_coin_flag = 1;
-		z80ctc_trg0_w(m_ctc, m_coin_flag);
+		m_ctc->trg0(m_coin_flag);
 	}
 }
 
@@ -39,7 +39,7 @@ READ8_MEMBER(cchasm_state::cchasm_coin_sound_r)
 READ8_MEMBER(cchasm_state::cchasm_soundlatch2_r)
 {
 	m_sound_flags &= ~0x80;
-	z80ctc_trg2_w(m_ctc, 0);
+	m_ctc->trg2(0);
 	return soundlatch2_byte_r(space, offset);
 }
 
@@ -65,7 +65,7 @@ WRITE16_MEMBER(cchasm_state::cchasm_io_w)
 		case 1:
 			m_sound_flags |= 0x80;
 			soundlatch2_byte_w(space, offset, data);
-			z80ctc_trg2_w(m_ctc, 1);
+			m_ctc->trg2(1);
 			cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
 			break;
 		case 2:
@@ -103,7 +103,7 @@ static WRITE_LINE_DEVICE_HANDLER( ctc_timer_1_w )
 	{
 		drvstate->m_output[0] ^= 0x7f;
 		drvstate->m_channel_active[0] = 1;
-		dac_data_w(device->machine().device("dac1"), drvstate->m_output[0]);
+		device->machine().device<dac_device>("dac1")->write_unsigned8(drvstate->m_output[0]);
 	}
 }
 
@@ -114,13 +114,12 @@ static WRITE_LINE_DEVICE_HANDLER( ctc_timer_2_w )
 	{
 		drvstate->m_output[1] ^= 0x7f;
 		drvstate->m_channel_active[1] = 1;
-		dac_data_w(device->machine().device("dac2"), drvstate->m_output[0]);
+		device->machine().device<dac_device>("dac2")->write_unsigned8(drvstate->m_output[0]);
 	}
 }
 
 Z80CTC_INTERFACE( cchasm_ctc_intf )
 {
-	0,               /* timer disables */
 	DEVCB_CPU_INPUT_LINE("audiocpu", INPUT_LINE_IRQ0),   /* interrupt handler */
 	DEVCB_NULL,					/* ZC/TO0 callback */
 	DEVCB_LINE(ctc_timer_1_w),	/* ZC/TO1 callback */
@@ -134,5 +133,5 @@ SOUND_START( cchasm )
 	state->m_sound_flags = 0;
 	state->m_output[0] = 0; state->m_output[1] = 0;
 
-	state->m_ctc = machine.device("ctc");
+	state->m_ctc = machine.device<z80ctc_device>("ctc");
 }

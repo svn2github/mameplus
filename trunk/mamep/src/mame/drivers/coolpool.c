@@ -558,8 +558,8 @@ WRITE16_MEMBER(coolpool_state::dsp_romaddr_w)
 
 WRITE16_MEMBER(coolpool_state::dsp_dac_w)
 {
-	device_t *device = machine().device("dac");
-	dac_signed_data_16_w(device, (INT16)(data << 4) + 0x8000);
+	dac_device *device = machine().device<dac_device>("dac");
+	device->write_signed16((INT16)(data << 4) + 0x8000);
 }
 
 
@@ -876,7 +876,7 @@ static MACHINE_CONFIG_START( amerdart, coolpool_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -907,7 +907,7 @@ static MACHINE_CONFIG_START( coolpool, coolpool_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -1175,33 +1175,31 @@ static void register_state_save(running_machine &machine)
 
 
 
-static DRIVER_INIT( amerdart )
+DRIVER_INIT_MEMBER(coolpool_state,amerdart)
 {
-	coolpool_state *state = machine.driver_data<coolpool_state>();
 
-	state->m_lastresult = 0xffff;
+	m_lastresult = 0xffff;
 
-	register_state_save(machine);
+	register_state_save(machine());
 }
 
-static DRIVER_INIT( coolpool )
+DRIVER_INIT_MEMBER(coolpool_state,coolpool)
 {
-	coolpool_state *state = machine.driver_data<coolpool_state>();
 
-	machine.device("dsp")->memory().space(AS_IO)->install_read_handler(0x07, 0x07, read16_delegate(FUNC(coolpool_state::coolpool_input_r),state));
+	machine().device("dsp")->memory().space(AS_IO)->install_read_handler(0x07, 0x07, read16_delegate(FUNC(coolpool_state::coolpool_input_r),this));
 
-	register_state_save(machine);
+	register_state_save(machine());
 }
 
 
-static DRIVER_INIT( 9ballsht )
+DRIVER_INIT_MEMBER(coolpool_state,9ballsht)
 {
 	int a, len;
 	UINT16 *rom;
 
 	/* decrypt the main program ROMs */
-	rom = (UINT16 *)machine.root_device().memregion("user1")->base();
-	len = machine.root_device().memregion("user1")->bytes();
+	rom = (UINT16 *)machine().root_device().memregion("user1")->base();
+	len = machine().root_device().memregion("user1")->bytes();
 	for (a = 0;a < len/2;a++)
 	{
 		int hi,lo,nhi,nlo;
@@ -1224,8 +1222,8 @@ static DRIVER_INIT( 9ballsht )
 	}
 
 	/* decrypt the sub data ROMs */
-	rom = (UINT16 *)machine.root_device().memregion("user2")->base();
-	len = machine.root_device().memregion("user2")->bytes();
+	rom = (UINT16 *)machine().root_device().memregion("user2")->base();
+	len = machine().root_device().memregion("user2")->bytes();
 	for (a = 1;a < len/2;a+=4)
 	{
 		/* just swap bits 1 and 2 of the address */
@@ -1234,7 +1232,7 @@ static DRIVER_INIT( 9ballsht )
 		rom[a+1] = tmp;
 	}
 
-	register_state_save(machine);
+	register_state_save(machine());
 }
 
 
@@ -1245,11 +1243,11 @@ static DRIVER_INIT( 9ballsht )
  *
  *************************************/
 
-GAME( 1989, amerdart,  0,        amerdart, amerdart, amerdart, ROT0, "Ameri",    "AmeriDarts (set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1989, amerdart2, amerdart, amerdart, amerdart, amerdart, ROT0, "Ameri",    "AmeriDarts (set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1989, amerdart3, amerdart, amerdart, amerdart, amerdart, ROT0, "Ameri",    "AmeriDarts (set 3)", GAME_SUPPORTS_SAVE )
-GAME( 1992, coolpool,  0,        coolpool, coolpool, coolpool, ROT0, "Catalina", "Cool Pool", 0 )
-GAME( 1993, 9ballsht,  0,        9ballsht, 9ballsht, 9ballsht, ROT0, "E-Scape EnterMedia (Bundra license)", "9-Ball Shootout (set 1)", 0 )
-GAME( 1993, 9ballsht2, 9ballsht, 9ballsht, 9ballsht, 9ballsht, ROT0, "E-Scape EnterMedia (Bundra license)", "9-Ball Shootout (set 2)", 0 )
-GAME( 1993, 9ballsht3, 9ballsht, 9ballsht, 9ballsht, 9ballsht, ROT0, "E-Scape EnterMedia (Bundra license)", "9-Ball Shootout (set 3)", 0 )
-GAME( 1993, 9ballshtc, 9ballsht, 9ballsht, 9ballsht, 9ballsht, ROT0, "E-Scape EnterMedia (Bundra license)", "9-Ball Shootout Championship", 0 )
+GAME( 1989, amerdart,  0,        amerdart, amerdart, coolpool_state, amerdart, ROT0, "Ameri",    "AmeriDarts (set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1989, amerdart2, amerdart, amerdart, amerdart, coolpool_state, amerdart, ROT0, "Ameri",    "AmeriDarts (set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1989, amerdart3, amerdart, amerdart, amerdart, coolpool_state, amerdart, ROT0, "Ameri",    "AmeriDarts (set 3)", GAME_SUPPORTS_SAVE )
+GAME( 1992, coolpool,  0,        coolpool, coolpool, coolpool_state, coolpool, ROT0, "Catalina", "Cool Pool", 0 )
+GAME( 1993, 9ballsht,  0,        9ballsht, 9ballsht, coolpool_state, 9ballsht, ROT0, "E-Scape EnterMedia (Bundra license)", "9-Ball Shootout (set 1)", 0 )
+GAME( 1993, 9ballsht2, 9ballsht, 9ballsht, 9ballsht, coolpool_state, 9ballsht, ROT0, "E-Scape EnterMedia (Bundra license)", "9-Ball Shootout (set 2)", 0 )
+GAME( 1993, 9ballsht3, 9ballsht, 9ballsht, 9ballsht, coolpool_state, 9ballsht, ROT0, "E-Scape EnterMedia (Bundra license)", "9-Ball Shootout (set 3)", 0 )
+GAME( 1993, 9ballshtc, 9ballsht, 9ballsht, 9ballsht, coolpool_state, 9ballsht, ROT0, "E-Scape EnterMedia (Bundra license)", "9-Ball Shootout Championship", 0 )

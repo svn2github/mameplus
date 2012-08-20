@@ -19,6 +19,7 @@ public:
 	DECLARE_WRITE8_MEMBER(lamp7_w);
 	DECLARE_WRITE8_MEMBER(sol_w);
 	DECLARE_CUSTOM_INPUT_MEMBER(wolfman_replay_hs_r);
+	DECLARE_DRIVER_INIT(peyper);
 };
 
 
@@ -545,7 +546,7 @@ static MACHINE_CONFIG_START( peyper, peyper_state )
 MACHINE_CONFIG_END
 
 
-static DRIVER_INIT( peyper )
+DRIVER_INIT_MEMBER(peyper_state,peyper)
 {
 }
 
@@ -622,10 +623,10 @@ ROM_START(wolfman)
 ROM_END
 
 
-GAME( 1985, odin_dlx, 0, peyper,   odin_dlx, peyper,   ROT0, "Sonic",  "Odin De Luxe",          GAME_IS_SKELETON_MECHANICAL)
-GAME( 1986, solarwap, 0, peyper,   solarwap, peyper,   ROT0, "Sonic",  "Solar Wars (Sonic)",    GAME_IS_SKELETON_MECHANICAL)
-GAME( 1987, poleposn, 0, peyper,   poleposn, peyper,   ROT0, "Sonic",  "Pole Position (Sonic)", GAME_IS_SKELETON_MECHANICAL)
-GAME( 1987, sonstwar, 0, peyper,   sonstwar, peyper,   ROT0, "Sonic",  "Star Wars (Sonic)",     GAME_IS_SKELETON_MECHANICAL)
+GAME( 1985, odin_dlx, 0, peyper,   odin_dlx, peyper_state, peyper,   ROT0, "Sonic",  "Odin De Luxe",          GAME_IS_SKELETON_MECHANICAL)
+GAME( 1986, solarwap, 0, peyper,   solarwap, peyper_state, peyper,   ROT0, "Sonic",  "Solar Wars (Sonic)",    GAME_IS_SKELETON_MECHANICAL)
+GAME( 1987, poleposn, 0, peyper,   poleposn, peyper_state, peyper,   ROT0, "Sonic",  "Pole Position (Sonic)", GAME_IS_SKELETON_MECHANICAL)
+GAME( 1987, sonstwar, 0, peyper,   sonstwar, peyper_state, peyper,   ROT0, "Sonic",  "Star Wars (Sonic)",     GAME_IS_SKELETON_MECHANICAL)
 
-GAME( 1987, wolfman,  0, peyper,   wolfman,  peyper,   ROT0, "Peyper", "Wolf Man",              GAME_IS_SKELETON_MECHANICAL)
-GAME( 1987, odisea,   0, peyper,   odisea,   peyper,   ROT0, "Peyper", "Odisea Paris-Dakar",    GAME_IS_SKELETON_MECHANICAL)
+GAME( 1987, wolfman,  0, peyper,   wolfman, peyper_state,  peyper,   ROT0, "Peyper", "Wolf Man",              GAME_IS_SKELETON_MECHANICAL)
+GAME( 1987, odisea,   0, peyper,   odisea, peyper_state,   peyper,   ROT0, "Peyper", "Odisea Paris-Dakar",    GAME_IS_SKELETON_MECHANICAL)

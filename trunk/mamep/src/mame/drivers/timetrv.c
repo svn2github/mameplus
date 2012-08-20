@@ -50,7 +50,7 @@ static VIDEO_START( timetrv )
 
 }
 
-static SCREEN_UPDATE_IND16( timetrv )
+static SCREEN_UPDATE_RGB32( timetrv )
 {
 	timetrv_state *state = screen.machine().driver_data<timetrv_state>();
 	popmessage("%s%s",reinterpret_cast<char *>(state->m_led_vram_lo.target()),reinterpret_cast<char *>(state->m_led_vram_hi.target()));
@@ -180,4 +180,4 @@ ROM_START( timetrv )
 	DISK_IMAGE_READONLY( "timetrv", 0, NO_DUMP )
 ROM_END
 
-GAME( 1991, timetrv,  0,       timetrv,  timetrv,  0, ROT0, "Virtual Image Productions (Sega license)", "Time Traveler", GAME_NO_SOUND | GAME_NOT_WORKING )
+GAME( 1991, timetrv,  0,       timetrv,  timetrv, driver_device,  0, ROT0, "Virtual Image Productions (Sega license)", "Time Traveler", GAME_NO_SOUND | GAME_NOT_WORKING )

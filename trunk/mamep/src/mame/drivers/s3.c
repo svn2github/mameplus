@@ -21,6 +21,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(williams_s3);
 };
 
 static ADDRESS_MAP_START( williams_s3_map, AS_PROGRAM, 8, williams_s3_state )
@@ -38,7 +40,7 @@ void williams_s3_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( williams_s3 )
+DRIVER_INIT_MEMBER(williams_s3_state,williams_s3)
 {
 }
 static MACHINE_CONFIG_START( williams_s3, williams_s3_state )
@@ -122,8 +124,8 @@ ROM_START(wldcp_l1)
 ROM_END
 
 
-GAME( 1977, httip_l1, 0, williams_s3, williams_s3, williams_s3, ROT0, "Williams", "Hot Tip (L-1)",			GAME_IS_SKELETON_MECHANICAL)
-GAME( 1977, lucky_l1, 0, williams_s3, williams_s3, williams_s3, ROT0, "Williams", "Lucky Seven (L-1)",		GAME_IS_SKELETON_MECHANICAL)
-GAME( 1978, wldcp_l1, 0, williams_s3, williams_s3, williams_s3, ROT0, "Williams", "World Cup Soccer (L-1)", 	GAME_IS_SKELETON_MECHANICAL)
-GAME( 1978, cntct_l1, 0, williams_s3, williams_s3, williams_s3, ROT0, "Williams", "Contact (L-1)",			GAME_IS_SKELETON_MECHANICAL)
-GAME( 1978, disco_l1, 0, williams_s3, williams_s3, williams_s3, ROT0, "Williams", "Disco Fever (L-1)",		GAME_IS_SKELETON_MECHANICAL)
+GAME( 1977, httip_l1, 0, williams_s3, williams_s3, williams_s3_state, williams_s3, ROT0, "Williams", "Hot Tip (L-1)",			GAME_IS_SKELETON_MECHANICAL)
+GAME( 1977, lucky_l1, 0, williams_s3, williams_s3, williams_s3_state, williams_s3, ROT0, "Williams", "Lucky Seven (L-1)",		GAME_IS_SKELETON_MECHANICAL)
+GAME( 1978, wldcp_l1, 0, williams_s3, williams_s3, williams_s3_state, williams_s3, ROT0, "Williams", "World Cup Soccer (L-1)",	GAME_IS_SKELETON_MECHANICAL)
+GAME( 1978, cntct_l1, 0, williams_s3, williams_s3, williams_s3_state, williams_s3, ROT0, "Williams", "Contact (L-1)",			GAME_IS_SKELETON_MECHANICAL)
+GAME( 1978, disco_l1, 0, williams_s3, williams_s3, williams_s3_state, williams_s3, ROT0, "Williams", "Disco Fever (L-1)",		GAME_IS_SKELETON_MECHANICAL)

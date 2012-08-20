@@ -657,10 +657,10 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( brkthru )
+DRIVER_INIT_MEMBER(brkthru_state,brkthru)
 {
-	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
-	machine.root_device().membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x2000);
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
+	machine().root_device().membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x2000);
 }
 
 /*************************************
@@ -669,7 +669,7 @@ static DRIVER_INIT( brkthru )
  *
  *************************************/
 
-GAME( 1986, brkthru,  0,       brkthru, brkthru,  brkthru, ROT0,   "Data East USA",         "Break Thru (US)", GAME_SUPPORTS_SAVE )
-GAME( 1986, brkthruj, brkthru, brkthru, brkthruj, brkthru, ROT0,   "Data East Corporation", "Kyohkoh-Toppa (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1986, forcebrk, brkthru, brkthru, brkthruj, brkthru, ROT0,   "bootleg",               "Force Break (bootleg)", GAME_SUPPORTS_SAVE )
-GAME( 1986, darwin,   0,       darwin,  darwin,   brkthru, ROT270, "Data East Corporation", "Darwin 4078 (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1986, brkthru,  0,       brkthru, brkthru, brkthru_state,  brkthru, ROT0,   "Data East USA",         "Break Thru (US)", GAME_SUPPORTS_SAVE )
+GAME( 1986, brkthruj, brkthru, brkthru, brkthruj, brkthru_state, brkthru, ROT0,   "Data East Corporation", "Kyohkoh-Toppa (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1986, forcebrk, brkthru, brkthru, brkthruj, brkthru_state, brkthru, ROT0,   "bootleg",               "Force Break (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1986, darwin,   0,       darwin,  darwin, brkthru_state,   brkthru, ROT270, "Data East Corporation", "Darwin 4078 (Japan)", GAME_SUPPORTS_SAVE )

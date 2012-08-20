@@ -1122,44 +1122,40 @@ ROM_END
    video_type is used to distinguish Rygar, Silkworm and Gemini Wing.
    This is needed because there is a difference in the tile and sprite indexing.
 */
-static DRIVER_INIT( rygar )
+DRIVER_INIT_MEMBER(tecmo_state,rygar)
 {
-	tecmo_state *state = machine.driver_data<tecmo_state>();
-	state->m_video_type = 0;
+	m_video_type = 0;
 }
 
-static DRIVER_INIT( silkworm )
+DRIVER_INIT_MEMBER(tecmo_state,silkworm)
 {
-	tecmo_state *state = machine.driver_data<tecmo_state>();
-	state->m_video_type = 1;
+	m_video_type = 1;
 }
 
-static DRIVER_INIT( gemini )
+DRIVER_INIT_MEMBER(tecmo_state,gemini)
 {
-	tecmo_state *state = machine.driver_data<tecmo_state>();
-	state->m_video_type = 2;
+	m_video_type = 2;
 }
 
-static DRIVER_INIT( backfirt )
+DRIVER_INIT_MEMBER(tecmo_state,backfirt)
 {
-	tecmo_state *state = machine.driver_data<tecmo_state>();
-	state->m_video_type = 2;
+	m_video_type = 2;
 
 	/* no MSM */
-	machine.device("soundcpu")->memory().space(AS_PROGRAM)->nop_write(0xc000, 0xc000);
-	machine.device("soundcpu")->memory().space(AS_PROGRAM)->nop_write(0xc400, 0xc400);
-	machine.device("soundcpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xc800);
+	machine().device("soundcpu")->memory().space(AS_PROGRAM)->nop_write(0xc000, 0xc000);
+	machine().device("soundcpu")->memory().space(AS_PROGRAM)->nop_write(0xc400, 0xc400);
+	machine().device("soundcpu")->memory().space(AS_PROGRAM)->nop_write(0xc800, 0xc800);
 }
 
 
 
 
 
-GAME( 1986, rygar,     0,        rygar,    rygar,    rygar,    ROT0,  "Tecmo", "Rygar (US set 1)", 0 )
-GAME( 1986, rygar2,    rygar,    rygar,    rygar,    rygar,    ROT0,  "Tecmo", "Rygar (US set 2)", 0 )
-GAME( 1986, rygar3,    rygar,    rygar,    rygar,    rygar,    ROT0,  "Tecmo", "Rygar (US set 3 Old Version)", 0 )
-GAME( 1986, rygarj,    rygar,    rygar,    rygar,    rygar,    ROT0,  "Tecmo", "Argus no Senshi (Japan)", 0 )
-GAME( 1987, gemini,    0,        gemini,   gemini,   gemini,   ROT90, "Tecmo", "Gemini Wing (Japan)", 0 ) /* Japan regional warning screen */
-GAME( 1988, silkworm,  0,        silkworm, silkworm, silkworm, ROT0,  "Tecmo", "Silk Worm (World)", 0 )   /* No regional "Warning, if you are playing ..." screen */
-GAME( 1988, silkwormj, silkworm, silkworm, silkworm, silkworm, ROT0,  "Tecmo", "Silk Worm (Japan)", 0 )   /* Japan regional warning screen */
-GAME( 1988, backfirt,  0,        gemini,   backfirt, backfirt, ROT0,  "Tecmo", "Back Fire (Tecmo, bootleg)", 0 )
+GAME( 1986, rygar,     0,        rygar,    rygar, tecmo_state,    rygar,    ROT0,  "Tecmo", "Rygar (US set 1)", 0 )
+GAME( 1986, rygar2,    rygar,    rygar,    rygar, tecmo_state,    rygar,    ROT0,  "Tecmo", "Rygar (US set 2)", 0 )
+GAME( 1986, rygar3,    rygar,    rygar,    rygar, tecmo_state,    rygar,    ROT0,  "Tecmo", "Rygar (US set 3 Old Version)", 0 )
+GAME( 1986, rygarj,    rygar,    rygar,    rygar, tecmo_state,    rygar,    ROT0,  "Tecmo", "Argus no Senshi (Japan)", 0 )
+GAME( 1987, gemini,    0,        gemini,   gemini, tecmo_state,   gemini,   ROT90, "Tecmo", "Gemini Wing (Japan)", 0 ) /* Japan regional warning screen */
+GAME( 1988, silkworm,  0,        silkworm, silkworm, tecmo_state, silkworm, ROT0,  "Tecmo", "Silk Worm (World)", 0 )   /* No regional "Warning, if you are playing ..." screen */
+GAME( 1988, silkwormj, silkworm, silkworm, silkworm, tecmo_state, silkworm, ROT0,  "Tecmo", "Silk Worm (Japan)", 0 )   /* Japan regional warning screen */
+GAME( 1988, backfirt,  0,        gemini,   backfirt, tecmo_state, backfirt, ROT0,  "Tecmo", "Back Fire (Tecmo, bootleg)", 0 )

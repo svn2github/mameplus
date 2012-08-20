@@ -313,11 +313,11 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( battlex )
+DRIVER_INIT_MEMBER(battlex_state,battlex)
 {
-	UINT8 *colormask = machine.root_device().memregion("user1")->base();
-	UINT8 *gfxdata = machine.root_device().memregion("user2")->base();
-	UINT8 *dest = machine.root_device().memregion("gfx1")->base();
+	UINT8 *colormask = machine().root_device().memregion("user1")->base();
+	UINT8 *gfxdata = machine().root_device().memregion("user2")->base();
+	UINT8 *dest = machine().root_device().memregion("gfx1")->base();
 
 	int tile, line, bit;
 
@@ -350,4 +350,4 @@ static DRIVER_INIT( battlex )
  *
  *************************************/
 
-GAME( 1982, battlex, 0, battlex, battlex, battlex, ROT180, "Omori Electric Co., Ltd.", "Battle Cross", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_COLORS | GAME_SUPPORTS_SAVE )
+GAME( 1982, battlex, 0, battlex, battlex, battlex_state, battlex, ROT180, "Omori Electric Co., Ltd.", "Battle Cross", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_COLORS | GAME_SUPPORTS_SAVE )

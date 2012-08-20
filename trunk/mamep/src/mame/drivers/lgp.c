@@ -84,6 +84,7 @@ public:
 	emu_timer *m_irq_timer;
 	DECLARE_READ8_MEMBER(ldp_read);
 	DECLARE_WRITE8_MEMBER(ldp_write);
+	DECLARE_DRIVER_INIT(lgp);
 };
 
 
@@ -93,7 +94,7 @@ public:
 
 
 /* VIDEO GOODS */
-static SCREEN_UPDATE_IND16( lgp )
+static SCREEN_UPDATE_RGB32( lgp )
 {
 	lgp_state *state = screen.machine().driver_data<lgp_state>();
 	int charx, chary;
@@ -473,9 +474,9 @@ ROM_START( lgp )
 ROM_END
 
 
-static DRIVER_INIT( lgp )
+DRIVER_INIT_MEMBER(lgp_state,lgp)
 {
 }
 
 /*    YEAR  NAME PARENT   MACHINE INPUT INIT MONITOR  COMPANY   FULLNAME             FLAGS) */
-GAME( 1983, lgp, 0,       lgp,    lgp,  lgp, ROT0,    "Taito",  "Laser Grand Prix",  GAME_NOT_WORKING|GAME_NO_SOUND)
+GAME( 1983, lgp, 0,       lgp,    lgp, lgp_state,  lgp, ROT0,    "Taito",  "Laser Grand Prix",  GAME_NOT_WORKING|GAME_NO_SOUND)

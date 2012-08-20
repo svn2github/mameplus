@@ -753,20 +753,19 @@ static void init_common(running_machine &machine, UINT32 key1, UINT32 key2, int 
 	state->m_use_fastboot = 0;
 }
 
-static DRIVER_INIT( redearth ){ init_common(machine, 0x9e300ab1, 0xa175b82c, 0); }
-static DRIVER_INIT( sfiii )   { init_common(machine, 0xb5fe053e, 0xfc03925a, 0); }
-static DRIVER_INIT( sfiii2 )  { init_common(machine, 0x00000000, 0x00000000, 1); }
-static DRIVER_INIT( jojo )    { init_common(machine, 0x02203ee3, 0x01301972, 0); }
-static DRIVER_INIT( sfiii3 )  { init_common(machine, 0xa55432b4, 0x0c129981, 0); }
-static DRIVER_INIT( jojoba )  { init_common(machine, 0x23323ee3, 0x03021972, 0); }
-static DRIVER_INIT( nocd )
+DRIVER_INIT_MEMBER(cps3_state,redearth)  { init_common(machine(), 0x9e300ab1, 0xa175b82c, 0); }
+DRIVER_INIT_MEMBER(cps3_state,sfiii)     { init_common(machine(), 0xb5fe053e, 0xfc03925a, 0); }
+DRIVER_INIT_MEMBER(cps3_state,sfiii2)    { init_common(machine(), 0x00000000, 0x00000000, 1); }
+DRIVER_INIT_MEMBER(cps3_state,jojo)      { init_common(machine(), 0x02203ee3, 0x01301972, 0); }
+DRIVER_INIT_MEMBER(cps3_state,sfiii3)    { init_common(machine(), 0xa55432b4, 0x0c129981, 0); }
+DRIVER_INIT_MEMBER(cps3_state,jojoba)    { init_common(machine(), 0x23323ee3, 0x03021972, 0); }
+DRIVER_INIT_MEMBER(cps3_state,nocd )
 {
-	cps3_state *state = machine.driver_data<cps3_state>();
-
 	DRIVER_INIT_CALL( redearth );
 
-	state->m_use_fastboot = 1;
+	m_use_fastboot = 1;
 }
+
 
 
 /* GFX decodes */
@@ -3596,13 +3595,13 @@ ROM_END
 /* Red Earth / Warzard */
 
 // 961121
-GAME( 1996, redearth,  0,        redearth, cps3_re,   redearth, ROT0, "Capcom", "Red Earth (Euro 961121)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, redeartn,  redearth, redearth, cps3_ren,  nocd,     ROT0, "Capcom", "Red Earth (961121, NO CD)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, warzard,   redearth, redearth, cps3_re,   redearth, ROT0, "Capcom", "Warzard (Japan 961121)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, redearth,  0,        redearth, cps3_re, cps3_state,   redearth, ROT0, "Capcom", "Red Earth (Euro 961121)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, redeartn,  redearth, redearth, cps3_ren, cps3_state,  nocd,     ROT0, "Capcom", "Red Earth (961121, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, warzard,   redearth, redearth, cps3_re, cps3_state,   redearth, ROT0, "Capcom", "Warzard (Japan 961121)", GAME_IMPERFECT_GRAPHICS )
 
 // 961023
-GAME( 1996, redearthr1,redearth, redearth, cps3_re,   redearth, ROT0, "Capcom", "Red Earth (Euro 961023)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1996, warzardr1, redearth, redearth, cps3_re,   redearth, ROT0, "Capcom", "Warzard (Japan 961023)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, redearthr1,redearth, redearth, cps3_re, cps3_state,   redearth, ROT0, "Capcom", "Red Earth (Euro 961023)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, warzardr1, redearth, redearth, cps3_re, cps3_state,   redearth, ROT0, "Capcom", "Warzard (Japan 961023)", GAME_IMPERFECT_GRAPHICS )
 
 /* Street Fighter III: New Generation */
 
@@ -3613,10 +3612,10 @@ GAME( 1996, warzardr1, redearth, redearth, cps3_re,   redearth, ROT0, "Capcom", 
 // not dumped
 
 // 970204
-GAME( 1997, sfiii,     0,        sfiii,    sfiiiws,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (USA 970204)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiiij,    sfiii,    sfiii,    sfiiiws,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Japan 970204)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiiih,    sfiii,    sfiii,    sfiiiws,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Hispanic 970204)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiiin,    sfiii,    sfiii,    sfiiiws,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Asia 970204, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiii,     0,        sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (USA 970204)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiij,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Japan 970204)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiih,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Hispanic 970204)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiiin,    sfiii,    sfiii,    sfiiiws, cps3_state,   sfiii,    ROT0, "Capcom", "Street Fighter III: New Generation (Asia 970204, NO CD)", GAME_IMPERFECT_GRAPHICS )
 
 /* Street Fighter III 2nd Impact: Giant Attack */
 
@@ -3624,47 +3623,47 @@ GAME( 1997, sfiiin,    sfiii,    sfiii,    sfiiiws,   sfiii,    ROT0, "Capcom", 
 // not dumped
 
 // 970930
-GAME( 1997, sfiii2,    0,        sfiii2,   sfiiiws,   sfiii2,   ROT0, "Capcom", "Street Fighter III 2nd Impact: Giant Attack (USA 970930)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiii2j,   sfiii2,   sfiii2,   sfiiiws,   sfiii2,   ROT0, "Capcom", "Street Fighter III 2nd Impact: Giant Attack (Japan 970930)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1997, sfiii2n,   sfiii2,   sfiii2,   sfiiiws,   sfiii2,   ROT0, "Capcom", "Street Fighter III 2nd Impact: Giant Attack (Asia 970930, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiii2,    0,        sfiii2,   sfiiiws, cps3_state,   sfiii2,   ROT0, "Capcom", "Street Fighter III 2nd Impact: Giant Attack (USA 970930)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiii2j,   sfiii2,   sfiii2,   sfiiiws, cps3_state,   sfiii2,   ROT0, "Capcom", "Street Fighter III 2nd Impact: Giant Attack (Japan 970930)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1997, sfiii2n,   sfiii2,   sfiii2,   sfiiiws, cps3_state,   sfiii2,   ROT0, "Capcom", "Street Fighter III 2nd Impact: Giant Attack (Asia 970930, NO CD)", GAME_IMPERFECT_GRAPHICS )
 
 /* JoJo's Venture / JoJo no Kimyouna Bouken */
 
 // 990128
-GAME( 1998, jojo,      0,        jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo's Venture (USA 990128)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, jojoj,     jojo,     jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo no Kimyouna Bouken (Japan 990128)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, jojon,     jojo,     jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo's Venture (Asia 990128, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, jojo,      0,        jojo,     cps3_jojo, cps3_state, jojo,     ROT0, "Capcom", "JoJo's Venture (USA 990128)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, jojoj,     jojo,     jojo,     cps3_jojo, cps3_state, jojo,     ROT0, "Capcom", "JoJo no Kimyouna Bouken (Japan 990128)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, jojon,     jojo,     jojo,     cps3_jojo, cps3_state, jojo,     ROT0, "Capcom", "JoJo's Venture (Asia 990128, NO CD)", GAME_IMPERFECT_GRAPHICS )
 
 // 990108
-GAME( 1998, jojor1,    jojo,     jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo's Venture (USA 990108)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, jojojr1,   jojo,     jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo no Kimyouna Bouken (Japan 990108)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, jojonr1,   jojo,     jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo's Venture (Asia 990108, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, jojor1,    jojo,     jojo,     cps3_jojo, cps3_state, jojo,     ROT0, "Capcom", "JoJo's Venture (USA 990108)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, jojojr1,   jojo,     jojo,     cps3_jojo, cps3_state, jojo,     ROT0, "Capcom", "JoJo no Kimyouna Bouken (Japan 990108)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, jojonr1,   jojo,     jojo,     cps3_jojo, cps3_state, jojo,     ROT0, "Capcom", "JoJo's Venture (Asia 990108, NO CD)", GAME_IMPERFECT_GRAPHICS )
 
 // 981202
-GAME( 1998, jojor2,    jojo,     jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo's Venture (USA 981202)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, jojojr2,   jojo,     jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo no Kimyouna Bouken (Japan 981202)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1998, jojonr2,   jojo,     jojo,     cps3_jojo, jojo,     ROT0, "Capcom", "JoJo's Venture (Asia 981202, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, jojor2,    jojo,     jojo,     cps3_jojo, cps3_state, jojo,     ROT0, "Capcom", "JoJo's Venture (USA 981202)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, jojojr2,   jojo,     jojo,     cps3_jojo, cps3_state, jojo,     ROT0, "Capcom", "JoJo no Kimyouna Bouken (Japan 981202)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1998, jojonr2,   jojo,     jojo,     cps3_jojo, cps3_state, jojo,     ROT0, "Capcom", "JoJo's Venture (Asia 981202, NO CD)", GAME_IMPERFECT_GRAPHICS )
 
 /* Street Fighter III 3rd Strike: Fight for the Future */
 
 // 990608
-GAME( 1999, sfiii3,    0,        sfiii3,   sfiiiws,   sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Euro 990608)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, sfiii3u,   sfiii3,   sfiii3,   sfiiiws,   sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (USA 990608)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, sfiii3n,   sfiii3,   sfiii3,   sfiiiws,   sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Japan 990608, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, sfiii3,    0,        sfiii3,   sfiiiws,   cps3_state, sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Euro 990608)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, sfiii3u,   sfiii3,   sfiii3,   sfiiiws,   cps3_state, sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (USA 990608)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, sfiii3n,   sfiii3,   sfiii3,   sfiiiws,   cps3_state, sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Japan 990608, NO CD)", GAME_IMPERFECT_GRAPHICS )
 
 // 990512
-GAME( 1999, sfiii3r1,  sfiii3,   sfiii3,   sfiiiws,   sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Euro 990512)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, sfiii3ur1, sfiii3,   sfiii3,   sfiiiws,   sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (USA 990512)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, sfiii3nr1, sfiii3,   sfiii3,   sfiiiws,   sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Japan 990512, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, sfiii3r1,  sfiii3,   sfiii3,   sfiiiws,   cps3_state, sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Euro 990512)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, sfiii3ur1, sfiii3,   sfiii3,   sfiiiws,   cps3_state, sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (USA 990512)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, sfiii3nr1, sfiii3,   sfiii3,   sfiiiws,   cps3_state, sfiii3,   ROT0, "Capcom", "Street Fighter III 3rd Strike: Fight for the Future (Japan 990512, NO CD)", GAME_IMPERFECT_GRAPHICS )
 
 /* JoJo's Bizarre Adventure / JoJo no Kimyouna Bouken: Miraie no Isan */
 
 // 990927
-GAME( 1999, jojoba,    0,        jojoba,   cps3_jojo, jojoba,   ROT0, "Capcom", "JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, jojoban,   jojoba,   jojoba,   cps3_jojo, jojoba,   ROT0, "Capcom", "JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927, NO CD)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, jojobane,  jojoba,   jojoba,   cps3_jojo, jojoba,   ROT0, "Capcom", "JoJo's Bizarre Adventure (Euro 990927, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, jojoba,    0,        jojoba,   cps3_jojo, cps3_state, jojoba,   ROT0, "Capcom", "JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, jojoban,   jojoba,   jojoba,   cps3_jojo, cps3_state, jojoba,   ROT0, "Capcom", "JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990927, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, jojobane,  jojoba,   jojoba,   cps3_jojo, cps3_state, jojoba,   ROT0, "Capcom", "JoJo's Bizarre Adventure (Euro 990927, NO CD)", GAME_IMPERFECT_GRAPHICS )
 
 // 990913
-GAME( 1999, jojobar1,  jojoba,   jojoba,   cps3_jojo, jojoba,   ROT0, "Capcom", "JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, jojobanr1, jojoba,   jojoba,   cps3_jojo, jojoba,   ROT0, "Capcom", "JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913, NO CD)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1999, jojobaner1,jojoba,   jojoba,   cps3_jojo, jojoba,   ROT0, "Capcom", "JoJo's Bizarre Adventure (Euro 990913, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, jojobar1,  jojoba,   jojoba,   cps3_jojo, cps3_state, jojoba,   ROT0, "Capcom", "JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, jojobanr1, jojoba,   jojoba,   cps3_jojo, cps3_state, jojoba,   ROT0, "Capcom", "JoJo no Kimyouna Bouken: Miraie no Isan (Japan 990913, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1999, jojobaner1,jojoba,   jojoba,   cps3_jojo, cps3_state, jojoba,   ROT0, "Capcom", "JoJo's Bizarre Adventure (Euro 990913, NO CD)", GAME_IMPERFECT_GRAPHICS )

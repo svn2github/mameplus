@@ -78,6 +78,7 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(pc_dack3_w);
 	DECLARE_WRITE_LINE_MEMBER(taitowlf_pic8259_1_set_int_line);
 	DECLARE_READ8_MEMBER(get_slave_ack);
+	DECLARE_DRIVER_INIT(taitowlf);
 };
 
 #if !ENABLE_VGA
@@ -691,19 +692,18 @@ static void taitowlf_set_keyb_int(running_machine &machine, int state)
 static READ8_HANDLER( vga_setting ) { return 0xff; } // hard-code to color
 #endif
 
-static DRIVER_INIT( taitowlf )
+DRIVER_INIT_MEMBER(taitowlf_state,taitowlf)
 {
-	taitowlf_state *state = machine.driver_data<taitowlf_state>();
-	state->m_bios_ram = auto_alloc_array(machine, UINT32, 0x10000/4);
+	m_bios_ram = auto_alloc_array(machine(), UINT32, 0x10000/4);
 
-	init_pc_common(machine, PCCOMMON_KEYBOARD_AT, taitowlf_set_keyb_int);
+	init_pc_common(machine(), PCCOMMON_KEYBOARD_AT, taitowlf_set_keyb_int);
 
-	intel82439tx_init(machine);
+	intel82439tx_init(machine());
 
-	kbdc8042_init(machine, &at8042);
+	kbdc8042_init(machine(), &at8042);
 	#if ENABLE_VGA
-	pc_vga_init(machine, vga_setting, NULL);
-	pc_vga_io_init(machine, machine.device("maincpu")->memory().space(AS_PROGRAM), 0xa0000, machine.device("maincpu")->memory().space(AS_IO), 0x0000);
+	pc_vga_init(machine(), vga_setting, NULL);
+	pc_vga_io_init(machine(), machine().device("maincpu")->memory().space(AS_PROGRAM), 0xa0000, machine().device("maincpu")->memory().space(AS_IO), 0x0000);
 	#endif
 }
 
@@ -750,4 +750,4 @@ ROM_END
 
 /*****************************************************************************/
 
-GAME(1997, pf2012, 0,	taitowlf, pc_keyboard, taitowlf,	ROT0,   "Taito",  "Psychic Force 2012", GAME_NOT_WORKING | GAME_NO_SOUND)
+GAME(1997, pf2012, 0,	taitowlf, pc_keyboard, taitowlf_state, taitowlf,	ROT0,   "Taito",  "Psychic Force 2012", GAME_NOT_WORKING | GAME_NO_SOUND)

@@ -35,6 +35,7 @@ public:
 	DECLARE_WRITE8_MEMBER(bg_paletteram_RRRRGGGGBBBBxxxx_be_w);
 	DECLARE_WRITE8_MEMBER(missb2_bg_bank_w);
 	DECLARE_WRITE_LINE_MEMBER(irqhandler);
+	DECLARE_DRIVER_INIT(missb2);
 };
 
 
@@ -584,15 +585,14 @@ static void configure_banks( running_machine& machine )
 	machine.root_device().membank("bank3")->configure_entries(0, 7, &SLAVE[0x9000], 0x1000);
 }
 
-static DRIVER_INIT( missb2 )
+DRIVER_INIT_MEMBER(missb2_state,missb2)
 {
-	missb2_state *state = machine.driver_data<missb2_state>();
 
-	configure_banks(machine);
-	state->m_video_enable = 0;
+	configure_banks(machine());
+	m_video_enable = 0;
 }
 
 /* Game Drivers */
 
-GAME( 1996, missb2,   0,      missb2,   missb2, missb2, ROT0,  "Alpha Co.", "Miss Bubble II",   GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1996, bublpong, missb2, bublpong, missb2, missb2, ROT0,  "Top Ltd.", "Bubble Pong Pong",  GAME_SUPPORTS_SAVE )
+GAME( 1996, missb2,   0,      missb2,   missb2, missb2_state, missb2, ROT0,  "Alpha Co.", "Miss Bubble II",   GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1996, bublpong, missb2, bublpong, missb2, missb2_state, missb2, ROT0,  "Top Ltd.", "Bubble Pong Pong",  GAME_SUPPORTS_SAVE )

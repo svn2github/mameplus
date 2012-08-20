@@ -17,6 +17,8 @@ protected:
 
 	// driver_device overrides
 	virtual void machine_reset();
+public:
+	DECLARE_DRIVER_INIT(vd);
 };
 
 
@@ -31,7 +33,7 @@ void vd_state::machine_reset()
 {
 }
 
-static DRIVER_INIT( vd )
+DRIVER_INIT_MEMBER(vd_state,vd)
 {
 }
 
@@ -56,4 +58,4 @@ ROM_END
 /-------------------------------------------------------------------*/
 
 
-GAME(1986,  break86,  0,    vd,  vd,  vd,  ROT0,  "Videodens",    "Break '86",     GAME_IS_SKELETON_MECHANICAL)
+GAME(1986,  break86,  0,    vd,  vd, vd_state,  vd,  ROT0,  "Videodens",    "Break '86",     GAME_IS_SKELETON_MECHANICAL)

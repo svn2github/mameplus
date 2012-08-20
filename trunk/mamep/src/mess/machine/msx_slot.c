@@ -240,7 +240,6 @@ MSX_SLOT_INIT(konami)
 	{
 		logerror ("konami: warning: truncating to 2mb\n");
 		size = 0x200000;
-		return 1;
 	}
 	banks = size / 0x2000;
 	if (size != banks * 0x2000 || (~(banks - 1) % banks))
@@ -324,7 +323,6 @@ MSX_SLOT_INIT(konami_scc)
 	{
 		logerror ("konami_scc: warning: truncating to 2mb\n");
 		size = 0x200000;
-		return 1;
 	}
 	banks = size / 0x2000;
 	if (size != banks * 0x2000 || (~(banks - 1) % banks))
@@ -473,7 +471,6 @@ MSX_SLOT_INIT(ascii8)
 	{
 		logerror ("ascii8: warning: truncating to 2mb\n");
 		size = 0x200000;
-		return 1;
 	}
 	banks = size / 0x2000;
 	if (size != banks * 0x2000 || (~(banks - 1) % banks))
@@ -626,7 +623,6 @@ MSX_SLOT_INIT(ascii8_sram)
 	{
 		logerror ("ascii8_sram: warning: truncating to 1mb\n");
 		size = 0x100000;
-		return 1;
 	}
 	banks = size / 0x2000;
 	if (size != banks * 0x2000 || (~(banks - 1) % banks))
@@ -1514,7 +1510,7 @@ MSX_SLOT_WRITE(synthesizer)
 {
 	if (addr >= 0x4000 && addr < 0x8000 && !(addr & 0x0010))
 	{
-		dac_data_w (machine.device("dac"), val);
+		machine.device<dac_device>("dac")->write_unsigned8(val);
 	}
 }
 
@@ -1571,7 +1567,7 @@ MSX_SLOT_WRITE(majutsushi)
 	msx_state *drvstate = machine.driver_data<msx_state>();
 	if (addr >= 0x5000 && addr < 0x6000)
 	{
-		dac_data_w (machine.device("dac"), val);
+		machine.device<dac_device>("dac")->write_unsigned8(val);
 	}
 	else if (addr >= 0x6000 && addr < 0x8000)
 	{

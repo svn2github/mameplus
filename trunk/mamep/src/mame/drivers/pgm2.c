@@ -31,6 +31,8 @@ public:
 		: driver_device(mconfig, type, tag)
 		{ }
 
+	DECLARE_DRIVER_INIT(kov2nl);
+	DECLARE_DRIVER_INIT(orleg2);
 };
 
 static ADDRESS_MAP_START( pgm2_map, AS_PROGRAM, 32, pgm2_state )
@@ -291,17 +293,17 @@ static void iga_u12_decode(UINT16* rom, int len, int ixor)
 	}
 }
 
-static DRIVER_INIT( orleg2 )
+DRIVER_INIT_MEMBER(pgm2_state,orleg2)
 {
-	UINT16 *src = (UINT16 *)machine.root_device().memregion("spritesa")->base();
+	UINT16 *src = (UINT16 *)machine().root_device().memregion("spritesa")->base();
 
 	iga_u12_decode(src, 0x2000000, 0x4761);
 	iga_u16_decode(src, 0x2000000, 0xc79f);
 }
 
-static DRIVER_INIT( kov2nl )
+DRIVER_INIT_MEMBER(pgm2_state,kov2nl)
 {
-	UINT16 *src = (UINT16 *)machine.root_device().memregion("spritesa")->base();
+	UINT16 *src = (UINT16 *)machine().root_device().memregion("spritesa")->base();
 
 	iga_u12_decode(src, 0x2000000, 0xa193);
 	iga_u16_decode(src, 0x2000000, 0xb780);
@@ -309,8 +311,8 @@ static DRIVER_INIT( kov2nl )
 
 
 /* PGM2 */
-GAME( 2007, orleg2,       0,         pgm2,    pgm2,     orleg2,       ROT0, "IGS", "Oriental Legend 2 (V104, China)", GAME_IS_SKELETON )
-GAME( 2007, orleg2o,      orleg2,    pgm2,    pgm2,     orleg2,       ROT0, "IGS", "Oriental Legend 2 (V103, China)", GAME_IS_SKELETON )
+GAME( 2007, orleg2,       0,         pgm2,    pgm2, pgm2_state,     orleg2,       ROT0, "IGS", "Oriental Legend 2 (V104, China)", GAME_IS_SKELETON )
+GAME( 2007, orleg2o,      orleg2,    pgm2,    pgm2, pgm2_state,     orleg2,       ROT0, "IGS", "Oriental Legend 2 (V103, China)", GAME_IS_SKELETON )
 
-GAME( 2008, kov2nl,       0,         pgm2,    pgm2,     kov2nl,       ROT0, "IGS", "Knights of Valour 2 New Legend (V302, China)", GAME_IS_SKELETON )
-GAME( 2008, kov2nlo,      kov2nl,    pgm2,    pgm2,     kov2nl,       ROT0, "IGS", "Knights of Valour 2 New Legend (V301, China)", GAME_IS_SKELETON )
+GAME( 2008, kov2nl,       0,         pgm2,    pgm2, pgm2_state,     kov2nl,       ROT0, "IGS", "Knights of Valour 2 New Legend (V302, China)", GAME_IS_SKELETON )
+GAME( 2008, kov2nlo,      kov2nl,    pgm2,    pgm2, pgm2_state,     kov2nl,       ROT0, "IGS", "Knights of Valour 2 New Legend (V301, China)", GAME_IS_SKELETON )

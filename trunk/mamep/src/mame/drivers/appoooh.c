@@ -230,9 +230,9 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( main_portmap, AS_IO, 8, appoooh_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ_PORT("P1") AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0x01, 0x01) AM_READ_PORT("P2") AM_DEVWRITE_LEGACY("sn2", sn76496_w)
-	AM_RANGE(0x02, 0x02) AM_DEVWRITE_LEGACY("sn3", sn76496_w)
+	AM_RANGE(0x00, 0x00) AM_READ_PORT("P1") AM_DEVWRITE("sn1", sn76489_new_device, write)
+	AM_RANGE(0x01, 0x01) AM_READ_PORT("P2") AM_DEVWRITE("sn2", sn76489_new_device, write)
+	AM_RANGE(0x02, 0x02) AM_DEVWRITE("sn3", sn76489_new_device, write)
 	AM_RANGE(0x03, 0x03) AM_READ_PORT("DSW1") AM_WRITE(appoooh_adpcm_w)
 	AM_RANGE(0x04, 0x04) AM_READ_PORT("BUTTON3") AM_WRITE(appoooh_out_w)
 	AM_RANGE(0x05, 0x05) AM_WRITE(appoooh_scroll_w) /* unknown */
@@ -393,6 +393,17 @@ static const msm5205_interface msm5205_config =
 };
 
 
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
+
+
 /*************************************
  *
  *  Machine driver
@@ -442,14 +453,17 @@ static MACHINE_CONFIG_START( appoooh_common, appoooh_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489, 18432000/6)
+	MCFG_SOUND_ADD("sn1", SN76489_NEW, 18432000/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489, 18432000/6)
+	MCFG_SOUND_ADD("sn2", SN76489_NEW, 18432000/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76489, 18432000/6)
+	MCFG_SOUND_ADD("sn3", SN76489_NEW, 18432000/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
+	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("msm", MSM5205, 384000)
 	MCFG_SOUND_CONFIG(msm5205_config)
@@ -596,15 +610,15 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT(robowres)
+DRIVER_INIT_MEMBER(appoooh_state,robowres)
 {
-	sega_315_5179_decode(machine, "maincpu");
+	sega_315_5179_decode(machine(), "maincpu");
 }
 
-static DRIVER_INIT(robowresb)
+DRIVER_INIT_MEMBER(appoooh_state,robowresb)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	space->set_decrypted_region(0x0000, 0x7fff, machine.root_device().memregion("maincpu")->base() + 0x1c000);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	space->set_decrypted_region(0x0000, 0x7fff, machine().root_device().memregion("maincpu")->base() + 0x1c000);
 }
 
 
@@ -614,6 +628,6 @@ static DRIVER_INIT(robowresb)
  *
  *************************************/
 
-GAME( 1984, appoooh,   0,        appoooh,  appoooh,  0,        ROT0, "Sanritsu / Sega", "Appoooh", GAME_SUPPORTS_SAVE )
-GAME( 1986, robowres,  0,        robowres, robowres, robowres, ROT0, "Sanritsu / Sega", "Robo Wres 2001", GAME_SUPPORTS_SAVE )
-GAME( 1986, robowresb, robowres, robowres, robowres, robowresb,ROT0, "bootleg",         "Robo Wres 2001 (bootleg)", GAME_SUPPORTS_SAVE )
+GAME( 1984, appoooh,   0,        appoooh,  appoooh, driver_device,  0,        ROT0, "Sanritsu / Sega", "Appoooh", GAME_SUPPORTS_SAVE )
+GAME( 1986, robowres,  0,        robowres, robowres, appoooh_state, robowres, ROT0, "Sanritsu / Sega", "Robo Wres 2001", GAME_SUPPORTS_SAVE )
+GAME( 1986, robowresb, robowres, robowres, robowres, appoooh_state, robowresb,ROT0, "bootleg",         "Robo Wres 2001 (bootleg)", GAME_SUPPORTS_SAVE )

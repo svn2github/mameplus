@@ -758,7 +758,7 @@ static const ym2203_interface ym2203_config =
 		AY8910_DEFAULT_LOADS,
 		DEVCB_NULL, DEVCB_NULL, DEVCB_NULL, DEVCB_NULL
 	},
-	irqhandler
+	DEVCB_LINE(irqhandler)
 };
 
 static MACHINE_CONFIG_START( shadoww, gaiden_state )
@@ -1482,38 +1482,35 @@ ROM_START( drgnbowl )
 ROM_END
 
 
-static DRIVER_INIT( shadoww )
+DRIVER_INIT_MEMBER(gaiden_state,shadoww)
 {
-	gaiden_state *state = machine.driver_data<gaiden_state>();
 	/* sprite size Y = sprite size X */
-	state->m_sprite_sizey = 0;
-	state->m_raiga_jumppoints = jumppoints_00;
+	m_sprite_sizey = 0;
+	m_raiga_jumppoints = jumppoints_00;
 }
 
-static DRIVER_INIT( wildfang )
+DRIVER_INIT_MEMBER(gaiden_state,wildfang)
 {
-	gaiden_state *state = machine.driver_data<gaiden_state>();
 	/* sprite size Y = sprite size X */
-	state->m_sprite_sizey = 0;
-	state->m_raiga_jumppoints = jumppoints_00;
+	m_sprite_sizey = 0;
+	m_raiga_jumppoints = jumppoints_00;
 
-	state->m_prot = 0;
-	state->m_jumpcode = 0;
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x07a006, 0x07a007, read16_delegate(FUNC(gaiden_state::wildfang_protection_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07a804, 0x07a805, write16_delegate(FUNC(gaiden_state::wildfang_protection_w),state));
+	m_prot = 0;
+	m_jumpcode = 0;
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x07a006, 0x07a007, read16_delegate(FUNC(gaiden_state::wildfang_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07a804, 0x07a805, write16_delegate(FUNC(gaiden_state::wildfang_protection_w),this));
 }
 
-static DRIVER_INIT( raiga )
+DRIVER_INIT_MEMBER(gaiden_state,raiga)
 {
-	gaiden_state *state = machine.driver_data<gaiden_state>();
 	/* sprite size Y independent from sprite size X */
-	state->m_sprite_sizey = 2;
-	state->m_raiga_jumppoints = jumppoints_00;
+	m_sprite_sizey = 2;
+	m_raiga_jumppoints = jumppoints_00;
 
-	state->m_prot = 0;
-	state->m_jumpcode = 0;
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x07a006, 0x07a007, read16_delegate(FUNC(gaiden_state::raiga_protection_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07a804, 0x07a805, write16_delegate(FUNC(gaiden_state::raiga_protection_w),state));
+	m_prot = 0;
+	m_jumpcode = 0;
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x07a006, 0x07a007, read16_delegate(FUNC(gaiden_state::raiga_protection_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x07a804, 0x07a805, write16_delegate(FUNC(gaiden_state::raiga_protection_w),this));
 }
 
 static void descramble_drgnbowl_gfx(running_machine &machine)
@@ -1555,12 +1552,11 @@ static void descramble_drgnbowl_gfx(running_machine &machine)
 	auto_free(machine, buffer);
 }
 
-static DRIVER_INIT( drgnbowl )
+DRIVER_INIT_MEMBER(gaiden_state,drgnbowl)
 {
-	gaiden_state *state = machine.driver_data<gaiden_state>();
-	state->m_raiga_jumppoints = jumppoints_00;
+	m_raiga_jumppoints = jumppoints_00;
 
-	descramble_drgnbowl_gfx(machine);
+	descramble_drgnbowl_gfx(machine());
 }
 
 static void descramble_mastninj_gfx(running_machine &machine, UINT8* src)
@@ -1604,24 +1600,24 @@ static void descramble_mastninj_gfx(running_machine &machine, UINT8* src)
 	}
 }
 
-static DRIVER_INIT(mastninj)
+DRIVER_INIT_MEMBER(gaiden_state,mastninj)
 {
 	// rearrange the graphic roms into a format that MAME can decode
-	descramble_mastninj_gfx(machine, machine.root_device().memregion("gfx2")->base());
-	descramble_mastninj_gfx(machine, machine.root_device().memregion("gfx3")->base());
+	descramble_mastninj_gfx(machine(), machine().root_device().memregion("gfx2")->base());
+	descramble_mastninj_gfx(machine(), machine().root_device().memregion("gfx3")->base());
 	DRIVER_INIT_CALL(shadoww);
 }
 
 //    YEAR, NAME,      PARENT,   MACHINE,  INPUT,    INIT,     MONITOR,COMPANY,FULLNAME,FLAGS
-GAME( 1988, shadoww,   0,        shadoww,  common,   shadoww,  ROT0,   "Tecmo", "Shadow Warriors (World, set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1988, shadowwa,  shadoww,  shadoww,  common,   shadoww,  ROT0,   "Tecmo", "Shadow Warriors (World, set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1988, gaiden,    shadoww,  shadoww,  common,   shadoww,  ROT0,   "Tecmo", "Ninja Gaiden (US)", GAME_SUPPORTS_SAVE )
-GAME( 1989, ryukendn,  shadoww,  shadoww,  common,   shadoww,  ROT0,   "Tecmo", "Ninja Ryukenden (Japan, set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1989, ryukendna, shadoww,  shadoww,  common,   shadoww,  ROT0,   "Tecmo", "Ninja Ryukenden (Japan, set 2)", GAME_SUPPORTS_SAVE )
-GAME( 1989, mastninj,  shadoww,  mastninj, common,   mastninj, ROT0,   "bootleg", "Master Ninja (bootleg of Shadow Warriors / Ninja Gaiden)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // sprites need fixing, sound and yscroll too.
-GAME( 1989, wildfang,  0,        shadoww,  wildfang, wildfang, ROT0,   "Tecmo", "Wild Fang / Tecmo Knight", GAME_SUPPORTS_SAVE )
-GAME( 1989, wildfangs, wildfang, shadoww,  tknight,  wildfang, ROT0,   "Tecmo", "Wild Fang", GAME_SUPPORTS_SAVE )
-GAME( 1989, tknight,   wildfang, shadoww,  tknight,  wildfang, ROT0,   "Tecmo", "Tecmo Knight", GAME_SUPPORTS_SAVE )
-GAME( 1991, stratof,   0,        raiga,    raiga,    raiga,    ROT0,   "Tecmo", "Raiga - Strato Fighter (US)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1991, raiga,     stratof,  raiga,    raiga,    raiga,    ROT0,   "Tecmo", "Raiga - Strato Fighter (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
-GAME( 1992, drgnbowl,  0,        drgnbowl, drgnbowl, drgnbowl, ROT0,   "Nics",  "Dragon Bowl", GAME_SUPPORTS_SAVE )
+GAME( 1988, shadoww,   0,        shadoww,  common, gaiden_state,   shadoww,  ROT0,   "Tecmo", "Shadow Warriors (World, set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1988, shadowwa,  shadoww,  shadoww,  common, gaiden_state,   shadoww,  ROT0,   "Tecmo", "Shadow Warriors (World, set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1988, gaiden,    shadoww,  shadoww,  common, gaiden_state,   shadoww,  ROT0,   "Tecmo", "Ninja Gaiden (US)", GAME_SUPPORTS_SAVE )
+GAME( 1989, ryukendn,  shadoww,  shadoww,  common, gaiden_state,   shadoww,  ROT0,   "Tecmo", "Ninja Ryukenden (Japan, set 1)", GAME_SUPPORTS_SAVE )
+GAME( 1989, ryukendna, shadoww,  shadoww,  common, gaiden_state,   shadoww,  ROT0,   "Tecmo", "Ninja Ryukenden (Japan, set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1989, mastninj,  shadoww,  mastninj, common, gaiden_state,   mastninj, ROT0,   "bootleg", "Master Ninja (bootleg of Shadow Warriors / Ninja Gaiden)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE ) // sprites need fixing, sound and yscroll too.
+GAME( 1989, wildfang,  0,        shadoww,  wildfang, gaiden_state, wildfang, ROT0,   "Tecmo", "Wild Fang / Tecmo Knight", GAME_SUPPORTS_SAVE )
+GAME( 1989, wildfangs, wildfang, shadoww,  tknight, gaiden_state,  wildfang, ROT0,   "Tecmo", "Wild Fang", GAME_SUPPORTS_SAVE )
+GAME( 1989, tknight,   wildfang, shadoww,  tknight, gaiden_state,  wildfang, ROT0,   "Tecmo", "Tecmo Knight", GAME_SUPPORTS_SAVE )
+GAME( 1991, stratof,   0,        raiga,    raiga, gaiden_state,    raiga,    ROT0,   "Tecmo", "Raiga - Strato Fighter (US)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1991, raiga,     stratof,  raiga,    raiga, gaiden_state,    raiga,    ROT0,   "Tecmo", "Raiga - Strato Fighter (Japan)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )
+GAME( 1992, drgnbowl,  0,        drgnbowl, drgnbowl, gaiden_state, drgnbowl, ROT0,   "Nics",  "Dragon Bowl", GAME_SUPPORTS_SAVE )

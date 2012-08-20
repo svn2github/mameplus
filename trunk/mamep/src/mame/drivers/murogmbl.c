@@ -84,7 +84,7 @@ static ADDRESS_MAP_START( murogmbl_map, AS_PROGRAM, 8, murogmbl_state )
 	AM_RANGE(0x6000, 0x6000) AM_READ_PORT("IN0")
 	AM_RANGE(0x6800, 0x6800) AM_READ_PORT("DSW")
 	AM_RANGE(0x7000, 0x7000) AM_READ_PORT("IN1")
-	AM_RANGE(0x7800, 0x7800) AM_READNOP AM_DEVWRITE_LEGACY("dac1", dac_w) /* read is always discarded */
+	AM_RANGE(0x7800, 0x7800) AM_READNOP AM_DEVWRITE("dac1", dac_device, write_unsigned8) /* read is always discarded */
 ADDRESS_MAP_END
 
 static VIDEO_START(murogmbl)
@@ -200,7 +200,7 @@ static MACHINE_CONFIG_START( murogmbl, murogmbl_state )
 	MCFG_VIDEO_START(murogmbl)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("dac1", DAC, 0)
+	MCFG_DAC_ADD("dac1")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
 MACHINE_CONFIG_END
 
@@ -219,4 +219,4 @@ ROM_START(murogmbl)
 	ROM_LOAD( "74s288.a8",	0x0000, 0x0020, CRC(fc35201c) SHA1(4549e228c48992e0d10957f029b89a547392e72b) )
 ROM_END
 
-GAME( 1982, murogmbl,  murogem,   murogmbl, murogmbl, 0, ROT0, "bootleg?", "Muroge Monaco (bootleg?)", GAME_NO_SOUND )
+GAME( 1982, murogmbl,  murogem,   murogmbl, murogmbl, driver_device, 0, ROT0, "bootleg?", "Muroge Monaco (bootleg?)", GAME_NO_SOUND )

@@ -967,11 +967,11 @@ ROM_START( cbombers )
 ROM_END
 
 
-static DRIVER_INIT( undrfire )
+DRIVER_INIT_MEMBER(undrfire_state,undrfire)
 {
 	UINT32 offset,i;
-	UINT8 *gfx = machine.root_device().memregion("gfx3")->base();
-	int size=machine.root_device().memregion("gfx3")->bytes();
+	UINT8 *gfx = machine().root_device().memregion("gfx3")->base();
+	int size=machine().root_device().memregion("gfx3")->bytes();
 	int data;
 
 	/* make piv tile GFX format suitable for gfxdecode */
@@ -996,11 +996,11 @@ static DRIVER_INIT( undrfire )
 }
 
 
-static DRIVER_INIT( cbombers )
+DRIVER_INIT_MEMBER(undrfire_state,cbombers)
 {
 	UINT32 offset,i;
-	UINT8 *gfx = machine.root_device().memregion("gfx3")->base();
-	int size=machine.root_device().memregion("gfx3")->bytes();
+	UINT8 *gfx = machine().root_device().memregion("gfx3")->base();
+	int size=machine().root_device().memregion("gfx3")->bytes();
 	int data;
 
 
@@ -1027,7 +1027,7 @@ static DRIVER_INIT( cbombers )
 
 
 
-GAME( 1993, undrfire, 0,        undrfire, undrfire, undrfire, ROT0, "Taito Corporation Japan", "Under Fire (World)", 0 )
-GAME( 1993, undrfireu,undrfire, undrfire, undrfire, undrfire, ROT0, "Taito America Corporation", "Under Fire (US)", 0 )
-GAME( 1993, undrfirej,undrfire, undrfire, undrfire, undrfire, ROT0, "Taito Corporation", "Under Fire (Japan)", 0 )
-GAMEL(1994, cbombers, 0,        cbombers, cbombers, cbombers, ROT0, "Taito Corporation Japan", "Chase Bombers", GAME_IMPERFECT_GRAPHICS, layout_cbombers )
+GAME( 1993, undrfire, 0,        undrfire, undrfire, undrfire_state, undrfire, ROT0, "Taito Corporation Japan", "Under Fire (World)", 0 )
+GAME( 1993, undrfireu,undrfire, undrfire, undrfire, undrfire_state, undrfire, ROT0, "Taito America Corporation", "Under Fire (US)", 0 )
+GAME( 1993, undrfirej,undrfire, undrfire, undrfire, undrfire_state, undrfire, ROT0, "Taito Corporation", "Under Fire (Japan)", 0 )
+GAMEL(1994, cbombers, 0,        cbombers, cbombers, undrfire_state, cbombers, ROT0, "Taito Corporation Japan", "Chase Bombers", GAME_IMPERFECT_GRAPHICS, layout_cbombers )

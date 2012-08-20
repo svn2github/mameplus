@@ -101,6 +101,7 @@ public:
 	DECLARE_READ8_MEMBER(ret_ff);
 	DECLARE_READ8_MEMBER(ret_00);
 	DECLARE_WRITE8_MEMBER(skylncr_nmi_enable_w);
+	DECLARE_DRIVER_INIT(skylncr);
 };
 
 
@@ -870,11 +871,10 @@ ROM_END
 *           Driver Init           *
 **********************************/
 
-static DRIVER_INIT( skylncr )
+DRIVER_INIT_MEMBER(skylncr_state,skylncr)
 {
-	skylncr_state *state = machine.driver_data<skylncr_state>();
-	state->m_generic_paletteram_8.allocate(0x100 * 3);
-	state->m_generic_paletteram2_8.allocate(0x100 * 3);
+	m_generic_paletteram_8.allocate(0x100 * 3);
+	m_generic_paletteram2_8.allocate(0x100 * 3);
 }
 
 
@@ -883,7 +883,7 @@ static DRIVER_INIT( skylncr )
 ****************************************************/
 
 /*    YEAR  NAME      PARENT   MACHINE   INPUT     INIT     ROT    COMPANY                 FULLNAME                            FLAGS  */
-GAME( 1995, skylncr,  0,       skylncr,  skylncr,  skylncr, ROT0, "Bordun International", "Sky Lancer (Bordun, ver.U450C)",    0 )
-GAME( 1995, butrfly,  0,       skylncr,  skylncr,  skylncr, ROT0, "Bordun International", "Butterfly Video Game (ver.U350C)",  0 )
-GAME( 1995, madzoo,   0,       skylncr,  skylncr,  skylncr, ROT0, "Bordun International", "Mad Zoo (ver.U450C)",               0 )
-GAME( 1995, leader,   0,       skylncr,  skylncr,  skylncr, ROT0, "bootleg",              "Leader",                            GAME_NOT_WORKING )
+GAME( 1995, skylncr,  0,       skylncr,  skylncr, skylncr_state,  skylncr, ROT0, "Bordun International", "Sky Lancer (Bordun, ver.U450C)",    0 )
+GAME( 1995, butrfly,  0,       skylncr,  skylncr, skylncr_state,  skylncr, ROT0, "Bordun International", "Butterfly Video Game (ver.U350C)",  0 )
+GAME( 1995, madzoo,   0,       skylncr,  skylncr, skylncr_state,  skylncr, ROT0, "Bordun International", "Mad Zoo (ver.U450C)",               0 )
+GAME( 1995, leader,   0,       skylncr,  skylncr, skylncr_state,  skylncr, ROT0, "bootleg",              "Leader",                            GAME_NOT_WORKING )

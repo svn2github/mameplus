@@ -240,10 +240,10 @@ READ8_MEMBER(exterm_state::sound_slave_latch_r)
 
 WRITE8_MEMBER(exterm_state::sound_slave_dac_w)
 {
-	device_t *device = machine().device("dac");
+	dac_device *device = machine().device<dac_device>("dac");
 	/* DAC A is used to modulate DAC B */
 	m_dac_value[offset & 1] = data;
-	dac_data_16_w(device, (m_dac_value[0] ^ 0xff) * m_dac_value[1]);
+	device->write_unsigned16((m_dac_value[0] ^ 0xff) * m_dac_value[1]);
 }
 
 
@@ -472,7 +472,7 @@ static MACHINE_CONFIG_START( exterm, exterm_state )
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("dac", DAC, 0)
+	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
 	MCFG_SOUND_ADD("ymsnd", YM2151, 4000000)
@@ -525,4 +525,4 @@ ROM_END
  *
  *************************************/
 
-GAME( 1989, exterm, 0, exterm, exterm, 0, ROT0, "Gottlieb / Premier Technology", "Exterminator", 0 )
+GAME( 1989, exterm, 0, exterm, exterm, driver_device, 0, ROT0, "Gottlieb / Premier Technology", "Exterminator", 0 )

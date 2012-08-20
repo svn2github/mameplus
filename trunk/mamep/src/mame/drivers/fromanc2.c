@@ -808,18 +808,16 @@ ROM_END
  *
  *************************************/
 
-static DRIVER_INIT( fromanc2 )
+DRIVER_INIT_MEMBER(fromanc2_state,fromanc2)
 {
-	fromanc2_state *state = machine.driver_data<fromanc2_state>();
-	state->m_subcpu_nmi_flag = 1;
-	state->m_subcpu_int_flag = 1;
-	state->m_sndcpu_nmi_flag = 1;
+	m_subcpu_nmi_flag = 1;
+	m_subcpu_int_flag = 1;
+	m_sndcpu_nmi_flag = 1;
 }
 
-static DRIVER_INIT( fromanc4 )
+DRIVER_INIT_MEMBER(fromanc2_state,fromanc4)
 {
-	fromanc2_state *state = machine.driver_data<fromanc2_state>();
-	state->m_sndcpu_nmi_flag = 1;
+	m_sndcpu_nmi_flag = 1;
 }
 
 
@@ -829,6 +827,6 @@ static DRIVER_INIT( fromanc4 )
  *
  *************************************/
 
-GAME( 1995, fromanc2, 0, fromanc2, fromanc2, fromanc2, ROT0, "Video System Co.", "Taisen Idol-Mahjong Final Romance 2 (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1995, fromancr, 0, fromancr, fromanc2, fromanc2, ROT0, "Video System Co.", "Taisen Mahjong FinalRomance R (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1998, fromanc4, 0, fromanc4, fromanc4, fromanc4, ROT0, "Video System Co.", "Taisen Mahjong FinalRomance 4 (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1995, fromanc2, 0, fromanc2, fromanc2, fromanc2_state, fromanc2, ROT0, "Video System Co.", "Taisen Idol-Mahjong Final Romance 2 (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1995, fromancr, 0, fromancr, fromanc2, fromanc2_state, fromanc2, ROT0, "Video System Co.", "Taisen Mahjong FinalRomance R (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1998, fromanc4, 0, fromanc4, fromanc4, fromanc2_state, fromanc4, ROT0, "Video System Co.", "Taisen Mahjong FinalRomance 4 (Japan)", GAME_SUPPORTS_SAVE )
