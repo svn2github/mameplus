@@ -160,8 +160,7 @@ private:
 };
 
 
-typedef struct _romload_private rom_load_data;
-struct _romload_private
+struct romload_private
 {
 	running_machine &machine() const { assert(m_machine != NULL); return *m_machine; }
 

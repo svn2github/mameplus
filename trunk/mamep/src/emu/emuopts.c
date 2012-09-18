@@ -184,6 +184,7 @@ const options_entry emu_options::s_option_entries[] =
 	{ OPTION_MULTIKEYBOARD ";multikey",                  "0",         OPTION_BOOLEAN,    "enable separate input from each keyboard device (if present)" },
 	{ OPTION_MULTIMOUSE,                                 "0",         OPTION_BOOLEAN,    "enable separate input from each mouse device (if present)" },
 	{ OPTION_STEADYKEY ";steady",                        "0",         OPTION_BOOLEAN,    "enable steadykey support" },
+	{ OPTION_UI_ACTIVE,                                  "0",         OPTION_BOOLEAN,    "enable user interface on top of emulated keyboard (if present)" },
 	{ OPTION_OFFSCREEN_RELOAD ";reload",                 "0",         OPTION_BOOLEAN,    "convert lightgun button 2 into offscreen reload" },
 	{ OPTION_JOYSTICK_MAP ";joymap",                     "auto",      OPTION_STRING,     "explicit joystick map, or auto to auto-select" },
 	{ OPTION_JOYSTICK_DEADZONE ";joy_deadzone;jdz",      "0.3",       OPTION_FLOAT,      "center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)" },
@@ -439,10 +440,16 @@ bool emu_options::parse_slot_devices(int argc, char *argv[], astring &error_stri
 		set_value(name, value, OPTION_PRIORITY_CMDLINE, error_string);
 	}
 	result = core_options::parse_command_line(argc, argv, OPTION_PRIORITY_CMDLINE, error_string);
+
+	int num = 0;
+	do {
+		num = options_count();
 	update_slot_options();
 	while (add_slot_options(false));
-	add_device_options(true);
+		add_device_options(false);
 	result = core_options::parse_command_line(argc, argv, OPTION_PRIORITY_CMDLINE, error_string);
+	} while(num != options_count());
+
 	return result;
 }
 
@@ -584,9 +591,13 @@ void emu_options::set_system_name(const char *name)
 		}
 		// then add the options
 		add_device_options(true);
-		update_slot_options();
-		while (add_slot_options(false));
-		add_device_options(true);
+		int num = 0;
+		do {
+			num = options_count();
+			update_slot_options();
+			while (add_slot_options(false));
+			add_device_options(false);
+		} while(num != options_count());
 	}
 }
 
@@ -628,4 +639,32 @@ bool emu_options::parse_one_ini(const char *basename, int priority, astring *err
 		error_string->catprintf("While parsing %s:\n%s\n", file.fullpath(), error.cstr());
 
 	return result;
+}
+
+
+const char *emu_options::main_value(astring &buffer, const char *name) const
+{
+	buffer = value(name);
+	int pos = buffer.chr(0,',');
+	if (pos!=-1) {
+		buffer = buffer.substr(0,pos);
+	}
+	return buffer.cstr();
+}
+
+const char *emu_options::sub_value(astring &buffer, const char *name, const char *subname) const
+{
+	astring tmp = ",";
+	tmp.cat(subname);
+	tmp.cat("=");
+	buffer = value(name);
+	int pos = buffer.find(0,tmp);
+	if (pos!=-1) {
+		int endpos = buffer.chr(pos+1,',');
+		if(endpos==-1) endpos = buffer.len();
+		buffer = buffer.substr(pos+tmp.len(),endpos-pos-tmp.len());
+	} else {
+		buffer ="";
+	}
+	return buffer.cstr();
 }
