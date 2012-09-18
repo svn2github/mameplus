@@ -31,8 +31,8 @@ public:
 	int            m_watchdog_count;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_mcu;
 
 	UINT8          m_irq_mask;
@@ -51,16 +51,25 @@ public:
 	DECLARE_WRITE8_MEMBER(champbas_dac2_w);
 	DECLARE_DRIVER_INIT(exctsccr);
 	DECLARE_DRIVER_INIT(champbas);
+	TILE_GET_INFO_MEMBER(champbas_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(exctsccr_get_bg_tile_info);
+	DECLARE_MACHINE_START(champbas);
+	DECLARE_MACHINE_RESET(champbas);
+	DECLARE_VIDEO_START(champbas);
+	DECLARE_PALETTE_INIT(champbas);
+	DECLARE_MACHINE_START(exctsccr);
+	DECLARE_VIDEO_START(exctsccr);
+	DECLARE_PALETTE_INIT(exctsccr);
 };
 
 
 /*----------- defined in video/champbas.c -----------*/
 
 
-PALETTE_INIT( champbas );
-PALETTE_INIT( exctsccr );
-VIDEO_START( champbas );
-VIDEO_START( exctsccr );
+
+
+
+
 SCREEN_UPDATE_IND16( champbas );
 SCREEN_UPDATE_IND16( exctsccr );
 

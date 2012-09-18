@@ -463,7 +463,7 @@ DIRECT_UPDATE_MEMBER(atarigen_state::atarigen_slapstic_setdirect)
 	address &= ~m_slapstic_mirror;
 	if (address >= m_slapstic_base && address < m_slapstic_base + 0x8000)
 	{
-		offs_t pc = cpu_get_previouspc(&direct.space().device());
+		offs_t pc = direct.space().device().safe_pcbase();
 		if (pc != m_slapstic_last_pc || address != m_slapstic_last_address)
 		{
 			m_slapstic_last_pc = pc;
@@ -734,7 +734,7 @@ READ8_HANDLER( atarigen_6502_sound_r )
 {
 	atarigen_state *state = space->machine().driver_data<atarigen_state>();
 	state->m_cpu_to_sound_ready = 0;
-	device_set_input_line(state->m_sound_cpu, INPUT_LINE_NMI, CLEAR_LINE);
+	state->m_sound_cpu->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 	return state->m_cpu_to_sound;
 }
 
@@ -750,9 +750,9 @@ static void update_6502_irq(running_machine &machine)
 {
 	atarigen_state *state = machine.driver_data<atarigen_state>();
 	if (state->m_timed_int || state->m_ym2151_int)
-		device_set_input_line(state->m_sound_cpu, M6502_IRQ_LINE, ASSERT_LINE);
+		state->m_sound_cpu->execute().set_input_line(M6502_IRQ_LINE, ASSERT_LINE);
 	else
-		device_set_input_line(state->m_sound_cpu, M6502_IRQ_LINE, CLEAR_LINE);
+		state->m_sound_cpu->execute().set_input_line(M6502_IRQ_LINE, CLEAR_LINE);
 }
 
 
@@ -769,8 +769,8 @@ static TIMER_CALLBACK( delayed_sound_reset )
 	/* unhalt and reset the sound CPU */
 	if (param == 0)
 	{
-		device_set_input_line(state->m_sound_cpu, INPUT_LINE_HALT, CLEAR_LINE);
-		device_set_input_line(state->m_sound_cpu, INPUT_LINE_RESET, PULSE_LINE);
+		state->m_sound_cpu->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
+		state->m_sound_cpu->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 	}
 
 	/* reset the sound write state */
@@ -799,7 +799,7 @@ static TIMER_CALLBACK( delayed_sound_w )
 	/* set up the states and signal an NMI to the sound CPU */
 	state->m_cpu_to_sound = param;
 	state->m_cpu_to_sound_ready = 1;
-	device_set_input_line(state->m_sound_cpu, INPUT_LINE_NMI, ASSERT_LINE);
+	state->m_sound_cpu->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 
 	/* allocate a high frequency timer until a response is generated */
 	/* the main CPU is *very* sensistive to the timing of the response */
@@ -1385,7 +1385,7 @@ void atarigen_halt_until_hblank_0(screen_device &screen)
 
 	/* halt and set a timer to wake up */
 	screen.machine().scheduler().timer_set(screen.scan_period() * (hblank - hpos) / width, FUNC(unhalt_cpu), 0, (void *)cpu);
-	device_set_input_line(cpu, INPUT_LINE_HALT, ASSERT_LINE);
+	cpu->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 }
 
 
@@ -1477,7 +1477,7 @@ WRITE32_HANDLER( atarigen_666_paletteram32_w )
 static TIMER_CALLBACK( unhalt_cpu )
 {
 	device_t *cpu = (device_t *)ptr;
-	device_set_input_line(cpu, INPUT_LINE_HALT, CLEAR_LINE);
+	cpu->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
 }
 
 
@@ -1516,44 +1516,36 @@ void atarigen_blend_gfx(running_machine &machine, int gfx0, int gfx1, int mask0,
 	int c, x, y;
 
 	/* allocate memory for the assembled data */
-	srcdata = auto_alloc_array(machine, UINT8, gx0->total_elements * gx0->width * gx0->height);
+	srcdata = auto_alloc_array(machine, UINT8, gx0->elements() * gx0->width() * gx0->height());
 
 	/* loop over elements */
 	dest = srcdata;
-	for (c = 0; c < gx0->total_elements; c++)
+	for (c = 0; c < gx0->elements(); c++)
 	{
-		const UINT8 *c0base = gfx_element_get_data(gx0, c);
-		const UINT8 *c1base = gfx_element_get_data(gx1, c);
+		const UINT8 *c0base = gx0->get_data(c);
+		const UINT8 *c1base = gx1->get_data(c);
 
 		/* loop over height */
-		for (y = 0; y < gx0->height; y++)
+		for (y = 0; y < gx0->height(); y++)
 		{
 			const UINT8 *c0 = c0base;
 			const UINT8 *c1 = c1base;
 
-			for (x = 0; x < gx0->width; x++)
+			for (x = 0; x < gx0->width(); x++)
 				*dest++ = (*c0++ & mask0) | (*c1++ & mask1);
-			c0base += gx0->line_modulo;
-			c1base += gx1->line_modulo;
+			c0base += gx0->rowbytes();
+			c1base += gx1->rowbytes();
 		}
 	}
 
+//  int newdepth = gx0->depth() * gx1->depth();
+	int granularity = gx0->granularity();
+	gx0->set_raw_layout(srcdata, gx0->width(), gx0->height(), gx0->elements(), 8 * gx0->width(), 8 * gx0->width() * gx0->height());
+	gx0->set_granularity(granularity);
+
 	/* free the second graphics element */
-	gfx_element_free(gx1);
 	machine.gfx[gfx1] = NULL;
-
-	/* create a simple target layout */
-	gx0->layout.planes = 8;
-	for (x = 0; x < 8; x++)
-		gx0->layout.planeoffset[x] = x;
-	for (x = 0; x < gx0->width; x++)
-		gx0->layout.xoffset[x] = 8 * x;
-	for (y = 0; y < gx0->height; y++)
-		gx0->layout.yoffset[y] = 8 * y * gx0->width;
-	gx0->layout.charincrement = 8 * gx0->width * gx0->height;
-
-	/* make the assembled data our new source data */
-	gfx_element_set_source(gx0, srcdata);
+	auto_free(machine, gx1);
 }
 
 

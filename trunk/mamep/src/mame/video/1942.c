@@ -24,9 +24,9 @@
 
 ***************************************************************************/
 
-PALETTE_INIT( 1942 )
+void _1942_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	rgb_t palette[256];
 	int i, colorbase;
 
@@ -63,23 +63,23 @@ PALETTE_INIT( 1942 )
 	/* characters use palette entries 128-143 */
 	colorbase = 0;
 	for (i = 0; i < 64 * 4; i++)
-		palette_set_color(machine, colorbase + i, palette[0x80 | *color_prom++]);
+		palette_set_color(machine(), colorbase + i, palette[0x80 | *color_prom++]);
 	colorbase += 64 * 4;
 
 	/* background tiles use palette entries 0-63 in four banks */
 	for (i = 0; i < 32 * 8; i++)
 	{
-		palette_set_color(machine, colorbase + 0 * 32 * 8 + i, palette[0x00 | *color_prom]);
-		palette_set_color(machine, colorbase + 1 * 32 * 8 + i, palette[0x10 | *color_prom]);
-		palette_set_color(machine, colorbase + 2 * 32 * 8 + i, palette[0x20 | *color_prom]);
-		palette_set_color(machine, colorbase + 3 * 32 * 8 + i, palette[0x30 | *color_prom]);
+		palette_set_color(machine(), colorbase + 0 * 32 * 8 + i, palette[0x00 | *color_prom]);
+		palette_set_color(machine(), colorbase + 1 * 32 * 8 + i, palette[0x10 | *color_prom]);
+		palette_set_color(machine(), colorbase + 2 * 32 * 8 + i, palette[0x20 | *color_prom]);
+		palette_set_color(machine(), colorbase + 3 * 32 * 8 + i, palette[0x30 | *color_prom]);
 		color_prom++;
 	}
 	colorbase += 4 * 32 * 8;
 
 	/* sprites use palette entries 64-79 */
 	for (i = 0; i < 16 * 16; i++)
-		palette_set_color(machine, colorbase + i, palette[0x40 | *color_prom++]);
+		palette_set_color(machine(), colorbase + i, palette[0x40 | *color_prom++]);
 }
 
 
@@ -89,33 +89,31 @@ PALETTE_INIT( 1942 )
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(_1942_state::get_fg_tile_info)
 {
-	_1942_state *state = machine.driver_data<_1942_state>();
 	int code, color;
 
-	code = state->m_fg_videoram[tile_index];
-	color = state->m_fg_videoram[tile_index + 0x400];
-	SET_TILE_INFO(
+	code = m_fg_videoram[tile_index];
+	color = m_fg_videoram[tile_index + 0x400];
+	SET_TILE_INFO_MEMBER(
 			0,
 			code + ((color & 0x80) << 1),
 			color & 0x3f,
 			0);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(_1942_state::get_bg_tile_info)
 {
-	_1942_state *state = machine.driver_data<_1942_state>();
 	int code, color;
 
 	tile_index = (tile_index & 0x0f) | ((tile_index & 0x01f0) << 1);
 
-	code = state->m_bg_videoram[tile_index];
-	color = state->m_bg_videoram[tile_index + 0x10];
-	SET_TILE_INFO(
+	code = m_bg_videoram[tile_index];
+	color = m_bg_videoram[tile_index + 0x10];
+	SET_TILE_INFO_MEMBER(
 			1,
 			code + ((color & 0x80) << 1),
-			(color & 0x1f) + (0x20 * state->m_palette_bank),
+			(color & 0x1f) + (0x20 * m_palette_bank),
 			TILE_FLIPYX((color & 0x60) >> 5));
 }
 
@@ -125,13 +123,12 @@ static TILE_GET_INFO( get_bg_tile_info )
   Start the video hardware emulation.
 
 ***************************************************************************/
-VIDEO_START( 1942 )
+void _1942_state::video_start()
 {
-	_1942_state *state = machine.driver_data<_1942_state>();
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_cols, 16, 16, 32, 16);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(_1942_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(_1942_state::get_bg_tile_info),this), TILEMAP_SCAN_COLS, 16, 16, 32, 16);
 
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_fg_tilemap->set_transparent_pen(0);
 }
 
 
@@ -182,7 +179,7 @@ WRITE8_MEMBER(_1942_state::c1942_c804_w)
 
 	coin_counter_w(machine(), 0,data & 0x01);
 
-	device_set_input_line(m_audiocpu, INPUT_LINE_RESET, (data & 0x10) ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, (data & 0x10) ? ASSERT_LINE : CLEAR_LINE);
 
 	flip_screen_set(data & 0x80);
 }

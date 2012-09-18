@@ -103,6 +103,7 @@ Sound: VLM5030 at 7B
 #include "includes/yiear.h"
 
 
+
 READ8_MEMBER(yiear_state::yiear_speech_r)
 {
 	device_t *device = machine().device("vlm");
@@ -125,7 +126,7 @@ static INTERRUPT_GEN( yiear_vblank_interrupt )
 	yiear_state *state = device->machine().driver_data<yiear_state>();
 
 	if (state->m_yiear_irq_enable)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -134,15 +135,15 @@ static INTERRUPT_GEN( yiear_nmi_interrupt )
 	yiear_state *state = device->machine().driver_data<yiear_state>();
 
 	if (state->m_yiear_nmi_enable)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, yiear_state )
 	AM_RANGE(0x0000, 0x0000) AM_READ(yiear_speech_r)
 	AM_RANGE(0x4000, 0x4000) AM_WRITE(yiear_control_w)
-	AM_RANGE(0x4800, 0x4800) AM_WRITE_LEGACY(konami_SN76496_latch_w)
-	AM_RANGE(0x4900, 0x4900) AM_DEVWRITE_LEGACY("snsnd", konami_SN76496_w)
+	AM_RANGE(0x4800, 0x4800) AM_WRITE(konami_SN76496_latch_w)
+	AM_RANGE(0x4900, 0x4900) AM_WRITE(konami_SN76496_w)
 	AM_RANGE(0x4a00, 0x4a00) AM_WRITE(yiear_VLM5030_control_w)
 	AM_RANGE(0x4b00, 0x4b00) AM_DEVWRITE_LEGACY("vlm", vlm5030_data_w)
 	AM_RANGE(0x4c00, 0x4c00) AM_READ_PORT("DSW2")
@@ -262,19 +263,26 @@ GFXDECODE_END
 
 
 
-static MACHINE_START( yiear )
+void yiear_state::machine_start()
 {
-	yiear_state *state = machine.driver_data<yiear_state>();
 
-	state->save_item(NAME(state->m_yiear_nmi_enable));
+	save_item(NAME(m_yiear_nmi_enable));
 }
 
-static MACHINE_RESET( yiear )
+void yiear_state::machine_reset()
 {
-	yiear_state *state = machine.driver_data<yiear_state>();
 
-	state->m_yiear_nmi_enable = 0;
+	m_yiear_nmi_enable = 0;
 }
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
 
 static MACHINE_CONFIG_START( yiear, yiear_state )
 
@@ -284,8 +292,6 @@ static MACHINE_CONFIG_START( yiear, yiear_state )
 	MCFG_CPU_VBLANK_INT("screen", yiear_vblank_interrupt)
 	MCFG_CPU_PERIODIC_INT(yiear_nmi_interrupt,480)	/* music tempo (correct frequency unknown) */
 
-	MCFG_MACHINE_START(yiear)
-	MCFG_MACHINE_RESET(yiear)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -298,16 +304,15 @@ static MACHINE_CONFIG_START( yiear, yiear_state )
 	MCFG_GFXDECODE(yiear)
 	MCFG_PALETTE_LENGTH(32)
 
-	MCFG_PALETTE_INIT(yiear)
-	MCFG_VIDEO_START(yiear)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	MCFG_SOUND_ADD("trackfld_audio", TRACKFLD_AUDIO, 0)
 
-	MCFG_SOUND_ADD("snsnd", SN76489A, XTAL_18_432MHz/12)   /* verified on pcb */
+	MCFG_SOUND_ADD("snsnd", SN76489A_NEW, XTAL_18_432MHz/12)   /* verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("vlm", VLM5030, XTAL_3_579545MHz)   /* verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)

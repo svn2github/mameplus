@@ -1,14 +1,16 @@
 #include "video/poly.h"
+#include "machine/scsibus.h"
+#include "machine/53c810.h"
 
 typedef float MATRIX[4][4];
 typedef float VECTOR[4];
 typedef float VECTOR3[3];
 
-typedef struct {
+struct PLANE {
 	float x,y,z,d;
-} PLANE;
+};
 
-typedef struct _cached_texture cached_texture;
+struct cached_texture;
 
 class model3_state : public driver_device
 {
@@ -16,11 +18,13 @@ public:
 	model3_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_maincpu(*this,"maincpu"),
+		m_lsi53c810(*this, "scsi:lsi53c810"),
 		m_work_ram(*this, "work_ram"),
 		m_paletteram64(*this, "paletteram64"),
 		m_soundram(*this, "soundram"){ }
 
 	required_device<cpu_device> m_maincpu;
+	optional_device<lsi53c810_device> m_lsi53c810;
 
 	required_shared_ptr<UINT64> m_work_ram;
 	required_shared_ptr<UINT64> m_paletteram64;
@@ -184,6 +188,15 @@ public:
 	DECLARE_DRIVER_INIT(dayto2pe);
 	DECLARE_DRIVER_INIT(spikeout);
 	DECLARE_DRIVER_INIT(model3_15);
+	virtual void video_start();
+	DECLARE_MACHINE_START(model3_10);
+	DECLARE_MACHINE_RESET(model3_10);
+	DECLARE_MACHINE_START(model3_15);
+	DECLARE_MACHINE_RESET(model3_15);
+	DECLARE_MACHINE_START(model3_20);
+	DECLARE_MACHINE_RESET(model3_20);
+	DECLARE_MACHINE_START(model3_21);
+	DECLARE_MACHINE_RESET(model3_21);
 };
 
 
@@ -203,7 +216,7 @@ void model3_tap_reset(running_machine &machine);
 /*----------- defined in video/model3.c -----------*/
 
 
-VIDEO_START(model3);
+
 SCREEN_UPDATE_IND16(model3);
 
 void real3d_display_list_end(running_machine &machine);

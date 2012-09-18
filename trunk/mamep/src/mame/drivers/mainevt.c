@@ -82,7 +82,7 @@ WRITE8_MEMBER(mainevt_state::mainevt_coin_w)
 
 WRITE8_MEMBER(mainevt_state::mainevt_sh_irqtrigger_w)
 {
-	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 READ8_MEMBER(mainevt_state::mainevt_sh_busy_r)
@@ -110,7 +110,7 @@ WRITE8_MEMBER(mainevt_state::mainevt_sh_bankswitch_w)
 {
 	int bank_A, bank_B;
 
-//logerror("CPU #1 PC: %04x bank switch = %02x\n",cpu_get_pc(&space.device()),data);
+//logerror("CPU #1 PC: %04x bank switch = %02x\n",space.device().safe_pc(),data);
 
 	/* bits 0-3 select the 007232 banks */
 	bank_A = (data & 0x3);
@@ -126,7 +126,7 @@ WRITE8_MEMBER(mainevt_state::dv_sh_bankswitch_w)
 	device_t *device = machine().device("k007232");
 	int bank_A, bank_B;
 
-//logerror("CPU #1 PC: %04x bank switch = %02x\n",cpu_get_pc(&space->device()),data);
+//logerror("CPU #1 PC: %04x bank switch = %02x\n",space->device().safe_pc(),data);
 
 	/* bits 0-3 select the 007232 banks */
 	bank_A = (data & 0x3);
@@ -411,28 +411,26 @@ static const k051960_interface mainevt_k051960_intf =
 	mainevt_sprite_callback
 };
 
-static MACHINE_START( mainevt )
+void mainevt_state::machine_start()
 {
-	mainevt_state *state = machine.driver_data<mainevt_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x2000);
+	membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x2000);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_upd = machine.device("upd");
-	state->m_k007232 = machine.device("k007232");
-	state->m_k052109 = machine.device("k052109");
-	state->m_k051960 = machine.device("k051960");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_upd = machine().device("upd");
+	m_k007232 = machine().device("k007232");
+	m_k052109 = machine().device("k052109");
+	m_k051960 = machine().device("k051960");
 
-	state->save_item(NAME(state->m_nmi_enable));
+	save_item(NAME(m_nmi_enable));
 }
 
-static MACHINE_RESET( mainevt )
+void mainevt_state::machine_reset()
 {
-	mainevt_state *state = machine.driver_data<mainevt_state>();
 
-	state->m_nmi_enable = 0;
+	m_nmi_enable = 0;
 }
 
 static INTERRUPT_GEN( mainevt_sound_timer_irq )
@@ -440,7 +438,7 @@ static INTERRUPT_GEN( mainevt_sound_timer_irq )
 	mainevt_state *state = device->machine().driver_data<mainevt_state>();
 
 	if(state->m_sound_irq_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static INTERRUPT_GEN( devstors_sound_timer_irq )
@@ -448,7 +446,7 @@ static INTERRUPT_GEN( devstors_sound_timer_irq )
 	mainevt_state *state = device->machine().driver_data<mainevt_state>();
 
 	if(state->m_sound_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( mainevt, mainevt_state )
@@ -462,8 +460,6 @@ static MACHINE_CONFIG_START( mainevt, mainevt_state )
 	MCFG_CPU_PROGRAM_MAP(mainevt_sound_map)
 	MCFG_CPU_PERIODIC_INT(mainevt_sound_timer_irq,8*60)	/* ??? */
 
-	MCFG_MACHINE_START(mainevt)
-	MCFG_MACHINE_RESET(mainevt)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -477,7 +473,7 @@ static MACHINE_CONFIG_START( mainevt, mainevt_state )
 
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_VIDEO_START(mainevt)
+	MCFG_VIDEO_START_OVERRIDE(mainevt_state,mainevt)
 
 	MCFG_K052109_ADD("k052109", mainevt_k052109_intf)
 	MCFG_K051960_ADD("k051960", mainevt_k051960_intf)
@@ -522,8 +518,6 @@ static MACHINE_CONFIG_START( devstors, mainevt_state )
 	MCFG_CPU_PROGRAM_MAP(devstors_sound_map)
 	MCFG_CPU_PERIODIC_INT(devstors_sound_timer_irq,4*60) /* ??? */
 
-	MCFG_MACHINE_START(mainevt)
-	MCFG_MACHINE_RESET(mainevt)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -537,7 +531,7 @@ static MACHINE_CONFIG_START( devstors, mainevt_state )
 
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_VIDEO_START(dv)
+	MCFG_VIDEO_START_OVERRIDE(mainevt_state,dv)
 
 	MCFG_K052109_ADD("k052109", dv_k052109_intf)
 	MCFG_K051960_ADD("k051960", dv_k051960_intf)

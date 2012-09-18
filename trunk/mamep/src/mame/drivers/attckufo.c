@@ -66,39 +66,10 @@ public:
 
 	DECLARE_READ8_MEMBER(attckufo_io_r);
 	DECLARE_WRITE8_MEMBER(attckufo_io_w);
+
+	DECLARE_READ8_MEMBER( vic_videoram_r );
+	DECLARE_READ8_MEMBER( vic_colorram_r );
 };
-
-
-
-static const rgb_t attckufo_palette[] =
-{
-/* ripped from vice, a very excellent emulator */
-	MAKE_RGB(0x00, 0x00, 0x00),
-	MAKE_RGB(0xff, 0xff, 0xff),
-	MAKE_RGB(0xf0, 0x00, 0x00),
-	MAKE_RGB(0x00, 0xf0, 0xf0),
-
-	MAKE_RGB(0x60, 0x00, 0x60),
-	MAKE_RGB(0x00, 0xa0, 0x00),
-	MAKE_RGB(0x00, 0x00, 0xf0),
-	MAKE_RGB(0xd0, 0xd0, 0x00),
-
-	MAKE_RGB(0xc0, 0xa0, 0x00),
-	MAKE_RGB(0xff, 0xa0, 0x00),
-	MAKE_RGB(0xf0, 0x80, 0x80),
-	MAKE_RGB(0x00, 0xff, 0xff),
-
-	MAKE_RGB(0xff, 0x00, 0xff),
-	MAKE_RGB(0x00, 0xff, 0x00),
-	MAKE_RGB(0x00, 0xa0, 0xff),
-	MAKE_RGB(0xff, 0xff, 0x00)
-};
-
-static PALETTE_INIT( attckufo )
-{
-	palette_set_colors(machine, 0, attckufo_palette, ARRAY_LENGTH(attckufo_palette));
-}
-
 
 READ8_MEMBER(attckufo_state::attckufo_io_r)
 {
@@ -122,13 +93,31 @@ WRITE8_MEMBER(attckufo_state::attckufo_io_w)
     */
 }
 
+READ8_MEMBER(attckufo_state::vic_videoram_r)
+{
+	return m_maincpu->space(AS_PROGRAM)->read_byte(offset);
+}
+
+READ8_MEMBER(attckufo_state::vic_colorram_r)
+{
+	return m_maincpu->space(AS_PROGRAM)->read_byte(offset + 0x400);
+}
+
 static ADDRESS_MAP_START( cpu_map, AS_PROGRAM, 8, attckufo_state )
 	ADDRESS_MAP_GLOBAL_MASK(0x3fff)
 	AM_RANGE(0x0000, 0x0fff) AM_RAM AM_SHARE("mainram")
-	AM_RANGE(0x1000, 0x100f) AM_DEVREADWRITE_LEGACY("mos6560", mos6560_port_r, mos6560_port_w)
+	AM_RANGE(0x1000, 0x100f) AM_DEVREADWRITE("mos6560", mos6560_device, read, write)
 	AM_RANGE(0x1400, 0x1403) AM_READWRITE(attckufo_io_r, attckufo_io_w)
 	AM_RANGE(0x1c00, 0x1fff) AM_RAM AM_SHARE("tileram")
 	AM_RANGE(0x2000, 0x3fff) AM_ROM
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( vic_videoram_map, AS_0, 8, attckufo_state )
+	AM_RANGE(0x0000, 0x3fff) AM_READ(vic_videoram_r)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( vic_colorram_map, AS_1, 8, attckufo_state )
+	AM_RANGE(0x000, 0x3ff) AM_READ(vic_colorram_r)
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( attckufo )
@@ -162,60 +151,25 @@ INPUT_PORTS_END
 static INTERRUPT_GEN( attckufo_raster_interrupt )
 {
 	attckufo_state *state = device->machine().driver_data<attckufo_state>();
-	mos6560_raster_interrupt_gen(state->m_mos6560);
+	state->m_mos6560->raster_interrupt_gen();
 }
 
-static SCREEN_UPDATE_IND16( attckufo )
+static MOS6560_INTERFACE( vic_intf )
 {
-	attckufo_state *state = screen.machine().driver_data<attckufo_state>();
-	mos6560_video_update(state->m_mos6560, bitmap, cliprect);
-	return 0;
-}
-
-static int attckufo_dma_read( running_machine &machine, int offset )
-{
-	attckufo_state *state = machine.driver_data<attckufo_state>();
-	return state->m_maincpu->space(AS_PROGRAM)->read_byte(offset);
-}
-
-static int attckufo_dma_read_color( running_machine &machine, int offset )
-{
-	attckufo_state *state = machine.driver_data<attckufo_state>();
-	return state->m_maincpu->space(AS_PROGRAM)->read_byte(offset + 0x400);
-}
-
-static const mos6560_interface attckufo_6560_intf =
-{
-	"screen",	/* screen */
-	MOS6560_ATTACKUFO,
-	NULL, NULL, NULL,	/* lightgun cb */
-	NULL, NULL,		/* paddle cb */
-	attckufo_dma_read, attckufo_dma_read_color	/* DMA */
+	"screen",
+	DEVCB_NULL,
+	DEVCB_NULL
 };
 
 
 static MACHINE_CONFIG_START( attckufo, attckufo_state )
-
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, 14318181/14)
 	MCFG_CPU_PROGRAM_MAP(cpu_map)
 	MCFG_CPU_PERIODIC_INT(attckufo_raster_interrupt, MOS656X_HRETRACERATE)
 
 	/* video hardware */
-	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_REFRESH_RATE(MOS6560_VRETRACERATE)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
-	MCFG_SCREEN_SIZE((MOS6560_XSIZE + 7) & ~7, MOS6560_YSIZE)
-	MCFG_SCREEN_VISIBLE_AREA(0, 23*8 - 1, 0, 22*8 - 1)
-	MCFG_SCREEN_UPDATE_STATIC(attckufo)
-
-	MCFG_PALETTE_LENGTH(ARRAY_LENGTH(attckufo_palette))
-	MCFG_PALETTE_INIT(attckufo)
-
-	/* sound hardware */
-	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_MOS656X_ADD("mos6560", attckufo_6560_intf)
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_MOS656X_ATTACK_UFO_ADD("mos6560", "screen", 14318181/14, vic_intf, vic_videoram_map, vic_colorram_map)
 MACHINE_CONFIG_END
 
 ROM_START( attckufo )

@@ -239,10 +239,10 @@ READ16_MEMBER(qdrmfgp_state::gp2_ide_std_r)
 	{
 		if (offset == 0x07)
 		{
-			switch (cpu_get_previouspc(&space.device()))
+			switch (space.device().safe_pcbase())
 			{
 				case 0xdb4c:
-					if ((m_workram[0x5fa4/2] - cpu_get_reg(&space.device(), M68K_D0)) <= 0x10)
+					if ((m_workram[0x5fa4/2] - space.device().state().state_int(M68K_D0)) <= 0x10)
 						m_gp2_irq_control = 1;
 					break;
 				case 0xdec2:
@@ -271,12 +271,12 @@ static TIMER_DEVICE_CALLBACK(qdrmfgp_interrupt)
 
 	if(scanline == 0)
 		if (state->m_control & 0x0001)
-			device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
+			state->m_maincpu->set_input_line(1, HOLD_LINE);
 
 	/* trigger V-blank interrupt */
 	if(scanline == 240)
 		if (state->m_control & 0x0004)
-			device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
+			state->m_maincpu->set_input_line(3, HOLD_LINE);
 }
 
 static void ide_interrupt(device_t *device, int state)
@@ -285,9 +285,9 @@ static void ide_interrupt(device_t *device, int state)
 	if (drvstate->m_control & 0x0008)
 	{
 		if (state != CLEAR_LINE)
-			cputag_set_input_line(device->machine(), "maincpu", 4, HOLD_LINE);
+			device->machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 		else
-			cputag_set_input_line(device->machine(), "maincpu", 4, CLEAR_LINE);
+			device->machine().device("maincpu")->execute().set_input_line(4, CLEAR_LINE);
 	}
 }
 
@@ -297,7 +297,7 @@ static TIMER_CALLBACK( gp2_timer_callback )
 {
 	qdrmfgp_state *state = machine.driver_data<qdrmfgp_state>();
 	if (state->m_control & 0x0004)
-		cputag_set_input_line(machine, "maincpu", 3, HOLD_LINE);
+		machine.device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 }
 
 static INTERRUPT_GEN(qdrmfgp2_interrupt)
@@ -305,7 +305,7 @@ static INTERRUPT_GEN(qdrmfgp2_interrupt)
 	qdrmfgp_state *state = device->machine().driver_data<qdrmfgp_state>();
 	/* trigger V-blank interrupt */
 	if (state->m_control & 0x0008)
-		device_set_input_line(device, 4, HOLD_LINE);
+		device->execute().set_input_line(4, HOLD_LINE);
 }
 
 static void gp2_ide_interrupt(device_t *device, int state)
@@ -318,11 +318,11 @@ static void gp2_ide_interrupt(device_t *device, int state)
 			if (drvstate->m_gp2_irq_control)
 				drvstate->m_gp2_irq_control = 0;
 			else
-				cputag_set_input_line(device->machine(), "maincpu", 5, HOLD_LINE);
+				device->machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 		}
 		else
 		{
-			cputag_set_input_line(device->machine(), "maincpu", 5, CLEAR_LINE);
+			device->machine().device("maincpu")->execute().set_input_line(5, CLEAR_LINE);
 		}
 	}
 }
@@ -570,7 +570,7 @@ static void sound_irq(device_t *device)
 {
 	qdrmfgp_state *state = device->machine().driver_data<qdrmfgp_state>();
 	if (state->m_control & 0x0001)
-		cputag_set_input_line(device->machine(), "maincpu", 1, HOLD_LINE);
+		device->machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
 }
 
 static const k054539_interface k054539_config =
@@ -607,12 +607,12 @@ static const k056832_interface qdrmfgp2_k056832_intf =
 
 WRITE_LINE_MEMBER(qdrmfgp_state::qdrmfgp_irq3_ack_w)
 {
-//  cputag_set_input_line(machine(), "maincpu", M68K_IRQ_3, CLEAR_LINE);
+//  machine().device("maincpu")->execute().set_input_line(M68K_IRQ_3, CLEAR_LINE);
 }
 
 WRITE_LINE_MEMBER(qdrmfgp_state::qdrmfgp_irq4_ack_w)
 {
-//  cputag_set_input_line(machine(), "maincpu", M68K_IRQ_4, CLEAR_LINE);
+//  machine().device("maincpu")->execute().set_input_line(M68K_IRQ_4, CLEAR_LINE);
 }
 
 static const k053252_interface qdrmfgp_k053252_intf =
@@ -635,30 +635,28 @@ static const k053252_interface qdrmfgp2_k053252_intf =
 	40, 16
 };
 
-static MACHINE_START( qdrmfgp )
+MACHINE_START_MEMBER(qdrmfgp_state,qdrmfgp)
 {
-	qdrmfgp_state *state = machine.driver_data<qdrmfgp_state>();
-	state_save_register_global(machine, state->m_control);
-	state_save_register_global(machine, state->m_pal);
-	state_save_register_global(machine, state->m_gp2_irq_control);
+	state_save_register_global(machine(), m_control);
+	state_save_register_global(machine(), m_pal);
+	state_save_register_global(machine(), m_gp2_irq_control);
 }
 
-static MACHINE_START( qdrmfgp2 )
+MACHINE_START_MEMBER(qdrmfgp_state,qdrmfgp2)
 {
 	/* sound irq (CCU? 240Hz) */
-	machine.scheduler().timer_pulse(attotime::from_hz(18432000/76800), FUNC(gp2_timer_callback));
+	machine().scheduler().timer_pulse(attotime::from_hz(18432000/76800), FUNC(gp2_timer_callback));
 
-	MACHINE_START_CALL( qdrmfgp );
+	MACHINE_START_CALL_MEMBER( qdrmfgp );
 }
 
-static MACHINE_RESET( qdrmfgp )
+void qdrmfgp_state::machine_reset()
 {
-	qdrmfgp_state *state = machine.driver_data<qdrmfgp_state>();
-	state->m_sndram = state->memregion("konami")->base() + 0x100000;
+	m_sndram = memregion("konami")->base() + 0x100000;
 
 	/* reset the IDE controller */
-	state->m_gp2_irq_control = 0;
-	devtag_reset(machine, "ide");
+	m_gp2_irq_control = 0;
+	machine().device("ide")->reset();
 }
 
 
@@ -667,6 +665,12 @@ static MACHINE_RESET( qdrmfgp )
  *  Machine driver
  *
  *************************************/
+static const ide_config ide_intf =
+{
+	ide_interrupt,
+	NULL,
+	0
+};
 
 static MACHINE_CONFIG_START( qdrmfgp, qdrmfgp_state )
 
@@ -675,11 +679,10 @@ static MACHINE_CONFIG_START( qdrmfgp, qdrmfgp_state )
 	MCFG_CPU_PROGRAM_MAP(qdrmfgp_map)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", qdrmfgp_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_START(qdrmfgp)
-	MCFG_MACHINE_RESET(qdrmfgp)
+	MCFG_MACHINE_START_OVERRIDE(qdrmfgp_state,qdrmfgp)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_interrupt, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -691,7 +694,7 @@ static MACHINE_CONFIG_START( qdrmfgp, qdrmfgp_state )
 
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(qdrmfgp)
+	MCFG_VIDEO_START_OVERRIDE(qdrmfgp_state,qdrmfgp)
 
 	MCFG_K056832_ADD("k056832", qdrmfgp_k056832_intf)
 	MCFG_K053252_ADD("k053252", 32000000/4, qdrmfgp_k053252_intf)
@@ -704,6 +707,12 @@ static MACHINE_CONFIG_START( qdrmfgp, qdrmfgp_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
 
+static const ide_config qdrmfgp2_ide_intf =
+{
+	gp2_ide_interrupt,
+	NULL,
+	0
+};
 static MACHINE_CONFIG_START( qdrmfgp2, qdrmfgp_state )
 
 	/* basic machine hardware */
@@ -711,11 +720,10 @@ static MACHINE_CONFIG_START( qdrmfgp2, qdrmfgp_state )
 	MCFG_CPU_PROGRAM_MAP(qdrmfgp2_map)
 	MCFG_CPU_VBLANK_INT("screen", qdrmfgp2_interrupt)
 
-	MCFG_MACHINE_START(qdrmfgp2)
-	MCFG_MACHINE_RESET(qdrmfgp)
+	MCFG_MACHINE_START_OVERRIDE(qdrmfgp_state,qdrmfgp2)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
-	MCFG_IDE_CONTROLLER_ADD("ide", gp2_ide_interrupt, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", qdrmfgp2_ide_intf, ide_devices, "hdd", NULL, true)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -727,7 +735,7 @@ static MACHINE_CONFIG_START( qdrmfgp2, qdrmfgp_state )
 
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(qdrmfgp2)
+	MCFG_VIDEO_START_OVERRIDE(qdrmfgp_state,qdrmfgp2)
 
 	MCFG_K056832_ADD("k056832", qdrmfgp2_k056832_intf)
 	MCFG_K053252_ADD("k053252", 32000000/4, qdrmfgp2_k053252_intf)

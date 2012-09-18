@@ -227,7 +227,7 @@ WRITE32_MEMBER(undrfire_state::color_ram_w)
 
 static TIMER_CALLBACK( interrupt5 )
 {
-	cputag_set_input_line(machine, "maincpu", 5, HOLD_LINE);
+	machine.device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 }
 
 
@@ -393,7 +393,7 @@ READ32_MEMBER(undrfire_state::undrfire_lightgun_r)
 		}
 	}
 
-logerror("CPU #0 PC %06x: warning - read unmapped lightgun offset %06x\n",cpu_get_pc(&space.device()),offset);
+logerror("CPU #0 PC %06x: warning - read unmapped lightgun offset %06x\n",space.device().safe_pc(),offset);
 
 	return 0x0;
 }
@@ -452,7 +452,7 @@ WRITE32_MEMBER(undrfire_state::cbombers_cpua_ctrl_w)
 	output_set_value("Lamp_6", (data >> 5) & 1 );
 	output_set_value("Wheel_vibration", (data >> 6) & 1 );
 
-	cputag_set_input_line(machine(), "sub", INPUT_LINE_RESET, (data & 0x1000) ? CLEAR_LINE : ASSERT_LINE);
+	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x1000) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 READ32_MEMBER(undrfire_state::cbombers_adc_r)
@@ -701,7 +701,7 @@ static INTERRUPT_GEN( undrfire_interrupt )
 {
 	undrfire_state *state = device->machine().driver_data<undrfire_state>();
 	state->m_frame_counter ^= 1;
-	device_set_input_line(device, 4, HOLD_LINE);
+	device->execute().set_input_line(4, HOLD_LINE);
 }
 
 static const tc0100scn_interface undrfire_tc0100scn_intf =
@@ -744,7 +744,6 @@ static MACHINE_CONFIG_START( undrfire, undrfire_state )
 	MCFG_GFXDECODE(undrfire)
 	MCFG_PALETTE_LENGTH(16384)
 
-	MCFG_VIDEO_START(undrfire)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", undrfire_tc0100scn_intf)
 	MCFG_TC0480SCP_ADD("tc0480scp", undrfire_tc0480scp_intf)
@@ -780,7 +779,6 @@ static MACHINE_CONFIG_START( cbombers, undrfire_state )
 	MCFG_GFXDECODE(cbombers)
 	MCFG_PALETTE_LENGTH(16384)
 
-	MCFG_VIDEO_START(undrfire)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", undrfire_tc0100scn_intf)
 	MCFG_TC0480SCP_ADD("tc0480scp", undrfire_tc0480scp_intf)

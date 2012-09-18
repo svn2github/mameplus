@@ -34,7 +34,7 @@ public:
 	double         m_oldbrt2;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_WRITE32_MEMBER(ps4_paletteram32_RRRRRRRRGGGGGGGGBBBBBBBBxxxxxxxx_dword_w);
 	DECLARE_WRITE32_MEMBER(ps4_bgpen_1_dword_w);
 	DECLARE_WRITE32_MEMBER(ps4_bgpen_2_dword_w);
@@ -47,11 +47,14 @@ public:
 	DECLARE_WRITE32_MEMBER(ps4_eeprom_w);
 	DECLARE_READ32_MEMBER(ps4_eeprom_r);
 	DECLARE_DRIVER_INIT(hotgmck);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/psikyo4.c -----------*/
 
-VIDEO_START( psikyo4 );
+
 SCREEN_UPDATE_IND16( psikyo4_left );
 SCREEN_UPDATE_IND16( psikyo4_right );

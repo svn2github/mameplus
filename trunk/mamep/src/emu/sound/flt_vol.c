@@ -2,8 +2,7 @@
 #include "flt_vol.h"
 
 
-typedef struct _filter_volume_state filter_volume_state;
-struct _filter_volume_state
+struct filter_volume_state
 {
 	sound_stream *	stream;
 	int				gain;
@@ -13,7 +12,7 @@ INLINE filter_volume_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == FILTER_VOLUME);
-	return (filter_volume_state *)downcast<legacy_device_base *>(device)->token();
+	return (filter_volume_state *)downcast<filter_volume_device *>(device)->token();
 }
 
 
@@ -44,32 +43,42 @@ void flt_volume_set_volume(device_t *device, float volume)
 	info->gain = (int)(volume * 256);
 }
 
+const device_type FILTER_VOLUME = &device_creator<filter_volume_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( filter_volume )
+filter_volume_device::filter_volume_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, FILTER_VOLUME, "Volume Filter", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(filter_volume_state);			break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(filter_volume_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( filter_volume );			break;
-		case DEVINFO_FCT_STOP:							/* Nothing */											break;
-		case DEVINFO_FCT_RESET:							/* Nothing */											break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Volume Filter");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Filters");								break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");									break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);								break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void filter_volume_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void filter_volume_device::device_start()
+{
+	DEVICE_START_NAME( filter_volume )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void filter_volume_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(FILTER_VOLUME, filter_volume);

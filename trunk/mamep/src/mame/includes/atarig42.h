@@ -46,12 +46,18 @@ public:
 	DECLARE_DIRECT_UPDATE_MEMBER(atarig42_sloop_direct_handler);
 	DECLARE_DRIVER_INIT(roadriot);
 	DECLARE_DRIVER_INIT(guardian);
+	TILE_GET_INFO_MEMBER(get_alpha_tile_info);
+	TILE_GET_INFO_MEMBER(get_playfield_tile_info);
+	TILEMAP_MAPPER_MEMBER(atarig42_playfield_scan);
+	DECLARE_MACHINE_START(atarig42);
+	DECLARE_MACHINE_RESET(atarig42);
+	DECLARE_VIDEO_START(atarig42);
 };
 
 
 /*----------- defined in video/atarig42.c -----------*/
 
-VIDEO_START( atarig42 );
+
 SCREEN_VBLANK( atarig42 );
 SCREEN_UPDATE_IND16( atarig42 );
 

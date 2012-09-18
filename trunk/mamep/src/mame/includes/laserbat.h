@@ -77,6 +77,10 @@ public:
 	DECLARE_READ8_MEMBER(zaccaria_port0a_r);
 	DECLARE_WRITE8_MEMBER(zaccaria_port0a_w);
 	DECLARE_WRITE8_MEMBER(zaccaria_port0b_w);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 

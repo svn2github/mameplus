@@ -111,7 +111,7 @@ static INTERRUPT_GEN( sprint2 )
 	device->machine().watchdog_enable(!service_mode(device->machine()));
 
 	if (!service_mode(device->machine()))
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -512,8 +512,6 @@ static MACHINE_CONFIG_START( sprint2, sprint2_state )
 	MCFG_GFXDECODE(sprint2)
 	MCFG_PALETTE_LENGTH(12)
 
-	MCFG_PALETTE_INIT(sprint2)
-	MCFG_VIDEO_START(sprint2)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

@@ -58,20 +58,18 @@ enum
 //============================================================
 
 
-typedef struct _quad_setup_data quad_setup_data;
-struct _quad_setup_data
+struct quad_setup_data
 {
 	INT32			dudx, dvdx, dudy, dvdy;
 	INT32			startu, startv;
 	INT32			rotwidth, rotheight;
 };
 
-typedef struct _texture_info texture_info;
+struct texture_info;
 
 typedef void (*texture_copy_func)(texture_info *texture, const render_texinfo *texsource);
 
-typedef struct _copy_info copy_info;
-struct _copy_info {
+struct copy_info {
 	int 				src_fmt;
 	Uint32				dst_fmt;
 	int					dst_bpp;
@@ -90,7 +88,7 @@ struct _copy_info {
 };
 
 /* texture_info holds information about a texture */
-struct _texture_info
+struct texture_info
 {
 	texture_info *		next;				// next texture in the list
 
@@ -117,8 +115,7 @@ struct _texture_info
 };
 
 /* sdl_info is the information about SDL for the current screen */
-typedef struct _sdl_info sdl_info;
-struct _sdl_info
+struct sdl_info
 {
 	INT32			blittimer;
 	UINT32			extra_flags;
@@ -622,7 +619,7 @@ static int draw13_window_create(sdl_window_info *window, int width, int height)
 
 	if (!sdl->sdl_renderer)
 	{
-		fatalerror("Error on creating renderer: %s \n", SDL_GetError());
+		fatalerror("Error on creating renderer: %s\n", SDL_GetError());
 	}
 
     //SDL_SelectRenderer(window->sdl_window);

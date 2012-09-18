@@ -22,10 +22,14 @@ public:
 	DECLARE_WRITE16_MEMBER(wwfsstar_fg0_videoram_w);
 	DECLARE_WRITE16_MEMBER(wwfsstar_bg0_videoram_w);
 	DECLARE_CUSTOM_INPUT_MEMBER(wwfsstar_vblank_r);
+	TILE_GET_INFO_MEMBER(get_fg0_tile_info);
+	TILEMAP_MAPPER_MEMBER(bg0_scan);
+	TILE_GET_INFO_MEMBER(get_bg0_tile_info);
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/wwfsstar.c -----------*/
 
-VIDEO_START( wwfsstar );
+
 SCREEN_UPDATE_IND16( wwfsstar );

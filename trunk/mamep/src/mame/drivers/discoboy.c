@@ -60,7 +60,7 @@ public:
 	UINT8    m_toggle;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 
 	/* memory */
 	UINT8    m_ram_1[0x800];
@@ -83,11 +83,14 @@ public:
 	DECLARE_WRITE8_MEMBER(yunsung8_adpcm_w);
 	DECLARE_WRITE8_MEMBER(yunsung8_sound_bankswitch_w);
 	DECLARE_DRIVER_INIT(discoboy);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 
-static VIDEO_START( discoboy )
+void discoboy_state::video_start()
 {
 }
 
@@ -233,9 +236,9 @@ WRITE8_MEMBER(discoboy_state::discoboy_port_01_w)
 WRITE8_MEMBER(discoboy_state::discoboy_port_03_w)// sfx? (to sound cpu)
 {
 	//  printf("unk discoboy_port_03_w %02x\n", data);
-	//  device_set_input_line(m_audiocpu, INPUT_LINE_NMI, HOLD_LINE);
+	//  m_audiocpu->set_input_line(INPUT_LINE_NMI, HOLD_LINE);
 	soundlatch_byte_w(space, 0, data);
-	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 WRITE8_MEMBER(discoboy_state::discoboy_port_06_w)
@@ -451,28 +454,26 @@ static GFXDECODE_START( discoboy )
 	GFXDECODE_ENTRY( "gfx2", 0, tiles8x8_layout2, 0x000, 128 )
 GFXDECODE_END
 
-static MACHINE_START( discoboy )
+void discoboy_state::machine_start()
 {
-	discoboy_state *state = machine.driver_data<discoboy_state>();
 
-	state->m_audiocpu = machine.device("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_ram_bank));
-	state->save_item(NAME(state->m_port_00));
-	state->save_item(NAME(state->m_gfxbank));
-	state->save_item(NAME(state->m_adpcm));
-	state->save_item(NAME(state->m_toggle));
+	save_item(NAME(m_ram_bank));
+	save_item(NAME(m_port_00));
+	save_item(NAME(m_gfxbank));
+	save_item(NAME(m_adpcm));
+	save_item(NAME(m_toggle));
 }
 
-static MACHINE_RESET( discoboy )
+void discoboy_state::machine_reset()
 {
-	discoboy_state *state = machine.driver_data<discoboy_state>();
 
-	state->m_ram_bank = 0;
-	state->m_port_00 = 0;
-	state->m_gfxbank = 0;
-	state->m_adpcm = 0x80;
-	state->m_toggle = 0;
+	m_ram_bank = 0;
+	m_port_00 = 0;
+	m_gfxbank = 0;
+	m_adpcm = 0x80;
+	m_toggle = 0;
 }
 
 static void yunsung8_adpcm_int( device_t *device )
@@ -503,8 +504,6 @@ static MACHINE_CONFIG_START( discoboy, discoboy_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,32*60)
 
-	MCFG_MACHINE_START( discoboy )
-	MCFG_MACHINE_RESET( discoboy )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -517,7 +516,6 @@ static MACHINE_CONFIG_START( discoboy, discoboy_state )
 	MCFG_GFXDECODE(discoboy)
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_VIDEO_START(discoboy)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

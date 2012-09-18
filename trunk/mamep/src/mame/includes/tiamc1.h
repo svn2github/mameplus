@@ -28,12 +28,39 @@ public:
 	DECLARE_WRITE8_MEMBER(tiamc1_bg_vshift_w);
 	DECLARE_WRITE8_MEMBER(tiamc1_bg_hshift_w);
 	DECLARE_WRITE8_MEMBER(tiamc1_palette_w);
+	TILE_GET_INFO_MEMBER(get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg2_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in audio/tiamc1.c -----------*/
 
-DECLARE_LEGACY_SOUND_DEVICE(TIAMC1, tiamc1_sound);
+class tiamc1_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	tiamc1_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tiamc1_sound_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type TIAMC1;
+
 
 WRITE8_DEVICE_HANDLER( tiamc1_timer0_w );
 WRITE8_DEVICE_HANDLER( tiamc1_timer1_w );
@@ -42,7 +69,7 @@ WRITE8_DEVICE_HANDLER( tiamc1_timer1_gate_w );
 
 /*----------- defined in video/tiamc1.c -----------*/
 
-PALETTE_INIT( tiamc1 );
-VIDEO_START( tiamc1 );
+
+
 SCREEN_UPDATE_IND16( tiamc1 );
 

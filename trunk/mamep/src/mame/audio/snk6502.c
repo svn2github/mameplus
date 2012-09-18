@@ -29,7 +29,7 @@
 #define FRAC_ONE	(1 << FRAC_BITS)
 #define FRAC_MASK	(FRAC_ONE - 1)
 
-typedef struct tone
+struct TONE 
 {
 	int	mute;
 	int	offset;
@@ -39,10 +39,9 @@ typedef struct tone
 	INT32	sample_step;
 	INT32	sample_cur;
 	INT16	form[16];
-} TONE;
+};
 
-typedef struct _snk6502_sound_state snk6502_sound_state;
-struct _snk6502_sound_state
+struct snk6502_sound_state
 {
 	TONE m_tone_channels[CHANNELS];
 	INT32 m_tone_clock_expire;
@@ -386,7 +385,7 @@ INLINE snk6502_sound_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == SNK6502);
 
-	return (snk6502_sound_state *)downcast<legacy_device_base *>(device)->token();
+	return (snk6502_sound_state *)downcast<snk6502_sound_device *>(device)->token();
 }
 
 INLINE void validate_tone_channel(snk6502_sound_state *state, int channel)
@@ -663,22 +662,6 @@ static DEVICE_START( snk6502_sound )
 	snk6502_set_music_clock(device->machine(), M_LN2 * (RES_K(18) * 2 + RES_K(1)) * CAP_U(1));
 
 	state->m_tone_stream = device->machine().sound().stream_alloc(*device, 0, 1, SAMPLE_RATE, NULL, snk6502_tone_update);
-}
-
-DEVICE_GET_INFO( snk6502_sound )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(snk6502_sound_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(snk6502_sound);	break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "snk6502 Custom");				break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
 }
 
 int snk6502_music0_playing(running_machine &machine)
@@ -1266,4 +1249,42 @@ WRITE8_HANDLER( fantasy_speech_w )
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(SNK6502, snk6502_sound);
+const device_type SNK6502 = &device_creator<snk6502_sound_device>;
+
+snk6502_sound_device::snk6502_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, SNK6502, "snk6502 Custom", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(snk6502_sound_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void snk6502_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void snk6502_sound_device::device_start()
+{
+	DEVICE_START_NAME( snk6502_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void snk6502_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

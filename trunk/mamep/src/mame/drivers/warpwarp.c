@@ -144,7 +144,7 @@ static INTERRUPT_GEN( vblank_irq )
 	warpwarp_state *state = device->machine().driver_data<warpwarp_state>();
 
 	if(state->m_ball_on)
-		device_set_input_line(device, 0, ASSERT_LINE);
+		device->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -217,7 +217,7 @@ WRITE8_MEMBER(warpwarp_state::geebee_out7_w)
 		case 6:
 			m_ball_on = data & 1;
 			if (~data & 1)
-				cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+				machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 			break;
 		case 7:
 			flip_screen_set(data & 1);
@@ -301,7 +301,7 @@ WRITE8_MEMBER(warpwarp_state::warpwarp_out3_w)
 		case 6:
 			m_ball_on = data & 1;
 			if (~data & 1)
-				cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+				machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 			break;
 		case 7:
 			flip_screen_set(data & 1);
@@ -742,8 +742,8 @@ static MACHINE_CONFIG_START( geebee, warpwarp_state )
 	MCFG_GFXDECODE(1k)
 	MCFG_PALETTE_LENGTH(4*2)
 
-	MCFG_PALETTE_INIT(geebee)
-	MCFG_VIDEO_START(geebee)
+	MCFG_PALETTE_INIT_OVERRIDE(warpwarp_state,geebee)
+	MCFG_VIDEO_START_OVERRIDE(warpwarp_state,geebee)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -758,8 +758,8 @@ static MACHINE_CONFIG_DERIVED( navarone, geebee )
 	MCFG_GFXDECODE(2k)
 	MCFG_PALETTE_LENGTH(2*2)
 
-	MCFG_PALETTE_INIT(navarone)
-	MCFG_VIDEO_START(navarone)
+	MCFG_PALETTE_INIT_OVERRIDE(warpwarp_state,navarone)
+	MCFG_VIDEO_START_OVERRIDE(warpwarp_state,navarone)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( bombbee, warpwarp_state )
@@ -777,8 +777,8 @@ static MACHINE_CONFIG_START( bombbee, warpwarp_state )
 	MCFG_GFXDECODE(color)
 	MCFG_PALETTE_LENGTH(2*256+1)
 
-	MCFG_PALETTE_INIT(warpwarp)
-	MCFG_VIDEO_START(warpwarp)
+	MCFG_PALETTE_INIT_OVERRIDE(warpwarp_state,warpwarp)
+	MCFG_VIDEO_START_OVERRIDE(warpwarp_state,warpwarp)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

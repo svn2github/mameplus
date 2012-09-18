@@ -28,8 +28,8 @@ public:
 	int           m_control;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k053246;
 	device_t *m_k053251;
 	device_t *m_k056832;
@@ -45,6 +45,11 @@ public:
 	DECLARE_DRIVER_INIT(dbza);
 	DECLARE_DRIVER_INIT(dbz);
 	DECLARE_DRIVER_INIT(dbz2);
+	TILE_GET_INFO_MEMBER(get_dbz_bg2_tile_info);
+	TILE_GET_INFO_MEMBER(get_dbz_bg1_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -54,5 +59,5 @@ extern void dbz_sprite_callback(running_machine &machine, int *code, int *color,
 extern void dbz_tile_callback(running_machine &machine, int layer, int *code, int *color, int *flags);
 
 
-VIDEO_START(dbz);
+
 SCREEN_UPDATE_IND16(dbz);

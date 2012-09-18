@@ -150,8 +150,7 @@ using namespace uml;
 ***************************************************************************/
 
 /* fast RAM info */
-typedef struct _fast_ram_info fast_ram_info;
-struct _fast_ram_info
+struct fast_ram_info
 {
 	offs_t				start;						/* start of the RAM block */
 	offs_t				end;						/* end of the RAM block */
@@ -161,8 +160,7 @@ struct _fast_ram_info
 
 
 /* hotspot info */
-typedef struct _hotspot_info hotspot_info;
-struct _hotspot_info
+struct hotspot_info
 {
 	offs_t				pc;							/* PC to consider */
 	UINT32				opcode;						/* required opcode at that PC */
@@ -171,8 +169,7 @@ struct _hotspot_info
 
 
 /* internal compiler state */
-typedef struct _compiler_state compiler_state;
-struct _compiler_state
+struct compiler_state
 {
 	UINT32				cycles;						/* accumulated cycles */
 	UINT8				checkints;					/* need to check interrupts before next instruction */
@@ -182,7 +179,7 @@ struct _compiler_state
 
 
 /* MIPS3 registers */
-struct _mips3imp_state
+struct mips3imp_state
 {
 	/* core state */
 	drc_cache *			cache;						/* pointer to the DRC code cache */
@@ -397,7 +394,7 @@ static void mips3_init(mips3_flavor flavor, int bigendian, legacy_cpu_device *de
 	/* allocate enough space for the cache and the core */
 	cache = auto_alloc(device->machine(), drc_cache(CACHE_SIZE + sizeof(*mips3)));
 	if (cache == NULL)
-		fatalerror("Unable to allocate cache of size %d", (UINT32)(CACHE_SIZE + sizeof(*mips3)));
+		fatalerror("Unable to allocate cache of size %d\n", (UINT32)(CACHE_SIZE + sizeof(*mips3)));
 
 	/* allocate the core memory */
 	*(mips3_state **)device->token() = mips3 = (mips3_state *)cache->alloc_near(sizeof(*mips3));
@@ -628,7 +625,7 @@ static CPU_GET_INFO( mips3 )
 		case CPUINFO_FCT_TRANSLATE:						info->translate = CPU_TRANSLATE_NAME(mips3);	break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
+		case CPUINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
 
 		/* --- everything else is handled generically --- */
 		default:										mips3com_get_info(mips3, state, info);			break;
@@ -744,7 +741,7 @@ static void code_flush_cache(mips3_state *mips3)
 	}
 	catch (drcuml_block::abort_compilation &)
 	{
-		fatalerror("Unrecoverable error generating static code");
+		fatalerror("Unrecoverable error generating static code\n");
 	}
 }
 
@@ -967,7 +964,7 @@ static void cfunc_unimplemented(void *param)
 {
 	mips3_state *mips3 = (mips3_state *)param;
 	UINT32 opcode = mips3->impstate->arg0;
-	fatalerror("PC=%08X: Unimplemented op %08X (%02X,%02X)", mips3->pc, opcode, opcode >> 26, opcode & 0x3f);
+	fatalerror("PC=%08X: Unimplemented op %08X (%02X,%02X)\n", mips3->pc, opcode, opcode >> 26, opcode & 0x3f);
 }
 
 
@@ -3713,13 +3710,13 @@ CPU_GET_INFO( vr4300be )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(vr4300be);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "VR4300 (big)");			break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "VR4300 (big)");			break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -3731,13 +3728,13 @@ CPU_GET_INFO( vr4300le )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(vr4300le);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "VR4300 (little)");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "VR4300 (little)");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -3750,13 +3747,13 @@ CPU_GET_INFO( vr4310be )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(vr4300be);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "VR4310 (big)");			break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "VR4310 (big)");			break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -3768,13 +3765,13 @@ CPU_GET_INFO( vr4310le )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(vr4300le);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "VR4310 (little)");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "VR4310 (little)");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -3801,13 +3798,13 @@ CPU_GET_INFO( r4600be )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(r4600be);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "R4600 (big)");			break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "R4600 (big)");			break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -3819,13 +3816,13 @@ CPU_GET_INFO( r4600le )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(r4600le);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "R4600 (little)");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "R4600 (little)");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -3853,13 +3850,13 @@ CPU_GET_INFO( r4650be )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(r4650be);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "IDT R4650 (big)");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "IDT R4650 (big)");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -3871,13 +3868,13 @@ CPU_GET_INFO( r4650le )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(r4650le);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "IDT R4650 (little)");	break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "IDT R4650 (little)");	break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -3905,13 +3902,13 @@ CPU_GET_INFO( r4700be )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(r4700be);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "R4700 (big)");			break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "R4700 (big)");			break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -3923,13 +3920,13 @@ CPU_GET_INFO( r4700le )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(r4700le);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "R4700 (little)");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "R4700 (little)");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -3957,13 +3954,13 @@ CPU_GET_INFO( r5000be )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(r5000be);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "R5000 (big)");			break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "R5000 (big)");			break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -3975,13 +3972,13 @@ CPU_GET_INFO( r5000le )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(r5000le);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "R5000 (little)");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "R5000 (little)");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -4009,13 +4006,13 @@ CPU_GET_INFO( qed5271be )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(qed5271be);			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "QED5271 (big)");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "QED5271 (big)");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -4027,13 +4024,13 @@ CPU_GET_INFO( qed5271le )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(qed5271le);			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "QED5271 (little)");	break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "QED5271 (little)");	break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -4061,13 +4058,13 @@ CPU_GET_INFO( rm7000be )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(rm7000be);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "RM7000 (big)");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "RM7000 (big)");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;
@@ -4079,13 +4076,13 @@ CPU_GET_INFO( rm7000le )
 	switch (state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(rm7000le);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "RM7000 (little)");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "RM7000 (little)");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(mips3);			break;

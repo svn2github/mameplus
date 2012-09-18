@@ -9,13 +9,13 @@
 #include "includes/hcastle.h"
 
 
-PALETTE_INIT( hcastle )
+void hcastle_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int chip;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x80);
+	machine().colortable = colortable_alloc(machine(), 0x80);
 
 	for (chip = 0; chip < 2; chip++)
 	{
@@ -35,7 +35,7 @@ PALETTE_INIT( hcastle )
 				else
 					ctabentry = (pal << 4) | (color_prom[(clut << 8) | i] & 0x0f);
 
-				colortable_entry_set_value(machine.colortable, (chip << 11) | (pal << 8) | i, ctabentry);
+				colortable_entry_set_value(machine().colortable, (chip << 11) | (pal << 8) | i, ctabentry);
 			}
 		}
 	}
@@ -65,23 +65,22 @@ static void set_pens(running_machine &machine)
 
 ***************************************************************************/
 
-static TILEMAP_MAPPER( tilemap_scan )
+TILEMAP_MAPPER_MEMBER(hcastle_state::tilemap_scan)
 {
 	/* logical (col,row) -> memory offset */
 	return (col & 0x1f) + ((row & 0x1f) << 5) + ((col & 0x20) << 6);	/* skip 0x400 */
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(hcastle_state::get_fg_tile_info)
 {
-	hcastle_state *state = machine.driver_data<hcastle_state>();
-	UINT8 ctrl_5 = k007121_ctrlram_r(state->m_k007121_1, 5);
-	UINT8 ctrl_6 = k007121_ctrlram_r(state->m_k007121_1, 6);
+	UINT8 ctrl_5 = k007121_ctrlram_r(m_k007121_1, 5);
+	UINT8 ctrl_6 = k007121_ctrlram_r(m_k007121_1, 6);
 	int bit0 = (ctrl_5 >> 0) & 0x03;
 	int bit1 = (ctrl_5 >> 2) & 0x03;
 	int bit2 = (ctrl_5 >> 4) & 0x03;
 	int bit3 = (ctrl_5 >> 6) & 0x03;
-	int attr = state->m_pf1_videoram[tile_index];
-	int tile = state->m_pf1_videoram[tile_index + 0x400];
+	int attr = m_pf1_videoram[tile_index];
+	int tile = m_pf1_videoram[tile_index + 0x400];
 	int color = attr & 0x7;
 	int bank =  ((attr & 0x80) >> 7) |
 				((attr >> (bit0 + 2)) & 0x02) |
@@ -89,24 +88,23 @@ static TILE_GET_INFO( get_fg_tile_info )
 				((attr >> (bit2    )) & 0x08) |
 				((attr >> (bit3 - 1)) & 0x10);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
-			tile + bank * 0x100 + state->m_pf1_bankbase,
+			tile + bank * 0x100 + m_pf1_bankbase,
 			((ctrl_6 & 0x30) * 2 + 16) + color,
 			0);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(hcastle_state::get_bg_tile_info)
 {
-	hcastle_state *state = machine.driver_data<hcastle_state>();
-	UINT8 ctrl_5 = k007121_ctrlram_r(state->m_k007121_2, 5);
-	UINT8 ctrl_6 = k007121_ctrlram_r(state->m_k007121_2, 6);
+	UINT8 ctrl_5 = k007121_ctrlram_r(m_k007121_2, 5);
+	UINT8 ctrl_6 = k007121_ctrlram_r(m_k007121_2, 6);
 	int bit0 = (ctrl_5 >> 0) & 0x03;
 	int bit1 = (ctrl_5 >> 2) & 0x03;
 	int bit2 = (ctrl_5 >> 4) & 0x03;
 	int bit3 = (ctrl_5 >> 6) & 0x03;
-	int attr = state->m_pf2_videoram[tile_index];
-	int tile = state->m_pf2_videoram[tile_index + 0x400];
+	int attr = m_pf2_videoram[tile_index];
+	int tile = m_pf2_videoram[tile_index + 0x400];
 	int color = attr & 0x7;
 	int bank =  ((attr & 0x80) >> 7) |
 				((attr >> (bit0 + 2)) & 0x02) |
@@ -114,9 +112,9 @@ static TILE_GET_INFO( get_bg_tile_info )
 				((attr >> (bit2    )) & 0x08) |
 				((attr >> (bit3 - 1)) & 0x10);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
-			tile + bank * 0x100 + state->m_pf2_bankbase,
+			tile + bank * 0x100 + m_pf2_bankbase,
 			((ctrl_6 & 0x30) * 2 + 16) + color,
 			0);
 }
@@ -129,14 +127,13 @@ static TILE_GET_INFO( get_bg_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( hcastle )
+void hcastle_state::video_start()
 {
-	hcastle_state *state = machine.driver_data<hcastle_state>();
 
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan, 8, 8, 64, 32);
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan, 8, 8, 64, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hcastle_state::get_fg_tile_info),this), tilemap_mapper_delegate(FUNC(hcastle_state::tilemap_scan),this), 8, 8, 64, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hcastle_state::get_bg_tile_info),this), tilemap_mapper_delegate(FUNC(hcastle_state::tilemap_scan),this), 8, 8, 64, 32);
 
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_fg_tilemap->set_transparent_pen(0);
 }
 
 

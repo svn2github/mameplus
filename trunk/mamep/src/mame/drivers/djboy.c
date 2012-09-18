@@ -153,7 +153,7 @@ WRITE8_MEMBER(djboy_state::beast_data_w)
 	m_data_to_beast = data;
 	m_z80_to_beast_full = 1;
 	m_beast_int0_l = 0;
-	device_set_input_line(m_beast, INPUT_LINE_IRQ0, ASSERT_LINE);
+	m_beast->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 }
 
 READ8_MEMBER(djboy_state::beast_data_r)
@@ -172,7 +172,7 @@ READ8_MEMBER(djboy_state::beast_status_r)
 
 WRITE8_MEMBER(djboy_state::trigger_nmi_on_cpu0)
 {
-	device_set_input_line(m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(djboy_state::cpu0_bankswitch_w)
@@ -233,7 +233,7 @@ WRITE8_MEMBER(djboy_state::coin_count_w)
 WRITE8_MEMBER(djboy_state::trigger_nmi_on_sound_cpu2)
 {
 	soundlatch_byte_w(space, 0, data);
-	device_set_input_line(m_cpu2, INPUT_LINE_NMI, PULSE_LINE);
+	m_cpu2->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 } /* trigger_nmi_on_sound_cpu2 */
 
 WRITE8_MEMBER(djboy_state::cpu2_bankswitch_w)
@@ -336,7 +336,7 @@ WRITE8_MEMBER(djboy_state::beast_p1_w)
 	if (data == 0xff)
 	{
 		m_beast_int0_l = 1;
-		device_set_input_line(m_beast, INPUT_LINE_IRQ0, CLEAR_LINE);
+		m_beast->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 	}
 
 	m_beast_p1 = data;
@@ -380,7 +380,7 @@ WRITE8_MEMBER(djboy_state::beast_p3_w)
 {
 
 	m_beast_p3 = data;
-	device_set_input_line(m_cpu1, INPUT_LINE_RESET, data & 2 ? CLEAR_LINE : ASSERT_LINE);
+	m_cpu1->execute().set_input_line(INPUT_LINE_RESET, data & 2 ? CLEAR_LINE : ASSERT_LINE);
 }
 /* Program/data maps are defined in the 8051 core */
 
@@ -504,11 +504,11 @@ static TIMER_DEVICE_CALLBACK( djboy_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE, 0xfd);
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xfd);
 
 	/* Pandora "sprite end dma" irq? TODO: timing is clearly off, attract mode relies on this */
 	if(scanline == 64)
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE, 0xff);
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 static const kaneko_pandora_interface djboy_pandora_config =
@@ -519,54 +519,52 @@ static const kaneko_pandora_interface djboy_pandora_config =
 };
 
 
-static MACHINE_START( djboy )
+void djboy_state::machine_start()
 {
-	djboy_state *state = machine.driver_data<djboy_state>();
-	UINT8 *MAIN = state->memregion("maincpu")->base();
-	UINT8 *CPU1 = state->memregion("cpu1")->base();
-	UINT8 *CPU2 = state->memregion("cpu2")->base();
+	UINT8 *MAIN = memregion("maincpu")->base();
+	UINT8 *CPU1 = memregion("cpu1")->base();
+	UINT8 *CPU2 = memregion("cpu2")->base();
 
-	state->membank("bank1")->configure_entries(0, 4,  &MAIN[0x00000], 0x2000);
-	state->membank("bank1")->configure_entries(4, 28, &MAIN[0x10000], 0x2000);
-	state->membank("bank2")->configure_entries(0, 2,  &CPU1[0x00000], 0x4000);
-	state->membank("bank2")->configure_entries(2, 10, &CPU1[0x10000], 0x4000);
-	state->membank("bank3")->configure_entries(0, 3,  &CPU2[0x00000], 0x4000);
-	state->membank("bank3")->configure_entries(3, 5,  &CPU2[0x10000], 0x4000);
-	state->membank("bank4")->configure_entry(0, &MAIN[0x10000]); /* unsure if/how this area is banked */
+	membank("bank1")->configure_entries(0, 4,  &MAIN[0x00000], 0x2000);
+	membank("bank1")->configure_entries(4, 28, &MAIN[0x10000], 0x2000);
+	membank("bank2")->configure_entries(0, 2,  &CPU1[0x00000], 0x4000);
+	membank("bank2")->configure_entries(2, 10, &CPU1[0x10000], 0x4000);
+	membank("bank3")->configure_entries(0, 3,  &CPU2[0x00000], 0x4000);
+	membank("bank3")->configure_entries(3, 5,  &CPU2[0x10000], 0x4000);
+	membank("bank4")->configure_entry(0, &MAIN[0x10000]); /* unsure if/how this area is banked */
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_cpu1 = machine.device("cpu1");
-	state->m_cpu2 = machine.device("cpu2");
-	state->m_beast = machine.device("beast");
-	state->m_pandora = machine.device("pandora");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_cpu1 = machine().device("cpu1");
+	m_cpu2 = machine().device("cpu2");
+	m_beast = machine().device("beast");
+	m_pandora = machine().device("pandora");
 
-	state->save_item(NAME(state->m_videoreg));
-	state->save_item(NAME(state->m_scrollx));
-	state->save_item(NAME(state->m_scrolly));
+	save_item(NAME(m_videoreg));
+	save_item(NAME(m_scrollx));
+	save_item(NAME(m_scrolly));
 
 	/* Kaneko BEAST */
-	state->save_item(NAME(state->m_data_to_beast));
-	state->save_item(NAME(state->m_data_to_z80));
-	state->save_item(NAME(state->m_beast_to_z80_full));
-	state->save_item(NAME(state->m_z80_to_beast_full));
-	state->save_item(NAME(state->m_beast_int0_l));
-	state->save_item(NAME(state->m_beast_p0));
-	state->save_item(NAME(state->m_beast_p1));
-	state->save_item(NAME(state->m_beast_p2));
-	state->save_item(NAME(state->m_beast_p3));
+	save_item(NAME(m_data_to_beast));
+	save_item(NAME(m_data_to_z80));
+	save_item(NAME(m_beast_to_z80_full));
+	save_item(NAME(m_z80_to_beast_full));
+	save_item(NAME(m_beast_int0_l));
+	save_item(NAME(m_beast_p0));
+	save_item(NAME(m_beast_p1));
+	save_item(NAME(m_beast_p2));
+	save_item(NAME(m_beast_p3));
 }
 
-static MACHINE_RESET( djboy )
+void djboy_state::machine_reset()
 {
-	djboy_state *state = machine.driver_data<djboy_state>();
 
-	state->m_videoreg = 0;
-	state->m_scrollx = 0;
-	state->m_scrolly = 0;
+	m_videoreg = 0;
+	m_scrollx = 0;
+	m_scrolly = 0;
 
-	state->m_beast_int0_l = 1;
-	state->m_beast_to_z80_full = 0;
-	state->m_z80_to_beast_full = 0;
+	m_beast_int0_l = 1;
+	m_beast_to_z80_full = 0;
+	m_z80_to_beast_full = 0;
 }
 
 static MACHINE_CONFIG_START( djboy, djboy_state )
@@ -591,8 +589,6 @@ static MACHINE_CONFIG_START( djboy, djboy_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(djboy)
-	MCFG_MACHINE_RESET(djboy)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(57.5)
@@ -607,7 +603,6 @@ static MACHINE_CONFIG_START( djboy, djboy_state )
 
 	MCFG_KANEKO_PANDORA_ADD("pandora", djboy_pandora_config)
 
-	MCFG_VIDEO_START(djboy)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

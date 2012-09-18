@@ -28,8 +28,8 @@ public:
 	UINT8       m_current_bank;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_pc080sn;
 	device_t *m_pc090oj;
 	DECLARE_WRITE16_MEMBER(jumping_sound_w);
@@ -45,6 +45,8 @@ public:
 	DECLARE_DRIVER_INIT(jumping);
 	DECLARE_DRIVER_INIT(rbislande);
 	DECLARE_DRIVER_INIT(rbisland);
+	virtual void machine_start();
+	DECLARE_VIDEO_START(jumping);
 };
 
 
@@ -56,6 +58,6 @@ void rbisland_cchip_init(running_machine &machine, int version);
 /*----------- defined in video/rainbow.c -----------*/
 
 SCREEN_UPDATE_IND16( rainbow );
-VIDEO_START( jumping );
+
 SCREEN_UPDATE_IND16( jumping );
 

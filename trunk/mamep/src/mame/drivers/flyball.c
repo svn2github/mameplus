@@ -43,7 +43,7 @@ public:
 	UINT8    m_potsense;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_READ8_MEMBER(flyball_input_r);
 	DECLARE_READ8_MEMBER(flyball_scanline_r);
 	DECLARE_READ8_MEMBER(flyball_potsense_r);
@@ -54,6 +54,12 @@ public:
 	DECLARE_WRITE8_MEMBER(flyball_pitcher_vert_w);
 	DECLARE_WRITE8_MEMBER(flyball_pitcher_horz_w);
 	DECLARE_WRITE8_MEMBER(flyball_misc_w);
+	TILEMAP_MAPPER_MEMBER(flyball_get_memory_offset);
+	TILE_GET_INFO_MEMBER(flyball_get_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -63,7 +69,7 @@ public:
  *
  *************************************/
 
-static TILEMAP_MAPPER( flyball_get_memory_offset )
+TILEMAP_MAPPER_MEMBER(flyball_state::flyball_get_memory_offset)
 {
 	if (col == 0)
 		col = num_cols;
@@ -72,10 +78,9 @@ static TILEMAP_MAPPER( flyball_get_memory_offset )
 }
 
 
-static TILE_GET_INFO( flyball_get_tile_info )
+TILE_GET_INFO_MEMBER(flyball_state::flyball_get_tile_info)
 {
-	flyball_state *state = machine.driver_data<flyball_state>();
-	UINT8 data = state->m_playfield_ram[tile_index];
+	UINT8 data = m_playfield_ram[tile_index];
 	int flags = ((data & 0x40) ? TILE_FLIPX : 0) | ((data & 0x80) ? TILE_FLIPY : 0);
 	int code = data & 63;
 
@@ -84,14 +89,13 @@ static TILE_GET_INFO( flyball_get_tile_info )
 		code += 64;
 	}
 
-	SET_TILE_INFO(0, code, 0, flags);
+	SET_TILE_INFO_MEMBER(0, code, 0, flags);
 }
 
 
-static VIDEO_START( flyball )
+void flyball_state::video_start()
 {
-	flyball_state *state = machine.driver_data<flyball_state>();
-	state->m_tmap = tilemap_create(machine, flyball_get_tile_info, flyball_get_memory_offset, 8, 16, 32, 16);
+	m_tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(flyball_state::flyball_get_tile_info),this), tilemap_mapper_delegate(FUNC(flyball_state::flyball_get_memory_offset),this), 8, 16, 32, 16);
 }
 
 
@@ -353,12 +357,12 @@ static GFXDECODE_START( flyball )
 GFXDECODE_END
 
 
-static PALETTE_INIT( flyball )
+void flyball_state::palette_init()
 {
-	palette_set_color(machine, 0, MAKE_RGB(0x3F, 0x3F, 0x3F));  /* tiles, ball */
-	palette_set_color(machine, 1, MAKE_RGB(0xFF, 0xFF, 0xFF));
-	palette_set_color(machine, 2, MAKE_RGB(0xFF ,0xFF, 0xFF));  /* sprites */
-	palette_set_color(machine, 3, MAKE_RGB(0x00, 0x00, 0x00));
+	palette_set_color(machine(), 0, MAKE_RGB(0x3F, 0x3F, 0x3F));  /* tiles, ball */
+	palette_set_color(machine(), 1, MAKE_RGB(0xFF, 0xFF, 0xFF));
+	palette_set_color(machine(), 2, MAKE_RGB(0xFF ,0xFF, 0xFF));  /* sprites */
+	palette_set_color(machine(), 3, MAKE_RGB(0x00, 0x00, 0x00));
 }
 
 
@@ -368,43 +372,41 @@ static PALETTE_INIT( flyball )
  *
  *************************************/
 
-static MACHINE_START( flyball )
+void flyball_state::machine_start()
 {
-	flyball_state *state = machine.driver_data<flyball_state>();
 
-	state->m_maincpu = machine.device("maincpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
 
-	state->save_item(NAME(state->m_pitcher_vert));
-	state->save_item(NAME(state->m_pitcher_horz));
-	state->save_item(NAME(state->m_pitcher_pic));
-	state->save_item(NAME(state->m_ball_vert));
-	state->save_item(NAME(state->m_ball_horz));
-	state->save_item(NAME(state->m_potmask));
-	state->save_item(NAME(state->m_potsense));
+	save_item(NAME(m_pitcher_vert));
+	save_item(NAME(m_pitcher_horz));
+	save_item(NAME(m_pitcher_pic));
+	save_item(NAME(m_ball_vert));
+	save_item(NAME(m_ball_horz));
+	save_item(NAME(m_potmask));
+	save_item(NAME(m_potsense));
 }
 
-static MACHINE_RESET( flyball )
+void flyball_state::machine_reset()
 {
-	flyball_state *state = machine.driver_data<flyball_state>();
 	int i;
 
 	/* address bits 0 through 8 are inverted */
-	UINT8* ROM = state->memregion("maincpu")->base() + 0x2000;
+	UINT8* ROM = memregion("maincpu")->base() + 0x2000;
 
 	for (i = 0; i < 0x1000; i++)
-		state->m_rombase[i] = ROM[i ^ 0x1ff];
+		m_rombase[i] = ROM[i ^ 0x1ff];
 
-	machine.device("maincpu")->reset();
+	machine().device("maincpu")->reset();
 
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(0), FUNC(flyball_quarter_callback));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), FUNC(flyball_quarter_callback));
 
-	state->m_pitcher_vert = 0;
-	state->m_pitcher_horz = 0;
-	state->m_pitcher_pic = 0;
-	state->m_ball_vert = 0;
-	state->m_ball_horz = 0;
-	state->m_potmask = 0;
-	state->m_potsense = 0;
+	m_pitcher_vert = 0;
+	m_pitcher_horz = 0;
+	m_pitcher_pic = 0;
+	m_ball_vert = 0;
+	m_ball_horz = 0;
+	m_potmask = 0;
+	m_potsense = 0;
 }
 
 
@@ -415,8 +417,6 @@ static MACHINE_CONFIG_START( flyball, flyball_state )
 	MCFG_CPU_PROGRAM_MAP(flyball_map)
 	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
 
-	MCFG_MACHINE_START(flyball)
-	MCFG_MACHINE_RESET(flyball)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -428,8 +428,6 @@ static MACHINE_CONFIG_START( flyball, flyball_state )
 	MCFG_GFXDECODE(flyball)
 	MCFG_PALETTE_LENGTH(4)
 
-	MCFG_PALETTE_INIT(flyball)
-	MCFG_VIDEO_START(flyball)
 
 	/* sound hardware */
 MACHINE_CONFIG_END

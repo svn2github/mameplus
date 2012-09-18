@@ -548,7 +548,7 @@ int drcbe_c::execute(code_handle &entry)
 			case MAKE_OPCODE_SHORT(OP_MAPVAR, 4, 0):	// MAPVAR  mapvar,value
 
 				// these opcodes should be processed at compile-time only
-				fatalerror("Unexpected opcode");
+				fatalerror("Unexpected opcode\n");
 				break;
 
 			case MAKE_OPCODE_SHORT(OP_DEBUG, 4, 0):		// DEBUG   pc
@@ -938,15 +938,15 @@ int drcbe_c::execute(code_handle &entry)
 				if (PARAM2 + 1 != 0)
 					flags = FLAGS32_NZCV_ADD(temp32, PARAM1, PARAM2 + (flags & FLAG_C));
 				else
-				{
-					if ((PARAM2 == 0xffffffff) && (flags & FLAG_C))
-					{
-						flags = FLAGS32_NZCV_ADD(temp32, PARAM1 + (flags & FLAG_C), PARAM2);
-						flags |= FLAG_C;
-					}
-					else
-						flags = FLAGS32_NZCV_ADD(temp32, PARAM1 + (flags & FLAG_C), PARAM2);
-				}
+                {
+                    if ((PARAM2 == 0xffffffff) && (flags & FLAG_C))
+                    {
+                        flags = FLAGS32_NZCV_ADD(temp32, PARAM1 + (flags & FLAG_C), PARAM2);
+                        flags |= FLAG_C;
+                    }
+                    else
+                        flags = FLAGS32_NZCV_ADD(temp32, PARAM1 + (flags & FLAG_C), PARAM2);
+                }
 				PARAM0 = temp32;
 				break;
 
@@ -966,22 +966,23 @@ int drcbe_c::execute(code_handle &entry)
 
 			case MAKE_OPCODE_SHORT(OP_SUBB, 4, 1):
 				temp32 = PARAM1 - PARAM2 - (flags & FLAG_C);
-				temp64 = (UINT64)PARAM1 - (UINT64)PARAM2 - (UINT64)(flags & FLAG_C);
+                temp64 = (UINT64)PARAM1 - (UINT64)PARAM2 - (UINT64)(flags & FLAG_C);
 				if (PARAM2 + 1 != 0)
 					flags = FLAGS32_NZCV_SUB(temp32, PARAM1, PARAM2 + (flags & FLAG_C));
 				else
-				{
-					flags = FLAGS32_NZCV_SUB(temp32, PARAM1 - (flags & FLAG_C), PARAM2);
-					flags &= ~(FLAG_C | FLAG_V);
-					flags |= ((temp64>>32) & 1) ? FLAG_C : 0;
-					flags |= (((PARAM1) ^ (PARAM2)) & ((PARAM1) ^ (temp64)) & 0x80000000) ? FLAG_V : 0;
-				}
+                {
+                    flags = FLAGS32_NZCV_SUB(temp32, PARAM1 - (flags & FLAG_C), PARAM2);
+                    flags &= ~(FLAG_C | FLAG_V);
+                    flags |= ((temp64>>32) & 1) ? FLAG_C : 0;
+                    flags |= (((PARAM1) ^ (PARAM2)) & ((PARAM1) ^ (temp64)) & 0x80000000) ? FLAG_V : 0;
+                }
 				PARAM0 = temp32;
 				break;
 
 			case MAKE_OPCODE_SHORT(OP_CMP, 4, 1):		// CMP     src1,src2[,f]
 				temp32 = PARAM0 - PARAM1;
 				flags = FLAGS32_NZCV_SUB(temp32, PARAM0, PARAM1);
+//                printf("CMP: %08x - %08x = flags %x\n", PARAM0, PARAM1, flags);
 				break;
 
 			case MAKE_OPCODE_SHORT(OP_MULU, 4, 0):		// MULU    dst,edst,src1,src2[,f]
@@ -1007,7 +1008,7 @@ int drcbe_c::execute(code_handle &entry)
 
 			case MAKE_OPCODE_SHORT(OP_MULS, 4, 1):
 				temp64 = (INT64)(INT32)PARAM2 * (INT64)(INT32)PARAM3;
-				temp32 = (INT32)temp64;
+                temp32 = (INT32)temp64;
 				flags = FLAGS32_NZ(temp32);
 				PARAM1 = temp64 >> 32;
 				PARAM0 = (UINT32)temp64;
@@ -1120,8 +1121,11 @@ int drcbe_c::execute(code_handle &entry)
 			case MAKE_OPCODE_SHORT(OP_SHL, 4, 1):
 				shift = PARAM2 & 31;
 				temp32 = PARAM1 << shift;
-				flags = FLAGS32_NZ(temp32);
-				if (shift != 0) flags |= ((PARAM1 << (shift - 1)) >> 31) & FLAG_C;
+				if (shift != 0)
+                {
+                    flags = FLAGS32_NZ(temp32);
+                    flags |= ((PARAM1 << (shift - 1)) >> 31) & FLAG_C;
+                }
 				PARAM0 = temp32;
 				break;
 
@@ -1132,8 +1136,11 @@ int drcbe_c::execute(code_handle &entry)
 			case MAKE_OPCODE_SHORT(OP_SHR, 4, 1):
 				shift = PARAM2 & 31;
 				temp32 = PARAM1 >> shift;
-				flags = FLAGS32_NZ(temp32);
-				if (shift != 0) flags |= (PARAM1 >> (shift - 1)) & FLAG_C;
+				if (shift != 0)
+                {
+                    flags = FLAGS32_NZ(temp32);
+                    flags |= (PARAM1 >> (shift - 1)) & FLAG_C;
+                }
 				PARAM0 = temp32;
 				break;
 
@@ -1144,8 +1151,11 @@ int drcbe_c::execute(code_handle &entry)
 			case MAKE_OPCODE_SHORT(OP_SAR, 4, 1):
 				shift = PARAM2 & 31;
 				temp32 = (INT32)PARAM1 >> shift;
-				flags = FLAGS32_NZ(temp32);
-				if (shift != 0) flags |= (PARAM1 >> (shift - 1)) & FLAG_C;
+				if (shift != 0)
+                {
+                    flags = FLAGS32_NZ(temp32);
+                    flags |= (PARAM1 >> (shift - 1)) & FLAG_C;
+                }
 				PARAM0 = temp32;
 				break;
 
@@ -1157,8 +1167,11 @@ int drcbe_c::execute(code_handle &entry)
 			case MAKE_OPCODE_SHORT(OP_ROL, 4, 1):
 				shift = PARAM2 & 31;
 				temp32 = (PARAM1 << shift) | (PARAM1 >> ((32 - shift) & 31));
-				flags = FLAGS32_NZ(temp32);
-				if (shift != 0) flags |= ((PARAM1 << (shift - 1)) >> 31) & FLAG_C;
+				if (shift != 0)
+                {
+                    flags = FLAGS32_NZ(temp32);
+                    flags |= ((PARAM1 << (shift - 1)) >> 31) & FLAG_C;
+                }
 				PARAM0 = temp32;
 				break;
 
@@ -2089,7 +2102,7 @@ int drcbe_c::execute(code_handle &entry)
 				break;
 
 			default:
-				fatalerror("Unexpected opcode!");
+				fatalerror("Unexpected opcode!\n");
 				break;
 		}
 
@@ -2180,7 +2193,7 @@ void drcbe_c::output_parameter(drcbec_instruction **dstptr, void **immedptr, int
 			break;
 
 		default:
-			fatalerror("Unexpected param->type");
+			fatalerror("Unexpected param->type\n");
 			break;
 	}
 

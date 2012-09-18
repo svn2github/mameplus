@@ -74,6 +74,9 @@ public:
 	DECLARE_WRITE16_MEMBER(k3_scrollx_w);
 	DECLARE_WRITE16_MEMBER(k3_scrolly_w);
 	DECLARE_WRITE16_MEMBER(k3_soundbanks_w);
+	TILE_GET_INFO_MEMBER(get_k3_bg_tile_info);
+	virtual void machine_start();
+	virtual void video_start();
 };
 
 
@@ -83,23 +86,21 @@ WRITE16_MEMBER(k3_state::k3_bgram_w)
 	m_bg_tilemap->mark_tile_dirty(offset);
 }
 
-static TILE_GET_INFO( get_k3_bg_tile_info )
+TILE_GET_INFO_MEMBER(k3_state::get_k3_bg_tile_info)
 {
-	k3_state *state = machine.driver_data<k3_state>();
-	int tileno = state->m_bgram[tile_index];
-	SET_TILE_INFO(1, tileno, 0, 0);
+	int tileno = m_bgram[tile_index];
+	SET_TILE_INFO_MEMBER(1, tileno, 0, 0);
 }
 
-static VIDEO_START(k3)
+void k3_state::video_start()
 {
-	k3_state *state = machine.driver_data<k3_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_k3_bg_tile_info, tilemap_scan_rows, 16, 16, 32, 64);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k3_state::get_k3_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 64);
 }
 
 static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	k3_state *state = machine.driver_data<k3_state>();
-	const gfx_element *gfx = machine.gfx[0];
+	gfx_element *gfx = machine.gfx[0];
 	UINT16 *source = state->m_spriteram_1;
 	UINT16 *source2 = state->m_spriteram_2;
 	UINT16 *finish = source + 0x1000 / 2;
@@ -248,7 +249,7 @@ static GFXDECODE_START( 1945kiii )
 GFXDECODE_END
 
 
-static MACHINE_START( 1945kiii )
+void k3_state::machine_start()
 {
 }
 
@@ -258,7 +259,6 @@ static MACHINE_CONFIG_START( k3, k3_state )
 	MCFG_CPU_PROGRAM_MAP(k3_map)
 	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
 
-	MCFG_MACHINE_START(1945kiii)
 
 	MCFG_GFXDECODE(1945kiii)
 
@@ -271,7 +271,6 @@ static MACHINE_CONFIG_START( k3, k3_state )
 
 	MCFG_PALETTE_LENGTH(0x800)
 
-	MCFG_VIDEO_START(k3)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

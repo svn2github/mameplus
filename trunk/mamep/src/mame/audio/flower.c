@@ -20,7 +20,7 @@ TODO:
 
 
 /* this structure defines the parameters for a channel */
-typedef struct
+struct sound_channel 
 {
 	UINT32 start;
 	UINT32 pos;
@@ -32,11 +32,10 @@ typedef struct
 	UINT8 effect;
 	UINT32 ecount;
 
-} sound_channel;
+};
 
 
-typedef struct _flower_sound_state flower_sound_state;
-struct _flower_sound_state
+struct flower_sound_state
 {
 	emu_timer *m_effect_timer;
 
@@ -63,7 +62,7 @@ INLINE flower_sound_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == FLOWER);
 
-	return (flower_sound_state *)downcast<legacy_device_base *>(device)->token();
+	return (flower_sound_state *)downcast<flower_sound_device *>(device)->token();
 }
 
 /* build a table to divide by the number of voices; gain is specified as gain*16 */
@@ -238,25 +237,6 @@ static DEVICE_RESET( flower_sound )
 	}
 }
 
-DEVICE_GET_INFO( flower_sound )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(flower_sound_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(flower_sound);	break;
-		case DEVINFO_FCT_RESET:							info->start = DEVICE_RESET_NAME(flower_sound);	break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Flower Custom");				break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
-}
-
-
 /********************************************************************************/
 
 #if FLOWER_VERBOSE
@@ -374,4 +354,51 @@ WRITE8_DEVICE_HANDLER( flower_sound2_w )
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(FLOWER, flower_sound);
+const device_type FLOWER = &device_creator<flower_sound_device>;
+
+flower_sound_device::flower_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, FLOWER, "Flower Custom", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(flower_sound_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void flower_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void flower_sound_device::device_start()
+{
+	DEVICE_START_NAME( flower_sound )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void flower_sound_device::device_reset()
+{
+	DEVICE_RESET_NAME( flower_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void flower_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

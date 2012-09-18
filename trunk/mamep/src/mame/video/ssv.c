@@ -141,7 +141,7 @@ Note: press Z to show some info on each sprite (debug builds only)
 #endif
 
 
-static void ssv_drawgfx(	bitmap_ind16 &bitmap, const rectangle &cliprect, const gfx_element *gfx,
+static void ssv_drawgfx(	bitmap_ind16 &bitmap, const rectangle &cliprect, gfx_element *gfx,
 					UINT32 code,UINT32 color,int flipx,int flipy,int x0,int y0,
 					int shadow )
 {
@@ -152,14 +152,14 @@ static void ssv_drawgfx(	bitmap_ind16 &bitmap, const rectangle &cliprect, const 
 	int sx, x1, dx;
 	int sy, y1, dy;
 
-	addr	=	gfx_element_get_data(gfx, code  % gfx->total_elements);
-	color	=	gfx->color_granularity * (color % gfx->total_colors);
+	addr	=	gfx->get_data(code  % gfx->elements());
+	color	=	gfx->granularity() * (color % gfx->colors());
 
-	if ( flipx )	{	x1 = x0-1;				x0 += gfx->width-1;		dx = -1;	}
-	else			{	x1 = x0 + gfx->width;							dx =  1;	}
+	if ( flipx )	{	x1 = x0-1;				x0 += gfx->width()-1;		dx = -1;	}
+	else			{	x1 = x0 + gfx->width();							dx =  1;	}
 
-	if ( flipy )	{	y1 = y0-1;				y0 += gfx->height-1;	dy = -1;	}
-	else			{	y1 = y0 + gfx->height;							dy =  1;	}
+	if ( flipy )	{	y1 = y0-1;				y0 += gfx->height()-1;	dy = -1;	}
+	else			{	y1 = y0 + gfx->height();							dy =  1;	}
 
 #define SSV_DRAWGFX(SETPIXELCOLOR)												\
 	for ( sy = y0; sy != y1; sy += dy )											\
@@ -178,7 +178,7 @@ static void ssv_drawgfx(	bitmap_ind16 &bitmap, const rectangle &cliprect, const 
 			}																	\
 		}																		\
 																				\
-		addr	+=	gfx->line_modulo;											\
+		addr	+=	gfx->rowbytes();											\
 	}
 
 	if (shadow)
@@ -192,28 +192,26 @@ static void ssv_drawgfx(	bitmap_ind16 &bitmap, const rectangle &cliprect, const 
 }
 
 
-VIDEO_START( ssv )
+void ssv_state::video_start()
 {
-	machine.gfx[0]->color_granularity = 64; /* 256 colour sprites with palette selectable on 64 colour boundaries */
+	machine().gfx[0]->set_granularity(64); /* 256 colour sprites with palette selectable on 64 colour boundaries */
 }
 
-VIDEO_START( eaglshot )
+VIDEO_START_MEMBER(ssv_state,eaglshot)
 {
-	ssv_state *state = machine.driver_data<ssv_state>();
-	VIDEO_START_CALL(ssv);
+	ssv_state::video_start();
 
-	state->m_eaglshot_gfxram		=	auto_alloc_array(machine, UINT16, 16 * 0x40000 / 2);
+	m_eaglshot_gfxram		=	auto_alloc_array(machine(), UINT16, 16 * 0x40000 / 2);
 
-	gfx_element_set_source(machine.gfx[0], (UINT8 *)state->m_eaglshot_gfxram);
-	gfx_element_set_source(machine.gfx[1], (UINT8 *)state->m_eaglshot_gfxram);
+	machine().gfx[0]->set_source((UINT8 *)m_eaglshot_gfxram);
+	machine().gfx[1]->set_source((UINT8 *)m_eaglshot_gfxram);
 }
 
-static TILE_GET_INFO( get_tile_info_0 )
+TILE_GET_INFO_MEMBER(ssv_state::get_tile_info_0)
 {
-	ssv_state *state = machine.driver_data<ssv_state>();
-	UINT16 tile = state->m_gdfs_tmapram[tile_index];
+	UINT16 tile = m_gdfs_tmapram[tile_index];
 
-	SET_TILE_INFO(2, tile, 0, TILE_FLIPXY( tile >> 14 ));
+	SET_TILE_INFO_MEMBER(2, tile, 0, TILE_FLIPXY( tile >> 14 ));
 }
 
 WRITE16_MEMBER(ssv_state::gdfs_tmapram_w)
@@ -223,17 +221,15 @@ WRITE16_MEMBER(ssv_state::gdfs_tmapram_w)
 	m_gdfs_tmap->mark_tile_dirty(offset);
 }
 
-VIDEO_START( gdfs )
+VIDEO_START_MEMBER(ssv_state,gdfs)
 {
-	ssv_state *state = machine.driver_data<ssv_state>();
 
-	VIDEO_START_CALL(ssv);
+	ssv_state::video_start();
 
 
-	state->m_gdfs_tmap			=	tilemap_create(	machine, get_tile_info_0, tilemap_scan_rows,
-											 16,16, 0x100,0x100	);
+	m_gdfs_tmap	= &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ssv_state::get_tile_info_0),this), TILEMAP_SCAN_ROWS, 16,16, 0x100,0x100);
 
-	state->m_gdfs_tmap->set_transparent_pen(0);
+	m_gdfs_tmap->set_transparent_pen(0);
 }
 
 /***************************************************************************

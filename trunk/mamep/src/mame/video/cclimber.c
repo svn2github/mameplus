@@ -36,9 +36,9 @@
   bit 0 -- 1  kohm resistor  -- RED
 
 ***************************************************************************/
-PALETTE_INIT( cclimber )
+PALETTE_INIT_MEMBER(cclimber_state,cclimber)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	static const int resistances_rg[3] = { 1000, 470, 220 };
 	static const int resistances_b [2] = { 470, 220 };
 	double weights_rg[3], weights_b[2];
@@ -50,7 +50,7 @@ PALETTE_INIT( cclimber )
 			2, resistances_b,  weights_b,  0, 0,
 			0, 0, 0, 0, 0);
 
-	for (i = 0;i < machine.total_colors(); i++)
+	for (i = 0;i < machine().total_colors(); i++)
 	{
 		int bit0, bit1, bit2;
 		int r, g, b;
@@ -72,7 +72,7 @@ PALETTE_INIT( cclimber )
 		bit1 = (color_prom[i] >> 7) & 0x01;
 		b = combine_2_weights(weights_b, bit0, bit1);
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 
@@ -113,9 +113,9 @@ PALETTE_INIT( cclimber )
 
 ***************************************************************************/
 
-PALETTE_INIT( swimmer )
+PALETTE_INIT_MEMBER(cclimber_state,swimmer)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0; i < 0x100; i++)
@@ -141,7 +141,7 @@ PALETTE_INIT( swimmer )
 		bit2 = (color_prom[i + 0x100] >> 3) & 0x01;
 		b = 0x20 * bit0 + 0x40 * bit1 + 0x80 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 
 	color_prom += 0x200;
@@ -170,21 +170,21 @@ PALETTE_INIT( swimmer )
 		bit2 = (color_prom[i] >> 7) & 0x01;
 		b = 0x20 * bit0 + 0x40 * bit1 + 0x80 * bit2;
 
-		palette_set_color(machine, i + 0x100, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i + 0x100, MAKE_RGB(r, g, b));
 	}
 
 	/* side panel backgrond pen */
 #if 0
 	// values calculated from the resistors don't seem to match the real board
-	palette_set_color(machine, SWIMMER_SIDE_BG_PEN, MAKE_RGB(0x24, 0x5d, 0x4e));
+	palette_set_color(machine(), SWIMMER_SIDE_BG_PEN, MAKE_RGB(0x24, 0x5d, 0x4e));
 #endif
-	palette_set_color(machine, SWIMMER_SIDE_BG_PEN, MAKE_RGB(0x20, 0x98, 0x79));
+	palette_set_color(machine(), SWIMMER_SIDE_BG_PEN, MAKE_RGB(0x20, 0x98, 0x79));
 }
 
 
-PALETTE_INIT( yamato )
+PALETTE_INIT_MEMBER(cclimber_state,yamato)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* chars - 12 bits RGB */
@@ -214,7 +214,7 @@ PALETTE_INIT( yamato )
 		bit3 = (color_prom[i + 0x40] >> 3) & 0x01;
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 
 	/* big sprite - 8 bits RGB */
@@ -241,18 +241,18 @@ PALETTE_INIT( yamato )
 		bit2 = (color_prom[i + 0x80] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i + 0x40, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i + 0x40, MAKE_RGB(r, g, b));
 	}
 
 	/* fake colors for bg gradient */
 	for (i = 0; i < 0x100; i++)
-		palette_set_color(machine, YAMATO_SKY_PEN_BASE + i, MAKE_RGB(0, 0, i));
+		palette_set_color(machine(), YAMATO_SKY_PEN_BASE + i, MAKE_RGB(0, 0, i));
 }
 
 
-PALETTE_INIT( toprollr )
+PALETTE_INIT_MEMBER(cclimber_state,toprollr)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0; i < 0xa0; i++)
@@ -278,7 +278,7 @@ PALETTE_INIT( toprollr )
 		bit2 = (color_prom[i] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 
@@ -344,61 +344,57 @@ WRITE8_MEMBER(cclimber_state::cannonb_flip_screen_w)
 }
 
 
-static TILE_GET_INFO( cclimber_get_pf_tile_info )
+TILE_GET_INFO_MEMBER(cclimber_state::cclimber_get_pf_tile_info)
 {
-	cclimber_state *state = machine.driver_data<cclimber_state>();
 	int code, color;
 
-	int flags = TILE_FLIPYX(state->m_colorram[tile_index] >> 6);
+	int flags = TILE_FLIPYX(m_colorram[tile_index] >> 6);
 
 	/* vertical flipping flips two adjacent characters */
 	if (flags & 0x02)
 		tile_index = tile_index ^ 0x20;
 
-	code = ((state->m_colorram[tile_index] & 0x10) << 5) |
-		   ((state->m_colorram[tile_index] & 0x20) << 3) |
-			 state->m_videoram[tile_index];
+	code = ((m_colorram[tile_index] & 0x10) << 5) |
+		   ((m_colorram[tile_index] & 0x20) << 3) |
+			 m_videoram[tile_index];
 
-	color = state->m_colorram[tile_index] & 0x0f;
+	color = m_colorram[tile_index] & 0x0f;
 
-	SET_TILE_INFO(0, code, color, flags);
+	SET_TILE_INFO_MEMBER(0, code, color, flags);
 }
 
 
-static TILE_GET_INFO( swimmer_get_pf_tile_info )
+TILE_GET_INFO_MEMBER(cclimber_state::swimmer_get_pf_tile_info)
 {
-	cclimber_state *state = machine.driver_data<cclimber_state>();
 	int code, color;
 
-	int flags = TILE_FLIPYX(state->m_colorram[tile_index] >> 6);
+	int flags = TILE_FLIPYX(m_colorram[tile_index] >> 6);
 
 	/* vertical flipping flips two adjacent characters */
 	if (flags & 0x02)
 		tile_index = tile_index ^ 0x20;
 
-	code = ((state->m_colorram[tile_index] & 0x10) << 4) | state->m_videoram[tile_index];
-	color = ((*state->m_swimmer_palettebank & 0x01) << 4) | (state->m_colorram[tile_index] & 0x0f);
+	code = ((m_colorram[tile_index] & 0x10) << 4) | m_videoram[tile_index];
+	color = ((*m_swimmer_palettebank & 0x01) << 4) | (m_colorram[tile_index] & 0x0f);
 
-	SET_TILE_INFO(0, code, color, flags);
+	SET_TILE_INFO_MEMBER(0, code, color, flags);
 }
 
 
-static TILE_GET_INFO( toprollr_get_pf_tile_info )
+TILE_GET_INFO_MEMBER(cclimber_state::toprollr_get_pf_tile_info)
 {
-	cclimber_state *state = machine.driver_data<cclimber_state>();
 	int code, attr, color;
 
-	attr = tile_index & 0x10 ? state->m_colorram[tile_index & ~0x20] : state->m_colorram[tile_index];
-	code = ((attr & 0x30) << 4) | state->m_videoram[tile_index];
+	attr = tile_index & 0x10 ? m_colorram[tile_index & ~0x20] : m_colorram[tile_index];
+	code = ((attr & 0x30) << 4) | m_videoram[tile_index];
 	color = attr & 0x0f;
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
 
-static TILE_GET_INFO( cclimber_get_bs_tile_info )
+TILE_GET_INFO_MEMBER(cclimber_state::cclimber_get_bs_tile_info)
 {
-	cclimber_state *state = machine.driver_data<cclimber_state>();
 	int code, color;
 
 	/* only the lower right is visible */
@@ -407,16 +403,15 @@ static TILE_GET_INFO( cclimber_get_bs_tile_info )
 	/* the address doesn't use A4 of the coordinates, giving a 16x16 map */
 	tile_index = ((tile_index & 0x1e0) >> 1) | (tile_index & 0x0f);
 
-	code = ((state->m_bigsprite_control[1] & 0x08) << 5) | state->m_bigsprite_videoram[tile_index];
-	color = state->m_bigsprite_control[1] & 0x07;
+	code = ((m_bigsprite_control[1] & 0x08) << 5) | m_bigsprite_videoram[tile_index];
+	color = m_bigsprite_control[1] & 0x07;
 
-	SET_TILE_INFO(2, code, color, 0);
+	SET_TILE_INFO_MEMBER(2, code, color, 0);
 }
 
 
-static TILE_GET_INFO( toprollr_get_bs_tile_info )
+TILE_GET_INFO_MEMBER(cclimber_state::toprollr_get_bs_tile_info)
 {
-	cclimber_state *state = machine.driver_data<cclimber_state>();
 	int code, color;
 
 	/* only the lower right is visible */
@@ -425,67 +420,63 @@ static TILE_GET_INFO( toprollr_get_bs_tile_info )
 	/* the address doesn't use A4 of the coordinates, giving a 16x16 map */
 	tile_index = ((tile_index & 0x1e0) >> 1) | (tile_index & 0x0f);
 
-	code = ((state->m_bigsprite_control[1] & 0x18) << 5) | state->m_bigsprite_videoram[tile_index];
-	color = state->m_bigsprite_control[1] & 0x07;
+	code = ((m_bigsprite_control[1] & 0x18) << 5) | m_bigsprite_videoram[tile_index];
+	color = m_bigsprite_control[1] & 0x07;
 
-	SET_TILE_INFO(2, code, color, 0);
+	SET_TILE_INFO_MEMBER(2, code, color, 0);
 }
 
 
-static TILE_GET_INFO( toproller_get_bg_tile_info )
+TILE_GET_INFO_MEMBER(cclimber_state::toproller_get_bg_tile_info)
 {
-	cclimber_state *state = machine.driver_data<cclimber_state>();
-	int code = ((state->m_toprollr_bg_coloram[tile_index] & 0x40) << 2) | state->m_toprollr_bg_videoram[tile_index];
-	int color = state->m_toprollr_bg_coloram[tile_index] & 0x0f;
+	int code = ((m_toprollr_bg_coloram[tile_index] & 0x40) << 2) | m_toprollr_bg_videoram[tile_index];
+	int color = m_toprollr_bg_coloram[tile_index] & 0x0f;
 
-	SET_TILE_INFO(3, code, color, TILE_FLIPX);
+	SET_TILE_INFO_MEMBER(3, code, color, TILE_FLIPX);
 }
 
 
-VIDEO_START( cclimber )
+VIDEO_START_MEMBER(cclimber_state,cclimber)
 {
-	cclimber_state *state = machine.driver_data<cclimber_state>();
-	state->m_pf_tilemap = tilemap_create(machine, cclimber_get_pf_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_pf_tilemap->set_transparent_pen(0);
-	state->m_pf_tilemap->set_scroll_cols(32);
+	m_pf_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cclimber_state::cclimber_get_pf_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_pf_tilemap->set_transparent_pen(0);
+	m_pf_tilemap->set_scroll_cols(32);
 
-	state->m_bs_tilemap = tilemap_create(machine, cclimber_get_bs_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bs_tilemap->set_scroll_cols(1);
-	state->m_bs_tilemap->set_scroll_rows(1);
-	state->m_bs_tilemap->set_transmask(0, 0x01, 0);	/* pen 0 is transaprent */
-	state->m_bs_tilemap->set_transmask(1, 0x0f, 0);  /* all 4 pens are transparent */
+	m_bs_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cclimber_state::cclimber_get_bs_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bs_tilemap->set_scroll_cols(1);
+	m_bs_tilemap->set_scroll_rows(1);
+	m_bs_tilemap->set_transmask(0, 0x01, 0);	/* pen 0 is transaprent */
+	m_bs_tilemap->set_transmask(1, 0x0f, 0);  /* all 4 pens are transparent */
 }
 
 
-VIDEO_START( swimmer )
+VIDEO_START_MEMBER(cclimber_state,swimmer)
 {
-	cclimber_state *state = machine.driver_data<cclimber_state>();
-	state->m_pf_tilemap = tilemap_create(machine, swimmer_get_pf_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_pf_tilemap->set_transparent_pen(0);
-	state->m_pf_tilemap->set_scroll_cols(32);
+	m_pf_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cclimber_state::swimmer_get_pf_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_pf_tilemap->set_transparent_pen(0);
+	m_pf_tilemap->set_scroll_cols(32);
 
-	state->m_bs_tilemap = tilemap_create(machine, cclimber_get_bs_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bs_tilemap->set_scroll_cols(1);
-	state->m_bs_tilemap->set_scroll_rows(1);
-	state->m_bs_tilemap->set_transmask(0, 0x01, 0);	/* pen 0 is transaprent */
-	state->m_bs_tilemap->set_transmask(1, 0xff, 0);  /* all 8 pens are transparent */
+	m_bs_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cclimber_state::cclimber_get_bs_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bs_tilemap->set_scroll_cols(1);
+	m_bs_tilemap->set_scroll_rows(1);
+	m_bs_tilemap->set_transmask(0, 0x01, 0);	/* pen 0 is transaprent */
+	m_bs_tilemap->set_transmask(1, 0xff, 0);  /* all 8 pens are transparent */
 }
 
 
-VIDEO_START( toprollr )
+VIDEO_START_MEMBER(cclimber_state,toprollr)
 {
-	cclimber_state *state = machine.driver_data<cclimber_state>();
-	state->m_pf_tilemap = tilemap_create(machine, toprollr_get_pf_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_pf_tilemap->set_transparent_pen(0);
+	m_pf_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cclimber_state::toprollr_get_pf_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_pf_tilemap->set_transparent_pen(0);
 
-	state->m_toproller_bg_tilemap = tilemap_create(machine, toproller_get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_toproller_bg_tilemap->set_scroll_rows(1);
+	m_toproller_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cclimber_state::toproller_get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_toproller_bg_tilemap->set_scroll_rows(1);
 
-	state->m_bs_tilemap = tilemap_create(machine, toprollr_get_bs_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bs_tilemap->set_scroll_cols(1);
-	state->m_bs_tilemap->set_scroll_rows(1);
-	state->m_bs_tilemap->set_transmask(0, 0x01, 0);	/* pen 0 is transaprent */
-	state->m_bs_tilemap->set_transmask(1, 0x0f, 0);  /* all 4 pens are transparent */
+	m_bs_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cclimber_state::toprollr_get_bs_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bs_tilemap->set_scroll_cols(1);
+	m_bs_tilemap->set_scroll_rows(1);
+	m_bs_tilemap->set_transmask(0, 0x01, 0);	/* pen 0 is transaprent */
+	m_bs_tilemap->set_transmask(1, 0x0f, 0);  /* all 4 pens are transparent */
 }
 
 
@@ -547,7 +538,7 @@ static void toprollr_draw_bigsprite(running_machine &machine, bitmap_ind16 &bitm
 }
 
 
-static void cclimber_draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, const gfx_element *gfx)
+static void cclimber_draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, gfx_element *gfx)
 {
 	cclimber_state *state = gfx->machine().driver_data<cclimber_state>();
 	int offs;
@@ -588,7 +579,7 @@ static void cclimber_draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprec
 }
 
 
-static void toprollr_draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, const gfx_element *gfx)
+static void toprollr_draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, gfx_element *gfx)
 {
 	cclimber_state *state = gfx->machine().driver_data<cclimber_state>();
 	int offs;
@@ -626,7 +617,7 @@ static void toprollr_draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprec
 }
 
 
-static void swimmer_draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, const gfx_element *gfx)
+static void swimmer_draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, gfx_element *gfx)
 {
 	cclimber_state *state = gfx->machine().driver_data<cclimber_state>();
 	int offs;

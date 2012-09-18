@@ -288,7 +288,7 @@ int arm7_tlb_translate(arm_state *cpustate, UINT32 *addr, int flags)
             }
             else
             {
-                fatalerror("ARM7: Not Yet Implemented: Coarse Table, Section Domain fault on virtual address, vaddr = %08x, domain = %08x, PC = %08x", vaddr, domain, R15);
+                fatalerror("ARM7: Not Yet Implemented: Coarse Table, Section Domain fault on virtual address, vaddr = %08x, domain = %08x, PC = %08x\n", vaddr, domain, R15);
             }
             break;
         case COPRO_TLB_SECTION_TABLE:
@@ -323,7 +323,7 @@ int arm7_tlb_translate(arm_state *cpustate, UINT32 *addr, int flags)
             break;
         case COPRO_TLB_FINE_TABLE:
             // Entry is the physical address of a fine second-level table
-            fatalerror("ARM7: Not Yet Implemented: fine second-level TLB lookup, PC = %08x, vaddr = %08x", R15, vaddr);
+            fatalerror("ARM7: Not Yet Implemented: fine second-level TLB lookup, PC = %08x, vaddr = %08x\n", R15, vaddr);
             break;
         default:
             // Entry is the physical address of a three-legged termite-eaten table
@@ -577,7 +577,7 @@ static CPU_EXECUTE( arm7 )
 				UINT32 temp1, temp2;
 				temp1 = GET_CPSR & 0xF00000C3;
 				temp2 = (R15 & 0xF0000000) | ((R15 & 0x0C000000) >> (26 - 6)) | (R15 & 0x00000003);
-				if (temp1 != temp2) fatalerror( "%08X: 32-bit and 26-bit modes are out of sync (%08X %08X)", pc, temp1, temp2);
+				if (temp1 != temp2) fatalerror( "%08X: 32-bit and 26-bit modes are out of sync (%08X %08X)\n", pc, temp1, temp2);
 			}
 #endif
 
@@ -786,7 +786,7 @@ CPU_GET_INFO( arm7 )
         case CPUINFO_INT_CONTEXT_SIZE:                  info->i = sizeof(arm_state);                 break;
         case CPUINFO_INT_INPUT_LINES:                   info->i = ARM7_NUM_LINES;               break;
         case CPUINFO_INT_DEFAULT_IRQ_VECTOR:            info->i = 0;                            break;
-        case DEVINFO_INT_ENDIANNESS:                    info->i = ENDIANNESS_LITTLE;                    break;
+        case CPUINFO_INT_ENDIANNESS:                    info->i = ENDIANNESS_LITTLE;                    break;
         case CPUINFO_INT_CLOCK_MULTIPLIER:              info->i = 1;                            break;
         case CPUINFO_INT_CLOCK_DIVIDER:                 info->i = 1;                            break;
         case CPUINFO_INT_MIN_INSTRUCTION_BYTES:         info->i = 2;                            break;
@@ -794,15 +794,15 @@ CPU_GET_INFO( arm7 )
         case CPUINFO_INT_MIN_CYCLES:                    info->i = 3;                            break;
         case CPUINFO_INT_MAX_CYCLES:                    info->i = 4;                            break;
 
-        case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM: info->i = 32;                   break;
-        case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 32;                   break;
-        case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;                    break;
-        case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:    info->i = 0;                    break;
-        case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:    info->i = 0;                    break;
-        case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:    info->i = 0;                    break;
-        case DEVINFO_INT_DATABUS_WIDTH + AS_IO:      info->i = 0;                    break;
-        case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:      info->i = 0;                    break;
-        case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:      info->i = 0;                    break;
+        case CPUINFO_INT_DATABUS_WIDTH + AS_PROGRAM: info->i = 32;                   break;
+        case CPUINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 32;                   break;
+        case CPUINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;                    break;
+        case CPUINFO_INT_DATABUS_WIDTH + AS_DATA:    info->i = 0;                    break;
+        case CPUINFO_INT_ADDRBUS_WIDTH + AS_DATA:    info->i = 0;                    break;
+        case CPUINFO_INT_ADDRBUS_SHIFT + AS_DATA:    info->i = 0;                    break;
+        case CPUINFO_INT_DATABUS_WIDTH + AS_IO:      info->i = 0;                    break;
+        case CPUINFO_INT_ADDRBUS_WIDTH + AS_IO:      info->i = 0;                    break;
+        case CPUINFO_INT_ADDRBUS_SHIFT + AS_IO:      info->i = 0;                    break;
 
         /* interrupt lines/exceptions */
         case CPUINFO_INT_INPUT_STATE + ARM7_IRQ_LINE:                   info->i = cpustate->pendingIrq; break;
@@ -876,11 +876,11 @@ CPU_GET_INFO( arm7 )
 	case CPUINFO_FCT_TRANSLATE:	    	info->translate = CPU_TRANSLATE_NAME(arm7);		break;
 
         /* --- the following bits of info are returned as NULL-terminated strings --- */
-        case DEVINFO_STR_NAME:                  strcpy(info->s, "ARM7");                        break;
-        case DEVINFO_STR_FAMILY:           strcpy(info->s, "Acorn Risc Machine");          break;
-        case DEVINFO_STR_VERSION:          strcpy(info->s, "2.0");                         break;
-        case DEVINFO_STR_SOURCE_FILE:             strcpy(info->s, __FILE__);                      break;
-        case DEVINFO_STR_CREDITS:          strcpy(info->s, "Copyright Steve Ellenoff, sellenoff@hotmail.com"); break;
+        case CPUINFO_STR_NAME:                  strcpy(info->s, "ARM7");                        break;
+        case CPUINFO_STR_FAMILY:           strcpy(info->s, "Acorn Risc Machine");          break;
+        case CPUINFO_STR_VERSION:          strcpy(info->s, "2.0");                         break;
+        case CPUINFO_STR_SOURCE_FILE:             strcpy(info->s, __FILE__);                      break;
+        case CPUINFO_STR_CREDITS:          strcpy(info->s, "Copyright Steve Ellenoff, sellenoff@hotmail.com"); break;
 
         case CPUINFO_STR_FLAGS:
             sprintf(info->s, "%c%c%c%c%c%c%c%c %s",
@@ -951,10 +951,10 @@ CPU_GET_INFO( arm7_be )
 {
 	switch (state)
 	{
-		case DEVINFO_INT_ENDIANNESS:		info->i = ENDIANNESS_BIG;								break;
+		case CPUINFO_INT_ENDIANNESS:		info->i = ENDIANNESS_BIG;								break;
 		case CPUINFO_FCT_RESET:				info->reset = CPU_RESET_NAME(arm7_be);					break;
 		case CPUINFO_FCT_DISASSEMBLE:		info->disassemble = CPU_DISASSEMBLE_NAME(arm7_be);		break;
-		case DEVINFO_STR_NAME:				strcpy(info->s, "ARM7 (big endian)");					break;
+		case CPUINFO_STR_NAME:				strcpy(info->s, "ARM7 (big endian)");					break;
 		default:							CPU_GET_INFO_CALL(arm7);
 	}
 }
@@ -964,7 +964,7 @@ CPU_GET_INFO( arm7500 )
     switch (state)
     {
         case CPUINFO_FCT_RESET:		info->reset = CPU_RESET_NAME(arm7500);		break;
-        case DEVINFO_STR_NAME:		strcpy(info->s, "ARM7500");				break;
+        case CPUINFO_STR_NAME:		strcpy(info->s, "ARM7500");				break;
 		default:					CPU_GET_INFO_CALL(arm7);
 		break;
     }
@@ -975,7 +975,7 @@ CPU_GET_INFO( arm9 )
     switch (state)
     {
         case CPUINFO_FCT_RESET:                 info->reset = CPU_RESET_NAME(arm9);                       break;
-        case DEVINFO_STR_NAME:             strcpy(info->s, "ARM9");                        break;
+        case CPUINFO_STR_NAME:             strcpy(info->s, "ARM9");                        break;
 	default:	CPU_GET_INFO_CALL(arm7);
 		break;
     }
@@ -986,7 +986,7 @@ CPU_GET_INFO( arm920t )
     switch (state)
     {
         case CPUINFO_FCT_RESET:                 info->reset = CPU_RESET_NAME(arm920t);                       break;
-        case DEVINFO_STR_NAME:             strcpy(info->s, "ARM920T");                        break;
+        case CPUINFO_STR_NAME:             strcpy(info->s, "ARM920T");                        break;
 	default:	CPU_GET_INFO_CALL(arm7);
 		break;
     }
@@ -997,7 +997,7 @@ CPU_GET_INFO( pxa255 )
     switch (state)
     {
         case CPUINFO_FCT_RESET:            info->reset = CPU_RESET_NAME(pxa255);                       break;
-        case DEVINFO_STR_NAME:             strcpy(info->s, "PXA255");                        break;
+        case CPUINFO_STR_NAME:             strcpy(info->s, "PXA255");                        break;
 	default:	CPU_GET_INFO_CALL(arm7);
 		break;
     }
@@ -1008,7 +1008,7 @@ CPU_GET_INFO( sa1110 )
     switch (state)
     {
         case CPUINFO_FCT_RESET:            info->reset = CPU_RESET_NAME(sa1110);                       break;
-        case DEVINFO_STR_NAME:             strcpy(info->s, "SA1110");                        break;
+        case CPUINFO_STR_NAME:             strcpy(info->s, "SA1110");                        break;
 	default:	CPU_GET_INFO_CALL(arm7);
 		break;
     }
@@ -1250,7 +1250,7 @@ static WRITE32_DEVICE_HANDLER( arm7_rt_w_callback )
             {
             	if (!arm7_tlb_translate( cpustate, &R15, 0))
             	{
-            		fatalerror("ARM7_MMU_ENABLE_HACK translate failed");
+            		fatalerror("ARM7_MMU_ENABLE_HACK translate failed\n");
             	}
             }
 #endif

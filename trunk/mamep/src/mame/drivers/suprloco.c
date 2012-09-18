@@ -20,9 +20,9 @@ TODO:
 WRITE8_MEMBER(suprloco_state::suprloco_soundport_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	/* spin for a while to let the Z80 read the command (fixes hanging sound in Regulus) */
-	device_spin_until_time(&space.device(), attotime::from_usec(50));
+	space.device().execute().spin_until_time(attotime::from_usec(50));
 }
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, suprloco_state )
@@ -45,8 +45,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, suprloco_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0xa000, 0xa003) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0xc000, 0xc003) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
+	AM_RANGE(0xa000, 0xa003) AM_DEVWRITE("sn1", sn76496_new_device, write)
+	AM_RANGE(0xc000, 0xc003) AM_DEVWRITE("sn2", sn76496_new_device, write)
 	AM_RANGE(0xe000, 0xe000) AM_READ(soundlatch_byte_r)
 ADDRESS_MAP_END
 
@@ -150,6 +150,21 @@ static GFXDECODE_START( suprloco )
 GFXDECODE_END
 
 
+/*************************************
+ *
+ *  Sound interface
+ *
+ *************************************/
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
 
 static MACHINE_CONFIG_START( suprloco, suprloco_state )
 
@@ -173,17 +188,17 @@ static MACHINE_CONFIG_START( suprloco, suprloco_state )
 	MCFG_GFXDECODE(suprloco)
 	MCFG_PALETTE_LENGTH(512+256)
 
-	MCFG_PALETTE_INIT(suprloco)
-	MCFG_VIDEO_START(suprloco)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496, 4000000)
+	MCFG_SOUND_ADD("sn1", SN76496_NEW, 4000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496, 2000000)
+	MCFG_SOUND_ADD("sn2", SN76496_NEW, 2000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 

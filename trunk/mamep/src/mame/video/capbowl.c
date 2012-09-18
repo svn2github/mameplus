@@ -19,7 +19,7 @@
 static void generate_interrupt( running_machine &machine, int state )
 {
 	capbowl_state *driver = machine.driver_data<capbowl_state>();
-	device_set_input_line(driver->m_maincpu, M6809_FIRQ_LINE, state);
+	driver->m_maincpu->set_input_line(M6809_FIRQ_LINE, state);
 }
 
 static const struct tms34061_interface tms34061intf =
@@ -38,10 +38,10 @@ static const struct tms34061_interface tms34061intf =
  *
  *************************************/
 
-VIDEO_START( capbowl )
+void capbowl_state::video_start()
 {
 	/* initialize TMS34061 emulation */
-    tms34061_start(machine, &tms34061intf);
+    tms34061_start(machine(), &tms34061intf);
 }
 
 
@@ -107,7 +107,7 @@ WRITE8_MEMBER(capbowl_state::bowlrama_blitter_w)
 			break;
 
 		default:
-			logerror("PC=%04X Write to unsupported blitter address %02X Data=%02X\n", cpu_get_pc(&space.device()), offset, data);
+			logerror("PC=%04X Write to unsupported blitter address %02X Data=%02X\n", space.device().safe_pc(), offset, data);
 			break;
 	}
 }
@@ -138,7 +138,7 @@ READ8_MEMBER(capbowl_state::bowlrama_blitter_r)
 			break;
 
 		default:
-			logerror("PC=%04X Read from unsupported blitter address %02X\n", cpu_get_pc(&space.device()), offset);
+			logerror("PC=%04X Read from unsupported blitter address %02X\n", space.device().safe_pc(), offset);
 			break;
 	}
 

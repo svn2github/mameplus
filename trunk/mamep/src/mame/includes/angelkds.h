@@ -34,7 +34,7 @@ public:
 	UINT8      m_layer_ctrl;
 
 	/* devices */
-	device_t *m_subcpu;
+	cpu_device *m_subcpu;
 	DECLARE_WRITE8_MEMBER(angelkds_cpu_bank_write);
 	DECLARE_READ8_MEMBER(angelkds_input_r);
 	DECLARE_WRITE8_MEMBER(angelkds_main_sound_w);
@@ -53,6 +53,12 @@ public:
 	DECLARE_WRITE8_MEMBER(angelkds_paletteram_w);
 	DECLARE_DRIVER_INIT(angelkds);
 	DECLARE_DRIVER_INIT(spcpostn);
+	TILE_GET_INFO_MEMBER(get_tx_tile_info);
+	TILE_GET_INFO_MEMBER(get_bgtop_tile_info);
+	TILE_GET_INFO_MEMBER(get_bgbot_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -61,5 +67,5 @@ public:
 
 
 
-VIDEO_START( angelkds );
+
 SCREEN_UPDATE_IND16( angelkds );

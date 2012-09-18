@@ -63,21 +63,21 @@ public:
 	DECLARE_WRITE16_MEMBER(skilldrp_sound_bank_w);
 	DECLARE_DRIVER_INIT(showhanc);
 	DECLARE_DRIVER_INIT(showhand);
+	DECLARE_VIDEO_START(astrocorp);
 };
 
 /***************************************************************************
                                 Video
 ***************************************************************************/
 
-static VIDEO_START( astrocorp )
+VIDEO_START_MEMBER(astrocorp_state,astrocorp)
 {
-	astrocorp_state *state = machine.driver_data<astrocorp_state>();
 
-	machine.primary_screen->register_screen_bitmap(state->m_bitmap);
+	machine().primary_screen->register_screen_bitmap(m_bitmap);
 
-	state->save_item(NAME(state->m_bitmap));
-	state->save_item       (NAME(state->m_screen_enable));
-	state->save_item       (NAME(state->m_draw_sprites));
+	save_item(NAME(m_bitmap));
+	save_item       (NAME(m_screen_enable));
+	save_item       (NAME(m_draw_sprites));
 }
 
 /***************************************************************************
@@ -192,7 +192,7 @@ WRITE16_MEMBER(astrocorp_state::astrocorp_sound_bank_w)
 	{
 		okim6295_device *oki = downcast<okim6295_device *>(device);
 		oki->set_bank_base(0x40000 * ((data >> 8) & 1));
-//      logerror("CPU #0 PC %06X: OKI bank %08X\n", cpu_get_pc(&space->device()), data);
+//      logerror("CPU #0 PC %06X: OKI bank %08X\n", space->device().safe_pc(), data);
 	}
 }
 
@@ -203,7 +203,7 @@ WRITE16_MEMBER(astrocorp_state::skilldrp_sound_bank_w)
 	{
 		okim6295_device *oki = downcast<okim6295_device *>(device);
 		oki->set_bank_base(0x40000 * (data & 1));
-//      logerror("CPU #0 PC %06X: OKI bank %08X\n", cpu_get_pc(&space->device()), data);
+//      logerror("CPU #0 PC %06X: OKI bank %08X\n", space->device().safe_pc(), data);
 	}
 }
 
@@ -274,7 +274,7 @@ WRITE16_MEMBER(astrocorp_state::astrocorp_screen_enable_w)
 	COMBINE_DATA(&m_screen_enable);
 //  popmessage("%04X",data);
 	if (m_screen_enable & (~1))
-		logerror("CPU #0 PC %06X: screen enable = %04X\n", cpu_get_pc(&space.device()), m_screen_enable);
+		logerror("CPU #0 PC %06X: screen enable = %04X\n", space.device().safe_pc(), m_screen_enable);
 }
 
 READ16_MEMBER(astrocorp_state::astrocorp_unk_r)
@@ -492,7 +492,7 @@ static MACHINE_CONFIG_START( showhand, astrocorp_state )
 	MCFG_GFXDECODE(astrocorp)
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(astrocorp)
+	MCFG_VIDEO_START_OVERRIDE(astrocorp_state,astrocorp)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -513,10 +513,10 @@ static TIMER_DEVICE_CALLBACK( skilldrp_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq. controls sprites, sound, i/o
-		cputag_set_input_line(timer.machine(), "maincpu", 4, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 
 	if(scanline == 0) // vblank-in? controls palette
-		cputag_set_input_line(timer.machine(), "maincpu", 2, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( skilldrp, astrocorp_state )
@@ -543,7 +543,7 @@ static MACHINE_CONFIG_START( skilldrp, astrocorp_state )
 	MCFG_GFXDECODE(astrocorp)
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(astrocorp)
+	MCFG_VIDEO_START_OVERRIDE(astrocorp_state,astrocorp)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

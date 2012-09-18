@@ -39,7 +39,7 @@ public:
 	UINT8      m_clear_tv;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	pia6821_device *m_pia_u1;
 	pia6821_device *m_pia_u2;
 	pia6821_device *m_pia_u3;
@@ -55,6 +55,8 @@ public:
 	DECLARE_WRITE8_MEMBER(sn2_port_a_u2_u3_w);
 	DECLARE_WRITE8_MEMBER(sn2_port_b_u2_u3_w);
 	DECLARE_WRITE_LINE_MEMBER(sn2_ca2_u2_u3_w);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 
@@ -144,7 +146,7 @@ WRITE_LINE_MEMBER(toratora_state::main_cpu_irq)
 	int combined_state = pia->irq_a_state() | pia->irq_b_state();
 
 	logerror("GEN IRQ: %x\n", combined_state);
-	device_set_input_line(m_maincpu, 0, combined_state ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(0, combined_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -421,27 +423,25 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static MACHINE_START( toratora )
+void toratora_state::machine_start()
 {
-	toratora_state *state = machine.driver_data<toratora_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_pia_u1 = machine.device<pia6821_device>("pia_u1");
-	state->m_pia_u2 = machine.device<pia6821_device>("pia_u2");
-	state->m_pia_u3 = machine.device<pia6821_device>("pia_u3");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_pia_u1 = machine().device<pia6821_device>("pia_u1");
+	m_pia_u2 = machine().device<pia6821_device>("pia_u2");
+	m_pia_u3 = machine().device<pia6821_device>("pia_u3");
 
-	state->save_item(NAME(state->m_timer));
-	state->save_item(NAME(state->m_last));
-	state->save_item(NAME(state->m_clear_tv));
+	save_item(NAME(m_timer));
+	save_item(NAME(m_last));
+	save_item(NAME(m_clear_tv));
 }
 
-static MACHINE_RESET( toratora )
+void toratora_state::machine_reset()
 {
-	toratora_state *state = machine.driver_data<toratora_state>();
 
-	state->m_timer = 0xff;
-	state->m_last = 0;
-	state->m_clear_tv = 0;
+	m_timer = 0xff;
+	m_last = 0;
+	m_clear_tv = 0;
 }
 
 static MACHINE_CONFIG_START( toratora, toratora_state )
@@ -455,8 +455,6 @@ static MACHINE_CONFIG_START( toratora, toratora_state )
 	MCFG_PIA6821_ADD("pia_u2", pia_u2_intf)
 	MCFG_PIA6821_ADD("pia_u3", pia_u3_intf)
 
-	MCFG_MACHINE_START(toratora)
-	MCFG_MACHINE_RESET(toratora)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

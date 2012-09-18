@@ -62,7 +62,7 @@ WRITE8_MEMBER(kyugo_state::kyugo_nmi_mask_w)
 
 WRITE8_MEMBER(kyugo_state::kyugo_sub_cpu_control_w)
 {
-	device_set_input_line(m_subcpu, INPUT_LINE_HALT, data ? CLEAR_LINE : ASSERT_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_HALT, data ? CLEAR_LINE : ASSERT_LINE);
 }
 
 static ADDRESS_MAP_START( kyugo_main_portmap, AS_IO, 8, kyugo_state )
@@ -494,35 +494,33 @@ static const ay8910_interface ay8910_config =
  *
  *************************************/
 
-static MACHINE_START( kyugo )
+void kyugo_state::machine_start()
 {
-	kyugo_state *state = machine.driver_data<kyugo_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_subcpu = machine.device("sub");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_subcpu = machine().device<cpu_device>("sub");
 
-	state->save_item(NAME(state->m_scroll_x_lo));
-	state->save_item(NAME(state->m_scroll_x_hi));
-	state->save_item(NAME(state->m_scroll_y));
-	state->save_item(NAME(state->m_bgpalbank));
-	state->save_item(NAME(state->m_fgcolor));
-	state->save_item(NAME(state->m_flipscreen));
+	save_item(NAME(m_scroll_x_lo));
+	save_item(NAME(m_scroll_x_hi));
+	save_item(NAME(m_scroll_y));
+	save_item(NAME(m_bgpalbank));
+	save_item(NAME(m_fgcolor));
+	save_item(NAME(m_flipscreen));
 }
 
-static MACHINE_RESET( kyugo )
+void kyugo_state::machine_reset()
 {
-	kyugo_state *state = machine.driver_data<kyugo_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	// must start with interrupts and sub CPU disabled
-	state->m_nmi_mask = 0;
-	state->kyugo_sub_cpu_control_w(*space, 0, 0);
+	m_nmi_mask = 0;
+	kyugo_sub_cpu_control_w(*space, 0, 0);
 
-	state->m_scroll_x_lo = 0;
-	state->m_scroll_x_hi = 0;
-	state->m_scroll_y = 0;
-	state->m_bgpalbank = 0;
-	state->m_fgcolor = 0;
-	state->m_flipscreen = 0;
+	m_scroll_x_lo = 0;
+	m_scroll_x_hi = 0;
+	m_scroll_y = 0;
+	m_bgpalbank = 0;
+	m_fgcolor = 0;
+	m_flipscreen = 0;
 }
 
 static INTERRUPT_GEN( vblank_irq )
@@ -530,7 +528,7 @@ static INTERRUPT_GEN( vblank_irq )
 	kyugo_state *state = device->machine().driver_data<kyugo_state>();
 
 	if(state->m_nmi_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -549,8 +547,6 @@ static MACHINE_CONFIG_START( gyrodine, kyugo_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(kyugo)
-	MCFG_MACHINE_RESET(kyugo)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -564,7 +560,6 @@ static MACHINE_CONFIG_START( gyrodine, kyugo_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(kyugo)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

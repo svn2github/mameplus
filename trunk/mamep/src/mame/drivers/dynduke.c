@@ -265,7 +265,7 @@ GFXDECODE_END
 
 static INTERRUPT_GEN( dynduke_interrupt )
 {
-	device_set_input_line_and_vector(device, 0, HOLD_LINE, 0xc8/4);	// VBL
+	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xc8/4);	// VBL
 }
 
 /* Machine Driver */
@@ -300,7 +300,6 @@ static MACHINE_CONFIG_START( dynduke, dynduke_state )
 	MCFG_GFXDECODE(dynduke)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(dynduke)
 
 	// sound hardware
 	SEIBU_SOUND_SYSTEM_YM3812_INTERFACE(14318180/4,1320000)

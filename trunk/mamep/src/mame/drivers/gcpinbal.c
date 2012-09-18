@@ -50,7 +50,7 @@ Stephh's notes (based on the game M68000 code and some tests) :
 static TIMER_CALLBACK( gcpinbal_interrupt1 )
 {
 	gcpinbal_state *state = machine.driver_data<gcpinbal_state>();
-	device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
+	state->m_maincpu->set_input_line(1, HOLD_LINE);
 }
 
 #ifdef UNUSED_FUNCTION
@@ -60,7 +60,7 @@ static TIMER_CALLBACK( gcpinbal_interrupt3 )
 	// IRQ3 is from the M6585
 //  if (!ADPCM_playing(0))
 	{
-		device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
+		state->m_maincpu->set_input_line(3, HOLD_LINE);
 	}
 }
 #endif
@@ -71,7 +71,7 @@ static INTERRUPT_GEN( gcpinbal_interrupt )
 
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(500), FUNC(gcpinbal_interrupt1));
 //  device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(1000), FUNC(gcpinbal_interrupt3));
-	device_set_input_line(device, 4, HOLD_LINE);
+	device->execute().set_input_line(4, HOLD_LINE);
 }
 
 
@@ -101,7 +101,7 @@ READ16_MEMBER(gcpinbal_state::ioc_r)
 
 	}
 
-//logerror("CPU #0 PC %06x: warning - read unmapped ioc offset %06x\n",cpu_get_pc(&space.device()),offset);
+//logerror("CPU #0 PC %06x: warning - read unmapped ioc offset %06x\n",space.device().safe_pc(),offset);
 
 	return m_ioc_ram[offset];
 }
@@ -192,7 +192,7 @@ WRITE16_MEMBER(gcpinbal_state::ioc_w)
 			break;
 
 		default:
-			logerror("CPU #0 PC %06x: warning - write ioc offset %06x with %04x\n", cpu_get_pc(&space.device()), offset, data);
+			logerror("CPU #0 PC %06x: warning - write ioc offset %06x with %04x\n", space.device().safe_pc(), offset, data);
 			break;
 	}
 
@@ -395,45 +395,43 @@ static const msm5205_interface msm6585_config =
                         MACHINE DRIVERS
 ***********************************************************/
 
-static MACHINE_START( gcpinbal )
+void gcpinbal_state::machine_start()
 {
-	gcpinbal_state *state = machine.driver_data<gcpinbal_state>();
 
-	state->save_item(NAME(state->m_scrollx));
-	state->save_item(NAME(state->m_scrolly));
-	state->save_item(NAME(state->m_bg0_gfxset));
-	state->save_item(NAME(state->m_bg1_gfxset));
-	state->save_item(NAME(state->m_msm_start));
-	state->save_item(NAME(state->m_msm_end));
-	state->save_item(NAME(state->m_msm_bank));
-	state->save_item(NAME(state->m_adpcm_start));
-	state->save_item(NAME(state->m_adpcm_end));
-	state->save_item(NAME(state->m_adpcm_idle));
-	state->save_item(NAME(state->m_adpcm_trigger));
-	state->save_item(NAME(state->m_adpcm_data));
+	save_item(NAME(m_scrollx));
+	save_item(NAME(m_scrolly));
+	save_item(NAME(m_bg0_gfxset));
+	save_item(NAME(m_bg1_gfxset));
+	save_item(NAME(m_msm_start));
+	save_item(NAME(m_msm_end));
+	save_item(NAME(m_msm_bank));
+	save_item(NAME(m_adpcm_start));
+	save_item(NAME(m_adpcm_end));
+	save_item(NAME(m_adpcm_idle));
+	save_item(NAME(m_adpcm_trigger));
+	save_item(NAME(m_adpcm_data));
 }
 
-static MACHINE_RESET( gcpinbal )
+void gcpinbal_state::machine_reset()
 {
-	gcpinbal_state *state = machine.driver_data<gcpinbal_state>();
 	int i;
 
 	for (i = 0; i < 3; i++)
 	{
-		state->m_scrollx[i] = 0;
-		state->m_scrolly[i] = 0;
+		m_scrollx[i] = 0;
+		m_scrolly[i] = 0;
 	}
 
-	state->m_adpcm_idle = 1;
-	state->m_adpcm_start = 0;
-	state->m_adpcm_end = 0;
-	state->m_adpcm_trigger = 0;
-	state->m_adpcm_data = 0;
-	state->m_bg0_gfxset = 0;
-	state->m_bg1_gfxset = 0;
-	state->m_msm_start = 0;
-	state->m_msm_end = 0;
-	state->m_msm_bank = 0;
+	m_adpcm_idle = 1;
+	m_adpcm_start = 0;
+	m_adpcm_end = 0;
+	m_adpcm_trigger = 0;
+	m_adpcm_data = 0;
+	m_bg0_gfxset = 0;
+	m_bg1_gfxset = 0;
+	m_msm_start = 0;
+	m_msm_end = 0;
+	m_msm_bank = 0;
 }
 
 static MACHINE_CONFIG_START( gcpinbal, gcpinbal_state )
@@ -451,13 +449,10 @@ static MACHINE_CONFIG_START( gcpinbal, gcpinbal_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(gcpinbal)
 
-	MCFG_MACHINE_START(gcpinbal)
-	MCFG_MACHINE_RESET(gcpinbal)
 
 	MCFG_GFXDECODE(gcpinbal)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(gcpinbal)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

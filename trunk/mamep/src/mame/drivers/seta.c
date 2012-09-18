@@ -1392,7 +1392,7 @@ static void uPD71054_update_timer( running_machine &machine, device_t *cpu, int 
 	} else {
 		uPD71054->timer[no]->adjust( attotime::never, no);
 		logerror( "CPU #0 PC %06X: uPD71054 error, timer %d duration is 0\n",
-				(cpu != NULL) ? cpu_get_pc(cpu) : -1, no );
+				(cpu != NULL) ? cpu->safe_pc() : -1, no );
 	}
 }
 
@@ -1403,7 +1403,7 @@ static void uPD71054_update_timer( running_machine &machine, device_t *cpu, int 
 ------------------------------*/
 static TIMER_CALLBACK( uPD71054_timer_callback )
 {
-	cputag_set_input_line(machine, "maincpu", 4, HOLD_LINE );
+	machine.device("maincpu")->execute().set_input_line(4, HOLD_LINE );
 	uPD71054_update_timer( machine, NULL, param );
 }
 
@@ -1490,7 +1490,7 @@ static const x1_010_interface seta_sound_intf2 =
 
 static void utoukond_ym3438_interrupt(device_t *device, int linestate)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", INPUT_LINE_NMI, linestate);
+	device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, linestate);
 }
 
 static const ym3438_interface utoukond_ym3438_intf =
@@ -1548,7 +1548,7 @@ WRITE16_MEMBER(seta_state::sub_ctrl_w)
 			{
 
 				if ( !(m_sub_ctrl_data & 1) && (data & 1) )
-					cputag_set_input_line(machine(), "sub", INPUT_LINE_RESET, PULSE_LINE);
+					machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 				m_sub_ctrl_data = data;
 			}
 			break;
@@ -1698,7 +1698,7 @@ READ16_MEMBER(seta_state::calibr50_ip_r)
 		case 0x16/2:	return (dir2 >> 8);			// upper 4 bits of p2 rotation
 		case 0x18/2:	return 0xffff;				// ? (value's read but not used)
 		default:
-			logerror("PC %06X - Read input %02X !\n", cpu_get_pc(&space.device()), offset*2);
+			logerror("PC %06X - Read input %02X !\n", space.device().safe_pc(), offset*2);
 			return 0;
 	}
 }
@@ -1708,8 +1708,8 @@ WRITE16_MEMBER(seta_state::calibr50_soundlatch_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_word_w(space, 0, data, mem_mask);
-		cputag_set_input_line(machine(), "sub", INPUT_LINE_NMI, PULSE_LINE);
-		device_spin_until_time(&space.device(), attotime::from_usec(50));	// Allow the other cpu to reply
+		machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		space.device().execute().spin_until_time(attotime::from_usec(50));	// Allow the other cpu to reply
 	}
 }
 
@@ -2178,11 +2178,10 @@ static ADDRESS_MAP_START( keroppi_map, AS_PROGRAM, 16, seta_state )
 	AM_RANGE(0xe00600, 0xe00607) AM_RAM AM_DEVREADWRITE_LEGACY("spritegen", spritectrl_r16, spritectrl_w16)
 ADDRESS_MAP_END
 
-static MACHINE_START( keroppi )
+MACHINE_START_MEMBER(seta_state,keroppi)
 {
-	seta_state *state = machine.driver_data<seta_state>();
-	state->m_keroppi_prize_hop = 0;
-	state->m_keroppi_protection_count = 0;
+	m_keroppi_prize_hop = 0;
+	m_keroppi_protection_count = 0;
 }
 
 /***************************************************************************
@@ -2510,7 +2509,7 @@ READ16_MEMBER(seta_state::krzybowl_input_r)
 		case 0xc/2:	return dir2y & 0xff;
 		case 0xe/2:	return dir2y >> 8;
 		default:
-			logerror("PC %06X - Read input %02X !\n", cpu_get_pc(&space.device()), offset*2);
+			logerror("PC %06X - Read input %02X !\n", space.device().safe_pc(), offset*2);
 			return 0;
 	}
 }
@@ -2675,7 +2674,7 @@ READ16_MEMBER(seta_state::kiwame_input_r)
 		case 0x08/2:	return 0xffff;
 
 		default:
-			logerror("PC %06X - Read input %02X !\n", cpu_get_pc(&space.device()), offset*2);
+			logerror("PC %06X - Read input %02X !\n", space.device().safe_pc(), offset*2);
 			return 0x0000;
 	}
 }
@@ -2701,12 +2700,12 @@ ADDRESS_MAP_END
 
 READ16_MEMBER(seta_state::thunderl_protection_r)
 {
-//  logerror("PC %06X - Protection Read\n", cpu_get_pc(&space.device()));
+//  logerror("PC %06X - Protection Read\n", space.device().safe_pc());
 	return 0x00dd;
 }
 WRITE16_MEMBER(seta_state::thunderl_protection_w)
 {
-//  logerror("PC %06X - Protection Written: %04X <- %04X\n", cpu_get_pc(&space.device()), offset*2, data);
+//  logerror("PC %06X - Protection Written: %04X <- %04X\n", space.device().safe_pc(), offset*2, data);
 }
 
 /* Similar to downtown etc. */
@@ -2772,7 +2771,7 @@ WRITE16_MEMBER(seta_state::wiggie_soundlatch_w)
 {
 
 	m_wiggie_soundlatch = data >> 8;
-	cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
+	machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -2838,7 +2837,7 @@ WRITE16_MEMBER(seta_state::utoukond_soundlatch_w)
 {
 	if (ACCESSING_BITS_0_7)
 	{
-		cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
+		machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
 		soundlatch_byte_w(space, 0, data & 0xff);
 	}
 }
@@ -2872,14 +2871,14 @@ READ16_MEMBER(seta_state::pairlove_prot_r)
 	int retdata;
 
 	retdata = m_pairslove_protram[offset];
-	//mame_printf_debug("pairs love protection? read %06x %04x %04x\n",cpu_get_pc(&space.device()), offset,retdata);
+	//mame_printf_debug("pairs love protection? read %06x %04x %04x\n",space.device().safe_pc(), offset,retdata);
 	m_pairslove_protram[offset] = m_pairslove_protram_old[offset];
 	return retdata;
 }
 
 WRITE16_MEMBER(seta_state::pairlove_prot_w)
 {
-	//mame_printf_debug("pairs love protection? write %06x %04x %04x\n",cpu_get_pc(&space.device()), offset,data);
+	//mame_printf_debug("pairs love protection? write %06x %04x %04x\n",space.device().safe_pc(), offset,data);
 	m_pairslove_protram_old[offset] = m_pairslove_protram[offset];
 	m_pairslove_protram[offset] = data;
 }
@@ -2956,7 +2955,7 @@ READ16_MEMBER(seta_state::inttoote_key_r)
 		case 0x80:	return ioport("BET4")->read();
 	}
 
-	logerror("%06X: unknown read, select = %04x\n",cpu_get_pc(&space.device()), *m_inttoote_key_select);
+	logerror("%06X: unknown read, select = %04x\n",space.device().safe_pc(), *m_inttoote_key_select);
 	return 0xffff;
 }
 
@@ -3176,17 +3175,16 @@ ADDRESS_MAP_END
                         Caliber 50 / U.S. Classic
 ***************************************************************************/
 
-static MACHINE_RESET(calibr50)
+MACHINE_RESET_MEMBER(seta_state,calibr50)
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	seta_state *state = machine.driver_data<seta_state>();
-	state->sub_bankswitch_w(*space, 0, 0);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	sub_bankswitch_w(*space, 0, 0);
 }
 
 WRITE8_MEMBER(seta_state::calibr50_soundlatch2_w)
 {
 	soundlatch2_byte_w(space,0,data);
-	device_spin_until_time(&space.device(), attotime::from_usec(50));	// Allow the other cpu to reply
+	space.device().execute().spin_until_time(attotime::from_usec(50));	// Allow the other cpu to reply
 }
 
 static ADDRESS_MAP_START( calibr50_sub_map, AS_PROGRAM, 8, seta_state )
@@ -7420,10 +7418,10 @@ static TIMER_DEVICE_CALLBACK( seta_interrupt_1_and_2 )
 	int scanline = param;
 
 	if(scanline == 240)
-		device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
+		state->m_maincpu->set_input_line(1, HOLD_LINE);
 
 	if(scanline == 112)
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+		state->m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 static TIMER_DEVICE_CALLBACK( seta_interrupt_2_and_4 )
@@ -7432,10 +7430,10 @@ static TIMER_DEVICE_CALLBACK( seta_interrupt_2_and_4 )
 	int scanline = param;
 
 	if(scanline == 240)
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+		state->m_maincpu->set_input_line(2, HOLD_LINE);
 
 	if(scanline == 112)
-		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		state->m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 
@@ -7445,10 +7443,10 @@ static TIMER_DEVICE_CALLBACK( seta_sub_interrupt )
 	int scanline = param;
 
 	if(scanline == 240)
-		device_set_input_line(state->m_subcpu, INPUT_LINE_NMI, PULSE_LINE);
+		state->m_subcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	if(scanline == 112)
-		device_set_input_line(state->m_subcpu, 0, HOLD_LINE);
+		state->m_subcpu->set_input_line(0, HOLD_LINE);
 }
 
 
@@ -7476,10 +7474,10 @@ static TIMER_DEVICE_CALLBACK( tndrcade_sub_interrupt )
 	int scanline = param;
 
 	if(scanline == 240)
-		device_set_input_line(state->m_subcpu, INPUT_LINE_NMI, PULSE_LINE);
+		state->m_subcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	if((scanline % 16) == 0)
-		device_set_input_line(state->m_subcpu, 0, HOLD_LINE);
+		state->m_subcpu->set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( tndrcade, seta_state )
@@ -7506,7 +7504,7 @@ static MACHINE_CONFIG_START( tndrcade, seta_state )
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
 
-	MCFG_VIDEO_START(seta_no_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_no_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -7556,7 +7554,7 @@ static MACHINE_CONFIG_START( twineagl, seta_state )
 	MCFG_GFXDECODE(downtown)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(twineagl_1_layer)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,twineagl_1_layer)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -7598,7 +7596,7 @@ static MACHINE_CONFIG_START( downtown, seta_state )
 	MCFG_GFXDECODE(downtown)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(seta_1_layer)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_1_layer)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -7624,10 +7622,10 @@ static TIMER_DEVICE_CALLBACK( calibr50_interrupt )
 	int scanline = param;
 
 	if((scanline % 64) == 0)
-		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		state->m_maincpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 248)
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+		state->m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 
@@ -7642,7 +7640,7 @@ static MACHINE_CONFIG_START( usclssic, seta_state )
 	MCFG_CPU_PROGRAM_MAP(calibr50_sub_map)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)	/* NMI caused by main cpu when writing to the sound latch */
 
-	MCFG_MACHINE_RESET(calibr50)
+	MCFG_MACHINE_RESET_OVERRIDE(seta_state,calibr50)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -7657,8 +7655,8 @@ static MACHINE_CONFIG_START( usclssic, seta_state )
 	MCFG_GFXDECODE(usclssic)
 	MCFG_PALETTE_LENGTH(16*32 + 64*32*2)		/* sprites, layer */
 
-	MCFG_PALETTE_INIT(usclssic)	/* layer is 6 planes deep */
-	MCFG_VIDEO_START(seta_1_layer)
+	MCFG_PALETTE_INIT_OVERRIDE(seta_state,usclssic)	/* layer is 6 planes deep */
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_1_layer)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -7691,7 +7689,7 @@ static MACHINE_CONFIG_START( calibr50, seta_state )
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)	/* IRQ: 4/frame
                                NMI: when the 68k writes the sound latch */
 
-	MCFG_MACHINE_RESET(calibr50)
+	MCFG_MACHINE_RESET_OVERRIDE(seta_state,calibr50)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -7706,7 +7704,7 @@ static MACHINE_CONFIG_START( calibr50, seta_state )
 	MCFG_GFXDECODE(downtown)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(seta_1_layer)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_1_layer)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -7746,7 +7744,7 @@ static MACHINE_CONFIG_START( metafox, seta_state )
 	MCFG_GFXDECODE(downtown)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(seta_1_layer)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_1_layer)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -7782,7 +7780,7 @@ static MACHINE_CONFIG_START( atehate, seta_state )
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
 
-	MCFG_VIDEO_START(seta_no_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_no_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -7825,8 +7823,8 @@ static MACHINE_CONFIG_START( blandia, seta_state )
 	MCFG_GFXDECODE(blandia)
 	MCFG_PALETTE_LENGTH((16*32+64*32*4)*2)	/* sprites, layer1, layer2, palette effect */
 
-	MCFG_PALETTE_INIT(blandia)				/* layers 1&2 are 6 planes deep */
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_PALETTE_INIT_OVERRIDE(seta_state,blandia)				/* layers 1&2 are 6 planes deep */
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -7858,8 +7856,8 @@ static MACHINE_CONFIG_START( blandiap, seta_state )
 	MCFG_GFXDECODE(blandia)
 	MCFG_PALETTE_LENGTH((16*32+64*32*4)*2)	/* sprites, layer1, layer2, palette effect */
 
-	MCFG_PALETTE_INIT(blandia)				/* layers 1&2 are 6 planes deep */
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_PALETTE_INIT_OVERRIDE(seta_state,blandia)				/* layers 1&2 are 6 planes deep */
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -7895,7 +7893,7 @@ static MACHINE_CONFIG_START( blockcar, seta_state )
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
 
-	MCFG_VIDEO_START(seta_no_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_no_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -7931,7 +7929,7 @@ static MACHINE_CONFIG_START( daioh, seta_state )
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer1, layer2 */
 
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -7973,7 +7971,7 @@ static MACHINE_CONFIG_START( drgnunit, seta_state )
 	MCFG_GFXDECODE(downtown)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(seta_1_layer)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_1_layer)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8008,7 +8006,7 @@ static MACHINE_CONFIG_START( qzkklgy2, seta_state )
 	MCFG_GFXDECODE(qzkklgy2)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(seta_1_layer)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_1_layer)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8029,10 +8027,10 @@ static TIMER_DEVICE_CALLBACK( setaroul_interrupt )
 	int scanline = param;
 
 	if(scanline == 248)
-		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		state->m_maincpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 112)
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+		state->m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 
@@ -8058,9 +8056,9 @@ static MACHINE_CONFIG_START( setaroul, seta_state )
 
 	MCFG_GFXDECODE(setaroul)
 	MCFG_PALETTE_LENGTH(512)
-	MCFG_PALETTE_INIT(setaroul)
+	MCFG_PALETTE_INIT_OVERRIDE(seta_state,setaroul)
 
-	MCFG_VIDEO_START(seta_1_layer)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_1_layer)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8096,7 +8094,7 @@ static MACHINE_CONFIG_START( eightfrc, seta_state )
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer1, layer2 */
 
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8137,8 +8135,8 @@ static MACHINE_CONFIG_START( extdwnhl, seta_state )
 	MCFG_GFXDECODE(zingzip)
 	MCFG_PALETTE_LENGTH(16*32+16*32+64*32*2)	/* sprites, layer2, layer1 */
 
-	MCFG_PALETTE_INIT(zingzip)			/* layer 1 gfx is 6 planes deep */
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_PALETTE_INIT_OVERRIDE(seta_state,zingzip)			/* layer 1 gfx is 6 planes deep */
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8156,10 +8154,10 @@ MACHINE_CONFIG_END
 #if __uPD71054_TIMER
 static INTERRUPT_GEN( wrofaero_interrupt )
 {
-	device_set_input_line(device, 2, HOLD_LINE );
+	device->execute().set_input_line(2, HOLD_LINE );
 }
 
-static MACHINE_START( wrofaero ) { uPD71054_timer_init(machine); }
+MACHINE_START_MEMBER(seta_state,wrofaero){ uPD71054_timer_init(machine()); }
 #endif	// __uPD71054_TIMER
 
 
@@ -8182,7 +8180,7 @@ static MACHINE_CONFIG_START( gundhara, seta_state )
 #endif	// __uPD71054_TIMER
 
 #if	__uPD71054_TIMER
-	MCFG_MACHINE_START( wrofaero )
+	MCFG_MACHINE_START_OVERRIDE(seta_state, wrofaero )
 #endif	// __uPD71054_TIMER
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
@@ -8198,8 +8196,8 @@ static MACHINE_CONFIG_START( gundhara, seta_state )
 	MCFG_GFXDECODE(jjsquawk)
 	MCFG_PALETTE_LENGTH(16*32+64*32*4)	/* sprites, layer2, layer1 */
 
-	MCFG_PALETTE_INIT(gundhara)				/* layers are 6 planes deep (but have only 4 palettes) */
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_PALETTE_INIT_OVERRIDE(seta_state,gundhara)				/* layers are 6 planes deep (seta_state,but have only 4 palettes) */
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8239,8 +8237,8 @@ static MACHINE_CONFIG_START( jjsquawk, seta_state )
 	MCFG_GFXDECODE(jjsquawk)
 	MCFG_PALETTE_LENGTH(16*32+64*32*4)	/* sprites, layer2, layer1 */
 
-	MCFG_PALETTE_INIT(jjsquawk)				/* layers are 6 planes deep */
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_PALETTE_INIT_OVERRIDE(seta_state,jjsquawk)				/* layers are 6 planes deep */
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8271,8 +8269,8 @@ static MACHINE_CONFIG_START( jjsquawb, seta_state )
 	MCFG_GFXDECODE(jjsquawk)
 	MCFG_PALETTE_LENGTH(16*32+64*32*4)	/* sprites, layer2, layer1 */
 
-	MCFG_PALETTE_INIT(jjsquawk)				/* layers are 6 planes deep */
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_PALETTE_INIT_OVERRIDE(seta_state,jjsquawk)				/* layers are 6 planes deep */
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8296,7 +8294,7 @@ static MACHINE_CONFIG_START( kamenrid, seta_state )
 	MCFG_CPU_VBLANK_INT("screen", wrofaero_interrupt)
 
 #if	__uPD71054_TIMER
-	MCFG_MACHINE_START( wrofaero )
+	MCFG_MACHINE_START_OVERRIDE(seta_state, wrofaero )
 #endif	// __uPD71054_TIMER
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
@@ -8312,7 +8310,7 @@ static MACHINE_CONFIG_START( kamenrid, seta_state )
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
 
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8349,7 +8347,7 @@ static MACHINE_CONFIG_START( orbs, seta_state )
 	MCFG_GFXDECODE(orbs)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
 
-	MCFG_VIDEO_START(seta_no_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_no_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8372,7 +8370,7 @@ static MACHINE_CONFIG_START( keroppi, seta_state )
 	MCFG_CPU_PROGRAM_MAP(keroppi_map)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", seta_interrupt_1_and_2, "screen", 0, 1)
 
-	MCFG_MACHINE_START(keroppi)
+	MCFG_MACHINE_START_OVERRIDE(seta_state,keroppi)
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
 
@@ -8387,7 +8385,7 @@ static MACHINE_CONFIG_START( keroppi, seta_state )
 	MCFG_GFXDECODE(orbs)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
 
-	MCFG_VIDEO_START(seta_no_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_no_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8423,7 +8421,7 @@ static MACHINE_CONFIG_START( krzybowl, seta_state )
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
 
-	MCFG_VIDEO_START(seta_no_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_no_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8448,7 +8446,7 @@ static MACHINE_CONFIG_START( madshark, seta_state )
 	MCFG_CPU_VBLANK_INT("screen", wrofaero_interrupt)
 
 #if	__uPD71054_TIMER
-	MCFG_MACHINE_START( wrofaero )
+	MCFG_MACHINE_START_OVERRIDE(seta_state, wrofaero )
 #endif	// __uPD71054_TIMER
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
@@ -8464,9 +8462,9 @@ static MACHINE_CONFIG_START( madshark, seta_state )
 	MCFG_GFXDECODE(jjsquawk)
 	MCFG_PALETTE_LENGTH(16*32+64*32*4)	/* sprites, layer2, layer1 */
 
-	MCFG_PALETTE_INIT(jjsquawk)				/* layers are 6 planes deep */
+	MCFG_PALETTE_INIT_OVERRIDE(seta_state,jjsquawk)				/* layers are 6 planes deep */
 
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8490,7 +8488,7 @@ static MACHINE_CONFIG_START( magspeed, seta_state )
 	MCFG_CPU_VBLANK_INT("screen", wrofaero_interrupt)
 
 #if	__uPD71054_TIMER
-	MCFG_MACHINE_START( wrofaero )
+	MCFG_MACHINE_START_OVERRIDE(seta_state, wrofaero )
 #endif	// __uPD71054_TIMER
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
@@ -8506,7 +8504,7 @@ static MACHINE_CONFIG_START( magspeed, seta_state )
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
 
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8536,7 +8534,7 @@ static MACHINE_CONFIG_START( msgundam, seta_state )
 #endif	// __uPD71054_TIMER
 
 #if	__uPD71054_TIMER
-	MCFG_MACHINE_START( wrofaero )
+	MCFG_MACHINE_START_OVERRIDE(seta_state, wrofaero )
 #endif	// __uPD71054_TIMER
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
@@ -8553,7 +8551,7 @@ static MACHINE_CONFIG_START( msgundam, seta_state )
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
 
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8590,7 +8588,7 @@ static MACHINE_CONFIG_START( oisipuzl, seta_state )
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
 
-	MCFG_VIDEO_START(oisipuzl_2_layers)	// flip is inverted for the tilemaps
+	MCFG_VIDEO_START_OVERRIDE(seta_state,oisipuzl_2_layers)	// flip is inverted for the tilemaps
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8627,7 +8625,7 @@ static MACHINE_CONFIG_START( triplfun, seta_state )
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
 
-	MCFG_VIDEO_START(oisipuzl_2_layers)	// flip is inverted for the tilemaps
+	MCFG_VIDEO_START_OVERRIDE(seta_state,oisipuzl_2_layers)	// flip is inverted for the tilemaps
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8662,7 +8660,7 @@ static MACHINE_CONFIG_START( kiwame, seta_state )
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
 
-	MCFG_VIDEO_START(seta_no_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_no_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8701,7 +8699,7 @@ static MACHINE_CONFIG_START( rezon, seta_state )
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer1, layer2 */
 
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8740,7 +8738,7 @@ static MACHINE_CONFIG_START( thunderl, seta_state )
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
 
-	MCFG_VIDEO_START(seta_no_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_no_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8811,7 +8809,7 @@ static MACHINE_CONFIG_START( wiggie, seta_state )
 	MCFG_GFXDECODE(wiggie)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
 
-	MCFG_VIDEO_START(seta_no_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_no_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -8845,7 +8843,7 @@ static MACHINE_CONFIG_START( wits, seta_state )
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)	/* sprites only */
 
-	MCFG_VIDEO_START(seta_no_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_no_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8881,7 +8879,7 @@ static MACHINE_CONFIG_START( umanclub, seta_state )
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(seta_no_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_no_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8921,7 +8919,7 @@ static MACHINE_CONFIG_START( utoukond, seta_state )
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer2, layer1 */
 
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -8954,7 +8952,7 @@ static MACHINE_CONFIG_START( wrofaero, seta_state )
 #endif	// __uPD71054_TIMER
 
 #if	__uPD71054_TIMER
-	MCFG_MACHINE_START( wrofaero )
+	MCFG_MACHINE_START_OVERRIDE(seta_state, wrofaero )
 #endif	// __uPD71054_TIMER
 
 	MCFG_DEVICE_ADD("spritegen", SETA001_SPRITE, 0)
@@ -8970,7 +8968,7 @@ static MACHINE_CONFIG_START( wrofaero, seta_state )
 	MCFG_GFXDECODE(msgundam)
 	MCFG_PALETTE_LENGTH(512 * 3)	/* sprites, layer1, layer2 */
 
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -9013,8 +9011,8 @@ static MACHINE_CONFIG_START( zingzip, seta_state )
 	MCFG_GFXDECODE(zingzip)
 	MCFG_PALETTE_LENGTH(16*32+16*32+64*32*2)	/* sprites, layer2, layer1 */
 
-	MCFG_PALETTE_INIT(zingzip)				/* layer 1 gfx is 6 planes deep */
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_PALETTE_INIT_OVERRIDE(seta_state,zingzip)				/* layer 1 gfx is 6 planes deep */
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -9066,7 +9064,7 @@ static MACHINE_CONFIG_START( pairlove, seta_state )
 	MCFG_GFXDECODE(tndrcade)
 	MCFG_PALETTE_LENGTH(2048)	/* sprites only */
 
-	MCFG_VIDEO_START(seta_no_layers)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_no_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -9088,10 +9086,10 @@ static TIMER_DEVICE_CALLBACK( crazyfgt_interrupt )
 	int scanline = param;
 
 	if((scanline % 48) == 0)
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE); // should this be triggered by the 3812?
+		state->m_maincpu->set_input_line(2, HOLD_LINE); // should this be triggered by the 3812?
 
 	if(scanline == 240)
-		device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
+		state->m_maincpu->set_input_line(1, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( crazyfgt, seta_state )
@@ -9114,8 +9112,8 @@ static MACHINE_CONFIG_START( crazyfgt, seta_state )
 	MCFG_GFXDECODE(crazyfgt)
 	MCFG_PALETTE_LENGTH(16*32+64*32*4)	/* sprites, layer1, layer2 */
 
-	MCFG_PALETTE_INIT(gundhara)				/* layers are 6 planes deep (but have only 4 palettes) */
-	MCFG_VIDEO_START(seta_2_layers)
+	MCFG_PALETTE_INIT_OVERRIDE(seta_state,gundhara)				/* layers are 6 planes deep (seta_state,but have only 4 palettes) */
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_2_layers)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -9139,16 +9137,16 @@ static TIMER_DEVICE_CALLBACK( inttoote_interrupt )
 
 	/* ACIA irq */
 	if(scanline == 15)
-		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		state->m_maincpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 38)
-		device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
+		state->m_maincpu->set_input_line(1, HOLD_LINE);
 
 	if(scanline == 61)
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+		state->m_maincpu->set_input_line(2, HOLD_LINE);
 
 	if(scanline >= 85 && (scanline % 23) == 0)
-		device_set_input_line(state->m_maincpu, 6, HOLD_LINE);
+		state->m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 static const pia6821_interface inttoote_pia0_intf =
@@ -9211,8 +9209,8 @@ static MACHINE_CONFIG_START( inttoote, seta_state )
 	MCFG_GFXDECODE(inttoote)
 	MCFG_PALETTE_LENGTH(512 * 1)
 
-	MCFG_PALETTE_INIT(inttoote)
-	MCFG_VIDEO_START(seta_1_layer)
+	MCFG_PALETTE_INIT_OVERRIDE(seta_state,inttoote)
+	MCFG_VIDEO_START_OVERRIDE(seta_state,seta_1_layer)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -10708,12 +10706,12 @@ READ16_MEMBER(seta_state::twineagl_200100_r)
 {
 
 	// protection check at boot
-	logerror("%04x: twineagl_200100_r %d\n",cpu_get_pc(&space.device()),offset);
+	logerror("%04x: twineagl_200100_r %d\n",space.device().safe_pc(),offset);
 	return m_twineagl_xram[offset];
 }
 WRITE16_MEMBER(seta_state::twineagl_200100_w)
 {
-	logerror("%04x: twineagl_200100_w %d = %02x\n",cpu_get_pc(&space.device()),offset,data);
+	logerror("%04x: twineagl_200100_w %d = %02x\n",space.device().safe_pc(),offset,data);
 
 	if (ACCESSING_BITS_0_7)
 	{

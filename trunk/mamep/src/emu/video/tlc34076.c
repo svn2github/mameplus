@@ -22,8 +22,7 @@
 #define TEST_REGISTER		0x0e
 #define RESET_STATE			0x0f
 
-typedef struct _tlc34076_state  tlc34076_state;
-struct _tlc34076_state
+struct tlc34076_state
 {
 	UINT8 local_paletteram[0x300];
 	UINT8 regs[0x10];
@@ -33,6 +32,11 @@ struct _tlc34076_state
 	UINT8 dacbits;
 
 	rgb_t pens[0x100];
+};
+
+const tlc34076_config tlc34076_6_bit_intf = 
+{
+	TLC34076_6_BIT
 };
 
 
@@ -47,7 +51,7 @@ INLINE tlc34076_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == TLC34076);
 
-	return (tlc34076_state *)downcast<legacy_device_base *>(device)->token();
+	return (tlc34076_state *)downcast<tlc34076_device *>(device)->token();
 }
 
 /*************************************
@@ -262,7 +266,7 @@ WRITE8_DEVICE_HANDLER( tlc34076_w )
 
 static DEVICE_START( tlc34076 )
 {
-	tlc34076_config *config = (tlc34076_config *)downcast<const legacy_device_base *>(device)->inline_config();
+	tlc34076_config *config = (tlc34076_config *)device->static_config();
 	tlc34076_state *state = get_safe_token(device);
 
 	state->dacbits = config->res_sel ? 8 : 6;
@@ -276,13 +280,40 @@ static DEVICE_START( tlc34076 )
 	state_save_register_global(device->machine(), state->dacbits);
 }
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+const device_type TLC34076 = &device_creator<tlc34076_device>;
 
-#define DEVTEMPLATE_ID( p, s )	p##tlc34076##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_RESET | DT_HAS_INLINE_CONFIG
-#define DEVTEMPLATE_NAME		"TLC34076"
-#define DEVTEMPLATE_FAMILY		"RAMDAC"
-#include "devtempl.h"
+tlc34076_device::tlc34076_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TLC34076, "TLC34076", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(tlc34076_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void tlc34076_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void tlc34076_device::device_start()
+{
+	DEVICE_START_NAME( tlc34076 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void tlc34076_device::device_reset()
+{
+	DEVICE_RESET_NAME( tlc34076 )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(TLC34076, tlc34076);

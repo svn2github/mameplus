@@ -104,6 +104,11 @@ public:
 	DECLARE_DRIVER_INIT(addr_lmhe);
 	DECLARE_DRIVER_INIT(addr_xhl);
 	DECLARE_DRIVER_INIT(laserdisc);
+	TILE_GET_INFO_MEMBER(horizontal_tile_info);
+	TILE_GET_INFO_MEMBER(vertical_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_VIDEO_START(vertical);
 };
 
 
@@ -116,24 +121,22 @@ public:
  *
  *************************************/
 
-static TILE_GET_INFO( horizontal_tile_info )
+TILE_GET_INFO_MEMBER(statriv2_state::horizontal_tile_info)
 {
-	statriv2_state *state = machine.driver_data<statriv2_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int code = videoram[0x400+tile_index];
 	int attr = videoram[tile_index] & 0x3f;
 
-	SET_TILE_INFO(0, code, attr, 0);
+	SET_TILE_INFO_MEMBER(0, code, attr, 0);
 }
 
-static TILE_GET_INFO( vertical_tile_info )
+TILE_GET_INFO_MEMBER(statriv2_state::vertical_tile_info)
 {
-	statriv2_state *state = machine.driver_data<statriv2_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int code = videoram[0x400+tile_index];
 	int attr = videoram[tile_index] & 0x3f;
 
-	SET_TILE_INFO(0, ((code & 0x7f) << 1) | ((code & 0x80) >> 7), attr, 0);
+	SET_TILE_INFO_MEMBER(0, ((code & 0x7f) << 1) | ((code & 0x80) >> 7), attr, 0);
 }
 
 
@@ -144,27 +147,25 @@ static TILE_GET_INFO( vertical_tile_info )
  *
  *************************************/
 
-static PALETTE_INIT( statriv2 )
+void statriv2_state::palette_init()
 {
 	int i;
 
 	for (i = 0; i < 64; i++)
 	{
-		palette_set_color_rgb(machine, 2*i+0, pal1bit(i >> 2), pal1bit(i >> 0), pal1bit(i >> 1));
-		palette_set_color_rgb(machine, 2*i+1, pal1bit(i >> 5), pal1bit(i >> 3), pal1bit(i >> 4));
+		palette_set_color_rgb(machine(), 2*i+0, pal1bit(i >> 2), pal1bit(i >> 0), pal1bit(i >> 1));
+		palette_set_color_rgb(machine(), 2*i+1, pal1bit(i >> 5), pal1bit(i >> 3), pal1bit(i >> 4));
 	}
 }
 
-static VIDEO_START( horizontal )
+void statriv2_state::video_start()
 {
-	statriv2_state *state = machine.driver_data<statriv2_state>();
-	state->m_tilemap = tilemap_create(machine, horizontal_tile_info ,tilemap_scan_rows, 8,15, 64,16);
+	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(statriv2_state::horizontal_tile_info),this) ,TILEMAP_SCAN_ROWS, 8,15, 64,16);
 }
 
-static VIDEO_START( vertical )
+VIDEO_START_MEMBER(statriv2_state,vertical)
 {
-	statriv2_state *state = machine.driver_data<statriv2_state>();
-	state->m_tilemap = tilemap_create(machine, vertical_tile_info, tilemap_scan_rows, 8,8, 32,32);
+	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(statriv2_state::vertical_tile_info),this), TILEMAP_SCAN_ROWS, 8,8, 32,32);
 }
 
 
@@ -217,8 +218,8 @@ static INTERRUPT_GEN( statriv2_interrupt )
 	state->m_latched_coin |= new_coin & (new_coin ^ state->m_last_coin);
 	state->m_last_coin = new_coin;
 
-	device_set_input_line(device, I8085_RST75_LINE, ASSERT_LINE);
-	device_set_input_line(device, I8085_RST75_LINE, CLEAR_LINE);
+	device->execute().set_input_line(I8085_RST75_LINE, ASSERT_LINE);
+	device->execute().set_input_line(I8085_RST75_LINE, CLEAR_LINE);
 }
 
 
@@ -618,8 +619,6 @@ static MACHINE_CONFIG_START( statriv2, statriv2_state )
 	MCFG_GFXDECODE(horizontal)
 	MCFG_PALETTE_LENGTH(2*64)
 
-	MCFG_PALETTE_INIT(statriv2)
-	MCFG_VIDEO_START(horizontal)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -635,7 +634,7 @@ static MACHINE_CONFIG_DERIVED( statriv2v, statriv2 )
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/2, 392, 0, 256, 262, 0, 256)
 
-	MCFG_VIDEO_START(vertical)
+	MCFG_VIDEO_START_OVERRIDE(statriv2_state,vertical)
 	MCFG_GFXDECODE(vertical)
 MACHINE_CONFIG_END
 

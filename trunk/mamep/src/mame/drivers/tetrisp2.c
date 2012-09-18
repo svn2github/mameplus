@@ -189,7 +189,7 @@ WRITE16_MEMBER(tetrisp2_state::nndmseal_sound_bank_w)
 
 			memcpy(machine().root_device().memregion("oki")->base(), rom + (m_bank_lo * 0x80000), 0x20000);
 
-//          logerror("PC:%06X sound bank_lo = %02X\n",cpu_get_pc(&space.device()),m_bank_lo);
+//          logerror("PC:%06X sound bank_lo = %02X\n",space.device().safe_pc(),m_bank_lo);
 		}
 		else
 		{
@@ -197,7 +197,7 @@ WRITE16_MEMBER(tetrisp2_state::nndmseal_sound_bank_w)
 
 			memcpy(machine().root_device().memregion("oki")->base() + 0x20000, rom + (m_bank_lo * 0x80000) + (m_bank_hi * 0x20000), 0x20000);
 
-//          logerror("PC:%06X sound bank_hi = %02X\n",cpu_get_pc(&space.device()),m_bank_hi);
+//          logerror("PC:%06X sound bank_hi = %02X\n",space.device().safe_pc(),m_bank_hi);
 		}
 	}
 }
@@ -566,7 +566,7 @@ WRITE16_MEMBER(stepstag_state::stepstag_soundlatch_word_w)
 
 	state->soundlatch_word_w(space, offset, data, mem_mask);
 
-	device_set_input_line(machine().device("sub"), M68K_IRQ_6, HOLD_LINE);
+	machine().device("sub")->execute().set_input_line(M68K_IRQ_6, HOLD_LINE);
 
 	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
@@ -1250,23 +1250,23 @@ GFXDECODE_END
 
 static TIMER_CALLBACK( rockn_timer_level4_callback )
 {
-	cputag_set_input_line(machine, "maincpu", 4, HOLD_LINE);
+	machine.device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 }
 
 static TIMER_CALLBACK( rockn_timer_sub_level4_callback )
 {
-	cputag_set_input_line(machine, "sub", 4, HOLD_LINE);
+	machine.device("sub")->execute().set_input_line(4, HOLD_LINE);
 }
 
 
 static TIMER_CALLBACK( rockn_timer_level1_callback )
 {
-	cputag_set_input_line(machine, "maincpu", 1, HOLD_LINE);
+	machine.device("maincpu")->execute().set_input_line(1, HOLD_LINE);
 }
 
 static TIMER_CALLBACK( rockn_timer_sub_level1_callback )
 {
-	cputag_set_input_line(machine, "sub", 1, HOLD_LINE);
+	machine.device("sub")->execute().set_input_line(1, HOLD_LINE);
 }
 
 static void init_rockn_timer(running_machine &machine)
@@ -1345,7 +1345,7 @@ static MACHINE_CONFIG_START( tetrisp2, tetrisp2_state )
 	MCFG_GFXDECODE(tetrisp2)
 	MCFG_PALETTE_LENGTH(0x8000)
 
-	MCFG_VIDEO_START(tetrisp2)
+	MCFG_VIDEO_START_OVERRIDE(tetrisp2_state,tetrisp2)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1376,7 +1376,7 @@ static MACHINE_CONFIG_START( nndmseal, tetrisp2_state )
 	MCFG_GFXDECODE(tetrisp2)
 	MCFG_PALETTE_LENGTH(0x8000)
 
-	MCFG_VIDEO_START(nndmseal)	// bg layer offset
+	MCFG_VIDEO_START_OVERRIDE(tetrisp2_state,nndmseal)	// bg layer offset
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1406,7 +1406,7 @@ static MACHINE_CONFIG_START( rockn, tetrisp2_state )
 	MCFG_GFXDECODE(tetrisp2)
 	MCFG_PALETTE_LENGTH(0x8000)
 
-	MCFG_VIDEO_START(rockntread)
+	MCFG_VIDEO_START_OVERRIDE(tetrisp2_state,rockntread)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1437,7 +1437,7 @@ static MACHINE_CONFIG_START( rockn2, tetrisp2_state )
 	MCFG_GFXDECODE(tetrisp2)
 	MCFG_PALETTE_LENGTH(0x8000)
 
-	MCFG_VIDEO_START(rockntread)
+	MCFG_VIDEO_START_OVERRIDE(tetrisp2_state,rockntread)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1481,7 +1481,7 @@ static MACHINE_CONFIG_START( rocknms, tetrisp2_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 0x140-1, 0, 0xe0-1)
 	MCFG_SCREEN_UPDATE_STATIC(rocknms_right)
 
-	MCFG_VIDEO_START(rocknms)
+	MCFG_VIDEO_START_OVERRIDE(tetrisp2_state,rocknms)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1527,7 +1527,7 @@ static MACHINE_CONFIG_START( stepstag, stepstag_state )
 
 	MCFG_PALETTE_LENGTH(0x8000)	// 0x8000 * 3 needed I guess, but it hits an assert
 
-	MCFG_VIDEO_START( stepstag )
+	MCFG_VIDEO_START_OVERRIDE(stepstag_state, stepstag )
 	MCFG_GFXDECODE(stepstag)
 
 	MCFG_DEFAULT_LAYOUT(layout_stepstag)
@@ -1771,7 +1771,7 @@ Sound: M6295 (on daughterboard)
 ROMs:(all ROMs are on daughterboard)
 1.1 - Programs (TMS 27C020)
 3.3 /
-(actual label is "Cawaii 1 Ver1.1" & "Cawaii 3 Ver1.1")
+(actual label is "Cawaii 1 Ver 1.0" & "Cawaii 3 Ver 1.0")
 MR97006-01.2 (42pin mask ROM, read as 16M, byte mode)
 IC6 is not populated.
 IC2 and IC5 have a 0-ohm resistor wired to pin32 (A20 on a 32MBit ROM)

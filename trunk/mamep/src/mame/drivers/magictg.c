@@ -127,7 +127,7 @@ Medium size chip with heat sink on it
 class magictg_state : public driver_device
 {
 public:
-	magictg_state(const machine_config &mconfig, device_type type, const char* tag)
+	magictg_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		m_mips(*this, "mips"),
 		m_adsp(*this, "adsp"),
@@ -211,6 +211,7 @@ public:
 protected:
 	virtual void machine_start();
 	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -253,7 +254,7 @@ void magictg_state::machine_reset()
  *
  *************************************/
 
-static VIDEO_START( magictg )
+void magictg_state::video_start()
 {
 
 }
@@ -691,7 +692,7 @@ READ32_MEMBER( magictg_state::adsp_idma_data_r )
 	}
 	else
 	{
-		fatalerror("????");
+		fatalerror("????\n");
 		return 0;
 	}
 }
@@ -705,7 +706,7 @@ WRITE32_MEMBER( magictg_state::adsp_idma_addr_w )
 		//mame_printf_debug("WR %.8x %.8x %.8x\n", offset, mem_mask, data >> 16);
 	}
 	else
-		fatalerror("????");
+		fatalerror("????\n");
 }
 
 READ32_MEMBER( magictg_state::adsp_status_r )
@@ -761,9 +762,9 @@ WRITE16_MEMBER( magictg_state::adsp_control_w )
 				UINT32 src_addr = (page << 14) | m_adsp_regs.bdma_external_addr;
 
 				if (type == 0)
-					addr_space = m_adsp->memory().space(AS_PROGRAM);
+					addr_space = m_adsp->space(AS_PROGRAM);
 				else
-					addr_space = m_adsp->memory().space(AS_DATA);
+					addr_space = m_adsp->space(AS_DATA);
 
 				if (dir == 0)
 				{
@@ -791,7 +792,7 @@ WRITE16_MEMBER( magictg_state::adsp_control_w )
 						}
 						else
 						{
-							fatalerror("Unsupported BDMA width");
+							fatalerror("Unsupported BDMA width\n");
 						}
 
 						--m_adsp_regs.bdma_word_count;
@@ -804,7 +805,7 @@ WRITE16_MEMBER( magictg_state::adsp_control_w )
 				m_adsp_regs.bdma_control |= ((src_addr >> 14) & 0xff) << 8;
 
 				if (m_adsp_regs.bdma_control & 8)
-					device_set_input_line(m_adsp, INPUT_LINE_RESET, PULSE_LINE);
+					m_adsp->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 			}
 			break;
 		}
@@ -898,7 +899,27 @@ static const adsp21xx_config adsp_config =
 	0,//timer_enable_callback   /* callback for timer fired */
 };
 
+static const voodoo_config voodoo_1_intf =
+{
+	2, //               fbmem;
+	4,//                tmumem0;
+	0,//                tmumem1;
+	"screen",//         screen;
+	"mips",//           cputag;
+	NULL,//             vblank;
+	NULL,//             stall;
+};
 
+static const voodoo_config voodoo_2_intf =
+{
+	2, //               fbmem;
+	4,//                tmumem0;
+	0,//                tmumem1;
+	"screen",//         screen;
+	"mips",//           cputag;
+	NULL,//vblank_assert                vblank;
+	NULL,// voodoo_stall            stall;
+};
 /*************************************
  *
  *  Machine driver
@@ -933,15 +954,9 @@ static MACHINE_CONFIG_START( magictg, magictg_state )
 #endif
 	MCFG_PCI_BUS_LEGACY_DEVICE(9, "zr36120", zr36120_pci_r, zr36120_pci_w)
 
-	MCFG_3DFX_VOODOO_1_ADD("voodoo_0", STD_VOODOO_1_CLOCK, 2, "screen")
-	MCFG_3DFX_VOODOO_CPU("mips")
-	MCFG_3DFX_VOODOO_TMU_MEMORY(0, 4)
+	MCFG_3DFX_VOODOO_1_ADD("voodoo_0", STD_VOODOO_1_CLOCK, voodoo_1_intf)
 
-	MCFG_3DFX_VOODOO_1_ADD("voodoo_1", STD_VOODOO_1_CLOCK, 2, "screen")
-	MCFG_3DFX_VOODOO_CPU("mips")
-	MCFG_3DFX_VOODOO_TMU_MEMORY(0, 4)
-//  MCFG_3DFX_VOODOO_VBLANK(vblank_assert)
-//  MCFG_3DFX_VOODOO_STALL(voodoo_stall)
+	MCFG_3DFX_VOODOO_1_ADD("voodoo_1", STD_VOODOO_1_CLOCK, voodoo_2_intf)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -949,7 +964,6 @@ static MACHINE_CONFIG_START( magictg, magictg_state )
 	MCFG_SCREEN_SIZE(1024, 1024)
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 16, 447)
 
-	MCFG_VIDEO_START(magictg)
 	MCFG_SCREEN_UPDATE_STATIC(magictg)
 MACHINE_CONFIG_END
 

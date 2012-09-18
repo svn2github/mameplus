@@ -67,6 +67,7 @@ public:
 	UINT16 get_heads() { return (m_dev) ? m_dev->get_heads() : 0; }
 	void set_geometry(UINT8 sectors, UINT8 heads) { if (m_dev) m_dev->set_geometry(sectors,heads); }
 	bool is_ready() { return (m_dev) ? m_dev->is_ready() : false; }
+	bool is_connected() { return (m_dev) ? true : false; }
 	void read_key(UINT8 key[]) { if (m_dev) m_dev->read_key(key); }
 protected:
 	// device-level overrides
@@ -129,8 +130,7 @@ extern const device_type IDE_HARDDISK_IMAGE;
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _ide_config ide_config;
-struct _ide_config
+struct ide_config
 {
 	void	(*interrupt)(device_t *device, int state);
 	const char *bmcpu;		/* name of bus master CPU */
@@ -145,16 +145,11 @@ SLOT_INTERFACE_EXTERN(ide_image_devices);
     DEVICE CONFIGURATION MACROS
 ***************************************************************************/
 
-#define MCFG_IDE_CONTROLLER_ADD(_tag, _callback, _slotintf, _master, _slave, _fixed) \
+#define MCFG_IDE_CONTROLLER_ADD(_tag, _config, _slotintf, _master, _slave, _fixed) \
 	MCFG_DEVICE_ADD(_tag, IDE_CONTROLLER, 0) \
-	MCFG_DEVICE_CONFIG_DATAPTR(ide_config, interrupt, _callback) \
+	MCFG_DEVICE_CONFIG(_config) \
 	MCFG_IDE_SLOT_ADD("drive_0", _slotintf, _master, NULL, _fixed) \
 	MCFG_IDE_SLOT_ADD("drive_1", _slotintf, _slave, NULL, _fixed) \
-
-#define MCFG_IDE_BUS_MASTER_SPACE(_tag, _cpu, _space) \
-	MCFG_DEVICE_MODIFY(_tag) \
-	MCFG_DEVICE_CONFIG_DATAPTR(ide_config, bmcpu, _cpu) \
-	MCFG_DEVICE_CONFIG_DATA32(ide_config, bmspace, AS_##_space)
 
 #define MCFG_IDE_SLOT_ADD(_tag, _slot_intf, _def_slot, _def_inp, _fixed) \
 	MCFG_DEVICE_ADD(_tag, IDE_SLOT, 0) \
@@ -190,7 +185,26 @@ WRITE16_DEVICE_HANDLER( ide_controller16_w );
 
 /* ----- device interface ----- */
 
-DECLARE_LEGACY_DEVICE(IDE_CONTROLLER, ide_controller);
+class ide_controller_device : public device_t
+{
+public:
+	ide_controller_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~ide_controller_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type IDE_CONTROLLER;
+
 
 
 #endif	/* __IDECTRL_H__ */

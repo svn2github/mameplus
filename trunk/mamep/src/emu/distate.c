@@ -403,11 +403,11 @@ device_state_interface::~device_state_interface()
 
 
 //-------------------------------------------------
-//  state - return the value of the given piece
+//  state_int - return the value of the given piece
 //  of indexed state as a UINT64
 //-------------------------------------------------
 
-UINT64 device_state_interface::state(int index)
+UINT64 device_state_interface::state_int(int index)
 {
 	// NULL or out-of-range entry returns 0
 	const device_state_entry *entry = state_find_entry(index);
@@ -464,11 +464,11 @@ int device_state_interface::state_string_max_length(int index)
 
 
 //-------------------------------------------------
-//  set_state - set the value of the given piece
-//  of indexed state from a UINT64
+//  set_state_int - set the value of the given
+//  piece of indexed state from a UINT64
 //-------------------------------------------------
 
-void device_state_interface::set_state(int index, UINT64 value)
+void device_state_interface::set_state_int(int index, UINT64 value)
 {
 	// NULL or out-of-range entry is a no-op
 	const device_state_entry *entry = state_find_entry(index);
@@ -523,8 +523,8 @@ device_state_entry &device_state_interface::state_add(int index, const char *sym
 	m_state_list.append(*entry);
 
 	// set the fast entry if applicable
-	if (index >= k_fast_state_min && index <= k_fast_state_max)
-		m_fast_state[index - k_fast_state_min] = entry;
+	if (index >= FAST_STATE_MIN && index <= FAST_STATE_MAX)
+		m_fast_state[index - FAST_STATE_MIN] = entry;
 
 	return *entry;
 }
@@ -595,8 +595,8 @@ void device_state_interface::interface_post_start()
 const device_state_entry *device_state_interface::state_find_entry(int index)
 {
 	// use fast lookup if possible
-	if (index >= k_fast_state_min && index <= k_fast_state_max)
-		return m_fast_state[index - k_fast_state_min];
+	if (index >= FAST_STATE_MIN && index <= FAST_STATE_MAX)
+		return m_fast_state[index - FAST_STATE_MIN];
 
 	// otherwise, scan the first
 	for (const device_state_entry *entry = m_state_list.first(); entry != NULL; entry = entry->m_next)

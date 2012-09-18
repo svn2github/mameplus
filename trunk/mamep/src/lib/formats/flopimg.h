@@ -41,7 +41,7 @@
 
 ***************************************************************************/
 
-typedef enum
+enum floperr_t
 {
 	FLOPPY_ERROR_SUCCESS,			/* no error */
 	FLOPPY_ERROR_INTERNAL,			/* fatal internal error */
@@ -53,10 +53,9 @@ typedef enum
 	FLOPPY_ERROR_NOSPACE,
 	FLOPPY_ERROR_PARAMOUTOFRANGE,
 	FLOPPY_ERROR_PARAMNOTSPECIFIED
-}
-floperr_t;
+};
 
-typedef struct _floppy_image floppy_image_legacy;
+struct floppy_image_legacy;
 
 struct FloppyCallbacks
 {
@@ -481,17 +480,25 @@ protected:
 
 	//! PC-type sectors with MFM encoding, sector size can go from 128 bytes to 16K.
 	void extract_sectors_from_bitstream_mfm_pc(const UINT8 *bitstream, int track_size, desc_xs *sectors, UINT8 *sectdata, int sectdata_size);
+	//! PC-type sectors with FM encoding
+	void extract_sectors_from_bitstream_fm_pc(const UINT8 *bitstream, int track_size, desc_xs *sectors, UINT8 *sectdata, int sectdata_size);
 
 
 	//! @brief Get a geometry (including sectors) from an image.
 
     //!   PC-type sectors with MFM encoding
 	void get_geometry_mfm_pc(floppy_image *image, int cell_size, int &track_count, int &head_count, int &sector_count);
+	//!   PC-type sectors with FM encoding
+	void get_geometry_fm_pc(floppy_image *image, int cell_size, int &track_count, int &head_count, int &sector_count);
 
 
 	//!  Regenerate the data for a full track.
 	//!  PC-type sectors with MFM encoding and fixed-size.
 	void get_track_data_mfm_pc(int track, int head, floppy_image *image, int cell_size, int sector_size, int sector_count, UINT8 *sectdata);
+
+	//!  Regenerate the data for a full track.
+	//!  PC-type sectors with FM encoding and fixed-size.
+	void get_track_data_fm_pc(int track, int head, floppy_image *image, int cell_size, int sector_size, int sector_count, UINT8 *sectdata);
 
 	//! Look up a bit in a level-type stream.
 	bool bit_r(const UINT32 *buffer, int offset);
@@ -608,15 +615,19 @@ public:
 	//! Form factors
 	enum {
 		FF_UNKNOWN  = 0x00000000, //!< Unknown, useful when converting
+		FF_3        = 0x20202033, //!< "3   " 3 inch disk
 		FF_35       = 0x20203533, //!< "35  " 3.5 inch disk
 		FF_525      = 0x20353235, //!< "525 " 5.25 inch disk
+		FF_8        = 0x20202038, //!< "8   " 8 inch disk
 	};
 
 	//! Variants
 	enum {
 		SSSD  = 0x44535353, //!< "SSSD", Single-sided single-density
-		SSDD  = 0x44445353, //!< "DSSD", Double-sided single-density
-		DSDD  = 0x44445344, //!< "DSDD", Double-sided double-density (720K)
+		SSDD  = 0x44445353, //!< "SSDD", Single-sided double-density
+		SSQD  = 0x44515353, //!< "SSQD", Single-sided quad-density
+		DSDD  = 0x44445344, //!< "DSDD", Double-sided double-density (720K in 3.5, 360K in 5.25)
+		DSQD  = 0x44515344, //!< "DSQD", Double-sided quad-density (720K in 5.25, means DD+80 tracks)
 		DSHD  = 0x44485344, //!< "DSHD", Double-sided high-density (1440K)
 		DSED  = 0x44455344, //!< "DSED", Double-sided extra-density (2880K)
 	};

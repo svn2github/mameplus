@@ -73,10 +73,12 @@ public:
 	UINT8      m_controller_select;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_READ8_MEMBER(v128_r);
 	DECLARE_WRITE8_MEMBER(controller_select_w);
 	DECLARE_READ8_MEMBER(controller_r);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 
@@ -101,7 +103,7 @@ static TIMER_CALLBACK( interrupt_callback )
 	int next_interrupt_number;
 	int next_vpos;
 
-	device_set_input_line(state->m_maincpu, 0, HOLD_LINE);
+	state->m_maincpu->set_input_line(0, HOLD_LINE);
 
 	/* set up for next interrupt */
 	next_interrupt_number = (interrupt_number + 1) % INTERRUPTS_PER_FRAME;
@@ -133,15 +135,14 @@ static void start_interrupt_timer( running_machine &machine )
  *
  *************************************/
 
-static MACHINE_START( beaminv )
+void beaminv_state::machine_start()
 {
-	beaminv_state *state = machine.driver_data<beaminv_state>();
-	create_interrupt_timer(machine);
+	create_interrupt_timer(machine());
 
-	state->m_maincpu = machine.device("maincpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
 
 	/* setup for save states */
-	state->save_item(NAME(state->m_controller_select));
+	save_item(NAME(m_controller_select));
 }
 
 
@@ -152,12 +153,11 @@ static MACHINE_START( beaminv )
  *
  *************************************/
 
-static MACHINE_RESET( beaminv )
+void beaminv_state::machine_reset()
 {
-	beaminv_state *state = machine.driver_data<beaminv_state>();
-	start_interrupt_timer(machine);
+	start_interrupt_timer(machine());
 
-	state->m_controller_select = 0;
+	m_controller_select = 0;
 }
 
 
@@ -336,8 +336,6 @@ static MACHINE_CONFIG_START( beaminv, beaminv_state )
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_IO_MAP(main_io_map)
 
-	MCFG_MACHINE_START(beaminv)
-	MCFG_MACHINE_RESET(beaminv)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

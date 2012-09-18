@@ -3,13 +3,13 @@
 #include "includes/spdodgeb.h"
 
 
-PALETTE_INIT( spdodgeb )
+void spdodgeb_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 
-	for (i = 0;i < machine.total_colors();i++)
+	for (i = 0;i < machine().total_colors();i++)
 	{
 		int bit0,bit1,bit2,bit3,r,g,b;
 
@@ -27,13 +27,13 @@ PALETTE_INIT( spdodgeb )
 		bit3 = (color_prom[0] >> 7) & 0x01;
 		g = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 		/* blue component */
-		bit0 = (color_prom[machine.total_colors()] >> 0) & 0x01;
-		bit1 = (color_prom[machine.total_colors()] >> 1) & 0x01;
-		bit2 = (color_prom[machine.total_colors()] >> 2) & 0x01;
-		bit3 = (color_prom[machine.total_colors()] >> 3) & 0x01;
+		bit0 = (color_prom[machine().total_colors()] >> 0) & 0x01;
+		bit1 = (color_prom[machine().total_colors()] >> 1) & 0x01;
+		bit2 = (color_prom[machine().total_colors()] >> 2) & 0x01;
+		bit3 = (color_prom[machine().total_colors()] >> 3) & 0x01;
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
+		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
 		color_prom++;
 	}
 }
@@ -45,21 +45,20 @@ PALETTE_INIT( spdodgeb )
 
 ***************************************************************************/
 
-static TILEMAP_MAPPER( background_scan )
+TILEMAP_MAPPER_MEMBER(spdodgeb_state::background_scan)
 {
 	/* logical (col,row) -> memory offset */
 	return (col & 0x1f) + ((row & 0x1f) << 5) + ((col & 0x20) << 5);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(spdodgeb_state::get_bg_tile_info)
 {
-	spdodgeb_state *state = machine.driver_data<spdodgeb_state>();
-	UINT8 code = state->m_videoram[tile_index];
-	UINT8 attr = state->m_videoram[tile_index + 0x800];
-	SET_TILE_INFO(
+	UINT8 code = m_videoram[tile_index];
+	UINT8 attr = m_videoram[tile_index + 0x800];
+	SET_TILE_INFO_MEMBER(
 			0,
 			code + ((attr & 0x1f) << 8),
-			((attr & 0xe0) >> 5) + 8 * state->m_tile_palbank,
+			((attr & 0xe0) >> 5) + 8 * m_tile_palbank,
 			0);
 }
 
@@ -70,10 +69,9 @@ static TILE_GET_INFO( get_bg_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( spdodgeb )
+void spdodgeb_state::video_start()
 {
-	spdodgeb_state *state = machine.driver_data<spdodgeb_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info,background_scan,8,8,64,32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(spdodgeb_state::get_bg_tile_info),this),tilemap_mapper_delegate(FUNC(spdodgeb_state::background_scan),this),8,8,64,32);
 }
 
 
@@ -91,12 +89,12 @@ TIMER_DEVICE_CALLBACK( spdodgeb_interrupt )
 
 	if (scanline == 256)
 	{
-		device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 		timer.machine().primary_screen->update_partial(256);
 	}
 	else if ((scanline % 8) == 0)
 	{
-		device_set_input_line(state->m_maincpu, M6502_IRQ_LINE, HOLD_LINE);
+		state->m_maincpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
 		timer.machine().primary_screen->update_partial(scanline+16); /* TODO: pretty off ... */
 	}
 }
@@ -152,7 +150,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 {
 	spdodgeb_state *state = machine.driver_data<spdodgeb_state>();
 	UINT8 *spriteram = state->m_spriteram;
-	const gfx_element *gfx = machine.gfx[1];
+	gfx_element *gfx = machine.gfx[1];
 	UINT8 *src;
 	int i;
 

@@ -21,8 +21,7 @@
 typedef int (*deco16_bank_cb)( const int bank );
 
 
-typedef struct _deco16ic_interface deco16ic_interface;
-struct _deco16ic_interface
+struct deco16ic_interface
 {
 	const char         *screen;
 	int                split;
@@ -35,7 +34,32 @@ struct _deco16ic_interface
 	int				   _8x8_gfxregion, _16x16_gfxregion;
 };
 
-DECLARE_LEGACY_DEVICE(DECO16IC, deco16ic);
+class deco16ic_device : public device_t
+{
+public:
+	deco16ic_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~deco16ic_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+
+	TILEMAP_MAPPER_MEMBER(deco16_scan_rows);
+	TILE_GET_INFO_MEMBER(get_pf2_tile_info);
+	TILE_GET_INFO_MEMBER(get_pf1_tile_info);
+	TILE_GET_INFO_MEMBER(get_pf2_tile_info_b);
+	TILE_GET_INFO_MEMBER(get_pf1_tile_info_b);
+};
+
+extern const device_type DECO16IC;
+
 
 
 /***************************************************************************

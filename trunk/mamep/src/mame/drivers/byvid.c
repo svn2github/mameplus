@@ -39,6 +39,7 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(by133_cb2);
 	DECLARE_READ8_MEMBER(by133_portb_r);
 	DECLARE_WRITE8_MEMBER(by133_portb_w);
+	virtual void machine_reset();
 };
 
 
@@ -84,13 +85,13 @@ ADDRESS_MAP_END
 INPUT_CHANGED_MEMBER(by133_state::video_test)
 {
 	if(newval)
-		device_set_input_line(m_videocpu, INPUT_LINE_NMI, PULSE_LINE);
+		m_videocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 INPUT_CHANGED_MEMBER(by133_state::sound_test)
 {
 	if(newval)
-		device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static INPUT_PORTS_START( by133 )
@@ -103,7 +104,7 @@ INPUT_PORTS_END
 
 WRITE_LINE_MEMBER(by133_state::vdp_interrupt)
 {
-	cputag_set_input_line(machine(), "videocpu", M6809_IRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("videocpu")->execute().set_input_line(M6809_IRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static TMS9928A_INTERFACE(byvid_tms9928a_interface)
@@ -115,13 +116,13 @@ static TMS9928A_INTERFACE(byvid_tms9928a_interface)
 
 WRITE_LINE_MEMBER(by133_state::by133_firq)
 {
-	device_set_input_line(m_videocpu, M6809_FIRQ_LINE, (m_videopia->irq_a_state() || m_videopia->irq_b_state()) ? ASSERT_LINE : CLEAR_LINE);
+	m_videocpu->set_input_line(M6809_FIRQ_LINE, (m_videopia->irq_a_state() || m_videopia->irq_b_state()) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 WRITE_LINE_MEMBER(by133_state::by133_cb2)
 {
 	// to M6803 port 2 d0?
-//  device_set_input_line(m_audiocpu, M6801_TIN_LINE, state ? ASSERT_LINE : CLEAR_LINE);
+//  m_audiocpu->set_input_line(M6801_TIN_LINE, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 READ8_MEMBER(by133_state::by133_portb_r)
@@ -154,10 +155,9 @@ static const pia6821_interface videopia_intf =
 };
 
 
-static MACHINE_RESET( by133 )
+void by133_state::machine_reset()
 {
-	by133_state *state = machine.driver_data<by133_state>();
-	state->m_sound_port2 = 2; // forced to 010 on /reset
+	m_sound_port2 = 2; // forced to 010 on /reset
 }
 
 static MACHINE_CONFIG_START( by133, by133_state )
@@ -175,7 +175,6 @@ static MACHINE_CONFIG_START( by133, by133_state )
 
 	MCFG_PIA6821_ADD("videopia", videopia_intf)
 
-	MCFG_MACHINE_RESET(by133)
 
 	/* video hardware */
 	MCFG_TMS9928A_ADD( "tms9928a", TMS9928A, byvid_tms9928a_interface )

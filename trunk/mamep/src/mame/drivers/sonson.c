@@ -61,7 +61,7 @@ WRITE8_MEMBER(sonson_state::sonson_sh_irqtrigger_w)
 	if (m_last_irq == 0 && data == 1)
 	{
 		/* setting bit 0 low then high triggers IRQ on the sound CPU */
-		device_set_input_line(m_audiocpu, M6809_FIRQ_LINE, HOLD_LINE);
+		m_audiocpu->set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 	}
 
 	m_last_irq = data;
@@ -225,20 +225,18 @@ GFXDECODE_END
 
 
 
-static MACHINE_START( sonson )
+void sonson_state::machine_start()
 {
-	sonson_state *state = machine.driver_data<sonson_state>();
 
-	state->m_audiocpu = machine.device("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_last_irq));
+	save_item(NAME(m_last_irq));
 }
 
-static MACHINE_RESET( sonson )
+void sonson_state::machine_reset()
 {
-	sonson_state *state = machine.driver_data<sonson_state>();
 
-	state->m_last_irq = 0;
+	m_last_irq = 0;
 }
 
 static MACHINE_CONFIG_START( sonson, sonson_state )
@@ -252,8 +250,6 @@ static MACHINE_CONFIG_START( sonson, sonson_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)	/* FIRQs are triggered by the main CPU */
 
-	MCFG_MACHINE_START(sonson)
-	MCFG_MACHINE_RESET(sonson)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -265,8 +261,6 @@ static MACHINE_CONFIG_START( sonson, sonson_state )
 	MCFG_GFXDECODE(sonson)
 	MCFG_PALETTE_LENGTH(64*4+32*8)
 
-	MCFG_PALETTE_INIT(sonson)
-	MCFG_VIDEO_START(sonson)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

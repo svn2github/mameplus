@@ -42,13 +42,13 @@ READ8_MEMBER(liberate_state::deco16_bank_r)
 		return m_spriteram[offset - 0x800];
 	if (offset < 0x2200)
 	{
-		logerror("%04x: Unmapped bank read %04x\n", cpu_get_pc(&space.device()), offset);
+		logerror("%04x: Unmapped bank read %04x\n", space.device().safe_pc(), offset);
 		return 0;
 	}
 	if (offset < 0x2800)
 		return m_scratchram[offset - 0x2200];
 
-	logerror("%04x: Unmapped bank read %04x\n", cpu_get_pc(&space.device()), offset);
+	logerror("%04x: Unmapped bank read %04x\n", space.device().safe_pc(), offset);
 	return 0;
 }
 
@@ -60,7 +60,7 @@ READ8_MEMBER(liberate_state::deco16_io_r)
 	if (offset == 3) return ioport("DSW1")->read(); /* Dip 1 */
 	if (offset == 4) return ioport("DSW2")->read(); /* Dip 2 */
 
-	logerror("%04x:  Read input %d\n", cpu_get_pc(&space.device()), offset);
+	logerror("%04x:  Read input %d\n", space.device().safe_pc(), offset);
 	return 0xff;
 }
 
@@ -69,9 +69,9 @@ WRITE8_MEMBER(liberate_state::deco16_bank_w)
 	m_bank = data;
 
 	if (m_bank)
-		m_maincpu->memory().space(AS_PROGRAM)->install_read_handler(0x8000, 0x800f, read8_delegate(FUNC(liberate_state::deco16_io_r),this));
+		m_maincpu->space(AS_PROGRAM)->install_read_handler(0x8000, 0x800f, read8_delegate(FUNC(liberate_state::deco16_io_r),this));
 	else
-		m_maincpu->memory().space(AS_PROGRAM)->install_read_bank(0x8000, 0x800f, "bank1");
+		m_maincpu->space(AS_PROGRAM)->install_read_bank(0x8000, 0x800f, "bank1");
 }
 
 READ8_MEMBER(liberate_state::prosoccr_bank_r)
@@ -93,13 +93,13 @@ READ8_MEMBER(liberate_state::prosoccr_bank_r)
 		return m_spriteram[offset - 0xc00];
 	if (offset < 0x2200)
 	{
-		logerror("%04x: Unmapped bank read %04x\n", cpu_get_pc(&space.device()), offset);
+		logerror("%04x: Unmapped bank read %04x\n", space.device().safe_pc(), offset);
 		return 0;
 	}
 	if (offset < 0x2800)
 		return m_scratchram[offset - 0x2200];
 
-	logerror("%04x: Unmapped bank read %04x\n", cpu_get_pc(&space.device()), offset);
+	logerror("%04x: Unmapped bank read %04x\n", space.device().safe_pc(), offset);
 	return 0;
 }
 
@@ -157,8 +157,8 @@ WRITE8_MEMBER(liberate_state::prosoccr_charram_w)
 	offset &= 0x7ff;
 
 	/* dirty char */
-	gfx_element_mark_dirty(machine().gfx[0], offset >> 3);
-//  gfx_element_mark_dirty(machine().gfx[0], (offset | 0x1800) >> 3);
+	machine().gfx[0]->mark_dirty(offset >> 3);
+//  machine().gfx[0]->mark_dirty((offset | 0x1800) >> 3);
 }
 
 WRITE8_MEMBER(liberate_state::prosoccr_char_bank_w)
@@ -174,9 +174,9 @@ WRITE8_MEMBER(liberate_state::prosoccr_io_bank_w)
 	m_bank = data & 1;
 
 	if (m_bank)
-		m_maincpu->memory().space(AS_PROGRAM)->install_read_handler(0x8000, 0x800f, read8_delegate(FUNC(liberate_state::deco16_io_r),this));
+		m_maincpu->space(AS_PROGRAM)->install_read_handler(0x8000, 0x800f, read8_delegate(FUNC(liberate_state::deco16_io_r),this));
 	else
-		m_maincpu->memory().space(AS_PROGRAM)->install_read_handler(0x8000, 0x800f, read8_delegate(FUNC(liberate_state::prosoccr_charram_r),this));
+		m_maincpu->space(AS_PROGRAM)->install_read_handler(0x8000, 0x800f, read8_delegate(FUNC(liberate_state::prosoccr_charram_r),this));
 
 }
 
@@ -223,8 +223,8 @@ WRITE8_MEMBER(liberate_state::prosport_charram_w)
 	offset &= 0x7ff;
 
 	/* dirty char */
-	gfx_element_mark_dirty(machine().gfx[3], (offset + 0x800) >> 3);
-	gfx_element_mark_dirty(machine().gfx[3 + 4], (offset + 0x800) >> 5);
+	machine().gfx[3]->mark_dirty((offset + 0x800) >> 3);
+	machine().gfx[3 + 4]->mark_dirty((offset + 0x800) >> 5);
 }
 
 
@@ -766,7 +766,7 @@ static INTERRUPT_GEN( deco16_interrupt )
 	int p = ~state->ioport("IN3")->read();
 	if ((p & 0x43) && !state->m_latch)
 	{
-		device_set_input_line(device, DECO16_IRQ_LINE, ASSERT_LINE);
+		device->execute().set_input_line(DECO16_IRQ_LINE, ASSERT_LINE);
 		state->m_latch = 1;
 	}
 	else
@@ -780,7 +780,7 @@ static INTERRUPT_GEN( deco16_interrupt )
 static INTERRUPT_GEN( prosport_interrupt )
 {
 	/* ??? */
-	device_set_input_line(device, DECO16_IRQ_LINE, ASSERT_LINE);
+	device->execute().set_input_line(DECO16_IRQ_LINE, ASSERT_LINE);
 }
 #endif
 
@@ -790,33 +790,31 @@ static INTERRUPT_GEN( prosport_interrupt )
  *
  *************************************/
 
-static MACHINE_START( liberate )
+MACHINE_START_MEMBER(liberate_state,liberate)
 {
-	liberate_state *state = machine.driver_data<liberate_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_background_disable));
-	state->save_item(NAME(state->m_background_color));
-	state->save_item(NAME(state->m_gfx_rom_readback));
-	state->save_item(NAME(state->m_latch));
-	state->save_item(NAME(state->m_bank));
+	save_item(NAME(m_background_disable));
+	save_item(NAME(m_background_color));
+	save_item(NAME(m_gfx_rom_readback));
+	save_item(NAME(m_latch));
+	save_item(NAME(m_bank));
 
-	state->save_item(NAME(state->m_io_ram));
+	save_item(NAME(m_io_ram));
 }
 
-static MACHINE_RESET( liberate )
+MACHINE_RESET_MEMBER(liberate_state,liberate)
 {
-	liberate_state *state = machine.driver_data<liberate_state>();
 
-	memset(state->m_io_ram, 0, ARRAY_LENGTH(state->m_io_ram));
+	memset(m_io_ram, 0, ARRAY_LENGTH(m_io_ram));
 
-	state->m_background_disable = 0;
-	state->m_background_color = 0;
-	state->m_gfx_rom_readback = 0;
-	state->m_latch = 0;
-	state->m_bank = 0;
+	m_background_disable = 0;
+	m_background_color = 0;
+	m_gfx_rom_readback = 0;
+	m_latch = 0;
+	m_bank = 0;
 }
 
 static MACHINE_CONFIG_START( liberate, liberate_state )
@@ -833,8 +831,8 @@ static MACHINE_CONFIG_START( liberate, liberate_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
-	MCFG_MACHINE_START(liberate)
-	MCFG_MACHINE_RESET(liberate)
+	MCFG_MACHINE_START_OVERRIDE(liberate_state,liberate)
+	MCFG_MACHINE_RESET_OVERRIDE(liberate_state,liberate)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -846,9 +844,9 @@ static MACHINE_CONFIG_START( liberate, liberate_state )
 
 	MCFG_GFXDECODE(liberate)
 	MCFG_PALETTE_LENGTH(33)
-	MCFG_PALETTE_INIT(liberate)
+	MCFG_PALETTE_INIT_OVERRIDE(liberate_state,liberate)
 
-	MCFG_VIDEO_START(liberate)
+	MCFG_VIDEO_START_OVERRIDE(liberate_state,liberate)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -870,7 +868,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( boomrang, liberate )
 
-	MCFG_VIDEO_START(boomrang)
+	MCFG_VIDEO_START_OVERRIDE(liberate_state,boomrang)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(boomrang)
 MACHINE_CONFIG_END
@@ -895,7 +893,7 @@ static MACHINE_CONFIG_DERIVED( prosoccr, liberate )
 
 	MCFG_GFXDECODE(prosoccr)
 
-	MCFG_VIDEO_START(prosoccr)
+	MCFG_VIDEO_START_OVERRIDE(liberate_state,prosoccr)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( prosport, liberate_state )
@@ -912,8 +910,8 @@ static MACHINE_CONFIG_START( prosport, liberate_state )
 
 //  MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
-	MCFG_MACHINE_START(liberate)
-	MCFG_MACHINE_RESET(liberate)
+	MCFG_MACHINE_START_OVERRIDE(liberate_state,liberate)
+	MCFG_MACHINE_RESET_OVERRIDE(liberate_state,liberate)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -926,7 +924,7 @@ static MACHINE_CONFIG_START( prosport, liberate_state )
 	MCFG_GFXDECODE(prosport)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_VIDEO_START(prosport)
+	MCFG_VIDEO_START_OVERRIDE(liberate_state,prosport)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

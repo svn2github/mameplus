@@ -48,12 +48,22 @@ public:
 	DECLARE_WRITE16_MEMBER(madgear_scroll1_w);
 	DECLARE_WRITE16_MEMBER(madgear_scroll2_w);
 	DECLARE_WRITE16_MEMBER(lastduel_palette_word_w);
+	TILE_GET_INFO_MEMBER(ld_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(ld_get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fix_info);
+	virtual void machine_reset();
+	DECLARE_MACHINE_START(lastduel);
+	DECLARE_VIDEO_START(lastduel);
+	DECLARE_MACHINE_START(madgear);
+	DECLARE_VIDEO_START(madgear);
 };
 
 /*----------- defined in video/lastduel.c -----------*/
 
 
-VIDEO_START( lastduel );
-VIDEO_START( madgear );
+
+
 SCREEN_UPDATE_IND16( lastduel );
 SCREEN_UPDATE_IND16( madgear );

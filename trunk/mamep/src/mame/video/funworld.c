@@ -105,9 +105,9 @@
 #include "includes/funworld.h"
 
 
-PALETTE_INIT(funworld)
+PALETTE_INIT_MEMBER(funworld_state,funworld)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 	static const int resistances_rb[3] = { 1000, 470, 220 };
 	static const int resistances_g [2] = { 470, 220 };
@@ -119,7 +119,7 @@ PALETTE_INIT(funworld)
 			2,	resistances_g,	weights_g,	100,	0);
 
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		int bit0, bit1, bit2, r, g, b;
 
@@ -138,7 +138,7 @@ PALETTE_INIT(funworld)
 		bit1 = (color_prom[i] >> 7) & 0x01;
 		g = combine_2_weights(weights_g, bit0, bit1);
 
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
+		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
 	}
 }
 
@@ -164,33 +164,30 @@ WRITE8_MEMBER(funworld_state::funworld_colorram_w)
     xxxx -xxx   tiles color (background).
 */
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(funworld_state::get_bg_tile_info)
 {
-	funworld_state *state = machine.driver_data<funworld_state>();
 /*  - bits -
     7654 3210
     xxxx ----   tiles color.
     ---- xxxx   unused.
 */
 	int offs = tile_index;
-	int attr = state->m_videoram[offs] + (state->m_colorram[offs] << 8);
+	int attr = m_videoram[offs] + (m_colorram[offs] << 8);
 	int code = attr & 0xfff;
-	int color = state->m_colorram[offs] >> 4;	// 4 bits for color.
+	int color = m_colorram[offs] >> 4;	// 4 bits for color.
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
 
-VIDEO_START(funworld)
+VIDEO_START_MEMBER(funworld_state,funworld)
 {
-	funworld_state *state = machine.driver_data<funworld_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 4, 8, 96, 29);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(funworld_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 4, 8, 96, 29);
 }
 
-VIDEO_START(magicrd2)
+VIDEO_START_MEMBER(funworld_state,magicrd2)
 {
-	funworld_state *state = machine.driver_data<funworld_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 4, 8, 112, 34);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(funworld_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 4, 8, 112, 34);
 }
 
 

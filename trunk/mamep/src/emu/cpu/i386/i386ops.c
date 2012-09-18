@@ -694,7 +694,7 @@ static void I386OP(mov_cr_r32)(i386_state *cpustate)		// Opcode 0x0f 22
 		case 3: CYCLES(cpustate,CYCLES_MOV_REG_CR3); break;
 		case 4: CYCLES(cpustate,1); break; // TODO
 		default:
-			fatalerror("i386: mov_cr_r32 CR%d !", cr);
+			fatalerror("i386: mov_cr_r32 CR%d!\n", cr);
 			break;
 	}
 }
@@ -718,7 +718,7 @@ static void I386OP(mov_dr_r32)(i386_state *cpustate)		// Opcode 0x0f 23
 			CYCLES(cpustate,CYCLES_MOV_DR6_7_REG);
 			break;
 		default:
-			fatalerror("i386: mov_dr_r32 DR%d !", dr);
+			fatalerror("i386: mov_dr_r32 DR%d!\n", dr);
 			break;
 	}
 }
@@ -1201,7 +1201,7 @@ static void I386OP(repeat)(i386_state *cpustate, int invert_flag)
 			break;
 
 		default:
-			fatalerror("i386: Invalid REP/opcode %02X combination",opcode);
+			fatalerror("i386: Invalid REP/opcode %02X combination\n",opcode);
 			break;
 	}
 
@@ -2204,7 +2204,7 @@ static void I386OP(groupFE_8)(i386_state *cpustate)			// Opcode 0xfe
 			}
 			break;
 		default:
-			fatalerror("i386: groupFE_8 /%d unimplemented", (modrm >> 3) & 0x7);
+			fatalerror("i386: groupFE_8 /%d unimplemented\n", (modrm >> 3) & 0x7);
 			break;
 	}
 }
@@ -2488,4 +2488,30 @@ static void I386OP(invalid)(i386_state *cpustate)
 {
 	report_invalid_opcode(cpustate);
 	i386_trap(cpustate, 6, 0, 0);
+}
+
+static void I386OP(xlat)(i386_state *cpustate)			// Opcode 0xd7
+{
+	UINT32 ea;
+	if( cpustate->segment_prefix ) {
+		if(!cpustate->address_size)
+		{
+			ea = i386_translate(cpustate, cpustate->segment_override, REG16(BX) + REG8(AL), 0 );
+		}
+		else
+		{
+			ea = i386_translate(cpustate, cpustate->segment_override, REG32(EBX) + REG8(AL), 0 );
+		}
+	} else {
+		if(!cpustate->address_size)
+		{
+			ea = i386_translate(cpustate, DS, REG16(BX) + REG8(AL), 0 );
+		}
+		else
+		{
+			ea = i386_translate(cpustate, DS, REG32(EBX) + REG8(AL), 0 );
+		}
+	}
+	REG8(AL) = READ8(cpustate,ea);
+	CYCLES(cpustate,CYCLES_XLAT);
 }

@@ -88,34 +88,31 @@ WRITE16_MEMBER(crospang_state::crospang_bg_videoram_w)
 	m_bg_layer->mark_tile_dirty(offset);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(crospang_state::get_bg_tile_info)
 {
-	crospang_state *state = machine.driver_data<crospang_state>();
-	int data  = state->m_bg_videoram[tile_index];
+	int data  = m_bg_videoram[tile_index];
 	int tile  = data & 0xfff;
 	int color = (data >> 12) & 0x0f;
 
-	SET_TILE_INFO(1, tile + state->m_bestri_tilebank * 0x1000, color + 0x20, 0);
+	SET_TILE_INFO_MEMBER(1, tile + m_bestri_tilebank * 0x1000, color + 0x20, 0);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(crospang_state::get_fg_tile_info)
 {
-	crospang_state *state = machine.driver_data<crospang_state>();
-	int data  = state->m_fg_videoram[tile_index];
+	int data  = m_fg_videoram[tile_index];
 	int tile  = data & 0xfff;
 	int color = (data >> 12) & 0x0f;
 
-	SET_TILE_INFO(1, tile + state->m_bestri_tilebank * 0x1000, color + 0x10, 0);
+	SET_TILE_INFO_MEMBER(1, tile + m_bestri_tilebank * 0x1000, color + 0x10, 0);
 }
 
 
-VIDEO_START( crospang )
+void crospang_state::video_start()
 {
-	crospang_state *state = machine.driver_data<crospang_state>();
-	state->m_bg_layer = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 16, 16, 32, 32);
-	state->m_fg_layer = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 16, 16, 32, 32);
+	m_bg_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(crospang_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_fg_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(crospang_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
 
-	state->m_fg_layer->set_transparent_pen(0);
+	m_fg_layer->set_transparent_pen(0);
 }
 
 SCREEN_UPDATE_IND16( crospang )

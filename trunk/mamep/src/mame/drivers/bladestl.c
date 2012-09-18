@@ -42,10 +42,10 @@ static TIMER_DEVICE_CALLBACK( bladestl_scanline )
 	int scanline = param;
 
 	if(scanline == 240 && k007342_is_int_enabled(state->m_k007342)) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "maincpu", HD6309_FIRQ_LINE, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(HD6309_FIRQ_LINE, HOLD_LINE);
 
 	if(scanline == 0) // vblank-in or timer irq
-		cputag_set_input_line(timer.machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 /*************************************
@@ -91,7 +91,7 @@ WRITE8_MEMBER(bladestl_state::bladestl_sh_irqtrigger_w)
 {
 
 	soundlatch_byte_w(space, offset, data);
-	device_set_input_line(m_audiocpu, M6809_IRQ_LINE, HOLD_LINE);
+	m_audiocpu->set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 	//logerror("(sound) write %02x\n", data);
 }
 
@@ -301,33 +301,31 @@ static const k007420_interface bladestl_k007420_intf =
 };
 
 
-static MACHINE_START( bladestl )
+void bladestl_state::machine_start()
 {
-	bladestl_state *state = machine.driver_data<bladestl_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x2000);
+	membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x2000);
 
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_k007342 = machine.device("k007342");
-	state->m_k007420 = machine.device("k007420");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_k007342 = machine().device("k007342");
+	m_k007420 = machine().device("k007420");
 
-	state->save_item(NAME(state->m_spritebank));
-	state->save_item(NAME(state->m_layer_colorbase));
-	state->save_item(NAME(state->m_last_track));
+	save_item(NAME(m_spritebank));
+	save_item(NAME(m_layer_colorbase));
+	save_item(NAME(m_last_track));
 }
 
-static MACHINE_RESET( bladestl )
+void bladestl_state::machine_reset()
 {
-	bladestl_state *state = machine.driver_data<bladestl_state>();
 	int i;
 
-	state->m_layer_colorbase[0] = 0;
-	state->m_layer_colorbase[1] = 1;
-	state->m_spritebank = 0;
+	m_layer_colorbase[0] = 0;
+	m_layer_colorbase[1] = 1;
+	m_spritebank = 0;
 
 	for (i = 0; i < 4 ; i++)
-		state->m_last_track[i] = 0;
+		m_last_track[i] = 0;
 }
 
 static MACHINE_CONFIG_START( bladestl, bladestl_state )
@@ -342,8 +340,6 @@ static MACHINE_CONFIG_START( bladestl, bladestl_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(bladestl)
-	MCFG_MACHINE_RESET(bladestl)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -354,7 +350,6 @@ static MACHINE_CONFIG_START( bladestl, bladestl_state )
 	MCFG_SCREEN_UPDATE_STATIC(bladestl)
 
 	MCFG_GFXDECODE(bladestl)
-	MCFG_PALETTE_INIT(bladestl)
 	MCFG_PALETTE_LENGTH(32 + 16*16)
 
 	MCFG_K007342_ADD("k007342", bladestl_k007342_intf)

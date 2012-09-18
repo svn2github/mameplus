@@ -41,28 +41,27 @@ static void update_interrupts(running_machine &machine)
 {
 	eprom_state *state = machine.driver_data<eprom_state>();
 
-	cputag_set_input_line(machine, "maincpu", 4, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(4, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
 
 	if (machine.device("extra") != NULL)
-		cputag_set_input_line(machine, "extra", 4, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("extra")->execute().set_input_line(4, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
 
-	cputag_set_input_line(machine, "maincpu", 6, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(6, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
-static MACHINE_START( eprom )
+MACHINE_START_MEMBER(eprom_state,eprom)
 {
-	atarigen_init(machine);
+	atarigen_init(machine());
 }
 
 
-static MACHINE_RESET( eprom )
+MACHINE_RESET_MEMBER(eprom_state,eprom)
 {
-	eprom_state *state = machine.driver_data<eprom_state>();
 
-	atarigen_eeprom_reset(state);
-	atarigen_interrupt_reset(state, update_interrupts);
-	atarigen_scanline_timer_reset(*machine.primary_screen, eprom_scanline_update, 8);
+	atarigen_eeprom_reset(this);
+	atarigen_interrupt_reset(this, update_interrupts);
+	atarigen_scanline_timer_reset(*machine().primary_screen, eprom_scanline_update, 8);
 	atarijsa_reset();
 }
 
@@ -110,9 +109,9 @@ WRITE16_MEMBER(eprom_state::eprom_latch_w)
 	{
 		/* bit 0: reset extra CPU */
 		if (data & 1)
-			cputag_set_input_line(machine(), "extra", INPUT_LINE_RESET, CLEAR_LINE);
+			machine().device("extra")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 		else
-			cputag_set_input_line(machine(), "extra", INPUT_LINE_RESET, ASSERT_LINE);
+			machine().device("extra")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 		/* bits 1-4: screen intensity */
 		m_screen_intensity = (data & 0x1e) >> 1;
@@ -144,7 +143,7 @@ WRITE16_MEMBER(eprom_state::sync_w)
 
 	m_sync_data[offset] = newword;
 	if ((oldword & 0xff00) != (newword & 0xff00))
-		device_yield(&space.device());
+		space.device().execute().yield();
 }
 
 
@@ -414,8 +413,8 @@ static MACHINE_CONFIG_START( eprom, eprom_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(eprom)
-	MCFG_MACHINE_RESET(eprom)
+	MCFG_MACHINE_START_OVERRIDE(eprom_state,eprom)
+	MCFG_MACHINE_RESET_OVERRIDE(eprom_state,eprom)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
 	/* video hardware */
@@ -429,7 +428,7 @@ static MACHINE_CONFIG_START( eprom, eprom_state )
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
 	MCFG_SCREEN_UPDATE_STATIC(eprom)
 
-	MCFG_VIDEO_START(eprom)
+	MCFG_VIDEO_START_OVERRIDE(eprom_state,eprom)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(jsa_i_mono_speech)
@@ -445,8 +444,8 @@ static MACHINE_CONFIG_START( klaxp, eprom_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(eprom)
-	MCFG_MACHINE_RESET(eprom)
+	MCFG_MACHINE_START_OVERRIDE(eprom_state,eprom)
+	MCFG_MACHINE_RESET_OVERRIDE(eprom_state,eprom)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
 	/* video hardware */
@@ -460,7 +459,7 @@ static MACHINE_CONFIG_START( klaxp, eprom_state )
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
 	MCFG_SCREEN_UPDATE_STATIC(eprom)
 
-	MCFG_VIDEO_START(eprom)
+	MCFG_VIDEO_START_OVERRIDE(eprom_state,eprom)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(jsa_ii_mono)
@@ -476,8 +475,8 @@ static MACHINE_CONFIG_START( guts, eprom_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(eprom)
-	MCFG_MACHINE_RESET(eprom)
+	MCFG_MACHINE_START_OVERRIDE(eprom_state,eprom)
+	MCFG_MACHINE_RESET_OVERRIDE(eprom_state,eprom)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
 	/* video hardware */
@@ -491,7 +490,7 @@ static MACHINE_CONFIG_START( guts, eprom_state )
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
 	MCFG_SCREEN_UPDATE_STATIC(guts)
 
-	MCFG_VIDEO_START(guts)
+	MCFG_VIDEO_START_OVERRIDE(eprom_state,guts)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(jsa_ii_mono)

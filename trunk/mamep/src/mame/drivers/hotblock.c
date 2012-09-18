@@ -66,6 +66,7 @@ public:
 	DECLARE_WRITE8_MEMBER(hotblock_port4_w);
 	DECLARE_WRITE8_MEMBER(hotblock_port0_w);
 	DECLARE_WRITE8_MEMBER(hotblock_video_write);
+	virtual void video_start();
 };
 
 
@@ -93,8 +94,8 @@ READ8_MEMBER(hotblock_state::hotblock_port4_r)
 
 WRITE8_MEMBER(hotblock_state::hotblock_port4_w)
 {
-//  mame_printf_debug("port4_w: pc = %06x : data %04x\n", cpu_get_pc(&space.device()), data);
-//  popmessage("port4_w: pc = %06x : data %04x", cpu_get_pc(&space.device()), data);
+//  mame_printf_debug("port4_w: pc = %06x : data %04x\n", space.device().safe_pc(), data);
+//  popmessage("port4_w: pc = %06x : data %04x", space.device().safe_pc(), data);
 
 	m_port4 = data;
 }
@@ -103,7 +104,7 @@ WRITE8_MEMBER(hotblock_state::hotblock_port4_w)
 
 WRITE8_MEMBER(hotblock_state::hotblock_port0_w)
 {
-//  popmessage("port4_w: pc = %06x : data %04x", cpu_get_pc(&space.device()), data);
+//  popmessage("port4_w: pc = %06x : data %04x", space.device().safe_pc(), data);
 
 	m_port0 = data;
 }
@@ -136,10 +137,9 @@ ADDRESS_MAP_END
 
 
 
-static VIDEO_START(hotblock)
+void hotblock_state::video_start()
 {
-	hotblock_state *state = machine.driver_data<hotblock_state>();
-	state->save_item(NAME(state->m_pal));
+	save_item(NAME(m_pal));
 }
 
 static SCREEN_UPDATE_IND16(hotblock)
@@ -197,7 +197,7 @@ INPUT_PORTS_END
 
 static INTERRUPT_GEN( hotblocks_irq ) /* right? */
 {
-	device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static const ay8910_interface ay8910_config =
@@ -229,7 +229,6 @@ static MACHINE_CONFIG_START( hotblock, hotblock_state )
 
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_VIDEO_START(hotblock)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

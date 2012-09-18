@@ -107,8 +107,8 @@ public:
 	UINT16   m_star_shift_reg;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_audiocpu2;
 	device_t *m_ic48_1;
 	mc6845_device *m_mc6845;
@@ -127,6 +127,8 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(flipscreen_w);
 	DECLARE_WRITE_LINE_MEMBER(display_enable_changed);
 	DECLARE_WRITE8_MEMBER(nyny_ay8910_37_port_a_w);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 
@@ -150,13 +152,13 @@ WRITE_LINE_MEMBER(nyny_state::main_cpu_irq)
 {
 	int combined_state = m_pia1->irq_a_state() | m_pia1->irq_b_state() | m_pia2->irq_b_state();
 
-	device_set_input_line(m_maincpu, M6809_IRQ_LINE, combined_state ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(M6809_IRQ_LINE, combined_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 WRITE_LINE_MEMBER(nyny_state::main_cpu_firq)
 {
-	device_set_input_line(m_maincpu, M6809_FIRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(M6809_FIRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -226,7 +228,7 @@ WRITE8_MEMBER(nyny_state::pia_2_port_b_w)
 	m_star_enable = data & 0x10;
 
 	/* bits 5-7 go to the music board connector */
-	audio_2_command_w(*m_maincpu->memory().space(AS_PROGRAM), 0, data & 0xe0);
+	audio_2_command_w(*m_maincpu->space(AS_PROGRAM), 0, data & 0xe0);
 }
 
 
@@ -448,7 +450,7 @@ WRITE8_MEMBER(nyny_state::audio_1_command_w)
 {
 
 	soundlatch_byte_w(space, 0, data);
-	device_set_input_line(m_audiocpu, M6800_IRQ_LINE, HOLD_LINE);
+	m_audiocpu->set_input_line(M6800_IRQ_LINE, HOLD_LINE);
 }
 
 
@@ -456,7 +458,7 @@ WRITE8_MEMBER(nyny_state::audio_1_answer_w)
 {
 
 	soundlatch3_byte_w(space, 0, data);
-	device_set_input_line(m_maincpu, M6809_IRQ_LINE, HOLD_LINE);
+	m_maincpu->set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 }
 
 
@@ -464,7 +466,7 @@ WRITE8_MEMBER(nyny_state::nyny_ay8910_37_port_a_w)
 {
 	/* not sure what this does */
 
-	/*logerror("%x PORT A write %x at  Y=%x X=%x\n", cpu_get_pc(&space->device()), data, space->machine().primary_screen->vpos(), space->machine().primary_screen->hpos());*/
+	/*logerror("%x PORT A write %x at  Y=%x X=%x\n", space->device().safe_pc(), data, space->machine().primary_screen->vpos(), space->machine().primary_screen->hpos());*/
 }
 
 
@@ -501,7 +503,7 @@ WRITE8_MEMBER(nyny_state::audio_2_command_w)
 {
 
 	soundlatch2_byte_w(space, 0, (data & 0x60) >> 5);
-	device_set_input_line(m_audiocpu2, M6800_IRQ_LINE, BIT(data, 7) ? CLEAR_LINE : ASSERT_LINE);
+	m_audiocpu2->execute().set_input_line(M6800_IRQ_LINE, BIT(data, 7) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 
@@ -673,33 +675,31 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static MACHINE_START( nyny )
+void nyny_state::machine_start()
 {
-	nyny_state *state = machine.driver_data<nyny_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_audiocpu2 = machine.device("audio2");
-	state->m_ic48_1 = machine.device("ic48_1");
-	state->m_mc6845 = machine.device<mc6845_device>("crtc");
-	state->m_pia1 = machine.device<pia6821_device>("pia1");
-	state->m_pia2 = machine.device<pia6821_device>("pia2");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_audiocpu2 = machine().device("audio2");
+	m_ic48_1 = machine().device("ic48_1");
+	m_mc6845 = machine().device<mc6845_device>("crtc");
+	m_pia1 = machine().device<pia6821_device>("pia1");
+	m_pia2 = machine().device<pia6821_device>("pia2");
 
 	/* setup for save states */
-	state->save_item(NAME(state->m_flipscreen));
-	state->save_item(NAME(state->m_star_enable));
-	state->save_item(NAME(state->m_star_delay_counter));
-	state->save_item(NAME(state->m_star_shift_reg));
+	save_item(NAME(m_flipscreen));
+	save_item(NAME(m_star_enable));
+	save_item(NAME(m_star_delay_counter));
+	save_item(NAME(m_star_shift_reg));
 }
 
-static MACHINE_RESET( nyny )
+void nyny_state::machine_reset()
 {
-	nyny_state *state = machine.driver_data<nyny_state>();
 
-	state->m_flipscreen = 0;
-	state->m_star_enable = 0;
-	state->m_star_delay_counter = 0;
-	state->m_star_shift_reg = 0;
+	m_flipscreen = 0;
+	m_star_enable = 0;
+	m_star_delay_counter = 0;
+	m_star_shift_reg = 0;
 }
 
 /*************************************
@@ -721,8 +721,6 @@ static MACHINE_CONFIG_START( nyny, nyny_state )
 	MCFG_CPU_ADD("audio2", M6802, AUDIO_CPU_2_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(nyny_audio_2_map)
 
-	MCFG_MACHINE_START(nyny)
-	MCFG_MACHINE_RESET(nyny)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */

@@ -53,15 +53,15 @@ static TIMER_CALLBACK( nmi_callback	)
 	machine.watchdog_enable(machine.root_device().ioport("IN0")->read() & 0x40);
 
 	if (machine.root_device().ioport("IN0")->read() & 0x40)
-		cputag_set_input_line(machine, "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine.device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(scanline), FUNC(nmi_callback), scanline);
 }
 
 
-static MACHINE_RESET( ultratnk )
+void ultratnk_state::machine_reset()
 {
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(32), FUNC(nmi_callback), 32);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(32), FUNC(nmi_callback), 32);
 }
 
 
@@ -297,7 +297,6 @@ static MACHINE_CONFIG_START( ultratnk, ultratnk_state )
 	MCFG_CPU_PROGRAM_MAP(ultratnk_cpu_map)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
-	MCFG_MACHINE_RESET(ultratnk)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -308,8 +307,6 @@ static MACHINE_CONFIG_START( ultratnk, ultratnk_state )
 	MCFG_GFXDECODE(ultratnk)
 	MCFG_PALETTE_LENGTH(10)
 
-	MCFG_PALETTE_INIT(ultratnk)
-	MCFG_VIDEO_START(ultratnk)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

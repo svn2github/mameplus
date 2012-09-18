@@ -40,7 +40,28 @@ enum
 	S3C2440_CORE_PIN_OM1
 };
 
-DECLARE_LEGACY_DEVICE(S3C2440, s3c2440);
+class s3c2440_device : public device_t
+{
+public:
+	s3c2440_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~s3c2440_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+public:
+	UINT32 screen_update(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+};
+
+extern const device_type S3C2440;
+
 
 /*******************************************************************************
     TYPE DEFINITIONS
@@ -52,42 +73,36 @@ typedef void (*s3c24xx_gpio_port_w_func)( device_t *device, int port, UINT32 mas
 typedef int (*s3c24xx_core_pin_r_func)( device_t *device, int pin);
 typedef void (*s3c24xx_core_pin_w_func)( device_t *device, int pin, int data);
 
-typedef struct _s3c2440_interface_core s3c2440_interface_core;
-struct _s3c2440_interface_core
+struct s3c2440_interface_core
 {
 	s3c24xx_core_pin_r_func pin_r;
 	s3c24xx_core_pin_w_func pin_w;
 };
 
-typedef struct _s3c2440_interface_gpio s3c2440_interface_gpio;
-struct _s3c2440_interface_gpio
+struct s3c2440_interface_gpio
 {
 	s3c24xx_gpio_port_r_func port_r;
 	s3c24xx_gpio_port_w_func port_w;
 };
 
-typedef struct _s3c2440_interface_i2c s3c2440_interface_i2c;
-struct _s3c2440_interface_i2c
+struct s3c2440_interface_i2c
 {
 	write_line_device_func scl_w;
 	read_line_device_func sda_r;
 	write_line_device_func sda_w;
 };
 
-typedef struct _s3c2440_interface_adc s3c2440_interface_adc;
-struct _s3c2440_interface_adc
+struct s3c2440_interface_adc
 {
 	read32_device_func data_r;
 };
 
-typedef struct _s3c2440_interface_i2s s3c2440_interface_i2s;
-struct _s3c2440_interface_i2s
+struct s3c2440_interface_i2s
 {
 	write16_device_func data_w;
 };
 
-typedef struct _s3c2440_interface_nand s3c2440_interface_nand;
-struct _s3c2440_interface_nand
+struct s3c2440_interface_nand
 {
 	write8_device_func command_w;
 	write8_device_func address_w;
@@ -95,14 +110,12 @@ struct _s3c2440_interface_nand
 	write8_device_func data_w;
 };
 
-typedef struct _s3c2440_interface_lcd s3c2440_interface_lcd;
-struct _s3c2440_interface_lcd
+struct s3c2440_interface_lcd
 {
 	int flags;
 };
 
-typedef struct _s3c2440_interface s3c2440_interface;
-struct _s3c2440_interface
+struct s3c2440_interface
 {
 	s3c2440_interface_core core;
 	s3c2440_interface_gpio gpio;
@@ -116,11 +129,6 @@ struct _s3c2440_interface
 /*******************************************************************************
     PROTOTYPES
 *******************************************************************************/
-
-DEVICE_GET_INFO( s3c2440 );
-
-VIDEO_START( s3c2440 );
-SCREEN_UPDATE_RGB32( s3c2440 );
 
 void s3c2440_uart_fifo_w( device_t *device, int uart, UINT8 data);
 void s3c2440_touch_screen( device_t *device, int state);
@@ -519,17 +527,17 @@ static const UINT32 MAP_SUBINT_TO_INT[15] =
     TYPE DEFINITIONS
 *******************************************************************************/
 
-typedef struct
+struct s3c24xx_memcon_regs_t
 {
 	UINT32 data[0x34/4];
-} s3c24xx_memcon_regs_t;
+};
 
-typedef struct
+struct s3c24xx_usbhost_regs_t
 {
 	UINT32 data[0x5C/4];
-} s3c24xx_usbhost_regs_t;
+};
 
-typedef struct
+struct s3c24xx_irq_regs_t
 {
 	UINT32 srcpnd;
 	UINT32 intmod;
@@ -539,9 +547,9 @@ typedef struct
 	UINT32 intoffset;
 	UINT32 subsrcpnd;
 	UINT32 intsubmsk;
-} s3c24xx_irq_regs_t;
+};
 
-typedef struct
+struct s3c24xx_dma_regs_t
 {
 	UINT32 disrc;
 	UINT32 disrcc;
@@ -552,9 +560,9 @@ typedef struct
 	UINT32 dcsrc;
 	UINT32 dcdst;
 	UINT32 dmasktrig;
-} s3c24xx_dma_regs_t;
+};
 
-typedef struct
+struct s3c24xx_clkpow_regs_t
 {
 	UINT32 locktime;
 	UINT32 mpllcon;
@@ -563,9 +571,9 @@ typedef struct
 	UINT32 clkslow;
 	UINT32 clkdivn;
 	UINT32 camdivn;
-} s3c24xx_clkpow_regs_t;
+};
 
-typedef struct
+struct s3c24xx_lcd_regs_t
 {
 	UINT32 lcdcon1;
 	UINT32 lcdcon2;
@@ -585,14 +593,14 @@ typedef struct
 	UINT32 lcdsrcpnd;
 	UINT32 lcdintmsk;
 	UINT32 tconsel;
-} s3c24xx_lcd_regs_t;
+};
 
-typedef struct
+struct s3c24xx_lcdpal_regs_t
 {
 	UINT32 data[0x400/4];
-} s3c24xx_lcdpal_regs_t;
+};
 
-typedef struct
+struct s3c24xx_nand_regs_t
 {
 	UINT32 nfconf;
 	UINT32 nfcont;
@@ -610,14 +618,14 @@ typedef struct
 	UINT32 nfsecc;
 	UINT32 nfsblk;
 	UINT32 nfeblk;
-} s3c24xx_nand_regs_t;
+};
 
-typedef struct
+struct s3c24xx_cam_regs_t
 {
 	UINT32 data[0xA4/4];
-} s3c24xx_cam_regs_t;
+};
 
-typedef struct
+struct s3c24xx_uart_regs_t
 {
 	UINT32 ulcon;
 	UINT32 ucon;
@@ -630,9 +638,9 @@ typedef struct
 	UINT32 utxh;
 	UINT32 urxh;
 	UINT32 ubrdiv;
-} s3c24xx_uart_regs_t;
+};
 
-typedef struct
+struct s3c24xx_pwm_regs_t
 {
 	UINT32 tcfg0;
 	UINT32 tcfg1;
@@ -651,39 +659,39 @@ typedef struct
 	UINT32 tcnto3;
 	UINT32 tcntb4;
 	UINT32 tcnto4;
-} s3c24xx_pwm_regs_t;
+};
 
-typedef struct
+struct s3c24xx_usbdev_regs_t
 {
 	UINT32 data[0x130/4];
-} s3c24xx_usbdev_regs_t;
+};
 
-typedef struct
+struct s3c24xx_wdt_regs_t
 {
 	UINT32 wtcon;
 	UINT32 wtdat;
 	UINT32 wtcnt;
-} s3c24xx_wdt_regs_t;
+};
 
-typedef struct
+struct s3c24xx_iic_regs_t
 {
 	UINT32 iiccon;
 	UINT32 iicstat;
 	UINT32 iicadd;
 	UINT32 iicds;
 	UINT32 iiclc;
-} s3c24xx_iic_regs_t;
+};
 
-typedef struct
+struct s3c24xx_iis_regs_t
 {
 	UINT32 iiscon;
 	UINT32 iismod;
 	UINT32 iispsr;
 	UINT32 iisfcon;
 	UINT32 iisfifo;
-} s3c24xx_iis_regs_t;
+};
 
-typedef struct
+struct s3c24xx_gpio_regs_t
 {
 	UINT32 gpacon;
 	UINT32 gpadat;
@@ -740,9 +748,9 @@ typedef struct
 	UINT32 gpjcon;
 	UINT32 gpjdat;
 	UINT32 gpjup;
-} s3c24xx_gpio_regs_t;
+};
 
-typedef struct
+struct s3c24xx_rtc_regs_t
 {
 	UINT32 rtccon;
 	UINT32 ticnt;
@@ -762,9 +770,9 @@ typedef struct
 	UINT32 bcddow;
 	UINT32 bcdmon;
 	UINT32 bcdyear;
-} s3c24xx_rtc_regs_t;
+};
 
-typedef struct
+struct s3c24xx_adc_regs_t
 {
 	UINT32 adccon;
 	UINT32 adctsc;
@@ -772,9 +780,9 @@ typedef struct
 	UINT32 adcdat0;
 	UINT32 adcdat1;
 	UINT32 adcupdn;
-} s3c24xx_adc_regs_t;
+};
 
-typedef struct
+struct s3c24xx_spi_regs_t
 {
 	UINT32 spcon;
 	UINT32 spsta;
@@ -782,46 +790,46 @@ typedef struct
 	UINT32 sppre;
 	UINT32 sptdat;
 	UINT32 sprdat;
-} s3c24xx_spi_regs_t;
+};
 
-typedef struct
+struct s3c24xx_sdi_regs_t
 {
 	UINT32 data[0x44/4];
-} s3c24xx_sdi_regs_t;
+};
 
-typedef struct
+struct s3c24xx_ac97_regs_t
 {
 	UINT32 data[0x20/4];
-} s3c24xx_ac97_regs_t;
+};
 
-typedef struct
+struct s3c24xx_memcon_t
 {
 	s3c24xx_memcon_regs_t regs;
-} s3c24xx_memcon_t;
+};
 
-typedef struct
+struct s3c24xx_usbhost_t
 {
 	s3c24xx_usbhost_regs_t regs;
-} s3c24xx_usbhost_t;
+};
 
-typedef struct
+struct s3c24xx_irq_t
 {
 	s3c24xx_irq_regs_t regs;
 	int line_irq, line_fiq;
-} s3c24xx_irq_t;
+};
 
-typedef struct
+struct s3c24xx_dma_t
 {
 	s3c24xx_dma_regs_t regs;
 	emu_timer *timer;
-} s3c24xx_dma_t;
+};
 
-typedef struct
+struct s3c24xx_clkpow_t
 {
 	s3c24xx_clkpow_regs_t regs;
-} s3c24xx_clkpow_t;
+};
 
-typedef struct
+struct s3c24xx_lcd_t
 {
 	s3c24xx_lcd_regs_t regs;
 	emu_timer *timer;
@@ -838,99 +846,99 @@ typedef struct
 	UINT32 tpal;
 	UINT32 hpos_min, hpos_max, vpos_min, vpos_max;
 	UINT32 dma_data, dma_bits;
-} s3c24xx_lcd_t;
+};
 
-typedef struct
+struct s3c24xx_lcdpal_t
 {
 	s3c24xx_lcdpal_regs_t regs;
-} s3c24xx_lcdpal_t;
+};
 
-typedef struct
+struct s3c24xx_nand_t
 {
 	s3c24xx_nand_regs_t regs;
 	UINT8 mecc[4];
 	UINT8 secc[2];
 	int ecc_pos, data_count;
-} s3c24xx_nand_t;
+};
 
-typedef struct
+struct s3c24xx_cam_t
 {
 	s3c24xx_cam_regs_t regs;
-} s3c24xx_cam_t;
+};
 
-typedef struct
+struct s3c24xx_uart_t
 {
 	s3c24xx_uart_regs_t regs;
-} s3c24xx_uart_t;
+};
 
-typedef struct
+struct s3c24xx_pwm_t
 {
 	s3c24xx_pwm_regs_t regs;
 	emu_timer *timer[5];
 	UINT32 cnt[5];
 	UINT32 cmp[5];
 	UINT32 freq[5];
-} s3c24xx_pwm_t;
+};
 
-typedef struct
+struct s3c24xx_usbdev_t
 {
 	s3c24xx_usbdev_regs_t regs;
-} s3c24xx_usbdev_t;
+};
 
-typedef struct
+struct s3c24xx_wdt_t
 {
 	s3c24xx_wdt_regs_t regs;
 	emu_timer *timer;
-} s3c24xx_wdt_t;
+};
 
-typedef struct
+struct s3c24xx_iic_t
 {
 	s3c24xx_iic_regs_t regs;
 	emu_timer *timer;
 	int count;
-} s3c24xx_iic_t;
+};
 
-typedef struct
+struct s3c24xx_iis_t
 {
 	s3c24xx_iis_regs_t regs;
 	emu_timer *timer;
 	UINT16 fifo[16/2];
 	int fifo_index;
-} s3c24xx_iis_t;
+};
 
-typedef struct
+struct s3c24xx_gpio_t
 {
 	s3c24xx_gpio_regs_t regs;
-} s3c24xx_gpio_t;
+};
 
-typedef struct
+struct s3c24xx_rtc_t
 {
 	s3c24xx_rtc_regs_t regs;
 	emu_timer *timer_tick_count;
 	emu_timer *timer_update;
-} s3c24xx_rtc_t;
+};
 
-typedef struct
+struct s3c24xx_adc_t
 {
 	s3c24xx_adc_regs_t regs;
-} s3c24xx_adc_t;
+};
 
-typedef struct
+struct s3c24xx_spi_t
 {
 	s3c24xx_spi_regs_t regs;
-} s3c24xx_spi_t;
+};
 
-typedef struct
+struct s3c24xx_sdi_t
 {
 	s3c24xx_sdi_regs_t regs;
-} s3c24xx_sdi_t;
+};
 
-typedef struct
+struct s3c24xx_ac97_t
 {
 	s3c24xx_ac97_regs_t regs;
-} s3c24xx_ac97_t;
+};
 
-typedef struct
+struct s3c24xx_t
 {
 	const s3c2440_interface *iface;
 	UINT8 steppingstone[4*1024];
@@ -955,6 +963,6 @@ typedef struct
 	s3c24xx_spi_t spi[S3C24XX_SPI_COUNT];
 	s3c24xx_sdi_t sdi;
 	s3c24xx_ac97_t ac97;
-} s3c24xx_t;
+};
 
 #endif

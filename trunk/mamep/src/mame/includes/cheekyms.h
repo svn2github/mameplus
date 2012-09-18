@@ -24,18 +24,22 @@ public:
 	bitmap_ind16       *m_bitmap_buffer;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	dac_device *m_dac;
 
 	UINT8          m_irq_mask;
 	DECLARE_WRITE8_MEMBER(cheekyms_port_40_w);
 	DECLARE_WRITE8_MEMBER(cheekyms_port_80_w);
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
+	TILE_GET_INFO_MEMBER(cheekyms_get_tile_info);
+	virtual void machine_start();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/cheekyms.c -----------*/
 
-PALETTE_INIT( cheekyms );
-VIDEO_START( cheekyms );
+
+
 SCREEN_UPDATE_IND16( cheekyms );

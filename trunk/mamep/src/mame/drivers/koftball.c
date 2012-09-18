@@ -62,38 +62,38 @@ public:
 	DECLARE_WRITE16_MEMBER(bmc_1_videoram_w);
 	DECLARE_WRITE16_MEMBER(bmc_2_videoram_w);
 	DECLARE_DRIVER_INIT(koftball);
+	TILE_GET_INFO_MEMBER(get_t1_tile_info);
+	TILE_GET_INFO_MEMBER(get_t2_tile_info);
+	virtual void video_start();
 };
 
 
-static TILE_GET_INFO( get_t1_tile_info )
+TILE_GET_INFO_MEMBER(koftball_state::get_t1_tile_info)
 {
-	koftball_state *state = machine.driver_data<koftball_state>();
-	int data = state->m_bmc_1_videoram[tile_index];
-	SET_TILE_INFO(
+	int data = m_bmc_1_videoram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			0,
 			data,
 			0,
 			0);
 }
 
-static TILE_GET_INFO( get_t2_tile_info )
+TILE_GET_INFO_MEMBER(koftball_state::get_t2_tile_info)
 {
-	koftball_state *state = machine.driver_data<koftball_state>();
-	int data = state->m_bmc_2_videoram[tile_index];
-	SET_TILE_INFO(
+	int data = m_bmc_2_videoram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			0,
 			data,
 			0,
 			0);
 }
 
-static VIDEO_START( koftball )
+void koftball_state::video_start()
 {
-	koftball_state *state = machine.driver_data<koftball_state>();
-	state->m_tilemap_1 = tilemap_create(machine, get_t1_tile_info,tilemap_scan_rows,8,8,64,32);
-	state->m_tilemap_2 = tilemap_create(machine, get_t2_tile_info,tilemap_scan_rows,8,8,64,32);
+	m_tilemap_1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(koftball_state::get_t1_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
+	m_tilemap_2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(koftball_state::get_t2_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
 
-	state->m_tilemap_1->set_transparent_pen(0);
+	m_tilemap_1->set_transparent_pen(0);
 }
 
 static SCREEN_UPDATE_IND16( koftball )
@@ -137,7 +137,7 @@ READ16_MEMBER(koftball_state::prot_r)
 		case 0x8000: return 0x0f0f;
 	}
 
-	logerror("unk prot r %x %x\n",m_prot_data,	cpu_get_previouspc(&space.device()));
+	logerror("unk prot r %x %x\n",m_prot_data,	space.device().safe_pcbase());
 	return machine().rand();
 }
 
@@ -215,13 +215,13 @@ static TIMER_DEVICE_CALLBACK( bmc_interrupt )
 	int scanline = param;
 
 	if(scanline == 240)
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+		state->m_maincpu->set_input_line(2, HOLD_LINE);
 
 	if(scanline == 128)
-		device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
+		state->m_maincpu->set_input_line(3, HOLD_LINE);
 
 	if(scanline == 64)
-		device_set_input_line(state->m_maincpu, 6, HOLD_LINE);
+		state->m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 static const gfx_layout tilelayout =
@@ -256,7 +256,6 @@ static MACHINE_CONFIG_START( koftball, koftball_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 30*8-1)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_VIDEO_START(koftball)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

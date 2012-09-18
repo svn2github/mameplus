@@ -133,7 +133,7 @@ WRITE16_MEMBER(rltennis_state::rlt_blitter_w)
 
 	if(offset == BLT_START && (((new_data ^ old_data ) & new_data) & BLTSTRT_TRIGGER))  /* blit strobe 0->1 */
 	{
-		device_set_input_line(m_maincpu, 1, HOLD_LINE);
+		m_maincpu->set_input_line(1, HOLD_LINE);
 
 		int src_x0=(m_blitter[BLT_X_START]>>SRC_SHIFT)+((m_blitter[BLT_FLAGS] & BLTFLAG_SRC_LR)?256:0);
 		int src_y0=(m_blitter[BLT_Y_START]>>SRC_SHIFT)+((m_blitter[BLT_FLAGS]>>3)&0xff00)+(((m_blitter[BLT_START]) & BLTSTRT_ROM_MSB)?(1<<0xd):0);
@@ -220,13 +220,12 @@ WRITE16_MEMBER(rltennis_state::rlt_blitter_w)
 	}
 }
 
-VIDEO_START( rltennis )
+void rltennis_state::video_start()
 {
-	rltennis_state *state = machine.driver_data<rltennis_state>();
-	state->m_tmp_bitmap[BITMAP_BG] = auto_bitmap_ind16_alloc(machine, 512, 256);
-	state->m_tmp_bitmap[BITMAP_FG_1] = auto_bitmap_ind16_alloc(machine, 512, 256);
-	state->m_tmp_bitmap[BITMAP_FG_2] = auto_bitmap_ind16_alloc(machine, 512, 256);
-	state->m_tmp_bitmap[BITMAP_FG_DISPLAY] = auto_bitmap_ind16_alloc(machine, 512, 256);
+	m_tmp_bitmap[BITMAP_BG] = auto_bitmap_ind16_alloc(machine(), 512, 256);
+	m_tmp_bitmap[BITMAP_FG_1] = auto_bitmap_ind16_alloc(machine(), 512, 256);
+	m_tmp_bitmap[BITMAP_FG_2] = auto_bitmap_ind16_alloc(machine(), 512, 256);
+	m_tmp_bitmap[BITMAP_FG_DISPLAY] = auto_bitmap_ind16_alloc(machine(), 512, 256);
 }
 
 SCREEN_UPDATE_IND16( rltennis )

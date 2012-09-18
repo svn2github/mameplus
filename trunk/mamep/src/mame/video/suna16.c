@@ -67,7 +67,7 @@ WRITE16_MEMBER(suna16_state::suna16_flipscreen_w)
 		flip_screen_set(data & 1 );
 		m_color_bank = ( data & 4 ) >> 2;
 	}
-	if (data & ~(1|4))	logerror("CPU#0 PC %06X - Flip screen unknown bits: %04X\n", cpu_get_pc(&space.device()), data);
+	if (data & ~(1|4))	logerror("CPU#0 PC %06X - Flip screen unknown bits: %04X\n", space.device().safe_pc(), data);
 }
 
 WRITE16_MEMBER(suna16_state::bestbest_flipscreen_w)
@@ -77,7 +77,7 @@ WRITE16_MEMBER(suna16_state::bestbest_flipscreen_w)
 		flip_screen_set(data & 0x10 );
 		//m_color_bank = ( data & 0x07 );
 	}
-	if (data & ~(0x10))	logerror("CPU#0 PC %06X - Flip screen unknown bits: %04X\n", cpu_get_pc(&space.device()), data);
+	if (data & ~(0x10))	logerror("CPU#0 PC %06X - Flip screen unknown bits: %04X\n", space.device().safe_pc(), data);
 }
 
 
@@ -89,11 +89,10 @@ WRITE16_MEMBER(suna16_state::bestbest_flipscreen_w)
 
 ***************************************************************************/
 
-VIDEO_START( suna16 )
+void suna16_state::video_start()
 {
-	suna16_state *state = machine.driver_data<suna16_state>();
 
-	state->m_paletteram = auto_alloc_array(machine, UINT16, machine.total_colors());
+	m_paletteram = auto_alloc_array(machine(), UINT16, machine().total_colors());
 }
 
 READ16_MEMBER(suna16_state::suna16_paletteram16_r)

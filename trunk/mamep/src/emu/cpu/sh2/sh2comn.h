@@ -26,8 +26,7 @@ class sh2_frontend;
 
 #define SH2_CODE_XOR(a)		((a) ^ NATIVE_ENDIAN_VALUE_LE_BE(2,0))
 
-typedef struct _irq_entry irq_entry;
-struct _irq_entry
+struct irq_entry
 {
 	int irq_vector;
 	int irq_priority;
@@ -91,7 +90,7 @@ do {											\
 		sh2_exception(sh2,message,irq);			\
 } while(0)
 
-typedef struct
+struct sh2_state
 {
 	UINT32	ppc;
 	UINT32	pc;
@@ -183,7 +182,7 @@ typedef struct
 	uml::code_handle *	nocode;					/* nocode */
 	uml::code_handle *	out_of_cycles;				/* out of cycles exception handler */
 #endif
-} sh2_state;
+};
 
 #ifdef USE_SH2DRC
 class sh2_frontend : public drc_frontend

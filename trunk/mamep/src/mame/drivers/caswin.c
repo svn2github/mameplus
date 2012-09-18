@@ -65,27 +65,28 @@ public:
 	DECLARE_READ8_MEMBER(vvillage_rng_r);
 	DECLARE_WRITE8_MEMBER(vvillage_output_w);
 	DECLARE_WRITE8_MEMBER(vvillage_lamps_w);
+	TILE_GET_INFO_MEMBER(get_sc0_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 
-static TILE_GET_INFO( get_sc0_tile_info )
+TILE_GET_INFO_MEMBER(caswin_state::get_sc0_tile_info)
 {
-	caswin_state *state = machine.driver_data<caswin_state>();
-	int tile = (state->m_sc0_vram[tile_index] | ((state->m_sc0_attr[tile_index] & 0x70)<<4)) & 0x7ff;
-	int colour = state->m_sc0_attr[tile_index] & 0xf;
+	int tile = (m_sc0_vram[tile_index] | ((m_sc0_attr[tile_index] & 0x70)<<4)) & 0x7ff;
+	int colour = m_sc0_attr[tile_index] & 0xf;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			tile,
 			colour,
 			0);
 }
 
-static VIDEO_START(vvillage)
+void caswin_state::video_start()
 {
-	caswin_state *state = machine.driver_data<caswin_state>();
-	state->m_sc0_tilemap = tilemap_create(machine, get_sc0_tile_info,tilemap_scan_rows,8,8,32,32);
+	m_sc0_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(caswin_state::get_sc0_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
 }
 
 static SCREEN_UPDATE_IND16(vvillage)
@@ -272,9 +273,9 @@ static const ay8910_interface ay8910_config =
 	DEVCB_NULL
 };
 
-static PALETTE_INIT( caswin )
+void caswin_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int	bit0, bit1, bit2 , r, g, b;
 	int	i;
 
@@ -293,7 +294,7 @@ static PALETTE_INIT( caswin )
 		bit2 = (color_prom[0] >> 7) & 0x01;
 		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 		color_prom++;
 	}
 }
@@ -318,9 +319,7 @@ static MACHINE_CONFIG_START( vvillage, caswin_state )
 
 	MCFG_GFXDECODE(vvillage)
 	MCFG_PALETTE_LENGTH(0x40)
-	MCFG_PALETTE_INIT(caswin)
 
-	MCFG_VIDEO_START(vvillage)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

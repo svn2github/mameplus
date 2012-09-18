@@ -49,7 +49,7 @@ public:
 	UINT8    m_adpcm_play_reg;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	device_t *m_ay1;
 	device_t *m_ay2;
 
@@ -70,6 +70,13 @@ public:
 	DECLARE_WRITE8_MEMBER(rougien_gfxbankswitch1_w);
 	DECLARE_WRITE8_MEMBER(rougien_gfxbankswitch2_w);
 	DECLARE_READ8_MEMBER(mermaid_collision_r);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_PALETTE_INIT(rougien);
 };
 
 
@@ -77,8 +84,8 @@ public:
 /*----------- defined in video/mermaid.c -----------*/
 
 
-PALETTE_INIT( mermaid );
-PALETTE_INIT( rougien );
-VIDEO_START( mermaid );
+
+
+
 SCREEN_UPDATE_IND16( mermaid );
 SCREEN_VBLANK( mermaid );

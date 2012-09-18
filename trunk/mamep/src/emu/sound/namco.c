@@ -36,7 +36,7 @@
 
 
 /* this structure defines the parameters for a channel */
-typedef struct
+struct sound_channel
 {
 	UINT32 frequency;
 	UINT32 counter;
@@ -47,11 +47,10 @@ typedef struct
 	UINT32 noise_counter;
 	INT32 noise_hold;
 	INT32 waveform_select;
-} sound_channel;
+};
 
 
-typedef struct _namco_sound namco_sound;
-struct _namco_sound
+struct namco_sound
 {
 	/* data about the sound system */
 	sound_channel channel_list[MAX_VOICES];
@@ -80,7 +79,7 @@ INLINE namco_sound *get_safe_token(device_t *device)
 	assert(device->type() == NAMCO ||
 		   device->type() == NAMCO_15XX ||
 		   device->type() == NAMCO_CUS30);
-	return (namco_sound *)downcast<legacy_device_base *>(device)->token();
+	return (namco_sound *)downcast<namco_device *>(device)->token();
 }
 
 /* update the decoded waveform data */
@@ -812,85 +811,62 @@ WRITE8_DEVICE_HANDLER( namco_snd_sharedram_w )
 	}
 }
 
+const device_type NAMCO = &device_creator<namco_device>;
 
-
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( namco )
+namco_device::namco_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, NAMCO, "Namco", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(namco_sound);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( namco );			break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							/* Nothing */									break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Namco");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Namco custom");				break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(namco_sound));
 }
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( namco_15xx )
+namco_device::namco_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, type, name, tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(namco_sound);				break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( namco );				break;
-		case DEVINFO_FCT_STOP:							/* Nothing */										break;
-		case DEVINFO_FCT_RESET:							/* Nothing */										break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Namco 15XX");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Namco custom");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");								break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);							break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(namco_sound));
 }
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-DEVICE_GET_INFO( namco_cus30 )
+void namco_device::device_config_complete()
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(namco_sound);				break;
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( namco );				break;
-		case DEVINFO_FCT_STOP:							/* Nothing */										break;
-		case DEVINFO_FCT_RESET:							/* Nothing */										break;
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Namco CUS30");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Namco custom");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");								break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);							break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void namco_device::device_start()
+{
+	DEVICE_START_NAME( namco )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void namco_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(NAMCO, namco);
-DEFINE_LEGACY_SOUND_DEVICE(NAMCO_15XX, namco_15xx);
-DEFINE_LEGACY_SOUND_DEVICE(NAMCO_CUS30, namco_cus30);
+const device_type NAMCO_15XX = &device_creator<namco_15xx_device>;
+
+namco_15xx_device::namco_15xx_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: namco_device(mconfig, NAMCO_15XX, "Namco 15XX", tag, owner, clock)
+{
+}
+
+const device_type NAMCO_CUS30 = &device_creator<namco_cus30_device>;
+
+namco_cus30_device::namco_cus30_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: namco_device(mconfig, NAMCO_CUS30, "Namco CUS30", tag, owner, clock)
+{
+}

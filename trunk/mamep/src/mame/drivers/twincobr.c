@@ -549,7 +549,7 @@ GFXDECODE_END
 /* handler called by the 3812 emulator when the internal timers cause an IRQ */
 static void irqhandler(device_t *device, int linestate)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, linestate);
+	device->machine().device("audiocpu")->execute().set_input_line(0, linestate);
 }
 
 static const ym3812_interface ym3812_config =
@@ -577,7 +577,7 @@ static MACHINE_CONFIG_START( twincobr, twincobr_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_RESET(twincobr)
+	MCFG_MACHINE_RESET_OVERRIDE(twincobr_state,twincobr)
 
 	/* video hardware */
 	MCFG_MC6845_ADD("crtc", HD6845, XTAL_28MHz/8, twincobr_mc6845_intf)	/* 3.5MHz measured on CLKin */
@@ -593,7 +593,7 @@ static MACHINE_CONFIG_START( twincobr, twincobr_state )
 	MCFG_GFXDECODE(twincobr)
 	MCFG_PALETTE_LENGTH(1792)
 
-	MCFG_VIDEO_START(toaplan0)
+	MCFG_VIDEO_START_OVERRIDE(twincobr_state,toaplan0)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

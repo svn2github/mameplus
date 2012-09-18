@@ -87,6 +87,15 @@ public:
 	DECLARE_DRIVER_INIT(xenophob);
 	DECLARE_DRIVER_INIT(archrivl);
 	DECLARE_DRIVER_INIT(spyhunt2);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(zwackery_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(zwackery_get_fg_tile_info);
+	DECLARE_MACHINE_START(zwackery);
+	DECLARE_MACHINE_RESET(zwackery);
+	DECLARE_VIDEO_START(zwackery);
+	DECLARE_MACHINE_START(mcr68);
+	DECLARE_MACHINE_RESET(mcr68);
+	DECLARE_VIDEO_START(mcr68);
 };
 
 /*----------- defined in machine/mcr68.c -----------*/
@@ -96,10 +105,10 @@ extern const pia6821_interface zwackery_pia1_intf;
 extern const pia6821_interface zwackery_pia2_intf;
 
 
-MACHINE_START( mcr68 );
-MACHINE_RESET( mcr68 );
-MACHINE_START( zwackery );
-MACHINE_RESET( zwackery );
+
+
+
+
 
 
 INTERRUPT_GEN( mcr68_interrupt );
@@ -108,9 +117,9 @@ INTERRUPT_GEN( mcr68_interrupt );
 /*----------- defined in video/mcr68.c -----------*/
 
 
-VIDEO_START( mcr68 );
+
 SCREEN_UPDATE_IND16( mcr68 );
 
 
-VIDEO_START( zwackery );
+
 SCREEN_UPDATE_IND16( zwackery );

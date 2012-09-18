@@ -13,8 +13,7 @@
 #define TABLESIZE   0x100
 #define BANKSIZE    0x10000
 
-typedef struct _nmk112_state nmk112_state;
-struct _nmk112_state
+struct nmk112_state
 {
 	/* which chips have their sample address table divided into pages */
 	UINT8 page_mask;
@@ -34,7 +33,7 @@ INLINE nmk112_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == NMK112);
 
-	return (nmk112_state *)downcast<legacy_device_base *>(device)->token();
+	return (nmk112_state *)downcast<nmk112_device *>(device)->token();
 }
 
 INLINE const nmk112_interface *get_interface( device_t *device )
@@ -152,18 +151,40 @@ static DEVICE_RESET( nmk112 )
 	}
 }
 
+const device_type NMK112 = &device_creator<nmk112_device>;
 
-/*****************************************************************************
-    DEVICE DEFINITION
-*****************************************************************************/
+nmk112_device::nmk112_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, NMK112, "NMK 112", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(nmk112_state));
+}
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-#define DEVTEMPLATE_ID(p,s)				p##nmk112##s
-#define DEVTEMPLATE_FEATURES			DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME				"NMK 112"
-#define DEVTEMPLATE_FAMILY				"NMK 112 Bankswitch IC"
-#include "devtempl.h"
+void nmk112_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void nmk112_device::device_start()
+{
+	DEVICE_START_NAME( nmk112 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void nmk112_device::device_reset()
+{
+	DEVICE_RESET_NAME( nmk112 )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(NMK112, nmk112);

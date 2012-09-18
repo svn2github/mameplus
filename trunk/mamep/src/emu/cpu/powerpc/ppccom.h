@@ -44,7 +44,7 @@
 #define PPCCAP_604_MMU				0x100		/* TRUE if we have 604-class MMU features */
 
 /* PowerPC flavors */
-enum _powerpc_flavor
+enum powerpc_flavor
 {
 	PPC_MODEL_403GA				= 0x00200000,
 	PPC_MODEL_403GB				= 0x00200100,
@@ -75,7 +75,6 @@ enum _powerpc_flavor
 	PPC_MODEL_MPC8241			= 0x80811014,	/* "Kahlua Lt" */
 	PPC_MODEL_MPC8245			= 0x80811014,	/* "Kahlua II" */
 };
-typedef enum _powerpc_flavor powerpc_flavor;
 
 
 /* exception types */
@@ -491,8 +490,7 @@ enum
 ***************************************************************************/
 
 /* PowerPC 4XX-specific serial port state */
-typedef struct _ppc4xx_spu_state ppc4xx_spu_state;
-struct _ppc4xx_spu_state
+struct ppc4xx_spu_state
 {
 	UINT8			regs[9];
 	UINT8			txbuf;
@@ -505,12 +503,11 @@ struct _ppc4xx_spu_state
 
 
 /* forward declaration of implementation-specific state */
-typedef struct _ppcimp_state ppcimp_state;
+struct ppcimp_state;
 
 
 /* PowerPC state */
-typedef struct _powerpc_state powerpc_state;
-struct _powerpc_state
+struct powerpc_state
 {
 	/* core registers */
 	UINT32			pc;
@@ -545,6 +542,8 @@ struct _powerpc_state
 	emu_timer *		wdog_timer;
 	UINT32			pit_reload;
 	UINT32			irqstate;
+	emu_timer *		buffered_dma_timer[4];
+	int				buffered_dma_rate[4];
 
 	/* PowerPC 603-specific state */
 	UINT32			mmu603_cmp;

@@ -146,15 +146,15 @@ WRITE8_MEMBER(punchout_state::punchout_speech_vcu_w)
 WRITE8_MEMBER(punchout_state::punchout_2a03_reset_w)
 {
 	if (data & 1)
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, ASSERT_LINE);
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 	else
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, CLEAR_LINE);
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 }
 
 
 READ8_MEMBER(punchout_state::spunchout_rp5c01_r)
 {
-	logerror("%04x: prot_r %x\n", cpu_get_previouspc(&space.device()), offset);
+	logerror("%04x: prot_r %x\n", space.device().safe_pcbase(), offset);
 
 	if (offset <= 0x0c)
 	{
@@ -266,7 +266,7 @@ WRITE8_MEMBER(punchout_state::spunchout_rp5c01_w)
 {
 	data &= 0x0f;
 
-	logerror("%04x: prot_w %x = %02x\n",cpu_get_previouspc(&space.device()),offset,data);
+	logerror("%04x: prot_w %x = %02x\n",space.device().safe_pcbase(),offset,data);
 
 	if (offset <= 0x0c)
 	{
@@ -301,7 +301,7 @@ READ8_MEMBER(punchout_state::spunchout_exp_r)
 	/* PC = 0x0313 */
 	/* (ret or 0x10) -> (D7DF),(D7A0) - (D7DF),(D7A0) = 0d0h(ret nc) */
 
-	if (cpu_get_previouspc(&space.device()) == 0x0313)
+	if (space.device().safe_pcbase() == 0x0313)
 		ret |= 0xc0;
 
 	return ret;
@@ -922,11 +922,10 @@ static const nes_interface nes_config =
 	"audiocpu"
 };
 
-static MACHINE_RESET( punchout )
+void punchout_state::machine_reset()
 {
-	punchout_state *state = machine.driver_data<punchout_state>();
-	state->m_rp5c01_mode_sel = 0;
-	memset(state->m_rp5c01_mem, 0, sizeof(state->m_rp5c01_mem));
+	m_rp5c01_mode_sel = 0;
+	memset(m_rp5c01_mem, 0, sizeof(m_rp5c01_mem));
 }
 
 static INTERRUPT_GEN( vblank_irq )
@@ -934,7 +933,7 @@ static INTERRUPT_GEN( vblank_irq )
 	punchout_state *state = device->machine().driver_data<punchout_state>();
 
 	if(state->m_nmi_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -951,7 +950,6 @@ static MACHINE_CONFIG_START( punchout, punchout_state )
 	MCFG_CPU_PROGRAM_MAP(punchout_sound_map)
 	MCFG_CPU_VBLANK_INT("top", nmi_line_pulse)
 
-	MCFG_MACHINE_RESET(punchout)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
@@ -973,7 +971,6 @@ static MACHINE_CONFIG_START( punchout, punchout_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(punchout_bottom)
 
-	MCFG_VIDEO_START(punchout)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -997,7 +994,7 @@ static MACHINE_CONFIG_DERIVED( armwrest, punchout )
 	/* video hardware */
 	MCFG_GFXDECODE(armwrest)
 
-	MCFG_VIDEO_START(armwrest)
+	MCFG_VIDEO_START_OVERRIDE(punchout_state,armwrest)
 	MCFG_SCREEN_MODIFY("top")
 	MCFG_SCREEN_UPDATE_STATIC(armwrest_top)
 	MCFG_SCREEN_MODIFY("bottom")

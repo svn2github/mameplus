@@ -46,12 +46,12 @@ metlclsh:
 
 WRITE8_MEMBER(metlclsh_state::metlclsh_cause_irq)
 {
-	device_set_input_line(m_subcpu, M6809_IRQ_LINE, ASSERT_LINE);
+	m_subcpu->set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(metlclsh_state::metlclsh_ack_nmi)
 {
-	device_set_input_line(m_maincpu, INPUT_LINE_NMI, CLEAR_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 static ADDRESS_MAP_START( metlclsh_master_map, AS_PROGRAM, 8, metlclsh_state )
@@ -83,17 +83,17 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER(metlclsh_state::metlclsh_cause_nmi2)
 {
-	device_set_input_line(m_maincpu, INPUT_LINE_NMI, ASSERT_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(metlclsh_state::metlclsh_ack_irq2)
 {
-	device_set_input_line(m_subcpu, M6809_IRQ_LINE, CLEAR_LINE);
+	m_subcpu->set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(metlclsh_state::metlclsh_ack_nmi2)
 {
-	device_set_input_line(m_subcpu, INPUT_LINE_NMI, CLEAR_LINE);
+	m_subcpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(metlclsh_state::metlclsh_flipscreen_w)
@@ -131,7 +131,7 @@ ADDRESS_MAP_END
 INPUT_CHANGED_MEMBER(metlclsh_state::coin_inserted)
 {
 	if (oldval)
-		cputag_set_input_line(machine(), "sub", INPUT_LINE_NMI, ASSERT_LINE);
+		machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 static INPUT_PORTS_START( metlclsh )
@@ -260,25 +260,23 @@ static const ym3526_interface ym3526_config =
 };
 
 
-static MACHINE_START( metlclsh )
+void metlclsh_state::machine_start()
 {
-	metlclsh_state *state = machine.driver_data<metlclsh_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_subcpu = machine.device("sub");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_subcpu = machine().device<cpu_device>("sub");
 
-	state->save_item(NAME(state->m_write_mask));
-	state->save_item(NAME(state->m_gfxbank));
+	save_item(NAME(m_write_mask));
+	save_item(NAME(m_gfxbank));
 }
 
-static MACHINE_RESET( metlclsh )
+void metlclsh_state::machine_reset()
 {
-	metlclsh_state *state = machine.driver_data<metlclsh_state>();
 
-	state->flip_screen_set(0);
+	flip_screen_set(0);
 
-	state->m_write_mask = 0;
-	state->m_gfxbank = 0;
+	m_write_mask = 0;
+	m_gfxbank = 0;
 }
 
 static MACHINE_CONFIG_START( metlclsh, metlclsh_state )
@@ -292,8 +290,6 @@ static MACHINE_CONFIG_START( metlclsh, metlclsh_state )
 	MCFG_CPU_PROGRAM_MAP(metlclsh_slave_map)
 	// IRQ by cpu #1, NMI by coins insertion
 
-	MCFG_MACHINE_START(metlclsh)
-	MCFG_MACHINE_RESET(metlclsh)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -306,7 +302,6 @@ static MACHINE_CONFIG_START( metlclsh, metlclsh_state )
 	MCFG_GFXDECODE(metlclsh)
 	MCFG_PALETTE_LENGTH(3 * 16)
 
-	MCFG_VIDEO_START(metlclsh)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

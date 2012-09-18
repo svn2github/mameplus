@@ -30,15 +30,15 @@ static const res_net_info carjmbre_net_info =
 	}
 };
 
-PALETTE_INIT( carjmbre )
+void carjmbre_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	rgb_t *rgb;
 
-	rgb = compute_res_net_all(machine, color_prom, &carjmbre_decode_info, &carjmbre_net_info);
-	palette_set_colors(machine, 0, rgb, 64);
-	palette_normalize_range(machine.palette, 0, 63, 0, 255);
-	auto_free(machine, rgb);
+	rgb = compute_res_net_all(machine(), color_prom, &carjmbre_decode_info, &carjmbre_net_info);
+	palette_set_colors(machine(), 0, rgb, 64);
+	palette_normalize_range(machine().palette, 0, 63, 0, 255);
+	auto_free(machine(), rgb);
 }
 
 
@@ -83,27 +83,25 @@ WRITE8_MEMBER(carjmbre_state::carjmbre_videoram_w)
 
 
 
-static TILE_GET_INFO( get_carjmbre_tile_info )
+TILE_GET_INFO_MEMBER(carjmbre_state::get_carjmbre_tile_info)
 {
-	carjmbre_state *state = machine.driver_data<carjmbre_state>();
-	UINT32 tile_number = state->m_videoram[tile_index] & 0xff;
-	UINT8 attr = state->m_videoram[tile_index + 0x400];
+	UINT32 tile_number = m_videoram[tile_index] & 0xff;
+	UINT8 attr = m_videoram[tile_index + 0x400];
 	tile_number += (attr & 0x80) << 1; /* bank */
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			tile_number,
 			attr & 0xf,
 			0);
 }
 
-VIDEO_START( carjmbre )
+void carjmbre_state::video_start()
 {
-	carjmbre_state *state = machine.driver_data<carjmbre_state>();
 
-	state->m_cj_tilemap = tilemap_create(machine, get_carjmbre_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->save_item(NAME(state->m_flipscreen));
-	state->save_item(NAME(state->m_bgcolor));
+	m_cj_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(carjmbre_state::get_carjmbre_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	save_item(NAME(m_flipscreen));
+	save_item(NAME(m_bgcolor));
 }
 
 SCREEN_UPDATE_IND16( carjmbre )

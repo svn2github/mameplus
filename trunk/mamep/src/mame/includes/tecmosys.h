@@ -73,6 +73,12 @@ public:
 	DECLARE_DRIVER_INIT(tkdensha);
 	DECLARE_DRIVER_INIT(deroon);
 	DECLARE_DRIVER_INIT(tkdensho);
+	TILE_GET_INFO_MEMBER(get_bg0tile_info);
+	TILE_GET_INFO_MEMBER(get_bg1tile_info);
+	TILE_GET_INFO_MEMBER(get_bg2tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_start();
+	virtual void video_start();
 };
 
 
@@ -86,4 +92,4 @@ void tecmosys_prot_init(running_machine &machine, int which);
 
 
 SCREEN_UPDATE_RGB32(tecmosys);
-VIDEO_START(tecmosys);
+

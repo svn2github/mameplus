@@ -56,11 +56,18 @@ public:
 	DECLARE_WRITE16_MEMBER(esd16_vram_1_w);
 	DECLARE_WRITE16_MEMBER(esd16_tilemap0_color_w);
 	DECLARE_WRITE16_MEMBER(esd16_tilemap0_color_jumppop_w);
+	TILE_GET_INFO_MEMBER(get_tile_info_0);
+	TILE_GET_INFO_MEMBER(get_tile_info_0_16x16);
+	TILE_GET_INFO_MEMBER(get_tile_info_1);
+	TILE_GET_INFO_MEMBER(get_tile_info_1_16x16);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/esd16.c -----------*/
 
 
-VIDEO_START( esd16 );
+
 SCREEN_UPDATE_IND16( hedpanic );

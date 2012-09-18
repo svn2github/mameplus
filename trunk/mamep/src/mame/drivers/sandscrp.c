@@ -108,6 +108,7 @@ public:
 	DECLARE_READ8_MEMBER(sandscrp_latchstatus_r);
 	DECLARE_READ8_MEMBER(sandscrp_soundlatch_r);
 	DECLARE_WRITE8_MEMBER(sandscrp_soundlatch_w);
+	virtual void machine_reset();
 };
 
 
@@ -137,9 +138,8 @@ SCREEN_UPDATE_IND16( sandscrp )
 
 
 
-static MACHINE_RESET( sandscrp )
+void sandscrp_state::machine_reset()
 {
-//  sandscrp_state *state = machine.driver_data<sandscrp_state>();
 }
 
 /* Sand Scorpion */
@@ -151,9 +151,9 @@ static void update_irq_state(running_machine &machine)
 {
 	sandscrp_state *state = machine.driver_data<sandscrp_state>();
 	if (state->m_vblank_irq || state->m_sprite_irq || state->m_unknown_irq)
-		cputag_set_input_line(machine, "maincpu", 1, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(1, ASSERT_LINE);
 	else
-		cputag_set_input_line(machine, "maincpu", 1, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(1, CLEAR_LINE);
 }
 
 
@@ -254,8 +254,8 @@ WRITE16_MEMBER(sandscrp_state::sandscrp_soundlatch_word_w)
 	{
 		m_latch1_full = 1;
 		soundlatch_byte_w(space, 0, data & 0xff);
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
-		device_spin_until_time(&space.device(), attotime::from_usec(100));	// Allow the other cpu to reply
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		space.device().execute().spin_until_time(attotime::from_usec(100));	// Allow the other cpu to reply
 	}
 }
 
@@ -291,7 +291,7 @@ WRITE8_MEMBER(sandscrp_state::sandscrp_bankswitch_w)
 	UINT8 *RAM = memregion("maincpu")->base();
 	int bank = data & 0x07;
 
-	if ( bank != data )	logerror("CPU #1 - PC %04X: Bank %02X\n",cpu_get_pc(&space.device()),data);
+	if ( bank != data )	logerror("CPU #1 - PC %04X: Bank %02X\n",space.device().safe_pc(),data);
 
 	if (bank < 3)	RAM = &RAM[0x4000 * bank];
 	else			RAM = &RAM[0x4000 * (bank-3) + 0x10000];
@@ -471,7 +471,7 @@ GFXDECODE_END
 
 static void irq_handler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_intf_sandscrp =
@@ -508,7 +508,6 @@ static MACHINE_CONFIG_START( sandscrp, sandscrp_state )
 
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(3))	/* a guess, and certainly wrong */
 
-	MCFG_MACHINE_RESET(sandscrp)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

@@ -38,7 +38,7 @@ static const int page_sizes[4] = { 4096, 8192, 16384, 32768 };
 
 #define IOC_LOG 0
 
-UINT32 *archimedes_memc_physmem;
+static UINT32 *archimedes_memc_physmem;
 static UINT32 memc_pagesize;
 static int memc_latchrom;
 static UINT32 ioc_timercnt[4], ioc_timerout[4];
@@ -64,7 +64,7 @@ void archimedes_request_irq_a(running_machine &machine, int mask)
 
 	if (ioc_regs[IRQ_MASK_A] & mask)
 	{
-		cputag_set_input_line(machine, "maincpu", ARM_IRQ_LINE, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(ARM_IRQ_LINE, ASSERT_LINE);
 	}
 }
 
@@ -422,6 +422,7 @@ DIRECT_UPDATE_HANDLER( a310_setopbase )
 
 void archimedes_driver_init(running_machine &machine)
 {
+	archimedes_memc_physmem = reinterpret_cast<UINT32 *>(machine.root_device().memshare("physicalram")->ptr());
 //  address_space *space = machine.device<arm_device>("maincpu")->space(AS_PROGRAM);
 //  space->set_direct_update_handler(direct_update_delegate(FUNC(a310_setopbase), &machine));
 }
@@ -473,7 +474,7 @@ static void latch_timer_cnt(int tmr)
 static READ32_HANDLER( ioc_ctrl_r )
 {
 	if(IOC_LOG)
-	logerror("IOC: R %s = %02x (PC=%x) %02x\n", ioc_regnames[offset&0x1f], ioc_regs[offset&0x1f], cpu_get_pc( &space->device() ),offset & 0x1f);
+	logerror("IOC: R %s = %02x (PC=%x) %02x\n", ioc_regnames[offset&0x1f], ioc_regs[offset&0x1f], space->device() .safe_pc( ),offset & 0x1f);
 
 	switch (offset & 0x1f)
 	{
@@ -535,7 +536,7 @@ static READ32_HANDLER( ioc_ctrl_r )
 		case T3_LATCH_HI: return (ioc_timerout[3]>>8)&0xff;
 		default:
 			if(!IOC_LOG)
-				logerror("IOC: R %s = %02x (PC=%x) %02x\n", ioc_regnames[offset&0x1f], ioc_regs[offset&0x1f], cpu_get_pc( &space->device() ),offset & 0x1f);
+				logerror("IOC: R %s = %02x (PC=%x) %02x\n", ioc_regnames[offset&0x1f], ioc_regs[offset&0x1f], space->device() .safe_pc( ),offset & 0x1f);
 			break;
 	}
 
@@ -546,7 +547,7 @@ static READ32_HANDLER( ioc_ctrl_r )
 static WRITE32_HANDLER( ioc_ctrl_w )
 {
 	if(IOC_LOG)
-	logerror("IOC: W %02x @ reg %s (PC=%x)\n", data&0xff, ioc_regnames[offset&0x1f], cpu_get_pc( &space->device() ));
+	logerror("IOC: W %02x @ reg %s (PC=%x)\n", data&0xff, ioc_regnames[offset&0x1f], space->device() .safe_pc( ));
 
 	switch (offset&0x1f)
 	{
@@ -592,7 +593,7 @@ static WRITE32_HANDLER( ioc_ctrl_w )
 			//if (ioc_regs[IRQ_STATUS_A] == 0)
 			{
 				//printf("IRQ clear A\n");
-				cputag_set_input_line(space->machine(), "maincpu", ARM_IRQ_LINE, CLEAR_LINE);
+				space->machine().device("maincpu")->execute().set_input_line(ARM_IRQ_LINE, CLEAR_LINE);
 			}
 			break;
 
@@ -654,7 +655,7 @@ static WRITE32_HANDLER( ioc_ctrl_w )
 
 		default:
 			if(!IOC_LOG)
-				logerror("IOC: W %02x @ reg %s (PC=%x)\n", data&0xff, ioc_regnames[offset&0x1f], cpu_get_pc( &space->device() ));
+				logerror("IOC: W %02x @ reg %s (PC=%x)\n", data&0xff, ioc_regnames[offset&0x1f], space->device() .safe_pc( ));
 
 			ioc_regs[offset&0x1f] = data & 0xff;
 			break;
@@ -778,7 +779,7 @@ WRITE32_HANDLER(archimedes_ioc_w)
 	}
 
 
-	logerror("(PC=%08x) I/O: W %x @ %x (mask %08x)\n", cpu_get_pc(&space->device()), data, (offset*4)+0x3000000, mem_mask);
+	logerror("(PC=%08x) I/O: W %x @ %x (mask %08x)\n", space->device().safe_pc(), data, (offset*4)+0x3000000, mem_mask);
 }
 
 READ32_HANDLER(archimedes_vidc_r)
@@ -865,7 +866,7 @@ WRITE32_HANDLER(archimedes_vidc_w)
 		r = (val & 0x000f) >> 0;
 
 		if(reg == 0x40 && val & 0xfff)
-			logerror("WARNING: border color write here (PC=%08x)!\n",cpu_get_pc(&space->device()));
+			logerror("WARNING: border color write here (PC=%08x)!\n",space->device().safe_pc());
 
 		palette_set_color_rgb(space->machine(), reg >> 2, pal4bit(r), pal4bit(g), pal4bit(b) );
 
@@ -982,7 +983,7 @@ WRITE32_HANDLER(archimedes_memc_w)
 			case 7:	/* Control */
 				memc_pagesize = ((data>>2) & 3);
 
-				logerror("(PC = %08x) MEMC: %x to Control (page size %d, %s, %s)\n", cpu_get_pc(&space->device()), data & 0x1ffc, page_sizes[memc_pagesize], ((data>>10)&1) ? "Video DMA on" : "Video DMA off", ((data>>11)&1) ? "Sound DMA on" : "Sound DMA off");
+				logerror("(PC = %08x) MEMC: %x to Control (page size %d, %s, %s)\n", space->device().safe_pc(), data & 0x1ffc, page_sizes[memc_pagesize], ((data>>10)&1) ? "Video DMA on" : "Video DMA off", ((data>>11)&1) ? "Sound DMA on" : "Sound DMA off");
 
 				video_dma_on = ((data>>10)&1);
 				audio_dma_on = ((data>>11)&1);
@@ -1087,6 +1088,6 @@ WRITE32_HANDLER(archimedes_memc_page_w)
 	// now go ahead and set the mapping in the page table
 	memc_pages[log] = phys + (memc*0x80);
 
-//  printf("PC=%08x = MEMC_PAGE(%d): W %08x: log %x to phys %x, MEMC %d, perms %d\n", cpu_get_pc(&space->device()),memc_pagesize, data, log, phys, memc, perms);
+//  printf("PC=%08x = MEMC_PAGE(%d): W %08x: log %x to phys %x, MEMC %d, perms %d\n", space->device().safe_pc(),memc_pagesize, data, log, phys, memc, perms);
 }
 

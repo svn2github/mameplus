@@ -93,8 +93,7 @@
 
 
 
-typedef struct _namco_06xx_state namco_06xx_state;
-struct _namco_06xx_state
+struct namco_06xx_state
 {
 	UINT8 m_control;
 	emu_timer *m_nmi_timer;
@@ -110,7 +109,7 @@ INLINE namco_06xx_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == NAMCO_06XX);
 
-	return (namco_06xx_state *)downcast<legacy_device_base *>(device)->token();
+	return (namco_06xx_state *)downcast<namco_06xx_device *>(device)->token();
 }
 
 
@@ -123,7 +122,7 @@ static TIMER_CALLBACK( nmi_generate )
 	{
 		LOG(("NMI cpu '%s'\n",state->m_nmicpu->tag()));
 
-		device_set_input_line(state->m_nmicpu, INPUT_LINE_NMI, PULSE_LINE);
+		state->m_nmicpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 	else
 		LOG(("NMI not generated because cpu '%s' is suspended\n",state->m_nmicpu->tag()));
@@ -220,7 +219,7 @@ WRITE8_DEVICE_HANDLER( namco_06xx_ctrl_w )
 
 static DEVICE_START( namco_06xx )
 {
-	const namco_06xx_config *config = (const namco_06xx_config *)downcast<const legacy_device_base *>(device)->inline_config();
+	const namco_06xx_config *config = (const namco_06xx_config *)device->static_config();
 	namco_06xx_state *state = get_safe_token(device);
 	int devnum;
 
@@ -288,18 +287,41 @@ static DEVICE_RESET( namco_06xx )
 }
 
 
-/*-------------------------------------------------
-    device definition
--------------------------------------------------*/
+const device_type NAMCO_06XX = &device_creator<namco_06xx_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+namco_06xx_device::namco_06xx_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, NAMCO_06XX, "Namco 06xx", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(namco_06xx_state));
+}
 
-#define DEVTEMPLATE_ID(p,s)		p##namco_06xx##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_RESET | DT_HAS_INLINE_CONFIG
-#define DEVTEMPLATE_NAME		"Namco 06xx"
-#define DEVTEMPLATE_FAMILY		"Namco I/O"
-#define DEVTEMPLATE_SHORTNAME   "namco06xx"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void namco_06xx_device::device_config_complete()
+{
+	m_shortname = "namco06xx";
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void namco_06xx_device::device_start()
+{
+	DEVICE_START_NAME( namco_06xx )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void namco_06xx_device::device_reset()
+{
+	DEVICE_RESET_NAME( namco_06xx )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(NAMCO_06XX, namco_06xx);

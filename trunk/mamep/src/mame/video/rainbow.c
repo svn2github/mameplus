@@ -70,18 +70,17 @@ the Y settings are active low.
 
 */
 
-VIDEO_START( jumping )
+VIDEO_START_MEMBER(rbisland_state,jumping)
 {
-	rbisland_state *state = machine.driver_data<rbisland_state>();
 
-	pc080sn_set_trans_pen(state->m_pc080sn, 1, 15);
+	pc080sn_set_trans_pen(m_pc080sn, 1, 15);
 
-	state->m_sprite_ctrl = 0;
-	state->m_sprites_flipscreen = 0;
+	m_sprite_ctrl = 0;
+	m_sprites_flipscreen = 0;
 
 	/* not 100% sure Jumping needs to save both... */
-	state->save_item(NAME(state->m_sprite_ctrl));
-	state->save_item(NAME(state->m_sprites_flipscreen));
+	save_item(NAME(m_sprite_ctrl));
+	save_item(NAME(m_sprites_flipscreen));
 }
 
 
@@ -108,7 +107,7 @@ SCREEN_UPDATE_IND16( jumping )
 	for (offs = state->m_spriteram.bytes() / 2 - 8; offs >= 0; offs -= 8)
 	{
 		int tile = spriteram[offs];
-		if (tile < screen.machine().gfx[1]->total_elements)
+		if (tile < screen.machine().gfx[1]->elements())
 		{
 			int sx,sy,color,data1;
 

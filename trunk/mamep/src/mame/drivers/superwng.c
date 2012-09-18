@@ -67,46 +67,49 @@ public:
 	DECLARE_WRITE8_MEMBER(superwng_cointcnt2_w);
 	DECLARE_WRITE8_MEMBER(superwng_hopper_w);
 	DECLARE_READ8_MEMBER(superwng_sound_byte_r);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(superwng_state::get_bg_tile_info)
 {
-	superwng_state *state = machine.driver_data<superwng_state>();
-	int code = state->m_videoram_bg[tile_index];
-	int attr = state->m_colorram_bg[tile_index];
+	int code = m_videoram_bg[tile_index];
+	int attr = m_colorram_bg[tile_index];
 
 	code= (code&0x7f) | ((attr&0x40)<<1) | ((code&0x80)<<1);
-	code|=state->m_tile_bank?0x200:0;
+	code|=m_tile_bank?0x200:0;
 
 	int flipx=(attr&0x80) ? TILE_FLIPX : 0;
 	int flipy=(attr&0x80) ? TILE_FLIPY : 0;
 
-	SET_TILE_INFO(0, code, attr & 0xf, flipx|flipy);
+	SET_TILE_INFO_MEMBER(0, code, attr & 0xf, flipx|flipy);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(superwng_state::get_fg_tile_info)
 {
-	superwng_state *state = machine.driver_data<superwng_state>();
-	int code = state->m_videoram_fg[tile_index];
-	int attr = state->m_colorram_fg[tile_index];
+	int code = m_videoram_fg[tile_index];
+	int attr = m_colorram_fg[tile_index];
 
 	code= (code&0x7f) | ((attr&0x40)<<1) | ((code&0x80)<<1);
 
-	code|=state->m_tile_bank?0x200:0;
+	code|=m_tile_bank?0x200:0;
 
 	int flipx=(attr&0x80) ? TILE_FLIPX : 0;
 	int flipy=(attr&0x80) ? TILE_FLIPY : 0;
 
-	SET_TILE_INFO(0, code, attr & 0xf, flipx|flipy);
+	SET_TILE_INFO_MEMBER(0, code, attr & 0xf, flipx|flipy);
 }
 
-static VIDEO_START( superwng )
+void superwng_state::video_start()
 {
-	superwng_state *state = machine.driver_data<superwng_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(superwng_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(superwng_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	state->m_bg_tilemap->set_scrollx(0, 64);
+	m_bg_tilemap->set_scrollx(0, 64);
 }
 
 static SCREEN_UPDATE_IND16( superwng )
@@ -168,12 +171,12 @@ static const UINT8 superwng_colors[]= /* temporary */
 	0x00, 0xc0, 0x07, 0x3f, 0x00, 0x1f, 0x3f, 0xff, 0x00, 0x86, 0x05, 0xff, 0x00, 0xc0, 0xe8, 0xff
 };
 
-PALETTE_INIT( superwng )
+void superwng_state::palette_init()
 {
 	int i;
 	const UINT8 * ptr=superwng_colors;
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		int bit0, bit1, bit2, r, g, b;
 
@@ -191,7 +194,7 @@ PALETTE_INIT( superwng )
 		bit1 = BIT(*ptr, 7);
 		b = 0x4f * bit0 + 0xa8 * bit1;
 
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
+		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
 		++ptr;
 	}
 }
@@ -212,25 +215,25 @@ static INTERRUPT_GEN( superwng_nmi_interrupt )
 WRITE8_MEMBER(superwng_state::superwng_sound_interrupt_w)
 {
 	m_sound_byte = data;
-	device_set_input_line(m_audiocpu, 0, ASSERT_LINE);
+	m_audiocpu->set_input_line(0, ASSERT_LINE);
 }
 
 READ8_MEMBER(superwng_state::superwng_sound_byte_r)
 {
-	device_set_input_line(m_audiocpu, 0, CLEAR_LINE);
+	m_audiocpu->set_input_line(0, CLEAR_LINE);
 	return m_sound_byte;
 }
 
 WRITE8_MEMBER(superwng_state::superwng_sound_nmi_clear_w)
 {
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 static INTERRUPT_GEN( superwng_sound_nmi_assert )
 {
 	superwng_state *state = device->machine().driver_data<superwng_state>();
 	if (BIT(state->m_nmi_enable, 0))
-		device_set_input_line(device, INPUT_LINE_NMI, ASSERT_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(superwng_state::superwng_bg_vram_w)
@@ -423,21 +426,19 @@ static GFXDECODE_START( superwng )
 	GFXDECODE_ENTRY( "gfx1", 0x0000, spritelayout,     0, 16 )
 GFXDECODE_END
 
-static MACHINE_START( superwng )
+void superwng_state::machine_start()
 {
-	superwng_state *state = machine.driver_data<superwng_state>();
 
-	state->save_item(NAME(state->m_tile_bank));
-	state->save_item(NAME(state->m_sound_byte));
-	state->save_item(NAME(state->m_nmi_enable));
+	save_item(NAME(m_tile_bank));
+	save_item(NAME(m_sound_byte));
+	save_item(NAME(m_nmi_enable));
 }
 
-static MACHINE_RESET( superwng )
+void superwng_state::machine_reset()
 {
-	superwng_state *state = machine.driver_data<superwng_state>();
 
-	state->m_sound_byte = 0;
-	state->m_nmi_enable = 0;
+	m_sound_byte = 0;
+	m_nmi_enable = 0;
 }
 
 static const ay8910_interface ay8910_config_1 =
@@ -471,8 +472,6 @@ static MACHINE_CONFIG_START( superwng, superwng_state )
 	MCFG_CPU_PROGRAM_MAP(superwng_sound_map)
 	MCFG_CPU_PERIODIC_INT(superwng_sound_nmi_assert, 4*60)
 
-	MCFG_MACHINE_START(superwng)
-	MCFG_MACHINE_RESET(superwng)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -484,8 +483,6 @@ static MACHINE_CONFIG_START( superwng, superwng_state )
 	MCFG_GFXDECODE(superwng)
 
 	MCFG_PALETTE_LENGTH(0x40)
-	MCFG_PALETTE_INIT(superwng)
-	MCFG_VIDEO_START(superwng)
 	MCFG_SCREEN_UPDATE_STATIC(superwng)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")

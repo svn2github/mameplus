@@ -38,19 +38,19 @@ Notes:
 
 WRITE8_MEMBER(retofinv_state::cpu1_reset_w)
 {
-	cputag_set_input_line(machine(), "sub", INPUT_LINE_RESET, data ? CLEAR_LINE : ASSERT_LINE);
+	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, data ? CLEAR_LINE : ASSERT_LINE);
 }
 
 WRITE8_MEMBER(retofinv_state::cpu2_reset_w)
 {
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, data ? CLEAR_LINE : ASSERT_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, data ? CLEAR_LINE : ASSERT_LINE);
 }
 
 WRITE8_MEMBER(retofinv_state::mcu_reset_w)
 {
 	/* the bootlegs don't have a MCU, so make sure it's there before trying to reset it */
 	if (machine().device("68705") != NULL)
-		cputag_set_input_line(machine(), "68705", INPUT_LINE_RESET, data ? CLEAR_LINE : ASSERT_LINE);
+		machine().device("68705")->execute().set_input_line(INPUT_LINE_RESET, data ? CLEAR_LINE : ASSERT_LINE);
 }
 
 WRITE8_MEMBER(retofinv_state::cpu2_m6000_w)
@@ -66,21 +66,21 @@ READ8_MEMBER(retofinv_state::cpu0_mf800_r)
 WRITE8_MEMBER(retofinv_state::soundcommand_w)
 {
       soundlatch_byte_w(space, 0, data);
-      cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
+      machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 WRITE8_MEMBER(retofinv_state::irq0_ack_w)
 {
 	m_main_irq_mask = data & 1;
 	if (!m_main_irq_mask)
-		cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(retofinv_state::irq1_ack_w)
 {
 	m_sub_irq_mask = data & 1;
 	if (!m_sub_irq_mask)
-		cputag_set_input_line(machine(), "sub", 0, CLEAR_LINE);
+		machine().device("sub")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(retofinv_state::coincounter_w)
@@ -137,8 +137,8 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, retofinv_state )
 	AM_RANGE(0x2000, 0x27ff) AM_RAM
 	AM_RANGE(0x4000, 0x4000) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x6000, 0x6000) AM_WRITE(cpu2_m6000_w)
-	AM_RANGE(0x8000, 0x8000) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
+	AM_RANGE(0x8000, 0x8000) AM_DEVWRITE("sn1", sn76496_new_device, write)
+	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE("sn2", sn76496_new_device, write)
 	AM_RANGE(0xe000, 0xffff) AM_ROM 		/* space for diagnostic ROM */
 ADDRESS_MAP_END
 
@@ -333,7 +333,7 @@ static INTERRUPT_GEN( main_vblank_irq )
 	retofinv_state *state = device->machine().driver_data<retofinv_state>();
 
 	if(state->m_main_irq_mask)
-		device_set_input_line(device, 0, ASSERT_LINE);
+		device->execute().set_input_line(0, ASSERT_LINE);
 }
 
 static INTERRUPT_GEN( sub_vblank_irq )
@@ -341,8 +341,26 @@ static INTERRUPT_GEN( sub_vblank_irq )
 	retofinv_state *state = device->machine().driver_data<retofinv_state>();
 
 	if(state->m_sub_irq_mask)
-		device_set_input_line(device, 0, ASSERT_LINE);
+		device->execute().set_input_line(0, ASSERT_LINE);
 }
+
+
+/*************************************
+ *
+ *  Sound interface
+ *
+ *************************************/
+
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
 
 static MACHINE_CONFIG_START( retofinv, retofinv_state )
 
@@ -375,17 +393,17 @@ static MACHINE_CONFIG_START( retofinv, retofinv_state )
 	MCFG_GFXDECODE(retofinv)
 	MCFG_PALETTE_LENGTH(256*2+64*16+64*16)
 
-	MCFG_PALETTE_INIT(retofinv)
-	MCFG_VIDEO_START(retofinv)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496, 18432000/6)
+	MCFG_SOUND_ADD("sn1", SN76496_NEW, 18432000/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496, 18432000/6)
+	MCFG_SOUND_ADD("sn2", SN76496_NEW, 18432000/6)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 

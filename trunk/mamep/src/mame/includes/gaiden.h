@@ -45,7 +45,7 @@ public:
 	const int   *m_raiga_jumppoints;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE16_MEMBER(gaiden_sound_command_w);
 	DECLARE_WRITE16_MEMBER(drgnbowl_sound_command_w);
 	DECLARE_WRITE16_MEMBER(wildfang_protection_w);
@@ -73,15 +73,25 @@ public:
 	DECLARE_DRIVER_INIT(mastninj);
 	DECLARE_DRIVER_INIT(shadoww);
 	DECLARE_DRIVER_INIT(wildfang);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info_raiga);
+	TILE_GET_INFO_MEMBER(get_tx_tile_info);
+	DECLARE_MACHINE_START(raiga);
+	DECLARE_MACHINE_RESET(raiga);
+	DECLARE_VIDEO_START(gaiden);
+	DECLARE_VIDEO_START(drgnbowl);
+	DECLARE_VIDEO_START(mastninj);
+	DECLARE_VIDEO_START(raiga);
 };
 
 
 /*----------- defined in video/gaiden.c -----------*/
 
-VIDEO_START( gaiden );
-VIDEO_START( raiga );
-VIDEO_START( drgnbowl );
-VIDEO_START( mastninj );
+
+
+
+
 
 SCREEN_UPDATE_RGB32( gaiden );
 SCREEN_UPDATE_RGB32( raiga );

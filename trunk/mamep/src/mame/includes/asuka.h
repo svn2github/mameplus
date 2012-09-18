@@ -8,7 +8,8 @@ class asuka_state : public driver_device
 {
 public:
 	asuka_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		  m_cadash_shared_ram(*this, "sharedram") { }
 
 	/* memory pointers */
 //  UINT16 *    paletteram; // this currently uses generic palette handlers
@@ -29,9 +30,11 @@ public:
 	int         m_adpcm_pos;
 	int         m_adpcm_data;
 
+	optional_shared_ptr<UINT8> m_cadash_shared_ram;
+
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_pc090oj;
 	device_t *m_tc0100scn;
 	DECLARE_WRITE8_MEMBER(sound_bankswitch_w);
@@ -42,6 +45,8 @@ public:
 	DECLARE_WRITE8_MEMBER(sound_bankswitch_2151_w);
 	DECLARE_WRITE8_MEMBER(asuka_msm5205_start_w);
 	DECLARE_WRITE8_MEMBER(asuka_msm5205_stop_w);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 

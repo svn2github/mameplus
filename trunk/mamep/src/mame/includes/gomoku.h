@@ -22,6 +22,9 @@ public:
 	DECLARE_WRITE8_MEMBER(gomoku_bgram_w);
 	DECLARE_WRITE8_MEMBER(gomoku_flipscreen_w);
 	DECLARE_WRITE8_MEMBER(gomoku_bg_dispsw_w);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -30,12 +33,34 @@ public:
 WRITE8_DEVICE_HANDLER( gomoku_sound1_w );
 WRITE8_DEVICE_HANDLER( gomoku_sound2_w );
 
-DECLARE_LEGACY_SOUND_DEVICE(GOMOKU, gomoku_sound);
+class gomoku_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	gomoku_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~gomoku_sound_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type GOMOKU;
+
 
 
 /*----------- defined in video/gomoku.c -----------*/
 
-PALETTE_INIT( gomoku );
-VIDEO_START( gomoku );
+
+
 SCREEN_UPDATE_IND16( gomoku );
 

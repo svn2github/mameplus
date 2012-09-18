@@ -447,49 +447,46 @@ static TIMER_DEVICE_CALLBACK( generate_interrupt )
 
 	/* IRQ is clocked on the rising edge of 16V, equal to the previous 32V */
 	if (scanline & 16)
-		cputag_set_input_line(timer.machine(), "maincpu", 0, ((scanline - 1) & 32) ? ASSERT_LINE : CLEAR_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(0, ((scanline - 1) & 32) ? ASSERT_LINE : CLEAR_LINE);
 
 	/* do a partial update now to handle sprite multiplexing (Maze Invaders) */
 	timer.machine().primary_screen->update_partial(scanline);
 }
 
 
-static MACHINE_START( centiped )
+MACHINE_START_MEMBER(centiped_state,centiped)
 {
-	centiped_state *state = machine.driver_data<centiped_state>();
 
-	state->save_item(NAME(state->m_oldpos));
-	state->save_item(NAME(state->m_sign));
-	state->save_item(NAME(state->m_dsw_select));
-	state->save_item(NAME(state->m_prg_bank));
+	save_item(NAME(m_oldpos));
+	save_item(NAME(m_sign));
+	save_item(NAME(m_dsw_select));
+	save_item(NAME(m_prg_bank));
 }
 
 
-static MACHINE_RESET( centiped )
+MACHINE_RESET_MEMBER(centiped_state,centiped)
 {
-	centiped_state *state = machine.driver_data<centiped_state>();
 
-	cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
-	state->m_dsw_select = 0;
-	state->m_control_select = 0;
-	state->m_prg_bank = 0;
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+	m_dsw_select = 0;
+	m_control_select = 0;
+	m_prg_bank = 0;
 }
 
 
-static MACHINE_RESET( magworm )
+MACHINE_RESET_MEMBER(centiped_state,magworm)
 {
-	centiped_state *state = machine.driver_data<centiped_state>();
 
-	MACHINE_RESET_CALL(centiped);
+	MACHINE_RESET_CALL_MEMBER(centiped);
 
 	/* kludge: clear RAM so that magworm can be reset cleanly */
-	memset(state->m_rambase, 0, 0x400);
+	memset(m_rambase, 0, 0x400);
 }
 
 
 WRITE8_MEMBER(centiped_state::irq_ack_w)
 {
-	cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -612,7 +609,7 @@ WRITE8_MEMBER(centiped_state::mazeinv_input_select_w)
 
 READ8_MEMBER(centiped_state::bullsdrt_data_port_r)
 {
-	switch (cpu_get_pc(&space.device()))
+	switch (space.device().safe_pc())
 	{
 		case 0x0033:
 		case 0x6b19:
@@ -1756,8 +1753,8 @@ static MACHINE_CONFIG_START( centiped_base, centiped_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, 12096000/8)	/* 1.512 MHz (slows down to 0.75MHz while accessing playfield RAM) */
 
-	MCFG_MACHINE_START(centiped)
-	MCFG_MACHINE_RESET(centiped)
+	MCFG_MACHINE_START_OVERRIDE(centiped_state,centiped)
+	MCFG_MACHINE_RESET_OVERRIDE(centiped_state,centiped)
 
 	MCFG_ATARIVGEAROM_ADD("earom")
 
@@ -1774,7 +1771,7 @@ static MACHINE_CONFIG_START( centiped_base, centiped_state )
 	MCFG_GFXDECODE(centiped)
 	MCFG_PALETTE_LENGTH(4+4*4*4*4)
 
-	MCFG_VIDEO_START(centiped)
+	MCFG_VIDEO_START_OVERRIDE(centiped_state,centiped)
 
 MACHINE_CONFIG_END
 
@@ -1825,7 +1822,7 @@ static MACHINE_CONFIG_DERIVED( magworm, centiped_base )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(magworm_map)
-	MCFG_MACHINE_RESET(magworm)
+	MCFG_MACHINE_RESET_OVERRIDE(centiped_state,magworm)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1847,7 +1844,7 @@ static MACHINE_CONFIG_DERIVED( milliped, centiped )
 	MCFG_GFXDECODE(milliped)
 	MCFG_PALETTE_LENGTH(4*4+4*4*4*4*4)
 
-	MCFG_VIDEO_START(milliped)
+	MCFG_VIDEO_START_OVERRIDE(centiped_state,milliped)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(milliped)
 
@@ -1883,8 +1880,8 @@ static MACHINE_CONFIG_DERIVED( warlords, centiped )
 	MCFG_GFXDECODE(warlords)
 	MCFG_PALETTE_LENGTH(8*4+8*4)
 
-	MCFG_PALETTE_INIT(warlords)
-	MCFG_VIDEO_START(warlords)
+	MCFG_PALETTE_INIT_OVERRIDE(centiped_state,warlords)
+	MCFG_VIDEO_START_OVERRIDE(centiped_state,warlords)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(warlords)
 
@@ -1924,7 +1921,7 @@ static MACHINE_CONFIG_START( bullsdrt, centiped_state )
 	MCFG_GFXDECODE(centiped)
 	MCFG_PALETTE_LENGTH(4+4*4*4*4)
 
-	MCFG_VIDEO_START(bullsdrt)
+	MCFG_VIDEO_START_OVERRIDE(centiped_state,bullsdrt)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

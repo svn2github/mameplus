@@ -415,6 +415,7 @@ public:
 	} chihiro_devs;
 
 	nv2a_renderer *nvidia_nv2a;
+	virtual void machine_start();
 };
 
 /*
@@ -1553,7 +1554,7 @@ int ide_baseboard_device::write_sector(UINT32 lba, const void *buffer)
 
 static WRITE_LINE_DEVICE_HANDLER( chihiro_pic8259_1_set_int_line )
 {
-	cputag_set_input_line(device->machine(), "maincpu", 0, state ? HOLD_LINE : CLEAR_LINE);
+	device->machine().device("maincpu")->execute().set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 static READ8_DEVICE_HANDLER( get_slave_ack )
@@ -1800,27 +1801,33 @@ ADDRESS_MAP_END
 static INPUT_PORTS_START( chihiro )
 INPUT_PORTS_END
 
-static MACHINE_START( chihiro )
+void chihiro_state::machine_start()
 {
-	chihiro_state *chst=machine.driver_data<chihiro_state>();
-	chst->nvidia_nv2a=auto_alloc(machine, nv2a_renderer(machine));
+	nvidia_nv2a=auto_alloc(machine(), nv2a_renderer(machine()));
 	memset(pic16lc_buffer,0,sizeof(pic16lc_buffer));
 	pic16lc_buffer[0]='B';
 	pic16lc_buffer[4]=2; // A/V connector, 2=vga
-	chst->smbus_register_device(0x10,smbus_callback_pic16lc);
-	chst->smbus_register_device(0x45,smbus_callback_cx25871);
-	chst->smbus_register_device(0x54,smbus_callback_eeprom);
-	device_set_irq_callback(machine.device("maincpu"), irq_callback);
-	chst->chihiro_devs.pic8259_1 = machine.device( "pic8259_1" );
-	chst->chihiro_devs.pic8259_2 = machine.device( "pic8259_2" );
-	chst->chihiro_devs.ide = machine.device( "ide" );
-	if (machine.debug_flags & DEBUG_FLAG_ENABLED)
-		debug_console_register_command(machine,"chihiro",CMDFLAG_NONE,0,1,4,chihiro_debug_commands);
+	smbus_register_device(0x10,smbus_callback_pic16lc);
+	smbus_register_device(0x45,smbus_callback_cx25871);
+	smbus_register_device(0x54,smbus_callback_eeprom);
+	machine().device("maincpu")->execute().set_irq_acknowledge_callback(irq_callback);
+	chihiro_devs.pic8259_1 = machine().device( "pic8259_1" );
+	chihiro_devs.pic8259_2 = machine().device( "pic8259_2" );
+	chihiro_devs.ide = machine().device( "ide" );
+	if (machine().debug_flags & DEBUG_FLAG_ENABLED)
+		debug_console_register_command(machine(),"chihiro",CMDFLAG_NONE,0,1,4,chihiro_debug_commands);
 }
 
 static SLOT_INTERFACE_START(ide_baseboard)
 	SLOT_INTERFACE("bb", IDE_BASEBOARD)
 SLOT_INTERFACE_END
+
+static const ide_config ide_intf =
+{
+	ide_interrupt,
+	"maincpu",
+	AS_PROGRAM
+};
 
 static MACHINE_CONFIG_START( chihiro_base, chihiro_state )
 
@@ -1843,8 +1850,7 @@ static MACHINE_CONFIG_START( chihiro_base, chihiro_state )
 	MCFG_PIC8259_ADD( "pic8259_1", chihiro_pic8259_1_config )
 	MCFG_PIC8259_ADD( "pic8259_2", chihiro_pic8259_2_config )
 	MCFG_PIT8254_ADD( "pit8254", chihiro_pit8254_config )
-	MCFG_IDE_CONTROLLER_ADD( "ide", ide_interrupt , ide_baseboard, NULL, "bb", true)
-	MCFG_IDE_BUS_MASTER_SPACE( "ide", "maincpu", PROGRAM )
+	MCFG_IDE_CONTROLLER_ADD( "ide", ide_intf , ide_baseboard, NULL, "bb", true)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1855,7 +1861,6 @@ static MACHINE_CONFIG_START( chihiro_base, chihiro_state )
 	MCFG_SCREEN_UPDATE_DRIVER(chihiro_state,screen_update_callback)
 	MCFG_SCREEN_VBLANK_DRIVER(chihiro_state,vblank_callback)
 
-	MCFG_MACHINE_START(chihiro)
 
 	MCFG_PALETTE_LENGTH(65536)
 MACHINE_CONFIG_END

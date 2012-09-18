@@ -54,13 +54,16 @@ public:
 	UINT16		  irq_reg;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_READ16_MEMBER(drill_io_r);
 	DECLARE_WRITE16_MEMBER(drill_io_w);
 	DECLARE_WRITE16_MEMBER(sensors_w);
 	DECLARE_READ16_MEMBER(drill_irq_r);
 	DECLARE_WRITE16_MEMBER(drill_irq_w);
 	DECLARE_DRIVER_INIT(drill);
+	DECLARE_MACHINE_START(drill);
+	DECLARE_MACHINE_RESET(drill);
+
 };
 
 
@@ -69,7 +72,7 @@ READ16_MEMBER(_2mindril_state::drill_io_r)
 
 
 //  if (offset * 2 == 0x4)
-	/*popmessage("PC=%08x %04x %04x %04x %04x %04x %04x %04x %04x", cpu_get_pc(&space.device()), m_iodata[0/2], m_iodata[2/2], m_iodata[4/2], m_iodata[6/2],
+	/*popmessage("PC=%08x %04x %04x %04x %04x %04x %04x %04x %04x", space.device().safe_pc(), m_iodata[0/2], m_iodata[2/2], m_iodata[4/2], m_iodata[6/2],
                                         m_iodata[8/2], m_iodata[0xa/2], m_iodata[0xc/2], m_iodata[0xe/2]);*/
 
 	switch(offset)
@@ -78,7 +81,7 @@ READ16_MEMBER(_2mindril_state::drill_io_r)
 		case 0x2/2:
 		{
 			int arm_pwr = ioport("IN0")->read();//throw
-			//popmessage("PC=%08x %02x",cpu_get_pc(&space.device()),arm_pwr);
+			//popmessage("PC=%08x %02x",space.device().safe_pc(),arm_pwr);
 
 			if(arm_pwr > 0xe0) return ~0x1800;
 			if(arm_pwr > 0xc0) return ~0x1400;
@@ -88,7 +91,7 @@ READ16_MEMBER(_2mindril_state::drill_io_r)
 		}
 		case 0x4/2: return (m_defender_sensor) | (m_shutter_sensor);
 		case 0xe/2: return ioport("IN2")->read();//coins
-//      default:  printf("PC=%08x [%04x] -> %04x R\n", cpu_get_pc(&space.device()), offset * 2, m_iodata[offset]);
+//      default:  printf("PC=%08x [%04x] -> %04x R\n", space.device().safe_pc(), offset * 2, m_iodata[offset]);
 	}
 
 	return 0xffff;
@@ -110,7 +113,7 @@ WRITE16_MEMBER(_2mindril_state::drill_io_w)
 	}
 
 //  if(data != 0 && offset != 8)
-//  printf("PC=%08x [%04x] <- %04x W\n", cpu_get_pc(&space.device()), offset * 2, data);
+//  printf("PC=%08x [%04x] <- %04x W\n", space.device().safe_pc(), offset * 2, data);
 }
 
 /*
@@ -186,10 +189,10 @@ WRITE16_MEMBER(_2mindril_state::drill_irq_w)
     ---- ---- -??- -??? connected to the other levels?
     */
 	if(((irq_reg & 8) == 0) && data & 8)
-		cputag_set_input_line(machine(), "maincpu", 4, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(4, CLEAR_LINE);
 
 	if(((irq_reg & 0x10) == 0) && data & 0x10)
-		cputag_set_input_line(machine(), "maincpu", 5, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(5, CLEAR_LINE);
 
 	if(data & 0xffe7)
 		printf("%04x\n",data);
@@ -399,13 +402,13 @@ GFXDECODE_END
 
 static INTERRUPT_GEN( drill_vblank_irq )
 {
-	device_set_input_line(device, 4, ASSERT_LINE);
+	device->execute().set_input_line(4, ASSERT_LINE);
 }
 
 #if 0
 static INTERRUPT_GEN( drill_device_irq )
 {
-	device_set_input_line(device, 5, ASSERT_LINE);
+	device->execute().set_input_line(5, ASSERT_LINE);
 }
 #endif
 
@@ -413,7 +416,7 @@ static INTERRUPT_GEN( drill_device_irq )
 static void irqhandler(device_t *device, int irq)
 {
 //  _2mindril_state *state = machine.driver_data<_2mindril_state>();
-//  device_set_input_line(state->m_maincpu, 5, irq ? ASSERT_LINE : CLEAR_LINE);
+//  state->m_maincpu->set_input_line(5, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
@@ -422,23 +425,21 @@ static const ym2610_interface ym2610_config =
 };
 
 
-static MACHINE_START( drill )
+MACHINE_START_MEMBER(_2mindril_state,drill)
 {
-	_2mindril_state *state = machine.driver_data<_2mindril_state>();
 
-	state->m_maincpu = machine.device("maincpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
 
-	state->save_item(NAME(state->m_defender_sensor));
-	state->save_item(NAME(state->m_shutter_sensor));
+	save_item(NAME(m_defender_sensor));
+	save_item(NAME(m_shutter_sensor));
 }
 
-static MACHINE_RESET( drill )
+MACHINE_RESET_MEMBER(_2mindril_state,drill)
 {
-	_2mindril_state *state = machine.driver_data<_2mindril_state>();
 
-	state->m_defender_sensor = 0;
-	state->m_shutter_sensor = 0;
-	state->irq_reg = 0;
+	m_defender_sensor = 0;
+	m_shutter_sensor = 0;
+	irq_reg = 0;
 }
 
 static MACHINE_CONFIG_START( drill, _2mindril_state )
@@ -449,8 +450,8 @@ static MACHINE_CONFIG_START( drill, _2mindril_state )
 	//MCFG_CPU_PERIODIC_INT(drill_device_irq,60)
 	MCFG_GFXDECODE(2mindril)
 
-	MCFG_MACHINE_START(drill)
-	MCFG_MACHINE_RESET(drill)
+	MCFG_MACHINE_START_OVERRIDE(_2mindril_state,drill)
+	MCFG_MACHINE_RESET_OVERRIDE(_2mindril_state,drill)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -462,7 +463,7 @@ static MACHINE_CONFIG_START( drill, _2mindril_state )
 
 	MCFG_PALETTE_LENGTH(0x2000)
 
-	MCFG_VIDEO_START(f3)
+	MCFG_VIDEO_START_OVERRIDE(_2mindril_state,f3)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

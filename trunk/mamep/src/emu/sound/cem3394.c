@@ -103,8 +103,7 @@
 
 
 /* this structure defines the parameters for a channel */
-typedef struct _cem3394_state cem3394_state;
-struct _cem3394_state
+struct cem3394_state
 {
 	sound_stream * stream;			/* our stream */
 	void (*external)(device_t *, int, short *);/* callback to generate external samples */
@@ -141,7 +140,7 @@ INLINE cem3394_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == CEM3394);
-	return (cem3394_state *)downcast<legacy_device_base *>(device)->token();
+	return (cem3394_state *)downcast<cem3394_device *>(device)->token();
 }
 
 
@@ -557,33 +556,42 @@ double cem3394_get_parameter(device_t *device, int input)
 	return 0.0;
 }
 
+const device_type CEM3394 = &device_creator<cem3394_device>;
 
-
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( cem3394 )
+cem3394_device::cem3394_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, CEM3394, "CEM3394", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(cem3394_state);					break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(cem3394_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( cem3394 );		break;
-		case DEVINFO_FCT_STOP:							/* nothing */									break;
-		case DEVINFO_FCT_RESET:							/* nothing */									break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "CEM3394");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Analog Synth");				break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void cem3394_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void cem3394_device::device_start()
+{
+	DEVICE_START_NAME( cem3394 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void cem3394_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(CEM3394, cem3394);

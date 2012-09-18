@@ -15,12 +15,21 @@
 #include "cpu/ssp1601/ssp1601.h"
 
 #include "machine/megavdp.h"
+#include "machine/mega32x.h"
+#include "machine/megacd.h"
 #include "video/315_5124.h"
 
 #define MASTER_CLOCK_NTSC 53693175
 #define MASTER_CLOCK_PAL  53203424
 #define SEGACD_CLOCK      12500000
 
+
+#define MAX_MD_CART_SIZE 0x800000
+
+/* where a fresh copy of rom is stashed for reset and banking setup */
+#define VIRGIN_COPY_GEN 0xd00000
+
+#define MD_CPU_REGION_SIZE (MAX_MD_CART_SIZE + VIRGIN_COPY_GEN)
 
 
 /*----------- defined in machine/megadriv.c -----------*/
@@ -97,15 +106,22 @@ class md_base_state : public driver_device
 public:
 	md_base_state(const machine_config &mconfig, device_type type, const char *tag)
 	: driver_device(mconfig, type, tag),
-		m_vdp(*this,"gen_vdp")
+		m_vdp(*this,"gen_vdp"),
+		m_megadrive_ram(*this,"megadrive_ram")
 	{ }
 	required_device<sega_genesis_vdp_device> m_vdp;
+	optional_shared_ptr<UINT16> m_megadrive_ram;
 
 	DECLARE_DRIVER_INIT(megadriv_c2);
 	DECLARE_DRIVER_INIT(megadrie);
 	DECLARE_DRIVER_INIT(megadriv);
 	DECLARE_DRIVER_INIT(megadrij);
 	DECLARE_DRIVER_INIT(mpnew);
+
+	TILE_GET_INFO_MEMBER( get_stampmap_16x16_1x1_tile_info );
+	TILE_GET_INFO_MEMBER( get_stampmap_32x32_1x1_tile_info );
+	TILE_GET_INFO_MEMBER( get_stampmap_16x16_16x16_tile_info );
+	TILE_GET_INFO_MEMBER( get_stampmap_32x32_16x16_tile_info );
 };
 
 class md_boot_state : public md_base_state
@@ -122,7 +138,7 @@ public:
 	// jzth protection
 	DECLARE_WRITE16_MEMBER( bl_710000_w )
 	{
-		int pc = cpu_get_pc(&space.device());
+		int pc = space.device().safe_pc();
 
 		logerror("%06x writing to bl_710000_w %04x %04x\n", pc, data, mem_mask);
 
@@ -178,7 +194,7 @@ public:
 	DECLARE_READ16_MEMBER( bl_710000_r )
 	{
 		UINT16 ret;
-		int pc = cpu_get_pc(&space.device());
+		int pc = space.device().safe_pc();
 		logerror("%06x reading from bl_710000_r\n", pc);
 
 		if (m_protcount==6) { ret = 0xe; }
@@ -255,6 +271,10 @@ public:
 	DECLARE_DRIVER_INIT(pclubjv4);
 	DECLARE_DRIVER_INIT(pclubjv5);
 	void segac2_common_init(running_machine& machine, int (*func)(int in));
+	DECLARE_VIDEO_START(segac2_new);
+	DECLARE_MACHINE_START(segac2);
+	DECLARE_MACHINE_RESET(segac2);
+
 };
 
 class mplay_state : public md_base_state
@@ -291,6 +311,8 @@ public:
 	UINT16 *m_ic36_ram;
 	DECLARE_WRITE_LINE_MEMBER( int_callback );
 	DECLARE_DRIVER_INIT(megaplay);
+	DECLARE_VIDEO_START(megplay);
+	DECLARE_MACHINE_RESET(megaplay);
 };
 
 class mtech_state : public md_base_state
@@ -324,10 +346,11 @@ public:
 	UINT8* m_megatech_banked_ram;
 	DECLARE_DRIVER_INIT(mt_crt);
 	DECLARE_DRIVER_INIT(mt_slot);
+	DECLARE_VIDEO_START(mtnew);
+	DECLARE_MACHINE_RESET(mtnew);
 };
 
-typedef struct _megadriv_cart  megadriv_cart;
-struct _megadriv_cart
+struct megadriv_cart
 {
 	int type;
 
@@ -370,22 +393,11 @@ public:
 
 	DECLARE_DRIVER_INIT(genesis);
 	DECLARE_DRIVER_INIT(mess_md_common);
-	DECLARE_DRIVER_INIT(_32x);
 	DECLARE_DRIVER_INIT(md_eur);
 	DECLARE_DRIVER_INIT(md_jpn);
-	DECLARE_DRIVER_INIT(mess_32x);
-	DECLARE_DRIVER_INIT(mess_32x_eur);
-	DECLARE_DRIVER_INIT(mess_32x_jpn);
+
 };
 
-class pico_state : public md_cons_state
-{
-public:
-	pico_state(const machine_config &mconfig, device_type type, const char *tag)
-	: md_cons_state(mconfig, type, tag) { }
-
-	UINT8 m_page_register;
-};
 
 class mdsvp_state : public md_cons_state
 {
@@ -420,32 +432,25 @@ public:
 
 };
 
-// Fifa96 needs the CPUs swapped for the gameplay to enter due to some race conditions
-// when using the DRC core.  Needs further investigation, the non-DRC core works either
-// way
-#define _32X_SWAP_MASTER_SLAVE_HACK
 
-extern int _32x_is_connected;
+
 extern cpu_device *_32x_master_cpu;
 extern cpu_device *_32x_slave_cpu;
 
 // called from out main scanline timers...
 
-extern int _32x_fifo_available_callback(device_t *device, UINT32 src, UINT32 dst, UINT32 data, int size);
-extern MACHINE_RESET( _32x );
-ADDRESS_MAP_EXTERN( sh2_main_map, driver_device );
-ADDRESS_MAP_EXTERN( sh2_slave_map, driver_device );
-extern emu_timer *_32x_pwm_timer;
-extern TIMER_CALLBACK( _32x_pwm_callback );
 
-extern int megadrive_vblank_flag;
-extern int genesis_scanline_counter;
+
+
 
 class segacd_state : public _32x_state	// use _32x_state as base to make easier the combo 32X + SCD
 {
 public:
 	segacd_state(const machine_config &mconfig, device_type type, const char *tag)
-	: _32x_state(mconfig, type, tag) { }
+	: _32x_state(mconfig, type, tag),
+	  m_font_bits(*this,"segacd_font") { }
+
+	required_shared_ptr<UINT16> m_font_bits;
 };
 
 extern int sega_cd_connected;
@@ -478,15 +483,9 @@ extern int megadrive_total_scanlines;
 extern int megadrive_vblank_flag;
 extern int genesis_scanline_counter;
 extern UINT16* megadrive_vdp_palette_lookup;
-extern UINT16* megadrive_vdp_palette_lookup_sprite; // for C2
-extern UINT16* megadrive_vdp_palette_lookup_shadow;
-extern UINT16* megadrive_vdp_palette_lookup_highlight;
-extern int segac2_bg_pal_lookup[4];
-extern int segac2_sp_pal_lookup[4];
-extern int genvdp_use_cram;
+
 extern int megadrive_region_export;
 extern int megadrive_region_pal;
-TIMER_DEVICE_CALLBACK( megadriv_scanline_timer_callback );
 
 /* machine/megadriv.c */
 extern TIMER_DEVICE_CALLBACK( megadriv_scanline_timer_callback );

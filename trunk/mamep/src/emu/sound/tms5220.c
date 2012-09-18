@@ -343,8 +343,7 @@ device), PES Speech adapter (serial port connection)
 
 static const UINT8 reload_table[4] = { 0, 2, 4, 6 }; //sample count reload for 5220c only; 5200 and 5220 always reload with 0; keep in mind this is loaded on IP=0 PC=12 subcycle=1 so it immediately will increment after one sample, effectively being 1,3,5,7 as in the comments above.
 
-typedef struct _tms5220_state tms5220_state;
-struct _tms5220_state
+struct tms5220_state
 {
 	/* coefficient tables */
 	int variant;				/* Variant of the 5xxx - see tms5110r.h */
@@ -472,7 +471,7 @@ INLINE tms5220_state *get_safe_token(device_t *device)
 		   device->type() == TMS5220C ||
 		   device->type() == TMC0285 ||
 		   device->type() == TMS5200);
-	return (tms5220_state *)downcast<legacy_device_base *>(device)->token();
+	return (tms5220_state *)downcast<tms5220_device *>(device)->token();
 }
 
 /* Static function prototypes */
@@ -2004,40 +2003,141 @@ void tms5220_set_frequency(device_t *device, int frequency)
 	tms->clock = frequency;
 }
 
+const device_type TMS5220C = &device_creator<tms5220c_device>;
+
+tms5220c_device::tms5220c_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: tms5220_device(mconfig, TMS5220C, "TMS5220C", tag, owner, clock)
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void tms5220c_device::device_start()
+{
+	DEVICE_START_NAME( tms5220c )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void tms5220c_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
 
 
-/*-------------------------------------------------
-    device definition
--------------------------------------------------*/
+const device_type TMS5220 = &device_creator<tms5220_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+tms5220_device::tms5220_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TMS5220, "TMS5220", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(tms5220_state));
+}
+tms5220_device::tms5220_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, type, name, tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(tms5220_state));
+}
 
-#define DEVTEMPLATE_ID(p,s)				p##tms5220##s
-#define DEVTEMPLATE_FEATURES			DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME				"TMS5220"
-#define DEVTEMPLATE_FAMILY				"TI Speech"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-#define DEVTEMPLATE_DERIVED_ID(p,s)		p##tms5220c##s
-#define DEVTEMPLATE_DERIVED_FEATURES	DT_HAS_START
-#define DEVTEMPLATE_DERIVED_NAME		"TMS5220C"
-#include "devtempl.h"
+void tms5220_device::device_config_complete()
+{
+}
 
-#define DEVTEMPLATE_DERIVED_ID(p,s)		p##tmc0285##s
-#define DEVTEMPLATE_DERIVED_FEATURES	DT_HAS_START
-#define DEVTEMPLATE_DERIVED_NAME		"TMC0285"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
 
-#define DEVTEMPLATE_DERIVED_ID(p,s)		p##tms5200##s
-#define DEVTEMPLATE_DERIVED_FEATURES	DT_HAS_START
-#define DEVTEMPLATE_DERIVED_NAME		"TMS5200"
-#include "devtempl.h"
+void tms5220_device::device_start()
+{
+	DEVICE_START_NAME( tms5220 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void tms5220_device::device_reset()
+{
+	DEVICE_RESET_NAME( tms5220 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void tms5220_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
 
 
-DEFINE_LEGACY_SOUND_DEVICE(TMS5220C, tms5220c);
-DEFINE_LEGACY_SOUND_DEVICE(TMS5220, tms5220);
-DEFINE_LEGACY_SOUND_DEVICE(TMC0285, tmc0285);
-DEFINE_LEGACY_SOUND_DEVICE(TMS5200, tms5200);
+const device_type TMC0285 = &device_creator<tmc0285_device>;
+
+tmc0285_device::tmc0285_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: tms5220_device(mconfig, TMC0285, "TMC0285", tag, owner, clock)
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void tmc0285_device::device_start()
+{
+	DEVICE_START_NAME( tmc0285 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void tmc0285_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+
+const device_type TMS5200 = &device_creator<tms5200_device>;
+
+tms5200_device::tms5200_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: tms5220_device(mconfig, TMS5200, "TMS5200", tag, owner, clock)
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void tms5200_device::device_start()
+{
+	DEVICE_START_NAME( tms5200 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void tms5200_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+
 
 
 /******************************************************************************

@@ -139,11 +139,11 @@ static TIMER_DEVICE_CALLBACK( galpanic_scanline )
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "maincpu", 3, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 
 	/* Pandora "sprite end dma" irq? */
 	if(scanline == 32)
-		cputag_set_input_line(timer.machine(), "maincpu", 5, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 }
 
 
@@ -152,14 +152,14 @@ static TIMER_DEVICE_CALLBACK( galhustl_scanline )
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "maincpu", 3, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 
 	/* Pandora "sprite end dma" irq? */
 	if(scanline == 32)
-		cputag_set_input_line(timer.machine(), "maincpu", 4, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 
 	if(scanline == 0) // timer irq?
-		cputag_set_input_line(timer.machine(), "maincpu", 5, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 }
 
 
@@ -581,8 +581,8 @@ static MACHINE_CONFIG_START( galpanic, galpanic_state )
 
 
 
-	MCFG_PALETTE_INIT(galpanic)
-	MCFG_VIDEO_START(galpanic)
+	MCFG_PALETTE_INIT_OVERRIDE(galpanic_state,galpanic)
+	MCFG_VIDEO_START_OVERRIDE(galpanic_state,galpanic)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

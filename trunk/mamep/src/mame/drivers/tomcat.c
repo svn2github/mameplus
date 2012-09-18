@@ -76,6 +76,7 @@ public:
 	DECLARE_READ8_MEMBER(tomcat_nvram_r);
 	DECLARE_WRITE8_MEMBER(tomcat_nvram_w);
 	DECLARE_WRITE8_MEMBER(soundlatches_w);
+	virtual void machine_start();
 };
 
 
@@ -182,7 +183,7 @@ WRITE16_MEMBER(tomcat_state::tomcat_mresl_w)
 {
 	// 320 Reset Low         (Address Strobe)
 	// Reset TMS320
-	device_set_input_line(machine().device("dsp"), INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("dsp")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 WRITE16_MEMBER(tomcat_state::tomcat_mresh_w)
@@ -190,13 +191,13 @@ WRITE16_MEMBER(tomcat_state::tomcat_mresh_w)
 	// 320 Reset high        (Address Strobe)
 	// Release reset of TMS320
 	m_dsp_BIO = 0;
-	device_set_input_line(machine().device("dsp"), INPUT_LINE_RESET, CLEAR_LINE);
+	machine().device("dsp")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 }
 
 WRITE16_MEMBER(tomcat_state::tomcat_irqclr_w)
 {
 	// Clear IRQ Latch          (Address Strobe)
-	cputag_set_input_line(machine(), "maincpu", 1, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(1, CLEAR_LINE);
 }
 
 READ16_MEMBER(tomcat_state::tomcat_inputs2_r)
@@ -223,7 +224,7 @@ READ16_MEMBER(tomcat_state::tomcat_320bio_r)
 
 READ16_MEMBER(tomcat_state::dsp_BIO_r)
 {
-	if ( cpu_get_pc(&space.device()) == 0x0001 )
+	if ( space.device().safe_pc() == 0x0001 )
 	{
 		if ( m_dsp_idle == 0 )
 		{
@@ -232,7 +233,7 @@ READ16_MEMBER(tomcat_state::dsp_BIO_r)
 		}
 		return !m_dsp_BIO;
 	}
-	else if ( cpu_get_pc(&space.device()) == 0x0003 )
+	else if ( space.device().safe_pc() == 0x0003 )
 	{
 		if ( m_dsp_BIO == 1 )
 		{
@@ -296,7 +297,7 @@ static ADDRESS_MAP_START( tomcat_map, AS_PROGRAM, 16, tomcat_state )
 	AM_RANGE(0x40e01a, 0x40e01b) AM_WRITE(tomcat_errh_w)
 	AM_RANGE(0x40e01c, 0x40e01d) AM_WRITE(tomcat_ackh_w)
 	AM_RANGE(0x40e01e, 0x40e01f) AM_WRITE(tomcat_txbuffh_w)
-	AM_RANGE(0x800000, 0x803fff) AM_RAM AM_BASE_LEGACY((UINT16**)&avgdvg_vectorram) AM_SIZE_LEGACY(&avgdvg_vectorram_size)
+	AM_RANGE(0x800000, 0x803fff) AM_RAM AM_SHARE("vectorram")
 	AM_RANGE(0xffa000, 0xffbfff) AM_READWRITE(tomcat_shared_ram_r, tomcat_shared_ram_w)
 	AM_RANGE(0xffc000, 0xffcfff) AM_RAM
 	AM_RANGE(0xffd000, 0xffdfff) AM_DEVREADWRITE8_LEGACY("m48t02", timekeeper_r, timekeeper_w, 0xff00)
@@ -355,22 +356,21 @@ static INPUT_PORTS_START( tomcat )
 	PORT_BIT( 0xff, 0x80, IPT_AD_STICK_X ) PORT_SENSITIVITY(50) PORT_KEYDELTA(30)
 INPUT_PORTS_END
 
-static MACHINE_START(tomcat)
+void tomcat_state::machine_start()
 {
-	tomcat_state *state = machine.driver_data<tomcat_state>();
-	((UINT16*)state->m_shared_ram)[0x0000] = 0xf600;
-	((UINT16*)state->m_shared_ram)[0x0001] = 0x0000;
-	((UINT16*)state->m_shared_ram)[0x0002] = 0xf600;
-	((UINT16*)state->m_shared_ram)[0x0003] = 0x0000;
+	((UINT16*)m_shared_ram)[0x0000] = 0xf600;
+	((UINT16*)m_shared_ram)[0x0001] = 0x0000;
+	((UINT16*)m_shared_ram)[0x0002] = 0xf600;
+	((UINT16*)m_shared_ram)[0x0003] = 0x0000;
 
-	machine.device<nvram_device>("nvram")->set_base(state->m_nvram, 0x800);
+	machine().device<nvram_device>("nvram")->set_base(m_nvram, 0x800);
 
-	state->save_item(NAME(state->m_nvram));
-	state->save_item(NAME(state->m_control_num));
-	state->save_item(NAME(state->m_dsp_BIO));
-	state->save_item(NAME(state->m_dsp_idle));
+	save_item(NAME(m_nvram));
+	save_item(NAME(m_control_num));
+	save_item(NAME(m_dsp_BIO));
+	save_item(NAME(m_dsp_idle));
 
-	state->m_dsp_BIO = 0;
+	m_dsp_BIO = 0;
 }
 
 static const riot6532_interface tomcat_riot6532_intf =
@@ -412,7 +412,6 @@ static MACHINE_CONFIG_START( tomcat, tomcat_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(4000))
 
-	MCFG_MACHINE_START(tomcat)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 

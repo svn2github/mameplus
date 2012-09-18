@@ -70,6 +70,11 @@ public:
 	DECLARE_DRIVER_INIT(lethalth);
 	DECLARE_DRIVER_INIT(m92);
 	DECLARE_DRIVER_INIT(m92_bank);
+	TILE_GET_INFO_MEMBER(get_pf_tile_info);
+	DECLARE_MACHINE_START(m92);
+	DECLARE_MACHINE_RESET(m92);
+	DECLARE_VIDEO_START(m92);
+	DECLARE_VIDEO_START(ppan);
 };
 
 
@@ -81,7 +86,7 @@ extern void m92_sprite_interrupt(running_machine &machine);
 /*----------- defined in video/m92.c -----------*/
 
 
-VIDEO_START( m92 );
+
 SCREEN_UPDATE_IND16( m92 );
-VIDEO_START( ppan );
+
 SCREEN_UPDATE_IND16( ppan );

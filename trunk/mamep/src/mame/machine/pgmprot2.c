@@ -37,10 +37,10 @@ static READ32_HANDLER( arm7_latch_arm_r )
 {
 	pgm_arm_type2_state *state = space->machine().driver_data<pgm_arm_type2_state>();
 
-	device_set_input_line(state->m_prot, ARM7_FIRQ_LINE, CLEAR_LINE ); // guess
+	state->m_prot->set_input_line(ARM7_FIRQ_LINE, CLEAR_LINE ); // guess
 
 	if (PGMARM7LOGERROR)
-		logerror("ARM7: Latch read: %08x (%08x) (%06x)\n", state->m_kov2_latchdata_68k_w, mem_mask, cpu_get_pc(&space->device()));
+		logerror("ARM7: Latch read: %08x (%08x) (%06x)\n", state->m_kov2_latchdata_68k_w, mem_mask, space->device().safe_pc());
 	return state->m_kov2_latchdata_68k_w;
 }
 
@@ -49,7 +49,7 @@ static WRITE32_HANDLER( arm7_latch_arm_w )
 	pgm_arm_type2_state *state = space->machine().driver_data<pgm_arm_type2_state>();
 
 	if (PGMARM7LOGERROR)
-		logerror("ARM7: Latch write: %08x (%08x) (%06x)\n", data, mem_mask, cpu_get_pc(&space->device()));
+		logerror("ARM7: Latch write: %08x (%08x) (%06x)\n", data, mem_mask, space->device().safe_pc());
 
 	COMBINE_DATA(&state->m_kov2_latchdata_arm_w);
 }
@@ -59,7 +59,7 @@ static READ32_HANDLER( arm7_shareram_r )
 	pgm_arm_type2_state *state = space->machine().driver_data<pgm_arm_type2_state>();
 
 	if (PGMARM7LOGERROR)
-		logerror("ARM7: ARM7 Shared RAM Read: %04x = %08x (%08x) (%06x)\n", offset << 2, state->m_arm7_shareram[offset], mem_mask, cpu_get_pc(&space->device()));
+		logerror("ARM7: ARM7 Shared RAM Read: %04x = %08x (%08x) (%06x)\n", offset << 2, state->m_arm7_shareram[offset], mem_mask, space->device().safe_pc());
 	return state->m_arm7_shareram[offset];
 }
 
@@ -68,7 +68,7 @@ static WRITE32_HANDLER( arm7_shareram_w )
 	pgm_arm_type2_state *state = space->machine().driver_data<pgm_arm_type2_state>();
 
 	if (PGMARM7LOGERROR)
-		logerror("ARM7: ARM7 Shared RAM Write: %04x = %08x (%08x) (%06x)\n", offset << 2, data, mem_mask, cpu_get_pc(&space->device()));
+		logerror("ARM7: ARM7 Shared RAM Write: %04x = %08x (%08x) (%06x)\n", offset << 2, data, mem_mask, space->device().safe_pc());
 	COMBINE_DATA(&state->m_arm7_shareram[offset]);
 }
 
@@ -77,7 +77,7 @@ static READ16_HANDLER( arm7_latch_68k_r )
 	pgm_arm_type2_state *state = space->machine().driver_data<pgm_arm_type2_state>();
 
 	if (PGMARM7LOGERROR)
-		logerror("M68K: Latch read: %04x (%04x) (%06x)\n", state->m_kov2_latchdata_arm_w & 0x0000ffff, mem_mask, cpu_get_pc(&space->device()));
+		logerror("M68K: Latch read: %04x (%04x) (%06x)\n", state->m_kov2_latchdata_arm_w & 0x0000ffff, mem_mask, space->device().safe_pc());
 	return state->m_kov2_latchdata_arm_w;
 }
 
@@ -86,10 +86,10 @@ static WRITE16_HANDLER( arm7_latch_68k_w )
 	pgm_arm_type2_state *state = space->machine().driver_data<pgm_arm_type2_state>();
 
 	if (PGMARM7LOGERROR)
-		logerror("M68K: Latch write: %04x (%04x) (%06x)\n", data & 0x0000ffff, mem_mask, cpu_get_pc(&space->device()));
+		logerror("M68K: Latch write: %04x (%04x) (%06x)\n", data & 0x0000ffff, mem_mask, space->device().safe_pc());
 	COMBINE_DATA(&state->m_kov2_latchdata_68k_w);
 
-	device_set_input_line(state->m_prot, ARM7_FIRQ_LINE, ASSERT_LINE ); // guess
+	state->m_prot->set_input_line(ARM7_FIRQ_LINE, ASSERT_LINE ); // guess
 }
 
 static READ16_HANDLER( arm7_ram_r )
@@ -98,7 +98,7 @@ static READ16_HANDLER( arm7_ram_r )
 	UINT16 *share16 = reinterpret_cast<UINT16 *>(state->m_arm7_shareram.target());
 
 	if (PGMARM7LOGERROR)
-		logerror("M68K: ARM7 Shared RAM Read: %04x = %04x (%08x) (%06x)\n", BYTE_XOR_LE(offset), share16[BYTE_XOR_LE(offset)], mem_mask, cpu_get_pc(&space->device()));
+		logerror("M68K: ARM7 Shared RAM Read: %04x = %04x (%08x) (%06x)\n", BYTE_XOR_LE(offset), share16[BYTE_XOR_LE(offset)], mem_mask, space->device().safe_pc());
 	return share16[BYTE_XOR_LE(offset)];
 }
 
@@ -108,7 +108,7 @@ static WRITE16_HANDLER( arm7_ram_w )
 	UINT16 *share16 = reinterpret_cast<UINT16 *>(state->m_arm7_shareram.target());
 
 	if (PGMARM7LOGERROR)
-		logerror("M68K: ARM7 Shared RAM Write: %04x = %04x (%04x) (%06x)\n", BYTE_XOR_LE(offset), data, mem_mask, cpu_get_pc(&space->device()));
+		logerror("M68K: ARM7 Shared RAM Write: %04x = %04x (%04x) (%06x)\n", BYTE_XOR_LE(offset), data, mem_mask, space->device().safe_pc());
 	COMBINE_DATA(&share16[BYTE_XOR_LE(offset)]);
 }
 
@@ -133,12 +133,11 @@ static ADDRESS_MAP_START( 55857F_arm7_map, AS_PROGRAM, 32, pgm_arm_type2_state )
 	AM_RANGE(0x50000000, 0x500003ff) AM_RAM
 ADDRESS_MAP_END
 
-MACHINE_START( pgm_arm_type2 )
+MACHINE_START_MEMBER(pgm_arm_type2_state,pgm_arm_type2)
 {
-	MACHINE_START_CALL(pgm);
-	pgm_arm_type2_state *state = machine.driver_data<pgm_arm_type2_state>();
+	MACHINE_START_CALL_MEMBER(pgm);
 
-	state->m_prot = machine.device<cpu_device>("prot");
+	m_prot = machine().device<cpu_device>("prot");
 
 	/* register type specific Save State stuff here */
 
@@ -149,7 +148,7 @@ MACHINE_START( pgm_arm_type2 )
 MACHINE_CONFIG_START( pgm_arm_type2, pgm_arm_type2_state )
 	MCFG_FRAGMENT_ADD(pgmbase)
 
-	MCFG_MACHINE_START( pgm_arm_type2 )
+	MCFG_MACHINE_START_OVERRIDE(pgm_arm_type2_state, pgm_arm_type2 )
 
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(kov2_mem)
@@ -176,7 +175,7 @@ static void kov2_latch_init( running_machine &machine )
 static WRITE32_HANDLER( kov2_arm_region_w )
 {
 	pgm_arm_type2_state *state = space->machine().driver_data<pgm_arm_type2_state>();
-	int pc = cpu_get_pc(&space->device());
+	int pc = space->device().safe_pc();
 	int regionhack = state->ioport("RegionHack")->read();
 	if (pc==0x190 && regionhack != 0xff) data = (data & 0xffff0000) | (regionhack << 0);
 	COMBINE_DATA(&state->m_arm7_shareram[0x138/4]);
@@ -229,7 +228,7 @@ DRIVER_INIT_MEMBER(pgm_arm_type2_state,kov2p)
 static WRITE32_HANDLER( martmast_arm_region_w )
 {
 	pgm_arm_type2_state *state = space->machine().driver_data<pgm_arm_type2_state>();
-	int pc = cpu_get_pc(&space->device());
+	int pc = space->device().safe_pc();
 	int regionhack = state->ioport("RegionHack")->read();
 	if (pc==0x170 && regionhack != 0xff) data = (data & 0xffff0000) | (regionhack << 0);
 	COMBINE_DATA(&state->m_arm7_shareram[0x138/4]);
@@ -250,7 +249,7 @@ DRIVER_INIT_MEMBER(pgm_arm_type2_state,martmast)
 static WRITE32_HANDLER( ddp2_arm_region_w )
 {
 	pgm_arm_type2_state *state = space->machine().driver_data<pgm_arm_type2_state>();
-	int pc = cpu_get_pc(&space->device());
+	int pc = space->device().safe_pc();
 	int regionhack = state->ioport("RegionHack")->read();
 	if (pc==0x0174 && regionhack != 0xff) data = (data & 0x0000ffff) | (regionhack << 16);
 	COMBINE_DATA(&state->m_arm7_shareram[0x0]);
@@ -259,19 +258,19 @@ static WRITE32_HANDLER( ddp2_arm_region_w )
 static READ32_HANDLER( ddp2_speedup_r )
 {
 	pgm_arm_type2_state *state = space->machine().driver_data<pgm_arm_type2_state>();
-	int pc = cpu_get_pc(&space->device());
+	int pc = space->device().safe_pc();
 	UINT32 data = state->m_arm_ram[0x300c/4];
 
 	if (pc==0x080109b4)
 	{
 		/* if we've hit the loop where this is read and both values are 0 then the only way out is an interrupt */
-		int r4 = (cpu_get_reg(&space->device(), ARM7_R4));
+		int r4 = (space->device().state().state_int(ARM7_R4));
 		r4 += 0xe;
 
 		if (r4==0x18002f9e)
 		{
 			UINT32 data2 =  state->m_arm_ram[0x2F9C/4]&0xffff0000;
-			if ((data==0x00000000) && (data2==0x00000000)) device_spin_until_interrupt(&space->device());
+			if ((data==0x00000000) && (data2==0x00000000)) space->device().execute().spin_until_interrupt();
 		}
 	}
 
@@ -280,12 +279,12 @@ static READ32_HANDLER( ddp2_speedup_r )
 
 static READ16_HANDLER( ddp2_main_speedup_r )
 {
+	pgm_state *state = space->machine().driver_data<pgm_state>();
+	UINT16 data = state->m_mainram[0x0ee54/2];
+	int pc = space->device().safe_pc();
 
-	UINT16 data = pgm_mainram[0x0ee54/2];
-	int pc = cpu_get_pc(&space->device());
-
-	if (pc == 0x149dce) device_spin_until_interrupt(&space->device());
-	if (pc == 0x149cfe) device_spin_until_interrupt(&space->device());
+	if (pc == 0x149dce) space->device().execute().spin_until_interrupt();
+	if (pc == 0x149cfe) space->device().execute().spin_until_interrupt();
 
 	return data;
 

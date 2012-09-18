@@ -199,7 +199,7 @@ WRITE32_MEMBER(djmain_state::v_ctrl_w)
 		if (m_pending_vb_int && !(!(m_v_ctrl & 0x8000))) // #define DISABLE_VB_INT  (!(state->m_v_ctrl & 0x8000))
 		{
 			m_pending_vb_int = 0;
-			cputag_set_input_line(machine(), "maincpu", M68K_IRQ_4, HOLD_LINE);
+			machine().device("maincpu")->execute().set_input_line(M68K_IRQ_4, HOLD_LINE);
 		}
 	}
 }
@@ -375,17 +375,17 @@ WRITE32_MEMBER(djmain_state::light_ctrl_2_w)
 
 WRITE32_MEMBER(djmain_state::unknown590000_w)
 {
-	//logerror("%08X: unknown 590000 write %08X: %08X & %08X\n", cpu_get_previouspc(&space.device()), offset, data, mem_mask);
+	//logerror("%08X: unknown 590000 write %08X: %08X & %08X\n", space.device().safe_pcbase(), offset, data, mem_mask);
 }
 
 WRITE32_MEMBER(djmain_state::unknown802000_w)
 {
-	//logerror("%08X: unknown 802000 write %08X: %08X & %08X\n", cpu_get_previouspc(&space.device()), offset, data, mem_mask);
+	//logerror("%08X: unknown 802000 write %08X: %08X & %08X\n", space.device().safe_pcbase(), offset, data, mem_mask);
 }
 
 WRITE32_MEMBER(djmain_state::unknownc02000_w)
 {
-	//logerror("%08X: unknown c02000 write %08X: %08X & %08X\n", cpu_get_previouspc(&space.device()), offset, data, mem_mask);
+	//logerror("%08X: unknown c02000 write %08X: %08X & %08X\n", space.device().safe_pcbase(), offset, data, mem_mask);
 }
 
 
@@ -408,7 +408,7 @@ static INTERRUPT_GEN( vb_interrupt )
 	}
 
 	//logerror("V-Blank interrupt\n");
-	device_set_input_line(device, M68K_IRQ_4, HOLD_LINE);
+	device->execute().set_input_line(M68K_IRQ_4, HOLD_LINE);
 }
 
 
@@ -417,12 +417,12 @@ static void ide_interrupt(device_t *device, int state)
 	if (state != CLEAR_LINE)
 	{
 		//logerror("IDE interrupt asserted\n");
-		cputag_set_input_line(device->machine(), "maincpu", M68K_IRQ_1, HOLD_LINE);
+		device->machine().device("maincpu")->execute().set_input_line(M68K_IRQ_1, HOLD_LINE);
 	}
 	else
 	{
 		//logerror("IDE interrupt cleared\n");
-		cputag_set_input_line(device->machine(), "maincpu", M68K_IRQ_1, CLEAR_LINE);
+		device->machine().device("maincpu")->execute().set_input_line(M68K_IRQ_1, CLEAR_LINE);
 	}
 }
 
@@ -1396,39 +1396,37 @@ static const k054539_interface k054539_config =
  *
  *************************************/
 
-static MACHINE_START( djmain )
+void djmain_state::machine_start()
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
-	device_t *ide = machine.device("ide");
+	device_t *ide = machine().device("ide");
 
-	if (ide != NULL && state->m_ide_master_password != NULL)
-		ide_set_master_password(ide, state->m_ide_master_password);
-	if (ide != NULL && state->m_ide_user_password != NULL)
-		ide_set_user_password(ide, state->m_ide_user_password);
+	if (ide != NULL && m_ide_master_password != NULL)
+		ide_set_master_password(ide, m_ide_master_password);
+	if (ide != NULL && m_ide_user_password != NULL)
+		ide_set_user_password(ide, m_ide_user_password);
 
-	state_save_register_global(machine, state->m_sndram_bank);
-	state_save_register_global(machine, state->m_pending_vb_int);
-	state_save_register_global(machine, state->m_v_ctrl);
-	state_save_register_global_array(machine, state->m_obj_regs);
+	state_save_register_global(machine(), m_sndram_bank);
+	state_save_register_global(machine(), m_pending_vb_int);
+	state_save_register_global(machine(), m_v_ctrl);
+	state_save_register_global_array(machine(), m_obj_regs);
 
-	machine.save().register_postload(save_prepost_delegate(FUNC(sndram_set_bank), &machine));
+	machine().save().register_postload(save_prepost_delegate(FUNC(sndram_set_bank), &machine()));
 }
 
 
-static MACHINE_RESET( djmain )
+void djmain_state::machine_reset()
 {
-	djmain_state *state = machine.driver_data<djmain_state>();
 	/* reset sound ram bank */
-	state->m_sndram_bank = 0;
-	sndram_set_bank(machine);
+	m_sndram_bank = 0;
+	sndram_set_bank(machine());
 
 	/* reset the IDE controller */
-	devtag_reset(machine, "ide");
+	machine().device("ide")->reset();
 
 	/* reset LEDs */
-	set_led_status(machine, 0, 1);
-	set_led_status(machine, 1, 1);
-	set_led_status(machine, 2, 1);
+	set_led_status(machine(), 0, 1);
+	set_led_status(machine(), 1, 1);
+	set_led_status(machine(), 2, 1);
 }
 
 
@@ -1448,6 +1446,13 @@ static const k056832_interface djmain_k056832_intf =
 	djmain_tile_callback, "none"
 };
 
+static const ide_config ide_intf =
+{
+	ide_interrupt,
+	NULL,
+	0
+};
+
 static MACHINE_CONFIG_START( djmain, djmain_state )
 
 	/* basic machine hardware */
@@ -1457,10 +1462,8 @@ static MACHINE_CONFIG_START( djmain, djmain_state )
 	MCFG_CPU_PROGRAM_MAP(memory_map)
 	MCFG_CPU_VBLANK_INT("screen", vb_interrupt)
 
-	MCFG_MACHINE_START(djmain)
-	MCFG_MACHINE_RESET(djmain)
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_interrupt, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1472,7 +1475,6 @@ static MACHINE_CONFIG_START( djmain, djmain_state )
 
 	MCFG_PALETTE_LENGTH(0x4440/4)
 	MCFG_GFXDECODE(djmain)
-	MCFG_VIDEO_START(djmain)
 
 	MCFG_K056832_ADD("k056832", djmain_k056832_intf)
 	MCFG_K055555_ADD("k055555")

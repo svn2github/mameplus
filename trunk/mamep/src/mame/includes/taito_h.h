@@ -19,12 +19,14 @@ public:
 	INT32       m_banknum;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_tc0080vco;
 	device_t *m_tc0220ioc;
 	DECLARE_READ8_MEMBER(syvalion_input_bypass_r);
 	DECLARE_WRITE8_MEMBER(sound_bankswitch_w);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 /*----------- defined in video/taito_h.c -----------*/

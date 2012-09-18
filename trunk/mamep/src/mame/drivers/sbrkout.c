@@ -62,6 +62,10 @@ public:
 	DECLARE_READ8_MEMBER(sync_r);
 	DECLARE_READ8_MEMBER(sync2_r);
 	DECLARE_WRITE8_MEMBER(sbrkout_videoram_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -95,24 +99,22 @@ static TIMER_CALLBACK( pot_trigger_callback );
  *
  *************************************/
 
-static MACHINE_START( sbrkout )
+void sbrkout_state::machine_start()
 {
-	sbrkout_state *state = machine.driver_data<sbrkout_state>();
-	UINT8 *videoram = state->m_videoram;
-	state->membank("bank1")->set_base(&videoram[0x380]);
-	state->m_scanline_timer = machine.scheduler().timer_alloc(FUNC(scanline_callback));
-	state->m_pot_timer = machine.scheduler().timer_alloc(FUNC(pot_trigger_callback));
+	UINT8 *videoram = m_videoram;
+	membank("bank1")->set_base(&videoram[0x380]);
+	m_scanline_timer = machine().scheduler().timer_alloc(FUNC(scanline_callback));
+	m_pot_timer = machine().scheduler().timer_alloc(FUNC(pot_trigger_callback));
 
-	state->save_item(NAME(state->m_sync2_value));
-	state->save_item(NAME(state->m_pot_mask));
-	state->save_item(NAME(state->m_pot_trigger));
+	save_item(NAME(m_sync2_value));
+	save_item(NAME(m_pot_mask));
+	save_item(NAME(m_pot_trigger));
 }
 
 
-static MACHINE_RESET( sbrkout )
+void sbrkout_state::machine_reset()
 {
-	sbrkout_state *state = machine.driver_data<sbrkout_state>();
-	state->m_scanline_timer->adjust(machine.primary_screen->time_until_pos(0));
+	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(0));
 }
 
 
@@ -134,7 +136,7 @@ static TIMER_CALLBACK( scanline_callback )
 
 	/* if this is a rising edge of 16V, assert the CPU interrupt */
 	if (scanline % 32 == 16)
-		cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 
 	/* update the DAC state */
 	machine.device<dac_device>("dac")->write_unsigned8((videoram[0x380 + 0x11] & (scanline >> 2)) ? 255 : 0);
@@ -156,7 +158,7 @@ static TIMER_CALLBACK( scanline_callback )
 
 WRITE8_MEMBER(sbrkout_state::irq_ack_w)
 {
-	cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -201,9 +203,9 @@ static void update_nmi_state(running_machine &machine)
 {
 	sbrkout_state *state = machine.driver_data<sbrkout_state>();
 	if ((state->m_pot_trigger[0] & ~state->m_pot_mask[0]) | (state->m_pot_trigger[1] & ~state->m_pot_mask[1]))
-		cputag_set_input_line(machine, "maincpu", INPUT_LINE_NMI, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 	else
-		cputag_set_input_line(machine, "maincpu", INPUT_LINE_NMI, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 
@@ -296,19 +298,17 @@ READ8_MEMBER(sbrkout_state::sync2_r)
  *
  *************************************/
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(sbrkout_state::get_bg_tile_info)
 {
-	sbrkout_state *state = machine.driver_data<sbrkout_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int code = (videoram[tile_index] & 0x80) ? videoram[tile_index] : 0;
-	SET_TILE_INFO(0, code, 0, 0);
+	SET_TILE_INFO_MEMBER(0, code, 0, 0);
 }
 
 
-static VIDEO_START( sbrkout )
+void sbrkout_state::video_start()
 {
-	sbrkout_state *state = machine.driver_data<sbrkout_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(sbrkout_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 
@@ -506,8 +506,6 @@ static MACHINE_CONFIG_START( sbrkout, sbrkout_state )
 	MCFG_CPU_ADD("maincpu", M6502,MAIN_CLOCK/16)	   /* 375 KHz? Should be 750KHz? */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 
-	MCFG_MACHINE_START(sbrkout)
-	MCFG_MACHINE_RESET(sbrkout)
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 
 	/* video hardware */
@@ -519,7 +517,6 @@ static MACHINE_CONFIG_START( sbrkout, sbrkout_state )
 	MCFG_SCREEN_UPDATE_STATIC(sbrkout)
 
 	MCFG_PALETTE_INIT(black_and_white)
-	MCFG_VIDEO_START(sbrkout)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

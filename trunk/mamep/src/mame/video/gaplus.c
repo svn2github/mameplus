@@ -23,13 +23,13 @@
 
 ***************************************************************************/
 
-PALETTE_INIT( gaplus )
+void gaplus_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 256);
+	machine().colortable = colortable_alloc(machine(), 256);
 
 	for (i = 0;i < 256;i++)
 	{
@@ -54,20 +54,20 @@ PALETTE_INIT( gaplus )
 		bit3 = (color_prom[i + 0x200] >> 3) & 0x01;
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		colortable_palette_set_color(machine.colortable,i,MAKE_RGB(r,g,b));
+		colortable_palette_set_color(machine().colortable,i,MAKE_RGB(r,g,b));
 	}
 
 	color_prom += 0x300;
 	/* color_prom now points to the beginning of the lookup table */
 
 	/* characters use colors 0xf0-0xff */
-	for (i = 0;i < machine.gfx[0]->total_colors * machine.gfx[0]->color_granularity;i++)
-		colortable_entry_set_value(machine.colortable, machine.gfx[0]->color_base + i, 0xf0 + (*color_prom++ & 0x0f));
+	for (i = 0;i < machine().gfx[0]->colors() * machine().gfx[0]->granularity();i++)
+		colortable_entry_set_value(machine().colortable, machine().gfx[0]->colorbase() + i, 0xf0 + (*color_prom++ & 0x0f));
 
 	/* sprites */
-	for (i = 0;i < machine.gfx[1]->total_colors * machine.gfx[1]->color_granularity;i++)
+	for (i = 0;i < machine().gfx[1]->colors() * machine().gfx[1]->granularity();i++)
 	{
-		colortable_entry_set_value(machine.colortable, machine.gfx[1]->color_base + i, (color_prom[0] & 0x0f) + ((color_prom[0x200] & 0x0f) << 4));
+		colortable_entry_set_value(machine().colortable, machine().gfx[1]->colorbase() + i, (color_prom[0] & 0x0f) + ((color_prom[0x200] & 0x0f) << 4));
 		color_prom++;
 	}
 }
@@ -81,7 +81,7 @@ PALETTE_INIT( gaplus )
 ***************************************************************************/
 
 /* convert from 32x32 to 36x28 */
-static TILEMAP_MAPPER( tilemap_scan )
+TILEMAP_MAPPER_MEMBER(gaplus_state::tilemap_scan)
 {
 	int offs;
 
@@ -95,15 +95,14 @@ static TILEMAP_MAPPER( tilemap_scan )
 	return offs;
 }
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(gaplus_state::get_tile_info)
 {
-	gaplus_state *state = machine.driver_data<gaplus_state>();
-	UINT8 attr = state->m_videoram[tile_index + 0x400];
+	UINT8 attr = m_videoram[tile_index + 0x400];
 	tileinfo.category = (attr & 0x40) >> 6;
 	tileinfo.group = attr & 0x3f;
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
-			state->m_videoram[tile_index] + ((attr & 0x80) << 1),
+			m_videoram[tile_index] + ((attr & 0x80) << 1),
 			attr & 0x3f,
 			0);
 }
@@ -180,14 +179,13 @@ static void starfield_init(running_machine &machine)
 
 ***************************************************************************/
 
-VIDEO_START( gaplus )
+void gaplus_state::video_start()
 {
-	gaplus_state *state = machine.driver_data<gaplus_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info,tilemap_scan,8,8,36,28);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gaplus_state::get_tile_info),this),tilemap_mapper_delegate(FUNC(gaplus_state::tilemap_scan),this),8,8,36,28);
 
-	colortable_configure_tilemap_groups(machine.colortable, state->m_bg_tilemap, machine.gfx[0], 0xff);
+	colortable_configure_tilemap_groups(machine().colortable, m_bg_tilemap, machine().gfx[0], 0xff);
 
-	starfield_init(machine);
+	starfield_init(machine());
 }
 
 

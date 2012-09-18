@@ -37,8 +37,8 @@ public:
 	int        m_pan[4];
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	eeprom_device *m_eeprom;
 	device_t *m_tc0220ioc;
 	device_t *m_tc0100scn;
@@ -59,10 +59,13 @@ public:
 	DECLARE_WRITE16_MEMBER(othunder_sound_w);
 	DECLARE_READ16_MEMBER(othunder_sound_r);
 	DECLARE_WRITE8_MEMBER(othunder_TC0310FAM_w);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/othunder.c -----------*/
 
-VIDEO_START( othunder );
+
 SCREEN_UPDATE_IND16( othunder );

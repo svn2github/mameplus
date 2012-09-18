@@ -28,7 +28,7 @@ public:
 	int     m_dipsw;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	DECLARE_READ8_MEMBER(blueprnt_sh_dipsw_r);
 	DECLARE_WRITE8_MEMBER(blueprnt_sound_command_w);
 	DECLARE_WRITE8_MEMBER(blueprnt_coin_counter_w);
@@ -36,12 +36,17 @@ public:
 	DECLARE_WRITE8_MEMBER(blueprnt_colorram_w);
 	DECLARE_WRITE8_MEMBER(blueprnt_flipscreen_w);
 	DECLARE_WRITE8_MEMBER(dipsw_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/blueprnt.c -----------*/
 
 
-PALETTE_INIT( blueprnt );
-VIDEO_START( blueprnt );
+
+
 SCREEN_UPDATE_IND16( blueprnt );

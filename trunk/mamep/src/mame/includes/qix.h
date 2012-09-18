@@ -8,6 +8,7 @@
 
 #include "video/mc6845.h"
 #include "machine/6821pia.h"
+#include "sound/sn76496.h"
 
 
 #define MAIN_CLOCK_OSC			20000000	/* 20 MHz */
@@ -24,6 +25,8 @@ class qix_state : public driver_device
 public:
 	qix_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag) ,
+		m_sn1 (*this, "sn1"),
+		m_sn2 (*this, "sn2"),
 		m_68705_port_out(*this, "68705_port_out"),
 		m_68705_ddr(*this, "68705_ddr"),
 		m_videoram(*this, "videoram"),
@@ -31,6 +34,10 @@ public:
 		m_videoram_mask(*this, "videoram_mask"),
 		m_paletteram(*this, "paletteram"),
 		m_scanline_latch(*this, "scanline_latch") { }
+
+	/* devices */
+	optional_device<sn76489_new_device> m_sn1;
+	optional_device<sn76489_new_device> m_sn2;
 
 	/* machine state */
 	optional_shared_ptr<UINT8> m_68705_port_out;
@@ -74,6 +81,9 @@ public:
 	DECLARE_DRIVER_INIT(slither);
 	DECLARE_DRIVER_INIT(zookeep);
 	DECLARE_DRIVER_INIT(kram3);
+	virtual void machine_reset();
+	DECLARE_MACHINE_START(qixmcu);
+	DECLARE_VIDEO_START(qix);
 };
 
 
@@ -87,8 +97,9 @@ extern const pia6821_interface qixmcu_pia_2_intf;
 extern const pia6821_interface slither_pia_1_intf;
 extern const pia6821_interface slither_pia_2_intf;
 
-MACHINE_START( qixmcu );
-MACHINE_RESET( qix );
+
+
+
 
 
 

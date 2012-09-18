@@ -135,6 +135,8 @@ public:
 	DECLARE_READ8_MEMBER(dips1_r);
 	DECLARE_WRITE8_MEMBER(input_mux_w);
 	DECLARE_DRIVER_INIT(bmcbowl);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -142,7 +144,7 @@ public:
 
 #define NVRAM_HACK
 
-static VIDEO_START( bmcbowl )
+void bmcbowl_state::video_start()
 {
 }
 
@@ -203,10 +205,10 @@ READ16_MEMBER(bmcbowl_state::bmc_random_read)
 
 READ16_MEMBER(bmcbowl_state::bmc_protection_r)
 {
-	switch(cpu_get_previouspc(&space.device()))
+	switch(space.device().safe_pcbase())
 	{
 		case 0xca68:
-			switch(cpu_get_reg(&space.device(), M68K_D2))
+			switch(space.device().state().state_int(M68K_D2))
 			{
 				case 0: 		 return 0x37<<8;
 				case 0x1013: return 0;
@@ -214,7 +216,7 @@ READ16_MEMBER(bmcbowl_state::bmc_protection_r)
 			}
 			break;
 	}
-	logerror("Protection read @ %X\n",cpu_get_previouspc(&space.device()));
+	logerror("Protection read @ %X\n",space.device().safe_pcbase());
 	return machine().rand();
 }
 
@@ -260,7 +262,7 @@ WRITE8_MEMBER(bmcbowl_state::via_ca2_out)
 
 WRITE8_MEMBER(bmcbowl_state::via_irq)
 {
-       cputag_set_input_line(machine(), "maincpu", 4, data ? ASSERT_LINE : CLEAR_LINE);
+       machine().device("maincpu")->execute().set_input_line(4, data ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -494,7 +496,7 @@ static const via6522_interface via_interface =
 	/*irq                  */ DEVCB_DRIVER_MEMBER(bmcbowl_state,via_irq)
 };
 
-static MACHINE_RESET( bmcbowl )
+void bmcbowl_state::machine_reset()
 {
 }
 
@@ -512,10 +514,8 @@ static MACHINE_CONFIG_START( bmcbowl, bmcbowl_state )
 
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_VIDEO_START(bmcbowl)
 
 	MCFG_NVRAM_HANDLER(bmcbowl)
-	MCFG_MACHINE_RESET(bmcbowl)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

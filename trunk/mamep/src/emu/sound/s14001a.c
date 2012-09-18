@@ -237,7 +237,7 @@ and off as it normally does during speech). Once START has gone low-high-low, th
 #include "emu.h"
 #include "s14001a.h"
 
-typedef struct
+struct S14001AChip
 {
 	sound_stream * stream;
 
@@ -262,13 +262,13 @@ typedef struct
 	UINT8 *SpeechRom; // array to hold rom contents, mame will not need this, will use a pointer
 	INT16 filtervals[8];
 	UINT8 VSU1000_amp; // amplitude setting on VSU-1000 board
-} S14001AChip;
+};
 
 INLINE S14001AChip *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == S14001A);
-	return (S14001AChip *)downcast<legacy_device_base *>(device)->token();
+	return (S14001AChip *)downcast<s14001a_device *>(device)->token();
 }
 
 
@@ -629,23 +629,42 @@ void s14001a_set_volume(device_t *device, int volume)
 	chip->VSU1000_amp = volume;
 }
 
-DEVICE_GET_INFO( s14001a )
+const device_type S14001A = &device_creator<s14001a_device>;
+
+s14001a_device::s14001a_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, S14001A, "S14001A", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:				info->i = sizeof(S14001AChip);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:						info->start = DEVICE_START_NAME( s14001a );		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:						strcpy(info->s, "S14001A");						break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "TSI S14001A");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.32");						break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright Jonathan Gevaryahu"); break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(S14001AChip));
 }
 
-DEFINE_LEGACY_SOUND_DEVICE(S14001A, s14001a);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void s14001a_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void s14001a_device::device_start()
+{
+	DEVICE_START_NAME( s14001a )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void s14001a_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

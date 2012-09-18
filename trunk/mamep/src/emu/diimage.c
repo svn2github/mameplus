@@ -1007,7 +1007,7 @@ bool device_image_interface::finish_load()
 		if (m_from_swlist)
 			call_display_info();
 
-		if (has_been_created() )// && get_legacy_fct(DEVINFO_FCT_IMAGE_CREATE) != NULL)
+		if (has_been_created())
         {
             err = call_create(m_create_format, m_create_args);
             if (err)
@@ -1220,7 +1220,7 @@ void ui_menu_control_device_image::test_create(bool &can_create, bool &need_conf
 			break;
 
 		default:
-			fatalerror("Unexpected");
+			fatalerror("Unexpected\n");
 			can_create = false;
 			need_confirm = false;
 			break;

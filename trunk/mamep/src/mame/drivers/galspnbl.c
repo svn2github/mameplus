@@ -49,7 +49,7 @@ WRITE16_MEMBER(galspnbl_state::soundcommand_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space,offset,data & 0xff);
-		device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -209,7 +209,7 @@ GFXDECODE_END
 static void irqhandler( device_t *device, int linestate )
 {
 	galspnbl_state *state = device->machine().driver_data<galspnbl_state>();
-	device_set_input_line(state->m_audiocpu, 0, linestate);
+	state->m_audiocpu->set_input_line(0, linestate);
 }
 
 static const ym3812_interface ym3812_config =
@@ -218,11 +218,10 @@ static const ym3812_interface ym3812_config =
 };
 
 
-static MACHINE_START( galspnbl )
+void galspnbl_state::machine_start()
 {
-	galspnbl_state *state = machine.driver_data<galspnbl_state>();
 
-	state->m_audiocpu = machine.device("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 }
 
 static MACHINE_CONFIG_START( galspnbl, galspnbl_state )
@@ -236,7 +235,6 @@ static MACHINE_CONFIG_START( galspnbl, galspnbl_state )
 	MCFG_CPU_PROGRAM_MAP(audio_map)
 								/* NMI is caused by the main CPU */
 
-	MCFG_MACHINE_START(galspnbl)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -249,7 +247,6 @@ static MACHINE_CONFIG_START( galspnbl, galspnbl_state )
 	MCFG_GFXDECODE(galspnbl)
 	MCFG_PALETTE_LENGTH(1024 + 32768)
 
-	MCFG_PALETTE_INIT(galspnbl)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

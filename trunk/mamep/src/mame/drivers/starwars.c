@@ -43,25 +43,24 @@
  *
  *************************************/
 
-static MACHINE_RESET( starwars )
+void starwars_state::machine_reset()
 {
-	starwars_state *state = machine.driver_data<starwars_state>();
 	/* ESB-specific */
-	if (state->m_is_esb)
+	if (m_is_esb)
 	{
-		address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+		address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 		/* reset the slapstic */
 		slapstic_reset();
-		state->m_slapstic_current_bank = slapstic_bank();
-		memcpy(state->m_slapstic_base, &state->m_slapstic_source[state->m_slapstic_current_bank * 0x2000], 0x2000);
+		m_slapstic_current_bank = slapstic_bank();
+		memcpy(m_slapstic_base, &m_slapstic_source[m_slapstic_current_bank * 0x2000], 0x2000);
 
 		/* reset all the banks */
-		state->starwars_out_w(*space, 4, 0);
+		starwars_out_w(*space, 4, 0);
 	}
 
 	/* reset the matrix processor */
-	starwars_mproc_reset(machine);
+	starwars_mproc_reset(machine());
 }
 
 
@@ -74,7 +73,7 @@ static MACHINE_RESET( starwars )
 
 WRITE8_MEMBER(starwars_state::irq_ack_w)
 {
-	cputag_set_input_line(machine(), "maincpu", M6809_IRQ_LINE, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
 }
 
 
@@ -125,7 +124,7 @@ DIRECT_UPDATE_MEMBER(starwars_state::esb_setdirect)
 	/* if we are in the slapstic region, process it */
 	if ((address & 0xe000) == 0x8000)
 	{
-		offs_t pc = cpu_get_pc(&direct.space().device());
+		offs_t pc = direct.space().device().safe_pc();
 
 		/* filter out duplicates; we get these because the handler gets called for
            multiple reasons:
@@ -152,7 +151,7 @@ DIRECT_UPDATE_MEMBER(starwars_state::esb_setdirect)
  *************************************/
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, starwars_state )
-	AM_RANGE(0x0000, 0x2fff) AM_RAM AM_BASE_LEGACY(&avgdvg_vectorram) AM_SIZE_LEGACY(&avgdvg_vectorram_size) AM_REGION("maincpu", 0)
+	AM_RANGE(0x0000, 0x2fff) AM_RAM AM_SHARE("vectorram") AM_REGION("maincpu", 0)
 	AM_RANGE(0x3000, 0x3fff) AM_ROM								/* vector_rom */
 	AM_RANGE(0x4300, 0x431f) AM_READ_PORT("IN0")
 	AM_RANGE(0x4320, 0x433f) AM_READ_PORT("IN1")
@@ -325,7 +324,6 @@ static MACHINE_CONFIG_START( starwars, starwars_state )
 	MCFG_CPU_ADD("audiocpu", M6809, MASTER_CLOCK / 8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_RESET(starwars)
 
 	MCFG_RIOT6532_ADD("riot", MASTER_CLOCK / 8, starwars_riot6532_intf)
 

@@ -48,7 +48,7 @@ enum
 //	GLOBAL VARIABLES
 //============================================================
 
-struct _scale_effect scale_effect;
+struct scale_effect scale_effect;
 
 UINT32 RGBtoYUV[65536];
 UINT32 LUT16to32[65536];

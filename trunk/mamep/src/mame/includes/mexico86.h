@@ -32,9 +32,9 @@ public:
 	int      m_coin_last;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
-	device_t *m_subcpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
+	cpu_device *m_subcpu;
 	device_t *m_mcu;
 
 	/* queue */
@@ -51,6 +51,8 @@ public:
 	DECLARE_WRITE8_MEMBER(mexico86_68705_ddr_b_w);
 	DECLARE_WRITE8_MEMBER(mexico86_bankswitch_w);
 	DECLARE_READ8_MEMBER(kiki_ym2203_r);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 

@@ -532,7 +532,7 @@ void video_manager::exit()
 
 	// free all the graphics elements
 	for (int i = 0; i < MAX_GFX_ELEMENTS; i++)
-		gfx_element_free(machine().gfx[i]);
+		auto_free(machine(), machine().gfx[i]);
 
 	// free the snapshot target
 	machine().render().target_free(m_snap_target);
@@ -1128,7 +1128,7 @@ file_error video_manager::open_next(emu_file &file, const char *extension)
 				end = snapstr.len();
 
 			if (end - pos < 3)
-				fatalerror("Something very wrong is going on!!!");
+				fatalerror("Something very wrong is going on!!!\n");
 
 			// copy the device name to an astring
 			astring snapdevname;

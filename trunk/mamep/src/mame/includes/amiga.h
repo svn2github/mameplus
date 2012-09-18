@@ -320,8 +320,7 @@ Ernesto Corvi & Mariusz Wojcieszek
 
 #define FLAGS_AGA_CHIPSET	(1 << 0)
 
-typedef struct _amiga_machine_interface amiga_machine_interface;
-struct _amiga_machine_interface
+struct amiga_machine_interface
 {
 	UINT32 chip_ram_mask;
 
@@ -342,8 +341,7 @@ struct _amiga_machine_interface
 #define IS_ECS(intf) ( intf->chip_ram_mask == ECS_CHIP_RAM_MASK && (( intf->flags & FLAGS_AGA_CHIPSET) == 0))
 #define IS_ECS_OR_AGA(intf) ( intf->chip_ram_mask == ECS_CHIP_RAM_MASK)
 
-typedef struct _amiga_autoconfig_device amiga_autoconfig_device;
-struct _amiga_autoconfig_device
+struct amiga_autoconfig_device
 {
 	UINT8		link_memory;		/* link into free memory list */
 	UINT8		rom_vector_valid;	/* ROM vector offset valid */
@@ -361,8 +359,7 @@ struct _amiga_autoconfig_device
 	void		(*uninstall)(running_machine &machine, offs_t base); /* memory uninstallation */
 };
 
-typedef struct _autoconfig_device autoconfig_device;
-struct _autoconfig_device
+struct autoconfig_device
 {
 	autoconfig_device *		next;
 	amiga_autoconfig_device	device;
@@ -432,6 +429,11 @@ public:
 	DECLARE_DRIVER_INIT(mquake);
 	DECLARE_DRIVER_INIT(amiga);
 	DECLARE_DRIVER_INIT(cdtv);
+	DECLARE_MACHINE_RESET(mquake);
+	DECLARE_MACHINE_RESET(amiga);
+	DECLARE_VIDEO_START(amiga);
+	DECLARE_PALETTE_INIT(amiga);
+	DECLARE_VIDEO_START(amiga_aga);
 };
 
 
@@ -443,7 +445,7 @@ void amiga_chip_ram_w8(amiga_state *state, offs_t offset, UINT8 data);
 
 void amiga_machine_config(running_machine &machine, const amiga_machine_interface *intf);
 
-MACHINE_RESET( amiga );
+
 
 READ16_HANDLER( amiga_cia_r );
 WRITE16_HANDLER( amiga_cia_w );
@@ -466,7 +468,29 @@ const amiga_machine_interface *amiga_get_interface(running_machine &machine);
 
 /*----------- defined in audio/amiga.c -----------*/
 
-DECLARE_LEGACY_SOUND_DEVICE(AMIGA, amiga_sound);
+class amiga_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	amiga_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~amiga_sound_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type AMIGA;
+
 
 void amiga_audio_update(device_t *device);
 void amiga_audio_data_w(device_t *device, int which, UINT16 data);
@@ -476,8 +500,8 @@ void amiga_audio_data_w(device_t *device, int which, UINT16 data);
 
 extern const UINT16 amiga_expand_byte[256];
 
-PALETTE_INIT( amiga );
-VIDEO_START( amiga );
+
+
 SCREEN_UPDATE_IND16( amiga );
 
 void amiga_copper_setpc(running_machine &machine, UINT32 pc);
@@ -491,7 +515,7 @@ void amiga_sprite_enable_comparitor(running_machine &machine, int which, int ena
 
 /*----------- defined in video/amigaaga.c -----------*/
 
-VIDEO_START( amiga_aga );
+
 SCREEN_UPDATE_RGB32( amiga_aga );
 
 void amiga_aga_render_scanline(running_machine &machine, bitmap_rgb32 &bitmap, int scanline);

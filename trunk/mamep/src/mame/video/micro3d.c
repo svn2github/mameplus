@@ -35,26 +35,24 @@ enum
  *
  *************************************/
 
-VIDEO_START( micro3d )
+void micro3d_state::video_start()
 {
-	micro3d_state *state = machine.driver_data<micro3d_state>();
 
 	/* Allocate 512x12 x 2 3D frame buffers */
-	state->m_frame_buffers[0] = auto_alloc_array(machine, UINT16, 1024 * 512);
-	state->m_frame_buffers[1] = auto_alloc_array(machine, UINT16, 1024 * 512);
-	state->m_tmp_buffer = auto_alloc_array(machine, UINT16, 1024 * 512);
+	m_frame_buffers[0] = auto_alloc_array(machine(), UINT16, 1024 * 512);
+	m_frame_buffers[1] = auto_alloc_array(machine(), UINT16, 1024 * 512);
+	m_tmp_buffer = auto_alloc_array(machine(), UINT16, 1024 * 512);
 }
 
 
-VIDEO_RESET( micro3d )
+void micro3d_state::video_reset()
 {
-	micro3d_state *state = machine.driver_data<micro3d_state>();
 
-	state->m_pipeline_state  = 0;
-	state->m_creg = 0;
+	m_pipeline_state  = 0;
+	m_creg = 0;
 
-	state->m_drawing_buffer = 0;
-	state->m_display_buffer = 1;
+	m_drawing_buffer = 0;
+	m_display_buffer = 1;
 }
 
 
@@ -119,7 +117,7 @@ WRITE16_MEMBER(micro3d_state::micro3d_clut_w)
 WRITE16_MEMBER(micro3d_state::micro3d_creg_w)
 {
 	if (~data & 0x80)
-		cputag_set_input_line(machine(), "vgb", 0, CLEAR_LINE);
+		machine().device("vgb")->execute().set_input_line(0, CLEAR_LINE);
 
 	m_creg = data;
 }
@@ -669,7 +667,7 @@ WRITE32_MEMBER(micro3d_state::micro3d_fifo_w)
 				{
 					UINT32 dpram_r_addr = (((data & 0x01ff) << 1) | m_dpram_bank);
 					m_pipe_data = m_draw_dpram[dpram_r_addr];
-					cputag_set_input_line(machine(), "drmath", AM29000_INTR1, ASSERT_LINE);
+					machine().device("drmath")->execute().set_input_line(AM29000_INTR1, ASSERT_LINE);
 					break;
 				}
 				case 0x80:
@@ -697,7 +695,7 @@ WRITE32_MEMBER(micro3d_state::micro3d_fifo_w)
 					/* TODO: We shouldn't need this extra buffer - is there some sort of sync missing? */
 					memcpy(m_frame_buffers[m_drawing_buffer], m_tmp_buffer, 512*1024*2);
 					m_drawing_buffer ^= 1;
-					cputag_set_input_line(machine(), "vgb", 0, ASSERT_LINE);
+					machine().device("vgb")->execute().set_input_line(0, ASSERT_LINE);
 					break;
 				}
 				default:
@@ -750,7 +748,7 @@ WRITE32_MEMBER(micro3d_state::micro3d_alt_fifo_w)
 
 READ32_MEMBER(micro3d_state::micro3d_pipe_r)
 {
-	cputag_set_input_line(machine(), "drmath", AM29000_INTR1, CLEAR_LINE);
+	machine().device("drmath")->execute().set_input_line(AM29000_INTR1, CLEAR_LINE);
 	return m_pipe_data;
 }
 

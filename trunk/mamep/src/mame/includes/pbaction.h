@@ -31,8 +31,8 @@ public:
 	int        m_scroll;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 
 	UINT8      m_nmi_mask;
 	DECLARE_WRITE8_MEMBER(pbaction_sh_command_w);
@@ -46,6 +46,11 @@ public:
 	DECLARE_WRITE8_MEMBER(pbaction_flipscreen_w);
 	DECLARE_DRIVER_INIT(pbactio3);
 	DECLARE_DRIVER_INIT(pbactio4);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 

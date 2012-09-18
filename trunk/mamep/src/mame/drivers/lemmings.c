@@ -80,12 +80,12 @@ WRITE16_MEMBER(lemmings_state::lemmings_palette_24bit_w)
 WRITE16_MEMBER(lemmings_state::lemmings_sound_w)
 {
 	soundlatch_byte_w(space, 0, data & 0xff);
-	device_set_input_line(m_audiocpu, 1, HOLD_LINE);
+	m_audiocpu->set_input_line(1, HOLD_LINE);
 }
 
 WRITE8_MEMBER(lemmings_state::lemmings_sound_ack_w)
 {
-	device_set_input_line(m_audiocpu, 1, CLEAR_LINE);
+	m_audiocpu->set_input_line(1, CLEAR_LINE);
 }
 
 /******************************************************************************/
@@ -244,7 +244,7 @@ GFXDECODE_END
 static void sound_irq( device_t *device, int state )
 {
 	lemmings_state *lemmings = device->machine().driver_data<lemmings_state>();
-	device_set_input_line(lemmings->m_audiocpu, 0, state);
+	lemmings->m_audiocpu->set_input_line(0, state);
 }
 
 static const ym2151_interface ym2151_config =
@@ -252,11 +252,10 @@ static const ym2151_interface ym2151_config =
 	DEVCB_LINE(sound_irq)
 };
 
-static MACHINE_START( lemmings )
+void lemmings_state::machine_start()
 {
-	lemmings_state *state = machine.driver_data<lemmings_state>();
 
-	state->m_audiocpu = machine.device("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 }
 
 static MACHINE_CONFIG_START( lemmings, lemmings_state )
@@ -269,7 +268,6 @@ static MACHINE_CONFIG_START( lemmings, lemmings_state )
 	MCFG_CPU_ADD("audiocpu", M6809,32220000/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(lemmings)
 
 	/* video hardware */
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
@@ -286,7 +284,6 @@ static MACHINE_CONFIG_START( lemmings, lemmings_state )
 	MCFG_GFXDECODE(lemmings)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(lemmings)
 
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 1);

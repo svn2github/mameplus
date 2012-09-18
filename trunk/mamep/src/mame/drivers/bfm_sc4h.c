@@ -64,16 +64,16 @@ UINT8 read_input_matrix(running_machine &machine, int row)
 
 READ16_MEMBER(sc4_state::sc4_cs1_r)
 {
-	int pc = cpu_get_pc(&space.device());
+	int pc = space.device().safe_pc();
 
 	if (offset<0x100000/2)
 	{
 		// allow some sets to boot, should probably return this data on Mbus once we figure out what it is
 		if ((pc == m_chk41addr) && (offset == m_chk41addr>>1))
 		{
-			UINT32 r_A0 = cpu_get_reg(&space.device(), M68K_A0);
-			UINT32 r_A1 = cpu_get_reg(&space.device(), M68K_A1);
-			UINT32 r_D1 = cpu_get_reg(&space.device(), M68K_D1);
+			UINT32 r_A0 = space.device().state().state_int(M68K_A0);
+			UINT32 r_A1 = space.device().state().state_int(M68K_A1);
+			UINT32 r_D1 = space.device().state().state_int(M68K_D1);
 
 			if (r_D1 == 0x7)
 			{
@@ -113,7 +113,7 @@ READ16_MEMBER(sc4_state::sc4_cs1_r)
 
 READ16_MEMBER(sc4_state::sc4_mem_r)
 {
-	int pc = cpu_get_pc(&space.device());
+	int pc = space.device().safe_pc();
 	int cs = m68307_get_cs(m_maincpu, offset * 2);
 	int base = 0, end = 0, base2 = 0, end2 = 0;
 //  if (!(debugger_access())) printf("cs is %d\n", cs);
@@ -124,8 +124,6 @@ READ16_MEMBER(sc4_state::sc4_mem_r)
 	{
 		case 1:
 			return sc4_cs1_r(space,offset,mem_mask);
-
-
 
 		case 2:
 			base = 0x800000/2;
@@ -225,12 +223,9 @@ READ16_MEMBER(sc4_state::sc4_mem_r)
 				return 0x0000;
 			}
 
-			break;
-
 		case 4:
 			logerror("%08x maincpu read access offset %08x mem_mask %04x cs %d\n", pc, offset*2, mem_mask, cs);
 			return 0x0000;//0xffff;
-			break;
 
 		default:
 			logerror("%08x maincpu read access offset %08x mem_mask %04x cs %d (invalid?)\n", pc, offset*2, mem_mask, cs);
@@ -274,7 +269,7 @@ WRITE8_MEMBER(sc4_state::mux_output2_w)
 
 WRITE16_MEMBER(sc4_state::sc4_mem_w)
 {
-	int pc = cpu_get_pc(&space.device());
+	int pc = space.device().safe_pc();
 	int cs = m68307_get_cs(m_maincpu, offset * 2);
 	int base = 0, end = 0, base2 = 0, end2 = 0;
 
@@ -400,7 +395,7 @@ ADDRESS_MAP_END
 
 READ32_MEMBER(sc4_adder4_state::adder4_mem_r)
 {
-	int pc = cpu_get_pc(&space.device());
+	int pc = space.device().safe_pc();
 	int cs = m68340_get_cs(m_adder4cpu, offset * 4);
 
 	switch ( cs )
@@ -422,7 +417,7 @@ READ32_MEMBER(sc4_adder4_state::adder4_mem_r)
 
 WRITE32_MEMBER(sc4_adder4_state::adder4_mem_w)
 {
-	int pc = cpu_get_pc(&space.device());
+	int pc = space.device().safe_pc();
 	int cs = m68340_get_cs(m_adder4cpu, offset * 4);
 
 	switch ( cs )
@@ -559,7 +554,7 @@ void bfm_sc4_68307_portb_w(address_space *space, bool dedicated, UINT16 data, UI
 {
 //  if (dedicated == false)
 	{
-		int pc = cpu_get_pc(&space->device());
+		int pc = space->device().safe_pc();
 		//m68ki_cpu_core *m68k = m68k_get_safe_token(&space->device());
 		// serial output to the VFD at least..
 		logerror("%08x bfm_sc4_68307_portb_w %04x %04x\n", pc, data, line_mask);
@@ -572,7 +567,7 @@ void bfm_sc4_68307_portb_w(address_space *space, bool dedicated, UINT16 data, UI
 }
 UINT8 bfm_sc4_68307_porta_r(address_space *space, bool dedicated, UINT8 line_mask)
 {
-	int pc = cpu_get_pc(&space->device());
+	int pc = space->device().safe_pc();
 	logerror("%08x bfm_sc4_68307_porta_r\n", pc);
 	return space->machine().rand();
 }
@@ -591,22 +586,21 @@ UINT16 bfm_sc4_68307_portb_r(address_space *space, bool dedicated, UINT16 line_m
 	}
 }
 
-static MACHINE_RESET( sc4 )
+MACHINE_RESET_MEMBER(sc4_state,sc4)
 {
-	sc4_state *state = machine.driver_data<sc4_state>();
 
 	int pattern =0, i;
 
-	for ( i = 0; i < state->m_reels; i++)
+	for ( i = 0; i < m_reels; i++)
 	{
 		stepper_reset_position(i);
 		if ( stepper_optic_state(i) ) pattern |= 1<<i;
 	}
 
-	state->m_dochk41 = true;
+	m_dochk41 = true;
 
-	state->m_optic_pattern = pattern;
-	state->sec.reset();
+	m_optic_pattern = pattern;
+	sec.reset();
 }
 
 static NVRAM_HANDLER( bfm_sc4 )
@@ -627,26 +621,25 @@ static NVRAM_HANDLER( bfm_sc4 )
 
 
 
-static MACHINE_START( sc4 )
+MACHINE_START_MEMBER(sc4_state,sc4)
 {
-	sc4_state *state = machine.driver_data<sc4_state>();
-	state->m_cpuregion = (UINT16*)state->memregion( "maincpu" )->base();
-	state->m_mainram = (UINT16*)auto_alloc_array_clear(machine, UINT16, 0x10000);
-	state->m_duart = machine.device("duart68681");
-	state->m_ymz = machine.device("ymz");
-	m68307_set_port_callbacks(machine.device("maincpu"),
+	m_cpuregion = (UINT16*)memregion( "maincpu" )->base();
+	m_mainram = (UINT16*)auto_alloc_array_clear(machine(), UINT16, 0x10000);
+	m_duart = machine().device("duart68681");
+	m_ymz = machine().device("ymz");
+	m68307_set_port_callbacks(machine().device("maincpu"),
 		bfm_sc4_68307_porta_r,
 		bfm_sc4_68307_porta_w,
 		bfm_sc4_68307_portb_r,
 		bfm_sc4_68307_portb_w );
-	m68307_set_duart68681(machine.device("maincpu"),machine.device("m68307_68681"));
+	m68307_set_duart68681(machine().device("maincpu"),machine().device("m68307_68681"));
 
 	int reels = 6;
-	state->m_reels=reels;
+	m_reels=reels;
 
 	for ( int n = 0; n < reels; n++ )
 	{
-		 if (state->m_reel_setup[n]) stepper_config(machine, n, state->m_reel_setup[n]);
+		 if (m_reel_setup[n]) stepper_config(machine(), n, m_reel_setup[n]);
 	}
 }
 
@@ -713,7 +706,12 @@ static const duart68681_config bfm_sc4_duart68681_config =
 	bfm_sc4_duart_irq_handler,
 	bfm_sc4_duart_tx,
 	bfm_sc4_duart_input_r,
-	bfm_sc4_duart_output_w
+	bfm_sc4_duart_output_w,
+	// TODO: What are the actual frequencies?
+	XTAL_16MHz/2/8,		/* IP2/RxCB clock */
+	XTAL_16MHz/2/16,	/* IP3/TxCA clock */
+	XTAL_16MHz/2/16,	/* IP4/RxCA clock */
+	XTAL_16MHz/2/8,		/* IP5/TxCB clock */
 };
 
 
@@ -769,8 +767,8 @@ MACHINE_CONFIG_START( sc4, sc4_state )
 	// internal duart of the 68307... paired in machine start
 	MCFG_DUART68681_ADD("m68307_68681", 16000000/4, m68307_duart68681_config) // ?? Mhz
 
-	MCFG_MACHINE_START( sc4 )
-	MCFG_MACHINE_RESET( sc4 )
+	MCFG_MACHINE_START_OVERRIDE(sc4_state, sc4 )
+	MCFG_MACHINE_RESET_OVERRIDE(sc4_state, sc4 )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -790,19 +788,18 @@ MACHINE_CONFIG_END
 
 
 
-static MACHINE_START( adder4 )
+MACHINE_START_MEMBER(sc4_adder4_state,adder4)
 {
-	sc4_adder4_state *state = machine.driver_data<sc4_adder4_state>();
-	state->m_adder4cpuregion = (UINT32*)state->memregion( "adder4" )->base();
-	state->m_adder4ram = (UINT32*)auto_alloc_array_clear(machine, UINT32, 0x10000);
-	MACHINE_START_CALL(sc4);
+	m_adder4cpuregion = (UINT32*)memregion( "adder4" )->base();
+	m_adder4ram = (UINT32*)auto_alloc_array_clear(machine(), UINT32, 0x10000);
+	MACHINE_START_CALL_MEMBER(sc4);
 }
 
 MACHINE_CONFIG_DERIVED_CLASS( sc4_adder4, sc4, sc4_adder4_state )
 	MCFG_CPU_ADD("adder4", M68340, 25175000)	 // 68340 (CPU32 core)
 	MCFG_CPU_PROGRAM_MAP(sc4_adder4_map)
 
-	MCFG_MACHINE_START( adder4 )
+	MCFG_MACHINE_START_OVERRIDE(sc4_adder4_state, adder4 )
 MACHINE_CONFIG_END
 
 MACHINE_CONFIG_DERIVED_CLASS( sc4dmd, sc4, sc4_state )
@@ -813,7 +810,7 @@ MACHINE_CONFIG_DERIVED_CLASS( sc4dmd, sc4, sc4_state )
 	MCFG_CPU_PROGRAM_MAP(bfm_dm01_memmap)
 	MCFG_CPU_PERIODIC_INT(bfm_dm01_vbl, 1500 )			/* generate 1500 NMI's per second ?? what is the exact freq?? */
 
-	MCFG_MACHINE_START( sc4 )
+	MCFG_MACHINE_START_OVERRIDE(sc4_state, sc4 )
 MACHINE_CONFIG_END
 
 INPUT_PORTS_START( sc4_base )

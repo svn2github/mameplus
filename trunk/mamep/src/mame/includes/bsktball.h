@@ -50,6 +50,11 @@ public:
 	DECLARE_WRITE8_MEMBER(bsktball_led1_w);
 	DECLARE_WRITE8_MEMBER(bsktball_led2_w);
 	DECLARE_WRITE8_MEMBER(bsktball_videoram_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -69,6 +74,6 @@ DISCRETE_SOUND_EXTERN( bsktball );
 
 /*----------- defined in video/bsktball.c -----------*/
 
-VIDEO_START( bsktball );
+
 SCREEN_UPDATE_IND16( bsktball );
 

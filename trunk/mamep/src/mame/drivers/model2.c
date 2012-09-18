@@ -119,7 +119,7 @@ static int copro_fifoin_pop(device_t *device, UINT32 *result)
 		if (state->m_dsp_type == DSP_TYPE_TGP)
 			return 0;
 
-		fatalerror("Copro FIFOIN underflow (at %08X)", cpu_get_pc(device));
+		fatalerror("Copro FIFOIN underflow (at %08X)\n", device->safe_pc());
 		return 0;
 	}
 
@@ -153,11 +153,11 @@ static void copro_fifoin_push(device_t *device, UINT32 data)
 	model2_state *state = device->machine().driver_data<model2_state>();
 	if (state->m_copro_fifoin_num == COPRO_FIFOIN_SIZE)
 	{
-		fatalerror("Copro FIFOIN overflow (at %08X)", cpu_get_pc(device));
+		fatalerror("Copro FIFOIN overflow (at %08X)\n", device->safe_pc());
 		return;
 	}
 
-	//mame_printf_debug("COPRO FIFOIN at %08X, %08X, %f\n", cpu_get_pc(device), data, *(float*)&data);
+	//mame_printf_debug("COPRO FIFOIN at %08X, %08X, %f\n", device->safe_pc(), data, *(float*)&data);
 
 	state->m_copro_fifoin_data[state->m_copro_fifoin_wpos++] = data;
 	if (state->m_copro_fifoin_wpos == COPRO_FIFOIN_SIZE)
@@ -187,7 +187,7 @@ static UINT32 copro_fifoout_pop(address_space *space)
 		i960_stall(&space->device());
 
 		/* spin the main cpu and let the TGP catch up */
-		device_spin_until_time(&space->device(), attotime::from_usec(100));
+		space->device().execute().spin_until_time(attotime::from_usec(100));
 
 		return 0;
 	}
@@ -225,7 +225,7 @@ static void copro_fifoout_push(device_t *device, UINT32 data)
 	//if (state->m_copro_fifoout_wpos == state->m_copro_fifoout_rpos)
 	if (state->m_copro_fifoout_num == COPRO_FIFOOUT_SIZE)
 	{
-		fatalerror("Copro FIFOOUT overflow (at %08X)", cpu_get_pc(device));
+		fatalerror("Copro FIFOOUT overflow (at %08X)\n", device->safe_pc());
 		return;
 	}
 
@@ -246,13 +246,13 @@ static void copro_fifoout_push(device_t *device, UINT32 data)
 		{
 			sharc_set_flag_input(device, 1, ASSERT_LINE);
 
-			//device_set_input_line(device, SHARC_INPUT_FLAG1, ASSERT_LINE);
+			//device->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
 		}
 		else
 		{
 			sharc_set_flag_input(device, 1, CLEAR_LINE);
 
-			//device_set_input_line(device, SHARC_INPUT_FLAG1, CLEAR_LINE);
+			//device->execute().set_input_line(SHARC_INPUT_FLAG1, CLEAR_LINE);
 		}
 	}
 }
@@ -299,107 +299,100 @@ static TIMER_DEVICE_CALLBACK( model2_timer_cb )
 	state->m_intreq |= (1<<bit);
 	if (state->m_intena & (1<<bit))
 	{
-		cputag_set_input_line(timer.machine(), "maincpu", I960_IRQ2, ASSERT_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(I960_IRQ2, ASSERT_LINE);
 	}
 
 	state->m_timervals[tnum] = 0;
 	state->m_timerrun[tnum] = 0;
 }
 
-static MACHINE_START(model2)
+MACHINE_START_MEMBER(model2_state,model2)
 {
-	model2_state *state = machine.driver_data<model2_state>();
-	state->m_copro_fifoin_data = auto_alloc_array_clear(machine, UINT32, COPRO_FIFOIN_SIZE);
-	state->m_copro_fifoout_data = auto_alloc_array_clear(machine, UINT32, COPRO_FIFOOUT_SIZE);
+	m_copro_fifoin_data = auto_alloc_array_clear(machine(), UINT32, COPRO_FIFOIN_SIZE);
+	m_copro_fifoout_data = auto_alloc_array_clear(machine(), UINT32, COPRO_FIFOOUT_SIZE);
 }
 
-static MACHINE_RESET(model2_common)
+MACHINE_RESET_MEMBER(model2_state,model2_common)
 {
-	model2_state *state = machine.driver_data<model2_state>();
 	int i;
 
-	state->m_intreq = 0;
-	state->m_intena = 0;
-	state->m_coproctl = 0;
-	state->m_coprocnt = 0;
-	state->m_geoctl = 0;
-	state->m_geocnt = 0;
-	state->m_ctrlmode = 0;
-	state->m_analog_channel = 0;
+	m_intreq = 0;
+	m_intena = 0;
+	m_coproctl = 0;
+	m_coprocnt = 0;
+	m_geoctl = 0;
+	m_geocnt = 0;
+	m_ctrlmode = 0;
+	m_analog_channel = 0;
 
-	state->m_timervals[0] = 0xfffff;
-	state->m_timervals[1] = 0xfffff;
-	state->m_timervals[2] = 0xfffff;
-	state->m_timervals[3] = 0xfffff;
+	m_timervals[0] = 0xfffff;
+	m_timervals[1] = 0xfffff;
+	m_timervals[2] = 0xfffff;
+	m_timervals[3] = 0xfffff;
 
-	state->m_timerrun[0] = state->m_timerrun[1] = state->m_timerrun[2] = state->m_timerrun[3] = 0;
+	m_timerrun[0] = m_timerrun[1] = m_timerrun[2] = m_timerrun[3] = 0;
 
-	state->m_timers[0] = machine.device<timer_device>("timer0");
-	state->m_timers[1] = machine.device<timer_device>("timer1");
-	state->m_timers[2] = machine.device<timer_device>("timer2");
-	state->m_timers[3] = machine.device<timer_device>("timer3");
+	m_timers[0] = machine().device<timer_device>("timer0");
+	m_timers[1] = machine().device<timer_device>("timer1");
+	m_timers[2] = machine().device<timer_device>("timer2");
+	m_timers[3] = machine().device<timer_device>("timer3");
 	for (i=0; i<4; i++)
-		state->m_timers[i]->reset();
+		m_timers[i]->reset();
 }
 
-static MACHINE_RESET(model2o)
+MACHINE_RESET_MEMBER(model2_state,model2o)
 {
-	model2_state *state = machine.driver_data<model2_state>();
-	MACHINE_RESET_CALL(model2_common);
+	MACHINE_RESET_CALL_MEMBER(model2_common);
 
 	// hold TGP in halt until we have code
-	cputag_set_input_line(machine, "tgp", INPUT_LINE_HALT, ASSERT_LINE);
+	machine().device("tgp")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 
-	state->m_dsp_type = DSP_TYPE_TGP;
+	m_dsp_type = DSP_TYPE_TGP;
 }
 
-static MACHINE_RESET(model2_scsp)
+MACHINE_RESET_MEMBER(model2_state,model2_scsp)
 {
-	model2_state *state = machine.driver_data<model2_state>();
-	state->membank("bank4")->set_base(state->memregion("scsp")->base() + 0x200000);
-	state->membank("bank5")->set_base(state->memregion("scsp")->base() + 0x600000);
+	membank("bank4")->set_base(memregion("scsp")->base() + 0x200000);
+	membank("bank5")->set_base(memregion("scsp")->base() + 0x600000);
 
 	// copy the 68k vector table into RAM
-	memcpy(state->m_soundram, state->memregion("audiocpu")->base() + 0x80000, 16);
-	machine.device("audiocpu")->reset();
-	scsp_set_ram_base(machine.device("scsp"), state->m_soundram);
+	memcpy(m_soundram, memregion("audiocpu")->base() + 0x80000, 16);
+	machine().device("audiocpu")->reset();
+	scsp_set_ram_base(machine().device("scsp"), m_soundram);
 }
 
-static MACHINE_RESET(model2)
+MACHINE_RESET_MEMBER(model2_state,model2)
 {
-	model2_state *state = machine.driver_data<model2_state>();
-	MACHINE_RESET_CALL(model2_common);
-	MACHINE_RESET_CALL(model2_scsp);
+	MACHINE_RESET_CALL_MEMBER(model2_common);
+	MACHINE_RESET_CALL_MEMBER(model2_scsp);
 
 	// hold TGP in halt until we have code
-	cputag_set_input_line(machine, "tgp", INPUT_LINE_HALT, ASSERT_LINE);
+	machine().device("tgp")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 
-	state->m_dsp_type = DSP_TYPE_TGP;
+	m_dsp_type = DSP_TYPE_TGP;
 }
 
-static MACHINE_RESET(model2b)
+MACHINE_RESET_MEMBER(model2_state,model2b)
 {
-	model2_state *state = machine.driver_data<model2_state>();
-	MACHINE_RESET_CALL(model2_common);
-	MACHINE_RESET_CALL(model2_scsp);
+	MACHINE_RESET_CALL_MEMBER(model2_common);
+	MACHINE_RESET_CALL_MEMBER(model2_scsp);
 
-	cputag_set_input_line(machine, "dsp", INPUT_LINE_HALT, ASSERT_LINE);
+	machine().device("dsp")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 
 	// set FIFOIN empty flag on SHARC
-	cputag_set_input_line(machine, "dsp", SHARC_INPUT_FLAG0, ASSERT_LINE);
+	machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG0, ASSERT_LINE);
 	// clear FIFOOUT buffer full flag on SHARC
-	cputag_set_input_line(machine, "dsp", SHARC_INPUT_FLAG1, CLEAR_LINE);
+	machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, CLEAR_LINE);
 
-	state->m_dsp_type = DSP_TYPE_SHARC;
+	m_dsp_type = DSP_TYPE_SHARC;
 }
 
-static MACHINE_RESET(model2c)
+MACHINE_RESET_MEMBER(model2_state,model2c)
 {
-	model2_state *state = machine.driver_data<model2_state>();
-	MACHINE_RESET_CALL(model2_common);
-	MACHINE_RESET_CALL(model2_scsp);
+	MACHINE_RESET_CALL_MEMBER(model2_common);
+	MACHINE_RESET_CALL_MEMBER(model2_scsp);
 
-	state->m_dsp_type = DSP_TYPE_TGPX4;
+	m_dsp_type = DSP_TYPE_TGPX4;
 }
 
 static void chcolor(running_machine &machine, pen_t color, UINT16 data)
@@ -578,7 +571,7 @@ WRITE32_MEMBER(model2_state::srallyc_devices_w)
 	if(mem_mask == 0x000000ff || mem_mask == 0x0000ffff)
 	{
 		m_driveio_comm_data = data & 0xff;
-		cputag_set_input_line(machine(), "drivecpu", 0, HOLD_LINE);
+		machine().device("drivecpu")->execute().set_input_line(0, HOLD_LINE);
 	}
 }
 
@@ -620,9 +613,9 @@ WRITE32_MEMBER(model2_state::copro_ctl1_w)
 			if (m_dsp_type != DSP_TYPE_TGPX4)
 			{
 				if (m_dsp_type == DSP_TYPE_SHARC)
-					cputag_set_input_line(machine(), "dsp", INPUT_LINE_HALT, CLEAR_LINE);
+					machine().device("dsp")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
 				else
-					cputag_set_input_line(machine(), "tgp", INPUT_LINE_HALT, CLEAR_LINE);
+					machine().device("tgp")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
 			}
 		}
 	}
@@ -666,7 +659,7 @@ WRITE32_MEMBER(model2_state::copro_fifo_w)
 	}
 	else
 	{
-		//mame_printf_debug("copro_fifo_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(&space.device()));
+		//mame_printf_debug("copro_fifo_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, space.device().safe_pc());
 		if (m_dsp_type == DSP_TYPE_SHARC)
 			copro_fifoin_push(machine().device("dsp"), data);
 		else
@@ -746,8 +739,8 @@ WRITE32_MEMBER(model2_state::geo_sharc_ctl1_w)
         else
         {
             logerror("Boot geo, %d dwords\n", m_geocnt);
-            cputag_set_input_line(machine(), "dsp2", INPUT_LINE_HALT, CLEAR_LINE);
-            //device_spin_until_time(&space.device(), attotime::from_usec(1000));       // Give the SHARC enough time to boot itself
+            machine().device("dsp2")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
+            //space.device().execute().spin_until_time(attotime::from_usec(1000));       // Give the SHARC enough time to boot itself
         }
     }
 
@@ -777,7 +770,7 @@ WRITE32_MEMBER(model2_state::geo_sharc_fifo_w)
     }
     else
     {
-        //mame_printf_debug("copro_fifo_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(&space.device()));
+        //mame_printf_debug("copro_fifo_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, space.device().safe_pc());
     }
 }
 
@@ -843,7 +836,7 @@ READ32_MEMBER(model2_state::geo_r)
 	}
 
 //  fatalerror("geo_r: %08X, %08X\n", address, mem_mask);
-	mame_printf_debug("geo_r: PC:%08x - %08X\n", cpu_get_pc(&space.device()), address);
+	mame_printf_debug("geo_r: PC:%08x - %08X\n", space.device().safe_pc(), address);
 
 	return 0;
 }
@@ -972,11 +965,11 @@ WRITE32_MEMBER(model2_state::model2_irq_w)
 
 static int snd_68k_ready_r(address_space *space)
 {
-	int sr = cpu_get_reg(space->machine().device("audiocpu"), M68K_SR);
+	int sr = space->machine().device("audiocpu")->state().state_int(M68K_SR);
 
 	if ((sr & 0x0700) > 0x0100)
 	{
-		device_spin_until_time(&space->device(), attotime::from_usec(40));
+		space->device().execute().spin_until_time(attotime::from_usec(40));
 		return 0;	// not ready yet, interrupts disabled
 	}
 
@@ -988,15 +981,15 @@ static void snd_latch_to_68k_w(address_space *space, int data)
 	model2_state *state = space->machine().driver_data<model2_state>();
 	if (!snd_68k_ready_r(space))
 	{
-		device_spin_until_time(&space->device(), attotime::from_usec(40));
+		space->device().execute().spin_until_time(attotime::from_usec(40));
 	}
 
 	state->m_to_68k = data;
 
-	cputag_set_input_line(space->machine(), "audiocpu", 2, HOLD_LINE);
+	space->machine().device("audiocpu")->execute().set_input_line(2, HOLD_LINE);
 
 	// give the 68k time to notice
-	device_spin_until_time(&space->device(), attotime::from_usec(40));
+	space->device().execute().spin_until_time(attotime::from_usec(40));
 }
 
 READ32_MEMBER(model2_state::model2_serial_r)
@@ -1024,7 +1017,7 @@ WRITE32_MEMBER(model2_state::model2_serial_w)
 		scsp_midi_in(machine().device("scsp"), 0, data&0xff, 0);
 
 		// give the 68k time to notice
-		device_spin_until_time(&space.device(), attotime::from_usec(40));
+		space.device().execute().spin_until_time(attotime::from_usec(40));
 	}
 }
 
@@ -1074,7 +1067,7 @@ READ32_MEMBER(model2_state::model2_prot_r)
 		else
 			return 0xfff0;
 	}
-	else logerror("Unhandled Protection READ @ %x mask %x (PC=%x)\n", offset, mem_mask, cpu_get_pc(&space.device()));
+	else logerror("Unhandled Protection READ @ %x mask %x (PC=%x)\n", offset, mem_mask, space.device().safe_pc());
 
 	return retval;
 }
@@ -1144,7 +1137,7 @@ WRITE32_MEMBER(model2_state::model2_prot_w)
 			strcpy((char *)m_protram, "  TECMO LTD.  DEAD OR ALIVE  1996.10.22  VER. 1.00");
 		}
 	}
-	else logerror("Unhandled Protection WRITE %x @ %x mask %x (PC=%x)\n", data, offset, mem_mask, cpu_get_pc(&space.device()));
+	else logerror("Unhandled Protection WRITE %x @ %x mask %x (PC=%x)\n", data, offset, mem_mask, space.device().safe_pc());
 
 }
 
@@ -1762,14 +1755,14 @@ static TIMER_DEVICE_CALLBACK(model2_interrupt)
 	{
 		state->m_intreq |= (1<<10);
 		if (state->m_intena & (1<<10))
-			device_set_input_line(state->m_maincpu, I960_IRQ3, ASSERT_LINE);
+			state->m_maincpu->set_input_line(I960_IRQ3, ASSERT_LINE);
 	}
 
 	if(scanline == 384/2)
 	{
 		state->m_intreq |= (1<<0);
 		if (state->m_intena & (1<<0))
-			device_set_input_line(state->m_maincpu, I960_IRQ0, ASSERT_LINE);
+			state->m_maincpu->set_input_line(I960_IRQ0, ASSERT_LINE);
 	}
 }
 
@@ -1782,21 +1775,21 @@ static TIMER_DEVICE_CALLBACK(model2c_interrupt)
 	{
 		state->m_intreq |= (1<<10);
 		if (state->m_intena & (1<<10))
-			device_set_input_line(state->m_maincpu, I960_IRQ3, ASSERT_LINE);
+			state->m_maincpu->set_input_line(I960_IRQ3, ASSERT_LINE);
 	}
 
 	if(scanline == 256)
 	{
 		state->m_intreq |= (1<<2);
 		if (state->m_intena & (1<<2))
-			device_set_input_line(state->m_maincpu, I960_IRQ2, ASSERT_LINE);
+			state->m_maincpu->set_input_line(I960_IRQ2, ASSERT_LINE);
 	}
 
 	if(scanline == 128)
 	{
 		state->m_intreq |= (1<<0);
 		if (state->m_intena & (1<<0))
-			device_set_input_line(state->m_maincpu, I960_IRQ0, ASSERT_LINE);
+			state->m_maincpu->set_input_line(I960_IRQ0, ASSERT_LINE);
 	}
 }
 
@@ -1884,10 +1877,10 @@ static void scsp_irq(device_t *device, int irq)
 	if (irq > 0)
 	{
 		state->m_scsp_last_line = irq;
-		cputag_set_input_line(device->machine(), "audiocpu", irq, ASSERT_LINE);
+		device->machine().device("audiocpu")->execute().set_input_line(irq, ASSERT_LINE);
 	}
 	else
-		cputag_set_input_line(device->machine(), "audiocpu", -irq, CLEAR_LINE);
+		device->machine().device("audiocpu")->execute().set_input_line(-irq, CLEAR_LINE);
 }
 
 static const scsp_interface scsp_config =
@@ -1905,7 +1898,7 @@ static const scsp_interface scsp_config =
 READ32_MEMBER(model2_state::copro_sharc_input_fifo_r)
 {
 	UINT32 result = 0;
-	//mame_printf_debug("SHARC FIFOIN pop at %08X\n", cpu_get_pc(&space.device()));
+	//mame_printf_debug("SHARC FIFOIN pop at %08X\n", space.device().safe_pc());
 
 	copro_fifoin_pop(machine().device("dsp"), &result);
 	return result;
@@ -1924,7 +1917,7 @@ READ32_MEMBER(model2_state::copro_sharc_buffer_r)
 
 WRITE32_MEMBER(model2_state::copro_sharc_buffer_w)
 {
-	//mame_printf_debug("sharc_buffer_w: %08X at %08X, %08X, %f\n", offset, cpu_get_pc(&space.device()), data, *(float*)&data);
+	//mame_printf_debug("sharc_buffer_w: %08X at %08X, %08X, %f\n", offset, space.device().safe_pc(), data, *(float*)&data);
 	m_bufferram[offset & 0x7fff] = data;
 }
 
@@ -1983,8 +1976,8 @@ static MACHINE_CONFIG_START( model2o, model2_state )
 	MCFG_CPU_CONFIG(tgp_config)
 	MCFG_CPU_PROGRAM_MAP(copro_tgp_map)
 
-	MCFG_MACHINE_START(model2)
-	MCFG_MACHINE_RESET(model2o)
+	MCFG_MACHINE_START_OVERRIDE(model2_state,model2)
+	MCFG_MACHINE_RESET_OVERRIDE(model2_state,model2o)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 	MCFG_NVRAM_ADD_1FILL("backup1")
@@ -2012,7 +2005,7 @@ static MACHINE_CONFIG_START( model2o, model2_state )
 
 	MCFG_PALETTE_LENGTH(8192)
 
-	MCFG_VIDEO_START(model2)
+	MCFG_VIDEO_START_OVERRIDE(model2_state,model2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -2042,8 +2035,8 @@ static MACHINE_CONFIG_START( model2a, model2_state )
 	MCFG_CPU_CONFIG(tgp_config)
 	MCFG_CPU_PROGRAM_MAP(copro_tgp_map)
 
-	MCFG_MACHINE_START(model2)
-	MCFG_MACHINE_RESET(model2)
+	MCFG_MACHINE_START_OVERRIDE(model2_state,model2)
+	MCFG_MACHINE_RESET_OVERRIDE(model2_state,model2)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 	MCFG_NVRAM_ADD_1FILL("backup1")
@@ -2070,7 +2063,7 @@ static MACHINE_CONFIG_START( model2a, model2_state )
 
 	MCFG_PALETTE_LENGTH(8192)
 
-	MCFG_VIDEO_START(model2)
+	MCFG_VIDEO_START_OVERRIDE(model2_state,model2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -2145,8 +2138,8 @@ static MACHINE_CONFIG_START( model2b, model2_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(18000))
 
-	MCFG_MACHINE_START(model2)
-	MCFG_MACHINE_RESET(model2b)
+	MCFG_MACHINE_START_OVERRIDE(model2_state,model2)
+	MCFG_MACHINE_RESET_OVERRIDE(model2_state,model2b)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 	MCFG_NVRAM_ADD_1FILL("backup1")
@@ -2173,7 +2166,7 @@ static MACHINE_CONFIG_START( model2b, model2_state )
 
 	MCFG_PALETTE_LENGTH(8192)
 
-	MCFG_VIDEO_START(model2)
+	MCFG_VIDEO_START_OVERRIDE(model2_state,model2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -2192,8 +2185,8 @@ static MACHINE_CONFIG_START( model2c, model2_state )
 	MCFG_CPU_ADD("audiocpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(model2_snd)
 
-	MCFG_MACHINE_START(model2)
-	MCFG_MACHINE_RESET(model2c)
+	MCFG_MACHINE_START_OVERRIDE(model2_state,model2)
+	MCFG_MACHINE_RESET_OVERRIDE(model2_state,model2c)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 	MCFG_NVRAM_ADD_1FILL("backup1")
@@ -2220,7 +2213,7 @@ static MACHINE_CONFIG_START( model2c, model2_state )
 
 	MCFG_PALETTE_LENGTH(8192)
 
-	MCFG_VIDEO_START(model2)
+	MCFG_VIDEO_START_OVERRIDE(model2_state,model2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

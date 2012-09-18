@@ -25,12 +25,13 @@ public:
 	optional_shared_ptr<UINT16> m_pktgaldb_sprites;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	device_t *m_deco_tilegen1;
 	DECLARE_READ16_MEMBER(pckgaldx_unknown_r);
 	DECLARE_READ16_MEMBER(pckgaldx_protection_r);
 	DECLARE_WRITE16_MEMBER(pktgaldx_oki_bank_w);
 	DECLARE_DRIVER_INIT(pktgaldx);
+	virtual void machine_start();
 };
 
 

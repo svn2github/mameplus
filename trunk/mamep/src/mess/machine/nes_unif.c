@@ -9,7 +9,7 @@
 
 ****************************************************************************************/
 
-typedef struct __unif
+struct unif
 {
 	const char *board; /* UNIF board */
 
@@ -17,7 +17,7 @@ typedef struct __unif
 	int wram;
 	int chrram;
 	int board_idx;
-} unif;
+};
 
 
 /*************************************************************
@@ -160,7 +160,7 @@ void unif_mapr_setup( running_machine &machine, const char *board )
 	logerror("%s\n", board);
 
 	if (unif_board == NULL)
-		fatalerror("Unknown UNIF board %s.", board);
+		fatalerror("Unknown UNIF board %s.\n", board);
 
 	state->m_pcb_id = unif_board->board_idx;
 	state->m_battery = unif_board->nvwram;	// we should implement battery banks based on the size of this...

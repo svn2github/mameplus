@@ -70,12 +70,12 @@ void vertigo_update_irq(device_t *device)
 {
 	vertigo_state *state = device->machine().driver_data<vertigo_state>();
 	if (state->m_irq_state < 7)
-		cputag_set_input_line(device->machine(), "maincpu", state->m_irq_state ^ 7, CLEAR_LINE);
+		device->machine().device("maincpu")->execute().set_input_line(state->m_irq_state ^ 7, CLEAR_LINE);
 
 	state->m_irq_state = ttl74148_output_r(device);
 
 	if (state->m_irq_state < 7)
-		cputag_set_input_line(device->machine(), "maincpu", state->m_irq_state ^ 7, ASSERT_LINE);
+		device->machine().device("maincpu")->execute().set_input_line(state->m_irq_state ^ 7, ASSERT_LINE);
 }
 
 
@@ -99,7 +99,7 @@ static WRITE_LINE_DEVICE_HANDLER( v_irq4_w )
 static WRITE_LINE_DEVICE_HANDLER( v_irq3_w )
 {
 	if (state)
-		cputag_set_input_line(device->machine(), "audiocpu", INPUT_LINE_IRQ0, ASSERT_LINE);
+		device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 
 	update_irq_encoder(device->machine(), INPUT_LINE_IRQ3, state);
 }
@@ -159,9 +159,9 @@ WRITE16_MEMBER(vertigo_state::vertigo_wsot_w)
 {
 	/* Reset sound cpu */
 	if ((data & 2) == 0)
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, ASSERT_LINE);
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 	else
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, CLEAR_LINE);
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 }
 
 
@@ -198,35 +198,33 @@ READ16_MEMBER(vertigo_state::vertigo_sio_r)
  *
  *************************************/
 
-MACHINE_START( vertigo )
+void vertigo_state::machine_start()
 {
-	vertigo_state *state = machine.driver_data<vertigo_state>();
 
-	state->m_custom = machine.device("custom");
-	state->m_ttl74148 = machine.device("74148");
+	m_custom = machine().device("custom");
+	m_ttl74148 = machine().device("74148");
 
-	state_save_register_global(machine, state->m_irq_state);
-	state_save_register_global(machine, state->m_adc_result);
-	state_save_register_global(machine, state->m_irq4_time);
+	state_save_register_global(machine(), m_irq_state);
+	state_save_register_global(machine(), m_adc_result);
+	state_save_register_global(machine(), m_irq4_time);
 
-	vertigo_vproc_init(machine);
+	vertigo_vproc_init(machine());
 }
 
-MACHINE_RESET( vertigo )
+void vertigo_state::machine_reset()
 {
-	vertigo_state *state = machine.driver_data<vertigo_state>();
 	int i;
 
-	ttl74148_enable_input_w(state->m_ttl74148, 0);
+	ttl74148_enable_input_w(m_ttl74148, 0);
 
 	for (i = 0; i < 8; i++)
-		ttl74148_input_line_w(state->m_ttl74148, i, 1);
+		ttl74148_input_line_w(m_ttl74148, i, 1);
 
-	ttl74148_update(state->m_ttl74148);
-	vertigo_vproc_reset(machine);
+	ttl74148_update(m_ttl74148);
+	vertigo_vproc_reset(machine());
 
-	state->m_irq4_time = machine.time();
-	state->m_irq_state = 7;
+	m_irq4_time = machine().time();
+	m_irq_state = 7;
 }
 
 

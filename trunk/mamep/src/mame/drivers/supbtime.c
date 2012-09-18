@@ -46,14 +46,14 @@ READ16_MEMBER(supbtime_state::supbtime_controls_r)
 			return 0;
 	}
 
-	logerror("CPU #0 PC %06x: warning - read unmapped control address %06x\n", cpu_get_pc(&space.device()), offset);
+	logerror("CPU #0 PC %06x: warning - read unmapped control address %06x\n", space.device().safe_pc(), offset);
 	return ~0;
 }
 
 WRITE16_MEMBER(supbtime_state::sound_w)
 {
 	soundlatch_byte_w(space, 0, data & 0xff);
-	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 /******************************************************************************/
@@ -311,7 +311,7 @@ GFXDECODE_END
 static void sound_irq(device_t *device, int state)
 {
 	supbtime_state *driver_state = device->machine().driver_data<supbtime_state>();
-	device_set_input_line(driver_state->m_audiocpu, 1, state); /* IRQ 2 */
+	driver_state->m_audiocpu->set_input_line(1, state); /* IRQ 2 */
 }
 
 static const ym2151_interface ym2151_config =
@@ -330,13 +330,12 @@ static const deco16ic_interface supbtime_deco16ic_tilegen1_intf =
 	0,1
 };
 
-static MACHINE_START( supbtime )
+void supbtime_state::machine_start()
 {
-	supbtime_state *state = machine.driver_data<supbtime_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_deco_tilegen1 = machine.device("tilegen1");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_deco_tilegen1 = machine().device("tilegen1");
 }
 
 static MACHINE_CONFIG_START( supbtime, supbtime_state )
@@ -349,7 +348,6 @@ static MACHINE_CONFIG_START( supbtime, supbtime_state )
 	MCFG_CPU_ADD("audiocpu", H6280, 32220000/8)	/* Custom chip 45, audio section crystal is 32.220 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(supbtime)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
@@ -391,7 +389,6 @@ static MACHINE_CONFIG_START( chinatwn, supbtime_state )
 	MCFG_CPU_ADD("audiocpu", H6280, 32220000/8) /* Custom chip 45, audio section crystal is 32.220 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(supbtime)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)

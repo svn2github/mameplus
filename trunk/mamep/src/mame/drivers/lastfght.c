@@ -121,6 +121,9 @@ public:
 	DECLARE_READ16_MEMBER(lastfght_sound_r);
 	DECLARE_WRITE16_MEMBER(lastfght_sound_w);
 	DECLARE_DRIVER_INIT(lastfght);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -128,16 +131,15 @@ public:
                                 Video Hardware
 ***************************************************************************/
 
-static VIDEO_START( lastfght )
+void lastfght_state::video_start()
 {
-	lastfght_state *state = machine.driver_data<lastfght_state>();
 	int i;
 	for (i = 0; i < 2; i++)
-		machine.primary_screen->register_screen_bitmap(state->m_bitmap[i]);
+		machine().primary_screen->register_screen_bitmap(m_bitmap[i]);
 
-	state->save_item(NAME(state->m_bitmap[0]));
-	state->save_item(NAME(state->m_bitmap[1]));
-	state->save_item(NAME(state->m_colorram));
+	save_item(NAME(m_bitmap[0]));
+	save_item(NAME(m_bitmap[1]));
+	save_item(NAME(m_colorram));
 }
 
 
@@ -210,11 +212,11 @@ WRITE16_MEMBER(lastfght_state::lastfght_hi_w)
 {
 
 	if (ACCESSING_BITS_8_15)
-		logerror("%06x: 600000.b = %02x\n", cpu_get_pc(&space.device()), data >> 8);
+		logerror("%06x: 600000.b = %02x\n", space.device().safe_pc(), data >> 8);
 	if (ACCESSING_BITS_0_7)
 	{
 		m_hi = data << 8;
-		//logerror("%06x: lastfght_hi  = %02x\n", cpu_get_pc(&space.device()), data);
+		//logerror("%06x: lastfght_hi  = %02x\n", space.device().safe_pc(), data);
 	}
 }
 
@@ -223,11 +225,11 @@ WRITE16_MEMBER(lastfght_state::lastfght_x_w)
 {
 
 	if (ACCESSING_BITS_8_15)
-		logerror("%06x: 800008.b = %02x\n", cpu_get_pc(&space.device()), data >> 8);
+		logerror("%06x: 800008.b = %02x\n", space.device().safe_pc(), data >> 8);
 	if (ACCESSING_BITS_0_7)
 	{
 		m_x = m_hi | data;
-		//logerror("%06x: lastfght_x   = %02x\n", cpu_get_pc(&space.device()),data);
+		//logerror("%06x: lastfght_x   = %02x\n", space.device().safe_pc(),data);
 	}
 }
 
@@ -238,12 +240,12 @@ WRITE16_MEMBER(lastfght_state::lastfght_yw_w)
 	if (ACCESSING_BITS_8_15)
 	{
 		m_y = m_hi | (data >> 8);
-		//logerror("%06x: lastfght_y   = %02x\n", cpu_get_pc(&space.device()), data >> 8);
+		//logerror("%06x: lastfght_y   = %02x\n", space.device().safe_pc(), data >> 8);
 	}
 	if (ACCESSING_BITS_0_7)
 	{
 		m_w = m_hi | data;
-		//logerror("%06x: lastfght_w   = %02x\n", cpu_get_pc(&space.device()), data);
+		//logerror("%06x: lastfght_w   = %02x\n", space.device().safe_pc(), data);
 	}
 }
 
@@ -254,10 +256,10 @@ WRITE16_MEMBER(lastfght_state::lastfght_h_w)
 	if (ACCESSING_BITS_8_15)
 	{
 		m_h = m_hi | (data >> 8);
-		//logerror("%06x: lastfght_h   = %02x\n", cpu_get_pc(&space.device()), data >> 8);
+		//logerror("%06x: lastfght_h   = %02x\n", space.device().safe_pc(), data >> 8);
 	}
 	if (ACCESSING_BITS_0_7)
-		logerror("%06x: 80000d.b = %02x\n", cpu_get_pc(&space.device()), data);
+		logerror("%06x: 80000d.b = %02x\n", space.device().safe_pc(), data);
 }
 
 // source delta x << 6, source x << 6
@@ -267,12 +269,12 @@ WRITE16_MEMBER(lastfght_state::lastfght_sx_w)
 	if (ACCESSING_BITS_8_15)
 	{
 		m_dsx = m_hi | (data >> 8);
-		//logerror("%06x: lastfght_dsx = %02x\n", cpu_get_pc(&space.device()), data >> 8);
+		//logerror("%06x: lastfght_dsx = %02x\n", space.device().safe_pc(), data >> 8);
 	}
 	if (ACCESSING_BITS_0_7)
 	{
 		m_sx = m_hi | data;
-		//logerror("%06x: lastfght_sx  = %02x\n", cpu_get_pc(&space.device()), data);
+		//logerror("%06x: lastfght_sx  = %02x\n", space.device().safe_pc(), data);
 	}
 }
 
@@ -283,12 +285,12 @@ WRITE16_MEMBER(lastfght_state::lastfght_sy_w)
 	if (ACCESSING_BITS_8_15)
 	{
 		m_sy = m_hi | (data >> 8);
-		//logerror("%06x: lastfght_sy  = %02x\n", cpu_get_pc(&space.device()), data >> 8);
+		//logerror("%06x: lastfght_sy  = %02x\n", space.device().safe_pc(), data >> 8);
 	}
 	if (ACCESSING_BITS_0_7)
 	{
 		m_sy1 = m_hi | data;
-		//logerror("%06x: lastfght_sy1 = %02x\n", cpu_get_pc(&space.device()), data);
+		//logerror("%06x: lastfght_sy1 = %02x\n", space.device().safe_pc(), data);
 	}
 }
 
@@ -299,12 +301,12 @@ WRITE16_MEMBER(lastfght_state::lastfght_sr_w)
 	if (ACCESSING_BITS_8_15)
 	{
 		m_sp = (m_hi >> 8) >> 4;
-		//logerror("%06x: lastfght_sp  = %02x\n", cpu_get_pc(&space.device()), data >> 8);
+		//logerror("%06x: lastfght_sp  = %02x\n", space.device().safe_pc(), data >> 8);
 	}
 	if (ACCESSING_BITS_0_7)
 	{
 		m_sr = data;
-		//logerror("%06x: lastfght_sr  = %02x\n", cpu_get_pc(&space.device()), data);
+		//logerror("%06x: lastfght_sr  = %02x\n", space.device().safe_pc(), data);
 	}
 }
 
@@ -315,12 +317,12 @@ WRITE16_MEMBER(lastfght_state::lastfght_sd_w)
 	if (ACCESSING_BITS_8_15)
 	{
 		m_sx1 = m_hi | (data >> 8);
-		//logerror("%06x: lastfght_sx1 = %02x\n", cpu_get_pc(&space.device()), data >> 8);
+		//logerror("%06x: lastfght_sx1 = %02x\n", space.device().safe_pc(), data >> 8);
 	}
 	if (ACCESSING_BITS_0_7)
 	{
 		m_dsy = m_hi | data;
-		//logerror("%06x: lastfght_dsy = %02x\n", cpu_get_pc(&space.device()), data);
+		//logerror("%06x: lastfght_dsy = %02x\n", space.device().safe_pc(), data);
 	}
 }
 
@@ -335,7 +337,7 @@ WRITE16_MEMBER(lastfght_state::lastfght_blit_w)
 		bitmap_ind16 &dest = m_bitmap[m_dest];
 
 #if 0
-		logerror("%06x: blit x %03x, y %03x, w %03x, h %03x, sx %03x.%02x, sx1 %03x.%02x, dsx %03x.%02x, sy %03x.%02x, sy1 %03x.%02x, dsy %03x.%02x, sp %02x, sr %02x, data %02x\n", cpu_get_pc(&space.device()),
+		logerror("%06x: blit x %03x, y %03x, w %03x, h %03x, sx %03x.%02x, sx1 %03x.%02x, dsx %03x.%02x, sy %03x.%02x, sy1 %03x.%02x, dsy %03x.%02x, sp %02x, sr %02x, data %02x\n", space.device().safe_pc(),
 				m_x, m_y, m_w + 1, m_h + 1,
 				m_sx >> 6, m_sx & 0x3f, m_sx1 >> 6, m_dsx & 0x3f, m_sx1 >> 6, m_sx1 & 0x3f,
 				m_sy >> 6, m_sy & 0x3f, m_sy1 >> 6, m_dsy & 0x3f, m_sy1 >> 6, m_sy1 & 0x3f,
@@ -359,7 +361,7 @@ WRITE16_MEMBER(lastfght_state::lastfght_blit_w)
 		}
 	}
 	if (ACCESSING_BITS_0_7)
-		logerror("%06x: 600007.b = %02x\n", cpu_get_pc(&space.device()), data);
+		logerror("%06x: 600007.b = %02x\n", space.device().safe_pc(), data);
 }
 
 // toggle framebuffer
@@ -415,9 +417,9 @@ READ16_MEMBER(lastfght_state::lastfght_sound_r)
 WRITE16_MEMBER(lastfght_state::lastfght_sound_w)
 {
 	if (ACCESSING_BITS_8_15)
-		logerror("%06x: sound_w msb = %02x\n", cpu_get_pc(&space.device()), data >> 8);
+		logerror("%06x: sound_w msb = %02x\n", space.device().safe_pc(), data >> 8);
 	if (ACCESSING_BITS_0_7)
-		logerror("%06x: sound_w lsb = %02x\n", cpu_get_pc(&space.device()), data);
+		logerror("%06x: sound_w lsb = %02x\n", space.device().safe_pc(), data);
 }
 
 /***************************************************************************
@@ -529,51 +531,49 @@ static INTERRUPT_GEN( unknown_interrupt )
 {
 	lastfght_state *state = device->machine().driver_data<lastfght_state>();
 
-	device_set_input_line(state->m_maincpu, H8_METRO_TIMER_HACK, HOLD_LINE);
+	state->m_maincpu->set_input_line(H8_METRO_TIMER_HACK, HOLD_LINE);
 }
 
-static MACHINE_START( lastfght )
+void lastfght_state::machine_start()
 {
-	lastfght_state *state = machine.driver_data<lastfght_state>();
 
-	state->save_item(NAME(state->m_clr_offset));
-	state->save_item(NAME(state->m_dest));
-	state->save_item(NAME(state->m_hi));
-	state->save_item(NAME(state->m_sx));
-	state->save_item(NAME(state->m_sx1));
-	state->save_item(NAME(state->m_dsx));
-	state->save_item(NAME(state->m_sy));
-	state->save_item(NAME(state->m_sy1));
-	state->save_item(NAME(state->m_dsy));
-	state->save_item(NAME(state->m_sp));
-	state->save_item(NAME(state->m_sr));
-	state->save_item(NAME(state->m_x));
-	state->save_item(NAME(state->m_y));
-	state->save_item(NAME(state->m_w));
-	state->save_item(NAME(state->m_h));
-	state->save_item(NAME(state->m_c00006));
+	save_item(NAME(m_clr_offset));
+	save_item(NAME(m_dest));
+	save_item(NAME(m_hi));
+	save_item(NAME(m_sx));
+	save_item(NAME(m_sx1));
+	save_item(NAME(m_dsx));
+	save_item(NAME(m_sy));
+	save_item(NAME(m_sy1));
+	save_item(NAME(m_dsy));
+	save_item(NAME(m_sp));
+	save_item(NAME(m_sr));
+	save_item(NAME(m_x));
+	save_item(NAME(m_y));
+	save_item(NAME(m_w));
+	save_item(NAME(m_h));
+	save_item(NAME(m_c00006));
 }
 
-static MACHINE_RESET( lastfght )
+void lastfght_state::machine_reset()
 {
-	lastfght_state *state = machine.driver_data<lastfght_state>();
 
-	state->m_clr_offset = 0;
-	state->m_dest = 0;
-	state->m_hi = 0;
-	state->m_sx = 0;
-	state->m_sx1 = 0;
-	state->m_dsx = 0;
-	state->m_sy = 0;
-	state->m_sy1 = 0;
-	state->m_dsy = 0;
-	state->m_sp = 0;
-	state->m_sr = 0;
-	state->m_x = 0;
-	state->m_y = 0;
-	state->m_w = 0;
-	state->m_h = 0;
-	state->m_c00006 = 0;
+	m_clr_offset = 0;
+	m_dest = 0;
+	m_hi = 0;
+	m_sx = 0;
+	m_sx1 = 0;
+	m_dsx = 0;
+	m_sy = 0;
+	m_sy1 = 0;
+	m_dsy = 0;
+	m_sp = 0;
+	m_sr = 0;
+	m_x = 0;
+	m_y = 0;
+	m_w = 0;
+	m_h = 0;
+	m_c00006 = 0;
 }
 
 static MACHINE_CONFIG_START( lastfght, lastfght_state )
@@ -586,8 +586,6 @@ static MACHINE_CONFIG_START( lastfght, lastfght_state )
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_MACHINE_START(lastfght)
-	MCFG_MACHINE_RESET(lastfght)
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH( 256 )
@@ -598,7 +596,6 @@ static MACHINE_CONFIG_START( lastfght, lastfght_state )
 	MCFG_SCREEN_REFRESH_RATE( 60 )
 	MCFG_SCREEN_UPDATE_STATIC( lastfght )
 
-	MCFG_VIDEO_START( lastfght )
 MACHINE_CONFIG_END
 
 

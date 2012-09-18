@@ -90,15 +90,15 @@ static TIMER_DEVICE_CALLBACK( gberet_interrupt_tick )
 
 	// NMI on d0
 	if (ticks_mask & state->m_interrupt_mask & 1)
-		cputag_set_input_line(timer.machine(), "maincpu", INPUT_LINE_NMI, ASSERT_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 
 	// IRQ on d3 (used by mrgoemon)
 	if (ticks_mask & state->m_interrupt_mask<<2 & 8)
-		cputag_set_input_line(timer.machine(), "maincpu", 0, ASSERT_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 
 	// IRQ on d4 (used by gberet)
 	if (ticks_mask & state->m_interrupt_mask<<2 & 16)
-		cputag_set_input_line(timer.machine(), "maincpu", 0, ASSERT_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -132,10 +132,10 @@ WRITE8_MEMBER(gberet_state::gberet_flipscreen_w)
 	UINT8 ack_mask = ~data & m_interrupt_mask; // 1->0
 
 	if (ack_mask & 1)
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 
 	if (ack_mask & 6)
-		cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 
 	m_interrupt_mask = data & 7;
 
@@ -145,7 +145,7 @@ WRITE8_MEMBER(gberet_state::gberet_flipscreen_w)
 
 WRITE8_MEMBER(gberet_state::gberet_sound_w)
 {
-	sn76496_w(machine().device("snsnd"), 0, *m_soundlatch);
+	m_sn->write(space, 0, *m_soundlatch);
 }
 
 static ADDRESS_MAP_START( gberet_map, AS_PROGRAM, 8, gberet_state )
@@ -197,13 +197,13 @@ WRITE8_MEMBER(gberet_state::gberetb_flipscreen_w)
 
 READ8_MEMBER(gberet_state::gberetb_irq_ack_r)
 {
-	cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 	return 0xff;
 }
 
 WRITE8_MEMBER(gberet_state::gberetb_nmi_ack_w)
 {
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 static ADDRESS_MAP_START( gberetb_map, AS_PROGRAM, 8, gberet_state )
@@ -218,7 +218,7 @@ static ADDRESS_MAP_START( gberetb_map, AS_PROGRAM, 8, gberet_state )
 	AM_RANGE(0xe900, 0xe9ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xf000, 0xf000) AM_WRITENOP // coin counter not supported
 	AM_RANGE(0xf200, 0xf200) AM_READ_PORT("DSW2")
-	AM_RANGE(0xf400, 0xf400) AM_DEVWRITE_LEGACY("snsnd", sn76496_w)
+	AM_RANGE(0xf400, 0xf400) AM_DEVWRITE("snsnd", sn76489a_new_device, write)
 	AM_RANGE(0xf600, 0xf600) AM_READ_PORT("P2")
 	AM_RANGE(0xf601, 0xf601) AM_READ_PORT("DSW1")
 	AM_RANGE(0xf602, 0xf602) AM_READ_PORT("P1")
@@ -381,26 +381,41 @@ GFXDECODE_END
 
 /*************************************
  *
+ *  Sound interface
+ *
+ *************************************/
+
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
+
+/*************************************
+ *
  *  Machine drivers
  *
  *************************************/
 
-static MACHINE_START( gberet )
+MACHINE_START_MEMBER(gberet_state,gberet)
 {
-	gberet_state *state = machine.driver_data<gberet_state>();
 
-	state->save_item(NAME(state->m_interrupt_mask));
-	state->save_item(NAME(state->m_interrupt_ticks));
-	state->save_item(NAME(state->m_spritebank));
+	save_item(NAME(m_interrupt_mask));
+	save_item(NAME(m_interrupt_ticks));
+	save_item(NAME(m_spritebank));
 }
 
-static MACHINE_RESET( gberet )
+MACHINE_RESET_MEMBER(gberet_state,gberet)
 {
-	gberet_state *state = machine.driver_data<gberet_state>();
 
-	state->m_interrupt_mask = 0;
-	state->m_interrupt_ticks = 0;
-	state->m_spritebank = 0;
+	m_interrupt_mask = 0;
+	m_interrupt_ticks = 0;
+	m_spritebank = 0;
 }
 
 static MACHINE_CONFIG_START( gberet, gberet_state )
@@ -410,8 +425,8 @@ static MACHINE_CONFIG_START( gberet, gberet_state )
 	MCFG_CPU_PROGRAM_MAP(gberet_map)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", gberet_interrupt_tick, "screen", 0, 16) // ?
 
-	MCFG_MACHINE_START(gberet)
-	MCFG_MACHINE_RESET(gberet)
+	MCFG_MACHINE_START_OVERRIDE(gberet_state,gberet)
+	MCFG_MACHINE_RESET_OVERRIDE(gberet_state,gberet)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -424,14 +439,15 @@ static MACHINE_CONFIG_START( gberet, gberet_state )
 	MCFG_GFXDECODE(gberet)
 	MCFG_PALETTE_LENGTH(2*16*16)
 
-	MCFG_PALETTE_INIT(gberet)
-	MCFG_VIDEO_START(gberet)
+	MCFG_PALETTE_INIT_OVERRIDE(gberet_state,gberet)
+	MCFG_VIDEO_START_OVERRIDE(gberet_state,gberet)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489A, XTAL_18_432MHz/12) /* type verified on real and bootleg pcb */
+	MCFG_SOUND_ADD("snsnd", SN76489A_NEW, XTAL_18_432MHz/12) /* type verified on real and bootleg pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( mrgoemon, gberet )
@@ -449,8 +465,8 @@ static MACHINE_CONFIG_START( gberetb, gberet_state )
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_assert)
 	MCFG_CPU_PERIODIC_INT(nmi_line_assert, XTAL_20MHz/0x8000) // divider guessed
 
-	MCFG_MACHINE_START(gberet)
-	MCFG_MACHINE_RESET(gberet)
+	MCFG_MACHINE_START_OVERRIDE(gberet_state,gberet)
+	MCFG_MACHINE_RESET_OVERRIDE(gberet_state,gberet)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -463,14 +479,15 @@ static MACHINE_CONFIG_START( gberetb, gberet_state )
 	MCFG_GFXDECODE(gberetb)
 	MCFG_PALETTE_LENGTH(2*16*16)
 
-	MCFG_PALETTE_INIT(gberet)
-	MCFG_VIDEO_START(gberet)
+	MCFG_PALETTE_INIT_OVERRIDE(gberet_state,gberet)
+	MCFG_VIDEO_START_OVERRIDE(gberet_state,gberet)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489A, XTAL_20MHz/12) // divider guessed
+	MCFG_SOUND_ADD("snsnd", SN76489A_NEW, XTAL_20MHz/12) // divider guessed
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 

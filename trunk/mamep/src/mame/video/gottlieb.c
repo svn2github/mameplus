@@ -109,7 +109,7 @@ WRITE8_MEMBER(gottlieb_state::gottlieb_charram_w)
 	if (m_charram[offset] != data)
 	{
 		m_charram[offset] = data;
-		gfx_element_mark_dirty(machine().gfx[0], offset / 32);
+		machine().gfx[0]->mark_dirty(offset / 32);
 	}
 }
 
@@ -121,81 +121,77 @@ WRITE8_MEMBER(gottlieb_state::gottlieb_charram_w)
  *
  *************************************/
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(gottlieb_state::get_bg_tile_info)
 {
-	gottlieb_state *state = machine.driver_data<gottlieb_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int code = videoram[tile_index];
 	if ((code & 0x80) == 0)
-		SET_TILE_INFO(state->m_gfxcharlo, code, 0, 0);
+		SET_TILE_INFO_MEMBER(m_gfxcharlo, code, 0, 0);
 	else
-		SET_TILE_INFO(state->m_gfxcharhi, code, 0, 0);
+		SET_TILE_INFO_MEMBER(m_gfxcharhi, code, 0, 0);
 }
 
-static TILE_GET_INFO( get_screwloo_bg_tile_info )
+TILE_GET_INFO_MEMBER(gottlieb_state::get_screwloo_bg_tile_info)
 {
-	gottlieb_state *state = machine.driver_data<gottlieb_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int code = videoram[tile_index];
 	if ((code & 0xc0) == 0)
-		SET_TILE_INFO(state->m_gfxcharlo, code, 0, 0);
+		SET_TILE_INFO_MEMBER(m_gfxcharlo, code, 0, 0);
 	else
-		SET_TILE_INFO(state->m_gfxcharhi, code, 0, 0);
+		SET_TILE_INFO_MEMBER(m_gfxcharhi, code, 0, 0);
 }
 
 
-VIDEO_START( gottlieb )
+void gottlieb_state::video_start()
 {
-	gottlieb_state *state = machine.driver_data<gottlieb_state>();
 	static const int resistances[4] = { 2000, 1000, 470, 240 };
 
 	/* compute palette information */
 	/* note that there really are pullup/pulldown resistors, but this situation is complicated */
 	/* by the use of transistors, so we ignore that and just use the realtive resistor weights */
 	compute_resistor_weights(0,	255, -1.0,
-			4, resistances, state->m_weights, 180, 0,
-			4, resistances, state->m_weights, 180, 0,
-			4, resistances, state->m_weights, 180, 0);
-	state->m_transparent0 = FALSE;
+			4, resistances, m_weights, 180, 0,
+			4, resistances, m_weights, 180, 0,
+			4, resistances, m_weights, 180, 0);
+	m_transparent0 = FALSE;
 
 	/* configure the background tilemap */
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bg_tilemap->set_transparent_pen(0);
-	state->m_bg_tilemap->set_scrolldx(0, 318 - 256);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gottlieb_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap->set_scrolldx(0, 318 - 256);
 
-	gfx_element_set_source(machine.gfx[0], state->m_charram);
+	machine().gfx[0]->set_source(m_charram);
 
 	/* save some state */
-	state_save_register_global(machine, state->m_background_priority);
-	state_save_register_global(machine, state->m_spritebank);
-	state_save_register_global(machine, state->m_transparent0);
+	state_save_register_global(machine(), m_background_priority);
+	state_save_register_global(machine(), m_spritebank);
+	state_save_register_global(machine(), m_transparent0);
 }
 
-VIDEO_START( screwloo )
+VIDEO_START_MEMBER(gottlieb_state,screwloo)
 {
-	gottlieb_state *state = machine.driver_data<gottlieb_state>();
 	static const int resistances[4] = { 2000, 1000, 470, 240 };
 
 	/* compute palette information */
 	/* note that there really are pullup/pulldown resistors, but this situation is complicated */
 	/* by the use of transistors, so we ignore that and just use the realtive resistor weights */
 	compute_resistor_weights(0,	255, -1.0,
-			4, resistances, state->m_weights, 180, 0,
-			4, resistances, state->m_weights, 180, 0,
-			4, resistances, state->m_weights, 180, 0);
-	state->m_transparent0 = FALSE;
+			4, resistances, m_weights, 180, 0,
+			4, resistances, m_weights, 180, 0,
+			4, resistances, m_weights, 180, 0);
+	m_transparent0 = FALSE;
 
 	/* configure the background tilemap */
-	state->m_bg_tilemap = tilemap_create(machine, get_screwloo_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bg_tilemap->set_transparent_pen(0);
-	state->m_bg_tilemap->set_scrolldx(0, 318 - 256);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gottlieb_state::get_screwloo_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap->set_scrolldx(0, 318 - 256);
 
-	gfx_element_set_source(machine.gfx[0], state->m_charram);
+	machine().gfx[0]->set_source(m_charram);
 
 	/* save some state */
-	state_save_register_global(machine, state->m_background_priority);
-	state_save_register_global(machine, state->m_spritebank);
-	state_save_register_global(machine, state->m_transparent0);
+	state_save_register_global(machine(), m_background_priority);
+	state_save_register_global(machine(), m_spritebank);
+	state_save_register_global(machine(), m_transparent0);
 }
 
 

@@ -212,17 +212,15 @@ psoldier dip locations still need verification.
 
 /*****************************************************************************/
 
-static MACHINE_START( m92 )
+MACHINE_START_MEMBER(m92_state,m92)
 {
-	m92_state *state = machine.driver_data<m92_state>();
-	state->save_item(NAME(state->m_sound_status));
+	save_item(NAME(m_sound_status));
 }
 
-static MACHINE_RESET( m92 )
+MACHINE_RESET_MEMBER(m92_state,m92)
 {
-	m92_state *state = machine.driver_data<m92_state>();
 
-	state->m_sprite_buffer_busy = 1;
+	m_sprite_buffer_busy = 1;
 }
 
 /*****************************************************************************/
@@ -237,14 +235,14 @@ static TIMER_DEVICE_CALLBACK( m92_scanline_interrupt )
 	if (scanline == state->m_raster_irq_position)
 	{
 		machine.primary_screen->update_partial(scanline);
-		device_set_input_line_and_vector(state->m_maincpu, 0, HOLD_LINE, M92_IRQ_2);
+		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, M92_IRQ_2);
 	}
 
 	/* VBLANK interrupt */
 	else if (scanline == machine.primary_screen->visible_area().max_y + 1)
 	{
 		machine.primary_screen->update_partial(scanline);
-		device_set_input_line_and_vector(state->m_maincpu, 0, HOLD_LINE, M92_IRQ_0);
+		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, M92_IRQ_0);
 	}
 }
 
@@ -253,14 +251,14 @@ static TIMER_DEVICE_CALLBACK( m92_scanline_interrupt )
 READ16_MEMBER(m92_state::m92_eeprom_r)
 {
 	UINT8 *RAM = memregion("eeprom")->base();
-//  logerror("%05x: EEPROM RE %04x\n",cpu_get_pc(&space.device()),offset);
+//  logerror("%05x: EEPROM RE %04x\n",space.device().safe_pc(),offset);
 	return RAM[offset] | 0xff00;
 }
 
 WRITE16_MEMBER(m92_state::m92_eeprom_w)
 {
 	UINT8 *RAM = memregion("eeprom")->base();
-//  logerror("%05x: EEPROM WR %04x\n",cpu_get_pc(&space.device()),offset);
+//  logerror("%05x: EEPROM WR %04x\n",space.device().safe_pc(),offset);
 	if (ACCESSING_BITS_0_7)
 		RAM[offset] = data;
 }
@@ -283,7 +281,7 @@ WRITE16_MEMBER(m92_state::m92_bankswitch_w)
 	{
 		membank("bank1")->set_entry((data & 0x06) >> 1);
 		if (data & 0xf9)
-			logerror("%05x: bankswitch %04x\n", cpu_get_pc(&space.device()), data);
+			logerror("%05x: bankswitch %04x\n", space.device().safe_pc(), data);
 	}
 }
 
@@ -297,21 +295,21 @@ CUSTOM_INPUT_MEMBER(m92_state::m92_sprite_busy_r)
 WRITE16_MEMBER(m92_state::m92_soundlatch_w)
 {
 	if (m_soundcpu)
-		device_set_input_line(m_soundcpu, NEC_INPUT_LINE_INTP1, ASSERT_LINE);
+		m_soundcpu->set_input_line(NEC_INPUT_LINE_INTP1, ASSERT_LINE);
 
 	soundlatch_byte_w(space, 0, data & 0xff);
 }
 
 READ16_MEMBER(m92_state::m92_sound_status_r)
 {
-//logerror("%06x: read sound status\n",cpu_get_pc(&space.device()));
+//logerror("%06x: read sound status\n",space.device().safe_pc());
 	return m_sound_status;
 }
 
 READ16_MEMBER(m92_state::m92_soundlatch_r)
 {
 	if (m_soundcpu)
-		device_set_input_line(m_soundcpu, NEC_INPUT_LINE_INTP1, CLEAR_LINE);
+		m_soundcpu->set_input_line(NEC_INPUT_LINE_INTP1, CLEAR_LINE);
 
 	return soundlatch_byte_r(space, offset) | 0xff00;
 }
@@ -319,20 +317,20 @@ READ16_MEMBER(m92_state::m92_soundlatch_r)
 WRITE16_MEMBER(m92_state::m92_sound_irq_ack_w)
 {
 	if (m_soundcpu)
-		device_set_input_line(m_soundcpu, NEC_INPUT_LINE_INTP1, CLEAR_LINE);
+		m_soundcpu->set_input_line(NEC_INPUT_LINE_INTP1, CLEAR_LINE);
 }
 
 WRITE16_MEMBER(m92_state::m92_sound_status_w)
 {
 	COMBINE_DATA(&m_sound_status);
-	device_set_input_line_and_vector(m_maincpu, 0, HOLD_LINE, M92_IRQ_3);
+	m_maincpu->set_input_line_and_vector(0, HOLD_LINE, M92_IRQ_3);
 
 }
 
 WRITE16_MEMBER(m92_state::m92_sound_reset_w)
 {
 	if (m_soundcpu)
-		device_set_input_line(m_soundcpu, INPUT_LINE_RESET, (data) ? CLEAR_LINE : ASSERT_LINE);
+		m_soundcpu->set_input_line(INPUT_LINE_RESET, (data) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 /*****************************************************************************/
@@ -916,7 +914,7 @@ static void sound_irq(device_t *device, int pinstate)
 {
 	m92_state *state = device->machine().driver_data<m92_state>();
 
-	device_set_input_line(state->m_soundcpu, NEC_INPUT_LINE_INTP0, pinstate ? ASSERT_LINE : CLEAR_LINE);
+	state->m_soundcpu->set_input_line(NEC_INPUT_LINE_INTP0, pinstate ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2151_interface ym2151_config =
@@ -930,7 +928,7 @@ void m92_sprite_interrupt(running_machine &machine)
 {
 	m92_state *state = machine.driver_data<m92_state>();
 
-	device_set_input_line_and_vector(state->m_maincpu, 0, HOLD_LINE, M92_IRQ_1);
+	state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, M92_IRQ_1);
 }
 
 static MACHINE_CONFIG_START( m92, m92_state )
@@ -943,8 +941,8 @@ static MACHINE_CONFIG_START( m92, m92_state )
 	MCFG_CPU_ADD("soundcpu" ,V35, XTAL_14_31818MHz)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(m92)
-	MCFG_MACHINE_RESET(m92)
+	MCFG_MACHINE_START_OVERRIDE(m92_state,m92)
+	MCFG_MACHINE_RESET_OVERRIDE(m92_state,m92)
 
 	MCFG_TIMER_ADD_SCANLINE("scantimer", m92_scanline_interrupt, "screen", 0, 1)
 
@@ -961,7 +959,7 @@ static MACHINE_CONFIG_START( m92, m92_state )
 	MCFG_GFXDECODE(m92)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(m92)
+	MCFG_VIDEO_START_OVERRIDE(m92_state,m92)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1029,8 +1027,8 @@ static MACHINE_CONFIG_START( ppan, m92_state )
 
 	/* no Sound CPU */
 
-	MCFG_MACHINE_START(m92)
-	MCFG_MACHINE_RESET(m92)
+	MCFG_MACHINE_START_OVERRIDE(m92_state,m92)
+	MCFG_MACHINE_RESET_OVERRIDE(m92_state,m92)
 
 	MCFG_TIMER_ADD_SCANLINE("scantimer", m92_scanline_interrupt, "screen", 0, 1)
 
@@ -1047,7 +1045,7 @@ static MACHINE_CONFIG_START( ppan, m92_state )
 	MCFG_GFXDECODE(m92)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(ppan)
+	MCFG_VIDEO_START_OVERRIDE(m92_state,ppan)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -30,9 +30,9 @@ public:
 	UINT16      m_eep_latch;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
-	device_t *m_subcpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
+	cpu_device *m_subcpu;
 	eeprom_device *m_eeprom;
 	device_t *m_tc0480scp;
 	device_t *m_tc0150rod;
@@ -73,12 +73,16 @@ public:
 	DECLARE_CUSTOM_INPUT_MEMBER(taitoz_pedal_r);
 	DECLARE_DRIVER_INIT(taitoz);
 	DECLARE_DRIVER_INIT(bshark);
+	DECLARE_MACHINE_START(taitoz);
+	DECLARE_MACHINE_RESET(taitoz);
+	DECLARE_VIDEO_START(taitoz);
+	DECLARE_MACHINE_START(bshark);
 };
 
 /*----------- defined in video/taito_z.c -----------*/
 
 
-VIDEO_START( taitoz );
+
 
 SCREEN_UPDATE_IND16( contcirc );
 SCREEN_UPDATE_IND16( chasehq );

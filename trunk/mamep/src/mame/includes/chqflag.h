@@ -26,8 +26,8 @@ public:
 	int        m_wheel;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k007232_1;
 	device_t *m_k007232_2;
 	device_t *m_k051960;
@@ -40,6 +40,9 @@ public:
 	DECLARE_WRITE8_MEMBER(chqflag_sh_irqtrigger_w);
 	DECLARE_WRITE8_MEMBER(k007232_bankswitch_w);
 	DECLARE_WRITE8_MEMBER(k007232_extvolume_w);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 /*----------- defined in video/chqflag.c -----------*/
@@ -48,5 +51,5 @@ extern void chqflag_sprite_callback(running_machine &machine, int *code,int *col
 extern void chqflag_zoom_callback_0(running_machine &machine, int *code,int *color,int *flags);
 extern void chqflag_zoom_callback_1(running_machine &machine, int *code,int *color,int *flags);
 
-VIDEO_START( chqflag );
+
 SCREEN_UPDATE_IND16( chqflag );

@@ -130,8 +130,8 @@ public:
 	virtual UINT8 read() {  return 0x00; }
 protected:
     // device-level overrides
-	virtual void device_start();
-	virtual void device_reset();
+    virtual void device_start();
+    virtual void device_reset();
 	virtual void device_config_complete() { m_shortname = "centronics_printer"; }
 private:
 	printer_image_device *m_printer;

@@ -40,8 +40,7 @@
  *
  *************************************/
 
-typedef struct _audio_channel audio_channel;
-struct _audio_channel
+struct audio_channel
 {
 	emu_timer *	irq_timer;
 	UINT32			curlocation;
@@ -54,8 +53,7 @@ struct _audio_channel
 };
 
 
-typedef struct _amiga_audio amiga_audio;
-struct _amiga_audio
+struct amiga_audio
 {
 	audio_channel	channel[4];
 	sound_stream *	stream;
@@ -67,7 +65,7 @@ INLINE amiga_audio *get_safe_token( device_t *device )
         assert(device != NULL);
         assert(device->type() == AMIGA);
 
-        return (amiga_audio *)downcast<legacy_device_base *>(device)->token();
+        return (amiga_audio *)downcast<amiga_sound_device *>(device)->token();
 }
 
 /*************************************
@@ -278,21 +276,42 @@ static DEVICE_START( amiga_sound )
 }
 
 
-DEVICE_GET_INFO( amiga_sound )
+const device_type AMIGA = &device_creator<amiga_sound_device>;
+
+amiga_sound_device::amiga_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, AMIGA, "Amiga Paula", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(amiga_audio);					break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(amiga_audio));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(amiga_sound);	break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Amiga Paula");				break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
+void amiga_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void amiga_sound_device::device_start()
+{
+	DEVICE_START_NAME( amiga_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void amiga_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(AMIGA, amiga_sound);

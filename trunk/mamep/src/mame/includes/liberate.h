@@ -29,8 +29,8 @@ public:
 	tilemap_t *m_back_tilemap;
 	tilemap_t *m_fix_tilemap;
 
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	DECLARE_READ8_MEMBER(deco16_bank_r);
 	DECLARE_READ8_MEMBER(deco16_io_r);
 	DECLARE_WRITE8_MEMBER(deco16_bank_w);
@@ -51,19 +51,31 @@ public:
 	DECLARE_DRIVER_INIT(yellowcb);
 	DECLARE_DRIVER_INIT(liberate);
 	DECLARE_DRIVER_INIT(prosport);
+	TILEMAP_MAPPER_MEMBER(back_scan);
+	TILEMAP_MAPPER_MEMBER(fix_scan);
+	TILE_GET_INFO_MEMBER(get_back_tile_info);
+	TILE_GET_INFO_MEMBER(get_fix_tile_info);
+	TILE_GET_INFO_MEMBER(prosport_get_back_tile_info);
+	DECLARE_MACHINE_START(liberate);
+	DECLARE_MACHINE_RESET(liberate);
+	DECLARE_VIDEO_START(liberate);
+	DECLARE_PALETTE_INIT(liberate);
+	DECLARE_VIDEO_START(prosport);
+	DECLARE_VIDEO_START(boomrang);
+	DECLARE_VIDEO_START(prosoccr);
 };
 
 
 /*----------- defined in video/liberate.c -----------*/
 
-PALETTE_INIT( liberate );
+
 SCREEN_UPDATE_IND16( prosoccr );
 SCREEN_UPDATE_IND16( prosport );
 SCREEN_UPDATE_IND16( liberate );
 SCREEN_UPDATE_IND16( boomrang );
-VIDEO_START( prosoccr );
-VIDEO_START( prosport );
-VIDEO_START( boomrang );
-VIDEO_START( liberate );
+
+
+
+
 
 

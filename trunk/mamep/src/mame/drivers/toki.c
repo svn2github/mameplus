@@ -46,7 +46,7 @@ for now. Even at 12 this slowdown still happens a little.
 WRITE16_MEMBER(toki_state::tokib_soundcommand16_w)
 {
 	soundlatch_byte_w(space, 0, data & 0xff);
-	cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
+	machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 READ16_MEMBER(toki_state::pip16_r)
@@ -65,7 +65,7 @@ static void toki_adpcm_int (device_t *device)
 
 	state->m_toggle ^= 1;
 	if (state->m_toggle)
-		cputag_set_input_line(device->machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+		device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(toki_state::toki_adpcm_control_w)
@@ -437,7 +437,6 @@ static MACHINE_CONFIG_START( toki, toki_state ) /* KOYO 20.000MHz near the cpu *
 	MCFG_GFXDECODE(toki)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(toki)
 
 	/* sound hardware */
 	SEIBU_SOUND_SYSTEM_YM3812_RAIDEN_INTERFACE(XTAL_14_31818MHz/4,XTAL_12MHz/12) /* verifed on pcb */
@@ -467,7 +466,6 @@ static MACHINE_CONFIG_START( tokib, toki_state )
 	MCFG_GFXDECODE(tokib)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(toki)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

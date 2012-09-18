@@ -80,17 +80,17 @@ public:
 	DECLARE_WRITE8_MEMBER(hitpoker_pic_w);
 	DECLARE_READ8_MEMBER(test_r);
 	DECLARE_DRIVER_INIT(hitpoker);
+	virtual void video_start();
 };
 
 
 #define CRTC_CLOCK XTAL_3_579545MHz
 
-static VIDEO_START(hitpoker)
+void hitpoker_state::video_start()
 {
-	hitpoker_state *state = machine.driver_data<hitpoker_state>();
-	state->m_videoram = auto_alloc_array(machine, UINT8, 0x35ff);
-	state->m_paletteram = auto_alloc_array(machine, UINT8, 0x1000);
-	state->m_colorram = auto_alloc_array(machine, UINT8, 0x2000);
+	m_videoram = auto_alloc_array(machine(), UINT8, 0x35ff);
+	m_paletteram = auto_alloc_array(machine(), UINT8, 0x1000);
+	m_colorram = auto_alloc_array(machine(), UINT8, 0x2000);
 }
 
 static SCREEN_UPDATE_IND16(hitpoker)
@@ -216,10 +216,10 @@ READ8_MEMBER(hitpoker_state::hitpoker_pic_r)
 
 	if(offset == 0)
 	{
-		if(cpu_get_pc(&space.device()) == 0x3143 ||
-		   cpu_get_pc(&space.device()) == 0x314e ||
-		   cpu_get_pc(&space.device()) == 0x3164 ||
-		   cpu_get_pc(&space.device()) == 0x3179)
+		if(space.device().safe_pc() == 0x3143 ||
+		   space.device().safe_pc() == 0x314e ||
+		   space.device().safe_pc() == 0x3164 ||
+		   space.device().safe_pc() == 0x3179)
 			return m_pic_data;
 
 		return (m_pic_data & 0x7f) | (m_pic_data & 0x40 ? 0x80 : 0x00);
@@ -487,7 +487,7 @@ static const hc11_config hitpoker_config =
 
 static INTERRUPT_GEN( hitpoker_irq )
 {
-	device_set_input_line(device, MC68HC11_IRQ_LINE, HOLD_LINE);
+	device->execute().set_input_line(MC68HC11_IRQ_LINE, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( hitpoker, hitpoker_state )
@@ -512,7 +512,6 @@ static MACHINE_CONFIG_START( hitpoker, hitpoker_state )
 	MCFG_GFXDECODE(hitpoker)
 	MCFG_PALETTE_LENGTH(0x800)
 
-	MCFG_VIDEO_START(hitpoker)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

@@ -121,6 +121,13 @@ public:
 	DECLARE_WRITE8_MEMBER(buckrog_i8255_0_w);
 	DECLARE_DRIVER_INIT(buckrog_enc);
 	DECLARE_DRIVER_INIT(turbo_enc);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	DECLARE_VIDEO_START(turbo);
+	DECLARE_PALETTE_INIT(turbo);
+	DECLARE_PALETTE_INIT(subroc3d);
+	DECLARE_MACHINE_RESET(buckrog);
+	DECLARE_VIDEO_START(buckrog);
+	DECLARE_PALETTE_INIT(buckrog);
 };
 
 
@@ -144,14 +151,14 @@ WRITE8_DEVICE_HANDLER( buckrog_sound_b_w );
 
 /*----------- defined in video/turbo.c -----------*/
 
-PALETTE_INIT( turbo );
-VIDEO_START( turbo );
+
+
 SCREEN_UPDATE_IND16( turbo );
 
-PALETTE_INIT( subroc3d );
+
 SCREEN_UPDATE_IND16( subroc3d );
 
-PALETTE_INIT( buckrog );
-VIDEO_START( buckrog );
+
+
 SCREEN_UPDATE_IND16( buckrog );
 

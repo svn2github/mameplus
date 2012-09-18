@@ -48,9 +48,9 @@ public:
 	UINT8 *m_bwp123_membase[3];
 
 	/* device */
-	device_t *m_maincpu;
-	device_t *m_subcpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_subcpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE8_MEMBER(bwp12_sharedram1_w);
 	DECLARE_WRITE8_MEMBER(bwp3_u8F_w);
 	DECLARE_WRITE8_MEMBER(bwp3_nmimask_w);
@@ -67,6 +67,13 @@ public:
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
 	DECLARE_INPUT_CHANGED_MEMBER(tilt_pressed);
 	DECLARE_DRIVER_INIT(bwing);
+	TILE_GET_INFO_MEMBER(get_fgtileinfo);
+	TILE_GET_INFO_MEMBER(get_bgtileinfo);
+	TILE_GET_INFO_MEMBER(get_charinfo);
+	TILEMAP_MAPPER_MEMBER(bwing_scan_cols);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -75,5 +82,5 @@ public:
 extern const gfx_layout bwing_tilelayout;
 
 
-VIDEO_START( bwing );
+
 SCREEN_UPDATE_IND16( bwing );

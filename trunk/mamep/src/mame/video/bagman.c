@@ -42,9 +42,9 @@ WRITE8_MEMBER(bagman_state::bagman_colorram_w)
   bit 0 -- 1  kohm resistor  -- /
 
 ***************************************************************************/
-PALETTE_INIT( bagman )
+PALETTE_INIT_MEMBER(bagman_state,bagman)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 	static const int resistances_rg[3] = { 1000, 470, 220 };
 	static const int resistances_b [2] = { 470, 220 };
@@ -57,7 +57,7 @@ PALETTE_INIT( bagman )
 			2,	resistances_b,	weights_b,	470,	0);
 
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		int bit0, bit1, bit2, r, g, b;
 
@@ -76,7 +76,7 @@ PALETTE_INIT( bagman )
 		bit1 = (color_prom[i] >> 7) & 0x01;
 		b = combine_2_weights(weights_b, bit0, bit1);
 
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
+		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
 	}
 }
 
@@ -89,23 +89,21 @@ WRITE8_MEMBER(bagman_state::bagman_flipscreen_w)
 	}
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(bagman_state::get_bg_tile_info)
 {
-	bagman_state *state = machine.driver_data<bagman_state>();
-	int gfxbank = (machine.gfx[2] && (state->m_colorram[tile_index] & 0x10)) ? 2 : 0;
-	int code = state->m_videoram[tile_index] + 8 * (state->m_colorram[tile_index] & 0x20);
-	int color = state->m_colorram[tile_index] & 0x0f;
+	int gfxbank = (machine().gfx[2] && (m_colorram[tile_index] & 0x10)) ? 2 : 0;
+	int code = m_videoram[tile_index] + 8 * (m_colorram[tile_index] & 0x20);
+	int color = m_colorram[tile_index] & 0x0f;
 
-	SET_TILE_INFO(gfxbank, code, color, 0);
+	SET_TILE_INFO_MEMBER(gfxbank, code, color, 0);
 }
 
-VIDEO_START( bagman )
+VIDEO_START_MEMBER(bagman_state,bagman)
 {
-	bagman_state *state = machine.driver_data<bagman_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows,
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bagman_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,
 		 8, 8, 32, 32);
 
-	state->m_bg_tilemap->set_scrolldy(-1, -1);
+	m_bg_tilemap->set_scrolldy(-1, -1);
 }
 
 

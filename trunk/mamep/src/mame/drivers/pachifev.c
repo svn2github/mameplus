@@ -105,6 +105,8 @@ public:
 	UINT8 m_adpcm_data;
 	DECLARE_WRITE8_MEMBER(controls_w);
 	DECLARE_READ8_MEMBER(controls_r);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 WRITE8_MEMBER(pachifev_state::controls_w)
@@ -143,8 +145,8 @@ static ADDRESS_MAP_START( pachifev_map, AS_PROGRAM, 8, pachifev_state )
     AM_RANGE(0xff08, 0xff08) AM_READ_PORT("DSW3")
     AM_RANGE(0xff10, 0xff10) AM_DEVREADWRITE("tms9928a", tms9928a_device, vram_read, vram_write)
     AM_RANGE(0xff12, 0xff12) AM_DEVREADWRITE("tms9928a", tms9928a_device, register_read, register_write)
-    AM_RANGE(0xff20, 0xff20) AM_DEVWRITE_LEGACY("sn76_1", sn76496_w)
-    AM_RANGE(0xff30, 0xff30) AM_DEVWRITE_LEGACY("sn76_2", sn76496_w)
+    AM_RANGE(0xff20, 0xff20) AM_DEVWRITE("y2404_1", y2404_new_device, write)
+    AM_RANGE(0xff30, 0xff30) AM_DEVWRITE("y2404_2", y2404_new_device, write)
     AM_RANGE(0xff40, 0xff40) AM_WRITE(controls_w)
     AM_RANGE(0xff50, 0xff50) AM_WRITENOP /* unknown */
     AM_RANGE(0xfffa, 0xfffb) AM_NOP /* decrementer */
@@ -246,6 +248,23 @@ static INPUT_PORTS_START( pachifev )
 INPUT_PORTS_END
 
 
+/*************************************
+ *
+ *  Sound interface
+ *
+ *************************************/
+
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
+
 #if USE_MSM
 
 
@@ -283,18 +302,17 @@ static const msm5205_interface msm5205_config =
 
 #endif
 
-static MACHINE_RESET( pachifev )
+void pachifev_state::machine_reset()
 {
-    pachifev_state *state = machine.driver_data<pachifev_state>();
 
-    state->m_power=0;
-    state->m_max_power=0;
-    state->m_input_power=0;
-    state->m_previous_power=0;
-    state->m_cnt=0;
+    m_power=0;
+    m_max_power=0;
+    m_input_power=0;
+    m_previous_power=0;
+    m_cnt=0;
 
 #if USE_MSM
-    state->m_adpcm_pos = 0;
+    m_adpcm_pos = 0;
 #endif
 }
 
@@ -338,15 +356,14 @@ static TMS9928A_INTERFACE(pachifev_tms9928a_interface)
     DEVCB_NULL
 };
 
-static MACHINE_START( pachifev)
+void pachifev_state::machine_start()
 {
-	pachifev_state *state = machine.driver_data<pachifev_state>();
 
-	state->save_item(NAME(state->m_power));
-	state->save_item(NAME(state->m_max_power));
-	state->save_item(NAME(state->m_input_power));
-	state->save_item(NAME(state->m_previous_power));
-	state->save_item(NAME(state->m_cnt));
+	save_item(NAME(m_power));
+	save_item(NAME(m_max_power));
+	save_item(NAME(m_input_power));
+	save_item(NAME(m_previous_power));
+	save_item(NAME(m_cnt));
 }
 
 static const struct tms9995reset_param pachifev_processor_config =
@@ -363,8 +380,6 @@ static MACHINE_CONFIG_START( pachifev, pachifev_state )
     MCFG_CPU_IO_MAP(pachifev_cru)
     MCFG_CPU_VBLANK_INT("screen",pachifev_vblank_irq)
 
-    MCFG_MACHINE_START(pachifev)
-    MCFG_MACHINE_RESET(pachifev)
 
     /* video hardware */
 	MCFG_TMS9928A_ADD( "tms9928a", TMS9928A, pachifev_tms9928a_interface )
@@ -378,10 +393,12 @@ static MACHINE_CONFIG_START( pachifev, pachifev_state )
     MCFG_SOUND_CONFIG(msm5205_config)
     MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 #endif
-    MCFG_SOUND_ADD("sn76_1", Y2404, XTAL_10_738635MHz/3) /* guess */
+    MCFG_SOUND_ADD("y2404_1", Y2404_NEW, XTAL_10_738635MHz/3) /* guess */
     MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
-    MCFG_SOUND_ADD("sn76_2", Y2404, XTAL_10_738635MHz/3) /* guess */
+	MCFG_SOUND_CONFIG(psg_intf)
+    MCFG_SOUND_ADD("y2404_2", Y2404_NEW, XTAL_10_738635MHz/3) /* guess */
     MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 ROM_START( pachifev )

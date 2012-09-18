@@ -168,15 +168,15 @@ static void omegaf_io_protection_reset(running_machine &machine);
 
 static INTERRUPT_GEN( ninjakd2_interrupt )
 {
-	device_set_input_line_and_vector(device, 0, HOLD_LINE, 0xd7);	/* RST 10h */
+	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h */
 }
 
 
-static MACHINE_RESET( ninjakd2 )
+void ninjakd2_state::machine_reset()
 {
 	/* initialize main Z80 bank */
-	machine.root_device().membank("bank1")->configure_entries(0, 8, machine.root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
-	machine.root_device().membank("bank1")->set_entry(0);
+	machine().root_device().membank("bank1")->configure_entries(0, 8, machine().root_device().memregion("maincpu")->base() + 0x10000, 0x4000);
+	machine().root_device().membank("bank1")->set_entry(0);
 }
 
 static void robokid_init_banks(running_machine &machine)
@@ -187,16 +187,16 @@ static void robokid_init_banks(running_machine &machine)
 	machine.root_device().membank("bank1")->set_entry(0);
 }
 
-static MACHINE_RESET( robokid )
+MACHINE_RESET_MEMBER(ninjakd2_state,robokid)
 {
-	robokid_init_banks(machine);
+	robokid_init_banks(machine());
 }
 
-static MACHINE_RESET( omegaf )
+MACHINE_RESET_MEMBER(ninjakd2_state,omegaf)
 {
-	robokid_init_banks(machine);
+	robokid_init_banks(machine());
 
-	omegaf_io_protection_reset(machine);
+	omegaf_io_protection_reset(machine());
 }
 
 
@@ -214,7 +214,7 @@ WRITE8_MEMBER(ninjakd2_state::robokid_bankselect_w)
 WRITE8_MEMBER(ninjakd2_state::ninjakd2_soundreset_w)
 {
 	// bit 4 resets sound CPU
-	cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_RESET, (data & 0x10) ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x10) ? ASSERT_LINE : CLEAR_LINE);
 
 	// bit 7 flips screen
 	flip_screen_set(data & 0x80);
@@ -905,7 +905,7 @@ GFXDECODE_END
 
 static void irqhandler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine(), "soundcpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("soundcpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -945,7 +945,6 @@ static MACHINE_CONFIG_START( ninjakd2, ninjakd2_state )
 	MCFG_CPU_PROGRAM_MAP(ninjakd2_sound_cpu)
 	MCFG_CPU_IO_MAP(ninjakd2_sound_io)
 
-	MCFG_MACHINE_RESET(ninjakd2)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -958,7 +957,6 @@ static MACHINE_CONFIG_START( ninjakd2, ninjakd2_state )
 	MCFG_GFXDECODE(ninjakd2)
 	MCFG_PALETTE_LENGTH(0x300)
 
-	MCFG_VIDEO_START(ninjakd2)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -988,7 +986,7 @@ static MACHINE_CONFIG_DERIVED( mnight, ninjakd2 )
 	MCFG_CPU_PROGRAM_MAP(mnight_main_cpu)
 
 	/* video hardware */
-	MCFG_VIDEO_START(mnight)
+	MCFG_VIDEO_START_OVERRIDE(ninjakd2_state,mnight)
 
 	/* sound hardware */
 	MCFG_DEVICE_REMOVE("pcm")
@@ -1002,7 +1000,7 @@ static MACHINE_CONFIG_DERIVED( arkarea, ninjakd2 )
 	MCFG_CPU_PROGRAM_MAP(mnight_main_cpu)
 
 	/* video hardware */
-	MCFG_VIDEO_START(arkarea)
+	MCFG_VIDEO_START_OVERRIDE(ninjakd2_state,arkarea)
 
 	/* sound hardware */
 	MCFG_DEVICE_REMOVE("pcm")
@@ -1015,13 +1013,13 @@ static MACHINE_CONFIG_DERIVED( robokid, mnight )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(robokid_main_cpu)
 
-	MCFG_MACHINE_RESET(robokid)
+	MCFG_MACHINE_RESET_OVERRIDE(ninjakd2_state,robokid)
 
 	/* video hardware */
 	MCFG_GFXDECODE(robokid)
 	MCFG_PALETTE_LENGTH(0x400)	// RAM is this large, but still only 0x300 colors used
 
-	MCFG_VIDEO_START(robokid)
+	MCFG_VIDEO_START_OVERRIDE(ninjakd2_state,robokid)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(robokid)
 MACHINE_CONFIG_END
@@ -1033,10 +1031,10 @@ static MACHINE_CONFIG_DERIVED( omegaf, robokid )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(omegaf_main_cpu)
 
-	MCFG_MACHINE_RESET(omegaf)
+	MCFG_MACHINE_RESET_OVERRIDE(ninjakd2_state,omegaf)
 
 	/* video hardware */
-	MCFG_VIDEO_START(omegaf)
+	MCFG_VIDEO_START_OVERRIDE(ninjakd2_state,omegaf)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(omegaf)
 MACHINE_CONFIG_END

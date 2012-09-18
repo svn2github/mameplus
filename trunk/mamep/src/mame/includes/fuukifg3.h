@@ -40,8 +40,8 @@ public:
 	UINT8       m_shared_ram[16];
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE32_MEMBER(paletteram32_xRRRRRGGGGGBBBBB_dword_w);
 	DECLARE_READ32_MEMBER(snd_020_r);
 	DECLARE_WRITE32_MEMBER(snd_020_w);
@@ -54,12 +54,19 @@ public:
 	DECLARE_WRITE32_MEMBER(fuuki32_vram_1_w);
 	DECLARE_WRITE32_MEMBER(fuuki32_vram_2_w);
 	DECLARE_WRITE32_MEMBER(fuuki32_vram_3_w);
+	TILE_GET_INFO_MEMBER(get_tile_info_0);
+	TILE_GET_INFO_MEMBER(get_tile_info_1);
+	TILE_GET_INFO_MEMBER(get_tile_info_2);
+	TILE_GET_INFO_MEMBER(get_tile_info_3);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/fuuki32.c -----------*/
 
 
-VIDEO_START( fuuki32 );
+
 SCREEN_UPDATE_IND16( fuuki32 );
 SCREEN_VBLANK( fuuki32 );

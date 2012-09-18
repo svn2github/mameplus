@@ -23,6 +23,11 @@
 #define POLY_V		4
 #define POLY_W		5
 
+#define POLY_R		3
+#define POLY_G		4
+#define POLY_B		5
+#define POLY_A		2
+
 #define ZBUFFER_MAX					10000000000.0f
 
 #define LOG_POLY_FIFO				0
@@ -31,8 +36,7 @@
 static int count = 0;
 #endif
 
-typedef struct _poly_extra_data poly_extra_data;
-struct _poly_extra_data
+struct poly_extra_data
 {
 	UINT32 color;
 	int texture_x, texture_y;
@@ -105,7 +109,7 @@ static UINT32 K001006_r(running_machine &machine, int chip, int offset, UINT32 m
 			}
 			default:
 			{
-				fatalerror("K001006_r chip %d, unknown device %02X", chip, K001006_device_sel[chip]);
+				fatalerror("K001006_r chip %d, unknown device %02X\n", chip, K001006_device_sel[chip]);
 			}
 		}
 	}
@@ -267,7 +271,7 @@ void K001005_init(running_machine &machine)
 		for (i=0; i < 128; i++)
 		{
 			tex_mirror_table[0][k][i] = i % size;
-			tex_mirror_table[1][k][i] = (i % (size*2)) >= size ? ((size - 1) - (i % size)) : i % size;
+			tex_mirror_table[1][k][i] = (i % (size*2)) >= size ? ((size - 1) - (i % size)) : (i % size);
 		}
 	}
 
@@ -353,18 +357,18 @@ READ32_HANDLER( K001005_r )
 			{
 				if (K001005_fifo_read_ptr < 0x3ff)
 				{
-					//cputag_set_input_line(space->machine(), "dsp", SHARC_INPUT_FLAG1, CLEAR_LINE);
+					//space->machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, CLEAR_LINE);
 					sharc_set_flag_input(space->machine().device("dsp"), 1, CLEAR_LINE);
 				}
 				else
 				{
-					//cputag_set_input_line(space->machine(), "dsp", SHARC_INPUT_FLAG1, ASSERT_LINE);
+					//space->machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
 					sharc_set_flag_input(space->machine().device("dsp"), 1, ASSERT_LINE);
 				}
 			}
 			else
 			{
-				//cputag_set_input_line(space->machine(), "dsp", SHARC_INPUT_FLAG1, ASSERT_LINE);
+				//space->machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
 				sharc_set_flag_input(space->machine().device("dsp"), 1, ASSERT_LINE);
 			}
 
@@ -390,7 +394,7 @@ READ32_HANDLER( K001005_r )
 			}
 
 		default:
-			mame_printf_debug("K001005_r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(&space->device()));
+			mame_printf_debug("K001005_r: %08X, %08X at %08X\n", offset, mem_mask, space->device().safe_pc());
 			break;
 	}
 	return 0;
@@ -406,22 +410,22 @@ WRITE32_HANDLER( K001005_w )
 			{
 				if (K001005_fifo_write_ptr < 0x400)
 				{
-					//cputag_set_input_line(space->machine(), "dsp", SHARC_INPUT_FLAG1, ASSERT_LINE);
+					//space->machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
 					sharc_set_flag_input(space->machine().device("dsp"), 1, ASSERT_LINE);
 				}
 				else
 				{
-					//cputag_set_input_line(space->machine(), "dsp", SHARC_INPUT_FLAG1, CLEAR_LINE);
+					//space->machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, CLEAR_LINE);
 					sharc_set_flag_input(space->machine().device("dsp"), 1, CLEAR_LINE);
 				}
 			}
 			else
 			{
-				//cputag_set_input_line(space->machine(), "dsp", SHARC_INPUT_FLAG1, ASSERT_LINE);
+				//space->machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
 				sharc_set_flag_input(space->machine().device("dsp"), 1, ASSERT_LINE);
 			}
 
-	    //  mame_printf_debug("K001005 FIFO write: %08X at %08X\n", data, cpu_get_pc(&space->device()));
+	    //  mame_printf_debug("K001005 FIFO write: %08X at %08X\n", data, space->device().safe_pc());
 			K001005_fifo[K001005_fifo_write_ptr] = data;
 			K001005_fifo_write_ptr++;
 			K001005_fifo_write_ptr &= 0x7ff;
@@ -446,16 +450,16 @@ WRITE32_HANDLER( K001005_w )
 #endif
 
 			// !!! HACK to get past the FIFO B test (GTI Club & Thunder Hurricane) !!!
-			if (cpu_get_pc(&space->device()) == 0x201ee)
+			if (space->device().safe_pc() == 0x201ee)
 			{
 				// This is used to make the SHARC timeout
-				device_spin_until_trigger(&space->device(), 10000);
+				space->device().execute().spin_until_trigger(10000);
 			}
 			// !!! HACK to get past the FIFO B test (Winding Heat & Midnight Run) !!!
-			if (cpu_get_pc(&space->device()) == 0x201e6)
+			if (space->device().safe_pc() == 0x201e6)
 			{
 				// This is used to make the SHARC timeout
-				device_spin_until_trigger(&space->device(), 10000);
+				space->device().execute().spin_until_trigger(10000);
 			}
 
 			break;
@@ -545,7 +549,7 @@ WRITE32_HANDLER( K001005_w )
 			break;
 
 		default:
-			//mame_printf_debug("K001005_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(&space->device()));
+			//mame_printf_debug("K001005_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, space->device().safe_pc());
 			break;
 	}
 
@@ -597,12 +601,12 @@ static void draw_scanline_2d_tex(void *dest, INT32 scanline, const poly_extent *
 
 	for (x = extent->startx; x < extent->stopx; x++)
 	{
-		int iu = (int)(u);
-		int iv = (int)(v);
+		int iu = (int)(u * 0.0625f);
+		int iv = (int)(v * 0.0625f);
 		int iiv, iiu, texel;
 
-		iiu = texture_x + x_mirror_table[(iu >> 4) & 0x7f];
-		iiv = texture_y + y_mirror_table[(iv >> 4) & 0x7f];
+		iiu = texture_x + x_mirror_table[iu & 0x7f];
+		iiv = texture_y + y_mirror_table[iv & 0x7f];
 
 		texel = texrom[((iiv & 0x1ff) * 512) + (iiu & 0x1ff)];
 		color = K001006_palette[pal_chip][palette_index + texel];
@@ -735,11 +739,11 @@ static void draw_scanline_tex(void *dest, INT32 scanline, const poly_extent *ext
 			int iu, iv;
 			int iiv, iiu, texel;
 
-			iu = u * oow;
-			iv = v * oow;
+			iu = u * oow * 0.0625f;
+			iv = v * oow * 0.0625f;
 
-			iiu = texture_x + x_mirror_table[(iu >> 4) & 0x7f];
-			iiv = texture_y + y_mirror_table[(iv >> 4) & 0x7f];
+			iiu = texture_x + x_mirror_table[iu & 0x7f];
+			iiv = texture_y + y_mirror_table[iv & 0x7f];
 
 			texel = texrom[((iiv & 0x1ff) * 512) + (iiu & 0x1ff)];
 			color = K001006_palette[pal_chip][palette_index + texel];
@@ -772,6 +776,62 @@ static void draw_scanline_tex(void *dest, INT32 scanline, const poly_extent *ext
 	}
 }
 
+static void draw_scanline_gouraud_blend(void *dest, INT32 scanline, const poly_extent *extent, const void *extradata, int threadid)
+{
+	bitmap_rgb32 *destmap = (bitmap_rgb32 *)dest;
+	float z = extent->param[POLY_Z].start;
+	float dz = extent->param[POLY_Z].dpdx;
+	float r = extent->param[POLY_R].start;
+	float dr = extent->param[POLY_R].dpdx;
+	float g = extent->param[POLY_G].start;
+	float dg = extent->param[POLY_G].dpdx;
+	float b = extent->param[POLY_B].start;
+	float db = extent->param[POLY_B].dpdx;
+	float a = extent->param[POLY_A].start;
+	float da = extent->param[POLY_A].dpdx;
+	UINT32 *fb = &destmap->pix32(scanline);
+	float *zb = (float*)&K001005_zbuffer->pix32(scanline);
+	int x;
+
+	for (x = extent->startx; x < extent->stopx; x++)
+	{
+		if (z <= zb[x])
+		{
+			int ir = (int)(r);
+			int ig = (int)(g);
+			int ib = (int)(b);
+			int ia = (int)(a);
+
+			if (ia > 0)
+			{
+				if (ia != 0xff)
+				{
+					int sr = (fb[x] >> 16) & 0xff;
+					int sg = (fb[x] >> 8) & 0xff;
+					int sb = fb[x] & 0xff;
+
+					ir = ((ir * ia) >> 8) + ((sr * (0xff-ia)) >> 8);
+					ig = ((ig * ia) >> 8) + ((sg * (0xff-ia)) >> 8);
+					ib = ((ib * ia) >> 8) + ((sb * (0xff-ia)) >> 8);
+				}
+
+				if (ir < 0) ir = 0; if (ir > 255) ir = 255;
+				if (ig < 0) ig = 0; if (ig > 255) ig = 255;
+				if (ib < 0) ib = 0; if (ib > 255) ib = 255;
+
+				fb[x] = 0xff000000 | (ir << 16) | (ig << 8) | ib;
+				zb[x] = z;
+			}
+		}
+
+		z += dz;
+		r += dr;
+		g += dg;
+		b += db;
+		a += da;
+	}
+}
+
 static void render_polygons(running_machine &machine)
 {
 	const rectangle& visarea = machine.primary_screen->visible_area();
@@ -801,6 +861,7 @@ static void render_polygons(running_machine &machine)
 		// 0x20: Gouraud shading enable?
 		// 0x40: Unused?
 		// 0x80: Used by textured polygons.
+		// 0x100: Alpha blending? Only used by Winding Heat car selection so far.
 
 		if (cmd == 0x800000ae || cmd == 0x8000008e || cmd == 0x80000096 || cmd == 0x800000b6 ||
 			cmd == 0x8000002e || cmd == 0x8000000e || cmd == 0x80000016 || cmd == 0x80000036 ||
@@ -1409,6 +1470,60 @@ static void render_polygons(running_machine &machine)
 				poly_render_quad(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline_2d_tex, 5, &v[0], &v[1], &v[2], &v[3]);
 			}
 		}
+		else if (cmd == 0x80000121)
+		{
+			// no texture, color gouraud, Z
+
+			poly_extra_data *extra = (poly_extra_data *)poly_get_extra_data(poly);
+			UINT32 color;
+
+			int last_vertex = 0;
+			int vert_num = 0;
+			do
+			{
+				int x, y, z;
+
+				x = ((fifo[index] >>  0) & 0x3fff);
+				y = ((fifo[index] >> 16) & 0x1fff);
+				x |= ((x & 0x2000) ? 0xffffc000 : 0);
+				y |= ((y & 0x1000) ? 0xffffe000 : 0);
+
+				poly_type = fifo[index] & 0x4000;
+				last_vertex = fifo[index] & 0x8000;
+				index++;
+
+				z = fifo[index] & 0xffffff00;
+				brightness = fifo[index] & 0xff;
+				index++;
+
+				color = fifo[index];
+				index++;
+
+				v[vert_num].x = ((float)(x) / 16.0f) + 256.0f;
+				v[vert_num].y = ((float)(-y) / 16.0f) + 192.0f + 8;
+				v[vert_num].p[POLY_Z] = *(float*)(&z);
+				v[vert_num].p[POLY_R] = (color >> 16) & 0xff;
+				v[vert_num].p[POLY_G] = (color >> 8) & 0xff;
+				v[vert_num].p[POLY_B] = color & 0xff;
+				v[vert_num].p[POLY_A] = (color >> 24) & 0xff;
+				vert_num++;
+			}
+			while (!last_vertex);
+
+			extra->color = color;
+			extra->flags = cmd;
+
+			if (poly_type == 0)
+			{
+				poly_render_triangle(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline_gouraud_blend, 6, &v[0], &v[1], &v[2]);
+			}
+			else
+			{
+				poly_render_quad(poly, K001005_bitmap[K001005_bitmap_page], visarea, draw_scanline_gouraud_blend, 6, &v[0], &v[1], &v[2], &v[3]);
+			}
+
+			// TODO: can this poly type form strips?
+		}
 		else if (cmd == 0x80000000)
 		{
 
@@ -1417,7 +1532,7 @@ static void render_polygons(running_machine &machine)
 		{
 
 		}
-		else if ((cmd & 0xffffff00) == 0x80000000)
+		else if ((cmd & 0xffff0000) == 0x80000000)
 		{
 			/*
             mame_printf_debug("Unknown polygon type %08X:\n", fifo[index-1]);
@@ -1559,7 +1674,7 @@ SCREEN_UPDATE_RGB32( gticlub )
 	draw_7segment_led(bitmap, 3, 3, gticlub_led_reg[0]);
 	draw_7segment_led(bitmap, 9, 3, gticlub_led_reg[1]);
 
-	//cputag_set_input_line(screen.machine(), "dsp", SHARC_INPUT_FLAG1, ASSERT_LINE);
+	//screen.machine().device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
 	sharc_set_flag_input(screen.machine().device("dsp"), 1, ASSERT_LINE);
 	return 0;
 }

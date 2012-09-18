@@ -126,7 +126,7 @@ READ8_MEMBER(ajax_state::ajax_ls138_f10_r)
 			break;
 
 		default:
-			logerror("%04x: (ls138_f10) read from an unknown address %02x\n",cpu_get_pc(&space.device()), offset);
+			logerror("%04x: (ls138_f10) read from an unknown address %02x\n",space.device().safe_pc(), offset);
 	}
 
 	return data;
@@ -142,11 +142,11 @@ WRITE8_MEMBER(ajax_state::ajax_ls138_f10_w)
 				watchdog_reset_w(space, 0, data);
 			else{
 				if (m_firq_enable)	/* Cause interrupt on slave CPU */
-					device_set_input_line(m_subcpu, M6809_FIRQ_LINE, HOLD_LINE);
+					m_subcpu->set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 			}
 			break;
 		case 0x01:	/* Cause interrupt on audio CPU */
-			device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+			m_audiocpu->set_input_line(0, HOLD_LINE);
 			break;
 		case 0x02:	/* Sound command number */
 			soundlatch_byte_w(space, offset, data);
@@ -159,7 +159,7 @@ WRITE8_MEMBER(ajax_state::ajax_ls138_f10_w)
 			break;
 
 		default:
-			logerror("%04x: (ls138_f10) write %02x to an unknown address %02x\n", cpu_get_pc(&space.device()), data, offset);
+			logerror("%04x: (ls138_f10) write %02x to an unknown address %02x\n", space.device().safe_pc(), data, offset);
 	}
 }
 
@@ -194,37 +194,35 @@ WRITE8_MEMBER(ajax_state::ajax_bankswitch_2_w)
 	membank("bank1")->set_entry(data & 0x0f);
 }
 
-MACHINE_START( ajax )
+void ajax_state::machine_start()
 {
-	ajax_state *state = machine.driver_data<ajax_state>();
-	UINT8 *MAIN = state->memregion("maincpu")->base();
-	UINT8 *SUB  = state->memregion("sub")->base();
+	UINT8 *MAIN = memregion("maincpu")->base();
+	UINT8 *SUB  = memregion("sub")->base();
 
-	state->membank("bank1")->configure_entries(0,  9,  &SUB[0x10000], 0x2000);
-	state->membank("bank2")->configure_entries(0, 12, &MAIN[0x10000], 0x2000);
+	membank("bank1")->configure_entries(0,  9,  &SUB[0x10000], 0x2000);
+	membank("bank2")->configure_entries(0, 12, &MAIN[0x10000], 0x2000);
 
-	state->membank("bank1")->set_entry(0);
-	state->membank("bank2")->set_entry(0);
+	membank("bank1")->set_entry(0);
+	membank("bank2")->set_entry(0);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_subcpu = machine.device("sub");
-	state->m_k007232_1 = machine.device("k007232_1");
-	state->m_k007232_2 = machine.device("k007232_2");
-	state->m_k052109 = machine.device("k052109");
-	state->m_k051960 = machine.device("k051960");
-	state->m_k051316 = machine.device("k051316");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_subcpu = machine().device<cpu_device>("sub");
+	m_k007232_1 = machine().device("k007232_1");
+	m_k007232_2 = machine().device("k007232_2");
+	m_k052109 = machine().device("k052109");
+	m_k051960 = machine().device("k051960");
+	m_k051316 = machine().device("k051316");
 
-	state->save_item(NAME(state->m_priority));
-	state->save_item(NAME(state->m_firq_enable));
+	save_item(NAME(m_priority));
+	save_item(NAME(m_firq_enable));
 }
 
-MACHINE_RESET( ajax )
+void ajax_state::machine_reset()
 {
-	ajax_state *state = machine.driver_data<ajax_state>();
 
-	state->m_priority = 0;
-	state->m_firq_enable = 0;
+	m_priority = 0;
+	m_firq_enable = 0;
 }
 
 INTERRUPT_GEN( ajax_interrupt )
@@ -232,5 +230,5 @@ INTERRUPT_GEN( ajax_interrupt )
 	ajax_state *state = device->machine().driver_data<ajax_state>();
 
 	if (k051960_is_irq_enabled(state->m_k051960))
-		device_set_input_line(device, KONAMI_IRQ_LINE, HOLD_LINE);
+		device->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
 }

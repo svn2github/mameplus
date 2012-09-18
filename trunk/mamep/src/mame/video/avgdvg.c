@@ -22,10 +22,10 @@
  *
  *************************************/
 
-UINT8 *avgdvg_vectorram;
-size_t avgdvg_vectorram_size;
+static UINT8 *avgdvg_vectorram;
+static size_t avgdvg_vectorram_size;
 
-UINT8 *avgdvg_colorram;
+static UINT8 *avgdvg_colorram;
 
 
 
@@ -112,8 +112,7 @@ private:
 	running_machine *m_machine;
 };
 
-typedef struct _vgconf vgconf;
-struct _vgconf
+struct vgconf
 {
 	int (*handler[8])(vgdata *);
 	UINT8 (*state_addr)(vgdata *);
@@ -1493,6 +1492,11 @@ static VIDEO_START( avg_common )
 {
 	const rectangle &visarea = machine.primary_screen->visible_area();
 
+	avgdvg_vectorram = reinterpret_cast<UINT8 *>(machine.root_device().memshare("vectorram")->ptr());
+	avgdvg_vectorram_size = machine.root_device().memshare("vectorram")->bytes();
+
+	avgdvg_colorram = reinterpret_cast<UINT8 *>(machine.root_device().memshare("colorram")->ptr());
+
 	vg = &vgd;
 	vg->set_machine(machine);
 
@@ -1524,6 +1528,11 @@ static VIDEO_START( avg_common )
 VIDEO_START( dvg )
 {
 	const rectangle &visarea = machine.primary_screen->visible_area();
+
+	avgdvg_vectorram = reinterpret_cast<UINT8 *>(machine.root_device().memshare("vectorram")->ptr());
+	avgdvg_vectorram_size = machine.root_device().memshare("vectorram")->bytes();
+
+	avgdvg_colorram = reinterpret_cast<UINT8 *>(machine.root_device().memshare("colorram")->ptr());
 
 	vgc = &dvg_default;
 	vg = &vgd;

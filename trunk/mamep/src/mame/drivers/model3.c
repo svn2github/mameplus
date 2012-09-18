@@ -673,13 +673,13 @@ static void update_irq_state(running_machine &machine)
 	if ((state->m_irq_enable & state->m_irq_state) || state->m_scsi_irq_state)
 	{
 //      printf("IRQ set: state %x enable %x scsi %x\n", state->m_irq_state, state->m_irq_enable, state->m_scsi_irq_state);
-		cputag_set_input_line(machine, "maincpu", PPC_IRQ, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(PPC_IRQ, ASSERT_LINE);
 		state->m_scsi_irq_state = 0;
 	}
 	else
 	{
 //      printf("IRQ clear: state %x enable %x scsi %x\n", state->m_irq_state, state->m_irq_enable, state->m_scsi_irq_state);
-		cputag_set_input_line(machine, "maincpu", PPC_IRQ, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(PPC_IRQ, CLEAR_LINE);
 	}
 }
 
@@ -1001,28 +1001,28 @@ READ64_MEMBER(model3_state::scsi_r)
 	int reg = offset*8;
 	UINT64 r = 0;
 	if (ACCESSING_BITS_56_63) {
-		r |= (UINT64)lsi53c810_reg_r(&space, reg+0) << 56;
+		r |= (UINT64)m_lsi53c810->lsi53c810_reg_r(reg+0) << 56;
 	}
 	if (ACCESSING_BITS_48_55) {
-		r |= (UINT64)lsi53c810_reg_r(&space, reg+1) << 48;
+		r |= (UINT64)m_lsi53c810->lsi53c810_reg_r(reg+1) << 48;
 	}
 	if (ACCESSING_BITS_40_47) {
-		r |= (UINT64)lsi53c810_reg_r(&space, reg+2) << 40;
+		r |= (UINT64)m_lsi53c810->lsi53c810_reg_r(reg+2) << 40;
 	}
 	if (ACCESSING_BITS_32_39) {
-		r |= (UINT64)lsi53c810_reg_r(&space, reg+3) << 32;
+		r |= (UINT64)m_lsi53c810->lsi53c810_reg_r(reg+3) << 32;
 	}
 	if (ACCESSING_BITS_24_31) {
-		r |= (UINT64)lsi53c810_reg_r(&space, reg+4) << 24;
+		r |= (UINT64)m_lsi53c810->lsi53c810_reg_r(reg+4) << 24;
 	}
 	if (ACCESSING_BITS_16_23) {
-		r |= (UINT64)lsi53c810_reg_r(&space, reg+5) << 16;
+		r |= (UINT64)m_lsi53c810->lsi53c810_reg_r(reg+5) << 16;
 	}
 	if (ACCESSING_BITS_8_15) {
-		r |= (UINT64)lsi53c810_reg_r(&space, reg+6) << 8;
+		r |= (UINT64)m_lsi53c810->lsi53c810_reg_r(reg+6) << 8;
 	}
 	if (ACCESSING_BITS_0_7) {
-		r |= (UINT64)lsi53c810_reg_r(&space, reg+7) << 0;
+		r |= (UINT64)m_lsi53c810->lsi53c810_reg_r(reg+7) << 0;
 	}
 
 	return r;
@@ -1032,28 +1032,28 @@ WRITE64_MEMBER(model3_state::scsi_w)
 {
 	int reg = offset*8;
 	if (ACCESSING_BITS_56_63) {
-		lsi53c810_reg_w(&space, reg+0, data >> 56);
+		m_lsi53c810->lsi53c810_reg_w(reg+0, data >> 56);
 	}
 	if (ACCESSING_BITS_48_55) {
-		lsi53c810_reg_w(&space, reg+1, data >> 48);
+		m_lsi53c810->lsi53c810_reg_w(reg+1, data >> 48);
 	}
 	if (ACCESSING_BITS_40_47) {
-		lsi53c810_reg_w(&space, reg+2, data >> 40);
+		m_lsi53c810->lsi53c810_reg_w(reg+2, data >> 40);
 	}
 	if (ACCESSING_BITS_32_39) {
-		lsi53c810_reg_w(&space, reg+3, data >> 32);
+		m_lsi53c810->lsi53c810_reg_w(reg+3, data >> 32);
 	}
 	if (ACCESSING_BITS_24_31) {
-		lsi53c810_reg_w(&space, reg+4, data >> 24);
+		m_lsi53c810->lsi53c810_reg_w(reg+4, data >> 24);
 	}
 	if (ACCESSING_BITS_16_23) {
-		lsi53c810_reg_w(&space, reg+5, data >> 16);
+		m_lsi53c810->lsi53c810_reg_w(reg+5, data >> 16);
 	}
 	if (ACCESSING_BITS_8_15) {
-		lsi53c810_reg_w(&space, reg+6, data >> 8);
+		m_lsi53c810->lsi53c810_reg_w(reg+6, data >> 8);
 	}
 	if (ACCESSING_BITS_0_7) {
-		lsi53c810_reg_w(&space, reg+7, data >> 0);
+		m_lsi53c810->lsi53c810_reg_w(reg+7, data >> 0);
 	}
 }
 
@@ -1183,7 +1183,7 @@ static void real3d_dma_callback(running_machine &machine, UINT32 src, UINT32 dst
 		case 0x9c:		/* Unknown */
 			break;
 		default:
-			logerror("dma_callback: %08X, %08X, %d at %08X", src, dst, length, cpu_get_pc(machine.device("maincpu")));
+			logerror("dma_callback: %08X, %08X, %d at %08X", src, dst, length, machine.device("maincpu")->safe_pc());
 			break;
 	}
 }
@@ -1204,16 +1204,8 @@ static const eeprom_interface eeprom_intf =
 	5				/* reset_delay (Lost World needs this, very similar to wbeachvl in playmark.c) */
 };
 
-static const SCSIConfigTable scsi_dev_table =
+static const struct LSI53C810interface lsi53c810_intf =
 {
-	0, /* no SCSI device */
-	{
-	}
-};
-
-static const struct LSI53C810interface scsi_intf =
-{
-	&scsi_dev_table,  /* SCSI device table */
 	&scsi_irq_callback,
 	&real3d_dma_callback,
 	&scsi_fetch,
@@ -1239,35 +1231,29 @@ static TIMER_CALLBACK(model3_sound_timer_tick)
 	}
 }
 
-static MACHINE_START(model3_10)
+MACHINE_START_MEMBER(model3_state,model3_10)
 {
-	lsi53c810_init(machine, &scsi_intf);
-	configure_fast_ram(machine);
+	configure_fast_ram(machine());
 
-	model3_state *state = machine.driver_data<model3_state>();
-	state->m_sound_timer = machine.scheduler().timer_alloc(FUNC(model3_sound_timer_tick));
+	m_sound_timer = machine().scheduler().timer_alloc(FUNC(model3_sound_timer_tick));
 }
-static MACHINE_START(model3_15)
+MACHINE_START_MEMBER(model3_state,model3_15)
 {
-	lsi53c810_init(machine, &scsi_intf);
-	configure_fast_ram(machine);
+	configure_fast_ram(machine());
 
-	model3_state *state = machine.driver_data<model3_state>();
-	state->m_sound_timer = machine.scheduler().timer_alloc(FUNC(model3_sound_timer_tick));
+	m_sound_timer = machine().scheduler().timer_alloc(FUNC(model3_sound_timer_tick));
 }
-static MACHINE_START(model3_20)
+MACHINE_START_MEMBER(model3_state,model3_20)
 {
-	configure_fast_ram(machine);
+	configure_fast_ram(machine());
 
-	model3_state *state = machine.driver_data<model3_state>();
-	state->m_sound_timer = machine.scheduler().timer_alloc(FUNC(model3_sound_timer_tick));
+	m_sound_timer = machine().scheduler().timer_alloc(FUNC(model3_sound_timer_tick));
 }
-static MACHINE_START(model3_21)
+MACHINE_START_MEMBER(model3_state,model3_21)
 {
-	configure_fast_ram(machine);
+	configure_fast_ram(machine());
 
-	model3_state *state = machine.driver_data<model3_state>();
-	state->m_sound_timer = machine.scheduler().timer_alloc(FUNC(model3_sound_timer_tick));
+	m_sound_timer = machine().scheduler().timer_alloc(FUNC(model3_sound_timer_tick));
 }
 
 static void model3_init(running_machine &machine, int step)
@@ -1319,10 +1305,10 @@ static void model3_init(running_machine &machine, int step)
 	}
 }
 
-static MACHINE_RESET(model3_10) { model3_init(machine, 0x10); }
-static MACHINE_RESET(model3_15) { model3_init(machine, 0x15); }
-static MACHINE_RESET(model3_20) { model3_init(machine, 0x20); }
-static MACHINE_RESET(model3_21) { model3_init(machine, 0x21); }
+MACHINE_RESET_MEMBER(model3_state,model3_10){ model3_init(machine(), 0x10); }
+MACHINE_RESET_MEMBER(model3_state,model3_15){ model3_init(machine(), 0x15); }
+MACHINE_RESET_MEMBER(model3_state,model3_20){ model3_init(machine(), 0x20); }
+MACHINE_RESET_MEMBER(model3_state,model3_21){ model3_init(machine(), 0x21); }
 
 
 READ64_MEMBER(model3_state::model3_ctrl_r)
@@ -1474,7 +1460,7 @@ WRITE64_MEMBER(model3_state::model3_ctrl_w)
 						}
 						break;
 					default:
-						//mame_printf_debug("Lightgun: Unknown command %02X at %08X\n", (UINT32)(data >> 24), cpu_get_pc(&space.device()));
+						//mame_printf_debug("Lightgun: Unknown command %02X at %08X\n", (UINT32)(data >> 24), space.device().safe_pc());
 						break;
 				}
 			}
@@ -1501,7 +1487,7 @@ WRITE64_MEMBER(model3_state::model3_ctrl_w)
 
 READ64_MEMBER(model3_state::model3_sys_r)
 {
-//  printf("model3_sys_r: mask %llx @ %x (PC %x)\n", mem_mask, offset, cpu_get_pc(&space.device()));
+//  printf("model3_sys_r: mask %llx @ %x (PC %x)\n", mem_mask, offset, space.device().safe_pc());
 
 	switch (offset)
 	{
@@ -1526,9 +1512,8 @@ READ64_MEMBER(model3_state::model3_sys_r)
 			else logerror("m3_sys: Unk sys_r @ 0x10: mask = %x\n", (UINT32)mem_mask);
 			break;
 		case 0x18/8:
-//          printf("read irq_state %x (PC %x)\n", m_irq_state, cpu_get_pc(&space.device()));
+//          printf("read irq_state %x (PC %x)\n", m_irq_state, space.device().safe_pc());
 			return (UINT64)m_irq_state<<56 | 0xff000000;
-			break;
 	}
 
 	logerror("Unknown model3 sys_r: offs %08X mask %08X\n", offset, (UINT32)mem_mask);
@@ -1679,14 +1664,14 @@ WRITE8_MEMBER(model3_state::model3_sound_w)
 
 READ64_MEMBER(model3_state::network_r)
 {
-	mame_printf_debug("network_r: %02X at %08X\n", offset, cpu_get_pc(&space.device()));
+	mame_printf_debug("network_r: %02X at %08X\n", offset, space.device().safe_pc());
 	return m_network_ram[offset];
 }
 
 WRITE64_MEMBER(model3_state::network_w)
 {
 	COMBINE_DATA(m_network_ram + offset);
-	mame_printf_debug("network_w: %02X, %08X%08X at %08X\n", offset, (UINT32)(data >> 32), (UINT32)(data), cpu_get_pc(&space.device()));
+	mame_printf_debug("network_w: %02X, %08X%08X at %08X\n", offset, (UINT32)(data >> 32), (UINT32)(data), space.device().safe_pc());
 }
 
 
@@ -5237,10 +5222,10 @@ static void scsp_irq(device_t *device, int irq)
 	if (irq > 0)
 	{
 		state->m_scsp_last_line = irq;
-		cputag_set_input_line(device->machine(), "audiocpu", irq, ASSERT_LINE);
+		device->machine().device("audiocpu")->execute().set_input_line(irq, ASSERT_LINE);
 	}
 	else
-		cputag_set_input_line(device->machine(), "audiocpu", -irq, CLEAR_LINE);
+		device->machine().device("audiocpu")->execute().set_input_line(-irq, CLEAR_LINE);
 }
 
 static const scsp_interface scsp_config =
@@ -5313,8 +5298,8 @@ static MACHINE_CONFIG_START( model3_10, model3_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(model3_10)
-	MCFG_MACHINE_RESET(model3_10)
+	MCFG_MACHINE_START_OVERRIDE(model3_state,model3_10)
+	MCFG_MACHINE_RESET_OVERRIDE(model3_state,model3_10)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 	MCFG_NVRAM_ADD_1FILL("backup")
@@ -5329,7 +5314,6 @@ static MACHINE_CONFIG_START( model3_10, model3_state )
 	MCFG_PALETTE_LENGTH(32768)
 	MCFG_PALETTE_INIT(RRRRR_GGGGG_BBBBB)
 
-	MCFG_VIDEO_START(model3)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD("scsp1", SCSP, 0)
@@ -5341,6 +5325,9 @@ static MACHINE_CONFIG_START( model3_10, model3_state )
 	MCFG_SOUND_CONFIG(scsp2_interface)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
+
+	MCFG_SCSIBUS_ADD("scsi")
+	MCFG_LSI53C810_ADD( "scsi:lsi53c810", lsi53c810_intf)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( model3_15, model3_state )
@@ -5352,8 +5339,8 @@ static MACHINE_CONFIG_START( model3_15, model3_state )
 	MCFG_CPU_ADD("audiocpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(model3_snd)
 
-	MCFG_MACHINE_START(model3_15)
-	MCFG_MACHINE_RESET(model3_15)
+	MCFG_MACHINE_START_OVERRIDE(model3_state,model3_15)
+	MCFG_MACHINE_RESET_OVERRIDE(model3_state,model3_15)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 	MCFG_NVRAM_ADD_1FILL("backup")
@@ -5368,7 +5355,6 @@ static MACHINE_CONFIG_START( model3_15, model3_state )
 	MCFG_PALETTE_LENGTH(32768)
 	MCFG_PALETTE_INIT(RRRRR_GGGGG_BBBBB)
 
-	MCFG_VIDEO_START(model3)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD("scsp1", SCSP, 0)
@@ -5380,6 +5366,9 @@ static MACHINE_CONFIG_START( model3_15, model3_state )
 	MCFG_SOUND_CONFIG(scsp2_interface)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 2.0)
 	MCFG_SOUND_ROUTE(0, "rspeaker", 2.0)
+
+	MCFG_SCSIBUS_ADD("scsi")
+	MCFG_LSI53C810_ADD( "scsi:lsi53c810", lsi53c810_intf)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( model3_20, model3_state )
@@ -5391,8 +5380,8 @@ static MACHINE_CONFIG_START( model3_20, model3_state )
 	MCFG_CPU_ADD("audiocpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(model3_snd)
 
-	MCFG_MACHINE_START(model3_20)
-	MCFG_MACHINE_RESET(model3_20)
+	MCFG_MACHINE_START_OVERRIDE(model3_state,model3_20)
+	MCFG_MACHINE_RESET_OVERRIDE(model3_state,model3_20)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 	MCFG_NVRAM_ADD_1FILL("backup")
@@ -5407,7 +5396,6 @@ static MACHINE_CONFIG_START( model3_20, model3_state )
 	MCFG_PALETTE_LENGTH(32768)
 	MCFG_PALETTE_INIT(RRRRR_GGGGG_BBBBB)
 
-	MCFG_VIDEO_START(model3)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD("scsp1", SCSP, 0)
@@ -5430,8 +5418,8 @@ static MACHINE_CONFIG_START( model3_21, model3_state )
 	MCFG_CPU_ADD("audiocpu", M68000, 12000000)
 	MCFG_CPU_PROGRAM_MAP(model3_snd)
 
-	MCFG_MACHINE_START(model3_21)
-	MCFG_MACHINE_RESET(model3_21)
+	MCFG_MACHINE_START_OVERRIDE(model3_state,model3_21)
+	MCFG_MACHINE_RESET_OVERRIDE(model3_state,model3_21)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 	MCFG_NVRAM_ADD_1FILL("backup")
@@ -5447,7 +5435,6 @@ static MACHINE_CONFIG_START( model3_21, model3_state )
 	MCFG_PALETTE_LENGTH(32768)
 	MCFG_PALETTE_INIT(RRRRR_GGGGG_BBBBB)
 
-	MCFG_VIDEO_START(model3)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD("scsp1", SCSP, 0)

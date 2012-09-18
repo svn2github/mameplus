@@ -169,7 +169,7 @@ POKEY_KEYBOARD_HANDLER(atari_a5200_keypads);
 #define COPY8(dst,s1,s2) *dst++ = s1; *dst++ = s2
 #define COPY16(dst,s1,s2,s3,s4) *dst++ = s1; *dst++ = s2; *dst++ = s3; *dst++ = s4
 
-typedef struct {
+struct ANTIC_R {
 	UINT8	antic00;	/* 00 nothing */
 	UINT8	antic01;	/* 01 nothing */
 	UINT8	antic02;	/* 02 nothing */
@@ -186,9 +186,9 @@ typedef struct {
 	UINT8	penv;		/* 0d light pen vertical pos */
 	UINT8	antic0e;	/* 0e nothing */
 	UINT8	nmist;		/* 0f NMI status */
-}	ANTIC_R;  /* read registers */
+};  /* read registers */
 
-typedef struct {
+struct ANTIC_W {
 	UINT8	dmactl; 	/* 00 write DMA control */
 	UINT8	chactl; 	/* 01 write character control */
 	UINT8	dlistl; 	/* 02 display list low */
@@ -205,17 +205,17 @@ typedef struct {
 	UINT8	antic0d;	/* 0d nothing */
 	UINT8	nmien;		/* 0e NMI enable */
 	UINT8	nmires; 	/* 0f NMI reset */
-}	ANTIC_W;  /* write registers */
+};  /* write registers */
 
 /* per scanline buffer for video data (and optimization variables) */
-typedef struct {
+struct VIDEO {
     UINT32  cmd;                /* antic command for this scanline */
     UINT16  data[HWIDTH];       /* graphics data buffer (text through chargen) */
-}   VIDEO;
+};
 
 typedef void (*atari_renderer_func)(address_space *space, VIDEO *video);
 
-typedef struct {
+struct ANTIC {
 	atari_renderer_func	renderer;	/* current renderer */
 	UINT32	cmd;				/* currently executed display list command */
 	UINT32	steal_cycles;		/* steal how many cpu cycles for this line ? */
@@ -261,7 +261,7 @@ typedef struct {
 	UINT8   *uc_g2;				/* used colors for gfx GTIA 2 */
 	UINT8   *uc_g3;				/* used colors for gfx GTIA 3 */
 	bitmap_ind16 *bitmap;
-}   ANTIC;
+};
 
 #define RDANTIC(space)		space->read_byte(antic.dpage+antic.doffs)
 #define RDVIDEO(space,o)	space->read_byte(antic.vpage+((antic.voffs+(o))&VOFFS))

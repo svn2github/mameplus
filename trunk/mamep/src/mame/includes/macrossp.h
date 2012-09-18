@@ -49,8 +49,8 @@ public:
 	INT32			 m_old_fade;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE32_MEMBER(paletteram32_macrossp_w);
 	DECLARE_READ32_MEMBER(macrossp_soundstatus_r);
 	DECLARE_WRITE32_MEMBER(macrossp_soundcmd_w);
@@ -64,11 +64,18 @@ public:
 	DECLARE_WRITE32_MEMBER(macrossp_text_videoram_w);
 	DECLARE_DRIVER_INIT(quizmoon);
 	DECLARE_DRIVER_INIT(macrossp);
+	TILE_GET_INFO_MEMBER(get_macrossp_scra_tile_info);
+	TILE_GET_INFO_MEMBER(get_macrossp_scrb_tile_info);
+	TILE_GET_INFO_MEMBER(get_macrossp_scrc_tile_info);
+	TILE_GET_INFO_MEMBER(get_macrossp_text_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 /*----------- defined in video/macrossp.c -----------*/
 
 
-VIDEO_START(macrossp);
+
 SCREEN_UPDATE_RGB32(macrossp);
 SCREEN_VBLANK(macrossp);

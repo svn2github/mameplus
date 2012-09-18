@@ -263,11 +263,11 @@ static void amiga_m68k_reset(device_t *device)
 	amiga_state *state = device->machine().driver_data<amiga_state>();
 	address_space *space = device->memory().space(AS_PROGRAM);
 
-	logerror("Executed RESET at PC=%06x\n", cpu_get_pc(&space->device()));
+	logerror("Executed RESET at PC=%06x\n", space->device().safe_pc());
 
 	/* Initialize the various chips */
-	devtag_reset(device->machine(), "cia_0");
-	devtag_reset(device->machine(), "cia_1");
+	device->machine().device("cia_0")->reset();
+	device->machine().device("cia_1")->reset();
 	custom_reset(device->machine());
 	autoconfig_reset(device->machine());
 
@@ -283,21 +283,20 @@ static void amiga_m68k_reset(device_t *device)
 }
 
 
-MACHINE_RESET( amiga )
+MACHINE_RESET_MEMBER(amiga_state,amiga)
 {
-	amiga_state *state = machine.driver_data<amiga_state>();
 
 	/* set m68k reset  function */
-	m68k_set_reset_callback(machine.device("maincpu"), amiga_m68k_reset);
+	m68k_set_reset_callback(machine().device("maincpu"), amiga_m68k_reset);
 
-	amiga_m68k_reset(machine.device("maincpu"));
+	amiga_m68k_reset(machine().device("maincpu"));
 
 	/* call the system-specific callback */
-	if (state->m_intf->reset_callback)
-		(*state->m_intf->reset_callback)(machine);
+	if (m_intf->reset_callback)
+		(*m_intf->reset_callback)(machine());
 
 	/* start the scanline timer */
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(0), FUNC(scanline_callback));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), FUNC(scanline_callback));
 }
 
 
@@ -372,31 +371,31 @@ static void update_irqs(running_machine &machine)
 	if (CUSTOM_REG(REG_INTENA) & 0x4000)
 	{
 		/* Serial transmit buffer empty, disk block finished, software interrupts */
-		cputag_set_input_line(machine, "maincpu", 1, ints & 0x0007 ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(1, ints & 0x0007 ? ASSERT_LINE : CLEAR_LINE);
 
 		/* I/O ports and timer interrupts */
-		cputag_set_input_line(machine, "maincpu", 2, ints & 0x0008 ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(2, ints & 0x0008 ? ASSERT_LINE : CLEAR_LINE);
 
 		/* Copper, VBLANK, blitter interrupts */
-		cputag_set_input_line(machine, "maincpu", 3, ints & 0x0070 ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(3, ints & 0x0070 ? ASSERT_LINE : CLEAR_LINE);
 
 		/* Audio interrupts */
-		cputag_set_input_line(machine, "maincpu", 4, ints & 0x0780 ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(4, ints & 0x0780 ? ASSERT_LINE : CLEAR_LINE);
 
 		/* Serial receive buffer full, disk sync match */
-		cputag_set_input_line(machine, "maincpu", 5, ints & 0x1800 ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(5, ints & 0x1800 ? ASSERT_LINE : CLEAR_LINE);
 
 		/* External interrupts */
-		cputag_set_input_line(machine, "maincpu", 6, ints & 0x2000 ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(6, ints & 0x2000 ? ASSERT_LINE : CLEAR_LINE);
 	}
 	else
 	{
-		cputag_set_input_line(machine, "maincpu", 1, CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 2, CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 3, CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 4, CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 5, CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 6, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(1, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(2, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(3, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(4, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(5, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(6, CLEAR_LINE);
 	}
 }
 
@@ -995,7 +994,7 @@ static void blitter_setup(address_space *space)
 	if ( CUSTOM_REG(REG_DMACON) & 0x0400 )
 	{
 		/* simulate the 68k not running while the blit is going */
-		device_adjust_icount( &space->device(), -(blittime/2) );
+		space->device().execute().adjust_icount(-(blittime/2) );
 
 		blittime = BLITTER_NASTY_DELAY;
 	}
@@ -1043,7 +1042,7 @@ READ16_HANDLER( amiga_cia_r )
 	data = mos6526_r(cia, offset >> 7);
 
 	if (LOG_CIA)
-		logerror("%06x:cia_%c_read(%03x) = %04x & %04x\n", cpu_get_pc(&space->device()), 'A' + ((~offset & 0x0800) >> 11), offset * 2, data << shift, mem_mask);
+		logerror("%06x:cia_%c_read(%03x) = %04x & %04x\n", space->device().safe_pc(), 'A' + ((~offset & 0x0800) >> 11), offset * 2, data << shift, mem_mask);
 
 	return data << shift;
 }
@@ -1061,7 +1060,7 @@ WRITE16_HANDLER( amiga_cia_w )
 	device_t *cia;
 
 	if (LOG_CIA)
-		logerror("%06x:cia_%c_write(%03x) = %04x & %04x\n", cpu_get_pc(&space->device()), 'A' + ((~offset & 0x0800) >> 11), offset * 2, data, mem_mask);
+		logerror("%06x:cia_%c_write(%03x) = %04x & %04x\n", space->device().safe_pc(), 'A' + ((~offset & 0x0800) >> 11), offset * 2, data, mem_mask);
 
 	/* offsets 0000-07ff reference CIA B, and are accessed via the MSB */
 	if ((offset & 0x0800) == 0)
@@ -1229,7 +1228,7 @@ READ16_HANDLER( amiga_custom_r )
 	}
 
 	if (LOG_CUSTOM)
-		logerror("%06X:read from custom %s\n", cpu_get_pc(&space->device()), amiga_custom_names[offset & 0xff]);
+		logerror("%06X:read from custom %s\n", space->device().safe_pc(), amiga_custom_names[offset & 0xff]);
 
 	return 0xffff;
 }
@@ -1263,7 +1262,7 @@ WRITE16_HANDLER( amiga_custom_w )
 	offset &= 0xff;
 
 	if (LOG_CUSTOM)
-		logerror("%06X:write to custom %s = %04X\n", cpu_get_pc(&space->device()), amiga_custom_names[offset & 0xff], data);
+		logerror("%06X:write to custom %s = %04X\n", space->device().safe_pc(), amiga_custom_names[offset & 0xff], data);
 
 	switch (offset)
 	{

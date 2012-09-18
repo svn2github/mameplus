@@ -160,8 +160,8 @@ public:
 	UINT32    m_tmap3_scrolly;
 
 	/* misc */
-	int       m_oki_bank_0;
 	int       m_oki_bank_1;
+	int       m_oki_bank_2;
 
 	DECLARE_WRITE32_MEMBER(gstream_palette_w);
 	DECLARE_WRITE32_MEMBER(gstream_vram_w);
@@ -177,6 +177,12 @@ public:
 	DECLARE_CUSTOM_INPUT_MEMBER(gstream_mirror_service_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(gstream_mirror_r);
 	DECLARE_DRIVER_INIT(gstream);
+	TILE_GET_INFO_MEMBER(get_gs1_tile_info);
+	TILE_GET_INFO_MEMBER(get_gs2_tile_info);
+	TILE_GET_INFO_MEMBER(get_gs3_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -293,68 +299,64 @@ ADDRESS_MAP_END
 
 WRITE32_MEMBER(gstream_state::gstream_oki_banking_w)
 {
-	/* OKI BANKING  (still far from perfect, based on game behaviour)
+/*
+    ****OKI BANKING****
+    Possibly perfect? works perfectly in-game, may not cover all possibilities.
+    Needs code testing on PCB.
 
-    The two OKIs can independently play music or samples and are switched on the fly during game
-    This is a preliminary table of the banks:
+    The two OKIs can independently play music or samples, and have half of the
+    sound ROMs to themselves. Sometimes the first OKI will play music, and some
+    times it will play samples. The second OKI is the same way. The banks for
+    both OKIs are laid out like so:
 
-    BANK    MUSIC   SAMPLES
-     0         X
-     1    X
-     2    X
-     3    X
-     4         X
-     5    X
-     6    X
-     7    X
+    BANK MUSIC SAMPLES
+     0            X
+     1     X
+     2     X
+     3     X
 
-    Two nibbles are used in this handler: (data & 0xf) and ((data >> 4) & 0xf)
-    The values for the first nibble are the followings and should map the 8 oki banks:
-    - 0x6, 0x7, 0x9, 0xa, 0xb, 0xd, 0xe, 0xf
-    The values for the second nibble are the followings and should probably be used too:
-    - 0x6, 0x9, 0xa
+    Bank 0 is the same in both ROMs.
 
-    Same values are redudant, for example:
-    level 2: data = 0x99
-    level 6: data = 0x99
-    (this means same background music for the two levels - it could be correct, though)
+    The banking seems to be concerned with half-nibbles in the data byte. For
+    OKI1, the half-nibbles are bits 76 and 32. For OKI2, 54 and 10.
+    The bank's '2' bit is the first half-nibble's bottom bit bitwise AND with
+    the inverse of its top bit. The bank's '1' bit is the second half-nibble's
+    bottom bit bitwise AND with the top bit.
 
-    Also with current implementation, using only (data & 0xf), we have to force some values
-    manually, because the correspondent places in the table are already used
+    This may or may not be correct, but further PCB tests are required, and it
+    certainly sounds perfect in-game, without using any "hacks". */
 
-    Musics order is completely guessed but close to what the original PCB game should be */
+/*
+7654 3210
+1010 1010 needs oki2 to be bank 0
+1010 1011 needs oki2 to be bank 1
+1010 1011 needs oki1 to be bank 0
 
-	static const int bank_table_0[16] = { -1, -1, -1, -1, -1, -1, 0, 0, -1, 6, 0, 5, -1, 0, 0, 0 };
-	static const int bank_table_1[16] = { -1, -1, -1, -1, -1, -1, 2, 2, -1, 0, 0, 4, -1, 1, 1, 1 };
+7654 3210
+1010 1111 needs oki1 to be bank 1
+1010 1110 needs oki1 to be bank 1
+1010 1110 needs oki2 to be bank 0
 
-	//popmessage("oki_0 banking value = %X\noki_1 banking value = %X\n",data & 0xf,(data >> 4) & 0xf);
+7654 3210
+0110 0110 needs oki1 to be bank 2
+0110 0110 needs oki2 to be bank 0
 
-	m_oki_bank_0 = bank_table_0[data & 0xf];
-	m_oki_bank_1 = bank_table_1[data & 0xf];		// (data >> 4) & 0xf ??
+6and!7 & 2and3
 
-	/* some values are already used in the table, so we force them manually */
-	if ((data == 0x6f) || (data == 0x6e))
-	{
-		m_oki_bank_0 = 0;	// level 3b-5a samples
-		m_oki_bank_1 = 6;		// level 3b-5a music
-	}
+4and!5 & 0and1
 
-	if (data == 0x9b)
-	{
-		m_oki_bank_0 = 7;		// level 7 music
-		m_oki_bank_1 = 0;		// level 7 samples
-	}
+*/
 
-	if (data == 0x9f)
-	{
-		m_oki_bank_0 = 0;		// end sequence samples
-		m_oki_bank_1 = 3;		// end sequence music
-	}
+	m_oki_bank_1 = ((BIT(data, 6) & !BIT(data, 7)) << 1) | (BIT(data, 2) & BIT(data, 3));
+	m_oki_bank_2 = ((BIT(data, 4) & !BIT(data, 5)) << 1) | (BIT(data, 0) & BIT(data, 1));
 
-	m_oki_1->set_bank_base(m_oki_bank_0 * 0x40000);
-	m_oki_2->set_bank_base(m_oki_bank_1 * 0x40000);
+	//popmessage("oki bank = %X\noki_1 = %X\noki_2 = %X\n",data, m_oki_bank_1, m_oki_bank_2);
+
+	m_oki_1->set_bank_base(m_oki_bank_1 * 0x40000);
+	m_oki_2->set_bank_base(m_oki_bank_2 * 0x40000);
 }
 
+// Some clocking?
 WRITE32_MEMBER(gstream_state::gstream_oki_4040_w)
 {
 	// data == 0 or data == 0x81
@@ -365,9 +367,9 @@ static ADDRESS_MAP_START( gstream_io, AS_IO, 32, gstream_state )
 	AM_RANGE(0x4010, 0x4013) AM_READ_PORT("IN1")
 	AM_RANGE(0x4020, 0x4023) AM_READ_PORT("IN2")	// extra coin switches etc
 	AM_RANGE(0x4030, 0x4033) AM_WRITE(gstream_oki_banking_w)	// oki banking
-	AM_RANGE(0x4040, 0x4043) AM_WRITE(gstream_oki_4040_w)	// ??
-	AM_RANGE(0x4050, 0x4053) AM_DEVREADWRITE8("oki2", okim6295_device, read, write, 0x000000ff)	// music and samples
-	AM_RANGE(0x4060, 0x4063) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x000000ff)	// music and samples
+	AM_RANGE(0x4040, 0x4043) AM_WRITE(gstream_oki_4040_w)	// some clocking?
+	AM_RANGE(0x4050, 0x4053) AM_DEVREADWRITE8("oki1", okim6295_device, read, write, 0x000000ff)	// music and samples
+	AM_RANGE(0x4060, 0x4063) AM_DEVREADWRITE8("oki2", okim6295_device, read, write, 0x000000ff)	// music and samples
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( gstream )
@@ -445,41 +447,37 @@ GFXDECODE_END
 
 
 
-static TILE_GET_INFO( get_gs1_tile_info )
+TILE_GET_INFO_MEMBER(gstream_state::get_gs1_tile_info)
 {
-	gstream_state *state = machine.driver_data<gstream_state>();
-	int tileno = (state->m_vram[tile_index + 0x000 / 4] & 0x0fff0000) >> 16;
-	int palette = (state->m_vram[tile_index + 0x000 / 4] & 0xc0000000) >> 30;
-	SET_TILE_INFO(0, tileno, palette + 0x10, 0);
+	int tileno = (m_vram[tile_index + 0x000 / 4] & 0x0fff0000) >> 16;
+	int palette = (m_vram[tile_index + 0x000 / 4] & 0xc0000000) >> 30;
+	SET_TILE_INFO_MEMBER(0, tileno, palette + 0x10, 0);
 }
 
-static TILE_GET_INFO( get_gs2_tile_info )
+TILE_GET_INFO_MEMBER(gstream_state::get_gs2_tile_info)
 {
-	gstream_state *state = machine.driver_data<gstream_state>();
-	int tileno = (state->m_vram[tile_index + 0x400 / 4] & 0x0fff0000) >> 16;
-	int palette = (state->m_vram[tile_index + 0x400 / 4] & 0xc0000000) >> 30;
-	SET_TILE_INFO(0, tileno + 0x1000, palette + 0x14, 0);
-}
-
-
-static TILE_GET_INFO( get_gs3_tile_info )
-{
-	gstream_state *state = machine.driver_data<gstream_state>();
-	int tileno = (state->m_vram[tile_index + 0x800 / 4] & 0x0fff0000) >> 16;
-	int palette = (state->m_vram[tile_index + 0x800 / 4] & 0xc0000000) >> 30;
-	SET_TILE_INFO(0, tileno + 0x2000, palette + 0x18, 0);
+	int tileno = (m_vram[tile_index + 0x400 / 4] & 0x0fff0000) >> 16;
+	int palette = (m_vram[tile_index + 0x400 / 4] & 0xc0000000) >> 30;
+	SET_TILE_INFO_MEMBER(0, tileno + 0x1000, palette + 0x14, 0);
 }
 
 
-static VIDEO_START(gstream)
+TILE_GET_INFO_MEMBER(gstream_state::get_gs3_tile_info)
 {
-	gstream_state *state = machine.driver_data<gstream_state>();
-	state->m_tilemap1 = tilemap_create(machine, get_gs1_tile_info, tilemap_scan_rows, 32, 32, 16, 16);
-	state->m_tilemap2 = tilemap_create(machine, get_gs2_tile_info, tilemap_scan_rows, 32, 32, 16, 16);
-	state->m_tilemap3 = tilemap_create(machine, get_gs3_tile_info, tilemap_scan_rows, 32, 32, 16, 16);
+	int tileno = (m_vram[tile_index + 0x800 / 4] & 0x0fff0000) >> 16;
+	int palette = (m_vram[tile_index + 0x800 / 4] & 0xc0000000) >> 30;
+	SET_TILE_INFO_MEMBER(0, tileno + 0x2000, palette + 0x18, 0);
+}
 
-	state->m_tilemap1->set_transparent_pen(0);
-	state->m_tilemap2->set_transparent_pen(0);
+
+void gstream_state::video_start()
+{
+	m_tilemap1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gstream_state::get_gs1_tile_info),this), TILEMAP_SCAN_ROWS, 32, 32, 16, 16);
+	m_tilemap2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gstream_state::get_gs2_tile_info),this), TILEMAP_SCAN_ROWS, 32, 32, 16, 16);
+	m_tilemap3 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gstream_state::get_gs3_tile_info),this), TILEMAP_SCAN_ROWS, 32, 32, 16, 16);
+
+	m_tilemap1->set_transparent_pen(0);
+	m_tilemap2->set_transparent_pen(0);
 }
 
 static SCREEN_UPDATE_IND16(gstream)
@@ -535,32 +533,30 @@ static SCREEN_UPDATE_IND16(gstream)
 }
 
 
-static MACHINE_START( gstream )
+void gstream_state::machine_start()
 {
-	gstream_state *state = machine.driver_data<gstream_state>();
 
-	state->save_item(NAME(state->m_tmap1_scrollx));
-	state->save_item(NAME(state->m_tmap2_scrollx));
-	state->save_item(NAME(state->m_tmap3_scrollx));
-	state->save_item(NAME(state->m_tmap1_scrolly));
-	state->save_item(NAME(state->m_tmap2_scrolly));
-	state->save_item(NAME(state->m_tmap3_scrolly));
-	state->save_item(NAME(state->m_oki_bank_0));
-	state->save_item(NAME(state->m_oki_bank_1));
+	save_item(NAME(m_tmap1_scrollx));
+	save_item(NAME(m_tmap2_scrollx));
+	save_item(NAME(m_tmap3_scrollx));
+	save_item(NAME(m_tmap1_scrolly));
+	save_item(NAME(m_tmap2_scrolly));
+	save_item(NAME(m_tmap3_scrolly));
+	save_item(NAME(m_oki_bank_1));
+	save_item(NAME(m_oki_bank_2));
 }
 
-static MACHINE_RESET( gstream )
+void gstream_state::machine_reset()
 {
-	gstream_state *state = machine.driver_data<gstream_state>();
 
-	state->m_tmap1_scrollx = 0;
-	state->m_tmap2_scrollx = 0;
-	state->m_tmap3_scrollx = 0;
-	state->m_tmap1_scrolly = 0;
-	state->m_tmap2_scrolly = 0;
-	state->m_tmap3_scrolly = 0;
-	state->m_oki_bank_0 = 0;
-	state->m_oki_bank_1 = 0;
+	m_tmap1_scrollx = 0;
+	m_tmap2_scrollx = 0;
+	m_tmap3_scrollx = 0;
+	m_tmap1_scrolly = 0;
+	m_tmap2_scrolly = 0;
+	m_tmap3_scrolly = 0;
+	m_oki_bank_1 = 0;
+	m_oki_bank_2 = 0;
 }
 
 static MACHINE_CONFIG_START( gstream, gstream_state )
@@ -571,8 +567,6 @@ static MACHINE_CONFIG_START( gstream, gstream_state )
 	MCFG_CPU_IO_MAP(gstream_io)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_MACHINE_START(gstream)
-	MCFG_MACHINE_RESET(gstream)
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
@@ -587,7 +581,6 @@ static MACHINE_CONFIG_START( gstream, gstream_state )
 	MCFG_PALETTE_LENGTH(0x1000 + 0x400 + 0x400 + 0x400) // sprites + 3 bg layers
 	MCFG_GFXDECODE(gstream)
 
-	MCFG_VIDEO_START(gstream)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
@@ -623,14 +616,13 @@ ROM_START( gstream )
 	ROM_LOAD( "gs_gr_05.u174", 0x800000, 0x200000, CRC(ef283a73) SHA1(8b598facb344eac33138611abc141a2acb375983) )
 	ROM_LOAD( "gs_gr_06.u175", 0xa00000, 0x200000, CRC(d4e3a2b2) SHA1(4577c007172c718bf7ca55a8ccee5455c281026c) )
 
-	ROM_REGION( 0x200000, "oki1", 0 )
+	ROM_REGION( 0x100000, "oki1", 0 )
 	ROM_LOAD( "gs_snd_01.u192", 0x000000, 0x080000, CRC(79b64d3f) SHA1(b2166210d3a3b85b9ace90749a444c881f69d551) )
 	ROM_LOAD( "gs_snd_02.u194", 0x080000, 0x080000, CRC(e49ed92c) SHA1(a3d7b3fe93a786a246acf2657d9056398c793078) )
-	ROM_LOAD( "gs_snd_03.u191", 0x100000, 0x080000, CRC(2bfff4ac) SHA1(cce1bb3c78b86722c926854c737f9589806012ba) )
-	ROM_LOAD( "gs_snd_04.u193", 0x180000, 0x080000, CRC(b259de3b) SHA1(1a64f41d4344fefad5832332f1a7655e23f6b017) )
 
-	ROM_REGION( 0x200000, "oki2", 0 )
-	ROM_COPY( "oki1", 0, 0, 0x200000 )
+	ROM_REGION( 0x100000, "oki2", 0 )
+	ROM_LOAD( "gs_snd_03.u191", 0x000000, 0x080000, CRC(2bfff4ac) SHA1(cce1bb3c78b86722c926854c737f9589806012ba) )
+	ROM_LOAD( "gs_snd_04.u193", 0x080000, 0x080000, CRC(b259de3b) SHA1(1a64f41d4344fefad5832332f1a7655e23f6b017) )
 
 	ROM_REGION( 0x2000, "nvram", 0 )
 	ROM_LOAD( "gstream.nv", 0x000000, 0x2000, CRC(895d724b) SHA1(97941102f94923220d9beb270939f0ad9a40fe0e) )
@@ -638,7 +630,7 @@ ROM_END
 
 READ32_MEMBER(gstream_state::gstream_speedup_r)
 {
-	if (m_maincpu->state(STATE_GENPC) == 0xc0001592)
+	if (m_maincpu->pc() == 0xc0001592)
 	{
 		m_maincpu->eat_cycles(50);
 	}
@@ -652,4 +644,5 @@ DRIVER_INIT_MEMBER(gstream_state,gstream)
 }
 
 
-GAME( 2002, gstream, 0, gstream, gstream, gstream_state, gstream, ROT270, "Oriental Soft", "G-Stream G2020", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 2002, gstream, 0, gstream, gstream, gstream_state, gstream, ROT270, "Oriental Soft", "G-Stream G2020", GAME_SUPPORTS_SAVE )
+

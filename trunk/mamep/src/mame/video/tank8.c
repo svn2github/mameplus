@@ -8,29 +8,29 @@ Atari Tank 8 video emulation
 #include "includes/tank8.h"
 
 
-PALETTE_INIT( tank8 )
+void tank8_state::palette_init()
 {
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x0a);
+	machine().colortable = colortable_alloc(machine(), 0x0a);
 
-	colortable_palette_set_color(machine.colortable, 8, MAKE_RGB(0x00, 0x00, 0x00));
-	colortable_palette_set_color(machine.colortable, 9, MAKE_RGB(0xff, 0xff, 0xff));
+	colortable_palette_set_color(machine().colortable, 8, MAKE_RGB(0x00, 0x00, 0x00));
+	colortable_palette_set_color(machine().colortable, 9, MAKE_RGB(0xff, 0xff, 0xff));
 
 	for (i = 0; i < 8; i++)
 	{
-		colortable_entry_set_value(machine.colortable, 2 * i + 0, 8);
-		colortable_entry_set_value(machine.colortable, 2 * i + 1, i);
+		colortable_entry_set_value(machine().colortable, 2 * i + 0, 8);
+		colortable_entry_set_value(machine().colortable, 2 * i + 1, i);
 	}
 
 	/* walls */
-	colortable_entry_set_value(machine.colortable, 0x10, 8);
-	colortable_entry_set_value(machine.colortable, 0x11, 9);
+	colortable_entry_set_value(machine().colortable, 0x10, 8);
+	colortable_entry_set_value(machine().colortable, 0x11, 9);
 
 	/* mines */
-	colortable_entry_set_value(machine.colortable, 0x12, 8);
-	colortable_entry_set_value(machine.colortable, 0x13, 9);
+	colortable_entry_set_value(machine().colortable, 0x12, 8);
+	colortable_entry_set_value(machine().colortable, 0x13, 9);
 }
 
 
@@ -69,10 +69,9 @@ WRITE8_MEMBER(tank8_state::tank8_video_ram_w)
 
 
 
-static TILE_GET_INFO( tank8_get_tile_info )
+TILE_GET_INFO_MEMBER(tank8_state::tank8_get_tile_info)
 {
-	tank8_state *state = machine.driver_data<tank8_state>();
-	UINT8 code = state->m_video_ram[tile_index];
+	UINT8 code = m_video_ram[tile_index];
 
 	int color = 0;
 
@@ -95,23 +94,22 @@ static TILE_GET_INFO( tank8_get_tile_info )
 			color |= 4;
 	}
 
-	SET_TILE_INFO(code >> 7, code, color, (code & 0x40) ? (TILE_FLIPX | TILE_FLIPY) : 0);
+	SET_TILE_INFO_MEMBER(code >> 7, code, color, (code & 0x40) ? (TILE_FLIPX | TILE_FLIPY) : 0);
 }
 
 
 
-VIDEO_START( tank8 )
+void tank8_state::video_start()
 {
-	tank8_state *state = machine.driver_data<tank8_state>();
-	machine.primary_screen->register_screen_bitmap(state->m_helper1);
-	machine.primary_screen->register_screen_bitmap(state->m_helper2);
-	machine.primary_screen->register_screen_bitmap(state->m_helper3);
+	machine().primary_screen->register_screen_bitmap(m_helper1);
+	machine().primary_screen->register_screen_bitmap(m_helper2);
+	machine().primary_screen->register_screen_bitmap(m_helper3);
 
-	state->m_tilemap = tilemap_create(machine, tank8_get_tile_info, tilemap_scan_rows, 16, 16, 32, 32);
+	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tank8_state::tank8_get_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
 
 	/* VBLANK starts on scanline #256 and ends on scanline #24 */
 
-	state->m_tilemap->set_scrolly(0, 2 * 24);
+	m_tilemap->set_scrolly(0, 2 * 24);
 }
 
 

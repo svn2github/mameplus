@@ -52,7 +52,7 @@
 #define ZIP_DECOMPRESS_BUFSIZE	16384
 
 /* Error types */
-enum _zip_error
+enum zip_error
 {
 	ZIPERR_NONE = 0,
 	ZIPERR_OUT_OF_MEMORY,
@@ -64,7 +64,6 @@ enum _zip_error
 	ZIPERR_UNSUPPORTED,
 	ZIPERR_BUFFER_TOO_SMALL
 };
-typedef enum _zip_error zip_error;
 
 
 
@@ -73,8 +72,7 @@ typedef enum _zip_error zip_error;
 ***************************************************************************/
 
 /* contains extracted file header information */
-typedef struct _zip_file_header zip_file_header;
-struct _zip_file_header
+struct zip_file_header
 {
 	UINT32			signature;				/* central file header signature */
 	UINT16			version_created;		/* version made by */
@@ -102,8 +100,7 @@ struct _zip_file_header
 
 
 /* contains extracted end of central directory information */
-typedef struct _zip_ecd zip_ecd;
-struct _zip_ecd
+struct zip_ecd
 {
 	UINT32			signature;				/* end of central dir signature */
 	UINT16			disk_number;			/* number of this disk */
@@ -121,8 +118,7 @@ struct _zip_ecd
 
 
 /* describes an open ZIP file */
-typedef struct _zip_file zip_file;
-struct _zip_file
+struct zip_file
 {
 	const char *	filename;				/* copy of ZIP filename (for caching) */
 	osd_file *		file;					/* OSD file handle */

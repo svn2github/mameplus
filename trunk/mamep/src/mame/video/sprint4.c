@@ -9,51 +9,49 @@ Atari Sprint 4 video emulation
 #include "includes/sprint4.h"
 
 
-PALETTE_INIT( sprint4 )
+void sprint4_state::palette_init()
 {
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 6);
+	machine().colortable = colortable_alloc(machine(), 6);
 
-	colortable_palette_set_color(machine.colortable, 0, MAKE_RGB(0x00, 0x00, 0x00)); /* black  */
-	colortable_palette_set_color(machine.colortable, 1, MAKE_RGB(0xfc, 0xdf, 0x80)); /* peach  */
-	colortable_palette_set_color(machine.colortable, 2, MAKE_RGB(0xf0, 0x00, 0xf0)); /* violet */
-	colortable_palette_set_color(machine.colortable, 3, MAKE_RGB(0x00, 0xf0, 0x0f)); /* green  */
-	colortable_palette_set_color(machine.colortable, 4, MAKE_RGB(0x30, 0x4f, 0xff)); /* blue   */
-	colortable_palette_set_color(machine.colortable, 5, MAKE_RGB(0xff, 0xff, 0xff)); /* white  */
+	colortable_palette_set_color(machine().colortable, 0, MAKE_RGB(0x00, 0x00, 0x00)); /* black  */
+	colortable_palette_set_color(machine().colortable, 1, MAKE_RGB(0xfc, 0xdf, 0x80)); /* peach  */
+	colortable_palette_set_color(machine().colortable, 2, MAKE_RGB(0xf0, 0x00, 0xf0)); /* violet */
+	colortable_palette_set_color(machine().colortable, 3, MAKE_RGB(0x00, 0xf0, 0x0f)); /* green  */
+	colortable_palette_set_color(machine().colortable, 4, MAKE_RGB(0x30, 0x4f, 0xff)); /* blue   */
+	colortable_palette_set_color(machine().colortable, 5, MAKE_RGB(0xff, 0xff, 0xff)); /* white  */
 
-	colortable_entry_set_value(machine.colortable, 0, 0);
-	colortable_entry_set_value(machine.colortable, 2, 0);
-	colortable_entry_set_value(machine.colortable, 4, 0);
-	colortable_entry_set_value(machine.colortable, 6, 0);
-	colortable_entry_set_value(machine.colortable, 8, 0);
+	colortable_entry_set_value(machine().colortable, 0, 0);
+	colortable_entry_set_value(machine().colortable, 2, 0);
+	colortable_entry_set_value(machine().colortable, 4, 0);
+	colortable_entry_set_value(machine().colortable, 6, 0);
+	colortable_entry_set_value(machine().colortable, 8, 0);
 
-	colortable_entry_set_value(machine.colortable, 1, 1);
-	colortable_entry_set_value(machine.colortable, 3, 2);
-	colortable_entry_set_value(machine.colortable, 5, 3);
-	colortable_entry_set_value(machine.colortable, 7, 4);
-	colortable_entry_set_value(machine.colortable, 9, 5);
+	colortable_entry_set_value(machine().colortable, 1, 1);
+	colortable_entry_set_value(machine().colortable, 3, 2);
+	colortable_entry_set_value(machine().colortable, 5, 3);
+	colortable_entry_set_value(machine().colortable, 7, 4);
+	colortable_entry_set_value(machine().colortable, 9, 5);
 }
 
 
-static TILE_GET_INFO( sprint4_tile_info )
+TILE_GET_INFO_MEMBER(sprint4_state::sprint4_tile_info)
 {
-	sprint4_state *state = machine.driver_data<sprint4_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	UINT8 code = videoram[tile_index];
 
 	if ((code & 0x30) == 0x30)
-		SET_TILE_INFO(0, code & ~0x40, (code >> 6) ^ 3, 0);
+		SET_TILE_INFO_MEMBER(0, code & ~0x40, (code >> 6) ^ 3, 0);
 	else
-		SET_TILE_INFO(0, code, 4, 0);
+		SET_TILE_INFO_MEMBER(0, code, 4, 0);
 }
 
 
-VIDEO_START( sprint4 )
+void sprint4_state::video_start()
 {
-	sprint4_state *state = machine.driver_data<sprint4_state>();
-	machine.primary_screen->register_screen_bitmap(state->m_helper);
+	machine().primary_screen->register_screen_bitmap(m_helper);
 
-	state->m_playfield = tilemap_create(machine, sprint4_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_playfield = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(sprint4_state::sprint4_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 
@@ -116,8 +114,8 @@ SCREEN_VBLANK( sprint4 )
 
 			rect.min_x = horz - 15;
 			rect.min_y = vert - 15;
-			rect.max_x = horz - 15 + screen.machine().gfx[1]->width - 1;
-			rect.max_y = vert - 15 + screen.machine().gfx[1]->height - 1;
+			rect.max_x = horz - 15 + screen.machine().gfx[1]->width() - 1;
+			rect.max_y = vert - 15 + screen.machine().gfx[1]->height() - 1;
 
 			rect &= screen.machine().primary_screen->visible_area();
 

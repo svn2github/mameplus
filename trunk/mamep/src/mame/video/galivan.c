@@ -52,13 +52,13 @@ background: 0x4000 bytes of ROM:    76543210    tile code low bits
 
 ***************************************************************************/
 
-PALETTE_INIT( galivan )
+void galivan_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x100);
+	machine().colortable = colortable_alloc(machine(), 0x100);
 
 	/* create a lookup table for the palette */
 	for (i = 0; i < 0x100; i++)
@@ -67,7 +67,7 @@ PALETTE_INIT( galivan )
 		int g = pal4bit(color_prom[i + 0x100]);
 		int b = pal4bit(color_prom[i + 0x200]);
 
-		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r, g, b));
+		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r, g, b));
 	}
 
 	/* color_prom now points to the beginning of the lookup table */
@@ -75,7 +75,7 @@ PALETTE_INIT( galivan )
 
 	/* characters use colors 0-0x7f */
 	for (i = 0; i < 0x80; i++)
-		colortable_entry_set_value(machine.colortable, i, i);
+		colortable_entry_set_value(machine().colortable, i, i);
 
 	/* I think that */
 	/* background tiles use colors 0xc0-0xff in four banks */
@@ -90,7 +90,7 @@ PALETTE_INIT( galivan )
 		else
 			ctabentry = 0xc0 | (i & 0x0f) | ((i & 0x30) >> 0);
 
-		colortable_entry_set_value(machine.colortable, 0x80 + i, ctabentry);
+		colortable_entry_set_value(machine().colortable, 0x80 + i, ctabentry);
 	}
 
 	/* sprites use colors 0x80-0xbf in four banks */
@@ -108,7 +108,7 @@ PALETTE_INIT( galivan )
 		else
 			ctabentry = 0x80 | ((i & 0x03) << 4) | (color_prom[i >> 4] & 0x0f);
 
-		colortable_entry_set_value(machine.colortable, 0x180 + i_swapped, ctabentry);
+		colortable_entry_set_value(machine().colortable, 0x180 + i_swapped, ctabentry);
 	}
 }
 
@@ -120,24 +120,23 @@ PALETTE_INIT( galivan )
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(galivan_state::get_bg_tile_info)
 {
-	UINT8 *BGROM = machine.root_device().memregion("gfx4")->base();
+	UINT8 *BGROM = machine().root_device().memregion("gfx4")->base();
 	int attr = BGROM[tile_index + 0x4000];
 	int code = BGROM[tile_index] | ((attr & 0x03) << 8);
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code,
 			(attr & 0x78) >> 3,		/* seems correct */
 			0);
 }
 
-static TILE_GET_INFO( get_tx_tile_info )
+TILE_GET_INFO_MEMBER(galivan_state::get_tx_tile_info)
 {
-	galivan_state *state = machine.driver_data<galivan_state>();
-	int attr = state->m_videoram[tile_index + 0x400];
-	int code = state->m_videoram[tile_index] | ((attr & 0x01) << 8);
-	SET_TILE_INFO(
+	int attr = m_videoram[tile_index + 0x400];
+	int code = m_videoram[tile_index] | ((attr & 0x01) << 8);
+	SET_TILE_INFO_MEMBER(
 			0,
 			code,
 			(attr & 0xe0) >> 5,		/* not sure */
@@ -145,28 +144,27 @@ static TILE_GET_INFO( get_tx_tile_info )
 	tileinfo.category = attr & 8 ? 0 : 1;	/* seems correct */
 }
 
-static TILE_GET_INFO( ninjemak_get_bg_tile_info )
+TILE_GET_INFO_MEMBER(galivan_state::ninjemak_get_bg_tile_info)
 {
-	UINT8 *BGROM = machine.root_device().memregion("gfx4")->base();
+	UINT8 *BGROM = machine().root_device().memregion("gfx4")->base();
 	int attr = BGROM[tile_index + 0x4000];
 	int code = BGROM[tile_index] | ((attr & 0x03) << 8);
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code,
 			((attr & 0x60) >> 3) | ((attr & 0x0c) >> 2),	/* seems correct */
 			0);
 }
 
-static TILE_GET_INFO( ninjemak_get_tx_tile_info )
+TILE_GET_INFO_MEMBER(galivan_state::ninjemak_get_tx_tile_info)
 {
-	galivan_state *state = machine.driver_data<galivan_state>();
-	int attr = state->m_videoram[tile_index + 0x400];
-	int code = state->m_videoram[tile_index] | ((attr & 0x03) << 8);
+	int attr = m_videoram[tile_index + 0x400];
+	int code = m_videoram[tile_index] | ((attr & 0x03) << 8);
 
 	if(tile_index < 0x12) /* don't draw the NB1414M4 params! TODO: could be a better fix */
 		code = attr = 0x01;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code,
 			(attr & 0x1c) >> 2,		/* seems correct ? */
@@ -181,24 +179,22 @@ static TILE_GET_INFO( ninjemak_get_tx_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( galivan )
+VIDEO_START_MEMBER(galivan_state,galivan)
 {
-	galivan_state *state = machine.driver_data<galivan_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 16, 16, 128, 128);
-	state->m_tx_tilemap = tilemap_create(machine, get_tx_tile_info, tilemap_scan_cols, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(galivan_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 128, 128);
+	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(galivan_state::get_tx_tile_info),this), TILEMAP_SCAN_COLS, 8, 8, 32, 32);
 
-	state->m_tx_tilemap->set_transparent_pen(15);
+	m_tx_tilemap->set_transparent_pen(15);
 }
 
-VIDEO_START( ninjemak )
+VIDEO_START_MEMBER(galivan_state,ninjemak)
 {
-	galivan_state *state = machine.driver_data<galivan_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, ninjemak_get_bg_tile_info, tilemap_scan_cols, 16, 16, 512, 32);
-	state->m_tx_tilemap = tilemap_create(machine, ninjemak_get_tx_tile_info, tilemap_scan_cols, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(galivan_state::ninjemak_get_bg_tile_info),this), TILEMAP_SCAN_COLS, 16, 16, 512, 32);
+	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(galivan_state::ninjemak_get_tx_tile_info),this), TILEMAP_SCAN_COLS, 8, 8, 32, 32);
 
-	state->m_tx_tilemap->set_transparent_pen(15);
+	m_tx_tilemap->set_transparent_pen(15);
 }
 
 
@@ -231,7 +227,7 @@ WRITE8_MEMBER(galivan_state::galivan_gfxbank_w)
 	/* bit 7 selects one of two ROM banks for c000-dfff */
 	membank("bank1")->set_entry((data & 0x80) >> 7);
 
-	/*  logerror("Address: %04X - port 40 = %02x\n", cpu_get_pc(&space.device()), data); */
+	/*  logerror("Address: %04X - port 40 = %02x\n", space.device().safe_pc(), data); */
 }
 
 WRITE8_MEMBER(galivan_state::ninjemak_gfxbank_w)

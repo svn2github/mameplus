@@ -93,6 +93,7 @@ public:
 	int m_rom_pagesize;
 	DECLARE_DRIVER_INIT(touryuu);
 	DECLARE_DRIVER_INIT(bballoon);
+	virtual void machine_reset();
 };
 
 
@@ -559,18 +560,18 @@ READ32_MEMBER(ghosteo_state::bballoon_speedup_r)
 	UINT32 ret = s3c2410_lcd_r(s3c2410, offset+0x10/4, mem_mask);
 
 
-	int pc = cpu_get_pc(&space.device());
+	int pc = space.device().safe_pc();
 
 	// these are vblank waits
 	if (pc == 0x3001c0e4 || pc == 0x3001c0d8)
 	{
 		// BnB Arcade
-		device_spin_until_time(&space.device(), attotime::from_usec(20));
+		space.device().execute().spin_until_time(attotime::from_usec(20));
 	}
 	else if (pc == 0x3002b580 || pc == 0x3002b550)
 	{
 		// Happy Tour
-		device_spin_until_time(&space.device(), attotime::from_usec(20));
+		space.device().execute().spin_until_time(attotime::from_usec(20));
 	}
 	//else
 	//  printf("speedup %08x %08x\n", pc, ret);
@@ -578,11 +579,10 @@ READ32_MEMBER(ghosteo_state::bballoon_speedup_r)
 	return ret;
 }
 
-static MACHINE_RESET( bballoon )
+void ghosteo_state::machine_reset()
 {
-	ghosteo_state *state = machine.driver_data<ghosteo_state>();
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x4d000010, 0x4d000013,read32_delegate(FUNC(ghosteo_state::bballoon_speedup_r), state));
-	s3c2410 = machine.device("s3c2410");
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x4d000010, 0x4d000013,read32_delegate(FUNC(ghosteo_state::bballoon_speedup_r), this));
+	s3c2410 = machine().device("s3c2410");
 }
 
 static MACHINE_CONFIG_START( ghosteo, ghosteo_state )
@@ -595,13 +595,10 @@ static MACHINE_CONFIG_START( ghosteo, ghosteo_state )
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(455, 262)
 	MCFG_SCREEN_VISIBLE_AREA(0, 320-1, 0, 256-1)
-	MCFG_SCREEN_UPDATE_STATIC(s3c2410)
+	MCFG_SCREEN_UPDATE_DEVICE("s3c2410", s3c2410_device, screen_update)
 
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_MACHINE_RESET( bballoon )
-
-	MCFG_VIDEO_START(s3c2410)
 
 	MCFG_S3C2410_ADD("s3c2410", 12000000, bballoon_s3c2410_intf)
 

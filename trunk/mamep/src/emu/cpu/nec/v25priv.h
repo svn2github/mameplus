@@ -35,7 +35,7 @@ enum
 };
 
 /* interrupt sources */
-typedef enum
+enum INTSOURCES
 {
 	BRK		= 0,
 	INT_IRQ	= 1,
@@ -57,17 +57,16 @@ typedef enum
 	INTTB	= 1 << 16,
 	BRKN	= 1 << 17,
 	BRKS	= 1 << 18
-} INTSOURCES;
+};
 
 /* internal RAM and register banks */
-typedef union
+union internalram
 {
 	UINT16 w[128];
 	UINT8  b[256];
-} internalram;
+};
 
-typedef struct _v25_state_t v25_state_t;
-struct _v25_state_t
+struct v25_state_t
 {
 	internalram ram;
 	offs_t	fetch_xor;
@@ -128,14 +127,14 @@ enum {
 	PC_SAVE   = 0x06/2
 };
 
-typedef enum {
+enum SREGS {
 	DS1 = 0x0E/2,
 	PS  = 0x0C/2,
 	SS  = 0x0A/2,
 	DS0 = 0x08/2
-} SREGS;
+};
 
-typedef enum {
+enum WREGS {
 	AW = 0x1E/2,
 	CW = 0x1C/2,
 	DW = 0x1A/2,
@@ -144,9 +143,9 @@ typedef enum {
 	BP = 0x14/2,
 	IX = 0x12/2,
 	IY = 0x10/2
-} WREGS;
+};
 
-typedef enum {
+enum BREGS {
    AL = NATIVE_ENDIAN_VALUE_LE_BE(0x1E, 0x1F),
    AH = NATIVE_ENDIAN_VALUE_LE_BE(0x1F, 0x1E),
    CL = NATIVE_ENDIAN_VALUE_LE_BE(0x1C, 0x1D),
@@ -155,7 +154,7 @@ typedef enum {
    DH = NATIVE_ENDIAN_VALUE_LE_BE(0x1B, 0x1A),
    BL = NATIVE_ENDIAN_VALUE_LE_BE(0x18, 0x19),
    BH = NATIVE_ENDIAN_VALUE_LE_BE(0x19, 0x18)
-} BREGS;
+};
 
 #define SetRB(x)		do { nec_state->RBW = (x) << 4; nec_state->RBB = (x) << 5; } while (0)
 

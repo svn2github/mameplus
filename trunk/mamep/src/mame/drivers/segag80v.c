@@ -162,19 +162,18 @@ INPUT_CHANGED_MEMBER(segag80v_state::service_switch)
 {
 	/* pressing the service switch sends an NMI */
 	if (newval)
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
-static MACHINE_START( g80v )
+void segag80v_state::machine_start()
 {
-	segag80v_state *state = machine.driver_data<segag80v_state>();
 	/* register for save states */
-	state_save_register_global_array(machine, state->m_mult_data);
-	state_save_register_global(machine, state->m_mult_result);
-	state_save_register_global(machine, state->m_spinner_select);
-	state_save_register_global(machine, state->m_spinner_sign);
-	state_save_register_global(machine, state->m_spinner_count);
+	state_save_register_global_array(machine(), m_mult_data);
+	state_save_register_global(machine(), m_mult_result);
+	state_save_register_global(machine(), m_spinner_select);
+	state_save_register_global(machine(), m_spinner_sign);
+	state_save_register_global(machine(), m_spinner_count);
 }
 
 
@@ -190,7 +189,7 @@ static offs_t decrypt_offset(address_space *space, offs_t offset)
 	segag80v_state *state = space->machine().driver_data<segag80v_state>();
 
 	/* ignore anything but accesses via opcode $32 (LD $(XXYY),A) */
-	offs_t pc = cpu_get_previouspc(&space->device());
+	offs_t pc = space->device().safe_pcbase();
 	if ((UINT16)pc == 0xffff || space->read_byte(pc) != 0x32)
 		return offset;
 
@@ -361,7 +360,7 @@ WRITE8_MEMBER(segag80v_state::unknown_w)
 	/* writing an 0x04 here enables interrupts */
 	/* some games write 0x00/0x01 here as well */
 	if (data != 0x00 && data != 0x01 && data != 0x04)
-		mame_printf_debug("%04X:unknown_w = %02X\n", cpu_get_pc(&space.device()), data);
+		mame_printf_debug("%04X:unknown_w = %02X\n", space.device().safe_pc(), data);
 }
 
 
@@ -901,7 +900,6 @@ static MACHINE_CONFIG_START( g80v_base, segag80v_state )
 	MCFG_CPU_IO_MAP(main_portmap)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_MACHINE_START(g80v)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", VECTOR)
@@ -910,7 +908,6 @@ static MACHINE_CONFIG_START( g80v_base, segag80v_state )
 	MCFG_SCREEN_VISIBLE_AREA(512, 1536, 640-32, 1408+32)
 	MCFG_SCREEN_UPDATE_STATIC(segag80v)
 
-	MCFG_VIDEO_START(segag80v)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -476,15 +476,16 @@ public:
 	DECLARE_READ8_MEMBER(mastboy_nmi_read);
 	DECLARE_WRITE8_MEMBER(mastboy_msm5205_reset_w);
 	DECLARE_DRIVER_INIT(mastboy);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /* VIDEO EMULATION */
 
-static VIDEO_START(mastboy)
+void mastboy_state::video_start()
 {
-	mastboy_state *state = machine.driver_data<mastboy_state>();
-	gfx_element_set_source(machine.gfx[0], state->m_vram);
+	machine().gfx[0]->set_source(m_vram);
 }
 
 static SCREEN_UPDATE_IND16(mastboy)
@@ -589,7 +590,7 @@ WRITE8_MEMBER(mastboy_state::banked_ram_w)
 			m_vram[offs] = data^0xff;
 
 			/* Decode the new tile */
-			gfx_element_mark_dirty(machine().gfx[0], offs/32);
+			machine().gfx[0]->mark_dirty(offs/32);
 		}
 	}
 	else
@@ -673,7 +674,7 @@ static void mastboy_adpcm_int(device_t *device)
 
 	state->m_m5205_part ^= 1;
 	if(!state->m_m5205_part)
-		cputag_set_input_line(device->machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+		device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -689,7 +690,7 @@ WRITE8_MEMBER(mastboy_state::mastboy_irq0_ack_w)
 {
 	m_irq0_ack = data;
 	if ((data & 1) == 1)
-		cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 static INTERRUPT_GEN( mastboy_interrupt )
@@ -697,7 +698,7 @@ static INTERRUPT_GEN( mastboy_interrupt )
 	mastboy_state *state = device->machine().driver_data<mastboy_state>();
 	if ((state->m_irq0_ack & 1) == 1)
 	{
-		device_set_input_line(device, 0, ASSERT_LINE);
+		device->execute().set_input_line(0, ASSERT_LINE);
 	}
 }
 
@@ -868,18 +869,17 @@ GFXDECODE_END
 
 /* Machine Functions / Driver */
 
-static MACHINE_RESET( mastboy )
+void mastboy_state::machine_reset()
 {
-	mastboy_state *state = machine.driver_data<mastboy_state>();
 	/* clear some ram */
-	memset( state->m_workram,   0x00, 0x01000);
-	memset( state->m_tileram,   0x00, 0x01000);
-	memset( state->m_colram,    0x00, 0x00200);
-	memset( state->m_vram, 0x00, 0x10000);
+	memset( m_workram,   0x00, 0x01000);
+	memset( m_tileram,   0x00, 0x01000);
+	memset( m_colram,    0x00, 0x00200);
+	memset( m_vram, 0x00, 0x10000);
 
-	state->m_m5205_part = 0;
-	msm5205_reset_w(machine.device("msm"),1);
-	state->m_irq0_ack = 0;
+	m_m5205_part = 0;
+	msm5205_reset_w(machine().device("msm"),1);
+	m_irq0_ack = 0;
 }
 
 
@@ -892,7 +892,6 @@ static MACHINE_CONFIG_START( mastboy, mastboy_state )
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
-	MCFG_MACHINE_RESET( mastboy )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -905,7 +904,6 @@ static MACHINE_CONFIG_START( mastboy, mastboy_state )
 	MCFG_GFXDECODE(mastboy)
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(mastboy)
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")

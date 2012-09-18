@@ -35,28 +35,26 @@
 static void update_interrupts(running_machine &machine)
 {
 	thunderj_state *state = machine.driver_data<thunderj_state>();
-	cputag_set_input_line(machine, "maincpu", 4, state->m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
-	cputag_set_input_line(machine, "extra", 4, state->m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
-	cputag_set_input_line(machine, "maincpu", 6, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(4, state->m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("extra")->execute().set_input_line(4, state->m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(6, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
-static MACHINE_START( thunderj )
+MACHINE_START_MEMBER(thunderj_state,thunderj)
 {
-	thunderj_state *state = machine.driver_data<thunderj_state>();
-	atarigen_init(machine);
+	atarigen_init(machine());
 
-	state->save_item(NAME(state->m_alpha_tile_bank));
+	save_item(NAME(m_alpha_tile_bank));
 }
 
 
-static MACHINE_RESET( thunderj )
+MACHINE_RESET_MEMBER(thunderj_state,thunderj)
 {
-	thunderj_state *state = machine.driver_data<thunderj_state>();
 
-	atarigen_eeprom_reset(state);
-	atarigen_interrupt_reset(state, update_interrupts);
-	atarivc_reset(*machine.primary_screen, state->m_atarivc_eof_data, 2);
+	atarigen_eeprom_reset(this);
+	atarigen_interrupt_reset(this, update_interrupts);
+	atarivc_reset(*machine().primary_screen, m_atarivc_eof_data, 2);
 	atarijsa_reset();
 }
 
@@ -88,9 +86,9 @@ WRITE16_MEMBER(thunderj_state::latch_w)
 	{
 		/* 0 means hold CPU 2's reset low */
 		if (data & 1)
-			cputag_set_input_line(machine(), "extra", INPUT_LINE_RESET, CLEAR_LINE);
+			machine().device("extra")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 		else
-			cputag_set_input_line(machine(), "extra", INPUT_LINE_RESET, ASSERT_LINE);
+			machine().device("extra")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 		/* bits 2-5 are the alpha bank */
 		if (m_alpha_tile_bank != ((data >> 2) & 7))
@@ -291,8 +289,8 @@ static MACHINE_CONFIG_START( thunderj, thunderj_state )
 	MCFG_CPU_ADD("extra", M68000, ATARI_CLOCK_14MHz/2)
 	MCFG_CPU_PROGRAM_MAP(extra_map)
 
-	MCFG_MACHINE_START(thunderj)
-	MCFG_MACHINE_RESET(thunderj)
+	MCFG_MACHINE_START_OVERRIDE(thunderj_state,thunderj)
+	MCFG_MACHINE_RESET_OVERRIDE(thunderj_state,thunderj)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
 	/* perfect synchronization due to shared RAM */
@@ -309,7 +307,7 @@ static MACHINE_CONFIG_START( thunderj, thunderj_state )
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
 	MCFG_SCREEN_UPDATE_STATIC(thunderj)
 
-	MCFG_VIDEO_START(thunderj)
+	MCFG_VIDEO_START_OVERRIDE(thunderj_state,thunderj)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(jsa_ii_mono)

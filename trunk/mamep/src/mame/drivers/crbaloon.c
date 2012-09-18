@@ -61,7 +61,7 @@ WRITE8_MEMBER(crbaloon_state::pc3092_w)
 {
 	m_pc3092_data[offset] = data & 0x0f;
 
-	if (LOG_PC3092) logerror("%04X:  write PC3092 #%d = 0x%02x\n", cpu_get_pc(&space.device()), offset, m_pc3092_data[offset]);
+	if (LOG_PC3092) logerror("%04X:  write PC3092 #%d = 0x%02x\n", space.device().safe_pc(), offset, m_pc3092_data[offset]);
 
 	pc3092_update(machine());
 }
@@ -141,7 +141,7 @@ READ8_MEMBER(crbaloon_state::pc3259_r)
 		break;
 	}
 
-	if (LOG_PC3259) logerror("%04X:  read PC3259 #%d = 0x%02x\n", cpu_get_pc(&space.device()), reg, ret);
+	if (LOG_PC3259) logerror("%04X:  read PC3259 #%d = 0x%02x\n", space.device().safe_pc(), reg, ret);
 
 	return ret | (ioport("DSW1")->read() & 0xf0);
 }
@@ -337,14 +337,13 @@ GFXDECODE_END
  *
  *************************************/
 
-static MACHINE_RESET( crballoon )
+void crbaloon_state::machine_reset()
 {
-	crbaloon_state *state = machine.driver_data<crbaloon_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_IO);
-	device_t *discrete = machine.device("discrete");
+	address_space *space = machine().device("maincpu")->memory().space(AS_IO);
+	device_t *discrete = machine().device("discrete");
 
 	pc3092_reset();
-	state->port_sound_w(*space, 0, 0);
+	port_sound_w(*space, 0, 0);
 	crbaloon_audio_set_music_freq(discrete, 0, 0);
 }
 
@@ -361,7 +360,7 @@ static INTERRUPT_GEN( vblank_irq )
 	crbaloon_state *state = device->machine().driver_data<crbaloon_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -373,15 +372,12 @@ static MACHINE_CONFIG_START( crbaloon, crbaloon_state )
 	MCFG_CPU_IO_MAP(main_io_map)
 	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
 
-	MCFG_MACHINE_RESET(crballoon)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_ALWAYS_UPDATE)
-	MCFG_VIDEO_START(crbaloon)
 
 	MCFG_GFXDECODE(crbaloon)
 	MCFG_PALETTE_LENGTH(32)
-	MCFG_PALETTE_INIT(crbaloon)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)

@@ -56,6 +56,9 @@ public:
 	DECLARE_WRITE8_MEMBER(themj_rombank_w);
 	DECLARE_WRITE8_MEMBER(adpcm_w);
 	DECLARE_DRIVER_INIT(rmhaihai);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void video_start();
+	DECLARE_MACHINE_RESET(themj);
 };
 
 
@@ -72,20 +75,18 @@ WRITE8_MEMBER(rmhaihai_state::rmhaihai_colorram_w)
 	m_bg_tilemap->mark_tile_dirty(offset);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(rmhaihai_state::get_bg_tile_info)
 {
-	rmhaihai_state *state = machine.driver_data<rmhaihai_state>();
-	int attr = state->m_colorram[tile_index];
-	int code = state->m_videoram[tile_index] + (state->m_gfxbank << 12) + ((attr & 0x07) << 8) + ((attr & 0x80) << 4);
-	int color = (state->m_gfxbank << 5) + (attr >> 3);
+	int attr = m_colorram[tile_index];
+	int code = m_videoram[tile_index] + (m_gfxbank << 12) + ((attr & 0x07) << 8) + ((attr & 0x80) << 4);
+	int color = (m_gfxbank << 5) + (attr >> 3);
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
-static VIDEO_START( rmhaihai )
+void rmhaihai_state::video_start()
 {
-	rmhaihai_state *state = machine.driver_data<rmhaihai_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows,
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(rmhaihai_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,
 		8, 8, 64, 32);
 }
 
@@ -103,8 +104,8 @@ READ8_MEMBER(rmhaihai_state::keyboard_r)
 {
 	static const char *const keynames[] = { "KEY0", "KEY1" };
 
-	logerror("%04x: keyboard_r\n",cpu_get_pc(&space.device()));
-	switch(cpu_get_pc(&space.device()))
+	logerror("%04x: keyboard_r\n",space.device().safe_pc());
+	switch(space.device().safe_pc())
 	{
 		/* read keyboard */
 		case 0x0aba:	// rmhaihai, rmhaisei
@@ -151,7 +152,7 @@ READ8_MEMBER(rmhaihai_state::keyboard_r)
 
 WRITE8_MEMBER(rmhaihai_state::keyboard_w)
 {
-logerror("%04x: keyboard_w %02x\n",cpu_get_pc(&space.device()),data);
+logerror("%04x: keyboard_w %02x\n",space.device().safe_pc(),data);
 	m_keyboard_cmd = data;
 }
 
@@ -191,10 +192,9 @@ logerror("banksw %d\n",bank);
 	membank("bank2")->set_base(rom + bank*0x4000 + 0x2000);
 }
 
-static MACHINE_RESET( themj )
+MACHINE_RESET_MEMBER(rmhaihai_state,themj)
 {
-	rmhaihai_state *state = machine.driver_data<rmhaihai_state>();
-	state->themj_rombank_w(*machine.device("maincpu")->memory().space(AS_IO), 0, 0);
+	themj_rombank_w(*machine().device("maincpu")->memory().space(AS_IO), 0, 0);
 }
 
 
@@ -483,7 +483,6 @@ static MACHINE_CONFIG_START( rmhaihai, rmhaihai_state )
 	MCFG_PALETTE_LENGTH(0x100)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(rmhaihai)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -514,7 +513,7 @@ static MACHINE_CONFIG_DERIVED( themj, rmhaihai )
 	MCFG_CPU_PROGRAM_MAP(themj_map)
 	MCFG_CPU_IO_MAP(themj_io_map)
 
-	MCFG_MACHINE_RESET(themj)
+	MCFG_MACHINE_RESET_OVERRIDE(rmhaihai_state,themj)
 
 	/* video hardware */
 	MCFG_GFXDECODE(themj)

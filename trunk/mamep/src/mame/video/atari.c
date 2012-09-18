@@ -1065,7 +1065,7 @@ static TIMER_CALLBACK( antic_issue_dli )
 	{
 		LOG(("           @cycle #%3d issue DLI\n", cycle(machine)));
 		antic.r.nmist |= DLI_NMI;
-		cputag_set_input_line(machine, "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine.device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 	else
 	{
@@ -1160,7 +1160,7 @@ static TIMER_CALLBACK( antic_steal_cycles )
 	LOG(("           @cycle #%3d steal %d cycles\n", cycle(machine), antic.steal_cycles));
 	after(machine, antic.steal_cycles, FUNC(antic_line_done));
     antic.steal_cycles = 0;
-	device_spin_until_trigger( machine.device("maincpu"), TRIGGER_STEAL );
+	machine.device("maincpu")->execute().spin_until_trigger(TRIGGER_STEAL );
 }
 
 
@@ -1528,7 +1528,7 @@ static void generic_atari_interrupt(running_machine &machine, int button_count)
 			LOG(("           cause VBL NMI\n"));
 			/* set the VBL NMI status bit */
 			antic.r.nmist |= VBL_NMI;
-			cputag_set_input_line(machine, "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+			machine.device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 		}
     }
 

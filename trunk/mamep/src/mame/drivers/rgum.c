@@ -31,10 +31,11 @@ public:
 	required_shared_ptr<UINT8> m_cram;
 	UINT8 m_hbeat;
 	DECLARE_CUSTOM_INPUT_MEMBER(rgum_heartbeat_r);
+	virtual void video_start();
 };
 
 
-static VIDEO_START(royalgum)
+void rgum_state::video_start()
 {
 }
 
@@ -42,7 +43,7 @@ static SCREEN_UPDATE_IND16(royalgum)
 {
 	rgum_state *state = screen.machine().driver_data<rgum_state>();
 	int x,y,count;
-	const gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 
 	count = 0;
 
@@ -284,7 +285,6 @@ static MACHINE_CONFIG_START( rgum, rgum_state )
 	MCFG_GFXDECODE(rgum)
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(royalgum)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

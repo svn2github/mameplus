@@ -191,7 +191,7 @@ static INTERRUPT_GEN( vblank_irq )
 	rocnrope_state *state = device->machine().driver_data<rocnrope_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -213,8 +213,6 @@ static MACHINE_CONFIG_START( rocnrope, rocnrope_state )
 	MCFG_GFXDECODE(rocnrope)
 	MCFG_PALETTE_LENGTH(16*16+16*16)
 
-	MCFG_PALETTE_INIT(rocnrope)
-	MCFG_VIDEO_START(rocnrope)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(timeplt_sound)

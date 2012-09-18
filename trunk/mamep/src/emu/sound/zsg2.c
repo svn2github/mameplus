@@ -47,14 +47,12 @@
 #include "zsg2.h"
 
 // 16 registers per channel, 48 channels
-typedef struct _zchan zchan;
-struct _zchan
+struct zchan
 {
 	UINT16 v[16];
 };
 
-typedef struct _zsg2_state zsg2_state;
-struct _zsg2_state
+struct zsg2_state
 {
 	zchan zc[48];
 	UINT16 act[3];
@@ -69,7 +67,7 @@ INLINE zsg2_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == ZSG2);
-	return (zsg2_state *)downcast<legacy_device_base *>(device)->token();
+	return (zsg2_state *)downcast<zsg2_device *>(device)->token();
 }
 
 static STREAM_UPDATE( update_stereo )
@@ -231,30 +229,42 @@ static DEVICE_START( zsg2 )
 	info->bank_samples = device->machine().root_device().memregion(intf->samplergn)->base();
 }
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
+const device_type ZSG2 = &device_creator<zsg2_device>;
 
-DEVICE_GET_INFO( zsg2 )
+zsg2_device::zsg2_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, ZSG2, "ZSG-2", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(zsg2_state);			break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(zsg2_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( zsg2 );		break;
-		case DEVINFO_FCT_STOP:							/* nothing */								break;
-		case DEVINFO_FCT_RESET:							/* nothing */								break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:						strcpy(info->s, "ZSG-2");					break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Zoom custom");				break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");						break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);					break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void zsg2_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void zsg2_device::device_start()
+{
+	DEVICE_START_NAME( zsg2 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void zsg2_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(ZSG2, zsg2);

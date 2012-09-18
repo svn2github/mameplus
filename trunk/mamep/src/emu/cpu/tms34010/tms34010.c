@@ -29,8 +29,7 @@
 ***************************************************************************/
 
 /* TMS34010 State */
-typedef struct _XY XY;
-struct _XY
+struct XY
 {
 #ifdef LSB_FIRST
 	INT16 x;
@@ -41,8 +40,7 @@ struct _XY
 #endif
 };
 
-typedef struct _tms34010_state tms34010_state;
-struct _tms34010_state
+struct tms34010_state
 {
 	UINT32				pc;
 	UINT32				ppc;
@@ -769,7 +767,7 @@ static TIMER_CALLBACK( internal_interrupt_callback )
 	LOG(("TMS34010 '%s' set internal interrupt $%04x\n", tms->device->tag(), type));
 
 	/* generate triggers so that spin loops can key off them */
-	device_triggerint(tms->device);
+	tms->device->signal_interrupt_trigger();
 }
 
 
@@ -997,7 +995,7 @@ static TIMER_CALLBACK( scanline_callback )
 
 				/* interlaced timing not supported */
 				if ((SMART_IOREG(tms, DPYCTL) & 0x4000) == 0)
-					fatalerror("Interlaced video configured on the TMS34010 (unsupported)");
+					fatalerror("Interlaced video configured on the TMS34010 (unsupported)\n");
 			}
 		}
 	}
@@ -1224,7 +1222,7 @@ WRITE16_HANDLER( tms34010_io_register_w )
 			break;
 
 		case REG_PMASK:
-			if (data) logerror("Plane masking not supported. PC=%08X\n", cpu_get_pc(&space->device()));
+			if (data) logerror("Plane masking not supported. PC=%08X\n", space->device().safe_pc());
 			break;
 
 		case REG_DPYCTL:
@@ -1235,7 +1233,7 @@ WRITE16_HANDLER( tms34010_io_register_w )
 			/* if the CPU is halting itself, stop execution right away */
 			if ((data & 0x8000) && !tms->external_host_access)
 				tms->icount = 0;
-			device_set_input_line(tms->device, INPUT_LINE_HALT, (data & 0x8000) ? ASSERT_LINE : CLEAR_LINE);
+			tms->device->set_input_line(INPUT_LINE_HALT, (data & 0x8000) ? ASSERT_LINE : CLEAR_LINE);
 
 			/* NMI issued? */
 			if (data & 0x0100)
@@ -1375,7 +1373,7 @@ WRITE16_HANDLER( tms34020_io_register_w )
 
 		case REG020_PMASKL:
 		case REG020_PMASKH:
-			if (data) logerror("Plane masking not supported. PC=%08X\n", cpu_get_pc(&space->device()));
+			if (data) logerror("Plane masking not supported. PC=%08X\n", space->device().safe_pc());
 			break;
 
 		case REG020_DPYCTL:
@@ -1386,7 +1384,7 @@ WRITE16_HANDLER( tms34020_io_register_w )
 			/* if the CPU is halting itself, stop execution right away */
 			if ((data & 0x8000) && !tms->external_host_access)
 				tms->icount = 0;
-			device_set_input_line(tms->device, INPUT_LINE_HALT, (data & 0x8000) ? ASSERT_LINE : CLEAR_LINE);
+			tms->device->set_input_line(INPUT_LINE_HALT, (data & 0x8000) ? ASSERT_LINE : CLEAR_LINE);
 
 			/* NMI issued? */
 			if (data & 0x0100)
@@ -1766,7 +1764,7 @@ CPU_GET_INFO( tms34010 )
 		case CPUINFO_INT_CONTEXT_SIZE:					info->i = sizeof(tms34010_state);	break;
 		case CPUINFO_INT_INPUT_LINES:					info->i = 2;						break;
 		case CPUINFO_INT_DEFAULT_IRQ_VECTOR:			info->i = 0;						break;
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;		break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;		break;
 		case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1;						break;
 		case CPUINFO_INT_CLOCK_DIVIDER:					info->i = 8;						break;
 		case CPUINFO_INT_MIN_INSTRUCTION_BYTES:			info->i = 2;						break;
@@ -1774,9 +1772,9 @@ CPU_GET_INFO( tms34010 )
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 1;						break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 10000;					break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:			info->i = 16;						break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM:		info->i = 32;						break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM:		info->i = 3;						break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_PROGRAM:			info->i = 16;						break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM:		info->i = 32;						break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM:		info->i = 3;						break;
 
 		case CPUINFO_INT_INPUT_STATE + 0:				info->i = (IOREG(tms, REG_INTPEND) & TMS34010_INT1) ? ASSERT_LINE : CLEAR_LINE; break;
 		case CPUINFO_INT_INPUT_STATE + 1:				info->i = (IOREG(tms, REG_INTPEND) & TMS34010_INT2) ? ASSERT_LINE : CLEAR_LINE; break;
@@ -1795,11 +1793,11 @@ CPU_GET_INFO( tms34010 )
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &tms->icount;		break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "TMS34010");		break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Texas Instruments 340x0"); break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");				break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);			break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Alex Pasadyn/Zsolt Vasvari\nParts based on code by Aaron Giles"); break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "TMS34010");		break;
+		case CPUINFO_STR_FAMILY:					strcpy(info->s, "Texas Instruments 340x0"); break;
+		case CPUINFO_STR_VERSION:					strcpy(info->s, "1.0");				break;
+		case CPUINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);			break;
+		case CPUINFO_STR_CREDITS:					strcpy(info->s, "Copyright Alex Pasadyn/Zsolt Vasvari\nParts based on code by Aaron Giles"); break;
 	}
 }
 
@@ -1820,7 +1818,7 @@ CPU_GET_INFO( tms34020 )
 		case CPUINFO_FCT_DISASSEMBLE:	info->disassemble = CPU_DISASSEMBLE_NAME(tms34020);	break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "TMS34020");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "TMS34020");		break;
 
 		default:										CPU_GET_INFO_CALL(tms34010);		break;
 	}

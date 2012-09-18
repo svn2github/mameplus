@@ -3,10 +3,22 @@ class konamigx_state : public driver_device
 public:
 	konamigx_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		m_maincpu(*this,"maincpu")
+		m_maincpu(*this,"maincpu"),
+		m_workram(*this,"workram"),
+		m_psacram(*this,"psacram"),
+		m_subpaletteram32(*this,"subpaletteram"),
+		m_k053936_0_ctrl(*this,"k053936_0_ctrl",32),
+		m_k053936_0_linectrl(*this,"k053936_0_line",32),
+		m_konamigx_type3_psac2_bank(*this,"psac2_bank")
 		{ }
 
 	required_device<cpu_device> m_maincpu;
+	optional_shared_ptr<UINT32> m_workram;
+	optional_shared_ptr<UINT32> m_psacram;
+	optional_shared_ptr<UINT32> m_subpaletteram32;
+	optional_shared_ptr<UINT16> m_k053936_0_ctrl;
+	optional_shared_ptr<UINT16> m_k053936_0_linectrl;
+	optional_shared_ptr<UINT32> m_konamigx_type3_psac2_bank;
 	DECLARE_WRITE32_MEMBER(esc_w);
 	DECLARE_WRITE32_MEMBER(eeprom_w);
 	DECLARE_WRITE32_MEMBER(control_w);
@@ -44,12 +56,26 @@ public:
 	DECLARE_WRITE32_MEMBER(konamigx_t4_psacmap_w);
 	DECLARE_CUSTOM_INPUT_MEMBER(gx_rdport1_3_r);
 	DECLARE_DRIVER_INIT(konamigx);
+	TILE_GET_INFO_MEMBER(get_gx_psac_tile_info);
+	TILE_GET_INFO_MEMBER(get_gx_psac3_tile_info);
+	TILE_GET_INFO_MEMBER(get_gx_psac3_alt_tile_info);
+	TILE_GET_INFO_MEMBER(get_gx_psac1a_tile_info);
+	TILE_GET_INFO_MEMBER(get_gx_psac1b_tile_info);
+	DECLARE_MACHINE_START(konamigx);
+	DECLARE_MACHINE_RESET(konamigx);
+	DECLARE_VIDEO_START(konamigx_5bpp);
+	DECLARE_VIDEO_START(dragoonj);
+	DECLARE_VIDEO_START(le2);
+	DECLARE_VIDEO_START(konamigx_6bpp);
+	DECLARE_VIDEO_START(konamigx_6bpp_2);
+	DECLARE_VIDEO_START(opengolf);
+	DECLARE_VIDEO_START(racinfrc);
+	DECLARE_VIDEO_START(konamigx_type3);
+	DECLARE_VIDEO_START(konamigx_type4);
+	DECLARE_VIDEO_START(konamigx_type4_vsn);
+	DECLARE_VIDEO_START(konamigx_type4_sd2);
+	DECLARE_VIDEO_START(winspike);
 };
-
-
-/*----------- defined in drivers/konamigx.c -----------*/
-
-extern UINT32 *gx_psacram, *gx_subpaletteram32;
 
 
 /*----------- defined in video/konamigx.c -----------*/
@@ -122,27 +148,23 @@ void konamigx_mixer_primode(int mode);
 void konamigx_objdma(void);
 extern UINT16 *K053247_ram;
 
-VIDEO_START(konamigx_5bpp);
-VIDEO_START(konamigx_6bpp);
-VIDEO_START(konamigx_6bpp_2);
-VIDEO_START(konamigx_type3);
-VIDEO_START(konamigx_type4);
-VIDEO_START(konamigx_type4_sd2);
-VIDEO_START(konamigx_type4_vsn);
-VIDEO_START(le2);
-VIDEO_START(dragoonj);
-VIDEO_START(winspike);
-VIDEO_START(opengolf);
-VIDEO_START(racinfrc);
+
+
+
+
+
+
+
+
+
+
+
+
 SCREEN_UPDATE_RGB32(konamigx);
 SCREEN_UPDATE_RGB32(konamigx_left);
 SCREEN_UPDATE_RGB32(konamigx_right);
 
-#ifdef UNUSED_FUNCTION
-#endif
-
 extern int konamigx_current_frame;
-extern UINT32* konamigx_type3_psac2_bank;
 
 
 /*----------- defined in machine/konamigx.c -----------*/

@@ -123,6 +123,7 @@ public:
 	DECLARE_READ8_MEMBER(get_slave_ack);
 	DECLARE_DRIVER_INIT(tetriskr);
 	DECLARE_DRIVER_INIT(filetto);
+	virtual void machine_reset();
 };
 
 static SCREEN_UPDATE_RGB32( tetriskr )
@@ -166,7 +167,7 @@ static SCREEN_UPDATE_RGB32( tetriskr )
 
 READ8_MEMBER(pcxt_state::disk_iobank_r)
 {
-	//printf("Read Prototyping card [%02x] @ PC=%05x\n",offset,cpu_get_pc(&space.device()));
+	//printf("Read Prototyping card [%02x] @ PC=%05x\n",offset,space.device().safe_pc());
 	//if(offset == 0) return ioport("DSW")->read();
 	if(offset == 1) return ioport("IN1")->read();
 
@@ -298,7 +299,7 @@ READ8_MEMBER(pcxt_state::port_a_r)
 	}
 	else//keyboard emulation
 	{
-		//cputag_set_input_line(machine(), "maincpu", 1, PULSE_LINE);
+		//machine().device("maincpu")->execute().set_input_line(1, PULSE_LINE);
 		return 0x00;//Keyboard is disconnected
 		//return 0xaa;//Keyboard code
 	}
@@ -352,7 +353,7 @@ WRITE8_MEMBER(pcxt_state::wss_2_w)
 
 WRITE8_MEMBER(pcxt_state::sys_reset_w)
 {
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_RESET, PULSE_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 }
 
 static I8255A_INTERFACE( ppi8255_0_intf )
@@ -386,7 +387,7 @@ static I8255A_INTERFACE( ppi8255_1_intf )
 READ8_MEMBER(pcxt_state::fdc765_status_r)
 {
 	UINT8 tmp;
-//  popmessage("Read FDC status @ PC=%05x",cpu_get_pc(&space.device()));
+//  popmessage("Read FDC status @ PC=%05x",space.device().safe_pc());
 	tmp = m_status | 0x80;
 	m_clr_status++;
 	if(m_clr_status == 0x10)
@@ -423,7 +424,7 @@ DMA8237 Controller
 
 WRITE_LINE_MEMBER(pcxt_state::pc_dma_hrq_changed)
 {
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
 
 	/* Assert HLDA */
 	i8237_hlda_w( m_dma8237_1, state );
@@ -517,7 +518,7 @@ static I8237_INTERFACE( dma8237_1_config )
 
 WRITE_LINE_MEMBER(pcxt_state::pic8259_1_set_int_line)
 {
-	cputag_set_input_line(machine(), "maincpu", 0, state ? HOLD_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 READ8_MEMBER(pcxt_state::get_slave_ack)
@@ -713,17 +714,16 @@ static GFXDECODE_START( pcxt )
 GFXDECODE_END
 
 
-static MACHINE_RESET( filetto )
+void pcxt_state::machine_reset()
 {
-	pcxt_state *state = machine.driver_data<pcxt_state>();
-	device_t *speaker = machine.device("speaker");
-	state->m_bank = -1;
-	state->m_lastvalue = -1;
-	device_set_irq_callback(machine.device("maincpu"), irq_callback);
+	device_t *speaker = machine().device("speaker");
+	m_bank = -1;
+	m_lastvalue = -1;
+	machine().device("maincpu")->execute().set_irq_acknowledge_callback(irq_callback);
 
-	state->m_pc_spkrdata = 0;
-	state->m_pc_input = 0;
-	state->m_wss2_data = 0;
+	m_pc_spkrdata = 0;
+	m_pc_input = 0;
+	m_wss2_data = 0;
 	speaker_level_w( speaker, 0 );
 }
 
@@ -732,7 +732,6 @@ static MACHINE_CONFIG_START( filetto, pcxt_state )
 	MCFG_CPU_PROGRAM_MAP(filetto_map)
 	MCFG_CPU_IO_MAP(filetto_io)
 
-	MCFG_MACHINE_RESET( filetto )
 
 	MCFG_PIT8253_ADD( "pit8253", pc_pit8253_config )
 

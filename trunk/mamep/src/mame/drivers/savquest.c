@@ -92,6 +92,8 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(pc_dack2_w);
 	DECLARE_WRITE_LINE_MEMBER(pc_dack3_w);
 	DECLARE_WRITE_LINE_MEMBER(savquest_pic8259_1_set_int_line);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 // Intel 82439TX System Controller (MXTC)
@@ -334,7 +336,7 @@ WRITE8_MEMBER(savquest_state::at_dma8237_2_w)
 
 WRITE_LINE_MEMBER(savquest_state::pc_dma_hrq_changed)
 {
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
 
 	/* Assert HLDA */
 	i8237_hlda_w( m_dma8237_1, state );
@@ -446,7 +448,7 @@ static const struct pit8253_config savquest_pit8254_config =
 
 WRITE_LINE_MEMBER(savquest_state::savquest_pic8259_1_set_int_line)
 {
-	device_set_input_line(m_maincpu, 0, state ? HOLD_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 READ8_MEMBER( savquest_state::get_slave_ack )
@@ -476,7 +478,7 @@ static void set_gate_a20(running_machine &machine, int a20)
 {
 	savquest_state *state = machine.driver_data<savquest_state>();
 
-	device_set_input_line(state->m_maincpu, INPUT_LINE_A20, a20);
+	state->m_maincpu->set_input_line(INPUT_LINE_A20, a20);
 }
 
 static void keyboard_interrupt(running_machine &machine, int state)
@@ -516,34 +518,37 @@ static void ide_interrupt(device_t *device, int state)
 
 static READ8_HANDLER( vga_setting ) { return 0xff; } // hard-code to color
 
-static MACHINE_START( savquest )
+void savquest_state::machine_start()
 {
-	savquest_state *state = machine.driver_data<savquest_state>();
-	state->m_bios_ram = auto_alloc_array(machine, UINT32, 0x20000/4);
+	m_bios_ram = auto_alloc_array(machine(), UINT32, 0x20000/4);
 
-	init_pc_common(machine, PCCOMMON_KEYBOARD_AT, savquest_set_keyb_int);
+	init_pc_common(machine(), PCCOMMON_KEYBOARD_AT, savquest_set_keyb_int);
 
-	device_set_irq_callback(state->m_maincpu, irq_callback);
-	intel82439tx_init(machine);
+	m_maincpu->set_irq_acknowledge_callback(irq_callback);
+	intel82439tx_init(machine());
 
-	kbdc8042_init(machine, &at8042);
-	pc_vga_init(machine, vga_setting, NULL);
-	pc_vga_io_init(machine, machine.device("maincpu")->memory().space(AS_PROGRAM), 0xa0000, machine.device("maincpu")->memory().space(AS_IO), 0x0000);
+	kbdc8042_init(machine(), &at8042);
+	pc_vga_init(machine(), vga_setting, NULL);
+	pc_vga_io_init(machine(), machine().device("maincpu")->memory().space(AS_PROGRAM), 0xa0000, machine().device("maincpu")->memory().space(AS_IO), 0x0000);
 }
 
-static MACHINE_RESET( savquest )
+void savquest_state::machine_reset()
 {
-	machine.root_device().membank("bank1")->set_base(machine.root_device().memregion("bios")->base() + 0x20000);
+	machine().root_device().membank("bank1")->set_base(machine().root_device().memregion("bios")->base() + 0x20000);
 }
 
+static const ide_config ide_intf =
+{
+	ide_interrupt,
+	NULL,
+	0
+};
 
 static MACHINE_CONFIG_START( savquest, savquest_state )
 	MCFG_CPU_ADD("maincpu", PENTIUM, 450000000)	// actually Pentium II 450
 	MCFG_CPU_PROGRAM_MAP(savquest_map)
 	MCFG_CPU_IO_MAP(savquest_io)
 
-	MCFG_MACHINE_START(savquest)
-	MCFG_MACHINE_RESET(savquest)
 
 	MCFG_PIT8254_ADD( "pit8254", savquest_pit8254_config )
 	MCFG_I8237_ADD( "dma8237_1", XTAL_14_31818MHz/3, dma8237_1_config )
@@ -557,7 +562,7 @@ static MACHINE_CONFIG_START( savquest, savquest_state )
 	MCFG_PCI_BUS_LEGACY_DEVICE(0, NULL, intel82439tx_pci_r, intel82439tx_pci_w)
 	MCFG_PCI_BUS_LEGACY_DEVICE(7, NULL, intel82371ab_pci_r, intel82371ab_pci_w)
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_interrupt, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
 
 	/* video hardware */
 	MCFG_FRAGMENT_ADD( pcvideo_vga )

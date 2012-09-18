@@ -25,8 +25,8 @@ public:
 	int        m_nmienable;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k007232_1;
 	device_t *m_k007232_2;
 	device_t *m_k052109;
@@ -43,6 +43,9 @@ public:
 	DECLARE_WRITE8_MEMBER(bottom9_sh_irqtrigger_w);
 	DECLARE_WRITE8_MEMBER(nmi_enable_w);
 	DECLARE_WRITE8_MEMBER(sound_bank_w);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 /*----------- defined in video/bottom9.c -----------*/
@@ -51,5 +54,5 @@ extern void bottom9_tile_callback(running_machine &machine, int layer,int bank,i
 extern void bottom9_sprite_callback(running_machine &machine, int *code,int *color,int *priority,int *shadow);
 extern void bottom9_zoom_callback(running_machine &machine, int *code,int *color,int *flags);
 
-VIDEO_START( bottom9 );
+
 SCREEN_UPDATE_IND16( bottom9 );

@@ -35,15 +35,16 @@ public:
 	DECLARE_WRITE32_MEMBER(eeprom_w);
 	DECLARE_WRITE8_MEMBER(kongambl_ff_w);
 	DECLARE_DRIVER_INIT(kingtut);
+	DECLARE_VIDEO_START(kongambl);
 };
 
 
-static VIDEO_START(kongambl)
+VIDEO_START_MEMBER(kongambl_state,kongambl)
 {
 	#if CUSTOM_DRAW
 
 	#else
-	device_t *k056832 = machine.device("k056832");
+	device_t *k056832 = machine().device("k056832");
 
 	k056832_set_layer_association(k056832, 0);
 	k056832_set_layer_offs(k056832, 0, -2, 0);
@@ -57,7 +58,7 @@ static SCREEN_UPDATE_IND16(kongambl)
 {
 	#if CUSTOM_DRAW
 	kongambl_state *state = screen.machine().driver_data<kongambl_state>();
-	const gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 	UINT32 count;
 
 	count = 0;
@@ -584,10 +585,10 @@ static TIMER_DEVICE_CALLBACK( kongambl_vblank )
 	int scanline = param;
 
 	if(scanline == 512)
-		device_set_input_line(state->m_maincpu, 1, HOLD_LINE); // vblank?
+		state->m_maincpu->set_input_line(1, HOLD_LINE); // vblank?
 
 	if(scanline == 0)
-		device_set_input_line(state->m_maincpu, 3, HOLD_LINE); // sprite irq?
+		state->m_maincpu->set_input_line(3, HOLD_LINE); // sprite irq?
 }
 
 static MACHINE_CONFIG_START( kongambl, kongambl_state )
@@ -610,7 +611,7 @@ static MACHINE_CONFIG_START( kongambl, kongambl_state )
 
 	MCFG_PALETTE_LENGTH(0x8000)
 
-	MCFG_VIDEO_START(kongambl)
+	MCFG_VIDEO_START_OVERRIDE(kongambl_state,kongambl)
 
 	MCFG_K053247_ADD("k053246", k053247_intf)
 	#if CUSTOM_DRAW

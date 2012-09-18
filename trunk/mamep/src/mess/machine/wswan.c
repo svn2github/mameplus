@@ -87,23 +87,23 @@ static void wswan_handle_irqs( running_machine &machine )
 {
 	wswan_state *state = machine.driver_data<wswan_state>();
 	if ( state->m_ws_portram[0xb2] & state->m_ws_portram[0xb6] & WSWAN_IFLAG_HBLTMR ) {
-		cputag_set_input_line_and_vector( machine, "maincpu", 0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_HBLTMR );
+		machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_HBLTMR );
 	} else if ( state->m_ws_portram[0xb2] & state->m_ws_portram[0xb6] & WSWAN_IFLAG_VBL ) {
-		cputag_set_input_line_and_vector( machine, "maincpu", 0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_VBL );
+		machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_VBL );
 	} else if ( state->m_ws_portram[0xb2] & state->m_ws_portram[0xb6] & WSWAN_IFLAG_VBLTMR ) {
-		cputag_set_input_line_and_vector( machine, "maincpu", 0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_VBLTMR );
+		machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_VBLTMR );
 	} else if ( state->m_ws_portram[0xb2] & state->m_ws_portram[0xb6] & WSWAN_IFLAG_LCMP ) {
-		cputag_set_input_line_and_vector( machine, "maincpu", 0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_LCMP );
+		machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_LCMP );
 	} else if ( state->m_ws_portram[0xb2] & state->m_ws_portram[0xb6] & WSWAN_IFLAG_SRX ) {
-		cputag_set_input_line_and_vector( machine, "maincpu", 0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_SRX );
+		machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_SRX );
 	} else if ( state->m_ws_portram[0xb2] & state->m_ws_portram[0xb6] & WSWAN_IFLAG_RTC ) {
-		cputag_set_input_line_and_vector( machine, "maincpu", 0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_RTC );
+		machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_RTC );
 	} else if ( state->m_ws_portram[0xb2] & state->m_ws_portram[0xb6] & WSWAN_IFLAG_KEY ) {
-		cputag_set_input_line_and_vector( machine, "maincpu", 0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_KEY );
+		machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_KEY );
 	} else if ( state->m_ws_portram[0xb2] & state->m_ws_portram[0xb6] & WSWAN_IFLAG_STX ) {
-		cputag_set_input_line_and_vector( machine, "maincpu", 0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_STX );
+		machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, state->m_ws_portram[0xb0] + WSWAN_INT_STX );
 	} else {
-		cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE );
+		machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE );
 	}
 }
 
@@ -187,83 +187,80 @@ static void wswan_setup_bios( running_machine &machine )
 	}
 }
 
-MACHINE_START( wswan )
+void wswan_state::machine_start()
 {
-	wswan_state *state = machine.driver_data<wswan_state>();
-	state->m_ws_bios_bank = NULL;
-	state->m_system_type = TYPE_WSWAN;
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(wswan_machine_stop),&machine));
-	state->m_vdp.timer = machine.scheduler().timer_alloc(FUNC(wswan_scanline_interrupt), &state->m_vdp );
-	state->m_vdp.timer->adjust( attotime::from_ticks( 256, 3072000 ), 0, attotime::from_ticks( 256, 3072000 ) );
+	m_ws_bios_bank = NULL;
+	m_system_type = TYPE_WSWAN;
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(wswan_machine_stop),&machine()));
+	m_vdp.timer = machine().scheduler().timer_alloc(FUNC(wswan_scanline_interrupt), &m_vdp );
+	m_vdp.timer->adjust( attotime::from_ticks( 256, 3072000 ), 0, attotime::from_ticks( 256, 3072000 ) );
 
-	wswan_setup_bios(machine);
+	wswan_setup_bios(machine());
 
 	/* Set up RTC timer */
-	if ( state->m_rtc.present )
-		machine.scheduler().timer_pulse(attotime::from_seconds(1), FUNC(wswan_rtc_callback));
+	if ( m_rtc.present )
+		machine().scheduler().timer_pulse(attotime::from_seconds(1), FUNC(wswan_rtc_callback));
 
-	machine.device<nvram_device>("nvram")->set_base(state->m_internal_eeprom, INTERNAL_EEPROM_SIZE);
+	machine().device<nvram_device>("nvram")->set_base(m_internal_eeprom, INTERNAL_EEPROM_SIZE);
 }
 
-MACHINE_START( wscolor )
+MACHINE_START_MEMBER(wswan_state,wscolor)
 {
-	wswan_state *state = machine.driver_data<wswan_state>();
-	state->m_ws_bios_bank = NULL;
-	state->m_system_type = TYPE_WSC;
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(wswan_machine_stop),&machine));
-	state->m_vdp.timer = machine.scheduler().timer_alloc(FUNC(wswan_scanline_interrupt), &state->m_vdp );
-	state->m_vdp.timer->adjust( attotime::from_ticks( 256, 3072000 ), 0, attotime::from_ticks( 256, 3072000 ) );
+	m_ws_bios_bank = NULL;
+	m_system_type = TYPE_WSC;
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(wswan_machine_stop),&machine()));
+	m_vdp.timer = machine().scheduler().timer_alloc(FUNC(wswan_scanline_interrupt), &m_vdp );
+	m_vdp.timer->adjust( attotime::from_ticks( 256, 3072000 ), 0, attotime::from_ticks( 256, 3072000 ) );
 
-	wswan_setup_bios(machine);
+	wswan_setup_bios(machine());
 
 	/* Set up RTC timer */
-	if ( state->m_rtc.present )
-		machine.scheduler().timer_pulse(attotime::from_seconds(1), FUNC(wswan_rtc_callback));
+	if ( m_rtc.present )
+		machine().scheduler().timer_pulse(attotime::from_seconds(1), FUNC(wswan_rtc_callback));
 
-	machine.device<nvram_device>("nvram")->set_base(state->m_internal_eeprom, INTERNAL_EEPROM_SIZE);
+	machine().device<nvram_device>("nvram")->set_base(m_internal_eeprom, INTERNAL_EEPROM_SIZE);
 }
 
-MACHINE_RESET( wswan )
+void wswan_state::machine_reset()
 {
-	wswan_state *state = machine.driver_data<wswan_state>();
-	address_space *space = machine.device( "maincpu")->memory().space( AS_PROGRAM );
+	address_space *space = machine().device( "maincpu")->memory().space( AS_PROGRAM );
 
 	/* Intialize ports */
-	memcpy( state->m_ws_portram, ws_portram_init, 256 );
+	memcpy( m_ws_portram, ws_portram_init, 256 );
 
 	/* Initialize VDP */
-	memset( &state->m_vdp, 0, sizeof( state->m_vdp ) );
+	memset( &m_vdp, 0, sizeof( m_vdp ) );
 
-	state->m_vdp.vram = (UINT8*)space->get_read_ptr(0);
-	state->m_vdp.palette_vram = (UINT8*)space->get_read_ptr(( state->m_system_type == TYPE_WSC ) ? 0xFE00 : 0 );
-	state->m_vdp.current_line = 145;  /* Randomly chosen, beginning of VBlank period to give cart some time to boot up */
-	state->m_vdp.color_mode = 0;
-	state->m_vdp.colors_16 = 0;
-	state->m_vdp.tile_packed = 0;
+	m_vdp.vram = (UINT8*)space->get_read_ptr(0);
+	m_vdp.palette_vram = (UINT8*)space->get_read_ptr(( m_system_type == TYPE_WSC ) ? 0xFE00 : 0 );
+	m_vdp.current_line = 145;  /* Randomly chosen, beginning of VBlank period to give cart some time to boot up */
+	m_vdp.color_mode = 0;
+	m_vdp.colors_16 = 0;
+	m_vdp.tile_packed = 0;
 
-	render_target *target = machine.render().first_target();
-	target->set_view(state->m_rotate);
+	render_target *target = machine().render().first_target();
+	target->set_view(m_rotate);
 
 	/* Initialize sound DMA */
-	memset( &state->m_sound_dma, 0, sizeof( state->m_sound_dma ) );
+	memset( &m_sound_dma, 0, sizeof( m_sound_dma ) );
 
 	/* Switch in the banks */
-	state->membank( "bank2" )->set_base( state->m_ROMMap[(state->m_ROMBanks - 1) & (state->m_ROMBanks - 1)] );
-	state->membank( "bank3" )->set_base( state->m_ROMMap[(state->m_ROMBanks - 1) & (state->m_ROMBanks - 1)] );
-	state->membank( "bank4" )->set_base( state->m_ROMMap[(state->m_ROMBanks - 12) & (state->m_ROMBanks - 1)] );
-	state->membank( "bank5" )->set_base( state->m_ROMMap[(state->m_ROMBanks - 11) & (state->m_ROMBanks - 1)] );
-	state->membank( "bank6" )->set_base( state->m_ROMMap[(state->m_ROMBanks - 10) & (state->m_ROMBanks - 1)] );
-	state->membank( "bank7" )->set_base( state->m_ROMMap[(state->m_ROMBanks - 9) & (state->m_ROMBanks - 1)] );
-	state->membank( "bank8" )->set_base( state->m_ROMMap[(state->m_ROMBanks - 8) & (state->m_ROMBanks - 1)] );
-	state->membank( "bank9" )->set_base( state->m_ROMMap[(state->m_ROMBanks - 7) & (state->m_ROMBanks - 1)] );
-	state->membank( "bank10" )->set_base( state->m_ROMMap[(state->m_ROMBanks - 6) & (state->m_ROMBanks - 1)] );
-	state->membank( "bank11" )->set_base( state->m_ROMMap[(state->m_ROMBanks - 5) & (state->m_ROMBanks - 1)] );
-	state->membank( "bank12" )->set_base( state->m_ROMMap[(state->m_ROMBanks - 4) & (state->m_ROMBanks - 1)] );
-	state->membank( "bank13" )->set_base( state->m_ROMMap[(state->m_ROMBanks - 3) & (state->m_ROMBanks - 1)] );
-	state->membank( "bank14" )->set_base( state->m_ROMMap[(state->m_ROMBanks - 2) & (state->m_ROMBanks - 1)] );
-	state->m_bios_disabled = 0;
-	state->membank( "bank15" )->set_base( state->m_ws_bios_bank );
-//  state->membank( 15 )->set_base( state->m_ROMMap[(state->m_ROMBanks - 1) & (state->m_ROMBanks - 1)] );
+	membank( "bank2" )->set_base( m_ROMMap[(m_ROMBanks - 1) & (m_ROMBanks - 1)] );
+	membank( "bank3" )->set_base( m_ROMMap[(m_ROMBanks - 1) & (m_ROMBanks - 1)] );
+	membank( "bank4" )->set_base( m_ROMMap[(m_ROMBanks - 12) & (m_ROMBanks - 1)] );
+	membank( "bank5" )->set_base( m_ROMMap[(m_ROMBanks - 11) & (m_ROMBanks - 1)] );
+	membank( "bank6" )->set_base( m_ROMMap[(m_ROMBanks - 10) & (m_ROMBanks - 1)] );
+	membank( "bank7" )->set_base( m_ROMMap[(m_ROMBanks - 9) & (m_ROMBanks - 1)] );
+	membank( "bank8" )->set_base( m_ROMMap[(m_ROMBanks - 8) & (m_ROMBanks - 1)] );
+	membank( "bank9" )->set_base( m_ROMMap[(m_ROMBanks - 7) & (m_ROMBanks - 1)] );
+	membank( "bank10" )->set_base( m_ROMMap[(m_ROMBanks - 6) & (m_ROMBanks - 1)] );
+	membank( "bank11" )->set_base( m_ROMMap[(m_ROMBanks - 5) & (m_ROMBanks - 1)] );
+	membank( "bank12" )->set_base( m_ROMMap[(m_ROMBanks - 4) & (m_ROMBanks - 1)] );
+	membank( "bank13" )->set_base( m_ROMMap[(m_ROMBanks - 3) & (m_ROMBanks - 1)] );
+	membank( "bank14" )->set_base( m_ROMMap[(m_ROMBanks - 2) & (m_ROMBanks - 1)] );
+	m_bios_disabled = 0;
+	membank( "bank15" )->set_base( m_ws_bios_bank );
+//  membank( 15 )->set_base( m_ROMMap[(m_ROMBanks - 1) & (m_ROMBanks - 1)] );
 }
 
 READ8_MEMBER( wswan_state::wswan_sram_r )
@@ -289,7 +286,7 @@ READ8_MEMBER( wswan_state::wswan_port_r )
 	UINT8 value = m_ws_portram[offset];
 
 	if ( offset != 2 )
-		logerror( "PC=%X: port read %02X\n", cpu_get_pc( machine().device("maincpu") ), offset );
+		logerror( "PC=%X: port read %02X\n", machine().device("maincpu") ->safe_pc( ), offset );
 	switch( offset )
 	{
 		case 0x02:		/* Current line */
@@ -357,10 +354,10 @@ READ8_MEMBER( wswan_state::wswan_port_r )
 
 WRITE8_MEMBER( wswan_state::wswan_port_w )
 {
-	address_space *mem = m_maincpu->memory().space(AS_PROGRAM);
+	address_space *mem = m_maincpu->space(AS_PROGRAM);
 	wswan_state *state = machine().driver_data<wswan_state>();
 	UINT8 input;
-	logerror( "PC=%X: port write %02X <- %02X\n", cpu_get_pc( &mem->device() ), offset, data );
+	logerror( "PC=%X: port write %02X <- %02X\n", mem->device().safe_pc(), offset, data );
 	switch( offset )
 	{
 		case 0x00:	/* Display control
@@ -1254,7 +1251,7 @@ WRITE8_MEMBER( wswan_state::wswan_port_w )
 				m_ws_portram[0xcb] = m_rtc.year;
 				break;
 			default:
-				logerror( "%X: Unknown RTC command (%X) requested\n", cpu_get_pc( &mem->device() ), data );
+				logerror( "%X: Unknown RTC command (%X) requested\n", mem->device().safe_pc(), data );
 			}
 			break;
 		case 0xcb:	/* RTC Data */

@@ -39,7 +39,7 @@ WRITE8_MEMBER(kncljoe_state::sound_cmd_w)
 	if ((data & 0x80) == 0)
 		soundlatch_byte_w(space, 0, data & 0x7f);
 	else
-		device_set_input_line(m_soundcpu, 0, ASSERT_LINE);
+		m_soundcpu->set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -97,7 +97,7 @@ READ8_MEMBER(kncljoe_state::m6803_port2_r)
 
 WRITE8_MEMBER(kncljoe_state::sound_irq_ack_w)
 {
-	device_set_input_line(m_soundcpu, 0, CLEAR_LINE);
+	m_soundcpu->set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(kncljoe_state::unused_w)
@@ -259,31 +259,29 @@ static const ay8910_interface ay8910_config =
 
 static INTERRUPT_GEN (sound_nmi)
 {
-	device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static MACHINE_START( kncljoe )
+void kncljoe_state::machine_start()
 {
-	kncljoe_state *state = machine.driver_data<kncljoe_state>();
 
-	state->m_soundcpu = machine.device("soundcpu");
+	m_soundcpu = machine().device<cpu_device>("soundcpu");
 
-	state->save_item(NAME(state->m_port1));
-	state->save_item(NAME(state->m_port2));
-	state->save_item(NAME(state->m_tile_bank));
-	state->save_item(NAME(state->m_sprite_bank));
-	state->save_item(NAME(state->m_flipscreen));
+	save_item(NAME(m_port1));
+	save_item(NAME(m_port2));
+	save_item(NAME(m_tile_bank));
+	save_item(NAME(m_sprite_bank));
+	save_item(NAME(m_flipscreen));
 }
 
-static MACHINE_RESET( kncljoe )
+void kncljoe_state::machine_reset()
 {
-	kncljoe_state *state = machine.driver_data<kncljoe_state>();
 
-	state->m_port1 = 0;
-	state->m_port2 = 0;
-	state->m_tile_bank = 0;
-	state->m_sprite_bank = 0;
-	state->m_flipscreen = 0;
+	m_port1 = 0;
+	m_port2 = 0;
+	m_tile_bank = 0;
+	m_sprite_bank = 0;
+	m_flipscreen = 0;
 }
 
 static MACHINE_CONFIG_START( kncljoe, kncljoe_state )
@@ -298,8 +296,6 @@ static MACHINE_CONFIG_START( kncljoe, kncljoe_state )
 	MCFG_CPU_IO_MAP(sound_portmap)
 	MCFG_CPU_PERIODIC_INT(sound_nmi, (double)3970) //measured 3.970 kHz
 
-	MCFG_MACHINE_START(kncljoe)
-	MCFG_MACHINE_RESET(kncljoe)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
@@ -314,8 +310,6 @@ static MACHINE_CONFIG_START( kncljoe, kncljoe_state )
 	MCFG_GFXDECODE(kncljoe)
 	MCFG_PALETTE_LENGTH(16*8+16*8)
 
-	MCFG_PALETTE_INIT(kncljoe)
-	MCFG_VIDEO_START(kncljoe)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

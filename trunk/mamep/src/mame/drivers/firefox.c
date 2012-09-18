@@ -95,6 +95,9 @@ public:
 	DECLARE_READ8_MEMBER(riot_porta_r);
 	DECLARE_WRITE8_MEMBER(riot_porta_w);
 	DECLARE_WRITE_LINE_MEMBER(riot_irq);
+	TILE_GET_INFO_MEMBER(bgtile_get_info);
+	virtual void machine_start();
+	virtual void video_start();
 };
 
 
@@ -190,10 +193,9 @@ WRITE8_MEMBER(firefox_state::firefox_disc_data_w)
  *
  *************************************/
 
-static TILE_GET_INFO( bgtile_get_info )
+TILE_GET_INFO_MEMBER(firefox_state::bgtile_get_info)
 {
-	firefox_state *state = machine.driver_data<firefox_state>();
-	SET_TILE_INFO(0, state->m_tileram[tile_index], 0, 0);
+	SET_TILE_INFO_MEMBER(0, m_tileram[tile_index], 0, 0);
 }
 
 
@@ -204,12 +206,11 @@ WRITE8_MEMBER(firefox_state::tileram_w)
 }
 
 
-static VIDEO_START( firefox )
+void firefox_state::video_start()
 {
-	firefox_state *state = machine.driver_data<firefox_state>();
-	state->m_bgtiles = tilemap_create(machine, bgtile_get_info, tilemap_scan_rows, 8,8, 64,64);
-	state->m_bgtiles->set_transparent_pen(0);
-	state->m_bgtiles->set_scrolldy(machine.primary_screen->visible_area().min_y, 0);
+	m_bgtiles = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(firefox_state::bgtile_get_info),this), TILEMAP_SCAN_ROWS, 8,8, 64,64);
+	m_bgtiles->set_transparent_pen(0);
+	m_bgtiles->set_scrolldy(machine().primary_screen->visible_area().min_y, 0);
 }
 
 
@@ -253,7 +254,7 @@ static TIMER_DEVICE_CALLBACK( video_timer_callback )
 {
 	timer.machine().primary_screen->update_now();
 
-	cputag_set_input_line( timer.machine(), "maincpu", M6809_IRQ_LINE, ASSERT_LINE );
+	timer.machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE );
 }
 
 static void set_rgba( running_machine &machine, int start, int index, unsigned char *palette_ram )
@@ -311,12 +312,12 @@ WRITE8_MEMBER(firefox_state::main_to_sound_w)
 {
 	m_main_to_sound_flag = 1;
 	soundlatch_byte_w(space, 0, data);
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(firefox_state::sound_reset_w)
 {
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, (data & 0x80) ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x80) ? ASSERT_LINE : CLEAR_LINE);
 	if ((data & 0x80) != 0)
 		m_sound_to_main_flag = m_main_to_sound_flag = 0;
 }
@@ -369,7 +370,7 @@ WRITE8_MEMBER(firefox_state::riot_porta_w)
 
 WRITE_LINE_MEMBER(firefox_state::riot_irq)
 {
-	cputag_set_input_line(machine(), "audiocpu", M6502_IRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(M6502_IRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -441,17 +442,17 @@ WRITE8_MEMBER(firefox_state::rom_bank_w)
 
 WRITE8_MEMBER(firefox_state::main_irq_clear_w)
 {
-    cputag_set_input_line( machine(), "maincpu", M6809_IRQ_LINE, CLEAR_LINE );
+    machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, CLEAR_LINE );
 }
 
 WRITE8_MEMBER(firefox_state::main_firq_clear_w)
 {
-    cputag_set_input_line( machine(), "maincpu", M6809_FIRQ_LINE, CLEAR_LINE );
+    machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, CLEAR_LINE );
 }
 
 WRITE8_MEMBER(firefox_state::self_reset_w)
 {
-	cputag_set_input_line( machine(), "maincpu", INPUT_LINE_RESET, PULSE_LINE );
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE );
 }
 
 
@@ -477,21 +478,20 @@ WRITE8_MEMBER(firefox_state::firefox_coin_counter_w)
 static void firq_gen(running_machine &machine, phillips_22vp931_device &laserdisc, int state)
 {
 	if (state)
-	    cputag_set_input_line( machine, "maincpu", M6809_FIRQ_LINE, ASSERT_LINE );
+	    machine.device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE );
 }
 
 
-static MACHINE_START( firefox )
+void firefox_state::machine_start()
 {
-	firefox_state *state = machine.driver_data<firefox_state>();
-	state->membank("bank1")->configure_entries(0, 32, state->memregion("maincpu")->base() + 0x10000, 0x1000);
-	state->m_nvram_1c = machine.device<x2212_device>("nvram_1c");
-	state->m_nvram_1d = machine.device<x2212_device>("nvram_1d");
+	membank("bank1")->configure_entries(0, 32, memregion("maincpu")->base() + 0x10000, 0x1000);
+	m_nvram_1c = machine().device<x2212_device>("nvram_1c");
+	m_nvram_1d = machine().device<x2212_device>("nvram_1d");
 
-	state->m_laserdisc->set_data_ready_callback(phillips_22vp931_device::data_ready_delegate(FUNC(firq_gen), &machine));
+	m_laserdisc->set_data_ready_callback(phillips_22vp931_device::data_ready_delegate(FUNC(firq_gen), &machine()));
 
-	state->m_control_num = 0;
-	state->m_sprite_bank = 0;
+	m_control_num = 0;
+	m_sprite_bank = 0;
 }
 
 
@@ -708,14 +708,12 @@ static MACHINE_CONFIG_START( firefox, firefox_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(60000))
 
-	MCFG_MACHINE_START(firefox)
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_hz((double)MASTER_XTAL/8/16/16/16/16))
 
 	/* video hardware */
 	MCFG_GFXDECODE(firefox)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(firefox)
 
 	MCFG_LASERDISC_22VP931_ADD("laserdisc")
 	MCFG_LASERDISC_OVERLAY_STATIC(64*8, 525, firefox)

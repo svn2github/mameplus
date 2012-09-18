@@ -231,16 +231,16 @@ static TIMER_CALLBACK( megatech_z80_run_state )
 		printf("enabling SMS Z80\n");
 		state->m_current_game_is_sms = 1;
 		megatech_set_genz80_as_sms_standard_map(machine, "genesis_snd_z80", MAPPER_STANDARD);
-		//cputag_set_input_line(machine, "genesis_snd_z80", INPUT_LINE_HALT, CLEAR_LINE);
-		cputag_set_input_line(machine, "genesis_snd_z80", INPUT_LINE_RESET, CLEAR_LINE);
+		//machine.device("genesis_snd_z80")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
+		machine.device("genesis_snd_z80")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 	}
 	else
 	{
 		printf("disabling SMS Z80\n");
 		state->m_current_game_is_sms = 0;
 		megatech_set_megadrive_z80_as_megadrive_z80(machine, "genesis_snd_z80");
-		cputag_set_input_line(machine, "maincpu", INPUT_LINE_RESET, CLEAR_LINE);
-		//cputag_set_input_line(machine, "maincpu", INPUT_LINE_HALT, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+		//machine.device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
 	}
 }
 
@@ -254,11 +254,11 @@ static TIMER_CALLBACK( megatech_z80_stop_state )
 	sprintf(tempname, "game%d", param);
 	game_region = machine.root_device().memregion(tempname)->base();
 
-	cputag_set_input_line(machine, "maincpu", INPUT_LINE_RESET, ASSERT_LINE);
-	cputag_set_input_line(machine, "genesis_snd_z80", INPUT_LINE_RESET, ASSERT_LINE);
-	//cputag_set_input_line(machine, "maincpu", INPUT_LINE_HALT, ASSERT_LINE);
-	//cputag_set_input_line(machine, "genesis_snd_z80", INPUT_LINE_HALT, ASSERT_LINE);
-	devtag_reset(machine, "ymsnd");
+	machine.device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	machine.device("genesis_snd_z80")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	//machine.device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
+	//machine.device("genesis_snd_z80")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
+	machine.device("ymsnd")->reset();
 
 	megadriv_stop_scanline_timer(machine);// stop the scanline timer for the genesis vdp... it can be restarted in video eof when needed
 	segae_md_sms_stop_scanline_timer();// stop the scanline timer for the sms vdp
@@ -439,10 +439,10 @@ DRIVER_INIT_MEMBER(mtech_state,mt_crt)
 	m_cart_is_genesis[0] = !pin[0] ? 1 : 0;;
 }
 
-static VIDEO_START(mtnew)
+VIDEO_START_MEMBER(mtech_state,mtnew)
 {
-	init_for_megadrive(machine); // create an sms vdp too, for compatibility mode
-	VIDEO_START_CALL(megadriv);
+	init_for_megadrive(machine()); // create an sms vdp too, for compatibility mode
+	VIDEO_START_CALL_LEGACY(megadriv);
 }
 
 //attotime::never
@@ -467,14 +467,13 @@ static SCREEN_VBLANK(mtnew)
 		SCREEN_VBLANK_CALL(megatech_md_sms);
 }
 
-static MACHINE_RESET(mtnew)
+MACHINE_RESET_MEMBER(mtech_state,mtnew)
 {
-	mtech_state *state = machine.driver_data<mtech_state>();
-	state->m_mt_bank_addr = 0;
+	m_mt_bank_addr = 0;
 
-	MACHINE_RESET_CALL(megadriv);
-	MACHINE_RESET_CALL(megatech_md_sms);
-	megatech_select_game(machine, 0);
+	MACHINE_RESET_CALL_LEGACY(megadriv);
+	MACHINE_RESET_CALL_LEGACY(megatech_md_sms);
+	megatech_select_game(machine(), 0);
 }
 
 static SCREEN_UPDATE_RGB32( megatech_menu )
@@ -510,9 +509,11 @@ static MACHINE_CONFIG_START( megatech, mtech_state )
 	MCFG_CPU_PROGRAM_MAP(megatech_bios_map)
 	MCFG_CPU_IO_MAP(megatech_bios_portmap)
 
-	MCFG_MACHINE_RESET(mtnew)
+	MCFG_MACHINE_RESET(0)
+	MCFG_MACHINE_RESET_OVERRIDE(mtech_state,mtnew)
 
-	MCFG_VIDEO_START(mtnew)
+	MCFG_VIDEO_START(0)
+	MCFG_VIDEO_START_OVERRIDE(mtech_state,mtnew)
 
 	MCFG_DEFAULT_LAYOUT(layout_dualhovu)
 

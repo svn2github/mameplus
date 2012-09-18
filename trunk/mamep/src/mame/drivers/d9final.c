@@ -42,27 +42,28 @@ public:
 	DECLARE_WRITE8_MEMBER(sc0_cram);
 	DECLARE_WRITE8_MEMBER(d9final_bank_w);
 	DECLARE_READ8_MEMBER(prot_latch_r);
+	TILE_GET_INFO_MEMBER(get_sc0_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 
-static TILE_GET_INFO( get_sc0_tile_info )
+TILE_GET_INFO_MEMBER(d9final_state::get_sc0_tile_info)
 {
-	d9final_state *state = machine.driver_data<d9final_state>();
-	int tile = ((state->m_hi_vram[tile_index] & 0x3f)<<8) | state->m_lo_vram[tile_index];
-	int color = state->m_cram[tile_index] & 0x3f;
+	int tile = ((m_hi_vram[tile_index] & 0x3f)<<8) | m_lo_vram[tile_index];
+	int color = m_cram[tile_index] & 0x3f;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			tile,
 			color,
 			0);
 }
 
-static VIDEO_START(d9final)
+void d9final_state::video_start()
 {
-	d9final_state *state = machine.driver_data<d9final_state>();
-	state->m_sc0_tilemap = tilemap_create(machine, get_sc0_tile_info,tilemap_scan_rows,8,8,64,32);
+	m_sc0_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(d9final_state::get_sc0_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
 }
 
 static SCREEN_UPDATE_IND16(d9final)
@@ -102,7 +103,7 @@ WRITE8_MEMBER(d9final_state::d9final_bank_w)
 /* game checks this after three attract cycles, otherwise coin inputs stop to work. */
 READ8_MEMBER(d9final_state::prot_latch_r)
 {
-//  printf("PC=%06x\n",cpu_get_pc(&space.device()));
+//  printf("PC=%06x\n",space.device().safe_pc());
 
 	return 0x04;
 }
@@ -271,11 +272,11 @@ static GFXDECODE_START( d9final )
 	GFXDECODE_ENTRY( "gfx1", 0, tiles16x8_layout, 0, 16*4 )
 GFXDECODE_END
 
-static MACHINE_RESET( d9final )
+void d9final_state::machine_reset()
 {
-	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 
-	machine.root_device().membank("bank1")->set_base(&ROM[0x10000]);
+	machine().root_device().membank("bank1")->set_base(&ROM[0x10000]);
 }
 
 static MACHINE_CONFIG_START( d9final, d9final_state )
@@ -285,7 +286,6 @@ static MACHINE_CONFIG_START( d9final, d9final_state )
 	MCFG_CPU_IO_MAP(d9final_io)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_MACHINE_RESET( d9final )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -299,7 +299,6 @@ static MACHINE_CONFIG_START( d9final, d9final_state )
 	MCFG_PALETTE_LENGTH(0x400)
 	MCFG_PALETTE_INIT(all_black)
 
-	MCFG_VIDEO_START(d9final)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

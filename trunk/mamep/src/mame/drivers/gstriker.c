@@ -195,7 +195,7 @@ WRITE16_MEMBER(gstriker_state::sound_command_w)
 	{
 		m_pending_command = 1;
 		soundlatch_byte_w(space, offset, data & 0xff);
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -262,9 +262,9 @@ GFXDECODE_END
 static void gs_ym2610_irq(device_t *device, int irq)
 {
 	if (irq)
-		cputag_set_input_line(device->machine(), "audiocpu", 0, ASSERT_LINE);
+		device->machine().device("audiocpu")->execute().set_input_line(0, ASSERT_LINE);
 	else
-		cputag_set_input_line(device->machine(), "audiocpu", 0, CLEAR_LINE);
+		device->machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
@@ -285,7 +285,7 @@ static ADDRESS_MAP_START( gstriker_map, AS_PROGRAM, 16, gstriker_state )
 	AM_RANGE(0x1c0000, 0x1c0fff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
 
 	AM_RANGE(0x200000, 0x20000f) AM_RAM_WRITE(MB60553_0_regs_w)
-	AM_RANGE(0x200040, 0x20005f) AM_RAM //AM_BASE_LEGACY(&gs_mixer_regs)
+	AM_RANGE(0x200040, 0x20005f) AM_RAM
 	AM_RANGE(0x200060, 0x20007f) AM_RAM
 	AM_RANGE(0x200080, 0x200081) AM_READ_PORT("P1")
 	AM_RANGE(0x200082, 0x200083) AM_READ_PORT("P2")
@@ -321,7 +321,7 @@ static ADDRESS_MAP_START( vgoal_map, AS_PROGRAM, 16, gstriker_state )
 	AM_RANGE(0x181000, 0x181fff) AM_RAM AM_SHARE("lineram")
 	AM_RANGE(0x1c0000, 0x1c4fff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x200000, 0x20000f) AM_RAM_WRITE(MB60553_0_regs_w)
-	AM_RANGE(0x200040, 0x20005f) AM_RAM //AM_BASE_LEGACY(&gs_mixer_regs)
+	AM_RANGE(0x200040, 0x20005f) AM_RAM
 
 	AM_RANGE(0x200080, 0x200081) AM_READ_PORT("P1")
 	AM_RANGE(0x200082, 0x200083) AM_READ_PORT("P2")
@@ -560,7 +560,7 @@ static MACHINE_CONFIG_START( gstriker, gstriker_state )
 	MCFG_GFXDECODE(gstriker)
 	MCFG_PALETTE_LENGTH(0x800)
 
-	MCFG_VIDEO_START(gstriker)
+	MCFG_VIDEO_START_OVERRIDE(gstriker_state,gstriker)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -573,7 +573,7 @@ static MACHINE_CONFIG_START( gstriker, gstriker_state )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( twrldc94, gstriker )
-	MCFG_VIDEO_START( twrldc94 )
+	MCFG_VIDEO_START_OVERRIDE(gstriker_state, twrldc94 )
 MACHINE_CONFIG_END
 
 
@@ -598,7 +598,7 @@ static MACHINE_CONFIG_START( vgoal, gstriker_state )
 	MCFG_GFXDECODE(gstriker)
 	MCFG_PALETTE_LENGTH(0x2000)
 
-	MCFG_VIDEO_START(vgoalsoc)
+	MCFG_VIDEO_START_OVERRIDE(gstriker_state,vgoalsoc)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

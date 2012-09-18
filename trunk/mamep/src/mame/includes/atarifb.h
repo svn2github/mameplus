@@ -57,7 +57,7 @@ public:
 	int m_counter_y_in2b;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_WRITE8_MEMBER(atarifb_out1_w);
 	DECLARE_WRITE8_MEMBER(atarifb4_out1_w);
 	DECLARE_WRITE8_MEMBER(abaseb_out1_w);
@@ -72,6 +72,13 @@ public:
 	DECLARE_WRITE8_MEMBER(atarifb_alpha1_videoram_w);
 	DECLARE_WRITE8_MEMBER(atarifb_alpha2_videoram_w);
 	DECLARE_WRITE8_MEMBER(atarifb_field_videoram_w);
+	TILE_GET_INFO_MEMBER(alpha1_get_tile_info);
+	TILE_GET_INFO_MEMBER(alpha2_get_tile_info);
+	TILE_GET_INFO_MEMBER(field_get_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -90,7 +97,7 @@ DISCRETE_SOUND_EXTERN( abaseb );
 
 /*----------- defined in video/atarifb.c -----------*/
 
-VIDEO_START( atarifb );
+
 SCREEN_UPDATE_IND16( atarifb );
 SCREEN_UPDATE_IND16( abaseb );
 SCREEN_UPDATE_IND16( soccer );

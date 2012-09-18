@@ -104,21 +104,21 @@
  *
  *******************************************/
 
-typedef struct
+struct plane
 {
 	poly_vertex	normal;
 	float		distance;
-} plane;
+};
 
-typedef struct
+struct texture_parameter
 {
 	float	diffuse;
 	float	ambient;
 	UINT32	specular_control;
 	float	specular_scale;
-} texture_parameter;
+};
 
-typedef struct
+struct triangle
 {
 	void *				next;
 	poly_vertex			v[3];
@@ -127,18 +127,17 @@ typedef struct
 	UINT8				luma;
 	INT16				viewport[4];
 	INT16				center[2];
-} triangle;
+};
 
-typedef struct
+struct quad_m2
 {
 	poly_vertex			v[4];
 	UINT16				z;
 	UINT16				texheader[4];
 	UINT8				luma;
-} _quad_m2;
+};
 
-typedef struct _poly_extra_data poly_extra_data;
-struct _poly_extra_data
+struct poly_extra_data
 {
 	model2_state *	state;
 	UINT32		lumabase;
@@ -298,7 +297,7 @@ static INT32 clip_polygon(poly_vertex *v, INT32 num_vertices, plane *cp, poly_ve
 
 #define MAX_TRIANGLES		32768
 
-struct _raster_state
+struct raster_state
 {
 	UINT32				mode;				/* bit 0 = Test Mode, bit 2 = Switch 60Hz(1)/30Hz(0) operation */
 	UINT16 *			texture_rom;		/* Texture ROM pointer */
@@ -357,7 +356,7 @@ void model2_3d_set_zclip( running_machine &machine, UINT8 clip )
 
 static void model2_3d_process_quad( raster_state *raster, UINT32 attr )
 {
-	_quad_m2	object;
+	quad_m2		object;
 	UINT16		*th, *tp;
 	INT32		tho;
 	UINT32		cull, i;
@@ -1283,7 +1282,7 @@ static void model2_3d_push( raster_state *raster, UINT32 input )
  *
  *******************************************/
 
-struct _geo_state
+struct geo_state
 {
 	raster_state *			raster;
 	UINT32				mode;					/* bit 0 = Enable Specular, bit 1 = Calculate Normals */
@@ -2700,23 +2699,22 @@ static void model2_exit(running_machine &machine)
 	poly_free(state->m_poly);
 }
 
-VIDEO_START(model2)
+VIDEO_START_MEMBER(model2_state,model2)
 {
-	model2_state *state = machine.driver_data<model2_state>();
-	const rectangle &visarea = machine.primary_screen->visible_area();
+	const rectangle &visarea = machine().primary_screen->visible_area();
 	int	width = visarea.width();
 	int	height = visarea.height();
 
-	state->m_sys24_bitmap.allocate(width, height+4);
+	m_sys24_bitmap.allocate(width, height+4);
 
-	state->m_poly = poly_alloc(machine, 4000, sizeof(poly_extra_data), 0);
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(model2_exit), &machine));
+	m_poly = poly_alloc(machine(), 4000, sizeof(poly_extra_data), 0);
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(model2_exit), &machine()));
 
 	/* initialize the hardware rasterizer */
-	model2_3d_init( machine, (UINT16*)state->memregion("user3")->base() );
+	model2_3d_init( machine(), (UINT16*)memregion("user3")->base() );
 
 	/* initialize the geometry engine */
-	geo_init( machine, (UINT32*)state->memregion("user2")->base() );
+	geo_init( machine(), (UINT32*)memregion("user2")->base() );
 }
 
 SCREEN_UPDATE_RGB32(model2)

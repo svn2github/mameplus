@@ -1,13 +1,13 @@
 #define NAMCOS1_MAX_BANK 0x400
 
 /* Bank handler definitions */
-typedef struct
+struct bankhandler
 {
 	read8_space_func bank_handler_r;
 	write8_space_func bank_handler_w;
 	int           bank_offset;
 	UINT8 *bank_pointer;
-} bankhandler;
+};
 
 class namcos1_state : public driver_device
 {
@@ -85,6 +85,14 @@ public:
 	DECLARE_DRIVER_INIT(ws89);
 	DECLARE_DRIVER_INIT(dspirit);
 	DECLARE_DRIVER_INIT(pistoldm);
+	TILE_GET_INFO_MEMBER(bg_get_info0);
+	TILE_GET_INFO_MEMBER(bg_get_info1);
+	TILE_GET_INFO_MEMBER(bg_get_info2);
+	TILE_GET_INFO_MEMBER(bg_get_info3);
+	TILE_GET_INFO_MEMBER(fg_get_info4);
+	TILE_GET_INFO_MEMBER(fg_get_info5);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -98,7 +106,7 @@ void namcos1_init_DACs(running_machine &machine);
 
 
 
-MACHINE_RESET( namcos1 );
+
 
 
 /*----------- defined in video/namcos1.c -----------*/
@@ -109,6 +117,6 @@ WRITE8_HANDLER( namcos1_paletteram_w );
 READ8_HANDLER( namcos1_spriteram_r );
 WRITE8_HANDLER( namcos1_spriteram_w );
 
-VIDEO_START( namcos1 );
+
 SCREEN_UPDATE_IND16( namcos1 );
 SCREEN_VBLANK( namcos1 );

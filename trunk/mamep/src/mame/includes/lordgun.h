@@ -4,8 +4,7 @@
 
 *************************************************************************/
 
-typedef struct _lordgun_gun_data lordgun_gun_data;
-struct _lordgun_gun_data
+struct lordgun_gun_data
 {
 	int		scr_x,	scr_y;
 	UINT16	hw_x,	hw_y;
@@ -59,6 +58,11 @@ public:
 	DECLARE_DRIVER_INIT(lordgun);
 	DECLARE_DRIVER_INIT(aliencha);
 	DECLARE_DRIVER_INIT(alienchac);
+	TILE_GET_INFO_MEMBER(get_tile_info_0);
+	TILE_GET_INFO_MEMBER(get_tile_info_1);
+	TILE_GET_INFO_MEMBER(get_tile_info_2);
+	TILE_GET_INFO_MEMBER(get_tile_info_3);
+	virtual void video_start();
 };
 
 
@@ -68,5 +72,5 @@ public:
 float lordgun_crosshair_mapper(const ioport_field *field, float linear_value);
 void lordgun_update_gun(running_machine &machine, int i);
 
-VIDEO_START( lordgun );
+
 SCREEN_UPDATE_IND16( lordgun );

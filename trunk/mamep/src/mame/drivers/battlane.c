@@ -48,8 +48,8 @@ WRITE8_MEMBER(battlane_state::battlane_cpu_command_w)
     /*
     if (~m_cpu_control & 0x08)
     {
-        device_set_input_line(m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
-        device_set_input_line(m_subcpu, INPUT_LINE_NMI, PULSE_LINE);
+        m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+        m_subcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
     }
     */
 
@@ -57,7 +57,7 @@ WRITE8_MEMBER(battlane_state::battlane_cpu_command_w)
         CPU2's SWI will trigger an 6809 IRQ on the master by resetting 0x04
         Master will respond by setting the bit back again
     */
-    device_set_input_line(m_maincpu, M6809_IRQ_LINE,  data & 0x04 ? CLEAR_LINE : HOLD_LINE);
+    m_maincpu->set_input_line(M6809_IRQ_LINE,  data & 0x04 ? CLEAR_LINE : HOLD_LINE);
 
 	/*
     Slave function call (e.g. ROM test):
@@ -75,7 +75,7 @@ WRITE8_MEMBER(battlane_state::battlane_cpu_command_w)
     FA96: 27 FA       BEQ   $FA92   ; Wait for bit to be set
     */
 
-	device_set_input_line(m_subcpu, M6809_IRQ_LINE, data & 0x02 ? CLEAR_LINE : HOLD_LINE);
+	m_subcpu->set_input_line(M6809_IRQ_LINE, data & 0x02 ? CLEAR_LINE : HOLD_LINE);
 }
 
 static INTERRUPT_GEN( battlane_cpu1_interrupt )
@@ -85,8 +85,8 @@ static INTERRUPT_GEN( battlane_cpu1_interrupt )
 	/* See note in battlane_cpu_command_w */
 	if (~state->m_cpu_control & 0x08)
 	{
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
-		device_set_input_line(state->m_subcpu, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+		state->m_subcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -267,23 +267,21 @@ static const ym3526_interface ym3526_config =
  *
  *************************************/
 
-static MACHINE_START( battlane )
+void battlane_state::machine_start()
 {
-	battlane_state *state = machine.driver_data<battlane_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_subcpu = machine.device("sub");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_subcpu = machine().device<cpu_device>("sub");
 
-	state->save_item(NAME(state->m_video_ctrl));
-	state->save_item(NAME(state->m_cpu_control));
+	save_item(NAME(m_video_ctrl));
+	save_item(NAME(m_cpu_control));
 }
 
-static MACHINE_RESET( battlane )
+void battlane_state::machine_reset()
 {
-	battlane_state *state = machine.driver_data<battlane_state>();
 
-	state->m_video_ctrl = 0;
-	state->m_cpu_control = 0;
+	m_video_ctrl = 0;
+	m_cpu_control = 0;
 }
 
 static MACHINE_CONFIG_START( battlane, battlane_state )
@@ -298,8 +296,6 @@ static MACHINE_CONFIG_START( battlane, battlane_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(battlane)
-	MCFG_MACHINE_RESET(battlane)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -312,7 +308,6 @@ static MACHINE_CONFIG_START( battlane, battlane_state )
 	MCFG_GFXDECODE(battlane)
 	MCFG_PALETTE_LENGTH(64)
 
-	MCFG_VIDEO_START(battlane)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -11,8 +11,7 @@
 /* the frequencies are later adjusted by "* clock / FSCALE" */
 #define FSCALE	1024
 
-typedef struct _tms_state tms_state;
-struct _tms_state {
+struct tms_state {
 	char *subtype;		/* subtype name MM6221AA, TMS3615 or TMS3617 */
 	sound_stream * channel;	/* returned by stream_create() */
 
@@ -344,7 +343,7 @@ INLINE tms_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == TMS36XX);
-	return (tms_state *)downcast<legacy_device_base *>(device)->token();
+	return (tms_state *)downcast<tms36xx_device *>(device)->token();
 }
 
 
@@ -524,32 +523,42 @@ static DEVICE_START( tms36xx )
 }
 
 
+const device_type TMS36XX = &device_creator<tms36xx_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( tms36xx )
+tms36xx_device::tms36xx_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TMS36XX, "TMS36XX", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(tms_state);				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(tms_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( tms36xx );		break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							/* Nothing */									break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "TMS36XX");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "TI PSG");						break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void tms36xx_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void tms36xx_device::device_start()
+{
+	DEVICE_START_NAME( tms36xx )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void tms36xx_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(TMS36XX, tms36xx);

@@ -260,6 +260,9 @@ public:
 	DECLARE_WRITE32_MEMBER(dsp_dataram1_w);
 	DECLARE_DRIVER_INIT(hangplt);
 	DECLARE_DRIVER_INIT(gticlub);
+	DECLARE_MACHINE_START(gticlub);
+	DECLARE_MACHINE_RESET(gticlub);
+	DECLARE_MACHINE_RESET(hangplt);
 };
 
 
@@ -272,12 +275,12 @@ WRITE32_MEMBER(gticlub_state::paletteram32_w)
 
 static void voodoo_vblank_0(device_t *device, int param)
 {
-	cputag_set_input_line(device->machine(), "maincpu", INPUT_LINE_IRQ0, param ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, param ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static void voodoo_vblank_1(device_t *device, int param)
 {
-	cputag_set_input_line(device->machine(), "maincpu", INPUT_LINE_IRQ1, param ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ1, param ? ASSERT_LINE : CLEAR_LINE);
 }
 
 READ32_MEMBER(gticlub_state::gticlub_k001604_tile_r)
@@ -390,10 +393,10 @@ WRITE8_MEMBER(gticlub_state::sysreg_w)
 
 		case 4:
 			if (data & 0x80)	/* CG Board 1 IRQ Ack */
-				cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ1, CLEAR_LINE);
+				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
 
 			if (data & 0x40)	/* CG Board 0 IRQ Ack */
-				cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ0, CLEAR_LINE);
+				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 
 			adc1038_di_write(adc1038, (data >> 0) & 1);
 			adc1038_clk_write(adc1038, (data >> 1) & 1);
@@ -405,15 +408,13 @@ WRITE8_MEMBER(gticlub_state::sysreg_w)
 
 /******************************************************************/
 
-static MACHINE_START( gticlub )
+MACHINE_START_MEMBER(gticlub_state,gticlub)
 {
-	gticlub_state *state = machine.driver_data<gticlub_state>();
-
 	/* set conservative DRC options */
-	ppcdrc_set_options(machine.device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
+	ppcdrc_set_options(machine().device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
 
 	/* configure fast RAM regions for DRC */
-	ppcdrc_add_fastram(machine.device("maincpu"), 0x00000000, 0x000fffff, FALSE, state->m_work_ram);
+	ppcdrc_add_fastram(machine().device("maincpu"), 0x00000000, 0x000fffff, FALSE, m_work_ram);
 }
 
 static ADDRESS_MAP_START( gticlub_map, AS_PROGRAM, 32, gticlub_state )
@@ -669,15 +670,15 @@ static INPUT_PORTS_START( hangplt )
 	PORT_DIPNAME( 0x02, 0x00, "Disable Test Mode" )
 	PORT_DIPSETTING( 0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING( 0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x01, 0x00, "Disable Machine Init" )
+	PORT_DIPNAME( 0x01, 0x01, "Disable Machine Init" )				// NOTE: Disabling Machine Init also disables analog controls
 	PORT_DIPSETTING( 0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING( 0x00, DEF_STR( On ) )
 
-	PORT_START("AN0")
-	PORT_BIT( 0x3ff, 0x000, IPT_UNKNOWN )
+	PORT_START("AN0")			// Rudder
+	PORT_BIT( 0x3ff, 0x000, IPT_AD_STICK_X ) PORT_MINMAX(0x000,0x3ff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5) PORT_REVERSE
 
-	PORT_START("AN1")
-	PORT_BIT( 0x3ff, 0x000, IPT_UNKNOWN )
+	PORT_START("AN1")			// Control Bar
+	PORT_BIT( 0x3ff, 0x000, IPT_AD_STICK_Y ) PORT_MINMAX(0x000,0x3ff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5) PORT_REVERSE
 
 	PORT_START("AN2")
 	PORT_BIT( 0x3ff, 0x000, IPT_UNKNOWN )
@@ -695,7 +696,7 @@ INPUT_PORTS_END
 */
 static INTERRUPT_GEN( gticlub_vblank )
 {
-	device_set_input_line(device, INPUT_LINE_IRQ0, ASSERT_LINE);
+	device->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 }
 
 
@@ -707,14 +708,14 @@ static const sharc_config sharc_cfg =
 
 static TIMER_CALLBACK( irq_off )
 {
-	cputag_set_input_line(machine, "audiocpu", param, CLEAR_LINE);
+	machine.device("audiocpu")->execute().set_input_line(param, CLEAR_LINE);
 }
 
 static void sound_irq_callback( running_machine &machine, int irq )
 {
 	int line = (irq == 0) ? INPUT_LINE_IRQ1 : INPUT_LINE_IRQ2;
 
-	cputag_set_input_line(machine, "audiocpu", line, ASSERT_LINE);
+	machine.device("audiocpu")->execute().set_input_line(line, ASSERT_LINE);
 	machine.scheduler().timer_set(attotime::from_usec(1), FUNC(irq_off), line);
 }
 
@@ -795,9 +796,9 @@ static const k001604_interface hangplt_k001604_intf_r =
 };
 
 
-static MACHINE_RESET( gticlub )
+MACHINE_RESET_MEMBER(gticlub_state,gticlub)
 {
-	cputag_set_input_line(machine, "dsp", INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("dsp")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( gticlub, gticlub_state )
@@ -818,8 +819,8 @@ static MACHINE_CONFIG_START( gticlub, gticlub_state )
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
-	MCFG_MACHINE_START(gticlub)
-	MCFG_MACHINE_RESET(gticlub)
+	MCFG_MACHINE_START_OVERRIDE(gticlub_state,gticlub)
+	MCFG_MACHINE_RESET_OVERRIDE(gticlub_state,gticlub)
 
 	MCFG_ADC1038_ADD("adc1038", gticlub_adc1038_intf)
 
@@ -876,11 +877,33 @@ static const k033906_interface hangplt_k033906_intf_1 =
 	"voodoo1"
 };
 
-static MACHINE_RESET( hangplt )
+MACHINE_RESET_MEMBER(gticlub_state,hangplt)
 {
-	cputag_set_input_line(machine, "dsp", INPUT_LINE_RESET, ASSERT_LINE);
-	cputag_set_input_line(machine, "dsp2", INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("dsp")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("dsp2")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
+
+static const voodoo_config voodoo_l_intf =
+{
+	2, //               fbmem;
+	2,//                tmumem0;
+	2,//                tmumem1;
+	"lscreen",//        screen;
+	"dsp",//            cputag;
+	voodoo_vblank_0,//  vblank;
+	NULL,//             stall;
+};
+
+static const voodoo_config voodoo_r_intf =
+{
+	2, //               fbmem;
+	2,//                tmumem0;
+	2,//                tmumem1;
+	"rscreen",//        screen;
+	"dsp2",//           cputag;
+	voodoo_vblank_1,//  vblank;
+	NULL,//             stall;
+};
 
 static MACHINE_CONFIG_START( hangplt, gticlub_state )
 
@@ -903,23 +926,14 @@ static MACHINE_CONFIG_START( hangplt, gticlub_state )
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
-	MCFG_MACHINE_START(gticlub)
-	MCFG_MACHINE_RESET(hangplt)
+	MCFG_MACHINE_START_OVERRIDE(gticlub_state,gticlub)
+	MCFG_MACHINE_RESET_OVERRIDE(gticlub_state,hangplt)
 
 	MCFG_ADC1038_ADD("adc1038", thunderh_adc1038_intf)
 	MCFG_K056230_ADD("k056230", gticlub_k056230_intf)
 
-	MCFG_3DFX_VOODOO_1_ADD("voodoo0", STD_VOODOO_1_CLOCK, 2, "lscreen")
-	MCFG_3DFX_VOODOO_CPU("dsp")
-	MCFG_3DFX_VOODOO_TMU_MEMORY(0, 2)
-	MCFG_3DFX_VOODOO_TMU_MEMORY(1, 2)
-	MCFG_3DFX_VOODOO_VBLANK(voodoo_vblank_0)
-
-	MCFG_3DFX_VOODOO_1_ADD("voodoo1", STD_VOODOO_1_CLOCK, 2, "rscreen")
-	MCFG_3DFX_VOODOO_CPU("dsp2")
-	MCFG_3DFX_VOODOO_TMU_MEMORY(0, 2)
-	MCFG_3DFX_VOODOO_TMU_MEMORY(1, 2)
-	MCFG_3DFX_VOODOO_VBLANK(voodoo_vblank_1)
+	MCFG_3DFX_VOODOO_1_ADD("voodoo0", STD_VOODOO_1_CLOCK, voodoo_l_intf)
+	MCFG_3DFX_VOODOO_1_ADD("voodoo1", STD_VOODOO_1_CLOCK, voodoo_r_intf)
 
 	MCFG_K033906_ADD("k033906_1", hangplt_k033906_intf_0)
 	MCFG_K033906_ADD("k033906_2", hangplt_k033906_intf_1)
@@ -1208,15 +1222,20 @@ DRIVER_INIT_MEMBER(gticlub_state,hangplt)
 
 	m_sharc_dataram_0 = auto_alloc_array(machine(), UINT32, 0x100000/4);
 	m_sharc_dataram_1 = auto_alloc_array(machine(), UINT32, 0x100000/4);
+
+	// workaround for lock/unlock errors
+	UINT32 *rom = (UINT32*)machine().root_device().memregion("user1")->base();
+	rom[(0x153ac^4) / 4] = 0x4e800020;
+	rom[(0x15428^4) / 4] = 0x4e800020;
 }
 
 /*************************************************************************/
 
-GAME( 1996, gticlub,  0,        gticlub,  gticlub,  gticlub_state, gticlub, ROT0, "Konami", "GTI Club (ver EAA)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
-GAME( 1996, gticlubu, gticlub,  gticlub,  gticlub,  gticlub_state, gticlub, ROT0, "Konami", "GTI Club (ver UAA)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
-GAME( 1996, gticluba, gticlub,  gticlub,  gticlub,  gticlub_state, gticlub, ROT0, "Konami", "GTI Club (ver AAA)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
-GAME( 1996, gticlubj, gticlub,  gticlub,  gticlub,  gticlub_state, gticlub, ROT0, "Konami", "GTI Club (ver JAA)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
+GAME( 1996, gticlub,  0,        gticlub,  gticlub,  gticlub_state, gticlub, ROT0, "Konami", "GTI Club (ver EAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, gticlubu, gticlub,  gticlub,  gticlub,  gticlub_state, gticlub, ROT0, "Konami", "GTI Club (ver UAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, gticluba, gticlub,  gticlub,  gticlub,  gticlub_state, gticlub, ROT0, "Konami", "GTI Club (ver AAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAME( 1996, gticlubj, gticlub,  gticlub,  gticlub,  gticlub_state, gticlub, ROT0, "Konami", "GTI Club (ver JAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
 GAME( 1996, thunderh, 0,        thunderh, thunderh, gticlub_state, gticlub, ROT0, "Konami", "Operation Thunder Hurricane (ver EAA)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
 GAME( 1996, thunderhu,thunderh, thunderh, thunderh, gticlub_state, gticlub, ROT0, "Konami", "Operation Thunder Hurricane (ver UAA)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
-GAME( 1997, slrasslt, 0,        slrasslt, slrasslt, gticlub_state, gticlub, ROT0, "Konami", "Solar Assault (ver UAA)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
-GAMEL( 1997, hangplt, 0,        hangplt,  hangplt,  gticlub_state, hangplt, ROT0, "Konami", "Hang Pilot", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND, layout_dualhovu )
+GAME( 1997, slrasslt, 0,        slrasslt, slrasslt, gticlub_state, gticlub, ROT0, "Konami", "Solar Assault (ver UAA)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+GAMEL( 1997, hangplt, 0,        hangplt,  hangplt,  gticlub_state, hangplt, ROT0, "Konami", "Hang Pilot", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND, layout_dualhovu )

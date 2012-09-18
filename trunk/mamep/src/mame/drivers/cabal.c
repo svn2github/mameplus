@@ -52,10 +52,9 @@ Dip locations verified with Fabtek manual for the trackball version
 #include "audio/seibu.h"
 #include "includes/cabal.h"
 
-static MACHINE_RESET( cabalbl )
+MACHINE_RESET_MEMBER(cabal_state,cabalbl)
 {
-	cabal_state *state = machine.driver_data<cabal_state>();
-	state->m_sound_command1 = state->m_sound_command2 = 0xff;
+	m_sound_command1 = m_sound_command2 = 0xff;
 }
 
 
@@ -106,12 +105,12 @@ WRITE16_MEMBER(cabal_state::cabal_sound_irq_trigger_word_w)
 	seibu_main_word_w(&space,4,data,mem_mask);
 
 	/* spin for a while to let the Z80 read the command, otherwise coins "stick" */
-	device_spin_until_time(&space.device(), attotime::from_usec(50));
+	space.device().execute().spin_until_time(attotime::from_usec(50));
 }
 
 WRITE16_MEMBER(cabal_state::cabalbl_sound_irq_trigger_word_w)
 {
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE );
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE );
 }
 
 
@@ -468,7 +467,7 @@ GFXDECODE_END
 
 static void irqhandler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2151_interface cabalbl_ym2151_interface =
@@ -511,7 +510,6 @@ static MACHINE_CONFIG_START( cabal, cabal_state )
 	MCFG_GFXDECODE(cabal)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(cabal)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -554,7 +552,7 @@ static MACHINE_CONFIG_START( cabalbl, cabal_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_RESET(cabalbl)
+	MCFG_MACHINE_RESET_OVERRIDE(cabal_state,cabalbl)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -567,7 +565,6 @@ static MACHINE_CONFIG_START( cabalbl, cabal_state )
 	MCFG_GFXDECODE(cabal)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(cabal)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

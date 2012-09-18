@@ -25,17 +25,16 @@
 
 // ======================> msm6242_interface
 
-typedef struct _msm6242_interface msm6242_interface;
-struct _msm6242_interface
+struct msm6242_interface
 {
 	devcb_write_line	m_out_int_cb;
 };
 
-typedef struct
+struct rtc_regs_t
 {
 	UINT8 sec, min, hour, day, wday, month;
 	UINT16 year;
-} rtc_regs_t;
+};
 
 
 // ======================> msm6242_device

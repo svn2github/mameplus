@@ -105,16 +105,14 @@ Dip locations verified from manual for:
 
 
 
-static MACHINE_RESET( gtmr )
+MACHINE_RESET_MEMBER(kaneko16_state,gtmr)
 {
-	kaneko16_state *state = machine.driver_data<kaneko16_state>();
-	state->VIEW2_2_pri = 1;
+	VIEW2_2_pri = 1;
 }
 
-static MACHINE_RESET( mgcrystl )
+MACHINE_RESET_MEMBER(kaneko16_state,mgcrystl)
 {
-	kaneko16_state *state = machine.driver_data<kaneko16_state>();
-	state->VIEW2_2_pri = 0;
+	VIEW2_2_pri = 0;
 }
 
 
@@ -154,7 +152,7 @@ WRITE16_MEMBER(kaneko16_state::kaneko16_soundlatch_w)
 	if (ACCESSING_BITS_8_15)
 	{
 		soundlatch_byte_w(space, 0, (data & 0xff00) >> 8 );
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -242,7 +240,8 @@ static ADDRESS_MAP_START( berlwall, AS_PROGRAM, 16, kaneko16_berlwall_state )
 //  AM_RANGE(0x480000, 0x480001) AM_RAM     // ?
 	AM_RANGE(0x500000, 0x500001) AM_READWRITE(kaneko16_bg15_reg_r, kaneko16_bg15_reg_w) AM_SHARE("bg15_reg")	// High Color Background
 	AM_RANGE(0x580000, 0x580001) AM_READWRITE(kaneko16_bg15_select_r, kaneko16_bg15_select_w) AM_SHARE("bg15_select")
-	AM_RANGE(0x600000, 0x60003f) AM_DEVREADWRITE("kan_spr", kaneko16_sprite_device, kaneko16_sprites_regs_r, kaneko16_sprites_regs_w)
+	AM_RANGE(0x600000, 0x60001f) AM_DEVREADWRITE("kan_spr", kaneko16_sprite_device, kaneko16_sprites_regs_r, kaneko16_sprites_regs_w)
+	/* writes to 0x600020 - 0x60003f too, mirror, or is it only hooked up on bytes or similar? */
 	AM_RANGE(0x680000, 0x680001) AM_READ_PORT("P1")
 	AM_RANGE(0x680002, 0x680003) AM_READ_PORT("P2")
 	AM_RANGE(0x680004, 0x680005) AM_READ_PORT("SYSTEM")
@@ -336,7 +335,7 @@ WRITE16_MEMBER(kaneko16_gtmr_state::bloodwar_oki_0_bank_w)
 	{
 		okim6295_device *oki = downcast<okim6295_device *>(device);
 		oki->set_bank_base(0x40000 * (data & 0xf) );
-//      logerror("CPU #0 PC %06X : OKI0  bank %08X\n",cpu_get_pc(&space->device()),data);
+//      logerror("CPU #0 PC %06X : OKI0  bank %08X\n",space->device().safe_pc(),data);
 	}
 }
 
@@ -347,7 +346,7 @@ WRITE16_MEMBER(kaneko16_gtmr_state::bloodwar_oki_1_bank_w)
 	{
 		okim6295_device *oki = downcast<okim6295_device *>(device);
 		oki->set_bank_base(0x40000 * data );
-//      logerror("CPU #0 PC %06X : OKI1  bank %08X\n",cpu_get_pc(&space->device()),data);
+//      logerror("CPU #0 PC %06X : OKI1  bank %08X\n",space->device().safe_pc(),data);
 	}
 }
 
@@ -477,7 +476,7 @@ WRITE16_MEMBER(kaneko16_gtmr_state::gtmr_oki_0_bank_w)
 	{
 		okim6295_device *oki = downcast<okim6295_device *>(device);
 		oki->set_bank_base( 0x40000 * (data & 0xF) );
-//      logerror("CPU #0 PC %06X : OKI0 bank %08X\n",cpu_get_pc(&space->device()),data);
+//      logerror("CPU #0 PC %06X : OKI0 bank %08X\n",space->device().safe_pc(),data);
 	}
 }
 
@@ -488,7 +487,7 @@ WRITE16_MEMBER(kaneko16_gtmr_state::gtmr_oki_1_bank_w)
 	{
 		okim6295_device *oki = downcast<okim6295_device *>(device);
 		oki->set_bank_base( 0x40000 * (data & 0x1) );
-//      logerror("CPU #0 PC %06X : OKI1 bank %08X\n",cpu_get_pc(&space->device()),data);
+//      logerror("CPU #0 PC %06X : OKI1 bank %08X\n",space->device().safe_pc(),data);
 	}
 }
 
@@ -551,7 +550,7 @@ READ16_MEMBER(kaneko16_gtmr_state::gtmr2_wheel_r)
 		case 0x0800:	// 360' Wheel
 			return	(ioport("WHEEL2")->read() << 8);
 		default:
-			logerror("gtmr2_wheel_r : read at %06x with joystick\n", cpu_get_pc(&space.device()));
+			logerror("gtmr2_wheel_r : read at %06x with joystick\n", space.device().safe_pc());
 			return	(~0);
 	}
 }
@@ -1586,15 +1585,15 @@ static TIMER_DEVICE_CALLBACK( kaneko16_interrupt )
 
 	// main vblank interrupt
 	if(scanline == 224)
-		device_set_input_line(state->m_maincpu, 5, HOLD_LINE);
+		state->m_maincpu->set_input_line(5, HOLD_LINE);
 
 	// each of these 2 int are responsible of translating a part of sprite buffer
 	// from work ram to sprite ram. How these are scheduled is unknown.
 	if(scanline == 64)
-		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		state->m_maincpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 144)
-		device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
+		state->m_maincpu->set_input_line(3, HOLD_LINE);
 }
 
 static const ay8910_interface ay8910_intf_dsw =
@@ -1668,8 +1667,8 @@ static MACHINE_CONFIG_START( berlwall, kaneko16_berlwall_state )
 	kaneko16_sprite_device::set_altspacing(*device, 1);
 
 
-	MCFG_PALETTE_INIT(berlwall)
-	MCFG_VIDEO_START(berlwall)
+	MCFG_PALETTE_INIT_OVERRIDE(kaneko16_berlwall_state,berlwall)
+	MCFG_VIDEO_START_OVERRIDE(kaneko16_berlwall_state,berlwall)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1698,7 +1697,7 @@ static MACHINE_CONFIG_START( bakubrkr, kaneko16_state )
 	MCFG_CPU_PROGRAM_MAP(bakubrkr)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", kaneko16_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(gtmr)
+	MCFG_MACHINE_RESET_OVERRIDE(kaneko16_state,gtmr)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
 	/* video hardware */
@@ -1728,7 +1727,7 @@ static MACHINE_CONFIG_START( bakubrkr, kaneko16_state )
 
 
 
-	MCFG_VIDEO_START(kaneko16)
+	MCFG_VIDEO_START_OVERRIDE(kaneko16_state,kaneko16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1793,7 +1792,7 @@ static MACHINE_CONFIG_START( blazeon, kaneko16_state )
 
 	// there is actually a 2nd sprite chip! looks like our device emulation handles both at once
 
-	MCFG_VIDEO_START(kaneko16)
+	MCFG_VIDEO_START_OVERRIDE(kaneko16_state,kaneko16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1826,7 +1825,7 @@ static MACHINE_CONFIG_START( gtmr, kaneko16_gtmr_state )
 	MCFG_CPU_PROGRAM_MAP(gtmr_map)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", kaneko16_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(gtmr)
+	MCFG_MACHINE_RESET_OVERRIDE(kaneko16_gtmr_state,gtmr)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -1861,7 +1860,7 @@ static MACHINE_CONFIG_START( gtmr, kaneko16_gtmr_state )
 	kaneko_hit_device::set_type(*device, 1);
 
 
-	MCFG_VIDEO_START(kaneko16)
+	MCFG_VIDEO_START_OVERRIDE(kaneko16_gtmr_state,kaneko16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1899,7 +1898,7 @@ static MACHINE_CONFIG_DERIVED( bloodwar, gtmr )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(bloodwar)
 
-	MCFG_MACHINE_RESET( gtmr )
+	MCFG_MACHINE_RESET_OVERRIDE(kaneko16_gtmr_state, gtmr )
 
 	MCFG_DEVICE_MODIFY("kan_spr")
 	kaneko16_sprite_device::set_priorities(*device, 2 /* never used? */ ,3 /* character selection / vs. portraits */ ,5 /* winning portrait*/ ,7 /* ? */);
@@ -1920,7 +1919,7 @@ static MACHINE_CONFIG_DERIVED( bonkadv, gtmr )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(bonkadv)
 
-	MCFG_MACHINE_RESET( gtmr )
+	MCFG_MACHINE_RESET_OVERRIDE(kaneko16_gtmr_state, gtmr )
 
 	MCFG_DEVICE_MODIFY("kan_spr")
 	kaneko16_sprite_device::set_priorities(*device, 2 /* never used? */ ,3 /* volcano lava on level 2 */ ,5 /* in-game player */ ,7 /* demostration text */);
@@ -1945,7 +1944,7 @@ static MACHINE_CONFIG_START( mgcrystl, kaneko16_state )
 	MCFG_CPU_PROGRAM_MAP(mgcrystl)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", kaneko16_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(mgcrystl)
+	MCFG_MACHINE_RESET_OVERRIDE(kaneko16_state,mgcrystl)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
 	/* video hardware */
@@ -1975,7 +1974,7 @@ static MACHINE_CONFIG_START( mgcrystl, kaneko16_state )
 
 
 
-	MCFG_VIDEO_START(kaneko16)
+	MCFG_VIDEO_START_OVERRIDE(kaneko16_state,kaneko16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2018,14 +2017,14 @@ static TIMER_DEVICE_CALLBACK( shogwarr_interrupt )
 	if(scanline == 224)
 	{
 		// the code for this interrupt is provided by the MCU..
-		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		state->m_maincpu->set_input_line(4, HOLD_LINE);
 	}
 
 	if(scanline == 64)
-		device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
+		state->m_maincpu->set_input_line(3, HOLD_LINE);
 
 	if(scanline == 144)
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+		state->m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 /*
@@ -2069,7 +2068,7 @@ static MACHINE_CONFIG_START( shogwarr, kaneko16_shogwarr_state )
 	MCFG_CPU_PROGRAM_MAP(shogwarr)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", shogwarr_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(mgcrystl)
+	MCFG_MACHINE_RESET_OVERRIDE(kaneko16_shogwarr_state,mgcrystl)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 	MCFG_EEPROM_DATA(shogwarr_default_eeprom, 128)
@@ -2091,7 +2090,7 @@ static MACHINE_CONFIG_START( shogwarr, kaneko16_shogwarr_state )
 	kaneko_view2_tilemap_device::set_gfx_region(*device, 1);
 	kaneko_view2_tilemap_device::set_offset(*device, 0x33, -0x8, 320, 240);
 
-	MCFG_VIDEO_START(kaneko16)
+	MCFG_VIDEO_START_OVERRIDE(kaneko16_shogwarr_state,kaneko16)
 
 	MCFG_DEVICE_ADD_VU002_SPRITES
 	kaneko16_sprite_device::set_priorities(*device, 1 /* below all */ ,3 /* above tile[0], below the others */ ,5 /* above all */ ,7 /* above all */);
@@ -2187,7 +2186,7 @@ static void kaneko16_expand_sample_banks(running_machine &machine, const char *r
 	UINT8 *src0;
 
 	if (machine.root_device().memregion(region)->bytes() < 0x40000 * 16)
-		fatalerror("gtmr SOUND1 region too small");
+		fatalerror("gtmr SOUND1 region too small\n");
 
 	/* bank 0 maps to itself, so we just leave it alone */
 	src0 = machine.root_device().memregion(region)->base();

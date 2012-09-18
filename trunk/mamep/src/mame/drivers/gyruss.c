@@ -118,7 +118,7 @@ WRITE8_MEMBER(gyruss_state::gyruss_dac_w)
 
 WRITE8_MEMBER(gyruss_state::gyruss_irq_clear_w)
 {
-	device_set_input_line(m_audiocpu_2, 0, CLEAR_LINE);
+	m_audiocpu_2->set_input_line(0, CLEAR_LINE);
 }
 
 static void filter_w( device_t *device, int chip, int data )
@@ -149,12 +149,12 @@ WRITE8_MEMBER(gyruss_state::gyruss_filter1_w)
 WRITE8_MEMBER(gyruss_state::gyruss_sh_irqtrigger_w)
 {
 	/* writing to this register triggers IRQ on the sound CPU */
-	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 WRITE8_MEMBER(gyruss_state::gyruss_i8039_irq_w)
 {
-	device_set_input_line(m_audiocpu_2, 0, ASSERT_LINE);
+	m_audiocpu_2->set_input_line(0, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(gyruss_state::master_nmi_mask_w)
@@ -488,12 +488,11 @@ static DISCRETE_SOUND_START( gyruss_sound )
 DISCRETE_SOUND_END
 
 
-static MACHINE_START( gyruss )
+void gyruss_state::machine_start()
 {
-	gyruss_state *state = machine.driver_data<gyruss_state>();
 
-	state->save_item(NAME(state->m_master_nmi_mask));
-	state->save_item(NAME(state->m_slave_irq_mask));
+	save_item(NAME(m_master_nmi_mask));
+	save_item(NAME(m_slave_irq_mask));
 }
 
 static INTERRUPT_GEN( master_vblank_irq )
@@ -501,7 +500,7 @@ static INTERRUPT_GEN( master_vblank_irq )
 	gyruss_state *state = device->machine().driver_data<gyruss_state>();
 
 	if (state->m_master_nmi_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static INTERRUPT_GEN( slave_vblank_irq )
@@ -509,7 +508,7 @@ static INTERRUPT_GEN( slave_vblank_irq )
 	gyruss_state *state = device->machine().driver_data<gyruss_state>();
 
 	if (state->m_slave_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( gyruss, gyruss_state )
@@ -533,7 +532,6 @@ static MACHINE_CONFIG_START( gyruss, gyruss_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(gyruss)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -543,8 +541,6 @@ static MACHINE_CONFIG_START( gyruss, gyruss_state )
 	MCFG_GFXDECODE(gyruss)
 	MCFG_PALETTE_LENGTH(16*4+16*16)
 
-	MCFG_PALETTE_INIT(gyruss)
-	MCFG_VIDEO_START(gyruss)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

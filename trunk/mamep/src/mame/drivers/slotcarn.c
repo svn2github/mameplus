@@ -48,6 +48,7 @@ public:
 	DECLARE_WRITE8_MEMBER(palette_w);
 	DECLARE_WRITE_LINE_MEMBER(hsync_changed);
 	DECLARE_WRITE_LINE_MEMBER(vsync_changed);
+	virtual void machine_start();
 };
 
 
@@ -162,7 +163,7 @@ WRITE_LINE_MEMBER(slotcarn_state::hsync_changed)
 
 WRITE_LINE_MEMBER(slotcarn_state::vsync_changed)
 {
-	cputag_set_input_line(machine(), "maincpu", 0, state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const mc6845_interface mc6845_intf =
@@ -540,11 +541,10 @@ GFXDECODE_END
 
 
 
-static MACHINE_START(merit)
+void slotcarn_state::machine_start()
 {
-	slotcarn_state *state = machine.driver_data<slotcarn_state>();
-	state->m_ram_palette = auto_alloc_array(machine, UINT8, RAM_PALETTE_SIZE);
-	state_save_register_global_pointer(machine, state->m_ram_palette, RAM_PALETTE_SIZE);
+	m_ram_palette = auto_alloc_array(machine(), UINT8, RAM_PALETTE_SIZE);
+	state_save_register_global_pointer(machine(), m_ram_palette, RAM_PALETTE_SIZE);
 }
 
 
@@ -614,7 +614,6 @@ static MACHINE_CONFIG_START( slotcarn, slotcarn_state )
 	MCFG_I8255A_ADD( "ppi8255_1", ppi8255_1_intf )
 	MCFG_I8255A_ADD( "ppi8255_2", ppi8255_2_intf )
 
-	MCFG_MACHINE_START(merit)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

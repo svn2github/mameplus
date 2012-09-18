@@ -135,8 +135,7 @@ Flags: 80=high score, 40=first bonus, 20=interval bonus, 10=?
 #include "cpu/mb88xx/mb88xx.h"
 
 
-typedef struct _namco_50xx_state namco_50xx_state;
-struct _namco_50xx_state
+struct namco_50xx_state
 {
 	device_t *	m_cpu;
 	UINT8					m_latched_cmd;
@@ -149,7 +148,7 @@ INLINE namco_50xx_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == NAMCO_50XX);
 
-	return (namco_50xx_state *)downcast<legacy_device_base *>(device)->token();
+	return (namco_50xx_state *)downcast<namco_50xx_device *>(device)->token();
 }
 
 
@@ -205,14 +204,14 @@ static WRITE8_HANDLER( namco_50xx_O_w )
 static TIMER_CALLBACK( namco_50xx_irq_clear )
 {
 	namco_50xx_state *state = get_safe_token((device_t *)ptr);
-	device_set_input_line(state->m_cpu, 0, CLEAR_LINE);
+	state->m_cpu->execute().set_input_line(0, CLEAR_LINE);
 }
 
 static void namco_50xx_irq_set(device_t *device)
 {
 	namco_50xx_state *state = get_safe_token(device);
 
-	device_set_input_line(state->m_cpu, 0, ASSERT_LINE);
+	state->m_cpu->execute().set_input_line(0, ASSERT_LINE);
 
 	// The execution time of one instruction is ~4us, so we must make sure to
 	// give the cpu time to poll the /IRQ input before we clear it.
@@ -292,18 +291,52 @@ static DEVICE_START( namco_50xx )
 }
 
 
-/*-------------------------------------------------
-    device definition
--------------------------------------------------*/
+const device_type NAMCO_50XX = &device_creator<namco_50xx_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+namco_50xx_device::namco_50xx_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, NAMCO_50XX, "Namco 50xx", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(namco_50xx_state));
+}
 
-#define DEVTEMPLATE_ID(p,s)		p##namco_50xx##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_ROM_REGION | DT_HAS_MACHINE_CONFIG
-#define DEVTEMPLATE_NAME		"Namco 50xx"
-#define DEVTEMPLATE_SHORTNAME   "namco50"
-#define DEVTEMPLATE_FAMILY		"Namco I/O"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void namco_50xx_device::device_config_complete()
+{
+	m_shortname = "namco50";
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void namco_50xx_device::device_start()
+{
+	DEVICE_START_NAME( namco_50xx )(this);
+}
+
+//-------------------------------------------------
+//  device_mconfig_additions - return a pointer to
+//  the device's machine fragment
+//-------------------------------------------------
+
+machine_config_constructor namco_50xx_device::device_mconfig_additions() const
+{
+	return MACHINE_CONFIG_NAME( namco_50xx  );
+}
+
+//-------------------------------------------------
+//  device_rom_region - return a pointer to the
+//  the device's ROM definitions
+//-------------------------------------------------
+
+const rom_entry *namco_50xx_device::device_rom_region() const
+{
+	return ROM_NAME(namco_50xx );
+}
 
 
-DEFINE_LEGACY_DEVICE(NAMCO_50XX, namco_50xx);

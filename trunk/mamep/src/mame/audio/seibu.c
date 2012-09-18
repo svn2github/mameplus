@@ -140,8 +140,7 @@ const seibu_adpcm_interface seibu_adpcm2_intf =
 	"adpcm2"
 };
 
-typedef struct _seibu_adpcm_state seibu_adpcm_state;
-struct _seibu_adpcm_state
+struct seibu_adpcm_state
 {
 	oki_adpcm_state m_adpcm;
 	sound_stream *m_stream;
@@ -183,7 +182,7 @@ static STREAM_UPDATE( seibu_adpcm_callback )
 static DEVICE_START( seibu_adpcm )
 {
 	running_machine &machine = device->machine();
-	seibu_adpcm_state *state = (seibu_adpcm_state *)downcast<legacy_device_base *>(device)->token();
+	seibu_adpcm_state *state = (seibu_adpcm_state *)downcast<seibu_adpcm_device *>(device)->token();
 	const seibu_adpcm_interface *intf;
 
 	intf = (const seibu_adpcm_interface *)device->static_config();
@@ -193,23 +192,6 @@ static DEVICE_START( seibu_adpcm )
 	state->m_base = machine.root_device().memregion(intf->rom_region)->base();
 	state->m_adpcm.reset();
 }
-
-DEVICE_GET_INFO( seibu_adpcm )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(seibu_adpcm_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(seibu_adpcm);	break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Seibu ADPCM");					break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
-}
-
 
 // "decrypt" is a bit flowery here, as it's probably just line-swapping to
 // simplify PCB layout/routing rather than intentional protection, but it
@@ -229,7 +211,7 @@ void seibu_adpcm_decrypt(running_machine &machine, const char *region)
 
 WRITE8_DEVICE_HANDLER( seibu_adpcm_adr_w )
 {
-	seibu_adpcm_state *state = (seibu_adpcm_state *)downcast<legacy_device_base *>(device)->token();
+	seibu_adpcm_state *state = (seibu_adpcm_state *)downcast<seibu_adpcm_device *>(device)->token();
 
 	if (state->m_stream)
 		state->m_stream->update();
@@ -246,7 +228,7 @@ WRITE8_DEVICE_HANDLER( seibu_adpcm_adr_w )
 
 WRITE8_DEVICE_HANDLER( seibu_adpcm_ctl_w )
 {
-	seibu_adpcm_state *state = (seibu_adpcm_state *)downcast<legacy_device_base *>(device)->token();
+	seibu_adpcm_state *state = (seibu_adpcm_state *)downcast<seibu_adpcm_device *>(device)->token();
 
 	// sequence is 00 02 01 each time.
 	if (state->m_stream)
@@ -306,9 +288,9 @@ static void update_irq_lines(running_machine &machine, int param)
 	}
 
 	if ((irq1 & irq2) == 0xff)	/* no IRQs pending */
-		device_set_input_line(sound_cpu,0,CLEAR_LINE);
+		sound_cpu->execute().set_input_line(0,CLEAR_LINE);
 	else	/* IRQ pending */
-		device_set_input_line_and_vector(sound_cpu,0,ASSERT_LINE,irq1 & irq2);
+		sound_cpu->execute().set_input_line_and_vector(0,ASSERT_LINE,irq1 & irq2);
 }
 
 WRITE8_HANDLER( seibu_irq_clear_w )
@@ -400,7 +382,7 @@ static WRITE8_HANDLER( seibu_pending_w )
 
 READ16_HANDLER( seibu_main_word_r )
 {
-	//logerror("%06x: seibu_main_word_r(%x)\n",cpu_get_pc(&space->device()),offset);
+	//logerror("%06x: seibu_main_word_r(%x)\n",space->device().safe_pc(),offset);
 	switch (offset)
 	{
 		case 2:
@@ -409,14 +391,14 @@ READ16_HANDLER( seibu_main_word_r )
 		case 5:
 			return main2sub_pending ? 1 : 0;
 		default:
-			//logerror("%06x: seibu_main_word_r(%x)\n",cpu_get_pc(&space->device()),offset);
+			//logerror("%06x: seibu_main_word_r(%x)\n",space->device().safe_pc(),offset);
 			return 0xffff;
 	}
 }
 
 WRITE16_HANDLER( seibu_main_word_w )
 {
-	//printf("%06x: seibu_main_word_w(%x,%02x)\n",cpu_get_pc(&space->device()),offset,data);
+	//printf("%06x: seibu_main_word_w(%x,%02x)\n",space->device().safe_pc(),offset,data);
 	if (ACCESSING_BITS_0_7)
 	{
 		switch (offset)
@@ -435,7 +417,7 @@ WRITE16_HANDLER( seibu_main_word_w )
 				main2sub_pending = 1;
 				break;
 			default:
-				//logerror("%06x: seibu_main_word_w(%x,%02x)\n",cpu_get_pc(&space->device()),offset,data);
+				//logerror("%06x: seibu_main_word_w(%x,%02x)\n",space->device().safe_pc(),offset,data);
 				break;
 		}
 	}
@@ -619,4 +601,42 @@ ADDRESS_MAP_START( seibu3_adpcm_sound_map, AS_PROGRAM, 8, driver_device )
 ADDRESS_MAP_END
 
 
-DEFINE_LEGACY_SOUND_DEVICE(SEIBU_ADPCM, seibu_adpcm);
+const device_type SEIBU_ADPCM = &device_creator<seibu_adpcm_device>;
+
+seibu_adpcm_device::seibu_adpcm_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, SEIBU_ADPCM, "Seibu ADPCM", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(seibu_adpcm_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void seibu_adpcm_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void seibu_adpcm_device::device_start()
+{
+	DEVICE_START_NAME( seibu_adpcm )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void seibu_adpcm_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

@@ -14,49 +14,45 @@
  *
  *************************************/
 
-static TILE_GET_INFO( centiped_get_tile_info )
+TILE_GET_INFO_MEMBER(centiped_state::centiped_get_tile_info)
 {
-	centiped_state *state = machine.driver_data<centiped_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 
 	int data = videoram[tile_index];
-	SET_TILE_INFO(0, (data & 0x3f) + 0x40, 0, TILE_FLIPYX(data >> 6));
+	SET_TILE_INFO_MEMBER(0, (data & 0x3f) + 0x40, 0, TILE_FLIPYX(data >> 6));
 }
 
 
-static TILE_GET_INFO( warlords_get_tile_info )
+TILE_GET_INFO_MEMBER(centiped_state::warlords_get_tile_info)
 {
-	centiped_state *state = machine.driver_data<centiped_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int data = videoram[tile_index];
-	int color = ((tile_index & 0x10) >> 4) | ((tile_index & 0x200) >> 8) | (state->m_flipscreen >> 5);
+	int color = ((tile_index & 0x10) >> 4) | ((tile_index & 0x200) >> 8) | (m_flipscreen >> 5);
 
-	SET_TILE_INFO(0, data & 0x3f, color, TILE_FLIPYX(data >> 6));
+	SET_TILE_INFO_MEMBER(0, data & 0x3f, color, TILE_FLIPYX(data >> 6));
 }
 
 
-static TILE_GET_INFO( milliped_get_tile_info )
+TILE_GET_INFO_MEMBER(centiped_state::milliped_get_tile_info)
 {
-	centiped_state *state = machine.driver_data<centiped_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int data = videoram[tile_index];
-	int bank = ((data >> 6) & 1) | (state->m_gfx_bank << 1);
+	int bank = ((data >> 6) & 1) | (m_gfx_bank << 1);
 	int color = (data >> 6) & 3;
 	/* Flip both x and y if flipscreen is non-zero */
-	int flip_tiles = (state->m_flipscreen) ? 0x03 : 0;
+	int flip_tiles = (m_flipscreen) ? 0x03 : 0;
 
-	SET_TILE_INFO(0, (data & 0x3f) + 0x40 + (bank * 0x80), color, TILE_FLIPYX(flip_tiles));
+	SET_TILE_INFO_MEMBER(0, (data & 0x3f) + 0x40 + (bank * 0x80), color, TILE_FLIPYX(flip_tiles));
 }
 
 
-static TILE_GET_INFO( bullsdrt_get_tile_info )
+TILE_GET_INFO_MEMBER(centiped_state::bullsdrt_get_tile_info)
 {
-	centiped_state *state = machine.driver_data<centiped_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int data = videoram[tile_index];
-	int bank = state->m_bullsdrt_tiles_bankram[tile_index & 0x1f] & 0x0f;
+	int bank = m_bullsdrt_tiles_bankram[tile_index & 0x1f] & 0x0f;
 
-	SET_TILE_INFO(0, (data & 0x3f) + 0x40 * bank, 0, TILE_FLIPYX(data >> 6));
+	SET_TILE_INFO_MEMBER(0, (data & 0x3f) + 0x40 * bank, 0, TILE_FLIPYX(data >> 6));
 }
 
 
@@ -97,42 +93,38 @@ static void init_common(running_machine &machine)
 }
 
 
-VIDEO_START( centiped )
+VIDEO_START_MEMBER(centiped_state,centiped)
 {
-	init_common(machine);
-	init_penmask(machine);
+	init_common(machine());
+	init_penmask(machine());
 
-	centiped_state *state = machine.driver_data<centiped_state>();
-	state->m_bg_tilemap = tilemap_create(machine, centiped_get_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(centiped_state::centiped_get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 
-VIDEO_START( warlords )
+VIDEO_START_MEMBER(centiped_state,warlords)
 {
-	init_common(machine);
+	init_common(machine());
 
-	centiped_state *state = machine.driver_data<centiped_state>();
-	state->m_bg_tilemap = tilemap_create(machine, warlords_get_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(centiped_state::warlords_get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 
-VIDEO_START( milliped )
+VIDEO_START_MEMBER(centiped_state,milliped)
 {
-	init_common(machine);
-	init_penmask(machine);
+	init_common(machine());
+	init_penmask(machine());
 
-	centiped_state *state = machine.driver_data<centiped_state>();
-	state->m_bg_tilemap = tilemap_create(machine, milliped_get_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(centiped_state::milliped_get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 
-VIDEO_START( bullsdrt )
+VIDEO_START_MEMBER(centiped_state,bullsdrt)
 {
-	init_common(machine);
-	init_penmask(machine);
+	init_common(machine());
+	init_penmask(machine());
 
-	centiped_state *state = machine.driver_data<centiped_state>();
-	state->m_bg_tilemap = tilemap_create(machine, bullsdrt_get_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(centiped_state::bullsdrt_get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 
@@ -287,12 +279,12 @@ WRITE8_MEMBER(centiped_state::centiped_paletteram_w)
 
 ***************************************************************************/
 
-PALETTE_INIT( warlords )
+PALETTE_INIT_MEMBER(centiped_state,warlords)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		UINT8 pen;
 		int r, g, b;
@@ -317,7 +309,7 @@ PALETTE_INIT( warlords )
 			r = g = b = grey;
 		}
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 

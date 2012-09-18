@@ -80,15 +80,17 @@ public:
 	DECLARE_WRITE8_MEMBER(blitter_cmd_w);
 	DECLARE_WRITE8_MEMBER(sound_latch_w);
 	DECLARE_WRITE8_MEMBER(ball_w);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 #define VIDEOBUF_SIZE 256*256
 
 
-static PALETTE_INIT( roul )
+void roul_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int bit6, bit7, bit0, bit1, r, g, b;
 	int i;
 
@@ -107,7 +109,7 @@ static PALETTE_INIT( roul )
 		bit1 = (color_prom[0] >> 5) & 0x01;
 		r = 0x0e * bit6 + 0x1f * bit7 + 0x43 * bit0 + 0x8f * bit1;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 		color_prom++;
 	}
 }
@@ -120,7 +122,7 @@ bit 7 -> blitter ready
 bit 6 -> ??? (after unknown blitter command : [80][80][08][02])
 */
 //  return 0x80; // blitter ready
-//  logerror("Read unknown port $f5 at %04x\n",cpu_get_pc(&space.device()));
+//  logerror("Read unknown port $f5 at %04x\n",space.device().safe_pc());
 	return machine().rand() & 0x00c0;
 }
 
@@ -168,7 +170,7 @@ WRITE8_MEMBER(roul_state::blitter_cmd_w)
 WRITE8_MEMBER(roul_state::sound_latch_w)
 {
 	soundlatch_byte_w(space, 0, data & 0xff);
-	cputag_set_input_line(machine(), "soundcpu", 0, HOLD_LINE);
+	machine().device("soundcpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 WRITE8_MEMBER(roul_state::ball_w)
@@ -207,10 +209,9 @@ static ADDRESS_MAP_START( sound_cpu_io_map, AS_IO, 8, roul_state )
 	AM_RANGE(0x00, 0x01) AM_DEVWRITE_LEGACY("aysnd", ay8910_address_data_w)
 ADDRESS_MAP_END
 
-static VIDEO_START(roul)
+void roul_state::video_start()
 {
-	roul_state *state = machine.driver_data<roul_state>();
-	state->m_videobuf = auto_alloc_array_clear(machine, UINT8, VIDEOBUF_SIZE);
+	m_videobuf = auto_alloc_array_clear(machine(), UINT8, VIDEOBUF_SIZE);
 }
 
 static SCREEN_UPDATE_IND16(roul)
@@ -286,7 +287,6 @@ static MACHINE_CONFIG_START( roul, roul_state )
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_PALETTE_INIT(roul)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -298,7 +298,6 @@ static MACHINE_CONFIG_START( roul, roul_state )
 
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(roul)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_SOUND_ADD("aysnd", AY8910, 1000000)

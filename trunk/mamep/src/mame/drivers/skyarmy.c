@@ -50,6 +50,9 @@ public:
 	DECLARE_WRITE8_MEMBER(skyarmy_videoram_w);
 	DECLARE_WRITE8_MEMBER(skyarmy_colorram_w);
 	DECLARE_WRITE8_MEMBER(nmi_enable_w);
+	TILE_GET_INFO_MEMBER(get_skyarmy_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 WRITE8_MEMBER(skyarmy_state::skyarmy_flip_screen_x_w)
@@ -62,13 +65,12 @@ WRITE8_MEMBER(skyarmy_state::skyarmy_flip_screen_y_w)
 	flip_screen_y_set(data & 0x01);
 }
 
-static TILE_GET_INFO( get_skyarmy_tile_info )
+TILE_GET_INFO_MEMBER(skyarmy_state::get_skyarmy_tile_info)
 {
-	skyarmy_state *state = machine.driver_data<skyarmy_state>();
-	int code = state->m_videoram[tile_index];
-	int attr = BITSWAP8(state->m_colorram[tile_index], 7, 6, 5, 4, 3, 0, 1, 2) & 7;
+	int code = m_videoram[tile_index];
+	int attr = BITSWAP8(m_colorram[tile_index], 7, 6, 5, 4, 3, 0, 1, 2) & 7;
 
-	SET_TILE_INFO( 0, code, attr, 0);
+	SET_TILE_INFO_MEMBER( 0, code, attr, 0);
 }
 
 WRITE8_MEMBER(skyarmy_state::skyarmy_videoram_w)
@@ -85,9 +87,9 @@ WRITE8_MEMBER(skyarmy_state::skyarmy_colorram_w)
 	m_tilemap->mark_tile_dirty(offset);
 }
 
-static PALETTE_INIT( skyarmy )
+void skyarmy_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0;i < 32;i++)
@@ -109,17 +111,16 @@ static PALETTE_INIT( skyarmy )
 		bit2 = (*color_prom >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
+		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
 		color_prom++;
 	}
 }
 
-static VIDEO_START( skyarmy )
+void skyarmy_state::video_start()
 {
-	skyarmy_state *state = machine.driver_data<skyarmy_state>();
 
-	state->m_tilemap = tilemap_create(machine, get_skyarmy_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_tilemap->set_scroll_cols(32);
+	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(skyarmy_state::get_skyarmy_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_tilemap->set_scroll_cols(32);
 }
 
 
@@ -158,7 +159,7 @@ static INTERRUPT_GEN( skyarmy_nmi_source )
 {
 	skyarmy_state *state = device->machine().driver_data<skyarmy_state>();
 
-	if(state->m_nmi) device_set_input_line(device,INPUT_LINE_NMI, PULSE_LINE);
+	if(state->m_nmi) device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -297,8 +298,6 @@ static MACHINE_CONFIG_START( skyarmy, skyarmy_state )
 	MCFG_GFXDECODE(skyarmy)
 	MCFG_PALETTE_LENGTH(32)
 
-	MCFG_PALETTE_INIT(skyarmy)
-	MCFG_VIDEO_START(skyarmy)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

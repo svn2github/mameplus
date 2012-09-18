@@ -96,8 +96,7 @@ static const int sprite_offsets[4] = { 0x00, 0x10, 0x20, 0x40 };
  *
  *************************************/
 
-typedef struct _s2636_state  s2636_state;
-struct _s2636_state
+struct s2636_state
 {
 	UINT8     *work_ram;
 	int       work_ram_size;
@@ -119,7 +118,7 @@ INLINE s2636_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == S2636);
 
-	return (s2636_state *)downcast<legacy_device_base *>(device)->token();
+	return (s2636_state *)downcast<s2636_device *>(device)->token();
 }
 
 INLINE const s2636_interface *get_interface( device_t *device )
@@ -365,13 +364,31 @@ static DEVICE_START( s2636 )
 	device->save_item(NAME(*s2636->collision_bitmap));
 }
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+const device_type S2636 = &device_creator<s2636_device>;
 
-#define DEVTEMPLATE_ID( p, s )	p##s2636##s
-#define DEVTEMPLATE_FEATURES		DT_HAS_START
-#define DEVTEMPLATE_NAME		"Signetics 2636"
-#define DEVTEMPLATE_FAMILY		"Signetics Video Chips"
-#include "devtempl.h"
+s2636_device::s2636_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, S2636, "Signetics 2636", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(s2636_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void s2636_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void s2636_device::device_start()
+{
+	DEVICE_START_NAME( s2636 )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(S2636, s2636);

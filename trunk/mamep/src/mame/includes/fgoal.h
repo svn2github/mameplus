@@ -24,7 +24,7 @@ public:
 	int        m_prev_coin;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	device_t *m_mb14241;
 	DECLARE_READ8_MEMBER(fgoal_analog_r);
 	DECLARE_READ8_MEMBER(fgoal_nmi_reset_r);
@@ -42,12 +42,16 @@ public:
 	DECLARE_WRITE8_MEMBER(fgoal_ypos_w);
 	DECLARE_WRITE8_MEMBER(fgoal_xpos_w);
 	DECLARE_CUSTOM_INPUT_MEMBER(fgoal_80_r);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/fgoal.c -----------*/
 
-VIDEO_START( fgoal );
+
 SCREEN_UPDATE_IND16( fgoal );
 
 

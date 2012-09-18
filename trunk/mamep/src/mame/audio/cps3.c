@@ -8,16 +8,14 @@
 
 #define CPS3_VOICES		16
 
-typedef struct _cps3_voice cps3_voice;
-struct _cps3_voice
+struct cps3_voice
 {
 	UINT32 regs[8];
 	UINT32 pos;
 	UINT16 frac;
 };
 
-typedef struct _cps3_sound_state cps3_sound_state;
-struct _cps3_sound_state
+struct cps3_sound_state
 {
 	sound_stream *m_stream;
 	cps3_voice m_voice[CPS3_VOICES];
@@ -30,7 +28,7 @@ INLINE cps3_sound_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == CPS3);
 
-	return (cps3_sound_state *)downcast<legacy_device_base *>(device)->token();
+	return (cps3_sound_state *)downcast<cps3_sound_device *>(device)->token();
 }
 
 static STREAM_UPDATE( cps3_stream_update )
@@ -117,23 +115,6 @@ static DEVICE_START( cps3_sound )
 	state->m_stream = device->machine().sound().stream_alloc(*device, 0, 2, device->clock() / 384, NULL, cps3_stream_update);
 }
 
-DEVICE_GET_INFO( cps3_sound )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(cps3_sound_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(cps3_sound);	break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "CPS3 Custom");					break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
-}
-
-
 WRITE32_DEVICE_HANDLER( cps3_sound_w )
 {
 	cps3_sound_state *state = get_safe_token(device);
@@ -188,4 +169,42 @@ READ32_DEVICE_HANDLER( cps3_sound_r )
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(CPS3, cps3_sound);
+const device_type CPS3 = &device_creator<cps3_sound_device>;
+
+cps3_sound_device::cps3_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, CPS3, "CPS3 Custom", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(cps3_sound_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void cps3_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void cps3_sound_device::device_start()
+{
+	DEVICE_START_NAME( cps3_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void cps3_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

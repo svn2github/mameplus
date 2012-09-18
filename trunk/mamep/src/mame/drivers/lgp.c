@@ -85,6 +85,7 @@ public:
 	DECLARE_READ8_MEMBER(ldp_read);
 	DECLARE_WRITE8_MEMBER(ldp_write);
 	DECLARE_DRIVER_INIT(lgp);
+	virtual void machine_start();
 };
 
 
@@ -332,25 +333,24 @@ GFXDECODE_END
 
 static TIMER_CALLBACK( irq_stop )
 {
-	cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 static INTERRUPT_GEN( vblank_callback_lgp )
 {
 	lgp_state *state = device->machine().driver_data<lgp_state>();
 	// NMI
-	//device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	//device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	// IRQ
-	device_set_input_line(device, 0, ASSERT_LINE);
+	device->execute().set_input_line(0, ASSERT_LINE);
 	state->m_irq_timer->adjust(attotime::from_usec(50));
 }
 
 
-static MACHINE_START( lgp )
+void lgp_state::machine_start()
 {
-	lgp_state *state = machine.driver_data<lgp_state>();
-	state->m_irq_timer = machine.scheduler().timer_alloc(FUNC(irq_stop));
+	m_irq_timer = machine().scheduler().timer_alloc(FUNC(irq_stop));
 }
 
 
@@ -367,7 +367,6 @@ static MACHINE_CONFIG_START( lgp, lgp_state )
 	MCFG_CPU_PROGRAM_MAP(sound_program_map)
 	MCFG_CPU_IO_MAP(sound_io_map)
 
-	MCFG_MACHINE_START(lgp)
 
 	MCFG_LASERDISC_LDV1000_ADD("laserdisc")
 	MCFG_LASERDISC_OVERLAY_STATIC(256, 256, lgp)
@@ -376,7 +375,7 @@ static MACHINE_CONFIG_START( lgp, lgp_state )
 	MCFG_LASERDISC_SCREEN_ADD_NTSC("screen", "laserdisc")
 
 	MCFG_PALETTE_LENGTH(256)
-	/* MCFG_PALETTE_INIT(lgp) */
+	/* MCFG_PALETTE_INIT_OVERRIDE(lgp_state,lgp) */
 
 	MCFG_GFXDECODE(lgp)
 

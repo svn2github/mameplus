@@ -103,7 +103,7 @@ static INTERRUPT_GEN( main_nmi_gen )
 {
 	suprridr_state *state = device->machine().driver_data<suprridr_state>();
 	if (state->m_nmi_enable)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -118,7 +118,7 @@ static TIMER_CALLBACK( delayed_sound_w )
 {
 	suprridr_state *state = machine.driver_data<suprridr_state>();
 	state->m_sound_data = param;
-	cputag_set_input_line(machine, "audiocpu", 0, ASSERT_LINE);
+	machine.device("audiocpu")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -136,7 +136,7 @@ READ8_MEMBER(suprridr_state::sound_data_r)
 
 WRITE8_MEMBER(suprridr_state::sound_irq_ack_w)
 {
-	cputag_set_input_line(machine(), "audiocpu", 0, CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -377,8 +377,6 @@ static MACHINE_CONFIG_START( suprridr, suprridr_state )
 	MCFG_GFXDECODE(suprridr)
 	MCFG_PALETTE_LENGTH(96)
 
-	MCFG_PALETTE_INIT(suprridr)
-	MCFG_VIDEO_START(suprridr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

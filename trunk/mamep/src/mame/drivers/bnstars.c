@@ -147,30 +147,36 @@ public:
 	DECLARE_READ32_MEMBER(bnstars3_r);
 	DECLARE_WRITE32_MEMBER(bnstars1_mahjong_select_w);
 	DECLARE_DRIVER_INIT(bnstars);
+	TILE_GET_INFO_MEMBER(get_ms32_tx0_tile_info);
+	TILE_GET_INFO_MEMBER(get_ms32_tx1_tile_info);
+	TILE_GET_INFO_MEMBER(get_ms32_bg0_tile_info);
+	TILE_GET_INFO_MEMBER(get_ms32_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(get_ms32_roz0_tile_info);
+	TILE_GET_INFO_MEMBER(get_ms32_roz1_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 
-static TILE_GET_INFO( get_ms32_tx0_tile_info )
+TILE_GET_INFO_MEMBER(bnstars_state::get_ms32_tx0_tile_info)
 {
-	bnstars_state *state = machine.driver_data<bnstars_state>();
 	int tileno, colour;
 
-	tileno = state->m_ms32_tx0_ram[tile_index *2+0] & 0x0000ffff;
-	colour = state->m_ms32_tx0_ram[tile_index *2+1] & 0x0000000f;
+	tileno = m_ms32_tx0_ram[tile_index *2+0] & 0x0000ffff;
+	colour = m_ms32_tx0_ram[tile_index *2+1] & 0x0000000f;
 
-	SET_TILE_INFO(3,tileno,colour,0);
+	SET_TILE_INFO_MEMBER(3,tileno,colour,0);
 }
 
-static TILE_GET_INFO( get_ms32_tx1_tile_info )
+TILE_GET_INFO_MEMBER(bnstars_state::get_ms32_tx1_tile_info)
 {
-	bnstars_state *state = machine.driver_data<bnstars_state>();
 	int tileno, colour;
 
-	tileno = state->m_ms32_tx1_ram[tile_index *2+0] & 0x0000ffff;
-	colour = state->m_ms32_tx1_ram[tile_index *2+1] & 0x0000000f;
+	tileno = m_ms32_tx1_ram[tile_index *2+0] & 0x0000ffff;
+	colour = m_ms32_tx1_ram[tile_index *2+1] & 0x0000000f;
 
-	SET_TILE_INFO(7,tileno,colour,0);
+	SET_TILE_INFO_MEMBER(7,tileno,colour,0);
 }
 
 WRITE32_MEMBER(bnstars_state::ms32_tx0_ram_w)
@@ -187,26 +193,24 @@ WRITE32_MEMBER(bnstars_state::ms32_tx1_ram_w)
 
 /* BG Layers */
 
-static TILE_GET_INFO( get_ms32_bg0_tile_info )
+TILE_GET_INFO_MEMBER(bnstars_state::get_ms32_bg0_tile_info)
 {
-	bnstars_state *state = machine.driver_data<bnstars_state>();
 	int tileno,colour;
 
-	tileno = state->m_ms32_bg0_ram[tile_index *2+0] & 0x0000ffff;
-	colour = state->m_ms32_bg0_ram[tile_index *2+1] & 0x0000000f;
+	tileno = m_ms32_bg0_ram[tile_index *2+0] & 0x0000ffff;
+	colour = m_ms32_bg0_ram[tile_index *2+1] & 0x0000000f;
 
-	SET_TILE_INFO(2,tileno,colour,0);
+	SET_TILE_INFO_MEMBER(2,tileno,colour,0);
 }
 
-static TILE_GET_INFO( get_ms32_bg1_tile_info )
+TILE_GET_INFO_MEMBER(bnstars_state::get_ms32_bg1_tile_info)
 {
-	bnstars_state *state = machine.driver_data<bnstars_state>();
 	int tileno,colour;
 
-	tileno = state->m_ms32_bg1_ram[tile_index *2+0] & 0x0000ffff;
-	colour = state->m_ms32_bg1_ram[tile_index *2+1] & 0x0000000f;
+	tileno = m_ms32_bg1_ram[tile_index *2+0] & 0x0000ffff;
+	colour = m_ms32_bg1_ram[tile_index *2+1] & 0x0000000f;
 
-	SET_TILE_INFO(6,tileno,colour,0);
+	SET_TILE_INFO_MEMBER(6,tileno,colour,0);
 }
 
 WRITE32_MEMBER(bnstars_state::ms32_bg0_ram_w)
@@ -309,26 +313,24 @@ static void draw_roz(running_machine &machine, bitmap_ind16 &bitmap, const recta
 }
 
 
-static TILE_GET_INFO( get_ms32_roz0_tile_info )
+TILE_GET_INFO_MEMBER(bnstars_state::get_ms32_roz0_tile_info)
 {
-	bnstars_state *state = machine.driver_data<bnstars_state>();
 	int tileno,colour;
 
-	tileno = state->m_ms32_roz0_ram[tile_index *2+0] & 0x0000ffff;
-	colour = state->m_ms32_roz0_ram[tile_index *2+1] & 0x0000000f;
+	tileno = m_ms32_roz0_ram[tile_index *2+0] & 0x0000ffff;
+	colour = m_ms32_roz0_ram[tile_index *2+1] & 0x0000000f;
 
-	SET_TILE_INFO(1,tileno,colour,0);
+	SET_TILE_INFO_MEMBER(1,tileno,colour,0);
 }
 
-static TILE_GET_INFO( get_ms32_roz1_tile_info )
+TILE_GET_INFO_MEMBER(bnstars_state::get_ms32_roz1_tile_info)
 {
-	bnstars_state *state = machine.driver_data<bnstars_state>();
 	int tileno,colour;
 
-	tileno = state->m_ms32_roz1_ram[tile_index *2+0] & 0x0000ffff;
-	colour = state->m_ms32_roz1_ram[tile_index *2+1] & 0x0000000f;
+	tileno = m_ms32_roz1_ram[tile_index *2+0] & 0x0000ffff;
+	colour = m_ms32_roz1_ram[tile_index *2+1] & 0x0000000f;
 
-	SET_TILE_INFO(5,tileno,colour,0);
+	SET_TILE_INFO_MEMBER(5,tileno,colour,0);
 }
 
 WRITE32_MEMBER(bnstars_state::ms32_roz0_ram_w)
@@ -486,7 +488,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 		else
 			pri_mask = 0xfe;
 
-		gfx_element_set_source_clip(gfx, tx, xsize, ty, ysize);
+		gfx->set_source_clip(tx, xsize, ty, ysize);
 		pdrawgfxzoom_transpen(bitmap, cliprect, gfx,
 				code,
 				color,
@@ -504,23 +506,22 @@ WRITE32_MEMBER(bnstars_state::ms32_spramx_w)
 }
 
 
-static VIDEO_START(bnstars)
+void bnstars_state::video_start()
 {
-	bnstars_state *state = machine.driver_data<bnstars_state>();
-	state->m_ms32_tx_tilemap[0] = tilemap_create(machine, get_ms32_tx0_tile_info,tilemap_scan_rows, 8, 8,64,64);
-	state->m_ms32_tx_tilemap[1] = tilemap_create(machine, get_ms32_tx1_tile_info,tilemap_scan_rows, 8, 8,64,64);
-	state->m_ms32_tx_tilemap[0]->set_transparent_pen(0);
-	state->m_ms32_tx_tilemap[1]->set_transparent_pen(0);
+	m_ms32_tx_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bnstars_state::get_ms32_tx0_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,64);
+	m_ms32_tx_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bnstars_state::get_ms32_tx1_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,64);
+	m_ms32_tx_tilemap[0]->set_transparent_pen(0);
+	m_ms32_tx_tilemap[1]->set_transparent_pen(0);
 
-	state->m_ms32_bg_tilemap[0] = tilemap_create(machine, get_ms32_bg0_tile_info,tilemap_scan_rows,16,16,64,64);
-	state->m_ms32_bg_tilemap[1] = tilemap_create(machine, get_ms32_bg1_tile_info,tilemap_scan_rows,16,16,64,64);
-	state->m_ms32_bg_tilemap[0]->set_transparent_pen(0);
-	state->m_ms32_bg_tilemap[1]->set_transparent_pen(0);
+	m_ms32_bg_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bnstars_state::get_ms32_bg0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,64,64);
+	m_ms32_bg_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bnstars_state::get_ms32_bg1_tile_info),this),TILEMAP_SCAN_ROWS,16,16,64,64);
+	m_ms32_bg_tilemap[0]->set_transparent_pen(0);
+	m_ms32_bg_tilemap[1]->set_transparent_pen(0);
 
-	state->m_ms32_roz_tilemap[0] = tilemap_create(machine, get_ms32_roz0_tile_info,tilemap_scan_rows,16,16,128,128);
-	state->m_ms32_roz_tilemap[1] = tilemap_create(machine, get_ms32_roz1_tile_info,tilemap_scan_rows,16,16,128,128);
-	state->m_ms32_roz_tilemap[0]->set_transparent_pen(0);
-	state->m_ms32_roz_tilemap[1]->set_transparent_pen(0);
+	m_ms32_roz_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bnstars_state::get_ms32_roz0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,128,128);
+	m_ms32_roz_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bnstars_state::get_ms32_roz1_tile_info),this),TILEMAP_SCAN_ROWS,16,16,128,128);
+	m_ms32_roz_tilemap[0]->set_transparent_pen(0);
+	m_ms32_roz_tilemap[1]->set_transparent_pen(0);
 
 
 }
@@ -1330,7 +1331,7 @@ static IRQ_CALLBACK(irq_callback)
 	for(i=15; i>=0 && !(state->m_irqreq & (1<<i)); i--);
 	state->m_irqreq &= ~(1<<i);
 	if(!state->m_irqreq)
-		device_set_input_line(device, 0, CLEAR_LINE);
+		device->execute().set_input_line(0, CLEAR_LINE);
 	return i;
 }
 
@@ -1338,15 +1339,15 @@ static void irq_init(running_machine &machine)
 {
 	bnstars_state *state = machine.driver_data<bnstars_state>();
 	state->m_irqreq = 0;
-	cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
-	device_set_irq_callback(machine.device("maincpu"), irq_callback);
+	machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+	machine.device("maincpu")->execute().set_irq_acknowledge_callback(irq_callback);
 }
 
 static void irq_raise(running_machine &machine, int level)
 {
 	bnstars_state *state = machine.driver_data<bnstars_state>();
 	state->m_irqreq |= (1<<level);
-	cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 /* TODO: fix this arrangement (derived from old deprecat lib) */
@@ -1366,9 +1367,9 @@ static TIMER_DEVICE_CALLBACK(ms32_interrupt)
 	if( (scanline % 8) == 0 && scanline <= 224 ) irq_raise(timer.machine(), 0);
 }
 
-static MACHINE_RESET( ms32 )
+void bnstars_state::machine_reset()
 {
-	irq_init(machine);
+	irq_init(machine());
 }
 
 
@@ -1384,7 +1385,6 @@ static MACHINE_CONFIG_START( bnstars, bnstars_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(60000))
 
-	MCFG_MACHINE_RESET(ms32)
 
 	MCFG_GFXDECODE(bnstars)
 	MCFG_PALETTE_LENGTH(0x8000*2)
@@ -1405,7 +1405,6 @@ static MACHINE_CONFIG_START( bnstars, bnstars_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(bnstars_right)
 
-	MCFG_VIDEO_START(bnstars)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1488,7 +1487,7 @@ DRIVER_INIT_MEMBER(bnstars_state,bnstars)
 	decrypt_ms32_tx(machine(), 0x00020,0x7e, "gfx7");
 	decrypt_ms32_bg(machine(), 0x00001,0x9b, "gfx6");
 
-	machine().root_device().membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base());
+	membank("bank1")->set_base(memregion("maincpu")->base());
 }
 
 GAME( 1997, bnstars1, 0,        bnstars, bnstars, bnstars_state, bnstars, ROT0,   "Jaleco", "Vs. Janshi Brandnew Stars", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )

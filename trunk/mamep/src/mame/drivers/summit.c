@@ -30,17 +30,19 @@ public:
 	required_shared_ptr<UINT8> m_attr;
 	required_shared_ptr<UINT8> m_vram;
 	DECLARE_WRITE8_MEMBER(out_w);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
-static VIDEO_START(summit)
+void summit_state::video_start()
 {
 }
 
 static SCREEN_UPDATE_IND16(summit)
 {
 	summit_state *state = screen.machine().driver_data<summit_state>();
-	const gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 	int count = 0x0000;
 
 	int y,x;
@@ -289,7 +291,7 @@ static GFXDECODE_START( summit )
 	GFXDECODE_ENTRY( "gfx1", 0, tiles8x8_layout, 0, 1 )
 GFXDECODE_END
 
-PALETTE_INIT( summit )
+void summit_state::palette_init()
 {
 
 }
@@ -311,9 +313,7 @@ static MACHINE_CONFIG_START( summit, summit_state )
 	MCFG_GFXDECODE(summit)
 
 	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT(summit)
 
-	MCFG_VIDEO_START(summit)
 MACHINE_CONFIG_END
 
 

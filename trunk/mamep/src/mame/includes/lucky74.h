@@ -35,11 +35,15 @@ public:
 	DECLARE_WRITE8_MEMBER(ym2149_portb_w);
 	DECLARE_WRITE8_MEMBER(lamps_a_w);
 	DECLARE_WRITE8_MEMBER(lamps_b_w);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/lucky74.c -----------*/
 
-PALETTE_INIT( lucky74 );
-VIDEO_START( lucky74 );
+
+
 SCREEN_UPDATE_IND16( lucky74 );

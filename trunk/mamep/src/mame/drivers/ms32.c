@@ -220,10 +220,10 @@ READ32_MEMBER(ms32_state::ms32_read_inputs3)
 WRITE32_MEMBER(ms32_state::ms32_sound_w)
 {
 	soundlatch_byte_w(space, 0, data & 0xff);
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, ASSERT_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 
 	// give the Z80 time to respond
-	device_spin_until_time(&space.device(), attotime::from_usec(40));
+	space.device().execute().spin_until_time(attotime::from_usec(40));
 }
 
 READ32_MEMBER(ms32_state::ms32_sound_r)
@@ -233,7 +233,7 @@ READ32_MEMBER(ms32_state::ms32_sound_r)
 
 WRITE32_MEMBER(ms32_state::reset_sub_w)
 {
-	if(data) cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, PULSE_LINE); // 0 too ?
+	if(data) machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE); // 0 too ?
 }
 
 
@@ -363,7 +363,7 @@ static ADDRESS_MAP_START( ms32_map, AS_PROGRAM, 32, ms32_state )
 	AM_RANGE(0xfce00034, 0xfce00037) AM_WRITENOP // irq ack?
 	AM_RANGE(0xfce00038, 0xfce0003b) AM_WRITE(reset_sub_w)
 	AM_RANGE(0xfce00050, 0xfce0005f) AM_WRITENOP	// watchdog? I haven't investigated
-//  AM_RANGE(0xfce00000, 0xfce0007f) AM_WRITEONLY AM_BASE_LEGACY(&ms32_fce00000) /* registers not ram? */
+//  AM_RANGE(0xfce00000, 0xfce0007f) AM_WRITEONLY AM_SHARE("ms32_fce00000") /* registers not ram? */
 	AM_RANGE(0xfce00000, 0xfce00003) AM_WRITE(ms32_gfxctrl_w)	/* flip screen + other unknown bits */
 	AM_RANGE(0xfce00280, 0xfce0028f) AM_WRITE(ms32_brightness_w)	// global brightness control
 /**/AM_RANGE(0xfce00600, 0xfce0065f) AM_RAM AM_SHARE("roz_ctrl")		/* roz control registers */
@@ -1284,7 +1284,7 @@ static IRQ_CALLBACK(irq_callback)
 	for(i=15; i>=0 && !(state->m_irqreq & (1<<i)); i--);
 	state->m_irqreq &= ~(1<<i);
 	if(!state->m_irqreq)
-		device_set_input_line(device, 0, CLEAR_LINE);
+		device->execute().set_input_line(0, CLEAR_LINE);
 	return i;
 }
 
@@ -1292,15 +1292,15 @@ static void irq_init(running_machine &machine)
 {
 	ms32_state *state = machine.driver_data<ms32_state>();
 	state->m_irqreq = 0;
-	cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
-	device_set_irq_callback(machine.device("maincpu"), irq_callback);
+	machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+	machine.device("maincpu")->execute().set_irq_acknowledge_callback(irq_callback);
 }
 
 static void irq_raise(running_machine &machine, int level)
 {
 	ms32_state *state = machine.driver_data<ms32_state>();
 	state->m_irqreq |= (1<<level);
-	cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 /* TODO: fix this arrangement (derived from old deprecat lib) */
@@ -1346,7 +1346,7 @@ static TIMER_DEVICE_CALLBACK(ms32_interrupt)
 
 READ8_MEMBER(ms32_state::latch_r)
 {
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 	return soundlatch_byte_r(space,0)^0xff;
 }
 
@@ -1379,12 +1379,12 @@ ADDRESS_MAP_END
 
 /********** MACHINE INIT **********/
 
-static MACHINE_RESET( ms32 )
+void ms32_state::machine_reset()
 {
-	machine.root_device().membank("bank1")->set_base(machine.root_device().memregion("maincpu")->base());
-	machine.root_device().membank("bank4")->set_entry(0);
-	machine.root_device().membank("bank5")->set_entry(1);
-	irq_init(machine);
+	machine().root_device().membank("bank1")->set_base(machine().root_device().memregion("maincpu")->base());
+	machine().root_device().membank("bank4")->set_entry(0);
+	machine().root_device().membank("bank5")->set_entry(1);
+	irq_init(machine());
 }
 
 /********** MACHINE DRIVER **********/
@@ -1401,7 +1401,6 @@ static MACHINE_CONFIG_START( ms32, ms32_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(60000))
 
-	MCFG_MACHINE_RESET(ms32)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1414,7 +1413,6 @@ static MACHINE_CONFIG_START( ms32, ms32_state )
 	MCFG_GFXDECODE(ms32)
 	MCFG_PALETTE_LENGTH(0x10000)
 
-	MCFG_VIDEO_START(ms32)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1431,7 +1429,7 @@ static MACHINE_CONFIG_DERIVED( f1superb, ms32 )
 
 	MCFG_GFXDECODE(f1superb)
 
-	MCFG_VIDEO_START(f1superb)
+	MCFG_VIDEO_START_OVERRIDE(ms32_state,f1superb)
 MACHINE_CONFIG_END
 
 

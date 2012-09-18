@@ -21,18 +21,22 @@ public:
 	tilemap_t *m_tilemap;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	dac_device *m_dac1;
 	dac_device *m_dac2;
 	DECLARE_WRITE8_MEMBER(mogura_tileram_w);
 	DECLARE_WRITE8_MEMBER(mogura_dac_w);
 	DECLARE_WRITE8_MEMBER(mogura_gfxram_w);
+	TILE_GET_INFO_MEMBER(get_mogura_tile_info);
+	virtual void machine_start();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
-static PALETTE_INIT( mogura )
+void mogura_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i, j;
 
 	j = 0;
@@ -56,20 +60,19 @@ static PALETTE_INIT( mogura )
 		bit2 = BIT(color_prom[i], 7);
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, j, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), j, MAKE_RGB(r, g, b));
 		j += 4;
 		if (j > 31) j -= 31;
 	}
 }
 
 
-static TILE_GET_INFO( get_mogura_tile_info )
+TILE_GET_INFO_MEMBER(mogura_state::get_mogura_tile_info)
 {
-	mogura_state *state = machine.driver_data<mogura_state>();
-	int code = state->m_tileram[tile_index];
-	int attr = state->m_tileram[tile_index + 0x800];
+	int code = m_tileram[tile_index];
+	int attr = m_tileram[tile_index + 0x800];
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code,
 			(attr >> 1) & 7,
@@ -77,11 +80,10 @@ static TILE_GET_INFO( get_mogura_tile_info )
 }
 
 
-static VIDEO_START( mogura )
+void mogura_state::video_start()
 {
-	mogura_state *state = machine.driver_data<mogura_state>();
-	gfx_element_set_source(machine.gfx[0], state->m_gfxram);
-	state->m_tilemap = tilemap_create(machine, get_mogura_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
+	machine().gfx[0]->set_source(m_gfxram);
+	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mogura_state::get_mogura_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 }
 
 static SCREEN_UPDATE_IND16( mogura )
@@ -120,7 +122,7 @@ WRITE8_MEMBER(mogura_state::mogura_gfxram_w)
 {
 	m_gfxram[offset] = data ;
 
-	gfx_element_mark_dirty(machine().gfx[0], offset / 16);
+	machine().gfx[0]->mark_dirty(offset / 16);
 }
 
 
@@ -188,13 +190,12 @@ static GFXDECODE_START( mogura )
 	GFXDECODE_ENTRY( NULL, 0, tiles8x8_layout, 0, 8 )
 GFXDECODE_END
 
-static MACHINE_START( mogura )
+void mogura_state::machine_start()
 {
-	mogura_state *state = machine.driver_data<mogura_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_dac1 = machine.device<dac_device>("dac1");
-	state->m_dac2 = machine.device<dac_device>("dac2");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_dac1 = machine().device<dac_device>("dac1");
+	m_dac2 = machine().device<dac_device>("dac2");
 }
 
 static MACHINE_CONFIG_START( mogura, mogura_state )
@@ -205,7 +206,6 @@ static MACHINE_CONFIG_START( mogura, mogura_state )
 	MCFG_CPU_IO_MAP(mogura_io_map)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_MACHINE_START(mogura)
 
 	MCFG_GFXDECODE(mogura)
 
@@ -219,8 +219,6 @@ static MACHINE_CONFIG_START( mogura, mogura_state )
 
 	MCFG_PALETTE_LENGTH(32)
 
-	MCFG_PALETTE_INIT(mogura)
-	MCFG_VIDEO_START(mogura)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

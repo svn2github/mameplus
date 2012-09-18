@@ -138,6 +138,10 @@ public:
 	DECLARE_WRITE8_MEMBER(ay_enable_w);
 	DECLARE_WRITE8_MEMBER(speech_enable_w);
 	DECLARE_DRIVER_INIT(looping);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_start();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -148,9 +152,9 @@ public:
  *
  *************************************/
 
-static PALETTE_INIT( looping )
+void looping_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	static const int resistances[3] = { 1000, 470, 220 };
 	double rweights[3], gweights[3], bweights[2];
 	int i;
@@ -183,7 +187,7 @@ static PALETTE_INIT( looping )
 		bit1 = (color_prom[i] >> 7) & 1;
 		b = combine_2_weights(bweights, bit0, bit1);
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 
@@ -195,22 +199,20 @@ static PALETTE_INIT( looping )
  *
  *************************************/
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(looping_state::get_tile_info)
 {
-	looping_state *state = machine.driver_data<looping_state>();
-	int tile_number = state->m_videoram[tile_index];
-	int color = state->m_colorram[(tile_index & 0x1f) * 2 + 1] & 0x07;
-	SET_TILE_INFO(0, tile_number, color, 0);
+	int tile_number = m_videoram[tile_index];
+	int color = m_colorram[(tile_index & 0x1f) * 2 + 1] & 0x07;
+	SET_TILE_INFO_MEMBER(0, tile_number, color, 0);
 }
 
 
-static VIDEO_START( looping )
+void looping_state::video_start()
 {
-	looping_state *state = machine.driver_data<looping_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_rows, 8,8, 32,32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(looping_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8,8, 32,32);
 
-	state->m_bg_tilemap->set_scroll_cols(0x20);
+	m_bg_tilemap->set_scroll_cols(0x20);
 }
 
 
@@ -318,10 +320,9 @@ static SCREEN_UPDATE_IND16( looping )
  *
  *************************************/
 
-static MACHINE_START( looping )
+void looping_state::machine_start()
 {
-	looping_state *state = machine.driver_data<looping_state>();
-	state->save_item(NAME(state->m_sound));
+	save_item(NAME(m_sound));
 }
 
 
@@ -334,41 +335,41 @@ static MACHINE_START( looping )
 
 static INTERRUPT_GEN( looping_interrupt )
 {
-	device_set_input_line_and_vector(device, 0, ASSERT_LINE, 4);
+	device->execute().set_input_line_and_vector(0, ASSERT_LINE, 4);
 }
 
 
 WRITE8_MEMBER(looping_state::level2_irq_set)
 {
 	if (!(data & 1))
-		cputag_set_input_line_and_vector(machine(), "maincpu", 0, ASSERT_LINE, 4);
+		machine().device("maincpu")->execute().set_input_line_and_vector(0, ASSERT_LINE, 4);
 }
 
 
 WRITE8_MEMBER(looping_state::main_irq_ack_w)
 {
 	if (data == 0)
-		cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
 WRITE8_MEMBER(looping_state::looping_souint_clr)
 {
 	if (data == 0)
-		cputag_set_input_line(machine(), "audiocpu", 0, CLEAR_LINE);
+		machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
 WRITE_LINE_MEMBER(looping_state::looping_spcint)
 {
-	cputag_set_input_line_and_vector(machine(), "audiocpu", 0, !state, 6);
+	machine().device("audiocpu")->execute().set_input_line_and_vector(0, !state, 6);
 }
 
 
 WRITE8_MEMBER(looping_state::looping_soundlatch_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	cputag_set_input_line_and_vector(machine(), "audiocpu", 0, ASSERT_LINE, 4);
+	machine().device("audiocpu")->execute().set_input_line_and_vector(0, ASSERT_LINE, 4);
 }
 
 
@@ -444,8 +445,8 @@ WRITE8_MEMBER(looping_state::ballon_enable_w)
 WRITE8_MEMBER(looping_state::out_0_w){ mame_printf_debug("out0 = %02X\n", data); }
 WRITE8_MEMBER(looping_state::out_2_w){ mame_printf_debug("out2 = %02X\n", data); }
 
-READ8_MEMBER(looping_state::adc_r){ mame_printf_debug("%04X:ADC read\n", cpu_get_pc(&space.device())); return 0xff; }
-WRITE8_MEMBER(looping_state::adc_w){ mame_printf_debug("%04X:ADC write = %02X\n", cpu_get_pc(&space.device()), data); }
+READ8_MEMBER(looping_state::adc_r){ mame_printf_debug("%04X:ADC read\n", space.device().safe_pc()); return 0xff; }
+WRITE8_MEMBER(looping_state::adc_w){ mame_printf_debug("%04X:ADC write = %02X\n", space.device().safe_pc(), data); }
 
 WRITE8_MEMBER(looping_state::plr2_w)
 {
@@ -546,8 +547,8 @@ static ADDRESS_MAP_START( looping_sound_map, AS_PROGRAM, 8, looping_state )
 	AM_RANGE(0x3c00, 0x3c00) AM_MIRROR(0x00f4) AM_DEVREADWRITE_LEGACY("aysnd", ay8910_r, ay8910_address_w)
 	AM_RANGE(0x3c02, 0x3c02) AM_MIRROR(0x00f4) AM_READNOP AM_DEVWRITE_LEGACY("aysnd", ay8910_data_w)
 	AM_RANGE(0x3c03, 0x3c03) AM_MIRROR(0x00f6) AM_NOP
-	AM_RANGE(0x3e00, 0x3e00) AM_MIRROR(0x00f4) AM_READNOP AM_DEVWRITE_LEGACY("tms", tms5220_data_w)
-	AM_RANGE(0x3e02, 0x3e02) AM_MIRROR(0x00f4) AM_DEVREAD_LEGACY("tms", tms5220_status_r) AM_WRITENOP
+	AM_RANGE(0x3e00, 0x3e00) AM_MIRROR(0x00f4) AM_READNOP AM_DEVWRITE("tms", tms5220n_device, write)
+	AM_RANGE(0x3e02, 0x3e02) AM_MIRROR(0x00f4) AM_DEVREAD("tms", tms5220n_device, read) AM_WRITENOP
 	AM_RANGE(0x3e03, 0x3e03) AM_MIRROR(0x00f6) AM_NOP
 ADDRESS_MAP_END
 
@@ -606,7 +607,7 @@ GFXDECODE_END
  *
  *************************************/
 
-static const tms5220_interface tms5220_config =
+static const tms52xx_config tms5220interface =
 {
 	DEVCB_DRIVER_LINE_MEMBER(looping_state,looping_spcint),		// IRQ
 	DEVCB_NULL						// READYQ
@@ -653,7 +654,6 @@ static MACHINE_CONFIG_START( looping, looping_state )
 	MCFG_CPU_IO_MAP(looping_cop_io_map)
 	MCFG_CPU_CONFIG(looping_cop_intf)
 
-	MCFG_MACHINE_START(looping)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -663,8 +663,6 @@ static MACHINE_CONFIG_START( looping, looping_state )
 	MCFG_GFXDECODE(looping)
 	MCFG_PALETTE_LENGTH(32)
 
-	MCFG_PALETTE_INIT(looping)
-	MCFG_VIDEO_START(looping)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -673,8 +671,8 @@ static MACHINE_CONFIG_START( looping, looping_state )
 	MCFG_SOUND_CONFIG(ay8910_config)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.20)
 
-	MCFG_SOUND_ADD("tms", TMS5220, TMS_CLOCK)
-	MCFG_SOUND_CONFIG(tms5220_config)
+	MCFG_SOUND_ADD("tms", TMS5220N, TMS_CLOCK)
+	MCFG_SOUND_CONFIG(tms5220interface)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 
 	MCFG_DAC_ADD("dac")

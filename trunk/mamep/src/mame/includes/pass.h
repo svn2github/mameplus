@@ -13,11 +13,14 @@ public:
 	required_shared_ptr<UINT16> m_fg_videoram;
 	DECLARE_WRITE16_MEMBER(pass_bg_videoram_w);
 	DECLARE_WRITE16_MEMBER(pass_fg_videoram_w);
+	TILE_GET_INFO_MEMBER(get_pass_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_pass_fg_tile_info);
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/pass.c -----------*/
 
 
-VIDEO_START( pass );
+
 SCREEN_UPDATE_IND16( pass );

@@ -234,6 +234,7 @@ public:
 	DECLARE_WRITE8_MEMBER(omegrace_leds_w);
 	DECLARE_WRITE8_MEMBER(omegrace_soundlatch_w);
 	DECLARE_DRIVER_INIT(omegrace);
+	virtual void machine_reset();
 };
 
 
@@ -243,9 +244,9 @@ public:
  *
  *************************************/
 
-static MACHINE_RESET( omegrace )
+void omegrace_state::machine_reset()
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	/* Omega Race expects the vector processor to be ready. */
 	avgdvg_reset_w(space, 0, 0);
 }
@@ -328,7 +329,7 @@ WRITE8_MEMBER(omegrace_state::omegrace_leds_w)
 WRITE8_MEMBER(omegrace_state::omegrace_soundlatch_w)
 {
 	soundlatch_byte_w (space, offset, data);
-	cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
+	machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -343,7 +344,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, omegrace_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROM
 	AM_RANGE(0x4000, 0x4bff) AM_RAM
 	AM_RANGE(0x5c00, 0x5cff) AM_RAM AM_SHARE("nvram") /* NVRAM */
-	AM_RANGE(0x8000, 0x8fff) AM_RAM AM_BASE_LEGACY(&avgdvg_vectorram) AM_SIZE_LEGACY(&avgdvg_vectorram_size) AM_REGION("maincpu", 0x8000) /* vector ram */
+	AM_RANGE(0x8000, 0x8fff) AM_RAM AM_SHARE("vectorram") AM_REGION("maincpu", 0x8000) /* vector ram */
 	AM_RANGE(0x9000, 0x9fff) AM_ROM /* vector rom */
 ADDRESS_MAP_END
 
@@ -501,7 +502,6 @@ static MACHINE_CONFIG_START( omegrace, omegrace_state )
 	MCFG_CPU_IO_MAP(sound_port)
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,250)
 
-	MCFG_MACHINE_RESET(omegrace)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */

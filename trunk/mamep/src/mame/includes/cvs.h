@@ -55,8 +55,8 @@ public:
 	UINT16     m_speech_rom_bit_address;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_speech;
 	dac_device *m_dac3;
 	device_t *m_tms;
@@ -100,13 +100,17 @@ public:
 	DECLARE_DRIVER_INIT(hero);
 	DECLARE_DRIVER_INIT(superbik);
 	DECLARE_DRIVER_INIT(hunchbaka);
+	DECLARE_MACHINE_START(cvs);
+	DECLARE_MACHINE_RESET(cvs);
+	DECLARE_VIDEO_START(cvs);
+	DECLARE_PALETTE_INIT(cvs);
 };
 
 
 /*----------- defined in drivers/cvs.c -----------*/
 
-MACHINE_START( cvs );
-MACHINE_RESET( cvs );
+
+
 
 /*----------- defined in video/cvs.c -----------*/
 
@@ -116,6 +120,6 @@ void cvs_init_stars( running_machine &machine );
 void cvs_scroll_stars( running_machine &machine );
 void cvs_update_stars(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, const pen_t star_pen, bool update_always);
 
-PALETTE_INIT( cvs );
+
 SCREEN_UPDATE_IND16( cvs );
-VIDEO_START( cvs );
+

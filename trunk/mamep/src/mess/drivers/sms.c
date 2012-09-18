@@ -116,7 +116,7 @@ static ADDRESS_MAP_START( sms_io, AS_IO, 8, sms_state )
 	AM_RANGE(0x00, 0x00) AM_MIRROR(0x3e) AM_WRITE(sms_bios_w)
 	AM_RANGE(0x01, 0x01) AM_MIRROR(0x3e) AM_WRITE(sms_io_control_w)
 	AM_RANGE(0x40, 0x7f)                 AM_READ(sms_count_r)
-	AM_RANGE(0x40, 0x7f)                 AM_DEVWRITE_LEGACY("segapsg", sn76496_w)
+	AM_RANGE(0x40, 0x7f)                 AM_DEVWRITE("segapsg", segapsg_new_device, write)
 	AM_RANGE(0x80, 0x80) AM_MIRROR(0x3e) AM_DEVREADWRITE("sms_vdp", sega315_5124_device, vram_read, vram_write)
 	AM_RANGE(0x81, 0x81) AM_MIRROR(0x3e) AM_DEVREADWRITE("sms_vdp", sega315_5124_device, register_read, register_write)
 	AM_RANGE(0xc0, 0xc0) AM_MIRROR(0x1e) AM_READ(sms_input_port_0_r)
@@ -138,7 +138,7 @@ static ADDRESS_MAP_START( gg_io, AS_IO, 8, sms_state )
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x00, 0x00)                 AM_READ(gg_input_port_2_r)
 	AM_RANGE(0x01, 0x05)                 AM_READWRITE(gg_sio_r, gg_sio_w)
-	AM_RANGE(0x06, 0x06)                 AM_DEVWRITE_LEGACY("gamegear", sn76496_stereo_w)
+	AM_RANGE(0x06, 0x06)                 AM_DEVWRITE("gamegear", gamegear_new_device, stereo_w)
 	AM_RANGE(0x07, 0x07)                 AM_WRITE(sms_io_control_w)
 	AM_RANGE(0x08, 0x08) AM_MIRROR(0x06) AM_WRITE(sms_bios_w)
 	AM_RANGE(0x09, 0x09) AM_MIRROR(0x06) AM_WRITE(sms_io_control_w)
@@ -147,7 +147,7 @@ static ADDRESS_MAP_START( gg_io, AS_IO, 8, sms_state )
 	AM_RANGE(0x20, 0x20) AM_MIRROR(0x1e) AM_WRITE(sms_bios_w)
 	AM_RANGE(0x21, 0x21) AM_MIRROR(0x1e) AM_WRITE(sms_io_control_w)
 	AM_RANGE(0x40, 0x7f)                 AM_READ(sms_count_r)
-	AM_RANGE(0x40, 0x7f)                 AM_DEVWRITE_LEGACY("gamegear", sn76496_w)
+	AM_RANGE(0x40, 0x7f)                 AM_DEVWRITE("gamegear", gamegear_new_device, write)
 	AM_RANGE(0x80, 0x80) AM_MIRROR(0x3e) AM_DEVREADWRITE("sms_vdp", sega315_5124_device, vram_read, vram_write)
 	AM_RANGE(0x81, 0x81) AM_MIRROR(0x3e) AM_DEVREADWRITE("sms_vdp", sega315_5124_device, register_read, register_write)
 	AM_RANGE(0xc0, 0xc0)                 AM_READ_PORT("PORT_DC")
@@ -308,7 +308,7 @@ INPUT_PORTS_END
 
 static WRITE_LINE_DEVICE_HANDLER( sms_int_callback )
 {
-	cputag_set_input_line(device->machine(), "maincpu", 0, state);
+	device->machine().device("maincpu")->execute().set_input_line(0, state);
 }
 
 static const sega315_5124_interface _315_5124_ntsc_intf =
@@ -334,6 +334,17 @@ static const sega315_5124_interface sms_store_intf =
 	DEVCB_LINE(sms_store_int_callback),
 	DEVCB_LINE(sms_pause_callback)
 };
+
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
 
 static MACHINE_CONFIG_FRAGMENT( sms_cartslot )
 	MCFG_CARTSLOT_ADD("cart1")
@@ -365,13 +376,14 @@ static MACHINE_CONFIG_START( sms_ntsc_base, sms_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
-	MCFG_MACHINE_START(sms)
-	MCFG_MACHINE_RESET(mess_sms)
+	MCFG_MACHINE_START_OVERRIDE(sms_state,sms)
+	MCFG_MACHINE_RESET_OVERRIDE(sms_state,mess_sms)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("segapsg", SEGAPSG, XTAL_53_693175MHz/15)
+	MCFG_SOUND_ADD("segapsg", SEGAPSG_NEW, XTAL_53_693175MHz/15)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
+	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_FRAGMENT_ADD( sms_cartslot )
 MACHINE_CONFIG_END
@@ -420,7 +432,7 @@ static MACHINE_CONFIG_DERIVED( sms1_ntsc, sms_ntsc_base )
 	MCFG_PALETTE_LENGTH(SEGA315_5124_PALETTE_SIZE)
 	MCFG_PALETTE_INIT(sega315_5124)
 
-	MCFG_VIDEO_START(sms1)
+	MCFG_VIDEO_START_OVERRIDE(sms_state,sms1)
 
 	MCFG_SEGA315_5124_ADD("sms_vdp", _315_5124_ntsc_intf)
 MACHINE_CONFIG_END
@@ -475,13 +487,14 @@ static MACHINE_CONFIG_START( sms_pal_base, sms_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(50))
 
-	MCFG_MACHINE_START(sms)
-	MCFG_MACHINE_RESET(mess_sms)
+	MCFG_MACHINE_START_OVERRIDE(sms_state,sms)
+	MCFG_MACHINE_RESET_OVERRIDE(sms_state,mess_sms)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("segapsg", SEGAPSG, MASTER_CLOCK_PAL/15)
+	MCFG_SOUND_ADD("segapsg", SEGAPSG_NEW, MASTER_CLOCK_PAL/15)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
+	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_FRAGMENT_ADD( sms_cartslot )
 MACHINE_CONFIG_END
@@ -531,7 +544,7 @@ static MACHINE_CONFIG_DERIVED( sms1_pal, sms_pal_base )
 
 	MCFG_DEFAULT_LAYOUT(layout_sms1)
 
-	MCFG_VIDEO_START(sms1)
+	MCFG_VIDEO_START_OVERRIDE(sms_state,sms1)
 
 	MCFG_SEGA315_5124_ADD("sms_vdp", _315_5124_pal_intf)
 MACHINE_CONFIG_END
@@ -565,8 +578,8 @@ static MACHINE_CONFIG_START( gamegear, sms_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
-	MCFG_MACHINE_START(sms)
-	MCFG_MACHINE_RESET(mess_sms)
+	MCFG_MACHINE_START_OVERRIDE(sms_state,sms)
+	MCFG_MACHINE_RESET_OVERRIDE(sms_state,mess_sms)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", LCD)
@@ -578,13 +591,14 @@ static MACHINE_CONFIG_START( gamegear, sms_state )
 	MCFG_PALETTE_LENGTH(SEGA315_5378_PALETTE_SIZE)
 	MCFG_PALETTE_INIT(sega315_5378)
 
-	MCFG_VIDEO_START(gamegear)
+	MCFG_VIDEO_START_OVERRIDE(sms_state,gamegear)
 
 	MCFG_SEGA315_5378_ADD("sms_vdp", _315_5124_ntsc_intf)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker","rspeaker")
-	MCFG_SOUND_ADD("gamegear", GAMEGEAR, XTAL_53_693175MHz/15)
+	MCFG_SOUND_ADD("gamegear", GAMEGEAR_NEW, XTAL_53_693175MHz/15)
+	MCFG_SOUND_CONFIG(psg_intf)
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.00)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.00)
 

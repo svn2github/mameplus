@@ -20,18 +20,16 @@
 #define LOG_OCW		0
 #define LOG_GENERAL	 0
 
-typedef enum
+enum pic8259_state_t
 {
 	STATE_ICW1,
 	STATE_ICW2,
 	STATE_ICW3,
 	STATE_ICW4,
 	STATE_READY
-} pic8259_state_t;
+};
 
-typedef struct pic8259	pic8259_t;
-
-struct pic8259
+struct pic8259_t
 {
 	devcb_resolved_write_line out_int_func;
 
@@ -77,7 +75,7 @@ struct pic8259
 INLINE pic8259_t *get_safe_token(device_t *device) {
 	assert( device != NULL );
 	assert( device->type() == PIC8259 );
-	return ( pic8259_t *) downcast<legacy_device_base *>(device)->token();
+	return ( pic8259_t *) downcast<pic8259_device *>(device)->token();
 }
 
 
@@ -448,26 +446,40 @@ static DEVICE_RESET( pic8259 ) {
 	pic8259->master = pic8259->sp_en_func();
 }
 
+const device_type PIC8259 = &device_creator<pic8259_device>;
 
-DEVICE_GET_INFO( pic8259 ) {
-	switch ( state ) {
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:				info->i = sizeof(pic8259_t);				break;
-		case DEVINFO_INT_INLINE_CONFIG_BYTES:		info->i = 0;								break;
+pic8259_device::pic8259_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, PIC8259, "Intel PIC8259", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(pic8259_t));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:						info->start = DEVICE_START_NAME(pic8259);	break;
-		case DEVINFO_FCT_STOP:						/* nothing */								break;
-		case DEVINFO_FCT_RESET:						info->reset = DEVICE_RESET_NAME(pic8259);	break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:						strcpy(info->s, "Intel PIC8259");			break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "PIC8259");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.00");					break;
-		case DEVINFO_STR_SOURCE_FILE:				strcpy(info->s, __FILE__);					break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright the MAME and MESS Teams");	break;
-	}
+void pic8259_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void pic8259_device::device_start()
+{
+	DEVICE_START_NAME( pic8259 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void pic8259_device::device_reset()
+{
+	DEVICE_RESET_NAME( pic8259 )(this);
 }
 
 
-DEFINE_LEGACY_DEVICE(PIC8259, pic8259);

@@ -17,13 +17,13 @@
 
 ******************************************************************************/
 
-PALETTE_INIT( ojankoy )
+PALETTE_INIT_MEMBER(ojankohs_state,ojankoy)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 	int bit0, bit1, bit2, bit3, bit4, r, g, b;
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		bit0 = BIT(color_prom[0], 2);
 		bit1 = BIT(color_prom[0], 3);
@@ -31,20 +31,20 @@ PALETTE_INIT( ojankoy )
 		bit3 = BIT(color_prom[0], 5);
 		bit4 = BIT(color_prom[0], 6);
 		r = 0x08 * bit0 + 0x11 * bit1 + 0x21 * bit2 + 0x43 * bit3 + 0x82 * bit4;
-		bit0 = BIT(color_prom[machine.total_colors()], 5);
-		bit1 = BIT(color_prom[machine.total_colors()], 6);
-		bit2 = BIT(color_prom[machine.total_colors()], 7);
+		bit0 = BIT(color_prom[machine().total_colors()], 5);
+		bit1 = BIT(color_prom[machine().total_colors()], 6);
+		bit2 = BIT(color_prom[machine().total_colors()], 7);
 		bit3 = BIT(color_prom[0], 0);
 		bit4 = BIT(color_prom[0], 1);
 		g = 0x08 * bit0 + 0x11 * bit1 + 0x21 * bit2 + 0x43 * bit3 + 0x82 * bit4;
-		bit0 = BIT(color_prom[machine.total_colors()], 0);
-		bit1 = BIT(color_prom[machine.total_colors()], 1);
-		bit2 = BIT(color_prom[machine.total_colors()], 2);
-		bit3 = BIT(color_prom[machine.total_colors()], 3);
-		bit4 = BIT(color_prom[machine.total_colors()], 4);
+		bit0 = BIT(color_prom[machine().total_colors()], 0);
+		bit1 = BIT(color_prom[machine().total_colors()], 1);
+		bit2 = BIT(color_prom[machine().total_colors()], 2);
+		bit3 = BIT(color_prom[machine().total_colors()], 3);
+		bit4 = BIT(color_prom[machine().total_colors()], 4);
 		b = 0x08 * bit0 + 0x11 * bit1 + 0x21 * bit2 + 0x43 * bit3 + 0x82 * bit4;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 		color_prom++;
 	}
 }
@@ -69,7 +69,7 @@ WRITE8_MEMBER(ojankohs_state::ccasino_palette_w)
 	int r, g, b;
 
 	/* get top 8 bits of the I/O port address */
-	offset = (offset << 8) | (cpu_get_reg(&space.device(), Z80_BC) >> 8);
+	offset = (offset << 8) | (space.device().state().state_int(Z80_BC) >> 8);
 
 	m_paletteram[offset] = data;
 
@@ -153,30 +153,28 @@ WRITE8_MEMBER(ojankohs_state::ojankohs_flipscreen_w)
 	}
 }
 
-static TILE_GET_INFO( ojankohs_get_tile_info )
+TILE_GET_INFO_MEMBER(ojankohs_state::ojankohs_get_tile_info)
 {
-	ojankohs_state *state = machine.driver_data<ojankohs_state>();
-	int tile = state->m_videoram[tile_index] | ((state->m_colorram[tile_index] & 0x0f) << 8);
-	int color = (state->m_colorram[tile_index] & 0xe0) >> 5;
+	int tile = m_videoram[tile_index] | ((m_colorram[tile_index] & 0x0f) << 8);
+	int color = (m_colorram[tile_index] & 0xe0) >> 5;
 
-	if (state->m_colorram[tile_index] & 0x10)
+	if (m_colorram[tile_index] & 0x10)
 	{
-		tile |= (state->m_gfxreg & 0x07) << 12;
-		color |= (state->m_gfxreg & 0xe0) >> 2;
+		tile |= (m_gfxreg & 0x07) << 12;
+		color |= (m_gfxreg & 0xe0) >> 2;
 	}
 
-	SET_TILE_INFO(0, tile, color, 0);
+	SET_TILE_INFO_MEMBER(0, tile, color, 0);
 }
 
-static TILE_GET_INFO( ojankoy_get_tile_info )
+TILE_GET_INFO_MEMBER(ojankohs_state::ojankoy_get_tile_info)
 {
-	ojankohs_state *state = machine.driver_data<ojankohs_state>();
-	int tile = state->m_videoram[tile_index] | (state->m_videoram[tile_index + 0x1000] << 8);
-	int color = state->m_colorram[tile_index] & 0x3f;
-	int flipx = ((state->m_colorram[tile_index] & 0x40) >> 6) ? TILEMAP_FLIPX : 0;
-	int flipy = ((state->m_colorram[tile_index] & 0x80) >> 7) ? TILEMAP_FLIPY : 0;
+	int tile = m_videoram[tile_index] | (m_videoram[tile_index + 0x1000] << 8);
+	int color = m_colorram[tile_index] & 0x3f;
+	int flipx = ((m_colorram[tile_index] & 0x40) >> 6) ? TILEMAP_FLIPX : 0;
+	int flipy = ((m_colorram[tile_index] & 0x80) >> 7) ? TILEMAP_FLIPY : 0;
 
-	SET_TILE_INFO(0, tile, color, (flipx | flipy));
+	SET_TILE_INFO_MEMBER(0, tile, color, (flipx | flipy));
 }
 
 
@@ -259,34 +257,31 @@ WRITE8_MEMBER(ojankohs_state::ojankoc_videoram_w)
 
 ******************************************************************************/
 
-VIDEO_START( ojankohs )
+VIDEO_START_MEMBER(ojankohs_state,ojankohs)
 {
-	ojankohs_state *state = machine.driver_data<ojankohs_state>();
 
-	state->m_tilemap = tilemap_create(machine, ojankohs_get_tile_info, tilemap_scan_rows,  8, 4, 64, 64);
-//  state->m_videoram = auto_alloc_array(machine, UINT8, 0x1000);
-//  state->m_colorram = auto_alloc_array(machine, UINT8, 0x1000);
-//  state->m_paletteram = auto_alloc_array(machine, UINT8, 0x800);
+	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ojankohs_state::ojankohs_get_tile_info),this), TILEMAP_SCAN_ROWS,  8, 4, 64, 64);
+//  m_videoram = auto_alloc_array(machine(), UINT8, 0x1000);
+//  m_colorram = auto_alloc_array(machine(), UINT8, 0x1000);
+//  m_paletteram = auto_alloc_array(machine(), UINT8, 0x800);
 }
 
-VIDEO_START( ojankoy )
+VIDEO_START_MEMBER(ojankohs_state,ojankoy)
 {
-	ojankohs_state *state = machine.driver_data<ojankohs_state>();
 
-	state->m_tilemap = tilemap_create(machine, ojankoy_get_tile_info, tilemap_scan_rows,  8, 4, 64, 64);
-//  state->m_videoram = auto_alloc_array(machine, UINT8, 0x2000);
-//  state->m_colorram = auto_alloc_array(machine, UINT8, 0x1000);
+	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ojankohs_state::ojankoy_get_tile_info),this), TILEMAP_SCAN_ROWS,  8, 4, 64, 64);
+//  m_videoram = auto_alloc_array(machine(), UINT8, 0x2000);
+//  m_colorram = auto_alloc_array(machine(), UINT8, 0x1000);
 }
 
-VIDEO_START( ojankoc )
+VIDEO_START_MEMBER(ojankohs_state,ojankoc)
 {
-	ojankohs_state *state = machine.driver_data<ojankohs_state>();
 
-	machine.primary_screen->register_screen_bitmap(state->m_tmpbitmap);
-	state->m_videoram.allocate(0x8000);
-	state->m_paletteram.allocate(0x20);
+	machine().primary_screen->register_screen_bitmap(m_tmpbitmap);
+	m_videoram.allocate(0x8000);
+	m_paletteram.allocate(0x20);
 
-	state->save_item(NAME(state->m_tmpbitmap));
+	save_item(NAME(m_tmpbitmap));
 }
 
 

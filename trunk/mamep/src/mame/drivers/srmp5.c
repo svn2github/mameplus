@@ -212,7 +212,7 @@ static SCREEN_UPDATE_RGB32( srmp5 )
 		{
 			if (state->m_tileduty[i] == 1)
 			{
-				gfx_element_decode(screen.machine().gfx[0], i);
+				screen.machine().gfx[0]->decode(i);
 				state->m_tileduty[i] = 0;
 			}
 		}
@@ -344,7 +344,7 @@ WRITE32_MEMBER(srmp5_state::srmp5_vidregs_w)
 
 READ32_MEMBER(srmp5_state::irq_ack_clear)
 {
-	cputag_set_input_line(machine(), "sub", R3000_IRQ4, CLEAR_LINE);
+	machine().device("sub")->execute().set_input_line(R3000_IRQ4, CLEAR_LINE);
 	return 0;
 }
 
@@ -579,7 +579,7 @@ static MACHINE_CONFIG_START( srmp5, srmp5_state )
 #ifdef DEBUG_CHAR
 	MCFG_GFXDECODE( srmp5 )
 #endif
-	MCFG_VIDEO_START(st0016)
+	MCFG_VIDEO_START_OVERRIDE(st0016_state,st0016)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

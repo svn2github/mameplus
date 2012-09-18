@@ -49,7 +49,7 @@ All Clocks and Vsync verified by Corrado Tomaselli (August 2012)
 
 static INTERRUPT_GEN( vulgus_vblank_irq )
 {
-	device_set_input_line_and_vector(device, 0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
+	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
 }
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, vulgus_state )
@@ -230,8 +230,6 @@ static MACHINE_CONFIG_START( vulgus, vulgus_state )
 	MCFG_GFXDECODE(vulgus)
 	MCFG_PALETTE_LENGTH(64*4+16*16+4*32*8)
 
-	MCFG_PALETTE_INIT(vulgus)
-	MCFG_VIDEO_START(vulgus)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

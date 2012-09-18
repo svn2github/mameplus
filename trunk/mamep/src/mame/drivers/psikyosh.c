@@ -349,7 +349,7 @@ READ32_MEMBER(psikyosh_state::psh_eeprom_r)
 
 static INTERRUPT_GEN(psikyosh_interrupt)
 {
-	device_set_input_line(device, 4, ASSERT_LINE);
+	device->execute().set_input_line(4, ASSERT_LINE);
 }
 
 // VBL handler writes 0x00 on entry, 0xc0 on exit
@@ -358,7 +358,7 @@ WRITE32_MEMBER(psikyosh_state::psikyosh_irqctrl_w)
 {
 	if (!(data & 0x00c00000))
 	{
-		device_set_input_line(m_maincpu, 4, CLEAR_LINE);
+		m_maincpu->set_input_line(4, CLEAR_LINE);
 	}
 }
 
@@ -785,7 +785,7 @@ INPUT_PORTS_END
 static void irqhandler(device_t *device, int linestate)
 {
 	psikyosh_state *state = device->machine().driver_data<psikyosh_state>();
-	device_set_input_line(state->m_maincpu, 12, linestate ? ASSERT_LINE : CLEAR_LINE);
+	state->m_maincpu->set_input_line(12, linestate ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ymf278b_interface ymf278b_config =
@@ -794,13 +794,12 @@ static const ymf278b_interface ymf278b_config =
 };
 
 
-static MACHINE_START( psikyosh )
+void psikyosh_state::machine_start()
 {
-	psikyosh_state *state = machine.driver_data<psikyosh_state>();
 
-	state->m_maincpu = machine.device("maincpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
 
-	state->membank("bank2")->configure_entries(0, 0x1000, state->memregion("gfx1")->base(), 0x20000);
+	membank("bank2")->configure_entries(0, 0x1000, memregion("gfx1")->base(), 0x20000);
 }
 
 
@@ -811,7 +810,6 @@ static MACHINE_CONFIG_START( psikyo3v1, psikyosh_state )
 	MCFG_CPU_PROGRAM_MAP(ps3v1_map)
 	MCFG_CPU_VBLANK_INT("screen", psikyosh_interrupt)
 
-	MCFG_MACHINE_START(psikyosh)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_interface_93C56)
 	MCFG_EEPROM_DEFAULT_VALUE(0)
@@ -830,7 +828,6 @@ static MACHINE_CONFIG_START( psikyo3v1, psikyosh_state )
 	MCFG_GFXDECODE(psikyosh)
 	MCFG_PALETTE_LENGTH(0x5000/4)
 
-	MCFG_VIDEO_START(psikyosh)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

@@ -48,7 +48,7 @@ public:
 	int        m_ty;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_READ8_MEMBER(fcombat_protection_r);
 	DECLARE_READ8_MEMBER(fcombat_port01_r);
 	DECLARE_WRITE8_MEMBER(e900_w);
@@ -61,13 +61,18 @@ public:
 	DECLARE_WRITE8_MEMBER(fcombat_videoreg_w);
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
 	DECLARE_DRIVER_INIT(fcombat);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 
 /*----------- defined in video/fcombat.c -----------*/
 
-PALETTE_INIT( fcombat );
-VIDEO_START( fcombat );
+
+
 SCREEN_UPDATE_IND16( fcombat );
 

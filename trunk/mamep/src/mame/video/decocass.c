@@ -68,49 +68,46 @@ void decocass_video_state_save_init( running_machine &machine )
     tilemap callbacks
  ********************************************/
 
-static TILEMAP_MAPPER( fgvideoram_scan_cols )
+TILEMAP_MAPPER_MEMBER(decocass_state::fgvideoram_scan_cols )
 {
 	/* logical (col,row) -> memory offset */
 	return (num_cols - 1 - col) * num_rows + row;
 }
 
-static TILEMAP_MAPPER( bgvideoram_scan_cols )
+TILEMAP_MAPPER_MEMBER(decocass_state::bgvideoram_scan_cols )
 {
 	/* logical (col,row) -> memory offset */
 	return tile_offset[col * num_rows + row];
 }
 
-static TILE_GET_INFO( get_bg_l_tile_info )
+TILE_GET_INFO_MEMBER(decocass_state::get_bg_l_tile_info)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	int color = (state->m_color_center_bot >> 7) & 1;
-	SET_TILE_INFO(
+	int color = (m_color_center_bot >> 7) & 1;
+	SET_TILE_INFO_MEMBER(
 			2,
-			(0x80 == (tile_index & 0x80)) ? 16 : state->m_bgvideoram[tile_index] >> 4,
+			(0x80 == (tile_index & 0x80)) ? 16 : m_bgvideoram[tile_index] >> 4,
 			color,
 			0);
 }
 
-static TILE_GET_INFO( get_bg_r_tile_info )
+TILE_GET_INFO_MEMBER(decocass_state::get_bg_r_tile_info )
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	int color = (state->m_color_center_bot >> 7) & 1;
-	SET_TILE_INFO(
+	int color = (m_color_center_bot >> 7) & 1;
+	SET_TILE_INFO_MEMBER(
 			2,
-			(0x00 == (tile_index & 0x80)) ? 16 : state->m_bgvideoram[tile_index] >> 4,
+			(0x00 == (tile_index & 0x80)) ? 16 : m_bgvideoram[tile_index] >> 4,
 			color,
 			TILE_FLIPY);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(decocass_state::get_fg_tile_info )
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	UINT8 code = state->m_fgvideoram[tile_index];
-	UINT8 attr = state->m_colorram[tile_index];
-	SET_TILE_INFO(
+	UINT8 code = m_fgvideoram[tile_index];
+	UINT8 attr = m_colorram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			0,
 			256 * (attr & 3) + code,
-			state->m_color_center_bot & 1,
+			m_color_center_bot & 1,
 			0);
 }
 
@@ -188,9 +185,9 @@ WRITE8_HANDLER( decocass_charram_w )
 	decocass_state *state = space->machine().driver_data<decocass_state>();
 	state->m_charram[offset] = data;
 	/* dirty sprite */
-	gfx_element_mark_dirty(space->machine().gfx[1], (offset >> 5) & 255);
+	space->machine().gfx[1]->mark_dirty((offset >> 5) & 255);
 	/* dirty char */
-	gfx_element_mark_dirty(space->machine().gfx[0], (offset >> 3) & 1023);
+	space->machine().gfx[0]->mark_dirty((offset >> 3) & 1023);
 }
 
 
@@ -222,7 +219,7 @@ WRITE8_HANDLER( decocass_tileram_w )
 	decocass_state *state = space->machine().driver_data<decocass_state>();
 	state->m_tileram[offset] = data;
 	/* dirty tile (64 bytes per tile) */
-	gfx_element_mark_dirty(space->machine().gfx[2], (offset / 64) & 15);
+	space->machine().gfx[2]->mark_dirty((offset / 64) & 15);
 	/* first 1KB of tile RAM is shared with tilemap RAM */
 	if (offset < state->m_bgvideoram_size)
 		mark_bg_tile_dirty(space->machine(), offset);
@@ -233,8 +230,8 @@ WRITE8_HANDLER( decocass_objectram_w )
 	decocass_state *state = space->machine().driver_data<decocass_state>();
 	state->m_objectram[offset] = data;
 	/* dirty the object */
-	gfx_element_mark_dirty(space->machine().gfx[3], 0);
-	gfx_element_mark_dirty(space->machine().gfx[3], 1);
+	space->machine().gfx[3]->mark_dirty(0);
+	space->machine().gfx[3]->mark_dirty(1);
 }
 
 WRITE8_HANDLER( decocass_bgvideoram_w )
@@ -489,35 +486,34 @@ static void draw_missiles(running_machine &machine,bitmap_ind16 &bitmap, const r
 }
 
 
-VIDEO_START( decocass )
+void decocass_state::video_start()
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	state->m_bg_tilemap_l = tilemap_create(machine, get_bg_l_tile_info, bgvideoram_scan_cols, 16, 16, 32, 32);
-	state->m_bg_tilemap_r = tilemap_create(machine, get_bg_r_tile_info, bgvideoram_scan_cols, 16, 16, 32, 32);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, fgvideoram_scan_cols, 8, 8, 32, 32);
+	m_bg_tilemap_l = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(decocass_state::get_bg_l_tile_info),this), tilemap_mapper_delegate(FUNC(decocass_state::bgvideoram_scan_cols),this), 16, 16, 32, 32);
+	m_bg_tilemap_r = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(decocass_state::get_bg_r_tile_info),this), tilemap_mapper_delegate(FUNC(decocass_state::bgvideoram_scan_cols),this), 16, 16, 32, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(decocass_state::get_fg_tile_info),this), tilemap_mapper_delegate(FUNC(decocass_state::fgvideoram_scan_cols),this), 8, 8, 32, 32);
 
-	state->m_bg_tilemap_l->set_transparent_pen(0);
-	state->m_bg_tilemap_r->set_transparent_pen(0);
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap_l->set_transparent_pen(0);
+	m_bg_tilemap_r->set_transparent_pen(0);
+	m_fg_tilemap->set_transparent_pen(0);
 
-	state->m_bg_tilemap_l_clip = machine.primary_screen->visible_area();
-	state->m_bg_tilemap_l_clip.max_y = 256 / 2 - 1;
+	m_bg_tilemap_l_clip = machine().primary_screen->visible_area();
+	m_bg_tilemap_l_clip.max_y = 256 / 2 - 1;
 
-	state->m_bg_tilemap_r_clip = machine.primary_screen->visible_area();
-	state->m_bg_tilemap_r_clip.min_y = 256 / 2;
+	m_bg_tilemap_r_clip = machine().primary_screen->visible_area();
+	m_bg_tilemap_r_clip.min_y = 256 / 2;
 
 	/* background videroam bits D0-D3 are shared with the tileram */
-	state->m_bgvideoram = state->m_tileram;
-	state->m_bgvideoram_size = 0x0400;	/* d000-d3ff */
+	m_bgvideoram = m_tileram;
+	m_bgvideoram_size = 0x0400;	/* d000-d3ff */
 
-	gfx_element_set_source(machine.gfx[0], state->m_charram);
-	gfx_element_set_source(machine.gfx[1], state->m_charram);
-	gfx_element_set_source(machine.gfx[2], state->m_tileram);
-	gfx_element_set_source(machine.gfx[3], state->m_objectram);
+	machine().gfx[0]->set_source(m_charram);
+	machine().gfx[1]->set_source(m_charram);
+	machine().gfx[2]->set_source(m_tileram);
+	machine().gfx[3]->set_source(m_objectram);
 
 	/* This should ensure that the fake 17th tile is left blank
      * now that dirty-tile tracking is handled by the core */
-	gfx_element_decode(machine.gfx[2], 16);
+	machine().gfx[2]->decode(16);
 }
 
 SCREEN_UPDATE_IND16( decocass )
@@ -527,7 +523,7 @@ SCREEN_UPDATE_IND16( decocass )
 	rectangle clip;
 
 	if (0xc0 != (screen.machine().root_device().ioport("IN2")->read() & 0xc0))  /* coin slots assert an NMI */
-		device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, ASSERT_LINE);
+		state->m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 
 	if (0 == (state->m_watchdog_flip & 0x04))
 		screen.machine().watchdog_reset();

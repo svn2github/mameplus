@@ -397,7 +397,7 @@ Stephh's notes (based on the games Z80 code and some tests) for other games :
 /* Send sound data to the sound cpu and cause an nmi */
 READ8_MEMBER(galaxold_state::drivfrcg_port0_r)
 {
-	switch (cpu_get_pc(&space.device()))
+	switch (space.device().safe_pc())
 	{
 		case 0x002e:
 		case 0x0297:
@@ -886,16 +886,16 @@ static ADDRESS_MAP_START( racknrol, AS_PROGRAM, 8, galaxold_state )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( racknrol_io, AS_IO, 8, galaxold_state )
-	AM_RANGE(0x1d, 0x1d) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0x1e, 0x1e) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
-	AM_RANGE(0x1f, 0x1f) AM_DEVWRITE_LEGACY("sn3", sn76496_w)
+	AM_RANGE(0x1d, 0x1d) AM_DEVWRITE("sn1", sn76496_new_device, write)
+	AM_RANGE(0x1e, 0x1e) AM_DEVWRITE("sn2", sn76496_new_device, write)
+	AM_RANGE(0x1f, 0x1f) AM_DEVWRITE("sn3", sn76496_new_device, write)
 	AM_RANGE(0x20, 0x3f) AM_WRITE(racknrol_tiles_bank_w) AM_SHARE("racknrol_tbank")
 	AM_RANGE(S2650_SENSE_PORT, S2650_SENSE_PORT) AM_READ_PORT("SENSE")
 ADDRESS_MAP_END
 
 READ8_MEMBER(galaxold_state::hexpoola_data_port_r)
 {
-	switch (cpu_get_pc(&space.device()))
+	switch (space.device().safe_pc())
 	{
 		case 0x0022:
 			return 0;
@@ -910,13 +910,13 @@ READ8_MEMBER(galaxold_state::hexpoola_data_port_r)
 static ADDRESS_MAP_START( hexpoola_io, AS_IO, 8, galaxold_state )
 	AM_RANGE(0x00, 0x00) AM_READNOP
 	AM_RANGE(0x20, 0x3f) AM_WRITE(racknrol_tiles_bank_w) AM_SHARE("racknrol_tbank")
-	AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_READ(hexpoola_data_port_r) AM_DEVWRITE_LEGACY("snsnd", sn76496_w)
+	AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_READ(hexpoola_data_port_r) AM_DEVWRITE("snsnd", sn76496_new_device, write)
 	AM_RANGE(S2650_SENSE_PORT, S2650_SENSE_PORT) AM_READ_PORT("SENSE")
 ADDRESS_MAP_END
 
 READ8_MEMBER(galaxold_state::bullsdrtg_data_port_r)
 {
-	switch (cpu_get_pc(&space.device()))
+	switch (space.device().safe_pc())
 	{
 		case 0x0083:
 		case 0x008c:
@@ -928,7 +928,7 @@ READ8_MEMBER(galaxold_state::bullsdrtg_data_port_r)
 		case 0x6b58:
 			return 1;
 		default:
-			logerror("Reading data port at PC=%04X\n", cpu_get_pc(&space.device()));
+			logerror("Reading data port at PC=%04X\n", space.device().safe_pc());
 			break;
 	}
 
@@ -938,7 +938,7 @@ READ8_MEMBER(galaxold_state::bullsdrtg_data_port_r)
 static ADDRESS_MAP_START( bullsdrtg_io_map, AS_IO, 8, galaxold_state )
 	AM_RANGE(0x00, 0x00) AM_READNOP
 	AM_RANGE(0x20, 0x3f) AM_WRITE(racknrol_tiles_bank_w) AM_SHARE("racknrol_tbank")
-	AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_READ(bullsdrtg_data_port_r) AM_DEVWRITE_LEGACY("snsnd", sn76496_w)
+	AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_READ(bullsdrtg_data_port_r) AM_DEVWRITE("snsnd", sn76496_new_device, write)
 	AM_RANGE(S2650_SENSE_PORT, S2650_SENSE_PORT) AM_READ_PORT("SENSE")
 ADDRESS_MAP_END
 
@@ -2139,6 +2139,24 @@ static GFXDECODE_START( _4in1 )
 	GFXDECODE_ENTRY( "gfx1", 0x4000, _4in1_spritelayout,    0, 8 )
 GFXDECODE_END
 
+
+/*************************************
+ *
+ *  Sound interface
+ *
+ *************************************/
+
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
+
 static const ay8910_interface bongo_ay8910_interface =
 {
 	AY8910_LEGACY_OUTPUT,
@@ -2156,7 +2174,7 @@ static MACHINE_CONFIG_START( galaxold_base, galaxold_state )
 	MCFG_CPU_ADD("maincpu", Z80, PIXEL_CLOCK/2)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(galaxold_map)
 
-	MCFG_MACHINE_RESET(galaxold)
+	MCFG_MACHINE_RESET_OVERRIDE(galaxold_state,galaxold)
 
 	MCFG_7474_ADD("7474_9m_1", "7474_9m_1", galaxold_7474_9m_1_callback, NULL)
 	MCFG_7474_ADD("7474_9m_2", "7474_9m_1", NULL, galaxold_7474_9m_2_q_callback)
@@ -2171,8 +2189,8 @@ static MACHINE_CONFIG_START( galaxold_base, galaxold_state )
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_STATIC(galaxold)
 
-	MCFG_PALETTE_INIT(galaxold)
-	MCFG_VIDEO_START(galaxold)
+	MCFG_PALETTE_INIT_OVERRIDE(galaxold_state,galaxold)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,galaxold)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2193,7 +2211,7 @@ static MACHINE_CONFIG_DERIVED( batman2, galaxian )
 	/* basic machine hardware */
 
 	/* video hardware */
-	MCFG_VIDEO_START(batman2)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,batman2)
 MACHINE_CONFIG_END
 
 
@@ -2204,7 +2222,7 @@ static MACHINE_CONFIG_DERIVED( mooncrst, galaxian )
 	MCFG_CPU_PROGRAM_MAP(mooncrst_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(mooncrst)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,mooncrst)
 MACHINE_CONFIG_END
 
 
@@ -2217,8 +2235,8 @@ static MACHINE_CONFIG_DERIVED( scramblb, galaxian )
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(32+2+64+1)	/* 32 for the characters, 2 for the bullets, 64 for the stars, 1 for background */
 
-	MCFG_PALETTE_INIT(scrambold)
-	MCFG_VIDEO_START(scrambold)
+	MCFG_PALETTE_INIT_OVERRIDE(galaxold_state,scrambold)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,scrambold)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( scramb2, galaxian )
@@ -2230,8 +2248,8 @@ static MACHINE_CONFIG_DERIVED( scramb2, galaxian )
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(32+2+64+1)	/* 32 for the characters, 2 for the bullets, 64 for the stars, 1 for background */
 
-	MCFG_PALETTE_INIT(scrambold)
-	MCFG_VIDEO_START(scrambold)
+	MCFG_PALETTE_INIT_OVERRIDE(galaxold_state,scrambold)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,scrambold)
 MACHINE_CONFIG_END
 
 
@@ -2245,7 +2263,7 @@ static MACHINE_CONFIG_DERIVED( 4in1, galaxian )
 	/* video hardware */
 	MCFG_GFXDECODE(_4in1)
 
-	MCFG_VIDEO_START(pisces)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,pisces)
 MACHINE_CONFIG_END
 
 
@@ -2255,12 +2273,12 @@ static MACHINE_CONFIG_DERIVED( bagmanmc, galaxian )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(bagmanmc_map)
 
-	MCFG_MACHINE_RESET( devilfsg )
+	MCFG_MACHINE_RESET_OVERRIDE(galaxold_state, devilfsg )
 
 	/* video hardware */
 	MCFG_GFXDECODE(bagmanmc)
 
-	MCFG_VIDEO_START(pisces)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,pisces)
 MACHINE_CONFIG_END
 
 
@@ -2271,7 +2289,7 @@ static MACHINE_CONFIG_DERIVED( dkongjrm, galaxian )
 	MCFG_CPU_PROGRAM_MAP(dkongjrm_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(dkongjrm)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,dkongjrm)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( rockclim, galaxian )
@@ -2281,9 +2299,9 @@ static MACHINE_CONFIG_DERIVED( rockclim, galaxian )
 	MCFG_CPU_PROGRAM_MAP(rockclim_map)
 	MCFG_GFXDECODE(rockclim)
 	/* video hardware */
-	MCFG_VIDEO_START(rockclim)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,rockclim)
 	MCFG_PALETTE_LENGTH(64+64+2)	/* 64 colors only, but still uses bullets so we need to keep the palette big */
-	MCFG_PALETTE_INIT(rockclim)
+	MCFG_PALETTE_INIT_OVERRIDE(galaxold_state,rockclim)
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_SIZE(64*8, 32*8)
@@ -2300,10 +2318,10 @@ static MACHINE_CONFIG_DERIVED( ozon1, galaxold_base )
 
 	MCFG_MACHINE_RESET(0)
 
-	MCFG_PALETTE_INIT(rockclim)
+	MCFG_PALETTE_INIT_OVERRIDE(galaxold_state,rockclim)
 	MCFG_PALETTE_LENGTH(32)
 
-	MCFG_VIDEO_START(galaxold_plain)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,galaxold_plain)
 	MCFG_SOUND_ADD("aysnd", AY8910, PIXEL_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
@@ -2327,9 +2345,9 @@ static MACHINE_CONFIG_START( drivfrcg, galaxold_state )
 	MCFG_PALETTE_LENGTH(64)
 	MCFG_GFXDECODE(gmgalax)
 
-	MCFG_PALETTE_INIT(rockclim)
+	MCFG_PALETTE_INIT_OVERRIDE(galaxold_state,rockclim)
 
-	MCFG_VIDEO_START(drivfrcg)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,drivfrcg)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2344,7 +2362,7 @@ static MACHINE_CONFIG_DERIVED( bongo, galaxold_base )
 	MCFG_CPU_PROGRAM_MAP(bongo)
 	MCFG_CPU_IO_MAP(bongo_io)
 
-	MCFG_VIDEO_START(bongo)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,bongo)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(galaxold)
 
@@ -2361,7 +2379,7 @@ static MACHINE_CONFIG_DERIVED( hunchbkg, galaxold_base )
 	MCFG_CPU_PROGRAM_MAP(hunchbkg)
 	MCFG_CPU_IO_MAP(hunchbkg_io)
 
-	MCFG_MACHINE_RESET(hunchbkg)
+	MCFG_MACHINE_RESET_OVERRIDE(galaxold_state,hunchbkg)
 
 	MCFG_FRAGMENT_ADD(galaxian_audio)
 MACHINE_CONFIG_END
@@ -2371,7 +2389,7 @@ static INTERRUPT_GEN( vblank_irq )
 	galaxold_state *state = device->machine().driver_data<galaxold_state>();
 
 	if(state->m_nmi_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_DERIVED( harem, galaxold_base )
@@ -2387,10 +2405,10 @@ static MACHINE_CONFIG_DERIVED( harem, galaxold_base )
 
 	MCFG_MACHINE_RESET(0)
 
-	MCFG_PALETTE_INIT(rockclim)
+	MCFG_PALETTE_INIT_OVERRIDE(galaxold_state,rockclim)
 	MCFG_PALETTE_LENGTH(32)
 
-	MCFG_VIDEO_START(galaxold_plain)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,galaxold_plain)
 
 	MCFG_SOUND_ADD("ay1", AY8910, 2000000) //?
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.33/3)
@@ -2424,19 +2442,22 @@ static MACHINE_CONFIG_START( racknrol, galaxold_state )
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_STATIC(galaxold)
 
-	MCFG_PALETTE_INIT(rockclim)
-	MCFG_VIDEO_START(racknrol)
+	MCFG_PALETTE_INIT_OVERRIDE(galaxold_state,rockclim)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,racknrol)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("sn1", SN76496, PIXEL_CLOCK/2)
+	MCFG_SOUND_ADD("sn1", SN76496_NEW, PIXEL_CLOCK/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496, PIXEL_CLOCK/2)
+	MCFG_SOUND_ADD("sn2", SN76496_NEW, PIXEL_CLOCK/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76496, PIXEL_CLOCK/2)
+	MCFG_SOUND_ADD("sn3", SN76496_NEW, PIXEL_CLOCK/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( ckongg, galaxian )
@@ -2447,7 +2468,7 @@ static MACHINE_CONFIG_DERIVED( ckongg, galaxian )
 
 	MCFG_GFXDECODE(gmgalax)
 
-	MCFG_VIDEO_START(ckongs)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,ckongs)
 
 MACHINE_CONFIG_END
 
@@ -2459,7 +2480,7 @@ static MACHINE_CONFIG_DERIVED( ckongmc, galaxian )
 
 	MCFG_GFXDECODE(gmgalax)
 
-	MCFG_VIDEO_START(ckongs)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,ckongs)
 
 MACHINE_CONFIG_END
 
@@ -2479,13 +2500,14 @@ static MACHINE_CONFIG_START( hexpoola, galaxold_state )
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_STATIC(galaxold)
 
-	MCFG_PALETTE_INIT(rockclim)
-	MCFG_VIDEO_START(racknrol)
+	MCFG_PALETTE_INIT_OVERRIDE(galaxold_state,rockclim)
+	MCFG_VIDEO_START_OVERRIDE(galaxold_state,racknrol)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
-	MCFG_SOUND_ADD("snsnd", SN76496, PIXEL_CLOCK/2)
+	MCFG_SOUND_ADD("snsnd", SN76496_NEW, PIXEL_CLOCK/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( bullsdrtg, hexpoola )

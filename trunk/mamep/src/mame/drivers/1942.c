@@ -79,10 +79,10 @@ static TIMER_DEVICE_CALLBACK( c1942_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
 
 	if(scanline == 0) // unknown irq event, presumably vblank-in or a periodic one (writes to the soundlatch and drives freeze dip-switch)
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE, 0xcf);	/* RST 08h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);	/* RST 08h */
 }
 
 
@@ -236,23 +236,21 @@ static GFXDECODE_START( 1942 )
 GFXDECODE_END
 
 
-static MACHINE_START( 1942 )
+void _1942_state::machine_start()
 {
-	_1942_state *state = machine.driver_data<_1942_state>();
 
-	state->m_audiocpu = machine.device("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_palette_bank));
-	state->save_item(NAME(state->m_scroll));
+	save_item(NAME(m_palette_bank));
+	save_item(NAME(m_scroll));
 }
 
-static MACHINE_RESET( 1942 )
+void _1942_state::machine_reset()
 {
-	_1942_state *state = machine.driver_data<_1942_state>();
 
-	state->m_palette_bank = 0;
-	state->m_scroll[0] = 0;
-	state->m_scroll[1] = 0;
+	m_palette_bank = 0;
+	m_scroll[0] = 0;
+	m_scroll[1] = 0;
 }
 
 static MACHINE_CONFIG_START( 1942, _1942_state )
@@ -266,8 +264,6 @@ static MACHINE_CONFIG_START( 1942, _1942_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)
 
-	MCFG_MACHINE_START(1942)
-	MCFG_MACHINE_RESET(1942)
 
 	/* video hardware */
 	MCFG_GFXDECODE(1942)
@@ -280,8 +276,6 @@ static MACHINE_CONFIG_START( 1942, _1942_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(1942)
 
-	MCFG_PALETTE_INIT(1942)
-	MCFG_VIDEO_START(1942)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

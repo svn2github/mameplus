@@ -71,7 +71,7 @@ static UINT32 pm_io(address_space *space, int reg, int write, UINT32 d)
 		state->m_emu_status &= ~SSP_PMC_HAVE_ADDR;
 	}
 
-	if (reg == 4 || (cpu_get_reg(&space->device(), SSP_ST) & 0x60))
+	if (reg == 4 || (space->device().state().state_int(SSP_ST) & 0x60))
 	{
 		#define CADDR ((((mode<<16)&0x7f0000)|addr)<<1)
 		UINT16 *dram = (UINT16 *)state->m_dram;
@@ -333,7 +333,7 @@ static UINT8 megadrive_io_read_data_port_svp(running_machine &machine, int portn
 
 static READ16_HANDLER( svp_speedup_r )
 {
-	 device_spin_until_time(&space->device(), attotime::from_usec(100));
+	 space->device().execute().spin_until_time(attotime::from_usec(100));
 	return 0x0425;
 }
 

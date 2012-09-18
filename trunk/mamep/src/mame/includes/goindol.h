@@ -42,6 +42,11 @@ public:
 	DECLARE_WRITE8_MEMBER(goindol_fg_videoram_w);
 	DECLARE_WRITE8_MEMBER(goindol_bg_videoram_w);
 	DECLARE_DRIVER_INIT(goindol);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -49,5 +54,5 @@ public:
 /*----------- defined in video/goindol.c -----------*/
 
 
-VIDEO_START( goindol );
+
 SCREEN_UPDATE_IND16( goindol );

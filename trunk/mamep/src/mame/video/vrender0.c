@@ -20,7 +20,7 @@ Missing:
 
 **************/
 
-typedef struct
+struct QuadInfo
 {
 	UINT16 *Dest;
 	UINT32 Pitch;	//in UINT16s
@@ -48,9 +48,9 @@ typedef struct
 	UINT32 SrcColor;
 	UINT8 DstAlpha;
 	UINT32 DstColor;
-} _Quad;
+};
 
-typedef struct
+struct RenderStateInfo
 {
 	UINT32 Tx;
 	UINT32 Ty;
@@ -72,17 +72,16 @@ typedef struct
 	UINT32 PixelFormat;
 	UINT32 Width;
 	UINT32 Height;
-} _RenderState;
+};
 
-typedef struct _vr0video_state  vr0video_state;
-struct _vr0video_state
+struct vr0video_state
 {
 	device_t *cpu;
 
 	UINT16 InternalPalette[256];
 	UINT32 LastPalUpdate;
 
-	_RenderState RenderState;
+	RenderStateInfo RenderState;
 };
 
 
@@ -95,7 +94,7 @@ INLINE vr0video_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == VIDEO_VRENDER0);
 
-	return (vr0video_state *)downcast<legacy_device_base *>(device)->token();
+	return (vr0video_state *)downcast<vr0video_device *>(device)->token();
 }
 
 INLINE const vr0video_interface *get_interface( device_t *device )
@@ -136,7 +135,7 @@ INLINE UINT16 Shade(UINT16 Src, UINT32 Shade)
 	return RGB16(scr, scg, scb);
 }
 
-static UINT16 Alpha(_Quad *Quad, UINT16 Src, UINT16 Dst)
+static UINT16 Alpha(QuadInfo *Quad, UINT16 Src, UINT16 Dst)
 {
 	UINT32 scr = (EXTRACTR8(Src) * ((Quad->Shade >> 16) & 0xff)) >> 8;
 	UINT32 scg = (EXTRACTG8(Src) * ((Quad->Shade >>  8) & 0xff)) >> 8;
@@ -239,7 +238,7 @@ static UINT16 Alpha(_Quad *Quad, UINT16 Src, UINT16 Dst)
 }
 
 #define TILENAME(bpp, t, a) \
-static void DrawQuad##bpp##t##a(_Quad *Quad)
+static void DrawQuad##bpp##t##a(QuadInfo *Quad)
 
 //TRUST ON THE COMPILER OPTIMIZATIONS
 #define TILETEMPL(bpp, t, a) \
@@ -339,7 +338,7 @@ TILETEMPL(4,1,0) TILETEMPL(4,1,1) TILETEMPL(4,1,2)
 DrawQuad##bpp##t##a
 
 
-static void DrawQuadFill(_Quad *Quad)
+static void DrawQuadFill(QuadInfo *Quad)
 {
 	UINT32 x, y;
 	UINT16 *line = Quad->Dest;
@@ -359,7 +358,7 @@ static void DrawQuadFill(_Quad *Quad)
 	}
 }
 
-typedef void (*_DrawTemplate)(_Quad *);
+typedef void (*_DrawTemplate)(QuadInfo *);
 
 static const _DrawTemplate DrawImage[]=
 {
@@ -487,7 +486,7 @@ int vrender0_ProcessPacket(device_t *device, UINT32 PacketPtr, UINT16 *Dest, UIN
 
 	if (Packet0 & 0x100)
 	{
-		_Quad Quad;
+		QuadInfo Quad;
 
 		Quad.Pitch = 512;
 
@@ -601,13 +600,40 @@ static DEVICE_RESET( vr0video )
 	vr0->LastPalUpdate = 0xffffffff;
 }
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+const device_type VIDEO_VRENDER0 = &device_creator<vr0video_device>;
 
-#define DEVTEMPLATE_ID( p, s )	p##vr0video##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME		"VRender0"
-#define DEVTEMPLATE_FAMILY		"???"
-#include "devtempl.h"
+vr0video_device::vr0video_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, VIDEO_VRENDER0, "VRender0", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(vr0video_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void vr0video_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void vr0video_device::device_start()
+{
+	DEVICE_START_NAME( vr0video )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void vr0video_device::device_reset()
+{
+	DEVICE_RESET_NAME( vr0video )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(VIDEO_VRENDER0, vr0video);

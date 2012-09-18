@@ -52,7 +52,7 @@ CPU/Video Board Parts:
 
 WRITE8_MEMBER(sbasketb_state::sbasketb_sh_irqtrigger_w)
 {
-	device_set_input_line_and_vector(machine().device<cpu_device>("audiocpu"), 0, HOLD_LINE, 0xff);
+	machine().device<cpu_device>("audiocpu")->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 WRITE8_MEMBER(sbasketb_state::sbasketb_coin_counter_w)
@@ -99,8 +99,8 @@ static ADDRESS_MAP_START( sbasketb_sound_map, AS_PROGRAM, 8, sbasketb_state )
 	AM_RANGE(0xa000, 0xa000) AM_DEVWRITE_LEGACY("vlm", vlm5030_data_w) /* speech data */
 	AM_RANGE(0xc000, 0xdfff) AM_DEVWRITE_LEGACY("vlm", hyperspt_sound_w)     /* speech and output controll */
 	AM_RANGE(0xe000, 0xe000) AM_DEVWRITE("dac", dac_device, write_unsigned8)
-	AM_RANGE(0xe001, 0xe001) AM_WRITE_LEGACY(konami_SN76496_latch_w)  /* Loads the snd command into the snd latch */
-	AM_RANGE(0xe002, 0xe002) AM_DEVWRITE_LEGACY("snsnd", konami_SN76496_w)      /* This address triggers the SN chip to read the data port. */
+	AM_RANGE(0xe001, 0xe001) AM_WRITE(konami_SN76496_latch_w)  /* Loads the snd command into the snd latch */
+	AM_RANGE(0xe002, 0xe002) AM_WRITE(konami_SN76496_w)      /* This address triggers the SN chip to read the data port. */
 ADDRESS_MAP_END
 
 
@@ -181,8 +181,18 @@ static INTERRUPT_GEN( vblank_irq )
 	sbasketb_state *state = device->machine().driver_data<sbasketb_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
 
 static MACHINE_CONFIG_START( sbasketb, sbasketb_state )
 
@@ -205,8 +215,6 @@ static MACHINE_CONFIG_START( sbasketb, sbasketb_state )
 	MCFG_GFXDECODE(sbasketb)
 	MCFG_PALETTE_LENGTH(16*16+16*16*16)
 
-	MCFG_PALETTE_INIT(sbasketb)
-	MCFG_VIDEO_START(sbasketb)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -216,8 +224,9 @@ static MACHINE_CONFIG_START( sbasketb, sbasketb_state )
 	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
-	MCFG_SOUND_ADD("snsnd", SN76489, XTAL_14_31818MHz / 8)
+	MCFG_SOUND_ADD("snsnd", SN76489_NEW, XTAL_14_31818MHz / 8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("vlm", VLM5030, XTAL_3_579545MHz) /* Schematics say 3.58MHz, but board uses 3.579545MHz xtal */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)

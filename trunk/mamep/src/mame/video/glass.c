@@ -31,25 +31,23 @@
       1  | xxxxxxxx -------- | not used
 */
 
-static TILE_GET_INFO( get_tile_info_glass_screen0 )
+TILE_GET_INFO_MEMBER(glass_state::get_tile_info_glass_screen0)
 {
-	glass_state *state = machine.driver_data<glass_state>();
-	int data = state->m_videoram[tile_index << 1];
-	int data2 = state->m_videoram[(tile_index << 1) + 1];
+	int data = m_videoram[tile_index << 1];
+	int data2 = m_videoram[(tile_index << 1) + 1];
 	int code = ((data & 0x03) << 14) | ((data & 0x0fffc) >> 2);
 
-	SET_TILE_INFO(0, code, 0x20 + (data2 & 0x1f), TILE_FLIPYX((data2 & 0xc0) >> 6));
+	SET_TILE_INFO_MEMBER(0, code, 0x20 + (data2 & 0x1f), TILE_FLIPYX((data2 & 0xc0) >> 6));
 }
 
 
-static TILE_GET_INFO( get_tile_info_glass_screen1 )
+TILE_GET_INFO_MEMBER(glass_state::get_tile_info_glass_screen1)
 {
-	glass_state *state = machine.driver_data<glass_state>();
-	int data = state->m_videoram[(0x1000 / 2) + (tile_index << 1)];
-	int data2 = state->m_videoram[(0x1000 / 2) + (tile_index << 1) + 1];
+	int data = m_videoram[(0x1000 / 2) + (tile_index << 1)];
+	int data2 = m_videoram[(0x1000 / 2) + (tile_index << 1) + 1];
 	int code = ((data & 0x03) << 14) | ((data & 0x0fffc) >> 2);
 
-	SET_TILE_INFO(0, code, 0x20 + (data2 & 0x1f), TILE_FLIPYX((data2 & 0xc0) >> 6));
+	SET_TILE_INFO_MEMBER(0, code, 0x20 + (data2 & 0x1f), TILE_FLIPYX((data2 & 0xc0) >> 6));
 }
 
 /***************************************************************************
@@ -125,17 +123,16 @@ WRITE16_MEMBER(glass_state::glass_vram_w)
 
 ***************************************************************************/
 
-VIDEO_START( glass )
+void glass_state::video_start()
 {
-	glass_state *state = machine.driver_data<glass_state>();
-	state->m_pant[0] = tilemap_create(machine, get_tile_info_glass_screen0, tilemap_scan_rows, 16, 16, 32, 32);
-	state->m_pant[1] = tilemap_create(machine, get_tile_info_glass_screen1, tilemap_scan_rows, 16, 16, 32, 32);
-	state->m_screen_bitmap = auto_bitmap_ind16_alloc (machine, 320, 200);
+	m_pant[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(glass_state::get_tile_info_glass_screen0),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_pant[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(glass_state::get_tile_info_glass_screen1),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_screen_bitmap = auto_bitmap_ind16_alloc (machine(), 320, 200);
 
-	state->save_item(NAME(*state->m_screen_bitmap));
+	save_item(NAME(*m_screen_bitmap));
 
-	state->m_pant[0]->set_transparent_pen(0);
-	state->m_pant[1]->set_transparent_pen(0);
+	m_pant[0]->set_transparent_pen(0);
+	m_pant[1]->set_transparent_pen(0);
 }
 
 
@@ -166,7 +163,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 {
 	glass_state *state = machine.driver_data<glass_state>();
 	int i;
-	const gfx_element *gfx = machine.gfx[0];
+	gfx_element *gfx = machine.gfx[0];
 
 	for (i = 3; i < (0x1000 - 6) / 2; i += 4)
 	{

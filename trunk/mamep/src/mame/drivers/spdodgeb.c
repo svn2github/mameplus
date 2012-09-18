@@ -32,7 +32,7 @@ Notes:
 WRITE8_MEMBER(spdodgeb_state::sound_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	cputag_set_input_line(machine(), "audiocpu", M6809_IRQ_LINE, HOLD_LINE);
+	machine().device("audiocpu")->execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(spdodgeb_state::spd_adpcm_w)
@@ -211,7 +211,7 @@ static void mcu63705_update_inputs(running_machine &machine)
 
 READ8_MEMBER(spdodgeb_state::mcu63701_r)
 {
-//  logerror("CPU #0 PC %04x: read from port %02x of 63701 data address 3801\n",cpu_get_pc(&space.device()),offset);
+//  logerror("CPU #0 PC %04x: read from port %02x of 63701 data address 3801\n",space.device().safe_pc(),offset);
 
 	if (m_mcu63701_command == 0) return 0x6a;
 	else switch (offset)
@@ -227,7 +227,7 @@ READ8_MEMBER(spdodgeb_state::mcu63701_r)
 
 WRITE8_MEMBER(spdodgeb_state::mcu63701_w)
 {
-//  logerror("CPU #0 PC %04x: write %02x to 63701 control address 3800\n",cpu_get_pc(&space.device()),data);
+//  logerror("CPU #0 PC %04x: write %02x to 63701 control address 3800\n",space.device().safe_pc(),data);
 	m_mcu63701_command = data;
 	mcu63705_update_inputs(machine());
 }
@@ -379,7 +379,7 @@ GFXDECODE_END
 
 static void irq_handler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", M6809_FIRQ_LINE, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(M6809_FIRQ_LINE, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym3812_interface ym3812_config =
@@ -394,19 +394,18 @@ static const msm5205_interface msm5205_config =
 };
 
 
-static MACHINE_RESET( spdodgeb )
+void spdodgeb_state::machine_reset()
 {
-	spdodgeb_state *state = machine.driver_data<spdodgeb_state>();
-	state->m_toggle = 0;
-	state->m_adpcm_pos[0] = state->m_adpcm_pos[1] = 0;
-	state->m_adpcm_end[0] = state->m_adpcm_end[1] = 0;
-	state->m_adpcm_idle[0] = state->m_adpcm_data[1] = 0;
-	state->m_adpcm_data[0] = state->m_adpcm_data[1] = -1;
-	state->m_mcu63701_command = 0;
-	memset(state->m_inputs, 0, sizeof(state->m_inputs));
-	memset(state->m_tapc, 0, sizeof(state->m_tapc));
-	state->m_last_port[0] = state->m_last_port[1] = 0;
-	state->m_last_dash[0] = state->m_last_dash[1] = 0;
+	m_toggle = 0;
+	m_adpcm_pos[0] = m_adpcm_pos[1] = 0;
+	m_adpcm_end[0] = m_adpcm_end[1] = 0;
+	m_adpcm_idle[0] = m_adpcm_data[1] = 0;
+	m_adpcm_data[0] = m_adpcm_data[1] = -1;
+	m_mcu63701_command = 0;
+	memset(m_inputs, 0, sizeof(m_inputs));
+	memset(m_tapc, 0, sizeof(m_tapc));
+	m_last_port[0] = m_last_port[1] = 0;
+	m_last_dash[0] = m_last_dash[1] = 0;
 }
 
 static MACHINE_CONFIG_START( spdodgeb, spdodgeb_state )
@@ -427,10 +426,7 @@ static MACHINE_CONFIG_START( spdodgeb, spdodgeb_state )
 	MCFG_GFXDECODE(spdodgeb)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_PALETTE_INIT(spdodgeb)
-	MCFG_VIDEO_START(spdodgeb)
 
-	MCFG_MACHINE_RESET( spdodgeb )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

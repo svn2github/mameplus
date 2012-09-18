@@ -30,8 +30,7 @@ static const UINT8 skew_bits_value[4] = { 0, 1, 2, 2 };
 #define CURSOR_ROW_ADDRESS(t)	((t)->reg[8] & 0x3f)
 
 
-typedef struct _tms9927_state tms9927_state;
-struct _tms9927_state
+struct tms9927_state
 {
 	/* driver-controlled state */
 	const tms9927_interface *intf;
@@ -64,7 +63,7 @@ INLINE tms9927_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == TMS9927);
-	return (tms9927_state *)downcast<legacy_device_base *>(device)->token();
+	return (tms9927_state *)downcast<tms9927_device *>(device)->token();
 }
 
 
@@ -307,58 +306,78 @@ static DEVICE_RESET( tms9927 )
 {
 }
 
+const device_type TMS9927 = &device_creator<tms9927_device>;
 
-DEVICE_GET_INFO( tms9927 )
+tms9927_device::tms9927_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TMS9927, "TMS9927", tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(tms9927_state);			break;
-		case DEVINFO_INT_INLINE_CONFIG_BYTES:			info->i = 0;								break;
-
-		/* --- the following bits of info are returned as pointers to functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(tms9927);	break;
-		case DEVINFO_FCT_STOP:							info->stop = DEVICE_STOP_NAME(tms9927);		break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME(tms9927);	break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "TMS9927");					break;
-		case DEVINFO_STR_FAMILY:						strcpy(info->s, "TMS9927 CRTC");			break;
-		case DEVINFO_STR_VERSION:						strcpy(info->s, "1.0");						break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);					break;
-		case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(tms9927_state));
+}
+tms9927_device::tms9927_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, type, name, tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(tms9927_state));
 }
 
-DEVICE_GET_INFO( crt5027 )
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void tms9927_device::device_config_complete()
 {
-	switch (state)
-	{
-		case DEVINFO_STR_NAME:							strcpy(info->s, "CRT5027");					break;
-		default:										DEVICE_GET_INFO_CALL(tms9927);				break;
-	}
 }
 
-DEVICE_GET_INFO( crt5037 )
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void tms9927_device::device_start()
 {
-	switch (state)
-	{
-		case DEVINFO_STR_NAME:							strcpy(info->s, "CRT5037");					break;
-		default:										DEVICE_GET_INFO_CALL(tms9927);				break;
-	}
+	DEVICE_START_NAME( tms9927 )(this);
 }
 
-DEVICE_GET_INFO( crt5057 )
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void tms9927_device::device_reset()
 {
-	switch (state)
-	{
-		case DEVINFO_STR_NAME:							strcpy(info->s, "CRT5057");					break;
-		default:										DEVICE_GET_INFO_CALL(tms9927);				break;
-	}
+	DEVICE_RESET_NAME( tms9927 )(this);
+}
+
+//-------------------------------------------------
+//  device_stop - device-specific stop
+//-------------------------------------------------
+
+void tms9927_device::device_stop()
+{
+	DEVICE_STOP_NAME( tms9927 )(this);
 }
 
 
-DEFINE_LEGACY_DEVICE(TMS9927, tms9927);
-DEFINE_LEGACY_DEVICE(CRT5027, crt5027);
-DEFINE_LEGACY_DEVICE(CRT5037, crt5037);
-DEFINE_LEGACY_DEVICE(CRT5057, crt5057);
+const device_type CRT5027 = &device_creator<crt5027_device>;
+
+crt5027_device::crt5027_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: tms9927_device(mconfig, CRT5027, "CRT5027", tag, owner, clock)
+{
+}
+
+
+const device_type CRT5037 = &device_creator<crt5037_device>;
+
+crt5037_device::crt5037_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: tms9927_device(mconfig, CRT5037, "CRT5037", tag, owner, clock)
+{
+}
+
+
+const device_type CRT5057 = &device_creator<crt5057_device>;
+
+crt5057_device::crt5057_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: tms9927_device(mconfig, CRT5057, "CRT5057", tag, owner, clock)
+{
+}
+
+

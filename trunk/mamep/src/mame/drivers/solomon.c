@@ -14,7 +14,7 @@ driver by Mirko Buffoni
 WRITE8_MEMBER(solomon_state::solomon_sh_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 /* this is checked on the title screen and when you reach certain scores in the game
@@ -23,17 +23,17 @@ WRITE8_MEMBER(solomon_state::solomon_sh_command_w)
 
 READ8_MEMBER(solomon_state::solomon_0xe603_r)
 {
-	if (cpu_get_pc(&space.device()) == 0x161) // all the time .. return 0 to act as before  for coin / startup etc.
+	if (space.device().safe_pc() == 0x161) // all the time .. return 0 to act as before  for coin / startup etc.
 	{
 		return 0;
 	}
-	else if (cpu_get_pc(&space.device()) == 0x4cf0) // stop it clearing the screen at certain scores
+	else if (space.device().safe_pc() == 0x4cf0) // stop it clearing the screen at certain scores
 	{
-		return (cpu_get_reg(&space.device(), Z80_BC) & 0x08);
+		return (space.device().state().state_int(Z80_BC) & 0x08);
 	}
 	else
 	{
-		mame_printf_debug("unhandled solomon_0xe603_r %04x\n", cpu_get_pc(&space.device()));
+		mame_printf_debug("unhandled solomon_0xe603_r %04x\n", space.device().safe_pc());
 		return 0;
 	}
 }
@@ -198,7 +198,7 @@ static INTERRUPT_GEN( vblank_irq )
 	solomon_state *state = device->machine().driver_data<solomon_state>();
 
 	if(state->m_nmi_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -227,7 +227,6 @@ static MACHINE_CONFIG_START( solomon, solomon_state )
 	MCFG_GFXDECODE(solomon)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_VIDEO_START(solomon)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

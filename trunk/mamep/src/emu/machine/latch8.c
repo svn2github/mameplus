@@ -10,8 +10,7 @@
 #include "sound/discrete.h"
 #include "latch8.h"
 
-typedef struct _latch8_t latch8_t;
-struct _latch8_t
+struct latch8_t
 {
 	latch8_config	*intf;
 	UINT8			 value;
@@ -26,7 +25,7 @@ struct _latch8_t
 INLINE latch8_t *get_safe_token(device_t *device) {
 	assert( device != NULL );
 	assert( device->type() == LATCH8 );
-	return ( latch8_t * ) downcast<legacy_device_base *>(device)->token();
+	return ( latch8_t * ) downcast<latch8_device *>(device)->token();
 }
 
 static void update(device_t *device, UINT8 new_val, UINT8 mask)
@@ -82,7 +81,7 @@ READ8_DEVICE_HANDLER( latch8_r )
 	if (latch8->has_read)
 	{
 		/*  temporary hack until all relevant systems are devices */
-		address_space *space = device->machine().firstcpu->memory().space(AS_PROGRAM);
+		address_space *space = device->machine().firstcpu->space(AS_PROGRAM);
 		int i;
 		for (i=0; i<8; i++)
 		{
@@ -186,7 +185,7 @@ static DEVICE_START( latch8 )
 	int i;
 
 	/* validate arguments */
-	latch8->intf = (latch8_config *)downcast<const legacy_device_base *>(device)->inline_config();
+	latch8->intf = (latch8_config *)&downcast<latch8_device *>(device)->m_inline_config;
 
 	latch8->value = 0x0;
 
@@ -232,27 +231,39 @@ static DEVICE_RESET( latch8 )
 }
 
 
-DEVICE_GET_INFO( latch8 )
+const device_type LATCH8 = &device_creator<latch8_device>;
+
+latch8_device::latch8_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+       : device_t(mconfig, LATCH8, "8 bit latch", tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(latch8_t);				break;
-		case DEVINFO_INT_INLINE_CONFIG_BYTES:			info->i = sizeof(latch8_config);							break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(latch8);break;
-		case DEVINFO_FCT_STOP:							/* Nothing */							break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME(latch8);break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "8 bit latch");			break;
-		case DEVINFO_STR_FAMILY:						strcpy(info->s, "Latches");				break;
-		case DEVINFO_STR_VERSION:						strcpy(info->s, "1.0");					break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(latch8_t));
+	memset((void*)&m_inline_config,0,sizeof(m_inline_config));
 }
 
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-DEFINE_LEGACY_DEVICE(LATCH8, latch8);
+void latch8_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void latch8_device::device_start()
+{
+	DEVICE_START_NAME( latch8 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void latch8_device::device_reset()
+{
+	DEVICE_RESET_NAME( latch8 )(this);
+}

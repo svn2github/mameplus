@@ -35,24 +35,23 @@
 static void update_interrupts(running_machine &machine)
 {
 	xybots_state *state = machine.driver_data<xybots_state>();
-	cputag_set_input_line(machine, "maincpu", 1, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
-	cputag_set_input_line(machine, "maincpu", 2, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(1, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(2, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
-static MACHINE_START( xybots )
+MACHINE_START_MEMBER(xybots_state,xybots)
 {
-	atarigen_init(machine);
+	atarigen_init(machine());
 }
 
 
-static MACHINE_RESET( xybots )
+MACHINE_RESET_MEMBER(xybots_state,xybots)
 {
-	xybots_state *state = machine.driver_data<xybots_state>();
 
-	atarigen_eeprom_reset(state);
-	atarigen_slapstic_reset(state);
-	atarigen_interrupt_reset(state, update_interrupts);
+	atarigen_eeprom_reset(this);
+	atarigen_slapstic_reset(this);
+	atarigen_interrupt_reset(this, update_interrupts);
 	atarijsa_reset();
 }
 
@@ -198,8 +197,8 @@ static MACHINE_CONFIG_START( xybots, xybots_state )
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_VBLANK_INT("screen", atarigen_video_int_gen)
 
-	MCFG_MACHINE_START(xybots)
-	MCFG_MACHINE_RESET(xybots)
+	MCFG_MACHINE_START_OVERRIDE(xybots_state,xybots)
+	MCFG_MACHINE_RESET_OVERRIDE(xybots_state,xybots)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
 	/* video hardware */
@@ -213,7 +212,7 @@ static MACHINE_CONFIG_START( xybots, xybots_state )
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
 	MCFG_SCREEN_UPDATE_STATIC(xybots)
 
-	MCFG_VIDEO_START(xybots)
+	MCFG_VIDEO_START_OVERRIDE(xybots_state,xybots)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(jsa_i_stereo_swapped)

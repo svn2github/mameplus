@@ -279,7 +279,7 @@ static const deco16ic_interface fghthist_deco16ic_tilegen2_intf =
 
 static TIMER_DEVICE_CALLBACK( interrupt_gen )
 {
-	cputag_set_input_line(timer.machine(), "maincpu", ARM_IRQ_LINE, HOLD_LINE);
+	timer.machine().device("maincpu")->execute().set_input_line(ARM_IRQ_LINE, HOLD_LINE);
 }
 
 READ32_MEMBER(deco32_state::deco32_irq_controller_r)
@@ -289,7 +289,7 @@ READ32_MEMBER(deco32_state::deco32_irq_controller_r)
 	switch (offset)
 	{
 	case 2: /* Raster IRQ ACK - value read is not used */
-		cputag_set_input_line(machine(), "maincpu", ARM_IRQ_LINE, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(ARM_IRQ_LINE, CLEAR_LINE);
 		return 0;
 
 	case 3: /* Irq controller
@@ -314,7 +314,7 @@ READ32_MEMBER(deco32_state::deco32_irq_controller_r)
 //      return 0xffffff80 | vblank | (0x40); //test for lock load guns
 	}
 
-	logerror("%08x: Unmapped IRQ read %08x (%08x)\n",cpu_get_pc(&space.device()),offset,mem_mask);
+	logerror("%08x: Unmapped IRQ read %08x (%08x)\n",space.device().safe_pc(),offset,mem_mask);
 	return 0xffffffff;
 }
 
@@ -324,7 +324,7 @@ WRITE32_MEMBER(deco32_state::deco32_irq_controller_w)
 
 	switch (offset) {
 	case 0: /* IRQ enable - probably an irq mask, but only values used are 0xc8 and 0xca */
-//      logerror("%08x:  IRQ write %d %08x\n",cpu_get_pc(&space.device()),offset,data);
+//      logerror("%08x:  IRQ write %d %08x\n",space.device().safe_pc(),offset,data);
 		m_raster_enable=(data&0xff)==0xc8; /* 0xca seems to be off */
 		break;
 
@@ -345,7 +345,7 @@ WRITE32_MEMBER(deco32_state::deco32_irq_controller_w)
 WRITE32_MEMBER(deco32_state::deco32_sound_w)
 {
 	soundlatch_byte_w(space,0,data & 0xff);
-	cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
+	machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 READ32_MEMBER(deco32_state::deco32_71_r)
@@ -364,7 +364,7 @@ READ32_MEMBER(deco32_state::captaven_prot_r)
 	case 0xed4: return ioport("IN2")->read(); /* Misc */
 	}
 
-	logerror("%08x: Unmapped protection read %04x\n",cpu_get_pc(&space.device()),offset<<2);
+	logerror("%08x: Unmapped protection read %04x\n",space.device().safe_pc(),offset<<2);
 	return 0xffffffff;
 }
 
@@ -405,13 +405,13 @@ WRITE32_MEMBER(deco32_state::fghthist_eeprom_w)
 
 READ32_MEMBER(deco32_state::dragngun_service_r)
 {
-//  logerror("%08x:Read service\n",cpu_get_pc(&space.device()));
+//  logerror("%08x:Read service\n",space.device().safe_pc());
 	return ioport("IN2")->read();
 }
 
 READ32_MEMBER(deco32_state::lockload_gun_mirror_r)
 {
-//logerror("%08x:Read gun %d\n",cpu_get_pc(&space.device()),offset);
+//logerror("%08x:Read gun %d\n",space.device().safe_pc(),offset);
 //return ((machine().rand()%0xffff)<<16) | machine().rand()%0xffff;
 	if (offset) /* Mirror of player 1 and player 2 fire buttons */
 		return ioport("IN4")->read() | ((machine().rand()%0xff)<<16);
@@ -420,7 +420,7 @@ READ32_MEMBER(deco32_state::lockload_gun_mirror_r)
 
 READ32_MEMBER(deco32_state::dragngun_prot_r)
 {
-//  logerror("%08x:Read prot %08x (%08x)\n",cpu_get_pc(&space.device()),offset<<1,mem_mask);
+//  logerror("%08x:Read prot %08x (%08x)\n",space.device().safe_pc(),offset<<1,mem_mask);
 
 	if (!m_strobe) m_strobe=8;
 	else m_strobe=0;
@@ -487,7 +487,7 @@ READ32_MEMBER(deco32_state::tattass_prot_r)
 	case 0x35a: return m_tattass_eprom_bit << 16;
 	}
 
-	logerror("%08x:Read prot %08x (%08x)\n",cpu_get_pc(&space.device()),offset<<1,mem_mask);
+	logerror("%08x:Read prot %08x (%08x)\n",space.device().safe_pc(),offset<<1,mem_mask);
 
 	return 0xffffffff;
 }
@@ -645,7 +645,7 @@ READ32_MEMBER(deco32_state::nslasher_prot_r)
 	case 0x35a: return (machine().device<eeprom_device>("eeprom")->read_bit()<< 16) | 0xffff; // Debug switch in low word??
 	}
 
-	//logerror("%08x: Read unmapped prot %08x (%08x)\n",cpu_get_pc(&space.device()),offset<<1,mem_mask);
+	//logerror("%08x: Read unmapped prot %08x (%08x)\n",space.device().safe_pc(),offset<<1,mem_mask);
 
 	return 0xffffffff;
 }
@@ -666,7 +666,7 @@ WRITE32_MEMBER(deco32_state::nslasher_eeprom_w)
 
 WRITE32_MEMBER(deco32_state::nslasher_prot_w)
 {
-	//logerror("%08x:write prot %08x (%08x) %08x\n",cpu_get_pc(&space.device()),offset<<1,mem_mask,data);
+	//logerror("%08x:write prot %08x (%08x) %08x\n",space.device().safe_pc(),offset<<1,mem_mask,data);
 
 	/* Only sound port of chip is used - no protection */
 	if (offset==0x700/4) {
@@ -674,7 +674,7 @@ WRITE32_MEMBER(deco32_state::nslasher_prot_w)
 		/* bit 1 of nslasher_sound_irq specifies IRQ command writes */
 		soundlatch_byte_w(space,0,(data>>16)&0xff);
 		m_nslasher_sound_irq |= 0x02;
-		cputag_set_input_line(machine(), "audiocpu", 0, (m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
+		machine().device("audiocpu")->execute().set_input_line(0, (m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -786,7 +786,7 @@ static ADDRESS_MAP_START( fghthist_map, AS_PROGRAM, 32, deco32_state )
 	AM_RANGE(0x16c000, 0x16c01f) AM_READNOP
 	AM_RANGE(0x17c000, 0x17c03f) AM_READNOP
 
-	AM_RANGE(0x200000, 0x200fff) AM_READWRITE_LEGACY(deco16_146_fghthist_prot_r, deco16_146_fghthist_prot_w) AM_BASE_LEGACY(&deco32_prot_ram)
+	AM_RANGE(0x200000, 0x200fff) AM_READWRITE_LEGACY(deco16_146_fghthist_prot_r, deco16_146_fghthist_prot_w) AM_SHARE("prot32ram")
 	AM_RANGE(0x208800, 0x208803) AM_WRITENOP /* ? */
 ADDRESS_MAP_END
 
@@ -816,7 +816,7 @@ static ADDRESS_MAP_START( fghthsta_memmap, AS_PROGRAM, 32, deco32_state )
 	AM_RANGE(0x1d4000, 0x1d5fff)  AM_RAM_WRITE(deco32_pf4_rowscroll_w) AM_SHARE("pf4_rowscroll32")
 	AM_RANGE(0x1e0000, 0x1e001f) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf_control_dword_r, deco16ic_pf_control_dword_w)
 
-	AM_RANGE(0x200000, 0x200fff) AM_READWRITE_LEGACY(deco16_146_fghthist_prot_r, deco16_146_fghthist_prot_w) AM_BASE_LEGACY(&deco32_prot_ram)
+	AM_RANGE(0x200000, 0x200fff) AM_READWRITE_LEGACY(deco16_146_fghthist_prot_r, deco16_146_fghthist_prot_w) AM_SHARE("prot32ram")
 ADDRESS_MAP_END
 
 // the video drawing (especially sprite) code on this is too slow to cope with proper partial updates
@@ -956,7 +956,7 @@ static ADDRESS_MAP_START( tattass_map, AS_PROGRAM, 32, deco32_state )
 	AM_RANGE(0x1d4000, 0x1d5fff) AM_RAM_WRITE(deco32_pf4_rowscroll_w) AM_SHARE("pf4_rowscroll32")
 	AM_RANGE(0x1e0000, 0x1e001f) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf_control_dword_r, deco16ic_pf_control_dword_w)
 
-	AM_RANGE(0x200000, 0x200fff) AM_READWRITE(tattass_prot_r, tattass_prot_w) AM_BASE_LEGACY(&deco32_prot_ram)
+	AM_RANGE(0x200000, 0x200fff) AM_READWRITE(tattass_prot_r, tattass_prot_w) AM_SHARE("prot32ram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( nslasher_map, AS_PROGRAM, 32, deco32_state )
@@ -997,7 +997,7 @@ static ADDRESS_MAP_START( nslasher_map, AS_PROGRAM, 32, deco32_state )
 	AM_RANGE(0x1d4000, 0x1d5fff) AM_RAM_WRITE(deco32_pf4_rowscroll_w) AM_SHARE("pf4_rowscroll32")
 	AM_RANGE(0x1e0000, 0x1e001f) AM_DEVREADWRITE_LEGACY("tilegen2", deco16ic_pf_control_dword_r, deco16ic_pf_control_dword_w)
 
-	AM_RANGE(0x200000, 0x200fff) AM_READWRITE(nslasher_prot_r, nslasher_prot_w) AM_BASE_LEGACY(&deco32_prot_ram)
+	AM_RANGE(0x200000, 0x200fff) AM_READWRITE(nslasher_prot_r, nslasher_prot_w) AM_SHARE("prot32ram")
 ADDRESS_MAP_END
 
 /******************************************************************************/
@@ -1017,7 +1017,7 @@ READ8_MEMBER(deco32_state::latch_r)
 {
 	/* bit 1 of nslasher_sound_irq specifies IRQ command writes */
 	m_nslasher_sound_irq &= ~0x02;
-	cputag_set_input_line(machine(), "audiocpu", 0, (m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(0, (m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
 	return soundlatch_byte_r(space,0);
 }
 
@@ -1623,7 +1623,7 @@ GFXDECODE_END
 
 static void sound_irq(device_t *device, int state)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 1, state); /* IRQ 2 */
+	device->machine().device("audiocpu")->execute().set_input_line(1, state); /* IRQ 2 */
 }
 
 static void sound_irq_nslasher(device_t *device, int state)
@@ -1634,7 +1634,7 @@ static void sound_irq_nslasher(device_t *device, int state)
 		drvstate->m_nslasher_sound_irq |= 0x01;
 	else
 		drvstate->m_nslasher_sound_irq &= ~0x01;
-	cputag_set_input_line(device->machine(), "audiocpu", 0, (drvstate->m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, (drvstate->m_nslasher_sound_irq != 0) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 WRITE8_MEMBER(deco32_state::sound_bankswitch_w)
@@ -1665,15 +1665,15 @@ static const eeprom_interface eeprom_interface_tattass =
 
 /**********************************************************************************/
 
-static MACHINE_RESET( deco32 )
+MACHINE_RESET_MEMBER(deco32_state,deco32)
 {
-	deco32_state *state = machine.driver_data<deco32_state>();
-	state->m_raster_irq_timer = machine.device<timer_device>("int_timer");
+	m_raster_irq_timer = machine().device<timer_device>("int_timer");
+	decoprot_reset(machine());
 }
 
 static INTERRUPT_GEN( deco32_vbl_interrupt )
 {
-	device_set_input_line(device, ARM_IRQ_LINE, HOLD_LINE);
+	device->execute().set_input_line(ARM_IRQ_LINE, HOLD_LINE);
 }
 
 UINT16 captaven_pri_callback(UINT16 x)
@@ -1740,7 +1740,7 @@ static MACHINE_CONFIG_START( captaven, deco32_state )
 	MCFG_CPU_ADD("audiocpu", H6280, XTAL_32_22MHz/4/3)  /* pin 10 is 32mhz/4, pin 14 is High so internal divisor is 3 (verified on pcb) */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_RESET(deco32)
+	MCFG_MACHINE_RESET_OVERRIDE(deco32_state,deco32)
 
 	MCFG_TIMER_ADD("int_timer", interrupt_gen)
 
@@ -1762,7 +1762,7 @@ static MACHINE_CONFIG_START( captaven, deco32_state )
 	decospr_device::set_pri_callback(*device, captaven_pri_callback);
 
 
-	MCFG_VIDEO_START(captaven)
+	MCFG_VIDEO_START_OVERRIDE(deco32_state,captaven)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1810,7 +1810,7 @@ static MACHINE_CONFIG_START( fghthist, deco32_state )
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
 
-	MCFG_VIDEO_START(fghthist)
+	MCFG_VIDEO_START_OVERRIDE(deco32_state,fghthist)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1856,7 +1856,7 @@ static MACHINE_CONFIG_START( fghthsta, deco32_state )
 	MCFG_DEVICE_ADD("spritegen", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 3);
 
-	MCFG_VIDEO_START(fghthist)
+	MCFG_VIDEO_START_OVERRIDE(deco32_state,fghthist)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1948,7 +1948,7 @@ static MACHINE_CONFIG_START( dragngun, dragngun_state )
 	MCFG_CPU_ADD("audiocpu", H6280, 32220000/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_RESET(deco32)
+	MCFG_MACHINE_RESET_OVERRIDE(deco32_state,deco32)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
 	MCFG_TIMER_ADD("int_timer", interrupt_gen)
@@ -1969,7 +1969,7 @@ static MACHINE_CONFIG_START( dragngun, dragngun_state )
 	MCFG_GFXDECODE(dragngun)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(dragngun)
+	MCFG_VIDEO_START_OVERRIDE(dragngun_state,dragngun)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2000,13 +2000,13 @@ static TIMER_DEVICE_CALLBACK( lockload_vbl_irq )
 	if(scanline == 31*8)
 	{
 		state->m_irq_source = 0;
-		device_set_input_line(state->m_maincpu, ARM_IRQ_LINE, HOLD_LINE);
+		state->m_maincpu->set_input_line(ARM_IRQ_LINE, HOLD_LINE);
 	}
 
 	if(scanline == 0)
 	{
 		state->m_irq_source = 1;
-		device_set_input_line(state->m_maincpu, ARM_IRQ_LINE, HOLD_LINE);
+		state->m_maincpu->set_input_line(ARM_IRQ_LINE, HOLD_LINE);
 	}
 }
 
@@ -2024,7 +2024,7 @@ static MACHINE_CONFIG_START( lockload, dragngun_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* to improve main<->audio comms */
 
-	MCFG_MACHINE_RESET(deco32)
+	MCFG_MACHINE_RESET_OVERRIDE(deco32_state,deco32)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
 	MCFG_TIMER_ADD("int_timer", interrupt_gen)
@@ -2045,7 +2045,7 @@ static MACHINE_CONFIG_START( lockload, dragngun_state )
 	MCFG_GFXDECODE(dragngun)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(lockload)
+	MCFG_VIDEO_START_OVERRIDE(dragngun_state,lockload)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2133,7 +2133,7 @@ static MACHINE_CONFIG_START( tattass, deco32_state )
 	MCFG_GFXDECODE(tattass)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(nslasher)
+	MCFG_VIDEO_START_OVERRIDE(deco32_state,nslasher)
 
 	/* sound hardware */
 	MCFG_DECOBSMT_ADD(DECOBSMT_TAG)
@@ -2172,7 +2172,7 @@ static MACHINE_CONFIG_START( nslasher, deco32_state )
 	MCFG_GFXDECODE(nslasher)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(nslasher)
+	MCFG_VIDEO_START_OVERRIDE(deco32_state,nslasher)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

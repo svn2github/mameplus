@@ -142,8 +142,7 @@
 /* The Z80 registers. halt is set to 1 when the CPU is halted, the refresh  */
 /* register is calculated as follows: refresh=(r&127)|(r2&128)    */
 /****************************************************************************/
-typedef struct _z80_state z80_state;
-struct _z80_state
+struct z80_state
 {
 	PAIR			prvpc,pc,sp,af,bc,de,hl,ix,iy,wz;
 	PAIR			af2,bc2,de2,hl2;
@@ -261,7 +260,8 @@ static const UINT8 cc_op[0x100] = {
  5,10,10,10,10,11, 7,11, 5,10,10, 0,10,17, 7,11,	/* cb -> cc_cb */
  5,10,10,11,10,11, 7,11, 5, 4,10,11,10, 0, 7,11,	/* dd -> cc_xy */
  5,10,10,19,10,11, 7,11, 5, 4,10, 4,10, 0, 7,11,	/* ed -> cc_ed */
- 5,10,10, 4,10,11, 7,11, 5, 6,10, 4,10, 0, 7,11};	/* fd -> cc_xy */
+ 5,10,10, 4,10,11, 7,11, 5, 6,10, 4,10, 0, 7,11		/* fd -> cc_xy */
+};
 
 static const UINT8 cc_cb[0x100] = {
  8, 8, 8, 8, 8, 8,15, 8, 8, 8, 8, 8, 8, 8,15, 8,
@@ -279,7 +279,8 @@ static const UINT8 cc_cb[0x100] = {
  8, 8, 8, 8, 8, 8,15, 8, 8, 8, 8, 8, 8, 8,15, 8,
  8, 8, 8, 8, 8, 8,15, 8, 8, 8, 8, 8, 8, 8,15, 8,
  8, 8, 8, 8, 8, 8,15, 8, 8, 8, 8, 8, 8, 8,15, 8,
- 8, 8, 8, 8, 8, 8,15, 8, 8, 8, 8, 8, 8, 8,15, 8};
+ 8, 8, 8, 8, 8, 8,15, 8, 8, 8, 8, 8, 8, 8,15, 8
+};
 
 static const UINT8 cc_ed[0x100] = {
  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
@@ -297,7 +298,8 @@ static const UINT8 cc_ed[0x100] = {
  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
- 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
+ 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8
+};
 
 /* ix/iy: with the exception of (i+offset) opcodes, t-states are main_opcode_table + 4 */
 static const UINT8 cc_xy[0x100] = {
@@ -316,7 +318,8 @@ static const UINT8 cc_xy[0x100] = {
  5+4,10+4,10+4,10+4,10+4,11+4, 7+4,11+4, 5+4,10+4,10+4, 0  ,10+4,17+4, 7+4,11+4,	/* cb -> cc_xycb */
  5+4,10+4,10+4,11+4,10+4,11+4, 7+4,11+4, 5+4, 4+4,10+4,11+4,10+4, 4+4, 7+4,11+4,
  5+4,10+4,10+4,19+4,10+4,11+4, 7+4,11+4, 5+4, 4+4,10+4, 4+4,10+4, 4+4, 7+4,11+4,
- 5+4,10+4,10+4, 4+4,10+4,11+4, 7+4,11+4, 5+4, 6+4,10+4, 4+4,10+4, 4+4, 7+4,11+4};
+ 5+4,10+4,10+4, 4+4,10+4,11+4, 7+4,11+4, 5+4, 6+4,10+4, 4+4,10+4, 4+4, 7+4,11+4
+};
 
 static const UINT8 cc_xycb[0x100] = {
 23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,
@@ -334,7 +337,8 @@ static const UINT8 cc_xycb[0x100] = {
 23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,
 23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,
 23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,
-23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23};
+23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23
+};
 
 /* extra cycles if jr/jp/call taken and 'interrupt latency' on rst 0-7 */
 static const UINT8 cc_ex[0x100] = {
@@ -353,14 +357,14 @@ static const UINT8 cc_ex[0x100] = {
  6, 0, 0, 0, 7, 0, 0, 2, 6, 0, 0, 0, 7, 0, 0, 2,
  6, 0, 0, 0, 7, 0, 0, 2, 6, 0, 0, 0, 7, 0, 0, 2,
  6, 0, 0, 0, 7, 0, 0, 2, 6, 0, 0, 0, 7, 0, 0, 2,
- 6, 0, 0, 0, 7, 0, 0, 2, 6, 0, 0, 0, 7, 0, 0, 2};
+ 6, 0, 0, 0, 7, 0, 0, 2, 6, 0, 0, 0, 7, 0, 0, 2
+};
 
 #define cc_dd	cc_xy
 #define cc_fd	cc_xy
 
 static void take_interrupt(z80_state *z80);
 static void take_interrupt_nsc800(z80_state *z80);
-static CPU_BURN( z80 );
 
 typedef void (*funcptr)(z80_state *z80);
 
@@ -471,19 +475,6 @@ PROTOTYPES(Z80ed,ed);
 PROTOTYPES(Z80fd,fd);
 PROTOTYPES(Z80xycb,xycb);
 
-/****************************************************************************/
-/* Burn an odd amount of cycles, that is instructions taking something      */
-/* different from 4 T-states per opcode (and r increment)                   */
-/****************************************************************************/
-INLINE void BURNODD(z80_state *z80, int cycles, int opcodes, int cyclesum)
-{
-	if( cycles > 0 )
-	{
-		z80->r += (cycles / cyclesum) * opcodes;
-		z80->icount -= (cycles / cyclesum) * cyclesum;
-	}
-}
-
 /***************************************************************
  * define an opcode function
  ***************************************************************/
@@ -588,8 +579,6 @@ INLINE void BURNODD(z80_state *z80, int cycles, int opcodes, int cyclesum)
 #define ENTER_HALT(Z) do {										\
 	(Z)->PC--;													\
 	(Z)->halt = 1;												\
-	if( (Z)->irq_state == CLEAR_LINE )							\
-		CPU_BURN_NAME(z80)( (Z)->device, (Z)->icount);			\
 } while (0)
 
 /***************************************************************
@@ -3681,22 +3670,6 @@ static CPU_EXECUTE( z80 )
 }
 
 /****************************************************************************
- * Burn 'cycles' T-states. Adjust z80->r register for the lost time
- ****************************************************************************/
-static CPU_BURN( z80 )
-{
-	z80_state *z80 = get_safe_token(device);
-
-	if( cycles > 0 )
-	{
-		/* NOP takes 4 cycles per instruction */
-		int n = (cycles + 3) / 4;
-		z80->r += n;
-		z80->icount -= 4 * n;
-	}
-}
-
-/****************************************************************************
  * Set IRQ line state
  ****************************************************************************/
 static void set_irq_line(z80_state *z80, int irqline, int state)
@@ -3891,7 +3864,7 @@ CPU_GET_INFO( z80 )
 		case CPUINFO_INT_CONTEXT_SIZE:					info->i = sizeof(z80_state);			break;
 		case CPUINFO_INT_INPUT_LINES:					info->i = 4;							break;
 		case CPUINFO_INT_DEFAULT_IRQ_VECTOR:			info->i = 0xff;							break;
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;			break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;			break;
 		case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1;							break;
 		case CPUINFO_INT_CLOCK_DIVIDER:					info->i = 1;							break;
 		case CPUINFO_INT_MIN_INSTRUCTION_BYTES:			info->i = 1;							break;
@@ -3899,12 +3872,12 @@ CPU_GET_INFO( z80 )
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 2;							break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 16;							break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:		info->i = 8;						break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM:		info->i = 16;						break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM:		info->i = 0;						break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:				info->i = 8;						break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:				info->i = 16;						break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:				info->i = 0;						break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_PROGRAM:		info->i = 8;						break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM:		info->i = 16;						break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM:		info->i = 0;						break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_IO:				info->i = 8;						break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_IO:				info->i = 16;						break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_IO:				info->i = 0;						break;
 
 		case CPUINFO_INT_INPUT_STATE + Z80_INPUT_LINE_BUSRQ:	info->i = z80->busrq_state;		break;
 		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_NMI:			info->i = z80->nmi_state;		break;
@@ -3926,11 +3899,11 @@ CPU_GET_INFO( z80 )
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &z80->icount;			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Z80");					break;
-		case DEVINFO_STR_FAMILY:						strcpy(info->s, "Zilog Z80");			break;
-		case DEVINFO_STR_VERSION:						strcpy(info->s, "3.9");					break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright Juergen Buchmueller, all rights reserved."); break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "Z80");					break;
+		case CPUINFO_STR_FAMILY:						strcpy(info->s, "Zilog Z80");			break;
+		case CPUINFO_STR_VERSION:						strcpy(info->s, "3.9");					break;
+		case CPUINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);				break;
+		case CPUINFO_STR_CREDITS:						strcpy(info->s, "Copyright Juergen Buchmueller, all rights reserved."); break;
 	}
 }
 
@@ -3950,7 +3923,7 @@ CPU_GET_INFO( nsc800 )
 		case CPUINFO_FCT_RESET:							info->reset = CPU_RESET_NAME(nsc800);			break;
 		case CPUINFO_FCT_EXECUTE:						info->execute = CPU_EXECUTE_NAME(nsc800);		break;
 
-		case DEVINFO_STR_NAME:							strcpy(info->s, "NSC800");						break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "NSC800");						break;
 
 		default:										CPU_GET_INFO_CALL(z80); 						break;
 	}

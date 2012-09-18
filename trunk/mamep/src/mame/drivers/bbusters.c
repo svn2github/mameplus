@@ -254,7 +254,7 @@ WRITE16_MEMBER(bbusters_state::sound_cpu_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, 0, data&0xff);
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -279,9 +279,9 @@ READ16_MEMBER(bbusters_state::control_3_r)
 WRITE16_MEMBER(bbusters_state::gun_select_w)
 {
 
-	logerror("%08x: gun r\n",cpu_get_pc(&space.device()));
+	logerror("%08x: gun r\n",space.device().safe_pc());
 
-	device_set_input_line(&space.device(), 2, HOLD_LINE);
+	space.device().execute().set_input_line(2, HOLD_LINE);
 
 	m_gun_select = data & 0xff;
 }
@@ -639,7 +639,7 @@ GFXDECODE_END
 
 static void sound_irq( device_t *device, int irq )
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2608_interface ym2608_config =
@@ -690,7 +690,7 @@ static MACHINE_CONFIG_START( bbusters, bbusters_state )
 	MCFG_GFXDECODE(bbusters)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(bbuster)
+	MCFG_VIDEO_START_OVERRIDE(bbusters_state,bbuster)
 
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram2")
@@ -728,7 +728,7 @@ static MACHINE_CONFIG_START( mechatt, bbusters_state )
 	MCFG_GFXDECODE(mechatt)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(mechatt)
+	MCFG_VIDEO_START_OVERRIDE(bbusters_state,mechatt)
 
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 

@@ -28,8 +28,8 @@ public:
 	UINT16     m_new_latch;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_mcu;
 	DECLARE_WRITE16_MEMBER(pushman_flipscreen_w);
 	DECLARE_WRITE16_MEMBER(pushman_control_w);
@@ -41,12 +41,19 @@ public:
 	DECLARE_WRITE8_MEMBER(pushman_68000_w);
 	DECLARE_WRITE16_MEMBER(pushman_scroll_w);
 	DECLARE_WRITE16_MEMBER(pushman_videoram_w);
+	TILEMAP_MAPPER_MEMBER(background_scan_rows);
+	TILE_GET_INFO_MEMBER(get_back_tile_info);
+	TILE_GET_INFO_MEMBER(get_text_tile_info);
+	virtual void machine_start();
+	virtual void video_start();
+	DECLARE_MACHINE_RESET(pushman);
+	DECLARE_MACHINE_RESET(bballs);
 };
 
 
 /*----------- defined in video/pushman.c -----------*/
 
 
-VIDEO_START( pushman );
+
 
 SCREEN_UPDATE_IND16( pushman );

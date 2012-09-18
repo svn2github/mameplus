@@ -33,11 +33,17 @@ public:
 	DECLARE_WRITE8_MEMBER(dummy1_w);
 	DECLARE_WRITE8_MEMBER(dummy2_w);
 	DECLARE_WRITE8_MEMBER(dummy3_w);
+	TILE_GET_INFO_MEMBER(get_ksayakyu_tile_info);
+	TILE_GET_INFO_MEMBER(get_text_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/ksayakyu.c -----------*/
 
-PALETTE_INIT( ksayakyu );
-VIDEO_START( ksayakyu );
+
+
 SCREEN_UPDATE_IND16( ksayakyu );

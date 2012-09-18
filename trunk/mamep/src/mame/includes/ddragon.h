@@ -59,7 +59,7 @@ public:
 #endif
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	device_t *m_snd_cpu;
 	device_t *m_sub_cpu;
 	device_t *m_adpcm_1;
@@ -89,13 +89,23 @@ public:
 	DECLARE_DRIVER_INIT(ddragon);
 	DECLARE_DRIVER_INIT(ddragon6809);
 	DECLARE_DRIVER_INIT(chinagat);
+	TILEMAP_MAPPER_MEMBER(background_scan);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_16color_tile_info);
+	DECLARE_MACHINE_START(chinagat);
+	DECLARE_MACHINE_RESET(chinagat);
+	DECLARE_VIDEO_START(chinagat);
+	DECLARE_MACHINE_START(ddragon);
+	DECLARE_MACHINE_RESET(ddragon);
+	DECLARE_VIDEO_START(ddragon);
 };
 
 
 /*----------- defined in video/ddragon.c -----------*/
 
 
-VIDEO_START( chinagat );
-VIDEO_START( ddragon );
+
+
 SCREEN_UPDATE_IND16( ddragon );
 

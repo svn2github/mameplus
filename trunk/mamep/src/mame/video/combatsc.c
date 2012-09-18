@@ -10,13 +10,13 @@
 #include "video/konicdev.h"
 #include "includes/combatsc.h"
 
-PALETTE_INIT( combatsc )
+PALETTE_INIT_MEMBER(combatsc_state,combatsc)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int pal;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x80);
+	machine().colortable = colortable_alloc(machine(), 0x80);
 
 	for (pal = 0; pal < 8; pal++)
 	{
@@ -55,19 +55,19 @@ PALETTE_INIT( combatsc )
 			else
 				ctabentry = (pal << 4) | (color_prom[(clut << 8) | i] & 0x0f);
 
-			colortable_entry_set_value(machine.colortable, (pal << 8) | i, ctabentry);
+			colortable_entry_set_value(machine().colortable, (pal << 8) | i, ctabentry);
 		}
 	}
 }
 
 
-PALETTE_INIT( combatscb )
+PALETTE_INIT_MEMBER(combatsc_state,combatscb)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int pal;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x80);
+	machine().colortable = colortable_alloc(machine(), 0x80);
 
 	for (pal = 0; pal < 8; pal++)
 	{
@@ -84,7 +84,7 @@ PALETTE_INIT( combatscb )
 				/* chars - no lookup? */
 				ctabentry = (pal << 4) | (i & 0x0f);	/* no lookup? */
 
-			colortable_entry_set_value(machine.colortable, (pal << 8) | i, ctabentry);
+			colortable_entry_set_value(machine().colortable, (pal << 8) | i, ctabentry);
 		}
 	}
 }
@@ -113,12 +113,11 @@ static void set_pens( running_machine &machine )
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_tile_info0 )
+TILE_GET_INFO_MEMBER(combatsc_state::get_tile_info0)
 {
-	combatsc_state *state = machine.driver_data<combatsc_state>();
-	UINT8 ctrl_6 = k007121_ctrlram_r(state->m_k007121_1, 6);
-	UINT8 attributes = state->m_page[0][tile_index];
-	int bank = 4 * ((state->m_vreg & 0x0f) - 1);
+	UINT8 ctrl_6 = k007121_ctrlram_r(m_k007121_1, 6);
+	UINT8 attributes = m_page[0][tile_index];
+	int bank = 4 * ((m_vreg & 0x0f) - 1);
 	int number, color;
 
 	if (bank < 0)
@@ -138,9 +137,9 @@ static TILE_GET_INFO( get_tile_info0 )
 
 	color = ((ctrl_6 & 0x10) * 2 + 16) + (attributes & 0x0f);
 
-	number = state->m_page[0][tile_index + 0x400] + 256 * bank;
+	number = m_page[0][tile_index + 0x400] + 256 * bank;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			number,
 			color,
@@ -148,12 +147,11 @@ static TILE_GET_INFO( get_tile_info0 )
 	tileinfo.category = (attributes & 0x40) >> 6;
 }
 
-static TILE_GET_INFO( get_tile_info1 )
+TILE_GET_INFO_MEMBER(combatsc_state::get_tile_info1)
 {
-	combatsc_state *state = machine.driver_data<combatsc_state>();
-	UINT8 ctrl_6 = k007121_ctrlram_r(state->m_k007121_2, 6);
-	UINT8 attributes = state->m_page[1][tile_index];
-	int bank = 4 * ((state->m_vreg >> 4) - 1);
+	UINT8 ctrl_6 = k007121_ctrlram_r(m_k007121_2, 6);
+	UINT8 attributes = m_page[1][tile_index];
+	int bank = 4 * ((m_vreg >> 4) - 1);
 	int number, color;
 
 	if (bank < 0)
@@ -173,9 +171,9 @@ static TILE_GET_INFO( get_tile_info1 )
 
 	color = ((ctrl_6 & 0x10) * 2 + 16 + 4 * 16) + (attributes & 0x0f);
 
-	number = state->m_page[1][tile_index + 0x400] + 256 * bank;
+	number = m_page[1][tile_index + 0x400] + 256 * bank;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			number,
 			color,
@@ -183,14 +181,13 @@ static TILE_GET_INFO( get_tile_info1 )
 	tileinfo.category = (attributes & 0x40) >> 6;
 }
 
-static TILE_GET_INFO( get_text_info )
+TILE_GET_INFO_MEMBER(combatsc_state::get_text_info)
 {
-	combatsc_state *state = machine.driver_data<combatsc_state>();
-	UINT8 attributes = state->m_page[0][tile_index + 0x800];
-	int number = state->m_page[0][tile_index + 0xc00];
+	UINT8 attributes = m_page[0][tile_index + 0x800];
+	int number = m_page[0][tile_index + 0xc00];
 	int color = 16 + (attributes & 0x0f);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			number,
 			color,
@@ -198,11 +195,10 @@ static TILE_GET_INFO( get_text_info )
 }
 
 
-static TILE_GET_INFO( get_tile_info0_bootleg )
+TILE_GET_INFO_MEMBER(combatsc_state::get_tile_info0_bootleg)
 {
-	combatsc_state *state = machine.driver_data<combatsc_state>();
-	UINT8 attributes = state->m_page[0][tile_index];
-	int bank = 4 * ((state->m_vreg & 0x0f) - 1);
+	UINT8 attributes = m_page[0][tile_index];
+	int bank = 4 * ((m_vreg & 0x0f) - 1);
 	int number, pal, color;
 
 	if (bank < 0)
@@ -222,20 +218,19 @@ static TILE_GET_INFO( get_tile_info0_bootleg )
 
 	pal = (bank == 0 || bank >= 0x1c || (attributes & 0x40)) ? 1 : 3;
 	color = pal*16;// + (attributes & 0x0f);
-	number = state->m_page[0][tile_index + 0x400] + 256 * bank;
+	number = m_page[0][tile_index + 0x400] + 256 * bank;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			number,
 			color,
 			0);
 }
 
-static TILE_GET_INFO( get_tile_info1_bootleg )
+TILE_GET_INFO_MEMBER(combatsc_state::get_tile_info1_bootleg)
 {
-	combatsc_state *state = machine.driver_data<combatsc_state>();
-	UINT8 attributes = state->m_page[1][tile_index];
-	int bank = 4*((state->m_vreg >> 4) - 1);
+	UINT8 attributes = m_page[1][tile_index];
+	int bank = 4*((m_vreg >> 4) - 1);
 	int number, pal, color;
 
 	if (bank < 0)
@@ -255,23 +250,22 @@ static TILE_GET_INFO( get_tile_info1_bootleg )
 
 	pal = (bank == 0 || bank >= 0x1c || (attributes & 0x40)) ? 5 : 7;
 	color = pal * 16;// + (attributes & 0x0f);
-	number = state->m_page[1][tile_index + 0x400] + 256 * bank;
+	number = m_page[1][tile_index + 0x400] + 256 * bank;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			number,
 			color,
 			0);
 }
 
-static TILE_GET_INFO( get_text_info_bootleg )
+TILE_GET_INFO_MEMBER(combatsc_state::get_text_info_bootleg)
 {
-	combatsc_state *state = machine.driver_data<combatsc_state>();
-//  UINT8 attributes = state->m_page[0][tile_index + 0x800];
-	int number = state->m_page[0][tile_index + 0xc00];
+//  UINT8 attributes = m_page[0][tile_index + 0x800];
+	int number = m_page[0][tile_index + 0xc00];
 	int color = 16;// + (attributes & 0x0f);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			number,
 			color,
@@ -284,47 +278,45 @@ static TILE_GET_INFO( get_text_info_bootleg )
 
 ***************************************************************************/
 
-VIDEO_START( combatsc )
+VIDEO_START_MEMBER(combatsc_state,combatsc)
 {
-	combatsc_state *state = machine.driver_data<combatsc_state>();
 
-	state->m_bg_tilemap[0] = tilemap_create(machine, get_tile_info0, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bg_tilemap[1] = tilemap_create(machine, get_tile_info1, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_textlayer =  tilemap_create(machine, get_text_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(combatsc_state::get_tile_info0),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(combatsc_state::get_tile_info1),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_textlayer =  &machine().tilemap().create(tilemap_get_info_delegate(FUNC(combatsc_state::get_text_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	state->m_spriteram[0] = auto_alloc_array_clear(machine, UINT8, 0x800);
-	state->m_spriteram[1] = auto_alloc_array_clear(machine, UINT8, 0x800);
+	m_spriteram[0] = auto_alloc_array_clear(machine(), UINT8, 0x800);
+	m_spriteram[1] = auto_alloc_array_clear(machine(), UINT8, 0x800);
 
-	state->m_bg_tilemap[0]->set_transparent_pen(0);
-	state->m_bg_tilemap[1]->set_transparent_pen(0);
-	state->m_textlayer->set_transparent_pen(0);
+	m_bg_tilemap[0]->set_transparent_pen(0);
+	m_bg_tilemap[1]->set_transparent_pen(0);
+	m_textlayer->set_transparent_pen(0);
 
-	state->m_textlayer->set_scroll_rows(32);
+	m_textlayer->set_scroll_rows(32);
 
-	state->save_pointer(NAME(state->m_spriteram[0]), 0x800);
-	state->save_pointer(NAME(state->m_spriteram[1]), 0x800);
+	save_pointer(NAME(m_spriteram[0]), 0x800);
+	save_pointer(NAME(m_spriteram[1]), 0x800);
 }
 
-VIDEO_START( combatscb )
+VIDEO_START_MEMBER(combatsc_state,combatscb)
 {
-	combatsc_state *state = machine.driver_data<combatsc_state>();
 
-	state->m_bg_tilemap[0] = tilemap_create(machine, get_tile_info0_bootleg, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bg_tilemap[1] = tilemap_create(machine, get_tile_info1_bootleg, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_textlayer = tilemap_create(machine, get_text_info_bootleg, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(combatsc_state::get_tile_info0_bootleg),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(combatsc_state::get_tile_info1_bootleg),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_textlayer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(combatsc_state::get_text_info_bootleg),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	state->m_spriteram[0] = auto_alloc_array_clear(machine, UINT8, 0x800);
-	state->m_spriteram[1] = auto_alloc_array_clear(machine, UINT8, 0x800);
+	m_spriteram[0] = auto_alloc_array_clear(machine(), UINT8, 0x800);
+	m_spriteram[1] = auto_alloc_array_clear(machine(), UINT8, 0x800);
 
-	state->m_bg_tilemap[0]->set_transparent_pen(0);
-	state->m_bg_tilemap[1]->set_transparent_pen(0);
-	state->m_textlayer->set_transparent_pen(0);
+	m_bg_tilemap[0]->set_transparent_pen(0);
+	m_bg_tilemap[1]->set_transparent_pen(0);
+	m_textlayer->set_transparent_pen(0);
 
-	state->m_bg_tilemap[0]->set_scroll_rows(32);
-	state->m_bg_tilemap[1]->set_scroll_rows(32);
+	m_bg_tilemap[0]->set_scroll_rows(32);
+	m_bg_tilemap[1]->set_scroll_rows(32);
 
-	state->save_pointer(NAME(state->m_spriteram[0]), 0x800);
-	state->save_pointer(NAME(state->m_spriteram[1]), 0x800);
+	save_pointer(NAME(m_spriteram[0]), 0x800);
+	save_pointer(NAME(m_spriteram[1]), 0x800);
 }
 
 /***************************************************************************
@@ -515,7 +507,7 @@ byte #4:
 static void bootleg_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, const UINT8 *source, int circuit )
 {
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	const gfx_element *gfx = machine.gfx[circuit + 2];
+	gfx_element *gfx = machine.gfx[circuit + 2];
 
 	int limit = circuit ? (space->read_byte(0xc2) * 256 + space->read_byte(0xc3)) : (space->read_byte(0xc0) * 256 + space->read_byte(0xc1));
 	const UINT8 *finish;

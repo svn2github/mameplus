@@ -73,6 +73,11 @@ public:
 	DECLARE_DRIVER_INIT(csprint);
 	DECLARE_DRIVER_INIT(paperboy);
 	DECLARE_DRIVER_INIT(720);
+	TILE_GET_INFO_MEMBER(get_alpha_tile_info);
+	TILE_GET_INFO_MEMBER(get_playfield_tile_info);
+	DECLARE_MACHINE_START(atarisy2);
+	DECLARE_MACHINE_RESET(atarisy2);
+	DECLARE_VIDEO_START(atarisy2);
 };
 
 
@@ -87,5 +92,5 @@ WRITE16_HANDLER( atarisy2_xscroll_w );
 WRITE16_HANDLER( atarisy2_videoram_w );
 WRITE16_HANDLER( atarisy2_paletteram_w );
 
-VIDEO_START( atarisy2 );
+
 SCREEN_UPDATE_IND16( atarisy2 );

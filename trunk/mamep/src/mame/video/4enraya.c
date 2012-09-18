@@ -17,23 +17,21 @@ WRITE8_MEMBER(_4enraya_state::fenraya_videoram_w)
 	m_bg_tilemap->mark_tile_dirty(offset & 0x3ff);
 }
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(_4enraya_state::get_tile_info)
 {
-	_4enraya_state *state = machine.driver_data<_4enraya_state>();
 
-	int code = state->m_videoram[tile_index * 2] + (state->m_videoram[tile_index * 2 + 1] << 8);
-	SET_TILE_INFO(
+	int code = m_videoram[tile_index * 2] + (m_videoram[tile_index * 2 + 1] << 8);
+	SET_TILE_INFO_MEMBER(
 		0,
 		code,
 		0,
 		0);
 }
 
-VIDEO_START( 4enraya )
+void _4enraya_state::video_start()
 {
-	_4enraya_state *state = machine.driver_data<_4enraya_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(_4enraya_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 SCREEN_UPDATE_IND16( 4enraya )

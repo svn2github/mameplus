@@ -57,6 +57,7 @@ public:
 	DECLARE_WRITE8_MEMBER(astron_FIX_write);
 	DECLARE_WRITE8_MEMBER(astron_io_bankswitch_w);
 	DECLARE_DRIVER_INIT(astron);
+	virtual void machine_start();
 };
 
 /* VIDEO GOODS */
@@ -125,7 +126,7 @@ READ8_MEMBER(segald_state::astron_DISC_read)
 	if (m_nmi_enable)
 		m_ldv1000_input_latch = m_laserdisc->status_r();
 
-	logerror("DISC read   (0x%04x) @ 0x%04x [0x%x]\n", m_ldv1000_input_latch, offset, cpu_get_pc(&space.device()));
+	logerror("DISC read   (0x%04x) @ 0x%04x [0x%x]\n", m_ldv1000_input_latch, offset, space.device().safe_pc());
 
 	return m_ldv1000_input_latch;
 }
@@ -133,21 +134,21 @@ READ8_MEMBER(segald_state::astron_DISC_read)
 READ8_MEMBER(segald_state::astron_OUT_read)
 {
 
-	logerror("OUT read   (0x%04x) @ 0x%04x [0x%x]\n", m_out_ram[offset], offset, cpu_get_pc(&space.device()));
+	logerror("OUT read   (0x%04x) @ 0x%04x [0x%x]\n", m_out_ram[offset], offset, space.device().safe_pc());
 	return m_out_ram[offset];
 }
 
 READ8_MEMBER(segald_state::astron_OBJ_read)
 {
 
-	logerror("OBJ read   (0x%04x) @ 0x%04x [0x%x]\n", m_obj_ram[offset], offset, cpu_get_pc(&space.device()));
+	logerror("OBJ read   (0x%04x) @ 0x%04x [0x%x]\n", m_obj_ram[offset], offset, space.device().safe_pc());
 	return m_obj_ram[offset];
 }
 
 READ8_MEMBER(segald_state::astron_COLOR_read)
 {
 
-	logerror("COLOR read   (0x%04x) @ 0x%04x [0x%x]\n", m_color_ram[offset], offset, cpu_get_pc(&space.device()));
+	logerror("COLOR read   (0x%04x) @ 0x%04x [0x%x]\n", m_color_ram[offset], offset, space.device().safe_pc());
 	return m_color_ram[offset];
 }
 
@@ -156,7 +157,7 @@ READ8_MEMBER(segald_state::astron_COLOR_read)
 WRITE8_MEMBER(segald_state::astron_DISC_write)
 {
 
-	logerror("DISC write : 0x%04x @  0x%04x [0x%x]\n", data, offset, cpu_get_pc(&space.device()));
+	logerror("DISC write : 0x%04x @  0x%04x [0x%x]\n", data, offset, space.device().safe_pc());
 
 	m_ldv1000_output_latch = data;
 
@@ -167,7 +168,7 @@ WRITE8_MEMBER(segald_state::astron_DISC_write)
 WRITE8_MEMBER(segald_state::astron_OUT_write)
 {
 
-	logerror("OUT write : 0x%04x @  0x%04x [0x%x]\n", data, offset, cpu_get_pc(&space.device()));
+	logerror("OUT write : 0x%04x @  0x%04x [0x%x]\n", data, offset, space.device().safe_pc());
 
 	switch(offset)
 	{
@@ -205,7 +206,7 @@ WRITE8_MEMBER(segald_state::astron_OBJ_write)
 {
 
 	m_obj_ram[offset] = data;
-	logerror("OBJ write : 0x%04x @ 0x%04x [0x%x]\n", data, offset, cpu_get_pc(&space.device()));
+	logerror("OBJ write : 0x%04x @ 0x%04x [0x%x]\n", data, offset, space.device().safe_pc());
 }
 
 WRITE8_MEMBER(segald_state::astron_COLOR_write)
@@ -228,14 +229,14 @@ WRITE8_MEMBER(segald_state::astron_COLOR_write)
 	a = (highBits & 0x80) ? 0 : 255;
 
 	palette_set_color(machine(), palIndex, MAKE_ARGB(a, r, g, b));
-	logerror("COLOR write : 0x%04x @   0x%04x [0x%x]\n", data, offset, cpu_get_pc(&space.device()));
+	logerror("COLOR write : 0x%04x @   0x%04x [0x%x]\n", data, offset, space.device().safe_pc());
 }
 
 WRITE8_MEMBER(segald_state::astron_FIX_write)
 {
 
 	m_fix_ram[offset] = data;
-	/* logerror("FIX write : 0x%04x @ 0x%04x [0x%x]\n", data, offset, cpu_get_pc(&space.device())); */
+	/* logerror("FIX write : 0x%04x @ 0x%04x [0x%x]\n", data, offset, space.device().safe_pc()); */
 }
 
 WRITE8_MEMBER(segald_state::astron_io_bankswitch_w)
@@ -359,7 +360,7 @@ static GFXDECODE_START( segald )
 GFXDECODE_END
 
 
-static MACHINE_START( astron )
+void segald_state::machine_start()
 {
 }
 
@@ -373,7 +374,6 @@ static MACHINE_CONFIG_START( astron, segald_state )
 	MCFG_CPU_IO_MAP(mainport)
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse, 1000.0/59.94)
 
-	MCFG_MACHINE_START(astron)
 
 	MCFG_LASERDISC_LDV1000_ADD("laserdisc")
 	MCFG_LASERDISC_OVERLAY_STATIC(256, 256, astron)

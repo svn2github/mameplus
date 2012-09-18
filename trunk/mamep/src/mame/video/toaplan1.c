@@ -136,71 +136,67 @@ Abnormalities:
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_pf1_tile_info )
+TILE_GET_INFO_MEMBER(toaplan1_state::get_pf1_tile_info)
 {
-	toaplan1_state *state = machine.driver_data<toaplan1_state>();
 	int color, tile_number, attrib;
 
-	tile_number = state->m_pf1_tilevram16[2*tile_index+1] & 0x7fff;
-	attrib = state->m_pf1_tilevram16[2*tile_index];
+	tile_number = m_pf1_tilevram16[2*tile_index+1] & 0x7fff;
+	attrib = m_pf1_tilevram16[2*tile_index];
 	color = attrib & 0x3f;
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			tile_number,
 			color,
 			0);
-	if (state->m_pf1_tilevram16[2*tile_index+1] & 0x8000) tileinfo.pen_data = state->m_empty_tile;
+	if (m_pf1_tilevram16[2*tile_index+1] & 0x8000) tileinfo.pen_data = m_empty_tile;
 	tileinfo.category = (attrib & 0xf000) >> 12;
 }
 
-static TILE_GET_INFO( get_pf2_tile_info )
+TILE_GET_INFO_MEMBER(toaplan1_state::get_pf2_tile_info)
 {
-	toaplan1_state *state = machine.driver_data<toaplan1_state>();
 	int color, tile_number, attrib;
 
-	tile_number = state->m_pf2_tilevram16[2*tile_index+1] & 0x7fff;
-	attrib = state->m_pf2_tilevram16[2*tile_index];
+	tile_number = m_pf2_tilevram16[2*tile_index+1] & 0x7fff;
+	attrib = m_pf2_tilevram16[2*tile_index];
 	color = attrib & 0x3f;
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			tile_number,
 			color,
 			0);
-	if (state->m_pf2_tilevram16[2*tile_index+1] & 0x8000) tileinfo.pen_data = state->m_empty_tile;
+	if (m_pf2_tilevram16[2*tile_index+1] & 0x8000) tileinfo.pen_data = m_empty_tile;
 	tileinfo.category = (attrib & 0xf000) >> 12;
 }
 
-static TILE_GET_INFO( get_pf3_tile_info )
+TILE_GET_INFO_MEMBER(toaplan1_state::get_pf3_tile_info)
 {
-	toaplan1_state *state = machine.driver_data<toaplan1_state>();
 	int color, tile_number, attrib;
 
-	tile_number = state->m_pf3_tilevram16[2*tile_index+1] & 0x7fff;
-	attrib = state->m_pf3_tilevram16[2*tile_index];
+	tile_number = m_pf3_tilevram16[2*tile_index+1] & 0x7fff;
+	attrib = m_pf3_tilevram16[2*tile_index];
 	color = attrib & 0x3f;
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			tile_number,
 			color,
 			0);
-	if (state->m_pf3_tilevram16[2*tile_index+1] & 0x8000) tileinfo.pen_data = state->m_empty_tile;
+	if (m_pf3_tilevram16[2*tile_index+1] & 0x8000) tileinfo.pen_data = m_empty_tile;
 	tileinfo.category = (attrib & 0xf000) >> 12;
 }
 
-static TILE_GET_INFO( get_pf4_tile_info )
+TILE_GET_INFO_MEMBER(toaplan1_state::get_pf4_tile_info)
 {
-	toaplan1_state *state = machine.driver_data<toaplan1_state>();
 	int color, tile_number, attrib;
 
-	tile_number = state->m_pf4_tilevram16[2*tile_index+1] & 0x7fff;
-	attrib = state->m_pf4_tilevram16[2*tile_index];
+	tile_number = m_pf4_tilevram16[2*tile_index+1] & 0x7fff;
+	attrib = m_pf4_tilevram16[2*tile_index];
 	color = attrib & 0x3f;
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			tile_number,
 			color,
 			0);
-	if (state->m_pf4_tilevram16[2*tile_index+1] & 0x8000) tileinfo.pen_data = state->m_empty_tile;
+	if (m_pf4_tilevram16[2*tile_index+1] & 0x8000) tileinfo.pen_data = m_empty_tile;
 	tileinfo.category = (attrib & 0xf000) >> 12;
 }
 
@@ -214,10 +210,10 @@ static void toaplan1_create_tilemaps(running_machine &machine)
 {
 	toaplan1_state *state = machine.driver_data<toaplan1_state>();
 
-	state->m_pf1_tilemap = tilemap_create(machine, get_pf1_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_pf2_tilemap = tilemap_create(machine, get_pf2_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_pf3_tilemap = tilemap_create(machine, get_pf3_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_pf4_tilemap = tilemap_create(machine, get_pf4_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
+	state->m_pf1_tilemap = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(toaplan1_state::get_pf1_tile_info),state), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	state->m_pf2_tilemap = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(toaplan1_state::get_pf2_tile_info),state), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	state->m_pf3_tilemap = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(toaplan1_state::get_pf3_tile_info),state), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	state->m_pf4_tilemap = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(toaplan1_state::get_pf4_tile_info),state), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
 
 	state->m_pf1_tilemap->set_transparent_pen(0);
 	state->m_pf2_tilemap->set_transparent_pen(0);
@@ -333,54 +329,52 @@ static void register_common(running_machine &machine)
 }
 
 
-VIDEO_START( rallybik )
+VIDEO_START_MEMBER(toaplan1_state,rallybik)
 {
-	toaplan1_state *state = machine.driver_data<toaplan1_state>();
 
-	toaplan1_create_tilemaps(machine);
-	toaplan1_paletteram_alloc(machine);
-	toaplan1_vram_alloc(machine);
+	toaplan1_create_tilemaps(machine());
+	toaplan1_paletteram_alloc(machine());
+	toaplan1_vram_alloc(machine());
 
-	state->m_buffered_spriteram = auto_alloc_array_clear(machine, UINT16, state->m_spriteram.bytes()/2);
-	state->save_pointer(NAME(state->m_buffered_spriteram), state->m_spriteram.bytes()/2);
+	m_buffered_spriteram = auto_alloc_array_clear(machine(), UINT16, m_spriteram.bytes()/2);
+	save_pointer(NAME(m_buffered_spriteram), m_spriteram.bytes()/2);
 
-	state->m_scrollx_offs1 = 0x00d + 6;
-	state->m_scrollx_offs2 = 0x00d + 4;
-	state->m_scrollx_offs3 = 0x00d + 2;
-	state->m_scrollx_offs4 = 0x00d + 0;
-	state->m_scrolly_offs  = 0x111;
+	m_scrollx_offs1 = 0x00d + 6;
+	m_scrollx_offs2 = 0x00d + 4;
+	m_scrollx_offs3 = 0x00d + 2;
+	m_scrollx_offs4 = 0x00d + 0;
+	m_scrolly_offs  = 0x111;
 
-	state->m_bcu_flipscreen = -1;
-	state->m_fcu_flipscreen = 0;
-	state->m_reset = 0;
+	m_bcu_flipscreen = -1;
+	m_fcu_flipscreen = 0;
+	m_reset = 0;
 
-	register_common(machine);
+	register_common(machine());
 
-	machine.save().register_postload(save_prepost_delegate(FUNC(rallybik_flipscreen), &machine));
+	machine().save().register_postload(save_prepost_delegate(FUNC(rallybik_flipscreen), &machine()));
 }
 
-VIDEO_START( toaplan1 )
+VIDEO_START_MEMBER(toaplan1_state,toaplan1)
 {
-	toaplan1_state *state = machine.driver_data<toaplan1_state>();
 
-	toaplan1_create_tilemaps(machine);
-	toaplan1_paletteram_alloc(machine);
-	toaplan1_vram_alloc(machine);
-	toaplan1_spritevram_alloc(machine);
+	toaplan1_create_tilemaps(machine());
+	toaplan1_paletteram_alloc(machine());
+	toaplan1_vram_alloc(machine());
+	toaplan1_spritevram_alloc(machine());
 
-	state->m_scrollx_offs1 = 0x1ef + 6;
-	state->m_scrollx_offs2 = 0x1ef + 4;
-	state->m_scrollx_offs3 = 0x1ef + 2;
-	state->m_scrollx_offs4 = 0x1ef + 0;
-	state->m_scrolly_offs  = 0x101;
+	m_scrollx_offs1 = 0x1ef + 6;
+	m_scrollx_offs2 = 0x1ef + 4;
+	m_scrollx_offs3 = 0x1ef + 2;
+	m_scrollx_offs4 = 0x1ef + 0;
+	m_scrolly_offs  = 0x101;
 
-	state->m_bcu_flipscreen = -1;
-	state->m_fcu_flipscreen = 0;
-	state->m_reset = 1;
+	m_bcu_flipscreen = -1;
+	m_fcu_flipscreen = 0;
+	m_reset = 1;
 
-	register_common(machine);
+	register_common(machine());
 
-	machine.save().register_postload(save_prepost_delegate(FUNC(toaplan1_flipscreen), &machine));
+	machine().save().register_postload(save_prepost_delegate(FUNC(toaplan1_flipscreen), &machine()));
 }
 
 
@@ -934,21 +928,21 @@ static void toaplan1_log_vram(running_machine &machine)
 ***************************************************************************/
 
 // custom function to draw a single sprite. needed to keep correct sprites - sprites and sprites - tilemaps priorities
-static void toaplan1_draw_sprite_custom(bitmap_ind16 &dest_bmp,const rectangle &clip,const gfx_element *gfx,
+static void toaplan1_draw_sprite_custom(bitmap_ind16 &dest_bmp,const rectangle &clip,gfx_element *gfx,
 		UINT32 code,UINT32 color,int flipx,int flipy,int sx,int sy,
 		int priority)
 {
-	int pal_base = gfx->color_base + gfx->color_granularity * (color % gfx->total_colors);
-	const UINT8 *source_base = gfx_element_get_data(gfx, code % gfx->total_elements);
+	int pal_base = gfx->colorbase() + gfx->granularity() * (color % gfx->colors());
+	const UINT8 *source_base = gfx->get_data(code % gfx->elements());
 	bitmap_ind8 &priority_bitmap = gfx->machine().priority_bitmap;
-	int sprite_screen_height = ((1<<16)*gfx->height+0x8000)>>16;
-	int sprite_screen_width = ((1<<16)*gfx->width+0x8000)>>16;
+	int sprite_screen_height = ((1<<16)*gfx->height()+0x8000)>>16;
+	int sprite_screen_width = ((1<<16)*gfx->width()+0x8000)>>16;
 
 	if (sprite_screen_width && sprite_screen_height)
 	{
 		/* compute sprite increment per screen pixel */
-		int dx = (gfx->width<<16)/sprite_screen_width;
-		int dy = (gfx->height<<16)/sprite_screen_height;
+		int dx = (gfx->width()<<16)/sprite_screen_width;
+		int dy = (gfx->height()<<16)/sprite_screen_height;
 
 		int ex = sx+sprite_screen_width;
 		int ey = sy+sprite_screen_height;
@@ -1006,7 +1000,7 @@ static void toaplan1_draw_sprite_custom(bitmap_ind16 &dest_bmp,const rectangle &
 
 			for( y=sy; y<ey; y++ )
 			{
-				const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
+				const UINT8 *source = source_base + (y_index>>16) * gfx->rowbytes();
 				UINT16 *dest = &dest_bmp.pix16(y);
 				UINT8 *pri = &priority_bitmap.pix8(y);
 
@@ -1224,6 +1218,6 @@ SCREEN_VBLANK( samesame )
 
 		memcpy(state->m_buffered_spriteram, state->m_spriteram, state->m_spriteram.bytes());
 		memcpy(state->m_buffered_spritesizeram16, state->m_spritesizeram16, TOAPLAN1_SPRITESIZERAM_SIZE);
-		cputag_set_input_line(screen.machine(), "maincpu", M68K_IRQ_2, HOLD_LINE);	/* Frame done */
+		screen.machine().device("maincpu")->execute().set_input_line(M68K_IRQ_2, HOLD_LINE);	/* Frame done */
 	}
 }

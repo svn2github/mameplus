@@ -16,7 +16,7 @@
  *  8253 Programmable Interval Timer
  *
  *************************************/
-struct _pit8253_state
+struct pit8253_state
 {
 	union
 	{
@@ -31,8 +31,7 @@ struct _pit8253_state
 	int idx[3];
 };
 
-typedef struct _tx1_sound_state tx1_sound_state;
-struct _tx1_sound_state
+struct tx1_sound_state
 {
 	sound_stream *m_stream;
 	UINT32 m_freq_to_step;
@@ -40,7 +39,7 @@ struct _tx1_sound_state
 	UINT32 m_step1;
 	UINT32 m_step2;
 
-	struct _pit8253_state m_pit8253;
+	pit8253_state m_pit8253;
 
 	UINT8 m_ay_outputa;
 	UINT8 m_ay_outputb;
@@ -72,7 +71,7 @@ INLINE tx1_sound_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == TX1 || device->type() == BUGGYBOY);
 
-	return (tx1_sound_state *)downcast<legacy_device_base *>(device)->token();
+	return (tx1_sound_state *)downcast<tx1_sound_device *>(device)->token();
 }
 
 WRITE8_DEVICE_HANDLER( tx1_pit8253_w )
@@ -319,24 +318,6 @@ static DEVICE_RESET( tx1_sound )
 
 	state->m_step0 = state->m_step1 = state->m_step2 = 0;
 }
-
-DEVICE_GET_INFO( tx1_sound )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(tx1_sound_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(tx1_sound);		break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME(tx1_sound);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "TX-1 Custom");					break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
-}
-
 
 /*************************************
  *
@@ -591,22 +572,103 @@ static DEVICE_RESET( buggyboy_sound )
 	state->m_noise_lfsrd = 0;
 }
 
-DEVICE_GET_INFO( buggyboy_sound )
+const device_type BUGGYBOY = &device_creator<buggyboy_sound_device>;
+
+buggyboy_sound_device::buggyboy_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: tx1_sound_device(mconfig, BUGGYBOY, "Buggy Boy Custom", tag, owner, clock)
 {
-	switch (state)
-	{
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(tx1_sound_state);			break;
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(buggyboy_sound);	break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME(buggyboy_sound);	break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Buggy Boy Custom");			break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
+void buggyboy_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void buggyboy_sound_device::device_start()
+{
+	DEVICE_START_NAME( buggyboy_sound )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void buggyboy_sound_device::device_reset()
+{
+	DEVICE_RESET_NAME( buggyboy_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void buggyboy_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(BUGGYBOY, buggyboy_sound);
-DEFINE_LEGACY_SOUND_DEVICE(TX1, tx1_sound);
+const device_type TX1 = &device_creator<tx1_sound_device>;
+
+tx1_sound_device::tx1_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TX1, "TX-1 Custom", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(tx1_sound_state));
+}
+
+tx1_sound_device::tx1_sound_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, type, name, tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(tx1_sound_state));
+}
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void tx1_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void tx1_sound_device::device_start()
+{
+	DEVICE_START_NAME( tx1_sound )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void tx1_sound_device::device_reset()
+{
+	DEVICE_RESET_NAME( tx1_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void tx1_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

@@ -38,16 +38,14 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _filter_state filter_state;
-struct _filter_state
+struct filter_state
 {
 	double				capval;				/* current capacitor value */
 	double				exponent;			/* constant exponent */
 };
 
 
-typedef struct _timer8253_channel timer8253_channel;
-struct _timer8253_channel
+struct timer8253_channel
 {
 	UINT8				holding;			/* holding until counts written? */
 	UINT8				latchmode;			/* latching mode */
@@ -63,8 +61,7 @@ struct _timer8253_channel
 };
 
 
-typedef struct _timer8253 timer8253;
-struct _timer8253
+struct timer8253
 {
 	timer8253_channel	chan[3];			/* three channels' worth of information */
 	double				env[3];				/* envelope value for each channel */
@@ -75,8 +72,7 @@ struct _timer8253
 };
 
 
-typedef struct _usb_state usb_state;
-struct _usb_state
+struct usb_state
 {
 	sound_stream *		stream;				/* output stream */
 	device_t *cpu;				/* CPU index of the 8035 */
@@ -101,8 +97,7 @@ struct _usb_state
 };
 
 /* SP0250-based speech board */
-typedef struct _speech_state speech_state;
-struct _speech_state
+struct speech_state
 {
 	UINT8 latch, t0, p2, drq;
 	UINT8 *speech;
@@ -141,14 +136,36 @@ INLINE double step_cr_filter(filter_state *state, double input)
     SPEECH BOARD
 ***************************************************************************/
 
-DECLARE_LEGACY_SOUND_DEVICE(SEGASPEECH, speech_sound);
+class speech_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	speech_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~speech_sound_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type SEGASPEECH;
+
 
 INLINE speech_state *get_safe_speech(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == SEGASPEECH);
 
-	return (speech_state *)downcast<legacy_device_base *>(device)->token();
+	return (speech_state *)downcast<speech_sound_device *>(device)->token();
 }
 
 static DEVICE_START( speech_sound )
@@ -159,23 +176,45 @@ static DEVICE_START( speech_sound )
 }
 
 
-DEVICE_GET_INFO( speech_sound )
+const device_type SEGASPEECH = &device_creator<speech_sound_device>;
+
+speech_sound_device::speech_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, SEGASPEECH, "Sega Speech Sound Board", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(speech_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(speech_sound);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Sega Speech Sound Board");	break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(speech_state));
 }
 
-DEFINE_LEGACY_SOUND_DEVICE(SEGASPEECH, speech_sound);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void speech_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void speech_sound_device::device_start()
+{
+	DEVICE_START_NAME( speech_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void speech_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+
 
 
 
@@ -264,7 +303,7 @@ static TIMER_CALLBACK( delayed_speech_w )
 	state->latch = data;
 
 	/* the high bit goes directly to the INT line */
-	cputag_set_input_line(machine, "audiocpu", 0, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
+	machine.device("audiocpu")->execute().set_input_line(0, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
 
 	/* a clock on the high bit clocks a 1 into T0 */
 	if (!(old & 0x80) && (data & 0x80))
@@ -348,14 +387,37 @@ MACHINE_CONFIG_END
     UNIVERSAL SOUND BOARD
 ***************************************************************************/
 
-static DECLARE_LEGACY_SOUND_DEVICE(SEGAUSB, usb_sound);
+class usb_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	usb_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~usb_sound_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type SEGAUSB;
+
 
 INLINE usb_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == SEGAUSB);
 
-	return (usb_state *)downcast<legacy_device_base *>(device)->token();
+	return (usb_state *)downcast<usb_sound_device *>(device)->token();
 }
 
 /*************************************
@@ -380,7 +442,7 @@ static DEVICE_RESET( usb_sound )
 	usb_state *usb = get_safe_token(device);
 
 	/* halt the USB CPU at reset time */
-	device_set_input_line(usb->cpu, INPUT_LINE_RESET, ASSERT_LINE);
+	usb->cpu->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 	/* start the clock timer */
 	usb->t1_clock_mask = 0x10;
@@ -398,9 +460,9 @@ READ8_DEVICE_HANDLER( sega_usb_status_r )
 {
 	usb_state *usb = get_safe_token(device);
 
-	LOG(("%04X:usb_data_r = %02X\n", cpu_get_pc(usb->maincpu), (usb->out_latch & 0x81) | (usb->in_latch & 0x7e)));
+	LOG(("%04X:usb_data_r = %02X\n", usb->maincpu->safe_pc(), (usb->out_latch & 0x81) | (usb->in_latch & 0x7e)));
 
-	device_adjust_icount(usb->maincpu, -200);
+	usb->maincpu->execute().adjust_icount(-200);
 
 	/* only bits 0 and 7 are controlled by the I8035; the remaining */
 	/* bits 1-6 reflect the current input latch values */
@@ -414,7 +476,7 @@ static TIMER_CALLBACK( delayed_usb_data_w )
 	int data = param;
 
 	/* look for rising/falling edges of bit 7 to control the RESET line */
-	device_set_input_line(usb->cpu, INPUT_LINE_RESET, (data & 0x80) ? ASSERT_LINE : CLEAR_LINE);
+	usb->cpu->execute().set_input_line(INPUT_LINE_RESET, (data & 0x80) ? ASSERT_LINE : CLEAR_LINE);
 
 	/* if the CLEAR line is set, the low 7 bits of the input are ignored */
 	if ((usb->last_p2_value & 0x40) == 0)
@@ -429,7 +491,7 @@ WRITE8_DEVICE_HANDLER( sega_usb_data_w )
 {
 	usb_state *usb = get_safe_token(device);
 
-	LOG(("%04X:usb_data_w = %02X\n", cpu_get_pc(usb->maincpu), data));
+	LOG(("%04X:usb_data_w = %02X\n", usb->maincpu->safe_pc(), data));
 	device->machine().scheduler().synchronize(FUNC(delayed_usb_data_w), data, usb);
 
 	/* boost the interleave so that sequences can be sent */
@@ -452,7 +514,7 @@ WRITE8_DEVICE_HANDLER( sega_usb_ram_w )
 	if (usb->in_latch & 0x80)
 		usb->program_ram[offset] = data;
 	else
-		LOG(("%04X:sega_usb_ram_w(%03X) = %02X while /LOAD disabled\n", cpu_get_pc(usb->maincpu), offset, data));
+		LOG(("%04X:sega_usb_ram_w(%03X) = %02X while /LOAD disabled\n", usb->maincpu->safe_pc(), offset, data));
 }
 
 
@@ -469,7 +531,7 @@ static READ8_DEVICE_HANDLER( usb_p1_r )
 
 	/* bits 0-6 are inputs and map to bits 0-6 of the input latch */
 	if ((usb->in_latch & 0x7f) != 0)
-		LOG(("%03X: P1 read = %02X\n", cpu_get_pc(usb->maincpu), usb->in_latch & 0x7f));
+		LOG(("%03X: P1 read = %02X\n", usb->maincpu->safe_pc(), usb->in_latch & 0x7f));
 	return usb->in_latch & 0x7f;
 }
 
@@ -480,7 +542,7 @@ static WRITE8_DEVICE_HANDLER( usb_p1_w )
 
 	/* bit 7 maps to bit 0 on the output latch */
 	usb->out_latch = (usb->out_latch & 0xfe) | (data >> 7);
-	LOG(("%03X: P1 write = %02X\n", cpu_get_pc(usb->maincpu), data));
+	LOG(("%03X: P1 write = %02X\n", usb->maincpu->safe_pc(), data));
 }
 
 
@@ -503,7 +565,7 @@ static WRITE8_DEVICE_HANDLER( usb_p2_w )
 	if ((old & 0x80) && !(data & 0x80))
 		usb->t1_clock = 0;
 
-	LOG(("%03X: P2 write -> bank=%d ready=%d clock=%d\n", cpu_get_pc(usb->maincpu), data & 3, (data >> 6) & 1, (data >> 7) & 1));
+	LOG(("%03X: P2 write -> bank=%d ready=%d clock=%d\n", usb->maincpu->safe_pc(), data & 3, (data >> 6) & 1, (data >> 7) & 1));
 }
 
 
@@ -817,24 +879,54 @@ static DEVICE_START( usb_sound )
 }
 
 
-static DEVICE_GET_INFO( usb_sound )
+const device_type SEGAUSB = &device_creator<usb_sound_device>;
+
+usb_sound_device::usb_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, SEGAUSB, "Sega Universal Sound Board", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(usb_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(usb_sound);		break;
-		case DEVINFO_FCT_RESET:							info->start = DEVICE_RESET_NAME(usb_sound);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Sega Universal Sound Board");	break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(usb_state));
 }
 
-DEFINE_LEGACY_SOUND_DEVICE(SEGAUSB, usb_sound);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void usb_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void usb_sound_device::device_start()
+{
+	DEVICE_START_NAME( usb_sound )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void usb_sound_device::device_reset()
+{
+	DEVICE_RESET_NAME( usb_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void usb_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+
 
 
 

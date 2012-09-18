@@ -583,16 +583,16 @@ void itech8_update_interrupts(running_machine &machine, int periodic, int tms340
 	if (main_cpu_type == M6809 || main_cpu_type == HD6309)
 	{
 		/* just modify lines that have changed */
-		if (periodic != -1) cputag_set_input_line(machine, "maincpu", INPUT_LINE_NMI, periodic ? ASSERT_LINE : CLEAR_LINE);
-		if (tms34061 != -1) cputag_set_input_line(machine, "maincpu", M6809_IRQ_LINE, tms34061 ? ASSERT_LINE : CLEAR_LINE);
-		if (blitter != -1) cputag_set_input_line(machine, "maincpu", M6809_FIRQ_LINE, blitter ? ASSERT_LINE : CLEAR_LINE);
+		if (periodic != -1) machine.device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, periodic ? ASSERT_LINE : CLEAR_LINE);
+		if (tms34061 != -1) machine.device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, tms34061 ? ASSERT_LINE : CLEAR_LINE);
+		if (blitter != -1) machine.device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, blitter ? ASSERT_LINE : CLEAR_LINE);
 	}
 
 	/* handle the 68000 case */
 	else
 	{
-		cputag_set_input_line(machine, "maincpu", 2, state->m_blitter_int ? ASSERT_LINE : CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 3, state->m_periodic_int ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(2, state->m_blitter_int ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(3, state->m_periodic_int ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -623,13 +623,13 @@ static INTERRUPT_GEN( generate_nmi )
 WRITE8_MEMBER(itech8_state::itech8_nmi_ack_w)
 {
 /* doesn't seem to hold for every game (e.g., hstennis) */
-/*  cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, CLEAR_LINE);*/
+/*  machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);*/
 }
 
 
 static void generate_sound_irq(device_t *device, int state)
 {
-	cputag_set_input_line(device->machine(), "soundcpu", M6809_FIRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("soundcpu")->execute().set_input_line(M6809_FIRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -643,29 +643,28 @@ static void generate_sound_irq(device_t *device, int state)
 static TIMER_CALLBACK( behind_the_beam_update );
 
 
-static MACHINE_START( sstrike )
+MACHINE_START_MEMBER(itech8_state,sstrike)
 {
 	/* we need to update behind the beam as well */
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(0), FUNC(behind_the_beam_update), 32);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), FUNC(behind_the_beam_update), 32);
 }
 
-static MACHINE_RESET( itech8 )
+void itech8_state::machine_reset()
 {
-	itech8_state *state = machine.driver_data<itech8_state>();
-	device_type main_cpu_type = machine.device("maincpu")->type();
+	device_type main_cpu_type = machine().device("maincpu")->type();
 
 	/* make sure bank 0 is selected */
 	if (main_cpu_type == M6809 || main_cpu_type == HD6309)
 	{
-		state->membank("bank1")->set_base(&state->memregion("maincpu")->base()[0x4000]);
-		machine.device("maincpu")->reset();
+		membank("bank1")->set_base(&memregion("maincpu")->base()[0x4000]);
+		machine().device("maincpu")->reset();
 	}
 
 	/* set the visible area */
-	if (state->m_visarea.width() > 1)
+	if (m_visarea.width() > 1)
 	{
-		machine.primary_screen->set_visible_area(state->m_visarea.min_x, state->m_visarea.max_x, state->m_visarea.min_y, state->m_visarea.max_y);
-		state->m_visarea.set(0, 0, 0, 0);
+		machine().primary_screen->set_visible_area(m_visarea.min_x, m_visarea.max_x, m_visarea.min_y, m_visarea.max_y);
+		m_visarea.set(0, 0, 0, 0);
 	}
 }
 
@@ -784,7 +783,7 @@ static TIMER_CALLBACK( delayed_sound_data_w )
 {
 	itech8_state *state = machine.driver_data<itech8_state>();
 	state->m_sound_data = param;
-	cputag_set_input_line(machine, "soundcpu", M6809_IRQ_LINE, ASSERT_LINE);
+	machine.device("soundcpu")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
 }
 
 
@@ -807,7 +806,7 @@ WRITE8_MEMBER(itech8_state::gtg2_sound_data_w)
 
 READ8_MEMBER(itech8_state::sound_data_r)
 {
-	cputag_set_input_line(machine(), "soundcpu", M6809_IRQ_LINE, CLEAR_LINE);
+	machine().device("soundcpu")->execute().set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
 	return m_sound_data;
 }
 
@@ -1688,16 +1687,14 @@ static MACHINE_CONFIG_START( itech8_core_lo, itech8_state )
 	MCFG_CPU_PROGRAM_MAP(tmslo_map)
 	MCFG_CPU_VBLANK_INT("screen", generate_nmi)
 
-	MCFG_MACHINE_RESET(itech8)
 	MCFG_NVRAM_ADD_RANDOM_FILL("nvram")
 
 	MCFG_TICKET_DISPENSER_ADD("ticket", attotime::from_msec(200), TICKET_MOTOR_ACTIVE_HIGH, TICKET_STATUS_ACTIVE_LOW)
 
 	/* video hardware */
-	MCFG_TLC34076_ADD("tlc34076", TLC34076_6_BIT)
+	MCFG_TLC34076_ADD("tlc34076", tlc34076_6_bit_intf)
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
-	MCFG_VIDEO_START(itech8)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -1851,7 +1848,7 @@ static MACHINE_CONFIG_DERIVED( slikshot_hi, itech8_core_hi )
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
 	MCFG_SCREEN_UPDATE_STATIC(slikshot)
-	MCFG_VIDEO_START(slikshot)
+	MCFG_VIDEO_START_OVERRIDE(itech8_state,slikshot)
 MACHINE_CONFIG_END
 
 
@@ -1868,7 +1865,7 @@ static MACHINE_CONFIG_DERIVED( slikshot_lo, itech8_core_lo )
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VISIBLE_AREA(0, 255, 0, 239)
 	MCFG_SCREEN_UPDATE_STATIC(slikshot)
-	MCFG_VIDEO_START(slikshot)
+	MCFG_VIDEO_START_OVERRIDE(itech8_state,slikshot)
 MACHINE_CONFIG_END
 
 
@@ -1887,7 +1884,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( sstrike, slikshot_lo )
 
 	/* basic machine hardware */
-	MCFG_MACHINE_START(sstrike)
+	MCFG_MACHINE_START_OVERRIDE(itech8_state,sstrike)
 
 MACHINE_CONFIG_END
 

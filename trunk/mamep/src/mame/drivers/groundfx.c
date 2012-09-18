@@ -100,7 +100,7 @@ WRITE32_MEMBER(groundfx_state::color_ram_w)
 
 static TIMER_CALLBACK( groundfx_interrupt5 )
 {
-	cputag_set_input_line(machine, "maincpu", 5, HOLD_LINE); //from 5... ADC port
+	machine.device("maincpu")->execute().set_input_line(5, HOLD_LINE); //from 5... ADC port
 }
 
 
@@ -358,7 +358,7 @@ static INTERRUPT_GEN( groundfx_interrupt )
 {
 	groundfx_state *state = device->machine().driver_data<groundfx_state>();
 	state->m_frame_counter^=1;
-	device_set_input_line(device, 4, HOLD_LINE);
+	device->execute().set_input_line(4, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( groundfx, groundfx_state )
@@ -381,7 +381,6 @@ static MACHINE_CONFIG_START( groundfx, groundfx_state )
 	MCFG_GFXDECODE(groundfx)
 	MCFG_PALETTE_LENGTH(16384)
 
-	MCFG_VIDEO_START(groundfx)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", groundfx_tc0100scn_intf)
 	MCFG_TC0480SCP_ADD("tc0480scp", groundfx_tc0480scp_intf)

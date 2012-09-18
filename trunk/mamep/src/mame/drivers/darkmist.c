@@ -218,10 +218,10 @@ static TIMER_DEVICE_CALLBACK( darkmist_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE,0x10); /* RST 10h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x10); /* RST 10h */
 
 	if(scanline == 0) // vblank-in irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE,0x08); /* RST 08h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x08); /* RST 08h */
 }
 
 
@@ -245,9 +245,7 @@ static MACHINE_CONFIG_START( darkmist, darkmist_state )
 	MCFG_SCREEN_UPDATE_STATIC(darkmist)
 
 	MCFG_GFXDECODE(darkmist)
-	MCFG_PALETTE_INIT(darkmist)
 	MCFG_PALETTE_LENGTH(0x100*4)
-	MCFG_VIDEO_START(darkmist)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -407,6 +405,8 @@ DRIVER_INIT_MEMBER(darkmist_state,darkmist)
 	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 	UINT8 *buffer = auto_alloc_array(machine(), UINT8, 0x10000);
 	UINT8 *decrypt = auto_alloc_array(machine(), UINT8, 0x8000);
+
+	t5182_init(machine());
 
 	decrypt_gfx(machine());
 

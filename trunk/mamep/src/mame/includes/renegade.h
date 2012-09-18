@@ -67,10 +67,15 @@ public:
 	DECLARE_DRIVER_INIT(kuniokun);
 	DECLARE_DRIVER_INIT(kuniokunb);
 	DECLARE_DRIVER_INIT(renegade);
+	TILE_GET_INFO_MEMBER(get_bg_tilemap_info);
+	TILE_GET_INFO_MEMBER(get_fg_tilemap_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/renegade.c -----------*/
 
 SCREEN_UPDATE_IND16( renegade );
-VIDEO_START( renegade );
+

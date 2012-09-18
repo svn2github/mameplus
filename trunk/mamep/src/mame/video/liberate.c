@@ -25,38 +25,37 @@ void debug_print(bitmap_ind16 &bitmap)
 }
 #endif
 
-static TILEMAP_MAPPER( back_scan )
+TILEMAP_MAPPER_MEMBER(liberate_state::back_scan)
 {
 	/* logical (col,row) -> memory offset */
 	return ((row & 0xf)) + ((15 - (col & 0xf)) << 4) + ((row & 0x10) << 5) + ((col & 0x10) << 4);
 }
 
-static TILEMAP_MAPPER( fix_scan )
+TILEMAP_MAPPER_MEMBER(liberate_state::fix_scan)
 {
 	/* logical (col,row) -> memory offset */
 	return (row & 0x1f) + ((31 - (col & 0x1f)) << 5);
 }
 
-static TILE_GET_INFO( get_back_tile_info )
+TILE_GET_INFO_MEMBER(liberate_state::get_back_tile_info)
 {
-	liberate_state *state = machine.driver_data<liberate_state>();
-	const UINT8 *RAM = state->memregion("user1")->base();
+	const UINT8 *RAM = memregion("user1")->base();
 	int tile, bank;
 
 	/* Convert tile index of 512x512 to paged format */
 	if (tile_index & 0x100)
 	{
 		if (tile_index & 0x200)
-			tile_index = (tile_index & 0xff) + (state->m_io_ram[5] << 8); /* Bottom right */
+			tile_index = (tile_index & 0xff) + (m_io_ram[5] << 8); /* Bottom right */
 		else
-			tile_index = (tile_index & 0xff) + (state->m_io_ram[4] << 8); /* Bottom left */
+			tile_index = (tile_index & 0xff) + (m_io_ram[4] << 8); /* Bottom left */
 	}
 	else
 	{
 		if (tile_index & 0x200)
-			tile_index = (tile_index & 0xff) + (state->m_io_ram[3] << 8); /* Top right */
+			tile_index = (tile_index & 0xff) + (m_io_ram[3] << 8); /* Top right */
 		else
-			tile_index = (tile_index & 0xff) + (state->m_io_ram[2] << 8); /* Top left */
+			tile_index = (tile_index & 0xff) + (m_io_ram[2] << 8); /* Top left */
 	}
 
 	tile = RAM[tile_index];
@@ -64,25 +63,23 @@ static TILE_GET_INFO( get_back_tile_info )
 		bank = 3;
 	else
 		bank = 2;
-	SET_TILE_INFO(bank, tile & 0x7f, state->m_background_color, 0);
+	SET_TILE_INFO_MEMBER(bank, tile & 0x7f, m_background_color, 0);
 }
 
-static TILE_GET_INFO( get_fix_tile_info )
+TILE_GET_INFO_MEMBER(liberate_state::get_fix_tile_info)
 {
-	liberate_state *state = machine.driver_data<liberate_state>();
-	UINT8 *videoram = state->m_videoram;
-	UINT8 *colorram = state->m_colorram;
+	UINT8 *videoram = m_videoram;
+	UINT8 *colorram = m_colorram;
 	int tile, color;
 
 	tile = videoram[tile_index] + (colorram[tile_index] << 8);
 	color = (colorram[tile_index] & 0x70) >> 4;
 
-	SET_TILE_INFO(0, tile, color, 0);
+	SET_TILE_INFO_MEMBER(0, tile, color, 0);
 }
 
-static TILE_GET_INFO( prosport_get_back_tile_info )
+TILE_GET_INFO_MEMBER(liberate_state::prosport_get_back_tile_info)
 {
-	liberate_state *state = machine.driver_data<liberate_state>();
 	int tile;
 
 	/*
@@ -91,13 +88,13 @@ static TILE_GET_INFO( prosport_get_back_tile_info )
         - bits 0-3 are not used by gfx hardware; the value is the color of the pixel in the map (golf)
     */
 
-	tile = (state->m_bg_vram[tile_index] & 0xf0)>>4;
+	tile = (m_bg_vram[tile_index] & 0xf0)>>4;
 
 	if (tile_index & 0x8) tile += 0x10;
 
-	tile += state->m_io_ram[0]&0x20; //Pro Bowling bg tiles banking bit
+	tile += m_io_ram[0]&0x20; //Pro Bowling bg tiles banking bit
 
-	SET_TILE_INFO(8, tile, 0, 0);
+	SET_TILE_INFO_MEMBER(8, tile, 0, 0);
 }
 
 /***************************************************************************/
@@ -123,11 +120,11 @@ WRITE8_MEMBER(liberate_state::deco16_io_w)
 			/* Todo */
 			break;
 		case 8: /* Irq ack */
-			device_set_input_line(m_maincpu, DECO16_IRQ_LINE, CLEAR_LINE);
+			m_maincpu->set_input_line(DECO16_IRQ_LINE, CLEAR_LINE);
 			break;
 		case 9: /* Sound */
 			soundlatch_byte_w(space, 0, data);
-			device_set_input_line(m_audiocpu, M6502_IRQ_LINE, HOLD_LINE);
+			m_audiocpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
 			break;
 	}
 }
@@ -151,11 +148,11 @@ WRITE8_MEMBER(liberate_state::prosoccr_io_w)
 			/* x--- ---- used on the attract mode */
 			break;
 		case 8: /* Irq ack */
-			device_set_input_line(m_maincpu, DECO16_IRQ_LINE, CLEAR_LINE);
+			m_maincpu->set_input_line(DECO16_IRQ_LINE, CLEAR_LINE);
 			break;
 		case 9: /* Sound */
 			soundlatch_byte_w(space, 0, data);
-			device_set_input_line(m_audiocpu, M6502_IRQ_LINE, HOLD_LINE);
+			m_audiocpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
 			break;
 	}
 }
@@ -174,10 +171,10 @@ WRITE8_MEMBER(liberate_state::prosport_io_w)
 			break;
 		case 2: /* Sound */
 			soundlatch_byte_w(space, 0, data);
-			device_set_input_line(m_audiocpu, M6502_IRQ_LINE, HOLD_LINE);
+			m_audiocpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
 			break;
 		case 4: /* Irq ack */
-			device_set_input_line(m_maincpu, DECO16_IRQ_LINE, CLEAR_LINE);
+			m_maincpu->set_input_line(DECO16_IRQ_LINE, CLEAR_LINE);
 			break;
 	}
 }
@@ -202,43 +199,39 @@ WRITE8_MEMBER(liberate_state::prosport_bg_vram_w)
 
 /***************************************************************************/
 
-VIDEO_START( prosoccr )
+VIDEO_START_MEMBER(liberate_state,prosoccr)
 {
-	liberate_state *state = machine.driver_data<liberate_state>();
-	state->m_back_tilemap = tilemap_create(machine, get_back_tile_info, back_scan, 16, 16, 32, 32);
-	state->m_fix_tilemap = tilemap_create(machine, get_fix_tile_info, fix_scan, 8, 8, 32, 32);
+	m_back_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(liberate_state::get_back_tile_info),this), tilemap_mapper_delegate(FUNC(liberate_state::back_scan),this), 16, 16, 32, 32);
+	m_fix_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(liberate_state::get_fix_tile_info),this), tilemap_mapper_delegate(FUNC(liberate_state::fix_scan),this), 8, 8, 32, 32);
 
-	state->m_fix_tilemap->set_transparent_pen(0);
+	m_fix_tilemap->set_transparent_pen(0);
 
-	state->m_charram = auto_alloc_array(machine, UINT8, 0x1800 * 2);
+	m_charram = auto_alloc_array(machine(), UINT8, 0x1800 * 2);
 }
 
-VIDEO_START( boomrang )
+VIDEO_START_MEMBER(liberate_state,boomrang)
 {
-	liberate_state *state = machine.driver_data<liberate_state>();
-	state->m_back_tilemap = tilemap_create(machine, get_back_tile_info, back_scan, 16, 16, 32, 32);
-	state->m_fix_tilemap = tilemap_create(machine, get_fix_tile_info, fix_scan, 8, 8, 32, 32);
+	m_back_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(liberate_state::get_back_tile_info),this), tilemap_mapper_delegate(FUNC(liberate_state::back_scan),this), 16, 16, 32, 32);
+	m_fix_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(liberate_state::get_fix_tile_info),this), tilemap_mapper_delegate(FUNC(liberate_state::fix_scan),this), 8, 8, 32, 32);
 
-	state->m_back_tilemap->set_transmask(0, 0x0001, 0x007e); /* Bottom 1 pen/Top 7 pens */
-	state->m_fix_tilemap->set_transparent_pen(0);
+	m_back_tilemap->set_transmask(0, 0x0001, 0x007e); /* Bottom 1 pen/Top 7 pens */
+	m_fix_tilemap->set_transparent_pen(0);
 }
 
-VIDEO_START( liberate )
+VIDEO_START_MEMBER(liberate_state,liberate)
 {
-	liberate_state *state = machine.driver_data<liberate_state>();
-	state->m_back_tilemap = tilemap_create(machine, get_back_tile_info, back_scan, 16, 16, 32, 32);
-	state->m_fix_tilemap = tilemap_create(machine, get_fix_tile_info, fix_scan, 8, 8, 32, 32);
+	m_back_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(liberate_state::get_back_tile_info),this), tilemap_mapper_delegate(FUNC(liberate_state::back_scan),this), 16, 16, 32, 32);
+	m_fix_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(liberate_state::get_fix_tile_info),this), tilemap_mapper_delegate(FUNC(liberate_state::fix_scan),this), 8, 8, 32, 32);
 
-	state->m_fix_tilemap->set_transparent_pen(0);
+	m_fix_tilemap->set_transparent_pen(0);
 }
 
-VIDEO_START( prosport )
+VIDEO_START_MEMBER(liberate_state,prosport)
 {
-	liberate_state *state = machine.driver_data<liberate_state>();
-	state->m_back_tilemap = tilemap_create(machine, prosport_get_back_tile_info, back_scan, 16, 16, 32, 32);
-	state->m_fix_tilemap = tilemap_create(machine, get_fix_tile_info, fix_scan, 8, 8, 32, 32);
+	m_back_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(liberate_state::prosport_get_back_tile_info),this), tilemap_mapper_delegate(FUNC(liberate_state::back_scan),this), 16, 16, 32, 32);
+	m_fix_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(liberate_state::get_fix_tile_info),this), tilemap_mapper_delegate(FUNC(liberate_state::fix_scan),this), 8, 8, 32, 32);
 
-	state->m_fix_tilemap->set_transparent_pen(0);
+	m_fix_tilemap->set_transparent_pen(0);
 }
 
 /***************************************************************************/
@@ -251,9 +244,9 @@ WRITE8_MEMBER(liberate_state::prosport_paletteram_w)
 	palette_set_color_rgb(machine(), offset, pal3bit(~data >> 0), pal3bit(~data >> 3), pal2bit(~data >> 6));
 }
 
-PALETTE_INIT( liberate )
+PALETTE_INIT_MEMBER(liberate_state,liberate)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i, bit0, bit1, bit2, g, r, b;
 
 	for (i = 0;i < 32;i++)
@@ -277,9 +270,9 @@ PALETTE_INIT( liberate )
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
 		color_prom++;
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
+		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
 	}
-	palette_set_color(machine,32,MAKE_RGB(0,0,0)); /* Allocate black for when no background is displayed */
+	palette_set_color(machine(),32,MAKE_RGB(0,0,0)); /* Allocate black for when no background is displayed */
 }
 
 /***************************************************************************/

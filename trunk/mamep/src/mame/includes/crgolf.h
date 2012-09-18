@@ -35,8 +35,8 @@ public:
 	UINT8    m_sample_count;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE8_MEMBER(rom_bank_select_w);
 	DECLARE_READ8_MEMBER(switch_input_r);
 	DECLARE_READ8_MEMBER(analog_input_r);
@@ -50,6 +50,9 @@ public:
 	DECLARE_READ8_MEMBER(crgolf_videoram_r);
 	DECLARE_WRITE8_MEMBER(crgolfhi_sample_w);
 	DECLARE_DRIVER_INIT(crgolfhi);
+	virtual void machine_start();
+	virtual void machine_reset();
+	DECLARE_VIDEO_START(crgolf);
 };
 
 /*----------- defined in video/crgolf.c -----------*/

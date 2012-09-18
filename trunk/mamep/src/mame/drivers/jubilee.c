@@ -101,6 +101,9 @@ public:
 	tilemap_t *m_bg_tilemap;
 	DECLARE_WRITE8_MEMBER(jubileep_videoram_w);
 	DECLARE_READ8_MEMBER(unk_r);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -116,20 +119,18 @@ WRITE8_MEMBER(jubilee_state::jubileep_videoram_w)
 }
 
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(jubilee_state::get_bg_tile_info)
 {
-	jubilee_state *state = machine.driver_data<jubilee_state>();
-	int code = state->m_videoram[tile_index];
+	int code = m_videoram[tile_index];
 
-	SET_TILE_INFO( 0, code, 0, 0);
+	SET_TILE_INFO_MEMBER( 0, code, 0, 0);
 }
 
 
 
-static VIDEO_START( jubileep )
+void jubilee_state::video_start()
 {
-	jubilee_state *state = machine.driver_data<jubilee_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jubilee_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 
@@ -141,7 +142,7 @@ static SCREEN_UPDATE_IND16( jubileep )
 }
 
 
-static PALETTE_INIT( jubileep )
+void jubilee_state::palette_init()
 {
 
 }
@@ -154,7 +155,7 @@ static PALETTE_INIT( jubileep )
 static INTERRUPT_GEN( jubileep_interrupt )
 {
 	/* doesn't seems to work properly. need to set level1 interrupts */
-	device_set_input_line_and_vector(device, 0, ASSERT_LINE, 3);//2=nmi  3,4,5,6
+	device->execute().set_input_line_and_vector(0, ASSERT_LINE, 3);//2=nmi  3,4,5,6
 }
 
 
@@ -428,10 +429,8 @@ static MACHINE_CONFIG_START( jubileep, jubilee_state )
 
 	MCFG_GFXDECODE(jubileep)
 
-	MCFG_PALETTE_INIT(jubileep)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_VIDEO_START(jubileep)
 
 	MCFG_MC6845_ADD("crtc", MC6845, MASTER_CLOCK/4, mc6845_intf) /* guess */
 

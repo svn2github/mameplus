@@ -55,7 +55,7 @@ READ16_MEMBER(taitoo_state::io_r)
 	{
 		case 0: retval = ioport("IN0")->read() & (clear_hack ? 0xf7ff : 0xffff); break;
 		case 1: retval = ioport("IN1")->read() & (clear_hack ? 0xfff7 : 0xffff); break;
-		default: logerror("IO R %x %x = %x @ %x\n", offset, mem_mask, retval, cpu_get_pc(&space.device()));
+		default: logerror("IO R %x %x = %x @ %x\n", offset, mem_mask, retval, space.device().safe_pc());
 	}
 	return retval;
 }
@@ -218,10 +218,10 @@ static TIMER_DEVICE_CALLBACK( parentj_interrupt )
 	int scanline = param;
 
 	if(scanline == 448)
-		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		state->m_maincpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 0)
-		device_set_input_line(state->m_maincpu, 5, HOLD_LINE);
+		state->m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -242,12 +242,11 @@ static const tc0080vco_interface parentj_intf =
 	0
 };
 
-static MACHINE_START( taitoo )
+void taitoo_state::machine_start()
 {
-	taitoo_state *state = machine.driver_data<taitoo_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_tc0080vco = machine.device("tc0080vco");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_tc0080vco = machine().device("tc0080vco");
 }
 
 static MACHINE_CONFIG_START( parentj, taitoo_state )
@@ -256,7 +255,6 @@ static MACHINE_CONFIG_START( parentj, taitoo_state )
 	MCFG_CPU_PROGRAM_MAP(parentj_map)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", parentj_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_START(taitoo)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)

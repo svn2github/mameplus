@@ -36,10 +36,14 @@ public:
 	DECLARE_WRITE16_MEMBER(dynduke_gfxbank_w);
 	DECLARE_WRITE16_MEMBER(dynduke_control_w);
 	DECLARE_DRIVER_INIT(dynduke);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_tx_tile_info);
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/dynduke.c -----------*/
 
-VIDEO_START( dynduke );
+
 SCREEN_UPDATE_IND16( dynduke );

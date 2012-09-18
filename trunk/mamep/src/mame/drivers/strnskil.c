@@ -38,7 +38,7 @@ READ8_MEMBER(strnskil_state::pettanp_protection_r)
 {
 	int res;
 
-	switch (cpu_get_pc(&space.device()))
+	switch (space.device().safe_pc())
 	{
 		case 0x6066:	res = 0xa5;	break;
 		case 0x60dc:	res = 0x20;	break;	/* bits 0-3 unknown */
@@ -49,7 +49,7 @@ READ8_MEMBER(strnskil_state::pettanp_protection_r)
 		default:		res = 0xff; break;
 	}
 
-	logerror("%04x: protection_r -> %02x\n",cpu_get_pc(&space.device()),res);
+	logerror("%04x: protection_r -> %02x\n",space.device().safe_pc(),res);
 	return res;
 }
 
@@ -57,7 +57,7 @@ READ8_MEMBER(strnskil_state::banbam_protection_r)
 {
 	int res;
 
-	switch (cpu_get_pc(&space.device()))
+	switch (space.device().safe_pc())
 	{
 		case 0x6094:	res = 0xa5;	break;
 		case 0x6118:	res = 0x20;	break;	/* bits 0-3 unknown */
@@ -68,13 +68,13 @@ READ8_MEMBER(strnskil_state::banbam_protection_r)
 		default:		res = 0xff; break;
 	}
 
-	logerror("%04x: protection_r -> %02x\n",cpu_get_pc(&space.device()),res);
+	logerror("%04x: protection_r -> %02x\n",space.device().safe_pc(),res);
 	return res;
 }
 
 WRITE8_MEMBER(strnskil_state::protection_w)
 {
-	logerror("%04x: protection_w %02x\n",cpu_get_pc(&space.device()),data);
+	logerror("%04x: protection_w %02x\n",space.device().safe_pc(),data);
 }
 
 /****************************************************************************/
@@ -103,8 +103,8 @@ static ADDRESS_MAP_START( strnskil_map2, AS_PROGRAM, 8, strnskil_state )
 	AM_RANGE(0xc000, 0xc7ff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xc800, 0xcfff) AM_RAM AM_SHARE("share1")
 
-	AM_RANGE(0xd801, 0xd801) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0xd802, 0xd802) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
+	AM_RANGE(0xd801, 0xd801) AM_DEVWRITE("sn1", sn76496_new_device, write)
+	AM_RANGE(0xd802, 0xd802) AM_DEVWRITE("sn2", sn76496_new_device, write)
 ADDRESS_MAP_END
 
 
@@ -324,11 +324,27 @@ static TIMER_DEVICE_CALLBACK( strnskil_irq )
 
 	if(scanline == 240 || scanline == 96)
 	{
-		device_set_input_line(state->m_maincpu,0,HOLD_LINE);
+		state->m_maincpu->set_input_line(0,HOLD_LINE);
 
 		state->m_irq_source = (scanline != 240);
 	}
 }
+
+
+/*************************************
+ *
+ *  Sound interface
+ *
+ *************************************/
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
 
 
 static MACHINE_CONFIG_START( strnskil, strnskil_state )
@@ -356,17 +372,17 @@ static MACHINE_CONFIG_START( strnskil, strnskil_state )
 	MCFG_GFXDECODE(strnskil)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_PALETTE_INIT(strnskil)
-	MCFG_VIDEO_START(strnskil)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496, 8000000/4)
+	MCFG_SOUND_ADD("sn1", SN76496_NEW, 8000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496, 8000000/2)
+	MCFG_SOUND_ADD("sn2", SN76496_NEW, 8000000/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 

@@ -314,6 +314,7 @@ public:
 	DECLARE_DRIVER_INIT(gamshara);
 	DECLARE_DRIVER_INIT(mrdrilrg);
 	DECLARE_DRIVER_INIT(chocovdr);
+	DECLARE_MACHINE_RESET(namcos10);
 };
 
 
@@ -421,25 +422,25 @@ READ32_MEMBER(namcos10_state::nand_status_r )
 
 WRITE32_MEMBER(namcos10_state::nand_address1_w )
 {
-	logerror("nand_a1_w %08x (%08x)\n", data, cpu_get_pc(&space.device()));
+	logerror("nand_a1_w %08x (%08x)\n", data, space.device().safe_pc());
 	nand_address = ( nand_address & 0x00ffffff ) | ( ( data & 0xff ) << 24 );
 }
 
 WRITE32_MEMBER(namcos10_state::nand_address2_w )
 {
-	logerror("nand_a2_w %08x (%08x)\n", data, cpu_get_pc(&space.device()));
+	logerror("nand_a2_w %08x (%08x)\n", data, space.device().safe_pc());
 	nand_address = ( nand_address & 0xff00ffff ) | ( ( data & 0xff ) << 16 );
 }
 
 WRITE32_MEMBER(namcos10_state::nand_address3_w )
 {
-	logerror("nand_a3_w %08x (%08x)\n", data, cpu_get_pc(&space.device()));
+	logerror("nand_a3_w %08x (%08x)\n", data, space.device().safe_pc());
 	nand_address = ( nand_address & 0xffff00ff ) | ( ( data & 0xff ) << 8 );
 }
 
 WRITE32_MEMBER(namcos10_state::nand_address4_w )
 {
-	logerror("nand_a4_w %08x (%08x)\n", data, cpu_get_pc(&space.device()));
+	logerror("nand_a4_w %08x (%08x)\n", data, space.device().safe_pc());
 	nand_address = ( nand_address & 0xffffff00 ) | ( ( data & 0xff ) << 0 );
 }
 
@@ -593,7 +594,7 @@ DRIVER_INIT_MEMBER(namcos10_state,nflclsfb)
 }
 
 
-static MACHINE_RESET( namcos10 )
+MACHINE_RESET_MEMBER(namcos10_state,namcos10)
 {
 }
 
@@ -602,7 +603,7 @@ static MACHINE_CONFIG_START( namcos10_memm, namcos10_state )
 	MCFG_CPU_ADD( "maincpu", CXD8606BQ, XTAL_101_4912MHz )
 	MCFG_CPU_PROGRAM_MAP( namcos10_memm_map )
 
-	MCFG_MACHINE_RESET( namcos10 )
+	MCFG_MACHINE_RESET_OVERRIDE(namcos10_state, namcos10 )
 
 	/* video hardware */
 	MCFG_PSXGPU_ADD( "maincpu", "gpu", CXD8561CQ, 0x200000, XTAL_53_693175MHz )
@@ -616,7 +617,7 @@ static MACHINE_CONFIG_START( namcos10_memn, namcos10_state )
 	MCFG_CPU_ADD( "maincpu", CXD8606BQ, XTAL_101_4912MHz )
 	MCFG_CPU_PROGRAM_MAP( namcos10_memn_map )
 
-	MCFG_MACHINE_RESET( namcos10 )
+	MCFG_MACHINE_RESET_OVERRIDE(namcos10_state, namcos10 )
 
 	/* video hardware */
 	MCFG_PSXGPU_ADD( "maincpu", "gpu", CXD8561CQ, 0x200000, XTAL_53_693175MHz )

@@ -35,8 +35,8 @@ public:
 	UINT8     m_sound_nmi_enabled;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE8_MEMBER(espial_master_interrupt_mask_w);
 	DECLARE_WRITE8_MEMBER(espial_master_soundlatch_w);
 	DECLARE_WRITE8_MEMBER(espial_sound_nmi_mask_w);
@@ -45,11 +45,17 @@ public:
 	DECLARE_WRITE8_MEMBER(espial_attributeram_w);
 	DECLARE_WRITE8_MEMBER(espial_scrollram_w);
 	DECLARE_WRITE8_MEMBER(espial_flipscreen_w);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_VIDEO_START(netwars);
 };
 
 /*----------- defined in video/espial.c -----------*/
 
-PALETTE_INIT( espial );
-VIDEO_START( espial );
-VIDEO_START( netwars );
+
+
+
 SCREEN_UPDATE_IND16( espial );

@@ -20,12 +20,18 @@ public:
 	DECLARE_READ16_MEMBER(special_port2_r);
 	DECLARE_WRITE16_MEMBER(latch_w);
 	DECLARE_DRIVER_INIT(batman);
+	TILE_GET_INFO_MEMBER(get_alpha_tile_info);
+	TILE_GET_INFO_MEMBER(get_playfield_tile_info);
+	TILE_GET_INFO_MEMBER(get_playfield2_tile_info);
+	DECLARE_MACHINE_START(batman);
+	DECLARE_MACHINE_RESET(batman);
+	DECLARE_VIDEO_START(batman);
 };
 
 
 /*----------- defined in video/batman.c -----------*/
 
-VIDEO_START( batman );
+
 SCREEN_UPDATE_IND16( batman );
 
 void batman_scanline_update(screen_device &screen, int scanline);

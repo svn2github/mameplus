@@ -72,15 +72,18 @@ public:
 	DECLARE_READ8_MEMBER(mux_r);
 	DECLARE_WRITE8_MEMBER(mux_w);
 	DECLARE_WRITE8_MEMBER(yumefuda_output_w);
+	TILE_GET_INFO_MEMBER(y_get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
-static TILE_GET_INFO( y_get_bg_tile_info )
+TILE_GET_INFO_MEMBER(albazg_state::y_get_bg_tile_info)
 {
-	albazg_state *state = machine.driver_data<albazg_state>();
-	int code = state->m_videoram[tile_index];
-	int color = state->m_colorram[tile_index];
+	int code = m_videoram[tile_index];
+	int color = m_colorram[tile_index];
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code + ((color & 0xf8) << 3),
 			color & 0x7,
@@ -88,10 +91,9 @@ static TILE_GET_INFO( y_get_bg_tile_info )
 }
 
 
-static VIDEO_START( yumefuda )
+void albazg_state::video_start()
 {
-	albazg_state *state = machine.driver_data<albazg_state>();
-	state->m_bg_tilemap = tilemap_create(machine, y_get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(albazg_state::y_get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 static SCREEN_UPDATE_IND16( yumefuda )
@@ -134,13 +136,13 @@ WRITE8_MEMBER(albazg_state::yumefuda_cram_w)
 /*Custom RAM (Thrash Protection)*/
 READ8_MEMBER(albazg_state::custom_ram_r)
 {
-//  logerror("Custom RAM read at %02x PC = %x\n", offset + 0xaf80, cpu_get_pc(&space.device()));
+//  logerror("Custom RAM read at %02x PC = %x\n", offset + 0xaf80, space.device().safe_pc());
 	return m_cus_ram[offset];// ^ 0x55;
 }
 
 WRITE8_MEMBER(albazg_state::custom_ram_w)
 {
-//  logerror("Custom RAM write at %02x : %02x PC = %x\n", offset + 0xaf80, data, cpu_get_pc(&space.device()));
+//  logerror("Custom RAM write at %02x : %02x PC = %x\n", offset + 0xaf80, data, space.device().safe_pc());
 	if(m_prot_lock)
 		m_cus_ram[offset] = data;
 }
@@ -148,7 +150,7 @@ WRITE8_MEMBER(albazg_state::custom_ram_w)
 /*this might be used as NVRAM commands btw*/
 WRITE8_MEMBER(albazg_state::prot_lock_w)
 {
-//  logerror("PC %04x Prot lock value written %02x\n", cpu_get_pc(&space.device()), data);
+//  logerror("PC %04x Prot lock value written %02x\n", space.device().safe_pc(), data);
 	m_prot_lock = data;
 }
 
@@ -354,24 +356,22 @@ INPUT_PORTS_END
 
 /***************************************************************************************/
 
-static MACHINE_START( yumefuda )
+void albazg_state::machine_start()
 {
-	albazg_state *state = machine.driver_data<albazg_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x2000);
+	membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x2000);
 
-	state->save_item(NAME(state->m_mux_data));
-	state->save_item(NAME(state->m_bank));
-	state->save_item(NAME(state->m_prot_lock));
+	save_item(NAME(m_mux_data));
+	save_item(NAME(m_bank));
+	save_item(NAME(m_prot_lock));
 }
 
-static MACHINE_RESET( yumefuda )
+void albazg_state::machine_reset()
 {
-	albazg_state *state = machine.driver_data<albazg_state>();
-	state->m_mux_data = 0;
-	state->m_bank = -1;
-	state->m_prot_lock = 0;
+	m_mux_data = 0;
+	m_bank = -1;
+	m_prot_lock = 0;
 }
 
 static MACHINE_CONFIG_START( yumefuda, albazg_state )
@@ -382,8 +382,6 @@ static MACHINE_CONFIG_START( yumefuda, albazg_state )
 	MCFG_CPU_IO_MAP(port_map)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_MACHINE_START(yumefuda)
-	MCFG_MACHINE_RESET(yumefuda)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -404,7 +402,6 @@ static MACHINE_CONFIG_START( yumefuda, albazg_state )
 	MCFG_GFXDECODE( yumefuda )
 	MCFG_PALETTE_LENGTH(0x80)
 
-	MCFG_VIDEO_START( yumefuda )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

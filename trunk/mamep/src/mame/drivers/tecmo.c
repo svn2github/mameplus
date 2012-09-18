@@ -68,12 +68,12 @@ WRITE8_MEMBER(tecmo_state::tecmo_bankswitch_w)
 WRITE8_MEMBER(tecmo_state::tecmo_sound_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	cputag_set_input_line(machine(), "soundcpu",INPUT_LINE_NMI,ASSERT_LINE);
+	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI,ASSERT_LINE);
 }
 
 WRITE8_MEMBER(tecmo_state::tecmo_nmi_ack_w)
 {
-	cputag_set_input_line(machine(), "soundcpu",INPUT_LINE_NMI,CLEAR_LINE);
+	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI,CLEAR_LINE);
 }
 
 WRITE8_MEMBER(tecmo_state::tecmo_adpcm_start_w)
@@ -606,7 +606,7 @@ GFXDECODE_END
 
 static void irqhandler(device_t *device, int linestate)
 {
-	cputag_set_input_line(device->machine(), "soundcpu", 0, linestate);
+	device->machine().device("soundcpu")->execute().set_input_line(0, linestate);
 }
 
 static const ym3812_interface ym3812_config =
@@ -621,12 +621,11 @@ static const msm5205_interface msm5205_config =
 };
 
 
-static MACHINE_RESET( rygar )
+MACHINE_RESET_MEMBER(tecmo_state,rygar)
 {
-	tecmo_state *state = machine.driver_data<tecmo_state>();
-	state->m_adpcm_pos = 0;
-	state->m_adpcm_end = 0;
-	state->m_adpcm_data = -1;
+	m_adpcm_pos = 0;
+	m_adpcm_end = 0;
+	m_adpcm_data = -1;
 }
 
 static MACHINE_CONFIG_START( rygar, tecmo_state )
@@ -650,9 +649,9 @@ static MACHINE_CONFIG_START( rygar, tecmo_state )
 	MCFG_GFXDECODE(tecmo)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(tecmo)
+	MCFG_VIDEO_START_OVERRIDE(tecmo_state,tecmo)
 
-	MCFG_MACHINE_RESET( rygar )
+	MCFG_MACHINE_RESET_OVERRIDE(tecmo_state, rygar )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -709,9 +708,9 @@ static MACHINE_CONFIG_START( backfirt, tecmo_state )
 	MCFG_GFXDECODE(tecmo)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(tecmo)
+	MCFG_VIDEO_START_OVERRIDE(tecmo_state,tecmo)
 
-	MCFG_MACHINE_RESET( rygar )
+	MCFG_MACHINE_RESET_OVERRIDE(tecmo_state, rygar )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -70,9 +70,9 @@ WRITE16_MEMBER(galpani2_state::galpani2_eeprom_w)
 ***************************************************************************/
 
 
-static MACHINE_RESET( galpani2 )
+void galpani2_state::machine_reset()
 {
-	machine.scheduler().boost_interleave(attotime::zero, attotime::from_usec(50)); //initial mcu xchk
+	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(50)); //initial mcu xchk
 }
 
 static void galpani2_write_kaneko(device_t *device)
@@ -115,7 +115,7 @@ WRITE8_MEMBER(galpani2_state::galpani2_mcu_init_w)
 		mcu_data	=	srcspace->read_byte(mcu_address );
 		dstspace->write_byte(mcu_address-0x10, mcu_data);
 	}
-	cputag_set_input_line(machine(), "sub", INPUT_LINE_IRQ7, HOLD_LINE); //MCU Initialised
+	machine().device("sub")->execute().set_input_line(INPUT_LINE_IRQ7, HOLD_LINE); //MCU Initialised
 }
 
 static void galpani2_mcu_nmi1(running_machine &machine)
@@ -548,17 +548,17 @@ static TIMER_DEVICE_CALLBACK( galpani2_interrupt1 )
 	int scanline = param;
 
 	if(scanline == 240)
-		 device_set_input_line(state->m_maincpu, 5, HOLD_LINE);
+		 state->m_maincpu->set_input_line(5, HOLD_LINE);
 
 	/* MCU related? */
 	if(scanline == 128)
 	{
-		device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
-		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		state->m_maincpu->set_input_line(3, HOLD_LINE);
+		state->m_maincpu->set_input_line(4, HOLD_LINE);
 	}
 
 	if(scanline == 0)
-		 device_set_input_line(state->m_maincpu, 6, HOLD_LINE); // hblank?
+		 state->m_maincpu->set_input_line(6, HOLD_LINE); // hblank?
 }
 
 /* CPU#2 interrupts, lev 3,4 & 5 are tested on power up. The rest is rte, but lev 7 */
@@ -568,13 +568,13 @@ static TIMER_DEVICE_CALLBACK( galpani2_interrupt2 )
 	int scanline = param;
 
 	if(scanline == 240)
-		device_set_input_line(state->m_subcpu, 5, HOLD_LINE);
+		state->m_subcpu->set_input_line(5, HOLD_LINE);
 
 	if(scanline == 128)
-		device_set_input_line(state->m_subcpu, 4, HOLD_LINE);
+		state->m_subcpu->set_input_line(4, HOLD_LINE);
 
 	if(scanline == 0)
-		device_set_input_line(state->m_subcpu, 3, HOLD_LINE);
+		state->m_subcpu->set_input_line(3, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( galpani2, galpani2_state )
@@ -589,7 +589,6 @@ static MACHINE_CONFIG_START( galpani2, galpani2_state )
 	MCFG_CPU_PROGRAM_MAP(galpani2_mem2)
 	MCFG_TIMER_ADD_SCANLINE("s_scantimer", galpani2_interrupt2, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(galpani2)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
 	/* video hardware */
@@ -606,8 +605,6 @@ static MACHINE_CONFIG_START( galpani2, galpani2_state )
 	MCFG_DEVICE_ADD_KC002_SPRITES
 	kaneko16_sprite_device::set_offsets(*device, 0x10000 - 0x16c0 + 0xc00, 0);
 
-	MCFG_PALETTE_INIT(galpani2)
-	MCFG_VIDEO_START(galpani2)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

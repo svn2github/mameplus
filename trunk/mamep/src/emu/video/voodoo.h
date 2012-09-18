@@ -48,17 +48,14 @@
 /***************************************************************************
     CONSTANTS
 ***************************************************************************/
-
 /* enumeration specifying which model of Voodoo we are emulating */
 enum
 {
-	VOODOO_1,
-	VOODOO_2,
-	VOODOO_BANSHEE,
-	VOODOO_3,
-	MAX_VOODOO_TYPES
+	TYPE_VOODOO_1,
+	TYPE_VOODOO_2,
+	TYPE_VOODOO_BANSHEE,
+	TYPE_VOODOO_3
 };
-
 
 #define STD_VOODOO_1_CLOCK			50000000
 #define STD_VOODOO_2_CLOCK			90000000
@@ -74,10 +71,8 @@ typedef void (*voodoo_vblank_func)(device_t *device, int state);
 typedef void (*voodoo_stall_func)(device_t *device, int state);
 
 
-typedef struct _voodoo_config voodoo_config;
-struct _voodoo_config
+struct voodoo_config
 {
-	int					type;
 	UINT8				fbmem;
 	UINT8				tmumem0;
 	UINT8				tmumem1;
@@ -93,40 +88,21 @@ struct _voodoo_config
     DEVICE CONFIGURATION MACROS
 ***************************************************************************/
 
-#define MCFG_3DFX_VOODOO_ADD(_tag, _type, _clock, _fbmem, _screen) \
-	MCFG_DEVICE_ADD(_tag, VOODOO_GRAPHICS, _clock) \
-	MCFG_DEVICE_CONFIG_DATA32(voodoo_config, type, _type) \
-	MCFG_DEVICE_CONFIG_DATA32(voodoo_config, fbmem, _fbmem) \
-	MCFG_DEVICE_CONFIG_DATAPTR(voodoo_config, screen, _screen)
+#define MCFG_3DFX_VOODOO_1_ADD(_tag, _clock, _config) \
+	MCFG_DEVICE_ADD(_tag, VOODOO_1, _clock) \
+	MCFG_DEVICE_CONFIG(_config)
 
-#define MCFG_3DFX_VOODOO_1_ADD(_tag, _clock, _fbmem, _screen) \
-	MCFG_3DFX_VOODOO_ADD(_tag, VOODOO_1, _clock, _fbmem, _screen)
+#define MCFG_3DFX_VOODOO_2_ADD(_tag, _clock, _config) \
+	MCFG_DEVICE_ADD(_tag, VOODOO_2, _clock) \
+	MCFG_DEVICE_CONFIG(_config)
 
-#define MCFG_3DFX_VOODOO_2_ADD(_tag, _clock, _fbmem, _screen) \
-	MCFG_3DFX_VOODOO_ADD(_tag, VOODOO_2, _clock, _fbmem, _screen)
+#define MCFG_3DFX_VOODOO_BANSHEE_ADD(_tag, _clock, _config) \
+	MCFG_DEVICE_ADD(_tag, VOODOO_BANSHEE, _clock) \
+	MCFG_DEVICE_CONFIG(_config)
 
-#define MCFG_3DFX_VOODOO_BANSHEE_ADD(_tag, _clock, _fbmem, _screen) \
-	MCFG_3DFX_VOODOO_ADD(_tag, VOODOO_BANSHEE, _clock, _fbmem, _screen)
-
-#define MCFG_3DFX_VOODOO_3_ADD(_tag, _clock, _fbmem, _screen) \
-	MCFG_3DFX_VOODOO_ADD(_tag, VOODOO_3, _clock, _fbmem, _screen)
-
-#define MCFG_3DFX_VOODOO_TMU_MEMORY(_tmu, _tmumem) \
-	MCFG_DEVICE_CONFIG_DATA32(voodoo_config, tmumem##_tmu, _tmumem)
-
-#define MCFG_3DFX_VOODOO_VBLANK(_vblank) \
-	MCFG_DEVICE_CONFIG_DATAPTR(voodoo_config, vblank, _vblank)
-
-#define MCFG_3DFX_VOODOO_STALL(_stall) \
-	MCFG_DEVICE_CONFIG_DATAPTR(voodoo_config, stall, _stall)
-
-#define MCFG_3DFX_VOODOO_CPU(_cputag) \
-	MCFG_DEVICE_CONFIG_DATAPTR(voodoo_config, cputag, _cputag)
-
-#define MCFG_3DFX_VOODOO_MODIFY(_tag) \
-	MCFG_DEVICE_MODIFY(_tag)
-
-
+#define MCFG_3DFX_VOODOO_3_ADD(_tag, _clock, _config) \
+	MCFG_DEVICE_ADD(_tag, VOODOO_3, _clock) \
+	MCFG_DEVICE_CONFIG(_config)
 
 /***************************************************************************
     FUNCTION PROTOTYPES
@@ -151,6 +127,66 @@ READ32_DEVICE_HANDLER( banshee_rom_r );
 
 /* ----- device interface ----- */
 
-DECLARE_LEGACY_DEVICE(VOODOO_GRAPHICS, voodoo);
+class voodoo_device : public device_t
+{
+public:
+	voodoo_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock);
+	~voodoo_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_stop();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+class voodoo_1_device : public voodoo_device
+{
+public:
+	voodoo_1_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+protected:
+	// device-level overrides
+	virtual void device_start();
+};
+
+extern const device_type VOODOO_1;
+
+class voodoo_2_device : public voodoo_device
+{
+public:
+	voodoo_2_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+protected:
+	// device-level overrides
+	virtual void device_start();
+};
+
+extern const device_type VOODOO_2;
+
+class voodoo_banshee_device : public voodoo_device
+{
+public:
+	voodoo_banshee_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+protected:
+	// device-level overrides
+	virtual void device_start();
+};
+
+extern const device_type VOODOO_BANSHEE;
+
+class voodoo_3_device : public voodoo_device
+{
+public:
+	voodoo_3_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+protected:
+	// device-level overrides
+	virtual void device_start();
+};
+
+extern const device_type VOODOO_3;
 
 #endif

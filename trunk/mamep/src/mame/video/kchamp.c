@@ -10,18 +10,18 @@
 #include "includes/kchamp.h"
 
 
-PALETTE_INIT( kchamp )
+void kchamp_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i, red, green, blue;
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		red = color_prom[i];
-		green = color_prom[machine.total_colors() + i];
-		blue = color_prom[2 * machine.total_colors() + i];
+		green = color_prom[machine().total_colors() + i];
+		blue = color_prom[2 * machine().total_colors() + i];
 
-		palette_set_color_rgb(machine, i, pal4bit(red), pal4bit(green), pal4bit(blue));
+		palette_set_color_rgb(machine(), i, pal4bit(red), pal4bit(green), pal4bit(blue));
 	}
 }
 
@@ -42,19 +42,17 @@ WRITE8_MEMBER(kchamp_state::kchamp_flipscreen_w)
 	flip_screen_set(data & 0x01);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(kchamp_state::get_bg_tile_info)
 {
-	kchamp_state *state = machine.driver_data<kchamp_state>();
-	int code = state->m_videoram[tile_index] + ((state->m_colorram[tile_index] & 7) << 8);
-	int color = (state->m_colorram[tile_index] >> 3) & 0x1f;
+	int code = m_videoram[tile_index] + ((m_colorram[tile_index] & 7) << 8);
+	int color = (m_colorram[tile_index] >> 3) & 0x1f;
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
-VIDEO_START( kchamp )
+void kchamp_state::video_start()
 {
-	kchamp_state *state = machine.driver_data<kchamp_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(kchamp_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 /*

@@ -21,10 +21,10 @@ static TIMER_DEVICE_CALLBACK( higemaru_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE, 0xcf);	/* RST 08h - vblank */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);	/* RST 08h - vblank */
 
 	if(scanline == 0) // unknown irq event, does various stuff like copying the spriteram
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE, 0xd7);	/* RST 10h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h */
 }
 
 
@@ -175,8 +175,6 @@ static MACHINE_CONFIG_START( higemaru, higemaru_state )
 	MCFG_GFXDECODE(higemaru)
 	MCFG_PALETTE_LENGTH(32*4+16*16)
 
-	MCFG_PALETTE_INIT(higemaru)
-	MCFG_VIDEO_START(higemaru)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

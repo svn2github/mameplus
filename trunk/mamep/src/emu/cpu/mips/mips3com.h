@@ -33,7 +33,7 @@
 #define MIPS3_CAUSE_READ_CYCLES		250
 
 /* MIPS flavors */
-enum _mips3_flavor
+enum mips3_flavor
 {
 	/* MIPS III variants */
 	MIPS3_TYPE_MIPS_III,
@@ -48,7 +48,6 @@ enum _mips3_flavor
 	MIPS3_TYPE_QED5271,
 	MIPS3_TYPE_RM7000
 };
-typedef enum _mips3_flavor mips3_flavor;
 
 /* TLB bits */
 #define TLB_GLOBAL				0x01
@@ -167,8 +166,7 @@ typedef enum _mips3_flavor mips3_flavor;
 ***************************************************************************/
 
 /* MIPS3 TLB entry */
-typedef struct _mips3_tlb_entry mips3_tlb_entry;
-struct _mips3_tlb_entry
+struct mips3_tlb_entry
 {
 	UINT64			page_mask;
 	UINT64			entry_hi;
@@ -177,12 +175,11 @@ struct _mips3_tlb_entry
 
 
 /* forward declaration of implementation-specific state */
-typedef struct _mips3imp_state mips3imp_state;
+struct mips3imp_state;
 
 
 /* MIPS3 state */
-typedef struct _mips3_state mips3_state;
-struct _mips3_state
+struct mips3_state
 {
 	/* core registers */
 	UINT32			pc;

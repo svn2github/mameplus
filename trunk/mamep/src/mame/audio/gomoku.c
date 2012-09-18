@@ -19,18 +19,17 @@ static const int defgain = 48;
 
 
 /* this structure defines the parameters for a channel */
-typedef struct
+struct sound_channel 
 {
 	int channel;
 	int frequency;
 	int counter;
 	int volume;
 	int oneshotplaying;
-} sound_channel;
+};
 
 
-typedef struct _gomoku_sound_state gomoku_sound_state;
-struct _gomoku_sound_state
+struct gomoku_sound_state
 {
 	/* data about the sound system */
 	sound_channel m_channel_list[MAX_VOICES];
@@ -57,7 +56,7 @@ INLINE gomoku_sound_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == GOMOKU);
 
-	return (gomoku_sound_state *)downcast<legacy_device_base *>(device)->token();
+	return (gomoku_sound_state *)downcast<gomoku_sound_device *>(device)->token();
 }
 
 
@@ -209,23 +208,6 @@ static DEVICE_START( gomoku_sound )
 }
 
 
-DEVICE_GET_INFO( gomoku_sound )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(gomoku_sound_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(gomoku_sound);	break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Gomoku Custom");				break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
-}
-
-
 /********************************************************************************/
 
 WRITE8_DEVICE_HANDLER( gomoku_sound1_w )
@@ -294,4 +276,42 @@ WRITE8_DEVICE_HANDLER( gomoku_sound2_w )
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(GOMOKU, gomoku_sound);
+const device_type GOMOKU = &device_creator<gomoku_sound_device>;
+
+gomoku_sound_device::gomoku_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, GOMOKU, "Gomoku Custom", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(gomoku_sound_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void gomoku_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void gomoku_sound_device::device_start()
+{
+	DEVICE_START_NAME( gomoku_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void gomoku_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

@@ -38,6 +38,12 @@ static ADDRESS_MAP_START( st0016_mem, AS_PROGRAM, 8, st0016_state )
 	AM_RANGE(0xf000, 0xffff) AM_RAM /* work ram */
 ADDRESS_MAP_END
 
+static ADDRESS_MAP_START( renju_mem, AS_PROGRAM, 8, st0016_state )
+	AM_RANGE(0x0000, 0x7fff) AM_ROM AM_REGION("maincpu", 0x200000 )
+	AM_IMPORT_FROM( st0016_mem )
+ADDRESS_MAP_END
+
+
 READ8_MEMBER(st0016_state::mux_r)
 {
 /*
@@ -417,10 +423,10 @@ static TIMER_DEVICE_CALLBACK(st0016_int)
 	int scanline = param;
 
 	if(scanline == 240)
-		device_set_input_line(state->m_maincpu,0,HOLD_LINE);
+		state->m_maincpu->set_input_line(0,HOLD_LINE);
 	else if((scanline % 64) == 0)
-		if(cpu_get_reg(state->m_maincpu, Z80_IFF1)) /* dirty hack ... */
-			device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE );
+		if(state->m_maincpu->state_int(Z80_IFF1)) /* dirty hack ... */
+			state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE );
 }
 
 static const st0016_interface st0016_config =
@@ -453,7 +459,7 @@ static MACHINE_CONFIG_START( st0016, st0016_state )
 	MCFG_GFXDECODE(st0016)
 	MCFG_PALETTE_LENGTH(16*16*4+1)
 
-	MCFG_VIDEO_START(st0016)
+	MCFG_VIDEO_START_OVERRIDE(st0016_state,st0016)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -469,6 +475,11 @@ static MACHINE_CONFIG_DERIVED( mayjinsn, st0016 )
 	MCFG_CPU_ADD("sub", V810, 10000000)//25 Mhz ?
 	MCFG_CPU_PROGRAM_MAP(v810_mem)
 	MCFG_QUANTUM_TIME(attotime::from_hz(60))
+MACHINE_CONFIG_END
+
+static MACHINE_CONFIG_DERIVED( renju, st0016 )
+	MCFG_CPU_MODIFY("maincpu")
+	MCFG_CPU_PROGRAM_MAP(renju_mem)
 MACHINE_CONFIG_END
 
 /*************************************
@@ -688,7 +699,7 @@ DRIVER_INIT_MEMBER(st0016_state,mayjisn2)
  *
  *************************************/
 
-GAME(  1994, renju,	    0,	    st0016,   renju, st0016_state,    renju,    ROT0, "Visco",     "Renju Kizoku", 0)
+GAME(  1994, renju,	    0,	    renju,    renju,   st0016_state,    renju,    ROT0, "Visco",     "Renju Kizoku", 0)
 GAME(  1996, nratechu,	0,	    st0016,   nratechu, st0016_state, nratechu, ROT0, "Seta",      "Neratte Chu", 0)
 GAME(  1994, mayjisn2,	0,	    mayjinsn, mayjisn2, st0016_state, mayjisn2, ROT0, "Seta",      "Mayjinsen 2", 0)
 GAME(  1995, koikois,   0,	    st0016,   koikois, st0016_state,  renju,    ROT0, "Visco",     "Koi Koi Shimasho", GAME_IMPERFECT_GRAPHICS)

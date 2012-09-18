@@ -17,22 +17,42 @@ const pen_t *tlc34076_get_pens(device_t *device);
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _tlc34076_config tlc34076_config;
-struct _tlc34076_config
+struct tlc34076_config
 {
 	int res_sel;
 };
 
-DECLARE_LEGACY_DEVICE(TLC34076, tlc34076);
+extern const tlc34076_config tlc34076_6_bit_intf;
+
+class tlc34076_device : public device_t
+{
+public:
+	tlc34076_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tlc34076_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type TLC34076;
+
 
 
 /***************************************************************************
     DEVICE CONFIGURATION MACROS
 ***************************************************************************/
 
-#define MCFG_TLC34076_ADD(_tag, _res_sel) \
+#define MCFG_TLC34076_ADD(_tag, _config) \
 	MCFG_DEVICE_ADD(_tag, TLC34076, 0) \
-	MCFG_DEVICE_CONFIG_DATA32(tlc34076_config, res_sel, _res_sel)
+	MCFG_DEVICE_CONFIG(_config)
 
 
 /***************************************************************************

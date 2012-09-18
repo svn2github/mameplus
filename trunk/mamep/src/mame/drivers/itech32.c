@@ -356,7 +356,6 @@ Notes:
 #include "includes/itech32.h"
 #include "sound/es5506.h"
 #include "machine/timekpr.h"
-#include "devconv.h"
 
 
 #define FULL_LOGGING				0
@@ -364,7 +363,7 @@ Notes:
 
 
 
-#define START_TMS_SPINNING(n)			do { device_spin_until_trigger(&space.device(), 7351 + n); m_tms_spinning[n] = 1; } while (0)
+#define START_TMS_SPINNING(n)			do { space.device().execute().spin_until_trigger(7351 + n); m_tms_spinning[n] = 1; } while (0)
 #define STOP_TMS_SPINNING(machine, n)	do { (machine).scheduler().trigger(7351 + n); (machine).driver_data<itech32_state>()->m_tms_spinning[n] = 0; } while (0)
 
 
@@ -402,15 +401,15 @@ void itech32_update_interrupts(running_machine &machine, int vint, int xint, int
 
 	if (state->m_is_drivedge)
 	{
-		cputag_set_input_line(machine, "maincpu", 3, state->m_vint_state ? ASSERT_LINE : CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 4, state->m_xint_state ? ASSERT_LINE : CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 5, state->m_qint_state ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(3, state->m_vint_state ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(4, state->m_xint_state ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(5, state->m_qint_state ? ASSERT_LINE : CLEAR_LINE);
 	}
 	else
 	{
-		cputag_set_input_line(machine, "maincpu", 1, state->m_vint_state ? ASSERT_LINE : CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 2, state->m_xint_state ? ASSERT_LINE : CLEAR_LINE);
-		cputag_set_input_line(machine, "maincpu", 3, state->m_qint_state ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(1, state->m_vint_state ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(2, state->m_xint_state ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(3, state->m_qint_state ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -436,24 +435,23 @@ WRITE16_MEMBER(itech32_state::int1_ack_w)
  *
  *************************************/
 
-static MACHINE_RESET( itech32 )
+void itech32_state::machine_reset()
 {
-	itech32_state *state = machine.driver_data<itech32_state>();
-	state->m_vint_state = state->m_xint_state = state->m_qint_state = 0;
-	state->m_sound_data = 0;
-	state->m_sound_return = 0;
-	state->m_sound_int_state = 0;
+	m_vint_state = m_xint_state = m_qint_state = 0;
+	m_sound_data = 0;
+	m_sound_return = 0;
+	m_sound_int_state = 0;
 }
 
 
-static MACHINE_RESET( drivedge )
+MACHINE_RESET_MEMBER(itech32_state,drivedge)
 {
-	MACHINE_RESET_CALL(itech32);
+	itech32_state::machine_reset();
 
-	cputag_set_input_line(machine, "dsp1", INPUT_LINE_RESET, ASSERT_LINE);
-	cputag_set_input_line(machine, "dsp2", INPUT_LINE_RESET, ASSERT_LINE);
-	STOP_TMS_SPINNING(machine, 0);
-	STOP_TMS_SPINNING(machine, 1);
+	machine().device("dsp1")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("dsp2")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	STOP_TMS_SPINNING(machine(), 0);
+	STOP_TMS_SPINNING(machine(), 1);
 }
 
 
@@ -642,7 +640,7 @@ static TIMER_CALLBACK( delayed_sound_data_w )
 	itech32_state *state = machine.driver_data<itech32_state>();
 	state->m_sound_data = param;
 	state->m_sound_int_state = 1;
-	cputag_set_input_line(machine, "soundcpu", M6809_IRQ_LINE, ASSERT_LINE);
+	machine.device("soundcpu")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
 }
 
 
@@ -668,7 +666,7 @@ WRITE32_MEMBER(itech32_state::sound_data32_w)
 
 READ8_MEMBER(itech32_state::sound_data_r)
 {
-	cputag_set_input_line(machine(), "soundcpu", M6809_IRQ_LINE, CLEAR_LINE);
+	machine().device("soundcpu")->execute().set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
 	m_sound_int_state = 0;
 	return m_sound_data;
 }
@@ -765,7 +763,7 @@ static const via6522_interface drivedge_via_interface =
 
 WRITE8_MEMBER(itech32_state::firq_clear_w)
 {
-	cputag_set_input_line(machine(), "soundcpu", M6809_FIRQ_LINE, CLEAR_LINE);
+	machine().device("soundcpu")->execute().set_input_line(M6809_FIRQ_LINE, CLEAR_LINE);
 }
 
 
@@ -778,8 +776,8 @@ WRITE8_MEMBER(itech32_state::firq_clear_w)
 
 WRITE32_MEMBER(itech32_state::tms_reset_assert_w)
 {
-	cputag_set_input_line(machine(), "dsp1", INPUT_LINE_RESET, ASSERT_LINE);
-	cputag_set_input_line(machine(), "dsp2", INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("dsp1")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("dsp2")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 
@@ -788,12 +786,12 @@ WRITE32_MEMBER(itech32_state::tms_reset_clear_w)
 	/* kludge to prevent crash on first boot */
 	if ((m_tms1_ram[0] & 0xff000000) == 0)
 	{
-		cputag_set_input_line(machine(), "dsp1", INPUT_LINE_RESET, CLEAR_LINE);
+		machine().device("dsp1")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 		STOP_TMS_SPINNING(machine(), 0);
 	}
 	if ((m_tms2_ram[0] & 0xff000000) == 0)
 	{
-		cputag_set_input_line(machine(), "dsp2", INPUT_LINE_RESET, CLEAR_LINE);
+		machine().device("dsp2")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 		STOP_TMS_SPINNING(machine(), 1);
 	}
 }
@@ -834,14 +832,14 @@ WRITE32_MEMBER(itech32_state::tms2_trigger_w)
 
 READ32_MEMBER(itech32_state::drivedge_tms1_speedup_r)
 {
-	if (m_tms1_ram[0x382] == 0 && cpu_get_pc(&space.device()) == 0xee) START_TMS_SPINNING(0);
+	if (m_tms1_ram[0x382] == 0 && space.device().safe_pc() == 0xee) START_TMS_SPINNING(0);
 	return m_tms1_ram[0x382];
 }
 
 
 READ32_MEMBER(itech32_state::drivedge_tms2_speedup_r)
 {
-	if (m_tms2_ram[0x382] == 0 && cpu_get_pc(&space.device()) == 0x809808) START_TMS_SPINNING(1);
+	if (m_tms2_ram[0x382] == 0 && space.device().safe_pc() == 0x809808) START_TMS_SPINNING(1);
 	return m_tms2_ram[0x382];
 }
 
@@ -930,10 +928,10 @@ ADDRESS_MAP_END
 
 READ32_MEMBER(itech32_state::test1_r)
 {
-	if (ACCESSING_BITS_24_31 && !m_written[0x100 + offset*4+0]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(&space.device()), 0x100 + offset*4+0);
-	if (ACCESSING_BITS_16_23 && !m_written[0x100 + offset*4+1]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(&space.device()), 0x100 + offset*4+1);
-	if (ACCESSING_BITS_8_15 && !m_written[0x100 + offset*4+2]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(&space.device()), 0x100 + offset*4+2);
-	if (ACCESSING_BITS_0_7 && !m_written[0x100 + offset*4+3]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(&space.device()), 0x100 + offset*4+3);
+	if (ACCESSING_BITS_24_31 && !m_written[0x100 + offset*4+0]) logerror("%06X:read from uninitialized memory %04X\n", space.device().safe_pc(), 0x100 + offset*4+0);
+	if (ACCESSING_BITS_16_23 && !m_written[0x100 + offset*4+1]) logerror("%06X:read from uninitialized memory %04X\n", space.device().safe_pc(), 0x100 + offset*4+1);
+	if (ACCESSING_BITS_8_15 && !m_written[0x100 + offset*4+2]) logerror("%06X:read from uninitialized memory %04X\n", space.device().safe_pc(), 0x100 + offset*4+2);
+	if (ACCESSING_BITS_0_7 && !m_written[0x100 + offset*4+3]) logerror("%06X:read from uninitialized memory %04X\n", space.device().safe_pc(), 0x100 + offset*4+3);
 	return ((UINT32 *)m_main_ram)[0x100/4 + offset];
 }
 
@@ -948,10 +946,10 @@ WRITE32_MEMBER(itech32_state::test1_w)
 
 READ32_MEMBER(itech32_state::test2_r)
 {
-	if (ACCESSING_BITS_24_31 && !m_written[0xc00 + offset*4+0]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(&space.device()), 0xc00 + offset*4+0);
-	if (ACCESSING_BITS_16_23 && !m_written[0xc00 + offset*4+1]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(&space.device()), 0xc00 + offset*4+1);
-	if (ACCESSING_BITS_8_15 && !m_written[0xc00 + offset*4+2]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(&space.device()), 0xc00 + offset*4+2);
-	if (ACCESSING_BITS_0_7 && !m_written[0xc00 + offset*4+3]) logerror("%06X:read from uninitialized memory %04X\n", cpu_get_pc(&space.device()), 0xc00 + offset*4+3);
+	if (ACCESSING_BITS_24_31 && !m_written[0xc00 + offset*4+0]) logerror("%06X:read from uninitialized memory %04X\n", space.device().safe_pc(), 0xc00 + offset*4+0);
+	if (ACCESSING_BITS_16_23 && !m_written[0xc00 + offset*4+1]) logerror("%06X:read from uninitialized memory %04X\n", space.device().safe_pc(), 0xc00 + offset*4+1);
+	if (ACCESSING_BITS_8_15 && !m_written[0xc00 + offset*4+2]) logerror("%06X:read from uninitialized memory %04X\n", space.device().safe_pc(), 0xc00 + offset*4+2);
+	if (ACCESSING_BITS_0_7 && !m_written[0xc00 + offset*4+3]) logerror("%06X:read from uninitialized memory %04X\n", space.device().safe_pc(), 0xc00 + offset*4+3);
 	return ((UINT32 *)m_main_ram)[0xc00/4 + offset];
 }
 
@@ -1678,7 +1676,6 @@ static MACHINE_CONFIG_START( timekill, itech32_state )
 	MCFG_CPU_ADD("soundcpu", M6809, SOUND_CLOCK/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_RESET(itech32)
 	MCFG_NVRAM_ADD_CUSTOM_DRIVER("nvram", itech32_state, nvram_init)
 
 	MCFG_TICKET_DISPENSER_ADD("ticket", attotime::from_msec(200), TICKET_MOTOR_ACTIVE_HIGH, TICKET_STATUS_ACTIVE_HIGH)
@@ -1691,7 +1688,6 @@ static MACHINE_CONFIG_START( timekill, itech32_state )
 	MCFG_SCREEN_RAW_PARAMS(VIDEO_CLOCK, 508, 0, 384, 262, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(itech32)
 
-	MCFG_VIDEO_START(itech32)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1732,7 +1728,7 @@ static MACHINE_CONFIG_DERIVED( drivedge, bloodstm )
 
 //  MCFG_CPU_ADD("comm", M6803, 8000000/4) -- network CPU
 
-	MCFG_MACHINE_RESET(drivedge)
+	MCFG_MACHINE_RESET_OVERRIDE(itech32_state,drivedge)
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 MACHINE_CONFIG_END
 

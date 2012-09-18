@@ -37,9 +37,9 @@ static INTERRUPT_GEN( thief_interrupt )
 {
 	/* SLAM switch causes an NMI if it's pressed */
 	if( (device->machine().root_device().ioport("P2")->read() & 0x10) == 0 )
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	else
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 /**********************************************************/
@@ -453,7 +453,6 @@ static MACHINE_CONFIG_START( sharkatt, thief_state )
 
 	MCFG_PALETTE_LENGTH(16)
 
-	MCFG_VIDEO_START(thief)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -489,7 +488,6 @@ static MACHINE_CONFIG_START( thief, thief_state )
 
 	MCFG_PALETTE_LENGTH(16)
 
-	MCFG_VIDEO_START(thief)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -525,7 +523,6 @@ static MACHINE_CONFIG_START( natodef, thief_state )
 
 	MCFG_PALETTE_LENGTH(16)
 
-	MCFG_VIDEO_START(thief)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

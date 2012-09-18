@@ -7,45 +7,42 @@
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_bg18_tile_info )
+TILE_GET_INFO_MEMBER(taitol_state::get_bg18_tile_info)
 {
-	taitol_state *state = machine.driver_data<taitol_state>();
-	int attr = state->m_rambanks[2 * tile_index + 0x8000 + 1];
-	int code = state->m_rambanks[2 * tile_index + 0x8000]
+	int attr = m_rambanks[2 * tile_index + 0x8000 + 1];
+	int code = m_rambanks[2 * tile_index + 0x8000]
 			| ((attr & 0x03) << 8)
-			| ((state->m_bankc[(attr & 0xc) >> 2]) << 10)
-			| (state->m_horshoes_gfxbank << 12);
+			| ((m_bankc[(attr & 0xc) >> 2]) << 10)
+			| (m_horshoes_gfxbank << 12);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code,
 			(attr & 0xf0) >> 4,
 			0);
 }
 
-static TILE_GET_INFO( get_bg19_tile_info )
+TILE_GET_INFO_MEMBER(taitol_state::get_bg19_tile_info)
 {
-	taitol_state *state = machine.driver_data<taitol_state>();
-	int attr = state->m_rambanks[2 * tile_index + 0x9000 + 1];
-	int code = state->m_rambanks[2 * tile_index + 0x9000]
+	int attr = m_rambanks[2 * tile_index + 0x9000 + 1];
+	int code = m_rambanks[2 * tile_index + 0x9000]
 			| ((attr & 0x03) << 8)
-			| ((state->m_bankc[(attr & 0xc) >> 2]) << 10)
-			| (state->m_horshoes_gfxbank << 12);
+			| ((m_bankc[(attr & 0xc) >> 2]) << 10)
+			| (m_horshoes_gfxbank << 12);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code,
 			(attr & 0xf0) >> 4,
 			0);
 }
 
-static TILE_GET_INFO( get_ch1a_tile_info )
+TILE_GET_INFO_MEMBER(taitol_state::get_ch1a_tile_info)
 {
-	taitol_state *state = machine.driver_data<taitol_state>();
-	int attr = state->m_rambanks[2 * tile_index + 0xa000 + 1];
-	int code = state->m_rambanks[2 * tile_index + 0xa000] | ((attr & 0x01) << 8) | ((attr & 0x04) << 7);
+	int attr = m_rambanks[2 * tile_index + 0xa000 + 1];
+	int code = m_rambanks[2 * tile_index + 0xa000] | ((attr & 0x01) << 8) | ((attr & 0x04) << 7);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			2,
 			code,
 			(attr & 0xf0) >> 4,
@@ -60,24 +57,23 @@ static TILE_GET_INFO( get_ch1a_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( taitol )
+VIDEO_START_MEMBER(taitol_state,taitol)
 {
-	taitol_state *state = machine.driver_data<taitol_state>();
 	int i;
 
-	state->m_bg18_tilemap = tilemap_create(machine, get_bg18_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_bg19_tilemap = tilemap_create(machine, get_bg19_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_ch1a_tilemap = tilemap_create(machine, get_ch1a_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
+	m_bg18_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(taitol_state::get_bg18_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_bg19_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(taitol_state::get_bg19_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_ch1a_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(taitol_state::get_ch1a_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 
-	state->m_bg18_tilemap->set_transparent_pen(0);
-	state->m_ch1a_tilemap->set_transparent_pen(0);
+	m_bg18_tilemap->set_transparent_pen(0);
+	m_ch1a_tilemap->set_transparent_pen(0);
 
 	for (i = 0; i < 256; i++)
-		palette_set_color(machine, i, MAKE_RGB(0, 0, 0));
+		palette_set_color(machine(), i, MAKE_RGB(0, 0, 0));
 
-	state->m_ch1a_tilemap->set_scrolldx(-8, -8);
-	state->m_bg18_tilemap->set_scrolldx(28, -11);
-	state->m_bg19_tilemap->set_scrolldx(38, -21);
+	m_ch1a_tilemap->set_scrolldx(-8, -8);
+	m_bg18_tilemap->set_scrolldx(28, -11);
+	m_bg19_tilemap->set_scrolldx(38, -21);
 }
 
 
@@ -106,7 +102,7 @@ WRITE8_MEMBER(taitol_state::taitol_bankc_w)
 	if (m_bankc[offset] != data)
 	{
 		m_bankc[offset] = data;
-//      logerror("Bankc %d, %02x (%04x)\n", offset, data, cpu_get_pc(&space.device()));
+//      logerror("Bankc %d, %02x (%04x)\n", offset, data, space.device().safe_pc());
 
 		m_bg18_tilemap->mark_all_dirty();
 		m_bg19_tilemap->mark_all_dirty();
@@ -122,7 +118,7 @@ READ8_MEMBER(taitol_state::taitol_bankc_r)
 WRITE8_MEMBER(taitol_state::taitol_control_w)
 {
 
-//  logerror("Control Write %02x (%04x)\n", data, cpu_get_pc(&space.device()));
+//  logerror("Control Write %02x (%04x)\n", data, space.device().safe_pc());
 
 	m_cur_ctrl = data;
 //popmessage("%02x",data);
@@ -143,48 +139,48 @@ WRITE8_MEMBER(taitol_state::taitol_control_w)
 READ8_MEMBER(taitol_state::taitol_control_r)
 {
 
-//  logerror("Control Read %02x (%04x)\n", cur_ctrl, cpu_get_pc(&space.device()));
+//  logerror("Control Read %02x (%04x)\n", cur_ctrl, space.device().safe_pc());
 	return m_cur_ctrl;
 }
 
 void taitol_chardef14_m( running_machine &machine, int offset )
 {
-	gfx_element_mark_dirty(machine.gfx[2], offset / 32 + 0);
+	machine.gfx[2]->mark_dirty(offset / 32 + 0);
 }
 
 void taitol_chardef15_m( running_machine &machine, int offset )
 {
-	gfx_element_mark_dirty(machine.gfx[2], offset / 32 + 128);
+	machine.gfx[2]->mark_dirty(offset / 32 + 128);
 }
 
 void taitol_chardef16_m( running_machine &machine, int offset )
 {
-	gfx_element_mark_dirty(machine.gfx[2], offset / 32 + 256);
+	machine.gfx[2]->mark_dirty(offset / 32 + 256);
 }
 
 void taitol_chardef17_m( running_machine &machine, int offset )
 {
-	gfx_element_mark_dirty(machine.gfx[2], offset / 32 + 384);
+	machine.gfx[2]->mark_dirty(offset / 32 + 384);
 }
 
 void taitol_chardef1c_m( running_machine &machine, int offset )
 {
-	gfx_element_mark_dirty(machine.gfx[2], offset / 32 + 512);
+	machine.gfx[2]->mark_dirty(offset / 32 + 512);
 }
 
 void taitol_chardef1d_m( running_machine &machine, int offset )
 {
-	gfx_element_mark_dirty(machine.gfx[2], offset / 32 + 640);
+	machine.gfx[2]->mark_dirty(offset / 32 + 640);
 }
 
 void taitol_chardef1e_m( running_machine &machine, int offset )
 {
-	gfx_element_mark_dirty(machine.gfx[2], offset / 32 + 768);
+	machine.gfx[2]->mark_dirty(offset / 32 + 768);
 }
 
 void taitol_chardef1f_m( running_machine &machine, int offset )
 {
-	gfx_element_mark_dirty(machine.gfx[2], offset / 32 + 896);
+	machine.gfx[2]->mark_dirty(offset / 32 + 896);
 }
 
 void taitol_bg18_m( running_machine &machine, int offset )

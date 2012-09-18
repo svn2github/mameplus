@@ -37,7 +37,7 @@ WRITE16_MEMBER(tecmo16_state::tecmo16_sound_command_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, 0x00, data & 0xff);
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -363,7 +363,7 @@ GFXDECODE_END
 
 static void irqhandler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2151_interface ym2151_config =
@@ -396,7 +396,6 @@ static MACHINE_CONFIG_START( fstarfrc, tecmo16_state )
 	MCFG_GFXDECODE(tecmo16)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(fstarfrc)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -416,13 +415,13 @@ static MACHINE_CONFIG_DERIVED( ginkun, fstarfrc )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(ginkun_map)
 
-	MCFG_VIDEO_START(ginkun)
+	MCFG_VIDEO_START_OVERRIDE(tecmo16_state,ginkun)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( riot, ginkun )
 
 	/* basic machine hardware */
-	MCFG_VIDEO_START(riot)
+	MCFG_VIDEO_START_OVERRIDE(tecmo16_state,riot)
 MACHINE_CONFIG_END
 
 /******************************************************************************/

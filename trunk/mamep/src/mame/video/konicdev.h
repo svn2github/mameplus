@@ -26,22 +26,19 @@ typedef void (*k051316_callback)(running_machine &machine, int *code, int *color
 typedef void (*k056832_callback)(running_machine &machine, int layer, int *code, int *color, int *flags);
 
 
-typedef struct _k007342_interface k007342_interface;
-struct _k007342_interface
+struct k007342_interface
 {
 	int                gfxnum;
 	k007342_callback   callback;
 };
 
-typedef struct _k007420_interface k007420_interface;
-struct _k007420_interface
+struct k007420_interface
 {
 	int                banklimit;
 	k007420_callback   callback;
 };
 
-typedef struct _k052109_interface k052109_interface;
-struct _k052109_interface
+struct k052109_interface
 {
 	const char         *gfx_memory_region;
 	int                gfx_num;
@@ -50,8 +47,7 @@ struct _k052109_interface
 	k052109_callback   callback;
 };
 
-typedef struct _k051960_interface k051960_interface;
-struct _k051960_interface
+struct k051960_interface
 {
 	const char         *gfx_memory_region;
 	int                gfx_num;
@@ -60,8 +56,7 @@ struct _k051960_interface
 	k051960_callback   callback;
 };
 
-typedef struct _k05324x_interface k05324x_interface;
-struct _k05324x_interface
+struct k05324x_interface
 {
 	const char         *gfx_memory_region;
 	int                gfx_num;
@@ -71,8 +66,7 @@ struct _k05324x_interface
 	k05324x_callback   callback;
 };
 
-typedef struct _k053247_interface k053247_interface;
-struct _k053247_interface
+struct k053247_interface
 {
 	const char         *screen;
 	const char         *gfx_memory_region;
@@ -83,8 +77,7 @@ struct _k053247_interface
 	k05324x_callback   callback;
 };
 
-typedef struct _k051316_interface k051316_interface;
-struct _k051316_interface
+struct k051316_interface
 {
 	const char         *gfx_memory_region;
 	int                gfx_num;
@@ -93,14 +86,12 @@ struct _k051316_interface
 	k051316_callback   callback;
 };
 
-typedef struct _k053936_interface k053936_interface;
-struct _k053936_interface
+struct k053936_interface
 {
 	int                wrap, xoff, yoff;
 };
 
-typedef struct _k056832_interface k056832_interface;
-struct _k056832_interface
+struct k056832_interface
 {
 	const char         *gfx_memory_region;
 	int                gfx_num;
@@ -113,22 +104,19 @@ struct _k056832_interface
 	const char         *k055555;	// tbyahhoo uses the k056832 together with a k055555
 };
 
-typedef struct _k054338_interface k054338_interface;
-struct _k054338_interface
+struct k054338_interface
 {
 	const char         *screen;
 	int                alpha_inv;
 	const char         *k055555;
 };
 
-typedef struct _k001006_interface k001006_interface;
-struct _k001006_interface
+struct k001006_interface
 {
 	const char     *gfx_region;
 };
 
-typedef struct _k001005_interface k001005_interface;
-struct _k001005_interface
+struct k001005_interface
 {
 	const char     *screen;
 	const char     *cpu;
@@ -140,8 +128,7 @@ struct _k001005_interface
 	int            gfx_index;
 };
 
-typedef struct _k001604_interface k001604_interface;
-struct _k001604_interface
+struct k001604_interface
 {
 	int            gfx_index_1;
 	int            gfx_index_2;
@@ -151,35 +138,457 @@ struct _k001604_interface
 	int            is_slrasslt;
 };
 
-typedef struct _k037122_interface k037122_interface;
-struct _k037122_interface
+struct k037122_interface
 {
 	const char     *screen;
 	int            gfx_index;
 };
 
-DECLARE_LEGACY_DEVICE(K007121, k007121);
-DECLARE_LEGACY_DEVICE(K007342, k007342);
-DECLARE_LEGACY_DEVICE(K007420, k007420);
-DECLARE_LEGACY_DEVICE(K052109, k052109);
-DECLARE_LEGACY_DEVICE(K051960, k051960);
-DECLARE_LEGACY_DEVICE(K053244, k05324x);
+class k007121_device : public device_t
+{
+public:
+	k007121_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k007121_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K007121;
+
+class k007342_device : public device_t
+{
+public:
+	k007342_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k007342_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+
+	TILEMAP_MAPPER_MEMBER(k007342_scan);
+	TILE_GET_INFO_MEMBER(k007342_get_tile_info0);
+	TILE_GET_INFO_MEMBER(k007342_get_tile_info1);
+};
+
+extern const device_type K007342;
+
+class k007420_device : public device_t
+{
+public:
+	k007420_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k007420_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K007420;
+
+class k052109_device : public device_t
+{
+public:
+	k052109_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k052109_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+
+	TILE_GET_INFO_MEMBER(k052109_get_tile_info0);
+	TILE_GET_INFO_MEMBER(k052109_get_tile_info1);
+	TILE_GET_INFO_MEMBER(k052109_get_tile_info2);
+};
+
+extern const device_type K052109;
+
+class k051960_device : public device_t
+{
+public:
+	k051960_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k051960_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K051960;
+
+class k05324x_device : public device_t
+{
+public:
+	k05324x_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k05324x_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K053244;
+
 #define K053245 K053244
-DECLARE_LEGACY_DEVICE(K053246, k053247);
+class k053247_device : public device_t
+{
+public:
+	k053247_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k053247_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K053246;
+
 #define K053247 K053246
-DECLARE_LEGACY_DEVICE(K055673, k055673);
-DECLARE_LEGACY_DEVICE(K051316, k051316);
-DECLARE_LEGACY_DEVICE(K053936, k053936);
-DECLARE_LEGACY_DEVICE(K053251, k053251);
-DECLARE_LEGACY_DEVICE(K054000, k054000);
-DECLARE_LEGACY_DEVICE(K051733, k051733);
-DECLARE_LEGACY_DEVICE(K056832, k056832);
-DECLARE_LEGACY_DEVICE(K055555, k055555);
-DECLARE_LEGACY_DEVICE(K054338, k054338);
-DECLARE_LEGACY_DEVICE(K001006, k001006);
-DECLARE_LEGACY_DEVICE(K001005, k001005);
-DECLARE_LEGACY_DEVICE(K001604, k001604);
-DECLARE_LEGACY_DEVICE(K037122, k037122);
+class k055673_device : public device_t
+{
+public:
+	k055673_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k055673_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K055673;
+
+class k051316_device : public device_t
+{
+public:
+	k051316_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k051316_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+
+	TILE_GET_INFO_MEMBER(k051316_get_tile_info0);
+};
+
+extern const device_type K051316;
+
+class k053936_device : public device_t
+{
+public:
+	k053936_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k053936_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K053936;
+
+class k053251_device : public device_t
+{
+public:
+	k053251_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k053251_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K053251;
+
+class k054000_device : public device_t
+{
+public:
+	k054000_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k054000_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K054000;
+
+class k051733_device : public device_t
+{
+public:
+	k051733_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k051733_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K051733;
+
+class k056832_device : public device_t
+{
+public:
+	k056832_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k056832_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+private:
+	// internal state
+	void *m_token;
+
+	TILE_GET_INFO_MEMBER(k056832_get_tile_info0);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_info1);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_info2);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_info3);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_info4);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_info5);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_info6);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_info7);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_info8);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_info9);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_infoa);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_infob);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_infoc);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_infod);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_infoe);
+	TILE_GET_INFO_MEMBER(k056832_get_tile_infof);
+};
+
+extern const device_type K056832;
+
+class k055555_device : public device_t
+{
+public:
+	k055555_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k055555_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K055555;
+
+class k054338_device : public device_t
+{
+public:
+	k054338_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k054338_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K054338;
+
+class k001006_device : public device_t
+{
+public:
+	k001006_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k001006_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K001006;
+
+class k001005_device : public device_t
+{
+public:
+	k001005_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k001005_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_stop();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K001005;
+
+class k001604_device : public device_t
+{
+public:
+	k001604_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k001604_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+
+	TILEMAP_MAPPER_MEMBER(k001604_scan_layer_8x8_0_size0);
+	TILEMAP_MAPPER_MEMBER(k001604_scan_layer_8x8_0_size1);
+	TILEMAP_MAPPER_MEMBER(k001604_scan_layer_8x8_1_size0);
+	TILEMAP_MAPPER_MEMBER(k001604_scan_layer_8x8_1_size1);
+	TILEMAP_MAPPER_MEMBER(slrasslt_scan_layer_8x8_0_size0);
+	TILEMAP_MAPPER_MEMBER(slrasslt_scan_layer_8x8_1_size0);
+	TILEMAP_MAPPER_MEMBER(k001604_scan_layer_roz_0_size0);
+	TILEMAP_MAPPER_MEMBER(k001604_scan_layer_roz_0_size1);
+	TILEMAP_MAPPER_MEMBER(k001604_scan_layer_roz_1_size0);
+	TILEMAP_MAPPER_MEMBER(k001604_scan_layer_roz_1_size1);
+	TILE_GET_INFO_MEMBER(k001604_tile_info_layer_8x8);
+	TILE_GET_INFO_MEMBER(k001604_tile_info_layer_roz);
+};
+
+extern const device_type K001604;
+
+class k037122_device : public device_t
+{
+public:
+	k037122_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k037122_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+
+	TILE_GET_INFO_MEMBER(k037122_tile_info_layer0);
+	TILE_GET_INFO_MEMBER(k037122_tile_info_layer1);
+};
+
+extern const device_type K037122;
+
 
 
 /***************************************************************************

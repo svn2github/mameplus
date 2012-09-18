@@ -116,6 +116,9 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(gamecstl_pic8259_1_set_int_line);
 	DECLARE_READ8_MEMBER(get_slave_ack);
 	DECLARE_DRIVER_INIT(gamecstl);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -130,19 +133,19 @@ static const rgb_t cga_palette[16] =
 	MAKE_RGB( 0xff, 0x55, 0x55 ), MAKE_RGB( 0xff, 0x55, 0xff ), MAKE_RGB( 0xff, 0xff, 0x55 ), MAKE_RGB( 0xff, 0xff, 0xff ),
 };
 
-static VIDEO_START(gamecstl)
+void gamecstl_state::video_start()
 {
 	int i;
 	for (i=0; i < 16; i++)
-		palette_set_color(machine, i, cga_palette[i]);
+		palette_set_color(machine(), i, cga_palette[i]);
 }
 
-static void draw_char(bitmap_ind16 &bitmap, const rectangle &cliprect, const gfx_element *gfx, int ch, int att, int x, int y)
+static void draw_char(bitmap_ind16 &bitmap, const rectangle &cliprect, gfx_element *gfx, int ch, int att, int x, int y)
 {
 	int i,j;
 	const UINT8 *dp;
 	int index = 0;
-	dp = gfx_element_get_data(gfx, ch);
+	dp = gfx->get_data(ch);
 
 	for (j=y; j < y+8; j++)
 	{
@@ -152,9 +155,9 @@ static void draw_char(bitmap_ind16 &bitmap, const rectangle &cliprect, const gfx
 		{
 			UINT8 pen = dp[index++];
 			if (pen)
-				p[i] = gfx->color_base + (att & 0xf);
+				p[i] = gfx->colorbase() + (att & 0xf);
 			else
-				p[i] = gfx->color_base  + ((att >> 4) & 0x7);
+				p[i] = gfx->colorbase()  + ((att >> 4) & 0x7);
 		}
 	}
 }
@@ -163,7 +166,7 @@ static SCREEN_UPDATE_IND16(gamecstl)
 {
 	gamecstl_state *state = screen.machine().driver_data<gamecstl_state>();
 	int i, j;
-	const gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 	UINT32 *cga = state->m_cga_ram;
 	int index = 0;
 
@@ -452,7 +455,7 @@ WRITE8_MEMBER(gamecstl_state::at_page8_w)
 
 WRITE_LINE_MEMBER(gamecstl_state::pc_dma_hrq_changed)
 {
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
 
 	/* Assert HLDA */
 	i8237_hlda_w( m_dma8237_1, state );
@@ -608,21 +611,20 @@ static IRQ_CALLBACK(irq_callback)
 	return pic8259_acknowledge(state->m_pic8259_1);
 }
 
-static MACHINE_START(gamecstl)
+void gamecstl_state::machine_start()
 {
-	gamecstl_state *state = machine.driver_data<gamecstl_state>();
-	state->m_pit8254 = machine.device( "pit8254" );
-	state->m_pic8259_1 = machine.device( "pic8259_1" );
-	state->m_pic8259_2 = machine.device( "pic8259_2" );
-	state->m_dma8237_1 = machine.device( "dma8237_1" );
-	state->m_dma8237_2 = machine.device( "dma8237_2" );
+	m_pit8254 = machine().device( "pit8254" );
+	m_pic8259_1 = machine().device( "pic8259_1" );
+	m_pic8259_2 = machine().device( "pic8259_2" );
+	m_dma8237_1 = machine().device( "dma8237_1" );
+	m_dma8237_2 = machine().device( "dma8237_2" );
 }
 
-static MACHINE_RESET(gamecstl)
+void gamecstl_state::machine_reset()
 {
-	machine.root_device().membank("bank1")->set_base(machine.root_device().memregion("bios")->base() + 0x30000);
+	machine().root_device().membank("bank1")->set_base(machine().root_device().memregion("bios")->base() + 0x30000);
 
-	device_set_irq_callback(machine.device("maincpu"), irq_callback);
+	machine().device("maincpu")->execute().set_irq_acknowledge_callback(irq_callback);
 }
 
 
@@ -634,7 +636,7 @@ static MACHINE_RESET(gamecstl)
 
 WRITE_LINE_MEMBER(gamecstl_state::gamecstl_pic8259_1_set_int_line)
 {
-	cputag_set_input_line(machine(), "maincpu", 0, state ? HOLD_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 READ8_MEMBER(gamecstl_state::get_slave_ack)
@@ -685,6 +687,13 @@ static const struct pit8253_config gamecstl_pit8254_config =
 	}
 };
 
+static const ide_config ide_intf =
+{
+	ide_interrupt,
+	NULL,
+	0
+};
+
 static MACHINE_CONFIG_START( gamecstl, gamecstl_state )
 
 	/* basic machine hardware */
@@ -692,8 +701,6 @@ static MACHINE_CONFIG_START( gamecstl, gamecstl_state )
 	MCFG_CPU_PROGRAM_MAP(gamecstl_map)
 	MCFG_CPU_IO_MAP(gamecstl_io)
 
-	MCFG_MACHINE_START(gamecstl)
-	MCFG_MACHINE_RESET(gamecstl)
 
 	MCFG_PCI_BUS_LEGACY_ADD("pcibus", 0)
 	MCFG_PCI_BUS_LEGACY_DEVICE(0, NULL, intel82439tx_pci_r, intel82439tx_pci_w)
@@ -709,7 +716,7 @@ static MACHINE_CONFIG_START( gamecstl, gamecstl_state )
 
 	MCFG_PIC8259_ADD( "pic8259_2", gamecstl_pic8259_2_config )
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_interrupt, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
 
 	MCFG_MC146818_ADD( "rtc", MC146818_STANDARD )
 
@@ -724,13 +731,12 @@ static MACHINE_CONFIG_START( gamecstl, gamecstl_state )
 	MCFG_GFXDECODE(CGA)
 	MCFG_PALETTE_LENGTH(16)
 
-	MCFG_VIDEO_START(gamecstl)
 
 MACHINE_CONFIG_END
 
 static void set_gate_a20(running_machine &machine, int a20)
 {
-	cputag_set_input_line(machine, "maincpu", INPUT_LINE_A20, a20);
+	machine.device("maincpu")->execute().set_input_line(INPUT_LINE_A20, a20);
 }
 
 static void keyboard_interrupt(running_machine &machine, int state)

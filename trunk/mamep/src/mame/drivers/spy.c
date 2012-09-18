@@ -31,7 +31,7 @@ static INTERRUPT_GEN( spy_interrupt )
 	spy_state *state = device->machine().driver_data<spy_state>();
 
 	if (k052109_is_irq_enabled(state->m_k052109))
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 READ8_MEMBER(spy_state::spy_bankedram1_r)
@@ -45,12 +45,12 @@ READ8_MEMBER(spy_state::spy_bankedram1_r)
 	{
 		if (m_pmcbank)
 		{
-			//logerror("%04x read pmcram %04x\n", cpu_get_pc(&space.device()), offset);
+			//logerror("%04x read pmcram %04x\n", space.device().safe_pc(), offset);
 			return m_pmcram[offset];
 		}
 		else
 		{
-			//logerror("%04x read pmc internal ram %04x\n", cpu_get_pc(&space.device()), offset);
+			//logerror("%04x read pmc internal ram %04x\n", space.device().safe_pc(), offset);
 			return 0;
 		}
 	}
@@ -69,11 +69,11 @@ WRITE8_MEMBER(spy_state::spy_bankedram1_w)
 	{
 		if (m_pmcbank)
 		{
-			//logerror("%04x pmcram %04x = %02x\n", cpu_get_pc(&space.device()), offset, data);
+			//logerror("%04x pmcram %04x = %02x\n", space.device().safe_pc(), offset, data);
 			m_pmcram[offset] = data;
 		}
 		//else
-			//logerror("%04x pmc internal ram %04x = %02x\n", cpu_get_pc(&space.device()), offset, data);
+			//logerror("%04x pmc internal ram %04x = %02x\n", space.device().safe_pc(), offset, data);
 	}
 	else
 		m_ram[offset] = data;
@@ -304,7 +304,7 @@ WRITE8_MEMBER(spy_state::spy_3f90_w)
 	/* bit 7 = PMC-BK */
 	m_pmcbank = (data & 0x80) >> 7;
 
-//logerror("%04x: 3f90_w %02x\n", cpu_get_pc(&space.device()), data);
+//logerror("%04x: 3f90_w %02x\n", space.device().safe_pc(), data);
 	/* bit 6 = PMC-START */
 	if ((data & 0x40) && !(m_old_3f90 & 0x40))
 	{
@@ -324,7 +324,7 @@ WRITE8_MEMBER(spy_state::spy_3f90_w)
 		}
 		spy_collision(machine());
 //ZT
-		device_set_input_line(m_maincpu, M6809_FIRQ_LINE, HOLD_LINE);
+		m_maincpu->set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 	}
 
 	m_old_3f90 = data;
@@ -333,7 +333,7 @@ WRITE8_MEMBER(spy_state::spy_3f90_w)
 
 WRITE8_MEMBER(spy_state::spy_sh_irqtrigger_w)
 {
-	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 WRITE8_MEMBER(spy_state::sound_bank_w)
@@ -470,7 +470,7 @@ static const k007232_interface spy_k007232_interface =
 static void irqhandler( device_t *device, int linestate )
 {
 	spy_state *state = device->machine().driver_data<spy_state>();
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, linestate);
+	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, linestate);
 }
 
 static const ym3812_interface ym3812_config =
@@ -495,38 +495,36 @@ static const k051960_interface spy_k051960_intf =
 	spy_sprite_callback
 };
 
-static MACHINE_START( spy )
+void spy_state::machine_start()
 {
-	spy_state *state = machine.driver_data<spy_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 12, &ROM[0x10000], 0x2000);
+	membank("bank1")->configure_entries(0, 12, &ROM[0x10000], 0x2000);
 
-	state->m_generic_paletteram_8.allocate(0x800);
-	memset(state->m_pmcram, 0, sizeof(state->m_pmcram));
+	m_generic_paletteram_8.allocate(0x800);
+	memset(m_pmcram, 0, sizeof(m_pmcram));
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_k052109 = machine.device("k052109");
-	state->m_k051960 = machine.device("k051960");
-	state->m_k007232_1 = machine.device("k007232_1");
-	state->m_k007232_2 = machine.device("k007232_2");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_k052109 = machine().device("k052109");
+	m_k051960 = machine().device("k051960");
+	m_k007232_1 = machine().device("k007232_1");
+	m_k007232_2 = machine().device("k007232_2");
 
-	state->save_item(NAME(state->m_rambank));
-	state->save_item(NAME(state->m_pmcbank));
-	state->save_item(NAME(state->m_video_enable));
-	state->save_item(NAME(state->m_old_3f90));
-	state->save_item(NAME(state->m_pmcram));
+	save_item(NAME(m_rambank));
+	save_item(NAME(m_pmcbank));
+	save_item(NAME(m_video_enable));
+	save_item(NAME(m_old_3f90));
+	save_item(NAME(m_pmcram));
 }
 
-static MACHINE_RESET( spy )
+void spy_state::machine_reset()
 {
-	spy_state *state = machine.driver_data<spy_state>();
 
-	state->m_rambank = 0;
-	state->m_pmcbank = 0;
-	state->m_video_enable = 0;
-	state->m_old_3f90 = -1;
+	m_rambank = 0;
+	m_pmcbank = 0;
+	m_video_enable = 0;
+	m_old_3f90 = -1;
 }
 
 static MACHINE_CONFIG_START( spy, spy_state )
@@ -540,8 +538,6 @@ static MACHINE_CONFIG_START( spy, spy_state )
 	MCFG_CPU_PROGRAM_MAP(spy_sound_map)
 								/* nmi by the sound chip */
 
-	MCFG_MACHINE_START(spy)
-	MCFG_MACHINE_RESET(spy)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -555,7 +551,6 @@ static MACHINE_CONFIG_START( spy, spy_state )
 
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(spy)
 
 	MCFG_K052109_ADD("k052109", spy_k052109_intf)
 	MCFG_K051960_ADD("k051960", spy_k051960_intf)

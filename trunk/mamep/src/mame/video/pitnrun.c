@@ -21,28 +21,26 @@ In debug build press 'w' for spotlight and 'e' for lightning
 
 
 
-static TILE_GET_INFO( get_tile_info1 )
+TILE_GET_INFO_MEMBER(pitnrun_state::get_tile_info1)
 {
-	pitnrun_state *state = machine.driver_data<pitnrun_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int code;
 	code = videoram[tile_index];
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 		0,
 		code,
 		0,
 		0);
 }
 
-static TILE_GET_INFO( get_tile_info2 )
+TILE_GET_INFO_MEMBER(pitnrun_state::get_tile_info2)
 {
-	pitnrun_state *state = machine.driver_data<pitnrun_state>();
 	int code;
-	code = state->m_videoram2[tile_index];
-	SET_TILE_INFO(
+	code = m_videoram2[tile_index];
+	SET_TILE_INFO_MEMBER(
 		1,
-		code + (state->m_char_bank<<8),
-		state->m_color_select&1,
+		code + (m_char_bank<<8),
+		m_color_select&1,
 		0);
 }
 
@@ -115,9 +113,9 @@ static void pitnrun_spotlights(running_machine &machine)
 }
 
 
-PALETTE_INIT (pitnrun)
+void pitnrun_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 	int bit0,bit1,bit2,r,g,b;
 	for (i = 0;i < 32*3; i++)
@@ -135,7 +133,7 @@ PALETTE_INIT (pitnrun)
 		bit2 = (color_prom[i] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
+		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
 	}
 
 	/* fake bg palette for lightning effect*/
@@ -157,22 +155,21 @@ PALETTE_INIT (pitnrun)
 		g/=3;
 		b/=3;
 
-		palette_set_color_rgb(machine,i+16,(r>0xff)?0xff:r,(g>0xff)?0xff:g,(b>0xff)?0xff:b);
+		palette_set_color_rgb(machine(),i+16,(r>0xff)?0xff:r,(g>0xff)?0xff:g,(b>0xff)?0xff:b);
 
 	}
 }
 
-VIDEO_START(pitnrun)
+void pitnrun_state::video_start()
 {
-	pitnrun_state *state = machine.driver_data<pitnrun_state>();
-	state->m_fg = tilemap_create( machine, get_tile_info1,tilemap_scan_rows,8,8,32,32 );
-	state->m_bg = tilemap_create( machine, get_tile_info2,tilemap_scan_rows,8,8,32*4,32 );
-	state->m_fg->set_transparent_pen(0 );
-	state->m_tmp_bitmap[0] = auto_bitmap_ind16_alloc(machine,128,128);
-	state->m_tmp_bitmap[1] = auto_bitmap_ind16_alloc(machine,128,128);
-	state->m_tmp_bitmap[2] = auto_bitmap_ind16_alloc(machine,128,128);
-	state->m_tmp_bitmap[3] = auto_bitmap_ind16_alloc(machine,128,128);
-	pitnrun_spotlights(machine);
+	m_fg = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(pitnrun_state::get_tile_info1),this),TILEMAP_SCAN_ROWS,8,8,32,32 );
+	m_bg = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(pitnrun_state::get_tile_info2),this),TILEMAP_SCAN_ROWS,8,8,32*4,32 );
+	m_fg->set_transparent_pen(0 );
+	m_tmp_bitmap[0] = auto_bitmap_ind16_alloc(machine(),128,128);
+	m_tmp_bitmap[1] = auto_bitmap_ind16_alloc(machine(),128,128);
+	m_tmp_bitmap[2] = auto_bitmap_ind16_alloc(machine(),128,128);
+	m_tmp_bitmap[3] = auto_bitmap_ind16_alloc(machine(),128,128);
+	pitnrun_spotlights(machine());
 }
 
 static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )

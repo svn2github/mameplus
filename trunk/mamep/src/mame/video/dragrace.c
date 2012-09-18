@@ -8,10 +8,9 @@ Atari Drag Race video emulation
 #include "includes/dragrace.h"
 
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(dragrace_state::get_tile_info)
 {
-	dragrace_state *state = machine.driver_data<dragrace_state>();
-	UINT8 code = state->m_playfield_ram[tile_index];
+	UINT8 code = m_playfield_ram[tile_index];
 	int num = 0;
 	int col = 0;
 
@@ -36,14 +35,13 @@ static TILE_GET_INFO( get_tile_info )
 		break;
 	}
 
-	SET_TILE_INFO(((code & 0xA0) == 0x80) ? 1 : 0, num, col, 0);
+	SET_TILE_INFO_MEMBER(((code & 0xA0) == 0x80) ? 1 : 0, num, col, 0);
 }
 
 
-VIDEO_START( dragrace )
+void dragrace_state::video_start()
 {
-	dragrace_state *state = machine.driver_data<dragrace_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_rows, 16, 16, 16, 16);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(dragrace_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 16, 16);
 }
 
 

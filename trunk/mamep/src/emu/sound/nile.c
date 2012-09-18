@@ -51,8 +51,7 @@ enum
 
 
 
-typedef struct _nile_state nile_state;
-struct _nile_state
+struct nile_state
 {
 	sound_stream * stream;
 	UINT8 *sound_ram;
@@ -65,7 +64,7 @@ INLINE nile_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == NILE);
-	return (nile_state *)downcast<legacy_device_base *>(device)->token();
+	return (nile_state *)downcast<nile_device *>(device)->token();
 }
 
 
@@ -78,7 +77,7 @@ WRITE16_DEVICE_HANDLER( nile_sndctrl_w )
 
 	COMBINE_DATA(&info->ctrl);
 
-//  printf("CTRL: %04x -> %04x (PC=%x)\n", ctrl, info->ctrl, cpu_get_pc(&space->device()));
+//  printf("CTRL: %04x -> %04x (PC=%x)\n", ctrl, info->ctrl, space->device().safe_pc());
 
 	ctrl^=info->ctrl;
 }
@@ -133,7 +132,7 @@ WRITE16_DEVICE_HANDLER( nile_snd_w )
 		info->vpos[v] = info->frac[v] = info->lponce[v] = 0;
 	}
 
-	//printf("v%02d: %04x to reg %02d (PC=%x)\n", v, info->sound_regs[offset], r, cpu_get_pc(&space->device()));
+	//printf("v%02d: %04x to reg %02d (PC=%x)\n", v, info->sound_regs[offset], r, space->device().safe_pc());
 }
 
 static STREAM_UPDATE( nile_update )
@@ -230,32 +229,42 @@ static DEVICE_START( nile )
 	info->stream = device->machine().sound().stream_alloc(*device, 0, 2, 44100, info, nile_update);
 }
 
+const device_type NILE = &device_creator<nile_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( nile )
+nile_device::nile_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, NILE, "NiLe", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(nile_state);				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(nile_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( nile );	break;
-		case DEVINFO_FCT_STOP:							/* Nothing */								break;
-		case DEVINFO_FCT_RESET:							/* Nothing */								break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "NiLe");					break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Seta custom");				break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");						break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);					break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void nile_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void nile_device::device_start()
+{
+	DEVICE_START_NAME( nile )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void nile_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(NILE, nile);

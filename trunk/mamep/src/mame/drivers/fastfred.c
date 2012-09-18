@@ -21,7 +21,7 @@
 // to change if a different ROM set ever surfaces.
 READ8_MEMBER(fastfred_state::fastfred_custom_io_r)
 {
-    switch (cpu_get_pc(&space.device()))
+    switch (space.device().safe_pc())
     {
     case 0x03c0: return 0x9d;
     case 0x03e6: return 0x9f;
@@ -47,14 +47,14 @@ READ8_MEMBER(fastfred_state::fastfred_custom_io_r)
     case 0x7b58: return 0x20;
     }
 
-    logerror("Uncaught custom I/O read %04X at %04X\n", 0xc800+offset, cpu_get_pc(&space.device()));
+    logerror("Uncaught custom I/O read %04X at %04X\n", 0xc800+offset, space.device().safe_pc());
     return 0x00;
 }
 
 READ8_MEMBER(fastfred_state::flyboy_custom1_io_r)
 {
 
-	switch (cpu_get_pc(&space.device()))
+	switch (space.device().safe_pc())
 	{
 	 case 0x049d: return 0xad;	/* compare */
 	 case 0x04b9:			/* compare with 0x9e ??? When ??? */
@@ -75,14 +75,14 @@ READ8_MEMBER(fastfred_state::flyboy_custom1_io_r)
 	 return 0x00;
 	}
 
-	logerror("Uncaught custom I/O read %04X at %04X\n", 0xc085+offset, cpu_get_pc(&space.device()));
+	logerror("Uncaught custom I/O read %04X at %04X\n", 0xc085+offset, space.device().safe_pc());
 	return 0x00;
 }
 
 READ8_MEMBER(fastfred_state::flyboy_custom2_io_r)
 {
 
-	switch (cpu_get_pc(&space.device()))
+	switch (space.device().safe_pc())
 	{
 	 case 0x0395: return 0xf7;	/* $C900 compare         */
 	 case 0x03f5:			/* $c8fd                 */
@@ -100,7 +100,7 @@ READ8_MEMBER(fastfred_state::flyboy_custom2_io_r)
 	 return 0x00;
 	}
 
-	logerror("Uncaught custom I/O read %04X at %04X\n", 0xc8fb+offset, cpu_get_pc(&space.device()));
+	logerror("Uncaught custom I/O read %04X at %04X\n", 0xc8fb+offset, space.device().safe_pc());
 	return 0x00;
 }
 
@@ -124,15 +124,14 @@ READ8_MEMBER(fastfred_state::boggy84_custom_io_r)
 */
 
 
-static MACHINE_START( imago )
+MACHINE_START_MEMBER(fastfred_state,imago)
 {
-	fastfred_state *state = machine.driver_data<fastfred_state>();
-	gfx_element_set_source(machine.gfx[1], state->m_imago_sprites);
+	machine().gfx[1]->set_source(m_imago_sprites);
 }
 
 WRITE8_MEMBER(fastfred_state::imago_dma_irq_w)
 {
-	cputag_set_input_line(machine(), "maincpu", 0, data & 1 ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, data & 1 ? ASSERT_LINE : CLEAR_LINE);
 }
 
 WRITE8_MEMBER(fastfred_state::imago_sprites_bank_w)
@@ -154,7 +153,7 @@ WRITE8_MEMBER(fastfred_state::imago_sprites_dma_w)
 	sprites_data = rom[m_imago_sprites_address + 0x2000*2 + m_imago_sprites_bank * 0x1000];
 	m_imago_sprites[offset + 0x800*2] = sprites_data;
 
-	gfx_element_mark_dirty(machine().gfx[1], offset/32);
+	machine().gfx[1]->mark_dirty(offset/32);
 }
 
 READ8_MEMBER(fastfred_state::imago_sprites_offset_r)
@@ -632,7 +631,7 @@ static INTERRUPT_GEN( vblank_irq )
 	fastfred_state *state = device->machine().driver_data<fastfred_state>();
 
 	if(state->m_nmi_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static INTERRUPT_GEN( sound_timer_irq )
@@ -640,7 +639,7 @@ static INTERRUPT_GEN( sound_timer_irq )
 	fastfred_state *state = device->machine().driver_data<fastfred_state>();
 
 	if(state->m_sound_nmi_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( fastfred, fastfred_state )
@@ -665,8 +664,8 @@ static MACHINE_CONFIG_START( fastfred, fastfred_state )
 	MCFG_GFXDECODE(fastfred)
 	MCFG_PALETTE_LENGTH(32*8)
 
-	MCFG_PALETTE_INIT(fastfred)
-	MCFG_VIDEO_START(fastfred)
+	MCFG_PALETTE_INIT_OVERRIDE(fastfred_state,fastfred)
+	MCFG_VIDEO_START_OVERRIDE(fastfred_state,fastfred)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -699,13 +698,13 @@ static MACHINE_CONFIG_DERIVED( imago, fastfred )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(imago_map)
 
-	MCFG_MACHINE_START(imago)
+	MCFG_MACHINE_START_OVERRIDE(fastfred_state,imago)
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(256+64+2) /* 256 for characters, 64 for the stars and 2 for the web */
 	MCFG_GFXDECODE(imago)
 
-	MCFG_VIDEO_START(imago)
+	MCFG_VIDEO_START_OVERRIDE(fastfred_state,imago)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(imago)
 MACHINE_CONFIG_END

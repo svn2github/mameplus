@@ -41,13 +41,16 @@ public:
 	int            m_noise;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_WRITE8_MEMBER(destroyr_misc_w);
 	DECLARE_WRITE8_MEMBER(destroyr_cursor_load_w);
 	DECLARE_WRITE8_MEMBER(destroyr_interrupt_ack_w);
 	DECLARE_WRITE8_MEMBER(destroyr_output_w);
 	DECLARE_READ8_MEMBER(destroyr_input_r);
 	DECLARE_READ8_MEMBER(destroyr_scanline_r);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void palette_init();
 };
 
 
@@ -134,7 +137,7 @@ static TIMER_CALLBACK( destroyr_dial_callback )
 
 	if (state->m_potmask[dial])
 	{
-		device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -151,21 +154,20 @@ static TIMER_CALLBACK( destroyr_frame_callback )
 }
 
 
-static MACHINE_RESET( destroyr )
+void destroyr_state::machine_reset()
 {
-	destroyr_state *state = machine.driver_data<destroyr_state>();
 
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(0), FUNC(destroyr_frame_callback));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), FUNC(destroyr_frame_callback));
 
-	state->m_cursor = 0;
-	state->m_wavemod = 0;
-	state->m_potmask[0] = 0;
-	state->m_potmask[1] = 0;
-	state->m_potsense[0] = 0;
-	state->m_potsense[1] = 0;
-	state->m_attract = 0;
-	state->m_motor_speed = 0;
-	state->m_noise = 0;
+	m_cursor = 0;
+	m_wavemod = 0;
+	m_potmask[0] = 0;
+	m_potmask[1] = 0;
+	m_potsense[0] = 0;
+	m_potsense[1] = 0;
+	m_attract = 0;
+	m_motor_speed = 0;
+	m_noise = 0;
 }
 
 
@@ -194,7 +196,7 @@ WRITE8_MEMBER(destroyr_state::destroyr_cursor_load_w)
 
 WRITE8_MEMBER(destroyr_state::destroyr_interrupt_ack_w)
 {
-	device_set_input_line(m_maincpu, 0, CLEAR_LINE);
+	m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -418,32 +420,31 @@ static GFXDECODE_START( destroyr )
 GFXDECODE_END
 
 
-static PALETTE_INIT( destroyr )
+void destroyr_state::palette_init()
 {
-	palette_set_color(machine, 0, MAKE_RGB(0x00, 0x00, 0x00));   /* major objects */
-	palette_set_color(machine, 1, MAKE_RGB(0x50, 0x50, 0x50));
-	palette_set_color(machine, 2, MAKE_RGB(0xAF, 0xAF, 0xAF));
-	palette_set_color(machine, 3, MAKE_RGB(0xFF ,0xFF, 0xFF));
-	palette_set_color(machine, 4, MAKE_RGB(0x00, 0x00, 0x00));   /* alpha numerics, waves, minor objects */
-	palette_set_color(machine, 5, MAKE_RGB(0xFF, 0xFF, 0xFF));
-	palette_set_color(machine, 6, MAKE_RGB(0x00, 0x00, 0x00));   /* cursor */
-	palette_set_color(machine, 7, MAKE_RGB(0x78, 0x78, 0x78));
+	palette_set_color(machine(), 0, MAKE_RGB(0x00, 0x00, 0x00));   /* major objects */
+	palette_set_color(machine(), 1, MAKE_RGB(0x50, 0x50, 0x50));
+	palette_set_color(machine(), 2, MAKE_RGB(0xAF, 0xAF, 0xAF));
+	palette_set_color(machine(), 3, MAKE_RGB(0xFF ,0xFF, 0xFF));
+	palette_set_color(machine(), 4, MAKE_RGB(0x00, 0x00, 0x00));   /* alpha numerics, waves, minor objects */
+	palette_set_color(machine(), 5, MAKE_RGB(0xFF, 0xFF, 0xFF));
+	palette_set_color(machine(), 6, MAKE_RGB(0x00, 0x00, 0x00));   /* cursor */
+	palette_set_color(machine(), 7, MAKE_RGB(0x78, 0x78, 0x78));
 }
 
 
-static MACHINE_START( destroyr )
+void destroyr_state::machine_start()
 {
-	destroyr_state *state = machine.driver_data<destroyr_state>();
 
-	state->m_maincpu = machine.device("maincpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
 
-	state->save_item(NAME(state->m_cursor));
-	state->save_item(NAME(state->m_wavemod));
-	state->save_item(NAME(state->m_attract));
-	state->save_item(NAME(state->m_motor_speed));
-	state->save_item(NAME(state->m_noise));
-	state->save_item(NAME(state->m_potmask));
-	state->save_item(NAME(state->m_potsense));
+	save_item(NAME(m_cursor));
+	save_item(NAME(m_wavemod));
+	save_item(NAME(m_attract));
+	save_item(NAME(m_motor_speed));
+	save_item(NAME(m_noise));
+	save_item(NAME(m_potmask));
+	save_item(NAME(m_potsense));
 }
 
 static MACHINE_CONFIG_START( destroyr, destroyr_state )
@@ -453,8 +454,6 @@ static MACHINE_CONFIG_START( destroyr, destroyr_state )
 	MCFG_CPU_PROGRAM_MAP(destroyr_map)
 	MCFG_CPU_PERIODIC_INT(irq0_line_assert, 4*60)
 
-	MCFG_MACHINE_START(destroyr)
-	MCFG_MACHINE_RESET(destroyr)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -465,7 +464,6 @@ static MACHINE_CONFIG_START( destroyr, destroyr_state )
 
 	MCFG_GFXDECODE(destroyr)
 	MCFG_PALETTE_LENGTH(8)
-	MCFG_PALETTE_INIT(destroyr)
 
 	/* sound hardware */
 MACHINE_CONFIG_END

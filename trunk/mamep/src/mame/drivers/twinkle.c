@@ -231,8 +231,9 @@ Notes:
 #include "cpu/m68000/m68000.h"
 #include "video/psx.h"
 #include "includes/psx.h"
-#include "machine/am53cf96.h"
+#include "machine/scsibus.h"
 #include "machine/scsicd.h"
+#include "machine/am53cf96.h"
 #include "machine/rtc65271.h"
 #include "machine/i2cmem.h"
 #include "machine/idectrl.h"
@@ -244,7 +245,10 @@ class twinkle_state : public psx_state
 {
 public:
 	twinkle_state(const machine_config &mconfig, device_type type, const char *tag)
-		: psx_state(mconfig, type, tag) { }
+		: psx_state(mconfig, type, tag),
+		m_am53cf96(*this, "scsi:am53cf96"){ }
+
+	required_device<am53cf96_device> m_am53cf96;
 
 	UINT16 m_spu_ctrl;		// SPU board control register
 	UINT8 m_spu_shared[0x400];	// SPU/PSX shared dual-ported RAM
@@ -268,6 +272,7 @@ public:
 	DECLARE_READ16_MEMBER(twinkle_ide_r);
 	DECLARE_WRITE16_MEMBER(twinkle_ide_w);
 	DECLARE_DRIVER_INIT(twinkle);
+	DECLARE_MACHINE_RESET(twinkle);
 };
 
 /* RTC */
@@ -597,12 +602,12 @@ WRITE32_MEMBER(twinkle_state::shared_psx_w)
 	if (mem_mask == 0xff)
 	{
 		m_spu_shared[offset*2] = data;
-//      printf("shared_psx_w: %x to %x (%x), mask %x (PC=%x)\n", data, offset, offset*2, mem_mask, cpu_get_pc(&space.device()));
+//      printf("shared_psx_w: %x to %x (%x), mask %x (PC=%x)\n", data, offset, offset*2, mem_mask, space.device().safe_pc());
 	}
 	else if (mem_mask == 0xff0000)
 	{
 		m_spu_shared[(offset*2)+1] = data;
-//      printf("shared_psx_w: %x to %x (%x), mask %x (PC=%x)\n", data, offset, (offset*2)+1, mem_mask, cpu_get_pc(&space.device()));
+//      printf("shared_psx_w: %x to %x (%x), mask %x (PC=%x)\n", data, offset, (offset*2)+1, mem_mask, space.device().safe_pc());
 	}
 	else
 	{
@@ -617,7 +622,7 @@ READ32_MEMBER(twinkle_state::shared_psx_r)
 
 	result = m_spu_shared[offset*2] | m_spu_shared[(offset*2)+1]<<16;
 
-//  printf("shared_psx_r: @ %x (%x %x), mask %x = %x (PC=%x)\n", offset, offset*2, (offset*2)+1, mem_mask, result, cpu_get_pc(&space.device()));
+//  printf("shared_psx_r: @ %x (%x %x), mask %x = %x (PC=%x)\n", offset, offset*2, (offset*2)+1, mem_mask, result, space.device().safe_pc());
 
 	result = 0;	// HACK to prevent the games from freezing while we sort out the rest of the 68k's boot sequence
 
@@ -627,7 +632,7 @@ READ32_MEMBER(twinkle_state::shared_psx_r)
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 32, twinkle_state )
 	AM_RANGE(0x00000000, 0x003fffff) AM_RAM	AM_SHARE("share1") /* ram */
 	AM_RANGE(0x1f000000, 0x1f0007ff) AM_READWRITE(shared_psx_r, shared_psx_w)
-	AM_RANGE(0x1f200000, 0x1f20001f) AM_READWRITE_LEGACY(am53cf96_r, am53cf96_w)
+	AM_RANGE(0x1f200000, 0x1f20001f) AM_DEVREADWRITE8("scsi:am53cf96", am53cf96_device, read, write, 0x00ff00ff)
 	AM_RANGE(0x1f20a01c, 0x1f20a01f) AM_WRITENOP /* scsi? */
 	AM_RANGE(0x1f210400, 0x1f2107ff) AM_READNOP
 	AM_RANGE(0x1f218000, 0x1f218003) AM_WRITE(watchdog_reset32_w) /* LTC1232 */
@@ -658,7 +663,7 @@ static void ide_interrupt(device_t *device, int state_)
 
 	if ((state_) && (state->m_spu_ctrl & 0x0400))
 	{
-		cputag_set_input_line(device->machine(), "audiocpu", M68K_IRQ_6, ASSERT_LINE);
+		device->machine().device("audiocpu")->execute().set_input_line(M68K_IRQ_6, ASSERT_LINE);
 	}
 }
 
@@ -698,19 +703,19 @@ WRITE16_MEMBER(twinkle_state::twinkle_spu_ctrl_w)
 
 	if ((!(data & 0x0080)) && (m_spu_ctrl & 0x0080))
 	{
-		device_set_input_line(&space.device(), M68K_IRQ_1, CLEAR_LINE);
+		space.device().execute().set_input_line(M68K_IRQ_1, CLEAR_LINE);
 	}
 	else if ((!(data & 0x0100)) && (m_spu_ctrl & 0x0100))
 	{
-		device_set_input_line(&space.device(), M68K_IRQ_2, CLEAR_LINE);
+		space.device().execute().set_input_line(M68K_IRQ_2, CLEAR_LINE);
 	}
 	else if ((!(data & 0x0200)) && (m_spu_ctrl & 0x0200))
 	{
-		device_set_input_line(&space.device(), M68K_IRQ_4, CLEAR_LINE);
+		space.device().execute().set_input_line(M68K_IRQ_4, CLEAR_LINE);
 	}
 	else if ((!(data & 0x0400)) && (m_spu_ctrl & 0x0400))
 	{
-		device_set_input_line(&space.device(), M68K_IRQ_6, CLEAR_LINE);
+		space.device().execute().set_input_line(M68K_IRQ_6, CLEAR_LINE);
 	}
 
 	m_spu_ctrl = data;
@@ -768,6 +773,7 @@ ADDRESS_MAP_END
 static void scsi_dma_read( twinkle_state *state, UINT32 n_address, INT32 n_size )
 {
 	UINT32 *p_n_psxram = state->m_p_n_psxram;
+
 	int i;
 	int n_this;
 
@@ -784,12 +790,12 @@ static void scsi_dma_read( twinkle_state *state, UINT32 n_address, INT32 n_size 
 		if( n_this < 2048 / 4 )
 		{
 			/* non-READ commands */
-			am53cf96_read_data( n_this * 4, state->m_sector_buffer );
+			state->m_am53cf96->dma_read_data( n_this * 4, state->m_sector_buffer );
 		}
 		else
 		{
 			/* assume normal 2048 byte data for now */
-			am53cf96_read_data( 2048, state->m_sector_buffer );
+			state->m_am53cf96->dma_read_data( 2048, state->m_sector_buffer );
 			n_this = 2048 / 4;
 		}
 		n_size -= n_this;
@@ -812,6 +818,7 @@ static void scsi_dma_read( twinkle_state *state, UINT32 n_address, INT32 n_size 
 static void scsi_dma_write( twinkle_state *state, UINT32 n_address, INT32 n_size )
 {
 	UINT32 *p_n_psxram = state->m_p_n_psxram;
+
 	int i;
 	int n_this;
 
@@ -839,7 +846,7 @@ static void scsi_dma_write( twinkle_state *state, UINT32 n_address, INT32 n_size
 			n_this--;
 		}
 
-		am53cf96_write_data( n_this * 4, state->m_sector_buffer );
+		state->m_am53cf96->dma_write_data( n_this * 4, state->m_sector_buffer );
 	}
 }
 
@@ -848,24 +855,14 @@ static void scsi_irq(running_machine &machine)
 	psx_irq_set(machine, 0x400);
 }
 
-static const SCSIConfigTable dev_table =
+static const struct AM53CF96interface am53cf96_intf =
 {
-	1, /* 1 SCSI device */
-	{
-		{ SCSI_ID_4, "cdrom0" } /* SCSI ID 4, CD-ROM */
-	}
-};
-
-static const struct AM53CF96interface scsi_intf =
-{
-	&dev_table,		/* SCSI device table */
 	&scsi_irq,		/* command completion IRQ */
 };
 
 DRIVER_INIT_MEMBER(twinkle_state,twinkle)
 {
 	psx_driver_init(machine());
-	am53cf96_init(machine(), &scsi_intf);
 
 	device_t *i2cmem = machine().device("security");
 	i2cmem_e0_write( i2cmem, 0 );
@@ -874,10 +871,13 @@ DRIVER_INIT_MEMBER(twinkle_state,twinkle)
 	i2cmem_wc_write( i2cmem, 0 );
 }
 
-static MACHINE_RESET( twinkle )
+MACHINE_RESET_MEMBER(twinkle_state,twinkle)
 {
 	/* also hook up CDDA audio to the CD-ROM drive */
-	cdda_set_cdrom(machine.device("cdda"), am53cf96_get_device(SCSI_ID_4));
+	void *cdrom;
+	scsidev_device *scsidev = machine().device<scsidev_device>("scsi:cdrom");
+	scsidev->GetDevice( &cdrom );
+	cdda_set_cdrom(machine().device("cdda"), cdrom);
 }
 
 static void spu_irq(device_t *device, UINT32 data)
@@ -898,6 +898,13 @@ static const rtc65271_interface twinkle_rtc =
 	DEVCB_NULL
 };
 
+static const ide_config ide_intf =
+{
+	ide_interrupt,
+	NULL,
+	0
+};
+
 static MACHINE_CONFIG_START( twinkle, twinkle_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD( "maincpu", CXD8530CQ, XTAL_67_7376MHz )
@@ -911,12 +918,14 @@ static MACHINE_CONFIG_START( twinkle, twinkle_state )
 
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_msec(1200)) /* check TD pin on LTC1232 */
 
-	MCFG_MACHINE_RESET( twinkle )
+	MCFG_MACHINE_RESET_OVERRIDE(twinkle_state, twinkle )
 	MCFG_I2CMEM_ADD("security",i2cmem_interface)
 
-	MCFG_DEVICE_ADD("cdrom0", SCSICD, 0)
+	MCFG_SCSIBUS_ADD("scsi")
+	MCFG_SCSIDEV_ADD("scsi:cdrom", SCSICD, SCSI_ID_4)
+	MCFG_AM53CF96_ADD("scsi:am53cf96", am53cf96_intf)
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_interrupt, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
 	MCFG_RTC65271_ADD("rtc", twinkle_rtc)
 
 	/* video hardware */
@@ -1008,7 +1017,7 @@ ROM_END
 ROM_START( bmiidx )
 	TWINKLE_BIOS
 
-	DISK_REGION( "cdrom0" )	// program
+	DISK_REGION( "scsi:cdrom" )	// program
 	DISK_IMAGE_READONLY("863jaa01", 0, BAD_DUMP SHA1(aee12de1dc5dd44e5bf7b62133ed695b80999390) )
 
 	DISK_REGION( "cdrom1" ) // video CD
@@ -1024,7 +1033,7 @@ ROM_START( bmiidx2 )
 	ROM_REGION( 0x100, "security", 0 )
 	ROM_LOAD( "985j.pd",      0x000000, 0x000100, BAD_DUMP CRC(a35143a9) SHA1(1c0feeab60d9dc50dc4b9a2f3dac73ca619e74b0) )
 
-	DISK_REGION( "cdrom0" )
+	DISK_REGION( "scsi:cdrom" )
 	DISK_IMAGE_READONLY( "985jaa01", 0, BAD_DUMP SHA1(0b783f11317f64552ebf3323459139529e7f315f) )
 
 	DISK_REGION( "cdrom1" ) // video CD
@@ -1040,7 +1049,7 @@ ROM_START( bmiidx3 )
 	ROM_REGION( 0x100, "security", 0 )
 	ROM_LOAD( "992j.pd",      0x000000, 0x000100, BAD_DUMP CRC(51f24913) SHA1(574b555e3d0c234011198d218d7ae5e95091acb1) )
 
-	DISK_REGION( "cdrom0" )
+	DISK_REGION( "scsi:cdrom" )
 	DISK_IMAGE_READONLY( "992jaa01", 0, BAD_DUMP SHA1(7e5389735dff379bb286ba3744edf59b7dfcc74b) )
 
 	DISK_REGION( "cdrom1" ) // video CD
@@ -1056,7 +1065,7 @@ ROM_START( bmiidx4 )
 	ROM_REGION( 0x100, "security", 0 )
 	ROM_LOAD( "a03j.pd",      0x000000, 0x000100, CRC(8860cfb6) SHA1(85a5b27f24d4baa7960e692b91c0cf3dc5388e72) )
 
-	DISK_REGION( "cdrom0" )
+	DISK_REGION( "scsi:cdrom" )
 	DISK_IMAGE_READONLY( "a03jaa01", 0, BAD_DUMP SHA1(2a587b5524bac6f03d26b55247a0acd22aad6c3a) )
 
 	DISK_REGION( "cdrom1" ) // video CD
@@ -1072,7 +1081,7 @@ ROM_START( bmiidx6 )
 	ROM_REGION( 0x100, "security", 0 )
 	ROM_LOAD( "b4uj.pd",      0x000000, 0x000100, BAD_DUMP CRC(0ab15633) SHA1(df004ff41f35b16089f69808ccf53a5e5cc13ac3) )
 
-	DISK_REGION( "cdrom0" )
+	DISK_REGION( "scsi:cdrom" )
 	DISK_IMAGE_READONLY( "b4ujaa01", 0, BAD_DUMP SHA1(d8f5d56b8728bea761dc4cdbc04851094d276bd6) )
 
 	DISK_REGION( "cdrom1" ) // DVD
@@ -1088,7 +1097,7 @@ ROM_START( bmiidx7 )
 	ROM_REGION( 0x100, "security", 0 )
 	ROM_LOAD( "b44j.pd",      0x000000, 0x000100, BAD_DUMP CRC(5baf4761) SHA1(aa7e07eb2cada03b85bdf11ac6a3de65f4253eef) )
 
-	DISK_REGION( "cdrom0" )
+	DISK_REGION( "scsi:cdrom" )
 	DISK_IMAGE_READONLY( "b44jaa01", 0, BAD_DUMP SHA1(a21610f3dc090e39e125d063442ed877fa056146) )
 
 	DISK_REGION( "cdrom1" ) // DVD
@@ -1104,7 +1113,7 @@ ROM_START( bmiidx8 )
 	ROM_REGION( 0x100, "security", 0 )
 	ROM_LOAD( "c44j.pd",      0x000000, 0x000100, BAD_DUMP CRC(04c22349) SHA1(d1cb78911cb1ca660d393a81ed3ed07b24c51525) )
 
-	DISK_REGION( "cdrom0" )
+	DISK_REGION( "scsi:cdrom" )
 	DISK_IMAGE_READONLY( "c44jaa01", 0, BAD_DUMP SHA1(8b544c81bc56b19e4aa1649e68824811d6d51ce5) )
 
 	DISK_REGION( "cdrom1" ) // DVD
@@ -1120,7 +1129,7 @@ ROM_START( bmiidxc )
 	ROM_REGION( 0x100, "security", 0 )
 	ROM_LOAD( "896j.pd",      0x000000, 0x000100, BAD_DUMP CRC(1e5caf37) SHA1(75b378662b651cb322e41564d3bae68cc9edadc5) )
 
-	DISK_REGION( "cdrom0" )
+	DISK_REGION( "scsi:cdrom" )
 	DISK_IMAGE_READONLY( "896jaabm", 0, BAD_DUMP SHA1(af008e5bcf18da4e9aea752a712c843e37a74be5) )
 
 	DISK_REGION( "cdrom1" ) // video CD
@@ -1136,7 +1145,7 @@ ROM_START( bmiidxc2 )
 	ROM_REGION( 0x100, "security", 0 )
 	ROM_LOAD( "984j.pd",      0x000000, 0x000100, BAD_DUMP CRC(213843e5) SHA1(5571db155a60fa4087dd996af48e8e27fc1c518c) )
 
-	DISK_REGION( "cdrom0" )
+	DISK_REGION( "scsi:cdrom" )
 	DISK_IMAGE_READONLY( "984a01bm", 0, BAD_DUMP SHA1(d9b7d74a72a76e4e9cf7725e0fb8dafcc1c87187) )
 
 	DISK_REGION( "cdrom1" ) // video CD
@@ -1152,7 +1161,7 @@ ROM_START( bmiidxca )
 	ROM_REGION( 0x100, "security", 0 )
 	ROM_LOAD( "896j.pd",      0x000000, 0x000100, BAD_DUMP CRC(1e5caf37) SHA1(75b378662b651cb322e41564d3bae68cc9edadc5) )
 
-	DISK_REGION( "cdrom0" )
+	DISK_REGION( "scsi:cdrom" )
 	DISK_IMAGE_READONLY( "896jabbm", 0, BAD_DUMP SHA1(117ae4c876207bbaf9e8fe0fdf5bb161155c1bdb) )
 
 	DISK_REGION( "cdrom1" ) // video CD

@@ -37,7 +37,7 @@
 //????
 #define MULTIPCM_CLOCKDIV   	(180.0)
 
-struct _Sample
+struct Sample_t
 {
 	unsigned int Start;
 	unsigned int Loop;
@@ -48,12 +48,12 @@ struct _Sample
 	unsigned char AM;
 };
 
-typedef enum {ATTACK,DECAY1,DECAY2,RELEASE} _STATE;
-ALLOW_SAVE_TYPE(_STATE); // allow save_item on a non-fundamental type
-struct _EG
+enum STATE {ATTACK,DECAY1,DECAY2,RELEASE};
+ALLOW_SAVE_TYPE(STATE); // allow save_item on a non-fundamental type
+struct EG_t
 {
 	int volume;	//
-	_STATE state;
+	STATE state;
 	int step;
 	//step vals
 	int AR;		//Attack
@@ -63,7 +63,7 @@ struct _EG
 	int DL;		//Decay level
 };
 
-struct _LFO
+struct LFO_t
 {
 	unsigned short phase;
 	UINT32 phase_step;
@@ -72,12 +72,12 @@ struct _LFO
 };
 
 
-struct _SLOT
+struct SLOT
 {
 	unsigned char Num;
 	unsigned char Regs[8];
 	int Playing;
-	struct _Sample *Sample;
+	Sample_t *Sample;
 	unsigned int Base;
 	unsigned int offset;
 	unsigned int step;
@@ -85,17 +85,16 @@ struct _SLOT
 	unsigned int DstTL;
 	int TLStep;
 	signed int Prev;
-	struct _EG EG;
-	struct _LFO PLFO;	//Phase lfo
-	struct _LFO ALFO;	//AM lfo
+	EG_t EG;
+	LFO_t PLFO;	//Phase lfo
+	LFO_t ALFO;	//AM lfo
 };
 
-typedef struct _MultiPCM MultiPCM;
-struct _MultiPCM
+struct MultiPCM
 {
 	sound_stream * stream;
-	struct _Sample Samples[0x200];		//Max 512 samples
-	struct _SLOT Slots[28];
+	Sample_t Samples[0x200];		//Max 512 samples
+	SLOT Slots[28];
 	unsigned int CurSlot;
 	unsigned int Address;
 	unsigned int BankR,BankL;
@@ -130,7 +129,7 @@ INLINE MultiPCM *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == MULTIPCM);
-	return (MultiPCM *)downcast<legacy_device_base *>(device)->token();
+	return (MultiPCM *)downcast<multipcm_device *>(device)->token();
 }
 
 
@@ -150,7 +149,7 @@ static int TLSteps[2];
 
 #define EG_SHIFT	16
 
-static int EG_Update(struct _SLOT *slot)
+static int EG_Update(SLOT *slot)
 {
 	switch(slot->EG.state)
 	{
@@ -202,7 +201,7 @@ static unsigned int Get_RATE(unsigned int *Steps,unsigned int rate,unsigned int 
 	return Steps[r];
 }
 
-static void EG_Calc(MultiPCM *ptChip,struct _SLOT *slot)
+static void EG_Calc(MultiPCM *ptChip,SLOT *slot)
 {
 	int octave=((slot->Regs[3]>>4)-1)&0xf;
 	int rate;
@@ -284,7 +283,7 @@ static void LFO_Init(void)
 	}
 }
 
-INLINE signed int PLFO_Step(struct _LFO *LFO)
+INLINE signed int PLFO_Step(LFO_t *LFO)
 {
 	int p;
 	LFO->phase+=LFO->phase_step;
@@ -293,7 +292,7 @@ INLINE signed int PLFO_Step(struct _LFO *LFO)
 	return p<<(SHIFT-LFO_SHIFT);
 }
 
-INLINE signed int ALFO_Step(struct _LFO *LFO)
+INLINE signed int ALFO_Step(LFO_t *LFO)
 {
 	int p;
 	LFO->phase+=LFO->phase_step;
@@ -302,7 +301,7 @@ INLINE signed int ALFO_Step(struct _LFO *LFO)
 	return p<<(SHIFT-LFO_SHIFT);
 }
 
-static void LFO_ComputeStep(MultiPCM *ptChip,struct _LFO *LFO,UINT32 LFOF,UINT32 LFOS,int ALFO)
+static void LFO_ComputeStep(MultiPCM *ptChip,LFO_t *LFO,UINT32 LFOF,UINT32 LFOS,int ALFO)
 {
 	float step=(float) LFOFreq[LFOF]*256.0/(float) ptChip->Rate;
 	LFO->phase_step=(unsigned int) ((float) (1<<LFO_SHIFT)*step);
@@ -320,7 +319,7 @@ static void LFO_ComputeStep(MultiPCM *ptChip,struct _LFO *LFO,UINT32 LFOF,UINT32
 
 
 
-static void WriteSlot(MultiPCM *ptChip,struct _SLOT *slot,int reg,unsigned char data)
+static void WriteSlot(MultiPCM *ptChip,SLOT *slot,int reg,unsigned char data)
 {
 	slot->Regs[reg]=data;
 
@@ -333,7 +332,7 @@ static void WriteSlot(MultiPCM *ptChip,struct _SLOT *slot,int reg,unsigned char 
 			//according to YMF278 sample write causes some base params written to the regs (envelope+lfos)
 			//the game should never change the sample while playing.
 			{
-				struct _Sample *Sample=ptChip->Samples+slot->Regs[1];
+				Sample_t *Sample=ptChip->Samples+slot->Regs[1];
 				WriteSlot(ptChip,slot,6,Sample->LFOVIB);
 				WriteSlot(ptChip,slot,7,Sample->AM);
 			}
@@ -441,7 +440,7 @@ static STREAM_UPDATE( MultiPCM_update )
 		signed int smpr=0;
 		for(sl=0;sl<28;++sl)
 		{
-			struct _SLOT *slot=ptChip->Slots+sl;
+			SLOT *slot=ptChip->Slots+sl;
 			if(slot->Playing)
 			{
 				unsigned int vol=(slot->TL>>SHIFT)|(slot->Pan<<7);
@@ -673,31 +672,42 @@ void multipcm_set_bank(device_t *device, UINT32 leftoffs, UINT32 rightoffs)
 }
 
 
+const device_type MULTIPCM = &device_creator<multipcm_device>;
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( multipcm )
+multipcm_device::multipcm_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, MULTIPCM, "Sega/Yamaha 315-5560", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(MultiPCM);				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(MultiPCM));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( multipcm );		break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							/* Nothing */									break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Sega/Yamaha 315-5560");		break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Sega custom");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "2.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void multipcm_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void multipcm_device::device_start()
+{
+	DEVICE_START_NAME( multipcm )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void multipcm_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(MULTIPCM, multipcm);

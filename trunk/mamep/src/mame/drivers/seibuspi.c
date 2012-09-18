@@ -747,7 +747,7 @@ static UINT8 z80_fifoout_pop(address_space *space)
 	UINT8 r;
 	if (state->m_fifoout_wpos == state->m_fifoout_rpos)
 	{
-		logerror("Sound FIFOOUT underflow at %08X\n", cpu_get_pc(&space->device()));
+		logerror("Sound FIFOOUT underflow at %08X\n", space->device().safe_pc());
 	}
 	r = state->m_fifoout_data[state->m_fifoout_rpos++];
 	if(state->m_fifoout_rpos == FIFO_SIZE)
@@ -773,7 +773,7 @@ static void z80_fifoout_push(address_space *space, UINT8 data)
 	}
 	if(state->m_fifoout_wpos == state->m_fifoout_rpos)
 	{
-		fatalerror("Sound FIFOOUT overflow at %08X", cpu_get_pc(&space->device()));
+		fatalerror("Sound FIFOOUT overflow at %08X\n", space->device().safe_pc());
 	}
 
 	state->m_fifoout_read_request = 1;
@@ -785,7 +785,7 @@ static UINT8 z80_fifoin_pop(address_space *space)
 	UINT8 r;
 	if (state->m_fifoin_wpos == state->m_fifoin_rpos)
 	{
-		fatalerror("Sound FIFOIN underflow at %08X", cpu_get_pc(&space->device()));
+		fatalerror("Sound FIFOIN underflow at %08X\n", space->device().safe_pc());
 	}
 	r = state->m_fifoin_data[state->m_fifoin_rpos++];
 	if(state->m_fifoin_rpos == FIFO_SIZE)
@@ -811,7 +811,7 @@ static void z80_fifoin_push(address_space *space, UINT8 data)
 	}
 	if(state->m_fifoin_wpos == state->m_fifoin_rpos)
 	{
-		fatalerror("Sound FIFOIN overflow at %08X", cpu_get_pc(&space->device()));
+		fatalerror("Sound FIFOIN overflow at %08X\n", space->device().safe_pc());
 	}
 
 	state->m_fifoin_read_request = 1;
@@ -859,7 +859,7 @@ READ32_MEMBER(seibuspi_state::sound_fifo_status_r)
 
 READ32_MEMBER(seibuspi_state::spi_int_r)
 {
-	cputag_set_input_line(machine(), "maincpu", 0,CLEAR_LINE );
+	machine().device("maincpu")->execute().set_input_line(0,CLEAR_LINE );
 	return 0xffffffff;
 }
 
@@ -907,9 +907,9 @@ logerror("z80 data = %08x mask = %08x\n",data,mem_mask);
 	if( ACCESSING_BITS_0_7 ) {
 		if( data & 0x1 ) {
 			m_z80_prg_fifo_pos = 0;
-			cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_RESET, CLEAR_LINE );
+			machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE );
 		} else {
-			cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_RESET, ASSERT_LINE );
+			machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE );
 		}
 	}
 }
@@ -1019,8 +1019,7 @@ READ32_MEMBER(seibuspi_state::soundrom_r)
 		}
 	}
 
-
-	fatalerror("soundrom_r: %08X, %08X", offset, mem_mask);
+	fatalerror("soundrom_r: %08X, %08X\n", offset, mem_mask);
 }
 
 /********************************************************************/
@@ -1099,9 +1098,9 @@ WRITE8_MEMBER(seibuspi_state::flashrom_write)
 static void irqhandler(device_t *device, int state)
 {
 	if (state)
-		cputag_set_input_line_and_vector(device->machine(), "soundcpu", 0, ASSERT_LINE, 0xd7);	// IRQ is RST10
+		device->machine().device("soundcpu")->execute().set_input_line_and_vector(0, ASSERT_LINE, 0xd7);	// IRQ is RST10
 	else
-		cputag_set_input_line(device->machine(), "soundcpu", 0, CLEAR_LINE);
+		device->machine().device("soundcpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 WRITE32_MEMBER(seibuspi_state::sys386f2_eeprom_w)
@@ -1792,7 +1791,7 @@ static const eeprom_interface eeprom_intf =
 
 static INTERRUPT_GEN( spi_interrupt )
 {
-	device_set_input_line(device, 0, ASSERT_LINE );
+	device->execute().set_input_line(0, ASSERT_LINE );
 }
 
 static IRQ_CALLBACK(spi_irq_callback)
@@ -1802,46 +1801,44 @@ static IRQ_CALLBACK(spi_irq_callback)
 
 /* SPI */
 
-static MACHINE_START( spi )
+MACHINE_START_MEMBER(seibuspi_state,spi)
 {
-	seibuspi_state *state = machine.driver_data<seibuspi_state>();
-	state->m_z80_rom = auto_alloc_array(machine, UINT8, 0x40000);
+	m_z80_rom = auto_alloc_array(machine(), UINT8, 0x40000);
 }
 
-static MACHINE_RESET( spi )
+MACHINE_RESET_MEMBER(seibuspi_state,spi)
 {
-	seibuspi_state *state = machine.driver_data<seibuspi_state>();
 	int i;
-	UINT8 *sound = state->memregion("ymf")->base();
+	UINT8 *sound = memregion("ymf")->base();
 
-	UINT8 *rombase = state->memregion("user1")->base();
+	UINT8 *rombase = memregion("user1")->base();
 	UINT8 flash_data = rombase[0x1ffffc];
 
-	cputag_set_input_line(machine, "soundcpu", INPUT_LINE_RESET, ASSERT_LINE );
-	device_set_irq_callback(machine.device("maincpu"), spi_irq_callback);
+	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE );
+	machine().device("maincpu")->execute().set_irq_acknowledge_callback(spi_irq_callback);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00000680, 0x00000683, read32_delegate(FUNC(seibuspi_state::sound_fifo_r),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x00000688, 0x0000068b, write32_delegate(FUNC(seibuspi_state::z80_prg_fifo_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0000068c, 0x0000068f, write32_delegate(FUNC(seibuspi_state::z80_enable_w),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00000680, 0x00000683, read32_delegate(FUNC(seibuspi_state::sound_fifo_r),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x00000688, 0x0000068b, write32_delegate(FUNC(seibuspi_state::z80_prg_fifo_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0000068c, 0x0000068f, write32_delegate(FUNC(seibuspi_state::z80_enable_w),this));
 
-	state->membank("bank4")->set_base(state->m_z80_rom);
-	state->membank("bank5")->set_base(state->m_z80_rom);
+	membank("bank4")->set_base(m_z80_rom);
+	membank("bank5")->set_base(m_z80_rom);
 
 	/* If the first value doesn't match, the game shows a checksum error */
 	/* If any of the other values are wrong, the game goes to update mode */
-	state->m_flash[0]->write(0, 0xff);
-	state->m_flash[0]->write(0, 0x10);
-	state->m_flash[0]->write(0, flash_data);			/* country code */
+	m_flash[0]->write(0, 0xff);
+	m_flash[0]->write(0, 0x10);
+	m_flash[0]->write(0, flash_data);			/* country code */
 
 	for (i=0; i < 0x100000; i++)
 	{
-		state->m_flash[0]->write(0, 0xff);
-		sound[i] = state->m_flash[0]->read(i);
+		m_flash[0]->write(0, 0xff);
+		sound[i] = m_flash[0]->read(i);
 	}
 	for (i=0; i < 0x100000; i++)
 	{
-		state->m_flash[1]->write(0, 0xff);
-		sound[0x100000+i] = state->m_flash[1]->read(i);
+		m_flash[1]->write(0, 0xff);
+		sound[0x100000+i] = m_flash[1]->read(i);
 	}
 }
 
@@ -1857,8 +1854,8 @@ static MACHINE_CONFIG_START( spi, seibuspi_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
-	MCFG_MACHINE_START(spi)
-	MCFG_MACHINE_RESET(spi)
+	MCFG_MACHINE_START_OVERRIDE(seibuspi_state,spi)
+	MCFG_MACHINE_RESET_OVERRIDE(seibuspi_state,spi)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
@@ -1878,7 +1875,7 @@ static MACHINE_CONFIG_START( spi, seibuspi_state )
 	MCFG_GFXDECODE(spi)
 	MCFG_PALETTE_LENGTH(6144)
 
-	MCFG_VIDEO_START(spi)
+	MCFG_VIDEO_START_OVERRIDE(seibuspi_state,spi)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -1888,34 +1885,32 @@ static MACHINE_CONFIG_START( spi, seibuspi_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
 
-static MACHINE_START( sxx2f )
+MACHINE_START_MEMBER(seibuspi_state,sxx2f)
 {
-	seibuspi_state *state = machine.driver_data<seibuspi_state>();
-	state->m_z80_rom = auto_alloc_array(machine, UINT8, 0x40000);
+	m_z80_rom = auto_alloc_array(machine(), UINT8, 0x40000);
 }
 
-static MACHINE_RESET( sxx2f )
+MACHINE_RESET_MEMBER(seibuspi_state,sxx2f)
 {
-	seibuspi_state *state = machine.driver_data<seibuspi_state>();
-	UINT8 *rom = state->memregion("soundcpu")->base();
+	UINT8 *rom = memregion("soundcpu")->base();
 
-	state->membank("bank4")->set_base(state->m_z80_rom);
-	state->membank("bank5")->set_base(state->m_z80_rom);
+	membank("bank4")->set_base(m_z80_rom);
+	membank("bank5")->set_base(m_z80_rom);
 
-	memcpy(state->m_z80_rom, rom, 0x40000);
+	memcpy(m_z80_rom, rom, 0x40000);
 
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0000068c, 0x0000068f, write32_delegate(FUNC(seibuspi_state::eeprom_w),state));
-	machine.device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00000680, 0x00000683, read32_delegate(FUNC(seibuspi_state::sb_coin_r),state));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x0000068c, 0x0000068f, write32_delegate(FUNC(seibuspi_state::eeprom_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x00000680, 0x00000683, read32_delegate(FUNC(seibuspi_state::sb_coin_r),this));
 
-	device_set_irq_callback(machine.device("maincpu"), spi_irq_callback);
+	machine().device("maincpu")->execute().set_irq_acknowledge_callback(spi_irq_callback);
 
-	state->m_sb_coin_latch = 0;
+	m_sb_coin_latch = 0;
 }
 
 static MACHINE_CONFIG_DERIVED( sxx2f, spi ) /* Intel i386DX @ 25MHz, YMF271 @ 16.9344MHz, Z80 @ 7.159MHz(?) */
 
-	MCFG_MACHINE_START(sxx2f)
-	MCFG_MACHINE_RESET(sxx2f)
+	MCFG_MACHINE_START_OVERRIDE(seibuspi_state,sxx2f)
+	MCFG_MACHINE_RESET_OVERRIDE(seibuspi_state,sxx2f)
 
 	MCFG_DEVICE_REMOVE("flash0")
 	MCFG_DEVICE_REMOVE("flash1")
@@ -1936,8 +1931,8 @@ static MACHINE_CONFIG_DERIVED( sxx2g, spi ) /* single board version using measur
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 
-	MCFG_MACHINE_START(sxx2f)
-	MCFG_MACHINE_RESET(sxx2f)
+	MCFG_MACHINE_START_OVERRIDE(seibuspi_state,sxx2f)
+	MCFG_MACHINE_RESET_OVERRIDE(seibuspi_state,sxx2f)
 
 	MCFG_DEVICE_REMOVE("flash0")
 	MCFG_DEVICE_REMOVE("flash1")
@@ -1946,25 +1941,25 @@ MACHINE_CONFIG_END
 
 READ32_MEMBER(seibuspi_state::senkyu_speedup_r)
 {
-	if (cpu_get_pc(&space.device())==0x00305bb2) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x00305bb2) space.device().execute().spin_until_interrupt(); // idle
 	return m_spimainram[(0x0018cb4-0x800)/4];
 }
 
 READ32_MEMBER(seibuspi_state::senkyua_speedup_r)
 {
-	if (cpu_get_pc(&space.device())== 0x30582e) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()== 0x30582e) space.device().execute().spin_until_interrupt(); // idle
 	return m_spimainram[(0x0018c9c-0x800)/4];
 }
 
 READ32_MEMBER(seibuspi_state::batlball_speedup_r)
 {
-//  printf("cpu_get_pc(&space.device()) %06x\n", cpu_get_pc(&space.device()));
+//  printf("space.device().safe_pc() %06x\n", space.device().safe_pc());
 
 	/* batlbalu */
-	if (cpu_get_pc(&space.device())==0x00305996) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x00305996) space.device().execute().spin_until_interrupt(); // idle
 
 	/* batlball */
-	if (cpu_get_pc(&space.device())==0x003058aa) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x003058aa) space.device().execute().spin_until_interrupt(); // idle
 
 	return m_spimainram[(0x0018db4-0x800)/4];
 }
@@ -1972,21 +1967,21 @@ READ32_MEMBER(seibuspi_state::batlball_speedup_r)
 READ32_MEMBER(seibuspi_state::rdft_speedup_r)
 {
 	/* rdft */
-	if (cpu_get_pc(&space.device())==0x0203f0a) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x0203f0a) space.device().execute().spin_until_interrupt(); // idle
 
 	/* rdftau */
-	if (cpu_get_pc(&space.device())==0x0203f16) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x0203f16) space.device().execute().spin_until_interrupt(); // idle
 
 	/* rdftj */
-	if (cpu_get_pc(&space.device())==0x0203f22) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x0203f22) space.device().execute().spin_until_interrupt(); // idle
 
 	/* rdftdi */
-	if (cpu_get_pc(&space.device())==0x0203f46) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x0203f46) space.device().execute().spin_until_interrupt(); // idle
 
 	/* rdftu */
-	if (cpu_get_pc(&space.device())==0x0203f3a) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x0203f3a) space.device().execute().spin_until_interrupt(); // idle
 
-//  mame_printf_debug("%08x\n",cpu_get_pc(&space.device()));
+//  mame_printf_debug("%08x\n",space.device().safe_pc());
 
 	return m_spimainram[(0x00298d0-0x800)/4];
 }
@@ -1994,15 +1989,15 @@ READ32_MEMBER(seibuspi_state::rdft_speedup_r)
 READ32_MEMBER(seibuspi_state::viprp1_speedup_r)
 {
 	/* viprp1 */
-	if (cpu_get_pc(&space.device())==0x0202769) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x0202769) space.device().execute().spin_until_interrupt(); // idle
 
 	/* viprp1s */
-	if (cpu_get_pc(&space.device())==0x02027e9) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x02027e9) space.device().execute().spin_until_interrupt(); // idle
 
 	/* viprp1ot */
-	if (cpu_get_pc(&space.device())==0x02026bd) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x02026bd) space.device().execute().spin_until_interrupt(); // idle
 
-//  mame_printf_debug("%08x\n",cpu_get_pc(&space.device()));
+//  mame_printf_debug("%08x\n",space.device().safe_pc());
 
 	return m_spimainram[(0x001e2e0-0x800)/4];
 }
@@ -2010,8 +2005,8 @@ READ32_MEMBER(seibuspi_state::viprp1_speedup_r)
 READ32_MEMBER(seibuspi_state::viprp1o_speedup_r)
 {
 	/* viperp1o */
-	if (cpu_get_pc(&space.device())==0x0201f99) device_spin_until_interrupt(&space.device()); // idle
-//  mame_printf_debug("%08x\n",cpu_get_pc(&space.device()));
+	if (space.device().safe_pc()==0x0201f99) space.device().execute().spin_until_interrupt(); // idle
+//  mame_printf_debug("%08x\n",space.device().safe_pc());
 	return m_spimainram[(0x001d49c-0x800)/4];
 }
 
@@ -2019,8 +2014,8 @@ READ32_MEMBER(seibuspi_state::viprp1o_speedup_r)
 // causes input problems?
 READ32_MEMBER(seibuspi_state::ejanhs_speedup_r)
 {
-// mame_printf_debug("%08x\n",cpu_get_pc(&space.device()));
- if (cpu_get_pc(&space.device())==0x03032c7) device_spin_until_interrupt(&space.device()); // idle
+// mame_printf_debug("%08x\n",space.device().safe_pc());
+ if (space.device().safe_pc()==0x03032c7) space.device().execute().spin_until_interrupt(); // idle
  return m_spimainram[(0x002d224-0x800)/4];
 }
 #endif
@@ -2029,18 +2024,18 @@ READ32_MEMBER(seibuspi_state::rf2_speedup_r)
 {
 
 	/* rdft22kc */
-	if (cpu_get_pc(&space.device())==0x0203926) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x0203926) space.device().execute().spin_until_interrupt(); // idle
 
 	/* rdft2, rdft2j */
-	if (cpu_get_pc(&space.device())==0x0204372) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x0204372) space.device().execute().spin_until_interrupt(); // idle
 
 	/* rdft2us */
-	if (cpu_get_pc(&space.device())==0x020420e) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x020420e) space.device().execute().spin_until_interrupt(); // idle
 
 	/* rdft2a */
-	if (cpu_get_pc(&space.device())==0x0204366) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x0204366) space.device().execute().spin_until_interrupt(); // idle
 
-//  mame_printf_debug("%08x\n",cpu_get_pc(&space.device()));
+//  mame_printf_debug("%08x\n",space.device().safe_pc());
 
 	return m_spimainram[(0x0282AC-0x800)/4];
 }
@@ -2048,22 +2043,22 @@ READ32_MEMBER(seibuspi_state::rf2_speedup_r)
 READ32_MEMBER(seibuspi_state::rfjet_speedup_r)
 {
 	/* rfjet, rfjetu, rfjeta */
-	if (cpu_get_pc(&space.device())==0x0206082) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x0206082) space.device().execute().spin_until_interrupt(); // idle
 
 	/* rfjetus */
-	if (cpu_get_pc(&space.device())==0x0205b39)
+	if (space.device().safe_pc()==0x0205b39)
 	{
 		UINT32 r;
-		device_spin_until_interrupt(&space.device()); // idle
+		space.device().execute().spin_until_interrupt(); // idle
 		// Hack to enter test mode
 		r = m_spimainram[(0x002894c-0x800)/4] & (~0x400);
 		return r | (((ioport("SYSTEM")->read() ^ 0xff)<<8) & 0x400);
 	}
 
 	/* rfjetj */
-	if (cpu_get_pc(&space.device())==0x0205f2e) device_spin_until_interrupt(&space.device()); // idle
+	if (space.device().safe_pc()==0x0205f2e) space.device().execute().spin_until_interrupt(); // idle
 
-//  mame_printf_debug("%08x\n",cpu_get_pc(&space.device()));
+//  mame_printf_debug("%08x\n",space.device().safe_pc());
 
 
 	return m_spimainram[(0x002894c-0x800)/4];
@@ -2188,9 +2183,9 @@ DRIVER_INIT_MEMBER(seibuspi_state,rfjet2k)
 	init_rfjet_common(machine());
 }
 
-static MACHINE_RESET( seibu386 )
+MACHINE_RESET_MEMBER(seibuspi_state,seibu386)
 {
-	device_set_irq_callback(machine.device("maincpu"), spi_irq_callback);
+	machine().device("maincpu")->execute().set_irq_acknowledge_callback(spi_irq_callback);
 }
 
 static MACHINE_CONFIG_START( seibu386, seibuspi_state )
@@ -2200,7 +2195,7 @@ static MACHINE_CONFIG_START( seibu386, seibuspi_state )
 	MCFG_CPU_PROGRAM_MAP(seibu386_map)
 	MCFG_CPU_VBLANK_INT("screen", spi_interrupt)
 
-	MCFG_MACHINE_RESET(seibu386)
+	MCFG_MACHINE_RESET_OVERRIDE(seibuspi_state,seibu386)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
@@ -2214,7 +2209,7 @@ static MACHINE_CONFIG_START( seibu386, seibuspi_state )
 	MCFG_GFXDECODE(spi)
 	MCFG_PALETTE_LENGTH(6144)
 
-	MCFG_VIDEO_START(spi)
+	MCFG_VIDEO_START_OVERRIDE(seibuspi_state,spi)
 	MCFG_SCREEN_UPDATE_STATIC(spi)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2255,7 +2250,7 @@ static MACHINE_CONFIG_START( sys386f2, seibuspi_state )
 
 	/* no z80? */
 
-	MCFG_MACHINE_RESET(seibu386)
+	MCFG_MACHINE_RESET_OVERRIDE(seibuspi_state,seibu386)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
@@ -2269,7 +2264,7 @@ static MACHINE_CONFIG_START( sys386f2, seibuspi_state )
 	MCFG_GFXDECODE(sys386f2)
 	MCFG_PALETTE_LENGTH(8192)
 
-	MCFG_VIDEO_START(sys386f2)
+	MCFG_VIDEO_START_OVERRIDE(seibuspi_state,sys386f2)
 	MCFG_SCREEN_UPDATE_STATIC(sys386f2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

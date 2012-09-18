@@ -483,6 +483,9 @@ public:
 	DECLARE_READ8_MEMBER(pia1_b_r);
 	DECLARE_WRITE8_MEMBER(fclown_ay8910_w);
 	DECLARE_DRIVER_INIT(fclown);
+	TILE_GET_INFO_MEMBER(get_fclown_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -507,9 +510,8 @@ WRITE8_MEMBER(_5clown_state::fclown_colorram_w)
 }
 
 
-static TILE_GET_INFO( get_fclown_tile_info )
+TILE_GET_INFO_MEMBER(_5clown_state::get_fclown_tile_info)
 {
-	_5clown_state *state = machine.driver_data<_5clown_state>();
 
 /*  - bits -
     7654 3210
@@ -520,19 +522,18 @@ static TILE_GET_INFO( get_fclown_tile_info )
     x--- ----   Extra color for 7's.
 */
 
-	int attr = state->m_colorram[tile_index];
-	int code = ((attr & 0x01) << 8) | ((attr & 0x40) << 2) | state->m_videoram[tile_index];	/* bit 8 for extended char set */
+	int attr = m_colorram[tile_index];
+	int code = ((attr & 0x01) << 8) | ((attr & 0x40) << 2) | m_videoram[tile_index];	/* bit 8 for extended char set */
 	int bank = (attr & 0x02) >> 1;													/* bit 1 switch the gfx banks */
 	int color = (attr & 0x3c) >> 2 | ((attr & 0x80) >> 3);							/* bits 2-3-4-5-7 for color */
 
-	SET_TILE_INFO(bank, code, color, 0);
+	SET_TILE_INFO_MEMBER(bank, code, color, 0);
 }
 
 
-static VIDEO_START(fclown)
+void _5clown_state::video_start()
 {
-	_5clown_state *state = machine.driver_data<_5clown_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_fclown_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(_5clown_state::get_fclown_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 
@@ -543,9 +544,9 @@ static SCREEN_UPDATE_IND16( fclown )
 	return 0;
 }
 
-static PALETTE_INIT( fclown )
+void _5clown_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 /*
     7654 3210
     ---- ---x   RED component.
@@ -560,7 +561,7 @@ static PALETTE_INIT( fclown )
 
 	if (color_prom == 0) return;
 
-	for (i = 0;i < machine.total_colors();i++)
+	for (i = 0;i < machine().total_colors();i++)
 	{
 		int bit0, bit1, bit2, bit3, r, g, b, bk;
 
@@ -580,7 +581,7 @@ static PALETTE_INIT( fclown )
 		bit2 = (color_prom[i] >> 2) & 0x01;
 		b = bk * (bit2 * 0xff);
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 
@@ -641,12 +642,12 @@ WRITE8_MEMBER(_5clown_state::trigsnd_w)
 
 	if ( (data & 0x0f) == 0x07 )
 	{
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, ASSERT_LINE );
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE );
 	}
 
 	else
 	{
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, CLEAR_LINE );
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE );
 	}
 
 }
@@ -1084,9 +1085,7 @@ static MACHINE_CONFIG_START( fclown, _5clown_state )
 
 	MCFG_GFXDECODE(fclown)
 	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT(fclown)
 
-	MCFG_VIDEO_START(fclown)
 
 	MCFG_MC6845_ADD("crtc", MC6845, MASTER_CLOCK/16, mc6845_intf) /* guess */
 

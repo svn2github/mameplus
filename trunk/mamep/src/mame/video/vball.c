@@ -19,34 +19,32 @@
 
 ***************************************************************************/
 
-static TILEMAP_MAPPER( background_scan )
+TILEMAP_MAPPER_MEMBER(vball_state::background_scan)
 {
 	/* logical (col,row) -> memory offset */
 	return (col & 0x1f) + ((row & 0x1f) << 5) + ((col & 0x20) << 5) + ((row & 0x20) <<6);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(vball_state::get_bg_tile_info)
 {
-	vball_state *state = machine.driver_data<vball_state>();
-	UINT8 code = state->m_vb_videoram[tile_index];
-	UINT8 attr = state->m_vb_attribram[tile_index];
-	SET_TILE_INFO(
+	UINT8 code = m_vb_videoram[tile_index];
+	UINT8 attr = m_vb_attribram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			0,
-			code + ((attr & 0x1f) << 8) + (state->m_gfxset<<8),
+			code + ((attr & 0x1f) << 8) + (m_gfxset<<8),
 			(attr >> 5) & 0x7,
 			0);
 }
 
 
-VIDEO_START( vb )
+void vball_state::video_start()
 {
-	vball_state *state = machine.driver_data<vball_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info,background_scan, 8, 8,64,64);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(vball_state::get_bg_tile_info),this),tilemap_mapper_delegate(FUNC(vball_state::background_scan),this), 8, 8,64,64);
 
-	state->m_bg_tilemap->set_scroll_rows(32);
-	state->m_gfxset=0;
-	state->m_vb_bgprombank=0xff;
-	state->m_vb_spprombank=0xff;
+	m_bg_tilemap->set_scroll_rows(32);
+	m_gfxset=0;
+	m_vb_bgprombank=0xff;
+	m_vb_spprombank=0xff;
 }
 
 WRITE8_MEMBER(vball_state::vb_videoram_w)
@@ -114,7 +112,7 @@ void vb_mark_all_dirty( running_machine &machine )
 static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	vball_state *state = machine.driver_data<vball_state>();
-	const gfx_element *gfx = machine.gfx[1];
+	gfx_element *gfx = machine.gfx[1];
 	UINT8 *src = state->m_spriteram;
 	int i;
 

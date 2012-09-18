@@ -49,7 +49,7 @@ WRITE8_MEMBER(shootout_state::shootout_bankswitch_w)
 WRITE8_MEMBER(shootout_state::sound_cpu_command_w)
 {
 	soundlatch_byte_w( space, offset, data );
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE );
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE );
 }
 
 WRITE8_MEMBER(shootout_state::shootout_flipscreen_w)
@@ -108,7 +108,7 @@ ADDRESS_MAP_END
 
 INPUT_CHANGED_MEMBER(shootout_state::coin_inserted)
 {
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, newval ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, newval ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static INPUT_PORTS_START( shootout )
@@ -230,12 +230,12 @@ GFXDECODE_END
 
 static void shootout_snd_irq(device_t *device, int linestate)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, linestate);
+	device->machine().device("audiocpu")->execute().set_input_line(0, linestate);
 }
 
 static void shootout_snd2_irq(device_t *device, int linestate)
 {
-	cputag_set_input_line(device->machine(), "maincpu", 0, linestate);
+	device->machine().device("maincpu")->execute().set_input_line(0, linestate);
 }
 
 static const ym2203_interface ym2203_config =
@@ -281,8 +281,6 @@ static MACHINE_CONFIG_START( shootout, shootout_state )
 	MCFG_GFXDECODE(shootout)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_PALETTE_INIT(shootout)
-	MCFG_VIDEO_START(shootout)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -310,8 +308,6 @@ static MACHINE_CONFIG_START( shootouj, shootout_state )
 	MCFG_GFXDECODE(shootout)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_PALETTE_INIT(shootout)
-	MCFG_VIDEO_START(shootout)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

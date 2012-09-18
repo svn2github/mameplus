@@ -220,35 +220,35 @@ ADDRESS_MAP_END
 
 READ8_MEMBER(fitfight_state::snd_porta_r)
 {
-	//mame_printf_debug("PA R @%x\n",cpu_get_pc(&space.device()));
+	//mame_printf_debug("PA R @%x\n",space.device().safe_pc());
 	return machine().rand();
 }
 
 READ8_MEMBER(fitfight_state::snd_portb_r)
 {
-	//mame_printf_debug("PB R @%x\n",cpu_get_pc(&space.device()));
+	//mame_printf_debug("PB R @%x\n",space.device().safe_pc());
 	return machine().rand();
 }
 
 READ8_MEMBER(fitfight_state::snd_portc_r)
 {
-	//mame_printf_debug("PC R @%x\n",cpu_get_pc(&space.device()));
+	//mame_printf_debug("PC R @%x\n",space.device().safe_pc());
 	return machine().rand();
 }
 
 WRITE8_MEMBER(fitfight_state::snd_porta_w)
 {
-	//mame_printf_debug("PA W %x @%x\n",data,cpu_get_pc(&space.device()));
+	//mame_printf_debug("PA W %x @%x\n",data,space.device().safe_pc());
 }
 
 WRITE8_MEMBER(fitfight_state::snd_portb_w)
 {
-	//mame_printf_debug("PB W %x @%x\n",data,cpu_get_pc(&space.device()));
+	//mame_printf_debug("PB W %x @%x\n",data,space.device().safe_pc());
 }
 
 WRITE8_MEMBER(fitfight_state::snd_portc_w)
 {
-	//mame_printf_debug("PC W %x @%x\n",data,cpu_get_pc(&space.device()));
+	//mame_printf_debug("PC W %x @%x\n",data,space.device().safe_pc());
 }
 
 static ADDRESS_MAP_START( snd_io, AS_IO, 8, fitfight_state )
@@ -259,7 +259,7 @@ ADDRESS_MAP_END
 
 static INTERRUPT_GEN( snd_irq )
 {
-	device_set_input_line(device, UPD7810_INTF2, HOLD_LINE);
+	device->execute().set_input_line(UPD7810_INTF2, HOLD_LINE);
 }
 
 static const UPD7810_CONFIG sound_cpu_config =
@@ -719,18 +719,16 @@ static GFXDECODE_START( prot )
 GFXDECODE_END
 
 
-static MACHINE_START( fitfight )
+void fitfight_state::machine_start()
 {
-	fitfight_state *state = machine.driver_data<fitfight_state>();
 
-	state->save_item(NAME(state->m_fof_700000_data));
+	save_item(NAME(m_fof_700000_data));
 }
 
-static MACHINE_RESET( fitfight )
+void fitfight_state::machine_reset()
 {
-	fitfight_state *state = machine.driver_data<fitfight_state>();
 
-	state->m_fof_700000_data = 0;
+	m_fof_700000_data = 0;
 }
 
 static MACHINE_CONFIG_START( fitfight, fitfight_state )
@@ -745,8 +743,6 @@ static MACHINE_CONFIG_START( fitfight, fitfight_state )
 	MCFG_CPU_IO_MAP(snd_io)
 	MCFG_CPU_VBLANK_INT("screen", snd_irq)
 
-	MCFG_MACHINE_START(fitfight)
-	MCFG_MACHINE_RESET(fitfight)
 
 	MCFG_GFXDECODE(fitfight)
 
@@ -759,7 +755,6 @@ static MACHINE_CONFIG_START( fitfight, fitfight_state )
 
 	MCFG_PALETTE_LENGTH(0x800)
 
-	MCFG_VIDEO_START(fitfight)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
@@ -773,8 +768,6 @@ static MACHINE_CONFIG_START( bbprot, fitfight_state )
 	MCFG_CPU_PROGRAM_MAP(bbprot_main_map)
 	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
 
-	MCFG_MACHINE_START(fitfight)
-	MCFG_MACHINE_RESET(fitfight)
 
 	MCFG_GFXDECODE(prot)
 
@@ -787,7 +780,6 @@ static MACHINE_CONFIG_START( bbprot, fitfight_state )
 
 	MCFG_PALETTE_LENGTH(0x2000)
 
-	MCFG_VIDEO_START(fitfight)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

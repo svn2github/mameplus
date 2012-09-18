@@ -983,12 +983,12 @@ static void parse_cpu_control( running_machine &machine )
 {
 	/* bit 0 enables cpu B */
 	taitoz_state *state = machine.driver_data<taitoz_state>();
-	device_set_input_line(state->m_subcpu, INPUT_LINE_RESET, (state->m_cpua_ctrl & 0x1) ? CLEAR_LINE : ASSERT_LINE);
+	state->m_subcpu->set_input_line(INPUT_LINE_RESET, (state->m_cpua_ctrl & 0x1) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 WRITE16_MEMBER(taitoz_state::cpua_ctrl_w)
 {
-	//logerror("CPU #0 PC %06x: write %04x to cpu control\n", cpu_get_pc(&space.device()), data);
+	//logerror("CPU #0 PC %06x: write %04x to cpu control\n", space.device().safe_pc(), data);
 
 	if (mem_mask == 0xff00) data >>= 8;
 	data &= 0xff;
@@ -1022,7 +1022,7 @@ WRITE16_MEMBER(taitoz_state::dblaxle_cpua_ctrl_w)
 static TIMER_CALLBACK( taitoz_interrupt6 )
 {
 	taitoz_state *state = machine.driver_data<taitoz_state>();
-	device_set_input_line(state->m_maincpu, 6, HOLD_LINE);
+	state->m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 /* 68000 B */
@@ -1030,7 +1030,7 @@ static TIMER_CALLBACK( taitoz_interrupt6 )
 static TIMER_CALLBACK( taitoz_cpub_interrupt5 )
 {
 	taitoz_state *state = machine.driver_data<taitoz_state>();
-	device_set_input_line(state->m_subcpu, 5, HOLD_LINE);
+	state->m_subcpu->set_input_line(5, HOLD_LINE);
 }
 
 
@@ -1048,7 +1048,7 @@ static INTERRUPT_GEN( sci_interrupt )
 	if (state->m_sci_int6)
 		device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), FUNC(taitoz_interrupt6));
 
-	device_set_input_line(device, 4, HOLD_LINE);
+	device->execute().set_input_line(4, HOLD_LINE);
 }
 
 
@@ -1194,7 +1194,7 @@ READ16_MEMBER(taitoz_state::bshark_stick_r)
 			return ioport("Y_ADJUST")->read();
 	}
 
-	logerror("CPU #0 PC %06x: warning - read unmapped stick offset %06x\n", cpu_get_pc(&space.device()), offset);
+	logerror("CPU #0 PC %06x: warning - read unmapped stick offset %06x\n", space.device().safe_pc(), offset);
 
 	return 0xff;
 }
@@ -1217,7 +1217,7 @@ READ16_MEMBER(taitoz_state::nightstr_stick_r)
 			return ioport("Y_ADJUST")->read();
 	}
 
-	logerror("CPU #0 PC %06x: warning - read unmapped stick offset %06x\n", cpu_get_pc(&space.device()), offset);
+	logerror("CPU #0 PC %06x: warning - read unmapped stick offset %06x\n", space.device().safe_pc(), offset);
 
 	return 0xff;
 }
@@ -1247,7 +1247,7 @@ READ16_MEMBER(taitoz_state::sci_steer_input_r)
 			return (steer & 0xff00) >> 8;
 	}
 
-	logerror("CPU #0 PC %06x: warning - read unmapped steer input offset %06x\n", cpu_get_pc(&space.device()), offset);
+	logerror("CPU #0 PC %06x: warning - read unmapped steer input offset %06x\n", space.device().safe_pc(), offset);
 
 	return 0xff;
 }
@@ -1318,7 +1318,7 @@ READ16_MEMBER(taitoz_state::dblaxle_steer_input_r)
 			return steer & 0xff;
 	}
 
-	logerror("CPU #0 PC %06x: warning - read unmapped steer input offset %02x\n", cpu_get_pc(&space.device()), offset);
+	logerror("CPU #0 PC %06x: warning - read unmapped steer input offset %02x\n", space.device().safe_pc(), offset);
 
 	return 0x00;
 }
@@ -1335,7 +1335,7 @@ READ16_MEMBER(taitoz_state::chasehq_motor_r)
 			return 0x55;	/* motor cpu status ? */
 
 		default:
-			logerror("CPU #0 PC %06x: warning - read motor cpu %03x\n",cpu_get_pc(&space.device()),offset);
+			logerror("CPU #0 PC %06x: warning - read motor cpu %03x\n",space.device().safe_pc(),offset);
 			return 0;
 	}
 }
@@ -1353,7 +1353,7 @@ WRITE16_MEMBER(taitoz_state::chasehq_motor_w)
 			break;
 	}
 
-	logerror("CPU #0 PC %06x: warning - write %04x to motor cpu %03x\n",cpu_get_pc(&space.device()),data,offset);
+	logerror("CPU #0 PC %06x: warning - write %04x to motor cpu %03x\n",space.device().safe_pc(),data,offset);
 }
 
 
@@ -2900,7 +2900,7 @@ Interface B is for games which lack a Z80 (Spacegun, Bshark).
 static void irqhandler(device_t *device, int irq)
 {
 	taitoz_state *state = device->machine().driver_data<taitoz_state>();
-	device_set_input_line(state->m_audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 /* handler called by the YM2610 emulator when the internal timers cause an IRQ */
@@ -2908,7 +2908,7 @@ static void irqhandlerb(device_t *device, int irq)
 {
 	// DG: this is probably specific to Z80 and wrong?
 //  taitoz_state *state = device->machine().driver_data<taitoz_state>();
-//  device_set_input_line(state->m_audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
+//  state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
@@ -3027,48 +3027,46 @@ static void taitoz_postload(running_machine &machine)
 	reset_sound_region(machine);
 }
 
-static MACHINE_START( bshark )
+MACHINE_START_MEMBER(taitoz_state,bshark)
 {
-	taitoz_state *state = machine.driver_data<taitoz_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_subcpu = machine.device("sub");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_eeprom = machine.device<eeprom_device>("eeprom");
-	state->m_tc0100scn = machine.device("tc0100scn");
-	state->m_tc0150rod = machine.device("tc0150rod");
-	state->m_tc0480scp = machine.device("tc0480scp");
-	state->m_tc0220ioc = machine.device("tc0220ioc");
-	state->m_tc0140syt = machine.device("tc0140syt");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_subcpu = machine().device<cpu_device>("sub");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_eeprom = machine().device<eeprom_device>("eeprom");
+	m_tc0100scn = machine().device("tc0100scn");
+	m_tc0150rod = machine().device("tc0150rod");
+	m_tc0480scp = machine().device("tc0480scp");
+	m_tc0220ioc = machine().device("tc0220ioc");
+	m_tc0140syt = machine().device("tc0140syt");
 
-	state->save_item(NAME(state->m_cpua_ctrl));
+	save_item(NAME(m_cpua_ctrl));
 
 	/* these are specific to various games: we ought to split the inits */
-	state->save_item(NAME(state->m_sci_int6));
-	state->save_item(NAME(state->m_ioc220_port));
+	save_item(NAME(m_sci_int6));
+	save_item(NAME(m_ioc220_port));
 
-	state->save_item(NAME(state->m_banknum));
+	save_item(NAME(m_banknum));
 }
 
-static MACHINE_START( taitoz )
+MACHINE_START_MEMBER(taitoz_state,taitoz)
 {
-	int banks = (machine.root_device().memregion("audiocpu")->bytes() - 0xc000) / 0x4000;
+	int banks = (machine().root_device().memregion("audiocpu")->bytes() - 0xc000) / 0x4000;
 
-	machine.root_device().membank("bank10")->configure_entries(0, banks, machine.root_device().memregion("audiocpu")->base() + 0xc000, 0x4000);
+	machine().root_device().membank("bank10")->configure_entries(0, banks, machine().root_device().memregion("audiocpu")->base() + 0xc000, 0x4000);
 
-	machine.save().register_postload(save_prepost_delegate(FUNC(taitoz_postload), &machine));
+	machine().save().register_postload(save_prepost_delegate(FUNC(taitoz_postload), &machine()));
 
-	MACHINE_START_CALL(bshark);
+	MACHINE_START_CALL_MEMBER(bshark);
 }
 
-static MACHINE_RESET( taitoz )
+MACHINE_RESET_MEMBER(taitoz_state,taitoz)
 {
-	taitoz_state *state = machine.driver_data<taitoz_state>();
 
-	state->m_banknum = -1;
-	state->m_cpua_ctrl = 0xff;
-	state->m_sci_int6 = 0;
-	state->m_ioc220_port = 0;
+	m_banknum = -1;
+	m_cpua_ctrl = 0xff;
+	m_sci_int6 = 0;
+	m_ioc220_port = 0;
 }
 
 /* Contcirc vis area seems narrower than the other games... */
@@ -3087,8 +3085,8 @@ static MACHINE_CONFIG_START( contcirc, taitoz_state )
 	MCFG_CPU_PROGRAM_MAP(contcirc_cpub_map)
 	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
 
-	MCFG_MACHINE_START(taitoz)
-	MCFG_MACHINE_RESET(taitoz)
+	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
+	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitoz_io220_intf)
 
@@ -3103,7 +3101,7 @@ static MACHINE_CONFIG_START( contcirc, taitoz_state )
 	MCFG_GFXDECODE(taitoz)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitoz)
+	MCFG_VIDEO_START_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", taitoz_tc0100scn_intf)
 	MCFG_TC0150ROD_ADD("tc0150rod", taitoz_tc0150rod_intf)
@@ -3149,8 +3147,8 @@ static MACHINE_CONFIG_START( chasehq, taitoz_state )
 	MCFG_CPU_PROGRAM_MAP(chq_cpub_map)
 	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
 
-	MCFG_MACHINE_START(taitoz)
-	MCFG_MACHINE_RESET(taitoz)
+	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
+	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitoz_io220_intf)
 
@@ -3165,7 +3163,7 @@ static MACHINE_CONFIG_START( chasehq, taitoz_state )
 	MCFG_GFXDECODE(chasehq)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitoz)
+	MCFG_VIDEO_START_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", chasehq_tc0100scn_intf)
 	MCFG_TC0150ROD_ADD("tc0150rod", taitoz_tc0150rod_intf)
@@ -3211,8 +3209,8 @@ static MACHINE_CONFIG_START( enforce, taitoz_state )
 	MCFG_CPU_PROGRAM_MAP(enforce_cpub_map)
 	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
 
-	MCFG_MACHINE_START(taitoz)
-	MCFG_MACHINE_RESET(taitoz)
+	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
+	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -3229,7 +3227,7 @@ static MACHINE_CONFIG_START( enforce, taitoz_state )
 	MCFG_GFXDECODE(taitoz)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitoz)
+	MCFG_VIDEO_START_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", taitoz_tc0100scn_intf)
 	MCFG_TC0150ROD_ADD("tc0150rod", taitoz_tc0150rod_intf)
@@ -3271,8 +3269,8 @@ static MACHINE_CONFIG_START( bshark, taitoz_state )
 	MCFG_CPU_PROGRAM_MAP(bshark_cpub_map)
 	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
 
-	MCFG_MACHINE_START(bshark)
-	MCFG_MACHINE_RESET(taitoz)
+	MCFG_MACHINE_START_OVERRIDE(taitoz_state,bshark)
+	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -3289,7 +3287,7 @@ static MACHINE_CONFIG_START( bshark, taitoz_state )
 	MCFG_GFXDECODE(taitoz)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitoz)
+	MCFG_VIDEO_START_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", taitoz_tc0100scn_intf)
 	MCFG_TC0150ROD_ADD("tc0150rod", taitoz_tc0150rod_intf)
@@ -3342,8 +3340,8 @@ static MACHINE_CONFIG_START( sci, taitoz_state )
 	MCFG_CPU_PROGRAM_MAP(sci_cpub_map)
 	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
 
-	MCFG_MACHINE_START(taitoz)
-	MCFG_MACHINE_RESET(taitoz)
+	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
+	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(3000))
 
@@ -3360,7 +3358,7 @@ static MACHINE_CONFIG_START( sci, taitoz_state )
 	MCFG_GFXDECODE(taitoz)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitoz)
+	MCFG_VIDEO_START_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", taitoz_tc0100scn_intf)
 	MCFG_TC0150ROD_ADD("tc0150rod", taitoz_tc0150rod_intf)
@@ -3404,8 +3402,8 @@ static MACHINE_CONFIG_START( nightstr, taitoz_state )
 	MCFG_CPU_PROGRAM_MAP(nightstr_cpub_map)
 	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
 
-	MCFG_MACHINE_START(taitoz)
-	MCFG_MACHINE_RESET(taitoz)
+	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
+	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -3422,7 +3420,7 @@ static MACHINE_CONFIG_START( nightstr, taitoz_state )
 	MCFG_GFXDECODE(chasehq)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitoz)
+	MCFG_VIDEO_START_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", chasehq_tc0100scn_intf)
 	MCFG_TC0150ROD_ADD("tc0150rod", taitoz_tc0150rod_intf)
@@ -3468,8 +3466,8 @@ static MACHINE_CONFIG_START( aquajack, taitoz_state )
 	MCFG_CPU_PROGRAM_MAP(aquajack_cpub_map)
 	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
 
-	MCFG_MACHINE_START(taitoz)
-	MCFG_MACHINE_RESET(taitoz)
+	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
+	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(30000))
 
@@ -3486,7 +3484,7 @@ static MACHINE_CONFIG_START( aquajack, taitoz_state )
 	MCFG_GFXDECODE(taitoz)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitoz)
+	MCFG_VIDEO_START_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", taitoz_tc0100scn_intf)
 	MCFG_TC0150ROD_ADD("tc0150rod", taitoz_tc0150rod_intf)
@@ -3528,8 +3526,8 @@ static MACHINE_CONFIG_START( spacegun, taitoz_state )
 	MCFG_CPU_PROGRAM_MAP(spacegun_cpub_map)
 	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
 
-	MCFG_MACHINE_START(bshark)
-	MCFG_MACHINE_RESET(taitoz)
+	MCFG_MACHINE_START_OVERRIDE(taitoz_state,bshark)
+	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_EEPROM_ADD("eeprom", spacegun_eeprom_intf)
 	MCFG_EEPROM_DATA(spacegun_default_eeprom, 128)
@@ -3590,8 +3588,8 @@ static MACHINE_CONFIG_START( dblaxle, taitoz_state )
 	MCFG_CPU_PROGRAM_MAP(dblaxle_cpub_map)
 	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
 
-	MCFG_MACHINE_START(taitoz)
-	MCFG_MACHINE_RESET(taitoz)
+	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
+	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -3608,7 +3606,7 @@ static MACHINE_CONFIG_START( dblaxle, taitoz_state )
 	MCFG_GFXDECODE(dblaxle)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitoz)
+	MCFG_VIDEO_START_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_TC0480SCP_ADD("tc0480scp", taitoz_tc0480scp_intf)
 	MCFG_TC0150ROD_ADD("tc0150rod", taitoz_tc0150rod_intf)
@@ -3652,8 +3650,8 @@ static MACHINE_CONFIG_START( racingb, taitoz_state )
 	MCFG_CPU_PROGRAM_MAP(racingb_cpub_map)
 	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
 
-	MCFG_MACHINE_START(taitoz)
-	MCFG_MACHINE_RESET(taitoz)
+	MCFG_MACHINE_START_OVERRIDE(taitoz_state,taitoz)
+	MCFG_MACHINE_RESET_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -3670,7 +3668,7 @@ static MACHINE_CONFIG_START( racingb, taitoz_state )
 	MCFG_GFXDECODE(dblaxle)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitoz)
+	MCFG_VIDEO_START_OVERRIDE(taitoz_state,taitoz)
 
 	MCFG_TC0480SCP_ADD("tc0480scp", taitoz_tc0480scp_intf)
 	MCFG_TC0150ROD_ADD("tc0150rod", taitoz_tc0150rod_intf)

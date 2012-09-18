@@ -199,137 +199,137 @@ WRITE8_MEMBER(taitob_state::bankswitch_w)
 static TIMER_CALLBACK( rsaga2_interrupt2 )
 {
 	taitob_state *state = machine.driver_data<taitob_state>();
-	device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+	state->m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( rastansaga2_interrupt )
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(rsaga2_interrupt2));
-	device_set_input_line(device, 4, HOLD_LINE);
+	device->execute().set_input_line(4, HOLD_LINE);
 }
 
 
 static TIMER_CALLBACK( crimec_interrupt3 )
 {
 	taitob_state *state = machine.driver_data<taitob_state>();
-	device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
+	state->m_maincpu->set_input_line(3, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( crimec_interrupt )
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(crimec_interrupt3));
-	device_set_input_line(device, 5, HOLD_LINE);
+	device->execute().set_input_line(5, HOLD_LINE);
 }
 
 
 static TIMER_CALLBACK( hitice_interrupt6 )
 {
 	taitob_state *state = machine.driver_data<taitob_state>();
-	device_set_input_line(state->m_maincpu, 6, HOLD_LINE);
+	state->m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( hitice_interrupt )
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(hitice_interrupt6));
-	device_set_input_line(device, 4, HOLD_LINE);
+	device->execute().set_input_line(4, HOLD_LINE);
 }
 
 
 static TIMER_CALLBACK( rambo3_interrupt1 )
 {
 	taitob_state *state = machine.driver_data<taitob_state>();
-	device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
+	state->m_maincpu->set_input_line(1, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( rambo3_interrupt )
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(rambo3_interrupt1));
-	device_set_input_line(device, 6, HOLD_LINE);
+	device->execute().set_input_line(6, HOLD_LINE);
 }
 
 
 static TIMER_CALLBACK( pbobble_interrupt5 )
 {
 	taitob_state *state = machine.driver_data<taitob_state>();
-	device_set_input_line(state->m_maincpu, 5, HOLD_LINE);
+	state->m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( pbobble_interrupt )
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(pbobble_interrupt5));
-	device_set_input_line(device, 3, HOLD_LINE);
+	device->execute().set_input_line(3, HOLD_LINE);
 }
 
 static TIMER_CALLBACK( viofight_interrupt1 )
 {
 	taitob_state *state = machine.driver_data<taitob_state>();
-	device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
+	state->m_maincpu->set_input_line(1, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( viofight_interrupt )
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(viofight_interrupt1));
-	device_set_input_line(device, 4, HOLD_LINE);
+	device->execute().set_input_line(4, HOLD_LINE);
 }
 
 static TIMER_CALLBACK( masterw_interrupt4 )
 {
 	taitob_state *state = machine.driver_data<taitob_state>();
-	device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+	state->m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( masterw_interrupt )
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(masterw_interrupt4));
-	device_set_input_line(device, 5, HOLD_LINE);
+	device->execute().set_input_line(5, HOLD_LINE);
 }
 
 static TIMER_CALLBACK( silentd_interrupt4 )
 {
 	taitob_state *state = machine.driver_data<taitob_state>();
-	device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+	state->m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( silentd_interrupt )
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(silentd_interrupt4));
-	device_set_input_line(device, 6, HOLD_LINE);
+	device->execute().set_input_line(6, HOLD_LINE);
 }
 
 static TIMER_CALLBACK( selfeena_interrupt4 )
 {
 	taitob_state *state = machine.driver_data<taitob_state>();
-	device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+	state->m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( selfeena_interrupt )
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(5000), FUNC(selfeena_interrupt4));
-	device_set_input_line(device, 6, HOLD_LINE);
+	device->execute().set_input_line(6, HOLD_LINE);
 }
 
 static TIMER_CALLBACK( sbm_interrupt5 )//4
 {
 	taitob_state *state = machine.driver_data<taitob_state>();
-	device_set_input_line(state->m_maincpu, 5, HOLD_LINE);
+	state->m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( sbm_interrupt )//5
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(10000), FUNC(sbm_interrupt5));
-	device_set_input_line(device, 4, HOLD_LINE);
+	device->execute().set_input_line(4, HOLD_LINE);
 }
 
 static TIMER_CALLBACK( realpunc_interrupt3 )//3
 {
 	taitob_state *state = machine.driver_data<taitob_state>();
-	device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
+	state->m_maincpu->set_input_line(3, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( realpunc_interrupt )//2
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(10000), FUNC(realpunc_interrupt3));
-	device_set_input_line(device, 2, HOLD_LINE);
+	device->execute().set_input_line(2, HOLD_LINE);
 }
 
 
@@ -394,7 +394,7 @@ WRITE16_MEMBER(taitob_state::gain_control_w)
 
 INPUT_CHANGED_MEMBER(taitob_state::realpunc_sensor)
 {
-	device_set_input_line(m_maincpu, 4, HOLD_LINE);
+	m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
 /***************************************************************************
@@ -1906,7 +1906,7 @@ GFXDECODE_END
 static void irqhandler( device_t *device, int irq )
 {
 	taitob_state *state = device->machine().driver_data<taitob_state>();
-	device_set_input_line(state->m_audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
@@ -2013,28 +2013,26 @@ static const tc0140syt_interface taitob_tc0140syt_intf =
 	"maincpu", "audiocpu"
 };
 
-static MACHINE_START( taitob )
+void taitob_state::machine_start()
 {
-	taitob_state *state = machine.driver_data<taitob_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_mb87078 = machine.device("mb87078");
-	state->m_ym = machine.device("ymsnd");
-	state->m_tc0180vcu = machine.device("tc0180vcu");
-	state->m_tc0640fio = machine.device("tc0640fio");
-	state->m_tc0220ioc = machine.device("tc0220ioc");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_mb87078 = machine().device("mb87078");
+	m_ym = machine().device("ymsnd");
+	m_tc0180vcu = machine().device("tc0180vcu");
+	m_tc0640fio = machine().device("tc0640fio");
+	m_tc0220ioc = machine().device("tc0220ioc");
 
-	state->save_item(NAME(state->m_eep_latch));
-	state->save_item(NAME(state->m_coin_word));
+	save_item(NAME(m_eep_latch));
+	save_item(NAME(m_coin_word));
 }
 
-static MACHINE_RESET( taitob )
+void taitob_state::machine_reset()
 {
-	taitob_state *state = machine.driver_data<taitob_state>();
 
-	state->m_eep_latch = 0;
-	state->m_coin_word = 0;
+	m_eep_latch = 0;
+	m_coin_word = 0;
 }
 
 static MACHINE_CONFIG_START( rastsag2, taitob_state )
@@ -2049,8 +2047,6 @@ static MACHINE_CONFIG_START( rastsag2, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2066,7 +2062,7 @@ static MACHINE_CONFIG_START( rastsag2, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order0)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order0)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color0_tc0180vcu_intf)
 
@@ -2095,8 +2091,6 @@ static MACHINE_CONFIG_START( ashura, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2112,7 +2106,7 @@ static MACHINE_CONFIG_START( ashura, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order0)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order0)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color0_tc0180vcu_intf)
 
@@ -2141,8 +2135,6 @@ static MACHINE_CONFIG_START( crimec, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2158,7 +2150,7 @@ static MACHINE_CONFIG_START( crimec, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order1)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order1)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color1_tc0180vcu_intf)
 
@@ -2187,8 +2179,6 @@ static MACHINE_CONFIG_START( tetrist, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2204,7 +2194,7 @@ static MACHINE_CONFIG_START( tetrist, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order0)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order0)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color0_tc0180vcu_intf)
 
@@ -2232,8 +2222,6 @@ static MACHINE_CONFIG_START( tetrista, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2249,7 +2237,7 @@ static MACHINE_CONFIG_START( tetrista, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order2)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order2)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color2_tc0180vcu_intf)
 
@@ -2278,8 +2266,6 @@ static MACHINE_CONFIG_START( hitice, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2295,8 +2281,8 @@ static MACHINE_CONFIG_START( hitice, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(hitice)
-	MCFG_VIDEO_RESET(hitice)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,hitice)
+	MCFG_VIDEO_RESET_OVERRIDE(taitob_state,hitice)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color0_tc0180vcu_intf)
 
@@ -2329,8 +2315,6 @@ static MACHINE_CONFIG_START( rambo3p, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2346,7 +2330,7 @@ static MACHINE_CONFIG_START( rambo3p, taitob_state )
 	MCFG_GFXDECODE(rambo3)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order0)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order0)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color0_tc0180vcu_intf)
 
@@ -2375,8 +2359,6 @@ static MACHINE_CONFIG_START( rambo3, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2392,7 +2374,7 @@ static MACHINE_CONFIG_START( rambo3, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order2)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order2)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color2_tc0180vcu_intf)
 
@@ -2418,8 +2400,6 @@ static MACHINE_CONFIG_START( pbobble, taitob_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -2441,7 +2421,7 @@ static MACHINE_CONFIG_START( pbobble, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order1)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order1)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color1_tc0180vcu_intf)
 
@@ -2470,8 +2450,6 @@ static MACHINE_CONFIG_START( spacedx, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_EEPROM_ADD("eeprom", taitob_eeprom_intf)
 
@@ -2491,7 +2469,7 @@ static MACHINE_CONFIG_START( spacedx, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order1)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order1)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color1_tc0180vcu_intf)
 
@@ -2520,8 +2498,6 @@ static MACHINE_CONFIG_START( spacedxo, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2537,7 +2513,7 @@ static MACHINE_CONFIG_START( spacedxo, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order2)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order2)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color2_tc0180vcu_intf)
 
@@ -2566,8 +2542,6 @@ static MACHINE_CONFIG_START( qzshowby, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_EEPROM_ADD("eeprom", taitob_eeprom_intf)
 
@@ -2587,7 +2561,7 @@ static MACHINE_CONFIG_START( qzshowby, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order1)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order1)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color1_tc0180vcu_intf)
 
@@ -2616,8 +2590,6 @@ static MACHINE_CONFIG_START( viofight, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2633,7 +2605,7 @@ static MACHINE_CONFIG_START( viofight, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order2)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order2)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color2_tc0180vcu_intf)
 
@@ -2665,8 +2637,6 @@ static MACHINE_CONFIG_START( masterw, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2682,7 +2652,7 @@ static MACHINE_CONFIG_START( masterw, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order2)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order2)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color2_tc0180vcu_intf)
 
@@ -2712,8 +2682,6 @@ static MACHINE_CONFIG_START( silentd, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2729,7 +2697,7 @@ static MACHINE_CONFIG_START( silentd, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order2)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order2)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color2_tc0180vcu_intf)
 
@@ -2758,8 +2726,6 @@ static MACHINE_CONFIG_START( selfeena, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2775,7 +2741,7 @@ static MACHINE_CONFIG_START( selfeena, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order2)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order2)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color2_tc0180vcu_intf)
 
@@ -2813,8 +2779,6 @@ static MACHINE_CONFIG_START( ryujin, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitob_io_intf)
 
@@ -2830,7 +2794,7 @@ static MACHINE_CONFIG_START( ryujin, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order2)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order2)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color2_tc0180vcu_intf)
 
@@ -2866,8 +2830,6 @@ static MACHINE_CONFIG_START( sbm, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0510NIO_ADD("tc0510nio", sbm_io_intf)
 
@@ -2883,7 +2845,7 @@ static MACHINE_CONFIG_START( sbm, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitob_color_order0)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,taitob_color_order0)
 
 	MCFG_TC0180VCU_ADD("tc0180vcu", color0_tc0180vcu_intf)
 
@@ -2917,8 +2879,6 @@ static MACHINE_CONFIG_START( realpunc, taitob_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_START(taitob)
-	MCFG_MACHINE_RESET(taitob)
 
 	MCFG_TC0510NIO_ADD("tc0510nio", realpunc_io_intf)
 
@@ -2934,7 +2894,7 @@ static MACHINE_CONFIG_START( realpunc, taitob_state )
 	MCFG_GFXDECODE(taito_b)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(realpunc)
+	MCFG_VIDEO_START_OVERRIDE(taitob_state,realpunc)
 	MCFG_SCREEN_UPDATE_STATIC(realpunc)
 
 	MCFG_HD63484_ADD("hd63484", realpunc_hd63484_intf)

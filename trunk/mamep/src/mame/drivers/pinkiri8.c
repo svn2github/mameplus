@@ -75,6 +75,7 @@ public:
 	DECLARE_READ8_MEMBER(ronjan_prot_status_r);
 	DECLARE_READ8_MEMBER(ronjan_patched_prot_r);
 	DECLARE_DRIVER_INIT(ronjan);
+	virtual void video_start();
 };
 
 
@@ -162,7 +163,7 @@ const address_space_config *janshi_vdp_device::memory_space_config(address_space
 
 
 
-static VIDEO_START( pinkiri8 )
+void pinkiri8_state::video_start()
 {
 
 }
@@ -204,7 +205,7 @@ static SCREEN_UPDATE_IND16( pinkiri8 )
 {
 	pinkiri8_state *state = screen.machine().driver_data<pinkiri8_state>();
 	int col_bank;
-	const gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 
 	/* update palette */
 	for (int pen = 0; pen < 0x800 ; pen++)
@@ -424,7 +425,7 @@ ADDRESS_MAP_END
 WRITE8_MEMBER(pinkiri8_state::output_regs_w)
 {
 	if(data & 0x40)
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 	//data & 0x80 is probably NMI mask
 }
 
@@ -1143,7 +1144,6 @@ static MACHINE_CONFIG_START( pinkiri8, pinkiri8_state )
 	MCFG_GFXDECODE(pinkiri8)
 	MCFG_PALETTE_LENGTH(0x2000)
 
-	MCFG_VIDEO_START(pinkiri8)
 
 	MCFG_DEVICE_ADD("janshivdp", JANSHIVDP, 0)
 

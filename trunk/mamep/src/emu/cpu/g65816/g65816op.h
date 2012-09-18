@@ -59,12 +59,14 @@
 INLINE uint g65816i_read_8_normal(g65816i_cpu_struct *cpustate, uint address)
 {
 	address = ADDRESS_65816(address);
+	CLOCKS -= (bus_5A22_cycle_burst(cpustate,address));
 	return g65816_read_8(address);
 }
 
 INLINE uint g65816i_read_8_immediate(g65816i_cpu_struct *cpustate, uint address)
 {
 	address = ADDRESS_65816(address);
+	CLOCKS -= (bus_5A22_cycle_burst(cpustate,address));
 	return g65816_read_8_immediate(address);
 }
 
@@ -76,6 +78,7 @@ INLINE uint g65816i_read_8_direct(g65816i_cpu_struct *cpustate, uint address)
 #else
 	address = ADDRESS_65816(address);
 #endif
+	CLOCKS -= (bus_5A22_cycle_burst(cpustate,address));
 	return g65816_read_8(address);
 }
 
@@ -90,6 +93,7 @@ INLINE uint g65816i_read_8_vector(g65816i_cpu_struct *cpustate, uint address)
 INLINE void g65816i_write_8_normal(g65816i_cpu_struct *cpustate, uint address, uint value)
 {
 	address = ADDRESS_65816(address);
+	CLOCKS -= (bus_5A22_cycle_burst(cpustate,address));
 	g65816_write_8(address, MAKE_UINT_8(value));
 }
 
@@ -101,6 +105,7 @@ INLINE void g65816i_write_8_direct(g65816i_cpu_struct *cpustate, uint address, u
 #else
 	address = ADDRESS_65816(address);
 #endif
+	CLOCKS -= (bus_5A22_cycle_burst(cpustate,address));
 	g65816_write_8(address, MAKE_UINT_8(value));
 }
 
@@ -2299,6 +2304,7 @@ TABLE_FUNCTION(uint, get_reg, (g65816i_cpu_struct *cpustate, int regnum))
 		case G65816_NMI_STATE: return LINE_NMI;
 		case G65816_IRQ_STATE: return LINE_IRQ;
 		case STATE_GENPCBASE: return REGISTER_PPC;
+		case _5A22_FASTROM: return cpustate->fastROM;
 	}
 	return 0;
 }
@@ -2332,6 +2338,7 @@ TABLE_FUNCTION(void, set_reg, (g65816i_cpu_struct *cpustate, int regnum, uint va
 		case G65816_PB: REGISTER_PB = MAKE_UINT_8(val); break;
 		case G65816_NMI_STATE: FTABLE_SET_LINE(cpustate, G65816_LINE_NMI, val == 0 ? CLEAR_LINE : ASSERT_LINE); break;
 		case G65816_IRQ_STATE: FTABLE_SET_LINE(cpustate, G65816_LINE_IRQ, val == 0 ? CLEAR_LINE : ASSERT_LINE); break;
+		case _5A22_FASTROM: cpustate->fastROM = val; break;
 	}
 }
 

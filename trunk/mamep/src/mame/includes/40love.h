@@ -56,7 +56,7 @@ public:
 	UINT8		m_snd_ctrl3;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE8_MEMBER(sound_command_w);
 	DECLARE_WRITE8_MEMBER(nmi_disable_w);
 	DECLARE_WRITE8_MEMBER(nmi_enable_w);
@@ -86,12 +86,21 @@ public:
 	DECLARE_WRITE8_MEMBER(sound_control_3_w);
 	DECLARE_DRIVER_INIT(undoukai);
 	DECLARE_DRIVER_INIT(40love);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_MACHINE_START(40love);
+	DECLARE_MACHINE_RESET(40love);
+	DECLARE_MACHINE_START(undoukai);
+	DECLARE_MACHINE_RESET(undoukai);
+	DECLARE_MACHINE_RESET(common);
+	DECLARE_MACHINE_RESET(ta7630);
 };
 
 
 /*----------- defined in video/40love.c -----------*/
 
 
-VIDEO_START( fortyl );
+
 SCREEN_UPDATE_IND16( fortyl );
-PALETTE_INIT( fortyl );
+

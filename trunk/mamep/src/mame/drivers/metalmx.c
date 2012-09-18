@@ -264,7 +264,7 @@ Logic:
  *
  *************************************/
 
-static MACHINE_RESET( metalmx );
+
 
 
 /*************************************
@@ -273,7 +273,7 @@ static MACHINE_RESET( metalmx );
  *
  *************************************/
 
-static VIDEO_START( metalmx )
+void metalmx_state::video_start()
 {
 
 }
@@ -333,8 +333,8 @@ WRITE32_MEMBER(metalmx_state::reset_w)
 	if (ACCESSING_BITS_16_31)
 	{
 		data >>= 16;
-		device_set_input_line(m_dsp32c_1, INPUT_LINE_RESET, data & 2 ? CLEAR_LINE : ASSERT_LINE);
-		device_set_input_line(m_dsp32c_2, INPUT_LINE_RESET, data & 1 ? CLEAR_LINE : ASSERT_LINE);
+		m_dsp32c_1->set_input_line(INPUT_LINE_RESET, data & 2 ? CLEAR_LINE : ASSERT_LINE);
+		m_dsp32c_2->set_input_line(INPUT_LINE_RESET, data & 1 ? CLEAR_LINE : ASSERT_LINE);
 	}
 }
 
@@ -493,7 +493,7 @@ WRITE32_MEMBER(metalmx_state::host_vram_w)
 
 static void tms_interrupt(device_t *device, int state)
 {
-	cputag_set_input_line(device->machine(), "maincpu", 4, state ? HOLD_LINE : CLEAR_LINE);
+	device->machine().device("maincpu")->execute().set_input_line(4, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 
@@ -750,7 +750,6 @@ static MACHINE_CONFIG_START( metalmx, metalmx_state )
 	MCFG_CPU_CONFIG(dsp32c_config)
 	MCFG_CPU_PROGRAM_MAP(dsp32c_2_map)
 
-	MCFG_MACHINE_RESET(metalmx)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -762,7 +761,6 @@ static MACHINE_CONFIG_START( metalmx, metalmx_state )
 	MCFG_PALETTE_LENGTH(65536)
 	MCFG_PALETTE_INIT(RRRRR_GGGGGG_BBBBB)
 
-	MCFG_VIDEO_START(metalmx)
 
 	MCFG_FRAGMENT_ADD(cage)
 MACHINE_CONFIG_END
@@ -778,12 +776,11 @@ DRIVER_INIT_MEMBER(metalmx_state,metalmx)
 	cage_set_irq_handler(cage_irq_callback);
 }
 
-static MACHINE_RESET( metalmx )
+void metalmx_state::machine_reset()
 {
-	metalmx_state *state = machine.driver_data<metalmx_state>();
 
-	device_set_input_line(state->m_dsp32c_1, INPUT_LINE_RESET, ASSERT_LINE);
-	device_set_input_line(state->m_dsp32c_2, INPUT_LINE_RESET, ASSERT_LINE);
+	m_dsp32c_1->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_dsp32c_2->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 

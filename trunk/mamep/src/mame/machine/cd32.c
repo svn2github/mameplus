@@ -81,7 +81,7 @@ INLINE akiko_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == AKIKO);
 
-	return (akiko_state *)downcast<legacy_device_base *>(device)->token();
+	return (akiko_state *)downcast<akiko_device *>(device)->token();
 }
 
 static DEVICE_STOP( akiko )
@@ -779,7 +779,7 @@ READ32_DEVICE_HANDLER( amiga_akiko32_r )
 
 	if ( LOG_AKIKO && offset < (0x30/4) )
 	{
-		logerror( "Reading AKIKO reg %0x [%s] at PC=%06x\n", offset, get_akiko_reg_name(offset), cpu_get_pc(&space->device()) );
+		logerror( "Reading AKIKO reg %0x [%s] at PC=%06x\n", offset, get_akiko_reg_name(offset), space->device().safe_pc() );
 	}
 
 	switch( offset )
@@ -842,7 +842,7 @@ WRITE32_DEVICE_HANDLER( amiga_akiko32_w )
 
 	if ( LOG_AKIKO && offset < (0x30/4) )
 	{
-		logerror( "Writing AKIKO reg %0x [%s] with %08x at PC=%06x\n", offset, get_akiko_reg_name(offset), data, cpu_get_pc(&space->device()) );
+		logerror( "Writing AKIKO reg %0x [%s] with %08x at PC=%06x\n", offset, get_akiko_reg_name(offset), data, space->device().safe_pc() );
 	}
 
 	switch( offset )
@@ -913,17 +913,49 @@ WRITE32_DEVICE_HANDLER( amiga_akiko32_w )
 	}
 }
 
-/*-------------------------------------------------
-    device definition
--------------------------------------------------*/
+const device_type AKIKO = &device_creator<akiko_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+akiko_device::akiko_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, AKIKO, "Akiko", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(akiko_state));
+}
 
-#define DEVTEMPLATE_ID(p,s)		p##akiko##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_STOP | DT_HAS_RESET
-#define DEVTEMPLATE_NAME		"Akiko"
-#define DEVTEMPLATE_FAMILY		"Amiga"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void akiko_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void akiko_device::device_start()
+{
+	DEVICE_START_NAME( akiko )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void akiko_device::device_reset()
+{
+	DEVICE_RESET_NAME( akiko )(this);
+}
+
+//-------------------------------------------------
+//  device_stop - device-specific stop
+//-------------------------------------------------
+
+void akiko_device::device_stop()
+{
+	DEVICE_STOP_NAME( akiko )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(AKIKO, akiko);

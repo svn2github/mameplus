@@ -265,6 +265,9 @@ public:
 	DECLARE_DRIVER_INIT(crmaze3a);
 	DECLARE_DRIVER_INIT(skiltrek);
 	DECLARE_DRIVER_INIT(crmaze3);
+	DECLARE_MACHINE_START(mpu4_vid);
+	DECLARE_MACHINE_RESET(mpu4_vid);
+	DECLARE_VIDEO_START(mpu4_vid);
 };
 
 
@@ -300,9 +303,9 @@ static WRITE16_HANDLER( bwb_characteriser16_w );
 static void update_mpu68_interrupts(running_machine &machine)
 {
 	mpu4vid_state *state = machine.driver_data<mpu4vid_state>();
-	cputag_set_input_line(machine, "video", 1, state->m_m6840_irq_state ? ASSERT_LINE : CLEAR_LINE);
-	cputag_set_input_line(machine, "video", 2, state->m_m6850_irq_state ? CLEAR_LINE : ASSERT_LINE);
-	cputag_set_input_line(machine, "video", 3, state->m_scn2674->get_irq_state() ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("video")->execute().set_input_line(1, state->m_m6840_irq_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("video")->execute().set_input_line(2, state->m_m6850_irq_state ? CLEAR_LINE : ASSERT_LINE);
+	machine.device("video")->execute().set_input_line(3, state->m_scn2674->get_irq_state() ? ASSERT_LINE : CLEAR_LINE);
 }
 
 /* Communications with 6809 board */
@@ -341,7 +344,7 @@ static WRITE_LINE_DEVICE_HANDLER( m6809_acia_irq )
 {
 	mpu4vid_state *drvstate = device->machine().driver_data<mpu4vid_state>();
 	drvstate->m_m68k_acia_cts = !state;
-	cputag_set_input_line(device->machine(), "maincpu", M6809_IRQ_LINE, state ? CLEAR_LINE : ASSERT_LINE);
+	device->machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, state ? CLEAR_LINE : ASSERT_LINE);
 }
 
 static ACIA6850_INTERFACE( m6809_acia_if )
@@ -532,37 +535,36 @@ static WRITE16_HANDLER( mpu4_vid_vidram_w )
 	mpu4vid_state *state = space->machine().driver_data<mpu4vid_state>();
 	COMBINE_DATA(&state->m_vid_vidram[offset]);
 	offset <<= 1;
-	gfx_element_mark_dirty(space->machine().gfx[state->m_gfx_index+0], offset/0x20);
-	gfx_element_mark_dirty(space->machine().gfx[state->m_gfx_index+1], offset/0x20);
-	gfx_element_mark_dirty(space->machine().gfx[state->m_gfx_index+2], offset/0x20);
-	gfx_element_mark_dirty(space->machine().gfx[state->m_gfx_index+3], offset/0x20);
+	space->machine().gfx[state->m_gfx_index+0]->mark_dirty(offset/0x20);
+	space->machine().gfx[state->m_gfx_index+1]->mark_dirty(offset/0x20);
+	space->machine().gfx[state->m_gfx_index+2]->mark_dirty(offset/0x20);
+	space->machine().gfx[state->m_gfx_index+3]->mark_dirty(offset/0x20);
 }
 
 
-static VIDEO_START( mpu4_vid )
+VIDEO_START_MEMBER(mpu4vid_state,mpu4_vid)
 {
-	mpu4vid_state *state = machine.driver_data<mpu4vid_state>();
 	/* if anything uses tile sizes other than 8x8 we can't really do it this way.. we'll have to draw tiles by hand.
       All Barcrest stuff uses 8x8, son unless the BwB is different, we don't need to */
 
-	state->m_vid_vidram.allocate(0x20000/2);
+	m_vid_vidram.allocate(0x20000/2);
 
-	memset(state->m_vid_vidram,0,0x20000);
+	memset(m_vid_vidram,0,0x20000);
 
 	/* find first empty slot to decode gfx */
-	for (state->m_gfx_index = 0; state->m_gfx_index < MAX_GFX_ELEMENTS; state->m_gfx_index++)
-		if (machine.gfx[state->m_gfx_index] == 0)
+	for (m_gfx_index = 0; m_gfx_index < MAX_GFX_ELEMENTS; m_gfx_index++)
+		if (machine().gfx[m_gfx_index] == 0)
 			break;
 
-	assert(state->m_gfx_index != MAX_GFX_ELEMENTS);
+	assert(m_gfx_index != MAX_GFX_ELEMENTS);
 
 	/* create the char set (gfx will then be updated dynamically from RAM) */
-	machine.gfx[state->m_gfx_index+0] = gfx_element_alloc(machine, &mpu4_vid_char_8x8_layout, reinterpret_cast<UINT8 *>(state->m_vid_vidram.target()), machine.total_colors() / 16, 0);
-	machine.gfx[state->m_gfx_index+1] = gfx_element_alloc(machine, &mpu4_vid_char_8x16_layout, reinterpret_cast<UINT8 *>(state->m_vid_vidram.target()), machine.total_colors() / 16, 0);
-	machine.gfx[state->m_gfx_index+2] = gfx_element_alloc(machine, &mpu4_vid_char_16x8_layout, reinterpret_cast<UINT8 *>(state->m_vid_vidram.target()), machine.total_colors() / 16, 0);
-	machine.gfx[state->m_gfx_index+3] = gfx_element_alloc(machine, &mpu4_vid_char_16x16_layout, reinterpret_cast<UINT8 *>(state->m_vid_vidram.target()), machine.total_colors() / 16, 0);
+	machine().gfx[m_gfx_index+0] = auto_alloc(machine(), gfx_element(machine(), mpu4_vid_char_8x8_layout, reinterpret_cast<UINT8 *>(m_vid_vidram.target()), machine().total_colors() / 16, 0));
+	machine().gfx[m_gfx_index+1] = auto_alloc(machine(), gfx_element(machine(), mpu4_vid_char_8x16_layout, reinterpret_cast<UINT8 *>(m_vid_vidram.target()), machine().total_colors() / 16, 0));
+	machine().gfx[m_gfx_index+2] = auto_alloc(machine(), gfx_element(machine(), mpu4_vid_char_16x8_layout, reinterpret_cast<UINT8 *>(m_vid_vidram.target()), machine().total_colors() / 16, 0));
+	machine().gfx[m_gfx_index+3] = auto_alloc(machine(), gfx_element(machine(), mpu4_vid_char_16x16_layout, reinterpret_cast<UINT8 *>(m_vid_vidram.target()), machine().total_colors() / 16, 0));
 
-	state->m_scn2674->init_stuff();
+	m_scn2674->init_stuff();
 
 
 }
@@ -1353,43 +1355,41 @@ static void video_reset(device_t *device)
 }
 
 /* machine start (called only once) */
-static MACHINE_START( mpu4_vid )
+MACHINE_START_MEMBER(mpu4vid_state,mpu4_vid)
 {
-	mpu4_state *state = machine.driver_data<mpu4_state>();
-	mpu4_config_common(machine);
+	mpu4_config_common(machine());
 
-	state->m_mod_number=4; //No AY chip
+	m_mod_number=4; //No AY chip
 	/* setup communications */
-	state->m_link7a_connected = 1;
+	m_link7a_connected = 1;
 
 	/* setup 8 mechanical meters */
-	MechMtr_config(machine,8);
+	MechMtr_config(machine(),8);
 
 	/* Hook the reset line */
-	m68k_set_reset_callback(machine.device("video"), video_reset);
+	m68k_set_reset_callback(machine().device("video"), ::video_reset);
 }
 
-static MACHINE_RESET( mpu4_vid )
+MACHINE_RESET_MEMBER(mpu4vid_state,mpu4_vid)
 {
-	mpu4_state *state = machine.driver_data<mpu4_state>();
-	state->m_vfd->reset(); //for debug ports only
+	m_vfd->reset(); //for debug ports only
 
-	mpu4_stepper_reset(state);
+	mpu4_stepper_reset(this);
 
-	state->m_lamp_strobe    = 0;
-	state->m_lamp_strobe2   = 0;
-	state->m_led_strobe     = 0;
+	m_lamp_strobe    = 0;
+	m_lamp_strobe2   = 0;
+	m_led_strobe     = 0;
 
-	state->m_IC23GC    = 0;
-	state->m_IC23GB    = 0;
-	state->m_IC23GA    = 0;
-	state->m_IC23G1    = 1;
-	state->m_IC23G2A   = 0;
-	state->m_IC23G2B   = 0;
+	m_IC23GC    = 0;
+	m_IC23GB    = 0;
+	m_IC23GA    = 0;
+	m_IC23G1    = 1;
+	m_IC23G2A   = 0;
+	m_IC23G2B   = 0;
 
-	state->m_prot_col  = 0;
-	state->m_chr_counter    = 0;
-	state->m_chr_value		= 0;
+	m_prot_col  = 0;
+	m_chr_counter    = 0;
+	m_chr_value		= 0;
 }
 
 static ADDRESS_MAP_START( mpu4_68k_map, AS_PROGRAM, 16, mpu4vid_state )
@@ -1528,9 +1528,9 @@ static MACHINE_CONFIG_START( mpu4_vid, mpu4vid_state )
 
 //  MCFG_QUANTUM_TIME(attotime::from_hz(960))
 
-	MCFG_MACHINE_START(mpu4_vid)
-	MCFG_MACHINE_RESET(mpu4_vid)
-	MCFG_VIDEO_START (mpu4_vid)
+	MCFG_MACHINE_START_OVERRIDE(mpu4vid_state,mpu4_vid)
+	MCFG_MACHINE_RESET_OVERRIDE(mpu4vid_state,mpu4_vid)
+	MCFG_VIDEO_START_OVERRIDE (mpu4vid_state,mpu4_vid)
 
 	MCFG_PALETTE_LENGTH(16)
 
@@ -1600,11 +1600,11 @@ static WRITE16_HANDLER( characteriser16_w )
 	mpu4_state *state = space->machine().driver_data<mpu4_state>();
 	int x;
 	int call=data;
-	LOG_CHR_FULL(("%04x Characteriser write offset %02X data %02X", cpu_get_previouspc(&space->device()),offset,data));
+	LOG_CHR_FULL(("%04x Characteriser write offset %02X data %02X", space->device().safe_pcbase(),offset,data));
 
 	if (!state->m_current_chr_table)
 	{
-		logerror("No Characteriser Table @ %04x\n", cpu_get_previouspc(&space->device()));
+		logerror("No Characteriser Table @ %04x\n", space->device().safe_pcbase());
 		return;
 	}
 
@@ -1630,19 +1630,19 @@ static WRITE16_HANDLER( characteriser16_w )
 static READ16_HANDLER( characteriser16_r )
 {
 	mpu4_state *state = space->machine().driver_data<mpu4_state>();
-	LOG_CHR_FULL(("%04x Characteriser read offset %02X,data %02X", cpu_get_previouspc(&space->device()),offset,state->m_current_chr_table[state->m_prot_col].response));
+	LOG_CHR_FULL(("%04x Characteriser read offset %02X,data %02X", space->device().safe_pcbase(),offset,state->m_current_chr_table[state->m_prot_col].response));
 	LOG_CHR(("Characteriser read offset %02X \n",offset));
 	LOG_CHR(("Characteriser read data %02X \n",state->m_current_chr_table[state->m_prot_col].response));
 
 	if (!state->m_current_chr_table)
 	{
-		logerror("No Characteriser Table @ %04x\n", cpu_get_previouspc(&space->device()));
+		logerror("No Characteriser Table @ %04x\n", space->device().safe_pcbase());
 		return 0x00;
 	}
 
 
 	/* hack for 'invalid questions' error on time machine.. I guess it wants them to decode properly for startup check? */
-	if (cpu_get_previouspc(&space->device())==0x283a)
+	if (space->device().safe_pcbase()==0x283a)
 	{
 		return 0x00;
 	}
@@ -1672,10 +1672,10 @@ static WRITE16_HANDLER( bwb_characteriser16_w )
 	mpu4_state *state = space->machine().driver_data<mpu4_state>();
 	int x;
 	int call=data &0xff;
-	LOG_CHR_FULL(("%04x Characteriser write offset %02X data %02X \n", cpu_get_previouspc(&space->device()),offset,data));
+	LOG_CHR_FULL(("%04x Characteriser write offset %02X data %02X \n", space->device().safe_pcbase(),offset,data));
 	if (!state->m_current_chr_table)
 	{
-		logerror("No Characteriser Table @ %04x\n", cpu_get_previouspc(&space->device()));
+		logerror("No Characteriser Table @ %04x\n", space->device().safe_pcbase());
 		return;
 	}
 

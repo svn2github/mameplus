@@ -115,26 +115,26 @@ public:
 	DECLARE_WRITE8_MEMBER(eeprom_clockline_w);
 	DECLARE_WRITE8_MEMBER(eeprom_dataline_w);
 	DECLARE_DRIVER_INIT(spool99);
+	TILE_GET_INFO_MEMBER(get_spool99_tile_info);
+	virtual void video_start();
 };
 
-static TILE_GET_INFO( get_spool99_tile_info )
+TILE_GET_INFO_MEMBER(spool99_state::get_spool99_tile_info)
 {
-	spool99_state *state = machine.driver_data<spool99_state>();
-	int code = ((state->m_vram[tile_index*2+1]<<8) | (state->m_vram[tile_index*2+0]));
-	int color = state->m_cram[tile_index*2+0];
+	int code = ((m_vram[tile_index*2+1]<<8) | (m_vram[tile_index*2+0]));
+	int color = m_cram[tile_index*2+0];
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code & 0x3fff,
 			color & 0x1f,
 			0);
 }
 
-static VIDEO_START(spool99)
+void spool99_state::video_start()
 {
-	spool99_state *state = machine.driver_data<spool99_state>();
 
-	state->m_sc0_tilemap = tilemap_create(machine, get_spool99_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
+	m_sc0_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(spool99_state::get_spool99_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 }
 
 static SCREEN_UPDATE_IND16(spool99)
@@ -276,7 +276,7 @@ static ADDRESS_MAP_START( vcarn_map, AS_PROGRAM, 8, spool99_state )
 	AM_RANGE(0xa800, 0xabff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_byte_le_w) AM_SHARE("paletteram")
 
 	AM_RANGE(0xb000, 0xdfff) AM_RAM
-//  AM_RANGE(0xdf00, 0xdfff) AM_READWRITE(vcarn_io_r,vcarn_io_w) AM_BASE_LEGACY(&vcarn_io)
+//  AM_RANGE(0xdf00, 0xdfff) AM_READWRITE(vcarn_io_r,vcarn_io_w) AM_SHARE("vcarn_io")
 	AM_RANGE(0xe000, 0xefff) AM_RAM_WRITE(spool99_vram_w) AM_SHARE("vram")
 	AM_RANGE(0xf000, 0xffff) AM_RAM_WRITE(spool99_cram_w) AM_SHARE("cram")
 ADDRESS_MAP_END
@@ -367,7 +367,6 @@ static MACHINE_CONFIG_START( spool99, spool99_state )
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_VIDEO_START(spool99)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

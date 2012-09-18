@@ -16,7 +16,7 @@ static UINT32 fifoout_pop(address_space *space)
 	model1_state *state = space->machine().driver_data<model1_state>();
 	UINT32 v;
 	if(state->m_fifoout_wpos == state->m_fifoout_rpos) {
-		fatalerror("TGP FIFOOUT underflow (%x)\n", cpu_get_pc(&space->device()));
+		fatalerror("TGP FIFOOUT underflow (%x)\n", space->device().safe_pc());
 	}
 	v = state->m_fifoout_data[state->m_fifoout_rpos++];
 	if(state->m_fifoout_rpos == FIFO_SIZE)
@@ -60,7 +60,7 @@ static UINT32 fifoin_pop(model1_state *state)
 static void fifoin_push(address_space *space, UINT32 data)
 {
 	model1_state *state = space->machine().driver_data<model1_state>();
-	//  logerror("TGP FIFOIN write %08x (%x)\n", data, cpu_get_pc(&space->device()));
+	//  logerror("TGP FIFOIN write %08x (%x)\n", data, space->device().safe_pc());
 	state->m_fifoin_data[state->m_fifoin_wpos++] = data;
 	if(state->m_fifoin_wpos == FIFO_SIZE)
 		state->m_fifoin_wpos = 0;
@@ -1948,7 +1948,7 @@ WRITE16_MEMBER(model1_state::model1_tgp_copro_w)
 {
 	if(offset) {
 		m_copro_w = (m_copro_w & 0x0000ffff) | (data << 16);
-		m_pushpc = cpu_get_pc(&space.device());
+		m_pushpc = space.device().safe_pc();
 		fifoin_push(&space, m_copro_w);
 	} else
 		m_copro_w = (m_copro_w & 0xffff0000) | data;
@@ -1967,7 +1967,7 @@ WRITE16_MEMBER(model1_state::model1_tgp_copro_adr_w)
 READ16_MEMBER(model1_state::model1_tgp_copro_ram_r)
 {
 	if(!offset) {
-		logerror("TGP f0 ram read %04x, %08x (%f) (%x)\n", m_ram_adr, m_ram_data[m_ram_adr], u2f(m_ram_data[m_ram_adr]), cpu_get_pc(&space.device()));
+		logerror("TGP f0 ram read %04x, %08x (%f) (%x)\n", m_ram_adr, m_ram_data[m_ram_adr], u2f(m_ram_data[m_ram_adr]), space.device().safe_pc());
 		return m_ram_data[m_ram_adr];
 	} else
 		return m_ram_data[m_ram_adr++] >> 16;
@@ -1978,33 +1978,32 @@ WRITE16_MEMBER(model1_state::model1_tgp_copro_ram_w)
 	COMBINE_DATA(m_ram_latch+offset);
 	if(offset) {
 		UINT32 v = m_ram_latch[0]|(m_ram_latch[1]<<16);
-		logerror("TGP f0 ram write %04x, %08x (%f) (%x)\n", m_ram_adr, v, u2f(v), cpu_get_pc(&space.device()));
+		logerror("TGP f0 ram write %04x, %08x (%f) (%x)\n", m_ram_adr, v, u2f(v), space.device().safe_pc());
 		m_ram_data[m_ram_adr] = v;
 		m_ram_adr++;
 	}
 }
 
-MACHINE_START( model1 )
+MACHINE_START_MEMBER(model1_state,model1)
 {
-	model1_state *state = machine.driver_data<model1_state>();
-	state->m_ram_data = auto_alloc_array(machine, UINT32, 0x10000);
+	m_ram_data = auto_alloc_array(machine(), UINT32, 0x10000);
 
-	state_save_register_global_pointer(machine, state->m_ram_data, 0x10000);
-	state_save_register_global(machine, state->m_ram_adr);
-	state_save_register_global(machine, state->m_ram_scanadr);
-	state_save_register_global_array(machine, state->m_ram_latch);
-	state_save_register_global(machine, state->m_fifoout_rpos);
-	state_save_register_global(machine, state->m_fifoout_wpos);
-	state_save_register_global_array(machine, state->m_fifoout_data);
-	state_save_register_global(machine, state->m_fifoin_rpos);
-	state_save_register_global(machine, state->m_fifoin_wpos);
-	state_save_register_global_array(machine, state->m_fifoin_data);
-	state_save_register_global_array(machine, state->m_cmat);
-	state_save_register_global_2d_array(machine, state->m_mat_stack);
-	state_save_register_global_2d_array(machine, state->m_mat_vector);
-	state_save_register_global(machine, state->m_mat_stack_pos);
-	state_save_register_global(machine, state->m_acc);
-	state_save_register_global(machine, state->m_list_length);
+	state_save_register_global_pointer(machine(), m_ram_data, 0x10000);
+	state_save_register_global(machine(), m_ram_adr);
+	state_save_register_global(machine(), m_ram_scanadr);
+	state_save_register_global_array(machine(), m_ram_latch);
+	state_save_register_global(machine(), m_fifoout_rpos);
+	state_save_register_global(machine(), m_fifoout_wpos);
+	state_save_register_global_array(machine(), m_fifoout_data);
+	state_save_register_global(machine(), m_fifoin_rpos);
+	state_save_register_global(machine(), m_fifoin_wpos);
+	state_save_register_global_array(machine(), m_fifoin_data);
+	state_save_register_global_array(machine(), m_cmat);
+	state_save_register_global_2d_array(machine(), m_mat_stack);
+	state_save_register_global_2d_array(machine(), m_mat_vector);
+	state_save_register_global(machine(), m_mat_stack_pos);
+	state_save_register_global(machine(), m_acc);
+	state_save_register_global(machine(), m_list_length);
 }
 
 void model1_tgp_reset(running_machine &machine, int swa)
@@ -2077,7 +2076,7 @@ static void copro_fifoin_push(address_space *space, UINT32 data)
 	model1_state *state = space->machine().driver_data<model1_state>();
 	if (state->m_copro_fifoin_num == FIFO_SIZE)
 	{
-		fatalerror("Copro FIFOIN overflow (at %08X)\n", cpu_get_pc(&space->device()));
+		fatalerror("Copro FIFOIN overflow (at %08X)\n", space->device().safe_pc());
 		return;
 	}
 
@@ -2123,7 +2122,7 @@ static void copro_fifoout_push(device_t *device, UINT32 data)
 	model1_state *state = device->machine().driver_data<model1_state>();
 	if (state->m_copro_fifoout_num == FIFO_SIZE)
 	{
-		fatalerror("Copro FIFOOUT overflow (at %08X)\n", cpu_get_pc(device));
+		fatalerror("Copro FIFOOUT overflow (at %08X)\n", device->safe_pc());
 		return;
 	}
 
@@ -2152,7 +2151,7 @@ READ16_MEMBER(model1_state::model1_tgp_vr_adr_r)
 	if ( m_ram_adr == 0 && m_copro_fifoin_num != 0 )
 	{
 		/* spin the main cpu and let the TGP catch up */
-		device_spin_until_time(&space.device(), attotime::from_usec(100));
+		space.device().execute().spin_until_time(attotime::from_usec(100));
 	}
 
 	return m_ram_adr;
@@ -2178,7 +2177,7 @@ READ16_MEMBER(model1_state::model1_vr_tgp_ram_r)
 		if ( m_ram_adr == 0 && r == 0xffff )
 		{
 			/* if the TGP is busy, spin some more */
-			device_spin_until_time(&space.device(), attotime::from_usec(100));
+			space.device().execute().spin_until_time(attotime::from_usec(100));
 		}
 
 		if ( m_ram_adr & 0x8000 )

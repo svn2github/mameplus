@@ -123,6 +123,24 @@ public:
 	DECLARE_DRIVER_INIT(rp36c3);
 	DECLARE_DRIVER_INIT(magoddsc);
 	DECLARE_DRIVER_INIT(nfb96_c1);
+	TILE_GET_INFO_MEMBER(get_goldstar_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_magical_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_cherrym_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_goldstar_reel1_tile_info);
+	TILE_GET_INFO_MEMBER(get_goldstar_reel2_tile_info);
+	TILE_GET_INFO_MEMBER(get_goldstar_reel3_tile_info);
+	TILE_GET_INFO_MEMBER(get_unkch_reel1_tile_info);
+	TILE_GET_INFO_MEMBER(get_unkch_reel2_tile_info);
+	TILE_GET_INFO_MEMBER(get_unkch_reel3_tile_info);
+	DECLARE_VIDEO_START(goldstar);
+	DECLARE_PALETTE_INIT(cm);
+	DECLARE_VIDEO_START(cherrym);
+	DECLARE_PALETTE_INIT(cmast91);
+	DECLARE_PALETTE_INIT(lucky8);
+	DECLARE_VIDEO_START(bingowng);
+	DECLARE_VIDEO_START(magical);
+	DECLARE_PALETTE_INIT(magodds);
+	DECLARE_VIDEO_START(unkch);
 };
 
 
@@ -131,11 +149,11 @@ public:
 
 
 
-VIDEO_START( goldstar );
-VIDEO_START( bingowng );
-VIDEO_START( cherrym );
-VIDEO_START( unkch );
-VIDEO_START( magical );
+
+
+
+
+
 SCREEN_UPDATE_IND16( goldstar );
 SCREEN_UPDATE_IND16( bingowng );
 SCREEN_UPDATE_IND16( cmast91 );

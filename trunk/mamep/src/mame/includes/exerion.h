@@ -46,7 +46,7 @@ public:
 	UINT8 m_portb;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_READ8_MEMBER(exerion_protection_r);
 	DECLARE_WRITE8_MEMBER(exerion_videoreg_w);
 	DECLARE_WRITE8_MEMBER(exerion_video_latch_w);
@@ -57,13 +57,17 @@ public:
 	DECLARE_WRITE8_MEMBER(exerion_portb_w);
 	DECLARE_DRIVER_INIT(exerion);
 	DECLARE_DRIVER_INIT(exerionb);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 
 /*----------- defined in video/exerion.c -----------*/
 
-PALETTE_INIT( exerion );
-VIDEO_START( exerion );
+
+
 SCREEN_UPDATE_IND16( exerion );
 

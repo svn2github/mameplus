@@ -202,7 +202,7 @@ static void create_tilemaps(running_machine &machine);
 #define SHOW_WRITE_ERROR(_format_,_offset_,_data_)\
 { \
 	popmessage(_format_,_offset_,_data_);\
-	logerror("CPU #0 PC %06X : Warning, ",cpu_get_pc(&space.device())); \
+	logerror("CPU #0 PC %06X : Warning, ",space.device().safe_pc()); \
 	logerror(_format_,_offset_,_data_);\
 	logerror("\n");\
 }
@@ -211,7 +211,7 @@ static void create_tilemaps(running_machine &machine);
 
 #define SHOW_WRITE_ERROR(_format_,_offset_,_data_)\
 {\
-	logerror("CPU #0 PC %06X : Warning, ",cpu_get_pc(&space.device())); \
+	logerror("CPU #0 PC %06X : Warning, ",space.device().safe_pc()); \
 	logerror(_format_,_offset_,_data_); \
 	logerror("\n");\
 }
@@ -220,31 +220,30 @@ static void create_tilemaps(running_machine &machine);
 
 
 
-VIDEO_START( megasys1 )
+VIDEO_START_MEMBER(megasys1_state,megasys1)
 {
-	megasys1_state *state = machine.driver_data<megasys1_state>();
 	int i;
 
-	state->m_spriteram = &state->m_ram[0x8000/2];
+	m_spriteram = &m_ram[0x8000/2];
 
-	state->m_buffer_objectram = auto_alloc_array(machine, UINT16, 0x2000);
-	state->m_buffer_spriteram16 = auto_alloc_array(machine, UINT16, 0x2000);
-	state->m_buffer2_objectram = auto_alloc_array(machine, UINT16, 0x2000);
-	state->m_buffer2_spriteram16 = auto_alloc_array(machine, UINT16, 0x2000);
+	m_buffer_objectram = auto_alloc_array(machine(), UINT16, 0x2000);
+	m_buffer_spriteram16 = auto_alloc_array(machine(), UINT16, 0x2000);
+	m_buffer2_objectram = auto_alloc_array(machine(), UINT16, 0x2000);
+	m_buffer2_spriteram16 = auto_alloc_array(machine(), UINT16, 0x2000);
 
-	create_tilemaps(machine);
-	state->m_tmap[0] = state->m_tilemap[0][0][0];
-	state->m_tmap[1] = state->m_tilemap[1][0][0];
-	state->m_tmap[2] = state->m_tilemap[2][0][0];
+	create_tilemaps(machine());
+	m_tmap[0] = m_tilemap[0][0][0];
+	m_tmap[1] = m_tilemap[1][0][0];
+	m_tmap[2] = m_tilemap[2][0][0];
 
-	state->m_active_layers = state->m_sprite_bank = state->m_screen_flag = state->m_sprite_flag = 0;
+	m_active_layers = m_sprite_bank = m_screen_flag = m_sprite_flag = 0;
 
 	for (i = 0; i < 3; i ++)
 	{
-		state->m_scroll_flag[i] = state->m_scrollx[i] = state->m_scrolly[i] = 0;
+		m_scroll_flag[i] = m_scrollx[i] = m_scrolly[i] = 0;
 	}
 
-	state->m_bits_per_color_code = 4;
+	m_bits_per_color_code = 4;
 
 /*
     The tile code of a specific layer is multiplied for a constant
@@ -263,19 +262,19 @@ VIDEO_START( megasys1 )
     for each layer and hardwired to 1x or 4x for both tile sizes
 */
 
-	state->m_8x8_scroll_factor[0] = 1;	state->m_16x16_scroll_factor[0] = 4;
-	state->m_8x8_scroll_factor[1] = 1;	state->m_16x16_scroll_factor[1] = 4;
-	state->m_8x8_scroll_factor[2] = 1;	state->m_16x16_scroll_factor[2] = 4;
+	m_8x8_scroll_factor[0] = 1;	m_16x16_scroll_factor[0] = 4;
+	m_8x8_scroll_factor[1] = 1;	m_16x16_scroll_factor[1] = 4;
+	m_8x8_scroll_factor[2] = 1;	m_16x16_scroll_factor[2] = 4;
 
-	if (strcmp(machine.system().name, "soldamj") == 0)
+	if (strcmp(machine().system().name, "soldamj") == 0)
 	{
-		state->m_8x8_scroll_factor[1] = 4;	state->m_16x16_scroll_factor[1] = 4;
+		m_8x8_scroll_factor[1] = 4;	m_16x16_scroll_factor[1] = 4;
 	}
 
-	state->m_hardware_type_z = 0;
-	if (strcmp(machine.system().name, "lomakai") == 0 ||
-		strcmp(machine.system().name, "makaiden") == 0)
-		state->m_hardware_type_z = 1;
+	m_hardware_type_z = 0;
+	if (strcmp(machine().system().name, "lomakai") == 0 ||
+		strcmp(machine().system().name, "makaiden") == 0)
+		m_hardware_type_z = 1;
 }
 
 /***************************************************************************
@@ -335,34 +334,32 @@ WRITE16_MEMBER(megasys1_state::megasys1_scrollram_2_w){ scrollram_w(&space, offs
             3                2 x 16     2 x 4
 */
 
-static TILEMAP_MAPPER( megasys1_scan_8x8 )
+TILEMAP_MAPPER_MEMBER(megasys1_state::megasys1_scan_8x8)
 {
 	return (col * TILES_PER_PAGE_Y) +
 		   (row / TILES_PER_PAGE_Y) * TILES_PER_PAGE * (num_cols / TILES_PER_PAGE_X) +
 		   (row % TILES_PER_PAGE_Y);
 }
 
-static TILEMAP_MAPPER( megasys1_scan_16x16 )
+TILEMAP_MAPPER_MEMBER(megasys1_state::megasys1_scan_16x16)
 {
 	return ( ((col / 2) * (TILES_PER_PAGE_Y / 2)) +
 			 ((row / 2) / (TILES_PER_PAGE_Y / 2)) * (TILES_PER_PAGE / 4) * (num_cols / TILES_PER_PAGE_X) +
 			 ((row / 2) % (TILES_PER_PAGE_Y / 2)) )*4 + (row&1) + (col&1)*2;
 }
 
-static TILE_GET_INFO( megasys1_get_scroll_tile_info_8x8 )
+TILE_GET_INFO_MEMBER(megasys1_state::megasys1_get_scroll_tile_info_8x8)
 {
-	megasys1_state *state = machine.driver_data<megasys1_state>();
 	int tmap = (FPTR)param;
-	UINT16 code = state->m_scrollram[tmap][tile_index];
-	SET_TILE_INFO(tmap, (code & 0xfff) * state->m_8x8_scroll_factor[tmap], code >> (16 - state->m_bits_per_color_code), 0);
+	UINT16 code = m_scrollram[tmap][tile_index];
+	SET_TILE_INFO_MEMBER(tmap, (code & 0xfff) * m_8x8_scroll_factor[tmap], code >> (16 - m_bits_per_color_code), 0);
 }
 
-static TILE_GET_INFO( megasys1_get_scroll_tile_info_16x16 )
+TILE_GET_INFO_MEMBER(megasys1_state::megasys1_get_scroll_tile_info_16x16)
 {
-	megasys1_state *state = machine.driver_data<megasys1_state>();
 	int tmap = (FPTR)param;
-	UINT16 code = state->m_scrollram[tmap][tile_index/4];
-	SET_TILE_INFO(tmap, (code & 0xfff) * state->m_16x16_scroll_factor[tmap] + (tile_index & 3), code >> (16 - state->m_bits_per_color_code), 0);
+	UINT16 code = m_scrollram[tmap][tile_index/4];
+	SET_TILE_INFO_MEMBER(tmap, (code & 0xfff) * m_16x16_scroll_factor[tmap] + (tile_index & 3), code >> (16 - m_bits_per_color_code), 0);
 }
 
 static void create_tilemaps(running_machine &machine)
@@ -373,23 +370,23 @@ static void create_tilemaps(running_machine &machine)
 	for (layer = 0; layer < 3; layer++)
 	{
 		/* 16x16 tilemaps */
-		state->m_tilemap[layer][0][0] = tilemap_create(machine, megasys1_get_scroll_tile_info_16x16, megasys1_scan_16x16,
+		state->m_tilemap[layer][0][0] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(megasys1_state::megasys1_get_scroll_tile_info_16x16),state), tilemap_mapper_delegate(FUNC(megasys1_state::megasys1_scan_16x16),state),
 								 8,8, TILES_PER_PAGE_X * 16, TILES_PER_PAGE_Y * 2);
-		state->m_tilemap[layer][0][1] = tilemap_create(machine, megasys1_get_scroll_tile_info_16x16, megasys1_scan_16x16,
+		state->m_tilemap[layer][0][1] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(megasys1_state::megasys1_get_scroll_tile_info_16x16),state), tilemap_mapper_delegate(FUNC(megasys1_state::megasys1_scan_16x16),state),
 								 8,8, TILES_PER_PAGE_X * 8, TILES_PER_PAGE_Y * 4);
-		state->m_tilemap[layer][0][2] = tilemap_create(machine, megasys1_get_scroll_tile_info_16x16, megasys1_scan_16x16,
+		state->m_tilemap[layer][0][2] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(megasys1_state::megasys1_get_scroll_tile_info_16x16),state), tilemap_mapper_delegate(FUNC(megasys1_state::megasys1_scan_16x16),state),
 								 8,8, TILES_PER_PAGE_X * 4, TILES_PER_PAGE_Y * 8);
-		state->m_tilemap[layer][0][3] = tilemap_create(machine, megasys1_get_scroll_tile_info_16x16, megasys1_scan_16x16,
+		state->m_tilemap[layer][0][3] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(megasys1_state::megasys1_get_scroll_tile_info_16x16),state), tilemap_mapper_delegate(FUNC(megasys1_state::megasys1_scan_16x16),state),
 								 8,8, TILES_PER_PAGE_X * 2, TILES_PER_PAGE_Y * 16);
 
 		/* 8x8 tilemaps */
-		state->m_tilemap[layer][1][0] = tilemap_create(machine, megasys1_get_scroll_tile_info_8x8, megasys1_scan_8x8,
+		state->m_tilemap[layer][1][0] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(megasys1_state::megasys1_get_scroll_tile_info_8x8),state), tilemap_mapper_delegate(FUNC(megasys1_state::megasys1_scan_8x8),state),
 								 8,8, TILES_PER_PAGE_X * 8, TILES_PER_PAGE_Y * 1);
-		state->m_tilemap[layer][1][1] = tilemap_create(machine, megasys1_get_scroll_tile_info_8x8, megasys1_scan_8x8,
+		state->m_tilemap[layer][1][1] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(megasys1_state::megasys1_get_scroll_tile_info_8x8),state), tilemap_mapper_delegate(FUNC(megasys1_state::megasys1_scan_8x8),state),
 								 8,8, TILES_PER_PAGE_X * 4, TILES_PER_PAGE_Y * 2);
-		state->m_tilemap[layer][1][2] = tilemap_create(machine, megasys1_get_scroll_tile_info_8x8, megasys1_scan_8x8,
+		state->m_tilemap[layer][1][2] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(megasys1_state::megasys1_get_scroll_tile_info_8x8),state), tilemap_mapper_delegate(FUNC(megasys1_state::megasys1_scan_8x8),state),
 								 8,8, TILES_PER_PAGE_X * 4, TILES_PER_PAGE_Y * 2);
-		state->m_tilemap[layer][1][3] = tilemap_create(machine, megasys1_get_scroll_tile_info_8x8, megasys1_scan_8x8,
+		state->m_tilemap[layer][1][3] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(megasys1_state::megasys1_get_scroll_tile_info_8x8),state), tilemap_mapper_delegate(FUNC(megasys1_state::megasys1_scan_8x8),state),
 								 8,8, TILES_PER_PAGE_X * 2, TILES_PER_PAGE_Y * 4);
 
 		/* set user data and transparency */
@@ -440,14 +437,14 @@ WRITE16_MEMBER(megasys1_state::megasys1_vregs_A_w)
 							if (machine().device("soundcpu"))
 							{
 								if (new_data & 0x10)
-									cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_RESET, ASSERT_LINE);
+									machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 								else
-									cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_RESET, CLEAR_LINE);
+									machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 							}
 							break;
 
 		case 0x308/2   :	soundlatch_word_w(space,0,new_data,0xffff);
-							cputag_set_input_line(machine(), "soundcpu", 4, HOLD_LINE);
+							machine().device("soundcpu")->execute().set_input_line(4, HOLD_LINE);
 							break;
 
 		default		 :	SHOW_WRITE_ERROR("vreg %04X <- %04X",offset*2,data);
@@ -492,14 +489,14 @@ WRITE16_MEMBER(megasys1_state::megasys1_vregs_C_w)
 
 		case 0x2308/2   :	m_screen_flag = new_data;
 							if (new_data & 0x10)
-								cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_RESET, ASSERT_LINE);
+								machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 							else
-								cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_RESET, CLEAR_LINE);
+								machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 							break;
 
 		case 0x8000/2   :	/* Cybattler reads sound latch on irq 2 */
 							soundlatch_word_w(space, 0, new_data, 0xffff);
-							cputag_set_input_line(machine(), "soundcpu", 2, HOLD_LINE);
+							machine().device("soundcpu")->execute().set_input_line(2, HOLD_LINE);
 							break;
 
 		default:		SHOW_WRITE_ERROR("vreg %04X <- %04X", offset * 2, data);
@@ -751,10 +748,9 @@ static const struct priority priorities[] =
     pens.
 */
 
-PALETTE_INIT( megasys1 )
+PALETTE_INIT_MEMBER(megasys1_state,megasys1)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
-	megasys1_state *state = machine.driver_data<megasys1_state>();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int pri_code, offset, i, order;
 
 	/* First check if we have an hand-crafted priority scheme
@@ -763,13 +759,13 @@ PALETTE_INIT( megasys1 )
 
 	i = 0;
 	while (	priorities[i].driver &&
-			strcmp(priorities[i].driver, machine.system().name) != 0 &&
-			strcmp(priorities[i].driver, machine.system().parent) != 0)
+			strcmp(priorities[i].driver, machine().system().name) != 0 &&
+			strcmp(priorities[i].driver, machine().system().parent) != 0)
 		i++;
 
 	if (priorities[i].driver)
 	{
-		memcpy (state->m_layers_order, priorities[i].priorities, 16 * sizeof(int));
+		memcpy (m_layers_order, priorities[i].priorities, 16 * sizeof(int));
 
 		logerror("WARNING: using an hand-crafted priorities scheme\n");
 
@@ -897,7 +893,7 @@ PALETTE_INIT( megasys1 )
 
 		}	// merging
 
-		state->m_layers_order[pri_code] = order & 0xfffff;	// at last!
+		m_layers_order[pri_code] = order & 0xfffff;	// at last!
 
 	}	// pri_code
 
@@ -906,7 +902,7 @@ PALETTE_INIT( megasys1 )
 #if 0
 	/* log the priority schemes */
 	for (i = 0; i < 16; i++)
-		logerror("PROM %X] %05x\n", i, state->m_layers_order[i]);
+		logerror("PROM %X] %05x\n", i, m_layers_order[i]);
 #endif
 
 

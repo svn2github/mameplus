@@ -1165,7 +1165,7 @@ static void decode_gfx(running_machine &machine, int gfx_index, UINT8 *data, UIN
 
 	memcpy(&gl, layout, sizeof(gl));
 	gl.total = total;
-	machine.gfx[gfx_index] = gfx_element_alloc(machine, &gl, data, machine.total_colors() >> bpp, 0);
+	machine.gfx[gfx_index] = auto_alloc(machine, gfx_element(machine, gl, data, machine.total_colors() >> bpp, 0));
 }
 
 /***************************************************************************/
@@ -1330,7 +1330,7 @@ void K055673_vh_start(running_machine &machine, const char *gfx_memory_region, i
 		break;
 
 	default:
-		fatalerror("Unsupported layout");
+		fatalerror("Unsupported layout\n");
 	}
 
 	if (VERBOSE && !(machine.config().m_video_attributes & VIDEO_HAS_SHADOWS))
@@ -1463,7 +1463,7 @@ READ16_HANDLER( K055673_GX6bpp_rom_word_r )
 		case 7:
 			return ROM[romofs+2];
 		default:
-			LOG(("55673_rom_word_r: Unknown read offset %x (PC=%x)\n", offset, cpu_get_pc(&space->device())));
+			LOG(("55673_rom_word_r: Unknown read offset %x (PC=%x)\n", offset, space->device().safe_pc()));
 			break;
 	}
 
@@ -1510,8 +1510,6 @@ int K053246_is_IRQ_enabled(void)
 
 #define K053936_MAX_CHIPS 2
 
-UINT16 *K053936_0_ctrl,*K053936_0_linectrl;
-UINT16 *K053936_1_ctrl,*K053936_1_linectrl;
 static int K053936_offset[K053936_MAX_CHIPS][2];
 static int K053936_wraparound[K053936_MAX_CHIPS];
 
@@ -1641,7 +1639,9 @@ if (machine.input().code_pressed(KEYCODE_D))
 
 void K053936_0_zoom_draw(bitmap_ind16 &bitmap,const rectangle &cliprect,tilemap_t *tmap,int flags,UINT32 priority, int glfgreat_hack)
 {
-	K053936_zoom_draw(0,K053936_0_ctrl,K053936_0_linectrl,bitmap,cliprect,tmap,flags,priority, glfgreat_hack);
+	UINT16 *ctrl = reinterpret_cast<UINT16 *>(tmap->machine().root_device().memshare("k053936_0_ctrl")->ptr());
+	UINT16 *linectrl = reinterpret_cast<UINT16 *>(tmap->machine().root_device().memshare("k053936_0_line")->ptr());
+	K053936_zoom_draw(0,ctrl,linectrl,bitmap,cliprect,tmap,flags,priority, glfgreat_hack);
 }
 
 void K053936_wraparound_enable(int chip, int status)
@@ -1666,7 +1666,7 @@ static UINT8 K054000_ram[0x20];
 
 static WRITE8_HANDLER( K054000_w )
 {
-//logerror("%04x: write %02x to 054000 address %02x\n",cpu_get_pc(&space->device()),data,offset);
+//logerror("%04x: write %02x to 054000 address %02x\n",space->device().safe_pc(),data,offset);
 
 	K054000_ram[offset] = data;
 }
@@ -1676,7 +1676,7 @@ static READ8_HANDLER( K054000_r )
 	int Acx,Acy,Aax,Aay;
 	int Bcx,Bcy,Bax,Bay;
 
-//logerror("%04x: read 054000 address %02x\n",cpu_get_pc(&space->device()),offset);
+//logerror("%04x: read 054000 address %02x\n",space->device().safe_pc(),offset);
 
 	if (offset != 0x18) return 0;
 
@@ -2111,10 +2111,10 @@ void K056832_vh_start(running_machine &machine, const char *gfx_memory_region, i
 			break;
 
 		default:
-			fatalerror("Unsupported bpp");
+			fatalerror("Unsupported bpp\n");
 	}
 
-	machine.gfx[gfx_index]->color_granularity = 16; /* override */
+	machine.gfx[gfx_index]->set_granularity(16); /* override */
 
 	K056832_memory_region = gfx_memory_region;
 	K056832_gfxnum = gfx_index;
@@ -2158,22 +2158,22 @@ void K056832_vh_start(running_machine &machine, const char *gfx_memory_region, i
 
 	K056832_videoram = auto_alloc_array(machine, UINT16, 0x2000 * (K056832_PAGE_COUNT+1) / 2);
 
-	K056832_tilemap[0x0] = tilemap_create(machine, K056832_get_tile_info0, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0x1] = tilemap_create(machine, K056832_get_tile_info1, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0x2] = tilemap_create(machine, K056832_get_tile_info2, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0x3] = tilemap_create(machine, K056832_get_tile_info3, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0x4] = tilemap_create(machine, K056832_get_tile_info4, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0x5] = tilemap_create(machine, K056832_get_tile_info5, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0x6] = tilemap_create(machine, K056832_get_tile_info6, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0x7] = tilemap_create(machine, K056832_get_tile_info7, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0x8] = tilemap_create(machine, K056832_get_tile_info8, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0x9] = tilemap_create(machine, K056832_get_tile_info9, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0xa] = tilemap_create(machine, K056832_get_tile_infoa, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0xb] = tilemap_create(machine, K056832_get_tile_infob, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0xc] = tilemap_create(machine, K056832_get_tile_infoc, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0xd] = tilemap_create(machine, K056832_get_tile_infod, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0xe] = tilemap_create(machine, K056832_get_tile_infoe, tilemap_scan_rows,  8, 8, 64, 32);
-	K056832_tilemap[0xf] = tilemap_create(machine, K056832_get_tile_infof, tilemap_scan_rows,  8, 8, 64, 32);
+	K056832_tilemap[0x0] = tilemap_create(machine, K056832_get_tile_info0, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0x1] = tilemap_create(machine, K056832_get_tile_info1, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0x2] = tilemap_create(machine, K056832_get_tile_info2, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0x3] = tilemap_create(machine, K056832_get_tile_info3, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0x4] = tilemap_create(machine, K056832_get_tile_info4, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0x5] = tilemap_create(machine, K056832_get_tile_info5, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0x6] = tilemap_create(machine, K056832_get_tile_info6, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0x7] = tilemap_create(machine, K056832_get_tile_info7, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0x8] = tilemap_create(machine, K056832_get_tile_info8, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0x9] = tilemap_create(machine, K056832_get_tile_info9, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0xa] = tilemap_create(machine, K056832_get_tile_infoa, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0xb] = tilemap_create(machine, K056832_get_tile_infob, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0xc] = tilemap_create(machine, K056832_get_tile_infoc, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0xd] = tilemap_create(machine, K056832_get_tile_infod, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0xe] = tilemap_create(machine, K056832_get_tile_infoe, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	K056832_tilemap[0xf] = tilemap_create(machine, K056832_get_tile_infof, TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
 
 	for (i=0; i<K056832_PAGE_COUNT; i++)
 	{
@@ -2265,7 +2265,7 @@ READ32_HANDLER( K056832_5bpp_rom_long_r )
 	}
 	else
 	{
-		LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", cpu_get_pc(&space->device()), mem_mask));
+		LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", space->device().safe_pc(), mem_mask));
 	}
 	return 0;
 }
@@ -2290,7 +2290,7 @@ READ32_HANDLER( K056832_6bpp_rom_long_r )
 	}
 	else
 	{
-		LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", cpu_get_pc(&space->device()), mem_mask));
+		LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", space->device().safe_pc(), mem_mask));
 	}
 	return 0;
 }
@@ -2621,7 +2621,7 @@ static int K056832_update_linemap(running_machine &machine, bitmap_rgb32 &bitmap
 			int count, src_pitch, src_modulo;
 			int	dst_pitch;
 			int line;
-			const gfx_element *src_gfx;
+			gfx_element *src_gfx;
 			int offs, mask;
 
 			#define LINE_WIDTH 512
@@ -2635,7 +2635,7 @@ static int K056832_update_linemap(running_machine &machine, bitmap_rgb32 &bitmap
 			pixmap  = K056832_pixmap[page];
 			pal_ptr    = machine.pens;
 			src_gfx    = machine.gfx[K056832_gfxnum];
-			src_pitch  = src_gfx->line_modulo;
+			src_pitch  = src_gfx->rowbytes();
 			src_modulo = src_gfx->char_modulo;
 			dst_pitch  = pixmap->rowpixels;
 

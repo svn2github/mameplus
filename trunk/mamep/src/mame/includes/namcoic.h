@@ -88,11 +88,76 @@ C102 - Controls CPU access to ROZ Memory Area.
 
 /***********************************************************************************/
 
+#pragma once
+
+#ifndef __NAMCOIC_H__
+#define __NAMCOIC_H__
+
+
+//**************************************************************************
+//  INTERFACE CONFIGURATION MACROS
+//**************************************************************************
+
+#define MCFG_NAMCO_C45_ROAD_ADD(_tag) \
+	MCFG_DEVICE_ADD(_tag, NAMCO_C45_ROAD, 0) \
+
+
+
+//**************************************************************************
+//  TYPE DEFINITIONS
+//**************************************************************************
+
+
+// ======================> namco_c45_road_device
+
+class namco_c45_road_device : public device_t
+{
+	// constants
+	static const int ROAD_COLS = 64;
+	static const int ROAD_ROWS = 512;
+	static const int ROAD_TILE_SIZE = 16;
+	static const int ROAD_TILEMAP_WIDTH = ROAD_TILE_SIZE * ROAD_COLS;
+	static const int ROAD_TILEMAP_HEIGHT = ROAD_TILE_SIZE * ROAD_ROWS;
+	static const int ROAD_TILE_COUNT_MAX = 0xfa00 / 0x40; // 0x3e8
+	static const int WORDS_PER_ROAD_TILE = 0x40/2;
+
+public:
+	// construction/destruction
+	namco_c45_road_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+
+	// read/write handlers
+	DECLARE_READ16_MEMBER( read );
+	DECLARE_WRITE16_MEMBER( write );
+
+	// C45 Land (Road) Emulation
+	void set_transparent_color(pen_t pen) { m_transparent_color = pen; }
+	void draw(bitmap_ind16 &bitmap, const rectangle &cliprect, int pri);
+
+protected:
+	// device-level overrides
+	virtual void device_start();
+	virtual void device_stop();
+
+	// internal helpers
+	TILE_GET_INFO_MEMBER( get_road_info );
+
+	// internal state
+	pen_t			m_transparent_color;
+	gfx_element *	m_gfx;
+	tilemap_t *		m_tilemap;
+	UINT16			m_ram[0x20000/2]; // at 0x880000 in Final Lap; at 0xa00000 in Lucky&Wild
+
+	static const gfx_layout s_tile_layout;
+};
+
+
+// device type definition
+extern const device_type NAMCO_C45_ROAD;
+
+
+
 /*----------- defined in drivers/namcoic.c -----------*/
 
-void namco_tilemap_init(
-		running_machine &machine, int gfxbank, void *pMaskROM,
-		void (*cb)( running_machine &machine, UINT16 code, int *gfx, int *mask) );
 void namco_tilemap_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int pri );
 void namco_tilemap_invalidate( void );
 WRITE16_HANDLER( namco_tilemapvideoram16_w );
@@ -112,63 +177,4 @@ WRITE32_HANDLER( namco_tilemapcontrol32_le_w );
 
 /***********************************************************************************/
 
-/* Namco System II Sprite Rendering */
-void namcos2_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int pri, int control );
-
-void namcos2_draw_sprites_metalhawk( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int pri );
-
-/***********************************************************************************/
-/* C355 Motion Object Emulation */
-
-/* for palXOR, supply either 0x0 (normal) or 0xf (palette mapping reversed) */
-void namco_obj_init( running_machine &machine, int gfxbank, int palXOR, int (*code2tile)( running_machine &machine, int code ) );
-void namco_obj_draw( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int pri );
-void namco_obj_draw( running_machine &machine, bitmap_rgb32 &bitmap, const rectangle &cliprect, int pri );
-
-WRITE16_HANDLER( namco_obj16_w );
-READ16_HANDLER( namco_obj16_r );
-
-WRITE32_HANDLER( namco_obj32_w );
-READ32_HANDLER( namco_obj32_r );
-WRITE32_HANDLER( namco_obj32_le_w );
-READ32_HANDLER( namco_obj32_le_r );
-
-WRITE16_HANDLER( namco_spritepos16_w );
-READ16_HANDLER( namco_spritepos16_r );
-
-WRITE32_HANDLER( namco_spritepos32_w );
-READ32_HANDLER( namco_spritepos32_r );
-
-/***********************************************************************************/
-/* C169 ROZ Layer Emulation */
-
-void namco_roz_init( running_machine &machine, int gfxbank, const char *maskregion );
-void namco_roz_draw( bitmap_ind16 &bitmap, const rectangle &cliprect, int pri );
-
-READ16_HANDLER( namco_rozcontrol16_r );
-WRITE16_HANDLER( namco_rozcontrol16_w );
-READ16_HANDLER( namco_rozvideoram16_r );
-WRITE16_HANDLER( namco_rozvideoram16_w );
-
-READ32_HANDLER( namco_rozcontrol32_r );
-WRITE32_HANDLER( namco_rozcontrol32_w );
-READ32_HANDLER( namco_rozcontrol32_le_r );
-WRITE32_HANDLER( namco_rozcontrol32_le_w );
-READ32_HANDLER( namco_rozbank32_r );
-WRITE32_HANDLER( namco_rozbank32_w );
-READ32_HANDLER( namco_rozvideoram32_r );
-WRITE32_HANDLER( namco_rozvideoram32_w );
-READ32_HANDLER( namco_rozvideoram32_le_r );
-WRITE32_HANDLER( namco_rozvideoram32_le_w );
-
-/***********************************************************************************/
-/* C45 Land (Road) Emulation */
-
-void namco_road_init( running_machine &machine, int gfxbank );
-void namco_road_set_transparent_color(pen_t pen);
-void namco_road_draw( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int pri );
-
-READ16_HANDLER( namco_road16_r );
-WRITE16_HANDLER( namco_road16_w );
-
-/***********************************************************************************/
+#endif

@@ -17,7 +17,7 @@ public:
 	int m_clown_z;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	samples_device *m_samples;
 	device_t *m_discrete;
 
@@ -32,6 +32,10 @@ public:
 	DECLARE_DRIVER_INIT(circus);
 	DECLARE_DRIVER_INIT(robotbwl);
 	DECLARE_DRIVER_INIT(crash);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 

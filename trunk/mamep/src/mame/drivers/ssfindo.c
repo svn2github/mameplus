@@ -245,6 +245,7 @@ public:
 	DECLARE_DRIVER_INIT(ssfindo);
 	DECLARE_DRIVER_INIT(ppcar);
 	DECLARE_DRIVER_INIT(tetfight);
+	virtual void machine_reset();
 };
 
 
@@ -354,18 +355,18 @@ ssfindo_speedup_func ssfindo_speedup;
 
 static void ssfindo_speedups(address_space* space)
 {
-	if (cpu_get_pc(&space->device())==0x2d6c8) // ssfindo
-		device_spin_until_time(&space->device(), attotime::from_usec(20));
-	else if (cpu_get_pc(&space->device())==0x2d6bc) // ssfindo
-		device_spin_until_time(&space->device(), attotime::from_usec(20));
+	if (space->device().safe_pc()==0x2d6c8) // ssfindo
+		space->device().execute().spin_until_time(attotime::from_usec(20));
+	else if (space->device().safe_pc()==0x2d6bc) // ssfindo
+		space->device().execute().spin_until_time(attotime::from_usec(20));
 }
 
 static void ppcar_speedups(address_space* space)
 {
-	if (cpu_get_pc(&space->device())==0x000bc8) // ppcar
-		device_spin_until_time(&space->device(), attotime::from_usec(20));
-	else if (cpu_get_pc(&space->device())==0x000bbc) // ppcar
-		device_spin_until_time(&space->device(), attotime::from_usec(20));
+	if (space->device().safe_pc()==0x000bc8) // ppcar
+		space->device().execute().spin_until_time(attotime::from_usec(20));
+	else if (space->device().safe_pc()==0x000bbc) // ppcar
+		space->device().execute().spin_until_time(attotime::from_usec(20));
 }
 
 
@@ -378,7 +379,7 @@ READ32_MEMBER(ssfindo_state::PS7500_IO_r)
 
 		case IOLINES: //TODO: eeprom  24c01
 #if 0
-		mame_printf_debug("IOLINESR %i @%x\n", offset, cpu_get_pc(&space.device()));
+		mame_printf_debug("IOLINESR %i @%x\n", offset, space.device().safe_pc());
 #endif
 
 		if(m_flashType == 1)
@@ -434,13 +435,13 @@ WRITE32_MEMBER(ssfindo_state::PS7500_IO_w)
 				if(data&0xc0)
 					m_adrLatch=0;
 
-			if(cpu_get_pc(&space.device()) == 0xbac0 && m_flashType == 1)
+			if(space.device().safe_pc() == 0xbac0 && m_flashType == 1)
 			{
 				m_flashN=data&1;
 			}
 
 #if 0
-				logerror("IOLINESW %i = %x  @%x\n",offset,data,cpu_get_pc(&space.device()));
+				logerror("IOLINESW %i = %x  @%x\n",offset,data,space.device().safe_pc());
 #endif
 			break;
 
@@ -520,7 +521,7 @@ WRITE32_MEMBER(ssfindo_state::io_w)
 	COMBINE_DATA(&temp);
 
 #if 0
-	logerror("[io_w] = %x @%x [latch=%x]\n",data,cpu_get_pc(&space.device()),m_adrLatch);
+	logerror("[io_w] = %x @%x [latch=%x]\n",data,space.device().safe_pc(),m_adrLatch);
 #endif
 
 	if(m_adrLatch==1)
@@ -610,9 +611,9 @@ static ADDRESS_MAP_START( tetfight_map, AS_PROGRAM, 32, ssfindo_state )
 	AM_RANGE(0x10000000, 0x14ffffff) AM_RAM AM_SHARE("vram")
 ADDRESS_MAP_END
 
-static MACHINE_RESET( ssfindo )
+void ssfindo_state::machine_reset()
 {
-	PS7500_reset(machine);
+	PS7500_reset(machine());
 }
 
 static INPUT_PORTS_START( ssfindo )
@@ -757,7 +758,6 @@ static MACHINE_CONFIG_START( ssfindo, ssfindo_state )
 	MCFG_CPU_PROGRAM_MAP(ssfindo_map)
 
 	MCFG_CPU_VBLANK_INT("screen", ssfindo_interrupt)
-	MCFG_MACHINE_RESET(ssfindo)
 
 
 	MCFG_SCREEN_ADD("screen", RASTER)

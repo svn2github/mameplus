@@ -52,6 +52,7 @@ protected:
 	virtual void machine_reset();
 
 	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -61,9 +62,9 @@ protected:
 
 ***************************************************************************/
 
-static PALETTE_INIT( kontest )
+void kontest_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int	bit0, bit1, bit2 , r, g, b;
 	int	i;
 
@@ -82,7 +83,7 @@ static PALETTE_INIT( kontest )
 		bit2 = (color_prom[i] >> 2) & 0x01;
 		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 
@@ -154,7 +155,7 @@ WRITE8_MEMBER(kontest_state::control_w)
 	// other bits: ?
 	m_control = data;
 
-	device_set_input_line(m_maincpu, 0, CLEAR_LINE);
+	m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 static ADDRESS_MAP_START( kontest_map, AS_PROGRAM, 8, kontest_state )
@@ -243,7 +244,7 @@ static INTERRUPT_GEN( kontest_interrupt )
 {
 	kontest_state *state = device->machine().driver_data<kontest_state>();
 	if (state->m_control & 8)
-		device_set_input_line(device, 0, ASSERT_LINE);
+		device->execute().set_input_line(0, ASSERT_LINE);
 }
 
 void kontest_state::machine_start()
@@ -273,7 +274,6 @@ static MACHINE_CONFIG_START( kontest, kontest_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 
-	MCFG_PALETTE_INIT(kontest)
 	MCFG_PALETTE_LENGTH(32)
 
 	/* sound hardware */

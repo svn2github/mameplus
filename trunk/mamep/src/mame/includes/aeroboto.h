@@ -54,11 +54,15 @@ public:
 	DECLARE_WRITE8_MEMBER(aeroboto_3000_w);
 	DECLARE_WRITE8_MEMBER(aeroboto_videoram_w);
 	DECLARE_WRITE8_MEMBER(aeroboto_tilecolor_w);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/aeroboto.c -----------*/
 
-VIDEO_START( aeroboto );
+
 SCREEN_UPDATE_IND16( aeroboto );
 

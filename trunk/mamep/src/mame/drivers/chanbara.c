@@ -78,7 +78,7 @@ public:
 	UINT8    m_scrollhi;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_WRITE8_MEMBER(chanbara_videoram_w);
 	DECLARE_WRITE8_MEMBER(chanbara_colorram_w);
 	DECLARE_WRITE8_MEMBER(chanbara_videoram2_w);
@@ -86,21 +86,27 @@ public:
 	DECLARE_WRITE8_MEMBER(chanbara_ay_out_0_w);
 	DECLARE_WRITE8_MEMBER(chanbara_ay_out_1_w);
 	DECLARE_DRIVER_INIT(chanbara);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg2_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
-static PALETTE_INIT( chanbara )
+void chanbara_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i, red, green, blue;
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		red = color_prom[i];
-		green = color_prom[machine.total_colors() + i];
-		blue = color_prom[2 * machine.total_colors() + i];
+		green = color_prom[machine().total_colors() + i];
+		blue = color_prom[2 * machine().total_colors() + i];
 
-		palette_set_color_rgb(machine, i, pal4bit(red << 1), pal4bit(green << 1), pal4bit(blue << 1));
+		palette_set_color_rgb(machine(), i, pal4bit(red << 1), pal4bit(green << 1), pal4bit(blue << 1));
 	}
 }
 
@@ -133,30 +139,27 @@ WRITE8_MEMBER(chanbara_state::chanbara_colorram2_w)
 }
 
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(chanbara_state::get_bg_tile_info)
 {
-	chanbara_state *state = machine.driver_data<chanbara_state>();
-	int code = state->m_videoram[tile_index] + ((state->m_colorram[tile_index] & 1) << 8);
-	int color = (state->m_colorram[tile_index] >> 1) & 0x1f;
+	int code = m_videoram[tile_index] + ((m_colorram[tile_index] & 1) << 8);
+	int color = (m_colorram[tile_index] >> 1) & 0x1f;
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
-static TILE_GET_INFO( get_bg2_tile_info )
+TILE_GET_INFO_MEMBER(chanbara_state::get_bg2_tile_info)
 {
-	chanbara_state *state = machine.driver_data<chanbara_state>();
-	int code = state->m_videoram2[tile_index];
-	int color = (state->m_colorram2[tile_index] >> 1) & 0x1f;
+	int code = m_videoram2[tile_index];
+	int color = (m_colorram2[tile_index] >> 1) & 0x1f;
 
-	SET_TILE_INFO(2, code, color, 0);
+	SET_TILE_INFO_MEMBER(2, code, color, 0);
 }
 
-static VIDEO_START(chanbara )
+void chanbara_state::video_start()
 {
-	chanbara_state *state = machine.driver_data<chanbara_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows,8, 8, 32, 32);
-	state->m_bg2_tilemap = tilemap_create(machine, get_bg2_tile_info, tilemap_scan_rows,16, 16, 16, 32);
-	state->m_bg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(chanbara_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,8, 8, 32, 32);
+	m_bg2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(chanbara_state::get_bg2_tile_info),this), TILEMAP_SCAN_ROWS,16, 16, 16, 32);
+	m_bg_tilemap->set_transparent_pen(0);
 }
 
 static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
@@ -366,7 +369,7 @@ WRITE8_MEMBER(chanbara_state::chanbara_ay_out_1_w)
 static void sound_irq( device_t *device, int linestate )
 {
 	chanbara_state *state = device->machine().driver_data<chanbara_state>();
-	device_set_input_line(state->m_maincpu, 0, linestate);
+	state->m_maincpu->set_input_line(0, linestate);
 }
 
 
@@ -384,22 +387,20 @@ static const ym2203_interface ym2203_config =
 };
 
 
-static MACHINE_START( chanbara )
+void chanbara_state::machine_start()
 {
-	chanbara_state *state = machine.driver_data<chanbara_state>();
 
-	state->m_maincpu = machine.device("maincpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
 
-	state->save_item(NAME(state->m_scroll));
-	state->save_item(NAME(state->m_scrollhi));
+	save_item(NAME(m_scroll));
+	save_item(NAME(m_scrollhi));
 }
 
-static MACHINE_RESET( chanbara )
+void chanbara_state::machine_reset()
 {
-	chanbara_state *state = machine.driver_data<chanbara_state>();
 
-	state->m_scroll = 0;
-	state->m_scrollhi = 0;
+	m_scroll = 0;
+	m_scrollhi = 0;
 }
 
 static MACHINE_CONFIG_START( chanbara, chanbara_state )
@@ -407,8 +408,6 @@ static MACHINE_CONFIG_START( chanbara, chanbara_state )
 	MCFG_CPU_ADD("maincpu", M6809, 12000000/8)
 	MCFG_CPU_PROGRAM_MAP(chanbara_map)
 
-	MCFG_MACHINE_START(chanbara)
-	MCFG_MACHINE_RESET(chanbara)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -420,9 +419,7 @@ static MACHINE_CONFIG_START( chanbara, chanbara_state )
 
 	MCFG_GFXDECODE(chanbara)
 	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT(chanbara)
 
-	MCFG_VIDEO_START(chanbara)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

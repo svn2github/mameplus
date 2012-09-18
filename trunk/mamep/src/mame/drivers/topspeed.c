@@ -300,7 +300,7 @@ static void parse_control( running_machine &machine )	/* assumes Z80 sandwiched 
 	/* however this fails when recovering from a save state
        if cpu B is disabled !! */
 	topspeed_state *state = machine.driver_data<topspeed_state>();
-	device_set_input_line(state->m_subcpu, INPUT_LINE_RESET, (state->m_cpua_ctrl &0x1) ? CLEAR_LINE : ASSERT_LINE);
+	state->m_subcpu->set_input_line(INPUT_LINE_RESET, (state->m_cpua_ctrl &0x1) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 WRITE16_MEMBER(topspeed_state::cpua_ctrl_w)
@@ -312,7 +312,7 @@ WRITE16_MEMBER(topspeed_state::cpua_ctrl_w)
 
 	parse_control(machine());
 
-	logerror("CPU #0 PC %06x: write %04x to cpu control\n", cpu_get_pc(&space.device()), data);
+	logerror("CPU #0 PC %06x: write %04x to cpu control\n", space.device().safe_pc(), data);
 }
 
 
@@ -325,7 +325,7 @@ WRITE16_MEMBER(topspeed_state::cpua_ctrl_w)
 static TIMER_CALLBACK( topspeed_interrupt6  )
 {
 	topspeed_state *state = machine.driver_data<topspeed_state>();
-	device_set_input_line(state->m_maincpu, 6, HOLD_LINE);
+	state->m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 /* 68000 B */
@@ -333,7 +333,7 @@ static TIMER_CALLBACK( topspeed_interrupt6  )
 static TIMER_CALLBACK( topspeed_cpub_interrupt6 )
 {
 	topspeed_state *state = machine.driver_data<topspeed_state>();
-	device_set_input_line(state->m_subcpu, 6, HOLD_LINE);	/* assumes Z80 sandwiched between the 68Ks */
+	state->m_subcpu->set_input_line(6, HOLD_LINE);	/* assumes Z80 sandwiched between the 68Ks */
 }
 
 
@@ -341,14 +341,14 @@ static INTERRUPT_GEN( topspeed_interrupt )
 {
 	/* Unsure how many int6's per frame */
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), FUNC(topspeed_interrupt6));
-	device_set_input_line(device, 5, HOLD_LINE);
+	device->execute().set_input_line(5, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( topspeed_cpub_interrupt )
 {
 	/* Unsure how many int6's per frame */
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000 - 500), FUNC(topspeed_cpub_interrupt6));
-	device_set_input_line(device, 5, HOLD_LINE);
+	device->execute().set_input_line(5, HOLD_LINE);
 }
 
 
@@ -393,7 +393,7 @@ READ16_MEMBER(topspeed_state::topspeed_motor_r)
 			return 0x55;	/* motor cpu status ? */
 
 		default:
-			logerror("CPU #0 PC %06x: warning - read from motor cpu %03x\n", cpu_get_pc(&space.device()), offset);
+			logerror("CPU #0 PC %06x: warning - read from motor cpu %03x\n", space.device().safe_pc(), offset);
 			return 0;
 	}
 }
@@ -401,7 +401,7 @@ READ16_MEMBER(topspeed_state::topspeed_motor_r)
 WRITE16_MEMBER(topspeed_state::topspeed_motor_w)
 {
 	/* Writes $900000-25 and $900200-219 */
-	logerror("CPU #0 PC %06x: warning - write %04x to motor cpu %03x\n", cpu_get_pc(&space.device()), data, offset);
+	logerror("CPU #0 PC %06x: warning - write %04x to motor cpu %03x\n", space.device().safe_pc(), data, offset);
 }
 
 
@@ -423,7 +423,7 @@ WRITE8_MEMBER(topspeed_state::sound_bankswitch_w)/* assumes Z80 sandwiched betwe
 
 static WRITE8_DEVICE_HANDLER( topspeed_tc0140syt_comm_w )
 {
-	cputag_set_input_line(device->machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	tc0140syt_comm_w(device, 0, data);
 }
 
@@ -661,7 +661,7 @@ GFXDECODE_END
 static void irq_handler( device_t *device, int irq )	/* assumes Z80 sandwiched between 68Ks */
 {
 	topspeed_state *state = device->machine().driver_data<topspeed_state>();
-	device_set_input_line(state->m_audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2151_interface ym2151_config =
@@ -693,42 +693,40 @@ static void topspeed_postload(running_machine &machine)
 	reset_sound_region(machine);
 }
 
-static MACHINE_START( topspeed )
+void topspeed_state::machine_start()
 {
-	topspeed_state *state = machine.driver_data<topspeed_state>();
 
-	state->membank("bank10")->configure_entries(0, 4, state->memregion("audiocpu")->base() + 0xc000, 0x4000);
+	membank("bank10")->configure_entries(0, 4, memregion("audiocpu")->base() + 0xc000, 0x4000);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_subcpu = machine.device("subcpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_tc0220ioc = machine.device("tc0220ioc");
-	state->m_pc080sn_1 = machine.device("pc080sn_1");
-	state->m_pc080sn_2 = machine.device("pc080sn_2");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_subcpu = machine().device<cpu_device>("subcpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_tc0220ioc = machine().device("tc0220ioc");
+	m_pc080sn_1 = machine().device("pc080sn_1");
+	m_pc080sn_2 = machine().device("pc080sn_2");
 
-	state->m_msm_chip[0] = machine.device("msm1");
-	state->m_msm_chip[1] = machine.device("msm2");
-	state->m_msm_rom[0] = state->memregion("adpcm")->base();
-	state->m_msm_rom[1] = state->memregion("adpcm")->base() + 0x10000;
+	m_msm_chip[0] = machine().device("msm1");
+	m_msm_chip[1] = machine().device("msm2");
+	m_msm_rom[0] = memregion("adpcm")->base();
+	m_msm_rom[1] = memregion("adpcm")->base() + 0x10000;
 
-	state->save_item(NAME(state->m_cpua_ctrl));
-	state->save_item(NAME(state->m_ioc220_port));
-	state->save_item(NAME(state->m_banknum));
-	machine.save().register_postload(save_prepost_delegate(FUNC(topspeed_postload), &machine));
+	save_item(NAME(m_cpua_ctrl));
+	save_item(NAME(m_ioc220_port));
+	save_item(NAME(m_banknum));
+	machine().save().register_postload(save_prepost_delegate(FUNC(topspeed_postload), &machine()));
 }
 
-static MACHINE_RESET( topspeed )
+void topspeed_state::machine_reset()
 {
-	topspeed_state *state = machine.driver_data<topspeed_state>();
 
-	state->m_cpua_ctrl = 0xff;
-	state->m_ioc220_port = 0;
-	state->m_banknum = -1;
+	m_cpua_ctrl = 0xff;
+	m_ioc220_port = 0;
+	m_banknum = -1;
 
-	msm5205_reset_w(state->m_msm_chip[0], 1);
-	msm5205_reset_w(state->m_msm_chip[1], 1);
-	state->m_msm_loop[0] = 0;
-	state->m_msm_loop[1] = 0;
+	msm5205_reset_w(m_msm_chip[0], 1);
+	msm5205_reset_w(m_msm_chip[1], 1);
+	m_msm_loop[0] = 0;
+	m_msm_loop[1] = 0;
 }
 
 static const pc080sn_interface topspeed_pc080sn_intf =
@@ -762,8 +760,6 @@ static MACHINE_CONFIG_START( topspeed, topspeed_state )
 	MCFG_CPU_PROGRAM_MAP(topspeed_cpub_map)
 	MCFG_CPU_VBLANK_INT("screen", topspeed_cpub_interrupt)
 
-	MCFG_MACHINE_START(topspeed)
-	MCFG_MACHINE_RESET(topspeed)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", topspeed_io_intf)
 

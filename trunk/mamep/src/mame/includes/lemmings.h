@@ -21,7 +21,7 @@ public:
 	UINT16 m_sprite_triple_buffer_1[0x800];
 	UINT8 m_vram_buffer[2048 * 64];	// 64 bytes per VRAM character
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	required_device<buffered_spriteram16_device> m_spriteram;
 	required_device<buffered_spriteram16_device> m_spriteram2;
 	/* memory pointers */
@@ -40,13 +40,16 @@ public:
 	DECLARE_WRITE16_MEMBER(lemmings_pixel_0_w);
 	DECLARE_WRITE16_MEMBER(lemmings_pixel_1_w);
 	DECLARE_WRITE16_MEMBER(lemmings_vram_w);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_start();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/lemmings.c -----------*/
 
 
-VIDEO_START( lemmings );
+
 SCREEN_VBLANK( lemmings );
 SCREEN_UPDATE_RGB32( lemmings );
 

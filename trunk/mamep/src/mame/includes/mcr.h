@@ -20,14 +20,17 @@ class mcr_state : public driver_device
 public:
 	mcr_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		  m_maincpu(*this, "maincpu"),
-		  m_spriteram(*this, "spriteram") ,
+		m_maincpu(*this, "maincpu"),
+		m_spriteram(*this, "spriteram"),
 		m_videoram(*this, "videoram"),
 		m_ssio(*this, "ssio"),
 		m_chip_squeak_deluxe(*this, "csd"),
 		m_sounds_good(*this, "sg"),
 		m_turbo_chip_squeak(*this, "tcs"),
-		m_squawk_n_talk(*this, "snt") { }
+		m_squawk_n_talk(*this, "snt"),
+		m_dpoker_coin_in_timer(*this, "dp_coinin"),
+		m_dpoker_hopper_timer(*this, "dp_hopper")
+	{ }
 
 	// these should be required but can't because mcr68 shares with us
 	// once the sound boards are properly device-ified, fix this
@@ -40,6 +43,8 @@ public:
 	optional_device<midway_sounds_good_device> m_sounds_good;
 	optional_device<midway_turbo_chip_squeak_device> m_turbo_chip_squeak;
 	optional_device<midway_squawk_n_talk_device> m_squawk_n_talk;
+	optional_device<timer_device> m_dpoker_coin_in_timer;
+	optional_device<timer_device> m_dpoker_hopper_timer;
 
 	DECLARE_WRITE8_MEMBER(mcr_control_port_w);
 	DECLARE_WRITE8_MEMBER(mcr_ipu_laserdisk_w);
@@ -53,6 +58,11 @@ public:
 	DECLARE_WRITE8_MEMBER(mcr_91490_videoram_w);
 	DECLARE_READ8_MEMBER(solarfox_ip0_r);
 	DECLARE_READ8_MEMBER(solarfox_ip1_r);
+	DECLARE_READ8_MEMBER(dpoker_ip0_r);
+	DECLARE_WRITE8_MEMBER(dpoker_lamps1_w);
+	DECLARE_WRITE8_MEMBER(dpoker_lamps2_w);
+	DECLARE_WRITE8_MEMBER(dpoker_output_w);
+	DECLARE_WRITE8_MEMBER(dpoker_meters_w);
 	DECLARE_READ8_MEMBER(kick_ip1_r);
 	DECLARE_WRITE8_MEMBER(wacko_op4_w);
 	DECLARE_READ8_MEMBER(wacko_ip1_r);
@@ -67,9 +77,14 @@ public:
 	DECLARE_READ8_MEMBER(demoderb_ip1_r);
 	DECLARE_READ8_MEMBER(demoderb_ip2_r);
 	DECLARE_WRITE8_MEMBER(demoderb_op4_w);
+
+	DECLARE_INPUT_CHANGED_MEMBER(dpoker_coin_in_hit);
+
 	DECLARE_DRIVER_INIT(mcr_91490);
 	DECLARE_DRIVER_INIT(kroozr);
+	DECLARE_DRIVER_INIT(solarfox);
 	DECLARE_DRIVER_INIT(kick);
+	DECLARE_DRIVER_INIT(dpoker);
 	DECLARE_DRIVER_INIT(twotiger);
 	DECLARE_DRIVER_INIT(demoderb);
 	DECLARE_DRIVER_INIT(wacko);
@@ -77,7 +92,14 @@ public:
 	DECLARE_DRIVER_INIT(dotrone);
 	DECLARE_DRIVER_INIT(nflfoot);
 	DECLARE_DRIVER_INIT(journey);
-	DECLARE_DRIVER_INIT(solarfox);
+
+	TILE_GET_INFO_MEMBER(mcr_90009_get_tile_info);
+	TILE_GET_INFO_MEMBER(mcr_90010_get_tile_info);
+	TILE_GET_INFO_MEMBER(mcr_91490_get_tile_info);
+	DECLARE_MACHINE_START(mcr);
+	DECLARE_MACHINE_RESET(mcr);
+	DECLARE_VIDEO_START(mcr);
+	DECLARE_MACHINE_START(nflfoot);
 };
 
 
@@ -102,9 +124,9 @@ extern const gfx_layout mcr_sprite_layout;
 extern UINT32 mcr_cpu_board;
 extern UINT32 mcr_sprite_board;
 
-MACHINE_START( mcr );
-MACHINE_RESET( mcr );
-MACHINE_START( nflfoot );
+
+
+
 
 TIMER_DEVICE_CALLBACK( mcr_interrupt );
 TIMER_DEVICE_CALLBACK( mcr_ipu_interrupt );
@@ -117,7 +139,7 @@ TIMER_DEVICE_CALLBACK( mcr_ipu_interrupt );
 extern INT8 mcr12_sprite_xoffs;
 extern INT8 mcr12_sprite_xoffs_flip;
 
-VIDEO_START( mcr );
+
 
 
 

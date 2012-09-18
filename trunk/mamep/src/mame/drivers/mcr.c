@@ -7,6 +7,7 @@
     Games supported:
         * Solar Fox
         * Kick
+        * Draw Poker
         * Satan's Hollow
         * Tron
         * Kozmik Krooz'r
@@ -19,9 +20,6 @@
         * Discs of Tron (Squawk n' Talk)
         * NFL Football (Squawk n' Talk + laserdisk)
         * Demolition Derby (Turbo Chip Squeak)
-
-    Known bugs:
-        * none at this time
 
 ****************************************************************************
 
@@ -59,6 +57,7 @@
                          -----  -----  -----  ------------
         Kick             90009  91399  90908
         Solar Fox        90009  91399  90908
+        Draw Poker       90009  91399  90908  ?
 
         Satan's Hollow   90010  91399  90913
         Tron             90010  91399  90913  91418
@@ -81,7 +80,7 @@
 ****************************************************************************
 
     Detailed CPU board descriptions:
-        90009 (Kick, Solar Fox)
+        90009 (Kick, Solar Fox, Draw Poker)
             * 2.5MHz Z80
             * up to 7x2k program EPROMs
             * 2x4k background EPROMs
@@ -130,7 +129,7 @@
 ****************************************************************************
 
     Detailed Video board descriptions:
-        91399 (Kick, Solar Fox, Satan's Hollow, Tron, Kozmik Krooz'r, Domino Man, Wacko)
+        91399 (Kick, Solar Fox, Draw Poker, Satan's Hollow, Tron, Kozmik Krooz'r, Domino Man, Wacko)
             * 4x8k sprite EPROMs
             * data is ORed into linebuffers
             * support for hflip, vflip (code bits 6,7)
@@ -152,7 +151,7 @@
 ****************************************************************************
 
     Detailed Sound Board descriptions:
-        90908 (Kick, Solar Fox)
+        90908 (Kick, Solar Fox, Draw Poker)
             * 2MHz Z80
             * 2x2MHz AY8910
             * each AY8910 channel has a duty cycle controlled @ 50kHz by a down counter
@@ -187,11 +186,11 @@
 
 ****************************************************************************
 
-    90009 = CPU Board (Kick, SolarFox)
+    90009 = CPU Board (Kick, SolarFox, DPoker)
     90010 = Super CPU (Kroozr, Tron, SHollow)
-    90908 = Sound I/O (Kick, SolarFox)
+    90908 = Sound I/O (Kick, SolarFox, DPoker)
     90913 = Super Sound I/O (SHollow, Tron)
-    91399 = Video Gen (Kick, SolarFox, SHollow, Tron, Kroozr)
+    91399 = Video Gen (Kick, SolarFox, DPoker, SHollow, Tron, Kroozr)
     91418 = Optical Encoder (Tron)
     91433 = Video Gen III (SpyHunt)
     91434 = Optical Sensor PC (Kroozr)
@@ -288,9 +287,14 @@
 #include "machine/nvram.h"
 #include "includes/mcr.h"
 
+#include "dpoker.lh"
+
 
 static UINT8 input_mux;
 static UINT8 last_op4;
+
+static UINT8 dpoker_coin_status;
+static UINT8 dpoker_output;
 
 static UINT8 nflfoot_serial_out_active;
 static UINT8 nflfoot_serial_out_bits;
@@ -325,7 +329,7 @@ WRITE8_MEMBER(mcr_state::mcr_control_port_w)
 
 /*************************************
  *
- *  Solar Fox input ports
+ *  Solar Fox I/O ports
  *
  *************************************/
 
@@ -356,7 +360,7 @@ READ8_MEMBER(mcr_state::solarfox_ip1_r)
 
 /*************************************
  *
- *  Kick input ports
+ *  Kick I/O ports
  *
  *************************************/
 
@@ -369,7 +373,110 @@ READ8_MEMBER(mcr_state::kick_ip1_r)
 
 /*************************************
  *
- *  Wacko input ports
+ *  Draw Poker I/O ports
+ *
+ *************************************/
+
+TIMER_DEVICE_CALLBACK( dpoker_hopper_callback )
+{
+	mcr_state *state = timer.machine().driver_data<mcr_state>();
+
+	if (dpoker_output & 0x40)
+	{
+		// hopper timing is a guesstimate
+		dpoker_coin_status ^= 8;
+		state->m_dpoker_hopper_timer->adjust(attotime::from_msec((dpoker_coin_status & 8) ? 100 : 250));
+	}
+	else
+	{
+		dpoker_coin_status &= ~8;
+	}
+
+	coin_counter_w(timer.machine(), 3, dpoker_coin_status & 8);
+}
+
+TIMER_DEVICE_CALLBACK( dpoker_coin_in_callback )
+{
+	dpoker_coin_status &= ~2;
+}
+
+INPUT_CHANGED_MEMBER(mcr_state::dpoker_coin_in_hit)
+{
+	if (newval)
+	{
+		// The game waits for coin release before it accepts another.
+		// It probably does this to prevent tampering, good old coin-on-a-string won't work here.
+		dpoker_coin_status |= 2;
+		m_dpoker_coin_in_timer->adjust(attotime::from_msec(100));
+	}
+}
+
+READ8_MEMBER(mcr_state::dpoker_ip0_r)
+{
+	// d0: Coin-in Hit
+	// d1: Coin-in Release
+	// d2: Coin-out Up
+	// d3: Coin-out Down
+	// d6: Coin-drop Hit
+	// d7: Coin-drop Release
+	UINT8 p0 = ioport("ssio:IP0")->read();
+	p0 |= (dpoker_coin_status >> 1 & 1);
+	p0 ^= (p0 << 1 & 0x80) | dpoker_coin_status;
+	return p0;
+}
+
+
+WRITE8_MEMBER(mcr_state::dpoker_lamps1_w)
+{
+	// cpanel button lamps (white)
+	output_set_lamp_value(0, data >> 0 & 1); // hold 1
+	output_set_lamp_value(1, data >> 4 & 1); // hold 2
+	output_set_lamp_value(2, data >> 5 & 1); // hold 3
+	output_set_lamp_value(3, data >> 6 & 1); // hold 4
+	output_set_lamp_value(4, data >> 7 & 1); // hold 5
+	output_set_lamp_value(5, data >> 1 & 1); // deal
+	output_set_lamp_value(6, data >> 2 & 1); // cancel
+	output_set_lamp_value(7, data >> 3 & 1); // stand
+}
+
+WRITE8_MEMBER(mcr_state::dpoker_lamps2_w)
+{
+	// d5: button lamp: service or change
+	output_set_lamp_value(8, data >> 5 & 1);
+
+	// d0-d4: marquee lamps: coin 1 to 5 --> output lamps 9 to 13
+	for (int i = 0; i < 5; i++)
+		output_set_lamp_value(9 + i, data >> i & 1);
+
+	// d6, d7: unused?
+}
+
+WRITE8_MEMBER(mcr_state::dpoker_output_w)
+{
+	// d0: ? coin return
+	// d1: ? divertor (active low)
+	// d3: coin counter?
+
+	// d6: assume hopper coin flow
+	// d7: assume hopper motor
+	if (data & 0x40 & ~dpoker_output)
+		m_dpoker_hopper_timer->adjust(attotime::from_msec(500));
+
+	// other bits: unused?
+
+	dpoker_output = data;
+}
+
+WRITE8_MEMBER(mcr_state::dpoker_meters_w)
+{
+	// meters?
+}
+
+
+
+/*************************************
+ *
+ *  Wacko I/O ports
  *
  *************************************/
 
@@ -400,7 +507,7 @@ READ8_MEMBER(mcr_state::wacko_ip2_r)
 
 /*************************************
  *
- *  Kozmik Krooz'r input ports
+ *  Kozmik Krooz'r I/O ports
  *
  *************************************/
 
@@ -569,8 +676,8 @@ READ8_MEMBER(mcr_state::nflfoot_ip2_r)
 			nflfoot_serial_in_active = FALSE;
 	}
 
-	if (cpu_get_pc(&space.device()) != 0x107)
-		logerror("%04X:ip2_r = %02X\n", cpu_get_pc(&space.device()), val);
+	if (space.device().safe_pc() != 0x107)
+		logerror("%04X:ip2_r = %02X\n", space.device().safe_pc(), val);
 	return val;
 }
 
@@ -580,7 +687,7 @@ WRITE8_MEMBER(mcr_state::nflfoot_op4_w)
 	z80sio_device *sio = machine().device<z80sio_device>("ipu_sio");
 
 	/* bit 7 = J3-7 on IPU board = /RXDA on SIO */
-	logerror("%04X:op4_w(%d%d%d)\n", cpu_get_pc(&space.device()), (data >> 7) & 1, (data >> 6) & 1, (data >> 5) & 1);
+	logerror("%04X:op4_w(%d%d%d)\n", space.device().safe_pc(), (data >> 7) & 1, (data >> 6) & 1, (data >> 5) & 1);
 
 	/* look for a non-zero start bit to go active */
 	if (!nflfoot_serial_out_active && (data & 0x80))
@@ -890,6 +997,95 @@ static INPUT_PORTS_START( kickc )
 
 	PORT_START("DIAL2")
 	PORT_BIT( 0xff, 0x00, IPT_DIAL ) PORT_SENSITIVITY(3) PORT_KEYDELTA(50) PORT_REVERSE PORT_COCKTAIL
+INPUT_PORTS_END
+
+
+static INPUT_PORTS_START( dpoker )
+	PORT_START("ssio:IP0")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 ) PORT_CHANGED_MEMBER(DEVICE_SELF, mcr_state, dpoker_coin_in_hit, NULL)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_SPECIAL ) // see dpoker_ip0_r
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_SPECIAL ) // "
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_SPECIAL ) // "
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_GAMBLE_KEYIN )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_GAMBLE_KEYOUT )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN2 ) PORT_NAME("Coin-drop")
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_SPECIAL ) // "
+
+	PORT_START("ssio:IP1")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_POKER_HOLD1 )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_POKER_HOLD2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_POKER_HOLD3 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_POKER_HOLD4 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_POKER_HOLD5 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_GAMBLE_DEAL )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_POKER_CANCEL )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_GAMBLE_STAND )
+
+	PORT_START("ssio:IP2")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN ) // only in test mode input test
+
+	// 10-position DIP switch on the sound pcb
+	// settings and defaults are verified from a sticker inside the cabinet, I don't know where 9 or 10 are connected
+	PORT_START("ssio:IP3")
+	PORT_DIPNAME( 0x01, 0x01, "Hopper" )			PORT_DIPLOCATION("B3:1")
+	PORT_DIPSETTING(    0x01, "Relay Pulse" )
+	PORT_DIPSETTING(    0x00, "Miser On" ) // what is this? - the game locks up if it's enabled
+	PORT_DIPNAME( 0x02, 0x02, "Music" )				PORT_DIPLOCATION("B3:2")
+	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPNAME( 0x04, 0x04, "Novelty" )			PORT_DIPLOCATION("B3:3")
+	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unused ) )	PORT_DIPLOCATION("B3:4")
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unused ) )	PORT_DIPLOCATION("B3:5")
+	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPNAME( 0x20, 0x20, "Cards After 5th Coin" )	PORT_DIPLOCATION("B3:6")
+	PORT_DIPSETTING(    0x20, "Face Up" )
+	PORT_DIPSETTING(    0x00, "Logo Up" )
+	PORT_DIPNAME( 0x40, 0x40, "Currency" )			PORT_DIPLOCATION("B3:7")
+	PORT_DIPSETTING(    0x40, "Ike Dollars" )
+	PORT_DIPSETTING(    0x00, "Other Coins" )
+	PORT_DIPNAME( 0x80, 0x00, "Background Color" )	PORT_DIPLOCATION("B3:8")
+	PORT_DIPSETTING(    0x80, "Green" )
+	PORT_DIPSETTING(    0x00, "Blue" )
+//  PORT_DIPNAME( 0x01, 0x00, DEF_STR( Unused ) )   PORT_DIPLOCATION("B3:9")
+//  PORT_DIPSETTING(    0x01, DEF_STR( On ) )
+//  PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+//  PORT_DIPNAME( 0x01, 0x00, "Freeze" )            PORT_DIPLOCATION("B3:10")
+//  PORT_DIPSETTING(    0x01, DEF_STR( On ) )
+//  PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+
+	PORT_START("ssio:IP4")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_START("ssio:DIP")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN ) // only in test mode input test
+
+	PORT_START("P24")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SPECIAL ) // Hopper Full (not implemented)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_GAMBLE_PAYOUT ) // Coin Return
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Door 1 Open") PORT_CODE(KEYCODE_A) // CAM OPEN
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Door 1 Lock") PORT_CODE(KEYCODE_S) // CAM LOCK
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Door 2 Open") PORT_CODE(KEYCODE_D) // HNG OPEN
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Door 2 Lock") PORT_CODE(KEYCODE_F) // HNG LOCK
+
+	PORT_START("P28")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START("P2C")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN ) // ? ARM HIT
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_SERVICE_NO_TOGGLE( 0x04, IP_ACTIVE_LOW ) // will only work after opening a door
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_GAMBLE_SERVICE )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN ) // ? XTMSG (ON/OFF)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_UNKNOWN ) // ? EXTLKT (ON/OFF)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
 
@@ -1636,8 +1832,8 @@ static MACHINE_CONFIG_START( mcr_90009, mcr_state )
 	MCFG_Z80CTC_ADD("ctc", MAIN_OSC_MCR_I/8 /* same as "maincpu" */, mcr_ctc_intf)
 
 	MCFG_WATCHDOG_VBLANK_INIT(16)
-	MCFG_MACHINE_START(mcr)
-	MCFG_MACHINE_RESET(mcr)
+	MCFG_MACHINE_START_OVERRIDE(mcr_state,mcr)
+	MCFG_MACHINE_RESET_OVERRIDE(mcr_state,mcr)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	/* video hardware */
@@ -1653,13 +1849,22 @@ static MACHINE_CONFIG_START( mcr_90009, mcr_state )
 	MCFG_GFXDECODE(mcr)
 	MCFG_PALETTE_LENGTH(32)
 
-	MCFG_VIDEO_START(mcr)
+	MCFG_VIDEO_START_OVERRIDE(mcr_state,mcr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_MIDWAY_SSIO_ADD("ssio")
 	MCFG_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
+MACHINE_CONFIG_END
+
+
+/* as above, but in a casino cabinet */
+static MACHINE_CONFIG_DERIVED( mcr_90009_dp, mcr_90009 )
+
+	/* basic machine hardware */
+	MCFG_TIMER_ADD("dp_coinin", dpoker_coin_in_callback)
+	MCFG_TIMER_ADD("dp_hopper", dpoker_hopper_callback)
 MACHINE_CONFIG_END
 
 
@@ -1727,7 +1932,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( mcr_91490_ipu, mcr_91490_snt )
 
 	/* basic machine hardware */
-	MCFG_MACHINE_START(nflfoot)
+	MCFG_MACHINE_START_OVERRIDE(mcr_state,nflfoot)
 
 	MCFG_CPU_ADD("ipu", Z80, 7372800/2)
 	MCFG_CPU_CONFIG(mcr_ipu_daisy_chain)
@@ -1863,6 +2068,36 @@ ROM_START( kickc )
 	ROM_LOAD( "2700-b.1d",    0x2000, 0x2000, CRC(78eda36c) SHA1(5cf9da6f364f586f324e7ac529db0dc273498320) )
 	ROM_LOAD( "2800-c.1b",    0x4000, 0x2000, CRC(c93e0170) SHA1(a7efdb6fd13dccd8d8d10de61b87585828bde6ac) )
 	ROM_LOAD( "2900-d.1a",    0x6000, 0x2000, CRC(91e59383) SHA1(bf87642cc747f1abbd80c6f529adfa60a1d9bc9e) )
+ROM_END
+
+
+ROM_START( dpoker )
+    ROM_REGION( 0x10000, "maincpu", 0 )
+    ROM_LOAD( "vppp.b3",      0x0000, 0x1000, CRC(2a76ded2) SHA1(3bb5467f0cbca07e72f6d61deb2687b7c1c839c8) )
+    ROM_LOAD( "vppp.b4",      0x1000, 0x1000, CRC(d6948faa) SHA1(4b9c3df45b1333c4e5595b790b439c104ab89eda) )
+    ROM_LOAD( "vppp.b5",      0x2000, 0x1000, CRC(a49916e5) SHA1(b21268c87bc5c3ea6e072846c5b97a7ae1e3995e) )
+    ROM_LOAD( "vppp.d4",      0x3000, 0x1000, CRC(c496934f) SHA1(cf27b6fb764fbf7ed4c5e1030c43498f0ac60c1c) )
+    ROM_LOAD( "vppp.d5",      0x4000, 0x1000, CRC(84f4bd38) SHA1(d1c53d8c6ba10d3bc343fe120eecbca70d48b759) )
+    ROM_LOAD( "vppp.d6",      0x5000, 0x1000, CRC(b0023bf1) SHA1(77a57a42dd403ef56f334ca295b5b43e94b99598) )
+    ROM_LOAD( "vppp.d7",      0x6000, 0x1000, CRC(a4012f5a) SHA1(011e77a6634fbb02a6ae99fe6685c92f2fad3fee) )
+
+	// The sound board was missing in this pcb set, we'll use the roms from Kick as placeholder.
+	// Funnily enough, according to a cabinet recording, the sound is actually very similar to Kickman.
+	ROM_REGION( 0x10000, "ssio:cpu", 0 )
+	ROM_LOAD( "vssp.a7",      0x0000, 0x1000, BAD_DUMP CRC(9e35c02e) SHA1(92afd0126dcfb2d4401927b2cf261090e186b6fa) )
+	ROM_LOAD( "vssp.a8",      0x1000, 0x1000, BAD_DUMP CRC(ca2b7c28) SHA1(fdcca3b755822c045c3c321cccc3f58112e2ad11) )
+	ROM_LOAD( "vssp.a9",      0x2000, 0x1000, BAD_DUMP CRC(d1901551) SHA1(fd7d6059f8ac59f95ae6f8ef12fbfce7ed16ec12) )
+	ROM_LOAD( "vssp.a10",     0x3000, 0x1000, BAD_DUMP CRC(d36ddcdc) SHA1(2d3ec83b9fa5a9d309c393a0c3ee45f0ba8192c9) )
+
+    ROM_REGION( 0x02000, "gfx1", 0 )
+    ROM_LOAD( "vpbg.g4",      0x0000, 0x1000, CRC(9fe9aad8) SHA1(f9174bcce3886548b8c18c5a06995d5c69ce5486) )
+    ROM_LOAD( "vpbg.g5",      0x1000, 0x1000, CRC(d43aeaae) SHA1(7bbabf9641c73154a769aa9bfc56ab0bc050e964) )
+
+    ROM_REGION( 0x08000, "gfx2", 0 )
+    ROM_LOAD( "vpfg.a1",      0x6000, 0x2000, CRC(d76ec7dd) SHA1(a7be6f05a988c59c7f83c640dd0ef824ea4ce839) )
+    ROM_LOAD( "vpfg.b1",      0x4000, 0x2000, CRC(cdba9a7d) SHA1(9076b52363cd84ae6e01ac46b369d7719536fac0) )
+    ROM_LOAD( "vpfg.d1",      0x2000, 0x2000, CRC(c661cace) SHA1(d5755f0c32a7d9ba283822daaf37ccbd2f6667de) )
+    ROM_LOAD( "vpfg.e1",      0x0000, 0x2000, CRC(acb3b469) SHA1(9769d6cfd49cba48264034fb5aed1d1b84ebba4c) )
 ROM_END
 
 
@@ -2541,21 +2776,47 @@ static void mcr_init(running_machine &machine, int cpuboard, int vidboard, int s
 DRIVER_INIT_MEMBER(mcr_state,solarfox)
 {
 	mcr_init(machine(), 90009, 91399, 90908);
+	mcr12_sprite_xoffs = 16;
 
 	machine().device<midway_ssio_device>("ssio")->set_custom_input(0, 0x1c, read8_delegate(FUNC(mcr_state::solarfox_ip0_r),this));
 	machine().device<midway_ssio_device>("ssio")->set_custom_input(1, 0xff, read8_delegate(FUNC(mcr_state::solarfox_ip1_r),this));
-
-	mcr12_sprite_xoffs = 16;
 }
 
 
 DRIVER_INIT_MEMBER(mcr_state,kick)
 {
 	mcr_init(machine(), 90009, 91399, 90908);
+	mcr12_sprite_xoffs_flip = 16;
 
 	machine().device<midway_ssio_device>("ssio")->set_custom_input(1, 0xf0, read8_delegate(FUNC(mcr_state::kick_ip1_r),this));
+}
 
+
+DRIVER_INIT_MEMBER(mcr_state,dpoker)
+{
+	mcr_init(machine(), 90009, 91399, 90908);
 	mcr12_sprite_xoffs_flip = 16;
+
+	machine().device<midway_ssio_device>("ssio")->set_custom_input(0, 0x8e, read8_delegate(FUNC(mcr_state::dpoker_ip0_r),this));
+
+	// meter ram, is it battery backed?
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_ram(0x8000, 0x81ff);
+
+	// extra I/O
+	machine().device("maincpu")->memory().space(AS_IO)->install_read_port(0x24, 0x24, "P24");
+	machine().device("maincpu")->memory().space(AS_IO)->install_read_port(0x28, 0x28, "P28");
+	machine().device("maincpu")->memory().space(AS_IO)->install_read_port(0x2c, 0x2c, "P2C");
+
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x2c, 0x2c, write8_delegate(FUNC(mcr_state::dpoker_lamps1_w),this));
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x30, 0x30, write8_delegate(FUNC(mcr_state::dpoker_lamps2_w),this));
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x34, 0x34, write8_delegate(FUNC(mcr_state::dpoker_output_w),this));
+	machine().device("maincpu")->memory().space(AS_IO)->install_write_handler(0x3f, 0x3f, write8_delegate(FUNC(mcr_state::dpoker_meters_w),this));
+
+	dpoker_coin_status = 0;
+	dpoker_output = 0;
+
+	state_save_register_global(machine(), dpoker_coin_status);
+	state_save_register_global(machine(), dpoker_output);
 }
 
 
@@ -2659,6 +2920,7 @@ GAME( 1981, solarfox, 0,        mcr_90009,     solarfox, mcr_state, solarfox,  R
 GAME( 1981, kick,     0,        mcr_90009,     kick, mcr_state,     kick,      ORIENTATION_SWAP_XY,        "Midway", "Kick (upright)", GAME_SUPPORTS_SAVE )
 GAME( 1981, kickman,  kick,     mcr_90009,     kick, mcr_state,     kick,      ORIENTATION_SWAP_XY,        "Midway", "Kickman (upright)", GAME_SUPPORTS_SAVE )
 GAME( 1981, kickc,    kick,     mcr_90009,     kickc, mcr_state,    kick,      ROT90,                      "Midway", "Kick (cocktail)", GAME_SUPPORTS_SAVE )
+GAMEL(1985, dpoker,   0,        mcr_90009_dp,  dpoker, mcr_state,   dpoker,    ROT0,                       "Bally",  "Draw Poker (Bally, 03-20)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE, layout_dpoker )
 
 /* 90010 CPU board + 91399 video gen + 90913 sound I/O */
 GAME( 1981, shollow,  0,        mcr_90010,     shollow, mcr_state,  mcr_90010, ROT90, "Bally Midway", "Satan's Hollow (set 1)", GAME_SUPPORTS_SAVE )

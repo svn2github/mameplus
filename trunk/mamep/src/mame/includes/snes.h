@@ -47,8 +47,8 @@
 
 /* Useful definitions */
 #define SNES_SCR_WIDTH        256		/* 32 characters 8 pixels wide */
-#define SNES_SCR_HEIGHT_NTSC  224		/* Can be 224 or 240 height */
-#define SNES_SCR_HEIGHT_PAL   274		/* ??? */
+#define SNES_SCR_HEIGHT_NTSC  225		/* Can be 224 or 240 height */
+#define SNES_SCR_HEIGHT_PAL   240		/* ??? */
 #define SNES_VTOTAL_NTSC      262		/* Maximum number of lines for NTSC systems */
 #define SNES_VTOTAL_PAL       312		/* Maximum number of lines for PAL systems */
 #define SNES_HTOTAL           341		/* Maximum number pixels per line (incl. hblank) */
@@ -146,26 +146,26 @@
 #define OLDJOY2        0x4017
 #define NMITIMEN       0x4200
 #define WRIO           0x4201
-#define WRMPYA         0x4202
-#define WRMPYB         0x4203
-#define WRDIVL         0x4204
-#define WRDIVH         0x4205
-#define WRDVDD         0x4206
+//#define WRMPYA         0x4202
+//#define WRMPYB         0x4203
+//#define WRDIVL         0x4204
+//#define WRDIVH         0x4205
+//#define WRDVDD         0x4206
 #define HTIMEL         0x4207
 #define HTIMEH         0x4208
 #define VTIMEL         0x4209
 #define VTIMEH         0x420A
 #define MDMAEN         0x420B
 #define HDMAEN         0x420C
-#define MEMSEL         0x420D
+//#define MEMSEL         0x420D
 #define RDNMI          0x4210
 #define TIMEUP         0x4211
 #define HVBJOY         0x4212
 #define RDIO           0x4213
-#define RDDIVL         0x4214
-#define RDDIVH         0x4215
-#define RDMPYL         0x4216
-#define RDMPYH         0x4217
+//#define RDDIVL         0x4214
+//#define RDDIVH         0x4215
+//#define RDMPYL         0x4216
+//#define RDMPYH         0x4217
 #define JOY1L          0x4218
 #define JOY1H          0x4219
 #define JOY2L          0x421A
@@ -405,7 +405,9 @@ class snes_state : public driver_device
 {
 public:
 	snes_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag)
+		{ }
+
 
 	/* misc */
 	UINT16                m_htmult;		/* in 512 wide, we run HTOTAL double and halve it on latching */
@@ -425,13 +427,20 @@ public:
 	UINT16                m_vtime;
 	UINT16                m_vmadd;
 
+	/* non-SNES HW-specific flags / variables */
+	UINT8                 m_is_nss;
+	UINT8				  m_input_disabled;
+	UINT8				  m_game_over_flag;
+	UINT8                 m_joy_flag;
+	UINT8                 m_is_sfcbox;
+
 	/* timers */
 	emu_timer             *m_scanline_timer;
 	emu_timer             *m_hblank_timer;
 	emu_timer             *m_nmi_timer;
 	emu_timer             *m_hirq_timer;
-	emu_timer             *m_div_timer;
-	emu_timer             *m_mult_timer;
+//  emu_timer             *m_div_timer;
+//  emu_timer             *m_mult_timer;
 	emu_timer             *m_io_timer;
 
 	/* DMA/HDMA-related */
@@ -494,6 +503,47 @@ public:
 	DECLARE_DRIVER_INIT(snes_hirom);
 	DECLARE_DRIVER_INIT(snes_mess);
 	DECLARE_DRIVER_INIT(snesst);
+
+	inline UINT16 snes_get_bgcolor( UINT8 direct_colors, UINT16 palette, UINT8 color );
+	inline void snes_set_scanline_pixel( int screen, INT16 x, UINT16 color, UINT8 priority, UINT8 layer, int blend );
+	inline void snes_draw_bgtile_lores( UINT8 layer, INT16 ii, UINT8 colour, UINT16 pal, UINT8 direct_colors, UINT8 priority );
+	inline void snes_draw_bgtile_hires( UINT8 layer, INT16 ii, UINT8 colour, UINT16 pal, UINT8 direct_colors, UINT8 priority );
+	inline void snes_draw_oamtile( INT16 ii, UINT8 colour, UINT16 pal, UINT8 priority );
+	inline void snes_draw_tile( UINT8 planes, UINT8 layer, UINT32 tileaddr, INT16 x, UINT8 priority, UINT8 flip, UINT8 direct_colors, UINT16 pal, UINT8 hires );
+	inline UINT32 snes_get_tmap_addr( UINT8 layer, UINT8 tile_size, UINT32 base, UINT32 x, UINT32 y );
+	inline void snes_update_line( UINT16 curline, UINT8 layer, UINT8 priority_b, UINT8 priority_a, UINT8 color_depth, UINT8 hires, UINT8 offset_per_tile, UINT8 direct_colors );
+	void snes_update_line_mode7( UINT16 curline, UINT8 layer, UINT8 priority_b, UINT8 priority_a );
+	void snes_update_obsel( void );
+	void snes_oam_list_build( void );
+	int is_sprite_on_scanline( UINT16 curline, UINT8 sprite );
+	void snes_update_objects_rto( UINT16 curline );
+	void snes_update_objects( UINT8 priority_oam0, UINT8 priority_oam1, UINT8 priority_oam2, UINT8 priority_oam3 );
+	void snes_update_mode_0( UINT16 curline );
+	void snes_update_mode_1( UINT16 curline );
+	void snes_update_mode_2( UINT16 curline );
+	void snes_update_mode_3( UINT16 curline );
+	void snes_update_mode_4( UINT16 curline );
+	void snes_update_mode_5( UINT16 curline );
+	void snes_update_mode_6( UINT16 curline );
+	void snes_update_mode_7( UINT16 curline );
+	void snes_draw_screens( UINT16 curline );
+	void snes_update_windowmasks( void );
+	void snes_update_offsets( void );
+	inline void snes_draw_blend( UINT16 offset, UINT16 *colour, UINT8 prevent_color_math, UINT8 black_pen_clip, int switch_screens );
+	void snes_refresh_scanline( running_machine &machine, bitmap_rgb32 &bitmap, UINT16 curline );
+
+	UINT32 snes_screen_update(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+
+	DECLARE_READ8_MEMBER( snes_oam_read );
+	DECLARE_WRITE8_MEMBER( snes_oam_write );
+	DECLARE_READ8_MEMBER( snes_cgram_read );
+	DECLARE_WRITE8_MEMBER( snes_cgram_write );
+	DECLARE_READ8_MEMBER( snes_vram_read );
+	DECLARE_WRITE8_MEMBER( snes_vram_write );
+	UINT16 *m_snes_oam;		/* Object Attribute Memory */
+	UINT16 *m_snes_cgram;	/* Palette RAM */
+	UINT8  *m_snes_vram;	/* Video RAM (TODO: Should be 16-bit, but it's easier this way) */
+
 };
 
 /* Special chips, checked at init and used in memory handlers */

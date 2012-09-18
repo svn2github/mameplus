@@ -53,6 +53,8 @@ public:
 	DECLARE_WRITE8_MEMBER(question_w);
 	DECLARE_READ8_MEMBER(ff_r);
 	DECLARE_DRIVER_INIT(coinmstr);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void video_start();
 };
 
 
@@ -899,25 +901,23 @@ static GFXDECODE_START( coinmstr )
 GFXDECODE_END
 
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(coinmstr_state::get_bg_tile_info)
 {
-	coinmstr_state *state = machine.driver_data<coinmstr_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int tile = videoram[tile_index + 0x0240];
 	int color = tile_index;
 
-	tile |= (state->m_attr_ram1[tile_index + 0x0240] & 0x80) << 1;
-	tile |= (state->m_attr_ram2[tile_index + 0x0240] & 0x80) << 2;
+	tile |= (m_attr_ram1[tile_index + 0x0240] & 0x80) << 1;
+	tile |= (m_attr_ram2[tile_index + 0x0240] & 0x80) << 2;
 
-	tile |= (state->m_attr_ram3[tile_index + 0x0240] & 0x03) << (6+4);
+	tile |= (m_attr_ram3[tile_index + 0x0240] & 0x03) << (6+4);
 
-	SET_TILE_INFO(0, tile, color, 0);
+	SET_TILE_INFO_MEMBER(0, tile, color, 0);
 }
 
-static VIDEO_START( coinmstr )
+void coinmstr_state::video_start()
 {
-	coinmstr_state *state = machine.driver_data<coinmstr_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 46, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(coinmstr_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 46, 32);
 }
 
 static SCREEN_UPDATE_IND16( coinmstr )
@@ -1027,7 +1027,6 @@ static MACHINE_CONFIG_START( coinmstr, coinmstr_state )
 	MCFG_GFXDECODE(coinmstr)
 	MCFG_PALETTE_LENGTH(46*32*4)
 
-	MCFG_VIDEO_START(coinmstr)
 
 	MCFG_MC6845_ADD("crtc", H46505, 14000000 / 16, h46505_intf)
 

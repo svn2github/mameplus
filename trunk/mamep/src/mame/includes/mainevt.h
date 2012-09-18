@@ -22,8 +22,8 @@ public:
 	UINT8      m_sound_irq_mask;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_upd;
 	device_t *m_k007232;
 	device_t *m_k052109;
@@ -39,6 +39,10 @@ public:
 	DECLARE_WRITE8_MEMBER(k052109_051960_w);
 	DECLARE_READ8_MEMBER(mainevt_sh_busy_r);
 	DECLARE_WRITE8_MEMBER(dv_sh_bankswitch_w);
+	virtual void machine_start();
+	virtual void machine_reset();
+	DECLARE_VIDEO_START(mainevt);
+	DECLARE_VIDEO_START(dv);
 };
 
 /*----------- defined in video/mainevt.c -----------*/
@@ -48,8 +52,8 @@ extern void dv_tile_callback(running_machine &machine, int layer,int bank,int *c
 extern void mainevt_sprite_callback(running_machine &machine, int *code,int *color,int *priority_mask,int *shadow);
 extern void dv_sprite_callback(running_machine &machine, int *code,int *color,int *priority,int *shadow);
 
-VIDEO_START( mainevt );
-VIDEO_START( dv );
+
+
 
 SCREEN_UPDATE_IND16( mainevt );
 SCREEN_UPDATE_IND16( dv );

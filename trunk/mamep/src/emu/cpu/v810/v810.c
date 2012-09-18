@@ -1,8 +1,16 @@
-/********************************************
+/******************************************************************
  NEC V810 (upd70732) core
   Tomasz Slanina - analog[at]op.pl
 
  Change Log
+ - 23/08/2012 - Implemented remaining BSU opcodes (Angelo Salese)
+ - 21/08/2012 - Fixed SET.F behaviour (Angelo Salese)
+ - 20/08/2012 - Fixed a sign bug with CVT.WS opcode (Angelo Salese)
+ - 16/08/2012 - Added XB, XH, MPYHW, MOVBSU, ORBSU and ANDNBSU opcodes
+                (Angelo Salese)
+ - 19/11/2010 - Fixed interrupt handing and flag position in PSW register
+                (Miodrag Milanovic)
+ - 18/11/2010 - Added bare bones irq support (Miodrag Milanovic)
  - 20/07/2004 - first public release
 
 
@@ -10,11 +18,11 @@
     - CY flag in few floating point opcodes
         (all floating point opcodes are NOT tested!)
   - traps/interrupts/exceptions
-  - bitstring opcodes
+  - bitstring opcodes currently makes the emulation to drop to 0%
   - timing
-  - missing opcodes : reti , trap
+  - missing opcodes : trap, caxi
 
-********************************************/
+******************************************************************/
 
 #include "emu.h"
 #include "debugger.h"
@@ -23,8 +31,7 @@
 #define clkIF 3
 #define clkMEM 3
 
-typedef struct _v810_state v810_state;
-struct _v810_state
+struct v810_state
 {
 	UINT32 reg[65];
 	UINT8 irq_line;
@@ -285,9 +292,75 @@ static UINT32 opCMPi(v810_state *cpustate,UINT32 op)	// cmpi imm5,r2
 static UINT32 opSETFi(v810_state *cpustate,UINT32 op)	// setf imm5,r2
 {
 	UINT32 op1=I5(op);
-	UINT32 op2=cpustate->PSW&0xf;
+	UINT8 res=0;
 	op1&=0xf;
-	SETREG(cpustate,GET2,(op1==op2)?1:0);
+	switch(op1)
+	{
+		case 0: //bv
+			res=GET_OV;
+			break;
+
+		case 1: //bl
+			res=GET_CY;
+			break;
+
+		case 2: //be
+			res=GET_Z;
+			break;
+
+		case 3: //bnh
+			res=GET_Z||GET_CY;
+			break;
+
+		case 4: //bn
+			res=GET_S;
+			break;
+
+		case 5: //br
+			res=1;
+			break;
+
+		case 6: //blt
+			res=GET_S^GET_OV;
+			break;
+
+		case 7: //ble
+			res=GET_Z||(GET_S^GET_OV);
+		break;
+
+		case 8: //bnv
+			res=!GET_OV;
+		break;
+
+		case 9: //bnl
+			res=!GET_CY;
+		break;
+
+		case 10: //bne
+			res=!GET_Z;
+		break;
+
+		case 11: //bh
+			res=!(GET_Z||GET_CY);
+		break;
+
+		case 12: //bp
+			res=!GET_S;
+		break;
+
+		case 13: //nop
+
+			break;
+
+		case 14: //bge
+			res=!(GET_OV^GET_S);
+		break;
+
+		case 15: //bgt
+			res=!(GET_Z||(GET_OV^GET_S));
+			break;
+	}
+	SETREG(cpustate,GET2,res);
 	return clkIF;
 }
 
@@ -545,7 +618,7 @@ static UINT32 opDI(v810_state *cpustate,UINT32 op)
 
 static UINT32 opTRAP(v810_state *cpustate,UINT32 op)
 {
-	logerror("V810: TRAP @ %X\n",cpustate->PC-2);
+	printf("V810: TRAP @ %X\n",cpustate->PC-2);
 	return clkIF;
 }
 
@@ -563,7 +636,7 @@ static UINT32 opRETI(v810_state *cpustate,UINT32 op)
 
 static UINT32 opHALT(v810_state *cpustate,UINT32 op)
 {
-	logerror("V810: HALT @ %X",cpustate->PC-2);
+	printf("V810: HALT @ %X",cpustate->PC-2);
 	return clkIF;
 }
 
@@ -691,6 +764,7 @@ static UINT32 opINB(v810_state *cpustate,UINT32 op)	// in.b disp16[reg1],reg2
 
 static UINT32 opCAXI(v810_state *cpustate,UINT32 op)	// caxi disp16[reg1],reg2
 {
+	printf("V810 CAXI execute\n");
 	cpustate->PC+=2;
 	return clkIF;
 }
@@ -822,6 +896,8 @@ static UINT32 opDIVr(v810_state *cpustate,UINT32 op)	// div r1,r2
 		SET_OV((op1^op2^GETREG(cpustate,GET2)) == 0x80000000);
 		CHECK_ZS(GETREG(cpustate,GET2));
 	}
+	else
+		printf("DIVr divide by zero?\n");
 	return clkIF;
 }
 
@@ -836,6 +912,8 @@ static UINT32 opDIVUr(v810_state *cpustate,UINT32 op)	// divu r1,r2
 		SET_OV((op1^op2^GETREG(cpustate,GET2)) == 0x80000000);
 		CHECK_ZS(GETREG(cpustate,GET2));
 	}
+	else
+		printf("DIVUr divide by zero?\n");
 	return clkIF;
 }
 
@@ -883,6 +961,8 @@ static void opDIVF(v810_state *cpustate,UINT32 op)
 	SET_OV(0);
 	if(val1!=0)
 		val2/=val1;
+	else
+		printf("DIVF divide by zero?\n");
 	SET_Z((val2==0.0)?1:0);
 	SET_S((val2<0.0)?1:0);
 	SETREG(cpustate,GET2,f2u(val2));
@@ -920,7 +1000,7 @@ static void opCVTS(v810_state *cpustate,UINT32 op)
 static void opCVTW(v810_state *cpustate,UINT32 op)
 {
 	//TODO: CY
-	float val1=GETREG(cpustate,GET1);
+	float val1=(INT32)GETREG(cpustate,GET1);
 	SET_OV(0);
 	SET_Z((val1==0.0)?1:0);
 	SET_S((val1<0.0)?1:0);
@@ -986,7 +1066,7 @@ static UINT32 opFpoint(v810_state *cpustate,UINT32 op)
 static UINT32 opBSU(v810_state *cpustate,UINT32 op)
 {
 	if(!(op & 8))
-		fatalerror("V810: unknown BSU opcode %04x",op);
+		fatalerror("V810: unknown BSU opcode %04x\n",op);
 
 	{
 		UINT32 srcbit,dstbit,src,dst,size;
@@ -995,8 +1075,8 @@ static UINT32 opBSU(v810_state *cpustate,UINT32 op)
 
 //      printf("BDST %08x BSRC %08x SIZE %08x DST %08x SRC %08x\n",cpustate->R26,cpustate->R27,cpustate->R28,cpustate->R29,cpustate->R30);
 
-		dstbit = cpustate->R26;
-		srcbit = cpustate->R27;
+		dstbit = cpustate->R26 & 0x1f;
+		srcbit = cpustate->R27 & 0x1f;
 		size =  cpustate->R28;
 		dst = cpustate->R29 & ~3;
 		src = cpustate->R30 & ~3;
@@ -1011,6 +1091,22 @@ static UINT32 opBSU(v810_state *cpustate,UINT32 op)
 
 				W_W(cpustate,dst,tmp);
 				break;
+			case 0x9: // ANDBSU
+				srctmp = ((R_W(cpustate,src) >> srcbit) & 1) ^ 1;
+				dsttmp = R_W(cpustate,dst);
+
+				tmp = dsttmp & (~(srctmp << dstbit));
+
+				W_W(cpustate,dst,tmp);
+				break;
+			case 0xa: // XORBSU
+				srctmp = (R_W(cpustate,src) >> srcbit) & 1;
+				dsttmp = R_W(cpustate,dst);
+
+				tmp = dsttmp ^ (srctmp << dstbit);
+
+				W_W(cpustate,dst,tmp);
+				break;
 			case 0xb: // MOVBSU
 				srctmp = (R_W(cpustate,src) >> srcbit) & 1;
 				dsttmp = (R_W(cpustate,dst) & ~(1 << dstbit));
@@ -1019,11 +1115,35 @@ static UINT32 opBSU(v810_state *cpustate,UINT32 op)
 
 				W_W(cpustate,dst,tmp);
 				break;
+			case 0xc: // ORNBSU
+				srctmp = ((R_W(cpustate,src) >> srcbit) & 1) ^ 1;
+				dsttmp = R_W(cpustate,dst);
+
+				tmp = dsttmp | (srctmp << dstbit);
+
+				W_W(cpustate,dst,tmp);
+				break;
 			case 0xd: // ANDNBSU
 				srctmp = (R_W(cpustate,src) >> srcbit) & 1;
 				dsttmp = R_W(cpustate,dst);
 
 				tmp = dsttmp & (~(srctmp << dstbit));
+
+				W_W(cpustate,dst,tmp);
+				break;
+			case 0xe: // XORNBSU
+				srctmp = ((R_W(cpustate,src) >> srcbit) & 1) ^ 1;
+				dsttmp = R_W(cpustate,dst);
+
+				tmp = dsttmp ^ (srctmp << dstbit);
+
+				W_W(cpustate,dst,tmp);
+				break;
+			case 0xf: // NOTBSU
+				srctmp = ((R_W(cpustate,src) >> srcbit) & 1) ^ 1;
+				dsttmp = (R_W(cpustate,dst) & ~(1 << dstbit));
+
+				tmp = (srctmp << dstbit) | dsttmp;
 
 				W_W(cpustate,dst,tmp);
 				break;
@@ -1315,7 +1435,7 @@ CPU_GET_INFO( v810 )
 		case CPUINFO_INT_CONTEXT_SIZE:					info->i = sizeof(v810_state);			break;
 		case CPUINFO_INT_INPUT_LINES:					info->i = 16;							break;
 		case CPUINFO_INT_DEFAULT_IRQ_VECTOR:			info->i = 0;							break;
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;			break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;			break;
 		case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1;							break;
 		case CPUINFO_INT_CLOCK_DIVIDER:					info->i = 1;							break;
 		case CPUINFO_INT_MIN_INSTRUCTION_BYTES:			info->i = 2;							break;
@@ -1323,15 +1443,15 @@ CPU_GET_INFO( v810 )
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 3;							break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 6;							break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 32;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 32;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 32;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 32;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
 
 		case CPUINFO_INT_INPUT_STATE + 0:				info->i = (cpustate->irq_line == 0) ? cpustate->irq_state : CLEAR_LINE;			break;
 		case CPUINFO_INT_INPUT_STATE + 1:				info->i = (cpustate->irq_line == 1) ? cpustate->irq_state : CLEAR_LINE;			break;
@@ -1411,11 +1531,11 @@ CPU_GET_INFO( v810 )
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &cpustate->icount;				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "V810");				break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "NEC V810");			break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");					break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Tomasz Slanina");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "V810");				break;
+		case CPUINFO_STR_FAMILY:					strcpy(info->s, "NEC V810");			break;
+		case CPUINFO_STR_VERSION:					strcpy(info->s, "1.0");					break;
+		case CPUINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);				break;
+		case CPUINFO_STR_CREDITS:					strcpy(info->s, "Tomasz Slanina");		break;
 
 		case CPUINFO_STR_REGISTER + V810_PC:			sprintf(info->s, "PC:%08X", cpustate->PC);		break;
 		case CPUINFO_STR_REGISTER + V810_R0:			sprintf(info->s, "R0 :%08X", cpustate->R0);		break;

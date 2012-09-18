@@ -87,7 +87,7 @@
 #define PNG_PF_Paeth		4
 
 /* Error types */
-enum _png_error
+enum png_error
 {
 	PNGERR_NONE,
 	PNGERR_OUT_OF_MEMORY,
@@ -101,7 +101,6 @@ enum _png_error
 	PNGERR_COMPRESS_ERROR,
 	PNGERR_UNSUPPORTED_FORMAT
 };
-typedef enum _png_error png_error;
 
 
 
@@ -109,8 +108,7 @@ typedef enum _png_error png_error;
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _png_text png_text;
-struct _png_text
+struct png_text
 {
 	png_text *		next;
 	const char *	keyword;		/* this is allocated */
@@ -118,8 +116,7 @@ struct _png_text
 };
 
 
-typedef struct _png_info png_info;
-struct _png_info
+struct png_info
 {
 	UINT8 *			image;
 	UINT32			width, height;

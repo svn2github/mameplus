@@ -365,6 +365,20 @@ const UINT32 TILEMAP_FLIPY = TILE_FLIPY;			// draw the tilemap vertically flippe
 // set this value for a scroll row/column to fully disable it
 const UINT32 TILE_LINE_DISABLED = 0x80000000;
 
+// standard mappers
+enum tilemap_standard_mapper
+{
+	TILEMAP_SCAN_ROWS = 0,
+	TILEMAP_SCAN_ROWS_FLIP_X,
+	TILEMAP_SCAN_ROWS_FLIP_Y,
+	TILEMAP_SCAN_ROWS_FLIP_XY,
+	TILEMAP_SCAN_COLS,
+	TILEMAP_SCAN_COLS_FLIP_X,
+	TILEMAP_SCAN_COLS_FLIP_Y,
+	TILEMAP_SCAN_COLS_FLIP_XY,
+	TILEMAP_STANDARD_COUNT
+};
+
 
 
 //**************************************************************************
@@ -394,12 +408,20 @@ struct tile_data
 
 	void set(running_machine &machine, int _gfxnum, int rawcode, int rawcolor, int _flags)
 	{
-		const gfx_element *gfx = machine.gfx[_gfxnum];
-		int code = rawcode % gfx->total_elements;
-		pen_data = gfx_element_get_data(gfx, code);
-		palette_base = gfx->color_base + gfx->color_granularity * rawcolor;
+		gfx_element *gfx = machine.gfx[_gfxnum];
+		int code = rawcode % gfx->elements();
+		pen_data = gfx->get_data(code);
+		palette_base = gfx->colorbase() + gfx->granularity() * rawcolor;
 		flags = _flags;
 		gfxnum = _gfxnum;
+	}
+
+	void set(running_machine &machine, gfx_element &gfx, int rawcode, int rawcolor, int _flags)
+	{
+		int code = rawcode % gfx.elements();
+		pen_data = gfx.get_data(code);
+		palette_base = gfx.colorbase() + gfx.granularity() * rawcolor;
+		flags = _flags;
 	}
 };
 
@@ -411,7 +433,6 @@ typedef delegate<tilemap_memory_index (UINT32, UINT32, UINT32, UINT32)> tilemap_
 
 // legacy callbacks
 typedef void (*tile_get_info_func)(running_machine &machine, tile_data &tileinfo, tilemap_memory_index tile_index, void *param);
-typedef void (*tile_get_info_device_func)(device_t *device, tile_data &tileinfo, tilemap_memory_index tile_index, void *param);
 typedef tilemap_memory_index (*tilemap_mapper_func)(running_machine &machine, UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows);
 
 
@@ -486,6 +507,19 @@ public:
 	void draw_roz(bitmap_ind16 &dest, const rectangle &cliprect, UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy, bool wraparound, UINT32 flags, UINT8 priority, UINT8 priority_mask = 0xff);
 	void draw_roz(bitmap_rgb32 &dest, const rectangle &cliprect, UINT32 startx, UINT32 starty, int incxx, int incxy, int incyx, int incyy, bool wraparound, UINT32 flags, UINT8 priority, UINT8 priority_mask = 0xff);
 	void draw_debug(bitmap_rgb32 &dest, UINT32 scrollx, UINT32 scrolly);
+
+	// mappers
+	// scan in row-major order with optional flipping
+	static tilemap_memory_index scan_rows(running_machine &machine, UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows);
+	static tilemap_memory_index scan_rows_flip_x(running_machine &machine, UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows);
+	static tilemap_memory_index scan_rows_flip_y(running_machine &machine, UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows);
+	static tilemap_memory_index scan_rows_flip_xy(running_machine &machine, UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows);
+
+	// scan in column-major order with optional flipping
+	static tilemap_memory_index scan_cols(running_machine &machine, UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows);
+	static tilemap_memory_index scan_cols_flip_x(running_machine &machine, UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows);
+	static tilemap_memory_index scan_cols_flip_y(running_machine &machine, UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows);
+	static tilemap_memory_index scan_cols_flip_xy(running_machine &machine, UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows);
 
 private:
 	// internal set of transparency states for rendering
@@ -606,7 +640,9 @@ public:
 
 	// tilemap creation
 	tilemap_t &create(tilemap_get_info_delegate tile_get_info, tilemap_mapper_delegate mapper, int tilewidth, int tileheight, int cols, int rows);
+	tilemap_t &create(tilemap_get_info_delegate tile_get_info, tilemap_standard_mapper mapper, int tilewidth, int tileheight, int cols, int rows);
 	tilemap_t &create(tile_get_info_func tile_get_info, tilemap_mapper_func mapper, int tilewidth, int tileheight, int cols, int rows);
+	tilemap_t &create(tile_get_info_func tile_get_info, tilemap_standard_mapper mapper, int tilewidth, int tileheight, int cols, int rows);
 
 	// tilemap list information
 	tilemap_t *find(int index) { return m_tilemap_list.find(index); }
@@ -638,14 +674,15 @@ private:
 
 // function definition for a get info callback
 #define TILE_GET_INFO(_name)			void _name(running_machine &machine, tile_data &tileinfo, tilemap_memory_index tile_index, void *param)
-#define TILE_GET_INFO_DEVICE(_name)		void _name(device_t *device, tile_data &tileinfo, tilemap_memory_index tile_index, void *param)
+#define TILE_GET_INFO_MEMBER(_name)		void _name(tile_data &tileinfo, tilemap_memory_index tile_index, void *param)
 
 // function definition for a logical-to-memory mapper
 #define TILEMAP_MAPPER(_name)			tilemap_memory_index _name(running_machine &machine, UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows)
+#define TILEMAP_MAPPER_MEMBER(_name)	tilemap_memory_index _name(UINT32 col, UINT32 row, UINT32 num_cols, UINT32 num_rows)
 
 // useful macro inside of a TILE_GET_INFO callback to set tile information
 #define SET_TILE_INFO(GFX,CODE,COLOR,FLAGS)         tileinfo.set(machine, GFX, CODE, COLOR, FLAGS)
-#define SET_TILE_INFO_DEVICE(GFX,CODE,COLOR,FLAGS)  tileinfo.set(device->machine(), GFX, CODE, COLOR, FLAGS)
+#define SET_TILE_INFO_MEMBER(GFX,CODE,COLOR,FLAGS)  tileinfo.set(machine(), GFX, CODE, COLOR, FLAGS)
 
 // Macros for setting tile attributes in the TILE_GET_INFO callback:
 //   TILE_FLIP_YX assumes that flipy is in bit 1 and flipx is in bit 0
@@ -666,32 +703,13 @@ private:
 inline tilemap_t *tilemap_create(running_machine &machine, tile_get_info_func tile_get_info, tilemap_mapper_func mapper, int tilewidth, int tileheight, int cols, int rows)
 { return &machine.tilemap().create(tilemap_get_info_delegate(tile_get_info, "", &machine), tilemap_mapper_delegate(mapper, "", &machine), tilewidth, tileheight, cols, rows); }
 
-// create a new tilemap that is owned by a device
-inline tilemap_t *tilemap_create_device(device_t *device, tile_get_info_device_func tile_get_info, tilemap_mapper_func mapper, int tilewidth, int tileheight, int cols, int rows)
-{ return &device->machine().tilemap().create(tilemap_get_info_delegate(tile_get_info, "", device), tilemap_mapper_delegate(mapper, "", &device->machine()), tilewidth, tileheight, cols, rows); }
-
-
-
-// ----- common logical-to-memory mappers -----
-
-// scan in row-major order with optional flipping
-TILEMAP_MAPPER( tilemap_scan_rows );
-TILEMAP_MAPPER( tilemap_scan_rows_flip_x );
-TILEMAP_MAPPER( tilemap_scan_rows_flip_y );
-TILEMAP_MAPPER( tilemap_scan_rows_flip_xy );
-
-// scan in column-major order with optional flipping
-TILEMAP_MAPPER( tilemap_scan_cols );
-TILEMAP_MAPPER( tilemap_scan_cols_flip_x );
-TILEMAP_MAPPER( tilemap_scan_cols_flip_y );
-TILEMAP_MAPPER( tilemap_scan_cols_flip_xy );
-
+inline tilemap_t *tilemap_create(running_machine &machine, tile_get_info_func tile_get_info, tilemap_standard_mapper mapper, int tilewidth, int tileheight, int cols, int rows)
+{ return &machine.tilemap().create(tilemap_get_info_delegate(tile_get_info, "", &machine), mapper, tilewidth, tileheight, cols, rows); }
 
 
 //**************************************************************************
 //  INLINE FUNCTIONS
 //**************************************************************************
-
 
 inline running_machine &tilemap_t::machine() const
 {

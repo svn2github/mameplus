@@ -32,7 +32,6 @@ DIP locations verified for:
 #include "cpu/m6502/m6502.h"
 #include "cpu/z80/z80.h"
 #include "sound/dac.h"
-#include "sound/sn76496.h"
 #include "sound/ay8910.h"
 #include "includes/lasso.h"
 
@@ -41,7 +40,7 @@ INPUT_CHANGED_MEMBER(lasso_state::coin_inserted)
 {
 
 	/* coin insertion causes an NMI */
-	device_set_input_line(m_maincpu, INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
 }
 
 
@@ -49,13 +48,13 @@ INPUT_CHANGED_MEMBER(lasso_state::coin_inserted)
 WRITE8_MEMBER(lasso_state::sound_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	generic_pulse_irq_line(m_audiocpu->execute(), 0, 1);
+	generic_pulse_irq_line(*m_audiocpu, 0, 1);
 }
 
 WRITE8_MEMBER(lasso_state::pinbo_sound_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 READ8_MEMBER(lasso_state::sound_status_r)
@@ -69,10 +68,10 @@ WRITE8_MEMBER(lasso_state::sound_select_w)
 	UINT8 to_write = BITSWAP8(*m_chip_data, 0, 1, 2, 3, 4, 5, 6, 7);
 
 	if (~data & 0x01)	/* chip #0 */
-		sn76496_w(m_sn_1, 0, to_write);
+		m_sn_1->write(space, 0, to_write);
 
 	if (~data & 0x02)	/* chip #1 */
-		sn76496_w(m_sn_2, 0, to_write);
+		m_sn_2->write(space, 0, to_write);
 }
 
 
@@ -459,42 +458,52 @@ static GFXDECODE_START( pinbo )
 GFXDECODE_END
 
 
+/*************************************
+ *
+ *  Sound interface
+ *
+ *************************************/
 
-static MACHINE_START( lasso )
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
 {
-	lasso_state *state = machine.driver_data<lasso_state>();
+    DEVCB_NULL
+};
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_sn_1 = machine.device("sn76489.1");
-	state->m_sn_2 = machine.device("sn76489.2");
 
-	state->save_item(NAME(state->m_gfxbank));
+void lasso_state::machine_start()
+{
+
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+
+	save_item(NAME(m_gfxbank));
 }
 
-static MACHINE_START( wwjgtin )
+MACHINE_START_MEMBER(lasso_state,wwjgtin)
 {
-	lasso_state *state = machine.driver_data<lasso_state>();
 
-	MACHINE_START_CALL(lasso);
+	lasso_state::machine_start();
 
-	state->save_item(NAME(state->m_track_enable));
+	save_item(NAME(m_track_enable));
 }
 
-static MACHINE_RESET( lasso )
+void lasso_state::machine_reset()
 {
-	lasso_state *state = machine.driver_data<lasso_state>();
 
-	state->m_gfxbank = 0;
+	m_gfxbank = 0;
 }
 
-static MACHINE_RESET( wwjgtin )
+MACHINE_RESET_MEMBER(lasso_state,wwjgtin)
 {
-	lasso_state *state = machine.driver_data<lasso_state>();
 
-	MACHINE_RESET_CALL(lasso);
+	lasso_state::machine_reset();
 
-	state->m_track_enable = 0;
+	m_track_enable = 0;
 }
 
 static MACHINE_CONFIG_START( base, lasso_state )
@@ -509,8 +518,6 @@ static MACHINE_CONFIG_START( base, lasso_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(lasso)
-	MCFG_MACHINE_RESET(lasso)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -523,17 +530,17 @@ static MACHINE_CONFIG_START( base, lasso_state )
 	MCFG_GFXDECODE(lasso)
 	MCFG_PALETTE_LENGTH(0x40)
 
-	MCFG_PALETTE_INIT(lasso)
-	MCFG_VIDEO_START(lasso)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn76489.1", SN76489, 2000000)
+	MCFG_SOUND_ADD("sn76489.1", SN76489_NEW, 2000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn76489.2", SN76489, 2000000)
+	MCFG_SOUND_ADD("sn76489.2", SN76489_NEW, 2000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( lasso, base )
@@ -567,8 +574,8 @@ static MACHINE_CONFIG_DERIVED( wwjgtin, base )
 	MCFG_CPU_MODIFY("audiocpu")
 	MCFG_CPU_PROGRAM_MAP(wwjgtin_audio_map)
 
-	MCFG_MACHINE_START(wwjgtin)
-	MCFG_MACHINE_RESET(wwjgtin)
+	MCFG_MACHINE_START_OVERRIDE(lasso_state,wwjgtin)
+	MCFG_MACHINE_RESET_OVERRIDE(lasso_state,wwjgtin)
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")
@@ -577,8 +584,8 @@ static MACHINE_CONFIG_DERIVED( wwjgtin, base )
 	MCFG_GFXDECODE(wwjgtin)	// Has 1 additional layer
 	MCFG_PALETTE_LENGTH(0x40 + 16*16)
 
-	MCFG_PALETTE_INIT(wwjgtin)
-	MCFG_VIDEO_START(wwjgtin)
+	MCFG_PALETTE_INIT_OVERRIDE(lasso_state,wwjgtin)
+	MCFG_VIDEO_START_OVERRIDE(lasso_state,wwjgtin)
 
 	/* sound hardware */
 	MCFG_DAC_ADD("dac")
@@ -600,7 +607,7 @@ static MACHINE_CONFIG_DERIVED( pinbo, base )
 	MCFG_GFXDECODE(pinbo)
 	MCFG_PALETTE_LENGTH(256)
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(pinbo)
+	MCFG_VIDEO_START_OVERRIDE(lasso_state,pinbo)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(chameleo)
 

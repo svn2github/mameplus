@@ -55,6 +55,9 @@ public:
 	DECLARE_READ8_MEMBER(moonwarp_p1_r);
 	DECLARE_READ8_MEMBER(moonwarp_p2_r);
 	DECLARE_DRIVER_INIT(moonwarp);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -188,7 +191,7 @@ static TIMER_CALLBACK( irq_callback )
 
 	/* set the IRQ line if enabled */
 	if (state->m_irq_enabled)
-		cputag_set_input_line_and_vector(machine, "maincpu", 0, HOLD_LINE, 0xfc);
+		machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xfc);
 
 	/* set up for next interrupt */
 	next_irq_number = (irq_number + 1) % IRQS_PER_FRAME;
@@ -268,7 +271,7 @@ static TIMER_CALLBACK( nmi_callback )
 
 	/* pulse the NMI line if enabled */
 	if (state->m_nmi_enabled)
-		cputag_set_input_line(machine, "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine.device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	/* set up for next interrupt */
 	next_nmi_number = (nmi_number + 1) % NMIS_PER_FRAME;
@@ -302,18 +305,17 @@ static void start_nmi_timer(running_machine &machine)
  *
  *************************************/
 
-static MACHINE_START( berzerk )
+void berzerk_state::machine_start()
 {
-	berzerk_state *state = machine.driver_data<berzerk_state>();
-	create_irq_timer(machine);
-	create_nmi_timer(machine);
+	create_irq_timer(machine());
+	create_nmi_timer(machine());
 
 	/* register for state saving */
-	state_save_register_global(machine, state->m_magicram_control);
-	state_save_register_global(machine, state->m_last_shift_data);
-	state_save_register_global(machine, state->m_intercept);
-	state_save_register_global(machine, state->m_irq_enabled);
-	state_save_register_global(machine, state->m_nmi_enabled);
+	state_save_register_global(machine(), m_magicram_control);
+	state_save_register_global(machine(), m_last_shift_data);
+	state_save_register_global(machine(), m_intercept);
+	state_save_register_global(machine(), m_irq_enabled);
+	state_save_register_global(machine(), m_nmi_enabled);
 }
 
 
@@ -324,16 +326,15 @@ static MACHINE_START( berzerk )
  *
  *************************************/
 
-static MACHINE_RESET( berzerk )
+void berzerk_state::machine_reset()
 {
-	berzerk_state *state = machine.driver_data<berzerk_state>();
-	state->m_irq_enabled = 0;
-	state->m_nmi_enabled = 0;
-	set_led_status(machine, 0, 0);
-	state->m_magicram_control = 0;
+	m_irq_enabled = 0;
+	m_nmi_enabled = 0;
+	set_led_status(machine(), 0, 0);
+	m_magicram_control = 0;
 
-	start_irq_timer(machine);
-	start_nmi_timer(machine);
+	start_irq_timer(machine());
+	start_nmi_timer(machine());
 }
 
 
@@ -350,12 +351,12 @@ static MACHINE_RESET( berzerk )
 #define LS181_10C	(1)
 
 
-static VIDEO_START( berzerk )
+void berzerk_state::video_start()
 {
-	TTL74181_config(machine, LS181_12C, 0);
+	TTL74181_config(machine(), LS181_12C, 0);
 	TTL74181_write(LS181_12C, TTL74181_INPUT_M, 1, 1);
 
-	TTL74181_config(machine, LS181_10C, 0);
+	TTL74181_config(machine(), LS181_10C, 0);
 	TTL74181_write(LS181_10C, TTL74181_INPUT_M, 1, 1);
 }
 
@@ -1084,13 +1085,10 @@ static MACHINE_CONFIG_START( berzerk, berzerk_state )
 	MCFG_CPU_PROGRAM_MAP(berzerk_map)
 	MCFG_CPU_IO_MAP(berzerk_io_map)
 
-	MCFG_MACHINE_START(berzerk)
-	MCFG_MACHINE_RESET(berzerk)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
-	MCFG_VIDEO_START(berzerk)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)

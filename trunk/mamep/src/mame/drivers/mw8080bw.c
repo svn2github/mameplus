@@ -44,8 +44,9 @@
           cabinet side art all call it just "Amazing Maze"
         * Desert Gun was originally named Road Runner. The name was changed
           when Midway merged with Bally who had a game by the same title
-        * Guided Missile: Original manufacturer is Taito and title is "Missile X".
-          Midway licensed the game from Taito
+        * Guided Missile: It is a misconception that that this is the same
+          game as Taito's "Missile X". The latter does not run on a CPU,
+          akin to Midway's Gun Fight vs Taito's Western Gun.
         * Space Invaders: Taito imported this licensed version because of
           short supply in Japan. The game is called "Space Invaders M"
           The M stands for Midway.
@@ -224,8 +225,8 @@ MACHINE_CONFIG_START( mw8080bw_root, mw8080bw_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu",I8080,MW8080BW_CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(main_map)
-	MCFG_MACHINE_START(mw8080bw)
-	MCFG_MACHINE_RESET(mw8080bw)
+	MCFG_MACHINE_START_OVERRIDE(mw8080bw_state,mw8080bw)
+	MCFG_MACHINE_RESET_OVERRIDE(mw8080bw_state,mw8080bw)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -880,21 +881,20 @@ static TIMER_CALLBACK( maze_tone_timing_timer_callback )
 }
 
 
-static MACHINE_START( maze )
+MACHINE_START_MEMBER(mw8080bw_state,maze)
 {
-	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* create astable timer for IC B1 */
-	machine.scheduler().timer_pulse(MAZE_555_B1_PERIOD, FUNC(maze_tone_timing_timer_callback));
+	machine().scheduler().timer_pulse(MAZE_555_B1_PERIOD, FUNC(maze_tone_timing_timer_callback));
 
 	/* initialize state of Tone Timing FF, IC C1 */
-	state->m_maze_tone_timing_state = 0;
+	m_maze_tone_timing_state = 0;
 
 	/* setup for save states */
-	state->save_item(NAME(state->m_maze_tone_timing_state));
-	machine.save().register_postload(save_prepost_delegate(FUNC(maze_update_discrete), &machine));
+	save_item(NAME(m_maze_tone_timing_state));
+	machine().save().register_postload(save_prepost_delegate(FUNC(maze_update_discrete), &machine()));
 
-	MACHINE_START_CALL(mw8080bw);
+	MACHINE_START_CALL_MEMBER(mw8080bw);
 }
 
 
@@ -957,7 +957,7 @@ static MACHINE_CONFIG_DERIVED( maze, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(maze_io_map)
-	MCFG_MACHINE_START(maze)
+	MCFG_MACHINE_START_OVERRIDE(mw8080bw_state,maze)
 	MCFG_WATCHDOG_TIME_INIT(PERIOD_OF_555_MONOSTABLE(RES_K(270), CAP_U(10))) /* 2.97s */
 
 	/* audio hardware */
@@ -973,14 +973,13 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static MACHINE_START( boothill )
+MACHINE_START_MEMBER(mw8080bw_state,boothill)
 {
-	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->m_rev_shift_res));
+	save_item(NAME(m_rev_shift_res));
 
-	MACHINE_START_CALL(mw8080bw);
+	MACHINE_START_CALL_MEMBER(mw8080bw);
 }
 
 
@@ -1049,7 +1048,7 @@ static MACHINE_CONFIG_DERIVED( boothill, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(boothill_io_map)
-	MCFG_MACHINE_START(boothill)
+	MCFG_MACHINE_START_OVERRIDE(mw8080bw_state,boothill)
 	MCFG_WATCHDOG_TIME_INIT(PERIOD_OF_555_MONOSTABLE(RES_K(270), CAP_U(10))) /* 2.97s */
 
 	/* add shifter */
@@ -1174,14 +1173,13 @@ MACHINE_CONFIG_END
 #define DESERTGU_DIP_SW_0_1_SET_2_TAG	("DIPSW01SET2")
 
 
-static MACHINE_START( desertgu )
+MACHINE_START_MEMBER(mw8080bw_state,desertgu)
 {
-	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->m_desertgun_controller_select));
+	save_item(NAME(m_desertgun_controller_select));
 
-	MACHINE_START_CALL(mw8080bw);
+	MACHINE_START_CALL_MEMBER(mw8080bw);
 }
 
 
@@ -1282,7 +1280,7 @@ static MACHINE_CONFIG_DERIVED( desertgu, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(desertgu_io_map)
-	MCFG_MACHINE_START(desertgu)
+	MCFG_MACHINE_START_OVERRIDE(mw8080bw_state,desertgu)
 	MCFG_WATCHDOG_TIME_INIT(255 * attotime::from_hz(MW8080BW_60HZ))
 
 	/* add shifter */
@@ -1500,14 +1498,13 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static MACHINE_START( gmissile )
+MACHINE_START_MEMBER(mw8080bw_state,gmissile)
 {
-	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->m_rev_shift_res));
+	save_item(NAME(m_rev_shift_res));
 
-	MACHINE_START_CALL(mw8080bw);
+	MACHINE_START_CALL_MEMBER(mw8080bw);
 }
 
 
@@ -1577,7 +1574,7 @@ static MACHINE_CONFIG_DERIVED( gmissile, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(gmissile_io_map)
-	MCFG_MACHINE_START(gmissile)
+	MCFG_MACHINE_START_OVERRIDE(mw8080bw_state,gmissile)
 	MCFG_WATCHDOG_TIME_INIT(255 * attotime::from_hz(MW8080BW_60HZ))
 
 	/* add shifter */
@@ -1596,14 +1593,13 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static MACHINE_START( m4 )
+MACHINE_START_MEMBER(mw8080bw_state,m4)
 {
-	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->m_rev_shift_res));
+	save_item(NAME(m_rev_shift_res));
 
-	MACHINE_START_CALL(mw8080bw);
+	MACHINE_START_CALL_MEMBER(mw8080bw);
 }
 
 
@@ -1671,7 +1667,7 @@ static MACHINE_CONFIG_DERIVED( m4, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(m4_io_map)
-	MCFG_MACHINE_START(m4)
+	MCFG_MACHINE_START_OVERRIDE(mw8080bw_state,m4)
 	MCFG_WATCHDOG_TIME_INIT(255 * attotime::from_hz(MW8080BW_60HZ))
 
 	/* add shifter */
@@ -1694,14 +1690,13 @@ MACHINE_CONFIG_END
 #define CLOWNS_CONTROLLER_P2_TAG		("CONTP2")
 
 
-static MACHINE_START( clowns )
+MACHINE_START_MEMBER(mw8080bw_state,clowns)
 {
-	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->m_clowns_controller_select));
+	save_item(NAME(m_clowns_controller_select));
 
-	MACHINE_START_CALL(mw8080bw);
+	MACHINE_START_CALL_MEMBER(mw8080bw);
 }
 
 
@@ -1840,7 +1835,7 @@ static MACHINE_CONFIG_DERIVED( clowns, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(clowns_io_map)
-	MCFG_MACHINE_START(clowns)
+	MCFG_MACHINE_START_OVERRIDE(mw8080bw_state,clowns)
 	MCFG_WATCHDOG_TIME_INIT(255 * attotime::from_hz(MW8080BW_60HZ))
 
 	/* add shifter */
@@ -1934,7 +1929,7 @@ static MACHINE_CONFIG_DERIVED( spacwalk, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(spacwalk_io_map)
-	MCFG_MACHINE_START(clowns)
+	MCFG_MACHINE_START_OVERRIDE(mw8080bw_state,clowns)
 	MCFG_WATCHDOG_TIME_INIT(255 * attotime::from_hz(MW8080BW_60HZ))
 
 	/* add shifter */
@@ -2129,17 +2124,16 @@ static TIMER_DEVICE_CALLBACK( spcenctr_strobe_timer_callback )
 }
 
 
-static MACHINE_START( spcenctr )
+MACHINE_START_MEMBER(mw8080bw_state,spcenctr)
 {
-	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->m_spcenctr_strobe_state));
-	state->save_item(NAME(state->m_spcenctr_trench_width));
-	state->save_item(NAME(state->m_spcenctr_trench_center));
-	state->save_item(NAME(state->m_spcenctr_trench_slope));
+	save_item(NAME(m_spcenctr_strobe_state));
+	save_item(NAME(m_spcenctr_trench_width));
+	save_item(NAME(m_spcenctr_trench_center));
+	save_item(NAME(m_spcenctr_trench_slope));
 
-	MACHINE_START_CALL(mw8080bw);
+	MACHINE_START_CALL_MEMBER(mw8080bw);
 }
 
 #if 0
@@ -2191,7 +2185,7 @@ WRITE8_MEMBER(mw8080bw_state::spcenctr_io_w)
 		m_spcenctr_trench_width = data;			/*  -  -  -  -  -  1  1  1 */
 
 	else
-		logerror("%04x:  Unmapped I/O port write to %02x = %02x\n", cpu_get_pc(&space.device()), offset, data);
+		logerror("%04x:  Unmapped I/O port write to %02x = %02x\n", space.device().safe_pc(), offset, data);
 }
 
 
@@ -2262,7 +2256,7 @@ static MACHINE_CONFIG_DERIVED( spcenctr, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(spcenctr_io_map)
-	MCFG_MACHINE_START(spcenctr)
+	MCFG_MACHINE_START_OVERRIDE(mw8080bw_state,spcenctr)
 	MCFG_WATCHDOG_TIME_INIT(255 * attotime::from_hz(MW8080BW_60HZ))
 
 	/* timers */
@@ -2291,14 +2285,13 @@ MACHINE_CONFIG_END
  *************************************/
 
 
-static MACHINE_START( phantom2 )
+MACHINE_START_MEMBER(mw8080bw_state,phantom2)
 {
-	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->m_phantom2_cloud_counter));
+	save_item(NAME(m_phantom2_cloud_counter));
 
-	MACHINE_START_CALL(mw8080bw);
+	MACHINE_START_CALL_MEMBER(mw8080bw);
 }
 
 
@@ -2358,7 +2351,7 @@ static MACHINE_CONFIG_DERIVED( phantom2, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(phantom2_io_map)
-	MCFG_MACHINE_START(phantom2)
+	MCFG_MACHINE_START_OVERRIDE(mw8080bw_state,phantom2)
 	MCFG_WATCHDOG_TIME_INIT(255 * attotime::from_hz(MW8080BW_60HZ))
 
 	/* video hardware */
@@ -2515,14 +2508,13 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static MACHINE_START( invaders )
+MACHINE_START_MEMBER(mw8080bw_state,invaders)
 {
-	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
 	/* setup for save states */
-	state->save_item(NAME(state->m_invaders_flip_screen));
+	save_item(NAME(m_invaders_flip_screen));
 
-	MACHINE_START_CALL(mw8080bw);
+	MACHINE_START_CALL_MEMBER(mw8080bw);
 }
 
 
@@ -2708,7 +2700,7 @@ MACHINE_CONFIG_DERIVED( invaders, mw8080bw_root )
 	/* basic machine hardware */
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(invaders_io_map)
-	MCFG_MACHINE_START(invaders)
+	MCFG_MACHINE_START_OVERRIDE(mw8080bw_state,invaders)
 	MCFG_WATCHDOG_TIME_INIT(255 * attotime::from_hz(MW8080BW_60HZ))
 
 	/* video hardware */
@@ -3196,7 +3188,7 @@ ROM_END
 /* 618 */ GAME( 1977, roadrunm, desertgu, desertgu, desertgu, driver_device, 0, ROT0,   "Midway", "Road Runner (Midway)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
 /* 619 */ GAME( 1977, dplay,    0,        dplay,    dplay, driver_device,    0, ROT0,   "Midway", "Double Play", GAME_SUPPORTS_SAVE  )
 /* 622 */ GAMEL(1977, lagunar,  0,        zzzap,    lagunar, driver_device,  0, ROT90,  "Midway", "Laguna Racer", GAME_NO_SOUND | GAME_SUPPORTS_SAVE , layout_lagunar )
-/* 623 */ GAME( 1977, gmissile, 0,        gmissile, gmissile, driver_device, 0, ROT0,   "Taito / Midway", "Missile X / Guided Missile", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  )
+/* 623 */ GAME( 1977, gmissile, 0,        gmissile, gmissile, driver_device, 0, ROT0,   "Midway", "Guided Missile", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  )
 /* 626 */ GAME( 1977, m4,       0,        m4,       m4, driver_device,       0, ROT0,   "Midway", "M-4", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  )
 /* 630 */ GAMEL(1978, clowns,   0,        clowns,   clowns, driver_device,   0, ROT0,   "Midway", "Clowns (rev. 2)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE , layout_clowns )
 /* 630 */ GAMEL(1978, clowns1,  clowns,   clowns,   clowns1, driver_device,  0, ROT0,   "Midway", "Clowns (rev. 1)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE , layout_clowns )

@@ -50,50 +50,52 @@ public:
 	DECLARE_WRITE8_MEMBER(bg0_videoram_w);
 	DECLARE_WRITE8_MEMBER(misc_w);
 	DECLARE_WRITE8_MEMBER(bg_bank_w);
+	TILE_GET_INFO_MEMBER(get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg2_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg0_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 
-static TILE_GET_INFO( get_bg1_tile_info )
+TILE_GET_INFO_MEMBER(cultures_state::get_bg1_tile_info)
 {
-	cultures_state *state = machine.driver_data<cultures_state>();
-	UINT8 *region = state->memregion("gfx3")->base() + 0x200000 + 0x80000 * state->m_bg1_bank;
+	UINT8 *region = memregion("gfx3")->base() + 0x200000 + 0x80000 * m_bg1_bank;
 	int code = region[tile_index * 2] + (region[tile_index * 2 + 1] << 8);
-	SET_TILE_INFO(2, code, code >> 12, 0);
+	SET_TILE_INFO_MEMBER(2, code, code >> 12, 0);
 }
 
-static TILE_GET_INFO( get_bg2_tile_info )
+TILE_GET_INFO_MEMBER(cultures_state::get_bg2_tile_info)
 {
-	cultures_state *state = machine.driver_data<cultures_state>();
-	UINT8 *region = state->memregion("gfx2")->base() + 0x200000 + 0x80000 * state->m_bg2_bank;
+	UINT8 *region = memregion("gfx2")->base() + 0x200000 + 0x80000 * m_bg2_bank;
 	int code = region[tile_index * 2] + (region[tile_index * 2 + 1] << 8);
-	SET_TILE_INFO(1, code, code >> 12, 0);
+	SET_TILE_INFO_MEMBER(1, code, code >> 12, 0);
 }
 
-static TILE_GET_INFO( get_bg0_tile_info )
+TILE_GET_INFO_MEMBER(cultures_state::get_bg0_tile_info)
 {
-	cultures_state *state = machine.driver_data<cultures_state>();
-	int code = state->m_bg0_videoram[tile_index * 2] + (state->m_bg0_videoram[tile_index * 2 + 1] << 8);
-	SET_TILE_INFO(0, code, code >> 12, 0);
+	int code = m_bg0_videoram[tile_index * 2] + (m_bg0_videoram[tile_index * 2 + 1] << 8);
+	SET_TILE_INFO_MEMBER(0, code, code >> 12, 0);
 }
 
-static VIDEO_START( cultures )
+void cultures_state::video_start()
 {
-	cultures_state *state = machine.driver_data<cultures_state>();
-	state->m_bg0_tilemap = tilemap_create(machine, get_bg0_tile_info,tilemap_scan_rows, 8, 8, 64, 128);
-	state->m_bg1_tilemap = tilemap_create(machine, get_bg1_tile_info,tilemap_scan_rows, 8, 8, 512, 512);
-	state->m_bg2_tilemap = tilemap_create(machine, get_bg2_tile_info,tilemap_scan_rows, 8, 8, 512, 512);
+	m_bg0_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cultures_state::get_bg0_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8, 64, 128);
+	m_bg1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cultures_state::get_bg1_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8, 512, 512);
+	m_bg2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cultures_state::get_bg2_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8, 512, 512);
 
-	state->m_bg1_tilemap->set_transparent_pen(0);
-	state->m_bg0_tilemap->set_transparent_pen(0);
+	m_bg1_tilemap->set_transparent_pen(0);
+	m_bg0_tilemap->set_transparent_pen(0);
 
-	state->m_bg0_tilemap->set_scrolldx(502, 10);
-	state->m_bg1_tilemap->set_scrolldx(502, 10);
-	state->m_bg2_tilemap->set_scrolldx(502, 10);
+	m_bg0_tilemap->set_scrolldx(502, 10);
+	m_bg1_tilemap->set_scrolldx(502, 10);
+	m_bg2_tilemap->set_scrolldx(502, 10);
 
-	state->m_bg0_tilemap->set_scrolldy(255, 0);
-	state->m_bg1_tilemap->set_scrolldy(255, 0);
-	state->m_bg2_tilemap->set_scrolldy(255, 0);
+	m_bg0_tilemap->set_scrolldy(255, 0);
+	m_bg1_tilemap->set_scrolldy(255, 0);
+	m_bg2_tilemap->set_scrolldy(255, 0);
 }
 
 static SCREEN_UPDATE_IND16( cultures )
@@ -364,32 +366,30 @@ static INTERRUPT_GEN( cultures_interrupt )
 {
 	cultures_state *state = device->machine().driver_data<cultures_state>();
 	if (state->m_irq_enable)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
-static MACHINE_START( cultures )
+void cultures_state::machine_start()
 {
-	cultures_state *state = machine.driver_data<cultures_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 16, &ROM[0x0000], 0x4000);
+	membank("bank1")->configure_entries(0, 16, &ROM[0x0000], 0x4000);
 
-	state->save_item(NAME(state->m_paletteram));
-	state->save_item(NAME(state->m_old_bank));
-	state->save_item(NAME(state->m_video_bank));
-	state->save_item(NAME(state->m_irq_enable));
-	state->save_item(NAME(state->m_bg1_bank));
-	state->save_item(NAME(state->m_bg2_bank));
+	save_item(NAME(m_paletteram));
+	save_item(NAME(m_old_bank));
+	save_item(NAME(m_video_bank));
+	save_item(NAME(m_irq_enable));
+	save_item(NAME(m_bg1_bank));
+	save_item(NAME(m_bg2_bank));
 }
 
-static MACHINE_RESET( cultures )
+void cultures_state::machine_reset()
 {
-	cultures_state *state = machine.driver_data<cultures_state>();
-	state->m_old_bank = -1;
-	state->m_video_bank = 0;
-	state->m_irq_enable = 0;
-	state->m_bg1_bank = 0;
-	state->m_bg2_bank = 0;
+	m_old_bank = -1;
+	m_video_bank = 0;
+	m_irq_enable = 0;
+	m_bg1_bank = 0;
+	m_bg2_bank = 0;
 }
 
 static MACHINE_CONFIG_START( cultures, cultures_state )
@@ -400,8 +400,6 @@ static MACHINE_CONFIG_START( cultures, cultures_state )
 	MCFG_CPU_IO_MAP(cultures_io_map)
 	MCFG_CPU_VBLANK_INT("screen", cultures_interrupt)
 
-	MCFG_MACHINE_START(cultures)
-	MCFG_MACHINE_RESET(cultures)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -414,7 +412,6 @@ static MACHINE_CONFIG_START( cultures, cultures_state )
 	MCFG_GFXDECODE(culture)
 	MCFG_PALETTE_LENGTH(0x2000)
 
-	MCFG_VIDEO_START(cultures)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

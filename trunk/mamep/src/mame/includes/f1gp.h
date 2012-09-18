@@ -45,7 +45,7 @@ public:
 	int       m_pending_command;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k053936;
 	DECLARE_READ16_MEMBER(sharedram_r);
 	DECLARE_WRITE16_MEMBER(sharedram_w);
@@ -64,14 +64,23 @@ public:
 	DECLARE_WRITE16_MEMBER(f1gp_fgscroll_w);
 	DECLARE_WRITE16_MEMBER(f1gp_gfxctrl_w);
 	DECLARE_WRITE16_MEMBER(f1gp2_gfxctrl_w);
+	TILE_GET_INFO_MEMBER(f1gp_get_roz_tile_info);
+	TILE_GET_INFO_MEMBER(f1gp2_get_roz_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	DECLARE_MACHINE_START(f1gp);
+	DECLARE_MACHINE_RESET(f1gp);
+	DECLARE_VIDEO_START(f1gp);
+	DECLARE_MACHINE_START(f1gpb);
+	DECLARE_VIDEO_START(f1gpb);
+	DECLARE_VIDEO_START(f1gp2);
 };
 
 /*----------- defined in video/f1gp.c -----------*/
 
 
-VIDEO_START( f1gp );
-VIDEO_START( f1gpb );
-VIDEO_START( f1gp2 );
+
+
+
 SCREEN_UPDATE_IND16( f1gp );
 SCREEN_UPDATE_IND16( f1gpb );
 SCREEN_UPDATE_IND16( f1gp2 );

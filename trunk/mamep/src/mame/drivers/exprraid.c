@@ -233,7 +233,7 @@ READ8_MEMBER(exprraid_state::exprraid_protection_r)
 WRITE8_MEMBER(exprraid_state::sound_cpu_command_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	device_set_input_line(m_slave, INPUT_LINE_NMI, PULSE_LINE);
+	m_slave->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 READ8_MEMBER(exprraid_state::vblank_r)
@@ -278,12 +278,12 @@ ADDRESS_MAP_END
 
 INPUT_CHANGED_MEMBER(exprraid_state::coin_inserted_deco16)
 {
-	device_set_input_line(m_maincpu, DECO16_IRQ_LINE, oldval ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(DECO16_IRQ_LINE, oldval ? ASSERT_LINE : CLEAR_LINE);
 }
 
 INPUT_CHANGED_MEMBER(exprraid_state::coin_inserted_nmi)
 {
-	device_set_input_line(m_maincpu, INPUT_LINE_NMI, oldval ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, oldval ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static INPUT_PORTS_START( exprraid )
@@ -437,7 +437,7 @@ GFXDECODE_END
 /* handler called by the 3812 emulator when the internal timers cause an IRQ */
 WRITE_LINE_MEMBER(exprraid_state::irqhandler)
 {
-	device_set_input_line_and_vector(m_slave, 0, state, 0xff);
+	m_slave->execute().set_input_line_and_vector(0, state, 0xff);
 }
 
 static const ym3526_interface ym3526_config =
@@ -455,37 +455,35 @@ static INTERRUPT_GEN( exprraid_interrupt )
 		if (state->m_coin == 0)
 		{
 			state->m_coin = 1;
-			//device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
-			device_set_input_line(device, DECO16_IRQ_LINE, ASSERT_LINE);
+			//device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+			device->execute().set_input_line(DECO16_IRQ_LINE, ASSERT_LINE);
 		}
 	}
 	else
 	{
-		device_set_input_line(device, DECO16_IRQ_LINE, CLEAR_LINE);
+		device->execute().set_input_line(DECO16_IRQ_LINE, CLEAR_LINE);
 		state->m_coin = 0;
 	}
 }
 #endif
 
 
-static MACHINE_START( exprraid )
+void exprraid_state::machine_start()
 {
-	exprraid_state *state = machine.driver_data<exprraid_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_slave = machine.device("slave");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_slave = machine().device("slave");
 
-	state->save_item(NAME(state->m_bg_index));
+	save_item(NAME(m_bg_index));
 }
 
-static MACHINE_RESET( exprraid )
+void exprraid_state::machine_reset()
 {
-	exprraid_state *state = machine.driver_data<exprraid_state>();
 
-	state->m_bg_index[0] = 0;
-	state->m_bg_index[1] = 0;
-	state->m_bg_index[2] = 0;
-	state->m_bg_index[3] = 0;
+	m_bg_index[0] = 0;
+	m_bg_index[1] = 0;
+	m_bg_index[2] = 0;
+	m_bg_index[3] = 0;
 }
 
 static MACHINE_CONFIG_START( exprraid, exprraid_state )
@@ -498,8 +496,6 @@ static MACHINE_CONFIG_START( exprraid, exprraid_state )
 	MCFG_CPU_ADD("slave", M6809, 2000000)        /* 2 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(slave_map)
 								/* IRQs are caused by the YM3526 */
-	MCFG_MACHINE_START(exprraid)
-	MCFG_MACHINE_RESET(exprraid)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -513,7 +509,6 @@ static MACHINE_CONFIG_START( exprraid, exprraid_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(exprraid)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

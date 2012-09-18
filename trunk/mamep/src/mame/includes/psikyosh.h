@@ -45,7 +45,7 @@ public:
 	UINT8          m_alphatable[256];
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 
 	DECLARE_WRITE32_MEMBER(psikyosh_irqctrl_w);
 	DECLARE_WRITE32_MEMBER(paletteram32_RRRRRRRRGGGGGGGGBBBBBBBBxxxxxxxx_dword_w);
@@ -63,10 +63,12 @@ public:
 	DECLARE_DRIVER_INIT(dragnblz);
 	DECLARE_DRIVER_INIT(gunbird2);
 	DECLARE_DRIVER_INIT(s1945ii);
+	virtual void machine_start();
+	virtual void video_start();
 };
 
 /*----------- defined in video/psikyosh.c -----------*/
 
-VIDEO_START( psikyosh );
+
 SCREEN_UPDATE_RGB32( psikyosh );
 SCREEN_VBLANK( psikyosh );

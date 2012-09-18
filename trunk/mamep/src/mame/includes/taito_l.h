@@ -52,8 +52,8 @@ public:
 	const char *m_portf1_tag;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 
 	/* memory buffers */
 	UINT8         m_rambanks[0x1000 * 12];
@@ -104,12 +104,27 @@ public:
 	DECLARE_WRITE8_MEMBER(champwr_msm5205_volume_w);
 	DECLARE_WRITE8_MEMBER(portA_w);
 	DECLARE_DRIVER_INIT(plottinga);
+	TILE_GET_INFO_MEMBER(get_bg18_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg19_tile_info);
+	TILE_GET_INFO_MEMBER(get_ch1a_tile_info);
+	DECLARE_MACHINE_START(taito_l);
+	DECLARE_MACHINE_RESET(fhawk);
+	DECLARE_VIDEO_START(taitol);
+	DECLARE_MACHINE_RESET(kurikint);
+	DECLARE_MACHINE_RESET(plotting);
+	DECLARE_MACHINE_RESET(evilston);
+	DECLARE_MACHINE_RESET(champwr);
+	DECLARE_MACHINE_RESET(raimais);
+	DECLARE_MACHINE_RESET(puzznic);
+	DECLARE_MACHINE_RESET(horshoes);
+	DECLARE_MACHINE_RESET(palamed);
+	DECLARE_MACHINE_RESET(cachat);
 };
 
 /*----------- defined in video/taito_l.c -----------*/
 
 SCREEN_VBLANK( taitol );
-VIDEO_START( taitol );
+
 SCREEN_UPDATE_IND16( taitol );
 
 void taitol_chardef14_m(running_machine &machine, int offset);

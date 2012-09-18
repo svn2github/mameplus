@@ -41,7 +41,7 @@ READ8_MEMBER(mosaic_state::protection_r)
 {
 	int res = (m_prot_val >> 8) & 0xff;
 
-	logerror("%06x: protection_r %02x\n", cpu_get_pc(&space.device()), res);
+	logerror("%06x: protection_r %02x\n", space.device().safe_pc(), res);
 
 	m_prot_val <<= 8;
 
@@ -51,7 +51,7 @@ READ8_MEMBER(mosaic_state::protection_r)
 WRITE8_MEMBER(mosaic_state::gfire2_protection_w)
 {
 
-	logerror("%06x: protection_w %02x\n", cpu_get_pc(&space.device()), data);
+	logerror("%06x: protection_w %02x\n", space.device().safe_pc(), data);
 
 	switch(data)
 	{
@@ -249,18 +249,16 @@ static const ym2203_interface ym2203_config =
 
 
 
-static MACHINE_START( mosaic )
+void mosaic_state::machine_start()
 {
-	mosaic_state *state = machine.driver_data<mosaic_state>();
 
-	state->save_item(NAME(state->m_prot_val));
+	save_item(NAME(m_prot_val));
 }
 
-static MACHINE_RESET( mosaic )
+void mosaic_state::machine_reset()
 {
-	mosaic_state *state = machine.driver_data<mosaic_state>();
 
-	state->m_prot_val = 0;
+	m_prot_val = 0;
 }
 
 static MACHINE_CONFIG_START( mosaic, mosaic_state )
@@ -271,8 +269,6 @@ static MACHINE_CONFIG_START( mosaic, mosaic_state )
 	MCFG_CPU_IO_MAP(mosaic_io_map)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_MACHINE_START(mosaic)
-	MCFG_MACHINE_RESET(mosaic)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -285,7 +281,6 @@ static MACHINE_CONFIG_START( mosaic, mosaic_state )
 	MCFG_GFXDECODE(mosaic)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_VIDEO_START(mosaic)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

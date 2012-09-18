@@ -22,12 +22,17 @@ public:
 
 	DECLARE_WRITE8_MEMBER(darkmist_hw_w);
 	DECLARE_DRIVER_INIT(darkmist);
+	TILE_GET_INFO_MEMBER(get_bgtile_info);
+	TILE_GET_INFO_MEMBER(get_fgtile_info);
+	TILE_GET_INFO_MEMBER(get_txttile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/darkmist.c -----------*/
 
-VIDEO_START( darkmist );
+
 SCREEN_UPDATE_IND16( darkmist );
-PALETTE_INIT( darkmist );
+
 

@@ -21,16 +21,16 @@ static int eolith_scanline = 0;
 void eolith_speedup_read(address_space *space)
 {
 	/* for debug */
-  //if ((cpu_get_pc(&space->device())!=eolith_speedup_address) && (eolith_vblank!=1) )
+  //if ((space->device().safe_pc()!=eolith_speedup_address) && (eolith_vblank!=1) )
   //    printf("%s:eolith speedup_read data %02x\n",space->machine().describe_context(), eolith_vblank);
 
 	if (eolith_vblank==0 && eolith_scanline < eolith_speedup_resume_scanline)
 	{
-		int pc = cpu_get_pc(&space->device());
+		int pc = space->device().safe_pc();
 
 		if ((pc==eolith_speedup_address) || (pc==eolith_speedup_address2))
 		{
-			device_spin_until_trigger(&space->device(), 1000);
+			space->device().execute().spin_until_trigger(1000);
 		}
 	}
 }
@@ -117,11 +117,11 @@ CUSTOM_INPUT_MEMBER(eolith_state::eolith_speedup_getvblank)
 // StealSee doesn't use interrupts, just the vblank
 CUSTOM_INPUT_MEMBER(eolith_state::stealsee_speedup_getvblank)
 {
-	int pc = cpu_get_pc(m_maincpu);
+	int pc = m_maincpu->pc();
 
 	if (pc==0x400081ec)
 		if(!eolith_vblank)
-			device_eat_cycles(m_maincpu, 500);
+			m_maincpu->eat_cycles(500);
 
 	return (machine().primary_screen->vpos() >= 240);
 }

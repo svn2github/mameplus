@@ -34,7 +34,7 @@ static void update_plunger(running_machine &machine)
 			state->m_time_released = machine.time();
 
 			if (!state->m_mask)
-				cputag_set_input_line(machine, "maincpu", INPUT_LINE_NMI, ASSERT_LINE);
+				machine.device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 		}
 		else
 			state->m_time_pushed = machine.time();
@@ -50,7 +50,7 @@ static TIMER_CALLBACK( interrupt_callback )
 
 	update_plunger(machine);
 
-	cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 
 	scanline = scanline + 32;
 
@@ -61,16 +61,15 @@ static TIMER_CALLBACK( interrupt_callback )
 }
 
 
-static MACHINE_RESET( videopin )
+void videopin_state::machine_reset()
 {
-	videopin_state *state = machine.driver_data<videopin_state>();
 
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(32), FUNC(interrupt_callback), 32);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(32), FUNC(interrupt_callback), 32);
 
 	/* both output latches are cleared on reset */
 
-	state->videopin_out1_w(*machine.memory().first_space(), 0, 0);
-	state->videopin_out2_w(*machine.memory().first_space(), 0, 0);
+	videopin_out1_w(*machine().memory().first_space(), 0, 0);
+	videopin_out2_w(*machine().memory().first_space(), 0, 0);
 }
 
 
@@ -132,7 +131,7 @@ WRITE8_MEMBER(videopin_state::videopin_led_w)
 	if (i == 7)
 		set_led_status(machine(), 0, data & 8);   /* start button */
 
-	cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -151,7 +150,7 @@ WRITE8_MEMBER(videopin_state::videopin_out1_w)
 	m_mask = ~data & 0x10;
 
 	if (m_mask)
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 
 	coin_lockout_global_w(machine(), ~data & 0x08);
 
@@ -328,7 +327,6 @@ static MACHINE_CONFIG_START( videopin, videopin_state )
 	MCFG_CPU_ADD("maincpu", M6502, 12096000 / 16)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 
-	MCFG_MACHINE_RESET(videopin)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -341,7 +339,6 @@ static MACHINE_CONFIG_START( videopin, videopin_state )
 	MCFG_PALETTE_LENGTH(2)
 
 	MCFG_PALETTE_INIT(black_and_white)
-	MCFG_VIDEO_START(videopin)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

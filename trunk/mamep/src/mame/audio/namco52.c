@@ -49,8 +49,7 @@
 #include "namco52.h"
 #include "cpu/mb88xx/mb88xx.h"
 
-typedef struct _namco_52xx_state namco_52xx_state;
-struct _namco_52xx_state
+struct namco_52xx_state
 {
 	device_t *m_cpu;
 	device_t *m_discrete;
@@ -66,7 +65,7 @@ INLINE namco_52xx_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == NAMCO_52XX);
 
-	return (namco_52xx_state *)downcast<legacy_device_base *>(device)->token();
+	return (namco_52xx_state *)downcast<namco_52xx_device *>(device)->token();
 }
 
 
@@ -135,7 +134,7 @@ static WRITE8_HANDLER( namco_52xx_O_w )
 static TIMER_CALLBACK( namco_52xx_irq_clear )
 {
 	namco_52xx_state *state = get_safe_token((device_t *)ptr);
-	device_set_input_line(state->m_cpu, 0, CLEAR_LINE);
+	state->m_cpu->execute().set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_DEVICE_HANDLER( namco_52xx_write )
@@ -144,7 +143,7 @@ WRITE8_DEVICE_HANDLER( namco_52xx_write )
 
 	device->machine().scheduler().synchronize(FUNC(namco_52xx_latch_callback), data, (void *)device);
 
-	device_set_input_line(state->m_cpu, 0, ASSERT_LINE);
+	state->m_cpu->execute().set_input_line(0, ASSERT_LINE);
 
 	// The execution time of one instruction is ~4us, so we must make sure to
 	// give the cpu time to poll the /IRQ input before we clear it.
@@ -224,18 +223,52 @@ static DEVICE_START( namco_52xx )
 }
 
 
-/*-------------------------------------------------
-    device definition
--------------------------------------------------*/
+const device_type NAMCO_52XX = &device_creator<namco_52xx_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+namco_52xx_device::namco_52xx_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, NAMCO_52XX, "Namco 52xx", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(namco_52xx_state));
+}
 
-#define DEVTEMPLATE_ID(p,s)		p##namco_52xx##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_ROM_REGION | DT_HAS_MACHINE_CONFIG
-#define DEVTEMPLATE_NAME		"Namco 52xx"
-#define DEVTEMPLATE_SHORTNAME   "namco52"
-#define DEVTEMPLATE_FAMILY		"Namco I/O"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void namco_52xx_device::device_config_complete()
+{
+	m_shortname = "namco52";
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void namco_52xx_device::device_start()
+{
+	DEVICE_START_NAME( namco_52xx )(this);
+}
+
+//-------------------------------------------------
+//  device_mconfig_additions - return a pointer to
+//  the device's machine fragment
+//-------------------------------------------------
+
+machine_config_constructor namco_52xx_device::device_mconfig_additions() const
+{
+	return MACHINE_CONFIG_NAME( namco_52xx  );
+}
+
+//-------------------------------------------------
+//  device_rom_region - return a pointer to the
+//  the device's ROM definitions
+//-------------------------------------------------
+
+const rom_entry *namco_52xx_device::device_rom_region() const
+{
+	return ROM_NAME(namco_52xx );
+}
 
 
-DEFINE_LEGACY_DEVICE(NAMCO_52XX, namco_52xx);

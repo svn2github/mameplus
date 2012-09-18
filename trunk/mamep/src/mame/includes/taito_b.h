@@ -30,8 +30,8 @@ public:
 	UINT16        m_realpunc_video_ctrl;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_mb87078;
 	device_t *m_ym;
 	device_t *m_tc0180vcu;
@@ -61,6 +61,15 @@ public:
 	DECLARE_WRITE16_MEMBER(tc0180vcu_framebuffer_word_w);
 	DECLARE_INPUT_CHANGED_MEMBER(realpunc_sensor);
 	DECLARE_DRIVER_INIT(taito_b);
+	virtual void machine_start();
+	virtual void machine_reset();
+	DECLARE_VIDEO_START(taitob_color_order0);
+	DECLARE_VIDEO_START(taitob_color_order1);
+	DECLARE_VIDEO_START(taitob_color_order2);
+	DECLARE_VIDEO_START(hitice);
+	DECLARE_VIDEO_RESET(hitice);
+	DECLARE_VIDEO_START(realpunc);
+	DECLARE_VIDEO_START(taitob_core);
 };
 
 
@@ -69,13 +78,13 @@ public:
 
 
 
-VIDEO_START( taitob_color_order0 );
-VIDEO_START( taitob_color_order1 );
-VIDEO_START( taitob_color_order2 );
-VIDEO_START( hitice );
-VIDEO_START( realpunc );
 
-VIDEO_RESET( hitice );
+
+
+
+
+
+
 
 SCREEN_UPDATE_RGB32( realpunc );
 SCREEN_UPDATE_IND16( taitob );

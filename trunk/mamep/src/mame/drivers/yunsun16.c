@@ -148,7 +148,7 @@ number 0 on each voice. That sample is 00000-00000.
 		if ((data & 0xff) != 0x3a)
 		{
 			soundlatch_byte_w(space, 0, data & 0xff);
-			device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+			m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 		}
 	}
 }
@@ -554,22 +554,20 @@ GFXDECODE_END
 
 ***************************************************************************/
 
-static MACHINE_START( yunsun16 )
+void yunsun16_state::machine_start()
 {
-	yunsun16_state *state = machine.driver_data<yunsun16_state>();
 
-	state->m_audiocpu = machine.device("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_sprites_scrolldx));
-	state->save_item(NAME(state->m_sprites_scrolldy));
+	save_item(NAME(m_sprites_scrolldx));
+	save_item(NAME(m_sprites_scrolldy));
 }
 
-static MACHINE_RESET( yunsun16 )
+void yunsun16_state::machine_reset()
 {
-	yunsun16_state *state = machine.driver_data<yunsun16_state>();
 
-	state->m_sprites_scrolldx = -0x40;
-	state->m_sprites_scrolldy = -0x0f;
+	m_sprites_scrolldx = -0x40;
+	m_sprites_scrolldy = -0x0f;
 }
 
 /***************************************************************************
@@ -579,7 +577,7 @@ static MACHINE_RESET( yunsun16 )
 static void soundirq(device_t *device, int state)
 {
 	yunsun16_state *yunsun16 = device->machine().driver_data<yunsun16_state>();
-	device_set_input_line(yunsun16->m_audiocpu, 0, state);
+	yunsun16->m_audiocpu->set_input_line(0, state);
 }
 
 static const ym3812_interface magicbub_ym3812_intf =
@@ -598,8 +596,6 @@ static MACHINE_CONFIG_START( magicbub, yunsun16_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(sound_port_map)
 
-	MCFG_MACHINE_START(yunsun16)
-	MCFG_MACHINE_RESET(yunsun16)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -612,7 +608,6 @@ static MACHINE_CONFIG_START( magicbub, yunsun16_state )
 	MCFG_GFXDECODE(yunsun16)
 	MCFG_PALETTE_LENGTH(8192)
 
-	MCFG_VIDEO_START(yunsun16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -639,8 +634,6 @@ static MACHINE_CONFIG_START( shocking, yunsun16_state )
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_VBLANK_INT("screen", irq2_line_hold)
 
-	MCFG_MACHINE_START(yunsun16)
-	MCFG_MACHINE_RESET(yunsun16)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -653,7 +646,6 @@ static MACHINE_CONFIG_START( shocking, yunsun16_state )
 	MCFG_GFXDECODE(yunsun16)
 	MCFG_PALETTE_LENGTH(8192)
 
-	MCFG_VIDEO_START(yunsun16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

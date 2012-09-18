@@ -275,8 +275,8 @@ WRITE8_MEMBER(trackfld_state::trackfld_VLM5030_control_w)
 
 
 static ADDRESS_MAP_START( yieartf_map, AS_PROGRAM, 8, trackfld_state )
-	AM_RANGE(0x0000, 0x0000) AM_READ(trackfld_speech_r) AM_WRITE_LEGACY(konami_SN76496_latch_w)
-	AM_RANGE(0x0001, 0x0001) AM_DEVWRITE_LEGACY("snsnd", konami_SN76496_w)
+	AM_RANGE(0x0000, 0x0000) AM_READ(trackfld_speech_r) AM_WRITE(konami_SN76496_latch_w)
+	AM_RANGE(0x0001, 0x0001) AM_WRITE(konami_SN76496_w)
 	AM_RANGE(0x0002, 0x0002) AM_WRITE(trackfld_VLM5030_control_w)
 	AM_RANGE(0x0003, 0x0003) AM_DEVWRITE_LEGACY("vlm", vlm5030_data_w)
 	AM_RANGE(0x1000, 0x1000) AM_MIRROR(0x007f) AM_WRITE(watchdog_reset_w)		/* AFE */
@@ -398,8 +398,7 @@ ADDRESS_MAP_END
 
 READ8_MEMBER(trackfld_state::trackfld_SN76496_r)
 {
-	device_t *device = machine().device("snsnd");
-	konami_SN76496_w(device, 0, 0);
+	konami_SN76496_w(space, 0, 0);
 	return 0xff; // ?
 }
 
@@ -408,8 +407,8 @@ static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x4000, 0x43ff) AM_MIRROR(0x1c00) AM_RAM
 	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x8000, 0x8000) AM_MIRROR(0x1fff) AM_READ_LEGACY(trackfld_sh_timer_r)
-	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_WRITE_LEGACY(konami_SN76496_latch_w)
-	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x1fff) AM_READ(trackfld_SN76496_r) AM_DEVWRITE_LEGACY("snsnd",konami_SN76496_w)
+	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_WRITE(konami_SN76496_latch_w)
+	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x1fff) AM_READ(trackfld_SN76496_r) AM_WRITE(konami_SN76496_w)
 	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x1ff8) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe001, 0xe001) AM_MIRROR(0x1ff8) AM_NOP			/* watch dog ?; reaktor reads here */
 	AM_RANGE(0xe002, 0xe002) AM_MIRROR(0x1ff8) AM_DEVREAD_LEGACY("vlm", trackfld_speech_r)
@@ -422,8 +421,8 @@ static ADDRESS_MAP_START( hyprolyb_sound_map, AS_PROGRAM, 8, trackfld_state )
 	AM_RANGE(0x4000, 0x43ff) AM_MIRROR(0x1c00) AM_RAM
 	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_READ(soundlatch_byte_r)
 	AM_RANGE(0x8000, 0x8000) AM_MIRROR(0x1fff) AM_READ_LEGACY(trackfld_sh_timer_r)
-	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_WRITE_LEGACY(konami_SN76496_latch_w)
-	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x1fff) AM_READ(trackfld_SN76496_r) AM_DEVWRITE_LEGACY("snsnd",konami_SN76496_w)
+	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_WRITE(konami_SN76496_latch_w)
+	AM_RANGE(0xc000, 0xc000) AM_MIRROR(0x1fff) AM_READ(trackfld_SN76496_r) AM_WRITE(konami_SN76496_w)
 	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x1ff8) AM_DEVWRITE("dac", dac_device, write_unsigned8)
 	AM_RANGE(0xe001, 0xe001) AM_MIRROR(0x1ff8) AM_NOP			/* watch dog ?; reaktor reads here */
 	AM_RANGE(0xe002, 0xe002) AM_MIRROR(0x1ff8) AM_DEVREAD_LEGACY("hyprolyb_adpcm", hyprolyb_adpcm_busy_r)
@@ -865,25 +864,23 @@ GFXDECODE_END
 
 
 
-static MACHINE_START( trackfld )
+MACHINE_START_MEMBER(trackfld_state,trackfld)
 {
-	trackfld_state *state = machine.driver_data<trackfld_state>();
 
 	/* video */
-	state->save_item(NAME(state->m_bg_bank));
-	state->save_item(NAME(state->m_sprite_bank1));
-	state->save_item(NAME(state->m_sprite_bank2));
-	state->save_item(NAME(state->m_old_gfx_bank));
+	save_item(NAME(m_bg_bank));
+	save_item(NAME(m_sprite_bank1));
+	save_item(NAME(m_sprite_bank2));
+	save_item(NAME(m_old_gfx_bank));
 }
 
-static MACHINE_RESET( trackfld )
+MACHINE_RESET_MEMBER(trackfld_state,trackfld)
 {
-	trackfld_state *state = machine.driver_data<trackfld_state>();
 
-	state->m_bg_bank = 0;
-	state->m_sprite_bank1 = 0;
-	state->m_sprite_bank2 = 0;
-	state->m_old_gfx_bank = 0;
+	m_bg_bank = 0;
+	m_sprite_bank1 = 0;
+	m_sprite_bank2 = 0;
+	m_old_gfx_bank = 0;
 }
 
 static INTERRUPT_GEN( vblank_irq )
@@ -891,7 +888,7 @@ static INTERRUPT_GEN( vblank_irq )
 	trackfld_state *state = device->machine().driver_data<trackfld_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( vblank_nmi )
@@ -899,9 +896,17 @@ static INTERRUPT_GEN( vblank_nmi )
 	trackfld_state *state = device->machine().driver_data<trackfld_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
 
 static MACHINE_CONFIG_START( trackfld, trackfld_state )
 
@@ -913,8 +918,8 @@ static MACHINE_CONFIG_START( trackfld, trackfld_state )
 	MCFG_CPU_ADD("audiocpu", Z80, SOUND_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(trackfld)
-	MCFG_MACHINE_RESET(trackfld)
+	MCFG_MACHINE_START_OVERRIDE(trackfld_state,trackfld)
+	MCFG_MACHINE_RESET_OVERRIDE(trackfld_state,trackfld)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
@@ -928,8 +933,8 @@ static MACHINE_CONFIG_START( trackfld, trackfld_state )
 	MCFG_GFXDECODE(trackfld)
 	MCFG_PALETTE_LENGTH(16*16+16*16)
 
-	MCFG_PALETTE_INIT(trackfld)
-	MCFG_VIDEO_START(trackfld)
+	MCFG_PALETTE_INIT_OVERRIDE(trackfld_state,trackfld)
+	MCFG_VIDEO_START_OVERRIDE(trackfld_state,trackfld)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -939,8 +944,9 @@ static MACHINE_CONFIG_START( trackfld, trackfld_state )
 	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
-	MCFG_SOUND_ADD("snsnd", SN76496, SOUND_CLOCK/8)
+	MCFG_SOUND_ADD("snsnd", SN76496_NEW, SOUND_CLOCK/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("vlm", VLM5030, VLM_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
@@ -952,7 +958,7 @@ static INTERRUPT_GEN( yieartf_timer_irq )
 	trackfld_state *state = device->machine().driver_data<trackfld_state>();
 
 	if (state->m_yieartf_nmi_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( yieartf, trackfld_state )
@@ -967,8 +973,8 @@ static MACHINE_CONFIG_START( yieartf, trackfld_state )
 //  MCFG_CPU_ADD("audiocpu", Z80, SOUND_CLOCK/4)
 //  MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(trackfld)
-	MCFG_MACHINE_RESET(trackfld)
+	MCFG_MACHINE_START_OVERRIDE(trackfld_state,trackfld)
+	MCFG_MACHINE_RESET_OVERRIDE(trackfld_state,trackfld)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
@@ -982,8 +988,8 @@ static MACHINE_CONFIG_START( yieartf, trackfld_state )
 	MCFG_GFXDECODE(trackfld)
 	MCFG_PALETTE_LENGTH(16*16+16*16)
 
-	MCFG_PALETTE_INIT(trackfld)
-	MCFG_VIDEO_START(trackfld)
+	MCFG_PALETTE_INIT_OVERRIDE(trackfld_state,trackfld)
+	MCFG_VIDEO_START_OVERRIDE(trackfld_state,trackfld)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -993,8 +999,9 @@ static MACHINE_CONFIG_START( yieartf, trackfld_state )
 	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
-	MCFG_SOUND_ADD("snsnd", SN76496, MASTER_CLOCK/6/2)
+	MCFG_SOUND_ADD("snsnd", SN76496_NEW, MASTER_CLOCK/6/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("vlm", VLM5030, VLM_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
@@ -1007,8 +1014,8 @@ static MACHINE_CONFIG_DERIVED( hyprolyb, trackfld )
 	MCFG_CPU_MODIFY("audiocpu")
 	MCFG_CPU_PROGRAM_MAP(hyprolyb_sound_map)
 
-	MCFG_MACHINE_START(trackfld)
-	MCFG_MACHINE_RESET(trackfld)
+	MCFG_MACHINE_START_OVERRIDE(trackfld_state,trackfld)
+	MCFG_MACHINE_RESET_OVERRIDE(trackfld_state,trackfld)
 
 	/* sound hardware */
 	MCFG_DEVICE_REMOVE("vlm")
@@ -1017,7 +1024,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( atlantol, hyprolyb )
 
-	MCFG_VIDEO_START(atlantol)
+	MCFG_VIDEO_START_OVERRIDE(trackfld_state,atlantol)
 MACHINE_CONFIG_END
 
 

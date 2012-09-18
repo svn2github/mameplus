@@ -116,7 +116,7 @@ public:
 	required_device<i8237_device> m_dma8237_2;
 	required_device<pic8259_device> m_pic8259_1;
 	required_device<pic8259_device> m_pic8259_2;
-	required_device<voodoo_device> m_voodoo;
+	required_device<voodoo_1_device> m_voodoo;
 
 	required_shared_ptr<UINT32> m_unk_ram;
 
@@ -162,6 +162,8 @@ public:
 	DECLARE_READ8_MEMBER(io20_r);
 	DECLARE_WRITE8_MEMBER(io20_w);
 	DECLARE_WRITE_LINE_MEMBER(funkball_pic8259_1_set_int_line);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 void funkball_state::video_start()
@@ -346,7 +348,7 @@ WRITE8_MEMBER(funkball_state::at_dma8237_2_w)
 
 WRITE_LINE_MEMBER(funkball_state::pc_dma_hrq_changed)
 {
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
 
 	/* Assert HLDA */
 	i8237_hlda_w( m_dma8237_1, state );
@@ -1035,7 +1037,7 @@ static const struct pit8253_config funkball_pit8254_config =
 
 WRITE_LINE_MEMBER(funkball_state::funkball_pic8259_1_set_int_line)
 {
-	device_set_input_line(m_maincpu, 0, state ? HOLD_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 READ8_MEMBER( funkball_state::get_slave_ack )
@@ -1065,7 +1067,7 @@ static void set_gate_a20(running_machine &machine, int a20)
 {
 	funkball_state *state = machine.driver_data<funkball_state>();
 
-	device_set_input_line(state->m_maincpu, INPUT_LINE_A20, a20);
+	state->m_maincpu->set_input_line(INPUT_LINE_A20, a20);
 }
 
 static void keyboard_interrupt(running_machine &machine, int state)
@@ -1103,35 +1105,33 @@ static void ide_interrupt(device_t *device, int state)
 	pic8259_ir6_w(drvstate->m_pic8259_2, state);
 }
 
-static MACHINE_START( funkball )
+void funkball_state::machine_start()
 {
-	funkball_state *state = machine.driver_data<funkball_state>();
 
-	state->m_bios_ram = auto_alloc_array(machine, UINT8, 0x20000);
+	m_bios_ram = auto_alloc_array(machine(), UINT8, 0x20000);
 
-	init_pc_common(machine, PCCOMMON_KEYBOARD_AT, funkball_set_keyb_int);
+	init_pc_common(machine(), PCCOMMON_KEYBOARD_AT, funkball_set_keyb_int);
 
-	device_set_irq_callback(state->m_maincpu, irq_callback);
+	m_maincpu->set_irq_acknowledge_callback(irq_callback);
 
-	kbdc8042_init(machine, &at8042);
+	kbdc8042_init(machine(), &at8042);
 
 	/* defaults, otherwise it won't boot */
-	state->m_unk_ram[0x010/4] = 0x2f8d85ff;
-	state->m_unk_ram[0x018/4] = 0x000018c5;
+	m_unk_ram[0x010/4] = 0x2f8d85ff;
+	m_unk_ram[0x018/4] = 0x000018c5;
 }
 
-static MACHINE_RESET( funkball )
+void funkball_state::machine_reset()
 {
-	funkball_state *state = machine.driver_data<funkball_state>();
-	state->membank("bios_ext1")->set_base(state->memregion("bios")->base() + 0x00000);
-	state->membank("bios_ext2")->set_base(state->memregion("bios")->base() + 0x04000);
-	state->membank("bios_ext3")->set_base(state->memregion("bios")->base() + 0x08000);
-	state->membank("bios_ext4")->set_base(state->memregion("bios")->base() + 0x0c000);
-	state->membank("bios_bank1")->set_base(state->memregion("bios")->base() + 0x10000);
-	state->membank("bios_bank2")->set_base(state->memregion("bios")->base() + 0x14000);
-	state->membank("bios_bank3")->set_base(state->memregion("bios")->base() + 0x18000);
-	state->membank("bios_bank4")->set_base(state->memregion("bios")->base() + 0x1c000);
-	state->m_voodoo_pci_regs.base_addr = 0xff000000;
+	membank("bios_ext1")->set_base(memregion("bios")->base() + 0x00000);
+	membank("bios_ext2")->set_base(memregion("bios")->base() + 0x04000);
+	membank("bios_ext3")->set_base(memregion("bios")->base() + 0x08000);
+	membank("bios_ext4")->set_base(memregion("bios")->base() + 0x0c000);
+	membank("bios_bank1")->set_base(memregion("bios")->base() + 0x10000);
+	membank("bios_bank2")->set_base(memregion("bios")->base() + 0x14000);
+	membank("bios_bank3")->set_base(memregion("bios")->base() + 0x18000);
+	membank("bios_bank4")->set_base(memregion("bios")->base() + 0x1c000);
+	m_voodoo_pci_regs.base_addr = 0xff000000;
 }
 
 SCREEN_UPDATE_RGB32( funkball )
@@ -1140,13 +1140,29 @@ SCREEN_UPDATE_RGB32( funkball )
 	return 0;
 }
 
+static const ide_config ide_intf =
+{
+	ide_interrupt,
+	NULL,
+	0
+};
+
+static const voodoo_config voodoo_intf =
+{
+	2, //               fbmem;
+	4,//                tmumem0;
+	0,//                tmumem1;
+	"screen",//         screen;
+	"maincpu",//        cputag;
+	NULL,//             vblank;
+	NULL,//             stall;
+};
+
 static MACHINE_CONFIG_START( funkball, funkball_state )
 	MCFG_CPU_ADD("maincpu", MEDIAGX, 66666666*3.5) // 66,6 MHz x 3.5
 	MCFG_CPU_PROGRAM_MAP(funkball_map)
 	MCFG_CPU_IO_MAP(funkball_io)
 
-	MCFG_MACHINE_START(funkball)
-	MCFG_MACHINE_RESET(funkball)
 
 	MCFG_PIT8254_ADD( "pit8254", funkball_pit8254_config )
 	MCFG_I8237_ADD( "dma8237_1", XTAL_14_31818MHz/3, dma8237_1_config )
@@ -1160,12 +1176,10 @@ static MACHINE_CONFIG_START( funkball, funkball_state )
 	MCFG_PCI_BUS_LEGACY_DEVICE(7, "voodoo_0", voodoo_0_pci_r, voodoo_0_pci_w)
 	MCFG_PCI_BUS_LEGACY_DEVICE(18, NULL, cx5510_pci_r, cx5510_pci_w)
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_interrupt, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
 
 	/* video hardware */
-	MCFG_3DFX_VOODOO_1_ADD("voodoo_0", STD_VOODOO_1_CLOCK, 2, "screen")
-	MCFG_3DFX_VOODOO_CPU("maincpu")
-	MCFG_3DFX_VOODOO_TMU_MEMORY(0, 4)
+	MCFG_3DFX_VOODOO_1_ADD("voodoo_0", STD_VOODOO_1_CLOCK, voodoo_intf)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)

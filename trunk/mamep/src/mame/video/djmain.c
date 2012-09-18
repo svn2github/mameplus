@@ -19,7 +19,7 @@ static void draw_sprites(running_machine& machine, bitmap_rgb32 &bitmap, const r
 	int offs, pri_code;
 	int sortedlist[NUM_SPRITES];
 
-	machine.gfx[0]->color_base = k055555_read_register(k055555, K55_PALBASE_SUB2) * 0x400;
+	machine.gfx[0]->set_colorbase(k055555_read_register(k055555, K55_PALBASE_SUB2) * 0x400);
 
 	for (offs = 0; offs < NUM_SPRITES; offs++)
 		sortedlist[offs] = -1;
@@ -134,9 +134,9 @@ void djmain_tile_callback(running_machine& machine, int layer, int *code, int *c
 {
 }
 
-VIDEO_START( djmain )
+void djmain_state::video_start()
 {
-	device_t *k056832 = machine.device("k056832");
+	device_t *k056832 = machine().device("k056832");
 
 	k056832_set_layer_offs(k056832, 0, -92, -27);
 	// k056832_set_layer_offs(k056832, 1, -87, -27);

@@ -111,8 +111,7 @@ $8000 - $ffff   ROM
 
 /********************************************************************************************/
 
-typedef struct _renegade_adpcm_state renegade_adpcm_state;
-struct _renegade_adpcm_state
+struct renegade_adpcm_state
 {
 	oki_adpcm_state m_adpcm;
 	sound_stream *m_stream;
@@ -123,14 +122,36 @@ struct _renegade_adpcm_state
 	UINT8 *m_base;
 } _renegade_adpcm_state_dummy;
 
-DECLARE_LEGACY_SOUND_DEVICE(RENEGADE_ADPCM, renegade_adpcm);
+class renegade_adpcm_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	renegade_adpcm_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~renegade_adpcm_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type RENEGADE_ADPCM;
+
 
 INLINE renegade_adpcm_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == RENEGADE_ADPCM);
 
-	return (renegade_adpcm_state *)downcast<legacy_device_base *>(device)->token();
+	return (renegade_adpcm_state *)downcast<renegade_adpcm_device *>(device)->token();
 }
 
 static STREAM_UPDATE( renegade_adpcm_callback )
@@ -169,23 +190,45 @@ static DEVICE_START( renegade_adpcm )
 	state->m_adpcm.reset();
 }
 
-DEVICE_GET_INFO( renegade_adpcm )
+const device_type RENEGADE_ADPCM = &device_creator<renegade_adpcm_device>;
+
+renegade_adpcm_device::renegade_adpcm_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, RENEGADE_ADPCM, "Renegade Custom ADPCM", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(renegade_adpcm_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(renegade_adpcm);break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Renegade Custom ADPCM");		break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);						break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(renegade_adpcm_state));
 }
 
-DEFINE_LEGACY_SOUND_DEVICE(RENEGADE_ADPCM, renegade_adpcm);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void renegade_adpcm_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void renegade_adpcm_device::device_start()
+{
+	DEVICE_START_NAME( renegade_adpcm )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void renegade_adpcm_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+
 
 
 WRITE8_MEMBER(renegade_state::adpcm_play_w)
@@ -216,7 +259,7 @@ WRITE8_MEMBER(renegade_state::adpcm_play_w)
 WRITE8_MEMBER(renegade_state::sound_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	cputag_set_input_line(machine(), "audiocpu", M6809_IRQ_LINE, HOLD_LINE);
+	machine().device("audiocpu")->execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 }
 
 /********************************************************************************************/
@@ -245,16 +288,15 @@ static void setbank(running_machine &machine)
 	state->membank("bank1")->set_base(&RAM[state->m_bank ? 0x10000 : 0x4000]);
 }
 
-static MACHINE_START( renegade )
+void renegade_state::machine_start()
 {
-	renegade_state *state = machine.driver_data<renegade_state>();
-	state_save_register_global_array(machine, state->m_mcu_buffer);
-	state_save_register_global(machine, state->m_mcu_input_size);
-	state_save_register_global(machine, state->m_mcu_output_byte);
-	state_save_register_global(machine, state->m_mcu_key);
+	state_save_register_global_array(machine(), m_mcu_buffer);
+	state_save_register_global(machine(), m_mcu_input_size);
+	state_save_register_global(machine(), m_mcu_output_byte);
+	state_save_register_global(machine(), m_mcu_key);
 
-	state_save_register_global(machine, state->m_bank);
-	machine.save().register_postload(save_prepost_delegate(FUNC(setbank), &machine));
+	state_save_register_global(machine(), m_bank);
+	machine().save().register_postload(save_prepost_delegate(FUNC(setbank), &machine()));
 }
 
 DRIVER_INIT_MEMBER(renegade_state,renegade)
@@ -315,7 +357,7 @@ WRITE8_MEMBER(renegade_state::renegade_68705_port_b_w)
 		m_port_a_in = m_from_main;
 
 		if (m_main_sent)
-			cputag_set_input_line(machine(), "mcu", 0, CLEAR_LINE);
+			machine().device("mcu")->execute().set_input_line(0, CLEAR_LINE);
 
 		m_main_sent = 0;
 	}
@@ -372,7 +414,7 @@ READ8_MEMBER(renegade_state::mcu_reset_r)
 	}
 	else
 	{
-		cputag_set_input_line(machine(), "mcu", INPUT_LINE_RESET, PULSE_LINE);
+		machine().device("mcu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 	}
 	return 0;
 }
@@ -402,7 +444,7 @@ WRITE8_MEMBER(renegade_state::mcu_w)
 	{
 		m_from_main = data;
 		m_main_sent = 1;
-		cputag_set_input_line(machine(), "mcu", 0, ASSERT_LINE);
+		machine().device("mcu")->execute().set_input_line(0, ASSERT_LINE);
 	}
 }
 
@@ -628,9 +670,9 @@ static TIMER_DEVICE_CALLBACK( renegade_interrupt )
 	int scanline = param;
 
 	if (scanline == 112) // ???
-		device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	else if(scanline == 240)
-		device_set_input_line(state->m_maincpu, 0, HOLD_LINE);
+		state->m_maincpu->set_input_line(0, HOLD_LINE);
 }
 
 WRITE8_MEMBER(renegade_state::renegade_coin_counter_w)
@@ -881,11 +923,10 @@ static const ym3526_interface ym3526_config =
 };
 
 
-static MACHINE_RESET( renegade )
+void renegade_state::machine_reset()
 {
-	renegade_state *state = machine.driver_data<renegade_state>();
-	state->m_bank = 0;
-	setbank(machine);
+	m_bank = 0;
+	setbank(machine());
 }
 
 
@@ -902,8 +943,6 @@ static MACHINE_CONFIG_START( renegade, renegade_state )
 	MCFG_CPU_ADD("mcu", M68705, 12000000/4) // ?
 	MCFG_CPU_PROGRAM_MAP(renegade_mcu_map)
 
-	MCFG_MACHINE_START(renegade)
-	MCFG_MACHINE_RESET(renegade)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -916,7 +955,6 @@ static MACHINE_CONFIG_START( renegade, renegade_state )
     MCFG_GFXDECODE(renegade)
     MCFG_PALETTE_LENGTH(256)
 
-    MCFG_VIDEO_START(renegade)
 
     /* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

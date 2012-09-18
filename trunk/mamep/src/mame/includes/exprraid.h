@@ -30,7 +30,7 @@ public:
 	//int          m_coin;    // used in the commented out INTERRUPT_GEN - can this be removed?
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	device_t *m_slave;
 	DECLARE_READ8_MEMBER(exprraid_protection_r);
 	DECLARE_WRITE8_MEMBER(sound_cpu_command_w);
@@ -48,6 +48,11 @@ public:
 	DECLARE_DRIVER_INIT(wexpressb);
 	DECLARE_DRIVER_INIT(wexpressb2);
 	DECLARE_DRIVER_INIT(wexpressb3);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 

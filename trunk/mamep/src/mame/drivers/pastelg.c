@@ -57,7 +57,7 @@ ADDRESS_MAP_END
 
 READ8_MEMBER(pastelg_state::pastelg_irq_ack_r)
 {
-	device_set_input_line(&space.device(), 0, CLEAR_LINE);
+	space.device().execute().set_input_line(0, CLEAR_LINE);
 	return 0;
 }
 
@@ -425,8 +425,6 @@ static MACHINE_CONFIG_START( pastelg, pastelg_state )
 
 	MCFG_PALETTE_LENGTH(32)
 
-	MCFG_PALETTE_INIT(pastelg)
-	MCFG_VIDEO_START(pastelg)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -483,8 +481,6 @@ static MACHINE_CONFIG_START( threeds, pastelg_state )
 
 	MCFG_PALETTE_LENGTH(32)
 
-	MCFG_PALETTE_INIT(pastelg)
-	MCFG_VIDEO_START(pastelg)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -739,7 +739,7 @@ static INTERRUPT_GEN( vblank_irq )
 	slapfght_state *state = device->machine().driver_data<slapfght_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -757,7 +757,7 @@ static MACHINE_CONFIG_START( perfrman, slapfght_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))		/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
-	MCFG_MACHINE_RESET(slapfight)
+	MCFG_MACHINE_RESET_OVERRIDE(slapfght_state,slapfight)
 
 	/* video hardware */
 	MCFG_BUFFERED_SPRITERAM8_ADD("spriteram")
@@ -774,7 +774,7 @@ static MACHINE_CONFIG_START( perfrman, slapfght_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(perfrman)
+	MCFG_VIDEO_START_OVERRIDE(slapfght_state,perfrman)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -803,7 +803,7 @@ static MACHINE_CONFIG_START( tigerhb, slapfght_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
-	MCFG_MACHINE_RESET(slapfight)
+	MCFG_MACHINE_RESET_OVERRIDE(slapfght_state,slapfight)
 
 	/* video hardware */
 	MCFG_BUFFERED_SPRITERAM8_ADD("spriteram")
@@ -820,7 +820,7 @@ static MACHINE_CONFIG_START( tigerhb, slapfght_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(slapfight)
+	MCFG_VIDEO_START_OVERRIDE(slapfght_state,slapfight)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -851,7 +851,7 @@ static MACHINE_CONFIG_START( tigerh, slapfght_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
-	MCFG_MACHINE_RESET(slapfight)
+	MCFG_MACHINE_RESET_OVERRIDE(slapfght_state,slapfight)
 
 	/* video hardware */
 	MCFG_BUFFERED_SPRITERAM8_ADD("spriteram")
@@ -868,7 +868,7 @@ static MACHINE_CONFIG_START( tigerh, slapfght_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(slapfight)
+	MCFG_VIDEO_START_OVERRIDE(slapfght_state,slapfight)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -900,7 +900,7 @@ static MACHINE_CONFIG_START( slapfigh, slapfght_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))	/* 10 CPU slices per frame - enough for the sound CPU to read all commands */
 
-	MCFG_MACHINE_RESET(slapfight)
+	MCFG_MACHINE_RESET_OVERRIDE(slapfght_state,slapfight)
 
 	/* video hardware */
 	MCFG_BUFFERED_SPRITERAM8_ADD("spriteram")
@@ -917,7 +917,7 @@ static MACHINE_CONFIG_START( slapfigh, slapfght_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(slapfight)
+	MCFG_VIDEO_START_OVERRIDE(slapfght_state,slapfight)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1770,10 +1770,10 @@ READ8_MEMBER(slapfght_state::gtstarb1_port_0_read)
         6D38: 20 F8         jr   nz,$6D32
         6D3A: 10 E0         djnz $6D1C
     */
-	if (cpu_get_pc(&space.device()) == 0x6d1e) return 0;
-	if (cpu_get_pc(&space.device()) == 0x6d24) return 6;
-	if (cpu_get_pc(&space.device()) == 0x6d2c) return 2;
-	if (cpu_get_pc(&space.device()) == 0x6d34) return 4;
+	if (space.device().safe_pc() == 0x6d1e) return 0;
+	if (space.device().safe_pc() == 0x6d24) return 6;
+	if (space.device().safe_pc() == 0x6d2c) return 2;
+	if (space.device().safe_pc() == 0x6d34) return 4;
 
 	/* The bootleg hangs in the "test mode" before diplaying (wrong) lives settings :
         6AD4: DB 00         in   a,($00)
@@ -1794,11 +1794,11 @@ READ8_MEMBER(slapfght_state::gtstarb1_port_0_read)
         6AF7: 20 FA         jr   nz,$6AF3
        This seems to be what used to be the MCU status.
     */
-	if (cpu_get_pc(&space.device()) == 0x6ad6) return 2; /* bit 1 must be ON */
-	if (cpu_get_pc(&space.device()) == 0x6ae4) return 2; /* bit 1 must be ON */
-	if (cpu_get_pc(&space.device()) == 0x6af5) return 0; /* bit 2 must be OFF */
+	if (space.device().safe_pc() == 0x6ad6) return 2; /* bit 1 must be ON */
+	if (space.device().safe_pc() == 0x6ae4) return 2; /* bit 1 must be ON */
+	if (space.device().safe_pc() == 0x6af5) return 0; /* bit 2 must be OFF */
 
-	logerror("Port Read PC=%04x\n",cpu_get_pc(&space.device()));
+	logerror("Port Read PC=%04x\n",space.device().safe_pc());
 
 	return 0;
 }

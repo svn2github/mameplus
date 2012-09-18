@@ -42,27 +42,25 @@
  *
  *************************************/
 
-static TILE_GET_INFO( get_alpha_tile_info )
+TILE_GET_INFO_MEMBER(atarigt_state::get_alpha_tile_info)
 {
-	atarigt_state *state = machine.driver_data<atarigt_state>();
-	UINT16 data = state->m_alpha32[tile_index / 2] >> (16 * (~tile_index & 1));
+	UINT16 data = m_alpha32[tile_index / 2] >> (16 * (~tile_index & 1));
 	int code = data & 0xfff;
 	int color = (data >> 12) & 0x0f;
-	SET_TILE_INFO(1, code, color, 0);
+	SET_TILE_INFO_MEMBER(1, code, color, 0);
 }
 
 
-static TILE_GET_INFO( get_playfield_tile_info )
+TILE_GET_INFO_MEMBER(atarigt_state::get_playfield_tile_info)
 {
-	atarigt_state *state = machine.driver_data<atarigt_state>();
-	UINT16 data = state->m_playfield32[tile_index / 2] >> (16 * (~tile_index & 1));
-	int code = (state->m_playfield_tile_bank << 12) | (data & 0xfff);
+	UINT16 data = m_playfield32[tile_index / 2] >> (16 * (~tile_index & 1));
+	int code = (m_playfield_tile_bank << 12) | (data & 0xfff);
 	int color = (data >> 12) & 7;
-	SET_TILE_INFO(0, code, color, (data >> 15) & 1);
+	SET_TILE_INFO_MEMBER(0, code, color, (data >> 15) & 1);
 }
 
 
-static TILEMAP_MAPPER( atarigt_playfield_scan )
+TILEMAP_MAPPER_MEMBER(atarigt_state::atarigt_playfield_scan)
 {
 	int bank = 1 - (col / (num_cols / 2));
 	return bank * (num_rows * num_cols / 2) + row * (num_cols / 2) + (col % (num_cols / 2));
@@ -76,47 +74,46 @@ static TILEMAP_MAPPER( atarigt_playfield_scan )
  *
  *************************************/
 
-VIDEO_START( atarigt )
+VIDEO_START_MEMBER(atarigt_state,atarigt)
 {
-	atarigt_state *state = machine.driver_data<atarigt_state>();
 	pen_t *substitute_pens;
 	int i, width, height;
 
 	/* blend the playfields and free the temporary one */
-	atarigen_blend_gfx(machine, 0, 2, 0x0f, 0x30);
+	atarigen_blend_gfx(machine(), 0, 2, 0x0f, 0x30);
 
 	/* initialize the playfield */
-	state->m_playfield_tilemap = tilemap_create(machine, get_playfield_tile_info, atarigt_playfield_scan,  8,8, 128,64);
+	m_playfield_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(atarigt_state::get_playfield_tile_info),this), tilemap_mapper_delegate(FUNC(atarigt_state::atarigt_playfield_scan),this),  8,8, 128,64);
 
 	/* initialize the motion objects */
-	state->m_rle = machine.device("rle");
+	m_rle = machine().device("rle");
 
 	/* initialize the alphanumerics */
-	state->m_alpha_tilemap = tilemap_create(machine, get_alpha_tile_info, tilemap_scan_rows,  8,8, 64,32);
+	m_alpha_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(atarigt_state::get_alpha_tile_info),this), TILEMAP_SCAN_ROWS,  8,8, 64,32);
 
 	/* allocate temp bitmaps */
-	width = machine.primary_screen->width();
-	height = machine.primary_screen->height();
+	width = machine().primary_screen->width();
+	height = machine().primary_screen->height();
 
-	state->m_pf_bitmap = auto_bitmap_ind16_alloc(machine, width, height);
-	state->m_an_bitmap = auto_bitmap_ind16_alloc(machine, width, height);
+	m_pf_bitmap = auto_bitmap_ind16_alloc(machine(), width, height);
+	m_an_bitmap = auto_bitmap_ind16_alloc(machine(), width, height);
 
 	/* map pens 1:1 */
-	substitute_pens = auto_alloc_array(machine, pen_t, 65536);
-	for (i = 0; i < machine.total_colors(); i++)
+	substitute_pens = auto_alloc_array(machine(), pen_t, 65536);
+	for (i = 0; i < machine().total_colors(); i++)
 		substitute_pens[i] = i;
-	machine.pens = substitute_pens;
+	machine().pens = substitute_pens;
 
 	/* reset statics */
-	memset(state->m_colorram, 0, 0x80000);
+	memset(m_colorram, 0, 0x80000);
 
 	/* save states */
-	state->save_item(NAME(state->m_playfield_tile_bank));
-	state->save_item(NAME(state->m_playfield_color_bank));
-	state->save_item(NAME(state->m_playfield_xscroll));
-	state->save_item(NAME(state->m_playfield_yscroll));
-	state->save_item(NAME(state->m_tram_checksum));
-	state->save_item(NAME(state->m_expanded_mram));
+	save_item(NAME(m_playfield_tile_bank));
+	save_item(NAME(m_playfield_color_bank));
+	save_item(NAME(m_playfield_xscroll));
+	save_item(NAME(m_playfield_yscroll));
+	save_item(NAME(m_tram_checksum));
+	save_item(NAME(m_expanded_mram));
 }
 
 

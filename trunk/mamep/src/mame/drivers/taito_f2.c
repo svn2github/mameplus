@@ -348,7 +348,7 @@ READ16_MEMBER(taitof2_state::ninjak_input_r)
 //          return (coin_word & mem_mask);
 	}
 
-	logerror("CPU #0 PC %06x: warning - read unmapped input offset %06x\n", cpu_get_pc(&space.device()), offset);
+	logerror("CPU #0 PC %06x: warning - read unmapped input offset %06x\n", space.device().safe_pc(), offset);
 
 	return 0xff;
 }
@@ -372,7 +372,7 @@ READ16_MEMBER(taitof2_state::cameltry_paddle_r)
 			return res;
 	}
 
-	logerror("CPU #0 PC %06x: warning - read unmapped paddle offset %06x\n", cpu_get_pc(&space.device()), offset);
+	logerror("CPU #0 PC %06x: warning - read unmapped paddle offset %06x\n", space.device().safe_pc(), offset);
 
 	return 0;
 }
@@ -392,7 +392,7 @@ READ16_MEMBER(taitof2_state::mjnquest_dsw_r)
 		}
 	}
 
-	logerror("CPU #0 PC %06x: warning - read unmapped dsw_r offset %06x\n", cpu_get_pc(&space.device()), offset);
+	logerror("CPU #0 PC %06x: warning - read unmapped dsw_r offset %06x\n", space.device().safe_pc(), offset);
 
 	return 0xff;
 }
@@ -418,7 +418,7 @@ READ16_MEMBER(taitof2_state::mjnquest_input_r)
 
 	}
 
-	logerror("CPU #0 mjnquest_input %06x: warning - read unknown input %06x\n", cpu_get_pc(&space.device()), m_mjnquest_input);
+	logerror("CPU #0 mjnquest_input %06x: warning - read unknown input %06x\n", space.device().safe_pc(), m_mjnquest_input);
 
 	return 0xff;
 }
@@ -575,13 +575,13 @@ driftout  8000 0000/8  0000 0000    The first control changes from 8000 to 0000 
 static TIMER_CALLBACK( taitof2_interrupt6 )
 {
 	taitof2_state *state = machine.driver_data<taitof2_state>();
-	device_set_input_line(state->m_maincpu, 6, HOLD_LINE);
+	state->m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( taitof2_interrupt )
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(500), FUNC(taitof2_interrupt6));
-	device_set_input_line(device, 5, HOLD_LINE);
+	device->execute().set_input_line(5, HOLD_LINE);
 }
 
 
@@ -603,7 +603,7 @@ WRITE8_MEMBER(taitof2_state::sound_bankswitch_w)
 READ8_MEMBER(taitof2_state::driveout_sound_command_r)
 {
 
-	device_set_input_line(m_audiocpu, 0, CLEAR_LINE);
+	m_audiocpu->set_input_line(0, CLEAR_LINE);
 //  logerror("sound IRQ OFF (sound command=%02x)\n", m_driveout_sound_latch);
 	return m_driveout_sound_latch;
 }
@@ -644,7 +644,7 @@ WRITE16_MEMBER(taitof2_state::driveout_sound_command_w)
 			else
 			{
 				m_driveout_sound_latch = ((data << 4) & 0xf0) | (m_driveout_sound_latch & 0x0f);
-				device_set_input_line(m_audiocpu, 0, ASSERT_LINE);
+				m_audiocpu->set_input_line(0, ASSERT_LINE);
 			}
 		}
 	}
@@ -663,7 +663,7 @@ WRITE16_MEMBER(taitof2_state::driveout_sound_command_w)
 WRITE16_MEMBER(taitof2_state::cchip2_word_w)
 {
 
-	logerror("cchip2_w pc: %06x offset %04x: %02x\n", cpu_get_pc(&space.device()), offset, data);
+	logerror("cchip2_w pc: %06x offset %04x: %02x\n", space.device().safe_pc(), offset, data);
 
 	COMBINE_DATA(&m_cchip2_ram[offset]);
 }
@@ -2135,29 +2135,50 @@ static INPUT_PORTS_START( deadconx )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_TILT )
 
 	PORT_START("DSWA")
-	TAITO_MACHINE_COCKTAIL_LOC(SW1)
+	TAITO_MACHINE_NO_COCKTAIL_LOC(SW1)
 	TAITO_COINAGE_WORLD_LOC(SW1)
 
 	PORT_START("DSWB") /* DSW B, missing a timer speed maybe? */
-	TAITO_DIFFICULTY_LOC(SW2)
-	PORT_DIPUNUSED_DIPLOC( 0x04, 0x04, "SW2:3" )
-	PORT_DIPNAME( 0x18, 0x18, "Damage" )		PORT_DIPLOCATION("SW2:4,5")
-	PORT_DIPSETTING(    0x10, "Small" )		/* Hero can take 12 gun shots */
-	PORT_DIPSETTING(    0x18, DEF_STR( Normal ) )	/* Hero can take 10 gun shots */
-	PORT_DIPSETTING(    0x08, "Big" )		/* Hero can take 8 gun shots */
-	PORT_DIPSETTING(    0x00, "Biggest" )		/* Hero can take 5 gun shots */
-	PORT_DIPUNUSED_DIPLOC( 0x20, 0x20, "SW2:6" )
-	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "SW2:7" )
-	PORT_DIPNAME( 0x80, 0x80, "Game Type" )		PORT_DIPLOCATION("SW2:8")
-	PORT_DIPSETTING(    0x00, "1 Player only" )
-	PORT_DIPSETTING(    0x80, "Multiplayer" )
+	PORT_DIPUNUSED_DIPLOC( 0x01, 0x01, "SW2:1" )		/* Listed as "NOT USE" */
+	PORT_DIPUNUSED_DIPLOC( 0x02, 0x02, "SW2:2" )		/* Listed as "NOT USE" */
+	PORT_DIPUNUSED_DIPLOC( 0x04, 0x04, "SW2:3" )		/* Listed as "NOT USE" */
+	PORT_DIPNAME( 0x18, 0x18, "Life Meter")	PORT_DIPLOCATION("SW2:4,5")
+	PORT_DIPSETTING(    0x00, "5" )
+	PORT_DIPSETTING(    0x10, "8" )
+	PORT_DIPSETTING(    0x18, "10" )
+	PORT_DIPSETTING(    0x08, "12" )
+	PORT_DIPUNUSED_DIPLOC( 0x20, 0x20, "SW2:6" )		/* Listed as "NOT USE" */
+	PORT_DIPNAME( 0xc0, 0xc0, "Number of Enemies 1/2 Player" )	PORT_DIPLOCATION("SW2:7,8")
+	PORT_DIPSETTING(    0xc0, "30/50" )
+	PORT_DIPSETTING(    0x80, "40/60" )
+	PORT_DIPSETTING(    0x40, "25/45" )
+	PORT_DIPSETTING(    0x00, "50/70" )
 INPUT_PORTS_END
 
-static INPUT_PORTS_START( deadconxj )
+static INPUT_PORTS_START( deadconxj ) /* Matches PDF of Dip Sheet but not matching current taito coin macros */
 	PORT_INCLUDE(deadconx)
 
 	PORT_MODIFY("DSWA")
-	TAITO_COINAGE_JAPAN_NEW_LOC(SW1)
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coin_A ) )	PORT_DIPLOCATION("SW1:1,2")
+	PORT_DIPSETTING(    0x00, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x03, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
+	PORT_DIPNAME( 0x0c, 0x0c, DEF_STR( Coin_B ) )	PORT_DIPLOCATION("SW1:3,4")
+	PORT_DIPSETTING(    0x00, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(    0x0c, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( 1C_2C ) )
+	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Demo_Sounds ) )	PORT_DIPLOCATION("SW1:5")
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Service_Mode ) )	PORT_DIPLOCATION("SW1:6")
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Flip_Screen ) )	PORT_DIPLOCATION("SW1:7")
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPUNUSED_DIPLOC( 0x80, 0x80, "SW1:8" )		/* Listed as "NOT USE" */
 INPUT_PORTS_END
 
 
@@ -2790,7 +2811,7 @@ GFXDECODE_END
 static void irq_handler( device_t *device, int irq )
 {
 	taitof2_state *state = device->machine().driver_data<taitof2_state>();
-	device_set_input_line(state->m_audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
@@ -2995,25 +3016,24 @@ static const tc0140syt_interface taitof2_tc0140syt_intf =
 	"maincpu", "audiocpu"
 };
 
-static MACHINE_START( common )
+MACHINE_START_MEMBER(taitof2_state,common)
 {
-	taitof2_state *state = machine.driver_data<taitof2_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");;
-	state->m_tc0100scn = machine.device("tc0100scn");;
-	state->m_tc0100scn_1 = machine.device("tc0100scn_1");;
-	state->m_tc0100scn_2 = machine.device("tc0100scn_2");;
-	state->m_tc0360pri = machine.device("tc0360pri");;
-	state->m_tc0280grd = machine.device("tc0280grd");;
-	state->m_tc0430grw = machine.device("tc0430grw");;
-	state->m_tc0480scp = machine.device("tc0480scp");;
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");;
+	m_tc0100scn = machine().device("tc0100scn");;
+	m_tc0100scn_1 = machine().device("tc0100scn_1");;
+	m_tc0100scn_2 = machine().device("tc0100scn_2");;
+	m_tc0360pri = machine().device("tc0360pri");;
+	m_tc0280grd = machine().device("tc0280grd");;
+	m_tc0430grw = machine().device("tc0430grw");;
+	m_tc0480scp = machine().device("tc0480scp");;
 }
 
-static MACHINE_START( f2 )
+MACHINE_START_MEMBER(taitof2_state,f2)
 {
-	MACHINE_START_CALL(common);
-	machine.root_device().membank("bank2")->configure_entries(0, 8, machine.root_device().memregion("audiocpu")->base() + 0x10000, 0x4000);
+	MACHINE_START_CALL_MEMBER(common);
+	machine().root_device().membank("bank2")->configure_entries(0, 8, machine().root_device().memregion("audiocpu")->base() + 0x10000, 0x4000);
 }
 
 static MACHINE_CONFIG_START( taito_f2, taitof2_state )
@@ -3025,7 +3045,7 @@ static MACHINE_CONFIG_START( taito_f2, taitof2_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 24000000/6)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(f2)
+	MCFG_MACHINE_START_OVERRIDE(taitof2_state,f2)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -3039,7 +3059,7 @@ static MACHINE_CONFIG_START( taito_f2, taitof2_state )
 	MCFG_GFXDECODE(taitof2)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitof2_default)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_default)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -3077,7 +3097,7 @@ static MACHINE_CONFIG_DERIVED( finalb, taito_f2_tc0220ioc )
 
 	/* video hardware */
 	MCFG_GFXDECODE(finalb)
-	MCFG_VIDEO_START(taitof2_finalb)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_finalb)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VBLANK_STATIC(taitof2_partial_buffer_delayed)
 
@@ -3094,7 +3114,7 @@ static MACHINE_CONFIG_DERIVED( dondokod, taito_f2_tc0220ioc )
 
 	/* video hardware */
 	MCFG_GFXDECODE(pivot)
-	MCFG_VIDEO_START(taitof2_dondokod)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_dondokod)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VBLANK_STATIC(taitof2_partial_buffer_delayed)
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri_roz)
@@ -3112,7 +3132,7 @@ static MACHINE_CONFIG_DERIVED( megab, taito_f2_tc0220ioc )
 	MCFG_CPU_PROGRAM_MAP(megab_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_megab)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_megab)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri)
 
@@ -3129,7 +3149,7 @@ static MACHINE_CONFIG_DERIVED( thundfox, taito_f2_tc0220ioc )
 
 	/* video hardware */
 	MCFG_GFXDECODE(thundfox)
-	MCFG_VIDEO_START(taitof2_thundfox)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_thundfox)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_thundfox)
 	MCFG_SCREEN_VBLANK_STATIC(taitof2_partial_buffer_delayed_thundfox)
@@ -3148,7 +3168,7 @@ static MACHINE_CONFIG_DERIVED( cameltry, taito_f2_tc0220ioc )
 
 	/* video hardware */
 	MCFG_GFXDECODE(pivot)
-	MCFG_VIDEO_START(taitof2_dondokod)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_dondokod)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri_roz)
 
@@ -3181,7 +3201,7 @@ static MACHINE_CONFIG_DERIVED( liquidk, taito_f2_tc0220ioc )
 	MCFG_CPU_PROGRAM_MAP(liquidk_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_megab)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_megab)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri)
 	MCFG_SCREEN_VBLANK_STATIC(taitof2_partial_buffer_delayed)
@@ -3214,7 +3234,7 @@ static MACHINE_CONFIG_DERIVED( ssi, taito_f2_tc0510nio )
 	MCFG_CPU_PROGRAM_MAP(ssi_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_ssi)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_ssi)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_ssi)
 	MCFG_SCREEN_VBLANK_STATIC(taitof2_partial_buffer_delayed_thundfox)	// buffer_delayed_thundfox instead of buffer_delayed fixes the butterfly powerup
@@ -3230,7 +3250,7 @@ static MACHINE_CONFIG_DERIVED( gunfront, taito_f2_tc0510nio )
 	MCFG_CPU_PROGRAM_MAP(gunfront_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_gunfront)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_gunfront)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri)
 	MCFG_SCREEN_VBLANK_STATIC(taitof2_partial_buffer_delayed)
@@ -3247,7 +3267,7 @@ static MACHINE_CONFIG_DERIVED( growl, taito_f2 )
 	MCFG_CPU_PROGRAM_MAP(growl_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_growl)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_growl)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri)
 
@@ -3263,7 +3283,7 @@ static MACHINE_CONFIG_DERIVED( mjnquest, taito_f2 )
 	MCFG_CPU_PROGRAM_MAP(mjnquest_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_mjnquest)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_mjnquest)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", taitof2_tc0100scn_intf)
 	MCFG_TC0110PCR_ADD("tc0110pcr", taitof2_tc0110pcr_intf)
@@ -3278,7 +3298,7 @@ static MACHINE_CONFIG_DERIVED( footchmp, taito_f2 )
 
 	/* video hardware */
 	MCFG_GFXDECODE(deadconx)
-	MCFG_VIDEO_START(taitof2_footchmp)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_footchmp)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_deadconx)
 	MCFG_SCREEN_VBLANK_STATIC(taitof2_full_buffer_delayed)
@@ -3302,7 +3322,7 @@ static MACHINE_CONFIG_DERIVED( hthero, taito_f2 )
 
 	/* video hardware */
 	MCFG_GFXDECODE(deadconx)
-	MCFG_VIDEO_START(taitof2_hthero)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_hthero)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_deadconx)
 	MCFG_SCREEN_VBLANK_STATIC(taitof2_full_buffer_delayed)
@@ -3319,7 +3339,7 @@ static MACHINE_CONFIG_DERIVED( koshien, taito_f2_tc0510nio )
 	MCFG_CPU_PROGRAM_MAP(koshien_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_koshien)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_koshien)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri)
 
@@ -3336,7 +3356,7 @@ static MACHINE_CONFIG_DERIVED( yuyugogo, taito_f2_tc0510nio )
 
 	/* video hardware */
 	MCFG_GFXDECODE(yuyugogo)
-	MCFG_VIDEO_START(taitof2_yuyugogo)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_yuyugogo)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_yesnoj)
 
@@ -3351,7 +3371,7 @@ static MACHINE_CONFIG_DERIVED( ninjak, taito_f2 )
 	MCFG_CPU_PROGRAM_MAP(ninjak_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_ninjak)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_ninjak)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri)
 
@@ -3367,7 +3387,7 @@ static MACHINE_CONFIG_DERIVED( solfigtr, taito_f2 )
 	MCFG_CPU_PROGRAM_MAP(solfigtr_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_solfigtr)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_solfigtr)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri)
 
@@ -3398,7 +3418,7 @@ static MACHINE_CONFIG_DERIVED( pulirula, taito_f2_tc0510nio )
 
 	/* video hardware */
 	MCFG_GFXDECODE(pivot)
-	MCFG_VIDEO_START(taitof2_pulirula)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_pulirula)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri_roz)
 
@@ -3417,7 +3437,7 @@ static MACHINE_CONFIG_DERIVED( metalb, taito_f2_tc0510nio )
 	/* video hardware */
 	MCFG_GFXDECODE(deadconx)
 	MCFG_PALETTE_LENGTH(8192)
-	MCFG_VIDEO_START(taitof2_metalb)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_metalb)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_metalb)
 
@@ -3433,7 +3453,7 @@ static MACHINE_CONFIG_DERIVED( qzchikyu, taito_f2_tc0510nio )
 	MCFG_CPU_PROGRAM_MAP(qzchikyu_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_qzchikyu)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_qzchikyu)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_VBLANK_STATIC(taitof2_partial_buffer_delayed_qzchikyu)
 
@@ -3449,7 +3469,7 @@ static MACHINE_CONFIG_DERIVED( yesnoj, taito_f2 )
 
 	/* video hardware */
 	MCFG_GFXDECODE(yuyugogo)
-	MCFG_VIDEO_START(taitof2_yesnoj)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_yesnoj)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_yesnoj)
 
@@ -3465,7 +3485,7 @@ static MACHINE_CONFIG_DERIVED( deadconx, taito_f2 )
 
 	/* video hardware */
 	MCFG_GFXDECODE(deadconx)
-	MCFG_VIDEO_START(taitof2_deadconx)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_deadconx)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_deadconx)
 
@@ -3482,7 +3502,7 @@ static MACHINE_CONFIG_DERIVED( deadconxj, taito_f2 )
 
 	/* video hardware */
 	MCFG_GFXDECODE(deadconx)
-	MCFG_VIDEO_START(taitof2_deadconxj)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_deadconxj)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_deadconx)
 
@@ -3498,7 +3518,7 @@ static MACHINE_CONFIG_DERIVED( dinorex, taito_f2_tc0510nio )
 	MCFG_CPU_PROGRAM_MAP(dinorex_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_dinorex)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_dinorex)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri)
 
@@ -3514,7 +3534,7 @@ static MACHINE_CONFIG_DERIVED( qjinsei, taito_f2_tc0510nio )
 	MCFG_CPU_PROGRAM_MAP(qjinsei_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_quiz)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_quiz)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri)
 
@@ -3530,7 +3550,7 @@ static MACHINE_CONFIG_DERIVED( qcrayon, taito_f2_tc0510nio )
 	MCFG_CPU_PROGRAM_MAP(qcrayon_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_quiz)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_quiz)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri)
 
@@ -3546,7 +3566,7 @@ static MACHINE_CONFIG_DERIVED( qcrayon2, taito_f2_tc0510nio )
 	MCFG_CPU_PROGRAM_MAP(qcrayon2_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(taitof2_quiz)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_quiz)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri)
 
@@ -3563,7 +3583,7 @@ static MACHINE_CONFIG_DERIVED( driftout, taito_f2_tc0510nio )
 
 	/* video hardware */
 	MCFG_GFXDECODE(pivot)
-	MCFG_VIDEO_START(taitof2_driftout)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_driftout)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(taitof2_pri_roz)
 
@@ -3583,7 +3603,7 @@ static MACHINE_CONFIG_START( cameltrya, taitof2_state )
 	MCFG_CPU_ADD("audiocpu", Z80,24000000/4)	/* verifed on pcb */
 	MCFG_CPU_PROGRAM_MAP(cameltrya_sound_map)
 
-	MCFG_MACHINE_START(common)
+	MCFG_MACHINE_START_OVERRIDE(taitof2_state,common)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", taitof2_io220_intf)
 
@@ -3599,7 +3619,7 @@ static MACHINE_CONFIG_START( cameltrya, taitof2_state )
 	MCFG_GFXDECODE(pivot)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitof2_dondokod)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_dondokod)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", dondokod_tc0100scn_intf)
 	MCFG_TC0430GRW_ADD("tc0280grd", taitof2_tc0280grd_intf)
@@ -3632,7 +3652,7 @@ static MACHINE_CONFIG_START( driveout, taitof2_state )
 	MCFG_CPU_ADD("audiocpu", Z80,24000000/6)	/* 4 MHz */
 	MCFG_CPU_PROGRAM_MAP(driveout_sound_map)
 
-	MCFG_MACHINE_START(common)
+	MCFG_MACHINE_START_OVERRIDE(taitof2_state,common)
 
 	MCFG_TC0510NIO_ADD("tc0510nio", taitof2_io510_intf)
 
@@ -3648,7 +3668,7 @@ static MACHINE_CONFIG_START( driveout, taitof2_state )
 	MCFG_GFXDECODE(pivot)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(taitof2_driftout)
+	MCFG_VIDEO_START_OVERRIDE(taitof2_state,taitof2_driftout)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", dondokod_tc0100scn_intf)
 	MCFG_TC0430GRW_ADD("tc0430grw", taitof2_tc0430grw_intf)

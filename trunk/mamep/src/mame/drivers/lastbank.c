@@ -440,12 +440,12 @@ static TIMER_DEVICE_CALLBACK( lastbank_irq_scanline )
 
 	if (scanline == 240 && (state->m_irq_enable & 4))
 	{
-		device_set_input_line_and_vector(state->m_maincpu, 0, HOLD_LINE, state->m_irq_vector[2]);
+		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, state->m_irq_vector[2]);
 	}
 
 	if (scanline == 0 && (state->m_irq_enable & 2))
 	{
-		device_set_input_line_and_vector(state->m_maincpu, 0, HOLD_LINE, state->m_irq_vector[1]);
+		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, state->m_irq_vector[1]);
 	}
 }
 
@@ -463,8 +463,8 @@ static MACHINE_CONFIG_START( lastbank, lastbank_state )
 
 	MCFG_QUANTUM_PERFECT_CPU("maincpu")
 
-	//MCFG_MACHINE_START(lastbank)
-	//MCFG_MACHINE_RESET(lastbank)
+	//MCFG_MACHINE_START_OVERRIDE(lastbank_state,lastbank)
+	//MCFG_MACHINE_RESET_OVERRIDE(lastbank_state,lastbank)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -480,7 +480,7 @@ static MACHINE_CONFIG_START( lastbank, lastbank_state )
 	MCFG_GFXDECODE( lastbank )
 	MCFG_PALETTE_LENGTH(0x100)
 
-//  MCFG_VIDEO_START(lastbank)
+//  MCFG_VIDEO_START_OVERRIDE(lastbank_state,lastbank)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

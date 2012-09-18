@@ -353,40 +353,37 @@ static const UINT8 cc_ex[0x100] = {
 };
 
 
-static MACHINE_START( system1 )
+void system1_state::machine_start()
 {
-	system1_state *state = machine.driver_data<system1_state>();
-	UINT32 numbanks = (state->memregion("maincpu")->bytes() - 0x10000) / 0x4000;
+	UINT32 numbanks = (memregion("maincpu")->bytes() - 0x10000) / 0x4000;
 
 	if (numbanks > 0)
-		state->membank("bank1")->configure_entries(0, numbanks, state->memregion("maincpu")->base() + 0x10000, 0x4000);
+		membank("bank1")->configure_entries(0, numbanks, memregion("maincpu")->base() + 0x10000, 0x4000);
 	else
-		state->membank("bank1")->configure_entry(0, state->memregion("maincpu")->base() + 0x8000);
-	state->membank("bank1")->set_entry(0);
+		membank("bank1")->configure_entry(0, memregion("maincpu")->base() + 0x8000);
+	membank("bank1")->set_entry(0);
 
-	z80_set_cycle_tables(machine.device("maincpu"), cc_op, cc_cb, cc_ed, cc_xy, cc_xycb, cc_ex);
+	z80_set_cycle_tables(machine().device("maincpu"), cc_op, cc_cb, cc_ed, cc_xy, cc_xycb, cc_ex);
 
-	state->m_mute_xor = 0x00;
+	m_mute_xor = 0x00;
 
-	state_save_register_global(machine, state->m_dakkochn_mux_data);
-	state_save_register_global(machine, state->m_videomode_prev);
-	state_save_register_global(machine, state->m_mcu_control);
-	state_save_register_global(machine, state->m_nob_maincpu_latch);
+	state_save_register_global(machine(), m_dakkochn_mux_data);
+	state_save_register_global(machine(), m_videomode_prev);
+	state_save_register_global(machine(), m_mcu_control);
+	state_save_register_global(machine(), m_nob_maincpu_latch);
 }
 
 
-static MACHINE_START( system2 )
+MACHINE_START_MEMBER(system1_state,system2)
 {
-	system1_state *state = machine.driver_data<system1_state>();
-	MACHINE_START_CALL(system1);
-	state->m_mute_xor = 0x01;
+	system1_state::machine_start();
+	m_mute_xor = 0x01;
 }
 
 
-static MACHINE_RESET( system1 )
+void system1_state::machine_reset()
 {
-	system1_state *state = machine.driver_data<system1_state>();
-	state->m_dakkochn_mux_data = 0;
+	m_dakkochn_mux_data = 0;
 }
 
 
@@ -417,7 +414,7 @@ WRITE8_MEMBER(system1_state::videomode_w)
 
 	/* bit 6 is connected to the 8751 IRQ */
 	if (i8751 != NULL)
-		device_set_input_line(i8751, MCS51_INT1_LINE, (data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
+		i8751->execute().set_input_line(MCS51_INT1_LINE, (data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
 
 	/* handle any custom banking or other stuff */
 	if (m_videomode_custom != NULL)
@@ -481,7 +478,7 @@ WRITE8_MEMBER(system1_state::sound_control_w)
 	/* bit 6 = feedback from sound board that read occurrred */
 
 	/* bit 7 controls the sound CPU's NMI line */
-	cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_NMI, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
+	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
 
 	/* remaining bits are used for video RAM banking */
 	system1_videoram_bank_w(device, offset, data);
@@ -524,7 +521,7 @@ WRITE8_MEMBER(system1_state::soundport_w)
 static TIMER_DEVICE_CALLBACK( soundirq_gen )
 {
 	/* sound IRQ is generated on 32V, 96V, ... and auto-acknowledged */
-	cputag_set_input_line(timer.machine(), "soundcpu", 0, HOLD_LINE);
+	timer.machine().device("soundcpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -548,8 +545,8 @@ WRITE8_MEMBER(system1_state::mcu_control_w)
         Bit 0 -> Directly connected to Z80 /INT line
     */
 	m_mcu_control = data;
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_HALT, (data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
-	cputag_set_input_line(machine(), "maincpu", 0, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, (data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 
@@ -567,7 +564,7 @@ WRITE8_MEMBER(system1_state::mcu_io_w)
 
 		default:
 			logerror("%03X: MCU movx write mode %02X offset %04X = %02X\n",
-					 cpu_get_pc(&space.device()), m_mcu_control, offset, data);
+					 space.device().safe_pc(), m_mcu_control, offset, data);
 			break;
 	}
 }
@@ -588,7 +585,7 @@ READ8_MEMBER(system1_state::mcu_io_r)
 
 		default:
 			logerror("%03X: MCU movx read mode %02X offset %04X\n",
-					 cpu_get_pc(&space.device()), m_mcu_control, offset);
+					 space.device().safe_pc(), m_mcu_control, offset);
 			return 0xff;
 	}
 }
@@ -597,8 +594,8 @@ READ8_MEMBER(system1_state::mcu_io_r)
 static INTERRUPT_GEN( mcu_irq_assert )
 {
 	/* toggle the INT0 line on the MCU */
-	device_set_input_line(device, MCS51_INT0_LINE, ASSERT_LINE);
-	device_set_input_line(device, MCS51_INT0_LINE, CLEAR_LINE);
+	device->execute().set_input_line(MCS51_INT0_LINE, ASSERT_LINE);
+	device->execute().set_input_line(MCS51_INT0_LINE, CLEAR_LINE);
 
 	/* boost interleave to ensure that the MCU can break the Z80 out of a HALT */
 	device->machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(10));
@@ -614,8 +611,8 @@ static TIMER_DEVICE_CALLBACK( mcu_t0_callback )
     */
 
 	device_t *mcu = timer.machine().device("mcu");
-	device_set_input_line(mcu, MCS51_T0_LINE, ASSERT_LINE);
-	device_set_input_line(mcu, MCS51_T0_LINE, CLEAR_LINE);
+	mcu->execute().set_input_line(MCS51_T0_LINE, ASSERT_LINE);
+	mcu->execute().set_input_line(MCS51_T0_LINE, CLEAR_LINE);
 }
 
 
@@ -638,7 +635,7 @@ WRITE8_MEMBER(system1_state::nob_mcu_control_p2_w)
 
 	/* bit 2 is toggled once near the end of an IRQ */
 	if (((m_mcu_control ^ data) & 0x04) && !(data & 0x04))
-		device_set_input_line(&space.device(), MCS51_INT0_LINE, CLEAR_LINE);
+		space.device().execute().set_input_line(MCS51_INT0_LINE, CLEAR_LINE);
 
 	/* bit 3 is toggled once at the start of an IRQ, and again at the end */
 	if (((m_mcu_control ^ data) & 0x08) && !(data & 0x08))
@@ -659,7 +656,7 @@ READ8_MEMBER(system1_state::nob_maincpu_latch_r)
 WRITE8_MEMBER(system1_state::nob_maincpu_latch_w)
 {
 	m_nob_maincpu_latch = data;
-	cputag_set_input_line(machine(), "mcu", MCS51_INT0_LINE, ASSERT_LINE);
+	machine().device("mcu")->execute().set_input_line(MCS51_INT0_LINE, ASSERT_LINE);
 	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
 
@@ -681,25 +678,25 @@ READ8_MEMBER(system1_state::nob_mcu_status_r)
 
 READ8_MEMBER(system1_state::nobb_inport1c_r)
 {
-//  logerror("IN  $1c : pc = %04x - data = 0x80\n",cpu_get_pc(&space.device()));
+//  logerror("IN  $1c : pc = %04x - data = 0x80\n",space.device().safe_pc());
 	return(0x80);	// infinite loop (at 0x0fb3) until bit 7 is set
 }
 
 READ8_MEMBER(system1_state::nobb_inport22_r)
 {
-//  logerror("IN  $22 : pc = %04x - data = %02x\n",cpu_get_pc(&space.device()),nobb_inport17_step);
+//  logerror("IN  $22 : pc = %04x - data = %02x\n",space.device().safe_pc(),nobb_inport17_step);
 	return(0);//nobb_inport17_step);
 }
 
 READ8_MEMBER(system1_state::nobb_inport23_r)
 {
-//  logerror("IN  $23 : pc = %04x - step = %02x\n",cpu_get_pc(&space.device()),m_nobb_inport23_step);
+//  logerror("IN  $23 : pc = %04x - step = %02x\n",space.device().safe_pc(),m_nobb_inport23_step);
 	return(m_nobb_inport23_step);
 }
 
 WRITE8_MEMBER(system1_state::nobb_outport24_w)
 {
-//  logerror("OUT $24 : pc = %04x - data = %02x\n",cpu_get_pc(&space.device()),data);
+//  logerror("OUT $24 : pc = %04x - data = %02x\n",space.device().safe_pc(),data);
 	m_nobb_inport23_step = data;
 }
 
@@ -774,8 +771,8 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, system1_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0x87ff) AM_MIRROR(0x1800) AM_RAM
-	AM_RANGE(0xa000, 0xa003) AM_MIRROR(0x1fff) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0xc000, 0xc003) AM_MIRROR(0x1fff) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
+	AM_RANGE(0xa000, 0xa003) AM_MIRROR(0x1fff) AM_DEVWRITE("sn1", sn76489a_new_device, write)
+	AM_RANGE(0xc000, 0xc003) AM_MIRROR(0x1fff) AM_DEVWRITE("sn2", sn76489a_new_device, write)
 	AM_RANGE(0xe000, 0xe000) AM_MIRROR(0x1fff) AM_READ(sound_data_r)
 ADDRESS_MAP_END
 
@@ -2092,6 +2089,21 @@ static GFXDECODE_START( system1 )
 GFXDECODE_END
 
 
+/*************************************
+ *
+ *  Sound interface
+ *
+ *************************************/
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
 
 /*************************************
  *
@@ -2143,8 +2155,6 @@ static MACHINE_CONFIG_START( sys1ppi, system1_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(system1)
-	MCFG_MACHINE_RESET(system1)
 
 	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
 
@@ -2158,16 +2168,17 @@ static MACHINE_CONFIG_START( sys1ppi, system1_state )
 	MCFG_GFXDECODE(system1)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(system1)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489A, SOUND_CLOCK/4)
+	MCFG_SOUND_ADD("sn1", SN76489A_NEW, SOUND_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489A, SOUND_CLOCK/2)	/* selectable via jumper */
+	MCFG_SOUND_ADD("sn2", SN76489A_NEW, SOUND_CLOCK/2)	/* selectable via jumper */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 /* reduced visible area for scrolling games */
@@ -2236,10 +2247,10 @@ MACHINE_CONFIG_END
 /* system2 video */
 static MACHINE_CONFIG_DERIVED( sys2, sys1ppi )
 
-	MCFG_MACHINE_START(system2)
+	MCFG_MACHINE_START_OVERRIDE(system1_state,system2)
 
 	/* video hardware */
-	MCFG_VIDEO_START(system2)
+	MCFG_VIDEO_START_OVERRIDE(system1_state,system2)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(system2)
 MACHINE_CONFIG_END
@@ -4688,7 +4699,7 @@ DRIVER_INIT_MEMBER(system1_state,myherok)
 READ8_MEMBER(system1_state::nob_start_r)
 {
 	/* in reality, it's likely some M1-dependent behavior */
-	return (cpu_get_pc(&space.device()) <= 0x0003) ? 0x80 : memregion("maincpu")->base()[1];
+	return (space.device().safe_pc() <= 0x0003) ? 0x80 : memregion("maincpu")->base()[1];
 }
 
 DRIVER_INIT_MEMBER(system1_state,nob)

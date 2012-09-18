@@ -100,7 +100,7 @@ ADDRESS_MAP_END
 static WRITE16_HANDLER( output_w )
 {
 	if (ACCESSING_BITS_0_7)
-		logerror("%06x:output_w(%x) = %02x\n", cpu_get_pc(&space->device()), offset, data);
+		logerror("%06x:output_w(%x) = %02x\n", space->device().safe_pc(), offset, data);
 }
 
 
@@ -108,13 +108,13 @@ static READ16_HANDLER( coin_chip_r )
 {
 	if (offset == 1)
 		return space->machine().root_device().ioport("COINCHIP")->read();
-	logerror("%06x:coin_chip_r(%02x) & %04x\n", cpu_get_pc(&space->device()), offset, mem_mask);
+	logerror("%06x:coin_chip_r(%02x) & %04x\n", space->device().safe_pc(), offset, mem_mask);
 	return 0xffff;
 }
 
 static WRITE16_HANDLER( coin_chip_w )
 {
-	logerror("%06x:coin_chip_w(%02x) = %04x & %04x\n", cpu_get_pc(&space->device()), offset, data, mem_mask);
+	logerror("%06x:coin_chip_w(%02x) = %04x & %04x\n", space->device().safe_pc(), offset, data, mem_mask);
 }
 
 // inputs at 282000, 282002 (full word)
@@ -302,9 +302,9 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static MACHINE_RESET(mquake)
+MACHINE_RESET_MEMBER(amiga_state,mquake)
 {
-	MACHINE_RESET_CALL(amiga);
+	MACHINE_RESET_CALL_MEMBER(amiga);
 }
 
 /*************************************
@@ -315,7 +315,6 @@ static MACHINE_RESET(mquake)
 
 static const mos6526_interface cia_0_intf =
 {
-	0,													/* tod_clock */
 	DEVCB_LINE(amiga_cia_0_irq),									/* irq_func */
 	DEVCB_NULL,	/* pc_func */
 	DEVCB_NULL,
@@ -328,7 +327,6 @@ static const mos6526_interface cia_0_intf =
 
 static const mos6526_interface cia_1_intf =
 {
-	0,													/* tod_clock */
 	DEVCB_LINE(amiga_cia_1_irq),									/* irq_func */
 	DEVCB_NULL,	/* pc_func */
 	DEVCB_NULL,
@@ -345,7 +343,7 @@ static MACHINE_CONFIG_START( mquake, amiga_state )
 	MCFG_CPU_ADD("maincpu", M68000, AMIGA_68000_NTSC_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 
-	MCFG_MACHINE_RESET(mquake)
+	MCFG_MACHINE_RESET_OVERRIDE(amiga_state,mquake)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
@@ -359,9 +357,9 @@ static MACHINE_CONFIG_START( mquake, amiga_state )
 	MCFG_SCREEN_UPDATE_STATIC(amiga)
 
 	MCFG_PALETTE_LENGTH(4096)
-	MCFG_PALETTE_INIT(amiga)
+	MCFG_PALETTE_INIT_OVERRIDE(amiga_state,amiga)
 
-	MCFG_VIDEO_START(amiga)
+	MCFG_VIDEO_START_OVERRIDE(amiga_state,amiga)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -380,8 +378,8 @@ static MACHINE_CONFIG_START( mquake, amiga_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 0.50)
 
 	/* cia */
-	MCFG_MOS8520_ADD("cia_0", AMIGA_68000_NTSC_CLOCK / 10, cia_0_intf)
-	MCFG_MOS8520_ADD("cia_1", AMIGA_68000_NTSC_CLOCK / 10, cia_1_intf)
+	MCFG_MOS8520_ADD("cia_0", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_0_intf)
+	MCFG_MOS8520_ADD("cia_1", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_1_intf)
 
 	/* fdc */
 	MCFG_AMIGA_FDC_ADD("fdc", AMIGA_68000_NTSC_CLOCK)

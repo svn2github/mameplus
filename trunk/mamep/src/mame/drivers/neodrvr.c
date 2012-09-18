@@ -11435,9 +11435,10 @@ DRIVER_INIT_MEMBER(neogeo_state,sengoku3)
 
 static READ16_HANDLER(popbounc_sfix_16_r)
 {
-	if (cpu_get_pc(&space->device())==0x6b10)
+	neogeo_state *state = space->machine().driver_data<neogeo_state>();
+	if (space->device().safe_pc()==0x6b10)
 		return 0;
-	return save_ram[0x4fbc/2];
+	return state->m_save_ram[0x4fbc/2];
 }
 
 /* Pop and Bounce and use a custom Spinner for Controls */
@@ -12281,7 +12282,7 @@ GAME( 1994, ssideki2,   neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   RO
 GAME( 1994, samsho2,    neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "SNK", "Samurai Shodown II / Shin Samurai Spirits - Haohmaru jigokuhen (NGM-063)(NGH-063)", GAME_SUPPORTS_SAVE )
 GAME( 1994, samsho2k,   samsho2,  neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "SNK", "Saulabi Spirits / Jin Saulabi Tu Hon (Korean release of Samurai Shodown II)", GAME_SUPPORTS_SAVE ) // official or hack?
 GAME( 1995, fatfury3,   neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "SNK", "Fatal Fury 3 - Road to the Final Victory / Garou Densetsu 3 - haruka-naru tatakai (NGM-069)(NGH-069)", GAME_SUPPORTS_SAVE )
-GAME( 1995, ssideki3,   neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "SNK", "Super Sidekicks 3 - The Next Glory / Tokuten Ou 3 - eikoue no michi", GAME_SUPPORTS_SAVE )
+GAME( 1995, ssideki3,   neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "SNK", "Super Sidekicks 3 - The Next Glory / Tokuten Ou 3 - eikou e no michi", GAME_SUPPORTS_SAVE )
 GAME( 1995, kof95,      neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "SNK", "The King of Fighters '95 (NGM-084)", GAME_SUPPORTS_SAVE )
 GAME( 1995, kof95h,     kof95,    neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "SNK", "The King of Fighters '95 (NGH-084)", GAME_SUPPORTS_SAVE )
 GAME( 1995, samsho3,    neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "SNK", "Samurai Shodown III / Samurai Spirits - Zankurou Musouken (NGM-087)", GAME_SUPPORTS_SAVE )
@@ -12445,7 +12446,7 @@ GAME( 1999, s1945p,     neogeo,   neogeo,   neogeo, neogeo_state,   s1945p,   RO
 /* Saurus */
 GAME( 1995, quizkof,    neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "Saurus", "Quiz King of Fighters (SAM-080)(SAH-080)", GAME_SUPPORTS_SAVE )
 GAME( 1995, quizkofk,   quizkof,  neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "Saurus", "Quiz King of Fighters (Korean release)", GAME_SUPPORTS_SAVE )
-GAME( 1995, stakwin,    neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "Saurus", "Stakes Winner / Stakes Winner - GI kinzen seihae no michi", GAME_SUPPORTS_SAVE )
+GAME( 1995, stakwin,    neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "Saurus", "Stakes Winner / Stakes Winner - GI kinzen seiha e no michi", GAME_SUPPORTS_SAVE )
 GAME( 1996, ragnagrd,   neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "Saurus", "Ragnagard / Shin-Oh-Ken", GAME_SUPPORTS_SAVE )
 GAME( 1996, pgoal,      neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "Saurus", "Pleasure Goal / Futsal - 5 on 5 Mini Soccer (NGM-219)", GAME_SUPPORTS_SAVE )
 GAME( 1996, ironclad,   neogeo,   neogeo,   neogeo, neogeo_state,   neogeo,   ROT0, "Saurus", "Choutetsu Brikin'ger - Iron clad (Prototype)", GAME_SUPPORTS_SAVE )

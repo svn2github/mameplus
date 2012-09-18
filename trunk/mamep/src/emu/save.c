@@ -141,12 +141,12 @@ void save_manager::register_presave(save_prepost_delegate func)
 {
 	// check for invalid timing
 	if (!m_reg_allowed)
-		fatalerror(_("Attempt to register callback function after state registration is closed!"));
+		fatalerror(_("Attempt to register callback function after state registration is closed!\n"));
 
 	// scan for duplicates and push through to the end
 	for (state_callback *cb = m_presave_list.first(); cb != NULL; cb = cb->next())
 		if (cb->m_func == func)
-			fatalerror(_("Duplicate save state function (%s/%s)"), cb->m_func.name(), func.name());
+			fatalerror(_("Duplicate save state function (%s/%s)\n"), cb->m_func.name(), func.name());
 
 	// allocate a new entry
 	m_presave_list.append(*auto_alloc(machine(), state_callback(func)));
@@ -162,12 +162,12 @@ void save_manager::register_postload(save_prepost_delegate func)
 {
 	// check for invalid timing
 	if (!m_reg_allowed)
-		fatalerror(_("Attempt to register callback function after state registration is closed!"));
+		fatalerror(_("Attempt to register callback function after state registration is closed!\n"));
 
 	// scan for duplicates and push through to the end
 	for (state_callback *cb = m_postload_list.first(); cb != NULL; cb = cb->next())
 		if (cb->m_func == func)
-			fatalerror(_("Duplicate save state function (%s/%s)"), cb->m_func.name(), func.name());
+			fatalerror(_("Duplicate save state function (%s/%s)\n"), cb->m_func.name(), func.name());
 
 	// allocate a new entry
 	m_postload_list.append(*auto_alloc(machine(), state_callback(func)));
@@ -211,7 +211,7 @@ void save_manager::save_memory(const char *module, const char *tag, UINT32 index
 
 		// error if we are equal
 		if (entry->m_name == totalname)
-			fatalerror(_("Duplicate save state registration entry (%s)"), totalname.cstr());
+			fatalerror(_("Duplicate save state registration entry (%s)\n"), totalname.cstr());
 	}
 
 	// insert us into the list

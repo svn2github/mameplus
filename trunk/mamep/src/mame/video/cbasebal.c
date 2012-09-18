@@ -8,24 +8,22 @@
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(cbasebal_state::get_bg_tile_info)
 {
-	cbasebal_state *state = machine.driver_data<cbasebal_state>();
-	UINT8 attr = state->m_scrollram[2 * tile_index + 1];
-	SET_TILE_INFO(
+	UINT8 attr = m_scrollram[2 * tile_index + 1];
+	SET_TILE_INFO_MEMBER(
 			1,
-			state->m_scrollram[2 * tile_index] + ((attr & 0x07) << 8) + 0x800 * state->m_tilebank,
+			m_scrollram[2 * tile_index] + ((attr & 0x07) << 8) + 0x800 * m_tilebank,
 			(attr & 0xf0) >> 4,
 			(attr & 0x08) ? TILE_FLIPX : 0);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(cbasebal_state::get_fg_tile_info)
 {
-	cbasebal_state *state = machine.driver_data<cbasebal_state>();
-	UINT8 attr = state->m_textram[tile_index + 0x800];
-	SET_TILE_INFO(
+	UINT8 attr = m_textram[tile_index + 0x800];
+	SET_TILE_INFO_MEMBER(
 			0,
-			state->m_textram[tile_index] + ((attr & 0xf0) << 4),
+			m_textram[tile_index] + ((attr & 0xf0) << 4),
 			attr & 0x07,
 			(attr & 0x08) ? TILE_FLIPX : 0);
 }
@@ -38,20 +36,19 @@ static TILE_GET_INFO( get_fg_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( cbasebal )
+void cbasebal_state::video_start()
 {
-	cbasebal_state *state = machine.driver_data<cbasebal_state>();
 
-	state->m_textram = auto_alloc_array(machine, UINT8, 0x1000);
-	state->m_scrollram = auto_alloc_array(machine, UINT8, 0x1000);
+	m_textram = auto_alloc_array(machine(), UINT8, 0x1000);
+	m_scrollram = auto_alloc_array(machine(), UINT8, 0x1000);
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 16, 16, 64, 32);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cbasebal_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cbasebal_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 
-	state->m_fg_tilemap->set_transparent_pen(3);
+	m_fg_tilemap->set_transparent_pen(3);
 
-	state->save_pointer(NAME(state->m_textram), 0x1000);
-	state->save_pointer(NAME(state->m_scrollram), 0x1000);
+	save_pointer(NAME(m_textram), 0x1000);
+	save_pointer(NAME(m_scrollram), 0x1000);
 }
 
 

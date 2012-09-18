@@ -84,7 +84,7 @@ WRITE16_MEMBER(m92_state::m92_spritecontrol_w)
         spriteram to the buffer.  It seems safe to assume 1 word can be copied per clock. */
 		machine().scheduler().timer_set(attotime::from_hz(XTAL_26_66666MHz) * 0x400, FUNC(spritebuffer_callback));
 	}
-//  logerror("%04x: m92_spritecontrol_w %08x %08x\n",cpu_get_pc(&space.device()),offset,data);
+//  logerror("%04x: m92_spritecontrol_w %08x %08x\n",space.device().safe_pc(),offset,data);
 }
 
 WRITE16_MEMBER(m92_state::m92_videocontrol_w)
@@ -121,7 +121,7 @@ WRITE16_MEMBER(m92_state::m92_videocontrol_w)
 	/* Access to upper palette bank */
     m_palette_bank = (m_videocontrol >> 1) & 1;
 
-//  logerror("%04x: m92_videocontrol_w %d = %02x\n",cpu_get_pc(&space.device()),offset,data);
+//  logerror("%04x: m92_videocontrol_w %d = %02x\n",space.device().safe_pc(),offset,data);
 }
 
 READ16_MEMBER(m92_state::m92_paletteram_r)
@@ -136,17 +136,16 @@ WRITE16_MEMBER(m92_state::m92_paletteram_w)
 
 /*****************************************************************************/
 
-static TILE_GET_INFO( get_pf_tile_info )
+TILE_GET_INFO_MEMBER(m92_state::get_pf_tile_info)
 {
-	m92_state *state = machine.driver_data<m92_state>();
 	pf_layer_info *layer = (pf_layer_info *)param;
 	int tile, attrib;
 	tile_index = 2 * tile_index + layer->vram_base;
 
-	attrib = state->m_vram_data[tile_index + 1];
-	tile = state->m_vram_data[tile_index] + ((attrib & 0x8000) << 1);
+	attrib = m_vram_data[tile_index + 1];
+	tile = m_vram_data[tile_index] + ((attrib & 0x8000) << 1);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			tile,
 			attrib & 0x7f,
@@ -238,23 +237,22 @@ WRITE16_MEMBER(m92_state::m92_master_control_w)
 
 /*****************************************************************************/
 
-VIDEO_START( m92 )
+VIDEO_START_MEMBER(m92_state,m92)
 {
-	m92_state *state = machine.driver_data<m92_state>();
 	int laynum;
 
-	memset(&state->m_pf_layer, 0, sizeof(state->m_pf_layer));
+	memset(&m_pf_layer, 0, sizeof(m_pf_layer));
 	for (laynum = 0; laynum < 3; laynum++)
 	{
-		pf_layer_info *layer = &state->m_pf_layer[laynum];
+		pf_layer_info *layer = &m_pf_layer[laynum];
 
 		/* allocate two tilemaps per layer, one normal, one wide */
-		layer->tmap = tilemap_create(machine, get_pf_tile_info, tilemap_scan_rows,  8,8, 64,64);
-		layer->wide_tmap = tilemap_create(machine, get_pf_tile_info, tilemap_scan_rows,  8,8, 128,64);
+		layer->tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m92_state::get_pf_tile_info),this), TILEMAP_SCAN_ROWS,  8,8, 64,64);
+		layer->wide_tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m92_state::get_pf_tile_info),this), TILEMAP_SCAN_ROWS,  8,8, 128,64);
 
 		/* set the user data for each one to point to the layer */
-		layer->tmap->set_user_data(&state->m_pf_layer[laynum]);
-		layer->wide_tmap->set_user_data(&state->m_pf_layer[laynum]);
+		layer->tmap->set_user_data(&m_pf_layer[laynum]);
+		layer->wide_tmap->set_user_data(&m_pf_layer[laynum]);
 
 		/* set scroll offsets */
 		layer->tmap->set_scrolldx(2 * laynum, -2 * laynum + 8);
@@ -274,33 +272,32 @@ VIDEO_START( m92 )
 		layer->tmap->set_transmask(2, 0x0001, (laynum == 2) ? 0xfffe : 0xffff);
 		layer->wide_tmap->set_transmask(2, 0x0001, (laynum == 2) ? 0xfffe : 0xffff);
 
-		state_save_register_item(machine, "layer", NULL, laynum, layer->vram_base);
-		state_save_register_item_array(machine, "layer", NULL, laynum, layer->control);
+		state_save_register_item(machine(), "layer", NULL, laynum, layer->vram_base);
+		state_save_register_item_array(machine(), "layer", NULL, laynum, layer->control);
 	}
 
-	state->m_generic_paletteram_16.allocate(0x1000/2);
+	m_generic_paletteram_16.allocate(0x1000/2);
 
-	memset(state->m_spriteram->live(),0,0x800);
-	memset(state->m_spriteram->buffer(),0,0x800);
+	memset(m_spriteram->live(),0,0x800);
+	memset(m_spriteram->buffer(),0,0x800);
 
-	state->save_item(NAME(state->m_pf_master_control));
-	state->save_item(NAME(state->m_videocontrol));
-	state->save_item(NAME(state->m_sprite_list));
-	state->save_item(NAME(state->m_raster_irq_position));
-	state->save_item(NAME(state->m_sprite_buffer_busy));
-	state->save_item(NAME(state->m_palette_bank));
+	save_item(NAME(m_pf_master_control));
+	save_item(NAME(m_videocontrol));
+	save_item(NAME(m_sprite_list));
+	save_item(NAME(m_raster_irq_position));
+	save_item(NAME(m_sprite_buffer_busy));
+	save_item(NAME(m_palette_bank));
 }
 
-VIDEO_START( ppan )
+VIDEO_START_MEMBER(m92_state,ppan)
 {
-	m92_state *state = machine.driver_data<m92_state>();
 	int laynum;
 
-	VIDEO_START_CALL(m92);
+	VIDEO_START_CALL_MEMBER(m92);
 
 	for (laynum = 0; laynum < 3; laynum++)
 	{
-		pf_layer_info *layer = &state->m_pf_layer[laynum];
+		pf_layer_info *layer = &m_pf_layer[laynum];
 
 		/* set scroll offsets */
 		layer->tmap->set_scrolldx(2 * laynum + 11, -2 * laynum + 11);

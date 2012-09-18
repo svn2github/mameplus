@@ -57,14 +57,14 @@ WRITE8_MEMBER(megazone_state::megazone_port_b_w)
 
 WRITE8_MEMBER(megazone_state::megazone_i8039_irq_w)
 {
-	device_set_input_line(m_daccpu, 0, ASSERT_LINE);
+	m_daccpu->set_input_line(0, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(megazone_state::i8039_irqen_and_status_w)
 {
 
 	if ((data & 0x80) == 0)
-		device_set_input_line(m_daccpu, 0, CLEAR_LINE);
+		m_daccpu->set_input_line(0, CLEAR_LINE);
 	m_i8039_status = (data & 0x70) >> 4;
 }
 
@@ -226,24 +226,22 @@ static const ay8910_interface ay8910_config =
 
 
 
-static MACHINE_START( megazone )
+void megazone_state::machine_start()
 {
-	megazone_state *state = machine.driver_data<megazone_state>();
 
-	state->m_maincpu = machine.device<cpu_device>("maincpu");
-	state->m_audiocpu = machine.device<cpu_device>("audiocpu");
-	state->m_daccpu = machine.device<cpu_device>("daccpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_daccpu = machine().device<cpu_device>("daccpu");
 
-	state->save_item(NAME(state->m_flipscreen));
-	state->save_item(NAME(state->m_i8039_status));
+	save_item(NAME(m_flipscreen));
+	save_item(NAME(m_i8039_status));
 }
 
-static MACHINE_RESET( megazone )
+void megazone_state::machine_reset()
 {
-	megazone_state *state = machine.driver_data<megazone_state>();
 
-	state->m_flipscreen = 0;
-	state->m_i8039_status = 0;
+	m_flipscreen = 0;
+	m_i8039_status = 0;
 }
 
 static INTERRUPT_GEN( vblank_irq )
@@ -251,7 +249,7 @@ static INTERRUPT_GEN( vblank_irq )
 	megazone_state *state = device->machine().driver_data<megazone_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -272,8 +270,6 @@ static MACHINE_CONFIG_START( megazone, megazone_state )
 	MCFG_CPU_IO_MAP(megazone_i8039_io_map)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(900))
-	MCFG_MACHINE_START(megazone)
-	MCFG_MACHINE_RESET(megazone)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -286,8 +282,6 @@ static MACHINE_CONFIG_START( megazone, megazone_state )
 	MCFG_GFXDECODE(megazone)
 	MCFG_PALETTE_LENGTH(16*16+16*16)
 
-	MCFG_PALETTE_INIT(megazone)
-	MCFG_VIDEO_START(megazone)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

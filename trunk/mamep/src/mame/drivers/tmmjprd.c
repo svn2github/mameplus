@@ -66,6 +66,7 @@ public:
 	DECLARE_WRITE32_MEMBER(tmmjprd_brt_1_w);
 	DECLARE_WRITE32_MEMBER(tmmjprd_brt_2_w);
 	DECLARE_WRITE32_MEMBER(tmmjprd_eeprom_write);
+	virtual void video_start();
 };
 
 
@@ -95,7 +96,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 {
 	tmmjprd_state *state = machine.driver_data<tmmjprd_state>();
 	int xpos,ypos,tileno,xflip,yflip, colr;
-	const gfx_element *gfx = machine.gfx[0];
+	gfx_element *gfx = machine.gfx[0];
 	int xoffs;
 	//  int todraw = (state->m_spriteregs[5]&0x0fff0000)>>16; // how many sprites to draw (start/end reg..) what is the other half?
 
@@ -337,15 +338,14 @@ static SCREEN_UPDATE_IND16( tmmjprd_right )
 	return 0;
 }
 
-static VIDEO_START(tmmjprd)
+void tmmjprd_state::video_start()
 {
-	tmmjprd_state *state = machine.driver_data<tmmjprd_state>();
 	/* the tilemaps are bigger than the regions the cpu can see, need to allocate the ram here */
 	/* or maybe not for this game/hw .... */
-	state->m_tilemap_ram[0] = auto_alloc_array_clear(machine, UINT32, 0x8000);
-	state->m_tilemap_ram[1] = auto_alloc_array_clear(machine, UINT32, 0x8000);
-	state->m_tilemap_ram[2] = auto_alloc_array_clear(machine, UINT32, 0x8000);
-	state->m_tilemap_ram[3] = auto_alloc_array_clear(machine, UINT32, 0x8000);
+	m_tilemap_ram[0] = auto_alloc_array_clear(machine(), UINT32, 0x8000);
+	m_tilemap_ram[1] = auto_alloc_array_clear(machine(), UINT32, 0x8000);
+	m_tilemap_ram[2] = auto_alloc_array_clear(machine(), UINT32, 0x8000);
+	m_tilemap_ram[3] = auto_alloc_array_clear(machine(), UINT32, 0x8000);
 }
 
 READ32_MEMBER(tmmjprd_state::tmmjprd_tilemap0_r)
@@ -380,7 +380,7 @@ READ32_MEMBER(tmmjprd_state::randomtmmjprds)
 #if 0
 static TIMER_CALLBACK( tmmjprd_blit_done )
 {
-	cputag_set_input_line(machine, "maincpu", 3, HOLD_LINE);
+	machine.device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 }
 
 static void tmmjprd_do_blit(running_machine &machine)
@@ -672,7 +672,7 @@ static ADDRESS_MAP_START( tmmjprd_map, AS_PROGRAM, 32, tmmjprd_state )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM
 	AM_RANGE(0x200010, 0x200013) AM_READ(randomtmmjprds) // gfx chip status?
 	/* check these are used .. */
-//  AM_RANGE(0x200010, 0x200013) AM_WRITEONLY AM_BASE_LEGACY(&tmmjprd_viewregs0 )
+//  AM_RANGE(0x200010, 0x200013) AM_WRITEONLY AM_SHARE("tmmjprd_viewregs0")
 	AM_RANGE(0x200100, 0x200117) AM_WRITEONLY AM_SHARE("tilemap_regs.0" ) // tilemap regs1
 	AM_RANGE(0x200120, 0x200137) AM_WRITEONLY AM_SHARE("tilemap_regs.1" ) // tilemap regs2
 	AM_RANGE(0x200140, 0x200157) AM_WRITEONLY AM_SHARE("tilemap_regs.2" ) // tilemap regs3
@@ -681,12 +681,12 @@ static ADDRESS_MAP_START( tmmjprd_map, AS_PROGRAM, 32, tmmjprd_state )
 //  AM_RANGE(0x200300, 0x200303) AM_WRITE_LEGACY(tmmjprd_rombank_w) // used during rom testing, rombank/area select + something else?
 	AM_RANGE(0x20040c, 0x20040f) AM_WRITE(tmmjprd_brt_1_w)
     AM_RANGE(0x200410, 0x200413) AM_WRITE(tmmjprd_brt_2_w)
-//  AM_RANGE(0x200500, 0x200503) AM_WRITEONLY AM_BASE_LEGACY(&tmmjprd_viewregs7 )
-//  AM_RANGE(0x200700, 0x20070f) AM_WRITE(tmmjprd_blitter_w) AM_BASE_LEGACY(&tmmjprd_blitterregs )
-//  AM_RANGE(0x200800, 0x20080f) AM_WRITEONLY AM_BASE_LEGACY(&tmmjprd_viewregs9 ) // never changes?
+//  AM_RANGE(0x200500, 0x200503) AM_WRITEONLY AM_SHARE("tmmjprd_viewregs7")
+//  AM_RANGE(0x200700, 0x20070f) AM_WRITE(tmmjprd_blitter_w) AM_SHARE("tmmjprd_blitterregs")
+//  AM_RANGE(0x200800, 0x20080f) AM_WRITEONLY AM_SHARE("tmmjprd_viewregs9") // never changes?
 	AM_RANGE(0x200900, 0x2009ff) AM_DEVREADWRITE16("i5000snd", i5000snd_device, read, write, 0xffffffff)
 	/* hmm */
-//  AM_RANGE(0x279700, 0x279713) AM_WRITEONLY AM_BASE_LEGACY(&tmmjprd_viewregs10 )
+//  AM_RANGE(0x279700, 0x279713) AM_WRITEONLY AM_SHARE("tmmjprd_viewregs10")
 	/* tilemaps */
 	AM_RANGE(0x280000, 0x283fff) AM_READWRITE(tmmjprd_tilemap0_r,tmmjprd_tilemap0_w)
 	AM_RANGE(0x284000, 0x287fff) AM_READWRITE(tmmjprd_tilemap1_r,tmmjprd_tilemap1_w)
@@ -737,10 +737,10 @@ static TIMER_DEVICE_CALLBACK( tmmjprd_scanline )
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "maincpu", 5, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 
 	if(scanline == 736) // blitter irq?
-		cputag_set_input_line(timer.machine(), "maincpu", 3, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 
 }
 
@@ -780,7 +780,6 @@ static MACHINE_CONFIG_START( tmmjprd, tmmjprd_state )
 	//MCFG_SCREEN_VISIBLE_AREA(0*8, 64*16-1, 0*8, 64*16-1)
 	MCFG_SCREEN_UPDATE_STATIC(tmmjprd_right)
 
-	MCFG_VIDEO_START(tmmjprd)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

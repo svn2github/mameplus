@@ -231,8 +231,8 @@ public:
 	wheelfir_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag) { }
 
-	device_t *m_maincpu;
-	device_t *m_subcpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_subcpu;
 	device_t *m_screen;
 	device_t *m_eeprom;
 
@@ -281,6 +281,9 @@ public:
 	DECLARE_READ16_MEMBER(wheelfir_snd_r);
 	DECLARE_WRITE16_MEMBER(coin_cnt_w);
 	DECLARE_DRIVER_INIT(wheelfir);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -376,7 +379,7 @@ WRITE16_MEMBER(wheelfir_state::wheelfir_blit_w)
 	if(offset==0xf && data==0xffff)
 	{
 
-		cputag_set_input_line(machine(), "maincpu", 1, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
 
 		{
 			UINT8 *rom = memregion("gfx1")->base();
@@ -503,7 +506,7 @@ WRITE16_MEMBER(wheelfir_state::wheelfir_blit_w)
 			{
 				vpage=LAYER_BG;
 /*
-                printf("bg -> %d %d   %d %d  %d %d @ %x\n",dst_x0,dst_y0, dst_x1,dst_y1, dst_x1-dst_x0, dst_y1-dst_y0,cpu_get_pc(&space.device()));
+                printf("bg -> %d %d   %d %d  %d %d @ %x\n",dst_x0,dst_y0, dst_x1,dst_y1, dst_x1-dst_x0, dst_y1-dst_y0,space.device().safe_pc());
 
                 for(int i=0;i<16;++i)
                 {
@@ -565,11 +568,10 @@ WRITE16_MEMBER(wheelfir_state::wheelfir_blit_w)
 	}
 }
 
-static VIDEO_START(wheelfir)
+void wheelfir_state::video_start()
 {
-	wheelfir_state *state = machine.driver_data<wheelfir_state>();
-	state->m_tmp_bitmap[0] = auto_bitmap_ind16_alloc(machine, 512, 512);
-	state->m_tmp_bitmap[1] = auto_bitmap_ind16_alloc(machine, 512, 512);
+	m_tmp_bitmap[0] = auto_bitmap_ind16_alloc(machine(), 512, 512);
+	m_tmp_bitmap[1] = auto_bitmap_ind16_alloc(machine(), 512, 512);
 }
 
 static SCREEN_UPDATE_IND16(wheelfir)
@@ -644,7 +646,7 @@ WRITE16_MEMBER(wheelfir_state::wheelfir_7c0000_w)
 WRITE16_MEMBER(wheelfir_state::wheelfir_snd_w)
 {
 	COMBINE_DATA(&m_soundlatch);
-	cputag_set_input_line(machine(), "subcpu", 1, HOLD_LINE); /* guess, tested also with periodic interrupts and latch clear*/
+	machine().device("subcpu")->execute().set_input_line(1, HOLD_LINE); /* guess, tested also with periodic interrupts and latch clear*/
 	machine().scheduler().synchronize();
 }
 
@@ -749,7 +751,7 @@ static TIMER_DEVICE_CALLBACK( scanline_timer_callback )
 
 		if(state->m_scanline_cnt==0) //<=0 ?
 		{
-			cputag_set_input_line(timer.machine(), "maincpu", 5, HOLD_LINE); // raster IRQ, changes scroll values for road
+			timer.machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE); // raster IRQ, changes scroll values for road
 		}
 
 	}
@@ -758,38 +760,37 @@ static TIMER_DEVICE_CALLBACK( scanline_timer_callback )
 		if(state->m_current_scanline==NUM_SCANLINES) /* vblank */
 		{
 			state->m_toggle_bit = 0x8000;
-			cputag_set_input_line(timer.machine(), "maincpu", 3, HOLD_LINE);
+			timer.machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 		}
 	}
 }
 
 
-static MACHINE_RESET( wheelfir )
+void wheelfir_state::machine_reset()
 {
 }
 
-static MACHINE_START( wheelfir )
+void wheelfir_state::machine_start()
 {
-	wheelfir_state *state = machine.driver_data<wheelfir_state>();
 
-	state->m_maincpu = machine.device( "maincpu");
-	state->m_subcpu = machine.device(  "subcpu");
-	state->m_screen = machine.device(  "screen");
-	state->m_eeprom = machine.device(  "eeprom");
+	m_maincpu = machine().device<cpu_device>( "maincpu");
+	m_subcpu = machine().device<cpu_device>(  "subcpu");
+	m_screen = machine().device(  "screen");
+	m_eeprom = machine().device(  "eeprom");
 
-	state->m_zoom_table = auto_alloc_array(machine, INT32, ZOOM_TABLE_SIZE);
-	state->m_blitter_data = auto_alloc_array(machine, UINT16, 16);
+	m_zoom_table = auto_alloc_array(machine(), INT32, ZOOM_TABLE_SIZE);
+	m_blitter_data = auto_alloc_array(machine(), UINT16, 16);
 
-	state->m_scanlines = reinterpret_cast<scroll_info*>(auto_alloc_array(machine, UINT8, sizeof(scroll_info)*(NUM_SCANLINES+NUM_VBLANK_LINES)));
-	state->m_palette=auto_alloc_array(machine, UINT8, NUM_COLORS*3);
+	m_scanlines = reinterpret_cast<scroll_info*>(auto_alloc_array(machine(), UINT8, sizeof(scroll_info)*(NUM_SCANLINES+NUM_VBLANK_LINES)));
+	m_palette=auto_alloc_array(machine(), UINT8, NUM_COLORS*3);
 
 
 	for(int i=0;i<(ZOOM_TABLE_SIZE);++i)
 	{
-		state->m_zoom_table[i]=-1;
+		m_zoom_table[i]=-1;
 	}
 
-	UINT16 *ROM = (UINT16 *)machine.root_device().memregion("maincpu")->base();
+	UINT16 *ROM = (UINT16 *)machine().root_device().memregion("maincpu")->base();
 
 	for(int j=0;j<400;++j)
 	{
@@ -804,7 +805,7 @@ static MACHINE_START( wheelfir )
 		int dflag=(ROM[0x200+1+i]&0x10)?1:0;
 
 		int index=d0|(d1<<6)|(hflag<<12)|(dflag<<13);
-		state->m_zoom_table[index]=j;
+		m_zoom_table[index]=j;
 	}
 }
 
@@ -820,7 +821,6 @@ static MACHINE_CONFIG_START( wheelfir, wheelfir_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
-	MCFG_MACHINE_RESET (wheelfir)
 
 	MCFG_TIMER_ADD_SCANLINE("scan_timer", scanline_timer_callback, "screen", 0, 1)
 
@@ -835,9 +835,7 @@ static MACHINE_CONFIG_START( wheelfir, wheelfir_state )
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_MACHINE_START(wheelfir)
 
-	MCFG_VIDEO_START(wheelfir)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

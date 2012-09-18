@@ -14,26 +14,25 @@
 
 /******************************************************************************/
 
-VIDEO_START( battlera )
+void battlera_state::video_start()
 {
-	battlera_state *state = machine.driver_data<battlera_state>();
-	state->m_HuC6270_vram=auto_alloc_array(machine, UINT8, 0x20000);
-	state->m_vram_dirty=auto_alloc_array(machine, UINT8, 0x1000);
+	m_HuC6270_vram=auto_alloc_array(machine(), UINT8, 0x20000);
+	m_vram_dirty=auto_alloc_array(machine(), UINT8, 0x1000);
 
-	memset(state->m_HuC6270_vram,0,0x20000);
-	memset(state->m_vram_dirty,1,0x1000);
+	memset(m_HuC6270_vram,0,0x20000);
+	memset(m_vram_dirty,1,0x1000);
 
-	state->m_tile_bitmap=auto_bitmap_ind16_alloc(machine,512,512);
-	state->m_front_bitmap=auto_bitmap_ind16_alloc(machine,512,512);
+	m_tile_bitmap=auto_bitmap_ind16_alloc(machine(),512,512);
+	m_front_bitmap=auto_bitmap_ind16_alloc(machine(),512,512);
 
-	state->m_vram_ptr=0;
-	state->m_inc_value=1;
-	state->m_current_scanline=0;
-	state->m_irq_enable=state->m_rcr_enable=state->m_sb_enable=state->m_bb_enable=0;
+	m_vram_ptr=0;
+	m_inc_value=1;
+	m_current_scanline=0;
+	m_irq_enable=m_rcr_enable=m_sb_enable=m_bb_enable=0;
 
-	gfx_element_set_source(machine.gfx[0], state->m_HuC6270_vram);
-	gfx_element_set_source(machine.gfx[1], state->m_HuC6270_vram);
-	gfx_element_set_source(machine.gfx[2], state->m_blank_tile);
+	machine().gfx[0]->set_source(m_HuC6270_vram);
+	machine().gfx[1]->set_source(m_HuC6270_vram);
+	machine().gfx[2]->set_source(m_blank_tile);
 }
 
 /******************************************************************************/
@@ -125,8 +124,8 @@ WRITE8_MEMBER(battlera_state::HuC6270_data_w)
 			case 2: /* VRAM */
 				if (m_HuC6270_vram[(m_HuC6270_registers[0]<<1)|1]!=data) {
 					m_HuC6270_vram[(m_HuC6270_registers[0]<<1)|1]=data;
-					gfx_element_mark_dirty(machine().gfx[0], m_HuC6270_registers[0]>>4);
-					gfx_element_mark_dirty(machine().gfx[1], m_HuC6270_registers[0]>>6);
+					machine().gfx[0]->mark_dirty(m_HuC6270_registers[0]>>4);
+					machine().gfx[1]->mark_dirty(m_HuC6270_registers[0]>>6);
 				}
 				if (m_HuC6270_registers[0]<0x1000) m_vram_dirty[m_HuC6270_registers[0]]=1;
 				return;
@@ -159,7 +158,7 @@ WRITE8_MEMBER(battlera_state::HuC6270_data_w)
 			case 16:
 			case 17:
 			case 18:
-				logerror("%04x: dma 2 %02x\n",cpu_get_pc(&space.device()),data);
+				logerror("%04x: dma 2 %02x\n",space.device().safe_pc(),data);
 				break;
 
 			case 19: /* SATB */
@@ -185,8 +184,8 @@ WRITE8_MEMBER(battlera_state::HuC6270_data_w)
 			case 2: /* VWR - VRAM */
 				if (m_HuC6270_vram[(m_HuC6270_registers[0]<<1)|0]!=data) {
 					m_HuC6270_vram[(m_HuC6270_registers[0]<<1)|0]=data;
-					gfx_element_mark_dirty(machine().gfx[0], m_HuC6270_registers[0]>>4);
-					gfx_element_mark_dirty(machine().gfx[1], m_HuC6270_registers[0]>>6);
+					machine().gfx[0]->mark_dirty(m_HuC6270_registers[0]>>4);
+					machine().gfx[1]->mark_dirty(m_HuC6270_registers[0]>>6);
 					if (m_HuC6270_registers[0]<0x1000) m_vram_dirty[m_HuC6270_registers[0]]=1;
 				}
 				m_HuC6270_registers[0]+=m_inc_value;
@@ -221,7 +220,7 @@ WRITE8_MEMBER(battlera_state::HuC6270_data_w)
 			case 16:
 			case 17:
 			case 18:
-				logerror("%04x: dma 2 %02x\n",cpu_get_pc(&space.device()),data);
+				logerror("%04x: dma 2 %02x\n",space.device().safe_pc(),data);
 				break;
 
 			case 19: /* SATB - Sprites */
@@ -230,7 +229,7 @@ WRITE8_MEMBER(battlera_state::HuC6270_data_w)
 			}
 			break;
 	}
-	logerror("%04x: unknown write to  VDC_register %02x (%02x) at %02x\n",cpu_get_pc(&space.device()),m_VDC_register,data,offset);
+	logerror("%04x: unknown write to  VDC_register %02x (%02x) at %02x\n",space.device().safe_pc(),m_VDC_register,data,offset);
 }
 
 /******************************************************************************/
@@ -306,9 +305,9 @@ SCREEN_UPDATE_IND16( battlera )
 	int offs,code,scrollx,scrolly,mx,my;
 
 	/* if any tiles changed, redraw the VRAM */
-	if (screen.machine().gfx[0]->dirtyseq != state->m_tile_dirtyseq)
+	if (screen.machine().gfx[0]->dirtyseq() != state->m_tile_dirtyseq)
 	{
-		state->m_tile_dirtyseq = screen.machine().gfx[0]->dirtyseq;
+		state->m_tile_dirtyseq = screen.machine().gfx[0]->dirtyseq();
 		memset(state->m_vram_dirty, 1, 0x1000);
 	}
 
@@ -371,7 +370,7 @@ TIMER_DEVICE_CALLBACK( battlera_irq )
 	/* If raster interrupt occurs, refresh screen _up_ to this point */
 	if (state->m_rcr_enable && (state->m_current_scanline+56)==state->m_HuC6270_registers[6]) {
 		timer.machine().primary_screen->update_partial(state->m_current_scanline);
-		device_set_input_line(state->m_maincpu, 0, HOLD_LINE); /* RCR interrupt */
+		state->m_maincpu->set_input_line(0, HOLD_LINE); /* RCR interrupt */
 	}
 
 	/* Start of vblank */
@@ -379,7 +378,7 @@ TIMER_DEVICE_CALLBACK( battlera_irq )
 		state->m_bldwolf_vblank=1;
 		timer.machine().primary_screen->update_partial(240);
 		if (state->m_irq_enable)
-			device_set_input_line(state->m_maincpu, 0, HOLD_LINE); /* VBL */
+			state->m_maincpu->set_input_line(0, HOLD_LINE); /* VBL */
 	}
 
 	/* End of vblank */

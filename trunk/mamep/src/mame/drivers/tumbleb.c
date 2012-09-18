@@ -7,6 +7,7 @@
   Tumblepop             (c) 1991 Data East Corporation (Bootleg 2)
   Jump Kids             (c) 1993 Comad
   Metal Saver           (c) 1994 First Amusement
+  Magicball Fighting    (c) 1994 SemiCom
   Pang Pang             (c) 1994 Dong Gue La Mi Ltd.
   Super Trio[1]         (c) 1994 GameAce
   Fancy World           (c) 1995 Unico
@@ -441,7 +442,7 @@ static void tumbleb2_playmusic( device_t *device )
 static INTERRUPT_GEN( tumbleb2_interrupt )
 {
 	tumbleb_state *state = device->machine().driver_data<tumbleb_state>();
-	device_set_input_line(device, 6, HOLD_LINE);
+	device->execute().set_input_line(6, HOLD_LINE);
 	tumbleb2_playmusic(state->m_oki);
 }
 
@@ -701,7 +702,7 @@ ADDRESS_MAP_END
 WRITE16_MEMBER(tumbleb_state::jumpkids_sound_w)
 {
 	soundlatch_byte_w(space, 0, data & 0xff);
-	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 static ADDRESS_MAP_START( suprtrio_main_map, AS_PROGRAM, 16, tumbleb_state )
@@ -740,7 +741,7 @@ WRITE16_MEMBER(tumbleb_state::semicom_soundcmd_w)
 	{
 		soundlatch_byte_w(space, 0, data & 0xff);
 		// needed for Super Trio which reads the sound with polling
-		// device_spin_until_time(&space.device(), attotime::from_usec(100));
+		// space.device().execute().spin_until_time(attotime::from_usec(100));
 		machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(20));
 
 	}
@@ -1361,6 +1362,87 @@ static INPUT_PORTS_START( chokchok )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 INPUT_PORTS_END
 
+
+static INPUT_PORTS_START( magicbal )
+	PORT_START("PLAYERS")
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1)
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(1)
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1)
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1)
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_START1 )
+	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(2)
+	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_PLAYER(2)
+	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
+	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(2)
+	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_START2 )
+
+	PORT_START("SYSTEM")
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0008, IP_ACTIVE_HIGH, IPT_CUSTOM ) PORT_VBLANK("screen")       // to be confirmed
+	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0020, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0040, IP_ACTIVE_LOW, IPT_UNKNOWN )
+	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_START("DSW") /* Switch positions based on other games - needs to be verified on real hardware!! */
+	PORT_DIPNAME( 0x0003, 0x0003, "Game Time" )		PORT_DIPLOCATION("SW1:8,7") /* Only used if Game is Timed, does this control # of innings if not timed? */
+	PORT_DIPSETTING(      0x0003, "5:00" )
+	PORT_DIPSETTING(      0x0001, "6:00" )
+	PORT_DIPSETTING(      0x0002, "7:00" )
+	PORT_DIPSETTING(      0x0000, "8:00" )
+	PORT_DIPNAME( 0x0004, 0x0004, DEF_STR( Unknown ) )	PORT_DIPLOCATION("SW1:6")
+	PORT_DIPSETTING(      0x0004, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0038, 0x0038, DEF_STR( Coinage ) )	PORT_DIPLOCATION("SW1:5,4,3")
+	PORT_DIPSETTING(      0x0000, DEF_STR( 5C_1C ) )
+	PORT_DIPSETTING(      0x0020, DEF_STR( 4C_1C ) )
+	PORT_DIPSETTING(      0x0010, DEF_STR( 3C_1C ) )
+	PORT_DIPSETTING(      0x0030, DEF_STR( 2C_1C ) )
+	PORT_DIPSETTING(      0x0038, DEF_STR( 1C_1C ) )
+	PORT_DIPSETTING(      0x0028, DEF_STR( 2C_3C ) )
+	PORT_DIPSETTING(      0x0018, DEF_STR( 1C_2C ) )
+	PORT_DIPSETTING(      0x0008, DEF_STR( 1C_3C ) )
+	PORT_DIPNAME( 0x0040, 0x0040, "Timed Game" )		PORT_DIPLOCATION("SW1:2") /* Game is timed or by innings? */
+	PORT_DIPSETTING(      0x0040, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0080, 0x0000, DEF_STR( Demo_Sounds ) )	PORT_DIPLOCATION("SW1:1")
+	PORT_DIPSETTING(      0x0080, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+
+	PORT_DIPNAME( 0x0100, 0x0100, DEF_STR( Unknown ) )	PORT_DIPLOCATION("SW2:8")
+	PORT_DIPSETTING(      0x0100, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0200, 0x0200, DEF_STR( Unknown ) )	PORT_DIPLOCATION("SW2:7")
+	PORT_DIPSETTING(      0x0200, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0400, 0x0400, DEF_STR( Unknown ) )	PORT_DIPLOCATION("SW2:6")
+	PORT_DIPSETTING(      0x0400, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x0800, 0x0800, "2 Players Game" )	PORT_DIPLOCATION("SW2:5")
+	PORT_DIPSETTING(      0x0000, "1 Credit" )
+	PORT_DIPSETTING(      0x0800, "2 Credits" )
+	PORT_DIPNAME( 0x1000, 0x1000, DEF_STR( Unknown ) )	PORT_DIPLOCATION("SW2:4")
+	PORT_DIPSETTING(      0x1000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Unknown ) )	PORT_DIPLOCATION("SW2:3")
+	PORT_DIPSETTING(      0x2000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x4000, 0x4000, DEF_STR( Unknown ) )	PORT_DIPLOCATION("SW2:2")
+	PORT_DIPSETTING(      0x4000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_DIPNAME( 0x8000, 0x8000, DEF_STR( Unknown ) )	PORT_DIPLOCATION("SW2:1")
+	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
+	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+INPUT_PORTS_END
+
 static INPUT_PORTS_START( wlstar )
 	PORT_START("PLAYERS")
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(1)
@@ -1863,33 +1945,31 @@ GFXDECODE_END
 /******************************************************************************/
 
 
-static MACHINE_START( tumbleb )
+MACHINE_START_MEMBER(tumbleb_state,tumbleb)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_oki = machine.device("oki");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_oki = machine().device("oki");
 
-	state->save_item(NAME(state->m_music_command));
-	state->save_item(NAME(state->m_music_bank));
-	state->save_item(NAME(state->m_music_is_playing));
+	save_item(NAME(m_music_command));
+	save_item(NAME(m_music_bank));
+	save_item(NAME(m_music_is_playing));
 
-	state->save_item(NAME(state->m_control_0));
-	state->save_item(NAME(state->m_flipscreen));
-	state->save_item(NAME(state->m_tilebank));
+	save_item(NAME(m_control_0));
+	save_item(NAME(m_flipscreen));
+	save_item(NAME(m_tilebank));
 }
 
-static MACHINE_RESET( tumbleb )
+MACHINE_RESET_MEMBER(tumbleb_state,tumbleb)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
 
-	state->m_music_command = 0;
-	state->m_music_bank = 0;
-	state->m_music_is_playing = 0;
-	state->m_flipscreen = 0;
-	state->m_tilebank = 0;
-	memset(state->m_control_0, 0, sizeof(state->m_control_0));
+	m_music_command = 0;
+	m_music_bank = 0;
+	m_music_is_playing = 0;
+	m_flipscreen = 0;
+	m_tilebank = 0;
+	memset(m_control_0, 0, sizeof(m_control_0));
 }
 
 static MACHINE_CONFIG_START( tumblepb, tumbleb_state )
@@ -1899,8 +1979,8 @@ static MACHINE_CONFIG_START( tumblepb, tumbleb_state )
 	MCFG_CPU_PROGRAM_MAP(tumblepopb_main_map)
 	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
 
-	MCFG_MACHINE_START(tumbleb)
-	MCFG_MACHINE_RESET(tumbleb)
+	MCFG_MACHINE_START_OVERRIDE(tumbleb_state,tumbleb)
+	MCFG_MACHINE_RESET_OVERRIDE(tumbleb_state,tumbleb)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1917,7 +1997,7 @@ static MACHINE_CONFIG_START( tumblepb, tumbleb_state )
 	MCFG_GFXDECODE(tumbleb)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(tumblepb)
+	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,tumblepb)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1934,8 +2014,8 @@ static MACHINE_CONFIG_START( tumbleb2, tumbleb_state )
 	MCFG_CPU_PROGRAM_MAP(tumblepopb_main_map)
 	MCFG_CPU_VBLANK_INT("screen", tumbleb2_interrupt)
 
-	MCFG_MACHINE_START(tumbleb)
-	MCFG_MACHINE_RESET(tumbleb)
+	MCFG_MACHINE_START_OVERRIDE(tumbleb_state,tumbleb)
+	MCFG_MACHINE_RESET_OVERRIDE(tumbleb_state,tumbleb)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1952,7 +2032,7 @@ static MACHINE_CONFIG_START( tumbleb2, tumbleb_state )
 	MCFG_GFXDECODE(tumbleb)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(tumblepb)
+	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,tumblepb)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1972,8 +2052,8 @@ static MACHINE_CONFIG_START( jumpkids, tumbleb_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 8000000/2)
 	MCFG_CPU_PROGRAM_MAP(jumpkids_sound_map)
 
-	MCFG_MACHINE_START(tumbleb)
-	MCFG_MACHINE_RESET(tumbleb)
+	MCFG_MACHINE_START_OVERRIDE(tumbleb_state,tumbleb)
+	MCFG_MACHINE_RESET_OVERRIDE(tumbleb_state,tumbleb)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1990,7 +2070,7 @@ static MACHINE_CONFIG_START( jumpkids, tumbleb_state )
 	MCFG_GFXDECODE(tumbleb)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(tumblepb)
+	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,tumblepb)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2006,8 +2086,8 @@ static MACHINE_CONFIG_START( fncywld, tumbleb_state )
 	MCFG_CPU_PROGRAM_MAP(fncywld_main_map)
 	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
 
-	MCFG_MACHINE_START(tumbleb)
-	MCFG_MACHINE_RESET(tumbleb)
+	MCFG_MACHINE_START_OVERRIDE(tumbleb_state,tumbleb)
+	MCFG_MACHINE_RESET_OVERRIDE(tumbleb_state,tumbleb)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2025,7 +2105,7 @@ static MACHINE_CONFIG_START( fncywld, tumbleb_state )
 	MCFG_GFXDECODE(fncywld)
 	MCFG_PALETTE_LENGTH(0x800)
 
-	MCFG_VIDEO_START(fncywld)
+	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,fncywld)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2044,7 +2124,7 @@ MACHINE_CONFIG_END
 static void semicom_irqhandler( device_t *device, int irq )
 {
 	tumbleb_state *state = device->machine().driver_data<tumbleb_state>();
-	device_set_input_line(state->m_audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -2053,18 +2133,17 @@ static const ym2151_interface semicom_ym2151_interface =
 	DEVCB_LINE(semicom_irqhandler)
 };
 
-static MACHINE_RESET (htchctch)
+MACHINE_RESET_MEMBER(tumbleb_state,htchctch)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
 
 	/* copy protection data every reset */
-	UINT16 *PROTDATA = (UINT16*)state->memregion("user1")->base();
-	int i, len = state->memregion("user1")->bytes();
+	UINT16 *PROTDATA = (UINT16*)memregion("user1")->base();
+	int i, len = memregion("user1")->bytes();
 
 	for (i = 0; i < len / 2; i++)
-		state->m_mainram[0x000/2 + i] = PROTDATA[i];
+		m_mainram[0x000/2 + i] = PROTDATA[i];
 
-	MACHINE_RESET_CALL(tumbleb);
+	MACHINE_RESET_CALL_MEMBER(tumbleb);
 }
 
 static MACHINE_CONFIG_START( htchctch, tumbleb_state )
@@ -2077,8 +2156,8 @@ static MACHINE_CONFIG_START( htchctch, tumbleb_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 15000000/4) /* verified on dquizgo */
 	MCFG_CPU_PROGRAM_MAP(semicom_sound_map)
 
-	MCFG_MACHINE_START(tumbleb)
-	MCFG_MACHINE_RESET(htchctch)
+	MCFG_MACHINE_START_OVERRIDE(tumbleb_state,tumbleb)
+	MCFG_MACHINE_RESET_OVERRIDE(tumbleb_state,htchctch)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2095,7 +2174,7 @@ static MACHINE_CONFIG_START( htchctch, tumbleb_state )
 	MCFG_GFXDECODE(tumbleb)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(tumblepb)
+	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,tumblepb)
 
 	/* sound hardware - same as hyperpac */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2143,7 +2222,7 @@ static MACHINE_CONFIG_DERIVED( semibase, bcstory )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( sdfight, bcstory )
-	MCFG_VIDEO_START(sdfight)
+	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,sdfight)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(sdfight)
 MACHINE_CONFIG_END
@@ -2158,6 +2237,8 @@ static MACHINE_CONFIG_DERIVED( metlsavr, cookbib )
 MACHINE_CONFIG_END
 
 
+
+
 static MACHINE_CONFIG_START( suprtrio, tumbleb_state )
 
 	/* basic machine hardware */
@@ -2168,8 +2249,8 @@ static MACHINE_CONFIG_START( suprtrio, tumbleb_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 8000000)
 	MCFG_CPU_PROGRAM_MAP(suprtrio_sound_map)
 
-	MCFG_MACHINE_START(tumbleb)
-	MCFG_MACHINE_RESET(tumbleb)
+	MCFG_MACHINE_START_OVERRIDE(tumbleb_state,tumbleb)
+	MCFG_MACHINE_RESET_OVERRIDE(tumbleb_state,tumbleb)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2186,7 +2267,7 @@ static MACHINE_CONFIG_START( suprtrio, tumbleb_state )
 	MCFG_GFXDECODE(suprtrio)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(suprtrio)
+	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,suprtrio)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2203,8 +2284,8 @@ static MACHINE_CONFIG_START( pangpang, tumbleb_state )
 	MCFG_CPU_PROGRAM_MAP(pangpang_main_map)
 	MCFG_CPU_VBLANK_INT("screen", tumbleb2_interrupt)
 
-	MCFG_MACHINE_START(tumbleb)
-	MCFG_MACHINE_RESET(tumbleb)
+	MCFG_MACHINE_START_OVERRIDE(tumbleb_state,tumbleb)
+	MCFG_MACHINE_RESET_OVERRIDE(tumbleb_state,tumbleb)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2221,7 +2302,7 @@ static MACHINE_CONFIG_START( pangpang, tumbleb_state )
 	MCFG_GFXDECODE(tumbleb)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(pangpang)
+	MCFG_VIDEO_START_OVERRIDE(tumbleb_state,pangpang)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2853,6 +2934,37 @@ ROM_START( sdfight )
 	ROM_LOAD16_BYTE( "8.uj5",  0x300001, 0x80000, CRC(60be7dd1) SHA1(d212dee3acf696cac0843e968a71ec1fb9b16dc9) ) // a
 ROM_END
 
+
+
+ROM_START( magicbal )
+	ROM_REGION( 0x100000, "maincpu", 0 ) /* 68000 Code */
+	ROM_LOAD16_BYTE( "jb17", 0x00000, 0x40000, CRC(501e64dd) SHA1(938c1b5364d02fe982d490118a86d4ca4b1297f2) )
+	ROM_LOAD16_BYTE( "jb18", 0x00001, 0x40000, CRC(84dcdf68) SHA1(83907705c1c45685e1888c187c8136865c43ee0b) )
+
+	ROM_REGION( 0x10000, "audiocpu", 0 ) /* Z80 Code */
+	ROM_LOAD( "ub5", 0x00000, 0x10000, CRC(48a9e99d) SHA1(d438f86b6cc9f8e145c89bac355a9bd2d634801e) )
+
+	ROM_REGION( 0x10000, "protection", 0 ) /* Intel 87C52 MCU Code */
+	ROM_LOAD( "87c52.mcu", 0x00000, 0x2000, NO_DUMP )
+
+	ROM_REGION16_BE( 0x200, "user1", ROMREGION_ERASE00 ) /* Data from Shared RAM */
+	/* this is not a real rom but instead the data extracted from shared ram, the MCU puts it there */
+	ROM_LOAD16_WORD( "protdata.bin", 0x00000, 0x200, CRC(fb67d20d) SHA1(63f2862a7ded075d501e21919f211d156bef4fb4) )
+
+	ROM_REGION( 0x040000, "oki", 0 ) /* Samples */
+	ROM_LOAD( "uc1", 0x00000, 0x40000, CRC(6e4cec27) SHA1(9dd07684502300589e957d1bcde0239880eaada2) )
+
+	ROM_REGION( 0x80000, "gfx1", 0 ) /* tiles */
+	ROM_LOAD16_BYTE( "rom5", 0x00001, 0x40000, CRC(b9561ae0) SHA1(e2fb11df167a984f98eb6d3a1b77e749646da403) )
+	ROM_LOAD16_BYTE( "rom6", 0x00000, 0x40000, CRC(b03a19ea) SHA1(66ab219111c53f79104aa9db250e4b2133a29924) )
+
+	ROM_REGION( 0x200000, "gfx2", 0 ) /* sprites */
+	ROM_LOAD16_BYTE( "uor1",  0x000000, 0x80000, CRC(1835ac6f) SHA1(3c0b171c248a98e1facb5f4fe1c94f98a07b7149) )
+	ROM_LOAD16_BYTE( "uor2",  0x000001, 0x80000, CRC(c9db161e) SHA1(3b7b45db005a7144e4c6386d917e89096172385e) )
+	ROM_LOAD16_BYTE( "uor3",  0x100000, 0x80000, CRC(69f54d5a) SHA1(10685a14304a0966027e729fc55433c05943391c) )
+	ROM_LOAD16_BYTE( "uor4",  0x100001, 0x80000, CRC(3736eef4) SHA1(c801fbf743a9cea6a605f716fb22cee1322fa340) )
+ROM_END
+
 /*
 
 Wonderleague Star (c) 1995 Mijin  (SemiCom traded under the Mijin name until 1995)
@@ -3150,9 +3262,9 @@ DRIVER_INIT_MEMBER(tumbleb_state,fncywld)
 
 READ16_MEMBER(tumbleb_state::bcstory_1a0_read)
 {
-	//mame_printf_debug("bcstory_io %06x\n",cpu_get_pc(&space.device()));
+	//mame_printf_debug("bcstory_io %06x\n",space.device().safe_pc());
 
-	if (cpu_get_pc(&space.device())==0x0560) return 0x1a0;
+	if (space.device().safe_pc()==0x0560) return 0x1a0;
 	else return ioport("SYSTEM")->read();
 }
 
@@ -3165,255 +3277,14 @@ DRIVER_INIT_MEMBER(tumbleb_state,bcstory)
 
 DRIVER_INIT_MEMBER(tumbleb_state,htchctch)
 {
-
-//  UINT16 *HCROM = (UINT16*)memregion("maincpu")->base();
 	UINT16 *PROTDATA = (UINT16*)memregion("user1")->base();
 	int i, len = memregion("user1")->bytes();
 	/* simulate RAM initialization done by the protection MCU */
-	/* verified on real hardware */
-//  static const UINT16 htchctch_mcu68k[] =
-//  {
-//      /* moved to protdata.bin file .. */
-//  };
-
-
-//  for (i = 0; i < sizeof(htchctch_mcu68k) / sizeof(htchctch_mcu68k[0]); i++)
-//      m_mainram[0x000/2 + i] = htchctch_mcu68k[i];
 
 	for (i = 0; i < len / 2; i++)
 		m_mainram[0x000/2 + i] = PROTDATA[i];
 
-
-
 	tumblepb_gfx1_rearrange(machine());
-
-/* trojan.. */
-#if 0
-	/* patch the irq 6 vector */
-	HCROM[0x00078/2] = 0x0001;
-	HCROM[0x0007a/2] = 0xe000;
-
-	/* our new interrupt code */
-
-	/* put registers on stack */
-	HCROM[0x1e000/2] = 0x48e7;
-	HCROM[0x1e002/2] = 0xfffe;
-
-	/* put the address we want to copy FROM in A0 */
-	HCROM[0x1e004/2] = 0x41f9;
-	HCROM[0x1e006/2] = 0x0012;
-	HCROM[0x1e008/2] = 0x0000;
-
-	/* put the address we want to copy TO in A1 */
-	HCROM[0x1e00a/2] = 0x43f9;
-	HCROM[0x1e00c/2] = 0x0012;
-	HCROM[0x1e00e/2] = 0x2000;
-
-	/* put the number of words we want to copy into D0 */
-	HCROM[0x1e010/2] = 0x203c;
-	HCROM[0x1e012/2] = 0x0000;
-	HCROM[0x1e014/2] = 0x0100;
-
-	/* copy a word */
-	HCROM[0x1e016/2] = 0x32d8;
-
-	/* decrease counter d0 */
-	HCROM[0x1e018/2] = 0x5380;
-
-	/* compare d0 to 0 */
-	HCROM[0x1e01a/2] = 0x0c80;
-	HCROM[0x1e01c/2] = 0x0000;
-	HCROM[0x1e01e/2] = 0x0000;
-
-	/* if its not 0 then branch back */
-	HCROM[0x1e020/2] = 0x66f4;
-
-
-
-
-	/* jump to drawing subroutine */
-	HCROM[0x1e022/2] = 0x4eb9;
-	HCROM[0x1e024/2] = 0x0001;
-	HCROM[0x1e026/2] = 0xe100;
-
-	/* get back registers from stack*/
-	HCROM[0x1e028/2] = 0x4cdf;
-	HCROM[0x1e02a/2] = 0x7fff;
-
-	/* jump to where the interrupt vector was copied to */
-	HCROM[0x1e02c/2] = 0x4ef9;
-	HCROM[0x1e02e/2] = 0x0012;
-	HCROM[0x1e030/2] = 0x2000;
-	/* we're back in the game code */
-
-
-	/* these subroutines are called from the new interrupt code above, i use them to draw */
-
-	/* DRAWING SUBROUTINE */
-
-	/* put the address we want to write to in A0 */
-	HCROM[0x1e100/2] = 0x41f9;
-	HCROM[0x1e102/2] = 0x0032;
-	HCROM[0x1e104/2] = 0x0104;
-
-	/* put the character we want to draw into D0 */
-	/* this bit isn't needed .. we end up using d4 then copying it over */
-	HCROM[0x1e106/2] = 0x203c;
-	HCROM[0x1e108/2] = 0x0000;
-	HCROM[0x1e10a/2] = 0x0007;
-
-	/* put the address we to read to in A2 */
-	HCROM[0x1e10c/2] = 0x45f9;
-	HCROM[0x1e10e/2] = 0x0012;
-//  HCROM[0x1e110/2] = 0x2000;
-	HCROM[0x1e110/2] = 0x2000+0x60+0x60+0x60+0x60+0x60;
-
-	/* put the number of rows into D3 */
-	HCROM[0x1e112/2] = 0x263c;
-	HCROM[0x1e114/2] = 0x0000;
-	HCROM[0x1e116/2] = 0x000c;
-
-	/* put the number of bytes per row into D2 */
-	HCROM[0x1e118/2] = 0x243c;
-	HCROM[0x1e11a/2] = 0x0000;
-	HCROM[0x1e11c/2] = 0x0008;
-
-
-	// move content of a2 to d4 (byte)
-	HCROM[0x1e11e/2] = 0x1812;
-
-	HCROM[0x1e120/2] = 0xe84c; // shift d4 right by 4
-
-	HCROM[0x1e122/2] = 0x0244; // mask with 0x000f
-	HCROM[0x1e124/2] = 0x000f; //
-
-	HCROM[0x1e126/2] = 0x3004; // d4 -> d0
-
-	/* jump to character draw to draw first bit */
-	HCROM[0x1e128/2] = 0x4eb9;
-	HCROM[0x1e12a/2] = 0x0001;
-	HCROM[0x1e12c/2] = 0xe200;
-
-	/* add 2 to draw address a0 */
-	HCROM[0x1e12e/2] = 0xd1fc;
-	HCROM[0x1e130/2] = 0x0000;
-	HCROM[0x1e132/2] = 0x0002;
-
-
-	// move content of a2 to d4 (byte)
-	HCROM[0x1e134/2] = 0x1812;
-
-	HCROM[0x1e136/2] = 0x0244; // mask with 0x000f
-	HCROM[0x1e138/2] = 0x000f; //
-
-	HCROM[0x1e13a/2] = 0x3004; // d4 -> d0
-
-	/* jump to character draw to draw second bit */
-	HCROM[0x1e13c/2] = 0x4eb9;
-	HCROM[0x1e13e/2] = 0x0001;
-	HCROM[0x1e140/2] = 0xe200;
-
-	/* add 2 to draw address a0 */
-	HCROM[0x1e142/2] = 0xd1fc;
-	HCROM[0x1e144/2] = 0x0000;
-	HCROM[0x1e146/2] = 0x0002;
-
-	/* add 1 to read address a2 */
-	HCROM[0x1e148/2] = 0xd5fc;
-	HCROM[0x1e14a/2] = 0x0000;
-	HCROM[0x1e14c/2] = 0x0001;
-
-// brr
-	/* decrease counter d2 */
-	HCROM[0x1e14e/2] = 0x5382;
-
-	/* compare d2 to 0 */
-	HCROM[0x1e150/2] = 0x0c82;
-	HCROM[0x1e152/2] = 0x0000;
-	HCROM[0x1e154/2] = 0x0000;
-
-	/* if its not 0 then branch back */
-	HCROM[0x1e156/2] = 0x66c6;
-
-	/* add 0xe0 to draw address a0 (0x100-0x20) */
-	HCROM[0x1e158/2] = 0xd1fc;
-	HCROM[0x1e15a/2] = 0x0000;
-	HCROM[0x1e15c/2] = 0x00e0;
-
-	/* decrease counter d2 */
-	HCROM[0x1e15e/2] = 0x5383;
-
-	/* compare d2 to 0 */
-	HCROM[0x1e160/2] = 0x0c83;
-	HCROM[0x1e162/2] = 0x0000;
-	HCROM[0x1e164/2] = 0x0000;
-
-	/* if its not 0 then branch back */
-	HCROM[0x1e166/2] = 0x66b0;
-
-	HCROM[0x1e168/2] = 0x4e75; // rts
-
-	/* DRAW CHARACTER SUBROUTINE, note, this won't restore a1,d1, don't other places! */
-
-	/* move address into A0->A1 for use by this subroutine */
-	HCROM[0x1e200/2] = 0x2248;
-
-	/* move address into D0->D1 for top half of character */
-	HCROM[0x1e202/2] = 0x2200;
-
-	/* add 0x30 to d1 to get the REAL tile code */
-	HCROM[0x1e204/2] = 0x0681;
-	HCROM[0x1e206/2] = 0x0000;
-	HCROM[0x1e208/2] = 0x0030;
-
-	/* or with 0xf000 to add the tile attribute */
-	HCROM[0x1e20a/2] = 0x0081;
-	HCROM[0x1e20c/2] = 0x0000;
-	HCROM[0x1e20e/2] = 0xf000;
-
-	/* write d1 -> a1 for TOP half */
-	HCROM[0x1e210/2] = 0x32c1; // not ideal .. we don't need to increase a1
-
-	/* move address into A0->A1 for use by this subroutine */
-	HCROM[0x1e212/2] = 0x2248;
-
-	/* add 0x80 to the address so we have the bottom location */
-	HCROM[0x1e214/2] = 0xd2fc;
-	HCROM[0x1e216/2] = 0x0080;
-
-	/* move address into D0->D1 for bottom  half of character */
-	HCROM[0x1e218/2] = 0x2200;
-
-	/* add 0x54 to d1 to get the REAL tile code for bottom half */
-	HCROM[0x1e21a/2] = 0x0681;
-	HCROM[0x1e21c/2] = 0x0000;
-	HCROM[0x1e21e/2] = 0x0054;
-
-	/* or with 0xf000 to add the tile attribute */
-	HCROM[0x1e220/2] = 0x0081;
-	HCROM[0x1e222/2] = 0x0000;
-	HCROM[0x1e224/2] = 0xf000;
-
-	/* write d1 -> a1 for BOTTOM half */
-	HCROM[0x1e226/2] = 0x32c1; // not ideal .. we don't need to increase a1
-
-
-	HCROM[0x1e228/2] = 0x4e75;
-
-	machine().device("maincpu")->memory().space(AS_PROGRAM)->nop_write(0x140000, 0x1407ff); // kill palette writes as the interrupt code we don't have controls them
-
-
-	{
-		FILE *fp;
-
-		fp=fopen("hcatch", "w+b");
-		if (fp)
-		{
-			fwrite(HCROM, 0x40000, 1, fp);
-			fclose(fp);
-		}
-	}
-#endif
 
 }
 
@@ -3492,23 +3363,31 @@ DRIVER_INIT_MEMBER(tumbleb_state,dquizgo)
 }
 
 
+
 /******************************************************************************/
 
+/* Misc 'bootleg' hardware - close to base Tumble Pop */
 GAME( 1991, tumbleb,  tumblep, tumblepb,    tumblepb, tumbleb_state, tumblepb, ROT0, "bootleg", "Tumble Pop (bootleg set 1)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  )
 GAME( 1991, tumbleb2, tumblep, tumbleb2,    tumblepb, tumbleb_state, tumbleb2, ROT0, "bootleg", "Tumble Pop (bootleg set 2)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  ) // PIC is protected, sound simulation not 100%
 GAME( 1993, jumpkids, 0,       jumpkids,    tumblepb, tumbleb_state, jumpkids, ROT0, "Comad",    "Jump Kids", GAME_SUPPORTS_SAVE )
-GAME( 1994, metlsavr, 0,       metlsavr,    metlsavr, tumbleb_state, chokchok, ROT0, "First Amusement", "Metal Saver", GAME_SUPPORTS_SAVE )
 GAME( 1994, pangpang, 0,       pangpang,    tumblepb, tumbleb_state, tumbleb2, ROT0, "Dong Gue La Mi Ltd.", "Pang Pang", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE  ) // PIC is protected, sound simulation not 100%
+
+/* Misc 'bootleg' hardware - more changes from base hardware */
 GAME( 1994, suprtrio, 0,       suprtrio,    suprtrio, tumbleb_state, suprtrio, ROT0, "Gameace", "Super Trio", GAME_SUPPORTS_SAVE )
 GAME( 1996, fncywld,  0,       fncywld,     fncywld, tumbleb_state,  fncywld,  ROT0, "Unico",   "Fancy World - Earth of Crisis" , GAME_SUPPORTS_SAVE ) // game says 1996, testmode 1995?
-// Should also be 'Magicball Fighting' (c)1994
+// Unico - Magic Purple almost certainly goes here
+
+/* First Amusement / Mijin / SemiCom hardware (MCU protected) */
+GAME( 1994, metlsavr, 0,       metlsavr,    metlsavr, tumbleb_state, chokchok, ROT0, "First Amusement", "Metal Saver", GAME_SUPPORTS_SAVE )
+GAME( 1994, magicbal, 0,       metlsavr,    magicbal, tumbleb_state, chokchok, ROT0, "SemiCom", "Magicball Fighting (Korea)", GAME_SUPPORTS_SAVE) // also still has the Metal Saver (c)1994 First Amusement tiles in the GFX
+GAME( 1995, chokchok, 0,       cookbib,     chokchok, tumbleb_state, chokchok, ROT0, "SemiCom", "Choky! Choky!", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE  )
 GAME( 1995, wlstar,   0,       cookbib_mcu, wlstar, tumbleb_state,   wlstar,   ROT0, "Mijin",   "Wonder League Star - Sok-Magicball Fighting (Korea)", GAME_SUPPORTS_SAVE ) // translates to 'Wonder League Star - Return of Magicball Fighting'
 GAME( 1995, htchctch, 0,       htchctch,    htchctch, tumbleb_state, htchctch, ROT0, "SemiCom", "Hatch Catch" , GAME_SUPPORTS_SAVE ) // not 100% sure about gfx offsets
 GAME( 1995, cookbib,  0,       cookbib,     cookbib, tumbleb_state,  htchctch, ROT0, "SemiCom", "Cookie & Bibi" , GAME_SUPPORTS_SAVE ) // not 100% sure about gfx offsets
-GAME( 1995, chokchok, 0,       cookbib,     chokchok, tumbleb_state, chokchok, ROT0, "SemiCom", "Choky! Choky!", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE  ) // corruption during attract mode (tmap disable?)
 GAME( 1996, wondl96,  0,       cookbib_mcu, wondl96, tumbleb_state,  wondl96,  ROT0, "SemiCom", "Wonder League '96 (Korea)", GAME_SUPPORTS_SAVE )
 GAME( 1996, sdfight,  0,       sdfight,     sdfight, tumbleb_state,  bcstory,  ROT0, "SemiCom", "SD Fighters (Korea)", GAME_SUPPORTS_SAVE )
 GAME( 1997, bcstry,   0,       bcstory,     bcstory, tumbleb_state,  bcstory,  ROT0, "SemiCom", "B.C. Story (set 1)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // gfx offsets?
 GAME( 1997, bcstrya,  bcstry,  bcstory,     bcstory, tumbleb_state,  bcstory,  ROT0, "SemiCom", "B.C. Story (set 2)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // gfx offsets?
 GAME( 1997, semibase, 0,       semibase,    semibase, tumbleb_state, bcstory,  ROT0, "SemiCom", "MuHanSeungBu (SemiCom Baseball) (Korea)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE )// sprite offsets..
 GAME( 1998, dquizgo,  0,       cookbib,     dquizgo, tumbleb_state,  dquizgo,  ROT0, "SemiCom", "Date Quiz Go Go (Korea)", GAME_IMPERFECT_GRAPHICS | GAME_SUPPORTS_SAVE ) // check layer offsets
+

@@ -48,7 +48,7 @@ public:
 	UINT8    m_port_select;     /* for muxed controls */
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	device_t *m_mcu;
 	DECLARE_WRITE8_MEMBER(beg_banking_w);
 	DECLARE_WRITE8_MEMBER(beg_fromsound_w);
@@ -86,6 +86,9 @@ public:
 	DECLARE_WRITE8_MEMBER(bigevglf_vidram_w);
 	DECLARE_READ8_MEMBER(bigevglf_vidram_r);
 	DECLARE_DRIVER_INIT(bigevglf);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -96,7 +99,7 @@ public:
 
 /*----------- defined in video/bigevglf.c -----------*/
 
-VIDEO_START( bigevglf );
+
 SCREEN_UPDATE_IND16( bigevglf );
 
 

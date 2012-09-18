@@ -16,13 +16,12 @@
  *
  *************************************/
 
-static TILE_GET_INFO( get_playfield_tile_info )
+TILE_GET_INFO_MEMBER(badlands_state::get_playfield_tile_info)
 {
-	badlands_state *state = machine.driver_data<badlands_state>();
-	UINT16 data = state->m_playfield[tile_index];
-	int code = (data & 0x1fff) + ((data & 0x1000) ? (state->m_playfield_tile_bank << 12) : 0);
+	UINT16 data = m_playfield[tile_index];
+	int code = (data & 0x1fff) + ((data & 0x1000) ? (m_playfield_tile_bank << 12) : 0);
 	int color = (data >> 13) & 0x07;
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
 
@@ -33,7 +32,7 @@ static TILE_GET_INFO( get_playfield_tile_info )
  *
  *************************************/
 
-VIDEO_START( badlands )
+VIDEO_START_MEMBER(badlands_state,badlands)
 {
 	static const atarimo_desc modesc =
 	{
@@ -71,16 +70,15 @@ VIDEO_START( badlands )
 		0,					/* resulting value to indicate "special" */
 		0					/* callback routine for special entries */
 	};
-	badlands_state *state = machine.driver_data<badlands_state>();
 
 	/* initialize the playfield */
-	state->m_playfield_tilemap = tilemap_create(machine, get_playfield_tile_info, tilemap_scan_rows,  8,8, 64,32);
+	m_playfield_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(badlands_state::get_playfield_tile_info),this), TILEMAP_SCAN_ROWS,  8,8, 64,32);
 
 	/* initialize the motion objects */
-	atarimo_init(machine, 0, &modesc);
+	atarimo_init(machine(), 0, &modesc);
 
 	/* save states */
-	state->save_item(NAME(state->m_playfield_tile_bank));
+	save_item(NAME(m_playfield_tile_bank));
 }
 
 

@@ -17,25 +17,23 @@
  *
  *************************************/
 
-static TILE_GET_INFO( get_playfield_tile_info )
+TILE_GET_INFO_MEMBER(relief_state::get_playfield_tile_info)
 {
-	relief_state *state = machine.driver_data<relief_state>();
-	UINT16 data1 = state->m_playfield[tile_index];
-	UINT16 data2 = state->m_playfield_upper[tile_index] & 0xff;
+	UINT16 data1 = m_playfield[tile_index];
+	UINT16 data2 = m_playfield_upper[tile_index] & 0xff;
 	int code = data1 & 0x7fff;
 	int color = 0x20 + (data2 & 0x0f);
-	SET_TILE_INFO(0, code, color, (data1 >> 15) & 1);
+	SET_TILE_INFO_MEMBER(0, code, color, (data1 >> 15) & 1);
 }
 
 
-static TILE_GET_INFO( get_playfield2_tile_info )
+TILE_GET_INFO_MEMBER(relief_state::get_playfield2_tile_info)
 {
-	relief_state *state = machine.driver_data<relief_state>();
-	UINT16 data1 = state->m_playfield2[tile_index];
-	UINT16 data2 = state->m_playfield_upper[tile_index] >> 8;
+	UINT16 data1 = m_playfield2[tile_index];
+	UINT16 data2 = m_playfield_upper[tile_index] >> 8;
 	int code = data1 & 0x7fff;
 	int color = data2 & 0x0f;
-	SET_TILE_INFO(0, code, color, (data1 >> 15) & 1);
+	SET_TILE_INFO_MEMBER(0, code, color, (data1 >> 15) & 1);
 }
 
 
@@ -46,7 +44,7 @@ static TILE_GET_INFO( get_playfield2_tile_info )
  *
  *************************************/
 
-VIDEO_START( relief )
+VIDEO_START_MEMBER(relief_state,relief)
 {
 	static const atarimo_desc modesc =
 	{
@@ -84,20 +82,19 @@ VIDEO_START( relief )
 		0,					/* resulting value to indicate "special" */
 		0					/* callback routine for special entries */
 	};
-	relief_state *state = machine.driver_data<relief_state>();
 
 	/* MOs are 5bpp but with a 4-bit color granularity */
-	machine.gfx[1]->color_granularity = 16;
+	machine().gfx[1]->set_granularity(16);
 
 	/* initialize the playfield */
-	state->m_playfield_tilemap = tilemap_create(machine, get_playfield_tile_info, tilemap_scan_cols,  8,8, 64,64);
+	m_playfield_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(relief_state::get_playfield_tile_info),this), TILEMAP_SCAN_COLS,  8,8, 64,64);
 
 	/* initialize the second playfield */
-	state->m_playfield2_tilemap = tilemap_create(machine, get_playfield2_tile_info, tilemap_scan_cols,  8,8, 64,64);
-	state->m_playfield2_tilemap->set_transparent_pen(0);
+	m_playfield2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(relief_state::get_playfield2_tile_info),this), TILEMAP_SCAN_COLS,  8,8, 64,64);
+	m_playfield2_tilemap->set_transparent_pen(0);
 
 	/* initialize the motion objects */
-	atarimo_init(machine, 0, &modesc);
+	atarimo_init(machine(), 0, &modesc);
 }
 
 

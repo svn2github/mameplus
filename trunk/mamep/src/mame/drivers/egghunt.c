@@ -61,7 +61,7 @@ public:
 	UINT8     m_gfx_banking;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 
 	/* memory */
 	required_shared_ptr<UINT8> m_atram;
@@ -75,6 +75,10 @@ public:
 	DECLARE_WRITE8_MEMBER(egghunt_soundlatch_w);
 	DECLARE_READ8_MEMBER(egghunt_okibanking_r);
 	DECLARE_WRITE8_MEMBER(egghunt_okibanking_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -117,23 +121,22 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap,const r
 	}
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(egghunt_state::get_bg_tile_info)
 {
-	egghunt_state *state = machine.driver_data<egghunt_state>();
-	int code = ((state->m_bgram[tile_index * 2 + 1] << 8) | state->m_bgram[tile_index * 2]) & 0x3fff;
-	int colour = state->m_atram[tile_index] & 0x3f;
+	int code = ((m_bgram[tile_index * 2 + 1] << 8) | m_bgram[tile_index * 2]) & 0x3fff;
+	int colour = m_atram[tile_index] & 0x3f;
 
 	if(code & 0x2000)
 	{
-		if((state->m_gfx_banking & 3) == 2)
+		if((m_gfx_banking & 3) == 2)
 			code += 0x2000;
-		else if((state->m_gfx_banking & 3) == 3)
+		else if((m_gfx_banking & 3) == 3)
 			code += 0x4000;
-//      else if((state->m_gfx_banking & 3) == 1)
+//      else if((m_gfx_banking & 3) == 1)
 //          code += 0;
 	}
 
-	SET_TILE_INFO(0, code, colour, 0);
+	SET_TILE_INFO_MEMBER(0, code, colour, 0);
 }
 
 READ8_MEMBER(egghunt_state::egghunt_bgram_r)
@@ -168,14 +171,13 @@ WRITE8_MEMBER(egghunt_state::egghunt_atram_w)
 }
 
 
-static VIDEO_START(egghunt)
+void egghunt_state::video_start()
 {
-	egghunt_state *state = machine.driver_data<egghunt_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(egghunt_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 
-	state->save_item(NAME(state->m_bgram));
-	state->save_item(NAME(state->m_spram));
+	save_item(NAME(m_bgram));
+	save_item(NAME(m_spram));
 }
 
 static SCREEN_UPDATE_IND16(egghunt)
@@ -203,7 +205,7 @@ WRITE8_MEMBER(egghunt_state::egghunt_vidram_bank_w)
 WRITE8_MEMBER(egghunt_state::egghunt_soundlatch_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 READ8_MEMBER(egghunt_state::egghunt_okibanking_r)
@@ -387,23 +389,21 @@ static GFXDECODE_START( egghunt )
 GFXDECODE_END
 
 
-static MACHINE_START( egghunt )
+void egghunt_state::machine_start()
 {
-	egghunt_state *state = machine.driver_data<egghunt_state>();
 
-	state->m_audiocpu = machine.device("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_gfx_banking));
-	state->save_item(NAME(state->m_okibanking));
-	state->save_item(NAME(state->m_vidram_bank));
+	save_item(NAME(m_gfx_banking));
+	save_item(NAME(m_okibanking));
+	save_item(NAME(m_vidram_bank));
 }
 
-static MACHINE_RESET( egghunt )
+void egghunt_state::machine_reset()
 {
-	egghunt_state *state = machine.driver_data<egghunt_state>();
-	state->m_gfx_banking = 0;
-	state->m_okibanking = 0;
-	state->m_vidram_bank = 0;
+	m_gfx_banking = 0;
+	m_okibanking = 0;
+	m_vidram_bank = 0;
 }
 
 static MACHINE_CONFIG_START( egghunt, egghunt_state )
@@ -417,8 +417,6 @@ static MACHINE_CONFIG_START( egghunt, egghunt_state )
 	MCFG_CPU_ADD("audiocpu", Z80,12000000/2)		 /* 6 MHz ?*/
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(egghunt)
-	MCFG_MACHINE_RESET(egghunt)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -431,7 +429,6 @@ static MACHINE_CONFIG_START( egghunt, egghunt_state )
 	MCFG_GFXDECODE(egghunt)
 	MCFG_PALETTE_LENGTH(0x400)
 
-	MCFG_VIDEO_START(egghunt)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

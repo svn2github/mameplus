@@ -152,6 +152,9 @@ public:
 	DECLARE_WRITE8_MEMBER(ppmast93_bgram_w);
 	DECLARE_WRITE8_MEMBER(ppmast93_port4_w);
 	DECLARE_WRITE8_MEMBER(ppmast_sound_w);
+	TILE_GET_INFO_MEMBER(get_ppmast93_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_ppmast93_fg_tile_info);
+	virtual void video_start();
 };
 
 
@@ -216,7 +219,7 @@ WRITE8_MEMBER(ppmast93_state::ppmast_sound_w)
 		case 0:
 		case 1: ym2413_w(machine().device("ymsnd"),offset,data); break;
 		case 2: machine().device<dac_device>("dac")->write_unsigned8(data);break;
-		default: logerror("%x %x - %x\n",offset,data,cpu_get_previouspc(&space.device()));
+		default: logerror("%x %x - %x\n",offset,data,space.device().safe_pcbase());
 	}
 }
 
@@ -322,35 +325,32 @@ static GFXDECODE_START( ppmast93 )
 	GFXDECODE_ENTRY( "gfx1", 0, tiles8x8_layout, 0, 16 )
 GFXDECODE_END
 
-static TILE_GET_INFO( get_ppmast93_bg_tile_info )
+TILE_GET_INFO_MEMBER(ppmast93_state::get_ppmast93_bg_tile_info)
 {
-	ppmast93_state *state = machine.driver_data<ppmast93_state>();
-	int code = (state->m_bgram[tile_index*2+1] << 8) | state->m_bgram[tile_index*2];
-	SET_TILE_INFO(
+	int code = (m_bgram[tile_index*2+1] << 8) | m_bgram[tile_index*2];
+	SET_TILE_INFO_MEMBER(
 			0,
 			code & 0x0fff,
 			(code & 0xf000) >> 12,
 			0);
 }
 
-static TILE_GET_INFO( get_ppmast93_fg_tile_info )
+TILE_GET_INFO_MEMBER(ppmast93_state::get_ppmast93_fg_tile_info)
 {
-	ppmast93_state *state = machine.driver_data<ppmast93_state>();
-	int code = (state->m_fgram[tile_index*2+1] << 8) | state->m_fgram[tile_index*2];
-	SET_TILE_INFO(
+	int code = (m_fgram[tile_index*2+1] << 8) | m_fgram[tile_index*2];
+	SET_TILE_INFO_MEMBER(
 			0,
 			(code & 0x0fff)+0x1000,
 			(code & 0xf000) >> 12,
 			0);
 }
 
-static VIDEO_START( ppmast93 )
+void ppmast93_state::video_start()
 {
-	ppmast93_state *state = machine.driver_data<ppmast93_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_ppmast93_bg_tile_info,tilemap_scan_rows,8,8,32, 32);
-	state->m_fg_tilemap = tilemap_create(machine, get_ppmast93_fg_tile_info,tilemap_scan_rows,8,8,32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ppmast93_state::get_ppmast93_bg_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ppmast93_state::get_ppmast93_fg_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32, 32);
 
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_fg_tilemap->set_transparent_pen(0);
 }
 
 static SCREEN_UPDATE_IND16( ppmast93 )
@@ -386,7 +386,6 @@ static MACHINE_CONFIG_START( ppmast93, ppmast93_state )
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(ppmast93)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

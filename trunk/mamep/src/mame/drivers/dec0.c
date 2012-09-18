@@ -187,7 +187,7 @@ WRITE16_MEMBER(dec0_state::dec0_control_w)
 			if (ACCESSING_BITS_0_7)
 			{
 				soundlatch_byte_w(space, 0, data & 0xff);
-				cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+				machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 			}
 			break;
 
@@ -196,11 +196,11 @@ WRITE16_MEMBER(dec0_state::dec0_control_w)
 			break;
 
 		case 8: /* Interrupt ack (VBL - IRQ 6) */
-			cputag_set_input_line(machine(), "maincpu", 6, CLEAR_LINE);
+			machine().device("maincpu")->execute().set_input_line(6, CLEAR_LINE);
 			break;
 
 		case 0xa: /* Mix Psel(?). */
-			logerror("CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",cpu_get_pc(&space.device()),data,0x30c010+(offset<<1));
+			logerror("CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",space.device().safe_pc(),data,0x30c010+(offset<<1));
 			break;
 
 		case 0xc: /* Cblk - coin blockout.  Seems to be unused by the games */
@@ -208,11 +208,11 @@ WRITE16_MEMBER(dec0_state::dec0_control_w)
 
 		case 0xe: /* Reset Intel 8751? - not sure, all the games write here at startup */
 			dec0_i8751_reset(machine());
-			logerror("CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",cpu_get_pc(&space.device()),data,0x30c010+(offset<<1));
+			logerror("CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",space.device().safe_pc(),data,0x30c010+(offset<<1));
 			break;
 
 		default:
-			logerror("CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",cpu_get_pc(&space.device()),data,0x30c010+(offset<<1));
+			logerror("CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",space.device().safe_pc(),data,0x30c010+(offset<<1));
 			break;
 	}
 }
@@ -226,7 +226,7 @@ WRITE16_MEMBER(dec0_automat_state::automat_control_w)
 			if (ACCESSING_BITS_0_7)
 			{
 				soundlatch_byte_w(space, 0, data & 0xff);
-				cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
+				machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
 			}
 			break;
 
@@ -238,7 +238,7 @@ WRITE16_MEMBER(dec0_automat_state::automat_control_w)
 			break;
 
 		case 0xa: /* Mix Psel(?). */
-			logerror("CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",cpu_get_pc(&space.device()),data,0x30c010+(offset<<1));
+			logerror("CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",space.device().safe_pc(),data,0x30c010+(offset<<1));
 			break;
 
 		case 0xc: /* Cblk - coin blockout.  Seems to be unused by the games */
@@ -246,7 +246,7 @@ WRITE16_MEMBER(dec0_automat_state::automat_control_w)
 #endif
 
 		default:
-			logerror("CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",cpu_get_pc(&space.device()),data,0x30c010+(offset<<1));
+			logerror("CPU #0 PC %06x: warning - write %02x to unmapped memory address %06x\n",space.device().safe_pc(),data,0x30c010+(offset<<1));
 			break;
 	}
 }
@@ -259,7 +259,7 @@ WRITE16_MEMBER(dec0_state::slyspy_control_w)
 			if (ACCESSING_BITS_0_7)
 			{
 				soundlatch_byte_w(space, 0, data & 0xff);
-				cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+				machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 			}
 			break;
 		case 2:
@@ -273,7 +273,7 @@ WRITE16_MEMBER(dec0_state::midres_sound_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, 0, data & 0xff);
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -358,7 +358,7 @@ READ16_MEMBER(dec0_state::slyspy_protection_r)
 		case 6:		return 0x2;
 	}
 
-	logerror("%04x, Unknown protection read at 30c000 %d\n", cpu_get_pc(&space.device()), offset);
+	logerror("%04x, Unknown protection read at 30c000 %d\n", space.device().safe_pc(), offset);
 	return 0;
 }
 
@@ -1287,12 +1287,12 @@ GFXDECODE_END
 
 static void sound_irq(device_t *device, int linestate)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, linestate); /* IRQ */
+	device->machine().device("audiocpu")->execute().set_input_line(0, linestate); /* IRQ */
 }
 
 static void sound_irq2(device_t *device, int linestate)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 1, linestate); /* IRQ2 */
+	device->machine().device("audiocpu")->execute().set_input_line(1, linestate); /* IRQ2 */
 }
 
 static const ym3812_interface ym3812_config =
@@ -1324,7 +1324,7 @@ static MACHINE_CONFIG_START( dec0_base, dec0_state )
 	MCFG_DEVICE_ADD("spritegen", DECO_MXC06, 0)
 	deco_mxc06_device::set_gfx_region(*device, 3);
 
-	MCFG_VIDEO_START(dec0)
+	MCFG_VIDEO_START_OVERRIDE(dec0_state,dec0)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( dec0_base_sound, dec0_base )
@@ -1385,7 +1385,7 @@ static void automat_vclk_cb(device_t *device)
 	else
 	{
 		msm5205_data_w(device, state->m_automat_adpcm_byte >> 4);
-		//cputag_set_input_line(device->machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE); // gives some scratch samples but breaks other sounds too
+		//device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE); // gives some scratch samples but breaks other sounds too
 	}
 
 	state->m_automat_msm5205_vclk_toggle ^= 1;
@@ -1414,7 +1414,7 @@ static MACHINE_CONFIG_START( automat, dec0_automat_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529) /* 57.41 Hz, 529us Vblank */)
 	MCFG_SCREEN_RAW_PARAMS(DEC0_PIXEL_CLOCK,DEC0_HTOTAL,DEC0_HBEND,DEC0_HBSTART,DEC0_VTOTAL,DEC0_VBEND,DEC0_VBSTART)
 	MCFG_SCREEN_UPDATE_STATIC(automat)
-	MCFG_VIDEO_START(dec0_nodma)
+	MCFG_VIDEO_START_OVERRIDE(dec0_state,dec0_nodma)
 
 	MCFG_DEVICE_ADD("tilegen1", DECO_BAC06, 0)
 	deco_bac06_device::set_gfx_region_wide(*device, 0,0,0);
@@ -1467,7 +1467,7 @@ static MACHINE_CONFIG_START( secretab, dec0_automat_state )
 //  MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(529) /* 57.41 Hz, 529us Vblank */)
 	MCFG_SCREEN_RAW_PARAMS(DEC0_PIXEL_CLOCK,DEC0_HTOTAL,DEC0_HBEND,DEC0_HBSTART,DEC0_VTOTAL,DEC0_VBEND,DEC0_VBSTART)
 	MCFG_SCREEN_UPDATE_STATIC(secretab)
-	MCFG_VIDEO_START(dec0_nodma)
+	MCFG_VIDEO_START_OVERRIDE(dec0_state,dec0_nodma)
 
 	MCFG_DEVICE_ADD("tilegen1", DECO_BAC06, 0)
 	deco_bac06_device::set_gfx_region_wide(*device, 0,0,0);
@@ -1638,10 +1638,10 @@ static MACHINE_CONFIG_DERIVED( hippodrm, dec0_base_sound )
 	MCFG_SCREEN_UPDATE_STATIC(hippodrm)
 MACHINE_CONFIG_END
 
-static MACHINE_RESET( slyspy )
+MACHINE_RESET_MEMBER(dec0_state,slyspy)
 {
 	// set initial memory map
-	slyspy_set_protection_map(machine, 0);
+	slyspy_set_protection_map(machine(), 0);
 }
 
 static MACHINE_CONFIG_DERIVED( slyspy, dec0_base_sound_alt )
@@ -1663,9 +1663,9 @@ static MACHINE_CONFIG_DERIVED( slyspy, dec0_base_sound_alt )
 //  MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(slyspy)
 
-	MCFG_VIDEO_START(dec0_nodma)
+	MCFG_VIDEO_START_OVERRIDE(dec0_state,dec0_nodma)
 
-	MCFG_MACHINE_RESET(slyspy)
+	MCFG_MACHINE_RESET_OVERRIDE(dec0_state,slyspy)
 MACHINE_CONFIG_END
 
 
@@ -1691,7 +1691,7 @@ static MACHINE_CONFIG_DERIVED( midres, dec0_base_sound_alt )
 	MCFG_SCREEN_UPDATE_STATIC(midres)
 
 	MCFG_GFXDECODE(midres)
-	MCFG_VIDEO_START(dec0_nodma)
+	MCFG_VIDEO_START_OVERRIDE(dec0_state,dec0_nodma)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( midresb, midres )

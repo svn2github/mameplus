@@ -35,7 +35,7 @@ public:
 	int       m_vclk_left;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	device_t *m_msm;
 	DECLARE_WRITE8_MEMBER(ojankohs_rombank_w);
 	DECLARE_WRITE8_MEMBER(ojankoy_rombank_w);
@@ -59,17 +59,28 @@ public:
 	DECLARE_WRITE8_MEMBER(ojankohs_adpcm_reset_w);
 	DECLARE_READ8_MEMBER(ojankohs_ay8910_0_r);
 	DECLARE_READ8_MEMBER(ojankohs_ay8910_1_r);
+	TILE_GET_INFO_MEMBER(ojankohs_get_tile_info);
+	TILE_GET_INFO_MEMBER(ojankoy_get_tile_info);
+	virtual void machine_reset();
+	DECLARE_MACHINE_START(ojankohs);
+	DECLARE_VIDEO_START(ojankohs);
+	DECLARE_MACHINE_START(ojankoy);
+	DECLARE_VIDEO_START(ojankoy);
+	DECLARE_PALETTE_INIT(ojankoy);
+	DECLARE_MACHINE_START(ojankoc);
+	DECLARE_VIDEO_START(ojankoc);
+	DECLARE_MACHINE_START(common);
 };
 
 
 /*----------- defined in video/ojankohs.c -----------*/
 
 
-PALETTE_INIT( ojankoy );
 
-VIDEO_START( ojankohs );
-VIDEO_START( ojankoy );
-VIDEO_START( ojankoc );
+
+
+
+
 
 SCREEN_UPDATE_IND16( ojankohs );
 SCREEN_UPDATE_IND16( ojankoc );

@@ -1,8 +1,7 @@
 #include "emu.h"
 #include "flt_rc.h"
 
-typedef struct _filter_rc_state filter_rc_state;
-struct _filter_rc_state
+struct filter_rc_state
 {
 	device_t *device;
 	sound_stream *	stream;
@@ -15,7 +14,7 @@ INLINE filter_rc_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == FILTER_RC);
-	return (filter_rc_state *)downcast<legacy_device_base *>(device)->token();
+	return (filter_rc_state *)downcast<filter_rc_device *>(device)->token();
 }
 
 const flt_rc_config flt_rc_ac_default = {FLT_RC_AC, 10000, 0, 0, CAP_U(1)};
@@ -111,30 +110,42 @@ void filter_rc_set_RC(device_t *device, int type, double R1, double R2, double R
 
 }
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
+const device_type FILTER_RC = &device_creator<filter_rc_device>;
 
-DEVICE_GET_INFO( filter_rc )
+filter_rc_device::filter_rc_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, FILTER_RC, "RC Filter", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(filter_rc_state);				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(filter_rc_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( filter_rc );	break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							/* Nothing */									break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "RC Filter");					break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Filters");						break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void filter_rc_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void filter_rc_device::device_start()
+{
+	DEVICE_START_NAME( filter_rc )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void filter_rc_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(FILTER_RC, filter_rc);

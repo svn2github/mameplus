@@ -152,6 +152,10 @@ public:
 	DECLARE_WRITE16_MEMBER(ddealer_mcu_shared_w);
 	DECLARE_READ16_MEMBER(ddealer_mcu_r);
 	DECLARE_DRIVER_INIT(ddealer);
+	TILE_GET_INFO_MEMBER(get_back_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -161,27 +165,25 @@ WRITE16_MEMBER(ddealer_state::ddealer_flipscreen_w)
 	m_flipscreen = data & 0x01;
 }
 
-static TILE_GET_INFO( get_back_tile_info )
+TILE_GET_INFO_MEMBER(ddealer_state::get_back_tile_info)
 {
-	ddealer_state *state = machine.driver_data<ddealer_state>();
-	int code = state->m_back_vram[tile_index];
-	SET_TILE_INFO(
+	int code = m_back_vram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			0,
 			code & 0xfff,
 			code >> 12,
 			0);
 }
 
-static VIDEO_START( ddealer )
+void ddealer_state::video_start()
 {
-	ddealer_state *state = machine.driver_data<ddealer_state>();
-	state->m_flipscreen = 0;
-	state->m_back_tilemap = tilemap_create(machine, get_back_tile_info, tilemap_scan_cols, 8, 8, 64, 32);
+	m_flipscreen = 0;
+	m_back_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ddealer_state::get_back_tile_info),this), TILEMAP_SCAN_COLS, 8, 8, 64, 32);
 }
 
 static void ddealer_draw_video_layer( running_machine &machine, UINT16* vreg_base, UINT16* top, UINT16* bottom, bitmap_ind16 &bitmap, const rectangle &cliprect, int flipy)
 {
-	const gfx_element *gfx = machine.gfx[1];
+	gfx_element *gfx = machine.gfx[1];
 
 	INT16 sx, sy;
 	int x,y, count;
@@ -598,29 +600,27 @@ static GFXDECODE_START( ddealer )
 	GFXDECODE_ENTRY( "gfx2", 0, tilelayout, 0x100, 16 )
 GFXDECODE_END
 
-static MACHINE_START( ddealer )
+void ddealer_state::machine_start()
 {
-	ddealer_state *state = machine.driver_data<ddealer_state>();
 
-	state->save_item(NAME(state->m_respcount));
-	state->save_item(NAME(state->m_flipscreen));
-	state->save_item(NAME(state->m_input_pressed));
-	state->save_item(NAME(state->m_coin_input));
+	save_item(NAME(m_respcount));
+	save_item(NAME(m_flipscreen));
+	save_item(NAME(m_input_pressed));
+	save_item(NAME(m_coin_input));
 }
 
-static MACHINE_RESET (ddealer)
+void ddealer_state::machine_reset()
 {
-	ddealer_state *state = machine.driver_data<ddealer_state>();
 
-	state->m_respcount = 0;
-	state->m_flipscreen = 0;
-	state->m_input_pressed = 0;
-	state->m_coin_input = 0;
+	m_respcount = 0;
+	m_flipscreen = 0;
+	m_input_pressed = 0;
+	m_coin_input = 0;
 }
 
 static INTERRUPT_GEN( ddealer_interrupt )
 {
-	device_set_input_line(device, 4, HOLD_LINE);
+	device->execute().set_input_line(4, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( ddealer, ddealer_state )
@@ -632,8 +632,6 @@ static MACHINE_CONFIG_START( ddealer, ddealer_state )
 
 	// M50747 or NMK-110 8131 MCU
 
-	MCFG_MACHINE_START(ddealer)
-	MCFG_MACHINE_RESET(ddealer)
 
 	MCFG_GFXDECODE(ddealer)
 
@@ -646,7 +644,6 @@ static MACHINE_CONFIG_START( ddealer, ddealer_state )
 
 	MCFG_PALETTE_LENGTH(0x400)
 
-	MCFG_VIDEO_START(ddealer)
 
 	MCFG_TIMER_ADD_PERIODIC("coinsim", ddealer_mcu_sim, attotime::from_hz(10000)) // not real, but for simulating the MCU
 

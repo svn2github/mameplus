@@ -21,7 +21,7 @@
 
 static TIMER_CALLBACK( cchasm_refresh_end )
 {
-    cputag_set_input_line (machine, "maincpu", 2, ASSERT_LINE);
+    machine.device("maincpu")->execute().set_input_line(2, ASSERT_LINE);
 }
 
 static void cchasm_refresh (running_machine &machine)
@@ -113,19 +113,18 @@ WRITE16_MEMBER(cchasm_state::cchasm_refresh_control_w)
 			cchasm_refresh(machine());
 			break;
 		case 0xf7:
-			cputag_set_input_line (machine(), "maincpu", 2, CLEAR_LINE);
+			machine().device("maincpu")->execute().set_input_line(2, CLEAR_LINE);
 			break;
 		}
 	}
 }
 
-VIDEO_START( cchasm )
+void cchasm_state::video_start()
 {
-	cchasm_state *state = machine.driver_data<cchasm_state>();
-	const rectangle &visarea = machine.primary_screen->visible_area();
+	const rectangle &visarea = machine().primary_screen->visible_area();
 
-	state->m_xcenter=visarea.xcenter() << 16;
-	state->m_ycenter=visarea.ycenter() << 16;
+	m_xcenter=visarea.xcenter() << 16;
+	m_ycenter=visarea.ycenter() << 16;
 
-	VIDEO_START_CALL(vector);
+	VIDEO_START_CALL_LEGACY(vector);
 }

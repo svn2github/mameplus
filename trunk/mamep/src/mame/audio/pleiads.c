@@ -38,8 +38,7 @@ struct n_state
 	int freq;
 };
 
-typedef struct _pleiads_sound_state pleiads_sound_state;
-struct _pleiads_sound_state
+struct pleiads_sound_state
 {
 	device_t *m_tms;
 	sound_stream *m_channel;
@@ -75,7 +74,7 @@ INLINE pleiads_sound_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == PLEIADS || device->type() == POPFLAME || device->type() == NAUGHTYB);
 
-	return (pleiads_sound_state *)downcast<legacy_device_base *>(device)->token();
+	return (pleiads_sound_state *)downcast<pleiads_sound_device *>(device)->token();
 }
 
 
@@ -562,23 +561,6 @@ static DEVICE_START( pleiads_sound )
 	DEVICE_START_CALL(common_sh_start);
 }
 
-DEVICE_GET_INFO( pleiads_sound )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(pleiads_sound_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(pleiads_sound);	break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Pleiads Custom");				break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
-}
-
-
 static DEVICE_START( naughtyb_sound )
 {
 	pleiads_sound_state *state = get_safe_token(device);
@@ -637,23 +619,6 @@ static DEVICE_START( naughtyb_sound )
 
 	DEVICE_START_CALL(common_sh_start);
 }
-
-DEVICE_GET_INFO( naughtyb_sound )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(pleiads_sound_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(naughtyb_sound);break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Naughty Boy Custom");			break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
-}
-
 
 static DEVICE_START( popflame_sound )
 {
@@ -714,23 +679,123 @@ static DEVICE_START( popflame_sound )
 	DEVICE_START_CALL(common_sh_start);
 }
 
-DEVICE_GET_INFO( popflame_sound )
+const device_type PLEIADS = &device_creator<pleiads_sound_device>;
+
+pleiads_sound_device::pleiads_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, PLEIADS, "Pleiads Custom", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(pleiads_sound_state);			break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(pleiads_sound_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(popflame_sound);	break;
+pleiads_sound_device::pleiads_sound_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, type, name, tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(pleiads_sound_state));
+}
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Pop Flamer Custom");				break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void pleiads_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void pleiads_sound_device::device_start()
+{
+	DEVICE_START_NAME( pleiads_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void pleiads_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(PLEIADS, pleiads_sound);
-DEFINE_LEGACY_SOUND_DEVICE(NAUGHTYB, naughtyb_sound);
-DEFINE_LEGACY_SOUND_DEVICE(POPFLAME, popflame_sound);
+const device_type NAUGHTYB = &device_creator<naughtyb_sound_device>;
+
+naughtyb_sound_device::naughtyb_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: pleiads_sound_device(mconfig, NAUGHTYB, "Naughty Boy Custom", tag, owner, clock)
+{
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void naughtyb_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void naughtyb_sound_device::device_start()
+{
+	DEVICE_START_NAME( naughtyb_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void naughtyb_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+
+const device_type POPFLAME = &device_creator<popflame_sound_device>;
+
+popflame_sound_device::popflame_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: pleiads_sound_device(mconfig, POPFLAME, "Pop Flamer Custom", tag, owner, clock)
+{
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void popflame_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void popflame_sound_device::device_start()
+{
+	DEVICE_START_NAME( popflame_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void popflame_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

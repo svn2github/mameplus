@@ -20,7 +20,7 @@ WRITE16_MEMBER(goal92_state::goal92_sound_command_w)
 	if (ACCESSING_BITS_8_15)
 	{
 		soundlatch_byte_w(space, 0, (data >> 8) & 0xff);
-		device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+		m_audiocpu->set_input_line(0, HOLD_LINE);
 	}
 }
 
@@ -40,7 +40,7 @@ READ16_MEMBER(goal92_state::goal92_inputs_r)
 			return ioport("DSW2")->read();
 
 		default:
-			logerror("reading unhandled goal92 inputs %04X %04X @ PC = %04X\n", offset, mem_mask,cpu_get_pc(&space.device()));
+			logerror("reading unhandled goal92 inputs %04X %04X @ PC = %04X\n", offset, mem_mask,space.device().safe_pc());
 	}
 
 	return 0;
@@ -213,7 +213,7 @@ static void irqhandler( device_t *device, int irq )
 {
 	/* NMI writes to MSM ports *only*! -AS */
 	//goal92_state *state = device->machine().driver_data<goal92_state>();
-	//device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, irq ? ASSERT_LINE : CLEAR_LINE);
+	//state->m_audiocpu->set_input_line(INPUT_LINE_NMI, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -234,7 +234,7 @@ static void goal92_adpcm_int( device_t *device )
 	state->m_adpcm_toggle^= 1;
 
 	if (state->m_adpcm_toggle)
-		device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+		state->m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static const msm5205_interface msm5205_config =
@@ -289,27 +289,25 @@ static GFXDECODE_START( goal92 )
 GFXDECODE_END
 
 
-static MACHINE_START( goal92 )
+void goal92_state::machine_start()
 {
-	goal92_state *state = machine.driver_data<goal92_state>();
-	UINT8 *ROM = state->memregion("audiocpu")->base();
+	UINT8 *ROM = memregion("audiocpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x4000);
+	membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x4000);
 
-	state->m_audiocpu = machine.device("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_fg_bank));
-	state->save_item(NAME(state->m_msm5205next));
-	state->save_item(NAME(state->m_adpcm_toggle));
+	save_item(NAME(m_fg_bank));
+	save_item(NAME(m_msm5205next));
+	save_item(NAME(m_adpcm_toggle));
 }
 
-static MACHINE_RESET( goal92 )
+void goal92_state::machine_reset()
 {
-	goal92_state *state = machine.driver_data<goal92_state>();
 
-	state->m_fg_bank = 0;
-	state->m_msm5205next = 0;
-	state->m_adpcm_toggle = 0;
+	m_fg_bank = 0;
+	m_msm5205next = 0;
+	m_adpcm_toggle = 0;
 }
 
 static MACHINE_CONFIG_START( goal92, goal92_state )
@@ -323,8 +321,6 @@ static MACHINE_CONFIG_START( goal92, goal92_state )
 	MCFG_CPU_PROGRAM_MAP(sound_cpu)
 								/* IRQs are triggered by the main CPU */
 
-	MCFG_MACHINE_START(goal92)
-	MCFG_MACHINE_RESET(goal92)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -338,7 +334,6 @@ static MACHINE_CONFIG_START( goal92, goal92_state )
 	MCFG_GFXDECODE(goal92)
 	MCFG_PALETTE_LENGTH(128*16)
 
-	MCFG_VIDEO_START(goal92)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

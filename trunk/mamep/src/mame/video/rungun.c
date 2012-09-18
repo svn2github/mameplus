@@ -14,16 +14,15 @@
 #include "includes/rungun.h"
 
 /* TTL text plane stuff */
-static TILE_GET_INFO( ttl_get_tile_info )
+TILE_GET_INFO_MEMBER(rungun_state::ttl_get_tile_info)
 {
-	rungun_state *state = machine.driver_data<rungun_state>();
-	UINT8 *lvram = (UINT8 *)state->m_ttl_vram;
+	UINT8 *lvram = (UINT8 *)m_ttl_vram;
 	int attr, code;
 
 	attr = (lvram[BYTE_XOR_LE(tile_index<<2)] & 0xf0) >> 4;
 	code = ((lvram[BYTE_XOR_LE(tile_index<<2)] & 0x0f) << 8) | (lvram[BYTE_XOR_LE((tile_index<<2)+2)]);
 
-	SET_TILE_INFO(state->m_ttl_gfx_index, code, attr, 0);
+	SET_TILE_INFO_MEMBER(m_ttl_gfx_index, code, attr, 0);
 }
 
 void rng_sprite_callback( running_machine &machine, int *code, int *color, int *priority_mask )
@@ -49,20 +48,19 @@ WRITE16_MEMBER(rungun_state::rng_936_videoram_w)
 	m_936_tilemap->mark_tile_dirty(offset / 2);
 }
 
-static TILE_GET_INFO( get_rng_936_tile_info )
+TILE_GET_INFO_MEMBER(rungun_state::get_rng_936_tile_info)
 {
-	rungun_state *state = machine.driver_data<rungun_state>();
 	int tileno, colour, flipx;
 
-	tileno = state->m_936_videoram[tile_index * 2 + 1] & 0x3fff;
-	flipx = (state->m_936_videoram[tile_index * 2 + 1] & 0xc000) >> 14;
-	colour = 0x10 + (state->m_936_videoram[tile_index * 2] & 0x000f);
+	tileno = m_936_videoram[tile_index * 2 + 1] & 0x3fff;
+	flipx = (m_936_videoram[tile_index * 2 + 1] & 0xc000) >> 14;
+	colour = 0x10 + (m_936_videoram[tile_index * 2] & 0x000f);
 
-	SET_TILE_INFO(0, tileno, colour, TILE_FLIPYX(flipx));
+	SET_TILE_INFO_MEMBER(0, tileno, colour, TILE_FLIPYX(flipx));
 }
 
 
-VIDEO_START( rng )
+void rungun_state::video_start()
 {
 	static const gfx_layout charlayout =
 	{
@@ -75,29 +73,28 @@ VIDEO_START( rng )
 		8*8*4
 	};
 
-	rungun_state *state = machine.driver_data<rungun_state>();
 	int gfx_index;
 
-	state->m_936_tilemap = tilemap_create(machine, get_rng_936_tile_info, tilemap_scan_rows, 16, 16, 128, 128);
-	state->m_936_tilemap->set_transparent_pen(0);
+	m_936_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(rungun_state::get_rng_936_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 128, 128);
+	m_936_tilemap->set_transparent_pen(0);
 
 	/* find first empty slot to decode gfx */
 	for (gfx_index = 0; gfx_index < MAX_GFX_ELEMENTS; gfx_index++)
-		if (machine.gfx[gfx_index] == 0)
+		if (machine().gfx[gfx_index] == 0)
 			break;
 
 	assert(gfx_index != MAX_GFX_ELEMENTS);
 
 	// decode the ttl layer's gfx
-	machine.gfx[gfx_index] = gfx_element_alloc(machine, &charlayout, state->memregion("gfx3")->base(), machine.total_colors() / 16, 0);
-	state->m_ttl_gfx_index = gfx_index;
+	machine().gfx[gfx_index] = auto_alloc(machine(), gfx_element(machine(), charlayout, memregion("gfx3")->base(), machine().total_colors() / 16, 0));
+	m_ttl_gfx_index = gfx_index;
 
 	// create the tilemap
-	state->m_ttl_tilemap = tilemap_create(machine, ttl_get_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
+	m_ttl_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(rungun_state::ttl_get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 
-	state->m_ttl_tilemap->set_transparent_pen(0);
+	m_ttl_tilemap->set_transparent_pen(0);
 
-	state->m_sprite_colorbase = 0x20;
+	m_sprite_colorbase = 0x20;
 }
 
 SCREEN_UPDATE_IND16(rng)

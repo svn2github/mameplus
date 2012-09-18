@@ -70,12 +70,12 @@ WRITE16_MEMBER(xorworld_state::eeprom_data_w)
 
 WRITE16_MEMBER(xorworld_state::xorworld_irq2_ack_w)
 {
-	cputag_set_input_line(machine(), "maincpu", 2, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(2, CLEAR_LINE);
 }
 
 WRITE16_MEMBER(xorworld_state::xorworld_irq6_ack_w)
 {
-	cputag_set_input_line(machine(), "maincpu", 6, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(6, CLEAR_LINE);
 }
 
 static ADDRESS_MAP_START( xorworld_map, AS_PROGRAM, 16, xorworld_state )
@@ -193,8 +193,6 @@ static MACHINE_CONFIG_START( xorworld, xorworld_state )
 	MCFG_GFXDECODE(xorworld)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_PALETTE_INIT(xorworld)
-	MCFG_VIDEO_START(xorworld)
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")

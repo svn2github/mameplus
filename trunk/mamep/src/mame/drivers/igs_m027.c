@@ -55,6 +55,9 @@ public:
 	DECLARE_DRIVER_INIT(hauntedh);
 	DECLARE_DRIVER_INIT(bigd2);
 	DECLARE_DRIVER_INIT(klxyj);
+	TILE_GET_INFO_MEMBER(get_tx_tilemap_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tilemap_tile_info);
+	virtual void video_start();
 };
 
 
@@ -78,7 +81,7 @@ WRITE32_MEMBER(igs_m027_state::igs_cg_videoram_w)
 {
 	COMBINE_DATA(&m_igs_cg_videoram[offset]);
 	//if(data!=0)
-	logerror("PC(%08X) CG @%x = %x!\n",cpu_get_pc(&space.device()),offset ,m_igs_cg_videoram[offset]);
+	logerror("PC(%08X) CG @%x = %x!\n",space.device().safe_pc(),offset ,m_igs_cg_videoram[offset]);
 
 
 
@@ -125,15 +128,14 @@ WRITE32_MEMBER(igs_m027_state::igs_tx_videoram_w)
 	//logerror( "TX VIDEO RAM OFFSET %x ,data %x!\n",offset ,m_igs_tx_videoram[offset]);
 }
 
-static TILE_GET_INFO( get_tx_tilemap_tile_info )
+TILE_GET_INFO_MEMBER(igs_m027_state::get_tx_tilemap_tile_info)
 {
-	igs_m027_state *state = machine.driver_data<igs_m027_state>();
 	//ppppppppNNNNNNNN
 	int tileno,colour;
-	tileno = state->m_igs_tx_videoram[tile_index] & 0xffff;
-	colour = (state->m_igs_tx_videoram[tile_index]>>0x10) & 0xffff;
+	tileno = m_igs_tx_videoram[tile_index] & 0xffff;
+	colour = (m_igs_tx_videoram[tile_index]>>0x10) & 0xffff;
 
-	SET_TILE_INFO(0,tileno,colour,0);
+	SET_TILE_INFO_MEMBER(0,tileno,colour,0);
 }
 
 /* BG Layer */
@@ -145,15 +147,14 @@ WRITE32_MEMBER(igs_m027_state::igs_bg_videoram_w)
 	logerror("BG VIDEO RAM OFFSET %x ,data %x!\n",offset ,m_igs_bg_videoram[offset]);
 }
 
-static TILE_GET_INFO( get_bg_tilemap_tile_info )
+TILE_GET_INFO_MEMBER(igs_m027_state::get_bg_tilemap_tile_info)
 {
-	igs_m027_state *state = machine.driver_data<igs_m027_state>();
 	//ppppppppNNNNNNNN
 	int tileno,colour;
-	tileno = state->m_igs_bg_videoram[tile_index] & 0xffff;
-	colour = (state->m_igs_bg_videoram[tile_index]>>0x10) & 0xffff;
+	tileno = m_igs_bg_videoram[tile_index] & 0xffff;
+	colour = (m_igs_bg_videoram[tile_index]>>0x10) & 0xffff;
 
-	SET_TILE_INFO(0,tileno,colour,0);
+	SET_TILE_INFO_MEMBER(0,tileno,colour,0);
 }
 
 
@@ -170,14 +171,13 @@ WRITE32_MEMBER(igs_m027_state::igs_palette32_w)
 
 
 
-static VIDEO_START(igs_majhong)
+void igs_m027_state::video_start()
 {
-	igs_m027_state *state = machine.driver_data<igs_m027_state>();
-	state->m_igs_tx_tilemap= tilemap_create(machine, get_tx_tilemap_tile_info,tilemap_scan_rows, 8, 8,64,32);
-	state->m_igs_tx_tilemap->set_transparent_pen(15);
-	state->m_igs_bg_tilemap= tilemap_create(machine, get_bg_tilemap_tile_info,tilemap_scan_rows, 8, 8,64,32);
-	//state->m_igs_bg_tilemap= tilemap_create(machine, get_bg_tilemap_tile_info,tilemap_scan_rows, 8, 8,64,32);
-	//state->m_igs_bg_tilemap->set_transparent_pen(15);
+	m_igs_tx_tilemap= &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igs_m027_state::get_tx_tilemap_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
+	m_igs_tx_tilemap->set_transparent_pen(15);
+	m_igs_bg_tilemap= &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igs_m027_state::get_bg_tilemap_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
+	//m_igs_bg_tilemap= &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igs_m027_state::get_bg_tilemap_tile_info),this),TILEMAP_SCAN_ROWS, 8, 8,64,32);
+	//m_igs_bg_tilemap->set_transparent_pen(15);
 	logerror("Video START OK!\n");
 }
 
@@ -383,7 +383,6 @@ static MACHINE_CONFIG_START( igs_majhong, igs_m027_state )
 
 	MCFG_PALETTE_LENGTH(0x200)
 
-	MCFG_VIDEO_START( igs_majhong )
 
 	/* sound hardware */
 

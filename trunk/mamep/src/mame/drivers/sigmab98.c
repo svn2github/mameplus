@@ -174,6 +174,7 @@ public:
 	DECLARE_DRIVER_INIT(animalc);
 	DECLARE_DRIVER_INIT(ucytokyu);
 	DECLARE_DRIVER_INIT(haekaka);
+	DECLARE_MACHINE_RESET(sammymdl);
 };
 
 
@@ -1690,7 +1691,7 @@ const eeprom_interface eeprom_intf =
 
 static INTERRUPT_GEN( gegege_vblank_interrupt )
 {
-	device_set_input_line_and_vector(device, 0, HOLD_LINE, 0x5a);
+	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x5a);
 }
 
 static MACHINE_CONFIG_START( gegege, sigmab98_state )
@@ -1741,9 +1742,9 @@ static const eeprom_interface eeprom_interface_93C46_8bit_delay =
 //  "*10010xxxx"    // erase all    1 00 10xxxx
 };
 
-static MACHINE_RESET( sammymdl )
+MACHINE_RESET_MEMBER(sigmab98_state,sammymdl)
 {
-	cpu_set_reg(machine.device("maincpu"), Z80_PC, 0x400);	// code starts at 400 ??? (000 = cart header)
+	machine().device("maincpu")->state().set_state_int(Z80_PC, 0x400);	// code starts at 400 ??? (000 = cart header)
 }
 
 static MACHINE_CONFIG_START( sammymdl, sigmab98_state )
@@ -1751,7 +1752,7 @@ static MACHINE_CONFIG_START( sammymdl, sigmab98_state )
 	MCFG_CPU_PROGRAM_MAP( animalc_map )
 	MCFG_CPU_IO_MAP( animalc_io )
 
-	MCFG_MACHINE_RESET( sammymdl )
+	MCFG_MACHINE_RESET_OVERRIDE(sigmab98_state, sammymdl )
 
 	MCFG_NVRAM_ADD_0FILL("nvram")	// battery
 	MCFG_EEPROM_ADD("eeprom", eeprom_interface_93C46_8bit_delay)
@@ -1788,13 +1789,13 @@ static TIMER_DEVICE_CALLBACK( sammymd1_irq )
 	int scanline = param;
 
 	if(scanline == 240)
-		device_set_input_line_and_vector(state->m_maincpu,0,HOLD_LINE, state->m_vblank_vector);
+		state->m_maincpu->set_input_line_and_vector(0,HOLD_LINE, state->m_vblank_vector);
 
 	if(scanline == 128)
-		device_set_input_line_and_vector(state->m_maincpu,0,HOLD_LINE, state->m_timer0_vector);
+		state->m_maincpu->set_input_line_and_vector(0,HOLD_LINE, state->m_timer0_vector);
 
 	if(scanline == 32)
-		device_set_input_line_and_vector(state->m_maincpu,0,HOLD_LINE, state->m_timer1_vector);
+		state->m_maincpu->set_input_line_and_vector(0,HOLD_LINE, state->m_timer1_vector);
 }
 
 static MACHINE_CONFIG_DERIVED( animalc, sammymdl )

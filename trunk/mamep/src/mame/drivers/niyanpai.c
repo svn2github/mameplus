@@ -243,17 +243,16 @@ static Z80CTC_INTERFACE( ctc_intf )
 	DEVCB_NULL					/* ZC/TO2 callback */
 };
 
-static MACHINE_RESET( niyanpai )
+void niyanpai_state::machine_reset()
 {
-	niyanpai_state *state = machine.driver_data<niyanpai_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	// initialize TMPZ84C011 PIO
 	for (i = 0; i < 5; i++)
 	{
-		state->m_pio_dir[i] = state->m_pio_latch[i] = 0;
-		state->tmpz84c011_pio_w(*space, i, 0);
+		m_pio_dir[i] = m_pio_latch[i] = 0;
+		tmpz84c011_pio_w(*space, i, 0);
 	}
 }
 
@@ -929,7 +928,7 @@ INPUT_PORTS_END
 
 static INTERRUPT_GEN( niyanpai_interrupt )
 {
-	device_set_input_line_and_vector(device, 1, HOLD_LINE,0x100/4);
+	device->execute().set_input_line_and_vector(1, HOLD_LINE,0x100/4);
 }
 
 static const z80_daisy_config daisy_chain_sound[] =
@@ -953,7 +952,6 @@ static MACHINE_CONFIG_START( niyanpai, niyanpai_state )
 
 	MCFG_Z80CTC_ADD("ctc", 8000000 /* same as "audiocpu" */, ctc_intf)
 
-	MCFG_MACHINE_RESET(niyanpai)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
@@ -966,7 +964,6 @@ static MACHINE_CONFIG_START( niyanpai, niyanpai_state )
 
 	MCFG_PALETTE_LENGTH(256*3)
 
-	MCFG_VIDEO_START(niyanpai)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

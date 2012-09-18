@@ -20,8 +20,7 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _adc12138_state adc12138_state;
-struct _adc12138_state
+struct adc12138_state
 {
 	adc1213x_input_convert_func input_callback_r;
 
@@ -58,7 +57,7 @@ INLINE adc12138_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert((device->type() == ADC12130) || (device->type() == ADC12132) || (device->type() == ADC12138));
-	return (adc12138_state *)downcast<legacy_device_base *>(device)->token();
+	return (adc12138_state *)downcast<adc12138_device *>(device)->token();
 }
 
 INLINE const adc12138_interface *get_interface(device_t *device)
@@ -354,29 +353,61 @@ static DEVICE_RESET( adc12138 )
 	adc1213x->acq_time = ADC1213X_ACQUISITION_TIME_10_CCLK;
 }
 
-/*-------------------------------------------------
-    device definition
--------------------------------------------------*/
+const device_type ADC12130 = &device_creator<adc12130_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
-
-#define DEVTEMPLATE_ID(p,s)		p##adc12138##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME		"A/D Converter 12138"
-#define DEVTEMPLATE_FAMILY		"National Semiconductor A/D Converters 1213x"
-#include "devtempl.h"
-
-#define DEVTEMPLATE_DERIVED_ID(p,s)		p##adc12130##s
-#define DEVTEMPLATE_DERIVED_FEATURES	0
-#define DEVTEMPLATE_DERIVED_NAME		"A/D Converter 12130"
-#include "devtempl.h"
-
-#define DEVTEMPLATE_DERIVED_ID(p,s)		p##adc12132##s
-#define DEVTEMPLATE_DERIVED_FEATURES	0
-#define DEVTEMPLATE_DERIVED_NAME		"A/D Converter 12132"
-#include "devtempl.h"
+adc12130_device::adc12130_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: adc12138_device(mconfig, ADC12130, "A/D Converter 12130", tag, owner, clock)
+{
+}
 
 
-DEFINE_LEGACY_DEVICE(ADC12130, adc12130);
-DEFINE_LEGACY_DEVICE(ADC12132, adc12132);
-DEFINE_LEGACY_DEVICE(ADC12138, adc12138);
+const device_type ADC12132 = &device_creator<adc12132_device>;
+
+adc12132_device::adc12132_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: adc12138_device(mconfig, ADC12132, "A/D Converter 12132", tag, owner, clock)
+{
+}
+
+
+const device_type ADC12138 = &device_creator<adc12138_device>;
+
+adc12138_device::adc12138_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, ADC12138, "A/D Converter 12138", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(adc12138_state));
+}
+adc12138_device::adc12138_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, type, name, tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(adc12138_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void adc12138_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void adc12138_device::device_start()
+{
+	DEVICE_START_NAME( adc12138 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void adc12138_device::device_reset()
+{
+	DEVICE_RESET_NAME( adc12138 )(this);
+}
+
+

@@ -94,7 +94,7 @@ static WRITE16_HANDLER( en_volume_w )
 
 static READ16_HANDLER( es5510_dsp_r )
 {
-//  logerror("%06x: DSP read offset %04x (data is %04x)\n",cpu_get_pc(&space->device()),offset,es5510_dsp_ram[offset]);
+//  logerror("%06x: DSP read offset %04x (data is %04x)\n",space->device().safe_pc(),offset,es5510_dsp_ram[offset]);
 //  if (es_tmp) return es5510_dsp_ram[offset];
 /*
     switch (offset) {
@@ -128,7 +128,7 @@ static WRITE16_HANDLER( es5510_dsp_w )
 	UINT8 *snd_mem = (UINT8 *)space->machine().root_device().memregion("ensoniq.0")->base();
 
 //  if (offset>4 && offset!=0x80  && offset!=0xa0  && offset!=0xc0  && offset!=0xe0)
-//      logerror("%06x: DSP write offset %04x %04x\n",cpu_get_pc(&space->device()),offset,data);
+//      logerror("%06x: DSP write offset %04x %04x\n",space->device().safe_pc(),offset,data);
 
 	COMBINE_DATA(&es5510_dsp_ram[offset]);
 
@@ -234,7 +234,7 @@ SOUND_RESET( taito_en_soundsystem_reset )
 
 	/* reset CPU to catch any banking of startup vectors */
 	machine.device("audiocpu")->reset();
-	//cputag_set_input_line(machine, "audiocpu", INPUT_LINE_RESET, ASSERT_LINE);
+	//machine.device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 	snd_shared_ram = (UINT32 *)machine.root_device().memshare("snd_shared")->ptr();
 }
@@ -267,12 +267,12 @@ static void taito_en_duart_irq_handler(device_t *device, int state, UINT8 vector
 {
 	if (state == ASSERT_LINE)
 	{
-		device_set_input_line_vector(device->machine().device("audiocpu"), M68K_IRQ_6, vector);
-		device_set_input_line(device->machine().device("audiocpu"), M68K_IRQ_6, ASSERT_LINE);
+		device->machine().device("audiocpu")->execute().set_input_line_vector(M68K_IRQ_6, vector);
+		device->machine().device("audiocpu")->execute().set_input_line(M68K_IRQ_6, ASSERT_LINE);
 	}
 	else
 	{
-		device_set_input_line(device->machine().device("audiocpu"), M68K_IRQ_6, CLEAR_LINE);
+		device->machine().device("audiocpu")->execute().set_input_line(M68K_IRQ_6, CLEAR_LINE);
 	}
 }
 
@@ -283,12 +283,27 @@ static void taito_en_duart_irq_handler(device_t *device, int state, UINT8 vector
  *
  *************************************/
 
+/*
+	68681 I/O pin assignments
+	(according to Gun Buster schematics):
+
+	IP0: 5V			OP0-OP5: N/C
+	IP1: 5V			OP6: ESPHALT
+	IP2: 1MHz		OP7: N/C
+	IP3: 0.5MHz
+	IP4: 0.5MHz
+	IP5: 1MHz
+*/
 static const duart68681_config taito_en_duart68681_config =
 {
 	taito_en_duart_irq_handler,
-	NULL,
-	NULL,
-	NULL
+	NULL,				/* tx callback */
+	NULL,				/* input port read */
+	NULL,				/* output port write */
+	XTAL_16MHz/2/8,		/* IP2/RxCB clock */
+	XTAL_16MHz/2/16,	/* IP3/TxCA clock */
+	XTAL_16MHz/2/16,	/* IP4/RxCA clock */
+	XTAL_16MHz/2/8,		/* IP5/TxCB clock */
 };
 
 static const mb87078_interface taito_en_mb87078_intf =

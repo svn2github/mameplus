@@ -49,7 +49,7 @@ WRITE8_MEMBER(tsamurai_state::nmi_enable_w)
 static INTERRUPT_GEN( samurai_interrupt )
 {
 	tsamurai_state *state = device->machine().driver_data<tsamurai_state>();
-	if (state->m_nmi_enabled) device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	if (state->m_nmi_enabled) device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 READ8_MEMBER(tsamurai_state::unknown_d803_r)
@@ -80,19 +80,19 @@ READ8_MEMBER(tsamurai_state::unknown_d938_r)
 WRITE8_MEMBER(tsamurai_state::sound_command1_w)
 {
 	m_sound_command1 = data;
-	cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE );
+	machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE );
 }
 
 WRITE8_MEMBER(tsamurai_state::sound_command2_w)
 {
 	m_sound_command2 = data;
-	cputag_set_input_line(machine(), "audio2", 0, HOLD_LINE );
+	machine().device("audio2")->execute().set_input_line(0, HOLD_LINE );
 }
 
 WRITE8_MEMBER(tsamurai_state::sound_command3_w)
 {
 	m_sound_command3 = data;
-	cputag_set_input_line(machine(), "audio3", 0, HOLD_LINE );
+	machine().device("audio3")->execute().set_input_line(0, HOLD_LINE );
 }
 
 WRITE8_MEMBER(tsamurai_state::flip_screen_w)
@@ -270,7 +270,7 @@ WRITE8_MEMBER(tsamurai_state::vsgongf_sound_nmi_enable_w)
 static INTERRUPT_GEN( vsgongf_sound_interrupt )
 {
 	tsamurai_state *state = device->machine().driver_data<tsamurai_state>();
-	if (state->m_vsgongf_sound_nmi_enabled) device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	if (state->m_vsgongf_sound_nmi_enabled) device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 /* what are these, protection of some kind? */
@@ -300,7 +300,7 @@ READ8_MEMBER(tsamurai_state::vsgongf_a100_r)
 WRITE8_MEMBER(tsamurai_state::vsgongf_sound_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static ADDRESS_MAP_START( vsgongf_map, AS_PROGRAM, 8, tsamurai_state )
@@ -325,9 +325,9 @@ static ADDRESS_MAP_START( vsgongf_map, AS_PROGRAM, 8, tsamurai_state )
 	AM_RANGE(0xf801, 0xf801) AM_WRITENOP /* vreg? always 0 */
 	AM_RANGE(0xf803, 0xf803) AM_WRITENOP /* vreg? always 0 */
 	AM_RANGE(0xfc00, 0xfc00) AM_RAM /* vreg? always 0 */
-	AM_RANGE(0xfc01, 0xfc01) AM_RAM_WRITE(nmi_enable_w)
-	AM_RANGE(0xfc02, 0xfc03) AM_RAM_WRITE(tsamurai_coin_counter_w)
-	AM_RANGE(0xfc04, 0xfc04) AM_RAM_WRITE(tsamurai_textbank1_w)
+	AM_RANGE(0xfc01, 0xfc01) AM_WRITE(nmi_enable_w)
+	AM_RANGE(0xfc02, 0xfc03) AM_WRITE(tsamurai_coin_counter_w)
+	AM_RANGE(0xfc04, 0xfc04) AM_WRITE(tsamurai_textbank1_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sound_vsgongf_map, AS_PROGRAM, 8, tsamurai_state )
@@ -702,7 +702,7 @@ static MACHINE_CONFIG_START( tsamurai, tsamurai_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(tsamurai)
+	MCFG_VIDEO_START_OVERRIDE(tsamurai_state,tsamurai)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -742,7 +742,7 @@ static MACHINE_CONFIG_START( vsgongf, tsamurai_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(vsgongf)
+	MCFG_VIDEO_START_OVERRIDE(tsamurai_state,vsgongf)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -786,7 +786,7 @@ static MACHINE_CONFIG_START( m660, tsamurai_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(tsamurai)
+	MCFG_VIDEO_START_OVERRIDE(tsamurai_state,tsamurai)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

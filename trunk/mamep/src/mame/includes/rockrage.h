@@ -19,7 +19,7 @@ public:
 	int        m_vreg;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k007342;
 	device_t *m_k007420;
 	DECLARE_WRITE8_MEMBER(rockrage_bankswitch_w);
@@ -27,6 +27,9 @@ public:
 	DECLARE_WRITE8_MEMBER(rockrage_vreg_w);
 	DECLARE_READ8_MEMBER(rockrage_VLM5030_busy_r);
 	DECLARE_WRITE8_MEMBER(rockrage_speech_w);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void palette_init();
 };
 
 
@@ -34,7 +37,7 @@ public:
 
 
 SCREEN_UPDATE_IND16( rockrage );
-PALETTE_INIT( rockrage );
+
 
 void rockrage_tile_callback(running_machine &machine, int layer, int bank, int *code, int *color, int *flags);
 void rockrage_sprite_callback(running_machine &machine, int *code, int *color);

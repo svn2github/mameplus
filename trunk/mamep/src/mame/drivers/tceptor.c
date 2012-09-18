@@ -41,7 +41,7 @@ static INTERRUPT_GEN( m6809_vb_interrupt )
 {
 	tceptor_state *state = device->machine().driver_data<tceptor_state>();
 	if (state->m_m6809_irq_enable)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 	else
 		state->m_m6809_irq_enable = 1;
 }
@@ -61,7 +61,7 @@ static INTERRUPT_GEN( m68k_vb_interrupt )
 {
 	tceptor_state *state = device->machine().driver_data<tceptor_state>();
 	if (state->m_m68k_irq_enable)
-		device_set_input_line(device, M68K_IRQ_1, HOLD_LINE);
+		device->execute().set_input_line(M68K_IRQ_1, HOLD_LINE);
 }
 
 WRITE16_MEMBER(tceptor_state::m68k_irq_enable_w)
@@ -74,7 +74,7 @@ static INTERRUPT_GEN( mcu_vb_interrupt )
 {
 	tceptor_state *state = device->machine().driver_data<tceptor_state>();
 	if (state->m_mcu_irq_enable)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 	else
 		state->m_mcu_irq_enable = 1;
 }
@@ -204,7 +204,7 @@ static ADDRESS_MAP_START( m68k_map, AS_PROGRAM, 16, tceptor_state )
 	AM_RANGE(0x200000, 0x203fff) AM_RAM			// M68K ERROR 0
 	AM_RANGE(0x300000, 0x300001) AM_WRITEONLY
 	AM_RANGE(0x400000, 0x4001ff) AM_WRITEONLY AM_SHARE("sprite_ram")
-	AM_RANGE(0x500000, 0x51ffff) AM_WRITE_LEGACY(namco_road16_w)
+	AM_RANGE(0x500000, 0x51ffff) AM_DEVWRITE("c45_road", namco_c45_road_device, write)
 	AM_RANGE(0x600000, 0x600001) AM_WRITE(m68k_irq_enable_w)	// not sure
 	AM_RANGE(0x700000, 0x703fff) AM_READWRITE(m68k_shared_word_r, m68k_shared_word_w) AM_SHARE("m68k_shared_ram")
 ADDRESS_MAP_END
@@ -340,23 +340,21 @@ static const namco_interface namco_config =
 
 /*******************************************************************/
 
-static MACHINE_START( tceptor )
+void tceptor_state::machine_start()
 {
-	tceptor_state *state = machine.driver_data<tceptor_state>();
-	state_save_register_global(machine, state->m_m6809_irq_enable);
-	state_save_register_global(machine, state->m_m68k_irq_enable);
-	state_save_register_global(machine, state->m_mcu_irq_enable);
+	state_save_register_global(machine(), m_m6809_irq_enable);
+	state_save_register_global(machine(), m_m68k_irq_enable);
+	state_save_register_global(machine(), m_mcu_irq_enable);
 }
 
 
 /*******************************************************************/
 
-static MACHINE_RESET( tceptor )
+void tceptor_state::machine_reset()
 {
-	tceptor_state *state = machine.driver_data<tceptor_state>();
-	state->m_m6809_irq_enable = 0;
-	state->m_m68k_irq_enable = 0;
-	state->m_mcu_irq_enable = 0;
+	m_m6809_irq_enable = 0;
+	m_m68k_irq_enable = 0;
+	m_mcu_irq_enable = 0;
 }
 
 /*******************************************************************/
@@ -387,13 +385,13 @@ static MACHINE_CONFIG_START( tceptor, tceptor_state )
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
-	MCFG_MACHINE_START(tceptor)
-	MCFG_MACHINE_RESET(tceptor)
 
 	/* video hardware */
 	MCFG_GFXDECODE(tceptor)
 	MCFG_PALETTE_LENGTH(4096)
 	MCFG_DEFAULT_LAYOUT(layout_horizont)
+
+	MCFG_NAMCO_C45_ROAD_ADD("c45_road")
 
 	MCFG_SCREEN_ADD("2dscreen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60.606060)
@@ -417,9 +415,7 @@ static MACHINE_CONFIG_START( tceptor, tceptor_state )
 	MCFG_SCREEN_UPDATE_STATIC(tceptor_3d_right)
 	MCFG_SCREEN_VBLANK_STATIC(tceptor)
 
-	MCFG_PALETTE_INIT(tceptor)
 
-	MCFG_VIDEO_START(tceptor)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

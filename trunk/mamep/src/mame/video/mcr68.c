@@ -18,36 +18,33 @@
  *
  *************************************/
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(mcr68_state::get_bg_tile_info)
 {
-	mcr68_state *state = machine.driver_data<mcr68_state>();
-	UINT16 *videoram = state->m_videoram;
+	UINT16 *videoram = m_videoram;
 	int data = LOW_BYTE(videoram[tile_index * 2]) | (LOW_BYTE(videoram[tile_index * 2 + 1]) << 8);
 	int code = (data & 0x3ff) | ((data >> 4) & 0xc00);
 	int color = (~data >> 12) & 3;
-	SET_TILE_INFO(0, code, color, TILE_FLIPYX((data >> 10) & 3));
-	if (machine.gfx[0]->total_elements < 0x1000)
+	SET_TILE_INFO_MEMBER(0, code, color, TILE_FLIPYX((data >> 10) & 3));
+	if (machine().gfx[0]->elements() < 0x1000)
 		tileinfo.category = (data >> 15) & 1;
 }
 
 
-static TILE_GET_INFO( zwackery_get_bg_tile_info )
+TILE_GET_INFO_MEMBER(mcr68_state::zwackery_get_bg_tile_info)
 {
-	mcr68_state *state = machine.driver_data<mcr68_state>();
-	UINT16 *videoram = state->m_videoram;
+	UINT16 *videoram = m_videoram;
 	int data = videoram[tile_index];
 	int color = (data >> 13) & 7;
-	SET_TILE_INFO(0, data & 0x3ff, color, TILE_FLIPYX((data >> 11) & 3));
+	SET_TILE_INFO_MEMBER(0, data & 0x3ff, color, TILE_FLIPYX((data >> 11) & 3));
 }
 
 
-static TILE_GET_INFO( zwackery_get_fg_tile_info )
+TILE_GET_INFO_MEMBER(mcr68_state::zwackery_get_fg_tile_info)
 {
-	mcr68_state *state = machine.driver_data<mcr68_state>();
-	UINT16 *videoram = state->m_videoram;
+	UINT16 *videoram = m_videoram;
 	int data = videoram[tile_index];
 	int color = (data >> 13) & 7;
-	SET_TILE_INFO(2, data & 0x3ff, color, TILE_FLIPYX((data >> 11) & 3));
+	SET_TILE_INFO_MEMBER(2, data & 0x3ff, color, TILE_FLIPYX((data >> 11) & 3));
 	tileinfo.category = (color != 0);
 }
 
@@ -59,44 +56,42 @@ static TILE_GET_INFO( zwackery_get_fg_tile_info )
  *
  *************************************/
 
-VIDEO_START( mcr68 )
+VIDEO_START_MEMBER(mcr68_state,mcr68)
 {
-	mcr68_state *state = machine.driver_data<mcr68_state>();
 	/* initialize the background tilemap */
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows,  16,16, 32,32);
-	state->m_bg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mcr68_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,  16,16, 32,32);
+	m_bg_tilemap->set_transparent_pen(0);
 }
 
 
-VIDEO_START( zwackery )
+VIDEO_START_MEMBER(mcr68_state,zwackery)
 {
-	mcr68_state *state = machine.driver_data<mcr68_state>();
-	const UINT8 *colordatabase = (const UINT8 *)state->memregion("gfx3")->base();
-	gfx_element *gfx0 = machine.gfx[0];
-	gfx_element *gfx2 = machine.gfx[2];
+	const UINT8 *colordatabase = (const UINT8 *)memregion("gfx3")->base();
+	gfx_element *gfx0 = machine().gfx[0];
+	gfx_element *gfx2 = machine().gfx[2];
 	UINT8 *srcdata0, *dest0;
 	UINT8 *srcdata2, *dest2;
 	int code, y, x;
 
 	/* initialize the background tilemap */
-	state->m_bg_tilemap = tilemap_create(machine, zwackery_get_bg_tile_info, tilemap_scan_rows,  16,16, 32,32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mcr68_state::zwackery_get_bg_tile_info),this), TILEMAP_SCAN_ROWS,  16,16, 32,32);
 
 	/* initialize the foreground tilemap */
-	state->m_fg_tilemap = tilemap_create(machine, zwackery_get_fg_tile_info, tilemap_scan_rows,  16,16, 32,32);
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mcr68_state::zwackery_get_fg_tile_info),this), TILEMAP_SCAN_ROWS,  16,16, 32,32);
+	m_fg_tilemap->set_transparent_pen(0);
 
 	/* allocate memory for the assembled gfx data */
-	srcdata0 = auto_alloc_array(machine, UINT8, gfx0->total_elements * gfx0->width * gfx0->height);
-	srcdata2 = auto_alloc_array(machine, UINT8, gfx2->total_elements * gfx2->width * gfx2->height);
+	srcdata0 = auto_alloc_array(machine(), UINT8, gfx0->elements() * gfx0->width() * gfx0->height());
+	srcdata2 = auto_alloc_array(machine(), UINT8, gfx2->elements() * gfx2->width() * gfx2->height());
 
 	/* "colorize" each code */
 	dest0 = srcdata0;
 	dest2 = srcdata2;
-	for (code = 0; code < gfx0->total_elements; code++)
+	for (code = 0; code < gfx0->elements(); code++)
 	{
 		const UINT8 *coldata = colordatabase + code * 32;
-		const UINT8 *gfxdata0 = gfx_element_get_data(gfx0, code);
-		const UINT8 *gfxdata2 = gfx_element_get_data(gfx2, code);
+		const UINT8 *gfxdata0 = gfx0->get_data(code);
+		const UINT8 *gfxdata2 = gfx2->get_data(code);
 
 		/* assume 16 rows */
 		for (y = 0; y < 16; y++)
@@ -122,24 +117,14 @@ VIDEO_START( zwackery )
 			}
 
 			/* advance */
-			gfxdata0 += gfx0->line_modulo;
-			gfxdata2 += gfx2->line_modulo;
+			gfxdata0 += gfx0->rowbytes();
+			gfxdata2 += gfx2->rowbytes();
 		}
 	}
 
-	/* create a simple target layout */
-	gfx0->layout.planes = gfx2->layout.planes = 8;
-	for (x = 0; x < 8; x++)
-		gfx0->layout.planeoffset[x] = gfx2->layout.planeoffset[x] = x;
-	for (x = 0; x < gfx0->width; x++)
-		gfx0->layout.xoffset[x] = gfx2->layout.xoffset[x] = 8 * x;
-	for (y = 0; y < gfx0->height; y++)
-		gfx0->layout.yoffset[y] = gfx2->layout.yoffset[y] = 8 * y * gfx0->width;
-	gfx0->layout.charincrement = gfx2->layout.charincrement = 8 * gfx0->width * gfx0->height;
-
 	/* make the assembled data our new source data */
-	gfx_element_set_source(gfx0, srcdata0);
-	gfx_element_set_source(gfx2, srcdata2);
+	gfx0->set_raw_layout(srcdata0, gfx0->width(), gfx0->height(), gfx0->elements(), 8 * gfx0->width(), 8 * gfx0->width() * gfx0->height());
+	gfx2->set_raw_layout(srcdata2, gfx2->width(), gfx2->height(), gfx2->elements(), 8 * gfx2->width(), 8 * gfx2->width() * gfx2->height());
 }
 
 

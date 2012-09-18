@@ -163,9 +163,9 @@ WRITE16_MEMBER(xexex_state::spriteram_mirror_w)
 READ16_MEMBER(xexex_state::xexex_waitskip_r)
 {
 
-	if (cpu_get_pc(&space.device()) == 0x1158)
+	if (space.device().safe_pc() == 0x1158)
 	{
-		device_spin_until_trigger(&space.device(), m_resume_trigger);
+		space.device().execute().spin_until_trigger(m_resume_trigger);
 		m_suspension_active = 1;
 	}
 
@@ -226,7 +226,7 @@ WRITE16_MEMBER(xexex_state::sound_cmd2_w)
 
 WRITE16_MEMBER(xexex_state::sound_irq_w)
 {
-	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 READ16_MEMBER(xexex_state::sound_status_r)
@@ -270,7 +270,7 @@ static TIMER_CALLBACK( dmaend_callback )
 
 		// IRQ 5 is the "object DMA end interrupt" and shouldn't be triggered
 		// if object data isn't ready for DMA within the frame.
-		device_set_input_line(state->m_maincpu, 5, HOLD_LINE);
+		state->m_maincpu->set_input_line(5, HOLD_LINE);
 	}
 }
 
@@ -289,7 +289,7 @@ static TIMER_DEVICE_CALLBACK( xexex_interrupt )
 	{
 		// IRQ 6 is for test mode only
 			if (state->m_cur_control2 & 0x0020)
-				device_set_input_line(state->m_maincpu, 6, HOLD_LINE);
+				state->m_maincpu->set_input_line(6, HOLD_LINE);
 	}
 
 	/* TODO: vblank is at 256! (enable CCU then have fun in fixing offsetted layers) */
@@ -307,7 +307,7 @@ static TIMER_DEVICE_CALLBACK( xexex_interrupt )
 		// IRQ 4 is the V-blank interrupt. It controls color, sound and
 		// vital game logics that shouldn't be interfered by frame-drop.
 		if (state->m_cur_control2 & 0x0800)
-			device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+			state->m_maincpu->set_input_line(4, HOLD_LINE);
 	}
 }
 
@@ -453,62 +453,60 @@ static void xexex_postload(running_machine &machine)
 	reset_sound_region(machine);
 }
 
-static MACHINE_START( xexex )
+void xexex_state::machine_start()
 {
-	xexex_state *state = machine.driver_data<xexex_state>();
-	UINT8 *ROM = state->memregion("audiocpu")->base();
+	UINT8 *ROM = memregion("audiocpu")->base();
 
-	state->membank("bank2")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
-	state->membank("bank2")->set_entry(0);
+	membank("bank2")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
+	membank("bank2")->set_entry(0);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_k053246 = machine.device("k053246");
-	state->m_k053250 = machine.device<k053250_t>("k053250");
-	state->m_k053251 = machine.device("k053251");
-	state->m_k053252 = machine.device("k053252");
-	state->m_k056832 = machine.device("k056832");
-	state->m_k054338 = machine.device("k054338");
-	state->m_k054539 = machine.device("k054539");
-	state->m_filter1l = machine.device("filter1l");
-	state->m_filter1r = machine.device("filter1r");
-	state->m_filter2l = machine.device("filter2l");
-	state->m_filter2r = machine.device("filter2r");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_k053246 = machine().device("k053246");
+	m_k053250 = machine().device<k053250_t>("k053250");
+	m_k053251 = machine().device("k053251");
+	m_k053252 = machine().device("k053252");
+	m_k056832 = machine().device("k056832");
+	m_k054338 = machine().device("k054338");
+	m_k054539 = machine().device("k054539");
+	m_filter1l = machine().device("filter1l");
+	m_filter1r = machine().device("filter1r");
+	m_filter2l = machine().device("filter2l");
+	m_filter2r = machine().device("filter2r");
 
-	state->save_item(NAME(state->m_cur_alpha));
-	state->save_item(NAME(state->m_sprite_colorbase));
-	state->save_item(NAME(state->m_layer_colorbase));
-	state->save_item(NAME(state->m_layerpri));
+	save_item(NAME(m_cur_alpha));
+	save_item(NAME(m_sprite_colorbase));
+	save_item(NAME(m_layer_colorbase));
+	save_item(NAME(m_layerpri));
 
-	state->save_item(NAME(state->m_suspension_active));
-	state->save_item(NAME(state->m_frame));
+	save_item(NAME(m_suspension_active));
+	save_item(NAME(m_frame));
 
-	state->save_item(NAME(state->m_cur_control2));
-	state->save_item(NAME(state->m_cur_sound_region));
-	machine.save().register_postload(save_prepost_delegate(FUNC(xexex_postload), &machine));
+	save_item(NAME(m_cur_control2));
+	save_item(NAME(m_cur_sound_region));
+	machine().save().register_postload(save_prepost_delegate(FUNC(xexex_postload), &machine()));
 
-	state->m_dmadelay_timer = machine.scheduler().timer_alloc(FUNC(dmaend_callback));
+	m_dmadelay_timer = machine().scheduler().timer_alloc(FUNC(dmaend_callback));
 }
 
-static MACHINE_RESET( xexex )
+void xexex_state::machine_reset()
 {
-	xexex_state *state = machine.driver_data<xexex_state>();
 	int i;
 
 	for (i = 0; i < 4; i++)
 	{
-		state->m_layerpri[i] = 0;
-		state->m_layer_colorbase[i] = 0;
+		m_layerpri[i] = 0;
+		m_layer_colorbase[i] = 0;
 	}
 
-	state->m_sprite_colorbase = 0;
+	m_sprite_colorbase = 0;
 
-	state->m_cur_control2 = 0;
-	state->m_cur_sound_region = 0;
-	state->m_suspension_active = 0;
-	state->m_resume_trigger = 1000;
-	state->m_frame = -1;
-	machine.device<k054539_device>("k054539")->init_flags(k054539_device::REVERSE_STEREO);
+	m_cur_control2 = 0;
+	m_cur_sound_region = 0;
+	m_suspension_active = 0;
+	m_resume_trigger = 1000;
+	m_frame = -1;
+	machine().device<k054539_device>("k054539")->init_flags(k054539_device::REVERSE_STEREO);
 }
 
 static MACHINE_CONFIG_START( xexex, xexex_state )
@@ -525,8 +523,6 @@ static MACHINE_CONFIG_START( xexex, xexex_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(1920))
 
-	MCFG_MACHINE_START(xexex)
-	MCFG_MACHINE_RESET(xexex)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
@@ -543,7 +539,6 @@ static MACHINE_CONFIG_START( xexex, xexex_state )
 
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(xexex)
 
 	MCFG_K056832_ADD("k056832", xexex_k056832_intf)
 	MCFG_K053246_ADD("k053246", xexex_k053246_intf)

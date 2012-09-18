@@ -126,7 +126,7 @@ static void karnov_i8751_w( running_machine &machine, int data )
 
 //  if (!state->m_i8751_return && data != 0x300) logerror("%s - Unknown Write %02x intel\n", machine.describe_context(), data);
 
-	device_set_input_line(state->m_maincpu, 6, HOLD_LINE); /* Signal main cpu task is complete */
+	state->m_maincpu->set_input_line(6, HOLD_LINE); /* Signal main cpu task is complete */
 	state->m_i8751_needs_ack = 1;
 }
 
@@ -186,7 +186,7 @@ static void wndrplnt_i8751_w( running_machine &machine, int data )
 	if (data == 0x501) state->m_i8751_return = 0x6bf8;
 	if (data == 0x500) state->m_i8751_return = 0x4e75;
 
-	device_set_input_line(state->m_maincpu, 6, HOLD_LINE); /* Signal main cpu task is complete */
+	state->m_maincpu->set_input_line(6, HOLD_LINE); /* Signal main cpu task is complete */
 	state->m_i8751_needs_ack = 1;
 }
 
@@ -318,7 +318,7 @@ static void chelnov_i8751_w( running_machine &machine, int data )
 
 	//  logerror("%s - Unknown Write %02x intel\n", machine.describe_context(), data);
 
-	device_set_input_line(state->m_maincpu, 6, HOLD_LINE); /* Signal main cpu task is complete */
+	state->m_maincpu->set_input_line(6, HOLD_LINE); /* Signal main cpu task is complete */
 	state->m_i8751_needs_ack = 1;
 }
 
@@ -335,7 +335,7 @@ WRITE16_MEMBER(karnov_state::karnov_control_w)
 	switch (offset << 1)
 	{
 		case 0: /* SECLR (Interrupt ack for Level 6 i8751 interrupt) */
-			device_set_input_line(m_maincpu, 6, CLEAR_LINE);
+			m_maincpu->set_input_line(6, CLEAR_LINE);
 
 			if (m_i8751_needs_ack)
 			{
@@ -343,7 +343,7 @@ WRITE16_MEMBER(karnov_state::karnov_control_w)
 				if (m_i8751_coin_pending)
 				{
 					m_i8751_return = m_i8751_coin_pending;
-					device_set_input_line(m_maincpu, 6, HOLD_LINE);
+					m_maincpu->set_input_line(6, HOLD_LINE);
 					m_i8751_coin_pending = 0;
 				}
 				else if (m_i8751_command_queue)
@@ -362,7 +362,7 @@ WRITE16_MEMBER(karnov_state::karnov_control_w)
 
 		case 2: /* SONREQ (Sound CPU byte) */
 			soundlatch_byte_w(space, 0, data & 0xff);
-			device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+			m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 			break;
 
 		case 4: /* DM (DMA to buffer spriteram) */
@@ -396,7 +396,7 @@ WRITE16_MEMBER(karnov_state::karnov_control_w)
 			break;
 
 		case 0xe: /* INTCLR (Interrupt ack for Level 7 vbl interrupt) */
-			device_set_input_line(m_maincpu, 7, CLEAR_LINE);
+			m_maincpu->set_input_line(7, CLEAR_LINE);
 			break;
 	}
 }
@@ -744,14 +744,14 @@ static INTERRUPT_GEN( karnov_interrupt )
 		else
 		{
 			state->m_i8751_return = port | 0x8000;
-			device_set_input_line(device, 6, HOLD_LINE);
+			device->execute().set_input_line(6, HOLD_LINE);
 			state->m_i8751_needs_ack = 1;
 		}
 
 		state->m_latch = 0;
 	}
 
-	device_set_input_line(device, 7, HOLD_LINE);	/* VBL */
+	device->execute().set_input_line(7, HOLD_LINE);	/* VBL */
 }
 
 static const ym3526_interface ym3526_config =
@@ -765,41 +765,39 @@ static const ym3526_interface ym3526_config =
  *
  *************************************/
 
-static MACHINE_START( karnov )
+void karnov_state::machine_start()
 {
-	karnov_state *state = machine.driver_data<karnov_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_flipscreen));
-	state->save_item(NAME(state->m_scroll));
+	save_item(NAME(m_flipscreen));
+	save_item(NAME(m_scroll));
 
-	state->save_item(NAME(state->m_i8751_return));
-	state->save_item(NAME(state->m_i8751_needs_ack));
-	state->save_item(NAME(state->m_i8751_coin_pending));
-	state->save_item(NAME(state->m_i8751_command_queue));
-	state->save_item(NAME(state->m_i8751_level));
-	state->save_item(NAME(state->m_latch));
+	save_item(NAME(m_i8751_return));
+	save_item(NAME(m_i8751_needs_ack));
+	save_item(NAME(m_i8751_coin_pending));
+	save_item(NAME(m_i8751_command_queue));
+	save_item(NAME(m_i8751_level));
+	save_item(NAME(m_latch));
 
 }
 
-static MACHINE_RESET( karnov )
+void karnov_state::machine_reset()
 {
-	karnov_state *state = machine.driver_data<karnov_state>();
 
-	memset(state->m_ram, 0, 0x4000 / 2); /* Chelnov likes ram clear on reset.. */
+	memset(m_ram, 0, 0x4000 / 2); /* Chelnov likes ram clear on reset.. */
 
-	state->m_i8751_return = 0;
-	state->m_i8751_needs_ack = 0;
-	state->m_i8751_coin_pending = 0;
-	state->m_i8751_command_queue = 0;
-	state->m_i8751_level = 0;
-//  state->m_latch = 0;
+	m_i8751_return = 0;
+	m_i8751_needs_ack = 0;
+	m_i8751_coin_pending = 0;
+	m_i8751_command_queue = 0;
+	m_i8751_level = 0;
+//  m_latch = 0;
 
-	state->m_flipscreen = 0;
-	state->m_scroll[0] = 0;
-	state->m_scroll[1] = 0;
+	m_flipscreen = 0;
+	m_scroll[0] = 0;
+	m_scroll[1] = 0;
 }
 
 
@@ -813,8 +811,6 @@ static MACHINE_CONFIG_START( karnov, karnov_state )
 	MCFG_CPU_ADD("audiocpu", M6502, 1500000)	/* Accurate */
 	MCFG_CPU_PROGRAM_MAP(karnov_sound_map)
 
-	MCFG_MACHINE_START(karnov)
-	MCFG_MACHINE_RESET(karnov)
 
 	/* video hardware */
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
@@ -832,8 +828,7 @@ static MACHINE_CONFIG_START( karnov, karnov_state )
 	MCFG_DEVICE_ADD("spritegen", DECO_KARNOVSPRITES, 0)
 	deco_karnovsprites_device::set_gfx_region(*device, 2);
 
-	MCFG_PALETTE_INIT(karnov)
-	MCFG_VIDEO_START(karnov)
+	MCFG_VIDEO_START_OVERRIDE(karnov_state,karnov)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -857,8 +852,6 @@ static MACHINE_CONFIG_START( wndrplnt, karnov_state )
 	MCFG_CPU_ADD("audiocpu", M6502, 1500000)	/* Accurate */
 	MCFG_CPU_PROGRAM_MAP(karnov_sound_map)
 
-	MCFG_MACHINE_START(karnov)
-	MCFG_MACHINE_RESET(karnov)
 
 	/* video hardware */
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
@@ -876,8 +869,7 @@ static MACHINE_CONFIG_START( wndrplnt, karnov_state )
 	MCFG_DEVICE_ADD("spritegen", DECO_KARNOVSPRITES, 0)
 	deco_karnovsprites_device::set_gfx_region(*device, 2);
 
-	MCFG_PALETTE_INIT(karnov)
-	MCFG_VIDEO_START(wndrplnt)
+	MCFG_VIDEO_START_OVERRIDE(karnov_state,wndrplnt)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

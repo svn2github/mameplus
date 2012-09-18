@@ -72,8 +72,7 @@ struct lpc12_t
 };
 
 
-typedef struct _sp0256_state sp0256_state;
-struct _sp0256_state
+struct sp0256_state
 {
 	device_t *device;
 	sound_stream  *stream;	        /* MAME core sound stream                       */
@@ -135,7 +134,7 @@ INLINE sp0256_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == SP0256);
-	return (sp0256_state *)downcast<legacy_device_base *>(device)->token();
+	return (sp0256_state *)downcast<sp0256_device *>(device)->token();
 }
 
 
@@ -1274,9 +1273,9 @@ WRITE8_DEVICE_HANDLER( sp0256_ALD_w )
 
 READ_LINE_DEVICE_HANDLER( sp0256_lrq_r )
 {
-	sp0256_state *sp = get_safe_token(device);
+    sp0256_state *sp = get_safe_token(device);
 
-	return sp->lrq == 0x8000;
+    return sp->lrq == 0x8000;
 }
 
 READ_LINE_DEVICE_HANDLER( sp0256_sby_r )
@@ -1359,35 +1358,57 @@ WRITE16_DEVICE_HANDLER( spb640_w )
 
 void sp0256_set_clock(device_t *device, int clock)
 {
-	sp0256_state *sp = get_safe_token(device);
+    sp0256_state *sp = get_safe_token(device);
 
-	device->set_unscaled_clock(clock);
-	sp->stream->set_sample_rate(clock / CLOCK_DIVIDER);
+    device->set_unscaled_clock(clock);
+    sp->stream->set_sample_rate(clock / CLOCK_DIVIDER);
 }
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
+const device_type SP0256 = &device_creator<sp0256_device>;
 
-DEVICE_GET_INFO( sp0256 )
+sp0256_device::sp0256_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, SP0256, "SP0256", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(sp0256_state); 				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(sp0256_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( sp0256 );			break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME( sp0256 );			break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "SP0256");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "GI");							break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Joseph Zbiciak, tim lindner"); break;
-	}
+void sp0256_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void sp0256_device::device_start()
+{
+	DEVICE_START_NAME( sp0256 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void sp0256_device::device_reset()
+{
+	DEVICE_RESET_NAME( sp0256 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void sp0256_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(SP0256, sp0256);

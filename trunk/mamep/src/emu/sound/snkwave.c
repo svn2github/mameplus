@@ -15,8 +15,7 @@
 #define CLOCK_SHIFT 8
 
 
-typedef struct _snkwave_state snkwave_state;
-struct _snkwave_state
+struct snkwave_state
 {
 	/* global sound parameters */
 	sound_stream * stream;
@@ -36,7 +35,7 @@ INLINE snkwave_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == SNKWAVE);
-	return (snkwave_state *)downcast<legacy_device_base *>(device)->token();
+	return (snkwave_state *)downcast<snkwave_device *>(device)->token();
 }
 
 
@@ -159,31 +158,42 @@ WRITE8_DEVICE_HANDLER( snkwave_w )
 		update_waveform(chip, offset - 2, data);
 }
 
+const device_type SNKWAVE = &device_creator<snkwave_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( snkwave )
+snkwave_device::snkwave_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, SNKWAVE, "SNK Wave", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(snkwave_state);		break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( snkwave );		break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							/* Nothing */									break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "SNK Wave");					break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "SNK Wave");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(snkwave_state));
 }
 
-DEFINE_LEGACY_SOUND_DEVICE(SNKWAVE, snkwave);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void snkwave_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void snkwave_device::device_start()
+{
+	DEVICE_START_NAME( snkwave )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void snkwave_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

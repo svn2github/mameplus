@@ -467,53 +467,6 @@ $a00000 checks have been seen on the Final Lap boards.
 /*************************************************************/
 /* 68000/6809/63705 Shared memory area - DUAL PORT Memory    */
 /*************************************************************/
-class namcos2_state : public driver_device
-{
-public:
-	namcos2_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag)
-	{ }
-	DECLARE_READ16_MEMBER(namcos2_68k_dpram_word_r);
-	DECLARE_WRITE16_MEMBER(namcos2_68k_dpram_word_w);
-	DECLARE_READ8_MEMBER(namcos2_dpram_byte_r);
-	DECLARE_WRITE8_MEMBER(namcos2_dpram_byte_w);
-	DECLARE_DRIVER_INIT(cosmogng);
-	DECLARE_DRIVER_INIT(sgunner2);
-	DECLARE_DRIVER_INIT(kyukaidk);
-	DECLARE_DRIVER_INIT(bubbletr);
-	DECLARE_DRIVER_INIT(suzuk8h2);
-	DECLARE_DRIVER_INIT(burnforc);
-	DECLARE_DRIVER_INIT(gollygho);
-	DECLARE_DRIVER_INIT(rthun2j);
-	DECLARE_DRIVER_INIT(sws);
-	DECLARE_DRIVER_INIT(finehour);
-	DECLARE_DRIVER_INIT(finallap);
-	DECLARE_DRIVER_INIT(dirtfoxj);
-	DECLARE_DRIVER_INIT(marvlanj);
-	DECLARE_DRIVER_INIT(sws92);
-	DECLARE_DRIVER_INIT(dsaber);
-	DECLARE_DRIVER_INIT(assault);
-	DECLARE_DRIVER_INIT(mirninja);
-	DECLARE_DRIVER_INIT(finalap2);
-	DECLARE_DRIVER_INIT(valkyrie);
-	DECLARE_DRIVER_INIT(fourtrax);
-	DECLARE_DRIVER_INIT(finalap3);
-	DECLARE_DRIVER_INIT(luckywld);
-	DECLARE_DRIVER_INIT(assaultj);
-	DECLARE_DRIVER_INIT(dsaberj);
-	DECLARE_DRIVER_INIT(suzuka8h);
-	DECLARE_DRIVER_INIT(phelios);
-	DECLARE_DRIVER_INIT(sws93);
-	DECLARE_DRIVER_INIT(metlhawk);
-	DECLARE_DRIVER_INIT(sws92g);
-	DECLARE_DRIVER_INIT(assaultp_hack);
-	DECLARE_DRIVER_INIT(assaultp);
-	DECLARE_DRIVER_INIT(ordyne);
-	DECLARE_DRIVER_INIT(marvland);
-	DECLARE_DRIVER_INIT(rthun2);
-};
-
-static UINT8 *namcos2_dpram;	/* 2Kx8 */
 
 static void
 GollyGhostUpdateLED_c4( int data )
@@ -574,18 +527,18 @@ GollyGhostUpdateDiorama_c0( int data )
 	}
 }
 
-READ16_MEMBER(namcos2_state::namcos2_68k_dpram_word_r)
+READ16_MEMBER(namcos2_state::dpram_word_r)
 {
-	return namcos2_dpram[offset];
+	return m_dpram[offset];
 }
 
-WRITE16_MEMBER(namcos2_state::namcos2_68k_dpram_word_w)
+WRITE16_MEMBER(namcos2_state::dpram_word_w)
 {
 	if( ACCESSING_BITS_0_7 )
 	{
-		namcos2_dpram[offset] = data&0xff;
+		m_dpram[offset] = data&0xff;
 
-		if( namcos2_gametype==NAMCOS2_GOLLY_GHOST )
+		if( m_gametype==NAMCOS2_GOLLY_GHOST )
 		{
 			switch( offset )
 			{
@@ -608,14 +561,14 @@ WRITE16_MEMBER(namcos2_state::namcos2_68k_dpram_word_w)
 }
 
 
-READ8_MEMBER(namcos2_state::namcos2_dpram_byte_r)
+READ8_MEMBER(namcos2_state::dpram_byte_r)
 {
-	return namcos2_dpram[offset];
+	return m_dpram[offset];
 }
 
-WRITE8_MEMBER(namcos2_state::namcos2_dpram_byte_w)
+WRITE8_MEMBER(namcos2_state::dpram_byte_w)
 {
-	namcos2_dpram[offset] = data;
+	m_dpram[offset] = data;
 }
 
 /*************************************************************/
@@ -638,20 +591,20 @@ static ADDRESS_MAP_START( namcos2_68k_default_cpu_board_am, AS_PROGRAM, 16, namc
 	AM_RANGE(0x200000, 0x3fffff) AM_READ_LEGACY(namcos2_68k_data_rom_r)
 	AM_RANGE(0x400000, 0x41ffff) AM_READWRITE_LEGACY(namco_tilemapvideoram16_r,namco_tilemapvideoram16_w)
 	AM_RANGE(0x420000, 0x42003f) AM_READWRITE_LEGACY(namco_tilemapcontrol16_r,namco_tilemapcontrol16_w)
-	AM_RANGE(0x440000, 0x44ffff) AM_READWRITE_LEGACY(namcos2_68k_video_palette_r,namcos2_68k_video_palette_w) AM_BASE_LEGACY(&namcos2_68k_palette_ram) AM_SIZE_LEGACY(&namcos2_68k_palette_size)
-	AM_RANGE(0x460000, 0x460fff) AM_READWRITE(namcos2_68k_dpram_word_r,namcos2_68k_dpram_word_w)
-	AM_RANGE(0x468000, 0x468fff) AM_READWRITE(namcos2_68k_dpram_word_r,namcos2_68k_dpram_word_w) /* mirror */
-	AM_RANGE(0x480000, 0x483fff) AM_READWRITE_LEGACY(namcos2_68k_serial_comms_ram_r,namcos2_68k_serial_comms_ram_w) AM_BASE_LEGACY(&namcos2_68k_serial_comms_ram)
-	AM_RANGE(0x4a0000, 0x4a000f) AM_READWRITE_LEGACY(namcos2_68k_serial_comms_ctrl_r,namcos2_68k_serial_comms_ctrl_w)
+	AM_RANGE(0x440000, 0x44ffff) AM_READWRITE(paletteram_word_r,paletteram_word_w) AM_SHARE("paletteram")
+	AM_RANGE(0x460000, 0x460fff) AM_READWRITE(dpram_word_r,dpram_word_w)
+	AM_RANGE(0x468000, 0x468fff) AM_READWRITE(dpram_word_r,dpram_word_w) /* mirror */
+	AM_RANGE(0x480000, 0x483fff) AM_READWRITE(serial_comms_ram_r,serial_comms_ram_w) AM_SHARE("serialram")
+	AM_RANGE(0x4a0000, 0x4a000f) AM_READWRITE(serial_comms_ctrl_r,serial_comms_ctrl_w)
 ADDRESS_MAP_END
 
 /*************************************************************/
 
 static ADDRESS_MAP_START( common_default_am, AS_PROGRAM, 16, namcos2_state )
-	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE_LEGACY(namcos2_sprite_ram_r,namcos2_sprite_ram_w) AM_BASE_LEGACY(&namcos2_sprite_ram)
-	AM_RANGE(0xc40000, 0xc40001) AM_READWRITE_LEGACY(namcos2_gfx_ctrl_r,namcos2_gfx_ctrl_w)
-	AM_RANGE(0xc80000, 0xc9ffff) AM_READWRITE_LEGACY(namcos2_68k_roz_ram_r,namcos2_68k_roz_ram_w) AM_BASE_LEGACY(&namcos2_68k_roz_ram)
-	AM_RANGE(0xcc0000, 0xcc000f) AM_READWRITE_LEGACY(namcos2_68k_roz_ctrl_r,namcos2_68k_roz_ctrl_w)
+	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0xc40000, 0xc40001) AM_READWRITE(gfx_ctrl_r, gfx_ctrl_w)
+	AM_RANGE(0xc80000, 0xc9ffff) AM_RAM_WRITE(rozram_word_w) AM_SHARE("rozram")
+	AM_RANGE(0xcc0000, 0xcc000f) AM_RAM AM_SHARE("rozctrl")
 	AM_RANGE(0xd00000, 0xd0000f) AM_READWRITE_LEGACY(namcos2_68k_key_r,namcos2_68k_key_w)
 	AM_IMPORT_FROM( namcos2_68k_default_cpu_board_am )
 ADDRESS_MAP_END
@@ -676,9 +629,9 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( common_finallap_am, AS_PROGRAM, 16, namcos2_state )
 	AM_RANGE(0x300000, 0x33ffff) AM_READ_LEGACY(namcos2_flap_prot_r)
-	AM_RANGE(0x800000, 0x80ffff) AM_READ_LEGACY(namcos2_sprite_ram_r) AM_WRITE_LEGACY(namcos2_sprite_ram_w) AM_BASE_LEGACY(&namcos2_sprite_ram)
-	AM_RANGE(0x840000, 0x840001) AM_READ_LEGACY(namcos2_gfx_ctrl_r) AM_WRITE_LEGACY(namcos2_gfx_ctrl_w)
-	AM_RANGE(0x880000, 0x89ffff) AM_READ_LEGACY(namco_road16_r) AM_WRITE_LEGACY(namco_road16_w)
+	AM_RANGE(0x800000, 0x80ffff) AM_RAM AM_SHARE("spriteram")
+	AM_RANGE(0x840000, 0x840001) AM_READWRITE(gfx_ctrl_r, gfx_ctrl_w)
+	AM_RANGE(0x880000, 0x89ffff) AM_DEVREADWRITE("c45_road", namco_c45_road_device, read, write)
 	AM_RANGE(0x8c0000, 0x8c0001) AM_WRITENOP
 	AM_IMPORT_FROM( namcos2_68k_default_cpu_board_am )
 ADDRESS_MAP_END
@@ -701,7 +654,7 @@ ADDRESS_MAP_END
 /*************************************************************/
 
 static ADDRESS_MAP_START( common_sgunner_am, AS_PROGRAM, 16, namcos2_state )
-	AM_RANGE(0x800000, 0x8141ff) AM_READWRITE_LEGACY(namco_obj16_r,namco_obj16_w)
+	AM_RANGE(0x800000, 0x8141ff) AM_READWRITE(c355_obj_ram_r,c355_obj_ram_w)
 	AM_RANGE(0x818000, 0x818001) AM_WRITENOP
 	AM_RANGE(0xa00000, 0xa0000f) AM_READWRITE_LEGACY(namcos2_68k_key_r,namcos2_68k_key_w)
 	AM_IMPORT_FROM( namcos2_68k_default_cpu_board_am )
@@ -725,10 +678,10 @@ ADDRESS_MAP_END
 /*************************************************************/
 
 static ADDRESS_MAP_START( common_metlhawk_am, AS_PROGRAM, 16, namcos2_state )
-	AM_RANGE(0xc00000, 0xc03fff) AM_READWRITE_LEGACY(namcos2_sprite_ram_r,namcos2_sprite_ram_w) AM_BASE_LEGACY(&namcos2_sprite_ram) \
-	AM_RANGE(0xc40000, 0xc4ffff) AM_READWRITE_LEGACY(namco_rozvideoram16_r,namco_rozvideoram16_w) \
-	AM_RANGE(0xd00000, 0xd0001f) AM_READWRITE_LEGACY(namco_rozcontrol16_r,namco_rozcontrol16_w) \
-	AM_RANGE(0xe00000, 0xe00001) AM_READWRITE_LEGACY(namcos2_gfx_ctrl_r,namcos2_gfx_ctrl_w) /* ??? */ \
+	AM_RANGE(0xc00000, 0xc03fff) AM_RAM AM_SHARE("spriteram") \
+	AM_RANGE(0xc40000, 0xc4ffff) AM_READWRITE(c169_roz_videoram_r,c169_roz_videoram_w) AM_SHARE("rozvideoram") \
+	AM_RANGE(0xd00000, 0xd0001f) AM_READWRITE(c169_roz_control_r,c169_roz_control_w) \
+	AM_RANGE(0xe00000, 0xe00001) AM_READWRITE(gfx_ctrl_r, gfx_ctrl_w) /* ??? */ \
 	AM_IMPORT_FROM( namcos2_68k_default_cpu_board_am )
 ADDRESS_MAP_END
 
@@ -750,14 +703,14 @@ ADDRESS_MAP_END
 /*************************************************************/
 
 static ADDRESS_MAP_START( common_luckywld_am, AS_PROGRAM, 16, namcos2_state )
-	AM_RANGE(0x800000, 0x8141ff) AM_READWRITE_LEGACY(namco_obj16_r,namco_obj16_w)
+	AM_RANGE(0x800000, 0x8141ff) AM_READWRITE(c355_obj_ram_r,c355_obj_ram_w)
 	AM_RANGE(0x818000, 0x818001) AM_NOP /* enable? */
 	AM_RANGE(0x81a000, 0x81a001) AM_WRITENOP /* enable? */
 	AM_RANGE(0x840000, 0x840001) AM_READNOP
-	AM_RANGE(0x900000, 0x900007) AM_READWRITE_LEGACY(namco_spritepos16_r,namco_spritepos16_w)
-	AM_RANGE(0xa00000, 0xa1ffff) AM_READWRITE_LEGACY(namco_road16_r,namco_road16_w)
-	AM_RANGE(0xc00000, 0xc0ffff) AM_READWRITE_LEGACY(namco_rozvideoram16_r,namco_rozvideoram16_w)
-	AM_RANGE(0xd00000, 0xd0001f) AM_READWRITE_LEGACY(namco_rozcontrol16_r,namco_rozcontrol16_w)
+	AM_RANGE(0x900000, 0x900007) AM_READWRITE(c355_obj_position_r,c355_obj_position_w)
+	AM_RANGE(0xa00000, 0xa1ffff) AM_DEVREADWRITE("c45_road", namco_c45_road_device, read, write)
+	AM_RANGE(0xc00000, 0xc0ffff) AM_READWRITE(c169_roz_videoram_r,c169_roz_videoram_w) AM_SHARE("rozvideoram")
+	AM_RANGE(0xd00000, 0xd0001f) AM_READWRITE(c169_roz_control_r,c169_roz_control_w)
 	AM_RANGE(0xf00000, 0xf00007) AM_READWRITE_LEGACY(namcos2_68k_key_r,namcos2_68k_key_w)
 	AM_IMPORT_FROM( namcos2_68k_default_cpu_board_am )
 ADDRESS_MAP_END
@@ -785,8 +738,8 @@ static ADDRESS_MAP_START( sound_default_am, AS_PROGRAM, 8, namcos2_state )
 	AM_RANGE(0x0000, 0x3fff) AM_ROMBANK("bank6") /* banked */
 	AM_RANGE(0x4000, 0x4001) AM_DEVREADWRITE_LEGACY("ymsnd", ym2151_r,ym2151_w)
 	AM_RANGE(0x5000, 0x6fff) AM_DEVREADWRITE_LEGACY("c140", c140_r,c140_w)
-	AM_RANGE(0x7000, 0x77ff) AM_READWRITE(namcos2_dpram_byte_r,namcos2_dpram_byte_w) AM_BASE_LEGACY(&namcos2_dpram)
-	AM_RANGE(0x7800, 0x7fff) AM_READWRITE(namcos2_dpram_byte_r,namcos2_dpram_byte_w) /* mirror */
+	AM_RANGE(0x7000, 0x77ff) AM_READWRITE(dpram_byte_r,dpram_byte_w) AM_SHARE("dpram")
+	AM_RANGE(0x7800, 0x7fff) AM_READWRITE(dpram_byte_r,dpram_byte_w) /* mirror */
 	AM_RANGE(0x8000, 0x9fff) AM_RAM
 	AM_RANGE(0xa000, 0xbfff) AM_WRITENOP /* Amplifier enable on 1st write */
 	AM_RANGE(0xc000, 0xc001) AM_WRITE_LEGACY(namcos2_sound_bankselect_w)
@@ -817,7 +770,7 @@ static ADDRESS_MAP_START( mcu_default_am, AS_PROGRAM, 8, namcos2_state )
 	AM_RANGE(0x3001, 0x3001) AM_READ_PORT("MCUDI1")
 	AM_RANGE(0x3002, 0x3002) AM_READ_PORT("MCUDI2")
 	AM_RANGE(0x3003, 0x3003) AM_READ_PORT("MCUDI3")
-	AM_RANGE(0x5000, 0x57ff) AM_READWRITE(namcos2_dpram_byte_r,namcos2_dpram_byte_w) AM_BASE_LEGACY(&namcos2_dpram)
+	AM_RANGE(0x5000, 0x57ff) AM_READWRITE(dpram_byte_r,dpram_byte_w) AM_SHARE("dpram")
 	AM_RANGE(0x6000, 0x6fff) AM_READNOP /* watchdog */
 	AM_RANGE(0x8000, 0xffff) AM_ROM
 ADDRESS_MAP_END
@@ -1670,8 +1623,8 @@ static MACHINE_CONFIG_START( default, namcos2_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(12000)) /* CPU slices per frame */
 
-	MCFG_MACHINE_START(namcos2)
-	MCFG_MACHINE_RESET(namcos2)
+	MCFG_MACHINE_START_OVERRIDE(namcos2_state,namcos2)
+	MCFG_MACHINE_RESET_OVERRIDE(namcos2_state,namcos2)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -1680,12 +1633,10 @@ static MACHINE_CONFIG_START( default, namcos2_state )
 	MCFG_SCREEN_REFRESH_RATE( (49152000.0 / 8) / (384 * 264) )
 	MCFG_SCREEN_SIZE(384, 264)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(namcos2_default)
+	MCFG_SCREEN_UPDATE_DRIVER(namcos2_state, screen_update)
 
 	MCFG_GFXDECODE(namcos2)
 	MCFG_PALETTE_LENGTH(0x2000)
-
-	MCFG_VIDEO_START(namcos2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -1746,8 +1697,8 @@ static MACHINE_CONFIG_START( gollygho, namcos2_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* CPU slices per frame */
 
-	MCFG_MACHINE_START(namcos2)
-	MCFG_MACHINE_RESET(namcos2)
+	MCFG_MACHINE_START_OVERRIDE(namcos2_state,namcos2)
+	MCFG_MACHINE_RESET_OVERRIDE(namcos2_state,namcos2)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -1756,12 +1707,10 @@ static MACHINE_CONFIG_START( gollygho, namcos2_state )
 	MCFG_SCREEN_REFRESH_RATE( (49152000.0 / 8) / (384 * 264) )
 	MCFG_SCREEN_SIZE(384, 264)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(namcos2_default)
+	MCFG_SCREEN_UPDATE_DRIVER(namcos2_state, screen_update)
 
 	MCFG_GFXDECODE(namcos2)
 	MCFG_PALETTE_LENGTH(0x2000)
-
-	MCFG_VIDEO_START(namcos2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -1795,8 +1744,8 @@ static MACHINE_CONFIG_START( finallap, namcos2_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* CPU slices per frame */
 
-	MCFG_MACHINE_START(namcos2)
-	MCFG_MACHINE_RESET(namcos2)
+	MCFG_MACHINE_START_OVERRIDE(namcos2_state,namcos2)
+	MCFG_MACHINE_RESET_OVERRIDE(namcos2_state,namcos2)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -1805,12 +1754,14 @@ static MACHINE_CONFIG_START( finallap, namcos2_state )
 	MCFG_SCREEN_REFRESH_RATE( (49152000.0 / 8) / (384 * 264) )
 	MCFG_SCREEN_SIZE(384, 264)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(finallap)
+	MCFG_SCREEN_UPDATE_DRIVER(namcos2_state, screen_update_finallap)
 
 	MCFG_GFXDECODE(finallap)
 	MCFG_PALETTE_LENGTH(0x2000)
 
-	MCFG_VIDEO_START(finallap)
+	MCFG_VIDEO_START_OVERRIDE(namcos2_state, finallap)
+
+	MCFG_NAMCO_C45_ROAD_ADD("c45_road")
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -1844,8 +1795,8 @@ static MACHINE_CONFIG_START( sgunner, namcos2_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* CPU slices per frame */
 
-	MCFG_MACHINE_START(namcos2)
-	MCFG_MACHINE_RESET(namcos2)
+	MCFG_MACHINE_START_OVERRIDE(namcos2_state,namcos2)
+	MCFG_MACHINE_RESET_OVERRIDE(namcos2_state,namcos2)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -1854,12 +1805,12 @@ static MACHINE_CONFIG_START( sgunner, namcos2_state )
 	MCFG_SCREEN_REFRESH_RATE( (49152000.0 / 8) / (384 * 264) )
 	MCFG_SCREEN_SIZE(384, 264)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(sgunner)
+	MCFG_SCREEN_UPDATE_DRIVER(namcos2_state, screen_update_sgunner)
 
 	MCFG_GFXDECODE(sgunner)
 	MCFG_PALETTE_LENGTH(0x2000)
 
-	MCFG_VIDEO_START(sgunner)
+	MCFG_VIDEO_START_OVERRIDE(namcos2_state, sgunner)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -1893,8 +1844,8 @@ static MACHINE_CONFIG_START( luckywld, namcos2_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* CPU slices per frame */
 
-	MCFG_MACHINE_START(namcos2)
-	MCFG_MACHINE_RESET(namcos2)
+	MCFG_MACHINE_START_OVERRIDE(namcos2_state,namcos2)
+	MCFG_MACHINE_RESET_OVERRIDE(namcos2_state,namcos2)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -1903,12 +1854,14 @@ static MACHINE_CONFIG_START( luckywld, namcos2_state )
 	MCFG_SCREEN_REFRESH_RATE( (49152000.0 / 8) / (384 * 264) )
 	MCFG_SCREEN_SIZE(384, 264)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(luckywld)
+	MCFG_SCREEN_UPDATE_DRIVER(namcos2_state, screen_update_luckywld)
 
 	MCFG_GFXDECODE(luckywld)
 	MCFG_PALETTE_LENGTH(0x2000)
 
-	MCFG_VIDEO_START(luckywld)
+	MCFG_VIDEO_START_OVERRIDE(namcos2_state, luckywld)
+
+	MCFG_NAMCO_C45_ROAD_ADD("c45_road")
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -1942,8 +1895,8 @@ static MACHINE_CONFIG_START( metlhawk, namcos2_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000)) /* CPU slices per frame */
 
-	MCFG_MACHINE_START(namcos2)
-	MCFG_MACHINE_RESET(namcos2)
+	MCFG_MACHINE_START_OVERRIDE(namcos2_state,namcos2)
+	MCFG_MACHINE_RESET_OVERRIDE(namcos2_state,namcos2)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -1952,12 +1905,12 @@ static MACHINE_CONFIG_START( metlhawk, namcos2_state )
 	MCFG_SCREEN_REFRESH_RATE( (49152000.0 / 8) / (384 * 264) )
 	MCFG_SCREEN_SIZE(384, 264)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 0*8, 28*8-1)
-	MCFG_SCREEN_UPDATE_STATIC(metlhawk)
+	MCFG_SCREEN_UPDATE_DRIVER(namcos2_state, screen_update_metlhawk)
 
 	MCFG_GFXDECODE(metlhawk)
 	MCFG_PALETTE_LENGTH(0x2000)
 
-	MCFG_VIDEO_START(metlhawk)
+	MCFG_VIDEO_START_OVERRIDE(namcos2_state, metlhawk)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -2560,7 +2513,7 @@ ROM_START( finallap )
 	ROM_REGION16_BE( 0x200000, "user1", ROMREGION_ERASEFF ) /* Shared data roms */
 	/* No DAT files present in ZIP archive */
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "fl1-3.5b", 0, 0x100, CRC(d179d99a) SHA1(4e64f284c74d2b77f893bd28aaa6489084056aa2) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -2615,7 +2568,7 @@ ROM_START( finallapd )
 	ROM_REGION16_BE( 0x200000, "user1", ROMREGION_ERASEFF ) /* Shared data roms */
 	/* No DAT files present in ZIP archive */
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "fl1-3.5b", 0, 0x100, CRC(d179d99a) SHA1(4e64f284c74d2b77f893bd28aaa6489084056aa2) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -2670,7 +2623,7 @@ ROM_START( finallapc )
 	ROM_REGION16_BE( 0x200000, "user1", ROMREGION_ERASEFF ) /* Shared data roms */
 	/* No DAT files present in ZIP archive */
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "fl1-3.5b", 0, 0x100, CRC(d179d99a) SHA1(4e64f284c74d2b77f893bd28aaa6489084056aa2) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -2725,7 +2678,7 @@ ROM_START( finallapjc )
 	ROM_REGION16_BE( 0x200000, "user1", ROMREGION_ERASEFF ) /* Shared data roms */
 	/* No DAT files present in ZIP archive */
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "fl1-3.5b", 0, 0x100, CRC(d179d99a) SHA1(4e64f284c74d2b77f893bd28aaa6489084056aa2) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -2780,7 +2733,7 @@ ROM_START( finallapjb )
 	ROM_REGION16_BE( 0x200000, "user1", ROMREGION_ERASEFF ) /* Shared data roms */
 	/* No DAT files present in ZIP archive */
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "fl1-3.5b", 0, 0x100, CRC(d179d99a) SHA1(4e64f284c74d2b77f893bd28aaa6489084056aa2) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -2839,7 +2792,7 @@ ROM_START( finalap2 )
 	NAMCOS2_DATA_LOAD_E_256K( "fls2dat0",  0x000000, CRC(f1af432c) SHA1(c514261a49ceb5c3ba0246519ba5d02e9a20d950) )
 	NAMCOS2_DATA_LOAD_O_256K( "fls2dat1",  0x000000, CRC(8719533e) SHA1(98d2767da6f7f67da7af15e8cfed95adb04b7427) )
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "fl1-3.5b", 0, 0x100, CRC(d179d99a) SHA1(4e64f284c74d2b77f893bd28aaa6489084056aa2) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -2896,7 +2849,7 @@ ROM_START( finalap2j )
 	NAMCOS2_DATA_LOAD_E_256K( "fls2dat0",  0x000000, CRC(f1af432c) SHA1(c514261a49ceb5c3ba0246519ba5d02e9a20d950) )
 	NAMCOS2_DATA_LOAD_O_256K( "fls2dat1",  0x000000, CRC(8719533e) SHA1(98d2767da6f7f67da7af15e8cfed95adb04b7427) )
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "fl1-3.5b", 0, 0x100, CRC(d179d99a) SHA1(4e64f284c74d2b77f893bd28aaa6489084056aa2) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -2953,7 +2906,7 @@ ROM_START( finalap3 ) // this set displays MOTION (Ver. 3) in the test mode menu
 	NAMCOS2_DATA_LOAD_E_128K( "flt1d0",  0x000000, CRC(80004966) SHA1(112b2a9b0ea792d5dbff1b9cf904da788aeede29) )
 	NAMCOS2_DATA_LOAD_O_128K( "flt1d1",  0x000000, CRC(a2e93e8c) SHA1(9c8a5431a79153a70eb6939d16e0a5a6be235e75) )
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "fl1-3.5b", 0, 0x100, CRC(d179d99a) SHA1(4e64f284c74d2b77f893bd28aaa6489084056aa2) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -3014,7 +2967,7 @@ ROM_START( finalap3a )
 	NAMCOS2_DATA_LOAD_E_128K( "flt1d0",  0x000000, CRC(80004966) SHA1(112b2a9b0ea792d5dbff1b9cf904da788aeede29) )
 	NAMCOS2_DATA_LOAD_O_128K( "flt1d1",  0x000000, CRC(a2e93e8c) SHA1(9c8a5431a79153a70eb6939d16e0a5a6be235e75) )
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "fl1-3.5b", 0, 0x100, CRC(d179d99a) SHA1(4e64f284c74d2b77f893bd28aaa6489084056aa2) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -3078,7 +3031,7 @@ ROM_START( finalap3j )
 	NAMCOS2_DATA_LOAD_E_128K( "flt1d0",  0x000000, CRC(80004966) SHA1(112b2a9b0ea792d5dbff1b9cf904da788aeede29) )
 	NAMCOS2_DATA_LOAD_O_128K( "flt1d1",  0x000000, CRC(a2e93e8c) SHA1(9c8a5431a79153a70eb6939d16e0a5a6be235e75) )
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "fl1-3.5b", 0, 0x100, CRC(d179d99a) SHA1(4e64f284c74d2b77f893bd28aaa6489084056aa2) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -3140,7 +3093,7 @@ ROM_START( finalap3jc )
 	NAMCOS2_DATA_LOAD_E_128K( "flt1_d0.13s",  0x000000, CRC(80004966) SHA1(112b2a9b0ea792d5dbff1b9cf904da788aeede29) )
 	NAMCOS2_DATA_LOAD_O_128K( "flt1_d1.13p",  0x000000, CRC(a2e93e8c) SHA1(9c8a5431a79153a70eb6939d16e0a5a6be235e75) )
 
-	ROM_REGION( 0x100, "user3", 0 ) /* PROM for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* PROM for road colors */
 	ROM_LOAD( "fl1_3.5b", 0, 0x100, CRC(d179d99a) SHA1(4e64f284c74d2b77f893bd28aaa6489084056aa2) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -3427,7 +3380,7 @@ ROM_START( fourtrax )
 	NAMCOS2_DATA_LOAD_E_256K( "fx_dat2.13p", 0x100000, CRC(71e4a5a0) SHA1(a0188c920a43c5e69e25464627094b6b6ed26a59) )
 	NAMCOS2_DATA_LOAD_O_256K( "fx_dat3.13n", 0x100000, CRC(605725f7) SHA1(b94ce0ec37f879a5e46a097058cb2dd57e2281f1) )
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "fx1_1.5b", 0, 0x100, CRC(85ffd753) SHA1(7dbc8c295204877f41289141a146aa4f5f9f9c96) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -4434,7 +4387,7 @@ ROM_START( suzuka8h )
 	NAMCOS2_DATA_LOAD_O_256K( "eh1-d1.bin",  0x000000, CRC(9825D5BF) SHA1(720F0E90C69A2E0C48889D510A15102768226A67) )
 	NAMCOS2_DATA_LOAD_O_256K( "eh1-d3.bin",  0x100000, CRC(F46D301F) SHA1(70797FD584735844539553EFCAD53E11239EC10E) )
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "ehs1_landdt.10w", 0, 0x100,             CRC(cde7e8a6) SHA1(860273daf2e649418746adf50a67ae33f9f3740c) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -4486,7 +4439,7 @@ ROM_START( suzuka8hj )
 	NAMCOS2_DATA_LOAD_O_256K( "eh1-d1.bin",  0x000000, CRC(9825d5bf) SHA1(720f0e90c69a2e0c48889d510a15102768226a67) )
 	NAMCOS2_DATA_LOAD_O_256K( "eh1-d3.bin",  0x100000, CRC(f46d301f) SHA1(70797fd584735844539553efcad53e11239ec10e) )
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "ehs1_landdt.10w", 0, 0x100,             CRC(cde7e8a6) SHA1(860273daf2e649418746adf50a67ae33f9f3740c) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -4546,7 +4499,7 @@ ROM_START( suzuk8h2 )
 	NAMCOS2_DATA_LOAD_E_512K( "ehs1-dat2.13p",  0x100000, CRC(087da1f3) SHA1(e9c4ba0383e883502c0f45ae6e6d5daba4eccb01) )
 	NAMCOS2_DATA_LOAD_O_512K( "ehs1-dat3.13n",  0x100000, CRC(85aecb3f) SHA1(00ab6104dee0cd0fbdb0235b88b41e4d26794f98) )
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "ehs1-landdt.10w", 0, 0x100,             CRC(cde7e8a6) SHA1(860273daf2e649418746adf50a67ae33f9f3740c) )
 
 	ROM_REGION( 0x100000, "c140", 0 ) /* Sound voices */
@@ -4979,7 +4932,7 @@ ROM_START( luckywld )
 	ROM_LOAD( "lw1voi1.3m",  0x000000, 0x080000, CRC(b3e57993) SHA1(ff7071fc2e2c00f0cf819860c2a9be353474920a) )
 	ROM_LOAD( "lw1voi2.3l",  0x080000, 0x080000, CRC(cd8b86a2) SHA1(54bbc91e995ea0c33874ce6fe5c3f014e173da07) )
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "lw1ld8.10w", 0, 0x100, CRC(29058c73) SHA1(4916d6bdb7f78e6803698cab32d1586ea457dfc8) )
 
 	ROM_REGION( 0x2000, "nvram", 0 ) /* default settings, including calibration - see notes with inputs */
@@ -5045,7 +4998,7 @@ ROM_START( luckywldj )
 	ROM_LOAD( "lw1voi1.3m",  0x000000, 0x080000, CRC(b3e57993) SHA1(ff7071fc2e2c00f0cf819860c2a9be353474920a) )
 	ROM_LOAD( "lw1voi2.3l",  0x080000, 0x080000, CRC(cd8b86a2) SHA1(54bbc91e995ea0c33874ce6fe5c3f014e173da07) )
 
-	ROM_REGION( 0x100, "user3", 0 ) /* prom for road colors */
+	ROM_REGION( 0x100, "c45_road:clut", 0 ) /* prom for road colors */
 	ROM_LOAD( "lw1ld8.10w", 0, 0x100, CRC(29058c73) SHA1(4916d6bdb7f78e6803698cab32d1586ea457dfc8) )
 
 	ROM_REGION( 0x2000, "nvram", 0 ) /* default settings, including calibration - see notes with inputs */
@@ -5055,17 +5008,17 @@ ROM_END
 
 DRIVER_INIT_MEMBER(namcos2_state,assault)
 {
-	namcos2_gametype=NAMCOS2_ASSAULT;
+	m_gametype=NAMCOS2_ASSAULT;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,assaultj)
 {
-	namcos2_gametype=NAMCOS2_ASSAULT_JP;
+	m_gametype=NAMCOS2_ASSAULT_JP;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,assaultp)
 {
-	namcos2_gametype=NAMCOS2_ASSAULT_PLUS;
+	m_gametype=NAMCOS2_ASSAULT_PLUS;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,assaultp_hack)
@@ -5084,67 +5037,67 @@ DRIVER_INIT_MEMBER(namcos2_state,assaultp_hack)
 
 DRIVER_INIT_MEMBER(namcos2_state,burnforc)
 {
-	namcos2_gametype=NAMCOS2_BURNING_FORCE;
+	m_gametype=NAMCOS2_BURNING_FORCE;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,cosmogng)
 {
-	namcos2_gametype=NAMCOS2_COSMO_GANG;
+	m_gametype=NAMCOS2_COSMO_GANG;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,dsaber)
 {
-	namcos2_gametype=NAMCOS2_DRAGON_SABER;
+	m_gametype=NAMCOS2_DRAGON_SABER;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,dsaberj)
 {
-	namcos2_gametype=NAMCOS2_DRAGON_SABER;
+	m_gametype=NAMCOS2_DRAGON_SABER;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,dirtfoxj)
 {
-	namcos2_gametype=NAMCOS2_DIRT_FOX_JP;
+	m_gametype=NAMCOS2_DIRT_FOX_JP;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,finallap)
 {
-	namcos2_gametype=NAMCOS2_FINAL_LAP;
+	m_gametype=NAMCOS2_FINAL_LAP;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,finalap2)
 {
-	namcos2_gametype=NAMCOS2_FINAL_LAP_2;
+	m_gametype=NAMCOS2_FINAL_LAP_2;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,finalap3)
 {
-	namcos2_gametype=NAMCOS2_FINAL_LAP_3;
+	m_gametype=NAMCOS2_FINAL_LAP_3;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,finehour)
 {
-	namcos2_gametype=NAMCOS2_FINEST_HOUR;
+	m_gametype=NAMCOS2_FINEST_HOUR;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,fourtrax)
 {
-	namcos2_gametype=NAMCOS2_FOUR_TRAX;
+	m_gametype=NAMCOS2_FOUR_TRAX;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,kyukaidk)
 {
-	namcos2_gametype=NAMCOS2_KYUUKAI_DOUCHUUKI;
+	m_gametype=NAMCOS2_KYUUKAI_DOUCHUUKI;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,marvlanj)
 {
-	namcos2_gametype=NAMCOS2_MARVEL_LAND;
+	m_gametype=NAMCOS2_MARVEL_LAND;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,marvland)
 {
-	namcos2_gametype=NAMCOS2_MARVEL_LAND;
+	m_gametype=NAMCOS2_MARVEL_LAND;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,metlhawk)
@@ -5202,82 +5155,82 @@ DRIVER_INIT_MEMBER(namcos2_state,metlhawk)
 			} /* next k */
 		} /* next j */
 	} /* next i */
-	namcos2_gametype=NAMCOS2_METAL_HAWK;
+	m_gametype=NAMCOS2_METAL_HAWK;
 } /* metlhawk */
 
 DRIVER_INIT_MEMBER(namcos2_state,mirninja)
 {
-	namcos2_gametype=NAMCOS2_MIRAI_NINJA;
+	m_gametype=NAMCOS2_MIRAI_NINJA;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,ordyne)
 {
-	namcos2_gametype=NAMCOS2_ORDYNE;
+	m_gametype=NAMCOS2_ORDYNE;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,phelios)
 {
-	namcos2_gametype=NAMCOS2_PHELIOS;
+	m_gametype=NAMCOS2_PHELIOS;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,rthun2)
 {
-	namcos2_gametype=NAMCOS2_ROLLING_THUNDER_2;
+	m_gametype=NAMCOS2_ROLLING_THUNDER_2;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,rthun2j)
 {
-	namcos2_gametype=NAMCOS2_ROLLING_THUNDER_2;
+	m_gametype=NAMCOS2_ROLLING_THUNDER_2;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,sgunner2)
 {
-	namcos2_gametype=NAMCOS2_STEEL_GUNNER_2;
+	m_gametype=NAMCOS2_STEEL_GUNNER_2;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,sws)
 {
-	namcos2_gametype=NAMCOS2_SUPER_WSTADIUM;
+	m_gametype=NAMCOS2_SUPER_WSTADIUM;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,sws92)
 {
-	namcos2_gametype=NAMCOS2_SUPER_WSTADIUM_92;
+	m_gametype=NAMCOS2_SUPER_WSTADIUM_92;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,sws92g)
 {
-	namcos2_gametype=NAMCOS2_SUPER_WSTADIUM_92T;
+	m_gametype=NAMCOS2_SUPER_WSTADIUM_92T;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,sws93)
 {
-	namcos2_gametype=NAMCOS2_SUPER_WSTADIUM_93;
+	m_gametype=NAMCOS2_SUPER_WSTADIUM_93;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,suzuka8h)
 {
-    namcos2_gametype=NAMCOS2_SUZUKA_8_HOURS;
+    m_gametype=NAMCOS2_SUZUKA_8_HOURS;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,suzuk8h2)
 {
-	namcos2_gametype=NAMCOS2_SUZUKA_8_HOURS_2;
+	m_gametype=NAMCOS2_SUZUKA_8_HOURS_2;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,valkyrie)
 {
-	namcos2_gametype=NAMCOS2_VALKYRIE;
+	m_gametype=NAMCOS2_VALKYRIE;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,gollygho)
 {
-	namcos2_gametype=NAMCOS2_GOLLY_GHOST;
+	m_gametype=NAMCOS2_GOLLY_GHOST;
 }
 
 DRIVER_INIT_MEMBER(namcos2_state,bubbletr)
 {
-	namcos2_gametype=NAMCOS2_BUBBLE_TROUBLE;
+	m_gametype=NAMCOS2_BUBBLE_TROUBLE;
 }
 
 
@@ -5300,7 +5253,7 @@ DRIVER_INIT_MEMBER(namcos2_state,luckywld)
 		if( code&0x80 ) out |= 0x01;
 		pData[i] = out;
 	}
-	namcos2_gametype=NAMCOS2_LUCKY_AND_WILD;
+	m_gametype=NAMCOS2_LUCKY_AND_WILD;
 }
 
 /* Based on the dumped BIOS versions it looks like Namco changed the BIOS rom */

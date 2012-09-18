@@ -56,7 +56,7 @@ READ8_MEMBER(actfancr_state::triothep_control_r)
 WRITE8_MEMBER(actfancr_state::actfancr_sound_w)
 {
 	soundlatch_byte_w(space, 0, data & 0xff);
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 /******************************************************************************/
@@ -279,7 +279,7 @@ GFXDECODE_END
 static void sound_irq(device_t *device, int linestate)
 {
 	actfancr_state *state = device->machine().driver_data<actfancr_state>();
-	device_set_input_line(state->m_audiocpu, 0, linestate); /* IRQ */
+	state->m_audiocpu->set_input_line(0, linestate); /* IRQ */
 }
 
 static const ym3812_interface ym3812_config =
@@ -289,35 +289,31 @@ static const ym3812_interface ym3812_config =
 
 /******************************************************************************/
 
-static MACHINE_START( actfancr )
+MACHINE_START_MEMBER(actfancr_state,actfancr)
 {
-	actfancr_state *state = machine.driver_data<actfancr_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 }
 
-static MACHINE_START( triothep )
+MACHINE_START_MEMBER(actfancr_state,triothep)
 {
-	actfancr_state *state = machine.driver_data<actfancr_state>();
 
-	MACHINE_START_CALL(actfancr);
+	MACHINE_START_CALL_MEMBER(actfancr);
 
-	state->save_item(NAME(state->m_trio_control_select));
+	save_item(NAME(m_trio_control_select));
 }
 
-static MACHINE_RESET( actfancr )
+MACHINE_RESET_MEMBER(actfancr_state,actfancr)
 {
-	actfancr_state *state = machine.driver_data<actfancr_state>();
-	state->m_flipscreen = 0;
+	m_flipscreen = 0;
 }
 
-static MACHINE_RESET( triothep )
+MACHINE_RESET_MEMBER(actfancr_state,triothep)
 {
-	actfancr_state *state = machine.driver_data<actfancr_state>();
 
-	MACHINE_RESET_CALL(actfancr);
-	state->m_trio_control_select = 0;
+	MACHINE_RESET_CALL_MEMBER(actfancr);
+	m_trio_control_select = 0;
 }
 
 /******************************************************************************/
@@ -332,8 +328,8 @@ static MACHINE_CONFIG_START( actfancr, actfancr_state )
 	MCFG_CPU_ADD("audiocpu",M6502, 1500000) /* Should be accurate */
 	MCFG_CPU_PROGRAM_MAP(dec0_s_map)
 
-	MCFG_MACHINE_START(actfancr)
-	MCFG_MACHINE_RESET(actfancr)
+	MCFG_MACHINE_START_OVERRIDE(actfancr_state,actfancr)
+	MCFG_MACHINE_RESET_OVERRIDE(actfancr_state,actfancr)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -354,7 +350,6 @@ static MACHINE_CONFIG_START( actfancr, actfancr_state )
 	MCFG_DEVICE_ADD("spritegen", DECO_MXC06, 0)
 	deco_mxc06_device::set_gfx_region(*device, 1);
 
-	MCFG_VIDEO_START(actfancr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -383,8 +378,8 @@ static MACHINE_CONFIG_START( triothep, actfancr_state )
 	MCFG_CPU_ADD("audiocpu",M6502, XTAL_12MHz/8) /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(dec0_s_map)
 
-	MCFG_MACHINE_START(triothep)
-	MCFG_MACHINE_RESET(triothep)
+	MCFG_MACHINE_START_OVERRIDE(actfancr_state,triothep)
+	MCFG_MACHINE_RESET_OVERRIDE(actfancr_state,triothep)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -405,7 +400,6 @@ static MACHINE_CONFIG_START( triothep, actfancr_state )
 	MCFG_DEVICE_ADD("spritegen", DECO_MXC06, 0)
 	deco_mxc06_device::set_gfx_region(*device, 1);
 
-	MCFG_VIDEO_START(actfancr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

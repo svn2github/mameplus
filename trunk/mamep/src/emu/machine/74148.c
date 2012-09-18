@@ -42,8 +42,7 @@
 #include "machine/74148.h"
 
 
-typedef struct _ttl74148_state ttl74148_state;
-struct _ttl74148_state
+struct ttl74148_state
 {
 	/* callback */
 	void (*output_cb)(device_t *device);
@@ -69,7 +68,7 @@ INLINE ttl74148_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == TTL74148);
 
-	return (ttl74148_state *)downcast<legacy_device_base *>(device)->token();
+	return (ttl74148_state *)downcast<ttl74148_device *>(device)->token();
 }
 
 void ttl74148_update(device_t *device)
@@ -180,7 +179,7 @@ int ttl74148_enable_output_r(device_t *device)
 
 static DEVICE_START( ttl74148 )
 {
-	ttl74148_config *config = (ttl74148_config *)downcast<const legacy_device_base *>(device)->inline_config();
+	ttl74148_config *config = (ttl74148_config *)device->static_config();
 	ttl74148_state *state = get_safe_token(device);
     state->output_cb = config->output_cb;
 
@@ -214,13 +213,40 @@ static DEVICE_RESET( ttl74148 )
     state->last_enable_output = -1;
 }
 
+const device_type TTL74148 = &device_creator<ttl74148_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+ttl74148_device::ttl74148_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TTL74148, "74148", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(ttl74148_state));
+}
 
-#define DEVTEMPLATE_ID(p,s)		p##ttl74148##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_RESET | DT_HAS_INLINE_CONFIG
-#define DEVTEMPLATE_NAME		"74148"
-#define DEVTEMPLATE_FAMILY		"TTL"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-DEFINE_LEGACY_DEVICE(TTL74148, ttl74148);
+void ttl74148_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void ttl74148_device::device_start()
+{
+	DEVICE_START_NAME( ttl74148 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void ttl74148_device::device_reset()
+{
+	DEVICE_RESET_NAME( ttl74148 )(this);
+}
+
+

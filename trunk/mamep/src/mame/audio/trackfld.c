@@ -9,11 +9,9 @@
 
 #define TIMER_RATE (4096/4)
 
-typedef struct _trackfld_audio_state trackfld_audio_state;
-struct _trackfld_audio_state
+struct trackfld_audio_state
 {
 	/* sound-related */
-	int      m_SN76496_latch;
 	int      m_last_addr;
 	int      m_last_irq;
 
@@ -27,7 +25,7 @@ INLINE trackfld_audio_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == TRACKFLD_AUDIO);
 
-	return (trackfld_audio_state *)downcast<legacy_device_base *>(device)->token();
+	return (trackfld_audio_state *)downcast<trackfld_audio_device *>(device)->token();
 }
 
 
@@ -46,7 +44,6 @@ static DEVICE_START( trackfld_audio )
 	state->m_vlm = device->machine().device("vlm");
 
 	/* sound */
-	device->save_item(NAME(state->m_SN76496_latch));
 	device->save_item(NAME(state->m_last_addr));
 	device->save_item(NAME(state->m_last_irq));
 }
@@ -55,7 +52,6 @@ static DEVICE_RESET( trackfld_audio )
 {
 	trackfld_audio_state *state = get_safe_token(device);
 
-	state->m_SN76496_latch = 0;
 	state->m_last_addr = 0;
 	state->m_last_irq = 0;
 }
@@ -151,39 +147,64 @@ WRITE8_HANDLER( konami_sh_irqtrigger_w )
 	if (state->m_last_irq == 0 && data)
 	{
 		/* setting bit 0 low then high triggers IRQ on the sound CPU */
-		device_set_input_line_and_vector(state->m_audiocpu, 0, HOLD_LINE, 0xff);
+		state->m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 	}
 
 	state->m_last_irq = data;
 }
 
 
-WRITE8_HANDLER( konami_SN76496_latch_w )
-{
-	device_t *audio = space->machine().device("trackfld_audio");
-	trackfld_audio_state *state = get_safe_token(audio);
-	state->m_SN76496_latch = data;
-}
 
-
-WRITE8_DEVICE_HANDLER( konami_SN76496_w )
-{
-	device_t *audio = device->machine().device("trackfld_audio");
-	trackfld_audio_state *state = get_safe_token(audio);
-	sn76496_w(device, offset, state->m_SN76496_latch);
-}
 
 /*****************************************************************************
     DEVICE DEFINITION
 *****************************************************************************/
 
+const device_type TRACKFLD_AUDIO = &device_creator<trackfld_audio_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+trackfld_audio_device::trackfld_audio_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TRACKFLD_AUDIO, "Track And Field Audio", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(trackfld_audio_state));
+}
 
-#define DEVTEMPLATE_ID(p,s)				p##trackfld_audio##s
-#define DEVTEMPLATE_FEATURES			DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME				"Track And Field Audio"
-#define DEVTEMPLATE_FAMILY				"Track And Field Audio IC"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-DEFINE_LEGACY_SOUND_DEVICE(TRACKFLD_AUDIO, trackfld_audio);
+void trackfld_audio_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void trackfld_audio_device::device_start()
+{
+	DEVICE_START_NAME( trackfld_audio )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void trackfld_audio_device::device_reset()
+{
+	DEVICE_RESET_NAME( trackfld_audio )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void trackfld_audio_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

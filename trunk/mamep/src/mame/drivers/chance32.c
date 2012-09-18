@@ -57,27 +57,30 @@ public:
 	required_shared_ptr<UINT8> m_bgram;
 
 	UINT8 mux_data;
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(chance32_state::get_fg_tile_info)
 {
-	chance32_state *state = machine.driver_data<chance32_state>();
-	int code = (state->m_fgram[tile_index * 2 + 1] << 8) | state->m_fgram[tile_index * 2];
+	int code = (m_fgram[tile_index * 2 + 1] << 8) | m_fgram[tile_index * 2];
 	int flip = (~code >> 12)&1;
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code & 0x0fff,
 			code >> 13,
 			TILE_FLIPYX(flip<<1)|flip);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(chance32_state::get_bg_tile_info)
 {
-	chance32_state *state = machine.driver_data<chance32_state>();
-	int code = (state->m_bgram[tile_index * 2 +1] << 8) | state->m_bgram[tile_index * 2];
+	int code = (m_bgram[tile_index * 2 +1] << 8) | m_bgram[tile_index * 2];
 	int flip = (~code >> 12)&1;
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code & 0x0fff,
 			code >> 13,
@@ -85,17 +88,16 @@ static TILE_GET_INFO( get_bg_tile_info )
 }
 
 
-VIDEO_START( chance32 )
+void chance32_state::video_start()
 {
-	chance32_state *state = machine.driver_data<chance32_state>();
 
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 16, 8, 35, 29);
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(chance32_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 35, 29);
+	m_fg_tilemap->set_transparent_pen(0);
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 16, 8, 35, 29);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(chance32_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 8, 35, 29);
 
-	state->m_fg_tilemap->set_flip(TILE_FLIPX|TILE_FLIPY);
-	state->m_bg_tilemap->set_flip(TILE_FLIPX|TILE_FLIPY);
+	m_fg_tilemap->set_flip(TILE_FLIPX|TILE_FLIPY);
+	m_bg_tilemap->set_flip(TILE_FLIPX|TILE_FLIPY);
 }
 
 
@@ -437,12 +439,12 @@ static GFXDECODE_START( chance32 )
 GFXDECODE_END
 
 
-static MACHINE_START( chance32 )
+void chance32_state::machine_start()
 {
 
 }
 
-static MACHINE_RESET( chance32 )
+void chance32_state::machine_reset()
 {
 
 }
@@ -471,8 +473,6 @@ static MACHINE_CONFIG_START( chance32, chance32_state )
 	MCFG_CPU_IO_MAP(chance32_portmap)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_MACHINE_START(chance32)
-	MCFG_MACHINE_RESET(chance32)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -488,7 +488,6 @@ static MACHINE_CONFIG_START( chance32, chance32_state )
 	MCFG_GFXDECODE(chance32)
 	MCFG_PALETTE_LENGTH(0x800)
 
-	MCFG_VIDEO_START(chance32)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

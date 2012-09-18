@@ -331,7 +331,7 @@ static void parse_control( running_machine &machine )	/* assumes Z80 sandwiched 
 	/* however this fails when recovering from a save state
        if cpu B is disabled !! */
 	ninjaw_state *state = machine.driver_data<ninjaw_state>();
-	device_set_input_line(state->m_subcpu, INPUT_LINE_RESET, (state->m_cpua_ctrl & 0x1) ? CLEAR_LINE : ASSERT_LINE);
+	state->m_subcpu->set_input_line(INPUT_LINE_RESET, (state->m_cpua_ctrl & 0x1) ? CLEAR_LINE : ASSERT_LINE);
 
 }
 
@@ -344,7 +344,7 @@ WRITE16_MEMBER(ninjaw_state::cpua_ctrl_w)
 
 	parse_control(machine());
 
-	logerror("CPU #0 PC %06x: write %04x to cpu control\n", cpu_get_pc(&space.device()), data);
+	logerror("CPU #0 PC %06x: write %04x to cpu control\n", space.device().safe_pc(), data);
 }
 
 
@@ -645,7 +645,7 @@ GFXDECODE_END
 static void irqhandler( device_t *device, int irq )
 {
 	ninjaw_state *state = device->machine().driver_data<ninjaw_state>();
-	device_set_input_line(state->m_audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
@@ -673,21 +673,68 @@ static DEVICE_START( subwoofer )
 	return 0;
 }
 
-static DEVICE_GET_INFO( subwoofer )
+class subwoofer_device : public device_t,
+                                  public device_sound_interface
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(subwoofer);		break;
+public:
+	subwoofer_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~subwoofer_device() { global_free(m_token); }
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Subwoofer");					break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type SUBWOOFER;
+
+const device_type SUBWOOFER = &device_creator<subwoofer_device>;
+
+subwoofer_device::subwoofer_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, SUBWOOFER, "Subwoofer", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof());
 }
 
-DECLARE_LEGACY_SOUND_DEVICE(SUBWOOFER, subwoofer);
-DEFINE_LEGACY_SOUND_DEVICE(SUBWOOFER, subwoofer);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void subwoofer_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void subwoofer_device::device_start()
+{
+	DEVICE_START_NAME( subwoofer )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void subwoofer_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+
 #endif
 
 
@@ -753,44 +800,42 @@ static void ninjaw_postload(running_machine &machine)
 	reset_sound_region(machine);
 }
 
-static MACHINE_START( ninjaw )
+void ninjaw_state::machine_start()
 {
-	ninjaw_state *state = machine.driver_data<ninjaw_state>();
 
-	state->membank("bank10")->configure_entries(0, 8, state->memregion("audiocpu")->base() + 0xc000, 0x4000);
+	membank("bank10")->configure_entries(0, 8, memregion("audiocpu")->base() + 0xc000, 0x4000);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_subcpu = machine.device("sub");
-	state->m_tc0140syt = machine.device("tc0140syt");
-	state->m_tc0100scn_1 = machine.device("tc0100scn_1");
-	state->m_tc0100scn_2 = machine.device("tc0100scn_2");
-	state->m_tc0100scn_3 = machine.device("tc0100scn_3");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_subcpu = machine().device<cpu_device>("sub");
+	m_tc0140syt = machine().device("tc0140syt");
+	m_tc0100scn_1 = machine().device("tc0100scn_1");
+	m_tc0100scn_2 = machine().device("tc0100scn_2");
+	m_tc0100scn_3 = machine().device("tc0100scn_3");
 
-	state->m_lscreen = machine.device("lscreen");
-	state->m_mscreen = machine.device("mscreen");
-	state->m_rscreen = machine.device("rscreen");
+	m_lscreen = machine().device("lscreen");
+	m_mscreen = machine().device("mscreen");
+	m_rscreen = machine().device("rscreen");
 
-	state->m_2610_1l = machine.device("2610.1.l");
-	state->m_2610_1r = machine.device("2610.1.r");
-	state->m_2610_2l = machine.device("2610.2.l");
-	state->m_2610_2r = machine.device("2610.2.r");
+	m_2610_1l = machine().device("2610.1.l");
+	m_2610_1r = machine().device("2610.1.r");
+	m_2610_2l = machine().device("2610.2.l");
+	m_2610_2r = machine().device("2610.2.r");
 
-	state->save_item(NAME(state->m_cpua_ctrl));
-	state->save_item(NAME(state->m_banknum));
-	state->save_item(NAME(state->m_pandata));
-	machine.save().register_postload(save_prepost_delegate(FUNC(ninjaw_postload), &machine));
+	save_item(NAME(m_cpua_ctrl));
+	save_item(NAME(m_banknum));
+	save_item(NAME(m_pandata));
+	machine().save().register_postload(save_prepost_delegate(FUNC(ninjaw_postload), &machine()));
 }
 
-static MACHINE_RESET( ninjaw )
+void ninjaw_state::machine_reset()
 {
-	ninjaw_state *state = machine.driver_data<ninjaw_state>();
-	state->m_cpua_ctrl = 0xff;
-	state->m_banknum = 0;
-	memset(state->m_pandata, 0, sizeof(state->m_pandata));
+	m_cpua_ctrl = 0xff;
+	m_banknum = 0;
+	memset(m_pandata, 0, sizeof(m_pandata));
 
 	/**** mixer control enable ****/
-	machine.sound().system_enable(true);	/* mixer enabled */
+	machine().sound().system_enable(true);	/* mixer enabled */
 }
 
 static MACHINE_CONFIG_START( ninjaw, ninjaw_state )
@@ -809,8 +854,6 @@ static MACHINE_CONFIG_START( ninjaw, ninjaw_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* CPU slices */
 
-	MCFG_MACHINE_START(ninjaw)
-	MCFG_MACHINE_RESET(ninjaw)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", ninjaw_io_intf)
 
@@ -840,7 +883,6 @@ static MACHINE_CONFIG_START( ninjaw, ninjaw_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(ninjaw_right)
 
-	MCFG_VIDEO_START(ninjaw)
 
 	MCFG_TC0100SCN_ADD("tc0100scn_1", darius2_tc0100scn_intf_l)
 	MCFG_TC0100SCN_ADD("tc0100scn_2", darius2_tc0100scn_intf_m)
@@ -892,8 +934,6 @@ static MACHINE_CONFIG_START( darius2, ninjaw_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* CPU slices */
 
-	MCFG_MACHINE_START(ninjaw)
-	MCFG_MACHINE_RESET(ninjaw)
 
 	MCFG_TC0220IOC_ADD("tc0220ioc", ninjaw_io_intf)
 
@@ -923,7 +963,6 @@ static MACHINE_CONFIG_START( darius2, ninjaw_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 36*8-1, 3*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(ninjaw_right)
 
-	MCFG_VIDEO_START(ninjaw)
 
 	MCFG_TC0100SCN_ADD("tc0100scn_1", darius2_tc0100scn_intf_l)
 	MCFG_TC0100SCN_ADD("tc0100scn_2", darius2_tc0100scn_intf_m)

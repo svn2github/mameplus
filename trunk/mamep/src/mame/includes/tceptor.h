@@ -1,3 +1,5 @@
+#include "namcos2.h"
+
 class tceptor_state : public driver_device
 {
 public:
@@ -7,7 +9,8 @@ public:
 		m_tile_attr(*this, "tile_attr"),
 		m_bg_ram(*this, "bg_ram"),
 		m_m68k_shared_ram(*this, "m68k_shared_ram"),
-		m_sprite_ram(*this, "sprite_ram"){ }
+		m_sprite_ram(*this, "sprite_ram"),
+		m_c45_road(*this, "c45_road") { }
 
 	UINT8 m_m6809_irq_enable;
 	UINT8 m_m68k_irq_enable;
@@ -48,13 +51,22 @@ public:
 	DECLARE_WRITE8_MEMBER(tceptor_bg_scroll_w);
 	void tile_mark_dirty(int offset);
 	DECLARE_WRITE8_MEMBER(voice_w);
+
+	optional_device<namco_c45_road_device> m_c45_road;
+	TILE_GET_INFO_MEMBER(get_tx_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg2_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/tceptor.c -----------*/
 
-PALETTE_INIT( tceptor );
-VIDEO_START( tceptor );
+
+
 SCREEN_UPDATE_IND16( tceptor_2d );
 SCREEN_UPDATE_IND16( tceptor_3d_left );
 SCREEN_UPDATE_IND16( tceptor_3d_right );

@@ -476,21 +476,21 @@ READ32_MEMBER(hng64_state::hng64_random_read)
 READ32_MEMBER(hng64_state::hng64_com_r)
 {
 
-	logerror("com read  (PC=%08x): %08x %08x = %08x\n", cpu_get_pc(&space.device()), (offset*4)+0xc0000000, mem_mask, m_com_ram[offset]);
+	logerror("com read  (PC=%08x): %08x %08x = %08x\n", space.device().safe_pc(), (offset*4)+0xc0000000, mem_mask, m_com_ram[offset]);
 	return m_com_ram[offset];
 }
 
 WRITE32_MEMBER(hng64_state::hng64_com_w)
 {
 
-	logerror("com write (PC=%08x): %08x %08x = %08x\n", cpu_get_pc(&space.device()), (offset*4)+0xc0000000, mem_mask, data);
+	logerror("com write (PC=%08x): %08x %08x = %08x\n", space.device().safe_pc(), (offset*4)+0xc0000000, mem_mask, data);
 	COMBINE_DATA(&m_com_ram[offset]);
 }
 
 WRITE32_MEMBER(hng64_state::hng64_com_share_w)
 {
 
-	logerror("commw  (PC=%08x): %08x %08x %08x\n", cpu_get_pc(&space.device()), data, (offset*4)+0xc0001000, mem_mask);
+	logerror("commw  (PC=%08x): %08x %08x %08x\n", space.device().safe_pc(), data, (offset*4)+0xc0001000, mem_mask);
 
 	if (offset == 0x0) COMBINE_DATA(&m_com_shared_a);
 	if (offset == 0x1) COMBINE_DATA(&m_com_shared_b);
@@ -498,7 +498,7 @@ WRITE32_MEMBER(hng64_state::hng64_com_share_w)
 
 READ32_MEMBER(hng64_state::hng64_com_share_r)
 {
-	logerror("commr  (PC=%08x): %08x %08x\n", cpu_get_pc(&space.device()), (offset*4)+0xc0001000, mem_mask);
+	logerror("commr  (PC=%08x): %08x %08x\n", space.device().safe_pc(), (offset*4)+0xc0001000, mem_mask);
 
 	//if(offset == 0x0) return m_com_shared_a;
 	//if(offset == 0x1) return m_com_shared_b;
@@ -529,7 +529,7 @@ READ32_MEMBER(hng64_state::hng64_sysregs_r)
 
 #if 0
 	if((offset*4) != 0x1084)
-		printf("HNG64 port read (PC=%08x) 0x%08x\n", cpu_get_pc(&space.device()), offset*4);
+		printf("HNG64 port read (PC=%08x) 0x%08x\n", space.device().safe_pc(), offset*4);
 #endif
 
 	rtc_addr = offset >> 1;
@@ -605,14 +605,14 @@ WRITE32_MEMBER(hng64_state::hng64_sysregs_w)
 
 #if 0
 	if(((offset*4) & 0xff00) == 0x1100)
-		printf("HNG64 writing to SYSTEM Registers 0x%08x == 0x%08x. (PC=%08x)\n", offset*4, m_sysregs[offset], cpu_get_pc(&space.device()));
+		printf("HNG64 writing to SYSTEM Registers 0x%08x == 0x%08x. (PC=%08x)\n", offset*4, m_sysregs[offset], space.device().safe_pc());
 #endif
 
 	switch(offset*4)
 	{
 		case 0x1084: //MIPS->MCU latch port
 			m_mcu_en = (data & 0xff); //command-based, i.e. doesn't control halt line and such?
-			//printf("HNG64 writing to SYSTEM Registers 0x%08x == 0x%08x. (PC=%08x)\n", offset*4, m_sysregs[offset], cpu_get_pc(&space.device()));
+			//printf("HNG64 writing to SYSTEM Registers 0x%08x == 0x%08x. (PC=%08x)\n", offset*4, m_sysregs[offset], space.device().safe_pc());
 			break;
 		//0x110c global irq mask?
 		/* irq ack */
@@ -624,7 +624,7 @@ WRITE32_MEMBER(hng64_state::hng64_sysregs_w)
 			hng64_do_dma(&space);
 			break;
 		//default:
-		//  printf("HNG64 writing to SYSTEM Registers 0x%08x == 0x%08x. (PC=%08x)\n", offset*4, m_sysregs[offset], cpu_get_pc(&space.device()));
+		//  printf("HNG64 writing to SYSTEM Registers 0x%08x == 0x%08x. (PC=%08x)\n", offset*4, m_sysregs[offset], space.device().safe_pc());
 	}
 }
 
@@ -751,7 +751,7 @@ READ32_MEMBER(hng64_state::racing_io_r)
 READ32_MEMBER(hng64_state::hng64_dualport_r)
 {
 
-	//printf("dualport R %08x %08x (PC=%08x)\n", offset*4, hng64_dualport[offset], cpu_get_pc(&space.device()));
+	//printf("dualport R %08x %08x (PC=%08x)\n", offset*4, hng64_dualport[offset], space.device().safe_pc());
 
 	/*
     command table:
@@ -789,7 +789,7 @@ Beast Busters 2 outputs (all at offset == 0x1c):
 WRITE32_MEMBER(hng64_state::hng64_dualport_w)
 {
 
-	//printf("dualport WRITE %08x %08x (PC=%08x)\n", offset*4, hng64_dualport[offset], cpu_get_pc(&space.device()));
+	//printf("dualport WRITE %08x %08x (PC=%08x)\n", offset*4, hng64_dualport[offset], space.device().safe_pc());
 	COMBINE_DATA (&m_dualport[offset]);
 }
 
@@ -809,7 +809,7 @@ READ32_MEMBER(hng64_state::hng64_3d_1_r)
 #ifdef UNUSED_FUNCTION
 WRITE32_MEMBER(hng64_state::hng64_3d_1_w)
 {
-	fatalerror("WRITE32_HANDLER( hng64_3d_1_w )");
+	fatalerror("WRITE32_HANDLER( hng64_3d_1_w )\n");
 }
 #endif
 
@@ -862,8 +862,8 @@ WRITE32_MEMBER(hng64_state::dl_w)
 #if 0
 READ32_MEMBER(hng64_state::dl_r)
 {
-	//mame_printf_debug("dl R (%08x) : %x %x\n", cpu_get_pc(&space.device()), offset, hng64_dl[offset]);
-	//usrintf_showmessage("dl R (%08x) : %x %x", cpu_get_pc(&space.device()), offset, hng64_dl[offset]);
+	//mame_printf_debug("dl R (%08x) : %x %x\n", space.device().safe_pc(), offset, hng64_dl[offset]);
+	//usrintf_showmessage("dl R (%08x) : %x %x", space.device().safe_pc(), offset, hng64_dl[offset]);
 	return hng64_dl[offset];
 }
 #endif
@@ -1048,14 +1048,14 @@ WRITE32_MEMBER( hng64_state::hng64_soundcpu_enable_w )
 		if (cmd==0x55AA)
 		{
 			printf("soundcpu ON\n");
-			cputag_set_input_line(space.machine(), "audiocpu", INPUT_LINE_HALT, CLEAR_LINE);
-			cputag_set_input_line(space.machine(), "audiocpu", INPUT_LINE_RESET, CLEAR_LINE);
+			space.machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
+			space.machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 		}
 		else if (cmd==0xAA55)
 		{
 			printf("soundcpu OFF\n");
-			cputag_set_input_line(space.machine(), "audiocpu", INPUT_LINE_HALT, ASSERT_LINE);
-			cputag_set_input_line(space.machine(), "audiocpu", INPUT_LINE_RESET, ASSERT_LINE);
+			space.machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
+			space.machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 		}
 		else
 		{
@@ -1751,10 +1751,10 @@ void hng64_state::m_set_irq(UINT32 irq_vector)
 			}
 		}
 
-		device_set_input_line(m_maincpu, 0, ASSERT_LINE);
+		m_maincpu->set_input_line(0, ASSERT_LINE);
 	}
 	else
-		device_set_input_line(m_maincpu, 0, CLEAR_LINE);
+		m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 static TIMER_DEVICE_CALLBACK( hng64_irq )
@@ -1772,54 +1772,52 @@ static TIMER_DEVICE_CALLBACK( hng64_irq )
 }
 
 
-static MACHINE_START(hyperneo)
+void hng64_state::machine_start()
 {
-	hng64_state *state = machine.driver_data<hng64_state>();
 
 	/* set the fastest DRC options */
-	mips3drc_set_options(machine.device("maincpu"), MIPS3DRC_FASTEST_OPTIONS + MIPS3DRC_STRICT_VERIFY);
+	mips3drc_set_options(machine().device("maincpu"), MIPS3DRC_FASTEST_OPTIONS + MIPS3DRC_STRICT_VERIFY);
 
 	/* configure fast RAM regions for DRC */
-	mips3drc_add_fastram(machine.device("maincpu"), 0x00000000, 0x00ffffff, FALSE, state->m_mainram);
-	mips3drc_add_fastram(machine.device("maincpu"), 0x04000000, 0x05ffffff, TRUE,  state->m_cart);
-	mips3drc_add_fastram(machine.device("maincpu"), 0x1fc00000, 0x1fc7ffff, TRUE,  state->m_rombase);
+	mips3drc_add_fastram(machine().device("maincpu"), 0x00000000, 0x00ffffff, FALSE, m_mainram);
+	mips3drc_add_fastram(machine().device("maincpu"), 0x04000000, 0x05ffffff, TRUE,  m_cart);
+	mips3drc_add_fastram(machine().device("maincpu"), 0x1fc00000, 0x1fc7ffff, TRUE,  m_rombase);
 }
 
 
-static MACHINE_RESET(hyperneo)
+void hng64_state::machine_reset()
 {
-	hng64_state *state = machine.driver_data<hng64_state>();
 	int i;
-	const UINT8 *rom = state->memregion("user2")->base();
+	const UINT8 *rom = memregion("user2")->base();
 
 	/* Sound CPU */
-	UINT8 *RAM = (UINT8*)state->m_soundram;
-	state->membank("bank1")->set_base(&RAM[0x1f0000]); // allows us to boot
-	state->membank("bank2")->set_base(&RAM[0x1f0000]); // seems to be the right default for most games (initial area jumps to a DI here)
-	cputag_set_input_line(machine, "audiocpu", INPUT_LINE_HALT, ASSERT_LINE);
-	cputag_set_input_line(machine, "audiocpu", INPUT_LINE_RESET, ASSERT_LINE);
+	UINT8 *RAM = (UINT8*)m_soundram;
+	membank("bank1")->set_base(&RAM[0x1f0000]); // allows us to boot
+	membank("bank2")->set_base(&RAM[0x1f0000]); // seems to be the right default for most games (initial area jumps to a DI here)
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 	/* Comm CPU */
-	KL5C80_init(state);
+	KL5C80_init(this);
 
 	/* Fill up virtual memory with ROM */
 	for (i = 0x0; i < 0x100000; i++)
-		state->m_com_virtual_mem[i] = rom[i];
+		m_com_virtual_mem[i] = rom[i];
 
-	KL5C80_virtual_mem_sync(state);
+	KL5C80_virtual_mem_sync(this);
 
-	address_space *space = machine.device<z80_device>("comm")->space(AS_PROGRAM);
-	space->set_direct_update_handler(direct_update_delegate(FUNC(hng64_state::KL5C80_direct_handler), state));
+	address_space *space = machine().device<z80_device>("comm")->space(AS_PROGRAM);
+	space->set_direct_update_handler(direct_update_delegate(FUNC(hng64_state::KL5C80_direct_handler), this));
 
-	cputag_set_input_line(machine, "comm", INPUT_LINE_RESET, PULSE_LINE);     // reset the CPU and let 'er rip
-//  cputag_set_input_line(machine, "comm", INPUT_LINE_HALT, ASSERT_LINE);     // hold on there pardner...
+	machine().device("comm")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);     // reset the CPU and let 'er rip
+//  machine().device("comm")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);     // hold on there pardner...
 
 	// "Display List" init - ugly
-	state->m_activeBuffer = 0;
+	m_activeBuffer = 0;
 
 	/* For simulate MCU stepping */
-	state->m_mcu_fake_time = 0;
-	state->m_mcu_en = 0;
+	m_mcu_fake_time = 0;
+	m_mcu_en = 0;
 }
 
 
@@ -1848,8 +1846,6 @@ static MACHINE_CONFIG_START( hng64, hng64_state )
 	MCFG_MSM6242_ADD("rtc", hng64_rtc_intf)
 
 	MCFG_GFXDECODE(hng64)
-	MCFG_MACHINE_START(hyperneo)
-	MCFG_MACHINE_RESET(hyperneo)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
@@ -1857,7 +1853,6 @@ static MACHINE_CONFIG_START( hng64, hng64_state )
 
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_VIDEO_START(hng64)
 	MCFG_SCREEN_VBLANK_STATIC(hng64)
 MACHINE_CONFIG_END
 

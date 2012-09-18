@@ -31,12 +31,16 @@ public:
 	DECLARE_WRITE8_MEMBER(ssozumo_scroll_w);
 	DECLARE_WRITE8_MEMBER(ssozumo_flipscreen_w);
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/ssozumo.c -----------*/
 
 
-PALETTE_INIT( ssozumo );
-VIDEO_START( ssozumo );
+
+
 SCREEN_UPDATE_IND16( ssozumo );

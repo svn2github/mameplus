@@ -55,16 +55,24 @@ public:
 	DECLARE_DRIVER_INIT(rampage);
 	DECLARE_DRIVER_INIT(spyhunt);
 	DECLARE_DRIVER_INIT(sarge);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(mcrmono_get_bg_tile_info);
+	TILEMAP_MAPPER_MEMBER(spyhunt_bg_scan);
+	TILE_GET_INFO_MEMBER(spyhunt_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(spyhunt_get_alpha_tile_info);
+	DECLARE_VIDEO_START(mcrmono);
+	DECLARE_VIDEO_START(spyhunt);
+	DECLARE_PALETTE_INIT(spyhunt);
 };
 
 
 /*----------- defined in video/mcr3.c -----------*/
 
 
-VIDEO_START( mcrmono );
-VIDEO_START( spyhunt );
 
-PALETTE_INIT( spyhunt );
+
+
+
 
 SCREEN_UPDATE_IND16( mcr3 );
 SCREEN_UPDATE_IND16( spyhunt );

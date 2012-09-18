@@ -322,7 +322,7 @@ ADDRESS_MAP_END
 
 READ8_MEMBER(scramble_state::hncholms_prot_r)
 {
-	if(cpu_get_pc(&space.device()) == 0x2b || cpu_get_pc(&space.device()) == 0xa27)
+	if(space.device().safe_pc() == 0x2b || space.device().safe_pc() == 0xa27)
 		return 1;
 	else
 		return 0;
@@ -1333,7 +1333,7 @@ static MACHINE_CONFIG_START( scramble, scramble_state )
 
 	MCFG_TIMER_ADD("int_timer", galaxold_interrupt_timer)
 
-	MCFG_MACHINE_RESET(scramble)
+	MCFG_MACHINE_RESET_OVERRIDE(scramble_state,scramble)
 
 	MCFG_I8255A_ADD( "ppi8255_0", scramble_ppi_0_intf )
 	MCFG_I8255A_ADD( "ppi8255_1", scramble_ppi_1_intf )
@@ -1349,8 +1349,8 @@ static MACHINE_CONFIG_START( scramble, scramble_state )
 	MCFG_GFXDECODE(scramble)
 	MCFG_PALETTE_LENGTH(32+64+2+1)	/* 32 for characters, 64 for stars, 2 for bullets, 0/1 for background */
 
-	MCFG_PALETTE_INIT(scrambold)
-	MCFG_VIDEO_START(scrambold)
+	MCFG_PALETTE_INIT_OVERRIDE(scramble_state,scrambold)
+	MCFG_VIDEO_START_OVERRIDE(scramble_state,scrambold)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1370,7 +1370,7 @@ static MACHINE_CONFIG_DERIVED( mars, scramble )
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(32+64+2+0)	/* 32 for characters, 64 for stars, 2 for bullets, 0/1 for background */
-	MCFG_PALETTE_INIT(galaxold)
+	MCFG_PALETTE_INIT_OVERRIDE(scramble_state,galaxold)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( devilfsh, scramble )
@@ -1382,7 +1382,7 @@ static MACHINE_CONFIG_DERIVED( devilfsh, scramble )
 	/* video hardware */
 	MCFG_GFXDECODE(devilfsh)
 	MCFG_PALETTE_LENGTH(32+64+2+0)	/* 32 for characters, 64 for stars, 2 for bullets, 0/1 for background */
-	MCFG_PALETTE_INIT(galaxold)
+	MCFG_PALETTE_INIT_OVERRIDE(scramble_state,galaxold)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( newsin7, scramble )
@@ -1394,8 +1394,8 @@ static MACHINE_CONFIG_DERIVED( newsin7, scramble )
 	/* video hardware */
 	MCFG_GFXDECODE(newsin7)
 	MCFG_PALETTE_LENGTH(32+64+2+0)	/* 32 for characters, 64 for stars, 2 for bullets, 0/1 for background */
-	MCFG_PALETTE_INIT(galaxold)
-	MCFG_VIDEO_START(scrambold)
+	MCFG_PALETTE_INIT_OVERRIDE(scramble_state,galaxold)
+	MCFG_VIDEO_START_OVERRIDE(scramble_state,scrambold)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( mrkougar, scramble )
@@ -1410,7 +1410,7 @@ static MACHINE_CONFIG_DERIVED( mrkougar, scramble )
 	/* video hardware */
 	MCFG_GFXDECODE(mrkougar)
 	MCFG_PALETTE_LENGTH(32+64+2+0)	/* 32 for characters, 64 for stars, 2 for bullets, 0/1 for background */
-	MCFG_PALETTE_INIT(galaxold)
+	MCFG_PALETTE_INIT_OVERRIDE(scramble_state,galaxold)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( mrkougb, scramble )
@@ -1424,7 +1424,7 @@ static MACHINE_CONFIG_DERIVED( mrkougb, scramble )
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(32+64+2+0)	/* 32 for characters, 64 for stars, 2 for bullets, 0/1 for background */
-	MCFG_PALETTE_INIT(galaxold)
+	MCFG_PALETTE_INIT_OVERRIDE(scramble_state,galaxold)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( ckongs, scramble )
@@ -1435,8 +1435,8 @@ static MACHINE_CONFIG_DERIVED( ckongs, scramble )
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(32+64+2+0)	/* 32 for characters, 64 for stars, 2 for bullets, 0/1 for background */
-	MCFG_PALETTE_INIT(galaxold)
-	MCFG_VIDEO_START(ckongs)
+	MCFG_PALETTE_INIT_OVERRIDE(scramble_state,galaxold)
+	MCFG_VIDEO_START_OVERRIDE(scramble_state,ckongs)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( hotshock, scramble )
@@ -1451,12 +1451,12 @@ static MACHINE_CONFIG_DERIVED( hotshock, scramble )
 	MCFG_CPU_MODIFY("audiocpu")
 	MCFG_CPU_IO_MAP(hotshock_sound_io_map)
 
-	MCFG_MACHINE_RESET(galaxold)
+	MCFG_MACHINE_RESET_OVERRIDE(scramble_state,galaxold)
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(32+64+2+0)	/* 32 for characters, 64 for stars, 2 for bullets, 0/1 for background */
-	MCFG_PALETTE_INIT(galaxold)
-	MCFG_VIDEO_START(pisces)
+	MCFG_PALETTE_INIT_OVERRIDE(scramble_state,galaxold)
+	MCFG_VIDEO_START_OVERRIDE(scramble_state,pisces)
 
 	MCFG_SOUND_MODIFY("8910.1")
 	MCFG_SOUND_ROUTES_RESET()
@@ -1474,8 +1474,8 @@ static MACHINE_CONFIG_DERIVED( cavelon, scramble )
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(32+64+2+0)	/* 32 for characters, 64 for stars, 2 for bullets, 0/1 for background */
-	MCFG_PALETTE_INIT(galaxold)
-	MCFG_VIDEO_START(ckongs)
+	MCFG_PALETTE_INIT_OVERRIDE(scramble_state,galaxold)
+	MCFG_VIDEO_START_OVERRIDE(scramble_state,ckongs)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( mimonscr, scramble )
@@ -1485,7 +1485,7 @@ static MACHINE_CONFIG_DERIVED( mimonscr, scramble )
 	MCFG_CPU_PROGRAM_MAP(mimonscr_map)
 
 	/* video hardware */
-	MCFG_VIDEO_START(mimonkey)
+	MCFG_VIDEO_START_OVERRIDE(scramble_state,mimonkey)
 MACHINE_CONFIG_END
 
 /* Triple Punch and Mariner are different - only one CPU, one 8910 */
@@ -1503,7 +1503,7 @@ static MACHINE_CONFIG_DERIVED( triplep, scramble )
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(32+64+2+0)	/* 32 for characters, 64 for stars, 2 for bullets */
 
-	MCFG_PALETTE_INIT(galaxold)
+	MCFG_PALETTE_INIT_OVERRIDE(scramble_state,galaxold)
 
 	/* sound hardware */
 	MCFG_SOUND_MODIFY("8910.1")
@@ -1522,8 +1522,8 @@ static MACHINE_CONFIG_DERIVED( mariner, triplep )
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(32+64+2+16)	/* 32 for characters, 64 for stars, 2 for bullets, 16 for background */
 
-	MCFG_PALETTE_INIT(mariner)
-	MCFG_VIDEO_START(mariner)
+	MCFG_PALETTE_INIT_OVERRIDE(scramble_state,mariner)
+	MCFG_VIDEO_START_OVERRIDE(scramble_state,mariner)
 MACHINE_CONFIG_END
 
 /* Hunchback replaces the Z80 with a S2650 CPU */
@@ -1541,7 +1541,7 @@ static MACHINE_CONFIG_DERIVED( hunchbks, scramble )
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(32+64+2+0)	/* 32 for characters, 64 for stars, 2 for bullets */
 
-	MCFG_PALETTE_INIT(galaxold)
+	MCFG_PALETTE_INIT_OVERRIDE(scramble_state,galaxold)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( hncholms, hunchbks )
@@ -1550,7 +1550,7 @@ static MACHINE_CONFIG_DERIVED( hncholms, hunchbks )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_CLOCK(18432000/6/2/2)
 
-	MCFG_VIDEO_START(scorpion)
+	MCFG_VIDEO_START_OVERRIDE(scramble_state,scorpion)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_START( ad2083, scramble_state )
@@ -1564,7 +1564,7 @@ static MACHINE_CONFIG_START( ad2083, scramble_state )
 
 	MCFG_TIMER_ADD("int_timer", galaxold_interrupt_timer)
 
-	MCFG_MACHINE_RESET(galaxold)
+	MCFG_MACHINE_RESET_OVERRIDE(scramble_state,galaxold)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1577,8 +1577,8 @@ static MACHINE_CONFIG_START( ad2083, scramble_state )
 	MCFG_GFXDECODE(ad2083)
 	MCFG_PALETTE_LENGTH(32+64+2+8)	/* 32 for characters, 64 for stars, 2 for bullets, 8 for background */
 
-	MCFG_PALETTE_INIT(turtles)
-	MCFG_VIDEO_START(ad2083)
+	MCFG_PALETTE_INIT_OVERRIDE(scramble_state,turtles)
+	MCFG_VIDEO_START_OVERRIDE(scramble_state,ad2083)
 
 	/* sound hardware */
 
@@ -2051,24 +2051,24 @@ ROM_START( turpins )
 	ROM_LOAD( "turtles.clr",     0x0000, 0x0020, CRC(f3ef02dd) SHA1(09fd795170d7d30f101d579f57553da5ff3800ab) )
 ROM_END
 
-GAME( 1982, triplep,  0,        triplep,  triplep, scramble_state,  scramble_ppi, ROT90, "K.K. International", "Triple Punch", GAME_SUPPORTS_SAVE )
-GAME( 1982, knockout, triplep,  triplep,  triplep, scramble_state,  scramble_ppi, ROT90, "KKK", "Knock Out!! (bootleg?)", GAME_SUPPORTS_SAVE )
+GAME( 1982, triplep,  0,        triplep,  triplep,  scramble_state, scramble_ppi, ROT90, "K.K. International", "Triple Punch", GAME_SUPPORTS_SAVE )
+GAME( 1982, knockout, triplep,  triplep,  triplep,  scramble_state, scramble_ppi, ROT90, "bootleg? (KKK)", "Knock Out!! (bootleg?)", GAME_SUPPORTS_SAVE )
 GAME( 1981, mariner,  0,        mariner,  scramble, scramble_state, mariner,      ROT90, "Amenip", "Mariner", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE)
-GAME( 1981, 800fath,  mariner,  mariner,  800fath, scramble_state,  mariner,      ROT90, "Amenip (US Billiards Inc. license)", "800 Fathoms", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
-GAME( 1981, ckongs,   ckong,    ckongs,   ckongs, scramble_state,   ckongs,       ROT90, "bootleg", "Crazy Kong (Scramble hardware)", GAME_SUPPORTS_SAVE )
-GAME( 1981, mars,     0,        mars,     mars, scramble_state,     mars,         ROT90, "Artic", "Mars", GAME_SUPPORTS_SAVE )
+GAME( 1981, 800fath,  mariner,  mariner,  800fath,  scramble_state, mariner,      ROT90, "Amenip (US Billiards Inc. license)", "800 Fathoms", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )
+GAME( 1981, ckongs,   ckong,    ckongs,   ckongs,   scramble_state, ckongs,       ROT90, "bootleg", "Crazy Kong (Scramble hardware)", GAME_SUPPORTS_SAVE )
+GAME( 1981, mars,     0,        mars,     mars,     scramble_state, mars,         ROT90, "Artic", "Mars", GAME_SUPPORTS_SAVE )
 GAME( 1982, devilfsh, 0,        devilfsh, devilfsh, scramble_state, devilfsh,     ROT90, "Artic", "Devil Fish", GAME_SUPPORTS_SAVE )
-GAME( 1983, newsin7,  0,        newsin7,  newsin7, scramble_state,  mars,         ROT90, "ATW USA, Inc.", "New Sinbad 7", GAME_SUPPORTS_SAVE )
+GAME( 1983, newsin7,  0,        newsin7,  newsin7,  scramble_state, mars,         ROT90, "ATW USA, Inc.", "New Sinbad 7", GAME_SUPPORTS_SAVE )
 GAME( 1984, mrkougar, 0,        mrkougar, mrkougar, scramble_state, mrkougar,     ROT90, "ATW", "Mr. Kougar", GAME_SUPPORTS_SAVE )
 GAME( 1983, mrkougar2,mrkougar, mrkougar, mrkougar, scramble_state, mrkougar,     ROT90, "ATW", "Mr. Kougar (earlier)", GAME_SUPPORTS_SAVE )
 GAME( 1983, mrkougb,  mrkougar, mrkougb,  mrkougar, scramble_state, mrkougb,      ROT90, "bootleg", "Mr. Kougar (bootleg set 1)", GAME_SUPPORTS_SAVE )
 GAME( 1983, mrkougb2, mrkougar, mrkougb,  mrkougar, scramble_state, mrkougb,      ROT90, "bootleg", "Mr. Kougar (bootleg set 2)", GAME_SUPPORTS_SAVE )
 GAME( 1982, hotshock, 0,        hotshock, hotshock, scramble_state, hotshock,     ROT90, "E.G. Felaco (Domino license)", "Hot Shocker", GAME_SUPPORTS_SAVE )
 GAME( 1982, hotshockb,hotshock, hotshock, hotshock, scramble_state, hotshock,     ROT90, "E.G. Felaco", "Hot Shocker (early revision?)", GAME_SUPPORTS_SAVE ) // has "Dudley presents" (protagonist of the game), instead of Domino
-GAME( 198?, conquer,  0,        hotshock, hotshock, driver_device, 0,            ROT90, "<unknown>", "Conqueror", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE)
+GAME( 198?, conquer,  0,        hotshock, hotshock, driver_device,  0,            ROT90, "<unknown>", "Conqueror", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE)
 GAME( 1983, hunchbks, hunchbak, hunchbks, hunchbks, scramble_state, scramble_ppi, ROT90, "Century Electronics", "Hunchback (Scramble hardware)", GAME_SUPPORTS_SAVE )
 GAME( 1984, hncholms, huncholy, hncholms, hncholms, scramble_state, scramble_ppi, ROT90, "Century Electronics / Seatongrove Ltd", "Hunchback Olympic (Scramble hardware)", GAME_SUPPORTS_SAVE )
-GAME( 1983, cavelon,  0,        cavelon,  cavelon, scramble_state,  cavelon,      ROT90, "Jetsoft", "Cavelon", GAME_SUPPORTS_SAVE )
+GAME( 1983, cavelon,  0,        cavelon,  cavelon,  scramble_state, cavelon,      ROT90, "Jetsoft", "Cavelon", GAME_SUPPORTS_SAVE )
 GAME( 1982, mimonscr, mimonkey, mimonscr, mimonscr, scramble_state, mimonscr,     ROT90, "bootleg", "Mighty Monkey (bootleg on Scramble hardware)", GAME_SUPPORTS_SAVE )
-GAME( 1983, ad2083,   0,        ad2083,   ad2083, scramble_state,   ad2083,       ROT90, "Midcoin", "A. D. 2083", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE)
-GAME( 1981, turpins,  turtles,  turpins,  turpins, driver_device,  0,            ROT90, "bootleg", "Turpin (bootleg on Scramble hardware)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE ) // haven't hooked up the sound CPU yet
+GAME( 1983, ad2083,   0,        ad2083,   ad2083,   scramble_state, ad2083,       ROT90, "Midcoin", "A. D. 2083", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE)
+GAME( 1981, turpins,  turtles,  turpins,  turpins,  driver_device,  0,            ROT90, "bootleg", "Turpin (bootleg on Scramble hardware)", GAME_NO_SOUND | GAME_SUPPORTS_SAVE ) // haven't hooked up the sound CPU yet

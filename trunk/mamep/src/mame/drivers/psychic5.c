@@ -315,11 +315,10 @@ The first sprite data is located at f20b,then f21b and so on.
 #include "includes/psychic5.h"
 
 
-static MACHINE_RESET( psychic5 )
+void psychic5_state::machine_reset()
 {
-	psychic5_state *state = machine.driver_data<psychic5_state>();
-	state->m_bank_latch = 0xff;
-	state->flip_screen_set(0);
+	m_bank_latch = 0xff;
+	flip_screen_set(0);
 }
 
 /***************************************************************************
@@ -333,10 +332,10 @@ static TIMER_DEVICE_CALLBACK( psychic5_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
 
 	if(scanline == 0) // sprite buffer irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE, 0xcf);	/* RST 08h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);	/* RST 08h */
 }
 
 
@@ -411,7 +410,7 @@ static ADDRESS_MAP_START( psychic5_main_map, AS_PROGRAM, 8, psychic5_state )
 	AM_RANGE(0x8000, 0xbfff) AM_RAMBANK("bank1")
 	AM_RANGE(0xc000, 0xdfff) AM_READWRITE(psychic5_paged_ram_r, psychic5_paged_ram_w)
 	AM_RANGE(0xe000, 0xefff) AM_RAM
-	AM_RANGE(0xf000, 0xf000) AM_RAM_WRITE(soundlatch_byte_w)
+	AM_RANGE(0xf000, 0xf000) AM_WRITE(soundlatch_byte_w)
 	AM_RANGE(0xf001, 0xf001) AM_READNOP AM_WRITE(psychic5_coin_counter_w)
 	AM_RANGE(0xf002, 0xf002) AM_READWRITE(psychic5_bankselect_r, psychic5_bankselect_w)
 	AM_RANGE(0xf003, 0xf003) AM_READWRITE(psychic5_vram_page_select_r, psychic5_vram_page_select_w)
@@ -646,7 +645,7 @@ GFXDECODE_END
 
 static void irqhandler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -671,7 +670,6 @@ static MACHINE_CONFIG_START( psychic5, psychic5_state )
 	MCFG_CPU_IO_MAP(psychic5_soundport_map)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))      /* Allow time for 2nd cpu to interleave */
-	MCFG_MACHINE_RESET(psychic5)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -685,8 +683,8 @@ static MACHINE_CONFIG_START( psychic5, psychic5_state )
 	MCFG_GFXDECODE(psychic5)
 	MCFG_PALETTE_LENGTH(768)
 
-	MCFG_VIDEO_START(psychic5)
-	MCFG_VIDEO_RESET(psychic5)
+	MCFG_VIDEO_START_OVERRIDE(psychic5_state,psychic5)
+	MCFG_VIDEO_RESET_OVERRIDE(psychic5_state,psychic5)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -717,7 +715,6 @@ static MACHINE_CONFIG_START( bombsa, psychic5_state )
 	MCFG_CPU_IO_MAP(bombsa_soundport_map)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
-	MCFG_MACHINE_RESET(psychic5)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -730,8 +727,8 @@ static MACHINE_CONFIG_START( bombsa, psychic5_state )
 	MCFG_GFXDECODE(bombsa)
 	MCFG_PALETTE_LENGTH(768)
 
-	MCFG_VIDEO_START(bombsa)
-	MCFG_VIDEO_RESET(bombsa)
+	MCFG_VIDEO_START_OVERRIDE(psychic5_state,bombsa)
+	MCFG_VIDEO_RESET_OVERRIDE(psychic5_state,bombsa)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

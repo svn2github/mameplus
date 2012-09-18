@@ -63,7 +63,7 @@ READ16_MEMBER(lethalj_state::lethalj_gun_r)
 			result = m_guny + 4;
 			break;
 	}
-/*  logerror("%08X:lethalj_gun_r(%d) = %04X\n", cpu_get_pc(&space.device()), offset, result); */
+/*  logerror("%08X:lethalj_gun_r(%d) = %04X\n", space.device().safe_pc(), offset, result); */
 	return result;
 }
 
@@ -75,15 +75,14 @@ READ16_MEMBER(lethalj_state::lethalj_gun_r)
  *
  *************************************/
 
-VIDEO_START( lethalj )
+void lethalj_state::video_start()
 {
-	lethalj_state *state = machine.driver_data<lethalj_state>();
 	/* allocate video RAM for screen */
-	state->m_screenram = auto_alloc_array(machine, UINT16, BLITTER_DEST_WIDTH * BLITTER_DEST_HEIGHT);
+	m_screenram = auto_alloc_array(machine(), UINT16, BLITTER_DEST_WIDTH * BLITTER_DEST_HEIGHT);
 
 	/* predetermine blitter info */
-	state->m_blitter_base = (UINT16 *)state->memregion("gfx1")->base();
-	state->m_blitter_rows = state->memregion("gfx1")->bytes() / (2*BLITTER_SOURCE_WIDTH);
+	m_blitter_base = (UINT16 *)memregion("gfx1")->base();
+	m_blitter_rows = memregion("gfx1")->bytes() / (2*BLITTER_SOURCE_WIDTH);
 }
 
 
@@ -96,7 +95,7 @@ VIDEO_START( lethalj )
 
 static TIMER_CALLBACK( gen_ext1_int )
 {
-	cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -158,7 +157,7 @@ WRITE16_MEMBER(lethalj_state::lethalj_blitter_w)
 
 	/* clear the IRQ on offset 0 */
 	else if (offset == 0)
-		cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 

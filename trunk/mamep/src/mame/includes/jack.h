@@ -47,15 +47,23 @@ public:
 	DECLARE_DRIVER_INIT(treahunt);
 	DECLARE_DRIVER_INIT(loverboy);
 	DECLARE_DRIVER_INIT(jack);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILEMAP_MAPPER_MEMBER(tilemap_scan_cols_flipy);
+	TILE_GET_INFO_MEMBER(joinem_get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	DECLARE_VIDEO_START(joinem);
+	DECLARE_PALETTE_INIT(joinem);
 };
 
 
 /*----------- defined in video/jack.c -----------*/
 
 
-VIDEO_START( jack );
+
 SCREEN_UPDATE_IND16( jack );
 
-PALETTE_INIT( joinem );
-VIDEO_START( joinem );
+
+
 SCREEN_UPDATE_IND16( joinem );

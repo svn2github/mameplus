@@ -28,11 +28,11 @@ Sound:  Z80-A
         M6295
 OSC:    14.31818MHz
         16.000MHz
-Chips:  SEI0100
+Chips:  SEI0100 (YM3931, main/sub cpu interface)
         SEI0160
-        SEI0200
+        SEI0200 (tilemap chip)
         SEI0210
-        SEI0220
+        SEI0220 (sprite chip)
 
 
 MAH1-1-1.915  samples
@@ -78,28 +78,31 @@ public:
 /* Multiplexer device for the mahjong panel */
 READ16_MEMBER(sengokmj_state::mahjong_panel_r)
 {
-	switch(m_sengokumj_mux_data)
+	const char *const mpnames[] = { "KEY0", "KEY1", "KEY2", "KEY3", "KEY4", "UNUSED" };
+	int i;
+	UINT16 res = 0xffff;
+
+	for(i=0;i<5;i++)
 	{
-		case 0x0100: return ioport("KEY0")->read();
-		case 0x0200: return ioport("KEY1")->read();
-		case 0x0400: return ioport("KEY2")->read();
-		case 0x0800: return ioport("KEY3")->read();
-		case 0x1000: return ioport("KEY4")->read();
-		case 0x2000: return ioport("UNUSED")->read();
+		if(m_sengokumj_mux_data & 1 << i)
+			res = ioport(mpnames[i])->read();
 	}
 
-	return 0xffff;
+	return res;
 }
 
 WRITE16_MEMBER(sengokmj_state::mahjong_panel_w)
 {
-	m_sengokumj_mux_data = data;
+	m_sengokumj_mux_data = (data & 0x3f00) >> 8;
+
+	if(data & 0xc0ff)
+		logerror("Write to mux %04x\n",data);
 }
 
 WRITE16_MEMBER(sengokmj_state::sengokmj_out_w)
 {
 	/* ---- ---- ---x ---- J.P. Signal (?)*/
-	/* ---- ---- ---- -x-- Coin counter (done AFTER that you press start)*/
+	/* ---- ---- ---- -x-- Coin counter (done AFTER you press start)*/
 	/* ---- ---- ---- --x- Cash enable (lockout)*/
 	/* ---- ---- ---- ---x Hopper 10 */
 	coin_lockout_w(machine(), 0,~data & 2);
@@ -117,10 +120,10 @@ READ16_MEMBER(sengokmj_state::sengokmj_system_r)
 static ADDRESS_MAP_START( sengokmj_map, AS_PROGRAM, 16, sengokmj_state )
 	AM_RANGE(0x00000, 0x07fff) AM_RAM
 	AM_RANGE(0x08000, 0x09fff) AM_RAM AM_SHARE("nvram")
-	AM_RANGE(0x0c000, 0x0c7ff) AM_RAM_WRITE_LEGACY(seibucrtc_sc0vram_w) AM_BASE_LEGACY(&seibucrtc_sc0vram)
-	AM_RANGE(0x0c800, 0x0cfff) AM_RAM_WRITE_LEGACY(seibucrtc_sc1vram_w) AM_BASE_LEGACY(&seibucrtc_sc1vram)
-	AM_RANGE(0x0d000, 0x0d7ff) AM_RAM_WRITE_LEGACY(seibucrtc_sc2vram_w) AM_BASE_LEGACY(&seibucrtc_sc2vram)
-	AM_RANGE(0x0d800, 0x0e7ff) AM_RAM_WRITE_LEGACY(seibucrtc_sc3vram_w) AM_BASE_LEGACY(&seibucrtc_sc3vram)
+	AM_RANGE(0x0c000, 0x0c7ff) AM_RAM_WRITE_LEGACY(seibucrtc_sc0vram_w) AM_SHARE("crtc_sc0vram")
+	AM_RANGE(0x0c800, 0x0cfff) AM_RAM_WRITE_LEGACY(seibucrtc_sc1vram_w) AM_SHARE("crtc_sc1vram")
+	AM_RANGE(0x0d000, 0x0d7ff) AM_RAM_WRITE_LEGACY(seibucrtc_sc2vram_w) AM_SHARE("crtc_sc2vram")
+	AM_RANGE(0x0d800, 0x0e7ff) AM_RAM_WRITE_LEGACY(seibucrtc_sc3vram_w) AM_SHARE("crtc_sc3vram")
 	AM_RANGE(0x0e800, 0x0f7ff) AM_RAM_WRITE(paletteram_xBBBBBGGGGGRRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x0f800, 0x0ffff) AM_RAM AM_SHARE("spriteram")
 	AM_RANGE(0xc0000, 0xfffff) AM_ROM
@@ -129,7 +132,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( sengokmj_io_map, AS_IO, 16, sengokmj_state )
 	AM_RANGE(0x4000, 0x400f) AM_READWRITE_LEGACY(seibu_main_word_r, seibu_main_word_w)
 	/*Areas from 8000-804f are for the custom Seibu CRTC.*/
-	AM_RANGE(0x8000, 0x804f) AM_RAM_WRITE_LEGACY(seibucrtc_vregs_w) AM_BASE_LEGACY(&seibucrtc_vregs)
+	AM_RANGE(0x8000, 0x804f) AM_RAM_WRITE_LEGACY(seibucrtc_vregs_w) AM_SHARE("crtc_vregs")
 
 //  AM_RANGE(0x8080, 0x8081) CRTC extra register?
 //  AM_RANGE(0x80c0, 0x80c1) CRTC extra register?
@@ -287,7 +290,7 @@ GFXDECODE_END
 
 static INTERRUPT_GEN( sengokmj_interrupt )
 {
-	device_set_input_line_and_vector(device,0,HOLD_LINE,0xc8/4);
+	device->execute().set_input_line_and_vector(0,HOLD_LINE,0xc8/4);
 }
 
 static MACHINE_CONFIG_START( sengokmj, sengokmj_state )

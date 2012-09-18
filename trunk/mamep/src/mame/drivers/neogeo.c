@@ -167,7 +167,6 @@
  *************************************/
 
 static UINT8 *memcard_data;
-static UINT16 *save_ram;
 
 static const char *audio_banks[4] =
 {
@@ -224,7 +223,7 @@ void neogeo_set_display_counter_msb( address_space *space, UINT16 data )
 
 	state->m_display_counter = (state->m_display_counter & 0x0000ffff) | ((UINT32)data << 16);
 
-	if (LOG_VIDEO_SYSTEM) logerror("PC %06x: set_display_counter %08x\n", cpu_get_pc(&space->device()), state->m_display_counter);
+	if (LOG_VIDEO_SYSTEM) logerror("PC %06x: set_display_counter %08x\n", space->device().safe_pc(), state->m_display_counter);
 }
 
 
@@ -234,7 +233,7 @@ void neogeo_set_display_counter_lsb( address_space *space, UINT16 data )
 
 	state->m_display_counter = (state->m_display_counter & 0xffff0000) | data;
 
-	if (LOG_VIDEO_SYSTEM) logerror("PC %06x: set_display_counter %08x\n", cpu_get_pc(&space->device()), state->m_display_counter);
+	if (LOG_VIDEO_SYSTEM) logerror("PC %06x: set_display_counter %08x\n", space->device().safe_pc(), state->m_display_counter);
 
 	if (state->m_display_position_interrupt_control & IRQ2CTRL_LOAD_RELATIVE)
 	{
@@ -248,9 +247,9 @@ static void update_interrupts( running_machine &machine )
 {
 	neogeo_state *state = machine.driver_data<neogeo_state>();
 
-	cputag_set_input_line(machine, "maincpu", 1, state->m_vblank_interrupt_pending ? ASSERT_LINE : CLEAR_LINE);
-	cputag_set_input_line(machine, "maincpu", 2, state->m_display_position_interrupt_pending ? ASSERT_LINE : CLEAR_LINE);
-	cputag_set_input_line(machine, "maincpu", 3, state->m_irq3_pending ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(1, state->m_vblank_interrupt_pending ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(2, state->m_display_position_interrupt_pending ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(3, state->m_irq3_pending ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -351,20 +350,20 @@ static void start_interrupt_timers( running_machine &machine )
 static void audio_cpu_irq(device_t *device, int assert)
 {
 	neogeo_state *state = device->machine().driver_data<neogeo_state>();
-	device_set_input_line(state->m_audiocpu, 0, assert ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(0, assert ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 static void audio_cpu_assert_nmi(running_machine &machine)
 {
 	neogeo_state *state = machine.driver_data<neogeo_state>();
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, ASSERT_LINE);
+	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 
 WRITE8_MEMBER(neogeo_state::audio_cpu_clear_nmi_w)
 {
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 
@@ -434,7 +433,7 @@ WRITE16_MEMBER(neogeo_state::io_control_w)
 //  case 0x33: break; // coui lockout
 
 	default:
-		logerror("PC: %x  Unmapped I/O control write.  Offset: %x  Data: %x\n", cpu_get_pc(&space.device()), offset, data);
+		logerror("PC: %x  Unmapped I/O control write.  Offset: %x  Data: %x\n", space.device().safe_pc(), offset, data);
 		break;
 	}
 }
@@ -460,7 +459,7 @@ READ16_MEMBER(neogeo_state::neogeo_unmapped_r)
 	else
 	{
 		m_recurse = 1;
-		ret = space.read_word(cpu_get_pc(&space.device()));
+		ret = space.read_word(space.device().safe_pc());
 		m_recurse = 0;
 	}
 
@@ -499,7 +498,7 @@ WRITE16_MEMBER(neogeo_state::save_ram_w)
 {
 
 	if (m_save_ram_unlocked)
-		COMBINE_DATA(&save_ram[offset]);
+		COMBINE_DATA(&m_save_ram[offset]);
 }
 
 
@@ -583,7 +582,7 @@ WRITE16_MEMBER(neogeo_state::audio_command_w)
 		/* boost the interleave to let the audio CPU read the command */
 		machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(50));
 
-		if (LOG_CPU_COMM) logerror("MAIN CPU PC %06x: audio_command_w %04x - %04x\n", cpu_get_pc(&space.device()), data, mem_mask);
+		if (LOG_CPU_COMM) logerror("MAIN CPU PC %06x: audio_command_w %04x - %04x\n", space.device().safe_pc(), data, mem_mask);
 	}
 }
 
@@ -592,7 +591,7 @@ READ8_MEMBER(neogeo_state::audio_command_r)
 {
 	UINT8 ret = soundlatch_byte_r(space, 0);
 
-	if (LOG_CPU_COMM) logerror(" AUD CPU PC   %04x: audio_command_r %02x\n", cpu_get_pc(&space.device()), ret);
+	if (LOG_CPU_COMM) logerror(" AUD CPU PC   %04x: audio_command_r %02x\n", space.device().safe_pc(), ret);
 
 	/* this is a guess */
 	audio_cpu_clear_nmi_w(space, 0, 0);
@@ -604,7 +603,7 @@ READ8_MEMBER(neogeo_state::audio_command_r)
 WRITE8_MEMBER(neogeo_state::audio_result_w)
 {
 
-	if (LOG_CPU_COMM && (m_audio_result != data)) logerror(" AUD CPU PC   %04x: audio_result_w %02x\n", cpu_get_pc(&space.device()), data);
+	if (LOG_CPU_COMM && (m_audio_result != data)) logerror(" AUD CPU PC   %04x: audio_result_w %02x\n", space.device().safe_pc(), data);
 
 	m_audio_result = data;
 }
@@ -614,7 +613,7 @@ CUSTOM_INPUT_MEMBER(neogeo_state::get_audio_result)
 {
 	UINT32 ret = m_audio_result;
 
-//  if (LOG_CPU_COMM) logerror("MAIN CPU PC %06x: audio_result_r %02x\n", cpu_get_pc(machine().device("maincpu")), ret);
+//  if (LOG_CPU_COMM) logerror("MAIN CPU PC %06x: audio_result_r %02x\n", machine().device("maincpu")->safe_pc(), ret);
 
 	return ret;
 }
@@ -654,7 +653,7 @@ void neogeo_set_main_cpu_bank_address( address_space *space, UINT32 bank_address
 {
 	neogeo_state *state = space->machine().driver_data<neogeo_state>();
 
-	if (LOG_MAIN_CPU_BANKING) logerror("MAIN CPU PC %06x: neogeo_set_main_cpu_bank_address %06x\n", cpu_get_pc(&space->device()), bank_address);
+	if (LOG_MAIN_CPU_BANKING) logerror("MAIN CPU PC %06x: neogeo_set_main_cpu_bank_address %06x\n", space->device().safe_pc(), bank_address);
 
 	state->m_main_cpu_bank_address = bank_address;
 
@@ -668,14 +667,14 @@ WRITE16_MEMBER(neogeo_state::main_cpu_bank_select_w)
 	UINT32 len = memregion("maincpu")->bytes();
 
 	if ((len <= 0x100000) && (data & 0x07))
-		logerror("PC %06x: warning: bankswitch to %02x but no banks available\n", cpu_get_pc(&space.device()), data);
+		logerror("PC %06x: warning: bankswitch to %02x but no banks available\n", space.device().safe_pc(), data);
 	else
 	{
 		bank_address = ((data & 0x07) + 1) * 0x100000;
 
 		if (bank_address >= len)
 		{
-			logerror("PC %06x: warning: bankswitch to empty bank %02x\n", cpu_get_pc(&space.device()), data);
+			logerror("PC %06x: warning: bankswitch to empty bank %02x\n", space.device().safe_pc(), data);
 			bank_address = 0x100000;
 		}
 
@@ -721,7 +720,7 @@ static void audio_cpu_bank_select( address_space *space, int region, UINT8 bank 
 {
 	neogeo_state *state = space->machine().driver_data<neogeo_state>();
 
-	if (LOG_AUDIO_CPU_BANKING) logerror("Audio CPU PC %03x: audio_cpu_bank_select: Region: %d   Bank: %02x\n", cpu_get_pc(&space->device()), region, bank);
+	if (LOG_AUDIO_CPU_BANKING) logerror("Audio CPU PC %03x: audio_cpu_bank_select: Region: %d   Bank: %02x\n", space->device().safe_pc(), region, bank);
 
 	state->m_audio_cpu_banks[region] = bank;
 
@@ -775,9 +774,9 @@ static void _set_audio_cpu_rom_source( address_space *space )
 	{
 		state->m_audio_cpu_rom_source_last = state->m_audio_cpu_rom_source;
 
-		cputag_set_input_line(space->machine(), "audiocpu", INPUT_LINE_RESET, PULSE_LINE);
+		space->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 
-		if (LOG_AUDIO_CPU_BANKING) logerror("Audio CPU PC %03x: selectign %s ROM\n", cpu_get_pc(&space->device()), state->m_audio_cpu_rom_source ? "CARTRIDGE" : "BIOS");
+		if (LOG_AUDIO_CPU_BANKING) logerror("Audio CPU PC %03x: selectign %s ROM\n", space->device().safe_pc(), state->m_audio_cpu_rom_source ? "CARTRIDGE" : "BIOS");
 	}
 }
 
@@ -858,11 +857,11 @@ WRITE16_MEMBER(neogeo_state::system_control_w)
 		case 0x02: /* unknown - HC32 middle pin 1 */
 		case 0x03: /* unknown - uPD4990 pin ? */
 		case 0x04: /* unknown - HC32 middle pin 10 */
-			logerror("PC: %x  Unmapped system control write.  Offset: %x  Data: %x\n", cpu_get_pc(&space.device()), offset & 0x07, bit);
+			logerror("PC: %x  Unmapped system control write.  Offset: %x  Data: %x\n", space.device().safe_pc(), offset & 0x07, bit);
 			break;
 		}
 
-		if (LOG_VIDEO_SYSTEM && ((offset & 0x07) != 0x06)) logerror("PC: %x  System control write.  Offset: %x  Data: %x\n", cpu_get_pc(&space.device()), offset & 0x07, bit);
+		if (LOG_VIDEO_SYSTEM && ((offset & 0x07) != 0x06)) logerror("PC: %x  System control write.  Offset: %x  Data: %x\n", space.device().safe_pc(), offset & 0x07, bit);
 	}
 }
 
@@ -987,58 +986,57 @@ static void neogeo_postload(running_machine &machine)
 	set_outputs(machine);
 }
 
-static MACHINE_START( neogeo )
+void neogeo_state::machine_start()
 {
-	neogeo_state *state = machine.driver_data<neogeo_state>();
 
 	/* configure NVRAM */
-	machine.device<nvram_device>("saveram")->set_base(save_ram, 0x10000);
+	machine().device<nvram_device>("saveram")->set_base(m_save_ram, 0x10000);
 
 	/* set the BIOS bank */
-	state->membank(NEOGEO_BANK_BIOS)->set_base(state->memregion("mainbios")->base());
+	membank(NEOGEO_BANK_BIOS)->set_base(memregion("mainbios")->base());
 
 	/* set the initial main CPU bank */
-	main_cpu_banking_init(machine);
+	main_cpu_banking_init(machine());
 
 	/* set the initial audio CPU ROM banks */
-	audio_cpu_banking_init(machine);
+	audio_cpu_banking_init(machine());
 
-	create_interrupt_timers(machine);
+	create_interrupt_timers(machine());
 
 	/* initialize the memcard data structure */
-	memcard_data = auto_alloc_array_clear(machine, UINT8, MEMCARD_SIZE);
+	memcard_data = auto_alloc_array_clear(machine(), UINT8, MEMCARD_SIZE);
 
 	/* start with an IRQ3 - but NOT on a reset */
-	state->m_irq3_pending = 1;
+	m_irq3_pending = 1;
 
 	/* get devices */
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_upd4990a = machine.device("upd4990a");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_upd4990a = machine().device("upd4990a");
 
 	/* register state save */
-	state->save_item(NAME(state->m_display_position_interrupt_control));
-	state->save_item(NAME(state->m_display_counter));
-	state->save_item(NAME(state->m_vblank_interrupt_pending));
-	state->save_item(NAME(state->m_display_position_interrupt_pending));
-	state->save_item(NAME(state->m_irq3_pending));
-	state->save_item(NAME(state->m_audio_result));
-	state->save_item(NAME(state->m_controller_select));
-	state->save_item(NAME(state->m_main_cpu_bank_address));
-	state->save_item(NAME(state->m_main_cpu_vector_table_source));
-	state->save_item(NAME(state->m_audio_cpu_banks));
-	state->save_item(NAME(state->m_audio_cpu_rom_source));
-	state->save_item(NAME(state->m_audio_cpu_rom_source_last));
-	state->save_item(NAME(state->m_save_ram_unlocked));
-	state_save_register_global_pointer(machine, memcard_data, 0x800);
-	state->save_item(NAME(state->m_output_data));
-	state->save_item(NAME(state->m_output_latch));
-	state->save_item(NAME(state->m_el_value));
-	state->save_item(NAME(state->m_led1_value));
-	state->save_item(NAME(state->m_led2_value));
-	state->save_item(NAME(state->m_recurse));
+	save_item(NAME(m_display_position_interrupt_control));
+	save_item(NAME(m_display_counter));
+	save_item(NAME(m_vblank_interrupt_pending));
+	save_item(NAME(m_display_position_interrupt_pending));
+	save_item(NAME(m_irq3_pending));
+	save_item(NAME(m_audio_result));
+	save_item(NAME(m_controller_select));
+	save_item(NAME(m_main_cpu_bank_address));
+	save_item(NAME(m_main_cpu_vector_table_source));
+	save_item(NAME(m_audio_cpu_banks));
+	save_item(NAME(m_audio_cpu_rom_source));
+	save_item(NAME(m_audio_cpu_rom_source_last));
+	save_item(NAME(m_save_ram_unlocked));
+	state_save_register_global_pointer(machine(), memcard_data, 0x800);
+	save_item(NAME(m_output_data));
+	save_item(NAME(m_output_latch));
+	save_item(NAME(m_el_value));
+	save_item(NAME(m_led1_value));
+	save_item(NAME(m_led2_value));
+	save_item(NAME(m_recurse));
 
-	machine.save().register_postload(save_prepost_delegate(FUNC(neogeo_postload), &machine));
+	machine().save().register_postload(save_prepost_delegate(FUNC(neogeo_postload), &machine()));
 }
 
 
@@ -1049,32 +1047,31 @@ static MACHINE_START( neogeo )
  *
  *************************************/
 
-static MACHINE_RESET( neogeo )
+void neogeo_state::machine_reset()
 {
-	neogeo_state *state = machine.driver_data<neogeo_state>();
 	offs_t offs;
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* reset system control registers */
 	for (offs = 0; offs < 8; offs++)
-		state->system_control_w(*space, offs, 0, 0x00ff);
+		system_control_w(*space, offs, 0, 0x00ff);
 
-	machine.device("maincpu")->reset();
+	machine().device("maincpu")->reset();
 
 	// mamep: Hack for AES BIOS
-	neogeo_set_fixed_layer_source(machine, 1);
+	neogeo_set_fixed_layer_source(machine(), 1);
 
-	neogeo_reset_rng(machine);
+	neogeo_reset_rng(machine());
 
-	start_interrupt_timers(machine);
+	start_interrupt_timers(machine());
 
 	/* trigger the IRQ3 that was set by MACHINE_START */
-	update_interrupts(machine);
+	update_interrupts(machine());
 
-	state->m_recurse = 0;
+	m_recurse = 0;
 
 	/* AES apparently always uses the cartridge's fixed bank mode */
-	// neogeo_set_fixed_layer_source(machine,1);
+	// neogeo_set_fixed_layer_source(machine(),1);
 
 }
 
@@ -1108,7 +1105,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 16, neogeo_state )
 	AM_RANGE(0x400000, 0x401fff) AM_MIRROR(0x3fe000) AM_READWRITE(neogeo_paletteram_r, neogeo_paletteram_w)
 	AM_RANGE(0x800000, 0x800fff) AM_READWRITE(memcard_r, memcard_w)
 	AM_RANGE(0xc00000, 0xc1ffff) AM_MIRROR(0x0e0000) AM_ROMBANK(NEOGEO_BANK_BIOS)
-	AM_RANGE(0xd00000, 0xd0ffff) AM_MIRROR(0x0f0000) AM_RAM_WRITE(save_ram_w) AM_BASE_LEGACY(&save_ram)
+	AM_RANGE(0xd00000, 0xd0ffff) AM_MIRROR(0x0f0000) AM_RAM_WRITE(save_ram_w) AM_SHARE("save_ram")
 	AM_RANGE(0xe00000, 0xffffff) AM_READ(neogeo_unmapped_r)
 ADDRESS_MAP_END
 
@@ -1373,14 +1370,10 @@ static MACHINE_CONFIG_START( neogeo, neogeo_state )
 
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_usec(128762))
 
-	MCFG_MACHINE_START(neogeo)
-	MCFG_MACHINE_RESET(neogeo)
 	MCFG_NVRAM_ADD_0FILL("saveram")
 	MCFG_MEMCARD_HANDLER(neogeo)
 
 	/* video hardware */
-	MCFG_VIDEO_START(neogeo)
-	MCFG_VIDEO_RESET(neogeo)
 	MCFG_DEFAULT_LAYOUT(layout_neogeo)
 
 	MCFG_SCREEN_ADD("screen", RASTER)

@@ -132,21 +132,19 @@ static void coolpool_from_shiftreg(address_space *space, UINT32 address, UINT16 
  *
  *************************************/
 
-static MACHINE_RESET( amerdart )
+MACHINE_RESET_MEMBER(coolpool_state,amerdart)
 {
-	coolpool_state *state = machine.driver_data<coolpool_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_dsp = machine.device("dsp");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_dsp = machine().device("dsp");
 
-	state->m_nvram_write_enable = 0;
+	m_nvram_write_enable = 0;
 }
 
 
-static MACHINE_RESET( coolpool )
+MACHINE_RESET_MEMBER(coolpool_state,coolpool)
 {
-	coolpool_state *state = machine.driver_data<coolpool_state>();
-	state->m_nvram_write_enable = 0;
+	m_nvram_write_enable = 0;
 }
 
 
@@ -211,21 +209,21 @@ static TIMER_DEVICE_CALLBACK( amerdart_audio_int_gen )
 {
 	coolpool_state *state = timer.machine().driver_data<coolpool_state>();
 
-	device_set_input_line(state->m_dsp, 0, ASSERT_LINE);
-	device_set_input_line(state->m_dsp, 0, CLEAR_LINE);
+	state->m_dsp->execute().set_input_line(0, ASSERT_LINE);
+	state->m_dsp->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
 WRITE16_MEMBER(coolpool_state::amerdart_misc_w)
 {
-	logerror("%08x:IOP_system_w %04x\n",cpu_get_pc(&space.device()),data);
+	logerror("%08x:IOP_system_w %04x\n",space.device().safe_pc(),data);
 
 	coin_counter_w(machine(), 0, ~data & 0x0001);
 	coin_counter_w(machine(), 1, ~data & 0x0002);
 
 	/* bits 10-15 are counted down over time */
 
-	cputag_set_input_line(machine(), "dsp", INPUT_LINE_RESET, (data & 0x0400) ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("dsp")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x0400) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 READ16_MEMBER(coolpool_state::amerdart_dsp_bio_line_r)
@@ -240,7 +238,7 @@ READ16_MEMBER(coolpool_state::amerdart_dsp_bio_line_r)
 	if (m_same_cmd_count >= 5)
 	{
 		m_same_cmd_count = 5;
-		device_spin(&space.device());
+		space.device().execute().spin();
 	}
 	m_old_cmd = m_cmd_pending;
 
@@ -250,8 +248,8 @@ READ16_MEMBER(coolpool_state::amerdart_dsp_bio_line_r)
 READ16_MEMBER(coolpool_state::amerdart_iop_r)
 {
 
-//  logerror("%08x:IOP read %04x\n",cpu_get_pc(&space.device()),m_iop_answer);
-	cputag_set_input_line(machine(), "maincpu", 1, CLEAR_LINE);
+//  logerror("%08x:IOP read %04x\n",space.device().safe_pc(),m_iop_answer);
+	machine().device("maincpu")->execute().set_input_line(1, CLEAR_LINE);
 
 	return m_iop_answer;
 }
@@ -259,7 +257,7 @@ READ16_MEMBER(coolpool_state::amerdart_iop_r)
 WRITE16_MEMBER(coolpool_state::amerdart_iop_w)
 {
 
-//  logerror("%08x:IOP write %04x\n", cpu_get_pc(&space.device()), data);
+//  logerror("%08x:IOP write %04x\n", space.device().safe_pc(), data);
 	COMBINE_DATA(&m_iop_cmd);
 	m_cmd_pending = 1;
 }
@@ -267,7 +265,7 @@ WRITE16_MEMBER(coolpool_state::amerdart_iop_w)
 READ16_MEMBER(coolpool_state::amerdart_dsp_cmd_r)
 {
 
-//  logerror("%08x:DSP cmd_r %04x\n", cpu_get_pc(&space.device()), m_iop_cmd);
+//  logerror("%08x:DSP cmd_r %04x\n", space.device().safe_pc(), m_iop_cmd);
 	m_cmd_pending = 0;
 	return m_iop_cmd;
 }
@@ -275,9 +273,9 @@ READ16_MEMBER(coolpool_state::amerdart_dsp_cmd_r)
 WRITE16_MEMBER(coolpool_state::amerdart_dsp_answer_w)
 {
 
-//  logerror("%08x:DSP answer %04x\n", cpu_get_pc(&space.device()), data);
+//  logerror("%08x:DSP answer %04x\n", space.device().safe_pc(), data);
 	m_iop_answer = data;
-	cputag_set_input_line(machine(), "maincpu", 1, ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(1, ASSERT_LINE);
 }
 
 
@@ -423,7 +421,7 @@ READ16_MEMBER(coolpool_state::amerdart_trackball_r)
 	m_result = (m_result & 0x0fff) | (amerdart_trackball_direction(&space, 2, ((m_result >> 12) & 0xf)) << 12);
 
 
-//  logerror("%08X:read port 6 (X=%02X Y=%02X oldX=%02X oldY=%02X oldRes=%04X Res=%04X)\n", cpu_get_pc(&space.device()), m_newx, m_newy, m_oldx, m_oldy, m_lastresult, m_result);
+//  logerror("%08X:read port 6 (X=%02X Y=%02X oldX=%02X oldY=%02X oldRes=%04X Res=%04X)\n", space.device().safe_pc(), m_newx, m_newy, m_oldx, m_oldy, m_lastresult, m_result);
 
 	m_lastresult = m_result;
 
@@ -439,12 +437,12 @@ READ16_MEMBER(coolpool_state::amerdart_trackball_r)
 
 WRITE16_MEMBER(coolpool_state::coolpool_misc_w)
 {
-	logerror("%08x:IOP_system_w %04x\n",cpu_get_pc(&space.device()),data);
+	logerror("%08x:IOP_system_w %04x\n",space.device().safe_pc(),data);
 
 	coin_counter_w(machine(), 0, ~data & 0x0001);
 	coin_counter_w(machine(), 1, ~data & 0x0002);
 
-	cputag_set_input_line(machine(), "dsp", INPUT_LINE_RESET, (data & 0x0400) ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("dsp")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x0400) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -462,7 +460,7 @@ static TIMER_CALLBACK( deferred_iop_w )
 
 	state->m_iop_cmd = param;
 	state->m_cmd_pending = 1;
-	cputag_set_input_line(machine, "dsp", 0, HOLD_LINE);	/* ???  I have no idea who should generate this! */
+	machine.device("dsp")->execute().set_input_line(0, HOLD_LINE);	/* ???  I have no idea who should generate this! */
 															/* the DSP polls the status bit so it isn't strictly */
 															/* necessary to also have an IRQ */
 	machine.scheduler().boost_interleave(attotime::zero, attotime::from_usec(50));
@@ -471,7 +469,7 @@ static TIMER_CALLBACK( deferred_iop_w )
 
 WRITE16_MEMBER(coolpool_state::coolpool_iop_w)
 {
-	logerror("%08x:IOP write %04x\n", cpu_get_pc(&space.device()), data);
+	logerror("%08x:IOP write %04x\n", space.device().safe_pc(), data);
 	machine().scheduler().synchronize(FUNC(deferred_iop_w), data);
 }
 
@@ -479,8 +477,8 @@ WRITE16_MEMBER(coolpool_state::coolpool_iop_w)
 READ16_MEMBER(coolpool_state::coolpool_iop_r)
 {
 
-	logerror("%08x:IOP read %04x\n",cpu_get_pc(&space.device()),m_iop_answer);
-	cputag_set_input_line(machine(), "maincpu", 1, CLEAR_LINE);
+	logerror("%08x:IOP read %04x\n",space.device().safe_pc(),m_iop_answer);
+	machine().device("maincpu")->execute().set_input_line(1, CLEAR_LINE);
 
 	return m_iop_answer;
 }
@@ -498,7 +496,7 @@ READ16_MEMBER(coolpool_state::dsp_cmd_r)
 {
 
 	m_cmd_pending = 0;
-	logerror("%08x:IOP cmd_r %04x\n", cpu_get_pc(&space.device()), m_iop_cmd);
+	logerror("%08x:IOP cmd_r %04x\n", space.device().safe_pc(), m_iop_cmd);
 	return m_iop_cmd;
 }
 
@@ -506,9 +504,9 @@ READ16_MEMBER(coolpool_state::dsp_cmd_r)
 WRITE16_MEMBER(coolpool_state::dsp_answer_w)
 {
 
-	logerror("%08x:IOP answer %04x\n", cpu_get_pc(&space.device()), data);
+	logerror("%08x:IOP answer %04x\n", space.device().safe_pc(), data);
 	m_iop_answer = data;
-	cputag_set_input_line(machine(), "maincpu", 1, ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(1, ASSERT_LINE);
 }
 
 
@@ -625,7 +623,7 @@ READ16_MEMBER(coolpool_state::coolpool_input_r)
 		}
 	}
 
-//  logerror("%08X:read port 7 (X=%02X Y=%02X oldX=%02X oldY=%02X res=%04X)\n", cpu_get_pc(&space.device()),
+//  logerror("%08X:read port 7 (X=%02X Y=%02X oldX=%02X oldY=%02X res=%04X)\n", space.device().safe_pc(),
 //      m_newx[1], m_newy[1], m_oldx[1], m_oldy[1], m_result);
 	m_lastresult = m_result;
 	return m_result;
@@ -863,7 +861,7 @@ static MACHINE_CONFIG_START( amerdart, coolpool_state )
 	MCFG_CPU_IO_MAP(amerdart_dsp_io_map)
 	MCFG_TIMER_ADD_SCANLINE("audioint", amerdart_audio_int_gen, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(amerdart)
+	MCFG_MACHINE_RESET_OVERRIDE(coolpool_state,amerdart)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_TIMER_ADD("nvram_timer", nvram_write_timeout)
@@ -892,13 +890,13 @@ static MACHINE_CONFIG_START( coolpool, coolpool_state )
 	MCFG_CPU_PROGRAM_MAP(coolpool_dsp_pgm_map)
 	MCFG_CPU_IO_MAP(coolpool_dsp_io_map)
 
-	MCFG_MACHINE_RESET(coolpool)
+	MCFG_MACHINE_RESET_OVERRIDE(coolpool_state,coolpool)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_TIMER_ADD("nvram_timer", nvram_write_timeout)
 
 	/* video hardware */
-	MCFG_TLC34076_ADD("tlc34076", TLC34076_6_BIT)
+	MCFG_TLC34076_ADD("tlc34076", tlc34076_6_bit_intf)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(XTAL_40MHz/6, 424, 0, 320, 262, 0, 240)

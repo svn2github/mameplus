@@ -17,7 +17,7 @@ INPUT_CHANGED_MEMBER(cheekyms_state::coin_inserted)
 
 	/* this starts a 556 one-shot timer (and triggers a sound effect) */
 	if (newval)
-		device_set_input_line(m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -108,12 +108,11 @@ static GFXDECODE_START( cheekyms )
 GFXDECODE_END
 
 
-static MACHINE_START( cheekyms )
+void cheekyms_state::machine_start()
 {
-	cheekyms_state *state = machine.driver_data<cheekyms_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_dac = machine.device<dac_device>("dac");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_dac = machine().device<dac_device>("dac");
 }
 
 static INTERRUPT_GEN( vblank_irq )
@@ -121,7 +120,7 @@ static INTERRUPT_GEN( vblank_irq )
 	cheekyms_state *state = device->machine().driver_data<cheekyms_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -133,7 +132,6 @@ static MACHINE_CONFIG_START( cheekyms, cheekyms_state )
 	MCFG_CPU_IO_MAP(io_map)
 	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
 
-	MCFG_MACHINE_START(cheekyms)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -146,8 +144,6 @@ static MACHINE_CONFIG_START( cheekyms, cheekyms_state )
 	MCFG_GFXDECODE(cheekyms)
 	MCFG_PALETTE_LENGTH(0xc0)
 
-	MCFG_PALETTE_INIT(cheekyms)
-	MCFG_VIDEO_START(cheekyms)
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

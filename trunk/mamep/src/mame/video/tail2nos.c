@@ -11,14 +11,13 @@
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(tail2nos_state::get_tile_info)
 {
-	tail2nos_state *state = machine.driver_data<tail2nos_state>();
-	UINT16 code = state->m_bgvideoram[tile_index];
-	SET_TILE_INFO(
+	UINT16 code = m_bgvideoram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			0,
-			(code & 0x1fff) + (state->m_charbank << 13),
-			((code & 0xe000) >> 13) + state->m_charpalette * 16,
+			(code & 0x1fff) + (m_charbank << 13),
+			((code & 0xe000) >> 13) + m_charpalette * 16,
 			0);
 }
 
@@ -50,22 +49,21 @@ static void tail2nos_postload(running_machine &machine)
 
 	for (i = 0; i < 0x20000; i += 64)
 	{
-		gfx_element_mark_dirty(machine.gfx[2], i / 64);
+		machine.gfx[2]->mark_dirty(i / 64);
 	}
 }
 
-VIDEO_START( tail2nos )
+void tail2nos_state::video_start()
 {
-	tail2nos_state *state = machine.driver_data<tail2nos_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tail2nos_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 
-	state->m_bg_tilemap->set_transparent_pen(15);
+	m_bg_tilemap->set_transparent_pen(15);
 
-	state->m_zoomdata = (UINT16 *)state->memregion("gfx3")->base();
+	m_zoomdata = (UINT16 *)memregion("gfx3")->base();
 
-	state->save_pointer(NAME(state->m_zoomdata), 0x20000 / 2);
-	machine.save().register_postload(save_prepost_delegate(FUNC(tail2nos_postload), &machine));
+	save_pointer(NAME(m_zoomdata), 0x20000 / 2);
+	machine().save().register_postload(save_prepost_delegate(FUNC(tail2nos_postload), &machine()));
 }
 
 
@@ -94,7 +92,7 @@ WRITE16_MEMBER(tail2nos_state::tail2nos_zoomdata_w)
 
 	COMBINE_DATA(&m_zoomdata[offset]);
 	if (oldword != m_zoomdata[offset])
-		gfx_element_mark_dirty(machine().gfx[2], offset / 64);
+		machine().gfx[2]->mark_dirty(offset / 64);
 }
 
 WRITE16_MEMBER(tail2nos_state::tail2nos_gfxbank_w)

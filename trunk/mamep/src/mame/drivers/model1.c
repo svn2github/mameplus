@@ -697,7 +697,7 @@ static void irq_raise(running_machine &machine, int level)
 	//  logerror("irq: raising %d\n", level);
 	//  irq_status |= (1 << level);
 	state->m_last_irq = level;
-	cputag_set_input_line(machine, "maincpu", 0, HOLD_LINE);
+	machine.device("maincpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 static IRQ_CALLBACK(irq_callback)
@@ -721,8 +721,8 @@ static IRQ_CALLBACK(irq_callback)
 
 static void irq_init(running_machine &machine)
 {
-	cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
-	device_set_irq_callback(machine.device("maincpu"), irq_callback);
+	machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
+	machine.device("maincpu")->execute().set_irq_acknowledge_callback(irq_callback);
 }
 
 static TIMER_DEVICE_CALLBACK( model1_interrupt )
@@ -741,42 +741,40 @@ static TIMER_DEVICE_CALLBACK( model1_interrupt )
 		// if the FIFO has something in it, signal the 68k too
 		if (state->m_fifo_rptr != state->m_fifo_wptr)
 		{
-			cputag_set_input_line(timer.machine(), "audiocpu", 2, HOLD_LINE);
+			timer.machine().device("audiocpu")->execute().set_input_line(2, HOLD_LINE);
 		}
 	}
 }
 
-static MACHINE_RESET(model1)
+MACHINE_RESET_MEMBER(model1_state,model1)
 {
-	model1_state *state = machine.driver_data<model1_state>();
-	state->membank("bank1")->set_base(state->memregion("maincpu")->base() + 0x1000000);
-	irq_init(machine);
-	model1_tgp_reset(machine, !strcmp(machine.system().name, "swa") || !strcmp(machine.system().name, "wingwar") || !strcmp(machine.system().name, "wingwaru") || !strcmp(machine.system().name, "wingwarj"));
-	if (!strcmp(machine.system().name, "swa"))
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x1000000);
+	irq_init(machine());
+	model1_tgp_reset(machine(), !strcmp(machine().system().name, "swa") || !strcmp(machine().system().name, "wingwar") || !strcmp(machine().system().name, "wingwaru") || !strcmp(machine().system().name, "wingwarj"));
+	if (!strcmp(machine().system().name, "swa"))
 	{
-		state->m_sound_irq = 0;
+		m_sound_irq = 0;
 	}
 	else
 	{
-		state->m_sound_irq = 3;
+		m_sound_irq = 3;
 	}
 
 	// init the sound FIFO
-	state->m_fifo_rptr = state->m_fifo_wptr = 0;
-	memset(state->m_to_68k, 0, sizeof(state->m_to_68k));
+	m_fifo_rptr = m_fifo_wptr = 0;
+	memset(m_to_68k, 0, sizeof(m_to_68k));
 }
 
-static MACHINE_RESET(model1_vr)
+MACHINE_RESET_MEMBER(model1_state,model1_vr)
 {
-	model1_state *state = machine.driver_data<model1_state>();
-	state->membank("bank1")->set_base(state->memregion("maincpu")->base() + 0x1000000);
-	irq_init(machine);
-	model1_vr_tgp_reset(machine);
-	state->m_sound_irq = 3;
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x1000000);
+	irq_init(machine());
+	model1_vr_tgp_reset(machine());
+	m_sound_irq = 3;
 
 	// init the sound FIFO
-	state->m_fifo_rptr = state->m_fifo_wptr = 0;
-	memset(state->m_to_68k, 0, sizeof(state->m_to_68k));
+	m_fifo_rptr = m_fifo_wptr = 0;
+	memset(m_to_68k, 0, sizeof(m_to_68k));
 }
 
 READ16_MEMBER(model1_state::network_ctl_r)
@@ -797,7 +795,7 @@ WRITE16_MEMBER(model1_state::md1_w)
 	if(0 && offset)
 		return;
 	if(1 && m_dump)
-		logerror("TGP: md1_w %x, %04x @ %04x (%x)\n", offset, data, mem_mask, cpu_get_pc(&space.device()));
+		logerror("TGP: md1_w %x, %04x @ %04x (%x)\n", offset, data, mem_mask, space.device().safe_pc());
 }
 
 WRITE16_MEMBER(model1_state::md0_w)
@@ -806,7 +804,7 @@ WRITE16_MEMBER(model1_state::md0_w)
 	if(0 && offset)
 		return;
 	if(1 && m_dump)
-		logerror("TGP: md0_w %x, %04x @ %04x (%x)\n", offset, data, mem_mask, cpu_get_pc(&space.device()));
+		logerror("TGP: md0_w %x, %04x @ %04x (%x)\n", offset, data, mem_mask, space.device().safe_pc());
 }
 
 WRITE16_MEMBER(model1_state::p_w)
@@ -814,14 +812,14 @@ WRITE16_MEMBER(model1_state::p_w)
 	UINT16 old = m_generic_paletteram_16[offset];
 	paletteram_xBBBBBGGGGGRRRRR_word_w(space, offset, data, mem_mask);
 	if(0 && m_generic_paletteram_16[offset] != old)
-		logerror("XVIDEO: p_w %x, %04x @ %04x (%x)\n", offset, data, mem_mask, cpu_get_pc(&space.device()));
+		logerror("XVIDEO: p_w %x, %04x @ %04x (%x)\n", offset, data, mem_mask, space.device().safe_pc());
 }
 
 WRITE16_MEMBER(model1_state::mr_w)
 {
 	COMBINE_DATA(m_mr+offset);
 	if(0 && offset == 0x1138/2)
-		logerror("MR.w %x, %04x @ %04x (%x)\n", offset*2+0x500000, data, mem_mask, cpu_get_pc(&space.device()));
+		logerror("MR.w %x, %04x @ %04x (%x)\n", offset*2+0x500000, data, mem_mask, space.device().safe_pc());
 }
 
 WRITE16_MEMBER(model1_state::mr2_w)
@@ -829,32 +827,32 @@ WRITE16_MEMBER(model1_state::mr2_w)
 	COMBINE_DATA(m_mr2+offset);
 #if 0
 	if(0 && offset == 0x6e8/2) {
-		logerror("MR.w %x, %04x @ %04x (%x)\n", offset*2+0x400000, data, mem_mask, cpu_get_pc(&space.device()));
+		logerror("MR.w %x, %04x @ %04x (%x)\n", offset*2+0x400000, data, mem_mask, space.device().safe_pc());
 	}
 	if(offset/2 == 0x3680/4)
-		logerror("MW f80[r25], %04x%04x (%x)\n", m_mr2[0x3680/2+1], m_mr2[0x3680/2], cpu_get_pc(&space.device()));
+		logerror("MW f80[r25], %04x%04x (%x)\n", m_mr2[0x3680/2+1], m_mr2[0x3680/2], space.device().safe_pc());
 	if(offset/2 == 0x06ca/4)
-		logerror("MW fca[r19], %04x%04x (%x)\n", m_mr2[0x06ca/2+1], m_mr2[0x06ca/2], cpu_get_pc(&space.device()));
+		logerror("MW fca[r19], %04x%04x (%x)\n", m_mr2[0x06ca/2+1], m_mr2[0x06ca/2], space.device().safe_pc());
 	if(offset/2 == 0x1eca/4)
-		logerror("MW fca[r22], %04x%04x (%x)\n", m_mr2[0x1eca/2+1], m_mr2[0x1eca/2], cpu_get_pc(&space.device()));
+		logerror("MW fca[r22], %04x%04x (%x)\n", m_mr2[0x1eca/2+1], m_mr2[0x1eca/2], space.device().safe_pc());
 #endif
 
 	// wingwar scene position, pc=e1ce -> d735
 	if(offset/2 == 0x1f08/4)
-		logerror("MW  8[r10], %f (%x)\n", *(float *)(m_mr2+0x1f08/2), cpu_get_pc(&space.device()));
+		logerror("MW  8[r10], %f (%x)\n", *(float *)(m_mr2+0x1f08/2), space.device().safe_pc());
 	if(offset/2 == 0x1f0c/4)
-		logerror("MW  c[r10], %f (%x)\n", *(float *)(m_mr2+0x1f0c/2), cpu_get_pc(&space.device()));
+		logerror("MW  c[r10], %f (%x)\n", *(float *)(m_mr2+0x1f0c/2), space.device().safe_pc());
 	if(offset/2 == 0x1f10/4)
-		logerror("MW 10[r10], %f (%x)\n", *(float *)(m_mr2+0x1f10/2), cpu_get_pc(&space.device()));
+		logerror("MW 10[r10], %f (%x)\n", *(float *)(m_mr2+0x1f10/2), space.device().safe_pc());
 }
 
 READ16_MEMBER(model1_state::snd_68k_ready_r)
 {
-	int sr = cpu_get_reg(machine().device("audiocpu"), M68K_SR);
+	int sr = machine().device("audiocpu")->state().state_int(M68K_SR);
 
 	if ((sr & 0x0700) > 0x0100)
 	{
-		device_spin_until_time(&space.device(), attotime::from_usec(40));
+		space.device().execute().spin_until_time(attotime::from_usec(40));
 		return 0;	// not ready yet, interrupts disabled
 	}
 
@@ -873,9 +871,9 @@ WRITE16_MEMBER(model1_state::snd_latch_to_68k_w)
     }
 
 	// signal the 68000 that there's data waiting
-	cputag_set_input_line(machine(), "audiocpu", 2, HOLD_LINE);
+	machine().device("audiocpu")->execute().set_input_line(2, HOLD_LINE);
 	// give the 68k time to reply
-	device_spin_until_time(&space.device(), attotime::from_usec(40));
+	space.device().execute().spin_until_time(attotime::from_usec(40));
 }
 
 static ADDRESS_MAP_START( model1_mem, AS_PROGRAM, 16, model1_state )
@@ -1527,8 +1525,8 @@ static MACHINE_CONFIG_START( model1, model1_state )
 	MCFG_CPU_ADD("audiocpu", M68000, 10000000)	// verified on real h/w
 	MCFG_CPU_PROGRAM_MAP(model1_snd)
 
-	MCFG_MACHINE_START(model1)
-	MCFG_MACHINE_RESET(model1)
+	MCFG_MACHINE_START_OVERRIDE(model1_state,model1)
+	MCFG_MACHINE_RESET_OVERRIDE(model1_state,model1)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
@@ -1542,7 +1540,7 @@ static MACHINE_CONFIG_START( model1, model1_state )
 
 	MCFG_PALETTE_LENGTH(8192)
 
-	MCFG_VIDEO_START(model1)
+	MCFG_VIDEO_START_OVERRIDE(model1_state,model1)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -1576,8 +1574,8 @@ static MACHINE_CONFIG_START( model1_vr, model1_state )
 	MCFG_CPU_CONFIG(model1_vr_tgp_config)
 	MCFG_CPU_PROGRAM_MAP(model1_vr_tgp_map)
 
-	MCFG_MACHINE_START(model1)
-	MCFG_MACHINE_RESET(model1_vr)
+	MCFG_MACHINE_START_OVERRIDE(model1_state,model1)
+	MCFG_MACHINE_RESET_OVERRIDE(model1_state,model1_vr)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_S24TILE_DEVICE_ADD("tile", 0x3fff)
@@ -1591,7 +1589,7 @@ static MACHINE_CONFIG_START( model1_vr, model1_state )
 
 	MCFG_PALETTE_LENGTH(8192)
 
-	MCFG_VIDEO_START(model1)
+	MCFG_VIDEO_START_OVERRIDE(model1_state,model1)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

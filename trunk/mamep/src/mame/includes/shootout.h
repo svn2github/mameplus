@@ -22,13 +22,17 @@ public:
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
 	DECLARE_DRIVER_INIT(shootouj);
 	DECLARE_DRIVER_INIT(shootout);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/shootout.c -----------*/
 
 
-PALETTE_INIT( shootout );
-VIDEO_START( shootout );
+
+
 SCREEN_UPDATE_IND16( shootout );
 SCREEN_UPDATE_IND16( shootouj );

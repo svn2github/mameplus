@@ -191,6 +191,19 @@ public:
 	DECLARE_DRIVER_INIT(kakumei2);
 	DECLARE_DRIVER_INIT(daireika);
 	DECLARE_DRIVER_INIT(mjzoomin);
+	TILEMAP_MAPPER_MEMBER(range0_16x16);
+	TILEMAP_MAPPER_MEMBER(range1_16x16);
+	TILEMAP_MAPPER_MEMBER(range2_16x16);
+	TILEMAP_MAPPER_MEMBER(range3_16x16);
+	TILEMAP_MAPPER_MEMBER(range2_8x8);
+	TILEMAP_MAPPER_MEMBER(range3_8x8);
+	TILE_GET_INFO_MEMBER(get_sc0_tile_info);
+	TILE_GET_INFO_MEMBER(get_sc1_tile_info);
+	TILE_GET_INFO_MEMBER(get_sc2_tile_info);
+	TILE_GET_INFO_MEMBER(get_sc3_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
+	DECLARE_VIDEO_START(urashima);
 };
 
 
@@ -201,28 +214,28 @@ Video Hardware start
 ******************************************************************************************/
 
 /*4096x512 tilemap*/
-static TILEMAP_MAPPER( range0_16x16 )
+TILEMAP_MAPPER_MEMBER(jalmah_state::range0_16x16)
 {
 	/* logical (col,row) -> memory offset */
 	return (row & 0x0f) + ((col & 0xff) << 4) + ((row & 0x70) << 8);
 }
 
 /*2048x1024 tilemap*/
-static TILEMAP_MAPPER( range1_16x16 )
+TILEMAP_MAPPER_MEMBER(jalmah_state::range1_16x16)
 {
 	/* logical (col,row) -> memory offset */
 	return (row & 0x0f) + ((col & 0x7f) << 4) + ((row & 0xf0) << 7);
 }
 
 /*1024x2048 tilemap*/
-static TILEMAP_MAPPER( range2_16x16 )
+TILEMAP_MAPPER_MEMBER(jalmah_state::range2_16x16)
 {
 	/* logical (col,row) -> memory offset */
 	return (row & 0x0f) + ((col & 0x3f) << 4) + ((row & 0x1f0) << 6);
 }
 
 /*512x4096 tilemap*/
-static TILEMAP_MAPPER( range3_16x16 )
+TILEMAP_MAPPER_MEMBER(jalmah_state::range3_16x16)
 {
 	/* logical (col,row) -> memory offset */
 	return (row & 0x0f) + ((col & 0x1f) << 4) + ((row & 0x3f0) << 5);
@@ -230,120 +243,114 @@ static TILEMAP_MAPPER( range3_16x16 )
 
 
 /*1024x512 tilemap*/
-static TILEMAP_MAPPER( range2_8x8 )
+TILEMAP_MAPPER_MEMBER(jalmah_state::range2_8x8)
 {
 	/* logical (col,row) -> memory offset */
 	return (row & 0x1f) + ((col & 0x7f) * 0x20) + ((row & 0x20) * 0x80);
 }
 
 /*512x1024 tilemap*/
-static TILEMAP_MAPPER( range3_8x8 )
+TILEMAP_MAPPER_MEMBER(jalmah_state::range3_8x8)
 {
 	return (row & 0x1f) + ((col & 0x3f) * 0x20) + ((row & 0x60) * 0x40);
 }
 
-static TILE_GET_INFO( get_sc0_tile_info )
+TILE_GET_INFO_MEMBER(jalmah_state::get_sc0_tile_info)
 {
-	jalmah_state *state = machine.driver_data<jalmah_state>();
-	int code = state->m_sc0_vram[tile_index];
-	SET_TILE_INFO(
+	int code = m_sc0_vram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			3,
-			(code & 0xfff) + ((state->m_sc0bank & 3) << 12),
+			(code & 0xfff) + ((m_sc0bank & 3) << 12),
 			code >> 12,
 			0);
 }
 
-static TILE_GET_INFO( get_sc1_tile_info )
+TILE_GET_INFO_MEMBER(jalmah_state::get_sc1_tile_info)
 {
-	jalmah_state *state = machine.driver_data<jalmah_state>();
-	int code = state->m_sc1_vram[tile_index];
-	SET_TILE_INFO(
+	int code = m_sc1_vram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			2,
 			code & 0xfff,
 			code >> 12,
 			0);
 }
 
-static TILE_GET_INFO( get_sc2_tile_info )
+TILE_GET_INFO_MEMBER(jalmah_state::get_sc2_tile_info)
 {
-	jalmah_state *state = machine.driver_data<jalmah_state>();
-	int code = state->m_sc2_vram[tile_index];
-	SET_TILE_INFO(
+	int code = m_sc2_vram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			1,
 			code & 0xfff,
 			code >> 12,
 			0);
 }
 
-static TILE_GET_INFO( get_sc3_tile_info )
+TILE_GET_INFO_MEMBER(jalmah_state::get_sc3_tile_info)
 {
-	jalmah_state *state = machine.driver_data<jalmah_state>();
-	int code = state->m_sc3_vram[tile_index];
-	SET_TILE_INFO(
+	int code = m_sc3_vram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			0,
 			code & 0xfff,
 			code >> 12,
 			0);
 }
 
-static VIDEO_START( jalmah )
+void jalmah_state::video_start()
 {
-	jalmah_state *state = machine.driver_data<jalmah_state>();
-	state->m_sc0_tilemap_0 = tilemap_create(machine, get_sc0_tile_info,range0_16x16,16,16,256,32);
-	state->m_sc0_tilemap_1 = tilemap_create(machine, get_sc0_tile_info,range1_16x16,16,16,128,64);
-	state->m_sc0_tilemap_2 = tilemap_create(machine, get_sc0_tile_info,range2_16x16,16,16,64,128);
-	state->m_sc0_tilemap_3 = tilemap_create(machine, get_sc0_tile_info,range3_16x16,16,16,32,256);
+	m_sc0_tilemap_0 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc0_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range0_16x16),this),16,16,256,32);
+	m_sc0_tilemap_1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc0_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range1_16x16),this),16,16,128,64);
+	m_sc0_tilemap_2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc0_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range2_16x16),this),16,16,64,128);
+	m_sc0_tilemap_3 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc0_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range3_16x16),this),16,16,32,256);
 
-	state->m_sc1_tilemap_0 = tilemap_create(machine, get_sc1_tile_info,range0_16x16,16,16,256,32);
-	state->m_sc1_tilemap_1 = tilemap_create(machine, get_sc1_tile_info,range1_16x16,16,16,128,64);
-	state->m_sc1_tilemap_2 = tilemap_create(machine, get_sc1_tile_info,range2_16x16,16,16,64,128);
-	state->m_sc1_tilemap_3 = tilemap_create(machine, get_sc1_tile_info,range3_16x16,16,16,32,256);
+	m_sc1_tilemap_0 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc1_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range0_16x16),this),16,16,256,32);
+	m_sc1_tilemap_1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc1_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range1_16x16),this),16,16,128,64);
+	m_sc1_tilemap_2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc1_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range2_16x16),this),16,16,64,128);
+	m_sc1_tilemap_3 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc1_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range3_16x16),this),16,16,32,256);
 
-	state->m_sc2_tilemap_0 = tilemap_create(machine, get_sc2_tile_info,range0_16x16,16,16,256,32);
-	state->m_sc2_tilemap_1 = tilemap_create(machine, get_sc2_tile_info,range1_16x16,16,16,128,64);
-	state->m_sc2_tilemap_2 = tilemap_create(machine, get_sc2_tile_info,range2_16x16,16,16,64,128);
-	state->m_sc2_tilemap_3 = tilemap_create(machine, get_sc2_tile_info,range3_16x16,16,16,32,256);
+	m_sc2_tilemap_0 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc2_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range0_16x16),this),16,16,256,32);
+	m_sc2_tilemap_1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc2_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range1_16x16),this),16,16,128,64);
+	m_sc2_tilemap_2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc2_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range2_16x16),this),16,16,64,128);
+	m_sc2_tilemap_3 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc2_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range3_16x16),this),16,16,32,256);
 
-	state->m_sc3_tilemap_0 = tilemap_create(machine, get_sc3_tile_info,tilemap_scan_cols,8,8,256,32);
-	//state->m_sc3_tilemap_1 = tilemap_create(machine, get_sc3_tile_info,tilemap_scan_cols,8,8,256,32);
-	state->m_sc3_tilemap_2 = tilemap_create(machine, get_sc3_tile_info,range2_8x8,8,8,128,64);
-	state->m_sc3_tilemap_3 = tilemap_create(machine, get_sc3_tile_info,range3_8x8,8,8,64,128);
+	m_sc3_tilemap_0 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc3_tile_info),this),TILEMAP_SCAN_COLS,8,8,256,32);
+	//m_sc3_tilemap_1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc3_tile_info),this),TILEMAP_SCAN_COLS,8,8,256,32);
+	m_sc3_tilemap_2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc3_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range2_8x8),this),8,8,128,64);
+	m_sc3_tilemap_3 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc3_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range3_8x8),this),8,8,64,128);
 
-	state->m_jm_scrollram = auto_alloc_array(machine, UINT16, 0x80/2);
-	state->m_jm_vregs = auto_alloc_array(machine, UINT16, 0x40/2);
+	m_jm_scrollram = auto_alloc_array(machine(), UINT16, 0x80/2);
+	m_jm_vregs = auto_alloc_array(machine(), UINT16, 0x40/2);
 
-	state->m_sc0_tilemap_0->set_transparent_pen(15);
-	state->m_sc0_tilemap_1->set_transparent_pen(15);
-	state->m_sc0_tilemap_2->set_transparent_pen(15);
-	state->m_sc0_tilemap_3->set_transparent_pen(15);
+	m_sc0_tilemap_0->set_transparent_pen(15);
+	m_sc0_tilemap_1->set_transparent_pen(15);
+	m_sc0_tilemap_2->set_transparent_pen(15);
+	m_sc0_tilemap_3->set_transparent_pen(15);
 
-	state->m_sc1_tilemap_0->set_transparent_pen(15);
-	state->m_sc1_tilemap_1->set_transparent_pen(15);
-	state->m_sc1_tilemap_2->set_transparent_pen(15);
-	state->m_sc1_tilemap_3->set_transparent_pen(15);
+	m_sc1_tilemap_0->set_transparent_pen(15);
+	m_sc1_tilemap_1->set_transparent_pen(15);
+	m_sc1_tilemap_2->set_transparent_pen(15);
+	m_sc1_tilemap_3->set_transparent_pen(15);
 
-	state->m_sc2_tilemap_0->set_transparent_pen(15);
-	state->m_sc2_tilemap_1->set_transparent_pen(15);
-	state->m_sc2_tilemap_2->set_transparent_pen(15);
-	state->m_sc2_tilemap_3->set_transparent_pen(15);
+	m_sc2_tilemap_0->set_transparent_pen(15);
+	m_sc2_tilemap_1->set_transparent_pen(15);
+	m_sc2_tilemap_2->set_transparent_pen(15);
+	m_sc2_tilemap_3->set_transparent_pen(15);
 
-	state->m_sc3_tilemap_0->set_transparent_pen(15);
-	//state->m_sc3_tilemap_1->set_transparent_pen(15);
-	state->m_sc3_tilemap_2->set_transparent_pen(15);
-	state->m_sc3_tilemap_3->set_transparent_pen(15);
+	m_sc3_tilemap_0->set_transparent_pen(15);
+	//m_sc3_tilemap_1->set_transparent_pen(15);
+	m_sc3_tilemap_2->set_transparent_pen(15);
+	m_sc3_tilemap_3->set_transparent_pen(15);
 }
 
-static VIDEO_START( urashima )
+VIDEO_START_MEMBER(jalmah_state,urashima)
 {
-	jalmah_state *state = machine.driver_data<jalmah_state>();
-	state->m_sc0_tilemap_0 = tilemap_create(machine, get_sc0_tile_info,range0_16x16,16,16,256,32);
-	state->m_sc3_tilemap_0 = tilemap_create(machine, get_sc3_tile_info,range2_8x8,8,8,128,64);
+	m_sc0_tilemap_0 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc0_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range0_16x16),this),16,16,256,32);
+	m_sc3_tilemap_0 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(jalmah_state::get_sc3_tile_info),this),tilemap_mapper_delegate(FUNC(jalmah_state::range2_8x8),this),8,8,128,64);
 
-	state->m_jm_scrollram = auto_alloc_array(machine, UINT16, 0x80/2);
-	state->m_jm_vregs = auto_alloc_array(machine, UINT16, 0x40/2);
+	m_jm_scrollram = auto_alloc_array(machine(), UINT16, 0x80/2);
+	m_jm_vregs = auto_alloc_array(machine(), UINT16, 0x40/2);
 
-	state->m_sc0_tilemap_0->set_transparent_pen(15);
-	state->m_sc3_tilemap_0->set_transparent_pen(15);
+	m_sc0_tilemap_0->set_transparent_pen(15);
+	m_sc3_tilemap_0->set_transparent_pen(15);
 }
 
 
@@ -966,7 +973,7 @@ WRITE16_MEMBER(jalmah_state::jalmah_okirom_w)
 		memcpy(&oki[0x20000], &oki[(m_oki_rom * 0x80000) + ((m_oki_bank+m_oki_za) * 0x20000) + 0x40000], 0x20000);
 	}
 
-	//popmessage("PC=%06x %02x %02x %02x %08x",cpu_get_pc(&space.device()),m_oki_rom,m_oki_za,m_oki_bank,(m_oki_rom * 0x80000) + ((m_oki_bank+m_oki_za) * 0x20000) + 0x40000);
+	//popmessage("PC=%06x %02x %02x %02x %08x",space.device().safe_pc(),m_oki_rom,m_oki_za,m_oki_bank,(m_oki_rom * 0x80000) + ((m_oki_bank+m_oki_za) * 0x20000) + 0x40000);
 }
 
 WRITE16_MEMBER(jalmah_state::jalmah_okibank_w)
@@ -980,7 +987,7 @@ WRITE16_MEMBER(jalmah_state::jalmah_okibank_w)
 		memcpy(&oki[0x20000], &oki[(m_oki_rom * 0x80000) + ((m_oki_bank+m_oki_za) * 0x20000) + 0x40000], 0x20000);
 	}
 
-	//popmessage("PC=%06x %02x %02x %02x %08x",cpu_get_pc(&space.device()),m_oki_rom,m_oki_za,m_oki_bank,(m_oki_rom * 0x80000) + ((m_oki_bank+m_oki_za) * 0x20000) + 0x40000);
+	//popmessage("PC=%06x %02x %02x %02x %08x",space.device().safe_pc(),m_oki_rom,m_oki_za,m_oki_bank,(m_oki_rom * 0x80000) + ((m_oki_bank+m_oki_za) * 0x20000) + 0x40000);
 }
 
 WRITE16_MEMBER(jalmah_state::jalmah_flip_screen_w)
@@ -1375,24 +1382,23 @@ static GFXDECODE_START( urashima )
 	GFXDECODE_ENTRY( "gfx4", 0, tilelayout, 0x100, 16 )
 GFXDECODE_END
 
-static MACHINE_RESET ( jalmah )
+void jalmah_state::machine_reset()
 {
-	jalmah_state *state = machine.driver_data<jalmah_state>();
-	state->m_respcount = 0;
+	m_respcount = 0;
 	/*check if we are into service or normal mode*/
-	switch(state->m_mcu_prg)
+	switch(m_mcu_prg)
 	{
 		case MJZOOMIN_MCU:
 		case DAIREIKA_MCU:
-			state->m_test_mode = (~(state->ioport("SYSTEM")->read()) & 0x0008) ? (1) : (0);
+			m_test_mode = (~(ioport("SYSTEM")->read()) & 0x0008) ? (1) : (0);
 			break;
 		case URASHIMA_MCU:
-			state->m_test_mode = ((~(state->ioport("SYSTEM")->read()) & 0x0008) || (~(state->ioport("DSW")->read()) & 0x8000)) ? (1) : (0);
+			m_test_mode = ((~(ioport("SYSTEM")->read()) & 0x0008) || (~(ioport("DSW")->read()) & 0x8000)) ? (1) : (0);
 			break;
 		case KAKUMEI_MCU:
 		case KAKUMEI2_MCU:
 		case SUCHIPI_MCU:
-			state->m_test_mode = (~(state->ioport("DSW")->read()) & 0x0004) ? (1) : (0);
+			m_test_mode = (~(ioport("DSW")->read()) & 0x0004) ? (1) : (0);
 			break;
 	}
 }
@@ -1414,9 +1420,7 @@ static MACHINE_CONFIG_START( jalmah, jalmah_state )
 	MCFG_SCREEN_UPDATE_STATIC(jalmah)
 
 	MCFG_PALETTE_LENGTH(0x400)
-	MCFG_MACHINE_RESET(jalmah)
 
-	MCFG_VIDEO_START(jalmah)
 
 	MCFG_TIMER_ADD_PERIODIC("mcusim", jalmah_mcu_sim, attotime::from_hz(10000)) // not real, but for simulating the MCU
 
@@ -1432,7 +1436,7 @@ static MACHINE_CONFIG_DERIVED( urashima, jalmah )
 
 	MCFG_GFXDECODE(urashima)
 
-	MCFG_VIDEO_START(urashima)
+	MCFG_VIDEO_START_OVERRIDE(jalmah_state,urashima)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(urashima)
 MACHINE_CONFIG_END
@@ -1755,7 +1759,7 @@ READ16_MEMBER(jalmah_state::urashima_mcu_r)
 	res = resp[m_respcount++];
 	if (m_respcount >= sizeof(resp)/sizeof(resp[0])) m_respcount = 0;
 
-//  logerror("%04x: mcu_r %02x\n",cpu_get_pc(&space.device()),res);
+//  logerror("%04x: mcu_r %02x\n",space.device().safe_pc(),res);
 
 	return res;
 }
@@ -1973,7 +1977,7 @@ READ16_MEMBER(jalmah_state::daireika_mcu_r)
 	res = resp[m_respcount++];
 	if (m_respcount >= sizeof(resp)/sizeof(resp[0])) m_respcount = 0;
 
-//  logerror("%04x: mcu_r %02x\n",cpu_get_pc(&space.device()),res);
+//  logerror("%04x: mcu_r %02x\n",space.device().safe_pc(),res);
 
 	return res;
 }
@@ -2252,7 +2256,7 @@ READ16_MEMBER(jalmah_state::mjzoomin_mcu_r)
 	res = resp[m_respcount++];
 	if (m_respcount >= sizeof(resp)/sizeof(resp[0])) m_respcount = 0;
 
-//  logerror("%04x: mcu_r %02x\n",cpu_get_pc(&space.device()),res);
+//  logerror("%04x: mcu_r %02x\n",space.device().safe_pc(),res);
 
 	return res;
 }
@@ -2389,7 +2393,7 @@ READ16_MEMBER(jalmah_state::kakumei_mcu_r)
 	res = resp[m_respcount++];
 	if (m_respcount >= sizeof(resp)/sizeof(resp[0])) m_respcount = 0;
 
-//  popmessage("%04x: mcu_r %02x",cpu_get_pc(&space.device()),res);
+//  popmessage("%04x: mcu_r %02x",space.device().safe_pc(),res);
 
 	return res;
 }
@@ -2410,7 +2414,7 @@ READ16_MEMBER(jalmah_state::suchipi_mcu_r)
 	res = resp[m_respcount++];
 	if (m_respcount >= sizeof(resp)/sizeof(resp[0])) m_respcount = 0;
 
-//  popmessage("%04x: mcu_r %02x",cpu_get_pc(&space.device()),res);
+//  popmessage("%04x: mcu_r %02x",space.device().safe_pc(),res);
 
 	return res;
 }

@@ -41,27 +41,26 @@ static TIMER_CALLBACK( scanline_timer_cb )
 
 	if (scanline != -1)
 	{
-		cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 		state->m_scanline_timer->adjust(machine.primary_screen->time_until_pos(scanline + 1), scanline);
 		machine.scheduler().timer_set(attotime::from_hz(25000000), FUNC(scanline_timer_cb), -1);
 	}
 	else
-		cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
-VIDEO_START( midvunit )
+void midvunit_state::video_start()
 {
-	midvunit_state *state = machine.driver_data<midvunit_state>();
-	state->m_scanline_timer = machine.scheduler().timer_alloc(FUNC(scanline_timer_cb));
+	m_scanline_timer = machine().scheduler().timer_alloc(FUNC(scanline_timer_cb));
 
-	state->m_poly = auto_alloc(machine, midvunit_renderer(*state));
+	m_poly = auto_alloc(machine(), midvunit_renderer(*this));
 
-	state_save_register_global_array(machine, state->m_video_regs);
-	state_save_register_global_array(machine, state->m_dma_data);
-	state_save_register_global(machine, state->m_dma_data_index);
-	state_save_register_global(machine, state->m_page_control);
-	state_save_register_global(machine, state->m_video_changed);
+	state_save_register_global_array(machine(), m_video_regs);
+	state_save_register_global_array(machine(), m_dma_data);
+	state_save_register_global(machine(), m_dma_data_index);
+	state_save_register_global(machine(), m_page_control);
+	state_save_register_global(machine(), m_video_changed);
 }
 
 
@@ -349,7 +348,7 @@ void midvunit_renderer::process_dma_queue()
 WRITE32_MEMBER(midvunit_state::midvunit_dma_queue_w)
 {
 	if (LOG_DMA && machine().input().code_pressed(KEYCODE_L))
-		logerror("%06X:queue(%X) = %08X\n", cpu_get_pc(&space.device()), m_dma_data_index, data);
+		logerror("%06X:queue(%X) = %08X\n", space.device().safe_pc(), m_dma_data_index, data);
 	if (m_dma_data_index < 16)
 		m_dma_data[m_dma_data_index++] = data;
 }
@@ -367,7 +366,7 @@ READ32_MEMBER(midvunit_state::midvunit_dma_trigger_r)
 	if (offset)
 	{
 		if (LOG_DMA && machine().input().code_pressed(KEYCODE_L))
-			logerror("%06X:trigger\n", cpu_get_pc(&space.device()));
+			logerror("%06X:trigger\n", space.device().safe_pc());
 		m_poly->process_dma_queue();
 		m_dma_data_index = 0;
 	}

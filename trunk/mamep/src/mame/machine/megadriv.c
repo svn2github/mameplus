@@ -37,15 +37,14 @@ Known Non-Issues (confirmed on Real Genesis)
 #include "cpu/sh2/sh2comn.h"
 #include "cpu/z80/z80.h"
 #include "sound/2612intf.h"
-#include "sound/cdda.h"
+
 #include "sound/dac.h"
-#include "sound/rf5c68.h"
+
 #include "sound/sn76496.h"
 #include "imagedev/chd_cd.h"
 #include "includes/megadriv.h"
 #include "machine/nvram.h"
 #include "cpu/ssp1601/ssp1601.h"
-#include "megacd.lh"
 
 #include "machine/megavdp.h"
 
@@ -56,7 +55,6 @@ static cpu_device *_genesis_snd_z80_cpu;
 int genesis_other_hacks = 0; // misc hacks
 
 timer_device* megadriv_scanline_timer;
-UINT16* megadrive_ram = NULL;
 
 struct genesis_z80_vars
 {
@@ -71,12 +69,12 @@ genesis_z80_vars genz80;
 void megadriv_z80_hold(running_machine &machine)
 {
 	if ((genz80.z80_has_bus == 1) && (genz80.z80_is_reset == 0))
-		cputag_set_input_line(machine, ":genesis_snd_z80", 0, HOLD_LINE);
+		machine.device(":genesis_snd_z80")->execute().set_input_line(0, HOLD_LINE);
 }
 
 void megadriv_z80_clear(running_machine &machine)
 {
-	cputag_set_input_line(machine, ":genesis_snd_z80", 0, CLEAR_LINE);
+	machine.device(":genesis_snd_z80")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 static void megadriv_z80_bank_w(UINT16 data)
@@ -86,13 +84,13 @@ static void megadriv_z80_bank_w(UINT16 data)
 
 static WRITE16_HANDLER( megadriv_68k_z80_bank_write )
 {
-	//logerror("%06x: 68k writing bit to bank register %01x\n", cpu_get_pc(&space->device()),data&0x01);
+	//logerror("%06x: 68k writing bit to bank register %01x\n", space->device().safe_pc(),data&0x01);
 	megadriv_z80_bank_w(data&0x01);
 }
 
 static WRITE8_HANDLER(megadriv_z80_z80_bank_w)
 {
-	//logerror("%04x: z80 writing bit to bank register %01x\n", cpu_get_pc(&space->device()),data&0x01);
+	//logerror("%04x: z80 writing bit to bank register %01x\n", space->device().safe_pc(),data&0x01);
 	megadriv_z80_bank_w(data&0x01);
 }
 
@@ -419,7 +417,7 @@ READ16_HANDLER( megadriv_68k_io_read )
 	switch (offset)
 	{
 		case 0:
-			logerror("%06x read version register\n", cpu_get_pc(&space->device()));
+			logerror("%06x read version register\n", space->device().safe_pc());
 			retdata = megadrive_region_export<<7 | // Export
 			          megadrive_region_pal<<6 | // NTSC
 			          (sega_cd_connected?0x00:0x20) | // 0x20 = no sega cd
@@ -577,14 +575,14 @@ static ADDRESS_MAP_START( megadriv_map, AS_PROGRAM, 16, driver_device )
 	AM_RANGE(0xa11200, 0xa11201) AM_WRITE_LEGACY(megadriv_68k_req_z80_reset)
 
 	/* these are fake - remove allocs in VIDEO_START to use these to view ram instead */
-//  AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE_LEGACY(&megadrive_vdp_vram)
-//  AM_RANGE(0xb10000, 0xb1007f) AM_RAM AM_BASE_LEGACY(&megadrive_vdp_vsram)
-//  AM_RANGE(0xb10100, 0xb1017f) AM_RAM AM_BASE_LEGACY(&megadrive_vdp_cram)
+//  AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_SHARE("megadrive_vdp_vram")
+//  AM_RANGE(0xb10000, 0xb1007f) AM_RAM AM_SHARE("megadrive_vdp_vsram")
+//  AM_RANGE(0xb10100, 0xb1017f) AM_RAM AM_SHARE("megadrive_vdp_cram")
 
 	AM_RANGE(0xc00000, 0xc0001f) AM_DEVREADWRITE("gen_vdp", sega_genesis_vdp_device, megadriv_vdp_r,megadriv_vdp_w)
 	AM_RANGE(0xd00000, 0xd0001f) AM_DEVREADWRITE("gen_vdp", sega_genesis_vdp_device, megadriv_vdp_r,megadriv_vdp_w) // the earth defend
 
-	AM_RANGE(0xe00000, 0xe0ffff) AM_RAM AM_MIRROR(0x1f0000) AM_BASE_LEGACY(&megadrive_ram)
+	AM_RANGE(0xe00000, 0xe0ffff) AM_RAM AM_MIRROR(0x1f0000) AM_SHARE("megadrive_ram")
 //  AM_RANGE(0xff0000, 0xffffff) AM_READONLY
 	/*       0xe00000 - 0xffffff) == MAIN RAM (64kb, Mirrored, most games use ff0000 - ffffff) */
 ADDRESS_MAP_END
@@ -603,7 +601,7 @@ static READ16_HANDLER( megadriv_68k_read_z80_ram )
 	}
 	else
 	{
-		logerror("%06x: 68000 attempting to access Z80 (read) address space without bus\n", cpu_get_pc(&space->device()));
+		logerror("%06x: 68000 attempting to access Z80 (read) address space without bus\n", space->device().safe_pc());
 		return space->machine().rand();
 	}
 }
@@ -630,7 +628,7 @@ static WRITE16_HANDLER( megadriv_68k_write_z80_ram )
 	}
 	else
 	{
-		logerror("%06x: 68000 attempting to access Z80 (write) address space without bus\n", cpu_get_pc(&space->device()));
+		logerror("%06x: 68000 attempting to access Z80 (write) address space without bus\n", space->device().safe_pc());
 	}
 }
 
@@ -655,13 +653,13 @@ static READ16_HANDLER( megadriv_68k_check_z80_bus )
 		if (genz80.z80_has_bus || genz80.z80_is_reset) retvalue = nextvalue | 0x0100;
 		else retvalue = (nextvalue & 0xfeff);
 
-		//logerror("%06x: 68000 check z80 Bus (byte MSB access) returning %04x mask %04x\n", cpu_get_pc(&space->device()),retvalue, mem_mask);
+		//logerror("%06x: 68000 check z80 Bus (byte MSB access) returning %04x mask %04x\n", space->device().safe_pc(),retvalue, mem_mask);
 		return retvalue;
 
 	}
 	else if (!ACCESSING_BITS_8_15) // is this valid?
 	{
-		//logerror("%06x: 68000 check z80 Bus (byte LSB access) %04x\n", cpu_get_pc(&space->device()),mem_mask);
+		//logerror("%06x: 68000 check z80 Bus (byte LSB access) %04x\n", space->device().safe_pc(),mem_mask);
 		if (genz80.z80_has_bus || genz80.z80_is_reset) retvalue = 0x0001;
 		else retvalue = 0x0000;
 
@@ -669,11 +667,11 @@ static READ16_HANDLER( megadriv_68k_check_z80_bus )
 	}
 	else
 	{
-		//logerror("%06x: 68000 check z80 Bus (word access) %04x\n", cpu_get_pc(&space->device()),mem_mask);
+		//logerror("%06x: 68000 check z80 Bus (word access) %04x\n", space->device().safe_pc(),mem_mask);
 		if (genz80.z80_has_bus || genz80.z80_is_reset) retvalue = nextvalue | 0x0100;
 		else retvalue = (nextvalue & 0xfeff);
 
-	//  mame_printf_debug("%06x: 68000 check z80 Bus (word access) %04x %04x\n", cpu_get_pc(&space->device()),mem_mask, retvalue);
+	//  mame_printf_debug("%06x: 68000 check z80 Bus (word access) %04x %04x\n", space->device().safe_pc(),mem_mask, retvalue);
 		return retvalue;
 	}
 }
@@ -684,9 +682,9 @@ static TIMER_CALLBACK( megadriv_z80_run_state )
 	/* Is the z80 RESET line pulled? */
 	if ( genz80.z80_is_reset )
 	{
-		devtag_reset( machine, "genesis_snd_z80" );
+		machine.device("genesis_snd_z80" )->reset();
 		machine.device<cpu_device>( "genesis_snd_z80" )->suspend(SUSPEND_REASON_HALT, 1 );
-		devtag_reset( machine, "ymsnd" );
+		machine.device("ymsnd" )->reset();
 	}
 	else
 	{
@@ -710,12 +708,12 @@ static WRITE16_HANDLER( megadriv_68k_req_z80_bus )
 	{
 		if (data & 0x0100)
 		{
-			//logerror("%06x: 68000 request z80 Bus (byte MSB access) %04x %04x\n", cpu_get_pc(&space->device()),data,mem_mask);
+			//logerror("%06x: 68000 request z80 Bus (byte MSB access) %04x %04x\n", space->device().safe_pc(),data,mem_mask);
 			genz80.z80_has_bus = 0;
 		}
 		else
 		{
-			//logerror("%06x: 68000 return z80 Bus (byte MSB access) %04x %04x\n", cpu_get_pc(&space->device()),data,mem_mask);
+			//logerror("%06x: 68000 return z80 Bus (byte MSB access) %04x %04x\n", space->device().safe_pc(),data,mem_mask);
 			genz80.z80_has_bus = 1;
 		}
 	}
@@ -723,12 +721,12 @@ static WRITE16_HANDLER( megadriv_68k_req_z80_bus )
 	{
 		if (data & 0x0001)
 		{
-			//logerror("%06x: 68000 request z80 Bus (byte LSB access) %04x %04x\n", cpu_get_pc(&space->device()),data,mem_mask);
+			//logerror("%06x: 68000 request z80 Bus (byte LSB access) %04x %04x\n", space->device().safe_pc(),data,mem_mask);
 			genz80.z80_has_bus = 0;
 		}
 		else
 		{
-			//logerror("%06x: 68000 return z80 Bus (byte LSB access) %04x %04x\n", cpu_get_pc(&space->device()),data,mem_mask);
+			//logerror("%06x: 68000 return z80 Bus (byte LSB access) %04x %04x\n", space->device().safe_pc(),data,mem_mask);
 			genz80.z80_has_bus = 1;
 		}
 	}
@@ -736,12 +734,12 @@ static WRITE16_HANDLER( megadriv_68k_req_z80_bus )
 	{
 		if (data & 0x0100)
 		{
-			//logerror("%06x: 68000 request z80 Bus (word access) %04x %04x\n", cpu_get_pc(&space->device()),data,mem_mask);
+			//logerror("%06x: 68000 request z80 Bus (word access) %04x %04x\n", space->device().safe_pc(),data,mem_mask);
 			genz80.z80_has_bus = 0;
 		}
 		else
 		{
-			//logerror("%06x: 68000 return z80 Bus (byte LSB access) %04x %04x\n", cpu_get_pc(&space->device()),data,mem_mask);
+			//logerror("%06x: 68000 return z80 Bus (byte LSB access) %04x %04x\n", space->device().safe_pc(),data,mem_mask);
 			genz80.z80_has_bus = 1;
 		}
 	}
@@ -757,12 +755,12 @@ static WRITE16_HANDLER ( megadriv_68k_req_z80_reset )
 	{
 		if (data & 0x0100)
 		{
-			//logerror("%06x: 68000 clear z80 reset (byte MSB access) %04x %04x\n", cpu_get_pc(&space->device()),data,mem_mask);
+			//logerror("%06x: 68000 clear z80 reset (byte MSB access) %04x %04x\n", space->device().safe_pc(),data,mem_mask);
 			genz80.z80_is_reset = 0;
 		}
 		else
 		{
-			//logerror("%06x: 68000 start z80 reset (byte MSB access) %04x %04x\n", cpu_get_pc(&space->device()),data,mem_mask);
+			//logerror("%06x: 68000 start z80 reset (byte MSB access) %04x %04x\n", space->device().safe_pc(),data,mem_mask);
 			genz80.z80_is_reset = 1;
 		}
 	}
@@ -770,12 +768,12 @@ static WRITE16_HANDLER ( megadriv_68k_req_z80_reset )
 	{
 		if (data & 0x0001)
 		{
-			//logerror("%06x: 68000 clear z80 reset (byte LSB access) %04x %04x\n", cpu_get_pc(&space->device()),data,mem_mask);
+			//logerror("%06x: 68000 clear z80 reset (byte LSB access) %04x %04x\n", space->device().safe_pc(),data,mem_mask);
 			genz80.z80_is_reset = 0;
 		}
 		else
 		{
-			//logerror("%06x: 68000 start z80 reset (byte LSB access) %04x %04x\n", cpu_get_pc(&space->device()),data,mem_mask);
+			//logerror("%06x: 68000 start z80 reset (byte LSB access) %04x %04x\n", space->device().safe_pc(),data,mem_mask);
 			genz80.z80_is_reset = 1;
 		}
 	}
@@ -783,12 +781,12 @@ static WRITE16_HANDLER ( megadriv_68k_req_z80_reset )
 	{
 		if (data & 0x0100)
 		{
-			//logerror("%06x: 68000 clear z80 reset (word access) %04x %04x\n", cpu_get_pc(&space->device()),data,mem_mask);
+			//logerror("%06x: 68000 clear z80 reset (word access) %04x %04x\n", space->device().safe_pc(),data,mem_mask);
 			genz80.z80_is_reset = 0;
 		}
 		else
 		{
-			//logerror("%06x: 68000 start z80 reset (byte LSB access) %04x %04x\n", cpu_get_pc(&space->device()),data,mem_mask);
+			//logerror("%06x: 68000 start z80 reset (byte LSB access) %04x %04x\n", space->device().safe_pc(),data,mem_mask);
 			genz80.z80_is_reset = 1;
 		}
 	}
@@ -883,7 +881,7 @@ static ADDRESS_MAP_START( md_bootleg_map, AS_PROGRAM, 16, driver_device )
 	AM_RANGE(0xc00000, 0xc0001f) AM_DEVREADWRITE("gen_vdp", sega_genesis_vdp_device, megadriv_vdp_r,megadriv_vdp_w)
 	AM_RANGE(0xd00000, 0xd0001f) AM_DEVREADWRITE("gen_vdp", sega_genesis_vdp_device, megadriv_vdp_r,megadriv_vdp_w)
 
-	AM_RANGE(0xe00000, 0xe0ffff) AM_RAM AM_MIRROR(0x1f0000) AM_BASE_LEGACY(&megadrive_ram)
+	AM_RANGE(0xe00000, 0xe0ffff) AM_RAM AM_MIRROR(0x1f0000) AM_SHARE("megadrive_ram")
 ADDRESS_MAP_END
 
 MACHINE_CONFIG_DERIVED( md_bootleg, megadriv )
@@ -1008,8 +1006,8 @@ MACHINE_RESET( megadriv )
 	{
 	//  set_refresh_rate(megadriv_framerate);
 	//  machine.device("maincpu")->set_clock_scale(0.9950f); /* Fatal Rewind is very fussy... (and doesn't work now anyway, so don't bother with this) */
-		if (megadrive_ram)
-			memset(megadrive_ram,0x00,0x10000);
+		if (state->m_megadrive_ram)
+			memset(state->m_megadrive_ram,0x00,0x10000);
 	}
 
 	megadriv_reset_vdp(machine);
@@ -1019,12 +1017,12 @@ MACHINE_RESET( megadriv )
 	/* if any of these extra CPUs exist, pause them until we actually turn them on */
 	if (_32x_master_cpu != NULL)
 	{
-		device_set_input_line(_32x_master_cpu, INPUT_LINE_RESET, ASSERT_LINE);
+		_32x_master_cpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 	}
 
 	if (_32x_slave_cpu != NULL)
 	{
-		device_set_input_line(_32x_slave_cpu, INPUT_LINE_RESET, ASSERT_LINE);
+		_32x_slave_cpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 	}
 
 	if (_segacd_68k_cpu != NULL )
@@ -1032,11 +1030,6 @@ MACHINE_RESET( megadriv )
 		MACHINE_RESET_CALL( segacd );
 	}
 
-
-	if(_32x_is_connected)
-	{
-		MACHINE_RESET_CALL(_32x);
-	}
 }
 
 void megadriv_stop_scanline_timer(running_machine &machine)
@@ -1095,18 +1088,18 @@ void genesis_vdp_sndirqline_callback_genesis_z80(running_machine &machine, bool 
 void genesis_vdp_lv6irqline_callback_genesis_68k(running_machine &machine, bool state)
 {
 	if (state==true)
-		cputag_set_input_line(machine, "maincpu", 6, HOLD_LINE);
+		machine.device("maincpu")->execute().set_input_line(6, HOLD_LINE);
 	else
-		cputag_set_input_line(machine, "maincpu", 6, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(6, CLEAR_LINE);
 }
 
 // this comes from the vdp, and is connected to 68k irq level 4 (raster interrupt)
 void genesis_vdp_lv4irqline_callback_genesis_68k(running_machine &machine, bool state)
 {
 	if (state==true)
-		cputag_set_input_line(machine, "maincpu", 4, HOLD_LINE);
+		machine.device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 	else
-		cputag_set_input_line(machine, "maincpu", 4, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(4, CLEAR_LINE);
 }
 
 /* Callback when the 68k takes an IRQ */
@@ -1133,6 +1126,25 @@ MACHINE_CONFIG_END
 
 
 
+
+static const sega315_5124_interface sms_vdp_ntsc_intf =
+{
+	false,
+	"megadriv",
+	DEVCB_NULL,
+	DEVCB_NULL,
+};
+
+static const sega315_5124_interface sms_vdp_pal_intf =
+{
+	true,
+	"megadriv",
+	DEVCB_NULL,
+	DEVCB_NULL,
+};
+
+
+
 MACHINE_CONFIG_FRAGMENT( md_ntsc )
 	MCFG_CPU_ADD("maincpu", M68000, MASTER_CLOCK_NTSC / 7) /* 7.67 MHz */
 	MCFG_CPU_PROGRAM_MAP(megadriv_map)
@@ -1149,6 +1161,7 @@ MACHINE_CONFIG_FRAGMENT( md_ntsc )
 	MCFG_FRAGMENT_ADD(megadriv_timers)
 
 	MCFG_DEVICE_ADD("gen_vdp", SEGA_GEN_VDP, 0)
+	MCFG_DEVICE_CONFIG( sms_vdp_ntsc_intf )
 	sega_genesis_vdp_device::set_genesis_vdp_sndirqline_callback(*device, genesis_vdp_sndirqline_callback_genesis_z80);
 	sega_genesis_vdp_device::set_genesis_vdp_lv6irqline_callback(*device, genesis_vdp_lv6irqline_callback_genesis_68k);
 	sega_genesis_vdp_device::set_genesis_vdp_lv4irqline_callback(*device, genesis_vdp_lv4irqline_callback_genesis_68k);
@@ -1206,6 +1219,7 @@ MACHINE_CONFIG_FRAGMENT( md_pal )
 	MCFG_FRAGMENT_ADD(megadriv_timers)
 
 	MCFG_DEVICE_ADD("gen_vdp", SEGA_GEN_VDP, 0)
+	MCFG_DEVICE_CONFIG( sms_vdp_pal_intf )
 	sega_genesis_vdp_device::set_genesis_vdp_sndirqline_callback(*device, genesis_vdp_sndirqline_callback_genesis_z80);
 	sega_genesis_vdp_device::set_genesis_vdp_lv6irqline_callback(*device, genesis_vdp_lv6irqline_callback_genesis_68k);
 	sega_genesis_vdp_device::set_genesis_vdp_lv4irqline_callback(*device, genesis_vdp_lv4irqline_callback_genesis_68k);
@@ -1237,45 +1251,21 @@ MACHINE_CONFIG_FRAGMENT( md_pal )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker",0.25) /* 3.58 MHz */
 MACHINE_CONFIG_END
 
-MACHINE_CONFIG_START( megadpal, driver_device )
+MACHINE_CONFIG_START( megadpal, md_cons_state )
 	MCFG_FRAGMENT_ADD(md_pal)
 MACHINE_CONFIG_END
 
 
 
-static const sh2_cpu_core sh2_conf_master = { 0, NULL, _32x_fifo_available_callback };
-static const sh2_cpu_core sh2_conf_slave  = { 1, NULL, _32x_fifo_available_callback };
 
 MACHINE_CONFIG_DERIVED( genesis_32x, megadriv )
 
-#ifndef _32X_SWAP_MASTER_SLAVE_HACK
-	MCFG_CPU_ADD("32x_master_sh2", SH2, (MASTER_CLOCK_NTSC*3)/7 )
-	MCFG_CPU_PROGRAM_MAP(sh2_main_map)
-	MCFG_CPU_CONFIG(sh2_conf_master)
-#endif
-
-	MCFG_CPU_ADD("32x_slave_sh2", SH2, (MASTER_CLOCK_NTSC*3)/7 )
-	MCFG_CPU_PROGRAM_MAP(sh2_slave_map)
-	MCFG_CPU_CONFIG(sh2_conf_slave)
-
-#ifdef _32X_SWAP_MASTER_SLAVE_HACK
-	MCFG_CPU_ADD("32x_master_sh2", SH2, (MASTER_CLOCK_NTSC*3)/7 )
-	MCFG_CPU_PROGRAM_MAP(sh2_main_map)
-	MCFG_CPU_CONFIG(sh2_conf_master)
-#endif
-
-	// brutal needs at least 30000 or the backgrounds don't animate properly / lock up, and the game
-	// freezes.  Some stage seem to need as high as 80000 ?   this *KILLS* performance
-	//
-	// boosting the interleave here actually makes Kolibri run incorrectly however, that
-	// one works best just boosting the interleave on communications?!
-	MCFG_QUANTUM_TIME(attotime::from_hz(1800000))
+	MCFG_DEVICE_ADD("sega32x", SEGA_32X_NTSC, 0)
 
 	// we need to remove and re-add the sound system because the balance is different
 	// due to MAME / MESS having severe issues if the dac output is > 0.40? (sound is corrupted even if DAC is slient?!)
 	MCFG_DEVICE_REMOVE("ymsnd")
 	MCFG_DEVICE_REMOVE("snsnd")
-
 
 	MCFG_SOUND_ADD("ymsnd", YM2612, MASTER_CLOCK_NTSC/7)
 	MCFG_SOUND_ROUTE(0, "lspeaker", (0.50)/2)
@@ -1286,84 +1276,32 @@ MACHINE_CONFIG_DERIVED( genesis_32x, megadriv )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", (0.25)/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", (0.25)/2)
 
-	MCFG_DAC_ADD("lch_pwm")
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
-
-	MCFG_DAC_ADD("rch_pwm")
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
 
 
 MACHINE_CONFIG_DERIVED( genesis_32x_pal, megadpal )
 
-#ifndef _32X_SWAP_MASTER_SLAVE_HACK
-	MCFG_CPU_ADD("32x_master_sh2", SH2, (MASTER_CLOCK_PAL*3)/7 )
-	MCFG_CPU_PROGRAM_MAP(sh2_main_map)
-	MCFG_CPU_CONFIG(sh2_conf_master)
-#endif
-
-	MCFG_CPU_ADD("32x_slave_sh2", SH2, (MASTER_CLOCK_PAL*3)/7 )
-	MCFG_CPU_PROGRAM_MAP(sh2_slave_map)
-	MCFG_CPU_CONFIG(sh2_conf_slave)
-
-#ifdef _32X_SWAP_MASTER_SLAVE_HACK
-	MCFG_CPU_ADD("32x_master_sh2", SH2, (MASTER_CLOCK_PAL*3)/7 )
-	MCFG_CPU_PROGRAM_MAP(sh2_main_map)
-	MCFG_CPU_CONFIG(sh2_conf_master)
-#endif
-
-	// brutal needs at least 30000 or the backgrounds don't animate properly / lock up, and the game
-	// freezes.  Some stage seem to need as high as 80000 ?   this *KILLS* performance
-	//
-	// boosting the interleave here actually makes Kolibri run incorrectly however, that
-	// one works best just boosting the interleave on communications?!
-	MCFG_QUANTUM_TIME(attotime::from_hz(1800000))
+	MCFG_DEVICE_ADD("sega32x", SEGA_32X_PAL, 0)
 
 	// we need to remove and re-add the sound system because the balance is different
 	// due to MAME / MESS having severe issues if the dac output is > 0.40? (sound is corrupted even if DAC is slient?!)
 	MCFG_DEVICE_REMOVE("ymsnd")
 	MCFG_DEVICE_REMOVE("snsnd")
 
-
-	MCFG_SOUND_ADD("ymsnd", YM2612, MASTER_CLOCK_PAL/7)
+	MCFG_SOUND_ADD("ymsnd", YM2612, MASTER_CLOCK_NTSC/7)
 	MCFG_SOUND_ROUTE(0, "lspeaker", (0.50)/2)
 	MCFG_SOUND_ROUTE(1, "rspeaker", (0.50)/2)
 
 	/* sound hardware */
-	MCFG_SOUND_ADD("snsnd", SEGAPSG, MASTER_CLOCK_PAL/15)
+	MCFG_SOUND_ADD("snsnd", SEGAPSG, MASTER_CLOCK_NTSC/15)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", (0.25)/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", (0.25)/2)
 
-	MCFG_DAC_ADD("lch_pwm")
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.40)
-
-	MCFG_DAC_ADD("rch_pwm")
-	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.40)
 MACHINE_CONFIG_END
 
 
 MACHINE_CONFIG_DERIVED( genesis_scd, megadriv )
-	MCFG_NVRAM_HANDLER_CLEAR()
-	MCFG_CPU_ADD("segacd_68k", M68000, SEGACD_CLOCK ) /* 12.5 MHz */
-	MCFG_CPU_PROGRAM_MAP(segacd_map)
-
-	MCFG_TIMER_ADD("sw_timer", NULL) //stopwatch timer
-
-	MCFG_DEFAULT_LAYOUT( layout_megacd )
-
-	MCFG_NVRAM_ADD_0FILL("backupram")
-
-	MCFG_SOUND_ADD( "cdda", CDDA, 0 )
-	MCFG_SOUND_ROUTE( 0, "lspeaker", 0.50 ) // TODO: accurate volume balance
-	MCFG_SOUND_ROUTE( 1, "rspeaker", 0.50 )
-
-	MCFG_SOUND_ADD("rfsnd", RF5C68, SEGACD_CLOCK) // RF5C164!
-	MCFG_SOUND_ROUTE( 0, "lspeaker", 0.50 )
-	MCFG_SOUND_ROUTE( 1, "rspeaker", 0.50 )
-
-	MCFG_TIMER_ADD("scd_dma_timer", scd_dma_timer_callback)
-
-	MCFG_QUANTUM_PERFECT_CPU("segacd_68k") // perfect sync to the fastest cpu
+	MCFG_DEVICE_ADD("segacd", SEGA_SEGACD_US, 0)
 MACHINE_CONFIG_END
 
 struct cdrom_interface scd_cdrom =
@@ -1390,27 +1328,8 @@ MACHINE_CONFIG_END
 
 MACHINE_CONFIG_DERIVED( genesis_32x_scd, genesis_32x )
 
-	MCFG_CPU_ADD("segacd_68k", M68000, SEGACD_CLOCK ) /* 12.5 MHz */
-	MCFG_CPU_PROGRAM_MAP(segacd_map)
-
-	MCFG_TIMER_ADD("sw_timer", NULL) //stopwatch timer
-	MCFG_NVRAM_ADD_0FILL("backupram")
-	MCFG_TIMER_ADD("scd_dma_timer", scd_dma_timer_callback)
-
-	MCFG_DEFAULT_LAYOUT( layout_megacd )
-
-	MCFG_SOUND_ADD( "cdda", CDDA, 0 )
-	MCFG_SOUND_ROUTE( 0, "lspeaker", 0.50 )
-	MCFG_SOUND_ROUTE( 1, "rspeaker", 0.50 )
-
-	MCFG_SOUND_ADD("rfsnd", RF5C68, SEGACD_CLOCK) // RF5C164
-	MCFG_SOUND_ROUTE( 0, "lspeaker", 0.25 )
-	MCFG_SOUND_ROUTE( 1, "rspeaker", 0.25 )
-
-	MCFG_CDROM_ADD( "cdrom", scd_cdrom)
-	MCFG_SOFTWARE_LIST_ADD("cd_list","segacd")
-
-	MCFG_QUANTUM_PERFECT_CPU("32x_master_sh2")
+	MCFG_DEVICE_ADD("segacd", SEGA_SEGACD_US, 0)
+	//MCFG_QUANTUM_PERFECT_CPU("32x_master_sh2")
 MACHINE_CONFIG_END
 
 
@@ -1434,43 +1353,30 @@ static void megadriv_init_common(running_machine &machine)
 	}
 
 	/* Look to see if this system has the 32x Master SH2 */
-	_32x_master_cpu = machine.device<cpu_device>("32x_master_sh2");
+	_32x_master_cpu = machine.device<cpu_device>(_32X_MASTER_TAG);
 	if (_32x_master_cpu != NULL)
 	{
 		printf("32x MASTER SH2 cpu found '%s'\n", _32x_master_cpu->tag() );
 	}
 
 	/* Look to see if this system has the 32x Slave SH2 */
-	_32x_slave_cpu = machine.device<cpu_device>("32x_slave_sh2");
+	_32x_slave_cpu = machine.device<cpu_device>(_32X_SLAVE_TAG);
 	if (_32x_slave_cpu != NULL)
 	{
 		printf("32x SLAVE SH2 cpu found '%s'\n", _32x_slave_cpu->tag() );
 	}
 
-	if ((_32x_master_cpu != NULL) && (_32x_slave_cpu != NULL))
-	{
-		_32x_is_connected = 1;
-	}
-	else
-	{
-		_32x_is_connected = 0;
-	}
 
-	if(_32x_is_connected)
-	{
-		_32x_pwm_timer = machine.scheduler().timer_alloc(FUNC(_32x_pwm_callback));
-		_32x_pwm_timer->adjust(attotime::never);
-	}
 
 	sega_cd_connected = 0;
 	segacd_wordram_mapped = 0;
-	_segacd_68k_cpu = machine.device<cpu_device>("segacd_68k");
+	_segacd_68k_cpu = machine.device<cpu_device>(":segacd:segacd_68k");
 	if (_segacd_68k_cpu != NULL)
 	{
 		printf("Sega CD secondary 68k cpu found '%s'\n", _segacd_68k_cpu->tag() );
 		sega_cd_connected = 1;
 		segacd_init_main_cpu(machine);
-		scd_dma_timer = machine.device<timer_device>("scd_dma_timer");
+		scd_dma_timer = machine.device<timer_device>(":segacd:scd_dma_timer");
 
 	}
 
@@ -1480,7 +1386,7 @@ static void megadriv_init_common(running_machine &machine)
 		printf("SVP (cpu) found '%s'\n", _svp_cpu->tag() );
 	}
 
-	device_set_irq_callback(machine.device("maincpu"), genesis_int_callback);
+	machine.device("maincpu")->execute().set_irq_acknowledge_callback(genesis_int_callback);
 	megadriv_backupram = NULL;
 	megadriv_backupram_length = 0;
 
@@ -1635,7 +1541,7 @@ SCREEN_VBLANK(megadriv)
 	md_base_state *state = screen.machine().driver_data<md_base_state>();
 
 	if (screen.machine().root_device().ioport(":RESET")->read_safe(0x00) & 0x01)
-		cputag_set_input_line(screen.machine(), ":maincpu", INPUT_LINE_RESET, PULSE_LINE);
+		screen.machine().device(":maincpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 
 	// rising edge
 	if (vblank_on)

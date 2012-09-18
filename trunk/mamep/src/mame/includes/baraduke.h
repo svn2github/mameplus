@@ -32,12 +32,18 @@ public:
 	DECLARE_READ8_MEMBER(baraduke_spriteram_r);
 	DECLARE_WRITE8_MEMBER(baraduke_spriteram_w);
 	DECLARE_DRIVER_INIT(baraduke);
+	TILEMAP_MAPPER_MEMBER(tx_tilemap_scan);
+	TILE_GET_INFO_MEMBER(tx_get_tile_info);
+	TILE_GET_INFO_MEMBER(get_tile_info0);
+	TILE_GET_INFO_MEMBER(get_tile_info1);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/baraduke.c -----------*/
 
-VIDEO_START( baraduke );
+
 SCREEN_UPDATE_IND16( baraduke );
 SCREEN_VBLANK( baraduke );
-PALETTE_INIT( baraduke );
+

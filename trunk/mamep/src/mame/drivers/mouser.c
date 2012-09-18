@@ -39,26 +39,26 @@ WRITE8_MEMBER(mouser_state::mouser_sound_interrupt_w)
 {
 	//logerror("int %02x\n", data);
 	m_sound_byte = data;
-	device_set_input_line(m_audiocpu, 0, ASSERT_LINE);
+	m_audiocpu->set_input_line(0, ASSERT_LINE);
 }
 
 READ8_MEMBER(mouser_state::mouser_sound_byte_r)
 {
 	//logerror("sound r\n");
-	device_set_input_line(m_audiocpu, 0, CLEAR_LINE);
+	m_audiocpu->set_input_line(0, CLEAR_LINE);
 	return m_sound_byte;
 }
 
 WRITE8_MEMBER(mouser_state::mouser_sound_nmi_clear_w)
 {
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 static INTERRUPT_GEN( mouser_sound_nmi_assert )
 {
 	mouser_state *state = device->machine().driver_data<mouser_state>();
 	if (BIT(state->m_nmi_enable, 0))
-		device_set_input_line(device, INPUT_LINE_NMI, ASSERT_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 static ADDRESS_MAP_START( mouser_map, AS_PROGRAM, 8, mouser_state )
@@ -183,23 +183,21 @@ static GFXDECODE_START( mouser )
 GFXDECODE_END
 
 
-static MACHINE_START( mouser )
+void mouser_state::machine_start()
 {
-	mouser_state *state = machine.driver_data<mouser_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_sound_byte));
-	state->save_item(NAME(state->m_nmi_enable));
+	save_item(NAME(m_sound_byte));
+	save_item(NAME(m_nmi_enable));
 }
 
-static MACHINE_RESET( mouser )
+void mouser_state::machine_reset()
 {
-	mouser_state *state = machine.driver_data<mouser_state>();
 
-	state->m_sound_byte = 0;
-	state->m_nmi_enable = 0;
+	m_sound_byte = 0;
+	m_nmi_enable = 0;
 }
 
 static MACHINE_CONFIG_START( mouser, mouser_state )
@@ -214,8 +212,6 @@ static MACHINE_CONFIG_START( mouser, mouser_state )
 	MCFG_CPU_IO_MAP(mouser_sound_io_map)
 	MCFG_CPU_PERIODIC_INT(mouser_sound_nmi_assert, 4*60) /* ??? This controls the sound tempo */
 
-	MCFG_MACHINE_START(mouser)
-	MCFG_MACHINE_RESET(mouser)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -228,7 +224,6 @@ static MACHINE_CONFIG_START( mouser, mouser_state )
 	MCFG_GFXDECODE(mouser)
 	MCFG_PALETTE_LENGTH(64)
 
-	MCFG_PALETTE_INIT(mouser)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

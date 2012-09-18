@@ -39,8 +39,8 @@ public:
 	int         m_latch;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE16_MEMBER(karnov_control_w);
 	DECLARE_READ16_MEMBER(karnov_control_r);
 	DECLARE_WRITE16_MEMBER(karnov_videoram_w);
@@ -51,6 +51,12 @@ public:
 	DECLARE_DRIVER_INIT(chelnovu);
 	DECLARE_DRIVER_INIT(chelnovj);
 	DECLARE_DRIVER_INIT(chelnov);
+	TILE_GET_INFO_MEMBER(get_fix_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void palette_init();
+	DECLARE_VIDEO_START(karnov);
+	DECLARE_VIDEO_START(wndrplnt);
 };
 
 enum {
@@ -68,7 +74,7 @@ enum {
 
 void karnov_flipscreen_w(running_machine &machine, int data);
 
-PALETTE_INIT( karnov );
-VIDEO_START( karnov );
-VIDEO_START( wndrplnt );
+
+
+
 SCREEN_UPDATE_IND16( karnov );

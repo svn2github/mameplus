@@ -34,6 +34,12 @@ public:
 	DECLARE_WRITE32_MEMBER(unico_vram32_w);
 	DECLARE_WRITE16_MEMBER(burglarx_sound_bank_w);
 	DECLARE_WRITE32_MEMBER(zeropnt2_eeprom_w);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	TILE_GET_INFO_MEMBER(get_tile_info32);
+	DECLARE_MACHINE_RESET(unico);
+	DECLARE_VIDEO_START(unico);
+	DECLARE_MACHINE_RESET(zeropt);
+	DECLARE_VIDEO_START(zeropnt2);
 };
 
 
@@ -41,9 +47,9 @@ public:
 
 
 
-VIDEO_START( unico );
+
 SCREEN_UPDATE_IND16( unico );
 
-VIDEO_START( zeropnt2 );
+
 SCREEN_UPDATE_IND16( zeropnt2 );
 

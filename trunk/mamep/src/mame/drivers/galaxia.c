@@ -69,7 +69,7 @@ TODO:
 
 static INTERRUPT_GEN( galaxia_interrupt )
 {
-	device_set_input_line_and_vector(device, 0, HOLD_LINE, 0x03);
+	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x03);
 	cvs_scroll_stars(device->machine());
 }
 
@@ -310,8 +310,8 @@ static MACHINE_CONFIG_START( galaxia, galaxia_state )
 	MCFG_GFXDECODE(galaxia)
 	MCFG_PALETTE_LENGTH(0x18+2)
 
-	MCFG_PALETTE_INIT(galaxia)
-	MCFG_VIDEO_START(galaxia)
+	MCFG_PALETTE_INIT_OVERRIDE(galaxia_state,galaxia)
+	MCFG_VIDEO_START_OVERRIDE(galaxia_state,galaxia)
 
 	MCFG_S2636_ADD("s2636_0", galaxia_s2636_config[0])
 	MCFG_S2636_ADD("s2636_1", galaxia_s2636_config[1])
@@ -350,8 +350,8 @@ static MACHINE_CONFIG_START( astrowar, galaxia_state )
 	MCFG_GFXDECODE(astrowar)
 	MCFG_PALETTE_LENGTH(0x18+2)
 
-	MCFG_PALETTE_INIT(astrowar)
-	MCFG_VIDEO_START(astrowar)
+	MCFG_PALETTE_INIT_OVERRIDE(galaxia_state,astrowar)
+	MCFG_VIDEO_START_OVERRIDE(galaxia_state,astrowar)
 
 	MCFG_S2636_ADD("s2636_0", astrowar_s2636_config)
 

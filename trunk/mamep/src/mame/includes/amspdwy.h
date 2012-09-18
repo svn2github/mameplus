@@ -28,7 +28,7 @@ public:
 	UINT8      m_wheel_return[2];
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	DECLARE_READ8_MEMBER(amspdwy_wheel_0_r);
 	DECLARE_READ8_MEMBER(amspdwy_wheel_1_r);
 	DECLARE_WRITE8_MEMBER(amspdwy_sound_w);
@@ -38,11 +38,16 @@ public:
 	DECLARE_WRITE8_MEMBER(amspdwy_videoram_w);
 	DECLARE_WRITE8_MEMBER(amspdwy_colorram_w);
 	DECLARE_READ8_MEMBER(amspdwy_sound_r);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	TILEMAP_MAPPER_MEMBER(tilemap_scan_cols_back);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/amspdwy.c -----------*/
 
 
-VIDEO_START( amspdwy );
+
 SCREEN_UPDATE_IND16( amspdwy );

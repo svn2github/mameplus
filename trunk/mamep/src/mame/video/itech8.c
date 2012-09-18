@@ -162,21 +162,20 @@ static const struct tms34061_interface tms34061intf =
  *
  *************************************/
 
-VIDEO_START( itech8 )
+void itech8_state::video_start()
 {
-	itech8_state *state = machine.driver_data<itech8_state>();
 	/* initialize TMS34061 emulation */
-	tms34061_start(machine, &tms34061intf);
+	tms34061_start(machine(), &tms34061intf);
 
 	/* get the TMS34061 display state */
-	tms34061_get_display_state(&state->m_tms_state);
+	tms34061_get_display_state(&m_tms_state);
 
 	/* reset statics */
-	state->m_page_select = 0xc0;
+	m_page_select = 0xc0;
 
 	/* fetch the GROM base */
-	state->m_grom_base = state->memregion("grom")->base();
-	state->m_grom_size = state->memregion("grom")->bytes();
+	m_grom_base = memregion("grom")->base();
+	m_grom_size = memregion("grom")->bytes();
 }
 
 
@@ -203,7 +202,7 @@ WRITE8_MEMBER(itech8_state::itech8_palette_w)
 WRITE8_MEMBER(itech8_state::itech8_page_w)
 {
 	machine().primary_screen->update_partial(machine().primary_screen->vpos());
-	logerror("%04x:display_page = %02X (%d)\n", cpu_get_pc(&space.device()), data, machine().primary_screen->vpos());
+	logerror("%04x:display_page = %02X (%d)\n", space.device().safe_pc(), data, machine().primary_screen->vpos());
 	m_page_select = data;
 }
 
@@ -444,7 +443,7 @@ READ8_MEMBER(itech8_state::itech8_blitter_r)
 	static const char *const portnames[] = { "AN_C", "AN_D", "AN_E", "AN_F" };
 
 	/* debugging */
-	if (FULL_LOGGING) logerror("%04x:blitter_r(%02x)\n", cpu_get_previouspc(&space.device()), offset / 2);
+	if (FULL_LOGGING) logerror("%04x:blitter_r(%02x)\n", space.device().safe_pcbase(), offset / 2);
 
 	/* low bit seems to be ignored */
 	offset /= 2;
@@ -507,7 +506,7 @@ WRITE8_MEMBER(itech8_state::itech8_blitter_w)
 	}
 
 	/* debugging */
-	if (FULL_LOGGING) logerror("%04x:blitter_w(%02x)=%02x\n", cpu_get_previouspc(&space.device()), offset, data);
+	if (FULL_LOGGING) logerror("%04x:blitter_w(%02x)=%02x\n", space.device().safe_pcbase(), offset, data);
 }
 
 

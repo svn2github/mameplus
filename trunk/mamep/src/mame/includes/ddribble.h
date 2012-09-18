@@ -52,11 +52,18 @@ public:
 	DECLARE_WRITE8_MEMBER(ddribble_bg_videoram_w);
 	DECLARE_READ8_MEMBER(ddribble_vlm5030_busy_r);
 	DECLARE_WRITE8_MEMBER(ddribble_vlm5030_ctrl_w);
+	TILEMAP_MAPPER_MEMBER(tilemap_scan);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 /*----------- defined in video/ddribble.c -----------*/
 
 
-PALETTE_INIT( ddribble );
-VIDEO_START( ddribble );
+
+
 SCREEN_UPDATE_IND16( ddribble );

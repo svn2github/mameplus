@@ -695,10 +695,9 @@ DISCRETE_SOUND_END
 //* ANALOG SOUND ENDS
 
 
-static MACHINE_RESET( wiz )
+void wiz_state::machine_reset()
 {
-	wiz_state *state = machine.driver_data<wiz_state>();
-	state->m_dsc0 = state->m_dsc1 = 1;
+	m_dsc0 = m_dsc1 = 1;
 }
 
 static INTERRUPT_GEN( wiz_vblank_interrupt )
@@ -706,7 +705,7 @@ static INTERRUPT_GEN( wiz_vblank_interrupt )
 	wiz_state *state = device->machine().driver_data<wiz_state>();
 
 	if(state->m_main_nmi_mask & 1)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static INTERRUPT_GEN( wiz_sound_interrupt )
@@ -714,7 +713,7 @@ static INTERRUPT_GEN( wiz_sound_interrupt )
 	wiz_state *state = device->machine().driver_data<wiz_state>();
 
 	if(state->m_sound_nmi_mask & 1)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -729,7 +728,6 @@ static MACHINE_CONFIG_START( wiz, wiz_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_PERIODIC_INT(wiz_sound_interrupt,4*60)	/* ??? */
 
-	MCFG_MACHINE_RESET( wiz )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -742,8 +740,6 @@ static MACHINE_CONFIG_START( wiz, wiz_state )
 	MCFG_GFXDECODE(wiz)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_PALETTE_INIT(wiz)
-	MCFG_VIDEO_START(wiz)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

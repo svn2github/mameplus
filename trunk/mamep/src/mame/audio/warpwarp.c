@@ -13,8 +13,7 @@
 #define CLOCK_16H	(18432000/3/2/16)
 #define CLOCK_1V    (18432000/3/2/384)
 
-typedef struct _warpwarp_sound_state warpwarp_sound_state;
-struct _warpwarp_sound_state
+struct warpwarp_sound_state
 {
 	INT16 *m_decay;
 	sound_stream *m_channel;
@@ -40,7 +39,7 @@ INLINE warpwarp_sound_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == WARPWARP);
 
-	return (warpwarp_sound_state *)downcast<legacy_device_base *>(device)->token();
+	return (warpwarp_sound_state *)downcast<warpwarp_sound_device *>(device)->token();
 }
 
 static TIMER_CALLBACK( sound_volume_decay )
@@ -241,21 +240,43 @@ static DEVICE_START( warpwarp_sound )
 }
 
 
-DEVICE_GET_INFO( warpwarp_sound )
+
+const device_type WARPWARP = &device_creator<warpwarp_sound_device>;
+
+warpwarp_sound_device::warpwarp_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, WARPWARP, "Warp Warp Custom", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(warpwarp_sound_state);			break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(warpwarp_sound_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(warpwarp_sound);	break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Warp Warp Custom");			break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
+void warpwarp_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void warpwarp_sound_device::device_start()
+{
+	DEVICE_START_NAME( warpwarp_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void warpwarp_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(WARPWARP, warpwarp_sound);

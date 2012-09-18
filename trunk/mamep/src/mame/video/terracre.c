@@ -10,37 +10,33 @@
 #include "includes/terracre.h"
 
 
-static
-TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(terracre_state::get_bg_tile_info)
 {
-	terracre_state *state = machine.driver_data<terracre_state>();
 	/* xxxx.----.----.----
      * ----.xx--.----.----
      * ----.--xx.xxxx.xxxx */
-	unsigned data = state->m_amazon_videoram[tile_index];
+	unsigned data = m_amazon_videoram[tile_index];
 	unsigned color = data>>11;
-	SET_TILE_INFO( 1,data&0x3ff,color,0 );
+	SET_TILE_INFO_MEMBER( 1,data&0x3ff,color,0 );
 }
 
-static
-TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(terracre_state::get_fg_tile_info)
 {
-	terracre_state *state = machine.driver_data<terracre_state>();
-	UINT16 *videoram = state->m_videoram;
+	UINT16 *videoram = m_videoram;
 	int data = videoram[tile_index];
-	SET_TILE_INFO( 0,data&0xff,0,0 );
+	SET_TILE_INFO_MEMBER( 0,data&0xff,0,0 );
 }
 
 static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	terracre_state *state = machine.driver_data<terracre_state>();
 	const UINT8 *spritepalettebank = state->memregion("user1")->base();
-	const gfx_element *pGfx = machine.gfx[2];
+	gfx_element *pGfx = machine.gfx[2];
 	const UINT16 *pSource = state->m_spriteram;
 	int i;
 	int transparent_pen;
 
-	if( pGfx->total_elements > 0x200 )
+	if( pGfx->elements() > 0x200 )
 	{ /* HORE HORE Kid */
 		transparent_pen = 0xf;
 	}
@@ -93,13 +89,13 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	}
 }
 
-PALETTE_INIT( amazon )
+void terracre_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x100);
+	machine().colortable = colortable_alloc(machine(), 0x100);
 
 	/* create a lookup table for the palette */
 	for (i = 0; i < 0x100; i++)
@@ -108,7 +104,7 @@ PALETTE_INIT( amazon )
 		int g = pal4bit(color_prom[i + 0x100]);
 		int b = pal4bit(color_prom[i + 0x200]);
 
-		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r, g, b));
+		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r, g, b));
 	}
 
 	/* color_prom now points to the beginning of the lookup table */
@@ -116,7 +112,7 @@ PALETTE_INIT( amazon )
 
 	/* characters use colors 0-0x0f */
 	for (i = 0; i < 0x10; i++)
-		colortable_entry_set_value(machine.colortable, i, i);
+		colortable_entry_set_value(machine().colortable, i, i);
 
 	/* background tiles use colors 0xc0-0xff in four banks */
 	/* the bottom two bits of the color code select the palette bank for */
@@ -130,7 +126,7 @@ PALETTE_INIT( amazon )
 		else
 			ctabentry = 0xc0 | (i & 0x0f) | ((i & 0x30) >> 0);
 
-		colortable_entry_set_value(machine.colortable, 0x10 + i, ctabentry);
+		colortable_entry_set_value(machine().colortable, 0x10 + i, ctabentry);
 	}
 
 	/* sprites use colors 128-191 in four banks */
@@ -148,7 +144,7 @@ PALETTE_INIT( amazon )
 		else
 			ctabentry = 0x80 | ((i & 0x03) << 4) | (color_prom[i >> 4] & 0x0f);
 
-		colortable_entry_set_value(machine.colortable, 0x110 + i_swapped, ctabentry);
+		colortable_entry_set_value(machine().colortable, 0x110 + i_swapped, ctabentry);
 	}
 }
 
@@ -187,16 +183,15 @@ WRITE16_MEMBER(terracre_state::amazon_scrollx_w)
 	m_background->set_scrollx(0,m_xscroll);
 }
 
-VIDEO_START( amazon )
+void terracre_state::video_start()
 {
-	terracre_state *state = machine.driver_data<terracre_state>();
-	state->m_background = tilemap_create(machine, get_bg_tile_info,tilemap_scan_cols,16,16,64,32);
-	state->m_foreground = tilemap_create(machine, get_fg_tile_info,tilemap_scan_cols,8,8,64,32);
-	state->m_foreground->set_transparent_pen(0xf);
+	m_background = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(terracre_state::get_bg_tile_info),this),TILEMAP_SCAN_COLS,16,16,64,32);
+	m_foreground = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(terracre_state::get_fg_tile_info),this),TILEMAP_SCAN_COLS,8,8,64,32);
+	m_foreground->set_transparent_pen(0xf);
 
 	/* register for saving */
-	state_save_register_global(machine, state->m_xscroll);
-	state_save_register_global(machine, state->m_yscroll);
+	state_save_register_global(machine(), m_xscroll);
+	state_save_register_global(machine(), m_yscroll);
 }
 
 SCREEN_UPDATE_IND16( amazon )

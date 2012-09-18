@@ -1,17 +1,25 @@
 /************************************************************
 
-    NEC UPD7759 ADPCM Speech Processor
+    NEC uPD7759/55/56/P56/57/58 ADPCM Speech Processor
     by: Juergen Buchmueller, Mike Balfour, Howie Cohen,
         Olivier Galibert, and Aaron Giles
 
+    TODO:
+    - is there a doable method to dump the internal maskrom? :(
+      As far as we know, decapping is the only option
+    - low-level emulation
+    - watchdog? - according to uPD775x datasheet, the chip goes into standy mode
+      if CS/ST/RESET have not been accessed for more than 3 seconds
+    - convert to MAME modern device
+
 *************************************************************
 
-    Description:
+    uPD7759 Description:
 
-    The UPD7759 is a speech processing LSI that utilizes ADPCM to produce
+    The uPD7759 is a speech processing LSI that utilizes ADPCM to produce
     speech or other sampled sounds.  It can directly address up to 1Mbit
     (128k) of external data ROM, or the host CPU can control the speech
-    data transfer.  The UPD7759 is usually hooked up to a 640 kHz clock and
+    data transfer.  The uPD7759 is usually hooked up to a 640 kHz clock and
     has one 8-bit input port, a start pin, a busy pin, and a clock output.
 
     The chip is composed of 3 parts:
@@ -56,7 +64,7 @@
     This allows the engine to be a little more adaptative than a
     classical ADPCM algorithm.
 
-    The UPD7759 can run in two modes, master (also known as standalone)
+    The uPD7759 can run in two modes, master (also known as standalone)
     and slave.  The mode is selected through the "md" pin.  No known
     game changes modes on the fly, and it's unsure if that's even
     possible to do.
@@ -77,7 +85,7 @@
     them by two gives the sample start offset in the rom.  A 0x00 marks
     the end of each sample.
 
-    It seems that the UPD7759 reads at least part of the rom header at
+    It seems that the uPD7759 reads at least part of the rom header at
     startup.  Games doing rom banking are careful to reset the chip after
     each change.
 
@@ -94,6 +102,22 @@
     The first command is always 0xFF.  A second 0xFF marks the end of the
     sample and the engine stops.  OTOH, there is a 0x00 at the end too.
     Go figure.
+
+*************************************************************
+
+    The other chip models don't support slave mode, and have an internal ROM.
+    Other than that, they are thought to be nearly identical to uPD7759.
+
+    55C    18-pin DIP   96 Kbit ROM
+    55G    24-pin SOP   96 Kbit ROM
+    56C    18-pin DIP  256 Kbit ROM
+    56G    24-pin SOP  256 Kbit ROM
+    P56CR  20-pin DIP  256 Kbit ROM (OTP) - dumping the ROM is trivial
+    P56G   24-pin SOP  256 Kbit ROM (OTP) - "
+    57C    18-pin DIP  512 Kbit ROM
+    57G    24-pin SOP  512 Kbit ROM
+    58C    18-pin DIP    1 Mbit ROM
+    58G    24-pin SOP    1 Mbit ROM
 
 *************************************************************/
 
@@ -143,11 +167,13 @@ enum
 
 *************************************************************/
 
-typedef struct _upd7759_state upd7759_state;
-struct _upd7759_state
+struct upd7759_state
 {
 	device_t *device;
 	sound_stream *channel;					/* stream channel for playback */
+
+	/* chip configuration */
+	UINT8		sample_offset_shift;		/* header sample address shift (access data > 0xffff) */
 
 	/* internal clock to output sample rate mapping */
 	UINT32		pos;						/* current output sample position */
@@ -186,6 +212,7 @@ struct _upd7759_state
 	UINT8 *		rom;						/* pointer to ROM data or NULL for slave mode */
 	UINT8 *		rombase;					/* pointer to ROM data or NULL for slave mode */
 	UINT32		romoffset;					/* ROM offset to make save/restore easier */
+	UINT32		rommask;					/* maximum address offset */
 };
 
 
@@ -223,8 +250,8 @@ static const int upd7759_state_table[16] = { -1, -1, 0, 0, 1, 2, 2, 3, -1, -1, 0
 INLINE upd7759_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
-	assert(device->type() == UPD7759);
-	return (upd7759_state *)downcast<legacy_device_base *>(device)->token();
+	assert(device->type() == UPD7759 || device->type() == UPD7756);
+	return (upd7759_state *)downcast<upd7759_device *>(device)->token();
 }
 
 
@@ -275,7 +302,7 @@ static void advance_state(upd7759_state *chip)
 		/* Start state: we begin here as soon as a sample is triggered */
 		case STATE_START:
 			chip->req_sample = chip->rom ? chip->fifo_in : 0x10;
-			if (DEBUG_STATES) DEBUG_METHOD("UPD7759: req_sample = %02X\n", chip->req_sample);
+			if (DEBUG_STATES) DEBUG_METHOD("uPD7759: req_sample = %02X\n", chip->req_sample);
 
 			/* 35+ cycles after we get here, the /DRQ goes low
              *     (first byte (number of samples in ROM) should be sent in response)
@@ -291,7 +318,7 @@ static void advance_state(upd7759_state *chip)
 		/* First request state: issue a request for the first byte */
 		/* The expected response will be the index of the last sample */
 		case STATE_FIRST_REQ:
-			if (DEBUG_STATES) DEBUG_METHOD("UPD7759: first data request\n");
+			if (DEBUG_STATES) DEBUG_METHOD("uPD7759: first data request\n");
 			chip->drq = 1;
 
 			/* 44 cycles later, we will latch this value and request another byte */
@@ -303,7 +330,7 @@ static void advance_state(upd7759_state *chip)
 		/* The second byte read will be just a dummy */
 		case STATE_LAST_SAMPLE:
 			chip->last_sample = chip->rom ? chip->rom[0] : chip->fifo_in;
-			if (DEBUG_STATES) DEBUG_METHOD("UPD7759: last_sample = %02X, requesting dummy 1\n", chip->last_sample);
+			if (DEBUG_STATES) DEBUG_METHOD("uPD7759: last_sample = %02X, requesting dummy 1\n", chip->last_sample);
 			chip->drq = 1;
 
 			/* 28 cycles later, we will latch this value and request another byte */
@@ -314,7 +341,7 @@ static void advance_state(upd7759_state *chip)
 		/* First dummy state: ignore any data here and issue a request for the third byte */
 		/* The expected response will be the MSB of the sample address */
 		case STATE_DUMMY1:
-			if (DEBUG_STATES) DEBUG_METHOD("UPD7759: dummy1, requesting offset_hi\n");
+			if (DEBUG_STATES) DEBUG_METHOD("uPD7759: dummy1, requesting offset_hi\n");
 			chip->drq = 1;
 
 			/* 32 cycles later, we will latch this value and request another byte */
@@ -325,8 +352,8 @@ static void advance_state(upd7759_state *chip)
 		/* Address MSB state: latch the MSB of the sample address and issue a request for the fourth byte */
 		/* The expected response will be the LSB of the sample address */
 		case STATE_ADDR_MSB:
-			chip->offset = (chip->rom ? chip->rom[chip->req_sample * 2 + 5] : chip->fifo_in) << 9;
-			if (DEBUG_STATES) DEBUG_METHOD("UPD7759: offset_hi = %02X, requesting offset_lo\n", chip->offset >> 9);
+			chip->offset = (chip->rom ? chip->rom[chip->req_sample * 2 + 5] : chip->fifo_in) << (8 + chip->sample_offset_shift);
+			if (DEBUG_STATES) DEBUG_METHOD("uPD7759: offset_hi = %02X, requesting offset_lo\n", chip->offset >> (8 + chip->sample_offset_shift));
 			chip->drq = 1;
 
 			/* 44 cycles later, we will latch this value and request another byte */
@@ -337,8 +364,9 @@ static void advance_state(upd7759_state *chip)
 		/* Address LSB state: latch the LSB of the sample address and issue a request for the fifth byte */
 		/* The expected response will be just a dummy */
 		case STATE_ADDR_LSB:
-			chip->offset |= (chip->rom ? chip->rom[chip->req_sample * 2 + 6] : chip->fifo_in) << 1;
-			if (DEBUG_STATES) DEBUG_METHOD("UPD7759: offset_lo = %02X, requesting dummy 2\n", (chip->offset >> 1) & 0xff);
+			chip->offset |= (chip->rom ? chip->rom[chip->req_sample * 2 + 6] : chip->fifo_in) << chip->sample_offset_shift;
+			if (DEBUG_STATES) DEBUG_METHOD("uPD7759: offset_lo = %02X, requesting dummy 2\n", (chip->offset >> chip->sample_offset_shift) & 0xff);
+			if (chip->offset > chip->rommask) logerror("uPD7759 offset %X > rommask %X\n",chip->offset, chip->rommask);
 			chip->drq = 1;
 
 			/* 36 cycles later, we will latch this value and request another byte */
@@ -351,7 +379,7 @@ static void advance_state(upd7759_state *chip)
 		case STATE_DUMMY2:
 			chip->offset++;
 			chip->first_valid_header = 0;
-			if (DEBUG_STATES) DEBUG_METHOD("UPD7759: dummy2, requesting block header\n");
+			if (DEBUG_STATES) DEBUG_METHOD("uPD7759: dummy2, requesting block header\n");
 			chip->drq = 1;
 
 			/* 36?? cycles later, we will latch this value and request another byte */
@@ -368,8 +396,8 @@ static void advance_state(upd7759_state *chip)
 				chip->repeat_count--;
 				chip->offset = chip->repeat_offset;
 			}
-			chip->block_header = chip->rom ? chip->rom[chip->offset++ & 0x1ffff] : chip->fifo_in;
-			if (DEBUG_STATES) DEBUG_METHOD("UPD7759: header (@%05X) = %02X, requesting next byte\n", chip->offset, chip->block_header);
+			chip->block_header = chip->rom ? chip->rom[chip->offset++ & chip->rommask] : chip->fifo_in;
+			if (DEBUG_STATES) DEBUG_METHOD("uPD7759: header (@%05X) = %02X, requesting next byte\n", chip->offset, chip->block_header);
 			chip->drq = 1;
 
 			/* our next step depends on the top two bits */
@@ -411,8 +439,8 @@ static void advance_state(upd7759_state *chip)
 		/* Nibble count state: latch the number of nibbles to play and request another byte */
 		/* The expected response will be the first data byte */
 		case STATE_NIBBLE_COUNT:
-			chip->nibbles_left = (chip->rom ? chip->rom[chip->offset++ & 0x1ffff] : chip->fifo_in) + 1;
-			if (DEBUG_STATES) DEBUG_METHOD("UPD7759: nibble_count = %u, requesting next byte\n", (unsigned)chip->nibbles_left);
+			chip->nibbles_left = (chip->rom ? chip->rom[chip->offset++ & chip->rommask] : chip->fifo_in) + 1;
+			if (DEBUG_STATES) DEBUG_METHOD("uPD7759: nibble_count = %u, requesting next byte\n", (unsigned)chip->nibbles_left);
 			chip->drq = 1;
 
 			/* 36?? cycles later, we will latch this value and request another byte */
@@ -423,7 +451,7 @@ static void advance_state(upd7759_state *chip)
 		/* MSN state: latch the data for this pair of samples and request another byte */
 		/* The expected response will be the next sample data or another header */
 		case STATE_NIBBLE_MSN:
-			chip->adpcm_data = chip->rom ? chip->rom[chip->offset++ & 0x1ffff] : chip->fifo_in;
+			chip->adpcm_data = chip->rom ? chip->rom[chip->offset++ & chip->rommask] : chip->fifo_in;
 			update_adpcm(chip, chip->adpcm_data >> 4);
 			chip->drq = 1;
 
@@ -541,7 +569,7 @@ static TIMER_CALLBACK( upd7759_slave_update )
 	advance_state(chip);
 
 	/* if the DRQ changed, update it */
-	logerror("slave_update: DRQ %d->%d\n", olddrq, chip->drq);
+	logerror("upd7759_slave_update: DRQ %d->%d\n", olddrq, chip->drq);
 	if (olddrq != chip->drq && chip->drqcallback)
 		(*chip->drqcallback)(chip->device, chip->drq);
 
@@ -594,7 +622,8 @@ static DEVICE_RESET( upd7759 )
 
 static void upd7759_postload(upd7759_state *chip)
 {
-	chip->rom = chip->rombase + chip->romoffset;
+	if (chip->rombase)
+		chip->rom = chip->rombase + chip->romoffset;
 }
 
 
@@ -639,6 +668,9 @@ static DEVICE_START( upd7759 )
 
 	chip->device = device;
 
+	/* chip configuration */
+	chip->sample_offset_shift = (device->type() == UPD7759) ? 1 : 0;
+
 	/* allocate a stream channel */
 	chip->channel = device->machine().sound().stream_alloc(*device, 0, 1, device->clock()/4, chip, upd7759_update);
 
@@ -652,12 +684,25 @@ static DEVICE_START( upd7759 )
 	chip->state = STATE_IDLE;
 
 	/* compute the ROM base or allocate a timer */
+	chip->romoffset = 0;
 	chip->rom = chip->rombase = *device->region();
-	if (chip->rom == NULL)
+	if (chip->rombase == NULL)
+	{
+		assert(device->type() == UPD7759); // other chips do not support slave mode
 		chip->timer = device->machine().scheduler().timer_alloc(FUNC(upd7759_slave_update), chip);
+		chip->rommask = 0;
 
-	/* set the DRQ callback */
-	chip->drqcallback = intf->drqcallback;
+		/* set the DRQ callback */
+		chip->drqcallback = intf->drqcallback;
+	}
+	else
+	{
+		UINT32 romsize = device->region()->bytes();
+		if (romsize >= 0x20000) chip->rommask = 0x1ffff;
+		else chip->rommask = romsize - 1;
+
+		chip->drqcallback = NULL;
+	}
 
 	/* assume /RESET and /START are both high */
 	chip->reset = 1;
@@ -735,36 +780,78 @@ int upd7759_busy_r(device_t *device)
 void upd7759_set_bank_base(device_t *device, UINT32 base)
 {
 	upd7759_state *chip = get_safe_token(device);
+	assert(chip->rombase != NULL);
 	chip->rom = chip->rombase + base;
 	chip->romoffset = base;
 }
 
+const device_type UPD7759 = &device_creator<upd7759_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( upd7759 )
+upd7759_device::upd7759_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, UPD7759, "uPD7759", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(upd7759_state);			break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(upd7759_state));
+}
+upd7759_device::upd7759_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, type, name, tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(upd7759_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( upd7759 );		break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME( upd7759 );		break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "UPD7759");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "NEC ADPCM");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void upd7759_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void upd7759_device::device_start()
+{
+	DEVICE_START_NAME( upd7759 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void upd7759_device::device_reset()
+{
+	DEVICE_RESET_NAME( upd7759 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void upd7759_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(UPD7759, upd7759);
+const device_type UPD7756 = &device_creator<upd7756_device>;
+
+upd7756_device::upd7756_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: upd7759_device(mconfig, UPD7756, "uPD7756", tag, owner, clock)
+{
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void upd7756_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}

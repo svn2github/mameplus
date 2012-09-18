@@ -37,15 +37,14 @@ WRITE16_MEMBER(alpha68k_state::alpha68k_paletteram_w)
 
 /******************************************************************************/
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(alpha68k_state::get_tile_info)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
-	int tile = state->m_videoram[2 * tile_index] & 0xff;
-	int color = state->m_videoram[2 * tile_index + 1] & 0x0f;
+	int tile = m_videoram[2 * tile_index] & 0xff;
+	int color = m_videoram[2 * tile_index + 1] & 0x0f;
 
-	tile = tile | (state->m_bank_base << 8);
+	tile = tile | (m_bank_base << 8);
 
-	SET_TILE_INFO(0, tile, color, 0);
+	SET_TILE_INFO_MEMBER(0, tile, color, 0);
 }
 
 WRITE16_MEMBER(alpha68k_state::alpha68k_videoram_w)
@@ -62,12 +61,11 @@ WRITE16_MEMBER(alpha68k_state::alpha68k_videoram_w)
 	m_fix_tilemap->mark_tile_dirty(offset / 2);
 }
 
-VIDEO_START( alpha68k )
+VIDEO_START_MEMBER(alpha68k_state,alpha68k)
 {
-	alpha68k_state *state = machine.driver_data<alpha68k_state>();
 
-	state->m_fix_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_cols, 8, 8, 32, 32);
-	state->m_fix_tilemap->set_transparent_pen(0);
+	m_fix_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(alpha68k_state::get_tile_info),this), TILEMAP_SCAN_COLS, 8, 8, 32, 32);
+	m_fix_tilemap->set_transparent_pen(0);
 }
 
 /******************************************************************************/
@@ -381,13 +379,13 @@ SCREEN_UPDATE_IND16( alpha68k_I )
 //ZT
 /******************************************************************************/
 
-PALETTE_INIT( kyros )
+PALETTE_INIT_MEMBER(alpha68k_state,kyros)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x100);
+	machine().colortable = colortable_alloc(machine(), 0x100);
 
 	/* create a lookup table for the palette */
 	for (i = 0; i < 0x100; i++)
@@ -396,7 +394,7 @@ PALETTE_INIT( kyros )
 		int g = pal4bit(color_prom[i + 0x100]);
 		int b = pal4bit(color_prom[i + 0x200]);
 
-		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r, g, b));
+		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r, g, b));
 	}
 
 	/* color_prom now points to the beginning of the lookup table */
@@ -405,17 +403,17 @@ PALETTE_INIT( kyros )
 	for (i = 0; i < 0x100; i++)
 	{
 		UINT8 ctabentry = ((color_prom[i] & 0x0f) << 4) | (color_prom[i + 0x100] & 0x0f);
-		colortable_entry_set_value(machine.colortable, i, ctabentry);
+		colortable_entry_set_value(machine().colortable, i, ctabentry);
 	}
 }
 
-PALETTE_INIT( paddlem )
+PALETTE_INIT_MEMBER(alpha68k_state,paddlem)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x100);
+	machine().colortable = colortable_alloc(machine(), 0x100);
 
 	/* create a lookup table for the palette */
 	for (i = 0; i < 0x100; i++)
@@ -424,7 +422,7 @@ PALETTE_INIT( paddlem )
 		int g = pal4bit(color_prom[i + 0x100]);
 		int b = pal4bit(color_prom[i + 0x200]);
 
-		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r, g, b));
+		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r, g, b));
 	}
 
 	/* color_prom now points to the beginning of the lookup table */
@@ -433,7 +431,7 @@ PALETTE_INIT( paddlem )
 	for (i = 0; i < 0x400; i++)
 	{
 		UINT8 ctabentry = ((color_prom[i + 0x400] & 0x0f) << 4) | (color_prom[i] & 0x0f);
-		colortable_entry_set_value(machine.colortable, i, ctabentry);
+		colortable_entry_set_value(machine().colortable, i, ctabentry);
 	}
 }
 

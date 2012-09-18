@@ -43,13 +43,19 @@ public:
 	DECLARE_READ8_MEMBER(thedeep_p0_r);
 	DECLARE_WRITE8_MEMBER(thedeep_vram_0_w);
 	DECLARE_WRITE8_MEMBER(thedeep_vram_1_w);
+	TILEMAP_MAPPER_MEMBER(tilemap_scan_rows_back);
+	TILE_GET_INFO_MEMBER(get_tile_info_0);
+	TILE_GET_INFO_MEMBER(get_tile_info_1);
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/thedeep.c -----------*/
 
 
-PALETTE_INIT( thedeep );
-VIDEO_START( thedeep );
+
+
 SCREEN_UPDATE_IND16( thedeep );
 

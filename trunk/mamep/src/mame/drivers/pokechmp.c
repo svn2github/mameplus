@@ -72,7 +72,7 @@ WRITE8_MEMBER(pokechmp_state::pokechmp_sound_bank_w)
 WRITE8_MEMBER(pokechmp_state::pokechmp_sound_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -223,7 +223,6 @@ static MACHINE_CONFIG_START( pokechmp, pokechmp_state )
 	MCFG_GFXDECODE(pokechmp)
 	MCFG_PALETTE_LENGTH(0x400)
 
-	MCFG_VIDEO_START(pokechmp)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

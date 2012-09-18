@@ -3,12 +3,13 @@ class tumbleb_state : public driver_device
 {
 public:
 	tumbleb_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_mainram(*this, "mainram"),
 		m_spriteram(*this, "spriteram"),
 		m_pf1_data(*this, "pf1_data"),
 		m_pf2_data(*this, "pf2_data"),
-		m_control(*this, "control"){ }
+		m_control(*this, "control")
+	{ }
 
 	/* memory pointers */
 	optional_shared_ptr<UINT16> m_mainram;
@@ -33,8 +34,8 @@ public:
 	UINT16      m_tilebank;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_oki;
 	UINT8 m_semicom_prot_offset;
 	UINT16 m_protbase;
@@ -72,17 +73,28 @@ public:
 	DECLARE_DRIVER_INIT(tumbleb2);
 	DECLARE_DRIVER_INIT(chokchok);
 	DECLARE_DRIVER_INIT(fncywld);
+	TILEMAP_MAPPER_MEMBER(tumblep_scan);
+	TILE_GET_INFO_MEMBER(get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg2_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fncywld_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(get_fncywld_bg2_tile_info);
+	TILE_GET_INFO_MEMBER(get_fncywld_fg_tile_info);
+	TILE_GET_INFO_MEMBER(pangpang_get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(pangpang_get_bg2_tile_info);
+	TILE_GET_INFO_MEMBER(pangpang_get_fg_tile_info);
+	DECLARE_MACHINE_START(tumbleb);
+	DECLARE_MACHINE_RESET(tumbleb);
+	DECLARE_VIDEO_START(tumblepb);
+	DECLARE_VIDEO_START(fncywld);
+	DECLARE_MACHINE_RESET(htchctch);
+	DECLARE_VIDEO_START(suprtrio);
+	DECLARE_VIDEO_START(pangpang);
+	DECLARE_VIDEO_START(sdfight);
 };
 
+
 /*----------- defined in video/tumbleb.c -----------*/
-
-
-
-VIDEO_START( tumblepb );
-VIDEO_START( fncywld );
-VIDEO_START( sdfight );
-VIDEO_START( suprtrio );
-VIDEO_START( pangpang );
 
 SCREEN_UPDATE_IND16( tumblepb );
 SCREEN_UPDATE_IND16( jumpkids );
@@ -90,7 +102,7 @@ SCREEN_UPDATE_IND16( fncywld );
 SCREEN_UPDATE_IND16( semicom );
 SCREEN_UPDATE_IND16( semicom_altoffsets );
 SCREEN_UPDATE_IND16( bcstory );
-SCREEN_UPDATE_IND16(semibase );
+SCREEN_UPDATE_IND16( semibase );
 SCREEN_UPDATE_IND16( suprtrio );
 SCREEN_UPDATE_IND16( pangpang );
 SCREEN_UPDATE_IND16( sdfight );

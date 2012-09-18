@@ -21,8 +21,8 @@ public:
 	UINT8     m_marineb_active_low_flipscreen;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 
 	UINT8     m_irq_mask;
 	DECLARE_WRITE8_MEMBER(irq_mask_w);
@@ -33,14 +33,20 @@ public:
 	DECLARE_WRITE8_MEMBER(marineb_palette_bank_1_w);
 	DECLARE_WRITE8_MEMBER(marineb_flipscreen_x_w);
 	DECLARE_WRITE8_MEMBER(marineb_flipscreen_y_w);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_MACHINE_RESET(springer);
 };
 
 
 /*----------- defined in video/marineb.c -----------*/
 
 
-PALETTE_INIT( marineb );
-VIDEO_START( marineb );
+
+
 SCREEN_UPDATE_IND16( marineb );
 SCREEN_UPDATE_IND16( changes );
 SCREEN_UPDATE_IND16( springer );

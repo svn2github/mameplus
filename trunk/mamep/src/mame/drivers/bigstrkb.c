@@ -36,7 +36,7 @@ lev 7 : 0x7c : 0000 05be - xxx
 
 static ADDRESS_MAP_START( bigstrkb_map, AS_PROGRAM, 16, bigstrkb_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
-//  AM_RANGE(0x0c0000, 0x0cffff) AM_READWRITE_LEGACY(megasys1_vregs_C_r, megasys1_vregs_C_w) AM_BASE_LEGACY(&megasys1_vregs)
+//  AM_RANGE(0x0c0000, 0x0cffff) AM_READWRITE_LEGACY(megasys1_vregs_C_r, megasys1_vregs_C_w) AM_SHARE("megasys1_vregs")
 
 	AM_RANGE(0x0C2004, 0x0C2005) AM_WRITENOP
 	AM_RANGE(0x0C200C, 0x0C200d) AM_WRITENOP
@@ -211,7 +211,6 @@ static MACHINE_CONFIG_START( bigstrkb, bigstrkb_state )
 
 	MCFG_PALETTE_LENGTH(0x400)
 
-	MCFG_VIDEO_START(bigstrkb)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 //  MCFG_SOUND_ADD("ymsnd", YM2151, ym2151_config)

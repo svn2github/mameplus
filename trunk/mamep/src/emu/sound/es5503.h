@@ -67,7 +67,7 @@ private:
     	MODE_SWAP = 3
     };
 
-    typedef struct
+    struct ES5503Osc
     {
     	UINT16 freq;
     	UINT16 wtsize;
@@ -80,7 +80,7 @@ private:
 
     	UINT32 accumulator;
     	UINT8  irqpend;
-    } ES5503Osc;
+    };
 
 	ES5503Osc oscillators[32];
 
@@ -95,7 +95,7 @@ private:
 
     direct_read_data *m_direct;
 
-    void halt_osc(int onum, int type, UINT32 *accumulator);
+    void halt_osc(int onum, int type, UINT32 *accumulator, int resshift);
 };
 
 

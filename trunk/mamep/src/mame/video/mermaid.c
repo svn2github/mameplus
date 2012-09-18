@@ -2,13 +2,13 @@
 #include "includes/mermaid.h"
 
 
-PALETTE_INIT( mermaid )
+void mermaid_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x41);
+	machine().colortable = colortable_alloc(machine(), 0x41);
 
 	for (i = 0; i < 0x40; i++)
 	{
@@ -16,30 +16,30 @@ PALETTE_INIT( mermaid )
 		int g = 0x21 * BIT(color_prom[i], 3) + 0x47 * BIT(color_prom[i], 4) + 0x97 * BIT(color_prom[i], 5);
 		int b =                                0x47 * BIT(color_prom[i], 6) + 0x97 * BIT(color_prom[i], 7);
 
-		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r, g, b));
+		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r, g, b));
 	}
 
 	/* blue background */
-	colortable_palette_set_color(machine.colortable, 0x40, MAKE_RGB(0, 0, 0xff));
+	colortable_palette_set_color(machine().colortable, 0x40, MAKE_RGB(0, 0, 0xff));
 
 	/* char/sprite palette */
 	for (i = 0; i < 0x40; i++)
-		colortable_entry_set_value(machine.colortable, i, i);
+		colortable_entry_set_value(machine().colortable, i, i);
 
 	/* background palette */
-	colortable_entry_set_value(machine.colortable, 0x40, 0x20);
-	colortable_entry_set_value(machine.colortable, 0x41, 0x21);
-	colortable_entry_set_value(machine.colortable, 0x42, 0x40);
-	colortable_entry_set_value(machine.colortable, 0x43, 0x21);
+	colortable_entry_set_value(machine().colortable, 0x40, 0x20);
+	colortable_entry_set_value(machine().colortable, 0x41, 0x21);
+	colortable_entry_set_value(machine().colortable, 0x42, 0x40);
+	colortable_entry_set_value(machine().colortable, 0x43, 0x21);
 }
 
-PALETTE_INIT( rougien )
+PALETTE_INIT_MEMBER(mermaid_state,rougien)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x41);
+	machine().colortable = colortable_alloc(machine(), 0x41);
 
 	for (i = 0; i < 0x40; i++)
 	{
@@ -47,21 +47,21 @@ PALETTE_INIT( rougien )
 		int g = 0x21 * BIT(color_prom[i], 3) + 0x47 * BIT(color_prom[i], 4) + 0x97 * BIT(color_prom[i], 5);
 		int b =                                0x47 * BIT(color_prom[i], 6) + 0x97 * BIT(color_prom[i], 7);
 
-		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r, g, b));
+		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r, g, b));
 	}
 
 	/* blue background */
-	colortable_palette_set_color(machine.colortable, 0x40, MAKE_RGB(0, 0, 0));
+	colortable_palette_set_color(machine().colortable, 0x40, MAKE_RGB(0, 0, 0));
 
 	/* char/sprite palette */
 	for (i = 0; i < 0x40; i++)
-		colortable_entry_set_value(machine.colortable, i, i);
+		colortable_entry_set_value(machine().colortable, i, i);
 
 	/* background palette */
-	colortable_entry_set_value(machine.colortable, 0x40, 0x40);
-	colortable_entry_set_value(machine.colortable, 0x41, 0x00);
-	colortable_entry_set_value(machine.colortable, 0x42, 0x00);
-	colortable_entry_set_value(machine.colortable, 0x43, 0x02);
+	colortable_entry_set_value(machine().colortable, 0x40, 0x40);
+	colortable_entry_set_value(machine().colortable, 0x41, 0x00);
+	colortable_entry_set_value(machine().colortable, 0x42, 0x00);
+	colortable_entry_set_value(machine().colortable, 0x43, 0x02);
 }
 
 
@@ -143,43 +143,40 @@ READ8_MEMBER(mermaid_state::mermaid_collision_r)
 	return collision;
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(mermaid_state::get_bg_tile_info)
 {
-	mermaid_state *state = machine.driver_data<mermaid_state>();
-	int code = state->m_videoram2[tile_index];
+	int code = m_videoram2[tile_index];
 	int sx = tile_index % 32;
 	int color = (sx >= 26) ? 0 : 1;
 
-	SET_TILE_INFO(2, code, color, 0);
+	SET_TILE_INFO_MEMBER(2, code, color, 0);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(mermaid_state::get_fg_tile_info)
 {
-	mermaid_state *state = machine.driver_data<mermaid_state>();
-	int attr = state->m_colorram[tile_index];
-	int code = state->m_videoram[tile_index] + ((attr & 0x30) << 4);
+	int attr = m_colorram[tile_index];
+	int code = m_videoram[tile_index] + ((attr & 0x30) << 4);
 	int color = attr & 0x0f;
 	int flags = TILE_FLIPYX((attr & 0xc0) >> 6);
 
-	code |= state->m_rougien_gfxbank1 * 0x2800;
-	code |= state->m_rougien_gfxbank2 * 0x2400;
+	code |= m_rougien_gfxbank1 * 0x2800;
+	code |= m_rougien_gfxbank2 * 0x2400;
 
-	SET_TILE_INFO(0, code, color, flags);
+	SET_TILE_INFO_MEMBER(0, code, color, flags);
 }
 
-VIDEO_START( mermaid )
+void mermaid_state::video_start()
 {
-	mermaid_state *state = machine.driver_data<mermaid_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bg_tilemap->set_scroll_cols(32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mermaid_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap->set_scroll_cols(32);
 
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_fg_tilemap->set_scroll_cols(32);
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mermaid_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_fg_tilemap->set_scroll_cols(32);
+	m_fg_tilemap->set_transparent_pen(0);
 
-	machine.primary_screen->register_screen_bitmap(state->m_helper);
-	machine.primary_screen->register_screen_bitmap(state->m_helper2);
+	machine().primary_screen->register_screen_bitmap(m_helper);
+	machine().primary_screen->register_screen_bitmap(m_helper2);
 }
 
 static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
@@ -307,8 +304,8 @@ SCREEN_VBLANK( mermaid )
 
 			rect.min_x = sx;
 			rect.min_y = sy;
-			rect.max_x = sx + screen.machine().gfx[1]->width - 1;
-			rect.max_y = sy + screen.machine().gfx[1]->height - 1;
+			rect.max_x = sx + screen.machine().gfx[1]->width() - 1;
+			rect.max_y = sy + screen.machine().gfx[1]->height() - 1;
 
 			rect &= visarea;
 
@@ -410,8 +407,8 @@ SCREEN_VBLANK( mermaid )
 
 			rect.min_x = sx;
 			rect.min_y = sy;
-			rect.max_x = sx + screen.machine().gfx[1]->width - 1;
-			rect.max_y = sy + screen.machine().gfx[1]->height - 1;
+			rect.max_x = sx + screen.machine().gfx[1]->width() - 1;
+			rect.max_y = sy + screen.machine().gfx[1]->height() - 1;
 
 			rect &= visarea;
 
@@ -491,8 +488,8 @@ SCREEN_VBLANK( mermaid )
 
 			rect.min_x = sx;
 			rect.min_y = sy;
-			rect.max_x = sx + screen.machine().gfx[1]->width - 1;
-			rect.max_y = sy + screen.machine().gfx[1]->height - 1;
+			rect.max_x = sx + screen.machine().gfx[1]->width() - 1;
+			rect.max_y = sy + screen.machine().gfx[1]->height() - 1;
 
 			rect &= visarea;
 

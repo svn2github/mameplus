@@ -75,7 +75,7 @@ static const rom_entry *find_rom_entry(const rom_entry *romp, const char *name)
 	return NULL;
 }
 
-static int load_ips_file(running_machine &machine, ips_chunk **p, const char *ips_dir, const char *ips_name, rom_load_data *romdata)
+static int load_ips_file(running_machine &machine, ips_chunk **p, const char *ips_dir, const char *ips_name, romload_private *romdata)
 {
 	file_error filerr;
 	UINT32 pos = 0;
@@ -206,7 +206,7 @@ static int check_crc(char *crc, const char *rom_hash)
 	return 1;
 }
 
-static int parse_ips_patch(running_machine &machine, ips_entry **ips_p, const char *patch_name, rom_load_data *romdata, const rom_entry *romp)
+static int parse_ips_patch(running_machine &machine, ips_entry **ips_p, const char *patch_name, romload_private *romdata, const rom_entry *romp)
 {
 	UINT8 buffer[1024];
 	file_error filerr;
@@ -325,7 +325,7 @@ parse_ips_patch_fail:
 }
 
 
-int open_ips_entry(running_machine &machine, const char *patch_name, rom_load_data *romdata, const rom_entry *romp)
+int open_ips_entry(running_machine &machine, const char *patch_name, romload_private *romdata, const rom_entry *romp)
 {
 	int result = 0;
 	char *s = mame_strdup(patch_name);
@@ -365,7 +365,7 @@ int open_ips_entry(running_machine &machine, const char *patch_name, rom_load_da
 	return result;
 }
 
-int close_ips_entry(rom_load_data *romdata)
+int close_ips_entry(romload_private *romdata)
 {
 	ips_entry *p;
 	ips_entry *next;

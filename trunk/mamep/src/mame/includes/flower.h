@@ -35,6 +35,11 @@ public:
 	DECLARE_WRITE8_MEMBER(flower_bg1ram_w);
 	DECLARE_WRITE8_MEMBER(flower_flipscreen_w);
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
+	TILE_GET_INFO_MEMBER(get_bg0_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(get_text_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -43,12 +48,35 @@ public:
 WRITE8_DEVICE_HANDLER( flower_sound1_w );
 WRITE8_DEVICE_HANDLER( flower_sound2_w );
 
-DECLARE_LEGACY_SOUND_DEVICE(FLOWER, flower_sound);
+class flower_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	flower_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~flower_sound_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type FLOWER;
+
 
 
 /*----------- defined in video/flower.c -----------*/
 
 
 SCREEN_UPDATE_IND16( flower );
-VIDEO_START( flower );
-PALETTE_INIT( flower );
+
+

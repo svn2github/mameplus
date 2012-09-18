@@ -159,7 +159,7 @@ static TIMER_CALLBACK( scanline_callback )
     if (scanline == 224) state->m_irvg_vblank=1;
     logerror("SCANLINE CALLBACK %d\n",scanline);
     /* set the IRQ line state based on the 32V line state */
-    cputag_set_input_line(machine, "maincpu", M6809_IRQ_LINE, (scanline & 32) ? ASSERT_LINE : CLEAR_LINE);
+    machine.device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, (scanline & 32) ? ASSERT_LINE : CLEAR_LINE);
 
     /* set a callback for the next 32-scanline increment */
     scanline += 32;
@@ -167,31 +167,30 @@ static TIMER_CALLBACK( scanline_callback )
     machine.scheduler().timer_set(machine.primary_screen->time_until_pos(scanline), FUNC(scanline_callback), scanline);
 }
 
-MACHINE_RESET( irobot )
+void irobot_state::machine_reset()
 {
-	irobot_state *state = machine.driver_data<irobot_state>();
-	UINT8 *MB = state->memregion("mathbox")->base();
+	UINT8 *MB = memregion("mathbox")->base();
 
 	/* initialize the memory regions */
-	state->m_mbROM		= MB + 0x00000;
-	state->m_mbRAM		= MB + 0x0c000;
-	state->m_comRAM[0]	= MB + 0x0e000;
-	state->m_comRAM[1]	= MB + 0x0f000;
+	m_mbROM		= MB + 0x00000;
+	m_mbRAM		= MB + 0x0c000;
+	m_comRAM[0]	= MB + 0x0e000;
+	m_comRAM[1]	= MB + 0x0f000;
 
-	state->m_irvg_vblank=0;
-	state->m_irvg_running = 0;
-	state->m_irvg_timer = machine.device<timer_device>("irvg_timer");
-	state->m_irmb_running = 0;
-	state->m_irmb_timer = machine.device<timer_device>("irmb_timer");
+	m_irvg_vblank=0;
+	m_irvg_running = 0;
+	m_irvg_timer = machine().device<timer_device>("irvg_timer");
+	m_irmb_running = 0;
+	m_irmb_timer = machine().device<timer_device>("irmb_timer");
 
 	/* set an initial timer to go off on scanline 0 */
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(0), FUNC(scanline_callback));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), FUNC(scanline_callback));
 
-	state->irobot_rom_banksel_w(*machine.device("maincpu")->memory().space(AS_PROGRAM),0,0);
-	state->irobot_out0_w(*machine.device("maincpu")->memory().space(AS_PROGRAM),0,0);
-	state->m_combase = state->m_comRAM[0];
-	state->m_combase_mb = state->m_comRAM[1];
-	state->m_outx = 0;
+	irobot_rom_banksel_w(*machine().device("maincpu")->memory().space(AS_PROGRAM),0,0);
+	irobot_out0_w(*machine().device("maincpu")->memory().space(AS_PROGRAM),0,0);
+	m_combase = m_comRAM[0];
+	m_combase_mb = m_comRAM[1];
+	m_outx = 0;
 }
 
 WRITE8_MEMBER(irobot_state::irobot_control_w)
@@ -419,7 +418,7 @@ TIMER_DEVICE_CALLBACK( irobot_irmb_done_callback )
 	irobot_state *state = timer.machine().driver_data<irobot_state>();
 	logerror("mb done. ");
 	state->m_irmb_running = 0;
-	cputag_set_input_line(timer.machine(), "maincpu", M6809_FIRQ_LINE, ASSERT_LINE);
+	timer.machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 }
 
 
@@ -824,7 +823,7 @@ default:	case 0x3f:	IXOR(irmb_din(state, curop), 0);							break;
 		state->m_irmb_timer->adjust(attotime::from_hz(200) * icount);
 	}
 #else
-	cputag_set_input_line(machine, "maincpu", M6809_FIRQ_LINE, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 #endif
 	state->m_irmb_running=1;
 }

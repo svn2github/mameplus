@@ -96,3 +96,29 @@ void scsidev_device::GetCommand( UINT8 **_command, int *_commandLength )
 	*_command = command;
 	*_commandLength = commandLength;
 }
+
+int scsidev_device::GetDeviceID()
+{
+	return scsiID;
+}
+
+void scsidev_device::static_set_deviceid( device_t &device, int _scsiID )
+{
+	scsidev_device &scsidev = downcast<scsidev_device &>(device);
+	scsidev.scsiID = _scsiID;
+}
+
+int SCSILengthFromUINT8( UINT8 *length )
+{
+	if( *length == 0 )
+	{
+		return 256;
+	}
+
+	return *length;
+}
+
+int SCSILengthFromUINT16( UINT8 *length )
+{
+	return ( *(length) << 8 ) | *(length + 1 );
+}

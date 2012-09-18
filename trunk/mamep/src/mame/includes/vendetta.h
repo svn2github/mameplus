@@ -24,8 +24,8 @@ public:
 	offs_t     m_video_banking_base;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k053260;
 	device_t *m_k052109;
 	device_t *m_k053246;
@@ -41,6 +41,8 @@ public:
 	DECLARE_READ8_MEMBER(vendetta_sound_r);
 	DECLARE_DRIVER_INIT(vendetta);
 	DECLARE_DRIVER_INIT(esckids);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 /*----------- defined in video/vendetta.c -----------*/

@@ -22,8 +22,7 @@
 
 extern int mn102_disassemble(char *buffer, UINT32 pc, const UINT8 *oprom);
 
-typedef struct _mn102_info mn102_info;
-struct _mn102_info
+struct mn102_info
 {
 	// The UINT32s are really UINT24
 	UINT32 pc;
@@ -35,29 +34,29 @@ struct _mn102_info
 	UINT16 psw;
 	UINT16 mdr;
 
-	struct _simple_timer {
-	UINT8 mode;
-	UINT8 base;
-	UINT8 cur;
+	struct {
+		UINT8 mode;
+		UINT8 base;
+		UINT8 cur;
 	} simple_timer[NUM_TIMERS_8BIT];
 
 	emu_timer *timer_timers[NUM_TIMERS_8BIT];
 
-	struct _prescaler {
-	UINT8 cycles;
-	UINT8 mode;
+	struct {
+		UINT8 cycles;
+		UINT8 mode;
 	} prescaler[NUM_PRESCALERS];
 
-	struct _dma {
-	UINT32 adr;
-	UINT32 count;
-	UINT16 iadr;
-	UINT8 ctrll, ctrlh, irq;
+	struct {
+		UINT32 adr;
+		UINT32 count;
+		UINT16 iadr;
+		UINT8 ctrll, ctrlh, irq;
 	} dma[8];
 
-	struct _serial {
-	UINT8 ctrll, ctrlh;
-	UINT8 buf;
+	struct {
+		UINT8 ctrll, ctrlh;
+		UINT8 buf;
 	} serial[2];
 
 	UINT8 ddr[8];
@@ -2367,7 +2366,7 @@ CPU_GET_INFO( mn10200 )
 		case CPUINFO_INT_CONTEXT_SIZE:          info->i = sizeof(mn102_info);   break;
 		case CPUINFO_INT_INPUT_LINES:           info->i = 0;                    break;
 		case CPUINFO_INT_DEFAULT_IRQ_VECTOR:    info->i = 0;                    break;
-		case DEVINFO_INT_ENDIANNESS:            info->i = ENDIANNESS_LITTLE;    break;
+		case CPUINFO_INT_ENDIANNESS:            info->i = ENDIANNESS_LITTLE;    break;
 		case CPUINFO_INT_CLOCK_MULTIPLIER:      info->i = 1;                    break;
 		case CPUINFO_INT_CLOCK_DIVIDER:         info->i = 1;                    break;
 		case CPUINFO_INT_MIN_INSTRUCTION_BYTES: info->i = 1;                    break;
@@ -2375,15 +2374,15 @@ CPU_GET_INFO( mn10200 )
 		case CPUINFO_INT_MIN_CYCLES:            info->i = 1;                    break;
 		case CPUINFO_INT_MAX_CYCLES:            info->i = 8;                    break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM: info->i = 16;                   break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 24;                   break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;                    break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:    info->i = 0;                    break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:    info->i = 0;                    break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:    info->i = 0;                    break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:      info->i = 8;                    break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:      info->i = 8;                    break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:      info->i = 0;                    break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_PROGRAM: info->i = 16;                   break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 24;                   break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;                    break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_DATA:    info->i = 0;                    break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_DATA:    info->i = 0;                    break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_DATA:    info->i = 0;                    break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_IO:      info->i = 8;                    break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_IO:      info->i = 8;                    break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_IO:      info->i = 0;                    break;
 
 		case CPUINFO_INT_PC:    /* intentional fallthrough */
 		case CPUINFO_INT_REGISTER + MN10200_PC:    info->i = cpustate->pc;                      break;
@@ -2400,11 +2399,11 @@ CPU_GET_INFO( mn10200 )
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:   info->icount = &cpustate->cycles;               break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:                          strcpy(info->s, "Panasonic MN10200");     break;
-		case DEVINFO_STR_FAMILY:                   strcpy(info->s, "MN10200");                break;
-		case DEVINFO_STR_VERSION:                  strcpy(info->s, "1.0");                 break;
-		case DEVINFO_STR_SOURCE_FILE:                     strcpy(info->s, __FILE__);              break;
-		case DEVINFO_STR_CREDITS:                  strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
+		case CPUINFO_STR_NAME:                          strcpy(info->s, "Panasonic MN10200");     break;
+		case CPUINFO_STR_FAMILY:                   strcpy(info->s, "MN10200");                break;
+		case CPUINFO_STR_VERSION:                  strcpy(info->s, "1.0");                 break;
+		case CPUINFO_STR_SOURCE_FILE:                     strcpy(info->s, __FILE__);              break;
+		case CPUINFO_STR_CREDITS:                  strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
 
 		case CPUINFO_STR_FLAGS:                    // intentional fallthrough
 		case CPUINFO_STR_REGISTER + MN10200_PSW:   sprintf(info->s, "S=%d irq=%s im=%d %c%c%c%c %c%c%c%c",

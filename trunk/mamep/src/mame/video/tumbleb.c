@@ -121,7 +121,7 @@ WRITE16_MEMBER(tumbleb_state::pangpang_pf2_data_w)
 
 /******************************************************************************/
 
-static TILEMAP_MAPPER( tumblep_scan )
+TILEMAP_MAPPER_MEMBER(tumbleb_state::tumblep_scan)
 {
 	/* logical (col,row) -> memory offset */
 	return (col & 0x1f) + ((row & 0x1f) << 5) + ((col & 0x60) << 5);
@@ -139,17 +139,16 @@ INLINE void get_bg_tile_info( running_machine &machine, tile_data &tileinfo, int
 			0);
 }
 
-static TILE_GET_INFO( get_bg1_tile_info ) { tumbleb_state *state = machine.driver_data<tumbleb_state>();	get_bg_tile_info(machine, tileinfo, tile_index, 2, state->m_pf1_data); }
-static TILE_GET_INFO( get_bg2_tile_info ) { tumbleb_state *state = machine.driver_data<tumbleb_state>();	get_bg_tile_info(machine, tileinfo, tile_index, 1, state->m_pf2_data); }
+TILE_GET_INFO_MEMBER(tumbleb_state::get_bg1_tile_info){ get_bg_tile_info(machine(), tileinfo, tile_index, 2, m_pf1_data); }
+TILE_GET_INFO_MEMBER(tumbleb_state::get_bg2_tile_info){ get_bg_tile_info(machine(), tileinfo, tile_index, 1, m_pf2_data); }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(tumbleb_state::get_fg_tile_info)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
-	int data = state->m_pf1_data[tile_index];
+	int data = m_pf1_data[tile_index];
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
-			(data & 0x0fff) | state->m_tilebank,
+			(data & 0x0fff) | m_tilebank,
 			data >> 12,
 			0);
 }
@@ -166,16 +165,15 @@ INLINE void get_fncywld_bg_tile_info( running_machine &machine, tile_data &tilei
 			0);
 }
 
-static TILE_GET_INFO( get_fncywld_bg1_tile_info ) { tumbleb_state *state = machine.driver_data<tumbleb_state>();	get_fncywld_bg_tile_info(machine, tileinfo, tile_index, 2, state->m_pf1_data); }
-static TILE_GET_INFO( get_fncywld_bg2_tile_info ) { tumbleb_state *state = machine.driver_data<tumbleb_state>();	get_fncywld_bg_tile_info(machine, tileinfo, tile_index, 1, state->m_pf2_data); }
+TILE_GET_INFO_MEMBER(tumbleb_state::get_fncywld_bg1_tile_info){ get_fncywld_bg_tile_info(machine(), tileinfo, tile_index, 2, m_pf1_data); }
+TILE_GET_INFO_MEMBER(tumbleb_state::get_fncywld_bg2_tile_info){ get_fncywld_bg_tile_info(machine(), tileinfo, tile_index, 1, m_pf2_data); }
 
-static TILE_GET_INFO( get_fncywld_fg_tile_info )
+TILE_GET_INFO_MEMBER(tumbleb_state::get_fncywld_fg_tile_info)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
-	int data = state->m_pf1_data[tile_index * 2];
-	int attr = state->m_pf1_data[tile_index * 2 + 1];
+	int data = m_pf1_data[tile_index * 2];
+	int attr = m_pf1_data[tile_index * 2 + 1];
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			data & 0x1fff,
 			attr & 0x1f,
@@ -208,16 +206,15 @@ INLINE void pangpang_get_bg2x_tile_info( running_machine &machine, tile_data &ti
 }
 
 
-static TILE_GET_INFO( pangpang_get_bg1_tile_info ) { tumbleb_state *state = machine.driver_data<tumbleb_state>();	pangpang_get_bg_tile_info(machine, tileinfo, tile_index, 2, state->m_pf1_data); }
-static TILE_GET_INFO( pangpang_get_bg2_tile_info ) { tumbleb_state *state = machine.driver_data<tumbleb_state>();	pangpang_get_bg2x_tile_info(machine, tileinfo, tile_index, 1, state->m_pf2_data); }
+TILE_GET_INFO_MEMBER(tumbleb_state::pangpang_get_bg1_tile_info){ pangpang_get_bg_tile_info(machine(), tileinfo, tile_index, 2, m_pf1_data); }
+TILE_GET_INFO_MEMBER(tumbleb_state::pangpang_get_bg2_tile_info){ pangpang_get_bg2x_tile_info(machine(), tileinfo, tile_index, 1, m_pf2_data); }
 
-static TILE_GET_INFO( pangpang_get_fg_tile_info )
+TILE_GET_INFO_MEMBER(tumbleb_state::pangpang_get_fg_tile_info)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
-	int data = state->m_pf1_data[tile_index * 2 + 1];
-	int attr = state->m_pf1_data[tile_index * 2];
+	int data = m_pf1_data[tile_index * 2 + 1];
+	int attr = m_pf1_data[tile_index * 2];
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			data & 0x1fff,
 			(attr >> 12)& 0x1f,
@@ -236,75 +233,70 @@ static void tumbleb_tilemap_redraw(running_machine &machine)
 		state->m_pf2_alt_tilemap->mark_all_dirty();
 }
 
-VIDEO_START( pangpang )
+VIDEO_START_MEMBER(tumbleb_state,pangpang)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
 
-	state->m_pf1_tilemap =     tilemap_create(machine, pangpang_get_fg_tile_info,  tilemap_scan_rows, 8,  8, 64, 32);
-	state->m_pf1_alt_tilemap = tilemap_create(machine, pangpang_get_bg1_tile_info, tumblep_scan,     16, 16, 64, 32);
-	state->m_pf2_tilemap =     tilemap_create(machine, pangpang_get_bg2_tile_info, tumblep_scan,     16, 16, 64, 32);
+	m_pf1_tilemap =     &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::pangpang_get_fg_tile_info),this),  TILEMAP_SCAN_ROWS, 8,  8, 64, 32);
+	m_pf1_alt_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::pangpang_get_bg1_tile_info),this), tilemap_mapper_delegate(FUNC(tumbleb_state::tumblep_scan),this),     16, 16, 64, 32);
+	m_pf2_tilemap =     &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::pangpang_get_bg2_tile_info),this), tilemap_mapper_delegate(FUNC(tumbleb_state::tumblep_scan),this),     16, 16, 64, 32);
 
-	state->m_pf1_tilemap->set_transparent_pen(0);
-	state->m_pf1_alt_tilemap->set_transparent_pen(0);
+	m_pf1_tilemap->set_transparent_pen(0);
+	m_pf1_alt_tilemap->set_transparent_pen(0);
 
-	machine.save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine()));
 }
 
 
-VIDEO_START( tumblepb )
+VIDEO_START_MEMBER(tumbleb_state,tumblepb)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
 
-	state->m_pf1_tilemap =     tilemap_create(machine, get_fg_tile_info,  tilemap_scan_rows, 8,  8, 64, 32);
-	state->m_pf1_alt_tilemap = tilemap_create(machine, get_bg1_tile_info, tumblep_scan,     16, 16, 64, 32);
-	state->m_pf2_tilemap =     tilemap_create(machine, get_bg2_tile_info, tumblep_scan,     16, 16, 64, 32);
+	m_pf1_tilemap =     &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::get_fg_tile_info),this),  TILEMAP_SCAN_ROWS, 8,  8, 64, 32);
+	m_pf1_alt_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::get_bg1_tile_info),this), tilemap_mapper_delegate(FUNC(tumbleb_state::tumblep_scan),this),     16, 16, 64, 32);
+	m_pf2_tilemap =     &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::get_bg2_tile_info),this), tilemap_mapper_delegate(FUNC(tumbleb_state::tumblep_scan),this),     16, 16, 64, 32);
 
-	state->m_pf1_tilemap->set_transparent_pen(0);
-	state->m_pf1_alt_tilemap->set_transparent_pen(0);
+	m_pf1_tilemap->set_transparent_pen(0);
+	m_pf1_alt_tilemap->set_transparent_pen(0);
 
-	machine.save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine()));
 }
 
-VIDEO_START( sdfight )
+VIDEO_START_MEMBER(tumbleb_state,sdfight)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
 
-	state->m_pf1_tilemap =     tilemap_create(machine, get_fg_tile_info,  tilemap_scan_rows, 8,  8, 64, 64); // 64*64 to prevent bad tilemap wrapping? - check real behavior
-	state->m_pf1_alt_tilemap = tilemap_create(machine, get_bg1_tile_info, tumblep_scan,     16, 16, 64, 32);
-	state->m_pf2_tilemap =     tilemap_create(machine, get_bg2_tile_info, tumblep_scan,     16, 16, 64, 32);
+	m_pf1_tilemap =     &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::get_fg_tile_info),this),  TILEMAP_SCAN_ROWS, 8,  8, 64, 64); // 64*64 to prevent bad tilemap wrapping? - check real behavior
+	m_pf1_alt_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::get_bg1_tile_info),this), tilemap_mapper_delegate(FUNC(tumbleb_state::tumblep_scan),this),     16, 16, 64, 32);
+	m_pf2_tilemap =     &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::get_bg2_tile_info),this), tilemap_mapper_delegate(FUNC(tumbleb_state::tumblep_scan),this),     16, 16, 64, 32);
 
-	state->m_pf1_tilemap->set_transparent_pen(0);
-	state->m_pf1_alt_tilemap->set_transparent_pen(0);
+	m_pf1_tilemap->set_transparent_pen(0);
+	m_pf1_alt_tilemap->set_transparent_pen(0);
 
-	machine.save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine()));
 }
 
-VIDEO_START( fncywld )
+VIDEO_START_MEMBER(tumbleb_state,fncywld)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
 
-	state->m_pf1_tilemap =     tilemap_create(machine, get_fncywld_fg_tile_info,  tilemap_scan_rows, 8,  8, 64, 32);
-	state->m_pf1_alt_tilemap = tilemap_create(machine, get_fncywld_bg1_tile_info, tumblep_scan,     16, 16, 64, 32);
-	state->m_pf2_tilemap =     tilemap_create(machine, get_fncywld_bg2_tile_info, tumblep_scan,     16, 16, 64, 32);
+	m_pf1_tilemap =     &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::get_fncywld_fg_tile_info),this),  TILEMAP_SCAN_ROWS, 8,  8, 64, 32);
+	m_pf1_alt_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::get_fncywld_bg1_tile_info),this), tilemap_mapper_delegate(FUNC(tumbleb_state::tumblep_scan),this),     16, 16, 64, 32);
+	m_pf2_tilemap =     &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::get_fncywld_bg2_tile_info),this), tilemap_mapper_delegate(FUNC(tumbleb_state::tumblep_scan),this),     16, 16, 64, 32);
 
-	state->m_pf1_tilemap->set_transparent_pen(15);
-	state->m_pf1_alt_tilemap->set_transparent_pen(15);
+	m_pf1_tilemap->set_transparent_pen(15);
+	m_pf1_alt_tilemap->set_transparent_pen(15);
 
-	machine.save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine()));
 }
 
 
-VIDEO_START( suprtrio )
+VIDEO_START_MEMBER(tumbleb_state,suprtrio)
 {
-	tumbleb_state *state = machine.driver_data<tumbleb_state>();
 
-	state->m_pf1_tilemap =     tilemap_create(machine, get_fg_tile_info,  tilemap_scan_rows, 8,  8, 64, 32);
-	state->m_pf1_alt_tilemap = tilemap_create(machine, get_bg1_tile_info, tumblep_scan,     16, 16, 64, 32);
-	state->m_pf2_tilemap =     tilemap_create(machine, get_bg2_tile_info, tumblep_scan,     16, 16, 64, 32);
+	m_pf1_tilemap =     &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::get_fg_tile_info),this),  TILEMAP_SCAN_ROWS, 8,  8, 64, 32);
+	m_pf1_alt_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::get_bg1_tile_info),this), tilemap_mapper_delegate(FUNC(tumbleb_state::tumblep_scan),this),     16, 16, 64, 32);
+	m_pf2_tilemap =     &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tumbleb_state::get_bg2_tile_info),this), tilemap_mapper_delegate(FUNC(tumbleb_state::tumblep_scan),this),     16, 16, 64, 32);
 
-	state->m_pf1_alt_tilemap->set_transparent_pen(0);
+	m_pf1_alt_tilemap->set_transparent_pen(0);
 
-	machine.save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tumbleb_tilemap_redraw), &machine()));
 }
 
 /******************************************************************************/

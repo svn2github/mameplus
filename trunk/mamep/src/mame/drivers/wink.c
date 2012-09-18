@@ -39,15 +39,17 @@ public:
 	DECLARE_WRITE8_MEMBER(prot_w);
 	DECLARE_READ8_MEMBER(sound_r);
 	DECLARE_DRIVER_INIT(wink);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(wink_state::get_bg_tile_info)
 {
-	wink_state *state = machine.driver_data<wink_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int code = videoram[tile_index];
-	code |= 0x200 * state->m_tile_bank;
+	code |= 0x200 * m_tile_bank;
 
 	// the 2 parts of the screen use different tile banking
 	if(tile_index < 0x360)
@@ -55,13 +57,12 @@ static TILE_GET_INFO( get_bg_tile_info )
 		code |= 0x100;
 	}
 
-	SET_TILE_INFO(0, code, 0, 0);
+	SET_TILE_INFO_MEMBER(0, code, 0, 0);
 }
 
-static VIDEO_START( wink )
+void wink_state::video_start()
 {
-	wink_state *state = machine.driver_data<wink_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(wink_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 static SCREEN_UPDATE_IND16( wink )
@@ -107,7 +108,7 @@ READ8_MEMBER(wink_state::player_inputs_r)
 
 WRITE8_MEMBER(wink_state::sound_irq_w)
 {
-	cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
+	machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
 	//sync with sound cpu (but it still loses some soundlatches...)
 	//machine().scheduler().synchronize();
 }
@@ -334,10 +335,9 @@ static INTERRUPT_GEN( wink_sound )
 	state->m_sound_flag ^= 0x80;
 }
 
-static MACHINE_RESET( wink )
+void wink_state::machine_reset()
 {
-	wink_state *state = machine.driver_data<wink_state>();
-	state->m_sound_flag = 0;
+	m_sound_flag = 0;
 }
 
 static MACHINE_CONFIG_START( wink, wink_state )
@@ -353,7 +353,6 @@ static MACHINE_CONFIG_START( wink, wink_state )
 	MCFG_CPU_PERIODIC_INT(wink_sound, 15625)
 
 	MCFG_NVRAM_ADD_1FILL("nvram")
-	MCFG_MACHINE_RESET(wink)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -366,7 +365,6 @@ static MACHINE_CONFIG_START( wink, wink_state )
 	MCFG_GFXDECODE(wink)
 	MCFG_PALETTE_LENGTH(16)
 
-	MCFG_VIDEO_START(wink)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

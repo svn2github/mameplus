@@ -130,11 +130,11 @@ static TIMER_DEVICE_CALLBACK( ddragon_scanline )
 
 	/* on the rising edge of VBLK (vcount == F8), signal an NMI */
 	if (vcount == 0xf8)
-		device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, ASSERT_LINE);
+		state->m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 
 	/* set 1ms signal on rising edge of vcount & 8 */
 	if (!(vcount_old & 8) && (vcount & 8))
-		device_set_input_line(state->m_maincpu, M6809_FIRQ_LINE, ASSERT_LINE);
+		state->m_maincpu->set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 }
 
 
@@ -145,41 +145,39 @@ static TIMER_DEVICE_CALLBACK( ddragon_scanline )
  *
  *************************************/
 
-static MACHINE_START( ddragon )
+MACHINE_START_MEMBER(ddragon_state,ddragon)
 {
-	ddragon_state *state = machine.driver_data<ddragon_state>();
 
 	/* configure banks */
-	state->membank("bank1")->configure_entries(0, 8, state->memregion("maincpu")->base() + 0x10000, 0x4000);
+	membank("bank1")->configure_entries(0, 8, memregion("maincpu")->base() + 0x10000, 0x4000);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_sub_cpu = machine.device("sub");
-	state->m_snd_cpu = machine.device("soundcpu");
-	state->m_adpcm_1 = machine.device("adpcm1");
-	state->m_adpcm_2 = machine.device("adpcm2");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_sub_cpu = machine().device("sub");
+	m_snd_cpu = machine().device("soundcpu");
+	m_adpcm_1 = machine().device("adpcm1");
+	m_adpcm_2 = machine().device("adpcm2");
 
 	/* register for save states */
-	state->save_item(NAME(state->m_dd_sub_cpu_busy));
-	state->save_item(NAME(state->m_scrollx_hi));
-	state->save_item(NAME(state->m_scrolly_hi));
-	state->save_item(NAME(state->m_adpcm_pos));
-	state->save_item(NAME(state->m_adpcm_end));
-	state->save_item(NAME(state->m_adpcm_idle));
-	state->save_item(NAME(state->m_adpcm_data));
+	save_item(NAME(m_dd_sub_cpu_busy));
+	save_item(NAME(m_scrollx_hi));
+	save_item(NAME(m_scrolly_hi));
+	save_item(NAME(m_adpcm_pos));
+	save_item(NAME(m_adpcm_end));
+	save_item(NAME(m_adpcm_idle));
+	save_item(NAME(m_adpcm_data));
 }
 
 
-static MACHINE_RESET( ddragon )
+MACHINE_RESET_MEMBER(ddragon_state,ddragon)
 {
-	ddragon_state *state = machine.driver_data<ddragon_state>();
 
-	state->m_dd_sub_cpu_busy = 1;
-	state->m_adpcm_pos[0] = state->m_adpcm_pos[1] = 0;
-	state->m_adpcm_end[0] = state->m_adpcm_end[1] = 0;
-	state->m_adpcm_idle[0] = state->m_adpcm_idle[1] = 1;
-	state->m_adpcm_data[0] = state->m_adpcm_data[1] = -1;
-	state->m_scrollx_hi = 0;
-	state->m_scrolly_hi = 0;
+	m_dd_sub_cpu_busy = 1;
+	m_adpcm_pos[0] = m_adpcm_pos[1] = 0;
+	m_adpcm_end[0] = m_adpcm_end[1] = 0;
+	m_adpcm_idle[0] = m_adpcm_idle[1] = 1;
+	m_adpcm_data[0] = m_adpcm_data[1] = -1;
+	m_scrollx_hi = 0;
+	m_scrolly_hi = 0;
 }
 
 
@@ -201,7 +199,7 @@ WRITE8_MEMBER(ddragon_state::ddragon_bankswitch_w)
 	if (data & 0x10)
 		m_dd_sub_cpu_busy = 0;
 	else if (m_dd_sub_cpu_busy == 0)
-		device_set_input_line(m_sub_cpu, m_sprite_irq, (m_sprite_irq == INPUT_LINE_NMI) ? PULSE_LINE : HOLD_LINE);
+		m_sub_cpu->execute().set_input_line(m_sprite_irq, (m_sprite_irq == INPUT_LINE_NMI) ? PULSE_LINE : HOLD_LINE);
 
 	membank("bank1")->set_entry((data & 0xe0) >> 5);
 }
@@ -223,7 +221,7 @@ WRITE8_MEMBER(ddragon_state::toffy_bankswitch_w)
 
 READ8_MEMBER(ddragon_state::darktowr_mcu_bank_r)
 {
-	// logerror("BankRead %05x %08x\n",cpu_get_pc(&space.device()),offset);
+	// logerror("BankRead %05x %08x\n",space.device().safe_pc(),offset);
 
 	/* Horrible hack - the alternate TStrike set is mismatched against the MCU,
    so just hack around the protection here.  (The hacks are 'right' as I have
@@ -232,9 +230,9 @@ READ8_MEMBER(ddragon_state::darktowr_mcu_bank_r)
 	if (!strcmp(machine().system().name, "tstrike"))
 	{
 		/* Static protection checks at boot-up */
-		if (cpu_get_pc(&space.device()) == 0x9ace)
+		if (space.device().safe_pc() == 0x9ace)
 			return 0;
-		if (cpu_get_pc(&space.device()) == 0x9ae4)
+		if (space.device().safe_pc() == 0x9ae4)
 			return 0x63;
 
 		/* Just return whatever the code is expecting */
@@ -251,7 +249,7 @@ READ8_MEMBER(ddragon_state::darktowr_mcu_bank_r)
 
 WRITE8_MEMBER(ddragon_state::darktowr_mcu_bank_w)
 {
-	logerror("BankWrite %05x %08x %08x\n", cpu_get_pc(&space.device()), offset, data);
+	logerror("BankWrite %05x %08x %08x\n", space.device().safe_pc(), offset, data);
 
 	if (offset == 0x1400 || offset == 0)
 	{
@@ -276,7 +274,7 @@ WRITE8_MEMBER(ddragon_state::darktowr_bankswitch_w)
 	if (data & 0x10)
 		m_dd_sub_cpu_busy = 0;
 	else if (m_dd_sub_cpu_busy == 0)
-		device_set_input_line(m_sub_cpu, m_sprite_irq, (m_sprite_irq == INPUT_LINE_NMI) ? PULSE_LINE : HOLD_LINE);
+		m_sub_cpu->execute().set_input_line(m_sprite_irq, (m_sprite_irq == INPUT_LINE_NMI) ? PULSE_LINE : HOLD_LINE);
 
 	membank("bank1")->set_entry(newbank);
 	if (newbank == 4 && oldbank != 4)
@@ -298,20 +296,20 @@ WRITE8_MEMBER(ddragon_state::ddragon_interrupt_w)
 	switch (offset)
 	{
 		case 0: /* 380b - NMI ack */
-			device_set_input_line(m_maincpu, INPUT_LINE_NMI, CLEAR_LINE);
+			m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 			break;
 
 		case 1: /* 380c - FIRQ ack */
-			device_set_input_line(m_maincpu, M6809_FIRQ_LINE, CLEAR_LINE);
+			m_maincpu->set_input_line(M6809_FIRQ_LINE, CLEAR_LINE);
 			break;
 
 		case 2: /* 380d - IRQ ack */
-			device_set_input_line(m_maincpu, M6809_IRQ_LINE, CLEAR_LINE);
+			m_maincpu->set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
 			break;
 
 		case 3: /* 380e - SND irq */
 			soundlatch_byte_w(space, 0, data);
-			device_set_input_line(m_snd_cpu, m_sound_irq, (m_sound_irq == INPUT_LINE_NMI) ? PULSE_LINE : HOLD_LINE);
+			m_snd_cpu->execute().set_input_line(m_sound_irq, (m_sound_irq == INPUT_LINE_NMI) ? PULSE_LINE : HOLD_LINE);
 			break;
 
 		case 4: /* 380f - ? */
@@ -323,20 +321,20 @@ WRITE8_MEMBER(ddragon_state::ddragon_interrupt_w)
 
 WRITE8_MEMBER(ddragon_state::ddragon2_sub_irq_ack_w)
 {
-	device_set_input_line(m_sub_cpu, m_sprite_irq, CLEAR_LINE );
+	m_sub_cpu->execute().set_input_line(m_sprite_irq, CLEAR_LINE );
 }
 
 
 WRITE8_MEMBER(ddragon_state::ddragon2_sub_irq_w)
 {
-	device_set_input_line(m_maincpu, M6809_IRQ_LINE, ASSERT_LINE);
+	m_maincpu->set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
 }
 
 
 static void irq_handler( device_t *device, int irq )
 {
 	ddragon_state *state = device->machine().driver_data<ddragon_state>();
-	device_set_input_line(state->m_snd_cpu, state->m_ym_irq , irq ? ASSERT_LINE : CLEAR_LINE );
+	state->m_snd_cpu->execute().set_input_line(state->m_ym_irq , irq ? ASSERT_LINE : CLEAR_LINE );
 }
 
 
@@ -355,14 +353,14 @@ CUSTOM_INPUT_MEMBER(ddragon_state::sub_cpu_busy)
 
 WRITE8_MEMBER(ddragon_state::darktowr_mcu_w)
 {
-	logerror("McuWrite %05x %08x %08x\n",cpu_get_pc(&space.device()), offset, data);
+	logerror("McuWrite %05x %08x %08x\n",space.device().safe_pc(), offset, data);
 	m_darktowr_mcu_ports[offset] = data;
 }
 
 
 READ8_MEMBER(ddragon_state::ddragon_hd63701_internal_registers_r)
 {
-	logerror("%04x: read %d\n", cpu_get_pc(&space.device()), offset);
+	logerror("%04x: read %d\n", space.device().safe_pc(), offset);
 	return 0;
 }
 
@@ -378,8 +376,8 @@ WRITE8_MEMBER(ddragon_state::ddragon_hd63701_internal_registers_w)
         it's quite obvious from the Double Dragon 2 code, below). */
 		if (data & 3)
 		{
-			device_set_input_line(m_maincpu, M6809_IRQ_LINE, ASSERT_LINE);
-			device_set_input_line(m_sub_cpu, m_sprite_irq, CLEAR_LINE);
+			m_maincpu->set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
+			m_sub_cpu->execute().set_input_line(m_sprite_irq, CLEAR_LINE);
 		}
 	}
 }
@@ -396,7 +394,7 @@ READ8_MEMBER(ddragon_state::ddragon_spriteram_r)
 {
 
 	/* Double Dragon crash fix - see notes above */
-	if (offset == 0x49 && cpu_get_pc(&space.device()) == 0x6261 && m_spriteram[offset] == 0x1f)
+	if (offset == 0x49 && space.device().safe_pc() == 0x6261 && m_spriteram[offset] == 0x1f)
 		return 0x1;
 
 	return m_spriteram[offset];
@@ -561,8 +559,8 @@ ADDRESS_MAP_END
 /* might not be 100% accurate, check bits written */
 WRITE8_MEMBER(ddragon_state::ddragonba_port_w)
 {
-	device_set_input_line(m_maincpu, M6809_IRQ_LINE, ASSERT_LINE);
-	device_set_input_line(m_sub_cpu, m_sprite_irq, CLEAR_LINE );
+	m_maincpu->set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
+	m_sub_cpu->execute().set_input_line(m_sprite_irq, CLEAR_LINE );
 }
 
 static ADDRESS_MAP_START( ddragonba_sub_portmap, AS_IO, 8, ddragon_state )
@@ -978,8 +976,8 @@ static MACHINE_CONFIG_START( ddragon, ddragon_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(60000))	/* heavy interleaving to sync up sprite<->main cpu's */
 
-	MCFG_MACHINE_START(ddragon)
-	MCFG_MACHINE_RESET(ddragon)
+	MCFG_MACHINE_START_OVERRIDE(ddragon_state,ddragon)
+	MCFG_MACHINE_RESET_OVERRIDE(ddragon_state,ddragon)
 
 	/* video hardware */
 	MCFG_GFXDECODE(ddragon)
@@ -989,7 +987,7 @@ static MACHINE_CONFIG_START( ddragon, ddragon_state )
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 384, 0, 256, 272, 0, 240)
 	MCFG_SCREEN_UPDATE_STATIC(ddragon)
 
-	MCFG_VIDEO_START(ddragon)
+	MCFG_VIDEO_START_OVERRIDE(ddragon_state,ddragon)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1041,8 +1039,8 @@ static MACHINE_CONFIG_START( ddragon6809, ddragon_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(60000)) /* heavy interleaving to sync up sprite<->main cpu's */
 
-	MCFG_MACHINE_START(ddragon)
-	MCFG_MACHINE_RESET(ddragon)
+	MCFG_MACHINE_START_OVERRIDE(ddragon_state,ddragon)
+	MCFG_MACHINE_RESET_OVERRIDE(ddragon_state,ddragon)
 
 	/* video hardware */
 	MCFG_GFXDECODE(ddragon)
@@ -1052,7 +1050,7 @@ static MACHINE_CONFIG_START( ddragon6809, ddragon_state )
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 384, 0, 256, 272, 0, 240)
 	MCFG_SCREEN_UPDATE_STATIC(ddragon)
 
-	MCFG_VIDEO_START(ddragon)
+	MCFG_VIDEO_START_OVERRIDE(ddragon_state,ddragon)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1087,8 +1085,8 @@ static MACHINE_CONFIG_START( ddragon2, ddragon_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(60000)) /* heavy interleaving to sync up sprite<->main cpu's */
 
-	MCFG_MACHINE_START(ddragon)
-	MCFG_MACHINE_RESET(ddragon)
+	MCFG_MACHINE_START_OVERRIDE(ddragon_state,ddragon)
+	MCFG_MACHINE_RESET_OVERRIDE(ddragon_state,ddragon)
 
 	/* video hardware */
 	MCFG_GFXDECODE(ddragon)
@@ -1098,7 +1096,7 @@ static MACHINE_CONFIG_START( ddragon2, ddragon_state )
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, 384, 0, 256, 272, 0, 240)
 	MCFG_SCREEN_UPDATE_STATIC(ddragon)
 
-	MCFG_VIDEO_START(ddragon)
+	MCFG_VIDEO_START_OVERRIDE(ddragon_state,ddragon)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

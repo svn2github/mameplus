@@ -361,26 +361,24 @@ GFXDECODE_END
 
 
 
-static MACHINE_START( gundealr )
+void gundealr_state::machine_start()
 {
-	gundealr_state *state = machine.driver_data<gundealr_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
+	membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
 
-	state->save_item(NAME(state->m_flipscreen));
-	state->save_item(NAME(state->m_scroll));
+	save_item(NAME(m_flipscreen));
+	save_item(NAME(m_scroll));
 }
 
-static MACHINE_RESET( gundealr )
+void gundealr_state::machine_reset()
 {
-	gundealr_state *state = machine.driver_data<gundealr_state>();
 
-	state->m_flipscreen = 0;
-	state->m_scroll[0] = 0;
-	state->m_scroll[1] = 0;
-	state->m_scroll[2] = 0;
-	state->m_scroll[3] = 0;
+	m_flipscreen = 0;
+	m_scroll[0] = 0;
+	m_scroll[1] = 0;
+	m_scroll[2] = 0;
+	m_scroll[3] = 0;
 }
 
 static TIMER_DEVICE_CALLBACK( gundealr_scanline )
@@ -388,9 +386,9 @@ static TIMER_DEVICE_CALLBACK( gundealr_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE,0xd7); /* RST 10h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xd7); /* RST 10h */
 	else if((scanline == 0) || (scanline == 120) ) //timer irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE,0xcf); /* RST 10h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xcf); /* RST 10h */
 }
 
 static const ym2203_interface ym2203_config =
@@ -414,8 +412,6 @@ static MACHINE_CONFIG_START( gundealr, gundealr_state )
 	MCFG_CPU_IO_MAP(main_portmap)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", gundealr_scanline, "screen", 0, 1)
 
-	MCFG_MACHINE_START(gundealr)
-	MCFG_MACHINE_RESET(gundealr)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -428,7 +424,6 @@ static MACHINE_CONFIG_START( gundealr, gundealr_state )
 	MCFG_GFXDECODE(gundealr)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(gundealr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

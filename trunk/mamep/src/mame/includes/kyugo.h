@@ -36,8 +36,8 @@ public:
 	const UINT8 *m_color_codes;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_subcpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_subcpu;
 
 	UINT8       m_nmi_mask;
 	DECLARE_WRITE8_MEMBER(kyugo_nmi_mask_w);
@@ -53,6 +53,11 @@ public:
 	DECLARE_WRITE8_MEMBER(kyugo_flipscreen_w);
 	DECLARE_DRIVER_INIT(srdmissn);
 	DECLARE_DRIVER_INIT(gyrodine);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -60,5 +65,5 @@ public:
 
 
 
-VIDEO_START( kyugo );
+
 SCREEN_UPDATE_IND16( kyugo );

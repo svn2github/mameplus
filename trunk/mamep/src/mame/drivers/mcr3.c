@@ -460,7 +460,7 @@ READ8_MEMBER(mcr3_state::turbotag_kludge_r)
 	/* Unfortunately, the game refuses to start if any bad ROM is   */
 	/* found; to work around this, we catch the checksum byte read  */
 	/* and modify it to what we know we will be getting.            */
-	if (cpu_get_previouspc(&space.device()) == 0xb29)
+	if (space.device().safe_pcbase() == 0xb29)
 		return 0x82;
 	else
 		return 0x92;
@@ -1086,8 +1086,8 @@ static MACHINE_CONFIG_START( mcrmono, mcr3_state )
 	MCFG_Z80CTC_ADD("ctc", MASTER_CLOCK/4 /* same as "maincpu" */, mcr_ctc_intf)
 
 	MCFG_WATCHDOG_VBLANK_INIT(16)
-	MCFG_MACHINE_START(mcr)
-	MCFG_MACHINE_RESET(mcr)
+	MCFG_MACHINE_START_OVERRIDE(mcr3_state,mcr)
+	MCFG_MACHINE_RESET_OVERRIDE(mcr3_state,mcr)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	// sound hardware
@@ -1106,7 +1106,7 @@ static MACHINE_CONFIG_START( mcrmono, mcr3_state )
 	MCFG_GFXDECODE(mcr3)
 	MCFG_PALETTE_LENGTH(64)
 
-	MCFG_VIDEO_START(mcrmono)
+	MCFG_VIDEO_START_OVERRIDE(mcr3_state,mcrmono)
 MACHINE_CONFIG_END
 
 
@@ -1156,8 +1156,8 @@ static MACHINE_CONFIG_DERIVED( mcrscroll, mcrmono )
 	MCFG_GFXDECODE(spyhunt)
 	MCFG_PALETTE_LENGTH(64+4)
 
-	MCFG_PALETTE_INIT(spyhunt)
-	MCFG_VIDEO_START(spyhunt)
+	MCFG_PALETTE_INIT_OVERRIDE(mcr3_state,spyhunt)
+	MCFG_VIDEO_START_OVERRIDE(mcr3_state,spyhunt)
 MACHINE_CONFIG_END
 
 

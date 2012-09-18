@@ -119,8 +119,7 @@ chirp 12-..: vokume   0   : silent
 #define IP_SIZE_FAST    (120/FR_SIZE)
 #define IP_SIZE_FASTER  ( 80/FR_SIZE)
 
-typedef struct _vlm5030_state vlm5030_state;
-struct _vlm5030_state
+struct vlm5030_state
 {
 	device_t *device;
 	const vlm5030_interface *intf;
@@ -214,7 +213,7 @@ INLINE vlm5030_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == VLM5030);
-	return (vlm5030_state *)downcast<legacy_device_base *>(device)->token();
+	return (vlm5030_state *)downcast<vlm5030_device *>(device)->token();
 }
 
 static int get_bits(vlm5030_state *chip, int sbit,int bits)
@@ -688,31 +687,51 @@ static DEVICE_START( vlm5030 )
 	device->machine().save().register_postload(save_prepost_delegate(FUNC(vlm5030_restore_state), chip));
 }
 
+const device_type VLM5030 = &device_creator<vlm5030_device>;
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( vlm5030 )
+vlm5030_device::vlm5030_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, VLM5030, "VLM5030", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(vlm5030_state);			break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(vlm5030_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( vlm5030 );		break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME( vlm5030 );		break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "VLM5030");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "VLM speech");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void vlm5030_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void vlm5030_device::device_start()
+{
+	DEVICE_START_NAME( vlm5030 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void vlm5030_device::device_reset()
+{
+	DEVICE_RESET_NAME( vlm5030 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void vlm5030_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(VLM5030, vlm5030);

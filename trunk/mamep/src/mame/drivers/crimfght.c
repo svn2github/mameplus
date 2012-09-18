@@ -28,7 +28,7 @@ static INTERRUPT_GEN( crimfght_interrupt )
 	crimfght_state *state = device->machine().driver_data<crimfght_state>();
 
 	if (k051960_is_irq_enabled(state->m_k051960))
-		device_set_input_line(device, KONAMI_IRQ_LINE, HOLD_LINE);
+		device->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(crimfght_state::crimfght_coin_w)
@@ -40,7 +40,7 @@ WRITE8_MEMBER(crimfght_state::crimfght_coin_w)
 WRITE8_MEMBER(crimfght_state::crimfght_sh_irqtrigger_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 WRITE8_MEMBER(crimfght_state::crimfght_snd_bankswitch_w)
@@ -258,24 +258,23 @@ static const k051960_interface crimfght_k051960_intf =
 	crimfght_sprite_callback
 };
 
-static MACHINE_START( crimfght )
+void crimfght_state::machine_start()
 {
-	crimfght_state *state = machine.driver_data<crimfght_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank2")->configure_entries(0, 12, &ROM[0x10000], 0x2000);
-	state->membank("bank2")->set_entry(0);
+	membank("bank2")->configure_entries(0, 12, &ROM[0x10000], 0x2000);
+	membank("bank2")->set_entry(0);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_k052109 = machine.device("k052109");
-	state->m_k051960 = machine.device("k051960");
-	state->m_k007232 = machine.device("k007232");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_k052109 = machine().device("k052109");
+	m_k051960 = machine().device("k051960");
+	m_k007232 = machine().device("k007232");
 }
 
-static MACHINE_RESET( crimfght )
+void crimfght_state::machine_reset()
 {
-	konami_configure_set_lines(machine.device("maincpu"), crimfght_banking);
+	konami_configure_set_lines(machine().device("maincpu"), crimfght_banking);
 }
 
 static MACHINE_CONFIG_START( crimfght, crimfght_state )
@@ -288,8 +287,6 @@ static MACHINE_CONFIG_START( crimfght, crimfght_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz) 	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(crimfght_sound_map)
 
-	MCFG_MACHINE_START(crimfght)
-	MCFG_MACHINE_RESET(crimfght)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -303,7 +300,6 @@ static MACHINE_CONFIG_START( crimfght, crimfght_state )
 
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(crimfght)
 
 	MCFG_K052109_ADD("k052109", crimfght_k052109_intf)
 	MCFG_K051960_ADD("k051960", crimfght_k051960_intf)

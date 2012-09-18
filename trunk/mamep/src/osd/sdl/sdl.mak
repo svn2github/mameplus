@@ -72,6 +72,9 @@ USE_DISPATCH_GL = 1
 # Get what you need here: http://www.gtk.org/download-windows.html
 # GTK_INSTALL_ROOT = y:/couriersud/win/gtk-32
 
+# uncomment to use Xinput for multiple mice on X11 systems
+# (currently defaults disabled due to causing issues with mouse capture, esp. in MESS)
+NO_USE_XINPUT = 1
 
 
 ###########################################################################
@@ -123,10 +126,25 @@ CC = @gcc -V 4.2
 LD = g++-4.2
 else
 ifeq ($(DISTRO),gcc44-generic)
-CC = @gcc -V 4.4
+CC = @gcc-4.4
 LD = @g++-4.4
 else
+ifeq ($(DISTRO),gcc45-generic)
+CC = @gcc-4.5
+LD = @g++-4.5
+else
+ifeq ($(DISTRO),gcc46-generic)
+CC = @gcc-4.6
+LD = @g++-4.6
+else
+ifeq ($(DISTRO),gcc47-generic)
+CC = @gcc-4.7
+LD = @g++-4.7
+else
 $(error DISTRO $(DISTRO) unknown)
+endif
+endif
+endif
 endif
 endif
 endif

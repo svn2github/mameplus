@@ -13,10 +13,12 @@ public:
 	midtunit_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
 		  m_nvram(*this, "nvram"),
+		  m_gfxrom(*this, "gfxrom"),
 		  m_cvsd_sound(*this, "cvsd"),
 		  m_adpcm_sound(*this, "adpcm") { }
 
 	required_shared_ptr<UINT16>	m_nvram;
+	required_memory_region m_gfxrom;
 	optional_device<williams_cvsd_sound_device> m_cvsd_sound;
 	optional_device<williams_adpcm_sound_device> m_adpcm_sound;
 
@@ -61,6 +63,8 @@ public:
 	DECLARE_DRIVER_INIT(nbajam);
 	DECLARE_DRIVER_INIT(jdreddp);
 	DECLARE_DRIVER_INIT(mk2);
+	DECLARE_MACHINE_RESET(midtunit);
+	DECLARE_VIDEO_START(midtunit);
 };
 
 /*----------- defined in machine/midtunit.c -----------*/
@@ -68,19 +72,17 @@ public:
 
 
 
-MACHINE_RESET( midtunit );
+
 
 
 
 /*----------- defined in video/midtunit.c -----------*/
 
-extern UINT8 *	midtunit_gfx_rom;
-extern size_t	midtunit_gfx_rom_size;
 extern UINT8 midtunit_gfx_rom_large;
 
-VIDEO_START( midtunit );
-VIDEO_START( midwunit );
-VIDEO_START( midxunit );
+
+
+
 
 
 

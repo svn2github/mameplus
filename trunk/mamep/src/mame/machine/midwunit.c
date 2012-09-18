@@ -51,7 +51,7 @@ WRITE16_MEMBER(midwunit_state::midwunit_cmos_w)
 	}
 	else
 	{
-		logerror("%08X:Unexpected CMOS W @ %05X\n", cpu_get_pc(&space.device()), offset);
+		logerror("%08X:Unexpected CMOS W @ %05X\n", space.device().safe_pc(), offset);
 		popmessage("Bad CMOS write");
 	}
 }
@@ -83,7 +83,7 @@ WRITE16_MEMBER(midwunit_state::midwunit_io_w)
 	switch (offset)
 	{
 		case 1:
-			logerror("%08X:Control W @ %05X = %04X\n", cpu_get_pc(&space.device()), offset, data);
+			logerror("%08X:Control W @ %05X = %04X\n", space.device().safe_pc(), offset, data);
 
 			/* bit 4 reset sound CPU */
 			dcs_reset_w(machine(), newword & 0x10);
@@ -99,7 +99,7 @@ WRITE16_MEMBER(midwunit_state::midwunit_io_w)
 			break;
 
 		default:
-			logerror("%08X:Unknown I/O write to %d = %04X\n", cpu_get_pc(&space.device()), offset, data);
+			logerror("%08X:Unknown I/O write to %d = %04X\n", space.device().safe_pc(), offset, data);
 			break;
 	}
 	m_iodata[offset] = newword;
@@ -132,7 +132,7 @@ READ16_MEMBER(midwunit_state::midwunit_io_r)
 			return (midway_serial_pic_status_r() << 12) | midwunit_sound_state_r(space,0,0xffff);
 
 		default:
-			logerror("%08X:Unknown I/O read from %d\n", cpu_get_pc(&space.device()), offset);
+			logerror("%08X:Unknown I/O read from %d\n", space.device().safe_pc(), offset);
 			break;
 	}
 	return ~0;
@@ -148,27 +148,8 @@ READ16_MEMBER(midwunit_state::midwunit_io_r)
 
 static void init_wunit_generic(running_machine &machine)
 {
-	midwunit_state *state = machine.driver_data<midwunit_state>();
-	UINT8 *base;
-	int i, j, len;
-
 	/* register for state saving */
 	register_state_saving(machine);
-
-	/* load the graphics ROMs -- quadruples */
-	midtunit_gfx_rom = base = state->memregion("gfx1")->base();
-	len = state->memregion("gfx1")->bytes();
-	for (i = 0; i < len / 0x400000; i++)
-	{
-		memcpy(state->m_decode_memory, base, 0x400000);
-		for (j = 0; j < 0x100000; j++)
-		{
-			*base++ = state->m_decode_memory[0x000000 + j];
-			*base++ = state->m_decode_memory[0x100000 + j];
-			*base++ = state->m_decode_memory[0x200000 + j];
-			*base++ = state->m_decode_memory[0x300000 + j];
-		}
-	}
 
 	/* init sound */
 	dcs_init(machine);
@@ -209,7 +190,7 @@ WRITE16_MEMBER(midwunit_state::umk3_palette_hack_w)
         without significantly impacting the rest of the system.
     */
 	COMBINE_DATA(&m_umk3_palette[offset]);
-	device_adjust_icount(&space.device(), -100);
+	space.device().execute().adjust_icount(-100);
 /*  printf("in=%04X%04X  out=%04X%04X\n", m_umk3_palette[3], m_umk3_palette[2], m_umk3_palette[1], m_umk3_palette[0]); */
 }
 
@@ -356,18 +337,17 @@ DRIVER_INIT_MEMBER(midwunit_state,rmpgwt)
  *
  *************************************/
 
-MACHINE_RESET( midwunit )
+MACHINE_RESET_MEMBER(midwunit_state,midwunit)
 {
-	midwunit_state *state = machine.driver_data<midwunit_state>();
 	int i;
 
 	/* reset sound */
-	dcs_reset_w(machine, 1);
-	dcs_reset_w(machine, 0);
+	dcs_reset_w(machine(), 1);
+	dcs_reset_w(machine(), 0);
 
 	/* reset I/O shuffling */
 	for (i = 0; i < 16; i++)
-		state->m_ioshuffle[i] = i % 8;
+		m_ioshuffle[i] = i % 8;
 }
 
 
@@ -400,7 +380,7 @@ WRITE16_MEMBER(midwunit_state::midwunit_security_w)
 
 READ16_MEMBER(midwunit_state::midwunit_sound_r)
 {
-	logerror("%08X:Sound read\n", cpu_get_pc(&space.device()));
+	logerror("%08X:Sound read\n", space.device().safe_pc());
 
 	return dcs_data_r(machine()) & 0xff;
 }
@@ -417,14 +397,14 @@ WRITE16_MEMBER(midwunit_state::midwunit_sound_w)
 	/* check for out-of-bounds accesses */
 	if (offset)
 	{
-		logerror("%08X:Unexpected write to sound (hi) = %04X\n", cpu_get_pc(&space.device()), data);
+		logerror("%08X:Unexpected write to sound (hi) = %04X\n", space.device().safe_pc(), data);
 		return;
 	}
 
 	/* call through based on the sound type */
 	if (ACCESSING_BITS_0_7)
 	{
-		logerror("%08X:Sound write = %04X\n", cpu_get_pc(&space.device()), data);
+		logerror("%08X:Sound write = %04X\n", space.device().safe_pc(), data);
 		dcs_data_w(machine(), data & 0xff);
 	}
 }

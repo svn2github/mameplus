@@ -9,11 +9,9 @@ class midxunit_state : public midtunit_state
 public:
 	midxunit_state(const machine_config &mconfig, device_type type, const char *tag)
 		: midtunit_state(mconfig, type, tag),
-		  m_nvram(*this, "nvram"),
-		  m_decode_memory(*this, "decode_memory", 16) { }
+		  m_nvram(*this, "nvram") { }
 
 	required_shared_ptr<UINT16>	m_nvram;
-	required_shared_ptr<UINT8> m_decode_memory;
 	UINT8 m_cmos_write_enable;
 	UINT16 m_iodata[8];
 	UINT8 m_ioshuffle[16];
@@ -37,6 +35,8 @@ public:
 	DECLARE_READ16_MEMBER(midxunit_sound_state_r);
 	DECLARE_WRITE16_MEMBER(midxunit_sound_w);
 	DECLARE_DRIVER_INIT(revx);
+	DECLARE_MACHINE_RESET(midxunit);
+	DECLARE_VIDEO_START(midxunit);
 };
 
 
@@ -47,6 +47,6 @@ public:
 
 
 
-MACHINE_RESET( midxunit );
+
 
 

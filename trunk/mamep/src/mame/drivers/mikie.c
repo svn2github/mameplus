@@ -70,7 +70,7 @@ WRITE8_MEMBER(mikie_state::mikie_sh_irqtrigger_w)
 	if (m_last_irq == 0 && data == 1)
 	{
 		// setting bit 0 low then high triggers IRQ on the sound CPU
-		device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+		m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 	}
 
 	m_last_irq = data;
@@ -247,23 +247,21 @@ static const sn76496_config psg_intf =
  *
  *************************************/
 
-static MACHINE_START( mikie )
+void mikie_state::machine_start()
 {
-	mikie_state *state = machine.driver_data<mikie_state>();
 
-	state->m_maincpu = machine.device<cpu_device>("maincpu");
-	state->m_audiocpu = machine.device<cpu_device>("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_palettebank));
-	state->save_item(NAME(state->m_last_irq));
+	save_item(NAME(m_palettebank));
+	save_item(NAME(m_last_irq));
 }
 
-static MACHINE_RESET( mikie )
+void mikie_state::machine_reset()
 {
-	mikie_state *state = machine.driver_data<mikie_state>();
 
-	state->m_palettebank = 0;
-	state->m_last_irq = 0;
+	m_palettebank = 0;
+	m_last_irq = 0;
 }
 
 static INTERRUPT_GEN( vblank_irq )
@@ -271,7 +269,7 @@ static INTERRUPT_GEN( vblank_irq )
 	mikie_state *state = device->machine().driver_data<mikie_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( mikie, mikie_state )
@@ -284,8 +282,6 @@ static MACHINE_CONFIG_START( mikie, mikie_state )
 	MCFG_CPU_ADD("audiocpu", Z80, CLK)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(mikie)
-	MCFG_MACHINE_RESET(mikie)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -298,8 +294,6 @@ static MACHINE_CONFIG_START( mikie, mikie_state )
 	MCFG_GFXDECODE(mikie)
 	MCFG_PALETTE_LENGTH(16*8*16+16*8*16)
 
-	MCFG_PALETTE_INIT(mikie)
-	MCFG_VIDEO_START(mikie)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

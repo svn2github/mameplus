@@ -15,8 +15,7 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _tc0220ioc_interface tc0220ioc_interface;
-struct _tc0220ioc_interface
+struct tc0220ioc_interface
 {
 	devcb_read8 read_0;
 	devcb_read8 read_1;
@@ -26,8 +25,7 @@ struct _tc0220ioc_interface
 };
 
 
-typedef struct _tc0510nio_interface tc0510nio_interface;
-struct _tc0510nio_interface
+struct tc0510nio_interface
 {
 	devcb_read8 read_0;
 	devcb_read8 read_1;
@@ -37,8 +35,7 @@ struct _tc0510nio_interface
 };
 
 
-typedef struct _tc0640fio_interface tc0640fio_interface;
-struct _tc0640fio_interface
+struct tc0640fio_interface
 {
 	devcb_read8 read_0;
 	devcb_read8 read_1;
@@ -47,9 +44,66 @@ struct _tc0640fio_interface
 	devcb_read8 read_7;
 };
 
-DECLARE_LEGACY_DEVICE(TC0220IOC, tc0220ioc);
-DECLARE_LEGACY_DEVICE(TC0510NIO, tc0510nio);
-DECLARE_LEGACY_DEVICE(TC0640FIO, tc0640fio);
+class tc0220ioc_device : public device_t
+{
+public:
+	tc0220ioc_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tc0220ioc_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type TC0220IOC;
+
+class tc0510nio_device : public device_t
+{
+public:
+	tc0510nio_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tc0510nio_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type TC0510NIO;
+
+class tc0640fio_device : public device_t
+{
+public:
+	tc0640fio_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tc0640fio_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type TC0640FIO;
+
 
 /***************************************************************************
     DEVICE CONFIGURATION MACROS

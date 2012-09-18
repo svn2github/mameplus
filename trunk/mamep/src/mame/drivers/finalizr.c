@@ -28,9 +28,9 @@ static TIMER_DEVICE_CALLBACK( finalizr_scanline )
 	int scanline = param;
 
 	if(scanline == 240 && state->m_irq_enable) // vblank irq
-		cputag_set_input_line(timer.machine(), "maincpu", M6809_IRQ_LINE, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 	else if(((scanline % 32) == 0) && state->m_nmi_enable) // timer irq
-		cputag_set_input_line(timer.machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -50,7 +50,7 @@ WRITE8_MEMBER(finalizr_state::finalizr_flipscreen_w)
 
 WRITE8_MEMBER(finalizr_state::finalizr_i8039_irq_w)
 {
-	device_set_input_line(m_audio_cpu, 0, ASSERT_LINE);
+	m_audio_cpu->execute().set_input_line(0, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(finalizr_state::i8039_irqen_w)
@@ -62,7 +62,7 @@ WRITE8_MEMBER(finalizr_state::i8039_irqen_w)
     */
 
 	if ((data & 0x80) == 0)
-		device_set_input_line(m_audio_cpu, 0, CLEAR_LINE);
+		m_audio_cpu->execute().set_input_line(0, CLEAR_LINE);
 }
 
 READ8_MEMBER(finalizr_state::i8039_T1_r)
@@ -106,7 +106,7 @@ static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, finalizr_state )
 	AM_RANGE(0x0813, 0x0813) AM_READ_PORT("DSW1")
 	AM_RANGE(0x0818, 0x0818) AM_WRITE(watchdog_reset_w)
 	AM_RANGE(0x0819, 0x0819) AM_WRITE(finalizr_coin_w)
-	AM_RANGE(0x081a, 0x081a) AM_DEVWRITE_LEGACY("snsnd", sn76496_w)	/* This address triggers the SN chip to read the data port. */
+	AM_RANGE(0x081a, 0x081a) AM_DEVWRITE("snsnd", sn76489a_new_device, write)	/* This address triggers the SN chip to read the data port. */
 	AM_RANGE(0x081b, 0x081b) AM_WRITENOP		/* Loads the snd command into the snd latch */
 	AM_RANGE(0x081c, 0x081c) AM_WRITE(finalizr_i8039_irq_w)	/* custom sound chip */
 	AM_RANGE(0x081d, 0x081d) AM_WRITE(soundlatch_byte_w)			/* custom sound chip */
@@ -235,29 +235,43 @@ static GFXDECODE_START( finalizr )
 GFXDECODE_END
 
 
+/*************************************
+ *
+ *  Sound interface
+ *
+ *************************************/
 
-static MACHINE_START( finalizr )
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
 {
-	finalizr_state *state = machine.driver_data<finalizr_state>();
+    DEVCB_NULL
+};
 
-	state->m_audio_cpu = machine.device("audiocpu");
 
-	state->save_item(NAME(state->m_spriterambank));
-	state->save_item(NAME(state->m_charbank));
-	state->save_item(NAME(state->m_T1_line));
-	state->save_item(NAME(state->m_nmi_enable));
-	state->save_item(NAME(state->m_irq_enable));
+void finalizr_state::machine_start()
+{
+
+	m_audio_cpu = machine().device("audiocpu");
+
+	save_item(NAME(m_spriterambank));
+	save_item(NAME(m_charbank));
+	save_item(NAME(m_T1_line));
+	save_item(NAME(m_nmi_enable));
+	save_item(NAME(m_irq_enable));
 }
 
-static MACHINE_RESET( finalizr )
+void finalizr_state::machine_reset()
 {
-	finalizr_state *state = machine.driver_data<finalizr_state>();
 
-	state->m_spriterambank = 0;
-	state->m_charbank = 0;
-	state->m_T1_line = 0;
-	state->m_nmi_enable = 0;
-	state->m_irq_enable = 0;
+	m_spriterambank = 0;
+	m_charbank = 0;
+	m_T1_line = 0;
+	m_nmi_enable = 0;
+	m_irq_enable = 0;
 }
 
 static MACHINE_CONFIG_START( finalizr, finalizr_state )
@@ -271,8 +285,6 @@ static MACHINE_CONFIG_START( finalizr, finalizr_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(sound_io_map)
 
-	MCFG_MACHINE_START(finalizr)
-	MCFG_MACHINE_RESET(finalizr)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -285,14 +297,13 @@ static MACHINE_CONFIG_START( finalizr, finalizr_state )
 	MCFG_GFXDECODE(finalizr)
 	MCFG_PALETTE_LENGTH(2*16*16)
 
-	MCFG_PALETTE_INIT(finalizr)
-	MCFG_VIDEO_START(finalizr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76489A, XTAL_18_432MHz/12)
+	MCFG_SOUND_ADD("snsnd", SN76489A_NEW, XTAL_18_432MHz/12)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
+	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_DAC_ADD("dac")
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.65)

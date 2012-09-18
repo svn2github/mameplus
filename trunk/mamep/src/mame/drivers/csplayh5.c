@@ -79,6 +79,7 @@ public:
 	DECLARE_DRIVER_INIT(renaimj);
 	DECLARE_DRIVER_INIT(csplayh7);
 	DECLARE_DRIVER_INIT(junai2);
+	virtual void machine_reset();
 };
 
 
@@ -582,17 +583,16 @@ static Z80CTC_INTERFACE( ctc_intf )
 };
 
 
-static MACHINE_RESET( csplayh5 )
+void csplayh5_state::machine_reset()
 {
-	csplayh5_state *state = machine.driver_data<csplayh5_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	// initialize TMPZ84C011 PIO
 	for (i = 0; i < 5; i++)
 	{
-		state->m_pio_dir[i] = state->m_pio_latch[i] = 0;
-		state->tmpz84c011_pio_w(*space, i, 0);
+		m_pio_dir[i] = m_pio_latch[i] = 0;
+		tmpz84c011_pio_w(*space, i, 0);
 	}
 }
 
@@ -602,7 +602,7 @@ static TIMER_DEVICE_CALLBACK( csplayh5_irq )
 	int scanline = param;
 
 	if(scanline == 212*2)
-		device_set_input_line_and_vector(state->m_maincpu, 1, HOLD_LINE,0x100/4);
+		state->m_maincpu->set_input_line_and_vector(1, HOLD_LINE,0x100/4);
 
 	if((scanline % 2) == 0)
 	{
@@ -639,7 +639,6 @@ static MACHINE_CONFIG_START( csplayh5, csplayh5_state )
 
 	MCFG_Z80CTC_ADD("ctc", 8000000, ctc_intf)
 
-	MCFG_MACHINE_RESET(csplayh5)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 

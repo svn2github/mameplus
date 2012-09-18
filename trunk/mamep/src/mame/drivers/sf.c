@@ -45,7 +45,7 @@ WRITE16_MEMBER(sf_state::soundcmd_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, offset, data & 0xff);
-		device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -146,7 +146,7 @@ WRITE16_MEMBER(sf_state::protection_w)
 		}
 	default:
 		{
-			logerror("Write protection at %06x (%04x)\n", cpu_get_pc(&space.device()), data & 0xffff);
+			logerror("Write protection at %06x (%04x)\n", space.device().safe_pc(), data & 0xffff);
 			logerror("*** Unknown protection %d\n", space.read_byte(0xffc684));
 			break;
 		}
@@ -799,7 +799,7 @@ GFXDECODE_END
 static void irq_handler( device_t *device, int irq )
 {
 	sf_state *state = device->machine().driver_data<sf_state>();
-	device_set_input_line(state->m_audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2151_interface ym2151_config =
@@ -813,26 +813,24 @@ static const msm5205_interface msm5205_config =
 	MSM5205_SEX_4B	/* 8KHz playback ?    */
 };
 
-static MACHINE_START( sf )
+void sf_state::machine_start()
 {
-	sf_state *state = machine.driver_data<sf_state>();
 
 	/* devices */
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_sf_active));
-	state->save_item(NAME(state->m_bgscroll));
-	state->save_item(NAME(state->m_fgscroll));
+	save_item(NAME(m_sf_active));
+	save_item(NAME(m_bgscroll));
+	save_item(NAME(m_fgscroll));
 }
 
-static MACHINE_RESET( sf )
+void sf_state::machine_reset()
 {
-	sf_state *state = machine.driver_data<sf_state>();
 
-	state->m_sf_active = 0;
-	state->m_bgscroll = 0;
-	state->m_fgscroll = 0;
+	m_sf_active = 0;
+	m_bgscroll = 0;
+	m_fgscroll = 0;
 }
 
 static MACHINE_CONFIG_START( sf, sf_state )
@@ -846,8 +844,6 @@ static MACHINE_CONFIG_START( sf, sf_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 								/* NMIs are caused by the main CPU */
 
-	MCFG_MACHINE_START(sf)
-	MCFG_MACHINE_RESET(sf)
 
 	MCFG_CPU_ADD("audio2", Z80, 3579545)	/* ? xtal is 3.579545MHz */
 	MCFG_CPU_PROGRAM_MAP(sound2_map)
@@ -865,7 +861,6 @@ static MACHINE_CONFIG_START( sf, sf_state )
 	MCFG_GFXDECODE(sf)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(sf)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

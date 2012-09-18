@@ -75,6 +75,7 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(flipscreen_w);
 	DECLARE_WRITE_LINE_MEMBER(display_enable_changed);
 	DECLARE_WRITE8_MEMBER(pia_comp_w);
+	virtual void machine_start();
 };
 
 
@@ -102,7 +103,7 @@ WRITE_LINE_MEMBER(r2dtank_state::main_cpu_irq)
 	int combined_state = pia0->irq_a_state() | pia0->irq_b_state() |
 						 pia1->irq_a_state() | pia1->irq_b_state();
 
-	cputag_set_input_line(machine(), "maincpu", M6809_IRQ_LINE,  combined_state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE,  combined_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -117,7 +118,7 @@ READ8_MEMBER(r2dtank_state::audio_command_r)
 {
 	UINT8 ret = soundlatch_byte_r(space, 0);
 
-if (LOG_AUDIO_COMM) logerror("%08X  CPU#1  Audio Command Read: %x\n", cpu_get_pc(&space.device()), ret);
+if (LOG_AUDIO_COMM) logerror("%08X  CPU#1  Audio Command Read: %x\n", space.device().safe_pc(), ret);
 
 	return ret;
 }
@@ -126,16 +127,16 @@ if (LOG_AUDIO_COMM) logerror("%08X  CPU#1  Audio Command Read: %x\n", cpu_get_pc
 WRITE8_MEMBER(r2dtank_state::audio_command_w)
 {
 	soundlatch_byte_w(space, 0, ~data);
-	cputag_set_input_line(machine(), "audiocpu", M6800_IRQ_LINE, HOLD_LINE);
+	machine().device("audiocpu")->execute().set_input_line(M6800_IRQ_LINE, HOLD_LINE);
 
-if (LOG_AUDIO_COMM) logerror("%08X   CPU#0  Audio Command Write: %x\n", cpu_get_pc(&space.device()), data^0xff);
+if (LOG_AUDIO_COMM) logerror("%08X   CPU#0  Audio Command Write: %x\n", space.device().safe_pc(), data^0xff);
 }
 
 
 READ8_MEMBER(r2dtank_state::audio_answer_r)
 {
 	UINT8 ret = soundlatch2_byte_r(space, 0);
-if (LOG_AUDIO_COMM) logerror("%08X  CPU#0  Audio Answer Read: %x\n", cpu_get_pc(&space.device()), ret);
+if (LOG_AUDIO_COMM) logerror("%08X  CPU#0  Audio Answer Read: %x\n", space.device().safe_pc(), ret);
 
 	return ret;
 }
@@ -144,13 +145,13 @@ if (LOG_AUDIO_COMM) logerror("%08X  CPU#0  Audio Answer Read: %x\n", cpu_get_pc(
 WRITE8_MEMBER(r2dtank_state::audio_answer_w)
 {
 	/* HACK - prevents lock-up, but causes game to end some in-between sreens prematurely */
-	if (cpu_get_pc(&space.device()) == 0xfb12)
+	if (space.device().safe_pc() == 0xfb12)
 		data = 0x00;
 
 	soundlatch2_byte_w(space, 0, data);
-	cputag_set_input_line(machine(), "maincpu", M6809_IRQ_LINE, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 
-if (LOG_AUDIO_COMM) logerror("%08X  CPU#1  Audio Answer Write: %x\n", cpu_get_pc(&space.device()), data);
+if (LOG_AUDIO_COMM) logerror("%08X  CPU#1  Audio Answer Write: %x\n", space.device().safe_pc(), data);
 }
 
 
@@ -296,13 +297,12 @@ static const pia6821_interface pia_audio_intf =
 };
 
 
-static MACHINE_START( r2dtank )
+void r2dtank_state::machine_start()
 {
-	r2dtank_state *state = machine.driver_data<r2dtank_state>();
 	/* setup for save states */
-	state_save_register_global(machine, state->m_flipscreen);
-	state_save_register_global(machine, state->m_ttl74123_output);
-	state_save_register_global(machine, state->m_AY8910_selected);
+	state_save_register_global(machine(), m_flipscreen);
+	state_save_register_global(machine(), m_ttl74123_output);
+	state_save_register_global(machine(), m_AY8910_selected);
 }
 
 
@@ -539,7 +539,6 @@ static MACHINE_CONFIG_START( r2dtank, r2dtank_state )
 	MCFG_CPU_ADD("audiocpu", M6802,3000000)			/* ?? */
 	MCFG_CPU_PROGRAM_MAP(r2dtank_audio_map)
 
-	MCFG_MACHINE_START(r2dtank)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */

@@ -155,7 +155,7 @@ public:
 	INT16    *m_samplebuf;
 
 	/* sound devices */
-	device_t *m_soundcpu;
+	cpu_device *m_soundcpu;
 	device_t *m_ay1;
 	device_t *m_ay2;
 	samples_device *m_samples;
@@ -177,12 +177,18 @@ public:
 	DECLARE_WRITE8_MEMBER(nmi_mask_w);
 	DECLARE_DRIVER_INIT(wilytowr);
 	DECLARE_DRIVER_INIT(fghtbskt);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	DECLARE_MACHINE_START(m63);
+	DECLARE_MACHINE_RESET(m63);
+	DECLARE_VIDEO_START(m63);
+	DECLARE_PALETTE_INIT(m63);
 };
 
 
-static PALETTE_INIT( m63 )
+PALETTE_INIT_MEMBER(m63_state,m63)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0; i < 256; i++)
@@ -208,7 +214,7 @@ static PALETTE_INIT( m63 )
 		bit3 = (color_prom[i + 2*256] >> 3) & 0x01;
 		b =  0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
+		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
 	}
 
 	color_prom += 3 * 256;
@@ -232,7 +238,7 @@ static PALETTE_INIT( m63 )
 		bit1 = (color_prom[i] >> 7) & 0x01;
 		b = 0x4f * bit0 + 0xa8 * bit1;
 
-		palette_set_color(machine,i+256,MAKE_RGB(r,g,b));
+		palette_set_color(machine(),i+256,MAKE_RGB(r,g,b));
 	}
 }
 
@@ -284,35 +290,32 @@ WRITE8_MEMBER(m63_state::fghtbskt_flipscreen_w)
 }
 
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(m63_state::get_bg_tile_info)
 {
-	m63_state *state = machine.driver_data<m63_state>();
 
-	int attr = state->m_colorram[tile_index];
-	int code = state->m_videoram[tile_index] | ((attr & 0x30) << 4);
-	int color = (attr & 0x0f) + (state->m_pal_bank << 4);
+	int attr = m_colorram[tile_index];
+	int code = m_videoram[tile_index] | ((attr & 0x30) << 4);
+	int color = (attr & 0x0f) + (m_pal_bank << 4);
 
-	SET_TILE_INFO(1, code, color, 0);
+	SET_TILE_INFO_MEMBER(1, code, color, 0);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(m63_state::get_fg_tile_info)
 {
-	m63_state *state = machine.driver_data<m63_state>();
 
-	int code = state->m_videoram2[tile_index];
+	int code = m_videoram2[tile_index];
 
-	SET_TILE_INFO(0, code, 0, state->m_fg_flag);
+	SET_TILE_INFO_MEMBER(0, code, 0, m_fg_flag);
 }
 
-static VIDEO_START( m63 )
+VIDEO_START_MEMBER(m63_state,m63)
 {
-	m63_state *state = machine.driver_data<m63_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m63_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m63_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	state->m_bg_tilemap->set_scroll_cols(32);
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap->set_scroll_cols(32);
+	m_fg_tilemap->set_transparent_pen(0);
 }
 
 static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
@@ -379,7 +382,7 @@ WRITE8_MEMBER(m63_state::coin_w)
 
 WRITE8_MEMBER(m63_state::snd_irq_w)
 {
-	device_set_input_line(m_soundcpu, 0, ASSERT_LINE);
+	m_soundcpu->set_input_line(0, ASSERT_LINE);
 	machine().scheduler().synchronize();
 }
 
@@ -409,7 +412,7 @@ WRITE8_MEMBER(m63_state::p2_w)
 	m_p2 = data;
 	if((m_p2 & 0xf0) == 0x50)
 	{
-		device_set_input_line(m_soundcpu, 0, CLEAR_LINE);
+		m_soundcpu->set_input_line(0, CLEAR_LINE);
 	}
 }
 
@@ -721,36 +724,34 @@ static INTERRUPT_GEN( snd_irq )
 	state->m_sound_irq = 1;
 }
 
-static MACHINE_START( m63 )
+MACHINE_START_MEMBER(m63_state,m63)
 {
-	m63_state *state = machine.driver_data<m63_state>();
 
-	state->m_soundcpu = machine.device("soundcpu");
-	state->m_ay1 = machine.device("ay1");
-	state->m_ay2 = machine.device("ay2");
-	state->m_samples = machine.device<samples_device>("samples");
+	m_soundcpu = machine().device<cpu_device>("soundcpu");
+	m_ay1 = machine().device("ay1");
+	m_ay2 = machine().device("ay2");
+	m_samples = machine().device<samples_device>("samples");
 
-	state->save_item(NAME(state->m_pal_bank));
-	state->save_item(NAME(state->m_fg_flag));
-	state->save_item(NAME(state->m_sy_offset));
+	save_item(NAME(m_pal_bank));
+	save_item(NAME(m_fg_flag));
+	save_item(NAME(m_sy_offset));
 
 	/* sound-related */
-	state->save_item(NAME(state->m_sound_irq));
-	state->save_item(NAME(state->m_sound_status));
-	state->save_item(NAME(state->m_p1));
-	state->save_item(NAME(state->m_p2));
+	save_item(NAME(m_sound_irq));
+	save_item(NAME(m_sound_status));
+	save_item(NAME(m_p1));
+	save_item(NAME(m_p2));
 }
 
-static MACHINE_RESET( m63 )
+MACHINE_RESET_MEMBER(m63_state,m63)
 {
-	m63_state *state = machine.driver_data<m63_state>();
 
-	state->m_pal_bank = 0;
-	state->m_fg_flag = 0;
-	state->m_sound_irq = 0;
-	state->m_sound_status = 0;
-	state->m_p1 = 0;
-	state->m_p2 = 0;
+	m_pal_bank = 0;
+	m_fg_flag = 0;
+	m_sound_irq = 0;
+	m_sound_status = 0;
+	m_p1 = 0;
+	m_p2 = 0;
 }
 
 
@@ -759,7 +760,7 @@ static INTERRUPT_GEN( vblank_irq )
 	m63_state *state = device->machine().driver_data<m63_state>();
 
 	if(state->m_nmi_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( m63, m63_state )
@@ -774,8 +775,8 @@ static MACHINE_CONFIG_START( m63, m63_state )
 	MCFG_CPU_IO_MAP(i8039_port_map)
 	MCFG_CPU_PERIODIC_INT(snd_irq, 60)
 
-	MCFG_MACHINE_START(m63)
-	MCFG_MACHINE_RESET(m63)
+	MCFG_MACHINE_START_OVERRIDE(m63_state,m63)
+	MCFG_MACHINE_RESET_OVERRIDE(m63_state,m63)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -788,8 +789,8 @@ static MACHINE_CONFIG_START( m63, m63_state )
 	MCFG_GFXDECODE(m63)
 	MCFG_PALETTE_LENGTH(256+4)
 
-	MCFG_PALETTE_INIT(m63)
-	MCFG_VIDEO_START(m63)
+	MCFG_PALETTE_INIT_OVERRIDE(m63_state,m63)
+	MCFG_VIDEO_START_OVERRIDE(m63_state,m63)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono") /* ????? */
@@ -818,8 +819,8 @@ static MACHINE_CONFIG_START( fghtbskt, m63_state )
 	MCFG_CPU_IO_MAP(i8039_port_map)
 	MCFG_CPU_PERIODIC_INT(snd_irq, 60/2)
 
-	MCFG_MACHINE_START(m63)
-	MCFG_MACHINE_RESET(m63)
+	MCFG_MACHINE_START_OVERRIDE(m63_state,m63)
+	MCFG_MACHINE_RESET_OVERRIDE(m63_state,m63)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -833,7 +834,7 @@ static MACHINE_CONFIG_START( fghtbskt, m63_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(m63)
+	MCFG_VIDEO_START_OVERRIDE(m63_state,m63)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

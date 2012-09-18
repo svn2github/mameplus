@@ -40,8 +40,8 @@ public:
 	int           m_coin_command_pending;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_msm;
 	DECLARE_WRITE8_MEMBER(firetrap_nmi_disable_w);
 	DECLARE_WRITE8_MEMBER(firetrap_bankselect_w);
@@ -61,12 +61,21 @@ public:
 	DECLARE_WRITE8_MEMBER(firetrap_bg2_scrollx_w);
 	DECLARE_WRITE8_MEMBER(firetrap_bg2_scrolly_w);
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
+	TILEMAP_MAPPER_MEMBER(get_fg_memory_offset);
+	TILEMAP_MAPPER_MEMBER(get_bg_memory_offset);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg2_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/firetrap.c -----------*/
 
 
-PALETTE_INIT( firetrap );
-VIDEO_START( firetrap );
+
+
 SCREEN_UPDATE_IND16( firetrap );

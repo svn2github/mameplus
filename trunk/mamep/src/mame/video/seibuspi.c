@@ -209,10 +209,10 @@ WRITE32_MEMBER(seibuspi_state::video_dma_address_w)
 	COMBINE_DATA( &m_video_dma_address );
 }
 
-static void drawgfx_blend(bitmap_rgb32 &bitmap, const rectangle &cliprect, const gfx_element *gfx, UINT32 code, UINT32 color, int flipx, int flipy, int sx, int sy)
+static void drawgfx_blend(bitmap_rgb32 &bitmap, const rectangle &cliprect, gfx_element *gfx, UINT32 code, UINT32 color, int flipx, int flipy, int sx, int sy)
 {
 	seibuspi_state *state = gfx->machine().driver_data<seibuspi_state>();
-	const pen_t *pens = &gfx->machine().pens[gfx->color_base];
+	const pen_t *pens = &gfx->machine().pens[gfx->colorbase()];
 	const UINT8 *dp;
 	int i, j;
 	int x1, x2;
@@ -220,8 +220,8 @@ static void drawgfx_blend(bitmap_rgb32 &bitmap, const rectangle &cliprect, const
 	int px, py;
 	int xd = 1, yd = 1;
 
-	int width = gfx->width;
-	int height = gfx->height;
+	int width = gfx->width();
+	int height = gfx->height();
 
 	x1 = sx;
 	x2 = sx + width - 1;
@@ -287,12 +287,12 @@ static void drawgfx_blend(bitmap_rgb32 &bitmap, const rectangle &cliprect, const
 		y2 = cliprect.max_y;
 	}
 
-	if (gfx->total_elements <= 0x10000)
+	if (gfx->elements() <= 0x10000)
 	{
 		code &= 0xffff;
 	}
 
-	dp = gfx_element_get_data(gfx, code);
+	dp = gfx->get_data(code);
 
 	// draw
 	for (j=y1; j <= y2; j++)
@@ -344,7 +344,7 @@ static void draw_sprites(running_machine &machine, bitmap_rgb32 &bitmap, const r
 	int a;
 	int priority;
 	int x,y, x1, y1;
-	const gfx_element *gfx = machine.gfx[2];
+	gfx_element *gfx = machine.gfx[2];
 
 	if( state->m_layer_enable & 0x10 )
 		return;
@@ -400,127 +400,122 @@ static void draw_sprites(running_machine &machine, bitmap_rgb32 &bitmap, const r
 	}
 }
 
-static TILE_GET_INFO( get_text_tile_info )
+TILE_GET_INFO_MEMBER(seibuspi_state::get_text_tile_info)
 {
-	seibuspi_state *state = machine.driver_data<seibuspi_state>();
 	int offs = tile_index / 2;
-	int tile = (state->m_tilemap_ram[offs + state->m_text_layer_offset] >> ((tile_index & 0x1) ? 16 : 0)) & 0xffff;
+	int tile = (m_tilemap_ram[offs + m_text_layer_offset] >> ((tile_index & 0x1) ? 16 : 0)) & 0xffff;
 	int color = (tile >> 12) & 0xf;
 
 	tile &= 0xfff;
 
-	SET_TILE_INFO(0, tile, color, 0);
+	SET_TILE_INFO_MEMBER(0, tile, color, 0);
 }
 
-static TILE_GET_INFO( get_back_tile_info )
+TILE_GET_INFO_MEMBER(seibuspi_state::get_back_tile_info)
 {
-	seibuspi_state *state = machine.driver_data<seibuspi_state>();
 	int offs = tile_index / 2;
-	int tile = (state->m_tilemap_ram[offs] >> ((tile_index & 0x1) ? 16 : 0)) & 0xffff;
+	int tile = (m_tilemap_ram[offs] >> ((tile_index & 0x1) ? 16 : 0)) & 0xffff;
 	int color = (tile >> 13) & 0x7;
 
 	tile &= 0x1fff;
 
-	if( state->m_rf2_layer_bank[0] )
+	if( m_rf2_layer_bank[0] )
 		tile |= 0x4000;
 
-	SET_TILE_INFO(1, tile, color, 0);
+	SET_TILE_INFO_MEMBER(1, tile, color, 0);
 }
 
-static TILE_GET_INFO( get_mid_tile_info )
+TILE_GET_INFO_MEMBER(seibuspi_state::get_mid_tile_info)
 {
-	seibuspi_state *state = machine.driver_data<seibuspi_state>();
 	int offs = tile_index / 2;
-	int tile = (state->m_tilemap_ram[offs + state->m_mid_layer_offset] >> ((tile_index & 0x1) ? 16 : 0)) & 0xffff;
+	int tile = (m_tilemap_ram[offs + m_mid_layer_offset] >> ((tile_index & 0x1) ? 16 : 0)) & 0xffff;
 	int color = (tile >> 13) & 0x7;
 
 	tile &= 0x1fff;
 	tile |= 0x2000;
 
-	if( state->m_rf2_layer_bank[1] )
+	if( m_rf2_layer_bank[1] )
 		tile |= 0x4000;
 
-	SET_TILE_INFO(1, tile, color + 16, 0);
+	SET_TILE_INFO_MEMBER(1, tile, color + 16, 0);
 }
 
-static TILE_GET_INFO( get_fore_tile_info )
+TILE_GET_INFO_MEMBER(seibuspi_state::get_fore_tile_info)
 {
-	seibuspi_state *state = machine.driver_data<seibuspi_state>();
 	int offs = tile_index / 2;
-	int tile = (state->m_tilemap_ram[offs + state->m_fore_layer_offset] >> ((tile_index & 0x1) ? 16 : 0)) & 0xffff;
+	int tile = (m_tilemap_ram[offs + m_fore_layer_offset] >> ((tile_index & 0x1) ? 16 : 0)) & 0xffff;
 	int color = (tile >> 13) & 0x7;
 
 	tile &= 0x1fff;
-	tile |= state->m_bg_fore_layer_position;
+	tile |= m_bg_fore_layer_position;
 
-	if( state->m_rf2_layer_bank[2] )
+	if( m_rf2_layer_bank[2] )
 		tile |= 0x4000;
 
-	tile |= ((state->m_layer_bank >> 27) & 0x1) << 13;
+	tile |= ((m_layer_bank >> 27) & 0x1) << 13;
 
-	SET_TILE_INFO(1, tile, color + 8, 0);
+	SET_TILE_INFO_MEMBER(1, tile, color + 8, 0);
 }
 
-VIDEO_START( spi )
+VIDEO_START_MEMBER(seibuspi_state,spi)
 {
-	seibuspi_state *state = machine.driver_data<seibuspi_state>();
 	int i;
 	int region_length;
 
-	state->m_text_layer	= tilemap_create( machine, get_text_tile_info, tilemap_scan_rows,  8,8,64,32 );
-	state->m_back_layer	= tilemap_create( machine, get_back_tile_info, tilemap_scan_cols,  16,16,32,32 );
-	state->m_mid_layer	= tilemap_create( machine, get_mid_tile_info, tilemap_scan_cols,  16,16,32,32 );
-	state->m_fore_layer	= tilemap_create( machine, get_fore_tile_info, tilemap_scan_cols,  16,16,32,32 );
+	m_text_layer	= &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seibuspi_state::get_text_tile_info),this), TILEMAP_SCAN_ROWS,  8,8,64,32 );
+	m_back_layer	= &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seibuspi_state::get_back_tile_info),this), TILEMAP_SCAN_COLS,  16,16,32,32 );
+	m_mid_layer	= &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seibuspi_state::get_mid_tile_info),this), TILEMAP_SCAN_COLS,  16,16,32,32 );
+	m_fore_layer	= &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seibuspi_state::get_fore_tile_info),this), TILEMAP_SCAN_COLS,  16,16,32,32 );
 
-	state->m_text_layer->set_transparent_pen(31);
-	state->m_mid_layer->set_transparent_pen(63);
-	state->m_fore_layer->set_transparent_pen(63);
+	m_text_layer->set_transparent_pen(31);
+	m_mid_layer->set_transparent_pen(63);
+	m_fore_layer->set_transparent_pen(63);
 
-	state->m_tilemap_ram = auto_alloc_array_clear(machine, UINT32, 0x4000/4);
-	state->m_palette_ram = auto_alloc_array_clear(machine, UINT32, 0x3000/4);
-	state->m_sprite_ram = auto_alloc_array_clear(machine, UINT32, 0x1000/4);
+	m_tilemap_ram = auto_alloc_array_clear(machine(), UINT32, 0x4000/4);
+	m_palette_ram = auto_alloc_array_clear(machine(), UINT32, 0x3000/4);
+	m_sprite_ram = auto_alloc_array_clear(machine(), UINT32, 0x1000/4);
 
-	state->m_sprite_bpp = 6;
-	state->m_sprite_dma_length = 0x1000;
+	m_sprite_bpp = 6;
+	m_sprite_dma_length = 0x1000;
 
 	for (i=0; i < 6144; i++) {
-		palette_set_color(machine, i, MAKE_RGB(0, 0, 0));
+		palette_set_color(machine(), i, MAKE_RGB(0, 0, 0));
 	}
 
-	memset(state->m_alpha_table, 0, 6144 * sizeof(UINT8));
+	memset(m_alpha_table, 0, 6144 * sizeof(UINT8));
 
 	// sprites
-	//for (i = 1792; i < 1808; i++) { state->m_alpha_table[i] = 1; } // breaks rdft
-	for (i = 1840; i < 1856; i++) { state->m_alpha_table[i] = 1; }
-	for (i = 1920; i < 1952; i++) { state->m_alpha_table[i] = 1; }
-	//for (i = 1984; i < 2048; i++) { state->m_alpha_table[i] = 1; } // breaks batlball
-	//for (i = 3840; i < 3904; i++) { state->m_alpha_table[i] = 1; } // breaks rdft
-	for (i = 4032; i < 4096; i++) { state->m_alpha_table[i] = 1; }
+	//for (i = 1792; i < 1808; i++) { m_alpha_table[i] = 1; } // breaks rdft
+	for (i = 1840; i < 1856; i++) { m_alpha_table[i] = 1; }
+	for (i = 1920; i < 1952; i++) { m_alpha_table[i] = 1; }
+	//for (i = 1984; i < 2048; i++) { m_alpha_table[i] = 1; } // breaks batlball
+	//for (i = 3840; i < 3904; i++) { m_alpha_table[i] = 1; } // breaks rdft
+	for (i = 4032; i < 4096; i++) { m_alpha_table[i] = 1; }
 
 	// mid layer
-	for (i = 4960; i < 4992; i++) { state->m_alpha_table[i] = 1; }	// breaks ejanhs
-	for (i = 5040; i < 5056; i++) { state->m_alpha_table[i] = 1; }	// breaks ejanhs
-	for (i = 5104; i < 5120; i++) { state->m_alpha_table[i] = 1; }
+	for (i = 4960; i < 4992; i++) { m_alpha_table[i] = 1; }	// breaks ejanhs
+	for (i = 5040; i < 5056; i++) { m_alpha_table[i] = 1; }	// breaks ejanhs
+	for (i = 5104; i < 5120; i++) { m_alpha_table[i] = 1; }
 	// fore layer
-	for (i = 5552; i < 5568; i++) { state->m_alpha_table[i] = 1; }	// breaks ejanhs
-	for (i = 5616; i < 5632; i++) { state->m_alpha_table[i] = 1; }	// breaks ejanhs
+	for (i = 5552; i < 5568; i++) { m_alpha_table[i] = 1; }	// breaks ejanhs
+	for (i = 5616; i < 5632; i++) { m_alpha_table[i] = 1; }	// breaks ejanhs
 	// text layer
-	for (i = 6000; i < 6016; i++) { state->m_alpha_table[i] = 1; }
-	for (i = 6128; i < 6144; i++) { state->m_alpha_table[i] = 1; }
+	for (i = 6000; i < 6016; i++) { m_alpha_table[i] = 1; }
+	for (i = 6128; i < 6144; i++) { m_alpha_table[i] = 1; }
 
-	region_length = machine.root_device().memregion("gfx2")->bytes();
+	region_length = machine().root_device().memregion("gfx2")->bytes();
 
 	if (region_length <= 0x300000)
 	{
-		state->m_bg_fore_layer_position = 0x2000;
+		m_bg_fore_layer_position = 0x2000;
 	}
 	else if (region_length <= 0x600000)
 	{
-		state->m_bg_fore_layer_position = 0x4000;
+		m_bg_fore_layer_position = 0x4000;
 	}
 	else
 	{
-		state->m_bg_fore_layer_position = 0x8000;
+		m_bg_fore_layer_position = 0x8000;
 	}
 }
 
@@ -640,23 +635,22 @@ SCREEN_UPDATE_RGB32( spi )
 	return 0;
 }
 
-VIDEO_START( sys386f2 )
+VIDEO_START_MEMBER(seibuspi_state,sys386f2)
 {
-	seibuspi_state *state = machine.driver_data<seibuspi_state>();
 	int i;
 
-	state->m_palette_ram = auto_alloc_array_clear(machine, UINT32, 0x4000/4);
-	state->m_sprite_ram = auto_alloc_array_clear(machine, UINT32, 0x2000/4);
+	m_palette_ram = auto_alloc_array_clear(machine(), UINT32, 0x4000/4);
+	m_sprite_ram = auto_alloc_array_clear(machine(), UINT32, 0x2000/4);
 
-	state->m_sprite_bpp = 8;
-	state->m_sprite_dma_length = 0x2000;
-	state->m_layer_enable = 0;
+	m_sprite_bpp = 8;
+	m_sprite_dma_length = 0x2000;
+	m_layer_enable = 0;
 
 	for (i=0; i < 8192; i++) {
-		palette_set_color(machine, i, MAKE_RGB(0, 0, 0));
+		palette_set_color(machine(), i, MAKE_RGB(0, 0, 0));
 	}
 
-	memset(state->m_alpha_table, 0, 8192 * sizeof(UINT8));
+	memset(m_alpha_table, 0, 8192 * sizeof(UINT8));
 }
 
 SCREEN_UPDATE_RGB32( sys386f2 )

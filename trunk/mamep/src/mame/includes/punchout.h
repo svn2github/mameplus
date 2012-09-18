@@ -51,14 +51,26 @@ public:
 	DECLARE_DRIVER_INIT(spnchotj);
 	DECLARE_DRIVER_INIT(punchout);
 	DECLARE_DRIVER_INIT(spnchout);
+	TILE_GET_INFO_MEMBER(top_get_info);
+	TILE_GET_INFO_MEMBER(armwrest_top_get_info);
+	TILE_GET_INFO_MEMBER(bot_get_info);
+	TILE_GET_INFO_MEMBER(armwrest_bot_get_info);
+	TILE_GET_INFO_MEMBER(bs1_get_info);
+	TILE_GET_INFO_MEMBER(bs2_get_info);
+	TILE_GET_INFO_MEMBER(armwrest_fg_get_info);
+	TILEMAP_MAPPER_MEMBER(armwrest_bs1_scan);
+	TILEMAP_MAPPER_MEMBER(armwrest_bs1_scan_flipx);
+	virtual void machine_reset();
+	virtual void video_start();
+	DECLARE_VIDEO_START(armwrest);
 };
 
 
 /*----------- defined in video/punchout.c -----------*/
 
 
-VIDEO_START( punchout );
-VIDEO_START( armwrest );
+
+
 SCREEN_UPDATE_IND16( punchout_top );
 SCREEN_UPDATE_IND16( punchout_bottom );
 SCREEN_UPDATE_IND16( armwrest_top );

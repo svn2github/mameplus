@@ -15,13 +15,13 @@
 
 ***************************************************************************/
 
-PALETTE_INIT( skykid )
+void skykid_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x100);
+	machine().colortable = colortable_alloc(machine(), 0x100);
 
 	/* create a lookup table for the palette */
 	for (i = 0; i < 0x100; i++)
@@ -30,7 +30,7 @@ PALETTE_INIT( skykid )
 		int g = pal4bit(color_prom[i + 0x100]);
 		int b = pal4bit(color_prom[i + 0x200]);
 
-		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r, g, b));
+		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r, g, b));
 	}
 
 	/* color_prom now points to the beginning of the lookup table */
@@ -38,13 +38,13 @@ PALETTE_INIT( skykid )
 
 	/* text palette */
 	for (i = 0; i < 0x100; i++)
-		colortable_entry_set_value(machine.colortable, i, i);
+		colortable_entry_set_value(machine().colortable, i, i);
 
 	/* tiles/sprites */
 	for (i = 0x100; i < 0x500; i++)
 	{
 		UINT8 ctabentry = color_prom[i - 0x100];
-		colortable_entry_set_value(machine.colortable, i, ctabentry);
+		colortable_entry_set_value(machine().colortable, i, ctabentry);
 	}
 }
 
@@ -57,7 +57,7 @@ PALETTE_INIT( skykid )
 ***************************************************************************/
 
 /* convert from 32x32 to 36x28 */
-static TILEMAP_MAPPER( tx_tilemap_scan )
+TILEMAP_MAPPER_MEMBER(skykid_state::tx_tilemap_scan)
 {
 	int offs;
 
@@ -71,32 +71,30 @@ static TILEMAP_MAPPER( tx_tilemap_scan )
 	return offs;
 }
 
-static TILE_GET_INFO( tx_get_tile_info )
+TILE_GET_INFO_MEMBER(skykid_state::tx_get_tile_info)
 {
-	skykid_state *state = machine.driver_data<skykid_state>();
-	int code = state->m_textram[tile_index];
-	int attr = state->m_textram[tile_index + 0x400];
+	int code = m_textram[tile_index];
+	int attr = m_textram[tile_index + 0x400];
 	tileinfo.category = code >> 4 & 0xf;
 
 	/* the hardware has two character sets, one normal and one flipped. When
        screen is flipped, character flip is done by selecting the 2nd character set.
        We reproduce this here, but since the tilemap system automatically flips
        characters when screen is flipped, we have to flip them back. */
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
-			code | (state->flip_screen() ? 0x100 : 0),
+			code | (flip_screen() ? 0x100 : 0),
 			attr & 0x3f,
-			state->flip_screen() ? (TILE_FLIPY | TILE_FLIPX) : 0);
+			flip_screen() ? (TILE_FLIPY | TILE_FLIPX) : 0);
 }
 
 
-static TILE_GET_INFO( bg_get_tile_info )
+TILE_GET_INFO_MEMBER(skykid_state::bg_get_tile_info)
 {
-	skykid_state *state = machine.driver_data<skykid_state>();
-	int code = state->m_videoram[tile_index];
-	int attr = state->m_videoram[tile_index+0x800];
+	int code = m_videoram[tile_index];
+	int attr = m_videoram[tile_index+0x800];
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code + ((attr & 0x01) << 8),
 			((attr & 0x7e) >> 1) | ((attr & 0x01) << 6),
@@ -111,17 +109,16 @@ static TILE_GET_INFO( bg_get_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( skykid )
+void skykid_state::video_start()
 {
-	skykid_state *state = machine.driver_data<skykid_state>();
-	state->m_tx_tilemap = tilemap_create(machine, tx_get_tile_info,tx_tilemap_scan,  8,8,36,28);
-	state->m_bg_tilemap = tilemap_create(machine, bg_get_tile_info,tilemap_scan_rows,     8,8,64,32);
+	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(skykid_state::tx_get_tile_info),this),tilemap_mapper_delegate(FUNC(skykid_state::tx_tilemap_scan),this),  8,8,36,28);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(skykid_state::bg_get_tile_info),this),TILEMAP_SCAN_ROWS,     8,8,64,32);
 
-	state->m_tx_tilemap->set_transparent_pen(0);
+	m_tx_tilemap->set_transparent_pen(0);
 
-	state_save_register_global(machine, state->m_priority);
-	state_save_register_global(machine, state->m_scroll_x);
-	state_save_register_global(machine, state->m_scroll_y);
+	state_save_register_global(machine(), m_priority);
+	state_save_register_global(machine(), m_scroll_x);
+	state_save_register_global(machine(), m_scroll_y);
 }
 
 

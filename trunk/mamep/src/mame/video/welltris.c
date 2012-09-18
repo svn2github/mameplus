@@ -191,16 +191,15 @@ WRITE16_MEMBER(welltris_state::welltris_scrollreg_w)
 	}
 }
 
-static TILE_GET_INFO( get_welltris_tile_info )
+TILE_GET_INFO_MEMBER(welltris_state::get_welltris_tile_info)
 {
-	welltris_state *state = machine.driver_data<welltris_state>();
-	UINT16 code = state->m_charvideoram[tile_index];
+	UINT16 code = m_charvideoram[tile_index];
 	int bank = (code & 0x1000) >> 12;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
-			(code & 0x0fff) + (state->m_gfxbank[bank] << 12),
-			((code & 0xe000) >> 13) + (8 * state->m_charpalettebank),
+			(code & 0x0fff) + (m_gfxbank[bank] << 12),
+			((code & 0xe000) >> 13) + (8 * m_charpalettebank),
 			0);
 }
 
@@ -211,12 +210,11 @@ WRITE16_MEMBER(welltris_state::welltris_charvideoram_w)
 	m_char_tilemap->mark_tile_dirty(offset);
 }
 
-VIDEO_START( welltris )
+void welltris_state::video_start()
 {
-	welltris_state *state = machine.driver_data<welltris_state>();
-	state->m_char_tilemap = tilemap_create(machine, get_welltris_tile_info, tilemap_scan_rows,  8, 8, 64, 32);
+	m_char_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(welltris_state::get_welltris_tile_info),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
 
-	state->m_char_tilemap->set_transparent_pen(15);
+	m_char_tilemap->set_transparent_pen(15);
 }
 
 static void draw_background(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect)

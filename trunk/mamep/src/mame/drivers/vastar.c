@@ -66,16 +66,16 @@ write:
 #include "sound/ay8910.h"
 #include "includes/vastar.h"
 
-static MACHINE_RESET( vastar )
+void vastar_state::machine_reset()
 {
 	/* we must start with the second CPU halted */
-	cputag_set_input_line(machine, "sub", INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(vastar_state::vastar_hold_cpu2_w)
 {
 	/* I'm not sure that this works exactly like this */
-	cputag_set_input_line(machine(), "sub", INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 READ8_MEMBER(vastar_state::vastar_sharedram_r)
@@ -294,7 +294,7 @@ static INTERRUPT_GEN( vblank_irq )
 	vastar_state *state = device->machine().driver_data<vastar_state>();
 
 	if(state->m_nmi_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( vastar, vastar_state )
@@ -312,7 +312,6 @@ static MACHINE_CONFIG_START( vastar, vastar_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))	/* 10 CPU slices per frame - seems enough to ensure proper */
 						/* synchronization of the CPUs */
-	MCFG_MACHINE_RESET(vastar)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -326,7 +325,6 @@ static MACHINE_CONFIG_START( vastar, vastar_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(vastar)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

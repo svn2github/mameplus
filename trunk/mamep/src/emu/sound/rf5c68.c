@@ -9,8 +9,7 @@
 #define  NUM_CHANNELS    (8)
 
 
-typedef struct _pcm_channel pcm_channel;
-struct _pcm_channel
+struct pcm_channel
 {
 	UINT8		enable;
 	UINT8		env;
@@ -22,8 +21,7 @@ struct _pcm_channel
 };
 
 
-typedef struct _rf5c68_state rf5c68_state;
-struct _rf5c68_state
+struct rf5c68_state
 {
 	sound_stream *		stream;
 	pcm_channel			chan[NUM_CHANNELS];
@@ -40,7 +38,7 @@ INLINE rf5c68_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == RF5C68);
-	return (rf5c68_state *)downcast<legacy_device_base *>(device)->token();
+	return (rf5c68_state *)downcast<rf5c68_device *>(device)->token();
 }
 
 
@@ -258,33 +256,42 @@ WRITE8_DEVICE_HANDLER( rf5c68_mem_w )
 	chip->data[chip->wbank * 0x1000 + offset] = data;
 }
 
+const device_type RF5C68 = &device_creator<rf5c68_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( rf5c68 )
+rf5c68_device::rf5c68_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, RF5C68, "RF5C68", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(rf5c68_state);				break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( rf5c68 );			break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							/* Nothing */									break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "RF5C68");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Ricoh PCM");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(rf5c68_state));
 }
 
-/**************** end of file ****************/
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-DEFINE_LEGACY_SOUND_DEVICE(RF5C68, rf5c68);
+void rf5c68_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void rf5c68_device::device_start()
+{
+	DEVICE_START_NAME( rf5c68 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void rf5c68_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

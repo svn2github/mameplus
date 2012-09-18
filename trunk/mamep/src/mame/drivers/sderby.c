@@ -82,7 +82,7 @@ READ16_MEMBER(sderby_state::sderby_input_r)
 			return 0xffff;			// to avoid game to reset (needs more work)
 	}
 
-	logerror("sderby_input_r : offset = %x - PC = %06x\n",offset*2,cpu_get_pc(&space.device()));
+	logerror("sderby_input_r : offset = %x - PC = %06x\n",offset*2,space.device().safe_pc());
 
 	return 0xffff;
 }
@@ -126,7 +126,7 @@ READ16_MEMBER(sderby_state::roulette_input_r)
 
 READ16_MEMBER(sderby_state::rprot_r)
 {
-	logerror("rprot_r : offset = %02x\n",cpu_get_pc(&space.device()));
+	logerror("rprot_r : offset = %02x\n",space.device().safe_pc());
 
 /* This is the only mask I found that allow a normal play.
    Using other values, the game hangs waiting for response,
@@ -510,7 +510,6 @@ static MACHINE_CONFIG_START( sderby, sderby_state )
 
 	MCFG_GFXDECODE(sderby)
 	MCFG_PALETTE_LENGTH(0x1000)
-	MCFG_VIDEO_START(sderby)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_OKIM6295_ADD("oki", 1056000, OKIM6295_PIN7_HIGH) /* clock frequency & pin 7 not verified */
@@ -534,7 +533,6 @@ static MACHINE_CONFIG_START( luckboom, sderby_state )
 
 	MCFG_GFXDECODE(sderby)
 	MCFG_PALETTE_LENGTH(0x1000)
-	MCFG_VIDEO_START(sderby)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_OKIM6295_ADD("oki", 1056000, OKIM6295_PIN7_HIGH) /* clock frequency & pin 7 not verified */
@@ -558,7 +556,6 @@ static MACHINE_CONFIG_START( spacewin, sderby_state )
 
 	MCFG_GFXDECODE(sderby)
 	MCFG_PALETTE_LENGTH(0x1000)
-	MCFG_VIDEO_START(sderby)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_OKIM6295_ADD("oki", 1056000, OKIM6295_PIN7_HIGH) /* clock frequency & pin 7 not verified */
@@ -582,7 +579,6 @@ static MACHINE_CONFIG_START( pmroulet, sderby_state )
 
 	MCFG_GFXDECODE(sderby)
 	MCFG_PALETTE_LENGTH(0x1000)
-	MCFG_VIDEO_START(sderby)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_OKIM6295_ADD("oki", 1056000, OKIM6295_PIN7_HIGH) /* clock frequency & pin 7 not verified */

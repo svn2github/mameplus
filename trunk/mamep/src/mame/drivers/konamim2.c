@@ -191,14 +191,14 @@ Notes:
 #include "cpu/powerpc/ppc.h"
 
 
-typedef struct
+struct CDE_DMA
 {
 	UINT32 dst_addr;
 	int length;
 	UINT32 next_dst_addr;
 	int next_length;
 	int dma_done;
-} CDE_DMA;
+};
 
 class konamim2_state : public driver_device
 {
@@ -248,10 +248,11 @@ public:
 	DECLARE_READ64_MEMBER(device2_r);
 	DECLARE_READ64_MEMBER(cpu_r);
 	DECLARE_DRIVER_INIT(m2);
+	virtual void video_start();
 };
 
 
-static VIDEO_START( m2 )
+void konamim2_state::video_start()
 {
 }
 
@@ -346,7 +347,7 @@ READ64_MEMBER(konamim2_state::unk3_r)
 READ64_MEMBER(konamim2_state::unk4_r)
 {
 	UINT64 r = 0;
-//  logerror("unk4_r: %08X, %08X%08X at %08X\n", offset, (UINT32)(mem_mask>>32), (UINT32)(mem_mask), cpu_get_pc(&space.device()));
+//  logerror("unk4_r: %08X, %08X%08X at %08X\n", offset, (UINT32)(mem_mask>>32), (UINT32)(mem_mask), space.device().safe_pc());
 
 	if (ACCESSING_BITS_32_63)
 	{
@@ -363,14 +364,14 @@ READ64_MEMBER(konamim2_state::unk4_r)
 WRITE64_MEMBER(konamim2_state::unk4_w)
 {
 //  logerror("unk4_w: %08X%08X, %08X, %08X%08X at %08X\n", (UINT32)(data >> 32), (UINT32)(data),
-//      offset, (UINT32)(mem_mask>>32), (UINT32)(mem_mask), cpu_get_pc(&space.device()));
+//      offset, (UINT32)(mem_mask>>32), (UINT32)(mem_mask), space.device().safe_pc());
 
 	if (ACCESSING_BITS_0_31)
 	{
 		if (data & 0x800000)
 		{
-//          mame_printf_debug("CPU '%s': CPU1 IRQ at %08X\n", device().tag(), cpu_get_pc(&space.device()));
-			cputag_set_input_line(machine(), "sub", INPUT_LINE_IRQ0, ASSERT_LINE);
+//          mame_printf_debug("CPU '%s': CPU1 IRQ at %08X\n", device().tag(), space.device().safe_pc());
+			machine().device("sub")->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 		}
 
 		m_unk20004 = (UINT32)(data);
@@ -464,7 +465,7 @@ WRITE64_MEMBER(konamim2_state::reset_w)
 	{
 		if (data & U64(0x100000000))
 		{
-			cputag_set_input_line(machine(), "maincpu", INPUT_LINE_RESET, PULSE_LINE);
+			machine().device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 			m_unk3 = 0;
 		}
 	}
@@ -488,27 +489,25 @@ WRITE64_MEMBER(konamim2_state::reset_w)
 static void cde_init(running_machine &machine)
 {
 	konamim2_state *state = machine.driver_data<konamim2_state>();
-	cdrom_file *cd = cdrom_open(get_disk_handle(machine, "cdrom"));
-	const cdrom_toc *toc = cdrom_get_toc(cd);
+	cdrom_file *cdfile = cdrom_open(get_disk_handle(machine, ":cdrom"));
 
-	if (cd)
+	const cdrom_toc *toc = cdrom_get_toc(cdfile);
+
+	if (cdfile)
 	{
 		memcpy(&state->m_cde_toc, toc, sizeof(cdrom_toc));
-	}
 
-	/*
-    printf("%d tracks\n", toc->numtrks);
-    for (i=0; i < toc->numtrks; i++)
-    {
-        const cdrom_track_info *track = &toc->tracks[i];
-        printf("Track %d: type %d, subtype %d, datasize %d, subsize %d, frames %d, extraframes %d, physframeofs %d\n",
-            i, track->trktype, track->subtype, track->datasize, track->subsize,track->frames, track->extraframes, track->physframeofs);
-    }
-    */
+		/*
+        printf("%d tracks\n", toc->numtrks);
+        for (int i=0; i < toc->numtrks; i++)
+        {
+            const cdrom_track_info *track = &toc->tracks[i];
+            printf("Track %d: type %d, subtype %d, datasize %d, subsize %d, frames %d, extraframes %d, physframeofs %d\n",
+                    i, track->trktype, track->subtype, track->datasize, track->subsize,track->frames, track->extraframes, track->physframeofs);
+        }
+        */
 
-	if (cd)
-	{
-		cdrom_close(cd);
+		cdrom_close(cdfile);
 	}
 
 	state->m_cde_drive_state = CDE_DRIVE_STATE_PAUSED;
@@ -904,7 +903,7 @@ READ64_MEMBER(konamim2_state::cde_r)
 
 		default:
 		{
-//                      mame_printf_debug("cde_r: %08X at %08X\n", reg*4, cpu_get_pc(&space.device()));
+//                      mame_printf_debug("cde_r: %08X at %08X\n", reg*4, space.device().safe_pc());
 			break;
 		}
 	}
@@ -938,7 +937,7 @@ WRITE64_MEMBER(konamim2_state::cde_w)
 	{
 		case 0x028/4:		// Command write
 		{
-			//printf("cde_w: %08X, %08X at %08X\n", d, reg*4, cpu_get_pc(&space.device()));
+			//printf("cde_w: %08X, %08X at %08X\n", d, reg*4, space.device().safe_pc());
 
 			if (d == 0x0180)
 			{
@@ -1066,7 +1065,7 @@ WRITE64_MEMBER(konamim2_state::cde_w)
 
 		default:
 		{
-//                      mame_printf_debug("cde_w: %08X, %08X at %08X\n", d, reg*4, cpu_get_pc(&space.device()));
+//                      mame_printf_debug("cde_w: %08X, %08X at %08X\n", d, reg*4, space.device().safe_pc());
 			break;
 		}
 	}
@@ -1164,18 +1163,18 @@ static INTERRUPT_GEN(m2)
         state->m_irq_active |= 0x8;
     }*/
 
-	device_set_input_line(device, INPUT_LINE_IRQ0, ASSERT_LINE);
+	device->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( m2, konamim2_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", PPC602, 33000000)	/* actually PPC602, 66MHz */
+	MCFG_CPU_ADD("maincpu", PPC602, 66000000)	/* actually PPC602, 66MHz */
 	MCFG_CPU_CONFIG(ppc602_config)
 	MCFG_CPU_PROGRAM_MAP(m2_main)
 	MCFG_CPU_VBLANK_INT("screen", m2)
 
-	MCFG_CPU_ADD("sub", PPC602, 33000000)	/* actually PPC602, 66MHz */
+	MCFG_CPU_ADD("sub", PPC602, 66000000)	/* actually PPC602, 66MHz */
 	MCFG_CPU_CONFIG(ppc602_config)
 	MCFG_CPU_PROGRAM_MAP(m2_main)
 
@@ -1190,7 +1189,6 @@ static MACHINE_CONFIG_START( m2, konamim2_state )
 	MCFG_PALETTE_LENGTH(32768)
 	MCFG_PALETTE_INIT(RRRRR_GGGGG_BBBBB)
 
-	MCFG_VIDEO_START(m2)
 
 MACHINE_CONFIG_END
 

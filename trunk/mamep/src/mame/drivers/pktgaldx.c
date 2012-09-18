@@ -90,7 +90,7 @@ static ADDRESS_MAP_START( pktgaldx_map, AS_PROGRAM, 16, pktgaldx_state )
 
 	AM_RANGE(0x161800, 0x16180f) AM_DEVWRITE_LEGACY("tilegen1", deco16ic_pf_control_w)
 	AM_RANGE(0x164800, 0x164801) AM_WRITE(pktgaldx_oki_bank_w)
-	AM_RANGE(0x167800, 0x167fff) AM_READWRITE_LEGACY(deco16_104_pktgaldx_prot_r,deco16_104_pktgaldx_prot_w) AM_BASE_LEGACY(&deco16_prot_ram)
+	AM_RANGE(0x167800, 0x167fff) AM_READWRITE_LEGACY(deco16_104_pktgaldx_prot_r,deco16_104_pktgaldx_prot_w) AM_SHARE("prot16ram")
 	AM_RANGE(0x170000, 0x17ffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -104,7 +104,7 @@ READ16_MEMBER(pktgaldx_state::pckgaldx_unknown_r)
 
 READ16_MEMBER(pktgaldx_state::pckgaldx_protection_r)
 {
-	logerror("pckgaldx_protection_r address %06x\n",cpu_get_pc(&space.device()));
+	logerror("pckgaldx_protection_r address %06x\n",space.device().safe_pc());
 	return -1;
 }
 
@@ -314,12 +314,13 @@ static const deco16ic_interface pktgaldx_deco16ic_tilegen1_intf =
 
 
 
-static MACHINE_START( pktgaldx )
+void pktgaldx_state::machine_start()
 {
-	pktgaldx_state *state = machine.driver_data<pktgaldx_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_deco_tilegen1 = machine.device("tilegen1");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_deco_tilegen1 = machine().device("tilegen1");
+
+	decoprot_reset(machine());
 }
 
 static MACHINE_CONFIG_START( pktgaldx, pktgaldx_state )
@@ -329,7 +330,6 @@ static MACHINE_CONFIG_START( pktgaldx, pktgaldx_state )
 	MCFG_CPU_PROGRAM_MAP(pktgaldx_map)
 	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
 
-	MCFG_MACHINE_START(pktgaldx)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -369,7 +369,6 @@ static MACHINE_CONFIG_START( pktgaldb, pktgaldx_state )
 	MCFG_CPU_PROGRAM_MAP(pktgaldb_map)
 	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
 
-	MCFG_MACHINE_START(pktgaldx)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

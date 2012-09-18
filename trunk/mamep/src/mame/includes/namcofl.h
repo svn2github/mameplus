@@ -1,3 +1,5 @@
+#include "namcos2.h"
+
 #define NAMCOFL_HTOTAL		(288)	/* wrong */
 #define NAMCOFL_HBSTART	(288)
 #define NAMCOFL_VTOTAL		(262)	/* needs to be checked */
@@ -13,11 +15,11 @@
 #define NAMCOFL_SPRITEGFX		1
 #define NAMCOFL_ROTGFX			2
 
-class namcofl_state : public driver_device
+class namcofl_state : public namcos2_shared_state
 {
 public:
 	namcofl_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag),
+		: namcos2_shared_state(mconfig, type, tag),
 		m_maincpu(*this,"maincpu"),
 		m_mcu(*this,"mcu"),
 		m_shareram(*this, "shareram"){ }
@@ -52,11 +54,14 @@ public:
 	DECLARE_WRITE32_MEMBER(namcofl_spritebank_w);
 	DECLARE_DRIVER_INIT(speedrcr);
 	DECLARE_DRIVER_INIT(finalapr);
+	DECLARE_MACHINE_START(namcofl);
+	DECLARE_MACHINE_RESET(namcofl);
+	DECLARE_VIDEO_START(namcofl);
 };
 
 
 /*----------- defined in video/namcofl.c -----------*/
 
-VIDEO_START( namcofl );
+
 SCREEN_UPDATE_IND16( namcofl );
 

@@ -160,24 +160,24 @@ static void update_interrupts(running_machine &machine)
 	atarisy2_state *state = machine.driver_data<atarisy2_state>();
 
 	if (state->m_video_int_state)
-		cputag_set_input_line(machine, "maincpu", 3, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(3, ASSERT_LINE);
 	else
-		cputag_set_input_line(machine, "maincpu", 3, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(3, CLEAR_LINE);
 
 	if (state->m_scanline_int_state)
-		cputag_set_input_line(machine, "maincpu", 2, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(2, ASSERT_LINE);
 	else
-		cputag_set_input_line(machine, "maincpu", 2, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(2, CLEAR_LINE);
 
 	if (state->m_p2portwr_state)
-		cputag_set_input_line(machine, "maincpu", 1, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(1, ASSERT_LINE);
 	else
-		cputag_set_input_line(machine, "maincpu", 1, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(1, CLEAR_LINE);
 
 	if (state->m_p2portrd_state)
-		cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 	else
-		cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -220,37 +220,35 @@ DIRECT_UPDATE_MEMBER( atarisy2_state::atarisy2_direct_handler )
 }
 
 
-static MACHINE_START( atarisy2 )
+MACHINE_START_MEMBER(atarisy2_state,atarisy2)
 {
-	atarisy2_state *state = machine.driver_data<atarisy2_state>();
-	atarigen_init(machine);
+	atarigen_init(machine());
 
-	state->save_item(NAME(state->m_interrupt_enable));
-	state->save_item(NAME(state->m_which_adc));
-	state->save_item(NAME(state->m_p2portwr_state));
-	state->save_item(NAME(state->m_p2portrd_state));
-	machine.save().register_postload(save_prepost_delegate(FUNC(bankselect_postload), &machine));
-	state->save_item(NAME(state->m_sound_reset_state));
+	save_item(NAME(m_interrupt_enable));
+	save_item(NAME(m_which_adc));
+	save_item(NAME(m_p2portwr_state));
+	save_item(NAME(m_p2portrd_state));
+	machine().save().register_postload(save_prepost_delegate(FUNC(bankselect_postload), &machine()));
+	save_item(NAME(m_sound_reset_state));
 }
 
 
-static MACHINE_RESET( atarisy2 )
+MACHINE_RESET_MEMBER(atarisy2_state,atarisy2)
 {
-	atarisy2_state *state = machine.driver_data<atarisy2_state>();
 
-	atarigen_eeprom_reset(state);
+	atarigen_eeprom_reset(this);
 	slapstic_reset();
-	atarigen_interrupt_reset(state, update_interrupts);
-	atarigen_sound_io_reset(machine.device("soundcpu"));
-	atarigen_scanline_timer_reset(*machine.primary_screen, scanline_update, 64);
+	atarigen_interrupt_reset(this, update_interrupts);
+	atarigen_sound_io_reset(machine().device("soundcpu"));
+	atarigen_scanline_timer_reset(*machine().primary_screen, scanline_update, 64);
 
-	address_space *main = machine.device<t11_device>("maincpu")->space(AS_PROGRAM);
-	main->set_direct_update_handler(direct_update_delegate(FUNC(atarisy2_state::atarisy2_direct_handler), state));
+	address_space *main = machine().device<t11_device>("maincpu")->space(AS_PROGRAM);
+	main->set_direct_update_handler(direct_update_delegate(FUNC(atarisy2_state::atarisy2_direct_handler), this));
 
-	state->m_p2portwr_state = 0;
-	state->m_p2portrd_state = 0;
+	m_p2portwr_state = 0;
+	m_p2portrd_state = 0;
 
-	state->m_which_adc = 0;
+	m_which_adc = 0;
 }
 
 
@@ -283,7 +281,7 @@ WRITE16_MEMBER(atarisy2_state::int1_ack_w)
 {
 	/* reset sound CPU */
 	if (ACCESSING_BITS_0_7)
-		cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_RESET, (data & 1) ? ASSERT_LINE : CLEAR_LINE);
+		machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 1) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -710,10 +708,10 @@ WRITE8_MEMBER(atarisy2_state::sound_reset_w)
 
 	/* a large number of signals are reset when this happens */
 	atarigen_sound_io_reset(machine().device("soundcpu"));
-	devtag_reset(machine(), "ymsnd");
+	machine().device("ymsnd")->reset();
 	if (m_has_tms5220)
 	{
-		devtag_reset(machine(), "tms"); // technically what happens is the tms5220 gets a long stream of 0xFF written to it when sound_reset_state is 0 which halts the chip after a few frames, but this works just as well, even if it isn't exactly true to hardware... The hardware may not have worked either, the resistors to pull input to 0xFF are fighting against the ls263 gate holding the latched value to be sent to the chip.
+		machine().device("tms")->reset(); // technically what happens is the tms5220 gets a long stream of 0xFF written to it when sound_reset_state is 0 which halts the chip after a few frames, but this works just as well, even if it isn't exactly true to hardware... The hardware may not have worked either, the resistors to pull input to 0xFF are fighting against the ls263 gate holding the latched value to be sent to the chip.
 	}
 	mixer_w(space, 0, 0);
 }
@@ -1270,8 +1268,8 @@ static MACHINE_CONFIG_START( atarisy2, atarisy2_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_PERIODIC_INT(atarigen_6502_irq_gen, (double)MASTER_CLOCK/2/16/16/16/10)
 
-	MCFG_MACHINE_START(atarisy2)
-	MCFG_MACHINE_RESET(atarisy2)
+	MCFG_MACHINE_START_OVERRIDE(atarisy2_state,atarisy2)
+	MCFG_MACHINE_RESET_OVERRIDE(atarisy2_state,atarisy2)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
 	/* video hardware */
@@ -1283,7 +1281,7 @@ static MACHINE_CONFIG_START( atarisy2, atarisy2_state )
 	MCFG_SCREEN_RAW_PARAMS(VIDEO_CLOCK/2, 640, 0, 512, 416, 0, 384)
 	MCFG_SCREEN_UPDATE_STATIC(atarisy2)
 
-	MCFG_VIDEO_START(atarisy2)
+	MCFG_VIDEO_START_OVERRIDE(atarisy2_state,atarisy2)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

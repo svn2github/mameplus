@@ -96,8 +96,7 @@ struct saa1099_noise
 };
 
 /* this structure defines a SAA1099 chip */
-typedef struct _saa1099_state saa1099_state;
-struct _saa1099_state
+struct saa1099_state
 {
 	device_t *device;
 	sound_stream * stream;			/* our stream */
@@ -171,7 +170,7 @@ INLINE saa1099_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == SAA1099);
-	return (saa1099_state *)downcast<legacy_device_base *>(device)->token();
+	return (saa1099_state *)downcast<saa1099_device *>(device)->token();
 }
 
 
@@ -436,31 +435,42 @@ WRITE8_DEVICE_HANDLER( saa1099_data_w )
 	}
 }
 
+const device_type SAA1099 = &device_creator<saa1099_device>;
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( saa1099 )
+saa1099_device::saa1099_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, SAA1099, "SAA1099", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(saa1099_state);				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(saa1099_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( saa1099 );		break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							/* Nothing */									break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "SAA1099");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Philips");						break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void saa1099_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void saa1099_device::device_start()
+{
+	DEVICE_START_NAME( saa1099 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void saa1099_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(SAA1099, saa1099);

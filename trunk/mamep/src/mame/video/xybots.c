@@ -17,24 +17,22 @@
  *
  *************************************/
 
-static TILE_GET_INFO( get_alpha_tile_info )
+TILE_GET_INFO_MEMBER(xybots_state::get_alpha_tile_info)
 {
-	xybots_state *state = machine.driver_data<xybots_state>();
-	UINT16 data = state->m_alpha[tile_index];
+	UINT16 data = m_alpha[tile_index];
 	int code = data & 0x3ff;
 	int color = (data >> 12) & 7;
 	int opaque = data & 0x8000;
-	SET_TILE_INFO(2, code, color, opaque ? TILE_FORCE_LAYER0 : 0);
+	SET_TILE_INFO_MEMBER(2, code, color, opaque ? TILE_FORCE_LAYER0 : 0);
 }
 
 
-static TILE_GET_INFO( get_playfield_tile_info )
+TILE_GET_INFO_MEMBER(xybots_state::get_playfield_tile_info)
 {
-	xybots_state *state = machine.driver_data<xybots_state>();
-	UINT16 data = state->m_playfield[tile_index];
+	UINT16 data = m_playfield[tile_index];
 	int code = data & 0x1fff;
 	int color = (data >> 11) & 0x0f;
-	SET_TILE_INFO(0, code, color, (data >> 15) & 1);
+	SET_TILE_INFO_MEMBER(0, code, color, (data >> 15) & 1);
 }
 
 
@@ -45,7 +43,7 @@ static TILE_GET_INFO( get_playfield_tile_info )
  *
  *************************************/
 
-VIDEO_START( xybots )
+VIDEO_START_MEMBER(xybots_state,xybots)
 {
 	static const atarimo_desc modesc =
 	{
@@ -83,17 +81,16 @@ VIDEO_START( xybots )
 		0,					/* resulting value to indicate "special" */
 		NULL				/* callback routine for special entries */
 	};
-	xybots_state *state = machine.driver_data<xybots_state>();
 
 	/* initialize the playfield */
-	state->m_playfield_tilemap = tilemap_create(machine, get_playfield_tile_info, tilemap_scan_rows,  8,8, 64,32);
+	m_playfield_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(xybots_state::get_playfield_tile_info),this), TILEMAP_SCAN_ROWS,  8,8, 64,32);
 
 	/* initialize the motion objects */
-	atarimo_init(machine, 0, &modesc);
+	atarimo_init(machine(), 0, &modesc);
 
 	/* initialize the alphanumerics */
-	state->m_alpha_tilemap = tilemap_create(machine, get_alpha_tile_info, tilemap_scan_rows,  8,8, 64,32);
-	state->m_alpha_tilemap->set_transparent_pen(0);
+	m_alpha_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(xybots_state::get_alpha_tile_info),this), TILEMAP_SCAN_ROWS,  8,8, 64,32);
+	m_alpha_tilemap->set_transparent_pen(0);
 }
 
 

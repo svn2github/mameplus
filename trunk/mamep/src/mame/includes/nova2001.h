@@ -27,6 +27,19 @@ public:
 	DECLARE_CUSTOM_INPUT_MEMBER(ninjakun_io_A002_ctrl_r);
 	DECLARE_DRIVER_INIT(raiders5);
 	DECLARE_DRIVER_INIT(pkunwar);
+	TILE_GET_INFO_MEMBER(nova2001_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(nova2001_get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(ninjakun_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(ninjakun_get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(pkunwar_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(raiders5_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(raiders5_get_fg_tile_info);
+	DECLARE_VIDEO_START(nova2001);
+	DECLARE_PALETTE_INIT(nova2001);
+	DECLARE_MACHINE_START(ninjakun);
+	DECLARE_VIDEO_START(ninjakun);
+	DECLARE_VIDEO_START(pkunwar);
+	DECLARE_VIDEO_START(raiders5);
 };
 
 

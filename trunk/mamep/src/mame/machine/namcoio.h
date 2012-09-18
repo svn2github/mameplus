@@ -7,8 +7,7 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _namcoio_interface namcoio_interface;
-struct _namcoio_interface
+struct namcoio_interface
 {
 	devcb_read8 in[4];
 	devcb_write8 out[2];
@@ -16,7 +15,26 @@ struct _namcoio_interface
 	device_t *device;
 };
 
-DECLARE_LEGACY_DEVICE(NAMCO56XX, namcoio);
+class namcoio_device : public device_t
+{
+public:
+	namcoio_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~namcoio_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type NAMCO56XX;
+
 #define NAMCO58XX NAMCO56XX
 #define NAMCO59XX NAMCO56XX
 

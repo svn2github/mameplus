@@ -148,6 +148,13 @@ public:
 	DECLARE_DRIVER_INIT(tarzana);
 	DECLARE_DRIVER_INIT(lhzb2a);
 	DECLARE_DRIVER_INIT(mgdha);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void video_start();
+	virtual void video_reset();
+	DECLARE_MACHINE_RESET(iqblocka);
+	DECLARE_MACHINE_RESET(mgcs);
+	DECLARE_MACHINE_RESET(lhzb2a);
 };
 
 
@@ -169,28 +176,25 @@ WRITE16_MEMBER(igs017_state::video_disable_lsb_w)
 		video_disable_w(space,offset,data);
 }
 
-static VIDEO_RESET( igs017 )
+void igs017_state::video_reset()
 {
-	igs017_state *state = machine.driver_data<igs017_state>();
-	state->m_video_disable = 0;
+	m_video_disable = 0;
 }
 
 
 #define COLOR(_X)	(((_X)>>2)&7)
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(igs017_state::get_fg_tile_info)
 {
-	igs017_state *state = machine.driver_data<igs017_state>();
-	int code = state->m_fg_videoram[tile_index*4+0] + (state->m_fg_videoram[tile_index*4+1] << 8);
-	int attr = state->m_fg_videoram[tile_index*4+2] + (state->m_fg_videoram[tile_index*4+3] << 8);
-	SET_TILE_INFO(0, code, COLOR(attr), TILE_FLIPXY( attr >> 5 ));
+	int code = m_fg_videoram[tile_index*4+0] + (m_fg_videoram[tile_index*4+1] << 8);
+	int attr = m_fg_videoram[tile_index*4+2] + (m_fg_videoram[tile_index*4+3] << 8);
+	SET_TILE_INFO_MEMBER(0, code, COLOR(attr), TILE_FLIPXY( attr >> 5 ));
 }
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(igs017_state::get_bg_tile_info)
 {
-	igs017_state *state = machine.driver_data<igs017_state>();
-	int code = state->m_bg_videoram[tile_index*4+0] + (state->m_bg_videoram[tile_index*4+1] << 8);
-	int attr = state->m_bg_videoram[tile_index*4+2] + (state->m_bg_videoram[tile_index*4+3] << 8);
-	SET_TILE_INFO(0, code, COLOR(attr)+8, TILE_FLIPXY( attr >> 5 ));
+	int code = m_bg_videoram[tile_index*4+0] + (m_bg_videoram[tile_index*4+1] << 8);
+	int attr = m_bg_videoram[tile_index*4+2] + (m_bg_videoram[tile_index*4+3] << 8);
+	SET_TILE_INFO_MEMBER(0, code, COLOR(attr)+8, TILE_FLIPXY( attr >> 5 ));
 }
 
 WRITE8_MEMBER(igs017_state::fg_w)
@@ -261,20 +265,19 @@ static void expand_sprites(running_machine &machine)
 	}
 }
 
-static VIDEO_START( igs017 )
+void igs017_state::video_start()
 {
-	igs017_state *state = machine.driver_data<igs017_state>();
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info,tilemap_scan_rows,8,8,64,32);
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info,tilemap_scan_rows,8,8,64,32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igs017_state::get_fg_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igs017_state::get_bg_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
 
-	state->m_fg_tilemap->set_transparent_pen(0xf);
-	state->m_bg_tilemap->set_transparent_pen(0xf);
+	m_fg_tilemap->set_transparent_pen(0xf);
+	m_bg_tilemap->set_transparent_pen(0xf);
 
-	state->m_toggle = 0;
-	state->m_debug_addr = 0;
-	state->m_debug_width = 512;
+	m_toggle = 0;
+	m_debug_addr = 0;
+	m_debug_width = 512;
 
-	expand_sprites(machine);
+	expand_sprites(machine());
 }
 
 /***************************************************************************
@@ -314,13 +317,12 @@ static void draw_sprite(running_machine &machine, bitmap_ind16 &bitmap,const rec
 {
 	igs017_state *state = machine.driver_data<igs017_state>();
 	// prepare GfxElement on the fly
-	gfx_element gfx(machine);
 
 	// Bounds checking
 	if ( addr + dimx * dimy >= state->m_sprites_gfx_size )
 		return;
 
-	gfx_element_build_temporary(&gfx, machine, state->m_sprites_gfx + addr, dimx, dimy, dimx, 0x100, 32, 0);
+	gfx_element gfx(machine, state->m_sprites_gfx + addr, dimx, dimy, dimx, 0x100, 32);
 
 	drawgfx_transpen(	bitmap,cliprect, &gfx,
 				0, color,
@@ -3225,10 +3227,10 @@ static TIMER_DEVICE_CALLBACK( irqblocka_interrupt )
 	int scanline = param;
 
 	if(scanline == 240 && state->m_irq_enable)
-		device_set_input_line(state->m_maincpu, 0, HOLD_LINE);
+		state->m_maincpu->set_input_line(0, HOLD_LINE);
 
 	if(scanline == 0 && state->m_nmi_enable)
-		device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -3244,12 +3246,11 @@ static I8255A_INTERFACE( iqblocka_ppi8255_intf )
 };
 
 
-static MACHINE_RESET( iqblocka )
+MACHINE_RESET_MEMBER(igs017_state,iqblocka)
 {
-	igs017_state *state = machine.driver_data<igs017_state>();
-	state->m_nmi_enable = 0;
-	state->m_irq_enable = 0;
-	state->m_input_select = 0;
+	m_nmi_enable = 0;
+	m_irq_enable = 0;
+	m_input_select = 0;
 }
 
 static MACHINE_CONFIG_START( iqblocka, igs017_state )
@@ -3260,7 +3261,7 @@ static MACHINE_CONFIG_START( iqblocka, igs017_state )
 
 	MCFG_I8255A_ADD( "ppi8255", iqblocka_ppi8255_intf )
 
-	MCFG_MACHINE_RESET(iqblocka)
+	MCFG_MACHINE_RESET_OVERRIDE(igs017_state,iqblocka)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -3273,8 +3274,6 @@ static MACHINE_CONFIG_START( iqblocka, igs017_state )
 	MCFG_GFXDECODE(igs017)
 	MCFG_PALETTE_LENGTH(0x100*2)
 
-	MCFG_VIDEO_START(igs017)
-	MCFG_VIDEO_RESET(igs017)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3295,20 +3294,19 @@ static TIMER_DEVICE_CALLBACK( mgcs_interrupt )
 	int scanline = param;
 
 	if(scanline == 240 && state->m_irq1_enable)
-		device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
+		state->m_maincpu->set_input_line(1, HOLD_LINE);
 
 	if(scanline == 0 && state->m_irq2_enable)
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+		state->m_maincpu->set_input_line(2, HOLD_LINE);
 }
 
-static MACHINE_RESET( mgcs )
+MACHINE_RESET_MEMBER(igs017_state,mgcs)
 {
-	igs017_state *state = machine.driver_data<igs017_state>();
-	MACHINE_RESET_CALL( iqblocka );
-	state->m_irq1_enable = 0;
-	state->m_irq2_enable = 0;
-	state->m_scramble_data = 0;
-	memset(state->m_igs_magic, 0, sizeof(state->m_igs_magic));
+	MACHINE_RESET_CALL_MEMBER( iqblocka );
+	m_irq1_enable = 0;
+	m_irq2_enable = 0;
+	m_scramble_data = 0;
+	memset(m_igs_magic, 0, sizeof(m_igs_magic));
 }
 
 static I8255A_INTERFACE( mgcs_ppi8255_intf )
@@ -3326,7 +3324,7 @@ static MACHINE_CONFIG_START( mgcs, igs017_state )
 	MCFG_CPU_PROGRAM_MAP(mgcs)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", mgcs_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(mgcs)
+	MCFG_MACHINE_RESET_OVERRIDE(igs017_state,mgcs)
 
 	MCFG_I8255A_ADD( "ppi8255", mgcs_ppi8255_intf )
 
@@ -3341,8 +3339,6 @@ static MACHINE_CONFIG_START( mgcs, igs017_state )
 	MCFG_GFXDECODE(igs017_flipped)
 	MCFG_PALETTE_LENGTH(0x100*2)
 
-	MCFG_VIDEO_START(igs017)
-	MCFG_VIDEO_RESET(igs017)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3368,7 +3364,7 @@ static MACHINE_CONFIG_START( lhzb2, igs017_state )
 	MCFG_CPU_PROGRAM_MAP(lhzb2)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", mgcs_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(mgcs)
+	MCFG_MACHINE_RESET_OVERRIDE(igs017_state,mgcs)
 
 	MCFG_I8255A_ADD( "ppi8255", lhzb2_ppi8255_intf )
 
@@ -3383,8 +3379,6 @@ static MACHINE_CONFIG_START( lhzb2, igs017_state )
 	MCFG_GFXDECODE(igs017_swapped)
 	MCFG_PALETTE_LENGTH(0x100*2)
 
-	MCFG_VIDEO_START(igs017)
-	MCFG_VIDEO_RESET(igs017)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3396,11 +3390,10 @@ MACHINE_CONFIG_END
 
 // lhzb2a
 
-static MACHINE_RESET( lhzb2a )
+MACHINE_RESET_MEMBER(igs017_state,lhzb2a)
 {
-	igs017_state *state = machine.driver_data<igs017_state>();
-	MACHINE_RESET_CALL( mgcs );
-	state->lhzb2a_input_addr_w(*state->m_maincpu->memory().space(AS_PROGRAM), 0, 0xf0);
+	MACHINE_RESET_CALL_MEMBER( mgcs );
+	lhzb2a_input_addr_w(*m_maincpu->space(AS_PROGRAM), 0, 0xf0);
 }
 
 static MACHINE_CONFIG_START( lhzb2a, igs017_state )
@@ -3408,7 +3401,7 @@ static MACHINE_CONFIG_START( lhzb2a, igs017_state )
 	MCFG_CPU_PROGRAM_MAP(lhzb2a)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", mgcs_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(lhzb2a)
+	MCFG_MACHINE_RESET_OVERRIDE(igs017_state,lhzb2a)
 
 //  MCFG_I8255A_ADD( "ppi8255", sdmg2_ppi8255_intf )
 
@@ -3423,8 +3416,6 @@ static MACHINE_CONFIG_START( lhzb2a, igs017_state )
 	MCFG_GFXDECODE(igs017_swapped)
 	MCFG_PALETTE_LENGTH(0x100*2)
 
-	MCFG_VIDEO_START(igs017)
-	MCFG_VIDEO_RESET(igs017)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3441,7 +3432,7 @@ static MACHINE_CONFIG_START( slqz2, igs017_state )
 	MCFG_CPU_PROGRAM_MAP(slqz2)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", mgcs_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(mgcs)
+	MCFG_MACHINE_RESET_OVERRIDE(igs017_state,mgcs)
 
 	MCFG_I8255A_ADD( "ppi8255", lhzb2_ppi8255_intf )
 
@@ -3456,8 +3447,6 @@ static MACHINE_CONFIG_START( slqz2, igs017_state )
 	MCFG_GFXDECODE(igs017)
 	MCFG_PALETTE_LENGTH(0x100*2)
 
-	MCFG_VIDEO_START(igs017)
-	MCFG_VIDEO_RESET(igs017)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3483,7 +3472,7 @@ static MACHINE_CONFIG_START( sdmg2, igs017_state )
 	MCFG_CPU_PROGRAM_MAP(sdmg2)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", mgcs_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(mgcs)
+	MCFG_MACHINE_RESET_OVERRIDE(igs017_state,mgcs)
 
 	MCFG_I8255A_ADD( "ppi8255", sdmg2_ppi8255_intf )
 
@@ -3498,8 +3487,6 @@ static MACHINE_CONFIG_START( sdmg2, igs017_state )
 	MCFG_GFXDECODE(igs017)
 	MCFG_PALETTE_LENGTH(0x100*2)
 
-	MCFG_VIDEO_START(igs017)
-	MCFG_VIDEO_RESET(igs017)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3516,10 +3503,10 @@ static TIMER_DEVICE_CALLBACK( mgdh_interrupt )
 	int scanline = param;
 
 	if(scanline == 240 && state->m_irq1_enable)
-		device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
+		state->m_maincpu->set_input_line(1, HOLD_LINE);
 
 	if(scanline == 0 && state->m_irq2_enable)
-		device_set_input_line(state->m_maincpu, 3, HOLD_LINE); // lev 3 instead of 2
+		state->m_maincpu->set_input_line(3, HOLD_LINE); // lev 3 instead of 2
 }
 
 static I8255A_INTERFACE( mgdh_ppi8255_intf )
@@ -3537,7 +3524,7 @@ static MACHINE_CONFIG_START( mgdha, igs017_state )
 	MCFG_CPU_PROGRAM_MAP(mgdha_map)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", mgdh_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(mgcs)
+	MCFG_MACHINE_RESET_OVERRIDE(igs017_state,mgcs)
 
 	MCFG_I8255A_ADD( "ppi8255", mgdh_ppi8255_intf )
 
@@ -3552,8 +3539,6 @@ static MACHINE_CONFIG_START( mgdha, igs017_state )
 	MCFG_GFXDECODE(igs017_swapped)
 	MCFG_PALETTE_LENGTH(0x100*2)
 
-	MCFG_VIDEO_START(igs017)
-	MCFG_VIDEO_RESET(igs017)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3572,7 +3557,7 @@ static MACHINE_CONFIG_START( tjsb, igs017_state )
 
 	MCFG_I8255A_ADD( "ppi8255", iqblocka_ppi8255_intf )
 
-	MCFG_MACHINE_RESET(iqblocka)
+	MCFG_MACHINE_RESET_OVERRIDE(igs017_state,iqblocka)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -3585,8 +3570,6 @@ static MACHINE_CONFIG_START( tjsb, igs017_state )
 	MCFG_GFXDECODE(igs017)
 	MCFG_PALETTE_LENGTH(0x100*2)
 
-	MCFG_VIDEO_START(igs017)
-	MCFG_VIDEO_RESET(igs017)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

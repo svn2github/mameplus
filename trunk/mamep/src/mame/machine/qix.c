@@ -10,8 +10,9 @@
 #include "cpu/m6800/m6800.h"
 #include "cpu/m6805/m6805.h"
 #include "cpu/m6809/m6809.h"
-#include "sound/sn76496.h"
 #include "includes/qix.h"
+
+
 
 
 
@@ -224,22 +225,20 @@ const pia6821_interface slither_pia_2_intf =
  *
  *************************************/
 
-MACHINE_RESET( qix )
+void qix_state::machine_reset()
 {
-	qix_state *state = machine.driver_data<qix_state>();
 
 	/* reset the coin counter register */
-	state->m_coinctrl = 0x00;
+	m_coinctrl = 0x00;
 }
 
 
-MACHINE_START( qixmcu )
+MACHINE_START_MEMBER(qix_state,qixmcu)
 {
-	qix_state *state = machine.driver_data<qix_state>();
 
 	/* set up save states */
-	state->save_item(NAME(state->m_68705_port_in));
-	state->save_item(NAME(state->m_coinctrl));
+	save_item(NAME(m_68705_port_in));
+	save_item(NAME(m_coinctrl));
 }
 
 
@@ -281,26 +280,26 @@ WRITE8_MEMBER(qix_state::zookeep_bankswitch_w)
 
 WRITE8_MEMBER(qix_state::qix_data_firq_w)
 {
-	cputag_set_input_line(machine(), "maincpu", M6809_FIRQ_LINE, ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 }
 
 
 WRITE8_MEMBER(qix_state::qix_data_firq_ack_w)
 {
-	cputag_set_input_line(machine(), "maincpu", M6809_FIRQ_LINE, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, CLEAR_LINE);
 }
 
 
 READ8_MEMBER(qix_state::qix_data_firq_r)
 {
-	cputag_set_input_line(machine(), "maincpu", M6809_FIRQ_LINE, ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 	return 0xff;
 }
 
 
 READ8_MEMBER(qix_state::qix_data_firq_ack_r)
 {
-	cputag_set_input_line(machine(), "maincpu", M6809_FIRQ_LINE, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, CLEAR_LINE);
 	return 0xff;
 }
 
@@ -314,26 +313,26 @@ READ8_MEMBER(qix_state::qix_data_firq_ack_r)
 
 WRITE8_MEMBER(qix_state::qix_video_firq_w)
 {
-	cputag_set_input_line(machine(), "videocpu", M6809_FIRQ_LINE, ASSERT_LINE);
+	machine().device("videocpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 }
 
 
 WRITE8_MEMBER(qix_state::qix_video_firq_ack_w)
 {
-	cputag_set_input_line(machine(), "videocpu", M6809_FIRQ_LINE, CLEAR_LINE);
+	machine().device("videocpu")->execute().set_input_line(M6809_FIRQ_LINE, CLEAR_LINE);
 }
 
 
 READ8_MEMBER(qix_state::qix_video_firq_r)
 {
-	cputag_set_input_line(machine(), "videocpu", M6809_FIRQ_LINE, ASSERT_LINE);
+	machine().device("videocpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 	return 0xff;
 }
 
 
 READ8_MEMBER(qix_state::qix_video_firq_ack_r)
 {
-	cputag_set_input_line(machine(), "videocpu", M6809_FIRQ_LINE, CLEAR_LINE);
+	machine().device("videocpu")->execute().set_input_line(M6809_FIRQ_LINE, CLEAR_LINE);
 	return 0xff;
 }
 
@@ -372,13 +371,13 @@ static WRITE8_DEVICE_HANDLER( qixmcu_coinctrl_w )
 	/* if (!(data & 0x04)) */
 	if (data & 0x04)
 	{
-		cputag_set_input_line(device->machine(), "mcu", M68705_IRQ_LINE, ASSERT_LINE);
+		device->machine().device("mcu")->execute().set_input_line(M68705_IRQ_LINE, ASSERT_LINE);
 		/* temporarily boost the interleave to sync things up */
 		/* note: I'm using 50 because 30 is not enough for space dungeon at game over */
 		device->machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(50));
 	}
 	else
-		cputag_set_input_line(device->machine(), "mcu", M68705_IRQ_LINE, CLEAR_LINE);
+		device->machine().device("mcu")->execute().set_input_line(M68705_IRQ_LINE, CLEAR_LINE);
 
 	/* this is a callback called by pia6821_device::write(), so I don't need to synchronize */
 	/* the CPUs - they have already been synchronized by qix_pia_w() */
@@ -499,10 +498,12 @@ static WRITE8_DEVICE_HANDLER( qix_coinctl_w )
  *
  *************************************/
 
-static WRITE8_DEVICE_HANDLER( slither_76489_0_w )
+ static WRITE8_DEVICE_HANDLER( slither_76489_0_w )
 {
+	qix_state *state = device->machine().driver_data<qix_state>();
+
 	/* write to the sound chip */
-	sn76496_w(device->machine().device("sn1"), 0, data);
+	state->m_sn1->write(*device->machine().device<legacy_cpu_device>("maincpu")->space(), 0, data);
 
 	/* clock the ready line going back into CB1 */
 	pia6821_device *pia = downcast<pia6821_device *>(device);
@@ -513,8 +514,10 @@ static WRITE8_DEVICE_HANDLER( slither_76489_0_w )
 
 static WRITE8_DEVICE_HANDLER( slither_76489_1_w )
 {
+	qix_state *state = device->machine().driver_data<qix_state>();
+
 	/* write to the sound chip */
-	sn76496_w(device->machine().device("sn2"), 0, data);
+	state->m_sn2->write(*device->machine().device<legacy_cpu_device>("maincpu")->space(), 0, data);
 
 	/* clock the ready line going back into CB1 */
 	pia6821_device *pia = downcast<pia6821_device *>(device);

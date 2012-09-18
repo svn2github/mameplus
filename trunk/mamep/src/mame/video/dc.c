@@ -26,6 +26,7 @@ SPG_HBLANK_INT
 ---- ---- ---- ---- ---- --xx xxxx xxxx line_comp_val
 */
 #define spg_hblank_in_irq   ((state->pvrta_regs[SPG_HBLANK_INT] & 0x03ff0000) >> 16)
+#define spg_hblank_in_irq_new   ((pvrta_regs[SPG_HBLANK_INT] & 0x03ff0000) >> 16)
 #define spg_hblank_int_mode ((state->pvrta_regs[SPG_HBLANK_INT] & 0x00003000) >> 12)
 #define spg_line_comp_val   ((state->pvrta_regs[SPG_HBLANK_INT] & 0x000003ff) >> 0)
 
@@ -36,6 +37,8 @@ SPG_VBLANK_INT
 */
 #define spg_vblank_out_irq_line_num ((state->pvrta_regs[SPG_VBLANK_INT] & 0x03ff0000) >> 16)
 #define spg_vblank_in_irq_line_num  ((state->pvrta_regs[SPG_VBLANK_INT] & 0x000003ff) >> 0)
+#define spg_vblank_out_irq_line_num_new ((pvrta_regs[SPG_VBLANK_INT] & 0x03ff0000) >> 16)
+#define spg_vblank_in_irq_line_num_new  ((pvrta_regs[SPG_VBLANK_INT] & 0x000003ff) >> 0)
 
 
 /*
@@ -133,27 +136,27 @@ static void pvr_accumulationbuffer_to_framebuffer(address_space *space, int x,in
 static bitmap_rgb32 *fake_accumulationbuffer_bitmap;
 static void render_to_accumulation_buffer(running_machine &machine,bitmap_rgb32 &bitmap,const rectangle &cliprect);
 
-typedef struct texinfo {
+struct texinfo  {
 	UINT32 address, vqbase;
 	int textured, sizex, sizey, stride, sizes, pf, palette, mode, mipmapped, blend_mode, filter_mode, flip_u, flip_v;
 
 	UINT32 (*r)(running_machine &machine, struct texinfo *t, float x, float y);
 	UINT32 (*blend)(UINT32 s, UINT32 d);
 	int palbase, cd;
-} texinfo;
+};
 
 typedef	struct
 {
 	float x, y, w, u, v;
 } vert;
 
-typedef struct
+struct strip
 {
 	int svert, evert;
 	texinfo ti;
-} strip;
+};
 
-typedef struct {
+struct receiveddata {
 	vert verts[65536];
 	strip strips[65536];
 
@@ -163,9 +166,9 @@ typedef struct {
 	UINT32 fbwsof2;
 	int busy;
 	int valid;
-} receiveddata;
+};
 
-typedef struct {
+struct pvrta_state {
 	int tafifo_pos, tafifo_mask, tafifo_vertexwords, tafifo_listtype;
 	int start_render_received;
 	int renderselect;
@@ -181,7 +184,7 @@ typedef struct {
 	UINT32 blend_mode, srcselect,dstselect,fogcontrol,colorclamp, use_alpha;
 	UINT32 ignoretexalpha,flipuv,clampuv,filtermode,sstexture,mmdadjust,tsinstruction;
 	UINT32 depthcomparemode,cullingmode,zwritedisable,cachebypass,dcalcctrl,volumeinstruction,mipmapped,vqcompressed,strideselect,paletteselector;
-} pvrta_state;
+};
 
 enum
 {
@@ -1014,7 +1017,7 @@ READ64_HANDLER( pvr_ta_r )
 
 	#if DEBUG_PVRTA_REGS
 	if (reg != 0x43)
-		mame_printf_verbose("PVRTA: [%08x] read %x @ %x (reg %x), mask %" I64FMT "x (PC=%x)\n", 0x5f8000+reg*4, state->pvrta_regs[reg], offset, reg, mem_mask, cpu_get_pc(&space->device()));
+		mame_printf_verbose("PVRTA: [%08x] read %x @ %x (reg %x), mask %" I64FMT "x (PC=%x)\n", 0x5f8000+reg*4, state->pvrta_regs[reg], offset, reg, mem_mask, space->device().safe_pc());
 	#endif
 	return (UINT64)state->pvrta_regs[reg] << shift;
 }
@@ -2578,28 +2581,27 @@ static TIMER_CALLBACK(endofrender_isp)
 }
 
 
-VIDEO_START(dc)
+void dc_state::video_start()
 {
-	dc_state *state = machine.driver_data<dc_state>();
 
-	memset(state->pvrctrl_regs, 0, sizeof(state->pvrctrl_regs));
-	memset(state->pvrta_regs, 0, sizeof(state->pvrta_regs));
+	memset(pvrctrl_regs, 0, sizeof(pvrctrl_regs));
+	memset(pvrta_regs, 0, sizeof(pvrta_regs));
 	memset(state_ta.grab, 0, sizeof(state_ta.grab));
 	pvr_build_parameterconfig();
 
 	// if the next 2 registers do not have the correct values, the naomi bios will hang
-	state->pvrta_regs[PVRID]=0x17fd11db;
-	state->pvrta_regs[REVISION]=0x11;
+	pvrta_regs[PVRID]=0x17fd11db;
+	pvrta_regs[REVISION]=0x11;
 	/* FIXME: move the following regs inside MACHINE_RESET */
-	state->pvrta_regs[VO_CONTROL]=		0x00000108;
-	state->pvrta_regs[SOFTRESET]=		0x00000007;
-	state->pvrta_regs[VO_STARTX]=		0x0000009d;
-	state->pvrta_regs[VO_STARTY]=		0x00150015;
-	state->pvrta_regs[SPG_HBLANK]=		0x007e0345;
-	state->pvrta_regs[SPG_LOAD]=		0x01060359;
-	state->pvrta_regs[SPG_VBLANK]=		0x01500104;
-	state->pvrta_regs[SPG_HBLANK_INT]=	0x031d0000;
-	state->pvrta_regs[SPG_VBLANK_INT]=	0x01500104;
+	pvrta_regs[VO_CONTROL]=		0x00000108;
+	pvrta_regs[SOFTRESET]=		0x00000007;
+	pvrta_regs[VO_STARTX]=		0x0000009d;
+	pvrta_regs[VO_STARTY]=		0x00150015;
+	pvrta_regs[SPG_HBLANK]=		0x007e0345;
+	pvrta_regs[SPG_LOAD]=		0x01060359;
+	pvrta_regs[SPG_VBLANK]=		0x01500104;
+	pvrta_regs[SPG_HBLANK_INT]=	0x031d0000;
+	pvrta_regs[SPG_VBLANK_INT]=	0x01500104;
 
 	state_ta.tafifo_pos=0;
 	state_ta.tafifo_mask=7;
@@ -2611,27 +2613,27 @@ VIDEO_START(dc)
 
 	computedilated();
 
-	state->vbout_timer = machine.scheduler().timer_alloc(FUNC(vbout));
-	state->vbout_timer->adjust(machine.primary_screen->time_until_pos(spg_vblank_out_irq_line_num));
+	vbout_timer = machine().scheduler().timer_alloc(FUNC(vbout));
+	vbout_timer->adjust(machine().primary_screen->time_until_pos(spg_vblank_out_irq_line_num_new));
 
-	state->vbin_timer = machine.scheduler().timer_alloc(FUNC(vbin));
-	state->vbin_timer->adjust(machine.primary_screen->time_until_pos(spg_vblank_in_irq_line_num));
+	vbin_timer = machine().scheduler().timer_alloc(FUNC(vbin));
+	vbin_timer->adjust(machine().primary_screen->time_until_pos(spg_vblank_in_irq_line_num_new));
 
-	state->hbin_timer = machine.scheduler().timer_alloc(FUNC(hbin));
-	state->hbin_timer->adjust(machine.primary_screen->time_until_pos(0, spg_hblank_in_irq-1));
+	hbin_timer = machine().scheduler().timer_alloc(FUNC(hbin));
+	hbin_timer->adjust(machine().primary_screen->time_until_pos(0, spg_hblank_in_irq_new-1));
 
-	state->scanline = 0;
-	state->next_y = 0;
+	scanline = 0;
+	next_y = 0;
 
-	state->endofrender_timer_isp = machine.scheduler().timer_alloc(FUNC(endofrender_isp));
-	state->endofrender_timer_tsp = machine.scheduler().timer_alloc(FUNC(endofrender_tsp));
-	state->endofrender_timer_video = machine.scheduler().timer_alloc(FUNC(endofrender_video));
+	endofrender_timer_isp = machine().scheduler().timer_alloc(FUNC(endofrender_isp));
+	endofrender_timer_tsp = machine().scheduler().timer_alloc(FUNC(endofrender_tsp));
+	endofrender_timer_video = machine().scheduler().timer_alloc(FUNC(endofrender_video));
 
-	state->endofrender_timer_isp->adjust(attotime::never);
-	state->endofrender_timer_tsp->adjust(attotime::never);
-	state->endofrender_timer_video->adjust(attotime::never);
+	endofrender_timer_isp->adjust(attotime::never);
+	endofrender_timer_tsp->adjust(attotime::never);
+	endofrender_timer_video->adjust(attotime::never);
 
-	fake_accumulationbuffer_bitmap = auto_bitmap_rgb32_alloc(machine,1024,1024);
+	fake_accumulationbuffer_bitmap = auto_bitmap_rgb32_alloc(machine(),1024,1024);
 
 }
 
@@ -2739,7 +2741,7 @@ READ32_HANDLER( elan_regs_r )
 		case 0x78/4: // IRQ MASK
 			return 0;
 		default:
-			printf("%08x %08x\n",cpu_get_pc(&space->device()),offset*4);
+			printf("%08x %08x\n",space->device().safe_pc(),offset*4);
 			break;
 	}
 
@@ -2751,7 +2753,7 @@ WRITE32_HANDLER( elan_regs_w )
 	switch(offset)
 	{
 		default:
-			printf("%08x %08x %08x W\n",cpu_get_pc(&space->device()),offset*4,data);
+			printf("%08x %08x %08x W\n",space->device().safe_pc(),offset*4,data);
 			break;
 	}
 }

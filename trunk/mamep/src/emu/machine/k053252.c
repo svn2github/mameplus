@@ -55,8 +55,7 @@ TODO:
 #include "emu.h"
 #include "k053252.h"
 
-typedef struct _k053252_state k053252_state;
-struct _k053252_state
+struct k053252_state
 {
 	UINT8   regs[16];
 	UINT16  hc,hfp,hbp;
@@ -82,7 +81,7 @@ INLINE k053252_state *k053252_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K053252);
 
-	return (k053252_state *)downcast<legacy_device_base *>(device)->token();
+	return (k053252_state *)downcast<k053252_device *>(device)->token();
 }
 
 INLINE const k053252_interface *k053252_get_interface( device_t *device )
@@ -231,26 +230,41 @@ static DEVICE_RESET( k053252 )
 }
 
 
-DEVICE_GET_INFO( k053252 )
+const device_type K053252 = &device_creator<k053252_device>;
+
+k053252_device::k053252_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K053252, "Konami 053252", tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k053252_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k053252);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k053252);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 053252");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(k053252_state));
 }
 
-DEFINE_LEGACY_DEVICE(K053252, k053252);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k053252_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k053252_device::device_start()
+{
+	DEVICE_START_NAME( k053252 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k053252_device::device_reset()
+{
+	DEVICE_RESET_NAME( k053252 )(this);
+}
+
+
 

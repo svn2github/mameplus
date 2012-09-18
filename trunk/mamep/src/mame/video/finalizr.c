@@ -10,13 +10,13 @@
 #include "includes/finalizr.h"
 
 
-PALETTE_INIT( finalizr )
+void finalizr_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x20);
+	machine().colortable = colortable_alloc(machine(), 0x20);
 
 	/* create a lookup table for the palette */
 	for (i = 0; i < 0x20; i++)
@@ -25,7 +25,7 @@ PALETTE_INIT( finalizr )
 		int g = pal4bit(color_prom[i + 0x00] >> 4);
 		int b = pal4bit(color_prom[i + 0x20] >> 0);
 
-		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r, g, b));
+		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r, g, b));
 	}
 
 	/* color_prom now points to the beginning of the lookup table */
@@ -34,44 +34,41 @@ PALETTE_INIT( finalizr )
 	for (i = 0; i < 0x100; i++)
 	{
 		UINT8 ctabentry = (color_prom[i] & 0x0f) | 0x10;
-		colortable_entry_set_value(machine.colortable, i, ctabentry);
+		colortable_entry_set_value(machine().colortable, i, ctabentry);
 	}
 
 	for (i = 0x100; i < 0x200; i++)
 	{
 		UINT8 ctabentry = color_prom[i] & 0x0f;
-		colortable_entry_set_value(machine.colortable, i, ctabentry);
+		colortable_entry_set_value(machine().colortable, i, ctabentry);
 	}
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(finalizr_state::get_bg_tile_info)
 {
-	finalizr_state *state = machine.driver_data<finalizr_state>();
-	int attr = state->m_colorram[tile_index];
-	int code = state->m_videoram[tile_index] + ((attr & 0xc0) << 2) + (state->m_charbank << 10);
+	int attr = m_colorram[tile_index];
+	int code = m_videoram[tile_index] + ((attr & 0xc0) << 2) + (m_charbank << 10);
 	int color = attr & 0x0f;
 	int flags = TILE_FLIPYX((attr & 0x30) >> 4);
 
-	SET_TILE_INFO(0, code, color, flags);
+	SET_TILE_INFO_MEMBER(0, code, color, flags);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(finalizr_state::get_fg_tile_info)
 {
-	finalizr_state *state = machine.driver_data<finalizr_state>();
-	int attr = state->m_colorram2[tile_index];
-	int code = state->m_videoram2[tile_index] + ((attr & 0xc0) << 2);
+	int attr = m_colorram2[tile_index];
+	int code = m_videoram2[tile_index] + ((attr & 0xc0) << 2);
 	int color = attr & 0x0f;
 	int flags = TILE_FLIPYX((attr & 0x30) >> 4);
 
-	SET_TILE_INFO(0, code, color, flags);
+	SET_TILE_INFO_MEMBER(0, code, color, flags);
 }
 
-VIDEO_START( finalizr )
+void finalizr_state::video_start()
 {
-	finalizr_state *state = machine.driver_data<finalizr_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(finalizr_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(finalizr_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 
@@ -98,8 +95,8 @@ SCREEN_UPDATE_IND16( finalizr )
 
 	/* Draw the sprites. */
 	{
-		const gfx_element *gfx1 = screen.machine().gfx[1];
-		const gfx_element *gfx2 = screen.machine().gfx[2];
+		gfx_element *gfx1 = screen.machine().gfx[1];
+		gfx_element *gfx2 = screen.machine().gfx[2];
 
 		UINT8 *sr = state->m_spriterambank ? state->m_spriteram_2 : state->m_spriteram;
 

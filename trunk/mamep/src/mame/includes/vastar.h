@@ -41,11 +41,16 @@ public:
 	DECLARE_WRITE8_MEMBER(vastar_bg2videoram_w);
 	DECLARE_READ8_MEMBER(vastar_bg1videoram_r);
 	DECLARE_READ8_MEMBER(vastar_bg2videoram_r);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg2_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/vastar.c -----------*/
 
 
-VIDEO_START( vastar );
+
 SCREEN_UPDATE_IND16( vastar );

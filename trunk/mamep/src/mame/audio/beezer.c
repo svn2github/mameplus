@@ -92,10 +92,9 @@ struct sh6840_timer_channel
 	} counter;
 };
 
-typedef struct _beezer_sound_state beezer_sound_state;
-struct _beezer_sound_state
+struct beezer_sound_state
 {
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 
 	/* IRQ variable */
 	UINT8 m_ptm_irq_state;
@@ -126,7 +125,7 @@ INLINE beezer_sound_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == BEEZER);
 
-	return (beezer_sound_state *)downcast<legacy_device_base *>(device)->token();
+	return (beezer_sound_state *)downcast<beezer_sound_device *>(device)->token();
 }
 
 /*************************************
@@ -138,7 +137,7 @@ INLINE beezer_sound_state *get_safe_token(device_t *device)
 /*static WRITE_LINE_DEVICE_HANDLER( update_irq_state )
 {
     beezer_sound_state *sndstate = get_safe_token(device);
-    cputag_set_input_line(device->machine(), "audiocpu", M6809_IRQ_LINE, (sndstate->ptm_irq_state) ? ASSERT_LINE : CLEAR_LINE);
+    device->machine().device("audiocpu")->execute().set_input_line(M6809_IRQ_LINE, (sndstate->ptm_irq_state) ? ASSERT_LINE : CLEAR_LINE);
 }*/
 
 
@@ -384,7 +383,7 @@ static DEVICE_START( common_sh_start )
 
 	/* allocate the stream */
 	state->m_stream = device->machine().sound().stream_alloc(*device, 0, 1, sample_rate, NULL, beezer_stream_update);
-	state->m_maincpu = device->machine().device("maincpu");
+	state->m_maincpu = device->machine().device<cpu_device>("maincpu");
 
 	sh6840_register_state_globals(device);
 }
@@ -395,7 +394,54 @@ static DEVICE_START( beezer_sound )
 	DEVICE_START_CALL(common_sh_start);
 }
 
-DEFINE_LEGACY_SOUND_DEVICE(BEEZER, beezer_sound);
+const device_type BEEZER = &device_creator<beezer_sound_device>;
+
+beezer_sound_device::beezer_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, BEEZER, "beezer SFX", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(beezer_sound_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void beezer_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void beezer_sound_device::device_start()
+{
+	DEVICE_START_NAME( beezer_sound )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+static DEVICE_RESET( beezer_sound );
+void beezer_sound_device::device_reset()
+{
+	DEVICE_RESET_NAME( beezer_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void beezer_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+
 
 /*************************************
  *
@@ -432,23 +478,6 @@ static DEVICE_RESET( beezer_sound )
 }
 
 
-DEVICE_GET_INFO( beezer_sound )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(beezer_sound_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(beezer_sound);	break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME(beezer_sound);	break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "beezer SFX");					break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
-}
-
 /*************************************
  *
  *  6840 timer handlers
@@ -469,7 +498,7 @@ READ8_DEVICE_HANDLER( beezer_sh6840_r )
 		return 0;
 		/* offset 1 reads the status register: bits 2 1 0 correspond to ints on channels 2,1,0, and bit 7 is an 'OR' of bits 2,1,0 */
 		case 1:
-		logerror("%04X:beezer_sh6840_r - unexpected read, status register is TODO!\n", cpu_get_pc(state->m_maincpu));
+		logerror("%04X:beezer_sh6840_r - unexpected read, status register is TODO!\n", state->m_maincpu->pc());
 		return 0;
 		/* offsets 2,4,6 read channel 0,1,2 MSBs and latch the LSB*/
 		case 2: case 4: case 6:

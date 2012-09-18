@@ -44,46 +44,43 @@ Known to exist but not dumped:
  *
  *************************************/
 
-static MACHINE_START( midvunit )
+void midvunit_state::machine_start()
 {
-	midvunit_state *state = machine.driver_data<midvunit_state>();
-	state_save_register_global(machine, state->m_cmos_protected);
-	state_save_register_global(machine, state->m_control_data);
-	state_save_register_global(machine, state->m_adc_data);
-	state_save_register_global(machine, state->m_adc_shift);
-	state_save_register_global(machine, state->m_last_port0);
-	state_save_register_global(machine, state->m_shifter_state);
-	state_save_register_global(machine, state->m_timer_rate);
+	state_save_register_global(machine(), m_cmos_protected);
+	state_save_register_global(machine(), m_control_data);
+	state_save_register_global(machine(), m_adc_data);
+	state_save_register_global(machine(), m_adc_shift);
+	state_save_register_global(machine(), m_last_port0);
+	state_save_register_global(machine(), m_shifter_state);
+	state_save_register_global(machine(), m_timer_rate);
 }
 
 
-static MACHINE_RESET( midvunit )
+void midvunit_state::machine_reset()
 {
-	midvunit_state *state = machine.driver_data<midvunit_state>();
-	dcs_reset_w(machine, 1);
-	dcs_reset_w(machine, 0);
+	dcs_reset_w(machine(), 1);
+	dcs_reset_w(machine(), 0);
 
-	memcpy(state->m_ram_base, state->memregion("user1")->base(), 0x20000*4);
-	machine.device("maincpu")->reset();
+	memcpy(m_ram_base, memregion("user1")->base(), 0x20000*4);
+	machine().device("maincpu")->reset();
 
-	state->m_timer[0] = machine.device<timer_device>("timer0");
-	state->m_timer[1] = machine.device<timer_device>("timer1");
+	m_timer[0] = machine().device<timer_device>("timer0");
+	m_timer[1] = machine().device<timer_device>("timer1");
 }
 
 
-static MACHINE_RESET( midvplus )
+MACHINE_RESET_MEMBER(midvunit_state,midvplus)
 {
-	midvunit_state *state = machine.driver_data<midvunit_state>();
-	dcs_reset_w(machine, 1);
-	dcs_reset_w(machine, 0);
+	dcs_reset_w(machine(), 1);
+	dcs_reset_w(machine(), 0);
 
-	memcpy(state->m_ram_base, state->memregion("user1")->base(), 0x20000*4);
-	machine.device("maincpu")->reset();
+	memcpy(m_ram_base, memregion("user1")->base(), 0x20000*4);
+	machine().device("maincpu")->reset();
 
-	state->m_timer[0] = machine.device<timer_device>("timer0");
-	state->m_timer[1] = machine.device<timer_device>("timer1");
+	m_timer[0] = machine().device<timer_device>("timer0");
+	m_timer[1] = machine().device<timer_device>("timer1");
 
-	devtag_reset(machine, "ide");
+	machine().device("ide")->reset();
 }
 
 
@@ -126,7 +123,7 @@ READ32_MEMBER(midvunit_state::midvunit_adc_r)
 {
 	if (!(m_control_data & 0x40))
 	{
-		cputag_set_input_line(machine(), "maincpu", 3, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(3, CLEAR_LINE);
 		return m_adc_data << m_adc_shift;
 	}
 	else
@@ -137,7 +134,7 @@ READ32_MEMBER(midvunit_state::midvunit_adc_r)
 
 static TIMER_CALLBACK( adc_ready )
 {
-	cputag_set_input_line(machine, "maincpu", 3, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(3, ASSERT_LINE);
 }
 
 
@@ -253,13 +250,13 @@ READ32_MEMBER(midvunit_state::tms32031_control_r)
 		/* timer is clocked at 100ns */
 		int which = (offset >> 4) & 1;
 		INT32 result = (m_timer[which]->time_elapsed() * m_timer_rate).as_double();
-//      logerror("%06X:tms32031_control_r(%02X) = %08X\n", cpu_get_pc(&space.device()), offset, result);
+//      logerror("%06X:tms32031_control_r(%02X) = %08X\n", space.device().safe_pc(), offset, result);
 		return result;
 	}
 
 	/* log anything else except the memory control register */
 	if (offset != 0x64)
-		logerror("%06X:tms32031_control_r(%02X)\n", cpu_get_pc(&space.device()), offset);
+		logerror("%06X:tms32031_control_r(%02X)\n", space.device().safe_pc(), offset);
 
 	return m_tms32031_control[offset];
 }
@@ -277,7 +274,7 @@ WRITE32_MEMBER(midvunit_state::tms32031_control_w)
 	else if (offset == 0x20 || offset == 0x30)
 	{
 		int which = (offset >> 4) & 1;
-//  logerror("%06X:tms32031_control_w(%02X) = %08X\n", cpu_get_pc(&space.device()), offset, data);
+//  logerror("%06X:tms32031_control_w(%02X) = %08X\n", space.device().safe_pc(), offset, data);
 		if (data & 0x40)
 			m_timer[which]->reset();
 
@@ -288,7 +285,7 @@ WRITE32_MEMBER(midvunit_state::tms32031_control_w)
 			m_timer_rate = 10000000.;
 	}
 	else
-		logerror("%06X:tms32031_control_w(%02X) = %08X\n", cpu_get_pc(&space.device()), offset, data);
+		logerror("%06X:tms32031_control_w(%02X) = %08X\n", space.device().safe_pc(), offset, data);
 }
 
 
@@ -409,7 +406,7 @@ READ32_MEMBER(midvunit_state::midvplus_misc_r)
 	}
 
 	if (offset != 0 && offset != 3)
-		logerror("%06X:midvplus_misc_r(%d) = %08X\n", cpu_get_pc(&space.device()), offset, result);
+		logerror("%06X:midvplus_misc_r(%d) = %08X\n", space.device().safe_pc(), offset, result);
 	return result;
 }
 
@@ -438,7 +435,7 @@ WRITE32_MEMBER(midvunit_state::midvplus_misc_w)
 	}
 
 	if (logit)
-		logerror("%06X:midvplus_misc_w(%d) = %08X\n", cpu_get_pc(&space.device()), offset, data);
+		logerror("%06X:midvplus_misc_w(%d) = %08X\n", space.device().safe_pc(), offset, data);
 }
 
 
@@ -1019,8 +1016,6 @@ static MACHINE_CONFIG_START( midvcommon, midvunit_state )
 	MCFG_CPU_ADD("maincpu", TMS32031, CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(midvunit_map)
 
-	MCFG_MACHINE_START(midvunit)
-	MCFG_MACHINE_RESET(midvunit)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_TIMER_ADD("timer0", NULL)
@@ -1033,7 +1028,6 @@ static MACHINE_CONFIG_START( midvcommon, midvunit_state )
 	MCFG_SCREEN_RAW_PARAMS(MIDVUNIT_VIDEO_CLOCK/2, 666, 0, 512, 432, 0, 400)
 	MCFG_SCREEN_UPDATE_STATIC(midvunit)
 
-	MCFG_VIDEO_START(midvunit)
 MACHINE_CONFIG_END
 
 
@@ -1043,6 +1037,12 @@ static MACHINE_CONFIG_DERIVED( midvunit, midvcommon )
 	MCFG_FRAGMENT_ADD(dcs_audio_2k)
 MACHINE_CONFIG_END
 
+static const ide_config ide_intf =
+{
+	NULL,
+	NULL,
+	0
+};
 
 static MACHINE_CONFIG_DERIVED( midvplus, midvcommon )
 
@@ -1051,11 +1051,11 @@ static MACHINE_CONFIG_DERIVED( midvplus, midvcommon )
 	MCFG_TMS3203X_CONFIG(midvplus_config)
 	MCFG_CPU_PROGRAM_MAP(midvplus_map)
 
-	MCFG_MACHINE_RESET(midvplus)
+	MCFG_MACHINE_RESET_OVERRIDE(midvunit_state,midvplus)
 	MCFG_DEVICE_REMOVE("nvram")
 	MCFG_NVRAM_HANDLER(midway_serial_pic2)
 
-	MCFG_IDE_CONTROLLER_ADD("ide", NULL, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(dcs2_audio_2115)
@@ -1714,7 +1714,7 @@ ROM_END
 
 READ32_MEMBER(midvunit_state::generic_speedup_r)
 {
-	device_eat_cycles(&space.device(), 100);
+	space.device().execute().eat_cycles(100);
 	return m_generic_speedup[offset];
 }
 

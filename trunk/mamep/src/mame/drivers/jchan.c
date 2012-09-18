@@ -223,6 +223,7 @@ public:
 	DECLARE_WRITE16_MEMBER(jchan_suprnova_sprite32regs_2_w);
 
 	DECLARE_DRIVER_INIT(jchan);
+	virtual void video_start();
 };
 
 
@@ -247,46 +248,45 @@ static TIMER_DEVICE_CALLBACK( jchan_vblank )
 	int scanline = param;
 
 	if(scanline == 240)
-		device_set_input_line(state->m_maincpu, 1, HOLD_LINE);
+		state->m_maincpu->set_input_line(1, HOLD_LINE);
 
 	if(scanline == 11)
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+		state->m_maincpu->set_input_line(2, HOLD_LINE);
 
 	if (state->m_irq_sub_enable)
 	{
 		if(scanline == 240)
-			device_set_input_line(state->m_subcpu, 1, HOLD_LINE);
+			state->m_subcpu->set_input_line(1, HOLD_LINE);
 
 		if(scanline == 249)
-			device_set_input_line(state->m_subcpu, 2, HOLD_LINE);
+			state->m_subcpu->set_input_line(2, HOLD_LINE);
 
 		if(scanline == 11)
-			device_set_input_line(state->m_subcpu, 3, HOLD_LINE);
+			state->m_subcpu->set_input_line(3, HOLD_LINE);
 	}
 }
 
 
 
 
-static VIDEO_START(jchan)
+void jchan_state::video_start()
 {
-	jchan_state *state = machine.driver_data<jchan_state>();
 	/* so we can use suprnova.c */
-	state->m_sprite_ram32_1 = auto_alloc_array(machine, UINT32, 0x4000/4);
-	state->m_sprite_ram32_2 = auto_alloc_array(machine, UINT32, 0x4000/4);
+	m_sprite_ram32_1 = auto_alloc_array(machine(), UINT32, 0x4000/4);
+	m_sprite_ram32_2 = auto_alloc_array(machine(), UINT32, 0x4000/4);
 
-	state->m_sprite_regs32_1 = auto_alloc_array(machine, UINT32, 0x40/4);
-	state->m_sprite_regs32_2 = auto_alloc_array(machine, UINT32, 0x40/4);
+	m_sprite_regs32_1 = auto_alloc_array(machine(), UINT32, 0x40/4);
+	m_sprite_regs32_2 = auto_alloc_array(machine(), UINT32, 0x40/4);
 
-	state->m_sprite_bitmap_1 = auto_bitmap_ind16_alloc(machine,1024,1024);
-	state->m_sprite_bitmap_2 = auto_bitmap_ind16_alloc(machine,1024,1024);
+	m_sprite_bitmap_1 = auto_bitmap_ind16_alloc(machine(),1024,1024);
+	m_sprite_bitmap_2 = auto_bitmap_ind16_alloc(machine(),1024,1024);
 
-	state->m_spritegen1 = machine.device<sknsspr_device>("spritegen1");
-	state->m_spritegen2 = machine.device<sknsspr_device>("spritegen2");
+	m_spritegen1 = machine().device<sknsspr_device>("spritegen1");
+	m_spritegen2 = machine().device<sknsspr_device>("spritegen2");
 
 
-	state->m_spritegen1->skns_sprite_kludge(0,0);
-	state->m_spritegen2->skns_sprite_kludge(0,0);
+	m_spritegen1->skns_sprite_kludge(0,0);
+	m_spritegen2->skns_sprite_kludge(0,0);
 }
 
 
@@ -392,7 +392,7 @@ WRITE16_MEMBER(jchan_state::main2sub_cmd_w)
 {
 
 	COMBINE_DATA(&m_mainsub_shared_ram[0x03ffe/2]);
-	cputag_set_input_line(machine(), "sub", 4, HOLD_LINE);
+	machine().device("sub")->execute().set_input_line(4, HOLD_LINE);
 }
 
 // is this called?
@@ -400,7 +400,7 @@ WRITE16_MEMBER(jchan_state::sub2main_cmd_w)
 {
 
 	COMBINE_DATA(&m_mainsub_shared_ram[0x0000/2]);
-	cputag_set_input_line(machine(), "maincpu", 3, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 }
 
 /* ram convert for suprnova (requires 32-bit stuff) */
@@ -621,7 +621,6 @@ static MACHINE_CONFIG_START( jchan, jchan_state )
 	kaneko_view2_tilemap_device::set_offset(*device, 25, 11, 320, 240);
 
 
-	MCFG_VIDEO_START(jchan)
 
 	MCFG_DEVICE_ADD("spritegen1", SKNS_SPRITE, 0)
 	MCFG_DEVICE_ADD("spritegen2", SKNS_SPRITE, 0)

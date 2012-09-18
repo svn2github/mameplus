@@ -67,8 +67,7 @@ INLINE int MAKE_INT_8(int A) {return (A & 0x80) ? A | ~0xff : A & 0xff;}
 /* ======================================================================== */
 
 /* CPU Structure */
-typedef struct _g65816i_cpu_struct g65816i_cpu_struct;
-struct _g65816i_cpu_struct
+struct g65816i_cpu_struct
 {
 	uint a;				/* Accumulator */
 	uint b;				/* holds high byte of accumulator */
@@ -91,6 +90,7 @@ struct _g65816i_cpu_struct
 	uint flag_c;		/* Carry Flag */
 	uint line_irq;		/* Status of the IRQ line */
 	uint line_nmi;		/* Status of the NMI line */
+	uint fastROM;		/* SNES specific */
 	uint ir;			/* Instruction Register */
 	uint irq_delay;		/* delay 1 instruction before checking irq */
 	device_irq_acknowledge_callback int_ack; /* Interrupt Acknowledge */
@@ -103,10 +103,19 @@ struct _g65816i_cpu_struct
 	void (*set_reg)(g65816i_cpu_struct *cpustate, int regnum, uint val);
 	void (*set_line)(g65816i_cpu_struct *cpustate, int line, int state);
 	int  (*execute)(g65816i_cpu_struct *cpustate, int cycles);
+	int bus_5A22_cycle_burst(g65816i_cpu_struct *cpustate, uint addr);
 	uint source;
 	uint destination;
 	int ICount;
 	int cpu_type;
+	UINT8 rw8_cycles, rw16_cycles, rw24_cycles;
+
+	/* 5A22 specific registers */
+	UINT8 wrmpya, wrmpyb;
+	UINT16 rdmpy;
+	UINT16 wrdiv;
+	UINT8 dvdd;
+	UINT16 rddiv;
 };
 
 extern void (*const *const g65816i_opcodes[])(g65816i_cpu_struct *cpustate);
@@ -114,6 +123,7 @@ extern uint (*const g65816i_get_reg[])(g65816i_cpu_struct *cpustate, int regnum)
 extern void (*const g65816i_set_reg[])(g65816i_cpu_struct *cpustate, int regnum, uint val);
 extern void (*const g65816i_set_line[])(g65816i_cpu_struct *cpustate, int line, int state);
 extern int (*const g65816i_execute[])(g65816i_cpu_struct *cpustate, int cycles);
+extern int bus_5A22_cycle_burst(g65816i_cpu_struct *cpustate, uint addr);
 
 #define REGISTER_A		cpustate->a		/* Accumulator */
 #define REGISTER_B		cpustate->b		/* Accumulator hi byte */
@@ -191,14 +201,14 @@ INLINE void g65816i_set_execution_mode(g65816i_cpu_struct *cpustate, uint mode)
 /* ======================================================================== */
 
 #define CLK_OP			1
-#define CLK_R8			1
-#define CLK_R16			2
-#define CLK_R24			3
-#define CLK_W8			1
-#define CLK_W16			2
-#define CLK_W24			3
-#define CLK_RMW8		3
-#define CLK_RMW16		5
+#define CLK_R8			cpustate->rw8_cycles
+#define CLK_R16			cpustate->rw16_cycles
+#define CLK_R24			cpustate->rw24_cycles
+#define CLK_W8			cpustate->rw8_cycles
+#define CLK_W16			cpustate->rw16_cycles
+#define CLK_W24			cpustate->rw24_cycles
+#define CLK_RMW8		cpustate->rw8_cycles+cpustate->rw8_cycles + 1
+#define CLK_RMW16		cpustate->rw16_cycles+cpustate->rw16_cycles + 1
 
 #define CLK_IMPLIED		1
 #define CLK_IMPLIED		1
@@ -244,6 +254,7 @@ INLINE void g65816i_set_execution_mode(g65816i_cpu_struct *cpustate, uint mode)
 #define CLK_W_SIY		5
 
 #define CLK(A)			CLOCKS -= (cpustate->cpu_type == CPU_TYPE_G65816 ? A : A*6)
+#define CLK_BUS(A)		CLOCKS -= A
 #define USE_ALL_CLKS()	CLOCKS = 0
 
 

@@ -36,13 +36,17 @@ public:
 	DECLARE_WRITE8_MEMBER(suprridr_fgram_w);
 	DECLARE_CUSTOM_INPUT_MEMBER(suprridr_control_r);
 	DECLARE_READ8_MEMBER(sound_data_r);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	TILE_GET_INFO_MEMBER(get_tile_info2);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/suprridr.c -----------*/
 
-VIDEO_START( suprridr );
-PALETTE_INIT( suprridr );
+
+
 
 int suprridr_is_screen_flipped(running_machine &machine);
 

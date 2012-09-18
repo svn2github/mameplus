@@ -92,18 +92,17 @@ WRITE8_MEMBER(battlane_state::battlane_video_ctrl_w)
 	m_video_ctrl = data;
 }
 
-static TILE_GET_INFO( get_tile_info_bg )
+TILE_GET_INFO_MEMBER(battlane_state::get_tile_info_bg)
 {
-	battlane_state *state = machine.driver_data<battlane_state>();
-	int code = state->m_tileram[tile_index];
-	int attr = state->m_tileram[tile_index + 0x400];
+	int code = m_tileram[tile_index];
+	int attr = m_tileram[tile_index + 0x400];
 	int gfxn = (attr & 0x01) + 1;
 	int color = (attr >> 1) & 0x03;
 
-	SET_TILE_INFO(gfxn, code, color, 0);
+	SET_TILE_INFO_MEMBER(gfxn, code, color, 0);
 }
 
-static TILEMAP_MAPPER( battlane_tilemap_scan_rows_2x2 )
+TILEMAP_MAPPER_MEMBER(battlane_state::battlane_tilemap_scan_rows_2x2)
 {
 	/*
             Tilemap Memory Organization
@@ -134,11 +133,10 @@ static TILEMAP_MAPPER( battlane_tilemap_scan_rows_2x2 )
 
 ***************************************************************************/
 
-VIDEO_START( battlane )
+void battlane_state::video_start()
 {
-	battlane_state *state = machine.driver_data<battlane_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info_bg, battlane_tilemap_scan_rows_2x2, 16, 16, 32, 32);
-	state->m_screen_bitmap.allocate(32 * 8, 32 * 8);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(battlane_state::get_tile_info_bg),this), tilemap_mapper_delegate(FUNC(battlane_state::battlane_tilemap_scan_rows_2x2),this), 16, 16, 32, 32);
+	m_screen_bitmap.allocate(32 * 8, 32 * 8);
 }
 
 static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )

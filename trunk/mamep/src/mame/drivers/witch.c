@@ -234,17 +234,20 @@ public:
 	DECLARE_WRITE8_MEMBER(xscroll_w);
 	DECLARE_WRITE8_MEMBER(yscroll_w);
 	DECLARE_DRIVER_INIT(witch);
+	TILE_GET_INFO_MEMBER(get_gfx0b_tile_info);
+	TILE_GET_INFO_MEMBER(get_gfx0a_tile_info);
+	TILE_GET_INFO_MEMBER(get_gfx1_tile_info);
+	virtual void video_start();
 };
 
 
 #define UNBANKED_SIZE 0x800
 
 
-static TILE_GET_INFO( get_gfx0b_tile_info )
+TILE_GET_INFO_MEMBER(witch_state::get_gfx0b_tile_info)
 {
-	witch_state *state = machine.driver_data<witch_state>();
-	int code  = state->m_gfx0_vram[tile_index];
-	int color = state->m_gfx0_cram[tile_index];
+	int code  = m_gfx0_vram[tile_index];
+	int color = m_gfx0_cram[tile_index];
 
 	code=code | ((color & 0xe0) << 3);
 
@@ -253,18 +256,17 @@ static TILE_GET_INFO( get_gfx0b_tile_info )
 		code=0;
 	}
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code,//tiles beyond 0x7ff only for sprites?
 			color & 0x0f,
 			0);
 }
 
-static TILE_GET_INFO( get_gfx0a_tile_info )
+TILE_GET_INFO_MEMBER(witch_state::get_gfx0a_tile_info)
 {
-	witch_state *state = machine.driver_data<witch_state>();
-	int code  = state->m_gfx0_vram[tile_index];
-	int color = state->m_gfx0_cram[tile_index];
+	int code  = m_gfx0_vram[tile_index];
+	int color = m_gfx0_cram[tile_index];
 
 	code=code | ((color & 0xe0) << 3);
 
@@ -273,20 +275,19 @@ static TILE_GET_INFO( get_gfx0a_tile_info )
 		code=0;
 	}
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code,//tiles beyond 0x7ff only for sprites?
 			color & 0x0f,
 			0);
 }
 
-static TILE_GET_INFO( get_gfx1_tile_info )
+TILE_GET_INFO_MEMBER(witch_state::get_gfx1_tile_info)
 {
-	witch_state *state = machine.driver_data<witch_state>();
-	int code  = state->m_gfx1_vram[tile_index];
-	int color = state->m_gfx1_cram[tile_index];
+	int code  = m_gfx1_vram[tile_index];
+	int color = m_gfx1_cram[tile_index];
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code | ((color & 0xf0) << 4),
 			(color>>0) & 0x0f,
@@ -396,7 +397,7 @@ WRITE8_MEMBER(witch_state::write_a00x)
 		break;
 
 		case 0x08: //A008
-			device_set_input_line(&space.device(),0,CLEAR_LINE);
+			space.device().execute().set_input_line(0,CLEAR_LINE);
 		break;
 	}
 }
@@ -413,7 +414,7 @@ READ8_MEMBER(witch_state::prot_read_700x)
     Otherwise later in game some I/O (controls) reads are skipped.
 */
 
-  switch(cpu_get_pc(&space.device()))
+  switch(space.device().safe_pc())
   {
 	case 0x23f:
 	case 0x246:
@@ -702,18 +703,17 @@ static GFXDECODE_START( witch )
 	GFXDECODE_ENTRY( "gfx2", 0, tiles8x8_layout, 0, 16 )
 GFXDECODE_END
 
-static VIDEO_START(witch)
+void witch_state::video_start()
 {
-	witch_state *state = machine.driver_data<witch_state>();
-	state->m_gfx0a_tilemap = tilemap_create(machine, get_gfx0a_tile_info,tilemap_scan_rows,8,8,32,32);
-	state->m_gfx0b_tilemap = tilemap_create(machine, get_gfx0b_tile_info,tilemap_scan_rows,8,8,32,32);
-	state->m_gfx1_tilemap = tilemap_create(machine, get_gfx1_tile_info,tilemap_scan_rows,8,8,32,32);
+	m_gfx0a_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(witch_state::get_gfx0a_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
+	m_gfx0b_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(witch_state::get_gfx0b_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
+	m_gfx1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(witch_state::get_gfx1_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
 
-	state->m_gfx0a_tilemap->set_transparent_pen(0);
-	state->m_gfx0b_tilemap->set_transparent_pen(0);
-	state->m_gfx0a_tilemap->set_palette_offset(0x100);
-	state->m_gfx0b_tilemap->set_palette_offset(0x100);
-	state->m_gfx1_tilemap->set_palette_offset(0x200);
+	m_gfx0a_tilemap->set_transparent_pen(0);
+	m_gfx0b_tilemap->set_transparent_pen(0);
+	m_gfx0a_tilemap->set_palette_offset(0x100);
+	m_gfx0b_tilemap->set_palette_offset(0x100);
+	m_gfx1_tilemap->set_palette_offset(0x200);
 }
 
 static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect)
@@ -781,12 +781,12 @@ static SCREEN_UPDATE_IND16(witch)
 
 static INTERRUPT_GEN( witch_main_interrupt )
 {
-	device_set_input_line(device,0,ASSERT_LINE);
+	device->execute().set_input_line(0,ASSERT_LINE);
 }
 
 static INTERRUPT_GEN( witch_sub_interrupt )
 {
-	device_set_input_line(device,0,ASSERT_LINE);
+	device->execute().set_input_line(0,ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( witch, witch_state )
@@ -813,7 +813,6 @@ static MACHINE_CONFIG_START( witch, witch_state )
 	MCFG_GFXDECODE(witch)
 	MCFG_PALETTE_LENGTH(0x800)
 
-	MCFG_VIDEO_START(witch)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

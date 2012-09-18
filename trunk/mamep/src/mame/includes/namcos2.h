@@ -6,6 +6,8 @@
 
 ***************************************************************************/
 
+#include "namcoic.h"
+
 /* CPU reference numbers */
 
 #define CPU_MASTER	0
@@ -17,7 +19,7 @@
 
 /*********************************************/
 /* IF GAME SPECIFIC HACKS ARE REQUIRED THEN  */
-/* USE THE namcos2_gametype VARIABLE TO FIND */
+/* USE THE m_gametype MEMBER TO FIND */
 /* OUT WHAT GAME IS RUNNING                  */
 /*********************************************/
 
@@ -85,62 +87,215 @@ enum
 	NAMCOFL_FINAL_LAP_R
 };
 
+
+// fix me -- most of this should be devices eventually
+class namcos2_shared_state : public driver_device
+{
+public:
+	namcos2_shared_state(const machine_config &mconfig, device_type type, const char *tag)
+		: driver_device(mconfig, type, tag),
+		  m_gametype(0),
+		  m_c169_roz_videoram(*this, "rozvideoram", 0),
+		  m_c169_roz_gfxbank(0),
+		  m_c169_roz_mask(NULL),
+		  m_c355_obj_gfxbank(0),
+		  m_c355_obj_palxor(0)
+	{ }
+
+	// game type helpers
+	bool is_system21();
+	int m_gametype;
+
+	// C169 ROZ Layer Emulation
+public:
+	void c169_roz_init(int gfxbank, const char *maskregion);
+	void c169_roz_draw(bitmap_ind16 &bitmap, const rectangle &cliprect, int pri);
+	DECLARE_READ16_MEMBER( c169_roz_control_r );
+	DECLARE_WRITE16_MEMBER( c169_roz_control_w );
+	DECLARE_READ16_MEMBER( c169_roz_bank_r );
+	DECLARE_WRITE16_MEMBER( c169_roz_bank_w );
+	DECLARE_READ16_MEMBER( c169_roz_videoram_r );
+	DECLARE_WRITE16_MEMBER( c169_roz_videoram_w );
+	TILE_GET_INFO_MEMBER( get_tile_info0 );
+	TILE_GET_INFO_MEMBER( get_tile_info1 );
+	TILE_GET_INFO_MEMBER( get_tile_info2 );
+	TILE_GET_INFO_MEMBER( get_tile_info3 );
+	TILE_GET_INFO_MEMBER( get_tile_info4 );
+	TILE_GET_INFO_MEMBER( get_tile_info5 );
+	void namco_tilemap_init(int gfxbank, void *pMaskROM, void (*cb)( running_machine &machine, UINT16 code, int *gfx, int *mask) );
+protected:
+	struct roz_parameters
+	{
+		UINT32 left, top, size;
+		UINT32 startx, starty;
+		int incxx, incxy, incyx, incyy;
+		int color, priority;
+	};
+	void c169_roz_unpack_params(const UINT16 *source, roz_parameters &params);
+	void c169_roz_draw_helper(bitmap_ind16 &bitmap, tilemap_t &tmap, const rectangle &clip, const roz_parameters &params);
+	void c169_roz_draw_scanline(bitmap_ind16 &bitmap, int line, int which, int pri, const rectangle &cliprect);
+	void c169_roz_get_info(tile_data &tileinfo, int tile_index, int which);
+	TILE_GET_INFO_MEMBER( c169_roz_get_info0 );
+	TILE_GET_INFO_MEMBER( c169_roz_get_info1 );
+	TILEMAP_MAPPER_MEMBER( c169_roz_mapper );
+
+	static const int ROZ_TILEMAP_COUNT = 2;
+	tilemap_t *m_c169_roz_tilemap[ROZ_TILEMAP_COUNT];
+	UINT16 m_c169_roz_bank[0x10/2];
+	UINT16 m_c169_roz_control[0x20/2];
+	optional_shared_ptr<UINT16> m_c169_roz_videoram;
+	int m_c169_roz_gfxbank;
+	UINT8 *m_c169_roz_mask;
+
+	// C355 Motion Object Emulation
+public:
+	typedef delegate<int (int)> c355_obj_code2tile_delegate;
+	// for pal_xor, supply either 0x0 (normal) or 0xf (palette mapping reversed)
+	void c355_obj_init(int gfxbank, int pal_xor, c355_obj_code2tile_delegate code2tile);
+	int c355_obj_default_code2tile(int code);
+	void c355_obj_draw(bitmap_ind16 &bitmap, const rectangle &cliprect, int pri);
+	void c355_obj_draw(bitmap_rgb32 &bitmap, const rectangle &cliprect, int pri);
+	DECLARE_READ16_MEMBER( c355_obj_ram_r );
+	DECLARE_WRITE16_MEMBER( c355_obj_ram_w );
+	DECLARE_READ16_MEMBER( c355_obj_position_r );
+	DECLARE_WRITE16_MEMBER( c355_obj_position_w );
+	DECLARE_MACHINE_START(namcos2);
+	DECLARE_MACHINE_RESET(namcos2);
+protected:
+	// C355 Motion Object internals
+	template<class _BitmapClass>
+	void c355_obj_draw_sprite(_BitmapClass &bitmap, const rectangle &cliprect, const UINT16 *pSource, int pri, int zpos);
+	template<class _BitmapClass>
+	void c355_obj_draw_list(_BitmapClass &bitmap, const rectangle &cliprect, int pri, const UINT16 *pSpriteList16, const UINT16 *pSpriteTable);
+
+	c355_obj_code2tile_delegate m_c355_obj_code2tile;
+	int m_c355_obj_gfxbank;
+	int m_c355_obj_palxor;
+	UINT16 m_c355_obj_position[4];
+	UINT16 m_c355_obj_ram[0x20000/2];
+
+public:
+	// general
+	void zdrawgfxzoom(bitmap_ind16 &dest_bmp, const rectangle &clip, gfx_element *gfx, UINT32 code, UINT32 color, int flipx, int flipy, int sx, int sy, int scalex, int scaley, int zpos);
+	void zdrawgfxzoom(bitmap_rgb32 &dest_bmp, const rectangle &clip, gfx_element *gfx, UINT32 code, UINT32 color, int flipx, int flipy, int sx, int sy, int scalex, int scaley, int zpos);
+};
+
+class namcos2_state : public namcos2_shared_state
+{
+public:
+	namcos2_state(const machine_config &mconfig, device_type type, const char *tag)
+		: namcos2_shared_state(mconfig, type, tag),
+		  m_dpram(*this, "dpram"),
+		  m_paletteram(*this, "paletteram"),
+		  m_spriteram(*this, "spriteram"),
+		  m_serial_comms_ram(*this, "serialram"),
+		  m_rozram(*this, "rozram"),
+		  m_roz_ctrl(*this, "rozctrl"),
+		  m_c45_road(*this, "c45_road")
+	{ }
+	DECLARE_READ16_MEMBER(dpram_word_r);
+	DECLARE_WRITE16_MEMBER(dpram_word_w);
+	DECLARE_READ8_MEMBER(dpram_byte_r);
+	DECLARE_WRITE8_MEMBER(dpram_byte_w);
+	DECLARE_DRIVER_INIT(cosmogng);
+	DECLARE_DRIVER_INIT(sgunner2);
+	DECLARE_DRIVER_INIT(kyukaidk);
+	DECLARE_DRIVER_INIT(bubbletr);
+	DECLARE_DRIVER_INIT(suzuk8h2);
+	DECLARE_DRIVER_INIT(burnforc);
+	DECLARE_DRIVER_INIT(gollygho);
+	DECLARE_DRIVER_INIT(rthun2j);
+	DECLARE_DRIVER_INIT(sws);
+	DECLARE_DRIVER_INIT(finehour);
+	DECLARE_DRIVER_INIT(finallap);
+	DECLARE_DRIVER_INIT(dirtfoxj);
+	DECLARE_DRIVER_INIT(marvlanj);
+	DECLARE_DRIVER_INIT(sws92);
+	DECLARE_DRIVER_INIT(dsaber);
+	DECLARE_DRIVER_INIT(assault);
+	DECLARE_DRIVER_INIT(mirninja);
+	DECLARE_DRIVER_INIT(finalap2);
+	DECLARE_DRIVER_INIT(valkyrie);
+	DECLARE_DRIVER_INIT(fourtrax);
+	DECLARE_DRIVER_INIT(finalap3);
+	DECLARE_DRIVER_INIT(luckywld);
+	DECLARE_DRIVER_INIT(assaultj);
+	DECLARE_DRIVER_INIT(dsaberj);
+	DECLARE_DRIVER_INIT(suzuka8h);
+	DECLARE_DRIVER_INIT(phelios);
+	DECLARE_DRIVER_INIT(sws93);
+	DECLARE_DRIVER_INIT(metlhawk);
+	DECLARE_DRIVER_INIT(sws92g);
+	DECLARE_DRIVER_INIT(assaultp_hack);
+	DECLARE_DRIVER_INIT(assaultp);
+	DECLARE_DRIVER_INIT(ordyne);
+	DECLARE_DRIVER_INIT(marvland);
+	DECLARE_DRIVER_INIT(rthun2);
+
+	virtual void video_start();
+	void video_start_finallap();
+	void video_start_luckywld();
+	void video_start_metlhawk();
+	void video_start_sgunner();
+
+	UINT32 screen_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_finallap(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_luckywld(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_metlhawk(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	UINT32 screen_update_sgunner(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+
+	TILE_GET_INFO_MEMBER( roz_tile_info );
+
+	DECLARE_READ16_MEMBER( paletteram_word_r );
+	DECLARE_WRITE16_MEMBER( paletteram_word_w );
+	DECLARE_WRITE16_MEMBER( rozram_word_w );
+	DECLARE_READ16_MEMBER( gfx_ctrl_r );
+	DECLARE_WRITE16_MEMBER( gfx_ctrl_w );
+	DECLARE_READ16_MEMBER( serial_comms_ram_r );
+	DECLARE_WRITE16_MEMBER( serial_comms_ram_w );
+	DECLARE_READ16_MEMBER( serial_comms_ctrl_r );
+	DECLARE_WRITE16_MEMBER( serial_comms_ctrl_w );
+
+	void draw_sprite_init();
+	void update_palette();
+	void apply_clip( rectangle &clip, const rectangle &cliprect );
+	void draw_roz(bitmap_ind16 &bitmap, const rectangle &cliprect);
+	void draw_sprites(bitmap_ind16 &bitmap, const rectangle &cliprect, int pri, int control );
+	void draw_sprites_metalhawk(bitmap_ind16 &bitmap, const rectangle &cliprect, int pri );
+	UINT16 get_palette_register( int which );
+
+	int get_pos_irq_scanline() { return (get_palette_register(5) - 32) & 0xff; }
+
+	required_shared_ptr<UINT8> m_dpram;	/* 2Kx8 */
+	required_shared_ptr<UINT16> m_paletteram;
+	optional_shared_ptr<UINT16> m_spriteram;
+	optional_shared_ptr<UINT16> m_serial_comms_ram;
+	optional_shared_ptr<UINT16> m_rozram;
+	optional_shared_ptr<UINT16> m_roz_ctrl;
+	tilemap_t *m_tilemap_roz;
+	UINT16 m_gfx_ctrl;
+	UINT16 m_serial_comms_ctrl[0x8];
+
+	optional_device<namco_c45_road_device> m_c45_road;
+};
+
 /*----------- defined in video/namcos2.c -----------*/
 
 #define NAMCOS21_NUM_COLORS 0x8000
 
-VIDEO_START( namcos2 );
-SCREEN_UPDATE_IND16( namcos2_default );
-
-VIDEO_START( finallap );
-SCREEN_UPDATE_IND16( finallap );
-
-VIDEO_START( luckywld );
-SCREEN_UPDATE_IND16( luckywld );
-
-VIDEO_START( metlhawk );
-SCREEN_UPDATE_IND16( metlhawk );
-
-VIDEO_START( sgunner );
-SCREEN_UPDATE_IND16( sgunner );
-
-extern UINT16 *namcos2_sprite_ram;
-WRITE16_HANDLER( namcos2_sprite_ram_w );
-READ16_HANDLER( namcos2_sprite_ram_r );
-
-int namcos2_GetPosIrqScanline( running_machine &machine );
-
-WRITE16_HANDLER( namcos2_gfx_ctrl_w );
-READ16_HANDLER( namcos2_gfx_ctrl_r );
-
 /**************************************************************/
 /*  Shared video palette function handlers                    */
 /**************************************************************/
-READ16_HANDLER( namcos2_68k_video_palette_r );
-WRITE16_HANDLER( namcos2_68k_video_palette_w );
 
 #define VIRTUAL_PALETTE_BANKS 30
-extern UINT16 *namcos2_68k_palette_ram;
-extern size_t namcos2_68k_palette_size;
 
 /**************************************************************/
 /*  ROZ - Rotate & Zoom memory function handlers              */
 /**************************************************************/
 
-WRITE16_HANDLER( namcos2_68k_roz_ctrl_w );
-READ16_HANDLER( namcos2_68k_roz_ctrl_r );
-
-WRITE16_HANDLER( namcos2_68k_roz_ram_w );
-READ16_HANDLER( namcos2_68k_roz_ram_r );
-extern UINT16 *namcos2_68k_roz_ram;
-
 /*----------- defined in machine/namcos2.c -----------*/
 
 extern void (*namcos2_kickstart)(running_machine &machine, int internal);
-extern int namcos2_gametype;
-
-MACHINE_START( namcos2 );
-MACHINE_RESET( namcos2 );
 
 READ16_HANDLER( namcos2_flap_prot_r );
 
@@ -156,16 +311,6 @@ READ16_HANDLER( namcos2_68k_eeprom_r );
 /*  Shared data ROM memory handlerhandlers                    */
 /**************************************************************/
 READ16_HANDLER( namcos2_68k_data_rom_r );
-
-/**************************************************************/
-/* Shared serial communications processory (CPU5 ????)        */
-/**************************************************************/
-READ16_HANDLER( namcos2_68k_serial_comms_ram_r );
-WRITE16_HANDLER( namcos2_68k_serial_comms_ram_w );
-READ16_HANDLER( namcos2_68k_serial_comms_ctrl_r );
-WRITE16_HANDLER( namcos2_68k_serial_comms_ctrl_w );
-
-extern UINT16 *namcos2_68k_serial_comms_ram;
 
 /**************************************************************/
 /* Shared protection/random number generator                  */

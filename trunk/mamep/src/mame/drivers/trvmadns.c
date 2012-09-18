@@ -83,6 +83,9 @@ public:
 	DECLARE_WRITE8_MEMBER(w2);
 	DECLARE_WRITE8_MEMBER(w3);
 	DECLARE_WRITE8_MEMBER(trvmadns_tileram_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -161,7 +164,7 @@ WRITE8_MEMBER(trvmadns_state::trvmadns_banking_w)
 WRITE8_MEMBER(trvmadns_state::trvmadns_gfxram_w)
 {
 	m_gfxram[offset] = data;
-	gfx_element_mark_dirty(machine().gfx[0], offset/16);
+	machine().gfx[0]->mark_dirty(offset/16);
 }
 
 WRITE8_MEMBER(trvmadns_state::trvmadns_palette_w)
@@ -199,12 +202,12 @@ WRITE8_MEMBER(trvmadns_state::trvmadns_tileram_w)
 {
 	if(offset==0)
 	{
-		if(cpu_get_previouspc(&space.device())==0x29e9)// || cpu_get_previouspc(&space.device())==0x1b3f) //29f5
+		if(space.device().safe_pcbase()==0x29e9)// || space.device().safe_pcbase()==0x1b3f) //29f5
 		{
-			cputag_set_input_line(machine(), "maincpu", 0, HOLD_LINE);
+			machine().device("maincpu")->execute().set_input_line(0, HOLD_LINE);
 		}
 //      else
-//          logerror("%x \n", cpu_get_previouspc(&space.device()));
+//          logerror("%x \n", space.device().safe_pcbase());
 
 	}
 
@@ -259,13 +262,12 @@ static GFXDECODE_START( trvmadns )
 	GFXDECODE_ENTRY( NULL, 0x6000, charlayout, 0, 4 ) // doesn't matter where we point this, all the tiles are decoded while the game runs
 GFXDECODE_END
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(trvmadns_state::get_bg_tile_info)
 {
-	trvmadns_state *state = machine.driver_data<trvmadns_state>();
 	int tile,attr,color,flag;
 
-	attr = state->m_tileram[tile_index*2 + 0];
-	tile = state->m_tileram[tile_index*2 + 1] + ((attr & 0x01) << 8);
+	attr = m_tileram[tile_index*2 + 0];
+	tile = m_tileram[tile_index*2 + 1] + ((attr & 0x01) << 8);
 	color = (attr & 0x18) >> 3;
 	flag = TILE_FLIPXY((attr & 0x06) >> 1);
 
@@ -275,26 +277,25 @@ static TILE_GET_INFO( get_bg_tile_info )
 	//0x20? tile transparent pen 1?
 	//0x40? tile transparent pen 1?
 
-	SET_TILE_INFO(0,tile,color,flag);
+	SET_TILE_INFO_MEMBER(0,tile,color,flag);
 
 	tileinfo.category = (attr & 0x20)>>5;
 }
 
-static VIDEO_START( trvmadns )
+void trvmadns_state::video_start()
 {
-	trvmadns_state *state = machine.driver_data<trvmadns_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(trvmadns_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
 //  fg_tilemap->set_transparent_pen(1);
 
-	gfx_element_set_source(machine.gfx[0], state->m_gfxram);
+	machine().gfx[0]->set_source(m_gfxram);
 }
 
 static SCREEN_UPDATE_IND16( trvmadns )
 {
 	trvmadns_state *state = screen.machine().driver_data<trvmadns_state>();
 	int x,y,count;
-	const gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 
 	bitmap.fill(0xd, cliprect);
 
@@ -337,10 +338,9 @@ static SCREEN_UPDATE_IND16( trvmadns )
 	return 0;
 }
 
-static MACHINE_RESET( trvmadns )
+void trvmadns_state::machine_reset()
 {
-	trvmadns_state *state = machine.driver_data<trvmadns_state>();
-	state->m_old_data = -1;
+	m_old_data = -1;
 }
 
 static MACHINE_CONFIG_START( trvmadns, trvmadns_state )
@@ -349,7 +349,6 @@ static MACHINE_CONFIG_START( trvmadns, trvmadns_state )
 	MCFG_CPU_IO_MAP(io_map)
 	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
 
-	MCFG_MACHINE_RESET(trvmadns)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -362,7 +361,6 @@ static MACHINE_CONFIG_START( trvmadns, trvmadns_state )
 	MCFG_GFXDECODE(trvmadns)
 	MCFG_PALETTE_LENGTH(16)
 
-	MCFG_VIDEO_START(trvmadns)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

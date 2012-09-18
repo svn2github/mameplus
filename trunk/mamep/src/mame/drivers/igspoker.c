@@ -114,15 +114,19 @@ public:
 	DECLARE_DRIVER_INIT(cpoker);
 	DECLARE_DRIVER_INIT(igs_ncs2);
 	DECLARE_DRIVER_INIT(cpokerpk);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
+	DECLARE_VIDEO_START(cpokerpk);
 };
 
 
-static MACHINE_RESET( igs )
+void igspoker_state::machine_reset()
 {
-	igspoker_state *state = machine.driver_data<igspoker_state>();
-	state->m_nmi_enable	=	0;
-	state->m_hopper		=	0;
-	state->m_bg_enable	=	1;
+	m_nmi_enable	=	0;
+	m_hopper		=	0;
+	m_bg_enable	=	1;
 }
 
 
@@ -135,38 +139,36 @@ static TIMER_DEVICE_CALLBACK( igs_interrupt )
 		return;
 
 	if((scanline % 64) == 32)
-		device_set_input_line(state->m_maincpu, 0, ASSERT_LINE);
+		state->m_maincpu->set_input_line(0, ASSERT_LINE);
 
 	if((scanline % 64) == 0 && state->m_nmi_enable)
-		device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
 READ8_MEMBER(igspoker_state::igs_irqack_r)
 {
-	device_set_input_line(m_maincpu, 0, CLEAR_LINE);
+	m_maincpu->set_input_line(0, CLEAR_LINE);
 	return 0;
 }
 
 WRITE8_MEMBER(igspoker_state::igs_irqack_w)
 {
-//  cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+//  machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(igspoker_state::get_bg_tile_info)
 {
-	igspoker_state *state = machine.driver_data<igspoker_state>();
-	int code = state->m_bg_tile_ram[tile_index];
-	SET_TILE_INFO(1 + (tile_index & 3), code, 0, 0);
+	int code = m_bg_tile_ram[tile_index];
+	SET_TILE_INFO_MEMBER(1 + (tile_index & 3), code, 0, 0);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(igspoker_state::get_fg_tile_info)
 {
-	igspoker_state *state = machine.driver_data<igspoker_state>();
-	int code = state->m_fg_tile_ram[tile_index] | (state->m_fg_color_ram[tile_index] << 8);
+	int code = m_fg_tile_ram[tile_index] | (m_fg_color_ram[tile_index] << 8);
 	int tile = code & 0x1fff;
-	SET_TILE_INFO(0, code, tile != 0x1fff ? ((code >> 12) & 0xe) + 1 : 0, 0);
+	SET_TILE_INFO_MEMBER(0, code, tile != 0x1fff ? ((code >> 12) & 0xe) + 1 : 0, 0);
 }
 
 WRITE8_MEMBER(igspoker_state::bg_tile_w)
@@ -187,13 +189,12 @@ WRITE8_MEMBER(igspoker_state::fg_color_w)
 	m_fg_tilemap->mark_tile_dirty(offset);
 }
 
-static VIDEO_START(igs_video)
+void igspoker_state::video_start()
 {
-	igspoker_state *state = machine.driver_data<igspoker_state>();
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows,	8,  8,	64, 32);
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows,	8,  32,	64, 8);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igspoker_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS,	8,  8,	64, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igspoker_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,	8,  32,	64, 8);
 
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_fg_tilemap->set_transparent_pen(0);
 }
 
 static SCREEN_UPDATE_IND16(igs_video)
@@ -209,10 +210,9 @@ static SCREEN_UPDATE_IND16(igs_video)
 	return 0;
 }
 
-static VIDEO_START(cpokerpk)
+VIDEO_START_MEMBER(igspoker_state,cpokerpk)
 {
-	igspoker_state *state = machine.driver_data<igspoker_state>();
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows,	8,  8,	64, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(igspoker_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS,	8,  8,	64, 32);
 }
 
 static SCREEN_UPDATE_IND16(cpokerpk)
@@ -242,7 +242,7 @@ WRITE8_MEMBER(igspoker_state::igs_nmi_and_coins_w)
 
 	m_nmi_enable = data & 0x80;     // nmi enable?
 #ifdef VERBOSE
-	logerror("PC %06X: NMI change %02x\n",cpu_get_pc(&space.device()),m_nmi_enable);
+	logerror("PC %06X: NMI change %02x\n",space.device().safe_pc(),m_nmi_enable);
 #endif
 
 	m_out[0] = data;
@@ -294,7 +294,7 @@ WRITE8_MEMBER(igspoker_state::igs_lamps_w)
 READ8_MEMBER(igspoker_state::custom_io_r)
 {
 #ifdef VERBOSE
-	logerror("PC %06X: Protection read %02x\n",cpu_get_pc(&space.device()), (int) m_protection_res);
+	logerror("PC %06X: Protection read %02x\n",space.device().safe_pc(), (int) m_protection_res);
 #endif
 	return m_protection_res;
 }
@@ -302,7 +302,7 @@ READ8_MEMBER(igspoker_state::custom_io_r)
 WRITE8_MEMBER(igspoker_state::custom_io_w)
 {
 #ifdef VERBOSE
-	logerror("PC %06X: Protection write %02x\n",cpu_get_pc(&space.device()),data);
+	logerror("PC %06X: Protection write %02x\n",space.device().safe_pc(),data);
 #endif
 
 	switch (data)
@@ -1773,7 +1773,6 @@ static MACHINE_CONFIG_START( igspoker, igspoker_state )
 	MCFG_CPU_IO_MAP(igspoker_io_map)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", igs_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(igs)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1786,7 +1785,6 @@ static MACHINE_CONFIG_START( igspoker, igspoker_state )
 	MCFG_GFXDECODE(igspoker)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(igs_video)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1813,7 +1811,7 @@ static MACHINE_CONFIG_DERIVED( number10, igspoker )
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(cpokerpk)
-	MCFG_VIDEO_START(cpokerpk)
+	MCFG_VIDEO_START_OVERRIDE(igspoker_state,cpokerpk)
 
 	MCFG_OKIM6295_ADD("oki", XTAL_12MHz / 12, OKIM6295_PIN7_HIGH)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)

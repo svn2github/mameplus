@@ -29,8 +29,7 @@
 #define MB_TEST 0
 #define LOG(x) do { if (MB_TEST) logerror x; } while (0)
 
-typedef struct _mathbox_state mathbox_state;
-struct _mathbox_state
+struct mathbox_state
 {
 	device_t *device;
 	/* math box scratch registers */
@@ -55,7 +54,7 @@ INLINE mathbox_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == MATHBOX);
-	return (mathbox_state *)downcast<legacy_device_base *>(device)->token();
+	return (mathbox_state *)downcast<mathbox_device *>(device)->token();
 }
 
 
@@ -230,7 +229,7 @@ WRITE8_DEVICE_HANDLER( mathbox_go_w )
       REG5 = (REG5 & 0x00ff) | (data << 8);
       REGf = 0x0000;  /* do everything in one step */
       goto step_048;
-      break;
+      //break; // never reached
 
     case 0x1c:
       /* window test? */
@@ -338,27 +337,40 @@ static DEVICE_RESET( mathbox )
 }
 
 
-DEVICE_GET_INFO( mathbox )
+const device_type MATHBOX = &device_creator<mathbox_device>;
+
+mathbox_device::mathbox_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, MATHBOX, "MATHBOX", tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(mathbox_state);		break;
-		case DEVINFO_INT_INLINE_CONFIG_BYTES:			info->i = 0;							break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(mathbox_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(mathbox);break;
-		case DEVINFO_FCT_STOP:							/* Nothing */							break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME(mathbox);break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "MATHBOX");				break;
-		case DEVINFO_STR_FAMILY:						strcpy(info->s, "I/O devices");			break;
-		case DEVINFO_STR_VERSION:						strcpy(info->s, "1.0");					break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void mathbox_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void mathbox_device::device_start()
+{
+	DEVICE_START_NAME( mathbox )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void mathbox_device::device_reset()
+{
+	DEVICE_RESET_NAME( mathbox )(this);
 }
 
 
-DEFINE_LEGACY_DEVICE(MATHBOX, mathbox);

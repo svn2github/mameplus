@@ -22,26 +22,24 @@ Notes:
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_pow_tile_info )
+TILE_GET_INFO_MEMBER(snk68_state::get_pow_tile_info)
 {
-	snk68_state *state = machine.driver_data<snk68_state>();
-	int tile = state->m_fg_tile_offset + (state->m_pow_fg_videoram[2*tile_index] & 0xff);
-	int color = state->m_pow_fg_videoram[2*tile_index+1] & 0x07;
+	int tile = m_fg_tile_offset + (m_pow_fg_videoram[2*tile_index] & 0xff);
+	int color = m_pow_fg_videoram[2*tile_index+1] & 0x07;
 
-	SET_TILE_INFO(0, tile, color, 0);
+	SET_TILE_INFO_MEMBER(0, tile, color, 0);
 }
 
-static TILE_GET_INFO( get_searchar_tile_info )
+TILE_GET_INFO_MEMBER(snk68_state::get_searchar_tile_info)
 {
-	snk68_state *state = machine.driver_data<snk68_state>();
-	int data = state->m_pow_fg_videoram[2*tile_index];
+	int data = m_pow_fg_videoram[2*tile_index];
 	int tile = data & 0x7ff;
 	int color = (data & 0x7000) >> 12;
 
 	// used in the ikari3 intro
 	int flags = (data & 0x8000) ? TILE_FORCE_LAYER0 : 0;
 
-	SET_TILE_INFO(0, tile, color, flags);
+	SET_TILE_INFO_MEMBER(0, tile, color, flags);
 }
 
 /***************************************************************************
@@ -60,23 +58,21 @@ static void common_video_start(running_machine &machine)
 	state->m_fg_tilemap->set_scrolldy(0, machine.primary_screen->height() - 256);
 }
 
-VIDEO_START( pow )
+void snk68_state::video_start()
 {
-	snk68_state *state = machine.driver_data<snk68_state>();
 
-	state->m_fg_tilemap = tilemap_create(machine, get_pow_tile_info, tilemap_scan_cols, 8, 8, 32, 32);
-	state->m_fg_tile_offset = 0;
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(snk68_state::get_pow_tile_info),this), TILEMAP_SCAN_COLS, 8, 8, 32, 32);
+	m_fg_tile_offset = 0;
 
-	common_video_start(machine);
+	common_video_start(machine());
 }
 
-VIDEO_START( searchar )
+VIDEO_START_MEMBER(snk68_state,searchar)
 {
-	snk68_state *state = machine.driver_data<snk68_state>();
 
-	state->m_fg_tilemap = tilemap_create(machine, get_searchar_tile_info, tilemap_scan_cols, 8, 8, 32, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(snk68_state::get_searchar_tile_info),this), TILEMAP_SCAN_COLS, 8, 8, 32, 32);
 
-	common_video_start(machine);
+	common_video_start(machine());
 }
 
 /***************************************************************************
@@ -202,7 +198,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	// pow has 0x4000 tiles and independent x/y flipping
 	// the other games have > 0x4000 tiles and flipping in only one direction
 	// (globally selected)
-	int const is_pow = (machine.gfx[1]->total_elements <= 0x4000);
+	int const is_pow = (machine.gfx[1]->elements() <= 0x4000);
 	int offs;
 
 	for (offs = 0; offs < 0x800; offs += 0x40)

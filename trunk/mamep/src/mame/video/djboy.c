@@ -17,17 +17,16 @@ WRITE8_MEMBER(djboy_state::djboy_scrolly_w)
 	m_scrolly = data;
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(djboy_state::get_bg_tile_info)
 {
-	djboy_state *state = machine.driver_data<djboy_state>();
-	UINT8 attr = state->m_videoram[tile_index + 0x800];
-	int code = state->m_videoram[tile_index] + (attr & 0xf) * 256;
+	UINT8 attr = m_videoram[tile_index + 0x800];
+	int code = m_videoram[tile_index] + (attr & 0xf) * 256;
 	int color = attr >> 4;
 
 	if (color & 8)
 		code |= 0x1000;
 
-	SET_TILE_INFO(1, code, color, 0);	/* no flip */
+	SET_TILE_INFO_MEMBER(1, code, color, 0);	/* no flip */
 }
 
 WRITE8_MEMBER(djboy_state::djboy_videoram_w)
@@ -37,10 +36,9 @@ WRITE8_MEMBER(djboy_state::djboy_videoram_w)
 	m_background->mark_tile_dirty(offset & 0x7ff);
 }
 
-VIDEO_START( djboy )
+void djboy_state::video_start()
 {
-	djboy_state *state = machine.driver_data<djboy_state>();
-	state->m_background = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 16, 16, 64, 32);
+	m_background = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(djboy_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
 }
 
 WRITE8_MEMBER(djboy_state::djboy_paletteram_w)

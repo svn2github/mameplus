@@ -39,7 +39,7 @@ public:
 
 	/* devices */
 	device_t *m_mcu;
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	DECLARE_READ8_MEMBER(blktiger_from_mcu_r);
 	DECLARE_WRITE8_MEMBER(blktiger_to_mcu_w);
 	DECLARE_READ8_MEMBER(blktiger_from_main_r);
@@ -55,6 +55,13 @@ public:
 	DECLARE_WRITE8_MEMBER(blktiger_video_control_w);
 	DECLARE_WRITE8_MEMBER(blktiger_video_enable_w);
 	DECLARE_WRITE8_MEMBER(blktiger_screen_layout_w);
+	TILEMAP_MAPPER_MEMBER(bg8x4_scan);
+	TILEMAP_MAPPER_MEMBER(bg4x8_scan);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_tx_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -62,5 +69,5 @@ public:
 
 
 
-VIDEO_START( blktiger );
+
 SCREEN_UPDATE_IND16( blktiger );

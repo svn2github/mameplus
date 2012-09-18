@@ -8,8 +8,7 @@
 #include "sound/s2636.h"
 
 
-typedef struct _s2636_sound s2636_sound;
-struct _s2636_sound
+struct s2636_sound
 {
     sound_stream *channel;
     UINT8 reg[1];
@@ -22,7 +21,7 @@ static s2636_sound *get_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == S2636_SOUND);
-	return (s2636_sound *) downcast<legacy_device_base *>(device)->token();
+	return (s2636_sound *) downcast<s2636_sound_device *>(device)->token();
 }
 
 
@@ -82,21 +81,42 @@ static DEVICE_START(s2636_sound)
     token->channel = device->machine().sound().stream_alloc(*device, 0, 1, device->machine().sample_rate(), 0, s2636_update);
 }
 
+const device_type S2636_SOUND = &device_creator<s2636_sound_device>;
 
-DEVICE_GET_INFO( s2636_sound )
+s2636_sound_device::s2636_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, S2636_SOUND, "S2636", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(s2636_sound);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(s2636_sound);	break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "S2636");				break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);						break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(s2636_sound));
 }
 
-DEFINE_LEGACY_SOUND_DEVICE(S2636_SOUND, s2636_sound);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void s2636_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void s2636_sound_device::device_start()
+{
+	DEVICE_START_NAME( s2636_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void s2636_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

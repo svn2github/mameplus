@@ -132,13 +132,13 @@ WRITE8_MEMBER(champbas_state::irq_enable_w)
 	m_irq_mask = data & 1;
 
 	if (!m_irq_mask)
-		device_set_input_line(m_maincpu, 0, CLEAR_LINE);
+		m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 static TIMER_CALLBACK( exctsccr_fm_callback )
 {
 	champbas_state *state = machine.driver_data<champbas_state>();
-	device_set_input_line_and_vector(state->m_audiocpu, 0, HOLD_LINE, 0xff);
+	state->m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 // Champion Baseball has only one DAC
@@ -180,7 +180,7 @@ WRITE8_MEMBER(champbas_state::champbas_mcu_halt_w)
 		return;
 
 	data &= 1;
-	device_set_input_line(m_mcu, INPUT_LINE_HALT, data ? ASSERT_LINE : CLEAR_LINE);
+	m_mcu->execute().set_input_line(INPUT_LINE_HALT, data ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -576,36 +576,33 @@ GFXDECODE_END
  *
  *************************************/
 
-static MACHINE_START( champbas )
+MACHINE_START_MEMBER(champbas_state,champbas)
 {
-	champbas_state *state = machine.driver_data<champbas_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_mcu = machine.device(CPUTAG_MCU);
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_mcu = machine().device(CPUTAG_MCU);
 
-	state->save_item(NAME(state->m_watchdog_count));
-	state->save_item(NAME(state->m_palette_bank));
-	state->save_item(NAME(state->m_gfx_bank));
+	save_item(NAME(m_watchdog_count));
+	save_item(NAME(m_palette_bank));
+	save_item(NAME(m_gfx_bank));
 }
 
-static MACHINE_START( exctsccr )
+MACHINE_START_MEMBER(champbas_state,exctsccr)
 {
-	champbas_state *state = machine.driver_data<champbas_state>();
-	state->m_audiocpu = machine.device("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	// FIXME
-	machine.scheduler().timer_pulse(attotime::from_hz(75), FUNC(exctsccr_fm_callback)); /* updates fm */
+	machine().scheduler().timer_pulse(attotime::from_hz(75), FUNC(exctsccr_fm_callback)); /* updates fm */
 
-	MACHINE_START_CALL(champbas);
+	MACHINE_START_CALL_MEMBER(champbas);
 }
 
 
-static MACHINE_RESET( champbas )
+MACHINE_RESET_MEMBER(champbas_state,champbas)
 {
-	champbas_state *state = machine.driver_data<champbas_state>();
 
-	state->m_palette_bank = 0;
-	state->m_gfx_bank = 0;	// talbot has only 1 bank
+	m_palette_bank = 0;
+	m_gfx_bank = 0;	// talbot has only 1 bank
 }
 
 static INTERRUPT_GEN( vblank_irq )
@@ -613,7 +610,7 @@ static INTERRUPT_GEN( vblank_irq )
 	champbas_state *state = device->machine().driver_data<champbas_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, 0, ASSERT_LINE);
+		device->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -628,8 +625,8 @@ static MACHINE_CONFIG_START( talbot, champbas_state )
 	MCFG_CPU_ADD(CPUTAG_MCU, ALPHA8201, XTAL_18_432MHz/6/8)
 	MCFG_CPU_PROGRAM_MAP(mcu_map)
 
-	MCFG_MACHINE_START(champbas)
-	MCFG_MACHINE_RESET(champbas)
+	MCFG_MACHINE_START_OVERRIDE(champbas_state,champbas)
+	MCFG_MACHINE_RESET_OVERRIDE(champbas_state,champbas)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -642,8 +639,8 @@ static MACHINE_CONFIG_START( talbot, champbas_state )
 	MCFG_GFXDECODE(talbot)
 	MCFG_PALETTE_LENGTH(0x200)
 
-	MCFG_PALETTE_INIT(champbas)
-	MCFG_VIDEO_START(champbas)
+	MCFG_PALETTE_INIT_OVERRIDE(champbas_state,champbas)
+	MCFG_VIDEO_START_OVERRIDE(champbas_state,champbas)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -663,8 +660,8 @@ static MACHINE_CONFIG_START( champbas, champbas_state )
 	MCFG_CPU_ADD("sub", Z80, XTAL_18_432MHz/6)
 	MCFG_CPU_PROGRAM_MAP(champbas_sub_map)
 
-	MCFG_MACHINE_START(champbas)
-	MCFG_MACHINE_RESET(champbas)
+	MCFG_MACHINE_START_OVERRIDE(champbas_state,champbas)
+	MCFG_MACHINE_RESET_OVERRIDE(champbas_state,champbas)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -677,8 +674,8 @@ static MACHINE_CONFIG_START( champbas, champbas_state )
 	MCFG_GFXDECODE(champbas)
 	MCFG_PALETTE_LENGTH(0x200)
 
-	MCFG_PALETTE_INIT(champbas)
-	MCFG_VIDEO_START(champbas)
+	MCFG_PALETTE_INIT_OVERRIDE(champbas_state,champbas)
+	MCFG_VIDEO_START_OVERRIDE(champbas_state,champbas)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -720,8 +717,8 @@ static MACHINE_CONFIG_START( exctsccr, champbas_state )
 	MCFG_CPU_ADD(CPUTAG_MCU, ALPHA8301, XTAL_18_432MHz/6/8)		/* Actually 8302 */
 	MCFG_CPU_PROGRAM_MAP(mcu_map)
 
-	MCFG_MACHINE_START(exctsccr)
-	MCFG_MACHINE_RESET(champbas)
+	MCFG_MACHINE_START_OVERRIDE(champbas_state,exctsccr)
+	MCFG_MACHINE_RESET_OVERRIDE(champbas_state,champbas)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -734,8 +731,8 @@ static MACHINE_CONFIG_START( exctsccr, champbas_state )
 	MCFG_GFXDECODE(exctsccr)
 	MCFG_PALETTE_LENGTH(0x200)
 
-	MCFG_PALETTE_INIT(exctsccr)
-	MCFG_VIDEO_START(exctsccr)
+	MCFG_PALETTE_INIT_OVERRIDE(champbas_state,exctsccr)
+	MCFG_VIDEO_START_OVERRIDE(champbas_state,exctsccr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -771,8 +768,8 @@ static MACHINE_CONFIG_START( exctsccrb, champbas_state )
 	MCFG_CPU_ADD("sub", Z80, XTAL_18_432MHz/6)
 	MCFG_CPU_PROGRAM_MAP(champbas_sub_map)
 
-	MCFG_MACHINE_START(champbas)
-	MCFG_MACHINE_RESET(champbas)
+	MCFG_MACHINE_START_OVERRIDE(champbas_state,champbas)
+	MCFG_MACHINE_RESET_OVERRIDE(champbas_state,champbas)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -785,8 +782,8 @@ static MACHINE_CONFIG_START( exctsccrb, champbas_state )
 	MCFG_GFXDECODE(exctsccr)
 	MCFG_PALETTE_LENGTH(0x200)
 
-	MCFG_PALETTE_INIT(exctsccr)
-	MCFG_VIDEO_START(exctsccr)
+	MCFG_PALETTE_INIT_OVERRIDE(champbas_state,exctsccr)
+	MCFG_VIDEO_START_OVERRIDE(champbas_state,exctsccr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -981,7 +978,7 @@ ROM_START( champbb2j )
 	ROM_LOAD( "bpr.5e", 0x0020, 0x100, CRC(2e481ffa) SHA1(bc8979efd43bee8be0ce96ebdacc873a5821e06e) ) /* look-up table */
 ROM_END
 
-ROM_START( exctsccr )
+ROM_START( exctsccr ) /* Teams: ITA AUS GBR FRA FRG BRA */
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "1_g10.bin",    0x0000, 0x2000, CRC(aa68df66) SHA1(f10cac5a4c5aad1e1eb8835174dc8d517bb2921a) )
 	ROM_LOAD( "2_h10.bin",    0x2000, 0x2000, CRC(2d8f8326) SHA1(8809e7b081fa2a1966cb51ac969fd7b468d35be0) )
@@ -1002,8 +999,8 @@ ROM_START( exctsccr )
 	ROM_LOAD( "5_b5.bin",     0x0000, 0x2000, CRC(35f4f8c9) SHA1(cdf5bbfea9abdd338938e5f4499d2d71ce3c6237) ) /* planes 0,1 */
 
 	ROM_REGION( 0x02000, "gfx3", 0 )	// 4bpp sprites
-	ROM_LOAD( "2_k5.bin",     0x0000, 0x1000, CRC(7f9cace2) SHA1(bf05a31716f3ca1c2fd1034cd1f39e2d21cdaed3) )
-	ROM_LOAD( "3_l5.bin",     0x1000, 0x1000, CRC(db2d9e0d) SHA1(6ec09a47f7aea6bf31eb0ee78f44012f4d92de8a) )
+	ROM_LOAD( "2.5k",     0x0000, 0x1000, CRC(7f9cace2) SHA1(bf05a31716f3ca1c2fd1034cd1f39e2d21cdaed3) )
+	ROM_LOAD( "3.5l",     0x1000, 0x1000, CRC(db2d9e0d) SHA1(6ec09a47f7aea6bf31eb0ee78f44012f4d92de8a) )
 
 	ROM_REGION( 0x0220, "proms", 0 )
 	ROM_LOAD( "prom1.e1",     0x0000, 0x0020, CRC(d9b10bf0) SHA1(bc1263331968f4bf37eb70ec4f56a8cb763c29d2) ) /* palette */
@@ -1011,7 +1008,7 @@ ROM_START( exctsccr )
 	ROM_LOAD( "prom2.8r",     0x0120, 0x0100, CRC(8a9c0edf) SHA1(8aad387e9409cff0eeb42eeb57e9ea88770a8c9a) ) /* lookup table */
 ROM_END
 
-ROM_START( exctsccra )
+ROM_START( exctsccra ) /* Teams: ITA AUS GBR FRA FRG BRA */
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "1_g10.bin",    0x0000, 0x2000, CRC(aa68df66) SHA1(f10cac5a4c5aad1e1eb8835174dc8d517bb2921a) )
 	ROM_LOAD( "2_h10.bin",    0x2000, 0x2000, CRC(2d8f8326) SHA1(8809e7b081fa2a1966cb51ac969fd7b468d35be0) )
@@ -1032,8 +1029,8 @@ ROM_START( exctsccra )
 	ROM_LOAD( "5_b5.bin",     0x0000, 0x2000, CRC(35f4f8c9) SHA1(cdf5bbfea9abdd338938e5f4499d2d71ce3c6237) ) /* planes 0,1 */
 
 	ROM_REGION( 0x02000, "gfx3", 0 )	// 4bpp sprites
-	ROM_LOAD( "2_k5.bin",     0x0000, 0x1000, CRC(7f9cace2) SHA1(bf05a31716f3ca1c2fd1034cd1f39e2d21cdaed3) )
-	ROM_LOAD( "3_l5.bin",     0x1000, 0x1000, CRC(db2d9e0d) SHA1(6ec09a47f7aea6bf31eb0ee78f44012f4d92de8a) )
+	ROM_LOAD( "2.5k",     0x0000, 0x1000, CRC(7f9cace2) SHA1(bf05a31716f3ca1c2fd1034cd1f39e2d21cdaed3) )
+	ROM_LOAD( "3.5l",     0x1000, 0x1000, CRC(db2d9e0d) SHA1(6ec09a47f7aea6bf31eb0ee78f44012f4d92de8a) )
 
 	ROM_REGION( 0x0220, "proms", 0 )
 	ROM_LOAD( "prom1.e1",     0x0000, 0x0020, CRC(d9b10bf0) SHA1(bc1263331968f4bf37eb70ec4f56a8cb763c29d2) ) /* palette */
@@ -1041,24 +1038,25 @@ ROM_START( exctsccra )
 	ROM_LOAD( "prom2.8r",     0x0120, 0x0100, CRC(8a9c0edf) SHA1(8aad387e9409cff0eeb42eeb57e9ea88770a8c9a) ) /* lookup table */
 ROM_END
 
-ROM_START( exctsccrj )
+ROM_START( exctsccru ) /* Teams: ITA USA GBR FRA FRG BRA */
 	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "1.10g",    0x0000, 0x2000, CRC(d1bfdf75) SHA1(a4a9bb340712401b1d24705c26d996a798776d4f) )
-	ROM_LOAD( "2.10h",    0x2000, 0x2000, CRC(5c61f0fe) SHA1(8c6751b80f89d8744d3eaa2a6da2cafdde968ed2) )
-	ROM_LOAD( "3.10j",    0x4000, 0x2000, CRC(8f213b10) SHA1(5bffaee2725fe34b0614fcf1b4dc1c9a2f2df36c) )
+	ROM_LOAD( "vr1u.g10",    0x0000, 0x2000, CRC(ef39676d) SHA1(f7728d86b2c68bb93a0fcf02931cda8cb65e6d48) ) /* Team USA in place of Austria */
+	ROM_LOAD( "vr2u.h10",    0x2000, 0x2000, CRC(37994b86) SHA1(681a27a009909cc8d26f8046c54532ec56145f97) )
+	ROM_LOAD( "vr3u.j10",    0x4000, 0x2000, CRC(2ed3c6bb) SHA1(d3bad24cbbb34eb6c43cb603cbf66ab35be2c845) )
 
 	ROM_REGION( 0x10000, "audiocpu", 0 )
-	ROM_LOAD( "0.6h",     0x0000, 0x2000, CRC(548b08a2) SHA1(4cdcc67e34e56cbac5d07e9603650073de0bb5d1) )
-	ROM_LOAD( "9_f6.bin", 0x2000, 0x2000, CRC(639998f5) SHA1(c4ff5e5e75d53dea38449f323186d08d5b57bf90) )
-	ROM_LOAD( "8.6d",     0x4000, 0x2000, CRC(b6b209a5) SHA1(e49a0db65b29337ac6b919237067b1990f2233ab) )
-	ROM_LOAD( "7.6c",     0x6000, 0x2000, CRC(8856452a) SHA1(4494c225c9df97da09c180caadb4dda49d0d5392) )
+	ROM_LOAD( "vr0u.6h",      0x0000, 0x2000, CRC(cbb035c6) SHA1(e89e69678335edf1cadc7b7949f8cfe47dfabc46) )
+	ROM_LOAD( "9_f6.bin",     0x2000, 0x2000, CRC(639998f5) SHA1(c4ff5e5e75d53dea38449f323186d08d5b57bf90) )
+	ROM_LOAD( "8_d6.bin",     0x4000, 0x2000, CRC(88651ee1) SHA1(2052e1b3f9784439369f464e31f4a2b0d1bb0565) )
+	ROM_LOAD( "7_c6.bin",     0x6000, 0x2000, CRC(6d51521e) SHA1(2809bd2e61f40dcd31d43c62520982bdcfb0a865) )
+	ROM_LOAD( "1_a6.bin",     0x8000, 0x1000, CRC(20f2207e) SHA1(b1ed2237d0bd50ddbe593fd2fbff9f1d67c1eb11) )
 
 	ROM_REGION( 0x04000, "gfx1", 0 )	// 3bpp chars + sprites: rearranged by DRIVER_INIT to leave only chars
-	ROM_LOAD( "4.5a",     0x0000, 0x2000, CRC(c4259307) SHA1(7bd4e229a5e1a5136826a57aa61810fcdf9c5027) ) /* planes 0,1 */
-	ROM_LOAD( "6.5c",     0x2000, 0x2000, CRC(cca53367) SHA1(f06ebf2ab8f8f10cfe118af490017972990e3073) ) /* plane 3 */
+	ROM_LOAD( "vr4u.a5",     0x0000, 0x2000, CRC(103bb739) SHA1(335d89b3a374daa3fd1bd3fd66a82e7310303051) ) /* planes 0,1 */
+	ROM_LOAD( "vr6u.c5",     0x2000, 0x2000, CRC(a5b2b303) SHA1(0dd1912baa8236cba2baa4bc3d2955fd19617be9) ) /* plane 3 */
 
 	ROM_REGION( 0x04000, "gfx2", 0 )	// 3bpp chars + sprites: rearranged by DRIVER_INIT to leave only sprites
-	ROM_LOAD( "5.5b",     0x0000, 0x2000, CRC(851d1a18) SHA1(2cfad530c8f9d95094fd0aacd2e0965b0300898c) ) /* planes 0,1 */
+	ROM_LOAD( "5_b5.bin",     0x0000, 0x2000, CRC(35f4f8c9) SHA1(cdf5bbfea9abdd338938e5f4499d2d71ce3c6237) ) /* planes 0,1 */
 
 	ROM_REGION( 0x02000, "gfx3", 0 )	// 4bpp sprites
 	ROM_LOAD( "2.5k",     0x0000, 0x1000, CRC(7f9cace2) SHA1(bf05a31716f3ca1c2fd1034cd1f39e2d21cdaed3) )
@@ -1070,9 +1068,9 @@ ROM_START( exctsccrj )
 	ROM_LOAD( "prom2.8r",     0x0120, 0x0100, CRC(8a9c0edf) SHA1(8aad387e9409cff0eeb42eeb57e9ea88770a8c9a) ) /* lookup table */
 ROM_END
 
-ROM_START( exctsccrj2 )
+ROM_START( exctsccrj ) /* Teams: JPN USA GBR FRA FRG BRA */
 	ROM_REGION( 0x10000, "maincpu", 0 )
-	ROM_LOAD( "1_10g.bin",    0x0000, 0x2000, CRC(310298a2) SHA1(b05a697ec2ed1bf4947fcc5f823ed9cb8daeee15) )
+	ROM_LOAD( "1_10g.bin",    0x0000, 0x2000, CRC(310298a2) SHA1(b05a697ec2ed1bf4947fcc5f823ed9cb8daeee15) ) /* Corrects "ENG" to GBR & "GFR" to FGR */
 	ROM_LOAD( "2_10h.bin",    0x2000, 0x2000, CRC(030fd0b7) SHA1(a4c57c5eb1c76dc7e5d9be48036f21331f9529d9) )
 	ROM_LOAD( "3_10j.bin",    0x4000, 0x2000, CRC(1a51ff1f) SHA1(2a657f95807bfbf172f7d22e20b9ce75f453d028) )
 
@@ -1093,6 +1091,35 @@ ROM_START( exctsccrj2 )
 	ROM_REGION( 0x02000, "gfx3", 0 )	// 4bpp sprites
 	ROM_LOAD( "2.5k",         0x0000, 0x1000, CRC(7f9cace2) SHA1(bf05a31716f3ca1c2fd1034cd1f39e2d21cdaed3) )
 	ROM_LOAD( "3.5l",         0x1000, 0x1000, CRC(db2d9e0d) SHA1(6ec09a47f7aea6bf31eb0ee78f44012f4d92de8a) )
+
+	ROM_REGION( 0x0220, "proms", 0 )
+	ROM_LOAD( "prom1.e1",     0x0000, 0x0020, CRC(d9b10bf0) SHA1(bc1263331968f4bf37eb70ec4f56a8cb763c29d2) ) /* palette */
+	ROM_LOAD( "prom3.k5",     0x0020, 0x0100, CRC(b5db1c2c) SHA1(900aaaac6b674a9c5c7b7804a4b0c3d5cce761aa) ) /* lookup table */
+	ROM_LOAD( "prom2.8r",     0x0120, 0x0100, CRC(8a9c0edf) SHA1(8aad387e9409cff0eeb42eeb57e9ea88770a8c9a) ) /* lookup table */
+ROM_END
+
+ROM_START( exctsccrjo ) /* Teams: JPN USA ENG FRA GFR BRA */
+	ROM_REGION( 0x10000, "maincpu", 0 )
+	ROM_LOAD( "1.10g",    0x0000, 0x2000, CRC(d1bfdf75) SHA1(a4a9bb340712401b1d24705c26d996a798776d4f) )
+	ROM_LOAD( "2.10h",    0x2000, 0x2000, CRC(5c61f0fe) SHA1(8c6751b80f89d8744d3eaa2a6da2cafdde968ed2) )
+	ROM_LOAD( "3.10j",    0x4000, 0x2000, CRC(8f213b10) SHA1(5bffaee2725fe34b0614fcf1b4dc1c9a2f2df36c) )
+
+	ROM_REGION( 0x10000, "audiocpu", 0 )
+	ROM_LOAD( "0.6h",     0x0000, 0x2000, CRC(548b08a2) SHA1(4cdcc67e34e56cbac5d07e9603650073de0bb5d1) )
+	ROM_LOAD( "9.f6",     0x2000, 0x2000, CRC(639998f5) SHA1(c4ff5e5e75d53dea38449f323186d08d5b57bf90) )
+	ROM_LOAD( "8.6d",     0x4000, 0x2000, CRC(b6b209a5) SHA1(e49a0db65b29337ac6b919237067b1990f2233ab) )
+	ROM_LOAD( "7.6c",     0x6000, 0x2000, CRC(8856452a) SHA1(4494c225c9df97da09c180caadb4dda49d0d5392) )
+
+	ROM_REGION( 0x04000, "gfx1", 0 )	// 3bpp chars + sprites: rearranged by DRIVER_INIT to leave only chars
+	ROM_LOAD( "4.5a",     0x0000, 0x2000, CRC(c4259307) SHA1(7bd4e229a5e1a5136826a57aa61810fcdf9c5027) ) /* planes 0,1 */
+	ROM_LOAD( "6.5c",     0x2000, 0x2000, CRC(cca53367) SHA1(f06ebf2ab8f8f10cfe118af490017972990e3073) ) /* plane 3 */
+
+	ROM_REGION( 0x04000, "gfx2", 0 )	// 3bpp chars + sprites: rearranged by DRIVER_INIT to leave only sprites
+	ROM_LOAD( "5.5b",     0x0000, 0x2000, CRC(851d1a18) SHA1(2cfad530c8f9d95094fd0aacd2e0965b0300898c) ) /* planes 0,1 */
+
+	ROM_REGION( 0x02000, "gfx3", 0 )	// 4bpp sprites
+	ROM_LOAD( "2.5k",     0x0000, 0x1000, CRC(7f9cace2) SHA1(bf05a31716f3ca1c2fd1034cd1f39e2d21cdaed3) )
+	ROM_LOAD( "3.5l",     0x1000, 0x1000, CRC(db2d9e0d) SHA1(6ec09a47f7aea6bf31eb0ee78f44012f4d92de8a) )
 
 	ROM_REGION( 0x0220, "proms", 0 )
 	ROM_LOAD( "prom1.e1",     0x0000, 0x0020, CRC(d9b10bf0) SHA1(bc1263331968f4bf37eb70ec4f56a8cb763c29d2) ) /* palette */
@@ -1248,8 +1275,9 @@ GAME( 1983, champbb2a,  champbb2, champmcu, champbas, champbas_state, champbas, 
 GAME( 1983, champbb2j,  champbb2, champmcu, champbas, champbas_state, champbas, ROT0,   "Alpha Denshi Co.", "Champion Baseball II (Japan)", GAME_NOT_WORKING | GAME_SUPPORTS_SAVE )
 
 GAME( 1983, exctsccr,   0,        exctsccr, exctsccr, champbas_state, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer", GAME_SUPPORTS_SAVE )
+GAME( 1983, exctsccru,  exctsccr, exctsccr, exctsccr, champbas_state, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer (US)", GAME_SUPPORTS_SAVE )
 GAME( 1983, exctsccra,  exctsccr, exctsccr, exctsccr, champbas_state, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer (alternate music)", GAME_SUPPORTS_SAVE )
-GAME( 1983, exctsccrj,  exctsccr, exctsccr, exctsccr, champbas_state, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer (Japan set 1)", GAME_SUPPORTS_SAVE )
-GAME( 1983, exctsccrj2, exctsccr, exctsccr, exctsccr, champbas_state, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer (Japan set 2)", GAME_SUPPORTS_SAVE )
+GAME( 1983, exctsccrj,  exctsccr, exctsccr, exctsccr, champbas_state, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer (Japan)", GAME_SUPPORTS_SAVE )
+GAME( 1983, exctsccrjo, exctsccr, exctsccr, exctsccr, champbas_state, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer (Japan, older)", GAME_SUPPORTS_SAVE )
 GAME( 1983, exctsccrb,  exctsccr, exctsccrb,exctsccr, champbas_state, exctsccr, ROT270, "bootleg",          "Exciting Soccer (bootleg)", GAME_SUPPORTS_SAVE )
 GAME( 1984, exctscc2,   0,        exctsccr, exctsccr, champbas_state, exctsccr, ROT270, "Alpha Denshi Co.", "Exciting Soccer II", GAME_SUPPORTS_SAVE )

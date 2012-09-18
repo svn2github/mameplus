@@ -35,11 +35,11 @@ static TIMER_CALLBACK(reset_timer_callback)
 void n64_periphs::reset_tick()
 {
 	reset_timer->adjust(attotime::never);
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ2, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ2, CLEAR_LINE);
 	machine().device("maincpu")->reset();
 	machine().device("rsp")->reset();
 	machine().device("rcp")->reset();
-	cputag_set_input_line(machine(), "rsp", INPUT_LINE_HALT, ASSERT_LINE);
+	machine().device("rsp")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 	reset_held = false;
 }
 
@@ -49,7 +49,7 @@ void n64_periphs::poll_reset_button(bool button)
 	reset_held = button;
 	if(!old_held && reset_held)
 	{
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ2, ASSERT_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ2, ASSERT_LINE);
 	}
 	else if(old_held && reset_held)
 	{
@@ -263,7 +263,7 @@ READ32_MEMBER( n64_periphs::mi_reg_r )
 			break;
 
 		default:
-			logerror("mi_reg_r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(&mem_map->device()));
+			logerror("mi_reg_r: %08X, %08X at %08X\n", offset, mem_mask, mem_map->device().safe_pc());
 			break;
 	}
 
@@ -350,7 +350,7 @@ WRITE32_MEMBER( n64_periphs::mi_reg_w )
 		}
 
 		default:
-			logerror("mi_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(maincpu));
+			logerror("mi_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, maincpu->safe_pc());
 			break;
 	}
 }
@@ -365,12 +365,12 @@ void n64_periphs::check_interrupts()
 	if (mi_intr_mask & mi_interrupt)
 	{
 		//printf("Asserting IRQ, %02x : %02x\n", mi_intr_mask, mi_interrupt); fflush(stdout);
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ0, ASSERT_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 	}
 	else
 	{
 		//printf("Deasserting IRQ, %02x : %02x\n", mi_intr_mask, mi_interrupt); fflush(stdout);
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ0, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 	}
 }
 
@@ -469,7 +469,7 @@ READ32_MEMBER( n64_periphs::rdram_reg_r )
 	//printf("rdram_reg_r %08x = %08x\n", offset * 4, rdram_regs[offset]); fflush(stdout);
 	if(offset > 0x24/4)
 	{
-		logerror("rdram_reg_r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(maincpu));
+		logerror("rdram_reg_r: %08X, %08X at %08X\n", offset, mem_mask, maincpu->safe_pc());
 		return 0;
 	}
 	return rdram_regs[offset];
@@ -480,7 +480,7 @@ WRITE32_MEMBER( n64_periphs::rdram_reg_w )
 	//printf("rdram_reg_w %08x %08x %08x\n", offset * 4, data, mem_mask); fflush(stdout);
 	if(offset > 0x24/4)
 	{
-		logerror("rdram_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(maincpu));
+		logerror("rdram_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, maincpu->safe_pc());
 		return;
 	}
 	COMBINE_DATA(&rdram_regs[offset]);
@@ -564,15 +564,15 @@ void n64_periphs::sp_set_status(UINT32 status)
 	//printf("sp_set_status: %08x\n", status);
 	if (status & 0x1)
 	{
-		device_set_input_line(rspcpu, INPUT_LINE_HALT, ASSERT_LINE);
-        cpu_set_reg(rspcpu, RSP_SR, cpu_get_reg(rspcpu, RSP_SR) | RSP_STATUS_HALT);
+		rspcpu->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
+        rspcpu->state().set_state_int(RSP_SR, rspcpu->state().state_int(RSP_SR) | RSP_STATUS_HALT);
 	}
 
 	if (status & 0x2)
 	{
-        cpu_set_reg(rspcpu, RSP_SR, cpu_get_reg(rspcpu, RSP_SR) | RSP_STATUS_BROKE);
+        rspcpu->state().set_state_int(RSP_SR, rspcpu->state().state_int(RSP_SR) | RSP_STATUS_BROKE);
 
-        if (cpu_get_reg(rspcpu, RSP_SR) & RSP_STATUS_INTR_BREAK)
+        if (rspcpu->state().state_int(RSP_SR) & RSP_STATUS_INTR_BREAK)
 		{
 			signal_rcp_interrupt(SP_INTERRUPT);
 		}
@@ -599,7 +599,7 @@ UINT32 n64_periphs::sp_reg_r(UINT32 offset)
 		case 0x10/4:		// SP_STATUS_REG
 			//machine().scheduler().synchronize();
 			//machine().scheduler().boost_interleave(attotime::from_msec(1), attotime::from_msec(m));
-            ret = cpu_get_reg(rspcpu, RSP_SR);
+            ret = rspcpu->state().state_int(RSP_SR);
 			break;
 
 		case 0x14/4:		// SP_DMA_FULL_REG
@@ -612,7 +612,7 @@ UINT32 n64_periphs::sp_reg_r(UINT32 offset)
 
 		case 0x1c/4:		// SP_SEMAPHORE_REG
 			//machine().scheduler().boost_interleave(attotime::from_usec(1), attotime::from_usec(1));
-			device_yield(machine().device("maincpu"));
+			machine().device("maincpu")->execute().yield();
             if( sp_semaphore )
             {
                 ret = 1;
@@ -669,15 +669,15 @@ UINT32 n64_periphs::sp_reg_r(UINT32 offset)
 		}
 
         case 0x40000/4:     // PC
-            ret = cpu_get_reg(rspcpu, RSP_PC) & 0x00000fff;
+            ret = rspcpu->state().state_int(RSP_PC) & 0x00000fff;
 			break;
 
         default:
-            logerror("sp_reg_r: %08X at %08X\n", offset, cpu_get_pc(maincpu));
+            logerror("sp_reg_r: %08X at %08X\n", offset, maincpu->safe_pc());
             break;
 	}
 
-	//printf("%08x sp_reg_r %08x = %08x\n", (UINT32)cpu_get_reg(maincpu, MIPS3_PC), offset * 4, ret); fflush(stdout);
+	//printf("%08x sp_reg_r %08x = %08x\n", (UINT32)maincpu->state().state_int(MIPS3_PC), offset * 4, ret); fflush(stdout);
 	return ret;
 }
 
@@ -688,7 +688,7 @@ READ32_DEVICE_HANDLER( n64_sp_reg_r )
 
 void n64_periphs::sp_reg_w(UINT32 offset, UINT32 data, UINT32 mem_mask)
 {
-	//printf("%08x sp_reg_w %08x %08x %08x\n", (UINT32)cpu_get_reg(maincpu, MIPS3_PC), offset * 4, data, mem_mask); fflush(stdout);
+	//printf("%08x sp_reg_w %08x %08x %08x\n", (UINT32)maincpu->state().state_int(MIPS3_PC), offset * 4, data, mem_mask); fflush(stdout);
 
 	if ((offset & 0x10000) == 0)
 	{
@@ -718,19 +718,19 @@ void n64_periphs::sp_reg_w(UINT32 offset, UINT32 data, UINT32 mem_mask)
 
             case 0x10/4:        // RSP_STATUS_REG
             {
-            	UINT32 oldstatus = cpu_get_reg(rspcpu, RSP_SR);
+            	UINT32 oldstatus = rspcpu->state().state_int(RSP_SR);
             	UINT32 newstatus = oldstatus;
 
                 // printf( "RSP_STATUS_REG Write; %08x\n", data );
                 if (data & 0x00000001)      // clear halt
                 {
-					device_set_input_line(rspcpu, INPUT_LINE_HALT, CLEAR_LINE);
+					rspcpu->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
 					newstatus &= ~RSP_STATUS_HALT;
 					//printf("***SP HALT CLR***\n"); fflush(stdout);
                 }
                 if (data & 0x00000002)      // set halt
                 {
-                    device_set_input_line(rspcpu, INPUT_LINE_HALT, ASSERT_LINE);
+                    rspcpu->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
                     newstatus |= RSP_STATUS_HALT;
 					//printf("***SP HALT SET***\n"); fflush(stdout);
                 }
@@ -760,8 +760,8 @@ void n64_periphs::sp_reg_w(UINT32 offset, UINT32 data, UINT32 mem_mask)
 					//printf("***SP SSTEP SET***\n"); fflush(stdout);
                     if(!(oldstatus & (RSP_STATUS_BROKE | RSP_STATUS_HALT)))
                     {
-                        cpu_set_reg(rspcpu, RSP_STEPCNT, 1 );
-                        device_yield(machine().device("rsp"));
+                        rspcpu->state().set_state_int(RSP_STEPCNT, 1 );
+                        machine().device("rsp")->execute().yield();
                     }
                 }
                 if (data & 0x00000080)
@@ -854,7 +854,7 @@ void n64_periphs::sp_reg_w(UINT32 offset, UINT32 data, UINT32 mem_mask)
                     newstatus |= RSP_STATUS_SIGNAL7;		// set signal 7
 					//printf("***SP SIG7 SET***\n"); fflush(stdout);
                 }
-                cpu_set_reg(rspcpu, RSP_SR, newstatus);
+                rspcpu->state().set_state_int(RSP_SR, newstatus);
                 break;
             }
 
@@ -868,7 +868,7 @@ void n64_periphs::sp_reg_w(UINT32 offset, UINT32 data, UINT32 mem_mask)
 				break;
 
 			default:
-				logerror("sp_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(maincpu));
+				logerror("sp_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, maincpu->safe_pc());
 				break;
 		}
 	}
@@ -877,18 +877,18 @@ void n64_periphs::sp_reg_w(UINT32 offset, UINT32 data, UINT32 mem_mask)
         switch (offset & 0xffff)
         {
             case 0x00/4:        // SP_PC_REG
-                if( cpu_get_reg(rspcpu, RSP_NEXTPC) != 0xffffffff )
+                if( rspcpu->state().state_int(RSP_NEXTPC) != 0xffffffff )
                 {
-                    cpu_set_reg(rspcpu, RSP_NEXTPC, 0x1000 | (data & 0xfff));
+                    rspcpu->state().set_state_int(RSP_NEXTPC, 0x1000 | (data & 0xfff));
                 }
                 else
                 {
-                    cpu_set_reg(rspcpu, RSP_PC, 0x1000 | (data & 0xfff));
+                    rspcpu->state().set_state_int(RSP_PC, 0x1000 | (data & 0xfff));
                 }
                 break;
 
             default:
-                logerror("sp_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(maincpu));
+                logerror("sp_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, maincpu->safe_pc());
                 break;
 		}
 	}
@@ -940,11 +940,11 @@ READ32_DEVICE_HANDLER( n64_dp_reg_r )
 		}
 
 		default:
-			logerror("dp_reg_r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(device));
+			logerror("dp_reg_r: %08X, %08X at %08X\n", offset, mem_mask, device->safe_pc());
 			break;
 	}
 
-	//printf("%08x dp_reg_r %08x = %08x\n", (UINT32)cpu_get_reg(device->machine().device("rsp"), RSP_PC), offset, ret); fflush(stdout);
+	//printf("%08x dp_reg_r %08x = %08x\n", (UINT32)device->machine().device("rsp")->state().state_int(RSP_PC), offset, ret); fflush(stdout);
 	return ret;
 }
 
@@ -953,7 +953,7 @@ WRITE32_DEVICE_HANDLER( n64_dp_reg_w )
 	n64_state *state = device->machine().driver_data<n64_state>();
 	n64_periphs *periphs = device->machine().device<n64_periphs>("rcp");
 
-	//printf("%08x dp_reg_w %08x %08x %08x\n", (UINT32)cpu_get_reg(device->machine().device("rsp"), RSP_PC), offset, data, mem_mask); fflush(stdout);
+	//printf("%08x dp_reg_w %08x %08x %08x\n", (UINT32)device->machine().device("rsp")->state().state_int(RSP_PC), offset, data, mem_mask); fflush(stdout);
 	switch (offset)
 	{
 		case 0x00/4:		// DP_START_REG
@@ -984,7 +984,7 @@ WRITE32_DEVICE_HANDLER( n64_dp_reg_w )
 		}
 
 		default:
-			logerror("dp_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(device));
+			logerror("dp_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, device->safe_pc());
 			break;
 	}
 }
@@ -1115,7 +1115,7 @@ READ32_MEMBER( n64_periphs::vi_reg_r )
 			break;
 
 		default:
-			logerror("vi_reg_r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(maincpu));
+			logerror("vi_reg_r: %08X, %08X at %08X\n", offset, mem_mask, maincpu->safe_pc());
 			break;
 	}
 
@@ -1205,7 +1205,7 @@ WRITE32_MEMBER( n64_periphs::vi_reg_w )
         */
 
 		default:
-			logerror("vi_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(maincpu));
+			logerror("vi_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, maincpu->safe_pc());
 			break;
 	}
 }
@@ -1354,7 +1354,7 @@ READ32_MEMBER( n64_periphs::ai_reg_r )
 			break;
 
         default:
-            logerror("ai_reg_r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(maincpu));
+            logerror("ai_reg_r: %08X, %08X at %08X\n", offset, mem_mask, maincpu->safe_pc());
             break;
     }
 
@@ -1396,7 +1396,7 @@ WRITE32_MEMBER( n64_periphs::ai_reg_w )
             break;
 
         default:
-            logerror("ai_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(maincpu));
+            logerror("ai_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, maincpu->safe_pc());
             break;
     }
 }
@@ -1407,7 +1407,7 @@ WRITE32_MEMBER( n64_periphs::ai_reg_w )
 static TIMER_CALLBACK(pi_dma_callback)
 {
 	machine.device<n64_periphs>("rcp")->pi_dma_tick();
-	device_yield(machine.device("rsp"));
+	machine.device("rsp")->execute().yield();
 }
 
 void n64_periphs::pi_dma_tick()
@@ -1532,7 +1532,7 @@ READ32_MEMBER( n64_periphs::pi_reg_r )
             break;
 
 		default:
-			logerror("pi_reg_r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(maincpu));
+			logerror("pi_reg_r: %08X, %08X at %08X\n", offset, mem_mask, maincpu->safe_pc());
 			break;
 	}
 
@@ -1635,7 +1635,7 @@ WRITE32_MEMBER( n64_periphs::pi_reg_w )
             break;
 
 		default:
-			logerror("pi_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(maincpu));
+			logerror("pi_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, maincpu->safe_pc());
 			break;
 	}
 }
@@ -1647,7 +1647,7 @@ READ32_MEMBER( n64_periphs::ri_reg_r )
 	//printf("ri_reg_r %08x = %08x\n", offset * 4, ri_regs[offset]);
 	if(offset > 0x1c/4)
 	{
-		logerror("ri_reg_r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(maincpu));
+		logerror("ri_reg_r: %08X, %08X at %08X\n", offset, mem_mask, maincpu->safe_pc());
 		return 0;
 	}
 	return ri_regs[offset];
@@ -1658,7 +1658,7 @@ WRITE32_MEMBER( n64_periphs::ri_reg_w )
 	//printf("ri_reg_w %08x %08x %08x\n", offset * 4, data, mem_mask);
 	if(offset > 0x1c/4)
 	{
-		logerror("ri_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(maincpu));
+		logerror("ri_reg_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, maincpu->safe_pc());
 		return;
 	}
 	COMBINE_DATA(&ri_regs[offset]);
@@ -2295,7 +2295,7 @@ WRITE32_MEMBER( n64_periphs::dd_reg_w )
 
 					dd_data_reg = (convert_to_bcd(systime.local_time.year % 100) << 24) | (convert_to_bcd(systime.local_time.month + 1) << 16);
 
-					cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ1, ASSERT_LINE);
+					machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ1, ASSERT_LINE);
 					dd_status_reg |= DD_STATUS_INTR;
 					break;
 				}
@@ -2309,7 +2309,7 @@ WRITE32_MEMBER( n64_periphs::dd_reg_w )
 
 					dd_data_reg = (convert_to_bcd(systime.local_time.mday) << 24) | (convert_to_bcd(systime.local_time.hour) << 16);
 
-					cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ1, ASSERT_LINE);
+					machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ1, ASSERT_LINE);
 					dd_status_reg |= DD_STATUS_INTR;
 					break;
 				}
@@ -2323,7 +2323,7 @@ WRITE32_MEMBER( n64_periphs::dd_reg_w )
 
 					dd_data_reg = (convert_to_bcd(systime.local_time.minute) << 24) | (convert_to_bcd(systime.local_time.second) << 16);
 
-					cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ1, ASSERT_LINE);
+					machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ1, ASSERT_LINE);
 					dd_status_reg |= DD_STATUS_INTR;
 					break;
 				}
@@ -2337,7 +2337,7 @@ WRITE32_MEMBER( n64_periphs::dd_reg_w )
 
 		case 0x10/4: // Interrupt Clear
 			logerror("dd interrupt clear\n");
-			cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ1, CLEAR_LINE);
+			machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
 			dd_status_reg &= ~DD_STATUS_INTR;
 			break;
 
@@ -2402,23 +2402,28 @@ static void n64_machine_stop(running_machine &machine)
 	image->battery_save(data, 0x30800);
 }
 
-MACHINE_START( n64 )
+void n64_state::machine_start()
 {
-	mips3drc_set_options(machine.device("maincpu"), MIPS3DRC_COMPATIBLE_OPTIONS);
+	rdram = reinterpret_cast<UINT32 *>(memshare("rdram")->ptr());
+	n64_sram = reinterpret_cast<UINT32 *>(memshare("sram")->ptr());
+	rsp_imem = reinterpret_cast<UINT32 *>(memshare("rsp_imem")->ptr());
+	rsp_dmem = reinterpret_cast<UINT32 *>(memshare("rsp_dmem")->ptr());
+
+	mips3drc_set_options(machine().device("maincpu"), MIPS3DRC_COMPATIBLE_OPTIONS);
 
 	/* configure fast RAM regions for DRC */
-	mips3drc_add_fastram(machine.device("maincpu"), 0x00000000, 0x007fffff, FALSE, rdram);
+	mips3drc_add_fastram(machine().device("maincpu"), 0x00000000, 0x007fffff, FALSE, rdram);
 
-	rspdrc_set_options(machine.device("rsp"), RSPDRC_STRICT_VERIFY);
-	rspdrc_flush_drc_cache(machine.device("rsp"));
-	rspdrc_add_dmem(machine.device("rsp"), rsp_dmem);
-	rspdrc_add_imem(machine.device("rsp"), rsp_imem);
+	rspdrc_set_options(machine().device("rsp"), RSPDRC_STRICT_VERIFY);
+	rspdrc_flush_drc_cache(machine().device("rsp"));
+	rspdrc_add_dmem(machine().device("rsp"), rsp_dmem);
+	rspdrc_add_imem(machine().device("rsp"), rsp_imem);
 
 	/* add a hook for battery save */
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(n64_machine_stop),&machine));
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(n64_machine_stop),&machine()));
 }
 
-MACHINE_RESET( n64 )
+void n64_state::machine_reset()
 {
-	cputag_set_input_line(machine, "rsp", INPUT_LINE_HALT, ASSERT_LINE);
+	machine().device("rsp")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 }

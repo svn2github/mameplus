@@ -110,6 +110,7 @@ public:
 	DECLARE_WRITE8_MEMBER(nmi_disable_and_clear_line_w);
 	DECLARE_WRITE8_MEMBER(nmi_enable_w);
 	DECLARE_READ8_MEMBER(dummy_r);
+	virtual void palette_init();
 };
 
 
@@ -131,9 +132,9 @@ public:
 ***************************************************************************/
 
 
-static PALETTE_INIT( shougi )
+void shougi_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 	static const int resistances_b[2]  = { 470, 220 };
 	static const int resistances_rg[3] = { 1000, 470, 220 };
@@ -145,7 +146,7 @@ static PALETTE_INIT( shougi )
 			3,	resistances_rg,	weights_g,	1000, 0,
 			2,	resistances_b,	weights_b,	1000, 0);
 
-	for (i = 0;i < machine.total_colors();i++)
+	for (i = 0;i < machine().total_colors();i++)
 	{
 		int bit0,bit1,bit2,r,g,b;
 
@@ -166,7 +167,7 @@ static PALETTE_INIT( shougi )
 		bit1 = (color_prom[i] >> 7) & 0x01;
 		b = combine_2_weights(weights_b, bit0, bit1);
 
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
+		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
 	}
 }
 
@@ -246,13 +247,13 @@ WRITE8_MEMBER(shougi_state::shougi_watchdog_reset_w)
 WRITE8_MEMBER(shougi_state::shougi_mcu_halt_off_w)
 {
 	/* logerror("mcu HALT OFF"); */
-	cputag_set_input_line(machine(), "mcu", INPUT_LINE_HALT, CLEAR_LINE);
+	machine().device("mcu")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(shougi_state::shougi_mcu_halt_on_w)
 {
 	/* logerror("mcu HALT ON"); */
-	cputag_set_input_line(machine(), "mcu", INPUT_LINE_HALT,ASSERT_LINE);
+	machine().device("mcu")->execute().set_input_line(INPUT_LINE_HALT,ASSERT_LINE);
 }
 
 
@@ -262,8 +263,8 @@ WRITE8_MEMBER(shougi_state::nmi_disable_and_clear_line_w)
 	m_nmi_enabled = 0; /* disable NMIs */
 
 	/* NMI lines are tied together on both CPUs and connected to the LS74 /Q output */
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, CLEAR_LINE);
-	cputag_set_input_line(machine(), "sub", INPUT_LINE_NMI, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
+	machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(shougi_state::nmi_enable_w)
@@ -279,8 +280,8 @@ static INTERRUPT_GEN( shougi_vblank_nmi )
 	if ( state->m_nmi_enabled == 1 )
 	{
 		/* NMI lines are tied together on both CPUs and connected to the LS74 /Q output */
-		cputag_set_input_line(device->machine(), "maincpu", INPUT_LINE_NMI, ASSERT_LINE);
-		cputag_set_input_line(device->machine(), "sub", INPUT_LINE_NMI, ASSERT_LINE);
+		device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+		device->machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 	}
 }
 
@@ -428,7 +429,6 @@ static MACHINE_CONFIG_START( shougi, shougi_state )
 
 	MCFG_PALETTE_LENGTH(32)
 
-	MCFG_PALETTE_INIT(shougi)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

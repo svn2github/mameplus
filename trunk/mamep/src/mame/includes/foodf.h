@@ -31,10 +31,14 @@ public:
 	DECLARE_WRITE16_MEMBER(foodf_paletteram_w);
 	void foodf_set_flip(int flip);
 	DECLARE_READ8_MEMBER(pot_r);
+	TILE_GET_INFO_MEMBER(get_playfield_tile_info);
+	DECLARE_MACHINE_START(foodf);
+	DECLARE_MACHINE_RESET(foodf);
+	DECLARE_VIDEO_START(foodf);
 };
 
 
 /*----------- defined in video/foodf.c -----------*/
 
-VIDEO_START( foodf );
+
 SCREEN_UPDATE_IND16( foodf );

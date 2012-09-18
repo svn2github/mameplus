@@ -82,7 +82,7 @@ READ8_DEVICE_HANDLER_TRAMPOLINE(k056230, k056230_r)
 		}
 	}
 
-//  mame_printf_debug("k056230_r: %d at %08X\n", offset, cpu_get_pc(&space->device()));
+//  mame_printf_debug("k056230_r: %d at %08X\n", offset, space->device().safe_pc());
 
 	return 0;
 }
@@ -96,7 +96,7 @@ void k056230_device::network_irq_clear()
 {
 	if(m_cpu)
 	{
-		device_set_input_line(m_cpu, INPUT_LINE_IRQ2, CLEAR_LINE);
+		m_cpu->execute().set_input_line(INPUT_LINE_IRQ2, CLEAR_LINE);
 	}
 }
 
@@ -118,13 +118,13 @@ WRITE8_DEVICE_HANDLER_TRAMPOLINE(k056230, k056230_w)
 				{
 					if(m_cpu)
 					{
-						device_set_input_line(m_cpu, INPUT_LINE_IRQ2, ASSERT_LINE);
+						m_cpu->execute().set_input_line(INPUT_LINE_IRQ2, ASSERT_LINE);
 					}
 					machine().scheduler().timer_set(attotime::from_usec(10), FUNC(network_irq_clear_callback), 0, (void*)this);
 				}
 			}
 //          else
-//              device_set_input_line(k056230->cpu, INPUT_LINE_IRQ2, CLEAR_LINE);
+//              k056230->cpu->execute().set_input_line(INPUT_LINE_IRQ2, CLEAR_LINE);
 			break;
 		}
 		case 2:		// Sub ID register
@@ -132,17 +132,17 @@ WRITE8_DEVICE_HANDLER_TRAMPOLINE(k056230, k056230_w)
 			break;
 		}
 	}
-//  mame_printf_debug("k056230_w: %d, %02X at %08X\n", offset, data, cpu_get_pc(&space->device()));
+//  mame_printf_debug("k056230_w: %d, %02X at %08X\n", offset, data, space->device().safe_pc());
 }
 
 READ32_DEVICE_HANDLER_TRAMPOLINE(k056230, lanc_ram_r)
 {
-	//mame_printf_debug("LANC_RAM_r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(&space->device()));
+	//mame_printf_debug("LANC_RAM_r: %08X, %08X at %08X\n", offset, mem_mask, space->device().safe_pc());
 	return m_ram[offset & 0x7ff];
 }
 
 WRITE32_DEVICE_HANDLER_TRAMPOLINE(k056230, lanc_ram_w)
 {
-	//mame_printf_debug("LANC_RAM_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(&space->device()));
+	//mame_printf_debug("LANC_RAM_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, space->device().safe_pc());
 	COMBINE_DATA(m_ram + (offset & 0x7ff));
 }

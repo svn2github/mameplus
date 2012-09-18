@@ -2105,7 +2105,7 @@ static struct stv_vdp2_debugging
 	UINT8 win;	 /*Enters into Window effect debug menu*/
 	UINT32 error; /*bits for VDP2 error logging*/
 	UINT8 roz;   /*Debug roz on screen*/
-} debug;
+} vdpdebug;
 
 /* Not sure if to use this for the rotating tilemaps as well or just use different draw functions, might add too much bloat */
 static struct stv_vdp2_tilemap_capabilities
@@ -2272,15 +2272,15 @@ static void stv_vdp2_fill_rotation_parameter_table( running_machine &machine, UI
 	if(LOG_ROZ == 2)
 	{
 		if(machine.input().code_pressed_once(JOYCODE_Y_UP_SWITCH))
-			debug.roz++;
+			vdpdebug.roz++;
 
 		if(machine.input().code_pressed_once(JOYCODE_Y_DOWN_SWITCH))
-			debug.roz--;
+			vdpdebug.roz--;
 
-		if(debug.roz > 10)
-			debug.roz = 10;
+		if(vdpdebug.roz > 10)
+			vdpdebug.roz = 10;
 
-		switch(debug.roz)
+		switch(vdpdebug.roz)
 		{
 	    	case 0: popmessage( "Rotation parameter Table (%d)", rot_parameter ); break;
 	        case 1: popmessage( "xst = %x, yst = %x, zst = %x", RP.xst, RP.yst, RP.zst ); break;
@@ -2443,7 +2443,7 @@ INLINE UINT32 stv_add_blend(UINT32 a, UINT32 b)
 }
 
 static void stv_vdp2_drawgfxzoom(
-		bitmap_rgb32 &dest_bmp,const rectangle &clip,const gfx_element *gfx,
+		bitmap_rgb32 &dest_bmp,const rectangle &clip,gfx_element *gfx,
 		UINT32 code,UINT32 color,int flipx,int flipy,int sx,int sy,
 		int transparency,int transparent_color,int scalex, int scaley,
 		int sprite_screen_width, int sprite_screen_height, int alpha)
@@ -2452,16 +2452,16 @@ static void stv_vdp2_drawgfxzoom(
 
 	if (!scalex || !scaley) return;
 
-	if (gfx->pen_usage && transparency == STV_TRANSPARENCY_PEN)
+	if (gfx->has_pen_usage() && transparency == STV_TRANSPARENCY_PEN)
 	{
 		int transmask = 0;
 
 		transmask = 1 << (transparent_color & 0xff);
 
-		if ((gfx->pen_usage[code] & ~transmask) == 0)
+		if ((gfx->pen_usage(code) & ~transmask) == 0)
 			/* character is totally transparent, no need to draw */
 			return;
-		else if ((gfx->pen_usage[code] & transmask) == 0)
+		else if ((gfx->pen_usage(code) & transmask) == 0)
 			/* character is totally opaque, can disable transparency */
 			transparency = STV_TRANSPARENCY_NONE;
 	}
@@ -2480,17 +2480,17 @@ static void stv_vdp2_drawgfxzoom(
 
 	if( gfx )
 	{
-		const pen_t *pal = &gfx->machine().pens[gfx->color_base + gfx->color_granularity * (color % gfx->total_colors)];
-		const UINT8 *source_base = gfx_element_get_data(gfx, code % gfx->total_elements);
+		const pen_t *pal = &gfx->machine().pens[gfx->colorbase() + gfx->granularity() * (color % gfx->colors())];
+		const UINT8 *source_base = gfx->get_data(code % gfx->elements());
 
-		//int sprite_screen_height = (scaley*gfx->height+0x8000)>>16;
-		//int sprite_screen_width = (scalex*gfx->width+0x8000)>>16;
+		//int sprite_screen_height = (scaley*gfx->height()+0x8000)>>16;
+		//int sprite_screen_width = (scalex*gfx->width()+0x8000)>>16;
 
 		if (sprite_screen_width && sprite_screen_height)
 		{
 			/* compute sprite increment per screen pixel */
-			//int dx = (gfx->width<<16)/sprite_screen_width;
-			//int dy = (gfx->height<<16)/sprite_screen_height;
+			//int dx = (gfx->width()<<16)/sprite_screen_width;
+			//int dy = (gfx->height()<<16)/sprite_screen_height;
 			int dx = stv2_current_tilemap.incx;
 			int dy = stv2_current_tilemap.incy;
 
@@ -2553,7 +2553,7 @@ static void stv_vdp2_drawgfxzoom(
 				{
 					for( y=sy; y<ey; y++ )
 					{
-						const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
+						const UINT8 *source = source_base + (y_index>>16) * gfx->rowbytes();
 						UINT32 *dest = &dest_bmp.pix32(y);
 
 						int x, x_index = x_index_base;
@@ -2572,7 +2572,7 @@ static void stv_vdp2_drawgfxzoom(
 				{
 					for( y=sy; y<ey; y++ )
 					{
-						const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
+						const UINT8 *source = source_base + (y_index>>16) * gfx->rowbytes();
 						UINT32 *dest = &dest_bmp.pix32(y);
 
 						int x, x_index = x_index_base;
@@ -2592,7 +2592,7 @@ static void stv_vdp2_drawgfxzoom(
 				{
 					for( y=sy; y<ey; y++ )
 					{
-						const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
+						const UINT8 *source = source_base + (y_index>>16) * gfx->rowbytes();
 						UINT32 *dest = &dest_bmp.pix32(y);
 
 						int x, x_index = x_index_base;
@@ -2612,7 +2612,7 @@ static void stv_vdp2_drawgfxzoom(
 				{
 					for( y=sy; y<ey; y++ )
 					{
-						const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
+						const UINT8 *source = source_base + (y_index>>16) * gfx->rowbytes();
 						UINT32 *dest = &dest_bmp.pix32(y);
 
 						int x, x_index = x_index_base;
@@ -5373,16 +5373,16 @@ WRITE32_HANDLER ( saturn_vdp2_vram_w )
 	gfxdata[offset*4+2] = (data & 0x0000ff00) >> 8;
 	gfxdata[offset*4+3] = (data & 0x000000ff) >> 0;
 
-	gfx_element_mark_dirty(space->machine().gfx[0], offset/8);
-	gfx_element_mark_dirty(space->machine().gfx[1], offset/8);
-	gfx_element_mark_dirty(space->machine().gfx[2], offset/8);
-	gfx_element_mark_dirty(space->machine().gfx[3], offset/8);
+	space->machine().gfx[0]->mark_dirty(offset/8);
+	space->machine().gfx[1]->mark_dirty(offset/8);
+	space->machine().gfx[2]->mark_dirty(offset/8);
+	space->machine().gfx[3]->mark_dirty(offset/8);
 
 	/* 8-bit tiles overlap, so this affects the previous one as well */
 	if (offset/8 != 0)
 	{
-		gfx_element_mark_dirty(space->machine().gfx[2], offset/8 - 1);
-		gfx_element_mark_dirty(space->machine().gfx[3], offset/8 - 1);
+		space->machine().gfx[2]->mark_dirty(offset/8 - 1);
+		space->machine().gfx[3]->mark_dirty(offset/8 - 1);
 	}
 
 	if ( stv_rbg_cache_data.watch_vdp2_vram_writes )
@@ -5761,16 +5761,16 @@ static void stv_vdp2_state_save_postload(running_machine &machine)
 		gfxdata[offset*4+2] = (data & 0x0000ff00) >> 8;
 		gfxdata[offset*4+3] = (data & 0x000000ff) >> 0;
 
-		gfx_element_mark_dirty(machine.gfx[0], offset/8);
-		gfx_element_mark_dirty(machine.gfx[1], offset/8);
-		gfx_element_mark_dirty(machine.gfx[2], offset/8);
-		gfx_element_mark_dirty(machine.gfx[3], offset/8);
+		machine.gfx[0]->mark_dirty(offset/8);
+		machine.gfx[1]->mark_dirty(offset/8);
+		machine.gfx[2]->mark_dirty(offset/8);
+		machine.gfx[3]->mark_dirty(offset/8);
 
 		/* 8-bit tiles overlap, so this affects the previous one as well */
 		if (offset/8 != 0)
 		{
-			gfx_element_mark_dirty(machine.gfx[2], offset/8 - 1);
-			gfx_element_mark_dirty(machine.gfx[3], offset/8 - 1);
+			machine.gfx[2]->mark_dirty(offset/8 - 1);
+			machine.gfx[3]->mark_dirty(offset/8 - 1);
 		}
 
 	}
@@ -5799,8 +5799,8 @@ static int stv_vdp2_start (running_machine &machine)
 	state->m_vdp2_cram = auto_alloc_array_clear(machine, UINT32, 0x080000/4 );
 	state->m_vdp2.gfx_decode = auto_alloc_array(machine, UINT8, 0x100000 );
 
-//  machine.gfx[0]->color_granularity=4;
-//  machine.gfx[1]->color_granularity=4;
+//  machine.gfx[0]->granularity()=4;
+//  machine.gfx[1]->granularity()=4;
 
 	memset( &stv_rbg_cache_data, 0, sizeof(stv_rbg_cache_data));
 	stv_rbg_cache_data.is_cache_dirty = 3;
@@ -5815,23 +5815,22 @@ static int stv_vdp2_start (running_machine &machine)
 }
 
 /* maybe we should move this to video/stv.c */
-VIDEO_START( stv_vdp2 )
+VIDEO_START_MEMBER(saturn_state,stv_vdp2)
 {
-	saturn_state *state = machine.driver_data<saturn_state>();
-	machine.primary_screen->register_screen_bitmap(state->m_tmpbitmap);
-	stv_vdp2_start(machine);
-	stv_vdp1_start(machine);
-	debug.l_en = 0xff;
-	debug.error = 0xffffffff;
-	debug.roz = 0;
-	gfx_element_set_source(machine.gfx[0], state->m_vdp2.gfx_decode);
-	gfx_element_set_source(machine.gfx[1], state->m_vdp2.gfx_decode);
-	gfx_element_set_source(machine.gfx[2], state->m_vdp2.gfx_decode);
-	gfx_element_set_source(machine.gfx[3], state->m_vdp2.gfx_decode);
-	gfx_element_set_source(machine.gfx[4], state->m_vdp1.gfx_decode);
-	gfx_element_set_source(machine.gfx[5], state->m_vdp1.gfx_decode);
-	gfx_element_set_source(machine.gfx[6], state->m_vdp1.gfx_decode);
-	gfx_element_set_source(machine.gfx[7], state->m_vdp1.gfx_decode);
+	machine().primary_screen->register_screen_bitmap(m_tmpbitmap);
+	stv_vdp2_start(machine());
+	stv_vdp1_start(machine());
+	vdpdebug.l_en = 0xff;
+	vdpdebug.error = 0xffffffff;
+	vdpdebug.roz = 0;
+	machine().gfx[0]->set_source(m_vdp2.gfx_decode);
+	machine().gfx[1]->set_source(m_vdp2.gfx_decode);
+	machine().gfx[2]->set_source(m_vdp2.gfx_decode);
+	machine().gfx[3]->set_source(m_vdp2.gfx_decode);
+	machine().gfx[4]->set_source(m_vdp1.gfx_decode);
+	machine().gfx[5]->set_source(m_vdp1.gfx_decode);
+	machine().gfx[6]->set_source(m_vdp1.gfx_decode);
+	machine().gfx[7]->set_source(m_vdp1.gfx_decode);
 }
 
 void stv_vdp2_dynamic_res_change(running_machine &machine)
@@ -6648,33 +6647,33 @@ SCREEN_UPDATE_RGB32( stv_vdp2 )
 	#if DEBUG_MODE
 	if(screen.machine().input().code_pressed_once(KEYCODE_T))
 	{
-		debug.l_en^=1;
-		popmessage("NBG3 %sabled",debug.l_en & 1 ? "en" : "dis");
+		vdpdebug.l_en^=1;
+		popmessage("NBG3 %sabled",vdpdebug.l_en & 1 ? "en" : "dis");
 	}
 	if(screen.machine().input().code_pressed_once(KEYCODE_Y))
 	{
-		debug.l_en^=2;
-		popmessage("NBG2 %sabled",debug.l_en & 2 ? "en" : "dis");
+		vdpdebug.l_en^=2;
+		popmessage("NBG2 %sabled",vdpdebug.l_en & 2 ? "en" : "dis");
 	}
 	if(screen.machine().input().code_pressed_once(KEYCODE_U))
 	{
-		debug.l_en^=4;
-		popmessage("NBG1 %sabled",debug.l_en & 4 ? "en" : "dis");
+		vdpdebug.l_en^=4;
+		popmessage("NBG1 %sabled",vdpdebug.l_en & 4 ? "en" : "dis");
 	}
 	if(screen.machine().input().code_pressed_once(KEYCODE_I))
 	{
-		debug.l_en^=8;
-		popmessage("NBG0 %sabled",debug.l_en & 8 ? "en" : "dis");
+		vdpdebug.l_en^=8;
+		popmessage("NBG0 %sabled",vdpdebug.l_en & 8 ? "en" : "dis");
 	}
 	if(screen.machine().input().code_pressed_once(KEYCODE_K))
 	{
-		debug.l_en^=0x10;
-		popmessage("RBG0 %sabled",debug.l_en & 0x10 ? "en" : "dis");
+		vdpdebug.l_en^=0x10;
+		popmessage("RBG0 %sabled",vdpdebug.l_en & 0x10 ? "en" : "dis");
 	}
 	if(screen.machine().input().code_pressed_once(KEYCODE_O))
 	{
-		debug.l_en^=0x20;
-		popmessage("SPRITE %sabled",debug.l_en & 0x20 ? "en" : "dis");
+		vdpdebug.l_en^=0x20;
+		popmessage("SPRITE %sabled",vdpdebug.l_en & 0x20 ? "en" : "dis");
 	}
 	#endif
 
@@ -6689,12 +6688,12 @@ SCREEN_UPDATE_RGB32( stv_vdp2 )
 		/*If a plane has a priority value of zero it isn't shown at all.*/
 		for(pri=1;pri<8;pri++)
 		{
-			if (debug.l_en & 1)    { if(pri==STV_VDP2_N3PRIN) stv_vdp2_draw_NBG3(screen.machine(), state->m_tmpbitmap,cliprect); }
-			if (debug.l_en & 2)    { if(pri==STV_VDP2_N2PRIN) stv_vdp2_draw_NBG2(screen.machine(), state->m_tmpbitmap,cliprect); }
-			if (debug.l_en & 4)    { if(pri==STV_VDP2_N1PRIN) stv_vdp2_draw_NBG1(screen.machine(), state->m_tmpbitmap,cliprect); }
-			if (debug.l_en & 8)    { if(pri==STV_VDP2_N0PRIN) stv_vdp2_draw_NBG0(screen.machine(), state->m_tmpbitmap,cliprect); }
-			if (debug.l_en & 0x10) { if(pri==STV_VDP2_R0PRIN) stv_vdp2_draw_RBG0(screen.machine(), state->m_tmpbitmap,cliprect); }
-			if (debug.l_en & 0x20) { draw_sprites(screen.machine(),state->m_tmpbitmap,cliprect,pri); }
+			if (vdpdebug.l_en & 1)    { if(pri==STV_VDP2_N3PRIN) stv_vdp2_draw_NBG3(screen.machine(), state->m_tmpbitmap,cliprect); }
+			if (vdpdebug.l_en & 2)    { if(pri==STV_VDP2_N2PRIN) stv_vdp2_draw_NBG2(screen.machine(), state->m_tmpbitmap,cliprect); }
+			if (vdpdebug.l_en & 4)    { if(pri==STV_VDP2_N1PRIN) stv_vdp2_draw_NBG1(screen.machine(), state->m_tmpbitmap,cliprect); }
+			if (vdpdebug.l_en & 8)    { if(pri==STV_VDP2_N0PRIN) stv_vdp2_draw_NBG0(screen.machine(), state->m_tmpbitmap,cliprect); }
+			if (vdpdebug.l_en & 0x10) { if(pri==STV_VDP2_R0PRIN) stv_vdp2_draw_RBG0(screen.machine(), state->m_tmpbitmap,cliprect); }
+			if (vdpdebug.l_en & 0x20) { draw_sprites(screen.machine(),state->m_tmpbitmap,cliprect,pri); }
 		}
 	}
 
@@ -6711,41 +6710,41 @@ SCREEN_UPDATE_RGB32( stv_vdp2 )
 
 		for (tilecode = 0;tilecode<0x8000;tilecode++)
 		{
-			gfx_element_mark_dirty(screen.machine().gfx[0], tilecode);
+			screen.machine().gfx[0]->mark_dirty(tilecode);
 		}
 
 		for (tilecode = 0;tilecode<0x2000;tilecode++)
 		{
-			gfx_element_mark_dirty(screen.machine().gfx[1], tilecode);
+			screen.machine().gfx[1]->mark_dirty(tilecode);
 		}
 
 		for (tilecode = 0;tilecode<0x4000;tilecode++)
 		{
-			gfx_element_mark_dirty(screen.machine().gfx[2], tilecode);
+			screen.machine().gfx[2]->mark_dirty(tilecode);
 		}
 
 		for (tilecode = 0;tilecode<0x1000;tilecode++)
 		{
-			gfx_element_mark_dirty(screen.machine().gfx[3], tilecode);
+			screen.machine().gfx[3]->mark_dirty(tilecode);
 		}
 
 		/* vdp 1 ... doesn't have to be tile based */
 
 		for (tilecode = 0;tilecode<0x8000;tilecode++)
 		{
-			gfx_element_mark_dirty(screen.machine().gfx[4], tilecode);
+			screen.machine().gfx[4]->mark_dirty(tilecode);
 		}
 		for (tilecode = 0;tilecode<0x2000;tilecode++)
 		{
-			gfx_element_mark_dirty(screen.machine().gfx[5], tilecode);
+			screen.machine().gfx[5]->mark_dirty(tilecode);
 		}
 		for (tilecode = 0;tilecode<0x4000;tilecode++)
 		{
-			gfx_element_mark_dirty(screen.machine().gfx[6], tilecode);
+			screen.machine().gfx[6]->mark_dirty(tilecode);
 		}
 		for (tilecode = 0;tilecode<0x1000;tilecode++)
 		{
-			gfx_element_mark_dirty(screen.machine().gfx[7], tilecode);
+			screen.machine().gfx[7]->mark_dirty(tilecode);
 		}
 	}
 

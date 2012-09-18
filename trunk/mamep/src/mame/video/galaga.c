@@ -324,12 +324,12 @@ const struct star star_seed_tab[252]=
 
 ***************************************************************************/
 
-PALETTE_INIT( galaga )
+PALETTE_INIT_MEMBER(galaga_state,galaga)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
-	machine.colortable = colortable_alloc(machine, 32+64);
+	machine().colortable = colortable_alloc(machine(), 32+64);
 
 	/* core palette */
 	for (i = 0;i < 32;i++)
@@ -349,7 +349,7 @@ PALETTE_INIT( galaga )
 		bit2 = ((*color_prom) >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		colortable_palette_set_color(machine.colortable,i,MAKE_RGB(r,g,b));
+		colortable_palette_set_color(machine().colortable,i,MAKE_RGB(r,g,b));
 		color_prom++;
 	}
 
@@ -366,20 +366,20 @@ PALETTE_INIT( galaga )
 		bits = (i >> 4) & 0x03;
 		b = map[bits];
 
-		colortable_palette_set_color(machine.colortable,32 + i,MAKE_RGB(r,g,b));
+		colortable_palette_set_color(machine().colortable,32 + i,MAKE_RGB(r,g,b));
 	}
 
 	/* characters */
 	for (i = 0;i < 64*4;i++)
-		colortable_entry_set_value(machine.colortable, i, (*(color_prom++) & 0x0f) + 0x10);	/* chars */
+		colortable_entry_set_value(machine().colortable, i, (*(color_prom++) & 0x0f) + 0x10);	/* chars */
 
 	/* sprites */
 	for (i = 0;i < 64*4;i++)
-		colortable_entry_set_value(machine.colortable, 64*4+i, (*(color_prom++) & 0x0f));
+		colortable_entry_set_value(machine().colortable, 64*4+i, (*(color_prom++) & 0x0f));
 
 	/* now the stars */
 	for (i = 0;i < 64;i++)
-		colortable_entry_set_value(machine.colortable, 64*4+64*4+i, 32 + i);
+		colortable_entry_set_value(machine().colortable, 64*4+64*4+i, 32 + i);
 }
 
 
@@ -391,7 +391,7 @@ PALETTE_INIT( galaga )
 ***************************************************************************/
 
 /* convert from 32x32 to 36x28 */
-static TILEMAP_MAPPER( tilemap_scan )
+TILEMAP_MAPPER_MEMBER(galaga_state::tilemap_scan)
 {
 	int offs;
 
@@ -406,20 +406,19 @@ static TILEMAP_MAPPER( tilemap_scan )
 }
 
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(galaga_state::get_tile_info)
 {
 	/* the hardware has two character sets, one normal and one x-flipped. When
        screen is flipped, character y flip is done by the hardware inverting the
        timing signals, while x flip is done by selecting the 2nd character set.
        We reproduce this here, but since the tilemap system automatically flips
        characters when screen is flipped, we have to flip them back. */
-	galaga_state *state =  machine.driver_data<galaga_state>();
-    int color = state->m_videoram[tile_index + 0x400] & 0x3f;
-	SET_TILE_INFO(
+    int color = m_videoram[tile_index + 0x400] & 0x3f;
+	SET_TILE_INFO_MEMBER(
 			0,
-			(state->m_videoram[tile_index] & 0x7f) | (state->flip_screen() ? 0x80 : 0) | (state->m_galaga_gfxbank << 8),
+			(m_videoram[tile_index] & 0x7f) | (flip_screen() ? 0x80 : 0) | (m_galaga_gfxbank << 8),
 			color,
-			state->flip_screen() ? TILE_FLIPX : 0);
+			flip_screen() ? TILE_FLIPX : 0);
 	tileinfo.group = color;
 }
 
@@ -431,17 +430,16 @@ static TILE_GET_INFO( get_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( galaga )
+VIDEO_START_MEMBER(galaga_state,galaga)
 {
-	galaga_state *state =  machine.driver_data<galaga_state>();
-	state->m_fg_tilemap = tilemap_create(machine, get_tile_info,tilemap_scan,8,8,36,28);
-	colortable_configure_tilemap_groups(machine.colortable, state->m_fg_tilemap, machine.gfx[0], 0x1f);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(galaga_state::get_tile_info),this),tilemap_mapper_delegate(FUNC(galaga_state::tilemap_scan),this),8,8,36,28);
+	colortable_configure_tilemap_groups(machine().colortable, m_fg_tilemap, machine().gfx[0], 0x1f);
 
-	state->m_galaga_gfxbank = 0;
+	m_galaga_gfxbank = 0;
 
-	state->save_item(NAME(state->m_stars_scrollx));
-	state->save_item(NAME(state->m_stars_scrolly));
-	state->save_item(NAME(state->m_galaga_gfxbank));
+	save_item(NAME(m_stars_scrollx));
+	save_item(NAME(m_stars_scrolly));
+	save_item(NAME(m_galaga_gfxbank));
 }
 
 

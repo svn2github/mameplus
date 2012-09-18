@@ -17,17 +17,15 @@
 /* Perform basic machine initialisation */
 
 
-MACHINE_START( namcond1 )
+void namcond1_state::machine_start()
 {
-	namcond1_state *state = machine.driver_data<namcond1_state>();
-	state_save_register_global(machine, state->m_h8_irq5_enabled);
+	state_save_register_global(machine(), m_h8_irq5_enabled);
 }
 
-MACHINE_RESET( namcond1 )
+void namcond1_state::machine_reset()
 {
-	namcond1_state *state = machine.driver_data<namcond1_state>();
 #ifdef MAME_DEBUG
-    /*UINT8   *ROM = state->memregion(REGION_CPU1)->base();*/
+    /*UINT8   *ROM = memregion(REGION_CPU1)->base();*/
     /*UINT32 debug_trigger_addr;*/
     /*int             i;*/
 
@@ -45,10 +43,10 @@ MACHINE_RESET( namcond1 )
 #endif
 
     // initialise MCU states
-    state->m_h8_irq5_enabled = 0;
+    m_h8_irq5_enabled = 0;
 
     // halt the MCU
-    cputag_set_input_line(machine, "mcu", INPUT_LINE_RESET, ASSERT_LINE);
+    machine().device("mcu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 // instance of the shared ram pointer
@@ -72,7 +70,7 @@ READ16_MEMBER(namcond1_state::namcond1_cuskey_r)
 
         default :
             logerror( "offset $%X accessed from $%X\n",
-                      offset<<1, cpu_get_pc(&space.device()) );
+                      offset<<1, space.device().safe_pc() );
             return( 0 );
     }
 }
@@ -96,7 +94,7 @@ WRITE16_MEMBER(namcond1_state::namcond1_cuskey_w)
             // this is a kludge until we emulate the h8
 	    if ((m_h8_irq5_enabled == 0) && (data != 0x0000))
 	    {
-	    	cputag_set_input_line(machine(), "mcu", INPUT_LINE_RESET, CLEAR_LINE);
+	    	machine().device("mcu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 	    }
             m_h8_irq5_enabled = ( data != 0x0000 );
             break;

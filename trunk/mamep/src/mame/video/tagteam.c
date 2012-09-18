@@ -32,14 +32,14 @@ static const res_net_decode_info tagteam_decode_info =
 	{  0x07, 0x07, 0x03 }  /* masks */
 };
 
-PALETTE_INIT( tagteam )
+void tagteam_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	rgb_t *rgb;
 
-	rgb = compute_res_net_all(machine, color_prom, &tagteam_decode_info, &tagteam_net_info);
-	palette_set_colors(machine, 0x00, rgb, 0x20);
-	auto_free(machine, rgb);
+	rgb = compute_res_net_all(machine(), color_prom, &tagteam_decode_info, &tagteam_net_info);
+	palette_set_colors(machine(), 0x00, rgb, 0x20);
+	auto_free(machine(), rgb);
 }
 
 
@@ -127,19 +127,17 @@ WRITE8_MEMBER(tagteam_state::tagteam_flipscreen_w)
 	coin_counter_w(machine(), 1, data & 0x40);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(tagteam_state::get_bg_tile_info)
 {
-	tagteam_state *state = machine.driver_data<tagteam_state>();
-	int code = state->m_videoram[tile_index] + 256 * state->m_colorram[tile_index];
-	int color = state->m_palettebank << 1;
+	int code = m_videoram[tile_index] + 256 * m_colorram[tile_index];
+	int color = m_palettebank << 1;
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
-VIDEO_START( tagteam )
+void tagteam_state::video_start()
 {
-	tagteam_state *state = machine.driver_data<tagteam_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows_flip_x,
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tagteam_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS_FLIP_X,
 		 8, 8, 32, 32);
 }
 

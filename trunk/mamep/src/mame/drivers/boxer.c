@@ -37,7 +37,7 @@ public:
 	UINT8 m_pot_latch;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_READ8_MEMBER(boxer_input_r);
 	DECLARE_READ8_MEMBER(boxer_misc_r);
 	DECLARE_WRITE8_MEMBER(boxer_bell_w);
@@ -46,6 +46,9 @@ public:
 	DECLARE_WRITE8_MEMBER(boxer_irq_reset_w);
 	DECLARE_WRITE8_MEMBER(boxer_crowd_w);
 	DECLARE_WRITE8_MEMBER(boxer_led_w);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void palette_init();
 };
 
 /*************************************
@@ -60,7 +63,7 @@ static TIMER_CALLBACK( pot_interrupt )
 	int mask = param;
 
 	if (state->m_pot_latch & mask)
-		device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, ASSERT_LINE);
+		state->m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 
 	state->m_pot_state |= mask;
 }
@@ -71,7 +74,7 @@ static TIMER_CALLBACK( periodic_callback )
 	boxer_state *state = machine.driver_data<boxer_state>();
 	int scanline = param;
 
-	device_set_input_line(state->m_maincpu, 0, ASSERT_LINE);
+	state->m_maincpu->set_input_line(0, ASSERT_LINE);
 
 	if (scanline == 0)
 	{
@@ -110,13 +113,13 @@ static TIMER_CALLBACK( periodic_callback )
  *
  *************************************/
 
-static PALETTE_INIT( boxer )
+void boxer_state::palette_init()
 {
-	palette_set_color(machine,0, MAKE_RGB(0x00,0x00,0x00));
-	palette_set_color(machine,1, MAKE_RGB(0xff,0xff,0xff));
+	palette_set_color(machine(),0, MAKE_RGB(0x00,0x00,0x00));
+	palette_set_color(machine(),1, MAKE_RGB(0xff,0xff,0xff));
 
-	palette_set_color(machine,2, MAKE_RGB(0xff,0xff,0xff));
-	palette_set_color(machine,3, MAKE_RGB(0x00,0x00,0x00));
+	palette_set_color(machine(),2, MAKE_RGB(0xff,0xff,0xff));
+	palette_set_color(machine(),3, MAKE_RGB(0x00,0x00,0x00));
 }
 
 static void draw_boxer( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
@@ -262,13 +265,13 @@ WRITE8_MEMBER(boxer_state::boxer_pot_w)
 
 	m_pot_latch = data & 0x3f;
 
-	device_set_input_line(m_maincpu, INPUT_LINE_NMI, CLEAR_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 
 WRITE8_MEMBER(boxer_state::boxer_irq_reset_w)
 {
-	device_set_input_line(m_maincpu, 0, CLEAR_LINE);
+	m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -422,23 +425,21 @@ GFXDECODE_END
  *
  *************************************/
 
-static MACHINE_START( boxer )
+void boxer_state::machine_start()
 {
-	boxer_state *state = machine.driver_data<boxer_state>();
 
-	state->m_maincpu = machine.device("maincpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
 
-	state->save_item(NAME(state->m_pot_state));
-	state->save_item(NAME(state->m_pot_latch));
+	save_item(NAME(m_pot_state));
+	save_item(NAME(m_pot_latch));
 }
 
-static MACHINE_RESET( boxer )
+void boxer_state::machine_reset()
 {
-	boxer_state *state = machine.driver_data<boxer_state>();
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(0), FUNC(periodic_callback));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(0), FUNC(periodic_callback));
 
-	state->m_pot_state = 0;
-	state->m_pot_latch = 0;
+	m_pot_state = 0;
+	m_pot_latch = 0;
 }
 
 
@@ -448,8 +449,6 @@ static MACHINE_CONFIG_START( boxer, boxer_state )
 	MCFG_CPU_ADD("maincpu", M6502, MASTER_CLOCK / 16)
 	MCFG_CPU_PROGRAM_MAP(boxer_map)
 
-	MCFG_MACHINE_START(boxer)
-	MCFG_MACHINE_RESET(boxer)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -460,7 +459,6 @@ static MACHINE_CONFIG_START( boxer, boxer_state )
 
 	MCFG_GFXDECODE(boxer)
 	MCFG_PALETTE_LENGTH(4)
-	MCFG_PALETTE_INIT(boxer)
 
 	/* sound hardware */
 MACHINE_CONFIG_END

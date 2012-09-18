@@ -35,25 +35,28 @@ public:
 	DECLARE_WRITE16_MEMBER(drtomy_vram_fg_w);
 	DECLARE_WRITE16_MEMBER(drtomy_vram_bg_w);
 	DECLARE_WRITE16_MEMBER(drtomy_okibank_w);
+	TILE_GET_INFO_MEMBER(get_tile_info_fg);
+	TILE_GET_INFO_MEMBER(get_tile_info_bg);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 
-static TILE_GET_INFO( get_tile_info_fg )
+TILE_GET_INFO_MEMBER(drtomy_state::get_tile_info_fg)
 {
-	drtomy_state *state = machine.driver_data<drtomy_state>();
-	int code  = state->m_videoram_fg[tile_index] & 0xfff;
-	int color = (state->m_videoram_fg[tile_index] & 0xf000) >> 12;
-	SET_TILE_INFO(2, code, color, 0);
+	int code  = m_videoram_fg[tile_index] & 0xfff;
+	int color = (m_videoram_fg[tile_index] & 0xf000) >> 12;
+	SET_TILE_INFO_MEMBER(2, code, color, 0);
 }
 
 
-static TILE_GET_INFO( get_tile_info_bg )
+TILE_GET_INFO_MEMBER(drtomy_state::get_tile_info_bg)
 {
-	drtomy_state *state = machine.driver_data<drtomy_state>();
-	int code  = state->m_videoram_bg[tile_index] & 0xfff;
-	int color = (state->m_videoram_bg[tile_index] & 0xf000) >> 12;
-	SET_TILE_INFO(1, code, color, 0);
+	int code  = m_videoram_bg[tile_index] & 0xfff;
+	int color = (m_videoram_bg[tile_index] & 0xf000) >> 12;
+	SET_TILE_INFO_MEMBER(1, code, color, 0);
 }
 
 
@@ -78,7 +81,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 {
 	drtomy_state *state = machine.driver_data<drtomy_state>();
 	int i, x, y, ex, ey;
-	const gfx_element *gfx = machine.gfx[0];
+	gfx_element *gfx = machine.gfx[0];
 
 	static const int x_offset[2] = {0x0, 0x2};
 	static const int y_offset[2] = {0x0, 0x1};
@@ -119,14 +122,13 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	}
 }
 
-static VIDEO_START( drtomy )
+void drtomy_state::video_start()
 {
-	drtomy_state *state = machine.driver_data<drtomy_state>();
 
-	state->m_tilemap_bg = tilemap_create(machine, get_tile_info_bg, tilemap_scan_rows, 16, 16, 32, 32);
-	state->m_tilemap_fg = tilemap_create(machine, get_tile_info_fg, tilemap_scan_rows, 16, 16, 32, 32);
+	m_tilemap_bg = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(drtomy_state::get_tile_info_bg),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_tilemap_fg = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(drtomy_state::get_tile_info_fg),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
 
-	state->m_tilemap_fg->set_transparent_pen(0);
+	m_tilemap_fg->set_transparent_pen(0);
 }
 
 static SCREEN_UPDATE_IND16( drtomy )
@@ -281,18 +283,16 @@ static INPUT_PORTS_START( drtomy )
 INPUT_PORTS_END
 
 
-static MACHINE_START( drtomy )
+void drtomy_state::machine_start()
 {
-	drtomy_state *state = machine.driver_data<drtomy_state>();
 
-	state->save_item(NAME(state->m_oki_bank));
+	save_item(NAME(m_oki_bank));
 }
 
-static MACHINE_RESET( drtomy )
+void drtomy_state::machine_reset()
 {
-	drtomy_state *state = machine.driver_data<drtomy_state>();
 
-	state->m_oki_bank = 0;
+	m_oki_bank = 0;
 }
 
 static MACHINE_CONFIG_START( drtomy, drtomy_state )
@@ -302,8 +302,6 @@ static MACHINE_CONFIG_START( drtomy, drtomy_state )
 	MCFG_CPU_PROGRAM_MAP(drtomy_map)
 	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
 
-	MCFG_MACHINE_START(drtomy)
-	MCFG_MACHINE_RESET(drtomy)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -316,7 +314,6 @@ static MACHINE_CONFIG_START( drtomy, drtomy_state )
 	MCFG_GFXDECODE(drtomy)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(drtomy)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

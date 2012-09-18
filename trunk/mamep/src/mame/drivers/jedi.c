@@ -129,8 +129,8 @@ static TIMER_CALLBACK( generate_interrupt )
 	int scanline = param;
 
 	/* IRQ is set by /32V */
-	cputag_set_input_line(machine, "maincpu", M6502_IRQ_LINE, (scanline & 32) ? CLEAR_LINE : ASSERT_LINE);
-	cputag_set_input_line(machine, "audiocpu", M6502_IRQ_LINE, (scanline & 32) ? CLEAR_LINE : ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(M6502_IRQ_LINE, (scanline & 32) ? CLEAR_LINE : ASSERT_LINE);
+	machine.device("audiocpu")->execute().set_input_line(M6502_IRQ_LINE, (scanline & 32) ? CLEAR_LINE : ASSERT_LINE);
 
 	/* set up for the next */
 	scanline += 32;
@@ -142,7 +142,7 @@ static TIMER_CALLBACK( generate_interrupt )
 
 WRITE8_MEMBER(jedi_state::main_irq_ack_w)
 {
-	cputag_set_input_line(machine(), "maincpu", M6502_IRQ_LINE, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(M6502_IRQ_LINE, CLEAR_LINE);
 }
 
 
@@ -153,19 +153,18 @@ WRITE8_MEMBER(jedi_state::main_irq_ack_w)
  *
  *************************************/
 
-static MACHINE_START( jedi )
+void jedi_state::machine_start()
 {
-	jedi_state *state = machine.driver_data<jedi_state>();
 
 	/* set a timer to run the interrupts */
-	state->m_interrupt_timer = machine.scheduler().timer_alloc(FUNC(generate_interrupt));
-	state->m_interrupt_timer->adjust(machine.primary_screen->time_until_pos(32), 32);
+	m_interrupt_timer = machine().scheduler().timer_alloc(FUNC(generate_interrupt));
+	m_interrupt_timer->adjust(machine().primary_screen->time_until_pos(32), 32);
 
 	/* configure the banks */
-	state->membank("bank1")->configure_entries(0, 3, state->memregion("maincpu")->base() + 0x10000, 0x4000);
+	membank("bank1")->configure_entries(0, 3, memregion("maincpu")->base() + 0x10000, 0x4000);
 
 	/* set up save state */
-	state->save_item(NAME(state->m_nvram_enabled));
+	save_item(NAME(m_nvram_enabled));
 }
 
 
@@ -176,13 +175,12 @@ static MACHINE_START( jedi )
  *
  *************************************/
 
-static MACHINE_RESET( jedi )
+void jedi_state::machine_reset()
 {
-	jedi_state *state = machine.driver_data<jedi_state>();
 
 	/* init globals */
-	state->m_a2d_select = 0;
-	state->m_nvram_enabled = 0;
+	m_a2d_select = 0;
+	m_nvram_enabled = 0;
 }
 
 
@@ -346,8 +344,6 @@ static MACHINE_CONFIG_START( jedi, jedi_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(240))
 
-	MCFG_MACHINE_START(jedi)
-	MCFG_MACHINE_RESET(jedi)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */

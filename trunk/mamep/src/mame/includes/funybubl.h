@@ -11,7 +11,7 @@ public:
 	required_shared_ptr<UINT8> m_paletteram;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 
 	/* memory */
 	UINT8      m_banked_vram[0x2000];
@@ -20,6 +20,8 @@ public:
 	DECLARE_WRITE8_MEMBER(funybubl_soundcommand_w);
 	DECLARE_WRITE8_MEMBER(funybubl_paldatawrite);
 	DECLARE_WRITE8_MEMBER(funybubl_oki_bank_sw);
+	virtual void machine_start();
+	virtual void video_start();
 };
 
 
@@ -27,5 +29,5 @@ public:
 /*----------- defined in video/funybubl.c -----------*/
 
 
-VIDEO_START(funybubl);
+
 SCREEN_UPDATE_IND16(funybubl);

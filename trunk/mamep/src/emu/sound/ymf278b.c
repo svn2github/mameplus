@@ -71,7 +71,9 @@
 #define VERBOSE 0
 #define LOG(x) do { if (VERBOSE) logerror x; } while (0)
 
-typedef struct
+struct YMF278BChip;
+
+struct YMF278BSlot
 {
 	INT16 wave;		/* wavetable number */
 	INT16 F_NUMBER;	/* frequency */
@@ -110,10 +112,10 @@ typedef struct
 	INT8 env_preverb;
 
 	int num;		/* slot number (for debug only) */
-	struct _YMF278BChip *chip;	/* pointer back to parent chip */
-} YMF278BSlot;
+	YMF278BChip *chip;	/* pointer back to parent chip */
+};
 
-typedef struct _YMF278BChip
+struct YMF278BChip
 {
 	UINT8 pcmregs[256];
 	YMF278BSlot slots[24];
@@ -151,13 +153,13 @@ typedef struct _YMF278BChip
 	INT32 mix_level[8];
 
 	sound_stream * stream;
-} YMF278BChip;
+};
 
 INLINE YMF278BChip *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == YMF278B);
-	return (YMF278BChip *)downcast<legacy_device_base *>(device)->token();
+	return (YMF278BChip *)downcast<ymf278b_device *>(device)->token();
 }
 
 static void ymf278b_write_memory(YMF278BChip *chip, UINT32 offset, UINT8 data)
@@ -1085,30 +1087,51 @@ static DEVICE_START( ymf278b )
 }
 
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
+const device_type YMF278B = &device_creator<ymf278b_device>;
 
-DEVICE_GET_INFO( ymf278b )
+ymf278b_device::ymf278b_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, YMF278B, "YMF278B", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(YMF278BChip);					break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(YMF278BChip));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( ymf278b );		break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							info->start = DEVICE_RESET_NAME( ymf278b );		break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "YMF278B");						break;
-		case DEVINFO_STR_FAMILY:						strcpy(info->s, "Yamaha FM");					break;
-		case DEVINFO_STR_VERSION:						strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void ymf278b_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void ymf278b_device::device_start()
+{
+	DEVICE_START_NAME( ymf278b )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void ymf278b_device::device_reset()
+{
+	DEVICE_RESET_NAME( ymf278b )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void ymf278b_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(YMF278B, ymf278b);

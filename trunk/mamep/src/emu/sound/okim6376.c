@@ -34,8 +34,7 @@ struct ADPCMVoice
 	INT32 step;
 };
 
-typedef struct _okim6376_state okim6376_state;
-struct _okim6376_state
+struct okim6376_state
 {
 	#define OKIM6376_VOICES		2
 	struct ADPCMVoice voice[OKIM6376_VOICES];
@@ -91,7 +90,7 @@ INLINE okim6376_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == OKIM6376);
-	return (okim6376_state *)downcast<legacy_device_base *>(device)->token();
+	return (okim6376_state *)downcast<okim6376_device *>(device)->token();
 }
 
 
@@ -619,31 +618,51 @@ WRITE8_DEVICE_HANDLER( okim6376_w )
 }
 
 
+const device_type OKIM6376 = &device_creator<okim6376_device>;
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( okim6376 )
+okim6376_device::okim6376_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, OKIM6376, "OKI6376", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:				info->i = sizeof(okim6376_state);					break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(okim6376_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:						info->start = DEVICE_START_NAME( okim6376 );		break;
-		case DEVINFO_FCT_STOP:						/* nothing */										break;
-		case DEVINFO_FCT_RESET:						info->reset = DEVICE_RESET_NAME( okim6376 );		break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:						strcpy(info->s, "OKI6376");							break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "OKI ADPCM");						break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");								break;
-		case DEVINFO_STR_SOURCE_FILE:				strcpy(info->s, __FILE__);							break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void okim6376_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void okim6376_device::device_start()
+{
+	DEVICE_START_NAME( okim6376 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void okim6376_device::device_reset()
+{
+	DEVICE_RESET_NAME( okim6376 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void okim6376_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(OKIM6376, okim6376);

@@ -122,7 +122,6 @@ void ncr539x_device::device_config_complete()
 	// or initialize to defaults if none provided
 	else
 	{
-		scsidevs = NULL;
 		memset(&m_out_irq_cb, 0, sizeof(m_out_irq_cb));
 		memset(&m_out_drq_cb, 0, sizeof(m_out_drq_cb));
 	}
@@ -149,8 +148,6 @@ ncr539x_device::ncr539x_device(const machine_config &mconfig, const char *tag, d
 
 void ncr539x_device::device_start()
 {
-	int i;
-
 	memset(m_scsi_devices, 0, sizeof(m_scsi_devices));
 
 	// resolve line callbacks
@@ -158,10 +155,13 @@ void ncr539x_device::device_start()
 	m_out_drq_func.resolve(m_out_drq_cb, *this);
 
 	// try to open the devices
-	for (i = 0; i < scsidevs->devs_present; i++)
+	for( device_t *device = owner()->first_subdevice(); device != NULL; device = device->next() )
 	{
-		m_scsi_devices[scsidevs->devices[i].scsiID] = machine().device<scsidev_device>( scsidevs->devices[i].tag );
-		assert( m_scsi_devices[scsidevs->devices[i].scsiID] != NULL );
+		scsidev_device *scsidev = dynamic_cast<scsidev_device *>(device);
+		if( scsidev != NULL )
+		{
+			m_scsi_devices[scsidev->GetDeviceID()] = scsidev;
+		}
 	}
 
 	m_operation_timer = timer_alloc(0, NULL);
@@ -191,8 +191,6 @@ void ncr539x_device::device_reset()
 
 	m_out_irq_func(CLEAR_LINE);
 	m_out_drq_func(CLEAR_LINE);
-
-	scan_devices();
 }
 
 void ncr539x_device::dma_read_data(int bytes, UINT8 *pData)
@@ -221,21 +219,6 @@ void ncr539x_device::dma_write_data(int bytes, UINT8 *pData)
 		else
 		{
 			logerror("ncr539x: write to unknown device SCSI ID %d\n", m_last_id);
-		}
-	}
-}
-
-void ncr539x_device::scan_devices()
-{
-	int i;
-
-	// try to open the devices
-	for (i = 0; i < scsidevs->devs_present; i++)
-	{
-		// if a device wasn't already allocated
-		if (!m_scsi_devices[scsidevs->devices[i].scsiID])
-		{
-			m_scsi_devices[scsidevs->devices[i].scsiID] = machine().device<scsidev_device>( scsidevs->devices[i].tag );
 		}
 	}
 }
@@ -363,7 +346,7 @@ READ8_MEMBER( ncr539x_device::read )
 
 	#if VERBOSE
 	#if VERBOSE_READS
-	printf("539x: Read @ %s (%02x) (PC=%x) (status %02x irq_status %02x)\n", rdregs[offset], offset, cpu_get_pc(&space.device()), m_status, m_irq_status);
+	printf("539x: Read @ %s (%02x) (PC=%x) (status %02x irq_status %02x)\n", rdregs[offset], offset, space.device().safe_pc(), m_status, m_irq_status);
 	#endif
 	#endif
 
@@ -394,7 +377,7 @@ READ8_MEMBER( ncr539x_device::read )
 					update_fifo_internal_state(fifo_bytes);
 
 					#if VERBOSE
-					printf("Read %02x from FIFO[%d], FIFO now contains %d bytes (PC=%x, m_buffer_remaining %x)\n", rv, m_fifo_ptr-1, fifo_bytes, cpu_get_pc(&space.device()), m_buffer_remaining);
+					printf("Read %02x from FIFO[%d], FIFO now contains %d bytes (PC=%x, m_buffer_remaining %x)\n", rv, m_fifo_ptr-1, fifo_bytes, space.device().safe_pc(), m_buffer_remaining);
 					#endif
 
 					if (fifo_bytes == 0)
@@ -501,7 +484,7 @@ READ8_MEMBER( ncr539x_device::read )
 WRITE8_MEMBER( ncr539x_device::write )
 {
 	#if VERBOSE
-	if (offset != 2) printf("539x: Write %02x @ %s (%02x) (PC=%x)\n", data, wrregs[offset], offset, cpu_get_pc(&space.device()));
+	if (offset != 2) printf("539x: Write %02x @ %s (%02x) (PC=%x)\n", data, wrregs[offset], offset, space.device().safe_pc());
 	#endif
 
 	switch (offset)

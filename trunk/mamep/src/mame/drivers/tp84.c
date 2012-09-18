@@ -74,10 +74,9 @@ C004      76489 #4 trigger
 
 
 
-static MACHINE_START( tp84 )
+void tp84_state::machine_start()
 {
-	tp84_state *state = machine.driver_data<tp84_state>();
-	state->m_audiocpu = machine.device<cpu_device>("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 }
 
 
@@ -120,7 +119,7 @@ WRITE8_MEMBER(tp84_state::tp84_filter_w)
 
 WRITE8_MEMBER(tp84_state::tp84_sh_irqtrigger_w)
 {
-	cputag_set_input_line_and_vector(machine(), "audiocpu",0,HOLD_LINE,0xff);
+	machine().device("audiocpu")->execute().set_input_line_and_vector(0,HOLD_LINE,0xff);
 }
 
 
@@ -193,9 +192,9 @@ static ADDRESS_MAP_START( audio_map, AS_PROGRAM, 8, tp84_state )
 	AM_RANGE(0x8000, 0x8000) AM_READ(tp84_sh_timer_r)
 	AM_RANGE(0xa000, 0xa1ff) AM_WRITE(tp84_filter_w)
 	AM_RANGE(0xc000, 0xc000) AM_WRITENOP
-	AM_RANGE(0xc001, 0xc001) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0xc003, 0xc003) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
-	AM_RANGE(0xc004, 0xc004) AM_DEVWRITE_LEGACY("sn3", sn76496_w)
+	AM_RANGE(0xc001, 0xc001) AM_DEVWRITE("y2404_1", y2404_new_device, write)
+	AM_RANGE(0xc003, 0xc003) AM_DEVWRITE("y2404_2", y2404_new_device, write)
+	AM_RANGE(0xc004, 0xc004) AM_DEVWRITE("y2404_3", y2404_new_device, write)
 ADDRESS_MAP_END
 
 
@@ -284,8 +283,25 @@ static INTERRUPT_GEN( sub_vblank_irq )
 	tp84_state *state = device->machine().driver_data<tp84_state>();
 
 	if(state->m_sub_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
+
+
+/*************************************
+ *
+ *  Sound interface
+ *
+ *************************************/
+
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
 
 
 static MACHINE_CONFIG_START( tp84, tp84_state )
@@ -305,7 +321,6 @@ static MACHINE_CONFIG_START( tp84, tp84_state )
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* 100 CPU slices per frame - an high value to ensure proper */
 							/* synchronization of the CPUs */
 
-	MCFG_MACHINE_START(tp84)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -318,20 +333,21 @@ static MACHINE_CONFIG_START( tp84, tp84_state )
 	MCFG_GFXDECODE(tp84)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_PALETTE_INIT(tp84)
-	MCFG_VIDEO_START(tp84)
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", Y2404, XTAL_14_31818MHz/8) /* verified on pcb */
+	MCFG_SOUND_ADD("y2404_1", Y2404_NEW, XTAL_14_31818MHz/8) /* verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "filter1", 0.75)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", Y2404, XTAL_14_31818MHz/8) /* verified on pcb */
+	MCFG_SOUND_ADD("y2404_2", Y2404_NEW, XTAL_14_31818MHz/8) /* verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "filter2", 0.75)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", Y2404, XTAL_14_31818MHz/8) /* verified on pcb */
+	MCFG_SOUND_ADD("y2404_3", Y2404_NEW, XTAL_14_31818MHz/8) /* verified on pcb */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "filter3", 0.75)
+	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_SOUND_ADD("filter1", FILTER_RC, 0)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)

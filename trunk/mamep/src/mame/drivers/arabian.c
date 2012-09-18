@@ -81,8 +81,8 @@ WRITE8_MEMBER(arabian_state::ay8910_portb_w)
         bit 0 = coin 1 counter
     */
 
-	cputag_set_input_line(machine(), "mcu", MB88_IRQ_LINE, data & 0x20 ? CLEAR_LINE : ASSERT_LINE);
-	cputag_set_input_line(machine(), "mcu", INPUT_LINE_RESET, data & 0x10 ? CLEAR_LINE : ASSERT_LINE);
+	machine().device("mcu")->execute().set_input_line(MB88_IRQ_LINE, data & 0x20 ? CLEAR_LINE : ASSERT_LINE);
+	machine().device("mcu")->execute().set_input_line(INPUT_LINE_RESET, data & 0x10 ? CLEAR_LINE : ASSERT_LINE);
 
 	/* clock the coin counters */
 	coin_counter_w(machine(), 1, ~data & 0x02);
@@ -340,20 +340,18 @@ static const ay8910_interface ay8910_config =
  *
  *************************************/
 
-static MACHINE_START( arabian )
+void arabian_state::machine_start()
 {
-	arabian_state *state = machine.driver_data<arabian_state>();
 
-	state->save_item(NAME(state->m_mcu_port_o));
-	state->save_item(NAME(state->m_mcu_port_p));
-	state->save_item(NAME(state->m_mcu_port_r));
+	save_item(NAME(m_mcu_port_o));
+	save_item(NAME(m_mcu_port_p));
+	save_item(NAME(m_mcu_port_r));
 }
 
-static MACHINE_RESET( arabian )
+void arabian_state::machine_reset()
 {
-	arabian_state *state = machine.driver_data<arabian_state>();
 
-	state->m_video_control = 0;
+	m_video_control = 0;
 }
 
 static MACHINE_CONFIG_START( arabian, arabian_state )
@@ -369,8 +367,6 @@ static MACHINE_CONFIG_START( arabian, arabian_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(arabian)
-	MCFG_MACHINE_RESET(arabian)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -382,8 +378,6 @@ static MACHINE_CONFIG_START( arabian, arabian_state )
 
 	MCFG_PALETTE_LENGTH(256*32)
 
-	MCFG_PALETTE_INIT(arabian)
-	MCFG_VIDEO_START(arabian)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -84,9 +84,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( spc_map, AS_PROGRAM, 8, snes_state )
 	AM_RANGE(0x0000, 0x00ef) AM_DEVREADWRITE_LEGACY("spc700", spc_ram_r, spc_ram_w)	/* lower 32k ram */
 	AM_RANGE(0x00f0, 0x00ff) AM_DEVREADWRITE_LEGACY("spc700", spc_io_r, spc_io_w)	/* spc io */
-	AM_RANGE(0x0100, 0xffff) AM_DEVWRITE_LEGACY("spc700", spc_ram_100_w)
-	AM_RANGE(0x0100, 0xffbf) AM_DEVREAD_LEGACY("spc700", spc_ram_100_r)
-	AM_RANGE(0xffc0, 0xffff) AM_DEVREAD_LEGACY("spc700", spc_ipl_r)
+	AM_RANGE(0x0100, 0xffff) AM_DEVREADWRITE_LEGACY("spc700", spc_ram_100_r, spc_ram_100_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( dsp_prg_map, AS_PROGRAM, 32, snes_state )
@@ -720,8 +718,8 @@ static MACHINE_CONFIG_START( snes_base, snes_state )
 	MCFG_VIDEO_START(snes)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_RAW_PARAMS(DOTCLK_NTSC, SNES_HTOTAL, 0, SNES_SCR_WIDTH, SNES_VTOTAL_NTSC, 0, SNES_SCR_HEIGHT_NTSC)
-	MCFG_SCREEN_UPDATE_STATIC(snes)
+	MCFG_SCREEN_RAW_PARAMS(DOTCLK_NTSC * 2, SNES_HTOTAL * 2, 0, SNES_SCR_WIDTH * 2, SNES_VTOTAL_NTSC, 0, SNES_SCR_HEIGHT_NTSC)
+	MCFG_SCREEN_UPDATE_DRIVER( snes_state, snes_screen_update )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -812,7 +810,7 @@ MACHINE_CONFIG_END
 ROM_START( snes )
 	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
+	ROM_REGION( 0x100, "sound_ipl", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 
 	ROM_REGION( 0x10000, "addons", ROMREGION_ERASE00 )		/* add-on chip ROMs (DSP, SFX, etc) */
@@ -825,7 +823,7 @@ ROM_END
 ROM_START( snesdsp )
 	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
+	ROM_REGION( 0x100, "sound_ipl", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 
 	ROM_REGION( 0x10000, "addons", 0 )		/* add-on chip ROMs (DSP, SFX, etc) */
@@ -843,7 +841,7 @@ ROM_END
 ROM_START( snesst10 )
 	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
+	ROM_REGION( 0x100, "sound_ipl", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 
 	ROM_REGION( 0x11000, "addons", 0 )		/* add-on chip ROMs (DSP, SFX, etc) */
@@ -857,7 +855,7 @@ ROM_END
 ROM_START( snesst11 )
 	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
+	ROM_REGION( 0x100, "sound_ipl", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 
 	ROM_REGION( 0x11000, "addons", 0 )		/* add-on chip ROMs (DSP, SFX, etc) */
@@ -871,7 +869,7 @@ ROM_END
 ROM_START( snessfx )
 	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
+	ROM_REGION( 0x100, "sound_ipl", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 
 	ROM_REGION( 0x10000, "addons", ROMREGION_ERASE00 )		/* add-on chip ROMs (DSP, SFX, etc) */
@@ -884,7 +882,7 @@ ROM_END
 ROM_START( snespal )
 	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
+	ROM_REGION( 0x100, "sound_ipl", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 
 	ROM_REGION( 0x10000, "addons", ROMREGION_ERASE00 )		/* add-on chip ROMs (DSP, SFX, etc) */
@@ -897,7 +895,7 @@ ROM_END
 ROM_START( snespdsp )
 	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
+	ROM_REGION( 0x100, "sound_ipl", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 
 	ROM_REGION( 0x10000, "addons", 0 )		/* add-on chip ROMs (DSP, SFX, etc) */
@@ -915,7 +913,7 @@ ROM_END
 ROM_START( snespsfx )
 	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
+	ROM_REGION( 0x100, "sound_ipl", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 
 	ROM_REGION( 0x10000, "addons", ROMREGION_ERASE00 )		/* add-on chip ROMs (DSP, SFX, etc) */
@@ -928,7 +926,7 @@ ROM_END
 ROM_START( snesst )
 	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
+	ROM_REGION( 0x100, "sound_ipl", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 
 	ROM_REGION( 0x10000, "addons", ROMREGION_ERASE00 )		/* add-on chip ROMs (DSP, SFX, etc) */
@@ -945,7 +943,7 @@ ROM_END
 ROM_START( snesbsx )
 	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
+	ROM_REGION( 0x100, "sound_ipl", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 
 	ROM_REGION( 0x10000, "addons", 0 )		/* add-on chip ROMs (DSP, SFX, etc) */

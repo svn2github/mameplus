@@ -40,9 +40,9 @@ public:
 	INT32       m_banknum;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
-	device_t *m_subcpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
+	cpu_device *m_subcpu;
 	device_t *m_tc0100scn;
 	device_t *m_tc0140syt;
 	DECLARE_READ16_MEMBER(sharedram_r);
@@ -61,6 +61,13 @@ public:
 	DECLARE_WRITE16_MEMBER(wgp_piv_ctrl_word_w);
 	DECLARE_DRIVER_INIT(wgp);
 	DECLARE_DRIVER_INIT(wgp2);
+	TILE_GET_INFO_MEMBER(get_piv0_tile_info);
+	TILE_GET_INFO_MEMBER(get_piv1_tile_info);
+	TILE_GET_INFO_MEMBER(get_piv2_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	DECLARE_VIDEO_START(wgp2);
 };
 
 
@@ -68,6 +75,6 @@ public:
 
 
 
-VIDEO_START( wgp );
-VIDEO_START( wgp2 );
+
+
 SCREEN_UPDATE_IND16( wgp );

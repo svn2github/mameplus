@@ -16,12 +16,12 @@
 
 ***************************************************************************/
 
-PALETTE_INIT( xorworld )
+void xorworld_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
-	for (i = 0;i < machine.total_colors();i++){
+	for (i = 0;i < machine().total_colors();i++){
 		int bit0,bit1,bit2,bit3;
 		int r,g,b;
 
@@ -32,18 +32,18 @@ PALETTE_INIT( xorworld )
 		bit3 = (color_prom[0] >> 3) & 0x01;
 		r = 0x0e*bit0 + 0x1e*bit1 + 0x44*bit2 + 0x8f*bit3;
 		/* green component */
-		bit0 = (color_prom[machine.total_colors()] >> 0) & 0x01;
-		bit1 = (color_prom[machine.total_colors()] >> 1) & 0x01;
-		bit2 = (color_prom[machine.total_colors()] >> 2) & 0x01;
-		bit3 = (color_prom[machine.total_colors()] >> 3) & 0x01;
+		bit0 = (color_prom[machine().total_colors()] >> 0) & 0x01;
+		bit1 = (color_prom[machine().total_colors()] >> 1) & 0x01;
+		bit2 = (color_prom[machine().total_colors()] >> 2) & 0x01;
+		bit3 = (color_prom[machine().total_colors()] >> 3) & 0x01;
 		g = 0x0e*bit0 + 0x1e*bit1 + 0x44*bit2 + 0x8f*bit3;
 		/* blue component */
-		bit0 = (color_prom[2*machine.total_colors()] >> 0) & 0x01;
-		bit1 = (color_prom[2*machine.total_colors()] >> 1) & 0x01;
-		bit2 = (color_prom[2*machine.total_colors()] >> 2) & 0x01;
-		bit3 = (color_prom[2*machine.total_colors()] >> 3) & 0x01;
+		bit0 = (color_prom[2*machine().total_colors()] >> 0) & 0x01;
+		bit1 = (color_prom[2*machine().total_colors()] >> 1) & 0x01;
+		bit2 = (color_prom[2*machine().total_colors()] >> 2) & 0x01;
+		bit3 = (color_prom[2*machine().total_colors()] >> 3) & 0x01;
 		b = 0x0e*bit0 + 0x1e * bit1 + 0x44*bit2 + 0x8f*bit3;
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
+		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
 
 		color_prom++;
 	}
@@ -66,20 +66,18 @@ WRITE16_MEMBER(xorworld_state::xorworld_videoram16_w)
       0  | xxxx---- -------- | color
 */
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(xorworld_state::get_bg_tile_info)
 {
-	xorworld_state *state = machine.driver_data<xorworld_state>();
-	UINT16 *videoram = state->m_videoram;
+	UINT16 *videoram = m_videoram;
 	int data = videoram[tile_index];
 	int code = data & 0x0fff;
 
-	SET_TILE_INFO(0, code, data >> 12, 0);
+	SET_TILE_INFO_MEMBER(0, code, data >> 12, 0);
 }
 
-VIDEO_START( xorworld )
+void xorworld_state::video_start()
 {
-	xorworld_state *state = machine.driver_data<xorworld_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows,
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(xorworld_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,
 		 8, 8, 32, 32);
 }
 

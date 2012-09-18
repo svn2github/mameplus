@@ -64,7 +64,7 @@ static const eeprom_interface eeprom_intf =
 
 WRITE16_MEMBER(overdriv_state::eeprom_w)
 {
-//logerror("%06x: write %04x to eeprom_w\n",cpu_get_pc(&space.device()),data);
+//logerror("%06x: write %04x to eeprom_w\n",space.device().safe_pc(),data);
 	if (ACCESSING_BITS_0_7)
 	{
 		/* bit 0 is data */
@@ -81,9 +81,9 @@ static TIMER_DEVICE_CALLBACK( overdriv_cpuA_scanline )
 	/* TODO: irqs routines are TOO slow right now, it ends up firing spurious irqs for whatever reason (shared ram fighting?) */
 	/*       this is a temporary solution to get rid of deprecat lib and the crashes, but also makes the game timer to be too slow */
 	if(scanline == 256 && timer.machine().primary_screen->frame_number() & 1) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "maincpu", 4, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 	else if((scanline % 128) == 0) // timer irq
-		cputag_set_input_line(timer.machine(), "maincpu", 5, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( cpuB_interrupt )
@@ -91,7 +91,7 @@ static INTERRUPT_GEN( cpuB_interrupt )
 	overdriv_state *state = device->machine().driver_data<overdriv_state>();
 
 	if (k053246_is_irq_enabled(state->m_k053246))
-		device_set_input_line(device, 4, HOLD_LINE);
+		device->execute().set_input_line(4, HOLD_LINE);
 }
 
 
@@ -101,7 +101,7 @@ WRITE16_MEMBER(overdriv_state::cpuA_ctrl_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		/* bit 0 probably enables the second 68000 */
-		device_set_input_line(m_subcpu, INPUT_LINE_RESET, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
+		m_subcpu->set_input_line(INPUT_LINE_RESET, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
 
 		/* bit 1 is clear during service mode - function unknown */
 
@@ -109,7 +109,7 @@ WRITE16_MEMBER(overdriv_state::cpuA_ctrl_w)
 		coin_counter_w(machine(), 0, data & 0x10);
 		coin_counter_w(machine(), 1, data & 0x20);
 
-//logerror("%06x: write %04x to cpuA_ctrl_w\n",cpu_get_pc(&space.device()),data);
+//logerror("%06x: write %04x to cpuA_ctrl_w\n",space.device().safe_pc(),data);
 	}
 }
 
@@ -148,17 +148,17 @@ READ8_MEMBER(overdriv_state::overdriv_2_sound_r)
 
 WRITE16_MEMBER(overdriv_state::overdriv_soundirq_w)
 {
-	device_set_input_line(m_audiocpu, M6809_IRQ_LINE, HOLD_LINE);
+	m_audiocpu->set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE16_MEMBER(overdriv_state::overdriv_cpuB_irq5_w)
 {
-	device_set_input_line(m_subcpu, 5, HOLD_LINE);
+	m_subcpu->set_input_line(5, HOLD_LINE);
 }
 
 WRITE16_MEMBER(overdriv_state::overdriv_cpuB_irq6_w)
 {
-	device_set_input_line(m_subcpu, 6, HOLD_LINE);
+	m_subcpu->set_input_line(6, HOLD_LINE);
 }
 
 static ADDRESS_MAP_START( overdriv_master_map, AS_PROGRAM, 16, overdriv_state )
@@ -280,39 +280,37 @@ static const k051316_interface overdriv_k051316_intf_2 =
 };
 
 
-static MACHINE_START( overdriv )
+void overdriv_state::machine_start()
 {
-	overdriv_state *state = machine.driver_data<overdriv_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_subcpu = machine.device("sub");
-	state->m_k051316_1 = machine.device("k051316_1");
-	state->m_k051316_2 = machine.device("k051316_2");
-	state->m_k053260_1 = machine.device("k053260_1");
-	state->m_k053260_2 = machine.device("k053260_2");
-	state->m_k053246 = machine.device("k053246");
-	state->m_k053251 = machine.device("k053251");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_subcpu = machine().device<cpu_device>("sub");
+	m_k051316_1 = machine().device("k051316_1");
+	m_k051316_2 = machine().device("k051316_2");
+	m_k053260_1 = machine().device("k053260_1");
+	m_k053260_2 = machine().device("k053260_2");
+	m_k053246 = machine().device("k053246");
+	m_k053251 = machine().device("k053251");
 
-	state->save_item(NAME(state->m_cpuB_ctrl));
-	state->save_item(NAME(state->m_sprite_colorbase));
-	state->save_item(NAME(state->m_zoom_colorbase));
-	state->save_item(NAME(state->m_road_colorbase));
+	save_item(NAME(m_cpuB_ctrl));
+	save_item(NAME(m_sprite_colorbase));
+	save_item(NAME(m_zoom_colorbase));
+	save_item(NAME(m_road_colorbase));
 }
 
-static MACHINE_RESET( overdriv )
+void overdriv_state::machine_reset()
 {
-	overdriv_state *state = machine.driver_data<overdriv_state>();
 
-	state->m_cpuB_ctrl = 0;
-	state->m_sprite_colorbase = 0;
-	state->m_zoom_colorbase[0] = 0;
-	state->m_zoom_colorbase[1] = 0;
-	state->m_road_colorbase[0] = 0;
-	state->m_road_colorbase[1] = 0;
+	m_cpuB_ctrl = 0;
+	m_sprite_colorbase = 0;
+	m_zoom_colorbase[0] = 0;
+	m_zoom_colorbase[1] = 0;
+	m_road_colorbase[0] = 0;
+	m_road_colorbase[1] = 0;
 
 	/* start with cpu B halted */
-	cputag_set_input_line(machine, "sub", INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 static const k053252_interface overdriv_k053252_intf =
@@ -345,8 +343,6 @@ static MACHINE_CONFIG_START( overdriv, overdriv_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 
-	MCFG_MACHINE_START(overdriv)
-	MCFG_MACHINE_RESET(overdriv)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 	MCFG_EEPROM_DATA(overdriv_default_eeprom, 128)

@@ -30,6 +30,11 @@ public:
 	DECLARE_WRITE8_MEMBER(sprint8_lockout_w);
 	DECLARE_WRITE8_MEMBER(sprint8_int_reset_w);
 	DECLARE_WRITE8_MEMBER(sprint8_video_ram_w);
+	TILE_GET_INFO_MEMBER(get_tile_info1);
+	TILE_GET_INFO_MEMBER(get_tile_info2);
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -40,9 +45,9 @@ void sprint8_set_collision(running_machine &machine, int n);
 
 /*----------- defined in video/sprint8.c -----------*/
 
-PALETTE_INIT( sprint8 );
+
 SCREEN_VBLANK( sprint8 );
-VIDEO_START( sprint8 );
+
 SCREEN_UPDATE_IND16( sprint8 );
 
 

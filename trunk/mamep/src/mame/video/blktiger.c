@@ -12,21 +12,20 @@
 
 ***************************************************************************/
 
-static TILEMAP_MAPPER( bg8x4_scan )
+TILEMAP_MAPPER_MEMBER(blktiger_state::bg8x4_scan)
 {
 	/* logical (col,row) -> memory offset */
 	return (col & 0x0f) + ((row & 0x0f) << 4) + ((col & 0x70) << 4) + ((row & 0x30) << 7);
 }
 
-static TILEMAP_MAPPER( bg4x8_scan )
+TILEMAP_MAPPER_MEMBER(blktiger_state::bg4x8_scan)
 {
 	/* logical (col,row) -> memory offset */
 	return (col & 0x0f) + ((row & 0x0f) << 4) + ((col & 0x30) << 4) + ((row & 0x70) << 6);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(blktiger_state::get_bg_tile_info)
 {
-	blktiger_state *state = machine.driver_data<blktiger_state>();
 	/* the tile priority table is a guess compiled by looking at the game. It
        was not derived from a PROM so it could be wrong. */
 	static const UINT8 split_table[16] =
@@ -36,23 +35,22 @@ static TILE_GET_INFO( get_bg_tile_info )
 		0,0,0,0,
 		0,0,0,0
 	};
-	UINT8 attr = state->m_scroll_ram[2 * tile_index + 1];
+	UINT8 attr = m_scroll_ram[2 * tile_index + 1];
 	int color = (attr & 0x78) >> 3;
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
-			state->m_scroll_ram[2 * tile_index] + ((attr & 0x07) << 8),
+			m_scroll_ram[2 * tile_index] + ((attr & 0x07) << 8),
 			color,
 			(attr & 0x80) ? TILE_FLIPX : 0);
 	tileinfo.group = split_table[color];
 }
 
-static TILE_GET_INFO( get_tx_tile_info )
+TILE_GET_INFO_MEMBER(blktiger_state::get_tx_tile_info)
 {
-	blktiger_state *state = machine.driver_data<blktiger_state>();
-	UINT8 attr = state->m_txvideoram[tile_index + 0x400];
-	SET_TILE_INFO(
+	UINT8 attr = m_txvideoram[tile_index + 0x400];
+	SET_TILE_INFO_MEMBER(
 			0,
-			state->m_txvideoram[tile_index] + ((attr & 0xe0) << 3),
+			m_txvideoram[tile_index] + ((attr & 0xe0) << 3),
 			attr & 0x1f,
 			0);
 }
@@ -64,33 +62,32 @@ static TILE_GET_INFO( get_tx_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( blktiger )
+void blktiger_state::video_start()
 {
-	blktiger_state *state = machine.driver_data<blktiger_state>();
 
-	state->m_chon = 1;
-	state->m_bgon = 1;
-	state->m_objon = 1;
-	state->m_screen_layout = 0;
+	m_chon = 1;
+	m_bgon = 1;
+	m_objon = 1;
+	m_screen_layout = 0;
 
-	state->m_scroll_ram = auto_alloc_array(machine, UINT8, BGRAM_BANK_SIZE * BGRAM_BANKS);
+	m_scroll_ram = auto_alloc_array(machine(), UINT8, BGRAM_BANK_SIZE * BGRAM_BANKS);
 
-	state->m_tx_tilemap =    tilemap_create(machine, get_tx_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bg_tilemap8x4 = tilemap_create(machine, get_bg_tile_info, bg8x4_scan, 16, 16, 128, 64);
-	state->m_bg_tilemap4x8 = tilemap_create(machine, get_bg_tile_info, bg4x8_scan, 16, 16, 64, 128);
+	m_tx_tilemap =    &machine().tilemap().create(tilemap_get_info_delegate(FUNC(blktiger_state::get_tx_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap8x4 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(blktiger_state::get_bg_tile_info),this), tilemap_mapper_delegate(FUNC(blktiger_state::bg8x4_scan),this), 16, 16, 128, 64);
+	m_bg_tilemap4x8 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(blktiger_state::get_bg_tile_info),this), tilemap_mapper_delegate(FUNC(blktiger_state::bg4x8_scan),this), 16, 16, 64, 128);
 
-	state->m_tx_tilemap->set_transparent_pen(3);
+	m_tx_tilemap->set_transparent_pen(3);
 
-	state->m_bg_tilemap8x4->set_transmask(0, 0xffff, 0x8000);	/* split type 0 is totally transparent in front half */
-	state->m_bg_tilemap8x4->set_transmask(1, 0xfff0, 0x800f);	/* split type 1 has pens 4-15 transparent in front half */
-	state->m_bg_tilemap8x4->set_transmask(2, 0xff00, 0x80ff);	/* split type 1 has pens 8-15 transparent in front half */
-	state->m_bg_tilemap8x4->set_transmask(3, 0xf000, 0x8fff);	/* split type 1 has pens 12-15 transparent in front half */
-	state->m_bg_tilemap4x8->set_transmask(0, 0xffff, 0x8000);
-	state->m_bg_tilemap4x8->set_transmask(1, 0xfff0, 0x800f);
-	state->m_bg_tilemap4x8->set_transmask(2, 0xff00, 0x80ff);
-	state->m_bg_tilemap4x8->set_transmask(3, 0xf000, 0x8fff);
+	m_bg_tilemap8x4->set_transmask(0, 0xffff, 0x8000);	/* split type 0 is totally transparent in front half */
+	m_bg_tilemap8x4->set_transmask(1, 0xfff0, 0x800f);	/* split type 1 has pens 4-15 transparent in front half */
+	m_bg_tilemap8x4->set_transmask(2, 0xff00, 0x80ff);	/* split type 1 has pens 8-15 transparent in front half */
+	m_bg_tilemap8x4->set_transmask(3, 0xf000, 0x8fff);	/* split type 1 has pens 12-15 transparent in front half */
+	m_bg_tilemap4x8->set_transmask(0, 0xffff, 0x8000);
+	m_bg_tilemap4x8->set_transmask(1, 0xfff0, 0x800f);
+	m_bg_tilemap4x8->set_transmask(2, 0xff00, 0x80ff);
+	m_bg_tilemap4x8->set_transmask(3, 0xf000, 0x8fff);
 
-	state->save_pointer(NAME(state->m_scroll_ram), BGRAM_BANK_SIZE * BGRAM_BANKS);
+	save_pointer(NAME(m_scroll_ram), BGRAM_BANK_SIZE * BGRAM_BANKS);
 }
 
 
@@ -155,7 +152,7 @@ WRITE8_MEMBER(blktiger_state::blktiger_video_control_w)
 	coin_counter_w(machine(), 1,data & 2);
 
 	/* bit 5 resets the sound CPU */
-	device_set_input_line(m_audiocpu, INPUT_LINE_RESET, (data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, (data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
 
 	/* bit 6 flips screen */
 	flip_screen_set(data & 0x40);

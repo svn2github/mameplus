@@ -200,7 +200,7 @@ READ16_MEMBER(tatsumi_state::cyclwarr_input2_r)
 WRITE16_MEMBER(tatsumi_state::cyclwarr_sound_w)
 {
 	soundlatch_byte_w(space, 0, data >> 8);
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 /***************************************************************************/
@@ -841,7 +841,7 @@ GFXDECODE_END
 
 static void sound_irq(device_t *device, int state)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", INPUT_LINE_IRQ0, state);
+	device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_IRQ0, state);
 }
 
 static const ym2151_interface ym2151_config =
@@ -851,20 +851,20 @@ static const ym2151_interface ym2151_config =
 
 static INTERRUPT_GEN( roundup5_interrupt )
 {
-	device_set_input_line_and_vector(device, 0, HOLD_LINE, 0xc8/4);	/* VBL */
+	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xc8/4);	/* VBL */
 }
 
 static void apache3_68000_reset(device_t *device)
 {
-	cputag_set_input_line(device->machine(), "sub2", INPUT_LINE_RESET, PULSE_LINE);
+	device->machine().device("sub2")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 }
 
-static MACHINE_RESET( apache3 )
+MACHINE_RESET_MEMBER(tatsumi_state,apache3)
 {
-	cputag_set_input_line(machine, "sub2", INPUT_LINE_RESET, ASSERT_LINE); // TODO
+	machine().device("sub2")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE); // TODO
 
 	/* Hook the RESET line, which resets the Z80 */
-	m68k_set_reset_callback(machine.device("sub"), apache3_68000_reset);
+	m68k_set_reset_callback(machine().device("sub"), apache3_68000_reset);
 }
 
 
@@ -888,7 +888,7 @@ static MACHINE_CONFIG_START( apache3, tatsumi_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 	MCFG_NVRAM_ADD_0FILL("nvram")
-	MCFG_MACHINE_RESET(apache3)
+	MCFG_MACHINE_RESET_OVERRIDE(tatsumi_state,apache3)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -898,7 +898,7 @@ static MACHINE_CONFIG_START( apache3, tatsumi_state )
 	MCFG_GFXDECODE(apache3)
 	MCFG_PALETTE_LENGTH(1024 + 4096) /* 1024 real colours, and 4096 arranged as series of cluts */
 
-	MCFG_VIDEO_START(apache3)
+	MCFG_VIDEO_START_OVERRIDE(tatsumi_state,apache3)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -939,7 +939,7 @@ static MACHINE_CONFIG_START( roundup5, tatsumi_state )
 	MCFG_GFXDECODE(roundup5)
 	MCFG_PALETTE_LENGTH(1024 + 4096) /* 1024 real colours, and 4096 arranged as series of cluts */
 
-	MCFG_VIDEO_START(roundup5)
+	MCFG_VIDEO_START_OVERRIDE(tatsumi_state,roundup5)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -981,7 +981,7 @@ static MACHINE_CONFIG_START( cyclwarr, tatsumi_state )
 	MCFG_GFXDECODE(cyclwarr)
 	MCFG_PALETTE_LENGTH(8192 + 8192)
 
-	MCFG_VIDEO_START(cyclwarr)
+	MCFG_VIDEO_START_OVERRIDE(tatsumi_state,cyclwarr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1023,7 +1023,7 @@ static MACHINE_CONFIG_START( bigfight, tatsumi_state )
 	MCFG_GFXDECODE(cyclwarr)
 	MCFG_PALETTE_LENGTH(8192 + 8192)
 
-	MCFG_VIDEO_START(bigfight)
+	MCFG_VIDEO_START_OVERRIDE(tatsumi_state,bigfight)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

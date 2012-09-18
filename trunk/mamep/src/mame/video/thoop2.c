@@ -36,29 +36,27 @@
       1  | x------- -------- | flip y
 */
 
-static TILE_GET_INFO( get_tile_info_thoop2_screen0 )
+TILE_GET_INFO_MEMBER(thoop2_state::get_tile_info_thoop2_screen0)
 {
-	thoop2_state *state = machine.driver_data<thoop2_state>();
-	int data = state->m_videoram[tile_index << 1];
-	int data2 = state->m_videoram[(tile_index << 1) + 1];
+	int data = m_videoram[tile_index << 1];
+	int data2 = m_videoram[(tile_index << 1) + 1];
 	int code = ((data & 0xfffc) >> 2) | ((data & 0x0003) << 14);
 
 	tileinfo.category = (data2 >> 6) & 0x03;
 
-	SET_TILE_INFO(1, code, data2 & 0x3f, TILE_FLIPYX((data2 >> 14) & 0x03));
+	SET_TILE_INFO_MEMBER(1, code, data2 & 0x3f, TILE_FLIPYX((data2 >> 14) & 0x03));
 }
 
 
-static TILE_GET_INFO( get_tile_info_thoop2_screen1 )
+TILE_GET_INFO_MEMBER(thoop2_state::get_tile_info_thoop2_screen1)
 {
-	thoop2_state *state = machine.driver_data<thoop2_state>();
-	int data = state->m_videoram[(0x1000/2) + (tile_index << 1)];
-	int data2 = state->m_videoram[(0x1000/2) + (tile_index << 1) + 1];
+	int data = m_videoram[(0x1000/2) + (tile_index << 1)];
+	int data2 = m_videoram[(0x1000/2) + (tile_index << 1) + 1];
 	int code = ((data & 0xfffc) >> 2) | ((data & 0x0003) << 14);
 
 	tileinfo.category = (data2 >> 6) & 0x03;
 
-	SET_TILE_INFO(1, code, data2 & 0x3f, TILE_FLIPYX((data2 >> 14) & 0x03));
+	SET_TILE_INFO_MEMBER(1, code, data2 & 0x3f, TILE_FLIPYX((data2 >> 14) & 0x03));
 }
 
 /***************************************************************************
@@ -79,19 +77,18 @@ WRITE16_MEMBER(thoop2_state::thoop2_vram_w)
 
 ***************************************************************************/
 
-VIDEO_START( thoop2 )
+void thoop2_state::video_start()
 {
-	thoop2_state *state = machine.driver_data<thoop2_state>();
 	int i;
 
-	state->m_pant[0] = tilemap_create(machine, get_tile_info_thoop2_screen0,tilemap_scan_rows,16,16,32,32);
-	state->m_pant[1] = tilemap_create(machine, get_tile_info_thoop2_screen1,tilemap_scan_rows,16,16,32,32);
+	m_pant[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(thoop2_state::get_tile_info_thoop2_screen0),this),TILEMAP_SCAN_ROWS,16,16,32,32);
+	m_pant[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(thoop2_state::get_tile_info_thoop2_screen1),this),TILEMAP_SCAN_ROWS,16,16,32,32);
 
-	state->m_pant[0]->set_transmask(0,0xff01,0x00ff); /* pens 1-7 opaque, pens 0, 8-15 transparent */
-	state->m_pant[1]->set_transmask(0,0xff01,0x00ff); /* pens 1-7 opaque, pens 0, 8-15 transparent */
+	m_pant[0]->set_transmask(0,0xff01,0x00ff); /* pens 1-7 opaque, pens 0, 8-15 transparent */
+	m_pant[1]->set_transmask(0,0xff01,0x00ff); /* pens 1-7 opaque, pens 0, 8-15 transparent */
 
 	for (i = 0; i < 5; i++){
-		state->m_sprite_table[i] = auto_alloc_array(machine, int, 512);
+		m_sprite_table[i] = auto_alloc_array(machine(), int, 512);
 	}
 }
 
@@ -151,7 +148,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 {
 	thoop2_state *state = machine.driver_data<thoop2_state>();
 	int j, x, y, ex, ey;
-	const gfx_element *gfx = machine.gfx[0];
+	gfx_element *gfx = machine.gfx[0];
 
 	static const int x_offset[2] = {0x0,0x2};
 	static const int y_offset[2] = {0x0,0x1};

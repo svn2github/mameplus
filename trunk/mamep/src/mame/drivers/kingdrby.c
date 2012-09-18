@@ -105,6 +105,11 @@ public:
 	DECLARE_READ8_MEMBER(key_matrix_r);
 	DECLARE_READ8_MEMBER(sound_cmd_r);
 	DECLARE_WRITE8_MEMBER(outportb_w);
+	TILE_GET_INFO_MEMBER(get_sc0_tile_info);
+	TILE_GET_INFO_MEMBER(get_sc1_tile_info);
+	virtual void video_start();
+	DECLARE_PALETTE_INIT(kingdrby);
+	DECLARE_PALETTE_INIT(kingdrbb);
 };
 
 
@@ -129,49 +134,46 @@ xxxx ---- basic color?
 ---- ---x tile bank
 */
 
-static TILE_GET_INFO( get_sc0_tile_info )
+TILE_GET_INFO_MEMBER(kingdrby_state::get_sc0_tile_info)
 {
-	kingdrby_state *state = machine.driver_data<kingdrby_state>();
-	int tile = state->m_vram[tile_index] | state->m_attr[tile_index]<<8;
-	int color = (state->m_attr[tile_index] & 0x06)>>1;
+	int tile = m_vram[tile_index] | m_attr[tile_index]<<8;
+	int color = (m_attr[tile_index] & 0x06)>>1;
 
 	tile&=0x1ff;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			tile,
 			color|0x40,
 			0);
 }
 
-static TILE_GET_INFO( get_sc1_tile_info )
+TILE_GET_INFO_MEMBER(kingdrby_state::get_sc1_tile_info)
 {
-	kingdrby_state *state = machine.driver_data<kingdrby_state>();
-	int tile = state->m_vram[tile_index] | state->m_attr[tile_index]<<8;
-	int color = (state->m_attr[tile_index] & 0x06)>>1;
+	int tile = m_vram[tile_index] | m_attr[tile_index]<<8;
+	int color = (m_attr[tile_index] & 0x06)>>1;
 
 	tile&=0x1ff;
 	//original 0xc
 	//0x13
 	//
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			tile,
 			color|0x40,
 			0);
 
-	tileinfo.category = (state->m_attr[tile_index] & 0x08)>>3;
+	tileinfo.category = (m_attr[tile_index] & 0x08)>>3;
 }
 
-static VIDEO_START(kingdrby)
+void kingdrby_state::video_start()
 {
-	kingdrby_state *state = machine.driver_data<kingdrby_state>();
-	state->m_sc0_tilemap = tilemap_create(machine, get_sc0_tile_info,tilemap_scan_rows,8,8,32,24);
-	state->m_sc1_tilemap = tilemap_create(machine, get_sc1_tile_info,tilemap_scan_rows,8,8,32,24);
-	state->m_sc0w_tilemap = tilemap_create(machine, get_sc0_tile_info,tilemap_scan_rows,8,8,32,32);
+	m_sc0_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(kingdrby_state::get_sc0_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,24);
+	m_sc1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(kingdrby_state::get_sc1_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,24);
+	m_sc0w_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(kingdrby_state::get_sc0_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
 
-	state->m_sc1_tilemap->set_transparent_pen(0);
+	m_sc1_tilemap->set_transparent_pen(0);
 }
 
 static const UINT8 hw_sprite[16] =
@@ -286,7 +288,7 @@ WRITE8_MEMBER(kingdrby_state::hopper_io_w)
 
 WRITE8_MEMBER(kingdrby_state::sound_cmd_w)
 {
-	cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	m_sound_cmd = data;
 	/* soundlatch is unneeded since we are already using perfect interleave. */
 	// soundlatch_byte_w(space,0, data);
@@ -953,9 +955,9 @@ static const ym2203_interface cowrace_ym2203_interface =
 	DEVCB_NULL
 };
 
-static PALETTE_INIT(kingdrby)
+PALETTE_INIT_MEMBER(kingdrby_state,kingdrby)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int	bit0, bit1, bit2 , r, g, b;
 	int	i;
 
@@ -974,15 +976,15 @@ static PALETTE_INIT(kingdrby)
 		bit2 = (color_prom[0] >> 5) & 0x01;
 		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 		color_prom++;
 	}
 }
 
-static PALETTE_INIT(kingdrbb)
+PALETTE_INIT_MEMBER(kingdrby_state,kingdrbb)
 {
-	UINT8 *raw_prom = machine.root_device().memregion("raw_prom")->base();
-	UINT8 *prom = machine.root_device().memregion("proms")->base();
+	UINT8 *raw_prom = machine().root_device().memregion("raw_prom")->base();
+	UINT8 *prom = machine().root_device().memregion("proms")->base();
 	int	bit0, bit1, bit2 , r, g, b;
 	int	i;
 
@@ -1007,7 +1009,7 @@ static PALETTE_INIT(kingdrbb)
 		bit2 = (prom[i] >> 5) & 0x01;
 		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 
@@ -1036,8 +1038,7 @@ static MACHINE_CONFIG_START( kingdrby, kingdrby_state )
 
 	MCFG_GFXDECODE(kingdrby)
 	MCFG_PALETTE_LENGTH(0x200)
-	MCFG_PALETTE_INIT(kingdrby)
-
+	MCFG_PALETTE_INIT_OVERRIDE(kingdrby_state,kingdrby)
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) /* not accurate */
@@ -1045,7 +1046,6 @@ static MACHINE_CONFIG_START( kingdrby, kingdrby_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 256-1, 0, 224-1)	/* controlled by CRTC */
 	MCFG_SCREEN_UPDATE_STATIC(kingdrby)
 
-	MCFG_VIDEO_START(kingdrby)
 
 	MCFG_MC6845_ADD("crtc", MC6845, CLK_1/32, mc6845_intf)	/* 53.333 Hz. guess */
 
@@ -1061,7 +1061,7 @@ static MACHINE_CONFIG_DERIVED( kingdrbb, kingdrby )
 	MCFG_CPU_MODIFY("slave")
 	MCFG_CPU_PROGRAM_MAP(slave_1986_map)
 
-	MCFG_PALETTE_INIT(kingdrbb)
+	MCFG_PALETTE_INIT_OVERRIDE(kingdrby_state,kingdrbb)
 
 	MCFG_DEVICE_REMOVE("ppi8255_0")
 	MCFG_DEVICE_REMOVE("ppi8255_1")
@@ -1076,8 +1076,7 @@ static MACHINE_CONFIG_DERIVED( cowrace, kingdrbb )
 	MCFG_CPU_IO_MAP(cowrace_sound_io)
 
 	MCFG_GFXDECODE(cowrace)
-	MCFG_PALETTE_INIT(kingdrby)
-
+	MCFG_PALETTE_INIT_OVERRIDE(kingdrby_state,kingdrby)
 	MCFG_OKIM6295_ADD("oki", 1056000, OKIM6295_PIN7_HIGH) // clock frequency & pin 7 not verified
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 

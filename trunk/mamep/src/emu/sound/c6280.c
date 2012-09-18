@@ -56,7 +56,7 @@
 #include "emu.h"
 #include "c6280.h"
 
-typedef struct {
+struct t_channel {
     UINT16 frequency;
     UINT8 control;
     UINT8 balance;
@@ -66,9 +66,9 @@ typedef struct {
     UINT8 noise_control;
     UINT32 noise_counter;
     UINT32 counter;
-} t_channel;
+};
 
-typedef struct {
+struct c6280_t {
 	sound_stream *stream;
 	device_t *device;
 	device_t *cpudevice;
@@ -80,13 +80,13 @@ typedef struct {
     INT16 volume_table[32];
     UINT32 noise_freq_tab[32];
     UINT32 wave_freq_tab[4096];
-} c6280_t;
+};
 
 INLINE c6280_t *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == C6280);
-	return (c6280_t *)downcast<legacy_device_base *>(device)->token();
+	return (c6280_t *)downcast<c6280_device *>(device)->token();
 }
 
 
@@ -344,32 +344,42 @@ WRITE8_DEVICE_HANDLER( c6280_w )
 	c6280_write(info, offset, data);
 }
 
+const device_type C6280 = &device_creator<c6280_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( c6280 )
+c6280_device::c6280_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, C6280, "HuC6280", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(c6280_t);						break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(c6280_t));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( c6280 );			break;
-		case DEVINFO_FCT_STOP:							/* nothing */									break;
-		case DEVINFO_FCT_RESET:							/* nothing */									break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "HuC6280");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "????");						break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void c6280_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void c6280_device::device_start()
+{
+	DEVICE_START_NAME( c6280 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void c6280_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(C6280, c6280);

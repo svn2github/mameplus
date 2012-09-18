@@ -141,8 +141,8 @@ public:
 	int          m_cps_version;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	msm5205_device *m_msm_1;	// fcrash
 	msm5205_device *m_msm_2;	// fcrash
 	DECLARE_READ16_MEMBER(cps1_hack_dsw_r);
@@ -208,6 +208,23 @@ public:
 	DECLARE_DRIVER_INIT(cawingb);
 	DECLARE_DRIVER_INIT(dinoh);
 	DECLARE_DRIVER_INIT(dinohb);
+	TILEMAP_MAPPER_MEMBER(tilemap0_scan);
+	TILEMAP_MAPPER_MEMBER(tilemap1_scan);
+	TILEMAP_MAPPER_MEMBER(tilemap2_scan);
+	TILE_GET_INFO_MEMBER(get_tile0_info);
+	TILE_GET_INFO_MEMBER(get_tile1_info);
+	TILE_GET_INFO_MEMBER(get_tile2_info);
+	DECLARE_MACHINE_START(cps1);
+	DECLARE_VIDEO_START(cps1);
+	DECLARE_MACHINE_START(common);
+	DECLARE_MACHINE_START(cps2);
+	DECLARE_VIDEO_START(cps2);
+	DECLARE_MACHINE_START(fcrash);
+	DECLARE_MACHINE_RESET(fcrash);
+	DECLARE_MACHINE_START(kodb);
+	DECLARE_MACHINE_START(qsound);
+	DECLARE_MACHINE_RESET(cps);
+	DECLARE_VIDEO_START(cps);
 };
 
 /*----------- defined in drivers/cps1.c -----------*/
@@ -224,8 +241,8 @@ GFXDECODE_EXTERN( cps1 );
 
 
 
-VIDEO_START( cps1 );
-VIDEO_START( cps2 );
+
+
 SCREEN_UPDATE_IND16( cps1 );
 SCREEN_VBLANK( cps1 );
 

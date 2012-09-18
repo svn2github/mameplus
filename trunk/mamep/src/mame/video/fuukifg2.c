@@ -52,10 +52,10 @@ INLINE void get_tile_info(running_machine &machine, tile_data &tileinfo, tilemap
 	SET_TILE_INFO(1 + _N_, code, attr & 0x3f, TILE_FLIPYX((attr >> 6) & 3));
 }
 
-static TILE_GET_INFO( get_tile_info_0 ) { get_tile_info(machine, tileinfo, tile_index, 0); }
-static TILE_GET_INFO( get_tile_info_1 ) { get_tile_info(machine, tileinfo, tile_index, 1); }
-static TILE_GET_INFO( get_tile_info_2 ) { get_tile_info(machine, tileinfo, tile_index, 2); }
-static TILE_GET_INFO( get_tile_info_3 ) { get_tile_info(machine, tileinfo, tile_index, 3); }
+TILE_GET_INFO_MEMBER(fuuki16_state::get_tile_info_0){ get_tile_info(machine(), tileinfo, tile_index, 0); }
+TILE_GET_INFO_MEMBER(fuuki16_state::get_tile_info_1){ get_tile_info(machine(), tileinfo, tile_index, 1); }
+TILE_GET_INFO_MEMBER(fuuki16_state::get_tile_info_2){ get_tile_info(machine(), tileinfo, tile_index, 2); }
+TILE_GET_INFO_MEMBER(fuuki16_state::get_tile_info_3){ get_tile_info(machine(), tileinfo, tile_index, 3); }
 
 INLINE void fuuki16_vram_w(address_space *space, offs_t offset, UINT16 data, UINT16 mem_mask, int _N_)
 {
@@ -80,32 +80,31 @@ WRITE16_MEMBER(fuuki16_state::fuuki16_vram_3_w){ fuuki16_vram_w(&space, offset, 
 
 /* Not used atm, seems to be fine without clearing pens? */
 #if 0
-PALETTE_INIT( fuuki16 )
+PALETTE_INIT_MEMBER(fuuki16_state,fuuki16)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int pen;
 
 	/* The game does not initialise the palette at startup. It should
        be totally black */
-	for (pen = 0; pen < machine.total_colors(); pen++)
-		palette_set_color(machine,pen,MAKE_RGB(0,0,0));
+	for (pen = 0; pen < machine().total_colors(); pen++)
+		palette_set_color(machine(),pen,MAKE_RGB(0,0,0));
 }
 #endif
 
-VIDEO_START( fuuki16 )
+void fuuki16_state::video_start()
 {
-	fuuki16_state *state = machine.driver_data<fuuki16_state>();
-	state->m_tilemap[0] = tilemap_create(machine, get_tile_info_0, tilemap_scan_rows, 16, 16, 64, 32);
-	state->m_tilemap[1] = tilemap_create(machine, get_tile_info_1, tilemap_scan_rows, 16, 16, 64, 32);
-	state->m_tilemap[2] = tilemap_create(machine, get_tile_info_2, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_tilemap[3] = tilemap_create(machine, get_tile_info_3, tilemap_scan_rows, 8, 8, 64, 32);
+	m_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fuuki16_state::get_tile_info_0),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fuuki16_state::get_tile_info_1),this), TILEMAP_SCAN_ROWS, 16, 16, 64, 32);
+	m_tilemap[2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fuuki16_state::get_tile_info_2),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_tilemap[3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fuuki16_state::get_tile_info_3),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 
-	state->m_tilemap[0]->set_transparent_pen(0x0f);	// 4 bits
-	state->m_tilemap[1]->set_transparent_pen(0xff);	// 8 bits
-	state->m_tilemap[2]->set_transparent_pen(0x0f);	// 4 bits
-	state->m_tilemap[3]->set_transparent_pen(0x0f);	// 4 bits
+	m_tilemap[0]->set_transparent_pen(0x0f);	// 4 bits
+	m_tilemap[1]->set_transparent_pen(0xff);	// 8 bits
+	m_tilemap[2]->set_transparent_pen(0x0f);	// 4 bits
+	m_tilemap[3]->set_transparent_pen(0x0f);	// 4 bits
 
-	machine.gfx[2]->color_granularity = 16; /* 256 colour tiles with palette selectable on 16 colour boundaries */
+	machine().gfx[2]->set_granularity(16); /* 256 colour tiles with palette selectable on 16 colour boundaries */
 }
 
 
@@ -140,7 +139,7 @@ static void draw_sprites( screen_device &screen, bitmap_ind16 &bitmap, const rec
 {
 	fuuki16_state *state = screen.machine().driver_data<fuuki16_state>();
 	int offs;
-	const gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 	bitmap_ind8 &priority_bitmap = screen.machine().priority_bitmap;
 	const rectangle &visarea = screen.visible_area();
 	UINT16 *spriteram16 = state->m_spriteram;

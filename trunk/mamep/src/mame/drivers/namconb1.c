@@ -272,7 +272,6 @@ GFX:                Custom 145     ( 80 pin PQFP)
 #include "emu.h"
 #include "cpu/m68000/m68000.h"
 #include "includes/namconb1.h"
-#include "includes/namcos2.h"
 #include "includes/namcoic.h"
 #include "sound/c352.h"
 #include "cpu/m37710/m37710.h"
@@ -289,11 +288,11 @@ static TIMER_DEVICE_CALLBACK( mcu_interrupt )
 
 	/* TODO: real sources of these */
 	if (scanline == 224)
-		cputag_set_input_line(timer.machine(), "mcu", M37710_LINE_IRQ0, HOLD_LINE);
+		timer.machine().device("mcu")->execute().set_input_line(M37710_LINE_IRQ0, HOLD_LINE);
 	else if (scanline == 0)
-		cputag_set_input_line(timer.machine(), "mcu", M37710_LINE_IRQ2, HOLD_LINE);
+		timer.machine().device("mcu")->execute().set_input_line(M37710_LINE_IRQ2, HOLD_LINE);
 	else if (scanline == 128)
-		cputag_set_input_line(timer.machine(), "mcu", M37710_LINE_ADC, HOLD_LINE);
+		timer.machine().device("mcu")->execute().set_input_line(M37710_LINE_ADC, HOLD_LINE);
 }
 
 
@@ -305,7 +304,7 @@ static TIMER_CALLBACK( namconb1_TriggerPOSIRQ )
 
 	machine.primary_screen->update_partial(param);
 	state->m_pos_irq_active = 1;
-	cputag_set_input_line(machine, "maincpu", state->m_namconb_cpureg[0x02] & 0xf, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(state->m_namconb_cpureg[0x02] & 0xf, ASSERT_LINE);
 }
 
 static INTERRUPT_GEN( namconb1_interrupt )
@@ -348,7 +347,7 @@ static INTERRUPT_GEN( namconb1_interrupt )
 	int scanline = (state->m_generic_paletteram_32[0x1808/4]&0xffff)-32;
 
 	if((!state->m_vblank_irq_active) && (state->m_namconb_cpureg[0x04] & 0xf0)) {
-		device_set_input_line(device, state->m_namconb_cpureg[0x04] & 0xf, ASSERT_LINE);
+		device->execute().set_input_line(state->m_namconb_cpureg[0x04] & 0xf, ASSERT_LINE);
 		state->m_vblank_irq_active = 1;
 	}
 
@@ -368,7 +367,7 @@ static TIMER_CALLBACK( namconb2_TriggerPOSIRQ )
 	namconb1_state *state = machine.driver_data<namconb1_state>();
 	machine.primary_screen->update_partial(param);
 	state->m_pos_irq_active = 1;
-	cputag_set_input_line(machine, "maincpu", state->m_namconb_cpureg[0x02], ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(state->m_namconb_cpureg[0x02], ASSERT_LINE);
 }
 
 static INTERRUPT_GEN( namconb2_interrupt )
@@ -406,7 +405,7 @@ static INTERRUPT_GEN( namconb2_interrupt )
 	int scanline = (state->m_generic_paletteram_32[0x1808/4]&0xffff)-32;
 
 	if((!state->m_vblank_irq_active) && state->m_namconb_cpureg[0x00]) {
-		device_set_input_line(device, state->m_namconb_cpureg[0x00], ASSERT_LINE);
+		device->execute().set_input_line(state->m_namconb_cpureg[0x00], ASSERT_LINE);
 		state->m_vblank_irq_active = 1;
 	}
 
@@ -425,9 +424,9 @@ static void namconb1_cpureg8_w(running_machine &machine, int reg, UINT8 data)
 	switch(reg) {
 	case 0x02: // POS IRQ level/enable
 		if(state->m_pos_irq_active && (((prev & 0xf) != (data & 0xf)) || !(data & 0xf0))) {
-			cputag_set_input_line(machine, "maincpu", prev & 0xf, CLEAR_LINE);
+			machine.device("maincpu")->execute().set_input_line(prev & 0xf, CLEAR_LINE);
 			if(data & 0xf0)
-				cputag_set_input_line(machine, "maincpu", data & 0xf, ASSERT_LINE);
+				machine.device("maincpu")->execute().set_input_line(data & 0xf, ASSERT_LINE);
 			else
 				state->m_pos_irq_active = 0;
 		}
@@ -435,9 +434,9 @@ static void namconb1_cpureg8_w(running_machine &machine, int reg, UINT8 data)
 
 	case 0x04: // VBLANK IRQ level/enable
 		if(state->m_vblank_irq_active && (((prev & 0xf) != (data & 0xf)) || !(data & 0xf0))) {
-			cputag_set_input_line(machine, "maincpu", prev & 0xf, CLEAR_LINE);
+			machine.device("maincpu")->execute().set_input_line(prev & 0xf, CLEAR_LINE);
 			if(data & 0xf0)
-				cputag_set_input_line(machine, "maincpu", data & 0xf, ASSERT_LINE);
+				machine.device("maincpu")->execute().set_input_line(data & 0xf, ASSERT_LINE);
 			else
 				state->m_vblank_irq_active = 0;
 		}
@@ -445,14 +444,14 @@ static void namconb1_cpureg8_w(running_machine &machine, int reg, UINT8 data)
 
 	case 0x07: // POS ack
 		if(state->m_pos_irq_active) {
-			cputag_set_input_line(machine, "maincpu", state->m_namconb_cpureg[0x02] & 0xf, CLEAR_LINE);
+			machine.device("maincpu")->execute().set_input_line(state->m_namconb_cpureg[0x02] & 0xf, CLEAR_LINE);
 			state->m_pos_irq_active = 0;
 		}
 		break;
 
 	case 0x09: // VBLANK ack
 		if(state->m_vblank_irq_active) {
-			cputag_set_input_line(machine, "maincpu", state->m_namconb_cpureg[0x04] & 0xf, CLEAR_LINE);
+			machine.device("maincpu")->execute().set_input_line(state->m_namconb_cpureg[0x04] & 0xf, CLEAR_LINE);
 			state->m_vblank_irq_active = 0;
 		}
 		break;
@@ -462,11 +461,11 @@ static void namconb1_cpureg8_w(running_machine &machine, int reg, UINT8 data)
 
 	case 0x18: // C75 Control
 		if(data & 1) {
-			cputag_set_input_line(machine, "mcu", INPUT_LINE_HALT, CLEAR_LINE);
-			cputag_set_input_line(machine, "mcu", INPUT_LINE_RESET, ASSERT_LINE);
-			cputag_set_input_line(machine, "mcu", INPUT_LINE_RESET, CLEAR_LINE);
+			machine.device("mcu")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
+			machine.device("mcu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+			machine.device("mcu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 		} else
-			cputag_set_input_line(machine, "mcu", INPUT_LINE_HALT, ASSERT_LINE);
+			machine.device("mcu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 		break;
 	}
 }
@@ -492,9 +491,9 @@ static void namconb2_cpureg8_w(running_machine &machine, int reg, UINT8 data)
 	switch(reg) {
 	case 0x00: // VBLANK IRQ level
 		if(state->m_vblank_irq_active && (prev != data)) {
-			cputag_set_input_line(machine, "maincpu", prev, CLEAR_LINE);
+			machine.device("maincpu")->execute().set_input_line(prev, CLEAR_LINE);
 			if(data)
-				cputag_set_input_line(machine, "maincpu", data, ASSERT_LINE);
+				machine.device("maincpu")->execute().set_input_line(data, ASSERT_LINE);
 			else
 				state->m_vblank_irq_active = 0;
 		}
@@ -502,9 +501,9 @@ static void namconb2_cpureg8_w(running_machine &machine, int reg, UINT8 data)
 
 	case 0x02: // POS IRQ level
 		if(state->m_pos_irq_active && (prev != data)) {
-			cputag_set_input_line(machine, "maincpu", prev, CLEAR_LINE);
+			machine.device("maincpu")->execute().set_input_line(prev, CLEAR_LINE);
 			if(data)
-				cputag_set_input_line(machine, "maincpu", data, ASSERT_LINE);
+				machine.device("maincpu")->execute().set_input_line(data, ASSERT_LINE);
 			else
 				state->m_pos_irq_active = 0;
 		}
@@ -512,14 +511,14 @@ static void namconb2_cpureg8_w(running_machine &machine, int reg, UINT8 data)
 
 	case 0x04: // VBLANK ack
 		if(state->m_vblank_irq_active) {
-			cputag_set_input_line(machine, "maincpu", state->m_namconb_cpureg[0x00], CLEAR_LINE);
+			machine.device("maincpu")->execute().set_input_line(state->m_namconb_cpureg[0x00], CLEAR_LINE);
 			state->m_vblank_irq_active = 0;
 		}
 		break;
 
 	case 0x06: // POS ack
 		if(state->m_pos_irq_active) {
-			cputag_set_input_line(machine, "maincpu", state->m_namconb_cpureg[0x02], CLEAR_LINE);
+			machine.device("maincpu")->execute().set_input_line(state->m_namconb_cpureg[0x02], CLEAR_LINE);
 			state->m_pos_irq_active = 0;
 		}
 		break;
@@ -529,11 +528,11 @@ static void namconb2_cpureg8_w(running_machine &machine, int reg, UINT8 data)
 
 	case 0x16: // C75 Control
 		if(data & 1) {
-			cputag_set_input_line(machine, "mcu", INPUT_LINE_HALT, CLEAR_LINE);
-			cputag_set_input_line(machine, "mcu", INPUT_LINE_RESET, ASSERT_LINE);
-			cputag_set_input_line(machine, "mcu", INPUT_LINE_RESET, CLEAR_LINE);
+			machine.device("mcu")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
+			machine.device("mcu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+			machine.device("mcu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 		} else {
-			cputag_set_input_line(machine, "mcu", INPUT_LINE_HALT, ASSERT_LINE);
+			machine.device("mcu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 		}
 		break;
 	}
@@ -590,7 +589,7 @@ static NVRAM_HANDLER( namconb1 )
 		else
 		{
 			memset( state->m_nvmem32, 0x00, NB1_NVMEM_SIZE );
-			if( namcos2_gametype == NAMCONB1_GUNBULET )
+			if( state->m_gametype == NAMCONB1_GUNBULET )
 			{
 				state->m_nvmem32[0] = 0x0f260f26; /* default gun calibration */
 			}
@@ -598,12 +597,11 @@ static NVRAM_HANDLER( namconb1 )
 	}
 } /* namconb1 */
 
-static MACHINE_START(namconb)
+MACHINE_START_MEMBER(namconb1_state,namconb)
 {
-	namconb1_state *state = machine.driver_data<namconb1_state>();
-	state->m_vblank_irq_active = 0;
-	state->m_pos_irq_active = 0;
-	memset(state->m_namconb_cpureg, 0, sizeof(state->m_namconb_cpureg));
+	m_vblank_irq_active = 0;
+	m_pos_irq_active = 0;
+	memset(m_namconb_cpureg, 0, sizeof(m_namconb_cpureg));
 }
 
 DRIVER_INIT_MEMBER(namconb1_state,nebulray)
@@ -612,52 +610,52 @@ DRIVER_INIT_MEMBER(namconb1_state,nebulray)
 	size_t numBytes = (0xfe7-0xe6f)*8;
 	memset( &pMem[0xe6f*8], 0, numBytes );
 
-	namcos2_gametype = NAMCONB1_NEBULRAY;
+	m_gametype = NAMCONB1_NEBULRAY;
 } /* nebulray */
 
 DRIVER_INIT_MEMBER(namconb1_state,gslgr94u)
 {
-	namcos2_gametype = NAMCONB1_GSLGR94U;
+	m_gametype = NAMCONB1_GSLGR94U;
 } /* gslgr94u */
 
 DRIVER_INIT_MEMBER(namconb1_state,gslgr94j)
 {
-	namcos2_gametype = NAMCONB1_GSLGR94J;
+	m_gametype = NAMCONB1_GSLGR94J;
 } /* gslgr94j */
 
 DRIVER_INIT_MEMBER(namconb1_state,sws95)
 {
-	namcos2_gametype = NAMCONB1_SWS95;
+	m_gametype = NAMCONB1_SWS95;
 } /* sws95 */
 
 DRIVER_INIT_MEMBER(namconb1_state,sws96)
 {
-	namcos2_gametype = NAMCONB1_SWS96;
+	m_gametype = NAMCONB1_SWS96;
 } /* sws96 */
 
 DRIVER_INIT_MEMBER(namconb1_state,sws97)
 {
-	namcos2_gametype = NAMCONB1_SWS97;
+	m_gametype = NAMCONB1_SWS97;
 } /* sws97 */
 
 DRIVER_INIT_MEMBER(namconb1_state,gunbulet)
 {
-	namcos2_gametype = NAMCONB1_GUNBULET;
+	m_gametype = NAMCONB1_GUNBULET;
 } /* gunbulet */
 
 DRIVER_INIT_MEMBER(namconb1_state,vshoot)
 {
-	namcos2_gametype = NAMCONB1_VSHOOT;
+	m_gametype = NAMCONB1_VSHOOT;
 } /* vshoot */
 
 DRIVER_INIT_MEMBER(namconb1_state,machbrkr)
 {
-	namcos2_gametype = NAMCONB2_MACH_BREAKERS;
+	m_gametype = NAMCONB2_MACH_BREAKERS;
 }
 
 DRIVER_INIT_MEMBER(namconb1_state,outfxies)
 {
-	namcos2_gametype = NAMCONB2_OUTFOXIES;
+	m_gametype = NAMCONB2_OUTFOXIES;
 }
 
 READ32_MEMBER(namconb1_state::custom_key_r)
@@ -669,7 +667,7 @@ READ32_MEMBER(namconb1_state::custom_key_r)
 		m_count = machine().rand();
 	} while( m_count==old_count );
 
-	switch( namcos2_gametype )
+	switch( m_gametype )
 	{
 	case NAMCONB1_GUNBULET:
 		return 0; /* no protection */
@@ -742,7 +740,7 @@ READ32_MEMBER(namconb1_state::custom_key_r)
 		break; /* no protection? */
 	}
 
-	logerror( "custom_key_r(%d); pc=%08x\n", offset, cpu_get_pc(&space.device()) );
+	logerror( "custom_key_r(%d); pc=%08x\n", offset, space.device().safe_pc() );
 	return 0;
 } /* custom_key_r */
 
@@ -856,8 +854,8 @@ static ADDRESS_MAP_START( namconb1_am, AS_PROGRAM, 32, namconb1_state )
 	AM_RANGE(0x208000, 0x2fffff) AM_RAM
 	AM_RANGE(0x400000, 0x40001f) AM_READWRITE(namconb_cpureg_r, namconb1_cpureg_w)
 	AM_RANGE(0x580000, 0x5807ff) AM_RAM AM_SHARE("nvmem32")
-	AM_RANGE(0x600000, 0x61ffff) AM_READWRITE_LEGACY(namco_obj32_r,namco_obj32_w)
-	AM_RANGE(0x620000, 0x620007) AM_READWRITE_LEGACY(namco_spritepos32_r,namco_spritepos32_w)
+	AM_RANGE(0x600000, 0x61ffff) AM_READWRITE16(c355_obj_ram_r,c355_obj_ram_w,0xffffffff) AM_SHARE("objram")
+	AM_RANGE(0x620000, 0x620007) AM_READWRITE16(c355_obj_position_r,c355_obj_position_w,0xffffffff)
 	AM_RANGE(0x640000, 0x64ffff) AM_READWRITE_LEGACY(namco_tilemapvideoram32_r,namco_tilemapvideoram32_w )
 	AM_RANGE(0x660000, 0x66003f) AM_READWRITE_LEGACY(namco_tilemapcontrol32_r,namco_tilemapcontrol32_w)
 	AM_RANGE(0x680000, 0x68000f) AM_RAM AM_SHARE("spritebank32")
@@ -872,17 +870,17 @@ static ADDRESS_MAP_START( namconb2_am, AS_PROGRAM, 32, namconb1_state )
 	AM_RANGE(0x200000, 0x207fff) AM_READWRITE(namconb_share_r, namconb_share_w)
 	AM_RANGE(0x208000, 0x2fffff) AM_RAM
 	AM_RANGE(0x400000, 0x4fffff) AM_ROM AM_REGION("data", 0)
-	AM_RANGE(0x600000, 0x61ffff) AM_READWRITE_LEGACY(namco_obj32_r,namco_obj32_w)
-	AM_RANGE(0x620000, 0x620007) AM_READWRITE_LEGACY(namco_spritepos32_r,namco_spritepos32_w)
+	AM_RANGE(0x600000, 0x61ffff) AM_READWRITE16(c355_obj_ram_r,c355_obj_ram_w,0xffffffff) AM_SHARE("objram")
+	AM_RANGE(0x620000, 0x620007) AM_READWRITE16(c355_obj_position_r,c355_obj_position_w,0xffffffff)
 	AM_RANGE(0x640000, 0x64000f) AM_RAM /* unknown xy offset */
 	AM_RANGE(0x680000, 0x68ffff) AM_READWRITE_LEGACY(namco_tilemapvideoram32_r, namco_tilemapvideoram32_w )
 	AM_RANGE(0x6c0000, 0x6c003f) AM_READWRITE_LEGACY(namco_tilemapcontrol32_r, namco_tilemapcontrol32_w )
-	AM_RANGE(0x700000, 0x71ffff) AM_READWRITE_LEGACY(namco_rozvideoram32_r,namco_rozvideoram32_w)
-	AM_RANGE(0x740000, 0x74001f) AM_READWRITE_LEGACY(namco_rozcontrol32_r,namco_rozcontrol32_w)
+	AM_RANGE(0x700000, 0x71ffff) AM_READWRITE16(c169_roz_videoram_r,c169_roz_videoram_w,0xffffffff) AM_SHARE("rozvideoram")
+	AM_RANGE(0x740000, 0x74001f) AM_READWRITE16(c169_roz_control_r,c169_roz_control_w,0xffffffff)
 	AM_RANGE(0x800000, 0x807fff) AM_RAM AM_SHARE("paletteram")
 	AM_RANGE(0x900008, 0x90000f) AM_RAM AM_SHARE("spritebank32")
 	AM_RANGE(0x940000, 0x94000f) AM_RAM AM_SHARE("tilebank32")
-	AM_RANGE(0x980000, 0x98000f) AM_READ_LEGACY(namco_rozbank32_r) AM_WRITE_LEGACY(namco_rozbank32_w)
+	AM_RANGE(0x980000, 0x98000f) AM_READWRITE16(c169_roz_bank_r,c169_roz_bank_w,0xffffffff)
 	AM_RANGE(0xa00000, 0xa007ff) AM_RAM AM_SHARE("nvmem32")
 	AM_RANGE(0xc00000, 0xc0001f) AM_READ(custom_key_r) AM_WRITENOP
 	AM_RANGE(0xf00000, 0xf0001f) AM_READWRITE(namconb_cpureg_r, namconb2_cpureg_w)
@@ -905,7 +903,7 @@ WRITE16_MEMBER(namconb1_state::nbmcu_shared_w)
 	// C74 BIOS has a very short window on the CPU sync signal, so immediately let the '020 at it
 	if ((offset == 0x6000/2) && (data & 0x80))
 	{
-		device_spin_until_time(&space.device(), downcast<cpu_device *>(&space.device())->cycles_to_attotime(300));	// was 300
+		space.device().execute().spin_until_time(downcast<cpu_device *>(&space.device())->cycles_to_attotime(300));	// was 300
 	}
 }
 
@@ -1019,7 +1017,7 @@ static MACHINE_CONFIG_START( namconb1, namconb1_state )
 	MCFG_TIMER_ADD_SCANLINE("mcu_st", mcu_interrupt, "screen", 0, 1)
 
 	MCFG_NVRAM_HANDLER(namconb1)
-	MCFG_MACHINE_START(namconb)
+	MCFG_MACHINE_START_OVERRIDE(namconb1_state,namconb)
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1030,7 +1028,7 @@ static MACHINE_CONFIG_START( namconb1, namconb1_state )
 
 	MCFG_GFXDECODE(namconb1)
 	MCFG_PALETTE_LENGTH(0x2000)
-	MCFG_VIDEO_START(namconb1)
+	MCFG_VIDEO_START_OVERRIDE(namconb1_state,namconb1)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_C352_ADD("c352", MASTER_CLOCK_HZ/2)
@@ -1051,7 +1049,7 @@ static MACHINE_CONFIG_START( namconb2, namconb1_state )
 	MCFG_TIMER_ADD_SCANLINE("mcu_st", mcu_interrupt, "screen", 0, 1)
 
 	MCFG_NVRAM_HANDLER(namconb1)
-	MCFG_MACHINE_START(namconb)
+	MCFG_MACHINE_START_OVERRIDE(namconb1_state,namconb)
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1062,7 +1060,7 @@ static MACHINE_CONFIG_START( namconb2, namconb1_state )
 
 	MCFG_GFXDECODE(2)
 	MCFG_PALETTE_LENGTH(0x2000)
-	MCFG_VIDEO_START(namconb2)
+	MCFG_VIDEO_START_OVERRIDE(namconb1_state,namconb2)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_C352_ADD("c352", MASTER_CLOCK_HZ/2)

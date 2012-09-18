@@ -67,7 +67,7 @@ WRITE8_MEMBER(ladyfrog_state::to_main_w)
 
 WRITE8_MEMBER(ladyfrog_state::sound_cpu_reset_w)
 {
-	device_set_input_line(m_audiocpu, INPUT_LINE_RESET, (data & 1 ) ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, (data & 1 ) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static TIMER_CALLBACK( nmi_callback )
@@ -75,7 +75,7 @@ static TIMER_CALLBACK( nmi_callback )
 	ladyfrog_state *state = machine.driver_data<ladyfrog_state>();
 
 	if (state->m_sound_nmi_enable)
-		device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+		state->m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	else
 		state->m_pending_nmi = 1;
 }
@@ -97,7 +97,7 @@ WRITE8_MEMBER(ladyfrog_state::nmi_enable_w)
 	m_sound_nmi_enable = 1;
 	if (m_pending_nmi)
 	{
-		device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 		m_pending_nmi = 0;
 	}
 }
@@ -276,30 +276,28 @@ static GFXDECODE_START( ladyfrog )
 GFXDECODE_END
 
 
-static MACHINE_START( ladyfrog )
+void ladyfrog_state::machine_start()
 {
-	ladyfrog_state *state = machine.driver_data<ladyfrog_state>();
 
-	state->m_audiocpu = machine.device("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_tilebank));
-	state->save_item(NAME(state->m_palette_bank));
-	state->save_item(NAME(state->m_sound_nmi_enable));
-	state->save_item(NAME(state->m_pending_nmi));
-	state->save_item(NAME(state->m_snd_flag));
-	state->save_item(NAME(state->m_snd_data));
+	save_item(NAME(m_tilebank));
+	save_item(NAME(m_palette_bank));
+	save_item(NAME(m_sound_nmi_enable));
+	save_item(NAME(m_pending_nmi));
+	save_item(NAME(m_snd_flag));
+	save_item(NAME(m_snd_data));
 }
 
-static MACHINE_RESET( ladyfrog )
+void ladyfrog_state::machine_reset()
 {
-	ladyfrog_state *state = machine.driver_data<ladyfrog_state>();
 
-	state->m_tilebank = 0;
-	state->m_palette_bank = 0;
-	state->m_sound_nmi_enable = 0;
-	state->m_pending_nmi = 0;
-	state->m_snd_flag = 0;
-	state->m_snd_data = 0;
+	m_tilebank = 0;
+	m_palette_bank = 0;
+	m_sound_nmi_enable = 0;
+	m_pending_nmi = 0;
+	m_snd_flag = 0;
+	m_snd_data = 0;
 }
 
 static MACHINE_CONFIG_START( ladyfrog, ladyfrog_state )
@@ -313,8 +311,6 @@ static MACHINE_CONFIG_START( ladyfrog, ladyfrog_state )
 	MCFG_CPU_PROGRAM_MAP(ladyfrog_sound_map)
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold,2*60)
 
-	MCFG_MACHINE_START(ladyfrog)
-	MCFG_MACHINE_RESET(ladyfrog)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -329,7 +325,6 @@ static MACHINE_CONFIG_START( ladyfrog, ladyfrog_state )
 	MCFG_GFXDECODE(ladyfrog)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(ladyfrog)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -354,7 +349,7 @@ static MACHINE_CONFIG_START( ladyfrog, ladyfrog_state )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( toucheme, ladyfrog )
-	MCFG_VIDEO_START(toucheme)
+	MCFG_VIDEO_START_OVERRIDE(ladyfrog_state,toucheme)
 MACHINE_CONFIG_END
 
 

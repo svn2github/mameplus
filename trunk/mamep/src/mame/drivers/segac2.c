@@ -102,23 +102,21 @@ static void recompute_palette_tables( running_machine &machine );
 
 ******************************************************************************/
 
-static MACHINE_START( segac2 )
+MACHINE_START_MEMBER(segac2_state,segac2)
 {
-	segac2_state *state = machine.driver_data<segac2_state>();
 
-	state_save_register_global_array(machine, state->m_misc_io_data);
-	state_save_register_global(machine, state->m_prot_write_buf);
-	state_save_register_global(machine, state->m_prot_read_buf);
+	state_save_register_global_array(machine(), m_misc_io_data);
+	state_save_register_global(machine(), m_prot_write_buf);
+	state_save_register_global(machine(), m_prot_read_buf);
 }
 
 
-static MACHINE_RESET( segac2 )
+MACHINE_RESET_MEMBER(segac2_state,segac2)
 {
-	segac2_state *state = machine.driver_data<segac2_state>();
 //  megadriv_framerate = 60;
 
 
-//  megadriv_scanline_timer = machine.device<timer_device>("md_scan_timer");
+//  megadriv_scanline_timer = machine().device<timer_device>("md_scan_timer");
 //  megadriv_scanline_timer->adjust(attotime::zero);
 	segac2_bg_pal_lookup[0] = 0x00;
 	segac2_bg_pal_lookup[1] = 0x10;
@@ -130,23 +128,23 @@ static MACHINE_RESET( segac2 )
 	segac2_sp_pal_lookup[2] = 0x20;
 	segac2_sp_pal_lookup[3] = 0x30;
 
-	megadriv_reset_vdp(machine);
+	megadriv_reset_vdp(machine());
 
 	/* determine how many sound banks */
-	state->m_sound_banks = 0;
-	if (state->memregion("upd")->base())
-		state->m_sound_banks = state->memregion("upd")->bytes() / 0x20000;
+	m_sound_banks = 0;
+	if (memregion("upd")->base())
+		m_sound_banks = memregion("upd")->bytes() / 0x20000;
 
 	/* reset the protection */
-	state->m_prot_write_buf = 0;
-	state->m_prot_read_buf = 0;
-	state->m_segac2_alt_palette_mode = 0;
+	m_prot_write_buf = 0;
+	m_prot_read_buf = 0;
+	m_segac2_alt_palette_mode = 0;
 
-	state->m_palbank = 0;
-	state->m_bg_palbase = 0;
-	state->m_sp_palbase = 0;
+	m_palbank = 0;
+	m_bg_palbase = 0;
+	m_sp_palbase = 0;
 
-	recompute_palette_tables(machine);
+	recompute_palette_tables(machine());
 
 }
 
@@ -497,7 +495,7 @@ static WRITE16_HANDLER( control_w )
 static READ16_HANDLER( prot_r )
 {
 	segac2_state *state = space->machine().driver_data<segac2_state>();
-	if (LOG_PROTECTION) logerror("%06X:protection r=%02X\n", cpu_get_previouspc(&space->device()), state->m_prot_func ? state->m_prot_read_buf : 0xff);
+	if (LOG_PROTECTION) logerror("%06X:protection r=%02X\n", space->device().safe_pcbase(), state->m_prot_func ? state->m_prot_read_buf : 0xff);
 	return state->m_prot_read_buf | 0xf0;
 }
 
@@ -523,7 +521,7 @@ static WRITE16_HANDLER( prot_w )
 	/* determine the value to return, should a read occur */
 	if (state->m_prot_func)
 		state->m_prot_read_buf = state->m_prot_func(table_index);
-	if (LOG_PROTECTION) logerror("%06X:protection w=%02X, new result=%02X\n", cpu_get_previouspc(&space->device()), data & 0x0f, state->m_prot_read_buf);
+	if (LOG_PROTECTION) logerror("%06X:protection w=%02X, new result=%02X\n", space->device().safe_pcbase(), data & 0x0f, state->m_prot_read_buf);
 
 	/* if the palette changed, force an update */
 	if (new_sp_palbase != state->m_sp_palbase || new_bg_palbase != state->m_bg_palbase)
@@ -1248,7 +1246,7 @@ INPUT_PORTS_END
 static void  segac2_irq2_interrupt(device_t *device, int state)
 {
 	//printf("sound irq %d\n", state);
-	cputag_set_input_line(device->machine(), "maincpu", 2, state ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("maincpu")->execute().set_input_line(2, state ? ASSERT_LINE : CLEAR_LINE);
 }
 static const ym3438_interface ym3438_intf =
 {
@@ -1268,9 +1266,9 @@ static const ym3438_interface ym3438_intf =
 
 ******************************************************************************/
 
-static VIDEO_START(segac2_new)
+VIDEO_START_MEMBER(segac2_state,segac2_new)
 {
-	VIDEO_START_CALL(megadriv);
+	VIDEO_START_CALL_LEGACY(megadriv);
 }
 
 // C2 doesn't use the internal VDP CRAM, instead it uses the digital output of the chip
@@ -1343,7 +1341,7 @@ static SCREEN_UPDATE_RGB32(segac2_new)
 void genesis_vdp_sndirqline_callback_segac2(running_machine &machine, bool state)
 {
 	if (state==true)
-		cputag_set_input_line(machine, "maincpu", 6, HOLD_LINE);
+		machine.device("maincpu")->execute().set_input_line(6, HOLD_LINE);
 }
 
 // the line usually used to drive irq6 is not connected
@@ -1356,12 +1354,18 @@ void genesis_vdp_lv6irqline_callback_segac2(running_machine &machine, bool state
 void genesis_vdp_lv4irqline_callback_segac2(running_machine &machine, bool state)
 {
 	if (state==true)
-		cputag_set_input_line(machine, "maincpu", 4, HOLD_LINE);
+		machine.device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 	else
-		cputag_set_input_line(machine, "maincpu", 4, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(4, CLEAR_LINE);
 }
 
-
+static const sega315_5124_interface sms_vdp_ntsc_intf =
+{
+	false,
+	"megadriv",
+	DEVCB_NULL,
+	DEVCB_NULL,
+};
 
 static MACHINE_CONFIG_START( segac, segac2_state )
 
@@ -1369,13 +1373,14 @@ static MACHINE_CONFIG_START( segac, segac2_state )
 	MCFG_CPU_ADD("maincpu", M68000, XL2_CLOCK/6)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 
-	MCFG_MACHINE_START(segac2)
-	MCFG_MACHINE_RESET(segac2)
+	MCFG_MACHINE_START_OVERRIDE(segac2_state,segac2)
+	MCFG_MACHINE_RESET_OVERRIDE(segac2_state,segac2)
 	MCFG_NVRAM_ADD_RANDOM_FILL("nvram")
 
 //  MCFG_FRAGMENT_ADD(megadriv_timers)
 
 	MCFG_DEVICE_ADD("gen_vdp", SEGA_GEN_VDP, 0)
+	MCFG_DEVICE_CONFIG( sms_vdp_ntsc_intf )
 	sega_genesis_vdp_device::set_genesis_vdp_sndirqline_callback(*device, genesis_vdp_sndirqline_callback_segac2);
 	sega_genesis_vdp_device::set_genesis_vdp_lv6irqline_callback(*device, genesis_vdp_lv6irqline_callback_segac2);
 	sega_genesis_vdp_device::set_genesis_vdp_lv4irqline_callback(*device, genesis_vdp_lv4irqline_callback_segac2);
@@ -1394,7 +1399,7 @@ static MACHINE_CONFIG_START( segac, segac2_state )
 
 	MCFG_PALETTE_LENGTH(2048*3)
 
-	MCFG_VIDEO_START(segac2_new)
+	MCFG_VIDEO_START_OVERRIDE(segac2_state,segac2_new)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1525,8 +1530,8 @@ ROM_END
 
 ROM_START( tfrceac ) /* ThunderForce AC  (c)1990 Technosoft / Sega */
 	ROM_REGION( 0x200000, "maincpu", 0 )
-	ROM_LOAD16_BYTE( "ic32.bin", 0x000000, 0x040000, CRC(95ecf202) SHA1(92b0f351f2bee7d59873a4991615f14f1afe4da7) )
-	ROM_LOAD16_BYTE( "ic31.bin", 0x000001, 0x040000, CRC(e63d7f1a) SHA1(a40d0a5a96f379a467048dc8fddd8aaaeb94da1d) )
+	ROM_LOAD16_BYTE( "epr-13675.ic32", 0x000000, 0x040000, CRC(95ecf202) SHA1(92b0f351f2bee7d59873a4991615f14f1afe4da7) )
+	ROM_LOAD16_BYTE( "epr-13674.ic31", 0x000001, 0x040000, CRC(e63d7f1a) SHA1(a40d0a5a96f379a467048dc8fddd8aaaeb94da1d) )
 	/* 0x080000 - 0x100000 Empty */
 	ROM_LOAD16_BYTE( "epr-13659.ic34", 0x100000, 0x040000, CRC(29f23461) SHA1(032a7125fef5a660b85654d595aafc46812cdde6) )
 	ROM_LOAD16_BYTE( "epr-13658.ic33", 0x100001, 0x040000, CRC(9e23734f) SHA1(64d27dc53f0ffc3513345a26ed077751b25d15f1) )

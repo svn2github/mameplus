@@ -1,4 +1,5 @@
 #include "sound/dac.h"
+#include "sound/sn76496.h"
 
 class homedata_state : public driver_device
 {
@@ -6,7 +7,7 @@ public:
 	homedata_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag) ,
 		m_vreg(*this, "vreg"),
-		m_videoram(*this, "videoram"){ }
+		m_videoram(*this, "videoram") {}
 
 	/* memory pointers */
 	optional_shared_ptr<UINT8> m_vreg;
@@ -35,11 +36,11 @@ public:
 	int      m_from_cpu;
 
 	/* device */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	dac_device *m_dac;
 	device_t *m_ym;
-	device_t *m_sn;
+	sn76489a_new_device *m_sn;
 	UINT8 m_prot_data;
 	DECLARE_READ8_MEMBER(mrokumei_keyboard_r);
 	DECLARE_WRITE8_MEMBER(mrokumei_keyboard_select_w);
@@ -80,6 +81,45 @@ public:
 	DECLARE_DRIVER_INIT(jogakuen);
 	DECLARE_DRIVER_INIT(battlcry);
 	DECLARE_DRIVER_INIT(mirderby);
+	TILE_GET_INFO_MEMBER(mrokumei_get_info0_0);
+	TILE_GET_INFO_MEMBER(mrokumei_get_info1_0);
+	TILE_GET_INFO_MEMBER(mrokumei_get_info0_1);
+	TILE_GET_INFO_MEMBER(mrokumei_get_info1_1);
+	TILE_GET_INFO_MEMBER(reikaids_get_info0_0);
+	TILE_GET_INFO_MEMBER(reikaids_get_info1_0);
+	TILE_GET_INFO_MEMBER(reikaids_get_info0_1);
+	TILE_GET_INFO_MEMBER(reikaids_get_info1_1);
+	TILE_GET_INFO_MEMBER(reikaids_get_info0_2);
+	TILE_GET_INFO_MEMBER(reikaids_get_info1_2);
+	TILE_GET_INFO_MEMBER(reikaids_get_info0_3);
+	TILE_GET_INFO_MEMBER(reikaids_get_info1_3);
+	TILE_GET_INFO_MEMBER(pteacher_get_info0_0);
+	TILE_GET_INFO_MEMBER(pteacher_get_info1_0);
+	TILE_GET_INFO_MEMBER(pteacher_get_info0_1);
+	TILE_GET_INFO_MEMBER(pteacher_get_info1_1);
+	TILE_GET_INFO_MEMBER(lemnangl_get_info0_0);
+	TILE_GET_INFO_MEMBER(lemnangl_get_info1_0);
+	TILE_GET_INFO_MEMBER(lemnangl_get_info0_1);
+	TILE_GET_INFO_MEMBER(lemnangl_get_info1_1);
+	TILE_GET_INFO_MEMBER(mirderby_get_info0_0);
+	TILE_GET_INFO_MEMBER(mirderby_get_info1_0);
+	TILE_GET_INFO_MEMBER(mirderby_get_info0_1);
+	TILE_GET_INFO_MEMBER(mirderby_get_info1_1);
+	DECLARE_MACHINE_START(homedata);
+	DECLARE_MACHINE_RESET(homedata);
+	DECLARE_VIDEO_START(mrokumei);
+	DECLARE_PALETTE_INIT(mrokumei);
+	DECLARE_MACHINE_START(reikaids);
+	DECLARE_MACHINE_RESET(reikaids);
+	DECLARE_VIDEO_START(reikaids);
+	DECLARE_PALETTE_INIT(reikaids);
+	DECLARE_MACHINE_START(pteacher);
+	DECLARE_MACHINE_RESET(pteacher);
+	DECLARE_VIDEO_START(pteacher);
+	DECLARE_PALETTE_INIT(pteacher);
+	DECLARE_VIDEO_START(mirderby);
+	DECLARE_PALETTE_INIT(mirderby);
+	DECLARE_VIDEO_START(lemnangl);
 };
 
 
@@ -87,16 +127,16 @@ public:
 /*----------- defined in video/homedata.c -----------*/
 
 
-PALETTE_INIT( mrokumei );
-PALETTE_INIT( reikaids );
-PALETTE_INIT( pteacher );
-PALETTE_INIT( mirderby );
 
-VIDEO_START( mrokumei );
-VIDEO_START( reikaids );
-VIDEO_START( pteacher );
-VIDEO_START( lemnangl );
-VIDEO_START( mirderby );
+
+
+
+
+
+
+
+
+
 SCREEN_UPDATE_IND16( mrokumei );
 SCREEN_UPDATE_IND16( reikaids );
 SCREEN_UPDATE_IND16( pteacher );

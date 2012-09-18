@@ -156,7 +156,7 @@ READ32_MEMBER(polygonet_state::psac_rom_r)
 /* irq 7 does nothing (it jsrs to a rts and then rte) */
 static INTERRUPT_GEN(polygonet_interrupt)
 {
-	device_set_input_line(device, M68K_IRQ_5, HOLD_LINE);
+	device->execute().set_input_line(M68K_IRQ_5, HOLD_LINE);
 }
 
 /* sound CPU communications */
@@ -183,7 +183,7 @@ WRITE32_MEMBER(polygonet_state::sound_w)
 
 WRITE32_MEMBER(polygonet_state::sound_irq_w)
 {
-	cputag_set_input_line(machine(), "soundcpu", 0, HOLD_LINE);
+	machine().device("soundcpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 /* DSP communications */
@@ -200,7 +200,7 @@ READ32_MEMBER(polygonet_state::dsp_host_interface_r)
 	if (mem_mask == 0x0000ff00)	{ value <<= 8;  }
 	if (mem_mask == 0xff000000) { value <<= 24; }
 
-	logerror("Dsp HI Read (host-side) %08x (HI %04x) = %08x (@%x)\n", mem_mask, hi_addr, value, cpu_get_pc(&space.device()));
+	logerror("Dsp HI Read (host-side) %08x (HI %04x) = %08x (@%x)\n", mem_mask, hi_addr, value, space.device().safe_pc());
 
 	return value;
 }
@@ -214,13 +214,13 @@ WRITE32_MEMBER(polygonet_state::shared_ram_write)
 	{
 		logerror("68k WRITING %04x to shared ram %x (@%x)\n", (m_shared_ram[offset] & 0xffff0000) >> 16,
 															   0xc000 + (offset<<1),
-															   cpu_get_pc(&space.device()));
+															   space.device().safe_pc());
 	}
 	else if (mem_mask == 0x0000ffff)
 	{
 		logerror("68k WRITING %04x to shared ram %x (@%x)\n", (m_shared_ram[offset] & 0x0000ffff),
 															   0xc000 +((offset<<1)+1),
-															   cpu_get_pc(&space.device()));
+															   space.device().safe_pc());
 	}
 	else
 	{
@@ -229,7 +229,7 @@ WRITE32_MEMBER(polygonet_state::shared_ram_write)
 																				  0xc000 + (offset<<1),
 																				  0xc000 +((offset<<1)+1),
 																				  mem_mask,
-																				  cpu_get_pc(&space.device()));
+																				  space.device().safe_pc());
 	}
 
 	/* write to the current dsp56k word */
@@ -253,16 +253,16 @@ WRITE32_MEMBER(polygonet_state::dsp_w_lines)
 	if ((data >> 24) & 0x01)
 	{
 //      logerror("RESET CLEARED\n");
-		cputag_set_input_line(machine(), "dsp", DSP56K_IRQ_RESET, CLEAR_LINE);
+		machine().device("dsp")->execute().set_input_line(DSP56K_IRQ_RESET, CLEAR_LINE);
 	}
 	else
 	{
 //      logerror("RESET ASSERTED\n");
-		cputag_set_input_line(machine(), "dsp", DSP56K_IRQ_RESET, ASSERT_LINE);
+		machine().device("dsp")->execute().set_input_line(DSP56K_IRQ_RESET, ASSERT_LINE);
 
 		/* A little hacky - I can't seem to set these lines anywhere else where reset is asserted, so i do it here */
-		cputag_set_input_line(machine(), "dsp", DSP56K_IRQ_MODA, ASSERT_LINE);
-		cputag_set_input_line(machine(), "dsp", DSP56K_IRQ_MODB, CLEAR_LINE);
+		machine().device("dsp")->execute().set_input_line(DSP56K_IRQ_MODA, ASSERT_LINE);
+		machine().device("dsp")->execute().set_input_line(DSP56K_IRQ_MODB, CLEAR_LINE);
 	}
 
 	/* 0x04000000 is the COMBNK line - it switches who has access to the shared RAM - the dsp or the 68020 */
@@ -557,7 +557,7 @@ WRITE8_MEMBER(polygonet_state::sound_bankswitch_w)
 
 static INTERRUPT_GEN(audio_interrupt)
 {
-	device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+	device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static ADDRESS_MAP_START( sound_map, AS_PROGRAM, 8, polygonet_state )
@@ -600,7 +600,7 @@ static GFXDECODE_START( plygonet )
 	GFXDECODE_ENTRY( "gfx2", 0, bglayout, 0x0000, 64 )
 GFXDECODE_END
 
-static MACHINE_START(polygonet)
+void polygonet_state::machine_start()
 {
 	logerror("Polygonet machine start\n");
 
@@ -608,9 +608,9 @@ static MACHINE_START(polygonet)
 	/* It's presumed the hardware has hard-wired operating mode 1 (MODA = 1, MODB = 0) */
 	/* TODO: This should work, but the MAME core appears to do something funny.
              Not a big deal - it's hacked in dsp_w_lines. */
-	//cputag_set_input_line(machine, "dsp", INPUT_LINE_RESET, ASSERT_LINE);
-	//cputag_set_input_line(machine, "dsp", DSP56K_IRQ_MODA, ASSERT_LINE);
-	//cputag_set_input_line(machine, "dsp", DSP56K_IRQ_MODB, CLEAR_LINE);
+	//machine().device("dsp")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	//machine().device("dsp")->execute().set_input_line(DSP56K_IRQ_MODA, ASSERT_LINE);
+	//machine().device("dsp")->execute().set_input_line(DSP56K_IRQ_MODB, CLEAR_LINE);
 }
 
 static const k053936_interface polygonet_k053936_intf =
@@ -632,7 +632,6 @@ static MACHINE_CONFIG_START( plygonet, polygonet_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_PERIODIC_INT(audio_interrupt, 480)
 
-	MCFG_MACHINE_START(polygonet)
 
 	MCFG_GFXDECODE(plygonet)
 
@@ -651,7 +650,6 @@ static MACHINE_CONFIG_START( plygonet, polygonet_state )
 
 	MCFG_PALETTE_LENGTH(32768)
 
-	MCFG_VIDEO_START(polygonet)
 
 	MCFG_K053936_ADD("k053936", polygonet_k053936_intf)
 

@@ -86,7 +86,7 @@ READ16_MEMBER(mcr68_state::zwackery_6840_r)
 	/* It expects D1 to end up between 0 and 5; in order to */
 	/* make this happen, we must assume that reads from the */
 	/* 6840 take 14 additional cycles                       */
-	device_adjust_icount(&space.device(), -14);
+	space.device().execute().adjust_icount(-14);
 	return mcr68_6840_upper_r(space,offset,0xffff);
 }
 
@@ -228,7 +228,7 @@ WRITE16_MEMBER(mcr68_state::pigskin_protection_w)
 		m_protection_data[3] = m_protection_data[4];
 		m_protection_data[4] = data & 0xff;
 
-		logerror("%06X:protection_w=%02X\n", cpu_get_previouspc(&space.device()), data & 0xff);
+		logerror("%06X:protection_w=%02X\n", space.device().safe_pcbase(), data & 0xff);
 	}
 }
 
@@ -968,8 +968,8 @@ static MACHINE_CONFIG_START( zwackery, mcr68_state )
 	MCFG_CPU_VBLANK_INT("screen", mcr68_interrupt)
 
 //  MCFG_WATCHDOG_VBLANK_INIT(8)
-	MCFG_MACHINE_START(zwackery)
-	MCFG_MACHINE_RESET(zwackery)
+	MCFG_MACHINE_START_OVERRIDE(mcr68_state,zwackery)
+	MCFG_MACHINE_RESET_OVERRIDE(mcr68_state,zwackery)
 
 	MCFG_PIA6821_ADD("pia0", zwackery_pia0_intf)
 	MCFG_PIA6821_ADD("pia1", zwackery_pia1_intf)
@@ -986,7 +986,7 @@ static MACHINE_CONFIG_START( zwackery, mcr68_state )
 	MCFG_GFXDECODE(zwackery)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(zwackery)
+	MCFG_VIDEO_START_OVERRIDE(mcr68_state,zwackery)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1003,8 +1003,8 @@ static MACHINE_CONFIG_START( mcr68, mcr68_state )
 	MCFG_CPU_VBLANK_INT("screen", mcr68_interrupt)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
-	MCFG_MACHINE_START(mcr68)
-	MCFG_MACHINE_RESET(mcr68)
+	MCFG_MACHINE_START_OVERRIDE(mcr68_state,mcr68)
+	MCFG_MACHINE_RESET_OVERRIDE(mcr68_state,mcr68)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1017,7 +1017,7 @@ static MACHINE_CONFIG_START( mcr68, mcr68_state )
 	MCFG_GFXDECODE(mcr68)
 	MCFG_PALETTE_LENGTH(64)
 
-	MCFG_VIDEO_START(mcr68)
+	MCFG_VIDEO_START_OVERRIDE(mcr68_state,mcr68)
 
 	/* sound hardware -- determined by specific machine */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

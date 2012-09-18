@@ -1,4 +1,4 @@
-/*  Konami NWK-TR System
+	/*  Konami NWK-TR System
 
     Driver by Ville Linde
 
@@ -236,6 +236,7 @@ public:
 	UINT8 m_led_reg0;
 	UINT8 m_led_reg1;
 	required_shared_ptr<UINT32> m_work_ram;
+	emu_timer *m_sound_irq_timer;
 	int m_fpga_uploaded;
 	int m_lanc2_ram_r;
 	int m_lanc2_ram_w;
@@ -251,6 +252,8 @@ public:
 	DECLARE_READ32_MEMBER(dsp_dataram_r);
 	DECLARE_WRITE32_MEMBER(dsp_dataram_w);
 	DECLARE_DRIVER_INIT(nwktr);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 
@@ -266,7 +269,7 @@ WRITE32_MEMBER(nwktr_state::paletteram32_w)
 
 static void voodoo_vblank_0(device_t *device, int param)
 {
-	cputag_set_input_line(device->machine(), "maincpu", INPUT_LINE_IRQ0, ASSERT_LINE);
+	device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, param);
 }
 
 
@@ -280,7 +283,10 @@ static SCREEN_UPDATE_RGB32( nwktr )
 
 	voodoo_update(voodoo, bitmap, cliprect);
 
-	k001604_draw_front_layer(k001604, bitmap, cliprect);
+	const rectangle &visarea = screen.visible_area();
+	const rectangle tilemap_rect(visarea.min_x, visarea.max_x, visarea.min_y+16, visarea.max_y);
+
+	k001604_draw_front_layer(k001604, bitmap, tilemap_rect);
 
 	draw_7segment_led(bitmap, 3, 3, state->m_led_reg0);
 	draw_7segment_led(bitmap, 9, 3, state->m_led_reg1);
@@ -354,13 +360,11 @@ WRITE32_MEMBER(nwktr_state::sysreg_w)
 		if (ACCESSING_BITS_0_7)
 		{
 			if (data & 0x80)	// CG Board 1 IRQ Ack
-			{
-				//cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ1, CLEAR_LINE);
-			}
+				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
 			if (data & 0x40)	// CG Board 0 IRQ Ack
-			{
-				//cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ0, CLEAR_LINE);
-			}
+				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
+
+			//set_cgboard_id((data >> 4) & 3);
 		}
 		return;
 	}
@@ -392,7 +396,7 @@ READ32_MEMBER(nwktr_state::lanc1_r)
 
 		default:
 		{
-			//printf("lanc1_r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(&space.device()));
+			//printf("lanc1_r: %08X, %08X at %08X\n", offset, mem_mask, space.device().safe_pc());
 			return 0xffffffff;
 		}
 	}
@@ -400,7 +404,7 @@ READ32_MEMBER(nwktr_state::lanc1_r)
 
 WRITE32_MEMBER(nwktr_state::lanc1_w)
 {
-	//printf("lanc1_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(&space.device()));
+	//printf("lanc1_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, space.device().safe_pc());
 }
 
 READ32_MEMBER(nwktr_state::lanc2_r)
@@ -428,7 +432,7 @@ READ32_MEMBER(nwktr_state::lanc2_r)
 		}
 	}
 
-	//printf("lanc2_r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(&space.device()));
+	//printf("lanc2_r: %08X, %08X at %08X\n", offset, mem_mask, space.device().safe_pc());
 
 	return r;
 }
@@ -452,7 +456,17 @@ WRITE32_MEMBER(nwktr_state::lanc2_w)
 
 			m_fpga_uploaded = 1;
 
-			//printf("lanc2_fpga_w: %02X at %08X\n", value, cpu_get_pc(&space.device()));
+			//printf("lanc2_fpga_w: %02X at %08X\n", value, space.device().safe_pc());
+		}
+		else if (ACCESSING_BITS_8_15)
+		{
+			m_lanc2_ram_r = 0;
+			m_lanc2_ram_w = 0;
+		}
+		else if (ACCESSING_BITS_16_23)
+		{
+			m_lanc2_ram[2] = (data >> 20) & 0xf;
+			m_lanc2_ram[3] = 0;
 		}
 		else if (ACCESSING_BITS_0_7)
 		{
@@ -461,38 +475,55 @@ WRITE32_MEMBER(nwktr_state::lanc2_w)
 		}
 		else
 		{
-			//printf("lanc2_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(&space.device()));
+			//printf("lanc2_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, space.device().safe_pc());
 		}
 	}
 	if (offset == 4)
 	{
-		if (mame_stricmp(machine().system().name, "thrilld") == 0)
-		{
-			m_work_ram[(0x3ffed0/4) + 0] = 0x472a3731;
-			m_work_ram[(0x3ffed0/4) + 1] = 0x33202020;
-			m_work_ram[(0x3ffed0/4) + 2] = 0x2d2d2a2a;
-			m_work_ram[(0x3ffed0/4) + 3] = 0x2a207878;
+		// TODO: check if these should be transferred via PPC DMA.
 
-			m_work_ram[(0x3fff40/4) + 0] = 0x47433731;
-			m_work_ram[(0x3fff40/4) + 1] = 0x33000000;
-			m_work_ram[(0x3fff40/4) + 2] = 0x19994a41;
-			m_work_ram[(0x3fff40/4) + 3] = 0x4100a9b1;
+		if (mame_stricmp(machine().system().name, "thrilld") == 0 ||
+			mame_stricmp(machine().system().name, "thrilldb") == 0 ||
+			mame_stricmp(machine().system().name, "thrilldae") == 0)
+		{
+			m_work_ram[(0x3ffed0/4) + 0] = 0x472a3731;		// G*71
+			m_work_ram[(0x3ffed0/4) + 1] = 0x33202020;		// 3
+			m_work_ram[(0x3ffed0/4) + 2] = 0x2d2d2a2a;		// --**
+			m_work_ram[(0x3ffed0/4) + 3] = 0x2a207878;		// *
+
+			m_work_ram[(0x3fff40/4) + 0] = 0x47433731;		// GC71
+			m_work_ram[(0x3fff40/4) + 1] = 0x33000000;		// 3
+			m_work_ram[(0x3fff40/4) + 2] = 0x19994a41;		//   JA
+			m_work_ram[(0x3fff40/4) + 3] = 0x4100a9b1;		// A
+		}
+		else if (mame_stricmp(machine().system().name, "racingj2") == 0)
+		{
+			m_work_ram[(0x3ffc80/4) + 0] = 0x47453838;		// GE88
+			m_work_ram[(0x3ffc80/4) + 1] = 0x38003030;		// 8 00
+			m_work_ram[(0x3ffc80/4) + 2] = 0x39374541;		// 97EA
+			m_work_ram[(0x3ffc80/4) + 3] = 0x410058da;		// A
 		}
 	}
 
-	//printf("lanc2_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(&space.device()));
+	//printf("lanc2_w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, space.device().safe_pc());
 }
 
 /*****************************************************************************/
 
-static MACHINE_START( nwktr )
+static TIMER_CALLBACK( irq_off )
 {
-	nwktr_state *state = machine.driver_data<nwktr_state>();
+	machine.device("audiocpu")->execute().set_input_line(param, CLEAR_LINE);
+}
+
+void nwktr_state::machine_start()
+{
 	/* set conservative DRC options */
-	ppcdrc_set_options(machine.device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
+	ppcdrc_set_options(machine().device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
 
 	/* configure fast RAM regions for DRC */
-	ppcdrc_add_fastram(machine.device("maincpu"), 0x00000000, 0x003fffff, FALSE, state->m_work_ram);
+	ppcdrc_add_fastram(machine().device("maincpu"), 0x00000000, 0x003fffff, FALSE, m_work_ram);
+
+	m_sound_irq_timer = machine().scheduler().timer_alloc(FUNC(irq_off));
 }
 
 static ADDRESS_MAP_START( nwktr_map, AS_PROGRAM, 32, nwktr_state )
@@ -599,19 +630,19 @@ static INPUT_PORTS_START( nwktr )
 	PORT_DIPSETTING( 0x00, DEF_STR( On ) )
 
 	PORT_START("ANALOG1")		// Steering
-	PORT_BIT( 0xfff, 0x800, IPT_PADDLE ) PORT_MINMAX(0x000, 0xfff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xfff, 0x800, IPT_PADDLE ) PORT_MINMAX(0x000, 0xfff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5) PORT_INVERT
 
 	PORT_START("ANALOG2")		// Acceleration pedal
-	PORT_BIT( 0x7ff, 0x000, IPT_PEDAL ) PORT_MINMAX(0x000, 0x7ff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xfff, 0x000, IPT_PEDAL ) PORT_MINMAX(0x000, 0xfff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
 
 	PORT_START("ANALOG3")		// Foot brake pedal
-	PORT_BIT( 0x7ff, 0x000, IPT_PEDAL2 ) PORT_MINMAX(0x000, 0x7ff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xfff, 0x000, IPT_PEDAL2 ) PORT_MINMAX(0x000, 0xfff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
 
 	PORT_START("ANALOG4")		// Hand brake lever
-	PORT_BIT( 0x7ff, 0x000, IPT_AD_STICK_Y ) PORT_MINMAX(0x000, 0x7ff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xfff, 0x000, IPT_AD_STICK_Y ) PORT_MINMAX(0x000, 0xfff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
 
 	PORT_START("ANALOG5")		// Clutch pedal
-	PORT_BIT( 0x7ff, 0x000, IPT_PEDAL3 ) PORT_MINMAX(0x000, 0x7ff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
+	PORT_BIT( 0xfff, 0x000, IPT_PEDAL3 ) PORT_MINMAX(0x000, 0xfff) PORT_SENSITIVITY(35) PORT_KEYDELTA(5)
 
 INPUT_PORTS_END
 
@@ -626,14 +657,14 @@ static double adc12138_input_callback( device_t *device, UINT8 input )
 	int value = 0;
 	switch (input)
 	{
-		case 0:		value = device->machine().root_device().ioport("ANALOG1")->read() - 0x800; break;
+		case 0:		value = device->machine().root_device().ioport("ANALOG1")->read(); break;
 		case 1:		value = device->machine().root_device().ioport("ANALOG2")->read(); break;
 		case 2:		value = device->machine().root_device().ioport("ANALOG3")->read(); break;
 		case 3:		value = device->machine().root_device().ioport("ANALOG4")->read(); break;
 		case 4:		value = device->machine().root_device().ioport("ANALOG5")->read(); break;
 	}
 
-	return (double)(value) / 2047.0;
+	return (double)(value) / 4095.0;
 }
 
 static const adc12138_interface nwktr_adc_interface = {
@@ -642,10 +673,11 @@ static const adc12138_interface nwktr_adc_interface = {
 
 static void sound_irq_callback(running_machine &machine, int irq)
 {
-	if (irq == 0)
-		generic_pulse_irq_line(machine.device("audiocpu"), INPUT_LINE_IRQ1, 1);
-	else
-		generic_pulse_irq_line(machine.device("audiocpu"), INPUT_LINE_IRQ2, 1);
+	nwktr_state *state = machine.driver_data<nwktr_state>();
+	int line = (irq == 0) ? INPUT_LINE_IRQ1 : INPUT_LINE_IRQ2;
+
+	machine.device("audiocpu")->execute().set_input_line(line, ASSERT_LINE);
+    state->m_sound_irq_timer->adjust(attotime::from_usec(5), line);
 }
 
 static const k056800_interface nwktr_k056800_interface =
@@ -672,10 +704,21 @@ static const k001604_interface thrilld_k001604_intf =
 	0		/* slrasslt hack */
 };
 
-static MACHINE_RESET( nwktr )
+void nwktr_state::machine_reset()
 {
-	cputag_set_input_line(machine, "dsp", INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("dsp")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
+
+static const voodoo_config voodoo_intf =
+{
+	2, //               fbmem;
+	2,//                tmumem0;
+	2,//                tmumem1;
+	"screen",//         screen;
+	"dsp",//            cputag;
+	voodoo_vblank_0,//  vblank;
+	NULL,//             stall;
+};
 
 static MACHINE_CONFIG_START( nwktr, nwktr_state )
 
@@ -690,16 +733,10 @@ static MACHINE_CONFIG_START( nwktr, nwktr_state )
 	MCFG_CPU_CONFIG(sharc_cfg)
 	MCFG_CPU_DATA_MAP(sharc_map)
 
-	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
+	MCFG_QUANTUM_TIME(attotime::from_hz(9000))
 
-	MCFG_MACHINE_START(nwktr)
-	MCFG_MACHINE_RESET(nwktr)
 
-	MCFG_3DFX_VOODOO_1_ADD("voodoo", STD_VOODOO_1_CLOCK, 2, "screen")
-	MCFG_3DFX_VOODOO_CPU("dsp")
-	MCFG_3DFX_VOODOO_TMU_MEMORY(0, 2)
-	MCFG_3DFX_VOODOO_TMU_MEMORY(1, 2)
-	MCFG_3DFX_VOODOO_VBLANK(voodoo_vblank_0)
+	MCFG_3DFX_VOODOO_1_ADD("voodoo", STD_VOODOO_1_CLOCK, voodoo_intf)
 
 	MCFG_K033906_ADD("k033906_1", nwktr_k033906_interface)
 
@@ -733,10 +770,9 @@ static MACHINE_CONFIG_DERIVED( thrilld, nwktr )
 	MCFG_K001604_ADD("k001604", thrilld_k001604_intf)
 MACHINE_CONFIG_END
 
-
 /*****************************************************************************/
 
-DRIVER_INIT_MEMBER(nwktr_state,nwktr)
+DRIVER_INIT_MEMBER(nwktr_state, nwktr)
 {
 	init_konami_cgboard(machine(), 1, CGBOARD_TYPE_NWKTR);
 	set_cgboard_texture_bank(machine(), 0, "bank5", memregion("user5")->base());
@@ -746,7 +782,6 @@ DRIVER_INIT_MEMBER(nwktr_state,nwktr)
 
 	lanc2_init(machine());
 }
-
 
 /*****************************************************************************/
 
@@ -895,7 +930,7 @@ ROM_END
 GAME( 1998, racingj,    0,       nwktr,   nwktr, nwktr_state, nwktr, ROT0, "Konami", "Racing Jam (JAC)", GAME_NOT_WORKING | GAME_NO_SOUND )
 GAME( 1999, racingj2,   racingj, nwktr,   nwktr, nwktr_state, nwktr, ROT0, "Konami", "Racing Jam: Chapter 2 (EAE)", GAME_NOT_WORKING | GAME_NO_SOUND )
 GAME( 1999, racingj2j,  racingj, nwktr,   nwktr, nwktr_state, nwktr, ROT0, "Konami", "Racing Jam: Chapter 2 (JAE)", GAME_NOT_WORKING | GAME_NO_SOUND )
-GAME( 1998, thrilld,    0,       thrilld, nwktr, nwktr_state, nwktr, ROT0, "Konami", "Thrill Drive (JAE)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
-GAME( 1998, thrilldb,   thrilld, thrilld, nwktr, nwktr_state, nwktr, ROT0, "Konami", "Thrill Drive (JAB)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
+GAME( 1998, thrilld,    0,       thrilld, nwktr, nwktr_state, nwktr, ROT0, "Konami", "Thrill Drive (JAE)", GAME_IMPERFECT_SOUND )
+GAME( 1998, thrilldb,   thrilld, thrilld, nwktr, nwktr_state, nwktr, ROT0, "Konami", "Thrill Drive (JAB)", GAME_IMPERFECT_SOUND )
 GAME( 1998, thrilldae,  thrilld, thrilld, nwktr, nwktr_state, nwktr, ROT0, "Konami", "Thrill Drive (EAA)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
 

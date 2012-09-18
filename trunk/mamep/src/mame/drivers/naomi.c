@@ -1582,7 +1582,7 @@ static ADDRESS_MAP_START( naomi_map, AS_PROGRAM, 64, dc_state )
 	AM_RANGE(0x08000000, 0x09ffffff) AM_MIRROR(0x02000000) AM_NOP // 'Unassigned'
 
 	/* Area 3 */
-	AM_RANGE(0x0c000000, 0x0dffffff) AM_MIRROR(0xa2000000) AM_RAM AM_BASE_LEGACY(&naomi_ram64)
+	AM_RANGE(0x0c000000, 0x0dffffff) AM_MIRROR(0xa2000000) AM_RAM AM_SHARE("dc_ram")
 
 	/* Area 4 */
 	AM_RANGE(0x10000000, 0x107fffff) AM_MIRROR(0x02000000) AM_WRITE_LEGACY(ta_fifo_poly_w )
@@ -1644,7 +1644,7 @@ static ADDRESS_MAP_START( naomi2_map, AS_PROGRAM, 64, dc_state )
     AM_RANGE(0x0a000000, 0x0bffffff) AM_RAM AM_SHARE("elan_ram") // T&L chip RAM
 
 	/* Area 3 */
-	AM_RANGE(0x0c000000, 0x0dffffff) AM_MIRROR(0xa2000000) AM_RAM AM_BASE_LEGACY(&naomi_ram64)
+	AM_RANGE(0x0c000000, 0x0dffffff) AM_MIRROR(0xa2000000) AM_RAM AM_SHARE("dc_ram")
 
 	/* Area 4 */
 	AM_RANGE(0x10000000, 0x107fffff) AM_WRITE_LEGACY(ta_fifo_poly_w )
@@ -1786,13 +1786,13 @@ static ADDRESS_MAP_START( aw_map, AS_PROGRAM, 64, dc_state )
 	AM_RANGE(0x08000000, 0x0bffffff) AM_NOP // 'Unassigned'
 
 	/* Area 3 */
-	AM_RANGE(0x0c000000, 0x0cffffff) AM_RAM AM_BASE_LEGACY(&naomi_ram64) AM_SHARE("share4")
-	AM_RANGE(0x0d000000, 0x0dffffff) AM_RAM AM_SHARE("share4")// extra ram on Naomi (mirror on DC)
-	AM_RANGE(0x0e000000, 0x0effffff) AM_RAM AM_SHARE("share4")// mirror
-	AM_RANGE(0x0f000000, 0x0fffffff) AM_RAM AM_SHARE("share4")// mirror
+	AM_RANGE(0x0c000000, 0x0cffffff) AM_RAM AM_SHARE("dc_ram")
+	AM_RANGE(0x0d000000, 0x0dffffff) AM_RAM AM_SHARE("dc_ram")// extra ram on Naomi (mirror on DC)
+	AM_RANGE(0x0e000000, 0x0effffff) AM_RAM AM_SHARE("dc_ram")// mirror
+	AM_RANGE(0x0f000000, 0x0fffffff) AM_RAM AM_SHARE("dc_ram")// mirror
 
-	AM_RANGE(0x8c000000, 0x8cffffff) AM_RAM AM_SHARE("share4") // RAM access through cache
-	AM_RANGE(0x8d000000, 0x8dffffff) AM_RAM AM_SHARE("share4") // RAM access through cache
+	AM_RANGE(0x8c000000, 0x8cffffff) AM_RAM AM_SHARE("dc_ram") // RAM access through cache
+	AM_RANGE(0x8d000000, 0x8dffffff) AM_RAM AM_SHARE("dc_ram") // RAM access through cache
 
 	/* Area 4 - half the texture memory, like dreamcast, not naomi */
 	AM_RANGE(0x10000000, 0x107fffff) AM_MIRROR(0x02000000) AM_WRITE_LEGACY(ta_fifo_poly_w )
@@ -1817,7 +1817,7 @@ ADDRESS_MAP_END
  */
 static void aica_irq(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine(), "soundcpu", ARM7_FIRQ_LINE, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("soundcpu")->execute().set_input_line(ARM7_FIRQ_LINE, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -2492,12 +2492,11 @@ static INPUT_PORTS_START( aw1w )
 	PORT_INCLUDE( naomi_debug )
 INPUT_PORTS_END
 
-static MACHINE_RESET( naomi )
+MACHINE_RESET_MEMBER(dc_state,naomi)
 {
-	dc_state *state = machine.driver_data<dc_state>();
 
-	MACHINE_RESET_CALL(dc);
-	aica_set_ram_base(machine.device("aica"), state->dc_sound_ram, 8*1024*1024);
+	dc_state::machine_reset();
+	aica_set_ram_base(machine().device("aica"), dc_sound_ram, 8*1024*1024);
 }
 
 /*
@@ -2516,8 +2515,7 @@ static MACHINE_CONFIG_START( naomi_aw_base, dc_state )
 
 	MCFG_MAPLE_DC_ADD( "maple_dc", "maincpu", dc_maple_irq )
 
-	MCFG_MACHINE_START( dc )
-	MCFG_MACHINE_RESET( naomi )
+	MCFG_MACHINE_RESET_OVERRIDE(dc_state,naomi)
 
 	MCFG_EEPROM_93C46_ADD("main_eeprom")
 	MCFG_EEPROM_DEFAULT_VALUE(0)
@@ -2532,7 +2530,6 @@ static MACHINE_CONFIG_START( naomi_aw_base, dc_state )
 
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_VIDEO_START(dc)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_SOUND_ADD("aica", AICA, 0)
@@ -2633,7 +2630,7 @@ static MACHINE_CONFIG_DERIVED( aw_base, naomi_aw_base )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(aw_map)
 	MCFG_MACRONIX_29L001MC_ADD("awflash")
-	MCFG_AW_ROM_BOARD_ADD("rom_board", "rom_key", "maincpu", naomi_g1_irq)
+	MCFG_AW_ROM_BOARD_ADD("rom_board", ":rom_key", "maincpu", naomi_g1_irq)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( aw1c, aw_base )
@@ -7861,6 +7858,23 @@ ROM_START( rumblef2 )
 	ROM_LOAD( "ax3401f01.bin", 0, 4, CRC(952919a1) SHA1(d343fdbbd1d8b651401133f21facc1584bb66c04) )
 ROM_END
 
+ROM_START( claychal )
+	AW_BIOS
+
+	ROM_REGION( 0x8000100, "rom_board", ROMREGION_ERASE)
+    ROM_LOAD( "u3.bin",       0x0000000, 0x1000100, CRC(5bb65194) SHA1(5fa8c38e6aadf5d999e260da24b001c0c7805d48) )
+    ROM_LOAD( "u1.bin",       0x1000000, 0x1000100, CRC(526fc1af) SHA1(dd8a37fa73a9ef193b6f4fb962345bdfc4854b5d) )
+    ROM_LOAD( "u4.bin",       0x2000000, 0x1000100, CRC(55f4e762) SHA1(a11f7d69458e647dd2b8d86c98a54f309b1f1bbc) )
+    ROM_LOAD( "u2.bin",       0x3000000, 0x1000100, CRC(c40dae68) SHA1(29ec47c76373eeaa686684f10907d551de7d9c59) )
+    ROM_LOAD( "u15.bin",      0x4000000, 0x1000100, CRC(b82dcb0a) SHA1(36dc89a388ac0c7e0a0e72428c8149cbda12805a) )
+    ROM_LOAD( "u17.bin",      0x5000000, 0x1000100, CRC(2f973eb4) SHA1(45409b5517cda119315f198892224889ac3a0f53) )
+    ROM_LOAD( "u14.bin",      0x6000000, 0x1000100, CRC(2e7d966f) SHA1(3304fd0c5140a13f6fe2ea9aaa74d7885e1505e1) )
+    ROM_LOAD( "u16.bin",      0x7000000, 0x1000100, CRC(14f8ca87) SHA1(778c048da9434ffda600e35ad5aca29e02cc98c0) )
+
+	ROM_REGION( 4, "rom_key", 0 )
+    ROM_LOAD( "cckey.bin",    0x000000, 0x000004, CRC(553dd361) SHA1(a60a26b5ee786cf0bb3d09bb6f00374598fbd7cc) )
+ROM_END
+
 /* All games have the regional titles at the start of the IC22 rom in the following order
 
   JAPAN
@@ -8167,3 +8181,4 @@ GAME( 2005, kofnwj,   kofnw,    aw2c,    aw2c, dc_state,  atomiswave, ROT0, "Sam
 GAME( 2005, xtrmhunt, awbios,   aw2c,    aw2c, dc_state,  atomiswave, ROT0, "Sammy",                           "Extreme Hunting", GAME_FLAGS )
 GAME( 2006, mslug6,   awbios,   aw2c,    aw2c, dc_state,  atomiswave, ROT0, "Sega / SNK Playmore",             "Metal Slug 6", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND|GAME_NOT_WORKING )
 GAME( 2006, xtrmhnt2, awbios,   aw2c,    aw2c, dc_state,  atomiswave, ROT0, "Sega",                            "Extreme Hunting 2", GAME_FLAGS )
+GAME( 2008, claychal, awbios,   aw2c,    aw2c, dc_state,  atomiswave, ROT0, "Sega",                            "Sega Clay Challenge", GAME_FLAGS )

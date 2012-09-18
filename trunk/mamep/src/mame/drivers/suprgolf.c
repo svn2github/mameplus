@@ -65,32 +65,33 @@ public:
 	DECLARE_WRITE8_MEMBER(suprgolf_writeA);
 	DECLARE_WRITE8_MEMBER(suprgolf_writeB);
 	DECLARE_DRIVER_INIT(suprgolf);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(suprgolf_state::get_tile_info)
 {
-	suprgolf_state *state = machine.driver_data<suprgolf_state>();
-	int code = state->m_videoram[tile_index*2]+256*(state->m_videoram[tile_index*2+1]);
-	int color = state->m_videoram[tile_index*2+0x800] & 0x7f;
+	int code = m_videoram[tile_index*2]+256*(m_videoram[tile_index*2+1]);
+	int color = m_videoram[tile_index*2+0x800] & 0x7f;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 		0,
 		code,
 		color,
 		0);
 }
 
-static VIDEO_START( suprgolf )
+void suprgolf_state::video_start()
 {
-	suprgolf_state *state = machine.driver_data<suprgolf_state>();
 
-	state->m_tilemap = tilemap_create( machine, get_tile_info,tilemap_scan_rows,8,8,32,32 );
-	state->m_paletteram = auto_alloc_array(machine, UINT8, 0x1000);
-	state->m_bg_vram = auto_alloc_array(machine, UINT8, 0x2000*0x20);
-	state->m_bg_fb = auto_alloc_array(machine, UINT16, 0x2000*0x20);
-	state->m_fg_fb = auto_alloc_array(machine, UINT16, 0x2000*0x20);
+	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(suprgolf_state::get_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32 );
+	m_paletteram = auto_alloc_array(machine(), UINT8, 0x1000);
+	m_bg_vram = auto_alloc_array(machine(), UINT8, 0x2000*0x20);
+	m_bg_fb = auto_alloc_array(machine(), UINT16, 0x2000*0x20);
+	m_fg_fb = auto_alloc_array(machine(), UINT16, 0x2000*0x20);
 
-	state->m_tilemap->set_transparent_pen(15);
+	m_tilemap->set_transparent_pen(15);
 }
 
 static SCREEN_UPDATE_IND16( suprgolf )
@@ -269,7 +270,7 @@ WRITE8_MEMBER(suprgolf_state::rom_bank_select_w)
 
 	//popmessage("%08x %02x",((data & 0x3f) * 0x4000),data);
 
-//  mame_printf_debug("ROM_BANK 0x8000 - %X @%X\n",data,cpu_get_previouspc(&space->device()));
+//  mame_printf_debug("ROM_BANK 0x8000 - %X @%X\n",data,space->device().safe_pcbase());
 	membank("bank2")->set_base(region_base + (data&0x3f ) * 0x4000);
 
 	m_msm_nmi_mask = data & 0x40;
@@ -279,7 +280,7 @@ WRITE8_MEMBER(suprgolf_state::rom_bank_select_w)
 WRITE8_MEMBER(suprgolf_state::rom2_bank_select_w)
 {
 	UINT8 *region_base = memregion("user2")->base();
-//  mame_printf_debug("ROM_BANK 0x4000 - %X @%X\n",data,cpu_get_previouspc(&space.device()));
+//  mame_printf_debug("ROM_BANK 0x4000 - %X @%X\n",data,space.device().safe_pcbase());
 
 	membank("bank1")->set_base(region_base + (data&0x0f) * 0x4000);
 
@@ -423,7 +424,7 @@ WRITE8_MEMBER(suprgolf_state::suprgolf_writeB)
 
 static void irqhandler(device_t *device, int irq)
 {
-	//cputag_set_input_line(device->machine(), "maincpu", INPUT_LINE_NMI, irq ? ASSERT_LINE : CLEAR_LINE);
+	//device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -449,7 +450,7 @@ static void adpcm_int(device_t *device)
 		if(state->m_toggle)
 		{
 			msm5205_data_w(device, (state->m_msm5205next & 0xf0) >> 4);
-			if(state->m_msm_nmi_mask) { cputag_set_input_line(device->machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE); }
+			if(state->m_msm_nmi_mask) { device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE); }
 		}
 		else
 		{
@@ -479,11 +480,10 @@ static GFXDECODE_START( suprgolf )
 	GFXDECODE_ENTRY( "gfx1", 0, gfxlayout,   0, 0x80 )
 GFXDECODE_END
 
-static MACHINE_RESET( suprgolf )
+void suprgolf_state::machine_reset()
 {
-	suprgolf_state *state = machine.driver_data<suprgolf_state>();
 
-	state->m_msm_nmi_mask = 0;
+	m_msm_nmi_mask = 0;
 }
 
 static I8255A_INTERFACE( ppi8255_intf_0 )
@@ -517,9 +517,7 @@ static MACHINE_CONFIG_START( suprgolf, suprgolf_state )
 	MCFG_CPU_IO_MAP(io_map)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_VIDEO_START(suprgolf)
 
-	MCFG_MACHINE_RESET(suprgolf)
 
 	MCFG_I8255A_ADD( "ppi8255_0", ppi8255_intf_0 )
 	MCFG_I8255A_ADD( "ppi8255_1", ppi8255_intf_1 )

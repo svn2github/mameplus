@@ -46,22 +46,21 @@ WRITE8_MEMBER(thedeep_state::thedeep_nmi_w)
 WRITE8_MEMBER(thedeep_state::thedeep_sound_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
-static MACHINE_RESET( thedeep )
+void thedeep_state::machine_reset()
 {
-	thedeep_state *state = machine.driver_data<thedeep_state>();
-	state->membank("bank1")->set_base(state->memregion("maincpu")->base() + 0x10000 + 0 * 0x4000);
-	state->m_scroll[0] = 0;
-	state->m_scroll[1] = 0;
-	state->m_scroll[2] = 0;
-	state->m_scroll[3] = 0;
-	state->m_protection_command = 0;
-	state->m_protection_index = -1;
-	state->m_protection_irq = 0;
-	state->m_rombank = -1;
+	membank("bank1")->set_base(memregion("maincpu")->base() + 0x10000 + 0 * 0x4000);
+	m_scroll[0] = 0;
+	m_scroll[1] = 0;
+	m_scroll[2] = 0;
+	m_scroll[3] = 0;
+	m_protection_command = 0;
+	m_protection_index = -1;
+	m_protection_irq = 0;
+	m_rombank = -1;
 }
 
 WRITE8_MEMBER(thedeep_state::thedeep_protection_w)
@@ -125,7 +124,7 @@ WRITE8_MEMBER(thedeep_state::thedeep_protection_w)
 		break;
 
 		default:
-			logerror( "pc %04x: protection_command %02x\n", cpu_get_pc(&space.device()),m_protection_command);
+			logerror( "pc %04x: protection_command %02x\n", space.device().safe_pc(),m_protection_command);
 	}
 }
 
@@ -143,7 +142,7 @@ READ8_MEMBER(thedeep_state::thedeep_protection_r)
 WRITE8_MEMBER(thedeep_state::thedeep_e100_w)
 {
 	if (data != 1)
-		logerror("pc %04x: e100 = %02x\n", cpu_get_pc(&space.device()),data);
+		logerror("pc %04x: e100 = %02x\n", space.device().safe_pc(),data);
 }
 
 static ADDRESS_MAP_START( main_map, AS_PROGRAM, 8, thedeep_state )
@@ -232,15 +231,15 @@ WRITE8_MEMBER(thedeep_state::thedeep_p3_w)
 
 	/* bit 0 0->1 transition IRQ0 to main */
 	if((!(m_mcu_p3_reg & 0x01)) && data & 0x01)
-		device_set_input_line(m_maincpu, 0, HOLD_LINE);
+		m_maincpu->set_input_line(0, HOLD_LINE);
 
 	/* bit 6 0->1 transition INT1 IRQ ACK */
 	if((!(m_mcu_p3_reg & 0x40)) && data & 0x40)
-		device_set_input_line(m_mcu, MCS51_INT1_LINE, CLEAR_LINE);
+		m_mcu->set_input_line(MCS51_INT1_LINE, CLEAR_LINE);
 
 	/* bit 7 0->1 transition INT0 IRQ ACK */
 	if((!(m_mcu_p3_reg & 0x80)) && data & 0x80)
-		device_set_input_line(m_mcu, MCS51_INT0_LINE, CLEAR_LINE);
+		m_mcu->set_input_line(MCS51_INT0_LINE, CLEAR_LINE);
 
 	m_mcu_p3_reg = data;
 	logerror("P3 %02x\n",data);
@@ -394,7 +393,7 @@ GFXDECODE_END
 
 static void irqhandler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface thedeep_ym2203_intf =
@@ -426,14 +425,14 @@ static TIMER_DEVICE_CALLBACK( thedeep_interrupt )
 				state->m_protection_irq = 1;
 		}
 		if (state->m_protection_irq)
-			device_set_input_line(state->m_maincpu, 0, HOLD_LINE);
+			state->m_maincpu->set_input_line(0, HOLD_LINE);
 	}
 	else if(scanline == 0)
 	{
 		if (state->m_nmi_enable)
 		{
-			device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, ASSERT_LINE);
-			device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, CLEAR_LINE);
+			state->m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
+			state->m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 		}
 	}
 }
@@ -442,7 +441,7 @@ static INTERRUPT_GEN( thedeep_mcu_irq )
 {
 	thedeep_state *state = device->machine().driver_data<thedeep_state>();
 
-	device_set_input_line(state->m_mcu, MCS51_INT1_LINE, ASSERT_LINE);
+	state->m_mcu->set_input_line(MCS51_INT1_LINE, ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( thedeep, thedeep_state )
@@ -462,7 +461,6 @@ static MACHINE_CONFIG_START( thedeep, thedeep_state )
 	MCFG_CPU_VBLANK_INT("screen",thedeep_mcu_irq ) // unknown source, but presumably vblank
 	MCFG_DEVICE_DISABLE()
 
-	MCFG_MACHINE_RESET(thedeep)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -475,8 +473,6 @@ static MACHINE_CONFIG_START( thedeep, thedeep_state )
 	MCFG_GFXDECODE(thedeep)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_PALETTE_INIT(thedeep)
-	MCFG_VIDEO_START(thedeep)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

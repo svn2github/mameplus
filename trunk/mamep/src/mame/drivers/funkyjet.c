@@ -105,7 +105,7 @@ static ADDRESS_MAP_START( funkyjet_map, AS_PROGRAM, 16, funkyjet_state )
 	AM_RANGE(0x120000, 0x1207ff) AM_RAM_WRITE(paletteram_xxxxBBBBGGGGRRRR_word_w) AM_SHARE("paletteram")
 	AM_RANGE(0x140000, 0x143fff) AM_RAM
 	AM_RANGE(0x160000, 0x1607ff) AM_RAM AM_SHARE("spriteram")
-	AM_RANGE(0x180000, 0x1807ff) AM_READWRITE_LEGACY(deco16_146_funkyjet_prot_r, deco16_146_funkyjet_prot_w) AM_BASE_LEGACY(&deco16_prot_ram)
+	AM_RANGE(0x180000, 0x1807ff) AM_READWRITE_LEGACY(deco16_146_funkyjet_prot_r, deco16_146_funkyjet_prot_w) AM_SHARE("prot16ram")
 	AM_RANGE(0x184000, 0x184001) AM_WRITENOP
 	AM_RANGE(0x188000, 0x188001) AM_WRITENOP
 	AM_RANGE(0x300000, 0x30000f) AM_DEVWRITE_LEGACY("tilegen1", deco16ic_pf_control_w)
@@ -278,7 +278,7 @@ GFXDECODE_END
 static void sound_irq( device_t *device, int state )
 {
 	funkyjet_state *driver_state = device->machine().driver_data<funkyjet_state>();
-	device_set_input_line(driver_state->m_audiocpu, 1, state); /* IRQ 2 */
+	driver_state->m_audiocpu->set_input_line(1, state); /* IRQ 2 */
 }
 
 static const ym2151_interface ym2151_config =
@@ -297,13 +297,14 @@ static const deco16ic_interface funkyjet_deco16ic_tilegen1_intf =
 	0,1,
 };
 
-static MACHINE_START( funkyjet )
+void funkyjet_state::machine_start()
 {
-	funkyjet_state *state = machine.driver_data<funkyjet_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_deco_tilegen1 = machine.device("tilegen1");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_deco_tilegen1 = machine().device("tilegen1");
+
+	decoprot_reset(machine());
 }
 
 static MACHINE_CONFIG_START( funkyjet, funkyjet_state )
@@ -316,7 +317,6 @@ static MACHINE_CONFIG_START( funkyjet, funkyjet_state )
 	MCFG_CPU_ADD("audiocpu", H6280, XTAL_32_22MHz/4) /* Custom chip 45, Audio section crystal is 32.220 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(funkyjet)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

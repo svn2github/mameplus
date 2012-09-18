@@ -9,12 +9,12 @@
 #include "includes/compgolf.h"
 
 
-PALETTE_INIT( compgolf )
+void compgolf_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		int bit0,bit1,bit2,r,g,b;
 		bit0 = (color_prom[i] >> 0) & 0x01;
@@ -30,7 +30,7 @@ PALETTE_INIT( compgolf )
 		bit2 = (color_prom[i] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r,g,b));
+		palette_set_color(machine(), i, MAKE_RGB(r,g,b));
 	}
 }
 
@@ -46,36 +46,33 @@ WRITE8_MEMBER(compgolf_state::compgolf_back_w)
 	m_bg_tilemap->mark_tile_dirty(offset / 2);
 }
 
-static TILE_GET_INFO( get_text_info )
+TILE_GET_INFO_MEMBER(compgolf_state::get_text_info)
 {
-	compgolf_state *state = machine.driver_data<compgolf_state>();
 	tile_index <<= 1;
-	SET_TILE_INFO(2, state->m_videoram[tile_index + 1] | (state->m_videoram[tile_index] << 8), state->m_videoram[tile_index] >> 2, 0);
+	SET_TILE_INFO_MEMBER(2, m_videoram[tile_index + 1] | (m_videoram[tile_index] << 8), m_videoram[tile_index] >> 2, 0);
 }
 
-static TILEMAP_MAPPER( back_scan )
+TILEMAP_MAPPER_MEMBER(compgolf_state::back_scan)
 {
 	/* logical (col,row) -> memory offset */
 	return (col & 0x0f) + ((row & 0x0f) << 4) + ((col & 0x10) << 4) + ((row & 0x10) << 5);
 }
 
-static TILE_GET_INFO( get_back_info )
+TILE_GET_INFO_MEMBER(compgolf_state::get_back_info)
 {
-	compgolf_state *state = machine.driver_data<compgolf_state>();
-	int attr = state->m_bg_ram[tile_index * 2];
-	int code = state->m_bg_ram[tile_index * 2 + 1] + ((attr & 1) << 8);
+	int attr = m_bg_ram[tile_index * 2];
+	int code = m_bg_ram[tile_index * 2 + 1] + ((attr & 1) << 8);
 	int color = (attr & 0x3e) >> 1;
 
-	SET_TILE_INFO(1, code, color, 0);
+	SET_TILE_INFO_MEMBER(1, code, color, 0);
 }
 
-VIDEO_START( compgolf )
+void compgolf_state::video_start()
 {
-	compgolf_state *state = machine.driver_data<compgolf_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_back_info, back_scan, 16, 16, 32, 32);
-	state->m_text_tilemap = tilemap_create(machine, get_text_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(compgolf_state::get_back_info),this), tilemap_mapper_delegate(FUNC(compgolf_state::back_scan),this), 16, 16, 32, 32);
+	m_text_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(compgolf_state::get_text_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	state->m_text_tilemap->set_transparent_pen(0);
+	m_text_tilemap->set_transparent_pen(0);
 }
 
 /*

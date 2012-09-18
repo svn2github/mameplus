@@ -41,7 +41,7 @@ public:
 	/* devices */
 	device_t *m_master;
 	device_t *m_slave;
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	device_t *m_pandora;
 	DECLARE_READ8_MEMBER(devram_r);
 	DECLARE_WRITE8_MEMBER(master_nmi_trigger_w);
@@ -61,12 +61,17 @@ public:
 	DECLARE_WRITE8_MEMBER(airbustr_colorram2_w);
 	DECLARE_WRITE8_MEMBER(airbustr_scrollregs_w);
 	DECLARE_DRIVER_INIT(airbustr);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/airbustr.c -----------*/
 
 
-VIDEO_START( airbustr );
+
 SCREEN_UPDATE_IND16( airbustr );
 SCREEN_VBLANK( airbustr );

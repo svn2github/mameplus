@@ -28,11 +28,11 @@ READ16_MEMBER(dec0_state::dec0_controls_r)
 			return ioport("DSW")->read();
 
 		case 8: /* Intel 8751 mc, Bad Dudes & Heavy Barrel only */
-			//logerror("CPU #0 PC %06x: warning - read i8751 %06x - %04x\n", cpu_get_pc(&space.device()), 0x30c000+offset, m_i8751_return);
+			//logerror("CPU #0 PC %06x: warning - read i8751 %06x - %04x\n", space.device().safe_pc(), 0x30c000+offset, m_i8751_return);
 			return m_i8751_return;
 	}
 
-	logerror("CPU #0 PC %06x: warning - read unmapped memory address %06x\n", cpu_get_pc(&space.device()), 0x30c000+offset);
+	logerror("CPU #0 PC %06x: warning - read unmapped memory address %06x\n", space.device().safe_pc(), 0x30c000+offset);
 	return ~0;
 }
 
@@ -80,7 +80,7 @@ READ16_MEMBER(dec0_state::midres_controls_r)
 			return 0;	/* ?? watchdog ?? */
 	}
 
-	logerror("PC %06x unknown control read at %02x\n", cpu_get_pc(&space.device()), 0x180000+offset);
+	logerror("PC %06x unknown control read at %02x\n", space.device().safe_pc(), 0x180000+offset);
 	return ~0;
 }
 
@@ -118,7 +118,7 @@ WRITE8_MEMBER(dec0_state::hippodrm_shared_w)
 
 READ16_MEMBER(dec0_state::hippodrm_68000_share_r)
 {
-	if (offset==0) device_yield(&space.device()); /* A wee helper */
+	if (offset==0) space.device().execute().yield(); /* A wee helper */
 	return m_share[offset]&0xff;
 }
 
@@ -191,9 +191,9 @@ WRITE8_MEMBER(dec0_state::dec0_mcu_port_w)
 	if (offset==2)
 	{
 		if ((data&0x4)==0)
-			cputag_set_input_line(machine(), "maincpu", 5, HOLD_LINE);
+			machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 		if ((data&0x8)==0)
-			cputag_set_input_line(machine(), "mcu", MCS51_INT1_LINE, CLEAR_LINE);
+			machine().device("mcu")->execute().set_input_line(MCS51_INT1_LINE, CLEAR_LINE);
 		if ((data&0x40)==0)
 			m_i8751_return=(m_i8751_return&0xff00)|(m_i8751_ports[0]);
 		if ((data&0x80)==0)
@@ -226,7 +226,7 @@ static void baddudes_i8751_write(running_machine &machine, int data)
 	}
 
 	if (!state->m_i8751_return) logerror("%s: warning - write unknown command %02x to 8571\n",machine.describe_context(),data);
-	cputag_set_input_line(machine, "maincpu", 5, HOLD_LINE);
+	machine.device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 }
 
 static void birdtry_i8751_write(running_machine &machine, int data)
@@ -298,7 +298,7 @@ static void birdtry_i8751_write(running_machine &machine, int data)
 		case 0x7ff: state->m_i8751_return = 0x200;     break;
 		default: logerror("%s: warning - write unknown command %02x to 8571\n",machine.describe_context(),data);
 	}
-	cputag_set_input_line(machine, "maincpu", 5, HOLD_LINE);
+	machine.device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 }
 
 void dec0_i8751_write(running_machine &machine, int data)
@@ -307,7 +307,7 @@ void dec0_i8751_write(running_machine &machine, int data)
 	state->m_i8751_command=data;
 
 	/* Writes to this address cause an IRQ to the i8751 microcontroller */
-	if (state->m_GAME == 1) cputag_set_input_line(machine, "mcu", MCS51_INT1_LINE, ASSERT_LINE);
+	if (state->m_GAME == 1) machine.device("mcu")->execute().set_input_line(MCS51_INT1_LINE, ASSERT_LINE);
 	if (state->m_GAME == 2) baddudes_i8751_write(machine, data);
 	if (state->m_GAME == 3) birdtry_i8751_write(machine, data);
 
@@ -331,19 +331,19 @@ WRITE16_MEMBER(dec0_state::sprite_mirror_w)
 
 READ16_MEMBER(dec0_state::robocop_68000_share_r)
 {
-//logerror("%08x: Share read %04x\n",cpu_get_pc(&space.device()),offset);
+//logerror("%08x: Share read %04x\n",space.device().safe_pc(),offset);
 
 	return m_robocop_shared_ram[offset];
 }
 
 WRITE16_MEMBER(dec0_state::robocop_68000_share_w)
 {
-//  logerror("%08x: Share write %04x %04x\n",cpu_get_pc(&space.device()),offset,data);
+//  logerror("%08x: Share write %04x %04x\n",space.device().safe_pc(),offset,data);
 
 	m_robocop_shared_ram[offset]=data&0xff;
 
 	if (offset == 0x7ff) /* A control address - not standard ram */
-		cputag_set_input_line(machine(), "sub", 0, HOLD_LINE);
+		machine().device("sub")->execute().set_input_line(0, HOLD_LINE);
 }
 
 /******************************************************************************/

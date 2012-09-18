@@ -24,15 +24,22 @@ public:
 	DECLARE_DRIVER_INIT(klaxp);
 	DECLARE_DRIVER_INIT(guts);
 	DECLARE_DRIVER_INIT(eprom);
+	TILE_GET_INFO_MEMBER(get_alpha_tile_info);
+	TILE_GET_INFO_MEMBER(get_playfield_tile_info);
+	TILE_GET_INFO_MEMBER(guts_get_playfield_tile_info);
+	DECLARE_MACHINE_START(eprom);
+	DECLARE_MACHINE_RESET(eprom);
+	DECLARE_VIDEO_START(eprom);
+	DECLARE_VIDEO_START(guts);
 };
 
 
 /*----------- defined in video/eprom.c -----------*/
 
-VIDEO_START( eprom );
+
 SCREEN_UPDATE_IND16( eprom );
 
-VIDEO_START( guts );
+
 SCREEN_UPDATE_IND16( guts );
 
 void eprom_scanline_update(screen_device &screen, int scanline);

@@ -15,8 +15,7 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _upd4701_state upd4701_state;
-struct _upd4701_state
+struct upd4701_state
 {
 	int cs;
 	int xy;
@@ -49,7 +48,7 @@ INLINE upd4701_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert((device->type() == UPD4701));
-	return (upd4701_state *)downcast<legacy_device_base *>(device)->token();
+	return (upd4701_state *)downcast<upd4701_device *>(device)->token();
 }
 
 
@@ -301,17 +300,40 @@ static DEVICE_RESET( upd4701 )
 	upd4701->cf = 1;
 }
 
-/*-------------------------------------------------
-    device definition
--------------------------------------------------*/
+const device_type UPD4701 = &device_creator<upd4701_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+upd4701_device::upd4701_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, UPD4701, "NEC uPD4701 Encoder", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(upd4701_state));
+}
 
-#define DEVTEMPLATE_ID(p,s)		p##upd4701##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME		"NEC uPD4701 Encoder"
-#define DEVTEMPLATE_FAMILY		"NEC uPD4701 Encoder"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void upd4701_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void upd4701_device::device_start()
+{
+	DEVICE_START_NAME( upd4701 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void upd4701_device::device_reset()
+{
+	DEVICE_RESET_NAME( upd4701 )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(UPD4701, upd4701);

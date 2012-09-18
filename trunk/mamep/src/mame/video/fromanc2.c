@@ -26,14 +26,14 @@ INLINE void fromanc2_get_tile_info( running_machine &machine, tile_data &tileinf
 	SET_TILE_INFO(layer, tile, color, 0);
 }
 
-static TILE_GET_INFO( fromanc2_get_v0_l0_tile_info ) { fromanc2_get_tile_info(machine, tileinfo, tile_index, 0, 0); }
-static TILE_GET_INFO( fromanc2_get_v0_l1_tile_info ) { fromanc2_get_tile_info(machine, tileinfo, tile_index, 0, 1); }
-static TILE_GET_INFO( fromanc2_get_v0_l2_tile_info ) { fromanc2_get_tile_info(machine, tileinfo, tile_index, 0, 2); }
-static TILE_GET_INFO( fromanc2_get_v0_l3_tile_info ) { fromanc2_get_tile_info(machine, tileinfo, tile_index, 0, 3); }
-static TILE_GET_INFO( fromanc2_get_v1_l0_tile_info ) { fromanc2_get_tile_info(machine, tileinfo, tile_index, 1, 0); }
-static TILE_GET_INFO( fromanc2_get_v1_l1_tile_info ) { fromanc2_get_tile_info(machine, tileinfo, tile_index, 1, 1); }
-static TILE_GET_INFO( fromanc2_get_v1_l2_tile_info ) { fromanc2_get_tile_info(machine, tileinfo, tile_index, 1, 2); }
-static TILE_GET_INFO( fromanc2_get_v1_l3_tile_info ) { fromanc2_get_tile_info(machine, tileinfo, tile_index, 1, 3); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromanc2_get_v0_l0_tile_info){ fromanc2_get_tile_info(machine(), tileinfo, tile_index, 0, 0); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromanc2_get_v0_l1_tile_info){ fromanc2_get_tile_info(machine(), tileinfo, tile_index, 0, 1); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromanc2_get_v0_l2_tile_info){ fromanc2_get_tile_info(machine(), tileinfo, tile_index, 0, 2); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromanc2_get_v0_l3_tile_info){ fromanc2_get_tile_info(machine(), tileinfo, tile_index, 0, 3); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromanc2_get_v1_l0_tile_info){ fromanc2_get_tile_info(machine(), tileinfo, tile_index, 1, 0); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromanc2_get_v1_l1_tile_info){ fromanc2_get_tile_info(machine(), tileinfo, tile_index, 1, 1); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromanc2_get_v1_l2_tile_info){ fromanc2_get_tile_info(machine(), tileinfo, tile_index, 1, 2); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromanc2_get_v1_l3_tile_info){ fromanc2_get_tile_info(machine(), tileinfo, tile_index, 1, 3); }
 
 
 INLINE void fromancr_get_tile_info( running_machine &machine, tile_data &tileinfo, int tile_index, int vram, int layer )
@@ -47,12 +47,12 @@ INLINE void fromancr_get_tile_info( running_machine &machine, tile_data &tileinf
 	SET_TILE_INFO(layer, tile, color, 0);
 }
 
-static TILE_GET_INFO( fromancr_get_v0_l0_tile_info ) { fromancr_get_tile_info(machine, tileinfo, tile_index, 0, 0); }
-static TILE_GET_INFO( fromancr_get_v0_l1_tile_info ) { fromancr_get_tile_info(machine, tileinfo, tile_index, 0, 1); }
-static TILE_GET_INFO( fromancr_get_v0_l2_tile_info ) { fromancr_get_tile_info(machine, tileinfo, tile_index, 0, 2); }
-static TILE_GET_INFO( fromancr_get_v1_l0_tile_info ) { fromancr_get_tile_info(machine, tileinfo, tile_index, 1, 0); }
-static TILE_GET_INFO( fromancr_get_v1_l1_tile_info ) { fromancr_get_tile_info(machine, tileinfo, tile_index, 1, 1); }
-static TILE_GET_INFO( fromancr_get_v1_l2_tile_info ) { fromancr_get_tile_info(machine, tileinfo, tile_index, 1, 2); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromancr_get_v0_l0_tile_info){ fromancr_get_tile_info(machine(), tileinfo, tile_index, 0, 0); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromancr_get_v0_l1_tile_info){ fromancr_get_tile_info(machine(), tileinfo, tile_index, 0, 1); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromancr_get_v0_l2_tile_info){ fromancr_get_tile_info(machine(), tileinfo, tile_index, 0, 2); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromancr_get_v1_l0_tile_info){ fromancr_get_tile_info(machine(), tileinfo, tile_index, 1, 0); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromancr_get_v1_l1_tile_info){ fromancr_get_tile_info(machine(), tileinfo, tile_index, 1, 1); }
+TILE_GET_INFO_MEMBER(fromanc2_state::fromancr_get_v1_l2_tile_info){ fromancr_get_tile_info(machine(), tileinfo, tile_index, 1, 2); }
 
 
 /******************************************************************************
@@ -379,143 +379,140 @@ WRITE16_MEMBER(fromanc2_state::fromanc4_gfxreg_2_w)
 
 ******************************************************************************/
 
-VIDEO_START( fromanc2 )
+VIDEO_START_MEMBER(fromanc2_state,fromanc2)
 {
-	fromanc2_state *state = machine.driver_data<fromanc2_state>();
 
-	state->m_tilemap[0][0] = tilemap_create(machine, fromanc2_get_v0_l0_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_tilemap[0][1] = tilemap_create(machine, fromanc2_get_v0_l1_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_tilemap[0][2] = tilemap_create(machine, fromanc2_get_v0_l2_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_tilemap[0][3] = tilemap_create(machine, fromanc2_get_v0_l3_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_tilemap[1][0] = tilemap_create(machine, fromanc2_get_v1_l0_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_tilemap[1][1] = tilemap_create(machine, fromanc2_get_v1_l1_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_tilemap[1][2] = tilemap_create(machine, fromanc2_get_v1_l2_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_tilemap[1][3] = tilemap_create(machine, fromanc2_get_v1_l3_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
+	m_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v0_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v0_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v0_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v0_l3_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v1_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v1_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v1_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromanc2_get_v1_l3_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
 
-	state->m_tilemap[0][1]->set_transparent_pen(0x000);
-	state->m_tilemap[0][2]->set_transparent_pen(0x000);
-	state->m_tilemap[0][3]->set_transparent_pen(0x000);
-	state->m_tilemap[1][1]->set_transparent_pen(0x000);
-	state->m_tilemap[1][2]->set_transparent_pen(0x000);
-	state->m_tilemap[1][3]->set_transparent_pen(0x000);
+	m_tilemap[0][1]->set_transparent_pen(0x000);
+	m_tilemap[0][2]->set_transparent_pen(0x000);
+	m_tilemap[0][3]->set_transparent_pen(0x000);
+	m_tilemap[1][1]->set_transparent_pen(0x000);
+	m_tilemap[1][2]->set_transparent_pen(0x000);
+	m_tilemap[1][3]->set_transparent_pen(0x000);
 
-	state->m_videoram[0][0] = auto_alloc_array(machine, UINT16, (64 * 64));
-	state->m_videoram[0][1] = auto_alloc_array(machine, UINT16, (64 * 64));
-	state->m_videoram[0][2] = auto_alloc_array(machine, UINT16, (64 * 64));
-	state->m_videoram[0][3] = auto_alloc_array(machine, UINT16, (64 * 64));
-	state->m_videoram[1][0] = auto_alloc_array(machine, UINT16, (64 * 64));
-	state->m_videoram[1][1] = auto_alloc_array(machine, UINT16, (64 * 64));
-	state->m_videoram[1][2] = auto_alloc_array(machine, UINT16, (64 * 64));
-	state->m_videoram[1][3] = auto_alloc_array(machine, UINT16, (64 * 64));
+	m_videoram[0][0] = auto_alloc_array(machine(), UINT16, (64 * 64));
+	m_videoram[0][1] = auto_alloc_array(machine(), UINT16, (64 * 64));
+	m_videoram[0][2] = auto_alloc_array(machine(), UINT16, (64 * 64));
+	m_videoram[0][3] = auto_alloc_array(machine(), UINT16, (64 * 64));
+	m_videoram[1][0] = auto_alloc_array(machine(), UINT16, (64 * 64));
+	m_videoram[1][1] = auto_alloc_array(machine(), UINT16, (64 * 64));
+	m_videoram[1][2] = auto_alloc_array(machine(), UINT16, (64 * 64));
+	m_videoram[1][3] = auto_alloc_array(machine(), UINT16, (64 * 64));
 
-	state->m_paletteram[0] = auto_alloc_array(machine, UINT16, 0x800);
-	state->m_paletteram[1] = auto_alloc_array(machine, UINT16, 0x800);
+	m_paletteram[0] = auto_alloc_array(machine(), UINT16, 0x800);
+	m_paletteram[1] = auto_alloc_array(machine(), UINT16, 0x800);
 
-	state->save_pointer(NAME(state->m_videoram[0][0]), (64 * 64));
-	state->save_pointer(NAME(state->m_videoram[0][1]), (64 * 64));
-	state->save_pointer(NAME(state->m_videoram[0][2]), (64 * 64));
-	state->save_pointer(NAME(state->m_videoram[0][3]), (64 * 64));
-	state->save_pointer(NAME(state->m_videoram[1][0]), (64 * 64));
-	state->save_pointer(NAME(state->m_videoram[1][1]), (64 * 64));
-	state->save_pointer(NAME(state->m_videoram[1][2]), (64 * 64));
-	state->save_pointer(NAME(state->m_videoram[1][3]), (64 * 64));
-	state->save_pointer(NAME(state->m_paletteram[0]), 0x800);
-	state->save_pointer(NAME(state->m_paletteram[1]), 0x800);
-	state->save_item(NAME(state->m_scrollx[0]));
-	state->save_item(NAME(state->m_scrollx[1]));
-	state->save_item(NAME(state->m_scrolly[0]));
-	state->save_item(NAME(state->m_scrolly[1]));
-	state->save_item(NAME(state->m_gfxbank[0]));
-	state->save_item(NAME(state->m_gfxbank[1]));
+	save_pointer(NAME(m_videoram[0][0]), (64 * 64));
+	save_pointer(NAME(m_videoram[0][1]), (64 * 64));
+	save_pointer(NAME(m_videoram[0][2]), (64 * 64));
+	save_pointer(NAME(m_videoram[0][3]), (64 * 64));
+	save_pointer(NAME(m_videoram[1][0]), (64 * 64));
+	save_pointer(NAME(m_videoram[1][1]), (64 * 64));
+	save_pointer(NAME(m_videoram[1][2]), (64 * 64));
+	save_pointer(NAME(m_videoram[1][3]), (64 * 64));
+	save_pointer(NAME(m_paletteram[0]), 0x800);
+	save_pointer(NAME(m_paletteram[1]), 0x800);
+	save_item(NAME(m_scrollx[0]));
+	save_item(NAME(m_scrollx[1]));
+	save_item(NAME(m_scrolly[0]));
+	save_item(NAME(m_scrolly[1]));
+	save_item(NAME(m_gfxbank[0]));
+	save_item(NAME(m_gfxbank[1]));
 }
 
-VIDEO_START( fromancr )
+VIDEO_START_MEMBER(fromanc2_state,fromancr)
 {
-	fromanc2_state *state = machine.driver_data<fromanc2_state>();
 
-	state->m_tilemap[0][0] = tilemap_create(machine, fromancr_get_v0_l0_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_tilemap[0][1] = tilemap_create(machine, fromancr_get_v0_l1_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_tilemap[0][2] = tilemap_create(machine, fromancr_get_v0_l2_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_tilemap[0][3] = 0;
-	state->m_tilemap[1][0] = tilemap_create(machine, fromancr_get_v1_l0_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_tilemap[1][1] = tilemap_create(machine, fromancr_get_v1_l1_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_tilemap[1][2] = tilemap_create(machine, fromancr_get_v1_l2_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
-	state->m_tilemap[1][3] = 0;
+	m_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[0][3] = 0;
+	m_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
+	m_tilemap[1][3] = 0;
 
-	state->m_tilemap[0][1]->set_transparent_pen(0x0ff);
-	state->m_tilemap[0][2]->set_transparent_pen(0x0ff);
-	state->m_tilemap[1][1]->set_transparent_pen(0x0ff);
-	state->m_tilemap[1][2]->set_transparent_pen(0x0ff);
+	m_tilemap[0][1]->set_transparent_pen(0x0ff);
+	m_tilemap[0][2]->set_transparent_pen(0x0ff);
+	m_tilemap[1][1]->set_transparent_pen(0x0ff);
+	m_tilemap[1][2]->set_transparent_pen(0x0ff);
 
-	state->m_videoram[0][0] = auto_alloc_array(machine, UINT16, (64 * 64));
-	state->m_videoram[0][1] = auto_alloc_array(machine, UINT16, (64 * 64));
-	state->m_videoram[0][2] = auto_alloc_array(machine, UINT16, (64 * 64));
-	state->m_videoram[1][0] = auto_alloc_array(machine, UINT16, (64 * 64));
-	state->m_videoram[1][1] = auto_alloc_array(machine, UINT16, (64 * 64));
-	state->m_videoram[1][2] = auto_alloc_array(machine, UINT16, (64 * 64));
+	m_videoram[0][0] = auto_alloc_array(machine(), UINT16, (64 * 64));
+	m_videoram[0][1] = auto_alloc_array(machine(), UINT16, (64 * 64));
+	m_videoram[0][2] = auto_alloc_array(machine(), UINT16, (64 * 64));
+	m_videoram[1][0] = auto_alloc_array(machine(), UINT16, (64 * 64));
+	m_videoram[1][1] = auto_alloc_array(machine(), UINT16, (64 * 64));
+	m_videoram[1][2] = auto_alloc_array(machine(), UINT16, (64 * 64));
 
-	state->m_paletteram[0] = auto_alloc_array(machine, UINT16, 0x800);
-	state->m_paletteram[1] = auto_alloc_array(machine, UINT16, 0x800);
+	m_paletteram[0] = auto_alloc_array(machine(), UINT16, 0x800);
+	m_paletteram[1] = auto_alloc_array(machine(), UINT16, 0x800);
 
-	state->save_pointer(NAME(state->m_videoram[0][0]), (64 * 64));
-	state->save_pointer(NAME(state->m_videoram[0][1]), (64 * 64));
-	state->save_pointer(NAME(state->m_videoram[0][2]), (64 * 64));
-	state->save_pointer(NAME(state->m_videoram[1][0]), (64 * 64));
-	state->save_pointer(NAME(state->m_videoram[1][1]), (64 * 64));
-	state->save_pointer(NAME(state->m_videoram[1][2]), (64 * 64));
-	state->save_pointer(NAME(state->m_paletteram[0]), 0x800);
-	state->save_pointer(NAME(state->m_paletteram[1]), 0x800);
-	state->save_item(NAME(state->m_scrollx[0]));
-	state->save_item(NAME(state->m_scrollx[1]));
-	state->save_item(NAME(state->m_scrolly[0]));
-	state->save_item(NAME(state->m_scrolly[1]));
-	state->save_item(NAME(state->m_gfxbank[0]));
-	state->save_item(NAME(state->m_gfxbank[1]));
+	save_pointer(NAME(m_videoram[0][0]), (64 * 64));
+	save_pointer(NAME(m_videoram[0][1]), (64 * 64));
+	save_pointer(NAME(m_videoram[0][2]), (64 * 64));
+	save_pointer(NAME(m_videoram[1][0]), (64 * 64));
+	save_pointer(NAME(m_videoram[1][1]), (64 * 64));
+	save_pointer(NAME(m_videoram[1][2]), (64 * 64));
+	save_pointer(NAME(m_paletteram[0]), 0x800);
+	save_pointer(NAME(m_paletteram[1]), 0x800);
+	save_item(NAME(m_scrollx[0]));
+	save_item(NAME(m_scrollx[1]));
+	save_item(NAME(m_scrolly[0]));
+	save_item(NAME(m_scrolly[1]));
+	save_item(NAME(m_gfxbank[0]));
+	save_item(NAME(m_gfxbank[1]));
 }
 
 
-VIDEO_START( fromanc4 )
+VIDEO_START_MEMBER(fromanc2_state,fromanc4)
 {
-	fromanc2_state *state = machine.driver_data<fromanc2_state>();
 
-	state->m_tilemap[0][0] = tilemap_create(machine, fromancr_get_v0_l0_tile_info, tilemap_scan_rows, 8, 8, 256, 64);
-	state->m_tilemap[0][1] = tilemap_create(machine, fromancr_get_v0_l1_tile_info, tilemap_scan_rows, 8, 8, 256, 64);
-	state->m_tilemap[0][2] = tilemap_create(machine, fromancr_get_v0_l2_tile_info, tilemap_scan_rows, 8, 8, 256, 64);
-	state->m_tilemap[0][3] = 0;
-	state->m_tilemap[1][0] = tilemap_create(machine, fromancr_get_v1_l0_tile_info, tilemap_scan_rows, 8, 8, 256, 64);
-	state->m_tilemap[1][1] = tilemap_create(machine, fromancr_get_v1_l1_tile_info, tilemap_scan_rows, 8, 8, 256, 64);
-	state->m_tilemap[1][2] = tilemap_create(machine, fromancr_get_v1_l2_tile_info, tilemap_scan_rows, 8, 8, 256, 64);
-	state->m_tilemap[1][3] = 0;
+	m_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
+	m_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
+	m_tilemap[0][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v0_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
+	m_tilemap[0][3] = 0;
+	m_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
+	m_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
+	m_tilemap[1][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(fromanc2_state::fromancr_get_v1_l2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
+	m_tilemap[1][3] = 0;
 
-	state->m_tilemap[0][1]->set_transparent_pen(0x000);
-	state->m_tilemap[0][2]->set_transparent_pen(0x000);
-	state->m_tilemap[1][1]->set_transparent_pen(0x000);
-	state->m_tilemap[1][2]->set_transparent_pen(0x000);
+	m_tilemap[0][1]->set_transparent_pen(0x000);
+	m_tilemap[0][2]->set_transparent_pen(0x000);
+	m_tilemap[1][1]->set_transparent_pen(0x000);
+	m_tilemap[1][2]->set_transparent_pen(0x000);
 
-	state->m_videoram[0][0] = auto_alloc_array(machine, UINT16, (256 * 64));
-	state->m_videoram[0][1] = auto_alloc_array(machine, UINT16, (256 * 64));
-	state->m_videoram[0][2] = auto_alloc_array(machine, UINT16, (256 * 64));
-	state->m_videoram[1][0] = auto_alloc_array(machine, UINT16, (256 * 64));
-	state->m_videoram[1][1] = auto_alloc_array(machine, UINT16, (256 * 64));
-	state->m_videoram[1][2] = auto_alloc_array(machine, UINT16, (256 * 64));
+	m_videoram[0][0] = auto_alloc_array(machine(), UINT16, (256 * 64));
+	m_videoram[0][1] = auto_alloc_array(machine(), UINT16, (256 * 64));
+	m_videoram[0][2] = auto_alloc_array(machine(), UINT16, (256 * 64));
+	m_videoram[1][0] = auto_alloc_array(machine(), UINT16, (256 * 64));
+	m_videoram[1][1] = auto_alloc_array(machine(), UINT16, (256 * 64));
+	m_videoram[1][2] = auto_alloc_array(machine(), UINT16, (256 * 64));
 
-	state->m_paletteram[0] = auto_alloc_array(machine, UINT16, 0x800);
-	state->m_paletteram[1] = auto_alloc_array(machine, UINT16, 0x800);
+	m_paletteram[0] = auto_alloc_array(machine(), UINT16, 0x800);
+	m_paletteram[1] = auto_alloc_array(machine(), UINT16, 0x800);
 
-	state->save_pointer(NAME(state->m_videoram[0][0]), (256 * 64));
-	state->save_pointer(NAME(state->m_videoram[0][1]), (256 * 64));
-	state->save_pointer(NAME(state->m_videoram[0][2]), (256 * 64));
-	state->save_pointer(NAME(state->m_videoram[1][0]), (256 * 64));
-	state->save_pointer(NAME(state->m_videoram[1][1]), (256 * 64));
-	state->save_pointer(NAME(state->m_videoram[1][2]), (256 * 64));
-	state->save_pointer(NAME(state->m_paletteram[0]), 0x800);
-	state->save_pointer(NAME(state->m_paletteram[1]), 0x800);
-	state->save_item(NAME(state->m_scrollx[0]));
-	state->save_item(NAME(state->m_scrollx[1]));
-	state->save_item(NAME(state->m_scrolly[0]));
-	state->save_item(NAME(state->m_scrolly[1]));
-	state->save_item(NAME(state->m_gfxbank[0]));
-	state->save_item(NAME(state->m_gfxbank[1]));
+	save_pointer(NAME(m_videoram[0][0]), (256 * 64));
+	save_pointer(NAME(m_videoram[0][1]), (256 * 64));
+	save_pointer(NAME(m_videoram[0][2]), (256 * 64));
+	save_pointer(NAME(m_videoram[1][0]), (256 * 64));
+	save_pointer(NAME(m_videoram[1][1]), (256 * 64));
+	save_pointer(NAME(m_videoram[1][2]), (256 * 64));
+	save_pointer(NAME(m_paletteram[0]), 0x800);
+	save_pointer(NAME(m_paletteram[1]), 0x800);
+	save_item(NAME(m_scrollx[0]));
+	save_item(NAME(m_scrollx[1]));
+	save_item(NAME(m_scrolly[0]));
+	save_item(NAME(m_scrolly[1]));
+	save_item(NAME(m_gfxbank[0]));
+	save_item(NAME(m_gfxbank[1]));
 }
 
 /******************************************************************************

@@ -7,7 +7,7 @@
 #ifndef _3DO_H_
 #define _3DO_H_
 
-typedef struct {
+struct SLOW2 {
 	/* 03180000 - 0318003f - configuration group */
 	/* 03180040 - 0318007f - diagnostic UART */
 
@@ -15,10 +15,10 @@ typedef struct {
 	UINT8	cg_w_count;
 	UINT32	cg_input;
 	UINT32	cg_output;
-} SLOW2;
+};
 
 
-typedef struct {
+struct MADAM {
 	UINT32	revision;		/* 03300000 */
 	UINT32	msysbits;		/* 03300004 */
 	UINT32	mctl;			/* 03300008 */
@@ -51,10 +51,10 @@ typedef struct {
 	UINT32	mult[40];		/* 03300600-0330069c */
 	UINT32	mult_control;	/* 033007f0-033007f4 */
 	UINT32	mult_status;	/* 033007f8 */
-} MADAM;
+};
 
 
-typedef struct {
+struct CLIO {
 	screen_device *screen;
 
 	UINT32	revision;		/* 03400000 */
@@ -150,13 +150,13 @@ typedef struct {
 	UINT32	uncle_soft_rev;	/* 0340c004 */
 	UINT32	uncle_addr;		/* 0340c008 */
 	UINT32	uncle_rom;		/* 0340c00c */
-} CLIO;
+};
 
 
-typedef struct {
+struct SVF {
 	UINT32	sport[512];
 	UINT32	color;
-} SVF;
+};
 
 
 class _3do_state : public driver_device
@@ -185,6 +185,8 @@ public:
 	DECLARE_WRITE32_MEMBER(_3do_madam_w);
 	DECLARE_READ32_MEMBER(_3do_clio_r);
 	DECLARE_WRITE32_MEMBER(_3do_clio_w);
+	virtual void machine_reset();
+	DECLARE_VIDEO_START(_3do);
 };
 
 /*----------- defined in machine/3do.c -----------*/
@@ -198,7 +200,7 @@ void _3do_madam_init( running_machine &machine );
 void _3do_clio_init( running_machine &machine, screen_device *screen );
 
 
-VIDEO_START( _3do );
+
 SCREEN_UPDATE_RGB32( _3do );
 
 #endif /* _3DO_H_ */

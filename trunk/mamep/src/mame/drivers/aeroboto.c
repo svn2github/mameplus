@@ -34,7 +34,7 @@ READ8_MEMBER(aeroboto_state::aeroboto_201_r)
 	/* serie of values to be returned from 3004, and display "PASS 201" if it is */
 	static const UINT8 res[4] = { 0xff, 0x9f, 0x1b, 0x03 };
 
-	logerror("PC %04x: read 3004\n", cpu_get_pc(&space.device()));
+	logerror("PC %04x: read 3004\n", space.device().safe_pc());
 	return res[(m_count++) & 3];
 }
 
@@ -44,14 +44,14 @@ static INTERRUPT_GEN( aeroboto_interrupt )
 	aeroboto_state *state = device->machine().driver_data<aeroboto_state>();
 
 	if (!state->m_disable_irq)
-		device_set_input_line(device, 0, ASSERT_LINE);
+		device->execute().set_input_line(0, ASSERT_LINE);
 	else
 		state->m_disable_irq--;
 }
 
 READ8_MEMBER(aeroboto_state::aeroboto_irq_ack_r)
 {
-	cputag_set_input_line(machine(),"maincpu", 0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 	return 0xff;
 }
 
@@ -223,30 +223,28 @@ static const ay8910_interface ay8910_config =
 	DEVCB_NULL
 };
 
-static MACHINE_START( formatz )
+void aeroboto_state::machine_start()
 {
-	aeroboto_state *state = machine.driver_data<aeroboto_state>();
 
-	state->m_stars_rom = state->memregion("gfx2")->base();
-	state->m_stars_length = state->memregion("gfx2")->bytes();
+	m_stars_rom = memregion("gfx2")->base();
+	m_stars_length = memregion("gfx2")->bytes();
 
-	state->save_item(NAME(state->m_disable_irq));
-	state->save_item(NAME(state->m_count));
+	save_item(NAME(m_disable_irq));
+	save_item(NAME(m_count));
 }
 
-static MACHINE_RESET( formatz )
+void aeroboto_state::machine_reset()
 {
-	aeroboto_state *state = machine.driver_data<aeroboto_state>();
 
-	state->m_disable_irq = 0;
-	state->m_count = 0;
+	m_disable_irq = 0;
+	m_count = 0;
 
-	state->m_charbank = 0;
-	state->m_starsoff = 0;
-	state->m_ox = 0;
-	state->m_oy = 0;
-	state->m_sx = 0;
-	state->m_sy = 0;
+	m_charbank = 0;
+	m_starsoff = 0;
+	m_ox = 0;
+	m_oy = 0;
+	m_sx = 0;
+	m_sy = 0;
 }
 
 static MACHINE_CONFIG_START( formatz, aeroboto_state )
@@ -260,8 +258,6 @@ static MACHINE_CONFIG_START( formatz, aeroboto_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_MACHINE_START(formatz)
-	MCFG_MACHINE_RESET(formatz)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -276,7 +272,6 @@ static MACHINE_CONFIG_START( formatz, aeroboto_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(aeroboto)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -71,9 +71,9 @@
 #include "includes/ampoker2.h"
 
 
-PALETTE_INIT( ampoker2 )
+void ampoker2_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 /*    - bits -
       76543210
       RRRGGGBB
@@ -89,7 +89,7 @@ PALETTE_INIT( ampoker2 )
 			2,	resistances_b,	weights_b,	0,	0);
 
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		int bit0, bit1, bit2, r, g, b;
 
@@ -108,7 +108,7 @@ PALETTE_INIT( ampoker2 )
 		bit2 = (color_prom[i] >> 7) & 0x01;
 		r = combine_3_weights(weights_r, bit0, bit1, bit2);
 
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
+		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
 	}
 }
 
@@ -119,10 +119,9 @@ WRITE8_MEMBER(ampoker2_state::ampoker2_videoram_w)
 	m_bg_tilemap->mark_tile_dirty(offset / 2);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(ampoker2_state::get_bg_tile_info)
 {
-	ampoker2_state *state = machine.driver_data<ampoker2_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int offs = tile_index * 2;
 	int attr = videoram[offs + 1];
 	int code = videoram[offs];
@@ -130,13 +129,12 @@ static TILE_GET_INFO( get_bg_tile_info )
 	code = code + (256 * (color & 0x03));   /* code = color.bit1 + color.bit0 + code */
 	color = color >> 1;	                    /* color = color - bit0 (bit1..bit7) */
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
-static TILE_GET_INFO( s2k_get_bg_tile_info )
+TILE_GET_INFO_MEMBER(ampoker2_state::s2k_get_bg_tile_info)
 {
-	ampoker2_state *state = machine.driver_data<ampoker2_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int offs = tile_index * 2;
 	int attr = videoram[offs + 1];
 	int code = videoram[offs];
@@ -144,20 +142,18 @@ static TILE_GET_INFO( s2k_get_bg_tile_info )
 	code = code + (256 * (color & 0x0f));	/* the game uses 2 extra bits */
 	color = color >> 1;
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
-VIDEO_START(ampoker2)
+void ampoker2_state::video_start()
 {
-	ampoker2_state *state = machine.driver_data<ampoker2_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows,
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ampoker2_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,
 		 8, 8, 64, 32);
 }
 
-VIDEO_START(sigma2k)
+VIDEO_START_MEMBER(ampoker2_state,sigma2k)
 {
-	ampoker2_state *state = machine.driver_data<ampoker2_state>();
-	state->m_bg_tilemap = tilemap_create(machine, s2k_get_bg_tile_info, tilemap_scan_rows,
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ampoker2_state::s2k_get_bg_tile_info),this), TILEMAP_SCAN_ROWS,
 		 8, 8, 64, 32);
 }
 

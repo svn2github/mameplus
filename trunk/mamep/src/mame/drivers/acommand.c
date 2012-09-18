@@ -88,32 +88,34 @@ public:
 	DECLARE_READ16_MEMBER(ac_devices_r);
 	DECLARE_WRITE16_MEMBER(ac_devices_w);
 	DECLARE_WRITE16_MEMBER(ac_unk2_w);
+	TILEMAP_MAPPER_MEMBER(bg_scan);
+	TILE_GET_INFO_MEMBER(ac_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(ac_get_tx_tile_info);
+	virtual void video_start();
 };
 
 
 
-static TILEMAP_MAPPER( bg_scan )
+TILEMAP_MAPPER_MEMBER(acommand_state::bg_scan)
 {
 	/* logical (col,row) -> memory offset */
 	return (row & 0x0f) + ((col & 0xff) << 4) + ((row & 0x70) << 8);
 }
 
-static TILE_GET_INFO( ac_get_bg_tile_info )
+TILE_GET_INFO_MEMBER(acommand_state::ac_get_bg_tile_info)
 {
-	acommand_state *state = machine.driver_data<acommand_state>();
-	int code = state->m_ac_bgvram[tile_index];
-	SET_TILE_INFO(
+	int code = m_ac_bgvram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			1,
 			code & 0xfff,
 			(code & 0xf000) >> 12,
 			0);
 }
 
-static TILE_GET_INFO( ac_get_tx_tile_info )
+TILE_GET_INFO_MEMBER(acommand_state::ac_get_tx_tile_info)
 {
-	acommand_state *state = machine.driver_data<acommand_state>();
-	int code = state->m_ac_txvram[tile_index];
-	SET_TILE_INFO(
+	int code = m_ac_txvram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			0,
 			code & 0xfff,
 			(code & 0xf000) >> 12,
@@ -179,15 +181,14 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 }
 
 
-static VIDEO_START( acommand )
+void acommand_state::video_start()
 {
-	acommand_state *state = machine.driver_data<acommand_state>();
-	state->m_tx_tilemap = tilemap_create(machine, ac_get_tx_tile_info,tilemap_scan_cols,8,8,512,32);
-	state->m_bg_tilemap = tilemap_create(machine, ac_get_bg_tile_info,bg_scan,16,16,256,16);
+	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(acommand_state::ac_get_tx_tile_info),this),TILEMAP_SCAN_COLS,8,8,512,32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(acommand_state::ac_get_bg_tile_info),this),tilemap_mapper_delegate(FUNC(acommand_state::bg_scan),this),16,16,256,16);
 
-	state->m_ac_vregs = auto_alloc_array(machine, UINT16, 0x80/2);
+	m_ac_vregs = auto_alloc_array(machine(), UINT16, 0x80/2);
 
-	state->m_tx_tilemap->set_transparent_pen(15);
+	m_tx_tilemap->set_transparent_pen(15);
 }
 
 
@@ -304,7 +305,7 @@ WRITE16_MEMBER(acommand_state::ac_txscroll_w)
 
 READ16_MEMBER(acommand_state::ac_devices_r)
 {
-	logerror("(PC=%06x) read at %04x\n",cpu_get_pc(&space.device()),offset*2);
+	logerror("(PC=%06x) read at %04x\n",space.device().safe_pc(),offset*2);
 
 	switch(offset)
 	{
@@ -589,10 +590,10 @@ static TIMER_DEVICE_CALLBACK( acommand_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "maincpu", 2, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 
 	if(scanline == 0) // vblank-in irq? (update palette and layers)
-		cputag_set_input_line(timer.machine(), "maincpu", 3, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( acommand, acommand_state )
@@ -613,7 +614,6 @@ static MACHINE_CONFIG_START( acommand, acommand_state )
 	MCFG_GFXDECODE(acommand)
 	MCFG_PALETTE_LENGTH(0x4000)
 
-	MCFG_VIDEO_START(acommand)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

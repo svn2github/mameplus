@@ -51,13 +51,13 @@ static INTERRUPT_GEN( scotrsht_interrupt )
 	scotrsht_state *state = device->machine().driver_data<scotrsht_state>();
 
 	if (state->m_irq_enable)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 WRITE8_MEMBER(scotrsht_state::scotrsht_soundlatch_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
+	machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 static ADDRESS_MAP_START( scotrsht_map, AS_PROGRAM, 8, scotrsht_state )
@@ -202,8 +202,6 @@ static MACHINE_CONFIG_START( scotrsht, scotrsht_state )
 	MCFG_GFXDECODE(scotrsht)
 	MCFG_PALETTE_LENGTH(16*8*16+16*8*16)
 
-	MCFG_PALETTE_INIT(scotrsht)
-	MCFG_VIDEO_START(scotrsht)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -14,12 +14,11 @@
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(mitchell_state::get_tile_info)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
-	UINT8 attr = state->m_colorram[tile_index];
-	int code = state->m_videoram[2 * tile_index] + (state->m_videoram[2 * tile_index + 1] << 8);
-	SET_TILE_INFO(
+	UINT8 attr = m_colorram[tile_index];
+	int code = m_videoram[2 * tile_index] + (m_videoram[2 * tile_index + 1] << 8);
+	SET_TILE_INFO_MEMBER(
 			0,
 			code,
 			attr & 0x7f,
@@ -34,20 +33,19 @@ static TILE_GET_INFO( get_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( pang )
+VIDEO_START_MEMBER(mitchell_state,pang)
 {
-	mitchell_state *state = machine.driver_data<mitchell_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_bg_tilemap->set_transparent_pen(15);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mitchell_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_bg_tilemap->set_transparent_pen(15);
 
 	/* OBJ RAM */
-	state->m_objram = auto_alloc_array_clear(machine, UINT8, state->m_videoram.bytes());
+	m_objram = auto_alloc_array_clear(machine(), UINT8, m_videoram.bytes());
 
 	/* Palette RAM */
-	state->m_generic_paletteram_8.allocate(2 * machine.total_colors());
+	m_generic_paletteram_8.allocate(2 * machine().total_colors());
 
-	state->save_pointer(NAME(state->m_objram), state->m_videoram.bytes());
+	save_pointer(NAME(m_objram), m_videoram.bytes());
 }
 
 
@@ -140,7 +138,7 @@ READ8_MEMBER(mitchell_state::pang_colorram_r)
 WRITE8_MEMBER(mitchell_state::pang_gfxctrl_w)
 {
 
-logerror("PC %04x: pang_gfxctrl_w %02x\n",cpu_get_pc(&space.device()),data);
+logerror("PC %04x: pang_gfxctrl_w %02x\n",space.device().safe_pc(),data);
 {
 #if 0
 	char baf[40];
@@ -179,7 +177,7 @@ logerror("PC %04x: pang_gfxctrl_w %02x\n",cpu_get_pc(&space.device()),data);
 WRITE8_MEMBER(mitchell_state::pangbl_gfxctrl_w)
 {
 
-logerror("PC %04x: pang_gfxctrl_w %02x\n",cpu_get_pc(&space.device()),data);
+logerror("PC %04x: pang_gfxctrl_w %02x\n",space.device().safe_pc(),data);
 {
 #if 0
 	char baf[40];
@@ -216,7 +214,7 @@ logerror("PC %04x: pang_gfxctrl_w %02x\n",cpu_get_pc(&space.device()),data);
 WRITE8_MEMBER(mitchell_state::mstworld_gfxctrl_w)
 {
 
-logerror("PC %04x: pang_gfxctrl_w %02x\n",cpu_get_pc(&space.device()),data);
+logerror("PC %04x: pang_gfxctrl_w %02x\n",space.device().safe_pc(),data);
 {
 	char baf[40];
 	sprintf(baf,"%02x",data);

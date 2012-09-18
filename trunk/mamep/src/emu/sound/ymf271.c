@@ -33,7 +33,7 @@
 
 //#define log2(n) (log((float) n)/log((float) 2))
 
-typedef struct
+struct YMF271Slot
 {
 	INT8  extout;
 	UINT8 lfoFreq;
@@ -80,14 +80,14 @@ typedef struct
 	INT32 lfo_phase, lfo_step;
 	INT32 lfo_amplitude;
 	double lfo_phasemod;
-} YMF271Slot;
+};
 
-typedef struct
+struct YMF271Group
 {
 	INT8 sync, pfm;
-} YMF271Group;
+};
 
-typedef struct
+struct YMF271Chip
 {
 	YMF271Slot slots[48];
 	YMF271Group groups[12];
@@ -112,7 +112,7 @@ typedef struct
 	UINT32 clock;
 	sound_stream * stream;
 	device_t *device;
-} YMF271Chip;
+};
 
 // slot mapping assists
 static const int fm_tab[] = { 0, 1, 2, -1, 3, 4, 5, -1, 6, 7, 8, -1, 9, 10, 11, -1 };
@@ -275,7 +275,7 @@ INLINE YMF271Chip *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == YMF271);
-	return (YMF271Chip *)downcast<legacy_device_base *>(device)->token();
+	return (YMF271Chip *)downcast<ymf271_device *>(device)->token();
 }
 
 
@@ -537,7 +537,7 @@ static void update_pcm(YMF271Chip *chip, int slotnum, INT32 *mixp, int length)
 
 	if (slot->waveform != 7)
 	{
-		fatalerror("Waveform %d in update_pcm !!!", slot->waveform);
+		fatalerror("Waveform %d in update_pcm!!!\n", slot->waveform);
 	}
 
 	for (i = 0; i < length; i++)
@@ -1810,30 +1810,51 @@ static DEVICE_RESET( ymf271 )
 	}
 }
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
+const device_type YMF271 = &device_creator<ymf271_device>;
 
-DEVICE_GET_INFO( ymf271 )
+ymf271_device::ymf271_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, YMF271, "YMF271", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(YMF271Chip);					break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(YMF271Chip));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( ymf271 );			break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME( ymf271 );			break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "YMF271");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Yamaha FM");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void ymf271_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void ymf271_device::device_start()
+{
+	DEVICE_START_NAME( ymf271 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void ymf271_device::device_reset()
+{
+	DEVICE_RESET_NAME( ymf271 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void ymf271_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(YMF271, ymf271);

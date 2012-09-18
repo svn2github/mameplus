@@ -46,13 +46,13 @@ WRITE8_MEMBER( zodiack_state::flipscreen_w )
 	}
 }
 
-PALETTE_INIT( zodiack )
+PALETTE_INIT_MEMBER(zodiack_state,zodiack)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x31);
+	machine().colortable = colortable_alloc(machine(), 0x31);
 
 	/* create a lookup table for the palette */
 	for (i = 0; i < 0x30; i++)
@@ -78,51 +78,49 @@ PALETTE_INIT( zodiack )
 		bit2 = (color_prom[i] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r, g, b));
+		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r, g, b));
 	}
 
 	/* white for bullets */
-	colortable_palette_set_color(machine.colortable, 0x30, RGB_WHITE);
+	colortable_palette_set_color(machine().colortable, 0x30, RGB_WHITE);
 
 	for (i = 0; i < 0x20; i++)
 		if ((i & 3) == 0)
-			colortable_entry_set_value(machine.colortable, i, 0);
+			colortable_entry_set_value(machine().colortable, i, 0);
 
 	for (i = 0; i < 0x10; i += 2)
 	{
-		colortable_entry_set_value(machine.colortable, 0x20 + i, 32 + (i / 2));
-		colortable_entry_set_value(machine.colortable, 0x21 + i, 40 + (i / 2));
+		colortable_entry_set_value(machine().colortable, 0x20 + i, 32 + (i / 2));
+		colortable_entry_set_value(machine().colortable, 0x21 + i, 40 + (i / 2));
 	}
 
 	/* bullet */
-	colortable_entry_set_value(machine.colortable, 0x30, 0);
-	colortable_entry_set_value(machine.colortable, 0x31, 0x30);
+	colortable_entry_set_value(machine().colortable, 0x30, 0);
+	colortable_entry_set_value(machine().colortable, 0x31, 0x30);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(zodiack_state::get_bg_tile_info)
 {
-	zodiack_state *state = machine.driver_data<zodiack_state>();
 
-	int code = state->m_videoram_2[tile_index];
-	int color = (state->m_attributeram[2 * (tile_index % 32) + 1] >> 4) & 0x07;
+	int code = m_videoram_2[tile_index];
+	int color = (m_attributeram[2 * (tile_index % 32) + 1] >> 4) & 0x07;
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(zodiack_state::get_fg_tile_info)
 {
-	zodiack_state *state = machine.driver_data<zodiack_state>();
 
-	int code = state->m_videoram[tile_index];
-	int color = state->m_attributeram[2 * (tile_index % 32) + 1] & 0x07;
+	int code = m_videoram[tile_index];
+	int color = m_attributeram[2 * (tile_index % 32) + 1] & 0x07;
 
-	SET_TILE_INFO(3, code, color, 0);
+	SET_TILE_INFO_MEMBER(3, code, color, 0);
 }
 
 void zodiack_state::video_start()
 {
-	m_bg_tilemap = tilemap_create(machine(), get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	m_fg_tilemap = tilemap_create(machine(), get_fg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(zodiack_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(zodiack_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
 	m_fg_tilemap->set_transparent_pen(0);
 	m_fg_tilemap->set_scroll_cols(32);

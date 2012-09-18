@@ -419,7 +419,7 @@ static void parse_control(running_machine &machine)
 	/* however this fails when recovering from a save state
        if cpu B is disabled !! */
 	wgp_state *state = machine.driver_data<wgp_state>();
-	device_set_input_line(state->m_subcpu, INPUT_LINE_RESET, (state->m_cpua_ctrl & 0x1) ? CLEAR_LINE : ASSERT_LINE);
+	state->m_subcpu->set_input_line(INPUT_LINE_RESET, (state->m_cpua_ctrl & 0x1) ? CLEAR_LINE : ASSERT_LINE);
 
 	/* bit 1 is "vibration" acc. to test mode */
 }
@@ -433,7 +433,7 @@ WRITE16_MEMBER(wgp_state::cpua_ctrl_w)/* assumes Z80 sandwiched between 68Ks */
 
 	parse_control(machine());
 
-	logerror("CPU #0 PC %06x: write %04x to cpu control\n",cpu_get_pc(&space.device()),data);
+	logerror("CPU #0 PC %06x: write %04x to cpu control\n",space.device().safe_pc(),data);
 }
 
 
@@ -447,14 +447,14 @@ WRITE16_MEMBER(wgp_state::cpua_ctrl_w)/* assumes Z80 sandwiched between 68Ks */
 static TIMER_CALLBACK( wgp_interrupt4 )
 {
 	wgp_state *state = machine.driver_data<wgp_state>();
-	device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+	state->m_maincpu->set_input_line(4, HOLD_LINE);
 }
 #endif
 
 static TIMER_CALLBACK( wgp_interrupt6 )
 {
 	wgp_state *state = machine.driver_data<wgp_state>();
-	device_set_input_line(state->m_maincpu, 6, HOLD_LINE);
+	state->m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 /* 68000 B */
@@ -462,7 +462,7 @@ static TIMER_CALLBACK( wgp_interrupt6 )
 static TIMER_CALLBACK( wgp_cpub_interrupt6 )
 {
 	wgp_state *state = machine.driver_data<wgp_state>();
-	device_set_input_line(state->m_subcpu, 6, HOLD_LINE);	/* assumes Z80 sandwiched between the 68Ks */
+	state->m_subcpu->set_input_line(6, HOLD_LINE);	/* assumes Z80 sandwiched between the 68Ks */
 }
 
 
@@ -475,7 +475,7 @@ static TIMER_CALLBACK( wgp_cpub_interrupt6 )
 static INTERRUPT_GEN( wgp_cpub_interrupt )
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000-500), FUNC(wgp_cpub_interrupt6));
-	device_set_input_line(device, 4, HOLD_LINE);
+	device->execute().set_input_line(4, HOLD_LINE);
 }
 
 
@@ -485,7 +485,7 @@ static INTERRUPT_GEN( wgp_cpub_interrupt )
 
 READ16_MEMBER(wgp_state::lan_status_r)
 {
-	logerror("CPU #2 PC %06x: warning - read lan status\n",cpu_get_pc(&space.device()));
+	logerror("CPU #2 PC %06x: warning - read lan status\n",space.device().safe_pc());
 
 	return  (0x4 << 8);	/* CPUB expects this in code at $104d0 (Wgp) */
 }
@@ -512,7 +512,7 @@ WRITE16_MEMBER(wgp_state::rotate_port_w)
 	{
 		case 0x00:
 		{
-//logerror("CPU #0 PC %06x: warning - port %04x write %04x\n",cpu_get_pc(&space.device()),port_sel,data);
+//logerror("CPU #0 PC %06x: warning - port %04x write %04x\n",space.device().safe_pc(),port_sel,data);
 
 			m_rotate_ctrl[m_port_sel] = data;
 			return;
@@ -586,7 +586,7 @@ READ16_MEMBER(wgp_state::wgp_adinput_r)
 			return ioport(UNKNOWN_PORT_TAG)->read_safe(0x00);	/* unknown */
 	}
 
-logerror("CPU #0 PC %06x: warning - read unmapped a/d input offset %06x\n",cpu_get_pc(&space.device()),offset);
+logerror("CPU #0 PC %06x: warning - read unmapped a/d input offset %06x\n",space.device().safe_pc(),offset);
 
 	return 0xff;
 }
@@ -899,7 +899,7 @@ GFXDECODE_END
 static void irqhandler( device_t *device, int irq )	// assumes Z80 sandwiched between 68Ks
 {
 	wgp_state *state = device->machine().driver_data<wgp_state>();
-	device_set_input_line(state->m_audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
@@ -922,42 +922,40 @@ static void wgp_postload(running_machine &machine)
 	reset_sound_region(machine);
 }
 
-static MACHINE_RESET( wgp )
+void wgp_state::machine_reset()
 {
-	wgp_state *state = machine.driver_data<wgp_state>();
 	int i;
 
-	state->m_banknum = 0;
-	state->m_cpua_ctrl = 0xff;
-	state->m_port_sel = 0;
-	state->m_piv_ctrl_reg = 0;
+	m_banknum = 0;
+	m_cpua_ctrl = 0xff;
+	m_port_sel = 0;
+	m_piv_ctrl_reg = 0;
 
 	for (i = 0; i < 3; i++)
 	{
-		state->m_piv_zoom[i] = 0;
-		state->m_piv_scrollx[i] = 0;
-		state->m_piv_scrolly[i] = 0;
+		m_piv_zoom[i] = 0;
+		m_piv_scrollx[i] = 0;
+		m_piv_scrolly[i] = 0;
 	}
 
-	memset(state->m_rotate_ctrl, 0, 8 * sizeof(UINT16));
+	memset(m_rotate_ctrl, 0, 8 * sizeof(UINT16));
 }
 
-static MACHINE_START( wgp )
+void wgp_state::machine_start()
 {
-	wgp_state *state = machine.driver_data<wgp_state>();
 
-	state->membank("bank10")->configure_entries(0, 4, state->memregion("audiocpu")->base() + 0xc000, 0x4000);
+	membank("bank10")->configure_entries(0, 4, memregion("audiocpu")->base() + 0xc000, 0x4000);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_subcpu = machine.device("sub");
-	state->m_tc0140syt = machine.device("tc0140syt");
-	state->m_tc0100scn = machine.device("tc0100scn");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_subcpu = machine().device<cpu_device>("sub");
+	m_tc0140syt = machine().device("tc0140syt");
+	m_tc0100scn = machine().device("tc0100scn");
 
-	state->save_item(NAME(state->m_cpua_ctrl));
-	state->save_item(NAME(state->m_banknum));
-	state->save_item(NAME(state->m_port_sel));
-	machine.save().register_postload(save_prepost_delegate(FUNC(wgp_postload), &machine));
+	save_item(NAME(m_cpua_ctrl));
+	save_item(NAME(m_banknum));
+	save_item(NAME(m_port_sel));
+	machine().save().register_postload(save_prepost_delegate(FUNC(wgp_postload), &machine()));
 }
 
 static const tc0100scn_interface wgp_tc0100scn_intf =
@@ -1005,8 +1003,6 @@ static MACHINE_CONFIG_START( wgp, wgp_state )
 	MCFG_CPU_PROGRAM_MAP(cpu2_map)
 	MCFG_CPU_VBLANK_INT("screen", wgp_cpub_interrupt)
 
-	MCFG_MACHINE_START(wgp)
-	MCFG_MACHINE_RESET(wgp)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(30000))
 
@@ -1023,7 +1019,6 @@ static MACHINE_CONFIG_START( wgp, wgp_state )
 	MCFG_GFXDECODE(wgp)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(wgp)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", wgp_tc0100scn_intf)
 
@@ -1045,7 +1040,7 @@ static MACHINE_CONFIG_DERIVED( wgp2, wgp )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(12000))
 	/* video hardware */
-	MCFG_VIDEO_START(wgp2)
+	MCFG_VIDEO_START_OVERRIDE(wgp_state,wgp2)
 
 	MCFG_DEVICE_REMOVE("tc0100scn")
 	MCFG_TC0100SCN_ADD("tc0100scn", wgp2_tc0100scn_intf)

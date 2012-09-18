@@ -30,40 +30,40 @@
 
  */
 
-PALETTE_INIT( stfight )
+void stfight_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x100);
+	machine().colortable = colortable_alloc(machine(), 0x100);
 
 	/* text uses colors 0xc0-0xcf */
 	for (i = 0; i < 0x40; i++)
 	{
 		UINT8 ctabentry = (color_prom[i] & 0x0f) | 0xc0;
-		colortable_entry_set_value(machine.colortable, i, ctabentry);
+		colortable_entry_set_value(machine().colortable, i, ctabentry);
 	}
 
 	/* fg uses colors 0x40-0x7f */
 	for (i = 0x40; i < 0x140; i++)
 	{
 		UINT8 ctabentry = (color_prom[i + 0x1c0] & 0x0f) | ((color_prom[i + 0x0c0] & 0x03) << 4) | 0x40;
-		colortable_entry_set_value(machine.colortable, i, ctabentry);
+		colortable_entry_set_value(machine().colortable, i, ctabentry);
 	}
 
 	/* bg uses colors 0-0x3f */
 	for (i = 0x140; i < 0x240; i++)
 	{
 		UINT8 ctabentry = (color_prom[i + 0x2c0] & 0x0f) | ((color_prom[i + 0x1c0] & 0x03) << 4);
-		colortable_entry_set_value(machine.colortable, i, ctabentry);
+		colortable_entry_set_value(machine().colortable, i, ctabentry);
 	}
 
 	/* bg uses colors 0x80-0xbf */
 	for (i = 0x240; i < 0x340; i++)
 	{
 		UINT8 ctabentry = (color_prom[i + 0x3c0] & 0x0f) | ((color_prom[i + 0x2c0] & 0x03) << 4) | 0x80;
-		colortable_entry_set_value(machine.colortable, i, ctabentry);
+		colortable_entry_set_value(machine().colortable, i, ctabentry);
 	}
 }
 
@@ -89,28 +89,28 @@ static void set_pens(running_machine &machine)
 
 ***************************************************************************/
 
-static TILEMAP_MAPPER( fg_scan )
+TILEMAP_MAPPER_MEMBER(stfight_state::fg_scan)
 {
 	/* logical (col,row) -> memory offset */
 	return (col & 0x0f) + ((row & 0x0f) << 4) + ((col & 0x70) << 4) + ((row & 0xf0) << 7);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(stfight_state::get_fg_tile_info)
 {
-	UINT8   *fgMap = machine.root_device().memregion("gfx5")->base();
+	UINT8   *fgMap = machine().root_device().memregion("gfx5")->base();
 	int attr,tile_base;
 
 	attr = fgMap[0x8000+tile_index];
 	tile_base = ((attr & 0x80) << 2) | ((attr & 0x20) << 3);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			tile_base + fgMap[tile_index],
 			attr & 0x07,
 			0);
 }
 
-static TILEMAP_MAPPER( bg_scan )
+TILEMAP_MAPPER_MEMBER(stfight_state::bg_scan)
 {
 	/* logical (col,row) -> memory offset */
 	return ((col & 0x0e) >> 1) + ((row & 0x0f) << 3) + ((col & 0x70) << 3) +
@@ -118,33 +118,32 @@ static TILEMAP_MAPPER( bg_scan )
 			((row & 0x60) << 8);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(stfight_state::get_bg_tile_info)
 {
-	UINT8   *bgMap = machine.root_device().memregion("gfx6")->base();
+	UINT8   *bgMap = machine().root_device().memregion("gfx6")->base();
 	int attr,tile_bank,tile_base;
 
 	attr = bgMap[0x8000+tile_index];
 	tile_bank = (attr & 0x20) >> 5;
 	tile_base = (attr & 0x80) << 1;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			2+tile_bank,
 			tile_base + bgMap[tile_index],
 			attr & 0x07,
 			0);
 }
 
-static TILE_GET_INFO( get_tx_tile_info )
+TILE_GET_INFO_MEMBER(stfight_state::get_tx_tile_info)
 {
-	stfight_state *state = machine.driver_data<stfight_state>();
-	UINT8 attr = state->m_text_attr_ram[tile_index];
+	UINT8 attr = m_text_attr_ram[tile_index];
 	int color = attr & 0x0f;
 
 	tileinfo.group = color;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
-			state->m_text_char_ram[tile_index] + ((attr & 0x80) << 1),
+			m_text_char_ram[tile_index] + ((attr & 0x80) << 1),
 			attr & 0x0f,
 			TILE_FLIPYX((attr & 0x60) >> 5));
 }
@@ -156,15 +155,14 @@ static TILE_GET_INFO( get_tx_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( stfight )
+void stfight_state::video_start()
 {
-	stfight_state *state = machine.driver_data<stfight_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info,bg_scan,     16,16,128,256);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info,fg_scan,16,16,128,256);
-	state->m_tx_tilemap = tilemap_create(machine, get_tx_tile_info,tilemap_scan_rows, 8,8,32,32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(stfight_state::get_bg_tile_info),this),tilemap_mapper_delegate(FUNC(stfight_state::bg_scan),this),16,16,128,256);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(stfight_state::get_fg_tile_info),this),tilemap_mapper_delegate(FUNC(stfight_state::fg_scan),this),16,16,128,256);
+	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(stfight_state::get_tx_tile_info),this),TILEMAP_SCAN_ROWS, 8,8,32,32);
 
-	state->m_fg_tilemap->set_transparent_pen(0x0f);
-	colortable_configure_tilemap_groups(machine.colortable, state->m_tx_tilemap, machine.gfx[0], 0xcf);
+	m_fg_tilemap->set_transparent_pen(0x0f);
+	colortable_configure_tilemap_groups(machine().colortable, m_tx_tilemap, machine().gfx[0], 0xcf);
 }
 
 

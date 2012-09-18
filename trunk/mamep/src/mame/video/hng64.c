@@ -92,7 +92,7 @@ do																					\
 while (0)																			\
 
 
-static void pdrawgfx_transpen_additive(bitmap_rgb32 &dest, const rectangle &cliprect, const gfx_element *gfx,
+static void pdrawgfx_transpen_additive(bitmap_rgb32 &dest, const rectangle &cliprect, gfx_element *gfx,
 		UINT32 code, UINT32 color, int flipx, int flipy, INT32 destx, INT32 desty,
 		bitmap_ind8 &priority, UINT32 pmask, UINT32 transpen)
 {
@@ -103,14 +103,14 @@ static void pdrawgfx_transpen_additive(bitmap_rgb32 &dest, const rectangle &clip
 	assert(gfx != NULL);
 
 	/* get final code and color, and grab lookup tables */
-	code %= gfx->total_elements;
-	color %= gfx->total_colors;
-	paldata = &gfx->machine().pens[gfx->color_base + gfx->color_granularity * color];
+	code %= gfx->elements();
+	color %= gfx->colors();
+	paldata = &gfx->machine().pens[gfx->colorbase() + gfx->granularity() * color];
 
 	/* use pen usage to optimize */
-	if (gfx->pen_usage != NULL && !gfx->dirty[code])
+	if (gfx->has_pen_usage())
 	{
-		UINT32 usage = gfx->pen_usage[code];
+		UINT32 usage = gfx->pen_usage(code);
 
 		/* fully transparent; do nothing */
 		if ((usage & ~(1 << transpen)) == 0)
@@ -125,7 +125,7 @@ static void pdrawgfx_transpen_additive(bitmap_rgb32 &dest, const rectangle &clip
 }
 
 
-static void pdrawgfxzoom_transpen_additive(bitmap_rgb32 &dest, const rectangle &cliprect, const gfx_element *gfx,
+static void pdrawgfxzoom_transpen_additive(bitmap_rgb32 &dest, const rectangle &cliprect, gfx_element *gfx,
 		UINT32 code, UINT32 color, int flipx, int flipy, INT32 destx, INT32 desty,
 		UINT32 scalex, UINT32 scaley, bitmap_ind8 &priority, UINT32 pmask,
 		UINT32 transpen)
@@ -145,14 +145,14 @@ static void pdrawgfxzoom_transpen_additive(bitmap_rgb32 &dest, const rectangle &
 	assert(gfx != NULL);
 
 	/* get final code and color, and grab lookup tables */
-	code %= gfx->total_elements;
-	color %= gfx->total_colors;
-	paldata = &gfx->machine().pens[gfx->color_base + gfx->color_granularity * color];
+	code %= gfx->elements();
+	color %= gfx->colors();
+	paldata = &gfx->machine().pens[gfx->colorbase() + gfx->granularity() * color];
 
 	/* use pen usage to optimize */
-	if (gfx->pen_usage != NULL && !gfx->dirty[code])
+	if (gfx->has_pen_usage())
 	{
-		UINT32 usage = gfx->pen_usage[code];
+		UINT32 usage = gfx->pen_usage(code);
 
 		/* fully transparent; do nothing */
 		if ((usage & ~(1 << transpen)) == 0)
@@ -210,7 +210,7 @@ static void pdrawgfxzoom_transpen_additive(bitmap_rgb32 &dest, const rectangle &
 static void draw_sprites(running_machine &machine, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
 	hng64_state *state = machine.driver_data<hng64_state>();
-	const gfx_element *gfx;
+	gfx_element *gfx;
 	UINT32 *source = state->m_spriteram;
 	UINT32 *finish = state->m_spriteram + 0xc000/4;
 
@@ -529,18 +529,17 @@ static void transition_control(running_machine &machine, bitmap_rgb32 &bitmap, c
 // pppppppp ff--atttt tttttttt tttttttt
 #define HNG64_GET_TILE_INFO                                                    \
 {                                                                              \
-	hng64_state *state = machine.driver_data<hng64_state>();                 \
-	UINT16 tilemapinfo = (state->m_videoregs[reg]>>shift)&0xffff;                 \
+	UINT16 tilemapinfo = (m_videoregs[reg]>>shift)&0xffff;                 \
 	int tileno,pal, flip;                                                      \
                                                                                \
-	tileno = state->m_videoram[tile_index+(offset/4)];                            \
+	tileno = m_videoram[tile_index+(offset/4)];                            \
                                                                                \
 	pal = (tileno&0xff000000)>>24;                                             \
 	flip =(tileno&0x00c00000)>>22;                                             \
                                                                                \
 	if (tileno&0x200000)                                                       \
 	{                                                                          \
-		tileno = (tileno & state->m_videoregs[0x0b]) | state->m_videoregs[0x0c];     \
+		tileno = (tileno & m_videoregs[0x0b]) | m_videoregs[0x0c];     \
 	}                                                                          \
                                                                                \
 	tileno &= 0x1fffff;                                                        \
@@ -549,28 +548,28 @@ static void transition_control(running_machine &machine, bitmap_rgb32 &bitmap, c
 	{                                                                          \
 		if (tilemapinfo&0x400)                                                 \
 		{                                                                      \
-			SET_TILE_INFO(1,tileno>>1,pal>>4,TILE_FLIPYX(flip));               \
+			SET_TILE_INFO_MEMBER(1,tileno>>1,pal>>4,TILE_FLIPYX(flip));               \
 		}                                                                      \
 		else                                                                   \
 		{                                                                      \
-			SET_TILE_INFO(0,tileno, pal,TILE_FLIPYX(flip));                    \
+			SET_TILE_INFO_MEMBER(0,tileno, pal,TILE_FLIPYX(flip));                    \
 		}                                                                      \
 	}                                                                          \
 	else                                                                       \
 	{                                                                          \
 		if (tilemapinfo&0x400)                                                 \
 		{                                                                      \
-			SET_TILE_INFO(3,tileno>>3,pal>>4,TILE_FLIPYX(flip));               \
+			SET_TILE_INFO_MEMBER(3,tileno>>3,pal>>4,TILE_FLIPYX(flip));               \
 		}                                                                      \
 		else                                                                   \
 		{                                                                      \
-			SET_TILE_INFO(2,tileno>>2, pal,TILE_FLIPYX(flip));                 \
+			SET_TILE_INFO_MEMBER(2,tileno>>2, pal,TILE_FLIPYX(flip));                 \
 		}                                                                      \
 	}                                                                          \
 }                                                                              \
 	                                                                           \
 
-static TILE_GET_INFO( get_hng64_tile0_8x8_info )
+TILE_GET_INFO_MEMBER(hng64_state::get_hng64_tile0_8x8_info)
 {
 	int offset = 0x00000;
 	int size = 0;
@@ -580,7 +579,7 @@ static TILE_GET_INFO( get_hng64_tile0_8x8_info )
 	HNG64_GET_TILE_INFO
 }
 
-static TILE_GET_INFO( get_hng64_tile0_16x16_info )
+TILE_GET_INFO_MEMBER(hng64_state::get_hng64_tile0_16x16_info)
 {
 	int offset = 0x00000;
 	int size = 1;
@@ -590,7 +589,7 @@ static TILE_GET_INFO( get_hng64_tile0_16x16_info )
 	HNG64_GET_TILE_INFO
 }
 
-static TILE_GET_INFO( get_hng64_tile1_8x8_info )
+TILE_GET_INFO_MEMBER(hng64_state::get_hng64_tile1_8x8_info)
 {
 	int offset = 0x10000;
 	int size = 0;
@@ -600,7 +599,7 @@ static TILE_GET_INFO( get_hng64_tile1_8x8_info )
 	HNG64_GET_TILE_INFO
 }
 
-static TILE_GET_INFO( get_hng64_tile1_16x16_info )
+TILE_GET_INFO_MEMBER(hng64_state::get_hng64_tile1_16x16_info)
 {
 	int offset = 0x10000;
 	int size = 1;
@@ -610,7 +609,7 @@ static TILE_GET_INFO( get_hng64_tile1_16x16_info )
 	HNG64_GET_TILE_INFO
 }
 
-static TILE_GET_INFO( get_hng64_tile2_8x8_info )
+TILE_GET_INFO_MEMBER(hng64_state::get_hng64_tile2_8x8_info)
 {
 	int offset = 0x20000;
 	int size = 0;
@@ -620,7 +619,7 @@ static TILE_GET_INFO( get_hng64_tile2_8x8_info )
 	HNG64_GET_TILE_INFO
 }
 
-static TILE_GET_INFO( get_hng64_tile2_16x16_info )
+TILE_GET_INFO_MEMBER(hng64_state::get_hng64_tile2_16x16_info)
 {
 	int offset = 0x20000;
 	int size = 1;
@@ -630,7 +629,7 @@ static TILE_GET_INFO( get_hng64_tile2_16x16_info )
 	HNG64_GET_TILE_INFO
 }
 
-static TILE_GET_INFO( get_hng64_tile3_8x8_info )
+TILE_GET_INFO_MEMBER(hng64_state::get_hng64_tile3_8x8_info)
 {
 	int offset = 0x30000;
 	int size = 0;
@@ -640,7 +639,7 @@ static TILE_GET_INFO( get_hng64_tile3_8x8_info )
 	HNG64_GET_TILE_INFO
 }
 
-static TILE_GET_INFO( get_hng64_tile3_16x16_info )
+TILE_GET_INFO_MEMBER(hng64_state::get_hng64_tile3_16x16_info)
 {
 	int offset = 0x30000;
 	int size = 1;
@@ -682,16 +681,15 @@ WRITE32_MEMBER(hng64_state::hng64_videoram_w)
 }
 
 /* internal set of transparency states for rendering */
-typedef enum
+enum hng64trans_t
 {
 	HNG64_TILEMAP_NORMAL = 1,
 	HNG64_TILEMAP_ADDITIVE,
 	HNG64_TILEMAP_ALPHA
-} hng64trans_t;
+};
 
 
-typedef struct _blit_parameters blit_parameters;
-struct _blit_parameters
+struct blit_parameters
 {
 	bitmap_rgb32 *			bitmap;
 	rectangle			cliprect;
@@ -1646,56 +1644,55 @@ SCREEN_VBLANK( hng64 )
 		clear3d(screen.machine());
 }
 
-VIDEO_START( hng64 )
+void hng64_state::video_start()
 {
-	hng64_state *state = machine.driver_data<hng64_state>();
-	const rectangle &visarea = machine.primary_screen->visible_area();
+	const rectangle &visarea = machine().primary_screen->visible_area();
 
-	state->m_old_animmask = -1;
-	state->m_old_animbits = -1;
-	state->m_old_tileflags0 = -1;
-	state->m_old_tileflags1 = -1;
-	state->m_old_tileflags2 = -1;
-	state->m_old_tileflags3 = -1;
+	m_old_animmask = -1;
+	m_old_animbits = -1;
+	m_old_tileflags0 = -1;
+	m_old_tileflags1 = -1;
+	m_old_tileflags2 = -1;
+	m_old_tileflags3 = -1;
 
-	state->m_tilemap0_8x8       = tilemap_create(machine, get_hng64_tile0_8x8_info,   tilemap_scan_rows,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
-	state->m_tilemap0_16x16     = tilemap_create(machine, get_hng64_tile0_16x16_info, tilemap_scan_rows,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
-	state->m_tilemap0_16x16_alt = tilemap_create(machine, get_hng64_tile0_16x16_info, tilemap_scan_rows,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
+	m_tilemap0_8x8       = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile0_8x8_info),this),   TILEMAP_SCAN_ROWS,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap0_16x16     = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile0_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap0_16x16_alt = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile0_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
 
-	state->m_tilemap1_8x8       = tilemap_create(machine, get_hng64_tile1_8x8_info,   tilemap_scan_rows,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
-	state->m_tilemap1_16x16     = tilemap_create(machine, get_hng64_tile1_16x16_info, tilemap_scan_rows,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
-	state->m_tilemap1_16x16_alt = tilemap_create(machine, get_hng64_tile1_16x16_info, tilemap_scan_rows,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
+	m_tilemap1_8x8       = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile1_8x8_info),this),   TILEMAP_SCAN_ROWS,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap1_16x16     = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile1_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap1_16x16_alt = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile1_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
 
-	state->m_tilemap2_8x8       = tilemap_create(machine, get_hng64_tile2_8x8_info,   tilemap_scan_rows,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
-	state->m_tilemap2_16x16     = tilemap_create(machine, get_hng64_tile2_16x16_info, tilemap_scan_rows,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
-	state->m_tilemap2_16x16_alt = tilemap_create(machine, get_hng64_tile2_16x16_info, tilemap_scan_rows,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
+	m_tilemap2_8x8       = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile2_8x8_info),this),   TILEMAP_SCAN_ROWS,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap2_16x16     = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile2_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap2_16x16_alt = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile2_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
 
-	state->m_tilemap3_8x8       = tilemap_create(machine, get_hng64_tile3_8x8_info,   tilemap_scan_rows,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
-	state->m_tilemap3_16x16     = tilemap_create(machine, get_hng64_tile3_16x16_info, tilemap_scan_rows,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
-	state->m_tilemap3_16x16_alt = tilemap_create(machine, get_hng64_tile3_16x16_info, tilemap_scan_rows,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
+	m_tilemap3_8x8       = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile3_8x8_info),this),   TILEMAP_SCAN_ROWS,  8,   8, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap3_16x16     = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile3_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 128, 128); /* 128x128x4 = 0x10000 */
+	m_tilemap3_16x16_alt = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hng64_state::get_hng64_tile3_16x16_info),this), TILEMAP_SCAN_ROWS,  16, 16, 256,  64); /* 128x128x4 = 0x10000 */
 
-	state->m_tilemap0_8x8->set_transparent_pen(0);
-	state->m_tilemap0_16x16->set_transparent_pen(0);
-	state->m_tilemap0_16x16_alt->set_transparent_pen(0);
+	m_tilemap0_8x8->set_transparent_pen(0);
+	m_tilemap0_16x16->set_transparent_pen(0);
+	m_tilemap0_16x16_alt->set_transparent_pen(0);
 
-	state->m_tilemap1_8x8->set_transparent_pen(0);
-	state->m_tilemap1_16x16->set_transparent_pen(0);
-	state->m_tilemap1_16x16_alt->set_transparent_pen(0);
+	m_tilemap1_8x8->set_transparent_pen(0);
+	m_tilemap1_16x16->set_transparent_pen(0);
+	m_tilemap1_16x16_alt->set_transparent_pen(0);
 
-	state->m_tilemap2_8x8->set_transparent_pen(0);
-	state->m_tilemap2_16x16->set_transparent_pen(0);
-	state->m_tilemap2_16x16_alt->set_transparent_pen(0);
+	m_tilemap2_8x8->set_transparent_pen(0);
+	m_tilemap2_16x16->set_transparent_pen(0);
+	m_tilemap2_16x16_alt->set_transparent_pen(0);
 
-	state->m_tilemap3_8x8->set_transparent_pen(0);
-	state->m_tilemap3_16x16->set_transparent_pen(0);
-	state->m_tilemap3_16x16_alt->set_transparent_pen(0);
+	m_tilemap3_8x8->set_transparent_pen(0);
+	m_tilemap3_16x16->set_transparent_pen(0);
+	m_tilemap3_16x16_alt->set_transparent_pen(0);
 
 	// Debug switch, turn on / off additive blending on a per-tilemap basis
-	state->m_additive_tilemap_debug = 0;
+	m_additive_tilemap_debug = 0;
 
 	// 3d Buffer Allocation
-	state->m_depthBuffer3d = auto_alloc_array(machine, float,  (visarea.max_x + 1)*(visarea.max_y + 1));
-	state->m_colorBuffer3d = auto_alloc_array(machine, UINT32, (visarea.max_x + 1)*(visarea.max_y + 1));
+	m_depthBuffer3d = auto_alloc_array(machine(), float,  (visarea.max_x + 1)*(visarea.max_y + 1));
+	m_colorBuffer3d = auto_alloc_array(machine(), UINT32, (visarea.max_x + 1)*(visarea.max_y + 1));
 }
 
 

@@ -145,6 +145,11 @@ public:
 	DECLARE_WRITE8_MEMBER(counters_w);
 	DECLARE_READ8_MEMBER(test_r);
 	DECLARE_DRIVER_INIT(luckgrln);
+	TILE_GET_INFO_MEMBER(get_luckgrln_reel1_tile_info);
+	TILE_GET_INFO_MEMBER(get_luckgrln_reel2_tile_info);
+	TILE_GET_INFO_MEMBER(get_luckgrln_reel3_tile_info);
+	TILE_GET_INFO_MEMBER(get_luckgrln_reel4_tile_info);
+	virtual void video_start();
 };
 
 
@@ -162,17 +167,16 @@ WRITE8_MEMBER(luckgrln_state::luckgrln_reel1_attr_w)
 
 
 
-static TILE_GET_INFO( get_luckgrln_reel1_tile_info )
+TILE_GET_INFO_MEMBER(luckgrln_state::get_luckgrln_reel1_tile_info)
 {
-	luckgrln_state *state = machine.driver_data<luckgrln_state>();
-	int code = state->m_reel1_ram[tile_index];
-	int attr = state->m_reel1_attr[tile_index];
+	int code = m_reel1_ram[tile_index];
+	int attr = m_reel1_attr[tile_index];
 	int col = (attr & 0x1f);
 
 	code |= (attr & 0xe0)<<3;
 
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code,
 			col,
@@ -193,17 +197,16 @@ WRITE8_MEMBER(luckgrln_state::luckgrln_reel2_attr_w)
 }
 
 
-static TILE_GET_INFO( get_luckgrln_reel2_tile_info )
+TILE_GET_INFO_MEMBER(luckgrln_state::get_luckgrln_reel2_tile_info)
 {
-	luckgrln_state *state = machine.driver_data<luckgrln_state>();
-	int code = state->m_reel2_ram[tile_index];
-	int attr = state->m_reel2_attr[tile_index];
+	int code = m_reel2_ram[tile_index];
+	int attr = m_reel2_attr[tile_index];
 	int col = (attr & 0x1f);
 
 	code |= (attr & 0xe0)<<3;
 
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code,
 			col,
@@ -223,16 +226,15 @@ WRITE8_MEMBER(luckgrln_state::luckgrln_reel3_attr_w)
 }
 
 
-static TILE_GET_INFO( get_luckgrln_reel3_tile_info )
+TILE_GET_INFO_MEMBER(luckgrln_state::get_luckgrln_reel3_tile_info)
 {
-	luckgrln_state *state = machine.driver_data<luckgrln_state>();
-	int code = state->m_reel3_ram[tile_index];
-	int attr = state->m_reel3_attr[tile_index];
+	int code = m_reel3_ram[tile_index];
+	int attr = m_reel3_attr[tile_index];
 	int col = (attr & 0x1f);
 
 	code |= (attr & 0xe0)<<3;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code,
 			col,
@@ -252,39 +254,37 @@ WRITE8_MEMBER(luckgrln_state::luckgrln_reel4_attr_w)
 }
 
 
-static TILE_GET_INFO( get_luckgrln_reel4_tile_info )
+TILE_GET_INFO_MEMBER(luckgrln_state::get_luckgrln_reel4_tile_info)
 {
-	luckgrln_state *state = machine.driver_data<luckgrln_state>();
-	int code = state->m_reel4_ram[tile_index];
-	int attr = state->m_reel4_attr[tile_index];
+	int code = m_reel4_ram[tile_index];
+	int attr = m_reel4_attr[tile_index];
 	int col = (attr & 0x1f);
 
 	code |= (attr & 0xe0)<<3;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code,
 			col,
 			0);
 }
 
-static VIDEO_START(luckgrln)
+void luckgrln_state::video_start()
 {
-	luckgrln_state *state = machine.driver_data<luckgrln_state>();
-	state->m_reel1_tilemap = tilemap_create(machine,get_luckgrln_reel1_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
-	state->m_reel2_tilemap = tilemap_create(machine,get_luckgrln_reel2_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
-	state->m_reel3_tilemap = tilemap_create(machine,get_luckgrln_reel3_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
-	state->m_reel4_tilemap = tilemap_create(machine,get_luckgrln_reel4_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
+	m_reel1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(luckgrln_state::get_luckgrln_reel1_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
+	m_reel2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(luckgrln_state::get_luckgrln_reel2_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
+	m_reel3_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(luckgrln_state::get_luckgrln_reel3_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
+	m_reel4_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(luckgrln_state::get_luckgrln_reel4_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
 
-	state->m_reel1_tilemap->set_scroll_cols(64);
-	state->m_reel2_tilemap->set_scroll_cols(64);
-	state->m_reel3_tilemap->set_scroll_cols(64);
-	state->m_reel4_tilemap->set_scroll_cols(64);
+	m_reel1_tilemap->set_scroll_cols(64);
+	m_reel2_tilemap->set_scroll_cols(64);
+	m_reel3_tilemap->set_scroll_cols(64);
+	m_reel4_tilemap->set_scroll_cols(64);
 
-	state->m_reel1_tilemap->set_transparent_pen(0 );
-	state->m_reel2_tilemap->set_transparent_pen(0 );
-	state->m_reel3_tilemap->set_transparent_pen(0 );
-	state->m_reel4_tilemap->set_transparent_pen(0 );
+	m_reel1_tilemap->set_transparent_pen(0 );
+	m_reel2_tilemap->set_transparent_pen(0 );
+	m_reel3_tilemap->set_transparent_pen(0 );
+	m_reel4_tilemap->set_transparent_pen(0 );
 }
 
 static SCREEN_UPDATE_IND16(luckgrln)
@@ -990,7 +990,7 @@ static INTERRUPT_GEN( luckgrln_irq )
 {
 	luckgrln_state *state = device->machine().driver_data<luckgrln_state>();
 	if(state->m_nmi_enable)
-		cputag_set_input_line(device->machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+		device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( luckgrln, luckgrln_state )
@@ -1011,7 +1011,6 @@ static MACHINE_CONFIG_START( luckgrln, luckgrln_state )
 	MCFG_GFXDECODE(luckgrln)
 	MCFG_PALETTE_LENGTH(0x8000)
 
-	MCFG_VIDEO_START(luckgrln)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

@@ -194,7 +194,7 @@ READ8_MEMBER(firetrap_state::firetrap_8751_bootleg_r)
 	UINT8 coin = 0;
 	UINT8 port = ioport("IN2")->read() & 0x70;
 
-	if (cpu_get_pc(&space.device()) == 0x1188)
+	if (space.device().safe_pc() == 0x1188)
 		return ~m_coin_command_pending;
 
 	if (port != 0x70)
@@ -214,7 +214,7 @@ READ8_MEMBER(firetrap_state::firetrap_8751_bootleg_r)
 
 READ8_MEMBER(firetrap_state::firetrap_8751_r)
 {
-	//logerror("PC:%04x read from 8751\n",cpu_get_pc(&space.device()));
+	//logerror("PC:%04x read from 8751\n",space.device().safe_pc());
 	return m_i8751_return;
 }
 
@@ -246,7 +246,7 @@ WRITE8_MEMBER(firetrap_state::firetrap_8751_w)
 	{
 		m_i8751_current_command = 0;
 		m_i8751_return = 0xff; /* This value is XOR'd and must equal 0 */
-		device_set_input_line_and_vector(m_maincpu, 0, HOLD_LINE, 0xff);
+		m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 		return;
 	}
 
@@ -293,18 +293,18 @@ WRITE8_MEMBER(firetrap_state::firetrap_8751_w)
 	else
 	{
 		m_i8751_return = 0xff;
-		logerror("%04x: Unknown i8751 command %02x!\n",cpu_get_pc(&space.device()),data);
+		logerror("%04x: Unknown i8751 command %02x!\n",space.device().safe_pc(),data);
 	}
 
 	/* Signal main cpu task is complete */
-	device_set_input_line_and_vector(m_maincpu, 0, HOLD_LINE, 0xff);
+	m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 	m_i8751_current_command=data;
 }
 
 WRITE8_MEMBER(firetrap_state::firetrap_sound_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(firetrap_state::firetrap_sound_2400_w)
@@ -327,7 +327,7 @@ static void firetrap_adpcm_int( device_t *device )
 
 	state->m_adpcm_toggle ^= 1;
 	if (state->m_sound_irq_enable && state->m_adpcm_toggle)
-		device_set_input_line(state->m_audiocpu, M6502_IRQ_LINE, HOLD_LINE);
+		state->m_audiocpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(firetrap_state::firetrap_adpcm_data_w)
@@ -418,7 +418,7 @@ INPUT_CHANGED_MEMBER(firetrap_state::coin_inserted)
 		if (m_coin_command_pending && !m_i8751_current_command)
 		{
 			m_i8751_return = m_coin_command_pending;
-			device_set_input_line_and_vector(m_maincpu, 0, HOLD_LINE, 0xff);
+			m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 			m_coin_command_pending = 0;
 		}
 	}
@@ -586,58 +586,56 @@ static INTERRUPT_GEN( firetrap_irq )
 	firetrap_state *state = device->machine().driver_data<firetrap_state>();
 
 	if (state->m_nmi_enable)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
-static MACHINE_START( firetrap )
+void firetrap_state::machine_start()
 {
-	firetrap_state *state = machine.driver_data<firetrap_state>();
-	UINT8 *MAIN = state->memregion("maincpu")->base();
-	UINT8 *SOUND = state->memregion("audiocpu")->base();
+	UINT8 *MAIN = memregion("maincpu")->base();
+	UINT8 *SOUND = memregion("audiocpu")->base();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_msm = machine.device("msm");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_msm = machine().device("msm");
 
-	state->membank("bank1")->configure_entries(0, 4, &MAIN[0x10000], 0x4000);
-	state->membank("bank2")->configure_entries(0, 2, &SOUND[0x10000], 0x4000);
+	membank("bank1")->configure_entries(0, 4, &MAIN[0x10000], 0x4000);
+	membank("bank2")->configure_entries(0, 2, &SOUND[0x10000], 0x4000);
 
-	state->save_item(NAME(state->m_i8751_current_command));
-	state->save_item(NAME(state->m_sound_irq_enable));
-	state->save_item(NAME(state->m_nmi_enable));
-	state->save_item(NAME(state->m_i8751_return));
-	state->save_item(NAME(state->m_i8751_init_ptr));
-	state->save_item(NAME(state->m_msm5205next));
-	state->save_item(NAME(state->m_adpcm_toggle));
-	state->save_item(NAME(state->m_coin_command_pending));
-	state->save_item(NAME(state->m_scroll1_x));
-	state->save_item(NAME(state->m_scroll1_y));
-	state->save_item(NAME(state->m_scroll2_x));
-	state->save_item(NAME(state->m_scroll2_y));
+	save_item(NAME(m_i8751_current_command));
+	save_item(NAME(m_sound_irq_enable));
+	save_item(NAME(m_nmi_enable));
+	save_item(NAME(m_i8751_return));
+	save_item(NAME(m_i8751_init_ptr));
+	save_item(NAME(m_msm5205next));
+	save_item(NAME(m_adpcm_toggle));
+	save_item(NAME(m_coin_command_pending));
+	save_item(NAME(m_scroll1_x));
+	save_item(NAME(m_scroll1_y));
+	save_item(NAME(m_scroll2_x));
+	save_item(NAME(m_scroll2_y));
 }
 
-static MACHINE_RESET( firetrap )
+void firetrap_state::machine_reset()
 {
-	firetrap_state *state = machine.driver_data<firetrap_state>();
 	int i;
 
 	for (i = 0; i < 2; i++)
 	{
-		state->m_scroll1_x[i] = 0;
-		state->m_scroll1_y[i] = 0;
-		state->m_scroll2_x[i] = 0;
-		state->m_scroll2_y[i] = 0;
+		m_scroll1_x[i] = 0;
+		m_scroll1_y[i] = 0;
+		m_scroll2_x[i] = 0;
+		m_scroll2_y[i] = 0;
 	}
 
-	state->m_i8751_current_command = 0;
-	state->m_sound_irq_enable = 0;
-	state->m_nmi_enable = 0;
-	state->m_i8751_return = 0;
-	state->m_i8751_init_ptr = 0;
-	state->m_msm5205next = 0xff;
-	state->m_adpcm_toggle = 0;
-	state->m_coin_command_pending = 0;
+	m_i8751_current_command = 0;
+	m_sound_irq_enable = 0;
+	m_nmi_enable = 0;
+	m_i8751_return = 0;
+	m_i8751_init_ptr = 0;
+	m_msm5205next = 0xff;
+	m_adpcm_toggle = 0;
+	m_coin_command_pending = 0;
 }
 
 static MACHINE_CONFIG_START( firetrap, firetrap_state )
@@ -652,8 +650,6 @@ static MACHINE_CONFIG_START( firetrap, firetrap_state )
 							/* IRQs are caused by the ADPCM chip */
 							/* NMIs are caused by the main CPU */
 
-	MCFG_MACHINE_START(firetrap)
-	MCFG_MACHINE_RESET(firetrap)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -666,8 +662,6 @@ static MACHINE_CONFIG_START( firetrap, firetrap_state )
 	MCFG_GFXDECODE(firetrap)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_PALETTE_INIT(firetrap)
-	MCFG_VIDEO_START(firetrap)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -692,8 +686,6 @@ static MACHINE_CONFIG_START( firetrapbl, firetrap_state )
 							/* IRQs are caused by the ADPCM chip */
 							/* NMIs are caused by the main CPU */
 
-	MCFG_MACHINE_START(firetrap)
-	MCFG_MACHINE_RESET(firetrap)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -705,8 +697,6 @@ static MACHINE_CONFIG_START( firetrapbl, firetrap_state )
 	MCFG_GFXDECODE(firetrap)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_PALETTE_INIT(firetrap)
-	MCFG_VIDEO_START(firetrap)
 	MCFG_SCREEN_UPDATE_STATIC(firetrap)
 
 	/* sound hardware */

@@ -22,6 +22,9 @@ Cruis'n Exotica  v2.4   08/23/2000
 Invasion         v5.0   12/14/1999
 The Grid         v1.2   10/18/2000
 
+Known to exist, but currently not dumped:
+  Cruis'n Exotica Version 1.3  Fri Feb 11, 2000  16:19:13
+
 **************************************************************************/
 
 #include "emu.h"
@@ -53,15 +56,10 @@ static UINT8			crusnexo_leds_select;
 static UINT8			keypad_select;
 static UINT8			bitlatch[10];
 
-static UINT32 *ram_base;
 static UINT8 cmos_protected;
 
-static UINT32 *linkram;
 
 static emu_timer *timer[2];
-
-static UINT32 *tms32031_control;
-
 
 static TIMER_CALLBACK( invasn_gun_callback );
 
@@ -73,28 +71,29 @@ static TIMER_CALLBACK( invasn_gun_callback );
  *
  *************************************/
 
-static MACHINE_START( midzeus )
+MACHINE_START_MEMBER(midzeus_state,midzeus)
 {
-	timer[0] = machine.scheduler().timer_alloc(FUNC_NULL);
-	timer[1] = machine.scheduler().timer_alloc(FUNC_NULL);
+	timer[0] = machine().scheduler().timer_alloc(FUNC_NULL);
+	timer[1] = machine().scheduler().timer_alloc(FUNC_NULL);
 
-	gun_timer[0] = machine.scheduler().timer_alloc(FUNC(invasn_gun_callback));
-	gun_timer[1] = machine.scheduler().timer_alloc(FUNC(invasn_gun_callback));
+	gun_timer[0] = machine().scheduler().timer_alloc(FUNC(invasn_gun_callback));
+	gun_timer[1] = machine().scheduler().timer_alloc(FUNC(invasn_gun_callback));
 
-	state_save_register_global(machine, gun_control);
-	state_save_register_global(machine, gun_irq_state);
-	state_save_register_global_array(machine, gun_x);
-	state_save_register_global_array(machine, gun_y);
-	state_save_register_global(machine, crusnexo_leds_select);
-	state_save_register_global(machine, keypad_select);
+	state_save_register_global(machine(), gun_control);
+	state_save_register_global(machine(), gun_irq_state);
+	state_save_register_global_array(machine(), gun_x);
+	state_save_register_global_array(machine(), gun_y);
+	state_save_register_global(machine(), crusnexo_leds_select);
+	state_save_register_global(machine(), keypad_select);
 }
 
 
-static MACHINE_RESET( midzeus )
+MACHINE_RESET_MEMBER(midzeus_state,midzeus)
 {
-	memcpy(ram_base, machine.root_device().memregion("user1")->base(), 0x40000*4);
-	*ram_base <<= 1;
-	machine.device("maincpu")->reset();
+
+	memcpy(m_ram_base, machine().root_device().memregion("user1")->base(), 0x40000*4);
+	*m_ram_base <<= 1;
+	machine().device("maincpu")->reset();
 
 	cmos_protected = TRUE;
 }
@@ -109,12 +108,12 @@ static MACHINE_RESET( midzeus )
 
 static TIMER_CALLBACK( display_irq_off )
 {
-	cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 static INTERRUPT_GEN( display_irq )
 {
-	device_set_input_line(device, 0, ASSERT_LINE);
+	device->execute().set_input_line(0, ASSERT_LINE);
 	device->machine().scheduler().timer_set(attotime::from_hz(30000000), FUNC(display_irq_off));
 }
 
@@ -131,7 +130,7 @@ WRITE32_MEMBER(midzeus_state::cmos_w)
 	if (bitlatch[2] && !cmos_protected)
 		COMBINE_DATA(&m_nvram[offset]);
 	else
-		logerror("%06X:timekeeper_w with bitlatch[2] = %d, cmos_protected = %d\n", cpu_get_pc(&space.device()), bitlatch[2], cmos_protected);
+		logerror("%06X:timekeeper_w with bitlatch[2] = %d, cmos_protected = %d\n", space.device().safe_pc(), bitlatch[2], cmos_protected);
 	cmos_protected = TRUE;
 }
 
@@ -185,7 +184,7 @@ WRITE32_MEMBER(midzeus_state::zpram_w)
 	if (bitlatch[2])
 		COMBINE_DATA(&m_nvram[offset]);
 	else
-		logerror("%06X:zpram_w with bitlatch[2] = %d\n", cpu_get_pc(&space.device()), bitlatch[2]);
+		logerror("%06X:zpram_w with bitlatch[2] = %d\n", space.device().safe_pc(), bitlatch[2]);
 }
 
 
@@ -226,7 +225,7 @@ READ32_MEMBER(midzeus_state::bitlatches_r)
 
 		/* unknown purpose */
 		default:
-			logerror("%06X:bitlatches_r(%X)\n", cpu_get_pc(&space.device()), offset);
+			logerror("%06X:bitlatches_r(%X)\n", space.device().safe_pc(), offset);
 			break;
 	}
 	return ~0;
@@ -243,19 +242,19 @@ WRITE32_MEMBER(midzeus_state::bitlatches_w)
 		/* unknown purpose */
 		default:
 			if (oldval ^ data)
-				logerror("%06X:bitlatches_w(%X) = %X\n", cpu_get_pc(&space.device()), offset, data);
+				logerror("%06X:bitlatches_w(%X) = %X\n", space.device().safe_pc(), offset, data);
 			break;
 
 		/* unknown purpose; crusnexo toggles this between 0 and 1 every 20 frames; thegrid writes 1 */
 		case 0:
 			if (data != 0 && data != 1)
-				logerror("%06X:bitlatches_w(%X) = %X (unexpected)\n", cpu_get_pc(&space.device()), offset, data);
+				logerror("%06X:bitlatches_w(%X) = %X (unexpected)\n", space.device().safe_pc(), offset, data);
 			break;
 
 		/* unknown purpose; mk4/invasn write 1 here at initialization; crusnexo/thegrid write 3 */
 		case 1:
 			if (data != 1 && data != 3)
-				logerror("%06X:bitlatches_w(%X) = %X (unexpected)\n", cpu_get_pc(&space.device()), offset, data);
+				logerror("%06X:bitlatches_w(%X) = %X (unexpected)\n", space.device().safe_pc(), offset, data);
 			break;
 
 		/* CMOS/ZPRAM extra enable latch; only low bit is used */
@@ -265,7 +264,7 @@ WRITE32_MEMBER(midzeus_state::bitlatches_w)
 		/* unknown purpose; invasn writes 2 here at startup */
 		case 4:
 			if (data != 2)
-				logerror("%06X:bitlatches_w(%X) = %X (unexpected)\n", cpu_get_pc(&space.device()), offset, data);
+				logerror("%06X:bitlatches_w(%X) = %X (unexpected)\n", space.device().safe_pc(), offset, data);
 			break;
 
 		/* ROM bank selection on Zeus 2 */
@@ -276,19 +275,19 @@ WRITE32_MEMBER(midzeus_state::bitlatches_w)
 		/* unknown purpose; crusnexo/thegrid write 1 at startup */
 		case 7:
 			if (data != 1)
-				logerror("%06X:bitlatches_w(%X) = %X (unexpected)\n", cpu_get_pc(&space.device()), offset, data);
+				logerror("%06X:bitlatches_w(%X) = %X (unexpected)\n", space.device().safe_pc(), offset, data);
 			break;
 
 		/* unknown purpose; crusnexo writes 4 at startup; thegrid writes 6 */
 		case 8:
 			if (data != 4 && data != 6)
-				logerror("%06X:bitlatches_w(%X) = %X (unexpected)\n", cpu_get_pc(&space.device()), offset, data);
+				logerror("%06X:bitlatches_w(%X) = %X (unexpected)\n", space.device().safe_pc(), offset, data);
 			break;
 
 		/* unknown purpose; thegrid writes 1 at startup */
 		case 9:
 			if (data != 1)
-				logerror("%06X:bitlatches_w(%X) = %X (unexpected)\n", cpu_get_pc(&space.device()), offset, data);
+				logerror("%06X:bitlatches_w(%X) = %X (unexpected)\n", space.device().safe_pc(), offset, data);
 			break;
 	}
 }
@@ -354,18 +353,18 @@ WRITE32_MEMBER(midzeus_state::crusnexo_leds_w)
 
 READ32_MEMBER(midzeus_state::linkram_r)
 {
-	logerror("%06X:unknown_8a000_r(%02X)\n", cpu_get_pc(&space.device()), offset);
+	logerror("%06X:unknown_8a000_r(%02X)\n", space.device().safe_pc(), offset);
 	if (offset == 0)
 		return 0x30313042;
 	else if (offset == 0x3c)
 		return 0xffffffff;
-	return linkram[offset];
+	return m_linkram[offset];
 }
 
 WRITE32_MEMBER(midzeus_state::linkram_w)
 {
-	logerror("%06X:unknown_8a000_w(%02X) = %08X\n", cpu_get_pc(&space.device()),  offset, data);
-	COMBINE_DATA(&linkram[offset]);
+	logerror("%06X:unknown_8a000_w(%02X) = %08X\n", space.device().safe_pc(),  offset, data);
+	COMBINE_DATA(&m_linkram[offset]);
 }
 
 
@@ -389,15 +388,15 @@ READ32_MEMBER(midzeus_state::tms32031_control_r)
 
 	/* log anything else except the memory control register */
 	if (offset != 0x64)
-		logerror("%06X:tms32031_control_r(%02X)\n", cpu_get_pc(&space.device()), offset);
+		logerror("%06X:tms32031_control_r(%02X)\n", space.device().safe_pc(), offset);
 
-	return tms32031_control[offset];
+	return m_tms32031_control[offset];
 }
 
 
 WRITE32_MEMBER(midzeus_state::tms32031_control_w)
 {
-	COMBINE_DATA(&tms32031_control[offset]);
+	COMBINE_DATA(&m_tms32031_control[offset]);
 
 	/* ignore changes to the memory control register */
 	if (offset == 0x64)
@@ -411,7 +410,7 @@ WRITE32_MEMBER(midzeus_state::tms32031_control_w)
 			timer[which]->adjust(attotime::never);
 	}
 	else
-		logerror("%06X:tms32031_control_w(%02X) = %08X\n", cpu_get_pc(&space.device()), offset, data);
+		logerror("%06X:tms32031_control_w(%02X) = %08X\n", space.device().safe_pc(), offset, data);
 }
 
 
@@ -462,7 +461,7 @@ READ32_MEMBER(midzeus_state::analog_r)
 {
 	static const char * const tags[] = { "ANALOG0", "ANALOG1", "ANALOG2", "ANALOG3" };
 	if (offset < 8 || offset > 11)
-		logerror("%06X:analog_r(%X)\n", cpu_get_pc(&space.device()), offset);
+		logerror("%06X:analog_r(%X)\n", space.device().safe_pc(), offset);
 	return ioport(tags[offset & 3])->read();
 }
 
@@ -484,9 +483,9 @@ static void update_gun_irq(running_machine &machine)
 {
 	/* low 2 bits of gun_control seem to enable IRQs */
 	if (gun_irq_state & gun_control & 0x03)
-		cputag_set_input_line(machine, "maincpu", 3, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(3, ASSERT_LINE);
 	else
-		cputag_set_input_line(machine, "maincpu", 3, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(3, CLEAR_LINE);
 }
 
 
@@ -564,10 +563,10 @@ READ32_MEMBER(midzeus_state::invasn_gun_r)
 
 static ADDRESS_MAP_START( zeus_map, AS_PROGRAM, 32, midzeus_state )
 	ADDRESS_MAP_UNMAP_HIGH
-	AM_RANGE(0x000000, 0x03ffff) AM_RAM AM_BASE_LEGACY(&ram_base)
+	AM_RANGE(0x000000, 0x03ffff) AM_RAM AM_SHARE("ram_base")
 	AM_RANGE(0x400000, 0x41ffff) AM_RAM
-	AM_RANGE(0x808000, 0x80807f) AM_READWRITE(tms32031_control_r, tms32031_control_w) AM_BASE_LEGACY(&tms32031_control)
-	AM_RANGE(0x880000, 0x8803ff) AM_READWRITE(zeus_r, zeus_w) AM_BASE_LEGACY(&zeusbase)
+	AM_RANGE(0x808000, 0x80807f) AM_READWRITE(tms32031_control_r, tms32031_control_w) AM_SHARE("tms32031_ctl")
+	AM_RANGE(0x880000, 0x8803ff) AM_READWRITE(zeus_r, zeus_w) AM_SHARE("zeusbase")
 	AM_RANGE(0x8d0000, 0x8d0004) AM_READWRITE(bitlatches_r, bitlatches_w)
 	AM_RANGE(0x990000, 0x99000f) AM_READWRITE_LEGACY(midway_ioasic_r, midway_ioasic_w)
 	AM_RANGE(0x9e0000, 0x9e0000) AM_WRITENOP		// watchdog?
@@ -579,11 +578,11 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( zeus2_map, AS_PROGRAM, 32, midzeus_state )
 	ADDRESS_MAP_UNMAP_HIGH
-	AM_RANGE(0x000000, 0x03ffff) AM_RAM AM_BASE_LEGACY(&ram_base)
+	AM_RANGE(0x000000, 0x03ffff) AM_RAM AM_SHARE("ram_base")
 	AM_RANGE(0x400000, 0x43ffff) AM_RAM
-	AM_RANGE(0x808000, 0x80807f) AM_READWRITE(tms32031_control_r, tms32031_control_w) AM_BASE_LEGACY(&tms32031_control)
-	AM_RANGE(0x880000, 0x88007f) AM_READWRITE_LEGACY(zeus2_r, zeus2_w) AM_BASE_LEGACY(&zeusbase)
-	AM_RANGE(0x8a0000, 0x8a003f) AM_READWRITE(linkram_r, linkram_w) AM_BASE_LEGACY(&linkram)
+	AM_RANGE(0x808000, 0x80807f) AM_READWRITE(tms32031_control_r, tms32031_control_w) AM_SHARE("tms32031_ctl")
+	AM_RANGE(0x880000, 0x88007f) AM_READWRITE_LEGACY(zeus2_r, zeus2_w) AM_SHARE("zeusbase")
+	AM_RANGE(0x8a0000, 0x8a003f) AM_READWRITE(linkram_r, linkram_w) AM_SHARE("linkram")
 	AM_RANGE(0x8d0000, 0x8d000a) AM_READWRITE(bitlatches_r, bitlatches_w)
 	AM_RANGE(0x900000, 0x91ffff) AM_READWRITE(zpram_r, zpram_w) AM_SHARE("nvram") AM_MIRROR(0x020000)
 	AM_RANGE(0x990000, 0x99000f) AM_READWRITE_LEGACY(midway_ioasic_r, midway_ioasic_w)
@@ -1094,8 +1093,8 @@ static MACHINE_CONFIG_START( midzeus, midzeus_state )
 	MCFG_CPU_PROGRAM_MAP(zeus_map)
 	MCFG_CPU_VBLANK_INT("screen", display_irq)
 
-	MCFG_MACHINE_START(midzeus)
-	MCFG_MACHINE_RESET(midzeus)
+	MCFG_MACHINE_START_OVERRIDE(midzeus_state,midzeus)
+	MCFG_MACHINE_RESET_OVERRIDE(midzeus_state,midzeus)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	/* video hardware */
@@ -1105,7 +1104,7 @@ static MACHINE_CONFIG_START( midzeus, midzeus_state )
 	MCFG_SCREEN_RAW_PARAMS(MIDZEUS_VIDEO_CLOCK/8, 529, 0, 400, 278, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(midzeus)
 
-	MCFG_VIDEO_START(midzeus)
+	MCFG_VIDEO_START_OVERRIDE(midzeus_state,midzeus)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(dcs2_audio_2104)
@@ -1134,8 +1133,8 @@ static MACHINE_CONFIG_START( midzeus2, midzeus_state )
 	MCFG_CPU_PROGRAM_MAP(zeus2_map)
 	MCFG_CPU_VBLANK_INT("screen", display_irq)
 
-	MCFG_MACHINE_START(midzeus)
-	MCFG_MACHINE_RESET(midzeus)
+	MCFG_MACHINE_START_OVERRIDE(midzeus_state,midzeus)
+	MCFG_MACHINE_RESET_OVERRIDE(midzeus_state,midzeus)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	/* video hardware */
@@ -1143,7 +1142,7 @@ static MACHINE_CONFIG_START( midzeus2, midzeus_state )
 	MCFG_SCREEN_RAW_PARAMS(MIDZEUS_VIDEO_CLOCK/4, 666, 0, 512, 438, 0, 400)
 	MCFG_SCREEN_UPDATE_STATIC(midzeus2)
 
-	MCFG_VIDEO_START(midzeus2)
+	MCFG_VIDEO_START_OVERRIDE(midzeus_state,midzeus2)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(dcs2_audio_2104)
@@ -1268,8 +1267,8 @@ ROM_START( crusnexo )
 	ROM_REGION32_LE( 0x0800000, "user1", 0 )
 	ROM_LOAD32_WORD( "exotica-24.u10", 0x0000000, 0x200000, CRC(5e702f7c) SHA1(98c76fb46b304d4d21656d0505d5e5e99c8335bf) ) /* Version 2.4  Wed Aug 23, 2000  17:26:53 */
 	ROM_LOAD32_WORD( "exotica-24.u11", 0x0000002, 0x200000, CRC(5ecb2cbc) SHA1(57283167e48ca96579d0712d9fec23a36fa2b496) )
-	ROM_LOAD32_WORD( "exotica-10.u12", 0x0400000, 0x200000, CRC(21f122b2) SHA1(5473401ec954bf9ab66a8283bd08d17c7960cd29) ) /* U12 & U13 should be v1.6 */
-	ROM_LOAD32_WORD( "exotica-10.u13", 0x0400002, 0x200000, CRC(cf9d3609) SHA1(6376891f478185d26370466bef92f0c5304d58d3) )
+	ROM_LOAD32_WORD( "exotica-10.u12", 0x0400000, 0x200000, CRC(21f122b2) SHA1(5473401ec954bf9ab66a8283bd08d17c7960cd29) ) /* These 2 roms might be labeled as a different version, */
+	ROM_LOAD32_WORD( "exotica-10.u13", 0x0400002, 0x200000, CRC(cf9d3609) SHA1(6376891f478185d26370466bef92f0c5304d58d3) ) /* but the data doesn't change. Verified for v1.3 & v1.6 */
 
 	ROM_REGION32_LE( 0x3000000, "user2", 0 )
 	ROM_LOAD32_WORD( "exotica.u14", 0x0000000, 0x400000, CRC(84452fc2) SHA1(06d87263f83ef079e6c5fb9de620e0135040c858) )
@@ -1296,8 +1295,8 @@ ROM_START( crusnexoa )
 	ROM_REGION32_LE( 0x0800000, "user1", 0 )
 	ROM_LOAD32_WORD( "exotica-20.u10", 0x0000000, 0x200000, CRC(43d80f54) SHA1(25683d835f3ed3dee99da33280ae6e21865801e4) ) /* Version 2.0  Fri Apr 07, 2000  17:55:07 */
 	ROM_LOAD32_WORD( "exotica-20.u11", 0x0000002, 0x200000, CRC(dba26b69) SHA1(4900ac3fe67664a543dcd66e41793874f6cdc07f) )
-	ROM_LOAD32_WORD( "exotica-10.u12", 0x0400000, 0x200000, CRC(21f122b2) SHA1(5473401ec954bf9ab66a8283bd08d17c7960cd29) ) /* U12 & U13 should be v1.6 */
-	ROM_LOAD32_WORD( "exotica-10.u13", 0x0400002, 0x200000, CRC(cf9d3609) SHA1(6376891f478185d26370466bef92f0c5304d58d3) )
+	ROM_LOAD32_WORD( "exotica-10.u12", 0x0400000, 0x200000, CRC(21f122b2) SHA1(5473401ec954bf9ab66a8283bd08d17c7960cd29) ) /* These 2 roms might be labeled as a different version, */
+	ROM_LOAD32_WORD( "exotica-10.u13", 0x0400002, 0x200000, CRC(cf9d3609) SHA1(6376891f478185d26370466bef92f0c5304d58d3) ) /* but the data doesn't change. Verified for v1.3 & v1.6 */
 
 	ROM_REGION32_LE( 0x3000000, "user2", 0 )
 	ROM_LOAD32_WORD( "exotica.u14", 0x0000000, 0x400000, CRC(84452fc2) SHA1(06d87263f83ef079e6c5fb9de620e0135040c858) )
@@ -1324,8 +1323,8 @@ ROM_START( crusnexob )
 	ROM_REGION32_LE( 0x0800000, "user1", 0 )
 	ROM_LOAD32_WORD( "exotica-16.u10", 0x0000000, 0x200000, CRC(65450140) SHA1(cad41a2cad48426de01feb78d3f71f768e3fc872) ) /* Version 1.6  Tue Feb 22, 2000  10:25:01 */
 	ROM_LOAD32_WORD( "exotica-16.u11", 0x0000002, 0x200000, CRC(e994891f) SHA1(bb088729b665864c7f3b79b97c3c86f9c8f68770) )
-	ROM_LOAD32_WORD( "exotica-10.u12", 0x0400000, 0x200000, CRC(21f122b2) SHA1(5473401ec954bf9ab66a8283bd08d17c7960cd29) ) /* U12 & U13 should be v1.6 */
-	ROM_LOAD32_WORD( "exotica-10.u13", 0x0400002, 0x200000, CRC(cf9d3609) SHA1(6376891f478185d26370466bef92f0c5304d58d3) )
+	ROM_LOAD32_WORD( "exotica-10.u12", 0x0400000, 0x200000, CRC(21f122b2) SHA1(5473401ec954bf9ab66a8283bd08d17c7960cd29) ) /* These 2 roms might be labeled as a different version, */
+	ROM_LOAD32_WORD( "exotica-10.u13", 0x0400002, 0x200000, CRC(cf9d3609) SHA1(6376891f478185d26370466bef92f0c5304d58d3) ) /* but the data doesn't change. Verified for v1.3 & v1.6 */
 
 	ROM_REGION32_LE( 0x3000000, "user2", 0 )
 	ROM_LOAD32_WORD( "exotica.u14", 0x0000000, 0x400000, CRC(84452fc2) SHA1(06d87263f83ef079e6c5fb9de620e0135040c858) )

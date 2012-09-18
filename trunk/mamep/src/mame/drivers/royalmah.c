@@ -194,16 +194,18 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(mjtensin_rtc_irq);
 	DECLARE_DRIVER_INIT(janptr96);
 	DECLARE_DRIVER_INIT(ippatsu);
+	virtual void palette_init();
+	DECLARE_PALETTE_INIT(mjderngr);
 };
 
 
 
 
-static PALETTE_INIT( royalmah )
+void royalmah_state::palette_init()
 {
 	offs_t i;
-	const UINT8 *prom = machine.root_device().memregion("proms")->base();
-	int len = machine.root_device().memregion("proms")->bytes();
+	const UINT8 *prom = machine().root_device().memregion("proms")->base();
+	int len = machine().root_device().memregion("proms")->bytes();
 
 	for (i = 0; i < len; i++)
 	{
@@ -229,16 +231,16 @@ static PALETTE_INIT( royalmah )
 		bit2 = (data >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color_rgb(machine,i, r,g,b);
+		palette_set_color_rgb(machine(),i, r,g,b);
 	}
 }
 
 
-static PALETTE_INIT( mjderngr )
+PALETTE_INIT_MEMBER(royalmah_state,mjderngr)
 {
 	offs_t i;
-	const UINT8 *prom = machine.root_device().memregion("proms")->base();
-	int len = machine.root_device().memregion("proms")->bytes();
+	const UINT8 *prom = machine().root_device().memregion("proms")->base();
+	int len = machine().root_device().memregion("proms")->bytes();
 
 	for (i = 0; i < len / 2; i++)
 	{
@@ -249,7 +251,7 @@ static PALETTE_INIT( mjderngr )
 		UINT8 g = BITSWAP8((data >>  5) & 0x1f,7,6,5,0,1,2,3,4 );
 		UINT8 b = BITSWAP8((data >> 10) & 0x1f,7,6,5,0,1,2,3,4 );
 
-		palette_set_color_rgb(machine,i, pal5bit(r), pal5bit(g), pal5bit(b));
+		palette_set_color_rgb(machine(),i, pal5bit(r), pal5bit(g), pal5bit(b));
 	}
 }
 
@@ -395,7 +397,7 @@ WRITE8_MEMBER(royalmah_state::suzume_bank_w)
 
 	m_suzume_bank = data;
 
-logerror("%04x: bank %02x\n",cpu_get_pc(&space.device()),data);
+logerror("%04x: bank %02x\n",space.device().safe_pc(),data);
 
 	/* bits 6, 4 and 3 used for something input related? */
 
@@ -430,7 +432,7 @@ WRITE8_MEMBER(royalmah_state::tontonb_bank_w)
 	UINT8 *rom = memregion("maincpu")->base();
 	int address;
 
-logerror("%04x: bank %02x\n",cpu_get_pc(&space.device()),data);
+logerror("%04x: bank %02x\n",space.device().safe_pc(),data);
 
 	if (data == 0) return;	// tontonb fix?
 
@@ -448,7 +450,7 @@ WRITE8_MEMBER(royalmah_state::dynax_bank_w)
 	UINT8 *rom = memregion("maincpu")->base();
 	int address;
 
-//logerror("%04x: bank %02x\n",cpu_get_pc(&space.device()),data);
+//logerror("%04x: bank %02x\n",space.device().safe_pc(),data);
 
 	m_dsw_select = data & 0x60;
 
@@ -762,7 +764,7 @@ READ8_MEMBER(royalmah_state::jansou_6405_r)
 WRITE8_MEMBER(royalmah_state::jansou_sound_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -896,7 +898,7 @@ READ8_MEMBER(royalmah_state::mjifb_rom_io_r)
 		case 0x9011:	return ioport("SYSTEM")->read();
 	}
 
-	logerror("%04X: unmapped input read at %04X\n", cpu_get_pc(&space.device()), offset);
+	logerror("%04X: unmapped input read at %04X\n", space.device().safe_pc(), offset);
 	return 0xff;
 }
 
@@ -925,7 +927,7 @@ WRITE8_MEMBER(royalmah_state::mjifb_rom_io_w)
 			return;
 	}
 
-	logerror("%04X: unmapped input write at %04X = %02X\n", cpu_get_pc(&space.device()), offset,data);
+	logerror("%04X: unmapped input write at %04X = %02X\n", space.device().safe_pc(), offset,data);
 }
 
 WRITE8_MEMBER(royalmah_state::mjifb_videoram_w)
@@ -1005,7 +1007,7 @@ READ8_MEMBER(royalmah_state::mjdejavu_rom_io_r)
 		case 0x9011:	return ioport("SYSTEM")->read();
 	}
 
-	logerror("%04X: unmapped input read at %04X\n", cpu_get_pc(&space.device()), offset);
+	logerror("%04X: unmapped input read at %04X\n", space.device().safe_pc(), offset);
 	return 0xff;
 }
 
@@ -1031,7 +1033,7 @@ WRITE8_MEMBER(royalmah_state::mjdejavu_rom_io_w)
 			return;
 	}
 
-	logerror("%04X: unmapped input write at %04X = %02X\n", cpu_get_pc(&space.device()), offset,data);
+	logerror("%04X: unmapped input write at %04X = %02X\n", space.device().safe_pc(), offset,data);
 }
 
 static ADDRESS_MAP_START( mjdejavu_map, AS_PROGRAM, 8, royalmah_state )
@@ -1123,7 +1125,7 @@ READ8_MEMBER(royalmah_state::cafetime_dsw_r)
 		case 0x03: return ioport("DSW4")->read();
 		case 0x04: return ioport("DSWTOP")->read();
 	}
-	logerror("%04X: unmapped dsw read %02X\n", cpu_get_pc(&space.device()), m_dsw_select);
+	logerror("%04X: unmapped dsw read %02X\n", space.device().safe_pc(), m_dsw_select);
 	return 0xff;
 }
 
@@ -1192,7 +1194,7 @@ READ8_MEMBER(royalmah_state::mjvegasa_rom_io_r)
 		return rtc->read(space, offset & 0xf);
 	}
 
-	logerror("%04X: unmapped IO read at %04X\n", cpu_get_pc(&space.device()), offset);
+	logerror("%04X: unmapped IO read at %04X\n", space.device().safe_pc(), offset);
 	return 0xff;
 }
 
@@ -1215,7 +1217,7 @@ WRITE8_MEMBER(royalmah_state::mjvegasa_rom_io_w)
 		return;
 	}
 
-	logerror("%04X: unmapped IO write at %04X = %02X\n", cpu_get_pc(&space.device()), offset,data);
+	logerror("%04X: unmapped IO write at %04X = %02X\n", space.device().safe_pc(), offset,data);
 }
 
 WRITE8_MEMBER(royalmah_state::mjvegasa_coin_counter_w)
@@ -3173,7 +3175,6 @@ static MACHINE_CONFIG_START( royalmah, royalmah_state )
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(16*2)
-	MCFG_PALETTE_INIT(royalmah)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_SIZE(256, 256)
@@ -3249,7 +3250,7 @@ static INTERRUPT_GEN( suzume_irq )
 {
 	royalmah_state *state = device->machine().driver_data<royalmah_state>();
 	if ( state->m_suzume_bank & 0x40 )
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_DERIVED( suzume, dondenmj )
@@ -3285,7 +3286,7 @@ static MACHINE_CONFIG_DERIVED( mjderngr, dondenmj )
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(16*32)
-	MCFG_PALETTE_INIT(mjderngr)
+	MCFG_PALETTE_INIT_OVERRIDE(royalmah_state,mjderngr)
 MACHINE_CONFIG_END
 
 /* It runs in IM 2, thus needs a vector on the data bus */
@@ -3295,15 +3296,15 @@ static TIMER_DEVICE_CALLBACK( janptr96_interrupt )
 	int scanline = param;
 
 	if(scanline == 248)
-		device_set_input_line_and_vector(state->m_maincpu, 0, HOLD_LINE, 0x80);	// vblank
+		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x80);	// vblank
 
 	if(scanline == 0)
-		device_set_input_line_and_vector(state->m_maincpu, 0, HOLD_LINE, 0x84);	// demo
+		state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x84);	// demo
 }
 
 WRITE_LINE_MEMBER(royalmah_state::janptr96_rtc_irq)
 {
-	device_set_input_line_and_vector(m_maincpu, 0, HOLD_LINE, 0x82);	// rtc
+	m_maincpu->set_input_line_and_vector(0, HOLD_LINE, 0x82);	// rtc
 }
 
 static MSM6242_INTERFACE( janptr96_rtc_intf )
@@ -3353,12 +3354,12 @@ static INTERRUPT_GEN( mjtensin_interrupt )
 {
 	royalmah_state *state = device->machine().driver_data<royalmah_state>();
 
-	device_set_input_line(state->m_maincpu, INPUT_LINE_IRQ0, HOLD_LINE);	// vblank
+	state->m_maincpu->set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);	// vblank
 }
 
 WRITE_LINE_MEMBER(royalmah_state::mjtensin_rtc_irq)
 {
-	device_set_input_line(m_maincpu, INPUT_LINE_IRQ1, HOLD_LINE);	// rtc
+	m_maincpu->set_input_line(INPUT_LINE_IRQ1, HOLD_LINE);	// rtc
 }
 
 

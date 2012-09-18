@@ -62,6 +62,39 @@ public:
 	DECLARE_DRIVER_INIT(spelunk2);
 	DECLARE_DRIVER_INIT(kidniki);
 	DECLARE_DRIVER_INIT(battroad);
+	TILE_GET_INFO_MEMBER(get_kungfum_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_ldrun_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_ldrun2_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_battroad_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_battroad_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_ldrun4_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_lotlot_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_lotlot_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_kidniki_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_kidniki_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_spelunkr_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_spelunkr_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_spelunk2_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_youjyudn_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_youjyudn_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_horizon_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_VIDEO_START(kungfum);
+	DECLARE_VIDEO_START(battroad);
+	DECLARE_PALETTE_INIT(battroad);
+	DECLARE_VIDEO_START(ldrun2);
+	DECLARE_VIDEO_START(ldrun4);
+	DECLARE_VIDEO_START(lotlot);
+	DECLARE_PALETTE_INIT(lotlot);
+	DECLARE_VIDEO_START(kidniki);
+	DECLARE_VIDEO_START(spelunkr);
+	DECLARE_VIDEO_START(spelunk2);
+	DECLARE_PALETTE_INIT(spelunk2);
+	DECLARE_VIDEO_START(youjyudn);
+	DECLARE_VIDEO_START(horizon);
 };
 
 
@@ -69,22 +102,22 @@ public:
 
 
 
-PALETTE_INIT( m62 );
-PALETTE_INIT( lotlot );
-PALETTE_INIT( battroad );
-PALETTE_INIT( spelunk2 );
 
-VIDEO_START( battroad );
-VIDEO_START( horizon );
-VIDEO_START( kidniki );
-VIDEO_START( kungfum );
-VIDEO_START( ldrun );
-VIDEO_START( ldrun2 );
-VIDEO_START( ldrun4 );
-VIDEO_START( lotlot );
-VIDEO_START( spelunkr );
-VIDEO_START( spelunk2 );
-VIDEO_START( youjyudn );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 SCREEN_UPDATE_IND16( battroad );
 SCREEN_UPDATE_IND16( horizon );

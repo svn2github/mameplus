@@ -202,27 +202,26 @@ int nes_ppu_vidaccess( device_t *device, int address, int data )
 	return data;
 }
 
-MACHINE_RESET( nes )
+void nes_state::machine_reset()
 {
-	nes_state *state = machine.driver_data<nes_state>();
 
 	/* Reset the mapper variables. Will also mark the char-gen ram as dirty */
-	if (state->m_disk_expansion && state->m_pcb_id == NO_BOARD)
-		state->m_ppu->set_hblank_callback(fds_irq);
+	if (m_disk_expansion && m_pcb_id == NO_BOARD)
+		m_ppu->set_hblank_callback(fds_irq);
 	else
-		nes_pcb_reset(machine);
+		nes_pcb_reset(machine());
 
 	/* Reset the serial input ports */
-	state->m_in_0.shift = 0;
-	state->m_in_1.shift = 0;
+	m_in_0.shift = 0;
+	m_in_1.shift = 0;
 
-	machine.device("maincpu")->reset();
+	machine().device("maincpu")->reset();
 }
 
 static TIMER_CALLBACK( nes_irq_callback )
 {
 	nes_state *state = machine.driver_data<nes_state>();
-	device_set_input_line(state->m_maincpu, M6502_IRQ_LINE, HOLD_LINE);
+	state->m_maincpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
 	state->m_irq_timer->adjust(attotime::never);
 }
 
@@ -288,33 +287,32 @@ static void nes_state_register( running_machine &machine )
 	machine.save().register_postload(save_prepost_delegate(FUNC(nes_banks_restore), state));
 }
 
-MACHINE_START( nes )
+void nes_state::machine_start()
 {
-	nes_state *state = machine.driver_data<nes_state>();
 
-	state->m_ppu = machine.device<ppu2c0x_device>("ppu");
-	init_nes_core(machine);
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(nes_machine_stop),&machine));
+	m_ppu = machine().device<ppu2c0x_device>("ppu");
+	init_nes_core(machine());
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(nes_machine_stop),&machine()));
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_sound = machine.device("nessound");
-	state->m_cart = machine.device("cart");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_sound = machine().device("nessound");
+	m_cart = machine().device("cart");
 
 	// If we're starting famicom with no disk inserted, we still haven't initialized the VRAM needed for
 	// video emulation, so we need to take care of it now
-	if (!state->m_vram)
+	if (!m_vram)
 	{
-		state->m_vram = auto_alloc_array(machine, UINT8, 0x4000);
+		m_vram = auto_alloc_array(machine(), UINT8, 0x4000);
 		for (int i = 0; i < 8; i++)
 		{
-			state->m_chr_map[i].source = CHRRAM;
-			state->m_chr_map[i].origin = i * 0x400; // for save state uses!
-			state->m_chr_map[i].access = &state->m_vram[state->m_chr_map[i].origin];
+			m_chr_map[i].source = CHRRAM;
+			m_chr_map[i].origin = i * 0x400; // for save state uses!
+			m_chr_map[i].access = &m_vram[m_chr_map[i].origin];
 		}
 	}
 
-	state->m_irq_timer = machine.scheduler().timer_alloc(FUNC(nes_irq_callback));
-	nes_state_register(machine);
+	m_irq_timer = machine().scheduler().timer_alloc(FUNC(nes_irq_callback));
+	nes_state_register(machine());
 }
 
 static void nes_machine_stop( running_machine &machine )
@@ -376,7 +374,7 @@ READ8_MEMBER(nes_state::nes_IN0_r)
 		}
 
 		if (LOG_JOY)
-			logerror("joy 0 read, val: %02x, pc: %04x, bits read: %d, chan0: %08x\n", ret, cpu_get_pc(&space.device()), m_in_0.shift, m_in_0.i0);
+			logerror("joy 0 read, val: %02x, pc: %04x, bits read: %d, chan0: %08x\n", ret, space.device().safe_pc(), m_in_0.shift, m_in_0.i0);
 
 		m_in_0.shift++;
 	}
@@ -465,7 +463,7 @@ READ8_MEMBER(nes_state::nes_IN1_r)
 		}
 
 		if (LOG_JOY)
-			logerror("joy 1 read, val: %02x, pc: %04x, bits read: %d, chan0: %08x\n", ret, cpu_get_pc(&space.device()), m_in_1.shift, m_in_1.i0);
+			logerror("joy 1 read, val: %02x, pc: %04x, bits read: %d, chan0: %08x\n", ret, space.device().safe_pc(), m_in_1.shift, m_in_1.i0);
 
 		m_in_1.shift++;
 	}
@@ -1252,7 +1250,7 @@ DEVICE_IMAGE_LOAD( nes_cart )
 			{
 				auto_free(image.device().machine(), temp_prg);
 				auto_free(image.device().machine(), temp_chr);
-				fatalerror("UNIF should have a [MAPR] chunk to work. Check if your image has been corrupted");
+				fatalerror("UNIF should have a [MAPR] chunk to work. Check if your image has been corrupted\n");
 			}
 
 			if (!prg_start)
@@ -1341,9 +1339,9 @@ DEVICE_IMAGE_LOAD( nes_cart )
 
 		// validate the xml fields
 		if (!prg_size)
-			fatalerror("No PRG entry for this software! Please check if the xml list got corrupted");
+			fatalerror("No PRG entry for this software! Please check if the xml list got corrupted\n");
 		if (prg_size < 0x8000)
-			fatalerror("PRG entry is too small! Please check if the xml list got corrupted");
+			fatalerror("PRG entry is too small! Please check if the xml list got corrupted\n");
 
 		// Allocate class pointers for PRG/VROM/VRAM/WRAM and copy data there from the temp copies
 		state->m_prg = auto_alloc_array(image.device().machine(), UINT8, prg_size);
@@ -1538,13 +1536,13 @@ static void fds_irq( device_t *device, int scanline, int vblank, int blanked )
 	nes_state *state = device->machine().driver_data<nes_state>();
 
 	if (state->m_IRQ_enable_latch)
-		device_set_input_line(state->m_maincpu, M6502_IRQ_LINE, HOLD_LINE);
+		state->m_maincpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
 
 	if (state->m_IRQ_enable)
 	{
 		if (state->m_IRQ_count <= 114)
 		{
-			device_set_input_line(state->m_maincpu, M6502_IRQ_LINE, HOLD_LINE);
+			state->m_maincpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
 			state->m_IRQ_enable = 0;
 			state->m_fds_status0 |= 0x01;
 		}

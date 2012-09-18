@@ -28,7 +28,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	mugsmash_state *state = machine.driver_data<mugsmash_state>();
 	const UINT16 *source = state->m_spriteram;
 	const UINT16 *finish = source + 0x2000;
-	const gfx_element *gfx = machine.gfx[0];
+	gfx_element *gfx = machine.gfx[0];
 
 	while (source < finish)
 	{
@@ -59,7 +59,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 	}
 }
 
-static TILE_GET_INFO( get_mugsmash_tile_info1 )
+TILE_GET_INFO_MEMBER(mugsmash_state::get_mugsmash_tile_info1)
 {
 
 	/* fF-- cccc  nnnn nnnn */
@@ -70,14 +70,13 @@ static TILE_GET_INFO( get_mugsmash_tile_info1 )
        f = flip-Y
     */
 
-	mugsmash_state *state = machine.driver_data<mugsmash_state>();
 	int tileno, colour, fx;
 
-	tileno = state->m_videoram1[tile_index * 2 + 1];
-	colour = state->m_videoram1[tile_index * 2] & 0x000f;
-	fx = (state->m_videoram1[tile_index * 2] & 0xc0) >> 6;
+	tileno = m_videoram1[tile_index * 2 + 1];
+	colour = m_videoram1[tile_index * 2] & 0x000f;
+	fx = (m_videoram1[tile_index * 2] & 0xc0) >> 6;
 
-	SET_TILE_INFO(1, tileno, colour, TILE_FLIPYX(fx));
+	SET_TILE_INFO_MEMBER(1, tileno, colour, TILE_FLIPYX(fx));
 }
 
 WRITE16_MEMBER(mugsmash_state::mugsmash_videoram1_w)
@@ -87,7 +86,7 @@ WRITE16_MEMBER(mugsmash_state::mugsmash_videoram1_w)
 	m_tilemap1->mark_tile_dirty(offset / 2);
 }
 
-static TILE_GET_INFO( get_mugsmash_tile_info2 )
+TILE_GET_INFO_MEMBER(mugsmash_state::get_mugsmash_tile_info2)
 {
 
 	/* fF-- cccc  nnnn nnnn */
@@ -98,14 +97,13 @@ static TILE_GET_INFO( get_mugsmash_tile_info2 )
        f = flip-Y
     */
 
-	mugsmash_state *state = machine.driver_data<mugsmash_state>();
 	int tileno, colour, fx;
 
-	tileno = state->m_videoram2[tile_index * 2 + 1];
-	colour = state->m_videoram2[tile_index * 2] & 0x000f;
-	fx = (state->m_videoram2[tile_index * 2] & 0xc0) >> 6;
+	tileno = m_videoram2[tile_index * 2 + 1];
+	colour = m_videoram2[tile_index * 2] & 0x000f;
+	fx = (m_videoram2[tile_index * 2] & 0xc0) >> 6;
 
-	SET_TILE_INFO(1, tileno, 16 + colour, TILE_FLIPYX(fx));
+	SET_TILE_INFO_MEMBER(1, tileno, 16 + colour, TILE_FLIPYX(fx));
 }
 
 WRITE16_MEMBER(mugsmash_state::mugsmash_videoram2_w)
@@ -138,14 +136,13 @@ WRITE16_MEMBER(mugsmash_state::mugsmash_reg_w)
 	}
 }
 
-VIDEO_START( mugsmash )
+void mugsmash_state::video_start()
 {
-	mugsmash_state *state = machine.driver_data<mugsmash_state>();
 
-	state->m_tilemap1 = tilemap_create(machine, get_mugsmash_tile_info1, tilemap_scan_rows, 16, 16, 32, 32);
-	state->m_tilemap1->set_transparent_pen(0);
+	m_tilemap1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mugsmash_state::get_mugsmash_tile_info1),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_tilemap1->set_transparent_pen(0);
 
-	state->m_tilemap2 = tilemap_create(machine, get_mugsmash_tile_info2, tilemap_scan_rows, 16, 16, 32, 32);
+	m_tilemap2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mugsmash_state::get_mugsmash_tile_info2),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
 }
 
 SCREEN_UPDATE_IND16( mugsmash )

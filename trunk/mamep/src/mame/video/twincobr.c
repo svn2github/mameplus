@@ -40,45 +40,42 @@ const mc6845_interface twincobr_mc6845_intf =
     Callbacks for the TileMap code
 ***************************************************************************/
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(twincobr_state::get_bg_tile_info)
 {
-	twincobr_state *state = machine.driver_data<twincobr_state>();
 	int code, tile_number, color;
 
-	code = state->m_bgvideoram16[tile_index+state->m_bg_ram_bank];
+	code = m_bgvideoram16[tile_index+m_bg_ram_bank];
 	tile_number = code & 0x0fff;
 	color = (code & 0xf000) >> 12;
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			2,
 			tile_number,
 			color,
 			0);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(twincobr_state::get_fg_tile_info)
 {
-	twincobr_state *state = machine.driver_data<twincobr_state>();
 	int code, tile_number, color;
 
-	code = state->m_fgvideoram16[tile_index];
-	tile_number = (code & 0x0fff) | state->m_fg_rom_bank;
+	code = m_fgvideoram16[tile_index];
+	tile_number = (code & 0x0fff) | m_fg_rom_bank;
 	color = (code & 0xf000) >> 12;
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			tile_number,
 			color,
 			0);
 }
 
-static TILE_GET_INFO( get_tx_tile_info )
+TILE_GET_INFO_MEMBER(twincobr_state::get_tx_tile_info)
 {
-	twincobr_state *state = machine.driver_data<twincobr_state>();
 	int code, tile_number, color;
 
-	code = state->m_txvideoram16[tile_index];
+	code = m_txvideoram16[tile_index];
 	tile_number = code & 0x07ff;
 	color = (code & 0xf800) >> 11;
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			tile_number,
 			color,
@@ -93,52 +90,51 @@ static void twincobr_create_tilemaps(running_machine &machine)
 {
 	twincobr_state *state = machine.driver_data<twincobr_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info,tilemap_scan_rows,8,8,64,64);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info,tilemap_scan_rows,8,8,64,64);
-	state->m_tx_tilemap = tilemap_create(machine, get_tx_tile_info,tilemap_scan_rows,8,8,64,32);
+	state->m_bg_tilemap = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(twincobr_state::get_bg_tile_info),state),TILEMAP_SCAN_ROWS,8,8,64,64);
+	state->m_fg_tilemap = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(twincobr_state::get_fg_tile_info),state),TILEMAP_SCAN_ROWS,8,8,64,64);
+	state->m_tx_tilemap = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(twincobr_state::get_tx_tile_info),state),TILEMAP_SCAN_ROWS,8,8,64,32);
 
 	state->m_fg_tilemap->set_transparent_pen(0);
 	state->m_tx_tilemap->set_transparent_pen(0);
 }
 
-VIDEO_START( toaplan0 )
+VIDEO_START_MEMBER(twincobr_state,toaplan0)
 {
-	twincobr_state *state = machine.driver_data<twincobr_state>();
 
 	/* the video RAM is accessed via ports, it's not memory mapped */
-	state->m_txvideoram_size = 0x0800;
-	state->m_bgvideoram_size = 0x2000;	/* banked two times 0x1000 */
-	state->m_fgvideoram_size = 0x1000;
+	m_txvideoram_size = 0x0800;
+	m_bgvideoram_size = 0x2000;	/* banked two times 0x1000 */
+	m_fgvideoram_size = 0x1000;
 
-	twincobr_create_tilemaps(machine);
+	twincobr_create_tilemaps(machine());
 
-	state->m_txvideoram16 = auto_alloc_array_clear(machine, UINT16, state->m_txvideoram_size);
-	state->m_fgvideoram16 = auto_alloc_array_clear(machine, UINT16, state->m_fgvideoram_size);
-	state->m_bgvideoram16 = auto_alloc_array_clear(machine, UINT16, state->m_bgvideoram_size);
+	m_txvideoram16 = auto_alloc_array_clear(machine(), UINT16, m_txvideoram_size);
+	m_fgvideoram16 = auto_alloc_array_clear(machine(), UINT16, m_fgvideoram_size);
+	m_bgvideoram16 = auto_alloc_array_clear(machine(), UINT16, m_bgvideoram_size);
 
-	state->m_display_on = 0;
-	twincobr_display(machine, state->m_display_on);
+	m_display_on = 0;
+	twincobr_display(machine(), m_display_on);
 
-	state_save_register_global_pointer(machine, state->m_txvideoram16, state->m_txvideoram_size);
-	state_save_register_global_pointer(machine, state->m_fgvideoram16, state->m_fgvideoram_size);
-	state_save_register_global_pointer(machine, state->m_bgvideoram16, state->m_bgvideoram_size);
-	state_save_register_global(machine, state->m_txoffs);
-	state_save_register_global(machine, state->m_fgoffs);
-	state_save_register_global(machine, state->m_bgoffs);
-	state_save_register_global(machine, state->m_scroll_x);
-	state_save_register_global(machine, state->m_scroll_y);
-	state_save_register_global(machine, state->m_txscrollx);
-	state_save_register_global(machine, state->m_fgscrollx);
-	state_save_register_global(machine, state->m_bgscrollx);
-	state_save_register_global(machine, state->m_txscrolly);
-	state_save_register_global(machine, state->m_fgscrolly);
-	state_save_register_global(machine, state->m_bgscrolly);
-	state_save_register_global(machine, state->m_display_on);
-	state_save_register_global(machine, state->m_fg_rom_bank);
-	state_save_register_global(machine, state->m_bg_ram_bank);
-	state_save_register_global(machine, state->m_flip_screen);
-	state_save_register_global(machine, state->m_wardner_sprite_hack);
-	machine.save().register_postload(save_prepost_delegate(FUNC(twincobr_restore_screen), &machine));
+	state_save_register_global_pointer(machine(), m_txvideoram16, m_txvideoram_size);
+	state_save_register_global_pointer(machine(), m_fgvideoram16, m_fgvideoram_size);
+	state_save_register_global_pointer(machine(), m_bgvideoram16, m_bgvideoram_size);
+	state_save_register_global(machine(), m_txoffs);
+	state_save_register_global(machine(), m_fgoffs);
+	state_save_register_global(machine(), m_bgoffs);
+	state_save_register_global(machine(), m_scroll_x);
+	state_save_register_global(machine(), m_scroll_y);
+	state_save_register_global(machine(), m_txscrollx);
+	state_save_register_global(machine(), m_fgscrollx);
+	state_save_register_global(machine(), m_bgscrollx);
+	state_save_register_global(machine(), m_txscrolly);
+	state_save_register_global(machine(), m_fgscrolly);
+	state_save_register_global(machine(), m_bgscrolly);
+	state_save_register_global(machine(), m_display_on);
+	state_save_register_global(machine(), m_fg_rom_bank);
+	state_save_register_global(machine(), m_bg_ram_bank);
+	state_save_register_global(machine(), m_flip_screen);
+	state_save_register_global(machine(), m_wardner_sprite_hack);
+	machine().save().register_postload(save_prepost_delegate(FUNC(twincobr_restore_screen), &machine()));
 }
 
 static void twincobr_restore_screen(running_machine &machine)

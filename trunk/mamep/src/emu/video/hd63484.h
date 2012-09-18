@@ -14,12 +14,30 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
-DECLARE_LEGACY_DEVICE(HD63484, hd63484);
+class hd63484_device : public device_t
+{
+public:
+	hd63484_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~hd63484_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type HD63484;
+
 
 #define HD63484_RAM_SIZE 0x100000
 
-typedef struct _hd63484_interface hd63484_interface;
-struct _hd63484_interface
+struct hd63484_interface
 {
 	int        skattva_hack;
 };

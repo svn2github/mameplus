@@ -136,7 +136,7 @@ class wardner_state : public twincobr_state
 {
 public:
 	wardner_state(const machine_config &mconfig, device_type type, const char *tag)
-		: twincobr_state(mconfig, type,tag),
+		: twincobr_state(mconfig, type, tag),
 		  m_rambase_c000(*this, "rambase_c000")
 	{
 	}
@@ -366,7 +366,7 @@ static const gfx_layout spritelayout =
 /* handler called by the 3812 emulator when the internal timers cause an IRQ */
 static void irqhandler(device_t *device, int linestate)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, linestate);
+	device->machine().device("audiocpu")->execute().set_input_line(0, linestate);
 }
 
 static const ym3812_interface ym3812_config =
@@ -404,7 +404,7 @@ static MACHINE_CONFIG_START( wardner, wardner_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))		/* 100 CPU slices per frame */
 
-	MCFG_MACHINE_RESET(wardner)
+	MCFG_MACHINE_RESET_OVERRIDE(wardner_state,wardner)
 
 	/* video hardware */
 	MCFG_MC6845_ADD("crtc", HD6845, XTAL_14MHz/4, twincobr_mc6845_intf)	/* 3.5MHz measured on CLKin */
@@ -420,7 +420,7 @@ static MACHINE_CONFIG_START( wardner, wardner_state )
 	MCFG_GFXDECODE(wardner)
 	MCFG_PALETTE_LENGTH(1792)
 
-	MCFG_VIDEO_START(toaplan0)
+	MCFG_VIDEO_START_OVERRIDE(wardner_state,toaplan0)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

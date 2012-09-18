@@ -18,19 +18,19 @@ INLINE void common_get_piv_tile_info( running_machine &machine, tile_data &tilei
 			TILE_FLIPYX( (attr & 0xc0) >> 6));
 }
 
-static TILE_GET_INFO( get_piv0_tile_info )
+TILE_GET_INFO_MEMBER(wgp_state::get_piv0_tile_info)
 {
-	common_get_piv_tile_info(machine, tileinfo, tile_index, 0);
+	common_get_piv_tile_info(machine(), tileinfo, tile_index, 0);
 }
 
-static TILE_GET_INFO( get_piv1_tile_info )
+TILE_GET_INFO_MEMBER(wgp_state::get_piv1_tile_info)
 {
-	common_get_piv_tile_info(machine, tileinfo, tile_index, 1);
+	common_get_piv_tile_info(machine(), tileinfo, tile_index, 1);
 }
 
-static TILE_GET_INFO( get_piv2_tile_info )
+TILE_GET_INFO_MEMBER(wgp_state::get_piv2_tile_info)
 {
-	common_get_piv_tile_info(machine, tileinfo, tile_index, 2);
+	common_get_piv_tile_info(machine(), tileinfo, tile_index, 2);
 }
 
 
@@ -38,9 +38,9 @@ static void wgp_core_vh_start( running_machine &machine, int piv_xoffs, int piv_
 {
 	wgp_state *state = machine.driver_data<wgp_state>();
 
-	state->m_piv_tilemap[0] = tilemap_create(machine, get_piv0_tile_info, tilemap_scan_rows, 16, 16, 64, 64);
-	state->m_piv_tilemap[1] = tilemap_create(machine, get_piv1_tile_info, tilemap_scan_rows, 16, 16, 64, 64);
-	state->m_piv_tilemap[2] = tilemap_create(machine, get_piv2_tile_info, tilemap_scan_rows, 16, 16, 64, 64);
+	state->m_piv_tilemap[0] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(wgp_state::get_piv0_tile_info),state), TILEMAP_SCAN_ROWS, 16, 16, 64, 64);
+	state->m_piv_tilemap[1] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(wgp_state::get_piv1_tile_info),state), TILEMAP_SCAN_ROWS, 16, 16, 64, 64);
+	state->m_piv_tilemap[2] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(wgp_state::get_piv2_tile_info),state), TILEMAP_SCAN_ROWS, 16, 16, 64, 64);
 
 	state->m_piv_xoffs = piv_xoffs;
 	state->m_piv_yoffs = piv_yoffs;
@@ -67,14 +67,14 @@ static void wgp_core_vh_start( running_machine &machine, int piv_xoffs, int piv_
 	state->save_item(NAME(state->m_piv_scrolly));
 }
 
-VIDEO_START( wgp )
+void wgp_state::video_start()
 {
-	wgp_core_vh_start(machine, 32, 16);
+	wgp_core_vh_start(machine(), 32, 16);
 }
 
-VIDEO_START( wgp2 )
+VIDEO_START_MEMBER(wgp_state,wgp2)
 {
-	wgp_core_vh_start(machine, 32, 16);
+	wgp_core_vh_start(machine(), 32, 16);
 }
 
 
@@ -352,7 +352,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	UINT8 small_sprite, col, flipx, flipy;
 	UINT16 code, bigsprite, map_index;
 //  UINT16 rotate = 0;
-	UINT16 tile_mask = (machine.gfx[0]->total_elements) - 1;
+	UINT16 tile_mask = (machine.gfx[0]->elements()) - 1;
 	static const int primasks[2] = {0x0, 0xfffc};	/* fff0 => under rhs of road only */
 
 	for (offs = 0x1ff; offs >= 0; offs--)

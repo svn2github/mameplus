@@ -19,18 +19,22 @@ public:
 	tilemap_t *m_tilemap1;
 	tilemap_t *m_tilemap2;
 
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE16_MEMBER(mugsmash_reg2_w);
 	DECLARE_READ16_MEMBER(mugsmash_input_ports_r);
 	DECLARE_WRITE16_MEMBER(mugsmash_videoram1_w);
 	DECLARE_WRITE16_MEMBER(mugsmash_videoram2_w);
 	DECLARE_WRITE16_MEMBER(mugsmash_reg_w);
+	TILE_GET_INFO_MEMBER(get_mugsmash_tile_info1);
+	TILE_GET_INFO_MEMBER(get_mugsmash_tile_info2);
+	virtual void machine_start();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/mugsmash.c -----------*/
 
-VIDEO_START( mugsmash );
+
 SCREEN_UPDATE_IND16( mugsmash );
 

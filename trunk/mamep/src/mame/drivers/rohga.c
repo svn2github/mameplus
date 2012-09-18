@@ -118,7 +118,7 @@
 READ16_MEMBER(rohga_state::rohga_irq_ack_r)
 {
 
-	device_set_input_line(m_maincpu, 6, CLEAR_LINE);
+	m_maincpu->set_input_line(6, CLEAR_LINE);
 	return 0;
 }
 
@@ -127,7 +127,7 @@ WRITE16_MEMBER(rohga_state::wizdfire_irq_ack_w)
 	/* This might actually do more, nitrobal for example sets 0xca->0xffff->0x80 at startup then writes 7 all the time
        except when a credit is inserted (writes 6 twice).
        Wizard Fire / Dark Seal 2 just writes 1 all the time, so I just don't trust it much for now... -AS */
-	device_set_input_line(m_maincpu, 6, CLEAR_LINE);
+	m_maincpu->set_input_line(6, CLEAR_LINE);
 }
 
 /**********************************************************************************/
@@ -138,7 +138,7 @@ static ADDRESS_MAP_START( rohga_map, AS_PROGRAM, 16, rohga_state )
 	AM_RANGE(0x200000, 0x20000f) AM_DEVWRITE_LEGACY("tilegen1", deco16ic_pf_control_w)
 	AM_RANGE(0x240000, 0x24000f) AM_DEVWRITE_LEGACY("tilegen2", deco16ic_pf_control_w)
 
-	AM_RANGE(0x280000, 0x2807ff) AM_MIRROR(0x800) AM_READWRITE_LEGACY(deco16_104_rohga_prot_r,deco16_104_rohga_prot_w)  AM_BASE_LEGACY(&deco16_prot_ram) /* Protection device */
+	AM_RANGE(0x280000, 0x2807ff) AM_MIRROR(0x800) AM_READWRITE_LEGACY(deco16_104_rohga_prot_r,deco16_104_rohga_prot_w)  AM_SHARE("prot16ram") /* Protection device */
 
 	AM_RANGE(0x2c0000, 0x2c0001) AM_READ_PORT("DSW3")
 
@@ -191,7 +191,7 @@ static ADDRESS_MAP_START( wizdfire_map, AS_PROGRAM, 16, rohga_state )
 	AM_RANGE(0x380000, 0x381fff) AM_RAM_DEVWRITE_LEGACY("deco_common", decocomn_buffered_palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0x390008, 0x390009) AM_DEVWRITE_LEGACY("deco_common", decocomn_palette_dma_w)
 
-	AM_RANGE(0xfe4000, 0xfe47ff) AM_READWRITE_LEGACY(deco16_104_prot_r,deco16_104_prot_w) AM_BASE_LEGACY(&deco16_prot_ram) /* Protection device */
+	AM_RANGE(0xfe4000, 0xfe47ff) AM_READWRITE_LEGACY(deco16_104_prot_r,deco16_104_prot_w) AM_SHARE("prot16ram") /* Protection device */
 	AM_RANGE(0xfdc000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -224,7 +224,7 @@ static ADDRESS_MAP_START( nitrobal_map, AS_PROGRAM, 16, rohga_state )
 	AM_RANGE(0x390008, 0x390009) AM_DEVWRITE_LEGACY("deco_common", decocomn_palette_dma_w)
 
 	AM_RANGE(0xfec000, 0xff3fff) AM_RAM
-	AM_RANGE(0xff4000, 0xff47ff) AM_MIRROR(0x800) AM_READWRITE_LEGACY(deco16_146_nitroball_prot_r,deco16_146_nitroball_prot_w) AM_BASE_LEGACY(&deco16_prot_ram) /* Protection device */
+	AM_RANGE(0xff4000, 0xff47ff) AM_MIRROR(0x800) AM_READWRITE_LEGACY(deco16_146_nitroball_prot_r,deco16_146_nitroball_prot_w) AM_SHARE("prot16ram") /* Protection device */
 	AM_RANGE(0xff8000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -232,7 +232,7 @@ static ADDRESS_MAP_START( schmeisr_map, AS_PROGRAM, 16, rohga_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x200000, 0x20000f) AM_DEVWRITE_LEGACY("tilegen1", deco16ic_pf_control_w)
 	AM_RANGE(0x240000, 0x24000f) AM_DEVWRITE_LEGACY("tilegen2", deco16ic_pf_control_w)
-	AM_RANGE(0x280000, 0x2807ff) AM_MIRROR(0x800) AM_READWRITE_LEGACY(deco16_104_rohga_prot_r,deco16_104_rohga_prot_w) AM_BASE_LEGACY(&deco16_prot_ram) /* Protection device */
+	AM_RANGE(0x280000, 0x2807ff) AM_MIRROR(0x800) AM_READWRITE_LEGACY(deco16_104_rohga_prot_r,deco16_104_rohga_prot_w) AM_SHARE("prot16ram") /* Protection device */
 
 	AM_RANGE(0x2c0000, 0x2c0001) AM_READ_PORT("DSW3")
 	AM_RANGE(0x300000, 0x300001) AM_READ_PORT("DSW3")  AM_WRITE(rohga_buffer_spriteram16_w) /* write 1 for sprite dma */
@@ -720,7 +720,7 @@ GFXDECODE_END
 static void sound_irq(device_t *device, int state)
 {
 	rohga_state *driver_state = device->machine().driver_data<rohga_state>();
-	device_set_input_line(driver_state->m_audiocpu, 1, state); /* IRQ 2 */
+	driver_state->m_audiocpu->set_input_line(1, state); /* IRQ 2 */
 }
 
 WRITE8_MEMBER(rohga_state::sound_bankswitch_w)
@@ -818,7 +818,7 @@ static MACHINE_CONFIG_START( rohga, rohga_state )
 	MCFG_GFXDECODE(rohga)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(rohga)
+	MCFG_VIDEO_START_OVERRIDE(rohga_state,rohga)
 
 	MCFG_DECOCOMN_ADD("deco_common", rohga_decocomn_intf)
 
@@ -880,7 +880,7 @@ static MACHINE_CONFIG_START( wizdfire, rohga_state )
 	MCFG_DEVICE_ADD("spritegen2", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 4);
 
-	MCFG_VIDEO_START(wizdfire)
+	MCFG_VIDEO_START_OVERRIDE(rohga_state,wizdfire)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -934,7 +934,7 @@ static MACHINE_CONFIG_START( nitrobal, rohga_state )
 	MCFG_DEVICE_ADD("spritegen2", DECO_SPRITE, 0)
 	decospr_device::set_gfx_region(*device, 4);
 
-	MCFG_VIDEO_START(wizdfire)
+	MCFG_VIDEO_START_OVERRIDE(rohga_state,wizdfire)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -976,7 +976,7 @@ static MACHINE_CONFIG_START( schmeisr, rohga_state )
 	MCFG_GFXDECODE(schmeisr)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(schmeisr)
+	MCFG_VIDEO_START_OVERRIDE(rohga_state,schmeisr)
 
 	MCFG_DECOCOMN_ADD("deco_common", rohga_decocomn_intf)
 
@@ -1544,6 +1544,8 @@ DRIVER_INIT_MEMBER(rohga_state,wizdfire)
 	deco74_decrypt_gfx(machine(), "gfx1");
 	deco74_decrypt_gfx(machine(), "gfx2");
 	deco74_decrypt_gfx(machine(), "gfx3");
+
+	decoprot_reset(machine());
 }
 
 DRIVER_INIT_MEMBER(rohga_state,nitrobal)

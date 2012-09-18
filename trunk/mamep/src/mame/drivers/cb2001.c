@@ -66,6 +66,11 @@ public:
 	DECLARE_WRITE16_MEMBER(cb2001_vidctrl_w);
 	DECLARE_WRITE16_MEMBER(cb2001_vidctrl2_w);
 	DECLARE_WRITE16_MEMBER(cb2001_bg_w);
+	TILE_GET_INFO_MEMBER(get_cb2001_reel1_tile_info);
+	TILE_GET_INFO_MEMBER(get_cb2001_reel2_tile_info);
+	TILE_GET_INFO_MEMBER(get_cb2001_reel3_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -456,10 +461,9 @@ WRITE16_MEMBER(cb2001_state::cb2001_vidctrl2_w)
 }
 
 
-static TILE_GET_INFO( get_cb2001_reel1_tile_info )
+TILE_GET_INFO_MEMBER(cb2001_state::get_cb2001_reel1_tile_info)
 {
-	cb2001_state *state = machine.driver_data<cb2001_state>();
-	int code = state->m_vram_bg[(0x0000/2) + tile_index/2];
+	int code = m_vram_bg[(0x0000/2) + tile_index/2];
 
 	if (tile_index&1)
 		code >>=8;
@@ -468,17 +472,16 @@ static TILE_GET_INFO( get_cb2001_reel1_tile_info )
 
 	int colour = 0;//= (cb2001_out_c&0x7) + 8;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code+0x800,
 			colour,
 			0);
 }
 
-static TILE_GET_INFO( get_cb2001_reel2_tile_info )
+TILE_GET_INFO_MEMBER(cb2001_state::get_cb2001_reel2_tile_info)
 {
-	cb2001_state *state = machine.driver_data<cb2001_state>();
-	int code = state->m_vram_bg[(0x0200/2) + tile_index/2];
+	int code = m_vram_bg[(0x0200/2) + tile_index/2];
 
 	if (tile_index&1)
 		code >>=8;
@@ -487,7 +490,7 @@ static TILE_GET_INFO( get_cb2001_reel2_tile_info )
 
 	int colour = 0;//(cb2001_out_c&0x7) + 8;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code+0x800,
 			colour,
@@ -495,10 +498,9 @@ static TILE_GET_INFO( get_cb2001_reel2_tile_info )
 }
 
 
-static TILE_GET_INFO( get_cb2001_reel3_tile_info )
+TILE_GET_INFO_MEMBER(cb2001_state::get_cb2001_reel3_tile_info)
 {
-	cb2001_state *state = machine.driver_data<cb2001_state>();
-	int code = state->m_vram_bg[(0x0400/2) + tile_index/2];
+	int code = m_vram_bg[(0x0400/2) + tile_index/2];
 	int colour = 0;//(cb2001_out_c&0x7) + 8;
 
 	if (tile_index&1)
@@ -506,7 +508,7 @@ static TILE_GET_INFO( get_cb2001_reel3_tile_info )
 
 	code &=0xff;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code+0x800,
 			colour,
@@ -514,16 +516,15 @@ static TILE_GET_INFO( get_cb2001_reel3_tile_info )
 }
 
 
-static VIDEO_START(cb2001)
+void cb2001_state::video_start()
 {
-	cb2001_state *state = machine.driver_data<cb2001_state>();
-	state->m_reel1_tilemap = tilemap_create(machine,get_cb2001_reel1_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
-	state->m_reel2_tilemap = tilemap_create(machine,get_cb2001_reel2_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
-	state->m_reel3_tilemap = tilemap_create(machine,get_cb2001_reel3_tile_info,tilemap_scan_rows, 8, 32, 64, 8);
+	m_reel1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cb2001_state::get_cb2001_reel1_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
+	m_reel2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cb2001_state::get_cb2001_reel2_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
+	m_reel3_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cb2001_state::get_cb2001_reel3_tile_info),this),TILEMAP_SCAN_ROWS, 8, 32, 64, 8);
 
-	state->m_reel1_tilemap->set_scroll_cols(64);
-	state->m_reel2_tilemap->set_scroll_cols(64);
-	state->m_reel3_tilemap->set_scroll_cols(64);
+	m_reel1_tilemap->set_scroll_cols(64);
+	m_reel2_tilemap->set_scroll_cols(64);
+	m_reel3_tilemap->set_scroll_cols(64);
 }
 
 WRITE16_MEMBER(cb2001_state::cb2001_bg_w)
@@ -769,15 +770,15 @@ static GFXDECODE_START( cb2001 )
 	GFXDECODE_ENTRY( "gfx", 0, cb2001_layout32, 0x0, 32 )
 GFXDECODE_END
 
-static PALETTE_INIT(cb2001)
+void cb2001_state::palette_init()
 {
 	int i;
 	for (i = 0; i < 0x200; i++)
 	{
 		int r,g,b;
 
-		UINT8*proms = machine.root_device().memregion("proms")->base();
-		int length = machine.root_device().memregion("proms")->bytes();
+		UINT8*proms = machine().root_device().memregion("proms")->base();
+		int length = machine().root_device().memregion("proms")->bytes();
 		UINT16 dat;
 
 		dat = (proms[0x000+i] << 8) | proms[0x200+i];
@@ -789,11 +790,11 @@ static PALETTE_INIT(cb2001)
 
 		if (length==0x400) // are the cb2001 proms dumped incorrectly?
 		{
-			if (!(i&0x20)) palette_set_color(machine, (i&0x1f) | ((i&~0x3f)>>1), MAKE_RGB(r, g, b));
+			if (!(i&0x20)) palette_set_color(machine(), (i&0x1f) | ((i&~0x3f)>>1), MAKE_RGB(r, g, b));
 		}
 		else
 		{
-			palette_set_color(machine, i, MAKE_RGB(r, g, b));
+			palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 		}
 	}
 }
@@ -842,7 +843,6 @@ static MACHINE_CONFIG_START( cb2001, cb2001_state )
 
 	MCFG_GFXDECODE(cb2001)
 
-	MCFG_PALETTE_INIT( cb2001 )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -853,7 +853,6 @@ static MACHINE_CONFIG_START( cb2001, cb2001_state )
 
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(cb2001)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

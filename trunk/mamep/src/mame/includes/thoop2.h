@@ -17,10 +17,13 @@ public:
 	DECLARE_WRITE16_MEMBER(thoop2_coin_w);
 	DECLARE_READ16_MEMBER(DS5002FP_R);
 	DECLARE_WRITE16_MEMBER(thoop2_vram_w);
+	TILE_GET_INFO_MEMBER(get_tile_info_thoop2_screen0);
+	TILE_GET_INFO_MEMBER(get_tile_info_thoop2_screen1);
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/thoop2.c -----------*/
 
-VIDEO_START( thoop2 );
+
 SCREEN_UPDATE_IND16( thoop2 );

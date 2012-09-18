@@ -42,17 +42,15 @@ static const gfx_layout charlayout =
 	8*8	/* every char takes 8 consecutive bytes */
 };
 
-static TILEMAP_MAPPER( tilemap_scan )
+TILEMAP_MAPPER_MEMBER(m10_state::tilemap_scan)
 {
 	return (31 - col) * 32 + row;
 }
 
 
-static void get_tile_info( running_machine &machine, tile_data &tileinfo, tilemap_memory_index tile_index, void *param )
+TILE_GET_INFO_MEMBER(m10_state::get_tile_info)
 {
-	m10_state *state = machine.driver_data<m10_state>();
-
-	SET_TILE_INFO(0, state->m_videoram[tile_index], state->m_colorram[tile_index] & 0x07, 0);
+	SET_TILE_INFO_MEMBER(0, m_videoram[tile_index], m_colorram[tile_index] & 0x07, 0);
 }
 
 
@@ -73,7 +71,7 @@ WRITE8_MEMBER(m10_state::m10_chargen_w)
 	if (m_chargen[offset] != data)
 	{
 		m_chargen[offset] = data;
-		gfx_element_mark_dirty(m_back_gfx, offset >> (3 + 5));
+		m_back_gfx->mark_dirty(offset >> (3 + 5));
 	}
 }
 
@@ -84,7 +82,7 @@ WRITE8_MEMBER(m10_state::m15_chargen_w)
 	if (m_chargen[offset] != data)
 	{
 		m_chargen[offset] = data;
-		gfx_element_mark_dirty(machine().gfx[0], offset >> 3);
+		machine().gfx[0]->mark_dirty(offset >> 3);
 	}
 }
 
@@ -100,30 +98,28 @@ INLINE void plot_pixel_m10( running_machine &machine, bitmap_ind16 &bm, int x, i
 				(IREMM10_HBSTART - 1) - (x - IREMM10_HBEND)) = col; // only when flip_screen(?)
 }
 
-VIDEO_START( m10 )
+VIDEO_START_MEMBER(m10_state,m10)
 {
-	m10_state *state = machine.driver_data<m10_state>();
 
-	state->m_tx_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan, 8, 8, 32, 32);
-	state->m_tx_tilemap->set_transparent_pen(0);
-	state->m_tx_tilemap->set_scrolldx(0, 62);
-	state->m_tx_tilemap->set_scrolldy(0, 0);
+	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m10_state::get_tile_info),this), tilemap_mapper_delegate(FUNC(m10_state::tilemap_scan),this), 8, 8, 32, 32);
+	m_tx_tilemap->set_transparent_pen(0);
+	m_tx_tilemap->set_scrolldx(0, 62);
+	m_tx_tilemap->set_scrolldy(0, 0);
 
-	state->m_back_gfx = gfx_element_alloc(machine, &backlayout, state->m_chargen, 8, 0);
+	m_back_gfx = auto_alloc(machine(), gfx_element(machine(), backlayout, m_chargen, 8, 0));
 
-	machine.gfx[1] = state->m_back_gfx;
+	machine().gfx[1] = m_back_gfx;
 	return ;
 }
 
-VIDEO_START( m15 )
+VIDEO_START_MEMBER(m10_state,m15)
 {
-	m10_state *state = machine.driver_data<m10_state>();
 
-	machine.gfx[0] = gfx_element_alloc(machine, &charlayout, state->m_chargen, 8, 0);
+	machine().gfx[0] = auto_alloc(machine(), gfx_element(machine(), charlayout, m_chargen, 8, 0));
 
-	state->m_tx_tilemap = tilemap_create(machine, get_tile_info,tilemap_scan, 8, 8, 32, 32);
-	state->m_tx_tilemap->set_scrolldx(0, 116);
-	state->m_tx_tilemap->set_scrolldy(0, 0);
+	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m10_state::get_tile_info),this),tilemap_mapper_delegate(FUNC(m10_state::tilemap_scan),this), 8, 8, 32, 32);
+	m_tx_tilemap->set_scrolldx(0, 116);
+	m_tx_tilemap->set_scrolldy(0, 0);
 
 	return ;
 }

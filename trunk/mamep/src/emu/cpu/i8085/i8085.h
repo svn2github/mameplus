@@ -36,8 +36,7 @@ enum
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _i8085_config i8085_config;
-struct _i8085_config
+struct i8085_config
 {
 	devcb_write8		out_status_func;	/* STATUS changed callback */
 	devcb_write_line	out_inte_func;		/* INTE changed callback */
@@ -56,6 +55,6 @@ DECLARE_LEGACY_CPU_DEVICE(I8085A, i8085);
 
 CPU_DISASSEMBLE( i8085 );
 
-#define i8085_set_sid(cpu, sid)		cpu_set_reg(cpu, I8085_SID, sid)
+#define i8085_set_sid(cpu, sid)		(cpu)->state().set_state_int(I8085_SID, sid)
 
 #endif

@@ -70,8 +70,7 @@ struct QSOUND_CHANNEL
 	INT32 offset;	 /* current offset counter */
 };
 
-typedef struct _qsound_state qsound_state;
-struct _qsound_state
+struct qsound_state
 {
 	/* Private variables */
 	sound_stream * stream;				/* Audio stream */
@@ -91,7 +90,7 @@ INLINE qsound_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == QSOUND);
-	return (qsound_state *)downcast<legacy_device_base *>(device)->token();
+	return (qsound_state *)downcast<qsound_device *>(device)->token();
 }
 
 
@@ -370,33 +369,51 @@ static STREAM_UPDATE( qsound_update )
 		fwrite(datap[1], samples*sizeof(QSOUND_SAMPLE), 1, chip->fpRawDataR);
 }
 
+const device_type QSOUND = &device_creator<qsound_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( qsound )
+qsound_device::qsound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, QSOUND, "Q-Sound", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(qsound_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( qsound );			break;
-		case DEVINFO_FCT_STOP:							info->stop = DEVICE_STOP_NAME( qsound );			break;
-		case DEVINFO_FCT_RESET:							/* Nothing */									break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Q-Sound");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Capcom custom");				break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(qsound_state));
 }
 
-/**************** end of file ****************/
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-DEFINE_LEGACY_SOUND_DEVICE(QSOUND, qsound);
+void qsound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void qsound_device::device_start()
+{
+	DEVICE_START_NAME( qsound )(this);
+}
+
+//-------------------------------------------------
+//  device_stop - device-specific stop
+//-------------------------------------------------
+
+void qsound_device::device_stop()
+{
+	DEVICE_STOP_NAME( qsound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void qsound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

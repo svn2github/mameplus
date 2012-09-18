@@ -149,11 +149,11 @@ INPUT_CHANGED_MEMBER(segag80r_state::service_switch)
 {
 	/* pressing the service switch sends an NMI */
 	if (newval)
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
-static MACHINE_START( g80r )
+void segag80r_state::machine_start()
 {
 	/* register for save states */
 }
@@ -171,7 +171,7 @@ static offs_t decrypt_offset(address_space *space, offs_t offset)
 	segag80r_state *state = space->machine().driver_data<segag80r_state>();
 
 	/* ignore anything but accesses via opcode $32 (LD $(XXYY),A) */
-	offs_t pc = cpu_get_previouspc(&space->device());
+	offs_t pc = space->device().safe_pcbase();
 	if ((UINT16)pc == 0xffff || space->read_byte(pc) != 0x32)
 		return offset;
 
@@ -286,7 +286,7 @@ WRITE8_MEMBER(segag80r_state::coin_count_w)
 WRITE8_MEMBER(segag80r_state::sindbadm_soundport_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(50));
 }
 
@@ -301,13 +301,11 @@ WRITE8_MEMBER(segag80r_state::sindbadm_misc_w)
 /* the data lines are flipped */
 WRITE8_MEMBER(segag80r_state::sindbadm_sn1_SN76496_w)
 {
-	device_t *device = machine().device("sn1");
-	sn76496_w(device, offset, BITSWAP8(data, 0,1,2,3,4,5,6,7));
+		m_sn1->write(space, offset, BITSWAP8(data, 0,1,2,3,4,5,6,7));
 }
 WRITE8_MEMBER(segag80r_state::sindbadm_sn2_SN76496_w)
 {
-	device_t *device = machine().device("sn2");
-	sn76496_w(device, offset, BITSWAP8(data, 0,1,2,3,4,5,6,7));
+		m_sn2->write(space, offset, BITSWAP8(data, 0,1,2,3,4,5,6,7));
 }
 
 
@@ -816,6 +814,22 @@ static GFXDECODE_START( monsterb )
 GFXDECODE_END
 
 
+/*************************************
+ *
+ *  Sound interface
+ *
+ *************************************/
+
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
 
 /*************************************
  *
@@ -831,7 +845,6 @@ static MACHINE_CONFIG_START( g80r_base, segag80r_state )
 	MCFG_CPU_IO_MAP(main_portmap)
 	MCFG_CPU_VBLANK_INT("screen", segag80r_vblank_start)
 
-	MCFG_MACHINE_START(g80r)
 
 	/* video hardware */
 	MCFG_GFXDECODE(segag80r)
@@ -841,7 +854,6 @@ static MACHINE_CONFIG_START( g80r_base, segag80r_state )
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_STATIC(segag80r)
 
-	MCFG_VIDEO_START(segag80r)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -934,11 +946,13 @@ static MACHINE_CONFIG_DERIVED( sindbadm, g80r_base )
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)
 
 	/* sound hardware */
-	MCFG_SOUND_ADD("sn1", SN76496, SINDBADM_SOUND_CLOCK/4)
+	MCFG_SOUND_ADD("sn1", SN76496_NEW, SINDBADM_SOUND_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496, SINDBADM_SOUND_CLOCK/2)
+	MCFG_SOUND_ADD("sn2", SN76496_NEW, SINDBADM_SOUND_CLOCK/2)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 

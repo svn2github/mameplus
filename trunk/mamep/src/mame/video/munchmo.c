@@ -2,12 +2,12 @@
 #include "includes/munchmo.h"
 
 
-PALETTE_INIT( mnchmobl )
+void munchmo_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		int bit0, bit1, bit2, r, g, b;
 
@@ -26,7 +26,7 @@ PALETTE_INIT( mnchmobl )
 		bit1 = BIT(color_prom[i], 7);
 		b = 0x4f * bit0 + 0xa8 * bit1;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 
@@ -41,16 +41,15 @@ WRITE8_MEMBER(munchmo_state::mnchmobl_flipscreen_w)
 }
 
 
-VIDEO_START( mnchmobl )
+void munchmo_state::video_start()
 {
-	munchmo_state *state = machine.driver_data<munchmo_state>();
-	state->m_tmpbitmap = auto_bitmap_ind16_alloc(machine, 512, 512);
+	m_tmpbitmap = auto_bitmap_ind16_alloc(machine(), 512, 512);
 }
 
 static void draw_status( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	munchmo_state *state = machine.driver_data<munchmo_state>();
-	const gfx_element *gfx = machine.gfx[0];
+	gfx_element *gfx = machine.gfx[0];
 	int row;
 
 	for (row = 0; row < 4; row++)
@@ -83,7 +82,7 @@ static void draw_background( running_machine &machine, bitmap_ind16 &bitmap, con
 */
 	munchmo_state *state = machine.driver_data<munchmo_state>();
 	UINT8 *rom = state->memregion("gfx2")->base();
-	const gfx_element *gfx = machine.gfx[1];
+	gfx_element *gfx = machine.gfx[1];
 	int offs;
 
 	for (offs = 0; offs < 0x100; offs++)
@@ -121,7 +120,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	int flags = state->m_vreg[7];							/*   XB?????? */
 	int xadjust = - 128 - 16 - ((flags & 0x80) ? 1 : 0);
 	int bank = (flags & 0x40) ? 1 : 0;
-	const gfx_element *gfx = machine.gfx[2 + bank];
+	gfx_element *gfx = machine.gfx[2 + bank];
 	int color_base = state->m_palette_bank * 4 + 3;
 	int i, j;
 	int firstsprite = state->m_vreg[4] & 0x3f;

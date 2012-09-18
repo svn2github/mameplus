@@ -8,7 +8,7 @@
 #define STATE_VCR		3
 
 /* todo: replace this with the PAIR structure */
-typedef union
+union pair
 {
 #ifdef LSB_FIRST
 	struct { unsigned char l,h; } b;
@@ -16,11 +16,11 @@ typedef union
 	struct { unsigned char h,l; } b;
 #endif
 	unsigned short int w;
-}pair;
+};
 
 /* the VDC context */
 
-typedef struct
+struct VDC
 {
 	int dvssr_write;			/* Set when the DVSSR register has been written to */
 	int physical_width;			/* Width of the display */
@@ -39,30 +39,30 @@ typedef struct
 	pair vdc_data[32];
 	int status;
 	int y_scroll;
-}VDC;
+};
 
-typedef struct {
+struct VCE {
 	UINT8	vce_control;			/* VCE control register */
 	pair	vce_address;			/* Current address in the palette */
 	pair	vce_data[512];			/* Palette data */
 	int		current_bitmap_line;	/* The current line in the display we are on */
 	bitmap_ind16	*bmp;
-}VCE;
+};
 
-typedef struct {
+struct VPC_PRIO {
 	UINT8 prio;
 	UINT8 vdc0_enabled;
 	UINT8 vdc1_enabled;
-} VPC_PRIO;
+};
 
-typedef struct {
+struct VPC {
 	VPC_PRIO vpc_prio[4];
 	UINT8	prio_map[512];		/* Pre-calculated priority map */
 	pair	priority;			/* Priority settings registers */
 	pair	window1;			/* Window 1 setting */
 	pair	window2;			/* Window 2 setting */
 	UINT8	vdc_select;			/* Which VDC do the ST0, ST1, and ST2 instructions write to */
-}VPC;
+};
 
 static VDC vdc[2];
 static VCE vce;
@@ -404,7 +404,7 @@ static void vdc_advance_line(running_machine &machine, int which)
 	}
 
 	if (ret)
-		cputag_set_input_line(machine, "maincpu", 0, HOLD_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 VIDEO_START( pce )
@@ -604,7 +604,7 @@ static UINT8 vdc_r( running_machine &machine, int which, offs_t offset )
 		case 0x00:
 			temp = vdc[which].status;
 			vdc[which].status &= ~(VDC_VD | VDC_DV | VDC_DS | VDC_RR | VDC_OR | VDC_CR);
-			cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
+			machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 			break;
 
 		case 0x02:
@@ -880,7 +880,7 @@ static void pce_refresh_sprites(running_machine &machine, int which, int line, U
 				{
 					/* note: flag is set only if irq is taken, Mizubaku Daibouken relies on this behaviour */
 					vdc[which].status |= VDC_OR;
-					cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+					machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 				}
 				continue;  /* Should cause an interrupt */
 			}
@@ -923,7 +923,7 @@ static void pce_refresh_sprites(running_machine &machine, int which, int line, U
 							else if (drawn[pixel_x] == 2)
 							{
 								if(vdc[which].vdc_data[CR].w & CR_CC)
-									cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+									machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 								vdc[which].status |= VDC_CR;
 							}
 						}
@@ -973,7 +973,7 @@ static void pce_refresh_sprites(running_machine &machine, int which, int line, U
 							else if ( drawn[pixel_x] == 2 )
 							{
 								if(vdc[which].vdc_data[CR].w & CR_CC)
-									cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+									machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 								vdc[which].status |= VDC_CR;
 							}
 						}
@@ -998,7 +998,7 @@ static void pce_refresh_sprites(running_machine &machine, int which, int line, U
 					{
 						/* note: flag is set only if irq is taken, Mizubaku Daibouken relies on this behaviour */
 						vdc[which].status |= VDC_OR;
-						cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+						machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 					}
 				}
 				else
@@ -1032,7 +1032,7 @@ static void pce_refresh_sprites(running_machine &machine, int which, int line, U
 								else if ( drawn[pixel_x] == 2 )
 								{
 									if(vdc[which].vdc_data[CR].w & CR_CC)
-										cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+										machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 									vdc[which].status |= VDC_CR;
 								}
 							}
@@ -1087,7 +1087,7 @@ static void vdc_do_dma(running_machine &machine, int which)
 	vdc[which].vdc_data[LENR].w = len;
 	if(dvc)
 	{
-		cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 	}
 
 }

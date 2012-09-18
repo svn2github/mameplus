@@ -911,13 +911,10 @@ READ32_HANDLER( sh4_internal_r )
 	{
 	case VERSION:
 		return PVR_SH7091;	// 0x040205c1, this is what a real SH7091 in a Dreamcast returns - the later Naomi BIOSes check and care!
-		break;
 	case PRR:
 		return 0;
-		break;
 	case IPRD:
 		return 0x00000000;	// SH7750 ignores writes here and always returns zero
-		break;
 	case RTCNT:
 		if ((sh4->m[RTCSR] >> 3) & 7)
 		{ // activated
@@ -927,7 +924,6 @@ READ32_HANDLER( sh4_internal_r )
 		}
 		else
 			return sh4->m[RTCNT];
-		break;
 
 /*********************************************************************************************************************
         INTC (Interrupt Controller)
@@ -1045,8 +1041,8 @@ void sh4_set_irln_input(device_t *device, int value)
 	if (sh4->irln == value)
 		return;
 	sh4->irln = value;
-	device_set_input_line(device, SH4_IRLn, ASSERT_LINE);
-	device_set_input_line(device, SH4_IRLn, CLEAR_LINE);
+	device->execute().set_input_line(SH4_IRLn, ASSERT_LINE);
+	device->execute().set_input_line(SH4_IRLn, CLEAR_LINE);
 }
 
 void sh4_set_irq_line(sh4_state *sh4, int irqline, int state) // set state of external interrupt line

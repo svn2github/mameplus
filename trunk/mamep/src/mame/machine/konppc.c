@@ -129,7 +129,7 @@ READ32_HANDLER( cgboard_dsp_comm_r_ppc )
 {
 	if (cgboard_id < MAX_CG_BOARDS)
 	{
-//      mame_printf_debug("dsp_cmd_r: (board %d) %08X, %08X at %08X\n", cgboard_id, offset, mem_mask, cpu_get_pc(&space->device()));
+//      mame_printf_debug("dsp_cmd_r: (board %d) %08X, %08X at %08X\n", cgboard_id, offset, mem_mask, space->device().safe_pc());
 		return dsp_comm_sharc[cgboard_id][offset] | (dsp_state[cgboard_id] << 16);
 	}
 	else
@@ -144,7 +144,7 @@ WRITE32_HANDLER( cgboard_dsp_comm_w_ppc )
 	const char *pcitag = (cgboard_id == 0) ? "k033906_1" : "k033906_2";
 	device_t *dsp = space->machine().device(dsptag);
 	device_t *k033906 = space->machine().device(pcitag);
-//  mame_printf_debug("dsp_cmd_w: (board %d) %08X, %08X, %08X at %08X\n", cgboard_id, data, offset, mem_mask, cpu_get_pc(&space->device()));
+//  mame_printf_debug("dsp_cmd_w: (board %d) %08X, %08X, %08X at %08X\n", cgboard_id, data, offset, mem_mask, space->device().safe_pc());
 
 	if (cgboard_id < MAX_CG_BOARDS)
 	{
@@ -161,15 +161,15 @@ WRITE32_HANDLER( cgboard_dsp_comm_w_ppc )
 					k033906_set_reg(k033906, (data & 0x20000000) ? 1 : 0);
 
 				if (data & 0x10000000)
-					device_set_input_line(dsp, INPUT_LINE_RESET, CLEAR_LINE);
+					dsp->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 				else
-					device_set_input_line(dsp, INPUT_LINE_RESET, ASSERT_LINE);
+					dsp->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 				if (data & 0x02000000)
-					device_set_input_line(dsp, INPUT_LINE_IRQ0, ASSERT_LINE);
+					dsp->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 
 				if (data & 0x04000000)
-					device_set_input_line(dsp, INPUT_LINE_IRQ1, ASSERT_LINE);
+					dsp->execute().set_input_line(INPUT_LINE_IRQ1, ASSERT_LINE);
 			}
 
 			if (ACCESSING_BITS_0_7)
@@ -224,13 +224,13 @@ static void dsp_comm_sharc_w(address_space *space, int board, int offset, UINT32
 		case CGBOARD_TYPE_ZR107:
 		case CGBOARD_TYPE_GTICLUB:
 		{
-			//cputag_set_input_line(machine, "dsp", SHARC_INPUT_FLAG0, ASSERT_LINE);
+			//machine.device("dsp")->execute().set_input_line(SHARC_INPUT_FLAG0, ASSERT_LINE);
 			sharc_set_flag_input(space->machine().device("dsp"), 0, ASSERT_LINE);
 
 			if (offset == 1)
 			{
 				if (data & 0x03)
-					cputag_set_input_line(space->machine(), "dsp", INPUT_LINE_IRQ2, ASSERT_LINE);
+					space->machine().device("dsp")->execute().set_input_line(INPUT_LINE_IRQ2, ASSERT_LINE);
 			}
 			break;
 		}

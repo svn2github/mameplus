@@ -9,22 +9,20 @@ WRITE8_MEMBER(blockade_state::blockade_videoram_w)
 	if (ioport("IN3")->read() & 0x80)
 	{
 		logerror("blockade_videoram_w: scanline %d\n", machine().primary_screen->vpos());
-		device_spin_until_interrupt(&space.device());
+		space.device().execute().spin_until_interrupt();
 	}
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(blockade_state::get_bg_tile_info)
 {
-	blockade_state *state = machine.driver_data<blockade_state>();
-	int code = state->m_videoram[tile_index];
+	int code = m_videoram[tile_index];
 
-	SET_TILE_INFO(0, code, 0, 0);
+	SET_TILE_INFO_MEMBER(0, code, 0, 0);
 }
 
-VIDEO_START( blockade )
+void blockade_state::video_start()
 {
-	blockade_state *state = machine.driver_data<blockade_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(blockade_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 SCREEN_UPDATE_IND16( blockade )

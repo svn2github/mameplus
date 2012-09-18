@@ -57,8 +57,7 @@ enum option_type
 	OPTIONTYPE_ENUM_VALUE
 };
 
-typedef struct _option_guide option_guide;
-struct _option_guide
+struct option_guide
 {
 	enum option_type option_type;
 	int parameter;
@@ -92,7 +91,7 @@ struct _option_guide
 #define OPTION_ENUM_END
 
 
-typedef enum
+enum optreserr_t 
 {
 	OPTIONRESOLUTION_ERROR_SUCCESS,
 	OPTIONRESOLUTION_ERROR_OUTOFMEMORY,
@@ -103,7 +102,7 @@ typedef enum
 	OPTIONRESOLUTION_ERROR_BADPARAM,
 	OPTIONRESOLUTION_ERROR_SYNTAX,
 	OPTIONRESOLTUION_ERROR_INTERNAL
-} optreserr_t;
+};
 
 
 
@@ -115,7 +114,7 @@ struct OptionResolutionError
 
 
 
-typedef struct _option_resolution option_resolution;
+struct option_resolution;
 
 struct OptionRange
 {

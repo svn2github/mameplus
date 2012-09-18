@@ -55,9 +55,6 @@
 // macro for specifying a clock derived from an owning device
 #define DERIVED_CLOCK(num, den)		(0xff000000 | ((num) << 12) | ((den) << 0))
 
-// shorthand for accessing devices by machine/type/tag
-#define devtag_reset(mach,tag)								(mach).device(tag)->reset()
-
 
 
 //**************************************************************************
@@ -180,6 +177,7 @@ public:
 	bool interface(device_state_interface *&intf) const { intf = m_state; return (intf != NULL); }
 	device_execute_interface &execute() const { assert(m_execute != NULL); return *m_execute; }
 	device_memory_interface &memory() const { assert(m_memory != NULL); return *m_memory; }
+	device_state_interface &state() const { assert(m_state != NULL); return *m_state; }
 
 	// owned object helpers
 	device_t *first_subdevice() const { return m_subdevice_list.first(); }
@@ -230,9 +228,12 @@ public:
 
 	// debugging
 	device_debug *debug() const { return m_debug; }
+	offs_t safe_pc();
+	offs_t safe_pcbase();
 
 	void set_default_bios(UINT8 bios) { m_default_bios = bios; }
 	void set_system_bios(UINT8 bios) { m_system_bios = bios; }
+
 protected:
 	// internal helper classes (defined below)
 	class finder_base;

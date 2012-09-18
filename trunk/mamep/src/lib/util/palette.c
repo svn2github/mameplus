@@ -48,8 +48,7 @@
 ***************************************************************************/
 
 /* object to track dirty states */
-typedef struct _dirty_state dirty_state;
-struct _dirty_state
+struct dirty_state
 {
 	UINT32 *		dirty;						/* bitmap of dirty entries */
 	UINT32			mindirty;					/* minimum dirty entry */
@@ -58,7 +57,7 @@ struct _dirty_state
 
 
 /* a single palette client */
-struct _palette_client
+struct palette_client
 {
 	palette_client *next;						/* pointer to next client */
 	palette_t *		palette;					/* reference to the palette */
@@ -68,7 +67,7 @@ struct _palette_client
 
 
 /* a palette object */
-struct _palette_t
+struct palette_t
 {
 	UINT32			refcount;					/* reference count on the palette */
 	UINT32			numcolors;					/* number of colors in the palette */

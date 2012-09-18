@@ -64,7 +64,7 @@ WRITE8_MEMBER(fantland_state::fantland_nmi_enable_w)
 	m_nmi_enable = data;
 
 	if ((m_nmi_enable != 0) && (m_nmi_enable != 8))
-		logerror("CPU #0 PC = %04X: nmi_enable = %02x\n", cpu_get_pc(&space.device()), data);
+		logerror("CPU #0 PC = %04X: nmi_enable = %02x\n", space.device().safe_pc(), data);
 }
 
 WRITE16_MEMBER(fantland_state::fantland_nmi_enable_16_w)
@@ -76,7 +76,7 @@ WRITE16_MEMBER(fantland_state::fantland_nmi_enable_16_w)
 WRITE8_MEMBER(fantland_state::fantland_soundlatch_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	device_set_input_line(m_audio_cpu, INPUT_LINE_NMI, PULSE_LINE);
+	m_audio_cpu->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE16_MEMBER(fantland_state::fantland_soundlatch_16_w)
@@ -169,7 +169,7 @@ WRITE8_MEMBER(fantland_state::borntofi_nmi_enable_w)
 	// data & 0x31 changes when lightgun fires
 
 	if ((m_nmi_enable != 0) && (m_nmi_enable != 8))
-		logerror("CPU #0 PC = %04X: nmi_enable = %02x\n", cpu_get_pc(&space.device()), data);
+		logerror("CPU #0 PC = %04X: nmi_enable = %02x\n", space.device().safe_pc(), data);
 
 //  popmessage("%02X", data);
 }
@@ -345,7 +345,7 @@ WRITE8_MEMBER(fantland_state::borntofi_msm5205_w)
 		{
 			case 0x00:		borntofi_adpcm_stop(msm, voice); break;
 			case 0x03:		borntofi_adpcm_start(msm, voice); break;
-			default:		logerror("CPU #0 PC = %04X: adpcm reg %d <- %02x\n", cpu_get_pc(&space.device()), reg, data);
+			default:		logerror("CPU #0 PC = %04X: adpcm reg %d <- %02x\n", space.device().safe_pc(), reg, data);
 		}
 	}
 	else
@@ -816,31 +816,29 @@ GFXDECODE_END
 
 ***************************************************************************/
 
-static MACHINE_START( fantland )
+MACHINE_START_MEMBER(fantland_state,fantland)
 {
-	fantland_state *state = machine.driver_data<fantland_state>();
 
-	state->m_audio_cpu = machine.device("audiocpu");
+	m_audio_cpu = machine().device("audiocpu");
 
-	state->save_item(NAME(state->m_nmi_enable));
+	save_item(NAME(m_nmi_enable));
 }
 
-static MACHINE_RESET( fantland )
+MACHINE_RESET_MEMBER(fantland_state,fantland)
 {
-	fantland_state *state = machine.driver_data<fantland_state>();
-	state->m_nmi_enable = 0;
+	m_nmi_enable = 0;
 }
 
 static INTERRUPT_GEN( fantland_irq )
 {
 	fantland_state *state = device->machine().driver_data<fantland_state>();
 	if (state->m_nmi_enable & 8)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static INTERRUPT_GEN( fantland_sound_irq )
 {
-	device_set_input_line_and_vector(device, 0, HOLD_LINE, 0x80 / 4);
+	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x80 / 4);
 }
 
 static MACHINE_CONFIG_START( fantland, fantland_state )
@@ -856,8 +854,8 @@ static MACHINE_CONFIG_START( fantland, fantland_state )
 	MCFG_CPU_PERIODIC_INT(fantland_sound_irq, 8000)
 	// NMI when soundlatch is written
 
-	MCFG_MACHINE_START(fantland)
-	MCFG_MACHINE_RESET(fantland)
+	MCFG_MACHINE_START_OVERRIDE(fantland_state,fantland)
+	MCFG_MACHINE_RESET_OVERRIDE(fantland_state,fantland)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(8000))	// sound irq must feed the DAC at 8kHz
 
@@ -888,7 +886,7 @@ MACHINE_CONFIG_END
 static void galaxygn_sound_irq( device_t *device, int line )
 {
 	fantland_state *state = device->machine().driver_data<fantland_state>();
-	device_set_input_line_and_vector(state->m_audio_cpu, 0, line ? ASSERT_LINE : CLEAR_LINE, 0x80/4);
+	state->m_audio_cpu->execute().set_input_line_and_vector(0, line ? ASSERT_LINE : CLEAR_LINE, 0x80/4);
 }
 
 static const ym2151_interface galaxygn_ym2151_interface =
@@ -908,8 +906,8 @@ static MACHINE_CONFIG_START( galaxygn, fantland_state )
 	MCFG_CPU_IO_MAP(galaxygn_sound_iomap)
 	// IRQ by YM2151, NMI when soundlatch is written
 
-	MCFG_MACHINE_START(fantland)
-	MCFG_MACHINE_RESET(fantland)
+	MCFG_MACHINE_START_OVERRIDE(fantland_state,fantland)
+	MCFG_MACHINE_RESET_OVERRIDE(fantland_state,fantland)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -954,54 +952,52 @@ static const msm5205_interface msm5205_config_3 =
 	MSM5205_S48_4B		/* 8 kHz, 4 Bits  */
 };
 
-static MACHINE_START( borntofi )
+MACHINE_START_MEMBER(fantland_state,borntofi)
 {
-	fantland_state *state = machine.driver_data<fantland_state>();
 
-	MACHINE_START_CALL(fantland);
+	MACHINE_START_CALL_MEMBER(fantland);
 
-	state->m_msm1 = machine.device("msm1");
-	state->m_msm2 = machine.device("msm2");
-	state->m_msm3 = machine.device("msm3");
-	state->m_msm4 = machine.device("msm4");
+	m_msm1 = machine().device("msm1");
+	m_msm2 = machine().device("msm2");
+	m_msm3 = machine().device("msm3");
+	m_msm4 = machine().device("msm4");
 
-	state->save_item(NAME(state->m_old_x));
-	state->save_item(NAME(state->m_old_y));
-	state->save_item(NAME(state->m_old_f));
-	state->save_item(NAME(state->m_input_ret));
-	state->save_item(NAME(state->m_adpcm_playing));
-	state->save_item(NAME(state->m_adpcm_addr[0]));
-	state->save_item(NAME(state->m_adpcm_addr[1]));
-	state->save_item(NAME(state->m_adpcm_nibble));
+	save_item(NAME(m_old_x));
+	save_item(NAME(m_old_y));
+	save_item(NAME(m_old_f));
+	save_item(NAME(m_input_ret));
+	save_item(NAME(m_adpcm_playing));
+	save_item(NAME(m_adpcm_addr[0]));
+	save_item(NAME(m_adpcm_addr[1]));
+	save_item(NAME(m_adpcm_nibble));
 }
 
-static MACHINE_RESET( borntofi )
+MACHINE_RESET_MEMBER(fantland_state,borntofi)
 {
-	fantland_state *state = machine.driver_data<fantland_state>();
 	int i;
 
-	MACHINE_RESET_CALL(fantland);
+	MACHINE_RESET_CALL_MEMBER(fantland);
 
 	for (i = 0; i < 2; i++)
 	{
-		state->m_old_x[i] = 0;
-		state->m_old_y[i] = 0;
-		state->m_old_f[i] = 0;
-		state->m_input_ret[i] = 0;
+		m_old_x[i] = 0;
+		m_old_y[i] = 0;
+		m_old_f[i] = 0;
+		m_input_ret[i] = 0;
 	}
 
 	for (i = 0; i < 4; i++)
 	{
-		state->m_adpcm_playing[i] = 1;
-		state->m_adpcm_addr[0][i] = 0;
-		state->m_adpcm_addr[1][i] = 0;
-		state->m_adpcm_nibble[i] = 0;
+		m_adpcm_playing[i] = 1;
+		m_adpcm_addr[0][i] = 0;
+		m_adpcm_addr[1][i] = 0;
+		m_adpcm_nibble[i] = 0;
 	}
 
-	borntofi_adpcm_stop(machine.device("msm1"), 0);
-	borntofi_adpcm_stop(machine.device("msm2"), 1);
-	borntofi_adpcm_stop(machine.device("msm3"), 2);
-	borntofi_adpcm_stop(machine.device("msm4"), 3);
+	borntofi_adpcm_stop(machine().device("msm1"), 0);
+	borntofi_adpcm_stop(machine().device("msm2"), 1);
+	borntofi_adpcm_stop(machine().device("msm3"), 2);
+	borntofi_adpcm_stop(machine().device("msm4"), 3);
 }
 
 static MACHINE_CONFIG_START( borntofi, fantland_state )
@@ -1014,8 +1010,8 @@ static MACHINE_CONFIG_START( borntofi, fantland_state )
 	MCFG_CPU_ADD("audiocpu", I8088, 18432000/3)        // 8088 - AMD P8088-2 CPU, running at 6.144MHz [18.432/3]
 	MCFG_CPU_PROGRAM_MAP(borntofi_sound_map)
 
-	MCFG_MACHINE_START(borntofi)
-	MCFG_MACHINE_RESET(borntofi)
+	MCFG_MACHINE_START_OVERRIDE(fantland_state,borntofi)
+	MCFG_MACHINE_RESET_OVERRIDE(fantland_state,borntofi)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1054,8 +1050,8 @@ static MACHINE_CONFIG_START( wheelrun, fantland_state )
 	MCFG_CPU_PROGRAM_MAP(wheelrun_sound_map)
 	// IRQ by YM3526, NMI when soundlatch is written
 
-	MCFG_MACHINE_START(fantland)
-	MCFG_MACHINE_RESET(fantland)
+	MCFG_MACHINE_START_OVERRIDE(fantland_state,fantland)
+	MCFG_MACHINE_RESET_OVERRIDE(fantland_state,fantland)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

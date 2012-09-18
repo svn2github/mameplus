@@ -55,8 +55,7 @@
 
 #define LOG(x)	do { if (VERBOSE) logerror x; } while (0)
 
-typedef struct	_m65ce02_Regs m65ce02_Regs;
-struct	_m65ce02_Regs {
+struct	m65ce02_Regs {
 	void	(*const *insn)(m65ce02_Regs *); /* pointer to the function pointer table */
 	PAIR	ppc;			/* previous program counter */
 	PAIR	pc;				/* program counter */
@@ -78,8 +77,8 @@ struct	_m65ce02_Regs {
 	legacy_cpu_device *device;
 	address_space *space;
 	direct_read_data *direct;
-	read8_space_func rdmem_id;					/* readmem callback for indexed instructions */
-	write8_space_func wrmem_id;					/* writemem callback for indexed instructions */
+	devcb_resolved_read8 rdmem_id;					/* readmem callback for indexed instructions */
+	devcb_resolved_write8 wrmem_id;					/* writemem callback for indexed instructions */
 };
 
 INLINE m65ce02_Regs *get_safe_token(device_t *device)
@@ -95,16 +94,11 @@ INLINE m65ce02_Regs *get_safe_token(device_t *device)
 
 #include "t65ce02.c"
 
-static UINT8 default_rdmem_id(address_space *space, offs_t address) { return space->read_byte(address); }
-static void default_wdmem_id(address_space *space, offs_t address, UINT8 data) { space->write_byte(address, data); }
-
 static CPU_INIT( m65ce02 )
 {
 	m65ce02_Regs *cpustate = get_safe_token(device);
 	const m6502_interface *intf = (const m6502_interface *)device->static_config();
 
-	cpustate->rdmem_id = default_rdmem_id;
-	cpustate->wrmem_id = default_wdmem_id;
 	cpustate->irq_callback = irqcallback;
 	cpustate->device = device;
 	cpustate->space = device->space(AS_PROGRAM);
@@ -112,11 +106,16 @@ static CPU_INIT( m65ce02 )
 
 	if ( intf )
 	{
-		if ( intf->read_indexed_func )
-			cpustate->rdmem_id = intf->read_indexed_func;
+		cpustate->rdmem_id.resolve(intf->read_indexed_func, *device);
+		cpustate->wrmem_id.resolve(intf->write_indexed_func, *device);
+	}
+	else
+	{
+		devcb_read8 nullrcb = DEVCB_NULL;
+		devcb_write8 nullwcb = DEVCB_NULL;
 
-		if ( intf->write_indexed_func )
-			cpustate->wrmem_id = intf->write_indexed_func;
+		cpustate->rdmem_id.resolve(nullrcb, *device);
+		cpustate->wrmem_id.resolve(nullwcb, *device);
 	}
 }
 
@@ -280,7 +279,7 @@ CPU_GET_INFO( m65ce02 )
 		case CPUINFO_INT_CONTEXT_SIZE:					info->i = sizeof(m65ce02_Regs);			break;
 		case CPUINFO_INT_INPUT_LINES:					info->i = 2;							break;
 		case CPUINFO_INT_DEFAULT_IRQ_VECTOR:			info->i = 0;							break;
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
 		case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1;							break;
 		case CPUINFO_INT_CLOCK_DIVIDER:					info->i = 1;							break;
 		case CPUINFO_INT_MIN_INSTRUCTION_BYTES:			info->i = 1;							break;
@@ -288,17 +287,17 @@ CPU_GET_INFO( m65ce02 )
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 1;							break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 10;							break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 8;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 20;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 8;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 20;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
 		case CPUINFO_INT_LOGADDR_WIDTH_PROGRAM: info->i = 16;					break;
 		case CPUINFO_INT_PAGE_SHIFT_PROGRAM:	info->i = 13;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
 
 		case CPUINFO_INT_INPUT_STATE+M65CE02_NMI_STATE: info->i = cpustate->nmi_state;			break;
 		case CPUINFO_INT_INPUT_STATE+M65CE02_IRQ_STATE: info->i = cpustate->irq_state;			break;
@@ -329,11 +328,11 @@ CPU_GET_INFO( m65ce02 )
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &cpustate->icount;			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME: strcpy(info->s, "M65CE02");  break;
-		case DEVINFO_STR_FAMILY: strcpy(info->s,"CBM Semiconductor Group CSG 65CE02");  break;
-		case DEVINFO_STR_VERSION: strcpy(info->s,"1.0beta");  break;
-		case DEVINFO_STR_SOURCE_FILE: strcpy(info->s,__FILE__);
-		case DEVINFO_STR_CREDITS:
+		case CPUINFO_STR_NAME: strcpy(info->s, "M65CE02");  break;
+		case CPUINFO_STR_FAMILY: strcpy(info->s,"CBM Semiconductor Group CSG 65CE02");  break;
+		case CPUINFO_STR_VERSION: strcpy(info->s,"1.0beta");  break;
+		case CPUINFO_STR_SOURCE_FILE: strcpy(info->s,__FILE__);
+		case CPUINFO_STR_CREDITS:
 			strcpy(info->s, "Copyright Juergen Buchmueller\n"
 				"Copyright Peter Trauner\n"
 				"all rights reserved.");  break;

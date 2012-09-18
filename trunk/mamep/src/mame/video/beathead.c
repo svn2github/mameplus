@@ -120,7 +120,7 @@ WRITE32_MEMBER( beathead_state::finescroll_w )
 	if ((oldword & 8) && !(newword & 8) && space.machine().primary_screen->vpos() != 261)
 	{
 		logerror("Suspending time! (scanline = %d)\n", space.machine().primary_screen->vpos());
-		cputag_set_input_line(space.machine(), "maincpu", INPUT_LINE_HALT, ASSERT_LINE);
+		space.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 	}
 }
 
@@ -153,7 +153,7 @@ READ32_MEMBER( beathead_state::hsync_ram_r )
 {
 	/* offset 0 is probably write-only */
 	if (offset == 0)
-		logerror("%08X:Unexpected HSYNC RAM read at offset 0\n", cpu_get_previouspc(&space.device()));
+		logerror("%08X:Unexpected HSYNC RAM read at offset 0\n", space.device().safe_pcbase());
 
 	/* offset 1 reads the data */
 	else

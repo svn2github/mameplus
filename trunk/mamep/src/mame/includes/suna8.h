@@ -10,7 +10,8 @@ public:
 		m_maincpu(*this,"maincpu"),
 		m_hardhead_ip(*this, "hardhead_ip"),
 		m_spriteram(*this, "spriteram"),
-		m_wram(*this, "wram"){ }
+		m_wram(*this, "wram")
+	{ }
 
 	required_device<cpu_device> m_maincpu;
 	optional_shared_ptr<UINT8> m_hardhead_ip;
@@ -20,7 +21,9 @@ public:
 	UINT8 m_rombank;
 	UINT8 m_spritebank;
 	UINT8 m_palettebank;
-	UINT8 m_unknown;
+	UINT8 m_paletteram_enab;
+	UINT8 m_prot2;
+	UINT8 m_prot2_prev;
 
 	UINT8 m_protection_val;
 	UINT8 m_nmi_enable;
@@ -35,6 +38,8 @@ public:
 	int m_tiles;
 	int m_trombank;
 	int m_page;
+
+	TILE_GET_INFO_MEMBER(get_tile_info);
 #endif
 
 	INT16 *m_samplebuf;
@@ -48,11 +53,16 @@ public:
 	DECLARE_WRITE8_MEMBER(rranger_bankswitch_w);
 	DECLARE_READ8_MEMBER(rranger_soundstatus_r);
 	DECLARE_WRITE8_MEMBER(sranger_prot_w);
-	DECLARE_READ8_MEMBER(brickzn_c140_r);
-	DECLARE_WRITE8_MEMBER(brickzn_palettebank_w);
-	DECLARE_WRITE8_MEMBER(brickzn_spritebank_w);
-	DECLARE_WRITE8_MEMBER(brickzn_unknown_w);
+
+	// brickzn
+	DECLARE_READ8_MEMBER(brickzn_cheats_r);
+	DECLARE_WRITE8_MEMBER(brickzn_multi_w);
+	DECLARE_WRITE8_MEMBER(brickzn_prot_w);
+	DECLARE_WRITE8_MEMBER(brickzn_prot2_w);
 	DECLARE_WRITE8_MEMBER(brickzn_rombank_w);
+	DECLARE_WRITE8_MEMBER(brickzn_enab_palram_w);
+	DECLARE_WRITE8_MEMBER(brickzn_disab_palram_w);
+
 	DECLARE_WRITE8_MEMBER(hardhea2_nmi_w);
 	DECLARE_WRITE8_MEMBER(hardhea2_flipscreen_w);
 	DECLARE_WRITE8_MEMBER(hardhea2_leds_w);
@@ -80,7 +90,7 @@ public:
 	DECLARE_READ8_MEMBER(suna8_banked_spriteram_r);
 	DECLARE_WRITE8_MEMBER(suna8_spriteram_w);
 	DECLARE_WRITE8_MEMBER(suna8_banked_spriteram_w);
-	DECLARE_DRIVER_INIT(brickzn3);
+	DECLARE_DRIVER_INIT(brickznv4);
 	DECLARE_DRIVER_INIT(starfigh);
 	DECLARE_DRIVER_INIT(hardhea2);
 	DECLARE_DRIVER_INIT(hardhedb);
@@ -88,6 +98,11 @@ public:
 	DECLARE_DRIVER_INIT(brickzn);
 	DECLARE_DRIVER_INIT(hardhead);
 	DECLARE_DRIVER_INIT(suna8);
+	DECLARE_VIDEO_START(suna8_textdim12);
+	DECLARE_VIDEO_START(suna8_textdim8);
+	DECLARE_MACHINE_RESET(brickzn);
+	DECLARE_VIDEO_START(suna8_textdim0);
+	DECLARE_MACHINE_RESET(hardhea2);
 };
 
 
@@ -103,7 +118,7 @@ SAMPLES_START( suna8_sh_start );
 
 
 
-VIDEO_START( suna8_textdim0 );
-VIDEO_START( suna8_textdim8 );
-VIDEO_START( suna8_textdim12 );
+
+
+
 SCREEN_UPDATE_IND16( suna8 );

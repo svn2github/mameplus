@@ -19,11 +19,32 @@ enum
 	C140_TYPE_ASIC219
 };
 
-typedef struct _c140_interface c140_interface;
-struct _c140_interface {
+struct c140_interface {
     int banking_type;
 };
 
-DECLARE_LEGACY_SOUND_DEVICE(C140, c140);
+class c140_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	c140_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~c140_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type C140;
+
 
 #endif /* __C140_H__ */

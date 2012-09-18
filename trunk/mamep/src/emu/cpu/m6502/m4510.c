@@ -120,8 +120,7 @@ z:      xxxx address bits a19 .. a16 for memory accesses with a15 1 ?
 
 #define LOG(x)	do { if (VERBOSE) logerror x; } while (0)
 
-typedef struct _m4510_Regs m4510_Regs;
-struct _m4510_Regs {
+struct m4510_Regs {
 	void	(*const *insn)(m4510_Regs *); /* pointer to the function pointer table */
 	PAIR	ppc;			/* previous program counter */
 	PAIR	pc; 			/* program counter */
@@ -148,8 +147,8 @@ struct _m4510_Regs {
 	direct_read_data *direct;
 	int 	icount;
 
-	read8_space_func rdmem_id;					/* readmem callback for indexed instructions */
-	write8_space_func wrmem_id;					/* writemem callback for indexed instructions */
+	devcb_resolved_read8 rdmem_id;					/* readmem callback for indexed instructions */
+	devcb_resolved_write8 wrmem_id;					/* writemem callback for indexed instructions */
 
 	UINT8    ddr;
 	UINT8    port;
@@ -184,25 +183,12 @@ INLINE int m4510_cpu_readop_arg(m4510_Regs *cpustate)
 #define M4510
 #include "t65ce02.c"
 
-static UINT8 default_rdmem_id(address_space *space, offs_t address)
-{
-	m4510_Regs *cpustate = get_safe_token(&space->device());
-	return space->read_byte(M4510_MEM(address));
-}
-static void default_wrmem_id(address_space *space, offs_t address, UINT8 data)
-{
-	m4510_Regs *cpustate = get_safe_token(&space->device());
-	space->write_byte(M4510_MEM(address), data);
-}
-
 static CPU_INIT( m4510 )
 {
 	m4510_Regs *cpustate = get_safe_token(device);
 	const m6502_interface *intf = (const m6502_interface *)device->static_config();
 
 	cpustate->interrupt_inhibit = 0;
-	cpustate->rdmem_id = default_rdmem_id;
-	cpustate->wrmem_id = default_wrmem_id;
 	cpustate->irq_callback = irqcallback;
 	cpustate->device = device;
 	cpustate->space = device->space(AS_PROGRAM);
@@ -210,12 +196,8 @@ static CPU_INIT( m4510 )
 
 	if ( intf )
 	{
-		if ( intf->read_indexed_func )
-			cpustate->rdmem_id = intf->read_indexed_func;
-
-		if ( intf->write_indexed_func )
-			cpustate->wrmem_id = intf->write_indexed_func;
-
+		cpustate->rdmem_id.resolve(intf->read_indexed_func, *device);
+		cpustate->wrmem_id.resolve(intf->write_indexed_func, *device);
 		cpustate->in_port_func.resolve(intf->in_port_func, *device);
 		cpustate->out_port_func.resolve(intf->out_port_func, *device);
 	}
@@ -223,6 +205,9 @@ static CPU_INIT( m4510 )
 	{
 		devcb_read8 nullrcb = DEVCB_NULL;
 		devcb_write8 nullwcb = DEVCB_NULL;
+
+		cpustate->rdmem_id.resolve(nullrcb, *device);
+		cpustate->wrmem_id.resolve(nullwcb, *device);
 		cpustate->in_port_func.resolve(nullrcb, *device);
 		cpustate->out_port_func.resolve(nullwcb, *device);
 	}
@@ -461,7 +446,7 @@ CPU_GET_INFO( m4510 )
 		case CPUINFO_INT_CONTEXT_SIZE:					info->i = sizeof(m4510_Regs);			break;
 		case CPUINFO_INT_INPUT_LINES:					info->i = 2;							break;
 		case CPUINFO_INT_DEFAULT_IRQ_VECTOR:			info->i = 0;							break;
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
 		case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1;							break;
 		case CPUINFO_INT_CLOCK_DIVIDER:					info->i = 1;							break;
 		case CPUINFO_INT_MIN_INSTRUCTION_BYTES:			info->i = 1;							break;
@@ -469,17 +454,17 @@ CPU_GET_INFO( m4510 )
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 1;							break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 10;							break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 8;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 20;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 8;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 20;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
 		case CPUINFO_INT_LOGADDR_WIDTH_PROGRAM: info->i = 16;					break;
 		case CPUINFO_INT_PAGE_SHIFT_PROGRAM:	info->i = 13;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
 
 		case CPUINFO_INT_INPUT_STATE + M4510_IRQ_LINE:	info->i = cpustate->irq_state;				break;
 		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_NMI:	info->i = cpustate->nmi_state;				break;
@@ -518,15 +503,15 @@ CPU_GET_INFO( m4510 )
 		case CPUINFO_FCT_BURN:							info->burn = NULL;						break;
 		case CPUINFO_FCT_DISASSEMBLE:					info->disassemble = CPU_DISASSEMBLE_NAME(m4510);			break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &cpustate->icount;			break;
-		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM:	info->internal_map8 = ADDRESS_MAP_NAME(m4510_mem); break;
+		case CPUINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM:	info->internal_map8 = ADDRESS_MAP_NAME(m4510_mem); break;
 		case CPUINFO_FCT_TRANSLATE:						info->translate = CPU_TRANSLATE_NAME(m4510);		break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "M4510");				break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "CBM Semiconductor Group CSG 65CE02"); break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0beta");				break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Juergen Buchmueller\nCopyright Peter Trauner\nall rights reserved."); break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "M4510");				break;
+		case CPUINFO_STR_FAMILY:					strcpy(info->s, "CBM Semiconductor Group CSG 65CE02"); break;
+		case CPUINFO_STR_VERSION:					strcpy(info->s, "1.0beta");				break;
+		case CPUINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);				break;
+		case CPUINFO_STR_CREDITS:					strcpy(info->s, "Copyright Juergen Buchmueller\nCopyright Peter Trauner\nall rights reserved."); break;
 
 		case CPUINFO_STR_FLAGS:
 			sprintf(info->s, "%c%c%c%c%c%c%c%c",

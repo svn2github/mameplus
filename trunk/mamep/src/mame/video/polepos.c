@@ -25,14 +25,13 @@
 
 ***************************************************************************/
 
-PALETTE_INIT( polepos )
+PALETTE_INIT_MEMBER(polepos_state,polepos)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
-	polepos_state *state = machine.driver_data<polepos_state>();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i, j;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 128);
+	machine().colortable = colortable_alloc(machine(), 128);
 
 	/*******************************************************
      * Color PROMs
@@ -78,7 +77,7 @@ PALETTE_INIT( polepos )
 		bit3 = (color_prom[0x200 + i] >> 3) & 1;
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		colortable_palette_set_color(machine.colortable,i,MAKE_RGB(r,g,b));
+		colortable_palette_set_color(machine().colortable,i,MAKE_RGB(r,g,b));
 	}
 
 	/*******************************************************
@@ -89,8 +88,8 @@ PALETTE_INIT( polepos )
 	for (i = 0; i < 64*4; i++)
 	{
 		int color = color_prom[0x300 + i];
-		colortable_entry_set_value(machine.colortable, 0x0000 + i, (color != 15) ? (0x020 + color) : 0x2f);
-		colortable_entry_set_value(machine.colortable, 0x0100 + i, (color != 15) ? (0x060 + color) : 0x2f);
+		colortable_entry_set_value(machine().colortable, 0x0000 + i, (color != 15) ? (0x020 + color) : 0x2f);
+		colortable_entry_set_value(machine().colortable, 0x0100 + i, (color != 15) ? (0x060 + color) : 0x2f);
 	}
 
 	/*******************************************************
@@ -102,7 +101,7 @@ PALETTE_INIT( polepos )
 	for (i = 0; i < 64*4; i++)
 	{
 		int color = color_prom[0x400 + i];
-		colortable_entry_set_value(machine.colortable, 0x0200 + i, 0x000 + color);
+		colortable_entry_set_value(machine().colortable, 0x0200 + i, 0x000 + color);
 	}
 
 	/*******************************************************
@@ -113,8 +112,8 @@ PALETTE_INIT( polepos )
 	for (i = 0; i < 64*16; i++)
 	{
 		int color = color_prom[0xc00 + i];
-		colortable_entry_set_value(machine.colortable, 0x0300 + i, (color != 15) ? (0x010 + color) : 0x1f);
-		colortable_entry_set_value(machine.colortable, 0x0700 + i, (color != 15) ? (0x050 + color) : 0x1f);
+		colortable_entry_set_value(machine().colortable, 0x0300 + i, (color != 15) ? (0x010 + color) : 0x1f);
+		colortable_entry_set_value(machine().colortable, 0x0700 + i, (color != 15) ? (0x050 + color) : 0x1f);
 	}
 
 	/*******************************************************
@@ -126,14 +125,14 @@ PALETTE_INIT( polepos )
 	for (i = 0; i < 64*16; i++)
 	{
 		int color = color_prom[0x800 + i];
-		colortable_entry_set_value(machine.colortable, 0x0b00 + i, 0x040 + color);
+		colortable_entry_set_value(machine().colortable, 0x0b00 + i, 0x040 + color);
 	}
 
 	/* 136014-142, 136014-143, 136014-144 Vertical position modifiers */
 	for (i = 0; i < 256; i++)
 	{
 		j = color_prom[0x500 + i] + (color_prom[0x600 + i] << 4) + (color_prom[0x700 + i] << 8);
-		state->m_vertical_position_modifier[i] = j;
+		m_vertical_position_modifier[i] = j;
 	}
 }
 
@@ -145,30 +144,28 @@ PALETTE_INIT( polepos )
 
 ***************************************************************************/
 
-static TILE_GET_INFO( bg_get_tile_info )
+TILE_GET_INFO_MEMBER(polepos_state::bg_get_tile_info)
 {
-	polepos_state *state = machine.driver_data<polepos_state>();
-	UINT16 word = state->m_view16_memory[tile_index];
+	UINT16 word = m_view16_memory[tile_index];
 	int code = (word & 0xff) | ((word & 0x4000) >> 6);
 	int color = (word & 0x3f00) >> 8;
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code,
 			color,
 			0);
 }
 
-static TILE_GET_INFO( tx_get_tile_info )
+TILE_GET_INFO_MEMBER(polepos_state::tx_get_tile_info)
 {
-	polepos_state *state = machine.driver_data<polepos_state>();
-	UINT16 word = state->m_alpha16_memory[tile_index];
+	UINT16 word = m_alpha16_memory[tile_index];
 	int code = (word & 0xff) | ((word & 0x4000) >> 6);
 	int color = (word & 0x3f00) >> 8;
 
 	/* I assume the purpose of CHACL is to allow the Z80 to control
        the display (therefore using only the bottom 8 bits of tilemap RAM)
        in case the Z8002 is not working. */
-	if (state->m_chacl == 0)
+	if (m_chacl == 0)
 	{
 		code &= 0xff;
 		color = 0;
@@ -177,7 +174,7 @@ static TILE_GET_INFO( tx_get_tile_info )
 	/* 128V input to the palette PROM */
 	if (tile_index >= 32*16) color |= 0x40;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code,
 			color,
@@ -193,13 +190,12 @@ static TILE_GET_INFO( tx_get_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( polepos )
+VIDEO_START_MEMBER(polepos_state,polepos)
 {
-	polepos_state *state = machine.driver_data<polepos_state>();
-	state->m_bg_tilemap = tilemap_create(machine, bg_get_tile_info,tilemap_scan_cols,8,8,64,16);
-	state->m_tx_tilemap = tilemap_create(machine, tx_get_tile_info,tilemap_scan_rows,8,8,32,32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(polepos_state::bg_get_tile_info),this),TILEMAP_SCAN_COLS,8,8,64,16);
+	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(polepos_state::tx_get_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
 
-	colortable_configure_tilemap_groups(machine.colortable, state->m_tx_tilemap, machine.gfx[0], 0x2f);
+	colortable_configure_tilemap_groups(machine().colortable, m_tx_tilemap, machine().gfx[0], 0x2f);
 }
 
 
@@ -425,11 +421,11 @@ static void zoom_sprite(running_machine &machine, bitmap_ind16 &bitmap,int big,
 		UINT32 code,UINT32 color,int flipx,int sx,int sy,
 		int sizex,int sizey)
 {
-	const gfx_element *gfx = machine.gfx[big ? 3 : 2];
-	const UINT8 *gfxdata = gfx_element_get_data(gfx, code % gfx->total_elements);
+	gfx_element *gfx = machine.gfx[big ? 3 : 2];
+	const UINT8 *gfxdata = gfx->get_data(code % gfx->elements());
 	UINT8 *scaling_rom = machine.root_device().memregion("gfx6")->base();
 	UINT32 transmask = colortable_get_transpen_mask(machine.colortable, gfx, color, 0x1f);
-	int coloroffs = gfx->color_base + color * gfx->color_granularity;
+	int coloroffs = gfx->colorbase() + color * gfx->granularity();
 	int x,y;
 
 	if (flipx) flipx = big ? 0x1f : 0x0f;
@@ -448,7 +444,7 @@ static void zoom_sprite(running_machine &machine, bitmap_ind16 &bitmap,int big,
 			const UINT8 *src;
 
 			if (!big) dy >>= 1;
-			src = gfxdata + dy * gfx->line_modulo;
+			src = gfxdata + dy * gfx->rowbytes();
 
 			for (x = (big ? 0x40 : 0x20);x > 0;x--)
 			{

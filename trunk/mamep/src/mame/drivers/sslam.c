@@ -374,7 +374,7 @@ WRITE16_MEMBER(sslam_state::sslam_snd_w)
 WRITE16_MEMBER(sslam_state::powerbls_sound_w)
 {
 	soundlatch_byte_w(space, 0, data & 0xff);
-	cputag_set_input_line(machine(), "audiocpu", MCS51_INT1_LINE, HOLD_LINE);
+	machine().device("audiocpu")->execute().set_input_line(MCS51_INT1_LINE, HOLD_LINE);
 }
 
 /* Memory Maps */
@@ -723,7 +723,7 @@ static MACHINE_CONFIG_START( sslam, sslam_state )
 	MCFG_GFXDECODE(sslam)
 	MCFG_PALETTE_LENGTH(0x800)
 
-	MCFG_VIDEO_START(sslam)
+	MCFG_VIDEO_START_OVERRIDE(sslam_state,sslam)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -753,7 +753,7 @@ static MACHINE_CONFIG_START( powerbls, sslam_state )
 	MCFG_GFXDECODE(powerbls)
 	MCFG_PALETTE_LENGTH(0x200)
 
-	MCFG_VIDEO_START(powerbls)
+	MCFG_VIDEO_START_OVERRIDE(sslam_state,powerbls)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

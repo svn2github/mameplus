@@ -66,17 +66,31 @@ public:
 	DECLARE_WRITE8_MEMBER(butasan_pagedram_w);
 	DECLARE_WRITE8_MEMBER(valtric_unknown_w);
 	DECLARE_WRITE8_MEMBER(butasan_unknown_w);
+	TILE_GET_INFO_MEMBER(argus_get_tx_tile_info);
+	TILE_GET_INFO_MEMBER(argus_get_bg0_tile_info);
+	TILE_GET_INFO_MEMBER(argus_get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(valtric_get_tx_tile_info);
+	TILE_GET_INFO_MEMBER(valtric_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(butasan_get_tx_tile_info);
+	TILE_GET_INFO_MEMBER(butasan_get_bg0_tile_info);
+	TILE_GET_INFO_MEMBER(butasan_get_bg1_tile_info);
+	DECLARE_VIDEO_START(argus);
+	DECLARE_VIDEO_RESET(argus);
+	DECLARE_VIDEO_START(valtric);
+	DECLARE_VIDEO_RESET(valtric);
+	DECLARE_VIDEO_START(butasan);
+	DECLARE_VIDEO_RESET(butasan);
 };
 
 
 /*----------- defined in video/argus.c -----------*/
 
-VIDEO_START( argus );
-VIDEO_START( valtric );
-VIDEO_START( butasan );
-VIDEO_RESET( argus );
-VIDEO_RESET( valtric );
-VIDEO_RESET( butasan );
+
+
+
+
+
+
 SCREEN_UPDATE_RGB32( argus );
 SCREEN_UPDATE_RGB32( valtric );
 SCREEN_UPDATE_RGB32( butasan );

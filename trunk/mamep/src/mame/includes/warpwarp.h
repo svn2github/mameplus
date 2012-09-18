@@ -36,17 +36,27 @@ public:
 	DECLARE_DRIVER_INIT(sos);
 	DECLARE_DRIVER_INIT(kaitei);
 	DECLARE_DRIVER_INIT(bombbee);
+	TILEMAP_MAPPER_MEMBER(tilemap_scan);
+	TILE_GET_INFO_MEMBER(geebee_get_tile_info);
+	TILE_GET_INFO_MEMBER(navarone_get_tile_info);
+	TILE_GET_INFO_MEMBER(warpwarp_get_tile_info);
+	DECLARE_VIDEO_START(geebee);
+	DECLARE_PALETTE_INIT(geebee);
+	DECLARE_VIDEO_START(warpwarp);
+	DECLARE_PALETTE_INIT(warpwarp);
+	DECLARE_VIDEO_START(navarone);
+	DECLARE_PALETTE_INIT(navarone);
 };
 
 
 /*----------- defined in video/warpwarp.c -----------*/
 
-PALETTE_INIT( geebee );
-PALETTE_INIT( navarone );
-PALETTE_INIT( warpwarp );
-VIDEO_START( geebee );
-VIDEO_START( navarone );
-VIDEO_START( warpwarp );
+
+
+
+
+
+
 SCREEN_UPDATE_IND16( geebee );
 
 
@@ -54,7 +64,29 @@ SCREEN_UPDATE_IND16( geebee );
 
 WRITE8_DEVICE_HANDLER( geebee_sound_w );
 
-DECLARE_LEGACY_SOUND_DEVICE(GEEBEE, geebee_sound);
+class geebee_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	geebee_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~geebee_sound_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type GEEBEE;
+
 
 
 /*----------- defined in audio/warpwarp.c -----------*/
@@ -63,4 +95,26 @@ WRITE8_DEVICE_HANDLER( warpwarp_sound_w );
 WRITE8_DEVICE_HANDLER( warpwarp_music1_w );
 WRITE8_DEVICE_HANDLER( warpwarp_music2_w );
 
-DECLARE_LEGACY_SOUND_DEVICE(WARPWARP, warpwarp_sound);
+class warpwarp_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	warpwarp_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~warpwarp_sound_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type WARPWARP;
+

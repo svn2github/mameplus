@@ -267,29 +267,27 @@ DRIVER_INIT_MEMBER(pce_state,sgx)
 	m_io_port_options = PCE_JOY_SIG | CONST_SIG;
 }
 
-MACHINE_START( pce )
+MACHINE_START_MEMBER(pce_state,pce)
 {
-	pce_state *state = machine.driver_data<pce_state>();
-	pce_cd_init( machine );
-	machine.device<nvram_device>("nvram")->set_base(state->m_cd.bram, PCE_BRAM_SIZE);
+	pce_cd_init( machine() );
+	machine().device<nvram_device>("nvram")->set_base(m_cd.bram, PCE_BRAM_SIZE);
 }
 
 #ifdef MESS
-MACHINE_RESET( mess_pce )
+MACHINE_RESET_MEMBER(pce_state,mess_pce)
 {
-	pce_state *state = machine.driver_data<pce_state>();
-	pce_cd_t &pce_cd = state->m_cd;
+	pce_cd_t &pce_cd = m_cd;
 	int joy_i;
 
 	for (joy_i = 0; joy_i < 5; joy_i++)
-		state->m_joy_6b_packet[joy_i] = 0;
+		m_joy_6b_packet[joy_i] = 0;
 
 	pce_cd.adpcm_read_buf = 0;
 	pce_cd.adpcm_write_buf = 0;
 
 	// TODO: add CD-DA stop command here
 	//pce_cd.cdda_status = PCE_CD_CDDA_OFF;
-	//cdda_stop_audio( machine.device( "cdda" ) );
+	//cdda_stop_audio( machine().device( "cdda" ) );
 
 	pce_cd.regs[0x0c] |= PCE_CD_ADPCM_STOP_FLAG;
 	pce_cd.regs[0x0c] &= ~PCE_CD_ADPCM_PLAY_FLAG;
@@ -298,7 +296,7 @@ MACHINE_RESET( mess_pce )
 
 	/* Note: Arcade Card BIOS contents are the same as System 3, only internal HW differs.
        We use a category to select between modes (some games can be run in either S-CD or A-CD modes) */
-	state->m_acard = machine.root_device().ioport("A_CARD")->read() & 1;
+	m_acard = machine().root_device().ioport("A_CARD")->read() & 1;
 }
 
 /* todo: how many input ports does the PCE have? */
@@ -1116,11 +1114,11 @@ static void pce_cd_set_irq_line( running_machine &machine, int num, int state )
 
 	if ( pce_cd.regs[0x02] & pce_cd.regs[0x03] & ( PCE_CD_IRQ_TRANSFER_DONE | PCE_CD_IRQ_TRANSFER_READY | PCE_CD_IRQ_SAMPLE_HALF_PLAY | PCE_CD_IRQ_SAMPLE_FULL_PLAY) )
 	{
-		cputag_set_input_line(machine, "maincpu", 1, ASSERT_LINE );
+		machine.device("maincpu")->execute().set_input_line(1, ASSERT_LINE );
 	}
 	else
 	{
-		cputag_set_input_line(machine, "maincpu", 1, CLEAR_LINE );
+		machine.device("maincpu")->execute().set_input_line(1, CLEAR_LINE );
 	}
 }
 
@@ -1340,7 +1338,7 @@ WRITE8_MEMBER(pce_state::pce_cd_intf_w)
 	if(offset & 0x200 && m_sys3_card && m_acard) // route Arcade Card handling ports
 		return pce_cd_acard_w(space,offset,data);
 
-	logerror("%04X: write to CD interface offset %02X, data %02X\n", cpu_get_pc(&space.device()), offset, data );
+	logerror("%04X: write to CD interface offset %02X, data %02X\n", space.device().safe_pc(), offset, data );
 
 	switch( offset & 0xf )
 	{
@@ -1352,7 +1350,7 @@ WRITE8_MEMBER(pce_state::pce_cd_intf_w)
 		pce_cd.adpcm_dma_timer->adjust(attotime::never); // stop ADPCM DMA here
 		/* any write here clears CD transfer irqs */
 		pce_cd.regs[0x03] &= ~0x70;
-		cputag_set_input_line(machine(), "maincpu", 1, CLEAR_LINE );
+		machine().device("maincpu")->execute().set_input_line(1, CLEAR_LINE );
 		break;
 	case 0x01:	/* CDC command / status / data */
 		break;
@@ -1594,7 +1592,7 @@ READ8_MEMBER(pce_state::pce_cd_intf_r)
 	if(offset & 0x200 && m_sys3_card && m_acard) // route Arcade Card handling ports
 		return pce_cd_acard_r(space,offset);
 
-	logerror("%04X: read from CD interface offset %02X\n", cpu_get_pc(&space.device()), offset );
+	logerror("%04X: read from CD interface offset %02X\n", space.device().safe_pc(), offset );
 
 	if((offset & 0xc0) == 0xc0 && m_sys3_card) //System 3 Card header handling
 	{

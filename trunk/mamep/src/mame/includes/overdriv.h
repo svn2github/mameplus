@@ -22,9 +22,9 @@ public:
 	UINT16     m_cpuB_ctrl;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_subcpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_subcpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k053260_1;
 	device_t *m_k053260_2;
 	device_t *m_k051316_1;
@@ -40,6 +40,8 @@ public:
 	DECLARE_WRITE16_MEMBER(overdriv_cpuB_irq6_w);
 	DECLARE_READ8_MEMBER(overdriv_1_sound_r);
 	DECLARE_READ8_MEMBER(overdriv_2_sound_r);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 /*----------- defined in video/overdriv.c -----------*/

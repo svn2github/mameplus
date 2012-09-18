@@ -65,13 +65,13 @@ WRITE8_MEMBER(toypop_state::toypop_main_interrupt_enable_w)
 WRITE8_MEMBER(toypop_state::toypop_main_interrupt_disable_w)
 {
 	m_main_irq_mask = 0;
-//  cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+//  machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(toypop_state::toypop_sound_interrupt_enable_acknowledge_w)
 {
 	m_sound_irq_mask = 1;
-//  cputag_set_input_line(machine(), "audiocpu", 0, CLEAR_LINE);
+//  machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(toypop_state::toypop_sound_interrupt_disable_w)
@@ -107,7 +107,7 @@ static INTERRUPT_GEN( toypop_main_vblank_irq )
 	device_t *namcoio_2 = device->machine().device("56xx_2");
 
 	if(state->m_main_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 
 	if (!namcoio_read_reset_line(namcoio_0))		/* give the cpu a tiny bit of time to write the command before processing it */
 		device->machine().scheduler().timer_set(attotime::from_usec(50), FUNC(namcoio_run));
@@ -125,47 +125,46 @@ static INTERRUPT_GEN( toypop_sound_timer_irq )
 	toypop_state *state = device->machine().driver_data<toypop_state>();
 
 	if(state->m_sound_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 WRITE8_MEMBER(toypop_state::toypop_sound_clear_w)
 {
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(toypop_state::toypop_sound_assert_w)
 {
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(toypop_state::toypop_m68000_clear_w)
 {
-	cputag_set_input_line(machine(), "sub", INPUT_LINE_RESET, CLEAR_LINE);
+	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(toypop_state::toypop_m68000_assert_w)
 {
-	cputag_set_input_line(machine(), "sub", INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
-static MACHINE_RESET( toypop )
+void toypop_state::machine_reset()
 {
-	toypop_state *state = machine.driver_data<toypop_state>();
 
-	state->m_main_irq_mask = 0;
-	cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
+	m_main_irq_mask = 0;
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 
-	state->m_sound_irq_mask = 0;
-	cputag_set_input_line(machine, "audiocpu", 0, CLEAR_LINE);
+	m_sound_irq_mask = 0;
+	machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
 
-	state->m_interrupt_enable_68k = 0;
+	m_interrupt_enable_68k = 0;
 }
 
 static INTERRUPT_GEN( toypop_m68000_interrupt )
 {
 	toypop_state *state = device->machine().driver_data<toypop_state>();
 	if (state->m_interrupt_enable_68k)
-		device_set_input_line(device, 6, HOLD_LINE);
+		device->execute().set_input_line(6, HOLD_LINE);
 }
 
 WRITE16_MEMBER(toypop_state::toypop_m68000_interrupt_enable_w)
@@ -562,7 +561,6 @@ static MACHINE_CONFIG_START( liblrabl, toypop_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))    /* 100 CPU slices per frame - an high value to ensure proper */
 							/* synchronization of the CPUs */
-	MCFG_MACHINE_RESET(toypop)
 
 	MCFG_NAMCO58XX_ADD("58xx", intf0)
 	MCFG_NAMCO56XX_ADD("56xx_1", intf1)
@@ -579,8 +577,6 @@ static MACHINE_CONFIG_START( liblrabl, toypop_state )
 	MCFG_GFXDECODE(toypop)
 	MCFG_PALETTE_LENGTH(128*4+64*4+16*2)
 
-	MCFG_PALETTE_INIT(toypop)
-	MCFG_VIDEO_START(toypop)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

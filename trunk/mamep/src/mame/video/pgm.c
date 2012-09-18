@@ -561,7 +561,7 @@ WRITE16_MEMBER(pgm_state::pgm_tx_videoram_w)
 	m_tx_tilemap->mark_tile_dirty(offset / 2);
 }
 
-static TILE_GET_INFO( get_pgm_tx_tilemap_tile_info )
+TILE_GET_INFO_MEMBER(pgm_state::get_pgm_tx_tilemap_tile_info)
 {
 
 /* 0x904000 - 0x90ffff is the Text Overlay Ram (pgm_tx_videoram)
@@ -578,14 +578,13 @@ static TILE_GET_INFO( get_pgm_tx_tilemap_tile_info )
     p = palette
     f = flip
 */
-	pgm_state *state = machine.driver_data<pgm_state>();
 	int tileno, colour, flipyx; //,game;
 
-	tileno = state->m_tx_videoram[tile_index * 2] & 0xffff;
-	colour = (state->m_tx_videoram[tile_index * 2 + 1] & 0x3e) >> 1;
-	flipyx = (state->m_tx_videoram[tile_index * 2 + 1] & 0xc0) >> 6;
+	tileno = m_tx_videoram[tile_index * 2] & 0xffff;
+	colour = (m_tx_videoram[tile_index * 2 + 1] & 0x3e) >> 1;
+	flipyx = (m_tx_videoram[tile_index * 2 + 1] & 0xc0) >> 6;
 
-	SET_TILE_INFO(0,tileno,colour,TILE_FLIPYX(flipyx));
+	SET_TILE_INFO_MEMBER(0,tileno,colour,TILE_FLIPYX(flipyx));
 }
 
 /* BG Layer */
@@ -596,48 +595,46 @@ WRITE16_MEMBER(pgm_state::pgm_bg_videoram_w)
 	m_bg_tilemap->mark_tile_dirty(offset / 2);
 }
 
-static TILE_GET_INFO( get_pgm_bg_tilemap_tile_info )
+TILE_GET_INFO_MEMBER(pgm_state::get_pgm_bg_tilemap_tile_info)
 {
 	/* pretty much the same as tx layer */
 
-	pgm_state *state = machine.driver_data<pgm_state>();
 	int tileno, colour, flipyx;
 
-	tileno = state->m_bg_videoram[tile_index *2] & 0xffff;
+	tileno = m_bg_videoram[tile_index *2] & 0xffff;
 
-	colour = (state->m_bg_videoram[tile_index * 2 + 1] & 0x3e) >> 1;
-	flipyx = (state->m_bg_videoram[tile_index * 2 + 1] & 0xc0) >> 6;
+	colour = (m_bg_videoram[tile_index * 2 + 1] & 0x3e) >> 1;
+	flipyx = (m_bg_videoram[tile_index * 2 + 1] & 0xc0) >> 6;
 
-	SET_TILE_INFO(1,tileno,colour,TILE_FLIPYX(flipyx));
+	SET_TILE_INFO_MEMBER(1,tileno,colour,TILE_FLIPYX(flipyx));
 }
 
 
 
 /*** Video - Start / Update ****************************************************/
 
-VIDEO_START( pgm )
+VIDEO_START_MEMBER(pgm_state,pgm)
 {
-	pgm_state *state = machine.driver_data<pgm_state>();
 	int i;
 
-	state->m_bdata = state->memregion("sprmask")->base();
-	state->m_bdatasize = state->memregion("sprmask")->bytes() - 1;
-	state->m_aoffset = 0;
-	state->m_boffset = 0;
+	m_bdata = memregion("sprmask")->base();
+	m_bdatasize = memregion("sprmask")->bytes() - 1;
+	m_aoffset = 0;
+	m_boffset = 0;
 
-	state->m_tx_tilemap = tilemap_create(machine, get_pgm_tx_tilemap_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_tx_tilemap->set_transparent_pen(15);
+	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(pgm_state::get_pgm_tx_tilemap_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_tx_tilemap->set_transparent_pen(15);
 
-	state->m_bg_tilemap = tilemap_create(machine, get_pgm_bg_tilemap_tile_info, tilemap_scan_rows, 32, 32, 64, 16);
-	state->m_bg_tilemap->set_transparent_pen(31);
-	state->m_bg_tilemap->set_scroll_rows(16 * 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(pgm_state::get_pgm_bg_tilemap_tile_info),this), TILEMAP_SCAN_ROWS, 32, 32, 64, 16);
+	m_bg_tilemap->set_transparent_pen(31);
+	m_bg_tilemap->set_scroll_rows(16 * 32);
 
 	for (i = 0; i < 0x1200 / 2; i++)
-		palette_set_color(machine, i, MAKE_RGB(0, 0, 0));
+		palette_set_color(machine(), i, MAKE_RGB(0, 0, 0));
 
-	state->m_spritebufferram = auto_alloc_array_clear(machine, UINT16, 0xa00/2);
+	m_spritebufferram = auto_alloc_array_clear(machine(), UINT16, 0xa00/2);
 
-	state->save_pointer(NAME(state->m_spritebufferram), 0xa00/2);
+	save_pointer(NAME(m_spritebufferram), 0xa00/2);
 }
 
 SCREEN_UPDATE_IND16( pgm )
@@ -678,6 +675,6 @@ SCREEN_VBLANK( pgm )
 		pgm_state *state = screen.machine().driver_data<pgm_state>();
 
 		/* first 0xa00 of main ram = sprites, seems to be buffered, DMA? */
-		memcpy(state->m_spritebufferram, pgm_mainram, 0xa00);
+		memcpy(state->m_spritebufferram, state->m_mainram, 0xa00);
 	}
 }

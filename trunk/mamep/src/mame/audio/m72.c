@@ -67,8 +67,7 @@ enum
 	Z80_CLEAR
 };
 
-typedef struct _m72_audio_state m72_audio_state;
-struct _m72_audio_state
+struct m72_audio_state
 {
 	UINT8 irqvector;
 	UINT32 sample_addr;
@@ -83,7 +82,7 @@ INLINE m72_audio_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == M72);
 
-	return (m72_audio_state *)downcast<legacy_device_base *>(device)->token();
+	return (m72_audio_state *)downcast<m72_audio_device *>(device)->token();
 }
 
 
@@ -117,7 +116,7 @@ static TIMER_CALLBACK( setvector_callback )
 	if (state->irqvector == 0)
 		logerror("You didn't call m72_init_sound()\n");
 
-	cputag_set_input_line_and_vector(machine, "soundcpu", 0, (state->irqvector == 0xff) ? CLEAR_LINE : ASSERT_LINE, state->irqvector);
+	machine.device("soundcpu")->execute().set_input_line_and_vector(0, (state->irqvector == 0xff) ? CLEAR_LINE : ASSERT_LINE, state->irqvector);
 }
 
 static DEVICE_START( m72_audio )
@@ -254,21 +253,51 @@ WRITE8_DEVICE_HANDLER( m72_sample_w )
 	state->sample_addr = (state->sample_addr + 1) & (state->samples_size - 1);
 }
 
-DEVICE_GET_INFO( m72_audio )
+const device_type M72 = &device_creator<m72_audio_device>;
+
+m72_audio_device::m72_audio_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, M72, "M72 Custom", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(m72_audio_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(m72_audio);	break;
-		case DEVINFO_FCT_RESET:							info->start = DEVICE_RESET_NAME(m72_audio);	break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "M72 Custom");				break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(m72_audio_state));
 }
 
-DEFINE_LEGACY_SOUND_DEVICE(M72, m72_audio);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void m72_audio_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void m72_audio_device::device_start()
+{
+	DEVICE_START_NAME( m72_audio )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void m72_audio_device::device_reset()
+{
+	DEVICE_RESET_NAME( m72_audio )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void m72_audio_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

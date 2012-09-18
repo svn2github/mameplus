@@ -76,7 +76,7 @@ INPUT_PORTS_END
 
 static ADDRESS_MAP_START( pce_mem , AS_PROGRAM, 8, paranoia_state )
 	AM_RANGE( 0x000000, 0x03FFFF) AM_ROM
-	AM_RANGE( 0x1F0000, 0x1F1FFF) AM_RAM AM_MIRROR(0x6000) AM_BASE_LEGACY(&pce_user_ram )
+	AM_RANGE( 0x1F0000, 0x1F1FFF) AM_RAM AM_MIRROR(0x6000)
 	AM_RANGE( 0x1FE000, 0x1FE3FF) AM_READWRITE_LEGACY(vdc_0_r, vdc_0_w )
 	AM_RANGE( 0x1FE400, 0x1FE7FF) AM_READWRITE_LEGACY(vce_r, vce_w )
 	AM_RANGE( 0x1FE800, 0x1FEBFF) AM_DEVREADWRITE_LEGACY("c6280", c6280_r, c6280_w )
@@ -154,7 +154,7 @@ WRITE8_MEMBER(paranoia_state::paranoia_i8155_c_w)
 
 WRITE_LINE_MEMBER(paranoia_state::paranoia_i8155_timer_out)
 {
-	//cputag_set_input_line(machine(), "sub", I8085_RST55_LINE, state ? CLEAR_LINE : ASSERT_LINE );
+	//machine().device("sub")->execute().set_input_line(I8085_RST55_LINE, state ? CLEAR_LINE : ASSERT_LINE );
 	//logerror("Timer out %d\n", state);
 }
 

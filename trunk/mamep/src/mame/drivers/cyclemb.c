@@ -11,8 +11,9 @@
     - inputs in Cycle Maabou;
     - sound (controlled by three i8741);
     - add flipscreen;
-    - color prom resistor network is guessed;
-    - standing cones in cyclemb are yellow/black instead of red/white?? need to verify on hw
+    - color prom resistor network is guessed, cyclemb yellows are more reddish on pcb video and photos;
+
+    BTANB verified on pcb: cyclemb standing cones are reddish-yellow/black instead of red/white
 
 =====================================================================================================
 
@@ -115,13 +116,16 @@ public:
 	DECLARE_WRITE8_MEMBER(skydest_i8741_0_w);
 	DECLARE_DRIVER_INIT(skydest);
 	DECLARE_DRIVER_INIT(cyclemb);
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 
-static PALETTE_INIT( cyclemb )
+void cyclemb_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i,r,g,b,val;
 	int bit0,bit1,bit2;
 
@@ -142,12 +146,12 @@ static PALETTE_INIT( cyclemb )
 		bit2 = (val >> 2) & 0x01;
 		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 
 
-static VIDEO_START( cyclemb )
+void cyclemb_state::video_start()
 {
 
 }
@@ -155,7 +159,7 @@ static VIDEO_START( cyclemb )
 static void cyclemb_draw_tilemap(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	cyclemb_state *state = screen.machine().driver_data<cyclemb_state>();
-	const gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 	int x,y,count;
 	UINT8 flip_screen = state->flip_screen();
 
@@ -256,7 +260,7 @@ static void cyclemb_draw_sprites(screen_device &screen, bitmap_ind16 &bitmap, co
 static void skydest_draw_tilemap(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	cyclemb_state *state = screen.machine().driver_data<cyclemb_state>();
-	const gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 	int x,y;
 	//UINT8 flip_screen = state->flip_screen();
 
@@ -378,7 +382,7 @@ WRITE8_MEMBER(cyclemb_state::cyclemb_bankswitch_w)
 WRITE8_MEMBER(cyclemb_state::sound_cmd_w)
 {
 	soundlatch_byte_w(space, 0, data & 0xff);
-	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 #endif
 
@@ -392,7 +396,7 @@ READ8_MEMBER(cyclemb_state::mcu_status_r)
 WRITE8_MEMBER(cyclemb_state::sound_cmd_w)//actually ciom
 {
 	soundlatch_byte_w(space, 0, data & 0xff);
-	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 #endif
 
@@ -418,7 +422,7 @@ READ8_MEMBER( cyclemb_state::skydest_i8741_0_r )
 {
 	if(offset == 1) //status port
 	{
-		//printf("STATUS PC=%04x\n",cpu_get_pc(m_maincpu));
+		//printf("STATUS PC=%04x\n",m_maincpu->pc());
 
 		return 1;
 	}
@@ -426,14 +430,14 @@ READ8_MEMBER( cyclemb_state::skydest_i8741_0_r )
 	{
 		UINT8 i,pt;
 
-		//printf("%04x\n",cpu_get_pc(m_maincpu));
+		//printf("%04x\n",m_maincpu->pc());
 
 		/* TODO: internal state of this */
-		if(cpu_get_pc(m_maincpu) == m_dsw_pc_hack)
+		if(m_maincpu->pc() == m_dsw_pc_hack)
 			m_mcu[0].rxd = (ioport("DSW1")->read() & 0x1f) << 2;
 		else if(m_mcu[0].rst)
 		{
-			//printf("READ PC=%04x\n",cpu_get_pc(m_maincpu));
+			//printf("READ PC=%04x\n",m_maincpu->pc());
 			{
 
 				switch(m_mcu[0].state)
@@ -499,7 +503,7 @@ WRITE8_MEMBER( cyclemb_state::skydest_i8741_0_w )
 {
 	if(offset == 1) //command port
 	{
-		//printf("%02x CMD PC=%04x\n",data,cpu_get_pc(m_maincpu));
+		//printf("%02x CMD PC=%04x\n",data,m_maincpu->pc());
 		switch(data)
 		{
 			case 0:
@@ -534,7 +538,7 @@ WRITE8_MEMBER( cyclemb_state::skydest_i8741_0_w )
 	}
 	else
 	{
-		//printf("%02x DATA PC=%04x\n",data,cpu_get_pc(m_maincpu));
+		//printf("%02x DATA PC=%04x\n",data,m_maincpu->pc());
 
 		m_mcu[0].txd = data;
 
@@ -590,9 +594,9 @@ static ADDRESS_MAP_START( cyclemb_sound_io, AS_IO, 8, cyclemb_state )
 	AM_RANGE(0x40, 0x40) AM_READ(soundlatch_byte_r) AM_WRITE(soundlatch2_byte_w)
 ADDRESS_MAP_END
 
-static MACHINE_RESET( cyclemb )
+void cyclemb_state::machine_reset()
 {
-	skydest_i8741_reset(machine);
+	skydest_i8741_reset(machine());
 }
 
 
@@ -917,11 +921,8 @@ static MACHINE_CONFIG_START( cyclemb, cyclemb_state )
 
 	MCFG_GFXDECODE(cyclemb)
 	MCFG_PALETTE_LENGTH(256)
-	MCFG_PALETTE_INIT(cyclemb)
 
-	MCFG_VIDEO_START(cyclemb)
 
-	MCFG_MACHINE_RESET(cyclemb)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -939,7 +940,7 @@ static MACHINE_CONFIG_DERIVED( skydest, cyclemb )
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 34*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(skydest)
 
-//  MCFG_PALETTE_INIT(skydest)
+//  MCFG_PALETTE_INIT_OVERRIDE(cyclemb_state,skydest)
 MACHINE_CONFIG_END
 
 /***************************************************************************

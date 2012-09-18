@@ -180,7 +180,7 @@ static void update_irq_state(running_machine &machine)
 {
 	ssv_state *state = machine.driver_data<ssv_state>();
 
-	cputag_set_input_line(machine, "maincpu", 0, (state->m_requested_int & state->m_irq_enable)? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(0, (state->m_requested_int & state->m_irq_enable)? ASSERT_LINE : CLEAR_LINE);
 }
 
 static IRQ_CALLBACK(ssv_irq_callback)
@@ -321,12 +321,11 @@ WRITE16_MEMBER(ssv_state::ssv_lockout_inv_w)
 	}
 }
 
-static MACHINE_RESET( ssv )
+void ssv_state::machine_reset()
 {
-	ssv_state *state = machine.driver_data<ssv_state>();
-	state->m_requested_int = 0;
-	device_set_irq_callback(machine.device("maincpu"), ssv_irq_callback);
-	state->membank("bank1")->set_base(state->memregion("user1")->base());
+	m_requested_int = 0;
+	machine().device("maincpu")->execute().set_irq_acknowledge_callback(ssv_irq_callback);
+	membank("bank1")->set_base(memregion("user1")->base());
 }
 
 
@@ -526,7 +525,7 @@ READ16_MEMBER(ssv_state::hypreact_input_r)
 	if (input_sel & 0x0002)	return ioport("KEY1")->read();
 	if (input_sel & 0x0004)	return ioport("KEY2")->read();
 	if (input_sel & 0x0008)	return ioport("KEY3")->read();
-	logerror("CPU #0 PC %06X: unknown input read: %04X\n",cpu_get_pc(&space.device()),input_sel);
+	logerror("CPU #0 PC %06X: unknown input read: %04X\n",space.device().safe_pc(),input_sel);
 	return 0xffff;
 }
 
@@ -651,7 +650,7 @@ READ16_MEMBER(ssv_state::srmp4_input_r)
 	if (input_sel & 0x0004)	return ioport("KEY1")->read();
 	if (input_sel & 0x0008)	return ioport("KEY2")->read();
 	if (input_sel & 0x0010)	return ioport("KEY3")->read();
-	logerror("CPU #0 PC %06X: unknown input read: %04X\n",cpu_get_pc(&space.device()),input_sel);
+	logerror("CPU #0 PC %06X: unknown input read: %04X\n",space.device().safe_pc(),input_sel);
 	return 0xffff;
 }
 
@@ -699,7 +698,7 @@ READ16_MEMBER(ssv_state::srmp7_input_r)
 	if (input_sel & 0x0004)	return ioport("KEY1")->read();
 	if (input_sel & 0x0008)	return ioport("KEY2")->read();
 	if (input_sel & 0x0010)	return ioport("KEY3")->read();
-	logerror("CPU #0 PC %06X: unknown input read: %04X\n",cpu_get_pc(&space.device()),input_sel);
+	logerror("CPU #0 PC %06X: unknown input read: %04X\n",space.device().safe_pc(),input_sel);
 	return 0xffff;
 }
 
@@ -930,8 +929,8 @@ WRITE16_MEMBER(ssv_state::eaglshot_gfxram_w)
 
 	offset += (m_scroll[0x76/2] & 0xf) * 0x40000/2;
 	COMBINE_DATA(&m_eaglshot_gfxram[offset]);
-	gfx_element_mark_dirty(machine().gfx[0], offset / (16*8/2));
-	gfx_element_mark_dirty(machine().gfx[1], offset / (16*8/2));
+	machine().gfx[0]->mark_dirty(offset / (16*8/2));
+	machine().gfx[1]->mark_dirty(offset / (16*8/2));
 }
 
 
@@ -2605,7 +2604,6 @@ static MACHINE_CONFIG_START( ssv, ssv_state )
 	MCFG_CPU_ADD("maincpu", V60, 16000000) /* Based on STA-0001 & STA-0001B System boards */
 	MCFG_TIMER_ADD_SCANLINE("scantimer", ssv_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_RESET(ssv)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2616,7 +2614,6 @@ static MACHINE_CONFIG_START( ssv, ssv_state )
 
 	MCFG_GFXDECODE(ssv)
 	MCFG_PALETTE_LENGTH(0x8000)
-	MCFG_VIDEO_START(ssv)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2666,7 +2663,7 @@ static MACHINE_CONFIG_DERIVED( gdfs, ssv )
 	MCFG_DEVICE_ADD("st0020_spr", ST0020_SPRITES, 0)
 
 	MCFG_GFXDECODE(gdfs)
-	MCFG_VIDEO_START(gdfs)
+	MCFG_VIDEO_START_OVERRIDE(ssv_state,gdfs)
 MACHINE_CONFIG_END
 
 
@@ -2844,7 +2841,7 @@ static MACHINE_CONFIG_DERIVED( eaglshot, ssv )
 	MCFG_SCREEN_UPDATE_STATIC(eaglshot)
 
 	MCFG_GFXDECODE(eaglshot)
-	MCFG_VIDEO_START(eaglshot)
+	MCFG_VIDEO_START_OVERRIDE(ssv_state,eaglshot)
 MACHINE_CONFIG_END
 
 

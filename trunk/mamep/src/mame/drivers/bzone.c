@@ -224,18 +224,16 @@
  *
  *************************************/
 
-static MACHINE_START( bzone )
+void bzone_state::machine_start()
 {
-	bzone_state *state = machine.driver_data<bzone_state>();
-	state_save_register_global(machine, state->m_analog_data);
+	state_save_register_global(machine(), m_analog_data);
 }
 
 
-static MACHINE_START( redbaron )
+MACHINE_START_MEMBER(bzone_state,redbaron)
 {
-	bzone_state *state = machine.driver_data<bzone_state>();
-	state_save_register_global(machine, state->m_analog_data);
-	state_save_register_global(machine, state->m_rb_input_select);
+	state_save_register_global(machine(), m_analog_data);
+	state_save_register_global(machine(), m_rb_input_select);
 }
 
 
@@ -249,7 +247,7 @@ static MACHINE_START( redbaron )
 static INTERRUPT_GEN( bzone_interrupt )
 {
 	if (device->machine().root_device().ioport("IN0")->read() & 0x10)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -315,7 +313,7 @@ static ADDRESS_MAP_START( bzone_map, AS_PROGRAM, 8, bzone_state )
 	AM_RANGE(0x1820, 0x182f) AM_DEVREADWRITE("pokey", pokey_device, read, write)
 	AM_RANGE(0x1840, 0x1840) AM_DEVWRITE_LEGACY("discrete", bzone_sounds_w)
 	AM_RANGE(0x1860, 0x187f) AM_DEVWRITE_LEGACY("mathbox", mathbox_go_w)
-	AM_RANGE(0x2000, 0x2fff) AM_RAM AM_BASE_LEGACY(&avgdvg_vectorram) AM_SIZE_LEGACY(&avgdvg_vectorram_size) AM_REGION("maincpu", 0x2000)
+	AM_RANGE(0x2000, 0x2fff) AM_RAM AM_SHARE("vectorram") AM_REGION("maincpu", 0x2000)
 	AM_RANGE(0x3000, 0x7fff) AM_ROM
 ADDRESS_MAP_END
 
@@ -339,7 +337,7 @@ static ADDRESS_MAP_START( redbaron_map, AS_PROGRAM, 8, bzone_state )
 	AM_RANGE(0x1810, 0x181f) AM_DEVREADWRITE("pokey", pokey_device, read, write)
 	AM_RANGE(0x1820, 0x185f) AM_DEVREADWRITE("earom", atari_vg_earom_device, read, write)
 	AM_RANGE(0x1860, 0x187f) AM_DEVWRITE_LEGACY("mathbox", mathbox_go_w)
-	AM_RANGE(0x2000, 0x2fff) AM_RAM AM_BASE_LEGACY(&avgdvg_vectorram) AM_SIZE_LEGACY(&avgdvg_vectorram_size) AM_REGION("maincpu", 0x2000)
+	AM_RANGE(0x2000, 0x2fff) AM_RAM AM_SHARE("vectorram") AM_REGION("maincpu", 0x2000)
 	AM_RANGE(0x3000, 0x7fff) AM_ROM
 ADDRESS_MAP_END
 
@@ -557,7 +555,6 @@ static MACHINE_CONFIG_START( bzone_base, bzone_state )
 	MCFG_CPU_PROGRAM_MAP(bzone_map)
 	MCFG_CPU_PERIODIC_INT(bzone_interrupt, (double)BZONE_MASTER_CLOCK / 4096 / 12)
 
-	MCFG_MACHINE_START(bzone)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", VECTOR)
@@ -589,7 +586,7 @@ static MACHINE_CONFIG_DERIVED( redbaron, bzone_base )
 	MCFG_CPU_PROGRAM_MAP(redbaron_map)
 	MCFG_CPU_PERIODIC_INT(bzone_interrupt, (double)BZONE_MASTER_CLOCK / 4096 / 12)
 
-	MCFG_MACHINE_START(redbaron)
+	MCFG_MACHINE_START_OVERRIDE(bzone_state,redbaron)
 
 	MCFG_ATARIVGEAROM_ADD("earom")
 
@@ -598,7 +595,6 @@ static MACHINE_CONFIG_DERIVED( redbaron, bzone_base )
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VISIBLE_AREA(0, 520, 0, 400)
 
-	MCFG_VIDEO_START(avg_bzone)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

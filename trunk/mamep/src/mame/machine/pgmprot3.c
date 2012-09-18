@@ -94,7 +94,7 @@ static WRITE16_HANDLER( svg_latch_68k_w )
 {
 	pgm_arm_type3_state *state = space->machine().driver_data<pgm_arm_type3_state>();
 	if (PGMARM7LOGERROR)
-		logerror("M68K: Latch write: %04x (%04x) (%06x)\n", data & 0x0000ffff, mem_mask, cpu_get_pc(&space->device()));
+		logerror("M68K: Latch write: %04x (%04x) (%06x)\n", data & 0x0000ffff, mem_mask, space->device().safe_pc());
 	COMBINE_DATA(&state->m_svg_latchdata_68k_w);
 }
 
@@ -104,7 +104,7 @@ static READ16_HANDLER( svg_latch_68k_r )
 	pgm_arm_type3_state *state = space->machine().driver_data<pgm_arm_type3_state>();
 
 	if (PGMARM7LOGERROR)
-		logerror("M68K: Latch read: %04x (%04x) (%06x)\n", state->m_svg_latchdata_arm_w & 0x0000ffff, mem_mask, cpu_get_pc(&space->device()));
+		logerror("M68K: Latch read: %04x (%04x) (%06x)\n", state->m_svg_latchdata_arm_w & 0x0000ffff, mem_mask, space->device().safe_pc());
 	return state->m_svg_latchdata_arm_w;
 }
 
@@ -115,7 +115,7 @@ static READ32_HANDLER( svg_latch_arm_r )
 	pgm_arm_type3_state *state = space->machine().driver_data<pgm_arm_type3_state>();
 
 	if (PGMARM7LOGERROR)
-		logerror("ARM7: Latch read: %08x (%08x) (%06x)\n", state->m_svg_latchdata_68k_w, mem_mask, cpu_get_pc(&space->device()));
+		logerror("ARM7: Latch read: %08x (%08x) (%06x)\n", state->m_svg_latchdata_68k_w, mem_mask, space->device().safe_pc());
 	return state->m_svg_latchdata_68k_w;
 }
 
@@ -124,7 +124,7 @@ static WRITE32_HANDLER( svg_latch_arm_w )
 	pgm_arm_type3_state *state = space->machine().driver_data<pgm_arm_type3_state>();
 
 	if (PGMARM7LOGERROR)
-		logerror("ARM7: Latch write: %08x (%08x) (%06x)\n", data, mem_mask, cpu_get_pc(&space->device()));
+		logerror("ARM7: Latch write: %08x (%08x) (%06x)\n", data, mem_mask, space->device().safe_pc());
 
 	COMBINE_DATA(&state->m_svg_latchdata_arm_w);
 }
@@ -154,12 +154,11 @@ static ADDRESS_MAP_START( 55857G_arm7_map, AS_PROGRAM, 32, pgm_arm_type3_state )
 ADDRESS_MAP_END
 
 
-MACHINE_START( pgm_arm_type3 )
+MACHINE_START_MEMBER(pgm_arm_type3_state,pgm_arm_type3)
 {
-	MACHINE_START_CALL(pgm);
-	pgm_arm_type3_state *state = machine.driver_data<pgm_arm_type3_state>();
+	MACHINE_START_CALL_MEMBER(pgm);
 
-	state->m_prot = machine.device<cpu_device>("prot");
+	m_prot = machine().device<cpu_device>("prot");
 
 	/* register type specific Save State stuff here */
 }
@@ -170,7 +169,7 @@ MACHINE_START( pgm_arm_type3 )
 MACHINE_CONFIG_START( pgm_arm_type3, pgm_arm_type3_state )
 	MCFG_FRAGMENT_ADD(pgmbase)
 
-	MCFG_MACHINE_START( pgm_arm_type3 )
+	MCFG_MACHINE_START_OVERRIDE(pgm_arm_type3_state, pgm_arm_type3 )
 
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(svg_68k_mem)
@@ -269,18 +268,19 @@ DRIVER_INIT_MEMBER(pgm_arm_type3_state,killbldp)
 static READ32_HANDLER( dmnfrnt_speedup_r )
 {
 	pgm_arm_type3_state *state = space->machine().driver_data<pgm_arm_type3_state>();
-	int pc = cpu_get_pc(&space->device());
-	if (pc == 0x8000fea) device_eat_cycles(&space->device(), 500);
+	int pc = space->device().safe_pc();
+	if (pc == 0x8000fea) space->device().execute().eat_cycles(500);
 //  else printf("dmn_speedup_r %08x\n", pc);
 	return state->m_arm_ram[0x000444/4];
 }
 
 static READ16_HANDLER( dmnfrnt_main_speedup_r )
 {
-	UINT16 data = pgm_mainram[0xa03c/2];
-	int pc = cpu_get_pc(&space->device());
-	if (pc == 0x10193a) device_spin_until_interrupt(&space->device());
-	else if (pc == 0x1019a4) device_spin_until_interrupt(&space->device());
+	pgm_state *state = space->machine().driver_data<pgm_state>();
+	UINT16 data = state->m_mainram[0xa03c/2];
+	int pc = space->device().safe_pc();
+	if (pc == 0x10193a) space->device().execute().spin_until_interrupt();
+	else if (pc == 0x1019a4) space->device().execute().spin_until_interrupt();
 	return data;
 }
 

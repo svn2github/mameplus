@@ -110,6 +110,7 @@ public:
 	DECLARE_READ8_MEMBER(jamma_if_control_latch_r);
 	DECLARE_READ8_MEMBER(jamma_if_read_dsw);
 	DECLARE_DRIVER_INIT(uapce);
+	virtual void machine_reset();
 };
 
 #define UAPCE_SOUND_EN	NODE_10
@@ -136,7 +137,7 @@ WRITE8_MEMBER(uapce_state::jamma_if_control_latch_w)
 
 	if ( diff & 0x40 )
 	{
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_RESET, (data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x40) ? CLEAR_LINE : ASSERT_LINE);
 	}
 
 /* D5 : Connected to a TIP31 which may control the coin meter:
@@ -225,11 +226,10 @@ static UINT8 jamma_if_read_joystick( running_machine &machine )
 	}
 }
 
-static MACHINE_RESET( uapce )
+void uapce_state::machine_reset()
 {
-	uapce_state *state = machine.driver_data<uapce_state>();
 	pce_set_joystick_readinputport_callback( jamma_if_read_joystick );
-	state->m_jamma_if_control_latch = 0;
+	m_jamma_if_control_latch = 0;
 }
 
 static ADDRESS_MAP_START( z80_map, AS_PROGRAM, 8, uapce_state )
@@ -285,7 +285,7 @@ INPUT_PORTS_END
 
 static ADDRESS_MAP_START( pce_mem , AS_PROGRAM, 8, uapce_state )
 	AM_RANGE( 0x000000, 0x09FFFF) AM_ROM
-	AM_RANGE( 0x1F0000, 0x1F1FFF) AM_RAM AM_MIRROR(0x6000) AM_BASE_LEGACY(&pce_user_ram )
+	AM_RANGE( 0x1F0000, 0x1F1FFF) AM_RAM AM_MIRROR(0x6000)
 	AM_RANGE( 0x1FE000, 0x1FE3FF) AM_READWRITE_LEGACY(vdc_0_r, vdc_0_w )
 	AM_RANGE( 0x1FE400, 0x1FE7FF) AM_READWRITE_LEGACY(vce_r, vce_w )
 	AM_RANGE( 0x1FE800, 0x1FEBFF) AM_DEVREADWRITE_LEGACY("c6280", c6280_r, c6280_w )
@@ -315,7 +315,6 @@ static MACHINE_CONFIG_START( uapce, uapce_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
-	MCFG_MACHINE_RESET( uapce )
 
     /* video hardware */
 

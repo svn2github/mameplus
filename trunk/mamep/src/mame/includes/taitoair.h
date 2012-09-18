@@ -43,7 +43,7 @@ public:
 	INT32         m_banknum;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	device_t *m_dsp;
 	device_t *m_tc0080vco;
 
@@ -79,12 +79,15 @@ public:
 	DECLARE_WRITE16_MEMBER(dsp_rasterize_w);
 	DECLARE_READ16_MEMBER(dsp_x_return_r);
 	DECLARE_READ16_MEMBER(dsp_y_return_r);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/taitoair.c -----------*/
 
 SCREEN_UPDATE_IND16( taitoair );
-VIDEO_START( taitoair );
+
 
 

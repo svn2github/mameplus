@@ -46,13 +46,13 @@ READ16_MEMBER(shangha3_state::shangha3_prot_r)
 {
 	static const int result[] = { 0x0,0x1,0x3,0x7,0xf,0xe,0xc,0x8,0x0};
 
-	logerror("PC %04x: read 20004e\n",cpu_get_pc(&space.device()));
+	logerror("PC %04x: read 20004e\n",space.device().safe_pc());
 
 	return result[m_prot_count++ % 9];
 }
 WRITE16_MEMBER(shangha3_state::shangha3_prot_w)
 {
-	logerror("PC %04x: write %02x to 20004e\n",cpu_get_pc(&space.device()),data);
+	logerror("PC %04x: write %02x to 20004e\n",space.device().safe_pc(),data);
 }
 
 
@@ -110,7 +110,7 @@ WRITE16_MEMBER(shangha3_state::heberpop_sound_command_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, 0, data & 0xff);
-		cputag_set_input_line_and_vector(machine(), "audiocpu", 0, HOLD_LINE, 0xff);	/* RST 38h */
+		machine().device("audiocpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);	/* RST 38h */
 	}
 }
 
@@ -457,7 +457,7 @@ static const ay8910_interface ay8910_config =
 
 static void irqhandler(device_t *device, int linestate)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", INPUT_LINE_NMI, linestate);
+	device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, linestate);
 }
 
 static const ym3438_interface ym3438_config =
@@ -486,7 +486,6 @@ static MACHINE_CONFIG_START( shangha3, shangha3_state )
 	MCFG_GFXDECODE(shangha3)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(shangha3)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -524,7 +523,6 @@ static MACHINE_CONFIG_START( heberpop, shangha3_state )
 	MCFG_GFXDECODE(shangha3)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(shangha3)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -563,7 +561,6 @@ static MACHINE_CONFIG_START( blocken, shangha3_state )
 	MCFG_GFXDECODE(shangha3)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(shangha3)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

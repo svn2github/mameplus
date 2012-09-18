@@ -109,10 +109,10 @@ static TIMER_DEVICE_CALLBACK( zodiack_scanline )
 	int scanline = param;
 
 	if(scanline == 240 && state->m_nmi_enable) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	if(scanline == 0 ) // vblank-in irq
-		cputag_set_input_line(timer.machine(), "maincpu", 0, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(0, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( zodiack_sound_nmi_gen )
@@ -127,7 +127,7 @@ static INTERRUPT_GEN( zodiack_sound_nmi_gen )
 WRITE8_MEMBER( zodiack_state::master_soundlatch_w )
 {
 	soundlatch_byte_w(space, offset, data);
-	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 WRITE8_MEMBER( zodiack_state::control_w )
@@ -578,7 +578,7 @@ static MACHINE_CONFIG_START( zodiack, zodiack_state )
 	MCFG_GFXDECODE(zodiack)
 	MCFG_PALETTE_LENGTH(4*8+2*8+2*1)
 
-	MCFG_PALETTE_INIT(zodiack)
+	MCFG_PALETTE_INIT_OVERRIDE(zodiack_state,zodiack)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

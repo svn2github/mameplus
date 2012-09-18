@@ -235,7 +235,7 @@ H=B0: 0C,0C,0D,0D,0E,0E,0F,0F 0C,0C,2D,2D,0E,0E,2F,2F
  *************************************/
 
 static void state_save_register(running_machine &machine);
-static TILE_GET_INFO( bg_get_tile_info );
+
 
 static void sprites_draw(running_machine &machine, bitmap_rgb32 &bitmap, const rectangle &cliprect, const UINT8 *spritebase);
 
@@ -253,10 +253,9 @@ static void bullets_draw(running_machine &machine, bitmap_rgb32 &bitmap, const r
  *
  *************************************/
 
-PALETTE_INIT( galaxian )
+void galaxian_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
-	galaxian_state *state = machine.driver_data<galaxian_state>();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	static const int rgb_resistances[3] = { 1000, 470, 220 };
 	double rweights[3], gweights[3], bweights[2];
 	int i, minval, midval, maxval, len;
@@ -294,7 +293,7 @@ PALETTE_INIT( galaxian )
 			2, &rgb_resistances[1], bweights, 470, 0);
 
 	/* decode the palette first */
-	len = machine.root_device().memregion("proms")->bytes();
+	len = machine().root_device().memregion("proms")->bytes();
 	for (i = 0; i < len; i++)
 	{
 		UINT8 bit0, bit1, bit2, r, g, b;
@@ -316,7 +315,7 @@ PALETTE_INIT( galaxian )
 		bit1 = BIT(color_prom[i],7);
 		b = combine_2_weights(bweights, bit0, bit1);
 
-		palette_set_color(machine, i, MAKE_RGB(r,g,b));
+		palette_set_color(machine(), i, MAKE_RGB(r,g,b));
 	}
 
 	/*
@@ -365,22 +364,21 @@ PALETTE_INIT( galaxian )
 		b = starmap[(bit1 << 1) | bit0];
 
 		/* set the RGB color */
-		state->m_star_color[i] = MAKE_RGB(r, g, b);
+		m_star_color[i] = MAKE_RGB(r, g, b);
 	}
 
 	/* default bullet colors are white for the first 7, and yellow for the last one */
 	for (i = 0; i < 7; i++)
-		state->m_bullet_color[i] = MAKE_RGB(0xff,0xff,0xff);
-	state->m_bullet_color[7] = MAKE_RGB(0xff,0xff,0x00);
+		m_bullet_color[i] = MAKE_RGB(0xff,0xff,0xff);
+	m_bullet_color[7] = MAKE_RGB(0xff,0xff,0x00);
 }
 
-PALETTE_INIT( moonwar )
+PALETTE_INIT_MEMBER(galaxian_state,moonwar)
 {
-	galaxian_state *state = machine.driver_data<galaxian_state>();
-	PALETTE_INIT_CALL(galaxian);
+	galaxian_state::palette_init();
 
 	/* wire mod to connect the bullet blue output to the 220 ohm resistor */
-	state->m_bullet_color[7] = MAKE_RGB(0xef,0xef,0x97);
+	m_bullet_color[7] = MAKE_RGB(0xef,0xef,0x97);
 }
 
 /*************************************
@@ -389,41 +387,40 @@ PALETTE_INIT( moonwar )
  *
  *************************************/
 
-VIDEO_START( galaxian )
+void galaxian_state::video_start()
 {
-	galaxian_state *state = machine.driver_data<galaxian_state>();
 	/* create a tilemap for the background */
-	if (!state->m_sfx_tilemap)
+	if (!m_sfx_tilemap)
 	{
 		/* normal galaxian hardware is row-based and individually scrolling columns */
-		state->m_bg_tilemap = tilemap_create(machine, bg_get_tile_info, tilemap_scan_rows, GALAXIAN_XSCALE*8,8, 32,32);
-		state->m_bg_tilemap->set_scroll_cols(32);
-		state->m_bg_tilemap->set_scrolldx(0, -GALAXIAN_XSCALE * 128);
-		state->m_bg_tilemap->set_scrolldy(0, 8);
+		m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(galaxian_state::bg_get_tile_info),this), TILEMAP_SCAN_ROWS, GALAXIAN_XSCALE*8,8, 32,32);
+		m_bg_tilemap->set_scroll_cols(32);
+		m_bg_tilemap->set_scrolldx(0, -GALAXIAN_XSCALE * 128);
+		m_bg_tilemap->set_scrolldy(0, 8);
 	}
 	else
 	{
 		/* sfx hardware is column-based and individually scrolling rows */
-		state->m_bg_tilemap = tilemap_create(machine, bg_get_tile_info, tilemap_scan_cols, GALAXIAN_XSCALE*8,8, 32,32);
-		state->m_bg_tilemap->set_scroll_rows(32);
-		state->m_bg_tilemap->set_scrolldx(0, -GALAXIAN_XSCALE * 128);
-		state->m_bg_tilemap->set_scrolldy(0, 8);
+		m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(galaxian_state::bg_get_tile_info),this), TILEMAP_SCAN_COLS, GALAXIAN_XSCALE*8,8, 32,32);
+		m_bg_tilemap->set_scroll_rows(32);
+		m_bg_tilemap->set_scrolldx(0, -GALAXIAN_XSCALE * 128);
+		m_bg_tilemap->set_scrolldy(0, 8);
 	}
-	state->m_bg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap->set_transparent_pen(0);
 
 	/* initialize globals */
-	state->m_flipscreen_x = 0;
-	state->m_flipscreen_y = 0;
-	state->m_background_enable = 0;
-	state->m_background_blue = 0;
-	state->m_background_red = 0;
-	state->m_background_green = 0;
+	m_flipscreen_x = 0;
+	m_flipscreen_y = 0;
+	m_background_enable = 0;
+	m_background_blue = 0;
+	m_background_red = 0;
+	m_background_green = 0;
 
 	/* initialize stars */
-	stars_init(machine);
+	stars_init(machine());
 
 	/* register for save states */
-	state_save_register(machine);
+	state_save_register(machine());
 }
 
 
@@ -481,20 +478,19 @@ SCREEN_UPDATE_RGB32( galaxian )
  *
  *************************************/
 
-static TILE_GET_INFO( bg_get_tile_info )
+TILE_GET_INFO_MEMBER(galaxian_state::bg_get_tile_info)
 {
-	galaxian_state *state = machine.driver_data<galaxian_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	UINT8 x = tile_index & 0x1f;
 
 	UINT16 code = videoram[tile_index];
-	UINT8 attrib = state->m_spriteram[x*2+1];
+	UINT8 attrib = m_spriteram[x*2+1];
 	UINT8 color = attrib & 7;
 
-	if (state->m_extend_tile_info_ptr != NULL)
-		(*state->m_extend_tile_info_ptr)(machine, &code, &color, attrib, x);
+	if (m_extend_tile_info_ptr != NULL)
+		(*m_extend_tile_info_ptr)(machine(), &code, &color, attrib, x);
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
 
@@ -556,10 +552,13 @@ static void sprites_draw(running_machine &machine, bitmap_rgb32 &bitmap, const r
 	rectangle clip = cliprect;
 	int sprnum;
 
+	/* the existence of +1 (sprite vs tile layer) is supported by a LOT of games */
+	const int hoffset = 1;
+
 	/* 16 of the 256 pixels of the sprites are hard-clipped at the line buffer */
 	/* according to the schematics, it should be the first 16 pixels */
-	clip.min_x = MAX(clip.min_x, (!state->m_flipscreen_x) * 16 * GALAXIAN_XSCALE);
-	clip.max_x = MIN(clip.max_x, (256 - state->m_flipscreen_x * 16) * GALAXIAN_XSCALE - 1);
+	clip.min_x = MAX(clip.min_x, (!state->m_flipscreen_x) * (16 + hoffset) * GALAXIAN_XSCALE);
+	clip.max_x = MIN(clip.max_x, (256 - state->m_flipscreen_x * (16 + hoffset)) * GALAXIAN_XSCALE - 1);
 
 	/* The line buffer is only written if it contains a '0' currently; */
 	/* it is cleared during the visible area, and populated during HBLANK */
@@ -576,7 +575,7 @@ static void sprites_draw(running_machine &machine, bitmap_rgb32 &bitmap, const r
 		UINT8 flipx = base[1] & 0x40;
 		UINT8 flipy = base[1] & 0x80;
 		UINT8 color = base[2] & 7;
-		UINT8 sx = base[3] + 1;
+		UINT8 sx = base[3] + hoffset;
 
 		/* extend the sprite information */
 		if (state->m_extend_sprite_info_ptr != NULL)

@@ -226,28 +226,26 @@ GFXDECODE_END
 
 
 
-static MACHINE_START( ginganin )
+void ginganin_state::machine_start()
 {
-	ginganin_state *state = machine.driver_data<ginganin_state>();
 
-	state->m_audiocpu = machine.device("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_layers_ctrl));
-	state->save_item(NAME(state->m_flipscreen));
+	save_item(NAME(m_layers_ctrl));
+	save_item(NAME(m_flipscreen));
 }
 
-static MACHINE_RESET( ginganin )
+void ginganin_state::machine_reset()
 {
-	ginganin_state *state = machine.driver_data<ginganin_state>();
 
-	state->m_layers_ctrl = 0;
-	state->m_flipscreen = 0;
+	m_layers_ctrl = 0;
+	m_flipscreen = 0;
 }
 
 
 WRITE8_MEMBER(ginganin_state::ptm_irq)
 {
-	cputag_set_input_line(machine(), "audiocpu", 0, (data & 1) ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(0, (data & 1) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ptm6840_interface ptm_intf =
@@ -268,8 +266,6 @@ static MACHINE_CONFIG_START( ginganin, ginganin_state )
 	MCFG_CPU_ADD("audiocpu", M6809, SOUND_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(ginganin)
-	MCFG_MACHINE_RESET(ginganin)
 
 	MCFG_PTM6840_ADD("6840ptm", ptm_intf)
 
@@ -284,7 +280,6 @@ static MACHINE_CONFIG_START( ginganin, ginganin_state )
 	MCFG_GFXDECODE(ginganin)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(ginganin)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

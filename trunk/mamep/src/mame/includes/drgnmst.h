@@ -57,11 +57,20 @@ public:
 	DECLARE_WRITE16_MEMBER(drgnmst_bg_videoram_w);
 	DECLARE_WRITE16_MEMBER(drgnmst_md_videoram_w);
 	DECLARE_DRIVER_INIT(drgnmst);
+	TILE_GET_INFO_MEMBER(get_drgnmst_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_drgnmst_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_drgnmst_md_tile_info);
+	TILEMAP_MAPPER_MEMBER(drgnmst_fg_tilemap_scan_cols);
+	TILEMAP_MAPPER_MEMBER(drgnmst_md_tilemap_scan_cols);
+	TILEMAP_MAPPER_MEMBER(drgnmst_bg_tilemap_scan_cols);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/drgnmst.c -----------*/
 
 
-VIDEO_START(drgnmst);
+
 SCREEN_UPDATE_IND16(drgnmst);

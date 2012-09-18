@@ -26,8 +26,8 @@ public:
 	UINT16      m_fgscroll;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	DECLARE_READ16_MEMBER(dummy_r);
 	DECLARE_WRITE16_MEMBER(sf_coin_w);
 	DECLARE_WRITE16_MEMBER(soundcmd_w);
@@ -41,11 +41,17 @@ public:
 	DECLARE_WRITE16_MEMBER(sf_gfxctrl_w);
 	DECLARE_WRITE8_MEMBER(msm1_5205_w);
 	DECLARE_WRITE8_MEMBER(msm2_5205_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_tx_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/sf.c -----------*/
 
 
-VIDEO_START( sf );
+
 SCREEN_UPDATE_IND16( sf );

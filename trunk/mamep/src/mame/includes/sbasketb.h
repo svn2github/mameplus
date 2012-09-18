@@ -1,3 +1,6 @@
+
+#include "sound/sn76496.h"
+
 class sbasketb_state : public driver_device
 {
 public:
@@ -8,7 +11,9 @@ public:
 		m_spriteram(*this, "spriteram"),
 		m_palettebank(*this, "palettebank"),
 		m_spriteram_select(*this, "spriteramsel"),
-		m_scroll(*this, "scroll"){ }
+		m_scroll(*this, "scroll"),
+		m_sn(*this, "snsnd")
+	{ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_colorram;
@@ -17,6 +22,7 @@ public:
 	required_shared_ptr<UINT8> m_palettebank;
 	required_shared_ptr<UINT8> m_spriteram_select;
 	required_shared_ptr<UINT8> m_scroll;
+	optional_device<sn76489_new_device> m_sn;
 
 	/* video-related */
 	tilemap_t  *m_bg_tilemap;
@@ -29,11 +35,18 @@ public:
 	DECLARE_WRITE8_MEMBER(sbasketb_colorram_w);
 	DECLARE_WRITE8_MEMBER(sbasketb_flipscreen_w);
 	DECLARE_DRIVER_INIT(sbasketb);
+
+	UINT8 m_SN76496_latch;
+	DECLARE_WRITE8_MEMBER( konami_SN76496_latch_w ) { m_SN76496_latch = data; };
+	DECLARE_WRITE8_MEMBER( konami_SN76496_w ) { m_sn->write(space, offset, m_SN76496_latch); };
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 /*----------- defined in video/sbasketb.c -----------*/
 
 
-PALETTE_INIT( sbasketb );
-VIDEO_START( sbasketb );
+
+
 SCREEN_UPDATE_IND16( sbasketb );

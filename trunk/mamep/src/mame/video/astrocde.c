@@ -59,7 +59,7 @@ INLINE int mame_vpos_to_astrocade_vpos(int scanline)
  *
  *************************************/
 
-PALETTE_INIT( astrocde )
+void astrocde_state::palette_init()
 {
 	/*
         The Astrocade has a 256 color palette: 32 colors with 8 luminance
@@ -102,13 +102,13 @@ PALETTE_INIT( astrocde )
 			g = MIN(g, 255);
 			b = MAX(b, 0);
 			b = MIN(b, 255);
-			palette_set_color(machine, color * 16 + luma, MAKE_RGB(r, g, b));
+			palette_set_color(machine(), color * 16 + luma, MAKE_RGB(r, g, b));
 		}
 	}
 }
 
 
-PALETTE_INIT( profpac )
+PALETTE_INIT_MEMBER(astrocde_state,profpac)
 {
 	/* Professor Pac-Man uses a more standard 12-bit RGB palette layout */
 	static const int resistances[4] = { 6200, 3000, 1500, 750 };
@@ -148,7 +148,7 @@ PALETTE_INIT( profpac )
 		bit3 = (i >> 11) & 0x01;
 		r = combine_4_weights(weights, bit0, bit1, bit2, bit3);
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 
@@ -160,51 +160,49 @@ PALETTE_INIT( profpac )
  *
  *************************************/
 
-VIDEO_START( astrocde )
+void astrocde_state::video_start()
 {
-	astrocde_state *state = machine.driver_data<astrocde_state>();
 
 	/* allocate timers */
-	state->m_scanline_timer = machine.scheduler().timer_alloc(FUNC(scanline_callback));
-	state->m_scanline_timer->adjust(machine.primary_screen->time_until_pos(1), 1);
-	state->m_intoff_timer = machine.scheduler().timer_alloc(FUNC(interrupt_off));
+	m_scanline_timer = machine().scheduler().timer_alloc(FUNC(scanline_callback));
+	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(1), 1);
+	m_intoff_timer = machine().scheduler().timer_alloc(FUNC(interrupt_off));
 
 	/* register for save states */
-	init_savestate(machine);
+	init_savestate(machine());
 
 	/* initialize the sparkle and stars */
-	if (state->m_video_config & AC_STARS)
-		init_sparklestar(machine);
+	if (m_video_config & AC_STARS)
+		init_sparklestar(machine());
 }
 
 
-VIDEO_START( profpac )
+VIDEO_START_MEMBER(astrocde_state,profpac)
 {
-	astrocde_state *state = machine.driver_data<astrocde_state>();
 
 	/* allocate timers */
-	state->m_scanline_timer = machine.scheduler().timer_alloc(FUNC(scanline_callback));
-	state->m_scanline_timer->adjust(machine.primary_screen->time_until_pos(1), 1);
-	state->m_intoff_timer = machine.scheduler().timer_alloc(FUNC(interrupt_off));
+	m_scanline_timer = machine().scheduler().timer_alloc(FUNC(scanline_callback));
+	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(1), 1);
+	m_intoff_timer = machine().scheduler().timer_alloc(FUNC(interrupt_off));
 
 	/* allocate videoram */
-	state->m_profpac_videoram = auto_alloc_array(machine, UINT16, 0x4000 * 4);
+	m_profpac_videoram = auto_alloc_array(machine(), UINT16, 0x4000 * 4);
 
 	/* register for save states */
-	init_savestate(machine);
+	init_savestate(machine());
 
 	/* register our specific save state data */
-	state_save_register_global_pointer(machine, state->m_profpac_videoram, 0x4000 * 4);
-	state_save_register_global_array(machine, state->m_profpac_palette);
-	state_save_register_global_array(machine, state->m_profpac_colormap);
-	state_save_register_global(machine, state->m_profpac_intercept);
-	state_save_register_global(machine, state->m_profpac_vispage);
-	state_save_register_global(machine, state->m_profpac_readpage);
-	state_save_register_global(machine, state->m_profpac_readshift);
-	state_save_register_global(machine, state->m_profpac_writepage);
-	state_save_register_global(machine, state->m_profpac_writemode);
-	state_save_register_global(machine, state->m_profpac_writemask);
-	state_save_register_global(machine, state->m_profpac_vw);
+	state_save_register_global_pointer(machine(), m_profpac_videoram, 0x4000 * 4);
+	state_save_register_global_array(machine(), m_profpac_palette);
+	state_save_register_global_array(machine(), m_profpac_colormap);
+	state_save_register_global(machine(), m_profpac_intercept);
+	state_save_register_global(machine(), m_profpac_vispage);
+	state_save_register_global(machine(), m_profpac_readpage);
+	state_save_register_global(machine(), m_profpac_readshift);
+	state_save_register_global(machine(), m_profpac_writepage);
+	state_save_register_global(machine(), m_profpac_writemode);
+	state_save_register_global(machine(), m_profpac_writemask);
+	state_save_register_global(machine(), m_profpac_vw);
 }
 
 
@@ -379,7 +377,7 @@ SCREEN_UPDATE_IND16( profpac )
 
 static TIMER_CALLBACK( interrupt_off )
 {
-	cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -393,14 +391,14 @@ static void astrocade_trigger_lightpen(running_machine &machine, UINT8 vfeedback
 		/* bit 0 controls the interrupt mode: mode 0 means assert until acknowledged */
 		if ((state->m_interrupt_enabl & 0x01) == 0)
 		{
-			cputag_set_input_line_and_vector(machine, "maincpu", 0, HOLD_LINE, state->m_interrupt_vector & 0xf0);
+			machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, state->m_interrupt_vector & 0xf0);
 			state->m_intoff_timer->adjust(machine.primary_screen->time_until_pos(vfeedback));
 		}
 
 		/* mode 1 means assert for 1 instruction */
 		else
 		{
-			cputag_set_input_line_and_vector(machine, "maincpu", 0, ASSERT_LINE, state->m_interrupt_vector & 0xf0);
+			machine.device("maincpu")->execute().set_input_line_and_vector(0, ASSERT_LINE, state->m_interrupt_vector & 0xf0);
 			state->m_intoff_timer->adjust(machine.device<cpu_device>("maincpu")->cycles_to_attotime(1));
 		}
 
@@ -434,14 +432,14 @@ static TIMER_CALLBACK( scanline_callback )
 		/* bit 2 controls the interrupt mode: mode 0 means assert until acknowledged */
 		if ((state->m_interrupt_enabl & 0x04) == 0)
 		{
-			cputag_set_input_line_and_vector(machine, "maincpu", 0, HOLD_LINE, state->m_interrupt_vector);
+			machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, state->m_interrupt_vector);
 			machine.scheduler().timer_set(machine.primary_screen->time_until_vblank_end(), FUNC(interrupt_off));
 		}
 
 		/* mode 1 means assert for 1 instruction */
 		else
 		{
-			cputag_set_input_line_and_vector(machine, "maincpu", 0, ASSERT_LINE, state->m_interrupt_vector);
+			machine.device("maincpu")->execute().set_input_line_and_vector(0, ASSERT_LINE, state->m_interrupt_vector);
 			machine.scheduler().timer_set(machine.device<cpu_device>("maincpu")->cycles_to_attotime(1), FUNC(interrupt_off));
 		}
 	}
@@ -835,7 +833,7 @@ static void execute_blit(address_space *space)
 	} while (state->m_pattern_height-- != 0);
 
 	/* count cycles we ran the bus */
-	device_adjust_icount(&space->device(), -cycles);
+	space->device().execute().adjust_icount(-cycles);
 }
 
 

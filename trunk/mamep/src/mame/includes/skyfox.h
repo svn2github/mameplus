@@ -23,17 +23,20 @@ public:
 	int        m_palette_selected;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_READ8_MEMBER(skyfox_vregs_r);
 	DECLARE_WRITE8_MEMBER(skyfox_vregs_w);
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
 	DECLARE_DRIVER_INIT(skyfox);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void palette_init();
 };
 
 /*----------- defined in video/skyfox.c -----------*/
 
 
-PALETTE_INIT( skyfox );
+
 
 SCREEN_UPDATE_IND16( skyfox );
 

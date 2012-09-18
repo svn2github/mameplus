@@ -29,7 +29,7 @@ public:
 	int m_aquarium_snd_ack;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	DECLARE_READ16_MEMBER(aquarium_coins_r);
 	DECLARE_WRITE8_MEMBER(aquarium_snd_ack_w);
 	DECLARE_WRITE16_MEMBER(aquarium_sound_w);
@@ -40,11 +40,17 @@ public:
 	DECLARE_WRITE16_MEMBER(aquarium_mid_videoram_w);
 	DECLARE_WRITE16_MEMBER(aquarium_bak_videoram_w);
 	DECLARE_DRIVER_INIT(aquarium);
+	TILE_GET_INFO_MEMBER(get_aquarium_txt_tile_info);
+	TILE_GET_INFO_MEMBER(get_aquarium_mid_tile_info);
+	TILE_GET_INFO_MEMBER(get_aquarium_bak_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/aquarium.c -----------*/
 
 
-VIDEO_START(aquarium);
+
 SCREEN_UPDATE_IND16(aquarium);

@@ -211,10 +211,10 @@ static TIMER_DEVICE_CALLBACK( deadang_main_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE,0xc4/4);
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xc4/4);
 
 	if(scanline == 0) // vblank-in irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE,0xc8/4);
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xc8/4);
 }
 
 static TIMER_DEVICE_CALLBACK( deadang_sub_scanline )
@@ -222,10 +222,10 @@ static TIMER_DEVICE_CALLBACK( deadang_sub_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line_and_vector(timer.machine(), "sub", 0, HOLD_LINE,0xc4/4);
+		timer.machine().device("sub")->execute().set_input_line_and_vector(0, HOLD_LINE,0xc4/4);
 
 	if(scanline == 0) // vblank-in irq
-		cputag_set_input_line_and_vector(timer.machine(), "sub", 0, HOLD_LINE,0xc8/4);
+		timer.machine().device("sub")->execute().set_input_line_and_vector(0, HOLD_LINE,0xc8/4);
 }
 
 /* Machine Drivers */
@@ -258,7 +258,6 @@ static MACHINE_CONFIG_START( deadang, deadang_state )
 	MCFG_GFXDECODE(deadang)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(deadang)
 
 	/* sound hardware */
 	SEIBU_SOUND_SYSTEM_YM2203_INTERFACE(XTAL_14_31818MHz/4)

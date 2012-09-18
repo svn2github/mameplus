@@ -29,7 +29,7 @@ public:
 	int        m_counter;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE8_MEMBER(control_w);
 	DECLARE_WRITE8_MEMBER(sound_reset_w);
 	DECLARE_WRITE8_MEMBER(sound_command_w);
@@ -42,13 +42,19 @@ public:
 	DECLARE_WRITE8_MEMBER(sound_control_w);
 	DECLARE_DRIVER_INIT(kchampvs);
 	DECLARE_DRIVER_INIT(kchampvs2);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_MACHINE_START(kchampvs);
+	DECLARE_MACHINE_START(kchamp);
 };
 
 
 /*----------- defined in video/kchamp.c -----------*/
 
 
-PALETTE_INIT( kchamp );
-VIDEO_START( kchamp );
+
+
 SCREEN_UPDATE_IND16( kchamp );
 SCREEN_UPDATE_IND16( kchampvs );

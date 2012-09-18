@@ -52,8 +52,8 @@ public:
 	UINT8*	 m_ROM;
 
 	/* devices */
-	device_t *m_audiocpu;
-	device_t *m_subcpu;
+	cpu_device *m_audiocpu;
+	cpu_device *m_subcpu;
 	device_t *m_mcu;
 	DECLARE_WRITE8_MEMBER(tnzsb_sound_command_w);
 	DECLARE_WRITE8_MEMBER(jpopnics_palette_w);
@@ -91,6 +91,11 @@ public:
 	DECLARE_DRIVER_INIT(kageki);
 	DECLARE_DRIVER_INIT(chukatai);
 	DECLARE_DRIVER_INIT(tnzsb);
+	DECLARE_MACHINE_START(tnzs);
+	DECLARE_MACHINE_RESET(tnzs);
+	DECLARE_PALETTE_INIT(arknoid2);
+	DECLARE_MACHINE_START(jpopnics);
+	DECLARE_MACHINE_RESET(jpopnics);
 };
 
 
@@ -99,14 +104,14 @@ public:
 INTERRUPT_GEN( arknoid2_interrupt );
 
 
-MACHINE_START( tnzs );
-MACHINE_RESET( tnzs );
-MACHINE_RESET( jpopnics );
-MACHINE_START( jpopnics );
+
+
+
+
 
 
 /*----------- defined in video/tnzs.c -----------*/
 
-PALETTE_INIT( arknoid2 );
+
 SCREEN_UPDATE_IND16( tnzs );
 SCREEN_VBLANK( tnzs );

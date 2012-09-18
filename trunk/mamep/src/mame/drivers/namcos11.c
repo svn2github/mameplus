@@ -341,6 +341,7 @@ public:
 	DECLARE_DRIVER_INIT(tekken);
 	DECLARE_DRIVER_INIT(xevi3dg);
 	DECLARE_DRIVER_INIT(tekken2);
+	DECLARE_MACHINE_RESET(namcos11);
 };
 
 INLINE void ATTR_PRINTF(3,4) verboselog( running_machine &machine, int n_level, const char *s_fmt, ... )
@@ -757,7 +758,7 @@ WRITE16_MEMBER(namcos11_state::c76_shared_w)
 
 READ16_MEMBER(namcos11_state::c76_inputs_r)
 {
-//  logerror("'c76' Read port %d @ %06X\n", offset, cpu_get_pc(&space.device()));
+//  logerror("'c76' Read port %d @ %06X\n", offset, space.device().safe_pc());
 
 	switch (offset)
 	{
@@ -855,9 +856,9 @@ ADDRESS_MAP_END
 READ16_MEMBER(namcos11_state::c76_speedup_r)
 {
 
-	if ((cpu_get_pc(&space.device()) == 0xc153) && (!(m_su_83 & 0xff00)))
+	if ((space.device().safe_pc() == 0xc153) && (!(m_su_83 & 0xff00)))
 	{
-		device_spin_until_interrupt(&space.device());
+		space.device().execute().spin_until_interrupt();
 	}
 
 	return m_su_83;
@@ -992,11 +993,10 @@ DRIVER_INIT_MEMBER(namcos11_state,ptblank2ua)
 	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler (0x1f780000, 0x1f78000f, read32_delegate(FUNC(namcos11_state::lightgun_r),this));
 }
 
-static MACHINE_RESET( namcos11 )
+MACHINE_RESET_MEMBER(namcos11_state,namcos11)
 {
-	namcos11_state *state = machine.driver_data<namcos11_state>();
 
-	memset( state->m_keycus, 0, state->m_keycus_size );
+	memset( m_keycus, 0, m_keycus_size );
 }
 
 
@@ -1004,21 +1004,21 @@ static TIMER_DEVICE_CALLBACK( mcu_irq0_cb )
 {
 	namcos11_state *state = timer.machine().driver_data<namcos11_state>();
 
-	device_set_input_line(state->m_mcu, M37710_LINE_IRQ0, HOLD_LINE);
+	state->m_mcu->set_input_line(M37710_LINE_IRQ0, HOLD_LINE);
 }
 
 static TIMER_DEVICE_CALLBACK( mcu_irq2_cb )
 {
 	namcos11_state *state = timer.machine().driver_data<namcos11_state>();
 
-	device_set_input_line(state->m_mcu, M37710_LINE_IRQ2, HOLD_LINE);
+	state->m_mcu->set_input_line(M37710_LINE_IRQ2, HOLD_LINE);
 }
 
 static TIMER_DEVICE_CALLBACK( mcu_adc_cb )
 {
 	namcos11_state *state = timer.machine().driver_data<namcos11_state>();
 
-	device_set_input_line(state->m_mcu, M37710_LINE_ADC, HOLD_LINE);
+	state->m_mcu->set_input_line(M37710_LINE_ADC, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( coh100, namcos11_state )
@@ -1034,7 +1034,7 @@ static MACHINE_CONFIG_START( coh100, namcos11_state )
 	MCFG_TIMER_ADD_PERIODIC("mcu_irq2", mcu_irq2_cb, attotime::from_hz(60))
 	MCFG_TIMER_ADD_PERIODIC("mcu_adc",  mcu_adc_cb, attotime::from_hz(60))
 
-	MCFG_MACHINE_RESET( namcos11 )
+	MCFG_MACHINE_RESET_OVERRIDE(namcos11_state, namcos11 )
 
 	MCFG_PSXGPU_ADD( "maincpu", "gpu", CXD8538Q, 0x200000, XTAL_53_693175MHz )
 

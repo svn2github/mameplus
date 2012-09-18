@@ -65,6 +65,12 @@ public:
 	DECLARE_DRIVER_INIT(primrage20);
 	DECLARE_DRIVER_INIT(primrage);
 	DECLARE_DRIVER_INIT(tmek);
+	TILE_GET_INFO_MEMBER(get_alpha_tile_info);
+	TILE_GET_INFO_MEMBER(get_playfield_tile_info);
+	TILEMAP_MAPPER_MEMBER(atarigt_playfield_scan);
+	DECLARE_MACHINE_START(atarigt);
+	DECLARE_MACHINE_RESET(atarigt);
+	DECLARE_VIDEO_START(atarigt);
 };
 
 
@@ -72,7 +78,7 @@ public:
 
 
 
-VIDEO_START( atarigt );
+
 SCREEN_VBLANK( atarigt );
 SCREEN_UPDATE_RGB32( atarigt );
 

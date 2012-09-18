@@ -39,7 +39,7 @@ INLINE void verboselog(running_machine &machine, int n_level, const char *s_fmt,
 		va_start( v, s_fmt );
 		vsprintf( buf, s_fmt, v );
 		va_end( v );
-		logerror( "%08x: %s", cpu_get_pc(machine.device("maincpu")), buf );
+		logerror( "%08x: %s", machine.device("maincpu")->safe_pc(), buf );
 	}
 }
 #else
@@ -59,8 +59,8 @@ TIMER_CALLBACK( cdislave_device::trigger_readback_int )
 void cdislave_device::readback_trigger()
 {
     verboselog(machine(), 0, "Asserting IRQ2\n" );
-    device_set_input_line_vector(machine().device("maincpu"), M68K_IRQ_2, 26);
-    cputag_set_input_line(machine(), "maincpu", M68K_IRQ_2, ASSERT_LINE);
+    machine().device("maincpu")->execute().set_input_line_vector(M68K_IRQ_2, 26);
+    machine().device("maincpu")->execute().set_input_line(M68K_IRQ_2, ASSERT_LINE);
     m_interrupt_timer->adjust(attotime::never);
 }
 
@@ -144,7 +144,7 @@ UINT16 cdislave_device::register_read(const UINT32 offset, const UINT16 mem_mask
                 case 0xf4:
                 case 0xf7:
                     verboselog(machine(), 0, "slave_r: De-asserting IRQ2\n" );
-                    cputag_set_input_line(machine(), "maincpu", M68K_IRQ_2, CLEAR_LINE);
+                    machine().device("maincpu")->execute().set_input_line(M68K_IRQ_2, CLEAR_LINE);
                     break;
             }
         }

@@ -156,7 +156,6 @@ OSC3: 48.384MHz
 */
 
 #include "emu.h"
-#include "includes/namcos2.h"
 #include "includes/namcoic.h"
 #include "cpu/i960/i960.h"
 #include "cpu/m37710/m37710.h"
@@ -236,9 +235,9 @@ static ADDRESS_MAP_START( namcofl_mem, AS_PROGRAM, 32, namcofl_state )
 	AM_RANGE(0x30400000, 0x3040ffff) AM_RAM_WRITE(namcofl_paletteram_w) AM_SHARE("paletteram")
 	AM_RANGE(0x30800000, 0x3080ffff) AM_READWRITE_LEGACY(namco_tilemapvideoram32_le_r, namco_tilemapvideoram32_le_w )
 	AM_RANGE(0x30a00000, 0x30a0003f) AM_READWRITE_LEGACY(namco_tilemapcontrol32_le_r, namco_tilemapcontrol32_le_w )
-	AM_RANGE(0x30c00000, 0x30c1ffff) AM_READWRITE_LEGACY(namco_rozvideoram32_le_r,namco_rozvideoram32_le_w)
-	AM_RANGE(0x30d00000, 0x30d0001f) AM_READWRITE_LEGACY(namco_rozcontrol32_le_r,namco_rozcontrol32_le_w)
-	AM_RANGE(0x30e00000, 0x30e1ffff) AM_READWRITE_LEGACY(namco_obj32_le_r, namco_obj32_le_w)
+	AM_RANGE(0x30c00000, 0x30c1ffff) AM_READWRITE16(c169_roz_videoram_r,c169_roz_videoram_w,0xffffffff) AM_SHARE("rozvideoram")
+	AM_RANGE(0x30d00000, 0x30d0001f) AM_READWRITE16(c169_roz_control_r,c169_roz_control_w,0xffffffff)
+	AM_RANGE(0x30e00000, 0x30e1ffff) AM_READWRITE16(c355_obj_ram_r,c355_obj_ram_w,0xffffffff) AM_SHARE("objram")
 	AM_RANGE(0x30f00000, 0x30f0000f) AM_RAM /* NebulaM2 code says this is int enable at 0000, int request at 0004, but doesn't do much about it */
 	AM_RANGE(0x40000000, 0x4000005f) AM_READWRITE(namcofl_sysreg_r, namcofl_sysreg_w )
 	AM_RANGE(0xfffffffc, 0xffffffff) AM_READ(fl_unk1_r )
@@ -262,7 +261,7 @@ WRITE16_MEMBER(namcofl_state::mcu_shared_w)
 	// C75 BIOS has a very short window on the CPU sync signal, so immediately let the i960 at it
 	if ((offset == 0x6000/2) && (data & 0x80))
 	{
-		device_yield(&space.device());
+		space.device().execute().yield();
 	}
 }
 
@@ -525,14 +524,14 @@ GFXDECODE_END
 
 static TIMER_CALLBACK( network_interrupt_callback )
 {
-	cputag_set_input_line(machine, "maincpu", I960_IRQ0, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(I960_IRQ0, ASSERT_LINE);
 	machine.scheduler().timer_set(machine.primary_screen->frame_period(), FUNC(network_interrupt_callback));
 }
 
 
 static TIMER_CALLBACK( vblank_interrupt_callback )
 {
-	cputag_set_input_line(machine, "maincpu", I960_IRQ2, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(I960_IRQ2, ASSERT_LINE);
 	machine.scheduler().timer_set(machine.primary_screen->frame_period(), FUNC(vblank_interrupt_callback));
 }
 
@@ -541,7 +540,7 @@ static TIMER_CALLBACK( raster_interrupt_callback )
 {
 	namcofl_state *state = machine.driver_data<namcofl_state>();
 	machine.primary_screen->update_partial(machine.primary_screen->vpos());
-	cputag_set_input_line(machine, "maincpu", I960_IRQ1, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(I960_IRQ1, ASSERT_LINE);
 	state->m_raster_interrupt_timer->adjust(machine.primary_screen->frame_period());
 }
 
@@ -549,41 +548,39 @@ static TIMER_DEVICE_CALLBACK( mcu_irq0_cb )
 {
 	namcofl_state *state = timer.machine().driver_data<namcofl_state>();
 
-	device_set_input_line(state->m_mcu, M37710_LINE_IRQ0, HOLD_LINE);
+	state->m_mcu->set_input_line(M37710_LINE_IRQ0, HOLD_LINE);
 }
 
 static TIMER_DEVICE_CALLBACK( mcu_irq2_cb )
 {
 	namcofl_state *state = timer.machine().driver_data<namcofl_state>();
 
-	device_set_input_line(state->m_mcu, M37710_LINE_IRQ2, HOLD_LINE);
+	state->m_mcu->set_input_line(M37710_LINE_IRQ2, HOLD_LINE);
 }
 
 static TIMER_DEVICE_CALLBACK( mcu_adc_cb )
 {
 	namcofl_state *state = timer.machine().driver_data<namcofl_state>();
 
-	device_set_input_line(state->m_mcu, M37710_LINE_ADC, HOLD_LINE);
+	state->m_mcu->set_input_line(M37710_LINE_ADC, HOLD_LINE);
 }
 
 
-static MACHINE_START( namcofl )
+MACHINE_START_MEMBER(namcofl_state,namcofl)
 {
-	namcofl_state *state = machine.driver_data<namcofl_state>();
-	state->m_raster_interrupt_timer = machine.scheduler().timer_alloc(FUNC(raster_interrupt_callback));
+	m_raster_interrupt_timer = machine().scheduler().timer_alloc(FUNC(raster_interrupt_callback));
 }
 
 
-static MACHINE_RESET( namcofl )
+MACHINE_RESET_MEMBER(namcofl_state,namcofl)
 {
-	namcofl_state *state = machine.driver_data<namcofl_state>();
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(machine.primary_screen->visible_area().max_y + 3), FUNC(network_interrupt_callback));
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(machine.primary_screen->visible_area().max_y + 1), FUNC(vblank_interrupt_callback));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(machine().primary_screen->visible_area().max_y + 3), FUNC(network_interrupt_callback));
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(machine().primary_screen->visible_area().max_y + 1), FUNC(vblank_interrupt_callback));
 
-	state->membank("bank1")->set_base(state->memregion("maincpu")->base() );
-	state->membank("bank2")->set_base(state->m_workram );
+	membank("bank1")->set_base(memregion("maincpu")->base() );
+	membank("bank2")->set_base(m_workram );
 
-	memset(state->m_workram, 0x00, 0x100000);
+	memset(m_workram, 0x00, 0x100000);
 }
 
 
@@ -599,8 +596,8 @@ static MACHINE_CONFIG_START( namcofl, namcofl_state )
 	MCFG_TIMER_ADD_PERIODIC("mcu_irq2", mcu_irq2_cb, attotime::from_hz(60))
 	MCFG_TIMER_ADD_PERIODIC("mcu_adc",  mcu_adc_cb, attotime::from_hz(60))
 
-	MCFG_MACHINE_START(namcofl)
-	MCFG_MACHINE_RESET(namcofl)
+	MCFG_MACHINE_START_OVERRIDE(namcofl_state,namcofl)
+	MCFG_MACHINE_RESET_OVERRIDE(namcofl_state,namcofl)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -613,7 +610,7 @@ static MACHINE_CONFIG_START( namcofl, namcofl_state )
 
 	MCFG_GFXDECODE(2)
 
-	MCFG_VIDEO_START(namcofl)
+	MCFG_VIDEO_START_OVERRIDE(namcofl_state,namcofl)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MCFG_C352_ADD("c352", 48384000/2)
@@ -818,13 +815,13 @@ static void namcofl_common_init(running_machine &machine)
 DRIVER_INIT_MEMBER(namcofl_state,speedrcr)
 {
 	namcofl_common_init(machine());
-	namcos2_gametype = NAMCOFL_SPEED_RACER;
+	m_gametype = NAMCOFL_SPEED_RACER;
 }
 
 DRIVER_INIT_MEMBER(namcofl_state,finalapr)
 {
 	namcofl_common_init(machine());
-	namcos2_gametype = NAMCOFL_FINAL_LAP_R;
+	m_gametype = NAMCOFL_FINAL_LAP_R;
 }
 
 GAME ( 1995, speedrcr,         0, namcofl, speedrcr, namcofl_state, speedrcr, ROT0, "Namco", "Speed Racer", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )

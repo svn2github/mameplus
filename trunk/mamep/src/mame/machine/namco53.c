@@ -61,8 +61,7 @@
 #define LOG(x) do { if (VERBOSE) logerror x; } while (0)
 
 
-typedef struct _namco_53xx_state namco_53xx_state;
-struct _namco_53xx_state
+struct namco_53xx_state
 {
 	device_t *	m_cpu;
 	UINT8					m_portO;
@@ -76,7 +75,7 @@ INLINE namco_53xx_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == NAMCO_53XX);
 
-	return (namco_53xx_state *)downcast<legacy_device_base *>(device)->token();
+	return (namco_53xx_state *)downcast<namco_53xx_device *>(device)->token();
 }
 
 
@@ -113,13 +112,13 @@ static WRITE8_HANDLER( namco_53xx_P_w )
 static TIMER_CALLBACK( namco_53xx_irq_clear )
 {
 	namco_53xx_state *state = get_safe_token((device_t *)ptr);
-	device_set_input_line(state->m_cpu, 0, CLEAR_LINE);
+	state->m_cpu->execute().set_input_line(0, CLEAR_LINE);
 }
 
 void namco_53xx_read_request(device_t *device)
 {
 	namco_53xx_state *state = get_safe_token(device);
-	device_set_input_line(state->m_cpu, 0, ASSERT_LINE);
+	state->m_cpu->execute().set_input_line(0, ASSERT_LINE);
 
 	// The execution time of one instruction is ~4us, so we must make sure to
 	// give the cpu time to poll the /IRQ input before we clear it.
@@ -192,18 +191,52 @@ static DEVICE_START( namco_53xx )
 }
 
 
-/*-------------------------------------------------
-    device definition
--------------------------------------------------*/
+const device_type NAMCO_53XX = &device_creator<namco_53xx_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+namco_53xx_device::namco_53xx_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, NAMCO_53XX, "Namco 53xx", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(namco_53xx_state));
+}
 
-#define DEVTEMPLATE_ID(p,s)		p##namco_53xx##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_ROM_REGION | DT_HAS_MACHINE_CONFIG
-#define DEVTEMPLATE_NAME		"Namco 53xx"
-#define DEVTEMPLATE_SHORTNAME   "namco53"
-#define DEVTEMPLATE_FAMILY		"Namco I/O"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void namco_53xx_device::device_config_complete()
+{
+	m_shortname = "namco53";
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void namco_53xx_device::device_start()
+{
+	DEVICE_START_NAME( namco_53xx )(this);
+}
+
+//-------------------------------------------------
+//  device_mconfig_additions - return a pointer to
+//  the device's machine fragment
+//-------------------------------------------------
+
+machine_config_constructor namco_53xx_device::device_mconfig_additions() const
+{
+	return MACHINE_CONFIG_NAME( namco_53xx  );
+}
+
+//-------------------------------------------------
+//  device_rom_region - return a pointer to the
+//  the device's ROM definitions
+//-------------------------------------------------
+
+const rom_entry *namco_53xx_device::device_rom_region() const
+{
+	return ROM_NAME(namco_53xx );
+}
 
 
-DEFINE_LEGACY_DEVICE(NAMCO_53XX, namco_53xx);

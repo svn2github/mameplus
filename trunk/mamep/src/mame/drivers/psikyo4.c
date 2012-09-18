@@ -193,7 +193,7 @@ READ32_MEMBER(psikyo4_state::ps4_eeprom_r)
 
 static INTERRUPT_GEN(psikyosh_interrupt)
 {
-	device_set_input_line(device, 4, HOLD_LINE);
+	device->execute().set_input_line(4, HOLD_LINE);
 }
 
 CUSTOM_INPUT_MEMBER(psikyo4_state::system_port_r)
@@ -651,7 +651,7 @@ INPUT_PORTS_END
 static void irqhandler( device_t *device, int linestate )
 {
 	psikyo4_state *state = device->machine().driver_data<psikyo4_state>();
-	device_set_input_line(state->m_maincpu, 12, linestate ? ASSERT_LINE : CLEAR_LINE);
+	state->m_maincpu->set_input_line(12, linestate ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ymf278b_interface ymf278b_config =
@@ -660,22 +660,20 @@ static const ymf278b_interface ymf278b_config =
 };
 
 
-static MACHINE_START( psikyo4 )
+void psikyo4_state::machine_start()
 {
-	psikyo4_state *state = machine.driver_data<psikyo4_state>();
 
-	state->m_maincpu = machine.device("maincpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
 
-	state->save_item(NAME(state->m_oldbrt1));
-	state->save_item(NAME(state->m_oldbrt2));
+	save_item(NAME(m_oldbrt1));
+	save_item(NAME(m_oldbrt2));
 }
 
-static MACHINE_RESET( psikyo4 )
+void psikyo4_state::machine_reset()
 {
-	psikyo4_state *state = machine.driver_data<psikyo4_state>();
 
-	state->m_oldbrt1 = -1;
-	state->m_oldbrt2 = -1;
+	m_oldbrt1 = -1;
+	m_oldbrt2 = -1;
 }
 
 static MACHINE_CONFIG_START( ps4big, psikyo4_state )
@@ -685,8 +683,6 @@ static MACHINE_CONFIG_START( ps4big, psikyo4_state )
 	MCFG_CPU_PROGRAM_MAP(ps4_map)
 	MCFG_CPU_VBLANK_INT("lscreen", psikyosh_interrupt)
 
-	MCFG_MACHINE_START(psikyo4)
-	MCFG_MACHINE_RESET(psikyo4)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_interface_93C56)
 	MCFG_EEPROM_DEFAULT_VALUE(0)
@@ -710,7 +706,6 @@ static MACHINE_CONFIG_START( ps4big, psikyo4_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(psikyo4_right)
 
-	MCFG_VIDEO_START(psikyo4)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

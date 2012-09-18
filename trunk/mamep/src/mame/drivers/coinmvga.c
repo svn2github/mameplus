@@ -234,6 +234,8 @@ public:
 	DECLARE_READ16_MEMBER(test_r);
 	DECLARE_DRIVER_INIT(colorama);
 	DECLARE_DRIVER_INIT(cmrltv75);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -242,7 +244,7 @@ public:
 *************************/
 
 
-static VIDEO_START( coinmvga )
+void coinmvga_state::video_start()
 {
 }
 
@@ -250,7 +252,7 @@ static VIDEO_START( coinmvga )
 static SCREEN_UPDATE_IND16( coinmvga )
 {
 	coinmvga_state *state = screen.machine().driver_data<coinmvga_state>();
-	const gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 	int count = 0x04000/2;
 
 	int y,x;
@@ -273,7 +275,7 @@ static SCREEN_UPDATE_IND16( coinmvga )
 }
 
 
-static PALETTE_INIT( coinmvga )
+void coinmvga_state::palette_init()
 {
 
 }
@@ -657,7 +659,7 @@ static const ymz280b_interface ymz280b_intf =
 static INTERRUPT_GEN( vblank_irq )
 {
 	//printf("1\n");
-	device_set_input_line(device, 2, HOLD_LINE);
+	device->execute().set_input_line(2, HOLD_LINE);
 }
 
 
@@ -685,10 +687,8 @@ static MACHINE_CONFIG_START( coinmvga, coinmvga_state )
 
 	MCFG_GFXDECODE(coinmvga)
 
-	MCFG_PALETTE_INIT(coinmvga)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(coinmvga)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

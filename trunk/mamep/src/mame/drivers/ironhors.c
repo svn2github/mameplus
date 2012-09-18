@@ -28,19 +28,19 @@ static TIMER_DEVICE_CALLBACK( ironhors_irq )
 	if (scanline == 240)
 	{
 		if (*state->m_interrupt_enable & 4)
-			device_set_input_line(state->m_maincpu, M6809_FIRQ_LINE, HOLD_LINE);
+			state->m_maincpu->set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 	}
 	else if (((scanline+16) % 64) == 0)
 	{
 		if (*state->m_interrupt_enable & 1)
-			device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+			state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
 WRITE8_MEMBER(ironhors_state::ironhors_sh_irqtrigger_w)
 {
 
-	device_set_input_line_and_vector(m_soundcpu, 0, HOLD_LINE, 0xff);
+	m_soundcpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 WRITE8_MEMBER(ironhors_state::ironhors_filter_w)
@@ -356,25 +356,23 @@ static const ym2203_interface ym2203_config =
 };
 
 
-static MACHINE_START( ironhors )
+void ironhors_state::machine_start()
 {
-	ironhors_state *state = machine.driver_data<ironhors_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_soundcpu = machine.device("soundcpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_soundcpu = machine().device<cpu_device>("soundcpu");
 
-	state->save_item(NAME(state->m_palettebank));
-	state->save_item(NAME(state->m_charbank));
-	state->save_item(NAME(state->m_spriterambank));
+	save_item(NAME(m_palettebank));
+	save_item(NAME(m_charbank));
+	save_item(NAME(m_spriterambank));
 }
 
-static MACHINE_RESET( ironhors )
+void ironhors_state::machine_reset()
 {
-	ironhors_state *state = machine.driver_data<ironhors_state>();
 
-	state->m_palettebank = 0;
-	state->m_charbank = 0;
-	state->m_spriterambank = 0;
+	m_palettebank = 0;
+	m_charbank = 0;
+	m_spriterambank = 0;
 }
 
 static MACHINE_CONFIG_START( ironhors, ironhors_state )
@@ -388,8 +386,6 @@ static MACHINE_CONFIG_START( ironhors, ironhors_state )
 	MCFG_CPU_PROGRAM_MAP(slave_map)
 	MCFG_CPU_IO_MAP(slave_io_map)
 
-	MCFG_MACHINE_START(ironhors)
-	MCFG_MACHINE_RESET(ironhors)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -402,8 +398,6 @@ static MACHINE_CONFIG_START( ironhors, ironhors_state )
 	MCFG_GFXDECODE(ironhors)
 	MCFG_PALETTE_LENGTH(16*8*16+16*8*16)
 
-	MCFG_PALETTE_INIT(ironhors)
-	MCFG_VIDEO_START(ironhors)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -430,19 +424,19 @@ static TIMER_DEVICE_CALLBACK( farwest_irq )
 	if ((scanline % 2) == 1)
 	{
 		if (*state->m_interrupt_enable & 4)
-			device_set_input_line(state->m_maincpu, M6809_FIRQ_LINE, HOLD_LINE);
+			state->m_maincpu->set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 	}
 	else if ((scanline % 2) == 0)
 	{
 		if (*state->m_interrupt_enable & 1)
-			device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+			state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
 READ8_MEMBER(ironhors_state::farwest_soundlatch_r)
 {
 
-	return soundlatch_byte_r(*m_soundcpu->memory().space(AS_PROGRAM), 0);
+	return soundlatch_byte_r(*m_soundcpu->space(AS_PROGRAM), 0);
 }
 
 static const ym2203_interface farwest_ym2203_config =
@@ -472,7 +466,7 @@ static MACHINE_CONFIG_DERIVED( farwest, ironhors )
 	MCFG_CPU_IO_MAP(0)
 
 	MCFG_GFXDECODE(farwest)
-	MCFG_VIDEO_START(farwest)
+	MCFG_VIDEO_START_OVERRIDE(ironhors_state,farwest)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(farwest)
 

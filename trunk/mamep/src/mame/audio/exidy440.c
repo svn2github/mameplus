@@ -38,7 +38,7 @@
 
 
 /* channel_data structure holds info about each 6844 DMA channel */
-typedef struct m6844_channel_data
+struct m6844_channel_data 
 {
 	int active;
 	int address;
@@ -46,20 +46,20 @@ typedef struct m6844_channel_data
 	UINT8 control;
 	int start_address;
 	int start_counter;
-} m6844_channel_data;
+};
 
 
 /* channel_data structure holds info about each active sound channel */
-typedef struct sound_channel_data
+struct sound_channel_data 
 {
 	INT16 *base;
 	int offset;
 	int remaining;
-} sound_channel_data;
+};
 
 
 /* sound_cache_entry structure contains info on each decoded sample */
-typedef struct sound_cache_entry
+struct sound_cache_entry 
 {
 	struct sound_cache_entry *next;
 	int address;
@@ -67,11 +67,11 @@ typedef struct sound_cache_entry
 	int bits;
 	int frequency;
 	INT16 data[1];
-} sound_cache_entry;
+};
 
 
 
-typedef struct
+struct exidy440_audio_state 
 {
 	UINT8 sound_command;
 	UINT8 sound_command_ack;
@@ -100,7 +100,7 @@ typedef struct
 
 	/* channel frequency is configurable */
 	int channel_frequency[4];
-}  exidy440_audio_state;
+};
 
 /* constant channel parameters */
 static const int channel_bits[4] =
@@ -124,7 +124,30 @@ static void decode_and_filter_cvsd(device_t *device, UINT8 *data, int bytes, int
 static void fir_filter(device_t *device, INT32 *input, INT16 *output, int count);
 
 
-DECLARE_LEGACY_SOUND_DEVICE(EXIDY440, exidy440_sound);
+class exidy440_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	exidy440_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~exidy440_sound_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_stop();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type EXIDY440;
+
 
 /*************************************
  *
@@ -137,7 +160,7 @@ INLINE exidy440_audio_state *get_safe_token(device_t *device)
 	assert(device != NULL);
         assert(device->type() == EXIDY440);
 
-        return (exidy440_audio_state *)downcast<legacy_device_base *>(device)->token();
+        return (exidy440_audio_state *)downcast<exidy440_sound_device *>(device)->token();
 }
 
 static DEVICE_START( exidy440_sound )
@@ -354,7 +377,7 @@ static READ8_DEVICE_HANDLER( sound_command_r )
 {
 	exidy440_audio_state *state = get_safe_token(device);
 	/* clear the FIRQ that got us here and acknowledge the read to the main CPU */
-	cputag_set_input_line(device->machine(), "audiocpu", 1, CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(1, CLEAR_LINE);
 	state->sound_command_ack = 1;
 
 	return state->sound_command;
@@ -366,7 +389,7 @@ void exidy440_sound_command(device_t *device, UINT8 param)
 	exidy440_audio_state *state = get_safe_token(device);
 	state->sound_command = param;
 	state->sound_command_ack = 0;
-	cputag_set_input_line(device->machine(), "audiocpu", INPUT_LINE_IRQ1, ASSERT_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_IRQ1, ASSERT_LINE);
 }
 
 
@@ -413,7 +436,7 @@ static WRITE8_DEVICE_HANDLER( sound_volume_w )
 
 static WRITE8_DEVICE_HANDLER( sound_interrupt_clear_w )
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -966,25 +989,54 @@ ADDRESS_MAP_END
  *
  *************************************/
 
-DEVICE_GET_INFO( exidy440_sound )
+const device_type EXIDY440 = &device_creator<exidy440_sound_device>;
+
+exidy440_sound_device::exidy440_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, EXIDY440, "Exidy 440 CVSD", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(exidy440_audio_state);					break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(exidy440_audio_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(exidy440_sound);	break;
-		case DEVINFO_FCT_STOP:							info->stop = DEVICE_STOP_NAME(exidy440_sound);	break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Exidy 440 CVSD");				break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
+void exidy440_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void exidy440_sound_device::device_start()
+{
+	DEVICE_START_NAME( exidy440_sound )(this);
+}
+
+//-------------------------------------------------
+//  device_stop - device-specific stop
+//-------------------------------------------------
+
+void exidy440_sound_device::device_stop()
+{
+	DEVICE_STOP_NAME( exidy440_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void exidy440_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(EXIDY440, exidy440_sound);
 
 
 

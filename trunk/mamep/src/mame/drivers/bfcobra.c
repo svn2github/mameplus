@@ -101,7 +101,7 @@ INLINE void z80_bank(running_machine &machine, int num, int data);
 
 ***************************************************************************/
 
-typedef union
+union ADDR_REG
 {
 #ifdef LSB_FIRST
 	struct { UINT16 loword, hiword ; } ;
@@ -111,7 +111,7 @@ typedef union
 	struct { UINT8 addr2, addr1, addr0; };
 #endif
 	UINT32 addr;
-} ADDR_REG;
+};
 
 /* Blitter register flag bits */
 #define	CMD_RUN			0x01
@@ -297,6 +297,8 @@ public:
 	DECLARE_READ_LINE_MEMBER(data_acia_rx_r);
 	DECLARE_WRITE_LINE_MEMBER(data_acia_tx_w);
 	DECLARE_DRIVER_INIT(bfcobra);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -343,25 +345,24 @@ static const UINT8 col3bit_default[16]=
 static const UINT8 col76index[] = {0, 2, 4, 7};
 
 
-static VIDEO_START( bfcobra )
+void bfcobra_state::video_start()
 {
-	bfcobra_state *state = machine.driver_data<bfcobra_state>();
 	int i;
 
-	memcpy(state->m_col4bit, col4bit_default, sizeof(state->m_col4bit));
-	memcpy(state->m_col3bit, col3bit_default, sizeof(state->m_col3bit));
+	memcpy(m_col4bit, col4bit_default, sizeof(m_col4bit));
+	memcpy(m_col3bit, col3bit_default, sizeof(m_col3bit));
 	for (i = 0; i < 256; ++i)
 	{
 		UINT8 col;
 
-		state->m_col8bit[i] = i;
+		m_col8bit[i] = i;
 		col = i & 0x7f;
 		col = (col & 0x1f) | (col76index[ ( (col & 0x60) >> 5 ) & 3] << 5);
-		state->m_col7bit[i] = col;
+		m_col7bit[i] = col;
 
 		col = (col & 3) | (col76index[( (col & 0x0c) >> 2) & 3] << 2 ) |
 			  (col76index[( (col & 0x30) >> 4) & 3] << 5 );
-		state->m_col6bit[i] = col;
+		m_col6bit[i] = col;
 	}
 }
 
@@ -740,7 +741,7 @@ static void RunBlit(address_space *space)
 	} while (blitter.command  & CMD_RUN);
 
 	/* Burn Z80 cycles while blitter is in operation */
-	device_spin_until_time(&space->device(),  attotime::from_nsec( (1000000000 / Z80_XTAL)*cycles_used * 2 ) );
+	space->device().execute().spin_until_time(attotime::from_nsec( (1000000000 / Z80_XTAL)*cycles_used * 2 ) );
 }
 
 
@@ -779,7 +780,7 @@ READ8_MEMBER(bfcobra_state::ramdac_r)
 		}
 		default:
 		{
-			mame_printf_debug("Unhandled RAMDAC read (PC:%.4x)\n", cpu_get_previouspc(&space.device()));
+			mame_printf_debug("Unhandled RAMDAC read (PC:%.4x)\n", space.device().safe_pcbase());
 		}
 	}
 
@@ -879,7 +880,7 @@ static void update_irqs(running_machine &machine)
 	if (newstate != state->m_irq_state)
 	{
 		state->m_irq_state = newstate;
-		cputag_set_input_line(machine, "maincpu", 0, state->m_irq_state ? ASSERT_LINE : CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, state->m_irq_state ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -930,7 +931,7 @@ READ8_MEMBER(bfcobra_state::chipset_r)
 		}
 		default:
 		{
-			mame_printf_debug("Flare One unknown read: 0x%.2x (PC:0x%.4x)\n", offset, cpu_get_previouspc(&space.device()));
+			mame_printf_debug("Flare One unknown read: 0x%.2x (PC:0x%.4x)\n", offset, space.device().safe_pcbase());
 		}
 	}
 
@@ -946,7 +947,7 @@ WRITE8_MEMBER(bfcobra_state::chipset_w)
 		case 0x03:
 		{
 			if (data > 0x3f)
-				popmessage("%x: Unusual bank access (%x)\n", cpu_get_previouspc(&space.device()), data);
+				popmessage("%x: Unusual bank access (%x)\n", space.device().safe_pcbase(), data);
 
 			data &= 0x3f;
 			m_bank_data[offset] = data;
@@ -1020,7 +1021,7 @@ WRITE8_MEMBER(bfcobra_state::chipset_w)
 		}
 		default:
 		{
-			mame_printf_debug("Flare One unknown write: 0x%.2x with 0x%.2x (PC:0x%.4x)\n", offset, data, cpu_get_previouspc(&space.device()));
+			mame_printf_debug("Flare One unknown write: 0x%.2x with 0x%.2x (PC:0x%.4x)\n", offset, data, space.device().safe_pcbase());
 		}
 	}
 }
@@ -1320,21 +1321,20 @@ WRITE8_MEMBER(bfcobra_state::fd_ctrl_w)
 }
 #endif
 
-static MACHINE_RESET( bfcobra )
+void bfcobra_state::machine_reset()
 {
-	bfcobra_state *state = machine.driver_data<bfcobra_state>();
 	unsigned int pal;
 
 	for (pal = 0; pal < 256; ++pal)
 	{
-		palette_set_color_rgb(machine, pal, pal3bit((pal>>5)&7), pal3bit((pal>>2)&7), pal2bit(pal&3));
+		palette_set_color_rgb(machine(), pal, pal3bit((pal>>5)&7), pal3bit((pal>>2)&7), pal2bit(pal&3));
 	}
 
-	state->m_bank_data[0] = 1;
-	memset(&state->m_ramdac, 0, sizeof(state->m_ramdac));
-	reset_fdc(machine);
+	m_bank_data[0] = 1;
+	memset(&m_ramdac, 0, sizeof(m_ramdac));
+	reset_fdc(machine());
 
-	state->m_irq_state = state->m_blitter_irq = state->m_vblank_irq = state->m_acia_irq = 0;
+	m_irq_state = m_blitter_irq = m_vblank_irq = m_acia_irq = 0;
 }
 
 /***************************************************************************
@@ -1657,7 +1657,7 @@ WRITE_LINE_MEMBER(bfcobra_state::m6809_acia_tx_w)
 
 WRITE_LINE_MEMBER(bfcobra_state::m6809_data_irq)
 {
-	cputag_set_input_line(machine(), "audiocpu", M6809_IRQ_LINE, state ? CLEAR_LINE : ASSERT_LINE);
+	machine().device("audiocpu")->execute().set_input_line(M6809_IRQ_LINE, state ? CLEAR_LINE : ASSERT_LINE);
 }
 
 static ACIA6850_INTERFACE( m6809_acia_if )
@@ -1787,7 +1787,6 @@ static MACHINE_CONFIG_START( bfcobra, bfcobra_state )
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_MACHINE_RESET(bfcobra)
 
 	/* TODO */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1807,7 +1806,6 @@ static MACHINE_CONFIG_START( bfcobra, bfcobra_state )
 	MCFG_SOUND_ADD("upd", UPD7759, UPD7759_STANDARD_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.40)
 
-	MCFG_VIDEO_START(bfcobra)
 
 	/* ACIAs */
 	MCFG_ACIA6850_ADD("acia6850_0", z80_acia_if)

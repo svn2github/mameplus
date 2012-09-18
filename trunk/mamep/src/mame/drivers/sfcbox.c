@@ -12,7 +12,9 @@ for which the system holds two at once.
 
 The "To Do" list:
 -----------------
--Consider moving the 3 cartridges of the slot 2 in a sowtware list since they are interchangable
+-Main CPU banks cartridges via ports $c0/$c1
+-Consider moving the 3 cartridges of the slot 2 in a software list since they are interchangable
+ (that's bs, since that pss61 should always be there anyway ... -AS)
 -Hook the z180 clone, the DSP 1A/1B and the Super FX
 -Add the missing GROM4-1
 -Add the possibly alternate revision of the attract ROM, with Kirby holding a coin
@@ -116,10 +118,47 @@ How does the Super Famicom Box operates
 #include "emu.h"
 #include "cpu/spc700/spc700.h"
 #include "cpu/g65816/g65816.h"
+#include "cpu/z180/z180.h"
+#include "machine/s3520cf.h"
+#include "video/mb90082.h"
 #include "includes/snes.h"
 #include "audio/snes_snd.h"
+#include "rendlay.h"
 
-static ADDRESS_MAP_START( snes_map, AS_PROGRAM, 8, snes_state )
+class sfcbox_state : public snes_state
+{
+public:
+	sfcbox_state(const machine_config &mconfig, device_type type, const char *tag)
+		: snes_state(mconfig, type, tag),
+		m_bios(*this, "bios"),
+		m_mb90082(*this,"mb90082"),
+		m_s3520cf(*this, "s3520cf")
+		{ }
+
+	required_device<cpu_device> m_bios;
+	required_device<mb90082_device> m_mb90082;
+	required_device<s3520cf_device> m_s3520cf;
+
+	UINT32 screen_update(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+
+	DECLARE_READ8_MEMBER( port_81_r );
+	DECLARE_READ8_MEMBER( port_83_r );
+	DECLARE_WRITE8_MEMBER( port_80_w );
+	DECLARE_WRITE8_MEMBER( port_81_w );
+	DECLARE_WRITE8_MEMBER( port_83_w );
+	DECLARE_WRITE8_MEMBER( snes_map_0_w );
+	DECLARE_WRITE8_MEMBER( snes_map_1_w );
+	DECLARE_MACHINE_START(sfcbox);
+	DECLARE_MACHINE_RESET(sfcbox);
+};
+
+UINT32 sfcbox_state::screen_update( screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect )
+{
+	m_mb90082->screen_update(screen,bitmap,cliprect);
+	return 0;
+}
+
+static ADDRESS_MAP_START( snes_map, AS_PROGRAM, 8, sfcbox_state )
 	AM_RANGE(0x000000, 0x2fffff) AM_READWRITE_LEGACY(snes_r_bank1, snes_w_bank1)	/* I/O and ROM (repeats for each bank) */
 	AM_RANGE(0x300000, 0x3fffff) AM_READWRITE_LEGACY(snes_r_bank2, snes_w_bank2)	/* I/O and ROM (repeats for each bank) */
 	AM_RANGE(0x400000, 0x5fffff) AM_READ_LEGACY(snes_r_bank3)						/* ROM (and reserved in Mode 20) */
@@ -140,15 +179,148 @@ static WRITE8_DEVICE_HANDLER( spc_ram_100_w )
 	spc_ram_w(device, offset + 0x100, data);
 }
 
-static ADDRESS_MAP_START( spc_mem, AS_PROGRAM, 8, snes_state )
+static ADDRESS_MAP_START( spc_mem, AS_PROGRAM, 8, sfcbox_state )
 	AM_RANGE(0x0000, 0x00ef) AM_DEVREADWRITE_LEGACY("spc700", spc_ram_r, spc_ram_w)	/* lower 32k ram */
 	AM_RANGE(0x00f0, 0x00ff) AM_DEVREADWRITE_LEGACY("spc700", spc_io_r, spc_io_w)	/* spc io */
-	AM_RANGE(0x0100, 0xffff) AM_DEVWRITE_LEGACY("spc700", spc_ram_100_w)
-	AM_RANGE(0x0100, 0xffbf) AM_DEVREAD_LEGACY("spc700", spc_ram_100_r)
-	AM_RANGE(0xffc0, 0xffff) AM_DEVREAD_LEGACY("spc700", spc_ipl_r)
+	AM_RANGE(0x0100, 0xffff) AM_DEVREADWRITE_LEGACY("spc700", spc_ram_100_r, spc_ram_100_w)
 ADDRESS_MAP_END
 
+static ADDRESS_MAP_START( sfcbox_map, AS_PROGRAM, 8, sfcbox_state )
+	AM_RANGE(0x00000, 0x0ffff) AM_ROM AM_REGION("krom", 0)
+	AM_RANGE(0x20000, 0x27fff) AM_RAM
+	AM_RANGE(0x40000, 0x47fff) AM_ROM AM_REGION("grom1", 0)
+	AM_RANGE(0x60000, 0x67fff) AM_ROM AM_REGION("grom2", 0)
+ADDRESS_MAP_END
+
+
+WRITE8_MEMBER( sfcbox_state::port_80_w )
+{
+/*
+    x--- ----   (often same as bit5)
+    -x-- ----   Unknown/unused
+    --x- ----     ??         PLENTY used (often same as bit7)
+    ---x ----   ?? pulsed while [C094] is nonzero (0370h timer0 steps)
+    ---- x---   Unknown/unused
+    ---- -x--   SNES Transfer DATA to SNES  (Bit1 of WRIO/RDIO on SNES side)
+    ---- --x-   SNES Transfer CLOCK to SNES (Bit5 of WRIO/RDIO on SNES side)
+    ---- ---x   SNES Transfer STAT to SNES  (Bit2 of WRIO/RDIO on SNES side)
+*/
+	snes_ram[WRIO] = ((data & 4) >> 1) | (snes_ram[WRIO] & ~0x02); // DATA
+	snes_ram[WRIO] = ((data & 2) << 4) | (snes_ram[WRIO] & ~0x20); // CLOCK
+	snes_ram[WRIO] = ((data & 1) << 2) | (snes_ram[WRIO] & ~0x04); // STAT
+}
+
+
+READ8_MEMBER( sfcbox_state::port_81_r )
+{
+/*
+    x--- ----   Vblank, Vsync, or Whatever flag (must toggle on/off at whatever speed)
+    -x-- ----   Int1 Request (Joypad is/was accessed by SNES or so?) (0=IRQ, 1=No)
+    --x- ----   Unknown/unused  ;/(for "joy2/slot1" or so, use [A0].4-5)
+    ---x ----   Unknown/unused  ;\joy1/slot0 or so, used by an UNUSED function (08A0h)
+    ---- x---   Boot mode or so (maybe a jumper, or watchdog-flag, or Bit0 of WRIO/RDIO?)
+    ---- -x--   SNES Transfer DATA from SNES (Bit4 of WRIO/RDIO on SNES side)
+    ---- --x-   SNES Transfer ACK from SNES  (Bit3 of WRIO/RDIO on SNES side)
+    ---- ---x   Int0 Request (Coin-Input, Low for 44ms..80ms) (0=IRQ, 1=No)
+*/
+	UINT8 res;
+
+	res = (machine().primary_screen->vblank() & 1) << 7;
+	res = 1 << 6;
+	res = 0 << 5;
+	res = 0 << 4;
+	res = 0 << 3;
+	res |= ((snes_ram[WRIO] & 0x10) >> 4) << 2; // DATA to main
+	res |= ((snes_ram[WRIO] & 0x08) >> 3) << 1; // ACK to main
+	res = 1 << 0;
+
+	return res;
+}
+
+WRITE8_MEMBER( sfcbox_state::port_81_w )
+{
+	m_maincpu->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+	m_soundcpu->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+
+	ioport("OSD_CS")->write(data, 0xff);
+}
+
+READ8_MEMBER( sfcbox_state::port_83_r )
+{
+	return 0xff;
+}
+
+WRITE8_MEMBER( sfcbox_state::port_83_w )
+{
+
+}
+
+WRITE8_MEMBER( sfcbox_state::snes_map_0_w )
+{
+	const char *const rom_socket[4] = {	"ROM5", "ROM1/7/12", "ROM3/9", "IC23" };
+
+	printf("%s ROM Socket\n",rom_socket[data & 3]);
+	printf("%02x ROM Slot\n",(data & 4) >> 2);
+	printf("%02x SRAM Enable\n",(data & 8) >> 3);
+	printf("%02x SRAM Slot\n",(data & 0x10) >> 4);
+	printf("%02x DSP Enable\n",(data & 0x20) >> 5);
+	printf("%02x DSP Slot\n",(data & 0x40) >> 6);
+	printf("%s ROM / DSP / SRAM maps\n",(data & 0x80) ? "HiROM" : "LoROM");
+}
+
+WRITE8_MEMBER( sfcbox_state::snes_map_1_w )
+{
+	/* Reserved for ROM DSP SRAM probably means bank ATROM */
+	const char *const rom_dsp_sram[4] = {	"Reserved?", "GSU", "LoROM", "HiROM" };
+	const char *const sram_size[4] = {	"2K", "8K", "Reserved?", "32K" };
+
+	printf("%s ROM / DSP SRAM map 2\n",rom_dsp_sram[data & 3]);
+	printf("%08x SRAM base\n",((data & 0xc) >> 2)*0x8000);
+	printf("%02x GSU Slot\n",((data & 0x10) >> 4));
+	printf("%s SRAM Size\n",sram_size[((data & 0xc0) >> 6)]);
+}
+
+static ADDRESS_MAP_START( sfcbox_io, AS_IO, 8, sfcbox_state )
+	AM_RANGE(0x0b, 0x0b) AM_DEVWRITE("mb90082",mb90082_device,write)
+	AM_RANGE(0x00, 0x3f) AM_RAM // internal i/o
+	AM_RANGE(0x80, 0x80) AM_READ_PORT("KEY") AM_WRITE(port_80_w) // Keyswitch and Button Inputs / SNES Transfer and Misc Output
+	AM_RANGE(0x81, 0x81) AM_READWRITE(port_81_r,port_81_w) // SNES Transfer and Misc Input / Misc Output
+//  AM_RANGE(0x82, 0x82) // Unknown/unused
+	AM_RANGE(0x83, 0x83) AM_READWRITE(port_83_r,port_83_w) // Joypad Input/Status / Joypad Output/Control
+//  AM_RANGE(0x84, 0x84) // Joypad 1, MSB (1st 8 bits) (eg. Bit7=ButtonB, 0=Low=Pressed)
+//  AM_RANGE(0x85, 0x85) // Joypad 1, LSB (2nd 8 bits) (eg. Bit0=LSB of ID, 0=Low=One)
+//  AM_RANGE(0x86, 0x86) // Joypad 2, MSB (1st 8 bits) (eg. Bit7=ButtonB, 0=Low=Pressed)
+//  AM_RANGE(0x87, 0x87) // Joypad 2, LSB (2nd 8 bits) (eg. Bit0=LSB of ID, 0=Low=One)
+	AM_RANGE(0xa0, 0xa0) AM_READ_PORT("RTC_R") AM_WRITE_PORT("RTC_W") //  Real Time Clock
+	AM_RANGE(0xc0, 0xc0) AM_WRITE(snes_map_0_w) // SNES Mapping Register 0
+	AM_RANGE(0xc1, 0xc1) AM_WRITE(snes_map_1_w) // SNES Mapping Register 1
+ADDRESS_MAP_END
+
+
 static INPUT_PORTS_START( snes )
+	PORT_START("RTC_R")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("s3520cf", s3520cf_device, read_bit)
+
+	PORT_START("RTC_W")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("s3520cf", s3520cf_device, set_clock_line)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("s3520cf", s3520cf_device, write_bit)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("s3520cf", s3520cf_device, set_dir_line)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("s3520cf", s3520cf_device, set_cs_line)
+
+	/* TODO: verify these */
+	PORT_START("KEY")
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON14 ) PORT_NAME("Reset Button")
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON13 ) PORT_NAME("TV/GAME Button")
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON12 ) PORT_NAME("Relay Off Button")
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON7 )  PORT_NAME("Options Button")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_BUTTON11 ) PORT_NAME("Self-Test Button")
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON10 ) PORT_NAME("Play Mode 3 Button")
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON9 )  PORT_NAME("Play Mode 2 Button")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON8 )  PORT_NAME("Play Mode 1 Button")
+
+	PORT_START("OSD_CS")
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("mb90082", mb90082_device, set_cs_line)
+
 	PORT_START("SERIAL1_DATA1_L")
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_NAME("P1 Button A") PORT_PLAYER(1)
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON4 ) PORT_NAME("P1 Button X") PORT_PLAYER(1)
@@ -263,7 +435,7 @@ static INPUT_PORTS_START( snes )
 #endif
 INPUT_PORTS_END
 
-static MACHINE_CONFIG_START( snes, snes_state )
+static MACHINE_CONFIG_START( snes, sfcbox_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", _5A22, 3580000*6)	/* 2.68Mhz, also 3.58Mhz */
@@ -272,7 +444,7 @@ static MACHINE_CONFIG_START( snes, snes_state )
 	MCFG_CPU_ADD("soundcpu", SPC700, 2048000/2)	/* 2.048 Mhz, but internal divider */
 	MCFG_CPU_PROGRAM_MAP(spc_mem)
 
-	MCFG_QUANTUM_TIME(attotime::from_hz(24000))
+	MCFG_QUANTUM_PERFECT_CPU("maincpu")
 
 	MCFG_MACHINE_START( snes )
 	MCFG_MACHINE_RESET( snes )
@@ -282,7 +454,7 @@ static MACHINE_CONFIG_START( snes, snes_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(DOTCLK_NTSC, SNES_HTOTAL, 0, SNES_SCR_WIDTH, SNES_VTOTAL_NTSC, 0, SNES_SCR_HEIGHT_NTSC)
-	MCFG_SCREEN_UPDATE_STATIC( snes )
+	MCFG_SCREEN_UPDATE_DRIVER( snes_state, snes_screen_update )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -291,10 +463,48 @@ static MACHINE_CONFIG_START( snes, snes_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.00)
 MACHINE_CONFIG_END
 
+
+MACHINE_START_MEMBER(sfcbox_state,sfcbox)
+{
+
+	MACHINE_START_CALL_LEGACY(snes);
+
+	m_is_sfcbox = 1;
+}
+
+MACHINE_RESET_MEMBER(sfcbox_state,sfcbox)
+{
+
+	MACHINE_RESET_CALL_LEGACY( snes );
+
+	/* start with both CPUs disabled */
+	m_maincpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_soundcpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+}
+
 static MACHINE_CONFIG_DERIVED( sfcbox, snes )
 
-	// ...
+	MCFG_CPU_ADD("bios", Z180, XTAL_12MHz / 2)	/* HD64180RF6X */
+	MCFG_CPU_PROGRAM_MAP(sfcbox_map)
+	MCFG_CPU_IO_MAP(sfcbox_io)
 
+	MCFG_MB90082_ADD("mb90082",XTAL_12MHz / 2) /* TODO: correct clock */
+	MCFG_S3520CF_ADD("s3520cf") /* RTC */
+
+	MCFG_MACHINE_START_OVERRIDE(sfcbox_state, sfcbox )
+	MCFG_MACHINE_RESET_OVERRIDE(sfcbox_state, sfcbox )
+
+	/* TODO: the screen should actually superimpose, but for the time being let's just separate outputs */
+	MCFG_DEFAULT_LAYOUT(layout_dualhsxs)
+
+	MCFG_SCREEN_ADD("osd", RASTER)
+	MCFG_SCREEN_REFRESH_RATE(60)
+	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
+//  MCFG_SCREEN_SIZE(24*12+22, 12*18+22)
+//  MCFG_SCREEN_VISIBLE_AREA(0*8, 24*12-1, 0*8, 12*18-1)
+	MCFG_SCREEN_SIZE(24*16+22, 12*16+22)
+	MCFG_SCREEN_VISIBLE_AREA(0*8, 24*16-1, 0*8, 12*16-1)
+	MCFG_SCREEN_UPDATE_DRIVER(sfcbox_state,screen_update)
 MACHINE_CONFIG_END
 
 /***************************************************************************
@@ -303,95 +513,78 @@ MACHINE_CONFIG_END
 
 ***************************************************************************/
 
+#define SFCBOX_BIOS \
+	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 ) \
+	ROM_REGION( 0x100, "sound_ipl", 0 )	\
+	ROM_LOAD( "spc700.rom", 0x00, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) ) \
+	ROM_REGION( 0x10000, "krom", 0 ) \
+	ROM_LOAD( "krom1.ic1", 0x00000, 0x10000, CRC(c9010002) SHA1(f4c74086a83b728b1c1af3a021a60efa80eff5a4) ) \
+	ROM_REGION( 0x100000, "user3", 0 ) \
+	ROM_LOAD( "atrom-4s-0.rom5", 0x00000, 0x80000, CRC(ad3ec05c) SHA1(a3d336db585fe02a37c323422d9db6a33fd489a6) ) \
+
+
 ROM_START( sfcbox )
-	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
+	SFCBOX_BIOS
 
-//  ROM_REGION( 0x80000, "atrom", 0 )
-//  ROM_REGION( 0x10000, "user3", 0 )
+	ROM_REGION( 0x8000, "grom1", ROMREGION_ERASEFF )
 
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
-	ROM_LOAD( "spc700.rom", 0x00, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
-
-	ROM_REGION( 0x10000, "krom", 0 )
-	ROM_LOAD( "krom1.ic1", 0x00000, 0x10000, CRC(c9010002) SHA1(f4c74086a83b728b1c1af3a021a60efa80eff5a4) )
-
-//  ROM_REGION( 0x1000, "addons", ROMREGION_ERASE00 )       /* add-on chip ROMs (DSP, SFX, etc) */
-//  ROM_REGION( MAX_SNES_CART_SIZE, "cart", ROMREGION_ERASE00 )
+	ROM_REGION( 0x8000, "grom2", ROMREGION_ERASEFF )
 ROM_END
 
 ROM_START( pss61 )
-	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
+	SFCBOX_BIOS
 
-	ROM_REGION( 0x100000, "atrom", 0 )
-	ROM_LOAD( "atrom-4s-0.rom5", 0x00000, 0x80000, CRC(ad3ec05c) SHA1(a3d336db585fe02a37c323422d9db6a33fd489a6) )
-
-	ROM_REGION( 0x10000, "grom", 0 )
+	ROM_REGION( 0x8000, "grom1", 0 )
 	ROM_LOAD( "grom1-1.ic1", 0x0000, 0x8000, CRC(333bf9a7) SHA1(5d0cd9ca29e5580c3eebe9f136839987c879f979) )
 
-	ROM_REGION( 0x380000, "user3", 0 )
-  ROM_LOAD( "shvc-mk-0.rom6", 0x000000, 0x080000, CRC(c8002453) SHA1(cbb853bf911255c1d8eb27cd34fc7855a0dda218) )
-  ROM_LOAD( "shvc-4m-1.rom3", 0x080000, 0x200000, CRC(91b28d56) SHA1(b83dd73d3d6049450bb8092d73c3af879804f58c) )
-	ROM_LOAD( "shvc-fo-1.ic20", 0x280000, 0x100000, CRC(ad668a41) SHA1(39ff7354a7fa02295c899b7a7ec3556998ac2636) ) /* Super FX hook needed for Star Fox */
+	ROM_REGION( 0x8000, "grom2", ROMREGION_ERASEFF )
 
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
-	ROM_LOAD( "spc700.rom", 0x00, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
-
-//  ROM_REGION( 0x1000, "addons", ROMREGION_ERASE00 )       /* add-on chip ROMs (DSP, SFX, etc) */
-//  ROM_REGION( MAX_SNES_CART_SIZE, "cart", ROMREGION_ERASE00 )
+	ROM_REGION( 0x380000, "game", 0 )
+	ROM_LOAD( "shvc-mk-0.rom12", 0x000000, 0x080000, CRC(c8002453) SHA1(cbb853bf911255c1d8eb27cd34fc7855a0dda218) )
+	ROM_LOAD( "shvc-4m-1.rom3", 0x080000, 0x200000, CRC(91b28d56) SHA1(b83dd73d3d6049450bb8092d73c3af879804f58c) )
+	ROM_LOAD( "shvc-fo-1.ic20", 0x280000, 0x100000, CRC(ad668a41) SHA1(39ff7354a7fa02295c899b7a7ec3556998ac2636) ) /* TODO: Super FX hook needed for Star Fox */
 ROM_END
 
 ROM_START( pss62 )
-	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
+	SFCBOX_BIOS
 
-	ROM_REGION( 0x10000, "grom", 0 )
+	ROM_REGION( 0x8000, "grom1", 0 )
 	ROM_LOAD( "grom2-1.ic1", 0x0000, 0x8000, CRC(bcfc5642) SHA1(a96e52685bd3dcdf09d1b7acd6e1c1ab7726a640) )
 
-	ROM_REGION( 0x180000, "user3", 0 )
+	ROM_REGION( 0x8000, "grom2", ROMREGION_ERASEFF )
+
+	ROM_REGION( 0x180000, "game", 0 )
 	ROM_LOAD( "shvc-gc-0.rom1", 0x000000, 0x100000, CRC(b4fd7aff) SHA1(eb553b77418dedba25fc4d5dddcb04f424b0f6a9) )
 	ROM_LOAD( "shvc-2a-1.rom3", 0x100000, 0x080000, CRC(6b23e2e4) SHA1(684123a12ca1e31115bd6221d96f82461066877f) )
-
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
-	ROM_LOAD( "spc700.rom", 0x00, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
-
-//  ROM_REGION( 0x1000, "addons", ROMREGION_ERASE00 )       /* add-on chip ROMs (DSP, SFX, etc) */
-//  ROM_REGION( MAX_SNES_CART_SIZE, "cart", ROMREGION_ERASE00 )
 ROM_END
 
 ROM_START( pss63 )
-	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
+	SFCBOX_BIOS
 
-	ROM_REGION( 0x10000, "grom", 0 )
+	ROM_REGION( 0x8000, "grom1", 0 )
 	ROM_LOAD( "grom3-1.ic1", 0x0000, 0x8000, CRC(ebec4c1c) SHA1(d638ef1486b4c0b3d4d5b666929ca7947e16efad) )
 
-	ROM_REGION( 0x500000, "user3", 0 )
+	ROM_REGION( 0x8000, "grom2", ROMREGION_ERASEFF )
+
+	ROM_REGION( 0x500000, "game", 0 )
 	ROM_LOAD( "shvc-t2-1.rom3", 0x000000, 0x100000, CRC(4ae93c10) SHA1(5fa25d027940907b769578d7bf85a9d5ba94911a) )
 	ROM_LOAD( "shvc-8x-1.rom1", 0x100000, 0x400000, CRC(3adef543) SHA1(df02860e691fbee453e345dd343c08b6da08d4ea) )
-
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
-	ROM_LOAD( "spc700.rom", 0x00, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
-
-//  ROM_REGION( 0x1000, "addons", ROMREGION_ERASE00 )       /* add-on chip ROMs (DSP, SFX, etc) */
-//  ROM_REGION( MAX_SNES_CART_SIZE, "cart", ROMREGION_ERASE00 )
 ROM_END
 
 ROM_START( pss64 )
-	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
+	SFCBOX_BIOS
 
-	ROM_REGION( 0x10000, "grom", 0 )
+	ROM_REGION( 0x8000, "grom1", ROMREGION_ERASEFF )
 	ROM_LOAD( "grom4-1.ic1", 0x0000, 0x8000, NO_DUMP )
 
-	ROM_REGION( 0x500000, "user3", 0 )
+	ROM_REGION( 0x8000, "grom2", ROMREGION_ERASEFF )
+
+	ROM_REGION( 0x500000, "game", 0 )
 	ROM_LOAD( "shvc-m4-0.rom3", 0x000000, 0x100000, CRC(fb259f4f) SHA1(8faeb56f80e82dd042bdc84d19c526a979c6de8f) )
 	ROM_LOAD( "shvc-8x-1.rom1", 0x100000, 0x400000, CRC(3adef543) SHA1(df02860e691fbee453e345dd343c08b6da08d4ea) )
 //  Possibly reverse order :
 //  ROM_LOAD( "shvc-8x-1.rom1", 0x000000, 0x400000, CRC(3adef543) SHA1(df02860e691fbee453e345dd343c08b6da08d4ea) )
 //  ROM_LOAD( "shvc-m4-0.rom3", 0x400000, 0x100000, CRC(fb259f4f) SHA1(8faeb56f80e82dd042bdc84d19c526a979c6de8f) )
-
-	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
-	ROM_LOAD( "spc700.rom", 0x00, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
-
-//  ROM_REGION( 0x1000, "addons", ROMREGION_ERASE00 )       /* add-on chip ROMs (DSP, SFX, etc) */
-//  ROM_REGION( MAX_SNES_CART_SIZE, "cart", ROMREGION_ERASE00 )
 ROM_END
 
 

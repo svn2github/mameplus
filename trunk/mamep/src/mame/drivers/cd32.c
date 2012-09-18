@@ -727,7 +727,6 @@ INPUT_PORTS_END
 
 static const mos6526_interface cia_0_intf =
 {
-	0,													/* tod_clock */
 	DEVCB_LINE(amiga_cia_0_irq),									/* irq_func */
 	DEVCB_NULL,	/* pc_func */
 	DEVCB_NULL,
@@ -740,7 +739,6 @@ static const mos6526_interface cia_0_intf =
 
 static const mos6526_interface cia_1_intf =
 {
-	0,													/* tod_clock */
 	DEVCB_LINE(amiga_cia_1_irq),									/* irq_func */
 	DEVCB_NULL,	/* pc_func */
 	DEVCB_NULL,
@@ -772,7 +770,7 @@ static MACHINE_CONFIG_START( cd32base, cd32_state )
 	MCFG_CPU_PROGRAM_MAP(cd32_map)
 	MCFG_DEVICE_ADD("akiko", AKIKO, 0)
 
-	MCFG_MACHINE_RESET(amiga)
+	MCFG_MACHINE_RESET_OVERRIDE(amiga_state,amiga)
 
 	MCFG_I2CMEM_ADD("i2cmem",i2cmem_interface)
 
@@ -786,7 +784,7 @@ static MACHINE_CONFIG_START( cd32base, cd32_state )
 	MCFG_SCREEN_VISIBLE_AREA((129-8-8)*2, (449+8-1+8)*2, 44-8, 300+8-1)
 	MCFG_SCREEN_UPDATE_STATIC(amiga_aga)
 
-	MCFG_VIDEO_START(amiga_aga)
+	MCFG_VIDEO_START_OVERRIDE(cd32_state,amiga_aga)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -802,8 +800,8 @@ static MACHINE_CONFIG_START( cd32base, cd32_state )
 	MCFG_SOUND_ROUTE( 1, "rspeaker", 0.50 )
 
 	/* cia */
-	MCFG_MOS8520_ADD("cia_0", AMIGA_68EC020_PAL_CLOCK / 10, cia_0_intf)
-	MCFG_MOS8520_ADD("cia_1", AMIGA_68EC020_PAL_CLOCK / 10, cia_1_intf)
+	MCFG_MOS8520_ADD("cia_0", AMIGA_68EC020_PAL_CLOCK / 10, 0, cia_0_intf)
+	MCFG_MOS8520_ADD("cia_1", AMIGA_68EC020_PAL_CLOCK / 10, 0, cia_1_intf)
 
 	MCFG_MICROTOUCH_ADD( "microtouch", cd32_microtouch_config )
 
@@ -1238,11 +1236,11 @@ static void cndypuzl_input_hack(running_machine &machine)
 {
 	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram.bytes())
+	if (machine.device("maincpu")->safe_pc() < state->m_chip_ram.bytes())
 	{
 		//(*state->m_chip_ram_w)(0x051c02, 0x0000);
 
-		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
+		UINT32 r_A5 = machine.device("maincpu")->state().state_int(M68K_A5);
 		(*state->m_chip_ram_w)(state, r_A5 - 0x7ebe, 0x0000);
 	}
 }
@@ -1257,11 +1255,11 @@ static void haremchl_input_hack(running_machine &machine)
 {
 	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram.bytes())
+	if (machine.device("maincpu")->safe_pc() < state->m_chip_ram.bytes())
 	{
 		//amiga_chip_ram_w8(state, 0x002907, 0x00);
 
-		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
+		UINT32 r_A5 = machine.device("maincpu")->state().state_int(M68K_A5);
 		UINT32 r_A2 = ((*state->m_chip_ram_r)(state, r_A5 - 0x7f00 + 0) << 16) | ((*state->m_chip_ram_r)(state, r_A5 - 0x7f00 + 2));
 		amiga_chip_ram_w8(state, r_A2 + 0x1f, 0x00);
 	}
@@ -1277,11 +1275,11 @@ static void lsrquiz_input_hack(running_machine &machine)
 {
 	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram.bytes())
+	if (machine.device("maincpu")->safe_pc() < state->m_chip_ram.bytes())
 	{
 		//amiga_chip_ram_w8(state, 0x001e1b, 0x00);
 
-		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
+		UINT32 r_A5 = machine.device("maincpu")->state().state_int(M68K_A5);
 		UINT32 r_A2 = ((*state->m_chip_ram_r)(state, r_A5 - 0x7fe0 + 0) << 16) | ((*state->m_chip_ram_r)(state, r_A5 - 0x7fe0 + 2));
 		amiga_chip_ram_w8(state, r_A2 + 0x13, 0x00);
 	}
@@ -1298,11 +1296,11 @@ static void lsrquiz2_input_hack(running_machine &machine)
 {
 	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram.bytes())
+	if (machine.device("maincpu")->safe_pc() < state->m_chip_ram.bytes())
 	{
 		//amiga_chip_ram_w8(state, 0x046107, 0x00);
 
-		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
+		UINT32 r_A5 = machine.device("maincpu")->state().state_int(M68K_A5);
 		UINT32 r_A2 = ((*state->m_chip_ram_r)(state, r_A5 - 0x7fdc + 0) << 16) | ((*state->m_chip_ram_r)(state, r_A5 - 0x7fdc + 2));
 		amiga_chip_ram_w8(state, r_A2 + 0x17, 0x00);
 	}
@@ -1318,11 +1316,11 @@ static void lasstixx_input_hack(running_machine &machine)
 {
 	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram.bytes())
+	if (machine.device("maincpu")->safe_pc() < state->m_chip_ram.bytes())
 	{
 		//amiga_chip_ram_w8(state, 0x00281c, 0x00);
 
-		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
+		UINT32 r_A5 = machine.device("maincpu")->state().state_int(M68K_A5);
 		UINT32 r_A2 = ((*state->m_chip_ram_r)(state, r_A5 - 0x7fa2 + 0) << 16) | ((*state->m_chip_ram_r)(state, r_A5 - 0x7fa2 + 2));
 		amiga_chip_ram_w8(state, r_A2 + 0x24, 0x00);
 	}
@@ -1338,11 +1336,11 @@ static void mgnumber_input_hack(running_machine &machine)
 {
 	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram.bytes())
+	if (machine.device("maincpu")->safe_pc() < state->m_chip_ram.bytes())
 	{
 		//(*state->m_chip_ram_w)(0x04bfa0, 0x0000);
 
-		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
+		UINT32 r_A5 = machine.device("maincpu")->state().state_int(M68K_A5);
 		(*state->m_chip_ram_w)(state, r_A5 - 0x7ed8, 0x0000);
 	}
 }
@@ -1357,11 +1355,11 @@ static void mgprem11_input_hack(running_machine &machine)
 {
 	cd32_state *state = machine.driver_data<cd32_state>();
 
-	if (cpu_get_pc(machine.device("maincpu")) < state->m_chip_ram.bytes())
+	if (machine.device("maincpu")->safe_pc() < state->m_chip_ram.bytes())
 	{
 		//amiga_chip_ram_w8(state, 0x044f7e, 0x00);
 
-		UINT32 r_A5 = cpu_get_reg(machine.device("maincpu"), M68K_A5);
+		UINT32 r_A5 = machine.device("maincpu")->state().state_int(M68K_A5);
 		amiga_chip_ram_w8(state, r_A5 - 0x7eca, 0x00);
 	}
 }

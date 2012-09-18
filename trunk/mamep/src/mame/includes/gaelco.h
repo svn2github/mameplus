@@ -25,7 +25,7 @@ public:
 	tilemap_t      *m_tilemap[2];
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE16_MEMBER(bigkarnk_sound_command_w);
 	DECLARE_WRITE16_MEMBER(bigkarnk_coin_w);
 	DECLARE_WRITE16_MEMBER(OKIM6295_bankswitch_w);
@@ -34,6 +34,11 @@ public:
 	DECLARE_WRITE16_MEMBER(thoop_vram_encrypted_w);
 	DECLARE_WRITE16_MEMBER(thoop_encrypted_w);
 	DECLARE_WRITE16_MEMBER(gaelco_vram_w);
+	TILE_GET_INFO_MEMBER(get_tile_info_gaelco_screen0);
+	TILE_GET_INFO_MEMBER(get_tile_info_gaelco_screen1);
+	virtual void machine_start();
+	DECLARE_VIDEO_START(bigkarnk);
+	DECLARE_VIDEO_START(maniacsq);
 };
 
 
@@ -41,8 +46,8 @@ public:
 /*----------- defined in video/gaelco.c -----------*/
 
 
-VIDEO_START( bigkarnk );
-VIDEO_START( maniacsq );
+
+
 
 SCREEN_UPDATE_IND16( bigkarnk );
 SCREEN_UPDATE_IND16( maniacsq );

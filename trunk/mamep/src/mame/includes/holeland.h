@@ -27,13 +27,17 @@ public:
 	DECLARE_WRITE8_MEMBER(holeland_pal_offs_w);
 	DECLARE_WRITE8_MEMBER(holeland_scroll_w);
 	DECLARE_WRITE8_MEMBER(holeland_flipscreen_w);
+	TILE_GET_INFO_MEMBER(holeland_get_tile_info);
+	TILE_GET_INFO_MEMBER(crzrally_get_tile_info);
+	DECLARE_VIDEO_START(holeland);
+	DECLARE_VIDEO_START(crzrally);
 };
 
 
 /*----------- defined in video/holeland.c -----------*/
 
-VIDEO_START( holeland );
-VIDEO_START( crzrally );
+
+
 SCREEN_UPDATE_IND16( holeland );
 SCREEN_UPDATE_IND16( crzrally );
 

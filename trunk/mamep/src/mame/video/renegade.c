@@ -38,41 +38,38 @@ WRITE8_MEMBER(renegade_state::renegade_scroll1_w)
 	m_scrollx = (m_scrollx & 0xff) | (data << 8);
 }
 
-static TILE_GET_INFO( get_bg_tilemap_info )
+TILE_GET_INFO_MEMBER(renegade_state::get_bg_tilemap_info)
 {
-	renegade_state *state = machine.driver_data<renegade_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	const UINT8 *source = &videoram[tile_index];
 	UINT8 attributes = source[0x400]; /* CCC??BBB */
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 		1 + (attributes & 0x7),
 		source[0],
 		attributes >> 5,
 		0);
 }
 
-static TILE_GET_INFO( get_fg_tilemap_info )
+TILE_GET_INFO_MEMBER(renegade_state::get_fg_tilemap_info)
 {
-	renegade_state *state = machine.driver_data<renegade_state>();
-	const UINT8 *source = &state->m_videoram2[tile_index];
+	const UINT8 *source = &m_videoram2[tile_index];
 	UINT8 attributes = source[0x400];
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 		0,
 		(attributes & 3) * 256 + source[0],
 		attributes >> 6,
 		0);
 }
 
-VIDEO_START( renegade )
+void renegade_state::video_start()
 {
-	renegade_state *state = machine.driver_data<renegade_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tilemap_info, tilemap_scan_rows,      16, 16, 64, 16);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tilemap_info, tilemap_scan_rows,   8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(renegade_state::get_bg_tilemap_info),this), TILEMAP_SCAN_ROWS,      16, 16, 64, 16);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(renegade_state::get_fg_tilemap_info),this), TILEMAP_SCAN_ROWS,   8, 8, 32, 32);
 
-	state->m_fg_tilemap->set_transparent_pen(0);
-	state->m_bg_tilemap->set_scrolldx(256, 0);
+	m_fg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap->set_scrolldx(256, 0);
 
-	state_save_register_global(machine, state->m_scrollx);
+	state_save_register_global(machine(), m_scrollx);
 }
 
 static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect)

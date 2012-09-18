@@ -58,11 +58,17 @@ public:
 	DECLARE_READ8_MEMBER(f1_r);
 	DECLARE_DRIVER_INIT(gladiatr);
 	DECLARE_DRIVER_INIT(ppking);
+	TILE_GET_INFO_MEMBER(bg_get_tile_info);
+	TILE_GET_INFO_MEMBER(fg_get_tile_info);
+	DECLARE_MACHINE_RESET(ppking);
+	DECLARE_VIDEO_START(ppking);
+	DECLARE_MACHINE_RESET(gladiator);
+	DECLARE_VIDEO_START(gladiatr);
 };
 
 /*----------- defined in video/gladiatr.c -----------*/
 
-VIDEO_START( ppking );
+
 SCREEN_UPDATE_IND16( ppking );
-VIDEO_START( gladiatr );
+
 SCREEN_UPDATE_IND16( gladiatr );

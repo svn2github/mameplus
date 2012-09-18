@@ -134,7 +134,7 @@ Z80PIO_INTERFACE( nflfoot_pio_intf )
 
 static WRITE_LINE_DEVICE_HANDLER( ipu_ctc_interrupt )
 {
-	cputag_set_input_line(device->machine(), "ipu", 0, state);
+	device->machine().device("ipu")->execute().set_input_line(0, state);
 }
 
 
@@ -155,20 +155,20 @@ const z80sio_interface nflfoot_sio_intf =
  *
  *************************************/
 
-MACHINE_START( mcr )
+MACHINE_START_MEMBER(mcr_state,mcr)
 {
-	state_save_register_global(machine, mcr_cocktail_flip);
+	state_save_register_global(machine(), mcr_cocktail_flip);
 }
 
 
-MACHINE_START( nflfoot )
+MACHINE_START_MEMBER(mcr_state,nflfoot)
 {
 	/* allocate a timer for the IPU watchdog */
-	ipu_watchdog_timer = machine.scheduler().timer_alloc(FUNC(ipu_watchdog_reset));
+	ipu_watchdog_timer = machine().scheduler().timer_alloc(FUNC(ipu_watchdog_reset));
 }
 
 
-MACHINE_RESET( mcr )
+MACHINE_RESET_MEMBER(mcr_state,mcr)
 {
 	/* reset cocktail flip */
 	mcr_cocktail_flip = 0;
@@ -246,18 +246,18 @@ WRITE8_MEMBER(mcr_state::mcr_ipu_laserdisk_w)
 	/* bit 1 enables (1) LD left channel audio */
 	/* bit 0 enables (1) LD video if PIX SW == 1 */
 	if (data != 0)
-		logerror("%04X:mcr_ipu_laserdisk_w(%d) = %02X\n", cpu_get_pc(&space.device()), offset, data);
+		logerror("%04X:mcr_ipu_laserdisk_w(%d) = %02X\n", space.device().safe_pc(), offset, data);
 }
 
 
 static TIMER_CALLBACK( ipu_watchdog_reset )
 {
 	logerror("ipu_watchdog_reset\n");
-	cputag_set_input_line(machine, "ipu", INPUT_LINE_RESET, PULSE_LINE);
-	devtag_reset(machine, "ipu_ctc");
-	devtag_reset(machine, "ipu_pio0");
-	devtag_reset(machine, "ipu_pio1");
-	devtag_reset(machine, "ipu_sio");
+	machine.device("ipu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+	machine.device("ipu_ctc")->reset();
+	machine.device("ipu_pio0")->reset();
+	machine.device("ipu_pio1")->reset();
+	machine.device("ipu_sio")->reset();
 }
 
 

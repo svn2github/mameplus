@@ -373,10 +373,10 @@ struct taitotz_polydata
 	int specular_r, specular_g, specular_b;
 };
 
-typedef struct
+struct PLANE
 {
 	float x, y, z, d;
-} PLANE;
+};
 
 typedef float VECTOR3[3];
 
@@ -521,6 +521,9 @@ public:
 	DECLARE_DRIVER_INIT(pwrshovl);
 	DECLARE_DRIVER_INIT(batlgear);
 	DECLARE_DRIVER_INIT(landhigh);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -564,21 +567,20 @@ static void taitotz_exit(running_machine &machine)
     */
 }
 
-static VIDEO_START( taitotz )
+void taitotz_state::video_start()
 {
-	taitotz_state *state = machine.driver_data<taitotz_state>();
 
-	int width = machine.primary_screen->width();
-	int height = machine.primary_screen->height();
+	int width = machine().primary_screen->width();
+	int height = machine().primary_screen->height();
 
-	state->m_screen_ram = auto_alloc_array(machine, UINT32, 0x200000);
-	state->m_frame_ram = auto_alloc_array(machine, UINT32, 0x80000);
-	state->m_texture_ram = auto_alloc_array(machine, UINT32, 0x800000);
+	m_screen_ram = auto_alloc_array(machine(), UINT32, 0x200000);
+	m_frame_ram = auto_alloc_array(machine(), UINT32, 0x80000);
+	m_texture_ram = auto_alloc_array(machine(), UINT32, 0x800000);
 
 	/* create renderer */
-	state->m_renderer = auto_alloc(machine, taitotz_renderer(machine, width, height, state->m_texture_ram));
+	m_renderer = auto_alloc(machine(), taitotz_renderer(machine(), width, height, m_texture_ram));
 
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(taitotz_exit), &machine));
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(taitotz_exit), &machine()));
 }
 
 static const float dot3_tex_table[32] =
@@ -1587,7 +1589,7 @@ WRITE64_MEMBER(taitotz_state::video_chip_w)
 					case 0xb:
 					{
 						m_video_ram_ptr = m_video_reg & 0xfffffff;
-						//logerror("video_chip_ram sel %08X at %08X\n", m_video_reg & 0x0fffffff, cpu_get_pc(&space.device()));
+						//logerror("video_chip_ram sel %08X at %08X\n", m_video_reg & 0x0fffffff, space.device().safe_pc());
 						break;
 					}
 					case 0x0:
@@ -1675,7 +1677,7 @@ WRITE64_MEMBER(taitotz_state::video_fifo_w)
 		{
 			if (m_video_fifo_ptr >= 8)
 			{
-				logerror("FIFO packet w: %08X at %08X\n", (UINT32)(data >> 32), cpu_get_pc(&space.device()));
+				logerror("FIFO packet w: %08X at %08X\n", (UINT32)(data >> 32), space.device().safe_pc());
 			}
 			m_video_fifo_ptr++;
 		}
@@ -1683,7 +1685,7 @@ WRITE64_MEMBER(taitotz_state::video_fifo_w)
 		{
 			if (m_video_fifo_ptr >= 8)
 			{
-				logerror("FIFO packet w: %08X at %08X\n", (UINT32)(data), cpu_get_pc(&space.device()));
+				logerror("FIFO packet w: %08X at %08X\n", (UINT32)(data), space.device().safe_pc());
 			}
 			m_video_fifo_ptr++;
 		}
@@ -1821,38 +1823,38 @@ WRITE64_MEMBER(taitotz_state::ppc_common_w)
 		{
 			m_io_share_ram[0xfff] = 0x0000;
 			m_io_share_ram[0xe00] = 0xffff;
-			cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ0, ASSERT_LINE);
+			machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 		}
 		else if (m_io_share_ram[0xfff] == 0x4004 || m_io_share_ram[0xfff] == 0x4000)
 		{
 			m_io_share_ram[0xfff] = 0x0000;
-			cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ0, ASSERT_LINE);
+			machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 		}
 		else if (m_io_share_ram[0xfff] == 0x7004)
 		{
 			// this command seems to turn off interrupts on TLCS...
 			m_io_share_ram[0xfff] = 0x0000;
-			cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ0, ASSERT_LINE);
+			machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 		}
 		else
 		{
 			// normally just raise INT0 on TLCS and let it handle the command
-			cputag_set_input_line(machine(), "iocpu", TLCS900_INT0, ASSERT_LINE);
-			cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ0, CLEAR_LINE);
+			machine().device("iocpu")->execute().set_input_line(TLCS900_INT0, ASSERT_LINE);
+			machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 
 			// The PPC always goes to busy loop waiting for TLCS here, so we can free up the timeslice.
 			// Only do it for HDD access and backup RAM for now...
 			if (m_io_share_ram[0xfff] == 0x1010 || m_io_share_ram[0xfff] == 0x1020 ||
 				m_io_share_ram[0xfff] == 0x6000 || m_io_share_ram[0xfff] == 0x6010)
 			{
-				//device_spin_until_trigger(machine().device("maincpu"), PPC_TLCS_COMM_TRIGGER);
-				device_spin_until_interrupt(machine().device("maincpu"));
+				//machine().device("maincpu")->execute().spin_until_trigger(PPC_TLCS_COMM_TRIGGER);
+				machine().device("maincpu")->execute().spin_until_interrupt();
 			}
 
 			// pwrshovl sometimes writes commands during command handling... make sure that doesn't happen
 			if (m_io_share_ram[0xfff] == 0x0000)
 			{
-				device_spin_until_time(machine().device("maincpu"), attotime::from_usec(50));
+				machine().device("maincpu")->execute().spin_until_time(attotime::from_usec(50));
 			}
 
 			machine().scheduler().trigger(TLCS_PPC_COMM_TRIGGER);
@@ -1924,22 +1926,22 @@ WRITE8_MEMBER(taitotz_state::tlcs_common_w)
 		}
 #endif
 
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ0, ASSERT_LINE);
-		cputag_set_input_line(machine(), "iocpu", TLCS900_INT0, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
+		machine().device("iocpu")->execute().set_input_line(TLCS900_INT0, CLEAR_LINE);
 
-		cputag_set_input_line(machine(), "iocpu", TLCS900_INT3, CLEAR_LINE);
+		machine().device("iocpu")->execute().set_input_line(TLCS900_INT3, CLEAR_LINE);
 
 		// The PPC is now free to continue running
 		//machine().scheduler().trigger(PPC_TLCS_COMM_TRIGGER);
-		//device_yield(machine().device("iocpu"));
+		//machine().device("iocpu")->execute().yield();
 	}
 
 	if (offset == 0x1ffe)
 	{
 		if (m_io_share_ram[0xfff] == 0 && m_io_share_ram[0xffe] == 0x1012)
 		{
-			//device_spin_until_trigger(machine().device("iocpu"), TLCS_PPC_COMM_TRIGGER);
-			device_yield(machine().device("iocpu"));
+			//machine().device("iocpu")->execute().spin_until_trigger(TLCS_PPC_COMM_TRIGGER);
+			machine().device("iocpu")->execute().yield();
 			machine().scheduler().trigger(PPC_TLCS_COMM_TRIGGER);
 		}
 	}
@@ -2422,37 +2424,35 @@ static void set_ide_drive_serial_number(device_t *device, int drive, const char 
 }
 
 
-static MACHINE_RESET( taitotz )
+void taitotz_state::machine_reset()
 {
-	taitotz_state *state = machine.driver_data<taitotz_state>();
-	devtag_reset(machine, "ide");
+	machine().device("ide")->reset();
 
-	if (state->m_hdd_serial_number != NULL)
+	if (m_hdd_serial_number != NULL)
 	{
-		set_ide_drive_serial_number(machine.device("ide"), 0, state->m_hdd_serial_number);
+		set_ide_drive_serial_number(machine().device("ide"), 0, m_hdd_serial_number);
 	}
 }
 
-static MACHINE_START( taitotz )
+void taitotz_state::machine_start()
 {
-	taitotz_state *state = machine.driver_data<taitotz_state>();
 
 	/* set conservative DRC options */
-	ppcdrc_set_options(machine.device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
+	ppcdrc_set_options(machine().device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
 
 	/* configure fast RAM regions for DRC */
-	ppcdrc_add_fastram(machine.device("maincpu"), 0x40000000, 0x40ffffff, FALSE, state->m_work_ram);
+	ppcdrc_add_fastram(machine().device("maincpu"), 0x40000000, 0x40ffffff, FALSE, m_work_ram);
 }
 
 
 static INTERRUPT_GEN( taitotz_vbi )
 {
-	cputag_set_input_line(device->machine(), "iocpu", TLCS900_INT3, ASSERT_LINE);
+	device->machine().device("iocpu")->execute().set_input_line(TLCS900_INT3, ASSERT_LINE);
 }
 
 static void ide_interrupt(device_t *device, int state)
 {
-	cputag_set_input_line(device->machine(), "iocpu", TLCS900_INT2, state);
+	device->machine().device("iocpu")->execute().set_input_line(TLCS900_INT2, state);
 }
 
 static const powerpc_config ppc603e_config =
@@ -2470,6 +2470,12 @@ static const tlcs900_interface taitotz_tlcs900_interface =
 	DEVCB_DRIVER_MEMBER(taitotz_state, tlcs900_port_write),
 };
 
+static const ide_config ide_intf =
+{
+	ide_interrupt,
+	NULL,
+	0
+};
 
 static MACHINE_CONFIG_START( taitotz, taitotz_state )
 	/* IBM EMPPC603eBG-100 */
@@ -2487,10 +2493,8 @@ static MACHINE_CONFIG_START( taitotz, taitotz_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(120))
 
-	MCFG_MACHINE_START( taitotz )
-	MCFG_MACHINE_RESET( taitotz )
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_interrupt, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -2500,7 +2504,6 @@ static MACHINE_CONFIG_START( taitotz, taitotz_state )
 	MCFG_SCREEN_VISIBLE_AREA(0, 511, 0, 383)
 	MCFG_SCREEN_UPDATE_STATIC(taitotz)
 
-	MCFG_VIDEO_START(taitotz)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( landhigh, taitotz )

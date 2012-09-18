@@ -40,6 +40,10 @@ public:
 	DECLARE_WRITE16_MEMBER(realbrk_vram_1_w);
 	DECLARE_WRITE16_MEMBER(realbrk_vram_2_w);
 	DECLARE_WRITE16_MEMBER(realbrk_vregs_w);
+	TILE_GET_INFO_MEMBER(get_tile_info_0);
+	TILE_GET_INFO_MEMBER(get_tile_info_1);
+	TILE_GET_INFO_MEMBER(get_tile_info_2);
+	virtual void video_start();
 };
 
 
@@ -48,7 +52,7 @@ public:
 #ifndef REALBRK_H
 #define REALBRK_H
 
-VIDEO_START(realbrk);
+
 SCREEN_UPDATE_IND16(realbrk);
 SCREEN_UPDATE_IND16(dai2kaku);
 

@@ -115,19 +115,22 @@ public:
 	DECLARE_WRITE8_MEMBER(seibu_sound_comms_w);
 	DECLARE_DRIVER_INIT(cshootere);
 	DECLARE_DRIVER_INIT(cshooter);
+	TILE_GET_INFO_MEMBER(get_cstx_tile_info);
+	virtual void video_start();
+	DECLARE_MACHINE_RESET(cshooter);
+	DECLARE_MACHINE_RESET(airraid);
 };
 
 
-static TILE_GET_INFO( get_cstx_tile_info )
+TILE_GET_INFO_MEMBER(cshooter_state::get_cstx_tile_info)
 {
-	cshooter_state *state = machine.driver_data<cshooter_state>();
-	int code = (state->m_txram[tile_index*2]);
-	int attr = (state->m_txram[tile_index*2+1]);
+	int code = (m_txram[tile_index*2]);
+	int attr = (m_txram[tile_index*2+1]);
 	int rg;
 	rg=0;
 	if (attr & 0x20) rg = 1;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 
 			rg,
 			(code & 0x1ff),
@@ -141,11 +144,10 @@ WRITE8_MEMBER(cshooter_state::cshooter_txram_w)
 	m_txtilemap->mark_tile_dirty(offset/2);
 }
 
-static VIDEO_START(cshooter)
+void cshooter_state::video_start()
 {
-	cshooter_state *state = machine.driver_data<cshooter_state>();
-	state->m_txtilemap = tilemap_create(machine, get_cstx_tile_info,tilemap_scan_rows, 8,8,32, 32);
-	state->m_txtilemap->set_transparent_pen(3);
+	m_txtilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cshooter_state::get_cstx_tile_info),this),TILEMAP_SCAN_ROWS, 8,8,32, 32);
+	m_txtilemap->set_transparent_pen(3);
 }
 
 static SCREEN_UPDATE_IND16(cshooter)
@@ -205,22 +207,21 @@ static TIMER_DEVICE_CALLBACK( cshooter_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE,0x10); /* RST 10h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x10); /* RST 10h */
 
 	if(scanline == 0) // vblank-in irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE,0x08); /* RST 08h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0x08); /* RST 08h */
 }
 
 
-static MACHINE_RESET( cshooter )
+MACHINE_RESET_MEMBER(cshooter_state,cshooter)
 {
-	cshooter_state *state = machine.driver_data<cshooter_state>();
-	state->m_counter = 0;
+	m_counter = 0;
 }
 
-static MACHINE_RESET( airraid )
+MACHINE_RESET_MEMBER(cshooter_state,airraid)
 {
-	MACHINE_RESET_CALL(seibu_sound);
+	MACHINE_RESET_CALL_LEGACY(seibu_sound);
 }
 
 READ8_MEMBER(cshooter_state::cshooter_coin_r)
@@ -443,7 +444,7 @@ static MACHINE_CONFIG_START( cshooter, cshooter_state )
 	MCFG_CPU_ADD("audiocpu", Z80,XTAL_14_31818MHz/4)		 /* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_RESET(cshooter)
+	MCFG_MACHINE_RESET_OVERRIDE(cshooter_state,cshooter)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -456,7 +457,6 @@ static MACHINE_CONFIG_START( cshooter, cshooter_state )
 	MCFG_GFXDECODE(cshooter)
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_VIDEO_START(cshooter)
 
 	/* sound hardware */
 	/* YM2151 and ym3931 seibu custom cpu running at XTAL_14_31818MHz/4 */
@@ -470,7 +470,7 @@ static MACHINE_CONFIG_START( airraid, cshooter_state )
 
 	SEIBU2_AIRRAID_SOUND_SYSTEM_CPU(XTAL_14_31818MHz/4)		 /* verified on pcb */
 
-	MCFG_MACHINE_RESET(airraid)
+	MCFG_MACHINE_RESET_OVERRIDE(cshooter_state,airraid)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -483,7 +483,6 @@ static MACHINE_CONFIG_START( airraid, cshooter_state )
 	MCFG_GFXDECODE(cshooter)
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_VIDEO_START(cshooter)
 
 	/* sound hardware */
 	SEIBU_AIRRAID_SOUND_SYSTEM_YM2151_INTERFACE(XTAL_14_31818MHz/4)

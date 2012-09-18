@@ -28,9 +28,9 @@
 
 ***************************************************************************/
 
-PALETTE_INIT( btime )
+PALETTE_INIT_MEMBER(btime_state,btime)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 
@@ -38,7 +38,7 @@ PALETTE_INIT( btime )
 	/* This function is also used by Eggs. */
 	if (color_prom == 0) return;
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		int bit0, bit1, bit2, r, g, b;
 
@@ -58,7 +58,7 @@ PALETTE_INIT( btime )
 		bit2 = (color_prom[i] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r,g,b));
+		palette_set_color(machine(), i, MAKE_RGB(r,g,b));
 	}
 }
 
@@ -79,12 +79,12 @@ PALETTE_INIT( btime )
 
 ***************************************************************************/
 
-PALETTE_INIT( lnc )
+PALETTE_INIT_MEMBER(btime_state,lnc)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		int bit0, bit1, bit2, r, g, b;
 
@@ -104,7 +104,7 @@ PALETTE_INIT( lnc )
 		bit2 = (color_prom[i] >> 0) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r,g,b));
+		palette_set_color(machine(), i, MAKE_RGB(r,g,b));
 	}
 }
 
@@ -114,28 +114,26 @@ Start the video hardware emulation.
 
 ***************************************************************************/
 
-VIDEO_START( btime )
+VIDEO_START_MEMBER(btime_state,btime)
 {
-	btime_state *state = machine.driver_data<btime_state>();
 
-	if (machine.gfx[0]->srcdata == NULL)
-		gfx_element_set_source(machine.gfx[0], state->m_deco_charram);
-	if (machine.gfx[1]->srcdata == NULL)
-		gfx_element_set_source(machine.gfx[1], state->m_deco_charram);
+	if (machine().gfx[0]->srcdata() == NULL)
+		machine().gfx[0]->set_source(m_deco_charram);
+	if (machine().gfx[1]->srcdata() == NULL)
+		machine().gfx[1]->set_source(m_deco_charram);
 }
 
 
-VIDEO_START( bnj )
+VIDEO_START_MEMBER(btime_state,bnj)
 {
-	btime_state *state = machine.driver_data<btime_state>();
 	/* the background area is twice as wide as the screen */
 	int width = 256;
 	int height = 256;
-	state->m_background_bitmap = auto_bitmap_ind16_alloc(machine, 2 * width, height);
+	m_background_bitmap = auto_bitmap_ind16_alloc(machine(), 2 * width, height);
 
-	state->save_item(NAME(*state->m_background_bitmap));
+	save_item(NAME(*m_background_bitmap));
 
-	VIDEO_START_CALL(btime);
+	VIDEO_START_CALL_MEMBER(btime);
 }
 
 
@@ -221,10 +219,10 @@ WRITE8_MEMBER(btime_state::deco_charram_w)
 	offset &= 0x1fff;
 
 	/* dirty sprite */
-	gfx_element_mark_dirty(machine().gfx[1], offset >> 5);
+	machine().gfx[1]->mark_dirty(offset >> 5);
 
 	/* diry char */
-	gfx_element_mark_dirty(machine().gfx[0], offset >> 3);
+	machine().gfx[0]->mark_dirty(offset >> 3);
 }
 
 WRITE8_MEMBER(btime_state::bnj_background_w)

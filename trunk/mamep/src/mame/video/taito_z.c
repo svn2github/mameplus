@@ -4,14 +4,13 @@
 
 /**********************************************************/
 
-VIDEO_START( taitoz )
+VIDEO_START_MEMBER(taitoz_state,taitoz)
 {
-	taitoz_state *state = machine.driver_data<taitoz_state>();
-	state->m_road_palbank = 3;
-	state->m_sci_spriteframe = 0;
+	m_road_palbank = 3;
+	m_sci_spriteframe = 0;
 
-	state->save_item(NAME(state->m_road_palbank));
-	state->save_item(NAME(state->m_sci_spriteframe));
+	save_item(NAME(m_road_palbank));
+	save_item(NAME(m_sci_spriteframe));
 }
 
 /********************************************************
@@ -824,7 +823,7 @@ WRITE16_MEMBER(taitoz_state::contcirc_out_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		/* bit 0 = reset sub CPU */
-		device_set_input_line(m_audiocpu, INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
 
 		/* bits 1-3 n.c. */
 

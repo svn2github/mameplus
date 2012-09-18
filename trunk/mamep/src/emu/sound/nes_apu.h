@@ -37,8 +37,7 @@
  * processor, as each is shared.
  */
 
-typedef struct _nes_interface nes_interface;
-struct _nes_interface
+struct nes_interface
 {
 	const char *cpu_tag;  /* CPU tag */
 };
@@ -46,6 +45,28 @@ struct _nes_interface
 READ8_DEVICE_HANDLER( nes_psg_r );
 WRITE8_DEVICE_HANDLER( nes_psg_w );
 
-DECLARE_LEGACY_SOUND_DEVICE(NES, nesapu);
+class nesapu_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	nesapu_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~nesapu_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type NES;
+
 
 #endif /* __NES_APU_H__ */

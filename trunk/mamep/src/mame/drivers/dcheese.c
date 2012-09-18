@@ -53,7 +53,7 @@ static void update_irq_state( device_t *cpu )
 
 	int i;
 	for (i = 1; i < 5; i++)
-		device_set_input_line(cpu, i, state->m_irq_state[i] ? ASSERT_LINE : CLEAR_LINE);
+		cpu->execute().set_input_line(i, state->m_irq_state[i] ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -93,20 +93,19 @@ static INTERRUPT_GEN( dcheese_vblank )
  *
  *************************************/
 
-static MACHINE_START( dcheese )
+void dcheese_state::machine_start()
 {
-	dcheese_state *state = machine.driver_data<dcheese_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_bsmt = machine.device("bsmt");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_bsmt = machine().device("bsmt");
 
-	device_set_irq_callback(state->m_maincpu, irq_callback);
+	m_maincpu->set_irq_acknowledge_callback(irq_callback);
 
-	state->save_item(NAME(state->m_irq_state));
-	state->save_item(NAME(state->m_soundlatch_full));
-	state->save_item(NAME(state->m_sound_control));
-	state->save_item(NAME(state->m_sound_msb_latch));
+	save_item(NAME(m_irq_state));
+	save_item(NAME(m_soundlatch_full));
+	save_item(NAME(m_sound_control));
+	save_item(NAME(m_sound_msb_latch));
 }
 
 
@@ -142,7 +141,7 @@ WRITE16_MEMBER(dcheese_state::sound_command_w)
 	{
 		/* write the latch and set the IRQ */
 		m_soundlatch_full = 1;
-		device_set_input_line(m_audiocpu, 0, ASSERT_LINE);
+		m_audiocpu->set_input_line(0, ASSERT_LINE);
 		soundlatch_byte_w(space, 0, data & 0xff);
 	}
 }
@@ -160,7 +159,7 @@ READ8_MEMBER(dcheese_state::sound_command_r)
 
 	/* read the latch and clear the IRQ */
 	m_soundlatch_full = 0;
-	device_set_input_line(m_audiocpu, 0, CLEAR_LINE);
+	m_audiocpu->set_input_line(0, CLEAR_LINE);
 	return soundlatch_byte_r(space, 0);
 }
 
@@ -183,7 +182,7 @@ WRITE8_MEMBER(dcheese_state::sound_control_w)
 	if ((diff & 0x40) && (data & 0x40))
 		m_bsmt->reset();
 	if (data != 0x40 && data != 0x60)
-		logerror("%04X:sound_control_w = %02X\n", cpu_get_pc(&space.device()), data);
+		logerror("%04X:sound_control_w = %02X\n", space.device().safe_pc(), data);
 }
 
 
@@ -416,7 +415,6 @@ static MACHINE_CONFIG_START( dcheese, dcheese_state )
 	MCFG_CPU_PROGRAM_MAP(sound_cpu_map)
 	MCFG_CPU_PERIODIC_INT(irq1_line_hold, 480)	/* accurate for fredmem */
 
-	MCFG_MACHINE_START(dcheese)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 	MCFG_TICKET_DISPENSER_ADD("ticket", attotime::from_msec(200), TICKET_MOTOR_ACTIVE_HIGH, TICKET_STATUS_ACTIVE_LOW)
@@ -430,8 +428,6 @@ static MACHINE_CONFIG_START( dcheese, dcheese_state )
 
 	MCFG_PALETTE_LENGTH(65534)
 
-	MCFG_PALETTE_INIT(dcheese)
-	MCFG_VIDEO_START(dcheese)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

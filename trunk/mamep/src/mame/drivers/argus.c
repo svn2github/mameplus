@@ -134,10 +134,10 @@ static TIMER_DEVICE_CALLBACK( argus_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE,0xd7); /* RST 10h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xd7); /* RST 10h */
 
 	if(scanline == 16) // vblank-in irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE,0xcf); /* RST 08h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xcf); /* RST 08h */
 }
 
 static TIMER_DEVICE_CALLBACK( butasan_scanline )
@@ -145,16 +145,16 @@ static TIMER_DEVICE_CALLBACK( butasan_scanline )
 	int scanline = param;
 
 	if(scanline == 248) // vblank-out irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE,0xd7); /* RST 10h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xd7); /* RST 10h */
 
 	if(scanline == 8) // vblank-in irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE,0xcf); /* RST 08h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE,0xcf); /* RST 08h */
 }
 
 /* Handler called by the YM2203 emulator when the internal timers cause an IRQ */
 static void irqhandler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -564,8 +564,8 @@ static MACHINE_CONFIG_START( argus, argus_state )
 	MCFG_GFXDECODE(argus)
 	MCFG_PALETTE_LENGTH(896)
 
-	MCFG_VIDEO_START(argus)
-	MCFG_VIDEO_RESET(argus)
+	MCFG_VIDEO_START_OVERRIDE(argus_state,argus)
+	MCFG_VIDEO_RESET_OVERRIDE(argus_state,argus)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -608,8 +608,8 @@ static MACHINE_CONFIG_START( valtric, argus_state )
 	MCFG_GFXDECODE(valtric)
 	MCFG_PALETTE_LENGTH(768)
 
-	MCFG_VIDEO_START(valtric)
-	MCFG_VIDEO_RESET(valtric)
+	MCFG_VIDEO_START_OVERRIDE(argus_state,valtric)
+	MCFG_VIDEO_RESET_OVERRIDE(argus_state,valtric)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -652,8 +652,8 @@ static MACHINE_CONFIG_START( butasan, argus_state )
 	MCFG_GFXDECODE(butasan)
 	MCFG_PALETTE_LENGTH(768)
 
-	MCFG_VIDEO_START(butasan)
-	MCFG_VIDEO_RESET(butasan)
+	MCFG_VIDEO_START_OVERRIDE(argus_state,butasan)
+	MCFG_VIDEO_RESET_OVERRIDE(argus_state,butasan)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

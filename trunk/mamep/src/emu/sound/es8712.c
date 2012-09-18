@@ -19,8 +19,7 @@
 
 
 /* struct describing a playing ADPCM chip */
-typedef struct _es8712_state es8712_state;
-struct _es8712_state
+struct es8712_state
 {
 	UINT8 playing;			/* 1 if we're actively playing */
 
@@ -51,7 +50,7 @@ INLINE es8712_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == ES8712);
-	return (es8712_state *)downcast<legacy_device_base *>(device)->token();
+	return (es8712_state *)downcast<es8712_device *>(device)->token();
 }
 
 
@@ -379,32 +378,51 @@ WRITE8_DEVICE_HANDLER( es8712_w )
 	chip->start &= 0xfffff; chip->end &= 0xfffff;
 }
 
+const device_type ES8712 = &device_creator<es8712_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( es8712 )
+es8712_device::es8712_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, ES8712, "ES8712", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(es8712_state);				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(es8712_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( es8712 );			break;
-		case DEVINFO_FCT_STOP:							/* nothing */									break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME( es8712 );			break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "ES8712");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Excellent Systems ADPCM");		break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void es8712_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void es8712_device::device_start()
+{
+	DEVICE_START_NAME( es8712 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void es8712_device::device_reset()
+{
+	DEVICE_RESET_NAME( es8712 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void es8712_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(ES8712, es8712);

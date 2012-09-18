@@ -22,7 +22,7 @@ static INTERRUPT_GEN( surpratk_interrupt )
 {
 	surpratk_state *state = device->machine().driver_data<surpratk_state>();
 	if (k052109_is_irq_enabled(state->m_k052109))
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 READ8_MEMBER(surpratk_state::bankedram_r)
@@ -60,7 +60,7 @@ WRITE8_MEMBER(surpratk_state::bankedram_w)
 WRITE8_MEMBER(surpratk_state::surpratk_videobank_w)
 {
 
-	logerror("%04x: videobank = %02x\n",cpu_get_pc(&space.device()),data);
+	logerror("%04x: videobank = %02x\n",space.device().safe_pc(),data);
 	/* bit 0 = select 053245 at 0000-07ff */
 	/* bit 1 = select palette at 0000-07ff */
 	/* bit 2 = select palette bank 0 or 1 */
@@ -71,7 +71,7 @@ WRITE8_MEMBER(surpratk_state::surpratk_5fc0_w)
 {
 
 	if ((data & 0xf4) != 0x10)
-		logerror("%04x: 3fc0 = %02x\n",cpu_get_pc(&space.device()),data);
+		logerror("%04x: 3fc0 = %02x\n",space.device().safe_pc(),data);
 
 	/* bit 0/1 = coin counters */
 	coin_counter_w(machine(), 0, data & 0x01);
@@ -161,7 +161,7 @@ INPUT_PORTS_END
 static void irqhandler( device_t *device, int linestate )
 {
 	surpratk_state *state = device->machine().driver_data<surpratk_state>();
-	device_set_input_line(state->m_maincpu, KONAMI_FIRQ_LINE, linestate);
+	state->m_maincpu->set_input_line(KONAMI_FIRQ_LINE, linestate);
 }
 
 static const ym2151_interface ym2151_config =
@@ -188,43 +188,41 @@ static const k05324x_interface surpratk_k05324x_intf =
 	surpratk_sprite_callback
 };
 
-static MACHINE_START( surpratk )
+void surpratk_state::machine_start()
 {
-	surpratk_state *state = machine.driver_data<surpratk_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 28, &ROM[0x10000], 0x2000);
-	state->membank("bank1")->configure_entries(28, 4, &ROM[0x08000], 0x2000);
-	state->membank("bank1")->set_entry(0);
+	membank("bank1")->configure_entries(0, 28, &ROM[0x10000], 0x2000);
+	membank("bank1")->configure_entries(28, 4, &ROM[0x08000], 0x2000);
+	membank("bank1")->set_entry(0);
 
-	state->m_generic_paletteram_8.allocate(0x1000);
+	m_generic_paletteram_8.allocate(0x1000);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_k053244 = machine.device("k053244");
-	state->m_k053251 = machine.device("k053251");
-	state->m_k052109 = machine.device("k052109");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_k053244 = machine().device("k053244");
+	m_k053251 = machine().device("k053251");
+	m_k052109 = machine().device("k052109");
 
-	state->save_item(NAME(state->m_videobank));
-	state->save_item(NAME(state->m_sprite_colorbase));
-	state->save_item(NAME(state->m_layer_colorbase));
-	state->save_item(NAME(state->m_layerpri));
+	save_item(NAME(m_videobank));
+	save_item(NAME(m_sprite_colorbase));
+	save_item(NAME(m_layer_colorbase));
+	save_item(NAME(m_layerpri));
 }
 
-static MACHINE_RESET( surpratk )
+void surpratk_state::machine_reset()
 {
-	surpratk_state *state = machine.driver_data<surpratk_state>();
 	int i;
 
-	konami_configure_set_lines(machine.device("maincpu"), surpratk_banking);
+	konami_configure_set_lines(machine().device("maincpu"), surpratk_banking);
 
 	for (i = 0; i < 3; i++)
 	{
-		state->m_layerpri[i] = 0;
-		state->m_layer_colorbase[i] = 0;
+		m_layerpri[i] = 0;
+		m_layer_colorbase[i] = 0;
 	}
 
-	state->m_sprite_colorbase = 0;
-	state->m_videobank = 0;
+	m_sprite_colorbase = 0;
+	m_videobank = 0;
 }
 
 static MACHINE_CONFIG_START( surpratk, surpratk_state )
@@ -234,8 +232,6 @@ static MACHINE_CONFIG_START( surpratk, surpratk_state )
 	MCFG_CPU_PROGRAM_MAP(surpratk_map)
 	MCFG_CPU_VBLANK_INT("screen", surpratk_interrupt)
 
-	MCFG_MACHINE_START(surpratk)
-	MCFG_MACHINE_RESET(surpratk)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -322,7 +318,7 @@ ROM_END
 
 static KONAMI_SETLINES_CALLBACK( surpratk_banking )
 {
-	logerror("%04x: setlines %02x\n",cpu_get_pc(device), lines);
+	logerror("%04x: setlines %02x\n",device->safe_pc(), lines);
 	device->machine().root_device().membank("bank1")->set_entry(lines & 0x1f);
 }
 

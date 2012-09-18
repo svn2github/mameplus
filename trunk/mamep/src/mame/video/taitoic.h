@@ -12,8 +12,7 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _pc080sn_interface pc080sn_interface;
-struct _pc080sn_interface
+struct pc080sn_interface
 {
 	int                gfxnum;
 
@@ -23,8 +22,7 @@ struct _pc080sn_interface
 };
 
 
-typedef struct _pc090oj_interface pc090oj_interface;
-struct _pc090oj_interface
+struct pc090oj_interface
 {
 	int                gfxnum;
 
@@ -33,8 +31,7 @@ struct _pc090oj_interface
 };
 
 
-typedef struct _tc0080vco_interface tc0080vco_interface;
-struct _tc0080vco_interface
+struct tc0080vco_interface
 {
 	int                gfxnum;
 	int                txnum;
@@ -45,8 +42,7 @@ struct _tc0080vco_interface
 	int                has_fg0;	/* for debug */
 };
 
-typedef struct _tc0100scn_interface tc0100scn_interface;
-struct _tc0100scn_interface
+struct tc0100scn_interface
 {
 	const char         *screen;
 
@@ -62,15 +58,13 @@ struct _tc0100scn_interface
 };
 
 
-typedef struct _tc0280grd_interface tc0280grd_interface;
-struct _tc0280grd_interface
+struct tc0280grd_interface
 {
 	int                gfxnum;
 };
 
 
-typedef struct _tc0480scp_interface tc0480scp_interface;
-struct _tc0480scp_interface
+struct tc0480scp_interface
 {
 	int                gfxnum;
 	int                txnum;
@@ -85,38 +79,245 @@ struct _tc0480scp_interface
 };
 
 
-typedef struct _tc0150rod_interface tc0150rod_interface;
-struct _tc0150rod_interface
+struct tc0150rod_interface
 {
 	const char      *gfx_region;	/* gfx region for the road */
 };
 
 
-typedef struct _tc0110pcr_interface tc0110pcr_interface;
-struct _tc0110pcr_interface
+struct tc0110pcr_interface
 {
 	int               pal_offs;
 };
 
-typedef struct _tc0180vcu_interface tc0180vcu_interface;
-struct _tc0180vcu_interface
+struct tc0180vcu_interface
 {
 	int            bg_color_base;
 	int            fg_color_base;
 	int            tx_color_base;
 };
 
-DECLARE_LEGACY_DEVICE(PC080SN, pc080sn);
-DECLARE_LEGACY_DEVICE(PC090OJ, pc090oj);
-DECLARE_LEGACY_DEVICE(TC0080VCO, tc0080vco);
-DECLARE_LEGACY_DEVICE(TC0100SCN, tc0100scn);
-DECLARE_LEGACY_DEVICE(TC0280GRD, tc0280grd);
+class pc080sn_device : public device_t
+{
+public:
+	pc080sn_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~pc080sn_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+private:
+	// internal state
+	void *m_token;
+
+	TILE_GET_INFO_MEMBER(pc080sn_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(pc080sn_get_fg_tile_info);
+};
+
+extern const device_type PC080SN;
+
+class pc090oj_device : public device_t
+{
+public:
+	pc090oj_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~pc090oj_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type PC090OJ;
+
+class tc0080vco_device : public device_t
+{
+public:
+	tc0080vco_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tc0080vco_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+private:
+	// internal state
+	void *m_token;
+
+	TILE_GET_INFO_MEMBER(tc0080vco_get_bg0_tile_info);
+	TILE_GET_INFO_MEMBER(tc0080vco_get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(tc0080vco_get_tx_tile_info);
+};
+
+extern const device_type TC0080VCO;
+
+class tc0100scn_device : public device_t
+{
+public:
+	tc0100scn_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tc0100scn_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+
+	TILE_GET_INFO_MEMBER(tc0100scn_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(tc0100scn_get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(tc0100scn_get_tx_tile_info);
+};
+
+extern const device_type TC0100SCN;
+
+class tc0280grd_device : public device_t
+{
+public:
+	tc0280grd_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tc0280grd_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+
+	TILE_GET_INFO_MEMBER(tc0280grd_get_tile_info);
+};
+
+extern const device_type TC0280GRD;
+
 #define TC0430GRW TC0280GRD
-DECLARE_LEGACY_DEVICE(TC0360PRI, tc0360pri);
-DECLARE_LEGACY_DEVICE(TC0480SCP, tc0480scp);
-DECLARE_LEGACY_DEVICE(TC0150ROD, tc0150rod);
-DECLARE_LEGACY_DEVICE(TC0110PCR, tc0110pcr);
-DECLARE_LEGACY_DEVICE(TC0180VCU, tc0180vcu);
+class tc0360pri_device : public device_t
+{
+public:
+	tc0360pri_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tc0360pri_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type TC0360PRI;
+
+class tc0480scp_device : public device_t
+{
+public:
+	tc0480scp_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tc0480scp_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+
+	TILE_GET_INFO_MEMBER(tc0480scp_get_bg0_tile_info);
+	TILE_GET_INFO_MEMBER(tc0480scp_get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(tc0480scp_get_bg2_tile_info);
+	TILE_GET_INFO_MEMBER(tc0480scp_get_bg3_tile_info);
+	TILE_GET_INFO_MEMBER(tc0480scp_get_tx_tile_info);
+};
+
+extern const device_type TC0480SCP;
+
+class tc0150rod_device : public device_t
+{
+public:
+	tc0150rod_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tc0150rod_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type TC0150ROD;
+
+class tc0110pcr_device : public device_t
+{
+public:
+	tc0110pcr_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tc0110pcr_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type TC0110PCR;
+
+class tc0180vcu_device : public device_t
+{
+public:
+	tc0180vcu_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tc0180vcu_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_tx_tile_info);
+};
+
+extern const device_type TC0180VCU;
+
 
 /***************************************************************************
     DEVICE CONFIGURATION MACROS

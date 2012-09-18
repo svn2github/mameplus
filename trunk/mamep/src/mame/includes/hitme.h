@@ -34,6 +34,11 @@ public:
 	DECLARE_READ8_MEMBER(hitme_port_3_r);
 	DECLARE_WRITE8_MEMBER(output_port_0_w);
 	DECLARE_WRITE8_MEMBER(output_port_1_w);
+	TILE_GET_INFO_MEMBER(get_hitme_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	DECLARE_VIDEO_START(barricad);
 };
 
 

@@ -19,8 +19,7 @@
 
 #define MASTER_CLOCK         XTAL_14_31818MHz
 
-typedef struct _timeplt_audio_state timeplt_audio_state;
-struct _timeplt_audio_state
+struct timeplt_audio_state
 {
 	UINT8    m_last_irq_state;
 	cpu_device *m_soundcpu;
@@ -38,7 +37,7 @@ INLINE timeplt_audio_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == TIMEPLT_AUDIO);
 
-	return (timeplt_audio_state *)downcast<legacy_device_base *>(device)->token();
+	return (timeplt_audio_state *)downcast<timeplt_audio_device *>(device)->token();
 }
 
 
@@ -151,7 +150,7 @@ WRITE8_HANDLER( timeplt_sh_irqtrigger_w )
 	if (state->m_last_irq_state == 0 && data)
 	{
 		/* setting bit 0 low then high triggers IRQ on the sound CPU */
-		device_set_input_line_and_vector(state->m_soundcpu, 0, HOLD_LINE, 0xff);
+		state->m_soundcpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 	}
 
 	state->m_last_irq_state = data;
@@ -261,14 +260,42 @@ MACHINE_CONFIG_END
     DEVICE DEFINITION
 *****************************************************************************/
 
+const device_type TIMEPLT_AUDIO = &device_creator<timeplt_audio_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+timeplt_audio_device::timeplt_audio_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TIMEPLT_AUDIO, "Time Pilot Audio", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(timeplt_audio_state));
+}
 
-#define DEVTEMPLATE_ID(p,s)				p##timeplt_audio##s
-#define DEVTEMPLATE_FEATURES			DT_HAS_START
-#define DEVTEMPLATE_NAME				"Time Pilot Audio"
-#define DEVTEMPLATE_FAMILY				"Time Pilot Audio IC"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-DEFINE_LEGACY_SOUND_DEVICE(TIMEPLT_AUDIO, timeplt_audio);
+void timeplt_audio_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void timeplt_audio_device::device_start()
+{
+	DEVICE_START_NAME( timeplt_audio )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void timeplt_audio_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
 

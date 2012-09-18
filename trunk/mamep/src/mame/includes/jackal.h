@@ -26,8 +26,8 @@ public:
 	UINT8    *m_spritebank;
 
 	/* devices */
-	device_t *m_mastercpu;
-	device_t *m_slavecpu;
+	cpu_device *m_mastercpu;
+	cpu_device *m_slavecpu;
 	DECLARE_READ8_MEMBER(topgunbl_rotary_r);
 	DECLARE_WRITE8_MEMBER(jackal_flipscreen_w);
 	DECLARE_READ8_MEMBER(jackal_zram_r);
@@ -37,6 +37,11 @@ public:
 	DECLARE_WRITE8_MEMBER(jackal_zram_w);
 	DECLARE_WRITE8_MEMBER(jackal_voram_w);
 	DECLARE_WRITE8_MEMBER(jackal_spriteram_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -44,6 +49,6 @@ public:
 
 void jackal_mark_tile_dirty(running_machine &machine, int offset);
 
-PALETTE_INIT( jackal );
-VIDEO_START( jackal );
+
+
 SCREEN_UPDATE_IND16( jackal );

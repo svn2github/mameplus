@@ -111,7 +111,7 @@ READ32_MEMBER(deco_mlc_state::test2_r)
 {
 //  if (offset==0)
 //      return ioport("IN0")->read(); //0xffffffff;
-//   logerror("%08x:  Test2_r %d\n",cpu_get_pc(&space.device()),offset);
+//   logerror("%08x:  Test2_r %d\n",space.device().safe_pc(),offset);
 	return machine().rand(); //0xffffffff;
 }
 
@@ -123,7 +123,7 @@ READ32_MEMBER(deco_mlc_state::test3_r)
 */
 //if (offset==0)
 //  return machine().rand()|(machine().rand()<<16);
-//  logerror("%08x:  Test3_r %d\n",cpu_get_pc(&space.device()),offset);
+//  logerror("%08x:  Test3_r %d\n",space.device().safe_pc(),offset);
 	return 0xffffffff;
 }
 
@@ -156,7 +156,7 @@ WRITE32_MEMBER(deco_mlc_state::avengrs_palette_w)
 READ32_MEMBER(deco_mlc_state::decomlc_vbl_r)
 {
 	m_vbl_i ^=0xffffffff;
-//logerror("vbl r %08x\n", cpu_get_pc(&space.device()));
+//logerror("vbl r %08x\n", space.device().safe_pc());
 	// Todo: Vblank probably in $10
 	return m_vbl_i;
 }
@@ -171,7 +171,7 @@ static TIMER_DEVICE_CALLBACK( interrupt_gen )
 {
 	deco_mlc_state *state = timer.machine().driver_data<deco_mlc_state>();
 //  logerror("hit scanline IRQ %d (%08x)\n", machine.primary_screen->vpos(), info.i);
-	cputag_set_input_line(timer.machine(), "maincpu", state->m_mainCpuIsArm ? ARM_IRQ_LINE : 1, HOLD_LINE);
+	timer.machine().device("maincpu")->execute().set_input_line(state->m_mainCpuIsArm ? ARM_IRQ_LINE : 1, HOLD_LINE);
 }
 
 WRITE32_MEMBER(deco_mlc_state::mlc_irq_w)
@@ -182,7 +182,7 @@ WRITE32_MEMBER(deco_mlc_state::mlc_irq_w)
 	switch (offset*4)
 	{
 	case 0x10: /* IRQ ack.  Value written doesn't matter */
-		cputag_set_input_line(machine(), "maincpu", m_mainCpuIsArm ? ARM_IRQ_LINE : 1, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(m_mainCpuIsArm ? ARM_IRQ_LINE : 1, CLEAR_LINE);
 		return;
 	case 0x14: /* Prepare scanline interrupt */
 		m_raster_irq_timer->adjust(machine().primary_screen->time_until_pos(m_irq_ram[0x14/4]));
@@ -241,7 +241,7 @@ READ32_MEMBER(deco_mlc_state::stadhr96_prot_146_r)
     */
 	offset<<=1;
 
-	logerror("%08x:  Read prot %04x\n", cpu_get_pc(&space.device()), offset);
+	logerror("%08x:  Read prot %04x\n", space.device().safe_pc(), offset);
 
 	if (offset==0x5c4)
 		return 0xaa55 << 16;
@@ -275,7 +275,7 @@ static ADDRESS_MAP_START( decomlc_map, AS_PROGRAM, 32, deco_mlc_state )
 	AM_RANGE(0x0500000, 0x0500003) AM_WRITE(avengrs_eprom_w) AM_MIRROR(0xff000000)
 	AM_RANGE(0x0600000, 0x0600007) AM_DEVREADWRITE8_LEGACY("ymz", ymz280b_r, ymz280b_w, 0xff000000) AM_MIRROR(0xff000000)
 	AM_RANGE(0x070f000, 0x070ffff) AM_READ(stadhr96_prot_146_r) AM_MIRROR(0xff000000)
-//  AM_RANGE(0x070f000, 0x070ffff) AM_READ_LEGACY(stadhr96_prot_146_w) AM_BASE_LEGACY(&deco32_prot_ram)
+//  AM_RANGE(0x070f000, 0x070ffff) AM_READ_LEGACY(stadhr96_prot_146_w) AM_SHARE("prot32ram")
 ADDRESS_MAP_END
 
 /******************************************************************************/
@@ -369,11 +369,10 @@ GFXDECODE_END
 
 /******************************************************************************/
 
-static MACHINE_RESET( mlc )
+MACHINE_RESET_MEMBER(deco_mlc_state,mlc)
 {
-	deco_mlc_state *state = machine.driver_data<deco_mlc_state>();
-	state->m_vbl_i = 0xffffffff;
-	state->m_raster_irq_timer = machine.device<timer_device>("int_timer");
+	m_vbl_i = 0xffffffff;
+	m_raster_irq_timer = machine().device<timer_device>("int_timer");
 }
 
 static MACHINE_CONFIG_START( avengrgs, deco_mlc_state )
@@ -382,7 +381,7 @@ static MACHINE_CONFIG_START( avengrgs, deco_mlc_state )
 	MCFG_CPU_ADD("maincpu", SH2,42000000/2) /* 21 MHz clock confirmed on real board */
 	MCFG_CPU_PROGRAM_MAP(decomlc_map)
 
-	MCFG_MACHINE_RESET(mlc)
+	MCFG_MACHINE_RESET_OVERRIDE(deco_mlc_state,mlc)
 	MCFG_EEPROM_93C46_ADD("eeprom") /* Actually 93c45 */
 
 	MCFG_TIMER_ADD("int_timer", interrupt_gen)
@@ -398,7 +397,7 @@ static MACHINE_CONFIG_START( avengrgs, deco_mlc_state )
 	MCFG_GFXDECODE(deco_mlc)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(mlc)
+	MCFG_VIDEO_START_OVERRIDE(deco_mlc_state,mlc)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -414,7 +413,7 @@ static MACHINE_CONFIG_START( mlc, deco_mlc_state )
 	MCFG_CPU_ADD("maincpu", ARM,42000000/6) /* 42 MHz -> 7MHz clock confirmed on real board */
 	MCFG_CPU_PROGRAM_MAP(decomlc_map)
 
-	MCFG_MACHINE_RESET(mlc)
+	MCFG_MACHINE_RESET_OVERRIDE(deco_mlc_state,mlc)
 	MCFG_EEPROM_93C46_ADD("eeprom") /* Actually 93c45 */
 
 	MCFG_TIMER_ADD("int_timer", interrupt_gen)
@@ -430,7 +429,7 @@ static MACHINE_CONFIG_START( mlc, deco_mlc_state )
 	MCFG_GFXDECODE(deco_mlc)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(mlc)
+	MCFG_VIDEO_START_OVERRIDE(deco_mlc_state,mlc)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -722,9 +721,9 @@ static void descramble_sound( running_machine &machine )
 READ32_MEMBER(deco_mlc_state::avengrgs_speedup_r)
 {
 	UINT32 a=m_mlc_ram[0x89a0/4];
-	UINT32 p=cpu_get_pc(&space.device());
+	UINT32 p=space.device().safe_pc();
 
-	if ((p==0x3234 || p==0x32dc) && (a&1)) device_spin_until_interrupt(&space.device());
+	if ((p==0x3234 || p==0x32dc) && (a&1)) space.device().execute().spin_until_interrupt();
 
 	return a;
 }

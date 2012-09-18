@@ -23,12 +23,16 @@ public:
 	DECLARE_WRITE8_MEMBER(srumbler_background_w);
 	DECLARE_WRITE8_MEMBER(srumbler_4009_w);
 	DECLARE_WRITE8_MEMBER(srumbler_scroll_w);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/srumbler.c -----------*/
 
 
-VIDEO_START( srumbler );
+
 SCREEN_UPDATE_IND16( srumbler );
 SCREEN_VBLANK( srumbler );

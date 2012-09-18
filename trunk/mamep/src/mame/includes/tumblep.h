@@ -20,8 +20,8 @@ public:
 //  UINT16 *  m_paletteram;    // currently this uses generic palette handling (in decocomn.c)
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_deco_tilegen1;
 	DECLARE_READ16_MEMBER(tumblep_prot_r);
 	DECLARE_WRITE16_MEMBER(tumblep_sound_w);
@@ -29,6 +29,7 @@ public:
 	DECLARE_READ16_MEMBER(tumblepop_controls_r);
 	DECLARE_WRITE16_MEMBER(tumblep_oki_w);
 	DECLARE_DRIVER_INIT(tumblep);
+	virtual void machine_start();
 };
 
 

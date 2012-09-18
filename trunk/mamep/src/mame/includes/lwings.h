@@ -48,14 +48,24 @@ public:
 	DECLARE_WRITE8_MEMBER(trojan_bg2_scrollx_w);
 	DECLARE_WRITE8_MEMBER(trojan_bg2_image_w);
 	DECLARE_WRITE8_MEMBER(msm5205_w);
+	TILEMAP_MAPPER_MEMBER(get_bg2_memory_offset);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(lwings_get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(trojan_get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg2_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	DECLARE_VIDEO_START(trojan);
+	DECLARE_VIDEO_START(avengers);
 };
 
 
 /*----------- defined in video/lwings.c -----------*/
 
 
-VIDEO_START( lwings );
-VIDEO_START( trojan );
-VIDEO_START( avengers );
+
+
+
 SCREEN_UPDATE_IND16( lwings );
 SCREEN_UPDATE_IND16( trojan );

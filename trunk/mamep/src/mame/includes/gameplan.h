@@ -45,8 +45,8 @@ public:
 	emu_timer *m_via_0_ca1_timer;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_riot;
 	required_device<via6522_device> m_via_0;
 	required_device<via6522_device> m_via_1;
@@ -59,6 +59,15 @@ public:
 	DECLARE_WRITE8_MEMBER(audio_trigger_w);
 	DECLARE_WRITE_LINE_MEMBER(r6532_irq);
 	DECLARE_WRITE8_MEMBER(r6532_soundlatch_w);
+	DECLARE_MACHINE_START(gameplan);
+	DECLARE_MACHINE_RESET(gameplan);
+	DECLARE_MACHINE_START(trvquest);
+	DECLARE_MACHINE_RESET(trvquest);
+	DECLARE_VIDEO_START(gameplan);
+	DECLARE_VIDEO_RESET(gameplan);
+	DECLARE_VIDEO_START(leprechn);
+	DECLARE_VIDEO_START(trvquest);
+	DECLARE_VIDEO_START(common);
 };
 
 

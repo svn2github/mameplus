@@ -45,7 +45,7 @@ public:
 	int         m_msm5205_vclk_toggle;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	DECLARE_READ16_MEMBER(fake_4a00a_r);
 	DECLARE_WRITE16_MEMBER(ashnojoe_soundlatch_w);
 	DECLARE_WRITE8_MEMBER(adpcm_w);
@@ -63,11 +63,21 @@ public:
 	DECLARE_WRITE8_MEMBER(ym2203_write_a);
 	DECLARE_WRITE8_MEMBER(ym2203_write_b);
 	DECLARE_DRIVER_INIT(ashnojoe);
+	TILE_GET_INFO_MEMBER(get_joe_tile_info);
+	TILE_GET_INFO_MEMBER(get_joe_tile_info_2);
+	TILE_GET_INFO_MEMBER(get_joe_tile_info_3);
+	TILE_GET_INFO_MEMBER(get_joe_tile_info_4);
+	TILE_GET_INFO_MEMBER(get_joe_tile_info_5);
+	TILE_GET_INFO_MEMBER(get_joe_tile_info_6);
+	TILE_GET_INFO_MEMBER(get_joe_tile_info_7);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/ashnojoe.c -----------*/
 
 
-VIDEO_START( ashnojoe );
+
 SCREEN_UPDATE_IND16( ashnojoe );

@@ -156,16 +156,16 @@ READ8_MEMBER(naughtyb_state::popflame_protection_r)/* Not used by bootleg/hack *
 		return seed00[m_prot_count] | seedxx;
 
 #if 0
-	if ( cpu_get_pc(&space.device()) == (0x26F2 + 0x03) )
+	if ( space.device().safe_pc() == (0x26F2 + 0x03) )
 	{
 		popflame_prot_count = 0;
 		return 0x01;
 	} /* Must not carry when rotated left */
 
-	if ( cpu_get_pc(&space.device()) == (0x26F9 + 0x03) )
+	if ( space.device().safe_pc() == (0x26F9 + 0x03) )
 		return 0x80; /* Must carry when rotated left */
 
-	if ( cpu_get_pc(&space.device()) == (0x270F + 0x03) )
+	if ( space.device().safe_pc() == (0x270F + 0x03) )
 	{
 		switch( popflame_prot_count++ )
 		{
@@ -175,7 +175,7 @@ READ8_MEMBER(naughtyb_state::popflame_protection_r)/* Not used by bootleg/hack *
 			case 3: return 0x38; /* x011 1xxx, matches 0x07 at $2693, stored in $400D */
 		}
 	}
-	logerror("CPU #0 PC %06x: unmapped protection read\n", cpu_get_pc(&space.device()));
+	logerror("CPU #0 PC %06x: unmapped protection read\n", space.device().safe_pc());
 	return 0x00;
 #endif
 }
@@ -248,7 +248,7 @@ static ADDRESS_MAP_START( naughtyb_map, AS_PROGRAM, 8, naughtyb_state )
 	AM_RANGE(0x4000, 0x7fff) AM_RAM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("videoram")
 	AM_RANGE(0x8800, 0x8fff) AM_RAM AM_SHARE("videoram2")
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(naughtyb_videoreg_w)
+	AM_RANGE(0x9000, 0x97ff) AM_WRITE(naughtyb_videoreg_w)
 	AM_RANGE(0x9800, 0x9fff) AM_RAM AM_SHARE("scrollreg")
 	AM_RANGE(0xa000, 0xa7ff) AM_DEVWRITE_LEGACY("cust", pleiads_sound_control_a_w)
 	AM_RANGE(0xa800, 0xafff) AM_DEVWRITE_LEGACY("cust", pleiads_sound_control_b_w)
@@ -261,7 +261,7 @@ static ADDRESS_MAP_START( popflame_map, AS_PROGRAM, 8, naughtyb_state )
 	AM_RANGE(0x4000, 0x7fff) AM_RAM
 	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("videoram")
 	AM_RANGE(0x8800, 0x8fff) AM_RAM AM_SHARE("videoram2")
-	AM_RANGE(0x9000, 0x97ff) AM_RAM_WRITE(popflame_videoreg_w)
+	AM_RANGE(0x9000, 0x97ff) AM_WRITE(popflame_videoreg_w)
 	AM_RANGE(0x9800, 0x9fff) AM_RAM AM_SHARE("scrollreg")
 	AM_RANGE(0xa000, 0xa7ff) AM_DEVWRITE_LEGACY("cust", pleiads_sound_control_a_w)
 	AM_RANGE(0xa800, 0xafff) AM_DEVWRITE_LEGACY("cust", pleiads_sound_control_b_w)
@@ -281,7 +281,7 @@ ADDRESS_MAP_END
 
 INPUT_CHANGED_MEMBER(naughtyb_state::coin_inserted)
 {
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, newval ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, newval ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static INPUT_PORTS_START( naughtyb )
@@ -436,8 +436,6 @@ static MACHINE_CONFIG_START( naughtyb, naughtyb_state )
 	MCFG_GFXDECODE(naughtyb)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_PALETTE_INIT(naughtyb)
-	MCFG_VIDEO_START(naughtyb)
 
 	/* sound hardware */
 	/* uses the TMS3615NS for sound */
@@ -470,8 +468,6 @@ static MACHINE_CONFIG_START( popflame, naughtyb_state )
 	MCFG_GFXDECODE(naughtyb)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_PALETTE_INIT(naughtyb)
-	MCFG_VIDEO_START(naughtyb)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -320,7 +320,7 @@ WRITE32_MEMBER(macrossp_state::paletteram32_macrossp_w)
 READ32_MEMBER(macrossp_state::macrossp_soundstatus_r)
 {
 
-	//  logerror("%08x read soundstatus\n", cpu_get_pc(&space.device()));
+	//  logerror("%08x read soundstatus\n", space.device().safe_pc());
 
 	/* bit 1 is sound status */
 	/* bit 0 unknown - it is expected to toggle, vblank? */
@@ -335,19 +335,19 @@ WRITE32_MEMBER(macrossp_state::macrossp_soundcmd_w)
 
 	if (ACCESSING_BITS_16_31)
 	{
-		//logerror("%08x write soundcmd %08x (%08x)\n",cpu_get_pc(&space.device()),data,mem_mask);
+		//logerror("%08x write soundcmd %08x (%08x)\n",space.device().safe_pc(),data,mem_mask);
 		soundlatch_word_w(space, 0, data >> 16, 0xffff);
 		m_sndpending = 1;
-		device_set_input_line(m_audiocpu, 2, HOLD_LINE);
+		m_audiocpu->set_input_line(2, HOLD_LINE);
 		/* spin for a while to let the sound CPU read the command */
-		device_spin_until_time(&space.device(), attotime::from_usec(50));
+		space.device().execute().spin_until_time(attotime::from_usec(50));
 	}
 }
 
 READ16_MEMBER(macrossp_state::macrossp_soundcmd_r)
 {
 
-	//  logerror("%06x read soundcmd\n",cpu_get_pc(&space.device()));
+	//  logerror("%06x read soundcmd\n",space.device().safe_pc());
 	m_sndpending = 0;
 	return soundlatch_word_r(space, offset, mem_mask);
 }
@@ -584,7 +584,7 @@ static void irqhandler(device_t *device, int irq)
 
 	/* IRQ lines 1 & 4 on the sound 68000 are definitely triggered by the ES5506,
     but I haven't noticed the ES5506 ever assert the line - maybe only used when developing the game? */
-	//  device_set_input_line(state->m_audiocpu, 1, irq ? ASSERT_LINE : CLEAR_LINE);
+	//  state->m_audiocpu->set_input_line(1, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const es5506_interface es5506_config =
@@ -597,27 +597,25 @@ static const es5506_interface es5506_config =
 };
 
 
-static MACHINE_START( macrossp )
+void macrossp_state::machine_start()
 {
-	macrossp_state *state = machine.driver_data<macrossp_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_sndpending));
-	state->save_item(NAME(state->m_snd_toggle));
-	state->save_item(NAME(state->m_fade_effect));
-	state->save_item(NAME(state->m_old_fade));
+	save_item(NAME(m_sndpending));
+	save_item(NAME(m_snd_toggle));
+	save_item(NAME(m_fade_effect));
+	save_item(NAME(m_old_fade));
 }
 
-static MACHINE_RESET( macrossp )
+void macrossp_state::machine_reset()
 {
-	macrossp_state *state = machine.driver_data<macrossp_state>();
 
-	state->m_sndpending = 0;
-	state->m_snd_toggle = 0;
-	state->m_fade_effect = 0;
-	state->m_old_fade = 0;
+	m_sndpending = 0;
+	m_snd_toggle = 0;
+	m_fade_effect = 0;
+	m_old_fade = 0;
 }
 
 static MACHINE_CONFIG_START( macrossp, macrossp_state )
@@ -630,8 +628,6 @@ static MACHINE_CONFIG_START( macrossp, macrossp_state )
 	MCFG_CPU_ADD("audiocpu", M68000, 32000000/2)	/* 16 MHz */
 	MCFG_CPU_PROGRAM_MAP(macrossp_sound_map)
 
-	MCFG_MACHINE_START(macrossp)
-	MCFG_MACHINE_RESET(macrossp)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -645,7 +641,6 @@ static MACHINE_CONFIG_START( macrossp, macrossp_state )
 	MCFG_GFXDECODE(macrossp)
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_VIDEO_START(macrossp)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -770,7 +765,7 @@ PC :00018110 018110: beq     18104
 */
 
 	COMBINE_DATA(&m_mainram[0x10158 / 4]);
-	if (cpu_get_pc(&space.device()) == 0x001810A) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc() == 0x001810A) space.device().execute().spin_until_interrupt();
 }
 
 #ifdef UNUSED_FUNCTION
@@ -778,7 +773,7 @@ WRITE32_MEMBER(macrossp_state::quizmoon_speedup_w)
 {
 
 	COMBINE_DATA(&m_mainram[0x00020 / 4]);
-	if (cpu_get_pc(&space.device()) == 0x1cc) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc() == 0x1cc) space.device().execute().spin_until_interrupt();
 }
 #endif
 

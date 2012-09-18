@@ -126,13 +126,13 @@ static void ym2151_irq_gen(device_t *device, int state)
 {
 	rpunch_state *drvstate = device->machine().driver_data<rpunch_state>();
 	drvstate->m_ym2151_irq = state;
-	cputag_set_input_line(device->machine(), "audiocpu", 0, (drvstate->m_ym2151_irq | drvstate->m_sound_busy) ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, (drvstate->m_ym2151_irq | drvstate->m_sound_busy) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
-static MACHINE_RESET( rpunch )
+void rpunch_state::machine_reset()
 {
-	UINT8 *snd = machine.root_device().memregion("upd")->base();
+	UINT8 *snd = machine().root_device().memregion("upd")->base();
 	memcpy(snd, snd + 0x20000, 0x20000);
 }
 
@@ -161,7 +161,7 @@ static TIMER_CALLBACK( sound_command_w_callback )
 	rpunch_state *state = machine.driver_data<rpunch_state>();
 	state->m_sound_busy = 1;
 	state->m_sound_data = param;
-	cputag_set_input_line(machine, "audiocpu", 0, (state->m_ym2151_irq | state->m_sound_busy) ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("audiocpu")->execute().set_input_line(0, (state->m_ym2151_irq | state->m_sound_busy) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -175,7 +175,7 @@ WRITE16_MEMBER(rpunch_state::sound_command_w)
 READ8_MEMBER(rpunch_state::sound_command_r)
 {
 	m_sound_busy = 0;
-	cputag_set_input_line(machine(), "audiocpu", 0, (m_ym2151_irq | m_sound_busy) ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(0, (m_ym2151_irq | m_sound_busy) ? ASSERT_LINE : CLEAR_LINE);
 	return m_sound_data;
 }
 
@@ -470,7 +470,6 @@ static MACHINE_CONFIG_START( rpunch, rpunch_state )
 	MCFG_CPU_ADD("audiocpu", Z80, MASTER_CLOCK/4)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_RESET(rpunch)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -482,7 +481,6 @@ static MACHINE_CONFIG_START( rpunch, rpunch_state )
 	MCFG_GFXDECODE(rpunch)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(rpunch)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

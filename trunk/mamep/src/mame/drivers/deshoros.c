@@ -4,23 +4,24 @@ Destiny (c) 1983 Data East Corporation
 
 driver by Angelo Salese
 
-A fortune-teller machine with 24 characters LED-array and a printer.
+A fortune-teller machine with 20 green 5x7 LED dot matrix display and a printer.
 M6809 CPU, 2KB RAM
 It is not Y2K compliant.
 
 Rough cpanel sketch:
 
-    [LED-array dispay]          CLEAR ENTER
-                                7  8  9  0
+    [LED-array dispay]          1  2  3  M
                                 4  5  6  F
-                                1  2  3  M
+                                7  8  9  0
+                                CLEAR ENTER
 
 To control system buttons (SYSTEM, lower nibble), hold one down and then
 push the main service button F2.
 
 
 TODO:
-- Emulate the graphics with genuine artwork display;
+- Identify display controller and dump the character ROM,
+  then emulate the graphics with genuine artwork display;
 - Printer emulation;
 - Exact sound & irq frequency;
 
@@ -57,18 +58,18 @@ protected:
 	// driver_device overrides
 	virtual void machine_start();
 	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*Temporary,to show something on screen...*/
 
-static VIDEO_START( destiny )
+void destiny_state::video_start()
 {
-	destiny_state *state = machine.driver_data<destiny_state>();
 	UINT8 i;
 	for(i=0;i<20;i++)
-		state->m_led_array[i] = 0x20;
-	state->m_led_array[20] = 0;
+		m_led_array[i] = 0x20;
+	m_led_array[20] = 0;
 }
 
 static SCREEN_UPDATE_IND16( destiny )
@@ -88,12 +89,12 @@ static SCREEN_UPDATE_IND16( destiny )
 
 WRITE8_MEMBER(destiny_state::firq_ack_w)
 {
-	device_set_input_line(m_maincpu, M6809_FIRQ_LINE, CLEAR_LINE);
+	m_maincpu->set_input_line(M6809_FIRQ_LINE, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(destiny_state::nmi_ack_w)
 {
-	device_set_input_line(m_maincpu, INPUT_LINE_NMI, CLEAR_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 READ8_MEMBER(destiny_state::printer_status_r)
@@ -146,7 +147,7 @@ INPUT_CHANGED_MEMBER(destiny_state::coin_inserted)
 {
 	// NMI on Coin SW or Service SW
 	if (oldval)
-		device_set_input_line(m_maincpu, INPUT_LINE_NMI, ASSERT_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 
 	// coincounter on coin insert
 	if (((int)(FPTR)param) == 0)
@@ -251,7 +252,7 @@ void destiny_state::machine_start()
 
 void destiny_state::machine_reset()
 {
-	bank_select_w(*m_maincpu->memory().space(AS_PROGRAM), 0, 0);
+	bank_select_w(*m_maincpu->space(AS_PROGRAM), 0, 0);
 }
 
 static MACHINE_CONFIG_START( destiny, destiny_state )
@@ -270,7 +271,6 @@ static MACHINE_CONFIG_START( destiny, destiny_state )
 	MCFG_SCREEN_UPDATE_STATIC(destiny)
 	MCFG_PALETTE_LENGTH(16)
 
-	MCFG_VIDEO_START(destiny)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

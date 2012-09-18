@@ -158,6 +158,11 @@ public:
 	DECLARE_WRITE32_MEMBER(dreamwld_6295_0_bank_w);
 	DECLARE_WRITE32_MEMBER(dreamwld_6295_1_bank_w);
 	DECLARE_WRITE32_MEMBER(dreamwld_palette_w);
+	TILE_GET_INFO_MEMBER(get_dreamwld_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_dreamwld_bg2_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -165,7 +170,7 @@ public:
 static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	dreamwld_state *state = machine.driver_data<dreamwld_state>();
-	const gfx_element *gfx = machine.gfx[0];
+	gfx_element *gfx = machine.gfx[0];
 	UINT32 *source = state->m_spritebuf1;
 	UINT32 *finish = state->m_spritebuf1 + 0x1000 / 4;
 	UINT16 *redirect = (UINT16 *)state->memregion("spritelut")->base();
@@ -234,14 +239,13 @@ WRITE32_MEMBER(dreamwld_state::dreamwld_bg_videoram_w)
 	m_bg_tilemap->mark_tile_dirty(offset * 2 + 1);
 }
 
-static TILE_GET_INFO( get_dreamwld_bg_tile_info )
+TILE_GET_INFO_MEMBER(dreamwld_state::get_dreamwld_bg_tile_info)
 {
-	dreamwld_state *state = machine.driver_data<dreamwld_state>();
 	int tileno, colour;
-	tileno = (tile_index & 1) ? (state->m_bg_videoram[tile_index >> 1] & 0xffff) : ((state->m_bg_videoram[tile_index >> 1] >> 16) & 0xffff);
+	tileno = (tile_index & 1) ? (m_bg_videoram[tile_index >> 1] & 0xffff) : ((m_bg_videoram[tile_index >> 1] >> 16) & 0xffff);
 	colour = tileno >> 13;
 	tileno &= 0x1fff;
-	SET_TILE_INFO(1, tileno + state->m_tilebank[0] * 0x2000, 0x80 + colour, 0);
+	SET_TILE_INFO_MEMBER(1, tileno + m_tilebank[0] * 0x2000, 0x80 + colour, 0);
 }
 
 
@@ -252,32 +256,30 @@ WRITE32_MEMBER(dreamwld_state::dreamwld_bg2_videoram_w)
 	m_bg2_tilemap->mark_tile_dirty(offset * 2 + 1);
 }
 
-static TILE_GET_INFO( get_dreamwld_bg2_tile_info )
+TILE_GET_INFO_MEMBER(dreamwld_state::get_dreamwld_bg2_tile_info)
 {
-	dreamwld_state *state = machine.driver_data<dreamwld_state>();
 	UINT16 tileno, colour;
-	tileno = (tile_index & 1) ? (state->m_bg2_videoram[tile_index >> 1] & 0xffff) : ((state->m_bg2_videoram[tile_index >> 1] >> 16) & 0xffff);
+	tileno = (tile_index & 1) ? (m_bg2_videoram[tile_index >> 1] & 0xffff) : ((m_bg2_videoram[tile_index >> 1] >> 16) & 0xffff);
 	colour = tileno >> 13;
 	tileno &= 0x1fff;
-	SET_TILE_INFO(1, tileno + state->m_tilebank[1] * 0x2000, 0xc0 + colour, 0);
+	SET_TILE_INFO_MEMBER(1, tileno + m_tilebank[1] * 0x2000, 0xc0 + colour, 0);
 }
 
-static VIDEO_START( dreamwld )
+void dreamwld_state::video_start()
 {
-	dreamwld_state *state = machine.driver_data<dreamwld_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_dreamwld_bg_tile_info,tilemap_scan_rows, 16, 16, 64,32);
-	state->m_bg2_tilemap = tilemap_create(machine, get_dreamwld_bg2_tile_info,tilemap_scan_rows, 16, 16, 64,32);
-	state->m_bg2_tilemap->set_transparent_pen(0);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(dreamwld_state::get_dreamwld_bg_tile_info),this),TILEMAP_SCAN_ROWS, 16, 16, 64,32);
+	m_bg2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(dreamwld_state::get_dreamwld_bg2_tile_info),this),TILEMAP_SCAN_ROWS, 16, 16, 64,32);
+	m_bg2_tilemap->set_transparent_pen(0);
 
-	state->m_bg_tilemap->set_scroll_rows(256);	// line scrolling
-	state->m_bg_tilemap->set_scroll_cols(1);
+	m_bg_tilemap->set_scroll_rows(256);	// line scrolling
+	m_bg_tilemap->set_scroll_cols(1);
 
-	state->m_bg2_tilemap->set_scroll_rows(256);	// line scrolling
-	state->m_bg2_tilemap->set_scroll_cols(1);
+	m_bg2_tilemap->set_scroll_rows(256);	// line scrolling
+	m_bg2_tilemap->set_scroll_cols(1);
 
-	state->m_spritebuf1 = auto_alloc_array(machine, UINT32, 0x2000 / 4);
-	state->m_spritebuf2 = auto_alloc_array(machine, UINT32, 0x2000 / 4);
+	m_spritebuf1 = auto_alloc_array(machine(), UINT32, 0x2000 / 4);
+	m_spritebuf2 = auto_alloc_array(machine(), UINT32, 0x2000 / 4);
 
 
 }
@@ -563,22 +565,20 @@ GFXDECODE_END
 
 
 
-static MACHINE_START( dreamwld )
+void dreamwld_state::machine_start()
 {
-	dreamwld_state *state = machine.driver_data<dreamwld_state>();
 
-	state->save_item(NAME(state->m_protindex));
-	state->save_item(NAME(state->m_tilebank));
-	state->save_item(NAME(state->m_tilebankold));
+	save_item(NAME(m_protindex));
+	save_item(NAME(m_tilebank));
+	save_item(NAME(m_tilebankold));
 }
 
-static MACHINE_RESET( dreamwld )
+void dreamwld_state::machine_reset()
 {
-	dreamwld_state *state = machine.driver_data<dreamwld_state>();
 
-	state->m_tilebankold[0] = state->m_tilebankold[1] = -1;
-	state->m_tilebank[0] = state->m_tilebank[1] = 0;
-	state->m_protindex = 0;
+	m_tilebankold[0] = m_tilebankold[1] = -1;
+	m_tilebank[0] = m_tilebank[1] = 0;
+	m_protindex = 0;
 }
 
 
@@ -591,8 +591,6 @@ static MACHINE_CONFIG_START( baryon, dreamwld_state )
 	MCFG_CPU_PROGRAM_MAP(baryon_map)
 	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold )
 
-	MCFG_MACHINE_START(dreamwld)
-	MCFG_MACHINE_RESET(dreamwld)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -606,7 +604,6 @@ static MACHINE_CONFIG_START( baryon, dreamwld_state )
 	MCFG_PALETTE_LENGTH(0x1000)
 	MCFG_GFXDECODE(dreamwld)
 
-	MCFG_VIDEO_START(dreamwld)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

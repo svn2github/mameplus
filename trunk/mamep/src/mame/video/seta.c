@@ -187,6 +187,7 @@ static const game_offset game_offsets[] =
 	{ "zingzip",  {  0,  0 }, { -1, -2 } },	// sprites unknown, tilemaps correct (test grid)
 	{ "eightfrc", {  3,  4 }, {  0,  0 } },	// unknown
 	{ "daioh",    {  1,  1 }, { -1, -1 } },	// correct? (launch window and test grid are right, but planet is wrong)
+	{ "daioha",   {  1,  1 }, { -1, -1 } },	// "
 	{ "msgundam", {  0,  0 }, { -2, -2 } },	// correct (test grid, banpresto logo)
 	{ "msgundam1",{  0,  0 }, { -2, -2 } },	// "
 	{ "oisipuzl", {  0,  0 }, { -1, -1 } },	// correct (test mode) flip screen not supported?
@@ -306,7 +307,7 @@ WRITE16_MEMBER(seta_state::seta_vregs_w)
 						if ( (samples_len > 0x100000) && ((addr+0x40000) <= samples_len) )
 							memcpy(&rom[0xc0000],&rom[addr],0x40000);
 						else
-							logerror("PC %06X - Invalid samples bank %02X !\n", cpu_get_pc(&space.device()), new_bank);
+							logerror("PC %06X - Invalid samples bank %02X !\n", space.device().safe_pc(), new_bank);
 					}
 					else if (samples_len == 0x480000)	/* zombraid */
 					{
@@ -372,8 +373,8 @@ INLINE void twineagl_tile_info( running_machine &machine, tile_data &tileinfo, i
 	SET_TILE_INFO( 1, (code & 0x3fff), attr & 0x1f, TILE_FLIPXY((code & 0xc000) >> 14) );
 }
 
-static TILE_GET_INFO( twineagl_get_tile_info_0 ) { twineagl_tile_info( machine, tileinfo, tile_index, 0x0000 ); }
-static TILE_GET_INFO( twineagl_get_tile_info_1 ) { twineagl_tile_info( machine, tileinfo, tile_index, 0x1000 ); }
+TILE_GET_INFO_MEMBER(seta_state::twineagl_get_tile_info_0){ twineagl_tile_info( machine(), tileinfo, tile_index, 0x0000 ); }
+TILE_GET_INFO_MEMBER(seta_state::twineagl_get_tile_info_1){ twineagl_tile_info( machine(), tileinfo, tile_index, 0x1000 ); }
 
 
 INLINE void get_tile_info( running_machine &machine, tile_data &tileinfo, int tile_index, int layer, int offset )
@@ -397,10 +398,10 @@ INLINE void get_tile_info( running_machine &machine, tile_data &tileinfo, int ti
 	SET_TILE_INFO( gfx, state->m_tiles_offset + (code & 0x3fff), attr & 0x1f, TILE_FLIPXY((code & 0xc000) >> 14) );
 }
 
-static TILE_GET_INFO( get_tile_info_0 ) { get_tile_info( machine, tileinfo, tile_index, 0, 0x0000 ); }
-static TILE_GET_INFO( get_tile_info_1 ) { get_tile_info( machine, tileinfo, tile_index, 0, 0x1000 ); }
-static TILE_GET_INFO( get_tile_info_2 ) { get_tile_info( machine, tileinfo, tile_index, 1, 0x0000 ); }
-static TILE_GET_INFO( get_tile_info_3 ) { get_tile_info( machine, tileinfo, tile_index, 1, 0x1000 ); }
+TILE_GET_INFO_MEMBER(seta_state::get_tile_info_0){ get_tile_info( machine(), tileinfo, tile_index, 0, 0x0000 ); }
+TILE_GET_INFO_MEMBER(seta_state::get_tile_info_1){ get_tile_info( machine(), tileinfo, tile_index, 0, 0x1000 ); }
+TILE_GET_INFO_MEMBER(seta_state::get_tile_info_2){ get_tile_info( machine(), tileinfo, tile_index, 1, 0x0000 ); }
+TILE_GET_INFO_MEMBER(seta_state::get_tile_info_3){ get_tile_info( machine(), tileinfo, tile_index, 1, 0x1000 ); }
 
 
 WRITE16_MEMBER(seta_state::seta_vram_0_w)
@@ -439,81 +440,78 @@ WRITE16_MEMBER(seta_state::twineagl_tilebank_w)
 
 
 /* 2 layers */
-VIDEO_START( seta_2_layers )
+VIDEO_START_MEMBER(seta_state,seta_2_layers)
 {
-	seta_state *state = machine.driver_data<seta_state>();
 
-	VIDEO_START_CALL( seta_no_layers );
+	VIDEO_START_CALL_MEMBER( seta_no_layers );
 
 	/* Each layer consists of 2 tilemaps: only one can be displayed
        at any given time */
 
 	/* layer 0 */
-	state->m_tilemap_0 = tilemap_create(	machine, get_tile_info_0, tilemap_scan_rows,
+	m_tilemap_0 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seta_state::get_tile_info_0),this), TILEMAP_SCAN_ROWS,
 								 16,16, 64,32 );
 
-	state->m_tilemap_1 = tilemap_create(	machine, get_tile_info_1, tilemap_scan_rows,
+	m_tilemap_1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seta_state::get_tile_info_1),this), TILEMAP_SCAN_ROWS,
 								 16,16, 64,32 );
 
 
 	/* layer 1 */
-	state->m_tilemap_2 = tilemap_create(	machine, get_tile_info_2, tilemap_scan_rows,
+	m_tilemap_2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seta_state::get_tile_info_2),this), TILEMAP_SCAN_ROWS,
 								 16,16, 64,32 );
 
-	state->m_tilemap_3 = tilemap_create(	machine, get_tile_info_3, tilemap_scan_rows,
+	m_tilemap_3 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seta_state::get_tile_info_3),this), TILEMAP_SCAN_ROWS,
 								 16,16, 64,32 );
 
-	state->m_tilemaps_flip = 0;
-	state->m_color_mode_shift = 3;
+	m_tilemaps_flip = 0;
+	m_color_mode_shift = 3;
 
-	state->m_tilemap_0->set_transparent_pen(0);
-	state->m_tilemap_1->set_transparent_pen(0);
-	state->m_tilemap_2->set_transparent_pen(0);
-	state->m_tilemap_3->set_transparent_pen(0);
+	m_tilemap_0->set_transparent_pen(0);
+	m_tilemap_1->set_transparent_pen(0);
+	m_tilemap_2->set_transparent_pen(0);
+	m_tilemap_3->set_transparent_pen(0);
 }
 
 
 /* 1 layer */
-VIDEO_START( seta_1_layer )
+VIDEO_START_MEMBER(seta_state,seta_1_layer)
 {
-	seta_state *state = machine.driver_data<seta_state>();
 
-	VIDEO_START_CALL( seta_no_layers );
+	VIDEO_START_CALL_MEMBER( seta_no_layers );
 
 	/* Each layer consists of 2 tilemaps: only one can be displayed
        at any given time */
 
 	/* layer 0 */
-	state->m_tilemap_0 = tilemap_create(	machine, get_tile_info_0, tilemap_scan_rows,
+	m_tilemap_0 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seta_state::get_tile_info_0),this), TILEMAP_SCAN_ROWS,
 								 16,16, 64,32 );
 
-	state->m_tilemap_1 = tilemap_create(	machine, get_tile_info_1, tilemap_scan_rows,
+	m_tilemap_1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seta_state::get_tile_info_1),this), TILEMAP_SCAN_ROWS,
 								 16,16, 64,32 );
 
-	state->m_color_mode_shift = 4;
+	m_color_mode_shift = 4;
 
-	state->m_tilemap_0->set_transparent_pen(0);
-	state->m_tilemap_1->set_transparent_pen(0);
+	m_tilemap_0->set_transparent_pen(0);
+	m_tilemap_1->set_transparent_pen(0);
 }
 
-VIDEO_START( twineagl_1_layer )
+VIDEO_START_MEMBER(seta_state,twineagl_1_layer)
 {
-	seta_state *state = machine.driver_data<seta_state>();
 
-	VIDEO_START_CALL( seta_no_layers );
+	VIDEO_START_CALL_MEMBER( seta_no_layers );
 
 	/* Each layer consists of 2 tilemaps: only one can be displayed
        at any given time */
 
 	/* layer 0 */
-	state->m_tilemap_0 = tilemap_create(	machine, twineagl_get_tile_info_0, tilemap_scan_rows,
+	m_tilemap_0 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seta_state::twineagl_get_tile_info_0),this), TILEMAP_SCAN_ROWS,
 								 16,16, 64,32 );
 
-	state->m_tilemap_1 = tilemap_create(	machine, twineagl_get_tile_info_1, tilemap_scan_rows,
+	m_tilemap_1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(seta_state::twineagl_get_tile_info_1),this), TILEMAP_SCAN_ROWS,
 								 16,16, 64,32 );
 
-	state->m_tilemap_0->set_transparent_pen(0);
-	state->m_tilemap_1->set_transparent_pen(0);
+	m_tilemap_0->set_transparent_pen(0);
+	m_tilemap_1->set_transparent_pen(0);
 }
 
 int setac_gfxbank_callback( running_machine &machine, UINT16 code, UINT8 color )
@@ -527,37 +525,35 @@ int setac_gfxbank_callback( running_machine &machine, UINT16 code, UINT8 color )
 }
 
 /* NO layers, only sprites */
-VIDEO_START( seta_no_layers )
+VIDEO_START_MEMBER(seta_state,seta_no_layers)
 {
-	seta_state *state = machine.driver_data<seta_state>();
 
-	state->m_tilemap_0 = 0;
-	state->m_tilemap_1 = 0;
-	state->m_tilemap_2 = 0;
-	state->m_tilemap_3 = 0;
+	m_tilemap_0 = 0;
+	m_tilemap_1 = 0;
+	m_tilemap_2 = 0;
+	m_tilemap_3 = 0;
 
-	state->m_tilemaps_flip = 0;
+	m_tilemaps_flip = 0;
 
-	state->m_global_offsets = game_offsets;
-	while (state->m_global_offsets->gamename && strcmp(machine.system().name, state->m_global_offsets->gamename))
-		state->m_global_offsets++;
-	state->m_samples_bank = -1;	// set the samples bank to an out of range value at start-up
+	m_global_offsets = game_offsets;
+	while (m_global_offsets->gamename && strcmp(machine().system().name, m_global_offsets->gamename))
+		m_global_offsets++;
+	m_samples_bank = -1;	// set the samples bank to an out of range value at start-up
 
 	// position kludges
-	machine.device<seta001_device>("spritegen")->set_fg_xoffsets(state->m_global_offsets->sprite_offs[1], state->m_global_offsets->sprite_offs[0]);
-	machine.device<seta001_device>("spritegen")->set_fg_yoffsets( -0x0a, 0x0e );
+	machine().device<seta001_device>("spritegen")->set_fg_xoffsets(m_global_offsets->sprite_offs[1], m_global_offsets->sprite_offs[0]);
+	machine().device<seta001_device>("spritegen")->set_fg_yoffsets( -0x0a, 0x0e );
 
 	// banking
-	machine.device<seta001_device>("spritegen")->set_gfxbank_callback( setac_gfxbank_callback );
+	machine().device<seta001_device>("spritegen")->set_gfxbank_callback( setac_gfxbank_callback );
 
 }
 
-VIDEO_START( oisipuzl_2_layers )
+VIDEO_START_MEMBER(seta_state,oisipuzl_2_layers)
 {
-	seta_state *state = machine.driver_data<seta_state>();
 
-	VIDEO_START_CALL(seta_2_layers);
-	state->m_tilemaps_flip = 1;
+	VIDEO_START_CALL_MEMBER(seta_2_layers);
+	m_tilemaps_flip = 1;
 }
 
 
@@ -575,24 +571,24 @@ VIDEO_START( oisipuzl_2_layers )
    The game can select to repeat every 16 colors to fill the 64 colors for the 6bpp gfx
    or to use the first 64 colors of the palette regardless of the color code!
 */
-PALETTE_INIT( blandia )
+PALETTE_INIT_MEMBER(seta_state,blandia)
 {
 	int color, pen;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x600*2);
+	machine().colortable = colortable_alloc(machine(), 0x600*2);
 
 	for (color = 0; color < 0x20; color++)
 	{
 		for (pen = 0; pen < 0x40; pen++)
 		{
 			// layer 2-3
-			colortable_entry_set_value(machine.colortable, 0x0200 + ((color << 6) | pen), 0x200 + ((color << 4) | (pen & 0x0f)));
-			colortable_entry_set_value(machine.colortable, 0x1200 + ((color << 6) | pen), 0x200 + pen);
+			colortable_entry_set_value(machine().colortable, 0x0200 + ((color << 6) | pen), 0x200 + ((color << 4) | (pen & 0x0f)));
+			colortable_entry_set_value(machine().colortable, 0x1200 + ((color << 6) | pen), 0x200 + pen);
 
 			// layer 0-1
-			colortable_entry_set_value(machine.colortable, 0x0a00 + ((color << 6) | pen), 0x400 + ((color << 4) | (pen & 0x0f)));
-			colortable_entry_set_value(machine.colortable, 0x1a00 + ((color << 6) | pen), 0x400 + pen);
+			colortable_entry_set_value(machine().colortable, 0x0a00 + ((color << 6) | pen), 0x400 + ((color << 4) | (pen & 0x0f)));
+			colortable_entry_set_value(machine().colortable, 0x1a00 + ((color << 6) | pen), 0x400 + pen);
 		}
 	}
 
@@ -600,7 +596,7 @@ PALETTE_INIT( blandia )
 	// what are used for palette from 0x800 to 0xBFF?
 	for(int i = 0; i < 0x2200; i++)
 	{
-		colortable_entry_set_value(machine.colortable, 0x2200 + i, 0x600 + (i & 0x1ff));
+		colortable_entry_set_value(machine().colortable, 0x2200 + i, 0x600 + (i & 0x1ff));
 	}
 }
 
@@ -608,90 +604,90 @@ PALETTE_INIT( blandia )
 
 /* layers have 6 bits per pixel, but the color code has a 16 colors granularity,
    even if the low 2 bits are ignored (so there are only 4 different palettes) */
-PALETTE_INIT( gundhara )
+PALETTE_INIT_MEMBER(seta_state,gundhara)
 {
 	int color, pen;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x600);
+	machine().colortable = colortable_alloc(machine(), 0x600);
 
 	for (color = 0; color < 0x20; color++)
 		for (pen = 0; pen < 0x40; pen++)
 		{
-			colortable_entry_set_value(machine.colortable, 0x0200 + ((color << 6) | pen), 0x400 + ((((color & ~3) << 4) + pen) & 0x1ff)); // used?
-			colortable_entry_set_value(machine.colortable, 0x1200 + ((color << 6) | pen), 0x400 + ((((color & ~3) << 4) + pen) & 0x1ff));
+			colortable_entry_set_value(machine().colortable, 0x0200 + ((color << 6) | pen), 0x400 + ((((color & ~3) << 4) + pen) & 0x1ff)); // used?
+			colortable_entry_set_value(machine().colortable, 0x1200 + ((color << 6) | pen), 0x400 + ((((color & ~3) << 4) + pen) & 0x1ff));
 
-			colortable_entry_set_value(machine.colortable, 0x0a00 + ((color << 6) | pen), 0x200 + ((((color & ~3) << 4) + pen) & 0x1ff)); // used?
-			colortable_entry_set_value(machine.colortable, 0x1a00 + ((color << 6) | pen), 0x200 + ((((color & ~3) << 4) + pen) & 0x1ff));
+			colortable_entry_set_value(machine().colortable, 0x0a00 + ((color << 6) | pen), 0x200 + ((((color & ~3) << 4) + pen) & 0x1ff)); // used?
+			colortable_entry_set_value(machine().colortable, 0x1a00 + ((color << 6) | pen), 0x200 + ((((color & ~3) << 4) + pen) & 0x1ff));
 		}
 }
 
 
 
 /* layers have 6 bits per pixel, but the color code has a 16 colors granularity */
-PALETTE_INIT( jjsquawk )
+PALETTE_INIT_MEMBER(seta_state,jjsquawk)
 {
 	int color, pen;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x600);
+	machine().colortable = colortable_alloc(machine(), 0x600);
 
 	for (color = 0; color < 0x20; color++)
 		for (pen = 0; pen < 0x40; pen++)
 		{
-			colortable_entry_set_value(machine.colortable, 0x0200 + ((color << 6) | pen), 0x400 + (((color << 4) + pen) & 0x1ff)); // used by madshark
-			colortable_entry_set_value(machine.colortable, 0x1200 + ((color << 6) | pen), 0x400 + (((color << 4) + pen) & 0x1ff));
+			colortable_entry_set_value(machine().colortable, 0x0200 + ((color << 6) | pen), 0x400 + (((color << 4) + pen) & 0x1ff)); // used by madshark
+			colortable_entry_set_value(machine().colortable, 0x1200 + ((color << 6) | pen), 0x400 + (((color << 4) + pen) & 0x1ff));
 
-			colortable_entry_set_value(machine.colortable, 0x0a00 + ((color << 6) | pen), 0x200 + (((color << 4) + pen) & 0x1ff)); // used by madshark
-			colortable_entry_set_value(machine.colortable, 0x1a00 + ((color << 6) | pen), 0x200 + (((color << 4) + pen) & 0x1ff));
+			colortable_entry_set_value(machine().colortable, 0x0a00 + ((color << 6) | pen), 0x200 + (((color << 4) + pen) & 0x1ff)); // used by madshark
+			colortable_entry_set_value(machine().colortable, 0x1a00 + ((color << 6) | pen), 0x200 + (((color << 4) + pen) & 0x1ff));
 		}
 }
 
 
 /* layer 0 is 6 bit per pixel, but the color code has a 16 colors granularity */
-PALETTE_INIT( zingzip )
+PALETTE_INIT_MEMBER(seta_state,zingzip)
 {
 	int color, pen;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x600);
+	machine().colortable = colortable_alloc(machine(), 0x600);
 
 	for (color = 0; color < 0x20; color++)
 		for (pen = 0; pen < 0x40; pen++)
 		{
-			colortable_entry_set_value(machine.colortable, 0x400 + ((color << 6) | pen), 0x400 + ((((color & ~3) << 4) + pen) & 0x1ff)); // used?
-			colortable_entry_set_value(machine.colortable, 0xc00 + ((color << 6) | pen), 0x400 + ((((color & ~3) << 4) + pen) & 0x1ff));
+			colortable_entry_set_value(machine().colortable, 0x400 + ((color << 6) | pen), 0x400 + ((((color & ~3) << 4) + pen) & 0x1ff)); // used?
+			colortable_entry_set_value(machine().colortable, 0xc00 + ((color << 6) | pen), 0x400 + ((((color & ~3) << 4) + pen) & 0x1ff));
 		}
 }
 
 // color prom
-PALETTE_INIT( inttoote )
+PALETTE_INIT_MEMBER(seta_state,inttoote)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int x;
 	for (x = 0; x < 0x200 ; x++)
 	{
 		int data = (color_prom[x*2] <<8) | color_prom[x*2+1];
-		palette_set_color_rgb(machine, x, pal5bit(data >> 10),pal5bit(data >> 5),pal5bit(data >> 0));
+		palette_set_color_rgb(machine(), x, pal5bit(data >> 10),pal5bit(data >> 5),pal5bit(data >> 0));
 	}
 }
 
-PALETTE_INIT( setaroul )
+PALETTE_INIT_MEMBER(seta_state,setaroul)
 {
-	machine.gfx[0]->color_granularity=16;
-	machine.gfx[1]->color_granularity=16;
+	machine().gfx[0]->set_granularity(16);
+	machine().gfx[1]->set_granularity(16);
 
-	PALETTE_INIT_CALL(inttoote);
+	PALETTE_INIT_CALL_MEMBER(inttoote);
 }
 
-PALETTE_INIT( usclssic )
+PALETTE_INIT_MEMBER(seta_state,usclssic)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int color, pen;
 	int x;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x400);
+	machine().colortable = colortable_alloc(machine(), 0x400);
 
 	/* DECODE PROM */
 	for (x = 0; x < 0x200 ; x++)
@@ -701,16 +697,16 @@ PALETTE_INIT( usclssic )
 		rgb_t color = MAKE_RGB(pal5bit(data >> 10), pal5bit(data >> 5), pal5bit(data >> 0));
 
 		if (x >= 0x100)
-			colortable_palette_set_color(machine.colortable, x + 0x000, color);
+			colortable_palette_set_color(machine().colortable, x + 0x000, color);
 		else
-			colortable_palette_set_color(machine.colortable, x + 0x300, color);
+			colortable_palette_set_color(machine().colortable, x + 0x300, color);
 	}
 
 	for (color = 0; color < 0x20; color++)
 		for (pen = 0; pen < 0x40; pen++)
 		{
-			colortable_entry_set_value(machine.colortable, 0x200 + ((color << 6) | pen), 0x200 + ((((color & ~3) << 4) + pen) & 0x1ff)); // used?
-			colortable_entry_set_value(machine.colortable, 0xa00 + ((color << 6) | pen), 0x200 + ((((color & ~3) << 4) + pen) & 0x1ff));
+			colortable_entry_set_value(machine().colortable, 0x200 + ((color << 6) | pen), 0x200 + ((((color & ~3) << 4) + pen) & 0x1ff)); // used?
+			colortable_entry_set_value(machine().colortable, 0xa00 + ((color << 6) | pen), 0x200 + ((((color & ~3) << 4) + pen) & 0x1ff));
 		}
 }
 
@@ -773,11 +769,11 @@ static void usclssic_set_pens(running_machine &machine)
 static void draw_tilemap_palette_effect(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, tilemap_t *tilemap, int scrollx, int scrolly, int gfxnum, int flipscreen)
 {
 	int y;
-	const gfx_element *gfx_tilemap = machine.gfx[gfxnum];
+	gfx_element *gfx_tilemap = machine.gfx[gfxnum];
 	const bitmap_ind16 &src_bitmap = tilemap->pixmap();
 	int width_mask, height_mask;
-	int opaque_mask = gfx_tilemap->color_granularity - 1;
-	int pixel_effect_mask = gfx_tilemap->color_base + (gfx_tilemap->total_colors - 1) * gfx_tilemap->color_granularity;
+	int opaque_mask = gfx_tilemap->granularity() - 1;
+	int pixel_effect_mask = gfx_tilemap->colorbase() + (gfx_tilemap->colors() - 1) * gfx_tilemap->granularity();
 	int p;
 
 	width_mask = src_bitmap.width() - 1;

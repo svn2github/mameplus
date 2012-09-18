@@ -22,7 +22,7 @@ WRITE16_MEMBER(aztarac_state::aztarac_sound_w)
 		soundlatch_byte_w(space, offset, data);
 		m_sound_status ^= 0x21;
 		if (m_sound_status & 0x20)
-			cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
+			machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
 	}
 }
 
@@ -49,5 +49,5 @@ INTERRUPT_GEN( aztarac_snd_timed_irq )
     state->m_sound_status ^= 0x10;
 
     if (state->m_sound_status & 0x10)
-        device_set_input_line(device,0,HOLD_LINE);
+        device->execute().set_input_line(0,HOLD_LINE);
 }

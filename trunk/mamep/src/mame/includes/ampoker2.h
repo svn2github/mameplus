@@ -18,12 +18,17 @@ public:
 	DECLARE_WRITE8_MEMBER(ampoker2_videoram_w);
 	DECLARE_DRIVER_INIT(rabbitpk);
 	DECLARE_DRIVER_INIT(piccolop);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(s2k_get_bg_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_VIDEO_START(sigma2k);
 };
 
 
 /*----------- defined in video/ampoker2.c -----------*/
 
-PALETTE_INIT( ampoker2 );
-VIDEO_START( ampoker2 );
-VIDEO_START( sigma2k );
+
+
+
 SCREEN_UPDATE_IND16( ampoker2 );

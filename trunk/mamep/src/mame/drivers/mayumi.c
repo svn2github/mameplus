@@ -41,6 +41,10 @@ public:
 	DECLARE_WRITE8_MEMBER(input_sel_w);
 	DECLARE_READ8_MEMBER(key_matrix_1p_r);
 	DECLARE_READ8_MEMBER(key_matrix_2p_r);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -50,19 +54,17 @@ public:
  *
  *************************************/
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(mayumi_state::get_tile_info)
 {
-	mayumi_state *state = machine.driver_data<mayumi_state>();
-	int code = state->m_videoram[tile_index] + (state->m_videoram[tile_index + 0x800] & 0x1f) * 0x100;
-	int col = (state->m_videoram[tile_index + 0x1000] >> 3) & 0x1f;
+	int code = m_videoram[tile_index] + (m_videoram[tile_index + 0x800] & 0x1f) * 0x100;
+	int col = (m_videoram[tile_index + 0x1000] >> 3) & 0x1f;
 
-	SET_TILE_INFO(0, code, col, 0);
+	SET_TILE_INFO_MEMBER(0, code, col, 0);
 }
 
-static VIDEO_START( mayumi )
+void mayumi_state::video_start()
 {
-	mayumi_state *state = machine.driver_data<mayumi_state>();
-	state->m_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
+	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mayumi_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 }
 
 WRITE8_MEMBER(mayumi_state::mayumi_videoram_w)
@@ -89,7 +91,7 @@ static INTERRUPT_GEN( mayumi_interrupt )
 	mayumi_state *state = device->machine().driver_data<mayumi_state>();
 
 	if (state->m_int_enable)
-		 device_set_input_line(device, 0, HOLD_LINE);
+		 device->execute().set_input_line(0, HOLD_LINE);
 }
 
 /*************************************
@@ -373,24 +375,22 @@ static const ym2203_interface ym2203_config =
  *
  *************************************/
 
-static MACHINE_START( mayumi )
+void mayumi_state::machine_start()
 {
-	mayumi_state *state = machine.driver_data<mayumi_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 4, &ROM[0x8000], 0x4000);
-	state->membank("bank1")->set_entry(0);
+	membank("bank1")->configure_entries(0, 4, &ROM[0x8000], 0x4000);
+	membank("bank1")->set_entry(0);
 
-	state->save_item(NAME(state->m_int_enable));
-	state->save_item(NAME(state->m_input_sel));
+	save_item(NAME(m_int_enable));
+	save_item(NAME(m_input_sel));
 }
 
-static MACHINE_RESET( mayumi )
+void mayumi_state::machine_reset()
 {
-	mayumi_state *state = machine.driver_data<mayumi_state>();
 
-	state->m_int_enable = 0;
-	state->m_input_sel = 0;
+	m_int_enable = 0;
+	m_input_sel = 0;
 }
 
 static MACHINE_CONFIG_START( mayumi, mayumi_state )
@@ -401,8 +401,6 @@ static MACHINE_CONFIG_START( mayumi, mayumi_state )
 	MCFG_CPU_IO_MAP(mayumi_io_map)
 	MCFG_CPU_VBLANK_INT("screen", mayumi_interrupt)
 
-	MCFG_MACHINE_START( mayumi )
-	MCFG_MACHINE_RESET( mayumi )
 
 	MCFG_I8255_ADD( "i8255", mayumi_i8255_intf )
 
@@ -418,7 +416,6 @@ static MACHINE_CONFIG_START( mayumi, mayumi_state )
 	MCFG_PALETTE_LENGTH(256)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(mayumi)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

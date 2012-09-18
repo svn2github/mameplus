@@ -20,6 +20,9 @@ public:
 	n64_rdp *m_rdp;
 	DECLARE_DRIVER_INIT(aleck64);
 
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 /*----------- devices -----------*/
@@ -39,11 +42,11 @@ struct n64_savable_data_t
 class n64_periphs : public device_t
 {
 private:
-	typedef struct
+	struct AUDIO_DMA
 	{
 		UINT32 address;
 		UINT32 length;
-	} AUDIO_DMA;
+	};
 
 public:
     // construction/destruction
@@ -282,7 +285,7 @@ extern WRITE32_DEVICE_HANDLER( n64_sp_reg_w );
 extern READ32_DEVICE_HANDLER( n64_dp_reg_r );
 extern WRITE32_DEVICE_HANDLER( n64_dp_reg_w );
 
-MACHINE_START( n64 );
-MACHINE_RESET( n64 );
+
+
 
 #endif

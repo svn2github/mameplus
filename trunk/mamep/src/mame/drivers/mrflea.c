@@ -85,7 +85,7 @@ WRITE8_MEMBER(mrflea_state::mrflea_io_w)
 {
 	m_status |= 0x08; // pending command to IO CPU
 	m_io = data;
-	device_set_input_line(m_subcpu, 0, HOLD_LINE );
+	m_subcpu->set_input_line(0, HOLD_LINE );
 }
 
 READ8_MEMBER(mrflea_state::mrflea_main_r)
@@ -122,7 +122,7 @@ static TIMER_DEVICE_CALLBACK( mrflea_slave_interrupt )
 	int scanline = param;
 
 	if ((scanline == 248) || (scanline == 248/2 && (state->m_status & 0x08)))
-		device_set_input_line(state->m_subcpu, 0, HOLD_LINE);
+		state->m_subcpu->set_input_line(0, HOLD_LINE);
 }
 
 READ8_MEMBER(mrflea_state::mrflea_interrupt_type_r)
@@ -328,29 +328,27 @@ static const ay8910_interface mrflea_ay8910_interface_1 =
  *
  *************************************/
 
-static MACHINE_START( mrflea )
+void mrflea_state::machine_start()
 {
-	mrflea_state *state = machine.driver_data<mrflea_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_subcpu = machine.device("sub");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_subcpu = machine().device<cpu_device>("sub");
 
-	state->save_item(NAME(state->m_gfx_bank));
-	state->save_item(NAME(state->m_io));
-	state->save_item(NAME(state->m_main));
-	state->save_item(NAME(state->m_status));
-	state->save_item(NAME(state->m_select1));
+	save_item(NAME(m_gfx_bank));
+	save_item(NAME(m_io));
+	save_item(NAME(m_main));
+	save_item(NAME(m_status));
+	save_item(NAME(m_select1));
 }
 
-static MACHINE_RESET( mrflea )
+void mrflea_state::machine_reset()
 {
-	mrflea_state *state = machine.driver_data<mrflea_state>();
 
-	state->m_gfx_bank = 0;
-	state->m_io = 0;
-	state->m_main = 0;
-	state->m_status = 0;
-	state->m_select1 = 0;
+	m_gfx_bank = 0;
+	m_io = 0;
+	m_main = 0;
+	m_status = 0;
+	m_select1 = 0;
 }
 
 static MACHINE_CONFIG_START( mrflea, mrflea_state )
@@ -368,8 +366,6 @@ static MACHINE_CONFIG_START( mrflea, mrflea_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(mrflea)
-	MCFG_MACHINE_RESET(mrflea)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

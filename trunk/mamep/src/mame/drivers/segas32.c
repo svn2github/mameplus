@@ -7,6 +7,7 @@
     Still to do:
         * fix protection
         * fix jpark correctly
+        * f1lap link
 
 ****************************************************************************
 
@@ -350,8 +351,8 @@ orunners:  Interleaved with the dj and << >> buttons is the data the drives the 
  *************************************/
 
 #define MASTER_CLOCK		32215900
-#define RFC_CLOCK			50000000
-#define MULTI32_CLOCK		40000000
+#define RFC_CLOCK			XTAL_50MHz
+#define MULTI32_CLOCK		XTAL_40MHz
 
 #define TIMER_0_CLOCK		((MASTER_CLOCK/2)/2048)	/* confirmed */
 #define TIMER_1_CLOCK		((RFC_CLOCK/16)/256)	/* confirmed */
@@ -384,18 +385,17 @@ static void signal_sound_irq(running_machine &machine, int which);
  *
  *************************************/
 
-static MACHINE_RESET( system32 )
+MACHINE_RESET_MEMBER(segas32_state,system32)
 {
-	segas32_state *state = machine.driver_data<segas32_state>();
 	/* initialize the interrupt controller */
-	memset(state->m_v60_irq_control, 0xff, sizeof(state->m_v60_irq_control));
+	memset(m_v60_irq_control, 0xff, sizeof(m_v60_irq_control));
 
 	/* allocate timers */
-	state->m_v60_irq_timer[0] = machine.device<timer_device>("v60_irq0");
-	state->m_v60_irq_timer[1] = machine.device<timer_device>("v60_irq1");
+	m_v60_irq_timer[0] = machine().device<timer_device>("v60_irq0");
+	m_v60_irq_timer[1] = machine().device<timer_device>("v60_irq1");
 
 	/* clear IRQ lines */
-	cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -417,13 +417,13 @@ static void update_irq_state(running_machine &machine)
 	for (vector = 0; vector < 5; vector++)
 		if (effirq & (1 << vector))
 		{
-			cputag_set_input_line_and_vector(machine, "maincpu", 0, ASSERT_LINE, vector);
+			machine.device("maincpu")->execute().set_input_line_and_vector(0, ASSERT_LINE, vector);
 			break;
 		}
 
 	/* if we didn't find any, clear the interrupt line */
 	if (vector == 5)
-		cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -451,7 +451,7 @@ static void int_control_w(address_space *space, int offset, UINT8 data)
 	segas32_state *state = space->machine().driver_data<segas32_state>();
 	int duration;
 
-//  logerror("%06X:int_control_w(%X) = %02X\n", cpu_get_pc(&space->device()), offset, data);
+//  logerror("%06X:int_control_w(%X) = %02X\n", space->device().safe_pc(), offset, data);
 	switch (offset)
 	{
 		case 0:
@@ -702,7 +702,7 @@ static void common_io_chip_w(address_space *space, int which, offs_t offset, UIN
 		case 0x1c/2:
 			state->m_system32_displayenable[which] = (data & 0x02);
 			if (which == 0)
-				cputag_set_input_line(space->machine(), "soundcpu", INPUT_LINE_RESET, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
+				space->machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
 			break;
 	}
 }
@@ -764,7 +764,7 @@ READ16_MEMBER(segas32_state::io_expansion_r)
 	if (!m_custom_io_r[0].isnull())
 		return (m_custom_io_r[0])(space, offset, mem_mask);
 	else
-		logerror("%06X:io_expansion_r(%X)\n", cpu_get_pc(&space.device()), offset);
+		logerror("%06X:io_expansion_r(%X)\n", space.device().safe_pc(), offset);
 	return 0xffff;
 }
 
@@ -778,7 +778,7 @@ WRITE16_MEMBER(segas32_state::io_expansion_w)
 	if (!m_custom_io_w[0].isnull())
 		(m_custom_io_w[0])(space, offset, data, mem_mask);
 	else
-		logerror("%06X:io_expansion_w(%X) = %02X\n", cpu_get_pc(&space.device()), offset, data & 0xff);
+		logerror("%06X:io_expansion_w(%X) = %02X\n", space.device().safe_pc(), offset, data & 0xff);
 }
 
 
@@ -788,7 +788,7 @@ READ32_MEMBER(segas32_state::io_expansion_0_r)
 		return (m_custom_io_r[0])(space, offset*2+0, mem_mask) |
 			  ((m_custom_io_r[0])(space, offset*2+1, mem_mask >> 16) << 16);
 	else
-		logerror("%06X:io_expansion_r(%X)\n", cpu_get_pc(&space.device()), offset);
+		logerror("%06X:io_expansion_r(%X)\n", space.device().safe_pc(), offset);
 	return 0xffffffff;
 }
 
@@ -807,7 +807,7 @@ WRITE32_MEMBER(segas32_state::io_expansion_0_w)
 		if (!m_custom_io_w[0].isnull())
 			(m_custom_io_w[0])(space, offset*2+0, data, mem_mask);
 		else
-			logerror("%06X:io_expansion_w(%X) = %02X\n", cpu_get_pc(&space.device()), offset, data & 0xff);
+			logerror("%06X:io_expansion_w(%X) = %02X\n", space.device().safe_pc(), offset, data & 0xff);
 
 	}
 	if (ACCESSING_BITS_16_23)
@@ -815,7 +815,7 @@ WRITE32_MEMBER(segas32_state::io_expansion_0_w)
 		if (!m_custom_io_w[0].isnull())
 			(m_custom_io_w[0])(space, offset*2+1, data >> 16, mem_mask >> 16);
 		else
-			logerror("%06X:io_expansion_w(%X) = %02X\n", cpu_get_pc(&space.device()), offset, data & 0xff);
+			logerror("%06X:io_expansion_w(%X) = %02X\n", space.device().safe_pc(), offset, data & 0xff);
 	}
 }
 
@@ -826,7 +826,7 @@ READ32_MEMBER(segas32_state::io_expansion_1_r)
 		return (m_custom_io_r[1])(space, offset*2+0, mem_mask) |
 			  ((m_custom_io_r[1])(space, offset*2+1, mem_mask >> 16) << 16);
 	else
-		logerror("%06X:io_expansion_r(%X)\n", cpu_get_pc(&space.device()), offset);
+		logerror("%06X:io_expansion_r(%X)\n", space.device().safe_pc(), offset);
 	return 0xffffffff;
 }
 
@@ -839,14 +839,14 @@ WRITE32_MEMBER(segas32_state::io_expansion_1_w)
 		if (!m_custom_io_w[1].isnull())
 			(m_custom_io_w[1])(space, offset*2+0, data, mem_mask);
 		else
-			logerror("%06X:io_expansion_w(%X) = %02X\n", cpu_get_pc(&space.device()), offset, data & 0xff);
+			logerror("%06X:io_expansion_w(%X) = %02X\n", space.device().safe_pc(), offset, data & 0xff);
 	}
 	if (ACCESSING_BITS_16_23)
 	{
 		if (!m_custom_io_w[1].isnull())
 			(m_custom_io_w[1])(space, offset*2+1, data >> 16, mem_mask >> 16);
 		else
-			logerror("%06X:io_expansion_w(%X) = %02X\n", cpu_get_pc(&space.device()), offset, data & 0xff);
+			logerror("%06X:io_expansion_w(%X) = %02X\n", space.device().safe_pc(), offset, data & 0xff);
 	}
 }
 
@@ -871,7 +871,7 @@ READ16_MEMBER(segas32_state::analog_custom_io_r)
 			m_analog_value[offset & 3] <<= 1;
 			return result;
 	}
-	logerror("%06X:unknown analog_custom_io_r(%X) & %04X\n", cpu_get_pc(&space.device()), offset*2, mem_mask);
+	logerror("%06X:unknown analog_custom_io_r(%X) & %04X\n", space.device().safe_pc(), offset*2, mem_mask);
 	return 0xffff;
 }
 
@@ -888,7 +888,7 @@ WRITE16_MEMBER(segas32_state::analog_custom_io_w)
 			m_analog_value[offset & 3] = ioport(names[offset & 3])->read_safe(0);
 			return;
 	}
-	logerror("%06X:unknown analog_custom_io_w(%X) = %04X & %04X\n", cpu_get_pc(&space.device()), offset*2, data, mem_mask);
+	logerror("%06X:unknown analog_custom_io_w(%X) = %04X & %04X\n", space.device().safe_pc(), offset*2, data, mem_mask);
 }
 
 
@@ -904,7 +904,7 @@ READ16_MEMBER(segas32_state::extra_custom_io_r)
 			return ioport(names[offset & 3])->read_safe(0xffff);
 	}
 
-	logerror("%06X:unknown extra_custom_io_r(%X) & %04X\n", cpu_get_pc(&space.device()), offset*2, mem_mask);
+	logerror("%06X:unknown extra_custom_io_r(%X) & %04X\n", space.device().safe_pc(), offset*2, mem_mask);
 	return 0xffff;
 }
 
@@ -925,7 +925,7 @@ WRITE16_MEMBER(segas32_state::orunners_custom_io_w)
 			m_analog_bank = data & 1;
 			return;
 	}
-	logerror("%06X:unknown orunners_custom_io_w(%X) = %04X & %04X\n", cpu_get_pc(&space.device()), offset*2, data, mem_mask);
+	logerror("%06X:unknown orunners_custom_io_w(%X) = %04X & %04X\n", space.device().safe_pc(), offset*2, data, mem_mask);
 }
 
 
@@ -944,7 +944,7 @@ READ16_MEMBER(segas32_state::sonic_custom_io_r)
 			return (UINT8)(ioport(names[offset/2])->read() - m_sonic_last[offset/2]);
 	}
 
-	logerror("%06X:unknown sonic_custom_io_r(%X) & %04X\n", cpu_get_pc(&space.device()), offset*2, mem_mask);
+	logerror("%06X:unknown sonic_custom_io_r(%X) & %04X\n", space.device().safe_pc(), offset*2, mem_mask);
 	return 0xffff;
 }
 
@@ -963,7 +963,7 @@ WRITE16_MEMBER(segas32_state::sonic_custom_io_w)
 			return;
 	}
 
-	logerror("%06X:unknown sonic_custom_io_w(%X) = %04X & %04X\n", cpu_get_pc(&space.device()), offset*2, data, mem_mask);
+	logerror("%06X:unknown sonic_custom_io_w(%X) = %04X & %04X\n", space.device().safe_pc(), offset*2, data, mem_mask);
 }
 
 
@@ -976,7 +976,7 @@ WRITE16_MEMBER(segas32_state::sonic_custom_io_w)
 
 WRITE16_MEMBER(segas32_state::random_number_16_w)
 {
-//  mame_printf_debug("%06X:random_seed_w(%04X) = %04X & %04X\n", cpu_get_pc(&space.device()), offset*2, data, mem_mask);
+//  mame_printf_debug("%06X:random_seed_w(%04X) = %04X & %04X\n", space.device().safe_pc(), offset*2, data, mem_mask);
 }
 
 READ16_MEMBER(segas32_state::random_number_16_r)
@@ -986,7 +986,7 @@ READ16_MEMBER(segas32_state::random_number_16_r)
 
 WRITE32_MEMBER(segas32_state::random_number_32_w)
 {
-//  mame_printf_debug("%06X:random_seed_w(%04X) = %04X & %04X\n", cpu_get_pc(&space.device()), offset*2, data, mem_mask);
+//  mame_printf_debug("%06X:random_seed_w(%04X) = %04X & %04X\n", space.device().safe_pc(), offset*2, data, mem_mask);
 }
 
 READ32_MEMBER(segas32_state::random_number_32_r)
@@ -1055,13 +1055,13 @@ static void update_sound_irq_state(running_machine &machine)
 	for (vector = 0; vector < 3; vector++)
 		if (effirq & (1 << vector))
 		{
-			cputag_set_input_line_and_vector(machine, "soundcpu", 0, ASSERT_LINE, 2 * vector);
+			machine.device("soundcpu")->execute().set_input_line_and_vector(0, ASSERT_LINE, 2 * vector);
 			break;
 		}
 
 	/* if we didn't find any, clear the interrupt line */
 	if (vector == 3)
-		cputag_set_input_line(machine, "soundcpu", 0, CLEAR_LINE);
+		machine.device("soundcpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -1566,23 +1566,63 @@ static INPUT_PORTS_START( f1en )
 	PORT_BIT( 0x30, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START("ANALOG1")
-	PORT_BIT( 0xff, 0x80, IPT_PADDLE ) PORT_SENSITIVITY(30) PORT_KEYDELTA(10)
+	PORT_BIT( 0xff, 0x80, IPT_PADDLE ) PORT_SENSITIVITY(50) PORT_KEYDELTA(10) PORT_NAME("Steering Wheel")
 
 	PORT_START("ANALOG2")
-	PORT_BIT( 0xff, 0x00, IPT_PEDAL ) PORT_SENSITIVITY(30) PORT_KEYDELTA(10)
+	PORT_BIT( 0xff, 0x00, IPT_PEDAL  ) PORT_SENSITIVITY(50) PORT_KEYDELTA(10) PORT_NAME("Gas Pedal")
 
 	PORT_START("ANALOG3")
-	PORT_BIT( 0xff, 0x00, IPT_PEDAL2 ) PORT_SENSITIVITY(30) PORT_KEYDELTA(10)
+	PORT_BIT( 0xff, 0x00, IPT_PEDAL2 ) PORT_SENSITIVITY(50) PORT_KEYDELTA(10) PORT_NAME("Brake Pedal")
 INPUT_PORTS_END
 
 
 static INPUT_PORTS_START( f1lap )
-	PORT_INCLUDE( f1en )
+	PORT_INCLUDE( system32_generic )
 
 	PORT_MODIFY("P1_A")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 ) PORT_CODE(KEYCODE_SPACE) PORT_NAME("Gear Up")
 	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_CODE(KEYCODE_LSHIFT) PORT_NAME("Gear Down")
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_CODE(KEYCODE_Z)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_CODE(KEYCODE_Z) PORT_NAME("Overtake")
+	PORT_BIT( 0xf8, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("P2_A")
+	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("SERVICE12_A")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED )
+
+	PORT_MODIFY("SERVICE34_A")
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x02, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x04, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x08, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) ) // service coin mirror
+	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) ) // seems to be a service switch mirror
+	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x40, DEF_STR( Unknown ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
+
+	PORT_START("ANALOG1")
+	PORT_BIT( 0xff, 0x80, IPT_PADDLE ) PORT_SENSITIVITY(50) PORT_KEYDELTA(20) PORT_NAME("Steering Wheel")
+
+	PORT_START("ANALOG2")
+	PORT_BIT( 0xff, 0x00, IPT_PEDAL  ) PORT_SENSITIVITY(50) PORT_KEYDELTA(20) PORT_NAME("Gas Pedal")
+
+	PORT_START("ANALOG3")
+	PORT_BIT( 0xff, 0x00, IPT_PEDAL2 ) PORT_SENSITIVITY(50) PORT_KEYDELTA(20) PORT_NAME("Brake Pedal")
 INPUT_PORTS_END
 
 
@@ -2159,7 +2199,7 @@ static MACHINE_CONFIG_START( system32, segas32_state )
 	MCFG_CPU_PROGRAM_MAP(system32_sound_map)
 	MCFG_CPU_IO_MAP(system32_sound_portmap)
 
-	MCFG_MACHINE_RESET(system32)
+	MCFG_MACHINE_RESET_OVERRIDE(segas32_state,system32)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -2176,7 +2216,7 @@ static MACHINE_CONFIG_START( system32, segas32_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 52*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(system32)
 
-	MCFG_VIDEO_START(system32)
+	MCFG_VIDEO_START_OVERRIDE(segas32_state,system32)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2218,7 +2258,7 @@ static MACHINE_CONFIG_START( multi32, segas32_state )
 	MCFG_CPU_PROGRAM_MAP(multi32_sound_map)
 	MCFG_CPU_IO_MAP(multi32_sound_portmap)
 
-	MCFG_MACHINE_RESET(system32)
+	MCFG_MACHINE_RESET_OVERRIDE(segas32_state,system32)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -2242,7 +2282,7 @@ static MACHINE_CONFIG_START( multi32, segas32_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 52*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(multi32_right)
 
-	MCFG_VIDEO_START(multi32)
+	MCFG_VIDEO_START_OVERRIDE(segas32_state,multi32)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2780,10 +2820,40 @@ ROM_END
  **************************************************************************************************************************
  **************************************************************************************************************************
     F1 Super Lap
-    Requires 2 linked system 32 boards to function
     protected via FD1149 317-0210
 */
 ROM_START( f1lap )
+	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code + data */
+	ROM_LOAD_x4( "epr-15598.ic17",        0x000000, 0x020000, CRC(9feab7cd) SHA1(2a14c0df39e7bdae12a34679fabc6abb7618e27d) )
+	ROM_LOAD_x4( "epr-15611.ic8",         0x080000, 0x020000, CRC(0d8c97c2) SHA1(863c606c58faddc2bdaeb69f9079266155ff9a96) )
+	ROM_LOAD16_BYTE_x2( "epr-15596.ic18", 0x100000, 0x040000, CRC(20e92909) SHA1(b974c79e11bfbd1cee61f9041cf79971fd96db3a) )
+	ROM_LOAD16_BYTE_x2( "epr-15597.ic9",  0x100001, 0x040000, CRC(cd1ccddb) SHA1(ff0371a8010141d1ab81b5eba555ae7c64e5da37) )
+
+	ROM_REGION( 0x500000, "soundcpu", 0 ) /* sound CPU */
+	ROM_LOAD_x8( "epr-15592.ic36", 0x100000, 0x020000, CRC(7c055cc8) SHA1(169beb83dfae86dd408aa92b3c214b8f607825fc) )
+	ROM_LOAD( "mpr-15593.ic35",    0x200000, 0x100000, CRC(e7300441) SHA1(33c264f0e6326689ba75026932c0932868e83b25) )
+	ROM_LOAD( "mpr-15594.ic34",    0x300000, 0x100000, CRC(7f4ca3bb) SHA1(dc53a1857d619e574acb4c0587a6ba844df2d283) )
+	ROM_LOAD( "mpr-15595.ic24",    0x400000, 0x100000, CRC(3fbdad9a) SHA1(573ea2242f79c7d3b6bf0e6745f6b07a621834ac) )
+
+	ROM_REGION( 0x400000, "gfx1", 0 ) /* tiles */
+	ROM_LOAD16_BYTE( "mpr-15608.ic14", 0x000000, 0x200000, CRC(64462c69) SHA1(9501e83c52e3e16f73b94cef975b5a31b2ee5476) )
+	ROM_LOAD16_BYTE( "mpr-15609.ic5",  0x000001, 0x200000, CRC(d586e455) SHA1(aea190d31c590216eb19766ba749b1e9b710bdce) )
+
+	ROM_REGION32_BE( 0x1000000, "gfx2", 0 ) /* sprites */
+	ROMX_LOAD( "mpr-15600.ic32", 0x000000, 0x200000, CRC(d2698d23) SHA1(996fbcc1d0814e6f14fa7e4870ece077ecda54e6) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-15602.ic30", 0x000002, 0x200000, CRC(1674764d) SHA1(bc39757a5d25df1a088f874ca2442854eb551e48) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-15604.ic28", 0x000004, 0x200000, CRC(1552bbb9) SHA1(77edd3f9d8dec87fa0445d264309e6164eba9313) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-15606.ic26", 0x000006, 0x200000, CRC(2b4f5265) SHA1(48b4ccdedb52fbf80661ff380e5a273201fc0a12) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-15601.ic31", 0x800000, 0x200000, CRC(31a8f40a) SHA1(62798346750dea87e43c8a8b01c33bf886bb50f4) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-15603.ic29", 0x800002, 0x200000, CRC(3805ecbc) SHA1(54d29250441160f282c70adfd515adb21d2cda33) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-15605.ic27", 0x800004, 0x200000, CRC(cbdbf35e) SHA1(a1c0900ac3210e72f5848561a6c4a77c804782c6) , ROM_SKIP(6)|ROM_GROUPWORD )
+	ROMX_LOAD( "mpr-15607.ic25", 0x800006, 0x200000, CRC(6c8817c9) SHA1(f5d493ed4237caf5042e95373bf9abd1fd16f873) , ROM_SKIP(6)|ROM_GROUPWORD )
+
+	ROM_REGION( 0x20000, "user2", 0 ) /*  comms board  */
+	ROM_LOAD( "15612", 0x00000, 0x20000, CRC(9d204617) SHA1(8db57121065f5d1ac52fcfb88459bdbdc30e645b) )
+ROM_END
+
+ROM_START( f1lapj )
 	ROM_REGION( 0x200000, "maincpu", 0 ) /* v60 code + data */
 	ROM_LOAD_x4( "epr-15598.ic17",        0x000000, 0x020000, CRC(9feab7cd) SHA1(2a14c0df39e7bdae12a34679fabc6abb7618e27d) )
 	ROM_LOAD_x4( "epr-15599.ic8",         0x080000, 0x020000, CRC(5c5ac112) SHA1(2c071946e33f0700a832c7aad36f639acd35f555) )
@@ -2813,6 +2883,7 @@ ROM_START( f1lap )
 	ROM_REGION( 0x20000, "user2", 0 ) /*  comms board  */
 	ROM_LOAD( "15612", 0x00000, 0x20000, CRC(9d204617) SHA1(8db57121065f5d1ac52fcfb88459bdbdc30e645b) )
 ROM_END
+
 
 
 /**************************************************************************************************************************
@@ -4211,9 +4282,19 @@ DRIVER_INIT_MEMBER(segas32_state,f1en)
 }
 
 
+
+
 DRIVER_INIT_MEMBER(segas32_state,f1lap)
 {
 	segas32_common_init(machine(), read16_delegate(FUNC(segas32_state::analog_custom_io_r),this), write16_delegate(FUNC(segas32_state::analog_custom_io_w),this));
+
+	m_dual_pcb_comms = auto_alloc_array(machine(), UINT16, 0x1000/2);
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_readwrite_handler(0x800000, 0x800fff, read16_delegate(FUNC(segas32_state::dual_pcb_comms_r),this), write16_delegate(FUNC(segas32_state::dual_pcb_comms_w),this));
+	machine().device("maincpu")->memory().space(AS_PROGRAM)->install_read_handler(0x801000, 0x801003, read16_delegate(FUNC(segas32_state::dual_pcb_masterslave),this));
+
+//  machine().device("maincpu")->memory().space(AS_PROGRAM)->install_write_handler(0x800048, 0x800049, write16_delegate(FUNC(segas32_state::f1en_comms_echo_w),this));
+	m_system32_prot_vblank = f1lap_fd1149_vblank;
+
 	m_sw1_output = f1lap_sw1_output;
 }
 
@@ -4348,23 +4429,24 @@ DRIVER_INIT_MEMBER(segas32_state,titlef)
 GAME( 1992, arescue,  0,        system32,     arescue, segas32_state,  arescue,  ROT0, "Sega",   "Air Rescue", GAME_IMPERFECT_GRAPHICS )
 GAME( 1993, alien3,   0,        system32,     alien3, segas32_state,   alien3,   ROT0, "Sega",   "Alien3: The Gun (World)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1993, alien3u,  alien3,   system32,     alien3, segas32_state,   alien3,   ROT0, "Sega",   "Alien3: The Gun (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1991, arabfgt,  0,        system32,     arabfgt, segas32_state,  arabfgt,  ROT0, "Sega",   "Arabian Fight (World)", GAME_IMPERFECT_GRAPHICS )		/* Released in 03.1992 */
+GAME( 1991, arabfgt,  0,        system32,     arabfgt, segas32_state,  arabfgt,  ROT0, "Sega",   "Arabian Fight (World)", GAME_IMPERFECT_GRAPHICS ) /* Released in 03.1992 */
 GAME( 1991, arabfgtu, arabfgt,  system32,     arabfgtu, segas32_state, arabfgt,  ROT0, "Sega",   "Arabian Fight (US)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1991, arabfgtj, arabfgt,  system32,     arabfgt, segas32_state,  arabfgt,  ROT0, "Sega",   "Arabian Fight (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, brival,   0,        system32,     brival, segas32_state,   brival,   ROT0, "Sega",   "Burning Rival (World)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, brivalj,  brival,   system32,     brival, segas32_state,   brival,   ROT0, "Sega",   "Burning Rival (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, darkedge, 0,        system32,     darkedge, segas32_state, darkedge, ROT0, "Sega",   "Dark Edge (World)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, darkedgej,darkedge, system32,     darkedge, segas32_state, darkedge, ROT0, "Sega",   "Dark Edge (Japan)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1994, dbzvrvs,  0,        system32,     dbzvrvs, segas32_state,  dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S.", GAME_IMPERFECT_GRAPHICS)
+GAME( 1994, dbzvrvs,  0,        system32,     dbzvrvs, segas32_state,  dbzvrvs,  ROT0, "Sega / Banpresto", "Dragon Ball Z V.R.V.S. (Japan)", GAME_IMPERFECT_GRAPHICS)
 GAME( 1991, f1en,     0,        system32,     f1en, segas32_state,     f1en,     ROT0, "Sega",   "F1 Exhaust Note", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, f1lap,    0,        system32,     f1lap, segas32_state,    f1lap,    ROT0, "Sega",   "F1 Super Lap", GAME_NOT_WORKING )
+GAME( 1993, f1lap,    0,        system32,     f1lap, segas32_state,    f1lap,    ROT0, "Sega",   "F1 Super Lap (World)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, f1lapj,   f1lap,    system32,     f1lap, segas32_state,    f1lap,    ROT0, "Sega",   "F1 Super Lap (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, ga2,      0,        system32_v25, ga2, segas32_state,      ga2,      ROT0, "Sega",   "Golden Axe: The Revenge of Death Adder (World)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, ga2u,     ga2,      system32_v25, ga2u, segas32_state,     ga2,      ROT0, "Sega",   "Golden Axe: The Revenge of Death Adder (US)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, ga2j,     ga2,      system32_v25, ga2, segas32_state,      ga2,      ROT0, "Sega",   "Golden Axe: The Revenge of Death Adder (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, holo,     0,        system32,     holo, segas32_state,     holo,     ORIENTATION_FLIP_Y, "Sega",   "Holosseum (US)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, jpark,    0,        system32,     jpark, segas32_state,    jpark,    ROT0, "Sega",   "Jurassic Park", GAME_IMPERFECT_GRAPHICS )				/* Released in 02.1994 */
+GAME( 1993, jpark,    0,        system32,     jpark, segas32_state,    jpark,    ROT0, "Sega",   "Jurassic Park", GAME_IMPERFECT_GRAPHICS )  /* Released in 02.1994 */
 GAME( 1994, kokoroj2, 0,        system32,     radr, segas32_state,     radr,     ROT0, "Sega",   "Kokoroji 2", GAME_IMPERFECT_GRAPHICS | GAME_NOT_WORKING) /* uses an Audio CD */
-GAME( 1990, radm,     0,        system32,     radm, segas32_state,     radm,     ROT0, "Sega",   "Rad Mobile (World)", GAME_IMPERFECT_GRAPHICS )			/* Released in 02.1991 */
+GAME( 1990, radm,     0,        system32,     radm, segas32_state,     radm,     ROT0, "Sega",   "Rad Mobile (World)", GAME_IMPERFECT_GRAPHICS )  /* Released in 02.1991 */
 GAME( 1990, radmu,    radm,     system32,     radm, segas32_state,     radm,     ROT0, "Sega",   "Rad Mobile (US)", GAME_IMPERFECT_GRAPHICS )
 GAMEL(1991, radr,     0,        system32,     radr, segas32_state,     radr,     ROT0, "Sega",   "Rad Rally (World)", GAME_IMPERFECT_GRAPHICS, layout_radr )
 GAMEL(1991, radru,    radr,     system32,     radr, segas32_state,     radr,     ROT0, "Sega",   "Rad Rally (US)", GAME_IMPERFECT_GRAPHICS, layout_radr )
@@ -4378,7 +4460,6 @@ GAME( 1991, spidmanu, spidman,  system32,     spidmanu, segas32_state, spidman, 
 GAME( 1994, svf,      0,        system32,     svf, segas32_state,      svf,      ROT0, "Sega",   "Super Visual Football: European Sega Cup", GAME_IMPERFECT_GRAPHICS )
 GAME( 1994, svs,      svf,      system32,     svf, segas32_state,      svf,      ROT0, "Sega",   "Super Visual Soccer: Sega Cup (US)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1994, jleague,  svf,      system32,     svf, segas32_state,      jleague,  ROT0, "Sega",   "The J.League 1994 (Japan)", GAME_IMPERFECT_GRAPHICS )
-
 GAME( 1994, harddunk, 0,        multi32,      harddunk, segas32_state, harddunk, ROT0, "Sega",   "Hard Dunk (World)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1994, harddunkj,harddunk, multi32,      harddunk, segas32_state, harddunk, ROT0, "Sega",   "Hard Dunk (Japan)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, orunners, 0,        multi32,      orunners, segas32_state, orunners, ROT0, "Sega",   "OutRunners (World)", GAME_IMPERFECT_GRAPHICS )

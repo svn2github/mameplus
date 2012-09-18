@@ -63,7 +63,7 @@ READ16_MEMBER(realbrk_state::realbrk_dsw_r)
 							((ioport("SW3")->read() & 0x0300) << 4) |
 							((ioport("SW4")->read() & 0x0300) << 6) ;
 
-	logerror("CPU #0 PC %06X: read with unknown dsw_select = %02x\n",cpu_get_pc(&space.device()),m_dsw_select[0]);
+	logerror("CPU #0 PC %06X: read with unknown dsw_select = %02x\n",space.device().safe_pc(),m_dsw_select[0]);
 	return 0xffff;
 }
 
@@ -123,7 +123,7 @@ READ16_MEMBER(realbrk_state::backup_ram_r)
 {
 	/*TODO: understand the format & cmds of the backup-ram,maybe it's an
             unemulated tmp68301 feature?*/
-	if(cpu_get_previouspc(&space.device()) == 0x02c08e)
+	if(space.device().safe_pcbase() == 0x02c08e)
 		return 0xffff;
 	else
 		return m_backup_ram[offset];
@@ -134,7 +134,7 @@ READ16_MEMBER(realbrk_state::backup_ram_dx_r)
 {
 	/*TODO: understand the format & cmds of the backup-ram,maybe it's an
             unemulated tmp68301 feature?*/
-	if(cpu_get_previouspc(&space.device()) == 0x02f046)
+	if(space.device().safe_pcbase() == 0x02f046)
 		return 0xffff;
 	else
 		return m_backup_ram[offset];
@@ -773,7 +773,6 @@ static MACHINE_CONFIG_START( realbrk, realbrk_state )
 	MCFG_GFXDECODE(realbrk)
 	MCFG_PALETTE_LENGTH(0x8000)
 
-	MCFG_VIDEO_START(realbrk)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

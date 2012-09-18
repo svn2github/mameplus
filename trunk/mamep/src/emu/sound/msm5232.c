@@ -9,7 +9,7 @@
     8 channel tone generator
 */
 
-typedef struct {
+struct VOICE {
 	UINT8 mode;
 
 	int		TG_count_period;
@@ -35,10 +35,10 @@ typedef struct {
 	int		pitch;			/* current pitch data */
 
 	int GF;
-} VOICE;
+};
 
 
-typedef struct {
+struct msm5232_state {
 	sound_stream *stream;
 
 	VOICE	voi[8];
@@ -71,14 +71,14 @@ typedef struct {
 	device_t *device;
 	void (*gate_handler)(device_t *device, int state);	/* callback called when the GATE output pin changes state */
 
-} msm5232_state;
+};
 
 
 INLINE msm5232_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == MSM5232);
-	return (msm5232_state *)downcast<legacy_device_base *>(device)->token();
+	return (msm5232_state *)downcast<msm5232_device *>(device)->token();
 }
 
 
@@ -850,32 +850,60 @@ void msm5232_set_clock(device_t *device, int clock)
 	}
 }
 
+const device_type MSM5232 = &device_creator<msm5232_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( msm5232 )
+msm5232_device::msm5232_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, MSM5232, "MSM5232", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(msm5232_state);						break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(msm5232_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( msm5232 );		break;
-		case DEVINFO_FCT_STOP:							info->stop = DEVICE_STOP_NAME( msm5232 );			break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME( msm5232 );			break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "MSM5232");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Oki Tone");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.1");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void msm5232_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void msm5232_device::device_start()
+{
+	DEVICE_START_NAME( msm5232 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void msm5232_device::device_reset()
+{
+	DEVICE_RESET_NAME( msm5232 )(this);
+}
+
+//-------------------------------------------------
+//  device_stop - device-specific stop
+//-------------------------------------------------
+
+void msm5232_device::device_stop()
+{
+	DEVICE_STOP_NAME( msm5232 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void msm5232_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(MSM5232, msm5232);

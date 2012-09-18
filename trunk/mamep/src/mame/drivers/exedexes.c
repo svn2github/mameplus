@@ -21,10 +21,10 @@ static TIMER_DEVICE_CALLBACK( exedexes_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xd7);	/* RST 10h - vblank */
 
 	if(scanline == 0) // unknown irq event
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE, 0xcf);	/* RST 08h */
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xcf);	/* RST 08h */
 }
 
 
@@ -205,24 +205,22 @@ static const sn76496_config psg_intf =
 };
 
 
-static MACHINE_START( exedexes )
+void exedexes_state::machine_start()
 {
-	exedexes_state *state = machine.driver_data<exedexes_state>();
 
-	state->save_item(NAME(state->m_chon));
-	state->save_item(NAME(state->m_objon));
-	state->save_item(NAME(state->m_sc1on));
-	state->save_item(NAME(state->m_sc2on));
+	save_item(NAME(m_chon));
+	save_item(NAME(m_objon));
+	save_item(NAME(m_sc1on));
+	save_item(NAME(m_sc2on));
 }
 
-static MACHINE_RESET( exedexes )
+void exedexes_state::machine_reset()
 {
-	exedexes_state *state = machine.driver_data<exedexes_state>();
 
-	state->m_chon = 0;
-	state->m_objon = 0;
-	state->m_sc1on = 0;
-	state->m_sc2on = 0;
+	m_chon = 0;
+	m_objon = 0;
+	m_sc1on = 0;
+	m_sc2on = 0;
 }
 
 static MACHINE_CONFIG_START( exedexes, exedexes_state )
@@ -236,8 +234,6 @@ static MACHINE_CONFIG_START( exedexes, exedexes_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold,4*60)
 
-	MCFG_MACHINE_START(exedexes)
-	MCFG_MACHINE_RESET(exedexes)
 
 	/* video hardware */
 	MCFG_BUFFERED_SPRITERAM8_ADD("spriteram")
@@ -253,8 +249,6 @@ static MACHINE_CONFIG_START( exedexes, exedexes_state )
 	MCFG_GFXDECODE(exedexes)
 	MCFG_PALETTE_LENGTH(64*4+64*4+16*16+16*16)
 
-	MCFG_PALETTE_INIT(exedexes)
-	MCFG_VIDEO_START(exedexes)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -20,15 +20,21 @@ public:
 	DECLARE_WRITE8_MEMBER(galaxia_dataport_w);
 	DECLARE_READ8_MEMBER(galaxia_collision_r);
 	DECLARE_READ8_MEMBER(galaxia_collision_clear);
+	TILE_GET_INFO_MEMBER(get_galaxia_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_astrowar_bg_tile_info);
+	DECLARE_VIDEO_START(galaxia);
+	DECLARE_PALETTE_INIT(galaxia);
+	DECLARE_VIDEO_START(astrowar);
+	DECLARE_PALETTE_INIT(astrowar);
 };
 
 
 /*----------- defined in video/galaxia.c -----------*/
 
-PALETTE_INIT( galaxia );
-PALETTE_INIT( astrowar );
-VIDEO_START( galaxia );
-VIDEO_START( astrowar );
+
+
+
+
 
 SCREEN_UPDATE_IND16( galaxia );
 SCREEN_UPDATE_IND16( astrowar );

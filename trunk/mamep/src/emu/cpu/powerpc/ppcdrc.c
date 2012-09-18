@@ -129,8 +129,7 @@ extern offs_t ppc_dasm_one(char *buffer, UINT32 pc, UINT32 op);
 ***************************************************************************/
 
 /* fast RAM info */
-typedef struct _fast_ram_info fast_ram_info;
-struct _fast_ram_info
+struct fast_ram_info
 {
 	offs_t				start;						/* start of the RAM block */
 	offs_t				end;						/* end of the RAM block */
@@ -140,8 +139,7 @@ struct _fast_ram_info
 
 
 /* hotspot info */
-typedef struct _hotspot_info hotspot_info;
-struct _hotspot_info
+struct hotspot_info
 {
 	offs_t				pc;							/* PC to consider */
 	UINT32				opcode;						/* required opcode at that PC */
@@ -150,8 +148,7 @@ struct _hotspot_info
 
 
 /* internal compiler state */
-typedef struct _compiler_state compiler_state;
-struct _compiler_state
+struct compiler_state
 {
 	UINT32				cycles;						/* accumulated cycles */
 	UINT8				checkints;					/* need to check interrupts before next instruction */
@@ -161,7 +158,7 @@ struct _compiler_state
 
 
 /* PowerPC implementation state */
-struct _ppcimp_state
+struct ppcimp_state
 {
 	/* core state */
 	drc_cache *			cache;						/* pointer to the DRC code cache */
@@ -783,7 +780,7 @@ static CPU_GET_INFO( ppcdrc )
 		case CPUINFO_FCT_TRANSLATE:						info->translate = CPU_TRANSLATE_NAME(ppcdrc);	break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
+		case CPUINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
 
 		/* --- everything else is handled generically --- */
 		default:										ppccom_get_info(ppc, state, info);				break;
@@ -912,7 +909,7 @@ static void code_flush_cache(powerpc_state *ppc)
 	}
 	catch (drcuml_block::abort_compilation &)
 	{
-		fatalerror("Error generating PPC static handlers");
+		fatalerror("Error generating PPC static handlers\n");
 	}
 }
 
@@ -1096,7 +1093,7 @@ static void cfunc_unimplemented(void *param)
 {
 	powerpc_state *ppc = (powerpc_state *)param;
 	UINT32 opcode = ppc->impstate->arg0;
-	fatalerror("PC=%08X: Unimplemented op %08X", ppc->pc, opcode);
+	fatalerror("PC=%08X: Unimplemented op %08X\n", ppc->pc, opcode);
 }
 
 
@@ -2313,6 +2310,23 @@ static void generate_compute_flags(powerpc_state *ppc, drcuml_block *block, cons
     }
 }
 
+/*-----------------------------------------------------
+    generate_shift_flags - compute S/Z flags for shifts
+-------------------------------------------------------*/
+
+static void generate_shift_flags(powerpc_state *ppc, drcuml_block *block, const opcode_desc *desc, UINT32 op)
+{
+    UML_CMP(block, R32(G_RA(op)), 0);               // cmp ra, #0
+    UML_SETc(block, COND_Z, I1);                     // set Z, i1
+    UML_SHL(block, I1, I1, 2);                      // shl i1, i1, #2   (i1 now = FLAG_Z)
+
+    UML_SHR(block, I2, R32(G_RA(op)), 28);          // shr i2, ra, #28
+    UML_AND(block, I2, I2, FLAG_S);                 // and i2, i2, FLAG_S (i2 now = FLAG_S)
+    UML_OR(block, I1, I1, I2);                      // or i1, i1, i2
+    UML_LOAD(block, I0, ppc->impstate->sz_cr_table, I1, SIZE_BYTE, SCALE_x1);	// load    i0,sz_cr_table,i0,byte
+    UML_OR(block, CR32(0), I0, XERSO32);											// or      [cr0],i0,[xerso]
+}
+
 /*-------------------------------------------------
     generate_fp_flags - compute FPSCR floating
     point status flags
@@ -3238,7 +3252,11 @@ static int generate_instruction_1f(powerpc_state *ppc, drcuml_block *block, comp
 
             UML_LABEL(block, compiler->labelnum++);             // 0:
 			UML_SHL(block, R32(G_RA(op)), R32(G_RS(op)), R32(G_RB(op)));					// shl     ra,rs,rb
-			generate_compute_flags(ppc, block, desc, op & M_RC, 0, FALSE);					// <update flags>
+            // calculate S and Z flags
+            if (op & M_RC)
+            {
+                generate_shift_flags(ppc, block, desc, op);
+            }
 
             UML_LABEL(block, compiler->labelnum++);             // 1:
             return TRUE;
@@ -3259,7 +3277,11 @@ static int generate_instruction_1f(powerpc_state *ppc, drcuml_block *block, comp
 
             UML_LABEL(block, compiler->labelnum++);             // 0:
 			UML_SHR(block, R32(G_RA(op)), R32(G_RS(op)), R32(G_RB(op)));							// shr     ra,i0,rb
-			generate_compute_flags(ppc, block, desc, op & M_RC, 0, FALSE);					// <update flags>
+            // calculate S and Z flags
+            if (op & M_RC)
+            {
+                generate_shift_flags(ppc, block, desc, op);
+            }
 
             UML_LABEL(block, compiler->labelnum++);             // 1:
 			return TRUE;
@@ -3293,7 +3315,11 @@ static int generate_instruction_1f(powerpc_state *ppc, drcuml_block *block, comp
             UML_SAR(block, R32(G_RA(op)), R32(G_RS(op)), I2);							// sar     ra,rs,i2
 
             UML_LABEL(block, compiler->labelnum++);             // 2:
-			generate_compute_flags(ppc, block, desc, op & M_RC, 0, FALSE);					// <update flags>
+            // calculate S and Z flags
+            if (op & M_RC)
+            {
+                generate_shift_flags(ppc, block, desc, op);
+            }
 			return TRUE;
 
 		case 0x338:	/* SRAWIx */
@@ -3306,7 +3332,11 @@ static int generate_instruction_1f(powerpc_state *ppc, drcuml_block *block, comp
 				UML_ROLINS(block, SPR32(SPR_XER), I0, 29, XER_CA);			// rolins  [xer],i0,29,XER_CA
 			}
 			UML_SAR(block, R32(G_RA(op)), R32(G_RS(op)), G_SH(op));					// sar     ra,rs,sh
-			generate_compute_flags(ppc, block, desc, op & M_RC, 0, FALSE);					// <update flags>
+            // calculate S and Z flags
+            if (op & M_RC)
+            {
+                generate_shift_flags(ppc, block, desc, op);
+            }
 			return TRUE;
 
 		case 0x01a:	/* CNTLZWx */
@@ -4435,7 +4465,7 @@ CPU_GET_INFO( ppc403ga )
 		case CPUINFO_FCT_SET_INFO:						info->setinfo = CPU_SET_INFO_NAME(ppcdrc4xx);		break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "PowerPC 403GA");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "PowerPC 403GA");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(ppcdrc4xx);		break;
@@ -4470,7 +4500,7 @@ CPU_GET_INFO( ppc403gcx )
 		case CPUINFO_FCT_SET_INFO:						info->setinfo = CPU_SET_INFO_NAME(ppcdrc4xx);		break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "PowerPC 403GCX");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "PowerPC 403GCX");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(ppcdrc4xx);		break;
@@ -4506,7 +4536,7 @@ CPU_GET_INFO( ppc405gp )
 		case CPUINFO_FCT_SET_INFO:						info->setinfo = CPU_SET_INFO_NAME(ppcdrc4xx);		break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "PowerPC 405GP");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "PowerPC 405GP");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(ppcdrc4xx);		break;
@@ -4544,7 +4574,7 @@ CPU_GET_INFO( ppc601 )
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(ppc601);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "PowerPC 601");			break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "PowerPC 601");			break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(ppcdrc);			break;
@@ -4578,7 +4608,7 @@ CPU_GET_INFO( ppc602 )
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(ppc602);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "PowerPC 602");			break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "PowerPC 602");			break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(ppcdrc);			break;
@@ -4612,7 +4642,7 @@ CPU_GET_INFO( ppc603 )
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(ppc603);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "PowerPC 603");			break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "PowerPC 603");			break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(ppcdrc);			break;
@@ -4646,7 +4676,7 @@ CPU_GET_INFO( ppc603e )
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(ppc603e);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "PowerPC 603e");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "PowerPC 603e");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(ppcdrc);			break;
@@ -4680,7 +4710,7 @@ CPU_GET_INFO( ppc603r )
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(ppc603r);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "PowerPC 603R");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "PowerPC 603R");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(ppcdrc);			break;
@@ -4714,7 +4744,7 @@ CPU_GET_INFO( ppc604 )
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(ppc604);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "PowerPC 604");			break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "PowerPC 604");			break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(ppcdrc);			break;
@@ -4753,7 +4783,7 @@ CPU_GET_INFO( mpc8240 )
 		case CPUINFO_FCT_INIT:							info->init = CPU_INIT_NAME(mpc8240);				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "PowerPC MPC8240");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "PowerPC MPC8240");		break;
 
 		/* --- everything else is handled generically --- */
 		default:										CPU_GET_INFO_CALL(ppcdrc);			break;

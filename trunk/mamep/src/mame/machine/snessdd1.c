@@ -178,12 +178,12 @@ static UINT8 SDD1_BG_getBit(SDD1_BG* thisptr, UINT8* endOfRun)
 }
 
 
-typedef struct
+struct SDD1_PEM_state
 {
 	UINT8 code_num;
 	UINT8 nextIfMPS;
 	UINT8 nextIfLPS;
-} SDD1_PEM_state;
+};
 
 static const SDD1_PEM_state SDD1_PEM_evolution_table[33] =
 {
@@ -222,11 +222,11 @@ static const SDD1_PEM_state SDD1_PEM_evolution_table[33] =
 	{ 7,24,22}
 };
 
-typedef struct
+struct SDD1_PEM_ContextInfo
 {
 	UINT8 status;
 	UINT8 MPS;
-} SDD1_PEM_ContextInfo;
+};
 
 class SDD1_PEM //Probability Estimation Module
 {
@@ -533,7 +533,7 @@ static void SDD1emu_decompress(SDD1emu* thisptr, UINT32 in_buf, UINT16 out_len, 
 	SDD1_OL_launch(thisptr->OL);
 }
 
-typedef struct
+struct snes_sdd1_t
 {
 	UINT8 sdd1_enable;	// channel bit-mask
 	UINT8 xfer_enable;	// channel bit-mask
@@ -553,9 +553,9 @@ typedef struct
 		UINT32 size;	// length of data buffer; reads decrement counter, set ready to false at 0
 		UINT8 ready;	// 1 when data[] is valid; 0 to invoke sdd1emu.decompress()
 	} buffer;
-} _snes_sdd1_t;
+} ;
 
-static _snes_sdd1_t snes_sdd1;
+static snes_sdd1_t snes_sdd1;
 
 static void sdd1_init(running_machine& machine)
 {

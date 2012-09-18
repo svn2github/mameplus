@@ -53,6 +53,9 @@ public:
 	DECLARE_WRITE16_MEMBER(ff7f_w);
 	DECLARE_WRITE16_MEMBER(rapidfir_control_w);
 	DECLARE_WRITE16_MEMBER(sound_bank_w);
+	DECLARE_MACHINE_RESET(tickee);
+	DECLARE_VIDEO_START(tickee);
+	DECLARE_MACHINE_RESET(rapidfir);
 };
 
 
@@ -93,14 +96,14 @@ static TIMER_CALLBACK( trigger_gun_interrupt )
 	state->m_gunx[which] = beamx;
 
 	/* fire the IRQ at the correct moment */
-	cputag_set_input_line(machine, "maincpu", param, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(param, ASSERT_LINE);
 }
 
 
 static TIMER_CALLBACK( clear_gun_interrupt )
 {
 	/* clear the IRQ on the next scanline? */
-	cputag_set_input_line(machine, "maincpu", param, CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(param, CLEAR_LINE);
 }
 
 
@@ -136,12 +139,11 @@ static TIMER_CALLBACK( setup_gun_interrupts )
  *
  *************************************/
 
-static VIDEO_START( tickee )
+VIDEO_START_MEMBER(tickee_state,tickee)
 {
-	tickee_state *state = machine.driver_data<tickee_state>();
 	/* start a timer going on the first scanline of every frame */
-	state->m_setup_gun_timer = machine.scheduler().timer_alloc(FUNC(setup_gun_interrupts));
-	state->m_setup_gun_timer->adjust(machine.primary_screen->time_until_pos(0));
+	m_setup_gun_timer = machine().scheduler().timer_alloc(FUNC(setup_gun_interrupts));
+	m_setup_gun_timer->adjust(machine().primary_screen->time_until_pos(0));
 }
 
 
@@ -215,18 +217,16 @@ static void rapidfir_scanline_update(screen_device &screen, bitmap_rgb32 &bitmap
  *
  *************************************/
 
-static MACHINE_RESET( tickee )
+MACHINE_RESET_MEMBER(tickee_state,tickee)
 {
-	tickee_state *state = machine.driver_data<tickee_state>();
-	state->m_beamxadd = 50;
-	state->m_beamyadd = 0;
+	m_beamxadd = 50;
+	m_beamyadd = 0;
 }
 
-static MACHINE_RESET( rapidfir )
+MACHINE_RESET_MEMBER(tickee_state,rapidfir)
 {
-	tickee_state *state = machine.driver_data<tickee_state>();
-	state->m_beamxadd = 0;
-	state->m_beamyadd = -5;
+	m_beamxadd = 0;
+	m_beamyadd = -5;
 }
 
 
@@ -293,7 +293,7 @@ WRITE16_MEMBER(tickee_state::tickee_control_w)
 	}
 
 	if (olddata != m_control[offset])
-		logerror("%08X:tickee_control_w(%d) = %04X (was %04X)\n", cpu_get_pc(&space.device()), offset, m_control[offset], olddata);
+		logerror("%08X:tickee_control_w(%d) = %04X (was %04X)\n", space.device().safe_pc(), offset, m_control[offset], olddata);
 }
 
 
@@ -767,16 +767,16 @@ static MACHINE_CONFIG_START( tickee, tickee_state )
 	MCFG_CPU_CONFIG(tms_config)
 	MCFG_CPU_PROGRAM_MAP(tickee_map)
 
-	MCFG_MACHINE_RESET(tickee)
+	MCFG_MACHINE_RESET_OVERRIDE(tickee_state,tickee)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_TICKET_DISPENSER_ADD("ticket1", attotime::from_msec(100), TICKET_MOTOR_ACTIVE_LOW, TICKET_STATUS_ACTIVE_HIGH)
 	MCFG_TICKET_DISPENSER_ADD("ticket2", attotime::from_msec(100), TICKET_MOTOR_ACTIVE_LOW, TICKET_STATUS_ACTIVE_HIGH)
 
 	/* video hardware */
-	MCFG_TLC34076_ADD("tlc34076", TLC34076_6_BIT)
+	MCFG_TLC34076_ADD("tlc34076", tlc34076_6_bit_intf)
 
-	MCFG_VIDEO_START(tickee)
+	MCFG_VIDEO_START_OVERRIDE(tickee_state,tickee)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(VIDEO_CLOCK/2, 444, 0, 320, 233, 0, 200)
@@ -810,13 +810,13 @@ static MACHINE_CONFIG_START( rapidfir, tickee_state )
 	MCFG_CPU_CONFIG(rapidfir_tms_config)
 	MCFG_CPU_PROGRAM_MAP(rapidfir_map)
 
-	MCFG_MACHINE_RESET(rapidfir)
+	MCFG_MACHINE_RESET_OVERRIDE(tickee_state,rapidfir)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	/* video hardware */
-	MCFG_TLC34076_ADD("tlc34076", TLC34076_6_BIT)
+	MCFG_TLC34076_ADD("tlc34076", tlc34076_6_bit_intf)
 
-	MCFG_VIDEO_START(tickee)
+	MCFG_VIDEO_START_OVERRIDE(tickee_state,tickee)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(VIDEO_CLOCK/2, 444, 0, 320, 233, 0, 200)
@@ -837,14 +837,14 @@ static MACHINE_CONFIG_START( mouseatk, tickee_state )
 	MCFG_CPU_CONFIG(tms_config)
 	MCFG_CPU_PROGRAM_MAP(mouseatk_map)
 
-	MCFG_MACHINE_RESET(tickee)
+	MCFG_MACHINE_RESET_OVERRIDE(tickee_state,tickee)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_TICKET_DISPENSER_ADD("ticket1", attotime::from_msec(100), TICKET_MOTOR_ACTIVE_LOW, TICKET_STATUS_ACTIVE_HIGH)
 	MCFG_TICKET_DISPENSER_ADD("ticket2", attotime::from_msec(100), TICKET_MOTOR_ACTIVE_LOW, TICKET_STATUS_ACTIVE_HIGH)
 
 	/* video hardware */
-	MCFG_TLC34076_ADD("tlc34076", TLC34076_6_BIT)
+	MCFG_TLC34076_ADD("tlc34076", tlc34076_6_bit_intf)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(VIDEO_CLOCK/2, 444, 0, 320, 233, 0, 200)

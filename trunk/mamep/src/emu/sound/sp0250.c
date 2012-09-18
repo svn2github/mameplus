@@ -32,8 +32,7 @@ should be 312, but 312 = 39*8 so it doesn't look right because a divider by 39 i
 */
 #define CLOCK_DIVIDER (7*6*8)
 
-typedef struct _sp0250_state sp0250_state;
-struct _sp0250_state
+struct sp0250_state
 {
 	INT16 amp;
 	UINT8 pitch;
@@ -60,7 +59,7 @@ INLINE sp0250_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == SP0250);
-	return (sp0250_state *)downcast<legacy_device_base *>(device)->token();
+	return (sp0250_state *)downcast<sp0250_device *>(device)->token();
 }
 
 
@@ -238,32 +237,42 @@ UINT8 sp0250_drq_r(device_t *device)
 }
 
 
+const device_type SP0250 = &device_creator<sp0250_device>;
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( sp0250 )
+sp0250_device::sp0250_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, SP0250, "SP0250", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(sp0250_state); 				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(sp0250_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( sp0250 );			break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							/* Nothing */									break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "SP0250");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "GI speech");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.1");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void sp0250_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void sp0250_device::device_start()
+{
+	DEVICE_START_NAME( sp0250 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void sp0250_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-
-DEFINE_LEGACY_SOUND_DEVICE(SP0250, sp0250);

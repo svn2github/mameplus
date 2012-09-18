@@ -20,16 +20,14 @@ INLINE void get_tile_info(running_machine &machine,tile_data &tileinfo,int tile_
 			0);
 }
 
-static TILE_GET_INFO( get_tile_info0 )
+TILE_GET_INFO_MEMBER(hexion_state::get_tile_info0)
 {
-	hexion_state *state = machine.driver_data<hexion_state>();
-	get_tile_info(machine,tileinfo,tile_index,state->m_vram[0]);
+	get_tile_info(machine(),tileinfo,tile_index,m_vram[0]);
 }
 
-static TILE_GET_INFO( get_tile_info1 )
+TILE_GET_INFO_MEMBER(hexion_state::get_tile_info1)
 {
-	hexion_state *state = machine.driver_data<hexion_state>();
-	get_tile_info(machine,tileinfo,tile_index,state->m_vram[1]);
+	get_tile_info(machine(),tileinfo,tile_index,m_vram[1]);
 }
 
 
@@ -40,19 +38,18 @@ static TILE_GET_INFO( get_tile_info1 )
 
 ***************************************************************************/
 
-VIDEO_START( hexion )
+void hexion_state::video_start()
 {
-	hexion_state *state = machine.driver_data<hexion_state>();
-	state->m_bg_tilemap[0] = tilemap_create(machine, get_tile_info0,tilemap_scan_rows,8,8,64,32);
-	state->m_bg_tilemap[1] = tilemap_create(machine, get_tile_info1,tilemap_scan_rows,     8,8,64,32);
+	m_bg_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hexion_state::get_tile_info0),this),TILEMAP_SCAN_ROWS,8,8,64,32);
+	m_bg_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hexion_state::get_tile_info1),this),TILEMAP_SCAN_ROWS,     8,8,64,32);
 
-	state->m_bg_tilemap[0]->set_transparent_pen(0);
-	state->m_bg_tilemap[1]->set_scrollx(0,-4);
-	state->m_bg_tilemap[1]->set_scrolly(0,4);
+	m_bg_tilemap[0]->set_transparent_pen(0);
+	m_bg_tilemap[1]->set_scrollx(0,-4);
+	m_bg_tilemap[1]->set_scrolly(0,4);
 
-	state->m_vram[0] = state->memregion("maincpu")->base() + 0x30000;
-	state->m_vram[1] = state->m_vram[0] + 0x2000;
-	state->m_unkram = state->m_vram[1] + 0x2000;
+	m_vram[0] = memregion("maincpu")->base() + 0x30000;
+	m_vram[1] = m_vram[0] + 0x2000;
+	m_unkram = m_vram[1] + 0x2000;
 }
 
 
@@ -84,7 +81,7 @@ WRITE8_MEMBER(hexion_state::hexion_bankswitch_w)
 if (data & 0x30)
 	popmessage("bankswitch %02x",data&0xf0);
 
-//logerror("%04x: bankswitch_w %02x\n",cpu_get_pc(&space.device()),data);
+//logerror("%04x: bankswitch_w %02x\n",space.device().safe_pc(),data);
 }
 
 READ8_MEMBER(hexion_state::hexion_bankedram_r)
@@ -103,7 +100,7 @@ READ8_MEMBER(hexion_state::hexion_bankedram_r)
 	}
 	else
 	{
-//logerror("%04x: bankedram_r offset %04x, bankctrl = %02x\n",cpu_get_pc(&space.device()),offset,m_bankctrl);
+//logerror("%04x: bankedram_r offset %04x, bankctrl = %02x\n",space.device().safe_pc(),offset,m_bankctrl);
 		return 0;
 	}
 }
@@ -112,43 +109,43 @@ WRITE8_MEMBER(hexion_state::hexion_bankedram_w)
 {
 	if (m_bankctrl == 3 && offset == 0 && (data & 0xfe) == 0)
 	{
-//logerror("%04x: bankedram_w offset %04x, data %02x, bankctrl = %02x\n",cpu_get_pc(&space.device()),offset,data,m_bankctrl);
+//logerror("%04x: bankedram_w offset %04x, data %02x, bankctrl = %02x\n",space.device().safe_pc(),offset,data,m_bankctrl);
 		m_rambank = data & 1;
 	}
 	else if (m_bankctrl == 0)
 	{
 		if (m_pmcbank)
 		{
-//logerror("%04x: bankedram_w offset %04x, data %02x, bankctrl = %02x\n",cpu_get_pc(&space.device()),offset,data,m_bankctrl);
+//logerror("%04x: bankedram_w offset %04x, data %02x, bankctrl = %02x\n",space.device().safe_pc(),offset,data,m_bankctrl);
 			m_vram[m_rambank][offset] = data;
 			m_bg_tilemap[m_rambank]->mark_tile_dirty(offset/4);
 		}
 		else
-			logerror("%04x pmc internal ram %04x = %02x\n",cpu_get_pc(&space.device()),offset,data);
+			logerror("%04x pmc internal ram %04x = %02x\n",space.device().safe_pc(),offset,data);
 	}
 	else if (m_bankctrl == 2 && offset < 0x800)
 	{
 		if (m_pmcbank)
 		{
-//logerror("%04x: unkram_w offset %04x, data %02x, bankctrl = %02x\n",cpu_get_pc(&space.device()),offset,data,m_bankctrl);
+//logerror("%04x: unkram_w offset %04x, data %02x, bankctrl = %02x\n",space.device().safe_pc(),offset,data,m_bankctrl);
 			m_unkram[offset] = data;
 		}
 		else
-			logerror("%04x pmc internal ram %04x = %02x\n",cpu_get_pc(&space.device()),offset,data);
+			logerror("%04x pmc internal ram %04x = %02x\n",space.device().safe_pc(),offset,data);
 	}
 	else
-logerror("%04x: bankedram_w offset %04x, data %02x, bankctrl = %02x\n",cpu_get_pc(&space.device()),offset,data,m_bankctrl);
+logerror("%04x: bankedram_w offset %04x, data %02x, bankctrl = %02x\n",space.device().safe_pc(),offset,data,m_bankctrl);
 }
 
 WRITE8_MEMBER(hexion_state::hexion_bankctrl_w)
 {
-//logerror("%04x: bankctrl_w %02x\n",cpu_get_pc(&space.device()),data);
+//logerror("%04x: bankctrl_w %02x\n",space.device().safe_pc(),data);
 	m_bankctrl = data;
 }
 
 WRITE8_MEMBER(hexion_state::hexion_gfxrom_select_w)
 {
-//logerror("%04x: gfxrom_select_w %02x\n",cpu_get_pc(&space.device()),data);
+//logerror("%04x: gfxrom_select_w %02x\n",space.device().safe_pc(),data);
 	m_gfxrom_select = data;
 }
 

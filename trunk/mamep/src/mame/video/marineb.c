@@ -10,12 +10,12 @@
 #include "includes/marineb.h"
 
 
-PALETTE_INIT( marineb )
+void marineb_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		int bit0, bit1, bit2, r, g, b;
 
@@ -26,16 +26,16 @@ PALETTE_INIT( marineb )
 		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 		/* green component */
 		bit0 = (color_prom[i] >> 3) & 0x01;
-		bit1 = (color_prom[i + machine.total_colors()] >> 0) & 0x01;
-		bit2 = (color_prom[i + machine.total_colors()] >> 1) & 0x01;
+		bit1 = (color_prom[i + machine().total_colors()] >> 0) & 0x01;
+		bit2 = (color_prom[i + machine().total_colors()] >> 1) & 0x01;
 		g = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 		/* blue component */
 		bit0 = 0;
-		bit1 = (color_prom[i + machine.total_colors()] >> 2) & 0x01;
-		bit2 = (color_prom[i + machine.total_colors()] >> 3) & 0x01;
+		bit1 = (color_prom[i + machine().total_colors()] >> 2) & 0x01;
+		bit2 = (color_prom[i + machine().total_colors()] >> 3) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r,g,b));
+		palette_set_color(machine(), i, MAKE_RGB(r,g,b));
 	}
 }
 
@@ -45,16 +45,15 @@ PALETTE_INIT( marineb )
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(marineb_state::get_tile_info)
 {
-	marineb_state *state = machine.driver_data<marineb_state>();
 
-	UINT8 code = state->m_videoram[tile_index];
-	UINT8 col = state->m_colorram[tile_index];
+	UINT8 code = m_videoram[tile_index];
+	UINT8 col = m_colorram[tile_index];
 
-	SET_TILE_INFO(0,
+	SET_TILE_INFO_MEMBER(0,
 				  code | ((col & 0xc0) << 2),
-				  (col & 0x0f) | (state->m_palette_bank << 4),
+				  (col & 0x0f) | (m_palette_bank << 4),
 				  TILE_FLIPXY((col >> 4) & 0x03));
 }
 
@@ -66,17 +65,16 @@ static TILE_GET_INFO( get_tile_info )
  *
  *************************************/
 
-VIDEO_START( marineb )
+void marineb_state::video_start()
 {
-	marineb_state *state = machine.driver_data<marineb_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bg_tilemap->set_scroll_cols(32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(marineb_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap->set_scroll_cols(32);
 
-	state->save_item(NAME(state->m_palette_bank));
-	state->save_item(NAME(state->m_column_scroll));
-	state->save_item(NAME(state->m_flipscreen_x));
-	state->save_item(NAME(state->m_flipscreen_y));
+	save_item(NAME(m_palette_bank));
+	save_item(NAME(m_column_scroll));
+	save_item(NAME(m_flipscreen_x));
+	save_item(NAME(m_flipscreen_y));
 }
 
 
@@ -214,7 +212,7 @@ SCREEN_UPDATE_IND16( marineb )
 
 		if (!state->m_flipscreen_y)
 		{
-			sy = 256 - screen.machine().gfx[gfx]->width - sy;
+			sy = 256 - screen.machine().gfx[gfx]->width() - sy;
 			flipy = !flipy;
 		}
 
@@ -257,7 +255,7 @@ SCREEN_UPDATE_IND16( changes )
 
 		if (!state->m_flipscreen_y)
 		{
-			sy = 256 - screen.machine().gfx[1]->width - sy;
+			sy = 256 - screen.machine().gfx[1]->width() - sy;
 			flipy = !flipy;
 		}
 
@@ -284,7 +282,7 @@ SCREEN_UPDATE_IND16( changes )
 
 	if (!state->m_flipscreen_y)
 	{
-		sy = 256 - screen.machine().gfx[2]->width - sy;
+		sy = 256 - screen.machine().gfx[2]->width() - sy;
 		flipy = !flipy;
 	}
 
@@ -353,7 +351,7 @@ SCREEN_UPDATE_IND16( springer )
 
 		if (!state->m_flipscreen_y)
 		{
-			sy = 256 - screen.machine().gfx[gfx]->width - sy;
+			sy = 256 - screen.machine().gfx[gfx]->width() - sy;
 			flipy = !flipy;
 		}
 
@@ -396,13 +394,13 @@ SCREEN_UPDATE_IND16( hoccer )
 
 		if (!state->m_flipscreen_y)
 		{
-			sy = 256 - screen.machine().gfx[1]->width - sy;
+			sy = 256 - screen.machine().gfx[1]->width() - sy;
 			flipy = !flipy;
 		}
 
 		if (state->m_flipscreen_x)
 		{
-			sx = 256 - screen.machine().gfx[1]->width - sx;
+			sx = 256 - screen.machine().gfx[1]->width() - sx;
 			flipx = !flipx;
 		}
 
@@ -456,7 +454,7 @@ SCREEN_UPDATE_IND16( hopprobo )
 
 		if (!state->m_flipscreen_y)
 		{
-			sy = 256 - screen.machine().gfx[gfx]->width - sy;
+			sy = 256 - screen.machine().gfx[gfx]->width() - sy;
 			flipy = !flipy;
 		}
 

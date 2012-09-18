@@ -284,7 +284,6 @@ An additional control PCB is used for Mocap Golf for the golf club sensor. It co
 #include "emu.h"
 #include "cpu/powerpc/ppc.h"
 #include "machine/pci.h"
-#include "memconv.h"
 #include "devconv.h"
 #include "machine/idectrl.h"
 #include "machine/timekpr.h"
@@ -351,6 +350,8 @@ public:
 	DECLARE_WRITE64_MEMBER(ata_w);
 	DECLARE_DRIVER_INIT(viper);
 	DECLARE_DRIVER_INIT(vipercf);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 UINT32 m_mpc8240_regs[256/4];
@@ -446,7 +447,7 @@ static void mpc8240_interrupt(running_machine &machine, int irq);
 #define I2C_STATE_DATA_TRANSFER		2
 
 
-typedef struct
+struct MPC8240_IRQ
 {
 	UINT32 vector;
 	int priority;
@@ -454,18 +455,18 @@ typedef struct
 	int active;
 	int pending;
 	int mask;
-} MPC8240_IRQ;
+};
 
-typedef struct
+struct MPC8240_GLOBAL_TIMER
 {
 	UINT32 base_count;
 	int enable;
 	emu_timer *timer;
-} MPC8240_GLOBAL_TIMER;
+};
 
 
 
-typedef struct
+struct MPC8240_EPIC
 {
 	UINT32 iack;
 	UINT32 eicr;
@@ -483,7 +484,7 @@ typedef struct
 
 	MPC8240_GLOBAL_TIMER global_timer[4];
 
-} MPC8240_EPIC;
+};
 
 // TODO: move to viper_state
 static MPC8240_EPIC epic;
@@ -666,11 +667,11 @@ static void epic_update_interrupts(running_machine &machine)
 			printf("vector = %02X\n", epic.iack);
 #endif
 
-		cputag_set_input_line(machine, "maincpu", INPUT_LINE_IRQ0, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 	}
 	else
 	{
-		cputag_set_input_line(machine, "maincpu", INPUT_LINE_IRQ0, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 	}
 }
 
@@ -684,11 +685,11 @@ READ32_MEMBER(viper_state::epic_r)
 		const char *regname = epic_get_register_name(reg);
 		if (regname)
 		{
-			printf("EPIC: read %08X (%s) at %08X\n", reg, regname, cpu_get_pc(&space.device()));
+			printf("EPIC: read %08X (%s) at %08X\n", reg, regname, space.device().safe_pc());
 		}
 		else
 		{
-			printf("EPIC: read %08X at %08X\n", reg, cpu_get_pc(&space.device()));
+			printf("EPIC: read %08X at %08X\n", reg, space.device().safe_pc());
 		}
 	}
 
@@ -869,11 +870,11 @@ WRITE32_MEMBER(viper_state::epic_w)
 		const char *regname = epic_get_register_name(reg);
 		if (regname)
 		{
-			printf("EPIC: write %08X, %08X (%s) at %08X\n", data, reg, regname, cpu_get_pc(&space.device()));
+			printf("EPIC: write %08X, %08X (%s) at %08X\n", data, reg, regname, space.device().safe_pc());
 		}
 		else
 		{
-			printf("EPIC: write %08X, %08X at %08X\n", data, reg, cpu_get_pc(&space.device()));
+			printf("EPIC: write %08X, %08X at %08X\n", data, reg, space.device().safe_pc());
 		}
 	}
 
@@ -971,7 +972,7 @@ WRITE32_MEMBER(viper_state::epic_w)
 				{
 					epic.eicr = data;
 					if (data & 0x08000000)
-						fatalerror("EPIC: serial interrupts mode not implemented");
+						fatalerror("EPIC: serial interrupts mode not implemented\n");
 					break;
 				}
 				case 0x10e0:			// Offset 0x410E0 - Spurious Vector Register
@@ -1449,7 +1450,7 @@ static UINT32 voodoo3_pci_r(device_t *busdevice, device_t *device, int function,
 		}
 
 		default:
-			fatalerror("voodoo3_pci_r: %08X at %08X", reg, cpu_get_pc(device->machine().device("maincpu")));
+			fatalerror("voodoo3_pci_r: %08X at %08X\n", reg, device->machine().device("maincpu")->safe_pc());
 	}
 	return 0;
 }
@@ -1519,7 +1520,7 @@ static void voodoo3_pci_w(device_t *busdevice, device_t *device, int function, i
 		}
 
 		default:
-			fatalerror("voodoo3_pci_w: %08X, %08X at %08X", data, reg, cpu_get_pc(device->machine().device("maincpu")));
+			fatalerror("voodoo3_pci_w: %08X, %08X at %08X\n", data, reg, device->machine().device("maincpu")->safe_pc());
 	}
 }
 
@@ -1530,7 +1531,7 @@ READ64_MEMBER(viper_state::voodoo3_io_r)
 }
 WRITE64_MEMBER(viper_state::voodoo3_io_w)
 {
-//  printf("voodoo3_io_w: %08X%08X, %08X at %08X\n", (UINT32)(data >> 32), (UINT32)(data), offset, cpu_get_pc(&space.device()));
+//  printf("voodoo3_io_w: %08X%08X, %08X at %08X\n", (UINT32)(data >> 32), (UINT32)(data), offset, space.device().safe_pc());
 
 	device_t *device = machine().device("voodoo");
 	write64be_with_32le_device_handler(banshee_io_w, device, offset, data, mem_mask);
@@ -1543,7 +1544,7 @@ READ64_MEMBER(viper_state::voodoo3_r)
 }
 WRITE64_MEMBER(viper_state::voodoo3_w)
 {
-//  printf("voodoo3_w: %08X%08X, %08X at %08X\n", (UINT32)(data >> 32), (UINT32)(data), offset, cpu_get_pc(&space.device()));
+//  printf("voodoo3_w: %08X%08X, %08X at %08X\n", (UINT32)(data >> 32), (UINT32)(data), offset, space.device().safe_pc());
 
 	device_t *device = machine().device("voodoo");
 	write64be_with_32le_device_handler(banshee_w, device,  offset, data, mem_mask);
@@ -1556,7 +1557,7 @@ READ64_MEMBER(viper_state::voodoo3_lfb_r)
 }
 WRITE64_MEMBER(viper_state::voodoo3_lfb_w)
 {
-//  printf("voodoo3_lfb_w: %08X%08X, %08X at %08X\n", (UINT32)(data >> 32), (UINT32)(data), offset, cpu_get_pc(&space.device()));
+//  printf("voodoo3_lfb_w: %08X%08X, %08X at %08X\n", (UINT32)(data >> 32), (UINT32)(data), offset, space.device().safe_pc());
 
 	device_t *device = machine().device("voodoo");
 	write64be_with_32le_device_handler(banshee_fb_w, device, offset, data, mem_mask);
@@ -1753,7 +1754,7 @@ READ64_MEMBER(viper_state::e70000_r)
 		ds2430_bit_timer->reset();
 		ds2430_bit_timer->start_time();
 
-//      printf("e70000_r: %08X (mask %08X%08X) at %08X\n", offset, (UINT32)(mem_mask >> 32), (UINT32)mem_mask, cpu_get_pc(cpu));
+//      printf("e70000_r: %08X (mask %08X%08X) at %08X\n", offset, (UINT32)(mem_mask >> 32), (UINT32)mem_mask, cpu->safe_pc());
 	}
 
 	return 0;
@@ -1768,7 +1769,7 @@ WRITE64_MEMBER(viper_state::e70000_w)
 			ds2430_timer->adjust(attotime::from_usec(40), 1);	// presence pulse for 240 microsecs
 
 			unk1_bit = 1;
-//          printf("e70000_w: %08X%08X, %08X (mask %08X%08X) at %08X\n", (UINT32)(data >> 32), (UINT32)data, offset, (UINT32)(mem_mask >> 32), (UINT32)mem_mask, cpu_get_pc(&space.device()));
+//          printf("e70000_w: %08X%08X, %08X (mask %08X%08X) at %08X\n", (UINT32)(data >> 32), (UINT32)data, offset, (UINT32)(mem_mask >> 32), (UINT32)mem_mask, space.device().safe_pc());
 		}
 		else
 		{
@@ -1793,7 +1794,7 @@ WRITE64_MEMBER(viper_state::unk1a_w)
 {
 	if (ACCESSING_BITS_56_63)
 	{
-	//  printf("unk1a_w: %08X%08X, %08X (mask %08X%08X) at %08X\n", (UINT32)(data >> 32), (UINT32)data, offset, (UINT32)(mem_mask >> 32), (UINT32)mem_mask, cpu_get_pc(cpu));
+	//  printf("unk1a_w: %08X%08X, %08X (mask %08X%08X) at %08X\n", (UINT32)(data >> 32), (UINT32)data, offset, (UINT32)(mem_mask >> 32), (UINT32)mem_mask, cpu->safe_pc());
 	}
 }
 
@@ -1802,7 +1803,7 @@ WRITE64_MEMBER(viper_state::unk1b_w)
 	if (ACCESSING_BITS_56_63)
 	{
 		unk1_bit = 0;
-	//  printf("unk1b_w: %08X%08X, %08X (mask %08X%08X) at %08X\n", (UINT32)(data >> 32), (UINT32)data, offset, (UINT32)(mem_mask >> 32), (UINT32)mem_mask, cpu_get_pc(cpu));
+	//  printf("unk1b_w: %08X%08X, %08X (mask %08X%08X) at %08X\n", (UINT32)(data >> 32), (UINT32)data, offset, (UINT32)(mem_mask >> 32), (UINT32)mem_mask, cpu->safe_pc());
 	}
 }
 
@@ -1929,7 +1930,7 @@ static INTERRUPT_GEN(viper_vblank)
 	//mpc8240_interrupt(device->machine, MPC8240_IRQ3);
 }
 
-static void voodoo_vblank(const device_t *device, int param)
+static void voodoo_vblank(device_t *device, int state)
 {
 	mpc8240_interrupt(device->machine(), MPC8240_IRQ4);
 }
@@ -1938,27 +1939,27 @@ static void ide_interrupt(device_t *device, int state)
 {
 }
 
-static MACHINE_START(viper)
+void viper_state::machine_start()
 {
-	ds2430_timer = machine.scheduler().timer_alloc(FUNC(ds2430_timer_callback));
-	ds2430_bit_timer = machine.device<timer_device>("ds2430_timer2");
-	mpc8240_epic_init(machine);
+	ds2430_timer = machine().scheduler().timer_alloc(FUNC(ds2430_timer_callback));
+	ds2430_bit_timer = machine().device<timer_device>("ds2430_timer2");
+	mpc8240_epic_init(machine());
 
 	/* set conservative DRC options */
-	ppcdrc_set_options(machine.device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
+	ppcdrc_set_options(machine().device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
 
 	/* configure fast RAM regions for DRC */
-	ppcdrc_add_fastram(machine.device("maincpu"), 0x00000000, 0x00ffffff, FALSE, workram);
+	ppcdrc_add_fastram(machine().device("maincpu"), 0x00000000, 0x00ffffff, FALSE, workram);
 
-	ds2430_rom = (UINT8*)machine.root_device().memregion("ds2430")->base();
+	ds2430_rom = (UINT8*)machine().root_device().memregion("ds2430")->base();
 }
 
-static MACHINE_RESET(viper)
+void viper_state::machine_reset()
 {
-	devtag_reset(machine, "ide");
+	machine().device("ide")->reset();
 	mpc8240_epic_reset();
 
-	UINT8 *ide_features = ide_get_features(machine.device("ide"), 0);
+	UINT8 *ide_features = ide_get_features(machine().device("ide"), 0);
 
 	// Viper expects these settings or the BIOS fails
 	ide_features[51*2+0] = 0;			/* 51: PIO data transfer cycle timing mode */
@@ -1966,6 +1967,24 @@ static MACHINE_RESET(viper)
 	ide_features[67*2+0] = 0xf0;		/* 67: minimum PIO transfer cycle time without flow control */
 	ide_features[67*2+1] = 0x00;
 }
+
+static const ide_config ide_intf =
+{
+	ide_interrupt,
+	NULL,
+	0
+};
+
+static const voodoo_config voodoo_intf =
+{
+	8, //               fbmem;
+	0,//                tmumem0;
+	0,//                tmumem1;
+	"screen",//         screen;
+	"maincpu",//        cputag;
+	voodoo_vblank,//    vblank;
+	NULL,//             stall;
+};
 
 static MACHINE_CONFIG_START( viper, viper_state )
 
@@ -1975,17 +1994,13 @@ static MACHINE_CONFIG_START( viper, viper_state )
 	MCFG_CPU_PROGRAM_MAP(viper_map)
 	MCFG_CPU_VBLANK_INT("screen", viper_vblank)
 
-	MCFG_MACHINE_START(viper)
-	MCFG_MACHINE_RESET(viper)
 
 	MCFG_PCI_BUS_LEGACY_ADD("pcibus", 0)
 	MCFG_PCI_BUS_LEGACY_DEVICE(0, "mpc8240", mpc8240_pci_r, mpc8240_pci_w)
 	MCFG_PCI_BUS_LEGACY_DEVICE(12, "voodoo", voodoo3_pci_r, voodoo3_pci_w)
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_interrupt, ide_devices, "hdd", NULL, true)
-	MCFG_3DFX_VOODOO_3_ADD("voodoo", STD_VOODOO_3_CLOCK, 8, "screen")
-	MCFG_3DFX_VOODOO_CPU("maincpu")
-	MCFG_3DFX_VOODOO_VBLANK(voodoo_vblank)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
+	MCFG_3DFX_VOODOO_3_ADD("voodoo", STD_VOODOO_3_CLOCK, voodoo_intf)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

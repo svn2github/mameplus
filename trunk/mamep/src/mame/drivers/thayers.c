@@ -80,6 +80,8 @@ public:
 	DECLARE_READ8_MEMBER(ssi263_register_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(laserdisc_enter_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(laserdisc_ready_r);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 
@@ -96,24 +98,24 @@ static void check_interrupt(running_machine &machine)
 	thayers_state *state = machine.driver_data<thayers_state>();
 	if (!state->m_timer_int || !state->m_data_rdy_int || !state->m_ssi_data_request)
 	{
-		cputag_set_input_line(machine, "maincpu", INPUT_LINE_IRQ0, HOLD_LINE);
+		machine.device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);
 	}
 	else
 	{
-		cputag_set_input_line(machine, "maincpu", INPUT_LINE_IRQ0, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 	}
 }
 
 static TIMER_CALLBACK( intrq_tick )
 {
-	cputag_set_input_line(machine, "maincpu", INPUT_LINE_IRQ0, CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(thayers_state::intrq_w)
 {
 	// T = 1.1 * R30 * C53 = 1.1 * 750K * 0.01uF = 8.25 ms
 
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ0, HOLD_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, HOLD_LINE);
 
 	machine().scheduler().timer_set(attotime::from_usec(8250), FUNC(intrq_tick));
 }
@@ -353,7 +355,7 @@ WRITE8_MEMBER(thayers_state::control2_w)
 
 	if ((!BIT(data, 2)) & m_cart_present)
 	{
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, HOLD_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, HOLD_LINE);
 	}
 }
 
@@ -737,35 +739,33 @@ INPUT_PORTS_END
 
 /* Machine Initialization */
 
-static MACHINE_START( thayers )
+void thayers_state::machine_start()
 {
-	thayers_state *state = machine.driver_data<thayers_state>();
-	memset(&state->m_ssi263, 0, sizeof(state->m_ssi263));
+	memset(&m_ssi263, 0, sizeof(m_ssi263));
 }
 
-static MACHINE_RESET( thayers )
+void thayers_state::machine_reset()
 {
-	thayers_state *state = machine.driver_data<thayers_state>();
 
-	state->m_laserdisc_data = 0;
+	m_laserdisc_data = 0;
 
-	state->m_rx_bit = 0;
-	state->m_keylatch = 0;
+	m_rx_bit = 0;
+	m_keylatch = 0;
 
-	state->m_cop_data_latch = 0;
-	state->m_cop_data_latch_enable = 0;
-	state->m_cop_l = 0;
-	state->m_cop_cmd_latch = 0;
+	m_cop_data_latch = 0;
+	m_cop_data_latch_enable = 0;
+	m_cop_l = 0;
+	m_cop_cmd_latch = 0;
 
-	state->m_timer_int = 1;
-	state->m_data_rdy_int = 1;
-	state->m_ssi_data_request = 1;
+	m_timer_int = 1;
+	m_data_rdy_int = 1;
+	m_ssi_data_request = 1;
 
-	state->m_cart_present = 0;
-	state->m_pr7820_enter = 0;
+	m_cart_present = 0;
+	m_pr7820_enter = 0;
 
-//  newtype = (state->ioport("DSWB")->read() & 0x18) ? LASERDISC_TYPE_PIONEER_LDV1000 : LASERDISC_TYPE_PIONEER_PR7820;
-//  laserdisc_set_type(state->m_laserdisc, newtype);
+//  newtype = (ioport("DSWB")->read() & 0x18) ? LASERDISC_TYPE_PIONEER_LDV1000 : LASERDISC_TYPE_PIONEER_PR7820;
+//  laserdisc_set_type(m_laserdisc, newtype);
 }
 
 /* COP400 Interface */
@@ -789,8 +789,6 @@ static MACHINE_CONFIG_START( thayers, thayers_state )
 	MCFG_CPU_IO_MAP(thayers_cop_io_map)
 	MCFG_CPU_CONFIG(thayers_cop_intf)
 
-	MCFG_MACHINE_START(thayers)
-	MCFG_MACHINE_RESET(thayers)
 
 	MCFG_LASERDISC_PR7820_ADD("laserdisc")
 

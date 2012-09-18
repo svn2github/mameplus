@@ -1538,13 +1538,13 @@ static TIMER_DEVICE_CALLBACK( bigrun_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "cpu1", 4, HOLD_LINE);
+		timer.machine().device("cpu1")->execute().set_input_line(4, HOLD_LINE);
 
 	if(scanline == 154)
-		cputag_set_input_line(timer.machine(), "cpu1", 2, HOLD_LINE);
+		timer.machine().device("cpu1")->execute().set_input_line(2, HOLD_LINE);
 
 	if(scanline == 69)
-		cputag_set_input_line(timer.machine(), "cpu1", 1, HOLD_LINE);
+		timer.machine().device("cpu1")->execute().set_input_line(1, HOLD_LINE);
 }
 
 
@@ -1589,7 +1589,7 @@ static MACHINE_CONFIG_START( bigrun, cischeat_state )
 	MCFG_GFXDECODE(bigrun)
 	MCFG_PALETTE_LENGTH(16*16 * 3 + 64*16 * 2 + 64*16)	/* scroll 0,1,2; road 0,1; sprites */
 
-	MCFG_VIDEO_START(bigrun)
+	MCFG_VIDEO_START_OVERRIDE(cischeat_state,bigrun)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1631,7 +1631,7 @@ static MACHINE_CONFIG_DERIVED( cischeat, bigrun )
 	MCFG_GFXDECODE(cischeat)
 	MCFG_PALETTE_LENGTH(32*16 * 3 + 64*16 * 2 + 128*16)	/* scroll 0,1,2; road 0,1; sprites */
 
-	MCFG_VIDEO_START(cischeat)
+	MCFG_VIDEO_START_OVERRIDE(cischeat_state,cischeat)
 MACHINE_CONFIG_END
 
 
@@ -1657,7 +1657,7 @@ static MACHINE_CONFIG_DERIVED( f1gpstar, bigrun )
 	MCFG_GFXDECODE(f1gpstar)
 	MCFG_PALETTE_LENGTH(16*16 * 3 + 64*16 * 2 + 128*16)	/* scroll 0,1,2; road 0,1; sprites */
 
-	MCFG_VIDEO_START(f1gpstar)
+	MCFG_VIDEO_START_OVERRIDE(cischeat_state,f1gpstar)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(f1gpstar)
 MACHINE_CONFIG_END
@@ -1696,10 +1696,10 @@ static TIMER_DEVICE_CALLBACK( scudhamm_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "maincpu", 3, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 
 	if(scanline == 120) // timer irq (clears a flag, presumably sprite DMA end)
-		cputag_set_input_line(timer.machine(), "maincpu", 2, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( scudhamm, cischeat_state )
@@ -1722,7 +1722,7 @@ static MACHINE_CONFIG_START( scudhamm, cischeat_state )
 	MCFG_GFXDECODE(scudhamm)
 	MCFG_PALETTE_LENGTH(16*16+16*16+128*16)
 
-	MCFG_VIDEO_START(f1gpstar)
+	MCFG_VIDEO_START_OVERRIDE(cischeat_state,f1gpstar)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1746,10 +1746,10 @@ static TIMER_DEVICE_CALLBACK( armchamp2_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "maincpu", 2, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 
 	if(scanline == 120) // timer irq (TODO: timing)
-		cputag_set_input_line(timer.machine(), "maincpu", 4, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_DERIVED( armchmp2, scudhamm )

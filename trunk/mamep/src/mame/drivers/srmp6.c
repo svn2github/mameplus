@@ -104,6 +104,7 @@ public:
 	DECLARE_WRITE16_MEMBER(paletteram_w);
 	DECLARE_READ16_MEMBER(srmp6_irq_ack_r);
 	DECLARE_DRIVER_INIT(INIT);
+	virtual void video_start();
 };
 
 #define VERBOSE 0
@@ -153,19 +154,18 @@ static void update_palette(running_machine &machine)
 	}
 }
 
-static VIDEO_START(srmp6)
+void srmp6_state::video_start()
 {
-	srmp6_state *state = machine.driver_data<srmp6_state>();
 
-	state->m_tileram = auto_alloc_array_clear(machine, UINT16, 0x100000*16/2);
-	state->m_dmaram.allocate(0x100/2);
-	state->m_sprram_old = auto_alloc_array_clear(machine, UINT16, 0x80000/2);
+	m_tileram = auto_alloc_array_clear(machine(), UINT16, 0x100000*16/2);
+	m_dmaram.allocate(0x100/2);
+	m_sprram_old = auto_alloc_array_clear(machine(), UINT16, 0x80000/2);
 
 	/* create the char set (gfx will then be updated dynamically from RAM) */
-	machine.gfx[0] = gfx_element_alloc(machine, &tiles8x8_layout, (UINT8*)state->m_tileram, machine.total_colors() / 256, 0);
-	machine.gfx[0]->color_granularity=256;
+	machine().gfx[0] = auto_alloc(machine(), gfx_element(machine(), tiles8x8_layout, (UINT8*)m_tileram, machine().total_colors() / 256, 0));
+	machine().gfx[0]->set_granularity(256);
 
-	state->m_brightness = 0x60;
+	m_brightness = 0x60;
 }
 
 #if 0
@@ -361,7 +361,7 @@ WRITE16_MEMBER(srmp6_state::video_regs_w)
 		case 0x56/2: // written 8,9,8,9 successively
 
 		default:
-			logerror("video_regs_w (PC=%06X): %04x = %04x & %04x\n", cpu_get_previouspc(&space.device()), offset*2, data, mem_mask);
+			logerror("video_regs_w (PC=%06X): %04x = %04x & %04x\n", space.device().safe_pcbase(), offset*2, data, mem_mask);
 			break;
 	}
 	COMBINE_DATA(&m_video_regs[offset]);
@@ -370,7 +370,7 @@ WRITE16_MEMBER(srmp6_state::video_regs_w)
 READ16_MEMBER(srmp6_state::video_regs_r)
 {
 
-	logerror("video_regs_r (PC=%06X): %04x\n", cpu_get_previouspc(&space.device()), offset*2);
+	logerror("video_regs_r (PC=%06X): %04x\n", space.device().safe_pcbase(), offset*2);
 	return m_video_regs[offset];
 }
 
@@ -391,7 +391,7 @@ static UINT32 process(running_machine &machine,UINT8 b,UINT32 dst_offset)
 		for(i=0;i<rle;++i)
 		{
 			tram[dst_offset + state->m_destl] = state->m_lastb;
-			gfx_element_mark_dirty(machine.gfx[0], (dst_offset + state->m_destl)/0x40);
+			machine.gfx[0]->mark_dirty((dst_offset + state->m_destl)/0x40);
 
 			dst_offset++;
 			++l;
@@ -405,7 +405,7 @@ static UINT32 process(running_machine &machine,UINT8 b,UINT32 dst_offset)
 		state->m_lastb2 = state->m_lastb;
 		state->m_lastb = b;
 		tram[dst_offset + state->m_destl] = b;
-		gfx_element_mark_dirty(machine.gfx[0], (dst_offset + state->m_destl)/0x40);
+		machine.gfx[0]->mark_dirty((dst_offset + state->m_destl)/0x40);
 
 		return 1;
 	}
@@ -541,7 +541,7 @@ WRITE16_MEMBER(srmp6_state::paletteram_w)
 
 READ16_MEMBER(srmp6_state::srmp6_irq_ack_r)
 {
-	cputag_set_input_line(machine(), "maincpu", 4, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(4, CLEAR_LINE);
 	return 0; // value read doesn't matter
 }
 
@@ -685,7 +685,6 @@ static MACHINE_CONFIG_START( srmp6, srmp6_state )
 
 	MCFG_PALETTE_LENGTH(0x800)
 
-	MCFG_VIDEO_START(srmp6)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

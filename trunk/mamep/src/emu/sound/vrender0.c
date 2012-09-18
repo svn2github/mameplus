@@ -12,8 +12,7 @@ reverb
 interrupts
 *************/
 
-typedef struct _vr0_state vr0_state;
-struct _vr0_state
+struct vr0_state
 {
 	UINT32 *TexBase;
 	UINT32 *FBBase;
@@ -26,7 +25,7 @@ INLINE vr0_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == VRENDER0);
-	return (vr0_state *)downcast<legacy_device_base *>(device)->token();
+	return (vr0_state *)downcast<vrender0_device *>(device)->token();
 }
 
 static void VR0_RenderAudio(vr0_state *VR0, int nsamples,stream_sample_t *l,stream_sample_t *r);
@@ -239,32 +238,42 @@ static void VR0_RenderAudio(vr0_state *VR0, int nsamples,stream_sample_t *l,stre
 }
 
 
+const device_type VRENDER0 = &device_creator<vrender0_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( vrender0 )
+vrender0_device::vrender0_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, VRENDER0, "VRender0", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(vr0_state);				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(vr0_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( vrender0 );		break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							/* Nothing */									break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "VRender0");					break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "???");							break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void vrender0_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void vrender0_device::device_start()
+{
+	DEVICE_START_NAME( vrender0 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void vrender0_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(VRENDER0, vrender0);

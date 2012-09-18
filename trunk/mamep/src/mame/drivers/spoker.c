@@ -54,6 +54,10 @@ public:
 	DECLARE_CUSTOM_INPUT_MEMBER(hopper_r);
 	DECLARE_DRIVER_INIT(spk116it);
 	DECLARE_DRIVER_INIT(3super8);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 WRITE8_MEMBER(spoker_state::bg_tile_w)
@@ -63,18 +67,16 @@ WRITE8_MEMBER(spoker_state::bg_tile_w)
 	m_bg_tilemap->mark_tile_dirty(offset);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(spoker_state::get_bg_tile_info)
 {
-	spoker_state *state = machine.driver_data<spoker_state>();
-	int code = state->m_bg_tile_ram[tile_index];
-	SET_TILE_INFO(1 + (tile_index & 3), code & 0xff, 0, 0);
+	int code = m_bg_tile_ram[tile_index];
+	SET_TILE_INFO_MEMBER(1 + (tile_index & 3), code & 0xff, 0, 0);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(spoker_state::get_fg_tile_info)
 {
-	spoker_state *state = machine.driver_data<spoker_state>();
-	int code = state->m_fg_tile_ram[tile_index] | (state->m_fg_color_ram[tile_index] << 8);
-	SET_TILE_INFO(0, code, (4*(code >> 14)+3), 0);
+	int code = m_fg_tile_ram[tile_index] | (m_fg_color_ram[tile_index] << 8);
+	SET_TILE_INFO_MEMBER(0, code, (4*(code >> 14)+3), 0);
 }
 
 WRITE8_MEMBER(spoker_state::fg_tile_w)
@@ -91,13 +93,12 @@ WRITE8_MEMBER(spoker_state::fg_color_w)
 	m_fg_tilemap->mark_tile_dirty(offset);
 }
 
-static VIDEO_START(spoker)
+void spoker_state::video_start()
 {
-	spoker_state *state = machine.driver_data<spoker_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows,	8,  32,	128, 8);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows,	8,  8,	128, 32);
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(spoker_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,	8,  32,	128, 8);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(spoker_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS,	8,  8,	128, 32);
+	m_fg_tilemap->set_transparent_pen(0);
 }
 
 static SCREEN_UPDATE_IND16(spoker)
@@ -132,7 +133,7 @@ WRITE8_MEMBER(spoker_state::spoker_nmi_and_coins_w)
 
 	if ((data) & (0x22))
 	{
-		logerror("PC %06X: nmi_and_coins = %02x\n",cpu_get_pc(&space.device()),data);
+		logerror("PC %06X: nmi_and_coins = %02x\n",space.device().safe_pc(),data);
 //      popmessage("%02x",data);
 	}
 
@@ -144,7 +145,7 @@ WRITE8_MEMBER(spoker_state::spoker_nmi_and_coins_w)
 	set_led_status(machine(), 6,		data & 0x40);	// led for coin out / hopper active
 
 	if(((m_nmi_ack & 0x80) == 0) && data & 0x80)
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 
 	m_nmi_ack = data & 0x80;     // nmi acknowledge, 0 -> 1
 
@@ -193,7 +194,7 @@ WRITE8_MEMBER(spoker_state::spoker_magic_w)
 
 		default:
 //          popmessage("magic %x <- %04x",igs_magic[0],data);
-			logerror("%06x: warning, writing to igs_magic %02x = %02x\n", cpu_get_pc(&space.device()), m_igs_magic[0], data);
+			logerror("%06x: warning, writing to igs_magic %02x = %02x\n", space.device().safe_pc(), m_igs_magic[0], data);
 	}
 }
 
@@ -208,11 +209,11 @@ READ8_MEMBER(spoker_state::spoker_magic_r)
 			if ( !(m_igs_magic[1] & 0x04) )	return ioport("DSW3")->read();
 			if ( !(m_igs_magic[1] & 0x08) )	return ioport("DSW4")->read();
 			if ( !(m_igs_magic[1] & 0x10) )	return ioport("DSW5")->read();
-			logerror("%06x: warning, reading dsw with igs_magic[1] = %02x\n", cpu_get_pc(&space.device()), m_igs_magic[1]);
+			logerror("%06x: warning, reading dsw with igs_magic[1] = %02x\n", space.device().safe_pc(), m_igs_magic[1]);
 			break;
 
 		default:
-			logerror("%06x: warning, reading with igs_magic = %02x\n", cpu_get_pc(&space.device()), m_igs_magic[0]);
+			logerror("%06x: warning, reading with igs_magic = %02x\n", space.device().safe_pc(), m_igs_magic[0]);
 	}
 
 	return 0;
@@ -510,20 +511,19 @@ GFXDECODE_END
                                 Machine Drivers
 ***************************************************************************/
 
-static MACHINE_RESET( spoker )
+void spoker_state::machine_reset()
 {
-	spoker_state *state = machine.driver_data<spoker_state>();
 
-	state->m_nmi_ack		=	0;
-	state->m_hopper			=	0;
-	state->m_video_enable	=	1;
+	m_nmi_ack		=	0;
+	m_hopper			=	0;
+	m_video_enable	=	1;
 }
 
 static INTERRUPT_GEN( spoker_interrupt )
 {
 //  spoker_state *state = device->machine().driver_data<spoker_state>();
 
-	device_set_input_line(device, INPUT_LINE_NMI, ASSERT_LINE);
+	device->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( spoker, spoker_state )
@@ -534,7 +534,6 @@ static MACHINE_CONFIG_START( spoker, spoker_state )
 	MCFG_CPU_IO_MAP(spoker_portmap)
 	MCFG_CPU_VBLANK_INT("screen",spoker_interrupt)
 
-	MCFG_MACHINE_RESET(spoker)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
@@ -549,7 +548,6 @@ static MACHINE_CONFIG_START( spoker, spoker_state )
 	MCFG_GFXDECODE(spoker)
 	MCFG_PALETTE_LENGTH(0x400)
 
-	MCFG_VIDEO_START(spoker)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

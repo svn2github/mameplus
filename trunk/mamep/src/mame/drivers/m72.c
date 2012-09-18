@@ -102,23 +102,21 @@ static TIMER_CALLBACK( kengo_scanline_interrupt );
 
 /***************************************************************************/
 
-static MACHINE_START( m72 )
+MACHINE_START_MEMBER(m72_state,m72)
 {
-	m72_state *state = machine.driver_data<m72_state>();
-	state->m_audio = machine.device("m72");
-	state->m_scanline_timer = machine.scheduler().timer_alloc(FUNC(m72_scanline_interrupt));
+	m_audio = machine().device("m72");
+	m_scanline_timer = machine().scheduler().timer_alloc(FUNC(m72_scanline_interrupt));
 
-	state->save_item(NAME(state->m_mcu_sample_addr));
-	state->save_item(NAME(state->m_mcu_snd_cmd_latch));
+	save_item(NAME(m_mcu_sample_addr));
+	save_item(NAME(m_mcu_snd_cmd_latch));
 }
 
-static MACHINE_START( kengo )
+MACHINE_START_MEMBER(m72_state,kengo)
 {
-	m72_state *state = machine.driver_data<m72_state>();
-	state->m_scanline_timer = machine.scheduler().timer_alloc(FUNC(kengo_scanline_interrupt));
+	m_scanline_timer = machine().scheduler().timer_alloc(FUNC(kengo_scanline_interrupt));
 
-	state->save_item(NAME(state->m_mcu_sample_addr));
-	state->save_item(NAME(state->m_mcu_snd_cmd_latch));
+	save_item(NAME(m_mcu_sample_addr));
+	save_item(NAME(m_mcu_snd_cmd_latch));
 }
 
 static TIMER_CALLBACK( synch_callback )
@@ -127,28 +125,25 @@ static TIMER_CALLBACK( synch_callback )
 	machine.scheduler().boost_interleave(attotime::from_hz(MASTER_CLOCK/4/12), attotime::from_seconds(25));
 }
 
-static MACHINE_RESET( m72 )
+MACHINE_RESET_MEMBER(m72_state,m72)
 {
-	m72_state *state = machine.driver_data<m72_state>();
-	state->m_irq_base = 0x20;
-	state->m_mcu_sample_addr = 0;
-	state->m_mcu_snd_cmd_latch = 0;
+	m_irq_base = 0x20;
+	m_mcu_sample_addr = 0;
+	m_mcu_snd_cmd_latch = 0;
 
-	state->m_scanline_timer->adjust(machine.primary_screen->time_until_pos(0));
-	machine.scheduler().synchronize(FUNC(synch_callback));
+	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(0));
+	machine().scheduler().synchronize(FUNC(synch_callback));
 }
 
-static MACHINE_RESET( xmultipl )
+MACHINE_RESET_MEMBER(m72_state,xmultipl)
 {
-	m72_state *state = machine.driver_data<m72_state>();
-	state->m_irq_base = 0x08;
-	state->m_scanline_timer->adjust(machine.primary_screen->time_until_pos(0));
+	m_irq_base = 0x08;
+	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(0));
 }
 
-static MACHINE_RESET( kengo )
+MACHINE_RESET_MEMBER(m72_state,kengo)
 {
-	m72_state *state = machine.driver_data<m72_state>();
-	state->m_scanline_timer->adjust(machine.primary_screen->time_until_pos(0));
+	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(0));
 }
 
 static TIMER_CALLBACK( m72_scanline_interrupt )
@@ -160,14 +155,14 @@ static TIMER_CALLBACK( m72_scanline_interrupt )
 	if (scanline < 256 && scanline == state->m_raster_irq_position - 128)
 	{
 		machine.primary_screen->update_partial(scanline);
-		cputag_set_input_line_and_vector(machine, "maincpu", 0, HOLD_LINE, state->m_irq_base + 2);
+		machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, state->m_irq_base + 2);
 	}
 
 	/* VBLANK interrupt */
 	else if (scanline == 256)
 	{
 		machine.primary_screen->update_partial(scanline);
-		cputag_set_input_line_and_vector(machine, "maincpu", 0, HOLD_LINE, state->m_irq_base + 0);
+		machine.device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, state->m_irq_base + 0);
 	}
 
 	/* adjust for next scanline */
@@ -185,19 +180,19 @@ static TIMER_CALLBACK( kengo_scanline_interrupt )
 	if (scanline < 256 && scanline == state->m_raster_irq_position - 128)
 	{
 		machine.primary_screen->update_partial(scanline);
-		cputag_set_input_line(machine, "maincpu", NEC_INPUT_LINE_INTP2, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(NEC_INPUT_LINE_INTP2, ASSERT_LINE);
 	}
 	else
-		cputag_set_input_line(machine, "maincpu", NEC_INPUT_LINE_INTP2, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(NEC_INPUT_LINE_INTP2, CLEAR_LINE);
 
 	/* VBLANK interrupt */
 	if (scanline == 256)
 	{
 		machine.primary_screen->update_partial(scanline);
-		cputag_set_input_line(machine, "maincpu", NEC_INPUT_LINE_INTP0, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(NEC_INPUT_LINE_INTP0, ASSERT_LINE);
 	}
 	else
-		cputag_set_input_line(machine, "maincpu", NEC_INPUT_LINE_INTP0, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(NEC_INPUT_LINE_INTP0, CLEAR_LINE);
 
 	/* adjust for next scanline */
 	if (++scanline >= machine.primary_screen->height())
@@ -238,7 +233,7 @@ WRITE16_MEMBER(m72_state::m72_main_mcu_sound_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		m_mcu_snd_cmd_latch = data;
-		cputag_set_input_line(machine(), "mcu", 1, ASSERT_LINE);
+		machine().device("mcu")->execute().set_input_line(1, ASSERT_LINE);
 	}
 }
 
@@ -255,7 +250,7 @@ WRITE16_MEMBER(m72_state::m72_main_mcu_w)
 	if (offset == 0x0fff/2 && ACCESSING_BITS_8_15)
 	{
 		m_protection_ram[offset] = val;
-		cputag_set_input_line(machine(), "mcu", 0, ASSERT_LINE);
+		machine().device("mcu")->execute().set_input_line(0, ASSERT_LINE);
 		/* Line driven, most likely by write line */
 		//machine().scheduler().timer_set(machine().device<cpu_device>("mcu")->cycles_to_attotime(2), FUNC(mcu_irq0_clear));
 		//machine().scheduler().timer_set(machine().device<cpu_device>("mcu")->cycles_to_attotime(0), FUNC(mcu_irq0_raise));
@@ -279,7 +274,7 @@ READ8_MEMBER(m72_state::m72_mcu_data_r)
 
 	if (offset == 0x0fff || offset == 0x0ffe)
 	{
-		cputag_set_input_line(machine(), "mcu", 0, CLEAR_LINE);
+		machine().device("mcu")->execute().set_input_line(0, CLEAR_LINE);
 	}
 
 	if (offset&1) ret = (m_protection_ram[offset/2] & 0xff00)>>8;
@@ -293,7 +288,7 @@ static INTERRUPT_GEN( m72_mcu_int )
 	m72_state *state = device->machine().driver_data<m72_state>();
 	//state->m_mcu_snd_cmd_latch |= 0x11; /* 0x10 is special as well - FIXME */
 	state->m_mcu_snd_cmd_latch = 0x11;// | (machine.rand() & 1); /* 0x10 is special as well - FIXME */
-	device_set_input_line(device, 1, ASSERT_LINE);
+	device->execute().set_input_line(1, ASSERT_LINE);
 }
 
 READ8_MEMBER(m72_state::m72_mcu_sample_r)
@@ -305,7 +300,7 @@ READ8_MEMBER(m72_state::m72_mcu_sample_r)
 
 WRITE8_MEMBER(m72_state::m72_mcu_ack_w)
 {
-	cputag_set_input_line(machine(), "mcu", 1, CLEAR_LINE);
+	machine().device("mcu")->execute().set_input_line(1, CLEAR_LINE);
 	m_mcu_snd_cmd_latch = 0;
 }
 
@@ -325,7 +320,7 @@ WRITE8_MEMBER(m72_state::m72_mcu_port_w)
 	if (offset == 1)
 	{
 		m_mcu_sample_latch = data;
-		cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 	else
 		logerror("port: %02x %02x\n", offset, data);
@@ -1817,8 +1812,8 @@ static MACHINE_CONFIG_START( m72_base, m72_state )
 	MCFG_CPU_PROGRAM_MAP(sound_ram_map)
 	MCFG_CPU_IO_MAP(sound_portmap)
 
-	MCFG_MACHINE_START(m72)
-	MCFG_MACHINE_RESET(m72)
+	MCFG_MACHINE_START_OVERRIDE(m72_state,m72)
+	MCFG_MACHINE_RESET_OVERRIDE(m72_state,m72)
 
 	/* video hardware */
 	MCFG_GFXDECODE(m72)
@@ -1828,7 +1823,7 @@ static MACHINE_CONFIG_START( m72_base, m72_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 512, 64, 448, 284, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(m72)
 
-	MCFG_VIDEO_START(m72)
+	MCFG_VIDEO_START_OVERRIDE(m72_state,m72)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1872,8 +1867,8 @@ static MACHINE_CONFIG_START( rtype, m72_state )
 	MCFG_CPU_IO_MAP(rtype_sound_portmap)
 								/* IRQs are generated by main Z80 and YM2151 */
 
-	MCFG_MACHINE_START(m72)
-	MCFG_MACHINE_RESET(m72)
+	MCFG_MACHINE_START_OVERRIDE(m72_state,m72)
+	MCFG_MACHINE_RESET_OVERRIDE(m72_state,m72)
 
 	/* video hardware */
 	MCFG_GFXDECODE(m72)
@@ -1883,7 +1878,7 @@ static MACHINE_CONFIG_START( rtype, m72_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 512, 64, 448, 284, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(m72)
 
-	MCFG_VIDEO_START(m72)
+	MCFG_VIDEO_START_OVERRIDE(m72_state,m72)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1909,8 +1904,8 @@ static MACHINE_CONFIG_START( xmultipl, m72_state )
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,128*55)	/* clocked by V1? (Vigilante) */
 								/* IRQs are generated by main Z80 and YM2151 */
 
-	MCFG_MACHINE_START(m72)
-	MCFG_MACHINE_RESET(xmultipl)
+	MCFG_MACHINE_START_OVERRIDE(m72_state,m72)
+	MCFG_MACHINE_RESET_OVERRIDE(m72_state,xmultipl)
 
 	/* video hardware */
 	MCFG_GFXDECODE(m72)
@@ -1920,7 +1915,7 @@ static MACHINE_CONFIG_START( xmultipl, m72_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 512, 64, 448, 284, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(m72)
 
-	MCFG_VIDEO_START(xmultipl)
+	MCFG_VIDEO_START_OVERRIDE(m72_state,xmultipl)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1950,8 +1945,8 @@ static MACHINE_CONFIG_START( xmultiplm72, m72_state )
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,128*55)	/* clocked by V1? (Vigilante) */
 								/* IRQs are generated by main Z80 and YM2151 */
 
-	MCFG_MACHINE_START(m72)
-	MCFG_MACHINE_RESET(xmultipl)
+	MCFG_MACHINE_START_OVERRIDE(m72_state,m72)
+	MCFG_MACHINE_RESET_OVERRIDE(m72_state,xmultipl)
 
 	/* video hardware */
 	MCFG_GFXDECODE(m72)
@@ -1961,7 +1956,7 @@ static MACHINE_CONFIG_START( xmultiplm72, m72_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 512, 64, 448, 284, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(m72)
 
-	MCFG_VIDEO_START(m72)
+	MCFG_VIDEO_START_OVERRIDE(m72_state,m72)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1991,8 +1986,8 @@ static MACHINE_CONFIG_START( dbreed, m72_state )
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,128*55)	/* clocked by V1? (Vigilante) */
 								/* IRQs are generated by main Z80 and YM2151 */
 
-	MCFG_MACHINE_START(m72)
-	MCFG_MACHINE_RESET(xmultipl)
+	MCFG_MACHINE_START_OVERRIDE(m72_state,m72)
+	MCFG_MACHINE_RESET_OVERRIDE(m72_state,xmultipl)
 
 	/* video hardware */
 	MCFG_GFXDECODE(rtype2)
@@ -2002,7 +1997,7 @@ static MACHINE_CONFIG_START( dbreed, m72_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 512, 64, 448, 284, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(m72)
 
-	MCFG_VIDEO_START(hharry)
+	MCFG_VIDEO_START_OVERRIDE(m72_state,hharry)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2032,8 +2027,8 @@ static MACHINE_CONFIG_START( dbreedm72, m72_state )
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,128*55)	/* clocked by V1? (Vigilante) */
 								/* IRQs are generated by main Z80 and YM2151 */
 
-	MCFG_MACHINE_START(m72)
-	MCFG_MACHINE_RESET(xmultipl)
+	MCFG_MACHINE_START_OVERRIDE(m72_state,m72)
+	MCFG_MACHINE_RESET_OVERRIDE(m72_state,xmultipl)
 
 	/* video hardware */
 	MCFG_GFXDECODE(m72)
@@ -2043,7 +2038,7 @@ static MACHINE_CONFIG_START( dbreedm72, m72_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 512, 64, 448, 284, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(m72)
 
-	MCFG_VIDEO_START(m72)
+	MCFG_VIDEO_START_OVERRIDE(m72_state,m72)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2073,8 +2068,8 @@ static MACHINE_CONFIG_START( rtype2, m72_state )
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,128*55)	/* clocked by V1? (Vigilante) */
 								/* IRQs are generated by main Z80 and YM2151 */
 
-	MCFG_MACHINE_START(m72)
-	MCFG_MACHINE_RESET(m72)
+	MCFG_MACHINE_START_OVERRIDE(m72_state,m72)
+	MCFG_MACHINE_RESET_OVERRIDE(m72_state,m72)
 
 	/* video hardware */
 	MCFG_GFXDECODE(rtype2)
@@ -2084,7 +2079,7 @@ static MACHINE_CONFIG_START( rtype2, m72_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 512, 64, 448, 284, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(m72)
 
-	MCFG_VIDEO_START(rtype2)
+	MCFG_VIDEO_START_OVERRIDE(m72_state,rtype2)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2114,8 +2109,8 @@ static MACHINE_CONFIG_START( majtitle, m72_state )
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,128*55)	/* clocked by V1? (Vigilante) */
 								/* IRQs are generated by main Z80 and YM2151 */
 
-	MCFG_MACHINE_START(m72)
-	MCFG_MACHINE_RESET(m72)
+	MCFG_MACHINE_START_OVERRIDE(m72_state,m72)
+	MCFG_MACHINE_RESET_OVERRIDE(m72_state,m72)
 
 	/* video hardware */
 	MCFG_GFXDECODE(majtitle)
@@ -2125,7 +2120,7 @@ static MACHINE_CONFIG_START( majtitle, m72_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 512, 64, 448, 284, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(majtitle)
 
-	MCFG_VIDEO_START(majtitle)
+	MCFG_VIDEO_START_OVERRIDE(m72_state,majtitle)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2155,8 +2150,8 @@ static MACHINE_CONFIG_START( hharry, m72_state )
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,128*55)	/* clocked by V1? (Vigilante) */
 								/* IRQs are generated by main Z80 and YM2151 */
 
-	MCFG_MACHINE_START(m72)
-	MCFG_MACHINE_RESET(xmultipl)
+	MCFG_MACHINE_START_OVERRIDE(m72_state,m72)
+	MCFG_MACHINE_RESET_OVERRIDE(m72_state,xmultipl)
 
 	/* video hardware */
 	MCFG_GFXDECODE(rtype2)
@@ -2166,7 +2161,7 @@ static MACHINE_CONFIG_START( hharry, m72_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 512, 64, 448, 284, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(m72)
 
-	MCFG_VIDEO_START(hharry)
+	MCFG_VIDEO_START_OVERRIDE(m72_state,hharry)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2196,8 +2191,8 @@ static MACHINE_CONFIG_START( hharryu, m72_state )
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,128*55)	/* clocked by V1? (Vigilante) */
 								/* IRQs are generated by main Z80 and YM2151 */
 
-	MCFG_MACHINE_START(m72)
-	MCFG_MACHINE_RESET(xmultipl)
+	MCFG_MACHINE_START_OVERRIDE(m72_state,m72)
+	MCFG_MACHINE_RESET_OVERRIDE(m72_state,xmultipl)
 
 	/* video hardware */
 	MCFG_GFXDECODE(rtype2)
@@ -2207,7 +2202,7 @@ static MACHINE_CONFIG_START( hharryu, m72_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 512, 64, 448, 284, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(m72)
 
-	MCFG_VIDEO_START(hharryu)
+	MCFG_VIDEO_START_OVERRIDE(m72_state,hharryu)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2237,8 +2232,8 @@ static MACHINE_CONFIG_START( dkgenm72, m72_state )
 	MCFG_CPU_PERIODIC_INT(fake_nmi,128*55)	/* clocked by V1? (Vigilante) */
 								/* IRQs are generated by main Z80 and YM2151 */
 
-	MCFG_MACHINE_START(m72)
-	MCFG_MACHINE_RESET(xmultipl)
+	MCFG_MACHINE_START_OVERRIDE(m72_state,m72)
+	MCFG_MACHINE_RESET_OVERRIDE(m72_state,xmultipl)
 
 	/* video hardware */
 	MCFG_GFXDECODE(m72)
@@ -2248,7 +2243,7 @@ static MACHINE_CONFIG_START( dkgenm72, m72_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 512, 64, 448, 284, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(m72)
 
-	MCFG_VIDEO_START(m72)
+	MCFG_VIDEO_START_OVERRIDE(m72_state,m72)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2278,8 +2273,8 @@ static MACHINE_CONFIG_START( poundfor, m72_state )
 	MCFG_CPU_PERIODIC_INT(fake_nmi,128*55)	/* clocked by V1? (Vigilante) */
 								/* IRQs are generated by main Z80 and YM2151 */
 
-	MCFG_MACHINE_START(m72)
-	MCFG_MACHINE_RESET(m72)
+	MCFG_MACHINE_START_OVERRIDE(m72_state,m72)
+	MCFG_MACHINE_RESET_OVERRIDE(m72_state,m72)
 
 	/* video hardware */
 	MCFG_GFXDECODE(rtype2)
@@ -2289,7 +2284,7 @@ static MACHINE_CONFIG_START( poundfor, m72_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 512, 64, 448, 284, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(m72)
 
-	MCFG_VIDEO_START(poundfor)
+	MCFG_VIDEO_START_OVERRIDE(m72_state,poundfor)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -2319,8 +2314,8 @@ static MACHINE_CONFIG_START( cosmccop, m72_state )
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,128*55)	/* clocked by V1? (Vigilante) */
 								/* IRQs are generated by main Z80 and YM2151 */
 
-	MCFG_MACHINE_START(kengo)
-	MCFG_MACHINE_RESET(kengo)
+	MCFG_MACHINE_START_OVERRIDE(m72_state,kengo)
+	MCFG_MACHINE_RESET_OVERRIDE(m72_state,kengo)
 
 	/* video hardware */
 	MCFG_GFXDECODE(rtype2)
@@ -2330,7 +2325,7 @@ static MACHINE_CONFIG_START( cosmccop, m72_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/4, 512, 64, 448, 284, 0, 256)
 	MCFG_SCREEN_UPDATE_STATIC(m72)
 
-	MCFG_VIDEO_START(poundfor)
+	MCFG_VIDEO_START_OVERRIDE(m72_state,poundfor)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

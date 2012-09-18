@@ -35,14 +35,12 @@
 ***************************************************************************/
 
 /* description for an eight-word mask */
-typedef struct atarirle_entry atarirle_entry;
 struct atarirle_entry
 {
 	UINT16			data[8];
 };
 
 /* description of the motion objects */
-typedef struct atarirle_desc atarirle_desc;
 struct atarirle_desc
 {
 	const char *	region;				/* region where the GFX data lives */
@@ -70,7 +68,25 @@ struct atarirle_desc
     FUNCTION PROTOTYPES
 ***************************************************************************/
 
-DECLARE_LEGACY_DEVICE(ATARIRLE, atarirle);
+class atarirle_device : public device_t
+{
+public:
+	atarirle_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~atarirle_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type ATARIRLE;
+
 #define MCFG_ATARIRLE_ADD(_tag, _interface) \
 	MCFG_DEVICE_ADD(_tag, ATARIRLE, 0) \
 	MCFG_DEVICE_CONFIG(_interface)

@@ -35,12 +35,17 @@ public:
 	DECLARE_WRITE8_MEMBER(sub_irq_mask_w);
 	DECLARE_WRITE8_MEMBER(tp84_spriteram_w);
 	DECLARE_READ8_MEMBER(tp84_scanline_r);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_start();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/tp84.c -----------*/
 
 
-PALETTE_INIT( tp84 );
-VIDEO_START( tp84 );
+
+
 SCREEN_UPDATE_IND16( tp84 );

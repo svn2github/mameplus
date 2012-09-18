@@ -47,8 +47,8 @@ public:
 	UINT16	   m_cuebrick_nvram[0x400 * 0x20];	// 32k paged in a 1k window
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k007232;
 	device_t *m_k053260;
 	device_t *m_k054539;
@@ -119,6 +119,19 @@ public:
 	DECLARE_DRIVER_INIT(mia);
 	DECLARE_DRIVER_INIT(tmnt);
 	DECLARE_DRIVER_INIT(cuebrick);
+	TILE_GET_INFO_MEMBER(glfgreat_get_roz_tile_info);
+	TILE_GET_INFO_MEMBER(prmrsocr_get_roz_tile_info);
+	DECLARE_MACHINE_START(common);
+	DECLARE_MACHINE_RESET(common);
+	DECLARE_VIDEO_START(cuebrick);
+	DECLARE_VIDEO_START(mia);
+	DECLARE_MACHINE_RESET(tmnt);
+	DECLARE_VIDEO_START(tmnt);
+	DECLARE_VIDEO_START(lgtnfght);
+	DECLARE_VIDEO_START(blswhstl);
+	DECLARE_VIDEO_START(glfgreat);
+	DECLARE_MACHINE_START(prmrsocr);
+	DECLARE_VIDEO_START(prmrsocr);
 };
 
 
@@ -138,13 +151,13 @@ extern void blswhstl_sprite_callback(running_machine &machine, int *code,int *co
 extern void prmrsocr_sprite_callback(running_machine &machine, int *code,int *color,int *priority_mask);
 
 
-VIDEO_START( cuebrick );
-VIDEO_START( mia );
-VIDEO_START( tmnt );
-VIDEO_START( lgtnfght );
-VIDEO_START( blswhstl );
-VIDEO_START( glfgreat );
-VIDEO_START( prmrsocr );
+
+
+
+
+
+
+
 
 SCREEN_UPDATE_IND16( mia );
 SCREEN_UPDATE_IND16( tmnt );

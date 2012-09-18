@@ -27,10 +27,63 @@
 #define SEGA005_555_TIMER_FREQ		(1.44 / ((15000 + 2 * 4700) * 1.5e-6))
 #define SEGA005_COUNTER_FREQ		(100000)	/* unknown, just a guess */
 
-DEVICE_GET_INFO( sega005_sound );
+class sega005_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	sega005_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
 
-DECLARE_LEGACY_SOUND_DEVICE(SEGA005, sega005_sound);
-DEFINE_LEGACY_SOUND_DEVICE(SEGA005, sega005_sound);
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+};
+
+extern const device_type SEGA005;
+
+const device_type SEGA005 = &device_creator<sega005_sound_device>;
+
+sega005_sound_device::sega005_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, SEGA005, "005 Custom", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void sega005_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+static DEVICE_START( sega005_sound );
+void sega005_sound_device::device_start()
+{
+	DEVICE_START_NAME( sega005_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void sega005_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+
 
 
 
@@ -572,20 +625,6 @@ static DEVICE_START( sega005_sound )
 }
 
 
-DEVICE_GET_INFO( sega005_sound )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(sega005_sound);	break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "005 Custom");					break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
-}
-
-
 static STREAM_UPDATE( sega005_stream_update )
 {
 	segag80r_state *state = device->machine().driver_data<segag80r_state>();
@@ -934,7 +973,7 @@ static WRITE8_DEVICE_HANDLER( n7751_command_w )
         D3    = /INT line
     */
 	state->m_n7751_command = data & 0x07;
-	cputag_set_input_line(device->machine(), "audiocpu", 0, ((data & 0x08) == 0) ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, ((data & 0x08) == 0) ? ASSERT_LINE : CLEAR_LINE);
 	device->machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(100));
 }
 

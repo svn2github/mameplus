@@ -27,9 +27,31 @@ TODO:
 #include "sound/okiadpcm.h"
 #include "includes/mjkjidai.h"
 
+class mjkjidai_adpcm_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	mjkjidai_adpcm_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~mjkjidai_adpcm_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type MJKJIDAI;
+
 /* Start of ADPCM custom chip code */
-typedef struct _mjkjidai_adpcm_state mjkjidai_adpcm_state;
-struct _mjkjidai_adpcm_state
+struct mjkjidai_adpcm_state
 {
 	oki_adpcm_state m_adpcm;
 	sound_stream *m_stream;
@@ -70,7 +92,7 @@ static STREAM_UPDATE( mjkjidai_adpcm_callback )
 static DEVICE_START( mjkjidai_adpcm )
 {
 	running_machine &machine = device->machine();
-	mjkjidai_adpcm_state *state = (mjkjidai_adpcm_state *)downcast<legacy_device_base *>(device)->token();
+	mjkjidai_adpcm_state *state = (mjkjidai_adpcm_state *)downcast<mjkjidai_adpcm_device *>(device)->token();
 
 	state->m_playing = 0;
 	state->m_stream = device->machine().sound().stream_alloc(*device, 0, 1, device->clock(), state, mjkjidai_adpcm_callback);
@@ -78,23 +100,45 @@ static DEVICE_START( mjkjidai_adpcm )
 	state->m_adpcm.reset();
 }
 
-DEVICE_GET_INFO( mjkjidai_adpcm )
+const device_type MJKJIDAI = &device_creator<mjkjidai_adpcm_device>;
+
+mjkjidai_adpcm_device::mjkjidai_adpcm_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, MJKJIDAI, "Custom ADPCM", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		case DEVINFO_INT_TOKEN_BYTES: info->i = sizeof(mjkjidai_adpcm_state); break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(mjkjidai_adpcm);break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Custom ADPCM");				break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(mjkjidai_adpcm_state));
 }
 
-DECLARE_LEGACY_SOUND_DEVICE(MJKJIDAI, mjkjidai_adpcm);
-DEFINE_LEGACY_SOUND_DEVICE(MJKJIDAI, mjkjidai_adpcm);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void mjkjidai_adpcm_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void mjkjidai_adpcm_device::device_start()
+{
+	DEVICE_START_NAME( mjkjidai_adpcm )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void mjkjidai_adpcm_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+
 
 
 static void mjkjidai_adpcm_play (mjkjidai_adpcm_state *state, int offset, int length)
@@ -108,7 +152,7 @@ static void mjkjidai_adpcm_play (mjkjidai_adpcm_state *state, int offset, int le
 WRITE8_MEMBER(mjkjidai_state::adpcm_w)
 {
 	device_t *device = machine().device("adpcm");
-	mjkjidai_adpcm_state *state = (mjkjidai_adpcm_state *)downcast<legacy_device_base *>(device)->token();
+	mjkjidai_adpcm_state *state = (mjkjidai_adpcm_state *)downcast<mjkjidai_adpcm_device *>(device)->token();
 	mjkjidai_adpcm_play (state, (data & 0x07) * 0x1000, 0x1000 * 2);
 }
 /* End of ADPCM custom chip code */
@@ -119,7 +163,7 @@ READ8_MEMBER(mjkjidai_state::keyboard_r)
 	int res = 0x3f,i;
 	static const char *const keynames[] = { "PL2_1", "PL2_2", "PL2_3", "PL2_4", "PL2_5", "PL2_6", "PL1_1", "PL1_2", "PL1_3", "PL1_4", "PL1_5", "PL1_6" };
 
-//  logerror("%04x: keyboard_r\n", cpu_get_pc(&space.device()));
+//  logerror("%04x: keyboard_r\n", space.device().safe_pc());
 
 	for (i = 0; i < 12; i++)
 	{
@@ -144,7 +188,7 @@ READ8_MEMBER(mjkjidai_state::keyboard_r)
 WRITE8_MEMBER(mjkjidai_state::keyboard_select_w)
 {
 
-//  logerror("%04x: keyboard_select %d = %02x\n",cpu_get_pc(&space.device()),offset,data);
+//  logerror("%04x: keyboard_select %d = %02x\n",space.device().safe_pc(),offset,data);
 
 	switch (offset)
 	{
@@ -375,7 +419,7 @@ static INTERRUPT_GEN( vblank_irq )
 	mjkjidai_state *state = device->machine().driver_data<mjkjidai_state>();
 
 	if(state->m_nmi_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -418,7 +462,6 @@ static MACHINE_CONFIG_START( mjkjidai, mjkjidai_state )
 	MCFG_PALETTE_LENGTH(0x100)
 
 	MCFG_PALETTE_INIT(RRRR_GGGG_BBBB)
-	MCFG_VIDEO_START(mjkjidai)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

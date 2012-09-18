@@ -198,11 +198,12 @@ protected:
 	required_device<cpu_device> m_maincpu;
 public:
 	DECLARE_DRIVER_INIT(hb);
+	virtual void machine_start();
 };
 
 READ32_MEMBER(pluto5_state::pluto5_mem_r)
 {
-	int pc = cpu_get_pc(&space.device());
+	int pc = space.device().safe_pc();
 	int cs = m68340_get_cs(m_maincpu, offset * 4);
 
 	switch ( cs )
@@ -220,7 +221,7 @@ READ32_MEMBER(pluto5_state::pluto5_mem_r)
 
 WRITE32_MEMBER(pluto5_state::pluto5_mem_w)
 {
-	int pc = cpu_get_pc(&space.device());
+	int pc = space.device().safe_pc();
 	int cs = m68340_get_cs(m_maincpu, offset * 4);
 
 	switch ( cs )
@@ -240,11 +241,10 @@ ADDRESS_MAP_END
 static INPUT_PORTS_START(  pluto5 )
 INPUT_PORTS_END
 
-static MACHINE_START( pluto5 )
+void pluto5_state::machine_start()
 {
-	pluto5_state *state = machine.driver_data<pluto5_state>();
-	state->m_cpuregion = (UINT32*)state->memregion( "maincpu" )->base();
-	state->m_mainram = (UINT32*)auto_alloc_array_clear(machine, UINT32, 0x10000);
+	m_cpuregion = (UINT32*)memregion( "maincpu" )->base();
+	m_mainram = (UINT32*)auto_alloc_array_clear(machine(), UINT32, 0x10000);
 
 }
 
@@ -252,7 +252,6 @@ static MACHINE_CONFIG_START( pluto5, pluto5_state )
 	MCFG_CPU_ADD("maincpu", M68340, 16000000)
 	MCFG_CPU_PROGRAM_MAP(pluto5_map)
 
-	MCFG_MACHINE_START( pluto5 )
 
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -599,7 +598,7 @@ DRIVER_INIT_MEMBER(pluto5_state,hb)
 
 GAME( 200?, hb_cr		,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "Qps","Cash Raker (Qps)", GAME_IS_SKELETON_MECHANICAL )
 GAME( 200?, hb_bar7		,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "Fairgames","Bar Seven (Fairgames)", GAME_IS_SKELETON_MECHANICAL )
-GAME( 200?, hb_bigx		,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "Jpm","Big X (Jpm)", GAME_IS_SKELETON_MECHANICAL )
+GAME( 200?, hb_bigx		,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "JPM","Big X (JPM)", GAME_IS_SKELETON_MECHANICAL )
 GAME( 200?, hb_ccow		,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "Qps","Cash Cow (Qps)", GAME_IS_SKELETON_MECHANICAL )
 GAME( 200?, hb_cashc	,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "Qps","Cash Crusade (Qps)", GAME_IS_SKELETON_MECHANICAL )
 GAME( 200?, hb_cashx	,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "Fairgames","Cash X (Fairgames)", GAME_IS_SKELETON_MECHANICAL )
@@ -614,7 +613,7 @@ GAME( 200?, hb_jailb	,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "Qps","Jail B
 GAME( 200?, hb_jkrwl	,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "Fairgames","Jokers Wild (Fairgames)", GAME_IS_SKELETON_MECHANICAL )
 GAME( 200?, hb_mrmon	,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "Qps","Mr. Money (Qps)", GAME_IS_SKELETON_MECHANICAL )
 GAME( 200?, hb_rhv		,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "Qps","Red Hot Voucher (Qps)", GAME_IS_SKELETON_MECHANICAL )
-GAME( 200?, hb_ringb	,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "Jpm","Ring A Bell (Jpm)", GAME_IS_SKELETON_MECHANICAL )
+GAME( 200?, hb_ringb	,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "JPM","Ring A Bell (JPM)", GAME_IS_SKELETON_MECHANICAL )
 GAME( 200?, hb_rckrl	,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "Qps","Rock 'n' Roll (Qps)", GAME_IS_SKELETON_MECHANICAL )
 GAME( 200?, hb_ydd		,0,			pluto5, pluto5, pluto5_state, hb, ROT0, "Qps","Yabba-Dabba-Dough (Qps)", GAME_IS_SKELETON_MECHANICAL )
 

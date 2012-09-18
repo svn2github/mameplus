@@ -35,12 +35,12 @@ struct nes_input
 #define CHRROM 0
 #define CHRRAM 1
 
-typedef struct
+struct chr_bank
 {
 	int source;	//defines source of base pointer
 	int origin; //defines offset of 0x400 byte segment at base pointer
 	UINT8* access;	//source translated + origin -> valid pointer!
-} chr_bank;
+};
 
 /*PPU nametable fast banking constants and structures */
 
@@ -53,13 +53,13 @@ typedef struct
 #define NES_BATTERY 0
 #define NES_WRAM 1
 
-typedef struct
+struct name_table
 {
 	int source;		/* defines source of base pointer */
 	int origin;		/* defines offset of 0x400 byte segment at base pointer */
 	int writable;	/* ExRAM, at least, can be write-protected AND used as nametable */
 	UINT8* access;	/* direct access when possible */
-} name_table;
+};
 
 typedef void (*nes_prg_callback)(running_machine &machine, int start, int bank);
 typedef void (*nes_chr_callback)(running_machine &machine, int start, int bank, int source);
@@ -126,7 +126,7 @@ public:
 	nes_chr_callback    m_mmc3_chr_cb;
 
 	/* devices */
-	device_t      *m_maincpu;
+	cpu_device      *m_maincpu;
 	ppu2c0x_device      *m_ppu;
 	device_t      *m_sound;
 	device_t      *m_cart;
@@ -255,6 +255,10 @@ public:
 	DECLARE_WRITE8_MEMBER(nes_fds_w);
 	DECLARE_WRITE8_MEMBER(nes_vh_sprite_dma_w);
 	DECLARE_DRIVER_INIT(famicom);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -268,8 +272,8 @@ DEVICE_START(nes_disk);
 DEVICE_IMAGE_LOAD(nes_disk);
 DEVICE_IMAGE_UNLOAD(nes_disk);
 
-MACHINE_START( nes );
-MACHINE_RESET( nes );
+
+
 
 
 
@@ -279,8 +283,8 @@ void nes_partialhash(hash_collection &dest, const unsigned char *data, unsigned 
 
 /*----------- defined in video/nes.c -----------*/
 
-PALETTE_INIT( nes );
-VIDEO_START( nes );
+
+
 SCREEN_UPDATE_IND16( nes );
 
 

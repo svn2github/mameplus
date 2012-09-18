@@ -73,7 +73,7 @@ K1000233A
 static INTERRUPT_GEN( pitnrun_nmi_source )
 {
 	pitnrun_state *state = device->machine().driver_data<pitnrun_state>();
-	if(state->m_nmi) device_set_input_line(device,INPUT_LINE_NMI, PULSE_LINE);
+	if(state->m_nmi) device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(pitnrun_state::nmi_enable_w)
@@ -241,7 +241,6 @@ static MACHINE_CONFIG_START( pitnrun, pitnrun_state )
 	MCFG_CPU_ADD("mcu", M68705,XTAL_18_432MHz/6)		/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(pitnrun_mcu_map)
 
-	MCFG_MACHINE_RESET(pitnrun)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -255,8 +254,6 @@ static MACHINE_CONFIG_START( pitnrun, pitnrun_state )
 
 	MCFG_GFXDECODE(pitnrun)
 	MCFG_PALETTE_LENGTH(32*3)
-	MCFG_PALETTE_INIT(pitnrun)
-	MCFG_VIDEO_START(pitnrun)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

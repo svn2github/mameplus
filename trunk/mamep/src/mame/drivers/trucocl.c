@@ -46,7 +46,7 @@ WRITE8_MEMBER(trucocl_state::irq_enable_w)
 
 static TIMER_CALLBACK( dac_irq )
 {
-	cputag_set_input_line(machine, "maincpu", INPUT_LINE_NMI, PULSE_LINE );
+	machine.device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE );
 }
 
 WRITE8_MEMBER(trucocl_state::audio_dac_w)
@@ -127,7 +127,7 @@ static INTERRUPT_GEN( trucocl_interrupt )
 	trucocl_state *state = device->machine().driver_data<trucocl_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 
 }
 
@@ -148,8 +148,6 @@ static MACHINE_CONFIG_START( trucocl, trucocl_state )
 	MCFG_GFXDECODE(trucocl)
 	MCFG_PALETTE_LENGTH(32)
 
-	MCFG_PALETTE_INIT(trucocl)
-	MCFG_VIDEO_START(trucocl)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

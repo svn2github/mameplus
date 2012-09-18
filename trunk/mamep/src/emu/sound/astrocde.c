@@ -43,8 +43,7 @@
 #include "astrocde.h"
 
 
-typedef struct _astrocade_state astrocade_state;
-struct _astrocade_state
+struct astrocade_state
 {
 	sound_stream *stream;		/* sound stream */
 
@@ -73,7 +72,7 @@ INLINE astrocade_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == ASTROCADE);
-	return (astrocade_state *)downcast<legacy_device_base *>(device)->token();
+	return (astrocade_state *)downcast<astrocade_device *>(device)->token();
 }
 
 
@@ -302,33 +301,51 @@ WRITE8_DEVICE_HANDLER( astrocade_sound_w )
 	chip->reg[offset & 7] = data;
 }
 
+const device_type ASTROCADE = &device_creator<astrocade_device>;
 
-
-/*************************************
- *
- *  Get/set info callbacks
- *
- *************************************/
-
-DEVICE_GET_INFO( astrocade )
+astrocade_device::astrocade_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, ASTROCADE, "Astrocade", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(astrocade_state);					break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(astrocade_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( astrocade );		break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME( astrocade );		break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Astrocade");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Bally");							break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "2.0");								break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);							break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void astrocade_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void astrocade_device::device_start()
+{
+	DEVICE_START_NAME( astrocade )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void astrocade_device::device_reset()
+{
+	DEVICE_RESET_NAME( astrocade )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void astrocade_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(ASTROCADE, astrocade);

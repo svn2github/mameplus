@@ -179,7 +179,7 @@ WRITE8_MEMBER(taitosj_state::taitosj_sndnmi_msk_w)
 WRITE8_MEMBER(taitosj_state::taitosj_soundcommand_w)
 {
 	soundlatch_byte_w(space,offset,data);
-	if (!m_sndnmi_disable) cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	if (!m_sndnmi_disable) machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -1801,8 +1801,6 @@ static MACHINE_CONFIG_START( nomcu, taitosj_state )
 			/* - periodic IRQ, with frequency 6000000/(4*16*16*10*16) = 36.621 Hz, */
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold, (double)6000000/(4*16*16*10*16))
 
-	MCFG_MACHINE_START(taitosj)
-	MCFG_MACHINE_RESET(taitosj)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1815,7 +1813,6 @@ static MACHINE_CONFIG_START( nomcu, taitosj_state )
 	MCFG_GFXDECODE(taitosj)
 	MCFG_PALETTE_LENGTH(64)
 
-	MCFG_VIDEO_START(taitosj)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

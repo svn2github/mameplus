@@ -33,7 +33,7 @@ public:
 	rectangle m_tilemap_clip;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 
 	UINT8 m_nmi_mask;
 	DECLARE_READ8_MEMBER(popper_input_ports_r);
@@ -46,13 +46,21 @@ public:
 	DECLARE_WRITE8_MEMBER(popper_flipscreen_w);
 	DECLARE_WRITE8_MEMBER(popper_e002_w);
 	DECLARE_WRITE8_MEMBER(popper_gfx_bank_w);
+	TILE_GET_INFO_MEMBER(get_popper_p123_tile_info);
+	TILE_GET_INFO_MEMBER(get_popper_p0_tile_info);
+	TILE_GET_INFO_MEMBER(get_popper_ol_p123_tile_info);
+	TILE_GET_INFO_MEMBER(get_popper_ol_p0_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/popper.c -----------*/
 
 
-PALETTE_INIT( popper );
-VIDEO_START( popper );
+
+
 SCREEN_UPDATE_IND16( popper );
 

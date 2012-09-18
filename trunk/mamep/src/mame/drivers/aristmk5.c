@@ -81,6 +81,8 @@ public:
 	DECLARE_READ32_MEMBER(Ns5r50);
 	DECLARE_WRITE32_MEMBER(sram_banksel_w);
 	DECLARE_DRIVER_INIT(aristmk5);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 
@@ -182,7 +184,7 @@ READ32_MEMBER(aristmk5_state::Ns5x58)
 	// reset 2KHz timer
     m_mk5_2KHz_timer->adjust(attotime::from_hz(1953.125));
     ioc_regs[IRQ_STATUS_A] &= ~0x01;
-    cputag_set_input_line(machine(), "maincpu", ARM_IRQ_LINE, CLEAR_LINE);
+    machine().device("maincpu")->execute().set_input_line(ARM_IRQ_LINE, CLEAR_LINE);
 	return 0xffffffff;
 }
 
@@ -297,7 +299,7 @@ WRITE32_MEMBER(aristmk5_state::sram_banksel_w)
 /* U.S games have no dram emulator enabled */
 static ADDRESS_MAP_START( aristmk5_map, AS_PROGRAM, 32, aristmk5_state )
 	AM_RANGE(0x00000000, 0x01ffffff) AM_READWRITE_LEGACY(archimedes_memc_logical_r, archimedes_memc_logical_w)
-	AM_RANGE(0x02000000, 0x02ffffff) AM_RAM AM_BASE_LEGACY(&archimedes_memc_physmem) /* physical RAM - 16 MB for now, should be 512k for the A310 */
+	AM_RANGE(0x02000000, 0x02ffffff) AM_RAM AM_SHARE("physicalram") /* physical RAM - 16 MB for now, should be 512k for the A310 */
 
 	/* MK-5 overrides */
 	AM_RANGE(0x03010420, 0x03010423) AM_WRITE(sram_banksel_w) // SRAM bank select write
@@ -323,7 +325,7 @@ ADDRESS_MAP_END
 /* with dram emulator enabled */
 static ADDRESS_MAP_START( aristmk5_drame_map, AS_PROGRAM, 32, aristmk5_state )
 	AM_RANGE(0x00000000, 0x01ffffff) AM_READWRITE_LEGACY(aristmk5_drame_memc_logical_r, archimedes_memc_logical_w)
-	AM_RANGE(0x02000000, 0x02ffffff) AM_RAM AM_BASE_LEGACY(&archimedes_memc_physmem) /* physical RAM - 16 MB for now, should be 512k for the A310 */
+	AM_RANGE(0x02000000, 0x02ffffff) AM_RAM AM_SHARE("physicalram") /* physical RAM - 16 MB for now, should be 512k for the A310 */
 
 	/* MK-5 overrides */
 	AM_RANGE(0x03010420, 0x03010423) AM_WRITE(sram_banksel_w) // SRAM bank select write
@@ -370,38 +372,36 @@ DRIVER_INIT_MEMBER(aristmk5_state,aristmk5)
 }
 
 
-static MACHINE_START( aristmk5 )
+void aristmk5_state::machine_start()
 {
-	aristmk5_state *state = machine.driver_data<aristmk5_state>();
-	archimedes_init(machine);
+	archimedes_init(machine());
 
 	// reset the DAC to centerline
-	//machine.device<dac_device>("dac")->write_signed8(0x80);
+	//machine().device<dac_device>("dac")->write_signed8(0x80);
 
-	state->m_mk5_2KHz_timer = machine.scheduler().timer_alloc(FUNC(mk5_2KHz_callback));
-	state->m_mk5_VSYNC_timer = machine.scheduler().timer_alloc(FUNC(mk5_VSYNC_callback));
+	m_mk5_2KHz_timer = machine().scheduler().timer_alloc(FUNC(mk5_2KHz_callback));
+	m_mk5_VSYNC_timer = machine().scheduler().timer_alloc(FUNC(mk5_VSYNC_callback));
 }
 
-static MACHINE_RESET( aristmk5 )
+void aristmk5_state::machine_reset()
 {
-	aristmk5_state *state = machine.driver_data<aristmk5_state>();
-	archimedes_reset(machine);
-	state->m_mk5_2KHz_timer->adjust(attotime::from_hz(1953.125)); // 8MHz / 4096
-	state->m_mk5_VSYNC_timer->adjust(attotime::from_hz(50000)); // default bit 1 & bit 2 == 0
+	archimedes_reset(machine());
+	m_mk5_2KHz_timer->adjust(attotime::from_hz(1953.125)); // 8MHz / 4096
+	m_mk5_VSYNC_timer->adjust(attotime::from_hz(50000)); // default bit 1 & bit 2 == 0
 
 	ioc_regs[IRQ_STATUS_B] |= 0x40; //hack, set keyboard irq empty to be ON
 
 	/* load the roms according to what the operator wants */
 	{
-		UINT8 *ROM = state->memregion("maincpu")->base();
-		UINT8 *PRG;// = state->memregion("prg_code")->base();
+		UINT8 *ROM = memregion("maincpu")->base();
+		UINT8 *PRG;// = memregion("prg_code")->base();
 		int i;
 		UINT8 op_mode;
 		static const char *const rom_region[] = { "set_chip_4.04", "set_chip_4.4", "clear_chip", "game_prg" };
 
-		op_mode = machine.root_device().ioport("ROM_LOAD")->read();
+		op_mode = machine().root_device().ioport("ROM_LOAD")->read();
 
-		PRG = machine.root_device().memregion(rom_region[op_mode & 3])->base();
+		PRG = machine().root_device().memregion(rom_region[op_mode & 3])->base();
 
 		if(PRG!=NULL)
 
@@ -424,8 +424,6 @@ static MACHINE_CONFIG_START( aristmk5, aristmk5_state )
 	MCFG_CPU_ADD("maincpu", ARM, 12000000)
 	MCFG_CPU_PROGRAM_MAP(aristmk5_drame_map)
     MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(2))	/* 1.6 - 2 seconds */
-	MCFG_MACHINE_START( aristmk5 )
-	MCFG_MACHINE_RESET( aristmk5 )
 
 //  MCFG_I2CMEM_ADD("i2cmem",i2cmem_interface)
 
@@ -437,7 +435,6 @@ static MACHINE_CONFIG_START( aristmk5, aristmk5_state )
 
 	MCFG_PALETTE_LENGTH(0x200)
 
-	MCFG_VIDEO_START(archimds_vidc)
 	MCFG_SCREEN_UPDATE_STATIC(archimds_vidc)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -470,8 +467,6 @@ static MACHINE_CONFIG_START( aristmk5_usa, aristmk5_state )
 	MCFG_CPU_ADD("maincpu", ARM, 12000000)
 	MCFG_CPU_PROGRAM_MAP(aristmk5_map)
     MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(2))	/* 1.6 - 2 seconds */
-	MCFG_MACHINE_START( aristmk5 )
-	MCFG_MACHINE_RESET( aristmk5 )
 
 //  MCFG_I2CMEM_ADD("i2cmem",i2cmem_interface)
 

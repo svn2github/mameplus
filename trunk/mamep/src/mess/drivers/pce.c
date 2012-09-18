@@ -353,8 +353,8 @@ static MACHINE_CONFIG_START( pce_common, pce_state )
 
 //  MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
-	MCFG_MACHINE_START( pce )
-	MCFG_MACHINE_RESET( mess_pce )
+	MCFG_MACHINE_START_OVERRIDE(pce_state, pce )
+	MCFG_MACHINE_RESET_OVERRIDE(pce_state, mess_pce )
 
     /* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -405,8 +405,8 @@ static MACHINE_CONFIG_START( sgx, pce_state )
 	MCFG_TIMER_ADD_SCANLINE("scantimer", sgx_interrupt, "screen", 0, 1)
 	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
-	MCFG_MACHINE_START( pce )
-	MCFG_MACHINE_RESET( mess_pce )
+	MCFG_MACHINE_START_OVERRIDE(pce_state, pce )
+	MCFG_MACHINE_RESET_OVERRIDE(pce_state, mess_pce )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -503,7 +503,7 @@ UINT32 pce_state::screen_update(screen_device &screen, bitmap_ind16 &bitmap, con
 
 static WRITE_LINE_DEVICE_HANDLER( pce_irq_changed )
 {
-	cputag_set_input_line( device->machine(), "maincpu", 0, state);
+	device->machine().device("maincpu")->execute().set_input_line(0, state);
 }
 
 
@@ -571,8 +571,8 @@ static MACHINE_CONFIG_START( pce_common_new, pce_state )
 	MCFG_CPU_IO_MAP(pce_io_new)
 	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
-	MCFG_MACHINE_START( pce )
-	MCFG_MACHINE_RESET( mess_pce )
+	MCFG_MACHINE_START_OVERRIDE(pce_state, pce )
+	MCFG_MACHINE_RESET_OVERRIDE(pce_state, mess_pce )
 
     /* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -584,7 +584,7 @@ static MACHINE_CONFIG_START( pce_common_new, pce_state )
 
 	MCFG_HUC6260_ADD( "huc6260", MAIN_CLOCK, pce_huc6260_config )
 	MCFG_HUC6270_ADD( "huc6270", pce_huc6270_config )
- 
+
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -623,8 +623,8 @@ static MACHINE_CONFIG_START( sgx_new, pce_state )
 	MCFG_CPU_IO_MAP(sgx_io_new)
 	MCFG_QUANTUM_TIME(attotime::from_hz(60))
 
-	MCFG_MACHINE_START( pce )
-	MCFG_MACHINE_RESET( mess_pce )
+	MCFG_MACHINE_START_OVERRIDE(pce_state, pce )
+	MCFG_MACHINE_RESET_OVERRIDE(pce_state, mess_pce )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -638,7 +638,7 @@ static MACHINE_CONFIG_START( sgx_new, pce_state )
 	MCFG_HUC6270_ADD( "huc6270_0", sgx_huc6270_0_config )
 	MCFG_HUC6270_ADD( "huc6270_1", sgx_huc6270_1_config )
 	MCFG_HUC6202_ADD( "huc6202", sgx_huc6202_config )
- 
+
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

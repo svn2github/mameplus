@@ -2,25 +2,24 @@
 #include "includes/buggychl.h"
 
 
-PALETTE_INIT( buggychl )
+void buggychl_state::palette_init()
 {
 	int i;
 
 	/* arbitrary blue shading for the sky, estimation */
 	for (i = 0; i < 128; i++)
-		palette_set_color(machine, i + 128, MAKE_RGB(0, 240-i, 255));
+		palette_set_color(machine(), i + 128, MAKE_RGB(0, 240-i, 255));
 }
 
-VIDEO_START( buggychl )
+void buggychl_state::video_start()
 {
-	buggychl_state *state = machine.driver_data<buggychl_state>();
-	machine.primary_screen->register_screen_bitmap(state->m_tmp_bitmap1);
-	machine.primary_screen->register_screen_bitmap(state->m_tmp_bitmap2);
+	machine().primary_screen->register_screen_bitmap(m_tmp_bitmap1);
+	machine().primary_screen->register_screen_bitmap(m_tmp_bitmap2);
 
-	state->save_item(NAME(state->m_tmp_bitmap1));
-	state->save_item(NAME(state->m_tmp_bitmap2));
+	save_item(NAME(m_tmp_bitmap1));
+	save_item(NAME(m_tmp_bitmap2));
 
-	gfx_element_set_source(machine.gfx[0], state->m_charram);
+	machine().gfx[0]->set_source(m_charram);
 }
 
 
@@ -30,7 +29,7 @@ WRITE8_MEMBER(buggychl_state::buggychl_chargen_w)
 	if (m_charram[offset] != data)
 	{
 		m_charram[offset] = data;
-		gfx_element_mark_dirty(machine().gfx[0], (offset / 8) & 0xff);
+		machine().gfx[0]->mark_dirty((offset / 8) & 0xff);
 	}
 }
 
@@ -205,7 +204,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 					code = 8 * (lookup[pos] | ((lookup[pos + 1] & 0x07) << 8));
 					realflipy = (lookup[pos + 1] & 0x80) ? !flipy : flipy;
 					code += (realflipy ? (charline ^ 7) : charline);
-					pendata = gfx_element_get_data(machine.gfx[1], code);
+					pendata = machine.gfx[1]->get_data(code);
 
 					for (x = 0; x < 16; x++)
 					{

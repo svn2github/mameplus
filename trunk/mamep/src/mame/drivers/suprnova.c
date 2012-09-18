@@ -418,20 +418,19 @@ READ32_MEMBER(skns_state::skns_hit_r)
 
 static TIMER_DEVICE_CALLBACK( interrupt_callback )
 {
-	cputag_set_input_line(timer.machine(), "maincpu", param, HOLD_LINE);
+	timer.machine().device("maincpu")->execute().set_input_line(param, HOLD_LINE);
 }
 
-static MACHINE_RESET(skns)
+void skns_state::machine_reset()
 {
-	skns_state *state = machine.driver_data<skns_state>();
-	hit_t &hit = state->m_hit;
+	hit_t &hit = m_hit;
 
-	if (state->m_region != 'A')
+	if (m_region != 'A')
 		hit.disconnect= 1;
 	else
 		hit.disconnect= 0;
 
-	state->membank("bank1")->set_base(state->memregion("user1")->base());
+	membank("bank1")->set_base(memregion("user1")->base());
 }
 
 
@@ -441,9 +440,9 @@ static TIMER_DEVICE_CALLBACK(skns_irq)
 	int scanline = param;
 
 	if(scanline == 240)
-		device_set_input_line(state->m_maincpu,5,HOLD_LINE); //vblank
+		state->m_maincpu->set_input_line(5,HOLD_LINE); //vblank
 	else if(scanline == 0)
-		device_set_input_line(state->m_maincpu,1,HOLD_LINE); // spc
+		state->m_maincpu->set_input_line(1,HOLD_LINE); // spc
 }
 
 /**********************************************************************************
@@ -625,28 +624,28 @@ WRITE32_MEMBER(skns_state::skns_io_w)
 		if(ACCESSING_BITS_8_15)
 		{ /* Interrupt Clear, do we need these? */
 /*          if(data&0x01)
-                cputag_set_input_line(machine(), "maincpu",1,CLEAR_LINE);
+                machine().device("maincpu")->execute().set_input_line(1,CLEAR_LINE);
             if(data&0x02)
-                cputag_set_input_line(machine(), "maincpu",3,CLEAR_LINE);
+                machine().device("maincpu")->execute().set_input_line(3,CLEAR_LINE);
             if(data&0x04)
-                cputag_set_input_line(machine(), "maincpu",5,CLEAR_LINE);
+                machine().device("maincpu")->execute().set_input_line(5,CLEAR_LINE);
             if(data&0x08)
-                cputag_set_input_line(machine(), "maincpu",7,CLEAR_LINE);
+                machine().device("maincpu")->execute().set_input_line(7,CLEAR_LINE);
             if(data&0x10)
-                cputag_set_input_line(machine(), "maincpu",9,CLEAR_LINE);
+                machine().device("maincpu")->execute().set_input_line(9,CLEAR_LINE);
             if(data&0x20)
-                cputag_set_input_line(machine(), "maincpu",0xb,CLEAR_LINE);
+                machine().device("maincpu")->execute().set_input_line(0xb,CLEAR_LINE);
             if(data&0x40)
-                cputag_set_input_line(machine(), "maincpu",0xd,CLEAR_LINE);
+                machine().device("maincpu")->execute().set_input_line(0xd,CLEAR_LINE);
             if(data&0x80)
-                cputag_set_input_line(machine(), "maincpu",0xf,CLEAR_LINE);*/
+                machine().device("maincpu")->execute().set_input_line(0xf,CLEAR_LINE);*/
 
 			/* idle skip for vblokbrk/sarukani, i can't find a better place to put it :-( but i think it works ok unless its making the game too fast */
-			if (cpu_get_pc(&space.device())==0x04013B42)
+			if (space.device().safe_pc()==0x04013B42)
 			{
 				if (!strcmp(machine().system().name,"vblokbrk") ||
 					!strcmp(machine().system().name,"sarukani"))
-					device_spin_until_interrupt(&space.device());
+					space.device().execute().spin_until_interrupt();
 			}
 
 		}
@@ -669,8 +668,8 @@ WRITE32_MEMBER(skns_state::skns_v3t_w)
 
 	COMBINE_DATA(&m_v3t_ram[offset]);
 
-	gfx_element_mark_dirty(machine().gfx[1], offset/0x40);
-	gfx_element_mark_dirty(machine().gfx[3], offset/0x20);
+	machine().gfx[1]->mark_dirty(offset/0x40);
+	machine().gfx[3]->mark_dirty(offset/0x20);
 
 	data = m_v3t_ram[offset];
 // i think we need to swap around to decode .. endian issues?
@@ -762,7 +761,6 @@ static MACHINE_CONFIG_START( skns, skns_state )
 
 	MCFG_MSM6242_ADD("rtc", rtc_intf)
 
-	MCFG_MACHINE_RESET(skns)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_TIMER_ADD_PERIODIC("int15_timer", interrupt_callback, attotime::from_msec(2))
@@ -787,8 +785,6 @@ static MACHINE_CONFIG_START( skns, skns_state )
 
 	MCFG_DEVICE_ADD("spritegen", SKNS_SPRITE, 0)
 
-	MCFG_VIDEO_START(skns)
-	MCFG_VIDEO_RESET(skns)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -799,60 +795,55 @@ static MACHINE_CONFIG_START( skns, skns_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.0)
 MACHINE_CONFIG_END
 
-static MACHINE_RESET(sknsa)
+MACHINE_RESET_MEMBER(skns_state,sknsa)
 {
-	skns_state *state = machine.driver_data<skns_state>();
-	state->m_region = 'A';
-	MACHINE_RESET_CALL(skns);
+	m_region = 'A';
+	skns_state::machine_reset();
 }
 
-static MACHINE_RESET(sknsj)
+MACHINE_RESET_MEMBER(skns_state,sknsj)
 {
-	skns_state *state = machine.driver_data<skns_state>();
-	state->m_region = 'J';
-	MACHINE_RESET_CALL(skns);
+	m_region = 'J';
+	skns_state::machine_reset();
 }
 
-static MACHINE_RESET(sknsu)
+MACHINE_RESET_MEMBER(skns_state,sknsu)
 {
-	skns_state *state = machine.driver_data<skns_state>();
-	state->m_region = 'U';
-	MACHINE_RESET_CALL(skns);
+	m_region = 'U';
+	skns_state::machine_reset();
 }
 
-static MACHINE_RESET(sknse)
+MACHINE_RESET_MEMBER(skns_state,sknse)
 {
-	skns_state *state = machine.driver_data<skns_state>();
-	state->m_region = 'E';
-	MACHINE_RESET_CALL(skns);
+	m_region = 'E';
+	skns_state::machine_reset();
 }
 
-static MACHINE_RESET(sknsk)
+MACHINE_RESET_MEMBER(skns_state,sknsk)
 {
-	skns_state *state = machine.driver_data<skns_state>();
-	state->m_region = 'K';
-	MACHINE_RESET_CALL(skns);
+	m_region = 'K';
+	skns_state::machine_reset();
 }
 
 
 static MACHINE_CONFIG_DERIVED( sknsa, skns )
-	MCFG_MACHINE_RESET(sknsa)
+	MCFG_MACHINE_RESET_OVERRIDE(skns_state,sknsa)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( sknsj, skns )
-	MCFG_MACHINE_RESET(sknsj)
+	MCFG_MACHINE_RESET_OVERRIDE(skns_state,sknsj)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( sknsu, skns )
-	MCFG_MACHINE_RESET(sknsu)
+	MCFG_MACHINE_RESET_OVERRIDE(skns_state,sknsu)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( sknse, skns )
-	MCFG_MACHINE_RESET(sknse)
+	MCFG_MACHINE_RESET_OVERRIDE(skns_state,sknse)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( sknsk, skns )
-	MCFG_MACHINE_RESET(sknsk)
+	MCFG_MACHINE_RESET_OVERRIDE(skns_state,sknsk)
 MACHINE_CONFIG_END
 
 /***** IDLE SKIPPING *****/
@@ -867,35 +858,35 @@ READ32_MEMBER(skns_state::gutsn_speedup_r)
     04022072: CMP/EQ  R2,R3
     04022074: BT      $0402206C
 */
-	if (cpu_get_pc(&space.device())==0x402206e)
+	if (space.device().safe_pc()==0x402206e)
 	{
 		if(m_main_ram[0x00078/4] == m_main_ram[0x0c780/4])
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 	}
 	return m_main_ram[0x0c780/4];
 }
 
 READ32_MEMBER(skns_state::cyvern_speedup_r)
 {
-	if (cpu_get_pc(&space.device())==0x402ebd2) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x402ebd2) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0x4d3c8/4];
 }
 
 READ32_MEMBER(skns_state::puzzloopj_speedup_r)
 {
-	if (cpu_get_pc(&space.device())==0x401dca0) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x401dca0) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0x86714/4];
 }
 
 READ32_MEMBER(skns_state::puzzloopa_speedup_r)
 {
-	if (cpu_get_pc(&space.device())==0x401d9d4) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x401d9d4) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0x85bcc/4];
 }
 
 READ32_MEMBER(skns_state::puzzloopu_speedup_r)
 {
-	if (cpu_get_pc(&space.device())==0x401dab0) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x401dab0) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0x85cec/4];
 }
 
@@ -908,61 +899,61 @@ READ32_MEMBER(skns_state::puzzloope_speedup_r)
     0401DA18: BF      $0401DA26
     0401DA26: BRA     $0401DA12
 */
-	if (cpu_get_pc(&space.device())==0x401da14) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x401da14) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0x81d38/4];
 }
 
 READ32_MEMBER(skns_state::senknow_speedup_r)
 {
-	if (cpu_get_pc(&space.device())==0x4017dce) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x4017dce) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0x0000dc/4];
 }
 
 READ32_MEMBER(skns_state::teljan_speedup_r)
 {
-	if (cpu_get_pc(&space.device())==0x401ba32) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x401ba32) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0x002fb4/4];
 }
 
 READ32_MEMBER(skns_state::jjparads_speedup_r)
 {
-	if (cpu_get_pc(&space.device())==0x4015e84) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x4015e84) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0x000994/4];
 }
 
 READ32_MEMBER(skns_state::jjparad2_speedup_r)
 {
-	if (cpu_get_pc(&space.device())==0x401620a) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x401620a) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0x000984/4];
 }
 
 READ32_MEMBER(skns_state::ryouran_speedup_r)
 {
-	if (cpu_get_pc(&space.device())==0x40182ce) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x40182ce) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0x000a14/4];
 }
 
 READ32_MEMBER(skns_state::galpans2_speedup_r)
 {
-	if (cpu_get_pc(&space.device())==0x4049ae2) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x4049ae2) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0x0fb6bc/4];
 }
 
 READ32_MEMBER(skns_state::panicstr_speedup_r)
 {
-	if (cpu_get_pc(&space.device())==0x404e68a) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x404e68a) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0x0f19e4/4];
 }
 
 READ32_MEMBER(skns_state::sengekis_speedup_r)// 60006ee  600308e
 {
-	if (cpu_get_pc(&space.device())==0x60006ec) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x60006ec) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0xb74bc/4];
 }
 
 READ32_MEMBER(skns_state::sengekij_speedup_r)// 60006ee  600308e
 {
-	if (cpu_get_pc(&space.device())==0x60006ec) device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x60006ec) space.device().execute().spin_until_interrupt();
 	return m_main_ram[0xb7380/4];
 }
 

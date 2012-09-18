@@ -57,9 +57,7 @@
 #define	LOG(x)		do { if (VERBOSE) logerror x; } while (0)
 
 
-typedef struct _i8275_t i8275_t;
-
-struct _i8275_t
+struct i8275_t
 {
 	devcb_resolved_write_line	out_drq_func;
 	devcb_resolved_write_line	out_irq_func;
@@ -132,7 +130,7 @@ INLINE i8275_t *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == I8275);
 
-	return (i8275_t *)downcast<legacy_device_base *>(device)->token();
+	return (i8275_t *)downcast<i8275_device *>(device)->token();
 }
 
 
@@ -588,26 +586,40 @@ static DEVICE_RESET( i8275 )
 	i8275->blink = 0;
 }
 
-DEVICE_GET_INFO( i8275 )
+const device_type I8275 = &device_creator<i8275_device>;
+
+i8275_device::i8275_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, I8275, "Intel 8275", tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(i8275_t);					break;
-		case DEVINFO_INT_INLINE_CONFIG_BYTES:			info->i = 0;								break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(i8275);		break;
-		case DEVINFO_FCT_STOP:							/* Nothing */								break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME(i8275);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Intel 8275");				break;
-		case DEVINFO_STR_FAMILY:						strcpy(info->s, "Intel 8275");				break;
-		case DEVINFO_STR_VERSION:						strcpy(info->s, "1.0");						break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);					break;
-		case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright MESS Team");		break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(i8275_t));
 }
 
-DEFINE_LEGACY_DEVICE(I8275, i8275);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void i8275_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void i8275_device::device_start()
+{
+	DEVICE_START_NAME( i8275 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void i8275_device::device_reset()
+{
+	DEVICE_RESET_NAME( i8275 )(this);
+}
+
+

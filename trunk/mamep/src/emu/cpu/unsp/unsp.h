@@ -11,9 +11,8 @@
 #ifndef __UNSP_H__
 #define __UNSP_H__
 
-typedef struct _unspimp_state unspimp_state;
-typedef struct _unsp_state unsp_state;
-struct _unsp_state
+struct unspimp_state;
+struct unsp_state
 {
 	UINT16 r[16];
 	UINT8 irq;

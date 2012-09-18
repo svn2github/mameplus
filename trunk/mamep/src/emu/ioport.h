@@ -719,7 +719,7 @@ class ioport_field;
 struct ioport_field_live;
 class ioport_manager;
 class emu_timer;
-typedef struct _xml_data_node xml_data_node;
+struct xml_data_node;
 class analog_field;
 
 // constructor function pointer
@@ -1691,6 +1691,7 @@ ATTR_COLD void INPUT_PORTS_NAME(_name)(device_t &owner, ioport_list &portlist, a
 // analog adjuster definition
 #define PORT_ADJUSTER(_default, _name) \
 	configurer.field_alloc(IPT_ADJUSTER, (_default), 0xff, (_name)); \
+	configurer.field_set_min_max(0, 100); \
 
 // config definition
 #define PORT_CONFNAME(_mask, _default, _name) \

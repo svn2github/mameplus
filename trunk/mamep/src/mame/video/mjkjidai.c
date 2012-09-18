@@ -8,14 +8,13 @@
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(mjkjidai_state::get_tile_info)
 {
-	mjkjidai_state *state = machine.driver_data<mjkjidai_state>();
 
-	int attr = state->m_videoram[tile_index + 0x800];
-	int code = state->m_videoram[tile_index] + ((attr & 0x1f) << 8);
-	int color = state->m_videoram[tile_index + 0x1000];
-	SET_TILE_INFO(0,code,color >> 3,0);
+	int attr = m_videoram[tile_index + 0x800];
+	int code = m_videoram[tile_index] + ((attr & 0x1f) << 8);
+	int color = m_videoram[tile_index + 0x1000];
+	SET_TILE_INFO_MEMBER(0,code,color >> 3,0);
 }
 
 
@@ -26,10 +25,9 @@ static TILE_GET_INFO( get_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( mjkjidai )
+void mjkjidai_state::video_start()
 {
-	mjkjidai_state *state = machine.driver_data<mjkjidai_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info,tilemap_scan_rows,8,8,64,32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mjkjidai_state::get_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
 }
 
 
@@ -51,7 +49,7 @@ WRITE8_MEMBER(mjkjidai_state::mjkjidai_ctrl_w)
 {
 	UINT8 *rom = memregion("maincpu")->base();
 
-//  logerror("%04x: port c0 = %02x\n",cpu_get_pc(&space.device()),data);
+//  logerror("%04x: port c0 = %02x\n",space.device().safe_pc(),data);
 
 	/* bit 0 = NMI enable */
 	m_nmi_mask = data & 1;

@@ -24,10 +24,14 @@ public:
 	DECLARE_WRITE32_MEMBER(silkroad_fgram3_w);
 	DECLARE_WRITE32_MEMBER(silk_6295_bank_w);
 	DECLARE_DRIVER_INIT(silkroad);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg2_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg3_tile_info);
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/silkroad.c -----------*/
 
-VIDEO_START(silkroad);
+
 SCREEN_UPDATE_IND16(silkroad);

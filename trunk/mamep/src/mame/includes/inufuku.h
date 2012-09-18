@@ -33,7 +33,7 @@ public:
 	UINT16    m_pending_command;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE16_MEMBER(inufuku_soundcommand_w);
 	DECLARE_WRITE8_MEMBER(pending_command_clear_w);
 	DECLARE_WRITE8_MEMBER(inufuku_soundrombank_w);
@@ -44,6 +44,11 @@ public:
 	DECLARE_READ16_MEMBER(inufuku_tx_videoram_r);
 	DECLARE_WRITE16_MEMBER(inufuku_tx_videoram_w);
 	DECLARE_CUSTOM_INPUT_MEMBER(soundflag_r);
+	TILE_GET_INFO_MEMBER(get_inufuku_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_inufuku_tx_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -51,4 +56,4 @@ public:
 
 
 SCREEN_UPDATE_IND16( inufuku );
-VIDEO_START( inufuku );
+

@@ -47,12 +47,18 @@ public:
 	DECLARE_WRITE8_MEMBER(i8039_T0_w);
 	DECLARE_WRITE8_MEMBER(finalizr_videoctrl_w);
 	DECLARE_DRIVER_INIT(finalizr);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/finalizr.c -----------*/
 
 
-PALETTE_INIT( finalizr );
-VIDEO_START( finalizr );
+
+
 SCREEN_UPDATE_IND16( finalizr );

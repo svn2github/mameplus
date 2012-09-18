@@ -21,8 +21,8 @@ public:
 	int        m_bank2;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k051316_1;
 	device_t *m_k051316_2;
 	device_t *m_k051316_3;
@@ -30,6 +30,9 @@ public:
 	DECLARE_WRITE16_MEMBER(sound_cmd_w);
 	DECLARE_WRITE16_MEMBER(sound_irq_trigger_w);
 	DECLARE_WRITE16_MEMBER(ultraman_gfxctrl_w);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -42,5 +45,5 @@ extern void ultraman_zoom_callback_1(running_machine &machine, int *code,int *co
 extern void ultraman_zoom_callback_2(running_machine &machine, int *code,int *color,int *flags);
 
 
-VIDEO_START( ultraman );
+
 SCREEN_UPDATE_IND16( ultraman );

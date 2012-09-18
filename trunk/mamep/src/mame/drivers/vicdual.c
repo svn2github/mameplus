@@ -95,7 +95,7 @@ INPUT_CHANGED_MEMBER(vicdual_state::coin_changed)
 		coin_counter_w(machine(), 0, 1);
 		coin_counter_w(machine(), 0, 0);
 
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_RESET, PULSE_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 
 		/* simulate the coin switch being closed for a while */
 		machine().scheduler().timer_set(4 * machine().primary_screen->frame_period(), FUNC(clear_coin_status));
@@ -482,7 +482,7 @@ static MACHINE_CONFIG_DERIVED( frogs, vicdual_root )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(frogs_map)
 	MCFG_CPU_IO_MAP(frogs_io_map)
-	MCFG_MACHINE_START(frogs_audio)
+	MCFG_MACHINE_START_OVERRIDE(vicdual_state,frogs_audio)
 
 	/* video hardware */
 	MCFG_SCREEN_MODIFY("screen")

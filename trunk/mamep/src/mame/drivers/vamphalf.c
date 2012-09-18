@@ -588,7 +588,7 @@ Offset+3
 static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap)
 {
 	vamphalf_state *state = screen.machine().driver_data<vamphalf_state>();
-	const gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 	UINT32 cnt;
 	int block, offs;
 	int code,color,x,y,fx,fy;
@@ -674,7 +674,7 @@ static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap)
 static void draw_sprites_aoh(screen_device &screen, bitmap_ind16 &bitmap)
 {
 	vamphalf_state *state = screen.machine().driver_data<vamphalf_state>();
-	const gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 	UINT32 cnt;
 	int block, offs;
 	int code,color,x,y,fx,fy;
@@ -2209,7 +2209,7 @@ ROM_END
 
 static int irq_active(address_space *space)
 {
-	UINT32 FCR = cpu_get_reg(&space->device(), 27);
+	UINT32 FCR = space->device().state().state_int(27);
 	if( !(FCR&(1<<29)) ) // int 2 (irq 4)
 		return 1;
 	else
@@ -2218,12 +2218,12 @@ static int irq_active(address_space *space)
 
 READ16_MEMBER(vamphalf_state::vamphalf_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0x82de)
+	if(space.device().safe_pc() == 0x82de)
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram[(0x4a840/2)+offset];
@@ -2231,12 +2231,12 @@ READ16_MEMBER(vamphalf_state::vamphalf_speedup_r)
 
 READ16_MEMBER(vamphalf_state::vamphafk_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0x82de)
+	if(space.device().safe_pc() == 0x82de)
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram[(0x4a6d0/2)+offset];
@@ -2244,12 +2244,12 @@ READ16_MEMBER(vamphalf_state::vamphafk_speedup_r)
 
 READ16_MEMBER(vamphalf_state::misncrft_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0xecc8)
+	if(space.device().safe_pc() == 0xecc8)
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram[(0x72eb4/2)+offset];
@@ -2257,12 +2257,12 @@ READ16_MEMBER(vamphalf_state::misncrft_speedup_r)
 
 READ16_MEMBER(vamphalf_state::coolmini_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0x75f7a)
+	if(space.device().safe_pc() == 0x75f7a)
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram[(0xd2e80/2)+offset];
@@ -2270,12 +2270,12 @@ READ16_MEMBER(vamphalf_state::coolmini_speedup_r)
 
 READ16_MEMBER(vamphalf_state::suplup_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0xaf18a )
+	if(space.device().safe_pc() == 0xaf18a )
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram[(0x11605c/2)+offset];
@@ -2283,12 +2283,12 @@ READ16_MEMBER(vamphalf_state::suplup_speedup_r)
 
 READ16_MEMBER(vamphalf_state::luplup_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0xaefac )
+	if(space.device().safe_pc() == 0xaefac )
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram[(0x115e84/2)+offset];
@@ -2296,12 +2296,12 @@ READ16_MEMBER(vamphalf_state::luplup_speedup_r)
 
 READ16_MEMBER(vamphalf_state::luplup29_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0xae6c0 )
+	if(space.device().safe_pc() == 0xae6c0 )
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram[(0x113f08/2)+offset];
@@ -2309,12 +2309,12 @@ READ16_MEMBER(vamphalf_state::luplup29_speedup_r)
 
 READ16_MEMBER(vamphalf_state::puzlbang_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0xae6d2 )
+	if(space.device().safe_pc() == 0xae6d2 )
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram[(0x113ecc/2)+offset];
@@ -2322,14 +2322,14 @@ READ16_MEMBER(vamphalf_state::puzlbang_speedup_r)
 
 READ32_MEMBER(vamphalf_state::wyvernwg_speedup_r)
 {
-	int pc = cpu_get_pc(&space.device());
+	int pc = space.device().safe_pc();
 
 	if(pc == 0x10758)
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram32[0x00b56fc/4];
@@ -2337,14 +2337,14 @@ READ32_MEMBER(vamphalf_state::wyvernwg_speedup_r)
 
 READ32_MEMBER(vamphalf_state::wyvernwga_speedup_r)
 {
-	int pc = cpu_get_pc(&space.device());
+	int pc = space.device().safe_pc();
 
 	if(pc == 0x10758)
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram32[0x00b74f8/4];
@@ -2354,12 +2354,12 @@ READ32_MEMBER(vamphalf_state::wyvernwga_speedup_r)
 
 READ32_MEMBER(vamphalf_state::finalgdr_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0x1c212)
+	if(space.device().safe_pc() == 0x1c212)
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram32[0x005e874/4];
@@ -2367,13 +2367,13 @@ READ32_MEMBER(vamphalf_state::finalgdr_speedup_r)
 
 READ32_MEMBER(vamphalf_state::mrkicker_speedup_r)
 {
-	UINT32 pc = cpu_get_pc(&space.device());
+	UINT32 pc = space.device().safe_pc();
 	if(pc == 0x469de || pc == 0x46a36)
 	{
 //      if(irq_active(&space))
-//          device_spin_until_interrupt(&space.device());
+//          space.device().execute().spin_until_interrupt();
 //      else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram32[0x00701a4/4];
@@ -2382,12 +2382,12 @@ READ32_MEMBER(vamphalf_state::mrkicker_speedup_r)
 
 READ16_MEMBER(vamphalf_state::dquizgo2_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0xaa622)
+	if(space.device().safe_pc() == 0xaa622)
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram[(0xcde70/2)+offset];
@@ -2395,13 +2395,13 @@ READ16_MEMBER(vamphalf_state::dquizgo2_speedup_r)
 
 READ32_MEMBER(vamphalf_state::aoh_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0xb994 )
+	if(space.device().safe_pc() == 0xb994 )
 	{
-		device_eat_cycles(&space.device(), 500);
+		space.device().execute().eat_cycles(500);
 	}
-	else if (cpu_get_pc(&space.device()) == 0xba40 )
+	else if (space.device().safe_pc() == 0xba40 )
 	{
-		device_eat_cycles(&space.device(), 500);
+		space.device().execute().eat_cycles(500);
 	}
 
 
@@ -2410,12 +2410,12 @@ READ32_MEMBER(vamphalf_state::aoh_speedup_r)
 
 READ16_MEMBER(vamphalf_state::jmpbreak_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0x983c)
+	if(space.device().safe_pc() == 0x983c)
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram[(0x00906fc / 2)+offset];
@@ -2423,12 +2423,12 @@ READ16_MEMBER(vamphalf_state::jmpbreak_speedup_r)
 
 READ16_MEMBER(vamphalf_state::mrdig_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0x1710)
+	if(space.device().safe_pc() == 0x1710)
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 		else
-			device_eat_cycles(&space.device(), 50);
+			space.device().execute().eat_cycles(50);
 	}
 
 	return m_wram[(0x00a99c / 2)+offset];
@@ -2437,10 +2437,10 @@ READ16_MEMBER(vamphalf_state::mrdig_speedup_r)
 READ16_MEMBER(vamphalf_state::dtfamily_speedup_r)
 {
 
-	int pc = cpu_get_pc(&space.device());
+	int pc = space.device().safe_pc();
 
 	if (pc == 0x12fa6)
-		device_spin_until_interrupt(&space.device());
+		space.device().execute().spin_until_interrupt();
 
 	return m_wram[0xcc2a8 / 2];
 
@@ -2449,8 +2449,8 @@ READ16_MEMBER(vamphalf_state::dtfamily_speedup_r)
 READ16_MEMBER(vamphalf_state::toyland_speedup_r)
 {
 
-	if (cpu_get_pc(&space.device()) == 0x130c2)
-		device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc() == 0x130c2)
+		space.device().execute().spin_until_interrupt();
 
 	return m_wram[0x780d8 / 2];
 
@@ -2458,10 +2458,10 @@ READ16_MEMBER(vamphalf_state::toyland_speedup_r)
 
 READ16_MEMBER(vamphalf_state::boonggab_speedup_r)
 {
-	if(cpu_get_pc(&space.device()) == 0x13198)
+	if(space.device().safe_pc() == 0x13198)
 	{
 		if(irq_active(&space))
-			device_spin_until_interrupt(&space.device());
+			space.device().execute().spin_until_interrupt();
 	}
 
 	return m_wram[(0xf1b7c / 2)+offset];

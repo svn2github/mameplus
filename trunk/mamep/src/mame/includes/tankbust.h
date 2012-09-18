@@ -37,12 +37,17 @@ public:
 	DECLARE_WRITE8_MEMBER(tankbust_yscroll_w);
 	DECLARE_READ8_MEMBER(tankbust_soundlatch_r);
 	DECLARE_READ8_MEMBER(tankbust_soundtimer_r);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_txt_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/tankbust.c -----------*/
 
-VIDEO_START( tankbust );
+
 SCREEN_UPDATE_IND16( tankbust );
 
 

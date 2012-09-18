@@ -70,7 +70,7 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
-enum _text_file_type
+enum text_file_type
 {
 	TFT_OSD = 0,	/* OSD depdendent encoding format used when BOMs missing */
 	TFT_UTF8,		/* UTF-8 */
@@ -79,11 +79,9 @@ enum _text_file_type
 	TFT_UTF32BE,	/* UTF-32 (UCS-4) (big endian) */
 	TFT_UTF32LE		/* UTF-32 (UCS-4) (little endian) */
 };
-typedef enum _text_file_type text_file_type;
 
 
-typedef struct _zlib_data zlib_data;
-struct _zlib_data
+struct zlib_data
 {
 	z_stream		stream;
 	UINT8			buffer[1024];
@@ -92,8 +90,7 @@ struct _zlib_data
 };
 
 
-/* typedef struct _core_file core_file -- declared in corefile.h */
-struct _core_file
+struct core_file
 {
 	osd_file *		file;						/* OSD file handle */
 	zlib_data *		zdata;						/* compression data */

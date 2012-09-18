@@ -26,9 +26,9 @@
 
 ***************************************************************************/
 
-PALETTE_INIT( thepit )
+void thepit_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0; i < 32; i++)
@@ -50,13 +50,13 @@ PALETTE_INIT( thepit )
 		bit2 = (color_prom[i] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 
 	/* allocate primary colors for the background and foreground
        this is wrong, but I don't know where to pick the colors from */
 	for (i = 0; i < 8; i++)
-		palette_set_color_rgb(machine, i + 32, pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0));
+		palette_set_color_rgb(machine(), i + 32, pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0));
 }
 
 
@@ -67,9 +67,9 @@ PALETTE_INIT( thepit )
 
 ***************************************************************************/
 
-PALETTE_INIT( suprmous )
+PALETTE_INIT_MEMBER(thepit_state,suprmous)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0; i < 32; i++)
@@ -78,13 +78,13 @@ PALETTE_INIT( suprmous )
 		UINT8 g = BITSWAP8(color_prom[i + 0x20], 0, 1, 2, 3, 4, 5, 6, 7);
 		UINT8 r = (b>>5&7)<<2 | (g>>6&3);
 
-		palette_set_color_rgb(machine, i, pal5bit(r), pal5bit(g), pal4bit(b));
+		palette_set_color_rgb(machine(), i, pal5bit(r), pal5bit(g), pal4bit(b));
 	}
 
 	/* allocate primary colors for the background and foreground
        this is wrong, but I don't know where to pick the colors from */
 	for (i = 0; i < 8; i++)
-		palette_set_color_rgb(machine, i + 32, pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0));
+		palette_set_color_rgb(machine(), i + 32, pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0));
 }
 
 
@@ -95,23 +95,21 @@ PALETTE_INIT( suprmous )
 
 ***************************************************************************/
 
-static TILE_GET_INFO( solid_get_tile_info )
+TILE_GET_INFO_MEMBER(thepit_state::solid_get_tile_info)
 {
-	thepit_state *state = machine.driver_data<thepit_state>();
-	UINT8 back_color = (state->m_colorram[tile_index] & 0x70) >> 4;
-	int priority = (back_color != 0) && ((state->m_colorram[tile_index] & 0x80) == 0);
-	tileinfo.pen_data = state->m_dummy_tile;
+	UINT8 back_color = (m_colorram[tile_index] & 0x70) >> 4;
+	int priority = (back_color != 0) && ((m_colorram[tile_index] & 0x80) == 0);
+	tileinfo.pen_data = m_dummy_tile;
 	tileinfo.palette_base = back_color + 32;
 	tileinfo.category = priority;
 }
 
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(thepit_state::get_tile_info)
 {
-	thepit_state *state = machine.driver_data<thepit_state>();
-	UINT8 fore_color = state->m_colorram[tile_index] % machine.gfx[0]->total_colors;
-	UINT8 code = state->m_videoram[tile_index];
-	SET_TILE_INFO(2 * state->m_graphics_bank, code, fore_color, 0);
+	UINT8 fore_color = m_colorram[tile_index] % machine().gfx[0]->colors();
+	UINT8 code = m_videoram[tile_index];
+	SET_TILE_INFO_MEMBER(2 * m_graphics_bank, code, fore_color, 0);
 }
 
 
@@ -122,20 +120,19 @@ static TILE_GET_INFO( get_tile_info )
  *
  *************************************/
 
-VIDEO_START( thepit )
+void thepit_state::video_start()
 {
-	thepit_state *state = machine.driver_data<thepit_state>();
-	state->m_solid_tilemap = tilemap_create(machine, solid_get_tile_info,tilemap_scan_rows,8,8,32,32);
+	m_solid_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(thepit_state::solid_get_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
 
-	state->m_tilemap = tilemap_create(machine, get_tile_info,tilemap_scan_rows,8,8,32,32);
-	state->m_tilemap->set_transparent_pen(0);
+	m_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(thepit_state::get_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
+	m_tilemap->set_transparent_pen(0);
 
-	state->m_solid_tilemap->set_scroll_cols(32);
-	state->m_tilemap->set_scroll_cols(32);
+	m_solid_tilemap->set_scroll_cols(32);
+	m_tilemap->set_scroll_cols(32);
 
-	state->m_dummy_tile = auto_alloc_array_clear(machine, UINT8, 8*8);
+	m_dummy_tile = auto_alloc_array_clear(machine(), UINT8, 8*8);
 
-	state->m_graphics_bank = 0;	/* only used in intrepid */
+	m_graphics_bank = 0;	/* only used in intrepid */
 }
 
 

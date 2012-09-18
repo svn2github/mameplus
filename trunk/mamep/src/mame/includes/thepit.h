@@ -33,12 +33,17 @@ public:
 	DECLARE_WRITE8_MEMBER(intrepid_graphics_bank_w);
 	DECLARE_READ8_MEMBER(thepit_input_port_0_r);
 	DECLARE_DRIVER_INIT(rtriv);
+	TILE_GET_INFO_MEMBER(solid_get_tile_info);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_PALETTE_INIT(suprmous);
 };
 
 
 /*----------- defined in video/thepit.c -----------*/
 
-PALETTE_INIT( thepit );
-PALETTE_INIT( suprmous );
-VIDEO_START( thepit );
+
+
+
 SCREEN_UPDATE_IND16( thepit );

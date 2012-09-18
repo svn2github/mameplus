@@ -42,7 +42,7 @@ public:
 	bitmap_ind16  *m_right;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	device_t *m_deco_tilegen1;
 	device_t *m_deco_tilegen2;
 
@@ -77,32 +77,33 @@ public:
 	DECLARE_READ32_MEMBER(backfire_eeprom_r);
 	DECLARE_WRITE32_MEMBER(backfire_eeprom_w);
 	DECLARE_DRIVER_INIT(backfire);
+	virtual void machine_start();
+	virtual void video_start();
 };
 
 //UINT32 *backfire_180010, *backfire_188010;
 
 /* I'm using the functions in deco16ic.c ... same chips, why duplicate code? */
-static VIDEO_START( backfire )
+void backfire_state::video_start()
 {
-	backfire_state *state = machine.driver_data<backfire_state>();
 
-	state->m_spriteram_1 = auto_alloc_array(machine, UINT16, 0x2000/2);
-	state->m_spriteram_2 = auto_alloc_array(machine, UINT16, 0x2000/2);
+	m_spriteram_1 = auto_alloc_array(machine(), UINT16, 0x2000/2);
+	m_spriteram_2 = auto_alloc_array(machine(), UINT16, 0x2000/2);
 
 	/* and register the allocated ram so that save states still work */
-	state->save_item(NAME(state->m_pf1_rowscroll));
-	state->save_item(NAME(state->m_pf2_rowscroll));
-	state->save_item(NAME(state->m_pf3_rowscroll));
-	state->save_item(NAME(state->m_pf4_rowscroll));
+	save_item(NAME(m_pf1_rowscroll));
+	save_item(NAME(m_pf2_rowscroll));
+	save_item(NAME(m_pf3_rowscroll));
+	save_item(NAME(m_pf4_rowscroll));
 
-	state->m_left =  auto_bitmap_ind16_alloc(machine, 80*8, 32*8);
-	state->m_right = auto_bitmap_ind16_alloc(machine, 80*8, 32*8);
+	m_left =  auto_bitmap_ind16_alloc(machine(), 80*8, 32*8);
+	m_right = auto_bitmap_ind16_alloc(machine(), 80*8, 32*8);
 
-	state->save_pointer(NAME(state->m_spriteram_1), 0x2000/2);
-	state->save_pointer(NAME(state->m_spriteram_2), 0x2000/2);
+	save_pointer(NAME(m_spriteram_1), 0x2000/2);
+	save_pointer(NAME(m_spriteram_2), 0x2000/2);
 
-	state->save_item(NAME(*state->m_left));
-	state->save_item(NAME(*state->m_right));
+	save_item(NAME(*m_left));
+	save_item(NAME(*m_right));
 }
 
 
@@ -189,7 +190,7 @@ READ32_MEMBER(backfire_state::backfire_eeprom_r)
 READ32_MEMBER(backfire_state::backfire_control2_r)
 {
 
-//  logerror("%08x:Read eprom %08x (%08x)\n", cpu_get_pc(&space.device()), offset << 1, mem_mask);
+//  logerror("%08x:Read eprom %08x (%08x)\n", space.device().safe_pc(), offset << 1, mem_mask);
 	return (m_eeprom->read_bit() << 24) | ioport("IN1")->read() | (ioport("IN1")->read() << 16);
 }
 
@@ -197,7 +198,7 @@ READ32_MEMBER(backfire_state::backfire_control2_r)
 READ32_MEMBER(backfire_state::backfire_control3_r)
 {
 
-//  logerror("%08x:Read eprom %08x (%08x)\n", cpu_get_pc(&space.device()), offset << 1, mem_mask);
+//  logerror("%08x:Read eprom %08x (%08x)\n", space.device().safe_pc(), offset << 1, mem_mask);
 	return (m_eeprom->read_bit() << 24) | ioport("IN2")->read() | (ioport("IN2")->read() << 16);
 }
 #endif
@@ -296,8 +297,8 @@ static ADDRESS_MAP_START( backfire_map, AS_PROGRAM, 32, backfire_state )
 	AM_RANGE(0x160000, 0x161fff) AM_WRITE(backfire_nonbuffered_palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0x170000, 0x177fff) AM_RAM AM_SHARE("mainram")// main ram
 
-//  AM_RANGE(0x180010, 0x180013) AM_RAM AM_BASE_LEGACY(&backfire_180010) // always 180010 ?
-//  AM_RANGE(0x188010, 0x188013) AM_RAM AM_BASE_LEGACY(&backfire_188010) // always 188010 ?
+//  AM_RANGE(0x180010, 0x180013) AM_RAM AM_SHARE("backfire_180010") // always 180010 ?
+//  AM_RANGE(0x188010, 0x188013) AM_RAM AM_SHARE("backfire_188010") // always 188010 ?
 
 	AM_RANGE(0x184000, 0x185fff) AM_READWRITE(backfire_spriteram1_r, backfire_spriteram1_w)
 	AM_RANGE(0x18c000, 0x18dfff) AM_READWRITE(backfire_spriteram2_r, backfire_spriteram2_w)
@@ -433,7 +434,7 @@ static const ymz280b_interface ymz280b_intf =
 
 static INTERRUPT_GEN( deco32_vbl_interrupt )
 {
-	device_set_input_line(device, ARM_IRQ_LINE, HOLD_LINE);
+	device->execute().set_input_line(ARM_IRQ_LINE, HOLD_LINE);
 }
 
 
@@ -471,16 +472,15 @@ static const deco16ic_interface backfire_deco16ic_tilegen2_intf =
 	2,3
 };
 
-static MACHINE_START( backfire )
+void backfire_state::machine_start()
 {
-	backfire_state *state = machine.driver_data<backfire_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_deco_tilegen1 = machine.device("tilegen1");
-	state->m_deco_tilegen2 = machine.device("tilegen2");
-	state->m_lscreen = machine.device("lscreen");
-	state->m_rscreen = machine.device("rscreen");
-	state->m_eeprom = machine.device<eeprom_device>("eeprom");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_deco_tilegen1 = machine().device("tilegen1");
+	m_deco_tilegen2 = machine().device("tilegen2");
+	m_lscreen = machine().device("lscreen");
+	m_rscreen = machine().device("rscreen");
+	m_eeprom = machine().device<eeprom_device>("eeprom");
 }
 
 UINT16 backfire_pri_callback(UINT16 x)
@@ -504,7 +504,6 @@ static MACHINE_CONFIG_START( backfire, backfire_state )
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_MACHINE_START(backfire)
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(2048)
@@ -525,7 +524,6 @@ static MACHINE_CONFIG_START( backfire, backfire_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(backfire_right)
 
-	MCFG_VIDEO_START(backfire)
 
 	MCFG_DECO16IC_ADD("tilegen1", backfire_deco16ic_tilegen1_intf)
 	MCFG_DECO16IC_ADD("tilegen2", backfire_deco16ic_tilegen2_intf)
@@ -699,10 +697,10 @@ static void descramble_sound( running_machine &machine )
 READ32_MEMBER(backfire_state::backfire_speedup_r)
 {
 
-	//mame_printf_debug( "%08x\n",cpu_get_pc(&space.device()));
+	//mame_printf_debug( "%08x\n",space.device().safe_pc());
 
-	if (cpu_get_pc(&space.device() )== 0xce44)  device_spin_until_time(&space.device(), attotime::from_usec(400)); // backfire
-	if (cpu_get_pc(&space.device()) == 0xcee4)  device_spin_until_time(&space.device(), attotime::from_usec(400)); // backfirea
+	if (space.device() .safe_pc()== 0xce44)  space.device().execute().spin_until_time(attotime::from_usec(400)); // backfire
+	if (space.device().safe_pc() == 0xcee4)  space.device().execute().spin_until_time(attotime::from_usec(400)); // backfirea
 
 	return m_mainram[0x18/4];
 }

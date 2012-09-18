@@ -37,7 +37,7 @@ static INTERRUPT_GEN ( bwp3_interrupt )
 	bwing_state *state = device->machine().driver_data<bwing_state>();
 
 	if (!state->m_bwp3_nmimask)
-		device_set_input_line(device, INPUT_LINE_NMI, ASSERT_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 //****************************************************************************
@@ -60,7 +60,7 @@ WRITE8_MEMBER(bwing_state::bwp3_nmimask_w)
 
 WRITE8_MEMBER(bwing_state::bwp3_nmiack_w)
 {
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 
@@ -83,16 +83,16 @@ WRITE8_MEMBER(bwing_state::bwp1_ctrl_w)
 	switch (offset)
 	{
 		// MSSTB
-		case 0: device_set_input_line(m_subcpu, M6809_IRQ_LINE, ASSERT_LINE); break;
+		case 0: m_subcpu->set_input_line(M6809_IRQ_LINE, ASSERT_LINE); break;
 
 		// IRQACK
-		case 1: device_set_input_line(m_maincpu, M6809_IRQ_LINE, CLEAR_LINE); break;
+		case 1: m_maincpu->set_input_line(M6809_IRQ_LINE, CLEAR_LINE); break;
 
 		// FIRQACK
-		case 2: device_set_input_line(m_maincpu, M6809_FIRQ_LINE, CLEAR_LINE); break;
+		case 2: m_maincpu->set_input_line(M6809_FIRQ_LINE, CLEAR_LINE); break;
 
 		// NMIACK
-		case 3: device_set_input_line(m_maincpu, INPUT_LINE_NMI, CLEAR_LINE); break;
+		case 3: m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE); break;
 
 		// SWAP(bank-swaps sprite RAM between 1800 & 1900; ignored bc. they're treated as a single chunk.)
 		case 4: break;
@@ -100,11 +100,11 @@ WRITE8_MEMBER(bwing_state::bwp1_ctrl_w)
 		// SNDREQ
 		case 5:
 			if (data == 0x80) // protection trick to screw CPU1 & 3
-				device_set_input_line(m_subcpu, INPUT_LINE_NMI, ASSERT_LINE); // SNMI
+				m_subcpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE); // SNMI
 			else
 			{
 				soundlatch_byte_w(space, 0, data);
-				device_set_input_line(m_audiocpu, DECO16_IRQ_LINE, HOLD_LINE); // SNDREQ
+				m_audiocpu->set_input_line(DECO16_IRQ_LINE, HOLD_LINE); // SNDREQ
 			}
 		break;
 
@@ -125,13 +125,13 @@ WRITE8_MEMBER(bwing_state::bwp2_ctrl_w)
 {
 	switch (offset)
 	{
-		case 0: device_set_input_line(m_maincpu, M6809_IRQ_LINE, ASSERT_LINE); break; // SMSTB
+		case 0: m_maincpu->set_input_line(M6809_IRQ_LINE, ASSERT_LINE); break; // SMSTB
 
-		case 1: device_set_input_line(m_subcpu, M6809_FIRQ_LINE, CLEAR_LINE); break;
+		case 1: m_subcpu->set_input_line(M6809_FIRQ_LINE, CLEAR_LINE); break;
 
-		case 2: device_set_input_line(m_subcpu, M6809_IRQ_LINE, CLEAR_LINE); break;
+		case 2: m_subcpu->set_input_line(M6809_IRQ_LINE, CLEAR_LINE); break;
 
-		case 3: device_set_input_line(m_subcpu, INPUT_LINE_NMI, CLEAR_LINE); break;
+		case 3: m_subcpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE); break;
 	}
 
 	#if BW_DEBUG
@@ -193,12 +193,12 @@ ADDRESS_MAP_END
 
 INPUT_CHANGED_MEMBER(bwing_state::coin_inserted)
 {
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
 }
 
 INPUT_CHANGED_MEMBER(bwing_state::tilt_pressed)
 {
-	cputag_set_input_line(machine(), "maincpu", M6809_FIRQ_LINE, newval ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, newval ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static INPUT_PORTS_START( bwing )
@@ -333,35 +333,33 @@ GFXDECODE_END
 //****************************************************************************
 // Hardware Definitions
 
-static MACHINE_START( bwing )
+void bwing_state::machine_start()
 {
-	bwing_state *state = machine.driver_data<bwing_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_subcpu = machine.device("sub");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_subcpu = machine().device<cpu_device>("sub");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_palatch));
-	state->save_item(NAME(state->m_srbank));
-	state->save_item(NAME(state->m_mapmask));
-	state->save_item(NAME(state->m_mapflip));
-	state->save_item(NAME(state->m_bwp3_nmimask));
-	state->save_item(NAME(state->m_bwp3_u8F_d));
+	save_item(NAME(m_palatch));
+	save_item(NAME(m_srbank));
+	save_item(NAME(m_mapmask));
+	save_item(NAME(m_mapflip));
+	save_item(NAME(m_bwp3_nmimask));
+	save_item(NAME(m_bwp3_u8F_d));
 
-	state->save_item(NAME(state->m_sreg));
+	save_item(NAME(m_sreg));
 }
 
-static MACHINE_RESET( bwing )
+void bwing_state::machine_reset()
 {
-	bwing_state *state = machine.driver_data<bwing_state>();
 
-	state->m_palatch = 0;
-	state->m_srbank = 0;
-	state->m_mapmask = 0;
-	state->m_mapflip = 0;
+	m_palatch = 0;
+	m_srbank = 0;
+	m_mapmask = 0;
+	m_mapflip = 0;
 
-	state->m_bwp3_nmimask = 0;
-	state->m_bwp3_u8F_d = 0;
+	m_bwp3_nmimask = 0;
+	m_bwp3_u8F_d = 0;
 }
 
 static MACHINE_CONFIG_START( bwing, bwing_state )
@@ -380,8 +378,6 @@ static MACHINE_CONFIG_START( bwing, bwing_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(18000))		// high enough?
 
-	MCFG_MACHINE_START(bwing)
-	MCFG_MACHINE_RESET(bwing)
 
 	// video hardware
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
@@ -396,7 +392,6 @@ static MACHINE_CONFIG_START( bwing, bwing_state )
 	MCFG_GFXDECODE(bwing)
 	MCFG_PALETTE_LENGTH(64)
 
-	MCFG_VIDEO_START(bwing)
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")

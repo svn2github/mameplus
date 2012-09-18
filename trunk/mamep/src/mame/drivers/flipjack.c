@@ -120,6 +120,8 @@ public:
 	DECLARE_INPUT_CHANGED_MEMBER(flipjack_coin);
 	DECLARE_READ8_MEMBER(flipjack_soundlatch_r);
 	DECLARE_WRITE8_MEMBER(flipjack_portc_w);
+	virtual void machine_start();
+	virtual void palette_init();
 };
 
 
@@ -129,19 +131,19 @@ public:
 
 ***************************************************************************/
 
-PALETTE_INIT( flipjack )
+void flipjack_state::palette_init()
 {
 	// from prom
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	for (int i = 0; i < 0x40; i++)
 	{
-		palette_set_color_rgb(machine, 2*i+1, pal1bit(i >> 1), pal1bit(i >> 2), pal1bit(i >> 0));
-		palette_set_color_rgb(machine, 2*i+0, pal1bit(color_prom[i] >> 1), pal1bit(color_prom[i] >> 2), pal1bit(color_prom[i] >> 0));
+		palette_set_color_rgb(machine(), 2*i+1, pal1bit(i >> 1), pal1bit(i >> 2), pal1bit(i >> 0));
+		palette_set_color_rgb(machine(), 2*i+0, pal1bit(color_prom[i] >> 1), pal1bit(color_prom[i] >> 2), pal1bit(color_prom[i] >> 0));
 	}
 
 	// standard 3bpp for blitter
 	for (int i = 0; i < 8; i++)
-		palette_set_color_rgb(machine, i+0x80, pal1bit(i >> 1), pal1bit(i >> 2), pal1bit(i >> 0));
+		palette_set_color_rgb(machine(), i+0x80, pal1bit(i >> 1), pal1bit(i >> 2), pal1bit(i >> 0));
 }
 
 
@@ -191,7 +193,7 @@ static SCREEN_UPDATE_RGB32( flipjack )
 	{
 		for (x=0;x<32;x++)
 		{
-			const gfx_element *gfx = screen.machine().gfx[0];
+			gfx_element *gfx = screen.machine().gfx[0];
 			int tile = state->m_bank << 8 | state->m_vram[x+y*0x100];
 			int color = state->m_cram[x+y*0x100] & 0x3f;
 
@@ -261,19 +263,19 @@ WRITE8_MEMBER(flipjack_state::flipjack_layer_w)
 
 READ8_MEMBER(flipjack_state::flipjack_soundlatch_r)
 {
-	device_set_input_line(m_audiocpu, 0, CLEAR_LINE);
+	m_audiocpu->set_input_line(0, CLEAR_LINE);
 	return m_soundlatch;
 }
 
 WRITE8_MEMBER(flipjack_state::flipjack_soundlatch_w)
 {
 	m_soundlatch = data;
-	device_set_input_line(m_audiocpu, 0, ASSERT_LINE);
+	m_audiocpu->set_input_line(0, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(flipjack_state::flipjack_sound_nmi_ack_w)
 {
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(flipjack_state::flipjack_portc_w)
@@ -284,7 +286,7 @@ WRITE8_MEMBER(flipjack_state::flipjack_portc_w)
 INPUT_CHANGED_MEMBER(flipjack_state::flipjack_coin)
 {
 	if (newval)
-		device_set_input_line(m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+		m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -458,16 +460,15 @@ GFXDECODE_END
 
 
 
-static MACHINE_START( flipjack )
+void flipjack_state::machine_start()
 {
-	flipjack_state *state = machine.driver_data<flipjack_state>();
-	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
-	machine.root_device().membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x2000);
-	state->membank("bank1")->set_entry(0);
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
+	machine().root_device().membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x2000);
+	membank("bank1")->set_entry(0);
 
-	state->save_item(NAME(state->m_soundlatch));
-	state->save_item(NAME(state->m_bank));
-	state->save_item(NAME(state->m_layer));
+	save_item(NAME(m_soundlatch));
+	save_item(NAME(m_bank));
+	save_item(NAME(m_layer));
 }
 
 
@@ -486,7 +487,6 @@ static MACHINE_CONFIG_START( flipjack, flipjack_state )
 
 	MCFG_I8255A_ADD( "ppi8255", ppi8255_intf )
 
-	MCFG_MACHINE_START(flipjack)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -498,7 +498,6 @@ static MACHINE_CONFIG_START( flipjack, flipjack_state )
 	MCFG_GFXDECODE(flipjack)
 
 	MCFG_PALETTE_LENGTH(128+8)
-	MCFG_PALETTE_INIT(flipjack)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

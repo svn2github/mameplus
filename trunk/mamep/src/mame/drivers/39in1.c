@@ -73,6 +73,7 @@ public:
 	DECLARE_WRITE32_MEMBER(cpld_w);
 	DECLARE_READ32_MEMBER(prot_cheater_r);
 	DECLARE_DRIVER_INIT(39in1);
+	virtual void machine_start();
 };
 
 
@@ -724,8 +725,8 @@ static void pxa255_update_interrupts(running_machine& machine)
 
 	intc_regs->icfp = (intc_regs->icpr & intc_regs->icmr) & intc_regs->iclr;
 	intc_regs->icip = (intc_regs->icpr & intc_regs->icmr) & (~intc_regs->iclr);
-	cputag_set_input_line(machine, "maincpu", ARM7_FIRQ_LINE, intc_regs->icfp ? ASSERT_LINE : CLEAR_LINE);
-	cputag_set_input_line(machine, "maincpu", ARM7_IRQ_LINE,  intc_regs->icip ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(ARM7_FIRQ_LINE, intc_regs->icfp ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(ARM7_IRQ_LINE,  intc_regs->icip ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static void pxa255_set_irq_line(running_machine& machine, UINT32 line, int irq_state)
@@ -1370,13 +1371,13 @@ READ32_MEMBER(_39in1_state::unknown_r)
 READ32_MEMBER(_39in1_state::cpld_r)
 {
 
-	//if (cpu_get_pc(&space.device()) != 0xe3af4) printf("CPLD read @ %x (PC %x state %d)\n", offset, cpu_get_pc(&space.device()), state);
+	//if (space.device().safe_pc() != 0xe3af4) printf("CPLD read @ %x (PC %x state %d)\n", offset, space.device().safe_pc(), state);
 
-	if (cpu_get_pc(&space.device()) == 0x3f04)
+	if (space.device().safe_pc() == 0x3f04)
 	{
 		return 0xf0;	  // any non-zero value works here
 	}
-	else if (cpu_get_pc(&space.device()) == 0xe3af4)
+	else if (space.device().safe_pc() == 0xe3af4)
 	{
 		return ioport("MCUIPT")->read();
 	}
@@ -1431,11 +1432,11 @@ WRITE32_MEMBER(_39in1_state::cpld_w)
 		m_seed = data<<16;
 	}
 
-	if (cpu_get_pc(&space.device()) == 0x280c)
+	if (space.device().safe_pc() == 0x280c)
 	{
 		m_state = 1;
 	}
-	if (cpu_get_pc(&space.device()) == 0x2874)
+	if (space.device().safe_pc() == 0x2874)
 	{
 		m_state = 2;
 		m_magic = space.read_byte(0xa02d4ff0);
@@ -1446,7 +1447,7 @@ WRITE32_MEMBER(_39in1_state::cpld_w)
 #if 0
 	else
 	{
-		printf("%08x: CPLD_W: %08x = %08x & %08x\n", cpu_get_pc(&space.device()), offset, data, mem_mask);
+		printf("%08x: CPLD_W: %08x = %08x & %08x\n", space.device().safe_pc(), offset, data, mem_mask);
 	}
 #endif
 }
@@ -1567,9 +1568,9 @@ static void pxa255_start(running_machine& machine)
 	//pxa255_register_state_save(device);
 }
 
-static MACHINE_START(39in1)
+void _39in1_state::machine_start()
 {
-	UINT8 *ROM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *ROM = machine().root_device().memregion("maincpu")->base();
 	int i;
 
 	for (i = 0; i < 0x80000; i += 2)
@@ -1583,7 +1584,7 @@ static MACHINE_START(39in1)
 //          }
 	}
 
-	pxa255_start(machine);
+	pxa255_start(machine());
 }
 
 static MACHINE_CONFIG_START( 39in1, _39in1_state )
@@ -1603,7 +1604,6 @@ static MACHINE_CONFIG_START( 39in1, _39in1_state )
 
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_MACHINE_START(39in1)
 	MCFG_EEPROM_93C66B_ADD("eeprom")
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

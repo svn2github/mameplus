@@ -106,8 +106,7 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _tpi6525_state tpi6525_state;
-struct _tpi6525_state
+struct tpi6525_state
 {
 	devcb_resolved_write_line	out_irq_func;
 	devcb_resolved_read8		in_pa_func;
@@ -141,7 +140,7 @@ INLINE tpi6525_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == TPI6525);
 
-	return (tpi6525_state *)downcast<legacy_device_base *>(device)->token();
+	return (tpi6525_state *)downcast<tpi6525_device *>(device)->token();
 }
 
 
@@ -196,29 +195,6 @@ static DEVICE_RESET( tpi6525 )
 	tpi6525->in_b = 0xff;
 	tpi6525->in_c = 0xff;
 }
-
-
-DEVICE_GET_INFO( tpi6525 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(tpi6525_state);		break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME( tpi6525 );			break;
-		case DEVINFO_FCT_STOP:					/* Nothing */										break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME( tpi6525 );			break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "6525 TPI");			break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "6525 TPI");			break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");					break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MESS Team");	break;
-	}
-}
-
 
 /***************************************************************************
     IMPLEMENTATION
@@ -619,4 +595,40 @@ UINT8 tpi6525_get_ddr_c(device_t *device)
 	return tpi6525->ddr_c;
 }
 
-DEFINE_LEGACY_DEVICE(TPI6525, tpi6525);
+const device_type TPI6525 = &device_creator<tpi6525_device>;
+
+tpi6525_device::tpi6525_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TPI6525, "6525 TPI", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(tpi6525_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void tpi6525_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void tpi6525_device::device_start()
+{
+	DEVICE_START_NAME( tpi6525 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void tpi6525_device::device_reset()
+{
+	DEVICE_RESET_NAME( tpi6525 )(this);
+}
+
+

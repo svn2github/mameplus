@@ -83,6 +83,10 @@ public:
 	DECLARE_DRIVER_INIT(dynabomb);
 	DECLARE_DRIVER_INIT(legendoh);
 	DECLARE_DRIVER_INIT(spotty);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_md_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void video_start();
 };
 
 
@@ -295,46 +299,43 @@ ADDRESS_MAP_END
   VIDEO HARDWARE EMULATION
 *****************************************************************************************************/
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(limenko_state::get_bg_tile_info)
 {
-	limenko_state *state = machine.driver_data<limenko_state>();
-	int tile  = state->m_bg_videoram[tile_index] & 0x7ffff;
-	int color = (state->m_bg_videoram[tile_index]>>28) & 0xf;
-	SET_TILE_INFO(0,tile,color,0);
+	int tile  = m_bg_videoram[tile_index] & 0x7ffff;
+	int color = (m_bg_videoram[tile_index]>>28) & 0xf;
+	SET_TILE_INFO_MEMBER(0,tile,color,0);
 }
 
-static TILE_GET_INFO( get_md_tile_info )
+TILE_GET_INFO_MEMBER(limenko_state::get_md_tile_info)
 {
-	limenko_state *state = machine.driver_data<limenko_state>();
-	int tile  = state->m_md_videoram[tile_index] & 0x7ffff;
-	int color = (state->m_md_videoram[tile_index]>>28) & 0xf;
-	SET_TILE_INFO(0,tile,color,0);
+	int tile  = m_md_videoram[tile_index] & 0x7ffff;
+	int color = (m_md_videoram[tile_index]>>28) & 0xf;
+	SET_TILE_INFO_MEMBER(0,tile,color,0);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(limenko_state::get_fg_tile_info)
 {
-	limenko_state *state = machine.driver_data<limenko_state>();
-	int tile  = state->m_fg_videoram[tile_index] & 0x7ffff;
-	int color = (state->m_fg_videoram[tile_index]>>28) & 0xf;
-	SET_TILE_INFO(0,tile,color,0);
+	int tile  = m_fg_videoram[tile_index] & 0x7ffff;
+	int color = (m_fg_videoram[tile_index]>>28) & 0xf;
+	SET_TILE_INFO_MEMBER(0,tile,color,0);
 }
 
-static void draw_single_sprite(bitmap_ind16 &dest_bmp,const rectangle &clip,const gfx_element *gfx,
+static void draw_single_sprite(bitmap_ind16 &dest_bmp,const rectangle &clip,gfx_element *gfx,
 		UINT32 code,UINT32 color,int flipx,int flipy,int sx,int sy,
 		int priority)
 {
 	limenko_state *state = gfx->machine().driver_data<limenko_state>();
-	int pal_base = gfx->color_base + gfx->color_granularity * (color % gfx->total_colors);
-	const UINT8 *source_base = gfx_element_get_data(gfx, code % gfx->total_elements);
+	int pal_base = gfx->colorbase() + gfx->granularity() * (color % gfx->colors());
+	const UINT8 *source_base = gfx->get_data(code % gfx->elements());
 
-	int sprite_screen_height = ((1<<16)*gfx->height+0x8000)>>16;
-	int sprite_screen_width = ((1<<16)*gfx->width+0x8000)>>16;
+	int sprite_screen_height = ((1<<16)*gfx->height()+0x8000)>>16;
+	int sprite_screen_width = ((1<<16)*gfx->width()+0x8000)>>16;
 
 	if (sprite_screen_width && sprite_screen_height)
 	{
 		/* compute sprite increment per screen pixel */
-		int dx = (gfx->width<<16)/sprite_screen_width;
-		int dy = (gfx->height<<16)/sprite_screen_height;
+		int dx = (gfx->width()<<16)/sprite_screen_width;
+		int dy = (gfx->height()<<16)/sprite_screen_height;
 
 		int ex = sx+sprite_screen_width;
 		int ey = sy+sprite_screen_height;
@@ -392,7 +393,7 @@ static void draw_single_sprite(bitmap_ind16 &dest_bmp,const rectangle &clip,cons
 
 			for( y=sy; y<ey; y++ )
 			{
-				const UINT8 *source = source_base + (y_index>>16) * gfx->line_modulo;
+				const UINT8 *source = source_base + (y_index>>16) * gfx->rowbytes();
 				UINT16 *dest = &dest_bmp.pix16(y);
 				UINT8 *pri = &state->m_sprites_bitmap_pri.pix8(y);
 
@@ -428,7 +429,6 @@ static void draw_sprites(running_machine &machine, UINT32 *sprites, const rectan
 	UINT8 *gfx_max	= base_gfx + state->memregion("gfx1")->bytes();
 
 	UINT8 *gfxdata;
-	gfx_element gfx(machine);
 
 	for(i = 0; i <= count*2; i += 2)
 	{
@@ -463,7 +463,7 @@ static void draw_sprites(running_machine &machine, UINT32 *sprites, const rectan
 			continue;
 
 		/* prepare GfxElement on the fly */
-		gfx_element_build_temporary(&gfx, machine, gfxdata, width, height, width, 0, 256, 0);
+		gfx_element gfx(machine, gfxdata, width, height, width, 0, 256);
 
 		draw_single_sprite(state->m_sprites_bitmap,cliprect,&gfx,0,color,flipx,flipy,x,y,pri);
 
@@ -501,18 +501,17 @@ static void copy_sprites(running_machine &machine, bitmap_ind16 &bitmap, bitmap_
 	}
 }
 
-static VIDEO_START( limenko )
+void limenko_state::video_start()
 {
-	limenko_state *state = machine.driver_data<limenko_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info,tilemap_scan_rows,8,8,128,64);
-	state->m_md_tilemap = tilemap_create(machine, get_md_tile_info,tilemap_scan_rows,8,8,128,64);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info,tilemap_scan_rows,8,8,128,64);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(limenko_state::get_bg_tile_info),this),TILEMAP_SCAN_ROWS,8,8,128,64);
+	m_md_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(limenko_state::get_md_tile_info),this),TILEMAP_SCAN_ROWS,8,8,128,64);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(limenko_state::get_fg_tile_info),this),TILEMAP_SCAN_ROWS,8,8,128,64);
 
-	state->m_md_tilemap->set_transparent_pen(0);
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_md_tilemap->set_transparent_pen(0);
+	m_fg_tilemap->set_transparent_pen(0);
 
-	state->m_sprites_bitmap.allocate(384,240);
-	state->m_sprites_bitmap_pri.allocate(384,240);
+	m_sprites_bitmap.allocate(384,240);
+	m_sprites_bitmap_pri.allocate(384,240);
 }
 
 static SCREEN_UPDATE_IND16( limenko )
@@ -768,7 +767,6 @@ static MACHINE_CONFIG_START( limenko, limenko_state )
 	MCFG_GFXDECODE(limenko)
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_VIDEO_START(limenko)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -800,7 +798,6 @@ static MACHINE_CONFIG_START( spotty, limenko_state )
 	MCFG_GFXDECODE(limenko)
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_VIDEO_START(limenko)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

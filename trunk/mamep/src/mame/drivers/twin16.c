@@ -122,13 +122,13 @@ WRITE16_MEMBER(twin16_state::twin16_CPUA_register_w)
 	if (m_CPUA_register != old)
 	{
 		if ((old & 0x08) == 0 && (m_CPUA_register & 0x08))
-			cputag_set_input_line_and_vector(machine(), "audiocpu", 0, HOLD_LINE, 0xff);
+			machine().device("audiocpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);
 
 		if ((old & 0x40) && (m_CPUA_register & 0x40) == 0)
 			twin16_spriteram_process(machine());
 
 		if ((old & 0x10) == 0 && (m_CPUA_register & 0x10))
-			cputag_set_input_line(machine(), "sub", M68K_IRQ_6, HOLD_LINE);
+			machine().device("sub")->execute().set_input_line(M68K_IRQ_6, HOLD_LINE);
 
 		coin_counter_w(machine(), 0, m_CPUA_register & 0x01);
 		coin_counter_w(machine(), 1, m_CPUA_register & 0x02);
@@ -149,7 +149,7 @@ WRITE16_MEMBER(twin16_state::twin16_CPUB_register_w)
 	if( m_CPUB_register!=old )
 	{
 		if ((old & 0x01) == 0 && (m_CPUB_register & 0x01))
-			cputag_set_input_line(machine(), "maincpu", M68K_IRQ_6, HOLD_LINE);
+			machine().device("maincpu")->execute().set_input_line(M68K_IRQ_6, HOLD_LINE);
 	}
 }
 
@@ -165,7 +165,7 @@ WRITE16_MEMBER(twin16_state::fround_CPU_register_w)
 	if (m_CPUA_register != old)
 	{
 		if ((old & 0x08) == 0 && (m_CPUA_register & 0x08))
-			cputag_set_input_line_and_vector(machine(), "audiocpu", 0, HOLD_LINE, 0xff);
+			machine().device("audiocpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);
 
 		coin_counter_w(machine(), 0, m_CPUA_register & 0x01);
 		coin_counter_w(machine(), 1, m_CPUA_register & 0x02);
@@ -688,35 +688,34 @@ static const k007232_interface k007232_config =
 static INTERRUPT_GEN( CPUA_interrupt )
 {
 	twin16_state *state = device->machine().driver_data<twin16_state>();
-	if (CPUA_IRQ_ENABLE) device_set_input_line(device, 5, HOLD_LINE);
+	if (CPUA_IRQ_ENABLE) device->execute().set_input_line(5, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( CPUB_interrupt )
 {
 	twin16_state *state = device->machine().driver_data<twin16_state>();
-	if (CPUB_IRQ_ENABLE) device_set_input_line(device, 5, HOLD_LINE);
+	if (CPUB_IRQ_ENABLE) device->execute().set_input_line(5, HOLD_LINE);
 }
 
 /* Machine Drivers */
 
-static MACHINE_RESET( twin16 )
+MACHINE_RESET_MEMBER(twin16_state,twin16)
 {
 	;
 }
 
-static MACHINE_START( twin16 )
+MACHINE_START_MEMBER(twin16_state,twin16)
 {
-	twin16_state *state = machine.driver_data<twin16_state>();
-	state->m_CPUA_register=0;
-	state->m_CPUB_register=0;
+	m_CPUA_register=0;
+	m_CPUB_register=0;
 
 	/* register for savestates */
-	state_save_register_global(machine, state->m_CPUA_register);
-	state_save_register_global(machine, state->m_CPUB_register);
+	state_save_register_global(machine(), m_CPUA_register);
+	state_save_register_global(machine(), m_CPUB_register);
 
-	state_save_register_global(machine, state->m_sound_command);
-	state_save_register_global(machine, state->m_cuebrickj_nvram_bank);
-	state_save_register_global_array(machine, state->m_cuebrickj_nvram);
+	state_save_register_global(machine(), m_sound_command);
+	state_save_register_global(machine(), m_cuebrickj_nvram_bank);
+	state_save_register_global_array(machine(), m_cuebrickj_nvram);
 }
 
 static MACHINE_CONFIG_START( twin16, twin16_state )
@@ -734,8 +733,8 @@ static MACHINE_CONFIG_START( twin16, twin16_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(twin16)
-	MCFG_MACHINE_RESET(twin16)
+	MCFG_MACHINE_START_OVERRIDE(twin16_state,twin16)
+	MCFG_MACHINE_RESET_OVERRIDE(twin16_state,twin16)
 
 	// video hardware
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -752,7 +751,7 @@ static MACHINE_CONFIG_START( twin16, twin16_state )
 	MCFG_GFXDECODE(twin16)
 	MCFG_PALETTE_LENGTH(0x400)
 
-	MCFG_VIDEO_START(twin16)
+	MCFG_VIDEO_START_OVERRIDE(twin16_state,twin16)
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -788,8 +787,8 @@ static MACHINE_CONFIG_START( fround, twin16_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(twin16)
-	MCFG_MACHINE_RESET(twin16)
+	MCFG_MACHINE_START_OVERRIDE(twin16_state,twin16)
+	MCFG_MACHINE_RESET_OVERRIDE(twin16_state,twin16)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -806,7 +805,7 @@ static MACHINE_CONFIG_START( fround, twin16_state )
 	MCFG_GFXDECODE(twin16)
 	MCFG_PALETTE_LENGTH(0x400)
 
-	MCFG_VIDEO_START(twin16)
+	MCFG_VIDEO_START_OVERRIDE(twin16_state,twin16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

@@ -32,24 +32,22 @@
       1  | xxxxxxxx x------- | not used?
 */
 
-static TILE_GET_INFO( get_tile_info_targeth_screen0 )
+TILE_GET_INFO_MEMBER(targeth_state::get_tile_info_targeth_screen0)
 {
-	targeth_state *state = machine.driver_data<targeth_state>();
-	int data = state->m_videoram[tile_index << 1];
-	int data2 = state->m_videoram[(tile_index << 1) + 1];
+	int data = m_videoram[tile_index << 1];
+	int data2 = m_videoram[(tile_index << 1) + 1];
 	int code = data & 0x3fff;
 
-	SET_TILE_INFO(0, code, data2 & 0x1f, TILE_FLIPXY((data2 >> 5) & 0x03));
+	SET_TILE_INFO_MEMBER(0, code, data2 & 0x1f, TILE_FLIPXY((data2 >> 5) & 0x03));
 }
 
-static TILE_GET_INFO( get_tile_info_targeth_screen1 )
+TILE_GET_INFO_MEMBER(targeth_state::get_tile_info_targeth_screen1)
 {
-	targeth_state *state = machine.driver_data<targeth_state>();
-	int data = state->m_videoram[(0x2000/2) + (tile_index << 1)];
-	int data2 = state->m_videoram[(0x2000/2) + (tile_index << 1) + 1];
+	int data = m_videoram[(0x2000/2) + (tile_index << 1)];
+	int data2 = m_videoram[(0x2000/2) + (tile_index << 1) + 1];
 	int code = data & 0x3fff;
 
-	SET_TILE_INFO(0, code, data2 & 0x1f, TILE_FLIPXY((data2 >> 5) & 0x03));
+	SET_TILE_INFO_MEMBER(0, code, data2 & 0x1f, TILE_FLIPXY((data2 >> 5) & 0x03));
 }
 
 /***************************************************************************
@@ -71,13 +69,12 @@ WRITE16_MEMBER(targeth_state::targeth_vram_w)
 
 ***************************************************************************/
 
-VIDEO_START( targeth )
+void targeth_state::video_start()
 {
-	targeth_state *state = machine.driver_data<targeth_state>();
-	state->m_pant[0] = tilemap_create(machine, get_tile_info_targeth_screen0,tilemap_scan_rows,16,16,64,32);
-	state->m_pant[1] = tilemap_create(machine, get_tile_info_targeth_screen1,tilemap_scan_rows,16,16,64,32);
+	m_pant[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(targeth_state::get_tile_info_targeth_screen0),this),TILEMAP_SCAN_ROWS,16,16,64,32);
+	m_pant[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(targeth_state::get_tile_info_targeth_screen1),this),TILEMAP_SCAN_ROWS,16,16,64,32);
 
-	state->m_pant[0]->set_transparent_pen(0);
+	m_pant[0]->set_transparent_pen(0);
 }
 
 
@@ -108,7 +105,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 {
 	targeth_state *state = machine.driver_data<targeth_state>();
 	int i;
-	const gfx_element *gfx = machine.gfx[0];
+	gfx_element *gfx = machine.gfx[0];
 
 	for (i = 3; i < (0x1000 - 6)/2; i += 4){
 		int sx = state->m_spriteram[i+2] & 0x03ff;

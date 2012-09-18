@@ -1,4 +1,4 @@
-typedef struct
+struct hit_t
 {
 	UINT16 x1p, y1p, z1p, x1s, y1s, z1s;
 	UINT16 x2p, y2p, z2p, x2s, y2s, z2s;
@@ -11,7 +11,7 @@ typedef struct
 	UINT16 flag;
 
 	UINT8 disconnect;
-} hit_t;
+};
 
 
 class skns_state : public driver_device
@@ -124,6 +124,16 @@ public:
 	DECLARE_DRIVER_INIT(senknow);
 	DECLARE_DRIVER_INIT(galpani4);
 	DECLARE_DRIVER_INIT(ryouran);
+	TILE_GET_INFO_MEMBER(get_tilemap_A_tile_info);
+	TILE_GET_INFO_MEMBER(get_tilemap_B_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void video_reset();
+	DECLARE_MACHINE_RESET(sknsa);
+	DECLARE_MACHINE_RESET(sknsj);
+	DECLARE_MACHINE_RESET(sknsu);
+	DECLARE_MACHINE_RESET(sknse);
+	DECLARE_MACHINE_RESET(sknsk);
 };
 
 
@@ -136,7 +146,7 @@ void skns_draw_sprites(
 	UINT8* gfx_source, size_t gfx_length,
 	UINT32* sprite_regs );
 
-VIDEO_START(skns);
-VIDEO_RESET(skns);
+
+
 SCREEN_VBLANK(skns);
 SCREEN_UPDATE_RGB32(skns);

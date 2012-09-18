@@ -53,10 +53,12 @@ public:
 	DECLARE_DRIVER_INIT(98best44);
 	DECLARE_DRIVER_INIT(npcartv1);
 	DECLARE_DRIVER_INIT(nprsp);
+	virtual void video_start();
+	DECLARE_MACHINE_RESET(nprsp);
 };
 
 
-VIDEO_START(neoprint)
+void neoprint_state::video_start()
 {
 }
 
@@ -73,7 +75,7 @@ static void draw_layer(running_machine &machine, bitmap_ind16 &bitmap,const rect
 {
 	neoprint_state *state = machine.driver_data<neoprint_state>();
 	int i, y, x;
-	const gfx_element *gfx = machine.gfx[0];
+	gfx_element *gfx = machine.gfx[0];
 	INT16 scrollx, scrolly;
 
 	i = (state->m_npvidregs[((layer*8)+0x06)/2] & 7) * 0x1000/4;
@@ -131,8 +133,8 @@ SCREEN_UPDATE_IND16(nprsp)
 
 READ16_MEMBER(neoprint_state::neoprint_calendar_r)
 {
-	//if(cpu_get_pc(&space.device()) != 0x4b38 )//&& cpu_get_pc(&space.device()) != 0x5f86 && cpu_get_pc(&space.device()) != 0x5f90)
-	//  printf("%08x\n",cpu_get_pc(&space.device()));
+	//if(space.device().safe_pc() != 0x4b38 )//&& space.device().safe_pc() != 0x5f86 && space.device().safe_pc() != 0x5f90)
+	//  printf("%08x\n",space.device().safe_pc());
 
 	return (upd4990a_databit_r(machine().device("upd4990a"), 0) << 15);
 }
@@ -151,8 +153,8 @@ READ8_MEMBER(neoprint_state::neoprint_unk_r)
 
 	m_vblank = (machine().primary_screen->frame_number() & 0x1) ? 0x10 : 0x00;
 
-	//if(cpu_get_pc(&space.device()) != 0x1504 && cpu_get_pc(&space.device()) != 0x5f86 && cpu_get_pc(&space.device()) != 0x5f90)
-	//  printf("%08x\n",cpu_get_pc(&space.device()));
+	//if(space.device().safe_pc() != 0x1504 && space.device().safe_pc() != 0x5f86 && space.device().safe_pc() != 0x5f90)
+	//  printf("%08x\n",space.device().safe_pc());
 
 	return m_vblank| 4 | 3;
 }
@@ -164,13 +166,13 @@ READ16_MEMBER(neoprint_state::neoprint_audio_result_r)
 
 static void audio_cpu_assert_nmi(running_machine &machine)
 {
-	cputag_set_input_line(machine, "audiocpu", INPUT_LINE_NMI, ASSERT_LINE);
+	machine.device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 
 WRITE8_MEMBER(neoprint_state::audio_cpu_clear_nmi_w)
 {
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 WRITE16_MEMBER(neoprint_state::audio_command_w)
@@ -185,7 +187,7 @@ WRITE16_MEMBER(neoprint_state::audio_command_w)
 		/* boost the interleave to let the audio CPU read the command */
 		machine().scheduler().boost_interleave(attotime::zero, attotime::from_usec(50));
 
-		//if (LOG_CPU_COMM) logerror("MAIN CPU PC %06x: audio_command_w %04x - %04x\n", cpu_get_pc(&space.device()), data, mem_mask);
+		//if (LOG_CPU_COMM) logerror("MAIN CPU PC %06x: audio_command_w %04x - %04x\n", space.device().safe_pc(), data, mem_mask);
 	}
 }
 
@@ -194,7 +196,7 @@ READ8_MEMBER(neoprint_state::audio_command_r)
 {
 	UINT8 ret = soundlatch_byte_r(space, 0);
 
-	//if (LOG_CPU_COMM) logerror(" AUD CPU PC   %04x: audio_command_r %02x\n", cpu_get_pc(&space.device()), ret);
+	//if (LOG_CPU_COMM) logerror(" AUD CPU PC   %04x: audio_command_r %02x\n", space.device().safe_pc(), ret);
 
 	/* this is a guess */
 	audio_cpu_clear_nmi_w(space, 0, 0);
@@ -208,7 +210,7 @@ WRITE8_MEMBER(neoprint_state::audio_result_w)
 {
 
 
-	//if (LOG_CPU_COMM && (m_audio_result != data)) logerror(" AUD CPU PC   %04x: audio_result_w %02x\n", cpu_get_pc(&space.device()), data);
+	//if (LOG_CPU_COMM && (m_audio_result != data)) logerror(" AUD CPU PC   %04x: audio_result_w %02x\n", space.device().safe_pc(), data);
 
 	m_audio_result = data;
 }
@@ -448,7 +450,7 @@ GFXDECODE_END
 
 static void audio_cpu_irq(device_t *device, int assert)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, assert ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, assert ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
@@ -481,7 +483,6 @@ static MACHINE_CONFIG_START( neoprint, neoprint_state )
 
 	MCFG_PALETTE_LENGTH(0x10000)
 
-	MCFG_VIDEO_START(neoprint)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 
@@ -493,10 +494,9 @@ static MACHINE_CONFIG_START( neoprint, neoprint_state )
 	MCFG_SOUND_ROUTE(2, "rspeaker", 1.0)
 MACHINE_CONFIG_END
 
-static MACHINE_RESET( nprsp )
+MACHINE_RESET_MEMBER(neoprint_state,nprsp)
 {
-	neoprint_state *state = machine.driver_data<neoprint_state>();
-	state->m_bank_val = 0;
+	m_bank_val = 0;
 }
 
 static MACHINE_CONFIG_START( nprsp, neoprint_state )
@@ -521,11 +521,10 @@ static MACHINE_CONFIG_START( nprsp, neoprint_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 48*8-1, 0*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(nprsp)
 
-	MCFG_MACHINE_RESET(nprsp)
+	MCFG_MACHINE_RESET_OVERRIDE(neoprint_state,nprsp)
 
 	MCFG_PALETTE_LENGTH(0x10000)
 
-	MCFG_VIDEO_START(neoprint)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

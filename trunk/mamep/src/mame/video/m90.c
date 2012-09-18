@@ -78,65 +78,62 @@ INLINE void dynablsb_get_tile_info(running_machine &machine,tile_data &tileinfo,
 			tileinfo.category = (color & 0x30) ? 1 : 0;
 }
 
-static TILE_GET_INFO( get_pf1_tile_info ) { get_tile_info(machine,tileinfo,tile_index,0,0x3); }
-static TILE_GET_INFO( get_pf1w_tile_info ) { get_tile_info(machine,tileinfo,tile_index,0,0x2); }
-static TILE_GET_INFO( get_pf2_tile_info ) { get_tile_info(machine,tileinfo,tile_index,1,0x3); }
-static TILE_GET_INFO( get_pf2w_tile_info ) { get_tile_info(machine,tileinfo,tile_index,1,0x2); }
+TILE_GET_INFO_MEMBER(m90_state::get_pf1_tile_info){ get_tile_info(machine(),tileinfo,tile_index,0,0x3); }
+TILE_GET_INFO_MEMBER(m90_state::get_pf1w_tile_info){ get_tile_info(machine(),tileinfo,tile_index,0,0x2); }
+TILE_GET_INFO_MEMBER(m90_state::get_pf2_tile_info){ get_tile_info(machine(),tileinfo,tile_index,1,0x3); }
+TILE_GET_INFO_MEMBER(m90_state::get_pf2w_tile_info){ get_tile_info(machine(),tileinfo,tile_index,1,0x2); }
 
-static TILE_GET_INFO( bomblord_get_pf1_tile_info ) { bomblord_get_tile_info(machine,tileinfo,tile_index,0); }
-static TILE_GET_INFO( bomblord_get_pf1w_tile_info ) { bomblord_get_tile_info(machine,tileinfo,tile_index,0); }
-static TILE_GET_INFO( bomblord_get_pf2_tile_info ) { bomblord_get_tile_info(machine,tileinfo,tile_index,2); }
-static TILE_GET_INFO( bomblord_get_pf2w_tile_info ) { bomblord_get_tile_info(machine,tileinfo,tile_index,2); }
+TILE_GET_INFO_MEMBER(m90_state::bomblord_get_pf1_tile_info){ bomblord_get_tile_info(machine(),tileinfo,tile_index,0); }
+TILE_GET_INFO_MEMBER(m90_state::bomblord_get_pf1w_tile_info){ bomblord_get_tile_info(machine(),tileinfo,tile_index,0); }
+TILE_GET_INFO_MEMBER(m90_state::bomblord_get_pf2_tile_info){ bomblord_get_tile_info(machine(),tileinfo,tile_index,2); }
+TILE_GET_INFO_MEMBER(m90_state::bomblord_get_pf2w_tile_info){ bomblord_get_tile_info(machine(),tileinfo,tile_index,2); }
 
-static TILE_GET_INFO( dynablsb_get_pf1_tile_info ) { dynablsb_get_tile_info(machine,tileinfo,tile_index,0); }
-static TILE_GET_INFO( dynablsb_get_pf1w_tile_info ) { dynablsb_get_tile_info(machine,tileinfo,tile_index,0); }
-static TILE_GET_INFO( dynablsb_get_pf2_tile_info ) { dynablsb_get_tile_info(machine,tileinfo,tile_index,2); }
-static TILE_GET_INFO( dynablsb_get_pf2w_tile_info ) { dynablsb_get_tile_info(machine,tileinfo,tile_index,2); }
+TILE_GET_INFO_MEMBER(m90_state::dynablsb_get_pf1_tile_info){ dynablsb_get_tile_info(machine(),tileinfo,tile_index,0); }
+TILE_GET_INFO_MEMBER(m90_state::dynablsb_get_pf1w_tile_info){ dynablsb_get_tile_info(machine(),tileinfo,tile_index,0); }
+TILE_GET_INFO_MEMBER(m90_state::dynablsb_get_pf2_tile_info){ dynablsb_get_tile_info(machine(),tileinfo,tile_index,2); }
+TILE_GET_INFO_MEMBER(m90_state::dynablsb_get_pf2w_tile_info){ dynablsb_get_tile_info(machine(),tileinfo,tile_index,2); }
 
-VIDEO_START( m90 )
+void m90_state::video_start()
 {
-	m90_state *state = machine.driver_data<m90_state>();
-	state->m_pf1_layer =      tilemap_create(machine, get_pf1_tile_info, tilemap_scan_rows,8,8,64,64);
-	state->m_pf1_wide_layer = tilemap_create(machine, get_pf1w_tile_info,tilemap_scan_rows,8,8,128,64);
-	state->m_pf2_layer =      tilemap_create(machine, get_pf2_tile_info, tilemap_scan_rows,8,8,64,64);
-	state->m_pf2_wide_layer = tilemap_create(machine, get_pf2w_tile_info,tilemap_scan_rows,8,8,128,64);
+	m_pf1_layer =      &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m90_state::get_pf1_tile_info),this), TILEMAP_SCAN_ROWS,8,8,64,64);
+	m_pf1_wide_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m90_state::get_pf1w_tile_info),this),TILEMAP_SCAN_ROWS,8,8,128,64);
+	m_pf2_layer =      &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m90_state::get_pf2_tile_info),this), TILEMAP_SCAN_ROWS,8,8,64,64);
+	m_pf2_wide_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m90_state::get_pf2w_tile_info),this),TILEMAP_SCAN_ROWS,8,8,128,64);
 
-	state->m_pf1_layer->set_transparent_pen(0);
-	state->m_pf1_wide_layer->set_transparent_pen(0);
+	m_pf1_layer->set_transparent_pen(0);
+	m_pf1_wide_layer->set_transparent_pen(0);
 
-	state_save_register_global_array(machine, state->m_video_control_data);
-	state_save_register_global(machine, state->m_last_pf1);
-	state_save_register_global(machine, state->m_last_pf2);
+	state_save_register_global_array(machine(), m_video_control_data);
+	state_save_register_global(machine(), m_last_pf1);
+	state_save_register_global(machine(), m_last_pf2);
 }
 
-VIDEO_START( bomblord )
+VIDEO_START_MEMBER(m90_state,bomblord)
 {
-	m90_state *state = machine.driver_data<m90_state>();
-	state->m_pf1_layer =      tilemap_create(machine, bomblord_get_pf1_tile_info, tilemap_scan_rows,8,8,64,64);
-	state->m_pf1_wide_layer = tilemap_create(machine, bomblord_get_pf1w_tile_info,tilemap_scan_rows,8,8,128,64);
-	state->m_pf2_layer =      tilemap_create(machine, bomblord_get_pf2_tile_info, tilemap_scan_rows,8,8,64,64);
-	state->m_pf2_wide_layer = tilemap_create(machine, bomblord_get_pf2w_tile_info,tilemap_scan_rows,8,8,128,64);
+	m_pf1_layer =      &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m90_state::bomblord_get_pf1_tile_info),this), TILEMAP_SCAN_ROWS,8,8,64,64);
+	m_pf1_wide_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m90_state::bomblord_get_pf1w_tile_info),this),TILEMAP_SCAN_ROWS,8,8,128,64);
+	m_pf2_layer =      &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m90_state::bomblord_get_pf2_tile_info),this), TILEMAP_SCAN_ROWS,8,8,64,64);
+	m_pf2_wide_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m90_state::bomblord_get_pf2w_tile_info),this),TILEMAP_SCAN_ROWS,8,8,128,64);
 
-	state->m_pf2_layer->set_transparent_pen(0);
-	state->m_pf2_wide_layer->set_transparent_pen(0);
-	state->m_pf1_layer->set_transparent_pen(0);
-	state->m_pf1_wide_layer->set_transparent_pen(0);
+	m_pf2_layer->set_transparent_pen(0);
+	m_pf2_wide_layer->set_transparent_pen(0);
+	m_pf1_layer->set_transparent_pen(0);
+	m_pf1_wide_layer->set_transparent_pen(0);
 
-	state_save_register_global_array(machine, state->m_video_control_data);
+	state_save_register_global_array(machine(), m_video_control_data);
 }
 
-VIDEO_START( dynablsb )
+VIDEO_START_MEMBER(m90_state,dynablsb)
 {
-	m90_state *state = machine.driver_data<m90_state>();
-	state->m_pf1_layer =      tilemap_create(machine, dynablsb_get_pf1_tile_info, tilemap_scan_rows,8,8,64,64);
-	state->m_pf1_wide_layer = tilemap_create(machine, dynablsb_get_pf1w_tile_info,tilemap_scan_rows,8,8,128,64);
-	state->m_pf2_layer =      tilemap_create(machine, dynablsb_get_pf2_tile_info, tilemap_scan_rows,8,8,64,64);
-	state->m_pf2_wide_layer = tilemap_create(machine, dynablsb_get_pf2w_tile_info,tilemap_scan_rows,8,8,128,64);
+	m_pf1_layer =      &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m90_state::dynablsb_get_pf1_tile_info),this), TILEMAP_SCAN_ROWS,8,8,64,64);
+	m_pf1_wide_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m90_state::dynablsb_get_pf1w_tile_info),this),TILEMAP_SCAN_ROWS,8,8,128,64);
+	m_pf2_layer =      &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m90_state::dynablsb_get_pf2_tile_info),this), TILEMAP_SCAN_ROWS,8,8,64,64);
+	m_pf2_wide_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m90_state::dynablsb_get_pf2w_tile_info),this),TILEMAP_SCAN_ROWS,8,8,128,64);
 
-	state->m_pf2_layer->set_transparent_pen(0);
-	state->m_pf2_wide_layer->set_transparent_pen(0);
+	m_pf2_layer->set_transparent_pen(0);
+	m_pf2_wide_layer->set_transparent_pen(0);
 
-	state_save_register_global_array(machine, state->m_video_control_data);
+	state_save_register_global_array(machine(), m_video_control_data);
 }
 
 static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,const rectangle &cliprect)

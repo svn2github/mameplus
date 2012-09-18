@@ -317,24 +317,25 @@ public:
 	DECLARE_READ32_MEMBER(coolridr_hack1_r);
 	DECLARE_READ32_MEMBER(coolridr_hack2_r);
 	DECLARE_DRIVER_INIT(coolridr);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 
 /* video */
 
-static VIDEO_START(coolridr)
+void coolridr_state::video_start()
 {
-	coolridr_state *state = machine.driver_data<coolridr_state>();
-	machine.primary_screen->register_screen_bitmap(state->m_temp_bitmap_sprites);
-	state->m_test_offs = 0x2000;
+	machine().primary_screen->register_screen_bitmap(m_temp_bitmap_sprites);
+	m_test_offs = 0x2000;
 }
 
 static SCREEN_UPDATE_RGB32(coolridr)
 {
 	coolridr_state *state = screen.machine().driver_data<coolridr_state>();
 	/* planes seems to basically be at 0x8000 and 0x28000... */
-	const gfx_element *gfx = screen.machine().gfx[2];
+	gfx_element *gfx = screen.machine().gfx[2];
 	UINT32 count;
 	int y,x;
 
@@ -691,7 +692,7 @@ WRITE32_MEMBER(coolridr_state::sysh1_char_w)
 		gfx[offset*4+2] = (m_h1_charram[offset] & 0x0000ff00) >> 8;
 		gfx[offset*4+3] = (m_h1_charram[offset] & 0x000000ff) >> 0;
 
-		gfx_element_mark_dirty(machine().gfx[2], offset/64); //*4/256
+		machine().gfx[2]->mark_dirty(offset/64); //*4/256
 	}
 }
 
@@ -1138,7 +1139,7 @@ INPUT_PORTS_END
 // IRQs 4, 6 (& 8?) are valid on SH-2
 static INTERRUPT_GEN( system_h1 )
 {
-	device_set_input_line(device, 4, HOLD_LINE);
+	device->execute().set_input_line(4, HOLD_LINE);
 }
 
 //IRQs 10,12 and 14 are valid on SH-1 instead
@@ -1149,16 +1150,16 @@ static TIMER_DEVICE_CALLBACK( system_h1_sub )
 
 	switch(scanline)
 	{
-    	case 512:device_set_input_line(state->m_subcpu, 0xa, HOLD_LINE); break;
-        case 256:device_set_input_line(state->m_subcpu, 0xc, HOLD_LINE); break;
-        case 0:device_set_input_line(state->m_subcpu, 0xe, HOLD_LINE); break;
+    	case 512:state->m_subcpu->set_input_line(0xa, HOLD_LINE); break;
+        case 256:state->m_subcpu->set_input_line(0xc, HOLD_LINE); break;
+        case 0:state->m_subcpu->set_input_line(0xe, HOLD_LINE); break;
 	}
 }
 
-static MACHINE_RESET ( coolridr )
+void coolridr_state::machine_reset()
 {
-//  cputag_set_input_line(machine, "maincpu", INPUT_LINE_HALT, ASSERT_LINE);
-	cputag_set_input_line(machine, "soundcpu", INPUT_LINE_HALT, ASSERT_LINE);
+//  machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
+	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( coolridr, coolridr_state )
@@ -1183,9 +1184,7 @@ static MACHINE_CONFIG_START( coolridr, coolridr_state )
 	MCFG_SCREEN_UPDATE_STATIC(coolridr)
 
 	MCFG_PALETTE_LENGTH(0x10000)
-	MCFG_MACHINE_RESET(coolridr)
 
-	MCFG_VIDEO_START(coolridr)
 MACHINE_CONFIG_END
 
 ROM_START( coolridr )

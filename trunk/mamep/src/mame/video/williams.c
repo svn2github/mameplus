@@ -105,7 +105,7 @@
 
 static void blitter_init(running_machine &machine, int blitter_config, const UINT8 *remap_prom);
 static void create_palette_lookup(running_machine &machine);
-static TILE_GET_INFO( get_tile_info );
+
 static int blitter_core(address_space *space, int sstart, int dstart, int w, int h, int data);
 
 
@@ -130,37 +130,34 @@ static void state_save_register(running_machine &machine)
 }
 
 
-VIDEO_START( williams )
+VIDEO_START_MEMBER(williams_state,williams)
 {
-	williams_state *state = machine.driver_data<williams_state>();
-	blitter_init(machine, state->m_blitter_config, NULL);
-	create_palette_lookup(machine);
-	state_save_register(machine);
+	blitter_init(machine(), m_blitter_config, NULL);
+	create_palette_lookup(machine());
+	state_save_register(machine());
 }
 
 
-VIDEO_START( blaster )
+VIDEO_START_MEMBER(williams_state,blaster)
 {
-	williams_state *state = machine.driver_data<williams_state>();
-	blitter_init(machine, state->m_blitter_config, state->memregion("proms")->base());
-	create_palette_lookup(machine);
-	state_save_register(machine);
+	blitter_init(machine(), m_blitter_config, memregion("proms")->base());
+	create_palette_lookup(machine());
+	state_save_register(machine());
 }
 
 
-VIDEO_START( williams2 )
+VIDEO_START_MEMBER(williams_state,williams2)
 {
-	williams_state *state = machine.driver_data<williams_state>();
-	blitter_init(machine, state->m_blitter_config, NULL);
+	blitter_init(machine(), m_blitter_config, NULL);
 
 	/* allocate paletteram */
-	state->m_generic_paletteram_8.allocate(0x400 * 2);
+	m_generic_paletteram_8.allocate(0x400 * 2);
 
 	/* create the tilemap */
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_cols,  24,16, 128,16);
-	state->m_bg_tilemap->set_scrolldx(2, 0);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(williams_state::get_tile_info),this), TILEMAP_SCAN_COLS,  24,16, 128,16);
+	m_bg_tilemap->set_scrolldx(2, 0);
 
-	state_save_register(machine);
+	state_save_register(machine());
 }
 
 
@@ -375,15 +372,14 @@ READ8_MEMBER(williams_state::williams2_video_counter_r)
  *
  *************************************/
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(williams_state::get_tile_info)
 {
-	williams_state *state = machine.driver_data<williams_state>();
-	int mask = machine.gfx[0]->total_elements - 1;
-	int data = state->m_williams2_tileram[tile_index];
+	int mask = machine().gfx[0]->elements() - 1;
+	int data = m_williams2_tileram[tile_index];
 	int y = (tile_index >> 1) & 7;
 	int color = 0;
 
-	switch (state->m_williams2_tilemap_config)
+	switch (m_williams2_tilemap_config)
 	{
 		case WILLIAMS_TILEMAP_MYSTICM:
 		{
@@ -406,7 +402,7 @@ static TILE_GET_INFO( get_tile_info )
 			break;
 	}
 
-	SET_TILE_INFO(0, data & mask, color, (data & ~mask) ? TILE_FLIPX : 0);
+	SET_TILE_INFO_MEMBER(0, data & mask, color, (data & ~mask) ? TILE_FLIPX : 0);
 }
 
 
@@ -540,11 +536,11 @@ WRITE8_MEMBER(williams_state::williams_blitter_w)
 	/* based on the number of memory accesses needed to do the blit, compute how long the blit will take */
 	/* this is just a guess */
 	estimated_clocks_at_4MHz = 20 + ((data & 4) ? 4 : 2) * accesses;
-	device_adjust_icount(&space.device(), -((estimated_clocks_at_4MHz + 3) / 4));
+	space.device().execute().adjust_icount(-((estimated_clocks_at_4MHz + 3) / 4));
 
 	/* Log blits */
 	logerror("%04X:Blit @ %3d : %02X%02X -> %02X%02X, %3dx%3d, mask=%02X, flags=%02X, icount=%d, win=%d\n",
-			cpu_get_pc(&space.device()), machine().primary_screen->vpos(),
+			space.device().safe_pc(), machine().primary_screen->vpos(),
 			m_blitterram[2], m_blitterram[3],
 			m_blitterram[4], m_blitterram[5],
 			m_blitterram[6], m_blitterram[7],

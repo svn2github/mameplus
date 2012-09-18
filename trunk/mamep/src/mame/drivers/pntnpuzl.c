@@ -231,7 +231,7 @@ WRITE16_MEMBER(pntnpuzl_state::pntnpuzl_200000_w)
 
 WRITE16_MEMBER(pntnpuzl_state::pntnpuzl_280018_w)
 {
-// logerror("%04x: 280018: %04x\n",cpu_get_pc(&space.device()),data);
+// logerror("%04x: 280018: %04x\n",space.device().safe_pc(),data);
 	m_serial >>= 1;
 	if (data & 0x2000)
 		m_serial |= 0x400;
@@ -274,19 +274,19 @@ READ16_MEMBER(pntnpuzl_state::pntnpuzl_28001a_r)
 
 READ16_MEMBER(pntnpuzl_state::irq1_ack_r)
 {
-//  device_set_input_line(m_maincpu, 1, CLEAR_LINE);
+//  m_maincpu->set_input_line(1, CLEAR_LINE);
 	return 0;
 }
 
 READ16_MEMBER(pntnpuzl_state::irq2_ack_r)
 {
-//  device_set_input_line(m_maincpu, 2, CLEAR_LINE);
+//  m_maincpu->set_input_line(2, CLEAR_LINE);
 	return 0;
 }
 
 READ16_MEMBER(pntnpuzl_state::irq4_ack_r)
 {
-//  device_set_input_line(m_maincpu, 4, CLEAR_LINE);
+//  m_maincpu->set_input_line(4, CLEAR_LINE);
 	return 0;
 }
 
@@ -323,7 +323,7 @@ INPUT_CHANGED_MEMBER(pntnpuzl_state::coin_inserted)
 
 	/* TODO: change this! */
 	if(newval)
-		generic_pulse_irq_line(m_maincpu->execute(), (UINT8)(FPTR)param, 1);
+		generic_pulse_irq_line(*m_maincpu, (UINT8)(FPTR)param, 1);
 }
 
 static INPUT_PORTS_START( pntnpuzl )

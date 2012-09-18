@@ -34,7 +34,7 @@ public:
 	int        m_gfx_bank;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k007121_1;
 	device_t *m_k007121_2;
 
@@ -48,12 +48,19 @@ public:
 	DECLARE_WRITE8_MEMBER(hcastle_pf1_control_w);
 	DECLARE_WRITE8_MEMBER(hcastle_pf2_control_w);
 	DECLARE_WRITE8_MEMBER(sound_bank_w);
+	TILEMAP_MAPPER_MEMBER(tilemap_scan);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/hcastle.c -----------*/
 
 
-PALETTE_INIT( hcastle );
+
 SCREEN_UPDATE_IND16( hcastle );
-VIDEO_START( hcastle );
+

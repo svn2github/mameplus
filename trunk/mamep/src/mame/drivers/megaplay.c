@@ -87,7 +87,7 @@ static INTERRUPT_GEN (megaplay_bios_irq)
 			segae_hintpending = 1;
 
 			if  ((segae_vdp_regs[0][0] & 0x10)) {
-				device_set_input_line(device, 0, HOLD_LINE);
+				device->execute().set_input_line(0, HOLD_LINE);
 				return;
 			}
 
@@ -100,7 +100,7 @@ static INTERRUPT_GEN (megaplay_bios_irq)
 		hintcount = segae_vdp_regs[0][10];
 
 		if ( (sline<0xe0) && (segae_vintpending) ) {
-			device_set_input_line(device, 0, HOLD_LINE);
+			device->execute().set_input_line(0, HOLD_LINE);
 		}
 	}
 
@@ -534,7 +534,7 @@ static WRITE8_HANDLER( megaplay_bios_6404_w )
 {
 	mplay_state *state = space->machine().driver_data<mplay_state>();
 	if(((state->m_bios_6404 & 0x0c) == 0x00) && ((data & 0x0c) == 0x0c))
-		cputag_set_input_line(space->machine(), "maincpu", INPUT_LINE_RESET, PULSE_LINE);
+		space->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 	state->m_bios_6404 = data;
 
 //  logerror("BIOS: 0x6404 write: 0x%02x\n", data);
@@ -573,7 +573,7 @@ static WRITE8_HANDLER( megaplay_game_w )
 		state->m_bios_mode = MP_GAME;
 		state->m_readpos = 1;
 //      popmessage("Game bank selected: 0x%03x", state->m_game_banksel);
-		logerror("BIOS [0x%04x]: 68K address space bank selected: 0x%03x\n", cpu_get_previouspc(&space->device()), state->m_game_banksel);
+		logerror("BIOS [0x%04x]: 68K address space bank selected: 0x%03x\n", space->device().safe_pcbase(), state->m_game_banksel);
 	}
 
 	state->m_mp_bios_bank_addr = ((state->m_mp_bios_bank_addr >> 1) | (data << 23)) & 0xff8000;
@@ -610,11 +610,11 @@ ADDRESS_MAP_END
 
 
 
-static VIDEO_START(megplay)
+VIDEO_START_MEMBER(mplay_state,megplay)
 {
 	//printf("megplay vs\n");
-	VIDEO_START_CALL(megadriv);
-//  VIDEO_START_CALL(megaplay_normal);
+	VIDEO_START_CALL_LEGACY(megadriv);
+//  VIDEO_START_CALL_MEMBER(megaplay_normal);
 }
 
 static SCREEN_UPDATE_RGB32(megplay)
@@ -628,14 +628,13 @@ static SCREEN_UPDATE_RGB32(megplay)
 
 
 //extern SCREEN_VBLANK(megadriv);
-static MACHINE_RESET( megaplay )
+MACHINE_RESET_MEMBER(mplay_state,megaplay)
 {
-	mplay_state *state = machine.driver_data<mplay_state>();
-	state->m_bios_mode = MP_ROM;
-	state->m_mp_bios_bank_addr = 0;
-	state->m_readpos = 1;
-	MACHINE_RESET_CALL(megadriv);
-	MACHINE_RESET_CALL(megatech_bios);
+	m_bios_mode = MP_ROM;
+	m_mp_bios_bank_addr = 0;
+	m_readpos = 1;
+	MACHINE_RESET_CALL_LEGACY(megadriv);
+	MACHINE_RESET_CALL_LEGACY(megatech_bios);
 }
 
 static SCREEN_VBLANK( megaplay )
@@ -654,7 +653,7 @@ static MACHINE_CONFIG_START( megaplay, mplay_state )
 	MCFG_CPU_PROGRAM_MAP(megaplay_bios_map)
 	MCFG_CPU_IO_MAP(megaplay_bios_io_map)
 
-	MCFG_MACHINE_RESET( megaplay )
+	MCFG_MACHINE_RESET_OVERRIDE(mplay_state, megaplay )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -663,7 +662,7 @@ static MACHINE_CONFIG_START( megaplay, mplay_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker",0.25) /* 3.58 MHz */
 
 	/* New update functions to handle the extra layer */
-	MCFG_VIDEO_START(megplay)
+	MCFG_VIDEO_START_OVERRIDE(mplay_state,megplay)
 	MCFG_SCREEN_MODIFY("megadriv")
 	MCFG_SCREEN_UPDATE_STATIC(megplay)
 	MCFG_SCREEN_VBLANK_STATIC( megaplay )

@@ -82,7 +82,7 @@ Preliminary COP MCU memory map
 static ADDRESS_MAP_START( legionna_map, AS_PROGRAM, 16, legionna_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x100000, 0x1003ff) AM_RAM
-	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(legionna_mcu_r, legionna_mcu_w) AM_BASE_LEGACY(&cop_mcu_ram)	/* COP mcu */
+	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(legionna_mcu_r, legionna_mcu_w) AM_SHARE("cop_mcu_ram")	/* COP mcu */
 	AM_RANGE(0x101000, 0x1017ff) AM_RAM_WRITE(legionna_background_w) AM_SHARE("back_data")
 	AM_RANGE(0x101800, 0x101fff) AM_RAM_WRITE(legionna_foreground_w) AM_SHARE("fore_data")
 	AM_RANGE(0x102000, 0x1027ff) AM_RAM_WRITE(legionna_midground_w) AM_SHARE("mid_data")
@@ -97,7 +97,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( heatbrl_map, AS_PROGRAM, 16, legionna_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x100000, 0x1003ff) AM_RAM
-	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(heatbrl_mcu_r, heatbrl_mcu_w) AM_BASE_LEGACY(&cop_mcu_ram)	/* COP mcu */
+	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(heatbrl_mcu_r, heatbrl_mcu_w) AM_SHARE("cop_mcu_ram")	/* COP mcu */
 	AM_RANGE(0x100800, 0x100fff) AM_RAM_WRITE(legionna_background_w) AM_SHARE("back_data")
 	AM_RANGE(0x101000, 0x1017ff) AM_RAM_WRITE(legionna_foreground_w) AM_SHARE("fore_data")
 	AM_RANGE(0x101800, 0x101fff) AM_RAM_WRITE(legionna_midground_w) AM_SHARE("mid_data")
@@ -110,7 +110,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( godzilla_map, AS_PROGRAM, 16, legionna_state )
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM
 	AM_RANGE(0x100000, 0x1003ff) AM_RAM
-	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(godzilla_mcu_r, godzilla_mcu_w) AM_BASE_LEGACY(&cop_mcu_ram)	/* COP mcu */
+	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(godzilla_mcu_r, godzilla_mcu_w) AM_SHARE("cop_mcu_ram")	/* COP mcu */
 	AM_RANGE(0x100800, 0x100fff) AM_RAM
 	AM_RANGE(0x101000, 0x101fff) AM_RAM_WRITE(legionna_background_w) AM_SHARE("back_data")
 	AM_RANGE(0x102000, 0x1027ff) AM_RAM_WRITE(legionna_midground_w) AM_SHARE("mid_data")
@@ -135,7 +135,7 @@ WRITE16_MEMBER(legionna_state::denjin_paletteram16_xBBBBBGGGGGRRRRR_word_w)
 static ADDRESS_MAP_START( denjinmk_map, AS_PROGRAM, 16, legionna_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x100000, 0x1003ff) AM_RAM
-	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(denjinmk_mcu_r, denjinmk_mcu_w) AM_BASE_LEGACY(&cop_mcu_ram)	/* COP mcu */
+	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(denjinmk_mcu_r, denjinmk_mcu_w) AM_SHARE("cop_mcu_ram")	/* COP mcu */
 	AM_RANGE(0x100800, 0x100fff) AM_RAM
 	AM_RANGE(0x101000, 0x1017ff) AM_RAM_WRITE(legionna_background_w) AM_SHARE("back_data")
 	AM_RANGE(0x101800, 0x101fff) AM_RAM_WRITE(legionna_foreground_w) AM_SHARE("fore_data")
@@ -152,7 +152,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( grainbow_map, AS_PROGRAM, 16, legionna_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x100000, 0x1003ff) AM_RAM
-	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(grainbow_mcu_r, grainbow_mcu_w) AM_BASE_LEGACY(&cop_mcu_ram)	/* COP mcu */
+	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(grainbow_mcu_r, grainbow_mcu_w) AM_SHARE("cop_mcu_ram")	/* COP mcu */
 	AM_RANGE(0x100800, 0x100fff) AM_RAM_WRITE(legionna_background_w) AM_SHARE("back_data")
 	AM_RANGE(0x101000, 0x1017ff) AM_RAM_WRITE(legionna_foreground_w) AM_SHARE("fore_data")
 	AM_RANGE(0x101800, 0x101fff) AM_RAM_WRITE(legionna_midground_w) AM_SHARE("mid_data")
@@ -168,7 +168,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( cupsoc_mem, AS_PROGRAM, 16, legionna_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x100000, 0x1003ff) AM_RAM
-	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(cupsoc_mcu_r,cupsoc_mcu_w) AM_BASE_LEGACY(&cop_mcu_ram)
+	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(cupsoc_mcu_r,cupsoc_mcu_w) AM_SHARE("cop_mcu_ram")
 	AM_RANGE(0x100800, 0x100fff) AM_RAM_WRITE(legionna_background_w) AM_SHARE("back_data")
 	AM_RANGE(0x101000, 0x1017ff) AM_RAM_WRITE(legionna_foreground_w) AM_SHARE("fore_data")
 	AM_RANGE(0x101800, 0x101fff) AM_RAM_WRITE(legionna_midground_w) AM_SHARE("mid_data")
@@ -187,7 +187,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( cupsocs_mem, AS_PROGRAM, 16, legionna_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	AM_RANGE(0x100000, 0x1003ff) AM_RAM
-	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(cupsocs_mcu_r,cupsocs_mcu_w) AM_BASE_LEGACY(&cop_mcu_ram)
+	AM_RANGE(0x100400, 0x1007ff) AM_READWRITE_LEGACY(cupsocs_mcu_r,cupsocs_mcu_w) AM_SHARE("cop_mcu_ram")
 	AM_RANGE(0x100800, 0x100fff) AM_RAM_WRITE(legionna_background_w) AM_SHARE("back_data")
 	AM_RANGE(0x101000, 0x1017ff) AM_RAM_WRITE(legionna_foreground_w) AM_SHARE("fore_data")
 	AM_RANGE(0x101800, 0x101fff) AM_RAM_WRITE(legionna_midground_w) AM_SHARE("mid_data")
@@ -206,7 +206,7 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( cupsocbl_mem, AS_PROGRAM, 16, legionna_state )
 	AM_RANGE(0x000000, 0x0fffff) AM_ROM
 	//AM_RANGE(0x100000, 0x1003ff) AM_RAM
-	AM_RANGE(0x100000, 0x1007ff) AM_READWRITE_LEGACY(copdxbl_0_r,copdxbl_0_w) AM_BASE_LEGACY(&cop_mcu_ram)
+	AM_RANGE(0x100000, 0x1007ff) AM_READWRITE_LEGACY(copdxbl_0_r,copdxbl_0_w) AM_SHARE("cop_mcu_ram")
 	AM_RANGE(0x100800, 0x100fff) AM_RAM_WRITE(legionna_background_w) AM_SHARE("back_data")
 	AM_RANGE(0x101000, 0x1017ff) AM_RAM_WRITE(legionna_foreground_w) AM_SHARE("fore_data")
 	AM_RANGE(0x101800, 0x101fff) AM_RAM_WRITE(legionna_midground_w) AM_SHARE("mid_data")
@@ -1061,8 +1061,8 @@ static MACHINE_CONFIG_START( legionna, legionna_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_SIZE(32*8, 32*8)
+	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
+	MCFG_SCREEN_SIZE(36*8, 36*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(legionna)
 
@@ -1070,7 +1070,7 @@ static MACHINE_CONFIG_START( legionna, legionna_state )
 	MCFG_PALETTE_LENGTH(128*16)
 	MCFG_PALETTE_INIT(all_black)
 
-	MCFG_VIDEO_START(legionna)
+	MCFG_VIDEO_START_OVERRIDE(legionna_state,legionna)
 
 	/* sound hardware */
 	SEIBU_SOUND_SYSTEM_YM3812_INTERFACE(14318180/4,1320000)
@@ -1091,8 +1091,8 @@ static MACHINE_CONFIG_START( heatbrl, legionna_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_SIZE(32*8, 32*8)
+	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
+	MCFG_SCREEN_SIZE(36*8, 36*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(legionna)
 
@@ -1100,7 +1100,7 @@ static MACHINE_CONFIG_START( heatbrl, legionna_state )
 	MCFG_PALETTE_LENGTH(128*16)
 	MCFG_PALETTE_INIT(all_black)
 
-	MCFG_VIDEO_START(legionna)
+	MCFG_VIDEO_START_OVERRIDE(legionna_state,legionna)
 
 	/* sound hardware */
 	SEIBU_SOUND_SYSTEM_YM3812_INTERFACE(14318180/4,1320000)
@@ -1120,8 +1120,8 @@ static MACHINE_CONFIG_START( godzilla, legionna_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(61)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_SIZE(40*8, 32*8)
+	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
+	MCFG_SCREEN_SIZE(42*8, 36*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 28*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(godzilla)
 
@@ -1129,7 +1129,7 @@ static MACHINE_CONFIG_START( godzilla, legionna_state )
 	MCFG_PALETTE_LENGTH(128*16)
 	MCFG_PALETTE_INIT(all_black)
 
-	MCFG_VIDEO_START(godzilla)
+	MCFG_VIDEO_START_OVERRIDE(legionna_state,godzilla)
 
 	/* sound hardware */
 	SEIBU_SOUND_SYSTEM_YM2151_INTERFACE(14318180/4,1320000)
@@ -1148,9 +1148,9 @@ static MACHINE_CONFIG_START( denjinmk, legionna_state )
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_SIZE(40*8, 32*8)
+	MCFG_SCREEN_SIZE(42*8, 36*8)
 	MCFG_SCREEN_REFRESH_RATE(61)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
+	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(godzilla)
 
@@ -1158,7 +1158,7 @@ static MACHINE_CONFIG_START( denjinmk, legionna_state )
 	MCFG_PALETTE_LENGTH(128*16)
 	MCFG_PALETTE_INIT(all_black)
 
-	MCFG_VIDEO_START(denjinmk)
+	MCFG_VIDEO_START_OVERRIDE(legionna_state,denjinmk)
 
 	/* sound hardware */
 	SEIBU_SOUND_SYSTEM_YM2151_INTERFACE(14318180/4,1320000)
@@ -1178,8 +1178,8 @@ static MACHINE_CONFIG_START( grainbow, legionna_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_SIZE(64*8, 32*8)
+	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
+	MCFG_SCREEN_SIZE(64*8, 36*8)
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 42*8-1, 2*8, 30*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(grainbow)
 
@@ -1187,7 +1187,7 @@ static MACHINE_CONFIG_START( grainbow, legionna_state )
 	MCFG_PALETTE_LENGTH(128*16)
 	MCFG_PALETTE_INIT(all_black)
 
-	MCFG_VIDEO_START(grainbow)
+	MCFG_VIDEO_START_OVERRIDE(legionna_state,grainbow)
 
 	/* sound hardware */
 	SEIBU_SOUND_SYSTEM_YM2151_INTERFACE(14318180/4,1320000)
@@ -1208,8 +1208,8 @@ static MACHINE_CONFIG_START( cupsoc, legionna_state )
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
-	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_SIZE(40*8, 32*8)
+	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
+	MCFG_SCREEN_SIZE(42*8, 36*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(grainbow)
 
@@ -1217,7 +1217,7 @@ static MACHINE_CONFIG_START( cupsoc, legionna_state )
 	MCFG_PALETTE_LENGTH(128*16)
 	MCFG_PALETTE_INIT(all_black)
 
-	MCFG_VIDEO_START(cupsoc)
+	MCFG_VIDEO_START_OVERRIDE(legionna_state,cupsoc)
 
 	/* sound hardware */
 	SEIBU_SOUND_SYSTEM_YM3812_INTERFACE(14318180/4,1320000)
@@ -1247,7 +1247,7 @@ static MACHINE_CONFIG_START( cupsocbl, legionna_state )
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(0))
-	MCFG_SCREEN_SIZE(40*8, 32*8)
+	MCFG_SCREEN_SIZE(42*8, 36*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 0*8, 32*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(grainbow)
 
@@ -1255,7 +1255,7 @@ static MACHINE_CONFIG_START( cupsocbl, legionna_state )
 	MCFG_PALETTE_LENGTH(128*16)
 	MCFG_PALETTE_INIT(all_black)
 
-	MCFG_VIDEO_START(cupsoc)
+	MCFG_VIDEO_START_OVERRIDE(legionna_state,cupsoc)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2305,7 +2305,7 @@ GAME( 1992, heatbrlo, heatbrl,  heatbrl,  heatbrl, driver_device,  0,         RO
 GAME( 1992, heatbrlu, heatbrl,  heatbrl,  heatbrl, driver_device,  0,         ROT0, "TAD Corporation", "Heated Barrel (US)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1992, heatbrle, heatbrl,  heatbrl,  heatbrl, driver_device,  0,         ROT0, "TAD Corporation", "Heated Barrel (Electronic Devices license)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 
-GAME( 1993, godzilla, 0,        godzilla, godzilla, driver_device, 0,         ROT0, "Banpresto", "Godzilla", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+GAME( 1993, godzilla, 0,        godzilla, godzilla, driver_device, 0,         ROT0, "Banpresto", "Godzilla (Japan)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1993, grainbow, 0,        grainbow, grainbow, driver_device, 0,         ROT0, "Banpresto", "SD Gundam Sangokushi Rainbow Tairiku Senki", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1993, denjinmk, 0,        denjinmk, denjinmk, legionna_state, denjinmk,  ROT0, "Banpresto", "Denjin Makai", GAME_IMPERFECT_GRAPHICS )
 

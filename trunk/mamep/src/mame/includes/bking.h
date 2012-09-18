@@ -37,7 +37,7 @@ public:
 	int			m_addr_l;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 
 #if 0
 	/* 68705 */
@@ -79,6 +79,14 @@ public:
 	DECLARE_READ8_MEMBER(bking_pos_r);
 	DECLARE_WRITE8_MEMBER(unk_w);
 	DECLARE_WRITE8_MEMBER(port_b_w);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_MACHINE_START(bking3);
+	DECLARE_MACHINE_RESET(bking3);
+	DECLARE_MACHINE_RESET(common);
 };
 
 
@@ -86,7 +94,7 @@ public:
 
 
 
-PALETTE_INIT( bking );
-VIDEO_START( bking );
+
+
 SCREEN_UPDATE_IND16( bking );
 SCREEN_VBLANK( bking );

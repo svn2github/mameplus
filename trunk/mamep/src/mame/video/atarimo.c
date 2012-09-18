@@ -34,7 +34,6 @@ public:
 	running_machine &machine() const { return m_machine; }
 
 	UINT32				gfxchanged;			/* true if the gfx info has changed */
-	gfx_element *		gfxelement[MAX_GFX_ELEMENTS]; /* local copy of graphics elements */
 	int					gfxgranularity[MAX_GFX_ELEMENTS];
 
 	bitmap_ind16			*bitmap;			/* temporary bitmap to render to */
@@ -235,12 +234,7 @@ INLINE int convert_mask(const atarimo_entry *input, atarimo_mask *result)
 
 INLINE void init_gfxelement(atarimo_data *mo, int idx)
 {
-	mo->gfxelement[idx] = auto_alloc(mo->machine(), gfx_element(mo->machine()));
-	memcpy(mo->gfxelement[idx], mo->machine().gfx[idx], sizeof(*mo->gfxelement[idx]));
-	mo->gfxgranularity[idx] = mo->gfxelement[idx]->color_granularity;
-	mo->gfxelement[idx]->color_granularity = 1;
-	mo->gfxelement[idx]->color_base = 0;
-	mo->gfxelement[idx]->total_colors = 65536;
+	mo->gfxgranularity[idx] = mo->machine().gfx[idx]->granularity();
 }
 
 
@@ -368,8 +362,8 @@ void atarimo_init(running_machine &machine, int map, const atarimo_desc *desc)
 	mo->entrybits     = compute_log(mo->entrycount);
 	mo->bankcount     = desc->banks;
 
-	mo->tilewidth     = gfx->width;
-	mo->tileheight    = gfx->height;
+	mo->tilewidth     = gfx->width();
+	mo->tileheight    = gfx->height();
 	mo->tilexshift    = compute_log(mo->tilewidth);
 	mo->tileyshift    = compute_log(mo->tileheight);
 	mo->bitmapwidth   = round_to_powerof2(mo->xposmask.mask);
@@ -383,7 +377,7 @@ void atarimo_init(running_machine &machine, int map, const atarimo_desc *desc)
 	mo->sliprammask   = mo->slipramsize - 1;
 
 	mo->palettebase   = desc->palettebase;
-	mo->maxcolors     = desc->maxcolors / gfx->color_granularity;
+	mo->maxcolors     = desc->maxcolors / gfx->granularity();
 	mo->transpen      = desc->transpen;
 
 	mo->bank          = 0;
@@ -742,9 +736,16 @@ bitmap_ind16 *atarimo_render(int map, const rectangle &cliprect, atarimo_rect_li
 static int mo_render_object(atarimo_data *mo, const atarimo_entry *entry, const rectangle &cliprect)
 {
 	int gfxindex = mo->gfxlookup[EXTRACT_DATA(entry, mo->gfxmask)];
-	const gfx_element *gfx = mo->gfxelement[gfxindex];
+	gfx_element *gfx = mo->machine().gfx[gfxindex];
 	bitmap_ind16 &bitmap = *mo->bitmap;
 	int x, y, sx, sy;
+
+int save_granularity = gfx->granularity();
+int save_colorbase = gfx->colorbase();
+int save_colors = gfx->colors();
+gfx->set_granularity(1);
+gfx->set_colorbase(0);
+gfx->set_colors(65536);
 
 	/* extract data from the various words */
 	int code = mo->codelookup[EXTRACT_DATA(entry, mo->codemask)] | (EXTRACT_DATA(entry, mo->codehighmask) << mo->codehighshift);
@@ -810,9 +811,15 @@ if ((temp & 0xff00) == 0xc800)
 	/* is this one special? */
 	if (mo->specialmask.mask != 0 && EXTRACT_DATA(entry, mo->specialmask) == mo->specialvalue)
 	{
+		int result = 0;
 		if (mo->specialcb)
-			return (*mo->specialcb)(bitmap, cliprect, code, color, xpos, ypos, NULL);
-		return 0;
+			result = (*mo->specialcb)(bitmap, cliprect, code, color, xpos, ypos, NULL);
+
+gfx->set_granularity(save_granularity);
+gfx->set_colorbase(save_colorbase);
+gfx->set_colors(save_colors);
+
+		return result;
 	}
 
 	/* adjust for h flip */
@@ -903,6 +910,10 @@ if ((temp & 0xff00) == 0xc800)
 			}
 		}
 	}
+
+gfx->set_granularity(save_granularity);
+gfx->set_colorbase(save_colorbase);
+gfx->set_colors(save_colors);
 
 	return rendered;
 }

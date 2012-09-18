@@ -35,8 +35,8 @@ public:
 	int        m_frame;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k054539;
 	device_t *m_filter1l;
 	device_t *m_filter1r;
@@ -61,6 +61,9 @@ public:
 	DECLARE_READ16_MEMBER(sound_status_r);
 	DECLARE_WRITE8_MEMBER(sound_bankswitch_w);
 	DECLARE_DRIVER_INIT(xexex);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -69,5 +72,5 @@ public:
 extern void xexex_sprite_callback(running_machine &machine, int *code, int *color, int *priority_mask);
 extern void xexex_tile_callback(running_machine &machine, int layer, int *code, int *color, int *flags);
 
-VIDEO_START( xexex );
+
 SCREEN_UPDATE_RGB32( xexex );

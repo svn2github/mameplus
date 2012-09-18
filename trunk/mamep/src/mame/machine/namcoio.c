@@ -116,8 +116,7 @@ TODO:
 #define LOG(x) do { if (VERBOSE) logerror x; } while (0)
 
 
-typedef struct _namcoio_state namcoio_state;
-struct _namcoio_state
+struct namcoio_state
 {
 	UINT8          ram[16];
 
@@ -144,7 +143,7 @@ INLINE namcoio_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == NAMCO56XX || device->type() == NAMCO58XX || device->type() == NAMCO59XX);
 
-	return (namcoio_state *)downcast<legacy_device_base *>(device)->token();
+	return (namcoio_state *)downcast<namcoio_device *>(device)->token();
 }
 
 INLINE const namcoio_interface *get_interface( device_t *device )
@@ -462,7 +461,7 @@ READ8_DEVICE_HANDLER( namcoio_r )
 	namcoio_state *namcoio = get_safe_token(device);
 	offset &= 0x3f;
 
-//  LOG(("%04x: I/O read: mode %d, offset %d = %02x\n", cpu_get_pc(&space->device()), offset / 16, namcoio_ram[(offset & 0x30) + 8], offset & 0x0f, namcoio_ram[offset]&0x0f));
+//  LOG(("%04x: I/O read: mode %d, offset %d = %02x\n", space->device().safe_pc(), offset / 16, namcoio_ram[(offset & 0x30) + 8], offset & 0x0f, namcoio_ram[offset]&0x0f));
 
 	return 0xf0 | namcoio->ram[offset];
 }
@@ -473,7 +472,7 @@ WRITE8_DEVICE_HANDLER( namcoio_w )
 	offset &= 0x3f;
 	data &= 0x0f;	// RAM is 4-bit wide
 
-//  LOG(("%04x: I/O write %d: offset %d = %02x\n", cpu_get_pc(&space->device()), offset / 16, offset & 0x0f, data));
+//  LOG(("%04x: I/O write %d: offset %d = %02x\n", space->device().safe_pc(), offset / 16, offset & 0x0f, data));
 
 	namcoio->ram[offset] = data;
 }
@@ -544,13 +543,40 @@ static DEVICE_RESET( namcoio )
 	namcoio_set_reset_line(device, PULSE_LINE);
 }
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+const device_type NAMCO56XX = &device_creator<namcoio_device>;
 
-#define DEVTEMPLATE_ID(p,s)				p##namcoio##s
-#define DEVTEMPLATE_FEATURES			DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME				"Namco 56xx, 58xx & 59xx"
-#define DEVTEMPLATE_FAMILY				"Namco I/O"
-#include "devtempl.h"
+namcoio_device::namcoio_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, NAMCO56XX, "Namco 56xx, 58xx & 59xx", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(namcoio_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void namcoio_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void namcoio_device::device_start()
+{
+	DEVICE_START_NAME( namcoio )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void namcoio_device::device_reset()
+{
+	DEVICE_RESET_NAME( namcoio )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(NAMCO56XX, namcoio);

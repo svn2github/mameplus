@@ -98,9 +98,9 @@ TO DO :
 WRITE8_MEMBER(tehkanwc_state::sub_cpu_halt_w)
 {
 	if (data)
-		cputag_set_input_line(machine(), "sub", INPUT_LINE_RESET, CLEAR_LINE);
+		machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 	else
-		cputag_set_input_line(machine(), "sub", INPUT_LINE_RESET, ASSERT_LINE);
+		machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 
@@ -141,12 +141,12 @@ WRITE8_MEMBER(tehkanwc_state::tehkanwc_track_1_reset_w)
 WRITE8_MEMBER(tehkanwc_state::sound_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static TIMER_CALLBACK( reset_callback )
 {
-	cputag_set_input_line(machine, "audiocpu", INPUT_LINE_RESET, PULSE_LINE);
+	machine.device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 }
 
 WRITE8_MEMBER(tehkanwc_state::sound_answer_w)
@@ -155,7 +155,7 @@ WRITE8_MEMBER(tehkanwc_state::sound_answer_w)
 
 	/* in Gridiron, the sound CPU goes in a tight loop after the self test, */
 	/* probably waiting to be reset by a watchdog */
-	if (cpu_get_pc(&space.device()) == 0x08bc) machine().scheduler().timer_set(attotime::from_seconds(1), FUNC(reset_callback));
+	if (space.device().safe_pc() == 0x08bc) machine().scheduler().timer_set(attotime::from_seconds(1), FUNC(reset_callback));
 }
 
 
@@ -666,7 +666,6 @@ static MACHINE_CONFIG_START( tehkanwc, tehkanwc_state )
 	MCFG_GFXDECODE(tehkanwc)
 	MCFG_PALETTE_LENGTH(768)
 
-	MCFG_VIDEO_START(tehkanwc)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -15,13 +15,12 @@
  *
  *************************************/
 
-static TILE_GET_INFO( get_playfield_tile_info )
+TILE_GET_INFO_MEMBER(foodf_state::get_playfield_tile_info)
 {
-	foodf_state *state = machine.driver_data<foodf_state>();
-	UINT16 data = state->m_playfield[tile_index];
+	UINT16 data = m_playfield[tile_index];
 	int code = (data & 0xff) | ((data >> 7) & 0x100);
 	int color = (data >> 8) & 0x3f;
-	SET_TILE_INFO(0, code, color, state->m_playfield_flip ? (TILE_FLIPX | TILE_FLIPY) : 0);
+	SET_TILE_INFO_MEMBER(0, code, color, m_playfield_flip ? (TILE_FLIPX | TILE_FLIPY) : 0);
 }
 
 
@@ -32,24 +31,23 @@ static TILE_GET_INFO( get_playfield_tile_info )
  *
  *************************************/
 
-VIDEO_START( foodf )
+VIDEO_START_MEMBER(foodf_state,foodf)
 {
 	static const int resistances[3] = { 1000, 470, 220 };
-	foodf_state *state = machine.driver_data<foodf_state>();
 
 	/* initialize the playfield */
-	state->m_playfield_tilemap = tilemap_create(machine, get_playfield_tile_info, tilemap_scan_cols,  8,8, 32,32);
-	state->m_playfield_tilemap->set_transparent_pen(0);
+	m_playfield_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(foodf_state::get_playfield_tile_info),this), TILEMAP_SCAN_COLS,  8,8, 32,32);
+	m_playfield_tilemap->set_transparent_pen(0);
 
 	/* adjust the playfield for the 8 pixel offset */
-	state->m_playfield_tilemap->set_scrollx(0, -8);
-	state->save_item(NAME(state->m_playfield_flip));
+	m_playfield_tilemap->set_scrollx(0, -8);
+	save_item(NAME(m_playfield_flip));
 
 	/* compute the color output resistor weights */
 	compute_resistor_weights(0,	255, -1.0,
-			3,	&resistances[0], state->m_rweights, 0, 0,
-			3,	&resistances[0], state->m_gweights, 0, 0,
-			2,	&resistances[1], state->m_bweights, 0, 0);
+			3,	&resistances[0], m_rweights, 0, 0,
+			3,	&resistances[0], m_gweights, 0, 0,
+			2,	&resistances[1], m_bweights, 0, 0);
 }
 
 
@@ -117,7 +115,7 @@ SCREEN_UPDATE_IND16( foodf )
 {
 	foodf_state *state = screen.machine().driver_data<foodf_state>();
 	int offs;
-	const gfx_element *gfx = screen.machine().gfx[1];
+	gfx_element *gfx = screen.machine().gfx[1];
 	bitmap_ind8 &priority_bitmap = screen.machine().priority_bitmap;
 	UINT16 *spriteram16 = state->m_spriteram;
 

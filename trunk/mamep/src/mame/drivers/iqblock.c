@@ -82,15 +82,15 @@ static TIMER_DEVICE_CALLBACK( iqblock_irq )
 		return;
 
 	if((scanline % 32) == 16)
-		device_set_input_line(state->m_maincpu, 0, HOLD_LINE);
+		state->m_maincpu->set_input_line(0, HOLD_LINE);
 	else if	((scanline % 32) == 0)
-		device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
 WRITE8_MEMBER(iqblock_state::iqblock_irqack_w)
 {
-	cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 READ8_MEMBER(iqblock_state::extrarom_r)
@@ -290,7 +290,6 @@ static MACHINE_CONFIG_START( iqblock, iqblock_state )
 	MCFG_GFXDECODE(iqblock)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(iqblock)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -139,7 +139,7 @@ WRITE8_MEMBER(tankbatt_state::tankbatt_sh_fire_w)
 WRITE8_MEMBER(tankbatt_state::tankbatt_irq_ack_w)
 {
 	/* 0x6e written at the end of the irq routine, could be either irq ack or a coin sample */
-	cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(tankbatt_state::tankbatt_coin_counter_w)
@@ -182,12 +182,12 @@ ADDRESS_MAP_END
 static INTERRUPT_GEN( tankbatt_interrupt )
 {
 	tankbatt_state *state = device->machine().driver_data<tankbatt_state>();
-	if (state->m_nmi_enable) device_set_input_line(device,INPUT_LINE_NMI,PULSE_LINE);
+	if (state->m_nmi_enable) device->execute().set_input_line(INPUT_LINE_NMI,PULSE_LINE);
 }
 
 INPUT_CHANGED_MEMBER(tankbatt_state::coin_inserted)
 {
-	cputag_set_input_line(machine(), "maincpu", 0, ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 static INPUT_PORTS_START( tankbatt )
@@ -300,8 +300,6 @@ static MACHINE_CONFIG_START( tankbatt, tankbatt_state )
 	MCFG_GFXDECODE(tankbatt)
 	MCFG_PALETTE_LENGTH(256*2)
 
-	MCFG_PALETTE_INIT(tankbatt)
-	MCFG_VIDEO_START(tankbatt)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

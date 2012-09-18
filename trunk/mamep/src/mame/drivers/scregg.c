@@ -7,7 +7,7 @@ Very similar to Burger Time hardware (and uses its video driver)
 driver by Nicola Salmoria
 
 To Do:
-Sprite Priorities in Dommy
+- Sprite Priorities in dommy
 
 
 Rock Duck
@@ -54,47 +54,67 @@ it as ASCII text.
 #include "sound/ay8910.h"
 #include "includes/btime.h"
 
+class scregg_state : public btime_state
+{
+public:
+	scregg_state(const machine_config &mconfig, device_type type, const char *tag)
+		: btime_state(mconfig, type, tag) { }
+
+	DECLARE_WRITE8_MEMBER(scregg_irqack_w);
+	DECLARE_READ8_MEMBER(scregg_irqack_r);
+
+	DECLARE_DRIVER_INIT(rockduck);
+	DECLARE_MACHINE_START(scregg);
+	DECLARE_MACHINE_RESET(scregg);
+};
+
+
 
 static TIMER_DEVICE_CALLBACK( scregg_interrupt )
 {
-	btime_state *state = timer.machine().driver_data<btime_state>();
-	device_set_input_line(state->m_maincpu, 0, (param & 8) ? ASSERT_LINE : CLEAR_LINE);
+	// assume that the irq generator is similar to burgertime hw
+	scregg_state *state = timer.machine().driver_data<scregg_state>();
+	state->m_maincpu->set_input_line(0, (param & 8) ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static WRITE8_HANDLER( scregg_irqack_w )
+WRITE8_MEMBER(scregg_state::scregg_irqack_w)
 {
-	btime_state *state = space->machine().driver_data<btime_state>();
-	device_set_input_line(state->m_maincpu, 0, CLEAR_LINE);
+	m_maincpu->set_input_line(0, CLEAR_LINE);
+}
+
+READ8_MEMBER(scregg_state::scregg_irqack_r)
+{
+	m_maincpu->set_input_line(0, CLEAR_LINE);
+	return 0;
 }
 
 
-static ADDRESS_MAP_START( dommy_map, AS_PROGRAM, 8, btime_state )
+static ADDRESS_MAP_START( dommy_map, AS_PROGRAM, 8, scregg_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
 	AM_RANGE(0x2000, 0x23ff) AM_RAM AM_SHARE("videoram")
 	AM_RANGE(0x2400, 0x27ff) AM_RAM AM_SHARE("colorram")
 	AM_RANGE(0x2800, 0x2bff) AM_READWRITE(btime_mirrorvideoram_r, btime_mirrorvideoram_w)
-	AM_RANGE(0x4000, 0x4000) AM_READ_PORT("DSW1") AM_WRITE_LEGACY(scregg_irqack_w)
+	AM_RANGE(0x4000, 0x4000) AM_READ_PORT("DSW1") AM_WRITE(scregg_irqack_w)
 	AM_RANGE(0x4001, 0x4001) AM_READ_PORT("DSW2") AM_WRITE(btime_video_control_w)
-/*  AM_RANGE(0x4004, 0x4004)  */ /* this is read */
 	AM_RANGE(0x4002, 0x4002) AM_READ_PORT("P1")
 	AM_RANGE(0x4003, 0x4003) AM_READ_PORT("P2")
-	AM_RANGE(0x4004, 0x4005) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w)
+	AM_RANGE(0x4004, 0x4005) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w) AM_READ(scregg_irqack_r)
 	AM_RANGE(0x4006, 0x4007) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
 	AM_RANGE(0xa000, 0xffff) AM_ROM
 ADDRESS_MAP_END
 
 
-static ADDRESS_MAP_START( eggs_map, AS_PROGRAM, 8, btime_state )
+static ADDRESS_MAP_START( eggs_map, AS_PROGRAM, 8, scregg_state )
 	AM_RANGE(0x0000, 0x07ff) AM_RAM
 	AM_RANGE(0x1000, 0x13ff) AM_RAM AM_SHARE("videoram")
 	AM_RANGE(0x1400, 0x17ff) AM_RAM AM_SHARE("colorram")
 	AM_RANGE(0x1800, 0x1bff) AM_READWRITE(btime_mirrorvideoram_r,btime_mirrorvideoram_w)
 	AM_RANGE(0x1c00, 0x1fff) AM_READWRITE(btime_mirrorcolorram_r,btime_mirrorcolorram_w)
 	AM_RANGE(0x2000, 0x2000) AM_READ_PORT("DSW1") AM_WRITE(btime_video_control_w)
-	AM_RANGE(0x2001, 0x2001) AM_READ_PORT("DSW2") AM_WRITE_LEGACY(scregg_irqack_w)
+	AM_RANGE(0x2001, 0x2001) AM_READ_PORT("DSW2") AM_WRITE(scregg_irqack_w)
 	AM_RANGE(0x2002, 0x2002) AM_READ_PORT("P1")
 	AM_RANGE(0x2003, 0x2003) AM_READ_PORT("P2")
-	AM_RANGE(0x2004, 0x2005) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w)
+	AM_RANGE(0x2004, 0x2005) AM_DEVWRITE_LEGACY("ay1", ay8910_address_data_w) AM_READ(scregg_irqack_r)
 	AM_RANGE(0x2006, 0x2007) AM_DEVWRITE_LEGACY("ay2", ay8910_address_data_w)
 	AM_RANGE(0x3000, 0x7fff) AM_ROM
 	AM_RANGE(0xf000, 0xffff) AM_ROM    /* reset/interrupt vectors */
@@ -213,41 +233,39 @@ GFXDECODE_END
 
 
 
-static MACHINE_START( scregg )
+MACHINE_START_MEMBER(scregg_state,scregg)
 {
-	btime_state *state = machine.driver_data<btime_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = NULL;
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = NULL;
 
-	state->save_item(NAME(state->m_btime_palette));
-	state->save_item(NAME(state->m_bnj_scroll1));
-	state->save_item(NAME(state->m_bnj_scroll2));
-	state->save_item(NAME(state->m_btime_tilemap));
+	save_item(NAME(m_btime_palette));
+	save_item(NAME(m_bnj_scroll1));
+	save_item(NAME(m_bnj_scroll2));
+	save_item(NAME(m_btime_tilemap));
 }
 
-static MACHINE_RESET( scregg )
+MACHINE_RESET_MEMBER(scregg_state,scregg)
 {
-	btime_state *state = machine.driver_data<btime_state>();
 
-	state->m_btime_palette = 0;
-	state->m_bnj_scroll1 = 0;
-	state->m_bnj_scroll2 = 0;
-	state->m_btime_tilemap[0] = 0;
-	state->m_btime_tilemap[1] = 0;
-	state->m_btime_tilemap[2] = 0;
-	state->m_btime_tilemap[3] = 0;
+	m_btime_palette = 0;
+	m_bnj_scroll1 = 0;
+	m_bnj_scroll2 = 0;
+	m_btime_tilemap[0] = 0;
+	m_btime_tilemap[1] = 0;
+	m_btime_tilemap[2] = 0;
+	m_btime_tilemap[3] = 0;
 }
 
-static MACHINE_CONFIG_START( dommy, btime_state )
+static MACHINE_CONFIG_START( dommy, scregg_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, XTAL_12MHz/8)
 	MCFG_CPU_PROGRAM_MAP(dommy_map)
 	MCFG_TIMER_ADD_SCANLINE("irq", scregg_interrupt, "screen", 0, 8)
 
-	MCFG_MACHINE_START(scregg)
-	MCFG_MACHINE_RESET(scregg)
+	MCFG_MACHINE_START_OVERRIDE(scregg_state,scregg)
+	MCFG_MACHINE_RESET_OVERRIDE(scregg_state,scregg)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -257,8 +275,8 @@ static MACHINE_CONFIG_START( dommy, btime_state )
 	MCFG_GFXDECODE(scregg)
 	MCFG_PALETTE_LENGTH(8)
 
-	MCFG_PALETTE_INIT(btime)
-	MCFG_VIDEO_START(btime)
+	MCFG_PALETTE_INIT_OVERRIDE(scregg_state,btime)
+	MCFG_VIDEO_START_OVERRIDE(scregg_state,btime)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -271,15 +289,15 @@ static MACHINE_CONFIG_START( dommy, btime_state )
 MACHINE_CONFIG_END
 
 
-static MACHINE_CONFIG_START( scregg, btime_state )
+static MACHINE_CONFIG_START( scregg, scregg_state )
 
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", M6502, XTAL_12MHz/8)
 	MCFG_CPU_PROGRAM_MAP(eggs_map)
 	MCFG_TIMER_ADD_SCANLINE("irq", scregg_interrupt, "screen", 0, 8)
 
-	MCFG_MACHINE_START(scregg)
-	MCFG_MACHINE_RESET(scregg)
+	MCFG_MACHINE_START_OVERRIDE(scregg_state,scregg)
+	MCFG_MACHINE_RESET_OVERRIDE(scregg_state,scregg)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -289,8 +307,8 @@ static MACHINE_CONFIG_START( scregg, btime_state )
 	MCFG_GFXDECODE(scregg)
 	MCFG_PALETTE_LENGTH(8)
 
-	MCFG_PALETTE_INIT(btime)
-	MCFG_VIDEO_START(btime)
+	MCFG_PALETTE_INIT_OVERRIDE(scregg_state,btime)
+	MCFG_VIDEO_START_OVERRIDE(scregg_state,btime)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -392,7 +410,7 @@ ROM_START( rockduck )
 ROM_END
 
 
-DRIVER_INIT_MEMBER(btime_state,rockduck)
+DRIVER_INIT_MEMBER(scregg_state,rockduck)
 {
 	// rd2.rdh and rd1.rdj are bitswapped, but not rd3.rdg .. are they really from the same board?
 	int x;
@@ -406,7 +424,7 @@ DRIVER_INIT_MEMBER(btime_state,rockduck)
 }
 
 
-GAME( 1983, dommy,    0,        dommy,  scregg, driver_device, 0, ROT270, "Technos Japan", "Dommy", GAME_SUPPORTS_SAVE )
-GAME( 1983, scregg,   0,        scregg, scregg, driver_device, 0, ROT270, "Technos Japan", "Scrambled Egg", GAME_SUPPORTS_SAVE )
-GAME( 1983, eggs,     scregg,   scregg, scregg, driver_device, 0, ROT270, "Technos Japan / Universal USA", "Eggs", GAME_SUPPORTS_SAVE )
-GAME( 1983, rockduck, 0,        scregg, rockduck, btime_state, rockduck, ROT270, "Datel SAS", "Rock Duck (prototype?)", GAME_WRONG_COLORS | GAME_SUPPORTS_SAVE )
+GAME( 1983, dommy,    0,        dommy,  scregg,   driver_device, 0,        ROT270, "Technos Japan", "Dommy", GAME_SUPPORTS_SAVE )
+GAME( 1983, scregg,   0,        scregg, scregg,   driver_device, 0,        ROT270, "Technos Japan", "Scrambled Egg", GAME_SUPPORTS_SAVE )
+GAME( 1983, eggs,     scregg,   scregg, scregg,   driver_device, 0,        ROT270, "Technos Japan (Universal USA license)", "Eggs (USA)", GAME_SUPPORTS_SAVE )
+GAME( 1983, rockduck, 0,        scregg, rockduck, scregg_state,  rockduck, ROT270, "Datel SAS", "Rock Duck (prototype?)", GAME_WRONG_COLORS | GAME_SUPPORTS_SAVE )

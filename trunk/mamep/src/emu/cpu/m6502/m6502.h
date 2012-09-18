@@ -46,20 +46,24 @@ enum
 };
 
 #define M6502_IRQ_LINE		0
-/* use device_set_input_line(cpudevice, M6502_SET_OVERFLOW, level)
+/* use cpudevice->execute().set_input_line(M6502_SET_OVERFLOW, level)
    to change level of the so input line
    positiv edge sets overflow flag */
 #define M6502_SET_OVERFLOW	1
 
 
 /* Optional interface to set callbacks */
-typedef struct _m6502_interface m6502_interface;
-struct _m6502_interface
+#define M6510_INTERFACE(name) \
+	const m6502_interface (name) =
+
+struct m6502_interface
 {
-	read8_space_func		read_indexed_func;
-	write8_space_func		write_indexed_func;
+	devcb_read8				read_indexed_func;
+	devcb_write8			write_indexed_func;
 	devcb_read8				in_port_func;
 	devcb_write8			out_port_func;
+	UINT8					external_port_pullup;
+	UINT8					external_port_pulldown;
 };
 
 DECLARE_LEGACY_CPU_DEVICE(M6502, m6502);

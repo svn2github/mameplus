@@ -20,7 +20,6 @@
 
                             [ Sprites Format ]
 
-
     Offset:         Bits:               Value:
 
         0.b                             Y (Bottom up)
@@ -76,25 +75,24 @@
     For Debug: there's no tilemap, just sprites.
 ***************************************************************************/
 #if TILEMAPS
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(suna8_state::get_tile_info)
 {
-	suna8_state *state = machine.driver_data<suna8_state>();
 	UINT8 code, attr;
 
-	if (machine.input().code_pressed(KEYCODE_X))
+	if (machine().input().code_pressed(KEYCODE_X))
 	{
-		UINT8 *rom = state->memregion("maincpu")->base() + 0x10000 + 0x4000 * state->m_trombank;
+		UINT8 *rom = memregion("maincpu")->base() + 0x10000 + 0x4000 * m_trombank;
 		code = rom[ 2 * tile_index + 0 ];
 		attr = rom[ 2 * tile_index + 1 ];
 	}
 	else
 	{
-		code = state->m_spriteram[ 2 * tile_index + 0 ];
-		attr = state->m_spriteram[ 2 * tile_index + 1 ];
+		code = m_spriteram[ 2 * tile_index + 0 ];
+		attr = m_spriteram[ 2 * tile_index + 1 ];
 	}
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
-			( (attr & 0x03) << 8 ) + code + state->m_tiles*0x400,
+			( (attr & 0x03) << 8 ) + code + m_tiles*0x400,
 			(attr >> 2) & 0xf,
 			TILE_FLIPYX( (attr >> 6) & 3 ));
 }
@@ -138,24 +136,46 @@ WRITE8_MEMBER(suna8_state::suna8_banked_spriteram_w)
 */
 WRITE8_MEMBER( suna8_state::brickzn_banked_paletteram_w )
 {
+	if (!m_paletteram_enab)
+		return;
+
 	int r,g,b;
 	UINT16 rgb;
 
 	offset += m_palettebank * 0x200;
 	m_generic_paletteram_8[offset] = data;
 	rgb = (m_generic_paletteram_8[offset&~1] << 8) + m_generic_paletteram_8[offset|1];
-	r	=	(((rgb & (1<<0xc))?1:0)<<0) |
-			(((rgb & (1<<0xb))?1:0)<<1) |
-			(((rgb & (1<<0xe))?1:0)<<2) |
-			(((rgb & (1<<0xf))?1:0)<<3);
-	g	=	(((rgb & (1<<0x8))?1:0)<<0) |
-			(((rgb & (1<<0x9))?1:0)<<1) |
-			(((rgb & (1<<0xa))?1:0)<<2) |
-			(((rgb & (1<<0xd))?1:0)<<3);
-	b	=	(((rgb & (1<<0x4))?1:0)<<0) |
-			(((rgb & (1<<0x3))?1:0)<<1) |
-			(((rgb & (1<<0x6))?1:0)<<2) |
-			(((rgb & (1<<0x7))?1:0)<<3);
+
+	if (m_prot2_prev == 0x3c && m_prot2 == 0x80)
+	{
+		rgb ^= 0x4444;
+
+		r	=	(rgb >> 12) & 0x0f;
+		g	=	(rgb >>  8) & 0x0f;
+		b	=	(rgb >>  4) & 0x0f;
+	}
+	// see code at 697b
+	else if (m_prot2_prev == 0xa8 && m_prot2 == 0x00)
+	{
+		r	=	(((rgb & (1<<0xc))?1:0)<<0) |
+				(((rgb & (1<<0xb))?1:0)<<1) |
+				(((rgb & (1<<0xe))?1:0)<<2) |
+				(((rgb & (1<<0xf))?1:0)<<3);
+		g	=	(((rgb & (1<<0x8))?1:0)<<0) |
+				(((rgb & (1<<0x9))?1:0)<<1) |
+				(((rgb & (1<<0xa))?1:0)<<2) |
+				(((rgb & (1<<0xd))?1:0)<<3);
+		b	=	(((rgb & (1<<0x4))?1:0)<<0) |
+				(((rgb & (1<<0x3))?1:0)<<1) |
+				(((rgb & (1<<0x6))?1:0)<<2) |
+				(((rgb & (1<<0x7))?1:0)<<3);
+	}
+	else
+	{
+		r	=	(rgb >> 12) & 0x0f;
+		g	=	(rgb >>  8) & 0x0f;
+		b	=	(rgb >>  4) & 0x0f;
+	}
 
 	palette_set_color_rgb(machine(),offset/2,pal4bit(r),pal4bit(g),pal4bit(b));
 }
@@ -166,17 +186,18 @@ static void suna8_vh_start_common(running_machine &machine, int dim)
 {
 	suna8_state *state = machine.driver_data<suna8_state>();
 
-	state->m_text_dim = dim;
-	if (!(state->m_text_dim > 0))
+	state->m_text_dim		=	dim;
+	state->m_spritebank		=	0;
+	state->m_palettebank	=	0;
+
+	if (!state->m_text_dim)
 	{
 		state->m_generic_paletteram_8.allocate(0x200 * 2);
 		state->m_spriteram.allocate(0x2000 * 2);
-		state->m_spritebank  = 0;
-		state->m_palettebank = 0;
 	}
 
 #if TILEMAPS
-	state->m_bg_tilemap = tilemap_create(	machine, get_tile_info, tilemap_scan_cols,
+	state->m_bg_tilemap = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(suna8_state::get_tile_info),state), TILEMAP_SCAN_COLS,
 
 								8, 8, 0x20*((state->m_text_dim > 0)?4:8), 0x20);
 
@@ -184,9 +205,9 @@ static void suna8_vh_start_common(running_machine &machine, int dim)
 #endif
 }
 
-VIDEO_START( suna8_textdim0 )	{ suna8_vh_start_common(machine, 0);  }
-VIDEO_START( suna8_textdim8 )	{ suna8_vh_start_common(machine, 8);  }
-VIDEO_START( suna8_textdim12 )	{ suna8_vh_start_common(machine, 12); }
+VIDEO_START_MEMBER(suna8_state,suna8_textdim0){ suna8_vh_start_common(machine(), 0);  }
+VIDEO_START_MEMBER(suna8_state,suna8_textdim8){ suna8_vh_start_common(machine(), 8);  }
+VIDEO_START_MEMBER(suna8_state,suna8_textdim12){ suna8_vh_start_common(machine(), 12); }
 
 /***************************************************************************
 
@@ -321,7 +342,7 @@ static void draw_normal_sprites(running_machine &machine, bitmap_ind16 &bitmap,c
 
 				drawgfx_transpen(	bitmap,cliprect,machine.gfx[0],
 							tile + (attr & 0x3)*0x100 + gfxbank,
-							((attr >> 2) & 0xf) | colorbank,	// hardhea2 player2
+							(((attr >> 2) & 0xf) | colorbank) + 0x10 * state->m_palettebank,	// hardhea2 player2
 							tile_flipx, tile_flipy,
 							sx, sy,15);
 			}
@@ -434,8 +455,8 @@ SCREEN_UPDATE_IND16( suna8 )
 		state->m_bg_tilemap->set_scrolly(0, 0);
 		state->m_bg_tilemap->draw(bitmap, cliprect, 0, 0);
 #if 1
-	popmessage("%02X %02X %02X %02X - p%2X g%02X r%02X",
-						state->m_rombank, state->m_palettebank, state->m_spritebank, state->m_unknown,
+	popmessage("%02X %02X %02X - p%2X g%02X r%02X",
+						state->m_rombank, state->m_palettebank, state->m_spritebank,
 						state->m_page, state->m_tiles, state->m_trombank);
 #endif
 	}

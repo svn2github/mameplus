@@ -165,6 +165,9 @@ public:
 	tilemap_t *m_bg_tilemap;
 	DECLARE_WRITE8_MEMBER(miniboy7_videoram_w);
 	DECLARE_WRITE8_MEMBER(miniboy7_colorram_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -184,30 +187,28 @@ WRITE8_MEMBER(miniboy7_state::miniboy7_colorram_w)
 	m_bg_tilemap->mark_tile_dirty(offset);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(miniboy7_state::get_bg_tile_info)
 {
-	miniboy7_state *state = machine.driver_data<miniboy7_state>();
 /*  - bits -
     7654 3210
     --xx xx--   tiles color?.
     ---- --x-   tiles bank.
     xx-- ---x   seems unused. */
 
-	int attr = state->m_colorram[tile_index];
-	int code = state->m_videoram[tile_index];
+	int attr = m_colorram[tile_index];
+	int code = m_videoram[tile_index];
 	int bank = (attr & 0x02) >> 1;	/* bit 1 switch the gfx banks */
 	int color = (attr & 0x3c);	/* bits 2-3-4-5 for color? */
 
 	if (bank == 1)	/* temporary hack to point to the 3rd gfx bank */
 		bank = 2;
 
-	SET_TILE_INFO(bank, code, color, 0);
+	SET_TILE_INFO_MEMBER(bank, code, color, 0);
 }
 
-static VIDEO_START( miniboy7 )
+void miniboy7_state::video_start()
 {
-	miniboy7_state *state = machine.driver_data<miniboy7_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 37, 37);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(miniboy7_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 37, 37);
 }
 
 static SCREEN_UPDATE_IND16( miniboy7 )
@@ -217,9 +218,9 @@ static SCREEN_UPDATE_IND16( miniboy7 )
 	return 0;
 }
 
-static PALETTE_INIT( miniboy7 )
+void miniboy7_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 /*  FIXME... Can't get the correct palette.
     sometimes RGB bits are inverted, disregarding the 4th bit.
 
@@ -236,7 +237,7 @@ static PALETTE_INIT( miniboy7 )
 	/* 0000IBGR */
 	if (color_prom == 0) return;
 
-	for (i = 0;i < machine.total_colors();i++)
+	for (i = 0;i < machine().total_colors();i++)
 	{
 		int bit0, bit1, bit2, r, g, b, inten, intenmin, intenmax;
 
@@ -260,7 +261,7 @@ static PALETTE_INIT( miniboy7 )
 		b = (bit2 * intenmin) + (inten * (bit2 * (intenmax - intenmin)));
 
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 
@@ -465,9 +466,7 @@ static MACHINE_CONFIG_START( miniboy7, miniboy7_state )
 
 	MCFG_GFXDECODE(miniboy7)
 
-	MCFG_PALETTE_INIT(miniboy7)
 	MCFG_PALETTE_LENGTH(256)
-	MCFG_VIDEO_START(miniboy7)
 
 	MCFG_MC6845_ADD("crtc", MC6845, MASTER_CLOCK/12, mc6845_intf) /* guess */
 

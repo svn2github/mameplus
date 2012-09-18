@@ -64,7 +64,7 @@ WRITE16_MEMBER(sshangha_state::sshangha_protection16_w)
 {
 	COMBINE_DATA(&m_prot_data[offset]);
 
-	logerror("CPU #0 PC %06x: warning - write unmapped control address %06x %04x\n",cpu_get_pc(&space.device()),offset<<1,data);
+	logerror("CPU #0 PC %06x: warning - write unmapped control address %06x %04x\n",space.device().safe_pc(),offset<<1,data);
 }
 
 /* Protection/IO chip 146 */
@@ -82,7 +82,7 @@ READ16_MEMBER(sshangha_state::sshangha_protection16_r)
 		// Protection TODO
 	}
 
-	logerror("CPU #0 PC %06x: warning - read unmapped control address %06x\n",cpu_get_pc(&space.device()),offset<<1);
+	logerror("CPU #0 PC %06x: warning - read unmapped control address %06x\n",space.device().safe_pc(),offset<<1);
 	return m_prot_data[offset];
 }
 
@@ -109,7 +109,7 @@ READ16_MEMBER(sshangha_state::deco_71_r)
 
 /******************************************************************************/
 
-static MACHINE_RESET( sshangha )
+void sshangha_state::machine_reset()
 {
 }
 
@@ -358,7 +358,7 @@ GFXDECODE_END
 
 static void irqhandler(device_t *device, int state)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, state);
+	device->machine().device("audiocpu")->execute().set_input_line(0, state);
 }
 
 static const ym2203_interface ym2203_config =
@@ -402,7 +402,6 @@ static MACHINE_CONFIG_START( sshangha, sshangha_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_RESET(sshangha)	/* init machine */
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -423,7 +422,6 @@ static MACHINE_CONFIG_START( sshangha, sshangha_state )
 	decospr_device::set_gfx_region(*device, 2);
 
 
-	MCFG_VIDEO_START(sshangha)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker") /* sure it's stereo? */

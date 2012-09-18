@@ -160,14 +160,14 @@ enum
 //  TYPES
 //============================================================
 
-typedef struct _texture_info texture_info;
+struct texture_info;
 
 #if USE_OPENGL
 typedef void (*texture_copy_func)(texture_info *texture, const render_texinfo *texsource);
 #endif
 
 /* texture_info holds information about a texture */
-struct _texture_info
+struct texture_info
 {
 #ifdef OLD_CODE
 	texture_info *		next;				// next texture in the list
@@ -213,8 +213,7 @@ struct _texture_info
 };
 
 /* sdl_info is the information about SDL for the current screen */
-typedef struct _sdl_info sdl_info;
-struct _sdl_info
+struct sdl_info
 {
 	INT32			blittimer;
 	UINT32			extra_flags;
@@ -269,8 +268,7 @@ struct _sdl_info
 };
 
 /* line_aa_step is used for drawing antialiased lines */
-typedef struct _line_aa_step line_aa_step;
-struct _line_aa_step
+struct line_aa_step
 {
 	float		xoffs, yoffs;				// X/Y deltas
 	float		weight;					// weight contribution

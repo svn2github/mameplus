@@ -391,7 +391,7 @@ static I8257_INTERFACE( hb_dma )
 
 static INTERRUPT_GEN( s2650_interrupt )
 {
-    device_set_input_line_and_vector(device, 0, HOLD_LINE, 0x03);
+    device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x03);
 }
 
 /*************************************
@@ -410,104 +410,97 @@ static void dkong_init_device_driver_data( running_machine &machine )
 	state->m_dev_vp2 = machine.device("virtual_p2");
 }
 
-static MACHINE_START( dkong2b )
+MACHINE_START_MEMBER(dkong_state,dkong2b)
 {
-	dkong_state *state = machine.driver_data<dkong_state>();
 
-	dkong_init_device_driver_data(machine);
-	state->m_hardware_type = HARDWARE_TKG04;
+	dkong_init_device_driver_data(machine());
+	m_hardware_type = HARDWARE_TKG04;
 
-	state->save_item(NAME(state->m_decrypt_counter));
-	state->save_item(NAME(state->m_dma_latch));
+	save_item(NAME(m_decrypt_counter));
+	save_item(NAME(m_dma_latch));
 }
 
-static MACHINE_START( s2650 )
+MACHINE_START_MEMBER(dkong_state,s2650)
 {
-    dkong_state *state = machine.driver_data<dkong_state>();
-    UINT8   *p = state->memregion("user1")->base();
-    const char *game_name = machine.system().name;
+    UINT8   *p = memregion("user1")->base();
+    const char *game_name = machine().system().name;
     int i;
 
-    MACHINE_START_CALL(dkong2b);
+    MACHINE_START_CALL_MEMBER(dkong2b);
 
     for (i = 0; i < 0x200; i++)
-        state->m_rev_map[i] = -1;
+        m_rev_map[i] = -1;
     for (i = 0; i < 0x200; i++)
-        state->m_rev_map[p[0x0000 + i]] = i;
+        m_rev_map[p[0x0000 + i]] = i;
 
-    state->m_hunchloopback = 0;
+    m_hunchloopback = 0;
 
-    state->save_item(NAME(state->m_hunchloopback));
-    state->save_item(NAME(state->m_prot_cnt));
-    state->save_item(NAME(state->m_main_fo));
+    save_item(NAME(m_hunchloopback));
+    save_item(NAME(m_prot_cnt));
+    save_item(NAME(m_main_fo));
 
-    if (strcmp(game_name,"herbiedk") == 0) state->m_protect_type = DK2650_HERBIEDK;
-    else if (strcmp(game_name,"hunchbkd") == 0) state->m_protect_type = DK2650_HUNCHBKD;
-    else if (strcmp(game_name,"sbdk") == 0) state->m_protect_type = DK2650_HUNCHBKD;
-    else if (strcmp(game_name,"herodk") == 0) state->m_protect_type = DK2650_HUNCHBKD;
-    else if (strcmp(game_name,"herodku") == 0) state->m_protect_type = DK2650_HUNCHBKD;
-    else if (strcmp(game_name,"8ballact") == 0) state->m_protect_type = DK2650_EIGHTACT;
-    else if (strcmp(game_name,"8ballact2") == 0) state->m_protect_type = DK2650_EIGHTACT;
-    else if (strcmp(game_name,"shootgal") == 0) state->m_protect_type = DK2650_SHOOTGAL;
-    else if (strcmp(game_name,"spclforc") == 0) state->m_protect_type = DK2650_SPCLFORC;
-    else if (strcmp(game_name,"spcfrcii") == 0) state->m_protect_type = DK2650_SPCLFORC;
+    if (strcmp(game_name,"herbiedk") == 0) m_protect_type = DK2650_HERBIEDK;
+    else if (strcmp(game_name,"hunchbkd") == 0) m_protect_type = DK2650_HUNCHBKD;
+    else if (strcmp(game_name,"sbdk") == 0) m_protect_type = DK2650_HUNCHBKD;
+    else if (strcmp(game_name,"herodk") == 0) m_protect_type = DK2650_HUNCHBKD;
+    else if (strcmp(game_name,"herodku") == 0) m_protect_type = DK2650_HUNCHBKD;
+    else if (strcmp(game_name,"8ballact") == 0) m_protect_type = DK2650_EIGHTACT;
+    else if (strcmp(game_name,"8ballact2") == 0) m_protect_type = DK2650_EIGHTACT;
+    else if (strcmp(game_name,"shootgal") == 0) m_protect_type = DK2650_SHOOTGAL;
+    else if (strcmp(game_name,"spclforc") == 0) m_protect_type = DK2650_SPCLFORC;
+    else if (strcmp(game_name,"spcfrcii") == 0) m_protect_type = DK2650_SPCLFORC;
     else
-        fatalerror("Unknown game <%s> in S2650 start.", game_name);
+        fatalerror("Unknown game <%s> in S2650 start.\n", game_name);
 }
 
-static MACHINE_START( radarscp )
+MACHINE_START_MEMBER(dkong_state,radarscp)
 {
-    dkong_state *state = machine.driver_data<dkong_state>();
 
-    MACHINE_START_CALL(dkong2b);
-    state->m_hardware_type = HARDWARE_TRS02;
+    MACHINE_START_CALL_MEMBER(dkong2b);
+    m_hardware_type = HARDWARE_TRS02;
 }
 
-static MACHINE_START( radarscp1 )
+MACHINE_START_MEMBER(dkong_state,radarscp1)
 {
-    dkong_state *state = machine.driver_data<dkong_state>();
 
-    MACHINE_START_CALL(dkong2b);
-    state->m_hardware_type = HARDWARE_TRS01;
+    MACHINE_START_CALL_MEMBER(dkong2b);
+    m_hardware_type = HARDWARE_TRS01;
 }
 
-static MACHINE_START( dkong3 )
+MACHINE_START_MEMBER(dkong_state,dkong3)
 {
-	dkong_state *state = machine.driver_data<dkong_state>();
 
-	dkong_init_device_driver_data(machine);
-	state->m_hardware_type = HARDWARE_TKG04;
+	dkong_init_device_driver_data(machine());
+	m_hardware_type = HARDWARE_TKG04;
 }
 
-static MACHINE_RESET( dkong )
+MACHINE_RESET_MEMBER(dkong_state,dkong)
 {
     /* nothing */
 }
 
-static MACHINE_RESET( strtheat )
+MACHINE_RESET_MEMBER(dkong_state,strtheat)
 {
-    dkong_state *state = machine.driver_data<dkong_state>();
-    UINT8 *ROM = state->memregion("maincpu")->base();
+    UINT8 *ROM = memregion("maincpu")->base();
 
-    MACHINE_RESET_CALL(dkong);
+    MACHINE_RESET_CALL_MEMBER(dkong);
 
     /* The initial state of the counter is 0x08 */
-    state->membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x4000);
-    state->m_decrypt_counter = 0x08;
-    state->membank("bank1")->set_entry(0);
+    membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x4000);
+    m_decrypt_counter = 0x08;
+    membank("bank1")->set_entry(0);
 }
 
-static MACHINE_RESET( drakton )
+MACHINE_RESET_MEMBER(dkong_state,drakton)
 {
-    dkong_state *state = machine.driver_data<dkong_state>();
-    UINT8 *ROM = state->memregion("maincpu")->base();
+    UINT8 *ROM = memregion("maincpu")->base();
 
-    MACHINE_RESET_CALL(dkong);
+    MACHINE_RESET_CALL_MEMBER(dkong);
 
     /* The initial state of the counter is 0x09 */
-    state->membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x4000);
-    state->m_decrypt_counter = 0x09;
-    state->membank("bank1")->set_entry(1);
+    membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x4000);
+    m_decrypt_counter = 0x09;
+    membank("bank1")->set_entry(1);
 }
 
 
@@ -642,7 +635,7 @@ READ8_MEMBER(dkong_state::epos_decrypt_rom)
 WRITE8_MEMBER(dkong_state::s2650_data_w)
 {
 #if DEBUG_PROTECTION
-    logerror("write : pc = %04x, loopback = %02x\n",cpu_get_pc(&space.device()), data);
+    logerror("write : pc = %04x, loopback = %02x\n",space.device().safe_pc(), data);
 #endif
 
     m_hunchloopback = data;
@@ -651,7 +644,7 @@ WRITE8_MEMBER(dkong_state::s2650_data_w)
 WRITE8_MEMBER(dkong_state::s2650_fo_w)
 {
 #if DEBUG_PROTECTION
-    logerror("write : pc = %04x, FO = %02x\n",cpu_get_pc(&space.device()), data);
+    logerror("write : pc = %04x, FO = %02x\n",space.device().safe_pc(), data);
 #endif
 
     m_main_fo = data;
@@ -663,7 +656,7 @@ WRITE8_MEMBER(dkong_state::s2650_fo_w)
 READ8_MEMBER(dkong_state::s2650_port0_r)
 {
 #if DEBUG_PROTECTION
-    logerror("port 0 : pc = %04x, loopback = %02x fo=%d\n",cpu_get_pc(&space.device()), m_hunchloopback, m_main_fo);
+    logerror("port 0 : pc = %04x, loopback = %02x fo=%d\n",space.device().safe_pc(), m_hunchloopback, m_main_fo);
 #endif
 
     switch (m_protect_type)
@@ -680,7 +673,7 @@ READ8_MEMBER(dkong_state::s2650_port0_r)
 	    	else
 	    		return m_hunchloopback--;
     }
-    fatalerror("Unhandled read from port 0 : pc = %4x\n",cpu_get_pc(&space.device()));
+    fatalerror("Unhandled read from port 0 : pc = %4x\n",space.device().safe_pc());
 }
 
 
@@ -688,7 +681,7 @@ READ8_MEMBER(dkong_state::s2650_port1_r)
 {
 
 #if DEBUG_PROTECTION
-    logerror("port 1 : pc = %04x, loopback = %02x fo=%d\n",cpu_get_pc(&space.device()), m_hunchloopback, m_main_fo);
+    logerror("port 1 : pc = %04x, loopback = %02x fo=%d\n",space.device().safe_pc(), m_hunchloopback, m_main_fo);
 #endif
 
     switch (m_protect_type)
@@ -702,7 +695,7 @@ READ8_MEMBER(dkong_state::s2650_port1_r)
         	else
         		return ++m_prot_cnt;
     }
-    fatalerror("Unhandled read from port 1 : pc = %4x\n",cpu_get_pc(&space.device()));
+    fatalerror("Unhandled read from port 1 : pc = %4x\n",space.device().safe_pc());
 }
 
 
@@ -711,13 +704,13 @@ WRITE8_MEMBER(dkong_state::dkong3_2a03_reset_w)
 
 	if (data & 1)
 	{
-		device_set_input_line(m_dev_n2a03a, INPUT_LINE_RESET, CLEAR_LINE);
-		device_set_input_line(m_dev_n2a03b, INPUT_LINE_RESET, CLEAR_LINE);
+		m_dev_n2a03a->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+		m_dev_n2a03b->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 	}
 	else
 	{
-		device_set_input_line(m_dev_n2a03a, INPUT_LINE_RESET, ASSERT_LINE);
-		device_set_input_line(m_dev_n2a03b, INPUT_LINE_RESET, ASSERT_LINE);
+		m_dev_n2a03a->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+		m_dev_n2a03b->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 	}
 }
 
@@ -1650,7 +1643,7 @@ static INTERRUPT_GEN( vblank_irq )
 	dkong_state *state = device->machine().driver_data<dkong_state>();
 
 	if(state->m_nmi_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( dkong_base, dkong_state )
@@ -1660,8 +1653,8 @@ static MACHINE_CONFIG_START( dkong_base, dkong_state )
     MCFG_CPU_PROGRAM_MAP(dkong_map)
     MCFG_CPU_VBLANK_INT("screen", vblank_irq)
 
-    MCFG_MACHINE_START(dkong2b)
-    MCFG_MACHINE_RESET(dkong)
+    MCFG_MACHINE_START_OVERRIDE(dkong_state,dkong2b)
+    MCFG_MACHINE_RESET_OVERRIDE(dkong_state,dkong)
 
     MCFG_I8257_ADD("dma8257", CLOCK_1H, dk_dma)
 
@@ -1673,16 +1666,16 @@ static MACHINE_CONFIG_START( dkong_base, dkong_state )
     MCFG_GFXDECODE(dkong)
     MCFG_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
 
-    MCFG_PALETTE_INIT(dkong2b)
-    MCFG_VIDEO_START(dkong)
+    MCFG_PALETTE_INIT_OVERRIDE(dkong_state,dkong2b)
+    MCFG_VIDEO_START_OVERRIDE(dkong_state,dkong)
 
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( radarscp, dkong_base )
 
-    MCFG_MACHINE_START(radarscp)
+    MCFG_MACHINE_START_OVERRIDE(dkong_state,radarscp)
     MCFG_PALETTE_LENGTH(RS_PALETTE_LENGTH)
-    MCFG_PALETTE_INIT(radarscp)
+    MCFG_PALETTE_INIT_OVERRIDE(dkong_state,radarscp)
 
     /* sound hardware */
     MCFG_FRAGMENT_ADD(radarscp_audio)
@@ -1691,9 +1684,9 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( radarscp1, dkong_base )
 
-    MCFG_MACHINE_START(radarscp1)
+    MCFG_MACHINE_START_OVERRIDE(dkong_state,radarscp1)
     MCFG_PALETTE_LENGTH(RS_PALETTE_LENGTH)
-    MCFG_PALETTE_INIT(radarscp1)
+    MCFG_PALETTE_INIT_OVERRIDE(dkong_state,radarscp1)
 
     /* sound hardware */
     MCFG_FRAGMENT_ADD(radarscp1_audio)
@@ -1703,7 +1696,7 @@ MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( dkong2b, dkong_base )
 
-    MCFG_MACHINE_START(dkong2b)
+    MCFG_MACHINE_START_OVERRIDE(dkong_state,dkong2b)
     MCFG_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
 
     /* sound hardware */
@@ -1724,7 +1717,7 @@ static MACHINE_CONFIG_START( dkong3, dkong_state )
     MCFG_CPU_IO_MAP(dkong3_io_map)
     MCFG_CPU_VBLANK_INT("screen", vblank_irq)
 
-    MCFG_MACHINE_START(dkong3)
+    MCFG_MACHINE_START_OVERRIDE(dkong_state,dkong3)
 
     MCFG_Z80DMA_ADD("z80dma", CLOCK_1H, dk3_dma)
 
@@ -1736,8 +1729,8 @@ static MACHINE_CONFIG_START( dkong3, dkong_state )
     MCFG_GFXDECODE(dkong)
     MCFG_PALETTE_LENGTH(DK3_PALETTE_LENGTH)
 
-    MCFG_PALETTE_INIT(dkong3)
-    MCFG_VIDEO_START(dkong)
+    MCFG_PALETTE_INIT_OVERRIDE(dkong_state,dkong3)
+    MCFG_VIDEO_START_OVERRIDE(dkong_state,dkong)
 
     /* sound hardware */
     MCFG_FRAGMENT_ADD(dkong3_audio)
@@ -1757,7 +1750,7 @@ static MACHINE_CONFIG_DERIVED( pestplce, dkongjr )
 
     MCFG_GFXDECODE(pestplce)
     MCFG_PALETTE_LENGTH(DK2B_PALETTE_LENGTH)
-    MCFG_PALETTE_INIT(dkong2b)  /* wrong! */
+    MCFG_PALETTE_INIT_OVERRIDE(dkong_state,dkong2b)  /* wrong! */
 	MCFG_SCREEN_MODIFY("screen")
     MCFG_SCREEN_UPDATE_STATIC(pestplce)
 
@@ -1766,7 +1759,7 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( dkong3b, dkongjr )
 
 	/* basic machine hardware */
-    MCFG_PALETTE_INIT(dkong3)
+    MCFG_PALETTE_INIT_OVERRIDE(dkong_state,dkong3)
 MACHINE_CONFIG_END
 
 /*************************************
@@ -1786,7 +1779,7 @@ static MACHINE_CONFIG_DERIVED( s2650, dkong2b )
     MCFG_DEVICE_MODIFY("dma8257")
     MCFG_DEVICE_CONFIG(hb_dma)
 
-    MCFG_MACHINE_START(s2650)
+    MCFG_MACHINE_START_OVERRIDE(dkong_state,s2650)
 
 MACHINE_CONFIG_END
 
@@ -1814,7 +1807,7 @@ static MACHINE_CONFIG_DERIVED( strtheat, dkong2b )
     MCFG_CPU_MODIFY("maincpu")
     MCFG_CPU_IO_MAP(epos_readport)
 
-    MCFG_MACHINE_RESET(strtheat)
+    MCFG_MACHINE_RESET_OVERRIDE(dkong_state,strtheat)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( drakton, dkong2b )
@@ -1824,7 +1817,7 @@ static MACHINE_CONFIG_DERIVED( drakton, dkong2b )
     MCFG_CPU_MODIFY("maincpu")
     MCFG_CPU_IO_MAP(epos_readport)
 
-    MCFG_MACHINE_RESET(drakton)
+    MCFG_MACHINE_RESET_OVERRIDE(dkong_state,drakton)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( drktnjr, dkongjr )
@@ -1834,7 +1827,7 @@ static MACHINE_CONFIG_DERIVED( drktnjr, dkongjr )
     MCFG_CPU_MODIFY("maincpu")
     MCFG_CPU_IO_MAP(epos_readport)
 
-    MCFG_MACHINE_RESET(drakton)
+    MCFG_MACHINE_RESET_OVERRIDE(dkong_state,drakton)
 MACHINE_CONFIG_END
 
 /*************************************

@@ -24,14 +24,30 @@ public:
 	DECLARE_WRITE16_MEMBER(m90_video_w);
 	DECLARE_DRIVER_INIT(bomblord);
 	DECLARE_DRIVER_INIT(quizf1);
+	TILE_GET_INFO_MEMBER(get_pf1_tile_info);
+	TILE_GET_INFO_MEMBER(get_pf1w_tile_info);
+	TILE_GET_INFO_MEMBER(get_pf2_tile_info);
+	TILE_GET_INFO_MEMBER(get_pf2w_tile_info);
+	TILE_GET_INFO_MEMBER(bomblord_get_pf1_tile_info);
+	TILE_GET_INFO_MEMBER(bomblord_get_pf1w_tile_info);
+	TILE_GET_INFO_MEMBER(bomblord_get_pf2_tile_info);
+	TILE_GET_INFO_MEMBER(bomblord_get_pf2w_tile_info);
+	TILE_GET_INFO_MEMBER(dynablsb_get_pf1_tile_info);
+	TILE_GET_INFO_MEMBER(dynablsb_get_pf1w_tile_info);
+	TILE_GET_INFO_MEMBER(dynablsb_get_pf2_tile_info);
+	TILE_GET_INFO_MEMBER(dynablsb_get_pf2w_tile_info);
+	virtual void machine_start();
+	virtual void video_start();
+	DECLARE_VIDEO_START(bomblord);
+	DECLARE_VIDEO_START(dynablsb);
 };
 
 
 /*----------- defined in video/m90.c -----------*/
 
-VIDEO_START( m90 );
-VIDEO_START( dynablsb );
-VIDEO_START( bomblord );
+
+
+
 SCREEN_UPDATE_IND16( m90 );
 SCREEN_UPDATE_IND16( dynablsb );
 SCREEN_UPDATE_IND16( bomblord );

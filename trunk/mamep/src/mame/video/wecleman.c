@@ -417,11 +417,10 @@ static void sprite_draw(running_machine &machine, _BitmapClass &bitmap, const re
                 [ Frontmost (text) layer + video registers ]
 ------------------------------------------------------------------------*/
 
-static TILE_GET_INFO( wecleman_get_txt_tile_info )
+TILE_GET_INFO_MEMBER(wecleman_state::wecleman_get_txt_tile_info)
 {
-	wecleman_state *state = machine.driver_data<wecleman_state>();
-	int code = state->m_txtram[tile_index];
-	SET_TILE_INFO(PAGE_GFX, code&0xfff, (code>>5&0x78)+(code>>12), 0);
+	int code = m_txtram[tile_index];
+	SET_TILE_INFO_MEMBER(PAGE_GFX, code&0xfff, (code>>5&0x78)+(code>>12), 0);
 }
 
 WRITE16_MEMBER(wecleman_state::wecleman_txtram_w)
@@ -464,27 +463,25 @@ WRITE16_MEMBER(wecleman_state::wecleman_txtram_w)
                             [ Background ]
 ------------------------------------------------------------------------*/
 
-static TILE_GET_INFO( wecleman_get_bg_tile_info )
+TILE_GET_INFO_MEMBER(wecleman_state::wecleman_get_bg_tile_info)
 {
-	wecleman_state *state = machine.driver_data<wecleman_state>();
-	int page = state->m_bgpage[((tile_index&0x7f)>>6) + ((tile_index>>12)<<1)];
-	int code = state->m_pageram[(tile_index&0x3f) + ((tile_index>>7&0x1f)<<6) + (page<<11)];
+	int page = m_bgpage[((tile_index&0x7f)>>6) + ((tile_index>>12)<<1)];
+	int code = m_pageram[(tile_index&0x3f) + ((tile_index>>7&0x1f)<<6) + (page<<11)];
 
-	SET_TILE_INFO(PAGE_GFX, code&0xfff, (code>>5&0x78)+(code>>12), 0);
+	SET_TILE_INFO_MEMBER(PAGE_GFX, code&0xfff, (code>>5&0x78)+(code>>12), 0);
 }
 
 /*------------------------------------------------------------------------
                             [ Foreground ]
 ------------------------------------------------------------------------*/
 
-static TILE_GET_INFO( wecleman_get_fg_tile_info )
+TILE_GET_INFO_MEMBER(wecleman_state::wecleman_get_fg_tile_info)
 {
-	wecleman_state *state = machine.driver_data<wecleman_state>();
-	int page = state->m_fgpage[((tile_index&0x7f)>>6) + ((tile_index>>12)<<1)];
-	int code = state->m_pageram[(tile_index&0x3f) + ((tile_index>>7&0x1f)<<6) + (page<<11)];
+	int page = m_fgpage[((tile_index&0x7f)>>6) + ((tile_index>>12)<<1)];
+	int code = m_pageram[(tile_index&0x3f) + ((tile_index>>7&0x1f)<<6) + (page<<11)];
 
 	if (!code || code==0xffff) code = 0x20;
-	SET_TILE_INFO(PAGE_GFX, code&0xfff, (code>>5&0x78)+(code>>12), 0);
+	SET_TILE_INFO_MEMBER(PAGE_GFX, code&0xfff, (code>>5&0x78)+(code>>12), 0);
 }
 
 /*------------------------------------------------------------------------
@@ -610,14 +607,14 @@ static void wecleman_draw_road(running_machine &machine, bitmap_rgb32 &bitmap, c
 			if ((road>>8) != 0x04) continue;
 			road &= YMASK;
 
-			src_ptr = gfx_element_get_data(machine.gfx[1], (road << 3));
-			gfx_element_get_data(machine.gfx[1], (road << 3) + 1);
-			gfx_element_get_data(machine.gfx[1], (road << 3) + 2);
-			gfx_element_get_data(machine.gfx[1], (road << 3) + 3);
-			gfx_element_get_data(machine.gfx[1], (road << 3) + 4);
-			gfx_element_get_data(machine.gfx[1], (road << 3) + 5);
-			gfx_element_get_data(machine.gfx[1], (road << 3) + 6);
-			gfx_element_get_data(machine.gfx[1], (road << 3) + 7);
+			src_ptr = machine.gfx[1]->get_data((road << 3));
+			machine.gfx[1]->get_data((road << 3) + 1);
+			machine.gfx[1]->get_data((road << 3) + 2);
+			machine.gfx[1]->get_data((road << 3) + 3);
+			machine.gfx[1]->get_data((road << 3) + 4);
+			machine.gfx[1]->get_data((road << 3) + 5);
+			machine.gfx[1]->get_data((road << 3) + 6);
+			machine.gfx[1]->get_data((road << 3) + 7);
 			mdy = ((road * MIDCURB_DY) >> 8) * bitmap.rowpixels();
 			tdy = ((road * TOPCURB_DY) >> 8) * bitmap.rowpixels();
 
@@ -656,7 +653,7 @@ static void wecleman_draw_road(running_machine &machine, bitmap_rgb32 &bitmap, c
 
 // blends two 8x8x16bpp direct RGB tilemaps
 static void draw_cloud(bitmap_rgb32 &bitmap,
-				 const gfx_element *gfx,
+				 gfx_element *gfx,
 				 UINT16 *tm_base,
 				 int x0, int y0,				// target coordinate
 				 int xcount, int ycount,		// number of tiles to draw in x and y
@@ -677,8 +674,8 @@ static void draw_cloud(bitmap_rgb32 &bitmap,
 
 	if (alpha > 0x1f) return;
 
-	tilew = gfx->width;
-	tileh = gfx->height;
+	tilew = gfx->width();
+	tileh = gfx->height();
 
 	tmmaskx = (1<<tmw_l2) - 1;
 	tmmasky = (1<<tmh_l2) - 1;
@@ -693,7 +690,7 @@ static void draw_cloud(bitmap_rgb32 &bitmap,
 
 	dst_base = &bitmap.pix32(y0+dy, x0+dx);
 
-	pal_base = gfx->machine().pens + pal_offset * gfx->color_granularity;
+	pal_base = gfx->machine().pens + pal_offset * gfx->granularity();
 
 	alpha <<= 6;
 
@@ -713,8 +710,8 @@ static void draw_cloud(bitmap_rgb32 &bitmap,
 			// Wec Le Mans specific: decodes tile color in EAX
 			UINT16 tile_color = ((tiledata >> 5) & 0x78) + (tiledata >> 12);
 
-			src_ptr = gfx_element_get_data(gfx, tile_index);
-			pal_ptr = pal_base + tile_color * gfx->color_granularity;
+			src_ptr = gfx->get_data(tile_index);
+			pal_ptr = pal_base + tile_color * gfx->granularity();
 			dst_ptr = dst_base + j * tilew;
 
 			/* alpha case */
@@ -881,9 +878,8 @@ WRITE16_MEMBER(wecleman_state::wecleman_paletteram16_SSSSBBBBGGGGRRRR_word_w)
                             Initializations
 ***************************************************************************/
 
-VIDEO_START( wecleman )
+VIDEO_START_MEMBER(wecleman_state,wecleman)
 {
-	wecleman_state *state = machine.driver_data<wecleman_state>();
 	/*
         Sprite banking - each bank is 0x20000 bytes (we support 0x40 bank codes)
         This game has ROMs for 16 banks
@@ -899,75 +895,75 @@ VIDEO_START( wecleman )
 	UINT8 *buffer;
 	int i, j;
 
-	assert(machine.primary_screen->format() == BITMAP_FORMAT_RGB32);
-	buffer = auto_alloc_array(machine, UINT8, 0x12c00);	// working buffer for sprite operations
+	assert(machine().primary_screen->format() == BITMAP_FORMAT_RGB32);
+	buffer = auto_alloc_array(machine(), UINT8, 0x12c00);	// working buffer for sprite operations
 
-	state->m_gameid = 0;
-	state->m_gfx_bank = bank;
-	state->m_spr_offsx = -0xbc + BMP_PAD;
-	state->m_spr_offsy = 1 + BMP_PAD;
-	state->m_cloud_blend = BLEND_MAX;
-	state->m_cloud_ds = 0;
-	state->m_cloud_visible = 0;
-	state->m_black_pen = get_black_pen(machine);
+	m_gameid = 0;
+	m_gfx_bank = bank;
+	m_spr_offsx = -0xbc + BMP_PAD;
+	m_spr_offsy = 1 + BMP_PAD;
+	m_cloud_blend = BLEND_MAX;
+	m_cloud_ds = 0;
+	m_cloud_visible = 0;
+	m_black_pen = get_black_pen(machine());
 
-	state->m_rgb_half     =          (UINT16*)(buffer + 0x00000);
-	state->m_t32x32pm     =             (int*)(buffer + 0x10020);
-	state->m_spr_ptr_list = (struct sprite **)(buffer + 0x12000);
-	state->m_spr_idx_list =            (int *)(buffer + 0x12400);
-	state->m_spr_pri_list =            (int *)(buffer + 0x12800);
+	m_rgb_half     =          (UINT16*)(buffer + 0x00000);
+	m_t32x32pm     =             (int*)(buffer + 0x10020);
+	m_spr_ptr_list = (struct sprite **)(buffer + 0x12000);
+	m_spr_idx_list =            (int *)(buffer + 0x12400);
+	m_spr_pri_list =            (int *)(buffer + 0x12800);
 
 	for (i=0; i<0x8000; i++)
 	{
 		j = i>>1;
-		state->m_rgb_half[i] = (j&0xf) | (j&0x1e0) | (j&0x3c00);
+		m_rgb_half[i] = (j&0xf) | (j&0x1e0) | (j&0x3c00);
 	}
 
 	for (j=0; j<0x20; j++)
 	{
 		for (i=-0x1f; i<0x20; i++)
 		{
-			*(state->m_t32x32pm + (j<<6) + i) = i * j;
+			*(m_t32x32pm + (j<<6) + i) = i * j;
 		}
 	}
 
-	state->m_sprite_list = auto_alloc_array_clear(machine, struct sprite, NUM_SPRITES);
+	m_sprite_list = auto_alloc_array_clear(machine(), struct sprite, NUM_SPRITES);
 
-	state->m_bg_tilemap = tilemap_create(machine, wecleman_get_bg_tile_info,
-								tilemap_scan_rows,
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(wecleman_state::wecleman_get_bg_tile_info),this),
+								TILEMAP_SCAN_ROWS,
 									/* We draw part of the road below */
 								8,8,
 								PAGE_NX * 2, PAGE_NY * 2 );
 
-	state->m_fg_tilemap = tilemap_create(machine, wecleman_get_fg_tile_info,
-								tilemap_scan_rows,
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(wecleman_state::wecleman_get_fg_tile_info),this),
+								TILEMAP_SCAN_ROWS,
 
 								8,8,
 								PAGE_NX * 2, PAGE_NY * 2);
 
-	state->m_txt_tilemap = tilemap_create(machine, wecleman_get_txt_tile_info,
-								 tilemap_scan_rows,
+	m_txt_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(wecleman_state::wecleman_get_txt_tile_info),this),
+								 TILEMAP_SCAN_ROWS,
 
 								 8,8,
 								 PAGE_NX * 1, PAGE_NY * 1);
 
-	state->m_bg_tilemap->set_scroll_rows(TILEMAP_DIMY);	/* Screen-wise scrolling */
-	state->m_bg_tilemap->set_scroll_cols(1);
-	state->m_bg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap->set_scroll_rows(TILEMAP_DIMY);	/* Screen-wise scrolling */
+	m_bg_tilemap->set_scroll_cols(1);
+	m_bg_tilemap->set_transparent_pen(0);
 
-	state->m_fg_tilemap->set_scroll_rows(TILEMAP_DIMY);	/* Screen-wise scrolling */
-	state->m_fg_tilemap->set_scroll_cols(1);
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_fg_tilemap->set_scroll_rows(TILEMAP_DIMY);	/* Screen-wise scrolling */
+	m_fg_tilemap->set_scroll_cols(1);
+	m_fg_tilemap->set_transparent_pen(0);
 
-	state->m_txt_tilemap->set_scroll_rows(1);
-	state->m_txt_tilemap->set_scroll_cols(1);
-	state->m_txt_tilemap->set_transparent_pen(0);
+	m_txt_tilemap->set_scroll_rows(1);
+	m_txt_tilemap->set_scroll_cols(1);
+	m_txt_tilemap->set_transparent_pen(0);
 
-	state->m_txt_tilemap->set_scrollx(0, 512-320-16 -BMP_PAD);
-	state->m_txt_tilemap->set_scrolly(0, -BMP_PAD );
+	m_txt_tilemap->set_scrollx(0, 512-320-16 -BMP_PAD);
+	m_txt_tilemap->set_scrolly(0, -BMP_PAD );
 
 	// patches out a mysterious pixel floating in the sky (tile decoding bug?)
-	*(machine.gfx[0]->gfxdata + (machine.gfx[0]->char_modulo*0xaca+7)) = 0;
+	*const_cast<UINT8 *>(machine().gfx[0]->get_data(0xaca)+7) = 0;
 }
 
 //  Callbacks for the K051316
@@ -984,9 +980,8 @@ void hotchase_zoom_callback_1(running_machine &machine, int *code,int *color,int
 	*color = ((*color & 0x3f) << 1) | ((*code & 0x80) >> 7);
 }
 
-VIDEO_START( hotchase )
+VIDEO_START_MEMBER(wecleman_state,hotchase)
 {
-	wecleman_state *state = machine.driver_data<wecleman_state>();
 	/*
         Sprite banking - each bank is 0x20000 bytes (we support 0x40 bank codes)
         This game has ROMs for 0x30 banks
@@ -1001,17 +996,17 @@ VIDEO_START( hotchase )
 
 	UINT8 *buffer;
 
-	buffer = auto_alloc_array(machine, UINT8, 0x400);	// reserve 1k for sprite list
+	buffer = auto_alloc_array(machine(), UINT8, 0x400);	// reserve 1k for sprite list
 
-	state->m_gameid = 1;
-	state->m_gfx_bank = bank;
-	state->m_spr_offsx = -0xc0;
-	state->m_spr_offsy = 0;
-	state->m_black_pen = get_black_pen(machine);
+	m_gameid = 1;
+	m_gfx_bank = bank;
+	m_spr_offsx = -0xc0;
+	m_spr_offsy = 0;
+	m_black_pen = get_black_pen(machine());
 
-	state->m_spr_ptr_list = (struct sprite **)buffer;
+	m_spr_ptr_list = (struct sprite **)buffer;
 
-	state->m_sprite_list = auto_alloc_array_clear(machine, struct sprite, NUM_SPRITES);
+	m_sprite_list = auto_alloc_array_clear(machine(), struct sprite, NUM_SPRITES);
 }
 
 

@@ -6,8 +6,7 @@
 
 ****************************************************************************************/
 
-typedef struct _nes_mmc  nes_mmc;
-struct _nes_mmc
+struct nes_mmc
 {
 	int    iNesMapper; /* iNES Mapper # */
 	int    pcb_id;
@@ -38,7 +37,7 @@ static void ffe_irq( device_t *device, int scanline, int vblank, int blanked )
 	{
 		if ((0xffff - state->m_IRQ_count) < 114)
 		{
-			device_set_input_line(state->m_maincpu, M6502_IRQ_LINE, HOLD_LINE);
+			state->m_maincpu->set_input_line(M6502_IRQ_LINE, HOLD_LINE);
 			state->m_IRQ_count = 0xffff;
 			state->m_IRQ_enable = 0;
 		}
@@ -459,7 +458,7 @@ int nes_get_mmc_id( running_machine &machine, int mapper )
 	const nes_mmc *mmc = nes_mapper_lookup(mapper);
 
 	if (mmc == NULL)
-		fatalerror("Unimplemented Mapper %d", mapper);
+		fatalerror("Unimplemented Mapper %d\n", mapper);
 
 	return mmc->pcb_id;
 }

@@ -77,12 +77,13 @@ public:
 	DECLARE_READ32_MEMBER(in0_r);
 	DECLARE_WRITE32_MEMBER(output_w);
 	DECLARE_DRIVER_INIT(feversoc);
+	virtual void video_start();
 };
 
 
 #define MASTER_CLOCK XTAL_28_63636MHz
 
-static VIDEO_START( feversoc )
+void feversoc_state::video_start()
 {
 
 }
@@ -247,7 +248,7 @@ INPUT_PORTS_END
 
 static INTERRUPT_GEN( feversoc_irq )
 {
-	cputag_set_input_line(device->machine(), "maincpu", 8, HOLD_LINE );
+	device->machine().device("maincpu")->execute().set_input_line(8, HOLD_LINE );
 }
 
 static MACHINE_CONFIG_START( feversoc, feversoc_state )
@@ -268,7 +269,6 @@ static MACHINE_CONFIG_START( feversoc, feversoc_state )
 	MCFG_GFXDECODE(feversoc)
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_VIDEO_START(feversoc)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

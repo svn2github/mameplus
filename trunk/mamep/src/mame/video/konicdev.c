@@ -1172,7 +1172,7 @@ static void konami_shuffle_16(UINT16 *buf,int len)
 
 	if (len == 2) return;
 
-	if (len % 4) fatalerror("shuffle() - not modulo 4");   /* must not happen */
+	if (len % 4) fatalerror("shuffle() - not modulo 4\n");   /* must not happen */
 
 	len /= 2;
 
@@ -1194,7 +1194,7 @@ static void konami_shuffle_8(UINT8 *buf,int len)
 
 	if (len == 2) return;
 
-	if (len % 4) fatalerror("shuffle() - not modulo 4");	/* must not happen */
+	if (len % 4) fatalerror("shuffle() - not modulo 4\n");	/* must not happen */
 
 	len /= 2;
 
@@ -1239,7 +1239,7 @@ static void decode_gfx(running_machine &machine, int gfx_index, UINT8 *data, UIN
 
 	memcpy(&gl, layout, sizeof(gl));
 	gl.total = total;
-	machine.gfx[gfx_index] = gfx_element_alloc(machine, &gl, data, machine.total_colors() >> bpp, 0);
+	machine.gfx[gfx_index] = auto_alloc(machine, gfx_element(machine, gl, data, machine.total_colors() >> bpp, 0));
 }
 
 
@@ -1332,8 +1332,7 @@ void konami_sortlayers5( int *layer, int *pri )
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k007121_state  k007121_state ;
-struct _k007121_state
+struct k007121_state
 {
 
 	UINT8    ctrlram[8];
@@ -1349,7 +1348,7 @@ INLINE k007121_state *k007121_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K007121);
 
-	return (k007121_state *)downcast<legacy_device_base *>(device)->token();
+	return (k007121_state *)downcast<k007121_device *>(device)->token();
 }
 
 /*****************************************************************************
@@ -1426,7 +1425,7 @@ void k007121_sprites_draw( device_t *device, bitmap_ind16 &bitmap, const rectang
 						  const UINT8 *source, int base_color, int global_x_offset, int bank_base, UINT32 pri_mask )
 {
 	k007121_state *k007121 = k007121_get_safe_token(device);
-//  const gfx_element *gfx = gfxs[chip];
+//  gfx_element *gfx = gfxs[chip];
 	bitmap_ind8 &priority_bitmap = gfx->machine().priority_bitmap;
 	int flipscreen = k007121->flipscreen;
 	int i, num, inc, offs[5];
@@ -1577,6 +1576,41 @@ static DEVICE_RESET( k007121 )
 		k007121->ctrlram[i] = 0;
 }
 
+const device_type K007121 = &device_creator<k007121_device>;
+
+k007121_device::k007121_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K007121, "Konami 007121", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k007121_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k007121_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k007121_device::device_start()
+{
+	DEVICE_START_NAME( k007121 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k007121_device::device_reset()
+{
+	DEVICE_RESET_NAME( k007121 )(this);
+}
 
 /***************************************************************************/
 /*                                                                         */
@@ -1584,8 +1618,7 @@ static DEVICE_RESET( k007121 )
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k007342_state k007342_state;
-struct _k007342_state
+struct k007342_state
 {
 	UINT8    *ram;
 	UINT8    *scroll_ram;
@@ -1612,7 +1645,7 @@ INLINE k007342_state *k007342_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K007342);
 
-	return (k007342_state *)downcast<legacy_device_base *>(device)->token();
+	return (k007342_state *)downcast<k007342_device *>(device)->token();
 }
 
 INLINE const k007342_interface *k007342_get_interface( device_t *device )
@@ -1778,13 +1811,13 @@ int k007342_is_int_enabled( device_t *device )
   color RAM     ----xxxx    depends on external connections (usually color and banking)
 */
 
-static TILEMAP_MAPPER( k007342_scan )
+TILEMAP_MAPPER_MEMBER(k007342_device::k007342_scan)
 {
 	/* logical (col,row) -> memory offset */
 	return (col & 0x1f) + ((row & 0x1f) << 5) + ((col & 0x20) << 5);
 }
 
-INLINE void k007342_get_tile_info( device_t *device, tile_data &tileinfo, int tile_index, int layer, UINT8 *cram, UINT8 *vram )
+INLINE void k007342_get_tile_info( running_machine &machine, device_t *device, tile_data &tileinfo, int tile_index, int layer, UINT8 *cram, UINT8 *vram )
 {
 	k007342_state *k007342 = k007342_get_safe_token(device);
 	int color, code, flags;
@@ -1797,43 +1830,60 @@ INLINE void k007342_get_tile_info( device_t *device, tile_data &tileinfo, int ti
 
 	k007342->callback(device->machine(), layer, k007342->regs[1], &code, &color, &flags);
 
-	SET_TILE_INFO_DEVICE(
+	SET_TILE_INFO(
 			k007342->gfxnum,
 			code,
 			color,
 			flags);
 }
 
-static TILE_GET_INFO_DEVICE( k007342_get_tile_info0 )
+TILE_GET_INFO_MEMBER(k007342_device::k007342_get_tile_info0)
 {
-	k007342_state *k007342 = k007342_get_safe_token(device);
-	k007342_get_tile_info(device, tileinfo, tile_index, 0, k007342->colorram_0, k007342->videoram_0);
+	k007342_state *k007342 = k007342_get_safe_token(this);
+	k007342_get_tile_info(machine(), this, tileinfo, tile_index, 0, k007342->colorram_0, k007342->videoram_0);
 }
 
-static TILE_GET_INFO_DEVICE( k007342_get_tile_info1 )
+TILE_GET_INFO_MEMBER(k007342_device::k007342_get_tile_info1)
 {
-	k007342_state *k007342 = k007342_get_safe_token(device);
-	k007342_get_tile_info(device, tileinfo, tile_index, 1, k007342->colorram_1, k007342->videoram_1);
+	k007342_state *k007342 = k007342_get_safe_token(this);
+	k007342_get_tile_info(machine(), this, tileinfo, tile_index, 1, k007342->colorram_1, k007342->videoram_1);
 }
 
+const device_type K007342 = &device_creator<k007342_device>;
 
-/*****************************************************************************
-    DEVICE INTERFACE
-*****************************************************************************/
-
-static DEVICE_START( k007342 )
+k007342_device::k007342_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K007342, "Konami 007342", tag, owner, clock)
 {
-	k007342_state *k007342 = k007342_get_safe_token(device);
-	const k007342_interface *intf = k007342_get_interface(device);
+	m_token = global_alloc_array_clear(UINT8, sizeof(k007342_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k007342_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k007342_device::device_start()
+{
+	k007342_state *k007342 = k007342_get_safe_token(this);
+	const k007342_interface *intf = k007342_get_interface(this);
 
 	k007342->gfxnum = intf->gfxnum;
 	k007342->callback = intf->callback;
 
-	k007342->tilemap[0] = tilemap_create_device(device, k007342_get_tile_info0, k007342_scan, 8, 8, 64, 32);
-	k007342->tilemap[1] = tilemap_create_device(device, k007342_get_tile_info1, k007342_scan, 8, 8, 64, 32);
+	k007342->tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k007342_device::k007342_get_tile_info0),this), tilemap_mapper_delegate(FUNC(k007342_device::k007342_scan),this), 8, 8, 64, 32);
+	k007342->tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k007342_device::k007342_get_tile_info1),this), tilemap_mapper_delegate(FUNC(k007342_device::k007342_scan),this), 8, 8, 64, 32);
 
-	k007342->ram = auto_alloc_array(device->machine(), UINT8, 0x2000);
-	k007342->scroll_ram = auto_alloc_array(device->machine(), UINT8, 0x0200);
+	k007342->ram = auto_alloc_array(machine(), UINT8, 0x2000);
+	k007342->scroll_ram = auto_alloc_array(machine(), UINT8, 0x0200);
 
 	k007342->colorram_0 = &k007342->ram[0x0000];
 	k007342->colorram_1 = &k007342->ram[0x1000];
@@ -1843,18 +1893,22 @@ static DEVICE_START( k007342 )
 	k007342->tilemap[0]->set_transparent_pen(0);
 	k007342->tilemap[1]->set_transparent_pen(0);
 
-	device->save_pointer(NAME(k007342->ram), 0x2000);
-	device->save_pointer(NAME(k007342->scroll_ram), 0x0200);
-	device->save_item(NAME(k007342->int_enabled));
-	device->save_item(NAME(k007342->flipscreen));
-	device->save_item(NAME(k007342->scrollx));
-	device->save_item(NAME(k007342->scrolly));
-	device->save_item(NAME(k007342->regs));
+	save_pointer(NAME(k007342->ram), 0x2000);
+	save_pointer(NAME(k007342->scroll_ram), 0x0200);
+	save_item(NAME(k007342->int_enabled));
+	save_item(NAME(k007342->flipscreen));
+	save_item(NAME(k007342->scrollx));
+	save_item(NAME(k007342->scrolly));
+	save_item(NAME(k007342->regs));
 }
 
-static DEVICE_RESET( k007342 )
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k007342_device::device_reset()
 {
-	k007342_state *k007342 = k007342_get_safe_token(device);
+	k007342_state *k007342 = k007342_get_safe_token(this);
 	int i;
 
 	k007342->int_enabled = 0;
@@ -1869,14 +1923,14 @@ static DEVICE_RESET( k007342 )
 }
 
 
+
 /***************************************************************************/
 /*                                                                         */
 /*                                 007420                                  */
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k007420_state k007420_state;
-struct _k007420_state
+struct k007420_state
 {
 	UINT8        *ram;
 
@@ -1896,7 +1950,7 @@ INLINE k007420_state *k007420_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K007420);
 
-	return (k007420_state *)downcast<legacy_device_base *>(device)->token();
+	return (k007420_state *)downcast<k007420_device *>(device)->token();
 }
 
 INLINE const k007420_interface *k007420_get_interface( device_t *device )
@@ -2128,14 +2182,49 @@ static DEVICE_RESET( k007420 )
 }
 
 
+const device_type K007420 = &device_creator<k007420_device>;
+
+k007420_device::k007420_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K007420, "Konami 007420", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k007420_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k007420_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k007420_device::device_start()
+{
+	DEVICE_START_NAME( k007420 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k007420_device::device_reset()
+{
+	DEVICE_RESET_NAME( k007420 )(this);
+}
+
 /***************************************************************************/
 /*                                                                         */
 /*                                 052109                                  */
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k052109_state k052109_state;
-struct _k052109_state
+struct k052109_state
 {
 	UINT8    *ram;
 	UINT8    *videoram_F;
@@ -2173,7 +2262,7 @@ INLINE k052109_state *k052109_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K052109);
 
-	return (k052109_state *)downcast<legacy_device_base *>(device)->token();
+	return (k052109_state *)downcast<k052109_device *>(device)->token();
 }
 
 INLINE const k052109_interface *k052109_get_interface( device_t *device )
@@ -2206,7 +2295,7 @@ READ8_DEVICE_HANDLER( k052109_r )
 			else if (offset >= 0x3a00 && offset < 0x3c00)
 			{	/* B x scroll */	}
 //          else
-//logerror("%04x: read from unknown 052109 address %04x\n",cpu_get_pc(&space->device()),offset);
+//logerror("%04x: read from unknown 052109 address %04x\n",space->device().safe_pc(),offset);
 		}
 
 		return k052109->ram[offset];
@@ -2230,7 +2319,7 @@ READ8_DEVICE_HANDLER( k052109_r )
 		addr = (code << 5) + (offset & 0x1f);
 		addr &= device->machine().root_device().memregion(k052109->memory_region)->bytes() - 1;
 
-//      logerror("%04x: off = %04x sub = %02x (bnk = %x) adr = %06x\n", cpu_get_pc(&space->device()), offset, k052109->romsubbank, bank, addr);
+//      logerror("%04x: off = %04x sub = %02x (bnk = %x) adr = %06x\n", space->device().safe_pc(), offset, k052109->romsubbank, bank, addr);
 
 		return device->machine().root_device().memregion(k052109->memory_region)->base()[addr];
 	}
@@ -2261,13 +2350,13 @@ WRITE8_DEVICE_HANDLER( k052109_w )
 			if (k052109->scrollctrl != data)
 			{
 //popmessage("scrollcontrol = %02x", data);
-//logerror("%04x: rowscrollcontrol = %02x\n", cpu_get_pc(&space->device()), data);
+//logerror("%04x: rowscrollcontrol = %02x\n", space->device().safe_pc(), data);
 				k052109->scrollctrl = data;
 			}
 		}
 		else if (offset == 0x1d00)
 		{
-//logerror("%04x: 052109 register 1d00 = %02x\n", cpu_get_pc(&space->device()), data);
+//logerror("%04x: 052109 register 1d00 = %02x\n", space->device().safe_pc(), data);
 			/* bit 2 = irq enable */
 			/* the custom chip can also generate NMI and FIRQ, for use with a 6809 */
 			k052109->irq_enabled = data & 0x04;
@@ -2300,12 +2389,12 @@ WRITE8_DEVICE_HANDLER( k052109_w )
 		}
 		else if (offset == 0x1e00 || offset == 0x3e00) // Surprise Attack uses offset 0x3e00
 		{
-//logerror("%04x: 052109 register 1e00 = %02x\n",cpu_get_pc(&space->device()),data);
+//logerror("%04x: 052109 register 1e00 = %02x\n",space->device().safe_pc(),data);
 			k052109->romsubbank = data;
 		}
 		else if (offset == 0x1e80)
 		{
-//if ((data & 0xfe)) logerror("%04x: 052109 register 1e80 = %02x\n",cpu_get_pc(&space->device()),data);
+//if ((data & 0xfe)) logerror("%04x: 052109 register 1e80 = %02x\n",space->device().safe_pc(),data);
 			k052109->tilemap[0]->set_flip((data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 			k052109->tilemap[1]->set_flip((data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
 			k052109->tilemap[2]->set_flip((data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
@@ -2360,7 +2449,7 @@ WRITE8_DEVICE_HANDLER( k052109_w )
 			k052109->charrombank_2[3] = (data >> 4) & 0x0f;
 		}
 //      else
-//          logerror("%04x: write %02x to unknown 052109 address %04x\n",cpu_get_pc(&space->device()),data,offset);
+//          logerror("%04x: write %02x to unknown 052109 address %04x\n",space->device().safe_pc(),data,offset);
 	}
 }
 
@@ -2600,7 +2689,7 @@ void k052109_set_layer_offsets( device_t *device, int layer, int dx, int dy )
   color RAM    ------xx  depends on external connections (usually banking, flip)
 */
 
-INLINE void k052109_get_tile_info( device_t *device, tile_data &tileinfo, int tile_index, int layer, UINT8 *cram, UINT8 *vram1, UINT8 *vram2 )
+INLINE void k052109_get_tile_info( running_machine &machine, device_t *device, tile_data &tileinfo, int tile_index, int layer, UINT8 *cram, UINT8 *vram1, UINT8 *vram2 )
 {
 	k052109_state *k052109 = k052109_get_safe_token(device);
 	int flipy = 0;
@@ -2627,7 +2716,7 @@ INLINE void k052109_get_tile_info( device_t *device, tile_data &tileinfo, int ti
 	if (flipy && (k052109->tileflip_enable & 2))
 		flags |= TILE_FLIPY;
 
-	SET_TILE_INFO_DEVICE(
+	SET_TILE_INFO(
 			k052109->gfxnum,
 			code,
 			color,
@@ -2636,22 +2725,22 @@ INLINE void k052109_get_tile_info( device_t *device, tile_data &tileinfo, int ti
 	tileinfo.category = priority;
 }
 
-static TILE_GET_INFO_DEVICE( k052109_get_tile_info0 )
+TILE_GET_INFO_MEMBER(k052109_device::k052109_get_tile_info0)
 {
-	k052109_state *k052109 = k052109_get_safe_token(device);
-	k052109_get_tile_info(device, tileinfo, tile_index, 0, k052109->colorram_F, k052109->videoram_F, k052109->videoram2_F);
+	k052109_state *k052109 = k052109_get_safe_token(this);
+	k052109_get_tile_info(machine(), this, tileinfo, tile_index, 0, k052109->colorram_F, k052109->videoram_F, k052109->videoram2_F);
 }
 
-static TILE_GET_INFO_DEVICE( k052109_get_tile_info1 )
+TILE_GET_INFO_MEMBER(k052109_device::k052109_get_tile_info1)
 {
-	k052109_state *k052109 = k052109_get_safe_token(device);
-	k052109_get_tile_info(device, tileinfo, tile_index, 1, k052109->colorram_A, k052109->videoram_A, k052109->videoram2_A);
+	k052109_state *k052109 = k052109_get_safe_token(this);
+	k052109_get_tile_info(machine(), this, tileinfo, tile_index, 1, k052109->colorram_A, k052109->videoram_A, k052109->videoram2_A);
 }
 
-static TILE_GET_INFO_DEVICE( k052109_get_tile_info2 )
+TILE_GET_INFO_MEMBER(k052109_device::k052109_get_tile_info2)
 {
-	k052109_state *k052109 = k052109_get_safe_token(device);
-	k052109_get_tile_info(device, tileinfo, tile_index, 2, k052109->colorram_B, k052109->videoram_B, k052109->videoram2_B);
+	k052109_state *k052109 = k052109_get_safe_token(this);
+	k052109_get_tile_info(machine(), this, tileinfo, tile_index, 2, k052109->colorram_B, k052109->videoram_B, k052109->videoram2_B);
 }
 
 
@@ -2664,11 +2753,32 @@ static void k052109_tileflip_reset(k052109_state *k052109)
 	k052109->tileflip_enable = ((data & 0x06) >> 1);
 }
 
-static DEVICE_START( k052109 )
+const device_type K052109 = &device_creator<k052109_device>;
+
+k052109_device::k052109_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K052109, "Konami 052109", tag, owner, clock)
 {
-	k052109_state *k052109 = k052109_get_safe_token(device);
-	const k052109_interface *intf = k052109_get_interface(device);
-	running_machine &machine = device->machine();
+	m_token = global_alloc_array_clear(UINT8, sizeof(k052109_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k052109_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k052109_device::device_start()
+{
+	k052109_state *k052109 = k052109_get_safe_token(this);
+	const k052109_interface *intf = k052109_get_interface(this);
 	UINT32 total;
 	static const gfx_layout charlayout =
 	{
@@ -2696,31 +2806,31 @@ static DEVICE_START( k052109 )
 	switch (intf->plane_order)
 	{
 	case NORMAL_PLANE_ORDER:
-		total = machine.root_device().memregion(intf->gfx_memory_region)->bytes() / 32;
-		decode_gfx(machine, intf->gfx_num, machine.root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout, 4);
+		total = machine().root_device().memregion(intf->gfx_memory_region)->bytes() / 32;
+		decode_gfx(machine(), intf->gfx_num, machine().root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout, 4);
 		break;
 
 	case GRADIUS3_PLANE_ORDER:
 		total = 0x1000;
-		decode_gfx(machine, intf->gfx_num, machine.root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout_gradius3, 4);
+		decode_gfx(machine(), intf->gfx_num, machine().root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout_gradius3, 4);
 		break;
 
 	default:
-		fatalerror("Unsupported plane_order");
+		fatalerror("Unsupported plane_order\n");
 	}
 
 	/* deinterleave the graphics, if needed */
-	deinterleave_gfx(machine, intf->gfx_memory_region, intf->deinterleave);
+	deinterleave_gfx(machine(), intf->gfx_memory_region, intf->deinterleave);
 
 	k052109->memory_region = intf->gfx_memory_region;
 	k052109->gfxnum = intf->gfx_num;
 	k052109->callback = intf->callback;
 
-	k052109->tilemap[0] = tilemap_create_device(device, k052109_get_tile_info0, tilemap_scan_rows, 8, 8, 64, 32);
-	k052109->tilemap[1] = tilemap_create_device(device, k052109_get_tile_info1, tilemap_scan_rows, 8, 8, 64, 32);
-	k052109->tilemap[2] = tilemap_create_device(device, k052109_get_tile_info2, tilemap_scan_rows, 8, 8, 64, 32);
+	k052109->tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k052109_device::k052109_get_tile_info0),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	k052109->tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k052109_device::k052109_get_tile_info1),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	k052109->tilemap[2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k052109_device::k052109_get_tile_info2),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 
-	k052109->ram = auto_alloc_array_clear(machine, UINT8, 0x6000);
+	k052109->ram = auto_alloc_array_clear(machine(), UINT8, 0x6000);
 
 	k052109->colorram_F = &k052109->ram[0x0000];
 	k052109->colorram_A = &k052109->ram[0x0800];
@@ -2736,22 +2846,26 @@ static DEVICE_START( k052109 )
 	k052109->tilemap[1]->set_transparent_pen(0);
 	k052109->tilemap[2]->set_transparent_pen(0);
 
-	device->save_pointer(NAME(k052109->ram), 0x6000);
-	device->save_item(NAME(k052109->rmrd_line));
-	device->save_item(NAME(k052109->romsubbank));
-	device->save_item(NAME(k052109->scrollctrl));
-	device->save_item(NAME(k052109->irq_enabled));
-	device->save_item(NAME(k052109->charrombank));
-	device->save_item(NAME(k052109->charrombank_2));
-	device->save_item(NAME(k052109->dx));
-	device->save_item(NAME(k052109->dy));
-	device->save_item(NAME(k052109->has_extra_video_ram));
-	device->machine().save().register_postload(save_prepost_delegate(FUNC(k052109_tileflip_reset), k052109));
+	save_pointer(NAME(k052109->ram), 0x6000);
+	save_item(NAME(k052109->rmrd_line));
+	save_item(NAME(k052109->romsubbank));
+	save_item(NAME(k052109->scrollctrl));
+	save_item(NAME(k052109->irq_enabled));
+	save_item(NAME(k052109->charrombank));
+	save_item(NAME(k052109->charrombank_2));
+	save_item(NAME(k052109->dx));
+	save_item(NAME(k052109->dy));
+	save_item(NAME(k052109->has_extra_video_ram));
+	machine().save().register_postload(save_prepost_delegate(FUNC(k052109_tileflip_reset), k052109));
 }
 
-static DEVICE_RESET( k052109 )
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k052109_device::device_reset()
 {
-	k052109_state *k052109 = k052109_get_safe_token(device);
+	k052109_state *k052109 = k052109_get_safe_token(this);
 	int i;
 
 	k052109->rmrd_line = CLEAR_LINE;
@@ -2771,14 +2885,15 @@ static DEVICE_RESET( k052109 )
 	}
 }
 
+
+
 /***************************************************************************/
 /*                                                                         */
 /*                                 051960                                  */
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k051960_state k051960_state;
-struct _k051960_state
+struct k051960_state
 {
 	UINT8    *ram;
 
@@ -2807,7 +2922,7 @@ INLINE k051960_state *k051960_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K051960);
 
-	return (k051960_state *)downcast<legacy_device_base *>(device)->token();
+	return (k051960_state *)downcast<k051960_device *>(device)->token();
 }
 
 INLINE const k051960_interface *k051960_get_interface( device_t *device )
@@ -2889,7 +3004,7 @@ READ8_DEVICE_HANDLER( k051937_r )
 			/* some games need bit 0 to pulse */
 			return (k051960->k051937_counter++) & 1;
 		}
-		//logerror("%04x: read unknown 051937 address %x\n", cpu_get_pc(device->cpu), offset);
+		//logerror("%04x: read unknown 051937 address %x\n", device->cpu->safe_pc(), offset);
 		return 0;
 	}
 
@@ -2920,12 +3035,12 @@ WRITE8_DEVICE_HANDLER( k051937_w )
 
 		/* bit 5 = enable gfx ROM reading */
 		k051960->readroms = data & 0x20;
-		//logerror("%04x: write %02x to 051937 address %x\n", cpu_get_pc(machine.cpu), data, offset);
+		//logerror("%04x: write %02x to 051937 address %x\n", machine.cpu->safe_pc(), data, offset);
 	}
 	else if (offset == 1)
 	{
-//  popmessage("%04x: write %02x to 051937 address %x", cpu_get_pc(machine.cpu), data, offset);
-//logerror("%04x: write %02x to unknown 051937 address %x\n", cpu_get_pc(machine.cpu), data, offset);
+//  popmessage("%04x: write %02x to 051937 address %x", machine.cpu->safe_pc(), data, offset);
+//logerror("%04x: write %02x to unknown 051937 address %x\n", machine.cpu->safe_pc(), data, offset);
 	}
 	else if (offset >= 2 && offset < 5)
 	{
@@ -2933,8 +3048,8 @@ WRITE8_DEVICE_HANDLER( k051937_w )
 	}
 	else
 	{
-	//  popmessage("%04x: write %02x to 051937 address %x", cpu_get_pc(machine.cpu), data, offset);
-	//logerror("%04x: write %02x to unknown 051937 address %x\n", cpu_get_pc(machine.cpu), data, offset);
+	//  popmessage("%04x: write %02x to 051937 address %x", machine.cpu->safe_pc(), data, offset);
+	//logerror("%04x: write %02x to unknown 051937 address %x\n", machine.cpu->safe_pc(), data, offset);
 	}
 }
 
@@ -3092,7 +3207,7 @@ void k051960_sprites_draw( device_t *device, bitmap_ind16 &bitmap, const rectang
 			flipy = !flipy;
 		}
 
-		drawmode_table[k051960->gfx->color_granularity - 1] = shadow ? DRAWMODE_SHADOW : DRAWMODE_SOURCE;
+		drawmode_table[k051960->gfx->granularity() - 1] = shadow ? DRAWMODE_SHADOW : DRAWMODE_SOURCE;
 
 		if (zoomx == 0x10000 && zoomy == 0x10000)
 		{
@@ -3263,7 +3378,7 @@ static DEVICE_START( k051960 )
 		break;
 
 	default:
-		fatalerror("Unknown plane_order");
+		fatalerror("Unknown plane_order\n");
 	}
 
 	if (VERBOSE && !(machine.config().m_video_attributes & VIDEO_HAS_SHADOWS))
@@ -3308,6 +3423,43 @@ static DEVICE_RESET( k051960 )
 	k051960->spriterombank[2] = 0;
 }
 
+
+const device_type K051960 = &device_creator<k051960_device>;
+
+k051960_device::k051960_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K051960, "Konami 051960", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k051960_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k051960_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k051960_device::device_start()
+{
+	DEVICE_START_NAME( k051960 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k051960_device::device_reset()
+{
+	DEVICE_RESET_NAME( k051960 )(this);
+}
+
 /***************************************************************************/
 /*                                                                         */
 /*                      05324x Family Sprite Generators                    */
@@ -3320,8 +3472,7 @@ static DEVICE_RESET( k051960 )
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k05324x_state k05324x_state;
-struct _k05324x_state
+struct k05324x_state
 {
 	UINT16    *ram;
 	UINT16    *buffer;
@@ -3349,7 +3500,7 @@ INLINE k05324x_state *k05324x_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert((device->type() == K053244 || device->type() == K053245));
 
-	return (k05324x_state *)downcast<legacy_device_base *>(device)->token();
+	return (k05324x_state *)downcast<k05324x_device *>(device)->token();
 }
 
 INLINE const k05324x_interface *k05324x_get_interface( device_t *device )
@@ -3678,7 +3829,7 @@ void k053245_sprites_draw( device_t *device, bitmap_ind16 &bitmap, const rectang
 		ox -= (zoomx * w) >> 13;
 		oy -= (zoomy * h) >> 13;
 
-		drawmode_table[k053245->gfx->color_granularity - 1] = shadow ? DRAWMODE_SHADOW : DRAWMODE_SOURCE;
+		drawmode_table[k053245->gfx->granularity() - 1] = shadow ? DRAWMODE_SHADOW : DRAWMODE_SOURCE;
 
 		for (y = 0; y < h; y++)
 		{
@@ -3928,7 +4079,7 @@ void k053245_sprites_draw_lethal( device_t *device, bitmap_ind16 &bitmap, const 
 		ox -= (zoomx * w) >> 13;
 		oy -= (zoomy * h) >> 13;
 
-		drawmode_table[machine.gfx[0]->color_granularity - 1] = shadow ? DRAWMODE_SHADOW : DRAWMODE_SOURCE;
+		drawmode_table[machine.gfx[0]->granularity() - 1] = shadow ? DRAWMODE_SHADOW : DRAWMODE_SOURCE;
 
 		for (y = 0; y < h; y++)
 		{
@@ -4064,7 +4215,7 @@ static DEVICE_START( k05324x )
 		break;
 
 	default:
-		fatalerror("Unsupported plane_order");
+		fatalerror("Unsupported plane_order\n");
 	}
 
 	if (VERBOSE && !(machine.config().m_video_attributes & VIDEO_HAS_SHADOWS))
@@ -4103,14 +4254,50 @@ static DEVICE_RESET( k05324x )
 		k05324x->regs[i] = 0;
 }
 
+
+const device_type K053244 = &device_creator<k05324x_device>;
+
+k05324x_device::k05324x_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K053244, "Konami 053244 & 053245", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k05324x_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k05324x_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k05324x_device::device_start()
+{
+	DEVICE_START_NAME( k05324x )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k05324x_device::device_reset()
+{
+	DEVICE_RESET_NAME( k05324x )(this);
+}
+
 /***************************************************************************/
 /*                                                                         */
 /*                                 053246/053247                           */
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k053247_state k053247_state;
-struct _k053247_state
+struct k053247_state
 {
 	UINT16    *ram;
 
@@ -4138,8 +4325,11 @@ INLINE k053247_state *k053247_get_safe_token( device_t *device )
 {
 	assert(device != NULL);
 	assert((device->type() == K053246 || device->type() == K053247 || device->type() == K055673));
-
-	return (k053247_state *)downcast<legacy_device_base *>(device)->token();
+	if (device->type() == K055673) {
+		return (k053247_state *)downcast<k055673_device *>(device)->token();
+	} else {
+		return (k053247_state *)downcast<k053247_device *>(device)->token();
+	}
 }
 
 INLINE const k053247_interface *k053247_get_interface( device_t *device )
@@ -4348,7 +4538,7 @@ READ16_DEVICE_HANDLER( k055673_GX6bpp_rom_word_r )
 		case 7:
 			return ROM[romofs + 2];
 		default:
-//          LOG(("55673_rom_word_r: Unknown read offset %x (PC=%x)\n", offset, cpu_get_pc(&space->device())));
+//          LOG(("55673_rom_word_r: Unknown read offset %x (PC=%x)\n", offset, space->device().safe_pc()));
 			break;
 	}
 
@@ -4365,12 +4555,12 @@ READ8_DEVICE_HANDLER( k053246_r )
 		addr = (k053246->kx46_regs[6] << 17) | (k053246->kx46_regs[7] << 9) | (k053246->kx46_regs[4] << 1) | ((offset & 1) ^ 1);
 		addr &= device->machine().root_device().memregion(k053246->memory_region)->bytes() - 1;
 //      if (VERBOSE)
-//          popmessage("%04x: offset %02x addr %06x", cpu_get_pc(&space->device()), offset, addr);
+//          popmessage("%04x: offset %02x addr %06x", space->device().safe_pc(), offset, addr);
 		return device->machine().root_device().memregion(k053246->memory_region)->base()[addr];
 	}
 	else
 	{
-//      LOG(("%04x: read from unknown 053246 address %x\n", cpu_get_pc(&space->device()), offset));
+//      LOG(("%04x: read from unknown 053246 address %x\n", space->device().safe_pc(), offset));
 		return 0;
 	}
 }
@@ -4739,7 +4929,7 @@ void k053247_sprites_draw_common( device_t *device, _BitmapClass &bitmap, const 
 		ox -= (zoomx * w) >> 13;
 		oy -= (zoomy * h) >> 13;
 
-		drawmode_table[k053246->gfx->color_granularity - 1] = shadow ? DRAWMODE_SHADOW : DRAWMODE_SOURCE;
+		drawmode_table[k053246->gfx->granularity() - 1] = shadow ? DRAWMODE_SHADOW : DRAWMODE_SOURCE;
 
 		for (y = 0; y < h; y++)
 		{
@@ -4905,7 +5095,7 @@ static DEVICE_START( k053247 )
 		break;
 
 	default:
-		fatalerror("Unsupported plane_order");
+		fatalerror("Unsupported plane_order\n");
 	}
 
 	if (VERBOSE)
@@ -5042,7 +5232,7 @@ static DEVICE_START( k055673 )
 		break;
 
 	default:
-		fatalerror("Unsupported layout");
+		fatalerror("Unsupported layout\n");
 	}
 
 	if (VERBOSE && !(machine.config().m_video_attributes & VIDEO_HAS_SHADOWS))
@@ -5075,6 +5265,80 @@ static DEVICE_RESET( k053247 )
 	memset(k053247->kx46_regs, 0, 8);
 	memset(k053247->kx47_regs, 0, 32);
 }
+
+
+const device_type K055673 = &device_creator<k055673_device>;
+
+k055673_device::k055673_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K055673, "Konami 055673", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k053247_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k055673_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k055673_device::device_start()
+{
+	DEVICE_START_NAME( k055673 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k055673_device::device_reset()
+{
+	DEVICE_RESET_NAME( k053247 )(this);
+}
+
+const device_type K053246 = &device_creator<k053247_device>;
+
+k053247_device::k053247_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K053246, "Konami 053246 & 053247", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k053247_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k053247_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k053247_device::device_start()
+{
+	DEVICE_START_NAME( k053247 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k053247_device::device_reset()
+{
+	DEVICE_RESET_NAME( k053247 )(this);
+}
+
 
 /*
     In a K053247+K055555 setup objects with Z-code 0x00 should be ignored
@@ -5112,8 +5376,7 @@ void k053247_set_z_rejection( device_t *device, int zcode )
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k051316_state k051316_state;
-struct _k051316_state
+struct k051316_state
 {
 	UINT8    *ram;
 
@@ -5137,7 +5400,7 @@ INLINE k051316_state *k051316_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K051316);
 
-	return (k051316_state *)downcast<legacy_device_base *>(device)->token();
+	return (k051316_state *)downcast<k051316_device *>(device)->token();
 }
 
 INLINE const k051316_interface *k051316_get_interface( device_t *device )
@@ -5208,7 +5471,7 @@ void k051316_wraparound_enable( device_t *device, int status )
 
 ***************************************************************************/
 
-INLINE void k051316_get_tile_info( device_t *device, tile_data &tileinfo, int tile_index )
+INLINE void k051316_get_tile_info( running_machine &machine, device_t *device, tile_data &tileinfo, int tile_index )
 {
 	k051316_state *k051316 = k051316_get_safe_token(device);
 	int code = k051316->ram[tile_index];
@@ -5217,7 +5480,7 @@ INLINE void k051316_get_tile_info( device_t *device, tile_data &tileinfo, int ti
 
 	k051316->callback(device->machine(), &code, &color, &flags);
 
-	SET_TILE_INFO_DEVICE(
+	SET_TILE_INFO(
 			k051316->gfxnum,
 			code,
 			color,
@@ -5225,7 +5488,7 @@ INLINE void k051316_get_tile_info( device_t *device, tile_data &tileinfo, int ti
 }
 
 
-static TILE_GET_INFO_DEVICE( k051316_get_tile_info0 ) { k051316_get_tile_info(device, tileinfo, tile_index); }
+TILE_GET_INFO_MEMBER(k051316_device::k051316_get_tile_info0) { k051316_get_tile_info(machine(), this, tileinfo, tile_index); }
 
 
 void k051316_zoom_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle &cliprect, int flags, UINT32 priority )
@@ -5273,16 +5536,32 @@ void k051316_zoom_draw( device_t *device, bitmap_ind16 &bitmap, const rectangle 
 #endif
 }
 
+const device_type K051316 = &device_creator<k051316_device>;
 
-/*****************************************************************************
-    DEVICE INTERFACE
-*****************************************************************************/
-
-static DEVICE_START( k051316 )
+k051316_device::k051316_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K051316, "Konami 051316", tag, owner, clock)
 {
-	k051316_state *k051316 = k051316_get_safe_token(device);
-	const k051316_interface *intf = k051316_get_interface(device);
-	running_machine &machine = device->machine();
+	m_token = global_alloc_array_clear(UINT8, sizeof(k051316_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k051316_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k051316_device::device_start()
+{
+	k051316_state *k051316 = k051316_get_safe_token(this);
+	const k051316_interface *intf = k051316_get_interface(this);
 
 	int is_tail2nos = 0;
 	UINT32 total;
@@ -5345,26 +5624,26 @@ static DEVICE_START( k051316 )
 	case -4:
 		total = 0x400;
 		is_tail2nos = 1;
-		decode_gfx(machine, intf->gfx_num, machine.root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout_tail2nos, 4);
+		decode_gfx(machine(), intf->gfx_num, machine().root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout_tail2nos, 4);
 		break;
 
 	case 4:
-		total = machine.root_device().memregion(intf->gfx_memory_region)->bytes() / 128;
-		decode_gfx(machine, intf->gfx_num, machine.root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout4, 4);
+		total = machine().root_device().memregion(intf->gfx_memory_region)->bytes() / 128;
+		decode_gfx(machine(), intf->gfx_num, machine().root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout4, 4);
 		break;
 
 	case 7:
-		total = machine.root_device().memregion(intf->gfx_memory_region)->bytes() / 256;
-		decode_gfx(machine, intf->gfx_num, machine.root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout7, 7);
+		total = machine().root_device().memregion(intf->gfx_memory_region)->bytes() / 256;
+		decode_gfx(machine(), intf->gfx_num, machine().root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout7, 7);
 		break;
 
 	case 8:
-		total = machine.root_device().memregion(intf->gfx_memory_region)->bytes() / 256;
-		decode_gfx(machine, intf->gfx_num, machine.root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout8, 8);
+		total = machine().root_device().memregion(intf->gfx_memory_region)->bytes() / 256;
+		decode_gfx(machine(), intf->gfx_num, machine().root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout8, 8);
 		break;
 
 	default:
-		fatalerror("Unsupported bpp");
+		fatalerror("Unsupported bpp\n");
 	}
 
 	k051316->memory_region = intf->gfx_memory_region;
@@ -5372,9 +5651,9 @@ static DEVICE_START( k051316 )
 	k051316->bpp = is_tail2nos ? 4 : intf->bpp;	// tail2nos is passed with bpp = -4 to setup the custom charlayout!
 	k051316->callback = intf->callback;
 
-	k051316->tmap = tilemap_create_device(device, k051316_get_tile_info0, tilemap_scan_rows, 16, 16, 32, 32);
+	k051316->tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k051316_device::k051316_get_tile_info0),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
 
-	k051316->ram = auto_alloc_array(machine, UINT8, 0x800);
+	k051316->ram = auto_alloc_array(machine(), UINT8, 0x800);
 
 	if (!intf->pen_is_mask)
 		k051316->tmap->set_transparent_pen(intf->transparent_pen);
@@ -5388,17 +5667,23 @@ static DEVICE_START( k051316 )
 	k051316->offset[0] = intf->xoffs;
 	k051316->offset[1] = intf->yoffs;
 
-	device->save_pointer(NAME(k051316->ram), 0x800);
-	device->save_item(NAME(k051316->ctrlram));
-	device->save_item(NAME(k051316->wraparound));
+	save_pointer(NAME(k051316->ram), 0x800);
+	save_item(NAME(k051316->ctrlram));
+	save_item(NAME(k051316->wraparound));
+
 }
 
-static DEVICE_RESET( k051316 )
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k051316_device::device_reset()
 {
-	k051316_state *k051316 = k051316_get_safe_token(device);
+	k051316_state *k051316 = k051316_get_safe_token(this);
 
 	memset(k051316->ctrlram,  0, 0x10);
 }
+
 
 /***************************************************************************/
 /*                                                                         */
@@ -5406,8 +5691,7 @@ static DEVICE_RESET( k051316 )
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k053936_state k053936_state;
-struct _k053936_state
+struct k053936_state
 {
 	UINT16    *ctrl;
 	UINT16    *linectrl;
@@ -5425,7 +5709,7 @@ INLINE k053936_state *k053936_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K053936);
 
-	return (k053936_state *)downcast<legacy_device_base *>(device)->token();
+	return (k053936_state *)downcast<k053936_device *>(device)->token();
 }
 
 INLINE const k053936_interface *k053936_get_interface( device_t *device )
@@ -5625,14 +5909,51 @@ static DEVICE_RESET( k053936 )
 	memset(k053936->ctrl, 0, 0x20);
 }
 
+const device_type K053936 = &device_creator<k053936_device>;
+
+k053936_device::k053936_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K053936, "Konami 053936", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k053936_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k053936_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k053936_device::device_start()
+{
+	DEVICE_START_NAME( k053936 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k053936_device::device_reset()
+{
+	DEVICE_RESET_NAME( k053936 )(this);
+}
+
+
+
 /***************************************************************************/
 /*                                                                         */
 /*                                 053251                                  */
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k053251_state k053251_state;
-struct _k053251_state
+struct k053251_state
 {
 	int      dirty_tmap[5];
 
@@ -5650,7 +5971,7 @@ INLINE k053251_state *k053251_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K053251);
 
-	return (k053251_state *)downcast<legacy_device_base *>(device)->token();
+	return (k053251_state *)downcast<k053251_device *>(device)->token();
 }
 
 /*****************************************************************************
@@ -5779,6 +6100,41 @@ static DEVICE_RESET( k053251 )
 		k053251->dirty_tmap[i] = 0;
 }
 
+const device_type K053251 = &device_creator<k053251_device>;
+
+k053251_device::k053251_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K053251, "Konami 053251", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k053251_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k053251_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k053251_device::device_start()
+{
+	DEVICE_START_NAME( k053251 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k053251_device::device_reset()
+{
+	DEVICE_RESET_NAME( k053251 )(this);
+}
 
 /***************************************************************************/
 /*                                                                         */
@@ -5786,8 +6142,7 @@ static DEVICE_RESET( k053251 )
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k054000_state k054000_state;
-struct _k054000_state
+struct k054000_state
 {
 	UINT8    regs[0x20];
 };
@@ -5801,7 +6156,7 @@ INLINE k054000_state *k054000_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K054000);
 
-	return (k054000_state *)downcast<legacy_device_base *>(device)->token();
+	return (k054000_state *)downcast<k054000_device *>(device)->token();
 }
 
 /*****************************************************************************
@@ -5812,7 +6167,7 @@ WRITE8_DEVICE_HANDLER( k054000_w )
 {
 	k054000_state *k054000 = k054000_get_safe_token(device);
 
-	//logerror("%04x: write %02x to 054000 address %02x\n",cpu_get_pc(&space->device()),data,offset);
+	//logerror("%04x: write %02x to 054000 address %02x\n",space->device().safe_pc(),data,offset);
 	k054000->regs[offset] = data;
 }
 
@@ -5822,7 +6177,7 @@ READ8_DEVICE_HANDLER( k054000_r )
 	int Acx, Acy, Aax, Aay;
 	int Bcx, Bcy, Bax, Bay;
 
-	//logerror("%04x: read 054000 address %02x\n", cpu_get_pc(&space->device()), offset);
+	//logerror("%04x: read 054000 address %02x\n", space->device().safe_pc(), offset);
 
 	if (offset != 0x18)
 		return 0;
@@ -5890,6 +6245,42 @@ static DEVICE_RESET( k054000 )
 		k054000->regs[i] = 0;
 }
 
+const device_type K054000 = &device_creator<k054000_device>;
+
+k054000_device::k054000_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K054000, "Konami 054000", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k054000_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k054000_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k054000_device::device_start()
+{
+	DEVICE_START_NAME( k054000 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k054000_device::device_reset()
+{
+	DEVICE_RESET_NAME( k054000 )(this);
+}
+
 
 /***************************************************************************/
 /*                                                                         */
@@ -5897,8 +6288,7 @@ static DEVICE_RESET( k054000 )
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k051733_state k051733_state;
-struct _k051733_state
+struct k051733_state
 {
 	UINT8    ram[0x20];
 	UINT8    rng;
@@ -5913,7 +6303,7 @@ INLINE k051733_state *k051733_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K051733);
 
-	return (k051733_state *)downcast<legacy_device_base *>(device)->token();
+	return (k051733_state *)downcast<k051733_device *>(device)->token();
 }
 
 /*****************************************************************************
@@ -5923,7 +6313,7 @@ INLINE k051733_state *k051733_get_safe_token( device_t *device )
 WRITE8_DEVICE_HANDLER( k051733_w )
 {
 	k051733_state *k051733= k051733_get_safe_token(device);
-	//logerror("%04x: write %02x to 051733 address %02x\n", cpu_get_pc(&space->device()), data, offset);
+	//logerror("%04x: write %02x to 051733 address %02x\n", space->device().safe_pc(), data, offset);
 
 	k051733->ram[offset] = data;
 }
@@ -6043,6 +6433,42 @@ static DEVICE_RESET( k051733 )
 	k051733->rng = 0;
 }
 
+const device_type K051733 = &device_creator<k051733_device>;
+
+k051733_device::k051733_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K051733, "Konami 051733", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k051733_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k051733_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k051733_device::device_start()
+{
+	DEVICE_START_NAME( k051733 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k051733_device::device_reset()
+{
+	DEVICE_RESET_NAME( k051733 )(this);
+}
+
 
 /***************************************************************************/
 /*                                                                         */
@@ -6056,8 +6482,7 @@ static DEVICE_RESET( k051733 )
 #define K056832_PAGE_WIDTH  (K056832_PAGE_COLS*8)
 #define K056832_PAGE_COUNT 16
 
-typedef struct _k056832_state k056832_state;
-struct _k056832_state
+struct k056832_state
 {
 	tilemap_t   *tilemap[K056832_PAGE_COUNT];
 	bitmap_ind16  *pixmap[K056832_PAGE_COUNT];
@@ -6119,7 +6544,7 @@ INLINE k056832_state *k056832_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K056832);
 
-	return (k056832_state *)downcast<legacy_device_base *>(device)->token();
+	return (k056832_state *)downcast<k056832_device *>(device)->token();
 }
 
 INLINE const k056832_interface *k056832_get_interface( device_t *device )
@@ -6248,7 +6673,7 @@ int k056832_get_lookup( device_t *device, int bits )
 	return res;
 }
 
-INLINE void k056832_get_tile_info( device_t *device, tile_data &tileinfo, int tile_index, int pageIndex )
+INLINE void k056832_get_tile_info(  running_machine &machine, device_t *device, tile_data &tileinfo, int tile_index, int pageIndex )
 {
 	k056832_state *k056832 = k056832_get_safe_token(device);
 	static const struct K056832_SHIFTMASKS
@@ -6287,29 +6712,29 @@ INLINE void k056832_get_tile_info( device_t *device, tile_data &tileinfo, int ti
 
 	k056832->callback(device->machine(), layer, &code, &color, &flags);
 
-	SET_TILE_INFO_DEVICE(
+	SET_TILE_INFO(
 			k056832->gfxnum,
 			code,
 			color,
 			flags);
 }
 
-static TILE_GET_INFO_DEVICE( k056832_get_tile_info0 ) { k056832_get_tile_info(device, tileinfo, tile_index, 0x0); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_info1 ) { k056832_get_tile_info(device, tileinfo, tile_index, 0x1); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_info2 ) { k056832_get_tile_info(device, tileinfo, tile_index, 0x2); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_info3 ) { k056832_get_tile_info(device, tileinfo, tile_index, 0x3); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_info4 ) { k056832_get_tile_info(device, tileinfo, tile_index, 0x4); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_info5 ) { k056832_get_tile_info(device, tileinfo, tile_index, 0x5); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_info6 ) { k056832_get_tile_info(device, tileinfo, tile_index, 0x6); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_info7 ) { k056832_get_tile_info(device, tileinfo, tile_index, 0x7); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_info8 ) { k056832_get_tile_info(device, tileinfo, tile_index, 0x8); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_info9 ) { k056832_get_tile_info(device, tileinfo, tile_index, 0x9); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_infoa ) { k056832_get_tile_info(device, tileinfo, tile_index, 0xa); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_infob ) { k056832_get_tile_info(device, tileinfo, tile_index, 0xb); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_infoc ) { k056832_get_tile_info(device, tileinfo, tile_index, 0xc); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_infod ) { k056832_get_tile_info(device, tileinfo, tile_index, 0xd); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_infoe ) { k056832_get_tile_info(device, tileinfo, tile_index, 0xe); }
-static TILE_GET_INFO_DEVICE( k056832_get_tile_infof ) { k056832_get_tile_info(device, tileinfo, tile_index, 0xf); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_info0) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0x0); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_info1) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0x1); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_info2) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0x2); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_info3) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0x3); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_info4) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0x4); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_info5) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0x5); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_info6) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0x6); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_info7) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0x7); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_info8) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0x8); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_info9) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0x9); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_infoa) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0xa); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_infob) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0xb); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_infoc) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0xc); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_infod) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0xd); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_infoe) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0xe); }
+TILE_GET_INFO_MEMBER(k056832_device::k056832_get_tile_infof) { k056832_get_tile_info(machine(), this, tileinfo, tile_index, 0xf); }
 
 static void k056832_change_rambank( k056832_state *k056832 )
 {
@@ -6418,7 +6843,7 @@ READ16_DEVICE_HANDLER( k056832_5bpp_rom_word_r )
 		return k056832_rom_read_b(device, offset * 2 + 1, 4, 5, 0)<<16;
 	else
 	{
-		//LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", cpu_get_pc(&space->device()), mem_mask));
+		//LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", space->device().safe_pc(), mem_mask));
 	}
 	return 0;
 }
@@ -6435,7 +6860,7 @@ READ32_DEVICE_HANDLER( k056832_5bpp_rom_long_r )
 		return k056832_rom_read_b(device, offset * 4 + 3, 4, 5, 1);
 	else
 	{
-		//LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", cpu_get_pc(&space->device()), mem_mask));
+		//LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", space->device().safe_pc(), mem_mask));
 	}
 	return 0;
 }
@@ -6452,7 +6877,7 @@ READ32_DEVICE_HANDLER( k056832_6bpp_rom_long_r )
 		return k056832_rom_read_b(device, offset * 4 + 3, 4, 6, 0);
 	else
 	{
-		//LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", cpu_get_pc(&space->device()), mem_mask));
+		//LOG(("Non-byte read of tilemap ROM, PC=%x (mask=%x)\n", space->device().safe_pc(), mem_mask));
 	}
 	return 0;
 }
@@ -7034,7 +7459,7 @@ static int k056832_update_linemap( device_t *device, _BitmapClass &bitmap, int p
 			int count, src_pitch, src_modulo;
 			int dst_pitch;
 			int line;
-			const gfx_element *src_gfx;
+			gfx_element *src_gfx;
 			int offs, mask;
 
 			#define LINE_WIDTH 512
@@ -7048,7 +7473,7 @@ static int k056832_update_linemap( device_t *device, _BitmapClass &bitmap, int p
 			pixmap  = k056832->pixmap[page];
 			pal_ptr = machine.pens;
 			src_gfx = machine.gfx[k056832->gfxnum];
-			src_pitch  = src_gfx->line_modulo;
+			src_pitch  = src_gfx->rowbytes();
 			src_modulo = src_gfx->char_modulo;
 			dst_pitch  = pixmap->rowpixels;
 
@@ -7754,17 +8179,37 @@ static void k056832_postload(k056832_state *k056832)
 	k056832_change_rombank(k056832);
 }
 
-/*****************************************************************************
-    DEVICE INTERFACE
-*****************************************************************************/
+
+
+const device_type K056832 = &device_creator<k056832_device>;
+
+k056832_device::k056832_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K056832, "Konami 056832", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k056832_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k056832_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k056832_device::device_start()
+{
 
 /* TODO: understand which elements MUST be init here (to keep correct layer
    associations) and which ones can can be init at RESET, if any */
-static DEVICE_START( k056832 )
-{
-	k056832_state *k056832 = k056832_get_safe_token(device);
-	const k056832_interface *intf = k056832_get_interface(device);
-	running_machine &machine = device->machine();
+	k056832_state *k056832 = k056832_get_safe_token(this);
+	const k056832_interface *intf = k056832_get_interface(this);
 	tilemap_t *tmap;
 	int i;
 	UINT32 total;
@@ -7849,55 +8294,55 @@ static DEVICE_START( k056832 )
 	switch (intf->bpp)
 	{
 		case K056832_BPP_4:
-			total = machine.root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 4);
-			decode_gfx(machine, intf->gfx_num, machine.root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout4, 4);
+			total = machine().root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 4);
+			decode_gfx(machine(), intf->gfx_num, machine().root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout4, 4);
 			break;
 
 		case K056832_BPP_5:
-			total = machine.root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 5);
-			decode_gfx(machine, intf->gfx_num, machine.root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout5, 4);
+			total = machine().root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 5);
+			decode_gfx(machine(), intf->gfx_num, machine().root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout5, 4);
 			break;
 
 		case K056832_BPP_6:
-			total = machine.root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 6);
-			decode_gfx(machine, intf->gfx_num, machine.root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout6, 4);
+			total = machine().root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 6);
+			decode_gfx(machine(), intf->gfx_num, machine().root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout6, 4);
 			break;
 
 		case K056832_BPP_8:
-			total = machine.root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 8);
-			decode_gfx(machine, intf->gfx_num, machine.root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout8, 4);
+			total = machine().root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 8);
+			decode_gfx(machine(), intf->gfx_num, machine().root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout8, 4);
 			break;
 
 		case K056832_BPP_8LE:
-			total = machine.root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 8);
-			decode_gfx(machine, intf->gfx_num, machine.root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout8le, 4);
+			total = machine().root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 8);
+			decode_gfx(machine(), intf->gfx_num, machine().root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout8le, 4);
 			break;
 
 		case K056832_BPP_8TASMAN:
-			total = machine.root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 8);
-			decode_gfx(machine, intf->gfx_num, machine.root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout8_tasman, 4);
+			total = machine().root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 8);
+			decode_gfx(machine(), intf->gfx_num, machine().root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout8_tasman, 4);
 			break;
 
 		case K056832_BPP_4dj:
-			total = machine.root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 4);
-			decode_gfx(machine, intf->gfx_num, machine.root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout4dj, 4);
+			total = machine().root_device().memregion(intf->gfx_memory_region)->bytes() / (i * 4);
+			decode_gfx(machine(), intf->gfx_num, machine().root_device().memregion(intf->gfx_memory_region)->base(), total, &charlayout4dj, 4);
 			break;
 
 		default:
-			fatalerror("Unsupported bpp");
+			fatalerror("Unsupported bpp\n");
 	}
 
-	machine.gfx[intf->gfx_num]->color_granularity = 16; /* override */
+	machine().gfx[intf->gfx_num]->set_granularity(16); /* override */
 
 	/* deinterleave the graphics, if needed */
-	deinterleave_gfx(machine, intf->gfx_memory_region, intf->deinterleave);
+	deinterleave_gfx(machine(), intf->gfx_memory_region, intf->deinterleave);
 
 	k056832->memory_region = intf->gfx_memory_region;
 	k056832->gfxnum = intf->gfx_num;
 	k056832->callback = intf->callback;
 
-	k056832->rombase = machine.root_device().memregion(intf->gfx_memory_region)->base();
-	k056832->num_gfx_banks = machine.root_device().memregion(intf->gfx_memory_region)->bytes() / 0x2000;
+	k056832->rombase = machine().root_device().memregion(intf->gfx_memory_region)->base();
+	k056832->num_gfx_banks = machine().root_device().memregion(intf->gfx_memory_region)->bytes() / 0x2000;
 	k056832->djmain_hack = intf->djmain_hack;
 
 	k056832->cur_gfx_banks = 0;
@@ -7923,7 +8368,7 @@ static DEVICE_START( k056832 )
 	k056832->active_layer = 0;
 	k056832->linemap_enabled = 0;
 
-	k056832->k055555 = device->machine().device(intf->k055555);
+	k056832->k055555 = machine().device(intf->k055555);
 
 	memset(k056832->line_dirty, 0, sizeof(UINT32) * K056832_PAGE_COUNT * 8);
 
@@ -7933,24 +8378,24 @@ static DEVICE_START( k056832 )
 		k056832->page_tile_mode[i] = 1;
 	}
 
-	k056832->videoram = auto_alloc_array(machine, UINT16, 0x2000 * (K056832_PAGE_COUNT + 1) / 2);
+	k056832->videoram = auto_alloc_array(machine(), UINT16, 0x2000 * (K056832_PAGE_COUNT + 1) / 2);
 
-	k056832->tilemap[0x0] = tilemap_create_device(device, k056832_get_tile_info0, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0x1] = tilemap_create_device(device, k056832_get_tile_info1, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0x2] = tilemap_create_device(device, k056832_get_tile_info2, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0x3] = tilemap_create_device(device, k056832_get_tile_info3, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0x4] = tilemap_create_device(device, k056832_get_tile_info4, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0x5] = tilemap_create_device(device, k056832_get_tile_info5, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0x6] = tilemap_create_device(device, k056832_get_tile_info6, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0x7] = tilemap_create_device(device, k056832_get_tile_info7, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0x8] = tilemap_create_device(device, k056832_get_tile_info8, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0x9] = tilemap_create_device(device, k056832_get_tile_info9, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0xa] = tilemap_create_device(device, k056832_get_tile_infoa, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0xb] = tilemap_create_device(device, k056832_get_tile_infob, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0xc] = tilemap_create_device(device, k056832_get_tile_infoc, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0xd] = tilemap_create_device(device, k056832_get_tile_infod, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0xe] = tilemap_create_device(device, k056832_get_tile_infoe, tilemap_scan_rows,  8, 8, 64, 32);
-	k056832->tilemap[0xf] = tilemap_create_device(device, k056832_get_tile_infof, tilemap_scan_rows,  8, 8, 64, 32);
+	k056832->tilemap[0x0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_info0),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0x1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_info1),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0x2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_info2),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0x3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_info3),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0x4] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_info4),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0x5] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_info5),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0x6] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_info6),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0x7] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_info7),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0x8] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_info8),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0x9] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_info9),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0xa] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_infoa),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0xb] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_infob),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0xc] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_infoc),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0xd] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_infod),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0xe] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_infoe),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
+	k056832->tilemap[0xf] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k056832_device::k056832_get_tile_infof),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
 
 	for (i = 0; i < K056832_PAGE_COUNT; i++)
 	{
@@ -7970,43 +8415,44 @@ static DEVICE_START( k056832 )
 	k056832_change_rambank(k056832);
 	k056832_change_rombank(k056832);
 
-	device->save_pointer(NAME(k056832->videoram), 0x10000);
-	device->save_item(NAME(k056832->regs));
-	device->save_item(NAME(k056832->regsb));
-	device->save_item(NAME(k056832->x));
-	device->save_item(NAME(k056832->y));
-	device->save_item(NAME(k056832->w));
-	device->save_item(NAME(k056832->h));
-	device->save_item(NAME(k056832->dx));
-	device->save_item(NAME(k056832->dy));
-	device->save_item(NAME(k056832->layer_tile_mode));
+	save_pointer(NAME(k056832->videoram), 0x10000);
+	save_item(NAME(k056832->regs));
+	save_item(NAME(k056832->regsb));
+	save_item(NAME(k056832->x));
+	save_item(NAME(k056832->y));
+	save_item(NAME(k056832->w));
+	save_item(NAME(k056832->h));
+	save_item(NAME(k056832->dx));
+	save_item(NAME(k056832->dy));
+	save_item(NAME(k056832->layer_tile_mode));
 
-	device->save_item(NAME(k056832->default_layer_association));
-	device->save_item(NAME(k056832->active_layer));
-	device->save_item(NAME(k056832->linemap_enabled));
-	device->save_item(NAME(k056832->use_ext_linescroll));
-	device->save_item(NAME(k056832->uses_tile_banks));
-	device->save_item(NAME(k056832->cur_tile_bank));
-	device->save_item(NAME(k056832->rom_half));
-	device->save_item(NAME(k056832->all_lines_dirty));
-	device->save_item(NAME(k056832->page_tile_mode));
+	save_item(NAME(k056832->default_layer_association));
+	save_item(NAME(k056832->active_layer));
+	save_item(NAME(k056832->linemap_enabled));
+	save_item(NAME(k056832->use_ext_linescroll));
+	save_item(NAME(k056832->uses_tile_banks));
+	save_item(NAME(k056832->cur_tile_bank));
+	save_item(NAME(k056832->rom_half));
+	save_item(NAME(k056832->all_lines_dirty));
+	save_item(NAME(k056832->page_tile_mode));
 
 	for (i = 0; i < 8; i++)
 	{
-		device->save_item(NAME(k056832->layer_offs[i]), i);
-		device->save_item(NAME(k056832->lsram_page[i]), i);
+		save_item(NAME(k056832->layer_offs[i]), i);
+		save_item(NAME(k056832->lsram_page[i]), i);
 	}
 
 	for (i = 0; i < K056832_PAGE_COUNT; i++)
 	{
-		device->save_item(NAME(k056832->line_dirty[i]), i);
-		device->save_item(NAME(k056832->all_lines_dirty[i]), i);
-		device->save_item(NAME(k056832->page_tile_mode[i]), i);
-		device->save_item(NAME(k056832->last_colorbase[i]), i);
+		save_item(NAME(k056832->line_dirty[i]), i);
+		save_item(NAME(k056832->all_lines_dirty[i]), i);
+		save_item(NAME(k056832->page_tile_mode[i]), i);
+		save_item(NAME(k056832->last_colorbase[i]), i);
 	}
 
-	device->machine().save().register_postload(save_prepost_delegate(FUNC(k056832_postload), k056832));
+	machine().save().register_postload(save_prepost_delegate(FUNC(k056832_postload), k056832));
 }
+
 
 /***************************************************************************/
 /*                                                                         */
@@ -8017,8 +8463,7 @@ static DEVICE_START( k056832 )
 /* K055555 5-bit-per-pixel priority encoder */
 /* This device has 48 8-bit-wide registers */
 
-typedef struct _k055555_state k055555_state;
-struct _k055555_state
+struct k055555_state
 {
 	UINT8    regs[128];
 };
@@ -8032,7 +8477,7 @@ INLINE k055555_state *k055555_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K055555);
 
-	return (k055555_state *)downcast<legacy_device_base *>(device)->token();
+	return (k055555_state *)downcast<k055555_device *>(device)->token();
 }
 
 /*****************************************************************************
@@ -8127,6 +8572,41 @@ static DEVICE_RESET( k055555 )
 	memset(k055555->regs, 0, 64 * sizeof(UINT8));
 }
 
+const device_type K055555 = &device_creator<k055555_device>;
+
+k055555_device::k055555_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K055555, "Konami 055555", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k055555_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k055555_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k055555_device::device_start()
+{
+	DEVICE_START_NAME( k055555 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k055555_device::device_reset()
+{
+	DEVICE_RESET_NAME( k055555 )(this);
+}
 
 /***************************************************************************/
 /*                                                                         */
@@ -8139,8 +8619,7 @@ static DEVICE_RESET( k055555 )
 // register-handling shell.
 
 
-typedef struct _k054338_state k054338_state;
-struct _k054338_state
+struct k054338_state
 {
 	UINT16    regs[32];
 	int       shd_rgb[9];
@@ -8159,7 +8638,7 @@ INLINE k054338_state *k054338_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K054338);
 
-	return (k054338_state *)downcast<legacy_device_base *>(device)->token();
+	return (k054338_state *)downcast<k054338_device *>(device)->token();
 }
 
 INLINE const k054338_interface *k054338_get_interface( device_t *device )
@@ -8431,6 +8910,42 @@ static DEVICE_RESET( k054338 )
 	memset(k054338->shd_rgb, 0, sizeof(int)*9);
 }
 
+const device_type K054338 = &device_creator<k054338_device>;
+
+k054338_device::k054338_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K054338, "Konami 054338", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k054338_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k054338_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k054338_device::device_start()
+{
+	DEVICE_START_NAME( k054338 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k054338_device::device_reset()
+{
+	DEVICE_RESET_NAME( k054338 )(this);
+}
+
 
 // Newer Konami devices
 
@@ -8447,8 +8962,7 @@ static DEVICE_RESET( k054338 )
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k001006_state k001006_state;
-struct _k001006_state
+struct k001006_state
 {
 	screen_device *screen;
 
@@ -8471,7 +8985,7 @@ INLINE k001006_state *k001006_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K001006);
 
-	return (k001006_state *)downcast<legacy_device_base *>(device)->token();
+	return (k001006_state *)downcast<k001006_device *>(device)->token();
 }
 
 INLINE const k001006_interface *k001006_get_interface( device_t *device )
@@ -8511,7 +9025,7 @@ READ32_DEVICE_HANDLER( k001006_r )
 			}
 			default:
 			{
-				fatalerror("k001006_r, unknown device %02X", k001006->device_sel);
+				fatalerror("k001006_r, unknown device %02X\n", k001006->device_sel);
 			}
 		}
 	}
@@ -8607,6 +9121,41 @@ static DEVICE_RESET( k001006 )
 	memset(k001006->palette, 0, 0x800*sizeof(UINT32));
 }
 
+const device_type K001006 = &device_creator<k001006_device>;
+
+k001006_device::k001006_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K001006, "Konami 001006", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k001006_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k001006_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k001006_device::device_start()
+{
+	DEVICE_START_NAME( k001006 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k001006_device::device_reset()
+{
+	DEVICE_RESET_NAME( k001006 )(this);
+}
 
 /*****************************************************************************/
 /* Konami K001005 Custom 3D Pixel Renderer chip (KS10071) */
@@ -8620,8 +9169,7 @@ static DEVICE_RESET( k001006 )
 #include "video/poly.h"
 #include "cpu/sharc/sharc.h"
 
-typedef struct _poly_extra_data poly_extra_data;
-struct _poly_extra_data
+struct poly_extra_data
 {
 	UINT32 color;
 	int texture_x, texture_y;
@@ -8631,8 +9179,7 @@ struct _poly_extra_data
 	int texture_mirror_y;
 };
 
-typedef struct _k001005_state k001005_state;
-struct _k001005_state
+struct k001005_state
 {
 	screen_device *screen;
 	device_t *cpu;
@@ -8681,7 +9228,7 @@ INLINE k001005_state *k001005_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K001005);
 
-	return (k001005_state *)downcast<legacy_device_base *>(device)->token();
+	return (k001005_state *)downcast<k001005_device *>(device)->token();
 }
 
 INLINE const k001005_interface *k001005_get_interface( device_t *device )
@@ -8784,18 +9331,18 @@ READ32_DEVICE_HANDLER( k001005_r )
 			{
 				if (k001005->fifo_read_ptr < 0x3ff)
 				{
-					//device_set_input_line(k001005->dsp, SHARC_INPUT_FLAG1, CLEAR_LINE);
+					//k001005->dsp->execute().set_input_line(SHARC_INPUT_FLAG1, CLEAR_LINE);
 					sharc_set_flag_input(k001005->dsp, 1, CLEAR_LINE);
 				}
 				else
 				{
-					//device_set_input_line(k001005->dsp, SHARC_INPUT_FLAG1, ASSERT_LINE);
+					//k001005->dsp->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
 					sharc_set_flag_input(k001005->dsp, 1, ASSERT_LINE);
 				}
 			}
 			else
 			{
-				//device_set_input_line(k001005->dsp, SHARC_INPUT_FLAG1, ASSERT_LINE);
+				//k001005->dsp->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
 				sharc_set_flag_input(k001005->dsp, 1, ASSERT_LINE);
 			}
 
@@ -8821,7 +9368,7 @@ READ32_DEVICE_HANDLER( k001005_r )
 			}
 
 		default:
-			//mame_printf_debug("k001005->r: %08X, %08X at %08X\n", offset, mem_mask, cpu_get_pc(&space->device()));
+			//mame_printf_debug("k001005->r: %08X, %08X at %08X\n", offset, mem_mask, space->device().safe_pc());
 			break;
 	}
 	return 0;
@@ -8839,22 +9386,22 @@ WRITE32_DEVICE_HANDLER( k001005_w )
 			{
 				if (k001005->fifo_write_ptr < 0x400)
 				{
-					//device_set_input_line(k001005->dsp, SHARC_INPUT_FLAG1, ASSERT_LINE);
+					//k001005->dsp->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
 					sharc_set_flag_input(k001005->dsp, 1, ASSERT_LINE);
 				}
 				else
 				{
-					//device_set_input_line(k001005->dsp, SHARC_INPUT_FLAG1, CLEAR_LINE);
+					//k001005->dsp->execute().set_input_line(SHARC_INPUT_FLAG1, CLEAR_LINE);
 					sharc_set_flag_input(k001005->dsp, 1, CLEAR_LINE);
 				}
 			}
 			else
 			{
-				//device_set_input_line(k001005->dsp, SHARC_INPUT_FLAG1, ASSERT_LINE);
+				//k001005->dsp->execute().set_input_line(SHARC_INPUT_FLAG1, ASSERT_LINE);
 				sharc_set_flag_input(k001005->dsp, 1, ASSERT_LINE);
 			}
 
-	    //  mame_printf_debug("K001005 FIFO write: %08X at %08X\n", data, cpu_get_pc(&space->device()));
+	    //  mame_printf_debug("K001005 FIFO write: %08X at %08X\n", data, space->device().safe_pc());
 			k001005->fifo[k001005->fifo_write_ptr] = data;
 			k001005->fifo_write_ptr++;
 			k001005->fifo_write_ptr &= 0x7ff;
@@ -8862,16 +9409,16 @@ WRITE32_DEVICE_HANDLER( k001005_w )
 			k001005->_3d_fifo[k001005->_3d_fifo_ptr++] = data;
 
 			// !!! HACK to get past the FIFO B test (GTI Club & Thunder Hurricane) !!!
-			if (cpu_get_pc(k001005->cpu) == 0x201ee)
+			if (k001005->cpu->safe_pc() == 0x201ee)
 			{
 				// This is used to make the SHARC timeout
-				device_spin_until_trigger(k001005->cpu, 10000);
+				k001005->cpu->execute().spin_until_trigger(10000);
 			}
 			// !!! HACK to get past the FIFO B test (Winding Heat & Midnight Run) !!!
-			if (cpu_get_pc(k001005->cpu) == 0x201e6)
+			if (k001005->cpu->safe_pc() == 0x201e6)
 			{
 				// This is used to make the SHARC timeout
-				device_spin_until_trigger(k001005->cpu, 10000);
+				k001005->cpu->execute().spin_until_trigger(10000);
 			}
 
 			break;
@@ -8918,7 +9465,7 @@ WRITE32_DEVICE_HANDLER( k001005_w )
 			break;
 
 		default:
-			//mame_printf_debug("k001005->w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, cpu_get_pc(&space->device()));
+			//mame_printf_debug("k001005->w: %08X, %08X, %08X at %08X\n", data, offset, mem_mask, space->device().safe_pc());
 			break;
 	}
 
@@ -9537,6 +10084,50 @@ static DEVICE_STOP( k001005 )
 	poly_free(k001005->poly);
 }
 
+const device_type K001005 = &device_creator<k001005_device>;
+
+k001005_device::k001005_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K001005, "Konami 001005", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k001005_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k001005_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k001005_device::device_start()
+{
+	DEVICE_START_NAME( k001005 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k001005_device::device_reset()
+{
+	DEVICE_RESET_NAME( k001005 )(this);
+}
+
+//-------------------------------------------------
+//  device_stop - device-specific stop
+//-------------------------------------------------
+
+void k001005_device::device_stop()
+{
+	DEVICE_STOP_NAME( k001005 )(this);
+}
 
 /***************************************************************************/
 /*                                                                         */
@@ -9545,8 +10136,7 @@ static DEVICE_STOP( k001005 )
 /***************************************************************************/
 
 
-typedef struct _k001604_state k001604_state;
-struct _k001604_state
+struct k001604_state
 {
 	screen_device *screen;
 	tilemap_t        *layer_8x8[2];
@@ -9574,7 +10164,7 @@ INLINE k001604_state *k001604_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K001604);
 
-	return (k001604_state *)downcast<legacy_device_base *>(device)->token();
+	return (k001604_state *)downcast<k001604_device *>(device)->token();
 }
 
 INLINE const k001604_interface *k001604_get_interface( device_t *device )
@@ -9614,69 +10204,69 @@ static const gfx_layout k001604_char_layout_layer_16x16 =
 /* FIXME: The TILEMAP_MAPPER below depends on parameters passed by the device interface (being game dependent).
 we might simplify the code, by passing the whole TILEMAP_MAPPER as a callback in the interface, but is it really worth? */
 
-static TILEMAP_MAPPER( k001604_scan_layer_8x8_0_size0 )
+TILEMAP_MAPPER_MEMBER(k001604_device::k001604_scan_layer_8x8_0_size0)
 {
 	/* logical (col,row) -> memory offset */
 	return (row * 128) + col;
 }
 
-static TILEMAP_MAPPER( k001604_scan_layer_8x8_0_size1 )
+TILEMAP_MAPPER_MEMBER(k001604_device::k001604_scan_layer_8x8_0_size1)
 {
 	/* logical (col,row) -> memory offset */
 	return (row * 256) + col;
 }
 
-static TILEMAP_MAPPER( k001604_scan_layer_8x8_1_size0 )
+TILEMAP_MAPPER_MEMBER(k001604_device::k001604_scan_layer_8x8_1_size0)
 {
 	/* logical (col,row) -> memory offset */
 	return (row * 128) + col + 64;
 }
 
-static TILEMAP_MAPPER( k001604_scan_layer_8x8_1_size1 )
+TILEMAP_MAPPER_MEMBER(k001604_device::k001604_scan_layer_8x8_1_size1)
 {
 	/* logical (col,row) -> memory offset */
 	return (row * 256) + col + 64;
 }
 
-static TILEMAP_MAPPER( slrasslt_scan_layer_8x8_0_size0 )
+TILEMAP_MAPPER_MEMBER(k001604_device::slrasslt_scan_layer_8x8_0_size0)
 {
 	/* logical (col,row) -> memory offset */
 	return (row * 128) + col + 16384;
 }
 
-static TILEMAP_MAPPER( slrasslt_scan_layer_8x8_1_size0 )
+TILEMAP_MAPPER_MEMBER(k001604_device::slrasslt_scan_layer_8x8_1_size0)
 {
 	/* logical (col,row) -> memory offset */
 	return (row * 128) + col + 64 + 16384;
 }
 
-static TILEMAP_MAPPER( k001604_scan_layer_roz_0_size0 )
+TILEMAP_MAPPER_MEMBER(k001604_device::k001604_scan_layer_roz_0_size0)
 {
 	/* logical (col,row) -> memory offset */
 	return (row * 128) + col;
 }
 
-static TILEMAP_MAPPER( k001604_scan_layer_roz_0_size1 )
+TILEMAP_MAPPER_MEMBER(k001604_device::k001604_scan_layer_roz_0_size1)
 {
 	/* logical (col,row) -> memory offset */
 	return (row * 256) + col + 128;
 }
 
-static TILEMAP_MAPPER( k001604_scan_layer_roz_1_size0 )
+TILEMAP_MAPPER_MEMBER(k001604_device::k001604_scan_layer_roz_1_size0)
 {
 	/* logical (col,row) -> memory offset */
 	return (row * 128) + col + 64;
 }
 
-static TILEMAP_MAPPER( k001604_scan_layer_roz_1_size1 )
+TILEMAP_MAPPER_MEMBER(k001604_device::k001604_scan_layer_roz_1_size1)
 {
 	/* logical (col,row) -> memory offset */
 	return (row * 256) + col + 128 + 64;
 }
 
-static TILE_GET_INFO_DEVICE( k001604_tile_info_layer_8x8 )
+TILE_GET_INFO_MEMBER(k001604_device::k001604_tile_info_layer_8x8)
 {
-	k001604_state *k001604 = k001604_get_safe_token(device);
+	k001604_state *k001604 = k001604_get_safe_token(this);
 	UINT32 val = k001604->tile_ram[tile_index];
 	int color = (val >> 17) & 0x1f;
 	int tile = (val & 0x7fff);
@@ -9687,12 +10277,12 @@ static TILE_GET_INFO_DEVICE( k001604_tile_info_layer_8x8 )
 	if (val & 0x800000)
 		flags |= TILE_FLIPY;
 
-	SET_TILE_INFO_DEVICE(k001604->gfx_index[0], tile, color, flags);
+	SET_TILE_INFO_MEMBER(k001604->gfx_index[0], tile, color, flags);
 }
 
-static TILE_GET_INFO_DEVICE( k001604_tile_info_layer_roz )
+TILE_GET_INFO_MEMBER(k001604_device::k001604_tile_info_layer_roz)
 {
-	k001604_state *k001604 = k001604_get_safe_token(device);
+	k001604_state *k001604 = k001604_get_safe_token(this);
 	UINT32 val = k001604->tile_ram[tile_index];
 	int flags = 0;
 	int color = (val >> 17) & 0x1f;
@@ -9705,7 +10295,7 @@ static TILE_GET_INFO_DEVICE( k001604_tile_info_layer_roz )
 
 	tile += k001604->roz_size ? 0x800 : 0x2000;
 
-	SET_TILE_INFO_DEVICE(k001604->gfx_index[k001604->roz_size], tile, color, flags);
+	SET_TILE_INFO_MEMBER(k001604->gfx_index[k001604->roz_size], tile, color, flags);
 }
 
 
@@ -9748,6 +10338,12 @@ void k001604_draw_front_layer( device_t *device, bitmap_rgb32 &bitmap, const rec
 {
 	k001604_state *k001604 = k001604_get_safe_token(device);
 
+	k001604->layer_8x8[0]->set_scrollx(-cliprect.min_x);
+	k001604->layer_8x8[0]->set_scrolly(-cliprect.min_y);
+
+	k001604->layer_8x8[1]->set_scrollx(-cliprect.min_x);
+	k001604->layer_8x8[1]->set_scrolly(-cliprect.min_y);
+
 	//k001604->layer_8x8[1]->draw(bitmap, cliprect, 0,0);
 	k001604->layer_8x8[0]->draw(bitmap, cliprect, 0,0);
 }
@@ -9784,8 +10380,8 @@ READ32_DEVICE_HANDLER( k001604_reg_r )
 
 	switch (offset)
 	{
-		case 0x54/4:	return device->machine().rand() << 16; break;
-		case 0x5c/4:	return device->machine().rand() << 16 | device->machine().rand(); break;
+		case 0x54/4:	return device->machine().rand() << 16;
+		case 0x5c/4:	return device->machine().rand() << 16 | device->machine().rand();
 	}
 
 	return k001604->reg[offset];
@@ -9861,8 +10457,8 @@ WRITE32_DEVICE_HANDLER( k001604_char_w )
 
 	COMBINE_DATA(k001604->char_ram + addr);
 
-	gfx_element_mark_dirty(device->machine().gfx[k001604->gfx_index[0]], addr / 32);
-	gfx_element_mark_dirty(device->machine().gfx[k001604->gfx_index[1]], addr / 128);
+	device->machine().gfx[k001604->gfx_index[0]]->mark_dirty(addr / 32);
+	device->machine().gfx[k001604->gfx_index[1]]->mark_dirty(addr / 128);
 }
 
 WRITE32_DEVICE_HANDLER( k001604_reg_w )
@@ -9882,19 +10478,36 @@ WRITE32_DEVICE_HANDLER( k001604_reg_w )
 
 	if (offset != 0x08 && offset != 0x09 && offset != 0x0a /*&& offset != 0x17 && offset != 0x18*/)
 	{
-		//printf("K001604_reg_w (%d), %02X, %08X, %08X at %08X\n", chip, offset, data, mem_mask, cpu_get_pc(&space->device()));
+		//printf("K001604_reg_w (%d), %02X, %08X, %08X at %08X\n", chip, offset, data, mem_mask, space->device().safe_pc());
 	}
 }
 
+const device_type K001604 = &device_creator<k001604_device>;
 
-/*****************************************************************************
-    DEVICE INTERFACE
-*****************************************************************************/
-
-static DEVICE_START( k001604 )
+k001604_device::k001604_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K001604, "Konami 001604", tag, owner, clock)
 {
-	k001604_state *k001604 = k001604_get_safe_token(device);
-	const k001604_interface *intf = k001604_get_interface(device);
+	m_token = global_alloc_array_clear(UINT8, sizeof(k001604_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k001604_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k001604_device::device_start()
+{
+	k001604_state *k001604 = k001604_get_safe_token(this);
+	const k001604_interface *intf = k001604_get_interface(this);
 	int roz_tile_size;
 
 	k001604->layer_size = intf->layer_size;		// 0 -> width = 128 tiles, 1 -> width = 256 tiles
@@ -9903,9 +10516,9 @@ static DEVICE_START( k001604 )
 	k001604->gfx_index[0] = intf->gfx_index_1;
 	k001604->gfx_index[1] = intf->gfx_index_2;
 
-	k001604->char_ram = auto_alloc_array(device->machine(), UINT32, 0x200000 / 4);
-	k001604->tile_ram = auto_alloc_array(device->machine(), UINT32, 0x20000 / 4);
-	k001604->reg = auto_alloc_array(device->machine(), UINT32, 0x400 / 4);
+	k001604->char_ram = auto_alloc_array(machine(), UINT32, 0x200000 / 4);
+	k001604->tile_ram = auto_alloc_array(machine(), UINT32, 0x20000 / 4);
+	k001604->reg = auto_alloc_array(machine(), UINT32, 0x400 / 4);
 
 	/* create tilemaps */
 	roz_tile_size = k001604->roz_size ? 16 : 8;
@@ -9913,41 +10526,46 @@ static DEVICE_START( k001604 )
 	{
 		if (k001604->layer_size)
 		{
-			k001604->layer_8x8[0] = tilemap_create_device(device, k001604_tile_info_layer_8x8, k001604_scan_layer_8x8_0_size1, 8, 8, 64, 64);
-			k001604->layer_8x8[1] = tilemap_create_device(device, k001604_tile_info_layer_8x8, k001604_scan_layer_8x8_1_size1, 8, 8, 64, 64);
-			k001604->layer_roz[0] = tilemap_create_device(device, k001604_tile_info_layer_roz, k001604_scan_layer_roz_0_size1, roz_tile_size, roz_tile_size, 64, 64);
-			k001604->layer_roz[1] = tilemap_create_device(device, k001604_tile_info_layer_roz, k001604_scan_layer_roz_1_size1, roz_tile_size, roz_tile_size, 64, 64);
+			k001604->layer_8x8[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k001604_device::k001604_tile_info_layer_8x8),this), tilemap_mapper_delegate(FUNC(k001604_device::k001604_scan_layer_8x8_0_size1),this), 8, 8, 64, 64);
+			k001604->layer_8x8[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k001604_device::k001604_tile_info_layer_8x8),this), tilemap_mapper_delegate(FUNC(k001604_device::k001604_scan_layer_8x8_1_size1),this), 8, 8, 64, 64);
+			k001604->layer_roz[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k001604_device::k001604_tile_info_layer_roz),this), tilemap_mapper_delegate(FUNC(k001604_device::k001604_scan_layer_roz_0_size1),this), roz_tile_size, roz_tile_size, 64, 64);
+			k001604->layer_roz[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k001604_device::k001604_tile_info_layer_roz),this), tilemap_mapper_delegate(FUNC(k001604_device::k001604_scan_layer_roz_1_size1),this), roz_tile_size, roz_tile_size, 64, 64);
 		}
 		else
 		{
-			k001604->layer_8x8[0] = tilemap_create_device(device, k001604_tile_info_layer_8x8, k001604_scan_layer_8x8_0_size0, 8, 8, 64, 64);
-			k001604->layer_8x8[1] = tilemap_create_device(device, k001604_tile_info_layer_8x8, k001604_scan_layer_8x8_1_size0, 8, 8, 64, 64);
-			k001604->layer_roz[0] = tilemap_create_device(device, k001604_tile_info_layer_roz, k001604_scan_layer_roz_0_size0, roz_tile_size, roz_tile_size, 128, 64);
-			k001604->layer_roz[1] = tilemap_create_device(device, k001604_tile_info_layer_roz, k001604_scan_layer_roz_1_size0, roz_tile_size, roz_tile_size, 64, 64);
+			k001604->layer_8x8[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k001604_device::k001604_tile_info_layer_8x8),this), tilemap_mapper_delegate(FUNC(k001604_device::k001604_scan_layer_8x8_0_size0),this), 8, 8, 64, 64);
+			k001604->layer_8x8[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k001604_device::k001604_tile_info_layer_8x8),this), tilemap_mapper_delegate(FUNC(k001604_device::k001604_scan_layer_8x8_1_size0),this), 8, 8, 64, 64);
+			k001604->layer_roz[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k001604_device::k001604_tile_info_layer_roz),this), tilemap_mapper_delegate(FUNC(k001604_device::k001604_scan_layer_roz_0_size0),this), roz_tile_size, roz_tile_size, 128, 64);
+			k001604->layer_roz[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k001604_device::k001604_tile_info_layer_roz),this), tilemap_mapper_delegate(FUNC(k001604_device::k001604_scan_layer_roz_1_size0),this), roz_tile_size, roz_tile_size, 64, 64);
 		}
 	}
 	else	/* slrasslt has shifted tilemaps (but only has k001604->layer_size =  0) */
 	{
-		k001604->layer_8x8[0] = tilemap_create_device(device, k001604_tile_info_layer_8x8, slrasslt_scan_layer_8x8_0_size0, 8, 8, 64, 64);
-		k001604->layer_8x8[1] = tilemap_create_device(device, k001604_tile_info_layer_8x8, slrasslt_scan_layer_8x8_1_size0, 8, 8, 64, 64);
-		k001604->layer_roz[0] = tilemap_create_device(device, k001604_tile_info_layer_roz, k001604_scan_layer_roz_0_size0, roz_tile_size, roz_tile_size, 128, 64);
-		k001604->layer_roz[1] = tilemap_create_device(device, k001604_tile_info_layer_roz, k001604_scan_layer_roz_1_size0, roz_tile_size, roz_tile_size, 64, 64);
+		k001604->layer_8x8[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k001604_device::k001604_tile_info_layer_8x8),this), tilemap_mapper_delegate(FUNC(k001604_device::slrasslt_scan_layer_8x8_0_size0),this), 8, 8, 64, 64);
+		k001604->layer_8x8[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k001604_device::k001604_tile_info_layer_8x8),this), tilemap_mapper_delegate(FUNC(k001604_device::slrasslt_scan_layer_8x8_1_size0),this), 8, 8, 64, 64);
+		k001604->layer_roz[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k001604_device::k001604_tile_info_layer_roz),this), tilemap_mapper_delegate(FUNC(k001604_device::k001604_scan_layer_roz_0_size0),this), roz_tile_size, roz_tile_size, 128, 64);
+		k001604->layer_roz[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k001604_device::k001604_tile_info_layer_roz),this), tilemap_mapper_delegate(FUNC(k001604_device::k001604_scan_layer_roz_1_size0),this), roz_tile_size, roz_tile_size, 64, 64);
 	}
 
 	k001604->layer_8x8[0]->set_transparent_pen(0);
 	k001604->layer_8x8[1]->set_transparent_pen(0);
 
-	device->machine().gfx[k001604->gfx_index[0]] = gfx_element_alloc(device->machine(), &k001604_char_layout_layer_8x8, (UINT8*)&k001604->char_ram[0], device->machine().total_colors() / 16, 0);
-	device->machine().gfx[k001604->gfx_index[1]] = gfx_element_alloc(device->machine(), &k001604_char_layout_layer_16x16, (UINT8*)&k001604->char_ram[0], device->machine().total_colors() / 16, 0);
+	machine().gfx[k001604->gfx_index[0]] = auto_alloc(machine(), gfx_element(machine(), k001604_char_layout_layer_8x8, (UINT8*)&k001604->char_ram[0], machine().total_colors() / 16, 0));
+	machine().gfx[k001604->gfx_index[1]] = auto_alloc(machine(), gfx_element(machine(), k001604_char_layout_layer_16x16, (UINT8*)&k001604->char_ram[0], machine().total_colors() / 16, 0));
 
-	device->save_pointer(NAME(k001604->reg), 0x400 / 4);
-	device->save_pointer(NAME(k001604->char_ram), 0x200000 / 4);
-	device->save_pointer(NAME(k001604->tile_ram), 0x20000 / 4);
+	save_pointer(NAME(k001604->reg), 0x400 / 4);
+	save_pointer(NAME(k001604->char_ram), 0x200000 / 4);
+	save_pointer(NAME(k001604->tile_ram), 0x20000 / 4);
+
 }
 
-static DEVICE_RESET( k001604 )
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k001604_device::device_reset()
 {
-	k001604_state *k001604 = k001604_get_safe_token(device);
+	k001604_state *k001604 = k001604_get_safe_token(this);
 
 	memset(k001604->char_ram, 0, 0x200000);
 	memset(k001604->tile_ram, 0, 0x10000);
@@ -9963,8 +10581,7 @@ static DEVICE_RESET( k001604 )
 /*                                                                         */
 /***************************************************************************/
 
-typedef struct _k037122_state k037122_state;
-struct _k037122_state
+struct k037122_state
 {
 	screen_device *screen;
 	tilemap_t        *layer[2];
@@ -9987,7 +10604,7 @@ INLINE k037122_state *k037122_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K037122);
 
-	return (k037122_state *)downcast<legacy_device_base *>(device)->token();
+	return (k037122_state *)downcast<k037122_device *>(device)->token();
 }
 
 INLINE const k037122_interface *k037122_get_interface( device_t *device )
@@ -10012,9 +10629,9 @@ static const gfx_layout k037122_char_layout =
 	8*128
 };
 
-static TILE_GET_INFO_DEVICE( k037122_tile_info_layer0 )
+TILE_GET_INFO_MEMBER(k037122_device::k037122_tile_info_layer0)
 {
-	k037122_state *k037122 = k037122_get_safe_token(device);
+	k037122_state *k037122 = k037122_get_safe_token(this);
 	UINT32 val = k037122->tile_ram[tile_index + (0x8000/4)];
 	int color = (val >> 17) & 0x1f;
 	int tile = val & 0x3fff;
@@ -10025,12 +10642,12 @@ static TILE_GET_INFO_DEVICE( k037122_tile_info_layer0 )
 	if (val & 0x800000)
 		flags |= TILE_FLIPY;
 
-	SET_TILE_INFO_DEVICE(k037122->gfx_index, tile, color, flags);
+	SET_TILE_INFO_MEMBER(k037122->gfx_index, tile, color, flags);
 }
 
-static TILE_GET_INFO_DEVICE( k037122_tile_info_layer1 )
+TILE_GET_INFO_MEMBER(k037122_device::k037122_tile_info_layer1)
 {
-	k037122_state *k037122 = k037122_get_safe_token(device);
+	k037122_state *k037122 = k037122_get_safe_token(this);
 	UINT32 val = k037122->tile_ram[tile_index];
 	int color = (val >> 17) & 0x1f;
 	int tile = val & 0x3fff;
@@ -10041,7 +10658,7 @@ static TILE_GET_INFO_DEVICE( k037122_tile_info_layer1 )
 	if (val & 0x800000)
 		flags |= TILE_FLIPY;
 
-	SET_TILE_INFO_DEVICE(k037122->gfx_index, tile, color, flags);
+	SET_TILE_INFO_MEMBER(k037122->gfx_index, tile, color, flags);
 }
 
 
@@ -10133,7 +10750,7 @@ WRITE32_DEVICE_HANDLER( k037122_char_w )
 	UINT32 addr = offset + (bank * (0x40000/4));
 
 	COMBINE_DATA(k037122->char_ram + addr);
-	gfx_element_mark_dirty(device->machine().gfx[k037122->gfx_index], addr / 32);
+	device->machine().gfx[k037122->gfx_index]->mark_dirty(addr / 32);
 }
 
 READ32_DEVICE_HANDLER( k037122_reg_r )
@@ -10161,34 +10778,61 @@ WRITE32_DEVICE_HANDLER( k037122_reg_w )
     DEVICE INTERFACE
 *****************************************************************************/
 
-static DEVICE_START( k037122 )
-{
-	k037122_state *k037122 = k037122_get_safe_token(device);
-	const k037122_interface *intf = k037122_get_interface(device);
+const device_type K037122 = &device_creator<k037122_device>;
 
-	k037122->screen = device->machine().device<screen_device>(intf->screen);
+k037122_device::k037122_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K037122, "Konami 0371222", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k037122_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k037122_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k037122_device::device_start()
+{
+	k037122_state *k037122 = k037122_get_safe_token(this);
+	const k037122_interface *intf = k037122_get_interface(this);
+
+	k037122->screen = machine().device<screen_device>(intf->screen);
 	k037122->gfx_index = intf->gfx_index;
 
-	k037122->char_ram = auto_alloc_array(device->machine(), UINT32, 0x200000 / 4);
-	k037122->tile_ram = auto_alloc_array(device->machine(), UINT32, 0x20000 / 4);
-	k037122->reg = auto_alloc_array(device->machine(), UINT32, 0x400 / 4);
+	k037122->char_ram = auto_alloc_array(machine(), UINT32, 0x200000 / 4);
+	k037122->tile_ram = auto_alloc_array(machine(), UINT32, 0x20000 / 4);
+	k037122->reg = auto_alloc_array(machine(), UINT32, 0x400 / 4);
 
-	k037122->layer[0] = tilemap_create_device(device, k037122_tile_info_layer0, tilemap_scan_rows, 8, 8, 256, 64);
-	k037122->layer[1] = tilemap_create_device(device, k037122_tile_info_layer1, tilemap_scan_rows, 8, 8, 128, 64);
+	k037122->layer[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k037122_device::k037122_tile_info_layer0),this), TILEMAP_SCAN_ROWS, 8, 8, 256, 64);
+	k037122->layer[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(k037122_device::k037122_tile_info_layer1),this), TILEMAP_SCAN_ROWS, 8, 8, 128, 64);
 
 	k037122->layer[0]->set_transparent_pen(0);
 	k037122->layer[1]->set_transparent_pen(0);
 
-	device->machine().gfx[k037122->gfx_index] = gfx_element_alloc(device->machine(), &k037122_char_layout, (UINT8*)k037122->char_ram, device->machine().total_colors() / 16, 0);
+	machine().gfx[k037122->gfx_index] = auto_alloc(machine(), gfx_element(machine(), k037122_char_layout, (UINT8*)k037122->char_ram, machine().total_colors() / 16, 0));
 
-	device->save_pointer(NAME(k037122->reg), 0x400 / 4);
-	device->save_pointer(NAME(k037122->char_ram), 0x200000 / 4);
-	device->save_pointer(NAME(k037122->tile_ram), 0x20000 / 4);
+	save_pointer(NAME(k037122->reg), 0x400 / 4);
+	save_pointer(NAME(k037122->char_ram), 0x200000 / 4);
+	save_pointer(NAME(k037122->tile_ram), 0x20000 / 4);
+
 }
 
-static DEVICE_RESET( k037122 )
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k037122_device::device_reset()
 {
-	k037122_state *k037122 = k037122_get_safe_token(device);
+	k037122_state *k037122 = k037122_get_safe_token(this);
 
 	memset(k037122->char_ram, 0, 0x200000);
 	memset(k037122->tile_ram, 0, 0x20000);
@@ -10274,459 +10918,3 @@ READ16_DEVICE_HANDLER( k053244_reg_word_r )
 	return(k053244->regs[offset * 2] << 8 | k053244->regs[offset * 2 + 1]);
 }
 
-
-
-/***************************************************************************/
-/*                                                                         */
-/*                         DEVICE_GET_INFOs                                */
-/*                                                                         */
-/***************************************************************************/
-
-
-DEVICE_GET_INFO( k007121 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k007121_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k007121);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k007121);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 007121");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-
-DEVICE_GET_INFO( k007342 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k007342_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k007342);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k007342);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 007342");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-
-DEVICE_GET_INFO( k007420 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k007420_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k007420);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k007420);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 007420");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-
-DEVICE_GET_INFO( k052109 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k052109_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k052109);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k052109);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 052109");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-DEVICE_GET_INFO( k051960 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k051960_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k051960);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k051960);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 051960");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-DEVICE_GET_INFO( k05324x )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k05324x_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k05324x);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k05324x);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 053244 & 053245");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-DEVICE_GET_INFO( k053247 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k053247_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k053247);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k053247);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 053246 & 053247");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-DEVICE_GET_INFO( k055673 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k053247_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k055673);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k053247);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 055673");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-DEVICE_GET_INFO( k051316 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k051316_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k051316);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k051316);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 051316");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-DEVICE_GET_INFO( k053936 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k053936_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k053936);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k053936);					break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 053936");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-DEVICE_GET_INFO( k053251 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k053251_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k053251);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k053251);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 053251");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-DEVICE_GET_INFO( k054000 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k054000_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k054000);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k054000);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 054000");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-DEVICE_GET_INFO( k051733 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k051733_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k051733);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k051733);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 051733");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-DEVICE_GET_INFO( k056832 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k056832_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k056832);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */						break;
-		case DEVINFO_FCT_RESET:					/* Nothing */						break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 056832");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-DEVICE_GET_INFO( k055555 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k055555_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k055555);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k055555);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 055555");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-DEVICE_GET_INFO( k054338 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k054338_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k054338);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k054338);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 054338");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-DEVICE_GET_INFO( k001006 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k001006_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k001006);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k001006);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 001006");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-
-DEVICE_GET_INFO( k001005 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k001005_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k001005);		break;
-		case DEVINFO_FCT_STOP:					info->stop = DEVICE_STOP_NAME(k001005);		break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k001005);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 001005");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-
-DEVICE_GET_INFO( k001604 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k001604_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k001604);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k001604);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 001604");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-
-DEVICE_GET_INFO( k037122 )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(k037122_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(k037122);		break;
-		case DEVINFO_FCT_STOP:					/* Nothing */									break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(k037122);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Konami 0371222");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Konami Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
-}
-
-
-DEFINE_LEGACY_DEVICE(K007121, k007121);
-DEFINE_LEGACY_DEVICE(K007342, k007342);
-DEFINE_LEGACY_DEVICE(K007420, k007420);
-DEFINE_LEGACY_DEVICE(K052109, k052109);
-DEFINE_LEGACY_DEVICE(K051960, k051960);
-DEFINE_LEGACY_DEVICE(K053244, k05324x);
-DEFINE_LEGACY_DEVICE(K053246, k053247);
-DEFINE_LEGACY_DEVICE(K055673, k055673);
-DEFINE_LEGACY_DEVICE(K051316, k051316);
-DEFINE_LEGACY_DEVICE(K053936, k053936);
-DEFINE_LEGACY_DEVICE(K053251, k053251);
-DEFINE_LEGACY_DEVICE(K054000, k054000);
-DEFINE_LEGACY_DEVICE(K051733, k051733);
-DEFINE_LEGACY_DEVICE(K056832, k056832);
-DEFINE_LEGACY_DEVICE(K055555, k055555);
-DEFINE_LEGACY_DEVICE(K054338, k054338);
-DEFINE_LEGACY_DEVICE(K001006, k001006);
-DEFINE_LEGACY_DEVICE(K001005, k001005);
-DEFINE_LEGACY_DEVICE(K001604, k001604);
-DEFINE_LEGACY_DEVICE(K037122, k037122);

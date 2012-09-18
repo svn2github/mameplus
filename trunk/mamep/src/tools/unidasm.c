@@ -40,7 +40,7 @@
 #include "emu.h"
 #include <ctype.h>
 
-enum _display_type
+enum display_type
 {
 	_8bit,
 	_8bitx,
@@ -59,11 +59,9 @@ enum _display_type
 	_64be,
 	_64le
 };
-typedef enum _display_type display_type;
 
 
-typedef struct _dasm_table_entry dasm_table_entry;
-struct _dasm_table_entry
+struct dasm_table_entry
 {
 	const char *			name;
 	display_type			display;
@@ -72,8 +70,7 @@ struct _dasm_table_entry
 };
 
 
-typedef struct _options options;
-struct _options
+struct options
 {
 	const char *			filename;
 	offs_t					basepc;

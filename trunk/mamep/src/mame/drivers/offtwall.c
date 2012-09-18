@@ -34,8 +34,8 @@
 static void update_interrupts(running_machine &machine)
 {
 	offtwall_state *state = machine.driver_data<offtwall_state>();
-	cputag_set_input_line(machine, "maincpu", 4, state->m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
-	cputag_set_input_line(machine, "maincpu", 6, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(4, state->m_scanline_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(6, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -46,19 +46,18 @@ static void update_interrupts(running_machine &machine)
  *
  *************************************/
 
-static MACHINE_START( offtwall )
+MACHINE_START_MEMBER(offtwall_state,offtwall)
 {
-	atarigen_init(machine);
+	atarigen_init(machine());
 }
 
 
-static MACHINE_RESET( offtwall )
+MACHINE_RESET_MEMBER(offtwall_state,offtwall)
 {
-	offtwall_state *state = machine.driver_data<offtwall_state>();
 
-	atarigen_eeprom_reset(state);
-	atarigen_interrupt_reset(state, update_interrupts);
-	atarivc_reset(*machine.primary_screen, state->m_atarivc_eof_data, 1);
+	atarigen_eeprom_reset(this);
+	atarigen_interrupt_reset(this, update_interrupts);
+	atarivc_reset(*machine().primary_screen, m_atarivc_eof_data, 1);
 	atarijsa_reset();
 }
 
@@ -103,7 +102,7 @@ WRITE16_MEMBER(offtwall_state::io_latch_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		/* bit 4 resets the sound CPU */
-		cputag_set_input_line(machine(), "jsa", INPUT_LINE_RESET, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
+		machine().device("jsa")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
 		if (!(data & 0x10)) atarijsa_reset();
 	}
 
@@ -163,11 +162,11 @@ READ16_MEMBER(offtwall_state::bankrom_r)
 {
 
 	/* this is the banked ROM read */
-	logerror("%06X: %04X\n", cpu_get_previouspc(&space.device()), offset);
+	logerror("%06X: %04X\n", space.device().safe_pcbase(), offset);
 
 	/* if the values are $3e000 or $3e002 are being read by code just below the
         ROM bank area, we need to return the correct value to give the proper checksum */
-	if ((offset == 0x3000 || offset == 0x3001) && cpu_get_previouspc(&space.device()) > 0x37000)
+	if ((offset == 0x3000 || offset == 0x3001) && space.device().safe_pcbase() > 0x37000)
 	{
 		UINT32 checksum = (space.read_word(0x3fd210) << 16) | space.read_word(0x3fd212);
 		UINT32 us = 0xaaaa5555 - checksum;
@@ -202,7 +201,7 @@ READ16_MEMBER(offtwall_state::bankrom_r)
 
 READ16_MEMBER(offtwall_state::spritecache_count_r)
 {
-	int prevpc = cpu_get_previouspc(&space.device());
+	int prevpc = space.device().safe_pcbase();
 
 	/* if this read is coming from $99f8 or $9992, it's in the sprite copy loop */
 	if (prevpc == 0x99f8 || prevpc == 0x9992)
@@ -256,7 +255,7 @@ READ16_MEMBER(offtwall_state::spritecache_count_r)
 
 READ16_MEMBER(offtwall_state::unknown_verify_r)
 {
-	int prevpc = cpu_get_previouspc(&space.device());
+	int prevpc = space.device().safe_pcbase();
 	if (prevpc < 0x5c5e || prevpc > 0xc432)
 		return m_unknown_verify_base[offset];
 	else
@@ -405,8 +404,8 @@ static MACHINE_CONFIG_START( offtwall, offtwall_state )
 	MCFG_CPU_ADD("maincpu", M68000, ATARI_CLOCK_14MHz/2)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 
-	MCFG_MACHINE_START(offtwall)
-	MCFG_MACHINE_RESET(offtwall)
+	MCFG_MACHINE_START_OVERRIDE(offtwall_state,offtwall)
+	MCFG_MACHINE_RESET_OVERRIDE(offtwall_state,offtwall)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
 	/* video hardware */
@@ -420,7 +419,7 @@ static MACHINE_CONFIG_START( offtwall, offtwall_state )
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
 	MCFG_SCREEN_UPDATE_STATIC(offtwall)
 
-	MCFG_VIDEO_START(offtwall)
+	MCFG_VIDEO_START_OVERRIDE(offtwall_state,offtwall)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(jsa_iii_mono_noadpcm)

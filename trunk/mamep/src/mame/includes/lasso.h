@@ -4,6 +4,8 @@
 
 ***************************************************************************/
 
+#include "sound/sn76496.h"
+
 class lasso_state : public driver_device
 {
 public:
@@ -16,7 +18,9 @@ public:
 		m_chip_data(*this, "chip_data"),
 		m_bitmap_ram(*this, "bitmap_ram"),
 		m_last_colors(*this, "last_colors"),
-		m_track_scroll(*this, "track_scroll"){ }
+		m_track_scroll(*this, "track_scroll"),
+		m_sn_1(*this, "sn76489.1"),
+		m_sn_2(*this, "sn76489.2"){ }
 
 	/* memory pointers */
 	required_shared_ptr<UINT8> m_videoram;
@@ -35,10 +39,10 @@ public:
 	UINT8    m_track_enable;	/* used by wwjgtin */
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
-	device_t *m_sn_1;
-	device_t *m_sn_2;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
+	optional_device<sn76489_new_device> m_sn_1;
+	optional_device<sn76489_new_device> m_sn_2;
 	DECLARE_WRITE8_MEMBER(sound_command_w);
 	DECLARE_WRITE8_MEMBER(pinbo_sound_command_w);
 	DECLARE_READ8_MEMBER(sound_status_r);
@@ -50,18 +54,30 @@ public:
 	DECLARE_WRITE8_MEMBER(wwjgtin_video_control_w);
 	DECLARE_WRITE8_MEMBER(pinbo_video_control_w);
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
+	TILE_GET_INFO_MEMBER(lasso_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(wwjgtin_get_track_tile_info);
+	TILE_GET_INFO_MEMBER(pinbo_get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_MACHINE_START(wwjgtin);
+	DECLARE_MACHINE_RESET(wwjgtin);
+	DECLARE_VIDEO_START(wwjgtin);
+	DECLARE_PALETTE_INIT(wwjgtin);
+	DECLARE_VIDEO_START(pinbo);
 };
 
 
 /*----------- defined in video/lasso.c -----------*/
 
 
-PALETTE_INIT( lasso );
-PALETTE_INIT( wwjgtin );
 
-VIDEO_START( lasso );
-VIDEO_START( wwjgtin );
-VIDEO_START( pinbo );
+
+
+
+
+
 
 SCREEN_UPDATE_IND16( lasso );
 SCREEN_UPDATE_IND16( chameleo );

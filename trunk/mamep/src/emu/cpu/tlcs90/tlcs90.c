@@ -10,22 +10,22 @@
 #include "debugger.h"
 #include "tlcs90.h"
 
-typedef enum					{	UNKNOWN,	NOP,	EX,		EXX,	LD,		LDW,	LDA,	LDI,	LDIR,	LDD,	LDDR,	CPI,	CPIR,	CPD,	CPDR,	PUSH,	POP,	JP,		JR,		CALL,	CALLR,		RET,	RETI,	HALT,	DI,		EI,		SWI,	DAA,	CPL,	NEG,	LDAR,	RCF,	SCF,	CCF,	TSET,	BIT,	SET,	RES,	INC,	DEC,	INCX,	DECX,	INCW,	DECW,	ADD,	ADC,	SUB,	SBC,	AND,	XOR,	OR,		CP,		RLC,	RRC,	RL,		RR,		SLA,	SRA,	SLL,	SRL,	RLD,	RRD,	DJNZ,	MUL,	DIV		}	_e_op;
+enum _e_op {	UNKNOWN,	NOP,	EX,		EXX,	LD,		LDW,	LDA,	LDI,	LDIR,	LDD,	LDDR,	CPI,	CPIR,	CPD,	CPDR,	PUSH,	POP,	JP,		JR,		CALL,	CALLR,		RET,	RETI,	HALT,	DI,		EI,		SWI,	DAA,	CPL,	NEG,	LDAR,	RCF,	SCF,	CCF,	TSET,	BIT,	SET,	RES,	INC,	DEC,	INCX,	DECX,	INCW,	DECW,	ADD,	ADC,	SUB,	SBC,	AND,	XOR,	OR,		CP,		RLC,	RRC,	RL,		RR,		SLA,	SRA,	SLL,	SRL,	RLD,	RRD,	DJNZ,	MUL,	DIV		};
 typedef UINT8 e_op;
 static const char *const op_names[] =	{	"??",		"nop",	"ex",	"exx",	"ld",	"ldw",	"lda",	"ldi",	"ldir",	"ldd",	"lddr",	"cpi",	"cpir",	"cpd",	"cpdr",	"push",	"pop",	"jp",	"jr",	"call",	"callr",	"ret",	"reti",	"halt",	"di",	"ei",	"swi",	"daa",	"cpl",	"neg",	"ldar",	"rcf",	"scf",	"ccf",	"tset",	"bit",	"set",	"res",	"inc",	"dec",	"incx",	"decx",	"incw",	"decw",	"add",	"adc",	"sub",	"sbc",	"and",	"xor",	"or",	"cp",	"rlc",	"rrc",	"rl",	"rr",	"sla",	"sra",	"sll",	"srl",	"rld",	"rrd",	"djnz",	"mul",	"div"	};
 
-typedef enum	{
+enum e_mode {
 	MODE_NONE,	MODE_BIT8,	MODE_CC,
 	MODE_I8,	MODE_D8,	MODE_R8,
 	MODE_I16,	MODE_D16,	MODE_R16,
 	MODE_MI16,	MODE_MR16,	MODE_MR16D8,	MODE_MR16R8,
 	MODE_R16D8,	MODE_R16R8
-}	e_mode;
+};
 ALLOW_SAVE_TYPE(e_mode); // allow save_item on a non-fundamental type
 
 typedef UINT16 e_r;
 
-typedef struct
+struct t90_Regs
 {
 	PAIR		prvpc,pc,sp,af,bc,de,hl,ix,iy;
 	PAIR		af2,bc2,de2,hl2;
@@ -59,7 +59,7 @@ typedef struct
 
 	UINT32	addr;
 
-}	t90_Regs;
+};
 
 INLINE t90_Regs *get_safe_token(device_t *device)
 {
@@ -1280,7 +1280,7 @@ INT2        P82         Rising Edge     -
 
 *************************************************************************************************************/
 
-typedef enum	{	INTSWI = 0,	INTNMI,	INTWD,	INT0,	INTT0,	INTT1,	INTT2,	INTT3,	INTT4,	INT1,	INTT5,	INT2,	INTRX,	INTTX,	INTMAX	}	e_irq;
+enum e_irq {	INTSWI = 0,	INTNMI,	INTWD,	INT0,	INTT0,	INTT1,	INTT2,	INTT3,	INTT4,	INT1,	INTT5,	INT2,	INTRX,	INTTX,	INTMAX	};
 DECLARE_ENUM_OPERATORS(e_irq)
 
 INLINE void leave_halt(t90_Regs *cpustate)
@@ -1967,7 +1967,7 @@ static CPU_EXECUTE( t90 )
 				break;
 
 			default:
-				fatalerror("%04x: unimplemented opcode, op=%02x\n",cpu_get_pc(device),cpustate->op);
+				fatalerror("%04x: unimplemented opcode, op=%02x\n",device->pc(),cpustate->op);
 		}
 
 		if ( cpustate->op != EI )
@@ -2797,7 +2797,7 @@ CPU_GET_INFO( tmp90840 )
 		case CPUINFO_INT_CONTEXT_SIZE:								info->i = sizeof(t90_Regs);			break;
 		case CPUINFO_INT_INPUT_LINES:								info->i = 1;					break;
 		case CPUINFO_INT_DEFAULT_IRQ_VECTOR:						info->i = 0xff;					break;
-		case DEVINFO_INT_ENDIANNESS:								info->i = ENDIANNESS_LITTLE;			break;
+		case CPUINFO_INT_ENDIANNESS:								info->i = ENDIANNESS_LITTLE;			break;
 		case CPUINFO_INT_CLOCK_MULTIPLIER:							info->i = 1;					break;
 		case CPUINFO_INT_CLOCK_DIVIDER:								info->i = 1;					break;
 		case CPUINFO_INT_MIN_INSTRUCTION_BYTES:						info->i = 1;					break;
@@ -2805,17 +2805,17 @@ CPU_GET_INFO( tmp90840 )
 		case CPUINFO_INT_MIN_CYCLES:								info->i = 2;					break;
 		case CPUINFO_INT_MAX_CYCLES:								info->i = 26;					break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:		info->i = 8;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM:		info->i = 20;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM:		info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_PROGRAM:		info->i = 8;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM:		info->i = 20;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM:		info->i = 0;					break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:		info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:		info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:		info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_DATA:		info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_DATA:		info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_DATA:		info->i = 0;					break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:			info->i = 8;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:			info->i = 16;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:			info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_IO:			info->i = 8;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_IO:			info->i = 16;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_IO:			info->i = 0;					break;
 
 		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_NMI:				info->i = cpustate->irq_state & (1 << INTNMI);	break;
 		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_IRQ0:				info->i = cpustate->irq_state & (1 << INT0);		break;
@@ -2851,15 +2851,15 @@ CPU_GET_INFO( tmp90840 )
 		case CPUINFO_FCT_BURN:										info->burn = CPU_BURN_NAME(t90);				break;
 		case CPUINFO_FCT_DISASSEMBLE:								info->disassemble = CPU_DISASSEMBLE_NAME(t90);		break;
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:						info->icount = &cpustate->icount;			break;
-		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map8 = ADDRESS_MAP_NAME(tmp90840_mem); break;
+		case CPUINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map8 = ADDRESS_MAP_NAME(tmp90840_mem); break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 
-		case DEVINFO_STR_NAME:				strcpy(info->s, "TMP90840");			break;
-		case DEVINFO_STR_FAMILY:		strcpy(info->s, "Toshiba TLCS-90");	break;
-		case DEVINFO_STR_VERSION:		strcpy(info->s, "1.0");				break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);			break;
-		case DEVINFO_STR_CREDITS:		strcpy(info->s, "Luca Elia");			break;
+		case CPUINFO_STR_NAME:				strcpy(info->s, "TMP90840");			break;
+		case CPUINFO_STR_FAMILY:		strcpy(info->s, "Toshiba TLCS-90");	break;
+		case CPUINFO_STR_VERSION:		strcpy(info->s, "1.0");				break;
+		case CPUINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);			break;
+		case CPUINFO_STR_CREDITS:		strcpy(info->s, "Luca Elia");			break;
 
 		case CPUINFO_STR_FLAGS:
 			sprintf(info->s, "%c%c%c%c%c%c%c%c",
@@ -2897,11 +2897,11 @@ CPU_GET_INFO( tmp90841 )
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
 
-		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map8 = ADDRESS_MAP_NAME(tmp90841_mem); return;
+		case CPUINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map8 = ADDRESS_MAP_NAME(tmp90841_mem); return;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 
-		case DEVINFO_STR_NAME:				strcpy(info->s, "TMP90841");			return;
+		case CPUINFO_STR_NAME:				strcpy(info->s, "TMP90841");			return;
 	}
 
 	CPU_GET_INFO_CALL(tmp90840);
@@ -2913,11 +2913,11 @@ CPU_GET_INFO( tmp91640 )
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
 
-		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map8 = ADDRESS_MAP_NAME(tmp91640_mem); return;
+		case CPUINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map8 = ADDRESS_MAP_NAME(tmp91640_mem); return;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 
-		case DEVINFO_STR_NAME:				strcpy(info->s, "TMP91640");			return;
+		case CPUINFO_STR_NAME:				strcpy(info->s, "TMP91640");			return;
 	}
 
 	CPU_GET_INFO_CALL(tmp90840);
@@ -2929,11 +2929,11 @@ CPU_GET_INFO( tmp91641 )
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
 
-		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map8 = ADDRESS_MAP_NAME(tmp91641_mem); return;
+		case CPUINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map8 = ADDRESS_MAP_NAME(tmp91641_mem); return;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 
-		case DEVINFO_STR_NAME:				strcpy(info->s, "TMP91641");			return;
+		case CPUINFO_STR_NAME:				strcpy(info->s, "TMP91641");			return;
 	}
 
 	CPU_GET_INFO_CALL(tmp90840);

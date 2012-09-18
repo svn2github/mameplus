@@ -41,11 +41,18 @@ public:
 	DECLARE_DRIVER_INIT(rygar);
 	DECLARE_DRIVER_INIT(backfirt);
 	DECLARE_DRIVER_INIT(gemini);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(gemini_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(gemini_get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_tx_tile_info);
+	DECLARE_MACHINE_RESET(rygar);
+	DECLARE_VIDEO_START(tecmo);
 };
 
 
 /*----------- defined in video/tecmo.c -----------*/
 
 
-VIDEO_START( tecmo );
+
 SCREEN_UPDATE_IND16( tecmo );

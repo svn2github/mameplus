@@ -433,6 +433,11 @@ public:
 	DECLARE_WRITE8_MEMBER(magicfly_colorram_w);
 	DECLARE_READ8_MEMBER(mux_port_r);
 	DECLARE_WRITE8_MEMBER(mux_port_w);
+	TILE_GET_INFO_MEMBER(get_magicfly_tile_info);
+	TILE_GET_INFO_MEMBER(get_7mezzo_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_VIDEO_START(7mezzo);
 };
 
 
@@ -453,9 +458,8 @@ WRITE8_MEMBER(magicfly_state::magicfly_colorram_w)
 	m_bg_tilemap->mark_tile_dirty(offset);
 }
 
-static TILE_GET_INFO( get_magicfly_tile_info )
+TILE_GET_INFO_MEMBER(magicfly_state::get_magicfly_tile_info)
 {
-	magicfly_state *state = machine.driver_data<magicfly_state>();
 /*  - bits -
     7654 3210
     ---- -xxx   Tiles color.
@@ -465,29 +469,27 @@ static TILE_GET_INFO( get_magicfly_tile_info )
     x--- ----   Mirrored from bit 3. The code check this one to boot the game.
 
 */
-	int attr = state->m_colorram[tile_index];
-	int code = state->m_videoram[tile_index];
+	int attr = m_colorram[tile_index];
+	int code = m_videoram[tile_index];
 	int bank = (attr & 0x10) >> 4;   /* bit 4 switch the gfx banks */
 	int color = attr & 0x07;         /* bits 0-2 for color */
 
     /* Seems that bit 7 is mirrored from bit 3 to have a normal boot */
     /* Boot only check the first color RAM offset */
 
-	state->m_colorram[0] = state->m_colorram[0] | ((state->m_colorram[0] & 0x08) << 4);	/* only for 1st offset */
-	//state->m_colorram[tile_index] = attr | ((attr & 0x08) << 4);         /* for the whole color RAM */
+	m_colorram[0] = m_colorram[0] | ((m_colorram[0] & 0x08) << 4);	/* only for 1st offset */
+	//m_colorram[tile_index] = attr | ((attr & 0x08) << 4);         /* for the whole color RAM */
 
-	SET_TILE_INFO(bank, code, color, 0);
+	SET_TILE_INFO_MEMBER(bank, code, color, 0);
 }
 
-static VIDEO_START(magicfly)
+void magicfly_state::video_start()
 {
-	magicfly_state *state = machine.driver_data<magicfly_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_magicfly_tile_info, tilemap_scan_rows, 8, 8, 32, 29);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(magicfly_state::get_magicfly_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 29);
 }
 
-static TILE_GET_INFO( get_7mezzo_tile_info )
+TILE_GET_INFO_MEMBER(magicfly_state::get_7mezzo_tile_info)
 {
-	magicfly_state *state = machine.driver_data<magicfly_state>();
 /*  - bits -
     7654 3210
     ---- -xxx   Tiles color.
@@ -497,24 +499,23 @@ static TILE_GET_INFO( get_7mezzo_tile_info )
     x--- ----   Mirrored from bit 2. The code check this one to boot the game.
 
 */
-	int attr = state->m_colorram[tile_index];
-	int code = state->m_videoram[tile_index];
+	int attr = m_colorram[tile_index];
+	int code = m_videoram[tile_index];
 	int bank = (attr & 0x10) >> 4;    /* bit 4 switch the gfx banks */
 	int color = attr & 0x07;          /* bits 0-2 for color */
 
     /* Seems that bit 7 is mirrored from bit 2 to have a normal boot */
     /* Boot only check the first color RAM offset */
 
-	state->m_colorram[0] = state->m_colorram[0] | ((state->m_colorram[0] & 0x04) << 5);	/* only for 1st offset */
-	//state->m_colorram[tile_index] = attr | ((attr & 0x04) << 5);         /* for the whole color RAM */
+	m_colorram[0] = m_colorram[0] | ((m_colorram[0] & 0x04) << 5);	/* only for 1st offset */
+	//m_colorram[tile_index] = attr | ((attr & 0x04) << 5);         /* for the whole color RAM */
 
-	SET_TILE_INFO(bank, code, color, 0);
+	SET_TILE_INFO_MEMBER(bank, code, color, 0);
 }
 
-static VIDEO_START( 7mezzo )
+VIDEO_START_MEMBER(magicfly_state,7mezzo)
 {
-	magicfly_state *state = machine.driver_data<magicfly_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_7mezzo_tile_info, tilemap_scan_rows, 8, 8, 32, 29);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(magicfly_state::get_7mezzo_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 29);
 }
 
 static SCREEN_UPDATE_IND16( magicfly )
@@ -524,30 +525,30 @@ static SCREEN_UPDATE_IND16( magicfly )
 	return 0;
 }
 
-static PALETTE_INIT( magicfly )
+void magicfly_state::palette_init()
 {
 	int i;
 
 	for (i = 0x00; i < 0x10; i += 0x10)
 	{
 		/* 1st gfx bank */
-		palette_set_color(machine, i + 0, MAKE_RGB(0x00, 0x00, 0x00));
-		palette_set_color(machine, i + 2, MAKE_RGB(0x00, 0x00, 0x00));
-		palette_set_color(machine, i + 4, MAKE_RGB(0x00, 0x00, 0x00));
-		palette_set_color(machine, i + 6, MAKE_RGB(0x00, 0x00, 0x00));
-		palette_set_color(machine, i + 8, MAKE_RGB(0x00, 0x00, 0x00));
-		palette_set_color(machine, i + 10, MAKE_RGB(0x00, 0x00, 0x00));
-		palette_set_color(machine, i + 12, MAKE_RGB(0x00, 0x00, 0x00));
-		palette_set_color(machine, i + 14, MAKE_RGB(0x00, 0x00, 0x00));
+		palette_set_color(machine(), i + 0, MAKE_RGB(0x00, 0x00, 0x00));
+		palette_set_color(machine(), i + 2, MAKE_RGB(0x00, 0x00, 0x00));
+		palette_set_color(machine(), i + 4, MAKE_RGB(0x00, 0x00, 0x00));
+		palette_set_color(machine(), i + 6, MAKE_RGB(0x00, 0x00, 0x00));
+		palette_set_color(machine(), i + 8, MAKE_RGB(0x00, 0x00, 0x00));
+		palette_set_color(machine(), i + 10, MAKE_RGB(0x00, 0x00, 0x00));
+		palette_set_color(machine(), i + 12, MAKE_RGB(0x00, 0x00, 0x00));
+		palette_set_color(machine(), i + 14, MAKE_RGB(0x00, 0x00, 0x00));
 
-		palette_set_color(machine, i + 1, MAKE_RGB(0x00, 0x00, 0x00));
-		palette_set_color(machine, i + 3, MAKE_RGB(0xff, 0x00, 0x00));
-		palette_set_color(machine, i + 5, MAKE_RGB(0x00, 0xff, 0x00));
-		palette_set_color(machine, i + 7, MAKE_RGB(0xff, 0xff, 0x00));
-		palette_set_color(machine, i + 9, MAKE_RGB(0x00, 0x00, 0xff));
-		palette_set_color(machine, i + 11, MAKE_RGB(0xff, 0x00, 0xff));
-		palette_set_color(machine, i + 13, MAKE_RGB(0x00, 0xff, 0xff));
-		palette_set_color(machine, i + 15, MAKE_RGB(0xff, 0xff, 0xff));
+		palette_set_color(machine(), i + 1, MAKE_RGB(0x00, 0x00, 0x00));
+		palette_set_color(machine(), i + 3, MAKE_RGB(0xff, 0x00, 0x00));
+		palette_set_color(machine(), i + 5, MAKE_RGB(0x00, 0xff, 0x00));
+		palette_set_color(machine(), i + 7, MAKE_RGB(0xff, 0xff, 0x00));
+		palette_set_color(machine(), i + 9, MAKE_RGB(0x00, 0x00, 0xff));
+		palette_set_color(machine(), i + 11, MAKE_RGB(0xff, 0x00, 0xff));
+		palette_set_color(machine(), i + 13, MAKE_RGB(0x00, 0xff, 0xff));
+		palette_set_color(machine(), i + 15, MAKE_RGB(0xff, 0xff, 0xff));
 	}
 }
 
@@ -817,9 +818,7 @@ static MACHINE_CONFIG_START( magicfly, magicfly_state )
 
 	MCFG_GFXDECODE(magicfly)
 	MCFG_PALETTE_LENGTH(32)
-	MCFG_PALETTE_INIT(magicfly)
 
-	MCFG_VIDEO_START(magicfly)
 
 	MCFG_MC6845_ADD("crtc", MC6845, MASTER_CLOCK/16, mc6845_intf) /* guess */
 
@@ -834,7 +833,7 @@ static MACHINE_CONFIG_DERIVED( 7mezzo, magicfly )
 	/* basic machine hardware */
 
 	/* video hardware */
-	MCFG_VIDEO_START(7mezzo)
+	MCFG_VIDEO_START_OVERRIDE(magicfly_state,7mezzo)
 
 MACHINE_CONFIG_END
 

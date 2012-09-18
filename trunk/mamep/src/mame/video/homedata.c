@@ -116,7 +116,7 @@ static void mrokumei_handleblit( address_space *space, int rom_base )
 	} /* for(;;) */
 
 finish:
-	device_set_input_line(state->m_maincpu, M6809_FIRQ_LINE, HOLD_LINE);
+	state->m_maincpu->set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 }
 
 static void reikaids_handleblit( address_space *space, int rom_base )
@@ -214,7 +214,7 @@ static void reikaids_handleblit( address_space *space, int rom_base )
 	}
 
 finish:
-	device_set_input_line(state->m_maincpu, M6809_FIRQ_LINE, HOLD_LINE);
+	state->m_maincpu->set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 }
 
 static void pteacher_handleblit( address_space *space, int rom_base )
@@ -301,7 +301,7 @@ static void pteacher_handleblit( address_space *space, int rom_base )
 	} /* for(;;) */
 
 finish:
-	device_set_input_line(state->m_maincpu, M6809_FIRQ_LINE, HOLD_LINE);
+	state->m_maincpu->set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 }
 
 
@@ -313,9 +313,9 @@ finish:
 
 ***************************************************************************/
 
-PALETTE_INIT( mrokumei )
+PALETTE_INIT_MEMBER(homedata_state,mrokumei)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* initialize 555 RGB palette */
@@ -332,13 +332,13 @@ PALETTE_INIT( mrokumei )
 		g = ((color >>  7) & 0x1e) | ((color >> 2) & 1);
 		b = ((color >>  3) & 0x1e) | ((color >> 1) & 1);
 
-		palette_set_color_rgb(machine, i, pal5bit(r), pal5bit(g), pal5bit(b));
+		palette_set_color_rgb(machine(), i, pal5bit(r), pal5bit(g), pal5bit(b));
 	}
 }
 
-PALETTE_INIT( reikaids )
+PALETTE_INIT_MEMBER(homedata_state,reikaids)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* initialize 555 RGB palette */
@@ -355,13 +355,13 @@ PALETTE_INIT( reikaids )
 		r = ((color >>  7) & 0x1e) | ((color >> 2) & 1);
 		b = ((color >>  3) & 0x1e) | ((color >> 1) & 1);
 
-		palette_set_color_rgb(machine, i, pal5bit(r), pal5bit(g), pal5bit(b));
+		palette_set_color_rgb(machine(), i, pal5bit(r), pal5bit(g), pal5bit(b));
 	}
 }
 
-PALETTE_INIT( pteacher )
+PALETTE_INIT_MEMBER(homedata_state,pteacher)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* initialize 555 RGB palette */
@@ -378,13 +378,13 @@ PALETTE_INIT( pteacher )
 		r = ((color >>  6) & 0x1f);
 		b = ((color >>  1) & 0x1f);
 
-		palette_set_color_rgb(machine, i, pal5bit(r), pal5bit(g), pal5bit(b));
+		palette_set_color_rgb(machine(), i, pal5bit(r), pal5bit(g), pal5bit(b));
 	}
 }
 
-PALETTE_INIT( mirderby )
+PALETTE_INIT_MEMBER(homedata_state,mirderby)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0; i < 0x100; i++)
@@ -394,7 +394,7 @@ PALETTE_INIT( mirderby )
 		g = color_prom[0x100+i];
 		b = color_prom[0x200+i];
 
-		palette_set_color_rgb(machine,i,pal4bit(r),pal4bit(g),pal4bit(b));
+		palette_set_color_rgb(machine(),i,pal4bit(r),pal4bit(g),pal4bit(b));
 	}
 }
 
@@ -425,28 +425,24 @@ INLINE void mrokumei_info1( running_machine &machine, tile_data &tileinfo, int t
 	SET_TILE_INFO( 1, code, color, state->m_flipscreen );
 }
 
-static TILE_GET_INFO( mrokumei_get_info0_0 )
+TILE_GET_INFO_MEMBER(homedata_state::mrokumei_get_info0_0)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	mrokumei_info0( machine, tileinfo, tile_index, 0,  state->m_blitter_bank & 0x03 );
+	mrokumei_info0( machine(), tileinfo, tile_index, 0,  m_blitter_bank & 0x03 );
 }
 
-static TILE_GET_INFO( mrokumei_get_info1_0 )
+TILE_GET_INFO_MEMBER(homedata_state::mrokumei_get_info1_0)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	mrokumei_info0( machine, tileinfo, tile_index, 1,  state->m_blitter_bank & 0x03 );
+	mrokumei_info0( machine(), tileinfo, tile_index, 1,  m_blitter_bank & 0x03 );
 }
 
-static TILE_GET_INFO( mrokumei_get_info0_1 )
+TILE_GET_INFO_MEMBER(homedata_state::mrokumei_get_info0_1)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	mrokumei_info1( machine, tileinfo, tile_index, 0, (state->m_blitter_bank & 0x38) >> 3 );
+	mrokumei_info1( machine(), tileinfo, tile_index, 0, (m_blitter_bank & 0x38) >> 3 );
 }
 
-static TILE_GET_INFO( mrokumei_get_info1_1 )
+TILE_GET_INFO_MEMBER(homedata_state::mrokumei_get_info1_1)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	mrokumei_info1( machine, tileinfo, tile_index, 1, (state->m_blitter_bank & 0x38) >> 3 );
+	mrokumei_info1( machine(), tileinfo, tile_index, 1, (m_blitter_bank & 0x38) >> 3 );
 }
 
 
@@ -472,52 +468,44 @@ INLINE void reikaids_info( running_machine &machine, tile_data &tileinfo, int ti
      *      xxxx.x---   layer#0
      *      ----.-xxx   layer#2
      */
-static TILE_GET_INFO( reikaids_get_info0_0 )
+TILE_GET_INFO_MEMBER(homedata_state::reikaids_get_info0_0)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	reikaids_info(machine, tileinfo, tile_index, 0, 0,  (state->m_gfx_bank[1] >> 3));
+	reikaids_info(machine(), tileinfo, tile_index, 0, 0,  (m_gfx_bank[1] >> 3));
 }
 
-static TILE_GET_INFO( reikaids_get_info1_0 )
+TILE_GET_INFO_MEMBER(homedata_state::reikaids_get_info1_0)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	reikaids_info(machine, tileinfo, tile_index, 1, 0,  (state->m_gfx_bank[1] >> 3));
+	reikaids_info(machine(), tileinfo, tile_index, 1, 0,  (m_gfx_bank[1] >> 3));
 }
 
-static TILE_GET_INFO( reikaids_get_info0_1 )
+TILE_GET_INFO_MEMBER(homedata_state::reikaids_get_info0_1)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	reikaids_info(machine, tileinfo, tile_index, 0, 1, ((state->m_gfx_bank[0] & 0x78) >> 3));
+	reikaids_info(machine(), tileinfo, tile_index, 0, 1, ((m_gfx_bank[0] & 0x78) >> 3));
 }
 
-static TILE_GET_INFO( reikaids_get_info1_1 )
+TILE_GET_INFO_MEMBER(homedata_state::reikaids_get_info1_1)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	reikaids_info(machine, tileinfo, tile_index, 1, 1, ((state->m_gfx_bank[0] & 0x78) >> 3));
+	reikaids_info(machine(), tileinfo, tile_index, 1, 1, ((m_gfx_bank[0] & 0x78) >> 3));
 }
 
-static TILE_GET_INFO( reikaids_get_info0_2 )
+TILE_GET_INFO_MEMBER(homedata_state::reikaids_get_info0_2)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	reikaids_info(machine, tileinfo, tile_index, 0, 2,  (state->m_gfx_bank[1] & 0x7));
+	reikaids_info(machine(), tileinfo, tile_index, 0, 2,  (m_gfx_bank[1] & 0x7));
 }
 
-static TILE_GET_INFO( reikaids_get_info1_2 )
+TILE_GET_INFO_MEMBER(homedata_state::reikaids_get_info1_2)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	reikaids_info(machine, tileinfo, tile_index, 1, 2,  (state->m_gfx_bank[1] & 0x7));
+	reikaids_info(machine(), tileinfo, tile_index, 1, 2,  (m_gfx_bank[1] & 0x7));
 }
 
-static TILE_GET_INFO( reikaids_get_info0_3 )
+TILE_GET_INFO_MEMBER(homedata_state::reikaids_get_info0_3)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	reikaids_info(machine, tileinfo, tile_index, 0, 3,  (state->m_gfx_bank[0] & 0x7));
+	reikaids_info(machine(), tileinfo, tile_index, 0, 3,  (m_gfx_bank[0] & 0x7));
 }
 
-static TILE_GET_INFO( reikaids_get_info1_3 )
+TILE_GET_INFO_MEMBER(homedata_state::reikaids_get_info1_3)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	reikaids_info(machine, tileinfo, tile_index, 1, 3,  (state->m_gfx_bank[0] & 0x7));
+	reikaids_info(machine(), tileinfo, tile_index, 1, 3,  (m_gfx_bank[0] & 0x7));
 }
 
 
@@ -532,28 +520,24 @@ INLINE void pteacher_info( running_machine &machine, tile_data &tileinfo, int ti
 	SET_TILE_INFO(layer, code, color, state->m_flipscreen);
 }
 
-static TILE_GET_INFO( pteacher_get_info0_0 )
+TILE_GET_INFO_MEMBER(homedata_state::pteacher_get_info0_0)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	pteacher_info(machine, tileinfo, tile_index, 0, 0, state->m_gfx_bank[0] & 0x0f);
+	pteacher_info(machine(), tileinfo, tile_index, 0, 0, m_gfx_bank[0] & 0x0f);
 }
 
-static TILE_GET_INFO( pteacher_get_info1_0 )
+TILE_GET_INFO_MEMBER(homedata_state::pteacher_get_info1_0)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	pteacher_info(machine, tileinfo, tile_index, 1, 0, state->m_gfx_bank[0] & 0x0f);
+	pteacher_info(machine(), tileinfo, tile_index, 1, 0, m_gfx_bank[0] & 0x0f);
 }
 
-static TILE_GET_INFO( pteacher_get_info0_1 )
+TILE_GET_INFO_MEMBER(homedata_state::pteacher_get_info0_1)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	pteacher_info(machine, tileinfo, tile_index, 0, 1, state->m_gfx_bank[0] >> 4);
+	pteacher_info(machine(), tileinfo, tile_index, 0, 1, m_gfx_bank[0] >> 4);
 }
 
-static TILE_GET_INFO( pteacher_get_info1_1 )
+TILE_GET_INFO_MEMBER(homedata_state::pteacher_get_info1_1)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	pteacher_info(machine, tileinfo, tile_index, 1, 1, state->m_gfx_bank[0] >> 4);
+	pteacher_info(machine(), tileinfo, tile_index, 1, 1, m_gfx_bank[0] >> 4);
 }
 
 
@@ -568,29 +552,25 @@ INLINE void lemnangl_info( running_machine &machine, tile_data &tileinfo, int ti
 	SET_TILE_INFO(2 * layer + gfxset, code, color, state->m_flipscreen);
 }
 
-static TILE_GET_INFO( lemnangl_get_info0_0 )
+TILE_GET_INFO_MEMBER(homedata_state::lemnangl_get_info0_0)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	lemnangl_info( machine, tileinfo, tile_index, 0, 0,  state->m_blitter_bank & 1, state->m_gfx_bank[0] & 0x0f );
+	lemnangl_info( machine(), tileinfo, tile_index, 0, 0,  m_blitter_bank & 1, m_gfx_bank[0] & 0x0f );
 }
 
-static TILE_GET_INFO( lemnangl_get_info1_0 )
+TILE_GET_INFO_MEMBER(homedata_state::lemnangl_get_info1_0)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	lemnangl_info( machine, tileinfo, tile_index, 1, 0,  state->m_blitter_bank & 1, state->m_gfx_bank[0] & 0x0f );
+	lemnangl_info( machine(), tileinfo, tile_index, 1, 0,  m_blitter_bank & 1, m_gfx_bank[0] & 0x0f );
 }
 
 
-static TILE_GET_INFO( lemnangl_get_info0_1 )
+TILE_GET_INFO_MEMBER(homedata_state::lemnangl_get_info0_1)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	lemnangl_info( machine, tileinfo, tile_index, 0, 1, (state->m_blitter_bank & 2) >> 1, state->m_gfx_bank[0] >> 4 );
+	lemnangl_info( machine(), tileinfo, tile_index, 0, 1, (m_blitter_bank & 2) >> 1, m_gfx_bank[0] >> 4 );
 }
 
-static TILE_GET_INFO( lemnangl_get_info1_1 )
+TILE_GET_INFO_MEMBER(homedata_state::lemnangl_get_info1_1)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	lemnangl_info( machine, tileinfo, tile_index, 1, 1, (state->m_blitter_bank & 2) >> 1, state->m_gfx_bank[0] >> 4 );
+	lemnangl_info( machine(), tileinfo, tile_index, 1, 1, (m_blitter_bank & 2) >> 1, m_gfx_bank[0] >> 4 );
 }
 
 
@@ -615,28 +595,24 @@ INLINE void mirderby_info1( running_machine &machine, tile_data &tileinfo, int t
 	SET_TILE_INFO( 1, code, color, state->m_flipscreen );
 }
 
-static TILE_GET_INFO( mirderby_get_info0_0 )
+TILE_GET_INFO_MEMBER(homedata_state::mirderby_get_info0_0)
 {
-//  homedata_state *state = machine.driver_data<homedata_state>();
-	mirderby_info0( machine, tileinfo, tile_index, 0, 0);// state->m_blitter_bank & 0x03 );
+	mirderby_info0( machine(), tileinfo, tile_index, 0, 0);// m_blitter_bank & 0x03 );
 }
 
-static TILE_GET_INFO( mirderby_get_info1_0 )
+TILE_GET_INFO_MEMBER(homedata_state::mirderby_get_info1_0)
 {
-//  homedata_state *state = machine.driver_data<homedata_state>();
-	mirderby_info0( machine, tileinfo, tile_index, 1, 0);// state->m_blitter_bank & 0x03 );
+	mirderby_info0( machine(), tileinfo, tile_index, 1, 0);// m_blitter_bank & 0x03 );
 }
 
-static TILE_GET_INFO( mirderby_get_info0_1 )
+TILE_GET_INFO_MEMBER(homedata_state::mirderby_get_info0_1)
 {
-//  homedata_state *state = machine.driver_data<homedata_state>();
-	mirderby_info1( machine, tileinfo, tile_index, 0, 0);//(state->m_blitter_bank & 0x38) >> 3 );
+	mirderby_info1( machine(), tileinfo, tile_index, 0, 0);//(m_blitter_bank & 0x38) >> 3 );
 }
 
-static TILE_GET_INFO( mirderby_get_info1_1 )
+TILE_GET_INFO_MEMBER(homedata_state::mirderby_get_info1_1)
 {
-//  homedata_state *state = machine.driver_data<homedata_state>();
-	mirderby_info1( machine, tileinfo, tile_index, 1, 0);//(state->m_blitter_bank & 0x38) >> 3 );
+	mirderby_info1( machine(), tileinfo, tile_index, 1, 0);//(m_blitter_bank & 0x38) >> 3 );
 }
 
 
@@ -647,74 +623,69 @@ static TILE_GET_INFO( mirderby_get_info1_1 )
 
 ***************************************************************************/
 
-VIDEO_START( mrokumei )
+VIDEO_START_MEMBER(homedata_state,mrokumei)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	state->m_bg_tilemap[0][0] = tilemap_create( machine, mrokumei_get_info0_0, tilemap_scan_rows, 8, 8, 64, 32 );
-	state->m_bg_tilemap[0][1] = tilemap_create( machine, mrokumei_get_info0_1, tilemap_scan_rows, 8, 8, 64, 32 );
-	state->m_bg_tilemap[1][0] = tilemap_create( machine, mrokumei_get_info1_0, tilemap_scan_rows, 8, 8, 64, 32 );
-	state->m_bg_tilemap[1][1] = tilemap_create( machine, mrokumei_get_info1_1, tilemap_scan_rows, 8, 8, 64, 32 );
+	m_bg_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::mrokumei_get_info0_0),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32 );
+	m_bg_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::mrokumei_get_info0_1),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32 );
+	m_bg_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::mrokumei_get_info1_0),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32 );
+	m_bg_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::mrokumei_get_info1_1),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32 );
 
-	state->m_bg_tilemap[0][1]->set_transparent_pen(0);
-	state->m_bg_tilemap[1][1]->set_transparent_pen(0);
+	m_bg_tilemap[0][1]->set_transparent_pen(0);
+	m_bg_tilemap[1][1]->set_transparent_pen(0);
 }
 
-VIDEO_START( reikaids )
+VIDEO_START_MEMBER(homedata_state,reikaids)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	state->m_bg_tilemap[0][0] = tilemap_create(machine, reikaids_get_info0_0, tilemap_scan_rows,  8, 8, 32, 32);
-	state->m_bg_tilemap[0][1] = tilemap_create(machine, reikaids_get_info0_1, tilemap_scan_rows,  8, 8, 32, 32);
-	state->m_bg_tilemap[0][2] = tilemap_create(machine, reikaids_get_info0_2, tilemap_scan_rows,  8, 8, 32, 32);
-	state->m_bg_tilemap[0][3] = tilemap_create(machine, reikaids_get_info0_3, tilemap_scan_rows,  8, 8, 32, 32);
-	state->m_bg_tilemap[1][0] = tilemap_create(machine, reikaids_get_info1_0, tilemap_scan_rows,  8, 8, 32, 32);
-	state->m_bg_tilemap[1][1] = tilemap_create(machine, reikaids_get_info1_1, tilemap_scan_rows,  8, 8, 32, 32);
-	state->m_bg_tilemap[1][2] = tilemap_create(machine, reikaids_get_info1_2, tilemap_scan_rows,  8, 8, 32, 32);
-	state->m_bg_tilemap[1][3] = tilemap_create(machine, reikaids_get_info1_3, tilemap_scan_rows,  8, 8, 32, 32);
+	m_bg_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::reikaids_get_info0_0),this), TILEMAP_SCAN_ROWS,  8, 8, 32, 32);
+	m_bg_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::reikaids_get_info0_1),this), TILEMAP_SCAN_ROWS,  8, 8, 32, 32);
+	m_bg_tilemap[0][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::reikaids_get_info0_2),this), TILEMAP_SCAN_ROWS,  8, 8, 32, 32);
+	m_bg_tilemap[0][3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::reikaids_get_info0_3),this), TILEMAP_SCAN_ROWS,  8, 8, 32, 32);
+	m_bg_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::reikaids_get_info1_0),this), TILEMAP_SCAN_ROWS,  8, 8, 32, 32);
+	m_bg_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::reikaids_get_info1_1),this), TILEMAP_SCAN_ROWS,  8, 8, 32, 32);
+	m_bg_tilemap[1][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::reikaids_get_info1_2),this), TILEMAP_SCAN_ROWS,  8, 8, 32, 32);
+	m_bg_tilemap[1][3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::reikaids_get_info1_3),this), TILEMAP_SCAN_ROWS,  8, 8, 32, 32);
 
-	state->m_bg_tilemap[0][0]->set_transparent_pen(0xff);
-	state->m_bg_tilemap[0][1]->set_transparent_pen(0xff);
-	state->m_bg_tilemap[0][2]->set_transparent_pen(0xff);
-	state->m_bg_tilemap[0][3]->set_transparent_pen(0xff);
-	state->m_bg_tilemap[1][0]->set_transparent_pen(0xff);
-	state->m_bg_tilemap[1][1]->set_transparent_pen(0xff);
-	state->m_bg_tilemap[1][2]->set_transparent_pen(0xff);
-	state->m_bg_tilemap[1][3]->set_transparent_pen(0xff);
+	m_bg_tilemap[0][0]->set_transparent_pen(0xff);
+	m_bg_tilemap[0][1]->set_transparent_pen(0xff);
+	m_bg_tilemap[0][2]->set_transparent_pen(0xff);
+	m_bg_tilemap[0][3]->set_transparent_pen(0xff);
+	m_bg_tilemap[1][0]->set_transparent_pen(0xff);
+	m_bg_tilemap[1][1]->set_transparent_pen(0xff);
+	m_bg_tilemap[1][2]->set_transparent_pen(0xff);
+	m_bg_tilemap[1][3]->set_transparent_pen(0xff);
 }
 
-VIDEO_START( pteacher )
+VIDEO_START_MEMBER(homedata_state,pteacher)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	state->m_bg_tilemap[0][0] = tilemap_create(machine, pteacher_get_info0_0, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_bg_tilemap[0][1] = tilemap_create(machine, pteacher_get_info0_1, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_bg_tilemap[1][0] = tilemap_create(machine, pteacher_get_info1_0, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_bg_tilemap[1][1] = tilemap_create(machine, pteacher_get_info1_1, tilemap_scan_rows, 8, 8, 64, 32);
+	m_bg_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::pteacher_get_info0_0),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_bg_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::pteacher_get_info0_1),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_bg_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::pteacher_get_info1_0),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_bg_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::pteacher_get_info1_1),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 
-	state->m_bg_tilemap[0][1]->set_transparent_pen(0xff);
-	state->m_bg_tilemap[1][1]->set_transparent_pen(0xff);
+	m_bg_tilemap[0][1]->set_transparent_pen(0xff);
+	m_bg_tilemap[1][1]->set_transparent_pen(0xff);
 }
 
-VIDEO_START( lemnangl )
+VIDEO_START_MEMBER(homedata_state,lemnangl)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	state->m_bg_tilemap[0][0] = tilemap_create(machine, lemnangl_get_info0_0, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_bg_tilemap[0][1] = tilemap_create(machine, lemnangl_get_info0_1, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_bg_tilemap[1][0] = tilemap_create(machine, lemnangl_get_info1_0, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_bg_tilemap[1][1] = tilemap_create(machine, lemnangl_get_info1_1, tilemap_scan_rows, 8, 8, 64, 32);
+	m_bg_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::lemnangl_get_info0_0),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_bg_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::lemnangl_get_info0_1),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_bg_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::lemnangl_get_info1_0),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_bg_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::lemnangl_get_info1_1),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 
-	state->m_bg_tilemap[0][1]->set_transparent_pen(0x0f);
-	state->m_bg_tilemap[1][1]->set_transparent_pen(0x0f);
+	m_bg_tilemap[0][1]->set_transparent_pen(0x0f);
+	m_bg_tilemap[1][1]->set_transparent_pen(0x0f);
 }
 
-VIDEO_START( mirderby )
+VIDEO_START_MEMBER(homedata_state,mirderby)
 {
-	homedata_state *state = machine.driver_data<homedata_state>();
-	state->m_bg_tilemap[0][0] = tilemap_create( machine, mirderby_get_info0_0, tilemap_scan_rows, 8, 8, 64, 32 );
-	state->m_bg_tilemap[0][1] = tilemap_create( machine, mirderby_get_info0_1, tilemap_scan_rows, 8, 8, 64, 32 );
-	state->m_bg_tilemap[1][0] = tilemap_create( machine, mirderby_get_info1_0, tilemap_scan_rows, 8, 8, 64, 32 );
-	state->m_bg_tilemap[1][1] = tilemap_create( machine, mirderby_get_info1_1, tilemap_scan_rows, 8, 8, 64, 32 );
+	m_bg_tilemap[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::mirderby_get_info0_0),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32 );
+	m_bg_tilemap[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::mirderby_get_info0_1),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32 );
+	m_bg_tilemap[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::mirderby_get_info1_0),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32 );
+	m_bg_tilemap[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(homedata_state::mirderby_get_info1_1),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32 );
 
-	state->m_bg_tilemap[0][1]->set_transparent_pen(0);
-	state->m_bg_tilemap[1][1]->set_transparent_pen(0);
+	m_bg_tilemap[0][1]->set_transparent_pen(0);
+	m_bg_tilemap[1][1]->set_transparent_pen(0);
 }
 
 /***************************************************************************
@@ -738,7 +709,7 @@ WRITE8_MEMBER(homedata_state::reikaids_videoram_w)
 
 WRITE8_MEMBER(homedata_state::reikaids_gfx_bank_w)
 {
-//logerror( "%04x: [setbank %02x]\n",cpu_get_pc(&space.device()),data);
+//logerror( "%04x: [setbank %02x]\n",space.device().safe_pc(),data);
 
 	if (m_gfx_bank[m_reikaids_which] != data)
 	{
@@ -751,7 +722,7 @@ WRITE8_MEMBER(homedata_state::reikaids_gfx_bank_w)
 
 WRITE8_MEMBER(homedata_state::pteacher_gfx_bank_w)
 {
-//  logerror("%04x: gfxbank:=%02x\n", cpu_get_pc(&space.device()), data);
+//  logerror("%04x: gfxbank:=%02x\n", space.device().safe_pc(), data);
 	if (m_gfx_bank[0] != data)
 	{
 		m_gfx_bank[0] = data;
@@ -761,7 +732,7 @@ WRITE8_MEMBER(homedata_state::pteacher_gfx_bank_w)
 
 WRITE8_MEMBER(homedata_state::homedata_blitter_param_w)
 {
-//logerror("%04x: blitter_param_w %02x\n", cpu_get_pc(&space.device()), data);
+//logerror("%04x: blitter_param_w %02x\n", space.device().safe_pc(), data);
 	m_blitter_param[m_blitter_param_count] = data;
 	m_blitter_param_count++;
 	m_blitter_param_count &= 3;

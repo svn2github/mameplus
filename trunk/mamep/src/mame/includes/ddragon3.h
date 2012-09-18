@@ -34,14 +34,19 @@ public:
 	UINT16          m_io_reg[8];
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE16_MEMBER(ddragon3_io_w);
 	DECLARE_WRITE16_MEMBER(ddragon3_scroll_w);
 	DECLARE_READ16_MEMBER(ddragon3_scroll_r);
 	DECLARE_WRITE16_MEMBER(ddragon3_bg_videoram_w);
 	DECLARE_WRITE16_MEMBER(ddragon3_fg_videoram_w);
 	DECLARE_WRITE8_MEMBER(oki_bankswitch_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 

@@ -191,9 +191,6 @@ Notes:
 #include "includes/pgm.h"
 
 
-UINT16 *pgm_mainram;
-
-
 READ16_MEMBER(pgm_state::pgm_videoram_r)
 {
 
@@ -224,7 +221,7 @@ READ16_MEMBER(pgm_state::z80_ram_r)
 
 WRITE16_MEMBER(pgm_state::z80_ram_w)
 {
-	int pc = cpu_get_pc(&space.device());
+	int pc = space.device().safe_pc();
 
 	if (ACCESSING_BITS_8_15)
 		m_z80_mainram[offset * 2] = data >> 8;
@@ -233,20 +230,20 @@ WRITE16_MEMBER(pgm_state::z80_ram_w)
 
 	if (pc != 0xf12 && pc != 0xde2 && pc != 0x100c50 && pc != 0x100b20)
 		if (PGMLOGERROR)
-			logerror("Z80: write %04x, %04x @ %04x (%06x)\n", offset * 2, data, mem_mask, cpu_get_pc(&space.device()));
+			logerror("Z80: write %04x, %04x @ %04x (%06x)\n", offset * 2, data, mem_mask, space.device().safe_pc());
 }
 
 WRITE16_MEMBER(pgm_state::z80_reset_w)
 {
 
 	if (PGMLOGERROR)
-		logerror("Z80: reset %04x @ %04x (%06x)\n", data, mem_mask, cpu_get_pc(&space.device()));
+		logerror("Z80: reset %04x @ %04x (%06x)\n", data, mem_mask, space.device().safe_pc());
 
 	if (data == 0x5050)
 	{
 		m_ics->reset();
-		device_set_input_line(m_soundcpu, INPUT_LINE_HALT, CLEAR_LINE);
-		device_set_input_line(m_soundcpu, INPUT_LINE_RESET, PULSE_LINE);
+		m_soundcpu->set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
+		m_soundcpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 		if(0)
 		{
 			FILE *out;
@@ -259,14 +256,14 @@ WRITE16_MEMBER(pgm_state::z80_reset_w)
 	{
 		/* this might not be 100% correct, but several of the games (ddp2, puzzli2 etc. expect the z80 to be turned
            off during data uploads, they write here before the upload */
-		device_set_input_line(m_soundcpu, INPUT_LINE_HALT, ASSERT_LINE);
+		m_soundcpu->set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 	}
 }
 
 WRITE16_MEMBER(pgm_state::z80_ctrl_w)
 {
 	if (PGMLOGERROR)
-		logerror("Z80: ctrl %04x @ %04x (%06x)\n", data, mem_mask, cpu_get_pc(&space.device()));
+		logerror("Z80: ctrl %04x @ %04x (%06x)\n", data, mem_mask, space.device().safe_pc());
 }
 
 WRITE16_MEMBER(pgm_state::m68k_l1_w)
@@ -275,23 +272,23 @@ WRITE16_MEMBER(pgm_state::m68k_l1_w)
 	if(ACCESSING_BITS_0_7)
 	{
 		if (PGMLOGERROR)
-			logerror("SL 1 m68.w %02x (%06x) IRQ\n", data & 0xff, cpu_get_pc(&space.device()));
+			logerror("SL 1 m68.w %02x (%06x) IRQ\n", data & 0xff, space.device().safe_pc());
 		soundlatch_byte_w(space, 0, data);
-		device_set_input_line(m_soundcpu, INPUT_LINE_NMI, PULSE_LINE );
+		m_soundcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE );
 	}
 }
 
 WRITE8_MEMBER(pgm_state::z80_l3_w)
 {
 	if (PGMLOGERROR)
-		logerror("SL 3 z80.w %02x (%04x)\n", data, cpu_get_pc(&space.device()));
+		logerror("SL 3 z80.w %02x (%04x)\n", data, space.device().safe_pc());
 	soundlatch3_byte_w(space, 0, data);
 }
 
 void pgm_sound_irq( device_t *device, int level )
 {
 	pgm_state *state = device->machine().driver_data<pgm_state>();
-	device_set_input_line(state->m_soundcpu, 0, level);
+	state->m_soundcpu->set_input_line(0, level);
 }
 
 /*static const ics2115_interface pgm_ics2115_interface =
@@ -320,7 +317,7 @@ ADDRESS_MAP_END
 ADDRESS_MAP_START( pgm_base_mem, AS_PROGRAM, 16, pgm_state )
 	AM_RANGE(0x700006, 0x700007) AM_WRITENOP // Watchdog?
 
-	AM_RANGE(0x800000, 0x81ffff) AM_RAM AM_MIRROR(0x0e0000) AM_BASE_LEGACY(&pgm_mainram) AM_SHARE("sram") /* Main Ram */
+	AM_RANGE(0x800000, 0x81ffff) AM_RAM AM_MIRROR(0x0e0000) AM_SHARE("sram") /* Main Ram */
 
 	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_READWRITE(pgm_videoram_r, pgm_videoram_w) AM_SHARE("videoram") /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram_xRRRRRGGGGGBBBBB_word_w) AM_SHARE("paletteram")
@@ -497,26 +494,25 @@ TIMER_DEVICE_CALLBACK( pgm_interrupt )
 	int scanline = param;
 
 	if(scanline == 224)
-		device_set_input_line(state->m_maincpu, 6, HOLD_LINE);
+		state->m_maincpu->set_input_line(6, HOLD_LINE);
 
 	if(scanline == 0)
-		if (!state->m_irq4_disabled) device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		if (!state->m_irq4_disabled) state->m_maincpu->set_input_line(4, HOLD_LINE);
 }
 
-MACHINE_START( pgm )
+MACHINE_START_MEMBER(pgm_state,pgm)
 {
-	pgm_state *state = machine.driver_data<pgm_state>();
 
-//  machine.base_datetime(state->m_systime);
+//  machine().base_datetime(m_systime);
 
-	state->m_maincpu = machine.device<cpu_device>("maincpu");
-	state->m_soundcpu = machine.device<cpu_device>("soundcpu");
-	state->m_ics = machine.device("ics");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_soundcpu = machine().device<cpu_device>("soundcpu");
+	m_ics = machine().device("ics");
 }
 
-MACHINE_RESET( pgm )
+MACHINE_RESET_MEMBER(pgm_state,pgm)
 {
-	cputag_set_input_line(machine, "soundcpu", INPUT_LINE_HALT, ASSERT_LINE);
+	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 }
 
 
@@ -531,8 +527,8 @@ MACHINE_CONFIG_FRAGMENT( pgmbase )
 	MCFG_CPU_PROGRAM_MAP(pgm_z80_mem)
 	MCFG_CPU_IO_MAP(pgm_z80_io)
 
-	MCFG_MACHINE_START( pgm )
-	MCFG_MACHINE_RESET( pgm )
+	MCFG_MACHINE_START_OVERRIDE(pgm_state, pgm )
+	MCFG_MACHINE_RESET_OVERRIDE(pgm_state, pgm )
 	MCFG_NVRAM_ADD_0FILL("sram")
 
 	MCFG_V3021_ADD("rtc")
@@ -549,7 +545,7 @@ MACHINE_CONFIG_FRAGMENT( pgmbase )
 	MCFG_GFXDECODE(pgm)
 	MCFG_PALETTE_LENGTH(0x1200/2)
 
-	MCFG_VIDEO_START(pgm)
+	MCFG_VIDEO_START_OVERRIDE(pgm_state,pgm)
 
 	/*sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3602,7 +3598,7 @@ static void expand_32x32x5bpp(running_machine &machine)
 
 	glcopy.total = (gfx2_size_needed / glcopy.charincrement)*8;
 
-	machine.gfx[1] = gfx_element_alloc(machine, &glcopy, (UINT8 *)dst, 32, 0x400);
+	machine.gfx[1] = auto_alloc(machine, gfx_element(machine, glcopy, (UINT8 *)dst, 32, 0x400));
 
 
 }

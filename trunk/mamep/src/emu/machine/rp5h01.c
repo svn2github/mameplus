@@ -2,6 +2,9 @@
 
     RP5H01
 
+    TODO:
+    - convert to modern and follow the datasheet better (all dumps
+      presumably needs to be redone from scratch?)
 
     2009-06 Converted to be a device
 
@@ -26,8 +29,7 @@ enum {
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _rp5h01_state rp5h01_state;
-struct _rp5h01_state
+struct rp5h01_state
 {
 	int counter;
 	int counter_mode;	/* test pin */
@@ -45,7 +47,7 @@ INLINE rp5h01_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert((device->type() == RP5H01));
-	return (rp5h01_state *)downcast<legacy_device_base *>(device)->token();
+	return (rp5h01_state *)downcast<rp5h01_device *>(device)->token();
 }
 
 /***************************************************************************
@@ -86,6 +88,25 @@ WRITE8_DEVICE_HANDLER( rp5h01_reset_w )
 
 	/* update the pin */
 	rp5h01->old_reset = newstate;
+}
+
+/*-------------------------------------------------
+    rp5h01_cs_w
+-------------------------------------------------*/
+
+WRITE8_DEVICE_HANDLER( rp5h01_cs_w )
+{
+	rp5h01_state *rp5h01 = get_safe_token(device);
+
+	/* if it's not enabled, ignore */
+	if (!rp5h01->enabled)
+		return;
+
+	if (data == 1)
+	{
+		/* reset the counter */
+		rp5h01->counter = 0;
+	}
 }
 
 /*-------------------------------------------------
@@ -200,17 +221,40 @@ static DEVICE_RESET( rp5h01 )
 	rp5h01->old_clock = -1;
 }
 
-/*-------------------------------------------------
-    device definition
--------------------------------------------------*/
+const device_type RP5H01 = &device_creator<rp5h01_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+rp5h01_device::rp5h01_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, RP5H01, "RP5H01", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(rp5h01_state));
+}
 
-#define DEVTEMPLATE_ID(p,s)		p##rp5h01##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME		"RP5H01"
-#define DEVTEMPLATE_FAMILY		"RP5H01"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void rp5h01_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void rp5h01_device::device_start()
+{
+	DEVICE_START_NAME( rp5h01 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void rp5h01_device::device_reset()
+{
+	DEVICE_RESET_NAME( rp5h01 )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(RP5H01, rp5h01);

@@ -387,25 +387,6 @@ UINT64 device_execute_interface::total_cycles() const
 
 
 //-------------------------------------------------
-//  run_thread_wrapper - wrapper for our cothread
-//  which just calls run and then returns to the
-//  scheduler thread, over and over
-//-------------------------------------------------
-/*
-void device_execute_interface::run_thread_wrapper()
-{
-    // loop infinitely
-    device_scheduler &scheduler = device().machine().scheduler();
-    while (1)
-    {
-        // call the classic run function, then swap back to the scheduler's thread
-        execute_run();
-        scheduler.make_active();
-    }
-}
-*/
-
-//-------------------------------------------------
 //  execute_clocks_to_cycles - convert the number
 //  of clocks to cycles, rounding down if necessary
 //-------------------------------------------------
@@ -662,7 +643,7 @@ void device_execute_interface::interface_clock_changed()
 
 IRQ_CALLBACK( device_execute_interface::static_standard_irq_callback )
 {
-	return device_execute(device)->standard_irq_callback(irqline);
+	return device->execute().standard_irq_callback(irqline);
 }
 
 int device_execute_interface::standard_irq_callback(int irqline)

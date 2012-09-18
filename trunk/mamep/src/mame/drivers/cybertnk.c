@@ -178,7 +178,7 @@ class cybertnk_state : public driver_device
 {
 public:
 	cybertnk_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: driver_device(mconfig, type, tag),
 		m_spr_ram(*this, "spr_ram"),
 		m_tilemap0_vram(*this, "tilemap0_vram"),
 		m_tilemap1_vram(*this, "tilemap1_vram"),
@@ -186,7 +186,8 @@ public:
 		m_tilemap0scroll(*this, "tilemap1_scroll"),
 		m_tilemap1scroll(*this, "tilemap1_scroll"),
 		m_tilemap2scroll(*this, "tilemap2_scroll"),
-		m_roadram(*this, "roadram"){ }
+		m_roadram(*this, "roadram")
+	{ }
 
 	tilemap_t *m_tilemap0_tilemap;
 	tilemap_t *m_tilemap1_tilemap;
@@ -214,6 +215,10 @@ public:
 	DECLARE_WRITE8_MEMBER(cybertnk_irq_ack_w);
 	DECLARE_WRITE8_MEMBER(cybertnk_cnt_w);
 	DECLARE_DRIVER_INIT(cybertnk);
+	TILE_GET_INFO_MEMBER(get_tilemap0_tile_info);
+	TILE_GET_INFO_MEMBER(get_tilemap1_tile_info);
+	TILE_GET_INFO_MEMBER(get_tilemap2_tile_info);
+	virtual void video_start();
 };
 
 /* tile format
@@ -227,59 +232,55 @@ public:
 
 */
 
-static TILE_GET_INFO( get_tilemap0_tile_info )
+TILE_GET_INFO_MEMBER(cybertnk_state::get_tilemap0_tile_info)
 {
-	cybertnk_state *state = machine.driver_data<cybertnk_state>();
-	int code = state->m_tilemap0_vram[tile_index];
+	int code = m_tilemap0_vram[tile_index];
 	int pal = (code & 0xe000) >> 13;
 	pal     |=(code & 0x1c00) >> 7;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code & 0x1fff,
 			pal,
 			0);
 }
 
-static TILE_GET_INFO( get_tilemap1_tile_info )
+TILE_GET_INFO_MEMBER(cybertnk_state::get_tilemap1_tile_info)
 {
-	cybertnk_state *state = machine.driver_data<cybertnk_state>();
-	int code = state->m_tilemap1_vram[tile_index];
+	int code = m_tilemap1_vram[tile_index];
 	int pal = (code & 0xe000) >> 13;
 	pal     |=(code & 0x1c00) >> 7;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code & 0x1fff,
 			pal,
 			0);
 }
 
-static TILE_GET_INFO( get_tilemap2_tile_info )
+TILE_GET_INFO_MEMBER(cybertnk_state::get_tilemap2_tile_info)
 {
-	cybertnk_state *state = machine.driver_data<cybertnk_state>();
-	int code = state->m_tilemap2_vram[tile_index];
+	int code = m_tilemap2_vram[tile_index];
 	int pal = (code & 0xe000) >> 13;
 	pal     |=(code & 0x1c00) >> 7;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			2,
 			code & 0x1fff,
 			pal,
 			0);
 }
 
-static VIDEO_START( cybertnk )
+void cybertnk_state::video_start()
 {
-	cybertnk_state *state = machine.driver_data<cybertnk_state>();
-	state->m_tilemap0_tilemap = tilemap_create(machine, get_tilemap0_tile_info,tilemap_scan_rows,8,8,128,32);
-	state->m_tilemap0_tilemap->set_transparent_pen(0);
+	m_tilemap0_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cybertnk_state::get_tilemap0_tile_info),this),TILEMAP_SCAN_ROWS,8,8,128,32);
+	m_tilemap0_tilemap->set_transparent_pen(0);
 
-	state->m_tilemap1_tilemap = tilemap_create(machine, get_tilemap1_tile_info,tilemap_scan_rows,8,8,128,32);
-	state->m_tilemap1_tilemap->set_transparent_pen(0);
+	m_tilemap1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cybertnk_state::get_tilemap1_tile_info),this),TILEMAP_SCAN_ROWS,8,8,128,32);
+	m_tilemap1_tilemap->set_transparent_pen(0);
 
-	state->m_tilemap2_tilemap = tilemap_create(machine, get_tilemap2_tile_info,tilemap_scan_rows,8,8,128,32);
-	state->m_tilemap2_tilemap->set_transparent_pen(0);
+	m_tilemap2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cybertnk_state::get_tilemap2_tile_info),this),TILEMAP_SCAN_ROWS,8,8,128,32);
+	m_tilemap2_tilemap->set_transparent_pen(0);
 }
 
 
@@ -288,7 +289,7 @@ static void draw_road(screen_device &screen, bitmap_ind16 &bitmap, const rectang
 {
 	cybertnk_state *state = screen.machine().driver_data<cybertnk_state>();
 	int i;
-	const gfx_element *gfx = screen.machine().gfx[3];
+	gfx_element *gfx = screen.machine().gfx[3];
 
 
 	for (i=0;i<0x1000/4;i+=4)
@@ -330,8 +331,9 @@ static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rect
 
     Z = zoom   * = alt zoom? (ok for roadside, but 00 for player tank etc?)
     C = colour
+    E = sprite enabled
                             +word offset
-     CCCC CCCC #### @ooo   0x0  # bits are often set too? @ is set at the very end of spriteram
+     CCCC CCCC #### Eooo   0x0  # bits are often set too?
      oooo oooo oooo oooo   0x1
      ---- ---- ---y yyyy   0x2
      ---- ---- ---- ----   0x3 (always has a value here, gets set to FFFF on some cleared sprites?)
@@ -422,16 +424,11 @@ static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rect
 
 						if (dot != 0)
 						{
-							//dot|= col_bank<<4;
-
 							int xx = (x+xz)+screen_shift;
 							if ((xx>=minx) && (xx<=maxx))
 							{
-								//if (dot != 0xe)
-									dest[xx] = paldata[col_bank << 4 | dot];
+								dest[xx] = paldata[col_bank << 4 | dot];
 							}
-
-							//CYBERTNK_DRAWPIXEL
 						}
 						xf+=zoom;
 						if(xf >= 0x100)
@@ -464,10 +461,6 @@ static void draw_sprites(screen_device &screen, bitmap_ind16 &bitmap, const rect
 			}
 		}
 	}
-
-//  if (state->m_spr_ram[0xff0/2] == 0x0008)
-//      memset(state->m_spr_ram, 0x00, 0xff0);
-
 }
 
 
@@ -538,7 +531,7 @@ WRITE8_MEMBER( cybertnk_state::cybertnk_sound_cmd_w )
 	else if (offset == 1)
 	{
 		soundlatch_byte_w(space, offset, data & 0xff);
-		cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
+		machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
 	}
 }
 
@@ -566,7 +559,7 @@ READ8_MEMBER( cybertnk_state::cybertnk_io_rdy_r )
 READ8_MEMBER( cybertnk_state::cybertnk_mux_r )
 {
 	const char *const innames[] = { "TRAVERSE", "ELEVATE", "ACCEL", "HANDLE" };
-	return ioport(innames[(m_mux_data & 0x60) >> 5])->read();;
+	return ioport(innames[(m_mux_data & 0x60) >> 5])->read();
 }
 
 /* Amusingly the data written here is pretty weird, it seems suited for an unused protection device (attract = coin count, in-game = return status of some inputs) */
@@ -579,7 +572,7 @@ WRITE8_MEMBER( cybertnk_state::cybertnk_irq_ack_w )
 	}
 	else if (offset == 1)
 	{
-		cputag_set_input_line(machine(), "maincpu", 1, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(1, CLEAR_LINE);
 	}
 }
 
@@ -865,7 +858,6 @@ static MACHINE_CONFIG_START( cybertnk, cybertnk_state )
 	MCFG_GFXDECODE(cybertnk)
 	MCFG_PALETTE_LENGTH(0x4000)
 
-	MCFG_VIDEO_START(cybertnk)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

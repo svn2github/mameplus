@@ -21,7 +21,7 @@ static void set_pens(starshp1_state *state, colortable_t *colortable)
 }
 
 
-PALETTE_INIT( starshp1 )
+void starshp1_state::palette_init()
 {
 	int i;
 
@@ -38,36 +38,34 @@ PALETTE_INIT( starshp1 )
 	};
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 8);
+	machine().colortable = colortable_alloc(machine(), 8);
 
 	for (i = 0; i < sizeof(colortable_source) / sizeof(colortable_source[0]); i++)
-		colortable_entry_set_value(machine.colortable, i, colortable_source[i]);
+		colortable_entry_set_value(machine().colortable, i, colortable_source[i]);
 }
 
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(starshp1_state::get_tile_info)
 {
-	starshp1_state *state = machine.driver_data<starshp1_state>();
-	UINT8 code = state->m_playfield_ram[tile_index];
+	UINT8 code = m_playfield_ram[tile_index];
 
-	SET_TILE_INFO(0, code & 0x3f, 0, 0);
+	SET_TILE_INFO_MEMBER(0, code & 0x3f, 0, 0);
 }
 
 
-VIDEO_START( starshp1 )
+void starshp1_state::video_start()
 {
-	starshp1_state *state = machine.driver_data<starshp1_state>();
 	UINT16 val = 0;
 
 	int i;
 
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_rows,  16, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(starshp1_state::get_tile_info),this), TILEMAP_SCAN_ROWS,  16, 8, 32, 32);
 
-	state->m_bg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap->set_transparent_pen(0);
 
-	state->m_bg_tilemap->set_scrollx(0, -8);
+	m_bg_tilemap->set_scrollx(0, -8);
 
-	state->m_LSFR = auto_alloc_array(machine, UINT16, 0x10000);
+	m_LSFR = auto_alloc_array(machine(), UINT16, 0x10000);
 
 	for (i = 0; i < 0x10000; i++)
 	{
@@ -76,12 +74,12 @@ VIDEO_START( starshp1 )
 				  (val >> 0x7) ^
 				  (val >> 0x1) ^ 1;
 
-		state->m_LSFR[i] = val;
+		m_LSFR[i] = val;
 
 		val = (val << 1) | (bit & 1);
 	}
 
-	machine.primary_screen->register_screen_bitmap(state->m_helper);
+	machine().primary_screen->register_screen_bitmap(m_helper);
 }
 
 
@@ -393,8 +391,8 @@ SCREEN_VBLANK( starshp1 )
 
 		rect.min_x = get_sprite_hpos(state, 13);
 		rect.min_y = get_sprite_vpos(state, 13);
-		rect.max_x = rect.min_x + screen.machine().gfx[1]->width - 1;
-		rect.max_y = rect.min_y + screen.machine().gfx[1]->height - 1;
+		rect.max_x = rect.min_x + screen.machine().gfx[1]->width() - 1;
+		rect.max_y = rect.min_y + screen.machine().gfx[1]->height() - 1;
 
 		rect &= state->m_helper.cliprect();
 

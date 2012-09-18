@@ -17,8 +17,7 @@
 
 #define BEEP_RATE			48000
 
-typedef struct _beep_state beep_state;
-struct _beep_state
+struct beep_state
 {
 	sound_stream *stream;	/* stream number */
 	int enable; 			/* enable beep */
@@ -32,7 +31,7 @@ INLINE beep_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == BEEP);
-	return (beep_state *)downcast<legacy_device_base *>(device)->token();
+	return (beep_state *)downcast<beep_device *>(device)->token();
 }
 
 
@@ -163,30 +162,42 @@ void beep_set_volume(device_t *device, int volume)
 	downcast<beep_device *>(device)->set_output_gain(0, volume);
 }
 
+const device_type BEEP = &device_creator<beep_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( beep )
+beep_device::beep_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, BEEP, "Beep", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(beep_state);				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(beep_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( beep );	break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Beep");					break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Beep");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");						break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);					break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright The MESS Team"); break;
-	}
+void beep_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void beep_device::device_start()
+{
+	DEVICE_START_NAME( beep )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void beep_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(BEEP, beep);

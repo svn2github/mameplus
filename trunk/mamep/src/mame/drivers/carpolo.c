@@ -223,6 +223,15 @@ static GFXDECODE_START( carpolo )
 	GFXDECODE_ENTRY( "gfx3", 0, alphalayout,  12*2+2*16, 4 )
 GFXDECODE_END
 
+static const ttl74148_config carpolo_ttl74148_intf =
+{
+	carpolo_74148_3s_cb
+};
+
+static const ttl74153_config carpolo_ttl74153_intf =
+{
+	NULL
+};
 
 /*************************************
  *
@@ -238,8 +247,6 @@ static MACHINE_CONFIG_START( carpolo, carpolo_state )
 	MCFG_CPU_VBLANK_INT("screen", carpolo_timer_interrupt)	/* this not strictly VBLANK,
                                                        but it's supposed to happen 60
                                                        times a sec, so it's a good place */
-	MCFG_MACHINE_START(carpolo)
-	MCFG_MACHINE_RESET(carpolo)
 
 	MCFG_PIA6821_ADD("pia0", carpolo_pia0_intf)
 	MCFG_PIA6821_ADD("pia1", carpolo_pia1_intf)
@@ -257,8 +264,8 @@ static MACHINE_CONFIG_START( carpolo, carpolo_state )
 	MCFG_7474_ADD("7474_1a_1", NULL, NULL, NULL)
 	MCFG_7474_ADD("7474_1a_2", NULL, NULL, NULL)
 
-	MCFG_74148_ADD("74148_3s", carpolo_74148_3s_cb)
-	MCFG_74153_ADD("74153_1k", NULL)
+	MCFG_74148_ADD("74148_3s", carpolo_ttl74148_intf)
+	MCFG_74153_ADD("74153_1k", carpolo_ttl74153_intf)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -272,8 +279,6 @@ static MACHINE_CONFIG_START( carpolo, carpolo_state )
 	MCFG_GFXDECODE(carpolo)
 	MCFG_PALETTE_LENGTH(12*2+2*16+4*2)
 
-	MCFG_PALETTE_INIT(carpolo)
-	MCFG_VIDEO_START(carpolo)
 MACHINE_CONFIG_END
 
 

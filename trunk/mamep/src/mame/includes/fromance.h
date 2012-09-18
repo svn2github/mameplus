@@ -50,7 +50,7 @@ public:
 	UINT8    m_sound_command;
 
 	/* devices */
-	device_t *m_subcpu;
+	cpu_device *m_subcpu;
 	DECLARE_READ8_MEMBER(fromance_commanddata_r);
 	DECLARE_WRITE8_MEMBER(fromance_commanddata_w);
 	DECLARE_READ8_MEMBER(fromance_busycheck_main_r);
@@ -72,15 +72,27 @@ public:
 	DECLARE_WRITE8_MEMBER(fromance_adpcm_reset_w);
 	DECLARE_DRIVER_INIT(pipedrm);
 	DECLARE_DRIVER_INIT(hatris);
+	TILE_GET_INFO_MEMBER(get_fromance_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fromance_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_nekkyoku_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_nekkyoku_fg_tile_info);
+	DECLARE_MACHINE_START(fromance);
+	DECLARE_MACHINE_RESET(fromance);
+	DECLARE_VIDEO_START(nekkyoku);
+	DECLARE_VIDEO_START(fromance);
+	DECLARE_MACHINE_START(pipedrm);
+	DECLARE_MACHINE_RESET(pipedrm);
+	DECLARE_VIDEO_START(pipedrm);
+	DECLARE_VIDEO_START(hatris);
 };
 
 
 /*----------- defined in video/fromance.c -----------*/
 
-VIDEO_START( fromance );
-VIDEO_START( nekkyoku );
-VIDEO_START( pipedrm );
-VIDEO_START( hatris );
+
+
+
+
 SCREEN_UPDATE_IND16( fromance );
 SCREEN_UPDATE_IND16( pipedrm );
 

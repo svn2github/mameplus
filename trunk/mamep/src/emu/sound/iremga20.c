@@ -45,8 +45,7 @@ struct IremGA20_channel_def
 	UINT32 play;
 };
 
-typedef struct _ga20_state ga20_state;
-struct _ga20_state
+struct ga20_state
 {
 	UINT8 *rom;
 	INT32 rom_size;
@@ -60,7 +59,7 @@ INLINE ga20_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == IREMGA20);
-	return (ga20_state *)downcast<legacy_device_base *>(device)->token();
+	return (ga20_state *)downcast<iremga20_device *>(device)->token();
 }
 
 
@@ -264,33 +263,51 @@ static DEVICE_START( iremga20 )
 	}
 }
 
+const device_type IREMGA20 = &device_creator<iremga20_device>;
 
-
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( iremga20 )
+iremga20_device::iremga20_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, IREMGA20, "Irem GA20", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(ga20_state);					break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(ga20_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( iremga20 );	break;
-		case DEVINFO_FCT_STOP:							/* nothing */									break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME( iremga20 );	break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Irem GA20");					break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Irem custom");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void iremga20_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void iremga20_device::device_start()
+{
+	DEVICE_START_NAME( iremga20 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void iremga20_device::device_reset()
+{
+	DEVICE_RESET_NAME( iremga20 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void iremga20_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(IREMGA20, iremga20);

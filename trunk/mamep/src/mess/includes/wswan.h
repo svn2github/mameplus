@@ -40,7 +40,7 @@
 #include "machine/nvram.h"
 
 
-typedef struct
+struct EEPROM
 {
 	UINT8	mode;		/* eeprom mode */
 	UINT16	address;	/* Read/write address */
@@ -50,9 +50,9 @@ typedef struct
 	int	size;		/* size of eeprom/sram area */
 	UINT8	*data;		/* pointer to start of sram/eeprom data */
 	UINT8	*page;		/* pointer to current sram/eeprom page */
-} EEPROM;
+};
 
-typedef struct
+struct RTC
 {
 	UINT8	present;	/* Is an RTC present */
 	UINT8	setting;	/* Timer setting byte */
@@ -64,16 +64,16 @@ typedef struct
 	UINT8	minute;		/* Minute */
 	UINT8	second;		/* Second */
 	UINT8	index;		/* index for reading/writing of current of alarm time */
-} RTC;
+};
 
-typedef struct
+struct SoundDMA
 {
 	UINT32	source;		/* Source address */
 	UINT16	size;		/* Size */
 	UINT8	enable;		/* Enabled */
-} SoundDMA;
+};
 
-typedef struct
+struct VDP
 {
 	UINT8 layer_bg_enable;			/* Background layer on/off */
 	UINT8 layer_fg_enable;			/* Foreground layer on/off */
@@ -117,7 +117,7 @@ typedef struct
 	UINT8 *palette_vram;			/* pointer to start of palette area in ram/vram (set by MACHINE_RESET), WSC only */
 	int main_palette[8];
 	emu_timer *timer;
-} VDP;
+};
 
 class wswan_state : public driver_device
 {
@@ -152,14 +152,19 @@ public:
 	bitmap_ind16 m_bitmap;
 	UINT8 m_rotate;
 	void wswan_clear_irq_line(int irq);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void palette_init();
+	DECLARE_MACHINE_START(wscolor);
+	DECLARE_PALETTE_INIT(wscolor);
 };
 
 
 /*----------- defined in machine/wswan.c -----------*/
 
-MACHINE_START( wswan );
-MACHINE_START( wscolor );
-MACHINE_RESET( wswan );
+
+
+
 DEVICE_START(wswan_cart);
 DEVICE_IMAGE_LOAD(wswan_cart);
 
@@ -171,7 +176,29 @@ void wswan_refresh_scanline( running_machine &machine );
 
 /*----------- defined in audio/wswan.c -----------*/
 
-DECLARE_LEGACY_SOUND_DEVICE(WSWAN, wswan_sound);
+class wswan_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	wswan_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~wswan_sound_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type WSWAN;
+
 
 WRITE8_DEVICE_HANDLER( wswan_sound_port_w );
 

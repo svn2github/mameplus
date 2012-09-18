@@ -52,12 +52,12 @@ static INTERRUPT_GEN( galastrm_interrupt )
 {
 	galastrm_state *state = device->machine().driver_data<galastrm_state>();
 	state->m_frame_counter ^= 1;
-	device_set_input_line(device, 5, HOLD_LINE);
+	device->execute().set_input_line(5, HOLD_LINE);
 }
 
 static TIMER_CALLBACK( galastrm_interrupt6 )
 {
-	cputag_set_input_line(machine, "maincpu", 6, HOLD_LINE);
+	machine.device("maincpu")->execute().set_input_line(6, HOLD_LINE);
 }
 
 
@@ -140,7 +140,7 @@ popmessage(t);
 				coin_counter_w(machine(), 1, data & 0x04000000);
 				m_coin_word = (data >> 16) &0xffff;
 			}
-//logerror("CPU #0 PC %06x: write input %06x\n",cpu_get_pc(&device()),offset);
+//logerror("CPU #0 PC %06x: write input %06x\n",device->safe_pc(),offset);
 		}
 	}
 }
@@ -325,7 +325,6 @@ static MACHINE_CONFIG_START( galastrm, galastrm_state )
 	MCFG_GFXDECODE(galastrm)
 	MCFG_PALETTE_LENGTH(4096)
 
-	MCFG_VIDEO_START(galastrm)
 
 	MCFG_TC0100SCN_ADD("tc0100scn", galastrm_tc0100scn_intf)
 	MCFG_TC0480SCP_ADD("tc0480scp", galastrm_tc0480scp_intf)

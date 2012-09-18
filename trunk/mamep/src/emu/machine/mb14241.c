@@ -7,8 +7,7 @@
 #include "emu.h"
 #include "machine/mb14241.h"
 
-typedef struct _mb14241_state  mb14241_state;
-struct _mb14241_state
+struct mb14241_state
 {
 	UINT16 shift_data;	/* 15 bits only */
 	UINT8 shift_count;	/* 3 bits */
@@ -23,7 +22,7 @@ INLINE mb14241_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == MB14241);
 
-	return (mb14241_state *)downcast<legacy_device_base *>(device)->token();
+	return (mb14241_state *)downcast<mb14241_device *>(device)->token();
 }
 
 /*****************************************************************************
@@ -68,13 +67,40 @@ static DEVICE_RESET( mb14241 )
 	mb14241->shift_count = 0;
 }
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+const device_type MB14241 = &device_creator<mb14241_device>;
 
-#define DEVTEMPLATE_ID( p, s )	p##mb14241##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME		"MB14241"
-#define DEVTEMPLATE_FAMILY		"MB14241 Shifter IC"
-#include "devtempl.h"
+mb14241_device::mb14241_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, MB14241, "MB14241", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(mb14241_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void mb14241_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void mb14241_device::device_start()
+{
+	DEVICE_START_NAME( mb14241 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void mb14241_device::device_reset()
+{
+	DEVICE_RESET_NAME( mb14241 )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(MB14241, mb14241);

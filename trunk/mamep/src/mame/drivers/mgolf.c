@@ -27,21 +27,25 @@ public:
 	attotime m_time_released;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_WRITE8_MEMBER(mgolf_vram_w);
 	DECLARE_READ8_MEMBER(mgolf_wram_r);
 	DECLARE_READ8_MEMBER(mgolf_dial_r);
 	DECLARE_READ8_MEMBER(mgolf_misc_r);
 	DECLARE_WRITE8_MEMBER(mgolf_wram_w);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(mgolf_state::get_tile_info)
 {
-	mgolf_state *state = machine.driver_data<mgolf_state>();
-	UINT8 code = state->m_video_ram[tile_index];
+	UINT8 code = m_video_ram[tile_index];
 
-	SET_TILE_INFO(0, code, code >> 7, 0);
+	SET_TILE_INFO_MEMBER(0, code, code >> 7, 0);
 }
 
 
@@ -52,10 +56,9 @@ WRITE8_MEMBER(mgolf_state::mgolf_vram_w)
 }
 
 
-static VIDEO_START( mgolf )
+void mgolf_state::video_start()
 {
-	mgolf_state *state = machine.driver_data<mgolf_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mgolf_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 
@@ -100,7 +103,7 @@ static void update_plunger( running_machine &machine )
 			state->m_time_released = machine.time();
 
 			if (!state->m_mask)
-				device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+				state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 		}
 		else
 			state->m_time_pushed = machine.time();
@@ -255,12 +258,12 @@ static INPUT_PORTS_START( mgolf )
 INPUT_PORTS_END
 
 
-static PALETTE_INIT( mgolf )
+void mgolf_state::palette_init()
 {
-	palette_set_color(machine, 0, MAKE_RGB(0x80, 0x80, 0x80));
-	palette_set_color(machine, 1, MAKE_RGB(0x00, 0x00, 0x00));
-	palette_set_color(machine, 2, MAKE_RGB(0x80, 0x80, 0x80));
-	palette_set_color(machine, 3, MAKE_RGB(0xff, 0xff, 0xff));
+	palette_set_color(machine(), 0, MAKE_RGB(0x80, 0x80, 0x80));
+	palette_set_color(machine(), 1, MAKE_RGB(0x00, 0x00, 0x00));
+	palette_set_color(machine(), 2, MAKE_RGB(0x80, 0x80, 0x80));
+	palette_set_color(machine(), 3, MAKE_RGB(0xff, 0xff, 0xff));
 }
 
 static const gfx_layout tile_layout =
@@ -302,23 +305,21 @@ static GFXDECODE_START( mgolf )
 GFXDECODE_END
 
 
-static MACHINE_START( mgolf )
+void mgolf_state::machine_start()
 {
-	mgolf_state *state = machine.driver_data<mgolf_state>();
 
-	state->m_maincpu = machine.device("maincpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
 
-	state->save_item(NAME(state->m_prev));
-	state->save_item(NAME(state->m_mask));
+	save_item(NAME(m_prev));
+	save_item(NAME(m_mask));
 }
 
-static MACHINE_RESET( mgolf )
+void mgolf_state::machine_reset()
 {
-	mgolf_state *state = machine.driver_data<mgolf_state>();
-	machine.scheduler().timer_set(machine.primary_screen->time_until_pos(16), FUNC(interrupt_callback), 16);
+	machine().scheduler().timer_set(machine().primary_screen->time_until_pos(16), FUNC(interrupt_callback), 16);
 
-	state->m_mask = 0;
-	state->m_prev = 0;
+	m_mask = 0;
+	m_prev = 0;
 }
 
 
@@ -328,8 +329,6 @@ static MACHINE_CONFIG_START( mgolf, mgolf_state )
 	MCFG_CPU_ADD("maincpu", M6502, 12096000 / 16) /* ? */
 	MCFG_CPU_PROGRAM_MAP(cpu_map)
 
-	MCFG_MACHINE_START(mgolf)
-	MCFG_MACHINE_RESET(mgolf)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -341,8 +340,6 @@ static MACHINE_CONFIG_START( mgolf, mgolf_state )
 	MCFG_GFXDECODE(mgolf)
 	MCFG_PALETTE_LENGTH(4)
 
-	MCFG_PALETTE_INIT(mgolf)
-	MCFG_VIDEO_START(mgolf)
 
 	/* sound hardware */
 MACHINE_CONFIG_END

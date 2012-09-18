@@ -1,6 +1,6 @@
 /*
 
-  ES5503 - Ensoniq ES5503 "DOC" emulator v1.0
+  ES5503 - Ensoniq ES5503 "DOC" emulator v2.1.1
   By R. Belmont.
 
   Copyright R. Belmont.
@@ -32,6 +32,8 @@
   0.5 (RB) - more flexible wave memory hookup (incl. banking) and save state support.
   1.0 (RB) - properly respects the input clock
   2.0 (RB) - C++ conversion, more accurate oscillator IRQ timing
+  2.1 (RB) - Corrected phase when looping; synthLAB, Arkanoid, and Arkanoid II no longer go out of tune
+  2.1.1 (RB) - Fixed issue introduced in 2.0 where IRQs were delayed
 */
 
 #include "emu.h"
@@ -109,28 +111,39 @@ void es5503_device::device_timer(emu_timer &timer, device_timer_id tid, int para
 // chip = chip ptr
 // onum = oscillator #
 // type = 1 for 0 found in sample data, 0 for hit end of table size
-void es5503_device::halt_osc(int onum, int type, UINT32 *accumulator)
+void es5503_device::halt_osc(int onum, int type, UINT32 *accumulator, int resshift)
 {
 	ES5503Osc *pOsc = &oscillators[onum];
 	ES5503Osc *pPartner = &oscillators[onum^1];
 	int mode = (pOsc->control>>1) & 3;
 
 	// if 0 found in sample data or mode is not free-run, halt this oscillator
-	if ((type != MODE_FREE) || (mode > 0))
+	if ((mode != MODE_FREE) || (type != 0))
 	{
 		pOsc->control |= 1;
 	}
-	else
+	else    // preserve the relative phase of the oscillator when looping
 	{
-		// reset the accumulator if not halting
-		*accumulator = 0;
+        UINT16 wtsize = pOsc->wtsize - 1;
+        UINT32 altram = (*accumulator) >> resshift;
+
+        if (altram > wtsize)
+        {
+            altram -= wtsize;
+        }
+        else
+        {
+            altram = 0;
+        }
+
+        *accumulator = altram << resshift;
 	}
 
 	// if swap mode, start the partner
 	if (mode == MODE_SWAP)
 	{
 		pPartner->control &= ~1;	// clear the halt bit
-		pPartner->accumulator = 0;	// and make sure it starts from the top
+		pPartner->accumulator = 0;	// and make sure it starts from the top (does this also need phase preservation?)
 	}
 
 	// IRQ enabled for this voice?
@@ -175,8 +188,8 @@ void es5503_device::sound_stream_update(sound_stream &stream, stream_sample_t **
 
 			for (snum = 0; snum < samples; snum++)
 			{
-				ramptr = (acc >> resshift) & sizemask;
 				altram = acc >> resshift;
+				ramptr = altram & sizemask;
 
 				acc += freq;
 
@@ -186,7 +199,7 @@ void es5503_device::sound_stream_update(sound_stream &stream, stream_sample_t **
 
 				if (m_direct->read_raw_byte(ramptr + wtptr) == 0x00)
 				{
-					halt_osc(osc, 1, &acc);
+					halt_osc(osc, 1, &acc, resshift);
 				}
 				else
 				{
@@ -203,7 +216,7 @@ void es5503_device::sound_stream_update(sound_stream &stream, stream_sample_t **
 
 					if (altram >= wtsize)
 					{
-						halt_osc(osc, 0, &acc);
+						halt_osc(osc, 0, &acc, resshift);
 					}
 				}
 
@@ -237,7 +250,7 @@ void es5503_device::device_start()
 	// find our direct access
 	m_direct = &space()->direct();
 
-	rege0 = 0x80;
+	rege0 = 0xff;
 
 	for (osc = 0; osc < 32; osc++)
 	{
@@ -257,12 +270,12 @@ void es5503_device::device_start()
 	m_stream = machine().sound().stream_alloc(*this, 0, 2, output_rate, this);
 
 	m_timer = timer_alloc(0, NULL);
-	m_timer->adjust(attotime::from_hz(output_rate));
+	m_timer->adjust(attotime::from_hz(output_rate), 0, attotime::from_hz(output_rate));
 }
 
 void es5503_device::device_reset()
 {
-	rege0 = 0x80;
+	rege0 = 0xff;
 
 	for (int osc = 0; osc < 32; osc++)
 	{
@@ -332,8 +345,13 @@ READ8_MEMBER( es5503_device::read )
 	{
 		switch (offset)
 		{
-			case 0xe0:	// interrupt status
+            case 0xe0:	// interrupt status
 				retval = rege0;
+
+                if (m_irq_func)
+                {
+                    m_irq_func(this, 0);
+                }
 
 				// scan all oscillators
 				for (i = 0; i < oscsenabled+1; i++)
@@ -346,12 +364,7 @@ READ8_MEMBER( es5503_device::read )
 						rege0 = retval | 0x80;
 
 						// and clear its flag
-						oscillators[i].irqpend--;
-
-						if (m_irq_func)
-						{
-							m_irq_func(this, 0);
-						}
+						oscillators[i].irqpend = 0;
 						break;
 					}
 				}
@@ -455,7 +468,7 @@ WRITE8_MEMBER( es5503_device::write )
 
 				output_rate = (clock()/8)/(2+oscsenabled);
 				m_stream->set_sample_rate(output_rate);
-				m_timer->adjust(attotime::from_hz(output_rate));
+				m_timer->adjust(attotime::from_hz(output_rate), 0, attotime::from_hz(output_rate));
 				break;
 
 			case 0xe2:	// A/D converter

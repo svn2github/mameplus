@@ -22,17 +22,16 @@
  *
  *************************************/
 
-VIDEO_START( policetr )
+void policetr_state::video_start()
 {
-	policetr_state *state = machine.driver_data<policetr_state>();
 	/* the source bitmap is in ROM */
-	state->m_srcbitmap = state->memregion("gfx1")->base();
+	m_srcbitmap = memregion("gfx1")->base();
 
 	/* compute the height */
-	state->m_srcbitmap_height_mask = (state->memregion("gfx1")->bytes() / SRCBITMAP_WIDTH) - 1;
+	m_srcbitmap_height_mask = (memregion("gfx1")->bytes() / SRCBITMAP_WIDTH) - 1;
 
 	/* the destination bitmap is not directly accessible to the CPU */
-	state->m_dstbitmap = auto_alloc_array(machine, UINT8, DSTBITMAP_WIDTH * DSTBITMAP_HEIGHT);
+	m_dstbitmap = auto_alloc_array(machine(), UINT8, DSTBITMAP_WIDTH * DSTBITMAP_HEIGHT);
 }
 
 
@@ -143,7 +142,7 @@ WRITE32_MEMBER(policetr_state::policetr_video_w)
 {
 	/* we assume 4-byte accesses */
 	if (mem_mask)
-		logerror("%08X: policetr_video_w access with mask %08X\n", cpu_get_previouspc(&space.device()), mem_mask);
+		logerror("%08X: policetr_video_w access with mask %08X\n", space.device().safe_pcbase(), mem_mask);
 
 	/* 4 offsets */
 	switch (offset)
@@ -193,7 +192,7 @@ WRITE32_MEMBER(policetr_state::policetr_video_w)
 
 				/* log anything else */
 				default:
-					logerror("%08X: policetr_video_w(2) = %08X & %08X with latch %02X\n", cpu_get_previouspc(&space.device()), data, mem_mask, m_video_latch);
+					logerror("%08X: policetr_video_w(2) = %08X & %08X with latch %02X\n", space.device().safe_pcbase(), data, mem_mask, m_video_latch);
 					break;
 			}
 			break;
@@ -207,7 +206,7 @@ WRITE32_MEMBER(policetr_state::policetr_video_w)
 				/* latch 0x00 is unknown; 0, 1, and 2 get written into the upper 12 bits before rendering */
 				case 0x00:
 					if (data != (0 << 20) && data != (1 << 20) && data != (2 << 20))
-						logerror("%08X: policetr_video_w(3) = %08X & %08X with latch %02X\n", cpu_get_previouspc(&space.device()), data, mem_mask, m_video_latch);
+						logerror("%08X: policetr_video_w(3) = %08X & %08X with latch %02X\n", space.device().safe_pcbase(), data, mem_mask, m_video_latch);
 					break;
 
 				/* latch 0x10 specifies destination bitmap X and Y offsets */
@@ -219,28 +218,28 @@ WRITE32_MEMBER(policetr_state::policetr_video_w)
 				/* latch 0x20 is unknown; either 0xef or 0x100 is written every IRQ4 */
 				case 0x20:
 					if (data != (0x100 << 12) && data != (0xef << 12))
-						logerror("%08X: policetr_video_w(3) = %08X & %08X with latch %02X\n", cpu_get_previouspc(&space.device()), data, mem_mask, m_video_latch);
+						logerror("%08X: policetr_video_w(3) = %08X & %08X with latch %02X\n", space.device().safe_pcbase(), data, mem_mask, m_video_latch);
 					break;
 
 				/* latch 0x40 is unknown; a 0 is written every IRQ4 */
 				case 0x40:
 					if (data != 0)
-						logerror("%08X: policetr_video_w(3) = %08X & %08X with latch %02X\n", cpu_get_previouspc(&space.device()), data, mem_mask, m_video_latch);
+						logerror("%08X: policetr_video_w(3) = %08X & %08X with latch %02X\n", space.device().safe_pcbase(), data, mem_mask, m_video_latch);
 					break;
 
 				/* latch 0x50 clears IRQ4 */
 				case 0x50:
-					cputag_set_input_line(machine(), "maincpu", R3000_IRQ4, CLEAR_LINE);
+					machine().device("maincpu")->execute().set_input_line(R3000_IRQ4, CLEAR_LINE);
 					break;
 
 				/* latch 0x60 clears IRQ5 */
 				case 0x60:
-					cputag_set_input_line(machine(), "maincpu", R3000_IRQ5, CLEAR_LINE);
+					machine().device("maincpu")->execute().set_input_line(R3000_IRQ5, CLEAR_LINE);
 					break;
 
 				/* log anything else */
 				default:
-					logerror("%08X: policetr_video_w(3) = %08X & %08X with latch %02X\n", cpu_get_previouspc(&space.device()), data, mem_mask, m_video_latch);
+					logerror("%08X: policetr_video_w(3) = %08X & %08X with latch %02X\n", space.device().safe_pcbase(), data, mem_mask, m_video_latch);
 					break;
 			}
 			break;
@@ -300,7 +299,7 @@ READ32_MEMBER(policetr_state::policetr_video_r)
 	}
 
 	/* log anything else */
-	logerror("%08X: policetr_video_r with latch %02X\n", cpu_get_previouspc(&space.device()), m_video_latch);
+	logerror("%08X: policetr_video_r with latch %02X\n", space.device().safe_pcbase(), m_video_latch);
 	return 0;
 }
 

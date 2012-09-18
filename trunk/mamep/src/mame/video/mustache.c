@@ -10,9 +10,9 @@
 #include "includes/mustache.h"
 
 
-PALETTE_INIT(mustache)
+void mustache_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0;i < 256;i++)
@@ -40,7 +40,7 @@ PALETTE_INIT(mustache)
 		bit3 = (color_prom[i + 512] >> 3) & 0x01;
 		b = 0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3;
 
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
+		palette_set_color(machine(),i,MAKE_RGB(r,g,b));
 	}
 }
 
@@ -76,33 +76,31 @@ WRITE8_MEMBER(mustache_state::mustache_scroll_w)
 	m_bg_tilemap->set_scrollx(3, 0x100);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(mustache_state::get_bg_tile_info)
 {
-	mustache_state *state = machine.driver_data<mustache_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int attr = videoram[2 * tile_index + 1];
-	int code = videoram[2 * tile_index] + ((attr & 0x60) << 3) + ((state->m_control_byte & 0x08) << 7);
+	int code = videoram[2 * tile_index] + ((attr & 0x60) << 3) + ((m_control_byte & 0x08) << 7);
 	int color = attr & 0x0f;
 
-	SET_TILE_INFO(0, code, color, ((attr & 0x10) ? TILE_FLIPX : 0) | ((attr & 0x80) ? TILE_FLIPY : 0)   );
+	SET_TILE_INFO_MEMBER(0, code, color, ((attr & 0x10) ? TILE_FLIPX : 0) | ((attr & 0x80) ? TILE_FLIPY : 0)   );
 
 
 }
 
-VIDEO_START( mustache )
+void mustache_state::video_start()
 {
-	mustache_state *state = machine.driver_data<mustache_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows_flip_x,
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mustache_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS_FLIP_X,
 		 8, 8, 64, 32);
 
-	state->m_bg_tilemap->set_scroll_rows(4);
+	m_bg_tilemap->set_scroll_rows(4);
 }
 
 static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
 {
 	mustache_state *state = machine.driver_data<mustache_state>();
 	rectangle clip = cliprect;
-	const gfx_element *gfx = machine.gfx[1];
+	gfx_element *gfx = machine.gfx[1];
 	const rectangle &visarea = machine.primary_screen->visible_area();
 	UINT8 *spriteram = state->m_spriteram;
 	int offs;

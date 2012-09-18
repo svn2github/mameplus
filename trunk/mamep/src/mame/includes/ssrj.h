@@ -23,13 +23,19 @@ public:
 	DECLARE_WRITE8_MEMBER(ssrj_vram1_w);
 	DECLARE_WRITE8_MEMBER(ssrj_vram2_w);
 	DECLARE_WRITE8_MEMBER(ssrj_vram4_w);
+	TILE_GET_INFO_MEMBER(get_tile_info1);
+	TILE_GET_INFO_MEMBER(get_tile_info2);
+	TILE_GET_INFO_MEMBER(get_tile_info4);
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/ssrj.c -----------*/
 
 
-VIDEO_START( ssrj );
+
 SCREEN_UPDATE_IND16( ssrj );
 SCREEN_VBLANK( ssrj );
-PALETTE_INIT( ssrj );
+

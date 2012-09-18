@@ -7,12 +7,30 @@
 
 #include "devlegcy.h"
 
-DECLARE_LEGACY_DEVICE(K053252, k053252);
+class k053252_device : public device_t
+{
+public:
+	k053252_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~k053252_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type K053252;
 
 
 
-typedef struct _k053252_interface k053252_interface;
-struct _k053252_interface
+
+struct k053252_interface
 {
 	const char         *screen;
 	devcb_write_line   int1_en;

@@ -173,6 +173,8 @@ public:
 	DECLARE_WRITE_LINE_MEMBER(calchase_pic8259_1_set_int_line);
 	DECLARE_READ8_MEMBER(get_slave_ack);
 	DECLARE_DRIVER_INIT(calchase);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 
@@ -236,7 +238,7 @@ WRITE8_MEMBER(calchase_state::at_page8_w)
 
 WRITE_LINE_MEMBER(calchase_state::pc_dma_hrq_changed)
 {
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_HALT, state ? ASSERT_LINE : CLEAR_LINE);
 
 	/* Assert HLDA */
 	i8237_hlda_w( m_dma8237_1, state );
@@ -356,7 +358,7 @@ static void mxtc_config_w(device_t *busdevice, device_t *device, int function, i
 				#if 0
 				if ((state->m_mxtc_config_reg[0x63] & 0x50) | ( state->m_mxtc_config_reg[0x63] & 0xA0)) // Only DO if comes a change to disable ROM.
 				{
-					if ( cpu_get_pc(busdevice->machine().device("maincpu"))==0xff74e) cpu_set_reg(busdevice->machine().device("maincpu"), STATE_GENPC, 0xff74d);
+					if ( busdevice->machine(->safe_pc().device("maincpu"))==0xff74e) busdevice->machine().device("maincpu")->state().set_pc(0xff74d);
 				}
 				#endif
 
@@ -804,16 +806,15 @@ static IRQ_CALLBACK(irq_callback)
 
 static READ8_HANDLER( vga_setting ) { return 0xff; } // hard-code to color
 
-static MACHINE_START(calchase)
+void calchase_state::machine_start()
 {
-	calchase_state *state = machine.driver_data<calchase_state>();
-	device_set_irq_callback(machine.device("maincpu"), irq_callback);
+	machine().device("maincpu")->execute().set_irq_acknowledge_callback(irq_callback);
 
-	state->m_pit8254 = machine.device( "pit8254" );
-	state->m_pic8259_1 = machine.device( "pic8259_1" );
-	state->m_pic8259_2 = machine.device( "pic8259_2" );
-	state->m_dma8237_1 = machine.device( "dma8237_1" );
-	state->m_dma8237_2 = machine.device( "dma8237_2" );
+	m_pit8254 = machine().device( "pit8254" );
+	m_pic8259_1 = machine().device( "pic8259_1" );
+	m_pic8259_2 = machine().device( "pic8259_2" );
+	m_dma8237_1 = machine().device( "dma8237_1" );
+	m_dma8237_2 = machine().device( "dma8237_2" );
 }
 
 /*************************************************************
@@ -824,7 +825,7 @@ static MACHINE_START(calchase)
 
 WRITE_LINE_MEMBER(calchase_state::calchase_pic8259_1_set_int_line)
 {
-	cputag_set_input_line(machine(), "maincpu", 0, state ? HOLD_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, state ? HOLD_LINE : CLEAR_LINE);
 }
 
 READ8_MEMBER(calchase_state::get_slave_ack)
@@ -877,15 +878,15 @@ static const struct pit8253_config calchase_pit8254_config =
 	}
 };
 
-static MACHINE_RESET(calchase)
+void calchase_state::machine_reset()
 {
-	//machine.root_device().membank("bank1")->set_base(machine.root_device().memregion("bios")->base() + 0x10000);
-	machine.root_device().membank("bank1")->set_base(machine.root_device().memregion("bios")->base());
+	//machine().root_device().membank("bank1")->set_base(machine().root_device().memregion("bios")->base() + 0x10000);
+	machine().root_device().membank("bank1")->set_base(machine().root_device().memregion("bios")->base());
 }
 
 static void set_gate_a20(running_machine &machine, int a20)
 {
-	cputag_set_input_line(machine, "maincpu", INPUT_LINE_A20, a20);
+	machine.device("maincpu")->execute().set_input_line(INPUT_LINE_A20, a20);
 }
 
 static void keyboard_interrupt(running_machine &machine, int state)
@@ -917,20 +918,25 @@ static void calchase_set_keyb_int(running_machine &machine, int state)
 	pic8259_ir1_w(drvstate->m_pic8259_1, state);
 }
 
+static const ide_config ide_intf =
+{
+	ide_interrupt,
+	NULL,
+	0
+};
+
 static MACHINE_CONFIG_START( calchase, calchase_state )
 	MCFG_CPU_ADD("maincpu", PENTIUM, 133000000) // Cyrix 686MX-PR200 CPU
 	MCFG_CPU_PROGRAM_MAP(calchase_map)
 	MCFG_CPU_IO_MAP(calchase_io)
 
-	MCFG_MACHINE_START(calchase)
-	MCFG_MACHINE_RESET(calchase)
 
 	MCFG_PIT8254_ADD( "pit8254", calchase_pit8254_config )
 	MCFG_I8237_ADD( "dma8237_1", XTAL_14_31818MHz/3, dma8237_1_config )
 	MCFG_I8237_ADD( "dma8237_2", XTAL_14_31818MHz/3, dma8237_2_config )
 	MCFG_PIC8259_ADD( "pic8259_1", calchase_pic8259_1_config )
 	MCFG_PIC8259_ADD( "pic8259_2", calchase_pic8259_2_config )
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_interrupt, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
 
 	MCFG_MC146818_ADD( "rtc", MC146818_STANDARD )
 	MCFG_PCI_BUS_LEGACY_ADD("pcibus", 0)
@@ -954,8 +960,8 @@ MACHINE_CONFIG_END
 READ32_MEMBER(calchase_state::calchase_idle_skip_r)
 {
 
-	if(cpu_get_pc(&space.device())==0x1406f48)
-		device_spin_until_interrupt(m_maincpu);
+	if(space.device().safe_pc()==0x1406f48)
+		m_maincpu->spin_until_interrupt();
 
 	return m_idle_skip_ram;
 }

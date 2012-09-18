@@ -95,11 +95,10 @@ WRITE8_MEMBER(paradise_state::paradise_palbank_w)
 	}
 }
 
-static TILE_GET_INFO( get_tile_info_0 )
+TILE_GET_INFO_MEMBER(paradise_state::get_tile_info_0)
 {
-	paradise_state *state = machine.driver_data<paradise_state>();
-	int code = state->m_vram_0[tile_index] + (state->m_vram_0[tile_index + 0x400] << 8);
-	SET_TILE_INFO(1, code, state->m_palbank, 0);
+	int code = m_vram_0[tile_index] + (m_vram_0[tile_index + 0x400] << 8);
+	SET_TILE_INFO_MEMBER(1, code, m_palbank, 0);
 }
 
 
@@ -110,11 +109,10 @@ WRITE8_MEMBER(paradise_state::paradise_vram_1_w)
 	m_tilemap_1->mark_tile_dirty(offset % 0x400);
 }
 
-static TILE_GET_INFO( get_tile_info_1 )
+TILE_GET_INFO_MEMBER(paradise_state::get_tile_info_1)
 {
-	paradise_state *state = machine.driver_data<paradise_state>();
-	int code = state->m_vram_1[tile_index] + (state->m_vram_1[tile_index + 0x400] << 8);
-	SET_TILE_INFO(2, code, 0, 0);
+	int code = m_vram_1[tile_index] + (m_vram_1[tile_index + 0x400] << 8);
+	SET_TILE_INFO_MEMBER(2, code, 0, 0);
 }
 
 
@@ -125,11 +123,10 @@ WRITE8_MEMBER(paradise_state::paradise_vram_2_w)
 	m_tilemap_2->mark_tile_dirty(offset % 0x400);
 }
 
-static TILE_GET_INFO( get_tile_info_2 )
+TILE_GET_INFO_MEMBER(paradise_state::get_tile_info_2)
 {
-	paradise_state *state = machine.driver_data<paradise_state>();
-	int code = state->m_vram_2[tile_index] + (state->m_vram_2[tile_index + 0x400] << 8);
-	SET_TILE_INFO(3, code, 0, 0);
+	int code = m_vram_2[tile_index] + (m_vram_2[tile_index + 0x400] << 8);
+	SET_TILE_INFO_MEMBER(3, code, 0, 0);
 }
 
 /* 256 x 256 bitmap. 4 bits per pixel so every byte encodes 2 pixels */
@@ -154,22 +151,21 @@ WRITE8_MEMBER(paradise_state::paradise_pixmap_w)
 
 ***************************************************************************/
 
-VIDEO_START( paradise )
+void paradise_state::video_start()
 {
-	paradise_state *state = machine.driver_data<paradise_state>();
 
-	state->m_tilemap_0 = tilemap_create(machine, get_tile_info_0, tilemap_scan_rows, 8, 8, 0x20, 0x20);
-	state->m_tilemap_1 = tilemap_create(machine, get_tile_info_1, tilemap_scan_rows, 8, 8, 0x20, 0x20);
-	state->m_tilemap_2 = tilemap_create(machine, get_tile_info_2, tilemap_scan_rows, 8, 8, 0x20, 0x20);
+	m_tilemap_0 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(paradise_state::get_tile_info_0),this), TILEMAP_SCAN_ROWS, 8, 8, 0x20, 0x20);
+	m_tilemap_1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(paradise_state::get_tile_info_1),this), TILEMAP_SCAN_ROWS, 8, 8, 0x20, 0x20);
+	m_tilemap_2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(paradise_state::get_tile_info_2),this), TILEMAP_SCAN_ROWS, 8, 8, 0x20, 0x20);
 
 	/* pixmap */
-	machine.primary_screen->register_screen_bitmap(state->m_tmpbitmap);
+	machine().primary_screen->register_screen_bitmap(m_tmpbitmap);
 
-	state->m_tilemap_0->set_transparent_pen(0x0f);
-	state->m_tilemap_1->set_transparent_pen(0xff);
-	state->m_tilemap_2->set_transparent_pen(0xff);
+	m_tilemap_0->set_transparent_pen(0x0f);
+	m_tilemap_1->set_transparent_pen(0xff);
+	m_tilemap_2->set_transparent_pen(0xff);
 
-	state->save_item(NAME(state->m_tmpbitmap));
+	save_item(NAME(m_tmpbitmap));
 }
 
 

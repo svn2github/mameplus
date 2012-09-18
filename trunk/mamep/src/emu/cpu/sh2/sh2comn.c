@@ -360,7 +360,7 @@ void sh2_do_dma(sh2_state *sh2, int dma)
 					{
 						//printf("dma stalled\n");
 						sh2->dma_timer_active[dma]=2;// mark as stalled
-						fatalerror("SH2 dma_callback_fifo_data_available == 0 in unsupported mode");
+						fatalerror("SH2 dma_callback_fifo_data_available == 0 in unsupported mode\n");
 					}
 				}
 
@@ -522,7 +522,7 @@ WRITE32_HANDLER( sh2_internal_w )
 	//      logerror("sh2_internal_w:  Write %08x (%x), %08x @ %08x\n", 0xfffffe00+offset*4, offset, data, mem_mask);
 
 //    if(offset != 0x20)
-//        printf("sh2_internal_w:  Write %08x (%x), %08x @ %08x (PC %x)\n", 0xfffffe00+offset*4, offset, data, mem_mask, cpu_get_pc(&space->device()));
+//        printf("sh2_internal_w:  Write %08x (%x), %08x @ %08x (PC %x)\n", 0xfffffe00+offset*4, offset, data, mem_mask, space->device().safe_pc());
 
 	switch( offset )
 	{

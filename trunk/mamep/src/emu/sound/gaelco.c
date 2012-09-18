@@ -49,8 +49,7 @@ Registers per channel:
 #define VOLUME_LEVELS			0x10
 
 /* this structure defines a channel */
-typedef struct _gaelco_sound_channel gaelco_sound_channel;
-struct _gaelco_sound_channel
+struct gaelco_sound_channel
 {
 	int active;			/* is it playing? */
 	int loop;			/* = 0 no looping, = 1 looping */
@@ -58,8 +57,7 @@ struct _gaelco_sound_channel
 };
 
 /* this structure defines the Gaelco custom sound chip */
-typedef struct _gaelco_sound_state gaelco_sound_state;
-struct _gaelco_sound_state
+struct gaelco_sound_state
 {
 	sound_stream *stream;									/* our stream */
 	UINT8 *snd_data;										/* PCM data */
@@ -78,7 +76,7 @@ INLINE gaelco_sound_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == GAELCO_GAE1 || device->type() == GAELCO_CG1V);
-	return (gaelco_sound_state *)downcast<legacy_device_base *>(device)->token();
+	return (gaelco_sound_state *)downcast<gaelco_gae1_device *>(device)->token();
 }
 
 /*============================================================================
@@ -284,60 +282,64 @@ static DEVICE_STOP( gaelco )
 }
 
 
+const device_type GAELCO_GAE1 = &device_creator<gaelco_gae1_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( gaelco_gae1 )
+gaelco_gae1_device::gaelco_gae1_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, GAELCO_GAE1, "Gaelco GAE1", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(gaelco_sound_state);					break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(gaelco_sound_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( gaelco );		break;
-		case DEVINFO_FCT_STOP:							info->stop = DEVICE_STOP_NAME( gaelco );				break;
-		case DEVINFO_FCT_RESET:							/* nothing */										break;
+gaelco_gae1_device::gaelco_gae1_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, type, name, tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(gaelco_sound_state));
+}
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Gaelco GAE1");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Gaelco custom");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");								break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);							break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void gaelco_gae1_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void gaelco_gae1_device::device_start()
+{
+	DEVICE_START_NAME( gaelco )(this);
+}
+
+//-------------------------------------------------
+//  device_stop - device-specific stop
+//-------------------------------------------------
+
+void gaelco_gae1_device::device_stop()
+{
+	DEVICE_STOP_NAME( gaelco )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void gaelco_gae1_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
+const device_type GAELCO_CG1V = &device_creator<gaelco_cg1v_device>;
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( gaelco_cg1v )
+gaelco_cg1v_device::gaelco_cg1v_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: gaelco_gae1_device(mconfig, GAELCO_CG1V, "Gaelco CG1V", tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(gaelco_sound_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( gaelco );		break;
-		case DEVINFO_FCT_STOP:							info->stop = DEVICE_STOP_NAME( gaelco );				break;
-		case DEVINFO_FCT_RESET:							/* nothing */										break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Gaelco CG1V");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Gaelco custom");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");								break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);							break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
 }
-
-
-DEFINE_LEGACY_SOUND_DEVICE(GAELCO_GAE1, gaelco_gae1);
-DEFINE_LEGACY_SOUND_DEVICE(GAELCO_CG1V, gaelco_cg1v);

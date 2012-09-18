@@ -11,8 +11,7 @@
 #include "sound/discrete.h"
 #include "audio/irem.h"
 
-typedef struct _irem_audio_state irem_audio_state;
-struct _irem_audio_state
+struct irem_audio_state
 {
 	UINT8                m_port1;
 	UINT8                m_port2;
@@ -28,7 +27,7 @@ INLINE irem_audio_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == IREM_AUDIO);
 
-	return (irem_audio_state *)downcast<legacy_device_base *>(device)->token();
+	return (irem_audio_state *)downcast<irem_audio_device *>(device)->token();
 }
 
 
@@ -68,7 +67,7 @@ WRITE8_HANDLER( irem_sound_cmd_w )
 	if ((data & 0x80) == 0)
 		drvstate->soundlatch_byte_w(*space, 0, data & 0x7f);
 	else
-		cputag_set_input_line(space->machine(), "iremsound", 0, ASSERT_LINE);
+		space->machine().device("iremsound")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -182,7 +181,7 @@ static WRITE8_DEVICE_HANDLER( ay8910_1_porta_w )
 
 static WRITE8_HANDLER( sound_irq_ack_w )
 {
-	cputag_set_input_line(space->machine(), "iremsound", 0, CLEAR_LINE);
+	space->machine().device("iremsound")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -223,7 +222,7 @@ static void adpcm_int(device_t *device)
 {
 	device_t *adpcm2 = device->machine().device("msm2");
 
-	cputag_set_input_line(device->machine(), "iremsound", INPUT_LINE_NMI, PULSE_LINE);
+	device->machine().device("iremsound")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 
 	/* the first MSM5205 clocks the second */
 	if (adpcm2 != NULL)
@@ -486,18 +485,42 @@ MACHINE_CONFIG_DERIVED( m62_audio, irem_audio_base )
 	MCFG_CPU_PROGRAM_MAP(m62_sound_map)
 MACHINE_CONFIG_END
 
-/*****************************************************************************
-    DEVICE DEFINITION
-*****************************************************************************/
+const device_type IREM_AUDIO = &device_creator<irem_audio_device>;
+
+irem_audio_device::irem_audio_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, IREM_AUDIO, "Irem Audio", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(irem_audio_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void irem_audio_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void irem_audio_device::device_start()
+{
+	DEVICE_START_NAME( irem_audio )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void irem_audio_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
 
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
-
-#define DEVTEMPLATE_ID(p,s)				p##irem_audio##s
-#define DEVTEMPLATE_FEATURES			DT_HAS_START
-#define DEVTEMPLATE_NAME				"Irem Audio"
-#define DEVTEMPLATE_FAMILY				"Irem Audio IC"
-#include "devtempl.h"
-
-
-DEFINE_LEGACY_SOUND_DEVICE(IREM_AUDIO, irem_audio);

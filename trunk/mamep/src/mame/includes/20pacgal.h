@@ -29,7 +29,7 @@ public:
 	UINT8 m_game_selected;	/* 0 = Ms. Pac-Man, 1 = Galaga */
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	device_t *m_eeprom;
 
 	/* memory */
@@ -52,6 +52,8 @@ public:
 	DECLARE_WRITE8_MEMBER(sprite_lookup_w);
 	DECLARE_DRIVER_INIT(25pacman);
 	DECLARE_DRIVER_INIT(20pacgal);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 

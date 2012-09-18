@@ -5,22 +5,37 @@ Pierpaolo Prazzoli
 David Haywood
 */
 
+
+#define littlerb_printf logerror
+#define littlerb_alt_printf logerror
+
 /*
 
-strange vdp/memory access chip..
-at the moment gfx / palettes etc. get drawn then erased
+Notes:
 
-maybe it needs read commands working so it knows how many sprites are in
-the list?
+VDP (Blitter) handling is not 100% correct
+A brief original video (recorded by Dox) can be seen at https://www.youtube.com/watch?v=8THpeogarUk
 
-maybe the vdp 'commands' can be used to store and get back
-write addresses?
+Overall addressing / auto-increment etc. of the VDP device is not fully understood, but for now
+appears to be good enough for the game.
 
-most graphics are stored as packed 4bpp in RAM, expanded before
-writing to the vdp device.  actual gfx are 8bpp.
+How we distinguish between mode setting (clear, copy, cliprect etc.) VDP commands and actual sprite
+commands is not yet understood.  All 'sprite' sections of the blit list seem to be terminated with
+a 0x0000 word, but it isn't clear how the blocks are started, the current method relies on some bits
+of the sprite data offset to determine if we're sprite data, or a command.  Maybe this is just a
+quirk of the hardware, and you can't have sprites at those offsets?
+
+Copy / Scroll are not yet implemented, see the Smileys between scenes in the original video.
+ (Clipping is implemented, but might be per layer, so you do see the sprites vanish, but no
+   smileys are drawn)
+
+How big are the actual framebuffers?  Are both also double buffered?
 
 Sound pitch is directly correlated with irqs, scanline timings and pixel clock,
 so it's surely not 100% correct. Sound sample playbacks looks fine at current time tho.
+
+------
+
 
 
 Dip sw.1
@@ -70,6 +85,8 @@ Dip sw.2
 #include "video/ramdac.h"
 #include "sound/dac.h"
 
+static void littlerb_draw_sprites(running_machine &machine);
+
 class littlerb_state : public driver_device
 {
 public:
@@ -78,7 +95,10 @@ public:
 		  m_maincpu(*this, "maincpu"),
 		  m_dacl(*this, "dacl"),
 	      m_dacr(*this, "dacr"),
-		m_region4(*this, "region4"){ }
+		m_region4(*this, "region4")
+	{
+		m_1ff80804 = -1;
+	}
 
 	required_device<cpu_device> m_maincpu;
 	required_device<dac_device> m_dacl;
@@ -100,6 +120,11 @@ public:
 	UINT8 m_sound_index_l,m_sound_index_r;
 	UINT16 m_sound_pointer_l,m_sound_pointer_r;
 
+	bitmap_ind16 *m_temp_bitmap_sprites;
+	bitmap_ind16 *m_temp_bitmap_sprites_back;
+
+
+	DECLARE_WRITE16_MEMBER(spritelist_w);
 	DECLARE_WRITE16_MEMBER(region4_w);
 	DECLARE_READ16_MEMBER(buffer_status_r);
 	DECLARE_READ16_MEMBER(littlerb_vdp_r);
@@ -107,6 +132,76 @@ public:
 	DECLARE_WRITE16_MEMBER(littlerb_l_sound_w);
 	DECLARE_WRITE16_MEMBER(littlerb_r_sound_w);
 	DECLARE_CUSTOM_INPUT_MEMBER(littlerb_frame_step_r);
+
+	int m_1ff80804;
+	int m_listoffset;
+	UINT16* m_spritelist;
+
+	DECLARE_READ16_MEMBER( littlerb_1ff80800_r )
+	{
+		littlerb_printf("littlerb_1ff80800_r\n");
+		return 0x0000;
+	}
+
+	DECLARE_WRITE16_MEMBER( littlerb_1ff80800_w )
+	{
+		littlerb_printf("littlerb_1ff80800_w %04x\n", data);
+	}
+
+	DECLARE_READ16_MEMBER( littlerb_1ff80802_r )
+	{
+		littlerb_printf("littlerb_1ff80802_r\n");
+		return 0x0000;
+	}
+
+	DECLARE_WRITE16_MEMBER( littlerb_1ff80802_w )
+	{
+		littlerb_printf("littlerb_1ff80802_w %04x\n", data);
+	}
+
+	DECLARE_WRITE16_MEMBER( littlerb_1ff80804_w )
+	{
+		littlerb_printf("littlerb_1ff80804_w %04x\n", data);
+
+		if ((!(m_spritelist[2] & 0x1000)) && (!(m_spritelist[1] & 0x1000)))
+		{
+
+		}
+		else
+		{
+			if (!(m_spritelist[2] & 0x1000))
+				m_temp_bitmap_sprites_back->fill(0, m_temp_bitmap_sprites_back->cliprect());
+
+		}
+
+		littlerb_draw_sprites(space.machine());
+
+
+		m_listoffset = 0;
+		memset(m_spritelist, 0x00, 0x20000); // clear out the list.. I think it's commands anyway?
+
+	}
+
+	DECLARE_WRITE16_MEMBER( littlerb_18000012_w )
+	{
+		littlerb_printf("littlerb_18000012_w %04x\n", data);
+		// edfc / fffc alternating (select double buffering?)
+	}
+
+	DECLARE_WRITE16_MEMBER( littlerb_18000014_w )
+	{
+		littlerb_printf("littlerb_18000014_w %04x\n", data);
+		// dosen't seem to be the draw trigger, or you get broken platforms..
+
+
+	}
+
+	DECLARE_WRITE16_MEMBER( littlerb_1800003c_w )
+	{
+		littlerb_printf("littlerb_1800003c_w %04x\n", data);
+		// edfc / fffc alternating (display double buffering?)
+	}
+	virtual void video_start();
 };
 
 
@@ -120,6 +215,17 @@ READ16_MEMBER(littlerb_state::buffer_status_r)
 	return 0;
 }
 
+
+WRITE16_MEMBER(littlerb_state::spritelist_w)
+{
+	littlerb_printf("spritelist_w %04x\n",  data);
+
+	COMBINE_DATA(&m_spritelist[m_listoffset]);
+	m_listoffset++;
+}
+
+
+
 /* this map is wrong because our VDP access is wrong! */
 static ADDRESS_MAP_START( littlerb_vdp_map8, AS_0, 16, littlerb_state )
 	// it ends up writing some gfx here (the bubbles when you shoot an enemy)
@@ -130,8 +236,14 @@ static ADDRESS_MAP_START( littlerb_vdp_map8, AS_0, 16, littlerb_state )
 	AM_RANGE(0x00800000, 0x00800001) AM_DEVWRITE8("^ramdac", ramdac_device, index_w, 0x00ff)
 	AM_RANGE(0x00800002 ,0x00800003) AM_DEVWRITE8("^ramdac", ramdac_device, pal_w,   0x00ff)
 	AM_RANGE(0x00800004 ,0x00800005) AM_DEVWRITE8("^ramdac", ramdac_device, mask_w,  0x00ff)
+	AM_RANGE(0x18000012, 0x18000013) AM_DEVWRITE("^", littlerb_state, littlerb_18000012_w)
+	AM_RANGE(0x18000014, 0x18000015) AM_DEVWRITE("^", littlerb_state, littlerb_18000014_w)
+	AM_RANGE(0x1800003c, 0x1800003d) AM_DEVWRITE("^", littlerb_state, littlerb_1800003c_w)
+	AM_RANGE(0x1ff80800, 0x1ff80801) AM_DEVREADWRITE("^", littlerb_state, littlerb_1ff80800_r, littlerb_1ff80800_w)
+	AM_RANGE(0x1ff80802, 0x1ff80803) AM_DEVREADWRITE("^", littlerb_state, littlerb_1ff80802_r, littlerb_1ff80802_w)
+	AM_RANGE(0x1ff80804, 0x1ff80805) AM_DEVREADWRITE("^", littlerb_state, buffer_status_r, littlerb_1ff80804_w)
+	AM_RANGE(0x1ff80806, 0x1ff80807) AM_RAM AM_DEVWRITE("^", littlerb_state, spritelist_w)
 
-	AM_RANGE(0x1ff80804, 0x1ff80805) AM_DEVREAD("^", littlerb_state, buffer_status_r)
 	// most gfx end up here including the sprite list
 	AM_RANGE(0x1ff80000, 0x1fffffff) AM_RAM AM_DEVWRITE("^", littlerb_state, region4_w)  AM_SHARE("region4")
 ADDRESS_MAP_END
@@ -200,18 +312,21 @@ static void littlerb_data_write(running_machine &machine, UINT16 data, UINT16 me
 	littlerb_state *state = machine.driver_data<littlerb_state>();
 	UINT32 addr = state->m_write_address >> 3; // almost surely raw addresses are actually shifted by 3
 	address_space *vdp_space = machine.device<littlerb_vdp_device>("littlerbvdp")->space();
-
 	int mode = state->m_vdp_writemode;
+
+
+	logerror("mode %04x, data %04x, mem_mask %04x (address %08x)\n", mode,  data, mem_mask, state->m_write_address >> 3);
+
 	if ((mode!=0x3800) && (mode !=0x2000) && (mode != 0xe000) && (mode != 0xf800))
 	{
-		printf("mode %04x, data %04x, mem_mask %04x (address %08x)\n", mode,  data, mem_mask, state->m_write_address >> 3);
 	}
 	else
 	{
 		vdp_space->write_word(addr, data, mem_mask);
 
 		// 2000 is used for palette writes which appears to be a RAMDAC, no auto-inc.
-		if (mode!=0x2000 && mode != 0xe000) state->m_write_address+=0x10;
+		//  1ff80806 is our 'spritelist'
+		if (mode!=0x2000 && mode != 0xe000 && addr != 0x1ff80806) state->m_write_address+=0x10;
 		littlerb_recalc_regs(machine);
 	}
 
@@ -231,7 +346,7 @@ static void littlerb_recalc_address(running_machine &machine)
 
 READ16_MEMBER(littlerb_state::littlerb_vdp_r)
 {
-	logerror("%06x littlerb_vdp_r offs %04x mask %04x (address %08x)\n", cpu_get_pc(&space.device()), offset, mem_mask, m_write_address);
+	logerror("%06x littlerb_vdp_r offs %04x mask %04x (address %08x)\n", space.device().safe_pc(), offset, mem_mask, m_write_address);
 	UINT16 res = 0;
 
 	switch (offset & 3)
@@ -245,7 +360,7 @@ READ16_MEMBER(littlerb_state::littlerb_vdp_r)
 	return res;
 }
 
-#define LOG_VDP 0
+#define LOG_VDP 1
 WRITE16_MEMBER(littlerb_state::littlerb_vdp_w)
 {
 
@@ -256,14 +371,15 @@ WRITE16_MEMBER(littlerb_state::littlerb_vdp_w)
 			if (m_type2_writes>2)
 			{
 				if (LOG_VDP) logerror("******************************* BIG WRITE OCCURRED BEFORE THIS!!! ****************************\n");
-				printf("big write occured with start %08x end %08x\n", m_write_address_laststart >> 3, m_write_address_lastend >> 3);
 			}
+
+			littlerb_printf("~%06x big write occured with start %08x end %08x (size %04x bytes)\n", m_lasttype2pc, m_write_address_laststart >> 3, m_write_address_lastend >> 3, m_type2_writes*2);
 
 			if (LOG_VDP) logerror("~%06x previously wrote %08x data bytes\n", m_lasttype2pc, m_type2_writes*2);
 			m_type2_writes = 0;
 		}
 
-		if (LOG_VDP) logerror("%06x littlerb_vdp_w offs %04x data %04x mask %04x\n", cpu_get_pc(&space.device()), offset, data, mem_mask);
+		if (LOG_VDP) logerror("%06x littlerb_vdp_w offs %04x data %04x mask %04x\n", space.device().safe_pc(), offset, data, mem_mask);
 	}
 	else
 	{
@@ -271,16 +387,16 @@ WRITE16_MEMBER(littlerb_state::littlerb_vdp_w)
 		{
 			if (m_type2_writes==0)
 			{
-				if (LOG_VDP) logerror("data write started %06x %04x data %04x mask %04x\n", cpu_get_pc(&space.device()), offset, data, mem_mask);
+				if (LOG_VDP) logerror("data write started %06x %04x data %04x mask %04x\n", space.device().safe_pc(), offset, data, mem_mask);
 			}
 			if (m_type2_writes==0) m_write_address_laststart = m_write_address;
 			m_write_address_lastend = m_write_address;
 			m_type2_writes++;
-			m_lasttype2pc = cpu_get_pc(&space.device());
+			m_lasttype2pc = space.device().safe_pc();
 		}
 		else
 		{
-			if (LOG_VDP) logerror("xxx %06x littlerb_vdp_w offs %04x data %04x mask %04x\n", cpu_get_pc(&space.device()), offset, data, mem_mask);
+			if (LOG_VDP) logerror("xxx %06x littlerb_vdp_w offs %04x data %04x mask %04x\n", space.device().safe_pc(), offset, data, mem_mask);
 		}
 	}
 
@@ -305,7 +421,7 @@ WRITE16_MEMBER(littlerb_state::littlerb_vdp_w)
 		case 3:
 			COMBINE_DATA(&m_vdp_writemode);
 			int mode = m_vdp_writemode;
-			if ((mode!=0x3800) && (mode !=0x2000)) printf("WRITE MODE CHANGED TO %04x\n",mode);
+			if ((mode!=0x3800) && (mode !=0x2000)) logerror("WRITE MODE CHANGED TO %04x\n",mode);
 		break;
 
 	}
@@ -400,9 +516,7 @@ static INPUT_PORTS_START( littlerb )
 	PORT_DIPNAME( 0x2000, 0x2000, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x2000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
-	PORT_DIPNAME( 0x4000, 0x4000, "GAME/TEST??" ) // changes what gets uploaded
-	PORT_DIPSETTING(      0x4000, DEF_STR( Off ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
+	PORT_SERVICE( 0x4000, IP_ACTIVE_LOW )
 	PORT_DIPNAME( 0x8000, 0x8000, DEF_STR( Unknown ) )
 	PORT_DIPSETTING(      0x8000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
@@ -438,59 +552,15 @@ static INPUT_PORTS_START( littlerb )
 INPUT_PORTS_END
 
 
-static void draw_sprite(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int xsize,int ysize, UINT32 fulloffs, int xpos, int ypos )
-{
-	int x,y;
-	fulloffs >>= 3;
-	address_space *vdp_space = machine.device<littlerb_vdp_device>("littlerbvdp")->space();
-
-	for (y=0;y<ysize;y++)
-	{
-		for (x=0;x<xsize;x++)
-		{
-			int drawxpos, drawypos;
-			// the addresses provided are the same as the offsets as the vdp writes
-			UINT16 pix = vdp_space->read_byte(fulloffs);
-
-			drawxpos = xpos+x;
-			drawypos = ypos+y;
-
-			if(cliprect.contains(drawxpos, drawypos))
-			{
-				if(pix&0xff) bitmap.pix16(drawypos, drawxpos) = pix;
-			}
-
-			drawxpos++;
-			fulloffs++;
-		}
-	}
-}
 
 /* sprite format / offset could be completely wrong, this is just based on our (currently incorrect) vram access */
 static SCREEN_UPDATE_IND16(littlerb)
 {
 	littlerb_state *state = screen.machine().driver_data<littlerb_state>();
-	int x,y,offs;
-	int xsize,ysize;
-	UINT16* spriteregion = &state->m_region4[0x400];
-	bitmap.fill(get_black_pen(screen.machine()), cliprect);
-	//printf("frame\n");
-	/* the spriteram format is something like this .. */
-	for (offs=0x26/2;offs<0xc00;offs+=6) // start at 00x26?
-	{
-		x = spriteregion[offs+2] & 0x01ff;
-		ysize = (spriteregion[offs+5] & 0x007f);
-		y = (spriteregion[offs+3] & 0x01ff); // 1?
-		xsize = (spriteregion[offs+4] & 0x00ff);
+	bitmap.fill(0, cliprect);
 
-		UINT32 fullcode = ((spriteregion[offs+1])<<16)+ (spriteregion[offs+0]);
-
-		//printf( "sprite %08x\n", fullcode);
-
-		//if (code!=0) printf("%04x %04x %04x %04x %04x %04x\n", spriteregion[offs+0], spriteregion[offs+1], spriteregion[offs+2], spriteregion[offs+3], spriteregion[offs+4], spriteregion[offs+5]);
-
-		draw_sprite(screen.machine(),bitmap, cliprect,xsize,ysize,fullcode,x-8,y-16);
-	}
+	copybitmap_trans(bitmap, *state->m_temp_bitmap_sprites_back, 0, 0, 0, 0, cliprect, 0);
+	copybitmap_trans(bitmap, *state->m_temp_bitmap_sprites, 0, 0, 0, 0, cliprect, 0);
 
 	return 0;
 }
@@ -516,11 +586,243 @@ static TIMER_DEVICE_CALLBACK( littlerb_scanline )
 	}
 
 //  logerror("IRQ\n");
-	if(scanline == 256)
+	if(scanline == 288)
 	{
-		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		state->m_maincpu->set_input_line(4, HOLD_LINE);
 	}
 }
+
+void littlerb_state::video_start()
+{
+//  machine().primary_screen->register_screen_bitmap(m_temp_bitmap_sprites_back);
+//  machine().primary_screen->register_screen_bitmap(m_temp_bitmap_sprites);
+
+	m_temp_bitmap_sprites_back = auto_bitmap_ind16_alloc(machine(),512,512);
+	m_temp_bitmap_sprites = auto_bitmap_ind16_alloc(machine(),512,512);
+
+
+	m_spritelist = (UINT16*)auto_alloc_array_clear(machine(), UINT16, 0x20000);
+
+}
+
+
+
+
+static void draw_sprite(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, int xsize,int ysize, UINT32 fulloffs, int xpos, int ypos )
+{
+	int x,y;
+	fulloffs >>= 3;
+	address_space *vdp_space = machine.device<littlerb_vdp_device>("littlerbvdp")->space();
+
+	for (y=0;y<ysize;y++)
+	{
+		for (x=0;x<xsize;x++)
+		{
+			int drawxpos, drawypos;
+			// the addresses provided are the same as the offsets as the vdp writes
+			UINT16 pix = vdp_space->read_byte(fulloffs);
+
+			drawxpos = xpos+x;
+			drawypos = ypos+y;
+
+			// odd clipping behavior, count is only increased for visible lines?
+			// I suspect the sprite corruption if you're near the top of the screen
+			// between level changes is related to this too, data offset values are
+			// probably being adjusted as layer is scrolled (and the cliprect is changed)
+			// even if they don't move.
+			if(drawypos>=cliprect.min_y)
+			{
+				fulloffs++;
+			}
+
+			if(cliprect.contains(drawxpos, drawypos))
+			{
+				if(pix&0xff) bitmap.pix16(drawypos, drawxpos) = pix;
+			}
+
+			drawxpos++;
+		}
+	}
+}
+
+static void littlerb_draw_sprites(running_machine &machine)
+{
+	littlerb_state *state = machine.driver_data<littlerb_state>();
+	int x,y,offs;
+	int xsize,ysize;
+	UINT16* spriteregion = state->m_spritelist;
+	//littlerb_printf("frame\n");
+
+	int layer = 0;
+	int yoffset = 0;
+
+	littlerb_printf("m_listoffset %04x\n", state->m_listoffset );
+
+	littlerb_printf("%04x %04x %04x %04x\n", spriteregion[0], spriteregion[1], spriteregion[2], spriteregion[3]);
+
+	littlerb_alt_printf("start\n");
+
+	int minx = 0 , maxx = 0x14f;
+	int miny = 0 , maxy = 0x11f;
+
+	for (offs=0;offs<(state->m_listoffset);)
+	{
+
+
+		UINT32 read_dword = ((spriteregion[offs+1])<<16)+ (spriteregion[offs+0]);
+
+		littlerb_printf("read %08x\n", read_dword);
+
+		// some kind of control words?? (layer selection, layer scrolls?, layer clears?)
+		// but the low bits are the sprite offset??? how can this work
+		if (spriteregion[offs+0] == 0x0060)
+		{
+			offs += 6;
+
+		}
+		else if (spriteregion[offs+0] == 0x0040)
+		{
+			littlerb_alt_printf("Control Word %04x %04x %04x %04x %04x %04x ---- ---- ---- ----\n", spriteregion[offs+0], spriteregion[offs+1], spriteregion[offs+2], spriteregion[offs+3], spriteregion[offs+4], spriteregion[offs+5]);
+
+			// some scroll stuff is here (title -> high score transition)
+			// maybe also copy area operations?
+
+
+			// this isn't understood ... note, we still have a hack before draw_sprites is called too
+
+			// usual start of frame
+			// Control Word 0040 0090 6000 0026 0000 0012 ---- ---- ---- ----
+
+			// happens in the middle of list during boss death, causes sprites to vanish atm
+			// Control Word 0040 ffd6 00aa 00f8 0088 0018 ---- ---- ---- ----
+			if (spriteregion[offs+4]==0x6000)
+			{
+				if (spriteregion[offs+3] & 0x1000)
+					state->m_temp_bitmap_sprites_back->fill(0, state->m_temp_bitmap_sprites_back->cliprect());
+			}
+			else
+			{
+				if (spriteregion[offs+1] != 0xffd6) state->m_temp_bitmap_sprites->fill(0, state->m_temp_bitmap_sprites->cliprect());
+			}
+
+
+
+			// this is some kind of scroll or copy area..
+			// also some of the other values change
+			// this is set AFTER the graphics which need to be scrolled are sent and causes the credit text to bounce up and down instead of
+			// anything scrolling
+			//yoffset = spriteregion[offs+1] - 0x90;
+
+
+			offs += 6;
+		}
+		else if (read_dword == 0x00e40020)
+		{
+			littlerb_alt_printf("Control Word %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x\n", spriteregion[offs+0], spriteregion[offs+1], spriteregion[offs+2], spriteregion[offs+3], spriteregion[offs+4], spriteregion[offs+5], spriteregion[offs+6], spriteregion[offs+7], spriteregion[offs+8], spriteregion[offs+9]);
+
+			if (spriteregion[offs+4]==0x6000)
+				layer = 1;
+			else
+				layer = 0;
+
+
+			minx = spriteregion[offs+6];
+			maxx = spriteregion[offs+8];
+
+			miny = spriteregion[offs+7];
+			maxy = spriteregion[offs+9];
+
+
+			offs += 10;
+		}
+		else if (read_dword == 0x00e40000)
+		{
+			// same as above?
+			littlerb_alt_printf("Control Word %04x %04x %04x %04x %04x %04x %04x %04x %04x %04x\n", spriteregion[offs+0], spriteregion[offs+1], spriteregion[offs+2], spriteregion[offs+3], spriteregion[offs+4], spriteregion[offs+5], spriteregion[offs+6], spriteregion[offs+7], spriteregion[offs+8], spriteregion[offs+9]);
+
+			if (spriteregion[offs+4]==0x6000)
+				layer = 1;
+			else
+				layer = 0;
+
+			minx = spriteregion[offs+6];
+			maxx = spriteregion[offs+8];
+
+			miny = spriteregion[offs+7];
+			maxy = spriteregion[offs+9];
+
+
+			offs += 10;
+		}
+		else if (read_dword == 0x00000000)
+		{
+			offs += 1;
+		}
+		else
+		{
+			UINT32 fullcode = ((spriteregion[offs+1])<<16)+ (spriteregion[offs+0]);
+
+			x = spriteregion[offs+2] & 0x07ff;
+			y = (spriteregion[offs+3] & 0x03ff); // 1?
+
+			if (x&0x400) x-=0x800;
+			if (y&0x200) y-=0x400;
+
+			y+= yoffset;
+
+			xsize = (spriteregion[offs+4] & 0x01ff); // background gfx for many places at 0x1ff wide
+			ysize = (spriteregion[offs+5] & 0x00ff); // player1/player2 texts in service mode sides are 0xff high
+
+
+			rectangle clip;
+
+			clip.min_x = minx;
+			clip.max_x = maxx;
+
+			clip.min_y = miny;
+			clip.max_y = maxy;
+
+			// used between levels, and on boss death to clip sprite at the ground for sinking effect
+
+
+			if (clip.min_x > state->m_temp_bitmap_sprites->cliprect().max_x)
+				clip.min_x =  state->m_temp_bitmap_sprites->cliprect().max_x;
+
+			if (clip.min_x < state->m_temp_bitmap_sprites->cliprect().min_x)
+				clip.min_x =  state->m_temp_bitmap_sprites->cliprect().min_x;
+
+			if (clip.max_x > state->m_temp_bitmap_sprites->cliprect().max_x)
+				clip.max_x =  state->m_temp_bitmap_sprites->cliprect().max_x;
+
+			if (clip.max_x < state->m_temp_bitmap_sprites->cliprect().min_x)
+				clip.max_x =  state->m_temp_bitmap_sprites->cliprect().min_x;
+
+
+			if (clip.min_y > state->m_temp_bitmap_sprites->cliprect().max_y)
+				clip.min_y =  state->m_temp_bitmap_sprites->cliprect().max_y;
+
+			if (clip.min_y < state->m_temp_bitmap_sprites->cliprect().min_y)
+				clip.min_y =  state->m_temp_bitmap_sprites->cliprect().min_y;
+
+			if (clip.max_y > state->m_temp_bitmap_sprites->cliprect().max_y)
+				clip.max_y =  state->m_temp_bitmap_sprites->cliprect().max_y;
+
+			if (clip.max_y < state->m_temp_bitmap_sprites->cliprect().min_y)
+				clip.max_y =  state->m_temp_bitmap_sprites->cliprect().min_y;
+
+
+			littlerb_alt_printf("%04x %04x %04x %04x %04x %04x\n", spriteregion[offs+0], spriteregion[offs+1], spriteregion[offs+2], spriteregion[offs+3], spriteregion[offs+4], spriteregion[offs+5]);
+
+			if (layer==0) draw_sprite(machine, *state->m_temp_bitmap_sprites, clip,xsize,ysize,fullcode,x,y);
+			else draw_sprite(machine, *state->m_temp_bitmap_sprites_back, clip,xsize,ysize,fullcode,x,y);
+
+
+			offs += 6;
+		}
+	}
+}
+
+
 
 static MACHINE_CONFIG_START( littlerb, littlerb_state )
 	MCFG_CPU_ADD("maincpu", M68000, 12000000)
@@ -528,18 +830,19 @@ static MACHINE_CONFIG_START( littlerb, littlerb_state )
 	MCFG_TIMER_ADD_SCANLINE("scantimer", littlerb_scanline, "screen", 0, 1)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_REFRESH_RATE(60)
+	MCFG_SCREEN_REFRESH_RATE(50) // guess based on high vertical resolution
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
-	MCFG_SCREEN_SIZE(512, 262)
-	MCFG_SCREEN_VISIBLE_AREA(0*8, 320-1, 0*8, 256-1)
+	MCFG_SCREEN_SIZE(512+22, 312)
+	MCFG_SCREEN_VISIBLE_AREA(0*8, 336-1, 0*8, 288-1)
 	MCFG_SCREEN_UPDATE_STATIC(littlerb)
+
 
 	MCFG_PALETTE_LENGTH(0x100)
 
 	MCFG_DEVICE_ADD("littlerbvdp", LITTLERBVDP, 0)
 	MCFG_RAMDAC_ADD("ramdac", ramdac_intf, ramdac_map)
 
-//  MCFG_PALETTE_INIT(littlerb)
+//  MCFG_PALETTE_INIT_OVERRIDE(littlerb_state,littlerb)
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker","rspeaker")
 
 	MCFG_DAC_ADD("dacl")
@@ -560,4 +863,4 @@ ROM_START( littlerb )
 ROM_END
 
 
-GAME( 1993, littlerb, 0, littlerb, littlerb, driver_device, 0, ROT0, "TCH", "Little Robin", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )
+GAME( 1994, littlerb, 0, littlerb, littlerb, driver_device, 0, ROT0, "TCH", "Little Robin", GAME_IMPERFECT_GRAPHICS|GAME_IMPERFECT_SOUND )

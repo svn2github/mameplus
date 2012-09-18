@@ -71,8 +71,7 @@ enum
     TYPE DEFINITIONS
 ***************************************************************************/
 
-/* in mame.h: typedef struct _debugcpu_private debugcpu_private; */
-struct _debugcpu_private
+struct debugcpu_private
 {
 	device_t *livecpu;
 	device_t *visiblecpu;
@@ -299,7 +298,7 @@ void debug_cpu_source_script(running_machine &machine, const char *file)
 			if (machine.phase() == MACHINE_PHASE_RUNNING)
 				debug_console_printf(machine, "Cannot open command file '%s'\n", file);
 			else
-				fatalerror("Cannot open command file '%s'", file);
+				fatalerror("Cannot open command file '%s'\n", file);
 		}
 	}
 }
@@ -984,7 +983,7 @@ UINT64 debug_read_opcode(address_space *_space, offs_t address, int size, int ar
 			break;
 
 		default:
-			fatalerror("debug_read_opcode: unknown type = %d", space->data_width() / 8 * 10 + size);
+			fatalerror("debug_read_opcode: unknown type = %d\n", space->data_width() / 8 * 10 + size);
 			break;
 	}
 
@@ -3050,7 +3049,11 @@ UINT32 device_debug::dasm_wrapped(astring &buffer, offs_t pc)
 	}
 
 	// disassemble to our buffer
-	return disassemble(buffer.stringbuffer(200), pc, opbuf, argbuf);
+	char diasmbuf[200];
+	memset(diasmbuf, 0x00, 200);
+	UINT32 result = disassemble(diasmbuf, pc, opbuf, argbuf);
+	buffer.cpy(diasmbuf);
+	return result;
 }
 
 
@@ -3122,7 +3125,7 @@ void device_debug::set_logunmap(symbol_table &table, void *ref, UINT64 value)
 UINT64 device_debug::get_state(symbol_table &table, void *ref)
 {
 	device_t *device = reinterpret_cast<device_t *>(table.globalref());
-	return device->debug()->m_state->state(reinterpret_cast<FPTR>(ref));
+	return device->debug()->m_state->state_int(reinterpret_cast<FPTR>(ref));
 }
 
 
@@ -3134,7 +3137,7 @@ UINT64 device_debug::get_state(symbol_table &table, void *ref)
 void device_debug::set_state(symbol_table &table, void *ref, UINT64 value)
 {
 	device_t *device = reinterpret_cast<device_t *>(table.globalref());
-	device->debug()->m_state->set_state(reinterpret_cast<FPTR>(ref), value);
+	device->debug()->m_state->set_state_int(reinterpret_cast<FPTR>(ref), value);
 }
 
 

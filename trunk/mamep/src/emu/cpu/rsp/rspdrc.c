@@ -82,8 +82,7 @@ extern offs_t rsp_dasm_one(char *buffer, offs_t pc, UINT32 op);
 ***************************************************************************/
 
 /* fast RAM info */
-typedef struct _fast_ram_info fast_ram_info;
-struct _fast_ram_info
+struct fast_ram_info
 {
 	offs_t				start;						/* start of the RAM block */
 	offs_t				end;						/* end of the RAM block */
@@ -93,8 +92,7 @@ struct _fast_ram_info
 
 
 /* internal compiler state */
-typedef struct _compiler_state compiler_state;
-struct _compiler_state
+struct compiler_state
 {
 	UINT32				cycles;						/* accumulated cycles */
 	UINT8				checkints;					/* need to check interrupts before next instruction */
@@ -102,7 +100,7 @@ struct _compiler_state
 	code_label	labelnum;					/* index for local labels */
 };
 
-struct _rspimp_state
+struct rspimp_state
 {
 	/* core state */
 	drc_cache *			cache;						/* pointer to the DRC code cache */
@@ -486,7 +484,7 @@ static void cfunc_get_cop0_reg(void *param)
 	}
 	else
 	{
-		fatalerror("RSP: cfunc_get_cop0_reg: %d", reg);
+		fatalerror("RSP: cfunc_get_cop0_reg: %d\n", reg);
 	}
 }
 
@@ -3457,7 +3455,7 @@ static void code_flush_cache(rsp_state *rsp)
 	}
 	catch (drcuml_block::abort_compilation &)
 	{
-		fatalerror("Unable to generate static RSP code");
+		fatalerror("Unable to generate static RSP code\n");
 	}
 }
 
@@ -3579,7 +3577,7 @@ static void cfunc_unimplemented(void *param)
 {
 	rsp_state *rsp = (rsp_state *)param;
 	UINT32 opcode = rsp->impstate->arg0;
-	fatalerror("PC=%08X: Unimplemented op %08X (%02X,%02X)", rsp->pc, opcode, opcode >> 26, opcode & 0x3f);
+	fatalerror("PC=%08X: Unimplemented op %08X (%02X,%02X)\n", rsp->pc, opcode, opcode >> 26, opcode & 0x3f);
 }
 
 
@@ -3590,7 +3588,7 @@ static void cfunc_unimplemented(void *param)
 #ifdef UNUSED_CODE
 static void cfunc_fatalerror(void *param)
 {
-	fatalerror("fatalerror");
+	fatalerror("fatalerror\n");
 }
 #endif
 
@@ -4761,7 +4759,7 @@ CPU_GET_INFO( rsp )
 		case CPUINFO_INT_CONTEXT_SIZE:					info->i = sizeof(rsp_state);					break;
 		case CPUINFO_INT_INPUT_LINES:					info->i = 1;							break;
 		case CPUINFO_INT_DEFAULT_IRQ_VECTOR:			info->i = 0;							break;
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;				break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;				break;
 		case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1;							break;
 		case CPUINFO_INT_CLOCK_DIVIDER:					info->i = 1;							break;
 		case CPUINFO_INT_MIN_INSTRUCTION_BYTES:			info->i = 4;							break;
@@ -4769,15 +4767,15 @@ CPU_GET_INFO( rsp )
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 1;							break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 1;							break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 32;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 32;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
 
 		case CPUINFO_INT_INPUT_STATE:					info->i = CLEAR_LINE;					break;
 
@@ -4834,11 +4832,11 @@ CPU_GET_INFO( rsp )
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &rsp->icount;				break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "RSP");					break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "RSP");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");					break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team");	break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "RSP");					break;
+		case CPUINFO_STR_FAMILY:					strcpy(info->s, "RSP");					break;
+		case CPUINFO_STR_VERSION:					strcpy(info->s, "1.0");					break;
+		case CPUINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);				break;
+		case CPUINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team");	break;
 
 		case CPUINFO_STR_FLAGS:							strcpy(info->s, " ");					break;
 

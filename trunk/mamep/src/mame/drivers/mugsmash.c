@@ -56,7 +56,7 @@ WRITE16_MEMBER(mugsmash_state::mugsmash_reg2_w)
 	{
 	case 1:
 		soundlatch_byte_w(space, 1, data & 0xff);
-		device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE );
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE );
 		break;
 
 	default:
@@ -391,7 +391,7 @@ GFXDECODE_END
 static void irq_handler(device_t *device, int irq)
 {
 	mugsmash_state *state = device->machine().driver_data<mugsmash_state>();
-	device_set_input_line(state->m_audiocpu, 0 , irq ? ASSERT_LINE : CLEAR_LINE );
+	state->m_audiocpu->set_input_line(0 , irq ? ASSERT_LINE : CLEAR_LINE );
 }
 
 static const ym2151_interface ym2151_config =
@@ -399,12 +399,11 @@ static const ym2151_interface ym2151_config =
 	DEVCB_LINE(irq_handler)
 };
 
-static MACHINE_START( mugsmash )
+void mugsmash_state::machine_start()
 {
-	mugsmash_state *state = machine.driver_data<mugsmash_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 }
 
 static MACHINE_CONFIG_START( mugsmash, mugsmash_state )
@@ -416,7 +415,6 @@ static MACHINE_CONFIG_START( mugsmash, mugsmash_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* Guess */
 	MCFG_CPU_PROGRAM_MAP(mugsmash_sound_map)
 
-	MCFG_MACHINE_START(mugsmash)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(60)
@@ -428,7 +426,6 @@ static MACHINE_CONFIG_START( mugsmash, mugsmash_state )
 
 	MCFG_PALETTE_LENGTH(0x300)
 
-	MCFG_VIDEO_START(mugsmash)
 
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 

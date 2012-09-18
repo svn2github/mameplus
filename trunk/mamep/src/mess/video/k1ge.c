@@ -10,8 +10,7 @@ used in the Neogeo pocket color.
 #include "emu.h"
 #include "k1ge.h"
 
-typedef struct k1ge k1ge_t;
-struct k1ge
+struct k1ge_t
 {
 	const k1ge_interface *intf;
 	screen_device *screen;
@@ -63,7 +62,7 @@ INLINE k1ge_t *get_safe_token( device_t *device )
 	assert( device != NULL );
 	assert( device->type() == K1GE || device->type() == K2GE );
 
-	return ( k1ge_t *) downcast<legacy_device_base *>(device)->token();
+	return ( k1ge_t *) downcast<k1ge_device *>(device)->token();
 }
 
 
@@ -892,37 +891,63 @@ static DEVICE_RESET( k1ge )
 }
 
 
-DEVICE_GET_INFO( k1ge )
+const device_type K1GE = &device_creator<k1ge_device>;
+
+k1ge_device::k1ge_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K1GE, "", tag, owner, clock)
 {
-	switch ( state )
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof( k1ge_t ); break;
-		case DEVINFO_INT_INLINE_CONFIG_BYTES:	info->i = 0; break;
+	m_token = global_alloc_array_clear(UINT8, sizeof( k1ge_t ));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME( k1ge ); break;
-		case DEVINFO_FCT_STOP:					break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME( k1ge ); break;
+k1ge_device::k1ge_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, type, name, tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof( k1ge_t ));
+}
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy( info->s, "SNK K1GE" ); break;
-		case DEVINFO_STR_FAMILY:				strcpy( info->s, "KxGE" ); break;
-		case DEVINFO_STR_VERSION:				strcpy( info->s, "1.0" ); break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy( info->s, __FILE__ );
-		case DEVINFO_STR_CREDITS:				strcpy( info->s, "Copyright the MESS team" ); break;
-	}
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k1ge_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k1ge_device::device_start()
+{
+	DEVICE_START_NAME( k1ge )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k1ge_device::device_reset()
+{
+	DEVICE_RESET_NAME( k1ge )(this);
 }
 
 
-DEVICE_GET_INFO( k2ge )
+const device_type K2GE = &device_creator<k2ge_device>;
+
+k2ge_device::k2ge_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: k1ge_device(mconfig, K2GE, "", tag, owner, clock)
 {
-	switch ( state )
-	{
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME( k2ge ); break;
-		default:								DEVICE_GET_INFO_CALL( k1ge ); break;
-	}
 }
 
-DEFINE_LEGACY_DEVICE(K1GE, k1ge);
-DEFINE_LEGACY_DEVICE(K2GE, k2ge);
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k2ge_device::device_start()
+{
+	DEVICE_START_NAME( k2ge )(this);
+}
+
+

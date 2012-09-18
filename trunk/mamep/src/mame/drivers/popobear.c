@@ -94,9 +94,10 @@ public:
 	required_shared_ptr<UINT16> m_vregs;
 	DECLARE_READ8_MEMBER(popo_620000_r);
 	DECLARE_WRITE8_MEMBER(popobear_irq_ack_w);
+	virtual void video_start();
 };
 
-VIDEO_START(popobear)
+void popobear_state::video_start()
 {
 
 }
@@ -285,7 +286,7 @@ WRITE8_MEMBER(popobear_state::popobear_irq_ack_w)
 	for(i=0;i<8;i++)
 	{
 		if(data & 1 << i)
-			device_set_input_line(m_maincpu, i, CLEAR_LINE);
+			m_maincpu->set_input_line(i, CLEAR_LINE);
 	}
 }
 
@@ -443,14 +444,14 @@ static TIMER_DEVICE_CALLBACK( popobear_irq )
 
 	/* Order is trusted (5 as vblank-out makes the title screen logo spinning to behave wrongly) */
 	if(scanline == 240)
-		device_set_input_line(state->m_maincpu, 3, ASSERT_LINE);
+		state->m_maincpu->set_input_line(3, ASSERT_LINE);
 
 	if(scanline == 0)
-		device_set_input_line(state->m_maincpu, 5, ASSERT_LINE);
+		state->m_maincpu->set_input_line(5, ASSERT_LINE);
 
 	/* TODO: actually a timer irq, tied with YM2413 sound chip (controls BGM tempo) */
 	if(scanline == 64 || scanline == 192)
-		device_set_input_line(state->m_maincpu, 2, ASSERT_LINE);
+		state->m_maincpu->set_input_line(2, ASSERT_LINE);
 }
 
 static MACHINE_CONFIG_START( popobear, popobear_state )
@@ -472,7 +473,6 @@ static MACHINE_CONFIG_START( popobear, popobear_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 64*8-1, 0*8, 32*8-1)
 	MCFG_PALETTE_LENGTH(256*2)
 
-	MCFG_VIDEO_START(popobear)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

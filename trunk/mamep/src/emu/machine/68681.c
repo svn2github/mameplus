@@ -44,7 +44,7 @@ static const char *const duart68681_reg_write_names[0x10] =
 
 #define RX_FIFO_SIZE				3
 
-typedef struct
+struct DUART68681_CHANNEL
 {
 	/* Registers */
 	UINT8 CR;  /* Command register */
@@ -70,9 +70,9 @@ typedef struct
 	UINT8 tx_ready;
 	emu_timer *tx_timer;
 
-} DUART68681_CHANNEL;
+};
 
-typedef struct
+struct duart68681_state
 {
 	/* device */
 	device_t *device;
@@ -99,14 +99,14 @@ typedef struct
 	/* UART channels */
 	DUART68681_CHANNEL channel[2];
 
-} duart68681_state;
+};
 
 INLINE duart68681_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == DUART68681);
 
-	return (duart68681_state *)downcast<legacy_device_base *>(device)->token();
+	return (duart68681_state *)downcast<duart68681_device *>(device)->token();
 }
 
 static void duart68681_update_interrupts(duart68681_state *duart68681)
@@ -903,30 +903,40 @@ static DEVICE_RESET(duart68681)
 	duart68681->channel[1].tx_timer->adjust(attotime::never, 1);
 }
 
-/*-------------------------------------------------
-    device get info callback
--------------------------------------------------*/
+const device_type DUART68681 = &device_creator<duart68681_device>;
 
-DEVICE_GET_INFO(duart68681)
+duart68681_device::duart68681_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, DUART68681, "DUART 68681", tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(duart68681_state);	break;
-		case DEVINFO_INT_INLINE_CONFIG_BYTES:	info->i = sizeof(duart68681_config);	break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(duart68681); break;
-		case DEVINFO_FCT_STOP:					/* nothing */ break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(duart68681);break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "DUART 68681");			break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "DUART");				break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");					break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(duart68681_state));
 }
 
-DEFINE_LEGACY_DEVICE(DUART68681, duart68681);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void duart68681_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void duart68681_device::device_start()
+{
+	DEVICE_START_NAME( duart68681 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void duart68681_device::device_reset()
+{
+	DEVICE_RESET_NAME( duart68681 )(this);
+}
+
+

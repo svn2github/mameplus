@@ -80,7 +80,7 @@ WRITE8_MEMBER(airbustr_state::airbustr_scrollregs_w)
 		case 0x06:	m_bg_scrollx = data;	break;
 		case 0x08:	m_highbits   = ~data;	break;	// complemented high bits
 
-		default:	logerror("CPU #2 - port %02X written with %02X - PC = %04X\n", offset, data, cpu_get_pc(&space.device()));
+		default:	logerror("CPU #2 - port %02X written with %02X - PC = %04X\n", offset, data, space.device().safe_pc());
 	}
 
 	m_bg_tilemap->set_scrolly(0, ((m_highbits << 5) & 0x100) + m_bg_scrolly);
@@ -89,42 +89,39 @@ WRITE8_MEMBER(airbustr_state::airbustr_scrollregs_w)
 	m_fg_tilemap->set_scrollx(0, ((m_highbits << 8) & 0x100) + m_fg_scrollx);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(airbustr_state::get_fg_tile_info)
 {
-	airbustr_state *state = machine.driver_data<airbustr_state>();
-	int attr = state->m_colorram2[tile_index];
-	int code = state->m_videoram2[tile_index] + ((attr & 0x0f) << 8);
+	int attr = m_colorram2[tile_index];
+	int code = m_videoram2[tile_index] + ((attr & 0x0f) << 8);
 	int color = attr >> 4;
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(airbustr_state::get_bg_tile_info)
 {
-	airbustr_state *state = machine.driver_data<airbustr_state>();
-	int attr = state->m_colorram[tile_index];
-	int code = state->m_videoram[tile_index] + ((attr & 0x0f) << 8);
+	int attr = m_colorram[tile_index];
+	int code = m_videoram[tile_index] + ((attr & 0x0f) << 8);
 	int color = (attr >> 4) + 16;
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
-VIDEO_START( airbustr )
+void airbustr_state::video_start()
 {
-	airbustr_state *state = machine.driver_data<airbustr_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 16, 16, 32, 32);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 16, 16, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(airbustr_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(airbustr_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
 
-	machine.primary_screen->register_screen_bitmap(state->m_sprites_bitmap);
-	state->m_fg_tilemap->set_transparent_pen(0);
+	machine().primary_screen->register_screen_bitmap(m_sprites_bitmap);
+	m_fg_tilemap->set_transparent_pen(0);
 
-	state->m_bg_tilemap->set_scrolldx(0x094, 0x06a);
-	state->m_bg_tilemap->set_scrolldy(0x100, 0x1ff);
-	state->m_fg_tilemap->set_scrolldx(0x094, 0x06a);
-	state->m_fg_tilemap->set_scrolldy(0x100, 0x1ff);
+	m_bg_tilemap->set_scrolldx(0x094, 0x06a);
+	m_bg_tilemap->set_scrolldy(0x100, 0x1ff);
+	m_fg_tilemap->set_scrolldx(0x094, 0x06a);
+	m_fg_tilemap->set_scrolldy(0x100, 0x1ff);
 
-	state->save_item(NAME(state->m_sprites_bitmap));
+	save_item(NAME(m_sprites_bitmap));
 }
 
 

@@ -52,15 +52,19 @@
 #include "includes/psx.h"
 #include "includes/konamigx.h"
 #include "machine/eeprom.h"
-#include "machine/am53cf96.h"
+#include "machine/scsibus.h"
 #include "machine/scsihd.h"
+#include "machine/am53cf96.h"
 #include "sound/k054539.h"
 
 class konamigq_state : public psx_state
 {
 public:
 	konamigq_state(const machine_config &mconfig, device_type type, const char *tag)
-		: psx_state(mconfig, type, tag) { }
+		: psx_state(mconfig, type, tag),
+		m_am53cf96(*this, "scsi:am53cf96"){ }
+
+	required_device<am53cf96_device> m_am53cf96;
 
 	UINT8 m_sndto000[ 16 ];
 	UINT8 m_sndtor3k[ 16 ];
@@ -80,6 +84,8 @@ public:
 	DECLARE_READ16_MEMBER(tms57002_status_word_r);
 	DECLARE_WRITE16_MEMBER(tms57002_control_word_w);
 	DECLARE_DRIVER_INIT(konamigq);
+	DECLARE_MACHINE_START(konamigq);
+	DECLARE_MACHINE_RESET(konamigq);
 };
 
 /* Sound */
@@ -93,7 +99,7 @@ WRITE32_MEMBER(konamigq_state::soundr3k_w)
 		m_sndto000[ ( offset << 1 ) + 1 ] = data >> 16;
 		if( offset == 3 )
 		{
-			cputag_set_input_line(machine(), "soundcpu", 1, HOLD_LINE );
+			machine().device("soundcpu")->execute().set_input_line(1, HOLD_LINE );
 		}
 	}
 	if( ACCESSING_BITS_0_15 )
@@ -146,7 +152,7 @@ static const UINT16 konamigq_def_eeprom[64] =
 WRITE32_MEMBER(konamigq_state::eeprom_w)
 {
 	ioport("EEPROMOUT")->write(data & 0x07, 0xff);
-	cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_RESET, ( data & 0x40 ) ? CLEAR_LINE : ASSERT_LINE );
+	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, ( data & 0x40 ) ? CLEAR_LINE : ASSERT_LINE );
 }
 
 
@@ -177,7 +183,7 @@ READ32_MEMBER(konamigq_state::pcmram_r)
 
 static ADDRESS_MAP_START( konamigq_map, AS_PROGRAM, 32, konamigq_state )
 	AM_RANGE(0x00000000, 0x003fffff) AM_RAM	AM_SHARE("share1") /* ram */
-	AM_RANGE(0x1f000000, 0x1f00001f) AM_READWRITE_LEGACY(am53cf96_r, am53cf96_w)
+	AM_RANGE(0x1f000000, 0x1f00001f) AM_DEVREADWRITE8("scsi:am53cf96", am53cf96_device, read, write, 0x00ff00ff)
 	AM_RANGE(0x1f100000, 0x1f10000f) AM_WRITE(soundr3k_w)
 	AM_RANGE(0x1f100010, 0x1f10001f) AM_READ(soundr3k_r)
 	AM_RANGE(0x1f180000, 0x1f180003) AM_WRITE(eeprom_w)
@@ -275,7 +281,7 @@ static void scsi_dma_read( konamigq_state *state, UINT32 n_address, INT32 n_size
 		{
 			n_this = n_size;
 		}
-		am53cf96_read_data( n_this * 4, sector_buffer );
+		state->m_am53cf96->dma_read_data( n_this * 4, sector_buffer );
 		n_size -= n_this;
 
 		i = 0;
@@ -302,17 +308,8 @@ static void scsi_irq(running_machine &machine)
 	psx_irq_set(machine, 0x400);
 }
 
-static const SCSIConfigTable dev_table =
+static const struct AM53CF96interface am53cf96_intf =
 {
-	1, /* 1 SCSI device */
-	{
-		{ SCSI_ID_0, ":disk" } /* SCSI ID 0, HDD */
-	}
-};
-
-static const struct AM53CF96interface scsi_intf =
-{
-	&dev_table,		/* SCSI device table */
 	&scsi_irq,		/* command completion IRQ */
 };
 
@@ -324,20 +321,16 @@ DRIVER_INIT_MEMBER(konamigq_state,konamigq)
 	m_p_n_pcmram = memregion( "shared" )->base() + 0x80000;
 }
 
-static MACHINE_START( konamigq )
+MACHINE_START_MEMBER(konamigq_state,konamigq)
 {
-	konamigq_state *state = machine.driver_data<konamigq_state>();
 
-	/* init the scsi controller and hook up it's DMA */
-	am53cf96_init(machine, &scsi_intf);
-
-	state->save_pointer(NAME(state->m_p_n_pcmram), 0x380000);
-	state->save_item(NAME(state->m_sndto000));
-	state->save_item(NAME(state->m_sndtor3k));
-	state->save_item(NAME(state->m_sector_buffer));
+	save_pointer(NAME(m_p_n_pcmram), 0x380000);
+	save_item(NAME(m_sndto000));
+	save_item(NAME(m_sndtor3k));
+	save_item(NAME(m_sector_buffer));
 }
 
-static MACHINE_RESET( konamigq )
+MACHINE_RESET_MEMBER(konamigq_state,konamigq)
 {
 }
 
@@ -353,12 +346,14 @@ static MACHINE_CONFIG_START( konamigq, konamigq_state )
 	MCFG_CPU_PROGRAM_MAP( konamigq_sound_map)
 	MCFG_CPU_PERIODIC_INT( irq2_line_hold, 480 )
 
-	MCFG_MACHINE_START( konamigq )
-	MCFG_MACHINE_RESET( konamigq )
+	MCFG_MACHINE_START_OVERRIDE(konamigq_state, konamigq )
+	MCFG_MACHINE_RESET_OVERRIDE(konamigq_state, konamigq )
 	MCFG_EEPROM_93C46_ADD("eeprom")
 	MCFG_EEPROM_DATA(konamigq_def_eeprom, 128)
 
-	MCFG_DEVICE_ADD("disk", SCSIHD, 0)
+	MCFG_SCSIBUS_ADD("scsi")
+	MCFG_SCSIDEV_ADD("scsi:disk", SCSIHD, SCSI_ID_0)
+	MCFG_AM53CF96_ADD("scsi:am53cf96", am53cf96_intf)
 
 	/* video hardware */
 	MCFG_PSXGPU_ADD( "maincpu", "gpu", CXD8538Q, 0x200000, XTAL_53_693175MHz )
@@ -469,7 +464,7 @@ ROM_START( cryptklr )
 	ROM_REGION32_LE( 0x080000, "user1", 0 ) /* bios */
 	ROM_LOAD( "420b03.27p",   0x0000000, 0x080000, CRC(aab391b1) SHA1(bf9dc7c0c8168c22a4be266fe6a66d3738df916b) )
 
-	DISK_REGION( "disk" )
+	DISK_REGION( "scsi:disk" )
 	DISK_IMAGE( "420uaa04", 0, SHA1(67cb1418fc0de2a89fc61847dc9efb9f1bebb347) )
 ROM_END
 

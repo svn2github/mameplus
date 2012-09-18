@@ -135,8 +135,7 @@ Ensoniq OTIS - ES5505                                            Ensoniq OTTO - 
 ***********************************************************************************************/
 
 /* struct describing a single playing voice */
-typedef struct _es5506_voice es5506_voice;
-struct _es5506_voice
+struct es5506_voice
 {
 	/* external state */
 	UINT32		control;				/* control register */
@@ -167,8 +166,7 @@ struct _es5506_voice
 	UINT32		accum_mask;
 };
 
-typedef struct _es5506_state es5506_state;
-struct _es5506_state
+struct es5506_state
 {
 	sound_stream *stream;				/* which stream are we using */
 	int			sample_rate;			/* current sample rate */
@@ -205,7 +203,7 @@ INLINE es5506_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == ES5505 || device->type() == ES5506);
-	return (es5506_state *)downcast<legacy_device_base *>(device)->token();
+	return (es5506_state *)downcast<es5506_device *>(device)->token();
 }
 
 
@@ -1570,26 +1568,6 @@ static DEVICE_START( es5505 )
 }
 
 
-
-/**********************************************************************************************
-
-     DEVICE_STOP( es5505 ) -- stop emulation of the ES5505
-
-***********************************************************************************************/
-
-static DEVICE_STOP( es5505 )
-{
-	DEVICE_STOP_CALL( es5506 );
-}
-
-
-static DEVICE_RESET( es5505 )
-{
-	DEVICE_RESET_CALL( es5506 );
-}
-
-
-
 /**********************************************************************************************
 
      es5505_reg_write -- handle a write to the selected ES5505 register
@@ -2153,59 +2131,82 @@ void es5505_voice_bank_w(device_t *device, int voice, int bank)
 	chip->voice[voice].exbank=bank;
 }
 
+const device_type ES5506 = &device_creator<es5506_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( es5505 )
+es5506_device::es5506_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, ES5506, "ES5506", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(es5506_state);					break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(es5506_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( es5505 );		break;
-		case DEVINFO_FCT_STOP:							info->stop = DEVICE_STOP_NAME( es5505 );		break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME( es5505 );		break;
+es5506_device::es5506_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, type, name, tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(es5506_state));
+}
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "ES5505");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Ensoniq Wavetable");			break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void es5506_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void es5506_device::device_start()
+{
+	DEVICE_START_NAME( es5506 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void es5506_device::device_reset()
+{
+	DEVICE_RESET_NAME( es5506 )(this);
+}
+
+//-------------------------------------------------
+//  device_stop - device-specific stop
+//-------------------------------------------------
+
+void es5506_device::device_stop()
+{
+	DEVICE_STOP_NAME( es5506 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void es5506_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
+const device_type ES5505 = &device_creator<es5505_device>;
 
-DEVICE_GET_INFO( es5506 )
+es5505_device::es5505_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: es5506_device(mconfig, ES5505, "ES5505", tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(es5506_state);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( es5506 );		break;
-		case DEVINFO_FCT_STOP:							info->stop = DEVICE_STOP_NAME( es5506 );		break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME( es5506 );		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "ES5506");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Ensoniq Wavetable");			break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
 }
 
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
 
-DEFINE_LEGACY_SOUND_DEVICE(ES5505, es5505);
-DEFINE_LEGACY_SOUND_DEVICE(ES5506, es5506);
+void es5505_device::device_start()
+{
+	DEVICE_START_NAME( es5505 )(this);
+}

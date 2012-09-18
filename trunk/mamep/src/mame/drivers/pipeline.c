@@ -97,26 +97,28 @@ public:
 	DECLARE_WRITE8_MEMBER(vidctrl_w);
 	DECLARE_READ8_MEMBER(protection_r);
 	DECLARE_WRITE8_MEMBER(protection_w);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	TILE_GET_INFO_MEMBER(get_tile_info2);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(pipeline_state::get_tile_info)
 {
-	pipeline_state *state = machine.driver_data<pipeline_state>();
-	int code = state->m_vram2[tile_index]+state->m_vram2[tile_index+0x800]*256;
-	SET_TILE_INFO(
+	int code = m_vram2[tile_index]+m_vram2[tile_index+0x800]*256;
+	SET_TILE_INFO_MEMBER(
 		0,
 		code,
 		0,
 		0);
 }
 
-static TILE_GET_INFO( get_tile_info2 )
+TILE_GET_INFO_MEMBER(pipeline_state::get_tile_info2)
 {
-	pipeline_state *state = machine.driver_data<pipeline_state>();
-	int code =state->m_vram1[tile_index]+((state->m_vram1[tile_index+0x800]>>4))*256;
-	int color=((state->m_vram1[tile_index+0x800])&0xf);
-	SET_TILE_INFO
+	int code =m_vram1[tile_index]+((m_vram1[tile_index+0x800]>>4))*256;
+	int color=((m_vram1[tile_index+0x800])&0xf);
+	SET_TILE_INFO_MEMBER
 	(
 		1,
 		code,
@@ -125,13 +127,12 @@ static TILE_GET_INFO( get_tile_info2 )
 	);
 }
 
-static VIDEO_START ( pipeline )
+void pipeline_state::video_start()
 {
-	pipeline_state *state = machine.driver_data<pipeline_state>();
-	state->m_palram=auto_alloc_array(machine, UINT8, 0x1000);
-	state->m_tilemap1 = tilemap_create( machine, get_tile_info,tilemap_scan_rows,8,8,64,32 );
-	state->m_tilemap2 = tilemap_create( machine, get_tile_info2,tilemap_scan_rows,8,8,64,32 );
-	state->m_tilemap2->set_transparent_pen(0);
+	m_palram=auto_alloc_array(machine(), UINT8, 0x1000);
+	m_tilemap1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(pipeline_state::get_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32 );
+	m_tilemap2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(pipeline_state::get_tile_info2),this),TILEMAP_SCAN_ROWS,8,8,64,32 );
+	m_tilemap2->set_transparent_pen(0);
 }
 
 static SCREEN_UPDATE_IND16( pipeline )
@@ -366,11 +367,11 @@ static const ym2203_interface ym2203_config =
 	DEVCB_NULL
 };
 
-static PALETTE_INIT(pipeline)
+void pipeline_state::palette_init()
 {
 	int r,g,b,i,c;
-	UINT8 *prom1 = &machine.root_device().memregion("proms")->base()[0x000];
-	UINT8 *prom2 = &machine.root_device().memregion("proms")->base()[0x100];
+	UINT8 *prom1 = &machine().root_device().memregion("proms")->base()[0x000];
+	UINT8 *prom2 = &machine().root_device().memregion("proms")->base()[0x100];
 
 	for(i=0;i<0x100;i++)
 	{
@@ -381,7 +382,7 @@ static PALETTE_INIT(pipeline)
 		r*=36;
 		g*=36;
 		b*=85;
-		palette_set_color(machine, 0x100+i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), 0x100+i, MAKE_RGB(r, g, b));
 	}
 }
 
@@ -416,10 +417,8 @@ static MACHINE_CONFIG_START( pipeline, pipeline_state )
 
 	MCFG_GFXDECODE(pipeline)
 
-	MCFG_PALETTE_INIT(pipeline)
 	MCFG_PALETTE_LENGTH(0x100+0x100)
 
-	MCFG_VIDEO_START(pipeline)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

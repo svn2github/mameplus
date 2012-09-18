@@ -26,7 +26,7 @@
 //**************************************************************************
 
 
-typedef enum
+enum rtc9701_state_t
 {
 	RTC9701_CMD_WAIT = 0,
 	RTC9701_RTC_READ,
@@ -35,12 +35,12 @@ typedef enum
 	RTC9701_EEPROM_WRITE,
 	RTC9701_AFTER_WRITE_ENABLE,
 
-} rtc9701_state_t;
+};
 
-typedef struct
+struct rtc_regs_t
 {
 	UINT8 sec, min, hour, day, wday, month, year;
-} rtc_regs_t;
+};
 
 
 // ======================> rtc9701_device

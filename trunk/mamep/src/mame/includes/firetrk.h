@@ -89,6 +89,18 @@ public:
 	DECLARE_INPUT_CHANGED_MEMBER(service_mode_switch_changed);
 	DECLARE_INPUT_CHANGED_MEMBER(firetrk_horn_changed);
 	DECLARE_INPUT_CHANGED_MEMBER(gear_changed);
+	TILE_GET_INFO_MEMBER(firetrk_get_tile_info1);
+	TILE_GET_INFO_MEMBER(superbug_get_tile_info1);
+	TILE_GET_INFO_MEMBER(montecar_get_tile_info1);
+	TILE_GET_INFO_MEMBER(firetrk_get_tile_info2);
+	TILE_GET_INFO_MEMBER(superbug_get_tile_info2);
+	TILE_GET_INFO_MEMBER(montecar_get_tile_info2);
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_VIDEO_START(superbug);
+	DECLARE_VIDEO_START(montecar);
+	DECLARE_PALETTE_INIT(montecar);
 };
 
 
@@ -109,11 +121,11 @@ DISCRETE_SOUND_EXTERN( montecar );
 
 /*----------- defined in video/firetrk.c -----------*/
 
-PALETTE_INIT( firetrk );
-PALETTE_INIT( montecar );
-VIDEO_START( firetrk );
-VIDEO_START( superbug );
-VIDEO_START( montecar );
+
+
+
+
+
 SCREEN_UPDATE_IND16( firetrk );
 SCREEN_UPDATE_IND16( superbug );
 SCREEN_UPDATE_IND16( montecar );

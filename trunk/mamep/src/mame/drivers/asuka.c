@@ -233,13 +233,13 @@ DIP locations verified for:
 static TIMER_CALLBACK( cadash_interrupt5 )
 {
 	asuka_state *state = machine.driver_data<asuka_state>();
-	device_set_input_line(state->m_maincpu, 5, HOLD_LINE);
+	state->m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( cadash_interrupt )
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(500), FUNC(cadash_interrupt5));
-	device_set_input_line(device, 4, HOLD_LINE);  /* interrupt vector 4 */
+	device->execute().set_input_line(4, HOLD_LINE);  /* interrupt vector 4 */
 }
 
 
@@ -294,16 +294,14 @@ WRITE8_MEMBER(asuka_state::asuka_msm5205_stop_w)
 	m_adpcm_pos &= 0xff00;
 }
 
-static UINT8 *cadash_shared_ram;
-
 READ16_MEMBER(asuka_state::cadash_share_r)
 {
-	return cadash_shared_ram[offset];
+	return m_cadash_shared_ram[offset];
 }
 
 WRITE16_MEMBER(asuka_state::cadash_share_w)
 {
-	cadash_shared_ram[offset] = data & 0xff;
+	m_cadash_shared_ram[offset] = data & 0xff;
 }
 
 
@@ -433,7 +431,7 @@ m68k M -> z180 M <-> z180 S <- m68k S
 
 static ADDRESS_MAP_START( cadash_sub_map, AS_PROGRAM, 8, asuka_state )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_BASE_LEGACY(&cadash_shared_ram)
+	AM_RANGE(0x8000, 0x87ff) AM_RAM AM_SHARE("sharedram")
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( cadash_sub_io, AS_IO, 8, asuka_state )
@@ -771,7 +769,7 @@ GFXDECODE_END
 
 static void irq_handler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2610_interface ym2610_config =
@@ -833,45 +831,43 @@ static const tc0110pcr_interface asuka_tc0110pcr_intf =
 };
 
 
-static MACHINE_START( asuka )
+void asuka_state::machine_start()
 {
-	asuka_state *state = machine.driver_data<asuka_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_pc090oj = machine.device("pc090oj");
-	state->m_tc0100scn = machine.device("tc0100scn");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_pc090oj = machine().device("pc090oj");
+	m_tc0100scn = machine().device("tc0100scn");
 
 	/* configure the banks */
-	state->membank("bank1")->configure_entry(0, state->memregion("audiocpu")->base());
-	state->membank("bank1")->configure_entries(1, 3, state->memregion("audiocpu")->base() + 0x10000, 0x04000);
+	membank("bank1")->configure_entry(0, memregion("audiocpu")->base());
+	membank("bank1")->configure_entries(1, 3, memregion("audiocpu")->base() + 0x10000, 0x04000);
 
-	state->save_item(NAME(state->m_adpcm_pos));
-	state->save_item(NAME(state->m_adpcm_data));
+	save_item(NAME(m_adpcm_pos));
+	save_item(NAME(m_adpcm_data));
 
-	state->save_item(NAME(state->m_current_round));
-	state->save_item(NAME(state->m_current_bank));
-	state->save_item(NAME(state->m_video_ctrl));
-	state->save_item(NAME(state->m_video_mask));
-	state->save_item(NAME(state->m_cc_port));
-	state->save_item(NAME(state->m_restart_status));
-	state->save_item(NAME(state->m_cval));
+	save_item(NAME(m_current_round));
+	save_item(NAME(m_current_bank));
+	save_item(NAME(m_video_ctrl));
+	save_item(NAME(m_video_mask));
+	save_item(NAME(m_cc_port));
+	save_item(NAME(m_restart_status));
+	save_item(NAME(m_cval));
 }
 
-static MACHINE_RESET( asuka )
+void asuka_state::machine_reset()
 {
-	asuka_state *state = machine.driver_data<asuka_state>();
 
-	state->m_adpcm_pos = 0;
-	state->m_adpcm_data = -1;
-	state->m_current_round = 0;
-	state->m_current_bank = 0;
-	state->m_video_ctrl = 0;
-	state->m_video_mask = 0;
-	state->m_cc_port = 0;
-	state->m_restart_status = 0;
+	m_adpcm_pos = 0;
+	m_adpcm_data = -1;
+	m_current_round = 0;
+	m_current_bank = 0;
+	m_video_ctrl = 0;
+	m_video_mask = 0;
+	m_cc_port = 0;
+	m_restart_status = 0;
 
-	memset(state->m_cval, 0, 26);
+	memset(m_cval, 0, 26);
 }
 
 static SCREEN_VBLANK( asuka )
@@ -906,8 +902,6 @@ static MACHINE_CONFIG_START( bonzeadv, asuka_state )
 	MCFG_CPU_ADD("audiocpu", Z80,4000000)    /* sound CPU, also required for test mode */
 	MCFG_CPU_PROGRAM_MAP(bonzeadv_z80_map)
 
-	MCFG_MACHINE_START(asuka)
-	MCFG_MACHINE_RESET(asuka)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -949,8 +943,6 @@ static MACHINE_CONFIG_START( asuka, asuka_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/4)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(z80_map)
 
-	MCFG_MACHINE_START(asuka)
-	MCFG_MACHINE_RESET(asuka)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -1001,8 +993,6 @@ static MACHINE_CONFIG_START( cadash, asuka_state )
 	MCFG_CPU_PROGRAM_MAP(cadash_sub_map)
 	MCFG_CPU_IO_MAP(cadash_sub_io)
 
-	MCFG_MACHINE_START(asuka)
-	MCFG_MACHINE_RESET(asuka)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -1045,8 +1035,6 @@ static MACHINE_CONFIG_START( mofflott, asuka_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(z80_map)
 
-	MCFG_MACHINE_START(asuka)
-	MCFG_MACHINE_RESET(asuka)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -1093,8 +1081,6 @@ static MACHINE_CONFIG_START( galmedes, asuka_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(cadash_z80_map)
 
-	MCFG_MACHINE_START(asuka)
-	MCFG_MACHINE_RESET(asuka)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
@@ -1137,8 +1123,6 @@ static MACHINE_CONFIG_START( eto, asuka_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 4000000)	/* 4 MHz ??? */
 	MCFG_CPU_PROGRAM_MAP(cadash_z80_map)
 
-	MCFG_MACHINE_START(asuka)
-	MCFG_MACHINE_RESET(asuka)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 

@@ -170,8 +170,7 @@ Timming
 #define M_RDOP(A)		cpustate->direct->read_decrypted_byte(A)
 #define M_RDOP_ARG(A)	cpustate->direct->read_raw_byte(A)
 
-typedef struct _alpha8201_state alpha8201_state;
-struct _alpha8201_state
+struct alpha8201_state
 {
 	UINT8 RAM[8*8];  /* internal GP register 8 * 8bank       */
 	unsigned PREVPC;
@@ -205,10 +204,10 @@ struct _alpha8201_state
 };
 
 /* The opcode table now is a combination of cycle counts and function pointers */
-typedef struct {
+struct s_opcode {
 	unsigned cycles;
 	void (*function) (alpha8201_state *cpustate);
-}	s_opcode;
+};
 
 
 #define PC				pc.w.l
@@ -885,7 +884,7 @@ static CPU_GET_INFO( alpha8xxx )
 		case CPUINFO_INT_CONTEXT_SIZE:					info->i = sizeof(alpha8201_state);		break;
 		case CPUINFO_INT_INPUT_LINES:					info->i = 0;							break;
 		case CPUINFO_INT_DEFAULT_IRQ_VECTOR:			info->i = 0;							break;
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
 		case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1;							break;
 		case CPUINFO_INT_CLOCK_DIVIDER:					info->i = 1;							break;
 		case CPUINFO_INT_MIN_INSTRUCTION_BYTES:			info->i = 1;							break;
@@ -893,15 +892,15 @@ static CPU_GET_INFO( alpha8xxx )
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 1;							break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 16;							break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 8;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 10;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 8;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 6;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 8;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 10;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 8;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 6;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
 #if HANDLE_HALT_LINE
 		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_HALT:		info->i = cpustate->halt ? ASSERT_LINE : CLEAR_LINE; break;
 #endif
@@ -941,10 +940,10 @@ static CPU_GET_INFO( alpha8xxx )
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &cpustate->icount;		break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "AlphaDenshi MCU");		break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "0.1");					break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Tatsuyuki Satoh"); break;
+		case CPUINFO_STR_FAMILY:					strcpy(info->s, "AlphaDenshi MCU");		break;
+		case CPUINFO_STR_VERSION:					strcpy(info->s, "0.1");					break;
+		case CPUINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);				break;
+		case CPUINFO_STR_CREDITS:					strcpy(info->s, "Copyright Tatsuyuki Satoh"); break;
 		case CPUINFO_STR_FLAGS:							sprintf(info->s, "%c%c", cpustate->cf?'C':'.',cpustate->zf?'Z':'.'); break;
 		case CPUINFO_STR_REGISTER + ALPHA8201_PC:		sprintf(info->s, "cpustate->PC:%03X", cpustate->PC);		break;
 		case CPUINFO_STR_REGISTER + ALPHA8201_SP:		sprintf(info->s, "SP:%02X", M_RDMEM(0x001) ); break;
@@ -976,7 +975,7 @@ CPU_GET_INFO( alpha8201 )
 {
 	switch (state)
 	{
-	case DEVINFO_STR_NAME:							strcpy(info->s, "ALPHA-8201");				break;
+	case CPUINFO_STR_NAME:							strcpy(info->s, "ALPHA-8201");				break;
 	case CPUINFO_FCT_EXECUTE:						info->execute = CPU_EXECUTE_NAME(alpha8201);			break;
 	default:
 		/* 8201 / 8301 */
@@ -988,7 +987,7 @@ CPU_GET_INFO( alpha8301 )
 {
 	switch (state)
 	{
-	case DEVINFO_STR_NAME:							strcpy(info->s, "ALPHA-8301");				break;
+	case CPUINFO_STR_NAME:							strcpy(info->s, "ALPHA-8301");				break;
 	case CPUINFO_FCT_EXECUTE:						info->execute = CPU_EXECUTE_NAME(ALPHA8301);			break;
 	default:
 		/* 8201 / 8301 */

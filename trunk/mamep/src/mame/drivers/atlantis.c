@@ -46,6 +46,8 @@ public:
 	atlantis_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag) {}
 	DECLARE_DRIVER_INIT(mwskins);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 
@@ -55,11 +57,10 @@ public:
  *
  *************************************/
 
-static MACHINE_START( mwskins )
+void atlantis_state::machine_start()
 {
-//  atlantis_state *state = machine.driver_data<atlantis_state>();
 	/* set the fastest DRC options */
-	mips3drc_set_options(machine.device("maincpu"), MIPS3DRC_FASTEST_OPTIONS);
+	mips3drc_set_options(machine().device("maincpu"), MIPS3DRC_FASTEST_OPTIONS);
 }
 
 
@@ -70,10 +71,10 @@ static MACHINE_START( mwskins )
  *
  *************************************/
 
-static MACHINE_RESET( mwskins )
+void atlantis_state::machine_reset()
 {
-    dcs_reset_w(machine, 1);
-    dcs_reset_w(machine, 0);
+    dcs_reset_w(machine(), 1);
+    dcs_reset_w(machine(), 0);
 }
 
 
@@ -140,6 +141,12 @@ static const mips3_config r4310_config =
 	16384				/* data cache size */
 };
 
+static const ide_config ide_intf =
+{
+	ide_interrupt,
+	NULL,
+	0
+};
 
 static MACHINE_CONFIG_START( mwskins, atlantis_state )
 
@@ -148,10 +155,8 @@ static MACHINE_CONFIG_START( mwskins, atlantis_state )
 	MCFG_CPU_CONFIG(r4310_config)
 	MCFG_CPU_PROGRAM_MAP(main_map)
 
-	MCFG_MACHINE_START(mwskins)
-	MCFG_MACHINE_RESET(mwskins)
 
-	MCFG_IDE_CONTROLLER_ADD("ide", ide_interrupt, ide_devices, "hdd", NULL, true)
+	MCFG_IDE_CONTROLLER_ADD("ide", ide_intf, ide_devices, "hdd", NULL, true)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)

@@ -84,7 +84,7 @@ static void f1dream_protection_w(address_space *space)
 	tigeroad_state *state = space->machine().driver_data<tigeroad_state>();
 	int indx;
 	int value = 255;
-	int prevpc = cpu_get_previouspc(&space->device());
+	int prevpc = space->device().safe_pcbase();
 
 	if (prevpc == 0x244c)
 	{
@@ -145,7 +145,7 @@ static void f1dream_protection_w(address_space *space)
 
 WRITE16_MEMBER(tigeroad_state::f1dream_control_w)
 {
-	logerror("protection write, PC: %04x  FFE1 Value:%01x\n",cpu_get_pc(&space.device()), m_ram16[0x3fe0/2]);
+	logerror("protection write, PC: %04x  FFE1 Value:%01x\n",space.device().safe_pc(), m_ram16[0x3fe0/2]);
 	f1dream_protection_w(&space);
 }
 
@@ -495,7 +495,7 @@ GFXDECODE_END
 /* handler called by the 2203 emulator when the internal timers cause an IRQ */
 static void irqhandler(device_t *device, int irq)
 {
-	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2203_interface ym2203_config =
@@ -542,7 +542,6 @@ static MACHINE_CONFIG_START( tigeroad, tigeroad_state )
 	MCFG_GFXDECODE(tigeroad)
 	MCFG_PALETTE_LENGTH(576)
 
-	MCFG_VIDEO_START(tigeroad)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -776,7 +775,7 @@ DRIVER_INIT_MEMBER(tigeroad_state,f1dream)
 
 
 GAME( 1987, tigeroad, 0,        tigeroad, tigeroad, tigeroad_state, tigeroad, ROT0, "Capcom (Romstar license)", "Tiger Road (US)", 0 )
-GAME( 1987, toramich, tigeroad, toramich, toramich, tigeroad_state, tigeroad, ROT0, "Capcom", "Tora-he no Michi (Japan)", 0 )
+GAME( 1987, toramich, tigeroad, toramich, toramich, tigeroad_state, tigeroad, ROT0, "Capcom", "Tora e no Michi (Japan)", 0 )
 GAME( 1987, tigeroadb,tigeroad, tigeroad, tigeroad, tigeroad_state, tigeroad, ROT0, "bootleg", "Tiger Road (US bootleg)", 0 )
 
 /* F1 Dream has an Intel 8751 microcontroller for protection */

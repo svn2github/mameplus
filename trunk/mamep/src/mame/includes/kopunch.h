@@ -25,7 +25,7 @@ public:
 	int        m_gfxbank;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_READ8_MEMBER(kopunch_in_r);
 	DECLARE_WRITE8_MEMBER(kopunch_lamp_w);
 	DECLARE_WRITE8_MEMBER(kopunch_coin_w);
@@ -36,11 +36,17 @@ public:
 	DECLARE_WRITE8_MEMBER(kopunch_gfxbank_w);
 	DECLARE_INPUT_CHANGED_MEMBER(left_coin_inserted);
 	DECLARE_INPUT_CHANGED_MEMBER(right_coin_inserted);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 /*----------- defined in video/kopunch.c -----------*/
 
 
-PALETTE_INIT( kopunch );
-VIDEO_START( kopunch );
+
+
 SCREEN_UPDATE_IND16( kopunch );

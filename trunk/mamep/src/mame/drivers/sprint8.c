@@ -16,7 +16,7 @@ void sprint8_set_collision(running_machine &machine, int n)
 	sprint8_state *state = machine.driver_data<sprint8_state>();
 	if (state->m_collision_reset == 0)
 	{
-		cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 
 		state->m_collision_index = n;
 	}
@@ -52,11 +52,10 @@ static TIMER_DEVICE_CALLBACK( input_callback )
 }
 
 
-static MACHINE_RESET( sprint8 )
+void sprint8_state::machine_reset()
 {
-	sprint8_state *state = machine.driver_data<sprint8_state>();
-	state->m_collision_reset = 0;
-	state->m_collision_index = 0;
+	m_collision_reset = 0;
+	m_collision_index = 0;
 }
 
 
@@ -95,7 +94,7 @@ WRITE8_MEMBER(sprint8_state::sprint8_int_reset_w)
 	m_collision_reset = !(data & 1);
 
 	if (m_collision_reset)
-		cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -456,7 +455,6 @@ static MACHINE_CONFIG_START( sprint8, sprint8_state )
 	MCFG_CPU_ADD("maincpu", M6800, 11055000 / 11) /* ? */
 	MCFG_CPU_PROGRAM_MAP(sprint8_map)
 
-	MCFG_MACHINE_RESET(sprint8)
 
 	MCFG_TIMER_ADD_PERIODIC("input_timer", input_callback, attotime::from_hz(60))
 
@@ -471,8 +469,6 @@ static MACHINE_CONFIG_START( sprint8, sprint8_state )
 	MCFG_GFXDECODE(sprint8)
 	MCFG_PALETTE_LENGTH(36)
 
-	MCFG_PALETTE_INIT(sprint8)
-	MCFG_VIDEO_START(sprint8)
 
 
 	/* sound hardware */

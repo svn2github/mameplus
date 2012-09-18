@@ -86,13 +86,13 @@ static const char *const PIC16C5xFormats[] = {
 
 #define MAX_OPS (((sizeof(PIC16C5xFormats) / sizeof(PIC16C5xFormats[0])) - 1) / PTRS_PER_FORMAT)
 
-typedef struct opcode {
+struct PIC16C5xOpcode  {
 	word mask;			/* instruction mask */
 	word bits;			/* constant bits */
 	word extcode;		/* value that gets extension code */
 	const char *parse;	/* how to parse bits */
 	const char *fmt;	/* instruction format */
-} PIC16C5xOpcode;
+};
 
 static PIC16C5xOpcode Op[MAX_OPS+1];
 static int OpInizialized = 0;
@@ -124,13 +124,13 @@ static void InitDasm16C5x(void)
 				case 'k':
 					bit --;
 					break;
-				default: fatalerror("Invalid instruction encoding '%s %s'",
+				default: fatalerror("Invalid instruction encoding '%s %s'\n",
 					ops[0],ops[1]);
 			}
 		}
 		if (bit != -1 )
 		{
-			fatalerror("not enough bits in encoding '%s %s' %d",
+			fatalerror("not enough bits in encoding '%s %s' %d\n",
 				ops[0],ops[1],bit);
 		}
 		while (isspace((UINT8)*p)) p++;
@@ -213,7 +213,7 @@ CPU_DISASSEMBLE( pic16c5x )
 			case 'k': k <<=1; k |= ((code & (1<<bit)) ? 1 : 0); bit--; break;
 			case ' ': break;
 			case '1': case '0':  bit--; break;
-			case '\0': fatalerror("premature end of parse string, opcode %x, bit = %d",code,bit);
+			case '\0': fatalerror("premature end of parse string, opcode %x, bit = %d\n",code,bit);
 		}
 		cp++;
 	}
@@ -239,7 +239,7 @@ CPU_DISASSEMBLE( pic16c5x )
 				case 'F': sprintf(num,"%s",regfile[f]); break;
 				case 'K': sprintf(num,"%02Xh",k); break;
 				default:
-					fatalerror("illegal escape character in format '%s'",Op[op].fmt);
+					fatalerror("illegal escape character in format '%s'\n",Op[op].fmt);
 			}
 			q = num; while (*q) *buffer++ = *q++;
 			*buffer = '\0';

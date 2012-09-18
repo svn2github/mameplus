@@ -180,8 +180,8 @@ Measurements -
 static void update_interrupts(running_machine &machine)
 {
 	badlands_state *state = machine.driver_data<badlands_state>();
-	cputag_set_input_line(machine, "maincpu", 1, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
-	cputag_set_input_line(machine, "maincpu", 2, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(1, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(2, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -197,28 +197,26 @@ static void scanline_update(screen_device &screen, int scanline)
 }
 
 
-static MACHINE_START( badlands )
+MACHINE_START_MEMBER(badlands_state,badlands)
 {
-	badlands_state *state = machine.driver_data<badlands_state>();
 
-	atarigen_init(machine);
+	atarigen_init(machine());
 
-	state->save_item(NAME(state->m_pedal_value));
+	save_item(NAME(m_pedal_value));
 }
 
 
-static MACHINE_RESET( badlands )
+MACHINE_RESET_MEMBER(badlands_state,badlands)
 {
-	badlands_state *state = machine.driver_data<badlands_state>();
 
-	state->m_pedal_value[0] = state->m_pedal_value[1] = 0x80;
+	m_pedal_value[0] = m_pedal_value[1] = 0x80;
 
-	atarigen_eeprom_reset(state);
-	atarigen_interrupt_reset(state, update_interrupts);
-	atarigen_scanline_timer_reset(*machine.primary_screen, scanline_update, 32);
+	atarigen_eeprom_reset(this);
+	atarigen_interrupt_reset(this, update_interrupts);
+	atarigen_scanline_timer_reset(*machine().primary_screen, scanline_update, 32);
 
-	atarigen_sound_io_reset(machine.device("audiocpu"));
-	memcpy(state->m_bank_base, &state->m_bank_source_data[0x0000], 0x1000);
+	atarigen_sound_io_reset(machine().device("audiocpu"));
+	memcpy(m_bank_base, &m_bank_source_data[0x0000], 0x1000);
 }
 
 
@@ -509,8 +507,8 @@ static MACHINE_CONFIG_START( badlands, badlands_state )
 	MCFG_CPU_ADD("audiocpu", M6502, ATARI_CLOCK_14MHz/8)
 	MCFG_CPU_PROGRAM_MAP(audio_map)
 
-	MCFG_MACHINE_START(badlands)
-	MCFG_MACHINE_RESET(badlands)
+	MCFG_MACHINE_START_OVERRIDE(badlands_state,badlands)
+	MCFG_MACHINE_RESET_OVERRIDE(badlands_state,badlands)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
 	/* video hardware */
@@ -524,7 +522,7 @@ static MACHINE_CONFIG_START( badlands, badlands_state )
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
 	MCFG_SCREEN_UPDATE_STATIC(badlands)
 
-	MCFG_VIDEO_START(badlands)
+	MCFG_VIDEO_START_OVERRIDE(badlands_state,badlands)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -678,7 +676,7 @@ GFXDECODE_END
 static void update_interrupts_bootleg(running_machine &machine)
 {
 	badlands_state *state = machine.driver_data<badlands_state>();
-	cputag_set_input_line(machine, "maincpu", 1, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(1, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -693,17 +691,16 @@ static void scanline_update_bootleg(screen_device &screen, int scanline)
 
 
 
-static MACHINE_RESET( badlandsb )
+MACHINE_RESET_MEMBER(badlands_state,badlandsb)
 {
-	badlands_state *state = machine.driver_data<badlands_state>();
-//  state->m_pedal_value[0] = state->m_pedal_value[1] = 0x80;
+//  m_pedal_value[0] = m_pedal_value[1] = 0x80;
 
-	atarigen_eeprom_reset(state);
-	atarigen_interrupt_reset(state, update_interrupts_bootleg);
-	atarigen_scanline_timer_reset(*machine.primary_screen, scanline_update_bootleg, 32);
+	atarigen_eeprom_reset(this);
+	atarigen_interrupt_reset(this, update_interrupts_bootleg);
+	atarigen_scanline_timer_reset(*machine().primary_screen, scanline_update_bootleg, 32);
 
-//  atarigen_sound_io_reset(machine.device("audiocpu"));
-//  memcpy(state->m_bank_base, &state->m_bank_source_data[0x0000], 0x1000);
+//  atarigen_sound_io_reset(machine().device("audiocpu"));
+//  memcpy(m_bank_base, &m_bank_source_data[0x0000], 0x1000);
 }
 
 static MACHINE_CONFIG_START( badlandsb, badlands_state )
@@ -716,8 +713,8 @@ static MACHINE_CONFIG_START( badlandsb, badlands_state )
 //  MCFG_CPU_ADD("audiocpu", Z80, XTAL_20MHz/12)    /* Divisor estimated */
 //  MCFG_CPU_PROGRAM_MAP(bootleg_soundmap)
 
-	MCFG_MACHINE_START(badlands)
-	MCFG_MACHINE_RESET(badlandsb)
+	MCFG_MACHINE_START_OVERRIDE(badlands_state,badlands)
+	MCFG_MACHINE_RESET_OVERRIDE(badlands_state,badlandsb)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
 	/* video hardware */
@@ -731,7 +728,7 @@ static MACHINE_CONFIG_START( badlandsb, badlands_state )
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
 	MCFG_SCREEN_UPDATE_STATIC(badlands)
 
-	MCFG_VIDEO_START(badlands)
+	MCFG_VIDEO_START_OVERRIDE(badlands_state,badlands)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

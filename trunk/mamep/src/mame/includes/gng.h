@@ -37,11 +37,16 @@ public:
 	DECLARE_WRITE8_MEMBER(gng_bgscrolly_w);
 	DECLARE_WRITE8_MEMBER(gng_flipscreen_w);
 	DECLARE_DRIVER_INIT(diamond);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/gng.c -----------*/
 
 
-VIDEO_START( gng );
+
 SCREEN_UPDATE_IND16( gng );

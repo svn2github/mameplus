@@ -111,12 +111,15 @@ public:
 	DECLARE_READ8_MEMBER(micro3d_sound_io_r);
 	DECLARE_DRIVER_INIT(micro3d);
 	DECLARE_DRIVER_INIT(botss);
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void video_reset();
 };
 
-typedef struct _micro3d_vtx_
+struct micro3d_vtx
 {
 	INT32 x, y, z;
-} micro3d_vtx;
+};
 
 
 /*----------- defined in machine/micro3d.c -----------*/
@@ -126,7 +129,7 @@ UINT8 micro3d_duart_input_r(device_t *device);
 void micro3d_duart_output_w(device_t *device, UINT8 data);
 void micro3d_duart_tx(device_t *device, int channel, UINT8 data);
 
-MACHINE_RESET( micro3d );
+
 
 
 /*----------- defined in audio/micro3d.c -----------*/
@@ -135,13 +138,36 @@ WRITE8_DEVICE_HANDLER( micro3d_upd7759_w );
 
 void micro3d_noise_sh_w(running_machine &machine, UINT8 data);
 
-DECLARE_LEGACY_SOUND_DEVICE(MICRO3D, micro3d_sound);
+class micro3d_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	micro3d_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~micro3d_sound_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type MICRO3D;
+
 
 
 /*----------- defined in video/micro3d.c -----------*/
 
-VIDEO_START( micro3d );
-VIDEO_RESET( micro3d );
+
+
 
 void micro3d_tms_interrupt(device_t *device, int state);
 void micro3d_scanline_update(screen_device &screen, bitmap_ind16 &bitmap, int scanline, const tms34010_display_params *params);

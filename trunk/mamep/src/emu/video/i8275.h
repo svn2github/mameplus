@@ -18,7 +18,26 @@
     MACROS
 ***************************************************************************/
 
-DECLARE_LEGACY_DEVICE(I8275, i8275);
+class i8275_device : public device_t
+{
+public:
+	i8275_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~i8275_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type I8275;
+
 
 /***************************************************************************
     TYPE DEFINITIONS
@@ -28,8 +47,7 @@ typedef void (*i8275_display_pixels_func)(device_t *device, int x, int y, UINT8 
 #define I8275_DISPLAY_PIXELS(name)	void name(device_t *device, int x, int y, UINT8 linecount, UINT8 charcode, UINT8 lineattr, UINT8 lten, UINT8 rvv, UINT8 vsp, UINT8 gpa, UINT8 hlgt)
 
 /* interface */
-typedef struct _i8275_interface i8275_interface;
-struct _i8275_interface
+struct i8275_interface
 {
 	const char *screen_tag;		/* screen we are acting on */
 	int width;					/* char width in pixels */

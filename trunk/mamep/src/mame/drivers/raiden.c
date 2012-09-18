@@ -239,7 +239,7 @@ GFXDECODE_END
 
 static INTERRUPT_GEN( raiden_interrupt )
 {
-	device_set_input_line_and_vector(device, 0, HOLD_LINE, 0xc8/4);	/* VBL */
+	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xc8/4);	/* VBL */
 }
 
 static MACHINE_CONFIG_START( raiden, raiden_state )
@@ -273,7 +273,6 @@ static MACHINE_CONFIG_START( raiden, raiden_state )
 	MCFG_GFXDECODE(raiden)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(raiden)
 
 	/* sound hardware */
 	SEIBU_SOUND_SYSTEM_YM3812_RAIDEN_INTERFACE(XTAL_14_31818MHz/4,XTAL_12MHz/12) // frequency and pin 7 verified (pin set in audio\seibu.h)
@@ -283,7 +282,7 @@ static MACHINE_CONFIG_DERIVED( raidena, raiden )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(alt_main_map)
 
-	MCFG_VIDEO_START(raidena)
+	MCFG_VIDEO_START_OVERRIDE(raiden_state,raidena)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( raidenu, raiden )
@@ -294,7 +293,7 @@ static MACHINE_CONFIG_DERIVED( raidenu, raiden )
 	MCFG_CPU_MODIFY("sub")
 	MCFG_CPU_PROGRAM_MAP(raidenu_sub_map)
 
-	MCFG_VIDEO_START(raidena)
+	MCFG_VIDEO_START_OVERRIDE(raiden_state,raidena)
 MACHINE_CONFIG_END
 
 
@@ -555,16 +554,16 @@ ROM_END
 #ifdef SYNC_HACK
 READ16_MEMBER(raiden_state::sub_cpu_spin_r)
 {
-	int pc=cpu_get_pc(&space.device());
+	int pc=space.device().safe_pc();
 	int ret=m_shared_ram[0x4];
 
 	// main set
 	if (pc==0xfcde6 && ret!=0x40)
-		device_spin(&space.device());
+		space.device().execute().spin();
 
 	// alt sets
 	if (pc==0xfcde8 && ret!=0x40)
-		device_spin(&space.device());
+		space.device().execute().spin();
 
 	return ret;
 }

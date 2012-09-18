@@ -153,34 +153,32 @@ WRITE8_MEMBER(cloak_state::cloak_flipscreen_w)
 	flip_screen_set(data & 0x80);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(cloak_state::get_bg_tile_info)
 {
-	cloak_state *state = machine.driver_data<cloak_state>();
-	UINT8 *videoram = state->m_videoram;
+	UINT8 *videoram = m_videoram;
 	int code = videoram[tile_index];
 
-	SET_TILE_INFO(0, code, 0, 0);
+	SET_TILE_INFO_MEMBER(0, code, 0, 0);
 }
 
-VIDEO_START( cloak )
+void cloak_state::video_start()
 {
-	cloak_state *state = machine.driver_data<cloak_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cloak_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	state->m_bitmap_videoram1 = auto_alloc_array(machine, UINT8, 256*256);
-	state->m_bitmap_videoram2 = auto_alloc_array(machine, UINT8, 256*256);
-	state->m_palette_ram = auto_alloc_array(machine, UINT16, NUM_PENS);
+	m_bitmap_videoram1 = auto_alloc_array(machine(), UINT8, 256*256);
+	m_bitmap_videoram2 = auto_alloc_array(machine(), UINT8, 256*256);
+	m_palette_ram = auto_alloc_array(machine(), UINT16, NUM_PENS);
 
-	state->set_current_bitmap_videoram_pointer();
+	set_current_bitmap_videoram_pointer();
 
-	state->save_item(NAME(state->m_bitmap_videoram_address_x));
-	state->save_item(NAME(state->m_bitmap_videoram_address_y));
-	state->save_item(NAME(state->m_bitmap_videoram_selected));
-	state->save_pointer(NAME(state->m_bitmap_videoram1), 256*256);
-	state->save_pointer(NAME(state->m_bitmap_videoram2), 256*256);
-	state->save_pointer(NAME(state->m_palette_ram), NUM_PENS);
-	machine.save().register_postload(save_prepost_delegate(FUNC(cloak_state::set_current_bitmap_videoram_pointer), state));
+	save_item(NAME(m_bitmap_videoram_address_x));
+	save_item(NAME(m_bitmap_videoram_address_y));
+	save_item(NAME(m_bitmap_videoram_selected));
+	save_pointer(NAME(m_bitmap_videoram1), 256*256);
+	save_pointer(NAME(m_bitmap_videoram2), 256*256);
+	save_pointer(NAME(m_palette_ram), NUM_PENS);
+	machine().save().register_postload(save_prepost_delegate(FUNC(cloak_state::set_current_bitmap_videoram_pointer), this));
 }
 
 static void draw_bitmap(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect)

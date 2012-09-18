@@ -2,13 +2,13 @@
 #include "video/konicdev.h"
 #include "includes/labyrunr.h"
 
-PALETTE_INIT( labyrunr )
+void labyrunr_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int pal;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x80);
+	machine().colortable = colortable_alloc(machine(), 0x80);
 
 	for (pal = 0; pal < 8; pal++)
 	{
@@ -18,7 +18,7 @@ PALETTE_INIT( labyrunr )
 			int i;
 
 			for (i = 0; i < 0x100; i++)
-				colortable_entry_set_value(machine.colortable, (pal << 8) | i, (pal << 4) | (i & 0x0f));
+				colortable_entry_set_value(machine().colortable, (pal << 8) | i, (pal << 4) | (i & 0x0f));
 		}
 		/* sprites */
 		else
@@ -34,7 +34,7 @@ PALETTE_INIT( labyrunr )
 				else
 					ctabentry = (pal << 4) | (color_prom[i] & 0x0f);
 
-				colortable_entry_set_value(machine.colortable, (pal << 8) | i, ctabentry);
+				colortable_entry_set_value(machine().colortable, (pal << 8) | i, ctabentry);
 			}
 		}
 	}
@@ -64,15 +64,14 @@ static void set_pens( running_machine &machine )
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_tile_info0 )
+TILE_GET_INFO_MEMBER(labyrunr_state::get_tile_info0)
 {
-	labyrunr_state *state = machine.driver_data<labyrunr_state>();
-	UINT8 ctrl_3 = k007121_ctrlram_r(state->m_k007121, 3);
-	UINT8 ctrl_4 = k007121_ctrlram_r(state->m_k007121, 4);
-	UINT8 ctrl_5 = k007121_ctrlram_r(state->m_k007121, 5);
-	UINT8 ctrl_6 = k007121_ctrlram_r(state->m_k007121, 6);
-	int attr = state->m_videoram1[tile_index];
-	int code = state->m_videoram1[tile_index + 0x400];
+	UINT8 ctrl_3 = k007121_ctrlram_r(m_k007121, 3);
+	UINT8 ctrl_4 = k007121_ctrlram_r(m_k007121, 4);
+	UINT8 ctrl_5 = k007121_ctrlram_r(m_k007121, 5);
+	UINT8 ctrl_6 = k007121_ctrlram_r(m_k007121, 6);
+	int attr = m_videoram1[tile_index];
+	int code = m_videoram1[tile_index + 0x400];
 	int bit0 = (ctrl_5 >> 0) & 0x03;
 	int bit1 = (ctrl_5 >> 2) & 0x03;
 	int bit2 = (ctrl_5 >> 4) & 0x03;
@@ -87,22 +86,21 @@ static TILE_GET_INFO( get_tile_info0 )
 
 	bank = (bank & ~(mask << 1)) | ((ctrl_4 & mask) << 1);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code + bank * 256,
 			((ctrl_6 & 0x30) * 2 + 16)+(attr & 7),
 			0);
 }
 
-static TILE_GET_INFO( get_tile_info1 )
+TILE_GET_INFO_MEMBER(labyrunr_state::get_tile_info1)
 {
-	labyrunr_state *state = machine.driver_data<labyrunr_state>();
-	UINT8 ctrl_3 = k007121_ctrlram_r(state->m_k007121, 3);
-	UINT8 ctrl_4 = k007121_ctrlram_r(state->m_k007121, 4);
-	UINT8 ctrl_5 = k007121_ctrlram_r(state->m_k007121, 5);
-	UINT8 ctrl_6 = k007121_ctrlram_r(state->m_k007121, 6);
-	int attr = state->m_videoram2[tile_index];
-	int code = state->m_videoram2[tile_index + 0x400];
+	UINT8 ctrl_3 = k007121_ctrlram_r(m_k007121, 3);
+	UINT8 ctrl_4 = k007121_ctrlram_r(m_k007121, 4);
+	UINT8 ctrl_5 = k007121_ctrlram_r(m_k007121, 5);
+	UINT8 ctrl_6 = k007121_ctrlram_r(m_k007121, 6);
+	int attr = m_videoram2[tile_index];
+	int code = m_videoram2[tile_index + 0x400];
 	int bit0 = (ctrl_5 >> 0) & 0x03;
 	int bit1 = (ctrl_5 >> 2) & 0x03;
 	int bit2 = (ctrl_5 >> 4) & 0x03;
@@ -117,7 +115,7 @@ static TILE_GET_INFO( get_tile_info1 )
 
 	bank = (bank & ~(mask << 1)) | ((ctrl_4 & mask) << 1);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code+bank*256,
 			((ctrl_6 & 0x30) * 2 + 16) + (attr & 7),
@@ -131,24 +129,23 @@ static TILE_GET_INFO( get_tile_info1 )
 
 ***************************************************************************/
 
-VIDEO_START( labyrunr )
+void labyrunr_state::video_start()
 {
-	labyrunr_state *state = machine.driver_data<labyrunr_state>();
 
-	state->m_layer0 = tilemap_create(machine, get_tile_info0, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_layer1 = tilemap_create(machine, get_tile_info1, tilemap_scan_rows, 8, 8, 32, 32);
+	m_layer0 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(labyrunr_state::get_tile_info0),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_layer1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(labyrunr_state::get_tile_info1),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	state->m_layer0->set_transparent_pen(0);
-	state->m_layer1->set_transparent_pen(0);
+	m_layer0->set_transparent_pen(0);
+	m_layer1->set_transparent_pen(0);
 
-	state->m_clip0 = machine.primary_screen->visible_area();
-	state->m_clip0.min_x += 40;
+	m_clip0 = machine().primary_screen->visible_area();
+	m_clip0.min_x += 40;
 
-	state->m_clip1 = machine.primary_screen->visible_area();
-	state->m_clip1.max_x = 39;
-	state->m_clip1.min_x = 0;
+	m_clip1 = machine().primary_screen->visible_area();
+	m_clip1.max_x = 39;
+	m_clip1.min_x = 0;
 
-	state->m_layer0->set_scroll_cols(32);
+	m_layer0->set_scroll_cols(32);
 }
 
 

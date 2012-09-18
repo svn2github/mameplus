@@ -174,29 +174,29 @@ WRITE16_MEMBER(ddragon3_state::ddragon3_io_w)
 
 		case 1: /* soundlatch_byte_w */
 			soundlatch_byte_w(space, 1, m_io_reg[1] & 0xff);
-			device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE );
+			m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE );
 		break;
 
 		case 2:
 			/*  this gets written to on startup and at the end of IRQ6
             **  possibly trigger IRQ on sound CPU
             */
-			device_set_input_line(m_maincpu, 6, CLEAR_LINE);
+			m_maincpu->set_input_line(6, CLEAR_LINE);
 			break;
 
 		case 3:
 			/*  this gets written to on startup,
             **  and at the end of IRQ5 (input port read) */
-			device_set_input_line(m_maincpu, 5, CLEAR_LINE);
+			m_maincpu->set_input_line(5, CLEAR_LINE);
 			break;
 
 		case 4:
 			/* this gets written to at the end of IRQ6 only */
-			device_set_input_line(m_maincpu, 6, CLEAR_LINE);
+			m_maincpu->set_input_line(6, CLEAR_LINE);
 			break;
 
 		default:
-			logerror("OUTPUT 1400[%02x] %08x, pc=%06x \n", offset, (unsigned)data, cpu_get_pc(&space.device()) );
+			logerror("OUTPUT 1400[%02x] %08x, pc=%06x \n", offset, (unsigned)data, space.device().safe_pc() );
 			break;
 	}
 }
@@ -517,7 +517,7 @@ GFXDECODE_END
 static void dd3_ymirq_handler(device_t *device, int irq)
 {
 	ddragon3_state *state = device->machine().driver_data<ddragon3_state>();
-	device_set_input_line(state->m_audiocpu, 0 , irq ? ASSERT_LINE : CLEAR_LINE );
+	state->m_audiocpu->set_input_line(0 , irq ? ASSERT_LINE : CLEAR_LINE );
 }
 
 static const ym2151_interface ym2151_config =
@@ -541,14 +541,14 @@ static TIMER_DEVICE_CALLBACK( ddragon3_scanline )
 	{
 		if (scanline > 0)
 			timer.machine().primary_screen->update_partial(scanline - 1);
-		device_set_input_line(state->m_maincpu, 5, ASSERT_LINE);
+		state->m_maincpu->set_input_line(5, ASSERT_LINE);
 	}
 
 	/* Vblank is raised on scanline 248 */
 	if (scanline == 248)
 	{
 		timer.machine().primary_screen->update_partial(scanline - 1);
-		device_set_input_line(state->m_maincpu, 6, ASSERT_LINE);
+		state->m_maincpu->set_input_line(6, ASSERT_LINE);
 	}
 }
 
@@ -558,36 +558,34 @@ static TIMER_DEVICE_CALLBACK( ddragon3_scanline )
  *
  *************************************/
 
-static MACHINE_START( ddragon3 )
+void ddragon3_state::machine_start()
 {
-	ddragon3_state *state = machine.driver_data<ddragon3_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_vreg));
-	state->save_item(NAME(state->m_bg_scrollx));
-	state->save_item(NAME(state->m_bg_scrolly));
-	state->save_item(NAME(state->m_fg_scrollx));
-	state->save_item(NAME(state->m_fg_scrolly));
-	state->save_item(NAME(state->m_bg_tilebase));
-	state->save_item(NAME(state->m_io_reg));
+	save_item(NAME(m_vreg));
+	save_item(NAME(m_bg_scrollx));
+	save_item(NAME(m_bg_scrolly));
+	save_item(NAME(m_fg_scrollx));
+	save_item(NAME(m_fg_scrolly));
+	save_item(NAME(m_bg_tilebase));
+	save_item(NAME(m_io_reg));
 }
 
-static MACHINE_RESET( ddragon3 )
+void ddragon3_state::machine_reset()
 {
-	ddragon3_state *state = machine.driver_data<ddragon3_state>();
 	int i;
 
-	state->m_vreg = 0;
-	state->m_bg_scrollx = 0;
-	state->m_bg_scrolly = 0;
-	state->m_fg_scrollx = 0;
-	state->m_fg_scrolly = 0;
-	state->m_bg_tilebase = 0;
+	m_vreg = 0;
+	m_bg_scrollx = 0;
+	m_bg_scrolly = 0;
+	m_fg_scrollx = 0;
+	m_fg_scrolly = 0;
+	m_bg_tilebase = 0;
 
 	for (i = 0; i < 8; i++)
-		state->m_io_reg[i] = 0;
+		m_io_reg[i] = 0;
 }
 
 static MACHINE_CONFIG_START( ddragon3, ddragon3_state )
@@ -600,8 +598,6 @@ static MACHINE_CONFIG_START( ddragon3, ddragon3_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(ddragon3)
-	MCFG_MACHINE_RESET(ddragon3)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -611,7 +607,6 @@ static MACHINE_CONFIG_START( ddragon3, ddragon3_state )
 	MCFG_GFXDECODE(ddragon3)
 	MCFG_PALETTE_LENGTH(768)
 
-	MCFG_VIDEO_START(ddragon3)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

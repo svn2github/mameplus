@@ -86,8 +86,8 @@ WRITE16_MEMBER(esd16_state::esd16_sound_command_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, 0, data & 0xff);
-		device_set_input_line(m_audio_cpu, 0, ASSERT_LINE);		// Generate an IRQ
-		device_spin_until_time(&space.device(), attotime::from_usec(50));	// Allow the other CPU to reply
+		m_audio_cpu->execute().set_input_line(0, ASSERT_LINE);		// Generate an IRQ
+		space.device().execute().spin_until_time(attotime::from_usec(50));	// Allow the other CPU to reply
 	}
 }
 
@@ -107,7 +107,7 @@ READ16_MEMBER(esd16_state::esd_eeprom_r)
 		return ((m_eeprom->read_bit() & 0x01) << 15);
 	}
 
-//  logerror("(0x%06x) unk EEPROM read: %04x\n", cpu_get_pc(&space.device()), mem_mask);
+//  logerror("(0x%06x) unk EEPROM read: %04x\n", space.device().safe_pc(), mem_mask);
 	return 0;
 }
 
@@ -116,7 +116,7 @@ WRITE16_MEMBER(esd16_state::esd_eeprom_w)
 	if (ACCESSING_BITS_8_15)
 		ioport("EEPROMOUT")->write(data, 0xffff);
 
-//  logerror("(0x%06x) Unk EEPROM write: %04x %04x\n", cpu_get_pc(&space.device()), data, mem_mask);
+//  logerror("(0x%06x) Unk EEPROM write: %04x %04x\n", space.device().safe_pc(), data, mem_mask);
 }
 
 
@@ -254,7 +254,7 @@ READ8_MEMBER(esd16_state::esd16_sound_command_r)
 {
 
 	/* Clear IRQ only after reading the command, or some get lost */
-	device_set_input_line(m_audio_cpu, 0, CLEAR_LINE);
+	m_audio_cpu->execute().set_input_line(0, CLEAR_LINE);
 	return soundlatch_byte_r(space, 0);
 }
 
@@ -585,24 +585,22 @@ GFXDECODE_END
 
 ***************************************************************************/
 
-static MACHINE_START( esd16 )
+void esd16_state::machine_start()
 {
-	esd16_state *state = machine.driver_data<esd16_state>();
-	UINT8 *AUDIO = state->memregion("audiocpu")->base();
+	UINT8 *AUDIO = memregion("audiocpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 16, &AUDIO[0x0000], 0x4000);
+	membank("bank1")->configure_entries(0, 16, &AUDIO[0x0000], 0x4000);
 
-	state->m_audio_cpu = machine.device("audiocpu");
-	state->m_eeprom = machine.device<eeprom_device>("eeprom");
+	m_audio_cpu = machine().device("audiocpu");
+	m_eeprom = machine().device<eeprom_device>("eeprom");
 
-	state->save_item(NAME(state->m_tilemap0_color));
+	save_item(NAME(m_tilemap0_color));
 }
 
-static MACHINE_RESET( esd16 )
+void esd16_state::machine_reset()
 {
-	esd16_state *state = machine.driver_data<esd16_state>();
 
-	state->m_tilemap0_color = 0;
+	m_tilemap0_color = 0;
 }
 
 static UINT16 hedpanic_pri_callback(UINT16 x)
@@ -625,8 +623,6 @@ static MACHINE_CONFIG_START( esd16, esd16_state )
 	MCFG_CPU_IO_MAP(multchmp_sound_io_map)
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,32*60)	/* IRQ By Main CPU */
 
-	MCFG_MACHINE_START(esd16)
-	MCFG_MACHINE_RESET(esd16)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -645,7 +641,6 @@ static MACHINE_CONFIG_START( esd16, esd16_state )
 	MCFG_GFXDECODE(esd16)
 	MCFG_PALETTE_LENGTH(0x1000/2)
 
-	MCFG_VIDEO_START(esd16)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

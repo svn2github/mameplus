@@ -29,8 +29,8 @@ public:
 	int         m_sound_status;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k054539_1;
 	device_t *m_k054539_2;
 	device_t *m_k053936;
@@ -47,6 +47,11 @@ public:
 	DECLARE_READ16_MEMBER(rng_ttl_ram_r);
 	DECLARE_WRITE16_MEMBER(rng_ttl_ram_w);
 	DECLARE_WRITE16_MEMBER(rng_936_videoram_w);
+	TILE_GET_INFO_MEMBER(ttl_get_tile_info);
+	TILE_GET_INFO_MEMBER(get_rng_936_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -57,5 +62,5 @@ public:
 extern void rng_sprite_callback(running_machine &machine, int *code, int *color, int *priority_mask);
 
 
-VIDEO_START( rng );
+
 SCREEN_UPDATE_IND16( rng );

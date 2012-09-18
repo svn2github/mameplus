@@ -42,7 +42,7 @@ public:
 	INT32 m_last_steering_val;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	device_t *m_discrete;
 	DECLARE_READ8_MEMBER(nitedrvr_steering_reset_r);
 	DECLARE_WRITE8_MEMBER(nitedrvr_steering_reset_w);
@@ -52,6 +52,10 @@ public:
 	DECLARE_WRITE8_MEMBER(nitedrvr_out1_w);
 	DECLARE_WRITE8_MEMBER(nitedrvr_videoram_w);
 	DECLARE_WRITE8_MEMBER(nitedrvr_hvc_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -60,8 +64,8 @@ public:
 
 TIMER_DEVICE_CALLBACK( nitedrvr_crash_toggle_callback );
 
-MACHINE_RESET( nitedrvr );
-MACHINE_START( nitedrvr );
+
+
 
 
 /*----------- defined in audio/nitedrvr.c -----------*/
@@ -72,5 +76,5 @@ DISCRETE_SOUND_EXTERN( nitedrvr );
 /*----------- defined in video/nitedrvr.c -----------*/
 
 
-VIDEO_START( nitedrvr );
+
 SCREEN_UPDATE_IND16( nitedrvr );

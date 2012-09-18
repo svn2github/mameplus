@@ -1,31 +1,20 @@
 /***************************************************************************
 
-  nss.c
-
-  Driver file to handle emulation of the Nintendo Super System.
-
-  R. Belmont
-  Anthony Kruize
-  Based on the original MESS driver by Lee Hammerton (aka Savoury Snax)
-
-  Driver is preliminary right now.
-
-  The memory map included below is setup in a way to make it easier to handle
-  Mode 20 and Mode 21 ROMs.
-
-  Todo (in no particular order):
-    - Fix additional sound bugs
-    - Emulate extra chips - superfx, dsp2, sa-1 etc.
-    - Add horizontal mosaic, hi-res. interlaced etc to video emulation.
-    - Fix support for Mode 7. (In Progress)
-    - Handle interleaved roms (maybe even multi-part roms, but how?)
-    - Add support for running at 3.58Mhz at the appropriate time.
-    - I'm sure there's lots more ...
-
     Nintendo Super System
 
-  There is a second processor and Menu system for selecting the games
-  controlling timer etc.? which still needs emulating there are dipswitches too
+    driver by Angelo Salese, based off info from Noca$h
+
+    TODO:
+    - EEPROM doesn't save?
+    - Fix sound CPU halt / reset lines, particularly needed by this to work
+      correctly;
+    - Fix continue behaviour, might be the same issue as the one above.
+    - Various M50458 bits
+    - OSD should actually super-impose with the SNES video somehow;
+
+    Notes:
+    - Multi-Cart BIOS works only with F-Zero, Super Tennis and Super Mario
+      World;
 
 ***************************************************************************
 
@@ -295,30 +284,61 @@ Contra III   CONTRA_III_1   TC574000   CONTRA_III_0   TC574000    GAME1_NSSU    
 
 #include "emu.h"
 #include "cpu/z80/z80.h"
+#include "machine/m6m80011ap.h"
+#include "machine/s3520cf.h"
+#include "machine/rp5h01.h"
+#include "video/m50458.h"
 #include "includes/snes.h"
+#include "rendlay.h"
 
 
 class nss_state : public snes_state
 {
 public:
 	nss_state(const machine_config &mconfig, device_type type, const char *tag)
-		: snes_state(mconfig, type, tag) { }
+		: snes_state(mconfig, type, tag),
+		m_m50458(*this,"m50458"),
+		m_s3520cf(*this, "s3520cf"),
+		m_rp5h01(*this,"rp5h01")
+		{ }
 
-	UINT8 m_m50458_rom_bank;
-	UINT8 m_vblank_bit;
-	DECLARE_READ8_MEMBER(nss_eeprom_r);
-	DECLARE_WRITE8_MEMBER(nss_eeprom_w);
-	DECLARE_READ8_MEMBER(m50458_r);
-	DECLARE_WRITE8_MEMBER(m50458_w);
-	DECLARE_READ8_MEMBER(port00_r);
-	DECLARE_READ8_MEMBER(port01_r);
-	DECLARE_READ8_MEMBER(port02_r);
-	DECLARE_READ8_MEMBER(port03_r);
-	DECLARE_WRITE8_MEMBER(port80_w);
-	DECLARE_WRITE8_MEMBER(port82_w);
-	DECLARE_READ8_MEMBER(spc_ram_100_r);
-	DECLARE_WRITE8_MEMBER(spc_ram_100_w);
+	required_device<m50458_device> m_m50458;
+	required_device<s3520cf_device> m_s3520cf;
+	required_device<rp5h01_device> m_rp5h01;
+	UINT8 m_wram_wp_flag;
+	UINT8 *m_wram;
+	UINT8 m_nmi_enable;
+	UINT8 m_cart_sel;
+	UINT32 screen_update(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect);
+
+	DECLARE_READ8_MEMBER(ram_wp_r);
+	DECLARE_WRITE8_MEMBER(ram_wp_w);
+	DECLARE_READ8_MEMBER(nss_prot_r);
+	DECLARE_WRITE8_MEMBER(nss_prot_w);
+
+	DECLARE_READ8_MEMBER(port_00_r);
+	DECLARE_WRITE8_MEMBER(port_00_w);
+	DECLARE_WRITE8_MEMBER(port_01_w);
+	DECLARE_WRITE8_MEMBER(port_02_w);
+	DECLARE_WRITE8_MEMBER(port_03_w);
+	DECLARE_WRITE8_MEMBER(port_04_w);
+	DECLARE_WRITE8_MEMBER(port_07_w);
+
+	DECLARE_DRIVER_INIT(nss);
+
+	DECLARE_CUSTOM_INPUT_MEMBER(game_over_flag_r);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
+
+
+
+UINT32 nss_state::screen_update( screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect )
+{
+	m_m50458->screen_update(screen,bitmap,cliprect);
+	return 0;
+}
+
 
 
 static ADDRESS_MAP_START( snes_map, AS_PROGRAM, 8, nss_state )
@@ -332,24 +352,20 @@ static ADDRESS_MAP_START( snes_map, AS_PROGRAM, 8, nss_state )
 	AM_RANGE(0xc00000, 0xffffff) AM_READWRITE_LEGACY(snes_r_bank7, snes_w_bank7)	/* Mirror and ROM */
 ADDRESS_MAP_END
 
-READ8_MEMBER(nss_state::spc_ram_100_r)
+static READ8_DEVICE_HANDLER( spc_ram_100_r )
 {
-	device_t *device = machine().device("spc700");
 	return spc_ram_r(device, offset + 0x100);
 }
 
-WRITE8_MEMBER(nss_state::spc_ram_100_w)
+static WRITE8_DEVICE_HANDLER( spc_ram_100_w )
 {
-	device_t *device = machine().device("spc700");
 	spc_ram_w(device, offset + 0x100, data);
 }
 
 static ADDRESS_MAP_START( spc_mem, AS_PROGRAM, 8, nss_state )
 	AM_RANGE(0x0000, 0x00ef) AM_DEVREADWRITE_LEGACY("spc700", spc_ram_r, spc_ram_w)	/* lower 32k ram */
 	AM_RANGE(0x00f0, 0x00ff) AM_DEVREADWRITE_LEGACY("spc700", spc_io_r, spc_io_w)	/* spc io */
-	AM_RANGE(0x0100, 0xffff) AM_WRITE(spc_ram_100_w)
-	AM_RANGE(0x0100, 0xffbf) AM_READ(spc_ram_100_r)
-	AM_RANGE(0xffc0, 0xffff) AM_DEVREAD_LEGACY("spc700", spc_ipl_r)
+	AM_RANGE(0x0100, 0xffff) AM_DEVREADWRITE_LEGACY("spc700", spc_ram_100_r, spc_ram_100_w)
 ADDRESS_MAP_END
 
 /* NSS specific */
@@ -369,162 +385,295 @@ bp 6bf9 EEPROM read
 bp 6f8d check the EEPROM2 results
 870d EEPROM2 result of checksum
 
-bp 6dce onward looks bogus, but it's probably the way it's intended to be
+New notes:
 
-M50458 charset is checked at 1382, a word checksum is provided at offsets 0xffe-0xfff of the given ROM
+0x3a7 is the protection check
+
+0x8000 work RAM is for cart 1
+0x8100 work RAM is for cart 2
+0x8200 work RAM is for cart 3
+
+*/
+/*
+noca$h info @ nocash.emubase.de/fullsnes.htm
+map
+0x0000 - 0x7fff BIOS
+0x8000 - 0x8fff RAM
+0x9000 - 0x9fff RAM with write protection
+0xa000          EEPROM Read
+0xc000 - 0xdfff instruction ROM
+0xe000          EEPROM Write
+0xe000 - 0xffff PROM Input & Output & Program Code (protection RP5H01, used also in earlier Nintendo systems)
+Data Write:
+  7-5  Unknown/unused
+  4    PROM Test Mode (0=Low=6bit Address, 1=High=7bit Address)
+  3    PROM Clock     (0=Low, 1=High) ;increment address on 1-to-0 transition
+  2-1  Unknown/unused
+  0    PROM Address Reset (0=High=Reset to zero, 1=Low=No Change)
+
+Data Read and Opcode Fetch:
+
+  7-5  Always set (MSBs of RST Opcode)
+  4    PROM Counter Out (0=High=One, 1=Low=Zero) ;PROM Address Bit5
+  3    PROM Data Out    (0=High=One, 1=Low=Zero)
+  2-0  Always set (LSBs of RST Opcode)
+
+i/o
+Input
+0x00 Joypad
+0x01 Front-Panel Buttons and Game Over Flag
+  7   From SNES Port 4016h.W.Bit2 (0=Game Over Flag, 1=Normal) (Inverted!)
+0x02 Coin and Service Button Inputs
+  7-3 Unknown/unused (maybe the (unused) Test button hides here)
+  2   Service Button (1=Pressed: Add Credit; with INST button: Config)
+  1   Coin Input 2   (1=Coin inserted in coin-slot 2)
+  0   Coin Input 1   (1=Coin inserted in coin-slot 1)
+0x03 RTC
+Output
+0x00/0x80 NMI Control and RAM protect
+0x01/0x81 Unknown and Slot Select
+0x02/0x82 RTC and OSD
+0x03/0x83 Unknown and LED control
+0x84 Coin Counter Outputs
+0x05 Unknown
+0x07 SNES Watchdog / Acknowledge SNES Joypad Read Flag
+
+SNES part:
+0x4100 DSW
+0x4016 bit 0 Joypad Strobe?
+0x4016 bit 2 Game Over Flag
+
+
 
 */
 
-READ8_MEMBER(nss_state::nss_eeprom_r)
+READ8_MEMBER(nss_state::ram_wp_r)
 {
-	return 0x40; // eeprom read bit
+	return m_wram[offset];
 }
 
-WRITE8_MEMBER(nss_state::nss_eeprom_w)
+WRITE8_MEMBER(nss_state::ram_wp_w)
 {
-	/*
-    x--- ---- EEPROM CS bit?
-    ---x ---- EEPROM clock bit?
-    ---- x--- EEPROM write bit
-    ---- ---x EEPROM reset bit? (active low)
-    */
-
-//  printf("EEPROM write %02x\n",data);
+	if(m_wram_wp_flag)
+		m_wram[offset] = data;
 }
 
 
-READ8_MEMBER(nss_state::m50458_r)
+READ8_MEMBER(nss_state::nss_prot_r)
 {
+	int data = 0xe7;
 
-	if(m_m50458_rom_bank)
+	if (m_cart_sel == 0)
 	{
-		UINT8 *gfx_rom = memregion("m50458_gfx")->base();
-
-		return gfx_rom[offset & 0xfff];
+		rp5h01_enable_w(m_rp5h01, 0, 0);
+		data |= ((~rp5h01_counter_r(m_rp5h01, 0)) << 4) & 0x10;	/* D4 */
+		data |= ((rp5h01_data_r(m_rp5h01, 0)) << 3) & 0x08;		/* D3 */
+		rp5h01_enable_w(m_rp5h01, 0, 1);
 	}
 	else
-	{
-		UINT8 *gfx_ram = memregion("m50458_vram")->base();
+		rp5h01_enable_w(m_rp5h01, 0, 1);
 
-		return gfx_ram[offset & 0xfff];
-	}
-
-	return 0;
+	return data;
 }
 
-WRITE8_MEMBER(nss_state::m50458_w)
+WRITE8_MEMBER(nss_state::nss_prot_w)
 {
-
-	if(m_m50458_rom_bank)
-		logerror("Warning: write to M50458 GFX ROM!\n");
-	else
+	if (m_cart_sel == 0)
 	{
-		UINT8 *gfx_ram = memregion("m50458_vram")->base();
-
-		gfx_ram[offset & 0xfff] = data;
+		rp5h01_enable_w(m_rp5h01, 0, 0);
+		rp5h01_test_w(m_rp5h01, 0, data & 0x10);		/* D4 */
+		rp5h01_clock_w(m_rp5h01, 0, data & 0x08);		/* D3 */
+		rp5h01_cs_w(m_rp5h01, 0, ~data & 0x01);
+		rp5h01_enable_w(m_rp5h01, 0, 1);
 	}
+	else
+		rp5h01_enable_w(m_rp5h01, 0, 1);
+
+	ioport("EEPROMOUT")->write(data, 0xff);
 }
 
 
 static ADDRESS_MAP_START( bios_map, AS_PROGRAM, 8, nss_state )
-	AM_RANGE(0x0000, 0x7fff) AM_ROMBANK("bank1")
-	AM_RANGE(0x8000, 0x87ff) AM_RAM
-	AM_RANGE(0x8800, 0x8fff) AM_RAM // vram perhaps?
-	AM_RANGE(0x9000, 0x9fff) AM_READWRITE(m50458_r,m50458_w) // M50458 vram & GFX rom routes here
-	AM_RANGE(0xa000, 0xa000) AM_READ(nss_eeprom_r)
-	AM_RANGE(0xe000, 0xe000) AM_WRITE(nss_eeprom_w)
-	AM_RANGE(0xc000, 0xdfff) AM_MIRROR(0x2000) AM_RAM AM_REGION("ibios_rom", 0x6000)
+	AM_RANGE(0x0000, 0x7fff) AM_ROM
+	AM_RANGE(0x8000, 0x8fff) AM_RAM
+	AM_RANGE(0x9000, 0x9fff) AM_READWRITE(ram_wp_r,ram_wp_w)
+	AM_RANGE(0xa000, 0xa000) AM_READ_PORT("EEPROMIN")
+	AM_RANGE(0xc000, 0xdfff) AM_ROM AM_REGION("ibios_rom", 0x6000 )
+	AM_RANGE(0xe000, 0xffff) AM_READWRITE(nss_prot_r,nss_prot_w)
 ADDRESS_MAP_END
 
-READ8_MEMBER(nss_state::port00_r)
+READ8_MEMBER(nss_state::port_00_r)
 {
+/*
+    x--- ----   SNES Watchdog (0=SNES did read Joypads, 1=Didn't do so) (ack via 07h.W)
+    -x-- ----   Vblank or Vsync or so       (0=What, 1=What?)
+    --x- ----   Button "Joypad Button B?"   (0=Released, 1=Pressed)
+    ---x ----   Button "Joypad Button A"    (0=Released, 1=Pressed)
+    ---- x---   Button "Joypad Down"        (0=Released, 1=Pressed)
+    ---- -x--   Button "Joypad Up"          (0=Released, 1=Pressed)
+    ---- --x-   Button "Joypad Left"        (0=Released, 1=Pressed)
+    ---- ---x   Button "Joypad Right"       (0=Released, 1=Pressed)
+*/
+	UINT8 res;
 
-	/*
-    -x-- ---- almost certainly tied to the vblank signal
-    */
+	res = (m_joy_flag) << 7;
+	res|= (machine().primary_screen->vblank() & 1) << 6;
+	res|= (((ioport("SERIAL1_DATA1_H")->read() & 0x80) >> 7) << 5);
+	res|= (((ioport("SERIAL1_DATA1_L")->read() & 0x80) >> 7) << 4);
+	res|= (((ioport("SERIAL1_DATA1_H")->read() & 0x04) >> 2) << 3);
+	res|= (((ioport("SERIAL1_DATA1_H")->read() & 0x08) >> 3) << 2);
+	res|= (((ioport("SERIAL1_DATA1_H")->read() & 0x02) >> 1) << 1);
+	res|= (((ioport("SERIAL1_DATA1_H")->read() & 0x01) >> 0) << 0);
 
-
-	m_vblank_bit^=0x40;
-
-	return m_vblank_bit | 0xbf;
+	return res;
 }
 
-
-READ8_MEMBER(nss_state::port01_r)
+WRITE8_MEMBER(nss_state::port_00_w)
 {
-	return 0xff;
+/*
+    xxxx ---- Unknown/unused      (should be always 0)
+    ---- x--- Maybe SNES CPU/PPU reset (usually same as Port 01h.W.Bit1)
+    ---- -x-- RAM at 9000h-9FFFh  (0=Disable/Protect, 1=Enable/Unlock)
+    ---- --x- Looks like maybe somehow NMI Related ?    ;\or one of these is PC10-style
+    ---- ---x Looks like NMI Enable                     ;/hardware-watchdog reload?
+*/
+	m_wram_wp_flag = (data & 4) >> 2;
+	m_nmi_enable = data & 1;
+
 }
 
-READ8_MEMBER(nss_state::port02_r)
+WRITE8_MEMBER(nss_state::port_01_w)
 {
-	/*
-    ---- -x-- (makes the BIOS to jump at 0x4258, sets 0x80 bit 1 and then jumps to unmapped area of the BIOS (bankswitch?))
-    ---- ---x
-    */
+/*
+    x--- ---- Maybe SNES Joypad Enable? (0=Disable/Demo, 1=Enable/Game)
+    -x-- ---- Unknown/unused        (should be always 0)
+    --x- ---- SNES Sound Mute       (0=Normal, 1=Mute) (for optional mute in demo mode)
+    ---x ---- Unknown  ;from INST-ROM flag! (Lo/HiROM, 2-player, zapper, volume or so?)
+    ---- xx-- Slot Select        (0..2 for Slot 1..3) (mapping to both SNES and Z80)
+    ---- --x- Maybe SNES CPU pause?  (cleared on deposit coin to continue) (1=Run)
+    ---- ---x Maybe SNES CPU/PPU reset?   (0=Reset, 1=Run)
+*/
+	m_input_disabled = ((data & 0x80) >> 7) ^ 1;
+	spc700_set_volume(machine().device("spc700"),data & 0x20 ? 0.0 : 100.0);
 
-	return 0xfb;
+	m_cart_sel = (data & 0xc) >> 2;
+
+	m_maincpu->set_input_line(INPUT_LINE_HALT, (data & 2) ? CLEAR_LINE : ASSERT_LINE);
+	m_soundcpu->set_input_line(INPUT_LINE_HALT, (data & 2) ? CLEAR_LINE : ASSERT_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+	m_soundcpu->set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+	/* also reset the device */
+	if((data & 1) == 0)
+		spc700_reset(machine().device("spc700"));
 }
 
-READ8_MEMBER(nss_state::port03_r)
+WRITE8_MEMBER(nss_state::port_02_w)
 {
-	/*
-    x--- ---- EEPROM2 read bit
-    ---- ---x tested at 7006, some status bit
-
-    */
-
-	return 0xfe;
+/*
+    x--- ----  OSD Clock ?       (usually same as Bit6)  ;\Chip Select when Bit6=Bit7 ?
+    -x-- ----  OSD Clock ?       (usually same as Bit7)  ;/
+    --x- ----  OSD Data Out      (0=Low=Zero, 1=High=One)
+    ---x ----  OSD Special       (?)  ... or just /CS ? (or software index DC3F/DD3F?)
+    ---- x---  RTC /CLK          (0=Low=Clock,  1=High=Idle)              ;S-3520
+    ---- -x--  RTC Data Out      (0=Low=Zero,   1=High=One)
+    ---- --x-  RTC Direction     (0=Low=Write,  1=High=Read)
+    ---- ---x  RTC /CS           (0=Low/Select, 1=High/No)
+*/
+//  printf("%02x\n",data & 0xf);
+	ioport("RTC_OSD")->write(data, 0xff);
 }
 
-WRITE8_MEMBER(nss_state::port80_w)
+WRITE8_MEMBER(nss_state::port_03_w)
 {
+/*
+    x--- ----     Layer SNES Enable?             (used by token proc, see 7A46h) SNES?
+    -x-- ----     Layer OSD Enable?
+    --xx ---- Unknown/unused (should be always 0)
+    ---- x---   LED Instructions (0=Off, 1=On)  ;-glows in demo (prompt for INST button)
+    ---- -x--   LED Game 3       (0=Off, 1=On)  ;\
+    ---- --x-   LED Game 2       (0=Off, 1=On)  ; blinked when enough credits inserted
+    ---- ---x   LED Game 1       (0=Off, 1=On)  ;/
 
-	/*
-    ---- -x-- written when 0x9000-0x9fff is read, probably a bankswitch
-    ---- --x- see port 0x02 note
-    ---- ---x BIOS bankswitch
-    */
-
-	membank("bank1")->set_entry(data & 1);
-	m_m50458_rom_bank = data & 4;
+*/
+//  popmessage("%02x",data);
 }
 
-WRITE8_MEMBER(nss_state::port82_w)// EEPROM2?
+WRITE8_MEMBER(nss_state::port_04_w)
 {
-	/*
-    ---- x--- EEPROM2 clock bit?
-    ---- -x-- EEPROM2 write bit
-    ---- --x- EEPROM2 CS bit?
-    */
+	coin_counter_w(machine(), 0, (data >> 0) & 1);
+	coin_counter_w(machine(), 1, (data >> 1) & 1);
+}
+
+WRITE8_MEMBER(nss_state::port_07_w)
+{
+	m_joy_flag = 1;
 }
 
 static ADDRESS_MAP_START( bios_io_map, AS_IO, 8, nss_state )
-	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ(port00_r)
-	AM_RANGE(0x01, 0x01) AM_READ(port01_r)
-	AM_RANGE(0x02, 0x02) AM_READ(port02_r)
-	AM_RANGE(0x03, 0x03) AM_READ(port03_r)
-	AM_RANGE(0x72, 0x72) AM_WRITENOP //?
-	AM_RANGE(0x80, 0x80) AM_WRITE(port80_w)
-	AM_RANGE(0x82, 0x82) AM_WRITE(port82_w)
-	AM_RANGE(0xea, 0xea) AM_WRITENOP //?
-
+	ADDRESS_MAP_GLOBAL_MASK(0x7)
+	AM_RANGE(0x00, 0x00) AM_READ(port_00_r) AM_WRITE(port_00_w)
+	AM_RANGE(0x01, 0x01) AM_READ_PORT("FP")  AM_WRITE(port_01_w)
+	AM_RANGE(0x02, 0x02) AM_READ_PORT("SYSTEM") AM_WRITE(port_02_w)
+	AM_RANGE(0x03, 0x03) AM_READ_PORT("RTC") AM_WRITE(port_03_w)
+	AM_RANGE(0x04, 0x04) AM_WRITE(port_04_w)
+	AM_RANGE(0x07, 0x07) AM_WRITE(port_07_w)
 ADDRESS_MAP_END
 
-static MACHINE_START( nss )
+void nss_state::machine_start()
 {
-	nss_state *state = machine.driver_data<nss_state>();
-	UINT8 *ROM = state->memregion("bios")->base();
 
-	state->membank("bank1")->configure_entries(0, 2, &ROM[0x10000], 0x8000);
-	state->membank("bank1")->set_entry(0);
+	MACHINE_START_CALL_LEGACY(snes);
 
-	state->m_m50458_rom_bank = 0;
+	m_is_nss = 1;
+	m_wram = auto_alloc_array_clear(machine(), UINT8, 0x1000);
+}
 
-	MACHINE_START_CALL(snes);
+
+CUSTOM_INPUT_MEMBER(nss_state::game_over_flag_r)
+{
+	return m_game_over_flag;
 }
 
 static INPUT_PORTS_START( snes )
+	PORT_START("SYSTEM")
+	PORT_BIT( 0xf8, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_SERVICE1 )
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_COIN2 )
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_COIN1 )
+
+	PORT_START("FP")
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_CUSTOM_MEMBER(DEVICE_SELF, nss_state,game_over_flag_r, NULL)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON13 ) PORT_NAME("Restart Button")
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_BUTTON12 ) PORT_NAME("Page Up Button")
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_BUTTON11 ) PORT_NAME("Page Down Button")
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH, IPT_BUTTON10 ) PORT_NAME("Instructions Button")
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_BUTTON9 ) PORT_NAME("Game 3 Button")
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_BUTTON8 ) PORT_NAME("Game 2 Button")
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_BUTTON7 ) PORT_NAME("Game 1 Button")
+
+	PORT_START("EEPROMIN")
+	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("m6m80011ap", m6m80011ap_device, read_bit)
+	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("m6m80011ap", m6m80011ap_device, ready_line )
+	PORT_BIT( 0x3f, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+
+	PORT_START("EEPROMOUT")
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("m6m80011ap", m6m80011ap_device, set_clock_line)
+	PORT_BIT( 0x08, IP_ACTIVE_HIGH,IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("m6m80011ap", m6m80011ap_device, write_bit)
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("m6m80011ap", m6m80011ap_device, set_cs_line)
+
+	PORT_START("RTC_OSD")
+	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("m50458", m50458_device, set_clock_line)
+	PORT_BIT( 0x20, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("m50458", m50458_device, write_bit)
+	PORT_BIT( 0x10, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("m50458", m50458_device, set_cs_line)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW,  IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("s3520cf", s3520cf_device, set_clock_line)
+	PORT_BIT( 0x04, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("s3520cf", s3520cf_device, write_bit)
+	PORT_BIT( 0x02, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("s3520cf", s3520cf_device, set_dir_line)
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OUTPUT ) PORT_WRITE_LINE_DEVICE_MEMBER("s3520cf", s3520cf_device, set_cs_line)
+
+	PORT_START("RTC")
+	PORT_BIT( 0xfe, IP_ACTIVE_HIGH, IPT_UNKNOWN )
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_SPECIAL ) PORT_READ_LINE_DEVICE_MEMBER("s3520cf", s3520cf_device, read_bit)
+
 	PORT_START("SERIAL1_DATA1_L")
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_NAME("P1 Button A") PORT_PLAYER(1)
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON4 ) PORT_NAME("P1 Button X") PORT_PLAYER(1)
@@ -639,56 +788,24 @@ static INPUT_PORTS_START( snes )
 #endif
 INPUT_PORTS_END
 
-static const gfx_layout nss_char_layout_16x18 =
-{
-	16,18,
-	RGN_FRAC(1,1),
-	1,
-	{ 0 },
-	{ 0, 1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13,14,15 },
-	{ 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16,8*16, 9*16, 10*16, 11*16, 12*16, 13*16, 14*16, 15*16, 16*16,17*16 },
-	16*18
-};
-
-static const gfx_layout nss_char_layout_16x16 =
-{
-	16,16,
-	RGN_FRAC(1,1),
-	1,
-	{ 0 },
-	{ 0, 1, 2, 3, 4, 5, 6, 7,8,9,10,11,12,13,14,15 },
-	{ 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16,8*16, 9*16, 10*16, 11*16, 12*16, 13*16, 14*16, 15*16 },
-	16*16
-};
-
-
-/* decoded for debugging purpose, this will be nuked in the end... */
-static GFXDECODE_START( nss )
-	GFXDECODE_ENTRY( "chargen",   0x00000, nss_char_layout_16x18,    0, 1 )
-	GFXDECODE_ENTRY( "m50458_gfx",   0x00000, nss_char_layout_16x16,    0, 1 )
-GFXDECODE_END
 
 static MACHINE_CONFIG_START( snes, nss_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", _5A22, 3580000*6)	/* 2.68Mhz, also 3.58Mhz */
+	MCFG_CPU_ADD("maincpu", _5A22, MCLK_NTSC)	/* 2.68Mhz, also 3.58Mhz */
 	MCFG_CPU_PROGRAM_MAP(snes_map)
 
 	MCFG_CPU_ADD("soundcpu", SPC700, 2048000/2)	/* 2.048 Mhz, but internal divider */
 	MCFG_CPU_PROGRAM_MAP(spc_mem)
 
-//  MCFG_QUANTUM_TIME(attotime::from_hz(24000))
 	MCFG_QUANTUM_PERFECT_CPU("maincpu")
-
-	MCFG_MACHINE_START( snes )
-	MCFG_MACHINE_RESET( snes )
 
 	/* video hardware */
 	MCFG_VIDEO_START( snes )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(DOTCLK_NTSC, SNES_HTOTAL, 0, SNES_SCR_WIDTH, SNES_VTOTAL_NTSC, 0, SNES_SCR_HEIGHT_NTSC)
-	MCFG_SCREEN_UPDATE_STATIC( snes )
+	MCFG_SCREEN_UPDATE_DRIVER( snes_state, snes_screen_update )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -697,17 +814,53 @@ static MACHINE_CONFIG_START( snes, nss_state )
 	MCFG_SOUND_ROUTE(1, "rspeaker", 1.00)
 MACHINE_CONFIG_END
 
+static INTERRUPT_GEN ( nss_vblank_irq )
+{
+	nss_state *state = device->machine().driver_data<nss_state>();
+
+	if(state->m_nmi_enable)
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
+}
+
+void nss_state::machine_reset()
+{
+
+	MACHINE_RESET_CALL_LEGACY( snes );
+
+	/* start with both CPUs disabled */
+	m_maincpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	m_soundcpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+
+	m_game_over_flag = 1;
+	m_joy_flag = 1;
+}
+
+static M50458_INTERFACE( m50458_intf )
+{
+	"osd"
+};
+
 static MACHINE_CONFIG_DERIVED( nss, snes )
 
 	MCFG_CPU_ADD("bios", Z80, 4000000)
 	MCFG_CPU_PROGRAM_MAP(bios_map)
 	MCFG_CPU_IO_MAP(bios_io_map)
-	MCFG_CPU_VBLANK_INT("screen", nmi_line_pulse)
-//  MCFG_CPU_FLAGS(CPU_DISABLE)
+	MCFG_CPU_VBLANK_INT("screen", nss_vblank_irq)
 
-	MCFG_GFXDECODE( nss )
-	MCFG_PALETTE_LENGTH(2)
-	MCFG_MACHINE_START( nss )
+	MCFG_M50458_ADD("m50458",m50458_intf,4000000) /* TODO: correct clock */
+	MCFG_S3520CF_ADD("s3520cf") /* RTC */
+	MCFG_RP5H01_ADD("rp5h01")
+	MCFG_M6M80011AP_ADD("m6m80011ap")
+
+	/* TODO: the screen should actually superimpose, but for the time being let's just separate outputs */
+	MCFG_DEFAULT_LAYOUT(layout_dualhsxs)
+
+	MCFG_SCREEN_ADD("osd", RASTER)
+	MCFG_SCREEN_REFRESH_RATE(60)
+	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
+	MCFG_SCREEN_SIZE(24*12+22, 12*18+22)
+	MCFG_SCREEN_VISIBLE_AREA(0*8, 24*12-1, 0*8, 12*18-1)
+	MCFG_SCREEN_UPDATE_DRIVER(nss_state,screen_update)
 MACHINE_CONFIG_END
 
 /***************************************************************************
@@ -717,20 +870,18 @@ MACHINE_CONFIG_END
 ***************************************************************************/
 
 #define NSS_BIOS \
-	ROM_REGION(0x100,           "user5", 0)		/* IPL ROM */ \
+	ROM_REGION(0x100,           "sound_ipl", 0)		/* IPL ROM */ \
 	ROM_LOAD("spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) ) \
 	ROM_REGION(0x10000,           "addons", ROMREGION_ERASE00)		/* add-on chip ROMs (DSP1 will be needed if we dump the NSS version of Super Mario Kart)*/\
 	ROM_LOAD( "dsp1b.bin", SNES_DSP1B_OFFSET, 0x002800, CRC(453557e0) SHA1(3a218b0e4572a8eba6d0121b17fdac9529609220) ) \
-	ROM_REGION(0x20000,         "bios",  0)		/* Bios CPU (what is it?) */ \
-	ROM_LOAD("nss-c.dat"  , 0x10000, 0x8000, CRC(a8e202b3) SHA1(b7afcfe4f5cf15df53452dc04be81929ced1efb2) )	/* bios */ \
-	ROM_LOAD("nss-ic14.02", 0x18000, 0x8000, CRC(e06cb58f) SHA1(62f507e91a2797919a78d627af53f029c7d81477) )	/* bios */ \
-	ROM_REGION( 0x1200, "chargen", ROMREGION_ERASEFF ) \
-	ROM_LOAD("m50458_char.bin",     0x0000, 0x1200, BAD_DUMP CRC(011cc342) SHA1(d5b9f32d6e251b4b25945267d7c68c099bd83e96) ) \
-	ROM_REGION( 0x1000, "m50458_gfx", ROMREGION_ERASEFF ) \
-	ROM_LOAD("m50458_char_mod.bin", 0x0000, 0x1000, BAD_DUMP CRC(8c4326ef) SHA1(21a63c5245ff7f3f70cb45e217b3045b19d0d799) ) \
-	ROM_REGION( 0x1000, "m50458_vram", ROMREGION_ERASE00 ) \
+	ROM_REGION(0x8000,         "bios",  0)		/* Bios CPU */ \
+	ROM_SYSTEM_BIOS( 0, "single", "Nintendo Super System (Single Cart BIOS)" ) \
+	ROMX_LOAD("nss-ic14.02", 0x00000, 0x8000, CRC(e06cb58f) SHA1(62f507e91a2797919a78d627af53f029c7d81477), ROM_BIOS(1) )	/* bios */ \
+	ROM_SYSTEM_BIOS( 1, "multi", "Nintendo Super System (Multi Cart BIOS)" ) \
+	ROMX_LOAD("nss-c.dat"  , 0x00000, 0x8000, CRC(a8e202b3) SHA1(b7afcfe4f5cf15df53452dc04be81929ced1efb2), ROM_BIOS(2) )	/* bios */ \
 	ROM_REGION( 0x2000, "dspprg", ROMREGION_ERASEFF) \
 	ROM_REGION( 0x800, "dspdata", ROMREGION_ERASEFF)
+
 
 
 
@@ -740,8 +891,9 @@ ROM_START( nss )
 
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, "ibios_rom", ROMREGION_ERASEFF )
-ROM_END
 
+	ROM_REGION( 0x10, "rp5h01", ROMREGION_ERASE00 )
+ROM_END
 
 ROM_START( nss_actr )
 	NSS_BIOS
@@ -752,6 +904,9 @@ ROM_START( nss_actr )
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, "ibios_rom", 0 )
 	ROM_LOAD( "act-rais.ic8", 0x0000, 0x8000, CRC(08b38ce6) SHA1(4cbb7fd28d98ffef0f17747201625883af954e3a) )
+
+	ROM_REGION( 0x10, "rp5h01", ROMREGION_ERASE00 )
+    ROM_LOAD( "security.prm", 0x000000, 0x000010, CRC(4b74ac55) SHA1(51ea71b06367b4956a4b737385e2d4d15bd43980) )
 ROM_END
 
 ROM_START( nss_con3 )
@@ -763,6 +918,9 @@ ROM_START( nss_con3 )
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, "ibios_rom", 0 )
 	ROM_LOAD( "contra3.ic8", 0x0000, 0x8000, CRC(0fbfa23b) SHA1(e7a1a78a58c64297e7b9623350ec57aed8035a4f) )
+
+	ROM_REGION( 0x10, "rp5h01", ROMREGION_ERASE00 )
+	ROM_LOAD( "security.prm", 0x000000, 0x000010, NO_DUMP )
 ROM_END
 
 ROM_START( nss_adam )
@@ -774,6 +932,9 @@ ROM_START( nss_adam )
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, "ibios_rom", 0 )
 	ROM_LOAD( "addams.ic8", 0x0000, 0x8000, CRC(57c7f72c) SHA1(2e3642b4b5438f6c535d6d1eb668e1663062cf78) )
+
+	ROM_REGION( 0x10, "rp5h01", ROMREGION_ERASE00 )
+	ROM_LOAD( "security.prm", 0x000000, 0x000010, CRC(154d10c2) SHA1(6829e149c341b753ee9bc72055c0634db4e81884) )
 ROM_END
 
 ROM_START( nss_aten )
@@ -785,6 +946,9 @@ ROM_START( nss_aten )
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, "ibios_rom", 0 )
 	ROM_LOAD( "amtennis.ic8", 0x0000, 0x8000, CRC(d2cd3926) SHA1(49fc253b1b9497ef1374c7db0bd72c163ffb07e7) )
+
+	ROM_REGION( 0x10, "rp5h01", ROMREGION_ERASE00 )
+	ROM_LOAD( "security.prm", 0x000000, 0x000010,CRC(3e640fa2) SHA1(ac530610a9d4979f070d5f57dfd4886c530aa20f) )
 ROM_END
 
 ROM_START( nss_rob3 )
@@ -796,6 +960,9 @@ ROM_START( nss_rob3 )
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, "ibios_rom", 0 )
 	ROM_LOAD( "robocop3.ic8", 0x0000, 0x8000, CRC(90d13c51) SHA1(6751dab14b7d178350ac333f07dd2c3852e4ae23) )
+
+	ROM_REGION( 0x10, "rp5h01", ROMREGION_ERASE00 )
+	ROM_LOAD( "security.prm", 0x000000, 0x000010, NO_DUMP )
 ROM_END
 
 ROM_START( nss_ncaa )
@@ -807,6 +974,9 @@ ROM_START( nss_ncaa )
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, "ibios_rom", 0 )
 	ROM_LOAD( "ncaa.ic8", 0x0000, 0x8000, CRC(b9fa28d5) SHA1(bc538bcff5c19eae4becc6582b5c111d287b76fa) )
+
+	ROM_REGION( 0x10, "rp5h01", ROMREGION_ERASE00 )
+	ROM_LOAD( "security.prm", 0x000000, 0x000010, CRC(a2e9ad5b) SHA1(a41f82451fc185f8e989a0d4f38700dc7813bb50) )
 ROM_END
 
 ROM_START( nss_skin )
@@ -818,6 +988,9 @@ ROM_START( nss_skin )
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, "ibios_rom", 0 )
 	ROM_LOAD( "skins.ic8", 0x0000, 0x8000, CRC(9f33d5ce) SHA1(4d279ad3665bd94c7ca9cb2778572bed42c5b298) )
+
+	ROM_REGION( 0x10, "rp5h01", ROMREGION_ERASE00 )
+	ROM_LOAD( "security.prm", 0x000000, 0x000010, CRC(86f8cd1d) SHA1(d567d194058568f4ae32b7726e433918b06bca54) )
 ROM_END
 
 ROM_START( nss_lwep )
@@ -829,6 +1002,9 @@ ROM_START( nss_lwep )
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, "ibios_rom", 0 )
 	ROM_LOAD( "nss-lw.ic8", 0x0000, 0x8000, CRC(1acc1d5d) SHA1(4c8b100ac5847915aaf3b5bfbcb4f632606c97de) )
+
+	ROM_REGION( 0x10, "rp5h01", ROMREGION_ERASE00 )
+	ROM_LOAD( "security.prm", 0x000000, 0x000010, CRC(e9755c14) SHA1(d8dbebf3536dcbd18c50ba11a6b729dc7085f74b) )
 ROM_END
 
 ROM_START( nss_ssoc )
@@ -839,6 +1015,9 @@ ROM_START( nss_ssoc )
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, "ibios_rom", 0 )
 	ROM_LOAD( "s-soccer.ic3", 0x0000, 0x8000, CRC(c09211c3) SHA1(b274a57f93ae0a8774664df3d3615fb7dbecfa2e) )
+
+	ROM_REGION( 0x10, "rp5h01", ROMREGION_ERASE00 )
+	ROM_LOAD( "security.prm", 0x000000, 0x000010, NO_DUMP )
 ROM_END
 
 ROM_START( nss_smw )
@@ -849,6 +1028,9 @@ ROM_START( nss_smw )
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, "ibios_rom", 0 )
 	ROM_LOAD( "mw.ic3", 0x0000, 0x8000, CRC(f2c5466e) SHA1(e116f01342fcf359498ed8750741c139093b1fb2) )
+
+	ROM_REGION( 0x10, "rp5h01", ROMREGION_ERASE00 )
+	ROM_LOAD( "security.prm", 0x000000, 0x000010, NO_DUMP )
 ROM_END
 
 ROM_START( nss_fzer )
@@ -859,6 +1041,9 @@ ROM_START( nss_fzer )
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, "ibios_rom", 0 )
 	ROM_LOAD( "fz.ic7", 0x0000, 0x8000, CRC(48ae570d) SHA1(934f9fec47dcf9e49936388968d2db50c69950da) )
+
+	ROM_REGION( 0x10, "rp5h01", ROMREGION_ERASE00 )
+	ROM_LOAD( "security.prm", 0x000000, 0x000010, CRC(9650a7d0) SHA1(59d57ab2720cff3a24105a7250560c41def45acc) )
 ROM_END
 
 ROM_START( nss_sten )
@@ -869,18 +1054,34 @@ ROM_START( nss_sten )
 	/* instruction / data rom for bios */
 	ROM_REGION( 0x8000, "ibios_rom", 0 )
 	ROM_LOAD( "st.ic3", 0x0000, 0x8000, CRC(8880596e) SHA1(ec6d68fc2f51f7d94f496cd72cf898db65324542) )
+
+	ROM_REGION( 0x10, "rp5h01", ROMREGION_ERASE00 )
+	ROM_LOAD( "security.prm", 0x000000, 0x000010, NO_DUMP )
 ROM_END
 
+DRIVER_INIT_MEMBER(nss_state,nss)
+{
+	UINT8 *PROM = memregion("rp5h01")->base();
+	int i;
+
+	DRIVER_INIT_CALL(snes);
+
+	for(i=0;i<0x10;i++)
+		PROM[i] = BITSWAP8(PROM[i],0,1,2,3,4,5,6,7) ^ 0xff;
+
+
+}
+
 GAME( 199?, nss,       0,     nss,      snes, snes_state,    snes,    ROT0, "Nintendo",                    "Nintendo Super System BIOS", GAME_IS_BIOS_ROOT )
-GAME( 1992, nss_actr,  nss,   nss,      snes, snes_state,    snes,    ROT0, "Enix",                        "Act Raiser (Nintendo Super System)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND ) // sound sometimes dies, timing issues
-GAME( 1992, nss_adam,  nss,   nss,      snes, snes_state,    snes,    ROT0, "Ocean",                       "The Addams Family (Nintendo Super System)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
-GAME( 1992, nss_aten,  nss,   nss,      snes, snes_state,    snes,    ROT0, "Absolute Entertainment Inc.", "David Crane's Amazing Tennis (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1992, nss_con3,  nss,   nss,      snes, snes_state,    snes,    ROT0, "Konami",                      "Contra 3: The Alien Wars (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1992, nss_lwep,  nss,   nss,      snes, snes_state,    snes,    ROT0, "Ocean",                       "Lethal Weapon (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1992, nss_ncaa,  nss,   nss,      snes, snes_state,    snes,    ROT0, "Sculptured Software Inc.",    "NCAA Basketball (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1992, nss_rob3,  nss,   nss,      snes, snes_state,    snes,    ROT0, "Ocean",                       "Robocop 3 (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) // any sprite minus Robocop is missing
-GAME( 1992, nss_skin,  nss,   nss,      snes, snes_state,    snes,    ROT0, "Irem",                        "Skins Game (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) // gfx issue caused by timing at start-up
-GAME( 1992, nss_ssoc,  nss,   nss,      snes, snes_state,    snes,    ROT0, "Human Inc.",                  "Super Soccer (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1991, nss_smw,   nss,   nss,      snes, snes_state,    snes,    ROT0, "Nintendo",                    "Super Mario World (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1991, nss_fzer,  nss,   nss,      snes, snes_state,    snes,    ROT0, "Nintendo",                    "F-Zero (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
-GAME( 1991, nss_sten,  nss,   nss,      snes, snes_state,    snes,    ROT0, "Nintendo",                    "Super Tennis (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1992, nss_actr,  nss,   nss,      snes, nss_state,    nss,    ROT0, "Enix",                        "Act Raiser (Nintendo Super System)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
+GAME( 1992, nss_adam,  nss,   nss,      snes, nss_state,    nss,    ROT0, "Ocean",                       "The Addams Family (Nintendo Super System)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
+GAME( 1992, nss_aten,  nss,   nss,      snes, nss_state,    nss,    ROT0, "Absolute Entertainment Inc.", "David Crane's Amazing Tennis (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1992, nss_con3,  nss,   nss,      snes, nss_state,    nss,    ROT0, "Konami",                      "Contra 3: The Alien Wars (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1992, nss_lwep,  nss,   nss,      snes, nss_state,    nss,    ROT0, "Ocean",                       "Lethal Weapon (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1992, nss_ncaa,  nss,   nss,      snes, nss_state,    nss,    ROT0, "Sculptured Software Inc.",    "NCAA Basketball (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1992, nss_rob3,  nss,   nss,      snes, nss_state,    nss,    ROT0, "Ocean",                       "Robocop 3 (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1992, nss_skin,  nss,   nss,      snes, nss_state,    nss,    ROT0, "Irem",                        "Skins Game (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING ) // can't start
+GAME( 1992, nss_ssoc,  nss,   nss,      snes, nss_state,    nss,    ROT0, "Human Inc.",                  "Super Soccer (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1991, nss_smw,   nss,   nss,      snes, nss_state,    nss,    ROT0, "Nintendo",                    "Super Mario World (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1991, nss_fzer,  nss,   nss,      snes, nss_state,    nss,    ROT0, "Nintendo",                    "F-Zero (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )
+GAME( 1991, nss_sten,  nss,   nss,      snes, nss_state,    nss,    ROT0, "Nintendo",                    "Super Tennis (Nintendo Super System)", GAME_IMPERFECT_SOUND | GAME_NOT_WORKING )

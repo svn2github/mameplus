@@ -15,6 +15,7 @@ class dc_state : public driver_device
 		dc_framebuffer_ram(*this, "frameram"),
 		dc_texture_ram(*this, "dc_texture_ram"),
 		dc_sound_ram(*this, "dc_sound_ram"),
+		dc_ram(*this, "dc_ram"),
 		pvr2_texture_ram(*this, "textureram2"),
 		pvr2_framebuffer_ram(*this, "frameram2"),
 		elan_ram(*this, "elan_ram") { }
@@ -23,6 +24,7 @@ class dc_state : public driver_device
 	required_shared_ptr<UINT64> dc_texture_ram; // '64-bit access area'
 
 	required_shared_ptr<UINT32> dc_sound_ram;
+	required_shared_ptr<UINT64> dc_ram;
 
 	/* machine related */
 	UINT32 dc_rtcregister[4];
@@ -90,6 +92,10 @@ class dc_state : public driver_device
 	DECLARE_DRIVER_INIT(dc);
 	DECLARE_DRIVER_INIT(dcus);
 	DECLARE_DRIVER_INIT(dcjp);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	DECLARE_MACHINE_RESET(naomi);
 };
 
 /*----------- defined in machine/dc.c -----------*/
@@ -115,8 +121,8 @@ WRITE64_DEVICE_HANDLER( dc_aica_reg_w );
 READ32_DEVICE_HANDLER( dc_arm_aica_r );
 WRITE32_DEVICE_HANDLER( dc_arm_aica_w );
 
-MACHINE_START( dc );
-MACHINE_RESET( dc );
+
+
 
 int dc_compute_interrupt_level(running_machine &machine);
 void dc_update_interrupt_status(running_machine &machine);
@@ -300,7 +306,7 @@ READ32_HANDLER( elan_regs_r );
 WRITE32_HANDLER( elan_regs_w );
 WRITE64_HANDLER( ta_fifo_poly_w );
 WRITE64_HANDLER( ta_fifo_yuv_w );
-VIDEO_START(dc);
+
 SCREEN_UPDATE_RGB32(dc);
 
 /*--------------- CORE registers --------------*/

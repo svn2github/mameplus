@@ -87,8 +87,6 @@ public:
 	DECLARE_READ32_MEMBER(cps3_40C0004_r);
 	DECLARE_READ32_MEMBER(cps3_eeprom_r);
 	DECLARE_WRITE32_MEMBER(cps3_eeprom_w);
-	DECLARE_READ32_MEMBER(cps3_cdrom_r);
-	DECLARE_WRITE32_MEMBER(cps3_cdrom_w);
 	DECLARE_WRITE32_MEMBER(cps3_ss_bank_base_w);
 	DECLARE_WRITE32_MEMBER(cps3_ss_pal_base_w);
 	DECLARE_WRITE32_MEMBER(cps3_palettedma_w);
@@ -107,6 +105,9 @@ public:
 	DECLARE_DRIVER_INIT(sfiii2);
 	DECLARE_DRIVER_INIT(nocd);
 
+	virtual void machine_reset();
+	virtual void video_start();
+
 	int m_use_fastboot;
 	emu_timer* m_fastboot_timer;
 };
@@ -114,7 +115,29 @@ public:
 
 /*----------- defined in audio/cps3.c -----------*/
 
-DECLARE_LEGACY_SOUND_DEVICE(CPS3, cps3_sound);
+class cps3_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	cps3_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~cps3_sound_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type CPS3;
+
 
 WRITE32_DEVICE_HANDLER( cps3_sound_w );
 READ32_DEVICE_HANDLER( cps3_sound_r );

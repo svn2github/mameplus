@@ -65,7 +65,7 @@ struct voice_registers
 	UINT8 reserved[4];
 };
 
-typedef struct
+struct VOICE
 {
 	long	ptoffset;
 	long	pos;
@@ -84,10 +84,9 @@ typedef struct
 	long	sample_start;
 	long	sample_end;
 	long	sample_loop;
-} VOICE;
+};
 
-typedef struct _c140_state c140_state;
-struct _c140_state
+struct c140_state
 {
 	int sample_rate;
 	sound_stream *stream;
@@ -109,7 +108,7 @@ INLINE c140_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == C140);
-	return (c140_state *)downcast<legacy_device_base *>(device)->token();
+	return (c140_state *)downcast<c140_device *>(device)->token();
 }
 
 
@@ -475,33 +474,42 @@ static DEVICE_START( c140 )
 	info->mixer_buffer_right = info->mixer_buffer_left + info->sample_rate;
 }
 
+const device_type C140 = &device_creator<c140_device>;
 
-
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( c140 )
+c140_device::c140_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, C140, "C140", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(c140_state);			break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(c140_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( c140 );		break;
-		case DEVINFO_FCT_STOP:							/* nothing */								break;
-		case DEVINFO_FCT_RESET:							/* nothing */								break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "C140");					break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Namco PCM");				break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");						break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);					break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void c140_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void c140_device::device_start()
+{
+	DEVICE_START_NAME( c140 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void c140_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(C140, c140);

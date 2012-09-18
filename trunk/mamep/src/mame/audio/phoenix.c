@@ -60,8 +60,7 @@ struct n_state
 	INT32 lowpass_polybit;
 };
 
-typedef struct _phoenix_sound_state phoenix_sound_state;
-struct _phoenix_sound_state
+struct phoenix_sound_state
 {
 	struct c_state		m_c24_state;
 	struct c_state		m_c25_state;
@@ -78,7 +77,7 @@ INLINE phoenix_sound_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == PHOENIX);
 
-	return (phoenix_sound_state *)downcast<legacy_device_base *>(device)->token();
+	return (phoenix_sound_state *)downcast<phoenix_sound_device *>(device)->token();
 }
 
 INLINE int update_c24(phoenix_sound_state *state, int samplerate)
@@ -571,21 +570,42 @@ static DEVICE_START( phoenix_sound )
 	register_state(device);
 }
 
-DEVICE_GET_INFO( phoenix_sound )
+const device_type PHOENIX = &device_creator<phoenix_sound_device>;
+
+phoenix_sound_device::phoenix_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, PHOENIX, "Phoenix Custom", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(phoenix_sound_state);			break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(phoenix_sound_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(phoenix_sound);	break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Phoenix Custom");				break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
+void phoenix_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void phoenix_sound_device::device_start()
+{
+	DEVICE_START_NAME( phoenix_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void phoenix_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(PHOENIX, phoenix_sound);

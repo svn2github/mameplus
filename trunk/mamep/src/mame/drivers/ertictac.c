@@ -36,6 +36,8 @@ public:
 
 	DECLARE_READ32_MEMBER(ertictac_podule_r);
 	DECLARE_DRIVER_INIT(ertictac);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 
@@ -57,7 +59,7 @@ READ32_MEMBER(ertictac_state::ertictac_podule_r)
 
 static ADDRESS_MAP_START( ertictac_map, AS_PROGRAM, 32, ertictac_state )
 	AM_RANGE(0x00000000, 0x01ffffff) AM_READWRITE_LEGACY(archimedes_memc_logical_r, archimedes_memc_logical_w)
-	AM_RANGE(0x02000000, 0x02ffffff) AM_RAM AM_BASE_LEGACY(&archimedes_memc_physmem) /* physical RAM - 16 MB for now, should be 512k for the A310 */
+	AM_RANGE(0x02000000, 0x02ffffff) AM_RAM AM_SHARE("physicalram") /* physical RAM - 16 MB for now, should be 512k for the A310 */
 
 	AM_RANGE(0x03340000, 0x0334001f) AM_READ(ertictac_podule_r)
 	AM_RANGE(0x033c0000, 0x033c001f) AM_READ(ertictac_podule_r)
@@ -193,17 +195,17 @@ DRIVER_INIT_MEMBER(ertictac_state,ertictac)
 	archimedes_driver_init(machine());
 }
 
-static MACHINE_START( ertictac )
+void ertictac_state::machine_start()
 {
-	archimedes_init(machine);
+	archimedes_init(machine());
 
 	// reset the DAC to centerline
-	//machine.device<dac_device>("dac")->write_signed8(0x80);
+	//machine().device<dac_device>("dac")->write_signed8(0x80);
 }
 
-static MACHINE_RESET( ertictac )
+void ertictac_state::machine_reset()
 {
-	archimedes_reset(machine);
+	archimedes_reset(machine());
 }
 
 static INTERRUPT_GEN( ertictac_podule_irq )
@@ -226,8 +228,6 @@ static MACHINE_CONFIG_START( ertictac, ertictac_state )
 	MCFG_CPU_PROGRAM_MAP(ertictac_map)
 	MCFG_CPU_PERIODIC_INT(ertictac_podule_irq,60) // FIXME: timing of this
 
-	MCFG_MACHINE_START(ertictac)
-	MCFG_MACHINE_RESET(ertictac)
 
 	MCFG_I2CMEM_ADD("i2cmem",i2cmem_interface)
 

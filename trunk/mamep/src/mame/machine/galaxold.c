@@ -18,11 +18,11 @@ static IRQ_CALLBACK(hunchbkg_irq_callback)
 	/* for some reason a call to cputag_set_input_line
      * is significantly delayed ....
      *
-     * cputag_set_input_line(device->machine(), "maincpu", 0, CLEAR_LINE);
+     * device->machine().device("maincpu")->set_input_line(0, CLEAR_LINE);
      *
      * Therefore we reset the line without any detour ....
      */
-	device_set_input_line(device->machine().firstcpu, 0, CLEAR_LINE);
+	device->machine().firstcpu->set_input_line(0, CLEAR_LINE);
 	//cpu_set_info(device->machine().firstcpu, CPUINFO_INT_INPUT_STATE + state->m_irq_line, CLEAR_LINE);
 	return 0x03;
 }
@@ -39,7 +39,7 @@ WRITE_LINE_DEVICE_HANDLER( galaxold_7474_9m_1_callback )
 {
 	galaxold_state *drvstate = device->machine().driver_data<galaxold_state>();
 	/* Q goes to the NMI line */
-	cputag_set_input_line(device->machine(), "maincpu", drvstate->m_irq_line, state ? CLEAR_LINE : ASSERT_LINE);
+	device->machine().device("maincpu")->execute().set_input_line(drvstate->m_irq_line, state ? CLEAR_LINE : ASSERT_LINE);
 }
 
 WRITE8_MEMBER(galaxold_state::galaxold_nmi_enable_w)
@@ -85,20 +85,20 @@ static void machine_reset_common(running_machine &machine, int line)
 	int_timer->adjust(machine.primary_screen->time_until_pos(0));
 }
 
-MACHINE_RESET( galaxold )
+MACHINE_RESET_MEMBER(galaxold_state,galaxold)
 {
-	machine_reset_common(machine, INPUT_LINE_NMI);
+	machine_reset_common(machine(), INPUT_LINE_NMI);
 }
 
-MACHINE_RESET( devilfsg )
+MACHINE_RESET_MEMBER(galaxold_state,devilfsg)
 {
-	machine_reset_common(machine, 0);
+	machine_reset_common(machine(), 0);
 }
 
-MACHINE_RESET( hunchbkg )
+MACHINE_RESET_MEMBER(galaxold_state,hunchbkg)
 {
-	machine_reset_common(machine, 0);
-	device_set_irq_callback(machine.device("maincpu"), hunchbkg_irq_callback);
+	machine_reset_common(machine(), 0);
+	machine().device("maincpu")->execute().set_irq_acknowledge_callback(hunchbkg_irq_callback);
 }
 
 WRITE8_MEMBER(galaxold_state::galaxold_coin_lockout_w)
@@ -132,7 +132,7 @@ WRITE8_MEMBER(galaxold_state::galaxold_leds_w)
 #ifdef UNUSED_FUNCTION
 READ8_MEMBER(galaxold_state::checkmaj_protection_r)
 {
-	switch (cpu_get_pc(&space.device()))
+	switch (space.device().safe_pc())
 	{
 	case 0x0f15:  return 0xf5;
 	case 0x0f8f:  return 0x7c;
@@ -141,7 +141,7 @@ READ8_MEMBER(galaxold_state::checkmaj_protection_r)
 	case 0x10f1:  return 0xaa;
 	case 0x1402:  return 0xaa;
 	default:
-		logerror("Unknown protection read. PC=%04X\n",cpu_get_pc(&space.device()));
+		logerror("Unknown protection read. PC=%04X\n",space.device().safe_pc());
 	}
 
 	return 0;
@@ -225,23 +225,23 @@ DRIVER_INIT_MEMBER(galaxold_state,dingoe)
 
 READ8_MEMBER(galaxold_state::scramblb_protection_1_r)
 {
-	switch (cpu_get_pc(&space.device()))
+	switch (space.device().safe_pc())
 	{
 	case 0x01da: return 0x80;
 	case 0x01e4: return 0x00;
 	default:
-		logerror("%04x: read protection 1\n",cpu_get_pc(&space.device()));
+		logerror("%04x: read protection 1\n",space.device().safe_pc());
 		return 0;
 	}
 }
 
 READ8_MEMBER(galaxold_state::scramblb_protection_2_r)
 {
-	switch (cpu_get_pc(&space.device()))
+	switch (space.device().safe_pc())
 	{
 	case 0x01ca: return 0x90;
 	default:
-		logerror("%04x: read protection 2\n",cpu_get_pc(&space.device()));
+		logerror("%04x: read protection 2\n",space.device().safe_pc());
 		return 0;
 	}
 }

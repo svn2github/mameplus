@@ -37,8 +37,7 @@ Offset 0:
 
 #define STEP 0x10000
 
-typedef struct _t6w28_state t6w28_state;
-struct _t6w28_state
+struct t6w28_state
 {
 	sound_stream * Channel;
 	int SampleRate;
@@ -61,7 +60,7 @@ INLINE t6w28_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == T6W28);
-	return (t6w28_state *)downcast<legacy_device_base *>(device)->token();
+	return (t6w28_state *)downcast<t6w28_device *>(device)->token();
 }
 
 
@@ -347,7 +346,7 @@ static DEVICE_START( t6w28 )
 	t6w28_state *chip = get_safe_token(device);
 
 	if (t6w28_init(device,chip) != 0)
-		fatalerror("Error creating t6w28 chip");
+		fatalerror("Error creating t6w28 chip\n");
 	t6w28_set_gain(chip, 0);
 
 	/* values from sn76489a */
@@ -365,31 +364,42 @@ static DEVICE_START( t6w28 )
 	device->save_item(NAME(chip->Output));
 }
 
+const device_type T6W28 = &device_creator<t6w28_device>;
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( t6w28 )
+t6w28_device::t6w28_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, T6W28, "T6W28", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(t6w28_state);					break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(t6w28_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( t6w28 );		break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							/* Nothing */									break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "T6W28");						break;
-		case DEVINFO_STR_FAMILY:						strcpy(info->s, "PSG");							break;
-		case DEVINFO_STR_VERSION:						strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void t6w28_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void t6w28_device::device_start()
+{
+	DEVICE_START_NAME( t6w28 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void t6w28_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(T6W28, t6w28);

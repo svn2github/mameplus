@@ -25,7 +25,7 @@ static INTERRUPT_GEN( bottom9_interrupt )
 	bottom9_state *state = device->machine().driver_data<bottom9_state>();
 
 	if (k052109_is_irq_enabled(state->m_k052109))
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 READ8_MEMBER(bottom9_state::k052109_051960_r)
@@ -135,14 +135,14 @@ WRITE8_MEMBER(bottom9_state::bottom9_1f90_w)
 
 WRITE8_MEMBER(bottom9_state::bottom9_sh_irqtrigger_w)
 {
-	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 static INTERRUPT_GEN( bottom9_sound_interrupt )
 {
 	bottom9_state *state = device->machine().driver_data<bottom9_state>();
 	if (state->m_nmienable)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(bottom9_state::nmi_enable_w)
@@ -319,35 +319,33 @@ static const k051316_interface bottom9_k051316_intf =
 	bottom9_zoom_callback
 };
 
-static MACHINE_START( bottom9 )
+void bottom9_state::machine_start()
 {
-	bottom9_state *state = machine.driver_data<bottom9_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 12, &ROM[0x10000], 0x2000);
+	membank("bank1")->configure_entries(0, 12, &ROM[0x10000], 0x2000);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_k052109 = machine.device("k052109");
-	state->m_k051960 = machine.device("k051960");
-	state->m_k051316 = machine.device("k051316");
-	state->m_k007232_1 = machine.device("k007232_1");
-	state->m_k007232_2 = machine.device("k007232_2");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_k052109 = machine().device("k052109");
+	m_k051960 = machine().device("k051960");
+	m_k051316 = machine().device("k051316");
+	m_k007232_1 = machine().device("k007232_1");
+	m_k007232_2 = machine().device("k007232_2");
 
-	state->save_item(NAME(state->m_video_enable));
-	state->save_item(NAME(state->m_zoomreadroms));
-	state->save_item(NAME(state->m_k052109_selected));
-	state->save_item(NAME(state->m_nmienable));
+	save_item(NAME(m_video_enable));
+	save_item(NAME(m_zoomreadroms));
+	save_item(NAME(m_k052109_selected));
+	save_item(NAME(m_nmienable));
 }
 
-static MACHINE_RESET( bottom9 )
+void bottom9_state::machine_reset()
 {
-	bottom9_state *state = machine.driver_data<bottom9_state>();
 
-	state->m_video_enable = 0;
-	state->m_zoomreadroms = 0;
-	state->m_k052109_selected = 0;
-	state->m_nmienable = 0;
+	m_video_enable = 0;
+	m_zoomreadroms = 0;
+	m_k052109_selected = 0;
+	m_nmienable = 0;
 }
 
 static MACHINE_CONFIG_START( bottom9, bottom9_state )
@@ -361,8 +359,6 @@ static MACHINE_CONFIG_START( bottom9, bottom9_state )
 	MCFG_CPU_PROGRAM_MAP(audio_map)
 	MCFG_CPU_PERIODIC_INT(bottom9_sound_interrupt,8*60)	/* irq is triggered by the main CPU */
 
-	MCFG_MACHINE_START(bottom9)
-	MCFG_MACHINE_RESET(bottom9)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -376,7 +372,6 @@ static MACHINE_CONFIG_START( bottom9, bottom9_state )
 
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(bottom9)
 
 	MCFG_K052109_ADD("k052109", bottom9_k052109_intf)
 	MCFG_K051960_ADD("k051960", bottom9_k051960_intf)

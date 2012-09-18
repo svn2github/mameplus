@@ -25,8 +25,8 @@ public:
 	//int        m_nmi_enabled;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k053260;
 	device_t *m_k052109;
 	device_t *m_k053245;
@@ -40,6 +40,8 @@ public:
 	DECLARE_WRITE8_MEMBER(parodius_sh_irqtrigger_w);
 	DECLARE_WRITE8_MEMBER(sound_arm_nmi_w);
 	DECLARE_READ8_MEMBER(parodius_sound_r);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 /*----------- defined in video/parodius.c -----------*/

@@ -261,7 +261,7 @@ READ8_MEMBER(airbustr_state::devram_r)
 
 WRITE8_MEMBER(airbustr_state::master_nmi_trigger_w)
 {
-	device_set_input_line(m_slave, INPUT_LINE_NMI, PULSE_LINE);
+	m_slave->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(airbustr_state::master_bankswitch_w)
@@ -308,7 +308,7 @@ WRITE8_MEMBER(airbustr_state::soundcommand_w)
 {
 	soundlatch_byte_w(space, 0, data);
 	m_soundlatch_status = 1;	// soundlatch has been written
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);	// cause a nmi to sub cpu
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);	// cause a nmi to sub cpu
 }
 
 WRITE8_MEMBER(airbustr_state::soundcommand2_w)
@@ -553,63 +553,61 @@ static TIMER_DEVICE_CALLBACK( airbustr_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line_and_vector(timer.machine(), "master", 0, HOLD_LINE, 0xff);
+		timer.machine().device("master")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);
 
 	/* Pandora "sprite end dma" irq? TODO: timing is likely off */
 	if(scanline == 64)
-		cputag_set_input_line_and_vector(timer.machine(), "master", 0, HOLD_LINE, 0xfd);
+		timer.machine().device("master")->execute().set_input_line_and_vector(0, HOLD_LINE, 0xfd);
 }
 
 /* Sub Z80 uses IM2 too, but 0xff irq routine just contains an irq ack in it */
 static INTERRUPT_GEN( slave_interrupt )
 {
-	device_set_input_line_and_vector(device, 0, HOLD_LINE, 0xfd);
+	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xfd);
 }
 
 /* Machine Initialization */
 
-static MACHINE_START( airbustr )
+void airbustr_state::machine_start()
 {
-	airbustr_state *state = machine.driver_data<airbustr_state>();
-	UINT8 *MASTER = state->memregion("master")->base();
-	UINT8 *SLAVE = state->memregion("slave")->base();
-	UINT8 *AUDIO = state->memregion("audiocpu")->base();
+	UINT8 *MASTER = memregion("master")->base();
+	UINT8 *SLAVE = memregion("slave")->base();
+	UINT8 *AUDIO = memregion("audiocpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 3, &MASTER[0x00000], 0x4000);
-	state->membank("bank1")->configure_entries(3, 5, &MASTER[0x10000], 0x4000);
-	state->membank("bank2")->configure_entries(0, 3, &SLAVE[0x00000], 0x4000);
-	state->membank("bank2")->configure_entries(3, 5, &SLAVE[0x10000], 0x4000);
-	state->membank("bank3")->configure_entries(0, 3, &AUDIO[0x00000], 0x4000);
-	state->membank("bank3")->configure_entries(3, 5, &AUDIO[0x10000], 0x4000);
+	membank("bank1")->configure_entries(0, 3, &MASTER[0x00000], 0x4000);
+	membank("bank1")->configure_entries(3, 5, &MASTER[0x10000], 0x4000);
+	membank("bank2")->configure_entries(0, 3, &SLAVE[0x00000], 0x4000);
+	membank("bank2")->configure_entries(3, 5, &SLAVE[0x10000], 0x4000);
+	membank("bank3")->configure_entries(0, 3, &AUDIO[0x00000], 0x4000);
+	membank("bank3")->configure_entries(3, 5, &AUDIO[0x10000], 0x4000);
 
-	state->m_master = machine.device("master");
-	state->m_slave = machine.device("slave");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_pandora = machine.device("pandora");
+	m_master = machine().device("master");
+	m_slave = machine().device("slave");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_pandora = machine().device("pandora");
 
-	state->save_item(NAME(state->m_soundlatch_status));
-	state->save_item(NAME(state->m_soundlatch2_status));
-	state->save_item(NAME(state->m_bg_scrollx));
-	state->save_item(NAME(state->m_bg_scrolly));
-	state->save_item(NAME(state->m_fg_scrollx));
-	state->save_item(NAME(state->m_fg_scrolly));
-	state->save_item(NAME(state->m_highbits));
+	save_item(NAME(m_soundlatch_status));
+	save_item(NAME(m_soundlatch2_status));
+	save_item(NAME(m_bg_scrollx));
+	save_item(NAME(m_bg_scrolly));
+	save_item(NAME(m_fg_scrollx));
+	save_item(NAME(m_fg_scrolly));
+	save_item(NAME(m_highbits));
 }
 
-static MACHINE_RESET( airbustr )
+void airbustr_state::machine_reset()
 {
-	airbustr_state *state = machine.driver_data<airbustr_state>();
 
-	state->m_soundlatch_status = state->m_soundlatch2_status = 0;
-	state->m_bg_scrollx = 0;
-	state->m_bg_scrolly = 0;
-	state->m_fg_scrollx = 0;
-	state->m_fg_scrolly = 0;
-	state->m_highbits = 0;
+	m_soundlatch_status = m_soundlatch2_status = 0;
+	m_bg_scrollx = 0;
+	m_bg_scrolly = 0;
+	m_fg_scrollx = 0;
+	m_fg_scrolly = 0;
+	m_highbits = 0;
 
-	state->membank("bank1")->set_entry(0x02);
-	state->membank("bank2")->set_entry(0x02);
-	state->membank("bank3")->set_entry(0x02);
+	membank("bank1")->set_entry(0x02);
+	membank("bank2")->set_entry(0x02);
+	membank("bank3")->set_entry(0x02);
 }
 
 /* Machine Driver */
@@ -641,8 +639,6 @@ static MACHINE_CONFIG_START( airbustr, airbustr_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	// Palette RAM is filled by sub cpu with data supplied by main cpu
 							// Maybe a high value is safer in order to avoid glitches
-	MCFG_MACHINE_START(airbustr)
-	MCFG_MACHINE_RESET(airbustr)
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(3))	/* a guess, and certainly wrong */
 
 	/* video hardware */
@@ -659,7 +655,6 @@ static MACHINE_CONFIG_START( airbustr, airbustr_state )
 
 	MCFG_KANEKO_PANDORA_ADD("pandora", airbustr_pandora_config)
 
-	MCFG_VIDEO_START(airbustr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

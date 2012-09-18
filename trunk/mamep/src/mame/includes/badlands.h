@@ -25,6 +25,11 @@ public:
 	DECLARE_WRITE8_MEMBER(audio_io_w);
 	DECLARE_READ16_MEMBER(badlandsb_unk_r);
 	DECLARE_DRIVER_INIT(badlands);
+	TILE_GET_INFO_MEMBER(get_playfield_tile_info);
+	DECLARE_MACHINE_START(badlands);
+	DECLARE_MACHINE_RESET(badlands);
+	DECLARE_VIDEO_START(badlands);
+	DECLARE_MACHINE_RESET(badlandsb);
 };
 
 
@@ -32,5 +37,5 @@ public:
 
 WRITE16_HANDLER( badlands_pf_bank_w );
 
-VIDEO_START( badlands );
+
 SCREEN_UPDATE_IND16( badlands );

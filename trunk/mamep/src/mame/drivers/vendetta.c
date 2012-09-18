@@ -201,24 +201,24 @@ WRITE8_MEMBER(vendetta_state::vendetta_5fe0_w)
 static TIMER_CALLBACK( z80_nmi_callback )
 {
 	vendetta_state *state = machine.driver_data<vendetta_state>();
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, ASSERT_LINE);
+	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(vendetta_state::z80_arm_nmi_w)
 {
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 
 	machine().scheduler().timer_set(attotime::from_usec(25), FUNC(z80_nmi_callback));
 }
 
 WRITE8_MEMBER(vendetta_state::z80_irq_w)
 {
-	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 READ8_MEMBER(vendetta_state::vendetta_sound_interrupt_r)
 {
-	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 	return 0x00;
 }
 
@@ -408,7 +408,7 @@ static INTERRUPT_GEN( vendetta_irq )
 {
 	vendetta_state *state = device->machine().driver_data<vendetta_state>();
 	if (state->m_irq_enabled)
-		device_set_input_line(device, KONAMI_IRQ_LINE, HOLD_LINE);
+		device->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
 }
 
 static const k052109_interface vendetta_k052109_intf =
@@ -457,48 +457,46 @@ static const k053252_interface esckids_k053252_intf =
 	12*8, 1*8
 };
 
-static MACHINE_START( vendetta )
+void vendetta_state::machine_start()
 {
-	vendetta_state *state = machine.driver_data<vendetta_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 28, &ROM[0x10000], 0x2000);
-	state->membank("bank1")->set_entry(0);
+	membank("bank1")->configure_entries(0, 28, &ROM[0x10000], 0x2000);
+	membank("bank1")->set_entry(0);
 
-	state->m_generic_paletteram_8.allocate(0x1000);
+	m_generic_paletteram_8.allocate(0x1000);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_k053246 = machine.device("k053246");
-	state->m_k053251 = machine.device("k053251");
-	state->m_k052109 = machine.device("k052109");
-	state->m_k054000 = machine.device("k054000");
-	state->m_k053260 = machine.device("k053260");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_k053246 = machine().device("k053246");
+	m_k053251 = machine().device("k053251");
+	m_k052109 = machine().device("k052109");
+	m_k054000 = machine().device("k054000");
+	m_k053260 = machine().device("k053260");
 
-	state->save_item(NAME(state->m_irq_enabled));
-	state->save_item(NAME(state->m_sprite_colorbase));
-	state->save_item(NAME(state->m_layer_colorbase));
-	state->save_item(NAME(state->m_layerpri));
+	save_item(NAME(m_irq_enabled));
+	save_item(NAME(m_sprite_colorbase));
+	save_item(NAME(m_layer_colorbase));
+	save_item(NAME(m_layerpri));
 }
 
-static MACHINE_RESET( vendetta )
+void vendetta_state::machine_reset()
 {
-	vendetta_state *state = machine.driver_data<vendetta_state>();
 	int i;
 
-	konami_configure_set_lines(machine.device("maincpu"), vendetta_banking);
+	konami_configure_set_lines(machine().device("maincpu"), vendetta_banking);
 
 	for (i = 0; i < 3; i++)
 	{
-		state->m_layerpri[i] = 0;
-		state->m_layer_colorbase[i] = 0;
+		m_layerpri[i] = 0;
+		m_layer_colorbase[i] = 0;
 	}
 
-	state->m_sprite_colorbase = 0;
-	state->m_irq_enabled = 0;
+	m_sprite_colorbase = 0;
+	m_irq_enabled = 0;
 
 	/* init banks */
-	vendetta_video_banking(machine, 0);
+	vendetta_video_banking(machine(), 0);
 }
 
 static MACHINE_CONFIG_START( vendetta, vendetta_state )
@@ -512,8 +510,6 @@ static MACHINE_CONFIG_START( vendetta, vendetta_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
                             /* interrupts are triggered by the main CPU */
 
-	MCFG_MACHINE_START(vendetta)
-	MCFG_MACHINE_RESET(vendetta)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
@@ -784,7 +780,7 @@ ROM_END
 static KONAMI_SETLINES_CALLBACK( vendetta_banking )
 {
 	if (lines >= 0x1c)
-		logerror("PC = %04x : Unknown bank selected %02x\n", cpu_get_pc(device), lines);
+		logerror("PC = %04x : Unknown bank selected %02x\n", device->safe_pc(), lines);
 	else
 		device->machine().root_device().membank("bank1")->set_entry(lines);
 }

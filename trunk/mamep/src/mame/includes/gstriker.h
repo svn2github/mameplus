@@ -5,20 +5,20 @@
 
 #define MAX_VS920A 2
 
-typedef struct
+struct sVS920A
 {
 	tilemap_t* tmap;
 	UINT16* vram;
 	UINT16 pal_base;
 	UINT8 gfx_region;
 
-} sVS920A;
+};
 
 /*** MB60553 **********************************************/
 
 #define MAX_MB60553 2
 
-typedef struct
+struct tMB60553
 {
 	tilemap_t* tmap;
 	UINT16* vram;
@@ -27,20 +27,20 @@ typedef struct
 	UINT16 pal_base;
 	UINT8 gfx_region;
 
-} tMB60553;
+};
 
 /*** CG10103 **********************************************/
 
 #define MAX_CG10103 2
 
-typedef struct
+struct tCG10103
 {
 	UINT16* vram;
 	UINT16 pal_base;
 	UINT8 gfx_region;
 	UINT8 transpen;
 
-} tCG10103;
+};
 
 class gstriker_state : public driver_device
 {
@@ -98,6 +98,12 @@ public:
 	DECLARE_DRIVER_INIT(twrldc94a);
 	DECLARE_DRIVER_INIT(vgoalsoc);
 	DECLARE_DRIVER_INIT(twrldc94);
+	TILE_GET_INFO_MEMBER(VS920A_get_tile_info);
+	TILE_GET_INFO_MEMBER(MB60553_get_tile_info);
+	TILEMAP_MAPPER_MEMBER(twc94_scan);
+	DECLARE_VIDEO_START(gstriker);
+	DECLARE_VIDEO_START(vgoalsoc);
+	DECLARE_VIDEO_START(twrldc94);
 };
 
 
@@ -105,7 +111,7 @@ public:
 
 
 SCREEN_UPDATE_IND16( gstriker );
-VIDEO_START( gstriker );
-VIDEO_START( twrldc94 );
-VIDEO_START( vgoalsoc );
+
+
+
 #endif

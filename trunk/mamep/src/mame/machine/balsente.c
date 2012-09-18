@@ -30,7 +30,7 @@ static void update_grudge_steering(running_machine &machine);
 
 static TIMER_CALLBACK( irq_off )
 {
-	cputag_set_input_line(machine, "maincpu", M6809_IRQ_LINE, CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
 }
 
 
@@ -45,7 +45,7 @@ TIMER_DEVICE_CALLBACK( balsente_interrupt_timer )
 		state->m_scanline_timer->adjust(timer.machine().primary_screen->time_until_pos(param + 64), param + 64);
 
 	/* IRQ starts on scanline 0, 64, 128, etc. */
-	cputag_set_input_line(timer.machine(), "maincpu", M6809_IRQ_LINE, ASSERT_LINE);
+	timer.machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, ASSERT_LINE);
 
 	/* it will turn off on the next HBLANK */
 	timer.machine().scheduler().timer_set(timer.machine().primary_screen->time_until_pos(param, BALSENTE_HBSTART), FUNC(irq_off));
@@ -75,112 +75,110 @@ TIMER_DEVICE_CALLBACK( balsente_interrupt_timer )
 }
 
 
-MACHINE_START( balsente )
+void balsente_state::machine_start()
 {
-	balsente_state *state = machine.driver_data<balsente_state>();
 	int i;
 
-	state->m_cem_device[0] = state->m_cem1;
-	state->m_cem_device[1] = state->m_cem2;
-	state->m_cem_device[2] = state->m_cem3;
-	state->m_cem_device[3] = state->m_cem4;
-	state->m_cem_device[4] = state->m_cem5;
-	state->m_cem_device[5] = state->m_cem6;
+	m_cem_device[0] = m_cem1;
+	m_cem_device[1] = m_cem2;
+	m_cem_device[2] = m_cem3;
+	m_cem_device[3] = m_cem4;
+	m_cem_device[4] = m_cem5;
+	m_cem_device[5] = m_cem6;
 
 	/* create the polynomial tables */
-	poly17_init(machine);
+	poly17_init(machine());
 
 	/* register for saving */
 	for (i = 0; i < 3; i++)
 	{
-		state_save_register_item(machine, "8253counter", NULL, i, state->m_counter[i].timer_active);
-		state_save_register_item(machine, "8253counter", NULL, i, state->m_counter[i].initial);
-		state_save_register_item(machine, "8253counter", NULL, i, state->m_counter[i].count);
-		state_save_register_item(machine, "8253counter", NULL, i, state->m_counter[i].gate);
-		state_save_register_item(machine, "8253counter", NULL, i, state->m_counter[i].out);
-		state_save_register_item(machine, "8253counter", NULL, i, state->m_counter[i].mode);
-		state_save_register_item(machine, "8253counter", NULL, i, state->m_counter[i].readbyte);
-		state_save_register_item(machine, "8253counter", NULL, i, state->m_counter[i].writebyte);
+		state_save_register_item(machine(), "8253counter", NULL, i, m_counter[i].timer_active);
+		state_save_register_item(machine(), "8253counter", NULL, i, m_counter[i].initial);
+		state_save_register_item(machine(), "8253counter", NULL, i, m_counter[i].count);
+		state_save_register_item(machine(), "8253counter", NULL, i, m_counter[i].gate);
+		state_save_register_item(machine(), "8253counter", NULL, i, m_counter[i].out);
+		state_save_register_item(machine(), "8253counter", NULL, i, m_counter[i].mode);
+		state_save_register_item(machine(), "8253counter", NULL, i, m_counter[i].readbyte);
+		state_save_register_item(machine(), "8253counter", NULL, i, m_counter[i].writebyte);
 	}
 
-	state->save_item(NAME(state->m_counter_control));
-	state->save_item(NAME(state->m_counter_0_ff));
-	state->save_item(NAME(state->m_counter_0_timer_active));
+	save_item(NAME(m_counter_control));
+	save_item(NAME(m_counter_0_ff));
+	save_item(NAME(m_counter_0_timer_active));
 
-	state->save_item(NAME(state->m_analog_input_data));
-	state->save_item(NAME(state->m_adc_value));
+	save_item(NAME(m_analog_input_data));
+	save_item(NAME(m_adc_value));
 
-	state->save_item(NAME(state->m_dac_value));
-	state->save_item(NAME(state->m_dac_register));
-	state->save_item(NAME(state->m_chip_select));
+	save_item(NAME(m_dac_value));
+	save_item(NAME(m_dac_register));
+	save_item(NAME(m_chip_select));
 
-	state->save_item(NAME(state->m_m6850_status));
-	state->save_item(NAME(state->m_m6850_control));
-	state->save_item(NAME(state->m_m6850_input));
-	state->save_item(NAME(state->m_m6850_output));
-	state->save_item(NAME(state->m_m6850_data_ready));
+	save_item(NAME(m_m6850_status));
+	save_item(NAME(m_m6850_control));
+	save_item(NAME(m_m6850_input));
+	save_item(NAME(m_m6850_output));
+	save_item(NAME(m_m6850_data_ready));
 
-	state->save_item(NAME(state->m_m6850_sound_status));
-	state->save_item(NAME(state->m_m6850_sound_control));
-	state->save_item(NAME(state->m_m6850_sound_input));
-	state->save_item(NAME(state->m_m6850_sound_output));
+	save_item(NAME(m_m6850_sound_status));
+	save_item(NAME(m_m6850_sound_control));
+	save_item(NAME(m_m6850_sound_input));
+	save_item(NAME(m_m6850_sound_output));
 
-	state->save_item(NAME(state->m_noise_position));
+	save_item(NAME(m_noise_position));
 
-	state->save_item(NAME(state->m_nstocker_bits));
-	state->save_item(NAME(state->m_spiker_expand_color));
-	state->save_item(NAME(state->m_spiker_expand_bgcolor));
-	state->save_item(NAME(state->m_spiker_expand_bits));
-	state->save_item(NAME(state->m_grudge_steering_result));
-	state->save_item(NAME(state->m_grudge_last_steering));
+	save_item(NAME(m_nstocker_bits));
+	save_item(NAME(m_spiker_expand_color));
+	save_item(NAME(m_spiker_expand_bgcolor));
+	save_item(NAME(m_spiker_expand_bits));
+	save_item(NAME(m_grudge_steering_result));
+	save_item(NAME(m_grudge_last_steering));
 }
 
 
-MACHINE_RESET( balsente )
+void balsente_state::machine_reset()
 {
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	balsente_state *state = machine.driver_data<balsente_state>();
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int numbanks;
 
 	/* reset counters; counter 2's gate is tied high */
-	memset(state->m_counter, 0, sizeof(state->m_counter));
-	state->m_counter[1].timer = machine.device<timer_device>("8253_1_timer");
-	state->m_counter[2].timer = machine.device<timer_device>("8253_2_timer");
-	state->m_counter[2].gate = 1;
+	memset(m_counter, 0, sizeof(m_counter));
+	m_counter[1].timer = machine().device<timer_device>("8253_1_timer");
+	m_counter[2].timer = machine().device<timer_device>("8253_2_timer");
+	m_counter[2].gate = 1;
 
 	/* reset the manual counter 0 clock */
-	state->m_counter_control = 0x00;
-	state->m_counter_0_ff = 0;
-	state->m_counter_0_timer_active = 0;
+	m_counter_control = 0x00;
+	m_counter_0_ff = 0;
+	m_counter_0_timer_active = 0;
 
 	/* reset the ADC states */
-	state->m_adc_value = 0;
+	m_adc_value = 0;
 
 	/* reset the CEM3394 I/O states */
-	state->m_dac_value = 0;
-	state->m_dac_register = 0;
-	state->m_chip_select = 0x3f;
+	m_dac_value = 0;
+	m_dac_register = 0;
+	m_chip_select = 0x3f;
 
 	/* reset game-specific states */
-	state->m_grudge_steering_result = 0;
+	m_grudge_steering_result = 0;
 
 	/* reset the 6850 chips */
-	state->balsente_m6850_w(*space, 0, 3);
-	state->balsente_m6850_sound_w(*space, 0, 3);
+	balsente_m6850_w(*space, 0, 3);
+	balsente_m6850_sound_w(*space, 0, 3);
 
 	/* reset the noise generator */
-	memset(state->m_noise_position, 0, sizeof(state->m_noise_position));
+	memset(m_noise_position, 0, sizeof(m_noise_position));
 
 	/* point the banks to bank 0 */
-	numbanks = (state->memregion("maincpu")->bytes() > 0x40000) ? 16 : 8;
-	state->membank("bank1")->configure_entries(0, numbanks, &state->memregion("maincpu")->base()[0x10000], 0x6000);
-	state->membank("bank2")->configure_entries(0, numbanks, &state->memregion("maincpu")->base()[0x12000], 0x6000);
-	state->membank("bank1")->set_entry(0);
-	state->membank("bank2")->set_entry(0);
-	machine.device("maincpu")->reset();
+	numbanks = (memregion("maincpu")->bytes() > 0x40000) ? 16 : 8;
+	membank("bank1")->configure_entries(0, numbanks, &memregion("maincpu")->base()[0x10000], 0x6000);
+	membank("bank2")->configure_entries(0, numbanks, &memregion("maincpu")->base()[0x12000], 0x6000);
+	membank("bank1")->set_entry(0);
+	membank("bank2")->set_entry(0);
+	machine().device("maincpu")->reset();
 
 	/* start a timer to generate interrupts */
-	state->m_scanline_timer->adjust(machine.primary_screen->time_until_pos(0));
+	m_scanline_timer->adjust(machine().primary_screen->time_until_pos(0));
 }
 
 
@@ -398,12 +396,12 @@ static void m6850_update_io(running_machine &machine)
 	/* apply the change */
 	if (new_state && !(state->m_m6850_status & 0x80))
 	{
-		cputag_set_input_line(machine, "maincpu", M6809_FIRQ_LINE, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 		state->m_m6850_status |= 0x80;
 	}
 	else if (!new_state && (state->m_m6850_status & 0x80))
 	{
-		cputag_set_input_line(machine, "maincpu", M6809_FIRQ_LINE, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(M6809_FIRQ_LINE, CLEAR_LINE);
 		state->m_m6850_status &= ~0x80;
 	}
 
@@ -416,12 +414,12 @@ static void m6850_update_io(running_machine &machine)
 	/* apply the change */
 	if (new_state && !(state->m_m6850_sound_status & 0x80))
 	{
-		cputag_set_input_line(machine, "audiocpu", INPUT_LINE_NMI, ASSERT_LINE);
+		machine.device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 		state->m_m6850_sound_status |= 0x80;
 	}
 	else if (!new_state && (state->m_m6850_sound_status & 0x80))
 	{
-		cputag_set_input_line(machine, "audiocpu", INPUT_LINE_NMI, CLEAR_LINE);
+		machine.device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 		state->m_m6850_sound_status &= ~0x80;
 	}
 }
@@ -716,7 +714,7 @@ void balsente_state::counter_set_out(int which, int out)
 {
 	/* OUT on counter 2 is hooked to the /INT line on the Z80 */
 	if (which == 2)
-		cputag_set_input_line(machine(), "audiocpu", 0, out ? ASSERT_LINE : CLEAR_LINE);
+		machine().device("audiocpu")->execute().set_input_line(0, out ? ASSERT_LINE : CLEAR_LINE);
 
 	/* OUT on counter 0 is hooked to the GATE line on counter 1 */
 	else if (which == 0)
@@ -1047,7 +1045,7 @@ WRITE8_MEMBER(balsente_state::balsente_chip_select_w)
 					"PULSE_WIDTH",
 					"WAVE_SELECT"
 				};
-				logerror("s%04X:   CEM#%d:%s=%f\n", cpu_get_previouspc(&space.device()), i, names[m_dac_register], voltage);
+				logerror("s%04X:   CEM#%d:%s=%f\n", space.device().safe_pcbase(), i, names[m_dac_register], voltage);
 			}
 #endif
 		}
@@ -1177,7 +1175,7 @@ static void update_grudge_steering(running_machine &machine)
 
 READ8_MEMBER(balsente_state::grudge_steering_r)
 {
-	logerror("%04X:grudge_steering_r(@%d)\n", cpu_get_pc(&space.device()), machine().primary_screen->vpos());
+	logerror("%04X:grudge_steering_r(@%d)\n", space.device().safe_pc(), machine().primary_screen->vpos());
 	m_grudge_steering_result |= 0x80;
 	return m_grudge_steering_result;
 }

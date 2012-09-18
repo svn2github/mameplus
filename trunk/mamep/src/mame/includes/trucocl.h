@@ -18,11 +18,14 @@ public:
 	DECLARE_WRITE8_MEMBER(trucocl_colorram_w);
 	DECLARE_WRITE8_MEMBER(audio_dac_w);
 	DECLARE_DRIVER_INIT(trucocl);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/trucocl.c -----------*/
 
-PALETTE_INIT( trucocl );
-VIDEO_START( trucocl );
+
+
 SCREEN_UPDATE_IND16( trucocl );

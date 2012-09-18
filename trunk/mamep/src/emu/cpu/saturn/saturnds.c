@@ -71,7 +71,7 @@ static const char number_2_hex[]=
 
 
 // don't split branch and return, source relies on this ordering
-typedef enum
+enum MNEMONICS
 {
 	Return, ReturnSetXM, ReturnSetCarry, ReturnClearCarry, ReturnFromInterrupt,
 	jump3,jump4,jump,
@@ -197,7 +197,7 @@ typedef enum
 	negateA, negateB, negateC, negateD,
 	notA, notB, notC, notD
 
-} MNEMONICS;
+};
 
 static const struct {
 	const char *name[2];
@@ -552,7 +552,7 @@ static const struct {
 
 };
 
-enum _opcode_sel
+enum opcode_sel
 {
 	Complete=-1,
 	Illegal,
@@ -570,9 +570,8 @@ enum _opcode_sel
 	OpcodeE,
 	OpcodeF
 };
-typedef enum _opcode_sel opcode_sel;
 
-enum _opcode_adr
+enum opcode_adr
 {
 	AdrNone,
 	AdrAF, AdrA, AdrB, AdrCount,
@@ -584,14 +583,13 @@ enum _opcode_adr
 	FieldP, FieldWP, FieldXS, FieldX, FieldS, FieldM, FieldB, FieldW, FieldA,
 	AdrImmCount
 };
-typedef enum _opcode_adr opcode_adr;
 
-typedef struct
+struct OPCODE
 {
 	opcode_sel sel;
 	opcode_adr adr;
 	MNEMONICS mnemonic;
-} OPCODE;
+};
 
 static const char *field_2_string(int adr_enum)
 {

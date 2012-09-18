@@ -40,7 +40,7 @@ WRITE16_MEMBER(cbuster_state::twocrude_control_w)
 
     case 2: /* Sound CPU write */
 		soundlatch_byte_w(space, 0, data & 0xff);
-		device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+		m_audiocpu->set_input_line(0, HOLD_LINE);
     	return;
 
 	case 4: /* Protection, maybe this is a PAL on the board?
@@ -75,7 +75,7 @@ WRITE16_MEMBER(cbuster_state::twocrude_control_w)
 
 		break;
 	}
-	logerror("Warning %04x- %02x written to control %02x\n", cpu_get_pc(&space.device()), data, offset);
+	logerror("Warning %04x- %02x written to control %02x\n", space.device().safe_pc(), data, offset);
 }
 
 READ16_MEMBER(cbuster_state::twocrude_control_r)
@@ -90,7 +90,7 @@ READ16_MEMBER(cbuster_state::twocrude_control_r)
 			return ioport("DSW")->read();
 
 		case 4: /* Protection */
-			logerror("%04x : protection control read at 30c000 %d\n", cpu_get_pc(&space.device()), offset);
+			logerror("%04x : protection control read at 30c000 %d\n", space.device().safe_pc(), offset);
 			return m_prot;
 
 		case 6: /* Credits, VBL in byte 7 */
@@ -265,7 +265,7 @@ GFXDECODE_END
 static void sound_irq(device_t *device, int state)
 {
 	cbuster_state *driver_state = device->machine().driver_data<cbuster_state>();
-	device_set_input_line(driver_state->m_audiocpu, 1, state); /* IRQ 2 */
+	driver_state->m_audiocpu->set_input_line(1, state); /* IRQ 2 */
 }
 
 static const ym2151_interface ym2151_config =
@@ -302,25 +302,23 @@ static const deco16ic_interface twocrude_deco16ic_tilegen2_intf =
 	0,2,
 };
 
-static MACHINE_START( cbuster )
+void cbuster_state::machine_start()
 {
-	cbuster_state *state = machine.driver_data<cbuster_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_deco_tilegen1 = machine.device("tilegen1");
-	state->m_deco_tilegen2 = machine.device("tilegen2");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_deco_tilegen1 = machine().device("tilegen1");
+	m_deco_tilegen2 = machine().device("tilegen2");
 
-	state->save_item(NAME(state->m_prot));
-	state->save_item(NAME(state->m_pri));
+	save_item(NAME(m_prot));
+	save_item(NAME(m_pri));
 }
 
-static MACHINE_RESET( cbuster )
+void cbuster_state::machine_reset()
 {
-	cbuster_state *state = machine.driver_data<cbuster_state>();
 
-	state->m_prot = 0;
-	state->m_pri = 0;
+	m_prot = 0;
+	m_pri = 0;
 }
 
 static MACHINE_CONFIG_START( twocrude, cbuster_state )
@@ -333,8 +331,6 @@ static MACHINE_CONFIG_START( twocrude, cbuster_state )
 	MCFG_CPU_ADD("audiocpu", H6280,32220000/4) /* Custom chip 45, Audio section crystal is 32.220 MHz */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(cbuster)
-	MCFG_MACHINE_RESET(cbuster)
 
 
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -343,7 +339,6 @@ static MACHINE_CONFIG_START( twocrude, cbuster_state )
 	MCFG_SCREEN_SIZE(32*8, 32*8)
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(twocrude)
-	MCFG_VIDEO_START(twocrude)
 
 	MCFG_GFXDECODE(cbuster)
 	MCFG_PALETTE_LENGTH(2048)

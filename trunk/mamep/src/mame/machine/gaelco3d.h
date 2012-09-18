@@ -34,8 +34,7 @@
     DEVICE INTERFACE TYPE
 ***************************************************************************/
 
-typedef struct _gaelco_serial_interface gaelco_serial_interface;
-struct _gaelco_serial_interface
+struct gaelco_serial_interface
 {
 	devcb_write_line irq_func;
 };
@@ -68,6 +67,23 @@ WRITE8_DEVICE_HANDLER( gaelco_serial_irq_enable );
 
 /* ----- device interface ----- */
 
-DECLARE_LEGACY_DEVICE(GAELCO_SERIAL, gaelco_serial);
+class gaelco_serial_device : public device_t
+{
+public:
+	gaelco_serial_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~gaelco_serial_device() { global_free(m_token); }
 
-//DEVICE_GET_INFO( gaelco_serial );
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_stop();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type GAELCO_SERIAL;

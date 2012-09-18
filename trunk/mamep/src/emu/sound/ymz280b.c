@@ -74,8 +74,7 @@ struct YMZ280BVoice
 	UINT8 irq_schedule;		/* 1 if the IRQ state is updated by timer */
 };
 
-typedef struct _ymz280b_state ymz280b_state;
-struct _ymz280b_state
+struct ymz280b_state
 {
 	sound_stream * stream;			/* which stream are we using */
 	UINT8 *region_base;				/* pointer to the base of the region */
@@ -137,7 +136,7 @@ INLINE ymz280b_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == YMZ280B);
-	return (ymz280b_state *)downcast<legacy_device_base *>(device)->token();
+	return (ymz280b_state *)downcast<ymz280b_device *>(device)->token();
 }
 
 
@@ -1046,31 +1045,51 @@ WRITE8_DEVICE_HANDLER( ymz280b_w )
 }
 
 
+const device_type YMZ280B = &device_creator<ymz280b_device>;
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( ymz280b )
+ymz280b_device::ymz280b_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, YMZ280B, "YMZ280B", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(ymz280b_state);				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(ymz280b_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( ymz280b );		break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							info->start = DEVICE_RESET_NAME( ymz280b );		break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "YMZ280B");						break;
-		case DEVINFO_STR_FAMILY:						strcpy(info->s, "Yamaha Wavetable");			break;
-		case DEVINFO_STR_VERSION:						strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void ymz280b_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void ymz280b_device::device_start()
+{
+	DEVICE_START_NAME( ymz280b )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void ymz280b_device::device_reset()
+{
+	DEVICE_RESET_NAME( ymz280b )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void ymz280b_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(YMZ280B, ymz280b);

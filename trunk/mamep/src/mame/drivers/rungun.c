@@ -128,7 +128,7 @@ WRITE16_MEMBER(rungun_state::rng_sysregs_w)
 				ioport("EEPROMOUT")->write(data, 0xff);
 
 			if (!(data & 0x40))
-				device_set_input_line(m_maincpu, M68K_IRQ_5, CLEAR_LINE);
+				m_maincpu->set_input_line(M68K_IRQ_5, CLEAR_LINE);
 		break;
 
 		case 0x0c/2:
@@ -159,7 +159,7 @@ WRITE16_MEMBER(rungun_state::sound_irq_w)
 {
 
 	if (ACCESSING_BITS_8_15)
-		device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+		m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 READ16_MEMBER(rungun_state::sound_status_msb_r)
@@ -176,7 +176,7 @@ static INTERRUPT_GEN(rng_interrupt)
 	rungun_state *state = device->machine().driver_data<rungun_state>();
 
 	if (state->m_sysreg[0x0c / 2] & 0x09)
-		device_set_input_line(device, M68K_IRQ_5, ASSERT_LINE);
+		device->execute().set_input_line(M68K_IRQ_5, ASSERT_LINE);
 }
 
 static ADDRESS_MAP_START( rungun_map, AS_PROGRAM, 16, rungun_state )
@@ -223,7 +223,7 @@ WRITE8_MEMBER(rungun_state::z80ctrl_w)
 	membank("bank2")->set_entry(data & 0x07);
 
 	if (data & 0x10)
-		device_set_input_line(m_audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 }
 
 static INTERRUPT_GEN(audio_interrupt)
@@ -233,7 +233,7 @@ static INTERRUPT_GEN(audio_interrupt)
 	if (state->m_z80_control & 0x80)
 		return;
 
-	device_set_input_line(device, INPUT_LINE_NMI, ASSERT_LINE);
+	device->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 /* sound (this should be split into audio/xexex.c or pregx.c or so someday) */
@@ -363,37 +363,35 @@ static const k053252_interface rng_k053252_intf =
 	9*8, 24
 };
 
-static MACHINE_START( rng )
+void rungun_state::machine_start()
 {
-	rungun_state *state = machine.driver_data<rungun_state>();
-	UINT8 *ROM = state->memregion("soundcpu")->base();
+	UINT8 *ROM = memregion("soundcpu")->base();
 
-	state->membank("bank2")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
+	membank("bank2")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("soundcpu");
-	state->m_k053936 = machine.device("k053936");
-	state->m_k055673 = machine.device("k055673");
-	state->m_k053252 = machine.device("k053252");
-	state->m_k054539_1 = machine.device("k054539_1");
-	state->m_k054539_2 = machine.device("k054539_2");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("soundcpu");
+	m_k053936 = machine().device("k053936");
+	m_k055673 = machine().device("k055673");
+	m_k053252 = machine().device("k053252");
+	m_k054539_1 = machine().device("k054539_1");
+	m_k054539_2 = machine().device("k054539_2");
 
-	state->save_item(NAME(state->m_z80_control));
-	state->save_item(NAME(state->m_sound_status));
-	state->save_item(NAME(state->m_ttl_vram));
+	save_item(NAME(m_z80_control));
+	save_item(NAME(m_sound_status));
+	save_item(NAME(m_ttl_vram));
 }
 
-static MACHINE_RESET( rng )
+void rungun_state::machine_reset()
 {
-	rungun_state *state = machine.driver_data<rungun_state>();
 
-	machine.device<k054539_device>("k054539_1")->init_flags(k054539_device::REVERSE_STEREO);
+	machine().device<k054539_device>("k054539_1")->init_flags(k054539_device::REVERSE_STEREO);
 
-	memset(state->m_sysreg, 0, 0x20);
-	memset(state->m_ttl_vram, 0, 0x1000 * sizeof(UINT16));
+	memset(m_sysreg, 0, 0x20);
+	memset(m_ttl_vram, 0, 0x1000 * sizeof(UINT16));
 
-	state->m_z80_control = 0;
-	state->m_sound_status = 0;
+	m_z80_control = 0;
+	m_sound_status = 0;
 }
 
 static MACHINE_CONFIG_START( rng, rungun_state )
@@ -411,8 +409,6 @@ static MACHINE_CONFIG_START( rng, rungun_state )
 
 	MCFG_GFXDECODE(rungun)
 
-	MCFG_MACHINE_START(rng)
-	MCFG_MACHINE_RESET(rng)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
@@ -428,7 +424,6 @@ static MACHINE_CONFIG_START( rng, rungun_state )
 
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(rng)
 
 	MCFG_K053936_ADD("k053936", rng_k053936_intf)
 	MCFG_K055673_ADD("k055673", rng_k055673_intf)

@@ -5,14 +5,13 @@
 #include "includes/shangkid.h"
 
 
-static TILE_GET_INFO( get_bg_tile_info ){
-	shangkid_state *state = machine.driver_data<shangkid_state>();
-	UINT8 *videoram = state->m_videoram;
+TILE_GET_INFO_MEMBER(shangkid_state::get_bg_tile_info){
+	UINT8 *videoram = m_videoram;
 	int attributes = videoram[tile_index+0x800];
 	int tile_number = videoram[tile_index]+0x100*(attributes&0x3);
 	int color;
 
-	if( state->m_gfx_type==1 )
+	if( m_gfx_type==1 )
 	{
 		/* Shanghai Kid:
             ------xx    bank
@@ -21,7 +20,7 @@ static TILE_GET_INFO( get_bg_tile_info ){
         */
 		color = attributes>>3;
 		color = (color&0x03)|((color&0x1c)<<1);
-		SET_TILE_INFO(
+		SET_TILE_INFO_MEMBER(
 				0,
 				tile_number,
 				color,
@@ -35,7 +34,7 @@ static TILE_GET_INFO( get_bg_tile_info ){
             x-------    flipx?
         */
 		color = (attributes>>2)&0x1f;
-		SET_TILE_INFO(
+		SET_TILE_INFO_MEMBER(
 				0,
 				tile_number,
 				color,
@@ -43,13 +42,12 @@ static TILE_GET_INFO( get_bg_tile_info ){
 	}
 
 	tileinfo.category =
-		(machine.root_device().memregion( "proms" )->base()[0x800+color*4]==2)?1:0;
+		(machine().root_device().memregion( "proms" )->base()[0x800+color*4]==2)?1:0;
 }
 
-VIDEO_START( shangkid )
+VIDEO_START_MEMBER(shangkid_state,shangkid)
 {
-	shangkid_state *state = machine.driver_data<shangkid_state>();
-	state->m_background = tilemap_create(machine, get_bg_tile_info,tilemap_scan_rows,8,8,64,32);
+	m_background = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(shangkid_state::get_bg_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
 }
 
 WRITE8_MEMBER(shangkid_state::shangkid_videoram_w)
@@ -62,7 +60,7 @@ WRITE8_MEMBER(shangkid_state::shangkid_videoram_w)
 static void draw_sprite(running_machine &machine, const UINT8 *source, bitmap_ind16 &bitmap, const rectangle &cliprect)
 {
 	shangkid_state *state = machine.driver_data<shangkid_state>();
-	const gfx_element *gfx;
+	gfx_element *gfx;
 	int transparent_pen;
 	int bank_index;
 	int c,r;
@@ -199,13 +197,13 @@ SCREEN_UPDATE_IND16( shangkid )
 }
 
 
-PALETTE_INIT( dynamski )
+PALETTE_INIT_MEMBER(shangkid_state,dynamski)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x20);
+	machine().colortable = colortable_alloc(machine(), 0x20);
 
 	/* create a lookup table for the palette */
 	for (i = 0; i < 0x20; i++)
@@ -213,7 +211,7 @@ PALETTE_INIT( dynamski )
 		UINT16 data = (color_prom[i | 0x20] << 8) | color_prom[i];
 		rgb_t color = MAKE_RGB(pal5bit(data >> 1), pal5bit(data >> 6), pal5bit(data >> 11));
 
-		colortable_palette_set_color(machine.colortable, i, color);
+		colortable_palette_set_color(machine().colortable, i, color);
 	}
 
 	/* color_prom now points to the beginning of the lookup table */
@@ -223,14 +221,14 @@ PALETTE_INIT( dynamski )
 	for (i = 0; i < 0x40; i++)
 	{
 		UINT8 ctabentry = color_prom[i] & 0x0f;
-		colortable_entry_set_value(machine.colortable, i, ctabentry);
+		colortable_entry_set_value(machine().colortable, i, ctabentry);
 	}
 
 	/* sprites */
 	for (i = 0x40; i < 0x80; i++)
 	{
 		UINT8 ctabentry = (color_prom[(i - 0x40) + 0x100] & 0x0f) | 0x10;
-		colortable_entry_set_value(machine.colortable, i, ctabentry);
+		colortable_entry_set_value(machine().colortable, i, ctabentry);
 	}
 }
 

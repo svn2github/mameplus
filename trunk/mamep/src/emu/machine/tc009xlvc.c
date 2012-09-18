@@ -83,7 +83,7 @@ READ8_MEMBER(tc0091lvc_device::tc0091lvc_pcg1_r)
 WRITE8_MEMBER(tc0091lvc_device::tc0091lvc_pcg1_w)
 {
 	m_pcg1_ram[offset] = data;
-	gfx_element_mark_dirty(machine().gfx[m_gfx_index], (offset+0x4000) / 32);
+	machine().gfx[m_gfx_index]->mark_dirty((offset+0x4000) / 32);
 	tx_tilemap->mark_all_dirty();
 }
 
@@ -95,7 +95,7 @@ READ8_MEMBER(tc0091lvc_device::tc0091lvc_pcg2_r)
 WRITE8_MEMBER(tc0091lvc_device::tc0091lvc_pcg2_w)
 {
 	m_pcg2_ram[offset] = data;
-	gfx_element_mark_dirty(machine().gfx[m_gfx_index], (offset+0xc000) / 32);
+	machine().gfx[m_gfx_index]->mark_dirty((offset+0xc000) / 32);
 	tx_tilemap->mark_all_dirty();
 }
 
@@ -108,7 +108,7 @@ WRITE8_MEMBER(tc0091lvc_device::tc0091lvc_vram0_w)
 {
 	m_vram0[offset] = data;
 	bg0_tilemap->mark_tile_dirty(offset/2);
-	gfx_element_mark_dirty(machine().gfx[m_gfx_index], (offset+0x8000) / 32);
+	machine().gfx[m_gfx_index]->mark_dirty((offset+0x8000) / 32);
 	tx_tilemap->mark_all_dirty();
 
 }
@@ -122,7 +122,7 @@ WRITE8_MEMBER(tc0091lvc_device::tc0091lvc_vram1_w)
 {
 	m_vram1[offset] = data;
 	bg1_tilemap->mark_tile_dirty(offset/2);
-	gfx_element_mark_dirty(machine().gfx[m_gfx_index], (offset+0x9000) / 32);
+	machine().gfx[m_gfx_index]->mark_dirty((offset+0x9000) / 32);
 	tx_tilemap->mark_all_dirty();
 }
 
@@ -135,7 +135,7 @@ WRITE8_MEMBER(tc0091lvc_device::tc0091lvc_tvram_w)
 {
 	m_tvram[offset] = data;
 	tx_tilemap->mark_tile_dirty(offset/2);
-	gfx_element_mark_dirty(machine().gfx[m_gfx_index], (offset+0xa000) / 32);
+	machine().gfx[m_gfx_index]->mark_dirty((offset+0xa000) / 32);
 	tx_tilemap->mark_all_dirty();
 }
 
@@ -147,7 +147,7 @@ READ8_MEMBER(tc0091lvc_device::tc0091lvc_spr_r)
 WRITE8_MEMBER(tc0091lvc_device::tc0091lvc_spr_w)
 {
 	m_sprram[offset] = data;
-	gfx_element_mark_dirty(machine().gfx[m_gfx_index], (offset+0xb000) / 32);
+	machine().gfx[m_gfx_index]->mark_dirty((offset+0xb000) / 32);
 	tx_tilemap->mark_all_dirty();
 }
 
@@ -181,47 +181,44 @@ void tc0091lvc_device::device_validity_check(validity_checker &valid) const
 {
 }
 
-static TILE_GET_INFO_DEVICE( get_bg0_tile_info )
+TILE_GET_INFO_MEMBER(tc0091lvc_device::get_bg0_tile_info)
 {
-	tc0091lvc_device *vdp = (tc0091lvc_device*)device;
-	int attr = vdp->m_vram0[2 * tile_index + 1];
-	int code = vdp->m_vram0[2 * tile_index]
+	int attr = m_vram0[2 * tile_index + 1];
+	int code = m_vram0[2 * tile_index]
 			| ((attr & 0x03) << 8)
-			| ((vdp->m_vregs[(attr & 0xc) >> 2]) << 10);
+			| ((m_vregs[(attr & 0xc) >> 2]) << 10);
 //          | (state->m_horshoes_gfxbank << 12);
 
-	SET_TILE_INFO_DEVICE(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code,
 			(attr & 0xf0) >> 4,
 			0);
 }
 
-static TILE_GET_INFO_DEVICE( get_bg1_tile_info )
+TILE_GET_INFO_MEMBER(tc0091lvc_device::get_bg1_tile_info)
 {
-	tc0091lvc_device *vdp = (tc0091lvc_device*)device;
-	int attr = vdp->m_vram1[2 * tile_index + 1];
-	int code = vdp->m_vram1[2 * tile_index]
+	int attr = m_vram1[2 * tile_index + 1];
+	int code = m_vram1[2 * tile_index]
 			| ((attr & 0x03) << 8)
-			| ((vdp->m_vregs[(attr & 0xc) >> 2]) << 10);
+			| ((m_vregs[(attr & 0xc) >> 2]) << 10);
 //          | (state->m_horshoes_gfxbank << 12);
 
-	SET_TILE_INFO_DEVICE(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code,
 			(attr & 0xf0) >> 4,
 			0);
 }
 
-static TILE_GET_INFO_DEVICE( get_tx_tile_info )
+TILE_GET_INFO_MEMBER(tc0091lvc_device::get_tx_tile_info)
 {
-	tc0091lvc_device *vdp = (tc0091lvc_device*)device;
-	int attr = vdp->m_tvram[2 * tile_index + 1];
-	UINT16 code = vdp->m_tvram[2 * tile_index]
+	int attr = m_tvram[2 * tile_index + 1];
+	UINT16 code = m_tvram[2 * tile_index]
 			| ((attr & 0x07) << 8);
 
-	SET_TILE_INFO_DEVICE(
-			vdp->m_gfx_index,
+	SET_TILE_INFO_MEMBER(
+			m_gfx_index,
 			code,
 			(attr & 0xf0) >> 4,
 			0);
@@ -258,9 +255,9 @@ void tc0091lvc_device::device_start()
 	m_sprram = m_pcg_ram + 0xb000;
 	m_sprram_buffer = auto_alloc_array_clear(machine(), UINT8, 0x400);
 
-	tx_tilemap = tilemap_create_device(this, get_tx_tile_info,tilemap_scan_rows,8,8,64,32);
-	bg0_tilemap = tilemap_create_device(this, get_bg0_tile_info,tilemap_scan_rows,8,8,64,32);
-	bg1_tilemap = tilemap_create_device(this, get_bg1_tile_info,tilemap_scan_rows,8,8,64,32);
+	tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0091lvc_device::get_tx_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
+	bg0_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0091lvc_device::get_bg0_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
+	bg1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(tc0091lvc_device::get_bg1_tile_info),this),TILEMAP_SCAN_ROWS,8,8,64,32);
 
 	tx_tilemap->set_transparent_pen(0);
 	bg0_tilemap->set_transparent_pen(0);
@@ -276,7 +273,7 @@ void tc0091lvc_device::device_start()
 
 	//printf("m_gfx_index %d\n", m_gfx_index);
 
-	machine().gfx[m_gfx_index] = gfx_element_alloc(machine(), &char_layout, (UINT8 *)m_pcg_ram, machine().total_colors() / 16, 0);
+	machine().gfx[m_gfx_index] = auto_alloc(machine(), gfx_element(machine(), char_layout, (UINT8 *)m_pcg_ram, machine().total_colors() / 16, 0));
 }
 
 void tc0091lvc_device::device_reset()
@@ -292,7 +289,7 @@ const address_space_config *tc0091lvc_device::memory_space_config(address_spacen
 
 void tc0091lvc_device::draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, UINT8 global_flip )
 {
-	const gfx_element *gfx = machine.gfx[1];
+	gfx_element *gfx = machine.gfx[1];
 	int count;
 
 	for(count=0;count<0x3e7;count+=8)

@@ -132,7 +132,7 @@ static WRITE8_DEVICE_HANDLER( ic8j1_output_changed )
 {
 	m10_state *state = device->machine().driver_data<m10_state>();
 	LOG(("ic8j1: %d %d\n", data, device->machine().primary_screen->vpos()));
-	device_set_input_line(state->m_maincpu, 0, !data ? CLEAR_LINE : ASSERT_LINE);
+	state->m_maincpu->set_input_line(0, !data ? CLEAR_LINE : ASSERT_LINE);
 }
 
 static WRITE8_DEVICE_HANDLER( ic8j2_output_changed )
@@ -175,7 +175,7 @@ static const ttl74123_interface ic8j2_intf =
  *
  *************************************/
 
-static PALETTE_INIT( m10 )
+PALETTE_INIT_MEMBER(m10_state,m10)
 {
 	int i;
 
@@ -188,31 +188,29 @@ static PALETTE_INIT( m10 )
 		else
 			color = RGB_BLACK;
 
-		palette_set_color(machine, i, color);
+		palette_set_color(machine(), i, color);
 	}
 }
 
-static MACHINE_START( m10 )
+MACHINE_START_MEMBER(m10_state,m10)
 {
-	m10_state *state = machine.driver_data<m10_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_ic8j1 = machine.device("ic8j1");
-	state->m_ic8j2 = machine.device("ic8j2");
-	state->m_samples = machine.device<samples_device>("samples");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_ic8j1 = machine().device("ic8j1");
+	m_ic8j2 = machine().device("ic8j2");
+	m_samples = machine().device<samples_device>("samples");
 
-	state->save_item(NAME(state->m_bottomline));
-	state->save_item(NAME(state->m_flip));
-	state->save_item(NAME(state->m_last));
+	save_item(NAME(m_bottomline));
+	save_item(NAME(m_flip));
+	save_item(NAME(m_last));
 }
 
-static MACHINE_RESET( m10 )
+MACHINE_RESET_MEMBER(m10_state,m10)
 {
-	m10_state *state = machine.driver_data<m10_state>();
 
-	state->m_bottomline = 0;
-	state->m_flip = 0;
-	state->m_last = 0;
+	m_bottomline = 0;
+	m_flip = 0;
+	m_last = 0;
 }
 
 /*************************************
@@ -486,7 +484,7 @@ READ8_MEMBER(m10_state::m10_a700_r)
 READ8_MEMBER(m10_state::m11_a700_r)
 {
 	//LOG(("rd:%d\n",machine().primary_screen->vpos()));
-	//device_set_input_line(m_maincpu, 0, CLEAR_LINE);
+	//m_maincpu->set_input_line(0, CLEAR_LINE);
 	LOG(("clear\n"));
 	ttl74123_clear_w(m_ic8j1, 0, 0);
 	ttl74123_clear_w(m_ic8j1, 0, 1);
@@ -502,7 +500,7 @@ READ8_MEMBER(m10_state::m11_a700_r)
 INPUT_CHANGED_MEMBER(m10_state::coin_inserted)
 {
 	/* coin insertion causes an NMI */
-	device_set_input_line(m_maincpu, INPUT_LINE_NMI, newval ? ASSERT_LINE : CLEAR_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, newval ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -511,35 +509,35 @@ static TIMER_CALLBACK( interrupt_callback )
 	m10_state *state = machine.driver_data<m10_state>();
 	if (param == 0)
 	{
-		device_set_input_line(state->m_maincpu, 0, ASSERT_LINE);
+		state->m_maincpu->set_input_line(0, ASSERT_LINE);
 		machine.scheduler().timer_set(machine.primary_screen->time_until_pos(IREMM10_VBSTART + 16), FUNC(interrupt_callback), 1);
 	}
 	if (param == 1)
 	{
-		device_set_input_line(state->m_maincpu, 0, ASSERT_LINE);
+		state->m_maincpu->set_input_line(0, ASSERT_LINE);
 		machine.scheduler().timer_set(machine.primary_screen->time_until_pos(IREMM10_VBSTART + 24), FUNC(interrupt_callback), 2);
 	}
 	if (param == -1)
-		device_set_input_line(state->m_maincpu, 0, CLEAR_LINE);
+		state->m_maincpu->set_input_line(0, CLEAR_LINE);
 
 }
 
 #if 0
 static INTERRUPT_GEN( m11_interrupt )
 {
-	device_set_input_line(device, 0, ASSERT_LINE);
+	device->execute().set_input_line(0, ASSERT_LINE);
 	//device->machine().scheduler().timer_set(machine.primary_screen->time_until_pos(IREMM10_VBEND), FUNC(interrupt_callback), -1);
 }
 
 static INTERRUPT_GEN( m10_interrupt )
 {
-	device_set_input_line(device, 0, ASSERT_LINE);
+	device->execute().set_input_line(0, ASSERT_LINE);
 }
 #endif
 
 static INTERRUPT_GEN( m15_interrupt )
 {
-	device_set_input_line(device, 0, ASSERT_LINE);
+	device->execute().set_input_line(0, ASSERT_LINE);
 	device->machine().scheduler().timer_set(device->machine().primary_screen->time_until_pos(IREMM10_VBSTART + 1, 80), FUNC(interrupt_callback), -1);
 }
 
@@ -831,8 +829,8 @@ static MACHINE_CONFIG_START( m10, m10_state )
 	MCFG_CPU_ADD("maincpu", M6502,IREMM10_CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(m10_main)
 
-	MCFG_MACHINE_START(m10)
-	MCFG_MACHINE_RESET(m10)
+	MCFG_MACHINE_START_OVERRIDE(m10_state,m10)
+	MCFG_MACHINE_RESET_OVERRIDE(m10_state,m10)
 
 	//MCFG_CPU_VBLANK_INT("screen", m10_interrupt)
 
@@ -844,8 +842,8 @@ static MACHINE_CONFIG_START( m10, m10_state )
 	MCFG_GFXDECODE(m10)
 	MCFG_PALETTE_LENGTH(2*8)
 
-	MCFG_PALETTE_INIT(m10)
-	MCFG_VIDEO_START(m10)
+	MCFG_PALETTE_INIT_OVERRIDE(m10_state,m10)
+	MCFG_VIDEO_START_OVERRIDE(m10_state,m10)
 
 	/* 74LS123 */
 
@@ -876,8 +874,8 @@ static MACHINE_CONFIG_START( m15, m10_state )
 	MCFG_CPU_ADD("maincpu", M6502,IREMM15_CPU_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(m15_main)
 
-	MCFG_MACHINE_START(m10)
-	MCFG_MACHINE_RESET(m10)
+	MCFG_MACHINE_START_OVERRIDE(m10_state,m10)
+	MCFG_MACHINE_RESET_OVERRIDE(m10_state,m10)
 
 	MCFG_CPU_VBLANK_INT("screen", m15_interrupt)
 
@@ -888,8 +886,8 @@ static MACHINE_CONFIG_START( m15, m10_state )
 
 	MCFG_PALETTE_LENGTH(2*8)
 
-	MCFG_PALETTE_INIT(m10)
-	MCFG_VIDEO_START( m15 )
+	MCFG_PALETTE_INIT_OVERRIDE(m10_state,m10)
+	MCFG_VIDEO_START_OVERRIDE(m10_state, m15 )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

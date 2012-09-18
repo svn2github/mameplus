@@ -16,7 +16,7 @@ Template for skeleton device
 //**************************************************************************
 
 #define MCFG_XXX_ADD(_tag,_freq) \
-	MCFG_DEVICE_ADD(_tag, xxx, _freq) \
+	MCFG_DEVICE_ADD(_tag, XXX, _freq) \
 
 
 //**************************************************************************
@@ -25,7 +25,7 @@ Template for skeleton device
 
 // ======================> xxx_device
 
-class xxx_device :	public device_t
+class xxx_device : public device_t
 {
 public:
 	// construction/destruction
@@ -44,7 +44,7 @@ protected:
 
 
 // device type definition
-extern const device_type xxx;
+extern const device_type XXX;
 
 
 

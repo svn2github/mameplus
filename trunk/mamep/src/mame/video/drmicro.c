@@ -26,45 +26,43 @@ WRITE8_MEMBER(drmicro_state::drmicro_videoram_w)
 
 /****************************************************************************/
 
-static TILE_GET_INFO( get_bg1_tile_info )
+TILE_GET_INFO_MEMBER(drmicro_state::get_bg1_tile_info)
 {
-	drmicro_state *state = machine.driver_data<drmicro_state>();
 	int code, col, flags;
 
-	code = state->m_videoram[tile_index + 0x0800];
-	col = state->m_videoram[tile_index + 0x0c00];
+	code = m_videoram[tile_index + 0x0800];
+	col = m_videoram[tile_index + 0x0c00];
 
 	code += (col & 0xc0) << 2;
 	flags = ((col & 0x20) ? TILEMAP_FLIPY : 0) | ((col & 0x10) ? TILEMAP_FLIPX : 0);
 	col &= 0x0f;
 
-	SET_TILE_INFO( 0, code, col, flags);
+	SET_TILE_INFO_MEMBER( 0, code, col, flags);
 }
 
-static TILE_GET_INFO( get_bg2_tile_info )
+TILE_GET_INFO_MEMBER(drmicro_state::get_bg2_tile_info)
 {
-	drmicro_state *state = machine.driver_data<drmicro_state>();
 	int code, col, flags;
 
-	code = state->m_videoram[tile_index + 0x0000];
-	col = state->m_videoram[tile_index + 0x0400];
+	code = m_videoram[tile_index + 0x0000];
+	col = m_videoram[tile_index + 0x0400];
 
 	code += (col & 0xc0) << 2;
 	flags = ((col & 0x20) ? TILEMAP_FLIPY : 0) | ((col & 0x10) ? TILEMAP_FLIPX : 0);
 	col &= 0x0f;
 
-	SET_TILE_INFO( 1, code, col, flags);
+	SET_TILE_INFO_MEMBER( 1, code, col, flags);
 }
 
 /****************************************************************************/
 
-PALETTE_INIT( drmicro )
+void drmicro_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x20);
+	machine().colortable = colortable_alloc(machine(), 0x20);
 
 	/* create a lookup table for the palette */
 	for (i = 0; i < 0x20; i++)
@@ -90,7 +88,7 @@ PALETTE_INIT( drmicro )
 		bit2 = (color_prom[i] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r, g, b));
+		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r, g, b));
 	}
 
 	/* color_prom now points to the beginning of the lookup table */
@@ -99,21 +97,20 @@ PALETTE_INIT( drmicro )
 	for (i = 0; i < 0x200; i++)
 	{
 		UINT8 ctabentry = color_prom[i] & 0x0f;
-		colortable_entry_set_value(machine.colortable, i, ctabentry);
+		colortable_entry_set_value(machine().colortable, i, ctabentry);
 	}
 }
 
-VIDEO_START( drmicro)
+void drmicro_state::video_start()
 {
-	drmicro_state *state = machine.driver_data<drmicro_state>();
 
-	state->m_videoram = auto_alloc_array(machine, UINT8, 0x1000);
-	state->save_pointer(NAME(state->m_videoram), 0x1000);
+	m_videoram = auto_alloc_array(machine(), UINT8, 0x1000);
+	save_pointer(NAME(m_videoram), 0x1000);
 
-	state->m_bg1 = tilemap_create(machine, get_bg1_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bg2 = tilemap_create(machine, get_bg2_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(drmicro_state::get_bg1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(drmicro_state::get_bg2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	state->m_bg2->set_transparent_pen(0);
+	m_bg2->set_transparent_pen(0);
 }
 
 SCREEN_UPDATE_IND16( drmicro )

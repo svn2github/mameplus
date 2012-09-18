@@ -73,10 +73,10 @@ static NVRAM_HANDLER( seicross )
 
 
 
-static MACHINE_RESET( friskyt )
+void seicross_state::machine_reset()
 {
 	/* start with the protection mcu halted */
-	cputag_set_input_line(machine, "mcu", INPUT_LINE_HALT, ASSERT_LINE);
+	machine().device("mcu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 }
 
 
@@ -90,7 +90,7 @@ READ8_MEMBER(seicross_state::friskyt_portB_r)
 WRITE8_MEMBER(seicross_state::friskyt_portB_w)
 {
 
-	//logerror("PC %04x: 8910 port B = %02x\n", cpu_get_pc(&space->device()), data);
+	//logerror("PC %04x: 8910 port B = %02x\n", space->device().safe_pc(), data);
 	/* bit 0 is IRQ enable */
 	m_irq_mask = data & 1;
 
@@ -100,8 +100,8 @@ WRITE8_MEMBER(seicross_state::friskyt_portB_w)
 	if (((m_portb & 4) == 0) && (data & 4))
 	{
 		/* reset and start the protection mcu */
-		cputag_set_input_line(machine(), "mcu", INPUT_LINE_RESET, PULSE_LINE);
-		cputag_set_input_line(machine(), "mcu", INPUT_LINE_HALT, CLEAR_LINE);
+		machine().device("mcu")->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
+		machine().device("mcu")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
 	}
 
 	/* other bits unknown */
@@ -393,7 +393,7 @@ static INTERRUPT_GEN( vblank_irq )
 	seicross_state *state = device->machine().driver_data<seicross_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 
 }
 
@@ -411,7 +411,6 @@ static MACHINE_CONFIG_START( nvram, seicross_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(1200))	/* 20 CPU slices per frame - an high value to ensure proper */
 						/* synchronization of the CPUs */
-	MCFG_MACHINE_RESET(friskyt)
 	MCFG_NVRAM_HANDLER(seicross)
 
 	/* video hardware */
@@ -425,8 +424,6 @@ static MACHINE_CONFIG_START( nvram, seicross_state )
 	MCFG_GFXDECODE(seicross)
 	MCFG_PALETTE_LENGTH(64)
 
-	MCFG_PALETTE_INIT(seicross)
-	MCFG_VIDEO_START(seicross)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

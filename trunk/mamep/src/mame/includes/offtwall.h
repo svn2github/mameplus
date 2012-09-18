@@ -29,10 +29,14 @@ public:
 	DECLARE_READ16_MEMBER(unknown_verify_r);
 	DECLARE_DRIVER_INIT(offtwall);
 	DECLARE_DRIVER_INIT(offtwalc);
+	TILE_GET_INFO_MEMBER(get_playfield_tile_info);
+	DECLARE_MACHINE_START(offtwall);
+	DECLARE_MACHINE_RESET(offtwall);
+	DECLARE_VIDEO_START(offtwall);
 };
 
 
 /*----------- defined in video/offtwall.c -----------*/
 
-VIDEO_START( offtwall );
+
 SCREEN_UPDATE_IND16( offtwall );

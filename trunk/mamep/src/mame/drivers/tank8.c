@@ -14,16 +14,15 @@ Atari Tank 8 driver
 void tank8_set_collision(running_machine &machine, int index)
 {
 	tank8_state *state = machine.driver_data<tank8_state>();
-	cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 
 	state->m_collision_index = index;
 }
 
 
-static MACHINE_RESET( tank8 )
+void tank8_state::machine_reset()
 {
-	tank8_state *state = machine.driver_data<tank8_state>();
-	state->m_collision_index = 0;
+	m_collision_index = 0;
 }
 
 
@@ -42,7 +41,7 @@ WRITE8_MEMBER(tank8_state::tank8_int_reset_w)
 {
 	m_collision_index &= ~0x3f;
 
-	cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(tank8_state::tank8_crash_w)
@@ -337,7 +336,6 @@ static MACHINE_CONFIG_START( tank8, tank8_state )
 	MCFG_CPU_ADD("maincpu", M6800, 11055000 / 10) /* ? */
 	MCFG_CPU_PROGRAM_MAP(tank8_cpu_map)
 
-	MCFG_MACHINE_RESET(tank8)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
@@ -353,8 +351,6 @@ static MACHINE_CONFIG_START( tank8, tank8_state )
 	MCFG_GFXDECODE(tank8)
 	MCFG_PALETTE_LENGTH(20)
 
-	MCFG_PALETTE_INIT(tank8)
-	MCFG_VIDEO_START(tank8)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

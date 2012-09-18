@@ -2,6 +2,15 @@
 #include "emu.h"
 #include "includes/megadriv.h"
 
+class pico_state : public md_cons_state
+{
+public:
+	pico_state(const machine_config &mconfig, device_type type, const char *tag)
+	: md_cons_state(mconfig, type, tag) { }
+
+	UINT8 m_page_register;
+};
+
 /*************************************
  *
  *  Input handlers
@@ -372,33 +381,33 @@ MACHINE_CONFIG_END
 /* we don't use the bios rom (it's not needed and only provides security on early models) */
 
 ROM_START(genesis)
-	ROM_REGION(0x1500000, "maincpu", ROMREGION_ERASEFF)
+	ROM_REGION(MD_CPU_REGION_SIZE, "maincpu", ROMREGION_ERASEFF)
 	ROM_REGION( 0x10000, "soundcpu", ROMREGION_ERASEFF)
 ROM_END
 
 ROM_START(megadriv)
-	ROM_REGION(0x1500000, "maincpu", ROMREGION_ERASEFF)
+	ROM_REGION(MD_CPU_REGION_SIZE, "maincpu", ROMREGION_ERASEFF)
 	ROM_REGION( 0x10000, "soundcpu", ROMREGION_ERASEFF)
 ROM_END
 
 ROM_START(megadrij)
-	ROM_REGION(0x1500000, "maincpu", ROMREGION_ERASEFF)
+	ROM_REGION(MD_CPU_REGION_SIZE, "maincpu", ROMREGION_ERASEFF)
 	ROM_REGION( 0x10000, "soundcpu", ROMREGION_ERASEFF)
 ROM_END
 
 
 ROM_START(gensvp)
-	ROM_REGION(0x1500000, "maincpu", ROMREGION_ERASEFF)
+	ROM_REGION(MD_CPU_REGION_SIZE, "maincpu", ROMREGION_ERASEFF)
 	ROM_REGION( 0x10000, "soundcpu", ROMREGION_ERASEFF)
 ROM_END
 
 ROM_START(mdsvp)
-	ROM_REGION(0x1500000, "maincpu", ROMREGION_ERASEFF)
+	ROM_REGION(MD_CPU_REGION_SIZE, "maincpu", ROMREGION_ERASEFF)
 	ROM_REGION( 0x10000, "soundcpu", ROMREGION_ERASEFF)
 ROM_END
 
 ROM_START(mdsvpj)
-	ROM_REGION(0x1500000, "maincpu", ROMREGION_ERASEFF)
+	ROM_REGION(MD_CPU_REGION_SIZE, "maincpu", ROMREGION_ERASEFF)
 	ROM_REGION( 0x10000, "soundcpu", ROMREGION_ERASEFF)
 ROM_END
 
@@ -440,33 +449,6 @@ DRIVER_INIT_MEMBER(md_cons_state,md_jpn)
 
 /****************************************** SegaCD & 32X emulation ****************************************/
 
-/* Very preliminary skeleton code from David Haywood, borrowed for MESS by Fabio Priuli */
-/* These are only included to document BIOS informations currently available */
-
-DRIVER_INIT_MEMBER(md_cons_state,mess_32x)
-{
-	DRIVER_INIT_CALL(_32x);
-	DRIVER_INIT_CALL(mess_md_common);
-	megadrive_region_export = 1;
-	megadrive_region_pal = 0;
-}
-
-DRIVER_INIT_MEMBER(md_cons_state,mess_32x_eur)
-{
-	DRIVER_INIT_CALL(_32x);
-	DRIVER_INIT_CALL(mess_md_common);
-	megadrive_region_export = 1;
-	megadrive_region_pal = 1;
-}
-
-
-DRIVER_INIT_MEMBER(md_cons_state,mess_32x_jpn)
-{
-	DRIVER_INIT_CALL(_32x);
-	DRIVER_INIT_CALL(mess_md_common);
-	megadrive_region_export = 0;
-	megadrive_region_pal = 0;
-}
 
 static MACHINE_CONFIG_DERIVED( ms_32x, genesis_32x )
 	MCFG_FRAGMENT_ADD( _32x_cartslot )
@@ -487,12 +469,12 @@ MACHINE_CONFIG_END
 	/* temp, rom should only be visible here when one of the regs is set, tempo needs it */ \
 	/* ROM_CART_LOAD("cart", 0x000000, 0x400000, ROM_NOMIRROR) */ \
 	ROM_COPY( "32x_68k_bios", 0x0, 0x0, 0x100) \
-	ROM_REGION( 0x400000, "32x_master_sh2", 0 ) /* SH2 Code */ \
+	ROM_REGION32_BE( 0x400000, "master", 0 ) /* SH2 Code */ \
 	ROM_SYSTEM_BIOS( 0, "retail", "Mars Version 1.0 (retail)" ) \
 	ROMX_LOAD( "32x_m_bios.bin", 0x000000,  0x000800, CRC(dd9c46b8) SHA1(1e5b0b2441a4979b6966d942b20cc76c413b8c5e), ROM_BIOS(1) ) \
 	ROM_SYSTEM_BIOS( 1, "sdk", "Mars Version 1.0 (early sdk)" ) \
 	ROMX_LOAD( "32x_m_bios_sdk.bin", 0x000000,  0x000800, BAD_DUMP CRC(c7102c53) SHA1(ed73a47f186b373b8eff765f84ef26c3d9ef6cb0), ROM_BIOS(2) ) \
-	ROM_REGION( 0x400000, "32x_slave_sh2", 0 ) /* SH2 Code */ \
+	ROM_REGION32_BE( 0x400000, "slave", 0 ) /* SH2 Code */ \
 	ROM_LOAD( "32x_s_bios.bin", 0x000000,  0x000400, CRC(bfda1fe5) SHA1(4103668c1bbd66c5e24558e73d4f3f92061a109a) ) \
 
 
@@ -638,10 +620,10 @@ ROM_START( 32x_scd )
 	ROM_REGION16_BE( 0x400000, "32x_68k_bios", 0 ) /* 68000 Code */
 	ROM_LOAD( "32x_g_bios.bin", 0x000000,  0x000100, CRC(5c12eae8) SHA1(dbebd76a448447cb6e524ac3cb0fd19fc065d944) )
 
-	ROM_REGION( 0x400000, "32x_master_sh2", 0 ) /* SH2 Code */
+	ROM_REGION32_BE( 0x400000, "master", 0 ) /* SH2 Code */
 	ROM_LOAD( "32x_m_bios.bin", 0x000000,  0x000800, CRC(dd9c46b8) SHA1(1e5b0b2441a4979b6966d942b20cc76c413b8c5e) )
 
-	ROM_REGION( 0x400000, "32x_slave_sh2", 0 ) /* SH2 Code */
+	ROM_REGION32_BE( 0x400000, "slave", 0 ) /* SH2 Code */
 	ROM_LOAD( "32x_s_bios.bin", 0x000000,  0x000400, CRC(bfda1fe5) SHA1(4103668c1bbd66c5e24558e73d4f3f92061a109a) )
 ROM_END
 
@@ -864,17 +846,17 @@ MACHINE_CONFIG_END
 
 
 ROM_START( pico )
-	ROM_REGION(0x1415000, "maincpu", ROMREGION_ERASEFF)
+	ROM_REGION(MD_CPU_REGION_SIZE, "maincpu", ROMREGION_ERASEFF)
 	ROM_REGION( 0x10000, "soundcpu", ROMREGION_ERASEFF)
 ROM_END
 
 ROM_START( picou )
-	ROM_REGION(0x1415000, "maincpu", ROMREGION_ERASEFF)
+	ROM_REGION(MD_CPU_REGION_SIZE, "maincpu", ROMREGION_ERASEFF)
 	ROM_REGION( 0x10000, "soundcpu", ROMREGION_ERASEFF)
 ROM_END
 
 ROM_START( picoj )
-	ROM_REGION(0x1415000, "maincpu", ROMREGION_ERASEFF)
+	ROM_REGION(MD_CPU_REGION_SIZE, "maincpu", ROMREGION_ERASEFF)
 	ROM_REGION( 0x10000, "soundcpu", ROMREGION_ERASEFF)
 ROM_END
 
@@ -896,9 +878,9 @@ CONS( 1990, mdsvp,      genesis,   0,      ms_megdsvppal,   md, md_cons_state,  
 CONS( 1988, mdsvpj,     genesis,   0,      ms_megdsvp,      md, md_cons_state,     md_jpn,    "Sega",   "Mega Drive (Japan, NTSC, for SVP cart)", 0)
 
 // the 32X plugged in the cart slot, games plugged into the 32x.  Maybe it should be handled as an expansion device?
-CONS( 1994, 32x,        0,         0,      ms_32x,          md, md_cons_state, mess_32x,      "Sega",   "32X (USA, NTSC)", GAME_NOT_WORKING )
-CONS( 1994, 32xe,       32x,       0,      ms_32x_pal,      md, md_cons_state, mess_32x_eur,  "Sega",   "32X (Europe, PAL)", GAME_NOT_WORKING )
-CONS( 1994, 32xj,       32x,       0,      ms_32x,          md, md_cons_state, mess_32x_jpn,  "Sega",   "32X (Japan, NTSC)", GAME_NOT_WORKING )
+CONS( 1994, 32x,        0,         0,      ms_32x,          md, md_cons_state, genesis,      "Sega",   "Genesis with 32X (USA, NTSC)", GAME_NOT_WORKING )
+CONS( 1994, 32xe,       32x,       0,      ms_32x_pal,      md, md_cons_state, md_eur,		 "Sega",   "Mega Drive with 32X (Europe, PAL)", GAME_NOT_WORKING )
+CONS( 1994, 32xj,       32x,       0,      ms_32x,          md, md_cons_state, md_jpn,		 "Sega",   "Mega Drive with 32X (Japan, NTSC)", GAME_NOT_WORKING )
 
 // the SegaCD plugged into the expansion port..
 CONS( 1992, segacd,     0,         0,      genesis_scd_scd, md, md_cons_state,     genesis,   "Sega",   "Sega CD (USA, NTSC)", GAME_NOT_WORKING )
@@ -915,7 +897,7 @@ CONS( 1992, wmega,      xeye,      0,      genesis_scd,     md, md_cons_state,  
 CONS( 1993, wmegam2,    xeye,      0,      genesis_scd,     md, md_cons_state,     md_jpn,    "Victor", "Wondermega M2 (Japan, NTSC)", GAME_NOT_WORKING )
 CONS( 1994, cdx,        0,         0,      genesis_scd,     md, md_cons_state,     genesis,   "Sega",   "CDX (USA, NTSC)", GAME_NOT_WORKING )
 CONS( 1994, multmega,   cdx,       0,      genesis_scd,     md, md_cons_state,     md_eur,    "Sega",   "Multi-Mega (Europe, PAL)", GAME_NOT_WORKING )
-CONS( 1994, 32x_scd,    0,         0,      genesis_32x_scd, md, md_cons_state, 	   mess_32x,  "Sega",   "Sega CD (USA, NTSC, w/32X)", GAME_NOT_WORKING )
+CONS( 1994, 32x_scd,    0,         0,      genesis_32x_scd, md, md_cons_state,	   genesis,  "Sega",   "Sega CD (USA, NTSC, w/32X)", GAME_NOT_WORKING )
 
 // this is a standalone system based on the md-like hardware (same vdp etc.)
 

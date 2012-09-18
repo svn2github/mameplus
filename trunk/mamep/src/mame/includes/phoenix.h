@@ -28,6 +28,13 @@ public:
 	DECLARE_CUSTOM_INPUT_MEMBER(player_input_r);
 	DECLARE_CUSTOM_INPUT_MEMBER(pleiads_protection_r);
 	DECLARE_DRIVER_INIT(condor);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	DECLARE_MACHINE_RESET(phoenix);
+	DECLARE_VIDEO_START(phoenix);
+	DECLARE_PALETTE_INIT(phoenix);
+	DECLARE_PALETTE_INIT(survival);
+	DECLARE_PALETTE_INIT(pleiads);
 };
 
 
@@ -51,15 +58,37 @@ DISCRETE_SOUND_EXTERN( phoenix );
 WRITE8_DEVICE_HANDLER( phoenix_sound_control_a_w );
 WRITE8_DEVICE_HANDLER( phoenix_sound_control_b_w );
 
-DECLARE_LEGACY_SOUND_DEVICE(PHOENIX, phoenix_sound);
+class phoenix_sound_device : public device_t,
+                                  public device_sound_interface
+{
+public:
+	phoenix_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~phoenix_sound_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+
+	// sound stream update overrides
+	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples);
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type PHOENIX;
+
 
 
 /*----------- defined in video/phoenix.c -----------*/
 
-PALETTE_INIT( phoenix );
-PALETTE_INIT( survival );
-PALETTE_INIT( pleiads );
-VIDEO_START( phoenix );
+
+
+
+
 SCREEN_UPDATE_IND16( phoenix );
 
 

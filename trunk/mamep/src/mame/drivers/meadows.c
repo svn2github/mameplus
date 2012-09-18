@@ -198,7 +198,7 @@ WRITE8_MEMBER(meadows_state::meadows_audio_w)
 
 INPUT_CHANGED_MEMBER(meadows_state::coin_inserted)
 {
-	cputag_set_input_line_and_vector(machine(), "maincpu", 0, (newval ? ASSERT_LINE : CLEAR_LINE), 0x82);
+	machine().device("maincpu")->execute().set_input_line_and_vector(0, (newval ? ASSERT_LINE : CLEAR_LINE), 0x82);
 }
 
 
@@ -214,7 +214,7 @@ static INTERRUPT_GEN( meadows_interrupt )
 	meadows_state *state = device->machine().driver_data<meadows_state>();
     /* fake something toggling the sense input line of the S2650 */
 	state->m_main_sense_state ^= 1;
-	device_set_input_line(device, 1, state->m_main_sense_state ? ASSERT_LINE : CLEAR_LINE);
+	device->execute().set_input_line(1, state->m_main_sense_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -229,7 +229,7 @@ static INTERRUPT_GEN( minferno_interrupt )
 {
 	meadows_state *state = device->machine().driver_data<meadows_state>();
 	state->m_main_sense_state++;
-	device_set_input_line(device, 1, (state->m_main_sense_state & 0x40) ? ASSERT_LINE : CLEAR_LINE );
+	device->execute().set_input_line(1, (state->m_main_sense_state & 0x40) ? ASSERT_LINE : CLEAR_LINE );
 }
 
 
@@ -312,7 +312,7 @@ static INTERRUPT_GEN( audio_interrupt )
 	meadows_state *state = device->machine().driver_data<meadows_state>();
     /* fake something toggling the sense input line of the S2650 */
 	state->m_audio_sense_state ^= 1;
-	device_set_input_line(device, 1, state->m_audio_sense_state ? ASSERT_LINE : CLEAR_LINE);
+	device->execute().set_input_line(1, state->m_audio_sense_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -323,10 +323,10 @@ static INTERRUPT_GEN( audio_interrupt )
  *
  *************************************/
 
-static PALETTE_INIT( meadows )
+void meadows_state::palette_init()
 {
-	palette_set_color(machine, 0, RGB_BLACK);
-	palette_set_color(machine, 1, RGB_WHITE);
+	palette_set_color(machine(), 0, RGB_BLACK);
+	palette_set_color(machine(), 1, RGB_WHITE);
 }
 
 
@@ -663,8 +663,6 @@ static MACHINE_CONFIG_START( meadows, meadows_state )
 	MCFG_GFXDECODE(meadows)
 	MCFG_PALETTE_LENGTH(2)
 
-	MCFG_PALETTE_INIT(meadows)
-	MCFG_VIDEO_START(meadows)
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -695,8 +693,6 @@ static MACHINE_CONFIG_START( minferno, meadows_state )
 	MCFG_GFXDECODE(minferno)
 	MCFG_PALETTE_LENGTH(2)
 
-	MCFG_PALETTE_INIT(meadows)
-	MCFG_VIDEO_START(meadows)
 
 	/* audio hardware */
 MACHINE_CONFIG_END
@@ -724,8 +720,6 @@ static MACHINE_CONFIG_START( bowl3d, meadows_state )
 	MCFG_GFXDECODE(meadows)
 	MCFG_PALETTE_LENGTH(2)
 
-	MCFG_PALETTE_INIT(meadows)
-	MCFG_VIDEO_START(meadows)
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

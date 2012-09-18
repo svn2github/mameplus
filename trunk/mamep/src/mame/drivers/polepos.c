@@ -259,7 +259,7 @@ READ16_MEMBER(polepos_state::polepos2_ic25_r)
 		m_last_result = (INT8)m_last_signed * (UINT8)m_last_unsigned;
 	}
 
-//  logerror("%04X: read IC25 @ %04X = %02X\n", cpu_get_pc(&space.device()), offset, result);
+//  logerror("%04X: read IC25 @ %04X = %02X\n", space.device().safe_pc(), offset, result);
 
 	return result | (result << 8);
 }
@@ -292,7 +292,7 @@ WRITE8_MEMBER(polepos_state::polepos_latch_w)
 		case 0x00:	/* IRQON */
 			m_main_irq_mask = bit;
 			if (!bit)
-				cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+				machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 			break;
 
 		case 0x01:	/* IOSEL */
@@ -313,11 +313,11 @@ WRITE8_MEMBER(polepos_state::polepos_latch_w)
 			break;
 
 		case 0x04:	/* RESB */
-			cputag_set_input_line(machine(), "sub", INPUT_LINE_RESET, bit ? CLEAR_LINE : ASSERT_LINE);
+			machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, bit ? CLEAR_LINE : ASSERT_LINE);
 			break;
 
 		case 0x05:	/* RESA */
-			cputag_set_input_line(machine(), "sub2", INPUT_LINE_RESET, bit ? CLEAR_LINE : ASSERT_LINE);
+			machine().device("sub2")->execute().set_input_line(INPUT_LINE_RESET, bit ? CLEAR_LINE : ASSERT_LINE);
 			break;
 
 		case 0x06:	/* SB0 */
@@ -336,7 +336,7 @@ WRITE16_MEMBER(polepos_state::polepos_z8002_nvi_enable_w)
 
 	m_sub_irq_mask = data;
 	if (!data)
-		device_set_input_line(&space.device(), 0, CLEAR_LINE);
+		space.device().execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -451,29 +451,28 @@ static TIMER_DEVICE_CALLBACK( polepos_scanline )
 	int scanline = param;
 
 	if (((scanline == 64) || (scanline == 192)) && state->m_main_irq_mask)	// 64V
-		cputag_set_input_line(timer.machine(), "maincpu", 0, ASSERT_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 
 	if (scanline == 240 && state->m_sub_irq_mask)	// VBLANK
 	{
-		cputag_set_input_line(timer.machine(), "sub", 0, ASSERT_LINE);
-		cputag_set_input_line(timer.machine(), "sub2", 0, ASSERT_LINE);
+		timer.machine().device("sub")->execute().set_input_line(0, ASSERT_LINE);
+		timer.machine().device("sub2")->execute().set_input_line(0, ASSERT_LINE);
 	}
 }
 
 
-static MACHINE_RESET( polepos )
+MACHINE_RESET_MEMBER(polepos_state,polepos)
 {
-	polepos_state *state = machine.driver_data<polepos_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	/* Reset all latches */
 	for (i = 0; i < 8; i++)
-		state->polepos_latch_w(*space, i, 0);
+		polepos_latch_w(*space, i, 0);
 
 	/* set the interrupt vectors (this shouldn't be needed) */
-	device_set_input_line_vector(machine.device("sub"), 0, Z8000_NVI);
-	device_set_input_line_vector(machine.device("sub2"), 0, Z8000_NVI);
+	machine().device("sub")->execute().set_input_line_vector(0, Z8000_NVI);
+	machine().device("sub2")->execute().set_input_line_vector(0, Z8000_NVI);
 }
 
 
@@ -863,6 +862,15 @@ static const namco_interface namco_config =
 	1				/* stereo */
 };
 
+const namco_06xx_config polepos_namco_06xx_intf =
+{
+	"maincpu", "51xx", "53xx", "52xx", "54xx"
+};
+
+const namco_54xx_config polepos_namco_54xx_intf =
+{
+	"discrete", NODE_01
+};
 
 /*********************************************************************
  * Machine driver
@@ -884,15 +892,15 @@ static MACHINE_CONFIG_START( polepos, polepos_state )
 	MCFG_NAMCO_51XX_ADD("51xx", MASTER_CLOCK/8/2, namco_51xx_intf)		/* 1.536 MHz */
 	MCFG_NAMCO_52XX_ADD("52xx", MASTER_CLOCK/8/2, namco_52xx_intf)		/* 1.536 MHz */
 	MCFG_NAMCO_53XX_ADD("53xx", MASTER_CLOCK/8/2, namco_53xx_intf)		/* 1.536 MHz */
-	MCFG_NAMCO_54XX_ADD("54xx", MASTER_CLOCK/8/2, "discrete", NODE_01)	/* 1.536 MHz */
+	MCFG_NAMCO_54XX_ADD("54xx", MASTER_CLOCK/8/2, polepos_namco_54xx_intf)	/* 1.536 MHz */
 
-	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/8/64, "maincpu", "51xx", "53xx", "52xx", "54xx")
+	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/8/64, polepos_namco_06xx_intf)
 
 	MCFG_WATCHDOG_VBLANK_INIT(16)	// 128V clocks the same as VBLANK
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* some interleaving */
 
-	MCFG_MACHINE_RESET(polepos)
+	MCFG_MACHINE_RESET_OVERRIDE(polepos_state,polepos)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_TIMER_ADD_SCANLINE("scantimer", polepos_scanline, "screen", 0, 1)
@@ -906,8 +914,8 @@ static MACHINE_CONFIG_START( polepos, polepos_state )
 	MCFG_PALETTE_LENGTH(0x0f00)
 	MCFG_DEFAULT_LAYOUT(layout_polepos)
 
-	MCFG_PALETTE_INIT(polepos)
-	MCFG_VIDEO_START(polepos)
+	MCFG_PALETTE_INIT_OVERRIDE(polepos_state,polepos)
+	MCFG_VIDEO_START_OVERRIDE(polepos_state,polepos)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -945,6 +953,10 @@ static const namco_51xx_interface namco_51xx_bl_intf =
 	}
 };
 
+const namco_06xx_config topracern_namco_06xx_intf =
+{
+	"maincpu", "51xx", NULL, NULL, NULL
+};
 
 static MACHINE_CONFIG_START( topracern, polepos_state )
 
@@ -961,13 +973,13 @@ static MACHINE_CONFIG_START( topracern, polepos_state )
 
 	/* todo, remove these devices too, this bootleg doesn't have them, but the emulation doesn't boot without them.. */
 	MCFG_NAMCO_51XX_ADD("51xx", MASTER_CLOCK/8/2, namco_51xx_bl_intf)		/* 1.536 MHz */
-	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/8/64, "maincpu", "51xx", NULL, NULL, NULL)
+	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/8/64, topracern_namco_06xx_intf)
 
 	MCFG_WATCHDOG_VBLANK_INIT(16)	// 128V clocks the same as VBLANK
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* some interleaving */
 
-	MCFG_MACHINE_RESET(polepos)
+	MCFG_MACHINE_RESET_OVERRIDE(polepos_state,polepos)
 	MCFG_NVRAM_ADD_1FILL("nvram")
 
 	MCFG_TIMER_ADD_SCANLINE("scantimer", polepos_scanline, "screen", 0, 1)
@@ -981,8 +993,8 @@ static MACHINE_CONFIG_START( topracern, polepos_state )
 	MCFG_PALETTE_LENGTH(0x0f00)
 	MCFG_DEFAULT_LAYOUT(layout_topracer)
 
-	MCFG_PALETTE_INIT(polepos)
-	MCFG_VIDEO_START(polepos)
+	MCFG_PALETTE_INIT_OVERRIDE(polepos_state,polepos)
+	MCFG_VIDEO_START_OVERRIDE(polepos_state,polepos)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

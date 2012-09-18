@@ -634,17 +634,16 @@ static Z80CTC_INTERFACE( ctc_intf_audio )
 	DEVCB_NULL					/* ZC/TO2 callback */
 };
 
-static MACHINE_RESET( sailorws )
+void nbmj9195_state::machine_reset()
 {
-	nbmj9195_state *state = machine.driver_data<nbmj9195_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
 	// initialize TMPZ84C011 PIO
 	for (i = 0; i < (5 * 2); i++)
 	{
-		state->m_pio_dir[i] = state->m_pio_latch[i] = 0;
-		state->tmpz84c011_pio_w(*space, i, 0);
+		m_pio_dir[i] = m_pio_latch[i] = 0;
+		tmpz84c011_pio_w(*space, i, 0);
 	}
 }
 
@@ -1166,6 +1165,30 @@ static ADDRESS_MAP_START( sailorws_sound_io_map, AS_IO, 8, nbmj9195_state )
 	AM_RANGE(0x34, 0x34) AM_READWRITE(tmpz84c011_1_dir_pd_r,tmpz84c011_1_dir_pd_w)
 	AM_RANGE(0x44, 0x44) AM_READWRITE(tmpz84c011_1_dir_pe_r,tmpz84c011_1_dir_pe_w)
 	AM_RANGE(0x80, 0x81) AM_DEVWRITE_LEGACY("ymsnd", ym3812_w)
+ADDRESS_MAP_END
+
+
+
+
+/*
+TODO: it probably doesn't belong in here. Both CPUs are certainly tmpz84c011 tho ...
+*/
+
+static ADDRESS_MAP_START( shabdama_map, AS_PROGRAM, 8, nbmj9195_state )
+	AM_RANGE(0x0000, 0x7fff) AM_ROM
+	AM_RANGE(0xe000, 0xe7ff) AM_RAM
+//  AM_RANGE(0xd000, 0xd1ff) AM_READWRITE(nbmj9195_palette_r,nbmj9195_palette_w)
+//  AM_RANGE(0xd800, 0xdfff) AM_RAM
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( shabdama_io_map, AS_IO, 8, nbmj9195_state )
+//  ADDRESS_MAP_UNMAP_HIGH
+	ADDRESS_MAP_GLOBAL_MASK(0xff)
+	AM_IMPORT_FROM( tmpz84c011_regs )
+
+//  AM_RANGE(0x60, 0x61) AM_READ(nbmj9195_blitter_0_r)
+//  AM_RANGE(0x60, 0x6f) AM_WRITE(nbmj9195_blitter_0_w)
+//  AM_RANGE(0x70, 0x7f) AM_WRITE(nbmj9195_clut_0_w)
 ADDRESS_MAP_END
 
 /********************************************************************************
@@ -3152,7 +3175,6 @@ static MACHINE_CONFIG_START( NBMJDRV1, nbmj9195_state )
 	MCFG_Z80CTC_ADD("main_ctc", 12000000/2 /* same as "maincpu" */, ctc_intf_main)
 	MCFG_Z80CTC_ADD("audio_ctc", 8000000 /* same as "audiocpu" */, ctc_intf_audio)
 
-	MCFG_MACHINE_RESET(sailorws)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_AFTER_VBLANK)
@@ -3165,7 +3187,6 @@ static MACHINE_CONFIG_START( NBMJDRV1, nbmj9195_state )
 
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_VIDEO_START(nbmj9195_2layer)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3186,7 +3207,7 @@ static MACHINE_CONFIG_DERIVED( NBMJDRV2, NBMJDRV1 )
 	/* basic machine hardware */
 
 	/* video hardware */
-	MCFG_VIDEO_START(nbmj9195_1layer)
+	MCFG_VIDEO_START_OVERRIDE(nbmj9195_state,nbmj9195_1layer)
 MACHINE_CONFIG_END
 
 
@@ -3197,7 +3218,7 @@ static MACHINE_CONFIG_DERIVED( NBMJDRV3, NBMJDRV1 )
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(nbmj9195_nb22090)
+	MCFG_VIDEO_START_OVERRIDE(nbmj9195_state,nbmj9195_nb22090)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(nbmj9195)
 MACHINE_CONFIG_END
@@ -3449,6 +3470,16 @@ static MACHINE_CONFIG_DERIVED( mjegolf, NBMJDRV3 )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(mjegolf_map)
 	MCFG_CPU_IO_MAP(mjegolf_io_map)
+MACHINE_CONFIG_END
+
+
+static MACHINE_CONFIG_DERIVED( shabdama, NBMJDRV1 )
+
+	/* basic machine hardware */
+	MCFG_CPU_MODIFY("maincpu")
+	MCFG_CPU_PROGRAM_MAP(shabdama_map)
+	MCFG_CPU_IO_MAP(shabdama_io_map)
+
 MACHINE_CONFIG_END
 
 
@@ -4023,6 +4054,23 @@ ROM_START( jituroku )
 	ROM_LOAD( "9.10h", 0x300000, 0x80000, CRC(6bea11d7) SHA1(c9ea69ed38a86c138f702f84c26897225cdaff31) )
 ROM_END
 
+ROM_START( shabdama )
+	ROM_REGION( 0x10000, "maincpu", ROMREGION_ERASE00 )
+	ROM_LOAD( "1.bin",        0x000000, 0x010000, CRC(e49e3d73) SHA1(6d17d60e1b6f8aee96f7a09f45113030064d3bdb) )
+
+	ROM_REGION( 0x20000, "audiocpu", ROMREGION_ERASE00 )
+    ROM_LOAD( "3.bin",        0x000000, 0x010000, CRC(e8233c6e) SHA1(fbfdb03dc9f4e3e80e161b8522b676485ffb1c95) )
+	ROM_LOAD( "2.bin",        0x010000, 0x010000, CRC(3e0b5344) SHA1(eeae36fc4fca091065c1d51f05c2d11f44fe6d13) )
+
+	ROM_REGION( 0x80000, "gfx1", ROMREGION_ERASE00 )
+	ROM_LOAD( "10.bin",       0x060000, 0x010000, CRC(5da10b82) SHA1(72974d083110fc6c583bfa1c22ce3abe02ba86f6) )
+	ROM_LOAD( "9.bin",        0x050000, 0x010000, CRC(1afdc5bf) SHA1(b07b32656ffc96b7f7d4bd242b2a6e0e105ab67a) )
+	ROM_LOAD( "8.bin",        0x040000, 0x010000, CRC(3e75423e) SHA1(62e24849ddeb004ed8570d2884afa4ab257cdf07) )
+	ROM_LOAD( "7.bin",        0x030000, 0x010000, CRC(7f08e3a6) SHA1(127018442183332175c9e1f558274cd2cb5f0147) )
+	ROM_LOAD( "6.bin",        0x020000, 0x010000, CRC(0fece809) SHA1(1fe8436af8ead02a3b517b6306f9824cd64b2d26) )
+	ROM_LOAD( "5.bin",  	  0x010000, 0x010000, CRC(0706386a) SHA1(29eee363775869dcc9c46285632e8bf745c9110b) )
+	ROM_LOAD( "4.bin",        0x000000, 0x010000, CRC(199e2127) SHA1(2514d51cb06438b312d1f328c72baa739280416a) )
+ROM_END
 
 //    YEAR, NAME,     PARENT,   MACHINE,  INPUT,    INIT,     MONITOR, COMPANY, FULLNAME, FLAGS
 GAME( 1992, mjuraden, 0,        mjuraden, mjuraden, nbmj9195_state, nbmj9195, ROT0,   "Nichibutsu / Yubis", "Mahjong Uranai Densetsu (Japan)", 0 )
@@ -4058,3 +4106,5 @@ GAME( 1992, mkoiuraa, mjkoiura, mkoiuraa, mjkoiura, nbmj9195_state, nbmj9195, RO
 GAME( 1994, mscoutm,  0,        mscoutm,  mscoutm, nbmj9195_state,  nbmj9195, ROT0,   "Sphinx / AV Japan", "Mahjong Scout Man (Japan)", 0 )
 GAME( 1994, imekura,  0,        imekura,  imekura, nbmj9195_state,  nbmj9195, ROT0,   "Sphinx / AV Japan", "Imekura Mahjong (Japan)", 0 )
 GAME( 1994, mjegolf,  0,        mjegolf,  mjegolf, nbmj9195_state,  nbmj9195, ROT0,   "Fujic / AV Japan", "Mahjong Erotica Golf (Japan)", 0 )
+
+GAME( 199?, shabdama, 0,        shabdama, mjuraden,nbmj9195_state,  nbmj9195,       ROT0, "Nichibutsu",      "LD Mahjong #4 Shabon-Dama", GAME_NOT_WORKING | GAME_NO_SOUND )

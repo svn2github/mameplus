@@ -29,11 +29,15 @@ public:
 	DECLARE_WRITE16_MEMBER(sderby_md_videoram_w);
 	DECLARE_WRITE16_MEMBER(sderby_fg_videoram_w);
 	DECLARE_WRITE16_MEMBER(sderby_scroll_w);
+	TILE_GET_INFO_MEMBER(get_sderby_tile_info);
+	TILE_GET_INFO_MEMBER(get_sderby_md_tile_info);
+	TILE_GET_INFO_MEMBER(get_sderby_fg_tile_info);
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/sderby.c -----------*/
 
-VIDEO_START( sderby );
+
 SCREEN_UPDATE_IND16( sderby );
 SCREEN_UPDATE_IND16( pmroulet );

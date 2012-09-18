@@ -317,12 +317,12 @@ poly3d_NoClip( void )
 	mClip.scissor.set(0, 639, 0, 479);
 }
 
-typedef struct
+struct Poly3dVertex
 {
 	float x,y,z;
 	int u,v; /* 0..0xfff */
 	int bri; /* 0..0xff */
-} Poly3dVertex;
+};
 
 #define MIN_Z (10.0f)
 
@@ -336,8 +336,7 @@ INLINE unsigned texel( namcos22_state *state, unsigned x, unsigned y )
 
 
 
-typedef struct _poly_extra_data poly_extra_data;
-struct _poly_extra_data
+struct poly_extra_data
 {
 	/* poly / sprites */
 	running_machine *machine;
@@ -768,19 +767,19 @@ static void renderscanline_sprite(void *destbase, INT32 scanline, const poly_ext
 
 static void
 poly3d_DrawSprite(
-	bitmap_rgb32 &dest_bmp, const gfx_element *gfx, UINT32 code,
+	bitmap_rgb32 &dest_bmp, gfx_element *gfx, UINT32 code,
 	UINT32 color, int flipx, int flipy, int sx, int sy,
 	int scalex, int scaley, int cz_factor, int prioverchar, int alpha )
 {
 	namcos22_state *state = gfx->machine().driver_data<namcos22_state>();
-	int sprite_screen_height = (scaley*gfx->height+0x8000)>>16;
-	int sprite_screen_width = (scalex*gfx->width+0x8000)>>16;
+	int sprite_screen_height = (scaley*gfx->height()+0x8000)>>16;
+	int sprite_screen_width = (scalex*gfx->width()+0x8000)>>16;
 	if (sprite_screen_width && sprite_screen_height)
 	{
 		float fsx = sx;
 		float fsy = sy;
-		float fwidth = gfx->width;
-		float fheight = gfx->height;
+		float fwidth = gfx->width();
+		float fheight = gfx->height();
 		float fsw = sprite_screen_width;
 		float fsh = sprite_screen_height;
 		poly_extra_data *extra = (poly_extra_data *)poly_get_extra_data(state->m_poly);
@@ -793,12 +792,12 @@ poly3d_DrawSprite(
 		extra->machine = &gfx->machine();
 		extra->alpha = alpha;
 		extra->prioverchar = 2 | prioverchar;
-		extra->line_modulo = gfx->line_modulo;
+		extra->line_modulo = gfx->rowbytes();
 		extra->flipx = flipx;
 		extra->flipy = flipy;
-		extra->pens = &gfx->machine().pens[gfx->color_base + gfx->color_granularity * (color&0x7f)];
+		extra->pens = &gfx->machine().pens[gfx->colorbase() + gfx->granularity() * (color&0x7f)];
 		extra->priority_bitmap = &gfx->machine().priority_bitmap;
-		extra->source = gfx_element_get_data(gfx, code % gfx->total_elements);
+		extra->source = gfx->get_data(code % gfx->elements());
 
 		vert[0].x = fsx;
 		vert[0].y = fsy;
@@ -954,12 +953,12 @@ static struct
 	int power;	/* 0.0..1.0 */
 } mCamera;
 
-typedef enum
+enum SceneNodeType
 {
 	eSCENENODE_NONLEAF,
 	eSCENENODE_QUAD3D,
 	eSCENENODE_SPRITE
-} SceneNodeType;
+};
 
 #define RADIX_BITS 4
 #define RADIX_BUCKETS (1<<RADIX_BITS)
@@ -1153,7 +1152,7 @@ static void RenderSceneHelper(running_machine &machine, bitmap_rgb32 &bitmap, st
 					break;
 
 				default:
-					fatalerror("invalid node->type");
+					fatalerror("invalid node->type\n");
 					break;
 				}
 				FreeSceneNode( node );
@@ -1466,7 +1465,7 @@ namcos22_draw_direct_poly( running_machine &machine, const UINT16 *pSource )
 } /* namcos22_draw_direct_poly */
 
 static void
-Prepare3dTexture( running_machine &machine, void *pTilemapROM, void *pTextureROM )
+Prepare3dTexture( running_machine &machine, void *pTilemapROM, const void *pTextureROM )
 {
 	namcos22_state *state = machine.driver_data<namcos22_state>();
 	int i;
@@ -1793,16 +1792,15 @@ static void UpdatePalette(running_machine &machine)
 } /* UpdatePalette */
 
 
-static TILE_GET_INFO( TextTilemapGetInfo )
+TILE_GET_INFO_MEMBER(namcos22_state::TextTilemapGetInfo)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	UINT16 data = nthword( state->m_textram,tile_index );
+	UINT16 data = nthword( m_textram,tile_index );
    /**
     * xxxx.----.----.---- palette select
     * ----.xx--.----.---- flip
     * ----.--xx.xxxx.xxxx code
     */
-	SET_TILE_INFO( GFX_CHAR,data&0x03ff,data>>12,TILE_FLIPYX((data&0x0c00)>>10) );
+	SET_TILE_INFO_MEMBER( GFX_CHAR,data&0x03ff,data>>12,TILE_FLIPYX((data&0x0c00)>>10) );
 }
 
 READ32_MEMBER(namcos22_state::namcos22_textram_r)
@@ -2325,7 +2323,7 @@ BlitQuads( running_machine &machine, bitmap_rgb32 &bitmap, INT32 addr, float m[4
 	int finish = addr + chunkLength;
 
 	if( chunkLength>0x100 )
-		fatalerror( "bad packet length" );
+		fatalerror( "bad packet length\n" );
 
 	while( addr<finish )
 	{
@@ -2699,7 +2697,7 @@ READ32_MEMBER(namcos22_state::namcos22_cgram_r)
 WRITE32_MEMBER(namcos22_state::namcos22_cgram_w)
 {
 	COMBINE_DATA( &m_cgram[offset] );
-	gfx_element_mark_dirty(machine().gfx[GFX_CHAR],offset/32);
+	machine().gfx[GFX_CHAR]->mark_dirty(offset/32);
 }
 
 READ32_MEMBER(namcos22_state::namcos22_paletteram_r)
@@ -2725,63 +2723,60 @@ static void namcos22_exit(running_machine &machine)
 	poly_free(state->m_poly);
 }
 
-static VIDEO_START( common )
+VIDEO_START_MEMBER(namcos22_state,common)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
 	int code;
 
-	state->m_mix_bitmap = auto_bitmap_ind16_alloc(machine,640,480);
-	state->m_bgtilemap = tilemap_create( machine, TextTilemapGetInfo,tilemap_scan_rows,16,16,64,64 );
-	state->m_bgtilemap->set_transparent_pen(0xf);
+	m_mix_bitmap = auto_bitmap_ind16_alloc(machine(),640,480);
+	m_bgtilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(namcos22_state::TextTilemapGetInfo),this),TILEMAP_SCAN_ROWS,16,16,64,64 );
+	m_bgtilemap->set_transparent_pen(0xf);
 
-	state->m_mbDSPisActive = 0;
-	memset( state->m_polygonram, 0xcc, 0x20000 );
+	m_mbDSPisActive = 0;
+	memset( m_polygonram, 0xcc, 0x20000 );
 
-	for (code = 0; code < machine.gfx[GFX_TEXTURE_TILE]->total_elements; code++)
-		gfx_element_decode(machine.gfx[GFX_TEXTURE_TILE], code);
+	for (code = 0; code < machine().gfx[GFX_TEXTURE_TILE]->elements(); code++)
+		machine().gfx[GFX_TEXTURE_TILE]->decode(code);
 
-	Prepare3dTexture(machine, state->memregion("textilemap")->base(), machine.gfx[GFX_TEXTURE_TILE]->gfxdata );
-	state->m_dirtypal = auto_alloc_array(machine, UINT8, NAMCOS22_PALETTE_SIZE/4);
-	state->m_mPtRomSize = state->memregion("pointrom")->bytes()/3;
-	state->m_mpPolyL = state->memregion("pointrom")->base();
-	state->m_mpPolyM = state->m_mpPolyL + state->m_mPtRomSize;
-	state->m_mpPolyH = state->m_mpPolyM + state->m_mPtRomSize;
+	Prepare3dTexture(machine(), memregion("textilemap")->base(), machine().gfx[GFX_TEXTURE_TILE]->get_data(0) );
+	m_dirtypal = auto_alloc_array(machine(), UINT8, NAMCOS22_PALETTE_SIZE/4);
+	m_mPtRomSize = memregion("pointrom")->bytes()/3;
+	m_mpPolyL = memregion("pointrom")->base();
+	m_mpPolyM = m_mpPolyL + m_mPtRomSize;
+	m_mpPolyH = m_mpPolyM + m_mPtRomSize;
 
-	state->m_poly = poly_alloc(machine, 4000, sizeof(poly_extra_data), 0);
-	machine.add_notifier(MACHINE_NOTIFY_RESET, machine_notify_delegate(FUNC(namcos22_reset), &machine));
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(namcos22_exit), &machine));
+	m_poly = poly_alloc(machine(), 4000, sizeof(poly_extra_data), 0);
+	machine().add_notifier(MACHINE_NOTIFY_RESET, machine_notify_delegate(FUNC(namcos22_reset), &machine()));
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(namcos22_exit), &machine()));
 
-	gfx_element_set_source(machine.gfx[GFX_CHAR], (UINT8 *)state->m_cgram.target());
+	machine().gfx[GFX_CHAR]->set_source((UINT8 *)m_cgram.target());
 }
 
-VIDEO_START( namcos22 )
+VIDEO_START_MEMBER(namcos22_state,namcos22)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	state->m_mbSuperSystem22 = 0;
-	VIDEO_START_CALL(common);
+	m_mbSuperSystem22 = 0;
+	VIDEO_START_CALL_MEMBER(common);
 }
 
-VIDEO_START( namcos22s )
+VIDEO_START_MEMBER(namcos22_state,namcos22s)
 {
-	namcos22_state *state = machine.driver_data<namcos22_state>();
-	state->m_mbSuperSystem22 = 1;
+	m_mbSuperSystem22 = 1;
 
 	// init spotram
-	state->m_spotram = auto_alloc_array(machine, UINT16, SPOTRAM_SIZE);
-	memset(state->m_spotram, 0, SPOTRAM_SIZE*2);
+	m_spotram = auto_alloc_array(machine(), UINT16, SPOTRAM_SIZE);
+	memset(m_spotram, 0, SPOTRAM_SIZE*2);
 
 	// init czram tables
 	int table;
 	for (table=0; table<4; table++)
 	{
-		state->m_banked_czram[table] = auto_alloc_array(machine, UINT16, 0x100);
-		memset(state->m_banked_czram[table], 0, 0x100*2);
-		state->m_recalc_czram[table] = auto_alloc_array(machine, UINT8, 0x2000);
-		memset(state->m_recalc_czram[table], 0, 0x2000);
-		state->m_cz_was_written[table] = 0;
+		m_banked_czram[table] = auto_alloc_array(machine(), UINT16, 0x100);
+		memset(m_banked_czram[table], 0, 0x100*2);
+		m_recalc_czram[table] = auto_alloc_array(machine(), UINT8, 0x2000);
+		memset(m_recalc_czram[table], 0, 0x2000);
+		m_cz_was_written[table] = 0;
 	}
 
-	VIDEO_START_CALL(common);
+	VIDEO_START_CALL_MEMBER(common);
 }
 
 SCREEN_UPDATE_RGB32( namcos22s )
@@ -2819,7 +2814,7 @@ SCREEN_UPDATE_RGB32( namcos22s )
 		FILE *f = fopen( "dump.txt", "wb" );
 		if( f )
 		{
-			address_space *space = state->m_maincpu->memory().space(AS_PROGRAM);
+			address_space *space = state->m_maincpu->space(AS_PROGRAM);
 
 			if (1) // czram
 			{
@@ -2884,7 +2879,7 @@ SCREEN_UPDATE_RGB32( namcos22 )
 		FILE *f = fopen( "dump.txt", "wb" );
 		if( f )
 		{
-			address_space *space = state->m_maincpu->memory().space(AS_PROGRAM);
+			address_space *space = state->m_maincpu->space(AS_PROGRAM);
 
 			//Dump(space, f,0x90000000, 0x90000003, "led?" );
 			Dump(space, f,0x90010000, 0x90017fff, "cz_ram");

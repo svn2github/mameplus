@@ -58,21 +58,21 @@ WRITE16_MEMBER(cninja_state::cninja_sound_w)
 {
 
 	soundlatch_byte_w(space, 0, data & 0xff);
-	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 WRITE16_MEMBER(cninja_state::stoneage_sound_w)
 {
 
 	soundlatch_byte_w(space, 0, data & 0xff);
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static TIMER_DEVICE_CALLBACK( interrupt_gen )
 {
 	cninja_state *state = timer.machine().driver_data<cninja_state>();
 
-	device_set_input_line(state->m_maincpu, (state->m_irq_mask & 0x10) ? 3 : 4, ASSERT_LINE);
+	state->m_maincpu->set_input_line((state->m_irq_mask & 0x10) ? 3 : 4, ASSERT_LINE);
 	state->m_raster_irq_timer->reset();
 }
 
@@ -86,12 +86,12 @@ READ16_MEMBER(cninja_state::cninja_irq_r)
 		return m_scanline;
 
 	case 2: /* Raster IRQ ACK - value read is not used */
-		device_set_input_line(m_maincpu, 3, CLEAR_LINE);
-		device_set_input_line(m_maincpu, 4, CLEAR_LINE);
+		m_maincpu->set_input_line(3, CLEAR_LINE);
+		m_maincpu->set_input_line(4, CLEAR_LINE);
 		return 0;
 	}
 
-	logerror("%08x:  Unmapped IRQ read %d\n", cpu_get_pc(&space.device()), offset);
+	logerror("%08x:  Unmapped IRQ read %d\n", space.device().safe_pc(), offset);
 	return 0;
 }
 
@@ -106,7 +106,7 @@ WRITE16_MEMBER(cninja_state::cninja_irq_w)
             0xc8:   Raster IRQ turned on (68k IRQ level 4)
             0xd8:   Raster IRQ turned on (68k IRQ level 3)
         */
-		logerror("%08x:  IRQ write %d %08x\n", cpu_get_pc(&space.device()), offset, data);
+		logerror("%08x:  IRQ write %d %08x\n", space.device().safe_pc(), offset, data);
 		m_irq_mask = data & 0xff;
 		return;
 
@@ -123,7 +123,7 @@ WRITE16_MEMBER(cninja_state::cninja_irq_w)
 		return;
 	}
 
-	logerror("%08x:  Unmapped IRQ write %d %04x\n", cpu_get_pc(&space.device()), offset, data);
+	logerror("%08x:  Unmapped IRQ write %d %04x\n", space.device().safe_pc(), offset, data);
 }
 
 READ16_MEMBER(cninja_state::robocop2_prot_r)
@@ -137,10 +137,10 @@ READ16_MEMBER(cninja_state::robocop2_prot_r)
 		case 0x4e6: /* Dip switches */
 			return ioport("DSW")->read();
 		case 0x504: /* PC: 6b6.  b4, 2c, 36 written before read */
-			logerror("Protection PC %06x: warning - read unmapped memory address %04x\n", cpu_get_pc(&space.device()), offset);
+			logerror("Protection PC %06x: warning - read unmapped memory address %04x\n", space.device().safe_pc(), offset);
 			return 0x84;
 	}
-	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n", cpu_get_pc(&space.device()), offset);
+	logerror("Protection PC %06x: warning - read unmapped memory address %04x\n", space.device().safe_pc(), offset);
 	return 0;
 }
 
@@ -181,8 +181,8 @@ static ADDRESS_MAP_START( cninja_map, AS_PROGRAM, 16, cninja_state )
 
 	AM_RANGE(0x1a4000, 0x1a47ff) AM_RAM AM_SHARE("spriteram")			/* Sprites */
 	AM_RANGE(0x1b4000, 0x1b4001) AM_DEVWRITE("spriteram", buffered_spriteram16_device, write) /* DMA flag */
-	AM_RANGE(0x1bc000, 0x1bc0ff) AM_WRITE_LEGACY(deco16_104_cninja_prot_w) AM_BASE_LEGACY(&deco16_prot_ram)		/* Protection writes */
-	AM_RANGE(0x1bc000, 0x1bcfff) AM_READ_LEGACY(deco16_104_cninja_prot_r) AM_BASE_LEGACY(&deco16_prot_ram)		/* Protection device */
+	AM_RANGE(0x1bc000, 0x1bc0ff) AM_WRITE_LEGACY(deco16_104_cninja_prot_w) AM_SHARE("prot16ram")		/* Protection writes */
+	AM_RANGE(0x1bc000, 0x1bcfff) AM_READ_LEGACY(deco16_104_cninja_prot_r) AM_SHARE("prot16ram")		/* Protection device */
 
 	AM_RANGE(0x308000, 0x308fff) AM_WRITENOP /* Bootleg only */
 ADDRESS_MAP_END
@@ -234,7 +234,7 @@ static ADDRESS_MAP_START( edrandy_map, AS_PROGRAM, 16, cninja_state )
 
 	AM_RANGE(0x188000, 0x189fff) AM_RAM_DEVWRITE_LEGACY("deco_common", decocomn_nonbuffered_palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0x194000, 0x197fff) AM_RAM AM_SHARE("ram") /* Main ram */
-	AM_RANGE(0x198000, 0x1987ff) AM_READWRITE_LEGACY(deco16_60_prot_r, deco16_60_prot_w) AM_BASE_LEGACY(&deco16_prot_ram) /* Protection device */
+	AM_RANGE(0x198000, 0x1987ff) AM_READWRITE_LEGACY(deco16_60_prot_r, deco16_60_prot_w) AM_SHARE("prot16ram") /* Protection device */
 	AM_RANGE(0x199550, 0x199551) AM_WRITENOP /* Looks like a bug in game code, a protection write is referenced off a5 instead of a6 and ends up here */
 	AM_RANGE(0x199750, 0x199751) AM_WRITENOP /* Looks like a bug in game code, a protection write is referenced off a5 instead of a6 and ends up here */
 
@@ -280,7 +280,7 @@ static ADDRESS_MAP_START( mutantf_map, AS_PROGRAM, 16, cninja_state )
 	AM_RANGE(0x160000, 0x161fff) AM_RAM_DEVWRITE_LEGACY("deco_common", decocomn_nonbuffered_palette_w) AM_SHARE("paletteram")
 	AM_RANGE(0x180000, 0x180001) AM_DEVWRITE_LEGACY("deco_common", decocomn_priority_w)
 	AM_RANGE(0x180002, 0x180003) AM_WRITENOP /* VBL irq ack */
-	AM_RANGE(0x1a0000, 0x1a07ff) AM_READWRITE_LEGACY(deco16_66_prot_r, deco16_66_prot_w) AM_BASE_LEGACY(&deco16_prot_ram) /* Protection device */
+	AM_RANGE(0x1a0000, 0x1a07ff) AM_READWRITE_LEGACY(deco16_66_prot_r, deco16_66_prot_w) AM_SHARE("prot16ram") /* Protection device */
 	AM_RANGE(0x1c0000, 0x1c0001) AM_DEVWRITE("spriteram", buffered_spriteram16_device, write) AM_DEVREAD_LEGACY("deco_common", decocomn_71_r)
 	AM_RANGE(0x1e0000, 0x1e0001) AM_DEVWRITE("spriteram2", buffered_spriteram16_device, write)
 
@@ -712,13 +712,13 @@ GFXDECODE_END
 static void sound_irq(device_t *device, int state)
 {
 	cninja_state *driver_state = device->machine().driver_data<cninja_state>();
-	device_set_input_line(driver_state->m_audiocpu, 1, state); /* IRQ 2 */
+	driver_state->m_audiocpu->set_input_line(1, state); /* IRQ 2 */
 }
 
 static void sound_irq2(device_t *device, int state)
 {
 	cninja_state *driver_state = device->machine().driver_data<cninja_state>();
-	device_set_input_line(driver_state->m_audiocpu, 0, state);
+	driver_state->m_audiocpu->set_input_line(0, state);
 }
 
 WRITE8_MEMBER(cninja_state::sound_bankswitch_w)
@@ -869,20 +869,20 @@ static const deco16ic_interface mutantf_deco16ic_tilegen2_intf =
 };
 
 
-static MACHINE_START( cninja )
+void cninja_state::machine_start()
 {
-	cninja_state *state = machine.driver_data<cninja_state>();
 
-	state->save_item(NAME(state->m_scanline));
-	state->save_item(NAME(state->m_irq_mask));
+	save_item(NAME(m_scanline));
+	save_item(NAME(m_irq_mask));
+
+	decoprot_reset(machine());
 }
 
-static MACHINE_RESET( cninja )
+void cninja_state::machine_reset()
 {
-	cninja_state *state = machine.driver_data<cninja_state>();
 
-	state->m_scanline = 0;
-	state->m_irq_mask = 0;
+	m_scanline = 0;
+	m_irq_mask = 0;
 }
 
 
@@ -911,8 +911,6 @@ static MACHINE_CONFIG_START( cninja, cninja_state )
 	MCFG_CPU_ADD("audiocpu", H6280,32220000/8)	/* Accurate */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(cninja)
-	MCFG_MACHINE_RESET(cninja)
 
 	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
 
@@ -965,8 +963,6 @@ static MACHINE_CONFIG_START( stoneage, cninja_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(stoneage_s_map)
 
-	MCFG_MACHINE_START(cninja)
-	MCFG_MACHINE_RESET(cninja)
 
 	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
 
@@ -980,7 +976,7 @@ static MACHINE_CONFIG_START( stoneage, cninja_state )
 	MCFG_GFXDECODE(cninja)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(stoneage)
+	MCFG_VIDEO_START_OVERRIDE(cninja_state,stoneage)
 
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 
@@ -1019,8 +1015,6 @@ static MACHINE_CONFIG_START( cninjabl, cninja_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(stoneage_s_map)
 
-	MCFG_MACHINE_START(cninja)
-	MCFG_MACHINE_RESET(cninja)
 
 	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
 
@@ -1064,8 +1058,6 @@ static MACHINE_CONFIG_START( edrandy, cninja_state )
 	MCFG_CPU_ADD("audiocpu", H6280,32220000/8)	/* Accurate */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(cninja)
-	MCFG_MACHINE_RESET(cninja)
 
 	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
 
@@ -1118,8 +1110,6 @@ static MACHINE_CONFIG_START( robocop2, cninja_state )
 	MCFG_CPU_ADD("audiocpu", H6280,32220000/8)	/* Accurate */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(cninja)
-	MCFG_MACHINE_RESET(cninja)
 
 	MCFG_TIMER_ADD("raster_timer", interrupt_gen)
 
@@ -1175,8 +1165,6 @@ static MACHINE_CONFIG_START( mutantf, cninja_state )
 	MCFG_CPU_ADD("audiocpu", H6280,32220000/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map_mutantf)
 
-	MCFG_MACHINE_START(cninja)
-	MCFG_MACHINE_RESET(cninja)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1185,7 +1173,7 @@ static MACHINE_CONFIG_START( mutantf, cninja_state )
 	MCFG_SCREEN_VISIBLE_AREA(0*8, 40*8-1, 1*8, 31*8-1)
 	MCFG_SCREEN_UPDATE_STATIC(mutantf)
 
-	MCFG_VIDEO_START(mutantf)
+	MCFG_VIDEO_START_OVERRIDE(cninja_state,mutantf)
 
 	MCFG_GFXDECODE(mutantf)
 	MCFG_PALETTE_LENGTH(2048)

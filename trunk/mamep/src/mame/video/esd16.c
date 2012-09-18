@@ -50,48 +50,44 @@ Note:   if MAME_DEBUG is defined, pressing Z with:
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_tile_info_0 )
+TILE_GET_INFO_MEMBER(esd16_state::get_tile_info_0)
 {
-	esd16_state *state = machine.driver_data<esd16_state>();
-	UINT16 code = state->m_vram_0[tile_index];
-	SET_TILE_INFO(
+	UINT16 code = m_vram_0[tile_index];
+	SET_TILE_INFO_MEMBER(
 			1,
 			code,
-			state->m_tilemap0_color,
+			m_tilemap0_color,
 			0);
 }
 
-static TILE_GET_INFO( get_tile_info_0_16x16 )
+TILE_GET_INFO_MEMBER(esd16_state::get_tile_info_0_16x16)
 {
-	esd16_state *state = machine.driver_data<esd16_state>();
-	UINT16 code = state->m_vram_0[tile_index];
-	SET_TILE_INFO(
+	UINT16 code = m_vram_0[tile_index];
+	SET_TILE_INFO_MEMBER(
 			2,
 			code,
-			state->m_tilemap0_color,
+			m_tilemap0_color,
 			0);
 }
 
 
-static TILE_GET_INFO( get_tile_info_1 )
+TILE_GET_INFO_MEMBER(esd16_state::get_tile_info_1)
 {
-	esd16_state *state = machine.driver_data<esd16_state>();
-	UINT16 code = state->m_vram_1[tile_index];
-	SET_TILE_INFO(
+	UINT16 code = m_vram_1[tile_index];
+	SET_TILE_INFO_MEMBER(
 			1,
 			code,
-			state->m_tilemap1_color,
+			m_tilemap1_color,
 			0);
 }
 
-static TILE_GET_INFO( get_tile_info_1_16x16 )
+TILE_GET_INFO_MEMBER(esd16_state::get_tile_info_1_16x16)
 {
-	esd16_state *state = machine.driver_data<esd16_state>();
-	UINT16 code = state->m_vram_1[tile_index];
-	SET_TILE_INFO(
+	UINT16 code = m_vram_1[tile_index];
+	SET_TILE_INFO_MEMBER(
 			2,
 			code,
-			state->m_tilemap1_color,
+			m_tilemap1_color,
 			0);
 }
 
@@ -137,26 +133,25 @@ WRITE16_MEMBER(esd16_state::esd16_tilemap0_color_jumppop_w)
 ***************************************************************************/
 
 
-VIDEO_START( esd16 )
+void esd16_state::video_start()
 {
-	esd16_state *state = machine.driver_data<esd16_state>();
 
-	state->m_tilemap_0 = tilemap_create(	machine, get_tile_info_0, tilemap_scan_rows, 8, 8, 0x80, 0x40);
-	state->m_tilemap_1 = tilemap_create(	machine, get_tile_info_1, tilemap_scan_rows, 8, 8, 0x80, 0x40);
+	m_tilemap_0 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(esd16_state::get_tile_info_0),this), TILEMAP_SCAN_ROWS, 8, 8, 0x80, 0x40);
+	m_tilemap_1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(esd16_state::get_tile_info_1),this), TILEMAP_SCAN_ROWS, 8, 8, 0x80, 0x40);
 
 	/* swatpolc changes tilemap 0 to 16x16 at various times */
-	state->m_tilemap_0_16x16 = tilemap_create(machine, get_tile_info_0_16x16, tilemap_scan_rows, 16,16, 0x40, 0x40);
+	m_tilemap_0_16x16 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(esd16_state::get_tile_info_0_16x16),this), TILEMAP_SCAN_ROWS, 16,16, 0x40, 0x40);
 
 	/* hedpanic changes tilemap 1 to 16x16 at various times */
-	state->m_tilemap_1_16x16 = tilemap_create(machine, get_tile_info_1_16x16, tilemap_scan_rows, 16,16, 0x40, 0x40);
+	m_tilemap_1_16x16 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(esd16_state::get_tile_info_1_16x16),this), TILEMAP_SCAN_ROWS, 16,16, 0x40, 0x40);
 
-	state->m_tilemap_0->set_scrolldx(-0x60 + 2, -0x60);
-	state->m_tilemap_1->set_scrolldx(-0x60, -0x60 + 2);
-	state->m_tilemap_0_16x16->set_scrolldx(-0x60 + 2, -0x60);
-	state->m_tilemap_1_16x16->set_scrolldx(-0x60, -0x60 + 2);
+	m_tilemap_0->set_scrolldx(-0x60 + 2, -0x60);
+	m_tilemap_1->set_scrolldx(-0x60, -0x60 + 2);
+	m_tilemap_0_16x16->set_scrolldx(-0x60 + 2, -0x60);
+	m_tilemap_1_16x16->set_scrolldx(-0x60, -0x60 + 2);
 
-	state->m_tilemap_1->set_transparent_pen(0x00);
-	state->m_tilemap_1_16x16->set_transparent_pen(0x00);
+	m_tilemap_1->set_transparent_pen(0x00);
+	m_tilemap_1_16x16->set_transparent_pen(0x00);
 }
 
 

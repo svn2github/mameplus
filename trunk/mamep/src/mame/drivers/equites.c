@@ -398,7 +398,7 @@ D                                                                               
 static TIMER_CALLBACK( equites_nmi_callback )
 {
 	equites_state *state = machine.driver_data<equites_state>();
-	device_set_input_line(state->m_audio_cpu, INPUT_LINE_NMI, ASSERT_LINE);
+	state->m_audio_cpu->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 static TIMER_CALLBACK( equites_frq_adjuster_callback )
@@ -430,7 +430,7 @@ WRITE8_MEMBER(equites_state::equites_c0f8_w)
 	switch (offset)
 	{
 		case 0:	// c0f8: NMI ack (written by NMI handler)
-			device_set_input_line(m_audio_cpu, INPUT_LINE_NMI, CLEAR_LINE);
+			m_audio_cpu->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 			break;
 
 		case 1: // c0f9: RST75 trigger (written by NMI handler)
@@ -440,7 +440,7 @@ WRITE8_MEMBER(equites_state::equites_c0f8_w)
 
 		case 2: // c0fa: INTR trigger (written by NMI handler)
 			// verified on PCB:
-			device_set_input_line(m_audio_cpu, I8085_INTR_LINE, HOLD_LINE);
+			m_audio_cpu->execute().set_input_line(I8085_INTR_LINE, HOLD_LINE);
 			break;
 
 		case 3: // c0fb: n.c.
@@ -582,10 +582,10 @@ static TIMER_DEVICE_CALLBACK( equites_scanline )
 	int scanline = param;
 
 	if(scanline == 232) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "maincpu", 1, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
 
 	if(scanline == 24) // vblank-in irq
-		cputag_set_input_line(timer.machine(), "maincpu", 2, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 }
 
 static TIMER_DEVICE_CALLBACK( splndrbt_scanline )
@@ -593,10 +593,10 @@ static TIMER_DEVICE_CALLBACK( splndrbt_scanline )
 	int scanline = param;
 
 	if(scanline == 224) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "maincpu", 1, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(1, HOLD_LINE);
 
 	if(scanline == 32) // vblank-in irq
-		cputag_set_input_line(timer.machine(), "maincpu", 2, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 }
 
 WRITE8_MEMBER(equites_state::equites_8155_w)
@@ -692,12 +692,12 @@ WRITE16_MEMBER(equites_state::mcu_w)
 
 WRITE16_MEMBER(equites_state::mcu_halt_assert_w)
 {
-	device_set_input_line(m_mcu, INPUT_LINE_HALT, ASSERT_LINE);
+	m_mcu->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 }
 
 WRITE16_MEMBER(equites_state::mcu_halt_clear_w)
 {
-	device_set_input_line(m_mcu, INPUT_LINE_HALT, CLEAR_LINE);
+	m_mcu->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
 }
 
 
@@ -1188,62 +1188,60 @@ MACHINE_CONFIG_END
 
 /******************************************************************************/
 
-static MACHINE_START( equites )
+MACHINE_START_MEMBER(equites_state,equites)
 {
-	equites_state *state = machine.driver_data<equites_state>();
 
-	state->m_mcu = machine.device("mcu");
-	state->m_audio_cpu = machine.device("audiocpu");
-	state->m_msm = machine.device<msm5232_device>("msm");
-	state->m_dac_1 = machine.device<dac_device>("dac1");
-	state->m_dac_2 = machine.device<dac_device>("dac2");
+	m_mcu = machine().device("mcu");
+	m_audio_cpu = machine().device("audiocpu");
+	m_msm = machine().device<msm5232_device>("msm");
+	m_dac_1 = machine().device<dac_device>("dac1");
+	m_dac_2 = machine().device<dac_device>("dac2");
 
-	state->save_item(NAME(state->m_fg_char_bank));
-	state->save_item(NAME(state->m_bgcolor));
-	state->save_item(NAME(state->m_splndrbt_bg_scrollx));
-	state->save_item(NAME(state->m_splndrbt_bg_scrolly));
-	state->save_item(NAME(state->m_sound_prom_address));
-	state->save_item(NAME(state->m_dac_latch));
-	state->save_item(NAME(state->m_eq8155_port_b));
-	state->save_item(NAME(state->m_eq8155_port_a));
-	state->save_item(NAME(state->m_eq8155_port_c));
-	state->save_item(NAME(state->m_ay_port_a));
-	state->save_item(NAME(state->m_ay_port_b));
-	state->save_item(NAME(state->m_eq_cymbal_ctrl));
-	state->save_item(NAME(state->m_cymvol));
-	state->save_item(NAME(state->m_hihatvol));
-	state->save_item(NAME(state->m_timer_count));
-	state->save_item(NAME(state->m_unknown_bit));
+	save_item(NAME(m_fg_char_bank));
+	save_item(NAME(m_bgcolor));
+	save_item(NAME(m_splndrbt_bg_scrollx));
+	save_item(NAME(m_splndrbt_bg_scrolly));
+	save_item(NAME(m_sound_prom_address));
+	save_item(NAME(m_dac_latch));
+	save_item(NAME(m_eq8155_port_b));
+	save_item(NAME(m_eq8155_port_a));
+	save_item(NAME(m_eq8155_port_c));
+	save_item(NAME(m_ay_port_a));
+	save_item(NAME(m_ay_port_b));
+	save_item(NAME(m_eq_cymbal_ctrl));
+	save_item(NAME(m_cymvol));
+	save_item(NAME(m_hihatvol));
+	save_item(NAME(m_timer_count));
+	save_item(NAME(m_unknown_bit));
 #if POPDRUMKIT
-	state->save_item(NAME(state->m_hihat));
-	state->save_item(NAME(state->m_cymbal));
+	save_item(NAME(m_hihat));
+	save_item(NAME(m_cymbal));
 #endif
 }
 
-static MACHINE_RESET( equites )
+MACHINE_RESET_MEMBER(equites_state,equites)
 {
-	equites_state *state = machine.driver_data<equites_state>();
 
-	state->flip_screen_set(0);
+	flip_screen_set(0);
 
-	state->m_fg_char_bank = 0;
-	state->m_bgcolor = 0;
-	state->m_splndrbt_bg_scrollx = 0;
-	state->m_splndrbt_bg_scrolly = 0;
-	state->m_sound_prom_address = 0;
-	state->m_dac_latch = 0;
-	state->m_eq8155_port_b = 0;
-	state->m_eq8155_port_a = 0;
-	state->m_eq8155_port_c = 0;
-	state->m_ay_port_a = 0;
-	state->m_ay_port_b = 0;
-	state->m_eq_cymbal_ctrl = 0;
-	state->m_cymvol = 0.0;
-	state->m_hihatvol = 0.0;
-	state->m_timer_count = 0;
-	state->m_unknown_bit = 0;
+	m_fg_char_bank = 0;
+	m_bgcolor = 0;
+	m_splndrbt_bg_scrollx = 0;
+	m_splndrbt_bg_scrolly = 0;
+	m_sound_prom_address = 0;
+	m_dac_latch = 0;
+	m_eq8155_port_b = 0;
+	m_eq8155_port_a = 0;
+	m_eq8155_port_c = 0;
+	m_ay_port_a = 0;
+	m_ay_port_b = 0;
+	m_eq_cymbal_ctrl = 0;
+	m_cymvol = 0.0;
+	m_hihatvol = 0.0;
+	m_timer_count = 0;
+	m_unknown_bit = 0;
 #if POPDRUMKIT
-	state->m_hihat = state->m_cymbal = 0;
+	m_hihat = m_cymbal = 0;
 #endif
 }
 
@@ -1269,11 +1267,11 @@ static MACHINE_CONFIG_START( equites, equites_state )
 
 	MCFG_GFXDECODE(equites)
 	MCFG_PALETTE_LENGTH(0x180)
-	MCFG_PALETTE_INIT(equites)
-	MCFG_VIDEO_START(equites)
+	MCFG_PALETTE_INIT_OVERRIDE(equites_state,equites)
+	MCFG_VIDEO_START_OVERRIDE(equites_state,equites)
 
-	MCFG_MACHINE_START(equites)
-	MCFG_MACHINE_RESET(equites)
+	MCFG_MACHINE_START_OVERRIDE(equites_state,equites)
+	MCFG_MACHINE_RESET_OVERRIDE(equites_state,equites)
 MACHINE_CONFIG_END
 
 
@@ -1306,11 +1304,11 @@ static MACHINE_CONFIG_START( splndrbt, equites_state )
 
 	MCFG_GFXDECODE(splndrbt)
 	MCFG_PALETTE_LENGTH(0x280)
-	MCFG_PALETTE_INIT(splndrbt)
-	MCFG_VIDEO_START(splndrbt)
+	MCFG_PALETTE_INIT_OVERRIDE(equites_state,splndrbt)
+	MCFG_VIDEO_START_OVERRIDE(equites_state,splndrbt)
 
-	MCFG_MACHINE_START(equites)
-	MCFG_MACHINE_RESET(equites)
+	MCFG_MACHINE_START_OVERRIDE(equites_state,equites)
+	MCFG_MACHINE_RESET_OVERRIDE(equites_state,equites)
 MACHINE_CONFIG_END
 
 

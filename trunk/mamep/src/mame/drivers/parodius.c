@@ -23,7 +23,7 @@ static INTERRUPT_GEN( parodius_interrupt )
 {
 	parodius_state *state = device->machine().driver_data<parodius_state>();
 	if (k052109_is_irq_enabled(state->m_k052109))
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 READ8_MEMBER(parodius_state::bankedram_r)
@@ -76,7 +76,7 @@ WRITE8_MEMBER(parodius_state::parodius_videobank_w)
 {
 
 	if (m_videobank & 0xf8)
-		logerror("%04x: videobank = %02x\n",cpu_get_pc(&space.device()),data);
+		logerror("%04x: videobank = %02x\n",space.device().safe_pc(),data);
 
 	/* bit 0 = select palette or work RAM at 0000-07ff */
 	/* bit 1 = select 052109 or 053245 at 2000-27ff */
@@ -88,7 +88,7 @@ WRITE8_MEMBER(parodius_state::parodius_3fc0_w)
 {
 
 	if ((data & 0xf4) != 0x10)
-		logerror("%04x: 3fc0 = %02x\n",cpu_get_pc(&space.device()),data);
+		logerror("%04x: 3fc0 = %02x\n",space.device().safe_pc(),data);
 
 	/* bit 0/1 = coin counters */
 	coin_counter_w(machine(), 0, data & 0x01);
@@ -108,7 +108,7 @@ READ8_MEMBER(parodius_state::parodius_sound_r)
 
 WRITE8_MEMBER(parodius_state::parodius_sh_irqtrigger_w)
 {
-	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 #if 0
@@ -116,7 +116,7 @@ WRITE8_MEMBER(parodius_state::parodius_sh_irqtrigger_w)
 static void sound_nmi_callback( running_machine &machine, int param )
 {
 	parodius_state *state = machine.driver_data<parodius_state>();
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, ( state->m_nmi_enabled ) ? CLEAR_LINE : ASSERT_LINE );
+	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, ( state->m_nmi_enabled ) ? CLEAR_LINE : ASSERT_LINE );
 
 	nmi_enabled = 0;
 }
@@ -125,13 +125,13 @@ static void sound_nmi_callback( running_machine &machine, int param )
 static TIMER_CALLBACK( nmi_callback )
 {
 	parodius_state *state = machine.driver_data<parodius_state>();
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, ASSERT_LINE);
+	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(parodius_state::sound_arm_nmi_w)
 {
 
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 	machine().scheduler().timer_set(attotime::from_usec(50), FUNC(nmi_callback));	/* kludge until the K053260 is emulated correctly */
 }
 
@@ -246,45 +246,43 @@ static const k05324x_interface parodius_k05324x_intf =
 	parodius_sprite_callback
 };
 
-static MACHINE_START( parodius )
+void parodius_state::machine_start()
 {
-	parodius_state *state = machine.driver_data<parodius_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 14, &ROM[0x10000], 0x4000);
-	state->membank("bank1")->configure_entries(14, 2, &ROM[0x08000], 0x4000);
-	state->membank("bank1")->set_entry(0);
+	membank("bank1")->configure_entries(0, 14, &ROM[0x10000], 0x4000);
+	membank("bank1")->configure_entries(14, 2, &ROM[0x08000], 0x4000);
+	membank("bank1")->set_entry(0);
 
-	state->m_generic_paletteram_8.allocate(0x1000);
+	m_generic_paletteram_8.allocate(0x1000);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_k053260 = machine.device("k053260");
-	state->m_k053245 = machine.device("k053245");
-	state->m_k053251 = machine.device("k053251");
-	state->m_k052109 = machine.device("k052109");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_k053260 = machine().device("k053260");
+	m_k053245 = machine().device("k053245");
+	m_k053251 = machine().device("k053251");
+	m_k052109 = machine().device("k052109");
 
-	state->save_item(NAME(state->m_videobank));
-	state->save_item(NAME(state->m_sprite_colorbase));
-	state->save_item(NAME(state->m_layer_colorbase));
-	state->save_item(NAME(state->m_layerpri));
+	save_item(NAME(m_videobank));
+	save_item(NAME(m_sprite_colorbase));
+	save_item(NAME(m_layer_colorbase));
+	save_item(NAME(m_layerpri));
 }
 
-static MACHINE_RESET( parodius )
+void parodius_state::machine_reset()
 {
-	parodius_state *state = machine.driver_data<parodius_state>();
 	int i;
 
-	konami_configure_set_lines(machine.device("maincpu"), parodius_banking);
+	konami_configure_set_lines(machine().device("maincpu"), parodius_banking);
 
 	for (i = 0; i < 3; i++)
 	{
-		state->m_layerpri[i] = 0;
-		state->m_layer_colorbase[i] = 0;
+		m_layerpri[i] = 0;
+		m_layer_colorbase[i] = 0;
 	}
 
-	state->m_sprite_colorbase = 0;
-	state->m_videobank = 0;
+	m_sprite_colorbase = 0;
+	m_videobank = 0;
 }
 
 static MACHINE_CONFIG_START( parodius, parodius_state )
@@ -297,8 +295,6 @@ static MACHINE_CONFIG_START( parodius, parodius_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)
 	MCFG_CPU_PROGRAM_MAP(parodius_sound_map)
 								/* NMIs are triggered by the 053260 */
-	MCFG_MACHINE_START(parodius)
-	MCFG_MACHINE_RESET(parodius)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -427,7 +423,7 @@ ROM_END
 static KONAMI_SETLINES_CALLBACK( parodius_banking )
 {
 	if (lines & 0xf0)
-		logerror("%04x: setlines %02x\n", cpu_get_pc(device), lines);
+		logerror("%04x: setlines %02x\n", device->safe_pc(), lines);
 
 	device->machine().root_device().membank("bank1")->set_entry((lines & 0x0f) ^ 0x0f);
 }

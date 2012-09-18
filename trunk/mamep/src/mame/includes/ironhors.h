@@ -31,8 +31,8 @@ public:
 	int        m_spriterambank;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_soundcpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_soundcpu;
 	DECLARE_WRITE8_MEMBER(ironhors_sh_irqtrigger_w);
 	DECLARE_WRITE8_MEMBER(ironhors_videoram_w);
 	DECLARE_WRITE8_MEMBER(ironhors_colorram_w);
@@ -41,14 +41,21 @@ public:
 	DECLARE_WRITE8_MEMBER(ironhors_flipscreen_w);
 	DECLARE_WRITE8_MEMBER(ironhors_filter_w);
 	DECLARE_READ8_MEMBER(farwest_soundlatch_r);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(farwest_get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
+	DECLARE_VIDEO_START(farwest);
 };
 
 
 /*----------- defined in video/ironhors.c -----------*/
 
 
-PALETTE_INIT( ironhors );
-VIDEO_START( ironhors );
+
+
 SCREEN_UPDATE_IND16( ironhors );
-VIDEO_START( farwest );
+
 SCREEN_UPDATE_IND16( farwest );

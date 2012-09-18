@@ -112,9 +112,9 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( sprcros2_master_io_map, AS_IO, 8, sprcros2_state )
 	ADDRESS_MAP_GLOBAL_MASK(0xff)
-	AM_RANGE(0x00, 0x00) AM_READ_PORT("P1") AM_DEVWRITE_LEGACY("sn1", sn76496_w)
-	AM_RANGE(0x01, 0x01) AM_READ_PORT("P2") AM_DEVWRITE_LEGACY("sn2", sn76496_w)
-	AM_RANGE(0x02, 0x02) AM_READ_PORT("EXTRA") AM_DEVWRITE_LEGACY("sn3", sn76496_w)
+	AM_RANGE(0x00, 0x00) AM_READ_PORT("P1") AM_DEVWRITE("sn1", sn76489_new_device, write)
+	AM_RANGE(0x01, 0x01) AM_READ_PORT("P2") AM_DEVWRITE("sn2", sn76489_new_device, write)
+	AM_RANGE(0x02, 0x02) AM_READ_PORT("EXTRA") AM_DEVWRITE("sn3", sn76489_new_device, write)
 	AM_RANGE(0x04, 0x04) AM_READ_PORT("DSW1")
 	AM_RANGE(0x05, 0x05) AM_READ_PORT("DSW2")
 	AM_RANGE(0x07, 0x07) AM_WRITE(sprcros2_m_port7_w)
@@ -228,6 +228,23 @@ static GFXDECODE_START( sprcros2 )
 	GFXDECODE_ENTRY( "gfx3", 0, sprcros2_fglayout,     512, 64 )
 GFXDECODE_END
 
+/*************************************
+ *
+ *  Sound interface
+ *
+ *************************************/
+
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
+
 static TIMER_DEVICE_CALLBACK( sprcros2_m_interrupt )
 {
 	sprcros2_state *state = timer.machine().driver_data<sprcros2_state>();
@@ -236,12 +253,12 @@ static TIMER_DEVICE_CALLBACK( sprcros2_m_interrupt )
 	if (scanline == 240)
 	{
 		if(state->m_port7&0x01)
-			device_set_input_line(state->m_master, INPUT_LINE_NMI, PULSE_LINE);
+			state->m_master->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 	else if(scanline == 0)
 	{
 		if(state->m_port7&0x08)
-			device_set_input_line(state->m_master, 0, HOLD_LINE);
+			state->m_master->set_input_line(0, HOLD_LINE);
 	}
 }
 
@@ -250,15 +267,14 @@ static INTERRUPT_GEN( sprcros2_s_interrupt )
 	sprcros2_state *state = device->machine().driver_data<sprcros2_state>();
 
 	if(state->m_s_port3&0x01)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
-static MACHINE_START( sprcros2 )
+void sprcros2_state::machine_start()
 {
-	sprcros2_state *state = machine.driver_data<sprcros2_state>();
 
-	state->save_item(NAME(state->m_port7));
-	state->save_item(NAME(state->m_s_port3));
+	save_item(NAME(m_port7));
+	save_item(NAME(m_s_port3));
 }
 
 static MACHINE_CONFIG_START( sprcros2, sprcros2_state )
@@ -274,7 +290,6 @@ static MACHINE_CONFIG_START( sprcros2, sprcros2_state )
 	MCFG_CPU_IO_MAP(sprcros2_slave_io_map)
 	MCFG_CPU_PERIODIC_INT(sprcros2_s_interrupt,2*60)	//2 nmis
 
-	MCFG_MACHINE_START(sprcros2)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -287,20 +302,21 @@ static MACHINE_CONFIG_START( sprcros2, sprcros2_state )
 	MCFG_GFXDECODE(sprcros2)
 	MCFG_PALETTE_LENGTH(768)
 
-	MCFG_PALETTE_INIT(sprcros2)
-	MCFG_VIDEO_START(sprcros2)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489, 10000000/4)
+	MCFG_SOUND_ADD("sn1", SN76489_NEW, 10000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489, 10000000/4)
+	MCFG_SOUND_ADD("sn2", SN76489_NEW, 10000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn3", SN76489, 10000000/4)
+	MCFG_SOUND_ADD("sn3", SN76489_NEW, 10000000/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 ROM_START( sprcros2 )

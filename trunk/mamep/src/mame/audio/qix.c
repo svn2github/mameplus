@@ -133,7 +133,7 @@ static WRITE_LINE_DEVICE_HANDLER( qix_pia_dint )
 	int combined_state = pia->irq_a_state() | pia->irq_b_state();
 
 	/* DINT is connected to the data CPU's IRQ line */
-	cputag_set_input_line(device->machine(), "maincpu", M6809_IRQ_LINE, combined_state ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("maincpu")->execute().set_input_line(M6809_IRQ_LINE, combined_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -143,7 +143,7 @@ static WRITE_LINE_DEVICE_HANDLER( qix_pia_sint )
 	int combined_state = pia->irq_a_state() | pia->irq_b_state();
 
 	/* SINT is connected to the sound CPU's IRQ line */
-	cputag_set_input_line(device->machine(), "audiocpu", M6800_IRQ_LINE, combined_state ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(M6800_IRQ_LINE, combined_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -234,6 +234,15 @@ static const pia6821_interface slithersnd_pia_0_intf =
 };
 
 
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
 
 /*************************************
  *
@@ -263,9 +272,11 @@ MACHINE_CONFIG_FRAGMENT( slither_audio )
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76489, SLITHER_CLOCK_OSC/4/4)
+	MCFG_SOUND_ADD("sn1", SN76489_NEW, SLITHER_CLOCK_OSC/4/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76489, SLITHER_CLOCK_OSC/4/4)
+	MCFG_SOUND_ADD("sn2", SN76489_NEW, SLITHER_CLOCK_OSC/4/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END

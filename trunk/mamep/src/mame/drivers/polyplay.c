@@ -102,26 +102,25 @@ static const samples_interface polyplay_samples_interface =
 };
 
 
-static MACHINE_RESET( polyplay )
+void polyplay_state::machine_reset()
 {
-	polyplay_state *state = machine.driver_data<polyplay_state>();
-	state->m_channel1_active = 0;
-	state->m_channel1_const = 0;
-	state->m_channel2_active = 0;
-	state->m_channel2_const = 0;
+	m_channel1_active = 0;
+	m_channel1_const = 0;
+	m_channel2_active = 0;
+	m_channel2_const = 0;
 
-	polyplay_set_channel1(machine, 0);
-	polyplay_play_channel1(machine, 0);
-	polyplay_set_channel2(machine, 0);
-	polyplay_play_channel2(machine, 0);
+	polyplay_set_channel1(machine(), 0);
+	polyplay_play_channel1(machine(), 0);
+	polyplay_set_channel2(machine(), 0);
+	polyplay_play_channel2(machine(), 0);
 
-	state->m_timer = machine.device<timer_device>("timer");
+	m_timer = machine().device<timer_device>("timer");
 }
 
 
 static INTERRUPT_GEN( periodic_interrupt )
 {
-	device_set_input_line_and_vector(device, 0, HOLD_LINE, 0x4e);
+	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x4e);
 }
 
 
@@ -134,7 +133,7 @@ static INTERRUPT_GEN( coin_interrupt )
 	else
 	{
 		if (state->m_last == 0)    /* coin inserted */
-			device_set_input_line_and_vector(device, 0, HOLD_LINE, 0x50);
+			device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x50);
 
 		state->m_last = 1;
 	}
@@ -277,7 +276,6 @@ static MACHINE_CONFIG_START( polyplay, polyplay_state )
 	MCFG_CPU_PERIODIC_INT(periodic_interrupt,75)
 	MCFG_CPU_VBLANK_INT("screen", coin_interrupt)
 
-	MCFG_MACHINE_RESET(polyplay)
 
 	MCFG_TIMER_ADD("timer", polyplay_timer_callback)
 
@@ -292,8 +290,6 @@ static MACHINE_CONFIG_START( polyplay, polyplay_state )
 	MCFG_GFXDECODE(polyplay)
 	MCFG_PALETTE_LENGTH(10)
 
-	MCFG_PALETTE_INIT(polyplay)
-	MCFG_VIDEO_START(polyplay)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -349,7 +345,7 @@ ROM_END
 
 static TIMER_DEVICE_CALLBACK( polyplay_timer_callback )
 {
-	cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE, 0x4c);
+	timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0x4c);
 }
 
 /* game driver */

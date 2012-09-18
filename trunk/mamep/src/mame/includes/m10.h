@@ -61,7 +61,7 @@ public:
 	int                 m_last;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	device_t *m_ic8j1;
 	device_t *m_ic8j2;
 	samples_device *m_samples;
@@ -79,6 +79,13 @@ public:
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
 	DECLARE_DRIVER_INIT(andromed);
 	DECLARE_DRIVER_INIT(ipminva1);
+	TILEMAP_MAPPER_MEMBER(tilemap_scan);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	DECLARE_MACHINE_START(m10);
+	DECLARE_MACHINE_RESET(m10);
+	DECLARE_VIDEO_START(m10);
+	DECLARE_PALETTE_INIT(m10);
+	DECLARE_VIDEO_START(m15);
 };
 
 
@@ -89,5 +96,5 @@ public:
 SCREEN_UPDATE_IND16( m10 );
 SCREEN_UPDATE_IND16( m15 );
 
-VIDEO_START( m10 );
-VIDEO_START( m15 );
+
+

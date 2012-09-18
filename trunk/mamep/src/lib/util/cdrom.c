@@ -88,7 +88,7 @@ const int ECC_Q_COMP = 43;			// 43 bytes each
     TYPE DEFINITIONS
 ***************************************************************************/
 
-struct _cdrom_file
+struct cdrom_file
 {
 	chd_file *			chd;				/* CHD file */
 	cdrom_toc			cdtoc;				/* TOC for the CD */
@@ -734,7 +734,7 @@ chd_error cdrom_parse_metadata(chd_file *chd, cdrom_toc *toc)
 		{
 			/* parse the metadata */
 			type[0] = subtype[0] = 0;
-			pgtype[0] = pgsub[0] = 0;
+            pgtype[0] = pgsub[0] = 0;
 			if (sscanf(metadata, CDROM_TRACK_METADATA_FORMAT, &tracknum, type, subtype, &frames) != 4)
 				return CHDERR_INVALID_DATA;
 			if (tracknum == 0 || tracknum > CD_MAX_TRACKS)
@@ -745,36 +745,36 @@ chd_error cdrom_parse_metadata(chd_file *chd, cdrom_toc *toc)
 		{
 			err = chd->read_metadata(CDROM_TRACK_METADATA2_TAG, toc->numtrks, metadata);
 			if (err == CHDERR_NONE)
-			{
-				/* parse the metadata */
-				type[0] = subtype[0] = 0;
-				pregap = postgap = 0;
-				if (sscanf(metadata, CDROM_TRACK_METADATA2_FORMAT, &tracknum, type, subtype, &frames, &pregap, pgtype, pgsub, &postgap) != 8)
-					return CHDERR_INVALID_DATA;
-				if (tracknum == 0 || tracknum > CD_MAX_TRACKS)
-					return CHDERR_INVALID_DATA;
-				track = &toc->tracks[tracknum - 1];
-			}
-			else
-			{
-				err = chd->read_metadata(GDROM_TRACK_METADATA_TAG, toc->numtrks, metadata);
+            {
+                /* parse the metadata */
+                type[0] = subtype[0] = 0;
+                pregap = postgap = 0;
+                if (sscanf(metadata, CDROM_TRACK_METADATA2_FORMAT, &tracknum, type, subtype, &frames, &pregap, pgtype, pgsub, &postgap) != 8)
+                    return CHDERR_INVALID_DATA;
+                if (tracknum == 0 || tracknum > CD_MAX_TRACKS)
+                    return CHDERR_INVALID_DATA;
+                track = &toc->tracks[tracknum - 1];
+            }
+            else
+            {
+                err = chd->read_metadata(GDROM_TRACK_METADATA_TAG, toc->numtrks, metadata);
 
-				if (err == CHDERR_NONE)
-				{
-					/* parse the metadata */
-					type[0] = subtype[0] = 0;
-					pregap = postgap = 0;
-					if (sscanf(metadata, GDROM_TRACK_METADATA_FORMAT, &tracknum, type, subtype, &frames, &padframes, &pregap, pgtype, pgsub, &postgap) != 9)
-						return CHDERR_INVALID_DATA;
-					if (tracknum == 0 || tracknum > CD_MAX_TRACKS)
-						return CHDERR_INVALID_DATA;
-					track = &toc->tracks[tracknum - 1];
-				}
-				else
-				{
-					break;
-				}
-			}
+                if (err == CHDERR_NONE)
+                {
+                    /* parse the metadata */
+                    type[0] = subtype[0] = 0;
+                    pregap = postgap = 0;
+                    if (sscanf(metadata, GDROM_TRACK_METADATA_FORMAT, &tracknum, type, subtype, &frames, &padframes, &pregap, pgtype, pgsub, &postgap) != 9)
+                        return CHDERR_INVALID_DATA;
+                    if (tracknum == 0 || tracknum > CD_MAX_TRACKS)
+                        return CHDERR_INVALID_DATA;
+                    track = &toc->tracks[tracknum - 1];
+                }
+                else
+                {
+                    break;
+                }
+            }
 		}
 
 		/* extract the track type and determine the data size */
@@ -791,7 +791,7 @@ chd_error cdrom_parse_metadata(chd_file *chd, cdrom_toc *toc)
 
 		/* set the frames and extra frames data */
 		track->frames = frames;
-		track->padframes = padframes;
+        track->padframes = padframes;
 		int padded = (frames + CD_TRACK_PADDING - 1) / CD_TRACK_PADDING;
 		track->extraframes = padded * CD_TRACK_PADDING - frames;
 
@@ -812,7 +812,7 @@ chd_error cdrom_parse_metadata(chd_file *chd, cdrom_toc *toc)
 	if (toc->numtrks > 0)
 		return CHDERR_NONE;
 
-	printf("toc->numtrks = %d?!\n", toc->numtrks);
+    printf("toc->numtrks = %d?!\n", toc->numtrks);
 
 	/* look for old-style metadata */
 	dynamic_buffer oldmetadata;
@@ -872,25 +872,25 @@ chd_error cdrom_write_metadata(chd_file *chd, const cdrom_toc *toc)
 	/* write the metadata */
 	for (i = 0; i < toc->numtrks; i++)
 	{
-		astring metadata;
-		if (!(toc->flags & CD_FLAG_GDROM))
-		{
-			metadata.format(CDROM_TRACK_METADATA2_FORMAT, i + 1, cdrom_get_type_string(toc->tracks[i].trktype),
-					cdrom_get_subtype_string(toc->tracks[i].subtype), toc->tracks[i].frames, toc->tracks[i].pregap,
-					cdrom_get_type_string(toc->tracks[i].pgtype), cdrom_get_subtype_string(toc->tracks[i].pgsub),
-					toc->tracks[i].postgap);
+        astring metadata;
+        if (!(toc->flags & CD_FLAG_GDROM))
+        {
+            metadata.format(CDROM_TRACK_METADATA2_FORMAT, i + 1, cdrom_get_type_string(toc->tracks[i].trktype),
+                    cdrom_get_subtype_string(toc->tracks[i].subtype), toc->tracks[i].frames, toc->tracks[i].pregap,
+                    cdrom_get_type_string(toc->tracks[i].pgtype), cdrom_get_subtype_string(toc->tracks[i].pgsub),
+                    toc->tracks[i].postgap);
 
-			err = chd->write_metadata(CDROM_TRACK_METADATA2_TAG, i, metadata);
-		}
-		else
-		{
-			metadata.format(GDROM_TRACK_METADATA_FORMAT, i + 1, cdrom_get_type_string(toc->tracks[i].trktype),
-					cdrom_get_subtype_string(toc->tracks[i].subtype), toc->tracks[i].frames, toc->tracks[i].padframes, 
-					toc->tracks[i].pregap, cdrom_get_type_string(toc->tracks[i].pgtype), 
-					cdrom_get_subtype_string(toc->tracks[i].pgsub), toc->tracks[i].postgap);
+            err = chd->write_metadata(CDROM_TRACK_METADATA2_TAG, i, metadata);
+        }
+        else
+        {
+            metadata.format(GDROM_TRACK_METADATA_FORMAT, i + 1, cdrom_get_type_string(toc->tracks[i].trktype),
+                    cdrom_get_subtype_string(toc->tracks[i].subtype), toc->tracks[i].frames, toc->tracks[i].padframes,
+                    toc->tracks[i].pregap, cdrom_get_type_string(toc->tracks[i].pgtype),
+                    cdrom_get_subtype_string(toc->tracks[i].pgsub), toc->tracks[i].postgap);
 
-			err = chd->write_metadata(GDROM_TRACK_METADATA_TAG, i, metadata);
-		}
+            err = chd->write_metadata(GDROM_TRACK_METADATA_TAG, i, metadata);
+        }
 		if (err != CHDERR_NONE)
 			return err;
 	}

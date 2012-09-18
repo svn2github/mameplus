@@ -7,8 +7,7 @@
 #include "cdrom.h"
 #include "cdda.h"
 
-typedef struct _cdda_info cdda_info;
-struct _cdda_info
+struct cdda_info
 {
 	sound_stream *		stream;
 	cdrom_file *		disc;
@@ -25,7 +24,7 @@ INLINE cdda_info *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == CDDA);
-	return (cdda_info *)downcast<legacy_device_base *>(device)->token();
+	return (cdda_info *)downcast<cdda_device *>(device)->token();
 }
 
 #define MAX_SECTORS ( 4 )
@@ -313,30 +312,42 @@ void cdda_set_channel_volume(device_t *device, int channel, int volume)
 	cdda->stream->set_output_gain(channel,volume / 100.0);
 }
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
+const device_type CDDA = &device_creator<cdda_device>;
 
-DEVICE_GET_INFO( cdda )
+cdda_device::cdda_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, CDDA, "CD/DA", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(cdda_info);				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(cdda_info));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( cdda );		break;
-		case DEVINFO_FCT_STOP:							/* nothing */								break;
-		case DEVINFO_FCT_RESET:							/* nothing */								break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "CD/DA");					break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "CD Audio");				break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");						break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);					break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void cdda_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void cdda_device::device_start()
+{
+	DEVICE_START_NAME( cdda )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void cdda_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(CDDA, cdda);

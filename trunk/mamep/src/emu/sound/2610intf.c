@@ -16,8 +16,7 @@
 #include "2610intf.h"
 #include "fm.h"
 
-typedef struct _ym2610_state ym2610_state;
-struct _ym2610_state
+struct ym2610_state
 {
 	sound_stream *	stream;
 	emu_timer *		timer[2];
@@ -32,7 +31,7 @@ INLINE ym2610_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == YM2610 || device->type() == YM2610B);
-	return (ym2610_state *)downcast<legacy_device_base *>(device)->token();
+	return (ym2610_state *)downcast<ym2610_device *>(device)->token();
 }
 
 
@@ -217,44 +216,84 @@ WRITE8_DEVICE_HANDLER( ym2610_control_port_b_w ) { ym2610_w(device, 2, data); }
 WRITE8_DEVICE_HANDLER( ym2610_data_port_a_w ) { ym2610_w(device, 1, data); }
 WRITE8_DEVICE_HANDLER( ym2610_data_port_b_w ) { ym2610_w(device, 3, data); }
 
+const device_type YM2610 = &device_creator<ym2610_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( ym2610 )
+ym2610_device::ym2610_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, YM2610, "YM2610", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(ym2610_state);				break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( ym2610 );				break;
-		case DEVINFO_FCT_STOP:							info->stop = DEVICE_STOP_NAME( ym2610 );				break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME( ym2610 );				break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "YM2610");							break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Yamaha FM");						break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");								break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);							break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(ym2610_state));
+}
+ym2610_device::ym2610_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, type, name, tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(ym2610_state));
 }
 
-DEVICE_GET_INFO( ym2610b )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "YM2610B");					break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		default:										DEVICE_GET_INFO_CALL(ym2610);				break;
-	}
+void ym2610_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void ym2610_device::device_start()
+{
+	DEVICE_START_NAME( ym2610 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void ym2610_device::device_reset()
+{
+	DEVICE_RESET_NAME( ym2610 )(this);
+}
+
+//-------------------------------------------------
+//  device_stop - device-specific stop
+//-------------------------------------------------
+
+void ym2610_device::device_stop()
+{
+	DEVICE_STOP_NAME( ym2610 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void ym2610_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(YM2610, ym2610);
-DEFINE_LEGACY_SOUND_DEVICE(YM2610B, ym2610b);
+const device_type YM2610B = &device_creator<ym2610b_device>;
+
+ym2610b_device::ym2610b_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: ym2610_device(mconfig, YM2610B, "YM2610B", tag, owner, clock)
+{
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void ym2610b_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

@@ -208,7 +208,7 @@ WRITE16_MEMBER(tecmosys_state::sound_w)
 	{
 		machine().scheduler().synchronize();
 		soundlatch_byte_w(space, 0x00, data & 0xff);
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -239,11 +239,11 @@ WRITE16_MEMBER(tecmosys_state::unk880000_w)
 
 		case 0x22/2:
 			machine().watchdog_reset();
-			//logerror( "watchdog_w( %06x, %04x ) @ %06x\n", (offset * 2)+0x880000, data, cpu_get_pc(&space.device()) );
+			//logerror( "watchdog_w( %06x, %04x ) @ %06x\n", (offset * 2)+0x880000, data, space.device().safe_pc() );
 			break;
 
 		default:
-			logerror( "unk880000_w( %06x, %04x ) @ %06x\n", (offset * 2)+0x880000, data, cpu_get_pc(&space.device()) );
+			logerror( "unk880000_w( %06x, %04x ) @ %06x\n", (offset * 2)+0x880000, data, space.device().safe_pc() );
 			break;
 	}
 }
@@ -252,7 +252,7 @@ READ16_MEMBER(tecmosys_state::unk880000_r)
 {
 	//UINT16 ret = m_880000regs[offset];
 
-	logerror( "unk880000_r( %06x ) @ %06x = %04x\n", (offset * 2 ) +0x880000, cpu_get_pc(&space.device()), m_880000regs[offset] );
+	logerror( "unk880000_r( %06x ) @ %06x = %04x\n", (offset * 2 ) +0x880000, space.device().safe_pc(), m_880000regs[offset] );
 
 	/* this code allows scroll regs to be updated, but tkdensho at least resets perodically */
 
@@ -439,7 +439,7 @@ GFXDECODE_END
 static void sound_irq(device_t *device, int irq)
 {
 	/* IRQ */
-	cputag_set_input_line(device->machine(), "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ymf262_interface tecmosys_ymf262_interface =
@@ -447,10 +447,9 @@ static const ymf262_interface tecmosys_ymf262_interface =
 	sound_irq		/* irq */
 };
 
-static MACHINE_START( tecmosys )
+void tecmosys_state::machine_start()
 {
-	tecmosys_state *state = machine.driver_data<tecmosys_state>();
-	state->membank("bank1")->configure_entries(0, 16, state->memregion("audiocpu")->base(), 0x4000);
+	membank("bank1")->configure_entries(0, 16, memregion("audiocpu")->base(), 0x4000);
 }
 
 static MACHINE_CONFIG_START( deroon, tecmosys_state )
@@ -463,7 +462,6 @@ static MACHINE_CONFIG_START( deroon, tecmosys_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_IO_MAP(io_map)
 
-	MCFG_MACHINE_START(tecmosys)
 
 	MCFG_GFXDECODE(tecmosys)
 
@@ -480,7 +478,6 @@ static MACHINE_CONFIG_START( deroon, tecmosys_state )
 
 	MCFG_PALETTE_LENGTH(0x4000+0x800)
 
-	MCFG_VIDEO_START(tecmosys)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

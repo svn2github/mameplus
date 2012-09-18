@@ -52,8 +52,8 @@ public:
 	int      m_mcu_select;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_mcu;
 
 	/* mcu */
@@ -104,6 +104,16 @@ public:
 	DECLARE_WRITE8_MEMBER(sound_control_1_w);
 	DECLARE_WRITE8_MEMBER(sound_control_2_w);
 	DECLARE_WRITE8_MEMBER(sound_control_3_w);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	TILE_GET_INFO_MEMBER(victnine_get_tile_info);
+	TILE_GET_INFO_MEMBER(get_rumba_tile_info);
+	virtual void machine_start();
+	DECLARE_MACHINE_RESET(flstory);
+	DECLARE_VIDEO_START(flstory);
+	DECLARE_VIDEO_START(victnine);
+	DECLARE_MACHINE_RESET(rumba);
+	DECLARE_VIDEO_START(rumba);
+	DECLARE_MACHINE_RESET(ta7630);
 };
 
 
@@ -113,10 +123,10 @@ public:
 
 /*----------- defined in video/flstory.c -----------*/
 
-VIDEO_START( flstory );
+
 SCREEN_UPDATE_IND16( flstory );
-VIDEO_START( victnine );
+
 SCREEN_UPDATE_IND16( victnine );
-VIDEO_START( rumba );
+
 SCREEN_UPDATE_IND16( rumba );
 

@@ -64,6 +64,10 @@ public:
 	DECLARE_WRITE8_MEMBER(ace_characterram_w);
 	DECLARE_WRITE8_MEMBER(ace_scoreram_w);
 	DECLARE_READ8_MEMBER(unk_r);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -79,13 +83,12 @@ READ8_MEMBER(aceal_state::ace_objpos_r)
 }
 #endif
 
-static VIDEO_START( ace )
+void aceal_state::video_start()
 {
-	aceal_state *state = machine.driver_data<aceal_state>();
-	gfx_element_set_source(machine.gfx[1], state->m_characterram);
-	gfx_element_set_source(machine.gfx[2], state->m_characterram);
-	gfx_element_set_source(machine.gfx[3], state->m_characterram);
-	gfx_element_set_source(machine.gfx[4], state->m_scoreram);
+	machine().gfx[1]->set_source(m_characterram);
+	machine().gfx[2]->set_source(m_characterram);
+	machine().gfx[3]->set_source(m_characterram);
+	machine().gfx[4]->set_source(m_scoreram);
 }
 
 static SCREEN_UPDATE_IND16( ace )
@@ -127,10 +130,10 @@ static SCREEN_UPDATE_IND16( ace )
 }
 
 
-static PALETTE_INIT( ace )
+void aceal_state::palette_init()
 {
-	palette_set_color(machine, 0, MAKE_RGB(0x00,0x00,0x00)); /* black */
-	palette_set_color(machine, 1, MAKE_RGB(0xff,0xff,0xff)); /* white */
+	palette_set_color(machine(), 0, MAKE_RGB(0x00,0x00,0x00)); /* black */
+	palette_set_color(machine(), 1, MAKE_RGB(0xff,0xff,0xff)); /* white */
 }
 
 
@@ -144,16 +147,16 @@ WRITE8_MEMBER(aceal_state::ace_characterram_w)
 			popmessage("write to %04x data = %02x\n", 0x8000 + offset, data);
 		}
 		m_characterram[offset] = data;
-		gfx_element_mark_dirty(machine().gfx[1], 0);
-		gfx_element_mark_dirty(machine().gfx[2], 0);
-		gfx_element_mark_dirty(machine().gfx[3], 0);
+		machine().gfx[1]->mark_dirty(0);
+		machine().gfx[2]->mark_dirty(0);
+		machine().gfx[3]->mark_dirty(0);
 	}
 }
 
 WRITE8_MEMBER(aceal_state::ace_scoreram_w)
 {
 	m_scoreram[offset] = data;
-	gfx_element_mark_dirty(machine().gfx[4], offset / 32);
+	machine().gfx[4]->mark_dirty(offset / 32);
 }
 
 READ8_MEMBER(aceal_state::unk_r)
@@ -323,26 +326,24 @@ GFXDECODE_END
 
 static void ace_postload(running_machine &machine)
 {
-	gfx_element_mark_dirty(machine.gfx[1], 0);
-	gfx_element_mark_dirty(machine.gfx[2], 0);
-	gfx_element_mark_dirty(machine.gfx[3], 0);
-	gfx_element_mark_dirty(machine.gfx[4], 0);
+	machine.gfx[1]->mark_dirty(0);
+	machine.gfx[2]->mark_dirty(0);
+	machine.gfx[3]->mark_dirty(0);
+	machine.gfx[4]->mark_dirty(0);
 }
 
-static MACHINE_START( ace )
+void aceal_state::machine_start()
 {
-	aceal_state *state = machine.driver_data<aceal_state>();
-	state->save_item(NAME(state->m_objpos));
-	machine.save().register_postload(save_prepost_delegate(FUNC(ace_postload), &machine));
+	save_item(NAME(m_objpos));
+	machine().save().register_postload(save_prepost_delegate(FUNC(ace_postload), &machine()));
 }
 
-static MACHINE_RESET( ace )
+void aceal_state::machine_reset()
 {
-	aceal_state *state = machine.driver_data<aceal_state>();
 	int i;
 
 	for (i = 0; i < 8; i++)
-		state->m_objpos[i] = 0;
+		m_objpos[i] = 0;
 }
 
 static MACHINE_CONFIG_START( ace, aceal_state )
@@ -351,8 +352,6 @@ static MACHINE_CONFIG_START( ace, aceal_state )
 	MCFG_CPU_ADD("maincpu", I8080, MASTER_CLOCK/9)	/* 2 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 
-	MCFG_MACHINE_START(ace)
-	MCFG_MACHINE_RESET(ace)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -365,8 +364,6 @@ static MACHINE_CONFIG_START( ace, aceal_state )
 	MCFG_GFXDECODE(ace)
 	MCFG_PALETTE_LENGTH(2)
 
-	MCFG_PALETTE_INIT(ace)
-	MCFG_VIDEO_START(ace)
 
 	/* sound hardware */
 	/* ???? */

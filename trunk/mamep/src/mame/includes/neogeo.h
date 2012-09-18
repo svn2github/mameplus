@@ -36,11 +36,12 @@ class neogeo_state : public driver_device
 {
 public:
 	neogeo_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag),
+		  m_save_ram(*this, "save_ram") { }
 
 	/* memory pointers */
 //  UINT8      *memcard_data;   // this currently uses generic handlers
-//  UINT16     *save_ram;       // this currently uses generic handlers
+	required_shared_ptr<UINT16> m_save_ram;       // this currently uses generic handlers
 
 	/* video-related */
 	UINT8      *m_sprite_gfx;
@@ -109,8 +110,8 @@ public:
 	int        m_fixed_layer_bank_type;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_upd4990a;
 	DECLARE_WRITE8_MEMBER(audio_cpu_clear_nmi_w);
 	DECLARE_WRITE16_MEMBER(io_control_w);
@@ -234,6 +235,10 @@ public:
 	DECLARE_DRIVER_INIT(kof97pla);
 	DECLARE_DRIVER_INIT(jckeygpd);
 	void mvs_install_protection(device_image_interface& image);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void video_reset();
 };
 
 
@@ -338,13 +343,12 @@ void kf2k2mp_px_decrypt(running_machine &machine);
 void kof2002b_gfx_decrypt(running_machine &machine, UINT8 *src, int size);
 void cthd2003_AES_protection(running_machine &machine);
 void kof10thu_decrypt_68K(running_machine &machine);
-
 void mvs_install_protection(device_image_interface& image);
 
 /*----------- defined in video/neogeo.c -----------*/
 
-VIDEO_START( neogeo );
-VIDEO_RESET( neogeo );
+
+
 SCREEN_UPDATE_RGB32( neogeo );
 
 

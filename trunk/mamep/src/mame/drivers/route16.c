@@ -107,7 +107,7 @@ WRITE8_MEMBER(route16_state::route16_sharedram_w)
 	if (offset >= 0x0313 && offset <= 0x0319 && data == 0xff)
 	{
 		// Let the other CPU run
-		device_yield(&space.device());
+		space.device().execute().yield();
 	}
 }
 
@@ -941,9 +941,9 @@ ROM_END
 
 READ8_MEMBER(route16_state::routex_prot_read)
 {
-	if (cpu_get_pc(&space.device()) == 0x2f) return 0xfb;
+	if (space.device().safe_pc() == 0x2f) return 0xfb;
 
-	logerror ("cpu '%s' (PC=%08X): unmapped prot read\n", space.device().tag(), cpu_get_pc(&space.device()));
+	logerror ("cpu '%s' (PC=%08X): unmapped prot read\n", space.device().tag(), space.device().safe_pc());
 	return 0x00;
 
 }

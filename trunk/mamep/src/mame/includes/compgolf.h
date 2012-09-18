@@ -34,11 +34,18 @@ public:
 	DECLARE_WRITE8_MEMBER(compgolf_scrollx_lo_w);
 	DECLARE_WRITE8_MEMBER(compgolf_scrolly_lo_w);
 	DECLARE_DRIVER_INIT(compgolf);
+	TILE_GET_INFO_MEMBER(get_text_info);
+	TILEMAP_MAPPER_MEMBER(back_scan);
+	TILE_GET_INFO_MEMBER(get_back_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/compgolf.c -----------*/
 
-PALETTE_INIT ( compgolf );
-VIDEO_START  ( compgolf );
+
+
 SCREEN_UPDATE_IND16( compgolf );

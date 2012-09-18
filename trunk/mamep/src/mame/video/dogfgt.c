@@ -11,9 +11,9 @@
 
 ***************************************************************************/
 
-PALETTE_INIT( dogfgt )
+void dogfgt_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* first 16 colors are RAM */
@@ -37,7 +37,7 @@ PALETTE_INIT( dogfgt )
 		bit2 = (*color_prom >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i + 16, MAKE_RGB(r,g,b));
+		palette_set_color(machine(), i + 16, MAKE_RGB(r,g,b));
 		color_prom++;
 	}
 }
@@ -49,13 +49,12 @@ PALETTE_INIT( dogfgt )
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(dogfgt_state::get_tile_info)
 {
-	dogfgt_state *state = machine.driver_data<dogfgt_state>();
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
-			state->m_bgvideoram[tile_index],
-			state->m_bgvideoram[tile_index + 0x400] & 0x03,
+			m_bgvideoram[tile_index],
+			m_bgvideoram[tile_index + 0x400] & 0x03,
 			0);
 }
 
@@ -66,16 +65,15 @@ static TILE_GET_INFO( get_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( dogfgt )
+void dogfgt_state::video_start()
 {
-	dogfgt_state *state = machine.driver_data<dogfgt_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_rows, 16, 16, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(dogfgt_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
 
-	state->m_bitmapram = auto_alloc_array(machine, UINT8, BITMAPRAM_SIZE);
-	state->save_pointer(NAME(state->m_bitmapram), BITMAPRAM_SIZE);
+	m_bitmapram = auto_alloc_array(machine(), UINT8, BITMAPRAM_SIZE);
+	save_pointer(NAME(m_bitmapram), BITMAPRAM_SIZE);
 
-	machine.primary_screen->register_screen_bitmap(state->m_pixbitmap);
-	state->save_item(NAME(state->m_pixbitmap));
+	machine().primary_screen->register_screen_bitmap(m_pixbitmap);
+	save_item(NAME(m_pixbitmap));
 }
 
 
@@ -168,7 +166,7 @@ WRITE8_MEMBER(dogfgt_state::dogfgt_1800_w)
 	flip_screen_set(data & 0x80);
 
 	/* other bits unused? */
-	logerror("PC %04x: 1800 = %02x\n", cpu_get_pc(&space.device()), data);
+	logerror("PC %04x: 1800 = %02x\n", space.device().safe_pc(), data);
 }
 
 

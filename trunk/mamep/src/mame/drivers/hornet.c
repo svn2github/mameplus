@@ -366,6 +366,9 @@ public:
 	DECLARE_WRITE32_MEMBER(dsp_dataram1_w);
 	DECLARE_DRIVER_INIT(hornet);
 	DECLARE_DRIVER_INIT(hornet_2board);
+	virtual void machine_start();
+	virtual void machine_reset();
+	DECLARE_MACHINE_RESET(hornet_2board);
 };
 
 
@@ -410,7 +413,7 @@ WRITE32_MEMBER(hornet_state::hornet_k037122_reg_w)
 
 static void voodoo_vblank_0(device_t *device, int param)
 {
-	cputag_set_input_line(device->machine(), "maincpu", INPUT_LINE_IRQ0, param);
+	device->machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, param);
 }
 
 static void voodoo_vblank_1(device_t *device, int param)
@@ -546,7 +549,7 @@ WRITE8_MEMBER(hornet_state::sysreg_w)
 			adc1213x_di_w(adc12138, 0, (data >> 1) & 0x1);
 			adc1213x_sclk_w(adc12138, 0, data & 0x1);
 
-			cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
+			machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
 			mame_printf_debug("System register 1 = %02X\n", data);
 			break;
 
@@ -581,9 +584,9 @@ WRITE8_MEMBER(hornet_state::sysreg_w)
                 0x01 = EXRGB
             */
 			if (data & 0x80)
-				cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ1, CLEAR_LINE);
+				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ1, CLEAR_LINE);
 			if (data & 0x40)
-				cputag_set_input_line(machine(), "maincpu", INPUT_LINE_IRQ0, CLEAR_LINE);
+				machine().device("maincpu")->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 			set_cgboard_id((data >> 4) & 3);
 			break;
 	}
@@ -621,7 +624,7 @@ WRITE32_MEMBER(hornet_state::gun_w)
 	if (mem_mask == 0xffff0000)
 	{
 		m_gn680_latch = data>>16;
-		cputag_set_input_line(machine(), "gn680", M68K_IRQ_6, HOLD_LINE);
+		machine().device("gn680")->execute().set_input_line(M68K_IRQ_6, HOLD_LINE);
 	}
 }
 
@@ -672,7 +675,7 @@ WRITE16_MEMBER(hornet_state::gn680_sysctrl)
 
 READ16_MEMBER(hornet_state::gn680_latch_r)
 {
-	cputag_set_input_line(machine(), "gn680", M68K_IRQ_6, CLEAR_LINE);
+	machine().device("gn680")->execute().set_input_line(M68K_IRQ_6, CLEAR_LINE);
 
 	return m_gn680_latch;
 }
@@ -879,40 +882,39 @@ static const sharc_config sharc_cfg =
 */
 static TIMER_CALLBACK( irq_off );
 
-static MACHINE_START( hornet )
+void hornet_state::machine_start()
 {
-	hornet_state *state = machine.driver_data<hornet_state>();
-	state->m_jvs_sdata_ptr = 0;
-	state->m_jvs_sdata = auto_alloc_array_clear(machine, UINT8, 1024);
+	m_jvs_sdata_ptr = 0;
+	m_jvs_sdata = auto_alloc_array_clear(machine(), UINT8, 1024);
 
 	/* set conservative DRC options */
-	ppcdrc_set_options(machine.device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
+	ppcdrc_set_options(machine().device("maincpu"), PPCDRC_COMPATIBLE_OPTIONS);
 
 	/* configure fast RAM regions for DRC */
-	ppcdrc_add_fastram(machine.device("maincpu"), 0x00000000, 0x003fffff, FALSE, state->m_workram);
+	ppcdrc_add_fastram(machine().device("maincpu"), 0x00000000, 0x003fffff, FALSE, m_workram);
 
-	state_save_register_global(machine, state->m_led_reg0);
-	state_save_register_global(machine, state->m_led_reg1);
-	state_save_register_global_pointer(machine, state->m_jvs_sdata, 1024);
-	state_save_register_global(machine, state->m_jvs_sdata_ptr);
+	state_save_register_global(machine(), m_led_reg0);
+	state_save_register_global(machine(), m_led_reg1);
+	state_save_register_global_pointer(machine(), m_jvs_sdata, 1024);
+	state_save_register_global(machine(), m_jvs_sdata_ptr);
 
-	state->m_sound_irq_timer = machine.scheduler().timer_alloc(FUNC(irq_off));
+	m_sound_irq_timer = machine().scheduler().timer_alloc(FUNC(irq_off));
 }
 
-static MACHINE_RESET( hornet )
+void hornet_state::machine_reset()
 {
-	UINT8 *usr3 = machine.root_device().memregion("user3")->base();
-	UINT8 *usr5 = machine.root_device().memregion("user5")->base();
+	UINT8 *usr3 = machine().root_device().memregion("user3")->base();
+	UINT8 *usr5 = machine().root_device().memregion("user5")->base();
 	if (usr3 != NULL)
 	{
-		machine.root_device().membank("bank1")->configure_entries(0, machine.root_device().memregion("user3")->bytes() / 0x10000, usr3, 0x10000);
-		machine.root_device().membank("bank1")->set_entry(0);
+		machine().root_device().membank("bank1")->configure_entries(0, machine().root_device().memregion("user3")->bytes() / 0x10000, usr3, 0x10000);
+		machine().root_device().membank("bank1")->set_entry(0);
 	}
 
-	cputag_set_input_line(machine, "dsp", INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("dsp")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 	if (usr5)
-		machine.root_device().membank("bank5")->set_base(usr5);
+		machine().root_device().membank("bank5")->set_base(usr5);
 }
 
 static double adc12138_input_callback( device_t *device, UINT8 input )
@@ -933,7 +935,7 @@ static const adc12138_interface hornet_adc_interface = {
 
 static TIMER_CALLBACK( irq_off )
 {
-	cputag_set_input_line(machine, "audiocpu", param, CLEAR_LINE);
+	machine.device("audiocpu")->execute().set_input_line(param, CLEAR_LINE);
 }
 
 static void sound_irq_callback( running_machine &machine, int irq )
@@ -941,7 +943,7 @@ static void sound_irq_callback( running_machine &machine, int irq )
 	hornet_state *state = machine.driver_data<hornet_state>();
 	int line = (irq == 0) ? INPUT_LINE_IRQ1 : INPUT_LINE_IRQ2;
 
-	cputag_set_input_line(machine, "audiocpu", line, ASSERT_LINE);
+	machine.device("audiocpu")->execute().set_input_line(line, ASSERT_LINE);
     state->m_sound_irq_timer->adjust(attotime::from_usec(1), line);
 }
 
@@ -975,6 +977,17 @@ static const k037122_interface hornet_k037122_intf_r =
 	"rscreen", 1
 };
 
+static const voodoo_config hornet_voodoo_intf =
+{
+	2, //               fbmem;
+	4,//                tmumem0;
+	0,//                tmumem1;
+	"screen",//         screen;
+	"dsp",//            cputag;
+	voodoo_vblank_0,//  vblank;
+	NULL,//             stall;
+};
+
 static MACHINE_CONFIG_START( hornet, hornet_state )
 
 	/* basic machine hardware */
@@ -991,15 +1004,10 @@ static MACHINE_CONFIG_START( hornet, hornet_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START( hornet )
-	MCFG_MACHINE_RESET( hornet )
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_3DFX_VOODOO_1_ADD("voodoo0", STD_VOODOO_1_CLOCK, 2, "screen")
-	MCFG_3DFX_VOODOO_CPU("dsp")
-	MCFG_3DFX_VOODOO_TMU_MEMORY(0, 4)
-	MCFG_3DFX_VOODOO_VBLANK(voodoo_vblank_0)
+	MCFG_3DFX_VOODOO_1_ADD("voodoo0", STD_VOODOO_1_CLOCK, hornet_voodoo_intf)
 
 	MCFG_K033906_ADD("k033906_1", hornet_k033906_intf_0)
 
@@ -1028,25 +1036,47 @@ static MACHINE_CONFIG_START( hornet, hornet_state )
 MACHINE_CONFIG_END
 
 
-static MACHINE_RESET( hornet_2board )
+MACHINE_RESET_MEMBER(hornet_state,hornet_2board)
 {
-	UINT8 *usr3 = machine.root_device().memregion("user3")->base();
-	UINT8 *usr5 = machine.root_device().memregion("user5")->base();
+	UINT8 *usr3 = machine().root_device().memregion("user3")->base();
+	UINT8 *usr5 = machine().root_device().memregion("user5")->base();
 
 	if (usr3 != NULL)
 	{
-		machine.root_device().membank("bank1")->configure_entries(0, machine.root_device().memregion("user3")->bytes() / 0x10000, usr3, 0x10000);
-		machine.root_device().membank("bank1")->set_entry(0);
+		machine().root_device().membank("bank1")->configure_entries(0, machine().root_device().memregion("user3")->bytes() / 0x10000, usr3, 0x10000);
+		machine().root_device().membank("bank1")->set_entry(0);
 	}
-	cputag_set_input_line(machine, "dsp", INPUT_LINE_RESET, ASSERT_LINE);
-	cputag_set_input_line(machine, "dsp2", INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("dsp")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("dsp2")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 	if (usr5)
 	{
-		machine.root_device().membank("bank5")->set_base(usr5);
-		machine.root_device().membank("bank6")->set_base(usr5);
+		machine().root_device().membank("bank5")->set_base(usr5);
+		machine().root_device().membank("bank6")->set_base(usr5);
 	}
 }
+
+static const voodoo_config voodoo_l_intf =
+{
+	2, //               fbmem;
+	4,//                tmumem0;
+	0,//                tmumem1;
+	"lscreen",//        screen;
+	"dsp",//            cputag;
+	voodoo_vblank_0,//  vblank;
+	NULL,//             stall;
+};
+
+static const voodoo_config voodoo_r_intf =
+{
+	2, //               fbmem;
+	4,//                tmumem0;
+	0,//                tmumem1;
+	"rscreen",//        screen;
+	"dsp2",//           cputag;
+	voodoo_vblank_1,//  vblank;
+	NULL,//             stall;
+};
 
 static MACHINE_CONFIG_DERIVED( hornet_2board, hornet )
 
@@ -1054,7 +1084,7 @@ static MACHINE_CONFIG_DERIVED( hornet_2board, hornet )
 	MCFG_CPU_CONFIG(sharc_cfg)
 	MCFG_CPU_DATA_MAP(sharc1_map)
 
-	MCFG_MACHINE_RESET(hornet_2board)
+	MCFG_MACHINE_RESET_OVERRIDE(hornet_state,hornet_2board)
 
 
 	MCFG_DEVICE_REMOVE("k037122_1")
@@ -1062,15 +1092,8 @@ static MACHINE_CONFIG_DERIVED( hornet_2board, hornet )
 	MCFG_K037122_ADD("k037122_2", hornet_k037122_intf_r)
 
 	MCFG_DEVICE_REMOVE("voodoo0")
-	MCFG_3DFX_VOODOO_1_ADD("voodoo0", STD_VOODOO_1_CLOCK, 2, "lscreen")
-	MCFG_3DFX_VOODOO_CPU("dsp")
-	MCFG_3DFX_VOODOO_TMU_MEMORY(0, 4)
-	MCFG_3DFX_VOODOO_VBLANK(voodoo_vblank_0)
-
-	MCFG_3DFX_VOODOO_1_ADD("voodoo1", STD_VOODOO_1_CLOCK, 2, "rscreen")
-	MCFG_3DFX_VOODOO_CPU("dsp2")
-	MCFG_3DFX_VOODOO_TMU_MEMORY(0, 4)
-	MCFG_3DFX_VOODOO_VBLANK(voodoo_vblank_1)
+	MCFG_3DFX_VOODOO_1_ADD("voodoo0", STD_VOODOO_1_CLOCK, voodoo_l_intf)
+	MCFG_3DFX_VOODOO_1_ADD("voodoo1", STD_VOODOO_1_CLOCK, voodoo_r_intf)
 
 	MCFG_K033906_ADD("k033906_2", hornet_k033906_intf_1)
 
@@ -1101,16 +1124,10 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( hornet_2board_v2, hornet_2board )
 
 	MCFG_DEVICE_REMOVE("voodoo0")
-	MCFG_3DFX_VOODOO_2_ADD("voodoo0", STD_VOODOO_2_CLOCK, 2, "lscreen")
-	MCFG_3DFX_VOODOO_CPU("dsp")
-	MCFG_3DFX_VOODOO_TMU_MEMORY(0, 4)
-	MCFG_3DFX_VOODOO_VBLANK(voodoo_vblank_0)
+	MCFG_3DFX_VOODOO_2_ADD("voodoo0", STD_VOODOO_2_CLOCK, voodoo_l_intf)
 
 	MCFG_DEVICE_REMOVE("voodoo1")
-	MCFG_3DFX_VOODOO_2_ADD("voodoo1", STD_VOODOO_2_CLOCK, 2, "rscreen")
-	MCFG_3DFX_VOODOO_CPU("dsp2")
-	MCFG_3DFX_VOODOO_TMU_MEMORY(0, 4)
-	MCFG_3DFX_VOODOO_VBLANK(voodoo_vblank_1)
+	MCFG_3DFX_VOODOO_2_ADD("voodoo1", STD_VOODOO_2_CLOCK, voodoo_r_intf)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( sscope2, hornet_2board_v2)

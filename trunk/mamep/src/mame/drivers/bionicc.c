@@ -73,14 +73,14 @@
 WRITE16_MEMBER(bionicc_state::hacked_controls_w)
 {
 
-	logerror("%06x: hacked_controls_w %04x %02x\n", cpu_get_pc(&space.device()), offset, data);
+	logerror("%06x: hacked_controls_w %04x %02x\n", space.device().safe_pc(), offset, data);
 	COMBINE_DATA(&m_inp[offset]);
 }
 
 READ16_MEMBER(bionicc_state::hacked_controls_r)
 {
 
-	logerror("%06x: hacked_controls_r %04x %04x\n", cpu_get_pc(&space.device()), offset, m_inp[offset]);
+	logerror("%06x: hacked_controls_r %04x %04x\n", space.device().safe_pc(), offset, m_inp[offset]);
 	return m_inp[offset];
 }
 
@@ -128,10 +128,10 @@ static TIMER_DEVICE_CALLBACK( bionicc_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "maincpu", 2, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(2, HOLD_LINE);
 
 	if(scanline == 0) // vblank-in or i8751 related irq
-		cputag_set_input_line(timer.machine(), "maincpu", 4, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(4, HOLD_LINE);
 }
 
 
@@ -328,27 +328,25 @@ GFXDECODE_END
  *
  *************************************/
 
-static MACHINE_START( bionicc )
+void bionicc_state::machine_start()
 {
-	bionicc_state *state = machine.driver_data<bionicc_state>();
 
-	state->save_item(NAME(state->m_soundcommand));
-	state->save_item(NAME(state->m_inp));
-	state->save_item(NAME(state->m_scroll));
+	save_item(NAME(m_soundcommand));
+	save_item(NAME(m_inp));
+	save_item(NAME(m_scroll));
 }
 
-static MACHINE_RESET( bionicc )
+void bionicc_state::machine_reset()
 {
-	bionicc_state *state = machine.driver_data<bionicc_state>();
 
-	state->m_inp[0] = 0;
-	state->m_inp[1] = 0;
-	state->m_inp[2] = 0;
-	state->m_scroll[0] = 0;
-	state->m_scroll[1] = 0;
-	state->m_scroll[2] = 0;
-	state->m_scroll[3] = 0;
-	state->m_soundcommand = 0;
+	m_inp[0] = 0;
+	m_inp[1] = 0;
+	m_inp[2] = 0;
+	m_scroll[0] = 0;
+	m_scroll[1] = 0;
+	m_scroll[2] = 0;
+	m_scroll[3] = 0;
+	m_soundcommand = 0;
 }
 
 static MACHINE_CONFIG_START( bionicc, bionicc_state )
@@ -366,8 +364,6 @@ static MACHINE_CONFIG_START( bionicc, bionicc_state )
      */
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,4*60)
 
-	MCFG_MACHINE_START(bionicc)
-	MCFG_MACHINE_RESET(bionicc)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -381,7 +377,6 @@ static MACHINE_CONFIG_START( bionicc, bionicc_state )
 	MCFG_GFXDECODE(bionicc)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(bionicc)
 
 	MCFG_BUFFERED_SPRITERAM16_ADD("spriteram")
 

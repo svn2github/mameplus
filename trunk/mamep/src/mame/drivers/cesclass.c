@@ -53,6 +53,7 @@ protected:
 	// driver_device overrides
 	virtual void video_start();
 
+	virtual void palette_init();
 };
 
 
@@ -90,12 +91,12 @@ UINT32 cesclassic_state::screen_update(screen_device &screen, bitmap_rgb32 &bitm
 
 WRITE16_MEMBER( cesclassic_state::irq2_ack_w )
 {
-	device_set_input_line(m_maincpu, 2, CLEAR_LINE);
+	m_maincpu->set_input_line(2, CLEAR_LINE);
 }
 
 WRITE16_MEMBER( cesclassic_state::irq3_ack_w )
 {
-	device_set_input_line(m_maincpu, 3, CLEAR_LINE);
+	m_maincpu->set_input_line(3, CLEAR_LINE);
 }
 
 WRITE16_MEMBER( cesclassic_state::lamps_w )
@@ -232,12 +233,12 @@ static INPUT_PORTS_START( cesclassic )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_CUSTOM ) PORT_VBLANK("l_lcd")
 INPUT_PORTS_END
 
-static PALETTE_INIT( cesclassic )
+void cesclassic_state::palette_init()
 {
 	int i;
 
 	for (i = 0; i < 4; i++)
-		palette_set_color_rgb(machine, i, pal2bit(i), 0, 0);
+		palette_set_color_rgb(machine(), i, pal2bit(i), 0, 0);
 }
 
 static MACHINE_CONFIG_START( cesclassic, cesclassic_state )
@@ -259,7 +260,6 @@ static MACHINE_CONFIG_START( cesclassic, cesclassic_state )
 	MCFG_DEFAULT_LAYOUT( layout_lcd )
 
 	MCFG_PALETTE_LENGTH(4)
-	MCFG_PALETTE_INIT(cesclassic)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 	MCFG_OKIM6295_ADD("oki", 24000000/16, OKIM6295_PIN7_LOW)

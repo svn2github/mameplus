@@ -51,15 +51,14 @@ enum {
 //============================================================
 
 
-typedef struct hentry {
+struct hentry  {
 	struct hentry *h;
 	char *e;
-} hentry;
+};
 
-typedef struct _win_i win_i;
+struct win_i;
 
-typedef struct _edit edit;
-struct _edit {
+struct edit {
 	GtkEntry *edit_w;
 	struct hentry *h, *ch;
 	char *hold;
@@ -68,7 +67,7 @@ struct _edit {
 	win_i *cbp;
 };
 
-struct _win_i {
+struct win_i {
 	int 					type;
 	win_i *					next;
 	GtkWidget *				win;

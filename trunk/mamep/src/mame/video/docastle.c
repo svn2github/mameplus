@@ -29,9 +29,9 @@
 
 ***************************************************************************/
 
-PALETTE_INIT( docastle )
+void docastle_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	for (i = 0; i < 256; i++)
@@ -57,8 +57,8 @@ PALETTE_INIT( docastle )
 		/* because the graphics are decoded as 4bpp with the top bit used for transparency
            or priority, we create matching 3bpp sets of palette entries, which effectively
            ignores the value of the top bit */
-		palette_set_color(machine, ((i & 0xf8) << 1) | 0x00 | (i & 0x07), MAKE_RGB(r,g,b));
-		palette_set_color(machine, ((i & 0xf8) << 1) | 0x08 | (i & 0x07), MAKE_RGB(r,g,b));
+		palette_set_color(machine(), ((i & 0xf8) << 1) | 0x00 | (i & 0x07), MAKE_RGB(r,g,b));
+		palette_set_color(machine(), ((i & 0xf8) << 1) | 0x08 | (i & 0x07), MAKE_RGB(r,g,b));
 		color_prom++;
 	}
 }
@@ -101,30 +101,29 @@ WRITE8_MEMBER(docastle_state::docastle_flipscreen_on_w)
 	m_do_tilemap->mark_all_dirty();
 }
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(docastle_state::get_tile_info)
 {
-	docastle_state *state = machine.driver_data<docastle_state>();
-	int code = state->m_videoram[tile_index] + 8 * (state->m_colorram[tile_index] & 0x20);
-	int color = state->m_colorram[tile_index] & 0x1f;
+	int code = m_videoram[tile_index] + 8 * (m_colorram[tile_index] & 0x20);
+	int color = m_colorram[tile_index] & 0x1f;
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
 static void video_start_common( running_machine &machine, UINT32 tile_transmask )
 {
 	docastle_state *state = machine.driver_data<docastle_state>();
-	state->m_do_tilemap = tilemap_create(machine, get_tile_info, tilemap_scan_rows,  8, 8, 32, 32);
+	state->m_do_tilemap = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(docastle_state::get_tile_info),state), TILEMAP_SCAN_ROWS,  8, 8, 32, 32);
 	state->m_do_tilemap->set_transmask(0, tile_transmask, 0x0000);
 }
 
-VIDEO_START( docastle )
+void docastle_state::video_start()
 {
-	video_start_common(machine, 0x00ff);
+	video_start_common(machine(), 0x00ff);
 }
 
-VIDEO_START( dorunrun )
+VIDEO_START_MEMBER(docastle_state,dorunrun)
 {
-	video_start_common(machine, 0xff00);
+	video_start_common(machine(), 0xff00);
 }
 
 static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
@@ -138,7 +137,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 	{
 		int sx, sy, flipx, flipy, code, color;
 
-		if (machine.gfx[1]->total_elements > 256)
+		if (machine.gfx[1]->elements() > 256)
 		{
 			/* spriteram
 

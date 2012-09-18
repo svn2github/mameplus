@@ -16,45 +16,42 @@
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(vastar_state::get_fg_tile_info)
 {
-	vastar_state *state = machine.driver_data<vastar_state>();
-	UINT8 *videoram = state->m_fgvideoram;
+	UINT8 *videoram = m_fgvideoram;
 	int code, color;
 
 	code = videoram[tile_index + 0x800] | (videoram[tile_index + 0x400] << 8);
 	color = videoram[tile_index];
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code,
 			color & 0x3f,
 			0);
 }
 
-static TILE_GET_INFO( get_bg1_tile_info )
+TILE_GET_INFO_MEMBER(vastar_state::get_bg1_tile_info)
 {
-	vastar_state *state = machine.driver_data<vastar_state>();
-	UINT8 *videoram = state->m_bg1videoram;
+	UINT8 *videoram = m_bg1videoram;
 	int code, color;
 
 	code = videoram[tile_index + 0x800] | (videoram[tile_index] << 8);
 	color = videoram[tile_index + 0xc00];
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			4,
 			code,
 			color & 0x3f,
 			0);
 }
 
-static TILE_GET_INFO( get_bg2_tile_info )
+TILE_GET_INFO_MEMBER(vastar_state::get_bg2_tile_info)
 {
-	vastar_state *state = machine.driver_data<vastar_state>();
-	UINT8 *videoram = state->m_bg2videoram;
+	UINT8 *videoram = m_bg2videoram;
 	int code, color;
 
 	code = videoram[tile_index + 0x800] | (videoram[tile_index] << 8);
 	color = videoram[tile_index + 0xc00];
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			3,
 			code,
 			color & 0x3f,
@@ -68,20 +65,19 @@ static TILE_GET_INFO( get_bg2_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( vastar )
+void vastar_state::video_start()
 {
-	vastar_state *state = machine.driver_data<vastar_state>();
 
-	state->m_fg_tilemap  = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows,8,8,32,32);
-	state->m_bg1_tilemap = tilemap_create(machine, get_bg1_tile_info,tilemap_scan_rows,8,8,32,32);
-	state->m_bg2_tilemap = tilemap_create(machine, get_bg2_tile_info,tilemap_scan_rows,8,8,32,32);
+	m_fg_tilemap  = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(vastar_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS,8,8,32,32);
+	m_bg1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(vastar_state::get_bg1_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
+	m_bg2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(vastar_state::get_bg2_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
 
-	state->m_fg_tilemap->set_transparent_pen(0);
-	state->m_bg1_tilemap->set_transparent_pen(0);
-	state->m_bg2_tilemap->set_transparent_pen(0);
+	m_fg_tilemap->set_transparent_pen(0);
+	m_bg1_tilemap->set_transparent_pen(0);
+	m_bg2_tilemap->set_transparent_pen(0);
 
-	state->m_bg1_tilemap->set_scroll_cols(32);
-	state->m_bg2_tilemap->set_scroll_cols(32);
+	m_bg1_tilemap->set_scroll_cols(32);
+	m_bg2_tilemap->set_scroll_cols(32);
 }
 
 

@@ -16,9 +16,9 @@
 
 ***************************************************************************/
 
-PALETTE_INIT( ironhors )
+void ironhors_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	static const int resistances[4] = { 2000, 1000, 470, 220 };
 	double rweights[4], gweights[4], bweights[4];
 	int i;
@@ -30,7 +30,7 @@ PALETTE_INIT( ironhors )
 			4, resistances, bweights, 1000, 0);
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x100);
+	machine().colortable = colortable_alloc(machine(), 0x100);
 
 	/* create a lookup table for the palette */
 	for (i = 0; i < 0x100; i++)
@@ -59,7 +59,7 @@ PALETTE_INIT( ironhors )
 		bit3 = (color_prom[i + 0x200] >> 3) & 0x01;
 		b = combine_4_weights(bweights, bit0, bit1, bit2, bit3);
 
-		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r, g, b));
+		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r, g, b));
 	}
 
 	/* color_prom now points to the beginning of the lookup table,*/
@@ -74,7 +74,7 @@ PALETTE_INIT( ironhors )
 		for (j = 0; j < 8; j++)
 		{
 			UINT8 ctabentry = (j << 5) | ((~i & 0x100) >> 4) | (color_prom[i] & 0x0f);
-			colortable_entry_set_value(machine.colortable, ((i & 0x100) << 3) | (j << 8) | (i & 0xff), ctabentry);
+			colortable_entry_set_value(machine().colortable, ((i & 0x100) << 3) | (j << 8) | (i & 0xff), ctabentry);
 		}
 	}
 }
@@ -132,24 +132,22 @@ WRITE8_MEMBER(ironhors_state::ironhors_flipscreen_w)
 	/* other bits are used too, but unknown */
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(ironhors_state::get_bg_tile_info)
 {
-	ironhors_state *state = machine.driver_data<ironhors_state>();
-	int code = state->m_videoram[tile_index] + ((state->m_colorram[tile_index] & 0x40) << 2) +
-		((state->m_colorram[tile_index] & 0x20) << 4) + (state->m_charbank << 10);
-	int color = (state->m_colorram[tile_index] & 0x0f) + 16 * state->m_palettebank;
-	int flags = ((state->m_colorram[tile_index] & 0x10) ? TILE_FLIPX : 0) |
-		((state->m_colorram[tile_index] & 0x20) ? TILE_FLIPY : 0);
+	int code = m_videoram[tile_index] + ((m_colorram[tile_index] & 0x40) << 2) +
+		((m_colorram[tile_index] & 0x20) << 4) + (m_charbank << 10);
+	int color = (m_colorram[tile_index] & 0x0f) + 16 * m_palettebank;
+	int flags = ((m_colorram[tile_index] & 0x10) ? TILE_FLIPX : 0) |
+		((m_colorram[tile_index] & 0x20) ? TILE_FLIPY : 0);
 
-	SET_TILE_INFO(0, code, color, flags);
+	SET_TILE_INFO_MEMBER(0, code, color, flags);
 }
 
-VIDEO_START( ironhors )
+void ironhors_state::video_start()
 {
-	ironhors_state *state = machine.driver_data<ironhors_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ironhors_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	state->m_bg_tilemap->set_scroll_rows(32);
+	m_bg_tilemap->set_scroll_rows(32);
 }
 
 static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )
@@ -249,23 +247,21 @@ SCREEN_UPDATE_IND16( ironhors )
 	return 0;
 }
 
-static TILE_GET_INFO( farwest_get_bg_tile_info )
+TILE_GET_INFO_MEMBER(ironhors_state::farwest_get_bg_tile_info)
 {
-	ironhors_state *state = machine.driver_data<ironhors_state>();
-	int code = state->m_videoram[tile_index] + ((state->m_colorram[tile_index] & 0x40) << 2) +
-		((state->m_colorram[tile_index] & 0x20) << 4) + (state->m_charbank << 10);
-	int color = (state->m_colorram[tile_index] & 0x0f) + 16 * state->m_palettebank;
-	int flags = 0;//((state->m_colorram[tile_index] & 0x10) ? TILE_FLIPX : 0) |  ((state->m_colorram[tile_index] & 0x20) ? TILE_FLIPY : 0);
+	int code = m_videoram[tile_index] + ((m_colorram[tile_index] & 0x40) << 2) +
+		((m_colorram[tile_index] & 0x20) << 4) + (m_charbank << 10);
+	int color = (m_colorram[tile_index] & 0x0f) + 16 * m_palettebank;
+	int flags = 0;//((m_colorram[tile_index] & 0x10) ? TILE_FLIPX : 0) |  ((m_colorram[tile_index] & 0x20) ? TILE_FLIPY : 0);
 
-	SET_TILE_INFO(0, code, color, flags);
+	SET_TILE_INFO_MEMBER(0, code, color, flags);
 }
 
-VIDEO_START( farwest )
+VIDEO_START_MEMBER(ironhors_state,farwest)
 {
-	ironhors_state *state = machine.driver_data<ironhors_state>();
-	state->m_bg_tilemap = tilemap_create(machine, farwest_get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ironhors_state::farwest_get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	state->m_bg_tilemap->set_scroll_rows(32);
+	m_bg_tilemap->set_scroll_rows(32);
 }
 
 static void farwest_draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )

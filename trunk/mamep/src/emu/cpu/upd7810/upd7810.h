@@ -11,7 +11,7 @@
 */
 
 // unfortunatly memory configuration differs with internal rom size
-typedef enum
+enum UPD7810_TYPE
 {
 	TYPE_7801,
 	TYPE_78C05,
@@ -24,7 +24,7 @@ typedef enum
 //  TYPE_78K0,
 //  TYPE_78K0S
 //  millions of subtypes
-} UPD7810_TYPE;
+};
 
 /* Supply an instance of this function in your driver code:
  * It will be called whenever an output signal changes or a new
@@ -33,10 +33,10 @@ typedef enum
 typedef int (*upd7810_io_callback)(device_t *device, int ioline, int state);
 
 // use it as reset parameter in the Machine struct
-typedef struct {
+struct UPD7810_CONFIG {
     UPD7810_TYPE type;
     upd7810_io_callback io_callback;
-} UPD7810_CONFIG;
+};
 
 enum
 {

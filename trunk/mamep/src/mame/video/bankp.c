@@ -33,13 +33,13 @@
 
 ***************************************************************************/
 
-PALETTE_INIT( bankp )
+void bankp_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 32);
+	machine().colortable = colortable_alloc(machine(), 32);
 
 	for (i = 0; i < 32; i++)
 	{
@@ -61,7 +61,7 @@ PALETTE_INIT( bankp )
 		bit2 = (*color_prom >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r,g,b));
+		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r,g,b));
 
 		color_prom++;
 	}
@@ -69,14 +69,14 @@ PALETTE_INIT( bankp )
 	/* color_prom now points to the beginning of the lookup table */
 
 	/* charset #1 lookup table */
-	for (i = 0; i < machine.gfx[0]->total_colors * machine.gfx[0]->color_granularity; i++)
-		colortable_entry_set_value(machine.colortable, machine.gfx[0]->color_base + i, *color_prom++ & 0x0f);
+	for (i = 0; i < machine().gfx[0]->colors() * machine().gfx[0]->granularity(); i++)
+		colortable_entry_set_value(machine().colortable, machine().gfx[0]->colorbase() + i, *color_prom++ & 0x0f);
 
 	color_prom += 128;	/* skip the bottom half of the PROM - seems to be not used */
 
 	/* charset #2 lookup table */
-	for (i = 0; i < machine.gfx[1]->total_colors * machine.gfx[1]->color_granularity; i++)
-		colortable_entry_set_value(machine.colortable, machine.gfx[1]->color_base + i, *color_prom++ & 0x0f);
+	for (i = 0; i < machine().gfx[1]->colors() * machine().gfx[1]->granularity(); i++)
+		colortable_entry_set_value(machine().colortable, machine().gfx[1]->colorbase() + i, *color_prom++ & 0x0f);
 
 	/* the bottom half of the PROM seems to be not used */
 }
@@ -132,40 +132,37 @@ WRITE8_MEMBER(bankp_state::bankp_out_w)
 	/* bits 6-7 unknown */
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(bankp_state::get_bg_tile_info)
 {
-	bankp_state *state = machine.driver_data<bankp_state>();
-	int code = state->m_videoram2[tile_index] + 256 * (state->m_colorram2[tile_index] & 0x07);
-	int color = state->m_colorram2[tile_index] >> 4;
-	int flags = (state->m_colorram2[tile_index] & 0x08) ? TILE_FLIPX : 0;
+	int code = m_videoram2[tile_index] + 256 * (m_colorram2[tile_index] & 0x07);
+	int color = m_colorram2[tile_index] >> 4;
+	int flags = (m_colorram2[tile_index] & 0x08) ? TILE_FLIPX : 0;
 
-	SET_TILE_INFO(1, code, color, flags);
+	SET_TILE_INFO_MEMBER(1, code, color, flags);
 	tileinfo.group = color;
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(bankp_state::get_fg_tile_info)
 {
-	bankp_state *state = machine.driver_data<bankp_state>();
-	int code = state->m_videoram[tile_index] + 256 * ((state->m_colorram[tile_index] & 3) >> 0);
-	int color = state->m_colorram[tile_index] >> 3;
-	int flags = (state->m_colorram[tile_index] & 0x04) ? TILE_FLIPX : 0;
+	int code = m_videoram[tile_index] + 256 * ((m_colorram[tile_index] & 3) >> 0);
+	int color = m_colorram[tile_index] >> 3;
+	int flags = (m_colorram[tile_index] & 0x04) ? TILE_FLIPX : 0;
 
-	SET_TILE_INFO(0, code, color, flags);
+	SET_TILE_INFO_MEMBER(0, code, color, flags);
 	tileinfo.group = color;
 }
 
-VIDEO_START( bankp )
+void bankp_state::video_start()
 {
-	bankp_state *state = machine.driver_data<bankp_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bankp_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bankp_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	colortable_configure_tilemap_groups(machine.colortable, state->m_bg_tilemap, machine.gfx[1], 0);
-	colortable_configure_tilemap_groups(machine.colortable, state->m_fg_tilemap, machine.gfx[0], 0);
+	colortable_configure_tilemap_groups(machine().colortable, m_bg_tilemap, machine().gfx[1], 0);
+	colortable_configure_tilemap_groups(machine().colortable, m_fg_tilemap, machine().gfx[0], 0);
 
-	state->save_item(NAME(state->m_scroll_x));
-	state->save_item(NAME(state->m_priority));
+	save_item(NAME(m_scroll_x));
+	save_item(NAME(m_priority));
 }
 
 SCREEN_UPDATE_IND16( bankp )

@@ -189,6 +189,7 @@ public:
 	required_shared_ptr<UINT8> m_io9401;
 	DECLARE_WRITE8_MEMBER(zvideoram_w);
 	DECLARE_READ8_MEMBER(spaceg_colorram_r);
+	virtual void palette_init();
 };
 
 /*************************************
@@ -197,31 +198,31 @@ public:
  *
  *************************************/
 
-static PALETTE_INIT( spaceg )
+void spaceg_state::palette_init()
 {
 	int i;
 
 	for (i = 0; i < 128; i++)
-		palette_set_color (machine, i, MAKE_RGB(0x00,0x00,0x00));
+		palette_set_color (machine(), i, MAKE_RGB(0x00,0x00,0x00));
 
 	// proms are currently undumped...
-	palette_set_color (machine, 0, MAKE_RGB(0x00,0x00,0x00));	//ok czarny
-	palette_set_color (machine, 1, MAKE_RGB(0x7f,0x00,0x00));//???
-	palette_set_color (machine, 2, MAKE_RGB(0xff,0xff,0xff));	//ok+ bialy
-	palette_set_color (machine, 3, MAKE_RGB(0xff,0x00,0x00));	//ok j.czerw.
-	palette_set_color (machine, 4, MAKE_RGB(0x3f,0x3f,0xff));	//ok j.niebieski
-	palette_set_color (machine, 5, MAKE_RGB(0x3f,0xff,0x3f));	//ok j.zielony
-	palette_set_color (machine, 6, MAKE_RGB(0xff,0xbf,0xbf));	//ok+ 'majtki'
-	palette_set_color (machine, 7, MAKE_RGB(0xff,0xff,0x00));	//ok+ zolty
+	palette_set_color (machine(), 0, MAKE_RGB(0x00,0x00,0x00));	//ok czarny
+	palette_set_color (machine(), 1, MAKE_RGB(0x7f,0x00,0x00));//???
+	palette_set_color (machine(), 2, MAKE_RGB(0xff,0xff,0xff));	//ok+ bialy
+	palette_set_color (machine(), 3, MAKE_RGB(0xff,0x00,0x00));	//ok j.czerw.
+	palette_set_color (machine(), 4, MAKE_RGB(0x3f,0x3f,0xff));	//ok j.niebieski
+	palette_set_color (machine(), 5, MAKE_RGB(0x3f,0xff,0x3f));	//ok j.zielony
+	palette_set_color (machine(), 6, MAKE_RGB(0xff,0xbf,0xbf));	//ok+ 'majtki'
+	palette_set_color (machine(), 7, MAKE_RGB(0xff,0xff,0x00));	//ok+ zolty
 
-	palette_set_color (machine, 8, MAKE_RGB(0xff,0x7f,0x00));	//ok+ pomaranczowy
-	palette_set_color (machine, 9, MAKE_RGB(0x3f,0xbf,0xff));	//ok j.niebieski (ciemniejszy od 13)
-	palette_set_color (machine, 10, MAKE_RGB(0x3f,0xbf,0x3f));	//ok+ c.zielony
-	palette_set_color (machine, 11, MAKE_RGB(0x00,0xff,0x00));	//ok j.zielony
-	palette_set_color (machine, 12, MAKE_RGB(0x7f,0x00,0x00));	//ok brazowy (c.czerw)
-	palette_set_color (machine, 13, MAKE_RGB(0x7f,0xbf,0xff));	//ok j.niebieski (jasniejszy od 9)
-	palette_set_color (machine, 14, MAKE_RGB(0x00,0xff,0xff));//???
-	palette_set_color (machine, 15, MAKE_RGB(0x7f,0x7f,0x7f));//???
+	palette_set_color (machine(), 8, MAKE_RGB(0xff,0x7f,0x00));	//ok+ pomaranczowy
+	palette_set_color (machine(), 9, MAKE_RGB(0x3f,0xbf,0xff));	//ok j.niebieski (ciemniejszy od 13)
+	palette_set_color (machine(), 10, MAKE_RGB(0x3f,0xbf,0x3f));	//ok+ c.zielony
+	palette_set_color (machine(), 11, MAKE_RGB(0x00,0xff,0x00));	//ok j.zielony
+	palette_set_color (machine(), 12, MAKE_RGB(0x7f,0x00,0x00));	//ok brazowy (c.czerw)
+	palette_set_color (machine(), 13, MAKE_RGB(0x7f,0xbf,0xff));	//ok j.niebieski (jasniejszy od 9)
+	palette_set_color (machine(), 14, MAKE_RGB(0x00,0xff,0xff));//???
+	palette_set_color (machine(), 15, MAKE_RGB(0x7f,0x7f,0x7f));//???
 }
 
 WRITE8_MEMBER(spaceg_state::zvideoram_w)
@@ -255,8 +256,8 @@ WRITE8_MEMBER(spaceg_state::zvideoram_w)
 			break;
 
 		default:
-			logerror("mode = %02x pc = %04x\n", *m_io9401, cpu_get_pc(&space.device()));
-			popmessage("mode = %02x pc = %04x\n", *m_io9401, cpu_get_pc(&space.device()));
+			logerror("mode = %02x pc = %04x\n", *m_io9401, space.device().safe_pc());
+			popmessage("mode = %02x pc = %04x\n", *m_io9401, space.device().safe_pc());
 			return;
 	}
 
@@ -401,6 +402,23 @@ INPUT_PORTS_END
 
 /*************************************
  *
+ *  Sound interface
+ *
+ *************************************/
+
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+//static const sn76496_config psg_intf =
+//{
+//    DEVCB_NULL
+//};
+
+
+/*************************************
+ *
  *  Machine config
  *
  *************************************/
@@ -421,19 +439,21 @@ static MACHINE_CONFIG_START( spaceg, spaceg_state )
 	MCFG_SCREEN_UPDATE_STATIC( spaceg )
 
 	MCFG_PALETTE_LENGTH(16+128-16)
-	MCFG_PALETTE_INIT( spaceg )
 
 	/* sound hardware */
 //  MCFG_SPEAKER_STANDARD_MONO("mono")
 
-//  MCFG_SOUND_ADD("sn1", SN76496, 15468480/4)
+//  MCFG_SOUND_ADD("sn1", SN76496_NEW, 15468480/4)
 //  MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+//  MCFG_SOUND_CONFIG(psg_intf)
 
-//  MCFG_SOUND_ADD("sn2", SN76496, 15468480/4)
+//  MCFG_SOUND_ADD("sn2", SN76496_NEW, 15468480/4)
 //  MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+//  MCFG_SOUND_CONFIG(psg_intf)
 
-//  MCFG_SOUND_ADD("sn3", SN76496, 15468480/4)
+//  MCFG_SOUND_ADD("sn3", SN76496_NEW, 15468480/4)
 //  MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+//  MCFG_SOUND_CONFIG(psg_intf)
 
 //  MCFG_DAC_ADD("dac")
 //  MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)

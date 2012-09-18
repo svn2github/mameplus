@@ -3031,7 +3031,7 @@ void n64_rdp::CmdLoadTLUT(UINT32 w1, UINT32 w2)
 
 	if (tl != th)
 	{
-		fatalerror("Load tlut: tl=%d, th=%d",tl,th);
+		fatalerror("Load tlut: tl=%d, th=%d\n",tl,th);
 	}
 
 	int count = (sh >> 2) - (sl >> 2) + 1;
@@ -3043,7 +3043,7 @@ void n64_rdp::CmdLoadTLUT(UINT32 w1, UINT32 w2)
 		{
 			if (tile[tilenum].tmem < 256)
 			{
-				fatalerror("rdp_load_tlut: loading tlut into low half at %d qwords",tile[tilenum].tmem);
+				fatalerror("rdp_load_tlut: loading tlut into low half at %d qwords\n",tile[tilenum].tmem);
 			}
 			UINT32 srcstart = (MiscState.TIAddress + (tl >> 2) * (MiscState.TIWidth << 1) + (sl >> 1)) >> 1;
 			UINT16 *dst = GetTMEM16();
@@ -3095,7 +3095,7 @@ void n64_rdp::CmdLoadBlock(UINT32 w1, UINT32 w2)
 
 	if (sh < sl)
 	{
-		fatalerror("load_block: sh < sl");
+		fatalerror("load_block: sh < sl\n");
 	}
 
 	INT32 width = (sh - sl) + 1;
@@ -3826,21 +3826,20 @@ n64_rdp::n64_rdp(n64_state &state) : poly_manager<UINT32, rdp_poly_state, 8, 320
 	_Fill[1] = &n64_rdp::_Fill32Bit;
 }
 
-VIDEO_START(n64)
+void n64_state::video_start()
 {
-	n64_state *state = machine.driver_data<n64_state>();
 
-	state->m_rdp = auto_alloc(machine, n64_rdp(*state));
+	m_rdp = auto_alloc(machine(), n64_rdp(*this));
 
-	state->m_rdp->SetMachine(machine);
-	state->m_rdp->InitInternalState();
+	m_rdp->SetMachine(machine());
+	m_rdp->InitInternalState();
 
-	state->m_rdp->Blender.SetMachine(machine);
-	state->m_rdp->Blender.SetProcessor(state->m_rdp);
+	m_rdp->Blender.SetMachine(machine());
+	m_rdp->Blender.SetProcessor(m_rdp);
 
-	state->m_rdp->TexPipe.SetMachine(machine);
+	m_rdp->TexPipe.SetMachine(machine());
 
-	state->m_rdp->AuxBuf = auto_alloc_array_clear(machine, UINT8, EXTENT_AUX_COUNT);
+	m_rdp->AuxBuf = auto_alloc_array_clear(machine(), UINT8, EXTENT_AUX_COUNT);
 
 	if (LOG_RDP_EXECUTION)
 	{

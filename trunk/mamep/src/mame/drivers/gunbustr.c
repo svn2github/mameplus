@@ -54,13 +54,13 @@
 
 static TIMER_CALLBACK( gunbustr_interrupt5 )
 {
-	cputag_set_input_line(machine, "maincpu", 5, HOLD_LINE);
+	machine.device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( gunbustr_interrupt )
 {
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(200000-500), FUNC(gunbustr_interrupt5));
-	device_set_input_line(device, 4, HOLD_LINE);
+	device->execute().set_input_line(4, HOLD_LINE);
 }
 
 WRITE32_MEMBER(gunbustr_state::gunbustr_palette_w)
@@ -117,7 +117,7 @@ WRITE32_MEMBER(gunbustr_state::gunbustr_input_w)
 				coin_counter_w(machine(), 1, data & 0x04000000);
 				m_coin_word = (data >> 16) &0xffff;
 			}
-			//logerror("CPU #0 PC %06x: write input %06x\n",cpu_get_pc(&device()),offset);
+			//logerror("CPU #0 PC %06x: write input %06x\n",device->safe_pc(),offset);
 			break;
 		}
 	}
@@ -320,7 +320,6 @@ static MACHINE_CONFIG_START( gunbustr, gunbustr_state )
 	MCFG_GFXDECODE(gunbustr)
 	MCFG_PALETTE_LENGTH(8192)
 
-	MCFG_VIDEO_START(gunbustr)
 
 	MCFG_TC0480SCP_ADD("tc0480scp", gunbustr_tc0480scp_intf)
 
@@ -434,8 +433,8 @@ ROM_END
 
 READ32_MEMBER(gunbustr_state::main_cycle_r)
 {
-	if (cpu_get_pc(&space.device())==0x55a && (m_ram[0x3acc/4]&0xff000000)==0)
-		device_spin_until_interrupt(&space.device());
+	if (space.device().safe_pc()==0x55a && (m_ram[0x3acc/4]&0xff000000)==0)
+		space.device().execute().spin_until_interrupt();
 
 	return m_ram[0x3acc/4];
 }
@@ -443,7 +442,7 @@ READ32_MEMBER(gunbustr_state::main_cycle_r)
 DRIVER_INIT_MEMBER(gunbustr_state,gunbustr)
 {
 	/* Speedup handler */
-	m_maincpu->memory().space(AS_PROGRAM)->install_read_handler(0x203acc, 0x203acf, read32_delegate(FUNC(gunbustr_state::main_cycle_r),this));
+	m_maincpu->space(AS_PROGRAM)->install_read_handler(0x203acc, 0x203acf, read32_delegate(FUNC(gunbustr_state::main_cycle_r),this));
 }
 
 DRIVER_INIT_MEMBER(gunbustr_state,gunbustrj)

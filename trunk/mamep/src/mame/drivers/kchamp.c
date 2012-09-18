@@ -82,7 +82,7 @@ WRITE8_MEMBER(kchamp_state::control_w)
 WRITE8_MEMBER(kchamp_state::sound_reset_w)
 {
 	if (!(data & 1))
-		device_set_input_line(m_audiocpu, INPUT_LINE_RESET, PULSE_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 }
 
 WRITE8_MEMBER(kchamp_state::sound_control_w)
@@ -95,7 +95,7 @@ WRITE8_MEMBER(kchamp_state::sound_control_w)
 WRITE8_MEMBER(kchamp_state::sound_command_w)
 {
 	soundlatch_byte_w(space, 0, data);
-	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 WRITE8_MEMBER(kchamp_state::sound_msm_w)
@@ -144,7 +144,7 @@ ADDRESS_MAP_END
 ********************/
 READ8_MEMBER(kchamp_state::sound_reset_r)
 {
-	device_set_input_line(m_audiocpu, INPUT_LINE_RESET, PULSE_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 	return 0;
 }
 
@@ -344,7 +344,7 @@ static INTERRUPT_GEN( kc_interrupt )
 {
 	kchamp_state *state = device->machine().driver_data<kchamp_state>();
 	if (state->m_nmi_enable)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static void msmint( device_t *device )
@@ -361,7 +361,7 @@ static void msmint( device_t *device )
 	if (!(state->m_counter ^= 1))
 	{
 		if (state->m_sound_nmi_enable)
-			device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+			state->m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -379,37 +379,34 @@ static INTERRUPT_GEN( sound_int )
 {
 	kchamp_state *state = device->machine().driver_data<kchamp_state>();
 	if (state->m_sound_nmi_enable)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
-static MACHINE_START( kchamp )
+MACHINE_START_MEMBER(kchamp_state,kchamp)
 {
-	kchamp_state *state = machine.driver_data<kchamp_state>();
 
-	state->m_audiocpu = machine.device("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_nmi_enable));
-	state->save_item(NAME(state->m_sound_nmi_enable));
+	save_item(NAME(m_nmi_enable));
+	save_item(NAME(m_sound_nmi_enable));
 }
 
-static MACHINE_START( kchampvs )
+MACHINE_START_MEMBER(kchamp_state,kchampvs)
 {
-	kchamp_state *state = machine.driver_data<kchamp_state>();
 
-	MACHINE_START_CALL(kchamp);
+	MACHINE_START_CALL_MEMBER(kchamp);
 
-	state->save_item(NAME(state->m_msm_data));
-	state->save_item(NAME(state->m_msm_play_lo_nibble));
-	state->save_item(NAME(state->m_counter));
+	save_item(NAME(m_msm_data));
+	save_item(NAME(m_msm_play_lo_nibble));
+	save_item(NAME(m_counter));
 }
 
-static MACHINE_RESET( kchamp )
+void kchamp_state::machine_reset()
 {
-	kchamp_state *state = machine.driver_data<kchamp_state>();
 
-	state->m_nmi_enable = 0;
-	state->m_sound_nmi_enable = 0;
+	m_nmi_enable = 0;
+	m_sound_nmi_enable = 0;
 }
 
 static MACHINE_CONFIG_START( kchampvs, kchamp_state )
@@ -425,8 +422,7 @@ static MACHINE_CONFIG_START( kchampvs, kchamp_state )
 	MCFG_CPU_IO_MAP(kchampvs_sound_io_map)		/* irq's triggered from main cpu */
 										/* nmi's from msm5205 */
 
-	MCFG_MACHINE_START(kchampvs)
-	MCFG_MACHINE_RESET(kchamp)
+	MCFG_MACHINE_START_OVERRIDE(kchamp_state,kchampvs)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -439,8 +435,6 @@ static MACHINE_CONFIG_START( kchampvs, kchamp_state )
 	MCFG_GFXDECODE(kchamp)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_PALETTE_INIT(kchamp)
-	MCFG_VIDEO_START(kchamp)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -475,8 +469,7 @@ static MACHINE_CONFIG_START( kchamp, kchamp_state )
 											/* irq's triggered from main cpu */
 											/* nmi's from 125 Hz clock */
 
-	MCFG_MACHINE_START(kchamp)
-	MCFG_MACHINE_RESET(kchamp)
+	MCFG_MACHINE_START_OVERRIDE(kchamp_state,kchamp)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -489,8 +482,6 @@ static MACHINE_CONFIG_START( kchamp, kchamp_state )
 	MCFG_GFXDECODE(kchamp)
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_PALETTE_INIT(kchamp)
-	MCFG_VIDEO_START(kchamp)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

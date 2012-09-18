@@ -308,9 +308,9 @@ static int sms_vdp_null_irq_callback(running_machine &machine, int status)
 static int sms_vdp_cpu0_irq_callback(running_machine &machine, int status)
 {
 	if (status == 1)
-		cputag_set_input_line(machine, "maincpu", 0, HOLD_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, HOLD_LINE);
 	else
-		cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 
 	return 0;
 }
@@ -318,9 +318,9 @@ static int sms_vdp_cpu0_irq_callback(running_machine &machine, int status)
 static int sms_vdp_cpu1_irq_callback(running_machine &machine, int status)
 {
 	if (status == 1)
-		cputag_set_input_line(machine, "genesis_snd_z80", 0, HOLD_LINE);
+		machine.device("genesis_snd_z80")->execute().set_input_line(0, HOLD_LINE);
 	else
-		cputag_set_input_line(machine, "genesis_snd_z80", 0, CLEAR_LINE);
+		machine.device("genesis_snd_z80")->execute().set_input_line(0, CLEAR_LINE);
 
 	return 0;
 }
@@ -329,9 +329,9 @@ static int sms_vdp_cpu1_irq_callback(running_machine &machine, int status)
 static int sms_vdp_cpu2_irq_callback(running_machine &machine, int status)
 {
 	if (status == 1)
-		cputag_set_input_line(machine, "mtbios", 0, HOLD_LINE);
+		machine.device("mtbios")->execute().set_input_line(0, HOLD_LINE);
 	else
-		cputag_set_input_line(machine, "mtbios", 0, CLEAR_LINE);
+		machine.device("mtbios")->execute().set_input_line(0, CLEAR_LINE);
 
 	return 0;
 }
@@ -522,7 +522,7 @@ static void vdp_data_w(address_space *space, UINT8 data, struct sms_vdp* chip)
 					g = (palword & 0x00f0)>>4;
 					b = (palword & 0x0f00)>>8;
 					rgb_t rgb = MAKE_RGB(pal4bit(r), pal4bit(g), pal4bit(b));
-					palette_set_color(space->machine(),(chip->addr_reg&0x3e)/2, rgb);
+					//palette_set_color(space->machine(),(chip->addr_reg&0x3e)/2, rgb);
 					chip->cram_mamecolours[(chip->addr_reg&0x3e)/2]=rgb;
 				}
 			}
@@ -538,7 +538,7 @@ static void vdp_data_w(address_space *space, UINT8 data, struct sms_vdp* chip)
 				g = (data & 0x0c)>>2;
 				b = (data & 0x30)>>4;
 				rgb_t rgb = MAKE_RGB(pal2bit(r), pal2bit(g), pal2bit(b));
-				palette_set_color(space->machine(),chip->addr_reg&0x1f, rgb);
+				//palette_set_color(space->machine(),chip->addr_reg&0x1f, rgb);
 				chip->cram_mamecolours[chip->addr_reg&0x1f]=rgb;
 			}
 
@@ -1181,7 +1181,7 @@ SCREEN_VBLANK(sms)
 
 		// the SMS has a 'RESET' button on the machine, it generates an NMI
 		if (screen.machine().root_device().ioport("PAUSE")->read_safe(0x00))
-			cputag_set_input_line(screen.machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+			screen.machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 

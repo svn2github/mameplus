@@ -53,7 +53,7 @@ static TIMER_CALLBACK( mw8080bw_interrupt_callback )
 	int vpos = machine.primary_screen->vpos();
 	UINT8 counter = vpos_to_vysnc_chain_counter(vpos);
 	UINT8 vector = 0xc7 | ((counter & 0x40) >> 2) | ((~counter & 0x40) >> 3);
-	device_set_input_line_and_vector(state->m_maincpu, 0, HOLD_LINE, vector);
+	state->m_maincpu->set_input_line_and_vector(0, HOLD_LINE, vector);
 
 	/* set up for next interrupt */
 	if (counter == MW8080BW_INT_TRIGGER_COUNT_1)
@@ -94,20 +94,19 @@ static void mw8080bw_start_interrupt_timer( running_machine &machine )
  *
  *************************************/
 
-MACHINE_START( mw8080bw )
+MACHINE_START_MEMBER(mw8080bw_state,mw8080bw)
 {
-	mw8080bw_state *state = machine.driver_data<mw8080bw_state>();
 
-	mw8080bw_create_interrupt_timer(machine);
+	mw8080bw_create_interrupt_timer(machine());
 
-	state->m_samples = machine.device<samples_device>("samples");
-	state->m_samples1 = machine.device<samples_device>("samples1");
-	state->m_samples2 = machine.device<samples_device>("samples2");
-	state->m_sn = machine.device("snsnd");
-	state->m_sn1 = machine.device("sn1");
-	state->m_sn2 = machine.device("sn2");
-	state->m_discrete = machine.device("discrete");
-	state->m_mb14241 = machine.device("mb14241");
+	m_samples = machine().device<samples_device>("samples");
+	m_samples1 = machine().device<samples_device>("samples1");
+	m_samples2 = machine().device<samples_device>("samples2");
+	m_sn = machine().device("snsnd");
+	m_sn1 = machine().device("sn1");
+	m_sn2 = machine().device("sn2");
+	m_discrete = machine().device("discrete");
+	m_mb14241 = machine().device("mb14241");
 }
 
 
@@ -117,7 +116,7 @@ MACHINE_START( mw8080bw )
  *
  *************************************/
 
-MACHINE_RESET( mw8080bw )
+MACHINE_RESET_MEMBER(mw8080bw_state,mw8080bw)
 {
-	mw8080bw_start_interrupt_timer(machine);
+	mw8080bw_start_interrupt_timer(machine());
 }

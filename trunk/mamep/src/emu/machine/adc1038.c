@@ -14,8 +14,7 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _adc1038_state adc1038_state;
-struct _adc1038_state
+struct adc1038_state
 {
 	int cycle;
 	int clk;
@@ -38,7 +37,7 @@ INLINE adc1038_state *adc1038_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == ADC1038);
 
-	return (adc1038_state *)downcast<legacy_device_base *>(device)->token();
+	return (adc1038_state *)downcast<adc1038_device *>(device)->token();
 }
 
 INLINE const adc1038_interface *adc1038_get_interface( device_t *device )
@@ -55,6 +54,9 @@ INLINE const adc1038_interface *adc1038_get_interface( device_t *device )
 READ_LINE_DEVICE_HANDLER( adc1038_do_read )
 {
 	adc1038_state *adc1038 = adc1038_get_safe_token(device);
+
+	adc1038->data_out = (adc1038->adc_data & 0x200) ? 1 : 0;
+	adc1038->adc_data <<= 1;
 
 	//printf("ADC DO\n");
 	return adc1038->data_out;
@@ -101,9 +103,6 @@ WRITE_LINE_DEVICE_HANDLER( adc1038_clk_write )
 			adc1038->adr |= (adc1038->data_in << 0);
 		}
 
-		adc1038->data_out = (adc1038->adc_data & 0x200) ? 1 : 0;
-		adc1038->adc_data <<= 1;
-
 		adc1038->cycle++;
 	}
 
@@ -118,9 +117,6 @@ READ_LINE_DEVICE_HANDLER( adc1038_sars_read )
 
 	/* notice that adc1038->adr is always < 7! */
 	adc1038->adc_data = adc1038->input_callback_r(device, adc1038->adr);
-
-	adc1038->data_out = (adc1038->adc_data & 0x200) ? 1 : 0;
-	adc1038->adc_data <<= 1;
 
 	adc1038->sars ^= 1;
 	return adc1038->sars;
@@ -161,17 +157,40 @@ static DEVICE_RESET( adc1038 )
 	adc1038->sars = 1;
 }
 
-/*-------------------------------------------------
-    device definition
--------------------------------------------------*/
+const device_type ADC1038 = &device_creator<adc1038_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+adc1038_device::adc1038_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, ADC1038, "A/D Converters 1038", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(adc1038_state));
+}
 
-#define DEVTEMPLATE_ID( p, s )	p##adc1038##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME		"A/D Converters 1038"
-#define DEVTEMPLATE_FAMILY		"National Semiconductor A/D Converters 1038"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void adc1038_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void adc1038_device::device_start()
+{
+	DEVICE_START_NAME( adc1038 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void adc1038_device::device_reset()
+{
+	DEVICE_RESET_NAME( adc1038 )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(ADC1038, adc1038);

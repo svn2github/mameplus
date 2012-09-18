@@ -352,17 +352,17 @@ C - uses sub board with support for player 3 and 4 controls
 
 WRITE8_MEMBER(namcos1_state::namcos1_sub_firq_w)
 {
-	cputag_set_input_line(machine(), "sub", M6809_FIRQ_LINE, ASSERT_LINE);
+	machine().device("sub")->execute().set_input_line(M6809_FIRQ_LINE, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(namcos1_state::irq_ack_w)
 {
-	device_set_input_line(&space.device(), 0, CLEAR_LINE);
+	space.device().execute().set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(namcos1_state::firq_ack_w)
 {
-	device_set_input_line(&space.device(), M6809_FIRQ_LINE, CLEAR_LINE);
+	space.device().execute().set_input_line(M6809_FIRQ_LINE, CLEAR_LINE);
 }
 
 
@@ -1058,7 +1058,7 @@ GFXDECODE_END
 
 static void namcos1_sound_interrupt( device_t *device, int irq )
 {
-	cputag_set_input_line(device->machine(), "audiocpu", M6809_FIRQ_LINE, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("audiocpu")->execute().set_input_line(M6809_FIRQ_LINE, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2151_interface ym2151_config =
@@ -1101,7 +1101,6 @@ static MACHINE_CONFIG_START( ns1, namcos1_state )
 	// heavy sync required to prevent CPUs from fighting for video RAM access and going into deadlocks
 	MCFG_QUANTUM_TIME(attotime::from_hz(38400))
 
-	MCFG_MACHINE_RESET(namcos1)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
@@ -1118,7 +1117,6 @@ static MACHINE_CONFIG_START( ns1, namcos1_state )
 	MCFG_GFXDECODE(namcos1)
 	MCFG_PALETTE_LENGTH(0x2000)
 
-	MCFG_VIDEO_START(namcos1)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

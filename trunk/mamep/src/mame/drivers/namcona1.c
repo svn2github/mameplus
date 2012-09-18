@@ -719,7 +719,7 @@ WRITE16_MEMBER(namcona1_state::mcu_mailbox_w_68k)
 //  logerror("mailbox_w_68k: %x @ %x\n", data, offset);
 
 	if (offset == 4)
-		cputag_set_input_line(machine(), "mcu", M37710_LINE_IRQ0, HOLD_LINE);
+		machine().device("mcu")->execute().set_input_line(M37710_LINE_IRQ0, HOLD_LINE);
 
 	COMBINE_DATA(&m_mcu_mailbox[offset%8]);
 
@@ -787,7 +787,7 @@ READ16_MEMBER(namcona1_state::na1mcu_shared_r)
 #if 0
 	if (offset >= 0x70000/2)
 	{
-		logerror("MD: %04x @ %x PC %x\n", ((data>>8)&0xff) | ((data<<8)&0xff00), offset*2, cpu_get_pc(&space.device()));
+		logerror("MD: %04x @ %x PC %x\n", ((data>>8)&0xff) | ((data<<8)&0xff00), offset*2, space.device().safe_pc());
 	}
 #endif
 
@@ -844,10 +844,10 @@ WRITE8_MEMBER(namcona1_state::port4_w)
 {
 	if ((data & 0x08) && !(m_mcu_port4 & 0x08))
 	{
-		logerror("launching 68k, PC=%x\n", cpu_get_pc(&space.device()));
+		logerror("launching 68k, PC=%x\n", space.device().safe_pc());
 
 		// reset and launch the 68k
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_RESET, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 	}
 
 	m_mcu_port4 = data;
@@ -914,19 +914,17 @@ WRITE8_MEMBER(namcona1_state::port8_w)
 }
 
 
-static MACHINE_START( namcona1 )
+void namcona1_state::machine_start()
 {
-	namcona1_state *state = machine.driver_data<namcona1_state>();
-	c140_set_base(machine.device("c140"), state->m_workram);
+	c140_set_base(machine().device("c140"), m_workram);
 }
 
 // for games with the MCU emulated, the MCU boots the 68000.  don't allow it before that.
-static MACHINE_RESET( namcona1_mcu )
+void namcona1_state::machine_reset()
 {
-	namcona1_state *state = machine.driver_data<namcona1_state>();
-	cputag_set_input_line(machine, "maincpu", INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
-	state->m_mcu_port5 = 1;
+	m_mcu_port5 = 1;
 }
 
 // "encrypt" player 3 inputs
@@ -968,7 +966,7 @@ static TIMER_DEVICE_CALLBACK( namcona1_interrupt )
 	{
 		simulate_mcu( timer.machine() );
 		if (enabled & 8)
-			device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+			state->m_maincpu->set_input_line(4, HOLD_LINE);
 	}
 
 	// posirq, used with dolphin in Emeraldia's "how to play" attract mode
@@ -978,7 +976,7 @@ static TIMER_DEVICE_CALLBACK( namcona1_interrupt )
 		if (posirq_scanline)
 			timer.machine().primary_screen->update_partial(posirq_scanline);
 
-		device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
+		state->m_maincpu->set_input_line(3, HOLD_LINE);
 	}
 }
 
@@ -993,11 +991,11 @@ static TIMER_DEVICE_CALLBACK( mcu_interrupt )
 
 	// vblank
 	if (scanline == 224)
-		device_set_input_line(state->m_mcu, M37710_LINE_IRQ1, HOLD_LINE);
+		state->m_mcu->set_input_line(M37710_LINE_IRQ1, HOLD_LINE);
 
 	// adc (timing guessed, when does this trigger?)
 	if (scanline == 0)
-		device_set_input_line(state->m_mcu, M37710_LINE_ADC, HOLD_LINE);
+		state->m_mcu->set_input_line(M37710_LINE_ADC, HOLD_LINE);
 }
 
 static const c140_interface C140_interface_typeA =
@@ -1018,8 +1016,6 @@ static MACHINE_CONFIG_START( namcona1, namcona1_state )
 	MCFG_TIMER_ADD_SCANLINE("scan_mcu", mcu_interrupt, "screen", 0, 1)
 
 	MCFG_NVRAM_HANDLER(namcosna1)
-	MCFG_MACHINE_START(namcona1)
-	MCFG_MACHINE_RESET(namcona1_mcu)
 	MCFG_QUANTUM_TIME(attotime::from_hz(2400))
 
 	/* video hardware */
@@ -1034,7 +1030,6 @@ static MACHINE_CONFIG_START( namcona1, namcona1_state )
 
 	MCFG_PALETTE_LENGTH(0x2000)
 
-	MCFG_VIDEO_START(namcona1)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

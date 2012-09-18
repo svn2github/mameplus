@@ -27,28 +27,25 @@
 
 /******************************************************************************/
 
-static TILE_GET_INFO( get_bbusters_tile_info )
+TILE_GET_INFO_MEMBER(bbusters_state::get_bbusters_tile_info)
 {
-	bbusters_state *state = machine.driver_data<bbusters_state>();
-	UINT16 tile = state->m_videoram[tile_index];
+	UINT16 tile = m_videoram[tile_index];
 
-	SET_TILE_INFO(0,tile&0xfff,tile>>12,0);
+	SET_TILE_INFO_MEMBER(0,tile&0xfff,tile>>12,0);
 }
 
-static TILE_GET_INFO( get_pf1_tile_info )
+TILE_GET_INFO_MEMBER(bbusters_state::get_pf1_tile_info)
 {
-	bbusters_state *state = machine.driver_data<bbusters_state>();
-	UINT16 tile = state->m_pf1_data[tile_index];
+	UINT16 tile = m_pf1_data[tile_index];
 
-	SET_TILE_INFO(3,tile&0xfff,tile>>12,0);
+	SET_TILE_INFO_MEMBER(3,tile&0xfff,tile>>12,0);
 }
 
-static TILE_GET_INFO( get_pf2_tile_info )
+TILE_GET_INFO_MEMBER(bbusters_state::get_pf2_tile_info)
 {
-	bbusters_state *state = machine.driver_data<bbusters_state>();
-	UINT16 tile = state->m_pf2_data[tile_index];
+	UINT16 tile = m_pf2_data[tile_index];
 
-	SET_TILE_INFO(4,tile&0xfff,tile>>12,0);
+	SET_TILE_INFO_MEMBER(4,tile&0xfff,tile>>12,0);
 }
 
 WRITE16_MEMBER(bbusters_state::bbusters_video_w)
@@ -74,28 +71,26 @@ WRITE16_MEMBER(bbusters_state::bbusters_pf2_w)
 
 /******************************************************************************/
 
-VIDEO_START( bbuster )
+VIDEO_START_MEMBER(bbusters_state,bbuster)
 {
-	bbusters_state *state = machine.driver_data<bbusters_state>();
 
-	state->m_fix_tilemap = tilemap_create(machine, get_bbusters_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_pf1_tilemap = tilemap_create(machine, get_pf1_tile_info, tilemap_scan_cols, 16, 16, 128, 32);
-	state->m_pf2_tilemap = tilemap_create(machine, get_pf2_tile_info, tilemap_scan_cols, 16, 16, 128, 32);
+	m_fix_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bbusters_state::get_bbusters_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_pf1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bbusters_state::get_pf1_tile_info),this), TILEMAP_SCAN_COLS, 16, 16, 128, 32);
+	m_pf2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bbusters_state::get_pf2_tile_info),this), TILEMAP_SCAN_COLS, 16, 16, 128, 32);
 
-	state->m_pf1_tilemap->set_transparent_pen(15);
-	state->m_fix_tilemap->set_transparent_pen(15);
+	m_pf1_tilemap->set_transparent_pen(15);
+	m_fix_tilemap->set_transparent_pen(15);
 }
 
-VIDEO_START( mechatt )
+VIDEO_START_MEMBER(bbusters_state,mechatt)
 {
-	bbusters_state *state = machine.driver_data<bbusters_state>();
 
-	state->m_fix_tilemap = tilemap_create(machine, get_bbusters_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_pf1_tilemap = tilemap_create(machine, get_pf1_tile_info, tilemap_scan_cols, 16, 16, 256, 32);
-	state->m_pf2_tilemap = tilemap_create(machine, get_pf2_tile_info, tilemap_scan_cols, 16, 16, 256, 32);
+	m_fix_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bbusters_state::get_bbusters_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_pf1_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bbusters_state::get_pf1_tile_info),this), TILEMAP_SCAN_COLS, 16, 16, 256, 32);
+	m_pf2_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bbusters_state::get_pf2_tile_info),this), TILEMAP_SCAN_COLS, 16, 16, 256, 32);
 
-	state->m_pf1_tilemap->set_transparent_pen(15);
-	state->m_fix_tilemap->set_transparent_pen(15);
+	m_pf1_tilemap->set_transparent_pen(15);
+	m_fix_tilemap->set_transparent_pen(15);
 }
 
 /******************************************************************************/
@@ -150,14 +145,14 @@ INLINE const UINT8 *get_source_ptr(gfx_element *gfx, UINT32 sprite, int dx, int 
 		break;
 	}
 
-	return gfx_element_get_data(gfx, (sprite+code) % gfx->total_elements) + ((dy%16) * gfx->line_modulo);
+	return gfx->get_data((sprite+code) % gfx->elements()) + ((dy%16) * gfx->rowbytes());
 }
 
 static void bbusters_draw_block(running_machine &machine, bitmap_ind16 &dest,int x,int y,int size,int flipx,int flipy,UINT32 sprite,int color,int bank,int block)
 {
 	bbusters_state *state = machine.driver_data<bbusters_state>();
 	gfx_element *gfx = machine.gfx[bank];
-	pen_t pen_base = gfx->color_base + gfx->color_granularity * (color % gfx->total_colors);
+	pen_t pen_base = gfx->colorbase() + gfx->granularity() * (color % gfx->colors());
 	UINT32 xinc=(state->m_scale_line_count * 0x10000 ) / size;
 	UINT8 pixel;
 	int x_index;

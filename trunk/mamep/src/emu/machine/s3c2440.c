@@ -31,16 +31,9 @@ INLINE void ATTR_PRINTF(3,4) verboselog( running_machine &machine, int n_level, 
 #include "machine/s3c24xx.c"
 #undef DEVICE_S3C2440
 
-VIDEO_START( s3c2440 )
+UINT32 s3c2440_device::screen_update(screen_device &screen, bitmap_rgb32 &bitmap, const rectangle &cliprect)
 {
-	device_t *device = machine.device( S3C2440_TAG);
-	s3c24xx_video_start( device, machine);
-}
-
-SCREEN_UPDATE_RGB32( s3c2440 )
-{
-	device_t *device = screen.machine().device( S3C2440_TAG);
-	return s3c24xx_video_update( device, screen, bitmap, cliprect);
+	return s3c24xx_video_update( this, screen, bitmap, cliprect);
 }
 
 DEVICE_START( s3c2440 )
@@ -74,20 +67,46 @@ DEVICE_START( s3c2440 )
 	space->install_legacy_readwrite_handler( *device, 0x5a000000, 0x5a000043, FUNC(s3c24xx_sdi_r), FUNC(s3c24xx_sdi_w));
 	space->install_legacy_readwrite_handler( *device, 0x5b000000, 0x5b00001f, FUNC(s3c24xx_ac97_r), FUNC(s3c24xx_ac97_w));
 	DEVICE_START_CALL(s3c24xx);
+
+	s3c24xx_video_start( device, device->machine());
 }
 
-DEVICE_GET_INFO( s3c2440 )
+const device_type S3C2440 = &device_creator<s3c2440_device>;
+
+s3c2440_device::s3c2440_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+       : device_t(mconfig, S3C2440, "Samsung S3C2440", tag, owner, clock)
 {
-	switch ( state )
-	{
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START: info->start = DEVICE_START_NAME(s3c2440); break;
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME: strcpy(info->s, "Samsung S3C2440"); break;
-		/* --- default --- */
-		default: DEVICE_GET_INFO_CALL(s3c24xx); break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(s3c24xx_t));
 }
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void s3c2440_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void s3c2440_device::device_start()
+{
+	DEVICE_START_NAME( s3c2440 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void s3c2440_device::device_reset()
+{
+	DEVICE_RESET_NAME( s3c24xx )(this);
+}
+
 
 void s3c2440_uart_fifo_w( device_t *device, int uart, UINT8 data)
 {
@@ -113,5 +132,3 @@ WRITE_LINE_DEVICE_HANDLER( s3c2440_pin_frnb_w )
 {
 	s3c24xx_pin_frnb_w( device, state);
 }
-
-DEFINE_LEGACY_DEVICE(S3C2440, s3c2440);

@@ -3,8 +3,7 @@
 #include "sound/msm5205.h"
 #include "audio/hyprolyb.h"
 
-typedef struct _hyprolyb_adpcm_state hyprolyb_adpcm_state;
-struct _hyprolyb_adpcm_state
+struct hyprolyb_adpcm_state
 {
 	device_t *m_msm;
 	address_space *m_space;
@@ -18,7 +17,7 @@ INLINE hyprolyb_adpcm_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == HYPROLYB_ADPCM);
 
-	return (hyprolyb_adpcm_state *)downcast<legacy_device_base *>(device)->token();
+	return (hyprolyb_adpcm_state *)downcast<hyprolyb_adpcm_device *>(device)->token();
 }
 
 static DEVICE_START( hyprolyb_adpcm )
@@ -136,16 +135,51 @@ MACHINE_CONFIG_FRAGMENT( hyprolyb_adpcm )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
 MACHINE_CONFIG_END
 
-/*****************************************************************************
-    DEVICE DEFINITION
-*****************************************************************************/
+const device_type HYPROLYB_ADPCM = &device_creator<hyprolyb_adpcm_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+hyprolyb_adpcm_device::hyprolyb_adpcm_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, HYPROLYB_ADPCM, "Hyper Olympics Audio", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(hyprolyb_adpcm_state));
+}
 
-#define DEVTEMPLATE_ID(p,s)				p##hyprolyb_adpcm##s
-#define DEVTEMPLATE_FEATURES			DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME				"Hyper Olympics Audio"
-#define DEVTEMPLATE_FAMILY				"Hyper Olympics Audio IC"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-DEFINE_LEGACY_SOUND_DEVICE(HYPROLYB_ADPCM, hyprolyb_adpcm);
+void hyprolyb_adpcm_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void hyprolyb_adpcm_device::device_start()
+{
+	DEVICE_START_NAME( hyprolyb_adpcm )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void hyprolyb_adpcm_device::device_reset()
+{
+	DEVICE_RESET_NAME( hyprolyb_adpcm )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void hyprolyb_adpcm_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

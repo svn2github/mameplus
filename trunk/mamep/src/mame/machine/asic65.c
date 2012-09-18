@@ -142,7 +142,7 @@ void asic65_reset(running_machine &machine, int state)
 
 	/* rom-based means reset and clear states */
 	if (asic65.cpu != NULL)
-		device_set_input_line(asic65.cpu, INPUT_LINE_RESET, state ? ASSERT_LINE : CLEAR_LINE);
+		asic65.cpu->execute().set_input_line(INPUT_LINE_RESET, state ? ASSERT_LINE : CLEAR_LINE);
 
 	/* otherwise, do it manually */
 	else
@@ -179,7 +179,7 @@ static TIMER_CALLBACK( m68k_asic65_deferred_w )
 	asic65.cmd = param >> 16;
 	asic65.tdata = param;
 	if (asic65.cpu != NULL)
-		device_set_input_line(asic65.cpu, 0, ASSERT_LINE);
+		asic65.cpu->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -211,7 +211,7 @@ WRITE16_HANDLER( asic65_data_w )
 	else
 	{
 		int command = (data < MAX_COMMANDS) ? command_map[asic65.type][data] : OP_UNKNOWN;
-		if (asic65.log) fprintf(asic65.log, "\n(%06X)%c%04X:", cpu_get_previouspc(&space->device()), (command == OP_UNKNOWN) ? '*' : ' ', data);
+		if (asic65.log) fprintf(asic65.log, "\n(%06X)%c%04X:", space->device().safe_pcbase(), (command == OP_UNKNOWN) ? '*' : ' ', data);
 
 		/* set the command number and reset the parameter/result indices */
 		asic65.command = data;
@@ -477,7 +477,7 @@ static READ16_HANDLER( asic65_68k_r )
 {
 	asic65.tfull = 0;
 	if (asic65.cpu != NULL)
-		device_set_input_line(asic65.cpu, 0, CLEAR_LINE);
+		asic65.cpu->execute().set_input_line(0, CLEAR_LINE);
 	return asic65.tdata;
 }
 
@@ -501,7 +501,7 @@ static READ16_HANDLER( asic65_stat_r )
 static READ16_HANDLER( asci65_get_bio )
 {
 	if (!asic65.tfull)
-		device_spin_until_interrupt(&space->device());
+		space->device().execute().spin_until_interrupt();
 	return asic65.tfull ? CLEAR_LINE : ASSERT_LINE;
 }
 

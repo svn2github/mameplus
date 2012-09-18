@@ -64,7 +64,7 @@ READ32_MEMBER(taito_f3_state::f3_control_r)
 	if (offset < 6)
 		return ioport(iptnames[offset])->read();
 
-	logerror("CPU #0 PC %06x: warning - read unmapped control address %06x\n", cpu_get_pc(&space.device()), offset);
+	logerror("CPU #0 PC %06x: warning - read unmapped control address %06x\n", space.device().safe_pc(), offset);
 	return 0xffffffff;
 }
 
@@ -105,17 +105,17 @@ WRITE32_MEMBER(taito_f3_state::f3_control_w)
 			}
 			return;
 	}
-	logerror("CPU #0 PC %06x: warning - write unmapped control address %06x %08x\n",cpu_get_pc(&space.device()),offset,data);
+	logerror("CPU #0 PC %06x: warning - write unmapped control address %06x %08x\n",space.device().safe_pc(),offset,data);
 }
 
 WRITE32_MEMBER(taito_f3_state::f3_sound_reset_0_w)
 {
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 }
 
 WRITE32_MEMBER(taito_f3_state::f3_sound_reset_1_w)
 {
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, ASSERT_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 WRITE32_MEMBER(taito_f3_state::f3_sound_bankswitch_w)
@@ -392,19 +392,19 @@ GFXDECODE_END
 
 static TIMER_CALLBACK( f3_interrupt3 )
 {
-	cputag_set_input_line(machine, "maincpu", 3, HOLD_LINE);	// some signal from video hardware?
+	machine.device("maincpu")->execute().set_input_line(3, HOLD_LINE);	// some signal from video hardware?
 }
 
 static INTERRUPT_GEN( f3_interrupt2 )
 {
-	device_set_input_line(device, 2, HOLD_LINE);	// vblank
+	device->execute().set_input_line(2, HOLD_LINE);	// vblank
 	device->machine().scheduler().timer_set(downcast<cpu_device *>(device)->cycles_to_attotime(10000), FUNC(f3_interrupt3));
 }
 
 static SOUND_RESET( f3 )
 {
 	SOUND_RESET_CALL( taito_en_soundsystem_reset );
-	cputag_set_input_line(machine, "audiocpu", INPUT_LINE_RESET, ASSERT_LINE);
+	machine.device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 }
 
 
@@ -419,10 +419,9 @@ static const UINT16 recalh_eeprom[64] =	{
 	0xffff,0xffff,0xffff,0xffff,0xffff,0xffff,0xffff,0xffff
 };
 
-static MACHINE_START(f3)
+MACHINE_START_MEMBER(taito_f3_state,f3)
 {
-	taito_f3_state *state = machine.driver_data<taito_f3_state>();
-	state_save_register_global_array(machine, state->m_coin_word);
+	state_save_register_global_array(machine(), m_coin_word);
 }
 
 static MACHINE_CONFIG_START( f3, taito_f3_state )
@@ -432,7 +431,7 @@ static MACHINE_CONFIG_START( f3, taito_f3_state )
 	MCFG_CPU_PROGRAM_MAP(f3_map)
 	MCFG_CPU_VBLANK_INT("screen", f3_interrupt2)
 
-	MCFG_MACHINE_START(f3)
+	MCFG_MACHINE_START_OVERRIDE(taito_f3_state,f3)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -448,7 +447,7 @@ static MACHINE_CONFIG_START( f3, taito_f3_state )
 	MCFG_GFXDECODE(taito_f3)
 	MCFG_PALETTE_LENGTH(0x2000)
 
-	MCFG_VIDEO_START(f3)
+	MCFG_VIDEO_START_OVERRIDE(taito_f3_state,f3)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(taito_en_sound)
@@ -526,7 +525,7 @@ static MACHINE_CONFIG_START( bubsympb, taito_f3_state )
 	MCFG_CPU_PROGRAM_MAP(f3_map)
 	MCFG_CPU_VBLANK_INT("screen", f3_interrupt2)
 
-	MCFG_MACHINE_START(f3)
+	MCFG_MACHINE_START_OVERRIDE(taito_f3_state,f3)
 
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
@@ -542,7 +541,7 @@ static MACHINE_CONFIG_START( bubsympb, taito_f3_state )
 	MCFG_GFXDECODE(bubsympb)
 	MCFG_PALETTE_LENGTH(8192)
 
-	MCFG_VIDEO_START(f3)
+	MCFG_VIDEO_START_OVERRIDE(taito_f3_state,f3)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

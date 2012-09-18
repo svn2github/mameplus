@@ -219,10 +219,14 @@ public:
 	UINT8 m_bv_busy;
 	UINT8 m_bv_pulse;
 	UINT8 m_bv_denomination;
+	UINT8 m_bv_protocol;
 	UINT64 m_bv_cycles;
 	UINT8 m_bv_last_enable_state;
 	UINT8 m_bv_enable_state;
 	UINT8 m_bv_enable_count;
+	UINT8 m_bv_data_bit;
+	UINT8 m_bv_loop_count;
+	UINT16 id023_data;
 	DECLARE_WRITE8_MEMBER(peplus_bgcolor_w);
 	DECLARE_WRITE8_MEMBER(peplus_crtc_display_w);
 	DECLARE_WRITE8_MEMBER(peplus_io_w);
@@ -258,8 +262,14 @@ public:
 	DECLARE_DRIVER_INIT(peplus);
 	DECLARE_DRIVER_INIT(peplussb);
 	DECLARE_DRIVER_INIT(peplussbw);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
+static const UINT8  id_022[8] = { 0x00, 0x01, 0x04, 0x09, 0x13, 0x16, 0x18, 0x00 };
+static const UINT16 id_023[8] = { 0x4a6c, 0x4a7b, 0x4a4b, 0x4a5a, 0x4a2b, 0x4a0a, 0x4a19, 0x4a3a };
 
 #define MASTER_CLOCK		XTAL_20MHz
 #define CPU_CLOCK			((MASTER_CLOCK)/2)		/* divided by 2 - 7474 */
@@ -382,7 +392,7 @@ static void handle_lightpen( device_t *device )
 WRITE_LINE_MEMBER(peplus_state::crtc_vsync)
 {
 	device_t *device = machine().device("crtc");
-	cputag_set_input_line(machine(), "maincpu", 0, state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, state ? ASSERT_LINE : CLEAR_LINE);
 	handle_lightpen(device);
 }
 
@@ -573,27 +583,41 @@ READ8_MEMBER(peplus_state::peplus_watchdog_r)
 READ8_MEMBER(peplus_state::peplus_input0_r)
 {
 /*
+        PE+ bill validators have a dip switch setting to switch between ID-022 and ID-023 protocols.
+
         Emulating IGT IDO22 Pulse Protocol (IGT Smoke 2.2)
         ID022 protocol requires a 20ms on/off pulse x times for denomination followed by a 50ms stop pulse.
         The DBV then waits for at least 3 toggling (ACK) pulses of alternating 20ms each from the game.
         If no toggling received within 200ms, the bill was rejected by the game (e.g. Max Credits reached).
-        Once toggling received, the DBV stacks the bill and sends two 10ms stacked pulses separated by a 10ms pause.
+        Once toggling received, the DBV stacks the bill and sends a 10ms stacked pulses.
 
-        TODO: Will need to include IGT IDO23 (IGT 2.5) for Superboard games.
-        PE+ bill validators have a dip switch setting to switch between ID-022 and ID-023 protocols.
+        Emulating IGT IDO23 Pulse Protocol (IGT 2.5)
+        ID023 protocol requires a start pulse of 50ms ON followed by a 20ms pause.  Next a 15-bit data stream
+        is sent based on the country code and denomination (see table below).  And finally a 90ms stop pulse.
+        There is then a 200ms pause and the entire sequence is transmitted again two more times.
+        The DBV then waits for the toggling much like the ID-022 protocol above, however ends with two 10ms
+        stack pulses instead of one.
 
-        IDO23 Denomination Codes
-        ------------------------
-        0x00 = $1
-        0x02 = $5
-        0x03 = $10
-        0x04 = $20
-        0x06 = $50
-        0x07 = $100
+        Ticket handling has not been emulated.
 
         IDO23 Country Codes
-        ------------------------
-        0x25(37) = USA
+        -------------------
+        0x07 = Canada
+        0x25 = USA
+
+        IDO23 USA 15-bit Data Samples:
+        ---------+--------------+--------------+-----------+
+        Bill Amt | Country Code |  Denom Code  |  Checksum |
+        ---------+--------------+--------------+-----------+
+        $1       | 1 0 0 1 0 1  |  0 0 1 1 0   |  1 1 0 0  |
+        $2       | 1 0 0 1 0 1  |  0 0 1 1 1   |  1 0 1 1  |
+        $5       | 1 0 0 1 0 1  |  0 0 1 0 0   |  1 0 1 1  |
+        $10      | 1 0 0 1 0 1  |  0 0 1 0 1   |  1 0 1 0  |
+        $20      | 1 0 0 1 0 1  |  0 0 0 1 0   |  1 0 1 1  |
+        $50      | 1 0 0 1 0 1  |  0 0 0 0 0   |  1 0 1 0  |
+        $100     | 1 0 0 1 0 1  |  0 0 0 0 1   |  1 0 0 1  |
+        Ticket   | 1 0 0 1 0 1  |  0 0 0 1 1   |  1 0 1 0  |
+        ---------+--------------+--------------+-----------+
 
         Direction Data
         --------------
@@ -606,21 +630,37 @@ READ8_MEMBER(peplus_state::peplus_input0_r)
 */
 	UINT64 curr_cycles = machine().firstcpu->total_cycles();
 
-	if ((ioport("DBV")->read_safe(0xff) & 0x01) == 0x00) {
+	// Allow Bill Insert if DBV Enabled
+	if (m_bv_enable_state == 0x01 && ((ioport("DBV")->read_safe(0xff) & 0x01) == 0x00)) {
 		// If not busy
 		if (m_bv_busy == 0) {
 			m_bv_busy = 1;
 
-			// Fetch Current Denomination
+			// Fetch Current Denomination and Protocol
 			m_bv_denomination = ioport("BC")->read();
+			m_bv_protocol = ioport("BP")->read();
+
+			if (m_bv_protocol == 0) {
+				// ID-022
+				m_bv_denomination = id_022[m_bv_denomination];
+
+				if (m_bv_denomination == 0)
+					m_bv_state = 0x03; // $1 So Skip Credit Pulse
+				else
+					m_bv_state = 0x01; // Greater than $1 Needs Credit Pulse
+			} else {
+				// ID-023
+				id023_data = id_023[m_bv_denomination];
+
+				m_bv_data_bit = 14;
+				m_bv_loop_count = 0;
+
+				m_bv_state = 0x11;
+			}
 
 			m_bv_cycles = curr_cycles;
 			m_bv_pulse = 1;
-
-			if (m_bv_denomination == 0)
-				m_bv_state = 3; // $1 So Skip Credit Pulse
-			else
-				m_bv_state = 1; // Greater than $1 Needs Credit Pulse
+			m_bv_enable_count = 0;
 		}
 	}
 
@@ -646,7 +686,7 @@ READ8_MEMBER(peplus_state::peplus_input0_r)
 				if (m_bv_denomination == 0)
 					m_bv_state++; // Done with Credit Pulse
 				else
-					m_bv_state = 1; // Continue Pulsing Denomination
+					m_bv_state = 0x01; // Continue Pulsing Denomination
 			}
 			break;
 		case 0x03: // Stop Pulse 50ms ON
@@ -676,7 +716,7 @@ READ8_MEMBER(peplus_state::peplus_input0_r)
 				// No Toggling Found, Game Rejected Bill
 				if (curr_cycles - m_bv_cycles >= 833.3 * 200) {
 					m_bv_pulse = 0;
-					m_bv_state = 0;
+					m_bv_state = 0x00;
 				}
 			}
 			break;
@@ -684,21 +724,102 @@ READ8_MEMBER(peplus_state::peplus_input0_r)
 			if (curr_cycles - m_bv_cycles >= 833.3 * 10) {
 				m_bv_cycles = curr_cycles;
 				m_bv_pulse = 0;
+				m_bv_state = 0x00;
+			}
+			break;
+		case 0x11: // Start Pulse 50ms ON
+			if (curr_cycles - m_bv_cycles >= 833.3 * 50) {
+				m_bv_cycles = curr_cycles;
+				m_bv_pulse = 0;
 				m_bv_state++;
 			}
 			break;
-		case 0x06: // Stacked Pulse 10ms OFF
+		case 0x12: // Start Pulse 20ms OFF
+			if (curr_cycles - m_bv_cycles >= 833.3 * 20) {
+				m_bv_cycles = curr_cycles;
+				m_bv_pulse = 1;
+				m_bv_state++;
+			}
+			break;
+		case 0x13: // Data Sync Pulse 20ms ON
+			if (curr_cycles - m_bv_cycles >= 833.3 * 20) {
+				m_bv_cycles = curr_cycles;
+				m_bv_pulse = 1 - ((id023_data >> m_bv_data_bit) & 0x01);
+				m_bv_state++;
+			}
+			break;
+		case 0x14: // Data Value Pulse 20ms OFF
+			if (curr_cycles - m_bv_cycles >= 833.3 * 20) {
+				m_bv_cycles = curr_cycles;
+				m_bv_pulse = 1;
+
+				if (m_bv_data_bit == 0) {
+					m_bv_data_bit = 14; // Done with Data Stream
+					m_bv_state++;
+				} else {
+					m_bv_data_bit--;
+					m_bv_state = 0x13; // More Data Yet
+				}
+			}
+			break;
+		case 0x15: // Stop Pulse 90ms ON
+			if (curr_cycles - m_bv_cycles >= 833.3 * 90) {
+				m_bv_cycles = curr_cycles;
+				m_bv_pulse = 0;
+
+				if (m_bv_loop_count >= 2) {
+					m_bv_state = 0x17; // Done, Ready for Toggling
+				} else {
+					m_bv_loop_count++;
+					m_bv_state++;
+				}
+			}
+			break;
+		case 0x16: // Repeat Pulse 200ms OFF
+			if (curr_cycles - m_bv_cycles >= 833.3 * 200) {
+				m_bv_cycles = curr_cycles;
+				m_bv_pulse = 1;
+				m_bv_state = 0x11; // Repeat from Start
+			}
+			break;
+		case 0x17: // Begin Toggle Polling
+			if (m_bv_enable_state != m_bv_last_enable_state) {
+				m_bv_enable_count++;
+				m_bv_last_enable_state = m_bv_enable_state;
+
+				// Got Enough Toggles, Advance to Stacking
+				if (m_bv_enable_count == 0x03) {
+					m_bv_cycles = curr_cycles;
+					m_bv_pulse = 1;
+					m_bv_state++;
+				}
+			} else {
+				// No Toggling Found, Game Rejected Bill
+				if (curr_cycles - m_bv_cycles >= 833.3 * 200) {
+					m_bv_pulse = 0;
+					m_bv_state = 0x00;
+				}
+			}
+			break;
+		case 0x18: // Stacked Pulse 10ms ON
+			if (curr_cycles - m_bv_cycles >= 833.3 * 10) {
+				m_bv_cycles = curr_cycles;
+				m_bv_pulse = 0;
+				m_bv_state++;
+			}
+			break;
+		case 0x19: // Stacked Pulse 10ms OFF
 			if (curr_cycles - m_bv_cycles >= 833.3 * 10) {
 				m_bv_cycles = curr_cycles;
 				m_bv_pulse = 1;
 				m_bv_state++;
 			}
 			break;
-		case 0x07: // Stacked Pulse 10ms ON
+		case 0x1a: // Stacked Pulse 10ms ON
 			if (curr_cycles - m_bv_cycles >= 833.3 * 10) {
 				m_bv_cycles = curr_cycles;
 				m_bv_pulse = 0;
-				m_bv_state = 0;
+				m_bv_state = 0x00;
 			}
 			break;
 	}
@@ -818,35 +939,33 @@ READ8_MEMBER(peplus_state::peplus_input_bank_a_r)
 * Video/Character functions *
 ****************************/
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(peplus_state::get_bg_tile_info)
 {
-	peplus_state *state = machine.driver_data<peplus_state>();
-	UINT8 *videoram = state->m_videoram;
-	int pr = state->m_palette_ram[tile_index];
-	int pr2 = state->m_palette_ram2[tile_index];
+	UINT8 *videoram = m_videoram;
+	int pr = m_palette_ram[tile_index];
+	int pr2 = m_palette_ram2[tile_index];
 	int vr = videoram[tile_index];
 
 	int code = ((pr & 0x0f)*256) | vr;
 	int color = (pr>>4) & 0x0f;
 
 	// Access 2nd Half of CGs and CAP
-	if (state->m_jumper_e16_e17 && (pr2 & 0x10) == 0x10)
+	if (m_jumper_e16_e17 && (pr2 & 0x10) == 0x10)
 	{
 		code += 0x1000;
 		color += 0x10;
 	}
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
-static VIDEO_START( peplus )
+void peplus_state::video_start()
 {
-	peplus_state *state = machine.driver_data<peplus_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 40, 25);
-	state->m_palette_ram = auto_alloc_array(machine, UINT8, 0x3000);
-	memset(state->m_palette_ram, 0, 0x3000);
-	state->m_palette_ram2 = auto_alloc_array(machine, UINT8, 0x3000);
-	memset(state->m_palette_ram2, 0, 0x3000);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(peplus_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 40, 25);
+	m_palette_ram = auto_alloc_array(machine(), UINT8, 0x3000);
+	memset(m_palette_ram, 0, 0x3000);
+	m_palette_ram2 = auto_alloc_array(machine(), UINT8, 0x3000);
+	memset(m_palette_ram2, 0, 0x3000);
 }
 
 static SCREEN_UPDATE_IND16( peplus )
@@ -857,9 +976,9 @@ static SCREEN_UPDATE_IND16( peplus )
 	return 0;
 }
 
-static PALETTE_INIT( peplus )
+void peplus_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 /*  prom bits
     7654 3210
     ---- -xxx   red component.
@@ -868,7 +987,7 @@ static PALETTE_INIT( peplus )
 */
 	int i;
 
-	for (i = 0;i < machine.total_colors();i++)
+	for (i = 0;i < machine().total_colors();i++)
 	{
 		int bit0, bit1, bit2, r, g, b;
 
@@ -890,7 +1009,7 @@ static PALETTE_INIT( peplus )
 		bit2 = 0;
 		b = 0x21 * bit2 + 0x47 * bit1 + 0x97 * bit0;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 
@@ -1006,11 +1125,16 @@ static INPUT_PORTS_START( peplus )
 	PORT_CONFNAME( 0x1f, 0x00, "Bill Choices" )
 	PORT_CONFSETTING( 0x00, "$1" )
 	PORT_CONFSETTING( 0x01, "$2" )
-	PORT_CONFSETTING( 0x04, "$5" )
-	PORT_CONFSETTING( 0x09, "$10" )
-	PORT_CONFSETTING( 0x13, "$20" )
-	PORT_CONFSETTING( 0x16, "$50" )
-	PORT_CONFSETTING( 0x18, "$100" )
+	PORT_CONFSETTING( 0x02, "$5" )
+	PORT_CONFSETTING( 0x03, "$10" )
+	PORT_CONFSETTING( 0x04, "$20" )
+	PORT_CONFSETTING( 0x05, "$50" )
+	PORT_CONFSETTING( 0x06, "$100" )
+
+	PORT_START("BP")
+	PORT_CONFNAME( 0x1f, 0x00, "Bill Protocol" )
+	PORT_CONFSETTING( 0x00, "ID-022" )
+	PORT_CONFSETTING( 0x01, "ID-023" )
 
 	PORT_START("SW1")
 	PORT_DIPNAME( 0x01, 0x01, "Line Frequency" )
@@ -1185,29 +1309,28 @@ INPUT_PORTS_END
 *     Machine Reset      *
 *************************/
 
-static MACHINE_RESET( peplus )
+void peplus_state::machine_reset()
 {
 	/* AutoHold Feature Currently Disabled */
 #if 0
-	peplus_state *state = machine.driver_data<peplus_state>();
 
 	// pepp0158
-	state->m_program_ram[0xa19f] = 0x22; // RET - Disable Memory Test
-	state->m_program_ram[0xddea] = 0x22; // RET - Disable Program Checksum
-	state->m_autohold_addr = 0x5ffe; // AutoHold Address
+	m_program_ram[0xa19f] = 0x22; // RET - Disable Memory Test
+	m_program_ram[0xddea] = 0x22; // RET - Disable Program Checksum
+	m_autohold_addr = 0x5ffe; // AutoHold Address
 
 	// pepp0188
-	state->m_program_ram[0x9a8d] = 0x22; // RET - Disable Memory Test
-	state->m_program_ram[0xf429] = 0x22; // RET - Disable Program Checksum
-	state->m_autohold_addr = 0x742f; // AutoHold Address
+	m_program_ram[0x9a8d] = 0x22; // RET - Disable Memory Test
+	m_program_ram[0xf429] = 0x22; // RET - Disable Program Checksum
+	m_autohold_addr = 0x742f; // AutoHold Address
 
 	// pepp0516
-	state->m_program_ram[0x9a24] = 0x22; // RET - Disable Memory Test
-	state->m_program_ram[0xd61d] = 0x22; // RET - Disable Program Checksum
-	state->m_autohold_addr = 0x5e7e; // AutoHold Address
+	m_program_ram[0x9a24] = 0x22; // RET - Disable Memory Test
+	m_program_ram[0xd61d] = 0x22; // RET - Disable Program Checksum
+	m_autohold_addr = 0x5e7e; // AutoHold Address
 
-	if (state->m_autohold_addr)
-		state->m_program_ram[state->m_autohold_addr] = state->ioport("AUTOHOLD")->read_safe(0x00) & 0x01;
+	if (m_autohold_addr)
+		m_program_ram[m_autohold_addr] = ioport("AUTOHOLD")->read_safe(0x00) & 0x01;
 #endif
 }
 
@@ -1222,7 +1345,6 @@ static MACHINE_CONFIG_START( peplus, peplus_state )
 	MCFG_CPU_PROGRAM_MAP(peplus_map)
 	MCFG_CPU_IO_MAP(peplus_iomap)
 
-	MCFG_MACHINE_RESET(peplus)
 	MCFG_NVRAM_ADD_0FILL("cmos")
 
 	// video hardware
@@ -1238,8 +1360,6 @@ static MACHINE_CONFIG_START( peplus, peplus_state )
 	MCFG_MC6845_ADD("crtc", R6545_1, MC6845_CLOCK, mc6845_intf)
 	MCFG_I2CMEM_ADD("i2cmem", i2cmem_interface)
 
-	MCFG_PALETTE_INIT(peplus)
-	MCFG_VIDEO_START(peplus)
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -27,7 +27,6 @@
 ***************************************************************************/
 
 /* internal structure containing a word index, shift and mask */
-typedef struct atarirle_mask atarirle_mask;
 struct atarirle_mask
 {
 	int				word;				/* word index */
@@ -36,7 +35,6 @@ struct atarirle_mask
 };
 
 /* internal structure for sorting the motion objects */
-typedef struct mo_sort_entry mo_sort_entry;
 struct mo_sort_entry
 {
 	mo_sort_entry *	next;
@@ -44,7 +42,6 @@ struct mo_sort_entry
 };
 
 /* internal structure describing each object in the ROMs */
-typedef struct atarirle_info atarirle_info;
 struct atarirle_info
 {
 	INT16			width;
@@ -57,7 +54,6 @@ struct atarirle_info
 };
 
 /* internal structure containing the state of the motion objects */
-typedef struct atarirle_data atarirle_data;
 struct atarirle_data
 {
 	int				bitmapwidth;		/* width of the full playfield bitmap */
@@ -151,7 +147,7 @@ INLINE atarirle_data *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == ATARIRLE);
 
-	return (atarirle_data *)downcast<legacy_device_base *>(device)->token();
+	return (atarirle_data *)downcast<atarirle_device *>(device)->token();
 }
 
 
@@ -371,26 +367,34 @@ static DEVICE_START( atarirle )
 }
 
 
-DEVICE_GET_INFO( atarirle )
+const device_type ATARIRLE = &device_creator<atarirle_device>;
+
+atarirle_device::atarirle_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, ATARIRLE, "Atari RLE", tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(atarirle_data);					break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(atarirle);		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "Atari RLE");				break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Atari RLE Video IC");					break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright MAME Team");			break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(atarirle_data));
 }
 
-DEFINE_LEGACY_DEVICE(ATARIRLE, atarirle);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void atarirle_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void atarirle_device::device_start()
+{
+	DEVICE_START_NAME( atarirle )(this);
+}
+
+
 
 /*---------------------------------------------------------------
     atarirle_control_w: Write handler for MO control bits.

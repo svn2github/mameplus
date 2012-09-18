@@ -92,26 +92,24 @@ static int get_bank(running_machine &machine, UINT8 prom1, UINT8 prom2, int bpp)
  *
  *************************************/
 
-static TILE_GET_INFO( get_alpha_tile_info )
+TILE_GET_INFO_MEMBER(atarisy1_state::get_alpha_tile_info)
 {
-	atarisy1_state *state = machine.driver_data<atarisy1_state>();
-	UINT16 data = state->m_alpha[tile_index];
+	UINT16 data = m_alpha[tile_index];
 	int code = data & 0x3ff;
 	int color = (data >> 10) & 0x07;
 	int opaque = data & 0x2000;
-	SET_TILE_INFO(0, code, color, opaque ? TILE_FORCE_LAYER0 : 0);
+	SET_TILE_INFO_MEMBER(0, code, color, opaque ? TILE_FORCE_LAYER0 : 0);
 }
 
 
-static TILE_GET_INFO( get_playfield_tile_info )
+TILE_GET_INFO_MEMBER(atarisy1_state::get_playfield_tile_info)
 {
-	atarisy1_state *state = machine.driver_data<atarisy1_state>();
-	UINT16 data = state->m_playfield[tile_index];
-	UINT16 lookup = state->m_playfield_lookup[((data >> 8) & 0x7f) | (state->m_playfield_tile_bank << 7)];
+	UINT16 data = m_playfield[tile_index];
+	UINT16 lookup = m_playfield_lookup[((data >> 8) & 0x7f) | (m_playfield_tile_bank << 7)];
 	int gfxindex = (lookup >> 8) & 15;
 	int code = ((lookup & 0xff) << 8) | (data & 0xff);
-	int color = 0x20 + (((lookup >> 12) & 15) << state->m_bank_color_shift[gfxindex]);
-	SET_TILE_INFO(gfxindex, code, color, (data >> 15) & 1);
+	int color = 0x20 + (((lookup >> 12) & 15) << m_bank_color_shift[gfxindex]);
+	SET_TILE_INFO_MEMBER(gfxindex, code, color, (data >> 15) & 1);
 }
 
 
@@ -122,7 +120,7 @@ static TILE_GET_INFO( get_playfield_tile_info )
  *
  *************************************/
 
-VIDEO_START( atarisy1 )
+VIDEO_START_MEMBER(atarisy1_state,atarisy1)
 {
 	static const atarimo_desc modesc =
 	{
@@ -161,24 +159,23 @@ VIDEO_START( atarisy1 )
 		0					/* callback routine for special entries */
 	};
 
-	atarisy1_state *state = machine.driver_data<atarisy1_state>();
 	UINT16 motable[256];
 	UINT16 *codelookup;
 	UINT8 *colorlookup, *gfxlookup;
 	int i, size;
 
 	/* first decode the graphics */
-	decode_gfx(machine, state->m_playfield_lookup, motable);
+	decode_gfx(machine(), m_playfield_lookup, motable);
 
 	/* initialize the playfield */
-	state->m_playfield_tilemap = tilemap_create(machine, get_playfield_tile_info, tilemap_scan_rows,  8,8, 64,64);
+	m_playfield_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(atarisy1_state::get_playfield_tile_info),this), TILEMAP_SCAN_ROWS,  8,8, 64,64);
 
 	/* initialize the motion objects */
-	atarimo_init(machine, 0, &modesc);
+	atarimo_init(machine(), 0, &modesc);
 
 	/* initialize the alphanumerics */
-	state->m_alpha_tilemap = tilemap_create(machine, get_alpha_tile_info, tilemap_scan_rows,  8,8, 64,32);
-	state->m_alpha_tilemap->set_transparent_pen(0);
+	m_alpha_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(atarisy1_state::get_alpha_tile_info),this), TILEMAP_SCAN_ROWS,  8,8, 64,32);
+	m_alpha_tilemap->set_transparent_pen(0);
 
 	/* modify the motion object code lookup */
 	codelookup = atarimo_get_code_lookup(0, &size);
@@ -196,12 +193,12 @@ VIDEO_START( atarisy1 )
 
 	/* reset the statics */
 	atarimo_set_yscroll(0, 256);
-	state->m_next_timer_scanline = -1;
+	m_next_timer_scanline = -1;
 
 	/* save state */
-	state->save_item(NAME(state->m_playfield_tile_bank));
-	state->save_item(NAME(state->m_playfield_priority_pens));
-	state->save_item(NAME(state->m_next_timer_scanline));
+	save_item(NAME(m_playfield_tile_bank));
+	save_item(NAME(m_playfield_priority_pens));
+	save_item(NAME(m_next_timer_scanline));
 }
 
 
@@ -226,7 +223,7 @@ WRITE16_HANDLER( atarisy1_bankselect_w )
 	/* sound CPU reset */
 	if (diff & 0x0080)
 	{
-		cputag_set_input_line(space->machine(), "audiocpu", INPUT_LINE_RESET, (newselect & 0x0080) ? CLEAR_LINE : ASSERT_LINE);
+		space->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, (newselect & 0x0080) ? CLEAR_LINE : ASSERT_LINE);
 		if (!(newselect & 0x0080)) atarigen_sound_reset(space->machine());
 	}
 
@@ -664,23 +661,23 @@ static int get_bank(running_machine &machine, UINT8 prom1, UINT8 prom2, int bpp)
 	switch (bpp)
 	{
 	case 4:
-		machine.gfx[gfx_index] = gfx_element_alloc(machine, &objlayout_4bpp, srcdata, 0x40, 256);
+		machine.gfx[gfx_index] = auto_alloc(machine, gfx_element(machine, objlayout_4bpp, srcdata, 0x40, 256));
 		break;
 
 	case 5:
-		machine.gfx[gfx_index] = gfx_element_alloc(machine, &objlayout_5bpp, srcdata, 0x40, 256);
+		machine.gfx[gfx_index] = auto_alloc(machine, gfx_element(machine, objlayout_5bpp, srcdata, 0x40, 256));
 		break;
 
 	case 6:
-		machine.gfx[gfx_index] = gfx_element_alloc(machine, &objlayout_6bpp, srcdata, 0x40, 256);
+		machine.gfx[gfx_index] = auto_alloc(machine, gfx_element(machine, objlayout_6bpp, srcdata, 0x40, 256));
 		break;
 
 	default:
-		fatalerror("Unsupported bpp");
+		fatalerror("Unsupported bpp\n");
 	}
 
 	/* set the color information */
-	machine.gfx[gfx_index]->color_granularity = 8;
+	machine.gfx[gfx_index]->set_granularity(8);
 	state->m_bank_color_shift[gfx_index] = bpp - 3;
 
 	/* set the entry and return it */

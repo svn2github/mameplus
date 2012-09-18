@@ -8,7 +8,8 @@ class _4enraya_state : public driver_device
 {
 public:
 	_4enraya_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag), m_snd_latch_bit(4) { }
+		: driver_device(mconfig, type, tag),
+		m_snd_latch_bit(4) { }
 
 	/* memory pointers */
 	UINT8	   m_videoram[0x1000];
@@ -28,11 +29,16 @@ public:
 	DECLARE_WRITE8_MEMBER(fenraya_videoram_w);
 	DECLARE_WRITE8_MEMBER(sound_control_w);
 	DECLARE_DRIVER_INIT(unkpacg);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/4enraya.c -----------*/
 
 
-VIDEO_START( 4enraya );
+
 SCREEN_UPDATE_IND16( 4enraya );

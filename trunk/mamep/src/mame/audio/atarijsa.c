@@ -147,7 +147,7 @@ void atarijsa_init(running_machine &machine, const char *testport, int testmask)
 
 	/* install POKEY memory handlers */
 	if (pokey != NULL)
-		jsacpu->memory().space(AS_PROGRAM)->install_readwrite_handler(0x2c00, 0x2c0f, read8_delegate(FUNC(pokey_device::read),pokey), write8_delegate(FUNC(pokey_device::write),pokey));
+		jsacpu->space(AS_PROGRAM)->install_readwrite_handler(0x2c00, 0x2c0f, read8_delegate(FUNC(pokey_device::read),pokey), write8_delegate(FUNC(pokey_device::write),pokey));
 
 	init_save_state(machine);
 	atarijsa_reset();
@@ -298,7 +298,7 @@ static WRITE8_HANDLER( jsa1_io_w )
 			}
 
 			/* reset the YM2151 if needed */
-			if ((data&1) == 0) devtag_reset(space->machine(), "ymsnd");
+			if ((data&1) == 0) space->machine().device("ymsnd")->reset();
 
 			/* coin counters */
 			coin_counter_w(space->machine(), 1, (data >> 5) & 1);
@@ -419,7 +419,7 @@ static WRITE8_HANDLER( jsa2_io_w )
             */
 
 			/* reset the YM2151 if needed */
-			if ((data&1) == 0) devtag_reset(space->machine(), "ymsnd");
+			if ((data&1) == 0) space->machine().device("ymsnd")->reset();
 
 			/* update the bank */
 			memcpy(bank_base, &bank_source_data[0x1000 * ((data >> 6) & 3)], 0x1000);
@@ -544,7 +544,7 @@ static WRITE8_HANDLER( jsa3_io_w )
             */
 
 			/* reset the YM2151 if needed */
-			if ((data&1) == 0) devtag_reset(space->machine(), "ymsnd");
+			if ((data&1) == 0) space->machine().device("ymsnd")->reset();
 
 			/* update the OKI bank */
 			if (oki6295 != NULL)
@@ -678,7 +678,7 @@ static WRITE8_HANDLER( jsa3s_io_w )
             */
 
 			/* reset the YM2151 if needed */
-			if ((data&1) == 0) devtag_reset(space->machine(), "ymsnd");
+			if ((data&1) == 0) space->machine().device("ymsnd")->reset();
 
 			/* update the OKI bank */
 			space->machine().root_device().membank("bank12")->set_entry((space->machine().root_device().membank("bank12")->entry() & 2) | ((data >> 1) & 1));

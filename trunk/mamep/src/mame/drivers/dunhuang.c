@@ -117,6 +117,11 @@ public:
 	DECLARE_WRITE8_MEMBER(dunhuang_rombank_w);
 	DECLARE_WRITE8_MEMBER(dunhuang_82_w);
 	DECLARE_READ8_MEMBER(dunhuang_dsw_r);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	TILE_GET_INFO_MEMBER(get_tile_info2);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -125,35 +130,32 @@ public:
 ***************************************************************************/
 
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(dunhuang_state::get_tile_info)
 {
-	dunhuang_state *state = machine.driver_data<dunhuang_state>();
-	UINT16 code = state->m_videoram[tile_index];
-	UINT8 color = state->m_colorram[tile_index] & 0x0f;
-	SET_TILE_INFO(0, code, color, 0);
+	UINT16 code = m_videoram[tile_index];
+	UINT8 color = m_colorram[tile_index] & 0x0f;
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
-static TILE_GET_INFO( get_tile_info2 )
+TILE_GET_INFO_MEMBER(dunhuang_state::get_tile_info2)
 {
-	dunhuang_state *state = machine.driver_data<dunhuang_state>();
-	UINT16 code = state->m_videoram2[tile_index];
-	UINT8 color = state->m_colorram2[tile_index] & 0x0f;
-	SET_TILE_INFO(1, code, color, 0);
+	UINT16 code = m_videoram2[tile_index];
+	UINT8 color = m_colorram2[tile_index] & 0x0f;
+	SET_TILE_INFO_MEMBER(1, code, color, 0);
 }
 
-static VIDEO_START(dunhuang)
+void dunhuang_state::video_start()
 {
-	dunhuang_state *state = machine.driver_data<dunhuang_state>();
-	state->m_tmap = tilemap_create(machine, get_tile_info, tilemap_scan_rows, 8,8, 0x40,0x20);
-	state->m_tmap2 = tilemap_create(machine, get_tile_info2, tilemap_scan_rows, 8,32, 0x40,0x8);
+	m_tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(dunhuang_state::get_tile_info),this), TILEMAP_SCAN_ROWS, 8,8, 0x40,0x20);
+	m_tmap2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(dunhuang_state::get_tile_info2),this), TILEMAP_SCAN_ROWS, 8,32, 0x40,0x8);
 
-	state->m_tmap->set_transparent_pen(0);
-	state->m_tmap2->set_transparent_pen(0);
+	m_tmap->set_transparent_pen(0);
+	m_tmap2->set_transparent_pen(0);
 
-	state->save_item(NAME(state->m_videoram));
-	state->save_item(NAME(state->m_colorram));
-	state->save_item(NAME(state->m_videoram2));
-	state->save_item(NAME(state->m_colorram2));
-	state->save_item(NAME(state->m_paldata));
+	save_item(NAME(m_videoram));
+	save_item(NAME(m_colorram));
+	save_item(NAME(m_videoram2));
+	save_item(NAME(m_colorram2));
+	save_item(NAME(m_paldata));
 }
 
 static SCREEN_UPDATE_IND16( dunhuang )
@@ -269,7 +271,7 @@ WRITE8_MEMBER(dunhuang_state::dunhuang_clear_y_w)
 WRITE8_MEMBER(dunhuang_state::dunhuang_horiz_clear_w)
 {
 	int i;
-//  logerror("%06x: horiz clear, y = %02x, data = %02d\n", cpu_get_pc(&space.device()), m_clear_y,data);
+//  logerror("%06x: horiz clear, y = %02x, data = %02d\n", space.device().safe_pc(), m_clear_y,data);
 	for (i = 0; i < 0x40; i++)
 	{
 		int addr = m_clear_y * 0x40 + i;
@@ -285,7 +287,7 @@ WRITE8_MEMBER(dunhuang_state::dunhuang_horiz_clear_w)
 WRITE8_MEMBER(dunhuang_state::dunhuang_vert_clear_w)
 {
 	int i;
-//  logerror("%06x: vert clear, x = %02x, y = %02x, data = %02x\n", cpu_get_pc(&space.device()), m_pos_x,m_pos_y,data);
+//  logerror("%06x: vert clear, x = %02x, y = %02x, data = %02x\n", space.device().safe_pc(), m_pos_x,m_pos_y,data);
 	for (i = 0; i < 0x08; i++)
 	{
 		int addr = (m_pos_x & 0x3f) + (i & 0x07) * 0x40;
@@ -343,7 +345,7 @@ WRITE8_MEMBER(dunhuang_state::dunhuang_block_h_w)
 	int i,j, addr;
 	UINT8 *tile_addr;
 
-//  logerror("%06x: block dst %x, src %x, xy %x %x, wh %x %x, clr %x\n", cpu_get_pc(&space.device()), m_block_dest, (m_block_addr_hi << 8) + m_block_addr_lo, m_block_x,m_block_y,m_block_w+1,m_block_h+1,m_block_c);
+//  logerror("%06x: block dst %x, src %x, xy %x %x, wh %x %x, clr %x\n", space.device().safe_pc(), m_block_dest, (m_block_addr_hi << 8) + m_block_addr_lo, m_block_x,m_block_y,m_block_w+1,m_block_h+1,m_block_c);
 
 	m_block_h = data;
 
@@ -382,7 +384,7 @@ WRITE8_MEMBER(dunhuang_state::dunhuang_block_h_w)
 			break;
 
 		default:
-			popmessage("%06x: block dst=%x", cpu_get_pc(&space.device()), m_block_dest);
+			popmessage("%06x: block dst=%x", space.device().safe_pc(), m_block_dest);
 	}
 }
 
@@ -763,53 +765,51 @@ static const ay8910_interface dunhuang_ay8910_interface =
 
 
 
-static MACHINE_START( dunhuang )
+void dunhuang_state::machine_start()
 {
-	dunhuang_state *state = machine.driver_data<dunhuang_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x8000);
+	membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x8000);
 
-	state->save_item(NAME(state->m_written));
-	state->save_item(NAME(state->m_written2));
-	state->save_item(NAME(state->m_pos_x));
-	state->save_item(NAME(state->m_pos_y));
-	state->save_item(NAME(state->m_clear_y));
-	state->save_item(NAME(state->m_block_x));
-	state->save_item(NAME(state->m_block_y));
-	state->save_item(NAME(state->m_block_w));
-	state->save_item(NAME(state->m_block_h));
-	state->save_item(NAME(state->m_block_addr_hi));
-	state->save_item(NAME(state->m_block_addr_lo));
-	state->save_item(NAME(state->m_block_dest));
-	state->save_item(NAME(state->m_block_c));
-	state->save_item(NAME(state->m_layers));
-	state->save_item(NAME(state->m_paloffs));
-	state->save_item(NAME(state->m_input));
-	state->save_item(NAME(state->m_hopper));
+	save_item(NAME(m_written));
+	save_item(NAME(m_written2));
+	save_item(NAME(m_pos_x));
+	save_item(NAME(m_pos_y));
+	save_item(NAME(m_clear_y));
+	save_item(NAME(m_block_x));
+	save_item(NAME(m_block_y));
+	save_item(NAME(m_block_w));
+	save_item(NAME(m_block_h));
+	save_item(NAME(m_block_addr_hi));
+	save_item(NAME(m_block_addr_lo));
+	save_item(NAME(m_block_dest));
+	save_item(NAME(m_block_c));
+	save_item(NAME(m_layers));
+	save_item(NAME(m_paloffs));
+	save_item(NAME(m_input));
+	save_item(NAME(m_hopper));
 }
 
-static MACHINE_RESET( dunhuang )
+void dunhuang_state::machine_reset()
 {
-	dunhuang_state *state = machine.driver_data<dunhuang_state>();
 
-	state->m_written = 0;
-	state->m_written2 = 0;
-	state->m_pos_x = 0;
-	state->m_pos_y = 0;
-	state->m_clear_y = 0;
-	state->m_block_x = 0;
-	state->m_block_y = 0;
-	state->m_block_w = 0;
-	state->m_block_h = 0;
-	state->m_block_addr_hi = 0;
-	state->m_block_addr_lo = 0;
-	state->m_block_dest = 0;
-	state->m_block_c = 0;
-	state->m_layers = 0;
-	state->m_paloffs = 0;
-	state->m_input = 0;
-	state->m_hopper = 0;
+	m_written = 0;
+	m_written2 = 0;
+	m_pos_x = 0;
+	m_pos_y = 0;
+	m_clear_y = 0;
+	m_block_x = 0;
+	m_block_y = 0;
+	m_block_w = 0;
+	m_block_h = 0;
+	m_block_addr_hi = 0;
+	m_block_addr_lo = 0;
+	m_block_dest = 0;
+	m_block_c = 0;
+	m_layers = 0;
+	m_paloffs = 0;
+	m_input = 0;
+	m_hopper = 0;
 }
 
 
@@ -821,8 +821,6 @@ static MACHINE_CONFIG_START( dunhuang, dunhuang_state )
 	MCFG_CPU_IO_MAP(dunhuang_io_map)
 	MCFG_CPU_VBLANK_INT("screen", irq0_line_hold)
 
-	MCFG_MACHINE_START(dunhuang)
-	MCFG_MACHINE_RESET(dunhuang)
 
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_seconds(5))
 
@@ -837,7 +835,6 @@ static MACHINE_CONFIG_START( dunhuang, dunhuang_state )
 	MCFG_GFXDECODE(dunhuang)
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(dunhuang)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

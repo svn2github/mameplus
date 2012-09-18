@@ -206,7 +206,7 @@ READ8_MEMBER(snesb_state::sb2b_6a6xxx_r)
 		case 0xfb7:	return 0x47;
 	}
 
-	logerror("Unknown protection read read %x @ %x\n",offset, cpu_get_pc(&space.device()));
+	logerror("Unknown protection read read %x @ %x\n",offset, space.device().safe_pc());
 
 	return 0;
 }
@@ -245,25 +245,20 @@ static ADDRESS_MAP_START( snesb_map, AS_PROGRAM, 8, snesb_state )
 	AM_RANGE(0xc00000, 0xffffff) AM_READWRITE_LEGACY(snes_r_bank7, snes_w_bank7)	/* Mirror and ROM */
 ADDRESS_MAP_END
 
-
-READ8_MEMBER(snesb_state::spc_ram_100_r)
+static READ8_DEVICE_HANDLER( spc_ram_100_r )
 {
-	device_t *device = machine().device("spc700");
 	return spc_ram_r(device, offset + 0x100);
 }
 
-WRITE8_MEMBER(snesb_state::spc_ram_100_w)
+static WRITE8_DEVICE_HANDLER( spc_ram_100_w )
 {
-	device_t *device = machine().device("spc700");
 	spc_ram_w(device, offset + 0x100, data);
 }
 
 static ADDRESS_MAP_START( spc_mem, AS_PROGRAM, 8, snesb_state )
 	AM_RANGE(0x0000, 0x00ef) AM_DEVREADWRITE_LEGACY("spc700", spc_ram_r, spc_ram_w)	/* lower 32k ram */
 	AM_RANGE(0x00f0, 0x00ff) AM_DEVREADWRITE_LEGACY("spc700", spc_io_r, spc_io_w)	/* spc io */
-	AM_RANGE(0x0100, 0xffff) AM_WRITE(spc_ram_100_w)
-	AM_RANGE(0x0100, 0xffbf) AM_READ(spc_ram_100_r)
-	AM_RANGE(0xffc0, 0xffff) AM_DEVREAD_LEGACY("spc700", spc_ipl_r)
+	AM_RANGE(0x0100, 0xffff) AM_DEVREADWRITE_LEGACY("spc700", spc_ram_100_r, spc_ram_100_w)
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( snes_common )
@@ -647,7 +642,7 @@ static MACHINE_CONFIG_START( kinstb, snesb_state )
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(DOTCLK_NTSC, SNES_HTOTAL, 0, SNES_SCR_WIDTH, SNES_VTOTAL_NTSC, 0, SNES_SCR_HEIGHT_NTSC)
-	MCFG_SCREEN_UPDATE_STATIC( snes )
+	MCFG_SCREEN_UPDATE_DRIVER( snes_state, snes_screen_update )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -865,7 +860,7 @@ ROM_START( kinstb )
 	ROM_LOAD( "3.u16", 0x200000, 0x100000, CRC(7a40f7dd) SHA1(cebe632e8d2d68d0619077cc1e931af73c9a723b) )
 	ROM_LOAD( "4.u17", 0x300000, 0x100000, CRC(3d7564c1) SHA1(392b513991897668d5dd469ac84a34f785895774) )
 
-	ROM_REGION(0x100,           "user5", 0)
+	ROM_REGION(0x100,           "sound_ipl", 0)
 	ROM_LOAD("spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )
 
 	ROM_REGION(0x800,           "user6", ROMREGION_ERASEFF)
@@ -907,7 +902,7 @@ ROM_START( ffight2b )
 	ROM_CONTINUE(          0x078000, 0x008000 )
 	ROM_LOAD( "ff2_1.u8", 0x100000, 0x040000, CRC(ea315ac1) SHA1(a85de091882d35bc77dc99677511828ff7c20350) )
 
-	ROM_REGION(0x100,           "user5", 0)
+	ROM_REGION(0x100,           "sound_ipl", 0)
 	ROM_LOAD("spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )
 
 	ROM_REGION(0x800,           "user6", ROMREGION_ERASEFF)
@@ -919,7 +914,7 @@ ROM_START( iron )
 	ROM_LOAD( "5.c10.bin", 0x080000, 0x080000, CRC(0c3a0b5b) SHA1(1e8ab860689137e0e94731f1af2cfc561492b5bd) )
 	ROM_LOAD( "4.c11.bin", 0x100000, 0x040000, CRC(2aa417c7) SHA1(24b375e5bbd4be5dcd31b63ea98fbbadd53d543e) )
 
-	ROM_REGION(0x100,           "user5", 0)
+	ROM_REGION(0x100,           "sound_ipl", 0)
 	ROM_LOAD("spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )
 
 	ROM_REGION(0x800,           "user6", ROMREGION_ERASEFF)
@@ -932,7 +927,7 @@ ROM_START( denseib )
 	ROM_LOAD( "dj.u16", 0x100000, 0x0080000, CRC(7cb71fd7) SHA1(7673e9dcaabe804e2d637e67eabca1683dad4245) )
 	ROM_LOAD( "dj.u17", 0x180000, 0x0080000, CRC(de29dd89) SHA1(441aefbc7ee64515ee66431ef504e76dc8dc5ca3) )
 
-	ROM_REGION(0x100,           "user5", 0)
+	ROM_REGION(0x100,           "sound_ipl", 0)
 	ROM_LOAD("spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )
 
 	ROM_REGION(0x800,           "user6", ROMREGION_ERASEFF)
@@ -941,7 +936,7 @@ ROM_END
 ROM_START( sblast2b )
 	ROM_REGION( 0x180000, "user3", ROMREGION_ERASEFF )
 
-	ROM_REGION(0x100,           "user5", 0)
+	ROM_REGION(0x100,           "sound_ipl", 0)
 	ROM_LOAD("spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )
 
 	ROM_REGION(0x800,           "user6", ROMREGION_ERASEFF)
@@ -960,7 +955,7 @@ ROM_START( endless )
 	ROM_LOAD( "endlessduel.unknownposition3", 0x100000, 0x80000, CRC(30d06d7a) SHA1(17c617d94abb10c3bdf9d51013b116f4ef4debe8) )
 	ROM_LOAD( "endlessduel.unknownposition4", 0x180000, 0x80000, CRC(9a9493ad) SHA1(82ee4fce9cc2014cb8404fd43eebb7941cdb9ac1) )
 
-	ROM_REGION(0x100,           "user5", 0)
+	ROM_REGION(0x100,           "sound_ipl", 0)
 	ROM_LOAD("spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )
 
 	ROM_REGION(0x800,           "user6", ROMREGION_ERASEFF)

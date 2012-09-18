@@ -3,18 +3,71 @@
 
   Driver by Mariusz Wojcieszek
 
-  CRT 250 (basic components, also used by CRT260)
-   Main CPU: Z80B
-      Sound: Yamaha YM2149F (or compatible)
-      Video: 2 Yamaha V9938 (MSX2 video chip!)
-      Other: 2 Z80APIO (I/O and interrupt controllers)
-             1 8255 (I/O)
+CRT-250
++-----------------------------------------------+
+|                                 JP6      JP7  |
+| 81464 81464 81464 81464     DS1225Y U9   U13  |
+| 81464 81464 81464 81464 Z80    PAL  U10  U14  |
+| 81464 81464 81464 81464  PAL        U11  U15  |
+|      21.47727MHz                    U12  U16  |
+|                                               |
+|   V9938 V9938                AY8930           |
+|                                               |
+|                              Z80APIO          |
+|                                               |
+|                P8255A        Z80APIO          |
+|                                               |
+|                                               |
+| |----------------J3-----------------| DSW VOL |
++-----------------------------------------------+
+
+  CPU: Z80B
+Video: Yamaha V9938 Video Processor x 2 (MSX2 video chip)
+Sound: AY8930 (or compatible)
+  OSC: 21.47727MHz
+Other: Z80APIO x 2  (I/O and interrupt controllers)
+       P8255A (I/O)
+       8-switch DSW (socketted)
+       Volume pot
+
+Memory: Fujitsu MB81464-12 (or compatible) all socketted. The 3rd row or memory
+        may or may not be populated.
+
+JP6 - 3 pin jumper: ROM size (1-2 = 27256, 2-3 = 27512)
+JP7 - 3 pin jumper: RAM / ROM for U13 to U16? (1-2 = RAM, 2-3 = ROM)
+J3 - 65 Pin connector:
+
+ #1 - Blue  (video out)    #23 - V-Meter Lamp              #45 - P2 Discard 3 Switch
+ #2 - Green (video out)    #24 - P2 Play Lamp              #46 - P2 Discard 2 Switch
+ #3 - Red   (video out)    #25 - Audit Meter #2 12v        #47 - P2 Discard 1 Switch
+ #4 - Vertical Sync        #26 - Audit Meter #1 12v        #48 - Adjust 3 Terminal
+ #5 - Horizontal Sync      #27 - V-Lamp return             #49 - Adjust 2 Terminal
+ #6 - NC                   #28 - Lockout Coil Option 12v   #50 - Adjust 1 Terminal
+ #7 - Video Ground         #29 - P2 Cancel Lamp            #51 - Switch Common Ground
+ #8 - Ground               #30 - Undefined Lamp            #52 - Switch Common Ground
+ #9 - Logic (PCB) Ground   #31 - P1 Cancel Lamp            #53 - P2 Cancel Switch
+#10 - Logic (PCB) Ground   #32 - P1 Play Lamp              #54 - Diagnostics Switch
+#11 - +5VDC Power          #33 - P1 Discard 5 Lamp         #55 - Books Switch
+#12 - +5VDC Power          #34 - P1 Discard 4 Lamp         #56 - Coin 2 Switch
+#13 - +12VDC Power         #35 - P1 Discard 3 Lamp         #57 - Coin 1 Switch
+#14 - V-Lamp               #36 - P1 Discard 2 Lamp         #58 - Undefined Switch
+#15 - V-Lamp Return        #37 - P1 Discard 1 Lamp         #59 - P1 Cancel Switch
+#16 - NC                   #38 - NC                        #60 - P1 Play Switch
+#17 - P2 Discard 1 Lamp    #39 - Speaker -                 #61 - P1 Discard 5 Switch
+#18 - P2 Discard 2 Lamp    #40 - Speaker +                 #62 - P1 Discard 4 Switch
+#19 - P2 Discard 3 Lamp    #41 - NC                        #63 - P1 Discard 3 Switch
+#20 - P2 Discard 4 Lamp    #42 - P2 Play Switch            #64 - P1 Discard 2 Switch
+#21 - P2 Discard 5 Lamp    #43 - P2 Discard 5 Switch       #65 - P1 Discard 1 Switch
+#22 - V-Meter Lamp         #44 - P2 Discard 4 Switch
+
+Power & Common Ground wires are 18 gauge, all other wires are 20 or 22 gauge.
 
   CRT 256: addon board for CRT 250, stores question roms (aka Memory Expansion board)
 
   CRT 258: addon board for CRT 250, contains UART and Microtouch touch screen controller
 
-  CRT 260 additional components:
+
+  CRT 260 same basic components as CRT 250 with these additional components:
   - Microtouch touch screen controller (SMT-3)
   - PC16550 UART (for communication with touch screen controller)
   - DS1204 Electronic Key (for protection)
@@ -29,9 +82,9 @@
   Known Games:
 
   CRT 250:
+  Dodge City (c) 1988
   Pit Boss II (c)1988
   Super Pit Boss (c)1988
-  * Dodge City (c) 1989
   Pit Boss Superstar (c)1990
   *Pit Boss Superstar 30 (c)1993
   *Pit Boss Superstar III 30 (c)1993?
@@ -52,8 +105,6 @@
   Megatouch 6 (c)1998
   *Megatouch 7 Encore (c)2000
 
-  * indicates that game needs to be dumped or redumped
-    Dodge City: 9131-02 (U9 through U11)
 
 Custom Program Versions (from different Megatouch manuals):
 
@@ -113,7 +164,7 @@ Not all regional versions are available for each Megatouch series
 #include "machine/nvram.h"
 
 
-typedef struct
+struct ds1204_t
 {
 	int state;
 	int read_ptr;
@@ -123,7 +174,7 @@ typedef struct
 	int out_bit;
 	UINT8 command[3];
 
-} ds1204_t;
+};
 
 class meritm_state : public driver_device
 {
@@ -182,6 +233,12 @@ public:
 	DECLARE_DRIVER_INIT(megat2);
 	DECLARE_DRIVER_INIT(pbst30);
 	DECLARE_DRIVER_INIT(megat3te);
+	virtual void machine_start();
+	virtual void video_start();
+	DECLARE_MACHINE_START(meritm_crt250_questions);
+	DECLARE_MACHINE_START(meritm_crt250_crt252_crt258);
+	DECLARE_MACHINE_START(meritm_crt260);
+	DECLARE_MACHINE_START(merit_common);
 };
 
 
@@ -394,15 +451,14 @@ static void meritm_vdp1_interrupt(device_t *, v99x8_device &device, int i)
 }
 
 
-static VIDEO_START( meritm )
+void meritm_state::video_start()
 {
-	meritm_state *state = machine.driver_data<meritm_state>();
-	state->m_layer0_enabled = state->m_layer1_enabled = 1;
+	m_layer0_enabled = m_layer1_enabled = 1;
 
-	state->m_vint = 0x18;
-	state_save_register_global(machine, state->m_vint);
-	state_save_register_global(machine, state->m_interrupt_vdp0_state);
-	state_save_register_global(machine, state->m_interrupt_vdp1_state);
+	m_vint = 0x18;
+	state_save_register_global(machine(), m_vint);
+	state_save_register_global(machine(), m_interrupt_vdp0_state);
+	state_save_register_global(machine(), m_interrupt_vdp1_state);
 }
 
 static SCREEN_UPDATE_IND16( meritm )
@@ -472,7 +528,7 @@ static void meritm_switch_banks( running_machine &machine )
 WRITE8_MEMBER(meritm_state::meritm_psd_a15_w)
 {
 	m_psd_a15 = data;
-	//logerror( "Writing PSD_A15 with %02x at PC=%04X\n", data, cpu_get_pc(&space.device()) );
+	//logerror( "Writing PSD_A15 with %02x at PC=%04X\n", data, space.device().safe_pc() );
 	meritm_switch_banks(machine());
 };
 
@@ -706,6 +762,46 @@ static INPUT_PORTS_START(meritm_crt250)
 
 	PORT_START("DSW")	/* need for AY-8910 accesses */
 	PORT_BIT( 0xff, 0x00, IPT_UNUSED)
+INPUT_PORTS_END
+
+static INPUT_PORTS_START(dodgecty)
+	PORT_INCLUDE(meritm_crt250)
+
+	PORT_MODIFY("PIO1_PORTA")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_POKER_HOLD1 ) PORT_NAME( "Hold 1 / Take / Lo" )
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_POKER_HOLD2 )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_POKER_HOLD3 )
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_POKER_HOLD4 )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_POKER_HOLD5 ) PORT_NAME( "Hold 5 / Double Up / Hi" )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_GAMBLE_BET )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_GAMBLE_DEAL )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN )
+
+	PORT_MODIFY("DSW")
+	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Unknown ) ) PORT_DIPLOCATION("SW1:1")
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x01, DEF_STR( On ) )
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Unknown ) ) PORT_DIPLOCATION("SW1:2")
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x02, DEF_STR( On ) )
+	PORT_DIPNAME( 0x04, 0x00, DEF_STR( Unknown ) ) PORT_DIPLOCATION("SW1:3")
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x04, DEF_STR( On ) )
+	PORT_DIPNAME( 0x08, 0x00, DEF_STR( Unknown ) ) PORT_DIPLOCATION("SW1:4")
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x08, DEF_STR( On ) )
+	PORT_DIPNAME( 0x10, 0x00, DEF_STR( Unknown ) ) PORT_DIPLOCATION("SW1:5")
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x10, DEF_STR( On ) )
+	PORT_DIPNAME( 0x20, 0x00, DEF_STR( Unknown ) ) PORT_DIPLOCATION("SW1:6")
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x20, DEF_STR( On ) )
+	PORT_DIPNAME( 0x40, 0x00, DEF_STR( Unknown ) ) PORT_DIPLOCATION("SW1:7")
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x40, DEF_STR( On ) )
+	PORT_DIPNAME( 0x80, 0x00, DEF_STR( Unknown ) ) PORT_DIPLOCATION("SW1:8")
+	PORT_DIPSETTING(    0x00, DEF_STR( Off ) )
+	PORT_DIPSETTING(    0x80, DEF_STR( On ) )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START(pitbossm)
@@ -997,57 +1093,53 @@ static const z80_daisy_config meritm_daisy_chain[] =
 	{ NULL }
 };
 
-static MACHINE_START(merit_common)
+MACHINE_START_MEMBER(meritm_state,merit_common)
 {
-	meritm_state *state = machine.driver_data<meritm_state>();
 
-	state->m_z80pio_0->strobe_a(1);
-	state->m_z80pio_0->strobe_b(1);
-	state->m_z80pio_1->strobe_a(1);
-	state->m_z80pio_1->strobe_b(1);
+	m_z80pio_0->strobe_a(1);
+	m_z80pio_0->strobe_b(1);
+	m_z80pio_1->strobe_a(1);
+	m_z80pio_1->strobe_b(1);
 };
 
-static MACHINE_START(meritm_crt250)
+void meritm_state::machine_start()
 {
-	meritm_state *state = machine.driver_data<meritm_state>();
-	state->membank("bank1")->configure_entries(0, 8, state->memregion("maincpu")->base(), 0x10000);
-	state->m_bank = 0xff;
-	meritm_crt250_switch_banks(machine);
-	MACHINE_START_CALL(merit_common);
-	state_save_register_global(machine, state->m_bank);
+	membank("bank1")->configure_entries(0, 8, memregion("maincpu")->base(), 0x10000);
+	m_bank = 0xff;
+	meritm_crt250_switch_banks(machine());
+	MACHINE_START_CALL_MEMBER(merit_common);
+	state_save_register_global(machine(), m_bank);
 
 };
 
-static MACHINE_START(meritm_crt250_questions)
+MACHINE_START_MEMBER(meritm_state,meritm_crt250_questions)
 {
-	meritm_state *state = machine.driver_data<meritm_state>();
-	MACHINE_START_CALL(meritm_crt250);
-	state_save_register_global(machine, state->m_questions_loword_address);
+	meritm_state::machine_start();
+	state_save_register_global(machine(), m_questions_loword_address);
 };
 
-static MACHINE_START(meritm_crt250_crt252_crt258)
+MACHINE_START_MEMBER(meritm_state,meritm_crt250_crt252_crt258)
 {
-	MACHINE_START_CALL(meritm_crt250_questions);
-	pc16552d_init(machine, 0, UART_CLK, NULL, pc16650d_tx_callback);
+	MACHINE_START_CALL_MEMBER(meritm_crt250_questions);
+	pc16552d_init(machine(), 0, UART_CLK, NULL, pc16650d_tx_callback);
 }
 
-static MACHINE_START(meritm_crt260)
+MACHINE_START_MEMBER(meritm_state,meritm_crt260)
 {
-	meritm_state *state = machine.driver_data<meritm_state>();
-	state->m_ram = auto_alloc_array(machine, UINT8,  0x8000 );
-	machine.device<nvram_device>("nvram")->set_base(state->m_ram, 0x8000);
-	memset(state->m_ram, 0x00, 0x8000);
-	state->membank("bank1")->configure_entries(0, 128, state->memregion("maincpu")->base(), 0x8000);
-	state->membank("bank2")->configure_entries(0, 128, state->memregion("maincpu")->base(), 0x8000);
-	state->membank("bank3")->configure_entries(0, 4, state->m_ram, 0x2000);
-	state->m_bank = 0xff;
-	state->m_psd_a15 = 0;
-	meritm_switch_banks(machine);
-	MACHINE_START_CALL(merit_common);
-	pc16552d_init(machine, 0, UART_CLK, NULL, pc16650d_tx_callback);
-	state_save_register_global(machine, state->m_bank);
-	state_save_register_global(machine, state->m_psd_a15);
-	state_save_register_global_pointer(machine, state->m_ram, 0x8000);
+	m_ram = auto_alloc_array(machine(), UINT8,  0x8000 );
+	machine().device<nvram_device>("nvram")->set_base(m_ram, 0x8000);
+	memset(m_ram, 0x00, 0x8000);
+	membank("bank1")->configure_entries(0, 128, memregion("maincpu")->base(), 0x8000);
+	membank("bank2")->configure_entries(0, 128, memregion("maincpu")->base(), 0x8000);
+	membank("bank3")->configure_entries(0, 4, m_ram, 0x2000);
+	m_bank = 0xff;
+	m_psd_a15 = 0;
+	meritm_switch_banks(machine());
+	MACHINE_START_CALL_MEMBER(merit_common);
+	pc16552d_init(machine(), 0, UART_CLK, NULL, pc16650d_tx_callback);
+	state_save_register_global(machine(), m_bank);
+	state_save_register_global(machine(), m_psd_a15);
+	state_save_register_global_pointer(machine(), m_ram, 0x8000);
 };
 
 // from MSX2 driver, may be not accurate for merit games
@@ -1081,7 +1173,6 @@ static MACHINE_CONFIG_START( meritm_crt250, meritm_state )
 	MCFG_CPU_CONFIG(meritm_daisy_chain)
 	MCFG_TIMER_ADD_SCANLINE("scantimer", meritm_interrupt, "screen", 0, 1)
 
-	MCFG_MACHINE_START(meritm_crt250)
 
 	MCFG_I8255A_ADD( "ppi8255", crt250_ppi8255_intf )
 
@@ -1112,7 +1203,6 @@ static MACHINE_CONFIG_START( meritm_crt250, meritm_state )
 
 	MCFG_PALETTE_INIT( v9938 )
 
-	MCFG_VIDEO_START(meritm)
 
   /* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1126,13 +1216,13 @@ MACHINE_CONFIG_END
 static MACHINE_CONFIG_DERIVED( meritm_crt250_questions, meritm_crt250 )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(meritm_crt250_questions_map)
-	MCFG_MACHINE_START(meritm_crt250_questions)
+	MCFG_MACHINE_START_OVERRIDE(meritm_state,meritm_crt250_questions)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( meritm_crt250_crt252_crt258, meritm_crt250_questions )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(meritm_crt250_crt258_io_map)
-	MCFG_MACHINE_START(meritm_crt250_crt252_crt258)
+	MCFG_MACHINE_START_OVERRIDE(meritm_state,meritm_crt250_crt252_crt258)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( meritm_crt260, meritm_crt250 )
@@ -1144,10 +1234,17 @@ static MACHINE_CONFIG_DERIVED( meritm_crt260, meritm_crt250 )
 	MCFG_I8255A_ADD( "ppi8255", crt260_ppi8255_intf )
 
 	MCFG_WATCHDOG_TIME_INIT(attotime::from_msec(1200))	// DS1232, TD connected to VCC
-	MCFG_MACHINE_START(meritm_crt260)
+	MCFG_MACHINE_START_OVERRIDE(meritm_state,meritm_crt260)
 
 MACHINE_CONFIG_END
 
+
+ROM_START( dodgecty ) /* Uses a small daughter card CRT-255 & Dallas DS1225Y NV SRAM */
+	ROM_REGION( 0x80000, "maincpu", 0 )
+	ROM_LOAD( "9131-02_u9-2t.u9",  0x00000, 0x10000, CRC(22e73039) SHA1(368f03b31f7c3cb81a95b20d1cb954e8557d2017) ) /* 9131-02 U9-2T  880111 */
+	ROM_LOAD( "9131-02_u10-0.u10", 0x10000, 0x10000, CRC(bc3391f3) SHA1(4df46f31489bc5e3de3f6fc917e23b9bb5231e5a) )
+	ROM_LOAD( "9131-02_u11-0.u11", 0x20000, 0x10000, CRC(f137d70c) SHA1(8ec04ec17300aa3a6ef14bcca1ca1c2aec0eea18) )
+ROM_END
 
 /*
     Pit Boss II - Merit Industries Inc. 1988
@@ -1176,50 +1273,50 @@ MACHINE_CONFIG_END
 
 ROM_START( pitboss2 )
 	ROM_REGION( 0x80000, "maincpu", 0 )
-	ROM_LOAD( "u9",  0x00000, 0x10000, CRC(a1b6ac15) SHA1(b7b395f3e7e14dbb84003e03bf7d054e795a7211) )
-	ROM_LOAD( "u10", 0x10000, 0x10000, CRC(207aa83c) SHA1(1955d75b9e561312e98831571c9853579ded3734) )
-	ROM_LOAD( "u11", 0x20000, 0x10000, CRC(2052e043) SHA1(36b6cbc5712fc736c748a68bd12675291eae669d) )
-	ROM_LOAD( "u12", 0x30000, 0x10000, CRC(33653f16) SHA1(57b9822499324502d66dc5a40e662596e5336943) )
-	ROM_LOAD( "u13", 0x40000, 0x10000, CRC(4f139e88) SHA1(425dd34804cc614aa93a468d2ba3e16de62f099c) )
-	ROM_LOAD( "u14", 0x50000, 0x10000, CRC(a58078cd) SHA1(a028be67fa05670a689144dfb9c9da51c5732389) )
-	ROM_LOAD( "u15", 0x60000, 0x10000, CRC(239b5d03) SHA1(fffb69cd7af215445da2b1281bcbc5f4fb6cfcc3) )
-	ROM_LOAD( "u16", 0x70000, 0x10000, CRC(574fb3c7) SHA1(213741df3055b97ddd9889c2aa3d3e863e2c86d3) )
-ROM_END
-
-ROM_START( pitbosss )
-	ROM_REGION( 0x80000, "maincpu", 0 )
-	ROM_LOAD( "9221-10-0b.u9",  0x00000, 0x10000, CRC(e1fbf7cb) SHA1(e04163219c357cd3da2a78ba2590d453df8e9477) )
-	ROM_LOAD( "9221-10-0.u10",  0x10000, 0x10000, CRC(853a1a99) SHA1(45e33442aa7e51c05c9ac8b8458937ee3ff4c21d) )
-	ROM_LOAD( "9221-10-0b.u11", 0x20000, 0x10000, CRC(6d6dfaf3) SHA1(de76c577eef1bb6637aacffedcc40266af92506e) )
-	ROM_LOAD( "9221-10-0.u12",  0x30000, 0x10000, CRC(3577a203) SHA1(80f9c827ad9dea2c6af788bd3b46ab65e8c594eb) )
-	ROM_LOAD( "9221-10-0.u13",  0x40000, 0x10000, CRC(466f81f9) SHA1(88429d9ff53d27bf639200852a7bf61768c8fd1b) )
-	ROM_LOAD( "9221-10-0.u14",  0x50000, 0x10000, CRC(0720faa6) SHA1(1d78d711e3aab1ecf604ae7b9c374d27639a97c3) )
-	ROM_LOAD( "9221-10-0.u15",  0x60000, 0x10000, CRC(c302b4c2) SHA1(d62d4bb33a9ccb95d1e550f9e439be3316b94c99) )
-	ROM_LOAD( "9221-10-0.u16",  0x70000, 0x10000, CRC(574fb3c7) SHA1(213741df3055b97ddd9889c2aa3d3e863e2c86d3) ) // matches pitboss2
-ROM_END
-
-ROM_START( pitbosssa )
-	ROM_REGION( 0x80000, "maincpu", 0 )
-	ROM_LOAD( "9221-10-0a.u9",  0x00000, 0x10000, CRC(41be6b30) SHA1(c4df87a599e310ce29ee9277e5adc916ff68f060) )
-	ROM_LOAD( "9221-10-0.u10",  0x10000, 0x10000, CRC(853a1a99) SHA1(45e33442aa7e51c05c9ac8b8458937ee3ff4c21d) )
-	ROM_LOAD( "9221-10-0a.u11", 0x20000, 0x10000, CRC(c9137469) SHA1(618680609bdffa92b919a2417bd3ec41a4c8bf2b) )
-	ROM_LOAD( "9221-10-0.u12",  0x30000, 0x10000, CRC(3577a203) SHA1(80f9c827ad9dea2c6af788bd3b46ab65e8c594eb) )
-	ROM_LOAD( "9221-10-0.u13",  0x40000, 0x10000, CRC(466f81f9) SHA1(88429d9ff53d27bf639200852a7bf61768c8fd1b) )
-	ROM_LOAD( "9221-10-0.u14a", 0x50000, 0x10000, CRC(0a928852) SHA1(c6c623f63a73b3de6298f436a4ca339c1447888d) )
-	ROM_LOAD( "9221-10-0.u15",  0x60000, 0x10000, CRC(c302b4c2) SHA1(d62d4bb33a9ccb95d1e550f9e439be3316b94c99) )
-	ROM_LOAD( "9221-10-0.u16",  0x70000, 0x10000, CRC(574fb3c7) SHA1(213741df3055b97ddd9889c2aa3d3e863e2c86d3) ) // matches pitboss2
+	ROM_LOAD( "9221-01_u9-0c.u9",  0x00000, 0x10000, CRC(a1b6ac15) SHA1(b7b395f3e7e14dbb84003e03bf7d054e795a7211) ) /* 9221-01C  880221 */
+	ROM_LOAD( "9221-01_u10-0.u10", 0x10000, 0x10000, CRC(207aa83c) SHA1(1955d75b9e561312e98831571c9853579ded3734) )
+	ROM_LOAD( "9221-01_u11-0.u11", 0x20000, 0x10000, CRC(2052e043) SHA1(36b6cbc5712fc736c748a68bd12675291eae669d) )
+	ROM_LOAD( "9221-01_u12-0.u12", 0x30000, 0x10000, CRC(33653f16) SHA1(57b9822499324502d66dc5a40e662596e5336943) )
+	ROM_LOAD( "9221-01_u13-0.u13", 0x40000, 0x10000, CRC(4f139e88) SHA1(425dd34804cc614aa93a468d2ba3e16de62f099c) )
+	ROM_LOAD( "9221-01_u14-0.u14", 0x50000, 0x10000, CRC(a58078cd) SHA1(a028be67fa05670a689144dfb9c9da51c5732389) )
+	ROM_LOAD( "9221-01_u15-0.u15", 0x60000, 0x10000, CRC(239b5d03) SHA1(fffb69cd7af215445da2b1281bcbc5f4fb6cfcc3) )
+	ROM_LOAD( "9221-01_u16-0.u16", 0x70000, 0x10000, CRC(574fb3c7) SHA1(213741df3055b97ddd9889c2aa3d3e863e2c86d3) )
 ROM_END
 
 ROM_START( spitboss )
 	ROM_REGION( 0x80000, "maincpu", 0 )
-	ROM_LOAD( "u9-0a.rom",  0x00000, 0x10000, CRC(e0c45c9c) SHA1(534bff67c8fee08f1c348275de8977659efa9f69) )
-	ROM_LOAD( "u10.rom",    0x10000, 0x10000, CRC(ed010c58) SHA1(02750944a28c1c27ce2a9904d11b7e46272a940e) )
-	ROM_LOAD( "u11-0a.rom", 0x20000, 0x10000, CRC(0c65fa86) SHA1(7906a8d615116ca67bf370dfb2da8cb2389a313d) )
-	ROM_LOAD( "u12.rom",    0x30000, 0x10000, CRC(0cf95b0e) SHA1(c6ffc13703892b9ae0da39a02db37c4ec890f79e) )
-	ROM_LOAD( "u13",        0x40000, 0x10000, CRC(4f139e88) SHA1(425dd34804cc614aa93a468d2ba3e16de62f099c) ) // matches pitboss2
-	ROM_LOAD( "u14",        0x50000, 0x10000, CRC(a58078cd) SHA1(a028be67fa05670a689144dfb9c9da51c5732389) ) // matches pitboss2
-	ROM_LOAD( "u15",        0x60000, 0x10000, CRC(239b5d03) SHA1(fffb69cd7af215445da2b1281bcbc5f4fb6cfcc3) ) // matches pitboss2
-	ROM_LOAD( "u16",        0x70000, 0x10000, CRC(574fb3c7) SHA1(213741df3055b97ddd9889c2aa3d3e863e2c86d3) ) // matches pitboss2
+	ROM_LOAD( "9221-02_u9-0a.u9",   0x00000, 0x10000, CRC(e0c45c9c) SHA1(534bff67c8fee08f1c348275de8977659efa9f69) ) /* 9221-02A   886021  (actual, but should be 880621) */
+	ROM_LOAD( "9221-02_u10-0.u10",  0x10000, 0x10000, CRC(ed010c58) SHA1(02750944a28c1c27ce2a9904d11b7e46272a940e) )
+	ROM_LOAD( "9221-02_u11-0a.u11", 0x20000, 0x10000, CRC(0c65fa86) SHA1(7906a8d615116ca67bf370dfb2da8cb2389a313d) )
+	ROM_LOAD( "9221-02_u12-0.u12",  0x30000, 0x10000, CRC(0cf95b0e) SHA1(c6ffc13703892b9ae0da39a02db37c4ec890f79e) )
+	ROM_LOAD( "9221-02_u13-0.u13",  0x40000, 0x10000, CRC(4f139e88) SHA1(425dd34804cc614aa93a468d2ba3e16de62f099c) ) // matches pitboss2
+	ROM_LOAD( "9221-02_u14-0.u14",  0x50000, 0x10000, CRC(a58078cd) SHA1(a028be67fa05670a689144dfb9c9da51c5732389) ) // matches pitboss2
+	ROM_LOAD( "9221-02_u15-0.u15",  0x60000, 0x10000, CRC(239b5d03) SHA1(fffb69cd7af215445da2b1281bcbc5f4fb6cfcc3) ) // matches pitboss2
+	ROM_LOAD( "9221-02_u16-0.u16",  0x70000, 0x10000, CRC(574fb3c7) SHA1(213741df3055b97ddd9889c2aa3d3e863e2c86d3) ) // matches pitboss2
+ROM_END
+
+ROM_START( pitbosss )
+	ROM_REGION( 0x80000, "maincpu", 0 )
+	ROM_LOAD( "9221-10_u9-0b.u9",   0x00000, 0x10000, CRC(e1fbf7cb) SHA1(e04163219c357cd3da2a78ba2590d453df8e9477) ) /* 9221-10-00B 092190 */
+	ROM_LOAD( "9221-10_u10-0.u10",  0x10000, 0x10000, CRC(853a1a99) SHA1(45e33442aa7e51c05c9ac8b8458937ee3ff4c21d) )
+	ROM_LOAD( "9221-10_u11-0b.u11", 0x20000, 0x10000, CRC(6d6dfaf3) SHA1(de76c577eef1bb6637aacffedcc40266af92506e) )
+	ROM_LOAD( "9221-10_u12-0.u12",  0x30000, 0x10000, CRC(3577a203) SHA1(80f9c827ad9dea2c6af788bd3b46ab65e8c594eb) )
+	ROM_LOAD( "9221-10_u13-0.u13",  0x40000, 0x10000, CRC(466f81f9) SHA1(88429d9ff53d27bf639200852a7bf61768c8fd1b) )
+	ROM_LOAD( "9221-10_u14-0.u14",  0x50000, 0x10000, CRC(0720faa6) SHA1(1d78d711e3aab1ecf604ae7b9c374d27639a97c3) )
+	ROM_LOAD( "9221-10_u15-0.u15",  0x60000, 0x10000, CRC(c302b4c2) SHA1(d62d4bb33a9ccb95d1e550f9e439be3316b94c99) )
+	ROM_LOAD( "9221-10_u16-0.u16",  0x70000, 0x10000, CRC(574fb3c7) SHA1(213741df3055b97ddd9889c2aa3d3e863e2c86d3) ) // matches pitboss2
+ROM_END
+
+ROM_START( pitbosssa )
+	ROM_REGION( 0x80000, "maincpu", 0 )
+	ROM_LOAD( "9221-10_u9-0a.u9",   0x00000, 0x10000, CRC(41be6b30) SHA1(c4df87a599e310ce29ee9277e5adc916ff68f060) ) /* 9221-10-00A  090370  (actual, but should be 090390) */
+	ROM_LOAD( "9221-10_u10-0.u10",  0x10000, 0x10000, CRC(853a1a99) SHA1(45e33442aa7e51c05c9ac8b8458937ee3ff4c21d) )
+	ROM_LOAD( "9221-10_u11-0a.u11", 0x20000, 0x10000, CRC(c9137469) SHA1(618680609bdffa92b919a2417bd3ec41a4c8bf2b) )
+	ROM_LOAD( "9221-10_u12-0.u12",  0x30000, 0x10000, CRC(3577a203) SHA1(80f9c827ad9dea2c6af788bd3b46ab65e8c594eb) )
+	ROM_LOAD( "9221-10_u13-0.u13",  0x40000, 0x10000, CRC(466f81f9) SHA1(88429d9ff53d27bf639200852a7bf61768c8fd1b) )
+	ROM_LOAD( "9221-10_u14-0.u14a", 0x50000, 0x10000, CRC(0a928852) SHA1(c6c623f63a73b3de6298f436a4ca339c1447888d) )
+	ROM_LOAD( "9221-10_u15-0.u15",  0x60000, 0x10000, CRC(c302b4c2) SHA1(d62d4bb33a9ccb95d1e550f9e439be3316b94c99) )
+	ROM_LOAD( "9221-10_u16-0.u16",  0x70000, 0x10000, CRC(574fb3c7) SHA1(213741df3055b97ddd9889c2aa3d3e863e2c86d3) ) // matches pitboss2
 ROM_END
 
 /*
@@ -1262,7 +1359,7 @@ Description of Changes:
 
 ROM_START( pitbossm ) /* Dallas DS1204V security key attached to CRT-254 connected to J2 connector labeled 9244-00 U1-RO1 C1994 MII */
 	ROM_REGION( 0x80000, "maincpu", 0 )
-	ROM_LOAD( "9244-00-01_u9-r0",  0x00000, 0x10000, CRC(8317fea1) SHA1(eb84fdca7cd51883153561785571790d12d0d612) )
+	ROM_LOAD( "9244-00-01_u9-r0",  0x00000, 0x10000, CRC(8317fea1) SHA1(eb84fdca7cd51883153561785571790d12d0d612) ) /* 9244-00-01 R0  940822 */
 	ROM_LOAD( "9244-00-01_u10-r0", 0x10000, 0x10000, CRC(853a1a99) SHA1(45e33442aa7e51c05c9ac8b8458937ee3ff4c21d) ) /* Could also be labeled 9234-00-01 U10-R0 */
 	ROM_LOAD( "9244-00-01_u11-r0", 0x20000, 0x10000, CRC(45223e0d) SHA1(45070e85d87aa67ecd6a1355212f1d24142fcbd0) )
 	ROM_LOAD( "9244-00-01_u12-r0", 0x30000, 0x10000, CRC(b9fb4203) SHA1(84b514d9739d9c2ab1081cfc7cdedb41155ee038) ) /* Could also be labeled 9234-00-01 U12-R0 */
@@ -1280,7 +1377,7 @@ ROM_END
 
 ROM_START( pitbossma ) /* Unprotected or patched??  The manual shows a DS1204 key for this set */
 	ROM_REGION( 0x80000, "maincpu", 0 )
-	ROM_LOAD( "9243-00-01_u9-r0",  0x00000, 0x10000, CRC(55e14fb1) SHA1(ec29764d1b63360f64b82452e0db8054b99fcca0) )
+	ROM_LOAD( "9243-00-01_u9-r0",  0x00000, 0x10000, CRC(55e14fb1) SHA1(ec29764d1b63360f64b82452e0db8054b99fcca0) ) /* 9243-00-01  R0 940616 */
 	ROM_LOAD( "9243-00-01_u10-r0", 0x10000, 0x10000, CRC(853a1a99) SHA1(45e33442aa7e51c05c9ac8b8458937ee3ff4c21d) ) /* Could also be labeled 9234-00-01 U10-R0 */
 	ROM_LOAD( "9243-00-01_u11-r0", 0x20000, 0x10000, CRC(47a9dfc7) SHA1(eca100003f5605bcf405f610a0458ccb67894d35) )
 	ROM_LOAD( "9243-00-01_u12-r0", 0x30000, 0x10000, CRC(b9fb4203) SHA1(84b514d9739d9c2ab1081cfc7cdedb41155ee038) ) /* Could also be labeled 9234-00-01 U12-R0 */
@@ -1298,7 +1395,7 @@ ROM_END
 
 ROM_START( pbst30 ) /* Dallas DS1204V security key attached to CRT-254 connected to J2 connector labeled 9234-10 U1-RO1 C1994 MII */
 	ROM_REGION( 0x80000, "maincpu", 0 )
-	ROM_LOAD( "9234-10-01_u9-r0",  0x00000, 0x10000, CRC(96f39c9a) SHA1(df698e94a5204cf050ceadc5c257ca5f68171114) )
+	ROM_LOAD( "9234-10-01_u9-r0",  0x00000, 0x10000, CRC(96f39c9a) SHA1(df698e94a5204cf050ceadc5c257ca5f68171114) ) /* 9234-10-01 032294 */
 	ROM_LOAD( "9234-00-01_u10-r0", 0x10000, 0x10000, CRC(853a1a99) SHA1(45e33442aa7e51c05c9ac8b8458937ee3ff4c21d) )
 	ROM_LOAD( "9234-10-01_u11-r0", 0x20000, 0x10000, CRC(835fa041) SHA1(2ae754c5fcf50548eb214902409217d1643c6eaa) )
 	ROM_LOAD( "9234-00-01_u12-r0", 0x30000, 0x10000, CRC(b9fb4203) SHA1(84b514d9739d9c2ab1081cfc7cdedb41155ee038) )
@@ -1315,7 +1412,7 @@ ROM_END
 
 ROM_START( pbst30b ) /* Dallas DS1204V security key attached to CRT-254 connected to J2 connector labeled 9234-01 U1-RO1 C1993 MII */
 	ROM_REGION( 0x80000, "maincpu", 0 )
-	ROM_LOAD( "9234-00-01_u9-r0a",  0x00000, 0x10000, CRC(5f058f95) SHA1(98382935340a076bdb1b20c7f16c25b6084599fe) )
+	ROM_LOAD( "9234-00-01_u9-r0a",  0x00000, 0x10000, CRC(5f058f95) SHA1(98382935340a076bdb1b20c7f16c25b6084599fe) ) /* 9234-00-01  122293 */
 	ROM_LOAD( "9234-00-01_u10-r0",  0x10000, 0x10000, CRC(853a1a99) SHA1(45e33442aa7e51c05c9ac8b8458937ee3ff4c21d) )
 	ROM_LOAD( "9234-00-01_u11-r0a", 0x20000, 0x10000, CRC(79125fb5) SHA1(6ca4f33c363cfb6f5c0f23b8fcc8cfcc076f68b1) )
 	ROM_LOAD( "9234-00-01_u12-r0",  0x30000, 0x10000, CRC(b9fb4203) SHA1(84b514d9739d9c2ab1081cfc7cdedb41155ee038) )
@@ -2025,8 +2122,9 @@ DRIVER_INIT_MEMBER(meritm_state,megat6)
 }
 
 /* CRT 250 */
-GAME( 1988, pitboss2,  0,        meritm_crt250, meritm_crt250, driver_device, 0, ROT0, "Merit", "Pit Boss II", GAME_IMPERFECT_GRAPHICS )
-GAME( 1988, spitboss,  0,        meritm_crt250, meritm_crt250, driver_device, 0, ROT0, "Merit", "Super Pit Boss", GAME_IMPERFECT_GRAPHICS )
+GAME( 1988, dodgecty,  0,        meritm_crt250, dodgecty,      driver_device, 0, ROT0, "Merit", "Dodge City (9131-02)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1988, pitboss2,  0,        meritm_crt250, meritm_crt250, driver_device, 0, ROT0, "Merit", "Pit Boss II (9221-01C)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1988, spitboss,  0,        meritm_crt250, meritm_crt250, driver_device, 0, ROT0, "Merit", "Super Pit Boss (9221-02A)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1990, pitbosss,  0,        meritm_crt250, meritm_crt250, driver_device, 0, ROT0, "Merit", "Pit Boss Superstar (9221-10-00B)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1990, pitbosssa, pitbosss, meritm_crt250, meritm_crt250, driver_device, 0, ROT0, "Merit", "Pit Boss Superstar (9221-10-00A)", GAME_IMPERFECT_GRAPHICS )
 
@@ -2035,7 +2133,7 @@ GAME( 1994, pbst30,    0,      meritm_crt250_crt252_crt258, pbst30, meritm_state
 GAME( 1993, pbst30b,   pbst30, meritm_crt250_crt252_crt258, pbst30, meritm_state, pbst30b, ROT0, "Merit", "Pit Boss Supertouch 30 (9234-00-01)", GAME_IMPERFECT_GRAPHICS )
 
 /* CRT 250 + CRT 254 + CRT 256 */
-GAME( 1994, pitbossm,  0,         meritm_crt250_questions, pitbossm, meritm_state, pitbossm, ROT0, "Merit", "Pit Boss Megastar (9244-00-01)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1994, pitbossm,  0,         meritm_crt250_questions, pitbossm, meritm_state,  pitbossm, ROT0, "Merit", "Pit Boss Megastar (9244-00-01)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1994, pitbossma, pitbossm,  meritm_crt250_questions, pitbossa, driver_device, 0,        ROT0, "Merit", "Pit Boss Megastar (9243-00-01)", GAME_IMPERFECT_GRAPHICS )
 
 /* CRT 260 */

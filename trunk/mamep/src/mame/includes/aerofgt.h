@@ -43,7 +43,7 @@ public:
 	int       m_pending_command;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE16_MEMBER(sound_command_w);
 	DECLARE_WRITE16_MEMBER(turbofrc_sound_command_w);
 	DECLARE_WRITE16_MEMBER(aerfboot_soundlatch_w);
@@ -68,6 +68,21 @@ public:
 	DECLARE_WRITE16_MEMBER(wbbc97_bitmap_enable_w);
 	DECLARE_WRITE16_MEMBER(pspikesb_oki_banking_w);
 	DECLARE_WRITE16_MEMBER(aerfboo2_okim6295_banking_w);
+	TILE_GET_INFO_MEMBER(get_pspikes_tile_info);
+	TILE_GET_INFO_MEMBER(karatblz_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(karatblz_bg2_tile_info);
+	TILE_GET_INFO_MEMBER(spinlbrk_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg1_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg2_tile_info);
+	DECLARE_MACHINE_START(aerofgt);
+	DECLARE_MACHINE_RESET(aerofgt);
+	DECLARE_VIDEO_START(pspikes);
+	DECLARE_MACHINE_START(common);
+	DECLARE_MACHINE_RESET(common);
+	DECLARE_VIDEO_START(karatblz);
+	DECLARE_VIDEO_START(spinlbrk);
+	DECLARE_VIDEO_START(turbofrc);
+	DECLARE_VIDEO_START(wbbc97);
 };
 
 
@@ -75,11 +90,11 @@ public:
 
 
 
-VIDEO_START( pspikes );
-VIDEO_START( karatblz );
-VIDEO_START( spinlbrk );
-VIDEO_START( turbofrc );
-VIDEO_START( wbbc97 );
+
+
+
+
+
 SCREEN_UPDATE_IND16( pspikes );
 SCREEN_UPDATE_IND16( pspikesb );
 SCREEN_UPDATE_IND16( spikes91 );

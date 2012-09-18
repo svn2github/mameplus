@@ -30,17 +30,16 @@
 
 
 /* this structure defines the parameters for a channel */
-typedef struct
+struct k051649_sound_channel
 {
 	unsigned long counter;
 	int frequency;
 	int volume;
 	int key;
 	signed char waveram[32];
-} k051649_sound_channel;
+};
 
-typedef struct _k051649_state k051649_state;
-struct _k051649_state
+struct k051649_state
 {
 	k051649_sound_channel channel_list[5];
 
@@ -61,7 +60,7 @@ INLINE k051649_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == K051649);
-	return (k051649_state *)downcast<legacy_device_base *>(device)->token();
+	return (k051649_state *)downcast<k051649_device *>(device)->token();
 }
 
 /* build a table to divide by the number of voices */
@@ -281,33 +280,51 @@ READ8_DEVICE_HANDLER ( k051649_test_r )
 	return 0xff;
 }
 
+const device_type K051649 = &device_creator<k051649_device>;
 
-
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( k051649 )
+k051649_device::k051649_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K051649, "K051649", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(k051649_state);				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(k051649_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( k051649 );		break;
-		case DEVINFO_FCT_STOP:							/* nothing */									break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME( k051649 );		break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "K051649");						break;
-		case DEVINFO_STR_FAMILY:						strcpy(info->s, "Konami custom");				break;
-		case DEVINFO_STR_VERSION:						strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void k051649_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k051649_device::device_start()
+{
+	DEVICE_START_NAME( k051649 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k051649_device::device_reset()
+{
+	DEVICE_RESET_NAME( k051649 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void k051649_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(K051649, k051649);

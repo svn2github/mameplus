@@ -665,7 +665,7 @@ void fd1094_device::change_state(int newstate)
 	m_state_change(state());
 
 	// force a flush of the prefetch cache on any state change
-	set_state(M68K_PREF_ADDR, 0x0010);
+	set_state_int(M68K_PREF_ADDR, 0x0010);
 }
 
 
@@ -721,7 +721,7 @@ void fd1094_device::device_start()
 	// register for the state changing callbacks we need in the m68000
 	m68k_set_cmpild_callback(this, &fd1094_device::cmp_callback);
 	m68k_set_rte_callback(this, &fd1094_device::rte_callback);
-	device_set_irq_callback(this, &fd1094_device::irq_callback);
+	set_irq_acknowledge_callback(&fd1094_device::irq_callback);
 
 	// save state
 	save_item(NAME(m_state));

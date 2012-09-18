@@ -65,7 +65,7 @@ WRITE8_HANDLER( decocass_sound_command_w )
 	state->m_sound_ack |= 0x80;
 	/* remove snd cpu data ack bit. i don't see it in the schems, but... */
 	state->m_sound_ack &= ~0x40;
-	device_set_input_line(state->m_audiocpu, M6502_IRQ_LINE, ASSERT_LINE);
+	state->m_audiocpu->set_input_line(M6502_IRQ_LINE, ASSERT_LINE);
 }
 
 READ8_HANDLER( decocass_sound_data_r )
@@ -97,7 +97,7 @@ READ8_HANDLER( decocass_sound_command_r )
 	decocass_state *state = space->machine().driver_data<decocass_state>();
 	UINT8 data = state->soundlatch_byte_r(*space, 0);
 	LOG(4,("CPU %s sound command <- $%02x\n", space->device().tag(), data));
-	device_set_input_line(state->m_audiocpu, M6502_IRQ_LINE, CLEAR_LINE);
+	state->m_audiocpu->set_input_line(M6502_IRQ_LINE, CLEAR_LINE);
 	state->m_sound_ack &= ~0x80;
 	return data;
 }
@@ -107,21 +107,21 @@ TIMER_DEVICE_CALLBACK( decocass_audio_nmi_gen )
 	decocass_state *state = timer.machine().driver_data<decocass_state>();
 	int scanline = param;
 	state->m_audio_nmi_state = scanline & 8;
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, (state->m_audio_nmi_enabled && state->m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, (state->m_audio_nmi_enabled && state->m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 WRITE8_HANDLER( decocass_sound_nmi_enable_w )
 {
 	decocass_state *state = space->machine().driver_data<decocass_state>();
 	state->m_audio_nmi_enabled = 1;
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, (state->m_audio_nmi_enabled && state->m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, (state->m_audio_nmi_enabled && state->m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 READ8_HANDLER( decocass_sound_nmi_enable_r )
 {
 	decocass_state *state = space->machine().driver_data<decocass_state>();
 	state->m_audio_nmi_enabled = 1;
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, (state->m_audio_nmi_enabled && state->m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, (state->m_audio_nmi_enabled && state->m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
 	return 0xff;
 }
 
@@ -144,7 +144,7 @@ WRITE8_HANDLER( decocass_sound_data_ack_reset_w )
 WRITE8_HANDLER( decocass_nmi_reset_w )
 {
 	decocass_state *state = space->machine().driver_data<decocass_state>();
-	device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, CLEAR_LINE );
+	state->m_maincpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE );
 }
 
 WRITE8_HANDLER( decocass_quadrature_decoder_reset_w )
@@ -210,21 +210,21 @@ READ8_HANDLER( decocass_input_r )
 WRITE8_HANDLER( decocass_reset_w )
 {
 	decocass_state *state = space->machine().driver_data<decocass_state>();
-	LOG(1,("%10s 6502-PC: %04x decocass_reset_w(%02x): $%02x\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+	LOG(1,("%10s 6502-PC: %04x decocass_reset_w(%02x): $%02x\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 	state->m_decocass_reset = data;
 
 	/* CPU #1 active high reset */
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_RESET, data & 0x01);
+	state->m_audiocpu->set_input_line(INPUT_LINE_RESET, data & 0x01);
 
 	/* on reset also disable audio NMI */
 	if (data & 1)
 	{
 		state->m_audio_nmi_enabled = 0;
-		device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, (state->m_audio_nmi_enabled && state->m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
+		state->m_audiocpu->set_input_line(INPUT_LINE_NMI, (state->m_audio_nmi_enabled && state->m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
 	}
 
 	/* 8041 active low reset */
-	device_set_input_line(state->m_mcu, INPUT_LINE_RESET, (data & 0x08) ? ASSERT_LINE : CLEAR_LINE);
+	state->m_mcu->execute().set_input_line(INPUT_LINE_RESET, (data & 0x08) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -289,7 +289,7 @@ static READ8_HANDLER( decocass_type1_latch_26_pass_3_inv_2_r )
 
 		data = (BIT(data, 0) << 0) | (BIT(data, 1) << 1) | 0x7c;
 		LOG(4,("%10s 6502-PC: %04x decocass_type1_latch_26_pass_3_inv_2_r(%02x): $%02x <- (%s %s)\n",
-			space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data,
+			space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data,
 			(data & 1) ? "OBF" : "-",
 			(data & 2) ? "IBF" : "-"));
 	}
@@ -337,7 +337,7 @@ static READ8_HANDLER( decocass_type1_latch_26_pass_3_inv_2_r )
 			(((prom[promaddr] >> 4) & 1)			   << MAP7(state->m_type1_outmap));
 
 		LOG(3,("%10s 6502-PC: %04x decocass_type1_latch_26_pass_3_inv_2_r(%02x): $%02x\n",
-			space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 
 		state->m_latch1 = save;		/* latch the data for the next A0 == 0 read */
 	}
@@ -369,7 +369,7 @@ static READ8_HANDLER( decocass_type1_pass_136_r )
 
 		data = (BIT(data, 0) << 0) | (BIT(data, 1) << 1) | 0x7c;
 		LOG(4,("%10s 6502-PC: %04x decocass_type1_pass_136_r(%02x): $%02x <- (%s %s)\n",
-			space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data,
+			space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data,
 			(data & 1) ? "OBF" : "-",
 			(data & 2) ? "IBF" : "-"));
 	}
@@ -417,7 +417,7 @@ static READ8_HANDLER( decocass_type1_pass_136_r )
 			(((prom[promaddr] >> 4) & 1)			   << MAP7(state->m_type1_outmap));
 
 		LOG(3,("%10s 6502-PC: %04x decocass_type1_pass_136_r(%02x): $%02x\n",
-			space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 
 		state->m_latch1 = save;		/* latch the data for the next A0 == 0 read */
 	}
@@ -449,7 +449,7 @@ static READ8_HANDLER( decocass_type1_latch_27_pass_3_inv_2_r )
 
 		data = (BIT(data, 0) << 0) | (BIT(data, 1) << 1) | 0x7c;
 		LOG(4,("%10s 6502-PC: %04x decocass_type1_latch_27_pass_3_inv_2_r(%02x): $%02x <- (%s %s)\n",
-			space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data,
+			space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data,
 			(data & 1) ? "OBF" : "-",
 			(data & 2) ? "IBF" : "-"));
 	}
@@ -497,7 +497,7 @@ static READ8_HANDLER( decocass_type1_latch_27_pass_3_inv_2_r )
 			(((state->m_latch1 >> MAP7(state->m_type1_inmap)) & 1)	   << MAP7(state->m_type1_outmap));
 
 		LOG(3,("%10s 6502-PC: %04x decocass_type1_latch_27_pass_3_inv_2_r(%02x): $%02x\n",
-			space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 
 		state->m_latch1 = save;		/* latch the data for the next A0 == 0 read */
 	}
@@ -529,7 +529,7 @@ static READ8_HANDLER( decocass_type1_latch_26_pass_5_inv_2_r )
 
 		data = (BIT(data, 0) << 0) | (BIT(data, 1) << 1) | 0x7c;
 		LOG(4,("%10s 6502-PC: %04x decocass_type1_latch_26_pass_5_inv_2_r(%02x): $%02x <- (%s %s)\n",
-			space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data,
+			space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data,
 			(data & 1) ? "OBF" : "-",
 			(data & 2) ? "IBF" : "-"));
 	}
@@ -577,7 +577,7 @@ static READ8_HANDLER( decocass_type1_latch_26_pass_5_inv_2_r )
 			(((prom[promaddr] >> 4) & 1)			   << MAP7(state->m_type1_outmap));
 
 		LOG(3,("%10s 6502-PC: %04x decocass_type1_latch_26_pass_5_inv_2_r(%02x): $%02x\n",
-			space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 
 		state->m_latch1 = save;		/* latch the data for the next A0 == 0 read */
 	}
@@ -611,7 +611,7 @@ static READ8_HANDLER( decocass_type1_latch_16_pass_3_inv_1_r )
 
 		data = (BIT(data, 0) << 0) | (BIT(data, 1) << 1) | 0x7c;
 		LOG(4,("%10s 6502-PC: %04x decocass_type1_latch_16_pass_3_inv_1_r(%02x): $%02x <- (%s %s)\n",
-			space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data,
+			space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data,
 			(data & 1) ? "OBF" : "-",
 			(data & 2) ? "IBF" : "-"));
 	}
@@ -659,7 +659,7 @@ static READ8_HANDLER( decocass_type1_latch_16_pass_3_inv_1_r )
 			(((prom[promaddr] >> 4) & 1)			   << MAP7(state->m_type1_outmap));
 
 		LOG(3,("%10s 6502-PC: %04x decocass_type1_latch_16_pass_3_inv_1_r(%02x): $%02x\n",
-			space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 
 		state->m_latch1 = save;		/* latch the data for the next A0 == 0 read */
 	}
@@ -689,7 +689,7 @@ static READ8_HANDLER( decocass_type2_r )
 		{
 			UINT8 *prom = state->memregion("dongle")->base();
 			data = prom[256 * state->m_type2_d2_latch + state->m_type2_promaddr];
-			LOG(3,("%10s 6502-PC: %04x decocass_type2_r(%02x): $%02x <- prom[%03x]\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, 256 * state->m_type2_d2_latch + state->m_type2_promaddr));
+			LOG(3,("%10s 6502-PC: %04x decocass_type2_r(%02x): $%02x <- prom[%03x]\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, 256 * state->m_type2_d2_latch + state->m_type2_promaddr));
 		}
 		else
 		{
@@ -703,7 +703,7 @@ static READ8_HANDLER( decocass_type2_r )
 		else
 			data = offset & 0xff;
 
-		LOG(3,("%10s 6502-PC: %04x decocass_type2_r(%02x): $%02x <- 8041-%s\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, offset & 1 ? "STATUS" : "DATA"));
+		LOG(3,("%10s 6502-PC: %04x decocass_type2_r(%02x): $%02x <- 8041-%s\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, offset & 1 ? "STATUS" : "DATA"));
 	}
 	return data;
 }
@@ -715,18 +715,18 @@ static WRITE8_HANDLER( decocass_type2_w )
 	{
 		if (1 == (offset & 1))
 		{
-			LOG(4,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> set PROM+D2 latch", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			LOG(4,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> set PROM+D2 latch", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 		}
 		else
 		{
 			state->m_type2_promaddr = data;
-			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> set PROM addr $%02x\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, state->m_type2_promaddr));
+			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> set PROM addr $%02x\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, state->m_type2_promaddr));
 			return;
 		}
 	}
 	else
 	{
-		LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s ", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, offset & 1 ? "8041-CMND" : "8041 DATA"));
+		LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s ", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, offset & 1 ? "8041-CMND" : "8041 DATA"));
 	}
 	if (1 == (offset & 1))
 	{
@@ -773,7 +773,7 @@ static READ8_HANDLER( decocass_type3_r )
 		{
 			UINT8 *prom = state->memregion("dongle")->base();
 			data = prom[state->m_type3_ctrs];
-			LOG(3,("%10s 6502-PC: %04x decocass_type3_r(%02x): $%02x <- prom[$%03x]\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, state->m_type3_ctrs));
+			LOG(3,("%10s 6502-PC: %04x decocass_type3_r(%02x): $%02x <- prom[$%03x]\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, state->m_type3_ctrs));
 			if (++state->m_type3_ctrs == 4096)
 				state->m_type3_ctrs = 0;
 		}
@@ -782,12 +782,12 @@ static READ8_HANDLER( decocass_type3_r )
 			if (0 == (offset & E5XX_MASK))
 			{
 				data = upi41_master_r(state->m_mcu, 1);
-				LOG(4,("%10s 6502-PC: %04x decocass_type3_r(%02x): $%02x <- 8041 STATUS\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+				LOG(4,("%10s 6502-PC: %04x decocass_type3_r(%02x): $%02x <- 8041 STATUS\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 			}
 			else
 			{
 				data = 0xff;	/* open data bus? */
-				LOG(4,("%10s 6502-PC: %04x decocass_type3_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+				LOG(4,("%10s 6502-PC: %04x decocass_type3_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 			}
 		}
 	}
@@ -796,7 +796,7 @@ static READ8_HANDLER( decocass_type3_r )
 		if (1 == state->m_type3_pal_19)
 		{
 			save = data = 0xff;    /* open data bus? */
-			LOG(3,("%10s 6502-PC: %04x decocass_type3_r(%02x): $%02x <- open bus", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			LOG(3,("%10s 6502-PC: %04x decocass_type3_r(%02x): $%02x <- open bus", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 		}
 		else
 		{
@@ -938,7 +938,7 @@ static READ8_HANDLER( decocass_type3_r )
 						(BIT(save, 7) << 7);
 				}
 				state->m_type3_d0_latch = save & 1;
-				LOG(3,("%10s 6502-PC: %04x decocass_type3_r(%02x): $%02x '%c' <- 8041-DATA\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, (data >= 32) ? data : '.'));
+				LOG(3,("%10s 6502-PC: %04x decocass_type3_r(%02x): $%02x '%c' <- 8041-DATA\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, (data >= 32) ? data : '.'));
 			}
 			else
 			{
@@ -952,7 +952,7 @@ static READ8_HANDLER( decocass_type3_r )
 					(BIT(save, 5) << 5) |
 					(BIT(save, 6) << 7) |
 					(BIT(save, 7) << 6);
-				LOG(3,("%10s 6502-PC: %04x decocass_type3_r(%02x): $%02x '%c' <- open bus (D0 replaced with latch)\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, (data >= 32) ? data : '.'));
+				LOG(3,("%10s 6502-PC: %04x decocass_type3_r(%02x): $%02x '%c' <- open bus (D0 replaced with latch)\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, (data >= 32) ? data : '.'));
 				state->m_type3_d0_latch = save & 1;
 			}
 		}
@@ -969,7 +969,7 @@ static WRITE8_HANDLER( decocass_type3_w )
 		if (1 == state->m_type3_pal_19)
 		{
 			state->m_type3_ctrs = data << 4;
-			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, "LDCTRS"));
+			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, "LDCTRS"));
 			return;
 		}
 		else
@@ -981,11 +981,11 @@ static WRITE8_HANDLER( decocass_type3_w )
 		if (1 == state->m_type3_pal_19)
 		{
 			/* write nowhere?? */
-			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, "nowhere?"));
+			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, "nowhere?"));
 			return;
 		}
 	}
-	LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, offset & 1 ? "8041-CMND" : "8041-DATA"));
+	LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, offset & 1 ? "8041-CMND" : "8041-DATA"));
 	upi41_master_w(state->m_mcu, offset, data);
 }
 
@@ -1012,12 +1012,12 @@ static READ8_HANDLER( decocass_type4_r )
 		if (0 == (offset & E5XX_MASK))
 		{
 			data = upi41_master_r(state->m_mcu, 1);
-			LOG(4,("%10s 6502-PC: %04x decocass_type4_r(%02x): $%02x <- 8041 STATUS\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			LOG(4,("%10s 6502-PC: %04x decocass_type4_r(%02x): $%02x <- 8041 STATUS\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 		}
 		else
 		{
 			data = 0xff;	/* open data bus? */
-			LOG(4,("%10s 6502-PC: %04x decocass_type4_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			LOG(4,("%10s 6502-PC: %04x decocass_type4_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 		}
 	}
 	else
@@ -1027,7 +1027,7 @@ static READ8_HANDLER( decocass_type4_r )
 			UINT8 *prom = space->machine().root_device().memregion("dongle")->base();
 
 			data = prom[state->m_type4_ctrs];
-			LOG(3,("%10s 6502-PC: %04x decocass_type4_r(%02x): $%02x '%c' <- PROM[%04x]\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, (data >= 32) ? data : '.', state->m_type4_ctrs));
+			LOG(3,("%10s 6502-PC: %04x decocass_type4_r(%02x): $%02x '%c' <- PROM[%04x]\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, (data >= 32) ? data : '.', state->m_type4_ctrs));
 			state->m_type4_ctrs = (state->m_type4_ctrs + 1) & 0x7fff;
 		}
 		else
@@ -1035,12 +1035,12 @@ static READ8_HANDLER( decocass_type4_r )
 			if (0 == (offset & E5XX_MASK))
 			{
 				data = upi41_master_r(state->m_mcu, 0);
-				LOG(3,("%10s 6502-PC: %04x decocass_type4_r(%02x): $%02x '%c' <- open bus (D0 replaced with latch)\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, (data >= 32) ? data : '.'));
+				LOG(3,("%10s 6502-PC: %04x decocass_type4_r(%02x): $%02x '%c' <- open bus (D0 replaced with latch)\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, (data >= 32) ? data : '.'));
 			}
 			else
 			{
 				data = 0xff;	/* open data bus? */
-				LOG(4,("%10s 6502-PC: %04x decocass_type4_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+				LOG(4,("%10s 6502-PC: %04x decocass_type4_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 			}
 		}
 	}
@@ -1056,7 +1056,7 @@ static WRITE8_HANDLER( decocass_type4_w )
 		if (1 == state->m_type4_latch)
 		{
 			state->m_type4_ctrs = (state->m_type4_ctrs & 0x00ff) | ((data & 0x7f) << 8);
-			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> CTRS MSB (%04x)\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, state->m_type4_ctrs));
+			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> CTRS MSB (%04x)\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, state->m_type4_ctrs));
 			return;
 		}
 		else
@@ -1070,11 +1070,11 @@ static WRITE8_HANDLER( decocass_type4_w )
 		if (state->m_type4_latch)
 		{
 			state->m_type4_ctrs = (state->m_type4_ctrs & 0xff00) | data;
-			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> CTRS LSB (%04x)\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, state->m_type4_ctrs));
+			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> CTRS LSB (%04x)\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, state->m_type4_ctrs));
 			return;
 		}
 	}
-	LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, offset & 1 ? "8041-CMND" : "8041-DATA"));
+	LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, offset & 1 ? "8041-CMND" : "8041-DATA"));
 	upi41_master_w(state->m_mcu, offset, data);
 }
 
@@ -1097,12 +1097,12 @@ static READ8_HANDLER( decocass_type5_r )
 		if (0 == (offset & E5XX_MASK))
 		{
 			data = upi41_master_r(state->m_mcu, 1);
-			LOG(4,("%10s 6502-PC: %04x decocass_type5_r(%02x): $%02x <- 8041 STATUS\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			LOG(4,("%10s 6502-PC: %04x decocass_type5_r(%02x): $%02x <- 8041 STATUS\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 		}
 		else
 		{
 			data = 0xff;	/* open data bus? */
-			LOG(4,("%10s 6502-PC: %04x decocass_type5_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			LOG(4,("%10s 6502-PC: %04x decocass_type5_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 		}
 	}
 	else
@@ -1110,19 +1110,19 @@ static READ8_HANDLER( decocass_type5_r )
 		if (state->m_type5_latch)
 		{
 			data = 0x55;	/* Only a fixed value? It looks like this is all we need to do */
-			LOG(3,("%10s 6502-PC: %04x decocass_type5_r(%02x): $%02x '%c' <- fixed value???\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, (data >= 32) ? data : '.'));
+			LOG(3,("%10s 6502-PC: %04x decocass_type5_r(%02x): $%02x '%c' <- fixed value???\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, (data >= 32) ? data : '.'));
 		}
 		else
 		{
 			if (0 == (offset & E5XX_MASK))
 			{
 				data = upi41_master_r(state->m_mcu, 0);
-				LOG(3,("%10s 6502-PC: %04x decocass_type5_r(%02x): $%02x '%c' <- open bus (D0 replaced with latch)\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, (data >= 32) ? data : '.'));
+				LOG(3,("%10s 6502-PC: %04x decocass_type5_r(%02x): $%02x '%c' <- open bus (D0 replaced with latch)\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, (data >= 32) ? data : '.'));
 			}
 			else
 			{
 				data = 0xff;	/* open data bus? */
-				LOG(4,("%10s 6502-PC: %04x decocass_type5_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+				LOG(4,("%10s 6502-PC: %04x decocass_type5_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 			}
 		}
 	}
@@ -1137,7 +1137,7 @@ static WRITE8_HANDLER( decocass_type5_w )
 	{
 		if (1 == state->m_type5_latch)
 		{
-			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, "latch #2??"));
+			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, "latch #2??"));
 			return;
 		}
 		else
@@ -1149,11 +1149,11 @@ static WRITE8_HANDLER( decocass_type5_w )
 		if (state->m_type5_latch)
 		{
 			/* write nowhere?? */
-			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, "nowhere?"));
+			LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, "nowhere?"));
 			return;
 		}
 	}
-	LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, offset & 1 ? "8041-CMND" : "8041-DATA"));
+	LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, offset & 1 ? "8041-CMND" : "8041-DATA"));
 	upi41_master_w(state->m_mcu, offset, data);
 }
 
@@ -1175,12 +1175,12 @@ static READ8_HANDLER( decocass_nodong_r )
 		if (0 == (offset & E5XX_MASK))
 		{
 			data = upi41_master_r(state->m_mcu, 1);
-			LOG(4,("%10s 6502-PC: %04x decocass_nodong_r(%02x): $%02x <- 8041 STATUS\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			LOG(4,("%10s 6502-PC: %04x decocass_nodong_r(%02x): $%02x <- 8041 STATUS\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 		}
 		else
 		{
 			data = 0xff;	/* open data bus? */
-			LOG(4,("%10s 6502-PC: %04x decocass_nodong_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			LOG(4,("%10s 6502-PC: %04x decocass_nodong_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 		}
 	}
 	else
@@ -1188,12 +1188,12 @@ static READ8_HANDLER( decocass_nodong_r )
 		if (0 == (offset & E5XX_MASK))
 		{
 			data = upi41_master_r(state->m_mcu, 0);
-			LOG(3,("%10s 6502-PC: %04x decocass_nodong_r(%02x): $%02x '%c' <- open bus (D0 replaced with latch)\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, (data >= 32) ? data : '.'));
+			LOG(3,("%10s 6502-PC: %04x decocass_nodong_r(%02x): $%02x '%c' <- open bus (D0 replaced with latch)\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, (data >= 32) ? data : '.'));
 		}
 		else
 		{
 			data = 0xff;	/* open data bus? */
-			LOG(4,("%10s 6502-PC: %04x decocass_nodong_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+			LOG(4,("%10s 6502-PC: %04x decocass_nodong_r(%02x): $%02x <- open bus\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 		}
 	}
 
@@ -1228,7 +1228,7 @@ READ8_HANDLER( decocass_e5xx_r )
 
 		LOG(4,("%10s 6502-PC: %04x decocass_e5xx_r(%02x): $%02x <- STATUS (%s%s%s%s%s%s%s%s)\n",
 			space->machine().time().as_string(6),
-			cpu_get_previouspc(&space->device()),
+			space->device().safe_pcbase(),
 			offset, data,
 			data & 0x01 ? "" : "REQ/",
 			data & 0x02 ? "" : " FNO/",
@@ -1260,7 +1260,7 @@ WRITE8_HANDLER( decocass_e5xx_w )
 
 	if (0 == (offset & E5XX_MASK))
 	{
-		LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data, offset & 1 ? "8041-CMND" : "8041-DATA"));
+		LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> %s\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data, offset & 1 ? "8041-CMND" : "8041-DATA"));
 		upi41_master_w(state->m_mcu, offset & 1, data);
 #ifdef MAME_DEBUG
 		decocass_fno(space->machine(), offset, data);
@@ -1268,7 +1268,7 @@ WRITE8_HANDLER( decocass_e5xx_w )
 	}
 	else
 	{
-		LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> dongle\n", space->machine().time().as_string(6), cpu_get_previouspc(&space->device()), offset, data));
+		LOG(3,("%10s 6502-PC: %04x decocass_e5xx_w(%02x): $%02x -> dongle\n", space->machine().time().as_string(6), space->device().safe_pcbase(), offset, data));
 	}
 }
 
@@ -1348,14 +1348,13 @@ void decocass_machine_state_save_init( running_machine &machine )
  *
  ***************************************************************************/
 
-MACHINE_START( decocass )
+void decocass_state::machine_start()
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_mcu = machine.device("mcu");
-	state->m_cassette = machine.device("cassette");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_mcu = machine().device("mcu");
+	m_cassette = machine().device("cassette");
 }
 
 static void decocass_reset_common( running_machine &machine )
@@ -1412,278 +1411,250 @@ static void decocass_reset_common( running_machine &machine )
 	state->m_center_v_shift = 0;
 }
 
-MACHINE_RESET( decocass )
+void decocass_state::machine_reset()
 {
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 }
 
-MACHINE_RESET( ctsttape )
+MACHINE_RESET_MEMBER(decocass_state,ctsttape)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #1 (DE-0061)\n"));
-	state->m_dongle_r = decocass_type1_pass_136_r;
+	m_dongle_r = decocass_type1_pass_136_r;
 }
 
-MACHINE_RESET( chwy )
+MACHINE_RESET_MEMBER(decocass_state,chwy)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #1 (DE-0061 own PROM)\n"));
-	state->m_dongle_r = decocass_type1_latch_27_pass_3_inv_2_r;
+	m_dongle_r = decocass_type1_latch_27_pass_3_inv_2_r;
 }
 
-MACHINE_RESET( cdsteljn )
+MACHINE_RESET_MEMBER(decocass_state,cdsteljn)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #1 (A-0061)\n"));
-	state->m_dongle_r = decocass_type1_latch_27_pass_3_inv_2_r;
+	m_dongle_r = decocass_type1_latch_27_pass_3_inv_2_r;
 }
 
-MACHINE_RESET( cterrani )
+MACHINE_RESET_MEMBER(decocass_state,cterrani)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #1 (DE-0061 straight)\n"));
-	state->m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
-	state->m_type1_inmap = MAKE_MAP(0,1,2,3,4,5,6,7);
-	state->m_type1_outmap = MAKE_MAP(0,1,2,3,4,5,6,7);
+	m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
+	m_type1_inmap = MAKE_MAP(0,1,2,3,4,5,6,7);
+	m_type1_outmap = MAKE_MAP(0,1,2,3,4,5,6,7);
 }
 
-MACHINE_RESET( castfant )
+MACHINE_RESET_MEMBER(decocass_state,castfant)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #1 (DE-0061)\n"));
-	state->m_dongle_r = decocass_type1_latch_16_pass_3_inv_1_r;
+	m_dongle_r = decocass_type1_latch_16_pass_3_inv_1_r;
 }
 
-MACHINE_RESET( csuperas )
+MACHINE_RESET_MEMBER(decocass_state,csuperas)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #1 (DE-0061 flip 4-5)\n"));
-	state->m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
-	state->m_type1_inmap = MAKE_MAP(0,1,2,3,5,4,6,7);
-	state->m_type1_outmap = MAKE_MAP(0,1,2,3,5,4,6,7);
+	m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
+	m_type1_inmap = MAKE_MAP(0,1,2,3,5,4,6,7);
+	m_type1_outmap = MAKE_MAP(0,1,2,3,5,4,6,7);
 }
 
-MACHINE_RESET( clocknch )
+MACHINE_RESET_MEMBER(decocass_state,clocknch)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #1 (DE-0061 flip 2-3)\n"));
-	state->m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
-	state->m_type1_inmap = MAKE_MAP(0,1,3,2,4,5,6,7);
-	state->m_type1_outmap = MAKE_MAP(0,1,3,2,4,5,6,7);
+	m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
+	m_type1_inmap = MAKE_MAP(0,1,3,2,4,5,6,7);
+	m_type1_outmap = MAKE_MAP(0,1,3,2,4,5,6,7);
 }
 
-MACHINE_RESET( cprogolf )
+MACHINE_RESET_MEMBER(decocass_state,cprogolf)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #1 (DE-0061 flip 0-1)\n"));
-	state->m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
-	state->m_type1_inmap = MAKE_MAP(1,0,2,3,4,5,6,7);
-	state->m_type1_outmap = MAKE_MAP(1,0,2,3,4,5,6,7);
+	m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
+	m_type1_inmap = MAKE_MAP(1,0,2,3,4,5,6,7);
+	m_type1_outmap = MAKE_MAP(1,0,2,3,4,5,6,7);
 }
 
-MACHINE_RESET( cprogolfj )
+MACHINE_RESET_MEMBER(decocass_state,cprogolfj)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #1 (A-0061 flip 0-1)\n"));
-	state->m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
-	state->m_type1_inmap = MAKE_MAP(1,0,2,3,4,5,6,7);
-	state->m_type1_outmap = MAKE_MAP(1,0,2,3,4,5,6,7);
+	m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
+	m_type1_inmap = MAKE_MAP(1,0,2,3,4,5,6,7);
+	m_type1_outmap = MAKE_MAP(1,0,2,3,4,5,6,7);
 }
 
-MACHINE_RESET( cluckypo )
+MACHINE_RESET_MEMBER(decocass_state,cluckypo)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #1 (DE-0061 flip 1-3)\n"));
-	state->m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
-	state->m_type1_inmap = MAKE_MAP(0,3,2,1,4,5,6,7);
-	state->m_type1_outmap = MAKE_MAP(0,3,2,1,4,5,6,7);
+	m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
+	m_type1_inmap = MAKE_MAP(0,3,2,1,4,5,6,7);
+	m_type1_outmap = MAKE_MAP(0,3,2,1,4,5,6,7);
 }
 
-MACHINE_RESET( ctisland )
+MACHINE_RESET_MEMBER(decocass_state,ctisland)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #1 (DE-0061 flip 0-2)\n"));
-	state->m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
-	state->m_type1_inmap = MAKE_MAP(2,1,0,3,4,5,6,7);
-	state->m_type1_outmap = MAKE_MAP(2,1,0,3,4,5,6,7);
+	m_dongle_r = decocass_type1_latch_26_pass_3_inv_2_r;
+	m_type1_inmap = MAKE_MAP(2,1,0,3,4,5,6,7);
+	m_type1_outmap = MAKE_MAP(2,1,0,3,4,5,6,7);
 }
 
-MACHINE_RESET( cexplore )
+MACHINE_RESET_MEMBER(decocass_state,cexplore)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #1 (DE-0061 own PROM)\n"));
-	state->m_dongle_r = decocass_type1_latch_26_pass_5_inv_2_r;
+	m_dongle_r = decocass_type1_latch_26_pass_5_inv_2_r;
 }
 
-MACHINE_RESET( cdiscon1 )
+MACHINE_RESET_MEMBER(decocass_state,cdiscon1)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #2 (CS82-007)\n"));
-	state->m_dongle_r = decocass_type2_r;
-	state->m_dongle_w = decocass_type2_w;
+	m_dongle_r = decocass_type2_r;
+	m_dongle_w = decocass_type2_w;
 }
 
-MACHINE_RESET( ctornado )
+MACHINE_RESET_MEMBER(decocass_state,ctornado)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #2 (CS82-007)\n"));
-	state->m_dongle_r = decocass_type2_r;
-	state->m_dongle_w = decocass_type2_w;
+	m_dongle_r = decocass_type2_r;
+	m_dongle_w = decocass_type2_w;
 }
 
-MACHINE_RESET( cmissnx )
+MACHINE_RESET_MEMBER(decocass_state,cmissnx)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #2 (CS82-007)\n"));
-	state->m_dongle_r = decocass_type2_r;
-	state->m_dongle_w = decocass_type2_w;
+	m_dongle_r = decocass_type2_r;
+	m_dongle_w = decocass_type2_w;
 }
 
-MACHINE_RESET( cptennis )
+MACHINE_RESET_MEMBER(decocass_state,cptennis)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #2 (CS82-007)\n"));
-	state->m_dongle_r = decocass_type2_r;
-	state->m_dongle_w = decocass_type2_w;
+	m_dongle_r = decocass_type2_r;
+	m_dongle_w = decocass_type2_w;
 }
 
-MACHINE_RESET( cfishing )
+MACHINE_RESET_MEMBER(decocass_state,cfishing)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_01;
-
-}
-
-MACHINE_RESET( cbtime )
-{
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
-	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_12;
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_01;
 
 }
 
-MACHINE_RESET( cburnrub )
+MACHINE_RESET_MEMBER(decocass_state,cbtime)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_67;
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_12;
+
 }
 
-MACHINE_RESET( cgraplop )
+MACHINE_RESET_MEMBER(decocass_state,cburnrub)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_56;
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_67;
 }
 
-MACHINE_RESET( cgraplop2 )
+MACHINE_RESET_MEMBER(decocass_state,cgraplop)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_67;
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_56;
 }
 
-MACHINE_RESET( clapapa )
+MACHINE_RESET_MEMBER(decocass_state,cgraplop2)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_34_7;
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_67;
 }
 
-MACHINE_RESET( cskater )
+MACHINE_RESET_MEMBER(decocass_state,clapapa)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_45;
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_34_7;
 }
 
-MACHINE_RESET( cprobowl )
+MACHINE_RESET_MEMBER(decocass_state,cskater)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_34_0;
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_45;
 }
 
-MACHINE_RESET( cnightst )
+MACHINE_RESET_MEMBER(decocass_state,cprobowl)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_13;
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_34_0;
 }
 
-MACHINE_RESET( cpsoccer )
+MACHINE_RESET_MEMBER(decocass_state,cnightst)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_24;
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_13;
 }
 
-MACHINE_RESET( csdtenis )
+MACHINE_RESET_MEMBER(decocass_state,cpsoccer)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_23_56;
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_24;
 }
 
-MACHINE_RESET( czeroize )
+MACHINE_RESET_MEMBER(decocass_state,csdtenis)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	UINT8 *mem = state->memregion("dongle")->base();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_23_56;
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_23_56;
+}
+
+MACHINE_RESET_MEMBER(decocass_state,czeroize)
+{
+	UINT8 *mem = memregion("dongle")->base();
+	decocass_reset_common(machine());
+	LOG(0,("dongle type #3 (PAL)\n"));
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_23_56;
 
 	/*
      * FIXME: remove if the original ROM is available.
@@ -1699,50 +1670,45 @@ MACHINE_RESET( czeroize )
 	mem[0x08a1] = 0xf7;
 }
 
-MACHINE_RESET( cppicf )
+MACHINE_RESET_MEMBER(decocass_state,cppicf)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_01;
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_01;
 }
 
-MACHINE_RESET( cfghtice )
+MACHINE_RESET_MEMBER(decocass_state,cfghtice)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #3 (PAL)\n"));
-	state->m_dongle_r = decocass_type3_r;
-	state->m_dongle_w = decocass_type3_w;
-	state->m_type3_swap = TYPE3_SWAP_25;
+	m_dongle_r = decocass_type3_r;
+	m_dongle_w = decocass_type3_w;
+	m_type3_swap = TYPE3_SWAP_25;
 }
 
-MACHINE_RESET( type4 )
+MACHINE_RESET_MEMBER(decocass_state,type4)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #4 (32K ROM)\n"));
-	state->m_dongle_r = decocass_type4_r;
-	state->m_dongle_w = decocass_type4_w;
+	m_dongle_r = decocass_type4_r;
+	m_dongle_w = decocass_type4_w;
 }
 
-MACHINE_RESET( cbdash )
+MACHINE_RESET_MEMBER(decocass_state,cbdash)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("dongle type #5 (NOP)\n"));
-	state->m_dongle_r = decocass_type5_r;
-	state->m_dongle_w = decocass_type5_w;
+	m_dongle_r = decocass_type5_r;
+	m_dongle_w = decocass_type5_w;
 }
 
-MACHINE_RESET( cflyball )
+MACHINE_RESET_MEMBER(decocass_state,cflyball)
 {
-	decocass_state *state = machine.driver_data<decocass_state>();
-	decocass_reset_common(machine);
+	decocass_reset_common(machine());
 	LOG(0,("no dongle\n"));
-	state->m_dongle_r = decocass_nodong_r;
+	m_dongle_r = decocass_nodong_r;
 }
 
 /***************************************************************************
@@ -1758,7 +1724,7 @@ WRITE8_HANDLER( i8041_p1_w )
 	{
 		LOG(4,("%10s 8041-PC: %03x i8041_p1_w: $%02x (%s%s%s%s%s%s%s%s)\n",
 			space->machine().time().as_string(6),
-			cpu_get_previouspc(&space->device()),
+			space->device().safe_pcbase(),
 			data,
 			data & 0x01 ? "" : "DATA-WRT",
 			data & 0x02 ? "" : " DATA-CLK",
@@ -1795,7 +1761,7 @@ READ8_HANDLER( i8041_p1_r )
 	{
 		LOG(4,("%10s 8041-PC: %03x i8041_p1_r: $%02x (%s%s%s%s%s%s%s%s)\n",
 			space->machine().time().as_string(6),
-			cpu_get_previouspc(&space->device()),
+			space->device().safe_pcbase(),
 			data,
 			data & 0x01 ? "" : "DATA-WRT",
 			data & 0x02 ? "" : " DATA-CLK",
@@ -1817,7 +1783,7 @@ WRITE8_HANDLER( i8041_p2_w )
 	{
 		LOG(4,("%10s 8041-PC: %03x i8041_p2_w: $%02x (%s%s%s%s%s%s%s%s)\n",
 			space->machine().time().as_string(6),
-			cpu_get_previouspc(&space->device()),
+			space->device().safe_pcbase(),
 			data,
 			data & 0x01 ? "" : "FNO/",
 			data & 0x02 ? "" : " EOT/",
@@ -1843,7 +1809,7 @@ READ8_HANDLER( i8041_p2_r )
 	{
 		LOG(4,("%10s 8041-PC: %03x i8041_p2_r: $%02x (%s%s%s%s%s%s%s%s)\n",
 			space->machine().time().as_string(6),
-			cpu_get_previouspc(&space->device()),
+			space->device().safe_pcbase(),
 			data,
 			data & 0x01 ? "" : "FNO/",
 			data & 0x02 ? "" : " EOT/",
@@ -1865,7 +1831,7 @@ READ8_HANDLER( i8041_p2_r )
 ***************************************************************************/
 
 /* regions within the virtual tape */
-enum _tape_region
+enum tape_region
 {
 	REGION_LEADER,				/* in clear leader section */
 	REGION_LEADER_GAP,			/* in gap between leader and BOT */
@@ -1878,11 +1844,10 @@ enum _tape_region
 	REGION_TRAILER_GAP,			/* in gap between trailer and EOT */
 	REGION_TRAILER				/* in clear trailer section */
 };
-typedef enum _tape_region tape_region;
 
 
 /* bytes within a data block on a virtual tape */
-enum _tape_byte
+enum tape_byte
 {
 	BYTE_PRE_GAP_0,				/* 34 bytes of gap, clock held to 0, no data */
 	BYTE_PRE_GAP_33 = BYTE_PRE_GAP_0 + 33,
@@ -1899,12 +1864,10 @@ enum _tape_byte
 	BYTE_POSTGAP_33 = BYTE_POSTGAP_0 + 33,
 	BYTE_BLOCK_TOTAL			/* total number of bytes in block */
 };
-typedef enum _tape_byte tape_byte;
 
 
 /* state of the tape */
-typedef struct _tape_state tape_state;
-struct _tape_state
+struct tape_state
 {
 	running_machine *	machine;			/* pointer back to the machine */
 	emu_timer *			timer;				/* timer for running the tape */
@@ -1966,7 +1929,7 @@ INLINE tape_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == DECOCASS_TAPE);
 
-	return (tape_state *)downcast<legacy_device_base *>(device)->token();
+	return (tape_state *)downcast<decocass_tape_device *>(device)->token();
 }
 
 
@@ -2228,7 +2191,6 @@ static DEVICE_START( decocass_tape )
 	/* validate some basic stuff */
 	assert(device != NULL);
 	assert(device->static_config() == NULL);
-	assert(downcast<const legacy_device_base *>(device)->inline_config() == NULL);
 
 	/* fetch the data pointer */
 	tape->timer = device->machine().scheduler().timer_alloc(FUNC(tape_clock_callback), (void *)device);
@@ -2281,29 +2243,40 @@ static DEVICE_RESET( decocass_tape )
 }
 
 
-/*-------------------------------------------------
-    device get info callback
--------------------------------------------------*/
+const device_type DECOCASS_TAPE = &device_creator<decocass_tape_device>;
 
-DEVICE_GET_INFO( decocass_tape )
+decocass_tape_device::decocass_tape_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, DECOCASS_TAPE, "DECO Cassette Tape", tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(tape_state);			break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(tape_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(decocass_tape); break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(decocass_tape);break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "DECO Cassette Tape");	break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Tape Controller");		break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");					break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void decocass_tape_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void decocass_tape_device::device_start()
+{
+	DEVICE_START_NAME( decocass_tape )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void decocass_tape_device::device_reset()
+{
+	DEVICE_RESET_NAME( decocass_tape )(this);
 }
 
 
-DEFINE_LEGACY_DEVICE(DECOCASS_TAPE, decocass_tape);

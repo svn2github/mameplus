@@ -52,9 +52,9 @@ public:
 	int      m_ic43_b;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	device_t *m_mcu;
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	device_t *m_slave;
 	DECLARE_WRITE8_MEMBER(bublbobl_bankswitch_w);
 	DECLARE_WRITE8_MEMBER(tokio_bankswitch_w);
@@ -98,6 +98,16 @@ public:
 	DECLARE_DRIVER_INIT(tokio);
 	DECLARE_DRIVER_INIT(dland);
 	DECLARE_DRIVER_INIT(bublbobl);
+	DECLARE_MACHINE_START(tokio);
+	DECLARE_MACHINE_RESET(tokio);
+	DECLARE_MACHINE_START(bublbobl);
+	DECLARE_MACHINE_RESET(bublbobl);
+	DECLARE_MACHINE_START(boblbobl);
+	DECLARE_MACHINE_RESET(boblbobl);
+	DECLARE_MACHINE_START(bub68705);
+	DECLARE_MACHINE_RESET(bub68705);
+	DECLARE_MACHINE_START(common);
+	DECLARE_MACHINE_RESET(common);
 };
 
 

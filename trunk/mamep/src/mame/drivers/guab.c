@@ -76,7 +76,11 @@ class guab_state : public driver_device
 {
 public:
 	guab_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) { }
+		: driver_device(mconfig, type, tag) ,
+		m_sn(*this, "snsnd") { }
+
+	/* devices */
+	required_device<sn76489_new_device> m_sn;
 
 	struct ef9369 m_pal;
 	emu_timer *m_fdc_timer;
@@ -91,6 +95,9 @@ public:
 	DECLARE_WRITE16_MEMBER(io_w);
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
 	DECLARE_WRITE_LINE_MEMBER(ptm_irq);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -102,7 +109,7 @@ public:
 
 WRITE_LINE_MEMBER(guab_state::ptm_irq)
 {
-	cputag_set_input_line(machine(), "maincpu", INT_6840PTM, state);
+	machine().device("maincpu")->execute().set_input_line(INT_6840PTM, state);
 }
 
 static const ptm6840_interface ptm_intf =
@@ -126,7 +133,7 @@ static const ptm6840_interface ptm_intf =
 
 static void tms_interrupt(running_machine &machine, int state)
 {
-	cputag_set_input_line(machine, "maincpu", INT_TMS34061, state);
+	machine.device("maincpu")->execute().set_input_line(INT_TMS34061, state);
 }
 
 static const struct tms34061_interface tms34061intf =
@@ -245,9 +252,9 @@ READ16_MEMBER(guab_state::ef9369_r)
 }
 
 
-static VIDEO_START( guab )
+void guab_state::video_start()
 {
-	tms34061_start(machine, &tms34061intf);
+	tms34061_start(machine(), &tms34061intf);
 }
 
 
@@ -376,7 +383,7 @@ static TIMER_CALLBACK( fdc_data_callback )
 	}
 
 	fdc.status |= DATA_REQUEST;
-	cputag_set_input_line(machine, "maincpu", INT_FLOPPYCTRL, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(INT_FLOPPYCTRL, ASSERT_LINE);
 }
 
 
@@ -471,7 +478,7 @@ WRITE16_MEMBER(guab_state::wd1770_w)
 															fdc.sector));
 
 					/* Trigger a DRQ interrupt on the CPU */
-					cputag_set_input_line(machine(), "maincpu", INT_FLOPPYCTRL, ASSERT_LINE);
+					machine().device("maincpu")->execute().set_input_line(INT_FLOPPYCTRL, ASSERT_LINE);
 					fdc.status |= DATA_REQUEST;
 					break;
 				}
@@ -516,7 +523,7 @@ WRITE16_MEMBER(guab_state::wd1770_w)
 			fdc.data = data;
 
 			/* Clear the DRQ */
-			cputag_set_input_line(machine(), "maincpu", INT_FLOPPYCTRL, CLEAR_LINE);
+			machine().device("maincpu")->execute().set_input_line(INT_FLOPPYCTRL, CLEAR_LINE);
 
 			/* Queue an event to write the data if write command was specified */
 			if (fdc.cmd & 0x20)
@@ -554,7 +561,7 @@ READ16_MEMBER(guab_state::wd1770_r)
 			retval = fdc.data;
 
 			/* Clear the DRQ */
-			cputag_set_input_line(machine(), "maincpu", INT_FLOPPYCTRL, CLEAR_LINE);
+			machine().device("maincpu")->execute().set_input_line(INT_FLOPPYCTRL, CLEAR_LINE);
 			fdc.status &= ~DATA_REQUEST;
 			break;
 		}
@@ -651,7 +658,7 @@ WRITE16_MEMBER(guab_state::io_w)
 		}
 		case 0x30:
 		{
-			sn76496_w(machine().device("snsnd"), 0, data & 0xff);
+			m_sn->write(space, 0, data & 0xff);
 			break;
 		}
 		case 0x31:
@@ -774,20 +781,35 @@ INPUT_PORTS_END
 
 /*************************************
  *
+ *  Sound interface
+ *
+ *************************************/
+
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
+
+/*************************************
+ *
  *  Machine driver
  *
  *************************************/
 
- static MACHINE_START( guab )
+void guab_state::machine_start()
 {
-	guab_state *state = machine.driver_data<guab_state>();
-	state->m_fdc_timer = machine.scheduler().timer_alloc(FUNC(fdc_data_callback));
+	m_fdc_timer = machine().scheduler().timer_alloc(FUNC(fdc_data_callback));
 }
 
-static MACHINE_RESET( guab )
+void guab_state::machine_reset()
 {
-	guab_state *state = machine.driver_data<guab_state>();
-	memset(&state->m_fdc, 0, sizeof(state->m_fdc));
+	memset(&m_fdc, 0, sizeof(m_fdc));
 }
 
 static MACHINE_CONFIG_START( guab, guab_state )
@@ -795,8 +817,6 @@ static MACHINE_CONFIG_START( guab, guab_state )
 	MCFG_CPU_ADD("maincpu", M68000, 8000000)
 	MCFG_CPU_PROGRAM_MAP(guab_map)
 
-	MCFG_MACHINE_START(guab)
-	MCFG_MACHINE_RESET(guab)
 
 	/* TODO: Use real video timings */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -808,13 +828,13 @@ static MACHINE_CONFIG_START( guab, guab_state )
 
 	MCFG_PALETTE_LENGTH(16)
 
-	MCFG_VIDEO_START(guab)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
 	/* TODO: Verify clock */
-	MCFG_SOUND_ADD("snsnd", SN76489, 2000000)
+	MCFG_SOUND_ADD("snsnd", SN76489_NEW, 2000000)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.50)
+	MCFG_SOUND_CONFIG(psg_intf)
 
 	/* 6840 PTM */
 	MCFG_PTM6840_ADD("6840ptm", ptm_intf)

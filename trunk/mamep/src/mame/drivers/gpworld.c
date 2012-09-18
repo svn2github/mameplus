@@ -70,6 +70,7 @@ public:
 	DECLARE_WRITE8_MEMBER(brake_gas_write);
 	DECLARE_WRITE8_MEMBER(palette_write);
 	DECLARE_DRIVER_INIT(gpworld);
+	virtual void machine_start();
 };
 
 
@@ -233,7 +234,7 @@ static SCREEN_UPDATE_RGB32( gpworld )
 }
 
 
-static MACHINE_START( gpworld )
+void gpworld_state::machine_start()
 {
 }
 
@@ -424,7 +425,7 @@ INPUT_PORTS_END
 
 static TIMER_CALLBACK( irq_stop )
 {
-	cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 static INTERRUPT_GEN( vblank_callback_gpworld )
@@ -435,11 +436,11 @@ static INTERRUPT_GEN( vblank_callback_gpworld )
 	{
 		state->m_laserdisc->data_w(state->m_ldp_write_latch);
 		state->m_ldp_read_latch = state->m_laserdisc->status_r();
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 
 	/* The time the IRQ line stays high is set just long enough to happen after the NMI - hacky? */
-	device_set_input_line(device, 0, ASSERT_LINE);
+	device->execute().set_input_line(0, ASSERT_LINE);
 	device->machine().scheduler().timer_set(attotime::from_usec(100), FUNC(irq_stop));
 }
 
@@ -467,7 +468,6 @@ static MACHINE_CONFIG_START( gpworld, gpworld_state )
 	MCFG_CPU_IO_MAP(mainport)
 	MCFG_CPU_VBLANK_INT("screen", vblank_callback_gpworld)
 
-	MCFG_MACHINE_START(gpworld)
 
 	MCFG_LASERDISC_LDV1000_ADD("laserdisc")
 	MCFG_LASERDISC_OVERLAY_STATIC(512, 256, gpworld)

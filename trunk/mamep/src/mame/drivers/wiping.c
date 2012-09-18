@@ -54,7 +54,7 @@ READ8_MEMBER(wiping_state::ports_r)
 
 WRITE8_MEMBER(wiping_state::subcpu_reset_w)
 {
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 WRITE8_MEMBER(wiping_state::main_irq_mask_w)
@@ -267,7 +267,7 @@ static INTERRUPT_GEN( vblank_irq )
 	wiping_state *state = device->machine().driver_data<wiping_state>();
 
 	if(state->m_main_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( sound_timer_irq )
@@ -275,7 +275,7 @@ static INTERRUPT_GEN( sound_timer_irq )
 	wiping_state *state = device->machine().driver_data<wiping_state>();
 
 	if(state->m_sound_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 
@@ -302,7 +302,6 @@ static MACHINE_CONFIG_START( wiping, wiping_state )
 	MCFG_GFXDECODE(wiping)
 	MCFG_PALETTE_LENGTH(64*4+64*4)
 
-	MCFG_PALETTE_INIT(wiping)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

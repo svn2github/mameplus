@@ -2,6 +2,8 @@
 
 #include "emu.h"
 #include "megavdp.h"
+#include "mega32x.h"
+#include "video/315_5124.h"
 
 /* still have dependencies on the following external gunk */
 
@@ -11,14 +13,7 @@ extern cpu_device *_svp_cpu;
 extern int segacd_wordram_mapped;
 extern timer_device* megadriv_scanline_timer;
 
-extern UINT32* _32x_render_videobuffer_to_screenbuffer_helper(running_machine &machine, int scanline);
-extern void _32x_scanline_cb0(running_machine& machine);
-extern void _32x_scanline_cb1(void);
-extern void _32x_check_framebuffer_swap(void);
-extern int _32x_hcount_compare_val;
-extern int _32x_displaymode;
-extern int _32x_videopriority;
-extern int _32x_is_connected;
+
 
 
 #define MAX_HPOSITION 480
@@ -63,7 +58,7 @@ void genesis_vdp_lv4irqline_callback_default(running_machine &machine, bool stat
 const device_type SEGA_GEN_VDP = &device_creator<sega_genesis_vdp_device>;
 
 sega_genesis_vdp_device::sega_genesis_vdp_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
-	: device_t(mconfig, SEGA_GEN_VDP, "sega_genesis_vdp_device", tag, owner, clock)
+	: sega315_5124_device( mconfig, SEGA315_5246, "Sega Genesis VDP", tag, owner, clock, SEGA315_5124_CRAM_SIZE, 0, true )
 {
 	m_genesis_vdp_sndirqline_callback = genesis_vdp_sndirqline_callback_default;
 	m_genesis_vdp_lv6irqline_callback = genesis_vdp_lv6irqline_callback_default;
@@ -575,7 +570,7 @@ void sega_genesis_vdp_device::megadrive_do_insta_68k_to_vram_dma(running_machine
 	if (length==0x00) length = 0xffff;
 
 	/* This is a hack until real DMA timings are implemented */
-	device_spin_until_time(m_cpu68k, attotime::from_nsec(length * 1000 / 3500));
+	m_cpu68k->spin_until_time(attotime::from_nsec(length * 1000 / 3500));
 
 	for (count = 0;count<(length>>1);count++)
 	{
@@ -1271,7 +1266,7 @@ READ16_MEMBER( sega_genesis_vdp_device::megadriv_vdp_r )
 		//  if ((!ACCESSING_BITS_8_15) || (!ACCESSING_BITS_0_7)) mame_printf_debug("8-bit VDP read control port access, offset %04x mem_mask %04x\n",offset,mem_mask);
 			retvalue = megadriv_vdp_ctrl_port_r(space.machine());
 		//  retvalue = space->machine().rand();
-		//  mame_printf_debug("%06x: Read Control Port at scanline %d hpos %d (return %04x)\n",cpu_get_pc(&space->device()),genesis_get_scanline_counter(machine), get_hposition(space.machine()),retvalue);
+		//  mame_printf_debug("%06x: Read Control Port at scanline %d hpos %d (return %04x)\n",space->device().safe_pc(),genesis_get_scanline_counter(machine), get_hposition(space.machine()),retvalue);
 			break;
 
 		case 0x08:
@@ -1281,7 +1276,7 @@ READ16_MEMBER( sega_genesis_vdp_device::megadriv_vdp_r )
 		//  if ((!ACCESSING_BITS_8_15) || (!ACCESSING_BITS_0_7)) mame_printf_debug("8-bit VDP read HV counter port access, offset %04x mem_mask %04x\n",offset,mem_mask);
 			retvalue = megadriv_read_hv_counters(space.machine());
 		//  retvalue = space->machine().rand();
-		//  mame_printf_debug("%06x: Read HV counters at scanline %d hpos %d (return %04x)\n",cpu_get_pc(&space->device()),genesis_get_scanline_counter(machine), get_hposition(space.machine()),retvalue);
+		//  mame_printf_debug("%06x: Read HV counters at scanline %d hpos %d (return %04x)\n",space->device().safe_pc(),genesis_get_scanline_counter(machine), get_hposition(space.machine()),retvalue);
 			break;
 
 		case 0x10:
@@ -2552,6 +2547,9 @@ void sega_genesis_vdp_device::genesis_render_videoline_to_videobuffer(int scanli
 /* This converts our render buffer to real screen colours */
 void sega_genesis_vdp_device::genesis_render_videobuffer_to_screenbuffer(running_machine &machine, int scanline)
 {
+	sega_32x_device *_32xdev = machine.device<sega_32x_device>("sega32x"); // take this out of the VDP eventually
+
+
 	UINT16*lineptr;
 	int x;
 
@@ -2564,7 +2562,8 @@ void sega_genesis_vdp_device::genesis_render_videobuffer_to_screenbuffer(running
 		lineptr = m_render_line;
 	}
 
-	UINT32* _32x_linerender = _32x_render_videobuffer_to_screenbuffer_helper(machine, scanline);
+
+	if (_32xdev) _32xdev->_32x_render_videobuffer_to_screenbuffer_helper(machine, scanline);
 
 
 
@@ -2578,22 +2577,25 @@ void sega_genesis_vdp_device::genesis_render_videobuffer_to_screenbuffer(running
 			int drawn = 0;
 
 			// low priority 32x - if it's the bg pen, we have a 32x, and it's display is enabled...
-			if ((dat&0x20000) && (_32x_is_connected) && (_32x_displaymode != 0))
+			if (_32xdev)
 			{
-				if (!_32x_videopriority)
+				if ((dat&0x20000) && (_32xdev->m_32x_displaymode != 0))
 				{
-					if (!(_32x_linerender[x]&0x8000))
+					if (!_32xdev->m_32x_videopriority)
 					{
-						lineptr[x] = _32x_linerender[x]&0x7fff;
-						drawn = 1;
+						if (!(_32xdev->m_32x_linerender[x]&0x8000))
+						{
+							lineptr[x] = _32xdev->m_32x_linerender[x]&0x7fff;
+							drawn = 1;
+						}
 					}
-				}
-				else
-				{
-					if ((_32x_linerender[x]&0x8000))
+					else
 					{
-						lineptr[x] = _32x_linerender[x]&0x7fff;
-						drawn = 1;
+						if ((_32xdev->m_32x_linerender[x]&0x8000))
+						{
+							lineptr[x] = _32xdev->m_32x_linerender[x]&0x7fff;
+							drawn = 1;
+						}
 					}
 				}
 			}
@@ -2633,22 +2635,25 @@ void sega_genesis_vdp_device::genesis_render_videobuffer_to_screenbuffer(running
 			int drawn = 0;
 
 			// low priority 32x - if it's the bg pen, we have a 32x, and it's display is enabled...
-			if ((dat&0x20000) && (_32x_is_connected) && (_32x_displaymode != 0))
+			if (_32xdev)
 			{
-				if (!_32x_videopriority)
+				if ((dat&0x20000) && (_32xdev->m_32x_displaymode != 0))
 				{
-					if (!(_32x_linerender[x]&0x8000))
+					if (!_32xdev->m_32x_videopriority)
 					{
-						lineptr[x] = _32x_linerender[x]&0x7fff;
-						drawn = 1;
+						if (!(_32xdev->m_32x_linerender[x]&0x8000))
+						{
+							lineptr[x] = _32xdev->m_32x_linerender[x]&0x7fff;
+							drawn = 1;
+						}
 					}
-				}
-				else
-				{
-					if ((_32x_linerender[x]&0x8000))
+					else
 					{
-						lineptr[x] = _32x_linerender[x]&0x7fff;
-						drawn = 1;
+						if ((_32xdev->m_32x_linerender[x]&0x8000))
+						{
+							lineptr[x] = _32xdev->m_32x_linerender[x]&0x7fff;
+							drawn = 1;
+						}
 					}
 				}
 			}
@@ -2712,19 +2717,22 @@ void sega_genesis_vdp_device::genesis_render_videobuffer_to_screenbuffer(running
 
 
 	// high priority 32x
-	if ((_32x_is_connected) && (_32x_displaymode != 0))
+	if (_32xdev)
 	{
-		for (x=0;x<320;x++)
+		if (_32xdev->m_32x_displaymode != 0)
 		{
-			if (!_32x_videopriority)
+			for (x=0;x<320;x++)
 			{
-				if ((_32x_linerender[x]&0x8000))
-					lineptr[x] = _32x_linerender[x]&0x7fff;
-			}
-			else
-			{
-				if (!(_32x_linerender[x]&0x8000))
-					lineptr[x] = _32x_linerender[x]&0x7fff;
+				if (!_32xdev->m_32x_videopriority)
+				{
+					if ((_32xdev->m_32x_linerender[x]&0x8000))
+						lineptr[x] = _32xdev->m_32x_linerender[x]&0x7fff;
+				}
+				else
+				{
+					if (!(_32xdev->m_32x_linerender[x]&0x8000))
+						lineptr[x] = _32xdev->m_32x_linerender[x]&0x7fff;
+				}
 			}
 		}
 	}
@@ -2756,6 +2764,8 @@ void sega_genesis_vdp_device::vdp_handle_scanline_callback(running_machine &mach
        to rounding errors in the timer calculation we're not quite there.  Let's assume we are
        still in the previous scanline for now.
     */
+	sega_32x_device *_32xdev = machine.device<sega_32x_device>("sega32x"); // take this out of the VDP eventually
+
 
 	if (genesis_get_scanline_counter(machine)!=(megadrive_total_scanlines-1))
 	{
@@ -2771,16 +2781,13 @@ void sega_genesis_vdp_device::vdp_handle_scanline_callback(running_machine &mach
 			megadrive_vblank_flag = 1;
 
 			// 32x interrupt!
-			if (_32x_is_connected)
-			{
-				_32x_scanline_cb0(machine);
-			}
+			if (_32xdev) _32xdev->_32x_scanline_cb0(machine);
 
 		}
 
 
 
-		_32x_check_framebuffer_swap();
+		if (_32xdev) _32xdev->_32x_check_framebuffer_swap();
 
 
 	//  if (genesis_get_scanline_counter(machine)==0) m_irq4counter = MEGADRIVE_REG0A_HINT_VALUE;
@@ -2812,10 +2819,9 @@ void sega_genesis_vdp_device::vdp_handle_scanline_callback(running_machine &mach
 
 		//if (genesis_get_scanline_counter(machine)==0) irq4_on_timer->adjust(attotime::from_usec(2));
 
-		if(_32x_is_connected)
-		{
-			_32x_scanline_cb1();
-		}
+
+		if (_32xdev) _32xdev->_32x_scanline_cb1();
+
 
 		if (genesis_get_scanline_counter(machine) == megadrive_z80irq_scanline)
 		{
@@ -2838,6 +2844,8 @@ void sega_genesis_vdp_device::vdp_handle_scanline_callback(running_machine &mach
 
 void sega_genesis_vdp_device::vdp_handle_eof(running_machine &machine)
 {
+	sega_32x_device *_32xdev = machine.device<sega_32x_device>("sega32x"); // take this out of the VDP eventually
+
 	rectangle visarea;
 	int scr_width = 320;
 
@@ -2849,7 +2857,7 @@ void sega_genesis_vdp_device::vdp_handle_eof(running_machine &machine)
 	m_sprite_collision=0;//? when to reset this ..
 	megadrive_imode = MEGADRIVE_REG0C_INTERLEAVE; // can't change mid-frame..
 	m_imode_odd_frame^=1;
-//      cputag_set_input_line(machine, "genesis_snd_z80", 0, CLEAR_LINE); // if the z80 interrupt hasn't happened by now, clear it..
+//      machine.device("genesis_snd_z80")->execute().set_input_line(0, CLEAR_LINE); // if the z80 interrupt hasn't happened by now, clear it..
 
 
 
@@ -2913,8 +2921,7 @@ void sega_genesis_vdp_device::vdp_handle_eof(running_machine &machine)
 	machine.primary_screen->configure(480, megadrive_total_scanlines, visarea, machine.primary_screen->frame_period().attoseconds);
 
 
-	if(_32x_is_connected)
-		_32x_hcount_compare_val = -1;
+	if(_32xdev) _32xdev->m_32x_hcount_compare_val = -1;
 }
 
 
@@ -2964,7 +2971,9 @@ TIMER_DEVICE_CALLBACK( megadriv_scanline_timer_callback_alt_timing )
 
 		vdp->vdp_handle_scanline_callback(timer.machine(), param);
 
-		timer.machine().primary_screen->update_partial(timer.machine().primary_screen->vpos()-1);
+		int vpos = timer.machine().primary_screen->vpos();
+		if (vpos > 0)
+			timer.machine().primary_screen->update_partial(vpos-1);
 	}
 }
 

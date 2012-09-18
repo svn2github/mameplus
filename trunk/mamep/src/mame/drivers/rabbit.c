@@ -132,6 +132,11 @@ public:
 	DECLARE_WRITE32_MEMBER(rabbit_blitter_w);
 	DECLARE_WRITE32_MEMBER(rabbit_eeprom_write);
 	DECLARE_DRIVER_INIT(rabbit);
+	TILE_GET_INFO_MEMBER(get_rabbit_tilemap0_tile_info);
+	TILE_GET_INFO_MEMBER(get_rabbit_tilemap1_tile_info);
+	TILE_GET_INFO_MEMBER(get_rabbit_tilemap2_tile_info);
+	TILE_GET_INFO_MEMBER(get_rabbit_tilemap3_tile_info);
+	virtual void video_start();
 };
 
 
@@ -197,24 +202,24 @@ INLINE void get_rabbit_tilemap_info(running_machine &machine, tile_data &tileinf
 	}
 }
 
-static TILE_GET_INFO( get_rabbit_tilemap0_tile_info )
+TILE_GET_INFO_MEMBER(rabbit_state::get_rabbit_tilemap0_tile_info)
 {
-	get_rabbit_tilemap_info(machine,tileinfo,tile_index,0,1);
+	get_rabbit_tilemap_info(machine(),tileinfo,tile_index,0,1);
 }
 
-static TILE_GET_INFO( get_rabbit_tilemap1_tile_info )
+TILE_GET_INFO_MEMBER(rabbit_state::get_rabbit_tilemap1_tile_info)
 {
-	get_rabbit_tilemap_info(machine,tileinfo,tile_index,1,1);
+	get_rabbit_tilemap_info(machine(),tileinfo,tile_index,1,1);
 }
 
-static TILE_GET_INFO( get_rabbit_tilemap2_tile_info )
+TILE_GET_INFO_MEMBER(rabbit_state::get_rabbit_tilemap2_tile_info)
 {
-	get_rabbit_tilemap_info(machine,tileinfo,tile_index,2,1);
+	get_rabbit_tilemap_info(machine(),tileinfo,tile_index,2,1);
 }
 
-static TILE_GET_INFO( get_rabbit_tilemap3_tile_info )
+TILE_GET_INFO_MEMBER(rabbit_state::get_rabbit_tilemap3_tile_info)
 {
-	get_rabbit_tilemap_info(machine,tileinfo,tile_index,3,0);
+	get_rabbit_tilemap_info(machine(),tileinfo,tile_index,3,0);
 }
 
 WRITE32_MEMBER(rabbit_state::rabbit_tilemap0_w)
@@ -265,7 +270,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 {
 	rabbit_state *state = machine.driver_data<rabbit_state>();
 	int xpos,ypos,tileno,xflip,yflip, colr;
-	const gfx_element *gfx = machine.gfx[1];
+	gfx_element *gfx = machine.gfx[1];
 	int todraw = (state->m_spriteregs[5]&0x0fff0000)>>16; // how many sprites to draw (start/end reg..) what is the other half?
 
 	UINT32 *source = (state->m_spriteram+ (todraw*2))-2;
@@ -382,33 +387,32 @@ static void draw_sprite_bitmap( running_machine &machine, bitmap_ind16 &bitmap, 
 
 
 }
-static VIDEO_START(rabbit)
+void rabbit_state::video_start()
 {
-	rabbit_state *state = machine.driver_data<rabbit_state>();
 	/* the tilemaps are bigger than the regions the cpu can see, need to allocate the ram here */
 	/* or maybe not for this game/hw .... */
-	state->m_tilemap_ram[0] = auto_alloc_array_clear(machine, UINT32, 0x20000/4);
-	state->m_tilemap_ram[1] = auto_alloc_array_clear(machine, UINT32, 0x20000/4);
-	state->m_tilemap_ram[2] = auto_alloc_array_clear(machine, UINT32, 0x20000/4);
-	state->m_tilemap_ram[3] = auto_alloc_array_clear(machine, UINT32, 0x20000/4);
+	m_tilemap_ram[0] = auto_alloc_array_clear(machine(), UINT32, 0x20000/4);
+	m_tilemap_ram[1] = auto_alloc_array_clear(machine(), UINT32, 0x20000/4);
+	m_tilemap_ram[2] = auto_alloc_array_clear(machine(), UINT32, 0x20000/4);
+	m_tilemap_ram[3] = auto_alloc_array_clear(machine(), UINT32, 0x20000/4);
 
-	state->m_tilemap[0] = tilemap_create(machine, get_rabbit_tilemap0_tile_info,tilemap_scan_rows,16, 16, 128,32);
-	state->m_tilemap[1] = tilemap_create(machine, get_rabbit_tilemap1_tile_info,tilemap_scan_rows,16, 16, 128,32);
-	state->m_tilemap[2] = tilemap_create(machine, get_rabbit_tilemap2_tile_info,tilemap_scan_rows,16, 16, 128,32);
-	state->m_tilemap[3] = tilemap_create(machine, get_rabbit_tilemap3_tile_info,tilemap_scan_rows, 8,  8, 128,32);
+	m_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(rabbit_state::get_rabbit_tilemap0_tile_info),this),TILEMAP_SCAN_ROWS,16, 16, 128,32);
+	m_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(rabbit_state::get_rabbit_tilemap1_tile_info),this),TILEMAP_SCAN_ROWS,16, 16, 128,32);
+	m_tilemap[2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(rabbit_state::get_rabbit_tilemap2_tile_info),this),TILEMAP_SCAN_ROWS,16, 16, 128,32);
+	m_tilemap[3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(rabbit_state::get_rabbit_tilemap3_tile_info),this),TILEMAP_SCAN_ROWS, 8,  8, 128,32);
 
 	/* the tilemaps mix 4bpp and 8bbp tiles, we split these into 2 groups, and set a different transpen for each group */
-    state->m_tilemap[0]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
-    state->m_tilemap[0]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
-    state->m_tilemap[1]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
-    state->m_tilemap[1]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
-    state->m_tilemap[2]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
-    state->m_tilemap[2]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
-    state->m_tilemap[3]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
-    state->m_tilemap[3]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
+    m_tilemap[0]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
+    m_tilemap[0]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
+    m_tilemap[1]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
+    m_tilemap[1]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
+    m_tilemap[2]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
+    m_tilemap[2]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
+    m_tilemap[3]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
+    m_tilemap[3]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
 
-	state->m_sprite_bitmap = auto_bitmap_ind16_alloc(machine,0x1000,0x1000);
-	state->m_sprite_clip.set(0, 0x1000-1, 0, 0x1000-1);
+	m_sprite_bitmap = auto_bitmap_ind16_alloc(machine(),0x1000,0x1000);
+	m_sprite_clip.set(0, 0x1000-1, 0, 0x1000-1);
 }
 
 /*
@@ -556,7 +560,7 @@ WRITE32_MEMBER(rabbit_state::rabbit_rombank_w)
 static TIMER_CALLBACK( rabbit_blit_done )
 {
 	rabbit_state *state = machine.driver_data<rabbit_state>();
-	cputag_set_input_line(machine, "maincpu", state->m_bltirqlevel, HOLD_LINE);
+	machine.device("maincpu")->execute().set_input_line(state->m_bltirqlevel, HOLD_LINE);
 }
 
 static void rabbit_do_blit(running_machine &machine)
@@ -868,7 +872,7 @@ GFXDECODE_END
 static INTERRUPT_GEN( rabbit_vblank_interrupt )
 {
 	rabbit_state *state = device->machine().driver_data<rabbit_state>();
-	cputag_set_input_line(device->machine(), "maincpu", state->m_vblirqlevel, HOLD_LINE);
+	device->machine().device("maincpu")->execute().set_input_line(state->m_vblirqlevel, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( rabbit, rabbit_state )
@@ -892,7 +896,6 @@ static MACHINE_CONFIG_START( rabbit, rabbit_state )
 	MCFG_PALETTE_LENGTH(0x4000)
 	MCFG_PALETTE_INIT( all_black )
 
-	MCFG_VIDEO_START(rabbit)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

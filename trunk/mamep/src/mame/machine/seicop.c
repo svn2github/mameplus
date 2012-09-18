@@ -1400,6 +1400,84 @@ Miscellaneous registers:
 0x470
 ???? ???? ???? ???? External pin register, used by some games for prg/gfx banking (per-game specific)
 
+
+---
+
+commands 0x8100/0x8900:
+
+status always 0x8007 (doesn't seem to care)
+raw | amp | scale | sin       | cos      |
+------------------------------------------
+y     0x00     x    0x00000000 0x00000000 (i.e. if amp is 0 then sin/cos are zero too)
+0     0x40     0    0x00000000 0x00020000
+0     0x40     1    0x00000000 0x00040000
+0     0x40     2    0x00000000 0x00080000
+0     0x40     3    0x00000000 0x00100000
+0x40  0x40     0    0x00020000 0x00000000
+0x40  0x40     1    0x00040000 0x00000000
+0x40  0x40     2    0x00080000 0x00000000
+0x40  0x40     3    0x00100000 0x00000000
+0x80  0x40     0    0x00000000 0xfffc0000
+0x80  0x40     1    0x00000000 0xfff80000
+0x80  0x40     2    0x00000000 0xfff00000
+0x80  0x40     3    0x00000000 0xffe00000
+0xc0  0x40     0    0xfffc0000 0x00000000
+0xc0  0x40     1    0xfff80000 0x00000000
+0xc0  0x40     2    0xfff00000 0x00000000
+0xc0  0x40     3    0xffe00000 0x00000000
+0     0x80     0    0x00000000 0x00040000
+0     0x80     1    0x00000000 0x00080000
+0     0x80     2    0x00000000 0x00100000
+0     0x80     3    0x00000000 0x00200000
+0x40  0x80     0    0x00040000 0x00000000
+0x40  0x80     1    0x00080000 0x00000000
+0x40  0x80     2    0x00100000 0x00000000
+0x40  0x80     3    0x00200000 0x00000000
+0x80  0x80     0    0x00000000 0xfff80000
+0x80  0x80     1    0x00000000 0xfff00000
+0x80  0x80     2    0x00000000 0xffe00000
+0x80  0x80     3    0x00000000 0xffc00000
+0xc0  0x80     0    0xfff80000 0x00000000
+0xc0  0x80     1    0xfff00000 0x00000000
+0xc0  0x80     2    0xffe00000 0x00000000
+0xc0  0x80     3    0xffc00000 0x00000000
+0     0xc0     0    0x00000000 0x00060000
+0     0xc0     1    0x00000000 0x000c0000
+0     0xc0     2    0x00000000 0x00180000
+0     0xc0     3    0x00000000 0x00300000
+0x40  0xc0     0    0x00060000 0x00000000
+0x40  0xc0     1    0x000c0000 0x00000000
+0x40  0xc0     2    0x00180000 0x00000000
+0x40  0xc0     3    0x00300000 0x00000000
+0x80  0xc0     0    0x00000000 0xfff40000
+0x80  0xc0     1    0x00000000 0xffe80000
+0x80  0xc0     2    0x00000000 0xffd00000
+0x80  0xc0     3    0x00000000 0xffa00000
+0xc0  0xc0     0    0xfff40000 0x00000000
+0xc0  0xc0     1    0xffe80000 0x00000000
+0xc0  0xc0     2    0xffd00000 0x00000000
+0xc0  0xc0     3    0xffa00000 0x00000000
+
+commands 0x130e/0x138e: (dx dy 2 fixed point 0x80)
+dx     dy      angle
+---------------------
+0x00   0x00    0x20
+0x20   0x00    0x25 (0x26 in test)
+0x40   0x00    0x2d (0x2b in test)
+0x60   0x00    0x36
+0x80   0x00    0x00 cop status 0x8007
+0xa0   0x00    0x4a
+0xc0   0x00    0x53
+0xe0   0x00    0x5b (0x5a)
+0x100  0x00    0x60
+0x120  0x00    0x65
+0x140  0x00    0x69 (0x68)
+0x160  0x00    0x6b
+0x180  0x00    0x6e (0x6d)
+0x1a0  0x00    0x6f
+0x1c0  0x00    0x71
+0x1e0  0x00    0x72
+
 */
 
 #include "emu.h"
@@ -1411,7 +1489,7 @@ Miscellaneous registers:
 #define seibu_cop_log logerror
 #define LOG_CMDS 1
 
-UINT16 *cop_mcu_ram;
+static UINT16 *cop_mcu_ram;
 
 static UINT16 copd2_table[0x100];
 static UINT16 copd2_table_2[0x100/8];
@@ -1542,7 +1620,7 @@ static WRITE16_HANDLER( seibu_common_video_regs_w )
 		case (0x026/2): { state->m_scrollram16[3] = seibu_vregs[offset]; break; }
 		case (0x028/2): { state->m_scrollram16[4] = seibu_vregs[offset]; break; }
 		case (0x02a/2): { state->m_scrollram16[5] = seibu_vregs[offset]; break; }
-		default: { logerror("seibu_common_video_regs_w unhandled offset %02x %04x\n",offset,data); break; }
+		default: { logerror("seibu_common_video_regs_w unhandled offset %02x %04x\n",offset*2,data); break; }
 	}
 }
 
@@ -1663,15 +1741,22 @@ No known explanation to this so far ...
 
  *******************************************************************************************/
 
+// temporary hack until this is a proper device
+inline void get_ram(running_machine &machine)
+{
+	if (cop_mcu_ram == NULL) cop_mcu_ram = reinterpret_cast<UINT16 *>(machine.root_device().memshare("cop_mcu_ram")->ptr());
+}
+
 READ16_HANDLER( copdxbl_0_r )
 {
+	get_ram(space->machine());
 	UINT16 retvalue = cop_mcu_ram[offset];
 
 	switch(offset)
 	{
 		default:
 		{
-			logerror("%06x: COPX unhandled read returning %04x from offset %04x\n", cpu_get_pc(&space->device()), retvalue, offset*2);
+			logerror("%06x: COPX unhandled read returning %04x from offset %04x\n", space->device().safe_pc(), retvalue, offset*2);
 			return retvalue;
 		}
 
@@ -1691,13 +1776,14 @@ READ16_HANDLER( copdxbl_0_r )
 WRITE16_HANDLER( copdxbl_0_w )
 {
 	legionna_state *state = space->machine().driver_data<legionna_state>();
+	get_ram(space->machine());
 	COMBINE_DATA(&cop_mcu_ram[offset]);
 
 	switch(offset)
 	{
 		default:
 		{
-			logerror("%06x: COPX unhandled write data %04x at offset %04x\n", cpu_get_pc(&space->device()), data, offset*2);
+			logerror("%06x: COPX unhandled write data %04x at offset %04x\n", space->device().safe_pc(), data, offset*2);
 			break;
 		}
 
@@ -1714,7 +1800,7 @@ WRITE16_HANDLER( copdxbl_0_w )
 		case (0x740/2):
 		{
 			state->soundlatch_byte_w(*space, 0, data & 0xff);
-			cputag_set_input_line(space->machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE );
+			space->machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE );
 			break;
 		}
 	}
@@ -1728,16 +1814,18 @@ WRITE16_HANDLER( copdxbl_0_w )
 
 static UINT16 cop_status,cop_dist,cop_angle;
 static UINT16 cop_hit_status;
-static UINT32 cop_hit_val_x,cop_hit_val_y;
+static INT16 cop_hit_val_x,cop_hit_val_y,cop_hit_val_z,cop_hit_val_unk;
 static UINT32 cop_sort_lookup,cop_sort_ram_addr,cop_sort_param;
 static INT8 cop_angle_compare;
 static UINT8 cop_angle_mod_val;
 static struct
 {
 	int x,y;
-	int min_x,min_y,max_x,max_y;
+	INT16 min_x,min_y,max_x,max_y;
 	UINT16 hitbox;
+	UINT16 hitbox_x,hitbox_y;
 }cop_collision_info[2];
+static int r0, r1;
 
 /* RE from Seibu Cup Soccer bootleg */
 static const UINT8 fade_table(int v)
@@ -1756,6 +1844,39 @@ static UINT16 u1,u2;
 	u1 == _u1_ && u2 == _u2_) \
 
 
+/*
+Godzilla 0x12c0 X = 0x21ed Y = 0x57da
+Megaron  0x12d0 X = 0x1ef1 Y = 0x55db
+King Ghidorah 0x12c8 X = 0x26eb Y = 0x55dc
+Mecha Ghidorah 0x12dc X = 0x24ec Y = 0x55dc
+Mecha Godzilla 0x12d4 X = 0x1cf1 Y = 0x52dc
+Gigan 0x12cc X = 0x23e8 Y = 0x55db
+
+(DC.W $1020, $F0C0, $0000, $0000)
+X = collides at the same spot
+Y = collides between 0xd0 and 0x20
+0x588 bits 2 & 3 = 0
+(DC.W $F0C0, $1020, $0000, $0000)
+X = collides between 0xb0 and 0x50 (inclusive)
+Y = collides between 0xd0 and 0x30 (not inclusive)
+0x588 bits 2 & 3 = 0x580 bits 0 & 1
+*/
+static void cop_take_hit_box_params(UINT8 offs)
+{
+	INT16 start_x,start_y,end_x,end_y;
+
+	end_y = INT8(cop_collision_info[offs].hitbox_y >> 8);
+	start_y = INT8(cop_collision_info[offs].hitbox_y);
+	end_x = INT8(cop_collision_info[offs].hitbox_x >> 8);
+	start_x = INT8(cop_collision_info[offs].hitbox_x);
+
+	cop_collision_info[offs].min_x = start_x + (cop_collision_info[offs].x >> 16);
+	cop_collision_info[offs].min_y = start_y + (cop_collision_info[offs].y >> 16);
+	cop_collision_info[offs].max_x = end_x + (cop_collision_info[offs].x >> 16);
+	cop_collision_info[offs].max_y = end_y + (cop_collision_info[offs].y >> 16);
+}
+
+
 static UINT8 cop_calculate_collsion_detection(running_machine &machine)
 {
 	static UINT8 res;
@@ -1764,19 +1885,22 @@ static UINT8 cop_calculate_collsion_detection(running_machine &machine)
 
 	/* outbound X check */
 	if(cop_collision_info[0].max_x >= cop_collision_info[1].min_x && cop_collision_info[0].min_x <= cop_collision_info[1].max_x)
-		res &= ~1;
+		res &= ~2;
 
 	/* outbound Y check */
 	if(cop_collision_info[0].max_y >= cop_collision_info[1].min_y && cop_collision_info[0].min_y <= cop_collision_info[1].max_y)
-		res &= ~2;
+		res &= ~1;
 
-	/* TODO: Legionnaire does collision detection via the other two regs,
-             for now just implement a version that allows the player to spam flying kicks and hit everything else on the screen ;-) */
-	cop_hit_val_x = (res & 1) ? cop_collision_info[0].max_x - cop_collision_info[1].min_x : 0;
-	cop_hit_val_y = (res & 2) ? cop_collision_info[0].max_y - cop_collision_info[1].min_y : 0;
+	cop_hit_val_x = (cop_collision_info[0].x - cop_collision_info[1].x) >> 16;
+	cop_hit_val_y = (cop_collision_info[0].y - cop_collision_info[1].y) >> 16;
+	cop_hit_val_z = 1;
+	cop_hit_val_unk = res; // TODO: there's also bit 2 and 3 triggered in the tests, no known meaning
+
+
+	//popmessage("%d %d %04x %04x %04x %04x",cop_hit_val_x,cop_hit_val_y,cop_collision_info[0].hitbox_x,cop_collision_info[0].hitbox_y,cop_collision_info[1].hitbox_x,cop_collision_info[1].hitbox_y);
 
 	//if(res == 0)
-	//  printf("0:%08x %08x 1:%08x %08x\n",cop_collision_info[0].min_x,cop_collision_info[0].min_y,cop_collision_info[1].min_x,cop_collision_info[1].min_y);
+	//popmessage("0:%08x %08x %08x 1:%08x %08x %08x\n",cop_collision_info[0].x,cop_collision_info[0].y,cop_collision_info[0].hitbox,cop_collision_info[1].x,cop_collision_info[1].y,cop_collision_info[1].hitbox);
 
 	return res;
 }
@@ -1784,6 +1908,7 @@ static UINT8 cop_calculate_collsion_detection(running_machine &machine)
 static READ16_HANDLER( generic_cop_r )
 {
 	UINT16 retvalue;
+	get_ram(space->machine());
 	retvalue = cop_mcu_ram[offset];
 
 
@@ -1801,18 +1926,18 @@ static READ16_HANDLER( generic_cop_r )
 			return cop_hit_status;
 
 		/* these two controls facing direction in Godzilla opponents (only vs.) - x value compare? */
-		case 0x184/2:
-			return (cop_hit_val_x & 0xffff0000) >> 16;
-
 		case 0x182/2:
-			return cop_hit_val_x & 0xffff;
+			return (cop_hit_val_y);
 
-		/* Legionnaire only - y value compare? */
-		case 0x188/2:
-			return (cop_hit_val_y & 0xffff0000) >> 16;
+		case 0x184/2:
+			return (cop_hit_val_x);
 
+		/* Legionnaire only - z value compare? */
 		case 0x186/2:
-			return cop_hit_val_y & 0xffff;
+			return (cop_hit_val_z);
+
+		case 0x188/2:
+			return cop_hit_val_unk;
 
 		/* BCD */
 		case 0x190/2:
@@ -1839,7 +1964,7 @@ static READ16_HANDLER( generic_cop_r )
 			return cop_angle;
 
 		default:
-			seibu_cop_log("%06x: COPX unhandled read returning %04x from offset %04x\n", cpu_get_pc(&space->device()), retvalue, offset*2);
+			seibu_cop_log("%06x: COPX unhandled read returning %04x from offset %04x\n", space->device().safe_pc(), retvalue, offset*2);
 			return retvalue;
 	}
 }
@@ -1853,11 +1978,12 @@ static UINT32 cop_sprite_dma_param;
 static WRITE16_HANDLER( generic_cop_w )
 {
 	UINT32 temp32;
+	get_ram(space->machine());
 
 	switch (offset)
 	{
 		default:
-			seibu_cop_log("%06x: COPX unhandled write data %04x at offset %04x\n", cpu_get_pc(&space->device()), data, offset*2);
+			seibu_cop_log("%06x: COPX unhandled write data %04x at offset %04x\n", space->device().safe_pc(), data, offset*2);
 			break;
 
 		/* Sprite DMA */
@@ -1894,8 +2020,8 @@ static WRITE16_HANDLER( generic_cop_w )
 			break;
 
 		/* triggered before 0x6200 in Seibu Cup, looks like an angle value ... */
-		case (0x1c/2): cop_angle_compare = cop_mcu_ram[0x1c/2] & 0xff;	break;
-		case (0x1e/2): cop_angle_mod_val = cop_mcu_ram[0x1e/2] & 0xff; break;
+		case (0x01c/2): cop_angle_compare = cop_mcu_ram[0x1c/2] & 0xff;	break;
+		case (0x01e/2): cop_angle_mod_val = cop_mcu_ram[0x1e/2] & 0xff; break;
 
 		case (0x08c/2): cop_sprite_dma_abs_y = (cop_mcu_ram[0x08c/2]); break;
 		case (0x08e/2): cop_sprite_dma_abs_x = (cop_mcu_ram[0x08e/2]); break;
@@ -1930,12 +2056,31 @@ static WRITE16_HANDLER( generic_cop_w )
 		case (0x038/2):	{ cop_438 = data; break; }
 		case (0x03a/2):	{ cop_43a = data; break; }
 		case (0x03c/2): { cop_43c = data; break; }
+		case (0x03e/2):
+			/*
+            0 in all 68k based games
+            0xffff in raiden2 / raidendx
+            0x2000 in zeroteam / xsedae
+            it's always setted up just before the 0x474 register
+            */
+			break;
 
 		/* brightness control */
 		case (0x05a/2): pal_brightness_val = data & 0xff; break;
 		case (0x05c/2): pal_brightness_mode = data & 0xff; break;
 
-		/* DMA / layer clearing */
+		/* DMA / layer clearing section */
+		case (0x074/2):
+			/*
+            This sets up a DMA mode of some sort
+                0x0e00: grainbow, cupsoc
+                0x0a00: legionna, godzilla, denjinmk
+                0x0600: heatbrl
+                0x1e00: zeroteam, xsedae
+            raiden2 and raidendx doesn't set this up, this could indicate that this is related to the non-private buffer DMAs
+            (both only uses 0x14 and 0x15 as DMAs)
+            */
+			break;
 
 		/* used in palette DMAs, for fading effects */
 		case (0x076/2):
@@ -1945,28 +2090,28 @@ static WRITE16_HANDLER( generic_cop_w )
 		case (0x078/2): /* DMA source address */
 		{
 			cop_dma_src[cop_dma_trigger] = data; // << 6 to get actual address
-			//seibu_cop_log("%06x: COPX set layer clear address to %04x (actual %08x)\n", cpu_get_pc(&space->device()), data, data<<6);
+			//seibu_cop_log("%06x: COPX set layer clear address to %04x (actual %08x)\n", space->device().safe_pc(), data, data<<6);
 			break;
 		}
 
 		case (0x07a/2): /* DMA length */
 		{
 			cop_dma_size[cop_dma_trigger] = data;
-			//seibu_cop_log("%06x: COPX set layer clear length to %04x (actual %08x)\n", cpu_get_pc(&space->device()), data, data<<5);
+			//seibu_cop_log("%06x: COPX set layer clear length to %04x (actual %08x)\n", space->device().safe_pc(), data, data<<5);
 			break;
 		}
 
 		case (0x07c/2): /* DMA destination */
 		{
 			cop_dma_dst[cop_dma_trigger] = data;
-			//seibu_cop_log("%06x: COPX set layer clear value to %04x (actual %08x)\n", cpu_get_pc(&space->device()), data, data<<6);
+			//seibu_cop_log("%06x: COPX set layer clear value to %04x (actual %08x)\n", space->device().safe_pc(), data, data<<6);
 			break;
 		}
 
 		case (0x07e/2): /* DMA parameter */
 		{
 			cop_dma_trigger = data;
-			//seibu_cop_log("%06x: COPX set layer clear trigger? to %04x\n", cpu_get_pc(&space->device()), data);
+			//seibu_cop_log("%06x: COPX set layer clear trigger? to %04x\n", space->device().safe_pc(), data);
 			if (data>=0x1ff)
 			{
 				seibu_cop_log("invalid DMA trigger!, >0x1ff\n");
@@ -1981,10 +2126,7 @@ static WRITE16_HANDLER( generic_cop_w )
 
 		case (0x044/2):
 		{
-			/*TODO: this appears to control trigonometry maths, but all games here doesn't seem to like current implementation ... */
-			cop_scale = 1;
-			if(data == 4)
-				cop_scale = 0;
+			cop_scale = data & 3;
 			break;
 		}
 
@@ -2019,7 +2161,7 @@ static WRITE16_HANDLER( generic_cop_w )
 			int command;
 
 			#if LOG_CMDS
-			seibu_cop_log("%06x: COPX execute table macro command %04x %04x | regs %08x %08x %08x %08x %08x\n", cpu_get_pc(&space->device()), data, cop_mcu_ram[offset], cop_register[0], cop_register[1], cop_register[2], cop_register[3], cop_register[4]);
+			seibu_cop_log("%06x: COPX execute table macro command %04x %04x | regs %08x %08x %08x %08x %08x\n", space->device().safe_pc(), data, cop_mcu_ram[offset], cop_register[0], cop_register[1], cop_register[2], cop_register[3], cop_register[4]);
 			#endif
 
 			command = -1;
@@ -2064,8 +2206,6 @@ static WRITE16_HANDLER( generic_cop_w )
 
 			//printf("%04x %04x %04x\n",cop_mcu_ram[offset],u1,u2);
 
-			cop_status &= 0x7fff;
-
 			/*
             Macro notes:
             - endianess changes from/to Raiden 2:
@@ -2088,7 +2228,9 @@ static WRITE16_HANDLER( generic_cop_w )
 
 				offs = (offset & 3) * 4;
 
-				space->write_dword(cop_register[0] + 4 + offs, space->read_dword(cop_register[0] + 4 + offs) + space->read_dword(cop_register[0] + 16 + offs));
+				/* TODO: 0x1c operation? */
+
+				space->write_dword(cop_register[0] + 0x04 + offs, space->read_dword(cop_register[0] + 0x04 + offs) + space->read_dword(cop_register[0] + 0x10 + offs));
 				return;
 			}
 
@@ -2099,14 +2241,15 @@ static WRITE16_HANDLER( generic_cop_w )
 
 				offs = (offset & 3) * 4;
 
-				//popmessage("%d %d",space->read_dword(cop_register[0] + 0x2c + 0),space->read_dword(cop_register[0] + 0x2c + 4));
+				/* read 0x28 + offs */
+				/* add 0x10 + offs */
+				/* write 0x10 + offs */
 
-				space->write_dword(cop_register[0] + 16 + offs, space->read_dword(cop_register[0] + 16 + offs) + space->read_dword(cop_register[0] + 0x28 + offs));
+				space->write_dword(cop_register[0] + 0x10 + offs, space->read_dword(cop_register[0] + 0x10 + offs) + space->read_dword(cop_register[0] + 0x28 + offs));
 				return;
 			}
 
 			/* SINE math - 0x8100 */
-			/* FIXME: cop scale is unreliable */
 			/*
                  00000-0ffff:
                    amp = x/256
@@ -2122,18 +2265,20 @@ static WRITE16_HANDLER( generic_cop_w )
 			{
 				int raw_angle = (space->read_word(cop_register[0]+(0x34^2)) & 0xff);
 				double angle = raw_angle * M_PI / 128;
-				double amp = 65536*(space->read_word(cop_register[0]+(0x36^2)) & 0xff);
+				double amp = (65536 >> 5)*(space->read_word(cop_register[0]+(0x36^2)) & 0xff);
+				int res;
 
 				/* TODO: up direction, why? */
 				if(raw_angle == 0xc0)
 					amp*=2;
 
-				space->write_dword(cop_register[0] + 16, int(amp*sin(angle)) >> (5-cop_scale));
+				res = int(amp*sin(angle)) << cop_scale;
+
+				space->write_dword(cop_register[0] + 0x10, res);
 				return;
 			}
 
 			/* COSINE math - 0x8900 */
-			/* FIXME: cop scale is unreliable */
 			/*
              10000-1ffff:
                amp = x/256
@@ -2149,32 +2294,39 @@ static WRITE16_HANDLER( generic_cop_w )
 			{
 				int raw_angle = (space->read_word(cop_register[0]+(0x34^2)) & 0xff);
 				double angle = raw_angle * M_PI / 128;
-				double amp = 65536*(space->read_word(cop_register[0]+(0x36^2)) & 0xff);
+				double amp = (65536 >> 5)*(space->read_word(cop_register[0]+(0x36^2)) & 0xff);
+				int res;
 
 				/* TODO: left direction, why? */
 				if(raw_angle == 0x80)
 					amp*=2;
 
-				space->write_dword(cop_register[0] + 20, int(amp*cos(angle)) >> (5-cop_scale));
+				res = int(amp*cos(angle)) << cop_scale;
+
+				space->write_dword(cop_register[0] + 20, res);
 				return;
 			}
 
 			/* 0x130e / 0x138e */
 			if(COP_CMD(0x984,0xaa4,0xd82,0xaa2,0x39b,0xb9a,0xb9a,0xa9a,5,0xbf7f))
 			{
-				int dx = space->read_dword(cop_register[1]+4) - space->read_dword(cop_register[0]+4);
-				int dy = space->read_dword(cop_register[1]+8) - space->read_dword(cop_register[0]+8);
+				int dy = space->read_dword(cop_register[1]+4) - space->read_dword(cop_register[0]+4);
+				int dx = space->read_dword(cop_register[1]+8) - space->read_dword(cop_register[0]+8);
 
-				if(!dy) {
+				cop_status = 7;
+				if(!dx) {
 					cop_status |= 0x8000;
 					cop_angle = 0;
 				} else {
-					cop_angle = atan(double(dx)/double(dy)) * 128 / M_PI;
-					if(dy<0)
+					cop_angle = atan(double(dy)/double(dx)) * 128.0 / M_PI;
+					if(dx<0)
 						cop_angle += 0x80;
 				}
 
-				space->write_byte(cop_register[0]+(0x34^3), cop_angle);
+				//printf("%d %d %f %04x\n",dx,dy,atan(double(dy)/double(dx)) * 128 / M_PI,cop_angle);
+
+				if(cop_mcu_ram[offset] & 0x80)
+					space->write_word(cop_register[0]+(0x34^2), cop_angle);
 				return;
 			}
 
@@ -2182,25 +2334,28 @@ static WRITE16_HANDLER( generic_cop_w )
 			//(heatbrl)  | 5 | bf7f | 138e | 984 aa4 d82 aa2 39b b9a b9a b9a
 			if(COP_CMD(0x984,0xaa4,0xd82,0xaa2,0x39b,0xb9a,0xb9a,0xb9a,5,0xbf7f))
 			{
-				int dx = space->read_dword(cop_register[1]+4) - space->read_dword(cop_register[0]+4);
-				int dy = space->read_dword(cop_register[1]+8) - space->read_dword(cop_register[0]+8);
-				if(!dy) {
+				int dy = space->read_dword(cop_register[1]+4) - space->read_dword(cop_register[0]+4);
+				int dx = space->read_dword(cop_register[1]+8) - space->read_dword(cop_register[0]+8);
+
+				cop_status = 7;
+				if(!dx) {
 					cop_status |= 0x8000;
 					cop_angle = 0;
 				} else {
-					cop_angle = atan(double(dx)/double(dy)) * 128 / M_PI;
-					if(dy<0)
+					cop_angle = atan(double(dy)/double(dx)) * 128.0 / M_PI;
+					if(dx<0)
 						cop_angle += 0x80;
 				}
 
-				/* TODO: bit 7 of macro command says if we have to write on work RAM */
-				//if(0)
-					space->write_byte(cop_register[0]+(0x34^3), cop_angle);
+				r0 = dy;
+				r1 = dx;
+
+				if(cop_mcu_ram[offset] & 0x80)
+					space->write_word(cop_register[0]+(0x34^2), cop_angle);
 				return;
 			}
 
 			/* Pythagorean theorem, hypotenuse length - 0x3bb0 */
-			//07 | 4 | 007f | 3bb0 | f9c b9c b9c b9c b9c b9c b9c 99c
 			//(grainbow) | 4 | 007f | 3bb0 | f9c b9c b9c b9c b9c b9c b9c 99c
 			/*
              40000-7ffff:
@@ -2210,15 +2365,15 @@ static WRITE16_HANDLER( generic_cop_w )
             */
 			if(COP_CMD(0xf9c,0xb9c,0xb9c,0xb9c,0xb9c,0xb9c,0xb9c,0x99c,4,0x007f))
 			{
-				int dx = space->read_dword(cop_register[1]+4) - space->read_dword(cop_register[0]+4);
-				int dy = space->read_dword(cop_register[1]+8) - space->read_dword(cop_register[0]+8);
+				int dy = r0;
+				int dx = r1;
 
 				dx = dx >> 16;
 				dy = dy >> 16;
 				cop_dist = sqrt((double)(dx*dx+dy*dy));
 
-				/* TODO: bit 7 of macro command says if we have to write on work RAM */
-				space->write_word(cop_register[0]+(0x38^2), cop_dist);
+				if(cop_mcu_ram[offset] & 0x80)
+					space->write_word(cop_register[0]+(0x38^2), cop_dist);
 				return;
 			}
 
@@ -2233,13 +2388,22 @@ static WRITE16_HANDLER( generic_cop_w )
                v2 = (x & 1023)*32
                val = !v1 ? 32767 : trunc(v2/v1+0.5)
             */
+            /* TODO: this is WRONG! */
 			if(COP_CMD(0xf9a,0xb9a,0xb9c,0xb9c,0xb9c,0x29c,0x000,0x000,5,0xfcdd))
 			{
 				int div = space->read_word(cop_register[0]+(0x36^2));
-				if(!div)
-					div = 1;
+				int res;
 
-				space->write_word(cop_register[0]+(0x38^2), (space->read_word(cop_register[0]+(0x38^2)) << (5-cop_scale)) / div);
+				if(!div)
+				{
+					printf("divide by zero?\n");
+					div = 1;
+				}
+
+				res = space->read_word(cop_register[0]+(0x38^2)) / div;
+				res <<= cop_scale + 2; /* TODO: check this */
+
+				space->write_word(cop_register[0]+(0x38^2), res);
 				return;
 			}
 
@@ -2266,25 +2430,14 @@ static WRITE16_HANDLER( generic_cop_w )
 			//(heatbrl)  | 9 | ffff | b080 | b40 bc0 bc2
 			if(COP_CMD(0xb40,0xbc0,0xbc2,0x000,0x000,0x000,0x000,0x000,u1,u2))
 			{
-				/* Take hitbox param, TODO */
 				cop_collision_info[0].hitbox = space->read_word(cop_register[2]);
+				cop_collision_info[0].hitbox_y = space->read_word((cop_register[2]&0xffff0000)|(cop_collision_info[0].hitbox));
+				cop_collision_info[0].hitbox_x = space->read_word(((cop_register[2]&0xffff0000)|(cop_collision_info[0].hitbox))+2);
 
-				if(cop_collision_info[0].hitbox == 0xc8) //hack for SD Gundam
-				{
-					cop_collision_info[0].min_x = cop_collision_info[0].x + (0 << 16);
-					cop_collision_info[0].min_y = cop_collision_info[0].y - (0x10 << 16);
-					cop_collision_info[0].max_x = cop_collision_info[0].x + (0xc0 << 16);
-					cop_collision_info[0].max_y = cop_collision_info[0].y + (0 << 16);
-				}
-				else
-				{
-					cop_collision_info[0].min_x = cop_collision_info[0].x + (0 << 16);
-					cop_collision_info[0].min_y = cop_collision_info[0].y + (0 << 16);
-					cop_collision_info[0].max_x = cop_collision_info[0].x + (0x10 << 16);
-					cop_collision_info[0].max_y = cop_collision_info[0].y + (0x10 << 16);
-				}
 				/* do the math */
+				cop_take_hit_box_params(0);
 				cop_hit_status = cop_calculate_collsion_detection(space->machine());
+
 				return;
 			}
 
@@ -2298,18 +2451,12 @@ static WRITE16_HANDLER( generic_cop_w )
 			//(heatbrl)  | 6 | ffff | b880 | b60 be0 be2
 			if(COP_CMD(0xb60,0xbe0,0xbe2,0x000,0x000,0x000,0x000,0x000,u1,u2))
 			{
-				/* Take hitbox param, TODO */
 				cop_collision_info[1].hitbox = space->read_word(cop_register[3]);
-
-				cop_collision_info[1].min_x = cop_collision_info[1].x + (0 << 16);
-				cop_collision_info[1].min_y = cop_collision_info[1].y + (0 << 16);
-				cop_collision_info[1].max_x = cop_collision_info[1].x + (0x10 << 16);
-				cop_collision_info[1].max_y = cop_collision_info[1].y + (0x10 << 16);
-
-				//if(cop_collision_info[0].x || cop_collision_info[1].x)
-				//popmessage("0: %08x %08x %08x 1: %08x %08x %08x",cop_collision_info[0].x,cop_collision_info[0].y,cop_collision_info[0].hitbox,cop_collision_info[1].x,cop_collision_info[1].y,cop_collision_info[1].hitbox);
+				cop_collision_info[1].hitbox_y = space->read_word((cop_register[3]&0xffff0000)|(cop_collision_info[1].hitbox));
+				cop_collision_info[1].hitbox_x = space->read_word(((cop_register[3]&0xffff0000)|(cop_collision_info[1].hitbox))+2);
 
 				/* do the math */
+				cop_take_hit_box_params(1);
 				cop_hit_status = cop_calculate_collsion_detection(space->machine());
 				return;
 			}
@@ -2354,11 +2501,18 @@ static WRITE16_HANDLER( generic_cop_w )
 			// cupsoc 1b | 5 | 7ff7 | dde5 | f80 aa2 984 0c2
 			/* radar x/y positions */
 			/* FIXME: x/ys are offsetted */
+			/* FIXME: uses 0x10044a for something */
 			if(COP_CMD(0xf80,0xaa2,0x984,0x0c2,0x000,0x000,0x000,0x000,5,0x7ff7))
 			{
 				UINT8 offs;
 				int div;
 //              INT16 offs_val;
+
+				/* TODO: [4-7] could be mirrors of [0-3] (this is the only command so far that uses 4-7 actually)*/
+				/* 0 + [4] */
+				/* 4 + [5] */
+				/* 8 + [4] */
+				/* 4 + [6] */
 
 				//printf("%08x %08x %08x %08x %08x %08x %08x\n",cop_register[0],cop_register[1],cop_register[2],cop_register[3],cop_register[4],cop_register[5],cop_register[6]);
 
@@ -2378,6 +2532,12 @@ static WRITE16_HANDLER( generic_cop_w )
 			if(COP_CMD(0x3a0,0x3a6,0x380,0xaa0,0x2a6,0x000,0x000,0x000,8,0xf3e7))
 			{
 				INT8 cur_angle;
+
+				/* 0 [1] */
+				/* 0xc [1] */
+				/* 0 [0] */
+				/* 0 [1] */
+				/* 0xc [1] */
 
 				cur_angle = space->read_byte(cop_register[1] + (0xc ^ 3));
 				space->write_byte(cop_register[1] + (0^3),space->read_byte(cop_register[1] + (0^3)) & 0xfb); //correct?
@@ -2447,7 +2607,7 @@ static WRITE16_HANDLER( generic_cop_w )
 		/* DMA go register */
 		case (0x2fc/2):
 		{
-			//seibu_cop_log("%06x: COPX execute current layer clear??? %04x\n", cpu_get_pc(&space->device()), data);
+			//seibu_cop_log("%06x: COPX execute current layer clear??? %04x\n", space->device().safe_pc(), data);
 
 			if (cop_dma_trigger >= 0x80 && cop_dma_trigger <= 0x87)
 			{
@@ -2470,7 +2630,7 @@ static WRITE16_HANDLER( generic_cop_w )
 				//if(dma_trigger != 0x87)
 				//printf("SRC: %08x %08x DST:%08x SIZE:%08x TRIGGER: %08x %02x %02x\n",cop_dma_src[cop_dma_trigger] << 6,cop_dma_fade_table * 0x400,cop_dma_dst[cop_dma_trigger] << 6,cop_dma_size[cop_dma_trigger] << 5,cop_dma_trigger,pal_brightness_val,pal_brightness_mode);
 
-				src = (cop_dma_src[cop_dma_trigger] << 6) ;
+				src = (cop_dma_src[cop_dma_trigger] << 6);
 				dst = (cop_dma_dst[cop_dma_trigger] << 6);
 				size = ((cop_dma_size[cop_dma_trigger] << 5) - (cop_dma_dst[cop_dma_trigger] << 6) + 0x20)/2;
 
@@ -2684,6 +2844,7 @@ READ16_HANDLER( heatbrl_mcu_r )
 
 WRITE16_HANDLER( heatbrl_mcu_w )
 {
+	get_ram(space->machine());
 	COMBINE_DATA(&cop_mcu_ram[offset]);
 
 	/* external pin register, used for banking */
@@ -2739,6 +2900,7 @@ READ16_HANDLER( cupsoc_mcu_r )
 
 WRITE16_HANDLER( cupsoc_mcu_w )
 {
+	get_ram(space->machine());
 	COMBINE_DATA(&cop_mcu_ram[offset]);
 
 	if(offset == 0x280/2) //irq ack / sprite buffering?
@@ -2781,6 +2943,7 @@ READ16_HANDLER( cupsocs_mcu_r )
 
 WRITE16_HANDLER( cupsocs_mcu_w )
 {
+	get_ram(space->machine());
 	COMBINE_DATA(&cop_mcu_ram[offset]);
 
 	if(offset == 0x280/2) //irq ack / sprite buffering?
@@ -2828,6 +2991,7 @@ READ16_HANDLER( godzilla_mcu_r )
 
 WRITE16_HANDLER( godzilla_mcu_w )
 {
+	get_ram(space->machine());
 	COMBINE_DATA(&cop_mcu_ram[offset]);
 
 	if(offset == 0x070/2)
@@ -2880,6 +3044,7 @@ READ16_HANDLER( denjinmk_mcu_r )
 
 WRITE16_HANDLER( denjinmk_mcu_w )
 {
+	get_ram(space->machine());
 	COMBINE_DATA(&cop_mcu_ram[offset]);
 
 	if(offset == 0x280/2) //irq ack / sprite buffering?
@@ -2933,6 +3098,7 @@ READ16_HANDLER( grainbow_mcu_r )
 
 WRITE16_HANDLER( grainbow_mcu_w )
 {
+	get_ram(space->machine());
 	COMBINE_DATA(&cop_mcu_ram[offset]);
 
 	if(offset == 0x280/2) //irq ack / sprite buffering?
@@ -2975,6 +3141,7 @@ READ16_HANDLER( legionna_mcu_r )
 
 WRITE16_HANDLER( legionna_mcu_w )
 {
+	get_ram(space->machine());
 	COMBINE_DATA(&cop_mcu_ram[offset]);
 
 	if(offset == 0x070/2) //external pin: puts bit 13 high, delay, reads 0x748, writes bit 13 low

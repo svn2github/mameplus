@@ -14,25 +14,23 @@
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(kyugo_state::get_fg_tile_info)
 {
-	kyugo_state *state = machine.driver_data<kyugo_state>();
-	int code = state->m_fgvideoram[tile_index];
-	SET_TILE_INFO(0,
+	int code = m_fgvideoram[tile_index];
+	SET_TILE_INFO_MEMBER(0,
 				  code,
-				  2 * state->m_color_codes[code >> 3] + state->m_fgcolor,
+				  2 * m_color_codes[code >> 3] + m_fgcolor,
 				  0);
 }
 
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(kyugo_state::get_bg_tile_info)
 {
-	kyugo_state *state = machine.driver_data<kyugo_state>();
-	int code = state->m_bgvideoram[tile_index];
-	int attr = state->m_bgattribram[tile_index];
-	SET_TILE_INFO(1,
+	int code = m_bgvideoram[tile_index];
+	int attr = m_bgattribram[tile_index];
+	SET_TILE_INFO_MEMBER(1,
 				  code | ((attr & 0x03) << 8),
-				  (attr >> 4) | (state->m_bgpalbank << 4),
+				  (attr >> 4) | (m_bgpalbank << 4),
 				  TILE_FLIPYX((attr & 0x0c) >> 2));
 }
 
@@ -43,19 +41,18 @@ static TILE_GET_INFO( get_bg_tile_info )
  *
  *************************************/
 
-VIDEO_START( kyugo )
+void kyugo_state::video_start()
 {
-	kyugo_state *state = machine.driver_data<kyugo_state>();
 
-	state->m_color_codes = state->memregion("proms")->base() + 0x300;
+	m_color_codes = memregion("proms")->base() + 0x300;
 
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(kyugo_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(kyugo_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
 
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_fg_tilemap->set_transparent_pen(0);
 
-	state->m_fg_tilemap->set_scrolldx(0, 224);
-	state->m_bg_tilemap->set_scrolldx(-32, 32);
+	m_fg_tilemap->set_scrolldx(0, 224);
+	m_bg_tilemap->set_scrolldx(-32, 32);
 }
 
 

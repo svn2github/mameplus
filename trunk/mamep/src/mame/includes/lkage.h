@@ -49,8 +49,8 @@ public:
 	int m_mcu_ready;	/* cpu data/mcu ready status */
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_mcu;
 	DECLARE_WRITE8_MEMBER(lkage_sound_command_w);
 	DECLARE_WRITE8_MEMBER(lkage_sh_nmi_disable_w);
@@ -76,6 +76,12 @@ public:
 	DECLARE_DRIVER_INIT(bygone);
 	DECLARE_DRIVER_INIT(lkage);
 	DECLARE_DRIVER_INIT(lkageb);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_tx_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 /*----------- defined in machine/lkage.c -----------*/
@@ -84,6 +90,6 @@ public:
 
 /*----------- defined in video/lkage.c -----------*/
 
-VIDEO_START( lkage );
+
 SCREEN_UPDATE_IND16( lkage );
 

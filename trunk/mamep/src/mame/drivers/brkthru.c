@@ -72,7 +72,7 @@ WRITE8_MEMBER(brkthru_state::brkthru_1803_w)
 	m_nmi_mask = ~data & 1;
 
 	if(data & 2)
-		device_set_input_line(m_maincpu, 0, CLEAR_LINE);
+		m_maincpu->set_input_line(0, CLEAR_LINE);
 
 	/* bit 1 = ? maybe IRQ acknowledge */
 }
@@ -84,7 +84,7 @@ WRITE8_MEMBER(brkthru_state::darwin_0803_w)
 	logerror("0803 %02X\n",data);
 
 	if(data & 2)
-		device_set_input_line(m_maincpu, 0, CLEAR_LINE);
+		m_maincpu->set_input_line(0, CLEAR_LINE);
 
 
 	/* bit 1 = ? maybe IRQ acknowledge */
@@ -93,14 +93,14 @@ WRITE8_MEMBER(brkthru_state::darwin_0803_w)
 WRITE8_MEMBER(brkthru_state::brkthru_soundlatch_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 INPUT_CHANGED_MEMBER(brkthru_state::coin_inserted)
 {
 	/* coin insertion causes an IRQ */
 	if (oldval)
-		device_set_input_line(m_maincpu, 0, ASSERT_LINE);
+		m_maincpu->set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -362,25 +362,23 @@ static const ym3526_interface ym3526_config =
  *
  *************************************/
 
-static MACHINE_START( brkthru )
+void brkthru_state::machine_start()
 {
-	brkthru_state *state = machine.driver_data<brkthru_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_bgscroll));
-	state->save_item(NAME(state->m_bgbasecolor));
-	state->save_item(NAME(state->m_flipscreen));
+	save_item(NAME(m_bgscroll));
+	save_item(NAME(m_bgbasecolor));
+	save_item(NAME(m_flipscreen));
 }
 
-static MACHINE_RESET( brkthru )
+void brkthru_state::machine_reset()
 {
-	brkthru_state *state = machine.driver_data<brkthru_state>();
 
-	state->m_bgscroll = 0;
-	state->m_bgbasecolor = 0;
-	state->m_flipscreen = 0;
+	m_bgscroll = 0;
+	m_bgbasecolor = 0;
+	m_flipscreen = 0;
 }
 
 static INTERRUPT_GEN( vblank_irq )
@@ -388,7 +386,7 @@ static INTERRUPT_GEN( vblank_irq )
 	brkthru_state *state = device->machine().driver_data<brkthru_state>();
 
 	if(state->m_nmi_mask)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( brkthru, brkthru_state )
@@ -401,8 +399,6 @@ static MACHINE_CONFIG_START( brkthru, brkthru_state )
 	MCFG_CPU_ADD("audiocpu", M6809, MASTER_CLOCK/8)		/* 1.5 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(brkthru)
-	MCFG_MACHINE_RESET(brkthru)
 
 	/* video hardware */
 	MCFG_GFXDECODE(brkthru)
@@ -413,8 +409,6 @@ static MACHINE_CONFIG_START( brkthru, brkthru_state )
 	MCFG_SCREEN_RAW_PARAMS(MASTER_CLOCK/2, 384, 8, 248, 272, 8, 248)
 	MCFG_SCREEN_UPDATE_STATIC(brkthru)
 
-	MCFG_PALETTE_INIT(brkthru)
-	MCFG_VIDEO_START(brkthru)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -441,8 +435,6 @@ static MACHINE_CONFIG_START( darwin, brkthru_state )
 	MCFG_CPU_ADD("audiocpu", M6809, MASTER_CLOCK/8)		/* 1.5 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(brkthru)
-	MCFG_MACHINE_RESET(brkthru)
 
 	/* video hardware */
 	MCFG_GFXDECODE(brkthru)
@@ -464,8 +456,6 @@ static MACHINE_CONFIG_START( darwin, brkthru_state )
         tuned by Shingo SUZUKI(VSyncMAME Project) 2000/10/19 */
 	MCFG_SCREEN_UPDATE_STATIC(brkthru)
 
-	MCFG_PALETTE_INIT(brkthru)
-	MCFG_VIDEO_START(brkthru)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -1,50 +1,268 @@
-/*
+/*************************************************************************************
+
     Zaccaria Generation 1
-*/
+
+    These games allow for up to 4 players at the same time.
+    Setup is via a menu - there are no dipswitches.
+    If you see 6 and 9 flashing at start- this indicates the battery is flat,
+     and a full setup is required before it can be used.
+    At start, the highscore will be set to a random value. Beating this score will
+     award a bonus. Tilting will cause the high score to advance by 100,000.
+    If at any time you 'clock' the machine (ie exceed 999,990), the last digit will
+     flash, indicating you have a million.
+    Sound - the output board is fitted with 4 oscillators which can be switched on
+     and off independently. Some games come with a NE555 and SN76477 with switchable
+     sounds (achieved with 21 switching diodes and 8 data bits).
+
+ToDo:
+- Outputs
+- Sound
+- Proper Artwork
+- Battery Backup
+
+**************************************************************************************/
 
 
 #include "emu.h"
 #include "cpu/s2650/s2650.h"
+#include "zac_1.lh"
 
 class zac_1_state : public driver_device
 {
 public:
 	zac_1_state(const machine_config &mconfig, device_type type, const char *tag)
 		: driver_device(mconfig, type, tag),
-		  m_maincpu(*this, "maincpu")
+	m_maincpu(*this, "maincpu"),
+	m_p_ram(*this, "ram")
 	{ }
 
+	DECLARE_READ8_MEMBER(ctrl_r);
+	DECLARE_WRITE8_MEMBER(ctrl_w);
+	DECLARE_READ8_MEMBER(serial_r);
+	DECLARE_WRITE8_MEMBER(serial_w);
+	DECLARE_READ8_MEMBER(reset_int_r);
+	DECLARE_WRITE8_MEMBER(reset_int_w);
+	UINT8 m_t_c;
+	UINT8 m_out_offs;
+	required_device<cpu_device> m_maincpu;
+	required_shared_ptr<UINT8> m_p_ram;
 protected:
 
 	// devices
-	required_device<cpu_device> m_maincpu;
 
 	// driver_device overrides
 	virtual void machine_reset();
-public:
-	DECLARE_DRIVER_INIT(zac_1);
+private:
+	UINT8 m_input_line;
 };
 
 
 static ADDRESS_MAP_START( zac_1_map, AS_PROGRAM, 8, zac_1_state )
-	AM_RANGE(0x0000, 0xffff) AM_NOP
+	ADDRESS_MAP_GLOBAL_MASK(0x1fff)
+	AM_RANGE(0x0000, 0x13ff) AM_ROM
+	AM_RANGE(0x1400, 0x17ff) AM_WRITE(reset_int_w)
+	AM_RANGE(0x1800, 0x18ff) AM_MIRROR(0x300) AM_RAM AM_SHARE("ram")
+	AM_RANGE(0x1c00, 0x1fff) AM_ROM
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( zac_1_io, AS_IO, 8, zac_1_state )
+	ADDRESS_MAP_UNMAP_HIGH
+	AM_RANGE(S2650_CTRL_PORT, S2650_CTRL_PORT) AM_READWRITE(ctrl_r,ctrl_w)
+	AM_RANGE(S2650_SENSE_PORT, S2650_FO_PORT) AM_READWRITE(serial_r,serial_w)
 ADDRESS_MAP_END
 
 static INPUT_PORTS_START( zac_1 )
+	PORT_START("TEST")
+	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_OTHER ) PORT_NAME("Test") PORT_CODE(KEYCODE_0) // doesn't seem to do anything
+
+	PORT_START("ROW0")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SERVICE ) // this performs tests
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_TILT )
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Slam")
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START )
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_COIN1 )
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_COIN2 )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_COIN3 )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Printer")
+
+	PORT_START("ROW1")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("RAM Reset")
+	PORT_BIT( 0x3e, IP_ACTIVE_LOW, IPT_UNUSED )
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_TILT )
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Burn Test")
+
+	PORT_START("ROW2")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Outhole") PORT_CODE(KEYCODE_X)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("LH Flap") PORT_CODE(KEYCODE_Q)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("RH Flap") PORT_CODE(KEYCODE_W)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Bottom Inside RH Canal") PORT_CODE(KEYCODE_E)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Bottom Outside RH Canal") PORT_CODE(KEYCODE_R)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Bottom Outside LH Canal") PORT_CODE(KEYCODE_Y)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Bottom Inside LH Canal") PORT_CODE(KEYCODE_U)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("LH Top Hole") PORT_CODE(KEYCODE_I)
+
+	PORT_START("ROW3")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("RH Bumper") PORT_CODE(KEYCODE_O)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("LH Top Canal") PORT_CODE(KEYCODE_A)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Top Centre Canal") PORT_CODE(KEYCODE_S)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("RH Top Canal") PORT_CODE(KEYCODE_D)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("LH Top Fixed Target") PORT_CODE(KEYCODE_F)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("RH Top Fixed Target") PORT_CODE(KEYCODE_G)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("LH Bumper") PORT_CODE(KEYCODE_H)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("RH Top Hole") PORT_CODE(KEYCODE_J)
+
+	PORT_START("ROW4")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Bottom Bumper") PORT_CODE(KEYCODE_K)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("LH Top Contact") PORT_CODE(KEYCODE_L)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("RH Top Contact") PORT_CODE(KEYCODE_Z)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("LH Spinning Target") PORT_CODE(KEYCODE_QUOTE)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Lateral Outside Contacts") PORT_CODE(KEYCODE_C)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("RH Spinning Target") PORT_CODE(KEYCODE_V)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Bank Contacts") PORT_CODE(KEYCODE_B)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("Moving Target") PORT_CODE(KEYCODE_N)
+
+	PORT_START("ROW5")
+	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("LH Bank Target 1") PORT_CODE(KEYCODE_M)
+	PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("LH Bank Target 2") PORT_CODE(KEYCODE_MINUS)
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("LH Bank Target 3") PORT_CODE(KEYCODE_EQUALS)
+	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("LH Bank Target 4") PORT_CODE(KEYCODE_BACKSPACE)
+	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("RH Bank Target 1") PORT_CODE(KEYCODE_OPENBRACE)
+	PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("RH Bank Target 2") PORT_CODE(KEYCODE_CLOSEBRACE)
+	PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("RH Bank Target 3") PORT_CODE(KEYCODE_BACKSLASH)
+	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_OTHER ) PORT_NAME("RH Bank Target 4") PORT_CODE(KEYCODE_COLON)
 INPUT_PORTS_END
+
+READ8_MEMBER( zac_1_state::ctrl_r )
+{
+// reads inputs
+	if (m_input_line == 0xfe)
+		return ioport("ROW0")->read();
+	else
+	if (m_input_line == 0xfd)
+		return ioport("ROW1")->read();
+	else
+	if (m_input_line == 0xfb)
+		return ioport("ROW2")->read();
+	else
+	if (m_input_line == 0xf7)
+		return ioport("ROW3")->read();
+	else
+	if (m_input_line == 0xef)
+		return ioport("ROW4")->read();
+	else
+	if (m_input_line == 0xdf)
+		return ioport("ROW5")->read();
+	else
+		return 0xff;
+}
+
+WRITE8_MEMBER( zac_1_state::ctrl_w )
+{
+	m_input_line = data;
+}
+
+WRITE8_MEMBER( zac_1_state::reset_int_w )
+{
+	m_maincpu->set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
+}
+
+READ8_MEMBER( zac_1_state::serial_r )
+{
+// from printer
+	return 0;
+}
+
+WRITE8_MEMBER( zac_1_state::serial_w )
+{
+// to printer
+}
 
 void zac_1_state::machine_reset()
 {
+	m_t_c = 0;
+// init system if invalid (from pinmame)
+	if (m_p_ram[0xf7] == 5 && m_p_ram[0xf8] == 0x0a)
+	{}
+	else
+	{
+		m_p_ram[0xc0] = 3; // 3 balls
+		for (UINT8 i=0xc1; i < 0xd6; i++)
+			m_p_ram[i] = 1; // enable match & coin slots
+		m_p_ram[0xf7] = 5;
+		m_p_ram[0xf8] = 0x0a;
+	}
 }
 
-DRIVER_INIT_MEMBER(zac_1_state,zac_1)
+static TIMER_DEVICE_CALLBACK( zac_1_inttimer )
 {
+	zac_1_state *state = timer.machine().driver_data<zac_1_state>();
+	if (state->m_t_c > 0x40)
+	{
+		UINT8 vector = (state->ioport("TEST")->read() ) ? 0x10 : 0x18;
+		state->m_maincpu->set_input_line_and_vector(INPUT_LINE_IRQ0, ASSERT_LINE, vector);
+	}
+	else
+		state->m_t_c++;
+}
+
+static TIMER_DEVICE_CALLBACK( zac_1_outtimer )
+{
+	static const UINT8 patterns[16] = { 0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7d, 0x07, 0x7f, 0x6f, 0, 0, 0, 0, 0, 0 };
+	zac_1_state *state = timer.machine().driver_data<zac_1_state>();
+	state->m_out_offs++;
+// displays, solenoids, lamps
+
+	if (state->m_out_offs < 0x40)
+	{
+		UINT8 display = (state->m_out_offs >> 3) & 7;
+		UINT8 digit = state->m_out_offs & 7;
+		output_set_digit_value(display * 10 + digit, patterns[state->m_p_ram[state->m_out_offs]&15]);
+	}
+// seems scores = 1800-182D; solenoids = 1840-187F;
+// lamps = 1880-18BF; bookkeeping=18C0-18FF. 4-tone osc=1850-1853.
+// 182E-183F is a storage area for inputs.
 }
 
 static MACHINE_CONFIG_START( zac_1, zac_1_state )
 	/* basic machine hardware */
 	MCFG_CPU_ADD("maincpu", S2650, 6000000/2)
 	MCFG_CPU_PROGRAM_MAP(zac_1_map)
+	MCFG_CPU_IO_MAP(zac_1_io)
+	MCFG_TIMER_ADD_PERIODIC("zac_1_inttimer", zac_1_inttimer, attotime::from_hz(200))
+	MCFG_TIMER_ADD_PERIODIC("zac_1_outtimer", zac_1_outtimer, attotime::from_hz(187500))
+
+	/* Video */
+	MCFG_DEFAULT_LAYOUT(layout_zac_1)
+MACHINE_CONFIG_END
+
+/*************************** LOCOMOTION ********************************/
+
+static ADDRESS_MAP_START( locomotp_map, AS_PROGRAM, 8, zac_1_state )
+	ADDRESS_MAP_GLOBAL_MASK(0x1fff)
+	AM_RANGE(0x0000, 0x17ff) AM_ROM
+	AM_RANGE(0x1800, 0x18ff) AM_MIRROR(0x300) AM_RAM AM_SHARE("ram")
+	AM_RANGE(0x1c00, 0x1fff) AM_ROM
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( locomotp_io, AS_IO, 8, zac_1_state)
+	ADDRESS_MAP_UNMAP_HIGH
+	AM_RANGE(S2650_CTRL_PORT, S2650_CTRL_PORT) AM_READWRITE(ctrl_r,ctrl_w)
+	AM_RANGE(S2650_DATA_PORT, S2650_DATA_PORT) AM_READ(reset_int_r)
+	AM_RANGE(S2650_SENSE_PORT, S2650_FO_PORT) AM_READWRITE(serial_r,serial_w)
+ADDRESS_MAP_END
+
+READ8_MEMBER( zac_1_state::reset_int_r )
+{
+	m_maincpu->set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
+	return 0;
+}
+
+static MACHINE_CONFIG_DERIVED( locomotp, zac_1 )
+	/* basic machine hardware */
+	MCFG_CPU_MODIFY("maincpu")
+	MCFG_CPU_PROGRAM_MAP(locomotp_map)
+	MCFG_CPU_IO_MAP(locomotp_io)
+	// also has sound cpu
 MACHINE_CONFIG_END
 
 
@@ -196,14 +414,14 @@ ROM_START(wsports)
 	ROM_LOAD ( "ws5.bin", 0x1000, 0x0400, CRC(5ef51ced) SHA1(390579d0482ceabf87924f7718ef33e336726d92))
 ROM_END
 
-GAME(1981, ewf,       0,       zac_1,  zac_1, zac_1_state,  zac_1,  ROT0,  "Zaccaria",    "Earth Wind Fire",     GAME_IS_SKELETON_MECHANICAL)
-GAME(1980, firemntn,  0,       zac_1,  zac_1, zac_1_state,  zac_1,  ROT0,  "Zaccaria",    "Fire Mountain",       GAME_IS_SKELETON_MECHANICAL)
-GAME(1978, futurwld,  0,       zac_1,  zac_1, zac_1_state,  zac_1,  ROT0,  "Zaccaria",    "Future World",        GAME_IS_SKELETON_MECHANICAL)
-GAME(1979, hotwheel,  0,       zac_1,  zac_1, zac_1_state,  zac_1,  ROT0,  "Zaccaria",    "Hot Wheels",          GAME_IS_SKELETON_MECHANICAL)
-GAME(1978, hod,       0,       zac_1,  zac_1, zac_1_state,  zac_1,  ROT0,  "Zaccaria",    "House of Diamonds",   GAME_IS_SKELETON_MECHANICAL)
-GAME(1981, locomotp,  0,       zac_1,  zac_1, zac_1_state,  zac_1,  ROT0,  "Zaccaria",    "Locomotion",          GAME_IS_SKELETON_MECHANICAL)
-GAME(1979, strapids,  0,       zac_1,  zac_1, zac_1_state,  zac_1,  ROT0,  "Zaccaria",    "Shooting the Rapids", GAME_IS_SKELETON_MECHANICAL)
-GAME(1980, sshtlzac,  0,       zac_1,  zac_1, zac_1_state,  zac_1,  ROT0,  "Zaccaria",    "Space Shuttle (Zaccaria)",   GAME_IS_SKELETON_MECHANICAL)
-GAME(1980, stargod,   0,       zac_1,  zac_1, zac_1_state,  zac_1,  ROT0,  "Zaccaria",    "Star God",            GAME_IS_SKELETON_MECHANICAL)
-GAME(1980, stargoda,  stargod, zac_1,  zac_1, zac_1_state,  zac_1,  ROT0,  "Zaccaria",    "Star God (alternate sound)", GAME_IS_SKELETON_MECHANICAL)
-GAME(1978, wsports,   0,       zac_1,  zac_1, zac_1_state,  zac_1,  ROT0,  "Zaccaria",    "Winter Sports",       GAME_IS_SKELETON_MECHANICAL)
+GAME(1981, ewf,       0,       zac_1,    zac_1, driver_device, 0,  ROT0,  "Zaccaria", "Earth Wind Fire",            GAME_MECHANICAL | GAME_NO_SOUND)
+GAME(1980, firemntn,  0,       zac_1,    zac_1, driver_device, 0,  ROT0,  "Zaccaria", "Fire Mountain",              GAME_MECHANICAL | GAME_NO_SOUND)
+GAME(1978, futurwld,  0,       zac_1,    zac_1, driver_device, 0,  ROT0,  "Zaccaria", "Future World",               GAME_MECHANICAL | GAME_NO_SOUND)
+GAME(1979, hotwheel,  0,       zac_1,    zac_1, driver_device, 0,  ROT0,  "Zaccaria", "Hot Wheels",                 GAME_MECHANICAL | GAME_NO_SOUND)
+GAME(1978, hod,       0,       zac_1,    zac_1, driver_device, 0,  ROT0,  "Zaccaria", "House of Diamonds",          GAME_MECHANICAL | GAME_NO_SOUND)
+GAME(1981, locomotp,  0,       locomotp, zac_1, driver_device, 0,  ROT0,  "Zaccaria", "Locomotion",                 GAME_MECHANICAL | GAME_NO_SOUND)
+GAME(1979, strapids,  0,       zac_1,    zac_1, driver_device, 0,  ROT0,  "Zaccaria", "Shooting the Rapids",        GAME_MECHANICAL | GAME_NO_SOUND)
+GAME(1980, sshtlzac,  0,       zac_1,    zac_1, driver_device, 0,  ROT0,  "Zaccaria", "Space Shuttle (Zaccaria)",   GAME_MECHANICAL | GAME_NO_SOUND)
+GAME(1980, stargod,   0,       zac_1,    zac_1, driver_device, 0,  ROT0,  "Zaccaria", "Star God",                   GAME_MECHANICAL | GAME_NO_SOUND)
+GAME(1980, stargoda,  stargod, zac_1,    zac_1, driver_device, 0,  ROT0,  "Zaccaria", "Star God (alternate sound)", GAME_MECHANICAL | GAME_NO_SOUND)
+GAME(1978, wsports,   0,       zac_1,    zac_1, driver_device, 0,  ROT0,  "Zaccaria", "Winter Sports",              GAME_MECHANICAL | GAME_NO_SOUND)

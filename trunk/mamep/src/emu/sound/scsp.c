@@ -111,11 +111,11 @@ static const double DRTimes[64]={100000/*infinity*/,100000/*infinity*/,118200.0,
 					28.0,25.0,22.0,18.0,14.0,12.0,11.0,8.5,7.1,6.1,5.4,4.3,3.6,3.1};
 static INT32 EG_TABLE[0x400];
 
-typedef enum {ATTACK,DECAY1,DECAY2,RELEASE} _STATE;
-struct _EG
+enum STATE {ATTACK,DECAY1,DECAY2,RELEASE};
+struct EG_t
 {
 	int volume;	//
-	_STATE state;
+	STATE state;
 	int step;
 	//step vals
 	int AR;		//Attack
@@ -128,7 +128,7 @@ struct _EG
 	UINT8 LPLINK;
 };
 
-struct _SLOT
+struct SLOT
 {
 	union
 	{
@@ -141,9 +141,9 @@ struct _SLOT
 	UINT32 cur_addr;	//current play address (24.8)
 	UINT32 nxt_addr;	//next play address
 	UINT32 step;		//pitch step (24.8)
-	struct _EG EG;			//Envelope
-	struct _LFO PLFO;		//Phase LFO
-	struct _LFO ALFO;		//Amplitude LFO
+	EG_t EG;			//Envelope
+	LFO_t PLFO;		//Phase LFO
+	LFO_t ALFO;		//Amplitude LFO
 	int slot;
 	signed short Prev;	//Previous sample (for interpolation)
 };
@@ -175,15 +175,14 @@ struct _SLOT
 
 #define USEDSP
 
-typedef struct _scsp_state scsp_state;
-struct _scsp_state
+struct scsp_state
 {
 	union
 	{
 		UINT16 data[0x30/2];
 		UINT8 datab[0x30];
 	} udata;
-	struct _SLOT Slots[32];
+	SLOT Slots[32];
 	signed short RINGBUF[128];
 	unsigned char BUFPTR;
 #if FM_DELAY
@@ -225,7 +224,7 @@ struct _scsp_state
 
 	int ARTABLE[64], DRTABLE[64];
 
-	struct _SCSPDSP DSP;
+	SCSPDSP DSP;
 	devcb_resolved_write_line main_irq;
 
 	device_t *device;
@@ -253,7 +252,7 @@ INLINE scsp_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == SCSP);
-	return (scsp_state *)downcast<legacy_device_base *>(device)->token();
+	return (scsp_state *)downcast<scsp_device *>(device)->token();
 }
 
 static unsigned char DecodeSCI(scsp_state *scsp,unsigned char irq)
@@ -390,7 +389,7 @@ static int Get_RR(scsp_state *scsp,int base,int R)
 	return scsp->DRTABLE[Rate];
 }
 
-static void Compute_EG(scsp_state *scsp,struct _SLOT *slot)
+static void Compute_EG(scsp_state *scsp,SLOT *slot)
 {
 	int octave=(OCT(slot)^8)-8;
 	int rate;
@@ -408,9 +407,9 @@ static void Compute_EG(scsp_state *scsp,struct _SLOT *slot)
 	slot->EG.EGHOLD=EGHOLD(slot);
 }
 
-static void SCSP_StopSlot(struct _SLOT *slot,int keyoff);
+static void SCSP_StopSlot(SLOT *slot,int keyoff);
 
-static int EG_Update(struct _SLOT *slot)
+static int EG_Update(SLOT *slot)
 {
 	switch(slot->EG.state)
 	{
@@ -460,7 +459,7 @@ static int EG_Update(struct _SLOT *slot)
 	return (slot->EG.volume>>EG_SHIFT)<<(SHIFT-10);
 }
 
-static UINT32 SCSP_Step(struct _SLOT *slot)
+static UINT32 SCSP_Step(SLOT *slot)
 {
 	int octave=(OCT(slot)^8)-8+SHIFT-10;
 	UINT32 Fn=FNS(slot)+(1 << 10);
@@ -477,7 +476,7 @@ static UINT32 SCSP_Step(struct _SLOT *slot)
 }
 
 
-static void Compute_LFO(struct _SLOT *slot)
+static void Compute_LFO(SLOT *slot)
 {
 	if(PLFOS(slot)!=0)
 		LFO_ComputeStep(&(slot->PLFO),LFOF(slot),PLFOWS(slot),PLFOS(slot),0);
@@ -485,7 +484,7 @@ static void Compute_LFO(struct _SLOT *slot)
 		LFO_ComputeStep(&(slot->ALFO),LFOF(slot),ALFOWS(slot),ALFOS(slot),1);
 }
 
-static void SCSP_StartSlot(scsp_state *scsp, struct _SLOT *slot)
+static void SCSP_StartSlot(scsp_state *scsp, SLOT *slot)
 {
 	UINT32 start_offset;
 
@@ -506,7 +505,7 @@ static void SCSP_StartSlot(scsp_state *scsp, struct _SLOT *slot)
 //  printf("StartSlot[%p]: SA %x PCM8B %x LPCTL %x ALFOS %x STWINH %x TL %x EFSDL %x\n", slot, SA(slot), PCM8B(slot), LPCTL(slot), ALFOS(slot), STWINH(slot), TL(slot), EFSDL(slot));
 }
 
-static void SCSP_StopSlot(struct _SLOT *slot,int keyoff)
+static void SCSP_StopSlot(SLOT *slot,int keyoff)
 {
 	if(keyoff /*&& slot->EG.state!=RELEASE*/)
 	{
@@ -658,7 +657,7 @@ static void SCSP_Init(device_t *device, scsp_state *scsp, const scsp_interface *
 
 static void SCSP_UpdateSlotReg(scsp_state *scsp,int s,int r)
 {
-	struct _SLOT *slot=scsp->Slots+s;
+	SLOT *slot=scsp->Slots+s;
 	int sl;
 	switch(r&0x3f)
 	{
@@ -668,7 +667,7 @@ static void SCSP_UpdateSlotReg(scsp_state *scsp,int s,int r)
 			{
 				for(sl=0;sl<32;++sl)
 				{
-					struct _SLOT *s2=scsp->Slots+sl;
+					SLOT *s2=scsp->Slots+sl;
 					{
 						if(KEYONB(s2) && s2->EG.state==RELEASE/*&& !s2->active*/)
 						{
@@ -702,7 +701,7 @@ static void SCSP_UpdateSlotReg(scsp_state *scsp,int s,int r)
 static void SCSP_UpdateReg(scsp_state *scsp, int reg)
 {
 	/* temporary hack until this is converted to a device */
-	address_space *space = scsp->device->machine().firstcpu->memory().space(AS_PROGRAM);
+	address_space *space = scsp->device->machine().firstcpu->space(AS_PROGRAM);
 
 	switch(reg&0x3f)
 	{
@@ -864,7 +863,7 @@ static void SCSP_UpdateRegR(scsp_state *scsp, int reg)
 				// MSLC     |  CA   |SGC|EG
 				// f e d c b a 9 8 7 6 5 4 3 2 1 0
 				unsigned char MSLC=(scsp->udata.data[0x8/2]>>11)&0x1f;
-				struct _SLOT *slot=scsp->Slots + MSLC;
+				SLOT *slot=scsp->Slots + MSLC;
 				unsigned int SGC = (slot->EG.state) & 3;
 				unsigned int CA = (slot->cur_addr>>(SHIFT+12)) & 0xf;
 				unsigned int EG = (0x1f - (slot->EG.volume>>(EG_SHIFT+5))) & 0x1f;
@@ -954,7 +953,7 @@ static unsigned short SCSP_r16(scsp_state *scsp, unsigned int addr)
 
 #define REVSIGN(v) ((~v)+1)
 
-INLINE INT32 SCSP_UpdateSlot(scsp_state *scsp, struct _SLOT *slot)
+INLINE INT32 SCSP_UpdateSlot(scsp_state *scsp, SLOT *slot)
 {
 	INT32 sample;
 	int step=slot->step;
@@ -1136,7 +1135,7 @@ static void SCSP_DoMasterSamples(scsp_state *scsp, int nsamples)
 #endif
 			if(scsp->Slots[sl].active)
 			{
-				struct _SLOT *slot=scsp->Slots+sl;
+				SLOT *slot=scsp->Slots+sl;
 				unsigned short Enc;
 				signed int sample;
 
@@ -1166,7 +1165,7 @@ static void SCSP_DoMasterSamples(scsp_state *scsp, int nsamples)
 
 		for(i=0;i<16;++i)
 		{
-			struct _SLOT *slot=scsp->Slots+i;
+			SLOT *slot=scsp->Slots+i;
 			if(EFSDL(slot))
 			{
 				unsigned short Enc=((EFPAN(slot))<<0x8)|((EFSDL(slot))<<0xd);
@@ -1241,7 +1240,7 @@ static void dma_scsp(address_space *space, scsp_state *scsp)
 	if(scsp->udata.data[0x1e/2] & 0x10)
 	{
 		popmessage("SCSP DMA IRQ triggered, contact MAMEdev");
-		device_set_input_line(space->machine().device("audiocpu"),DecodeSCI(scsp,SCIDMA),HOLD_LINE);
+		space->machine().device("audiocpu")->execute().set_input_line(DecodeSCI(scsp,SCIDMA),HOLD_LINE);
 	}
 }
 
@@ -1325,7 +1324,7 @@ WRITE16_DEVICE_HANDLER( scsp_w )
 		case 0x416:
 			COMBINE_DATA(&scsp->dma_regs[((offset-0x412)/2) & 3]);
 			if(ACCESSING_BITS_8_15 && offset*2 == 0x416)
-				dma_scsp(device->machine().firstcpu->memory().space(AS_PROGRAM), scsp);
+				dma_scsp(device->machine().firstcpu->space(AS_PROGRAM), scsp);
 			break;
 		case 0x42a:		//check main cpu IRQ
 			scsp->main_irq(1);
@@ -1359,32 +1358,42 @@ READ16_DEVICE_HANDLER( scsp_midi_out_r )
 	return val;
 }
 
+const device_type SCSP = &device_creator<scsp_device>;
 
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( scsp )
+scsp_device::scsp_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, SCSP, "SCSP", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(scsp_state);				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(scsp_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( scsp );		break;
-		case DEVINFO_FCT_STOP:							/* Nothing */								break;
-		case DEVINFO_FCT_RESET:							/* Nothing */								break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "SCSP");					break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Sega/Yamaha custom");		break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "2.1.1");					break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);					break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void scsp_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void scsp_device::device_start()
+{
+	DEVICE_START_NAME( scsp )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void scsp_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(SCSP, scsp);

@@ -15,8 +15,7 @@
 #define TC0140SYT_PORT01_FULL_MASTER  (0x04)
 #define TC0140SYT_PORT23_FULL_MASTER  (0x08)
 
-typedef struct _tc0140syt_state tc0140syt_state;
-struct _tc0140syt_state
+struct tc0140syt_state
 {
 	UINT8     slavedata[4];  /* Data on master->slave port (4 nibbles) */
 	UINT8     masterdata[4]; /* Data on slave->master port (4 nibbles) */
@@ -39,7 +38,7 @@ INLINE tc0140syt_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == TC0140SYT);
 
-	return (tc0140syt_state *)downcast<legacy_device_base *>(device)->token();
+	return (tc0140syt_state *)downcast<tc0140syt_device *>(device)->token();
 }
 
 INLINE const tc0140syt_interface *get_interface( device_t *device )
@@ -59,7 +58,7 @@ static void interrupt_controller( device_t *device )
 
 	if (tc0140syt->nmi_req && tc0140syt->nmi_enabled)
 	{
-		device_set_input_line(tc0140syt->slavecpu, INPUT_LINE_NMI, PULSE_LINE);
+		tc0140syt->slavecpu->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 		tc0140syt->nmi_req = 0;
 	}
 }
@@ -110,14 +109,14 @@ WRITE8_DEVICE_HANDLER( tc0140syt_comm_w )
 			break;
 
 		case 0x04:		// port status
-			//logerror("taitosnd: Master issued control value %02x (PC = %08x) \n",data, cpu_get_pc(&space->device()) );
+			//logerror("taitosnd: Master issued control value %02x (PC = %08x) \n",data, space->device().safe_pc() );
 			/* this does a hi-lo transition to reset the sound cpu */
 			if (data)
-				device_set_input_line(tc0140syt->slavecpu, INPUT_LINE_RESET, ASSERT_LINE);
+				tc0140syt->slavecpu->execute().set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 			else
 			{
-				device_set_input_line(tc0140syt->slavecpu, INPUT_LINE_RESET, CLEAR_LINE);
-				device_spin(tc0140syt->mastercpu); /* otherwise no sound in driftout */
+				tc0140syt->slavecpu->execute().set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
+				tc0140syt->mastercpu->execute().spin(); /* otherwise no sound in driftout */
 			}
 			break;
 
@@ -191,7 +190,7 @@ WRITE8_DEVICE_HANDLER( tc0140syt_slave_comm_w )
 			tc0140syt->masterdata[tc0140syt->submode ++] = data;
 			tc0140syt->status |= TC0140SYT_PORT01_FULL_MASTER;
 			//logerror("taitosnd: Slave cpu sends 0/1 : %01x%01x\n" , tc0140syt->masterdata[1] , tc0140syt->masterdata[0]);
-			device_spin(tc0140syt->slavecpu); /* writing should take longer than emulated, so spin */
+			tc0140syt->slavecpu->execute().spin(); /* writing should take longer than emulated, so spin */
 			break;
 
 		case 0x02:		// mode #2
@@ -203,7 +202,7 @@ WRITE8_DEVICE_HANDLER( tc0140syt_slave_comm_w )
 			tc0140syt->masterdata[tc0140syt->submode ++] = data;
 			tc0140syt->status |= TC0140SYT_PORT23_FULL_MASTER;
 			//logerror("taitosnd: Slave cpu sends 2/3 : %01x%01x\n" , tc0140syt->masterdata[3] , tc0140syt->masterdata[2]);
-			device_spin(tc0140syt->slavecpu); /* writing should take longer than emulated, so spin */
+			tc0140syt->slavecpu->execute().spin(); /* writing should take longer than emulated, so spin */
 			break;
 
 		case 0x04:		// port status
@@ -241,7 +240,7 @@ READ8_DEVICE_HANDLER( tc0140syt_slave_comm_r )
 			break;
 
 		case 0x01:		// mode #1
-			//logerror("taitosnd: Slave cpu receives 0/1 : %01x%01x PC=%4x\n", tc0140syt->slavedata[1] , tc0140syt->slavedata[0],cpu_get_pc(&space->device()));
+			//logerror("taitosnd: Slave cpu receives 0/1 : %01x%01x PC=%4x\n", tc0140syt->slavedata[1] , tc0140syt->slavedata[0],space->device().safe_pc());
 			tc0140syt->status &= ~TC0140SYT_PORT01_FULL;
 			res = tc0140syt->slavedata[tc0140syt->submode ++];
 			break;
@@ -313,13 +312,40 @@ static DEVICE_RESET( tc0140syt )
 	}
 }
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+const device_type TC0140SYT = &device_creator<tc0140syt_device>;
 
-#define DEVTEMPLATE_ID(p,s)		p##tc0140syt##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME		"Taito TC0140SYT"
-#define DEVTEMPLATE_FAMILY		"Taito Audio Custom IC"
-#include "devtempl.h"
+tc0140syt_device::tc0140syt_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, TC0140SYT, "Taito TC0140SYT", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(tc0140syt_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void tc0140syt_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void tc0140syt_device::device_start()
+{
+	DEVICE_START_NAME( tc0140syt )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void tc0140syt_device::device_reset()
+{
+	DEVICE_RESET_NAME( tc0140syt )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(TC0140SYT, tc0140syt);

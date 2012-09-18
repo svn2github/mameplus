@@ -31,6 +31,12 @@ public:
 	DECLARE_WRITE8_MEMBER(gotya_colorram_w);
 	DECLARE_WRITE8_MEMBER(gotya_video_control_w);
 	DECLARE_WRITE8_MEMBER(gotya_soundlatch_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILEMAP_MAPPER_MEMBER(tilemap_scan_rows_thehand);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -41,6 +47,6 @@ public:
 /*----------- defined in video/gotya.c -----------*/
 
 
-PALETTE_INIT( gotya );
-VIDEO_START( gotya );
+
+
 SCREEN_UPDATE_IND16( gotya );

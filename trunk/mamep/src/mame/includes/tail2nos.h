@@ -25,8 +25,8 @@ public:
 	int         m_video_enable;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k051316;
 	DECLARE_WRITE16_MEMBER(sound_command_w);
 	DECLARE_WRITE16_MEMBER(tail2nos_bgvideoram_w);
@@ -34,6 +34,10 @@ public:
 	DECLARE_WRITE16_MEMBER(tail2nos_zoomdata_w);
 	DECLARE_WRITE16_MEMBER(tail2nos_gfxbank_w);
 	DECLARE_WRITE8_MEMBER(sound_bankswitch_w);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -42,5 +46,5 @@ public:
 extern void tail2nos_zoom_callback(running_machine &machine, int *code,int *color,int *flags);
 
 
-VIDEO_START( tail2nos );
+
 SCREEN_UPDATE_IND16( tail2nos );

@@ -35,7 +35,7 @@ INLINE void verboselog(running_machine &machine, int n_level, const char *s_fmt,
 		va_start( v, s_fmt );
 		vsprintf( buf, s_fmt, v );
 		va_end( v );
-		logerror( "%08x: %s", cpu_get_pc(machine.device("maincpu")), buf );
+		logerror( "%08x: %s", machine.device("maincpu")->safe_pc(), buf );
 	}
 }
 
@@ -67,7 +67,7 @@ static void gba_machine_stop(running_machine &machine)
 	}
 }
 
-static PALETTE_INIT( gba )
+void gba_state::palette_init()
 {
 	UINT8 r, g, b;
 	for( b = 0; b < 32; b++ )
@@ -76,7 +76,7 @@ static PALETTE_INIT( gba )
 		{
 			for( r = 0; r < 32; r++ )
 			{
-				palette_set_color_rgb( machine, ( b << 10 ) | ( g << 5 ) | r, pal5bit(r), pal5bit(g), pal5bit(b) );
+				palette_set_color_rgb( machine(), ( b << 10 ) | ( g << 5 ) | r, pal5bit(r), pal5bit(g), pal5bit(b) );
 			}
 		}
 	}
@@ -98,8 +98,8 @@ static void gba_request_irq(running_machine &machine, UINT32 int_type)
 		// master enable?
 		if (state->m_IME & 1)
 		{
-			device_set_input_line(machine.device("maincpu"), ARM7_IRQ_LINE, ASSERT_LINE);
-			device_set_input_line(machine.device("maincpu"), ARM7_IRQ_LINE, CLEAR_LINE);
+			machine.device("maincpu")->execute().set_input_line(ARM7_IRQ_LINE, ASSERT_LINE);
+			machine.device("maincpu")->execute().set_input_line(ARM7_IRQ_LINE, CLEAR_LINE);
 		}
 	}
 }
@@ -832,7 +832,7 @@ READ32_MEMBER(gba_state::gba_io_r)
 			break;
 		case 0x00a0/4:
 		case 0x00a4/4:
-			return 0;	// (does this actually do anything on real h/w?)
+			retval = 0;	// (does this actually do anything on real h/w?)
 			break;
 		case 0x00b0/4:
 		case 0x00b4/4:
@@ -852,11 +852,12 @@ READ32_MEMBER(gba_state::gba_io_r)
 				#if 0
 				if (((offset-0xb0/4) % 3) == 2)
 				{
-					return m_dma_regs[offset-(0xb0/4)] & 0xff000000;
+					retval = m_dma_regs[offset-(0xb0/4)] & 0xff000000;
 				}
+				else
 				#endif
 
-				return m_dma_regs[offset-(0xb0/4)];
+				retval = m_dma_regs[offset-(0xb0/4)];
 			}
 			break;
 		case 0x0100/4:
@@ -868,7 +869,7 @@ READ32_MEMBER(gba_state::gba_io_r)
 				double time, ticks;
 				int timer = offset-(0x100/4);
 
-//              printf("Read timer reg %x (PC=%x)\n", timer, cpu_get_pc(&space.device()));
+//              printf("Read timer reg %x (PC=%x)\n", timer, space.device().safe_pc());
 
 				// update times for
 				if (m_timer_regs[timer] & 0x800000)
@@ -901,7 +902,7 @@ READ32_MEMBER(gba_state::gba_io_r)
 					elapsed = 0;
 				}
 
-				return (m_timer_regs[timer] & 0xffff0000) | (elapsed & 0xffff);
+				retval = (m_timer_regs[timer] & 0xffff0000) | (elapsed & 0xffff);
 			}
 			break;
 		case 0x0120/4:
@@ -943,9 +944,9 @@ READ32_MEMBER(gba_state::gba_io_r)
 		case 0x0130/4:
 			if( (mem_mask) & 0x0000ffff )	// KEYINPUT
 			{
-				return ioport("IN0")->read();
+				retval = ioport("IN0")->read();
 			}
-			if( (mem_mask) & 0xffff0000 )
+			else if( (mem_mask) & 0xffff0000 )
 			{
 				verboselog(machine(), 2, "GBA IO Register Read: KEYCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, m_KEYCNT );
 				retval |= m_KEYCNT << 16;
@@ -1669,7 +1670,7 @@ WRITE32_MEMBER(gba_state::gba_io_w)
 
 				m_timer_regs[offset] = (m_timer_regs[offset] & ~(mem_mask & 0xFFFF0000)) | (data & (mem_mask & 0xFFFF0000));
 
-//              printf("%x to timer %d (mask %x PC %x)\n", data, offset, ~mem_mask, cpu_get_pc(&space.device()));
+//              printf("%x to timer %d (mask %x PC %x)\n", data, offset, ~mem_mask, space.device().safe_pc());
 
 				if (ACCESSING_BITS_0_15)
 				{
@@ -1828,7 +1829,7 @@ WRITE32_MEMBER(gba_state::gba_io_w)
 		case 0x0200/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-//              printf("IE (%08x) = %04x raw %x (%08x) (scan %d PC %x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, data, ~mem_mask, machine.primary_screen->vpos(), cpu_get_pc(&space.device()));
+//              printf("IE (%08x) = %04x raw %x (%08x) (scan %d PC %x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, data, ~mem_mask, machine.primary_screen->vpos(), space.device().safe_pc());
 				m_IE = ( m_IE & ~mem_mask ) | ( data & mem_mask );
 #if 0
 				if (m_IE & m_IF)
@@ -1888,7 +1889,7 @@ WRITE32_MEMBER(gba_state::gba_io_w)
 					m_HALTCNT = data & 0x000000ff;
 
 					// either way, wait for an IRQ
-					device_spin_until_interrupt(machine().device("maincpu"));
+					machine().device("maincpu")->execute().spin_until_interrupt();
 				}
 			}
 			if( (mem_mask) & 0xffff0000 )
@@ -1958,8 +1959,8 @@ READ32_MEMBER(gba_state::gba_10000000_r)
 {
 	UINT32 data, cpsr, pc;
 	cpu_device *cpu = downcast<cpu_device *>(machine().device( "maincpu"));
-	pc = cpu_get_reg( cpu, ARM7_PC);
-	cpsr = cpu_get_reg( cpu, ARM7_CPSR);
+	pc = cpu->state_int( ARM7_PC);
+	cpsr = cpu->state_int( ARM7_CPSR);
 	if (T_IS_SET( cpsr))
 	{
 		data = space.read_dword( pc + 8);
@@ -2112,45 +2113,44 @@ static TIMER_CALLBACK( perform_scan )
 	state->m_scan_timer->adjust(machine.primary_screen->time_until_pos(( scanline + 1 ) % 228, 0));
 }
 
-static MACHINE_RESET( gba )
+void gba_state::machine_reset()
 {
-	dac_device *gb_a_l = machine.device<dac_device>("direct_a_left");
-	dac_device *gb_a_r = machine.device<dac_device>("direct_a_right");
-	dac_device *gb_b_l = machine.device<dac_device>("direct_b_left");
-	dac_device *gb_b_r = machine.device<dac_device>("direct_b_right");
-	gba_state *state = machine.driver_data<gba_state>();
+	dac_device *gb_a_l = machine().device<dac_device>("direct_a_left");
+	dac_device *gb_a_r = machine().device<dac_device>("direct_a_right");
+	dac_device *gb_b_l = machine().device<dac_device>("direct_b_left");
+	dac_device *gb_b_r = machine().device<dac_device>("direct_b_right");
 
-	//memset(state, 0, sizeof(state));
-	state->m_SOUNDBIAS = 0x0200;
-	state->m_eeprom_state = EEP_IDLE;
-	state->m_SIOMULTI0 = 0xffff;
-	state->m_SIOMULTI1 = 0xffff;
-	state->m_SIOMULTI2 = 0xffff;
-	state->m_SIOMULTI3 = 0xffff;
-	state->m_KEYCNT = 0x03ff;
-	state->m_RCNT = 0x8000;
-	state->m_JOYSTAT = 0x0002;
-	state->m_gfxBG2Changed = 0;
-	state->m_gfxBG3Changed = 0;
-	state->m_gfxBG2X = 0;
-	state->m_gfxBG2Y = 0;
-	state->m_gfxBG3X = 0;
-	state->m_gfxBG3Y = 0;
+	//memset(this, 0, sizeof(this));
+	m_SOUNDBIAS = 0x0200;
+	m_eeprom_state = EEP_IDLE;
+	m_SIOMULTI0 = 0xffff;
+	m_SIOMULTI1 = 0xffff;
+	m_SIOMULTI2 = 0xffff;
+	m_SIOMULTI3 = 0xffff;
+	m_KEYCNT = 0x03ff;
+	m_RCNT = 0x8000;
+	m_JOYSTAT = 0x0002;
+	m_gfxBG2Changed = 0;
+	m_gfxBG3Changed = 0;
+	m_gfxBG2X = 0;
+	m_gfxBG2Y = 0;
+	m_gfxBG3X = 0;
+	m_gfxBG3Y = 0;
 
-	state->m_windowOn = 0;
-	state->m_fxOn = 0;
+	m_windowOn = 0;
+	m_fxOn = 0;
 
-	state->m_bios_protected = 0;
+	m_bios_protected = 0;
 
-	state->m_scan_timer->adjust(machine.primary_screen->time_until_pos(0, 0));
-	state->m_hbl_timer->adjust(attotime::never);
-	state->m_dma_timer[0]->adjust(attotime::never);
-	state->m_dma_timer[1]->adjust(attotime::never, 1);
-	state->m_dma_timer[2]->adjust(attotime::never, 2);
-	state->m_dma_timer[3]->adjust(attotime::never, 3);
+	m_scan_timer->adjust(machine().primary_screen->time_until_pos(0, 0));
+	m_hbl_timer->adjust(attotime::never);
+	m_dma_timer[0]->adjust(attotime::never);
+	m_dma_timer[1]->adjust(attotime::never, 1);
+	m_dma_timer[2]->adjust(attotime::never, 2);
+	m_dma_timer[3]->adjust(attotime::never, 3);
 
-	state->m_fifo_a_ptr = state->m_fifo_b_ptr = 17;	// indicate empty
-	state->m_fifo_a_in = state->m_fifo_b_in = 17;
+	m_fifo_a_ptr = m_fifo_b_ptr = 17;	// indicate empty
+	m_fifo_a_in = m_fifo_b_in = 17;
 
 	// and clear the DACs
 	gb_a_l->write_signed8(0x80);
@@ -2158,55 +2158,54 @@ static MACHINE_RESET( gba )
 	gb_b_l->write_signed8(0x80);
 	gb_b_r->write_signed8(0x80);
 
-	if (state->m_flash_battery_load != 0)
+	if (m_flash_battery_load != 0)
 	{
-		device_image_interface *image = dynamic_cast<device_image_interface *>(state->m_nvimage);
-		UINT8 *nvram = auto_alloc_array( machine, UINT8, state->m_flash_size);
-		image->battery_load( nvram, state->m_flash_size, 0xff);
-		for (int i = 0; i < state->m_flash_size; i++)
+		device_image_interface *image = dynamic_cast<device_image_interface *>(m_nvimage);
+		UINT8 *nvram = auto_alloc_array( machine(), UINT8, m_flash_size);
+		image->battery_load( nvram, m_flash_size, 0xff);
+		for (int i = 0; i < m_flash_size; i++)
 		{
-			state->m_mFlashDev->write_raw( i, nvram[i]);
+			m_mFlashDev->write_raw( i, nvram[i]);
 		}
-		auto_free( machine, nvram);
-		state->m_flash_battery_load = 0;
+		auto_free( machine(), nvram);
+		m_flash_battery_load = 0;
 	}
 }
 
-static MACHINE_START( gba )
+void gba_state::machine_start()
 {
-	gba_state *state = machine.driver_data<gba_state>();
 
 	/* add a hook for battery save */
-	machine.add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(gba_machine_stop),&machine));
+	machine().add_notifier(MACHINE_NOTIFY_EXIT, machine_notify_delegate(FUNC(gba_machine_stop),&machine()));
 
 	/* create a timer to fire scanline functions */
-	state->m_scan_timer = machine.scheduler().timer_alloc(FUNC(perform_scan));
-	state->m_hbl_timer = machine.scheduler().timer_alloc(FUNC(perform_hbl));
-	state->m_scan_timer->adjust(machine.primary_screen->time_until_pos(0, 0));
+	m_scan_timer = machine().scheduler().timer_alloc(FUNC(perform_scan));
+	m_hbl_timer = machine().scheduler().timer_alloc(FUNC(perform_hbl));
+	m_scan_timer->adjust(machine().primary_screen->time_until_pos(0, 0));
 
 	/* and one for each DMA channel */
-	state->m_dma_timer[0] = machine.scheduler().timer_alloc(FUNC(dma_complete));
-	state->m_dma_timer[1] = machine.scheduler().timer_alloc(FUNC(dma_complete));
-	state->m_dma_timer[2] = machine.scheduler().timer_alloc(FUNC(dma_complete));
-	state->m_dma_timer[3] = machine.scheduler().timer_alloc(FUNC(dma_complete));
-	state->m_dma_timer[0]->adjust(attotime::never);
-	state->m_dma_timer[1]->adjust(attotime::never, 1);
-	state->m_dma_timer[2]->adjust(attotime::never, 2);
-	state->m_dma_timer[3]->adjust(attotime::never, 3);
+	m_dma_timer[0] = machine().scheduler().timer_alloc(FUNC(dma_complete));
+	m_dma_timer[1] = machine().scheduler().timer_alloc(FUNC(dma_complete));
+	m_dma_timer[2] = machine().scheduler().timer_alloc(FUNC(dma_complete));
+	m_dma_timer[3] = machine().scheduler().timer_alloc(FUNC(dma_complete));
+	m_dma_timer[0]->adjust(attotime::never);
+	m_dma_timer[1]->adjust(attotime::never, 1);
+	m_dma_timer[2]->adjust(attotime::never, 2);
+	m_dma_timer[3]->adjust(attotime::never, 3);
 
 	/* also one for each timer (heh) */
-	state->m_tmr_timer[0] = machine.scheduler().timer_alloc(FUNC(timer_expire));
-	state->m_tmr_timer[1] = machine.scheduler().timer_alloc(FUNC(timer_expire));
-	state->m_tmr_timer[2] = machine.scheduler().timer_alloc(FUNC(timer_expire));
-	state->m_tmr_timer[3] = machine.scheduler().timer_alloc(FUNC(timer_expire));
-	state->m_tmr_timer[0]->adjust(attotime::never);
-	state->m_tmr_timer[1]->adjust(attotime::never, 1);
-	state->m_tmr_timer[2]->adjust(attotime::never, 2);
-	state->m_tmr_timer[3]->adjust(attotime::never, 3);
+	m_tmr_timer[0] = machine().scheduler().timer_alloc(FUNC(timer_expire));
+	m_tmr_timer[1] = machine().scheduler().timer_alloc(FUNC(timer_expire));
+	m_tmr_timer[2] = machine().scheduler().timer_alloc(FUNC(timer_expire));
+	m_tmr_timer[3] = machine().scheduler().timer_alloc(FUNC(timer_expire));
+	m_tmr_timer[0]->adjust(attotime::never);
+	m_tmr_timer[1]->adjust(attotime::never, 1);
+	m_tmr_timer[2]->adjust(attotime::never, 2);
+	m_tmr_timer[3]->adjust(attotime::never, 3);
 
 	/* and an IRQ handling timer */
-	state->m_irq_timer = machine.scheduler().timer_alloc(FUNC(handle_irq));
-	state->m_irq_timer->adjust(attotime::never);
+	m_irq_timer = machine().scheduler().timer_alloc(FUNC(handle_irq));
+	m_irq_timer->adjust(attotime::never);
 }
 
 ROM_START( gba )
@@ -2293,7 +2292,7 @@ READ32_MEMBER(gba_state::eeprom_r)
 			{
 				if (m_eeprom_addr >= sizeof( m_gba_eeprom))
 				{
-					fatalerror( "eeprom: invalid address (%x)", m_eeprom_addr);
+					fatalerror( "eeprom: invalid address (%x)\n", m_eeprom_addr);
 				}
 				m_eep_data = m_gba_eeprom[m_eeprom_addr];
 				//printf("EEPROM read @ %x = %x (%x)\n", m_eeprom_addr, m_eep_data, (m_eep_data & 0x80) ? 1 : 0);
@@ -2317,7 +2316,7 @@ READ32_MEMBER(gba_state::eeprom_r)
 //          printf("eeprom_r: @ %x, mask %08x (state %d) (PC=%x) = %08x\n", offset, ~mem_mask, m_eeprom_state, activecpu_get_pc(), out);
 			return out;
 	}
-//  printf("eeprom_r: @ %x, mask %08x (state %d) (PC=%x) = %d\n", offset, ~mem_mask, m_eeprom_state, cpu_get_pc(&space.device()), 0);
+//  printf("eeprom_r: @ %x, mask %08x (state %d) (PC=%x) = %d\n", offset, ~mem_mask, m_eeprom_state, space.device().safe_pc(), 0);
 	return 0;
 }
 
@@ -2329,7 +2328,7 @@ WRITE32_MEMBER(gba_state::eeprom_w)
 		data >>= 16;
 	}
 
-//  printf("eeprom_w: %x @ %x (state %d) (PC=%x)\n", data, offset, m_eeprom_state, cpu_get_pc(&space.device()));
+//  printf("eeprom_w: %x @ %x (state %d) (PC=%x)\n", data, offset, m_eeprom_state, space.device().safe_pc());
 
 	switch (m_eeprom_state)
 	{
@@ -2394,10 +2393,10 @@ WRITE32_MEMBER(gba_state::eeprom_w)
 
 			if (m_eeprom_bits == 0)
 			{
-				mame_printf_verbose("%08x: EEPROM: %02x to %x\n", cpu_get_pc(machine().device("maincpu")), m_eep_data, m_eeprom_addr );
+				mame_printf_verbose("%08x: EEPROM: %02x to %x\n", machine().device("maincpu")->safe_pc(), m_eep_data, m_eeprom_addr );
 				if (m_eeprom_addr >= sizeof( m_gba_eeprom))
 				{
-					fatalerror( "eeprom: invalid address (%x)", m_eeprom_addr);
+					fatalerror( "eeprom: invalid address (%x)\n", m_eeprom_addr);
 				}
 				m_gba_eeprom[m_eeprom_addr] = m_eep_data;
 				m_eeprom_addr++;
@@ -2475,11 +2474,11 @@ static astring gba_chip_string( UINT32 chip)
 	return str.trimspace();
 }
 
-typedef struct
+struct gba_chip_fix_conflict_item
 {
 	char game_code[5];
 	UINT32 chip;
-} gba_chip_fix_conflict_item;
+};
 
 static const gba_chip_fix_conflict_item gba_chip_fix_conflict_list[] =
 {
@@ -2519,10 +2518,10 @@ static const gba_chip_fix_conflict_item gba_chip_fix_conflict_list[] =
 	{ "BYUJ", GBA_CHIP_EEPROM_64K }, // 2322 - Yggdra Union (JPN)
 };
 
-typedef struct
+struct gba_chip_fix_eeprom_item
 {
 	char game_code[5];
-} gba_chip_fix_eeprom_item;
+};
 
 static const gba_chip_fix_eeprom_item gba_chip_fix_eeprom_list[] =
 {
@@ -2977,8 +2976,7 @@ static UINT32 gba_fix_wrong_chip(running_machine &machine, UINT32 cart_size, UIN
 	return chip;
 }
 
-typedef struct _gba_pcb  gba_pcb;
-struct _gba_pcb
+struct gba_pcb
 {
 	const char              *pcb_name;
 	int                     pcb_id;
@@ -3157,8 +3155,6 @@ static MACHINE_CONFIG_START( gbadv, gba_state )
 	MCFG_CPU_ADD("maincpu", ARM7, 16777216)
 	MCFG_CPU_PROGRAM_MAP(gbadvance_map)
 
-	MCFG_MACHINE_START(gba)
-	MCFG_MACHINE_RESET(gba)
 
 	MCFG_SCREEN_ADD("gbalcd", RASTER)	// htot hst vwid vtot vst vis
 	MCFG_SCREEN_RAW_PARAMS(16777216/4, 308, 0,  240, 228, 0,  160)
@@ -3166,7 +3162,6 @@ static MACHINE_CONFIG_START( gbadv, gba_state )
 
 	MCFG_DEFAULT_LAYOUT(layout_lcd)
 	MCFG_PALETTE_LENGTH(32768)
-	MCFG_PALETTE_INIT( gba )
 
 	MCFG_SPEAKER_STANDARD_STEREO("spkleft", "spkright")
 	MCFG_SOUND_ADD("custom", GAMEBOY, 0)

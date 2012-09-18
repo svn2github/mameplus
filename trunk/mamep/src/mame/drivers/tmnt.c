@@ -169,7 +169,7 @@ static INTERRUPT_GEN(cuebrick_interrupt)
 	tmnt_state *state = device->machine().driver_data<tmnt_state>();
 
 	if (state->m_irq5_mask)
-		device_set_input_line(device, M68K_IRQ_5, HOLD_LINE);
+		device->execute().set_input_line(M68K_IRQ_5, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( punkshot_interrupt )
@@ -210,7 +210,7 @@ WRITE8_MEMBER(tmnt_state::glfgreat_sound_w)
 	k053260_w(device, offset, data);
 
 	if (offset)
-		device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+		m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 READ16_MEMBER(tmnt_state::prmrsocr_sound_r)
@@ -232,7 +232,7 @@ WRITE16_MEMBER(tmnt_state::prmrsocr_sound_cmd_w)
 
 WRITE16_MEMBER(tmnt_state::prmrsocr_sound_irq_w)
 {
-	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 WRITE8_MEMBER(tmnt_state::prmrsocr_audio_bankswitch_w)
@@ -312,7 +312,7 @@ static int sound_nmi_enabled;
 
 static void sound_nmi_callback( int param )
 {
-	cputag_set_input_line(machine, "audiocpu", INPUT_LINE_NMI, ( sound_nmi_enabled ) ? CLEAR_LINE : ASSERT_LINE );
+	machine.device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, ( sound_nmi_enabled ) ? CLEAR_LINE : ASSERT_LINE );
 
 	sound_nmi_enabled = 0;
 }
@@ -321,13 +321,13 @@ static void sound_nmi_callback( int param )
 static TIMER_CALLBACK( nmi_callback )
 {
 	tmnt_state *state = machine.driver_data<tmnt_state>();
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, ASSERT_LINE);
+	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(tmnt_state::sound_arm_nmi_w)
 {
 //  sound_nmi_enabled = 1;
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 	machine().scheduler().timer_set(attotime::from_usec(50), FUNC(nmi_callback));	/* kludge until the K053260 is emulated correctly */
 }
 
@@ -380,8 +380,8 @@ READ16_MEMBER(tmnt_state::ssriders_protection_r)
 			return data;
 
 		default:
-			popmessage("%06x: unknown protection read",cpu_get_pc(&space.device()));
-			logerror("%06x: read 1c0800 (D7=%02x 1058fc=%02x 105a0a=%02x)\n",cpu_get_pc(&space.device()),(UINT32)cpu_get_reg(&space.device(), M68K_D7),cmd,data);
+			popmessage("%06x: unknown protection read",space.device().safe_pc());
+			logerror("%06x: read 1c0800 (D7=%02x 1058fc=%02x 105a0a=%02x)\n",space.device().safe_pc(),(UINT32)space.device().state().state_int(M68K_D7),cmd,data);
 			return 0xffff;
     }
 }
@@ -518,7 +518,7 @@ WRITE16_MEMBER(tmnt_state::thndrx2_eeprom_w)
 
 		/* bit 5 triggers IRQ on sound cpu */
 		if (m_last == 0 && (data & 0x20) != 0)
-			device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+			m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 		m_last = data & 0x20;
 
 		/* bit 6 = enable char ROM reading through the video RAM */
@@ -666,7 +666,7 @@ WRITE16_MEMBER(tmnt_state::ssriders_soundkludge_w)
 {
 
 	/* I think this is more than just a trigger */
-	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 static ADDRESS_MAP_START( blswhstl_main_map, AS_PROGRAM, 16, tmnt_state )
@@ -2036,7 +2036,7 @@ static void cuebrick_irq_handler( device_t *device, int state )
 {
 	tmnt_state *tmnt = device->machine().driver_data<tmnt_state>();
 
-	device_set_input_line(tmnt->m_maincpu, M68K_IRQ_6, (state) ? ASSERT_LINE : CLEAR_LINE);
+	tmnt->m_maincpu->set_input_line(M68K_IRQ_6, (state) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2151_interface ym2151_interface_cbj =
@@ -2203,44 +2203,42 @@ static const k053936_interface prmrsocr_k053936_interface =
 };
 
 
-static MACHINE_START( common )
+MACHINE_START_MEMBER(tmnt_state,common)
 {
-	tmnt_state *state = machine.driver_data<tmnt_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_k007232 = machine.device("k007232");
-	state->m_k053260 = machine.device("k053260");
-	state->m_k054539 = machine.device("k054539");
-	state->m_upd = machine.device("upd");
-	state->m_samples = machine.device<samples_device>("samples");
-	state->m_k052109 = machine.device("k052109");
-	state->m_k051960 = machine.device("k051960");
-	state->m_k053245 = machine.device("k053245");
-	state->m_k053251 = machine.device("k053251");
-	state->m_k053936 = machine.device("k053936");
-	state->m_k054000 = machine.device("k054000");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_k007232 = machine().device("k007232");
+	m_k053260 = machine().device("k053260");
+	m_k054539 = machine().device("k054539");
+	m_upd = machine().device("upd");
+	m_samples = machine().device<samples_device>("samples");
+	m_k052109 = machine().device("k052109");
+	m_k051960 = machine().device("k051960");
+	m_k053245 = machine().device("k053245");
+	m_k053251 = machine().device("k053251");
+	m_k053936 = machine().device("k053936");
+	m_k054000 = machine().device("k054000");
 
-	state->save_item(NAME(state->m_toggle));
-	state->save_item(NAME(state->m_last));
-	state->save_item(NAME(state->m_tmnt_soundlatch));
-	state->save_item(NAME(state->m_cuebrick_snd_irqlatch));
-	state->save_item(NAME(state->m_cuebrick_nvram_bank));
-	state->save_item(NAME(state->m_sprite_colorbase));
-	state->save_item(NAME(state->m_layer_colorbase));
-	state->save_item(NAME(state->m_layerpri));
-	state->save_item(NAME(state->m_sorted_layer));
+	save_item(NAME(m_toggle));
+	save_item(NAME(m_last));
+	save_item(NAME(m_tmnt_soundlatch));
+	save_item(NAME(m_cuebrick_snd_irqlatch));
+	save_item(NAME(m_cuebrick_nvram_bank));
+	save_item(NAME(m_sprite_colorbase));
+	save_item(NAME(m_layer_colorbase));
+	save_item(NAME(m_layerpri));
+	save_item(NAME(m_sorted_layer));
 }
 
-static MACHINE_RESET( common )
+MACHINE_RESET_MEMBER(tmnt_state,common)
 {
-	tmnt_state *state = machine.driver_data<tmnt_state>();
 
-	state->m_toggle = 0;
-	state->m_last = 0;
-	state->m_tmnt_soundlatch = 0;
-	state->m_cuebrick_snd_irqlatch = 0;
-	state->m_cuebrick_nvram_bank = 0;
+	m_toggle = 0;
+	m_last = 0;
+	m_tmnt_soundlatch = 0;
+	m_cuebrick_snd_irqlatch = 0;
+	m_cuebrick_nvram_bank = 0;
 }
 
 /* cuebrick, mia and tmnt */
@@ -2249,7 +2247,7 @@ static INTERRUPT_GEN( tmnt_vblank_irq )
 	tmnt_state *state = device->machine().driver_data<tmnt_state>();
 
 	if(state->m_irq5_mask)
-		device_set_input_line(device, 5, HOLD_LINE);
+		device->execute().set_input_line(5, HOLD_LINE);
 }
 
 
@@ -2260,8 +2258,8 @@ static MACHINE_CONFIG_START( cuebrick, tmnt_state )
 	MCFG_CPU_PROGRAM_MAP(cuebrick_main_map)
 	MCFG_CPU_VBLANK_INT("screen",cuebrick_interrupt)
 
-	MCFG_MACHINE_START(common)
-	MCFG_MACHINE_RESET(common)
+	MCFG_MACHINE_START_OVERRIDE(tmnt_state,common)
+	MCFG_MACHINE_RESET_OVERRIDE(tmnt_state,common)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS | VIDEO_UPDATE_AFTER_VBLANK)
@@ -2276,7 +2274,7 @@ static MACHINE_CONFIG_START( cuebrick, tmnt_state )
 	MCFG_PALETTE_LENGTH(1024)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_VIDEO_START(cuebrick)
+	MCFG_VIDEO_START_OVERRIDE(tmnt_state,cuebrick)
 
 	MCFG_K052109_ADD("k052109", cuebrick_k052109_intf)
 	MCFG_K051960_ADD("k051960", cuebrick_k051960_intf)
@@ -2301,8 +2299,8 @@ static MACHINE_CONFIG_START( mia, tmnt_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)
 	MCFG_CPU_PROGRAM_MAP(mia_audio_map)
 
-	MCFG_MACHINE_START(common)
-	MCFG_MACHINE_RESET(common)
+	MCFG_MACHINE_START_OVERRIDE(tmnt_state,common)
+	MCFG_MACHINE_RESET_OVERRIDE(tmnt_state,common)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS)
@@ -2316,7 +2314,7 @@ static MACHINE_CONFIG_START( mia, tmnt_state )
 
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(mia)
+	MCFG_VIDEO_START_OVERRIDE(tmnt_state,mia)
 
 	MCFG_K052109_ADD("k052109", mia_k052109_intf)
 	MCFG_K051960_ADD("k051960", mia_k051960_intf)
@@ -2335,13 +2333,12 @@ static MACHINE_CONFIG_START( mia, tmnt_state )
 MACHINE_CONFIG_END
 
 
-static MACHINE_RESET( tmnt )
+MACHINE_RESET_MEMBER(tmnt_state,tmnt)
 {
-	tmnt_state *state = machine.driver_data<tmnt_state>();
 
 	/* the UPD7759 control flip-flops are cleared: /ST is 1, /RESET is 0 */
-	upd7759_start_w(state->m_upd, 0);
-	upd7759_reset_w(state->m_upd, 1);
+	upd7759_start_w(m_upd, 0);
+	upd7759_reset_w(m_upd, 1);
 }
 
 static MACHINE_CONFIG_START( tmnt, tmnt_state )
@@ -2354,8 +2351,8 @@ static MACHINE_CONFIG_START( tmnt, tmnt_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)
 	MCFG_CPU_PROGRAM_MAP(tmnt_audio_map)
 
-	MCFG_MACHINE_START(common)
-	MCFG_MACHINE_RESET(tmnt)
+	MCFG_MACHINE_START_OVERRIDE(tmnt_state,common)
+	MCFG_MACHINE_RESET_OVERRIDE(tmnt_state,tmnt)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS)
@@ -2371,7 +2368,7 @@ static MACHINE_CONFIG_START( tmnt, tmnt_state )
 
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(tmnt)
+	MCFG_VIDEO_START_OVERRIDE(tmnt_state,tmnt)
 
 	MCFG_K052109_ADD("k052109", tmnt_k052109_intf)
 	MCFG_K051960_ADD("k051960", tmnt_k051960_intf)
@@ -2407,8 +2404,8 @@ static MACHINE_CONFIG_START( punkshot, tmnt_state )
 	MCFG_CPU_PROGRAM_MAP(punkshot_audio_map)
 								/* NMIs are generated by the 053260 */
 
-	MCFG_MACHINE_START(common)
-	MCFG_MACHINE_RESET(common)
+	MCFG_MACHINE_START_OVERRIDE(tmnt_state,common)
+	MCFG_MACHINE_RESET_OVERRIDE(tmnt_state,common)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS | VIDEO_UPDATE_AFTER_VBLANK)
@@ -2448,8 +2445,8 @@ static MACHINE_CONFIG_START( lgtnfght, tmnt_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_3_579545MHz)
 	MCFG_CPU_PROGRAM_MAP(lgtnfght_audio_map)
 
-	MCFG_MACHINE_START(common)
-	MCFG_MACHINE_RESET(common)
+	MCFG_MACHINE_START_OVERRIDE(tmnt_state,common)
+	MCFG_MACHINE_RESET_OVERRIDE(tmnt_state,common)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS | VIDEO_UPDATE_AFTER_VBLANK)
@@ -2463,7 +2460,7 @@ static MACHINE_CONFIG_START( lgtnfght, tmnt_state )
 
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(lgtnfght)
+	MCFG_VIDEO_START_OVERRIDE(tmnt_state,lgtnfght)
 
 	MCFG_K052109_ADD("k052109", tmnt_k052109_intf)
 	MCFG_K053245_ADD("k053245", lgtnfght_k05324x_intf)
@@ -2493,8 +2490,8 @@ static MACHINE_CONFIG_START( blswhstl, tmnt_state )
 	MCFG_CPU_PROGRAM_MAP(ssriders_audio_map)
 								/* NMIs are generated by the 053260 */
 
-	MCFG_MACHINE_START(common)
-	MCFG_MACHINE_RESET(common)
+	MCFG_MACHINE_START_OVERRIDE(tmnt_state,common)
+	MCFG_MACHINE_RESET_OVERRIDE(tmnt_state,common)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
@@ -2511,7 +2508,7 @@ static MACHINE_CONFIG_START( blswhstl, tmnt_state )
 
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START( blswhstl )
+	MCFG_VIDEO_START_OVERRIDE(tmnt_state, blswhstl )
 
 	MCFG_K052109_ADD("k052109", blswhstl_k052109_intf)
 	MCFG_K053245_ADD("k053245", blswhstl_k05324x_intf)
@@ -2559,8 +2556,8 @@ static MACHINE_CONFIG_START( glfgreat, tmnt_state )
 	MCFG_CPU_PROGRAM_MAP(glfgreat_audio_map)
 								/* NMIs are generated by the 053260 */
 
-	MCFG_MACHINE_START(common)
-	MCFG_MACHINE_RESET(common)
+	MCFG_MACHINE_START_OVERRIDE(tmnt_state,common)
+	MCFG_MACHINE_RESET_OVERRIDE(tmnt_state,common)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS | VIDEO_HAS_HIGHLIGHTS | VIDEO_UPDATE_AFTER_VBLANK)
@@ -2575,7 +2572,7 @@ static MACHINE_CONFIG_START( glfgreat, tmnt_state )
 	MCFG_GFXDECODE(glfgreat)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(glfgreat)
+	MCFG_VIDEO_START_OVERRIDE(tmnt_state,glfgreat)
 
 	MCFG_K052109_ADD("k052109", glfgreat_k052109_intf)
 	MCFG_K053245_ADD("k053245", glfgreat_k05324x_intf)
@@ -2594,7 +2591,7 @@ MACHINE_CONFIG_END
 static void sound_nmi( device_t *device )
 {
 	tmnt_state *state = device->machine().driver_data<tmnt_state>();
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static const k054539_interface k054539_config =
@@ -2604,11 +2601,11 @@ static const k054539_interface k054539_config =
 	sound_nmi
 };
 
-static MACHINE_START( prmrsocr )
+MACHINE_START_MEMBER(tmnt_state,prmrsocr)
 {
-	MACHINE_START_CALL(common);
-	UINT8 *ROM = machine.root_device().memregion("audiocpu")->base();
-	machine.root_device().membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
+	MACHINE_START_CALL_MEMBER(common);
+	UINT8 *ROM = machine().root_device().memregion("audiocpu")->base();
+	machine().root_device().membank("bank1")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
 }
 
 static MACHINE_CONFIG_START( prmrsocr, tmnt_state )
@@ -2622,8 +2619,8 @@ static MACHINE_CONFIG_START( prmrsocr, tmnt_state )
 	MCFG_CPU_PROGRAM_MAP(prmrsocr_audio_map)
 								/* NMIs are generated by the 054539 */
 
-	MCFG_MACHINE_START(prmrsocr)
-	MCFG_MACHINE_RESET(common)
+	MCFG_MACHINE_START_OVERRIDE(tmnt_state,prmrsocr)
+	MCFG_MACHINE_RESET_OVERRIDE(tmnt_state,common)
 
 	MCFG_EEPROM_ADD("eeprom", thndrx2_eeprom_intf)
 
@@ -2640,7 +2637,7 @@ static MACHINE_CONFIG_START( prmrsocr, tmnt_state )
 	MCFG_GFXDECODE(glfgreat)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(prmrsocr)
+	MCFG_VIDEO_START_OVERRIDE(tmnt_state,prmrsocr)
 
 	MCFG_K052109_ADD("k052109", glfgreat_k052109_intf)
 	MCFG_K053245_ADD("k053245", prmrsocr_k05324x_intf)
@@ -2671,8 +2668,8 @@ static MACHINE_CONFIG_START( tmnt2, tmnt_state )
 	MCFG_CPU_PROGRAM_MAP(ssriders_audio_map)
 								/* NMIs are generated by the 053260 */
 
-	MCFG_MACHINE_START(common)
-	MCFG_MACHINE_RESET(common)
+	MCFG_MACHINE_START_OVERRIDE(tmnt_state,common)
+	MCFG_MACHINE_RESET_OVERRIDE(tmnt_state,common)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
@@ -2688,7 +2685,7 @@ static MACHINE_CONFIG_START( tmnt2, tmnt_state )
 
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(lgtnfght)
+	MCFG_VIDEO_START_OVERRIDE(tmnt_state,lgtnfght)
 
 	MCFG_K052109_ADD("k052109", tmnt_k052109_intf)
 	MCFG_K053245_ADD("k053245", lgtnfght_k05324x_intf)
@@ -2718,8 +2715,8 @@ static MACHINE_CONFIG_START( ssriders, tmnt_state )
 	MCFG_CPU_PROGRAM_MAP(ssriders_audio_map)
 								/* NMIs are generated by the 053260 */
 
-	MCFG_MACHINE_START(common)
-	MCFG_MACHINE_RESET(common)
+	MCFG_MACHINE_START_OVERRIDE(tmnt_state,common)
+	MCFG_MACHINE_RESET_OVERRIDE(tmnt_state,common)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
@@ -2735,7 +2732,7 @@ static MACHINE_CONFIG_START( ssriders, tmnt_state )
 
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(lgtnfght)
+	MCFG_VIDEO_START_OVERRIDE(tmnt_state,lgtnfght)
 
 	MCFG_K052109_ADD("k052109", tmnt_k052109_intf)
 	MCFG_K053245_ADD("k053245", lgtnfght_k05324x_intf)
@@ -2761,8 +2758,8 @@ static MACHINE_CONFIG_START( sunsetbl, tmnt_state )
 	MCFG_CPU_PROGRAM_MAP(sunsetbl_main_map)
 	MCFG_CPU_VBLANK_INT("screen", irq4_line_hold)
 
-	MCFG_MACHINE_START(common)
-	MCFG_MACHINE_RESET(common)
+	MCFG_MACHINE_START_OVERRIDE(tmnt_state,common)
+	MCFG_MACHINE_RESET_OVERRIDE(tmnt_state,common)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
@@ -2801,8 +2798,8 @@ static MACHINE_CONFIG_START( thndrx2, tmnt_state )
 	MCFG_CPU_PROGRAM_MAP(thndrx2_audio_map)
 								/* NMIs are generated by the 053260 */
 
-	MCFG_MACHINE_START(common)
-	MCFG_MACHINE_RESET(common)
+	MCFG_MACHINE_START_OVERRIDE(tmnt_state,common)
+	MCFG_MACHINE_RESET_OVERRIDE(tmnt_state,common)
 
 	MCFG_EEPROM_ADD("eeprom", thndrx2_eeprom_intf)
 

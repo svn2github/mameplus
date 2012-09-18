@@ -103,13 +103,13 @@ PC5380-9651            5380-JY3306A           5380-N1045503A
 
 static TIMER_CALLBACK( irq5_gen )
 {
-	cputag_set_input_line(machine, "maincpu", R3000_IRQ5, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(R3000_IRQ5, ASSERT_LINE);
 }
 
 
 static INTERRUPT_GEN( irq4_gen )
 {
-	device_set_input_line(device, R3000_IRQ4, ASSERT_LINE);
+	device->execute().set_input_line(R3000_IRQ4, ASSERT_LINE);
 	device->machine().scheduler().timer_set(device->machine().primary_screen->time_until_pos(0), FUNC(irq5_gen));
 }
 
@@ -152,7 +152,7 @@ WRITE32_MEMBER(policetr_state::control_w)
 
 	/* log any unknown bits */
 	if (data & 0x4f1fffff)
-		logerror("%08X: control_w = %08X & %08X\n", cpu_get_previouspc(&space.device()), data, mem_mask);
+		logerror("%08X: control_w = %08X & %08X\n", space.device().safe_pcbase(), data, mem_mask);
 }
 
 
@@ -203,7 +203,7 @@ WRITE32_MEMBER(policetr_state::speedup_w)
 	COMBINE_DATA(m_speedup_data);
 
 	/* see if the PC matches */
-	if ((cpu_get_previouspc(&space.device()) & 0x1fffffff) == m_speedup_pc)
+	if ((space.device().safe_pcbase() & 0x1fffffff) == m_speedup_pc)
 	{
 		UINT64 curr_cycles = machine().firstcpu->total_cycles();
 
@@ -214,7 +214,7 @@ WRITE32_MEMBER(policetr_state::speedup_w)
 
 			/* more than 2 in a row and we spin */
 			if (m_loop_count > 2)
-				device_spin_until_interrupt(&space.device());
+				space.device().execute().spin_until_interrupt();
 		}
 		else
 			m_loop_count = 0;
@@ -431,7 +431,6 @@ static MACHINE_CONFIG_START( policetr, policetr_state )
 
 	MCFG_PALETTE_LENGTH(256)
 
-	MCFG_VIDEO_START(policetr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

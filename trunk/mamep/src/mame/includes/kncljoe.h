@@ -29,7 +29,7 @@ public:
 	UINT8      m_port2;
 
 	/* devices */
-	device_t *m_soundcpu;
+	cpu_device *m_soundcpu;
 	DECLARE_WRITE8_MEMBER(sound_cmd_w);
 	DECLARE_WRITE8_MEMBER(sound_irq_ack_w);
 	DECLARE_WRITE8_MEMBER(kncljoe_videoram_w);
@@ -40,6 +40,11 @@ public:
 	DECLARE_READ8_MEMBER(m6803_port1_r);
 	DECLARE_READ8_MEMBER(m6803_port2_r);
 	DECLARE_WRITE8_MEMBER(unused_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -47,6 +52,6 @@ public:
 /*----------- defined in video/kncljoe.c -----------*/
 
 
-PALETTE_INIT( kncljoe );
-VIDEO_START( kncljoe );
+
+
 SCREEN_UPDATE_IND16( kncljoe );

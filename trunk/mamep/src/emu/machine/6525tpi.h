@@ -34,8 +34,7 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _tpi6525_interface tpi6525_interface;
-struct _tpi6525_interface
+struct tpi6525_interface
 {
 	devcb_write_line	out_irq_func;
 
@@ -57,7 +56,26 @@ struct _tpi6525_interface
     DEVICE CONFIGURATION MACROS
 ***************************************************************************/
 
-DECLARE_LEGACY_DEVICE(TPI6525, tpi6525);
+class tpi6525_device : public device_t
+{
+public:
+	tpi6525_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock);
+	~tpi6525_device() { global_free(m_token); }
+
+	// access to legacy token
+	void *token() const { assert(m_token != NULL); return m_token; }
+protected:
+	// device-level overrides
+	virtual void device_config_complete();
+	virtual void device_start();
+	virtual void device_reset();
+private:
+	// internal state
+	void *m_token;
+};
+
+extern const device_type TPI6525;
+
 
 #define MCFG_TPI6525_ADD(_tag, _intrf) \
 	MCFG_DEVICE_ADD(_tag, TPI6525, 0) \

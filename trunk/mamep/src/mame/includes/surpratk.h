@@ -24,7 +24,7 @@ public:
 	int        m_videobank;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	device_t *m_k052109;
 	device_t *m_k053244;
 	device_t *m_k053251;
@@ -32,6 +32,8 @@ public:
 	DECLARE_WRITE8_MEMBER(bankedram_w);
 	DECLARE_WRITE8_MEMBER(surpratk_videobank_w);
 	DECLARE_WRITE8_MEMBER(surpratk_5fc0_w);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 /*----------- defined in video/surpratk.c -----------*/

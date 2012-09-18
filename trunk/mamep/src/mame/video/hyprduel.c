@@ -256,22 +256,19 @@ INLINE void hyprduel_vram_w( running_machine &machine, offs_t offset, UINT16 dat
 
 
 
-static TILE_GET_INFO( get_tile_info_0_8bit )
+TILE_GET_INFO_MEMBER(hyprduel_state::get_tile_info_0_8bit)
 {
-	hyprduel_state *state = machine.driver_data<hyprduel_state>();
-	get_tile_info_8bit(machine, tileinfo, tile_index, 0, state->m_vram_0);
+	get_tile_info_8bit(machine(), tileinfo, tile_index, 0, m_vram_0);
 }
 
-static TILE_GET_INFO( get_tile_info_1_8bit )
+TILE_GET_INFO_MEMBER(hyprduel_state::get_tile_info_1_8bit)
 {
-	hyprduel_state *state = machine.driver_data<hyprduel_state>();
-	get_tile_info_8bit(machine, tileinfo, tile_index, 1, state->m_vram_1);
+	get_tile_info_8bit(machine(), tileinfo, tile_index, 1, m_vram_1);
 }
 
-static TILE_GET_INFO( get_tile_info_2_8bit )
+TILE_GET_INFO_MEMBER(hyprduel_state::get_tile_info_2_8bit)
 {
-	hyprduel_state *state = machine.driver_data<hyprduel_state>();
-	get_tile_info_8bit(machine, tileinfo, tile_index, 2, state->m_vram_2);
+	get_tile_info_8bit(machine(), tileinfo, tile_index, 2, m_vram_2);
 }
 
 WRITE16_MEMBER(hyprduel_state::hyprduel_vram_0_w)
@@ -359,56 +356,53 @@ static void expand_gfx1(hyprduel_state &state)
 	}
 }
 
-static VIDEO_START( common_14220 )
+VIDEO_START_MEMBER(hyprduel_state,common_14220)
 {
-	hyprduel_state *state = machine.driver_data<hyprduel_state>();
-	expand_gfx1(*state);
-	alloc_empty_tiles(machine);
-	state->m_tiletable_old = auto_alloc_array(machine, UINT16, state->m_tiletable.bytes() / 2);
-	state->m_dirtyindex = auto_alloc_array(machine, UINT8, state->m_tiletable.bytes() / 4);
+	expand_gfx1(*this);
+	alloc_empty_tiles(machine());
+	m_tiletable_old = auto_alloc_array(machine(), UINT16, m_tiletable.bytes() / 2);
+	m_dirtyindex = auto_alloc_array(machine(), UINT8, m_tiletable.bytes() / 4);
 
-	state->save_pointer(NAME(state->m_tiletable_old), state->m_tiletable.bytes() / 2);
-	state->save_pointer(NAME(state->m_dirtyindex), state->m_tiletable.bytes() / 4);
+	save_pointer(NAME(m_tiletable_old), m_tiletable.bytes() / 2);
+	save_pointer(NAME(m_dirtyindex), m_tiletable.bytes() / 4);
 
-	state->m_bg_tilemap[0] = tilemap_create(machine, get_tile_info_0_8bit, tilemap_scan_rows, 8, 8, WIN_NX, WIN_NY);
-	state->m_bg_tilemap[1] = tilemap_create(machine, get_tile_info_1_8bit, tilemap_scan_rows, 8, 8, WIN_NX, WIN_NY);
-	state->m_bg_tilemap[2] = tilemap_create(machine, get_tile_info_2_8bit, tilemap_scan_rows, 8, 8, WIN_NX, WIN_NY);
+	m_bg_tilemap[0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hyprduel_state::get_tile_info_0_8bit),this), TILEMAP_SCAN_ROWS, 8, 8, WIN_NX, WIN_NY);
+	m_bg_tilemap[1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hyprduel_state::get_tile_info_1_8bit),this), TILEMAP_SCAN_ROWS, 8, 8, WIN_NX, WIN_NY);
+	m_bg_tilemap[2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hyprduel_state::get_tile_info_2_8bit),this), TILEMAP_SCAN_ROWS, 8, 8, WIN_NX, WIN_NY);
 
-	state->m_bg_tilemap[0]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
-	state->m_bg_tilemap[0]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
+	m_bg_tilemap[0]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
+	m_bg_tilemap[0]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
 
-	state->m_bg_tilemap[1]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
-	state->m_bg_tilemap[1]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
+	m_bg_tilemap[1]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
+	m_bg_tilemap[1]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
 
-	state->m_bg_tilemap[2]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
-	state->m_bg_tilemap[2]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
+	m_bg_tilemap[2]->map_pen_to_layer(0, 15,  TILEMAP_PIXEL_TRANSPARENT);
+	m_bg_tilemap[2]->map_pen_to_layer(1, 255, TILEMAP_PIXEL_TRANSPARENT);
 
-	state->m_bg_tilemap[0]->set_scrolldx(0, 0);
-	state->m_bg_tilemap[1]->set_scrolldx(0, 0);
-	state->m_bg_tilemap[2]->set_scrolldx(0, 0);
+	m_bg_tilemap[0]->set_scrolldx(0, 0);
+	m_bg_tilemap[1]->set_scrolldx(0, 0);
+	m_bg_tilemap[2]->set_scrolldx(0, 0);
 
 	/* Set up save state */
-	state->save_item(NAME(state->m_sprite_xoffs));
-	state->save_item(NAME(state->m_sprite_yoffs));
-	machine.save().register_postload(save_prepost_delegate(FUNC(hyprduel_postload), &machine));
+	save_item(NAME(m_sprite_xoffs));
+	save_item(NAME(m_sprite_yoffs));
+	machine().save().register_postload(save_prepost_delegate(FUNC(hyprduel_postload), &machine()));
 }
 
-VIDEO_START( hyprduel_14220 )
+VIDEO_START_MEMBER(hyprduel_state,hyprduel_14220)
 {
-	hyprduel_state *state = machine.driver_data<hyprduel_state>();
 
-	state->m_sprite_yoffs_sub = 2;
+	m_sprite_yoffs_sub = 2;
 
-	VIDEO_START_CALL(common_14220);
+	VIDEO_START_CALL_MEMBER(common_14220);
 }
 
-VIDEO_START( magerror_14220 )
+VIDEO_START_MEMBER(hyprduel_state,magerror_14220)
 {
-	hyprduel_state *state = machine.driver_data<hyprduel_state>();
 
-	state->m_sprite_yoffs_sub = 0;
+	m_sprite_yoffs_sub = 0;
 
-	VIDEO_START_CALL(common_14220);
+	VIDEO_START_CALL_MEMBER(common_14220);
 }
 
 /***************************************************************************
@@ -494,8 +488,6 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 
 	for (i = 0; i < 0x20; i++)
 	{
-		gfx_element gfx(machine);
-
 		if (!(state->m_videoregs[0x02 / 2] & 0x8000))
 		{
 			src = state->m_spriteram + (sprites - 1) * (8 / 2);
@@ -569,7 +561,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 				if ((gfxstart + width * height - 1) >= gfx_size)
 					continue;
 
-				gfx_element_build_temporary(&gfx, machine, base_gfx8 + gfxstart, width, height, width, 0, 256, 0);
+				gfx_element gfx(machine, base_gfx8 + gfxstart, width, height, width, 0, 256);
 
 				pdrawgfxzoom_transpen(bitmap,cliprect, &gfx,
 								0,
@@ -585,7 +577,7 @@ static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const 
 				if ((gfxstart + width / 2 * height - 1) >= gfx_size)
 					continue;
 
-				gfx_element_build_temporary(&gfx, machine, base_gfx4 + 2 * gfxstart, width, height, width, 0, 16, 0);
+				gfx_element gfx(machine, base_gfx4 + 2 * gfxstart, width, height, width, 0, 16);
 
 				pdrawgfxzoom_transpen(bitmap,cliprect, &gfx,
 								0,

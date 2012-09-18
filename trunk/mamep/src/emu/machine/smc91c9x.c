@@ -106,8 +106,7 @@ static const char *const ethernet_regname[64] =
     TYPE DEFINITIONS
 ***************************************************************************/
 
-typedef struct _smc91c9x_state smc91c9x_state;
-struct _smc91c9x_state
+struct smc91c9x_state
 {
 	device_t *device;
 	smc91c9x_irq_func irq_handler;
@@ -156,7 +155,7 @@ INLINE smc91c9x_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == SMC91C94 || device->type() == SMC91C96);
 
-	return (smc91c9x_state *)downcast<legacy_device_base *>(device)->token();
+	return (smc91c9x_state *)downcast<smc91c9x_device *>(device)->token();
 }
 
 
@@ -509,13 +508,11 @@ WRITE16_DEVICE_HANDLER( smc91c9x_w )
 
 static DEVICE_START( smc91c9x )
 {
-	const smc91c9x_config *config = (const smc91c9x_config *)downcast<const legacy_device_base *>(device)->inline_config();
+	const smc91c9x_config *config = (const smc91c9x_config *)device->static_config();
 	smc91c9x_state *smc = get_safe_token(device);
 
 	/* validate some basic stuff */
 	assert(device != NULL);
-	assert(device->static_config() == NULL);
-	assert(downcast<const legacy_device_base *>(device)->inline_config() != NULL);
 
 	/* store a pointer back to the device */
 	smc->device = device;
@@ -586,52 +583,55 @@ static DEVICE_RESET( smc91c9x )
 }
 
 
-/*-------------------------------------------------
-    device get info callback
--------------------------------------------------*/
-
-static DEVICE_GET_INFO( smc91c9x )
+smc91c9x_device::smc91c9x_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, type, name, tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(smc91c9x_state);		break;
-		case DEVINFO_INT_INLINE_CONFIG_BYTES:	info->i = sizeof(smc91c9x_config);		break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(smc91c9x); break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(smc91c9x);break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					/* provided by subclasses */			break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "SMC91C9X Ethernet Controller");break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");					break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(smc91c9x_state));
 }
 
-DEVICE_GET_INFO( smc91c94 )
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void smc91c9x_device::device_config_complete()
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "SMC91C94");			break;
-		default:								DEVICE_GET_INFO_CALL(smc91c9x);			break;
-	}
 }
 
-DEVICE_GET_INFO( smc91c96 )
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void smc91c9x_device::device_start()
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "SMC91C96");			break;
-		default:								DEVICE_GET_INFO_CALL(smc91c9x);			break;
-	}
+	DEVICE_START_NAME( smc91c9x )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void smc91c9x_device::device_reset()
+{
+	DEVICE_RESET_NAME( smc91c9x )(this);
 }
 
 
-DEFINE_LEGACY_DEVICE(SMC91C94, smc91c94);
-DEFINE_LEGACY_DEVICE(SMC91C96, smc91c96);
+const device_type SMC91C94 = &device_creator<smc91c94_device>;
+
+smc91c94_device::smc91c94_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: smc91c9x_device(mconfig, SMC91C94, "SMC91C94", tag, owner, clock)
+{
+}
+
+
+const device_type SMC91C96 = &device_creator<smc91c96_device>;
+
+smc91c96_device::smc91c96_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: smc91c9x_device(mconfig, SMC91C96, "SMC91C96", tag, owner, clock)
+{
+}
+
+
 

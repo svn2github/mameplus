@@ -13,14 +13,13 @@ ToDo: Fix Sprites & Rowscroll/Select for Cocktail
 #include "emu.h"
 #include "includes/mcatadv.h"
 
-static TILE_GET_INFO( get_mcatadv_tile_info1 )
+TILE_GET_INFO_MEMBER(mcatadv_state::get_mcatadv_tile_info1)
 {
-	mcatadv_state *state = machine.driver_data<mcatadv_state>();
-	int tileno = state->m_videoram1[tile_index * 2 + 1];
-	int colour = (state->m_videoram1[tile_index * 2] & 0x3f00) >> 8;
-	int pri = (state->m_videoram1[tile_index * 2] & 0xc000) >> 14;
+	int tileno = m_videoram1[tile_index * 2 + 1];
+	int colour = (m_videoram1[tile_index * 2] & 0x3f00) >> 8;
+	int pri = (m_videoram1[tile_index * 2] & 0xc000) >> 14;
 
-	SET_TILE_INFO(0,tileno,colour + state->m_palette_bank1 * 0x40, 0);
+	SET_TILE_INFO_MEMBER(0,tileno,colour + m_palette_bank1 * 0x40, 0);
 	tileinfo.category = pri;
 }
 
@@ -31,14 +30,13 @@ WRITE16_MEMBER(mcatadv_state::mcatadv_videoram1_w)
 	m_tilemap1->mark_tile_dirty(offset / 2);
 }
 
-static TILE_GET_INFO( get_mcatadv_tile_info2 )
+TILE_GET_INFO_MEMBER(mcatadv_state::get_mcatadv_tile_info2)
 {
-	mcatadv_state *state = machine.driver_data<mcatadv_state>();
-	int tileno = state->m_videoram2[tile_index * 2 + 1];
-	int colour = (state->m_videoram2[tile_index * 2] & 0x3f00) >> 8;
-	int pri = (state->m_videoram2[tile_index * 2] & 0xc000) >> 14;
+	int tileno = m_videoram2[tile_index * 2 + 1];
+	int colour = (m_videoram2[tile_index * 2] & 0x3f00) >> 8;
+	int pri = (m_videoram2[tile_index * 2] & 0xc000) >> 14;
 
-	SET_TILE_INFO(1, tileno, colour + state->m_palette_bank2 * 0x40, 0);
+	SET_TILE_INFO_MEMBER(1, tileno, colour + m_palette_bank2 * 0x40, 0);
 	tileinfo.category = pri;
 }
 
@@ -250,23 +248,22 @@ SCREEN_UPDATE_IND16( mcatadv )
 	return 0;
 }
 
-VIDEO_START( mcatadv )
+void mcatadv_state::video_start()
 {
-	mcatadv_state *state = machine.driver_data<mcatadv_state>();
-	state->m_tilemap1 = tilemap_create(machine, get_mcatadv_tile_info1, tilemap_scan_rows, 16, 16, 32, 32);
-	state->m_tilemap1->set_transparent_pen(0);
+	m_tilemap1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mcatadv_state::get_mcatadv_tile_info1),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_tilemap1->set_transparent_pen(0);
 
-	state->m_tilemap2 = tilemap_create(machine, get_mcatadv_tile_info2, tilemap_scan_rows, 16, 16, 32, 32);
-	state->m_tilemap2->set_transparent_pen(0);
+	m_tilemap2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(mcatadv_state::get_mcatadv_tile_info2),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
+	m_tilemap2->set_transparent_pen(0);
 
-	state->m_spriteram_old = auto_alloc_array_clear(machine, UINT16, state->m_spriteram.bytes() / 2);
-	state->m_vidregs_old = auto_alloc_array(machine, UINT16, (0x0f + 1) / 2);
+	m_spriteram_old = auto_alloc_array_clear(machine(), UINT16, m_spriteram.bytes() / 2);
+	m_vidregs_old = auto_alloc_array(machine(), UINT16, (0x0f + 1) / 2);
 
-	state->m_palette_bank1 = 0;
-	state->m_palette_bank2 = 0;
+	m_palette_bank1 = 0;
+	m_palette_bank2 = 0;
 
-	state->save_pointer(NAME(state->m_spriteram_old), state->m_spriteram.bytes() / 2);
-	state->save_pointer(NAME(state->m_vidregs_old), (0x0f + 1) / 2);
+	save_pointer(NAME(m_spriteram_old), m_spriteram.bytes() / 2);
+	save_pointer(NAME(m_vidregs_old), (0x0f + 1) / 2);
 }
 
 SCREEN_VBLANK( mcatadv )

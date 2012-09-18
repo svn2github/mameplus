@@ -27,8 +27,8 @@ public:
 	int m_select1;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_subcpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_subcpu;
 	DECLARE_WRITE8_MEMBER(mrflea_main_w);
 	DECLARE_WRITE8_MEMBER(mrflea_io_w);
 	DECLARE_READ8_MEMBER(mrflea_main_r);
@@ -42,6 +42,8 @@ public:
 	DECLARE_WRITE8_MEMBER(mrflea_gfx_bank_w);
 	DECLARE_WRITE8_MEMBER(mrflea_videoram_w);
 	DECLARE_WRITE8_MEMBER(mrflea_spriteram_w);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 

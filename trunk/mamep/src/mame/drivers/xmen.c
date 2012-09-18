@@ -44,7 +44,7 @@ static const eeprom_interface eeprom_intf =
 WRITE16_MEMBER(xmen_state::eeprom_w)
 {
 
-	logerror("%06x: write %04x to 108000\n",cpu_get_pc(&space.device()),data);
+	logerror("%06x: write %04x to 108000\n",space.device().safe_pc(),data);
 	if (ACCESSING_BITS_0_7)
 	{
 		/* bit 0 = coin counter */
@@ -81,7 +81,7 @@ WRITE16_MEMBER(xmen_state::sound_cmd_w)
 
 WRITE16_MEMBER(xmen_state::sound_irq_w)
 {
-	device_set_input_line(m_audiocpu, 0, HOLD_LINE);
+	m_audiocpu->set_input_line(0, HOLD_LINE);
 }
 
 WRITE16_MEMBER(xmen_state::xmen_18fa00_w)
@@ -292,45 +292,43 @@ static INPUT_PORTS_START( xmen6p )
 INPUT_PORTS_END
 
 
-static MACHINE_START( xmen )
+void xmen_state::machine_start()
 {
-	xmen_state *state = machine.driver_data<xmen_state>();
-	UINT8 *ROM = state->memregion("audiocpu")->base();
+	UINT8 *ROM = memregion("audiocpu")->base();
 
-	state->membank("bank4")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
-	state->membank("bank4")->set_entry(0);
+	membank("bank4")->configure_entries(0, 8, &ROM[0x10000], 0x4000);
+	membank("bank4")->set_entry(0);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_k053246 = machine.device("k053246");
-	state->m_k053251 = machine.device("k053251");
-	state->m_k052109 = machine.device("k052109");
-	state->m_k054539 = machine.device("k054539");
-	state->m_lscreen = machine.device("lscreen");
-	state->m_rscreen = machine.device("rscreen");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_k053246 = machine().device("k053246");
+	m_k053251 = machine().device("k053251");
+	m_k052109 = machine().device("k052109");
+	m_k054539 = machine().device("k054539");
+	m_lscreen = machine().device("lscreen");
+	m_rscreen = machine().device("rscreen");
 
-	state->save_item(NAME(state->m_sound_curbank));
-	state->save_item(NAME(state->m_sprite_colorbase));
-	state->save_item(NAME(state->m_layer_colorbase));
-	state->save_item(NAME(state->m_layerpri));
-	state->save_item(NAME(state->m_vblank_irq_mask));
-	machine.save().register_postload(save_prepost_delegate(FUNC(sound_reset_bank), &machine));
+	save_item(NAME(m_sound_curbank));
+	save_item(NAME(m_sprite_colorbase));
+	save_item(NAME(m_layer_colorbase));
+	save_item(NAME(m_layerpri));
+	save_item(NAME(m_vblank_irq_mask));
+	machine().save().register_postload(save_prepost_delegate(FUNC(sound_reset_bank), &machine()));
 }
 
-static MACHINE_RESET( xmen )
+void xmen_state::machine_reset()
 {
-	xmen_state *state = machine.driver_data<xmen_state>();
 	int i;
 
 	for (i = 0; i < 3; i++)
 	{
-		state->m_layerpri[i] = 0;
-		state->m_layer_colorbase[i] = 0;
+		m_layerpri[i] = 0;
+		m_layer_colorbase[i] = 0;
 	}
 
-	state->m_sprite_colorbase = 0;
-	state->m_sound_curbank = 0;
-	state->m_vblank_irq_mask = 0;
+	m_sprite_colorbase = 0;
+	m_sound_curbank = 0;
+	m_vblank_irq_mask = 0;
 }
 
 static const k052109_interface xmen_k052109_intf =
@@ -357,10 +355,10 @@ static TIMER_DEVICE_CALLBACK( xmen_scanline )
 	int scanline = param;
 
 	if(scanline == 240 && state->m_vblank_irq_mask) // vblank-out irq
-		cputag_set_input_line(timer.machine(), "maincpu", 3, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE);
 
 	if(scanline == 0) // sprite DMA irq?
-		cputag_set_input_line(timer.machine(), "maincpu", 5, HOLD_LINE);
+		timer.machine().device("maincpu")->execute().set_input_line(5, HOLD_LINE);
 
 }
 
@@ -376,8 +374,6 @@ static MACHINE_CONFIG_START( xmen, xmen_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_16MHz/2)	/* verified on pcb */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(xmen)
-	MCFG_MACHINE_RESET(xmen)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
@@ -428,8 +424,6 @@ static MACHINE_CONFIG_START( xmen6p, xmen_state )
 	MCFG_CPU_ADD("audiocpu", Z80,8000000)	/* verified with M1, guessed but accurate */
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(xmen)
-	MCFG_MACHINE_RESET(xmen)
 
 	MCFG_EEPROM_ADD("eeprom", eeprom_intf)
 
@@ -453,7 +447,7 @@ static MACHINE_CONFIG_START( xmen6p, xmen_state )
 	MCFG_SCREEN_UPDATE_STATIC(xmen6p_right)
 	MCFG_SCREEN_VBLANK_STATIC(xmen6p)
 
-	MCFG_VIDEO_START(xmen6p)
+	MCFG_VIDEO_START_OVERRIDE(xmen_state,xmen6p)
 
 	MCFG_K052109_ADD("k052109", xmen_k052109_intf)
 	MCFG_K053246_ADD("k053246", xmen6p_k053246_intf)

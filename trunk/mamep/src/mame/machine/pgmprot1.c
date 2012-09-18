@@ -121,7 +121,7 @@ static READ16_HANDLER( pgm_arm7_type1_ram_r )
 	UINT16 *share16 = reinterpret_cast<UINT16 *>(state->m_arm7_shareram.target());
 
 	if (PGMARM7LOGERROR)
-		logerror("M68K: ARM7 Shared RAM Read: %04x = %04x (%08x) (%06x)\n", BYTE_XOR_LE(offset), share16[BYTE_XOR_LE(offset)], mem_mask, cpu_get_pc(&space->device()));
+		logerror("M68K: ARM7 Shared RAM Read: %04x = %04x (%08x) (%06x)\n", BYTE_XOR_LE(offset), share16[BYTE_XOR_LE(offset)], mem_mask, space->device().safe_pc());
 	return share16[BYTE_XOR_LE(offset << 1)];
 }
 
@@ -131,7 +131,7 @@ static WRITE16_HANDLER( pgm_arm7_type1_ram_w )
 	UINT16 *share16 = reinterpret_cast<UINT16 *>(state->m_arm7_shareram.target());
 
 	if (PGMARM7LOGERROR)
-		logerror("M68K: ARM7 Shared RAM Write: %04x = %04x (%04x) (%06x)\n", BYTE_XOR_LE(offset), data, mem_mask, cpu_get_pc(&space->device()));
+		logerror("M68K: ARM7 Shared RAM Write: %04x = %04x (%04x) (%06x)\n", BYTE_XOR_LE(offset), data, mem_mask, space->device().safe_pc());
 	COMBINE_DATA(&share16[BYTE_XOR_LE(offset << 1)]);
 }
 
@@ -154,7 +154,7 @@ static READ32_HANDLER( pgm_arm7_type1_shareram_r )
 	pgm_arm_type1_state *state = space->machine().driver_data<pgm_arm_type1_state>();
 
 	if (PGMARM7LOGERROR)
-		logerror("ARM7: ARM7 Shared RAM Read: %04x = %08x (%08x) (%06x)\n", offset << 2, state->m_arm7_shareram[offset], mem_mask, cpu_get_pc(&space->device()));
+		logerror("ARM7: ARM7 Shared RAM Read: %04x = %08x (%08x) (%06x)\n", offset << 2, state->m_arm7_shareram[offset], mem_mask, space->device().safe_pc());
 	return state->m_arm7_shareram[offset];
 }
 
@@ -163,7 +163,7 @@ static WRITE32_HANDLER( pgm_arm7_type1_shareram_w )
 	pgm_arm_type1_state *state = space->machine().driver_data<pgm_arm_type1_state>();
 
 	if (PGMARM7LOGERROR)
-		logerror("ARM7: ARM7 Shared RAM Write: %04x = %08x (%08x) (%06x)\n", offset << 2, data, mem_mask, cpu_get_pc(&space->device()));
+		logerror("ARM7: ARM7 Shared RAM Write: %04x = %08x (%08x) (%06x)\n", offset << 2, data, mem_mask, space->device().safe_pc());
 	COMBINE_DATA(&state->m_arm7_shareram[offset]);
 }
 
@@ -205,21 +205,20 @@ static ADDRESS_MAP_START( cavepgm_mem, AS_PROGRAM, 16, pgm_arm_type1_state )
 ADDRESS_MAP_END
 
 
-static MACHINE_START( pgm_arm_type1 )
+MACHINE_START_MEMBER(pgm_arm_type1_state,pgm_arm_type1)
 {
-	MACHINE_START_CALL(pgm);
+	MACHINE_START_CALL_MEMBER(pgm);
 
 
-	pgm_arm_type1_state *state = machine.driver_data<pgm_arm_type1_state>();
 
-	state->m_prot = machine.device<cpu_device>("prot");
+	m_prot = machine().device<cpu_device>("prot");
 
-	state->save_item(NAME(state->m_value0));
-	state->save_item(NAME(state->m_value1));
-	state->save_item(NAME(state->m_valuekey));
-	state->save_item(NAME(state->m_valueresponse));
-	state->save_item(NAME(state->m_curslots));
-	state->save_item(NAME(state->m_slots));
+	save_item(NAME(m_value0));
+	save_item(NAME(m_value1));
+	save_item(NAME(m_valuekey));
+	save_item(NAME(m_valueresponse));
+	save_item(NAME(m_curslots));
+	save_item(NAME(m_slots));
 }
 
 MACHINE_CONFIG_START( pgm_arm_type1_cave, pgm_arm_type1_state )
@@ -228,7 +227,7 @@ MACHINE_CONFIG_START( pgm_arm_type1_cave, pgm_arm_type1_state )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(cavepgm_mem)
 
-	MCFG_MACHINE_START( pgm_arm_type1 )
+	MCFG_MACHINE_START_OVERRIDE(pgm_arm_type1_state, pgm_arm_type1 )
 
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_REFRESH_RATE(59.17) // verified on pcb
@@ -562,21 +561,21 @@ void command_handler_ddp3(pgm_arm_type1_state *state, int pc)
 			break;
 
 		case 0x67: // set high bits
-	//      printf("%06x command %02x | %04x\n", cpu_get_pc(&space->device()), state->m_ddp3lastcommand, state->m_value0);
+	//      printf("%06x command %02x | %04x\n", space->device().safe_pc(), state->m_ddp3lastcommand, state->m_value0);
 			state->m_valueresponse = 0x880000;
 			state->m_curslots = (state->m_value0 & 0xff00)>>8;
 			state->m_slots[state->m_curslots] = (state->m_value0 & 0x00ff) << 16;
 			break;
 
 		case 0xe5: // set low bits for operation?
-		//  printf("%06x command %02x | %04x\n", cpu_get_pc(&space->device()), state->m_ddp3lastcommand, state->m_value0);
+		//  printf("%06x command %02x | %04x\n", space->device().safe_pc(), state->m_ddp3lastcommand, state->m_value0);
 			state->m_valueresponse = 0x880000;
 			state->m_slots[state->m_curslots] |= (state->m_value0 & 0xffff);
 			break;
 
 
 		case 0x8e: // read back result of operations
-	//      printf("%06x command %02x | %04x\n", cpu_get_pc(&space->device()), state->m_ddp3lastcommand, state->m_value0);
+	//      printf("%06x command %02x | %04x\n", space->device().safe_pc(), state->m_ddp3lastcommand, state->m_value0);
 			state->m_valueresponse = state->m_slots[state->m_value0&0xff];
 			break;
 
@@ -1351,7 +1350,7 @@ void command_handler_oldsplus(pgm_arm_type1_state *state, int pc)
 static WRITE16_HANDLER( pgm_arm7_type1_sim_w )
 {
 	pgm_arm_type1_state *state = space->machine().driver_data<pgm_arm_type1_state>();
-	int pc = cpu_get_pc(&space->device());
+	int pc = space->device().safe_pc();
 
 	if (offset == 0)
 	{

@@ -155,7 +155,7 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER(tubep_state::main_cpu_irq_line_clear_w)
 {
-	cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 	logerror("CPU#0 VBLANK int clear at scanline=%3i\n", m_curr_scanline);
 	return;
 }
@@ -191,7 +191,7 @@ ADDRESS_MAP_END
 
 WRITE8_MEMBER(tubep_state::second_cpu_irq_line_clear_w)
 {
-	cputag_set_input_line(machine(), "slave", 0, CLEAR_LINE);
+	machine().device("slave")->execute().set_input_line(0, CLEAR_LINE);
 	logerror("CPU#1 VBLANK int clear at scanline=%3i\n", m_curr_scanline);
 	return;
 }
@@ -226,7 +226,7 @@ READ8_MEMBER(tubep_state::tubep_soundlatch_r)
 
 READ8_MEMBER(tubep_state::tubep_sound_irq_ack)
 {
-	cputag_set_input_line(machine(), "soundcpu", 0, CLEAR_LINE);
+	machine().device("soundcpu")->execute().set_input_line(0, CLEAR_LINE);
 	return 0;
 }
 
@@ -266,7 +266,7 @@ static TIMER_CALLBACK( tubep_scanline_callback )
 	if (scanline == 240)
 	{
 		logerror("VBLANK CPU#0\n");
-		cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 	}
 
 
@@ -275,7 +275,7 @@ static TIMER_CALLBACK( tubep_scanline_callback )
 	if (scanline == 16)
 	{
 		logerror("/VBLANK CPU#1\n");
-		cputag_set_input_line(machine, "slave", 0, ASSERT_LINE);
+		machine.device("slave")->execute().set_input_line(0, ASSERT_LINE);
 	}
 
 
@@ -285,14 +285,14 @@ static TIMER_CALLBACK( tubep_scanline_callback )
 	{
 		logerror("/nmi CPU#3\n");
 		tubep_vblank_end(machine); /* switch buffered sprite RAM page */
-		cputag_set_input_line(machine, "mcu", INPUT_LINE_NMI, ASSERT_LINE);
+		machine.device("mcu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 	}
 	/* CPU #3 MS2010-A NMI */
 	/* deactivates at the start of VBLANK signal which happens at the beginning of scanline number 240*/
 	if (scanline == 240)
 	{
 		logerror("CPU#3 nmi clear\n");
-		cputag_set_input_line(machine, "mcu", INPUT_LINE_NMI, CLEAR_LINE);
+		machine.device("mcu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 	}
 
 
@@ -300,7 +300,7 @@ static TIMER_CALLBACK( tubep_scanline_callback )
 	/* activates whenever line V6 from video part goes lo->hi that is when the scanline becomes 64 and 192 */
 	if ((scanline == 64) || (scanline == 192))
 	{
-		cputag_set_input_line(machine, "soundcpu", 0, ASSERT_LINE);	/* sound cpu interrupt (music tempo) */
+		machine.device("soundcpu")->execute().set_input_line(0, ASSERT_LINE);	/* sound cpu interrupt (music tempo) */
 	}
 
 
@@ -335,20 +335,18 @@ static void tubep_setup_save_state(running_machine &machine)
 
 
 
-static MACHINE_START( tubep )
+MACHINE_START_MEMBER(tubep_state,tubep)
 {
-	tubep_state *state = machine.driver_data<tubep_state>();
 	/* Create interrupt timer */
-	state->m_interrupt_timer = machine.scheduler().timer_alloc(FUNC(tubep_scanline_callback));
+	m_interrupt_timer = machine().scheduler().timer_alloc(FUNC(tubep_scanline_callback));
 
-	tubep_setup_save_state(machine);
+	tubep_setup_save_state(machine());
 }
 
 
-static MACHINE_RESET( tubep )
+MACHINE_RESET_MEMBER(tubep_state,tubep)
 {
-	tubep_state *state = machine.driver_data<tubep_state>();
-	state->m_interrupt_timer->adjust(machine.primary_screen->time_until_pos(0));
+	m_interrupt_timer->adjust(machine().primary_screen->time_until_pos(0));
 }
 
 
@@ -396,7 +394,7 @@ WRITE8_MEMBER(tubep_state::rjammer_LS259_w)
 WRITE8_MEMBER(tubep_state::rjammer_soundlatch_w)
 {
 	m_sound_latch = data;
-	cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -451,7 +449,7 @@ static TIMER_CALLBACK( rjammer_scanline_callback )
 	if (scanline == 240)
 	{
 		logerror("VBLANK CPU#0\n");
-		cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 	}
 
 
@@ -460,7 +458,7 @@ static TIMER_CALLBACK( rjammer_scanline_callback )
 	if (scanline == 16)
 	{
 		logerror("/VBLANK CPU#1\n");
-		cputag_set_input_line(machine, "slave", 0, HOLD_LINE);
+		machine.device("slave")->execute().set_input_line(0, HOLD_LINE);
 	}
 
 
@@ -470,14 +468,14 @@ static TIMER_CALLBACK( rjammer_scanline_callback )
 	{
 		logerror("/nmi CPU#3\n");
 		tubep_vblank_end(machine); /* switch buffered sprite RAM page */
-		cputag_set_input_line(machine, "mcu", INPUT_LINE_NMI, ASSERT_LINE);
+		machine.device("mcu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 	}
 	/* CPU #3 MS2010-A NMI */
 	/* deactivates at the start of VBLANK signal which happens at the beginning of scanline number 240*/
 	if (scanline == 240)
 	{
 		logerror("CPU#3 nmi clear\n");
-		cputag_set_input_line(machine, "mcu", INPUT_LINE_NMI, CLEAR_LINE);
+		machine.device("mcu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 	}
 
 
@@ -485,7 +483,7 @@ static TIMER_CALLBACK( rjammer_scanline_callback )
 	/* activates whenever line V6 from video part goes lo->hi that is when the scanline becomes 64 and 192 */
 	if ((scanline == 64) || (scanline == 192))
 	{
-		cputag_set_input_line(machine, "soundcpu", 0, ASSERT_LINE);	/* sound cpu interrupt (music tempo) */
+		machine.device("soundcpu")->execute().set_input_line(0, ASSERT_LINE);	/* sound cpu interrupt (music tempo) */
 	}
 
 
@@ -501,19 +499,17 @@ static TIMER_CALLBACK( rjammer_scanline_callback )
 }
 
 
-static MACHINE_START( rjammer )
+MACHINE_START_MEMBER(tubep_state,rjammer)
 {
-	tubep_state *state = machine.driver_data<tubep_state>();
 	/* Create interrupt timer */
-	state->m_interrupt_timer = machine.scheduler().timer_alloc(FUNC(rjammer_scanline_callback));
+	m_interrupt_timer = machine().scheduler().timer_alloc(FUNC(rjammer_scanline_callback));
 
-	tubep_setup_save_state(machine);
+	tubep_setup_save_state(machine());
 }
 
-static MACHINE_RESET( rjammer )
+MACHINE_RESET_MEMBER(tubep_state,rjammer)
 {
-	tubep_state *state = machine.driver_data<tubep_state>();
-	state->m_interrupt_timer->adjust(machine.primary_screen->time_until_pos(0));
+	m_interrupt_timer->adjust(machine().primary_screen->time_until_pos(0));
 }
 
 
@@ -564,7 +560,7 @@ static void rjammer_adpcm_vck (device_t *device)
 	if (state->m_ls74 == 1)
 	{
 		msm5205_data_w(device, (state->m_ls377 >> 0) & 15 );
-		cputag_set_input_line(device->machine(), "soundcpu", 0, ASSERT_LINE );
+		device->machine().device("soundcpu")->execute().set_input_line(0, ASSERT_LINE );
 	}
 	else
 	{
@@ -586,7 +582,7 @@ WRITE8_MEMBER(tubep_state::rjammer_voice_input_w)
             I do it here because this port (0x80) is first one accessed
             in the interrupt routine.
     */
-	cputag_set_input_line(machine(), "soundcpu", 0, CLEAR_LINE );
+	machine().device("soundcpu")->execute().set_input_line(0, CLEAR_LINE );
 	return;
 }
 
@@ -909,8 +905,8 @@ static MACHINE_CONFIG_START( tubep, tubep_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(tubep)
-	MCFG_MACHINE_RESET(tubep)
+	MCFG_MACHINE_START_OVERRIDE(tubep_state,tubep)
+	MCFG_MACHINE_RESET_OVERRIDE(tubep_state,tubep)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -921,9 +917,9 @@ static MACHINE_CONFIG_START( tubep, tubep_state )
 
 	MCFG_PALETTE_LENGTH(32 + 256*64)
 
-	MCFG_PALETTE_INIT(tubep)
-	MCFG_VIDEO_START(tubep)
-	MCFG_VIDEO_RESET(tubep)
+	MCFG_PALETTE_INIT_OVERRIDE(tubep_state,tubep)
+	MCFG_VIDEO_START_OVERRIDE(tubep_state,tubep)
+	MCFG_VIDEO_RESET_OVERRIDE(tubep_state,tubep)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -968,8 +964,8 @@ static MACHINE_CONFIG_START( rjammer, tubep_state )
 	MCFG_CPU_ADD("mcu",NSC8105,6000000)	/* 6 MHz Xtal - divided internally ??? */
 	MCFG_CPU_PROGRAM_MAP(nsc_map)
 
-	MCFG_MACHINE_START(rjammer)
-	MCFG_MACHINE_RESET(rjammer)
+	MCFG_MACHINE_START_OVERRIDE(tubep_state,rjammer)
+	MCFG_MACHINE_RESET_OVERRIDE(tubep_state,rjammer)
 
 
 	/* video hardware */
@@ -981,9 +977,9 @@ static MACHINE_CONFIG_START( rjammer, tubep_state )
 
 	MCFG_PALETTE_LENGTH(64)
 
-	MCFG_PALETTE_INIT(rjammer)
-	MCFG_VIDEO_START(tubep)
-	MCFG_VIDEO_RESET(tubep)
+	MCFG_PALETTE_INIT_OVERRIDE(tubep_state,rjammer)
+	MCFG_VIDEO_START_OVERRIDE(tubep_state,tubep)
+	MCFG_VIDEO_RESET_OVERRIDE(tubep_state,tubep)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -54,7 +54,7 @@ WRITE16_MEMBER(splash_state::splash_sh_irqtrigger_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, 0, data & 0xff);
-		cputag_set_input_line(machine(), "audiocpu", 0, HOLD_LINE);
+		machine().device("audiocpu")->execute().set_input_line(0, HOLD_LINE);
 	}
 }
 
@@ -63,11 +63,11 @@ WRITE16_MEMBER(splash_state::roldf_sh_irqtrigger_w)
 	if (ACCESSING_BITS_0_7)
 	{
 		soundlatch_byte_w(space, 0, data & 0xff);
-		cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 
 	// give the z80 time to see it
-	device_spin_until_time(&space.device(), attotime::from_usec(40));
+	space.device().execute().spin_until_time(attotime::from_usec(40));
 }
 
 WRITE16_MEMBER(splash_state::splash_coin_w)
@@ -148,7 +148,7 @@ static void roldfrog_update_irq( running_machine &machine )
 {
 	splash_state * state = machine.driver_data<splash_state>();
 	int irq = (state->m_sound_irq ? 0x08 : 0) | ((state->m_vblank_irq) ? 0x18 : 0);
-	device_set_input_line_and_vector(machine.device("audiocpu"), 0, irq ? ASSERT_LINE : CLEAR_LINE, 0xc7 | irq);
+	machine.device("audiocpu")->execute().set_input_line_and_vector(0, irq ? ASSERT_LINE : CLEAR_LINE, 0xc7 | irq);
 }
 
 WRITE8_MEMBER(splash_state::roldfrog_vblank_ack_w)
@@ -223,7 +223,7 @@ WRITE16_MEMBER(splash_state::spr_write)
 WRITE16_MEMBER(splash_state::funystrp_sh_irqtrigger_w)
 {
 	soundlatch_byte_w(space, 0, data>>8);
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static ADDRESS_MAP_START( funystrp_map, AS_PROGRAM, 16, splash_state )
@@ -291,12 +291,11 @@ static ADDRESS_MAP_START( funystrp_sound_io_map, AS_IO, 8, splash_state )
 	AM_RANGE(0x07, 0x07) AM_WRITE(msm2_interrupt_w)
 ADDRESS_MAP_END
 
-static MACHINE_RESET( funystrp )
+MACHINE_RESET_MEMBER(splash_state,funystrp)
 {
-	splash_state *state = machine.driver_data<splash_state>();
 
-	state->m_adpcm_data = 0;
-	state->m_ret = 0x100;
+	m_adpcm_data = 0;
+	m_ret = 0x100;
 }
 
 
@@ -485,28 +484,27 @@ static const msm5205_interface splash_msm5205_interface =
 	MSM5205_S48_4B		/* 8KHz */
 };
 
-static MACHINE_RESET( splash )
+MACHINE_RESET_MEMBER(splash_state,splash)
 {
-	splash_state *state = machine.driver_data<splash_state>();
 
-	state->m_adpcm_data = 0;
-	state->m_ret = 0x100;
+	m_adpcm_data = 0;
+	m_ret = 0x100;
 }
 
 static MACHINE_CONFIG_START( splash, splash_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", M68000,24000000/2)			/* 12 MHz (24/2) */
+	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz/2)		/* 12MHz (24/2) */
 	MCFG_CPU_PROGRAM_MAP(splash_map)
 	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
 
-	MCFG_CPU_ADD("audiocpu", Z80,30000000/8)
+	MCFG_CPU_ADD("audiocpu", Z80, XTAL_30MHz/8)		/* 3.75MHz (30/8) */
 	MCFG_CPU_PROGRAM_MAP(splash_sound_map)
 	MCFG_CPU_PERIODIC_INT(nmi_line_pulse,60*64)	/* needed for the msm5205 to play the samples */
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
-	MCFG_SCREEN_REFRESH_RATE(60)
+	MCFG_SCREEN_REFRESH_RATE(58)
 	MCFG_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MCFG_SCREEN_SIZE(64*8, 64*8)
 	MCFG_SCREEN_VISIBLE_AREA(2*8, 48*8-1, 2*8, 32*8-1)
@@ -515,18 +513,17 @@ static MACHINE_CONFIG_START( splash, splash_state )
 	MCFG_GFXDECODE(splash)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(splash)
 
-	MCFG_MACHINE_RESET( splash )
+	MCFG_MACHINE_RESET_OVERRIDE(splash_state, splash )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM3812, 3000000)
+	MCFG_SOUND_ADD("ymsnd", YM3812, XTAL_30MHz/8)		/* 3.75MHz (30/8) */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
-	MCFG_SOUND_ADD("msm", MSM5205, 384000)
-	MCFG_SOUND_CONFIG(splash_msm5205_interface)
+	MCFG_SOUND_ADD("msm", MSM5205, XTAL_384kHz)
+	MCFG_SOUND_CONFIG(splash_msm5205_interface)		/* Sample rate = 384kHz/48 */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 MACHINE_CONFIG_END
 
@@ -552,11 +549,11 @@ static INTERRUPT_GEN(  roldfrog_interrupt )
 static MACHINE_CONFIG_START( roldfrog, splash_state )
 
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", M68000,24000000/2)			/* 12 MHz - verified */
+	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz/2)		/* 12 MHz - verified */
 	MCFG_CPU_PROGRAM_MAP(roldfrog_map)
 	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
 
-	MCFG_CPU_ADD("audiocpu", Z80,3000000)			/* 3 MHz - verified */
+	MCFG_CPU_ADD("audiocpu", Z80, XTAL_24MHz/8)		/* 3 MHz - verified */
 	MCFG_CPU_PROGRAM_MAP(roldfrog_sound_map)
 	MCFG_CPU_IO_MAP(roldfrog_sound_io_map)
 	MCFG_CPU_VBLANK_INT("screen", roldfrog_interrupt)
@@ -573,20 +570,18 @@ static MACHINE_CONFIG_START( roldfrog, splash_state )
 	MCFG_GFXDECODE(splash)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(splash)
 
-	MCFG_MACHINE_RESET( splash )
+	MCFG_MACHINE_RESET_OVERRIDE(splash_state, splash )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("ymsnd", YM2203, 22000000 / 8)
+	MCFG_SOUND_ADD("ymsnd", YM2203, XTAL_24MHz / 8)
 	MCFG_SOUND_CONFIG(ym2203_config)
 	MCFG_SOUND_ROUTE(0, "mono", 0.20)
 	MCFG_SOUND_ROUTE(1, "mono", 0.20)
 	MCFG_SOUND_ROUTE(2, "mono", 0.20)
 	MCFG_SOUND_ROUTE(3, "mono", 1.0)
-
 MACHINE_CONFIG_END
 
 static void adpcm_int1( device_t *device )
@@ -600,7 +595,7 @@ static void adpcm_int1( device_t *device )
 		if (state->m_msm_toggle1 == 0)
 		{
 			state->m_msm_source|=1;
-			device_set_input_line_and_vector(device->machine().device("audiocpu"), 0, HOLD_LINE, 0x38);
+			device->machine().device("audiocpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0x38);
 		}
 	}
 }
@@ -616,7 +611,7 @@ static void adpcm_int2( device_t *device )
 		if (state->m_msm_toggle2 == 0)
 		{
 			state->m_msm_source|=2;
-			device_set_input_line_and_vector(device->machine().device("audiocpu"), 0, HOLD_LINE, 0x38);
+			device->machine().device("audiocpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0x38);
 		}
 	}
 }
@@ -635,11 +630,11 @@ static const msm5205_interface msm_interface2 =
 
 static MACHINE_CONFIG_START( funystrp, splash_state )
 	/* basic machine hardware */
-	MCFG_CPU_ADD("maincpu", M68000,24000000/2)			/* 12 MHz (24/2) */
+	MCFG_CPU_ADD("maincpu", M68000, XTAL_24MHz/2)		/* 12 MHz (24/2) */
 	MCFG_CPU_PROGRAM_MAP(funystrp_map)
 	MCFG_CPU_VBLANK_INT("screen", irq6_line_hold)
 
-	MCFG_CPU_ADD("audiocpu", Z80,30000000/8)
+	MCFG_CPU_ADD("audiocpu", Z80, XTAL_24MHz/4)		/* 6MHz (24/4) */
 	MCFG_CPU_PROGRAM_MAP(funystrp_sound_map)
 	MCFG_CPU_IO_MAP(funystrp_sound_io_map)
 
@@ -654,19 +649,18 @@ static MACHINE_CONFIG_START( funystrp, splash_state )
 	MCFG_GFXDECODE(splash)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(splash)
 
-	MCFG_MACHINE_RESET( funystrp )
+	MCFG_MACHINE_RESET_OVERRIDE(splash_state, funystrp )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("msm1", MSM5205, 400000)
-	MCFG_SOUND_CONFIG(msm_interface1)
+	MCFG_SOUND_ADD("msm1", MSM5205, XTAL_400kHz)
+	MCFG_SOUND_CONFIG(msm_interface1)		/* Sample rate = 400kHz/64 */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 
-	MCFG_SOUND_ADD("msm2", MSM5205, 400000)
-	MCFG_SOUND_CONFIG(msm_interface2)
+	MCFG_SOUND_ADD("msm2", MSM5205, XTAL_400kHz)
+	MCFG_SOUND_CONFIG(msm_interface2)		/* Sample rate = 400kHz/96 */
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 MACHINE_CONFIG_END
 
@@ -712,18 +706,23 @@ mapped, this data appears to be supplied by a protection device.
 The z80 rom (used for sound) is a hack of the main program from dynax's
 'Dragon Punch' game.
 
+Notes about roldfrog.009 & 9:
+  There is 1 bit difference between the two, so one is a bad dump.
+  roldfrom.009 0x3A10C == 2E
+             9 0x3A10C == 2F
+
 ***************************************************************************/
 
 ROM_START( roldfrog )
 	ROM_REGION( 0x408000, "maincpu", 0 )	/* 68000 code */
-	ROM_LOAD16_BYTE( "roldfrog.002",	0x000000, 0x080000, CRC(724cf022) SHA1(f8cddfb785ae7900cb95b854811ec3fb250fa7fe) )
-	ROM_LOAD16_BYTE( "roldfrog.006",	0x000001, 0x080000, CRC(e52a7ae2) SHA1(5c6ecbc2711376afdd7b8da11f84d36ffc464c8a) )
-	ROM_LOAD16_BYTE( "roldfrog.003",	0x100000, 0x080000, CRC(a1d49967) SHA1(54d73c1db1090b7d5109906525ce95ee8c00ad1f) )
-	ROM_LOAD16_BYTE( "roldfrog.007",	0x100001, 0x080000, CRC(e5805c4e) SHA1(5691807b711ea5137f91afd6033fcd734d2b5ad0) )
-	ROM_LOAD16_BYTE( "roldfrog.004",	0x200000, 0x080000, CRC(709281f5) SHA1(01453168df4dc84069346cecd1fba9adeae6fcb8) )
-	ROM_LOAD16_BYTE( "roldfrog.008",	0x200001, 0x080000, CRC(39adcba4) SHA1(6c8c945b6383fa2549e6654b427a7ce4c7ff46b5) )
-	ROM_LOAD16_BYTE( "roldfrog.005",	0x300000, 0x080000, CRC(b683160c) SHA1(526a772108a6bf71207a7b6de7cbd14f8e9496bc) )
-	ROM_LOAD16_BYTE( "roldfrog.009",	0x300001, 0x080000, CRC(e475fb76) SHA1(9ab56db86530647ea4a5d2109a02119710ff9b7e) )
+	ROM_LOAD16_BYTE( "roldfrog.002", 0x000000, 0x080000, CRC(724cf022) SHA1(f8cddfb785ae7900cb95b854811ec3fb250fa7fe) )
+	ROM_LOAD16_BYTE( "roldfrog.006", 0x000001, 0x080000, CRC(e52a7ae2) SHA1(5c6ecbc2711376afdd7b8da11f84d36ffc464c8a) )
+	ROM_LOAD16_BYTE( "roldfrog.003", 0x100000, 0x080000, CRC(a1d49967) SHA1(54d73c1db1090b7d5109906525ce95ee8c00ad1f) )
+	ROM_LOAD16_BYTE( "roldfrog.007", 0x100001, 0x080000, CRC(e5805c4e) SHA1(5691807b711ea5137f91afd6033fcd734d2b5ad0) )
+	ROM_LOAD16_BYTE( "roldfrog.004", 0x200000, 0x080000, CRC(709281f5) SHA1(01453168df4dc84069346cecd1fba9adeae6fcb8) )
+	ROM_LOAD16_BYTE( "roldfrog.008", 0x200001, 0x080000, CRC(39adcba4) SHA1(6c8c945b6383fa2549e6654b427a7ce4c7ff46b5) )
+	ROM_LOAD16_BYTE( "roldfrog.005", 0x300000, 0x080000, CRC(b683160c) SHA1(526a772108a6bf71207a7b6de7cbd14f8e9496bc) )
+	ROM_LOAD16_BYTE( "roldfrog.009", 0x300001, 0x080000, CRC(e475fb76) SHA1(9ab56db86530647ea4a5d2109a02119710ff9b7e) ) /* 1 bit difference with "9" which is the BAD_DUMP */
 	/* 68000 code - supplied by protection device? */
 	ROM_LOAD16_WORD_SWAP( "protdata.bin", 0x400000, 0x8000, CRC(ecaa8dd1) SHA1(b15f583d1a96b6b7ce50bcdca8cb28508f92b6a5) )
 
@@ -733,22 +732,22 @@ ROM_START( roldfrog )
 	ROM_CONTINUE(             0x38000, 0x08000 )
 
 	ROM_REGION( 0x80000, "gfx1", 0 )
-	ROM_LOAD( "roldfrog.010",       0x00000, 0x20000, CRC(51fd0e1a) SHA1(940c4231b21d16c62cad47c22fe735b18662af4a) )
-	ROM_LOAD( "roldfrog.011",       0x20000, 0x20000, CRC(610bf6f3) SHA1(04a7efac2e83c6747d4bd480b1f3118eb44a1f76) )
-	ROM_LOAD( "roldfrog.012",       0x40000, 0x20000, CRC(466ede67) SHA1(2d44dba1e76e5ceebf33fa6fc148ed665701a7ff) )
-	ROM_LOAD( "roldfrog.013",       0x60000, 0x20000, CRC(fad3e8be) SHA1(eccd7b1440d3a0d433c92ff33213326e0d57422a) )
+	ROM_LOAD( "roldfrog.010", 0x00000, 0x20000, CRC(51fd0e1a) SHA1(940c4231b21d16c62cad47c22fe735b18662af4a) )
+	ROM_LOAD( "roldfrog.011", 0x20000, 0x20000, CRC(610bf6f3) SHA1(04a7efac2e83c6747d4bd480b1f3118eb44a1f76) )
+	ROM_LOAD( "roldfrog.012", 0x40000, 0x20000, CRC(466ede67) SHA1(2d44dba1e76e5ceebf33fa6fc148ed665701a7ff) )
+	ROM_LOAD( "roldfrog.013", 0x60000, 0x20000, CRC(fad3e8be) SHA1(eccd7b1440d3a0d433c92ff33213326e0d57422a) )
 ROM_END
 
 ROM_START( roldfroga )
 	ROM_REGION( 0x408000, "maincpu", 0 )	/* 68000 code */
-	ROM_LOAD16_BYTE( "roldfrog.002",	0x000000, 0x080000, CRC(724cf022) SHA1(f8cddfb785ae7900cb95b854811ec3fb250fa7fe) )
-	ROM_LOAD16_BYTE( "roldfrog.006",	0x000001, 0x080000, CRC(e52a7ae2) SHA1(5c6ecbc2711376afdd7b8da11f84d36ffc464c8a) )
-	ROM_LOAD16_BYTE( "roldfrog.003",	0x100000, 0x080000, CRC(a1d49967) SHA1(54d73c1db1090b7d5109906525ce95ee8c00ad1f) )
-	ROM_LOAD16_BYTE( "roldfrog.007",	0x100001, 0x080000, CRC(e5805c4e) SHA1(5691807b711ea5137f91afd6033fcd734d2b5ad0) )
-	ROM_LOAD16_BYTE( "roldfrog.004",	0x200000, 0x080000, CRC(709281f5) SHA1(01453168df4dc84069346cecd1fba9adeae6fcb8) )
-	ROM_LOAD16_BYTE( "roldfrog.008",	0x200001, 0x080000, CRC(39adcba4) SHA1(6c8c945b6383fa2549e6654b427a7ce4c7ff46b5) )
-	ROM_LOAD16_BYTE( "roldfrog.005",	0x300000, 0x080000, CRC(b683160c) SHA1(526a772108a6bf71207a7b6de7cbd14f8e9496bc) )
-	ROM_LOAD16_BYTE( "9",	            0x300001, 0x080000, CRC(fd515b58) SHA1(7926ab9afbc260219351a02b56b82ede883f9aab) )	// differs with roldfrog.009 by 1 byte
+	ROM_LOAD16_BYTE( "roldfrog.002", 0x000000, 0x080000, CRC(724cf022) SHA1(f8cddfb785ae7900cb95b854811ec3fb250fa7fe) )
+	ROM_LOAD16_BYTE( "roldfrog.006", 0x000001, 0x080000, CRC(e52a7ae2) SHA1(5c6ecbc2711376afdd7b8da11f84d36ffc464c8a) )
+	ROM_LOAD16_BYTE( "roldfrog.003", 0x100000, 0x080000, CRC(a1d49967) SHA1(54d73c1db1090b7d5109906525ce95ee8c00ad1f) )
+	ROM_LOAD16_BYTE( "roldfrog.007", 0x100001, 0x080000, CRC(e5805c4e) SHA1(5691807b711ea5137f91afd6033fcd734d2b5ad0) )
+	ROM_LOAD16_BYTE( "roldfrog.004", 0x200000, 0x080000, CRC(709281f5) SHA1(01453168df4dc84069346cecd1fba9adeae6fcb8) )
+	ROM_LOAD16_BYTE( "roldfrog.008", 0x200001, 0x080000, CRC(39adcba4) SHA1(6c8c945b6383fa2549e6654b427a7ce4c7ff46b5) )
+	ROM_LOAD16_BYTE( "roldfrog.005", 0x300000, 0x080000, CRC(b683160c) SHA1(526a772108a6bf71207a7b6de7cbd14f8e9496bc) )
+	ROM_LOAD16_BYTE( "9",	         0x300001, 0x080000, CRC(fd515b58) SHA1(7926ab9afbc260219351a02b56b82ede883f9aab) ) /* 1 bit difference with "roldfrog.009" which is the BAD_DUMP */
 	/* 68000 code - supplied by protection device? */
 	ROM_LOAD16_WORD_SWAP( "protdata.bin", 0x400000, 0x8000, CRC(ecaa8dd1) SHA1(b15f583d1a96b6b7ce50bcdca8cb28508f92b6a5) )
 
@@ -758,10 +757,10 @@ ROM_START( roldfroga )
 	ROM_CONTINUE(             0x38000, 0x08000 )
 
 	ROM_REGION( 0x80000, "gfx1", 0 )
-	ROM_LOAD( "roldfrog.010",       0x00000, 0x20000, CRC(51fd0e1a) SHA1(940c4231b21d16c62cad47c22fe735b18662af4a) )
-	ROM_LOAD( "roldfrog.011",       0x20000, 0x20000, CRC(610bf6f3) SHA1(04a7efac2e83c6747d4bd480b1f3118eb44a1f76) )
-	ROM_LOAD( "roldfrog.012",       0x40000, 0x20000, CRC(466ede67) SHA1(2d44dba1e76e5ceebf33fa6fc148ed665701a7ff) )
-	ROM_LOAD( "roldfrog.013",       0x60000, 0x20000, CRC(fad3e8be) SHA1(eccd7b1440d3a0d433c92ff33213326e0d57422a) )
+	ROM_LOAD( "roldfrog.010", 0x00000, 0x20000, CRC(51fd0e1a) SHA1(940c4231b21d16c62cad47c22fe735b18662af4a) )
+	ROM_LOAD( "roldfrog.011", 0x20000, 0x20000, CRC(610bf6f3) SHA1(04a7efac2e83c6747d4bd480b1f3118eb44a1f76) )
+	ROM_LOAD( "roldfrog.012", 0x40000, 0x20000, CRC(466ede67) SHA1(2d44dba1e76e5ceebf33fa6fc148ed665701a7ff) )
+	ROM_LOAD( "roldfrog.013", 0x60000, 0x20000, CRC(fad3e8be) SHA1(eccd7b1440d3a0d433c92ff33213326e0d57422a) )
 ROM_END
 
 /*
@@ -876,7 +875,7 @@ REF. 922704
 |------------------------------------------------|
 |       384kHz                 |----------------||
 |       M5205        24MHz     |     68000      ||
-|       YM3812             PAL |                ||
+|YM3014 YM3812             PAL |                ||
 |       6116    PAL  30MHz     |----------------||
 |       1.5C                                     |
 |       Z80B                    2.4G       6.4I  |
@@ -902,6 +901,8 @@ Notes:
       6264        : 8k x8 SRAM
       KM681000    : 128k x8 SRAM
       VSync       : 58Hz
+
+* Found a Splash! PCB (possibly bootleg) with OSCs of 25.175MHz & 32MHz
 
 ***************************************************************************/
 

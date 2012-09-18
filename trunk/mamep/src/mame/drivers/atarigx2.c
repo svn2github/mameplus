@@ -36,24 +36,23 @@
 static void update_interrupts(running_machine &machine)
 {
 	atarigx2_state *state = machine.driver_data<atarigx2_state>();
-	cputag_set_input_line(machine, "maincpu", 4, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
-	cputag_set_input_line(machine, "maincpu", 5, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(4, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(5, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
-static MACHINE_START( atarigx2 )
+MACHINE_START_MEMBER(atarigx2_state,atarigx2)
 {
-	atarigen_init(machine);
+	atarigen_init(machine());
 }
 
 
-static MACHINE_RESET( atarigx2 )
+MACHINE_RESET_MEMBER(atarigx2_state,atarigx2)
 {
-	atarigx2_state *state = machine.driver_data<atarigx2_state>();
 
-	atarigen_eeprom_reset(state);
-	atarigen_interrupt_reset(state, update_interrupts);
-	atarigen_scanline_timer_reset(*machine.primary_screen, atarigx2_scanline_update, 8);
+	atarigen_eeprom_reset(this);
+	atarigen_interrupt_reset(this, update_interrupts);
+	atarigen_scanline_timer_reset(*machine().primary_screen, atarigx2_scanline_update, 8);
 	atarijsa_reset();
 }
 
@@ -123,7 +122,7 @@ WRITE32_MEMBER(atarigx2_state::latch_w)
 
 	/* lower byte */
 	if (ACCESSING_BITS_16_23)
-		cputag_set_input_line(machine(), "jsa", INPUT_LINE_RESET, (data & 0x100000) ? CLEAR_LINE : ASSERT_LINE);
+		machine().device("jsa")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x100000) ? CLEAR_LINE : ASSERT_LINE);
 }
 
 
@@ -146,9 +145,9 @@ WRITE32_MEMBER(atarigx2_state::mo_command_w)
 WRITE32_MEMBER(atarigx2_state::atarigx2_protection_w)
 {
 	{
-		int pc = cpu_get_previouspc(&space.device());
+		int pc = space.device().safe_pcbase();
 //      if (pc == 0x11cbe || pc == 0x11c30)
-//          logerror("%06X:Protection W@%04X = %04X  (result to %06X)\n", pc, offset, data, cpu_get_reg(&space.device(), M68K_A2));
+//          logerror("%06X:Protection W@%04X = %04X  (result to %06X)\n", pc, offset, data, space.device().state().state_int(M68K_A2));
 //      else
 		if (ACCESSING_BITS_16_31)
 			logerror("%06X:Protection W@%04X = %04X\n", pc, offset * 4, data >> 16);
@@ -1126,14 +1125,14 @@ READ32_MEMBER(atarigx2_state::atarigx2_protection_r)
 				result = machine().rand() << 16;
 			else
 				result = 0xffff << 16;
-			logerror("%06X:Unhandled protection R@%04X = %04X\n", cpu_get_previouspc(&space.device()), offset, result);
+			logerror("%06X:Unhandled protection R@%04X = %04X\n", space.device().safe_pcbase(), offset, result);
 		}
 	}
 
 	if (ACCESSING_BITS_16_31)
-		logerror("%06X:Protection R@%04X = %04X\n", cpu_get_previouspc(&space.device()), offset * 4, result >> 16);
+		logerror("%06X:Protection R@%04X = %04X\n", space.device().safe_pcbase(), offset * 4, result >> 16);
 	else
-		logerror("%06X:Protection R@%04X = %04X\n", cpu_get_previouspc(&space.device()), offset * 4 + 2, result);
+		logerror("%06X:Protection R@%04X = %04X\n", space.device().safe_pcbase(), offset * 4 + 2, result);
 	return result;
 }
 
@@ -1434,8 +1433,8 @@ static MACHINE_CONFIG_START( atarigx2, atarigx2_state )
 	MCFG_CPU_PROGRAM_MAP(main_map)
 	MCFG_CPU_VBLANK_INT("screen", atarigen_video_int_gen)
 
-	MCFG_MACHINE_START(atarigx2)
-	MCFG_MACHINE_RESET(atarigx2)
+	MCFG_MACHINE_START_OVERRIDE(atarigx2_state,atarigx2)
+	MCFG_MACHINE_RESET_OVERRIDE(atarigx2_state,atarigx2)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
 	/* video hardware */
@@ -1450,7 +1449,7 @@ static MACHINE_CONFIG_START( atarigx2, atarigx2_state )
 	MCFG_SCREEN_UPDATE_STATIC(atarigx2)
 	MCFG_SCREEN_VBLANK_STATIC(atarigx2)
 
-	MCFG_VIDEO_START(atarigx2)
+	MCFG_VIDEO_START_OVERRIDE(atarigx2_state,atarigx2)
 
 	/* sound hardware */
 	MCFG_FRAGMENT_ADD(jsa_iiis_stereo)

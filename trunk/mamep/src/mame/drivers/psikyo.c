@@ -127,7 +127,7 @@ READ32_MEMBER(psikyo_state::sngkace_input_r)
 		case 0x0:	return ioport("P1_P2")->read();
 		case 0x1:	return ioport("DSW")->read();
 		case 0x2:	return ioport("COIN")->read();
-		default:	logerror("PC %06X - Read input %02X !\n", cpu_get_pc(&space.device()), offset * 2);
+		default:	logerror("PC %06X - Read input %02X !\n", space.device().safe_pc(), offset * 2);
 				return 0;
 	}
 }
@@ -138,7 +138,7 @@ READ32_MEMBER(psikyo_state::gunbird_input_r)
 	{
 		case 0x0:	return ioport("P1_P2")->read();
 		case 0x1:	return ioport("DSW")->read();
-		default:	logerror("PC %06X - Read input %02X !\n", cpu_get_pc(&space.device()), offset * 2);
+		default:	logerror("PC %06X - Read input %02X !\n", space.device().safe_pc(), offset * 2);
 				return 0;
 	}
 }
@@ -148,7 +148,7 @@ static TIMER_CALLBACK( psikyo_soundlatch_callback )
 {
 	psikyo_state *state = machine.driver_data<psikyo_state>();
 	state->m_soundlatch = param;
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, ASSERT_LINE);
+	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 	state->m_z80_nmi = 1;
 }
 
@@ -247,12 +247,12 @@ WRITE32_MEMBER(psikyo_state::s1945_mcu_w)
 			m_s1945_mcu_latching |= 4;
 			break;
 		default:
-//          logerror("MCU: function %02x, direction %02x, latch1 %02x, latch2 %02x (%x)\n", data, m_s1945_mcu_direction, m_s1945_mcu_latch1, m_s1945_mcu_latch2, cpu_get_pc(&space.device()));
+//          logerror("MCU: function %02x, direction %02x, latch1 %02x, latch2 %02x (%x)\n", data, m_s1945_mcu_direction, m_s1945_mcu_latch1, m_s1945_mcu_latch2, space.device().safe_pc());
 			break;
 		}
 		break;
 	default:
-//      logerror("MCU.w %x, %02x (%x)\n", offset, data, cpu_get_pc(&space.device()));
+//      logerror("MCU.w %x, %02x (%x)\n", offset, data, space.device().safe_pc());
 		;
 	}
 }
@@ -291,7 +291,7 @@ READ32_MEMBER(psikyo_state::s1945_input_r)
 		case 0x0:	return ioport("P1_P2")->read();
 		case 0x1:	return (ioport("DSW")->read() & 0xffff000f) | s1945_mcu_r(space, offset - 1, mem_mask);
 		case 0x2:	return s1945_mcu_r(space, offset - 1, mem_mask);
-		default:	logerror("PC %06X - Read input %02X !\n", cpu_get_pc(&space.device()), offset * 2);
+		default:	logerror("PC %06X - Read input %02X !\n", space.device().safe_pc(), offset * 2);
 					return 0;
 	}
 }
@@ -382,7 +382,7 @@ ADDRESS_MAP_END
 static void sound_irq( device_t *device, int irq )
 {
 	psikyo_state *state = device->machine().driver_data<psikyo_state>();
-	device_set_input_line(state->m_audiocpu, 0, irq ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 READ8_MEMBER(psikyo_state::psikyo_soundlatch_r)
@@ -392,7 +392,7 @@ READ8_MEMBER(psikyo_state::psikyo_soundlatch_r)
 
 WRITE8_MEMBER(psikyo_state::psikyo_clear_nmi_w)
 {
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 	m_z80_nmi = 0;
 }
 
@@ -1013,26 +1013,24 @@ GFXDECODE_END
 
 ***************************************************************************/
 
-static MACHINE_START( psikyo )
+void psikyo_state::machine_start()
 {
-	psikyo_state *state = machine.driver_data<psikyo_state>();
 
-	state->m_audiocpu = machine.device("audiocpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_soundlatch));
-	state->save_item(NAME(state->m_z80_nmi));
-	state->save_item(NAME(state->m_mcu_status));
-	state->save_item(NAME(state->m_tilemap_0_bank));
-	state->save_item(NAME(state->m_tilemap_1_bank));
+	save_item(NAME(m_soundlatch));
+	save_item(NAME(m_z80_nmi));
+	save_item(NAME(m_mcu_status));
+	save_item(NAME(m_tilemap_0_bank));
+	save_item(NAME(m_tilemap_1_bank));
 }
 
-static MACHINE_RESET( psikyo )
+void psikyo_state::machine_reset()
 {
-	psikyo_state *state = machine.driver_data<psikyo_state>();
 
-	state->m_soundlatch = 0;
-	state->m_z80_nmi = 0;
-	state->m_mcu_status = 0;
+	m_soundlatch = 0;
+	m_z80_nmi = 0;
+	m_mcu_status = 0;
 }
 
 
@@ -1057,8 +1055,6 @@ static MACHINE_CONFIG_START( sngkace, psikyo_state )
 	MCFG_CPU_PROGRAM_MAP(sngkace_sound_map)
 	MCFG_CPU_IO_MAP(sngkace_sound_io_map)
 
-	MCFG_MACHINE_START(psikyo)
-	MCFG_MACHINE_RESET(psikyo)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1072,7 +1068,7 @@ static MACHINE_CONFIG_START( sngkace, psikyo_state )
 	MCFG_GFXDECODE(psikyo)
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_VIDEO_START(sngkace)
+	MCFG_VIDEO_START_OVERRIDE(psikyo_state,sngkace)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1108,8 +1104,6 @@ static MACHINE_CONFIG_START( gunbird, psikyo_state )
 	MCFG_CPU_PROGRAM_MAP(gunbird_sound_map)
 	MCFG_CPU_IO_MAP(gunbird_sound_io_map)
 
-	MCFG_MACHINE_START(psikyo)
-	MCFG_MACHINE_RESET(psikyo)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1123,7 +1117,7 @@ static MACHINE_CONFIG_START( gunbird, psikyo_state )
 	MCFG_GFXDECODE(psikyo)
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_VIDEO_START(psikyo)
+	MCFG_VIDEO_START_OVERRIDE(psikyo_state,psikyo)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -1143,8 +1137,6 @@ static MACHINE_CONFIG_START( s1945bl, psikyo_state ) /* Bootleg hardware based o
 	MCFG_CPU_PROGRAM_MAP(psikyo_bootleg_map)
 	MCFG_CPU_VBLANK_INT("screen", irq1_line_hold)
 
-	MCFG_MACHINE_START(psikyo)
-	MCFG_MACHINE_RESET(psikyo)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1158,7 +1150,7 @@ static MACHINE_CONFIG_START( s1945bl, psikyo_state ) /* Bootleg hardware based o
 	MCFG_GFXDECODE(psikyo)
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_VIDEO_START(psikyo)
+	MCFG_VIDEO_START_OVERRIDE(psikyo_state,psikyo)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1178,7 +1170,7 @@ MACHINE_CONFIG_END
 static void irqhandler( device_t *device, int linestate )
 {
 	psikyo_state *state = device->machine().driver_data<psikyo_state>();
-	device_set_input_line(state->m_audiocpu, 0, linestate ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(0, linestate ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ymf278b_interface ymf278b_config =
@@ -1199,8 +1191,6 @@ static MACHINE_CONFIG_START( s1945, psikyo_state )
 
 	/* MCU should go here */
 
-	MCFG_MACHINE_START(psikyo)
-	MCFG_MACHINE_RESET(psikyo)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1214,7 +1204,7 @@ static MACHINE_CONFIG_START( s1945, psikyo_state )
 	MCFG_GFXDECODE(psikyo)
 	MCFG_PALETTE_LENGTH(0x1000)
 
-	MCFG_VIDEO_START(psikyo)
+	MCFG_VIDEO_START_OVERRIDE(psikyo_state,psikyo)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

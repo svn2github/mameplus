@@ -78,17 +78,38 @@ public:
 	DECLARE_DRIVER_INIT(bigtwin);
 	DECLARE_DRIVER_INIT(powerbal);
 	DECLARE_DRIVER_INIT(magicstk);
+	TILE_GET_INFO_MEMBER(bigtwin_get_tx_tile_info);
+	TILE_GET_INFO_MEMBER(bigtwin_get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(wbeachvl_get_tx_tile_info);
+	TILE_GET_INFO_MEMBER(wbeachvl_get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(wbeachvl_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(hrdtimes_get_tx_tile_info);
+	TILE_GET_INFO_MEMBER(bigtwinb_get_tx_tile_info);
+	TILE_GET_INFO_MEMBER(hrdtimes_get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(hrdtimes_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(powerbal_get_bg_tile_info);
+	DECLARE_MACHINE_START(playmark);
+	DECLARE_MACHINE_RESET(playmark);
+	DECLARE_VIDEO_START(bigtwin);
+	DECLARE_VIDEO_START(bigtwinb);
+	DECLARE_VIDEO_START(wbeachvl);
+	DECLARE_VIDEO_START(excelsr);
+	DECLARE_VIDEO_START(hotmind);
+	DECLARE_VIDEO_START(hrdtimes);
+	DECLARE_MACHINE_START(powerbal);
+	DECLARE_MACHINE_RESET(powerbal);
+	DECLARE_VIDEO_START(powerbal);
 };
 
 /*----------- defined in video/playmark.c -----------*/
 
 
-VIDEO_START( bigtwin );
-VIDEO_START( bigtwinb );
-VIDEO_START( wbeachvl );
-VIDEO_START( excelsr );
-VIDEO_START( hotmind );
-VIDEO_START( hrdtimes );
+
+
+
+
+
+
 
 SCREEN_UPDATE_IND16( bigtwin );
 SCREEN_UPDATE_IND16( bigtwinb );

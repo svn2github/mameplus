@@ -71,7 +71,7 @@ public:
 	UINT8 m_hop_mux;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	DECLARE_WRITE8_MEMBER(m14_vram_w);
 	DECLARE_WRITE8_MEMBER(m14_cram_w);
 	DECLARE_READ8_MEMBER(m14_rng_r);
@@ -80,6 +80,11 @@ public:
 	DECLARE_WRITE8_MEMBER(hopper_w);
 	DECLARE_INPUT_CHANGED_MEMBER(left_coin_inserted);
 	DECLARE_INPUT_CHANGED_MEMBER(right_coin_inserted);
+	TILE_GET_INFO_MEMBER(m14_get_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -90,7 +95,7 @@ public:
  *************************************/
 
 /* guess, might not be 100% accurate. */
-static PALETTE_INIT( m14 )
+void m14_state::palette_init()
 {
 	int i;
 
@@ -103,31 +108,29 @@ static PALETTE_INIT( m14 )
 		else
 			color = (i & 0x10) ? RGB_WHITE : RGB_BLACK;
 
-		palette_set_color(machine, i, color);
+		palette_set_color(machine(), i, color);
 	}
 }
 
-static TILE_GET_INFO( m14_get_tile_info )
+TILE_GET_INFO_MEMBER(m14_state::m14_get_tile_info)
 {
-	m14_state *state = machine.driver_data<m14_state>();
 
-	int code = state->m_video_ram[tile_index];
-	int color = state->m_color_ram[tile_index] & 0x0f;
+	int code = m_video_ram[tile_index];
+	int color = m_color_ram[tile_index] & 0x0f;
 
 	/* colorram & 0xf0 used but unknown purpose*/
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code,
 			color,
 			0);
 }
 
-static VIDEO_START( m14 )
+void m14_state::video_start()
 {
-	m14_state *state = machine.driver_data<m14_state>();
 
-	state->m_m14_tilemap = tilemap_create(machine, m14_get_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_m14_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m14_state::m14_get_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 }
 
 static SCREEN_UPDATE_IND16( m14 )
@@ -230,14 +233,14 @@ INPUT_CHANGED_MEMBER(m14_state::left_coin_inserted)
 {
 	/* left coin insertion causes a rst6.5 (vector 0x34) */
 	if (newval)
-		device_set_input_line(m_maincpu, I8085_RST65_LINE, HOLD_LINE);
+		m_maincpu->set_input_line(I8085_RST65_LINE, HOLD_LINE);
 }
 
 INPUT_CHANGED_MEMBER(m14_state::right_coin_inserted)
 {
 	/* right coin insertion causes a rst5.5 (vector 0x2c) */
 	if (newval)
-		device_set_input_line(m_maincpu, I8085_RST55_LINE, HOLD_LINE);
+		m_maincpu->set_input_line(I8085_RST55_LINE, HOLD_LINE);
 }
 
 static INPUT_PORTS_START( m14 )
@@ -312,24 +315,22 @@ GFXDECODE_END
 
 static INTERRUPT_GEN( m14_irq )
 {
-	device_set_input_line(device, I8085_RST75_LINE, ASSERT_LINE);
-	device_set_input_line(device, I8085_RST75_LINE, CLEAR_LINE);
+	device->execute().set_input_line(I8085_RST75_LINE, ASSERT_LINE);
+	device->execute().set_input_line(I8085_RST75_LINE, CLEAR_LINE);
 }
 
-static MACHINE_START( m14 )
+void m14_state::machine_start()
 {
-	m14_state *state = machine.driver_data<m14_state>();
 
-	state->m_maincpu = machine.device("maincpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
 
-	state->save_item(NAME(state->m_hop_mux));
+	save_item(NAME(m_hop_mux));
 }
 
-static MACHINE_RESET( m14 )
+void m14_state::machine_reset()
 {
-	m14_state *state = machine.driver_data<m14_state>();
 
-	state->m_hop_mux = 0;
+	m_hop_mux = 0;
 }
 
 
@@ -341,8 +342,6 @@ static MACHINE_CONFIG_START( m14, m14_state )
 	MCFG_CPU_IO_MAP(m14_io_map)
 	MCFG_CPU_VBLANK_INT("screen",m14_irq)
 
-	MCFG_MACHINE_START(m14)
-	MCFG_MACHINE_RESET(m14)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -353,9 +352,7 @@ static MACHINE_CONFIG_START( m14, m14_state )
 	MCFG_SCREEN_UPDATE_STATIC(m14)
 	MCFG_GFXDECODE(m14)
 	MCFG_PALETTE_LENGTH(0x20)
-	MCFG_PALETTE_INIT(m14)
 
-	MCFG_VIDEO_START(m14)
 
 	/* sound hardware */
 //  MCFG_SPEAKER_STANDARD_MONO("mono")

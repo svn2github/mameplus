@@ -62,11 +62,11 @@ static TIMER_DEVICE_CALLBACK( pingpong_interrupt )
 
 	if (scanline == 240)
 	{
-		if (state->m_intenable & 0x04) device_set_input_line(state->m_maincpu, 0, HOLD_LINE);
+		if (state->m_intenable & 0x04) state->m_maincpu->set_input_line(0, HOLD_LINE);
 	}
 	else if ((scanline % 32) == 0)
 	{
-		if (state->m_intenable & 0x08) device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+		if (state->m_intenable & 0x08) state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -77,11 +77,11 @@ static TIMER_DEVICE_CALLBACK( merlinmm_interrupt )
 
 	if (scanline == 240)
 	{
-		if (state->m_intenable & 0x04) device_set_input_line(state->m_maincpu, 0, HOLD_LINE);
+		if (state->m_intenable & 0x04) state->m_maincpu->set_input_line(0, HOLD_LINE);
 	}
 	else if (scanline == 0)
 	{
-		if (state->m_intenable & 0x08) device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+		if (state->m_intenable & 0x08) state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 	}
 }
 
@@ -98,7 +98,7 @@ static ADDRESS_MAP_START( pingpong_map, AS_PROGRAM, 8, pingpong_state )
 	AM_RANGE(0xa980, 0xa980) AM_READ_PORT("DSW2")
 	AM_RANGE(0xa000, 0xa000) AM_WRITE(coin_w)	/* coin counters + irq enables */
 	AM_RANGE(0xa200, 0xa200) AM_WRITENOP		/* SN76496 data latch */
-	AM_RANGE(0xa400, 0xa400) AM_DEVWRITE_LEGACY("snsnd", sn76496_w)	/* trigger read */
+	AM_RANGE(0xa400, 0xa400) AM_DEVWRITE("snsnd", sn76496_new_device, write)	/* trigger read */
 	AM_RANGE(0xa600, 0xa600) AM_WRITE(watchdog_reset_w)
 ADDRESS_MAP_END
 
@@ -119,7 +119,7 @@ static ADDRESS_MAP_START( merlinmm_map, AS_PROGRAM, 8, pingpong_state )
 	AM_RANGE(0xa100, 0xa100) AM_READ_PORT("IN2")
 	AM_RANGE(0xa180, 0xa180) AM_READ_PORT("IN3")
 	AM_RANGE(0xa200, 0xa200) AM_WRITENOP		/* SN76496 data latch */
-	AM_RANGE(0xa400, 0xa400) AM_DEVWRITE_LEGACY("snsnd", sn76496_w)	/* trigger read */
+	AM_RANGE(0xa400, 0xa400) AM_DEVWRITE("snsnd", sn76496_new_device, write)	/* trigger read */
 	AM_RANGE(0xa600, 0xa600) AM_WRITE(watchdog_reset_w)
 ADDRESS_MAP_END
 
@@ -442,6 +442,22 @@ static GFXDECODE_START( pingpong )
 GFXDECODE_END
 
 
+/*************************************
+ *
+ *  Sound interface
+ *
+ *************************************/
+
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
 
 static MACHINE_CONFIG_START( pingpong, pingpong_state )
 
@@ -461,14 +477,13 @@ static MACHINE_CONFIG_START( pingpong, pingpong_state )
 	MCFG_GFXDECODE(pingpong)
 	MCFG_PALETTE_LENGTH(64*4+64*4)
 
-	MCFG_PALETTE_INIT(pingpong)
-	MCFG_VIDEO_START(pingpong)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("snsnd", SN76496, 18432000/8)
+	MCFG_SOUND_ADD("snsnd", SN76496_NEW, 18432000/8)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 MACHINE_CONFIG_END
 
 /* too fast! */

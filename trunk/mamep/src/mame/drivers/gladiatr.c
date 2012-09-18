@@ -251,14 +251,14 @@ static const struct TAITO8741interface gladiator_8741interface=
 	{gladiator_dsw1_r,gladiator_dsw2_r,gladiator_button3_r,gladiator_controls_r}	/* port handler */
 };
 
-static MACHINE_RESET( gladiator )
+MACHINE_RESET_MEMBER(gladiatr_state,gladiator)
 {
 	TAITO8741_start(&gladiator_8741interface);
 	/* 6809 bank memory set */
 	{
-		UINT8 *rom = machine.root_device().memregion("audiocpu")->base() + 0x10000;
-		machine.root_device().membank("bank2")->set_base(rom);
-		machine.device("audiocpu")->reset();
+		UINT8 *rom = machine().root_device().memregion("audiocpu")->base() + 0x10000;
+		machine().root_device().membank("bank2")->set_base(rom);
+		machine().device("audiocpu")->reset();
 	}
 }
 
@@ -273,7 +273,7 @@ WRITE8_MEMBER(gladiatr_state::gladiator_int_control_w)
 static void gladiator_ym_irq(device_t *device, int irq)
 {
 	/* NMI IRQ is not used by gladiator sound program */
-	cputag_set_input_line(device->machine(), "sub", INPUT_LINE_NMI, irq ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("sub")->execute().set_input_line(INPUT_LINE_NMI, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 /*Sound Functions*/
@@ -293,12 +293,12 @@ WRITE8_MEMBER(gladiatr_state::glad_adpcm_w)
 WRITE8_MEMBER(gladiatr_state::glad_cpu_sound_command_w)
 {
 	soundlatch_byte_w(space,0,data);
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, ASSERT_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 READ8_MEMBER(gladiatr_state::glad_cpu_sound_command_r)
 {
-	cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 	return soundlatch_byte_r(space,0);
 }
 
@@ -312,7 +312,7 @@ WRITE8_MEMBER(gladiatr_state::gladiatr_flipscreen_w)
 /* !!!!! patch to IRQ timming for 2nd CPU !!!!! */
 WRITE8_MEMBER(gladiatr_state::gladiatr_irq_patch_w)
 {
-	cputag_set_input_line(machine(), "sub", 0, HOLD_LINE);
+	machine().device("sub")->execute().set_input_line(0, HOLD_LINE);
 }
 #endif
 
@@ -364,11 +364,10 @@ READ8_MEMBER(gladiatr_state::qx1_r)
 		return m_flag1;
 }
 
-static MACHINE_RESET( ppking )
+MACHINE_RESET_MEMBER(gladiatr_state,ppking)
 {
-	gladiatr_state *state = machine.driver_data<gladiatr_state>();
-	state->m_data1 = state->m_data2 = 0;
-	state->m_flag1 = state->m_flag2 = 1;
+	m_data1 = m_data2 = 0;
+	m_flag1 = m_flag2 = 1;
 }
 
 static ADDRESS_MAP_START( ppking_cpu1_map, AS_PROGRAM, 8, gladiatr_state )
@@ -679,7 +678,7 @@ static MACHINE_CONFIG_START( ppking, gladiatr_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_RESET(ppking)
+	MCFG_MACHINE_RESET_OVERRIDE(gladiatr_state,ppking)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
@@ -693,7 +692,7 @@ static MACHINE_CONFIG_START( ppking, gladiatr_state )
 	MCFG_GFXDECODE(ppking)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(ppking)
+	MCFG_VIDEO_START_OVERRIDE(gladiatr_state,ppking)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -727,7 +726,7 @@ static MACHINE_CONFIG_START( gladiatr, gladiatr_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(600))
 
-	MCFG_MACHINE_RESET(gladiator)
+	MCFG_MACHINE_RESET_OVERRIDE(gladiatr_state,gladiator)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
@@ -741,7 +740,7 @@ static MACHINE_CONFIG_START( gladiatr, gladiatr_state )
 	MCFG_GFXDECODE(gladiatr)
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(gladiatr)
+	MCFG_VIDEO_START_OVERRIDE(gladiatr_state,gladiatr)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -995,7 +994,7 @@ DRIVER_INIT_MEMBER(gladiatr_state,gladiatr)
 
 READ8_MEMBER(gladiatr_state::f6a3_r)
 {
-	if(cpu_get_previouspc(&space.device())==0x8e)
+	if(space.device().safe_pcbase()==0x8e)
 		m_nvram[0x6a3]=1;
 
 	return m_nvram[0x6a3];

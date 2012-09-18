@@ -46,6 +46,11 @@ public:
 	DECLARE_WRITE8_MEMBER(pitnrun_h_heed_w);
 	DECLARE_WRITE8_MEMBER(pitnrun_v_heed_w);
 	DECLARE_WRITE8_MEMBER(pitnrun_color_select_w);
+	TILE_GET_INFO_MEMBER(get_tile_info1);
+	TILE_GET_INFO_MEMBER(get_tile_info2);
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -53,13 +58,13 @@ public:
 
 
 
-MACHINE_RESET( pitnrun );
+
 
 
 
 /*----------- defined in video/pitnrun.c -----------*/
 
 
-PALETTE_INIT(pitnrun);
-VIDEO_START(pitnrun);
+
+
 SCREEN_UPDATE_IND16(pitnrun);

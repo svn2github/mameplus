@@ -195,6 +195,7 @@ public:
 	DECLARE_DRIVER_INIT(vbowl);
 	DECLARE_DRIVER_INIT(vbowlj);
 	DECLARE_DRIVER_INIT(ryukobou);
+	virtual void video_start();
 };
 
 
@@ -223,24 +224,23 @@ WRITE16_MEMBER(igs011_state::igs011_priority_w)
 {
 	COMBINE_DATA(&m_priority);
 
-//  logerror("%06x: priority = %02x\n", cpu_get_pc(&space.device()), m_priority);
+//  logerror("%06x: priority = %02x\n", space.device().safe_pc(), m_priority);
 
 	if (data & ~0x7)
-		logerror("%06x: warning, unknown bits written to priority = %02x\n", cpu_get_pc(&space.device()), m_priority);
+		logerror("%06x: warning, unknown bits written to priority = %02x\n", space.device().safe_pc(), m_priority);
 }
 
 
-static VIDEO_START( igs011 )
+void igs011_state::video_start()
 {
-	igs011_state *state = machine.driver_data<igs011_state>();
 	int i;
 
 	for (i = 0; i < 8; i++)
 	{
-		state->m_layer[i] = auto_alloc_array(machine, UINT8, 512 * 256);
+		m_layer[i] = auto_alloc_array(machine(), UINT8, 512 * 256);
 	}
 
-	state->m_lhb2_pen_hi = 0;
+	m_lhb2_pen_hi = 0;
 }
 
 static SCREEN_UPDATE_IND16( igs011 )
@@ -445,7 +445,7 @@ WRITE16_MEMBER(igs011_state::igs011_blit_flags_w)
 	COMBINE_DATA(&blitter.flags);
 
 #if LOG_BLITTER
-	logerror("%06x: blit x %03x, y %03x, w %03x, h %03x, gfx %03x%04x, depth %02x, pen %02x, flags %03x\n", cpu_get_pc(&space.device()),
+	logerror("%06x: blit x %03x, y %03x, w %03x, h %03x, gfx %03x%04x, depth %02x, pen %02x, flags %03x\n", space.device().safe_pc(),
 					blitter.x,blitter.y,blitter.w,blitter.h,blitter.gfx_hi,blitter.gfx_lo,blitter.depth,blitter.pen,blitter.flags);
 #endif
 
@@ -1374,7 +1374,7 @@ WRITE16_MEMBER(igs011_state::drgnwrld_igs003_w)
 				coin_counter_w(machine(), 0,data & 2);
 
 			if (data & ~0x2)
-				logerror("%06x: warning, unknown bits written in coin counter = %02x\n", cpu_get_pc(&space.device()), data);
+				logerror("%06x: warning, unknown bits written in coin counter = %02x\n", space.device().safe_pc(), data);
 
 			break;
 
@@ -1387,7 +1387,7 @@ WRITE16_MEMBER(igs011_state::drgnwrld_igs003_w)
 
 		default:
 //          popmessage("igs003 %x <- %04x",m_igs003_reg[0],data);
-			logerror("%06x: warning, writing to igs003_reg %02x = %02x\n", cpu_get_pc(&space.device()), m_igs003_reg[0], data);
+			logerror("%06x: warning, writing to igs003_reg %02x = %02x\n", space.device().safe_pc(), m_igs003_reg[0], data);
 	}
 }
 READ16_MEMBER(igs011_state::drgnwrld_igs003_r)
@@ -1421,7 +1421,7 @@ READ16_MEMBER(igs011_state::drgnwrld_igs003_r)
 		case 0x34:	return 0x32;
 
 		default:
-			logerror("%06x: warning, reading with igs003_reg = %02x\n", cpu_get_pc(&space.device()), m_igs003_reg[0]);
+			logerror("%06x: warning, reading with igs003_reg = %02x\n", space.device().safe_pc(), m_igs003_reg[0]);
 	}
 
 	return 0;
@@ -1441,7 +1441,7 @@ WRITE16_MEMBER(igs011_state::lhb_inputs_w)
 	}
 
 	if ( m_igs_input_sel & (~0xff) )
-		logerror("%06x: warning, unknown bits written in igs_input_sel = %02x\n", cpu_get_pc(&space.device()), m_igs_input_sel);
+		logerror("%06x: warning, unknown bits written in igs_input_sel = %02x\n", space.device().safe_pc(), m_igs_input_sel);
 
 //  popmessage("sel2 %02x",m_igs_input_sel&~0x1f);
 }
@@ -1458,7 +1458,7 @@ READ16_MEMBER(igs011_state::lhb_inputs_r)
 			if (~m_igs_input_sel & 0x08)	return ioport("KEY3")->read();
 			if (~m_igs_input_sel & 0x10)	return ioport("KEY4")->read();
 
-			logerror("%06x: warning, reading with igs_input_sel = %02x\n", cpu_get_pc(&space.device()), m_igs_input_sel);
+			logerror("%06x: warning, reading with igs_input_sel = %02x\n", space.device().safe_pc(), m_igs_input_sel);
 			break;
 	}
 	return 0;
@@ -1486,7 +1486,7 @@ WRITE16_MEMBER(igs011_state::lhb2_igs003_w)
 			}
 
 			if ( m_igs_input_sel & ~0x7f )
-				logerror("%06x: warning, unknown bits written in igs_input_sel = %02x\n", cpu_get_pc(&space.device()), m_igs_input_sel);
+				logerror("%06x: warning, unknown bits written in igs_input_sel = %02x\n", space.device().safe_pc(), m_igs_input_sel);
 
 //          popmessage("sel2 %02x",m_igs_input_sel&~0x1f);
 			break;
@@ -1501,13 +1501,13 @@ WRITE16_MEMBER(igs011_state::lhb2_igs003_w)
 			}
 
 			if ( m_lhb2_pen_hi & ~0xf )
-				logerror("%06x: warning, unknown bits written in lhb2_pen_hi = %02x\n", cpu_get_pc(&space.device()), m_lhb2_pen_hi);
+				logerror("%06x: warning, unknown bits written in lhb2_pen_hi = %02x\n", space.device().safe_pc(), m_lhb2_pen_hi);
 
 //          popmessage("oki %02x",m_lhb2_pen_hi & 0x08);
 			break;
 
 		default:
-			logerror("%06x: warning, writing to igs003_reg %02x = %02x\n", cpu_get_pc(&space.device()), m_igs003_reg[0], data);
+			logerror("%06x: warning, writing to igs003_reg %02x = %02x\n", space.device().safe_pc(), m_igs003_reg[0], data);
 	}
 }
 READ16_MEMBER(igs011_state::lhb2_igs003_r)
@@ -1522,7 +1522,7 @@ READ16_MEMBER(igs011_state::lhb2_igs003_r)
 			if (~m_igs_input_sel & 0x10)	return ioport("KEY4")->read();
 			/* fall through */
 		default:
-			logerror("%06x: warning, reading with igs003_reg = %02x\n", cpu_get_pc(&space.device()), m_igs003_reg[0]);
+			logerror("%06x: warning, reading with igs003_reg = %02x\n", space.device().safe_pc(), m_igs003_reg[0]);
 			break;
 
 //      case 0x03:
@@ -1581,13 +1581,13 @@ WRITE16_MEMBER(igs011_state::wlcc_igs003_w)
 			}
 
 			if (data & ~0x33)
-				logerror("%06x: warning, unknown bits written in coin counter = %02x\n", cpu_get_pc(&space.device()), data);
+				logerror("%06x: warning, unknown bits written in coin counter = %02x\n", space.device().safe_pc(), data);
 
 //          popmessage("coin %02x",data);
 			break;
 
 		default:
-			logerror("%06x: warning, writing to igs003_reg %02x = %02x\n", cpu_get_pc(&space.device()), m_igs003_reg[0], data);
+			logerror("%06x: warning, writing to igs003_reg %02x = %02x\n", space.device().safe_pc(), m_igs003_reg[0], data);
 	}
 }
 READ16_MEMBER(igs011_state::wlcc_igs003_r)
@@ -1619,7 +1619,7 @@ READ16_MEMBER(igs011_state::wlcc_igs003_r)
 		case 0x34:	return 0x32;
 
 		default:
-			logerror("%06x: warning, reading with igs003_reg = %02x\n", cpu_get_pc(&space.device()), m_igs003_reg[0]);
+			logerror("%06x: warning, reading with igs003_reg = %02x\n", space.device().safe_pc(), m_igs003_reg[0]);
 	}
 
 	return 0;
@@ -1647,13 +1647,13 @@ WRITE16_MEMBER(igs011_state::xymg_igs003_w)
 			}
 
 			if ( m_igs_input_sel & 0x40 )
-				logerror("%06x: warning, unknown bits written in igs_input_sel = %02x\n", cpu_get_pc(&space.device()), m_igs_input_sel);
+				logerror("%06x: warning, unknown bits written in igs_input_sel = %02x\n", space.device().safe_pc(), m_igs_input_sel);
 
 //          popmessage("sel2 %02x",m_igs_input_sel&~0x1f);
 			break;
 
 		default:
-			logerror("%06x: warning, writing to igs003_reg %02x = %02x\n", cpu_get_pc(&space.device()), m_igs003_reg[0], data);
+			logerror("%06x: warning, writing to igs003_reg %02x = %02x\n", space.device().safe_pc(), m_igs003_reg[0], data);
 	}
 }
 READ16_MEMBER(igs011_state::xymg_igs003_r)
@@ -1693,7 +1693,7 @@ READ16_MEMBER(igs011_state::xymg_igs003_r)
 		case 0x34:	return 0x32;
 
 		default:
-			logerror("%06x: warning, reading with igs003_reg = %02x\n", cpu_get_pc(&space.device()), m_igs003_reg[0]);
+			logerror("%06x: warning, reading with igs003_reg = %02x\n", space.device().safe_pc(), m_igs003_reg[0]);
 			break;
 	}
 
@@ -1719,13 +1719,13 @@ WRITE16_MEMBER(igs011_state::vbowl_igs003_w)
 			}
 
 			if (data & ~0x3)
-				logerror("%06x: warning, unknown bits written in coin counter = %02x\n", cpu_get_pc(&space.device()), data);
+				logerror("%06x: warning, unknown bits written in coin counter = %02x\n", space.device().safe_pc(), data);
 
 			break;
 
 		default:
 //          popmessage("igs003 %x <- %04x",m_igs003_reg[0],data);
-			logerror("%06x: warning, writing to igs003_reg %02x = %02x\n", cpu_get_pc(&space.device()), m_igs003_reg[0], data);
+			logerror("%06x: warning, writing to igs003_reg %02x = %02x\n", space.device().safe_pc(), m_igs003_reg[0], data);
 	}
 }
 READ16_MEMBER(igs011_state::vbowl_igs003_r)
@@ -1761,7 +1761,7 @@ READ16_MEMBER(igs011_state::vbowl_igs003_r)
 		case 0x34:	return 0x32;
 
 		default:
-			logerror("%06x: warning, reading with igs003_reg = %02x\n", cpu_get_pc(&space.device()), m_igs003_reg[0]);
+			logerror("%06x: warning, reading with igs003_reg = %02x\n", space.device().safe_pc(), m_igs003_reg[0]);
 	}
 
 	return 0;
@@ -2507,7 +2507,7 @@ WRITE16_MEMBER(igs011_state::vbowl_pen_hi_w)
 	}
 
 	if (data & ~0x7)
-		logerror("%06x: warning, unknown bits written to pen_hi = %04x\n", cpu_get_pc(&space.device()), m_priority);
+		logerror("%06x: warning, unknown bits written to pen_hi = %04x\n", space.device().safe_pc(), m_priority);
 }
 
 WRITE16_MEMBER(igs011_state::vbowl_link_0_w){ }
@@ -3814,7 +3814,6 @@ static MACHINE_CONFIG_START( igs011_base, igs011_state )
 	MCFG_PALETTE_LENGTH(0x800)
 //  MCFG_GFXDECODE(igs011)
 
-	MCFG_VIDEO_START( igs011 )
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -3827,7 +3826,7 @@ static TIMER_DEVICE_CALLBACK ( lev5_timer_irq_cb )
 {
 	igs011_state *state = timer.machine().driver_data<igs011_state>();
 
-	device_set_input_line(state->m_maincpu, 5, HOLD_LINE);
+	state->m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_DERIVED( drgnwrld, igs011_base )
@@ -3853,7 +3852,7 @@ static INTERRUPT_GEN( lhb_vblank_irq )
 	if (!state->m_lhb_irq_enable)
 		return;
 
-	device_set_input_line(state->m_maincpu, 6, HOLD_LINE);
+	state->m_maincpu->set_input_line(6, HOLD_LINE);
 }
 
 static TIMER_DEVICE_CALLBACK ( lhb_timer_irq_cb )
@@ -3862,7 +3861,7 @@ static TIMER_DEVICE_CALLBACK ( lhb_timer_irq_cb )
 	if (!state->m_lhb_irq_enable)
 		return;
 
-	device_set_input_line(state->m_maincpu, 5, HOLD_LINE);
+	state->m_maincpu->set_input_line(5, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_DERIVED( lhb, igs011_base )
@@ -3879,7 +3878,7 @@ static TIMER_DEVICE_CALLBACK ( lev3_timer_irq_cb )
 {
 	igs011_state *state = timer.machine().driver_data<igs011_state>();
 
-	device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
+	state->m_maincpu->set_input_line(3, HOLD_LINE);
 }
 
 
@@ -3933,7 +3932,7 @@ MACHINE_CONFIG_END
 
 static void sound_irq(device_t *device, int state)
 {
-//   cputag_set_input_line(machine, "maincpu", 3, state);
+//   machine.device("maincpu")->execute().set_input_line(3, state);
 }
 
 static MACHINE_CONFIG_DERIVED( vbowl, igs011_base )

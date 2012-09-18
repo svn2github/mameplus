@@ -48,16 +48,16 @@ READ8_MEMBER(tnzs_state::mcu_tnzs_r)
 	UINT8 data;
 
 	data = upi41_master_r(m_mcu, offset & 1);
-	device_yield(&space.device());
+	space.device().execute().yield();
 
-//  logerror("PC %04x: read %02x from mcu $c00%01x\n", cpu_get_previouspc(&space.device()), data, offset);
+//  logerror("PC %04x: read %02x from mcu $c00%01x\n", space.device().safe_pcbase(), data, offset);
 
 	return data;
 }
 
 WRITE8_MEMBER(tnzs_state::mcu_tnzs_w)
 {
-//  logerror("PC %04x: write %02x to mcu $c00%01x\n", cpu_get_previouspc(&space.device()), data, offset);
+//  logerror("PC %04x: write %02x to mcu $c00%01x\n", space.device().safe_pcbase(), data, offset);
 
 	upi41_master_w(m_mcu, offset & 1, data);
 }
@@ -75,7 +75,7 @@ READ8_MEMBER(tnzs_state::tnzs_port1_r)
 		default:	data = 0xff; break;
 	}
 
-//  logerror("I8742:%04x  Read %02x from port 1\n", cpu_get_previouspc(&space.device()), data);
+//  logerror("I8742:%04x  Read %02x from port 1\n", space.device().safe_pcbase(), data);
 
 	return data;
 }
@@ -84,14 +84,14 @@ READ8_MEMBER(tnzs_state::tnzs_port2_r)
 {
 	int data = ioport("IN2")->read();
 
-//  logerror("I8742:%04x  Read %02x from port 2\n", cpu_get_previouspc(&space.device()), data);
+//  logerror("I8742:%04x  Read %02x from port 2\n", space.device().safe_pcbase(), data);
 
 	return data;
 }
 
 WRITE8_MEMBER(tnzs_state::tnzs_port2_w)
 {
-//  logerror("I8742:%04x  Write %02x to port 2\n", cpu_get_previouspc(&space.device()), data);
+//  logerror("I8742:%04x  Write %02x to port 2\n", space.device().safe_pcbase(), data);
 
 	coin_lockout_w(machine(), 0, (data & 0x40));
 	coin_lockout_w(machine(), 1, (data & 0x80));
@@ -107,7 +107,7 @@ READ8_MEMBER(tnzs_state::arknoid2_sh_f000_r)
 {
 	int val;
 
-//  logerror("PC %04x: read input %04x\n", cpu_get_pc(&space.device()), 0xf000 + offset);
+//  logerror("PC %04x: read input %04x\n", space.device().safe_pc(), 0xf000 + offset);
 
 	val = ioport((offset / 2) ? "AN2" : "AN1")->read_safe(0);
 	if (offset & 1)
@@ -212,7 +212,7 @@ READ8_MEMBER(tnzs_state::mcu_arknoid2_r)
 {
 	static const char mcu_startup[] = "\x55\xaa\x5a";
 
-//  logerror("PC %04x: read mcu %04x\n", cpu_get_pc(&space.device()), 0xc000 + offset);
+//  logerror("PC %04x: read mcu %04x\n", space.device().safe_pc(), 0xc000 + offset);
 
 	if (offset == 0)
 	{
@@ -273,7 +273,7 @@ WRITE8_MEMBER(tnzs_state::mcu_arknoid2_w)
 {
 	if (offset == 0)
 	{
-//      logerror("PC %04x: write %02x to mcu %04x\n", cpu_get_pc(&space.device()), data, 0xc000 + offset);
+//      logerror("PC %04x: write %02x to mcu %04x\n", space.device().safe_pc(), data, 0xc000 + offset);
 		if (m_mcu_command == 0x41)
 		{
 			m_mcu_credits = (m_mcu_credits + data) & 0xff;
@@ -290,7 +290,7 @@ WRITE8_MEMBER(tnzs_state::mcu_arknoid2_w)
         0x80: release coin lockout (issued only in test mode)
         during initialization, a sequence of 4 bytes sets coin/credit settings
         */
-//      logerror("PC %04x: write %02x to mcu %04x\n", cpu_get_pc(&space.device()), data, 0xc000 + offset);
+//      logerror("PC %04x: write %02x to mcu %04x\n", space.device().safe_pc(), data, 0xc000 + offset);
 
 		if (m_mcu_initializing)
 		{
@@ -318,7 +318,7 @@ READ8_MEMBER(tnzs_state::mcu_extrmatn_r)
 {
 	static const char mcu_startup[] = "\x5a\xa5\x55";
 
-//  logerror("PC %04x: read mcu %04x\n", cpu_get_pc(&space.device()), 0xc000 + offset);
+//  logerror("PC %04x: read mcu %04x\n", space.device().safe_pc(), 0xc000 + offset);
 
 	if (offset == 0)
 	{
@@ -402,7 +402,7 @@ WRITE8_MEMBER(tnzs_state::mcu_extrmatn_w)
 {
 	if (offset == 0)
 	{
-//      logerror("PC %04x: write %02x to mcu %04x\n", cpu_get_pc(&space.device()), data, 0xc000 + offset);
+//      logerror("PC %04x: write %02x to mcu %04x\n", space.device().safe_pc(), data, 0xc000 + offset);
 		if (m_mcu_command == 0x41)
 		{
 			m_mcu_credits = (m_mcu_credits + data) & 0xff;
@@ -424,7 +424,7 @@ WRITE8_MEMBER(tnzs_state::mcu_extrmatn_w)
         during initialization, a sequence of 4 bytes sets coin/credit settings
         */
 
-//      logerror("PC %04x: write %02x to mcu %04x\n", cpu_get_pc(&space.device()), data, 0xc000 + offset);
+//      logerror("PC %04x: write %02x to mcu %04x\n", space.device().safe_pc(), data, 0xc000 + offset);
 
 		if (m_mcu_initializing)
 		{
@@ -636,38 +636,36 @@ INTERRUPT_GEN( arknoid2_interrupt )
 			break;
 	}
 
-	device_set_input_line(device, 0, HOLD_LINE);
+	device->execute().set_input_line(0, HOLD_LINE);
 }
 
-MACHINE_RESET( tnzs )
+MACHINE_RESET_MEMBER(tnzs_state,tnzs)
 {
-	tnzs_state *state = machine.driver_data<tnzs_state>();
 	/* initialize the mcu simulation */
-	switch (state->m_mcu_type)
+	switch (m_mcu_type)
 	{
 		case MCU_ARKANOID:
 		case MCU_EXTRMATN:
 		case MCU_DRTOPPEL:
 		case MCU_PLUMPOP:
-			mcu_reset(machine);
+			mcu_reset(machine());
 			break;
 		default:
 			break;
 	}
 
-	state->m_screenflip = 0;
-	state->m_kageki_csport_sel = 0;
-	state->m_input_select = 0;
-	state->m_mcu_readcredits = 0;	// this might belong to mcu_reset
-	state->m_insertcoin = 0;		// this might belong to mcu_reset
+	m_screenflip = 0;
+	m_kageki_csport_sel = 0;
+	m_input_select = 0;
+	m_mcu_readcredits = 0;	// this might belong to mcu_reset
+	m_insertcoin = 0;		// this might belong to mcu_reset
 }
 
-MACHINE_RESET( jpopnics )
+MACHINE_RESET_MEMBER(tnzs_state,jpopnics)
 {
-	tnzs_state *state = machine.driver_data<tnzs_state>();
 
-	state->m_screenflip = 0;
-	state->m_mcu_type = -1;
+	m_screenflip = 0;
+	m_mcu_type = -1;
 }
 
 static void tnzs_postload(running_machine &machine)
@@ -677,51 +675,49 @@ static void tnzs_postload(running_machine &machine)
 }
 
 
-MACHINE_START( jpopnics )
+MACHINE_START_MEMBER(tnzs_state,jpopnics)
 {
-	tnzs_state *state = machine.driver_data<tnzs_state>();
-	UINT8 *SUB = state->memregion("sub")->base();
-	state->m_ROM = machine.root_device().memregion("maincpu")->base();
-	state->m_bankedram = auto_alloc_array(machine, UINT8, 0x8000); // 2 banks of 0x4000
+	UINT8 *SUB = memregion("sub")->base();
+	m_ROM = machine().root_device().memregion("maincpu")->base();
+	m_bankedram = auto_alloc_array(machine(), UINT8, 0x8000); // 2 banks of 0x4000
 
-	state->membank("subbank")->configure_entries(0, 4, &SUB[0x08000], 0x2000);
-	state->membank("subbank")->set_entry(state->m_bank2);
+	membank("subbank")->configure_entries(0, 4, &SUB[0x08000], 0x2000);
+	membank("subbank")->set_entry(m_bank2);
 
-	state->m_subcpu = machine.device("sub");
-	state->m_mcu = NULL;
+	m_subcpu = machine().device<cpu_device>("sub");
+	m_mcu = NULL;
 
-	state->m_bank1 = 2;
-	state->m_bank2 = 0;
+	m_bank1 = 2;
+	m_bank2 = 0;
 
-	state->save_pointer(NAME(state->m_bankedram), 0x8000);
-	state->save_item(NAME(state->m_screenflip));
-	state->save_item(NAME(state->m_bank1));
-	state->save_item(NAME(state->m_bank2));
+	save_pointer(NAME(m_bankedram), 0x8000);
+	save_item(NAME(m_screenflip));
+	save_item(NAME(m_bank1));
+	save_item(NAME(m_bank2));
 
-	machine.save().register_postload(save_prepost_delegate(FUNC(tnzs_postload), &machine));
+	machine().save().register_postload(save_prepost_delegate(FUNC(tnzs_postload), &machine()));
 }
 
-MACHINE_START( tnzs )
+MACHINE_START_MEMBER(tnzs_state,tnzs)
 {
-	tnzs_state *state = machine.driver_data<tnzs_state>();
 
-	MACHINE_START_CALL( jpopnics );
+	MACHINE_START_CALL_MEMBER( jpopnics );
 
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_mcu = machine.device("mcu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_mcu = machine().device("mcu");
 
-	state->save_item(NAME(state->m_kageki_csport_sel));
-	state->save_item(NAME(state->m_input_select));
-	state->save_item(NAME(state->m_mcu_readcredits));
-	state->save_item(NAME(state->m_insertcoin));
-	state->save_item(NAME(state->m_mcu_initializing));
-	state->save_item(NAME(state->m_mcu_coinage_init));
-	state->save_item(NAME(state->m_mcu_coinage));
-	state->save_item(NAME(state->m_mcu_coins_a));
-	state->save_item(NAME(state->m_mcu_coins_b));
-	state->save_item(NAME(state->m_mcu_credits));
-	state->save_item(NAME(state->m_mcu_reportcoin));
-	state->save_item(NAME(state->m_mcu_command));
+	save_item(NAME(m_kageki_csport_sel));
+	save_item(NAME(m_input_select));
+	save_item(NAME(m_mcu_readcredits));
+	save_item(NAME(m_insertcoin));
+	save_item(NAME(m_mcu_initializing));
+	save_item(NAME(m_mcu_coinage_init));
+	save_item(NAME(m_mcu_coinage));
+	save_item(NAME(m_mcu_coins_a));
+	save_item(NAME(m_mcu_coins_b));
+	save_item(NAME(m_mcu_credits));
+	save_item(NAME(m_mcu_reportcoin));
+	save_item(NAME(m_mcu_command));
 
 }
 
@@ -729,13 +725,13 @@ MACHINE_START( tnzs )
 WRITE8_MEMBER(tnzs_state::tnzs_ramrom_bankswitch_w)
 {
 
-//  logerror("PC %04x: writing %02x to bankswitch\n", cpu_get_pc(&space.device()),data);
+//  logerror("PC %04x: writing %02x to bankswitch\n", space.device().safe_pc(),data);
 
 	/* bit 4 resets the second CPU */
 	if (data & 0x10)
-		device_set_input_line(m_subcpu, INPUT_LINE_RESET, CLEAR_LINE);
+		m_subcpu->set_input_line(INPUT_LINE_RESET, CLEAR_LINE);
 	else
-		device_set_input_line(m_subcpu, INPUT_LINE_RESET, ASSERT_LINE);
+		m_subcpu->set_input_line(INPUT_LINE_RESET, ASSERT_LINE);
 
 	/* bits 0-2 select RAM/ROM bank */
 	m_bank1 = data & 0x07;
@@ -743,7 +739,7 @@ WRITE8_MEMBER(tnzs_state::tnzs_ramrom_bankswitch_w)
 
 WRITE8_MEMBER(tnzs_state::tnzs_bankswitch1_w)
 {
-//  logerror("PC %04x: writing %02x to bankswitch 1\n", cpu_get_pc(&space.device()),data);
+//  logerror("PC %04x: writing %02x to bankswitch 1\n", space.device().safe_pc(),data);
 
 	switch (m_mcu_type)
 	{
@@ -753,7 +749,7 @@ WRITE8_MEMBER(tnzs_state::tnzs_bankswitch1_w)
 				if (data & 0x04)
 				{
 					if (m_mcu != NULL && m_mcu->type() == I8742)
-						device_set_input_line(m_mcu, INPUT_LINE_RESET, PULSE_LINE);
+						m_mcu->execute().set_input_line(INPUT_LINE_RESET, PULSE_LINE);
 				}
 				/* Coin count and lockout is handled by the i8742 */
 				break;

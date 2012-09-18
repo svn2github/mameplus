@@ -64,15 +64,14 @@ WRITE8_MEMBER(metlclsh_state::metlclsh_gfxbank_w)
 
 ***************************************************************************/
 
-static TILEMAP_MAPPER( metlclsh_bgtilemap_scan )
+TILEMAP_MAPPER_MEMBER(metlclsh_state::metlclsh_bgtilemap_scan)
 {
 	return	(row & 7) + ((row & ~7) << 4) + ((col & 0xf) << 3) + ((col & ~0xf) << 4);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(metlclsh_state::get_bg_tile_info)
 {
-	metlclsh_state *state = machine.driver_data<metlclsh_state>();
-	SET_TILE_INFO(1, state->m_bgram[tile_index] + (state->m_gfxbank << 7), 0, 0);
+	SET_TILE_INFO_MEMBER(1, m_bgram[tile_index] + (m_gfxbank << 7), 0, 0);
 }
 
 WRITE8_MEMBER(metlclsh_state::metlclsh_bgram_w)
@@ -112,12 +111,11 @@ WRITE8_MEMBER(metlclsh_state::metlclsh_bgram_w)
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(metlclsh_state::get_fg_tile_info)
 {
-	metlclsh_state *state = machine.driver_data<metlclsh_state>();
-	UINT8 code = state->m_fgram[tile_index + 0x000];
-	UINT8 attr = state->m_fgram[tile_index + 0x400];
-	SET_TILE_INFO(2, code + ((attr & 0x03) << 8), (attr >> 5) & 3, 0);
+	UINT8 code = m_fgram[tile_index + 0x000];
+	UINT8 attr = m_fgram[tile_index + 0x400];
+	SET_TILE_INFO_MEMBER(2, code + ((attr & 0x03) << 8), (attr >> 5) & 3, 0);
 	tileinfo.category = ((attr & 0x80) ? 1 : 2);
 }
 
@@ -134,19 +132,18 @@ WRITE8_MEMBER(metlclsh_state::metlclsh_fgram_w)
 
 ***************************************************************************/
 
-VIDEO_START( metlclsh )
+void metlclsh_state::video_start()
 {
-	metlclsh_state *state = machine.driver_data<metlclsh_state>();
 
-	state->m_otherram = auto_alloc_array(machine, UINT8, 0x800);	// banked ram
+	m_otherram = auto_alloc_array(machine(), UINT8, 0x800);	// banked ram
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, metlclsh_bgtilemap_scan, 16, 16, 32, 16);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(metlclsh_state::get_bg_tile_info),this), tilemap_mapper_delegate(FUNC(metlclsh_state::metlclsh_bgtilemap_scan),this), 16, 16, 32, 16);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(metlclsh_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	state->m_bg_tilemap->set_transparent_pen(0);
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap->set_transparent_pen(0);
+	m_fg_tilemap->set_transparent_pen(0);
 
-	state->save_pointer(NAME(state->m_otherram), 0x800);
+	save_pointer(NAME(m_otherram), 0x800);
 }
 
 

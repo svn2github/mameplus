@@ -31,7 +31,7 @@
 /* the largest possible cartridge image (street fighter 2 - 2.5MB) */
 #define PCE_ROM_MAXSIZE		0x280000
 
-typedef struct
+struct pce_cd_t
 {
 	UINT8	regs[16];
 	UINT8	*bram;
@@ -101,7 +101,7 @@ typedef struct
 	emu_timer	*adpcm_fadeout_timer;
 	emu_timer	*adpcm_fadein_timer;
 	double	adpcm_volume;
-} pce_cd_t;
+};
 
 
 class pce_state : public driver_device
@@ -140,6 +140,8 @@ public:
 	DECLARE_DRIVER_INIT(tg16);
 	DECLARE_DRIVER_INIT(mess_pce);
 	UINT32 screen_update(screen_device &screen, bitmap_ind16 &bitmap, const rectangle &cliprect);
+	DECLARE_MACHINE_START(pce);
+	DECLARE_MACHINE_RESET(mess_pce);
 };
 
 
@@ -149,8 +151,8 @@ DEVICE_IMAGE_LOAD(pce_cart);
 
 extern const msm5205_interface pce_cd_msm5205_interface;
 
-MACHINE_START( pce );
-MACHINE_RESET( mess_pce );
+
+
 
 
 #endif /* PCE_H_ */

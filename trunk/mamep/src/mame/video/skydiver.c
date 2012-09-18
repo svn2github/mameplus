@@ -9,24 +9,23 @@
 #include "sound/discrete.h"
 
 
-MACHINE_RESET( skydiver )
+void skydiver_state::machine_reset()
 {
-	skydiver_state *state = machine.driver_data<skydiver_state>();
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
 
 	/* reset all latches */
-	state->skydiver_start_lamp_1_w(*space, 0, 0);
-	state->skydiver_start_lamp_2_w(*space, 0, 0);
-	state->skydiver_lamp_s_w(*space, 0, 0);
-	state->skydiver_lamp_k_w(*space, 0, 0);
-	state->skydiver_lamp_y_w(*space, 0, 0);
-	state->skydiver_lamp_d_w(*space, 0, 0);
+	skydiver_start_lamp_1_w(*space, 0, 0);
+	skydiver_start_lamp_2_w(*space, 0, 0);
+	skydiver_lamp_s_w(*space, 0, 0);
+	skydiver_lamp_k_w(*space, 0, 0);
+	skydiver_lamp_y_w(*space, 0, 0);
+	skydiver_lamp_d_w(*space, 0, 0);
 	output_set_value("lampi", 0);
 	output_set_value("lampv", 0);
 	output_set_value("lampe", 0);
 	output_set_value("lampr", 0);
-	state->skydiver_width_w(*space, 0, 0);
-	state->skydiver_coin_lockout_w(*space, 0, 0);
+	skydiver_width_w(*space, 0, 0);
+	skydiver_coin_lockout_w(*space, 0, 0);
 }
 
 
@@ -36,11 +35,10 @@ MACHINE_RESET( skydiver )
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_tile_info )
+TILE_GET_INFO_MEMBER(skydiver_state::get_tile_info)
 {
-	skydiver_state *state = machine.driver_data<skydiver_state>();
-	UINT8 code = state->m_videoram[tile_index];
-	SET_TILE_INFO(0, code & 0x3f, code >> 6, 0);
+	UINT8 code = m_videoram[tile_index];
+	SET_TILE_INFO_MEMBER(0, code & 0x3f, code >> 6, 0);
 }
 
 
@@ -51,10 +49,9 @@ static TILE_GET_INFO( get_tile_info )
  *
  *************************************/
 
-VIDEO_START( skydiver )
+void skydiver_state::video_start()
 {
-	skydiver_state *state = machine.driver_data<skydiver_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_tile_info,tilemap_scan_rows,8,8,32,32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(skydiver_state::get_tile_info),this),TILEMAP_SCAN_ROWS,8,8,32,32);
 }
 
 

@@ -159,6 +159,12 @@ public:
 	DECLARE_DRIVER_INIT(mtrain);
 	DECLARE_DRIVER_INIT(saklove);
 	DECLARE_DRIVER_INIT(xplan);
+	TILE_GET_INFO_MEMBER(ss9601_get_tile_info_0);
+	TILE_GET_INFO_MEMBER(ss9601_get_tile_info_1);
+	DECLARE_VIDEO_START(subsino2);
+	DECLARE_VIDEO_START(mtrain);
+	DECLARE_MACHINE_RESET(am188em);
+	DECLARE_VIDEO_START(xtrain);
 };
 
 
@@ -182,17 +188,15 @@ INLINE void ss9601_get_tile_info(layer_t *l, running_machine &machine, tile_data
 }
 
 // Layer 0
-static TILE_GET_INFO( ss9601_get_tile_info_0 )
+TILE_GET_INFO_MEMBER(subsino2_state::ss9601_get_tile_info_0)
 {
-	subsino2_state *state = machine.driver_data<subsino2_state>();
-	ss9601_get_tile_info(&state->m_layers[0], machine, tileinfo, tile_index, param);
+	ss9601_get_tile_info(&m_layers[0], machine(), tileinfo, tile_index, param);
 }
 
 // Layer 1
-static TILE_GET_INFO( ss9601_get_tile_info_1 )
+TILE_GET_INFO_MEMBER(subsino2_state::ss9601_get_tile_info_1)
 {
-	subsino2_state *state = machine.driver_data<subsino2_state>();
-	ss9601_get_tile_info(&state->m_layers[1], machine, tileinfo, tile_index, param);
+	ss9601_get_tile_info(&m_layers[1], machine(), tileinfo, tile_index, param);
 }
 
 
@@ -560,73 +564,71 @@ WRITE8_MEMBER(subsino2_state::ss9601_disable_w)
                                 Video Update
 ***************************************************************************/
 
-static VIDEO_START( subsino2 )
+VIDEO_START_MEMBER(subsino2_state,subsino2)
 {
-	subsino2_state *state = machine.driver_data<subsino2_state>();
-	state->m_hm86171_colorram = auto_alloc_array(machine, UINT8, 256*3);
+	m_hm86171_colorram = auto_alloc_array(machine(), UINT8, 256*3);
 
 	// SS9601 Regs:
 
-	state->m_ss9601_tilesize		=	TILE_8x8;
-	state->m_ss9601_scrollctrl	=	0xfd;	// not written by mtrain, default to reels on
-	state->m_ss9601_disable		=	0x00;
+	m_ss9601_tilesize		=	TILE_8x8;
+	m_ss9601_scrollctrl	=	0xfd;	// not written by mtrain, default to reels on
+	m_ss9601_disable		=	0x00;
 
 	// SS9601 Layers:
 
 	for (int i = 0; i < 2; i++)
 	{
-		layer_t *l = &state->m_layers[i];
+		layer_t *l = &m_layers[i];
 
-		l->tmap = tilemap_create(machine, i ? ss9601_get_tile_info_1 : ss9601_get_tile_info_0, tilemap_scan_rows, 8,8, 0x80,0x40);
+		l->tmap = &machine().tilemap().create(i ? tilemap_get_info_delegate(FUNC(subsino2_state::ss9601_get_tile_info_1),this) : tilemap_get_info_delegate(FUNC(subsino2_state::ss9601_get_tile_info_0),this), TILEMAP_SCAN_ROWS, 8,8, 0x80,0x40);
 
 		l->tmap->set_transparent_pen(0);
 
 		// line scroll
 		l->tmap->set_scroll_rows(0x200);
 
-		l->videorams[VRAM_HI] = auto_alloc_array(machine, UINT8, 0x80 * 0x40);
-		l->videorams[VRAM_LO] = auto_alloc_array(machine, UINT8, 0x80 * 0x40);
+		l->videorams[VRAM_HI] = auto_alloc_array(machine(), UINT8, 0x80 * 0x40);
+		l->videorams[VRAM_LO] = auto_alloc_array(machine(), UINT8, 0x80 * 0x40);
 
-		l->scrollrams[VRAM_HI] = auto_alloc_array(machine, UINT8, 0x200);
-		l->scrollrams[VRAM_LO] = auto_alloc_array(machine, UINT8, 0x200);
+		l->scrollrams[VRAM_HI] = auto_alloc_array(machine(), UINT8, 0x200);
+		l->scrollrams[VRAM_LO] = auto_alloc_array(machine(), UINT8, 0x200);
 		memset(l->scrollrams[VRAM_HI], 0, 0x200);
 		memset(l->scrollrams[VRAM_LO], 0, 0x200);
 	}
 
 	// SS9601 Reels:
 
-	state->m_ss9601_reelrams[VRAM_HI] = auto_alloc_array(machine, UINT8, 0x2000);
-	state->m_ss9601_reelrams[VRAM_LO] = auto_alloc_array(machine, UINT8, 0x2000);
-	memset(state->m_ss9601_reelrams[VRAM_HI], 0, 0x2000);
-	memset(state->m_ss9601_reelrams[VRAM_LO], 0, 0x2000);
-	state->m_ss9601_reelrects[0].set(0, 0, 0x00*8, 0x09*8-1);
-	state->m_ss9601_reelrects[1].set(0, 0, 0x09*8, 0x10*8-1);
-	state->m_ss9601_reelrects[2].set(0, 0, 0x10*8, 256-16-1);
+	m_ss9601_reelrams[VRAM_HI] = auto_alloc_array(machine(), UINT8, 0x2000);
+	m_ss9601_reelrams[VRAM_LO] = auto_alloc_array(machine(), UINT8, 0x2000);
+	memset(m_ss9601_reelrams[VRAM_HI], 0, 0x2000);
+	memset(m_ss9601_reelrams[VRAM_LO], 0, 0x2000);
+	m_ss9601_reelrects[0].set(0, 0, 0x00*8, 0x09*8-1);
+	m_ss9601_reelrects[1].set(0, 0, 0x09*8, 0x10*8-1);
+	m_ss9601_reelrects[2].set(0, 0, 0x10*8, 256-16-1);
 
 /*
-    state_save_register_global_pointer(machine, state->m_ss9601_reelrams[VRAM_HI], 0x2000);
-    state_save_register_global_pointer(machine, state->m_ss9601_reelrams[VRAM_LO], 0x2000);
+    state_save_register_global_pointer(machine(), m_ss9601_reelrams[VRAM_HI], 0x2000);
+    state_save_register_global_pointer(machine(), m_ss9601_reelrams[VRAM_LO], 0x2000);
 
-    state_save_register_global_pointer(machine, state->m_layers[0].scrollrams[VRAM_HI], 0x200);
-    state_save_register_global_pointer(machine, state->m_layers[0].scrollrams[VRAM_LO], 0x200);
+    state_save_register_global_pointer(machine(), m_layers[0].scrollrams[VRAM_HI], 0x200);
+    state_save_register_global_pointer(machine(), m_layers[0].scrollrams[VRAM_LO], 0x200);
 
-    state_save_register_global_pointer(machine, state->m_layers[1].scrollrams[VRAM_HI], 0x200);
-    state_save_register_global_pointer(machine, state->m_layers[1].scrollrams[VRAM_LO], 0x200);
+    state_save_register_global_pointer(machine(), m_layers[1].scrollrams[VRAM_HI], 0x200);
+    state_save_register_global_pointer(machine(), m_layers[1].scrollrams[VRAM_LO], 0x200);
 */
 }
 
-static VIDEO_START( mtrain )
+VIDEO_START_MEMBER(subsino2_state,mtrain)
 {
-	VIDEO_START_CALL( subsino2 );
+	VIDEO_START_CALL_MEMBER( subsino2 );
 }
 
-static VIDEO_START( xtrain )
+VIDEO_START_MEMBER(subsino2_state,xtrain)
 {
-	subsino2_state *state = machine.driver_data<subsino2_state>();
-	VIDEO_START_CALL( subsino2 );
-	state->m_ss9601_reelrects[0].set(0, 0, 0x00*8, 0x08*8-1);
-	state->m_ss9601_reelrects[1].set(0, 0, 0x08*8, 0x18*8-1);
-	state->m_ss9601_reelrects[2].set(0, 0, 0x18*8, 256-16-1);
+	VIDEO_START_CALL_MEMBER( subsino2 );
+	m_ss9601_reelrects[0].set(0, 0, 0x00*8, 0x08*8-1);
+	m_ss9601_reelrects[1].set(0, 0, 0x08*8, 0x18*8-1);
+	m_ss9601_reelrects[2].set(0, 0, 0x18*8, 256-16-1);
 }
 
 static SCREEN_UPDATE_IND16( subsino2 )
@@ -851,14 +853,13 @@ WRITE8_MEMBER(subsino2_state::am188em_regs_w)
 	m_am188em_regs[offset] = data;
 }
 
-static MACHINE_RESET( am188em )
+MACHINE_RESET_MEMBER(subsino2_state,am188em)
 {
-	subsino2_state *state = machine.driver_data<subsino2_state>();
 	// start with masked interrupts
-	state->m_am188em_regs[AM188EM_IMASK+0] = 0xfd;
-	state->m_am188em_regs[AM188EM_IMASK+1] = 0x07;
-	state->m_am188em_regs[AM188EM_I0CON+0] = 0x0f;
-	state->m_am188em_regs[AM188EM_I0CON+1] = 0x00;
+	m_am188em_regs[AM188EM_IMASK+0] = 0xfd;
+	m_am188em_regs[AM188EM_IMASK+1] = 0x07;
+	m_am188em_regs[AM188EM_I0CON+0] = 0x0f;
+	m_am188em_regs[AM188EM_I0CON+1] = 0x00;
 }
 
 static INTERRUPT_GEN( am188em_int0_irq )
@@ -866,14 +867,14 @@ static INTERRUPT_GEN( am188em_int0_irq )
 	subsino2_state *state = device->machine().driver_data<subsino2_state>();
 	if ( ((state->m_am188em_regs[AM188EM_IMASK+0] & 0x10) == 0) ||	// IMASK.I0 mask
 		 ((state->m_am188em_regs[AM188EM_I0CON+0] & 0x08) == 0) )	// I0CON.MSK mask
-		device_set_input_line_and_vector(device, 0, HOLD_LINE, 0x0c);	// INT0 (background scrolling in xplan)
+		device->execute().set_input_line_and_vector(0, HOLD_LINE, 0x0c);	// INT0 (background scrolling in xplan)
 }
 
 static TIMER_DEVICE_CALLBACK( am188em_timer2_irq )
 {
 	subsino2_state *state = timer.machine().driver_data<subsino2_state>();
 	if ((state->m_am188em_regs[AM188EM_IMASK+0] & 0x01) == 0)	// TMR mask
-		cputag_set_input_line_and_vector(timer.machine(), "maincpu", 0, HOLD_LINE, 0x4c/4);
+		timer.machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0x4c/4);
 }
 
 /***************************************************************************
@@ -883,7 +884,7 @@ static TIMER_DEVICE_CALLBACK( am188em_timer2_irq )
 // To be removed when cpu core is updated
 static TIMER_DEVICE_CALLBACK( h8_timer_irq )
 {
-	cputag_set_input_line(timer.machine(), "maincpu", H8_METRO_TIMER_HACK, HOLD_LINE);
+	timer.machine().device("maincpu")->execute().set_input_line(H8_METRO_TIMER_HACK, HOLD_LINE);
 }
 
 
@@ -898,6 +899,11 @@ static TIMER_DEVICE_CALLBACK( h8_timer_irq )
 
 WRITE16_MEMBER(subsino2_state::bishjan_sel_w)
 {
+	/*
+        sound writes in service mode:
+        01 88 04 00 (coin in)
+        02 89 04 0v (v = voice = 0..3)
+    */
 	if (ACCESSING_BITS_8_15)
 		m_bishjan_sel = data >> 8;
 }
@@ -1475,7 +1481,7 @@ static INPUT_PORTS_START( bishjan )
 
 	PORT_START("SYSTEM") // IN A
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_UNKNOWN		)
-	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_SERVICE		) PORT_IMPULSE(1)	// service mode
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_SERVICE		)	PORT_IMPULSE(1)	// service mode (press twice for inputs)
 	PORT_BIT( 0x0004, IP_ACTIVE_HIGH,IPT_SPECIAL		)	// hopper sensor
 	PORT_BIT( 0x0008, IP_ACTIVE_LOW, IPT_SERVICE1		)	// stats
 	PORT_BIT( 0x0010, IP_ACTIVE_LOW, IPT_SERVICE2		)	// pay out? "hopper empty"
@@ -2187,7 +2193,7 @@ static MACHINE_CONFIG_START( bishjan, subsino2_state )
 	MCFG_GFXDECODE( ss9601 )
 	MCFG_PALETTE_LENGTH( 256 )
 
-	MCFG_VIDEO_START( subsino2 )
+	MCFG_VIDEO_START_OVERRIDE(subsino2_state, subsino2 )
 
 	// sound hardware
 	// SS9904?
@@ -2215,7 +2221,7 @@ static MACHINE_CONFIG_START( mtrain, subsino2_state )
 	MCFG_GFXDECODE( ss9601 )
 	MCFG_PALETTE_LENGTH( 256 )
 
-	MCFG_VIDEO_START( mtrain )
+	MCFG_VIDEO_START_OVERRIDE(subsino2_state, mtrain )
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2234,7 +2240,7 @@ static MACHINE_CONFIG_START( saklove, subsino2_state )
 	MCFG_CPU_IO_MAP( saklove_io )
 	MCFG_TIMER_ADD_PERIODIC("timer2", am188em_timer2_irq, attotime::from_hz(60)) // timer 2, ?? Hz
 
-	MCFG_MACHINE_RESET(am188em)
+	MCFG_MACHINE_RESET_OVERRIDE(subsino2_state,am188em)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	// video hardware
@@ -2248,7 +2254,7 @@ static MACHINE_CONFIG_START( saklove, subsino2_state )
 	MCFG_GFXDECODE( ss9601 )
 	MCFG_PALETTE_LENGTH( 256 )
 
-	MCFG_VIDEO_START( subsino2 )
+	MCFG_VIDEO_START_OVERRIDE(subsino2_state, subsino2 )
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2271,7 +2277,7 @@ static MACHINE_CONFIG_START( xplan, subsino2_state )
 	MCFG_CPU_VBLANK_INT( "screen", am188em_int0_irq )
 	MCFG_TIMER_ADD_PERIODIC("timer2", am188em_timer2_irq, attotime::from_hz(60)) // timer 2, ?? Hz
 
-	MCFG_MACHINE_RESET(am188em)
+	MCFG_MACHINE_RESET_OVERRIDE(subsino2_state,am188em)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	// video hardware
@@ -2285,7 +2291,7 @@ static MACHINE_CONFIG_START( xplan, subsino2_state )
 	MCFG_GFXDECODE( ss9601 )
 	MCFG_PALETTE_LENGTH( 256 )
 
-	MCFG_VIDEO_START( subsino2 )
+	MCFG_VIDEO_START_OVERRIDE(subsino2_state, subsino2 )
 
 	// sound hardware
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -2298,7 +2304,7 @@ static MACHINE_CONFIG_DERIVED( xtrain, xplan )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_IO_MAP(xtrain_io)
 
-	MCFG_VIDEO_START( xtrain )
+	MCFG_VIDEO_START_OVERRIDE(subsino2_state, xtrain )
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( expcard, xplan )

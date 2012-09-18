@@ -138,8 +138,8 @@
 static void update_interrupts(running_machine &machine)
 {
 	gauntlet_state *state = machine.driver_data<gauntlet_state>();
-	cputag_set_input_line(machine, "maincpu", 4, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
-	cputag_set_input_line(machine, "maincpu", 6, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(4, state->m_video_int_state ? ASSERT_LINE : CLEAR_LINE);
+	machine.device("maincpu")->execute().set_input_line(6, state->m_sound_int_state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -155,26 +155,24 @@ static void scanline_update(screen_device &screen, int scanline)
 }
 
 
-static MACHINE_START( gauntlet )
+MACHINE_START_MEMBER(gauntlet_state,gauntlet)
 {
-	gauntlet_state *state = machine.driver_data<gauntlet_state>();
-	atarigen_init(machine);
+	atarigen_init(machine());
 
-	state->save_item(NAME(state->m_sound_reset_val));
+	save_item(NAME(m_sound_reset_val));
 }
 
 
-static MACHINE_RESET( gauntlet )
+MACHINE_RESET_MEMBER(gauntlet_state,gauntlet)
 {
-	gauntlet_state *state = machine.driver_data<gauntlet_state>();
 
-	state->m_sound_reset_val = 1;
+	m_sound_reset_val = 1;
 
-	atarigen_eeprom_reset(state);
-	atarigen_slapstic_reset(state);
-	atarigen_interrupt_reset(state, update_interrupts);
-	atarigen_scanline_timer_reset(*machine.primary_screen, scanline_update, 32);
-	atarigen_sound_io_reset(machine.device("audiocpu"));
+	atarigen_eeprom_reset(this);
+	atarigen_slapstic_reset(this);
+	atarigen_interrupt_reset(this, update_interrupts);
+	atarigen_scanline_timer_reset(*machine().primary_screen, scanline_update, 32);
+	atarigen_sound_io_reset(machine().device("audiocpu"));
 }
 
 
@@ -210,12 +208,12 @@ WRITE16_MEMBER(gauntlet_state::sound_reset_w)
 
 		if ((oldword ^ m_sound_reset_val) & 1)
 		{
-			cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_RESET, (m_sound_reset_val & 1) ? CLEAR_LINE : ASSERT_LINE);
+			machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_RESET, (m_sound_reset_val & 1) ? CLEAR_LINE : ASSERT_LINE);
 			atarigen_sound_reset(machine());
 			if (m_sound_reset_val & 1)
 			{
-				devtag_reset(machine(), "ymsnd");
-				devtag_reset(machine(), "tms");
+				machine().device("ymsnd")->reset();
+				machine().device("tms")->reset();
 				tms5220_set_frequency(machine().device("tms"), ATARI_CLOCK_14MHz/2 / 11);
 				atarigen_set_ym2151_vol(machine(), 0);
 				atarigen_set_pokey_vol(machine(), 0);
@@ -258,7 +256,7 @@ WRITE8_MEMBER(gauntlet_state::sound_ctl_w)
 	switch (offset & 7)
 	{
 		case 0:	/* music reset, bit D7, low reset */
-			if (((data>>7)&1) == 0) devtag_reset(machine(), "ymsnd");
+			if (((data>>7)&1) == 0) machine().device("ymsnd")->reset();
 			break;
 
 		case 1:	/* speech write, bit D7, active low */
@@ -521,8 +519,8 @@ static MACHINE_CONFIG_START( gauntlet, gauntlet_state )
 	MCFG_CPU_ADD("audiocpu", M6502, ATARI_CLOCK_14MHz/8)
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 
-	MCFG_MACHINE_START(gauntlet)
-	MCFG_MACHINE_RESET(gauntlet)
+	MCFG_MACHINE_START_OVERRIDE(gauntlet_state,gauntlet)
+	MCFG_MACHINE_RESET_OVERRIDE(gauntlet_state,gauntlet)
 	MCFG_NVRAM_ADD_1FILL("eeprom")
 
 	/* video hardware */
@@ -536,7 +534,7 @@ static MACHINE_CONFIG_START( gauntlet, gauntlet_state )
 	MCFG_SCREEN_RAW_PARAMS(ATARI_CLOCK_14MHz/2, 456, 0, 336, 262, 0, 240)
 	MCFG_SCREEN_UPDATE_STATIC(gauntlet)
 
-	MCFG_VIDEO_START(gauntlet)
+	MCFG_VIDEO_START_OVERRIDE(gauntlet_state,gauntlet)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

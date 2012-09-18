@@ -67,7 +67,7 @@ Registers:
 #define	VOL_BASE	(2*32*256/30)					// Volume base
 
 /* this structure defines the parameters for a channel */
-typedef struct {
+struct X1_010_CHANNEL {
 	unsigned char	status;
 	unsigned char	volume;						//        volume / wave form no.
 	unsigned char	frequency;					//     frequency / pitch lo
@@ -75,10 +75,9 @@ typedef struct {
 	unsigned char	start;						// start address / envelope time
 	unsigned char	end;						//   end address / envelope no.
 	unsigned char	reserve[2];
-} X1_010_CHANNEL;
+};
 
-typedef struct _x1_010_state x1_010_state;
-struct _x1_010_state
+struct x1_010_state
 {
 	/* Variables only used here */
 	int	rate;								// Output sampling rate (Hz)
@@ -101,7 +100,7 @@ INLINE x1_010_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == X1_010);
-	return (x1_010_state *)downcast<legacy_device_base *>(device)->token();
+	return (x1_010_state *)downcast<x1_010_device *>(device)->token();
 }
 
 
@@ -284,31 +283,42 @@ WRITE16_DEVICE_HANDLER( seta_sound_word_w )
 }
 
 
+const device_type X1_010 = &device_creator<x1_010_device>;
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( x1_010 )
+x1_010_device::x1_010_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, X1_010, "X1-010", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(x1_010_state); 			break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(x1_010_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( x1_010 );			break;
-		case DEVINFO_FCT_STOP:							/* Nothing */									break;
-		case DEVINFO_FCT_RESET:							/* Nothing */									break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "X1-010");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Seta custom");					break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void x1_010_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void x1_010_device::device_start()
+{
+	DEVICE_START_NAME( x1_010 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void x1_010_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(X1_010, x1_010);

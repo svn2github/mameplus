@@ -19,7 +19,7 @@ static const int defgain = 48;
 
 
 /* this structure defines the parameters for a channel */
-typedef struct
+struct sound_channel 
 {
 	int frequency;
 	int counter;
@@ -27,13 +27,12 @@ typedef struct
 	const UINT8 *wave;
 	int oneshot;
 	int oneshotplaying;
-} sound_channel;
+};
 
 
 
 
-typedef struct _wiping_sound_state wiping_sound_state;
-struct _wiping_sound_state
+struct wiping_sound_state
 {
 	/* data about the sound system */
 	sound_channel m_channel_list[MAX_VOICES];
@@ -61,7 +60,7 @@ INLINE wiping_sound_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == WIPING);
 
-	return (wiping_sound_state *)downcast<legacy_device_base *>(device)->token();
+	return (wiping_sound_state *)downcast<wiping_sound_device *>(device)->token();
 }
 
 /* build a table to divide by the number of voices; gain is specified as gain*16 */
@@ -210,24 +209,6 @@ static DEVICE_START( wiping_sound )
 }
 
 
-DEVICE_GET_INFO( wiping_sound )
-{
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(wiping_sound_state);			break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(wiping_sound);	break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Wiping Custom");				break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);						break;
-	}
-}
-
-
-
 /********************************************************************************/
 
 WRITE8_DEVICE_HANDLER( wiping_sound_w )
@@ -278,4 +259,42 @@ WRITE8_DEVICE_HANDLER( wiping_sound_w )
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(WIPING, wiping_sound);
+const device_type WIPING = &device_creator<wiping_sound_device>;
+
+wiping_sound_device::wiping_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, WIPING, "Wiping Custom", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(wiping_sound_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void wiping_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void wiping_sound_device::device_start()
+{
+	DEVICE_START_NAME( wiping_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void wiping_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

@@ -37,6 +37,10 @@ public:
 	DECLARE_WRITE8_MEMBER(videopin_out1_w);
 	DECLARE_WRITE8_MEMBER(videopin_out2_w);
 	DECLARE_WRITE8_MEMBER(videopin_note_dvsr_w);
+	TILEMAP_MAPPER_MEMBER(get_memory_offset);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -48,6 +52,6 @@ DISCRETE_SOUND_EXTERN( videopin );
 /*----------- defined in video/videopin.c -----------*/
 
 
-VIDEO_START( videopin );
+
 SCREEN_UPDATE_IND16( videopin );
 

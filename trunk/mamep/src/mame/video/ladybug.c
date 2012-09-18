@@ -93,19 +93,19 @@ static void palette_init_common( running_machine &machine, const UINT8 *color_pr
 }
 
 
-PALETTE_INIT( ladybug )
+PALETTE_INIT_MEMBER(ladybug_state,ladybug)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
-	palette_init_common(machine, color_prom, 0x20, 0, 5, 2, 6, 4, 7);
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
+	palette_init_common(machine(), color_prom, 0x20, 0, 5, 2, 6, 4, 7);
 }
 
-PALETTE_INIT( sraider )
+PALETTE_INIT_MEMBER(ladybug_state,sraider)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
 	/* the resistor net may be probably different than Lady Bug */
-	palette_init_common(machine, color_prom, 0x41, 3, 0, 5, 4, 7, 6);
+	palette_init_common(machine(), color_prom, 0x41, 3, 0, 5, 4, 7, 6);
 
 	/* star colors */
 	for (i = 0x20; i < 0x40; i++)
@@ -127,14 +127,14 @@ PALETTE_INIT( sraider )
 		bit0 = ((i - 0x20) >> 0) & 0x01;
 		r = 0x47 * bit0;
 
-		colortable_palette_set_color(machine.colortable, i, MAKE_RGB(r, g, b));
+		colortable_palette_set_color(machine().colortable, i, MAKE_RGB(r, g, b));
 	}
 
 	for (i = 0x60; i < 0x80; i++)
-		colortable_entry_set_value(machine.colortable, i, (i - 0x60) + 0x20);
+		colortable_entry_set_value(machine().colortable, i, (i - 0x60) + 0x20);
 
 	/* stationary part of grid */
-	colortable_entry_set_value(machine.colortable, 0x81, 0x40);
+	colortable_entry_set_value(machine().colortable, 0x81, 0x40);
 }
 
 WRITE8_MEMBER(ladybug_state::ladybug_videoram_w)
@@ -187,47 +187,44 @@ WRITE8_MEMBER(ladybug_state::sraider_io_w)
 	redclash_set_stars_speed(machine(), (data & 0x07) - 1);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(ladybug_state::get_bg_tile_info)
 {
-	ladybug_state *state = machine.driver_data<ladybug_state>();
-	int code = state->m_videoram[tile_index] + 32 * (state->m_colorram[tile_index] & 0x08);
-	int color = state->m_colorram[tile_index] & 0x07;
+	int code = m_videoram[tile_index] + 32 * (m_colorram[tile_index] & 0x08);
+	int color = m_colorram[tile_index] & 0x07;
 
-	SET_TILE_INFO(0, code, color, 0);
+	SET_TILE_INFO_MEMBER(0, code, color, 0);
 }
 
-static TILE_GET_INFO( get_grid_tile_info )
+TILE_GET_INFO_MEMBER(ladybug_state::get_grid_tile_info)
 {
 	if (tile_index < 512)
-		SET_TILE_INFO(3, tile_index, 0, 0);
+		SET_TILE_INFO_MEMBER(3, tile_index, 0, 0);
 	else
 	{
 		int temp = tile_index / 32;
 		tile_index = (31 - temp) * 32 + (tile_index % 32);
-		SET_TILE_INFO(4, tile_index, 0, 0);
+		SET_TILE_INFO_MEMBER(4, tile_index, 0, 0);
 	}
 }
 
-VIDEO_START( ladybug )
+VIDEO_START_MEMBER(ladybug_state,ladybug)
 {
-	ladybug_state *state = machine.driver_data<ladybug_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bg_tilemap->set_scroll_rows(32);
-	state->m_bg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ladybug_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap->set_scroll_rows(32);
+	m_bg_tilemap->set_transparent_pen(0);
 }
 
-VIDEO_START( sraider )
+VIDEO_START_MEMBER(ladybug_state,sraider)
 {
-	ladybug_state *state = machine.driver_data<ladybug_state>();
 
-	state->m_grid_tilemap = tilemap_create(machine, get_grid_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_grid_tilemap->set_scroll_rows(32);
-	state->m_grid_tilemap->set_transparent_pen(0);
+	m_grid_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ladybug_state::get_grid_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_grid_tilemap->set_scroll_rows(32);
+	m_grid_tilemap->set_transparent_pen(0);
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bg_tilemap->set_scroll_rows(32);
-	state->m_bg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(ladybug_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap->set_scroll_rows(32);
+	m_bg_tilemap->set_transparent_pen(0);
 }
 
 static void draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect )

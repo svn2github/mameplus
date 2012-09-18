@@ -240,7 +240,7 @@ void device_sound_interface::set_output_gain(int outputnum, float gain)
 
 //-------------------------------------------------
 //  inputnum_from_device - return the input number
-//	that is connected to the given device's output
+//  that is connected to the given device's output
 //-------------------------------------------------
 
 int device_sound_interface::inputnum_from_device(device_t &source_device, int outputnum) const
@@ -347,13 +347,13 @@ void device_sound_interface::interface_post_start()
 						int streamoutputnum;
 						sound_stream *outputstream = sound->output_to_stream_output(outputnum, streamoutputnum);
 						if (outputstream == NULL)
-							fatalerror("Sound device '%s' specifies route for non-existant output #%d", route->m_target.cstr(), outputnum);
+							fatalerror("Sound device '%s' specifies route for non-existant output #%d\n", route->m_target.cstr(), outputnum);
 
 						// find the input stream to connect to
 						int streaminputnum;
 						sound_stream *inputstream = input_to_stream_input(inputnum++, streaminputnum);
 						if (inputstream == NULL)
-							fatalerror("Sound device '%s' targeted output #%d to non-existant device '%s' input %d", route->m_target.cstr(), outputnum, m_device.tag(), inputnum - 1);
+							fatalerror("Sound device '%s' targeted output #%d to non-existant device '%s' input %d\n", route->m_target.cstr(), outputnum, m_device.tag(), inputnum - 1);
 
 						// set the input
 						inputstream->set_input(streaminputnum, outputstream, streamoutputnum, route->m_gain);

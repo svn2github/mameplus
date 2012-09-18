@@ -8,23 +8,23 @@ Atari Sprint 8 video emulation
 #include "includes/sprint8.h"
 
 
-PALETTE_INIT( sprint8 )
+void sprint8_state::palette_init()
 {
 	int i;
 
 	/* allocate the colortable */
-	machine.colortable = colortable_alloc(machine, 0x12);
+	machine().colortable = colortable_alloc(machine(), 0x12);
 
 	for (i = 0; i < 0x10; i++)
 	{
-		colortable_entry_set_value(machine.colortable, 2 * i + 0, 0x10);
-		colortable_entry_set_value(machine.colortable, 2 * i + 1, i);
+		colortable_entry_set_value(machine().colortable, 2 * i + 0, 0x10);
+		colortable_entry_set_value(machine().colortable, 2 * i + 1, i);
 	}
 
-	colortable_entry_set_value(machine.colortable, 0x20, 0x10);
-	colortable_entry_set_value(machine.colortable, 0x21, 0x10);
-	colortable_entry_set_value(machine.colortable, 0x22, 0x10);
-	colortable_entry_set_value(machine.colortable, 0x23, 0x11);
+	colortable_entry_set_value(machine().colortable, 0x20, 0x10);
+	colortable_entry_set_value(machine().colortable, 0x21, 0x10);
+	colortable_entry_set_value(machine().colortable, 0x22, 0x10);
+	colortable_entry_set_value(machine().colortable, 0x23, 0x11);
 }
 
 
@@ -63,10 +63,9 @@ static void set_pens(sprint8_state *state, colortable_t *colortable)
 }
 
 
-static TILE_GET_INFO( get_tile_info1 )
+TILE_GET_INFO_MEMBER(sprint8_state::get_tile_info1)
 {
-	sprint8_state *state = machine.driver_data<sprint8_state>();
-	UINT8 code = state->m_video_ram[tile_index];
+	UINT8 code = m_video_ram[tile_index];
 
 	int color = 0;
 
@@ -85,14 +84,13 @@ static TILE_GET_INFO( get_tile_info1 )
 
 	}
 
-	SET_TILE_INFO(code >> 7, code, color, (code & 0x40) ? (TILE_FLIPX | TILE_FLIPY) : 0);
+	SET_TILE_INFO_MEMBER(code >> 7, code, color, (code & 0x40) ? (TILE_FLIPX | TILE_FLIPY) : 0);
 }
 
 
-static TILE_GET_INFO( get_tile_info2 )
+TILE_GET_INFO_MEMBER(sprint8_state::get_tile_info2)
 {
-	sprint8_state *state = machine.driver_data<sprint8_state>();
-	UINT8 code = state->m_video_ram[tile_index];
+	UINT8 code = m_video_ram[tile_index];
 
 	int color = 0;
 
@@ -101,7 +99,7 @@ static TILE_GET_INFO( get_tile_info2 )
 	else
 		color = 17;
 
-	SET_TILE_INFO(code >> 7, code, color, (code & 0x40) ? (TILE_FLIPX | TILE_FLIPY) : 0);
+	SET_TILE_INFO_MEMBER(code >> 7, code, color, (code & 0x40) ? (TILE_FLIPX | TILE_FLIPY) : 0);
 }
 
 
@@ -113,17 +111,16 @@ WRITE8_MEMBER(sprint8_state::sprint8_video_ram_w)
 }
 
 
-VIDEO_START( sprint8 )
+void sprint8_state::video_start()
 {
-	sprint8_state *state = machine.driver_data<sprint8_state>();
-	machine.primary_screen->register_screen_bitmap(state->m_helper1);
-	machine.primary_screen->register_screen_bitmap(state->m_helper2);
+	machine().primary_screen->register_screen_bitmap(m_helper1);
+	machine().primary_screen->register_screen_bitmap(m_helper2);
 
-	state->m_tilemap1 = tilemap_create(machine, get_tile_info1, tilemap_scan_rows, 16, 8, 32, 32);
-	state->m_tilemap2 = tilemap_create(machine, get_tile_info2, tilemap_scan_rows, 16, 8, 32, 32);
+	m_tilemap1 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(sprint8_state::get_tile_info1),this), TILEMAP_SCAN_ROWS, 16, 8, 32, 32);
+	m_tilemap2 = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(sprint8_state::get_tile_info2),this), TILEMAP_SCAN_ROWS, 16, 8, 32, 32);
 
-	state->m_tilemap1->set_scrolly(0, +24);
-	state->m_tilemap2->set_scrolly(0, +24);
+	m_tilemap1->set_scrolly(0, +24);
+	m_tilemap2->set_scrolly(0, +24);
 }
 
 

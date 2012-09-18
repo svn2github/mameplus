@@ -20,6 +20,7 @@ The name "Seibu CRTC" is actually an agglomerate of all the Seibu Customs that a
 single boards, most if not all of them are shared video chips in the aforementioned games.
 
 TODO:
+- Needs a full device rewrite
 - Dynamic Resolution Change (xx10 register?)
 - Dynamic Paging register probably incorrect,needs further investigation;
 - Merge the aforementioned games and clean-up the code in these drivers;
@@ -60,8 +61,8 @@ List of default vregs (title screen):
 #include "includes/sei_crtc.h"
 
 static tilemap_t *sc0_tilemap,*sc2_tilemap,*sc1_tilemap,*sc3_tilemap_0,*sc3_tilemap_1;
-UINT16 *seibucrtc_sc0vram,*seibucrtc_sc1vram,*seibucrtc_sc2vram,*seibucrtc_sc3vram;
-UINT16 *seibucrtc_vregs;
+static UINT16 *seibucrtc_sc0vram,*seibucrtc_sc1vram,*seibucrtc_sc2vram,*seibucrtc_sc3vram;
+static UINT16 *seibucrtc_vregs;
 UINT16 seibucrtc_sc0bank;
 
 /*******************************
@@ -99,22 +100,22 @@ UINT16 seibucrtc_sc0bank;
 /************************************
 * 0x24 - Screen 1 (FG) scroll x
 ************************************/
-#define SEIBU_CRTC_SC1_SX	(seibucrtc_vregs[0x0024/2])
+#define SEIBU_CRTC_SC1_SX	(seibucrtc_vregs[0x0028/2])
 
 /************************************
 * 0x26 - Screen 1 (FG) scroll y
 ************************************/
-#define SEIBU_CRTC_SC1_SY	(seibucrtc_vregs[0x0026/2])
+#define SEIBU_CRTC_SC1_SY	(seibucrtc_vregs[0x002a/2])
 
 /************************************
 * 0x28 - Screen 2 (MD) scroll x
 ************************************/
-#define SEIBU_CRTC_SC2_SX	(seibucrtc_vregs[0x0028/2])
+#define SEIBU_CRTC_SC2_SX	(seibucrtc_vregs[0x0024/2])
 
 /************************************
 * 0x2a - Screen 2 (MD) scroll y
 ************************************/
-#define SEIBU_CRTC_SC2_SY	(seibucrtc_vregs[0x002a/2])
+#define SEIBU_CRTC_SC2_SY	(seibucrtc_vregs[0x0026/2])
 
 /************************************
 * 0x2c - Fix screen scroll x (global)
@@ -255,11 +256,17 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,const re
 
 VIDEO_START( seibu_crtc )
 {
-	sc0_tilemap = tilemap_create(machine, seibucrtc_sc0_tile_info,tilemap_scan_rows,16,16,32,32);
-	sc2_tilemap = tilemap_create(machine, seibucrtc_sc2_tile_info,tilemap_scan_rows,16,16,32,32);
-	sc1_tilemap = tilemap_create(machine, seibucrtc_sc1_tile_info,tilemap_scan_rows,16,16,32,32);
-	sc3_tilemap_0 = tilemap_create(machine, seibucrtc_sc3_tile_info,tilemap_scan_rows, 8, 8,32,32);
-	sc3_tilemap_1 = tilemap_create(machine, seibucrtc_sc3_tile_info,tilemap_scan_rows, 8, 8,64,32);
+	seibucrtc_sc0vram = reinterpret_cast<UINT16 *>(machine.root_device().memshare("crtc_sc0vram")->ptr());
+	seibucrtc_sc1vram = reinterpret_cast<UINT16 *>(machine.root_device().memshare("crtc_sc1vram")->ptr());
+	seibucrtc_sc2vram = reinterpret_cast<UINT16 *>(machine.root_device().memshare("crtc_sc2vram")->ptr());
+	seibucrtc_sc3vram = reinterpret_cast<UINT16 *>(machine.root_device().memshare("crtc_sc3vram")->ptr());
+	seibucrtc_vregs = reinterpret_cast<UINT16 *>(machine.root_device().memshare("crtc_vregs")->ptr());
+
+	sc0_tilemap = tilemap_create(machine, seibucrtc_sc0_tile_info,TILEMAP_SCAN_ROWS,16,16,32,32);
+	sc2_tilemap = tilemap_create(machine, seibucrtc_sc2_tile_info,TILEMAP_SCAN_ROWS,16,16,32,32);
+	sc1_tilemap = tilemap_create(machine, seibucrtc_sc1_tile_info,TILEMAP_SCAN_ROWS,16,16,32,32);
+	sc3_tilemap_0 = tilemap_create(machine, seibucrtc_sc3_tile_info,TILEMAP_SCAN_ROWS, 8, 8,32,32);
+	sc3_tilemap_1 = tilemap_create(machine, seibucrtc_sc3_tile_info,TILEMAP_SCAN_ROWS, 8, 8,64,32);
 
 	sc2_tilemap->set_transparent_pen(15);
 	sc1_tilemap->set_transparent_pen(15);

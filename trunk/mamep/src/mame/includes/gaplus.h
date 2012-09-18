@@ -40,6 +40,11 @@ public:
 	DECLARE_WRITE8_MEMBER(out_lamps0);
 	DECLARE_WRITE8_MEMBER(out_lamps1);
 	DECLARE_DRIVER_INIT(gaplus);
+	TILEMAP_MAPPER_MEMBER(tilemap_scan);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -49,7 +54,7 @@ public:
 
 /*----------- defined in video/gaplus.c -----------*/
 
-VIDEO_START( gaplus );
-PALETTE_INIT( gaplus );
+
+
 SCREEN_UPDATE_IND16( gaplus );
 SCREEN_VBLANK( gaplus );	/* update starfields */

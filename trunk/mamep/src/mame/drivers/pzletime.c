@@ -53,39 +53,42 @@ public:
 	DECLARE_CUSTOM_INPUT_MEMBER(ticket_status_r);
 	DECLARE_WRITE16_MEMBER(eeprom_w);
 	DECLARE_WRITE16_MEMBER(oki_bank_w);
+	TILE_GET_INFO_MEMBER(get_mid_tile_info);
+	TILE_GET_INFO_MEMBER(get_txt_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
-static TILE_GET_INFO( get_mid_tile_info )
+TILE_GET_INFO_MEMBER(pzletime_state::get_mid_tile_info)
 {
-	pzletime_state *state = machine.driver_data<pzletime_state>();
-	int tileno = state->m_mid_videoram[tile_index] & 0x0fff;
-	int colour = state->m_mid_videoram[tile_index] & 0xf000;
+	int tileno = m_mid_videoram[tile_index] & 0x0fff;
+	int colour = m_mid_videoram[tile_index] & 0xf000;
 	colour = colour >> 12;
-	SET_TILE_INFO(2, tileno, colour, 0);
+	SET_TILE_INFO_MEMBER(2, tileno, colour, 0);
 }
 
-static TILE_GET_INFO( get_txt_tile_info )
+TILE_GET_INFO_MEMBER(pzletime_state::get_txt_tile_info)
 {
-	pzletime_state *state = machine.driver_data<pzletime_state>();
-	int tileno = state->m_txt_videoram[tile_index] & 0x0fff;
-	int colour = state->m_txt_videoram[tile_index] & 0xf000;
+	int tileno = m_txt_videoram[tile_index] & 0x0fff;
+	int colour = m_txt_videoram[tile_index] & 0xf000;
 	colour = colour >> 12;
 
-	SET_TILE_INFO(0, tileno, colour, 0);
+	SET_TILE_INFO_MEMBER(0, tileno, colour, 0);
 
 	tileinfo.category = BIT(colour, 3);
 }
 
-static VIDEO_START( pzletime )
+void pzletime_state::video_start()
 {
-	pzletime_state *state = machine.driver_data<pzletime_state>();
 
-	state->m_mid_tilemap = tilemap_create(machine, get_mid_tile_info, tilemap_scan_cols, 16, 16, 64, 16);
-	state->m_txt_tilemap = tilemap_create(machine, get_txt_tile_info, tilemap_scan_rows,  8, 8, 64, 32);
+	m_mid_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(pzletime_state::get_mid_tile_info),this), TILEMAP_SCAN_COLS, 16, 16, 64, 16);
+	m_txt_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(pzletime_state::get_txt_tile_info),this), TILEMAP_SCAN_ROWS,  8, 8, 64, 32);
 
-	state->m_mid_tilemap->set_transparent_pen(0);
-	state->m_txt_tilemap->set_transparent_pen(0);
+	m_mid_tilemap->set_transparent_pen(0);
+	m_txt_tilemap->set_transparent_pen(0);
 }
 
 static SCREEN_UPDATE_IND16( pzletime )
@@ -293,7 +296,7 @@ static GFXDECODE_START( pzletime )
 	GFXDECODE_ENTRY( "gfx3", 0, layout16x16, 0x000, 0x10 )
 GFXDECODE_END
 
-static PALETTE_INIT( pzletime )
+void pzletime_state::palette_init()
 {
 	int i;
 
@@ -301,21 +304,19 @@ static PALETTE_INIT( pzletime )
 
 	/* initialize 555 RGB lookup */
 	for (i = 0; i < 32768; i++)
-		palette_set_color_rgb(machine, i + 0x300, pal5bit(i >> 10), pal5bit(i >> 5), pal5bit(i >> 0));
+		palette_set_color_rgb(machine(), i + 0x300, pal5bit(i >> 10), pal5bit(i >> 5), pal5bit(i >> 0));
 }
 
-static MACHINE_START( pzletime )
+void pzletime_state::machine_start()
 {
-	pzletime_state *state = machine.driver_data<pzletime_state>();
 
-	state->save_item(NAME(state->m_ticket));
+	save_item(NAME(m_ticket));
 }
 
-static MACHINE_RESET( pzletime )
+void pzletime_state::machine_reset()
 {
-	pzletime_state *state = machine.driver_data<pzletime_state>();
 
-	state->m_ticket = 0;
+	m_ticket = 0;
 }
 
 static MACHINE_CONFIG_START( pzletime, pzletime_state )
@@ -325,8 +326,6 @@ static MACHINE_CONFIG_START( pzletime, pzletime_state )
 	MCFG_CPU_PROGRAM_MAP(pzletime_map)
 	MCFG_CPU_VBLANK_INT("screen",irq4_line_hold)
 
-	MCFG_MACHINE_START(pzletime)
-	MCFG_MACHINE_RESET(pzletime)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -339,8 +338,6 @@ static MACHINE_CONFIG_START( pzletime, pzletime_state )
 	MCFG_PALETTE_LENGTH(0x300 + 32768)
 	MCFG_EEPROM_93C46_ADD("eeprom")
 
-	MCFG_PALETTE_INIT(pzletime)
-	MCFG_VIDEO_START(pzletime)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

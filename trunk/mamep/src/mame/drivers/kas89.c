@@ -214,8 +214,8 @@ public:
 	UINT8 m_leds_mux_data;
 	UINT8 m_outdata;			/* Muxed with the sound latch. Output to a sign? */
 
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 
 	required_device<v9938_device> m_v9938;
 	DECLARE_WRITE8_MEMBER(mux_w);
@@ -226,6 +226,8 @@ public:
 	DECLARE_WRITE8_MEMBER(led_mux_data_w);
 	DECLARE_WRITE8_MEMBER(led_mux_select_w);
 	DECLARE_DRIVER_INIT(kas89);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 #define VDP_MEM             0x40000
@@ -237,7 +239,7 @@ public:
 
 static void kas89_vdp_interrupt(device_t *, v99x8_device &device, int i)
 {
-	cputag_set_input_line (device.machine(), "maincpu", 0, (i ? ASSERT_LINE : CLEAR_LINE));
+	device.machine().device("maincpu")->execute().set_input_line(0, (i ? ASSERT_LINE : CLEAR_LINE));
 }
 
 static TIMER_DEVICE_CALLBACK( kas89_interrupt )
@@ -254,20 +256,18 @@ static TIMER_DEVICE_CALLBACK( kas89_interrupt )
 *       Machine Start & Reset        *
 *************************************/
 
-static MACHINE_START( kas89 )
+void kas89_state::machine_start()
 {
-	kas89_state *state = machine.driver_data<kas89_state>();
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
 	output_set_lamp_value(37, 0);	/* turning off the operator led */
 }
 
-static MACHINE_RESET(kas89)
+void kas89_state::machine_reset()
 {
-	kas89_state *state = machine.driver_data<kas89_state>();
 
-	state->m_main_nmi_enable = 0;
+	m_main_nmi_enable = 0;
 }
 
 
@@ -315,14 +315,14 @@ static TIMER_DEVICE_CALLBACK ( kas89_nmi_cb )
 	kas89_state *state = timer.machine().driver_data<kas89_state>();
 
 	if (state->m_main_nmi_enable)
-		device_set_input_line(state->m_maincpu, INPUT_LINE_NMI, PULSE_LINE);
+		state->m_maincpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static TIMER_DEVICE_CALLBACK ( kas89_sound_nmi_cb )
 {
 	kas89_state *state = timer.machine().driver_data<kas89_state>();
 
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, PULSE_LINE);
+	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -379,13 +379,13 @@ WRITE8_MEMBER(kas89_state::sound_comm_w)
 	else
 	{
 		soundlatch_byte_w(space, 0, data);
-		device_set_input_line(m_audiocpu, 0, ASSERT_LINE );
+		m_audiocpu->set_input_line(0, ASSERT_LINE );
 	}
 }
 
 WRITE8_MEMBER(kas89_state::int_ack_w)
 {
-	device_set_input_line(m_audiocpu, 0, CLEAR_LINE );
+	m_audiocpu->set_input_line(0, CLEAR_LINE );
 }
 
 
@@ -787,8 +787,6 @@ static MACHINE_CONFIG_START( kas89, kas89_state )
 	MCFG_CPU_IO_MAP(audio_io)
 	MCFG_TIMER_ADD_PERIODIC("kas89_snmi", kas89_sound_nmi_cb, attotime::from_hz(138)) /* Connected to a 138Hz osc.*/
 
-	MCFG_MACHINE_START(kas89)
-	MCFG_MACHINE_RESET(kas89)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 

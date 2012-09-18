@@ -35,7 +35,7 @@ WRITE8_MEMBER(xxmissio_state::xxmissio_status_m_w)
 
 		case 0x40:
 			m_status &= ~0x08;
-			cputag_set_input_line_and_vector(machine(), "sub", 0, HOLD_LINE, 0x10);
+			machine().device("sub")->execute().set_input_line_and_vector(0, HOLD_LINE, 0x10);
 			break;
 
 		case 0x80:
@@ -58,7 +58,7 @@ WRITE8_MEMBER(xxmissio_state::xxmissio_status_s_w)
 
 		case 0x80:
 			m_status &= ~0x04;
-			cputag_set_input_line_and_vector(machine(), "maincpu", 0, HOLD_LINE, 0x10);
+			machine().device("maincpu")->execute().set_input_line_and_vector(0, HOLD_LINE, 0x10);
 			break;
 	}
 }
@@ -67,20 +67,20 @@ static INTERRUPT_GEN( xxmissio_interrupt_m )
 {
 	xxmissio_state *state = device->machine().driver_data<xxmissio_state>();
 	state->m_status &= ~0x20;
-	device_set_input_line(device, 0, HOLD_LINE);
+	device->execute().set_input_line(0, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( xxmissio_interrupt_s )
 {
 	xxmissio_state *state = device->machine().driver_data<xxmissio_state>();
 	state->m_status &= ~0x10;
-	device_set_input_line(device, 0, HOLD_LINE);
+	device->execute().set_input_line(0, HOLD_LINE);
 }
 
-static MACHINE_START( xxmissio )
+void xxmissio_state::machine_start()
 {
-	machine.root_device().membank("bank1")->configure_entries(0, 8, machine.root_device().memregion("user1")->base(), 0x4000);
-	machine.root_device().membank("bank1")->set_entry(0);
+	machine().root_device().membank("bank1")->configure_entries(0, 8, machine().root_device().memregion("user1")->base(), 0x4000);
+	machine().root_device().membank("bank1")->set_entry(0);
 }
 
 /****************************************************************************/
@@ -294,7 +294,6 @@ static MACHINE_CONFIG_START( xxmissio, xxmissio_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(xxmissio)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -307,7 +306,6 @@ static MACHINE_CONFIG_START( xxmissio, xxmissio_state )
 	MCFG_GFXDECODE(xxmissio)
 	MCFG_PALETTE_LENGTH(768)
 
-	MCFG_VIDEO_START(xxmissio)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

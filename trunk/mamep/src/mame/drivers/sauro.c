@@ -369,7 +369,7 @@ GFXDECODE_END
 
 static INTERRUPT_GEN( sauro_interrupt )
 {
-	device_set_input_line(device, 0, HOLD_LINE);
+	device->execute().set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( tecfri, sauro_state )
@@ -405,7 +405,7 @@ static MACHINE_CONFIG_DERIVED( trckydoc, tecfri )
 
 	MCFG_GFXDECODE(trckydoc)
 
-	MCFG_VIDEO_START(trckydoc)
+	MCFG_VIDEO_START_OVERRIDE(sauro_state,trckydoc)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(trckydoc)
 
@@ -423,7 +423,7 @@ static MACHINE_CONFIG_DERIVED( sauro, tecfri )
 
 	MCFG_GFXDECODE(sauro)
 
-	MCFG_VIDEO_START(sauro)
+	MCFG_VIDEO_START_OVERRIDE(sauro_state,sauro)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(sauro)
 

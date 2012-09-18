@@ -25,7 +25,7 @@ public:
 	int       m_bestri_tilebank;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE16_MEMBER(crospang_soundlatch_w);
 	DECLARE_WRITE16_MEMBER(bestri_tilebank_w);
 	DECLARE_WRITE16_MEMBER(bestri_bg_scrolly_w);
@@ -39,12 +39,17 @@ public:
 	DECLARE_WRITE16_MEMBER(crospang_fg_videoram_w);
 	DECLARE_WRITE16_MEMBER(crospang_bg_videoram_w);
 	DECLARE_DRIVER_INIT(crospang);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/crospang.c -----------*/
 
-VIDEO_START( crospang );
+
 SCREEN_UPDATE_IND16( crospang );
 
 

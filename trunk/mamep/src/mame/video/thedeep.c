@@ -38,29 +38,27 @@
 
 ***************************************************************************/
 
-static TILEMAP_MAPPER( tilemap_scan_rows_back )
+TILEMAP_MAPPER_MEMBER(thedeep_state::tilemap_scan_rows_back)
 {
 	return (col & 0x0f) + ((col & 0x10) << 5) + (row << 4);
 }
 
-static TILE_GET_INFO( get_tile_info_0 )
+TILE_GET_INFO_MEMBER(thedeep_state::get_tile_info_0)
 {
-	thedeep_state *state = machine.driver_data<thedeep_state>();
-	UINT8 code	=	state->m_vram_0[ tile_index * 2 + 0 ];
-	UINT8 color	=	state->m_vram_0[ tile_index * 2 + 1 ];
-	SET_TILE_INFO(
+	UINT8 code	=	m_vram_0[ tile_index * 2 + 0 ];
+	UINT8 color	=	m_vram_0[ tile_index * 2 + 1 ];
+	SET_TILE_INFO_MEMBER(
 			1,
 			code + (color << 8),
 			(color & 0xf0) >> 4,
 			TILE_FLIPX	);	// why?
 }
 
-static TILE_GET_INFO( get_tile_info_1 )
+TILE_GET_INFO_MEMBER(thedeep_state::get_tile_info_1)
 {
-	thedeep_state *state = machine.driver_data<thedeep_state>();
-	UINT8 code	=	state->m_vram_1[ tile_index * 2 + 0 ];
-	UINT8 color	=	state->m_vram_1[ tile_index * 2 + 1 ];
-	SET_TILE_INFO(
+	UINT8 code	=	m_vram_1[ tile_index * 2 + 0 ];
+	UINT8 color	=	m_vram_1[ tile_index * 2 + 1 ];
+	SET_TILE_INFO_MEMBER(
 			2,
 			code + (color << 8),
 			(color & 0xf0) >> 4,
@@ -86,12 +84,12 @@ WRITE8_MEMBER(thedeep_state::thedeep_vram_1_w)
 
 ***************************************************************************/
 
-PALETTE_INIT( thedeep )
+void thedeep_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 	for (i = 0;i < 512;i++)
-		palette_set_color_rgb(machine,i,pal4bit(color_prom[0x400 + i] >> 0),pal4bit(color_prom[0x400 + i] >> 4),pal4bit(color_prom[0x200 + i] >> 0));
+		palette_set_color_rgb(machine(),i,pal4bit(color_prom[0x400 + i] >> 0),pal4bit(color_prom[0x400 + i] >> 4),pal4bit(color_prom[0x200 + i] >> 0));
 }
 
 /***************************************************************************
@@ -100,16 +98,15 @@ PALETTE_INIT( thedeep )
 
 ***************************************************************************/
 
-VIDEO_START( thedeep )
+void thedeep_state::video_start()
 {
-	thedeep_state *state = machine.driver_data<thedeep_state>();
-	state->m_tilemap_0  = tilemap_create(machine, get_tile_info_0,tilemap_scan_rows_back,16,16,0x20,0x20);
-	state->m_tilemap_1  = tilemap_create(machine, get_tile_info_1,tilemap_scan_rows,8,8,0x20,0x20);
+	m_tilemap_0  = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(thedeep_state::get_tile_info_0),this),tilemap_mapper_delegate(FUNC(thedeep_state::tilemap_scan_rows_back),this),16,16,0x20,0x20);
+	m_tilemap_1  = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(thedeep_state::get_tile_info_1),this),TILEMAP_SCAN_ROWS,8,8,0x20,0x20);
 
-	state->m_tilemap_0->set_transparent_pen(0 );
-	state->m_tilemap_1->set_transparent_pen(0 );
+	m_tilemap_0->set_transparent_pen(0 );
+	m_tilemap_1->set_transparent_pen(0 );
 
-	state->m_tilemap_0->set_scroll_cols(0x20);	// column scroll for the background
+	m_tilemap_0->set_scroll_cols(0x20);	// column scroll for the background
 }
 
 /***************************************************************************

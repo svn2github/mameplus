@@ -17,7 +17,7 @@
 //	GLOBAL VARIABLES
 //============================================================
 
-struct _scale_effect
+struct scale_effect
 {
 	int effect;
 	int xsize;
@@ -25,7 +25,7 @@ struct _scale_effect
 	const char *name;
 };
 
-extern struct _scale_effect scale_effect;
+extern struct scale_effect scale_effect;
 
 
 

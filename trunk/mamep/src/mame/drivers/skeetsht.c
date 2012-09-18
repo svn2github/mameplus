@@ -40,6 +40,8 @@ public:
 	DECLARE_READ8_MEMBER(hc11_porta_r);
 	DECLARE_WRITE8_MEMBER(hc11_porta_w);
 	DECLARE_WRITE8_MEMBER(ay8910_w);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -49,12 +51,11 @@ public:
  *
  *************************************/
 
-static MACHINE_RESET( skeetsht )
+void skeetsht_state::machine_reset()
 {
-	skeetsht_state *state = machine.driver_data<skeetsht_state>();
 
-	state->m_ay = machine.device("aysnd");
-	state->m_tms = machine.device("tms");
+	m_ay = machine().device("aysnd");
+	m_tms = machine().device("tms");
 }
 
 
@@ -64,7 +65,7 @@ static MACHINE_RESET( skeetsht )
  *
  *************************************/
 
-static VIDEO_START ( skeetsht )
+void skeetsht_state::video_start()
 {
 }
 
@@ -114,7 +115,7 @@ WRITE16_MEMBER(skeetsht_state::ramdac_w)
 
 static void skeetsht_tms_irq(device_t *device, int state)
 {
-	cputag_set_input_line(device->machine(), "68hc11", MC68HC11_IRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
+	device->machine().device("68hc11")->execute().set_input_line(MC68HC11_IRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -263,15 +264,13 @@ static MACHINE_CONFIG_START( skeetsht, skeetsht_state )
 	MCFG_CPU_CONFIG(tms_config)
 	MCFG_CPU_PROGRAM_MAP(tms_program_map)
 
-	MCFG_MACHINE_RESET(skeetsht)
 
-	MCFG_TLC34076_ADD("tlc34076", TLC34076_6_BIT)
+	MCFG_TLC34076_ADD("tlc34076", tlc34076_6_bit_intf)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_RAW_PARAMS(48000000 / 8, 156*4, 0, 100*4, 328, 0, 300) // FIXME
 	MCFG_SCREEN_UPDATE_STATIC(tms340x0_rgb32)
 
-	MCFG_VIDEO_START(skeetsht)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 

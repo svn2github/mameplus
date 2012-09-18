@@ -43,7 +43,7 @@ public:
 	unsigned    m_game_id;	// see below
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	UINT8       m_sound_nmi_mask;
 	UINT8       m_sound_pa_latch;
 	DECLARE_WRITE16_MEMBER(tnextspc_coin_counters_w);
@@ -88,6 +88,16 @@ public:
 	DECLARE_DRIVER_INIT(timesold);
 	DECLARE_DRIVER_INIT(kyros);
 	DECLARE_DRIVER_INIT(sstingry);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	DECLARE_MACHINE_START(common);
+	DECLARE_MACHINE_RESET(common);
+	DECLARE_PALETTE_INIT(kyros);
+	DECLARE_PALETTE_INIT(paddlem);
+	DECLARE_MACHINE_START(alpha68k_II);
+	DECLARE_MACHINE_RESET(alpha68k_II);
+	DECLARE_VIDEO_START(alpha68k);
+	DECLARE_MACHINE_START(alpha68k_V);
+	DECLARE_MACHINE_RESET(alpha68k_V);
 };
 
 /* game_id - used to deal with a few game specific situations */
@@ -101,10 +111,10 @@ enum
 
 /*----------- defined in video/alpha68k.c -----------*/
 
-PALETTE_INIT( kyros );
-PALETTE_INIT( paddlem );
 
-VIDEO_START( alpha68k );
+
+
+
 
 SCREEN_UPDATE_IND16( kyros );
 SCREEN_UPDATE_IND16( sstingry );

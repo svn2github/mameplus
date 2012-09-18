@@ -122,6 +122,10 @@ public:
 	DECLARE_WRITE8_MEMBER(mermaid_p2_w);
 	DECLARE_READ8_MEMBER(mermaid_p3_r);
 	DECLARE_WRITE8_MEMBER(mermaid_p3_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -131,26 +135,24 @@ public:
  *
  *************************************/
 
-static MACHINE_START( hvyunit )
+void hvyunit_state::machine_start()
 {
-	hvyunit_state *state = machine.driver_data<hvyunit_state>();
 
-	state->m_master_cpu = machine.device("master");
-	state->m_slave_cpu = machine.device("slave");
-	state->m_sound_cpu = machine.device("soundcpu");
-	state->m_mermaid = machine.device("mermaid");
-	state->m_pandora = machine.device("pandora");
+	m_master_cpu = machine().device("master");
+	m_slave_cpu = machine().device("slave");
+	m_sound_cpu = machine().device("soundcpu");
+	m_mermaid = machine().device("mermaid");
+	m_pandora = machine().device("pandora");
 
 	// TODO: Save state
 }
 
-static MACHINE_RESET( hvyunit )
+void hvyunit_state::machine_reset()
 {
-	hvyunit_state *state = machine.driver_data<hvyunit_state>();
 
-	state->m_mermaid_int0_l = 1;
-	state->m_mermaid_to_z80_full = 0;
-	state->m_z80_to_mermaid_full = 0;
+	m_mermaid_int0_l = 1;
+	m_mermaid_to_z80_full = 0;
+	m_z80_to_mermaid_full = 0;
 }
 
 
@@ -160,21 +162,19 @@ static MACHINE_RESET( hvyunit )
  *
  *************************************/
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(hvyunit_state::get_bg_tile_info)
 {
-	hvyunit_state *state = machine.driver_data<hvyunit_state>();
 
-	int attr = state->m_colorram[tile_index];
-	int code = state->m_videoram[tile_index] + ((attr & 0x0f) << 8);
+	int attr = m_colorram[tile_index];
+	int code = m_videoram[tile_index] + ((attr & 0x0f) << 8);
 	int color = (attr >> 4);
 
-	SET_TILE_INFO(1, code, color, 0);
+	SET_TILE_INFO_MEMBER(1, code, color, 0);
 }
 
-static VIDEO_START( hvyunit )
+void hvyunit_state::video_start()
 {
-	hvyunit_state *state = machine.driver_data<hvyunit_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 16, 16, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(hvyunit_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 16, 16, 32, 32);
 }
 
 static SCREEN_UPDATE_IND16( hvyunit )
@@ -211,7 +211,7 @@ static SCREEN_VBLANK( hvyunit )
 
 WRITE8_MEMBER(hvyunit_state::trigger_nmi_on_slave_cpu)
 {
-	device_set_input_line(m_slave_cpu, INPUT_LINE_NMI, PULSE_LINE);
+	m_slave_cpu->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(hvyunit_state::master_bankswitch_w)
@@ -228,7 +228,7 @@ WRITE8_MEMBER(hvyunit_state::mermaid_data_w)
 	m_data_to_mermaid = data;
 	m_z80_to_mermaid_full = 1;
 	m_mermaid_int0_l = 0;
-	device_set_input_line(m_mermaid, INPUT_LINE_IRQ0, ASSERT_LINE);
+	m_mermaid->execute().set_input_line(INPUT_LINE_IRQ0, ASSERT_LINE);
 }
 
 READ8_MEMBER(hvyunit_state::mermaid_data_r)
@@ -255,7 +255,7 @@ WRITE8_MEMBER(hvyunit_state::trigger_nmi_on_sound_cpu2)
 {
 
 	soundlatch_byte_w(space, 0, data);
-	device_set_input_line(m_sound_cpu, INPUT_LINE_NMI, PULSE_LINE);
+	m_sound_cpu->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 WRITE8_MEMBER(hvyunit_state::hu_videoram_w)
@@ -358,7 +358,7 @@ WRITE8_MEMBER(hvyunit_state::mermaid_p1_w)
 	if (data == 0xff)
 	{
 		m_mermaid_int0_l = 1;
-		device_set_input_line(m_mermaid, INPUT_LINE_IRQ0, CLEAR_LINE);
+		m_mermaid->execute().set_input_line(INPUT_LINE_IRQ0, CLEAR_LINE);
 	}
 
 	m_mermaid_p[1] = data;
@@ -404,7 +404,7 @@ WRITE8_MEMBER(hvyunit_state::mermaid_p3_w)
 {
 
 	m_mermaid_p[3] = data;
-	device_set_input_line(m_slave_cpu, INPUT_LINE_RESET, data & 2 ? CLEAR_LINE : ASSERT_LINE);
+	m_slave_cpu->execute().set_input_line(INPUT_LINE_RESET, data & 2 ? CLEAR_LINE : ASSERT_LINE);
 }
 
 
@@ -630,11 +630,11 @@ static TIMER_DEVICE_CALLBACK( hvyunit_scanline )
 	int scanline = param;
 
 	if(scanline == 240) // vblank-out irq
-		device_set_input_line_and_vector(state->m_master_cpu, 0, HOLD_LINE, 0xfd);
+		state->m_master_cpu->execute().set_input_line_and_vector(0, HOLD_LINE, 0xfd);
 
 	/* Pandora "sprite end dma" irq? TODO: timing is likely off */
 	if(scanline == 64)
-		device_set_input_line_and_vector(state->m_master_cpu, 0, HOLD_LINE, 0xff);
+		state->m_master_cpu->execute().set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 static const kaneko_pandora_interface hvyunit_pandora_config =
@@ -673,8 +673,6 @@ static MACHINE_CONFIG_START( hvyunit, hvyunit_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
-	MCFG_MACHINE_START(hvyunit)
-	MCFG_MACHINE_RESET(hvyunit)
 
 	MCFG_SCREEN_ADD("screen", RASTER)
 	MCFG_SCREEN_REFRESH_RATE(58)
@@ -689,7 +687,6 @@ static MACHINE_CONFIG_START( hvyunit, hvyunit_state )
 
 	MCFG_KANEKO_PANDORA_ADD("pandora", hvyunit_pandora_config)
 
-	MCFG_VIDEO_START(hvyunit)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

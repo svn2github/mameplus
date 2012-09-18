@@ -286,7 +286,6 @@ INPUT_PORTS_END
 
 static const mos6526_interface cia_0_intf =
 {
-	0,														/* tod_clock */
 	DEVCB_LINE(amiga_cia_0_irq),										/* irq_func */
 	DEVCB_NULL,	/* pc_func */
 	DEVCB_NULL,
@@ -299,7 +298,6 @@ static const mos6526_interface cia_0_intf =
 
 static const mos6526_interface cia_1_intf =
 {
-	0,														/* tod_clock */
 	DEVCB_LINE(amiga_cia_1_irq),										/* irq_func */
 	DEVCB_NULL,	/* pc_func */
 	DEVCB_NULL,
@@ -316,7 +314,7 @@ static MACHINE_CONFIG_START( arcadia, arcadia_amiga_state )
 	MCFG_CPU_ADD("maincpu", M68000, AMIGA_68000_NTSC_CLOCK)
 	MCFG_CPU_PROGRAM_MAP(amiga_map)
 
-	MCFG_MACHINE_RESET(amiga)
+	MCFG_MACHINE_RESET_OVERRIDE(arcadia_amiga_state,amiga)
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
 	/* video hardware */
@@ -330,9 +328,9 @@ static MACHINE_CONFIG_START( arcadia, arcadia_amiga_state )
 	MCFG_SCREEN_UPDATE_STATIC(amiga)
 
 	MCFG_PALETTE_LENGTH(4096)
-	MCFG_PALETTE_INIT(amiga)
+	MCFG_PALETTE_INIT_OVERRIDE(arcadia_amiga_state,amiga)
 
-	MCFG_VIDEO_START(amiga)
+	MCFG_VIDEO_START_OVERRIDE(arcadia_amiga_state,amiga)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
@@ -344,8 +342,8 @@ static MACHINE_CONFIG_START( arcadia, arcadia_amiga_state )
 	MCFG_SOUND_ROUTE(3, "lspeaker", 0.50)
 
 	/* cia */
-	MCFG_MOS8520_ADD("cia_0", AMIGA_68000_NTSC_CLOCK / 10, cia_0_intf)
-	MCFG_MOS8520_ADD("cia_1", AMIGA_68000_NTSC_CLOCK / 10, cia_1_intf)
+	MCFG_MOS8520_ADD("cia_0", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_0_intf)
+	MCFG_MOS8520_ADD("cia_1", AMIGA_68000_NTSC_CLOCK / 10, 0, cia_1_intf)
 
 	/* fdc */
 	MCFG_AMIGA_FDC_ADD("fdc", AMIGA_68000_NTSC_CLOCK)

@@ -38,29 +38,28 @@ static int command7(running_machine &machine);
  *
  *************************************/
 
-VIDEO_START( victory )
+void victory_state::video_start()
 {
-	victory_state *state = machine.driver_data<victory_state>();
 	/* allocate bitmapram */
-	state->m_rram = auto_alloc_array(machine, UINT8, 0x4000);
-	state->m_gram = auto_alloc_array(machine, UINT8, 0x4000);
-	state->m_bram = auto_alloc_array(machine, UINT8, 0x4000);
+	m_rram = auto_alloc_array(machine(), UINT8, 0x4000);
+	m_gram = auto_alloc_array(machine(), UINT8, 0x4000);
+	m_bram = auto_alloc_array(machine(), UINT8, 0x4000);
 
 	/* allocate bitmaps */
-	state->m_bgbitmap = auto_alloc_array(machine, UINT8, 256 * 256);
-	state->m_fgbitmap = auto_alloc_array(machine, UINT8, 256 * 256);
+	m_bgbitmap = auto_alloc_array(machine(), UINT8, 256 * 256);
+	m_fgbitmap = auto_alloc_array(machine(), UINT8, 256 * 256);
 
 	/* reset globals */
-	state->m_vblank_irq = 0;
-	state->m_fgcoll = state->m_fgcollx = state->m_fgcolly = 0;
-	state->m_bgcoll = state->m_bgcollx = state->m_bgcolly = 0;
-	state->m_scrollx = state->m_scrolly = 0;
-	state->m_video_control = 0;
-	memset(&state->m_micro, 0, sizeof(state->m_micro));
-	state->m_micro.timer = machine.scheduler().timer_alloc(FUNC_NULL);
+	m_vblank_irq = 0;
+	m_fgcoll = m_fgcollx = m_fgcolly = 0;
+	m_bgcoll = m_bgcollx = m_bgcolly = 0;
+	m_scrollx = m_scrolly = 0;
+	m_video_control = 0;
+	memset(&m_micro, 0, sizeof(m_micro));
+	m_micro.timer = machine().scheduler().timer_alloc(FUNC_NULL);
 
 	/* register for state saving */
-	state_save_register_global_array(machine, state->m_paletteram);
+	state_save_register_global_array(machine(), m_paletteram);
 }
 
 
@@ -75,9 +74,9 @@ static void victory_update_irq(running_machine &machine)
 {
 	victory_state *state = machine.driver_data<victory_state>();
 	if (state->m_vblank_irq || state->m_fgcoll || (state->m_bgcoll && (state->m_video_control & 0x20)))
-		cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 	else
-		cputag_set_input_line(machine, "maincpu", 0, CLEAR_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -132,7 +131,7 @@ READ8_MEMBER(victory_state::victory_video_control_r)
 	{
 		case 0x00:	/* 5XFIQ */
 			result = m_fgcollx;
-			if (LOG_COLLISION) logerror("%04X:5XFIQ read = %02X\n", cpu_get_previouspc(&space.device()), result);
+			if (LOG_COLLISION) logerror("%04X:5XFIQ read = %02X\n", space.device().safe_pcbase(), result);
 			return result;
 
 		case 0x01:	/* 5CLFIQ */
@@ -142,12 +141,12 @@ READ8_MEMBER(victory_state::victory_video_control_r)
 				m_fgcoll = 0;
 				victory_update_irq(machine());
 			}
-			if (LOG_COLLISION) logerror("%04X:5CLFIQ read = %02X\n", cpu_get_previouspc(&space.device()), result);
+			if (LOG_COLLISION) logerror("%04X:5CLFIQ read = %02X\n", space.device().safe_pcbase(), result);
 			return result;
 
 		case 0x02:	/* 5BACKX */
 			result = m_bgcollx & 0xfc;
-			if (LOG_COLLISION) logerror("%04X:5BACKX read = %02X\n", cpu_get_previouspc(&space.device()), result);
+			if (LOG_COLLISION) logerror("%04X:5BACKX read = %02X\n", space.device().safe_pcbase(), result);
 			return result;
 
 		case 0x03:	/* 5BACKY */
@@ -157,7 +156,7 @@ READ8_MEMBER(victory_state::victory_video_control_r)
 				m_bgcoll = 0;
 				victory_update_irq(machine());
 			}
-			if (LOG_COLLISION) logerror("%04X:5BACKY read = %02X\n", cpu_get_previouspc(&space.device()), result);
+			if (LOG_COLLISION) logerror("%04X:5BACKY read = %02X\n", space.device().safe_pcbase(), result);
 			return result;
 
 		case 0x04:	/* 5STAT */
@@ -172,11 +171,11 @@ READ8_MEMBER(victory_state::victory_video_control_r)
 			result |= (~m_vblank_irq & 1) << 5;
 			result |= (~m_bgcoll & 1) << 4;
 			result |= (machine().primary_screen->vpos() & 0x100) >> 5;
-			if (LOG_COLLISION) logerror("%04X:5STAT read = %02X\n", cpu_get_previouspc(&space.device()), result);
+			if (LOG_COLLISION) logerror("%04X:5STAT read = %02X\n", space.device().safe_pcbase(), result);
 			return result;
 
 		default:
-			logerror("%04X:victory_video_control_r(%02X)\n", cpu_get_previouspc(&space.device()), offset);
+			logerror("%04X:victory_video_control_r(%02X)\n", space.device().safe_pcbase(), offset);
 			break;
 	}
 	return 0;
@@ -196,12 +195,12 @@ WRITE8_MEMBER(victory_state::victory_video_control_w)
 	switch (offset)
 	{
 		case 0x00:	/* LOAD IL */
-			if (LOG_MICROCODE) logerror("%04X:IL=%02X\n", cpu_get_previouspc(&space.device()), data);
+			if (LOG_MICROCODE) logerror("%04X:IL=%02X\n", space.device().safe_pcbase(), data);
 			micro.i = (micro.i & 0xff00) | (data & 0x00ff);
 			break;
 
 		case 0x01:	/* LOAD IH */
-			if (LOG_MICROCODE) logerror("%04X:IH=%02X\n", cpu_get_previouspc(&space.device()), data);
+			if (LOG_MICROCODE) logerror("%04X:IH=%02X\n", space.device().safe_pcbase(), data);
 			micro.i = (micro.i & 0x00ff) | ((data << 8) & 0xff00);
 			if (micro.cmdlo == 5)
 			{
@@ -211,7 +210,7 @@ WRITE8_MEMBER(victory_state::victory_video_control_w)
 			break;
 
 		case 0x02:	/* LOAD CMD */
-			if (LOG_MICROCODE) logerror("%04X:CMD=%02X\n", cpu_get_previouspc(&space.device()), data);
+			if (LOG_MICROCODE) logerror("%04X:CMD=%02X\n", space.device().safe_pcbase(), data);
 			micro.cmd = data;
 			micro.cmdlo = data & 7;
 			if (micro.cmdlo == 0)
@@ -226,12 +225,12 @@ WRITE8_MEMBER(victory_state::victory_video_control_w)
 			break;
 
 		case 0x03:	/* LOAD G */
-			if (LOG_MICROCODE) logerror("%04X:G=%02X\n", cpu_get_previouspc(&space.device()), data);
+			if (LOG_MICROCODE) logerror("%04X:G=%02X\n", space.device().safe_pcbase(), data);
 			micro.g = data;
 			break;
 
 		case 0x04:	/* LOAD X */
-			if (LOG_MICROCODE) logerror("%04X:X=%02X\n", cpu_get_previouspc(&space.device()), data);
+			if (LOG_MICROCODE) logerror("%04X:X=%02X\n", space.device().safe_pcbase(), data);
 			micro.xp = data;
 			if (micro.cmdlo == 3)
 			{
@@ -241,7 +240,7 @@ WRITE8_MEMBER(victory_state::victory_video_control_w)
 			break;
 
 		case 0x05:	/* LOAD Y */
-			if (LOG_MICROCODE) logerror("%04X:Y=%02X\n", cpu_get_previouspc(&space.device()), data);
+			if (LOG_MICROCODE) logerror("%04X:Y=%02X\n", space.device().safe_pcbase(), data);
 			micro.yp = data;
 			if (micro.cmdlo == 4)
 			{
@@ -251,12 +250,12 @@ WRITE8_MEMBER(victory_state::victory_video_control_w)
 			break;
 
 		case 0x06:	/* LOAD R */
-			if (LOG_MICROCODE) logerror("%04X:R=%02X\n", cpu_get_previouspc(&space.device()), data);
+			if (LOG_MICROCODE) logerror("%04X:R=%02X\n", space.device().safe_pcbase(), data);
 			micro.r = data;
 			break;
 
 		case 0x07:	/* LOAD B */
-			if (LOG_MICROCODE) logerror("%04X:B=%02X\n", cpu_get_previouspc(&space.device()), data);
+			if (LOG_MICROCODE) logerror("%04X:B=%02X\n", space.device().safe_pcbase(), data);
 			micro.b = data;
 			if (micro.cmdlo == 2)
 			{
@@ -271,12 +270,12 @@ WRITE8_MEMBER(victory_state::victory_video_control_w)
 			break;
 
 		case 0x08:	/* SCROLLX */
-			if (LOG_MICROCODE) logerror("%04X:SCROLLX write = %02X\n", cpu_get_previouspc(&space.device()), data);
+			if (LOG_MICROCODE) logerror("%04X:SCROLLX write = %02X\n", space.device().safe_pcbase(), data);
 			m_scrollx = data;
 			break;
 
 		case 0x09:	/* SCROLLY */
-			if (LOG_MICROCODE) logerror("%04X:SCROLLY write = %02X\n", cpu_get_previouspc(&space.device()), data);
+			if (LOG_MICROCODE) logerror("%04X:SCROLLY write = %02X\n", space.device().safe_pcbase(), data);
 			m_scrolly = data;
 			break;
 
@@ -288,18 +287,18 @@ WRITE8_MEMBER(victory_state::victory_video_control_w)
 			// D3 = SINVERT
 			// D2 = BIR12
 			// D1 = SELOVER
-			if (LOG_MICROCODE) logerror("%04X:CONTROL write = %02X\n", cpu_get_previouspc(&space.device()), data);
+			if (LOG_MICROCODE) logerror("%04X:CONTROL write = %02X\n", space.device().safe_pcbase(), data);
 			m_video_control = data;
 			break;
 
 		case 0x0b:	/* CLRVIRQ */
-			if (LOG_MICROCODE) logerror("%04X:CLRVIRQ write = %02X\n", cpu_get_previouspc(&space.device()), data);
+			if (LOG_MICROCODE) logerror("%04X:CLRVIRQ write = %02X\n", space.device().safe_pcbase(), data);
 			m_vblank_irq = 0;
 			victory_update_irq(machine());
 			break;
 
 		default:
-			if (LOG_MICROCODE) logerror("%04X:victory_video_control_w(%02X) = %02X\n", cpu_get_previouspc(&space.device()), offset, data);
+			if (LOG_MICROCODE) logerror("%04X:victory_video_control_w(%02X) = %02X\n", space.device().safe_pcbase(), offset, data);
 			break;
 	}
 }

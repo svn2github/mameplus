@@ -25,11 +25,14 @@ public:
 	DECLARE_WRITE8_MEMBER(rocnrope_flipscreen_w);
 	DECLARE_DRIVER_INIT(rocnrope);
 	DECLARE_DRIVER_INIT(rocnropk);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 /*----------- defined in video/rocnrope.c -----------*/
 
 
-PALETTE_INIT( rocnrope );
-VIDEO_START( rocnrope );
+
+
 SCREEN_UPDATE_IND16( rocnrope );

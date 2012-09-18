@@ -33,8 +33,6 @@
         * The above listed joystick maneuver to enable Pac-Man will still play a tone, but
           the effect (if any) is unknown.
 
-        * CPU is a Z8S18020VSC (20MHz part), OSC is 73.728MHz
-
     Note: The "correct" size of the roms are 27C020 for the program rom and 27C256 for the
           graphics rom.  However genuine boards have been found with larger roms containing
           the same data with the extra rom space blanked out.
@@ -45,6 +43,41 @@
         * The timed interrupt is a kludge; it is supposed to be generated internally by
           the Z180, but the cpu core doesn't support that yet.
         * Is the clock divide 3 or 4?
+
++-------------------------------------------------------+
+|                        +-------------+                |
+|                        |     U13     |                |
+|                        |ms pac/galaga|                |
+|                        +-------------+                |
+|                         +-----------+                 |
+|        +---+            |           |                 |
+|        |VOL|            |   ZiLOG   |                 |
+|        +---+            |Z8S18020VSC|                 |
+|                         | Z180 MPU  |                 |
+|J                        |           |                 |
+|A                        +-----------+                 |
+|M              +-----------+      +-----------+        |
+|M              |           |  OSC |           |        |
+|A              |CY37256P160|      |CY37256P160|        |
+|               |-83AC      |      |-83AC      |        |
+|               |           |   :: |           |   +---+|
+|               |           |   :: |           |   | C ||
+|               +-----------+   J1 +-----------+   | 1 ||
+|                 93LC46A                          | 9 ||
+|         +-------------+              +-------+   | 9 ||
+|         |     U14     |   +-------+  |CY7C199|   +---+|
+|         |ms pac/galaga|   |CY7C199|  +-------+        |
+|  D4     +-------------+   +-------+                   |
++-------------------------------------------------------+
+
+     CPU: Z8S18020VSC ZiLOG Z180 (20MHz part)
+Graphics: CY37256P160-83AC x 2 (Ultra37000 CPLD family - 160 pin TQFP, 256 Macrocells, 83MHz speed)
+  MEMORY: CY7C199-15VC 32K x 8 Static RAM x 3 (or equivalent ISSI IS61C256AH-15J)
+     OSC: 73.728MHz
+  EEPROM: 93LC46A 128 x 8-bit 1K microwire compatible Serial EEPROM
+     VOL: Volume adjust
+      D4: Diode - Status light
+      J1: 5 2-pin jumper array
 
 ***************************************************************************/
 
@@ -80,7 +113,7 @@ WRITE8_MEMBER(_20pacgal_state::irqack_w)
 	m_irq_mask = data & 1;
 
 	if (!m_irq_mask)
-		device_set_input_line(m_maincpu, 0, CLEAR_LINE);
+		m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(_20pacgal_state::timer_pulse_w)
@@ -308,25 +341,23 @@ INPUT_PORTS_END
  *
  *************************************/
 
-static MACHINE_START( 20pacgal )
+void _20pacgal_state::machine_start()
 {
-	_20pacgal_state *state = machine.driver_data<_20pacgal_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_eeprom = machine.device("eeprom");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_eeprom = machine().device("eeprom");
 
-	state->save_item(NAME(state->m_game_selected));
-	state->save_item(NAME(state->m_ram_48000));
-	state->save_item(NAME(state->m_irq_mask));
+	save_item(NAME(m_game_selected));
+	save_item(NAME(m_ram_48000));
+	save_item(NAME(m_irq_mask));
 
-	machine.save().register_postload(save_prepost_delegate(FUNC(set_bankptr), &machine));
+	machine().save().register_postload(save_prepost_delegate(FUNC(set_bankptr), &machine()));
 }
 
-static MACHINE_RESET( 20pacgal )
+void _20pacgal_state::machine_reset()
 {
-	_20pacgal_state *state = machine.driver_data<_20pacgal_state>();
 
-	state->m_game_selected = 0;
+	m_game_selected = 0;
 }
 
 static INTERRUPT_GEN( vblank_irq )
@@ -334,7 +365,7 @@ static INTERRUPT_GEN( vblank_irq )
 	_20pacgal_state *state = device->machine().driver_data<_20pacgal_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE); // TODO: assert breaks the inputs in 25pacman test mode
+		device->execute().set_input_line(0, HOLD_LINE); // TODO: assert breaks the inputs in 25pacman test mode
 }
 
 static MACHINE_CONFIG_START( 20pacgal, _20pacgal_state )
@@ -345,8 +376,6 @@ static MACHINE_CONFIG_START( 20pacgal, _20pacgal_state )
 	MCFG_CPU_IO_MAP(20pacgal_io_map)
 	MCFG_CPU_VBLANK_INT("screen", vblank_irq)
 
-	MCFG_MACHINE_START(20pacgal)
-	MCFG_MACHINE_RESET(20pacgal)
 
 	MCFG_EEPROM_ADD("eeprom", _20pacgal_eeprom_intf)
 

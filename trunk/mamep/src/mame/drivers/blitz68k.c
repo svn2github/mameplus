@@ -171,6 +171,8 @@ public:
 	DECLARE_DRIVER_INIT(megadblj);
 	DECLARE_DRIVER_INIT(hermit);
 	DECLARE_DRIVER_INIT(dualgame);
+	DECLARE_VIDEO_START(blitz68k);
+	DECLARE_VIDEO_START(blitz68k_addr_factor1);
 };
 
 /*************************************************************************************************************
@@ -192,16 +194,15 @@ struct blit_t
 	int addr_factor;
 } blit;
 
-static VIDEO_START(blitz68k)
+VIDEO_START_MEMBER(blitz68k_state,blitz68k)
 {
-	blitz68k_state *state = machine.driver_data<blitz68k_state>();
-	state->m_blit_buffer = auto_alloc_array(machine, UINT8, 512*256);
+	m_blit_buffer = auto_alloc_array(machine(), UINT8, 512*256);
 	blit.addr_factor = 2;
 }
 
-static VIDEO_START(blitz68k_addr_factor1)
+VIDEO_START_MEMBER(blitz68k_state,blitz68k_addr_factor1)
 {
-	VIDEO_START_CALL(blitz68k);
+	VIDEO_START_CALL_MEMBER(blitz68k);
 	blit.addr_factor = 1;
 }
 
@@ -581,7 +582,7 @@ READ16_MEMBER(blitz68k_state::test_r)
 WRITE16_MEMBER(blitz68k_state::irq_callback_w)
 {
 //  popmessage("%02x",data);
-	cputag_set_input_line(machine(), "maincpu", 3, HOLD_LINE );
+	machine().device("maincpu")->execute().set_input_line(3, HOLD_LINE );
 }
 
 WRITE16_MEMBER(blitz68k_state::sound_write_w)
@@ -1647,17 +1648,17 @@ static MC6845_ON_UPDATE_ADDR_CHANGED(crtc_addr)
 
 WRITE_LINE_MEMBER(blitz68k_state::crtc_vsync_irq1)
 {
-	cputag_set_input_line(machine(), "maincpu", 1, state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(1, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 WRITE_LINE_MEMBER(blitz68k_state::crtc_vsync_irq3)
 {
-	cputag_set_input_line(machine(), "maincpu", 3, state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(3, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 WRITE_LINE_MEMBER(blitz68k_state::crtc_vsync_irq5)
 {
-	cputag_set_input_line(machine(), "maincpu", 5, state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(5, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 const mc6845_interface mc6845_intf_irq1 =
@@ -1727,7 +1728,7 @@ static MACHINE_CONFIG_START( ilpag, blitz68k_state )
 
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(blitz68k)
+	MCFG_VIDEO_START_OVERRIDE(blitz68k_state,blitz68k)
 
 	MCFG_RAMDAC_ADD("ramdac", ramdac_intf, ramdac_map)
 
@@ -1802,7 +1803,7 @@ static MACHINE_CONFIG_START( cjffruit, blitz68k_state )
 
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(blitz68k)
+	MCFG_VIDEO_START_OVERRIDE(blitz68k_state,blitz68k)
 	MCFG_RAMDAC_ADD("ramdac", ramdac_intf, ramdac_map)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1834,7 +1835,7 @@ static MACHINE_CONFIG_START( bankrob, blitz68k_state )
 
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(blitz68k)
+	MCFG_VIDEO_START_OVERRIDE(blitz68k_state,blitz68k)
 	MCFG_RAMDAC_ADD("ramdac", ramdac_intf, ramdac_map)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1864,7 +1865,7 @@ static MACHINE_CONFIG_START( bankroba, blitz68k_state )
 
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(blitz68k_addr_factor1)
+	MCFG_VIDEO_START_OVERRIDE(blitz68k_state,blitz68k_addr_factor1)
 	MCFG_RAMDAC_ADD("ramdac", ramdac_intf, ramdac_map)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1893,7 +1894,7 @@ static MACHINE_CONFIG_START( deucesw2, blitz68k_state )
 
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(blitz68k)
+	MCFG_VIDEO_START_OVERRIDE(blitz68k_state,blitz68k)
 	MCFG_RAMDAC_ADD("ramdac", ramdac_intf, ramdac_map)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1924,7 +1925,7 @@ static MACHINE_CONFIG_START( dualgame, blitz68k_state )
 
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(blitz68k)
+	MCFG_VIDEO_START_OVERRIDE(blitz68k_state,blitz68k)
 	MCFG_RAMDAC_ADD("ramdac", ramdac_intf, ramdac_map)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1953,7 +1954,7 @@ static MACHINE_CONFIG_START( hermit, blitz68k_state )
 
 	MCFG_PALETTE_LENGTH(0x100)
 
-	MCFG_VIDEO_START(blitz68k)
+	MCFG_VIDEO_START_OVERRIDE(blitz68k_state,blitz68k)
 	MCFG_RAMDAC_ADD("ramdac", ramdac_intf, ramdac_map)
 
 	MCFG_SPEAKER_STANDARD_MONO("mono")

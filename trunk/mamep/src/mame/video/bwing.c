@@ -96,9 +96,9 @@ WRITE8_MEMBER(bwing_state::bwing_scrollram_w)
 	{
 		offs = offset;
 		if (offset < 0x1000)
-			gfx_element_mark_dirty(machine().gfx[2], offset / 32);
+			machine().gfx[2]->mark_dirty(offset / 32);
 		else
-			gfx_element_mark_dirty(machine().gfx[3], offset / 32);
+			machine().gfx[3]->mark_dirty(offset / 32);
 	}
 
 	(m_srbase[m_srbank])[offs] = data;
@@ -119,7 +119,7 @@ WRITE8_MEMBER(bwing_state::bwing_scrollreg_w)
 			m_srbank = data >> 6;
 
 			#if BW_DEBUG
-				logerror("(%s)%04x: w=%02x a=%04x f=%d\n", device().tag, cpu_get_pc(&space.device()), data, 0x1b00 + offset, machine().primary_screen->frame_number());
+				logerror("(%s)%04x: w=%02x a=%04x f=%d\n", device().tag, space.device().safe_pc(), data, 0x1b00 + offset, machine().primary_screen->frame_number());
 			#endif
 		break;
 	}
@@ -170,72 +170,71 @@ WRITE8_MEMBER(bwing_state::bwing_paletteram_w)
 //****************************************************************************
 // Initializations
 
-static TILE_GET_INFO( get_fgtileinfo )
+TILE_GET_INFO_MEMBER(bwing_state::get_fgtileinfo)
 {
-	bwing_state *state = machine.driver_data<bwing_state>();
-	tileinfo.pen_data = gfx_element_get_data(machine.gfx[2], state->m_fgdata[tile_index] & (BW_NTILES - 1));
-	tileinfo.palette_base = machine.gfx[2]->color_base + ((state->m_fgdata[tile_index] >> 7) << 3);
+	tileinfo.pen_data = machine().gfx[2]->get_data(m_fgdata[tile_index] & (BW_NTILES - 1));
+	tileinfo.palette_base = machine().gfx[2]->colorbase() + ((m_fgdata[tile_index] >> 7) << 3);
 }
 
-static TILE_GET_INFO( get_bgtileinfo )
+TILE_GET_INFO_MEMBER(bwing_state::get_bgtileinfo)
 {
-	bwing_state *state = machine.driver_data<bwing_state>();
-	tileinfo.pen_data = gfx_element_get_data(machine.gfx[3], state->m_bgdata[tile_index] & (BW_NTILES - 1));
-	tileinfo.palette_base = machine.gfx[3]->color_base + ((state->m_bgdata[tile_index] >> 7) << 3);
+	tileinfo.pen_data = machine().gfx[3]->get_data(m_bgdata[tile_index] & (BW_NTILES - 1));
+	tileinfo.palette_base = machine().gfx[3]->colorbase() + ((m_bgdata[tile_index] >> 7) << 3);
 }
 
-static TILE_GET_INFO( get_charinfo )
+TILE_GET_INFO_MEMBER(bwing_state::get_charinfo)
 {
-	bwing_state *state = machine.driver_data<bwing_state>();
-	SET_TILE_INFO(0, state->m_videoram[tile_index], 0, 0);
+	SET_TILE_INFO_MEMBER(0, m_videoram[tile_index], 0, 0);
 }
 
-static TILEMAP_MAPPER( bwing_scan_cols )
+TILEMAP_MAPPER_MEMBER(bwing_state::bwing_scan_cols)
 {
 	return ((col << 6) + row);
 }
 
 
-VIDEO_START( bwing )
+void bwing_state::video_start()
 {
-	bwing_state *state = machine.driver_data<bwing_state>();
-	UINT32 *dwptr;
+//  UINT32 *dwptr;
 	int i;
 
-	state->m_charmap = tilemap_create(machine, get_charinfo, tilemap_scan_cols, 8, 8, 32, 32);
-	state->m_fgmap = tilemap_create(machine, get_fgtileinfo, bwing_scan_cols, 16, 16, 64, 64);
-	state->m_bgmap = tilemap_create(machine, get_bgtileinfo, bwing_scan_cols, 16, 16, 64, 64);
+	m_charmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bwing_state::get_charinfo),this), TILEMAP_SCAN_COLS, 8, 8, 32, 32);
+	m_fgmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bwing_state::get_fgtileinfo),this), tilemap_mapper_delegate(FUNC(bwing_state::bwing_scan_cols),this), 16, 16, 64, 64);
+	m_bgmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(bwing_state::get_bgtileinfo),this), tilemap_mapper_delegate(FUNC(bwing_state::bwing_scan_cols),this), 16, 16, 64, 64);
 
-	state->m_charmap->set_transparent_pen(0);
-	state->m_fgmap->set_transparent_pen(0);
+	m_charmap->set_transparent_pen(0);
+	m_fgmap->set_transparent_pen(0);
 
-	state->m_srxlat = auto_alloc_array(machine, int, 0x2000);
-	state->save_pointer(NAME(state->m_srxlat), 0x2000);
+	m_srxlat = auto_alloc_array(machine(), int, 0x2000);
+	save_pointer(NAME(m_srxlat), 0x2000);
 
-	fill_srxlat(state->m_srxlat);
+	fill_srxlat(m_srxlat);
 
-	state->m_fgdata = state->memregion("gpu")->base();
-	state->m_bgdata = state->m_fgdata + 0x1000;
+	m_fgdata = memregion("gpu")->base();
+	m_bgdata = m_fgdata + 0x1000;
 
 	for (i = 0; i < 4; i++)
-		state->m_srbase[i] = state->m_fgdata + i * 0x2000;
+		m_srbase[i] = m_fgdata + i * 0x2000;
 
 	for (i = 0; i < 8; i++)
-		state->m_sreg[i] = 0;
+		m_sreg[i] = 0;
 
-//  state->m_fgfx = machine.gfx[2];
-	gfx_element_set_source(machine.gfx[2], state->m_srbase[1]);
+//  m_fgfx = machine().gfx[2];
+	machine().gfx[2]->set_source(m_srbase[1]);
 
-//  state->m_bgfx = machine.gfx[3];
-	gfx_element_set_source(machine.gfx[3], state->m_srbase[1] + 0x1000);
+//  m_bgfx = machine().gfx[3];
+	machine().gfx[3]->set_source(m_srbase[1] + 0x1000);
+/*
+    WTF??
 
-	dwptr = machine.gfx[2]->pen_usage;
-	if (dwptr)
-	{
-		dwptr[0] = 0;
-		for(i = 1; i < BW_NTILES; i++)
-			dwptr[i] = -1;
-	}
+    dwptr = machine().gfx[2]->pen_usage();
+    if (dwptr)
+    {
+        dwptr[0] = 0;
+        for(i = 1; i < BW_NTILES; i++)
+            dwptr[i] = -1;
+    }
+*/
 }
 
 //****************************************************************************

@@ -68,6 +68,17 @@ public:
 	DECLARE_DRIVER_INIT(kozure);
 	DECLARE_DRIVER_INIT(terraf);
 	DECLARE_DRIVER_INIT(terrafb);
+	TILEMAP_MAPPER_MEMBER(armedf_scan_type1);
+	TILEMAP_MAPPER_MEMBER(armedf_scan_type2);
+	TILEMAP_MAPPER_MEMBER(armedf_scan_type3);
+	TILE_GET_INFO_MEMBER(get_nb1414m4_tx_tile_info);
+	TILE_GET_INFO_MEMBER(get_armedf_tx_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	DECLARE_MACHINE_START(armedf);
+	DECLARE_MACHINE_RESET(armedf);
+	DECLARE_VIDEO_START(terraf);
+	DECLARE_VIDEO_START(armedf);
 };
 
 class bigfghtr_state : public armedf_state
@@ -88,11 +99,13 @@ public:
 	DECLARE_WRITE16_MEMBER(sharedram_w);
 	DECLARE_READ16_MEMBER(sharedram_r);
 	DECLARE_DRIVER_INIT(bigfghtr);
+	DECLARE_MACHINE_START(bigfghtr);
+	DECLARE_MACHINE_RESET(bigfghtr);
 };
 
 /*----------- defined in video/armedf.c -----------*/
 
 SCREEN_UPDATE_IND16( armedf );
-VIDEO_START( armedf );
-VIDEO_START( terraf );
+
+
 

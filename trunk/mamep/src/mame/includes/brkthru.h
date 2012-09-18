@@ -27,8 +27,8 @@ public:
 	//UINT8 *m_brkthru_nmi_enable; /* needs to be tracked down */
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 
 	UINT8   m_nmi_mask;
 	DECLARE_WRITE8_MEMBER(brkthru_1803_w);
@@ -39,11 +39,17 @@ public:
 	DECLARE_WRITE8_MEMBER(brkthru_1800_w);
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
 	DECLARE_DRIVER_INIT(brkthru);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
 /*----------- defined in video/brkthru.c -----------*/
 
-VIDEO_START( brkthru );
-PALETTE_INIT( brkthru );
+
+
 SCREEN_UPDATE_IND16( brkthru );

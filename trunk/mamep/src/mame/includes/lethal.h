@@ -18,8 +18,8 @@ public:
 	UINT8      m_cur_control2;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_k054539;
 	device_t *m_k056832;
 	device_t *m_k053244;
@@ -36,6 +36,9 @@ public:
 	DECLARE_READ8_MEMBER(gunsaux_r);
 	DECLARE_WRITE8_MEMBER(lethalen_palette_control);
 	DECLARE_DRIVER_INIT(lethalen);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 /*----------- defined in video/lethal.c -----------*/
@@ -44,5 +47,5 @@ extern void lethalen_sprite_callback(running_machine &machine, int *code, int *c
 extern void lethalen_tile_callback(running_machine &machine, int layer, int *code, int *color, int *flags);
 
 
-VIDEO_START(lethalen);
+
 SCREEN_UPDATE_IND16(lethalen);

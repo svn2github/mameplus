@@ -32,17 +32,23 @@ public:
 	int         m_sprites_scrolldy;
 
 	/* devices */
-	device_t *m_audiocpu;
+	cpu_device *m_audiocpu;
 	DECLARE_WRITE16_MEMBER(yunsun16_sound_bank_w);
 	DECLARE_WRITE16_MEMBER(magicbub_sound_command_w);
 	DECLARE_WRITE16_MEMBER(yunsun16_vram_0_w);
 	DECLARE_WRITE16_MEMBER(yunsun16_vram_1_w);
 	DECLARE_DRIVER_INIT(magicbub);
+	TILEMAP_MAPPER_MEMBER(yunsun16_tilemap_scan_pages);
+	TILE_GET_INFO_MEMBER(get_tile_info_0);
+	TILE_GET_INFO_MEMBER(get_tile_info_1);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/yunsun16.c -----------*/
 
 
-VIDEO_START( yunsun16 );
+
 SCREEN_UPDATE_IND16( yunsun16 );

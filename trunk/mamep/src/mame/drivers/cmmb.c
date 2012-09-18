@@ -64,10 +64,12 @@ public:
 	DECLARE_READ8_MEMBER(cmmb_input_r);
 	DECLARE_WRITE8_MEMBER(cmmb_output_w);
 	DECLARE_READ8_MEMBER(kludge_r);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
-static VIDEO_START( cmmb )
+void cmmb_state::video_start()
 {
 
 }
@@ -76,7 +78,7 @@ static SCREEN_UPDATE_IND16( cmmb )
 {
 	cmmb_state *state = screen.machine().driver_data<cmmb_state>();
 	UINT8 *videoram = state->m_videoram;
-	const gfx_element *gfx = screen.machine().gfx[0];
+	gfx_element *gfx = screen.machine().gfx[0];
 	int count = 0x00000;
 
 	int y,x;
@@ -113,8 +115,8 @@ WRITE8_MEMBER(cmmb_state::cmmb_charram_w)
 	offset&=0xfff;
 
 	/* dirty char */
-	gfx_element_mark_dirty(machine().gfx[0], offset >> 4);
-    gfx_element_mark_dirty(machine().gfx[1], offset >> 5);
+	machine().gfx[0]->mark_dirty(offset >> 4);
+    machine().gfx[1]->mark_dirty(offset >> 5);
 }
 
 
@@ -303,10 +305,10 @@ static INTERRUPT_GEN( cmmb_irq )
 {
 	//if(device->machine().input().code_pressed_once(KEYCODE_Z))
 	//if(device->machine().input().code_pressed(KEYCODE_Z))
-//      device_set_input_line(device, 0, HOLD_LINE);
+//      device->execute().set_input_line(0, HOLD_LINE);
 }
 
-static MACHINE_RESET( cmmb )
+void cmmb_state::machine_reset()
 {
 }
 
@@ -328,9 +330,7 @@ static MACHINE_CONFIG_START( cmmb, cmmb_state )
 	MCFG_GFXDECODE(cmmb)
 	MCFG_PALETTE_LENGTH(512)
 
-	MCFG_VIDEO_START(cmmb)
 
-	MCFG_MACHINE_RESET(cmmb)
 
 	/* sound hardware */
 //  MCFG_SPEAKER_STANDARD_MONO("mono")

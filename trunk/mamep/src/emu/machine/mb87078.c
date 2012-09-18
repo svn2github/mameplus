@@ -71,8 +71,7 @@
 #include "emu.h"
 #include "machine/mb87078.h"
 
-typedef struct _mb87078_state  mb87078_state;
-struct _mb87078_state
+struct mb87078_state
 {
 	int          gain[4];		/* gain index 0-63,64,65 */
 	int          channel_latch;	/* current channel */
@@ -116,7 +115,7 @@ INLINE mb87078_state *get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == MB87078);
 
-	return (mb87078_state *)downcast<legacy_device_base *>(device)->token();
+	return (mb87078_state *)downcast<mb87078_device *>(device)->token();
 }
 
 INLINE const mb87078_interface *get_interface( device_t *device )
@@ -266,13 +265,40 @@ static DEVICE_RESET( mb87078 )
 	mb87078_reset_comp_w(device, 1);
 }
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+const device_type MB87078 = &device_creator<mb87078_device>;
 
-#define DEVTEMPLATE_ID( p, s )	p##mb87078##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME		"Fujitsu MB87078"
-#define DEVTEMPLATE_FAMILY		"Fujitsu Volume Controller MB87078"
-#include "devtempl.h"
+mb87078_device::mb87078_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, MB87078, "Fujitsu MB87078", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(mb87078_state));
+}
+
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void mb87078_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void mb87078_device::device_start()
+{
+	DEVICE_START_NAME( mb87078 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void mb87078_device::device_reset()
+{
+	DEVICE_RESET_NAME( mb87078 )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(MB87078, mb87078);

@@ -742,13 +742,13 @@ WRITE8_MEMBER(galaga_state::bosco_latch_w)
 		case 0x00:	/* IRQ1 */
 			m_main_irq_mask = data & 1;
 			if (!m_main_irq_mask)
-				cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+				machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 			break;
 
 		case 0x01:	/* IRQ2 */
 			m_sub_irq_mask = data & 1;
 			if (!m_sub_irq_mask)
-				cputag_set_input_line(machine(), "sub", 0, CLEAR_LINE);
+				machine().device("sub")->execute().set_input_line(0, CLEAR_LINE);
 			break;
 
 		case 0x02:	/* NMION */
@@ -756,8 +756,8 @@ WRITE8_MEMBER(galaga_state::bosco_latch_w)
 			break;
 
 		case 0x03:	/* RESET */
-			cputag_set_input_line(machine(), "sub", INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
-			cputag_set_input_line(machine(), "sub2", INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+			machine().device("sub")->execute().set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
+			machine().device("sub2")->execute().set_input_line(INPUT_LINE_RESET, (data & 1) ? CLEAR_LINE : ASSERT_LINE);
 			break;
 
 		case 0x04:	/* n.c. */
@@ -874,22 +874,21 @@ static TIMER_CALLBACK( cpu3_interrupt_callback )
 }
 
 
-static MACHINE_START( galaga )
+MACHINE_START_MEMBER(galaga_state,galaga)
 {
-	galaga_state *state = machine.driver_data<galaga_state>();
 
 	/* create the interrupt timer */
-	state->m_cpu3_interrupt_timer = machine.scheduler().timer_alloc(FUNC(cpu3_interrupt_callback));
-	state->m_custom_mod = 0;
-	state_save_register_global(machine, state->m_custom_mod);
-	state->save_item(NAME(state->m_main_irq_mask));
-	state->save_item(NAME(state->m_sub_irq_mask));
-	state->save_item(NAME(state->m_sub2_nmi_mask));
+	m_cpu3_interrupt_timer = machine().scheduler().timer_alloc(FUNC(cpu3_interrupt_callback));
+	m_custom_mod = 0;
+	state_save_register_global(machine(), m_custom_mod);
+	save_item(NAME(m_main_irq_mask));
+	save_item(NAME(m_sub_irq_mask));
+	save_item(NAME(m_sub2_nmi_mask));
 }
 
 static void bosco_latch_reset(running_machine &machine)
 {
-	bosco_state *state = machine.driver_data<bosco_state>();
+	galaga_state *state = machine.driver_data<galaga_state>();
 	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
 	int i;
 
@@ -898,20 +897,19 @@ static void bosco_latch_reset(running_machine &machine)
 		state->bosco_latch_w(*space,i,0);
 }
 
-static MACHINE_RESET( galaga )
+MACHINE_RESET_MEMBER(galaga_state,galaga)
 {
-	galaga_state *state = machine.driver_data<galaga_state>();
 
 	/* Reset all latches */
-	bosco_latch_reset(machine);
+	bosco_latch_reset(machine());
 
-	state->m_cpu3_interrupt_timer->adjust(machine.primary_screen->time_until_pos(64), 64);
+	m_cpu3_interrupt_timer->adjust(machine().primary_screen->time_until_pos(64), 64);
 }
 
-static MACHINE_RESET( battles )
+MACHINE_RESET_MEMBER(xevious_state,battles)
 {
-	MACHINE_RESET_CALL(galaga);
-	battles_customio_init(machine);
+	MACHINE_RESET_CALL_MEMBER(galaga);
+	battles_customio_init(machine());
 }
 
 
@@ -1644,7 +1642,7 @@ static INTERRUPT_GEN( main_vblank_irq )
 	galaga_state *state = device->machine().driver_data<galaga_state>();
 
 	if(state->m_main_irq_mask)
-		device_set_input_line(device, 0, ASSERT_LINE);
+		device->execute().set_input_line(0, ASSERT_LINE);
 }
 
 static INTERRUPT_GEN( sub_vblank_irq )
@@ -1652,8 +1650,23 @@ static INTERRUPT_GEN( sub_vblank_irq )
 	galaga_state *state = device->machine().driver_data<galaga_state>();
 
 	if(state->m_sub_irq_mask)
-		device_set_input_line(device, 0, ASSERT_LINE);
+		device->execute().set_input_line(0, ASSERT_LINE);
 }
+
+const namco_06xx_config bosco_namco_06xx_0_intf =
+{
+	"maincpu", "51xx",   NULL,   "50xx_1", "54xx"
+};
+
+const namco_06xx_config bosco_namco_06xx_1_intf =
+{
+	"sub",     "50xx_2", "52xx", NULL,     NULL
+};
+
+const namco_54xx_config namco_54xx_intf =
+{
+	"discrete", NODE_01
+};
 
 static MACHINE_CONFIG_START( bosco, bosco_state )
 
@@ -1673,16 +1686,16 @@ static MACHINE_CONFIG_START( bosco, bosco_state )
 	MCFG_NAMCO_50XX_ADD("50xx_2", MASTER_CLOCK/6/2)	/* 1.536 MHz */
 	MCFG_NAMCO_51XX_ADD("51xx", MASTER_CLOCK/6/2, namco_51xx_intf)		/* 1.536 MHz */
 	MCFG_NAMCO_52XX_ADD("52xx", MASTER_CLOCK/6/2, namco_52xx_intf)		/* 1.536 MHz */
-	MCFG_NAMCO_54XX_ADD("54xx", MASTER_CLOCK/6/2, "discrete", NODE_01)	/* 1.536 MHz */
+	MCFG_NAMCO_54XX_ADD("54xx", MASTER_CLOCK/6/2, namco_54xx_intf)		/* 1.536 MHz */
 
-	MCFG_NAMCO_06XX_ADD("06xx_0", MASTER_CLOCK/6/64, "maincpu", "51xx",   NULL,   "50xx_1", "54xx")
-	MCFG_NAMCO_06XX_ADD("06xx_1", MASTER_CLOCK/6/64, "sub",     "50xx_2", "52xx", NULL,     NULL)
+	MCFG_NAMCO_06XX_ADD("06xx_0", MASTER_CLOCK/6/64, bosco_namco_06xx_0_intf)
+	MCFG_NAMCO_06XX_ADD("06xx_1", MASTER_CLOCK/6/64, bosco_namco_06xx_1_intf)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* 100 CPU slices per frame - an high value to ensure proper */
 							/* synchronization of the CPUs */
-	MCFG_MACHINE_START(galaga)
-	MCFG_MACHINE_RESET(galaga)
+	MCFG_MACHINE_START_OVERRIDE(bosco_state,galaga)
+	MCFG_MACHINE_RESET_OVERRIDE(bosco_state,galaga)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1693,8 +1706,8 @@ static MACHINE_CONFIG_START( bosco, bosco_state )
 	MCFG_GFXDECODE(bosco)
 	MCFG_PALETTE_LENGTH(64*4+64*4+4+64)
 
-	MCFG_PALETTE_INIT(bosco)
-	MCFG_VIDEO_START(bosco)
+	MCFG_PALETTE_INIT_OVERRIDE(bosco_state,bosco)
+	MCFG_VIDEO_START_OVERRIDE(bosco_state,bosco)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1709,6 +1722,11 @@ static MACHINE_CONFIG_START( bosco, bosco_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
 MACHINE_CONFIG_END
 
+
+const namco_06xx_config galaga_namco_06xx_intf =
+{
+	"maincpu", "51xx", NULL, NULL, "54xx"
+};
 
 static MACHINE_CONFIG_START( galaga, galaga_state )
 
@@ -1725,15 +1743,15 @@ static MACHINE_CONFIG_START( galaga, galaga_state )
 	MCFG_CPU_PROGRAM_MAP(galaga_map)
 
 	MCFG_NAMCO_51XX_ADD("51xx", MASTER_CLOCK/6/2, namco_51xx_intf)		/* 1.536 MHz */
-	MCFG_NAMCO_54XX_ADD("54xx", MASTER_CLOCK/6/2, "discrete", NODE_01)	/* 1.536 MHz */
+	MCFG_NAMCO_54XX_ADD("54xx", MASTER_CLOCK/6/2, namco_54xx_intf)		/* 1.536 MHz */
 
-	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/6/64, "maincpu", "51xx", NULL, NULL, "54xx")
+	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/6/64,  galaga_namco_06xx_intf)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* 100 CPU slices per frame - an high value to ensure proper */
 							/* synchronization of the CPUs */
-	MCFG_MACHINE_START(galaga)
-	MCFG_MACHINE_RESET(galaga)
+	MCFG_MACHINE_START_OVERRIDE(galaga_state,galaga)
+	MCFG_MACHINE_RESET_OVERRIDE(galaga_state,galaga)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1744,8 +1762,8 @@ static MACHINE_CONFIG_START( galaga, galaga_state )
 	MCFG_GFXDECODE(galaga)
 	MCFG_PALETTE_LENGTH(64*4+64*4+64)
 
-	MCFG_PALETTE_INIT(galaga)
-	MCFG_VIDEO_START(galaga)
+	MCFG_PALETTE_INIT_OVERRIDE(galaga_state,galaga)
+	MCFG_VIDEO_START_OVERRIDE(galaga_state,galaga)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1760,6 +1778,11 @@ static MACHINE_CONFIG_START( galaga, galaga_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
 MACHINE_CONFIG_END
 
+const namco_06xx_config galagab_namco_06xx_intf =
+{
+	"maincpu", "51xx", NULL, NULL, NULL
+};
+
 static MACHINE_CONFIG_DERIVED( galagab, galaga )
 
 	/* basic machine hardware */
@@ -1768,7 +1791,7 @@ static MACHINE_CONFIG_DERIVED( galagab, galaga )
 	MCFG_DEVICE_REMOVE("06xx")
 
 	/* FIXME: bootlegs should not have any Namco custom chip. However, this workaround is needed atm */
-	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/6/64, "maincpu", "51xx", NULL, NULL, NULL)
+	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/6/64, galagab_namco_06xx_intf)
 
 	MCFG_CPU_ADD("sub3", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(galaga_mem4)
@@ -1777,6 +1800,10 @@ static MACHINE_CONFIG_DERIVED( galagab, galaga )
 	MCFG_DEVICE_REMOVE("discrete")
 MACHINE_CONFIG_END
 
+const namco_06xx_config xevious_namco_06xx_intf =
+{
+	"maincpu", "51xx", NULL, "50xx", "54xx"
+};
 
 static MACHINE_CONFIG_START( xevious, xevious_state )
 
@@ -1794,15 +1821,15 @@ static MACHINE_CONFIG_START( xevious, xevious_state )
 
 	MCFG_NAMCO_50XX_ADD("50xx", MASTER_CLOCK/6/2)	/* 1.536 MHz */
 	MCFG_NAMCO_51XX_ADD("51xx", MASTER_CLOCK/6/2, namco_51xx_intf)		/* 1.536 MHz */
-	MCFG_NAMCO_54XX_ADD("54xx", MASTER_CLOCK/6/2, "discrete", NODE_01)	/* 1.536 MHz */
+	MCFG_NAMCO_54XX_ADD("54xx", MASTER_CLOCK/6/2, namco_54xx_intf)		/* 1.536 MHz */
 
-	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/6/64, "maincpu", "51xx", NULL, "50xx", "54xx")
+	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/6/64, xevious_namco_06xx_intf)
 
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 	MCFG_QUANTUM_TIME(attotime::from_hz(60000))	/* 1000 CPU slices per frame - an high value to ensure proper */
 							/* synchronization of the CPUs */
-	MCFG_MACHINE_START(galaga)
-	MCFG_MACHINE_RESET(galaga)
+	MCFG_MACHINE_START_OVERRIDE(galaga_state,galaga)
+	MCFG_MACHINE_RESET_OVERRIDE(galaga_state,galaga)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -1812,8 +1839,8 @@ static MACHINE_CONFIG_START( xevious, xevious_state )
 	MCFG_GFXDECODE(xevious)
 	MCFG_PALETTE_LENGTH(128*4+64*8+64*2)
 
-	MCFG_PALETTE_INIT(xevious)
-	MCFG_VIDEO_START(xevious)
+	MCFG_PALETTE_INIT_OVERRIDE(xevious_state,xevious)
+	MCFG_VIDEO_START_OVERRIDE(xevious_state,xevious)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1828,6 +1855,11 @@ static MACHINE_CONFIG_START( xevious, xevious_state )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
 MACHINE_CONFIG_END
 
+const namco_06xx_config battles_namco_06xx_intf =
+{
+	"maincpu", "51xx", NULL, NULL, NULL
+};
+
 static MACHINE_CONFIG_DERIVED( battles, xevious )
 
 	/* basic machine hardware */
@@ -1837,7 +1869,7 @@ static MACHINE_CONFIG_DERIVED( battles, xevious )
 	MCFG_DEVICE_REMOVE("06xx")
 
 	/* FIXME: bootlegs should not have any Namco custom chip. However, this workaround is needed atm */
-	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/6/64, "maincpu", "51xx", NULL, NULL, NULL)
+	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/6/64, battles_namco_06xx_intf)
 
 	MCFG_CPU_ADD("sub3", Z80, MASTER_CLOCK/6)	/* 3.072 MHz */
 	MCFG_CPU_PROGRAM_MAP(battles_mem4)
@@ -1845,10 +1877,10 @@ static MACHINE_CONFIG_DERIVED( battles, xevious )
 
 	MCFG_TIMER_ADD("battles_nmi", battles_nmi_generate)
 
-	MCFG_MACHINE_RESET(battles)
+	MCFG_MACHINE_RESET_OVERRIDE(xevious_state,battles)
 
 	/* video hardware */
-	MCFG_PALETTE_INIT(battles)
+	MCFG_PALETTE_INIT_OVERRIDE(xevious_state,battles)
 
 	/* sound hardware */
 	MCFG_DEVICE_REMOVE("discrete")
@@ -1857,6 +1889,10 @@ static MACHINE_CONFIG_DERIVED( battles, xevious )
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.80)
 MACHINE_CONFIG_END
 
+const namco_06xx_config digdug_namco_06xx_intf =
+{
+	"maincpu", "51xx", "53xx", NULL, NULL
+};
 
 static MACHINE_CONFIG_START( digdug, digdug_state )
 
@@ -1875,12 +1911,12 @@ static MACHINE_CONFIG_START( digdug, digdug_state )
 	MCFG_NAMCO_51XX_ADD("51xx", MASTER_CLOCK/6/2, namco_51xx_intf)		/* 1.536 MHz */
 	MCFG_NAMCO_53XX_ADD("53xx", MASTER_CLOCK/6/2, namco_53xx_intf)		/* 1.536 MHz */
 
-	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/6/64, "maincpu", "51xx", "53xx", NULL, NULL)
+	MCFG_NAMCO_06XX_ADD("06xx", MASTER_CLOCK/6/64, digdug_namco_06xx_intf)
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* 100 CPU slices per frame - an high value to ensure proper */
 							/* synchronization of the CPUs */
-	MCFG_MACHINE_START(galaga)
-	MCFG_MACHINE_RESET(galaga)
+	MCFG_MACHINE_START_OVERRIDE(galaga_state,galaga)
+	MCFG_MACHINE_RESET_OVERRIDE(galaga_state,galaga)
 
 	MCFG_ATARIVGEAROM_ADD("earom")
 
@@ -1892,8 +1928,8 @@ static MACHINE_CONFIG_START( digdug, digdug_state )
 	MCFG_GFXDECODE(digdug)
 	MCFG_PALETTE_LENGTH(16*2+64*4+64*4)
 
-	MCFG_PALETTE_INIT(digdug)
-	MCFG_VIDEO_START(digdug)
+	MCFG_PALETTE_INIT_OVERRIDE(digdug_state,digdug)
+	MCFG_VIDEO_START_OVERRIDE(digdug_state,digdug)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

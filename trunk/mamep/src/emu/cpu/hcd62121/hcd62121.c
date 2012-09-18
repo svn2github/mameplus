@@ -15,7 +15,7 @@ Martin Poupe's site can be found at http://prg.rkk.cz/~mpoupe/
 #include "hcd62121.h"
 
 
-struct _hcd62121_state
+struct hcd62121_state
 {
 	UINT32 prev_pc;
 	UINT16 sp;
@@ -35,8 +35,6 @@ struct _hcd62121_state
 	address_space *io;
 	int icount;
 };
-
-typedef struct _hcd62121_state hcd62121_state;
 
 
 /* From the battery check routine at 20:e874 it looks like
@@ -405,7 +403,7 @@ CPU_GET_INFO( hcd62121 )
 	case CPUINFO_INT_CONTEXT_SIZE:					info->i = sizeof(hcd62121_state);					break;
 	case CPUINFO_INT_INPUT_LINES:						info->i = 2;							break;
 	case CPUINFO_INT_DEFAULT_IRQ_VECTOR:			info->i = 0xff;							break;
-	case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;				break;
+	case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_BIG;				break;
 	case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1;							break;
 	case CPUINFO_INT_CLOCK_DIVIDER:					info->i = 1;							break;
 	case CPUINFO_INT_MIN_INSTRUCTION_BYTES:			info->i = 1;							break;
@@ -413,15 +411,15 @@ CPU_GET_INFO( hcd62121 )
 	case CPUINFO_INT_MIN_CYCLES:					info->i = 4;	/* right? */			break;
 	case CPUINFO_INT_MAX_CYCLES:					info->i = 48;	/* right? */			break;
 
-	case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 8;					break;
-	case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 24;					break;
-	case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
-	case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
-	case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
-	case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
-	case DEVINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 8;					break;
-	case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 8;					break;
-	case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
+	case CPUINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 8;					break;
+	case CPUINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 24;					break;
+	case CPUINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = 0;					break;
+	case CPUINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 0;					break;
+	case CPUINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 0;					break;
+	case CPUINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = 0;					break;
+	case CPUINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 8;					break;
+	case CPUINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 8;					break;
+	case CPUINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
 
 	case CPUINFO_INT_SP:							info->i = cpustate->sp;					break;
 	case CPUINFO_INT_PC:							info->i = ( cpustate->cseg << 16 ) | cpustate->ip; break;
@@ -450,11 +448,11 @@ CPU_GET_INFO( hcd62121 )
 	case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &cpustate->icount;			break;
 
 	/* --- the following bits of info are returned as NULL-terminated strings --- */
-	case DEVINFO_STR_NAME:							strcpy(info->s, "HCD62121"); break;
-	case DEVINFO_STR_FAMILY:						strcpy(info->s, "Hitachi HCD62121"); break;
-	case DEVINFO_STR_VERSION:						strcpy(info->s, "0.1"); break;
-	case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__); break;
-	case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright The MESS Team."); break;
+	case CPUINFO_STR_NAME:							strcpy(info->s, "HCD62121"); break;
+	case CPUINFO_STR_FAMILY:						strcpy(info->s, "Hitachi HCD62121"); break;
+	case CPUINFO_STR_VERSION:						strcpy(info->s, "0.1"); break;
+	case CPUINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__); break;
+	case CPUINFO_STR_CREDITS:						strcpy(info->s, "Copyright The MESS Team."); break;
 
 	case CPUINFO_STR_FLAGS:
 		sprintf(info->s, "%s-%s-%s-%c-%c",

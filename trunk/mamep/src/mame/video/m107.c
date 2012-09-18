@@ -42,17 +42,16 @@
 
 /*****************************************************************************/
 
-static TILE_GET_INFO( get_pf_tile_info )
+TILE_GET_INFO_MEMBER(m107_state::get_pf_tile_info)
 {
-	m107_state *state = machine.driver_data<m107_state>();
 	pf_layer_info *layer = (pf_layer_info *)param;
 	int tile, attrib;
 	tile_index = 2 * tile_index + layer->vram_base;
 
-	attrib = state->m_vram_data[tile_index + 1];
-	tile = state->m_vram_data[tile_index] + ((attrib & 0x1000) << 4);
+	attrib = m_vram_data[tile_index + 1];
+	tile = m_vram_data[tile_index] + ((attrib & 0x1000) << 4);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			tile,
 			attrib & 0x7f,
@@ -119,20 +118,19 @@ WRITE16_MEMBER(m107_state::m107_control_w)
 
 /*****************************************************************************/
 
-VIDEO_START( m107 )
+void m107_state::video_start()
 {
-	m107_state *state = machine.driver_data<m107_state>();
 	int laynum;
 
 	for (laynum = 0; laynum < 4; laynum++)
 	{
-		pf_layer_info *layer = &state->m_pf_layer[laynum];
+		pf_layer_info *layer = &m_pf_layer[laynum];
 
 		/* allocate a tilemaps per layer */
-		layer->tmap = tilemap_create(machine, get_pf_tile_info, tilemap_scan_rows,  8,8, 64,64);
+		layer->tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(m107_state::get_pf_tile_info),this), TILEMAP_SCAN_ROWS,  8,8, 64,64);
 
 		/* set the user data to point to the layer */
-		layer->tmap->set_user_data(&state->m_pf_layer[laynum]);
+		layer->tmap->set_user_data(&m_pf_layer[laynum]);
 
 		/* set scroll offsets */
 		layer->tmap->set_scrolldx(-3 + 2 * laynum, -3 + 2 * laynum);
@@ -143,7 +141,7 @@ VIDEO_START( m107 )
 			layer->tmap->set_transparent_pen(0);
 	}
 
-	state->m_buffered_spriteram = auto_alloc_array_clear(machine, UINT16, 0x1000/2);
+	m_buffered_spriteram = auto_alloc_array_clear(machine(), UINT16, 0x1000/2);
 }
 
 /*****************************************************************************/
@@ -373,7 +371,7 @@ WRITE16_MEMBER(m107_state::m107_spritebuffer_w)
 		/*
         TODO: this register looks a lot more complex than how the game uses it. All of them seems to test various bit combinations during POST.
         */
-//      logerror("%04x: buffered spriteram\n",cpu_get_pc(&space.device()));
+//      logerror("%04x: buffered spriteram\n",space.device().safe_pc());
 		m_sprite_display	= (!(data & 0x1000));
 
 		memcpy(m_buffered_spriteram, m_spriteram, 0x1000);

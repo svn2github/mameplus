@@ -23,11 +23,15 @@ public:
 	DECLARE_WRITE16_MEMBER(prehisle_control16_w);
 	DECLARE_WRITE8_MEMBER(D7759_write_port_0_w);
 	DECLARE_WRITE8_MEMBER(D7759_upd_reset_w);
+	TILE_GET_INFO_MEMBER(get_bg2_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/prehisle.c -----------*/
 
 
-VIDEO_START( prehisle );
+
 SCREEN_UPDATE_IND16( prehisle );

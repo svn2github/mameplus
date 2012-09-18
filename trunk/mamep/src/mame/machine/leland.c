@@ -109,7 +109,7 @@ WRITE8_MEMBER(leland_state::alleymas_joystick_kludge)
 {
 	/* catch the case where they clear this memory location at PC $1827 and change */
 	/* the value written to be a 1 */
-	if (cpu_get_previouspc(&space.device()) == 0x1827)
+	if (space.device().safe_pcbase() == 0x1827)
 		*m_alleymas_kludge_mem = 1;
 	else
 		*m_alleymas_kludge_mem = data;
@@ -316,99 +316,95 @@ WRITE8_MEMBER(leland_state::indyheat_analog_w)
  *
  *************************************/
 
-MACHINE_START( leland )
+MACHINE_START_MEMBER(leland_state,leland)
 {
-	leland_state *state = machine.driver_data<leland_state>();
 	/* allocate extra stuff */
-	state->m_battery_ram = reinterpret_cast<UINT8 *>(state->memshare("battery")->ptr());
+	m_battery_ram = reinterpret_cast<UINT8 *>(memshare("battery")->ptr());
 
 	/* start scanline interrupts going */
-	state->m_master_int_timer = machine.scheduler().timer_alloc(FUNC(leland_interrupt_callback));
+	m_master_int_timer = machine().scheduler().timer_alloc(FUNC(leland_interrupt_callback));
 }
 
 
-MACHINE_RESET( leland )
+MACHINE_RESET_MEMBER(leland_state,leland)
 {
-	leland_state *state = machine.driver_data<leland_state>();
-	state->m_master_int_timer->adjust(machine.primary_screen->time_until_pos(8), 8);
+	m_master_int_timer->adjust(machine().primary_screen->time_until_pos(8), 8);
 
 	/* reset globals */
-	state->m_gfx_control = 0x00;
-	leland_sound_port_w(machine.device("ay8910.1"), 0, 0xff);
-	state->m_wcol_enable = 0;
+	m_gfx_control = 0x00;
+	leland_sound_port_w(machine().device("ay8910.1"), 0, 0xff);
+	m_wcol_enable = 0;
 
-	state->m_dangerz_x = 512;
-	state->m_dangerz_y = 512;
-	state->m_analog_result = 0xff;
-	memset(state->m_dial_last_input, 0, sizeof(state->m_dial_last_input));
-	memset(state->m_dial_last_result, 0, sizeof(state->m_dial_last_result));
+	m_dangerz_x = 512;
+	m_dangerz_y = 512;
+	m_analog_result = 0xff;
+	memset(m_dial_last_input, 0, sizeof(m_dial_last_input));
+	memset(m_dial_last_result, 0, sizeof(m_dial_last_result));
 
-	state->m_keycard_shift = 0;
-	state->m_keycard_bit = 0;
-	state->m_keycard_state = 0;
-	state->m_keycard_clock = 0;
-	memset(state->m_keycard_command, 0, sizeof(state->m_keycard_command));
+	m_keycard_shift = 0;
+	m_keycard_bit = 0;
+	m_keycard_state = 0;
+	m_keycard_clock = 0;
+	memset(m_keycard_command, 0, sizeof(m_keycard_command));
 
-	state->m_top_board_bank = 0;
-	state->m_sound_port_bank = 0;
-	state->m_alternate_bank = 0;
+	m_top_board_bank = 0;
+	m_sound_port_bank = 0;
+	m_alternate_bank = 0;
 
 	/* initialize the master banks */
-	state->m_master_length = state->memregion("master")->bytes();
-	state->m_master_base = state->memregion("master")->base();
-	(*state->m_update_master_bank)(machine);
+	m_master_length = memregion("master")->bytes();
+	m_master_base = memregion("master")->base();
+	(*m_update_master_bank)(machine());
 
 	/* initialize the slave banks */
-	state->m_slave_length = state->memregion("slave")->bytes();
-	state->m_slave_base = state->memregion("slave")->base();
-	if (state->m_slave_length > 0x10000)
-		state->membank("bank3")->set_base(&state->m_slave_base[0x10000]);
+	m_slave_length = memregion("slave")->bytes();
+	m_slave_base = memregion("slave")->base();
+	if (m_slave_length > 0x10000)
+		membank("bank3")->set_base(&m_slave_base[0x10000]);
 }
 
 
-MACHINE_START( ataxx )
+MACHINE_START_MEMBER(leland_state,ataxx)
 {
-	leland_state *state = machine.driver_data<leland_state>();
 	/* set the odd data banks */
-	state->m_battery_ram = reinterpret_cast<UINT8 *>(state->memshare("battery")->ptr());
-	state->m_extra_tram = auto_alloc_array(machine, UINT8, ATAXX_EXTRA_TRAM_SIZE);
+	m_battery_ram = reinterpret_cast<UINT8 *>(memshare("battery")->ptr());
+	m_extra_tram = auto_alloc_array(machine(), UINT8, ATAXX_EXTRA_TRAM_SIZE);
 
 	/* start scanline interrupts going */
-	state->m_master_int_timer = machine.scheduler().timer_alloc(FUNC(ataxx_interrupt_callback));
+	m_master_int_timer = machine().scheduler().timer_alloc(FUNC(ataxx_interrupt_callback));
 }
 
 
-MACHINE_RESET( ataxx )
+MACHINE_RESET_MEMBER(leland_state,ataxx)
 {
-	leland_state *state = machine.driver_data<leland_state>();
-	memset(state->m_extra_tram, 0, ATAXX_EXTRA_TRAM_SIZE);
-	state->m_master_int_timer->adjust(machine.primary_screen->time_until_pos(8), 8);
+	memset(m_extra_tram, 0, ATAXX_EXTRA_TRAM_SIZE);
+	m_master_int_timer->adjust(machine().primary_screen->time_until_pos(8), 8);
 
 	/* initialize the XROM */
-	state->m_xrom_length = state->memregion("user1")->bytes();
-	state->m_xrom_base = state->memregion("user1")->base();
-	state->m_xrom1_addr = 0;
-	state->m_xrom2_addr = 0;
+	m_xrom_length = memregion("user1")->bytes();
+	m_xrom_base = memregion("user1")->base();
+	m_xrom1_addr = 0;
+	m_xrom2_addr = 0;
 
 	/* reset globals */
-	state->m_wcol_enable = 0;
+	m_wcol_enable = 0;
 
-	state->m_analog_result = 0xff;
-	memset(state->m_dial_last_input, 0, sizeof(state->m_dial_last_input));
-	memset(state->m_dial_last_result, 0, sizeof(state->m_dial_last_result));
+	m_analog_result = 0xff;
+	memset(m_dial_last_input, 0, sizeof(m_dial_last_input));
+	memset(m_dial_last_result, 0, sizeof(m_dial_last_result));
 
-	state->m_master_bank = 0;
+	m_master_bank = 0;
 
 	/* initialize the master banks */
-	state->m_master_length = state->memregion("master")->bytes();
-	state->m_master_base = state->memregion("master")->base();
-	ataxx_bankswitch(machine);
+	m_master_length = memregion("master")->bytes();
+	m_master_base = memregion("master")->base();
+	ataxx_bankswitch(machine());
 
 	/* initialize the slave banks */
-	state->m_slave_length = state->memregion("slave")->bytes();
-	state->m_slave_base = state->memregion("slave")->base();
-	if (state->m_slave_length > 0x10000)
-		state->membank("bank3")->set_base(&state->m_slave_base[0x10000]);
+	m_slave_length = memregion("slave")->bytes();
+	m_slave_base = memregion("slave")->base();
+	if (m_slave_length > 0x10000)
+		membank("bank3")->set_base(&m_slave_base[0x10000]);
 }
 
 
@@ -426,7 +422,7 @@ static TIMER_CALLBACK( leland_interrupt_callback )
 
 	/* interrupts generated on the VA10 line, which is every */
 	/* 16 scanlines starting with scanline #8 */
-	cputag_set_input_line(machine, "master", 0, HOLD_LINE);
+	machine.device("master")->execute().set_input_line(0, HOLD_LINE);
 
 	/* set a timer for the next one */
 	scanline += 16;
@@ -442,7 +438,7 @@ static TIMER_CALLBACK( ataxx_interrupt_callback )
 	int scanline = param;
 
 	/* interrupts generated according to the interrupt control register */
-	cputag_set_input_line(machine, "master", 0, HOLD_LINE);
+	machine.device("master")->execute().set_input_line(0, HOLD_LINE);
 
 	/* set a timer for the next one */
 	state->m_master_int_timer->adjust(machine.primary_screen->time_until_pos(scanline), scanline);
@@ -453,7 +449,7 @@ INTERRUPT_GEN( leland_master_interrupt )
 {
 	/* check for coins here */
 	if ((device->machine().root_device().ioport("IN1")->read() & 0x0e) != 0x0e)
-		device_set_input_line(device, INPUT_LINE_NMI, ASSERT_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE);
 }
 
 
@@ -469,7 +465,7 @@ WRITE8_MEMBER(leland_state::leland_master_alt_bankswitch_w)
 	/* update any bankswitching */
 	if (LOG_BANKSWITCHING_M)
 		if ((m_alternate_bank ^ data) & 0x0f)
-			logerror("%04X:alternate_bank = %02X\n", cpu_get_pc(&space.device()), data & 0x0f);
+			logerror("%04X:alternate_bank = %02X\n", space.device().safe_pc(), data & 0x0f);
 	m_alternate_bank = data & 15;
 	(*m_update_master_bank)(machine());
 
@@ -852,11 +848,11 @@ WRITE8_MEMBER(leland_state::leland_battery_ram_w)
 {
 	if (m_battery_ram_enable)
 	{
-		if (LOG_BATTERY_RAM) logerror("%04X:BatteryW@%04X=%02X\n", cpu_get_pc(&space.device()), offset, data);
+		if (LOG_BATTERY_RAM) logerror("%04X:BatteryW@%04X=%02X\n", space.device().safe_pc(), offset, data);
 		m_battery_ram[offset] = data;
 	}
 	else
-		logerror("%04X:BatteryW@%04X (invalid!)\n", cpu_get_pc(&space.device()), offset);
+		logerror("%04X:BatteryW@%04X (invalid!)\n", space.device().safe_pc(), offset);
 }
 
 
@@ -864,13 +860,13 @@ WRITE8_MEMBER(leland_state::ataxx_battery_ram_w)
 {
 	if (m_battery_ram_enable)
 	{
-		if (LOG_BATTERY_RAM) logerror("%04X:BatteryW@%04X=%02X\n", cpu_get_pc(&space.device()), offset, data);
+		if (LOG_BATTERY_RAM) logerror("%04X:BatteryW@%04X=%02X\n", space.device().safe_pc(), offset, data);
 		m_battery_ram[offset] = data;
 	}
 	else if ((m_master_bank & 0x30) == 0x20)
 		m_ataxx_qram[((m_master_bank & 0xc0) << 8) + offset] = data;
 	else
-		logerror("%04X:BatteryW@%04X (invalid!)\n", cpu_get_pc(&space.device()), offset);
+		logerror("%04X:BatteryW@%04X (invalid!)\n", space.device().safe_pc(), offset);
 }
 
 
@@ -1065,7 +1061,7 @@ WRITE8_MEMBER(leland_state::leland_master_analog_key_w)
 			/* update top board banking for some games */
 			if (LOG_BANKSWITCHING_M)
 				if ((m_top_board_bank ^ data) & 0xc0)
-					logerror("%04X:top_board_bank = %02X\n", cpu_get_pc(&space.device()), data & 0xc0);
+					logerror("%04X:top_board_bank = %02X\n", space.device().safe_pc(), data & 0xc0);
 			m_top_board_bank = data & 0xc0;
 			(*m_update_master_bank)(machine());
 			break;
@@ -1096,13 +1092,13 @@ READ8_MEMBER(leland_state::leland_master_input_r)
 
 		case 0x01:	/* /GIN1 */
 			result = ioport("IN1")->read();
-			if (cpu_get_reg(machine().device("slave"), Z80_HALT))
+			if (machine().device("slave")->state().state_int(Z80_HALT))
 				result ^= 0x01;
 			break;
 
 		case 0x02:	/* /GIN2 */
 		case 0x12:
-			cputag_set_input_line(machine(), "master", INPUT_LINE_NMI, CLEAR_LINE);
+			machine().device("master")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 			break;
 
 		case 0x03:	/* /IGID */
@@ -1116,7 +1112,7 @@ READ8_MEMBER(leland_state::leland_master_input_r)
 
 		case 0x11:	/* /GIN1 */
 			result = ioport("IN3")->read();
-			if (LOG_EEPROM) logerror("%04X:EE read\n", cpu_get_pc(&space.device()));
+			if (LOG_EEPROM) logerror("%04X:EE read\n", space.device().safe_pc());
 			break;
 
 		default:
@@ -1134,13 +1130,13 @@ WRITE8_MEMBER(leland_state::leland_master_output_w)
 	switch (offset)
 	{
 		case 0x09:	/* /MCONT */
-			cputag_set_input_line(machine(), "slave", INPUT_LINE_RESET, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
+			machine().device("slave")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
 			m_wcol_enable = (data & 0x02);
-			cputag_set_input_line(machine(), "slave", INPUT_LINE_NMI, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
-			cputag_set_input_line(machine(), "slave", 0, (data & 0x08) ? CLEAR_LINE : ASSERT_LINE);
+			machine().device("slave")->execute().set_input_line(INPUT_LINE_NMI, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
+			machine().device("slave")->execute().set_input_line(0, (data & 0x08) ? CLEAR_LINE : ASSERT_LINE);
 
 			eeprom = machine().device<eeprom_device>("eeprom");
-			if (LOG_EEPROM) logerror("%04X:EE write %d%d%d\n", cpu_get_pc(&space.device()),
+			if (LOG_EEPROM) logerror("%04X:EE write %d%d%d\n", space.device().safe_pc(),
 					(data >> 6) & 1, (data >> 5) & 1, (data >> 4) & 1);
 			eeprom->write_bit     ((data & 0x10) >> 4);
 			eeprom->set_clock_line((data & 0x20) ? ASSERT_LINE : CLEAR_LINE);
@@ -1178,7 +1174,7 @@ READ8_MEMBER(leland_state::ataxx_master_input_r)
 
 		case 0x07:	/* /SLVBLK */
 			result = ioport("IN1")->read();
-			if (cpu_get_reg(machine().device("slave"), Z80_HALT))
+			if (machine().device("slave")->state().state_int(Z80_HALT))
 				result ^= 0x01;
 			break;
 
@@ -1204,15 +1200,15 @@ WRITE8_MEMBER(leland_state::ataxx_master_output_w)
 		case 0x04:	/* /MBNK */
 			if (LOG_BANKSWITCHING_M)
 				if ((m_master_bank ^ data) & 0xff)
-					logerror("%04X:master_bank = %02X\n", cpu_get_pc(&space.device()), data & 0xff);
+					logerror("%04X:master_bank = %02X\n", space.device().safe_pc(), data & 0xff);
 			m_master_bank = data;
 			ataxx_bankswitch(machine());
 			break;
 
 		case 0x05:	/* /SLV0 */
-			cputag_set_input_line(machine(), "slave", 0, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
-			cputag_set_input_line(machine(), "slave", INPUT_LINE_NMI, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
-			cputag_set_input_line(machine(), "slave", INPUT_LINE_RESET, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
+			machine().device("slave")->execute().set_input_line(0, (data & 0x01) ? CLEAR_LINE : ASSERT_LINE);
+			machine().device("slave")->execute().set_input_line(INPUT_LINE_NMI, (data & 0x04) ? CLEAR_LINE : ASSERT_LINE);
+			machine().device("slave")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
 			break;
 
 		case 0x08:	/*  */
@@ -1257,22 +1253,22 @@ WRITE8_MEMBER(leland_state::ataxx_paletteram_and_misc_w)
 	else if (offset == 0x7fc)
 	{
 		m_xrom1_addr = (m_xrom1_addr & 0xff00) | (data & 0x00ff);
-		if (LOG_XROM) logerror("%04X:XROM1 address low write = %02X (addr=%04X)\n", cpu_get_pc(&space.device()), data, m_xrom1_addr);
+		if (LOG_XROM) logerror("%04X:XROM1 address low write = %02X (addr=%04X)\n", space.device().safe_pc(), data, m_xrom1_addr);
 	}
 	else if (offset == 0x7fd)
 	{
 		m_xrom1_addr = (m_xrom1_addr & 0x00ff) | ((data << 8) & 0xff00);
-		if (LOG_XROM) logerror("%04X:XROM1 address high write = %02X (addr=%04X)\n", cpu_get_pc(&space.device()), data, m_xrom1_addr);
+		if (LOG_XROM) logerror("%04X:XROM1 address high write = %02X (addr=%04X)\n", space.device().safe_pc(), data, m_xrom1_addr);
 	}
 	else if (offset == 0x7fe)
 	{
 		m_xrom2_addr = (m_xrom2_addr & 0xff00) | (data & 0x00ff);
-		if (LOG_XROM) logerror("%04X:XROM2 address low write = %02X (addr=%04X)\n", cpu_get_pc(&space.device()), data, m_xrom2_addr);
+		if (LOG_XROM) logerror("%04X:XROM2 address low write = %02X (addr=%04X)\n", space.device().safe_pc(), data, m_xrom2_addr);
 	}
 	else if (offset == 0x7ff)
 	{
 		m_xrom2_addr = (m_xrom2_addr & 0x00ff) | ((data << 8) & 0xff00);
-		if (LOG_XROM) logerror("%04X:XROM2 address high write = %02X (addr=%04X)\n", cpu_get_pc(&space.device()), data, m_xrom2_addr);
+		if (LOG_XROM) logerror("%04X:XROM2 address high write = %02X (addr=%04X)\n", space.device().safe_pc(), data, m_xrom2_addr);
 	}
 	else
 		m_extra_tram[offset] = data;
@@ -1286,13 +1282,13 @@ READ8_MEMBER(leland_state::ataxx_paletteram_and_misc_r)
 	else if (offset == 0x7fc || offset == 0x7fd)
 	{
 		int result = m_xrom_base[0x00000 | m_xrom1_addr | ((offset & 1) << 16)];
-		if (LOG_XROM) logerror("%04X:XROM1 read(%d) = %02X (addr=%04X)\n", cpu_get_pc(&space.device()), offset - 0x7fc, result, m_xrom1_addr);
+		if (LOG_XROM) logerror("%04X:XROM1 read(%d) = %02X (addr=%04X)\n", space.device().safe_pc(), offset - 0x7fc, result, m_xrom1_addr);
 		return result;
 	}
 	else if (offset == 0x7fe || offset == 0x7ff)
 	{
 		int result = m_xrom_base[0x20000 | m_xrom2_addr | ((offset & 1) << 16)];
-		if (LOG_XROM) logerror("%04X:XROM2 read(%d) = %02X (addr=%04X)\n", cpu_get_pc(&space.device()), offset - 0x7fc, result, m_xrom2_addr);
+		if (LOG_XROM) logerror("%04X:XROM2 read(%d) = %02X (addr=%04X)\n", space.device().safe_pc(), offset - 0x7fc, result, m_xrom2_addr);
 		return result;
 	}
 	else
@@ -1346,12 +1342,12 @@ WRITE8_MEMBER(leland_state::leland_slave_small_banksw_w)
 
 	if (bankaddress >= m_slave_length)
 	{
-		logerror("%04X:Slave bank %02X out of range!", cpu_get_pc(&space.device()), data & 1);
+		logerror("%04X:Slave bank %02X out of range!", space.device().safe_pc(), data & 1);
 		bankaddress = 0x10000;
 	}
 	membank("bank3")->set_base(&m_slave_base[bankaddress]);
 
-	if (LOG_BANKSWITCHING_S) logerror("%04X:Slave bank = %02X (%05X)\n", cpu_get_pc(&space.device()), data & 1, bankaddress);
+	if (LOG_BANKSWITCHING_S) logerror("%04X:Slave bank = %02X (%05X)\n", space.device().safe_pc(), data & 1, bankaddress);
 }
 
 
@@ -1361,12 +1357,12 @@ WRITE8_MEMBER(leland_state::leland_slave_large_banksw_w)
 
 	if (bankaddress >= m_slave_length)
 	{
-		logerror("%04X:Slave bank %02X out of range!", cpu_get_pc(&space.device()), data & 15);
+		logerror("%04X:Slave bank %02X out of range!", space.device().safe_pc(), data & 15);
 		bankaddress = 0x10000;
 	}
 	membank("bank3")->set_base(&m_slave_base[bankaddress]);
 
-	if (LOG_BANKSWITCHING_S) logerror("%04X:Slave bank = %02X (%05X)\n", cpu_get_pc(&space.device()), data & 15, bankaddress);
+	if (LOG_BANKSWITCHING_S) logerror("%04X:Slave bank = %02X (%05X)\n", space.device().safe_pc(), data & 15, bankaddress);
 }
 
 
@@ -1385,12 +1381,12 @@ WRITE8_MEMBER(leland_state::ataxx_slave_banksw_w)
 
 	if (bankaddress >= m_slave_length)
 	{
-		logerror("%04X:Slave bank %02X out of range!", cpu_get_pc(&space.device()), data & 0x3f);
+		logerror("%04X:Slave bank %02X out of range!", space.device().safe_pc(), data & 0x3f);
 		bankaddress = 0x2000;
 	}
 	membank("bank3")->set_base(&m_slave_base[bankaddress]);
 
-	if (LOG_BANKSWITCHING_S) logerror("%04X:Slave bank = %02X (%05X)\n", cpu_get_pc(&space.device()), data, bankaddress);
+	if (LOG_BANKSWITCHING_S) logerror("%04X:Slave bank = %02X (%05X)\n", space.device().safe_pc(), data, bankaddress);
 }
 
 

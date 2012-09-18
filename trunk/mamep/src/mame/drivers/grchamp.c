@@ -76,10 +76,10 @@
  *
  *************************************/
 
-static MACHINE_RESET( grchamp )
+void grchamp_state::machine_reset()
 {
 	/* if the coin system is 1 way, lock Coin B (Page 40) */
-	coin_lockout_w(machine, 1, (machine.root_device().ioport("DSWB")->read() & 0x10) ? 1 : 0);
+	coin_lockout_w(machine(), 1, (machine().root_device().ioport("DSWB")->read() & 0x10) ? 1 : 0);
 }
 
 
@@ -95,7 +95,7 @@ static INTERRUPT_GEN( grchamp_cpu0_interrupt )
 	grchamp_state *state = device->machine().driver_data<grchamp_state>();
 
 	if (state->m_cpu0_out[0] & 0x01)
-		device_set_input_line(device, 0, ASSERT_LINE);
+		device->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -104,7 +104,7 @@ static INTERRUPT_GEN( grchamp_cpu1_interrupt )
 	grchamp_state *state = device->machine().driver_data<grchamp_state>();
 
 	if (state->m_cpu1_out[4] & 0x01)
-		device_set_input_line(device, 0, ASSERT_LINE);
+		device->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -131,7 +131,7 @@ WRITE8_MEMBER(grchamp_state::cpu0_outputs_w)
 			/* bit 6: FOG OUT */
 			/* bit 7: RADARON */
 			if ((diff & 0x01) && !(data & 0x01))
-				cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+				machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 			if ((diff & 0x02) && !(data & 0x02))
 				m_collide = m_collmode = 0;
 			break;
@@ -190,7 +190,7 @@ WRITE8_MEMBER(grchamp_state::cpu0_outputs_w)
 		case 0x0e:	/* OUT14 */
 			/* O-21 connector */
 			soundlatch_byte_w(space, 0, data);
-			cputag_set_input_line(machine(), "audiocpu", INPUT_LINE_NMI, PULSE_LINE);
+			machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 			break;
 	}
 }
@@ -269,7 +269,7 @@ WRITE8_MEMBER(grchamp_state::cpu1_outputs_w)
 		case 0x04:	/* OUT4 */
 			/* bit 0:   interrupt enable for CPU 1 */
 			if ((diff & 0x01) && !(data & 0x01))
-				cputag_set_input_line(machine(), "sub", 0, CLEAR_LINE);
+				machine().device("sub")->execute().set_input_line(0, CLEAR_LINE);
 			break;
 
 		case 0x05:	/* OUT5 - unused */
@@ -684,7 +684,6 @@ static MACHINE_CONFIG_START( grchamp, grchamp_state )
 	MCFG_CPU_PROGRAM_MAP(sound_map)
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold, (double)SOUND_CLOCK/4/16/16/10/16)
 
-	MCFG_MACHINE_RESET(grchamp)
 	MCFG_WATCHDOG_VBLANK_INIT(8)
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))
 
@@ -696,8 +695,6 @@ static MACHINE_CONFIG_START( grchamp, grchamp_state )
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_STATIC(grchamp)
 
-	MCFG_PALETTE_INIT(grchamp)
-	MCFG_VIDEO_START(grchamp)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

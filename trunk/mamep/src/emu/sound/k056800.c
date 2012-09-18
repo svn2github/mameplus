@@ -9,8 +9,7 @@
 #include "emu.h"
 #include "sound/k056800.h"
 
-typedef struct _k056800_state k056800_state;
-struct _k056800_state
+struct k056800_state
 {
 	UINT8                host_reg[8];
 	UINT8                sound_reg[8];
@@ -29,7 +28,7 @@ INLINE k056800_state *k056800_get_safe_token( device_t *device )
 	assert(device != NULL);
 	assert(device->type() == K056800);
 
-	return (k056800_state *)downcast<legacy_device_base *>(device)->token();
+	return (k056800_state *)downcast<k056800_device *>(device)->token();
 }
 
 INLINE const k056800_interface *k056800_get_interface( device_t *device )
@@ -164,14 +163,40 @@ static DEVICE_RESET( k056800 )
 	k056800->sound_cpu_irq1_enable = 0;
 }
 
+const device_type K056800 = &device_creator<k056800_device>;
 
-static const char DEVTEMPLATE_SOURCE[] = __FILE__;
+k056800_device::k056800_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K056800, "Konami 056800 MIRAC", tag, owner, clock)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(k056800_state));
+}
 
-#define DEVTEMPLATE_ID( p, s )	p##k056800##s
-#define DEVTEMPLATE_FEATURES	DT_HAS_START | DT_HAS_RESET
-#define DEVTEMPLATE_NAME		"Konami 056800 MIRAC"
-#define DEVTEMPLATE_FAMILY		"Konami custom"
-#include "devtempl.h"
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void k056800_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k056800_device::device_start()
+{
+	DEVICE_START_NAME( k056800 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void k056800_device::device_reset()
+{
+	DEVICE_RESET_NAME( k056800 )(this);
+}
 
 
-DEFINE_LEGACY_DEVICE(K056800, k056800);

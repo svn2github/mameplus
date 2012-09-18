@@ -60,13 +60,13 @@ Note:   if MAME_DEBUG is defined, pressing Z or X with:
 #define SHOW_READ_ERROR(_format_,_offset_)\
 {\
 	popmessage(_format_,_offset_);\
-	logerror("CPU #0 PC %06X : Warning, ",cpu_get_pc(&space.device())); \
+	logerror("CPU #0 PC %06X : Warning, ",space.device().safe_pc()); \
 	logerror(_format_ "\n",_offset_);\
 }
 #define SHOW_WRITE_ERROR(_format_,_offset_,_data_)\
 {\
 	popmessage(_format_,_offset_,_data_);\
-	logerror("CPU #0 PC %06X : Warning, ",cpu_get_pc(&space.device())); \
+	logerror("CPU #0 PC %06X : Warning, ",space.device().safe_pc()); \
 	logerror(_format_ "\n",_offset_,_data_); \
 }
 
@@ -74,12 +74,12 @@ Note:   if MAME_DEBUG is defined, pressing Z or X with:
 
 #define SHOW_READ_ERROR(_format_,_offset_)\
 {\
-	logerror("CPU #0 PC %06X : Warning, ",cpu_get_pc(&space.device())); \
+	logerror("CPU #0 PC %06X : Warning, ",space.device().safe_pc()); \
 	logerror(_format_ "\n",_offset_);\
 }
 #define SHOW_WRITE_ERROR(_format_,_offset_,_data_)\
 {\
-	logerror("CPU #0 PC %06X : Warning, ",cpu_get_pc(&space.device())); \
+	logerror("CPU #0 PC %06X : Warning, ",space.device().safe_pc()); \
 	logerror(_format_ "\n",_offset_,_data_); \
 }
 
@@ -153,34 +153,32 @@ WRITE16_MEMBER(cischeat_state::cischeat_scrollram_0_w){ scrollram_w(&space, offs
 WRITE16_MEMBER(cischeat_state::cischeat_scrollram_1_w){ scrollram_w(&space, offset, data, mem_mask, 1); }
 WRITE16_MEMBER(cischeat_state::cischeat_scrollram_2_w){ scrollram_w(&space, offset, data, mem_mask, 2); }
 
-static TILEMAP_MAPPER( cischeat_scan_8x8 )
+TILEMAP_MAPPER_MEMBER(cischeat_state::cischeat_scan_8x8)
 {
 	return (col * TILES_PER_PAGE_Y) +
 		   (row / TILES_PER_PAGE_Y) * TILES_PER_PAGE * (num_cols / TILES_PER_PAGE_X) +
 		   (row % TILES_PER_PAGE_Y);
 }
 
-static TILEMAP_MAPPER( cischeat_scan_16x16 )
+TILEMAP_MAPPER_MEMBER(cischeat_state::cischeat_scan_16x16)
 {
 	return ( ((col / 2) * (TILES_PER_PAGE_Y / 2)) +
 			 ((row / 2) / (TILES_PER_PAGE_Y / 2)) * (TILES_PER_PAGE / 4) * (num_cols / TILES_PER_PAGE_X) +
 			 ((row / 2) % (TILES_PER_PAGE_Y / 2)) )*4 + (row&1) + (col&1)*2;
 }
 
-static TILE_GET_INFO( cischeat_get_scroll_tile_info_8x8 )
+TILE_GET_INFO_MEMBER(cischeat_state::cischeat_get_scroll_tile_info_8x8)
 {
-	cischeat_state *state = machine.driver_data<cischeat_state>();
 	int tmap = (FPTR)param;
-	UINT16 code = state->m_scrollram[tmap][tile_index];
-	SET_TILE_INFO(tmap, (code & 0xfff), code >> (16 - state->m_bits_per_color_code), 0);
+	UINT16 code = m_scrollram[tmap][tile_index];
+	SET_TILE_INFO_MEMBER(tmap, (code & 0xfff), code >> (16 - m_bits_per_color_code), 0);
 }
 
-static TILE_GET_INFO( cischeat_get_scroll_tile_info_16x16 )
+TILE_GET_INFO_MEMBER(cischeat_state::cischeat_get_scroll_tile_info_16x16)
 {
-	cischeat_state *state = machine.driver_data<cischeat_state>();
 	int tmap = (FPTR)param;
-	UINT16 code = state->m_scrollram[tmap][tile_index/4];
-	SET_TILE_INFO(tmap, (code & 0xfff) * 4 + (tile_index & 3), code >> (16 - state->m_bits_per_color_code), 0);
+	UINT16 code = m_scrollram[tmap][tile_index/4];
+	SET_TILE_INFO_MEMBER(tmap, (code & 0xfff) * 4 + (tile_index & 3), code >> (16 - m_bits_per_color_code), 0);
 }
 
 static void create_tilemaps(running_machine &machine)
@@ -191,23 +189,23 @@ static void create_tilemaps(running_machine &machine)
 	for (layer = 0; layer < 3; layer++)
 	{
 		/* 16x16 tilemaps */
-		state->m_tilemap[layer][0][0] = tilemap_create(machine, cischeat_get_scroll_tile_info_16x16, cischeat_scan_16x16,
+		state->m_tilemap[layer][0][0] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(cischeat_state::cischeat_get_scroll_tile_info_16x16),state), tilemap_mapper_delegate(FUNC(cischeat_state::cischeat_scan_16x16),state),
 								 8,8, TILES_PER_PAGE_X * 16, TILES_PER_PAGE_Y * 2);
-		state->m_tilemap[layer][0][1] = tilemap_create(machine, cischeat_get_scroll_tile_info_16x16, cischeat_scan_16x16,
+		state->m_tilemap[layer][0][1] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(cischeat_state::cischeat_get_scroll_tile_info_16x16),state), tilemap_mapper_delegate(FUNC(cischeat_state::cischeat_scan_16x16),state),
 								 8,8, TILES_PER_PAGE_X * 8, TILES_PER_PAGE_Y * 4);
-		state->m_tilemap[layer][0][2] = tilemap_create(machine, cischeat_get_scroll_tile_info_16x16, cischeat_scan_16x16,
+		state->m_tilemap[layer][0][2] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(cischeat_state::cischeat_get_scroll_tile_info_16x16),state), tilemap_mapper_delegate(FUNC(cischeat_state::cischeat_scan_16x16),state),
 								 8,8, TILES_PER_PAGE_X * 4, TILES_PER_PAGE_Y * 8);
-		state->m_tilemap[layer][0][3] = tilemap_create(machine, cischeat_get_scroll_tile_info_16x16, cischeat_scan_16x16,
+		state->m_tilemap[layer][0][3] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(cischeat_state::cischeat_get_scroll_tile_info_16x16),state), tilemap_mapper_delegate(FUNC(cischeat_state::cischeat_scan_16x16),state),
 								 8,8, TILES_PER_PAGE_X * 2, TILES_PER_PAGE_Y * 16);
 
 		/* 8x8 tilemaps */
-		state->m_tilemap[layer][1][0] = tilemap_create(machine, cischeat_get_scroll_tile_info_8x8, cischeat_scan_8x8,
+		state->m_tilemap[layer][1][0] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(cischeat_state::cischeat_get_scroll_tile_info_8x8),state), tilemap_mapper_delegate(FUNC(cischeat_state::cischeat_scan_8x8),state),
 								 8,8, TILES_PER_PAGE_X * 8, TILES_PER_PAGE_Y * 1);
-		state->m_tilemap[layer][1][1] = tilemap_create(machine, cischeat_get_scroll_tile_info_8x8, cischeat_scan_8x8,
+		state->m_tilemap[layer][1][1] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(cischeat_state::cischeat_get_scroll_tile_info_8x8),state), tilemap_mapper_delegate(FUNC(cischeat_state::cischeat_scan_8x8),state),
 								 8,8, TILES_PER_PAGE_X * 4, TILES_PER_PAGE_Y * 2);
-		state->m_tilemap[layer][1][2] = tilemap_create(machine, cischeat_get_scroll_tile_info_8x8, cischeat_scan_8x8,
+		state->m_tilemap[layer][1][2] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(cischeat_state::cischeat_get_scroll_tile_info_8x8),state), tilemap_mapper_delegate(FUNC(cischeat_state::cischeat_scan_8x8),state),
 								 8,8, TILES_PER_PAGE_X * 4, TILES_PER_PAGE_Y * 2);
-		state->m_tilemap[layer][1][3] = tilemap_create(machine, cischeat_get_scroll_tile_info_8x8, cischeat_scan_8x8,
+		state->m_tilemap[layer][1][3] = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(cischeat_state::cischeat_get_scroll_tile_info_8x8),state), tilemap_mapper_delegate(FUNC(cischeat_state::cischeat_scan_8x8),state),
 								 8,8, TILES_PER_PAGE_X * 2, TILES_PER_PAGE_Y * 4);
 
 		/* set user data and transparency */
@@ -230,28 +228,27 @@ void cischeat_state::cischeat_set_vreg_flag(int which, int data)
 }
 
 /* 32 colour codes for the tiles */
-VIDEO_START( cischeat )
+VIDEO_START_MEMBER(cischeat_state,cischeat)
 {
-	cischeat_state *state = machine.driver_data<cischeat_state>();
 	int i;
 
-	state->m_spriteram = &state->m_ram[0x8000/2];
+	m_spriteram = &m_ram[0x8000/2];
 
-	create_tilemaps(machine);
-	state->m_tmap[0] = state->m_tilemap[0][0][0];
-	state->m_tmap[1] = state->m_tilemap[1][0][0];
-	state->m_tmap[2] = state->m_tilemap[2][0][0];
+	create_tilemaps(machine());
+	m_tmap[0] = m_tilemap[0][0][0];
+	m_tmap[1] = m_tilemap[1][0][0];
+	m_tmap[2] = m_tilemap[2][0][0];
 
-	state->m_active_layers = 0;
+	m_active_layers = 0;
 
 	for (i = 0; i < 3; i ++)
 	{
-		state->m_scroll_flag[i] = state->m_scrollx[i] = state->m_scrolly[i] = 0;
+		m_scroll_flag[i] = m_scrollx[i] = m_scrolly[i] = 0;
 	}
 
-	state->m_bits_per_color_code = 5;
+	m_bits_per_color_code = 5;
 
-	prepare_shadows(state);
+	prepare_shadows(this);
 }
 
 /**************************************************************************
@@ -259,18 +256,17 @@ VIDEO_START( cischeat )
 **************************************************************************/
 
 /* 16 colour codes for the tiles */
-VIDEO_START( f1gpstar )
+VIDEO_START_MEMBER(cischeat_state,f1gpstar)
 {
-	cischeat_state *state = machine.driver_data<cischeat_state>();
 
-	VIDEO_START_CALL(cischeat);
+	VIDEO_START_CALL_MEMBER(cischeat);
 
-	state->m_bits_per_color_code = 4;
+	m_bits_per_color_code = 4;
 }
 
-VIDEO_START( bigrun )
+VIDEO_START_MEMBER(cischeat_state,bigrun)
 {
-	VIDEO_START_CALL(f1gpstar);
+	VIDEO_START_CALL_MEMBER(f1gpstar);
 }
 
 
@@ -377,9 +373,9 @@ WRITE16_MEMBER(cischeat_state::bigrun_vregs_w)
 		case 0x2208/2   : break;	// watchdog reset
 
 		/* Not sure about this one.. */
-		case 0x2308/2   :	cputag_set_input_line(machine(), "cpu2", INPUT_LINE_RESET, (new_data & 2) ? ASSERT_LINE : CLEAR_LINE );
-							cputag_set_input_line(machine(), "cpu3", INPUT_LINE_RESET, (new_data & 2) ? ASSERT_LINE : CLEAR_LINE );
-							cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_RESET, (new_data & 1) ? ASSERT_LINE : CLEAR_LINE );
+		case 0x2308/2   :	machine().device("cpu2")->execute().set_input_line(INPUT_LINE_RESET, (new_data & 2) ? ASSERT_LINE : CLEAR_LINE );
+							machine().device("cpu3")->execute().set_input_line(INPUT_LINE_RESET, (new_data & 2) ? ASSERT_LINE : CLEAR_LINE );
+							machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, (new_data & 1) ? ASSERT_LINE : CLEAR_LINE );
 							break;
 
 		default: SHOW_WRITE_ERROR("vreg %04X <- %04X",offset*2,data);
@@ -465,13 +461,13 @@ WRITE16_MEMBER(cischeat_state::cischeat_vregs_w)
 
 		case 0x2300/2   :	/* Sound CPU: reads latch during int 4, and stores command */
 							soundlatch_word_w(space, 0, new_data, 0xffff);
-							cputag_set_input_line(machine(), "soundcpu", 4, HOLD_LINE);
+							machine().device("soundcpu")->execute().set_input_line(4, HOLD_LINE);
 							break;
 
 		/* Not sure about this one.. */
-		case 0x2308/2   :	cputag_set_input_line(machine(), "cpu2", INPUT_LINE_RESET, (new_data & 2) ? ASSERT_LINE : CLEAR_LINE );
-							cputag_set_input_line(machine(), "cpu3", INPUT_LINE_RESET, (new_data & 2) ? ASSERT_LINE : CLEAR_LINE );
-							cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_RESET, (new_data & 1) ? ASSERT_LINE : CLEAR_LINE );
+		case 0x2308/2   :	machine().device("cpu2")->execute().set_input_line(INPUT_LINE_RESET, (new_data & 2) ? ASSERT_LINE : CLEAR_LINE );
+							machine().device("cpu3")->execute().set_input_line(INPUT_LINE_RESET, (new_data & 2) ? ASSERT_LINE : CLEAR_LINE );
+							machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, (new_data & 1) ? ASSERT_LINE : CLEAR_LINE );
 							break;
 
 		default: SHOW_WRITE_ERROR("vreg %04X <- %04X",offset*2,data);
@@ -580,7 +576,7 @@ CPU #0 PC 00235C : Warning, vreg 0006 <- 0000
 
 		/* Usually written in sequence, but not always */
 		case 0x0008/2   :	soundlatch_word_w(space, 0, new_data, 0xffff);	break;
-		case 0x0018/2   :	cputag_set_input_line(machine(), "soundcpu", 4, HOLD_LINE);	break;
+		case 0x0018/2   :	machine().device("soundcpu")->execute().set_input_line(4, HOLD_LINE);	break;
 
 		case 0x0010/2   :	break;
 
@@ -600,9 +596,9 @@ CPU #0 PC 00235C : Warning, vreg 0006 <- 0000
 		case 0x2208/2   : break;	// watchdog reset
 
 		/* Not sure about this one. Values: $10 then 0, $7 then 0 */
-		case 0x2308/2   :	cputag_set_input_line(machine(), "cpu2", INPUT_LINE_RESET, (new_data & 1) ? ASSERT_LINE : CLEAR_LINE );
-							cputag_set_input_line(machine(), "cpu3", INPUT_LINE_RESET, (new_data & 2) ? ASSERT_LINE : CLEAR_LINE );
-							cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_RESET, (new_data & 4) ? ASSERT_LINE : CLEAR_LINE );
+		case 0x2308/2   :	machine().device("cpu2")->execute().set_input_line(INPUT_LINE_RESET, (new_data & 1) ? ASSERT_LINE : CLEAR_LINE );
+							machine().device("cpu3")->execute().set_input_line(INPUT_LINE_RESET, (new_data & 2) ? ASSERT_LINE : CLEAR_LINE );
+							machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_RESET, (new_data & 4) ? ASSERT_LINE : CLEAR_LINE );
 							break;
 
 		default:		SHOW_WRITE_ERROR("vreg %04X <- %04X",offset*2,data);
@@ -623,9 +619,9 @@ WRITE16_MEMBER(cischeat_state::f1gpstr2_vregs_w)
 			if (ACCESSING_BITS_0_7)
 			{
 				if((old_data & 4) && ((new_data & 4) == 0))
-					cputag_set_input_line(machine(), "cpu5", 4, HOLD_LINE);
+					machine().device("cpu5")->execute().set_input_line(4, HOLD_LINE);
 				if((old_data & 2) && ((new_data & 2) == 0))
-					cputag_set_input_line(machine(), "cpu5", 2, HOLD_LINE);
+					machine().device("cpu5")->execute().set_input_line(2, HOLD_LINE);
 			}
 			break;
 

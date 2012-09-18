@@ -92,8 +92,7 @@ DEBUG TRICKS:
 
 #define ENABLE_VERBOSE_LOG (1)
 
-typedef struct _acan_dma_regs_t acan_dma_regs_t;
-struct _acan_dma_regs_t
+struct acan_dma_regs_t
 {
 	UINT32 source[2];
 	UINT32 dest[2];
@@ -101,8 +100,7 @@ struct _acan_dma_regs_t
 	UINT16 control[2];
 };
 
-typedef struct _acan_sprdma_regs_t acan_sprdma_regs_t;
-struct _acan_sprdma_regs_t
+struct acan_sprdma_regs_t
 {
 	UINT32 src;
 	UINT16 src_inc;
@@ -194,6 +192,14 @@ public:
 	tilemap_t *m_tilemap_sizes[4][4];
 	bitmap_ind16 m_sprite_final_bitmap;
 	void write_swapped_byte(int offset, UINT8 byte);
+	TILE_GET_INFO_MEMBER(get_supracan_tilemap0_tile_info);
+	TILE_GET_INFO_MEMBER(get_supracan_tilemap1_tile_info);
+	TILE_GET_INFO_MEMBER(get_supracan_tilemap2_tile_info);
+	TILE_GET_INFO_MEMBER(get_supracan_roz_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -208,7 +214,7 @@ INLINE void verboselog(const char *tag, running_machine &machine, int n_level, c
 		va_start( v, s_fmt );
 		vsprintf( buf, s_fmt, v );
 		va_end( v );
-		logerror( "%06x: %s: %s", cpu_get_pc(machine.device(tag)), tag, buf );
+		logerror( "%06x: %s: %s", machine.device(tag)->safe_pc(), tag, buf );
 	}
 }
 
@@ -371,58 +377,57 @@ static void supracan_tilemap_get_info_roz(running_machine &machine, int layer, t
 
 
 
-static TILE_GET_INFO( get_supracan_tilemap0_tile_info )
+TILE_GET_INFO_MEMBER(supracan_state::get_supracan_tilemap0_tile_info)
 {
 
-	supracan_tilemap_get_info_common(machine, 0, tileinfo, tile_index);
+	supracan_tilemap_get_info_common(machine(), 0, tileinfo, tile_index);
 }
 
-static TILE_GET_INFO( get_supracan_tilemap1_tile_info )
+TILE_GET_INFO_MEMBER(supracan_state::get_supracan_tilemap1_tile_info)
 {
-	supracan_tilemap_get_info_common(machine, 1, tileinfo, tile_index);
+	supracan_tilemap_get_info_common(machine(), 1, tileinfo, tile_index);
 }
 
-static TILE_GET_INFO( get_supracan_tilemap2_tile_info )
+TILE_GET_INFO_MEMBER(supracan_state::get_supracan_tilemap2_tile_info)
 {
 
-	supracan_tilemap_get_info_common(machine, 2, tileinfo, tile_index);
+	supracan_tilemap_get_info_common(machine(), 2, tileinfo, tile_index);
 }
 
-static TILE_GET_INFO( get_supracan_roz_tile_info )
+TILE_GET_INFO_MEMBER(supracan_state::get_supracan_roz_tile_info)
 {
 
-	supracan_tilemap_get_info_roz(machine, 3, tileinfo, tile_index);
+	supracan_tilemap_get_info_roz(machine(), 3, tileinfo, tile_index);
 }
 
 
-static VIDEO_START( supracan )
+void supracan_state::video_start()
 {
-	supracan_state *state = machine.driver_data<supracan_state>();
-	state->m_sprite_final_bitmap.allocate(1024, 1024, BITMAP_FORMAT_IND16);
+	m_sprite_final_bitmap.allocate(1024, 1024, BITMAP_FORMAT_IND16);
 
-	state->m_vram = (UINT16*)(*machine.root_device().memregion("ram_gfx"));
-	state->m_vram_swapped = (UINT16*)(*machine.root_device().memregion("ram_gfx2"));
-	state->m_vram_addr_swapped = (UINT8*)(*state->memregion("ram_gfx3")); // hack for 1bpp layer at startup
+	m_vram = (UINT16*)(*machine().root_device().memregion("ram_gfx"));
+	m_vram_swapped = (UINT16*)(*machine().root_device().memregion("ram_gfx2"));
+	m_vram_addr_swapped = (UINT8*)(*memregion("ram_gfx3")); // hack for 1bpp layer at startup
 
-	state->m_tilemap_sizes[0][0] = tilemap_create(machine, get_supracan_tilemap0_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_tilemap_sizes[0][1] = tilemap_create(machine, get_supracan_tilemap0_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_tilemap_sizes[0][2] = tilemap_create(machine, get_supracan_tilemap0_tile_info, tilemap_scan_rows, 8, 8, 128, 32);
-	state->m_tilemap_sizes[0][3] = tilemap_create(machine, get_supracan_tilemap0_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
+	m_tilemap_sizes[0][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_tilemap0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_tilemap_sizes[0][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_tilemap0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_tilemap_sizes[0][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_tilemap0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 128, 32);
+	m_tilemap_sizes[0][3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_tilemap0_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
 
-	state->m_tilemap_sizes[1][0] = tilemap_create(machine, get_supracan_tilemap1_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_tilemap_sizes[1][1] = tilemap_create(machine, get_supracan_tilemap1_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_tilemap_sizes[1][2] = tilemap_create(machine, get_supracan_tilemap1_tile_info, tilemap_scan_rows, 8, 8, 128, 32);
-	state->m_tilemap_sizes[1][3] = tilemap_create(machine, get_supracan_tilemap1_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
+	m_tilemap_sizes[1][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_tilemap1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_tilemap_sizes[1][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_tilemap1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_tilemap_sizes[1][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_tilemap1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 128, 32);
+	m_tilemap_sizes[1][3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_tilemap1_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
 
-	state->m_tilemap_sizes[2][0] = tilemap_create(machine, get_supracan_tilemap2_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_tilemap_sizes[2][1] = tilemap_create(machine, get_supracan_tilemap2_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_tilemap_sizes[2][2] = tilemap_create(machine, get_supracan_tilemap2_tile_info, tilemap_scan_rows, 8, 8, 128, 32);
-	state->m_tilemap_sizes[2][3] = tilemap_create(machine, get_supracan_tilemap2_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
+	m_tilemap_sizes[2][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_tilemap2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_tilemap_sizes[2][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_tilemap2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_tilemap_sizes[2][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_tilemap2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 128, 32);
+	m_tilemap_sizes[2][3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_tilemap2_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
 
-	state->m_tilemap_sizes[3][0] = tilemap_create(machine, get_supracan_roz_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_tilemap_sizes[3][1] = tilemap_create(machine, get_supracan_roz_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_tilemap_sizes[3][2] = tilemap_create(machine, get_supracan_roz_tile_info, tilemap_scan_rows, 8, 8, 128, 32);
-	state->m_tilemap_sizes[3][3] = tilemap_create(machine, get_supracan_roz_tile_info, tilemap_scan_rows, 8, 8, 64, 64);
+	m_tilemap_sizes[3][0] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_roz_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_tilemap_sizes[3][1] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_roz_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_tilemap_sizes[3][2] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_roz_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 128, 32);
+	m_tilemap_sizes[3][3] = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(supracan_state::get_supracan_roz_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 64);
 }
 
 static int get_tilemap_dimensions(running_machine &machine, int &xsize, int &ysize, int layer)
@@ -504,7 +509,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 		int sprite_xflip = (supracan_vram[i+1] & 0x0800) >> 11;
 		int sprite_yflip = (supracan_vram[i+1] & 0x0400) >> 10;
 		//int xscale = (supracan_vram[i+2] & 0xf000) >> 12;
-		const gfx_element *gfx = machine.gfx[region];
+		gfx_element *gfx = machine.gfx[region];
 
 
 
@@ -986,7 +991,7 @@ WRITE16_MEMBER( supracan_state::supracan_dma_w )
 {
 	acan_dma_regs_t *acan_dma_regs = &m_acan_dma_regs;
 	int ch = (offset < 0x10/2) ? 0 : 1;
-	address_space *mem = m_maincpu->memory().space(AS_PROGRAM);
+	address_space *mem = m_maincpu->space(AS_PROGRAM);
 
 	switch(offset)
 	{
@@ -1050,7 +1055,7 @@ WRITE16_MEMBER( supracan_state::supracan_dma_w )
 			else if(data != 0x0000) // fake DMA, used by C.U.G.
 			{
 				verboselog("maincpu", machine(), 0, "supracan_dma_w: Unknown DMA kickoff value of %04x (other regs %08x, %08x, %d)\n", data, acan_dma_regs->source[ch], acan_dma_regs->dest[ch], acan_dma_regs->count[ch] + 1);
-				fatalerror("supracan_dma_w: Unknown DMA kickoff value of %04x (other regs %08x, %08x, %d)",data, acan_dma_regs->source[ch], acan_dma_regs->dest[ch], acan_dma_regs->count[ch] + 1);
+				fatalerror("supracan_dma_w: Unknown DMA kickoff value of %04x (other regs %08x, %08x, %d)\n",data, acan_dma_regs->source[ch], acan_dma_regs->dest[ch], acan_dma_regs->count[ch] + 1);
 			}
 			break;
 		default:
@@ -1096,11 +1101,11 @@ WRITE16_MEMBER( supracan_state::supracan_vram_w )
 	write_swapped_byte(offset*2, (data & 0x00ff));
 
 	// mark tiles of each depth as dirty
-	gfx_element_mark_dirty(machine().gfx[0], (offset*2)/(64));
-	gfx_element_mark_dirty(machine().gfx[1], (offset*2)/(32));
-	gfx_element_mark_dirty(machine().gfx[2], (offset*2)/(16));
-	gfx_element_mark_dirty(machine().gfx[3], (offset*2)/(512));
-	gfx_element_mark_dirty(machine().gfx[4], (offset*2)/(8));
+	machine().gfx[0]->mark_dirty((offset*2)/(64));
+	machine().gfx[1]->mark_dirty((offset*2)/(32));
+	machine().gfx[2]->mark_dirty((offset*2)/(16));
+	machine().gfx[3]->mark_dirty((offset*2)/(512));
+	machine().gfx[4]->mark_dirty((offset*2)/(8));
 
 }
 
@@ -1121,7 +1126,7 @@ ADDRESS_MAP_END
 
 READ8_MEMBER( supracan_state::supracan_6502_soundmem_r )
 {
-	address_space *mem = m_maincpu->memory().space(AS_PROGRAM);
+	address_space *mem = m_maincpu->space(AS_PROGRAM);
 	UINT8 data = m_soundram[offset];
 
 	switch(offset)
@@ -1138,11 +1143,11 @@ READ8_MEMBER( supracan_state::supracan_6502_soundmem_r )
 			{
 				if(m_sound_irq_enable_reg & m_sound_irq_source_reg)
 				{
-					device_set_input_line(machine().device("soundcpu"), 0, ASSERT_LINE);
+					machine().device("soundcpu")->execute().set_input_line(0, ASSERT_LINE);
 				}
 				else
 				{
-					device_set_input_line(machine().device("soundcpu"), 0, CLEAR_LINE);
+					machine().device("soundcpu")->execute().set_input_line(0, CLEAR_LINE);
 				}
 			}
 			break;
@@ -1152,7 +1157,7 @@ READ8_MEMBER( supracan_state::supracan_6502_soundmem_r )
 			if(!mem->debugger_access()) verboselog(m_hack_68k_to_6502_access ? "maincpu" : "soundcpu", machine(), 3, "supracan_soundreg_r: IRQ source: %04x\n", data);
 			if(!mem->debugger_access())
 			{
-				device_set_input_line(machine().device("soundcpu"), 0, CLEAR_LINE);
+				machine().device("soundcpu")->execute().set_input_line(0, CLEAR_LINE);
 			}
 			break;
 		case 0x420:
@@ -1186,7 +1191,7 @@ WRITE8_MEMBER( supracan_state::supracan_6502_soundmem_w )
 			if(m_sound_cpu_68k_irq_reg &~ data)
 			{
 				verboselog(m_hack_68k_to_6502_access ? "maincpu" : "soundcpu", machine(), 0, "supracan_soundreg_w: sound_cpu_68k_irq_reg: %04x: Triggering M68k IRQ\n", data);
-				device_set_input_line(m_maincpu, 7, HOLD_LINE);
+				m_maincpu->set_input_line(7, HOLD_LINE);
 			}
 			else
 			{
@@ -1332,7 +1337,7 @@ static INPUT_PORTS_START( supracan )
 	PORT_BIT(0x8000, IP_ACTIVE_HIGH, IPT_BUTTON1 ) PORT_PLAYER(4) PORT_NAME("P4 Button A")
 INPUT_PORTS_END
 
-static PALETTE_INIT( supracan )
+void supracan_state::palette_init()
 {
 	// Used for debugging purposes for now
 	//#if 0
@@ -1343,14 +1348,14 @@ static PALETTE_INIT( supracan )
 		r = (i & 0x1f) << 3;
 		g = ((i >> 5) & 0x1f) << 3;
 		b = ((i >> 10) & 0x1f) << 3;
-		palette_set_color_rgb( machine, i, r, g, b );
+		palette_set_color_rgb( machine(), i, r, g, b );
 	}
 	//#endif
 }
 
 WRITE16_MEMBER( supracan_state::supracan_68k_soundram_w )
 {
-	address_space *mem = m_maincpu->memory().space(AS_PROGRAM);
+	address_space *mem = m_maincpu->space(AS_PROGRAM);
 	m_soundram[offset*2 + 1] = data & 0xff;
 	m_soundram[offset*2 + 0] = data >> 8;
 
@@ -1373,7 +1378,7 @@ WRITE16_MEMBER( supracan_state::supracan_68k_soundram_w )
 
 READ16_MEMBER( supracan_state::supracan_68k_soundram_r )
 {
-	address_space *mem = m_maincpu->memory().space(AS_PROGRAM);
+	address_space *mem = m_maincpu->space(AS_PROGRAM);
 	UINT16 val = m_soundram[offset*2 + 0] << 8;
 	val |= m_soundram[offset*2 + 1];
 
@@ -1416,7 +1421,7 @@ WRITE16_MEMBER( supracan_state::supracan_sound_w )
 	switch ( offset )
 	{
 		case 0x000a/2:  /* Sound cpu IRQ request. */
-			device_set_input_line(machine().device("soundcpu"), 0, ASSERT_LINE);
+			machine().device("soundcpu")->execute().set_input_line(0, ASSERT_LINE);
 			break;
 		case 0x001c/2:	/* Sound cpu control. Bit 0 tied to sound cpu RESET line */
 			if(data & 0x01)
@@ -1425,7 +1430,7 @@ WRITE16_MEMBER( supracan_state::supracan_sound_w )
 				{
 					/* Reset and enable the sound cpu */
 #if !(SOUNDCPU_BOOT_HACK)
-					cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_HALT, CLEAR_LINE);
+					machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_HALT, CLEAR_LINE);
 					machine().device("soundcpu")->reset();
 #endif
 				}
@@ -1434,7 +1439,7 @@ WRITE16_MEMBER( supracan_state::supracan_sound_w )
 			else
 			{
 				/* Halt the sound cpu */
-				cputag_set_input_line(machine(), "soundcpu", INPUT_LINE_HALT, ASSERT_LINE);
+				machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 			}
 			verboselog("maincpu", machine(), 0, "sound cpu ctrl: %04x\n", data);
 			break;
@@ -1447,7 +1452,7 @@ WRITE16_MEMBER( supracan_state::supracan_sound_w )
 
 READ16_MEMBER( supracan_state::supracan_video_r )
 {
-	address_space *mem = m_maincpu->memory().space(AS_PROGRAM);
+	address_space *mem = m_maincpu->space(AS_PROGRAM);
 	UINT16 data = m_video_regs[offset];
 
 	switch(offset)
@@ -1456,7 +1461,7 @@ READ16_MEMBER( supracan_state::supracan_video_r )
 			if(!mem->debugger_access())
 			{
 				//verboselog("maincpu", machine(), 0, "read video IRQ flags (%04x)\n", data);
-				device_set_input_line(m_maincpu, 7, CLEAR_LINE);
+				m_maincpu->set_input_line(7, CLEAR_LINE);
 			}
 			break;
 		case 0x02/2: // Current scanline
@@ -1485,7 +1490,7 @@ static TIMER_CALLBACK( supracan_hbl_callback )
 {
 	supracan_state *state = machine.driver_data<supracan_state>();
 
-	device_set_input_line(state->m_maincpu, 3, HOLD_LINE);
+	state->m_maincpu->set_input_line(3, HOLD_LINE);
 
 	state->m_hbl_timer->adjust(attotime::never);
 }
@@ -1494,7 +1499,7 @@ static TIMER_CALLBACK( supracan_line_on_callback )
 {
 	supracan_state *state = machine.driver_data<supracan_state>();
 
-	device_set_input_line(state->m_maincpu, 5, HOLD_LINE);
+	state->m_maincpu->set_input_line(5, HOLD_LINE);
 
 	state->m_line_on_timer->adjust(attotime::never);
 }
@@ -1503,7 +1508,7 @@ static TIMER_CALLBACK( supracan_line_off_callback )
 {
 	supracan_state *state = machine.driver_data<supracan_state>();
 
-	device_set_input_line(state->m_maincpu, 5, CLEAR_LINE);
+	state->m_maincpu->set_input_line(5, CLEAR_LINE);
 
 	state->m_line_on_timer->adjust(attotime::never);
 }
@@ -1537,7 +1542,7 @@ static TIMER_CALLBACK( supracan_video_callback )
 		if(state->m_irq_mask & 1)
 		{
 			verboselog("maincpu", machine, 0, "Triggering VBL IRQ\n\n");
-			device_set_input_line(state->m_maincpu, 7, HOLD_LINE);
+			state->m_maincpu->set_input_line(7, HOLD_LINE);
 		}
 		break;
 	}
@@ -1550,7 +1555,7 @@ static TIMER_CALLBACK( supracan_video_callback )
 
 WRITE16_MEMBER( supracan_state::supracan_video_w )
 {
-	address_space *mem = m_maincpu->memory().space(AS_PROGRAM);
+	address_space *mem = m_maincpu->space(AS_PROGRAM);
 	acan_sprdma_regs_t *acan_sprdma_regs = &m_acan_sprdma_regs;
 	int i;
 
@@ -1720,7 +1725,7 @@ WRITE16_MEMBER( supracan_state::supracan_video_w )
 #if 0
 			if(!m_irq_mask && !m_hbl_mask)
 			{
-				device_set_input_line(m_maincpu, 7, CLEAR_LINE);
+				m_maincpu->set_input_line(7, CLEAR_LINE);
 			}
 #endif
 			verboselog("maincpu", machine(), 3, "irq_mask = %04x\n", data);
@@ -1764,25 +1769,23 @@ static DEVICE_IMAGE_LOAD( supracan_cart )
 }
 
 
-static MACHINE_START( supracan )
+void supracan_state::machine_start()
 {
-	supracan_state *state = machine.driver_data<supracan_state>();
 
-	state->m_video_timer = machine.scheduler().timer_alloc(FUNC(supracan_video_callback));
-	state->m_hbl_timer = machine.scheduler().timer_alloc(FUNC(supracan_hbl_callback));
-	state->m_line_on_timer = machine.scheduler().timer_alloc(FUNC(supracan_line_on_callback));
-	state->m_line_off_timer = machine.scheduler().timer_alloc(FUNC(supracan_line_off_callback));
+	m_video_timer = machine().scheduler().timer_alloc(FUNC(supracan_video_callback));
+	m_hbl_timer = machine().scheduler().timer_alloc(FUNC(supracan_hbl_callback));
+	m_line_on_timer = machine().scheduler().timer_alloc(FUNC(supracan_line_on_callback));
+	m_line_off_timer = machine().scheduler().timer_alloc(FUNC(supracan_line_off_callback));
 }
 
 
-static MACHINE_RESET( supracan )
+void supracan_state::machine_reset()
 {
-	supracan_state *state = machine.driver_data<supracan_state>();
 
-	cputag_set_input_line(machine, "soundcpu", INPUT_LINE_HALT, ASSERT_LINE);
+	machine().device("soundcpu")->execute().set_input_line(INPUT_LINE_HALT, ASSERT_LINE);
 
-	state->m_video_timer->adjust( machine.primary_screen->time_until_pos( 0, 0 ) );
-	state->m_irq_mask = 0;
+	m_video_timer->adjust( machine().primary_screen->time_until_pos( 0, 0 ) );
+	m_irq_mask = 0;
 }
 
 /* gfxdecode is retained for reference purposes but not otherwise used by the driver */
@@ -1874,7 +1877,7 @@ static INTERRUPT_GEN( supracan_irq )
 
 	if(state->m_irq_mask)
 	{
-		device_set_input_line(device, 7, HOLD_LINE);
+		device->execute().set_input_line(7, HOLD_LINE);
 	}
 #endif
 }
@@ -1887,11 +1890,11 @@ static INTERRUPT_GEN( supracan_sound_irq )
 
 	if(state->m_sound_irq_enable_reg & state->m_sound_irq_source_reg)
 	{
-		device_set_input_line(device->machine().device("soundcpu"), 0, ASSERT_LINE);
+		device->machine().device("soundcpu")->execute().set_input_line(0, ASSERT_LINE);
 	}
 	else
 	{
-		device_set_input_line(device->machine().device("soundcpu"), 0, CLEAR_LINE);
+		device->machine().device("soundcpu")->execute().set_input_line(0, CLEAR_LINE);
 	}
 }
 
@@ -1910,15 +1913,11 @@ static MACHINE_CONFIG_START( supracan, supracan_state )
 	MCFG_QUANTUM_PERFECT_CPU("soundcpu")
 #endif
 
-	MCFG_MACHINE_START( supracan )
-	MCFG_MACHINE_RESET( supracan )
 
 	MCFG_SCREEN_ADD( "screen", RASTER )
 	MCFG_SCREEN_RAW_PARAMS(XTAL_10_738635MHz/2, 348, 0, 256, 256, 0, 240 )	/* No idea if this is correct */
 	MCFG_SCREEN_UPDATE_STATIC( supracan )
-	MCFG_VIDEO_START( supracan )
 	MCFG_PALETTE_LENGTH( 32768 )
-	MCFG_PALETTE_INIT( supracan )
 	MCFG_GFXDECODE(supracan)
 
 	MCFG_CARTSLOT_ADD("cart")

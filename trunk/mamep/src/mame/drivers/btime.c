@@ -159,32 +159,27 @@ enum
 
 
 
-
-
-
-static UINT8 *decrypted;
+static UINT8 *decrypted; // TODO: put me in btime class
 
 WRITE8_MEMBER(btime_state::audio_nmi_enable_w)
 {
-
 	/* for most games, this serves as the NMI enable for the audio CPU; however,
        lnc and disco use bit 0 of the first AY-8910's port A instead; many other
        games also write there in addition to this address */
 	if (m_audio_nmi_enable_type == AUDIO_ENABLE_DIRECT)
 	{
 		m_audio_nmi_enabled = data & 1;
-		device_set_input_line(m_audiocpu, INPUT_LINE_NMI, (m_audio_nmi_enabled && m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, (m_audio_nmi_enabled && m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
 WRITE8_MEMBER(btime_state::ay_audio_nmi_enable_w)
 {
-
 	/* port A bit 0, when 1, inhibits the NMI */
 	if (m_audio_nmi_enable_type == AUDIO_ENABLE_AY8910)
 	{
 		m_audio_nmi_enabled = ~data & 1;
-		device_set_input_line(m_audiocpu, INPUT_LINE_NMI, (m_audio_nmi_enabled && m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
+		m_audiocpu->set_input_line(INPUT_LINE_NMI, (m_audio_nmi_enabled && m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -193,7 +188,7 @@ static TIMER_DEVICE_CALLBACK( audio_nmi_gen )
 	btime_state *state = timer.machine().driver_data<btime_state>();
 	int scanline = param;
 	state->m_audio_nmi_state = scanline & 8;
-	device_set_input_line(state->m_audiocpu, INPUT_LINE_NMI, (state->m_audio_nmi_enabled && state->m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
+	state->m_audiocpu->set_input_line(INPUT_LINE_NMI, (state->m_audio_nmi_enabled && state->m_audio_nmi_state) ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
@@ -210,18 +205,17 @@ static void btime_decrypt( address_space *space )
 	UINT8 *src, *src1;
 	int addr, addr1;
 
-
 	/* the encryption is a simple bit rotation: 76543210 -> 65342710, but */
 	/* with a catch: it is only applied if the previous instruction did a */
 	/* memory write. Also, only opcodes at addresses with this bit pattern: */
 	/* xxxx xxx1 xxxx x1xx are encrypted. */
 
 	/* get the address of the next opcode */
-	addr = cpu_get_pc(&space->device());
+	addr = space->device().safe_pc();
 
 	/* however if the previous instruction was JSR (which caused a write to */
 	/* the stack), fetch the address of the next instruction. */
-	addr1 = cpu_get_previouspc(&space->device());
+	addr1 = space->device().safe_pcbase();
 	src1 = (addr1 < 0x9000) ? state->m_rambase : state->memregion("maincpu")->base();
 	if (decrypted[addr1] == 0x20)	/* JSR $xxxx */
 		addr = src1[addr1 + 1] + 256 * src1[addr1 + 2];
@@ -237,7 +231,6 @@ static void btime_decrypt( address_space *space )
 
 WRITE8_MEMBER(btime_state::lnc_w)
 {
-
 	if      (offset <= 0x3bff)                       ;
 	else if (offset >= 0x3c00 && offset <= 0x3fff) { lnc_videoram_w(space, offset - 0x3c00, data); return; }
 	else if (offset >= 0x7c00 && offset <= 0x7fff) { lnc_mirrorvideoram_w(space, offset - 0x7c00, data); return; }
@@ -247,7 +240,7 @@ WRITE8_MEMBER(btime_state::lnc_w)
 	else if (offset == 0x9000)                     { return; }  /* AM_NOP */
 	else if (offset == 0x9002)                     { audio_command_w(space, 0, data); return; }
 	else if (offset >= 0xb000 && offset <= 0xb1ff)   ;
-	else logerror("CPU '%s' PC %04x: warning - write %02x to unmapped memory address %04x\n", space.device().tag(), cpu_get_pc(&space.device()), data, offset);
+	else logerror("CPU '%s' PC %04x: warning - write %02x to unmapped memory address %04x\n", space.device().tag(), space.device().safe_pc(), data, offset);
 
 	m_rambase[offset] = data;
 
@@ -257,7 +250,6 @@ WRITE8_MEMBER(btime_state::lnc_w)
 
 WRITE8_MEMBER(btime_state::mmonkey_w)
 {
-
 	if      (offset <= 0x3bff)                       ;
 	else if (offset >= 0x3c00 && offset <= 0x3fff) { lnc_videoram_w(space, offset - 0x3c00, data); return; }
 	else if (offset >= 0x7c00 && offset <= 0x7fff) { lnc_mirrorvideoram_w(space, offset - 0x7c00, data); return; }
@@ -266,7 +258,7 @@ WRITE8_MEMBER(btime_state::mmonkey_w)
 	else if (offset == 0x9000)                     { return; }  /* AM_NOP */
 	else if (offset == 0x9002)                     { audio_command_w(space, 0, data); return; }
 	else if (offset >= 0xb000 && offset <= 0xbfff) { mmonkey_protection_w(space, offset - 0xb000, data); return; }
-	else logerror("CPU '%s' PC %04x: warning - write %02x to unmapped memory address %04x\n", space.device().tag(), cpu_get_pc(&space.device()), data, offset);
+	else logerror("CPU '%s' PC %04x: warning - write %02x to unmapped memory address %04x\n", space.device().tag(), space.device().safe_pc(), data, offset);
 
 	m_rambase[offset] = data;
 
@@ -276,7 +268,6 @@ WRITE8_MEMBER(btime_state::mmonkey_w)
 
 WRITE8_MEMBER(btime_state::btime_w)
 {
-
 	if      (offset <= 0x07ff)                     ;
 	else if (offset >= 0x0c00 && offset <= 0x0c0f) btime_paletteram_w(space, offset - 0x0c00, data);
 	else if (offset >= 0x1000 && offset <= 0x17ff) ;
@@ -285,7 +276,7 @@ WRITE8_MEMBER(btime_state::btime_w)
 	else if (offset == 0x4002)                     btime_video_control_w(space, 0, data);
 	else if (offset == 0x4003)                     audio_command_w(space, 0, data);
 	else if (offset == 0x4004)                     bnj_scroll1_w(space, 0, data);
-	else logerror("CPU '%s' PC %04x: warning - write %02x to unmapped memory address %04x\n", space.device().tag(), cpu_get_pc(&space.device()), data, offset);
+	else logerror("CPU '%s' PC %04x: warning - write %02x to unmapped memory address %04x\n", space.device().tag(), space.device().safe_pc(), data, offset);
 
 	m_rambase[offset] = data;
 
@@ -294,7 +285,6 @@ WRITE8_MEMBER(btime_state::btime_w)
 
 WRITE8_MEMBER(btime_state::tisland_w)
 {
-
 	if      (offset <= 0x07ff)                     ;
 	else if (offset >= 0x0c00 && offset <= 0x0c0f) btime_paletteram_w(space, offset - 0x0c00, data);
 	else if (offset >= 0x1000 && offset <= 0x17ff) ;
@@ -305,7 +295,7 @@ WRITE8_MEMBER(btime_state::tisland_w)
 	else if (offset == 0x4004)                     bnj_scroll1_w(space, 0, data);
 	else if (offset == 0x4005)			     bnj_scroll2_w(space, 0, data);
 //  else if (offset == 0x8000)                     btime_video_control_w(space,0,data);
-	else logerror("CPU '%s' PC %04x: warning - write %02x to unmapped memory address %04x\n", space.device().tag(), cpu_get_pc(&space.device()), data, offset);
+	else logerror("CPU '%s' PC %04x: warning - write %02x to unmapped memory address %04x\n", space.device().tag(), space.device().safe_pc(), data, offset);
 
 	m_rambase[offset] = data;
 
@@ -314,7 +304,6 @@ WRITE8_MEMBER(btime_state::tisland_w)
 
 WRITE8_MEMBER(btime_state::zoar_w)
 {
-
 	if      (offset <= 0x07ff)					   ;
 	else if (offset >= 0x8000 && offset <= 0x87ff) ;
 	else if (offset >= 0x8800 && offset <= 0x8bff) btime_mirrorvideoram_w(space, offset - 0x8800, data);
@@ -324,7 +313,7 @@ WRITE8_MEMBER(btime_state::zoar_w)
 	else if (offset == 0x9804)                     bnj_scroll2_w(space, 0, data);
 	else if (offset == 0x9805)                     bnj_scroll1_w(space, 0, data);
 	else if (offset == 0x9806)                     audio_command_w(space, 0, data);
-	else logerror("CPU '%s' PC %04x: warning - write %02x to unmapped memory address %04x\n", space.device().tag(), cpu_get_pc(&space.device()), data, offset);
+	else logerror("CPU '%s' PC %04x: warning - write %02x to unmapped memory address %04x\n", space.device().tag(), space.device().safe_pc(), data, offset);
 
 	m_rambase[offset] = data;
 
@@ -333,13 +322,12 @@ WRITE8_MEMBER(btime_state::zoar_w)
 
 WRITE8_MEMBER(btime_state::disco_w)
 {
-
 	if      (offset <= 0x04ff)                     ;
 	else if (offset >= 0x2000 && offset <= 0x7fff) deco_charram_w(space, offset - 0x2000, data);
 	else if (offset >= 0x8000 && offset <= 0x881f) ;
 	else if (offset == 0x9a00)                     audio_command_w(space, 0, data);
 	else if (offset == 0x9c00)                     disco_video_control_w(space, 0, data);
-	else logerror("CPU '%s' PC %04x: warning - write %02x to unmapped memory address %04x\n", space.device().tag(), cpu_get_pc(&space.device()), data, offset);
+	else logerror("CPU '%s' PC %04x: warning - write %02x to unmapped memory address %04x\n", space.device().tag(), space.device().safe_pc(), data, offset);
 
 	m_rambase[offset] = data;
 
@@ -517,33 +505,31 @@ ADDRESS_MAP_END
 
 INPUT_CHANGED_MEMBER(btime_state::coin_inserted_irq_hi)
 {
-
 	if (newval)
-		device_set_input_line(m_maincpu, 0, HOLD_LINE);
+		m_maincpu->set_input_line(0, HOLD_LINE);
 }
 
 INPUT_CHANGED_MEMBER(btime_state::coin_inserted_irq_lo)
 {
-
 	if (!newval)
-		device_set_input_line(m_maincpu, 0, HOLD_LINE);
+		m_maincpu->set_input_line(0, HOLD_LINE);
 }
 
 INPUT_CHANGED_MEMBER(btime_state::coin_inserted_nmi_lo)
 {
-	device_set_input_line(m_maincpu, INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
+	m_maincpu->set_input_line(INPUT_LINE_NMI, newval ? CLEAR_LINE : ASSERT_LINE);
 }
 
 
 WRITE8_MEMBER(btime_state::audio_command_w)
 {
 	soundlatch_byte_w(space, offset, data);
-	device_set_input_line(m_audiocpu, 0, ASSERT_LINE);
+	m_audiocpu->set_input_line(0, ASSERT_LINE);
 }
 
 READ8_MEMBER(btime_state::audio_command_r)
 {
-	device_set_input_line(m_audiocpu, 0, CLEAR_LINE);
+	m_audiocpu->set_input_line(0, CLEAR_LINE);
 	return soundlatch_byte_r(space, offset);
 }
 
@@ -1410,68 +1396,63 @@ static DISCRETE_SOUND_START( btime_sound )
 DISCRETE_SOUND_END
 
 
-static MACHINE_START( btime )
+MACHINE_START_MEMBER(btime_state,btime)
 {
-	btime_state *state = machine.driver_data<btime_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_btime_palette));
-	state->save_item(NAME(state->m_bnj_scroll1));
-	state->save_item(NAME(state->m_bnj_scroll2));
-	state->save_item(NAME(state->m_btime_tilemap));
-	state->save_item(NAME(state->m_audio_nmi_enabled));
-	state->save_item(NAME(state->m_audio_nmi_state));
+	save_item(NAME(m_btime_palette));
+	save_item(NAME(m_bnj_scroll1));
+	save_item(NAME(m_bnj_scroll2));
+	save_item(NAME(m_btime_tilemap));
+	save_item(NAME(m_audio_nmi_enabled));
+	save_item(NAME(m_audio_nmi_state));
 }
 
-static MACHINE_START( mmonkey )
+MACHINE_START_MEMBER(btime_state,mmonkey)
 {
-	btime_state *state = machine.driver_data<btime_state>();
 
-	MACHINE_START_CALL(btime);
+	MACHINE_START_CALL_MEMBER(btime);
 
-	state->save_item(NAME(state->m_protection_command));
-	state->save_item(NAME(state->m_protection_status));
-	state->save_item(NAME(state->m_protection_value));
-	state->save_item(NAME(state->m_protection_ret));
+	save_item(NAME(m_protection_command));
+	save_item(NAME(m_protection_status));
+	save_item(NAME(m_protection_value));
+	save_item(NAME(m_protection_ret));
 }
 
-static MACHINE_RESET( btime )
+MACHINE_RESET_MEMBER(btime_state,btime)
 {
-	btime_state *state = machine.driver_data<btime_state>();
 
 	/* by default, the audio NMI is disabled, except for bootlegs which don't use the enable */
-	state->m_audio_nmi_enabled = (state->m_audio_nmi_enable_type == AUDIO_ENABLE_NONE);
+	m_audio_nmi_enabled = (m_audio_nmi_enable_type == AUDIO_ENABLE_NONE);
 
-	state->m_btime_palette = 0;
-	state->m_bnj_scroll1 = 0;
-	state->m_bnj_scroll2 = 0;
-	state->m_btime_tilemap[0] = 0;
-	state->m_btime_tilemap[1] = 0;
-	state->m_btime_tilemap[2] = 0;
-	state->m_btime_tilemap[3] = 0;
-	state->m_audio_nmi_state = 0;
+	m_btime_palette = 0;
+	m_bnj_scroll1 = 0;
+	m_bnj_scroll2 = 0;
+	m_btime_tilemap[0] = 0;
+	m_btime_tilemap[1] = 0;
+	m_btime_tilemap[2] = 0;
+	m_btime_tilemap[3] = 0;
+	m_audio_nmi_state = 0;
 }
 
-static MACHINE_RESET( lnc )
+MACHINE_RESET_MEMBER(btime_state,lnc)
 {
-	btime_state *state = machine.driver_data<btime_state>();
-	*state->m_lnc_charbank = 1;
+	*m_lnc_charbank = 1;
 
-	MACHINE_RESET_CALL(btime);
+	MACHINE_RESET_CALL_MEMBER(btime);
 }
 
-static MACHINE_RESET( mmonkey )
+MACHINE_RESET_MEMBER(btime_state,mmonkey)
 {
-	btime_state *state = machine.driver_data<btime_state>();
 
-	MACHINE_RESET_CALL(lnc);
+	MACHINE_RESET_CALL_MEMBER(lnc);
 
-	state->m_protection_command = 0;
-	state->m_protection_status = 0;
-	state->m_protection_value = 0;
-	state->m_protection_ret = 0;
+	m_protection_command = 0;
+	m_protection_status = 0;
+	m_protection_value = 0;
+	m_protection_ret = 0;
 }
 
 static MACHINE_CONFIG_START( btime, btime_state )
@@ -1489,14 +1470,14 @@ static MACHINE_CONFIG_START( btime, btime_state )
 	MCFG_SCREEN_RAW_PARAMS(HCLK, 384, 8, 248, 272, 8, 248)
 	MCFG_SCREEN_UPDATE_STATIC(btime)
 
-	MCFG_MACHINE_START(btime)
-	MCFG_MACHINE_RESET(btime)
+	MCFG_MACHINE_START_OVERRIDE(btime_state,btime)
+	MCFG_MACHINE_RESET_OVERRIDE(btime_state,btime)
 
 	MCFG_GFXDECODE(btime)
 	MCFG_PALETTE_LENGTH(16)
 
-	MCFG_PALETTE_INIT(btime)
-	MCFG_VIDEO_START(btime)
+	MCFG_PALETTE_INIT_OVERRIDE(btime_state,btime)
+	MCFG_VIDEO_START_OVERRIDE(btime_state,btime)
 
 	/* audio hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
@@ -1543,13 +1524,13 @@ static MACHINE_CONFIG_DERIVED( lnc, btime )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(lnc_map)
 
-	MCFG_MACHINE_RESET(lnc)
+	MCFG_MACHINE_RESET_OVERRIDE(btime_state,lnc)
 
 	/* video hardware */
 	MCFG_GFXDECODE(lnc)
 	MCFG_PALETTE_LENGTH(8)
 
-	MCFG_PALETTE_INIT(lnc)
+	MCFG_PALETTE_INIT_OVERRIDE(btime_state,lnc)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(lnc)
 MACHINE_CONFIG_END
@@ -1571,8 +1552,8 @@ static MACHINE_CONFIG_DERIVED( mmonkey, wtennis )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(mmonkey_map)
 
-	MCFG_MACHINE_START(mmonkey)
-	MCFG_MACHINE_RESET(mmonkey)
+	MCFG_MACHINE_START_OVERRIDE(btime_state,mmonkey)
+	MCFG_MACHINE_RESET_OVERRIDE(btime_state,mmonkey)
 MACHINE_CONFIG_END
 
 static MACHINE_CONFIG_DERIVED( sdtennis, btime )
@@ -1586,7 +1567,7 @@ static MACHINE_CONFIG_DERIVED( sdtennis, btime )
 	MCFG_GFXDECODE(bnj)
 	MCFG_PALETTE_LENGTH(16)
 
-	MCFG_VIDEO_START(bnj)
+	MCFG_VIDEO_START_OVERRIDE(btime_state,bnj)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(bnj)
 MACHINE_CONFIG_END

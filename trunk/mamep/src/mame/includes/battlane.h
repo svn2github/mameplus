@@ -23,8 +23,8 @@ public:
 	int         m_cpu_control;	/* CPU interrupt control register */
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_subcpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_subcpu;
 	DECLARE_WRITE8_MEMBER(battlane_cpu_command_w);
 	DECLARE_WRITE8_MEMBER(battlane_palette_w);
 	DECLARE_WRITE8_MEMBER(battlane_scrollx_w);
@@ -33,11 +33,16 @@ public:
 	DECLARE_WRITE8_MEMBER(battlane_spriteram_w);
 	DECLARE_WRITE8_MEMBER(battlane_bitmap_w);
 	DECLARE_WRITE8_MEMBER(battlane_video_ctrl_w);
+	TILE_GET_INFO_MEMBER(get_tile_info_bg);
+	TILEMAP_MAPPER_MEMBER(battlane_tilemap_scan_rows_2x2);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/battlane.c -----------*/
 
 
-VIDEO_START( battlane );
+
 SCREEN_UPDATE_IND16( battlane );

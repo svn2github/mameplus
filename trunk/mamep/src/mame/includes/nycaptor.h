@@ -46,9 +46,9 @@ public:
 	int m_mask;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
-	device_t *m_subcpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
+	cpu_device *m_subcpu;
 	device_t *m_mcu;
 	DECLARE_WRITE8_MEMBER(sub_cpu_halt_w);
 	DECLARE_READ8_MEMBER(from_snd_r);
@@ -98,6 +98,11 @@ public:
 	DECLARE_DRIVER_INIT(colt);
 	DECLARE_DRIVER_INIT(bronx);
 	DECLARE_DRIVER_INIT(nycaptor);
+	TILE_GET_INFO_MEMBER(get_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
+	DECLARE_MACHINE_RESET(ta7630);
 };
 
 
@@ -110,5 +115,5 @@ public:
 
 
 
-VIDEO_START( nycaptor );
+
 SCREEN_UPDATE_IND16( nycaptor );

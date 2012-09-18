@@ -36,7 +36,7 @@ public:
 	UINT8      m_astrof_bosskill_playing;
 
 	/* devices */
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	samples_device *m_samples;	// astrof & abattle
 	device_t *m_sn;	// tomahawk
 	DECLARE_READ8_MEMBER(irq_clear_r);
@@ -62,6 +62,12 @@ public:
 	DECLARE_DRIVER_INIT(afire);
 	DECLARE_DRIVER_INIT(abattle);
 	DECLARE_DRIVER_INIT(sstarbtl);
+	virtual void video_start();
+	DECLARE_MACHINE_START(astrof);
+	DECLARE_MACHINE_START(abattle);
+	DECLARE_MACHINE_RESET(abattle);
+	DECLARE_MACHINE_START(spfghmk2);
+	DECLARE_MACHINE_START(tomahawk);
 };
 
 /*----------- defined in audio/astrof.c -----------*/

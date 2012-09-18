@@ -34,11 +34,16 @@ public:
 	DECLARE_WRITE8_MEMBER(bombjack_colorram_w);
 	DECLARE_WRITE8_MEMBER(bombjack_background_w);
 	DECLARE_WRITE8_MEMBER(bombjack_flipscreen_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/bombjack.c -----------*/
 
 
-VIDEO_START( bombjack );
+
 SCREEN_UPDATE_IND16( bombjack );

@@ -20,12 +20,12 @@
 
 ***************************************************************************/
 
-PALETTE_INIT( appoooh )
+PALETTE_INIT_MEMBER(appoooh_state,appoooh)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		UINT8 pen;
 		int bit0, bit1, bit2, r, g, b;
@@ -55,16 +55,16 @@ PALETTE_INIT( appoooh )
 		bit2 = (color_prom[pen] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 
-PALETTE_INIT( robowres )
+PALETTE_INIT_MEMBER(appoooh_state,robowres)
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	int i;
 
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		int bit0, bit1, bit2, r, g, b;
 
@@ -88,7 +88,7 @@ PALETTE_INIT( robowres )
 		bit2 = (color_prom[pen] >> 7) & 0x01;
 		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 }
 
@@ -100,29 +100,27 @@ PALETTE_INIT( robowres )
 
 ***************************************************************************/
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(appoooh_state::get_fg_tile_info)
 {
-	appoooh_state *state = machine.driver_data<appoooh_state>();
-	int code = state->m_fg_videoram[tile_index] + 256 * ((state->m_fg_colorram[tile_index] >> 5) & 7);
+	int code = m_fg_videoram[tile_index] + 256 * ((m_fg_colorram[tile_index] >> 5) & 7);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			code,
-			state->m_fg_colorram[tile_index] & 0x0f,
-			(state->m_fg_colorram[tile_index] & 0x10 ) ? TILEMAP_FLIPX : 0
+			m_fg_colorram[tile_index] & 0x0f,
+			(m_fg_colorram[tile_index] & 0x10 ) ? TILEMAP_FLIPX : 0
 	);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(appoooh_state::get_bg_tile_info)
 {
-	appoooh_state *state = machine.driver_data<appoooh_state>();
-	int code = state->m_bg_videoram[tile_index] + 256 * ((state->m_bg_colorram[tile_index] >> 5) & 7);
+	int code = m_bg_videoram[tile_index] + 256 * ((m_bg_colorram[tile_index] >> 5) & 7);
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			1,
 			code,
-			state->m_bg_colorram[tile_index] & 0x0f,
-			(state->m_bg_colorram[tile_index] & 0x10 ) ? TILEMAP_FLIPX : 0
+			m_bg_colorram[tile_index] & 0x0f,
+			(m_bg_colorram[tile_index] & 0x10 ) ? TILEMAP_FLIPX : 0
 	);
 }
 
@@ -132,19 +130,18 @@ static TILE_GET_INFO( get_bg_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( appoooh )
+VIDEO_START_MEMBER(appoooh_state,appoooh)
 {
-	appoooh_state *state = machine.driver_data<appoooh_state>();
 
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(appoooh_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(appoooh_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	state->m_fg_tilemap->set_transparent_pen(0);
-	state->m_fg_tilemap->set_scrolldy(8, 8);
-	state->m_bg_tilemap->set_scrolldy(8, 8);
+	m_fg_tilemap->set_transparent_pen(0);
+	m_fg_tilemap->set_scrolldy(8, 8);
+	m_bg_tilemap->set_scrolldy(8, 8);
 
-	state->save_item(NAME(state->m_scroll_x));
-	state->save_item(NAME(state->m_priority));
+	save_item(NAME(m_scroll_x));
+	save_item(NAME(m_priority));
 }
 
 WRITE8_MEMBER(appoooh_state::appoooh_scroll_w)
@@ -203,7 +200,7 @@ WRITE8_MEMBER(appoooh_state::appoooh_out_w)
 	/* bit 7 unknown (used) */
 }
 
-static void appoooh_draw_sprites( bitmap_ind16 &dest_bmp, const rectangle &cliprect, const gfx_element *gfx, UINT8 *sprite )
+static void appoooh_draw_sprites( bitmap_ind16 &dest_bmp, const rectangle &cliprect, gfx_element *gfx, UINT8 *sprite )
 {
 	appoooh_state *state = gfx->machine().driver_data<appoooh_state>();
 	int offs;
@@ -235,7 +232,7 @@ static void appoooh_draw_sprites( bitmap_ind16 &dest_bmp, const rectangle &clipr
 	}
 }
 
-static void robowres_draw_sprites( bitmap_ind16 &dest_bmp, const rectangle &cliprect, const gfx_element *gfx, UINT8 *sprite )
+static void robowres_draw_sprites( bitmap_ind16 &dest_bmp, const rectangle &cliprect, gfx_element *gfx, UINT8 *sprite )
 {
 	appoooh_state *state = gfx->machine().driver_data<appoooh_state>();
 	int offs;

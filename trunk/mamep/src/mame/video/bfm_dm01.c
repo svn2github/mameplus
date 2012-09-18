@@ -52,7 +52,7 @@ Standard dm01 memorymap
 
 #define LOG(x) do { if (VERBOSE) logerror x; } while (0)
 
-typedef struct _dm01
+struct bfmdm01
 {
 	const bfmdm01_interface *intf;
 	int		 data_avail,
@@ -64,7 +64,7 @@ typedef struct _dm01
 UINT8 scanline[DM_BYTESPERROW],
 		comdata;
 
-} bfmdm01;
+};
 
 static bfmdm01 dm01;
 ///////////////////////////////////////////////////////////////////////////
@@ -209,7 +209,7 @@ static READ8_HANDLER( unknown_r )
 
 static WRITE8_HANDLER( unknown_w )
 {
-	cputag_set_input_line(space->machine(), "matrix", INPUT_LINE_NMI, CLEAR_LINE ); //?
+	space->machine().device("matrix")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE ); //?
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -231,14 +231,14 @@ void BFM_dm01_writedata(running_machine &machine, UINT8 data)
 	dm01.data_avail = 1;
 
   //pulse IRQ line
-	cputag_set_input_line(machine, "matrix", M6809_IRQ_LINE, HOLD_LINE ); // trigger IRQ
+	machine.device("matrix")->execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE ); // trigger IRQ
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 INTERRUPT_GEN( bfm_dm01_vbl )
 {
-	device_set_input_line(device, INPUT_LINE_NMI, ASSERT_LINE );
+	device->execute().set_input_line(INPUT_LINE_NMI, ASSERT_LINE );
 }
 
 ///////////////////////////////////////////////////////////////////////////

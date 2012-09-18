@@ -1,17 +1,22 @@
 
 // later, this might be merged with segas1x_state in segas16.h
 
-class segas1x_bootleg_state : public driver_device
+#include "video/sega16sp.h"
+#include "machine/segaic16.h"
+
+class segas1x_bootleg_state : public sega_16bit_common_base
 {
 public:
 	segas1x_bootleg_state(const machine_config &mconfig, device_type type, const char *tag)
-		: driver_device(mconfig, type, tag) ,
+		: sega_16bit_common_base(mconfig, type, tag) ,
 		m_textram(*this, "textram"),
 		m_bg0_tileram(*this, "bg0_tileram"),
 		m_bg1_tileram(*this, "bg1_tileram"),
 		m_tileram(*this, "tileram"),
 		m_goldnaxeb2_bgpage(*this, "gab2_bgpage"),
-		m_goldnaxeb2_fgpage(*this, "gab2_fgpage"){ }
+		m_goldnaxeb2_fgpage(*this, "gab2_fgpage"),
+		m_sprites(*this, "sprites")
+		{ }
 
 	required_shared_ptr<UINT16> m_textram;
 	optional_shared_ptr<UINT16> m_bg0_tileram;
@@ -20,6 +25,7 @@ public:
 	optional_shared_ptr<UINT16> m_goldnaxeb2_bgpage;
 	optional_shared_ptr<UINT16> m_goldnaxeb2_fgpage;
 
+	required_device<sega_16bit_sprite_device> m_sprites;
 
 	UINT16 m_coinctrl;
 
@@ -102,8 +108,8 @@ public:
 	UINT8 *m_decrypted_region;	// goldnaxeb1 & bayrouteb1
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_soundcpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_soundcpu;
 	DECLARE_WRITE16_MEMBER(sound_command_nmi_w);
 	DECLARE_WRITE16_MEMBER(sound_command_w);
 	DECLARE_WRITE16_MEMBER(sys16_coinctrl_w);
@@ -167,14 +173,26 @@ public:
 	DECLARE_DRIVER_INIT(tturfbl);
 	DECLARE_DRIVER_INIT(goldnaxeb1);
 	DECLARE_DRIVER_INIT(common);
+	TILEMAP_MAPPER_MEMBER(sys16_bg_map);
+	TILEMAP_MAPPER_MEMBER(sys16_text_map);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(get_bg2_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg2_tile_info);
+	TILE_GET_INFO_MEMBER(get_text_tile_info);
+	TILE_GET_INFO_MEMBER(get_s16a_bootleg_tile_infotxt);
+	TILE_GET_INFO_MEMBER(get_s16a_bootleg_tile_info0);
+	TILE_GET_INFO_MEMBER(get_s16a_bootleg_tile_info1);
+	DECLARE_VIDEO_START(system16);
+	DECLARE_VIDEO_START(system18old);
+	DECLARE_VIDEO_START(s16a_bootleg_shinobi);
+	DECLARE_VIDEO_START(s16a_bootleg_passsht);
+	DECLARE_VIDEO_START(s16a_bootleg_wb3bl);
+	DECLARE_VIDEO_START(s16a_bootleg);
 };
 
 /*----------- defined in video/system16.c -----------*/
 
-extern VIDEO_START( s16a_bootleg );
-extern VIDEO_START( s16a_bootleg_wb3bl );
-extern VIDEO_START( s16a_bootleg_shinobi );
-extern VIDEO_START( s16a_bootleg_passsht );
 extern SCREEN_UPDATE_IND16( s16a_bootleg );
 extern SCREEN_UPDATE_IND16( s16a_bootleg_passht4b );
 

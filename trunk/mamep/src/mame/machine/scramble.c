@@ -13,23 +13,22 @@
 #include "includes/scramble.h"
 
 
-MACHINE_RESET( scramble )
+MACHINE_RESET_MEMBER(scramble_state,scramble)
 {
-	scramble_state *state = machine.driver_data<scramble_state>();
-	MACHINE_RESET_CALL(galaxold);
+	MACHINE_RESET_CALL_MEMBER(galaxold);
 
-	if (machine.device("audiocpu") != NULL)
-		scramble_sh_init(machine);
+	if (machine().device("audiocpu") != NULL)
+		scramble_sh_init(machine());
 
-	state->m_security_2B_counter = 0;
+	m_security_2B_counter = 0;
 }
 
-MACHINE_RESET( explorer )
+MACHINE_RESET_MEMBER(scramble_state,explorer)
 {
-	UINT8 *RAM = machine.root_device().memregion("maincpu")->base();
+	UINT8 *RAM = machine().root_device().memregion("maincpu")->base();
 	RAM[0x47ff] = 0; /* If not set, it doesn't reset after the 1st time */
 
-	MACHINE_RESET_CALL(galaxold);
+	MACHINE_RESET_CALL_MEMBER(galaxold);
 }
 
 
@@ -58,7 +57,7 @@ WRITE8_DEVICE_HANDLER( scramble_protection_w )
 
 READ8_DEVICE_HANDLER( scramble_protection_r )
 {
-	switch (cpu_get_pc(device->machine().device("maincpu")))
+	switch (device->machine().device("maincpu")->safe_pc())
 	{
 	case 0x00a8: return 0xf0;
 	case 0x00be: return 0xb0;
@@ -88,16 +87,16 @@ static READ8_HANDLER( mariner_protection_2_r )
 
 READ8_HANDLER( triplep_pip_r )
 {
-	logerror("PC %04x: triplep read port 2\n",cpu_get_pc(&space->device()));
-	if (cpu_get_pc(&space->device()) == 0x015a) return 0xff;
-	else if (cpu_get_pc(&space->device()) == 0x0886) return 0x05;
+	logerror("PC %04x: triplep read port 2\n",space->device().safe_pc());
+	if (space->device().safe_pc() == 0x015a) return 0xff;
+	else if (space->device().safe_pc() == 0x0886) return 0x05;
 	else return 0;
 }
 
 READ8_HANDLER( triplep_pap_r )
 {
-	logerror("PC %04x: triplep read port 3\n",cpu_get_pc(&space->device()));
-	if (cpu_get_pc(&space->device()) == 0x015d) return 0x04;
+	logerror("PC %04x: triplep read port 3\n",space->device().safe_pc());
+	if (space->device().safe_pc() == 0x015d) return 0x04;
 	else return 0;
 }
 

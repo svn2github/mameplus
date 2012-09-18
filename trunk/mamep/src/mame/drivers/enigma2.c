@@ -77,8 +77,8 @@ public:
 	emu_timer *m_interrupt_assert_timer;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	DECLARE_READ8_MEMBER(dip_switch_r);
 	DECLARE_WRITE8_MEMBER(sound_data_w);
 	DECLARE_WRITE8_MEMBER(enigma2_flip_screen_w);
@@ -87,6 +87,8 @@ public:
 	DECLARE_READ8_MEMBER(sound_latch_r);
 	DECLARE_WRITE8_MEMBER(protection_data_w);
 	DECLARE_DRIVER_INIT(enigma2);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 
@@ -112,7 +114,7 @@ INLINE int vysnc_chain_counter_to_vpos( UINT16 counter )
 static TIMER_CALLBACK( interrupt_clear_callback )
 {
 	enigma2_state *state = machine.driver_data<enigma2_state>();
-	device_set_input_line(state->m_maincpu, 0, CLEAR_LINE);
+	state->m_maincpu->set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -126,7 +128,7 @@ static TIMER_CALLBACK( interrupt_assert_callback )
 	int vpos = machine.primary_screen->vpos();
 	UINT16 counter = vpos_to_vysnc_chain_counter(vpos);
 	UINT8 vector = 0xc7 | ((counter & 0x80) >> 3) | ((~counter & 0x80) >> 4);
-	device_set_input_line_and_vector(state->m_maincpu, 0, ASSERT_LINE, vector);
+	state->m_maincpu->set_input_line_and_vector(0, ASSERT_LINE, vector);
 
 	/* set up for next interrupt */
 	if (counter == INT_TRIGGER_COUNT_1)
@@ -157,33 +159,31 @@ static void start_interrupt_timers( running_machine &machine )
 
 
 
-static MACHINE_START( enigma2 )
+void enigma2_state::machine_start()
 {
-	enigma2_state *state = machine.driver_data<enigma2_state>();
-	create_interrupt_timers(machine);
+	create_interrupt_timers(machine());
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	state->save_item(NAME(state->m_blink_count));
-	state->save_item(NAME(state->m_sound_latch));
-	state->save_item(NAME(state->m_last_sound_data));
-	state->save_item(NAME(state->m_protection_data));
-	state->save_item(NAME(state->m_flip_screen));
+	save_item(NAME(m_blink_count));
+	save_item(NAME(m_sound_latch));
+	save_item(NAME(m_last_sound_data));
+	save_item(NAME(m_protection_data));
+	save_item(NAME(m_flip_screen));
 }
 
 
-static MACHINE_RESET( enigma2 )
+void enigma2_state::machine_reset()
 {
-	enigma2_state *state = machine.driver_data<enigma2_state>();
-	cputag_set_input_line(machine, "audiocpu", INPUT_LINE_NMI, CLEAR_LINE);
+	machine().device("audiocpu")->execute().set_input_line(INPUT_LINE_NMI, CLEAR_LINE);
 
-	state->m_last_sound_data = 0;
-	state->m_flip_screen = 0;
-	state->m_sound_latch = 0;
-	state->m_blink_count = 0;
+	m_last_sound_data = 0;
+	m_flip_screen = 0;
+	m_sound_latch = 0;
+	m_blink_count = 0;
 
-	start_interrupt_timers(machine);
+	start_interrupt_timers(machine());
 }
 
 
@@ -359,7 +359,7 @@ READ8_MEMBER(enigma2_state::dip_switch_r)
 {
 	UINT8 ret = 0x00;
 
-	if (LOG_PROT) logerror("DIP SW Read: %x at %x (prot data %x)\n", offset, cpu_get_pc(&space.device()), m_protection_data);
+	if (LOG_PROT) logerror("DIP SW Read: %x at %x (prot data %x)\n", offset, space.device().safe_pc(), m_protection_data);
 	switch (offset)
 	{
 	case 0x01:
@@ -372,7 +372,7 @@ READ8_MEMBER(enigma2_state::dip_switch_r)
 		break;
 
 	case 0x02:
-		if (cpu_get_pc(&space.device()) == 0x07e5)
+		if (space.device().safe_pc() == 0x07e5)
 			ret = 0xaa;
 		else
 			ret = 0xf4;
@@ -393,7 +393,7 @@ WRITE8_MEMBER(enigma2_state::sound_data_w)
 	if (!(data & 0x04) && (m_last_sound_data & 0x04))
 		m_sound_latch = (m_sound_latch << 1) | (~data & 0x01);
 
-	device_set_input_line(m_audiocpu, INPUT_LINE_NMI, (data & 0x02) ? ASSERT_LINE : CLEAR_LINE);
+	m_audiocpu->set_input_line(INPUT_LINE_NMI, (data & 0x02) ? ASSERT_LINE : CLEAR_LINE);
 
 	m_last_sound_data = data;
 }
@@ -613,8 +613,6 @@ static MACHINE_CONFIG_START( enigma2, enigma2_state )
 	MCFG_CPU_PROGRAM_MAP(engima2_audio_cpu_map)
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold,8*52)
 
-	MCFG_MACHINE_START(enigma2)
-	MCFG_MACHINE_RESET(enigma2)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -641,8 +639,6 @@ static MACHINE_CONFIG_START( enigma2a, enigma2_state )
 	MCFG_CPU_PROGRAM_MAP(engima2_audio_cpu_map)
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold,8*52)
 
-	MCFG_MACHINE_START(enigma2)
-	MCFG_MACHINE_RESET(enigma2)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)

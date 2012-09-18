@@ -51,6 +51,10 @@ public:
 	DECLARE_WRITE8_MEMBER(cabaret_nmi_and_coins_w);
 	void show_out();
 	DECLARE_DRIVER_INIT(cabaret);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
@@ -74,19 +78,17 @@ WRITE8_MEMBER(cabaret_state::bg_tile_w)
 	m_bg_tilemap->mark_tile_dirty(offset);
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(cabaret_state::get_bg_tile_info)
 {
-	cabaret_state *state = machine.driver_data<cabaret_state>();
-	int code = state->m_bg_tile_ram[tile_index];
-	SET_TILE_INFO(1, code & 0xff, 0, 0);
+	int code = m_bg_tile_ram[tile_index];
+	SET_TILE_INFO_MEMBER(1, code & 0xff, 0, 0);
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(cabaret_state::get_fg_tile_info)
 {
-	cabaret_state *state = machine.driver_data<cabaret_state>();
-	int code = state->m_fg_tile_ram[tile_index] | (state->m_fg_color_ram[tile_index] << 8);
+	int code = m_fg_tile_ram[tile_index] | (m_fg_color_ram[tile_index] << 8);
 	int tile = code & 0x1fff;
-	SET_TILE_INFO(0, code, tile != 0x1fff ? ((code >> 12) & 0xe) + 1 : 0, 0);
+	SET_TILE_INFO_MEMBER(0, code, tile != 0x1fff ? ((code >> 12) & 0xe) + 1 : 0, 0);
 }
 
 WRITE8_MEMBER(cabaret_state::fg_tile_w)
@@ -101,13 +103,12 @@ WRITE8_MEMBER(cabaret_state::fg_color_w)
 	m_fg_tilemap->mark_tile_dirty(offset);
 }
 
-static VIDEO_START(cabaret)
+void cabaret_state::video_start()
 {
-	cabaret_state *state = machine.driver_data<cabaret_state>();
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows,	8,  32,	64, 8);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows,	8,  8,	64, 32);
-	state->m_fg_tilemap->set_transparent_pen(0);
-	state->m_bg_tilemap->set_scroll_cols(64);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cabaret_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS,	8,  32,	64, 8);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(cabaret_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS,	8,  8,	64, 32);
+	m_fg_tilemap->set_transparent_pen(0);
+	m_bg_tilemap->set_scroll_cols(64);
 }
 
 
@@ -140,7 +141,7 @@ WRITE8_MEMBER(cabaret_state::cabaret_nmi_and_coins_w)
 {
 	if ((m_nmi_enable ^ data) & (~0xdd))
 	{
-		logerror("PC %06X: nmi_and_coins = %02x\n",cpu_get_pc(&space.device()),data);
+		logerror("PC %06X: nmi_and_coins = %02x\n",space.device().safe_pc(),data);
 //      popmessage("%02x",data);
 	}
 
@@ -318,17 +319,16 @@ GFXDECODE_END
                                 Machine Drivers
 ***************************************************************************/
 
-static MACHINE_RESET( cabaret )
+void cabaret_state::machine_reset()
 {
-	cabaret_state *state = machine.driver_data<cabaret_state>();
-	state->m_nmi_enable		=	0;
+	m_nmi_enable		=	0;
 }
 
 static INTERRUPT_GEN( cabaret_interrupt )
 {
 	cabaret_state *state = device->machine().driver_data<cabaret_state>();
 	 if (state->m_nmi_enable & 0x80)
-		device_set_input_line(device, INPUT_LINE_NMI, PULSE_LINE);
+		device->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 static MACHINE_CONFIG_START( cabaret, cabaret_state )
@@ -338,7 +338,6 @@ static MACHINE_CONFIG_START( cabaret, cabaret_state )
 	MCFG_CPU_IO_MAP(cabaret_portmap)
 	MCFG_CPU_VBLANK_INT("screen",cabaret_interrupt)
 
-	MCFG_MACHINE_RESET(cabaret)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -351,7 +350,6 @@ static MACHINE_CONFIG_START( cabaret, cabaret_state )
 	MCFG_GFXDECODE(cabaret)
 	MCFG_PALETTE_LENGTH(0x800)
 
-	MCFG_VIDEO_START(cabaret)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

@@ -471,10 +471,9 @@ static void draw_layer( running_machine &machine, bitmap_ind16 &bitmap, int opaq
 	}
 }
 
-static TILE_GET_INFO( get_text_tile_info )
+TILE_GET_INFO_MEMBER(twin16_state::get_text_tile_info)
 {
-	twin16_state *state = machine.driver_data<twin16_state>();
-	const UINT16 *source = state->m_text_ram;
+	const UINT16 *source = m_text_ram;
 	int attr = source[tile_index];
 	/* fedcba9876543210
        -x-------------- yflip
@@ -489,31 +488,30 @@ static TILE_GET_INFO( get_text_tile_info )
 	if (attr&0x2000) flags|=TILE_FLIPX;
 	if (attr&0x4000) flags|=TILE_FLIPY;
 
-	SET_TILE_INFO(0, code, color, flags);
+	SET_TILE_INFO_MEMBER(0, code, color, flags);
 }
 
-VIDEO_START( twin16 )
+VIDEO_START_MEMBER(twin16_state,twin16)
 {
-	twin16_state *state = machine.driver_data<twin16_state>();
-	state->m_text_tilemap = tilemap_create(machine, get_text_tile_info, tilemap_scan_rows, 8, 8, 64, 32);
-	state->m_text_tilemap->set_transparent_pen(0);
+	m_text_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(twin16_state::get_text_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 64, 32);
+	m_text_tilemap->set_transparent_pen(0);
 
-	palette_set_shadow_factor(machine,0.4); // screenshots estimate
+	palette_set_shadow_factor(machine(),0.4); // screenshots estimate
 
-	memset(state->m_sprite_buffer,0xff,0x800*sizeof(UINT16));
-	state->m_sprite_busy = 0;
-	state->m_sprite_timer = machine.scheduler().timer_alloc(FUNC(twin16_sprite_tick));
-	state->m_sprite_timer->adjust(attotime::never);
+	memset(m_sprite_buffer,0xff,0x800*sizeof(UINT16));
+	m_sprite_busy = 0;
+	m_sprite_timer = machine().scheduler().timer_alloc(FUNC(twin16_sprite_tick));
+	m_sprite_timer->adjust(attotime::never);
 
 	/* register for savestates */
-	state_save_register_global_array(machine, state->m_sprite_buffer);
-	state_save_register_global_array(machine, state->m_scrollx);
-	state_save_register_global_array(machine, state->m_scrolly);
+	state_save_register_global_array(machine(), m_sprite_buffer);
+	state_save_register_global_array(machine(), m_scrollx);
+	state_save_register_global_array(machine(), m_scrolly);
 
-	state_save_register_global(machine, state->m_need_process_spriteram);
-	state_save_register_global(machine, state->m_gfx_bank);
-	state_save_register_global(machine, state->m_video_register);
-	state_save_register_global(machine, state->m_sprite_busy);
+	state_save_register_global(machine(), m_need_process_spriteram);
+	state_save_register_global(machine(), m_gfx_bank);
+	state_save_register_global(machine(), m_video_register);
+	state_save_register_global(machine(), m_sprite_busy);
 }
 
 SCREEN_UPDATE_IND16( twin16 )

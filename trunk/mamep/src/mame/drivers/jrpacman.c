@@ -118,8 +118,8 @@ public:
 
 WRITE8_MEMBER(jrpacman_state::jrpacman_interrupt_vector_w)
 {
-	device_set_input_line_vector(machine().device("maincpu"), 0, data);
-	cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line_vector(0, data);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 WRITE8_MEMBER(jrpacman_state::irq_mask_w)
@@ -285,7 +285,7 @@ static INTERRUPT_GEN( vblank_irq )
 	jrpacman_state *state = device->machine().driver_data<jrpacman_state>();
 
 	if(state->m_irq_mask)
-		device_set_input_line(device, 0, HOLD_LINE);
+		device->execute().set_input_line(0, HOLD_LINE);
 }
 
 static MACHINE_CONFIG_START( jrpacman, jrpacman_state )
@@ -307,8 +307,8 @@ static MACHINE_CONFIG_START( jrpacman, jrpacman_state )
 	MCFG_GFXDECODE(jrpacman)
 	MCFG_PALETTE_LENGTH(128*4)
 
-	MCFG_PALETTE_INIT(pacman)
-	MCFG_VIDEO_START(jrpacman)
+	MCFG_PALETTE_INIT_OVERRIDE(jrpacman_state,pacman)
+	MCFG_VIDEO_START_OVERRIDE(jrpacman_state,jrpacman)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

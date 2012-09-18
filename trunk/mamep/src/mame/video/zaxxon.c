@@ -15,10 +15,9 @@
  *
  *************************************/
 
-PALETTE_INIT( zaxxon )
+void zaxxon_state::palette_init()
 {
-	const UINT8 *color_prom = machine.root_device().memregion("proms")->base();
-	zaxxon_state *state = machine.driver_data<zaxxon_state>();
+	const UINT8 *color_prom = machine().root_device().memregion("proms")->base();
 	static const int resistances[3] = { 1000, 470, 220 };
 	double rweights[3], gweights[3], bweights[2];
 	int i;
@@ -30,7 +29,7 @@ PALETTE_INIT( zaxxon )
 			2,	&resistances[1], bweights, 470, 0);
 
 	/* initialize the palette with these colors */
-	for (i = 0; i < machine.total_colors(); i++)
+	for (i = 0; i < machine().total_colors(); i++)
 	{
 		int bit0, bit1, bit2;
 		int r, g, b;
@@ -52,11 +51,11 @@ PALETTE_INIT( zaxxon )
 		bit1 = (color_prom[i] >> 7) & 0x01;
 		b = combine_2_weights(bweights, bit0, bit1);
 
-		palette_set_color(machine, i, MAKE_RGB(r, g, b));
+		palette_set_color(machine(), i, MAKE_RGB(r, g, b));
 	}
 
 	/* color_prom now points to the beginning of the character color codes */
-	state->m_color_codes = &color_prom[256];
+	m_color_codes = &color_prom[256];
 }
 
 
@@ -67,47 +66,44 @@ PALETTE_INIT( zaxxon )
  *
  *************************************/
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(zaxxon_state::get_bg_tile_info)
 {
-	const UINT8 *source = machine.root_device().memregion("tilemap_dat")->base();
-	int size = machine.root_device().memregion("tilemap_dat")->bytes() / 2;
+	const UINT8 *source = machine().root_device().memregion("tilemap_dat")->base();
+	int size = machine().root_device().memregion("tilemap_dat")->bytes() / 2;
 	int eff_index = tile_index & (size - 1);
 	int code = source[eff_index] + 256 * (source[eff_index + size] & 3);
 	int color = source[eff_index + size] >> 4;
 
-	SET_TILE_INFO(1, code, color, 0);
+	SET_TILE_INFO_MEMBER(1, code, color, 0);
 }
 
 
-static TILE_GET_INFO( zaxxon_get_fg_tile_info )
+TILE_GET_INFO_MEMBER(zaxxon_state::zaxxon_get_fg_tile_info)
 {
-	zaxxon_state *state = machine.driver_data<zaxxon_state>();
 	int sx = tile_index % 32;
 	int sy = tile_index / 32;
-	int code = state->m_videoram[tile_index];
-	int color = state->m_color_codes[sx + 32 * (sy / 4)] & 0x0f;
+	int code = m_videoram[tile_index];
+	int color = m_color_codes[sx + 32 * (sy / 4)] & 0x0f;
 
-	SET_TILE_INFO(0, code, color * 2, 0);
+	SET_TILE_INFO_MEMBER(0, code, color * 2, 0);
 }
 
 
-static TILE_GET_INFO( razmataz_get_fg_tile_info )
+TILE_GET_INFO_MEMBER(zaxxon_state::razmataz_get_fg_tile_info)
 {
-	zaxxon_state *state = machine.driver_data<zaxxon_state>();
-	int code = state->m_videoram[tile_index];
-	int color = state->m_color_codes[code] & 0x0f;
+	int code = m_videoram[tile_index];
+	int color = m_color_codes[code] & 0x0f;
 
-	SET_TILE_INFO(0, code, color * 2, 0);
+	SET_TILE_INFO_MEMBER(0, code, color * 2, 0);
 }
 
 
-static TILE_GET_INFO( congo_get_fg_tile_info )
+TILE_GET_INFO_MEMBER(zaxxon_state::congo_get_fg_tile_info)
 {
-	zaxxon_state *state = machine.driver_data<zaxxon_state>();
-	int code = state->m_videoram[tile_index] + (state->m_congo_fg_bank << 8);
-	int color = state->m_colorram[tile_index] & 0x1f;
+	int code = m_videoram[tile_index] + (m_congo_fg_bank << 8);
+	int color = m_colorram[tile_index] & 0x1f;
 
-	SET_TILE_INFO(0, code, color * 2, 0);
+	SET_TILE_INFO_MEMBER(0, code, color * 2, 0);
 }
 
 
@@ -118,7 +114,7 @@ static TILE_GET_INFO( congo_get_fg_tile_info )
  *
  *************************************/
 
-static void video_start_common(running_machine &machine, tile_get_info_func fg_tile_info)
+static void video_start_common(running_machine &machine, tilemap_get_info_delegate fg_tile_info)
 {
 	zaxxon_state *state = machine.driver_data<zaxxon_state>();
 
@@ -132,8 +128,8 @@ static void video_start_common(running_machine &machine, tile_get_info_func fg_t
 	memset(state->m_congo_custom, 0, sizeof(state->m_congo_custom));
 
 	/* create a background and foreground tilemap */
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows,  8,8, 32,512);
-	state->m_fg_tilemap = tilemap_create(machine, fg_tile_info, tilemap_scan_rows,  8,8, 32,32);
+	state->m_bg_tilemap = &machine.tilemap().create(tilemap_get_info_delegate(FUNC(zaxxon_state::get_bg_tile_info),state), TILEMAP_SCAN_ROWS,  8,8, 32,512);
+	state->m_fg_tilemap = &machine.tilemap().create(fg_tile_info, TILEMAP_SCAN_ROWS,  8,8, 32,32);
 
 	/* configure the foreground tilemap */
 	state->m_fg_tilemap->set_transparent_pen(0);
@@ -148,31 +144,30 @@ static void video_start_common(running_machine &machine, tile_get_info_func fg_t
 }
 
 
-VIDEO_START( zaxxon )
+void zaxxon_state::video_start()
 {
-	video_start_common(machine, zaxxon_get_fg_tile_info);
+	video_start_common(machine(), tilemap_get_info_delegate(FUNC(zaxxon_state::zaxxon_get_fg_tile_info),this));
 }
 
 
-VIDEO_START( razmataz )
+VIDEO_START_MEMBER(zaxxon_state,razmataz)
 {
-	video_start_common(machine, razmataz_get_fg_tile_info);
+	video_start_common(machine(), tilemap_get_info_delegate(FUNC(zaxxon_state::razmataz_get_fg_tile_info),this));
 }
 
 
-VIDEO_START( congo )
+VIDEO_START_MEMBER(zaxxon_state,congo)
 {
-	zaxxon_state *state = machine.driver_data<zaxxon_state>();
 
 	/* allocate our own spriteram since it is not accessible by the main CPU */
-	state->m_spriteram.allocate(0x100);
+	m_spriteram.allocate(0x100);
 
 	/* register for save states */
-	state->save_item(NAME(state->m_congo_fg_bank));
-	state->save_item(NAME(state->m_congo_color_bank));
-	state->save_item(NAME(state->m_congo_custom));
+	save_item(NAME(m_congo_fg_bank));
+	save_item(NAME(m_congo_color_bank));
+	save_item(NAME(m_congo_custom));
 
-	video_start_common(machine, congo_get_fg_tile_info);
+	video_start_common(machine(), tilemap_get_info_delegate(FUNC(zaxxon_state::congo_get_fg_tile_info),this));
 }
 
 
@@ -289,7 +284,7 @@ WRITE8_MEMBER(zaxxon_state::congo_sprite_custom_w)
 		int count = m_congo_custom[2];
 
 		/* count cycles (just a guess) */
-		device_adjust_icount(&space.device(), -count * 5);
+		space.device().execute().adjust_icount(-count * 5);
 
 		/* this is just a guess; the chip is hardwired to the spriteram */
 		while (count-- >= 0)
@@ -434,7 +429,7 @@ static void draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const r
 {
 	zaxxon_state *state = machine.driver_data<zaxxon_state>();
 	UINT8 *spriteram = state->m_spriteram;
-	const gfx_element *gfx = machine.gfx[2];
+	gfx_element *gfx = machine.gfx[2];
 	int flip = state->flip_screen();
 	int flipmask = flip ? 0xff : 0x00;
 	int offs;

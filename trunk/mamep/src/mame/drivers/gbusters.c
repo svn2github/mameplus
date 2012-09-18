@@ -24,7 +24,7 @@ static INTERRUPT_GEN( gbusters_interrupt )
 	gbusters_state *state = device->machine().driver_data<gbusters_state>();
 
 	if (k052109_is_irq_enabled(state->m_k052109))
-		device_set_input_line(device, KONAMI_IRQ_LINE, HOLD_LINE);
+		device->execute().set_input_line(KONAMI_IRQ_LINE, HOLD_LINE);
 }
 
 READ8_MEMBER(gbusters_state::bankedram_r)
@@ -56,7 +56,7 @@ WRITE8_MEMBER(gbusters_state::gbusters_1f98_w)
 	/* other bits unused/unknown */
 	if (data & 0xfe)
 	{
-		//logerror("%04x: (1f98) write %02x\n",cpu_get_pc(&space.device()), data);
+		//logerror("%04x: (1f98) write %02x\n",space.device().safe_pc(), data);
 		//popmessage("$1f98 = %02x", data);
 	}
 }
@@ -84,13 +84,13 @@ WRITE8_MEMBER(gbusters_state::gbusters_coin_counter_w)
 		sprintf(baf, "ccnt = %02x", data);
 		popmessage(baf);
 #endif
-		logerror("%04x: (ccount) write %02x\n", cpu_get_pc(&space.device()), data);
+		logerror("%04x: (ccount) write %02x\n", space.device().safe_pc(), data);
 	}
 }
 
 WRITE8_MEMBER(gbusters_state::gbusters_unknown_w)
 {
-	logerror("%04x: write %02x to 0x1f9c\n",cpu_get_pc(&space.device()), data);
+	logerror("%04x: write %02x to 0x1f9c\n",space.device().safe_pc(), data);
 
 {
 char baf[40];
@@ -101,7 +101,7 @@ char baf[40];
 
 WRITE8_MEMBER(gbusters_state::gbusters_sh_irqtrigger_w)
 {
-	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 WRITE8_MEMBER(gbusters_state::gbusters_snd_bankswitch_w)
@@ -266,38 +266,36 @@ static const k051960_interface gbusters_k051960_intf =
 	gbusters_sprite_callback
 };
 
-static MACHINE_START( gbusters )
+void gbusters_state::machine_start()
 {
-	gbusters_state *state = machine.driver_data<gbusters_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 16, &ROM[0x10000], 0x2000);
-	state->membank("bank1")->set_entry(0);
+	membank("bank1")->configure_entries(0, 16, &ROM[0x10000], 0x2000);
+	membank("bank1")->set_entry(0);
 
-	state->m_generic_paletteram_8.allocate(0x800);
+	m_generic_paletteram_8.allocate(0x800);
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_k052109 = machine.device("k052109");
-	state->m_k051960 = machine.device("k051960");
-	state->m_k007232 = machine.device("k007232");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_k052109 = machine().device("k052109");
+	m_k051960 = machine().device("k051960");
+	m_k007232 = machine().device("k007232");
 
-	state->save_item(NAME(state->m_palette_selected));
-	state->save_item(NAME(state->m_priority));
+	save_item(NAME(m_palette_selected));
+	save_item(NAME(m_priority));
 }
 
-static MACHINE_RESET( gbusters )
+void gbusters_state::machine_reset()
 {
-	gbusters_state *state = machine.driver_data<gbusters_state>();
-	UINT8 *RAM = state->memregion("maincpu")->base();
+	UINT8 *RAM = memregion("maincpu")->base();
 
-	konami_configure_set_lines(machine.device("maincpu"), gbusters_banking);
+	konami_configure_set_lines(machine().device("maincpu"), gbusters_banking);
 
 	/* mirror address for banked ROM */
 	memcpy(&RAM[0x18000], &RAM[0x10000], 0x08000);
 
-	state->m_palette_selected = 0;
-	state->m_priority = 0;
+	m_palette_selected = 0;
+	m_priority = 0;
 }
 
 static MACHINE_CONFIG_START( gbusters, gbusters_state )
@@ -310,8 +308,6 @@ static MACHINE_CONFIG_START( gbusters, gbusters_state )
 	MCFG_CPU_ADD("audiocpu", Z80, 3579545)		/* ? */
 	MCFG_CPU_PROGRAM_MAP(gbusters_sound_map)
 
-	MCFG_MACHINE_START(gbusters)
-	MCFG_MACHINE_RESET(gbusters)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_HAS_SHADOWS)
@@ -325,7 +321,6 @@ static MACHINE_CONFIG_START( gbusters, gbusters_state )
 
 	MCFG_PALETTE_LENGTH(1024)
 
-	MCFG_VIDEO_START(gbusters)
 
 	MCFG_K052109_ADD("k052109", gbusters_k052109_intf)
 	MCFG_K051960_ADD("k051960", gbusters_k051960_intf)
@@ -430,7 +425,7 @@ static KONAMI_SETLINES_CALLBACK( gbusters_banking )
 
 	if (lines & 0xf0)
 	{
-		//logerror("%04x: (lines) write %02x\n",cpu_get_pc(device), lines);
+		//logerror("%04x: (lines) write %02x\n",device->safe_pc(), lines);
 		//popmessage("lines = %02x", lines);
 	}
 

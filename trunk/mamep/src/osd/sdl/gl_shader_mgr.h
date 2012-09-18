@@ -4,26 +4,25 @@
 
 // #define GLSL_SOURCE_ON_DISK 1
 
-typedef enum {
+enum GLSL_SHADER_TYPE {
 	GLSL_SHADER_TYPE_IDX16,
 	GLSL_SHADER_TYPE_RGB32_LUT,
 	GLSL_SHADER_TYPE_RGB32_DIRECT,
 	GLSL_SHADER_TYPE_NUMBER
-} GLSL_SHADER_TYPE;
+};
 
-typedef enum {
+enum GLSL_SHADER_FEATURE {
 	GLSL_SHADER_FEAT_PLAIN,
 	GLSL_SHADER_FEAT_BILINEAR,
 	GLSL_SHADER_FEAT_INT_NUMBER,
 	GLSL_SHADER_FEAT_CUSTOM = GLSL_SHADER_FEAT_INT_NUMBER,
 	GLSL_SHADER_FEAT_MAX_NUMBER,
-} GLSL_SHADER_FEATURE;
+};
 
 // old code passed sdl_info * to functions here
 // however the parameter was not used
 // changed interface to more generic one.
-typedef struct _glsl_shader_info glsl_shader_info;
-struct _glsl_shader_info
+struct glsl_shader_info
 {
 	int dummy; // avoid compiler breakage
 };

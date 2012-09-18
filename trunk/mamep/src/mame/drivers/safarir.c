@@ -73,6 +73,11 @@ public:
 	DECLARE_READ8_MEMBER(ram_r);
 	DECLARE_WRITE8_MEMBER(ram_bank_w);
 	DECLARE_WRITE8_MEMBER(safarir_audio_w);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_start();
+	virtual void video_start();
+	virtual void palette_init();
 };
 
 
@@ -135,23 +140,22 @@ static GFXDECODE_START( safarir )
 GFXDECODE_END
 
 
-static PALETTE_INIT( safarir )
+void safarir_state::palette_init()
 {
 	int i;
 
-	for (i = 0; i < machine.total_colors() / 2; i++)
+	for (i = 0; i < machine().total_colors() / 2; i++)
 	{
-		palette_set_color(machine, (i * 2) + 0, RGB_BLACK);
-		palette_set_color(machine, (i * 2) + 1, MAKE_RGB(pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0)));
+		palette_set_color(machine(), (i * 2) + 0, RGB_BLACK);
+		palette_set_color(machine(), (i * 2) + 1, MAKE_RGB(pal1bit(i >> 2), pal1bit(i >> 1), pal1bit(i >> 0)));
 	}
 }
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(safarir_state::get_bg_tile_info)
 {
 	int color;
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	safarir_state *state = machine.driver_data<safarir_state>();
-	UINT8 code = state->ram_r(*space,tile_index | 0x400);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	UINT8 code = ram_r(*space,tile_index | 0x400);
 
 	if (code & 0x80)
 		color = 6;	/* yellow */
@@ -165,16 +169,15 @@ static TILE_GET_INFO( get_bg_tile_info )
 			color |= (tile_index & 0xc0) ? 1 : 0;
 	}
 
-	SET_TILE_INFO(0, code & 0x7f, color, 0);
+	SET_TILE_INFO_MEMBER(0, code & 0x7f, color, 0);
 }
 
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(safarir_state::get_fg_tile_info)
 {
 	int color, flags;
-	address_space *space = machine.device("maincpu")->memory().space(AS_PROGRAM);
-	safarir_state *state = machine.driver_data<safarir_state>();
-	UINT8 code = state->ram_r(*space,tile_index);
+	address_space *space = machine().device("maincpu")->memory().space(AS_PROGRAM);
+	UINT8 code = ram_r(*space,tile_index);
 
 	if (code & 0x80)
 		color = 7;	/* white */
@@ -183,18 +186,17 @@ static TILE_GET_INFO( get_fg_tile_info )
 
 	flags = ((tile_index & 0x1f) >= 0x03) ? 0 : TILE_FORCE_LAYER0;
 
-	SET_TILE_INFO(1, code & 0x7f, color, flags);
+	SET_TILE_INFO_MEMBER(1, code & 0x7f, color, flags);
 }
 
 
-static VIDEO_START( safarir )
+void safarir_state::video_start()
 {
-	safarir_state *state = machine.driver_data<safarir_state>();
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_rows, 8, 8, 32, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(safarir_state::get_bg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(safarir_state::get_fg_tile_info),this), TILEMAP_SCAN_ROWS, 8, 8, 32, 32);
 
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_fg_tilemap->set_transparent_pen(0);
 }
 
 
@@ -313,22 +315,21 @@ MACHINE_CONFIG_END
  *
  *************************************/
 
-static MACHINE_START( safarir )
+void safarir_state::machine_start()
 {
-	safarir_state *state = machine.driver_data<safarir_state>();
 
-	state->m_ram_1 = auto_alloc_array(machine, UINT8, state->m_ram.bytes());
-	state->m_ram_2 = auto_alloc_array(machine, UINT8, state->m_ram.bytes());
-	state->m_port_last = 0;
-	state->m_port_last2 = 0;
-	state->m_samples = machine.device<samples_device>("samples");
+	m_ram_1 = auto_alloc_array(machine(), UINT8, m_ram.bytes());
+	m_ram_2 = auto_alloc_array(machine(), UINT8, m_ram.bytes());
+	m_port_last = 0;
+	m_port_last2 = 0;
+	m_samples = machine().device<samples_device>("samples");
 
 	/* setup for save states */
-	state->save_pointer(NAME(state->m_ram_1), state->m_ram.bytes());
-	state->save_pointer(NAME(state->m_ram_2), state->m_ram.bytes());
-	state->save_item(NAME(state->m_ram_bank));
-	state->save_item(NAME(state->m_port_last));
-	state->save_item(NAME(state->m_port_last2));
+	save_pointer(NAME(m_ram_1), m_ram.bytes());
+	save_pointer(NAME(m_ram_2), m_ram.bytes());
+	save_item(NAME(m_ram_bank));
+	save_item(NAME(m_port_last));
+	save_item(NAME(m_port_last2));
 }
 
 
@@ -405,11 +406,8 @@ static MACHINE_CONFIG_START( safarir, safarir_state )
 	MCFG_CPU_ADD("maincpu", I8080A, XTAL_18MHz/12)	/* 1.5 MHz ? */
 	MCFG_CPU_PROGRAM_MAP(main_map)
 
-	MCFG_MACHINE_START(safarir)
 
 	/* video hardware */
-	MCFG_VIDEO_START(safarir)
-	MCFG_PALETTE_INIT(safarir)
 	MCFG_PALETTE_LENGTH(2*8)
 	MCFG_GFXDECODE(safarir)
 

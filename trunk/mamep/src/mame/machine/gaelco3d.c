@@ -77,8 +77,7 @@
 #define LINK_SLACK_B ((LINK_SLACK / 3) + 1)
 
 
-typedef struct _buf_t buf_t;
-struct _buf_t
+struct buf_t
 {
 	volatile UINT8 data;
 	volatile UINT8 stat;
@@ -86,17 +85,15 @@ struct _buf_t
 	volatile int data_cnt;
 };
 
-typedef struct _shmem_t shmem_t;
-struct _shmem_t
+struct shmem_t
 {
 	volatile INT32	lock;
 	buf_t				buf[2];
 };
 
-typedef struct _osd_shared_mem osd_shared_mem;
+struct osd_shared_mem;
 
-typedef struct _gaelco_serial_state gaelco_serial_state;
-struct _gaelco_serial_state
+struct gaelco_serial_state
 {
 	device_t *m_device;
 	devcb_resolved_write_line m_irq_func;
@@ -113,7 +110,7 @@ struct _gaelco_serial_state
 	shmem_t *m_shmem;
 };
 
-struct _osd_shared_mem
+struct osd_shared_mem
 {
 	char *fn;
 	size_t size;
@@ -208,14 +205,14 @@ INLINE gaelco_serial_state *get_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == GAELCO_SERIAL);
-	return (gaelco_serial_state *) downcast<legacy_device_base *>(device)->token();
+	return (gaelco_serial_state *) downcast<gaelco_serial_device *>(device)->token();
 }
 
 INLINE const gaelco_serial_interface *get_interface(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == GAELCO_SERIAL);
-	return (gaelco_serial_interface *) downcast<legacy_device_base *>(device)->static_config();
+	return (gaelco_serial_interface *) downcast<gaelco_serial_device *>(device)->static_config();
 }
 
 INLINE void shmem_lock(shmem_t *shmem)
@@ -498,28 +495,49 @@ static DEVICE_STOP( gaelco_serial )
 	osd_sharedmem_free(state->m_os_shmem);
 }
 
-DEVICE_GET_INFO( gaelco_serial )
+const device_type GAELCO_SERIAL = &device_creator<gaelco_serial_device>;
+
+gaelco_serial_device::gaelco_serial_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, GAELCO_SERIAL, "gaelco_serial", tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(gaelco_serial_state);	break;
-		case DEVINFO_INT_INLINE_CONFIG_BYTES:			info->i = 0;							break;
-		//case DEVINFO_INT_CLASS:                           info->i = DEVICE_CLASS_PERIPHERAL;      break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(gaelco_serial_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(gaelco_serial);break;
-		case DEVINFO_FCT_STOP:							info->stop = DEVICE_STOP_NAME(gaelco_serial);break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME(gaelco_serial);break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "gaelco_serial");		break;
-		case DEVINFO_STR_FAMILY:						strcpy(info->s, "SERIAL");				break;
-		case DEVINFO_STR_VERSION:						strcpy(info->s, "1.0");					break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void gaelco_serial_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void gaelco_serial_device::device_start()
+{
+	DEVICE_START_NAME( gaelco_serial )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void gaelco_serial_device::device_reset()
+{
+	DEVICE_RESET_NAME( gaelco_serial )(this);
+}
+
+//-------------------------------------------------
+//  device_stop - device-specific stop
+//-------------------------------------------------
+
+void gaelco_serial_device::device_stop()
+{
+	DEVICE_STOP_NAME( gaelco_serial )(this);
 }
 
 
-DEFINE_LEGACY_DEVICE(GAELCO_SERIAL, gaelco_serial);

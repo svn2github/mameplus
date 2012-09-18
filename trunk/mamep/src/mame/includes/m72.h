@@ -97,18 +97,36 @@ public:
 	DECLARE_DRIVER_INIT(nspirit);
 	DECLARE_DRIVER_INIT(loht);
 	DECLARE_DRIVER_INIT(imgfight);
+	TILE_GET_INFO_MEMBER(m72_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(m72_get_fg_tile_info);
+	TILE_GET_INFO_MEMBER(hharry_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(rtype2_get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(rtype2_get_fg_tile_info);
+	TILEMAP_MAPPER_MEMBER(majtitle_scan_rows);
+	DECLARE_MACHINE_START(m72);
+	DECLARE_MACHINE_RESET(m72);
+	DECLARE_VIDEO_START(m72);
+	DECLARE_MACHINE_RESET(xmultipl);
+	DECLARE_VIDEO_START(xmultipl);
+	DECLARE_VIDEO_START(hharry);
+	DECLARE_VIDEO_START(rtype2);
+	DECLARE_VIDEO_START(majtitle);
+	DECLARE_VIDEO_START(hharryu);
+	DECLARE_VIDEO_START(poundfor);
+	DECLARE_MACHINE_START(kengo);
+	DECLARE_MACHINE_RESET(kengo);
 };
 
 
 /*----------- defined in video/m72.c -----------*/
 
-VIDEO_START( m72 );
-VIDEO_START( rtype2 );
-VIDEO_START( majtitle );
-VIDEO_START( hharry );
-VIDEO_START( poundfor );
-VIDEO_START( xmultipl );
-VIDEO_START( hharryu );
+
+
+
+
+
+
+
 
 
 SCREEN_UPDATE_IND16( m72 );

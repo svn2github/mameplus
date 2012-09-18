@@ -143,12 +143,12 @@ Current Problem(s) - in order of priority
 
 static UINT16 rps(running_machine &machine)
 {
-	return cpu_get_reg(machine.device("maincpu"), NEC_CS);
+	return machine.device("maincpu")->state().state_int(NEC_CS);
 }
 
 static UINT16 rpc(running_machine &machine)
 {
-	return cpu_get_reg(machine.device("maincpu"), NEC_IP);
+	return machine.device("maincpu")->state().state_int(NEC_IP);
 }
 
 WRITE16_MEMBER(raiden2_state::cop_pgm_data_w)
@@ -428,6 +428,7 @@ READ16_MEMBER(raiden2_state::cop_dist_r)
 WRITE16_MEMBER(raiden2_state::cop_scale_w)
 {
 	COMBINE_DATA(&cop_scale);
+	cop_scale &= 3;
 }
 
 READ16_MEMBER(raiden2_state::cop_reg_high_r)
@@ -450,6 +451,23 @@ WRITE16_MEMBER(raiden2_state::cop_reg_low_w)
 	cop_regs[offset] = (cop_regs[offset] & ~UINT32(mem_mask)) | (data & mem_mask);
 }
 
+void raiden2_state::cop_take_hit_box_params(UINT8 offs)
+{
+	INT16 start_x,start_y,end_x,end_y;
+
+	start_x = INT8(cop_collision_info[offs].hitbox_x);
+	start_y = INT8(cop_collision_info[offs].hitbox_y);
+
+	end_x = INT8(cop_collision_info[offs].hitbox_x >> 8);
+	end_y = INT8(cop_collision_info[offs].hitbox_y >> 8);
+
+	cop_collision_info[offs].min_x = start_x + (cop_collision_info[offs].x >> 16);
+	cop_collision_info[offs].min_y = start_y + (cop_collision_info[offs].y >> 16);
+	cop_collision_info[offs].max_x = end_x + (cop_collision_info[offs].x >> 16);
+	cop_collision_info[offs].max_y = end_y + (cop_collision_info[offs].y >> 16);
+}
+
+
 UINT8 raiden2_state::cop_calculate_collsion_detection(running_machine &machine)
 {
 	static UINT8 res;
@@ -458,13 +476,17 @@ UINT8 raiden2_state::cop_calculate_collsion_detection(running_machine &machine)
 
 	/* outbound X check */
 	if(cop_collision_info[0].max_x >= cop_collision_info[1].min_x && cop_collision_info[0].min_x <= cop_collision_info[1].max_x)
-		res &= ~1;
+		res &= ~2;
 
 	/* outbound Y check */
 	if(cop_collision_info[0].max_y >= cop_collision_info[1].min_y && cop_collision_info[0].min_y <= cop_collision_info[1].max_y)
-		res &= ~2;
+		res &= ~1;
 
-	/* TODO: special collision detection for Zero Team */
+	cop_hit_val_x = (cop_collision_info[0].x - cop_collision_info[1].x) >> 16;
+	cop_hit_val_y = (cop_collision_info[0].y - cop_collision_info[1].y) >> 16;
+	cop_hit_val_z = 1;
+	cop_hit_val_unk = res; // TODO: there's also bit 2 and 3 triggered in the tests, no known meaning
+
 
 	return res;
 }
@@ -519,31 +541,41 @@ WRITE16_MEMBER(raiden2_state::cop_cmd_w)
 
 	case 0x42c2: { // 42c2 0005 fcdd 0040 - 0f9a 0b9a 0b9c 0b9c 0b9c 029c 0000 0000
 		int div = space.read_word(cop_regs[0]+0x36);
+		int res;
 		if(!div)
+		{
+			printf("divide by zero?\n");
 			div = 1;
-		space.write_word(cop_regs[0]+0x38, (space.read_word(cop_regs[0]+0x38) << (5-cop_scale)) / div);
+		}
+		res = space.read_word(cop_regs[0]+(0x38)) / div;
+		res <<= cop_scale + 2; /* TODO: check this */
+		space.write_word(cop_regs[0]+0x38, res);
 		break;
 	}
 
 	case 0x8100: { // 8100 0007 fdfb 0080 - 0b9a 0b88 0888 0000 0000 0000 0000 0000
-		int raw_angle = (space.read_word(cop_regs[0]+0x34) & 0xff);
+		int raw_angle = (space.read_word(cop_regs[0]+(0x34)) & 0xff);
 		double angle = raw_angle * M_PI / 128;
-		double amp = 65536*(space.read_word(cop_regs[0]+0x36) & 0xff);
+		double amp = (65536 >> 5)*(space.read_word(cop_regs[0]+(0x36)) & 0xff);
+		int res;
 		/* TODO: up direction, why? (check machine/seicop.c) */
 		if(raw_angle == 0xc0)
 			amp*=2;
-		space.write_dword(cop_regs[0] + 16, int(amp*sin(angle)) >> (5-cop_scale));
+		res = int(amp*sin(angle)) << cop_scale;
+		space.write_dword(cop_regs[0] + 16, res);
 		break;
 	}
 
 	case 0x8900: { // 8900 0007 fdfb 0088 - 0b9a 0b8a 088a 0000 0000 0000 0000 0000
-		int raw_angle = (space.read_word(cop_regs[0]+0x34) & 0xff);
+		int raw_angle = (space.read_word(cop_regs[0]+(0x34)) & 0xff);
 		double angle = raw_angle * M_PI / 128;
-		double amp = 65536*(space.read_word(cop_regs[0]+0x36) & 0xff);
+		double amp = (65536 >> 5)*(space.read_word(cop_regs[0]+(0x36)) & 0xff);
+		int res;
 		/* TODO: left direction, why? (check machine/seicop.c) */
 		if(raw_angle == 0x80)
 			amp*=2;
-		space.write_dword(cop_regs[0] + 20, int(amp*cos(angle)) >> (5-cop_scale));
+		res = int(amp*cos(angle)) << cop_scale;
+		space.write_dword(cop_regs[0] + 20, res);
 		break;
 	}
 
@@ -562,7 +594,7 @@ WRITE16_MEMBER(raiden2_state::cop_cmd_w)
 		space.write_dword(cop_regs[2], space.read_dword(cop_regs[0]+4));
 		break;
 
-		// raidndx only
+		// raidendx only
 	case 0x7e05:
 		space.write_dword(0x470, (space.read_dword(cop_regs[4]) & 0x30) << 6);
 		// Actually, wherever the bank selection actually is
@@ -570,38 +602,34 @@ WRITE16_MEMBER(raiden2_state::cop_cmd_w)
 		break;
 
 	case 0xa100:
+	case 0xa180:
 		cop_collision_info[0].y = (space.read_dword(cop_regs[0]+4));
 		cop_collision_info[0].x = (space.read_dword(cop_regs[0]+8));
 		break;
 
 	case 0xa900:
+	case 0xa980:
 		cop_collision_info[1].y = (space.read_dword(cop_regs[1]+4));
 		cop_collision_info[1].x = (space.read_dword(cop_regs[1]+8));
 		break;
 
 	case 0xb100:
-		/* Take hitbox param, TODO */
 		cop_collision_info[0].hitbox = space.read_word(cop_regs[2]);
-
-		cop_collision_info[0].min_x = cop_collision_info[0].x + (0 << 16);
-		cop_collision_info[0].min_y = cop_collision_info[0].y + (0 << 16);
-		cop_collision_info[0].max_x = cop_collision_info[0].x + (0x10 << 16);
-		cop_collision_info[0].max_y = cop_collision_info[0].y + (0x10 << 16);
+		cop_collision_info[0].hitbox_y = space.read_word((cop_regs[2]&0xffff0000)|(cop_collision_info[0].hitbox));
+		cop_collision_info[0].hitbox_x = space.read_word(((cop_regs[2]&0xffff0000)|(cop_collision_info[0].hitbox))+2);
 
 		/* do the math */
+		cop_take_hit_box_params(0);
 		cop_hit_status = cop_calculate_collsion_detection(space.machine());
 		break;
 
 	case 0xb900:
-		/* Take hitbox param, TODO */
 		cop_collision_info[1].hitbox = space.read_word(cop_regs[3]);
-
-		cop_collision_info[1].min_x = cop_collision_info[1].x + (0 << 16);
-		cop_collision_info[1].min_y = cop_collision_info[1].y + (0 << 16);
-		cop_collision_info[1].max_x = cop_collision_info[1].x + (0x10 << 16);
-		cop_collision_info[1].max_y = cop_collision_info[1].y + (0x10 << 16);
+		cop_collision_info[1].hitbox_y = space.read_word((cop_regs[3]&0xffff0000)|(cop_collision_info[1].hitbox));
+		cop_collision_info[1].hitbox_x = space.read_word(((cop_regs[3]&0xffff0000)|(cop_collision_info[1].hitbox))+2);
 
 		/* do the math */
+		cop_take_hit_box_params(1);
 		cop_hit_status = cop_calculate_collsion_detection(space.machine());
 		break;
 
@@ -629,7 +657,7 @@ void raiden2_state::draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,
 {
 	UINT16 *source = sprites + sprites_cur_start/2 - 4;
 
-	const gfx_element *gfx = machine.gfx[2];
+	gfx_element *gfx = machine.gfx[2];
 
 //  static int ytlim = 1;
 //  static int xtlim = 1;
@@ -663,9 +691,6 @@ void raiden2_state::draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,
 		int xflip, yflip;
 		int xstep, ystep;
 
-		if (sx & 0x8000) sx -= 0x10000;
-		if (sy & 0x8000) sy -= 0x10000;
-
 
 		ytlim = (source[0] >> 12) & 0x7;
 		xtlim = (source[0] >> 8) & 0x7;
@@ -697,6 +722,12 @@ void raiden2_state::draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,
 		{
 			for (ytiles = 0; ytiles < ytlim; ytiles++)
 			{
+				/* note this wraparound handling could be wrong if some of the COP maths is wrong */
+
+#define ZEROTEAM_MASK_X (0x1ff) // causes a blank square in the corner of zero team, but otherwise the thrusters of the ship in the r2 intro are clipped, using 0x8000 as a sign bit instead of this logic works for r2, but not zero team
+#define ZEROTEAM_MASK_Y (0x1ff)
+
+
 				drawgfx_transpen(
 						bitmap,
 						cliprect,
@@ -704,7 +735,35 @@ void raiden2_state::draw_sprites(running_machine &machine, bitmap_ind16 &bitmap,
 						tile_number,
 						colr,
 						yflip,xflip,
-						sx+xstep*xtiles,sy+ystep*ytiles,15);
+						(sx+xstep*xtiles)&ZEROTEAM_MASK_X,(sy+ystep*ytiles)&ZEROTEAM_MASK_Y,15);
+
+				drawgfx_transpen(
+						bitmap,
+						cliprect,
+						gfx,
+						tile_number,
+						colr,
+						yflip,xflip,
+						((sx+xstep*xtiles)&ZEROTEAM_MASK_X)-0x200,(sy+ystep*ytiles)&ZEROTEAM_MASK_Y,15);
+
+				drawgfx_transpen(
+						bitmap,
+						cliprect,
+						gfx,
+						tile_number,
+						colr,
+						yflip,xflip,
+						(sx+xstep*xtiles)&ZEROTEAM_MASK_X,((sy+ystep*ytiles)&ZEROTEAM_MASK_Y)-0x200,15);
+
+				drawgfx_transpen(
+						bitmap,
+						cliprect,
+						gfx,
+						tile_number,
+						colr,
+						yflip,xflip,
+						((sx+xstep*xtiles)&ZEROTEAM_MASK_X)-0x200,((sy+ystep*ytiles)&ZEROTEAM_MASK_Y)-0x200,15);
+
 
 				tile_number++;
 			}
@@ -820,64 +879,59 @@ WRITE16_MEMBER(raiden2_state::raidendx_cop_bank_2_w)
 
 /* TILEMAP RELATED (move to video file) */
 
-static TILE_GET_INFO( get_back_tile_info )
+TILE_GET_INFO_MEMBER(raiden2_state::get_back_tile_info)
 {
-	raiden2_state *state = machine.driver_data<raiden2_state>();
-	int tile = state->back_data[tile_index];
+	int tile = back_data[tile_index];
 	int color = (tile >> 12) | (0 << 4);
 
-	tile = (tile & 0xfff) | (state->bg_bank << 12);
+	tile = (tile & 0xfff) | (bg_bank << 12);
 
-	SET_TILE_INFO(1,tile+0x0000,color,0);
+	SET_TILE_INFO_MEMBER(1,tile+0x0000,color,0);
 }
 
-static TILE_GET_INFO( get_mid_tile_info )
+TILE_GET_INFO_MEMBER(raiden2_state::get_mid_tile_info)
 {
-	raiden2_state *state = machine.driver_data<raiden2_state>();
-	int tile = state->mid_data[tile_index];
+	int tile = mid_data[tile_index];
 	int color = (tile >> 12) | (2 << 4);
 
-	tile = (tile & 0xfff) | (state->mid_bank << 12);
+	tile = (tile & 0xfff) | (mid_bank << 12);
 
-	SET_TILE_INFO(1,tile,color,0);
+	SET_TILE_INFO_MEMBER(1,tile,color,0);
 }
 
-static TILE_GET_INFO( get_fore_tile_info )
+TILE_GET_INFO_MEMBER(raiden2_state::get_fore_tile_info)
 {
-	raiden2_state *state = machine.driver_data<raiden2_state>();
-	int tile = state->fore_data[tile_index];
+	int tile = fore_data[tile_index];
 	int color = (tile >> 12) | (1 << 4);
 
-	tile = (tile & 0xfff) | (state->fg_bank << 12);
+	tile = (tile & 0xfff) | (fg_bank << 12);
 
-	SET_TILE_INFO(1,tile,color,0);
+	SET_TILE_INFO_MEMBER(1,tile,color,0);
 }
 
-static TILE_GET_INFO( get_text_tile_info )
+TILE_GET_INFO_MEMBER(raiden2_state::get_text_tile_info)
 {
-	raiden2_state *state = machine.driver_data<raiden2_state>();
-	int tile = state->text_data[tile_index];
+	int tile = text_data[tile_index];
 	int color = (tile>>12)&0xf;
 
 	tile &= 0xfff;
 
-	SET_TILE_INFO(0,tile,color,0);
+	SET_TILE_INFO_MEMBER(0,tile,color,0);
 }
 
 /* VIDEO START (move to video file) */
 
 
-static VIDEO_START( raiden2 )
+VIDEO_START_MEMBER(raiden2_state,raiden2)
 {
-	raiden2_state *state = machine.driver_data<raiden2_state>();
-	state->text_layer       = tilemap_create(machine, get_text_tile_info, tilemap_scan_rows,  8, 8, 64,32 );
-	state->background_layer = tilemap_create(machine, get_back_tile_info, tilemap_scan_rows, 16,16, 32,32 );
-	state->midground_layer  = tilemap_create(machine, get_mid_tile_info,  tilemap_scan_rows, 16,16, 32,32 );
-	state->foreground_layer = tilemap_create(machine, get_fore_tile_info, tilemap_scan_rows, 16,16, 32,32 );
+	text_layer       = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(raiden2_state::get_text_tile_info),this), TILEMAP_SCAN_ROWS,  8, 8, 64,32 );
+	background_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(raiden2_state::get_back_tile_info),this), TILEMAP_SCAN_ROWS, 16,16, 32,32 );
+	midground_layer  = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(raiden2_state::get_mid_tile_info),this),  TILEMAP_SCAN_ROWS, 16,16, 32,32 );
+	foreground_layer = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(raiden2_state::get_fore_tile_info),this), TILEMAP_SCAN_ROWS, 16,16, 32,32 );
 
-	state->midground_layer->set_transparent_pen(15);
-	state->foreground_layer->set_transparent_pen(15);
-	state->text_layer->set_transparent_pen(15);
+	midground_layer->set_transparent_pen(15);
+	foreground_layer->set_transparent_pen(15);
+	text_layer->set_transparent_pen(15);
 }
 
 /* SCREEN_UPDATE_IND16 (move to video file) */
@@ -931,7 +985,7 @@ static SCREEN_UPDATE_IND16( raiden2 )
 
 static INTERRUPT_GEN( raiden2_interrupt )
 {
-	device_set_input_line_and_vector(device, 0, HOLD_LINE, 0xc0/4);	/* VBL */
+	device->execute().set_input_line_and_vector(0, HOLD_LINE, 0xc0/4);	/* VBL */
 }
 
 
@@ -1051,58 +1105,54 @@ void raiden2_state::common_reset()
 	cop_itoa_digit_count = 4; //TODO: Raiden 2 never inits the BCD register, value here is a guess (8 digits, as WR is 10.000.000 + a)
 }
 
-static MACHINE_RESET(raiden2)
+MACHINE_RESET_MEMBER(raiden2_state,raiden2)
 {
-	raiden2_state *state = machine.driver_data<raiden2_state>();
-	state->common_reset();
+	common_reset();
 	sprcpt_init();
-	MACHINE_RESET_CALL(seibu_sound);
+	MACHINE_RESET_CALL_LEGACY(seibu_sound);
 
-	state->membank("mainbank")->set_entry(1);
+	membank("mainbank")->set_entry(1);
 
-	state->prg_bank = 0;
+	prg_bank = 0;
 	//cop_init();
 }
 
-static MACHINE_RESET(raidendx)
+MACHINE_RESET_MEMBER(raiden2_state,raidendx)
 {
-	raiden2_state *state = machine.driver_data<raiden2_state>();
-	state->common_reset();
+	common_reset();
 	sprcpt_init();
-	MACHINE_RESET_CALL(seibu_sound);
+	MACHINE_RESET_CALL_LEGACY(seibu_sound);
 
-	state->membank("mainbank")->set_entry(8);
+	membank("mainbank")->set_entry(8);
 
-	state->prg_bank = 0x08;
+	prg_bank = 0x08;
 
 	//cop_init();
 }
 
-static MACHINE_RESET(zeroteam)
+MACHINE_RESET_MEMBER(raiden2_state,zeroteam)
 {
-	raiden2_state *state = machine.driver_data<raiden2_state>();
-	state->bg_bank = 0;
-	state->fg_bank = 2;
-	state->mid_bank = 1;
+	bg_bank = 0;
+	fg_bank = 2;
+	mid_bank = 1;
 	sprcpt_init();
-	MACHINE_RESET_CALL(seibu_sound);
+	MACHINE_RESET_CALL_LEGACY(seibu_sound);
 
-	state->membank("mainbank")->set_entry(1);
+	membank("mainbank")->set_entry(1);
 
-	state->prg_bank = 0;
+	prg_bank = 0;
 	//cop_init();
 }
 
-static MACHINE_RESET(xsedae)
+MACHINE_RESET_MEMBER(raiden2_state,xsedae)
 {
-	raiden2_state *state = machine.driver_data<raiden2_state>();
-	state->bg_bank = 0;
-	state->fg_bank = 2;
-	state->mid_bank = 1;
+	bg_bank = 0;
+	fg_bank = 2;
+	mid_bank = 1;
 	sprcpt_init();
-	MACHINE_RESET_CALL(seibu_sound);
+	MACHINE_RESET_CALL_LEGACY(seibu_sound);
 
-	//state->membank("mainbank")->set_entry(1);
+	//membank("mainbank")->set_entry(1);
 
 	//cop_init();
 }
@@ -1185,6 +1235,98 @@ WRITE16_MEMBER(raiden2_state::sprite_prot_dst2_w)
 	dst2 = data;
 }
 
+READ16_MEMBER(raiden2_state::cop_collision_status_y_r)
+{
+	return cop_hit_val_y;
+}
+
+READ16_MEMBER(raiden2_state::cop_collision_status_x_r)
+{
+	return cop_hit_val_x;
+}
+
+READ16_MEMBER(raiden2_state::cop_collision_status_z_r)
+{
+	return cop_hit_val_z;
+}
+
+READ16_MEMBER(raiden2_state::cop_collision_status_unk_r)
+{
+	return cop_hit_val_unk;
+}
+
+WRITE16_MEMBER(raiden2_state::cop_sort_lookup_hi_w)
+{
+	cop_sort_lookup = (cop_sort_lookup&0x0000ffff)|(data<<16);
+}
+
+WRITE16_MEMBER(raiden2_state::cop_sort_lookup_lo_w)
+{
+	cop_sort_lookup = (cop_sort_lookup&0xffff0000)|(data&0xffff);
+}
+
+WRITE16_MEMBER(raiden2_state::cop_sort_ram_addr_hi_w)
+{
+	cop_sort_ram_addr = (cop_sort_ram_addr&0x0000ffff)|(data<<16);
+}
+
+WRITE16_MEMBER(raiden2_state::cop_sort_ram_addr_lo_w)
+{
+	cop_sort_ram_addr = (cop_sort_ram_addr&0xffff0000)|(data&0xffff);
+}
+
+WRITE16_MEMBER(raiden2_state::cop_sort_param_w)
+{
+	cop_sort_param = data;
+}
+
+WRITE16_MEMBER(raiden2_state::cop_sort_dma_trig_w)
+{
+	UINT16 sort_size;
+
+	sort_size = data;
+
+	//printf("%04x %04x %04x %04x\n",cop_sort_ram_addr,cop_sort_lookup,cop_sort_param,data);
+
+	{
+		int i,j;
+		UINT8 xchg_flag;
+		UINT32 addri,addrj;
+		UINT16 vali,valj;
+
+		/* TODO: use a better algorithm than bubble sort! */
+		for(i=2;i<sort_size;i+=2)
+		{
+			for(j=i-2;j<sort_size;j+=2)
+			{
+				addri = cop_sort_ram_addr+space.read_word(cop_sort_lookup+i);
+				addrj = cop_sort_ram_addr+space.read_word(cop_sort_lookup+j);
+
+				vali = space.read_word(addri);
+				valj = space.read_word(addrj);
+
+				//printf("%08x %08x %04x %04x\n",addri,addrj,vali,valj);
+
+				switch(cop_sort_param)
+				{
+					case 2:	xchg_flag = (vali > valj); break;
+					case 1: xchg_flag = (vali < valj); break;
+					default: xchg_flag = 0; printf("Warning: sort-DMA used with param %02x\n",cop_sort_param); break;
+				}
+
+				if(xchg_flag)
+				{
+					UINT16 xch_val;
+
+					xch_val = space.read_word(cop_sort_lookup+i);
+					space.write_word(cop_sort_lookup+i,space.read_word(cop_sort_lookup+j));
+					space.write_word(cop_sort_lookup+j,xch_val);
+				}
+			}
+		}
+	}
+}
+
 /* MEMORY MAPS */
 static ADDRESS_MAP_START( raiden2_cop_mem, AS_PROGRAM, 16, raiden2_state )
 //  AM_RANGE(0x0041c, 0x0041d) AM_WRITENOP // angle compare (for 0x6200 COP macro)
@@ -1200,7 +1342,11 @@ static ADDRESS_MAP_START( raiden2_cop_mem, AS_PROGRAM, 16, raiden2_state )
 	AM_RANGE(0x0043a, 0x0043b) AM_WRITE(cop_pgm_mask_w)
 	AM_RANGE(0x0043c, 0x0043d) AM_WRITE(cop_pgm_trigger_w)
 	AM_RANGE(0x00444, 0x00445) AM_WRITE(cop_scale_w)
-	AM_RANGE(0x00450, 0x00459) AM_WRITENOP //sort-DMA params, Zero Team uses it
+	AM_RANGE(0x00450, 0x00451) AM_WRITE(cop_sort_ram_addr_hi_w)
+	AM_RANGE(0x00452, 0x00453) AM_WRITE(cop_sort_ram_addr_lo_w)
+	AM_RANGE(0x00454, 0x00455) AM_WRITE(cop_sort_lookup_hi_w)
+	AM_RANGE(0x00456, 0x00457) AM_WRITE(cop_sort_lookup_lo_w)
+	AM_RANGE(0x00458, 0x00459) AM_WRITE(cop_sort_param_w)
 	AM_RANGE(0x0045a, 0x0045b) AM_WRITENOP //palette DMA brightness val, used by X Se Dae / Zero Team
 	AM_RANGE(0x0045c, 0x0045d) AM_WRITENOP //palette DMA brightness mode, used by X Se Dae / Zero Team (sets to 5)
 	AM_RANGE(0x00470, 0x00471) AM_READWRITE(cop_tile_bank_2_r,cop_tile_bank_2_w)
@@ -1214,7 +1360,10 @@ static ADDRESS_MAP_START( raiden2_cop_mem, AS_PROGRAM, 16, raiden2_state )
 	AM_RANGE(0x004c0, 0x004c9) AM_READWRITE(cop_reg_low_r, cop_reg_low_w)
 	AM_RANGE(0x00500, 0x00505) AM_WRITE(cop_cmd_w)
 	AM_RANGE(0x00580, 0x00581) AM_READ(cop_collision_status_r)
-//  AM_RANGE(0x00588, 0x00589) AM_READ(cop_collision_status2_r) // used by Zero Team (only this, why?)
+	AM_RANGE(0x00582, 0x00583) AM_READ(cop_collision_status_y_r)
+	AM_RANGE(0x00584, 0x00585) AM_READ(cop_collision_status_x_r)
+	AM_RANGE(0x00586, 0x00587) AM_READ(cop_collision_status_z_r)
+	AM_RANGE(0x00588, 0x00589) AM_READ(cop_collision_status_unk_r)
 	AM_RANGE(0x00590, 0x00599) AM_READ(cop_itoa_digits_r)
 	AM_RANGE(0x005b0, 0x005b1) AM_READ(cop_status_r)
 	AM_RANGE(0x005b2, 0x005b3) AM_READ(cop_dist_r)
@@ -1240,7 +1389,7 @@ static ADDRESS_MAP_START( raiden2_cop_mem, AS_PROGRAM, 16, raiden2_state )
 	AM_RANGE(0x006dc, 0x006dd) AM_READ(sprite_prot_dst2_r) AM_WRITE(sprite_prot_dst2_w)
 	AM_RANGE(0x006de, 0x006df) AM_WRITE(sprite_prot_src_w)
 	AM_RANGE(0x006fc, 0x006fd) AM_WRITE(cop_dma_trigger_w)
-	AM_RANGE(0x006fe, 0x006ff) AM_WRITENOP // sort-DMA trigger
+	AM_RANGE(0x006fe, 0x006ff) AM_WRITE(cop_sort_dma_trig_w) // sort-DMA trigger
 
 	AM_RANGE(0x00762, 0x00763) AM_READ(sprite_prot_dst1_r)
 ADDRESS_MAP_END
@@ -1655,7 +1804,7 @@ static MACHINE_CONFIG_START( raiden2, raiden2_state )
 	MCFG_CPU_PROGRAM_MAP(raiden2_mem)
 	MCFG_CPU_VBLANK_INT("screen", raiden2_interrupt)
 
-	MCFG_MACHINE_RESET(raiden2)
+	MCFG_MACHINE_RESET_OVERRIDE(raiden2_state,raiden2)
 
 	SEIBU2_RAIDEN2_SOUND_SYSTEM_CPU(XTAL_28_63636MHz/8)
 
@@ -1671,7 +1820,7 @@ static MACHINE_CONFIG_START( raiden2, raiden2_state )
 	MCFG_GFXDECODE(raiden2)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(raiden2)
+	MCFG_VIDEO_START_OVERRIDE(raiden2_state,raiden2)
 
 	/* sound hardware */
 	SEIBU_SOUND_SYSTEM_YM2151_RAIDEN2_INTERFACE(XTAL_28_63636MHz/8,XTAL_28_63636MHz/28,1,2)
@@ -1687,7 +1836,7 @@ static MACHINE_CONFIG_DERIVED( xsedae, raiden2 )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(xsedae_mem)
 
-	MCFG_MACHINE_RESET(xsedae)
+	MCFG_MACHINE_RESET_OVERRIDE(raiden2_state,xsedae)
 
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)
 
@@ -1700,7 +1849,7 @@ static MACHINE_CONFIG_DERIVED( raidendx, raiden2 )
 	MCFG_CPU_MODIFY("maincpu")
 	MCFG_CPU_PROGRAM_MAP(raidendx_mem)
 
-	MCFG_MACHINE_RESET(raidendx)
+	MCFG_MACHINE_RESET_OVERRIDE(raiden2_state,raidendx)
 MACHINE_CONFIG_END
 
 
@@ -1711,7 +1860,7 @@ static MACHINE_CONFIG_START( zeroteam, raiden2_state )
 	MCFG_CPU_PROGRAM_MAP(zeroteam_mem)
 	MCFG_CPU_VBLANK_INT("screen", raiden2_interrupt)
 
-	MCFG_MACHINE_RESET(zeroteam)
+	MCFG_MACHINE_RESET_OVERRIDE(raiden2_state,zeroteam)
 
 	SEIBU_NEWZEROTEAM_SOUND_SYSTEM_CPU(XTAL_28_63636MHz/8)
 
@@ -1727,7 +1876,7 @@ static MACHINE_CONFIG_START( zeroteam, raiden2_state )
 	MCFG_GFXDECODE(raiden2)
 	MCFG_PALETTE_LENGTH(2048)
 
-	MCFG_VIDEO_START(raiden2)
+	MCFG_VIDEO_START_OVERRIDE(raiden2_state,raiden2)
 
 	/* sound hardware */
 	SEIBU_SOUND_SYSTEM_YM3812_INTERFACE(XTAL_28_63636MHz/8, 1320000/* ? */)
@@ -2242,7 +2391,7 @@ ROM_END
 
 /* Raiden DX sets */
 
-ROM_START( raidndx )
+ROM_START( raidendx )
 	ROM_REGION( 0x200000, "mainprg", 0 ) /* v30 main cpu */
 	ROM_LOAD32_BYTE("1d.4n",   0x000000, 0x80000, CRC(14d725fc) SHA1(f12806f64f069fdc4ee29b309a32f7ca00b36f93) )
 	ROM_LOAD32_BYTE("2d.4p",   0x000001, 0x80000, CRC(5e7e45cb) SHA1(94eff893b5335c522f1c063c3175b9bac87b0a25) )
@@ -2277,7 +2426,7 @@ ROM_START( raidndx )
 	ROM_LOAD( "dx_pcm.3a", 0x00000, 0x40000, CRC(8cf0d17e) SHA1(0fbe0b1e1ca5360c7c8329331408e3d799b4714c) ) /* Shared with original Raiden 2 */
 ROM_END
 
-ROM_START( raidndxa1 )
+ROM_START( raidendxa1 )
 	ROM_REGION( 0x200000, "mainprg", 0 ) /* v30 main cpu */
 	ROM_LOAD32_BYTE("dx_1h.4n",   0x000000, 0x80000, BAD_DUMP CRC(7624c36b) SHA1(84c17f2988031210d06536710e1eac558f4290a1) ) // bad
 	ROM_LOAD32_BYTE("dx_2h.4p",   0x000001, 0x80000, CRC(4940fdf3) SHA1(c87e307ed7191802583bee443c7c8e4f4e33db25) )
@@ -2312,7 +2461,7 @@ ROM_START( raidndxa1 )
 	ROM_LOAD( "dx_pcm.3a", 0x00000, 0x40000, CRC(8cf0d17e) SHA1(0fbe0b1e1ca5360c7c8329331408e3d799b4714c) )
 ROM_END
 
-ROM_START( raidndxa2 )
+ROM_START( raidendxa2 )
 	ROM_REGION( 0x200000, "mainprg", 0 ) /* v30 main cpu */
 	ROM_LOAD32_BYTE("1d.bin",   0x000000, 0x80000, CRC(22b155ae) SHA1(388151e2c8fb301bd5bc66a974e9fe16816ae0bc) )
 	ROM_LOAD32_BYTE("2d.bin",   0x000001, 0x80000, CRC(2be98ca8) SHA1(491e990405b0ad3de45bdbcc2453af9215ae19c8) )
@@ -2347,7 +2496,7 @@ ROM_START( raidndxa2 )
 	ROM_LOAD( "dx_pcm.3a", 0x00000, 0x40000, CRC(8cf0d17e) SHA1(0fbe0b1e1ca5360c7c8329331408e3d799b4714c) ) /* Shared with original Raiden 2 */
 ROM_END
 
-ROM_START( raidndxj )
+ROM_START( raidendxj )
 	ROM_REGION( 0x200000, "mainprg", 0 ) /* v30 main cpu */
 	ROM_LOAD32_BYTE("rdxj_1.bin",   0x000000, 0x80000, CRC(b5b32885) SHA1(fb3c592b2436d347103c17bd765176062be95fa2) )
 	ROM_LOAD32_BYTE("rdxj_2.bin",   0x000001, 0x80000, CRC(7efd581d) SHA1(4609a0d8afb3d62a38b461089295efed47beea91) )
@@ -2382,7 +2531,7 @@ ROM_START( raidndxj )
 	ROM_LOAD( "dx_pcm.3a", 0x00000, 0x40000, CRC(8cf0d17e) SHA1(0fbe0b1e1ca5360c7c8329331408e3d799b4714c) ) /* Shared with original Raiden 2 */
 ROM_END
 
-ROM_START( raidndxu )
+ROM_START( raidendxu )
 	ROM_REGION( 0x200000, "mainprg", 0 ) /* v30 main cpu */
 	ROM_LOAD32_BYTE("1a.u1210", 0x000000, 0x80000, CRC(53e63194) SHA1(a957330e14649cf46ad27fb99c460576c59e60b1) )
 	ROM_LOAD32_BYTE("2a.u1211", 0x000001, 0x80000, CRC(ec8d1647) SHA1(5ceae132c6c09d6bb8565e9141ee1170bbdfd5fc) )
@@ -2417,7 +2566,7 @@ ROM_START( raidndxu )
 	ROM_LOAD( "dx_pcm.3a", 0x00000, 0x40000, CRC(8cf0d17e) SHA1(0fbe0b1e1ca5360c7c8329331408e3d799b4714c) ) /* Shared with original Raiden 2 */
 ROM_END
 
-ROM_START( raidndxg )
+ROM_START( raidendxg )
 	ROM_REGION( 0x200000, "mainprg", 0 ) /* v30 main cpu */
 	ROM_LOAD32_BYTE("1d.u1210", 0x000000, 0x80000, CRC(14d725fc) SHA1(f12806f64f069fdc4ee29b309a32f7ca00b36f93) )
 	ROM_LOAD32_BYTE("2d.u1211", 0x000001, 0x80000, CRC(5e7e45cb) SHA1(94eff893b5335c522f1c063c3175b9bac87b0a25) )
@@ -2932,12 +3081,12 @@ GAME( 1993, raiden2f, raiden2, raiden2,  raiden2, raiden2_state,  raiden2,  ROT2
 GAME( 1993, raiden2g, raiden2, raiden2,  raiden2, raiden2_state,  raiden2,  ROT270, "Seibu Kaihatsu (Fabtek license)",        "Raiden II (set 8, US Fabtek, Easy Version)",         GAME_NOT_WORKING) // rev 3 and 4 mix?
 
 
-GAME( 1994, raidndx,  0,       raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu",                         "Raiden DX (UK)",                   GAME_NOT_WORKING)
-GAME( 1994, raidndxa1,raidndx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu (Metrotainment license)", "Raiden DX (Asia set 1)",           GAME_NOT_WORKING)
-GAME( 1994, raidndxa2,raidndx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu (Metrotainment license)", "Raiden DX (Asia set 2)",           GAME_NOT_WORKING)
-GAME( 1994, raidndxj, raidndx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu",                         "Raiden DX (Japan)",                GAME_NOT_WORKING)
-GAME( 1994, raidndxu, raidndx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu (Fabtek license)",        "Raiden DX (US)",                   GAME_NOT_WORKING)
-GAME( 1994, raidndxg, raidndx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu (Tuning license)",        "Raiden DX (Germany)",              GAME_NOT_WORKING)
+GAME( 1994, raidendx,  0,       raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu",                         "Raiden DX (UK)",                   GAME_NOT_WORKING)
+GAME( 1994, raidendxa1,raidendx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu (Metrotainment license)", "Raiden DX (Asia set 1)",           GAME_NOT_WORKING)
+GAME( 1994, raidendxa2,raidendx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu (Metrotainment license)", "Raiden DX (Asia set 2)",           GAME_NOT_WORKING)
+GAME( 1994, raidendxj, raidendx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu",                         "Raiden DX (Japan)",                GAME_NOT_WORKING)
+GAME( 1994, raidendxu, raidendx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu (Fabtek license)",        "Raiden DX (US)",                   GAME_NOT_WORKING)
+GAME( 1994, raidendxg, raidendx, raidendx,  raidendx, raiden2_state, raidendx,  ROT270, "Seibu Kaihatsu (Tuning license)",        "Raiden DX (Germany)",              GAME_NOT_WORKING)
 
 GAME( 1993, zeroteam, 0,       zeroteam, zeroteam, raiden2_state,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team USA (set 1, US, Fabtek license)", GAME_NOT_WORKING)
 GAME( 1993, zeroteama,zeroteam,zeroteam, zeroteam, raiden2_state,  zeroteam,  ROT0,   "Seibu Kaihatsu", "Zero Team (set 2, Japan? (earlier?))", GAME_NOT_WORKING)

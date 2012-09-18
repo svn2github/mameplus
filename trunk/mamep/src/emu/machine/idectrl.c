@@ -26,84 +26,84 @@
     CONSTANTS
 ***************************************************************************/
 
-#define MINIMUM_COMMAND_TIME			(attotime::from_usec(10))
+#define MINIMUM_COMMAND_TIME				(attotime::from_usec(10))
 
-#define TIME_PER_SECTOR					(attotime::from_usec(100))
-#define TIME_PER_ROTATION				(attotime::from_hz(5400/60))
-#define TIME_SECURITY_ERROR				(attotime::from_msec(1000))
+#define TIME_PER_SECTOR						(attotime::from_usec(100))
+#define TIME_PER_ROTATION					(attotime::from_hz(5400/60))
+#define TIME_SECURITY_ERROR					(attotime::from_msec(1000))
 
-#define TIME_SEEK_MULTISECTOR			(attotime::from_msec(13))
-#define TIME_NO_SEEK_MULTISECTOR		(attotime::from_nsec(16300))
+#define TIME_SEEK_MULTISECTOR				(attotime::from_msec(13))
+#define TIME_NO_SEEK_MULTISECTOR			(attotime::from_nsec(16300))
 
-#define IDE_STATUS_ERROR				0x01
-#define IDE_STATUS_HIT_INDEX			0x02
-#define IDE_STATUS_BUFFER_READY			0x08
-#define IDE_STATUS_SEEK_COMPLETE		0x10
-#define IDE_STATUS_DRIVE_READY			0x40
-#define IDE_STATUS_BUSY					0x80
+#define IDE_STATUS_ERROR					0x01
+#define IDE_STATUS_HIT_INDEX				0x02
+#define IDE_STATUS_BUFFER_READY				0x08
+#define IDE_STATUS_SEEK_COMPLETE			0x10
+#define IDE_STATUS_DRIVE_READY				0x40
+#define IDE_STATUS_BUSY						0x80
 
-#define IDE_CONFIG_REGISTERS			0x10
+#define IDE_CONFIG_REGISTERS				0x10
 
 #define BANK(b, v) (((v) << 4) | (b))
 
-#define IDE_BANK0_DATA					BANK(0, 0)
-#define IDE_BANK0_ERROR					BANK(0, 1)
-#define IDE_BANK0_SECTOR_COUNT			BANK(0, 2)
-#define IDE_BANK0_SECTOR_NUMBER			BANK(0, 3)
-#define IDE_BANK0_CYLINDER_LSB			BANK(0, 4)
-#define IDE_BANK0_CYLINDER_MSB			BANK(0, 5)
-#define IDE_BANK0_HEAD_NUMBER			BANK(0, 6)
-#define IDE_BANK0_STATUS_COMMAND		BANK(0, 7)
+#define IDE_BANK0_DATA						BANK(0, 0)
+#define IDE_BANK0_ERROR						BANK(0, 1)
+#define IDE_BANK0_SECTOR_COUNT				BANK(0, 2)
+#define IDE_BANK0_SECTOR_NUMBER				BANK(0, 3)
+#define IDE_BANK0_CYLINDER_LSB				BANK(0, 4)
+#define IDE_BANK0_CYLINDER_MSB				BANK(0, 5)
+#define IDE_BANK0_HEAD_NUMBER				BANK(0, 6)
+#define IDE_BANK0_STATUS_COMMAND			BANK(0, 7)
 
-#define IDE_BANK1_STATUS_CONTROL		BANK(1, 6)
+#define IDE_BANK1_STATUS_CONTROL			BANK(1, 6)
 
-#define IDE_BANK2_CONFIG_UNK			BANK(2, 4)
-#define IDE_BANK2_CONFIG_REGISTER		BANK(2, 8)
-#define IDE_BANK2_CONFIG_DATA			BANK(2, 0xc)
+#define IDE_BANK2_CONFIG_UNK				BANK(2, 4)
+#define IDE_BANK2_CONFIG_REGISTER			BANK(2, 8)
+#define IDE_BANK2_CONFIG_DATA				BANK(2, 0xc)
 
-#define IDE_COMMAND_READ_MULTIPLE		0x20
-#define IDE_COMMAND_READ_MULTIPLE_ONCE	0x21
-#define IDE_COMMAND_WRITE_MULTIPLE		0x30
-#define IDE_COMMAND_DIAGNOSTIC			0x90
-#define IDE_COMMAND_SET_CONFIG			0x91
-#define IDE_COMMAND_READ_MULTIPLE_BLOCK	0xc4
-#define IDE_COMMAND_WRITE_MULTIPLE_BLOCK 0xc5
-#define IDE_COMMAND_SET_BLOCK_COUNT		0xc6
-#define IDE_COMMAND_READ_DMA			0xc8
-#define IDE_COMMAND_WRITE_DMA			0xca
-#define IDE_COMMAND_GET_INFO			0xec
-#define IDE_COMMAND_SET_FEATURES		0xef
-#define IDE_COMMAND_SECURITY_UNLOCK		0xf2
-#define IDE_COMMAND_UNKNOWN_F9			0xf9
-#define IDE_COMMAND_VERIFY_MULTIPLE		0x40
-#define IDE_COMMAND_VERIFY_NORETRY		0x41
-#define IDE_COMMAND_ATAPI_IDENTIFY		0xa1
-#define IDE_COMMAND_RECALIBRATE			0x10
-#define IDE_COMMAND_SEEK				0x70
-#define IDE_COMMAND_IDLE_IMMEDIATE		0xe1
-#define IDE_COMMAND_IDLE				0xe3
-#define IDE_COMMAND_TAITO_GNET_UNLOCK_1 0xfe
-#define IDE_COMMAND_TAITO_GNET_UNLOCK_2 0xfc
-#define IDE_COMMAND_TAITO_GNET_UNLOCK_3 0x0f
+#define IDE_COMMAND_READ_MULTIPLE			0x20
+#define IDE_COMMAND_READ_MULTIPLE_NORETRY	0x21
+#define IDE_COMMAND_WRITE_MULTIPLE			0x30
+#define IDE_COMMAND_WRITE_MULTIPLE_NORETRY	0x31
+#define IDE_COMMAND_DIAGNOSTIC				0x90
+#define IDE_COMMAND_SET_CONFIG				0x91
+#define IDE_COMMAND_READ_MULTIPLE_BLOCK		0xc4
+#define IDE_COMMAND_WRITE_MULTIPLE_BLOCK	0xc5
+#define IDE_COMMAND_SET_BLOCK_COUNT			0xc6
+#define IDE_COMMAND_READ_DMA				0xc8
+#define IDE_COMMAND_WRITE_DMA				0xca
+#define IDE_COMMAND_GET_INFO				0xec
+#define IDE_COMMAND_SET_FEATURES			0xef
+#define IDE_COMMAND_SECURITY_UNLOCK			0xf2
+#define IDE_COMMAND_UNKNOWN_F9				0xf9
+#define IDE_COMMAND_VERIFY_MULTIPLE			0x40
+#define IDE_COMMAND_VERIFY_NORETRY			0x41
+#define IDE_COMMAND_ATAPI_IDENTIFY			0xa1
+#define IDE_COMMAND_RECALIBRATE				0x10
+#define IDE_COMMAND_SEEK					0x70
+#define IDE_COMMAND_IDLE_IMMEDIATE			0xe1
+#define IDE_COMMAND_IDLE					0xe3
+#define IDE_COMMAND_TAITO_GNET_UNLOCK_1		0xfe
+#define IDE_COMMAND_TAITO_GNET_UNLOCK_2		0xfc
+#define IDE_COMMAND_TAITO_GNET_UNLOCK_3		0x0f
 
-#define IDE_ERROR_NONE					0x00
-#define IDE_ERROR_DEFAULT				0x01
-#define IDE_ERROR_TRACK0_NOT_FOUND		0x02
-#define IDE_ERROR_UNKNOWN_COMMAND		0x04
-#define IDE_ERROR_BAD_LOCATION			0x10
-#define IDE_ERROR_BAD_SECTOR			0x80
+#define IDE_ERROR_NONE						0x00
+#define IDE_ERROR_DEFAULT					0x01
+#define IDE_ERROR_TRACK0_NOT_FOUND			0x02
+#define IDE_ERROR_UNKNOWN_COMMAND			0x04
+#define IDE_ERROR_BAD_LOCATION				0x10
+#define IDE_ERROR_BAD_SECTOR				0x80
 
-#define IDE_BUSMASTER_STATUS_ACTIVE		0x01
-#define IDE_BUSMASTER_STATUS_ERROR		0x02
-#define IDE_BUSMASTER_STATUS_IRQ		0x04
+#define IDE_BUSMASTER_STATUS_ACTIVE			0x01
+#define IDE_BUSMASTER_STATUS_ERROR			0x02
+#define IDE_BUSMASTER_STATUS_IRQ			0x04
 
 
 
 /***************************************************************************
     TYPE DEFINITIONS
 ***************************************************************************/
-typedef struct _ide_device ide_device;
-struct _ide_device
+struct ide_device
 {
 	UINT16			cur_cylinder;
 	UINT8			cur_sector;
@@ -114,8 +114,7 @@ struct _ide_device
 };
 
 
-typedef struct _ide_state ide_state;
-struct _ide_state
+struct ide_state
 {
 	device_t *device;
 
@@ -197,13 +196,13 @@ INLINE ide_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == IDE_CONTROLLER);
 
-	return (ide_state *)downcast<legacy_device_base *>(device)->token();
+	return (ide_state *)downcast<ide_controller_device *>(device)->token();
 }
 
 
 INLINE void signal_interrupt(ide_state *ide)
 {
-	const ide_config *config = (const ide_config *)downcast<const legacy_device_base *>(ide->device)->inline_config();
+	const ide_config *config = (const ide_config *)ide->device->static_config();
 
 	LOG(("IDE interrupt assert\n"));
 
@@ -217,7 +216,7 @@ INLINE void signal_interrupt(ide_state *ide)
 
 INLINE void clear_interrupt(ide_state *ide)
 {
-	const ide_config *config = (const ide_config *)downcast<const legacy_device_base *>(ide->device)->inline_config();
+	const ide_config *config = (const ide_config *)ide->device->static_config();
 
 	LOG(("IDE interrupt clear\n"));
 
@@ -1003,7 +1002,7 @@ static void handle_command(ide_state *ide, UINT8 command)
 	switch (command)
 	{
 		case IDE_COMMAND_READ_MULTIPLE:
-		case IDE_COMMAND_READ_MULTIPLE_ONCE:
+		case IDE_COMMAND_READ_MULTIPLE_NORETRY:
 			LOGPRINT(("IDE Read multiple: C=%d H=%d S=%d LBA=%d count=%d\n",
 				ide->drive[ide->cur_drive].cur_cylinder, ide->drive[ide->cur_drive].cur_head, ide->drive[ide->cur_drive].cur_sector, lba_address(ide), ide->sector_count));
 
@@ -1062,6 +1061,7 @@ static void handle_command(ide_state *ide, UINT8 command)
 			break;
 
 		case IDE_COMMAND_WRITE_MULTIPLE:
+		case IDE_COMMAND_WRITE_MULTIPLE_NORETRY:
 			LOGPRINT(("IDE Write multiple: C=%d H=%d S=%d LBA=%d count=%d\n",
 				ide->drive[ide->cur_drive].cur_cylinder, ide->drive[ide->cur_drive].cur_head, ide->drive[ide->cur_drive].cur_sector, lba_address(ide), ide->sector_count));
 
@@ -1286,8 +1286,13 @@ static UINT32 ide_controller_read(device_t *device, int bank, offs_t offset, int
 //  if (BANK(bank, offset) != IDE_BANK0_DATA && BANK(bank, offset) != IDE_BANK0_STATUS_COMMAND && BANK(bank, offset) != IDE_BANK1_STATUS_CONTROL)
 		LOG(("%s:IDE read at %d:%X, size=%d\n", device->machine().describe_context(), bank, offset, size));
 
-	if (ide->drive[ide->cur_drive].slot->is_ready()) {
-		ide->status |= IDE_STATUS_DRIVE_READY;
+	if (ide->drive[ide->cur_drive].slot->is_connected())
+	{
+		if (ide->drive[ide->cur_drive].slot->is_ready()) {
+			ide->status |= IDE_STATUS_DRIVE_READY;
+		} else {
+			ide->status &= ~IDE_STATUS_DRIVE_READY;
+		}
 	}
 
 	switch (BANK(bank, offset))
@@ -1834,14 +1839,13 @@ static DEVICE_START( ide_controller )
 
 	/* validate some basic stuff */
 	assert(device != NULL);
-	assert(device->static_config() == NULL);
-	assert(downcast<const legacy_device_base *>(device)->inline_config() != NULL);
+	assert(device->static_config() != NULL);
 
 	/* store a pointer back to the device */
 	ide->device = device;
 
 	/* set MAME harddisk handle */
-	config = (const ide_config *)downcast<const legacy_device_base *>(device)->inline_config();
+	config = (const ide_config *)device->static_config();
 
 	ide->drive[0].slot = device->owner()->subdevice<ide_slot_device>("drive_0");
 	ide->drive[1].slot = device->owner()->subdevice<ide_slot_device>("drive_1");
@@ -1939,33 +1943,43 @@ SLOT_INTERFACE_START(ide_devices)
 	SLOT_INTERFACE("hdd", IDE_HARDDISK)
 SLOT_INTERFACE_END
 
-/*-------------------------------------------------
-    device get info callback
--------------------------------------------------*/
+const device_type IDE_CONTROLLER = &device_creator<ide_controller_device>;
 
-DEVICE_GET_INFO( ide_controller )
+ide_controller_device::ide_controller_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, IDE_CONTROLLER, "IDE Controller", tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(ide_state);			break;
-		case DEVINFO_INT_INLINE_CONFIG_BYTES:	info->i = sizeof(ide_config);			break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(ide_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:					info->start = DEVICE_START_NAME(ide_controller); break;
-		case DEVINFO_FCT_RESET:					info->reset = DEVICE_RESET_NAME(ide_controller);break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:					strcpy(info->s, "IDE Controller");		break;
-		case DEVINFO_STR_FAMILY:				strcpy(info->s, "Disk Controller");		break;
-		case DEVINFO_STR_VERSION:				strcpy(info->s, "1.0");					break;
-		case DEVINFO_STR_SOURCE_FILE:			strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void ide_controller_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void ide_controller_device::device_start()
+{
+	DEVICE_START_NAME( ide_controller )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void ide_controller_device::device_reset()
+{
+	DEVICE_RESET_NAME( ide_controller )(this);
 }
 
 
-DEFINE_LEGACY_DEVICE(IDE_CONTROLLER, ide_controller);
 
 //**************************************************************************
 //  IDE SLOT DEVICE

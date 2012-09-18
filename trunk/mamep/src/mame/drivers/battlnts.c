@@ -29,12 +29,12 @@ static INTERRUPT_GEN( battlnts_interrupt )
 {
 	battlnts_state *state = device->machine().driver_data<battlnts_state>();
 	if (k007342_is_int_enabled(state->m_k007342))
-		device_set_input_line(device, HD6309_IRQ_LINE, HOLD_LINE);
+		device->execute().set_input_line(HD6309_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(battlnts_state::battlnts_sh_irqtrigger_w)
 {
-	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 WRITE8_MEMBER(battlnts_state::battlnts_bankswitch_w)
@@ -221,28 +221,26 @@ static const k007420_interface bladestl_k007420_intf =
 };
 
 
-static MACHINE_START( battlnts )
+void battlnts_state::machine_start()
 {
-	battlnts_state *state = machine.driver_data<battlnts_state>();
-	UINT8 *ROM = state->memregion("maincpu")->base();
+	UINT8 *ROM = memregion("maincpu")->base();
 
-	state->membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x4000);
+	membank("bank1")->configure_entries(0, 4, &ROM[0x10000], 0x4000);
 
-	state->m_audiocpu = machine.device("audiocpu");
-	state->m_k007342 = machine.device("k007342");
-	state->m_k007420 = machine.device("k007420");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_k007342 = machine().device("k007342");
+	m_k007420 = machine().device("k007420");
 
-	state->save_item(NAME(state->m_spritebank));
-	state->save_item(NAME(state->m_layer_colorbase));
+	save_item(NAME(m_spritebank));
+	save_item(NAME(m_layer_colorbase));
 }
 
-static MACHINE_RESET( battlnts )
+void battlnts_state::machine_reset()
 {
-	battlnts_state *state = machine.driver_data<battlnts_state>();
 
-	state->m_layer_colorbase[0] = 0;
-	state->m_layer_colorbase[1] = 0;
-	state->m_spritebank = 0;
+	m_layer_colorbase[0] = 0;
+	m_layer_colorbase[1] = 0;
+	m_spritebank = 0;
 }
 
 static MACHINE_CONFIG_START( battlnts, battlnts_state )
@@ -255,8 +253,6 @@ static MACHINE_CONFIG_START( battlnts, battlnts_state )
 	MCFG_CPU_ADD("audiocpu", Z80, XTAL_24MHz / 6 /* 3579545? */)
 	MCFG_CPU_PROGRAM_MAP(battlnts_sound_map)
 
-	MCFG_MACHINE_START(battlnts)
-	MCFG_MACHINE_RESET(battlnts)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -400,7 +396,7 @@ static void shuffle( UINT8 *buf, int len )
 		return;
 
 	if (len % 4)
-		fatalerror("shuffle() - not modulo 4");	/* must not happen */
+		fatalerror("shuffle() - not modulo 4\n");	/* must not happen */
 
 	len /= 2;
 

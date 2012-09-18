@@ -7,6 +7,7 @@
 #include "emu.h"
 #include "cpu/tms34010/tms34010.h"
 #include "includes/midtunit.h"
+#include "includes/midwunit.h"
 #include "includes/midxunit.h"
 
 
@@ -40,8 +41,6 @@ enum
 
 
 /* graphics-related variables */
-       UINT8 *	midtunit_gfx_rom;
-       size_t	midtunit_gfx_rom_size;
        UINT8	midtunit_gfx_rom_large;
 static UINT16	midtunit_control;
 
@@ -54,6 +53,8 @@ static UINT8	videobank_select;
 static UINT16	dma_register[18];
 static struct
 {
+	UINT8 *		gfxrom;
+
 	UINT32		offset;			/* source offset, in bits */
 	INT32		rowbits;		/* source bits to skip each row */
 	INT32		xpos;			/* x position, clipped */
@@ -85,10 +86,10 @@ static struct
  *
  *************************************/
 
-VIDEO_START( midtunit )
+VIDEO_START_MEMBER(midtunit_state,midtunit)
 {
 	/* allocate memory */
-	local_videoram = auto_alloc_array(machine, UINT16, 0x100000/2);
+	local_videoram = auto_alloc_array(machine(), UINT16, 0x100000/2);
 
 	/* reset all the globals */
 	gfxbank_offset[0] = 0x000000;
@@ -98,24 +99,24 @@ VIDEO_START( midtunit )
 	memset(&dma_state, 0, sizeof(dma_state));
 
 	/* register for state saving */
-	state_save_register_global(machine, midtunit_control);
-	state_save_register_global_array(machine, gfxbank_offset);
-	state_save_register_global_pointer(machine, local_videoram, 0x100000/sizeof(local_videoram[0]));
-	state_save_register_global(machine, videobank_select);
-	state_save_register_global_array(machine, dma_register);
+	state_save_register_global(machine(), midtunit_control);
+	state_save_register_global_array(machine(), gfxbank_offset);
+	state_save_register_global_pointer(machine(), local_videoram, 0x100000/sizeof(local_videoram[0]));
+	state_save_register_global(machine(), videobank_select);
+	state_save_register_global_array(machine(), dma_register);
 }
 
 
-VIDEO_START( midwunit )
+VIDEO_START_MEMBER(midwunit_state,midwunit)
 {
-	VIDEO_START_CALL(midtunit);
+	VIDEO_START_CALL_MEMBER(midtunit);
 	midtunit_gfx_rom_large = 1;
 }
 
 
-VIDEO_START( midxunit )
+VIDEO_START_MEMBER(midxunit_state,midxunit)
 {
-	VIDEO_START_CALL(midtunit);
+	VIDEO_START_CALL_MEMBER(midtunit);
 	midtunit_gfx_rom_large = 1;
 	videobank_select = 1;
 }
@@ -130,7 +131,7 @@ VIDEO_START( midxunit )
 
 READ16_MEMBER(midtunit_state::midtunit_gfxrom_r)
 {
-	UINT8 *base = &midtunit_gfx_rom[gfxbank_offset[(offset >> 21) & 1]];
+	UINT8 *base = m_gfxrom->base() + gfxbank_offset[(offset >> 21) & 1];
 	offset = (offset & 0x01fffff) * 2;
 	return base[offset] | (base[offset + 1] << 8);
 }
@@ -138,7 +139,7 @@ READ16_MEMBER(midtunit_state::midtunit_gfxrom_r)
 
 READ16_MEMBER(midtunit_state::midwunit_gfxrom_r)
 {
-	UINT8 *base = &midtunit_gfx_rom[gfxbank_offset[0]];
+	UINT8 *base = m_gfxrom->base() + gfxbank_offset[0];
 	offset *= 2;
 	return base[offset] | (base[offset + 1] << 8);
 }
@@ -357,7 +358,7 @@ typedef void (*dma_draw_func)(void);
 #define DMA_DRAW_FUNC_BODY(name, bitsperpixel, extractor, xflip, skip, scale, zero, nonzero) \
 {																				\
 	int height = dma_state.height << 8;											\
-	UINT8 *base = midtunit_gfx_rom;													\
+	UINT8 *base = dma_state.gfxrom;													\
 	UINT32 offset = dma_state.offset;											\
 	UINT16 pal = dma_state.palette;												\
 	UINT16 color = pal | dma_state.color;										\
@@ -589,7 +590,7 @@ DECLARE_BLITTER_SET(dma_draw_noskip_noscale,   dma_state.bpp, EXTRACTGEN,   SKIP
 static TIMER_CALLBACK( dma_callback )
 {
 	dma_register[DMA_COMMAND] &= ~0x8000; /* tell the cpu we're done */
-	cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+	machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -679,7 +680,7 @@ WRITE16_MEMBER(midtunit_state::midtunit_dma_w)
 
 	/* high bit triggers action */
 	command = dma_register[DMA_COMMAND];
-	cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 	if (!(command & 0x8000))
 		return;
 

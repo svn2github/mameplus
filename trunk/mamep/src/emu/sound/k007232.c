@@ -30,7 +30,7 @@ added external port callback, and functions to set the volume of the channels
 #define  KDAC_A_PCM_MAX    (2)		/* Channels per chip */
 
 
-typedef struct kdacApcm
+struct KDAC_A_PCM
 {
 	UINT8			vol[KDAC_A_PCM_MAX][2];	/* volume for the left and right channel */
 	UINT32			addr[KDAC_A_PCM_MAX];
@@ -48,7 +48,7 @@ typedef struct kdacApcm
 	sound_stream *	stream;
 	const k007232_interface *intf;
 	UINT32			fncode[0x200];
-} KDAC_A_PCM;
+};
 
 
 #define   BASE_SHIFT    (12)
@@ -58,7 +58,7 @@ INLINE KDAC_A_PCM *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
 	assert(device->type() == K007232);
-	return (KDAC_A_PCM *)downcast<legacy_device_base *>(device)->token();
+	return (KDAC_A_PCM *)downcast<k007232_device *>(device)->token();
 }
 
 
@@ -443,34 +443,42 @@ void k007232_set_bank( device_t *device, int chABank, int chBBank )
 
 /*****************************************************************************/
 
+const device_type K007232 = &device_creator<k007232_device>;
 
-
-
-
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( k007232 )
+k007232_device::k007232_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, K007232, "K007232", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(KDAC_A_PCM);				break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(KDAC_A_PCM));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME( k007232 );		break;
-		case DEVINFO_FCT_STOP:							/* nothing */									break;
-		case DEVINFO_FCT_RESET:							/* nothing */									break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "K007232");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Konami custom");				break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+void k007232_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void k007232_device::device_start()
+{
+	DEVICE_START_NAME( k007232 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void k007232_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(K007232, k007232);

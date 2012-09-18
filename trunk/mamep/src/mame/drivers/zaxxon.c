@@ -293,7 +293,7 @@ INPUT_CHANGED_MEMBER(zaxxon_state::service_switch)
 {
 	/* pressing the service switch sends an NMI */
 	if (newval)
-		cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+		machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 }
 
 
@@ -302,7 +302,7 @@ static INTERRUPT_GEN( vblank_int )
 	zaxxon_state *state = device->machine().driver_data<zaxxon_state>();
 
 	if (state->m_int_enabled)
-		device_set_input_line(device, 0, ASSERT_LINE);
+		device->execute().set_input_line(0, ASSERT_LINE);
 }
 
 
@@ -310,7 +310,7 @@ WRITE8_MEMBER(zaxxon_state::int_enable_w)
 {
 	m_int_enabled = data & 1;
 	if (!m_int_enabled)
-		cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+		machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 }
 
 
@@ -321,14 +321,13 @@ WRITE8_MEMBER(zaxxon_state::int_enable_w)
  *
  *************************************/
 
-static MACHINE_START( zaxxon )
+void zaxxon_state::machine_start()
 {
-	zaxxon_state *state = machine.driver_data<zaxxon_state>();
 
 	/* register for save states */
-	state->save_item(NAME(state->m_int_enabled));
-	state->save_item(NAME(state->m_coin_status));
-	state->save_item(NAME(state->m_coin_enable));
+	save_item(NAME(m_int_enabled));
+	save_item(NAME(m_coin_status));
+	save_item(NAME(m_coin_enable));
 }
 
 
@@ -498,9 +497,9 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START( congo_sound_map, AS_PROGRAM, 8, zaxxon_state )
 	AM_RANGE(0x0000, 0x1fff) AM_ROM
 	AM_RANGE(0x4000, 0x47ff) AM_MIRROR(0x1800) AM_RAM
-	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_DEVWRITE_LEGACY("sn1", sn76496_w)
+	AM_RANGE(0x6000, 0x6000) AM_MIRROR(0x1fff) AM_DEVWRITE("sn1", sn76496_new_device, write)
 	AM_RANGE(0x8000, 0x8003) AM_MIRROR(0x1ffc) AM_DEVREADWRITE("ppi8255", i8255_device, read, write)
-	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_DEVWRITE_LEGACY("sn2", sn76496_w)
+	AM_RANGE(0xa000, 0xa000) AM_MIRROR(0x1fff) AM_DEVWRITE("sn2", sn76496_new_device, write)
 ADDRESS_MAP_END
 
 
@@ -937,6 +936,23 @@ GFXDECODE_END
 
 /*************************************
  *
+ *  Sound interface
+ *
+ *************************************/
+
+
+//-------------------------------------------------
+//  sn76496_config psg_intf
+//-------------------------------------------------
+
+static const sn76496_config psg_intf =
+{
+    DEVCB_NULL
+};
+
+
+/*************************************
+ *
  *  Machine driver
  *
  *************************************/
@@ -948,7 +964,6 @@ static MACHINE_CONFIG_START( root, zaxxon_state )
 	MCFG_CPU_PROGRAM_MAP(zaxxon_map)
 	MCFG_CPU_VBLANK_INT("screen", vblank_int)
 
-	MCFG_MACHINE_START(zaxxon)
 
 	MCFG_I8255A_ADD( "ppi8255", zaxxon_ppi_intf )
 
@@ -960,8 +975,6 @@ static MACHINE_CONFIG_START( root, zaxxon_state )
 	MCFG_SCREEN_RAW_PARAMS(PIXEL_CLOCK, HTOTAL, HBEND, HBSTART, VTOTAL, VBEND, VBSTART)
 	MCFG_SCREEN_UPDATE_STATIC(zaxxon)
 
-	MCFG_PALETTE_INIT(zaxxon)
-	MCFG_VIDEO_START(zaxxon)
 MACHINE_CONFIG_END
 
 
@@ -993,7 +1006,7 @@ static MACHINE_CONFIG_DERIVED( razmataz, root )
 	MCFG_DEVICE_REMOVE("ppi8255")
 
 	/* video hardware */
-	MCFG_VIDEO_START(razmataz)
+	MCFG_VIDEO_START_OVERRIDE(zaxxon_state,razmataz)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(razmataz)
 
@@ -1017,18 +1030,20 @@ static MACHINE_CONFIG_DERIVED( congo, root )
 
 	/* video hardware */
 	MCFG_PALETTE_LENGTH(512)
-	MCFG_VIDEO_START(congo)
+	MCFG_VIDEO_START_OVERRIDE(zaxxon_state,congo)
 	MCFG_SCREEN_MODIFY("screen")
 	MCFG_SCREEN_UPDATE_STATIC(congo)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")
 
-	MCFG_SOUND_ADD("sn1", SN76496, SOUND_CLOCK)
+	MCFG_SOUND_ADD("sn1", SN76496_NEW, SOUND_CLOCK)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 
-	MCFG_SOUND_ADD("sn2", SN76496, SOUND_CLOCK/4)
+	MCFG_SOUND_ADD("sn2", SN76496_NEW, SOUND_CLOCK/4)
 	MCFG_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.0)
+	MCFG_SOUND_CONFIG(psg_intf)
 
 	MCFG_FRAGMENT_ADD(congo_samples)
 MACHINE_CONFIG_END

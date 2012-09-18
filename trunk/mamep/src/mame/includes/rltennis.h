@@ -7,11 +7,12 @@
 class rltennis_state : public driver_device
 {
 public:
-	rltennis_state(const machine_config &mconfig, device_type type, const char *tag) : driver_device(mconfig, type, tag),
+	rltennis_state(const machine_config &mconfig, device_type type, const char *tag)
+	  : driver_device(mconfig, type, tag),
 		m_data760000(0), m_data740000(0), m_dac_counter(0), m_sample_rom_offset_1(0), m_sample_rom_offset_2(0),
 		m_offset_shift(0){ }
 
-	device_t *m_maincpu;
+	cpu_device *m_maincpu;
 	device_t *m_screen;
 
 	UINT16 m_blitter[RLT_NUM_BLITTER_REGS];
@@ -42,10 +43,13 @@ public:
 	DECLARE_WRITE16_MEMBER(rlt_snd1_w);
 	DECLARE_WRITE16_MEMBER(rlt_snd2_w);
 	DECLARE_WRITE16_MEMBER(rlt_blitter_w);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 
-VIDEO_START( rltennis );
+
 SCREEN_UPDATE_IND16( rltennis );
 

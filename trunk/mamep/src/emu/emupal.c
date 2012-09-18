@@ -29,8 +29,7 @@
 ***************************************************************************/
 
 /* information about a shadow table */
-typedef struct _shadow_table_data shadow_table_data;
-struct _shadow_table_data
+struct shadow_table_data
 {
 	UINT32 *			base;				/* pointer to the base of the table */
 	INT16				dr;					/* delta red value */
@@ -40,8 +39,7 @@ struct _shadow_table_data
 };
 
 
-/* typedef struct _palette_private palette_private; */
-struct _palette_private
+struct palette_private
 {
 	bitmap_format		format;				/* format assumed for palette data */
 
@@ -58,7 +56,6 @@ struct _palette_private
 };
 
 
-/* typedef struct _colortable_t colortable_t; */
 class colortable_t
 {
 public:
@@ -133,7 +130,7 @@ void palette_init(running_machine &machine)
 			return;
 
 		default:
-			fatalerror("Unsupported screen bitmap format!");
+			fatalerror("Unsupported screen bitmap format!\n");
 			break;
 	}
 
@@ -434,19 +431,19 @@ rgb_t colortable_palette_get_color(colortable_t *ctable, UINT32 entry)
     color
 -------------------------------------------------*/
 
-UINT32 colortable_get_transpen_mask(colortable_t *ctable, const gfx_element *gfx, int color, int transcolor)
+UINT32 colortable_get_transpen_mask(colortable_t *ctable, gfx_element *gfx, int color, int transcolor)
 {
-	UINT32 entry = gfx->color_base + (color % gfx->total_colors) * gfx->color_granularity;
+	UINT32 entry = gfx->colorbase() + (color % gfx->colors()) * gfx->granularity();
 	UINT32 mask = 0;
 	UINT32 count, bit;
 
 	/* make sure we are in range */
 	assert(ctable != NULL);
 	assert(entry < ctable->entries);
-	assert(gfx->color_depth <= 32);
+	assert(gfx->depth() <= 32);
 
 	/* either gfx->color_depth entries or as many as we can get up until the end */
-	count = MIN(gfx->color_depth, ctable->entries - entry);
+	count = MIN(gfx->depth(), ctable->entries - entry);
 
 	/* set a bit anywhere the transcolor matches */
 	for (bit = 0; bit < count; bit++)
@@ -465,17 +462,17 @@ UINT32 colortable_get_transpen_mask(colortable_t *ctable, const gfx_element *gfx
     (each group maps to a gfx color)
 -------------------------------------------------*/
 
-void colortable_configure_tilemap_groups(colortable_t *ctable, tilemap_t *tmap, const gfx_element *gfx, int transcolor)
+void colortable_configure_tilemap_groups(colortable_t *ctable, tilemap_t *tmap, gfx_element *gfx, int transcolor)
 {
 	int color;
 
 	assert(ctable != NULL);
 	assert(gfx != NULL);
 	assert(tmap != NULL);
-	assert(gfx->total_colors <= TILEMAP_NUM_GROUPS);
+	assert(gfx->colors() <= TILEMAP_NUM_GROUPS);
 
 	/* iterate over all colors in the tilemap */
-	for (color = 0; color < gfx->total_colors; color++)
+	for (color = 0; color < gfx->colors(); color++)
 		tmap->set_transmask(color, colortable_get_transpen_mask(ctable, gfx, color, transcolor), 0);
 }
 

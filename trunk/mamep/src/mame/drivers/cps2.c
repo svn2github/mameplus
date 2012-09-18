@@ -641,7 +641,7 @@ static TIMER_DEVICE_CALLBACK( cps2_interrupt )
 	if (state->m_scanline1 == param || (state->m_scanline1 < param && !state->m_scancalls))
 	{
 		state->m_cps_b_regs[0x10/2] = 0;
-		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		state->m_maincpu->set_input_line(4, HOLD_LINE);
 		cps2_set_sprite_priorities(timer.machine());
 		timer.machine().primary_screen->update_partial(param);
 		state->m_scancalls++;
@@ -652,7 +652,7 @@ static TIMER_DEVICE_CALLBACK( cps2_interrupt )
 	if(state->m_scanline2 == param || (state->m_scanline2 < param && !state->m_scancalls))
 	{
 		state->m_cps_b_regs[0x12 / 2] = 0;
-		device_set_input_line(state->m_maincpu, 4, HOLD_LINE);
+		state->m_maincpu->set_input_line(4, HOLD_LINE);
 		cps2_set_sprite_priorities(timer.machine());
 		timer.machine().primary_screen->update_partial(param);
 		state->m_scancalls++;
@@ -663,7 +663,7 @@ static TIMER_DEVICE_CALLBACK( cps2_interrupt )
 	{
 		state->m_cps_b_regs[0x10 / 2] = state->m_scanline1;
 		state->m_cps_b_regs[0x12 / 2] = state->m_scanline2;
-		device_set_input_line(state->m_maincpu, 2, HOLD_LINE);
+		state->m_maincpu->set_input_line(2, HOLD_LINE);
 		if(state->m_scancalls)
 		{
 			cps2_set_sprite_priorities(timer.machine());
@@ -722,7 +722,7 @@ static WRITE16_HANDLER( cps2_eeprom_port_w )
 
 	        /* Z80 Reset */
 		if (state->m_audiocpu != NULL)
-			device_set_input_line(state->m_audiocpu, INPUT_LINE_RESET, (data & 0x0008) ? CLEAR_LINE : ASSERT_LINE);
+			state->m_audiocpu->set_input_line(INPUT_LINE_RESET, (data & 0x0008) ? CLEAR_LINE : ASSERT_LINE);
 
 		coin_counter_w(space->machine(), 0, data & 0x0001);
 		if ((strncmp(space->machine().system().name, "pzloop2", 8) == 0) ||
@@ -1210,15 +1210,14 @@ GFXDECODE_END
  *
  *************************************/
 
-static MACHINE_START( cps2 )
+MACHINE_START_MEMBER(cps_state,cps2)
 {
-	cps_state *state = machine.driver_data<cps_state>();
 
-	state->m_maincpu = machine.device("maincpu");
-	state->m_audiocpu = machine.device("audiocpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
 
-	if (state->m_audiocpu != NULL)	// gigaman2 has no audiocpu
-		state->membank("bank1")->configure_entries(0, (QSOUND_SIZE - 0x10000) / 0x4000, state->memregion("audiocpu")->base() + 0x10000, 0x4000);
+	if (m_audiocpu != NULL)	// gigaman2 has no audiocpu
+		membank("bank1")->configure_entries(0, (QSOUND_SIZE - 0x10000) / 0x4000, memregion("audiocpu")->base() + 0x10000, 0x4000);
 }
 
 
@@ -1233,7 +1232,7 @@ static MACHINE_CONFIG_START( cps2, cps_state )
 	MCFG_CPU_PROGRAM_MAP(qsound_sub_map)
 	MCFG_CPU_PERIODIC_INT(irq0_line_hold, 251)	/* 251 is good (see 'mercy mercy mercy'section of sgemf attract mode for accurate sound sync */
 
-	MCFG_MACHINE_START(cps2)
+	MCFG_MACHINE_START_OVERRIDE(cps_state,cps2)
 
 	MCFG_EEPROM_ADD("eeprom", cps2_eeprom_interface)
 
@@ -1258,7 +1257,7 @@ static MACHINE_CONFIG_START( cps2, cps_state )
 	MCFG_GFXDECODE(cps2)
 	MCFG_PALETTE_LENGTH(0xc00)
 
-	MCFG_VIDEO_START(cps2)
+	MCFG_VIDEO_START_OVERRIDE(cps_state,cps2)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")

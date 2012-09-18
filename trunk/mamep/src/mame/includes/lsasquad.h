@@ -33,8 +33,8 @@ public:
 	UINT8 m_ddr_b;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_audiocpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_audiocpu;
 	device_t *m_mcu;
 	DECLARE_WRITE8_MEMBER(lsasquad_bankswitch_w);
 	DECLARE_WRITE8_MEMBER(lsasquad_sh_nmi_disable_w);
@@ -57,6 +57,8 @@ public:
 	DECLARE_READ8_MEMBER(lsasquad_mcu_status_r);
 	DECLARE_READ8_MEMBER(daikaiju_mcu_status_r);
 	DECLARE_WRITE8_MEMBER(unk);
+	DECLARE_MACHINE_START(lsasquad);
+	DECLARE_MACHINE_RESET(lsasquad);
 };
 
 /*----------- defined in machine/lsasquad.c -----------*/

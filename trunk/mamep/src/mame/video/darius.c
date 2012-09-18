@@ -16,21 +16,19 @@ INLINE void actual_get_fg_tile_info( running_machine &machine, tile_data &tilein
 			TILE_FLIPYX((attr & 0xc000) >> 14));
 }
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(darius_state::get_fg_tile_info)
 {
-	darius_state *state = machine.driver_data<darius_state>();
-	actual_get_fg_tile_info(machine, tileinfo, tile_index, state->m_fg_ram, 2);
+	actual_get_fg_tile_info(machine(), tileinfo, tile_index, m_fg_ram, 2);
 }
 
 /***************************************************************************/
 
-VIDEO_START( darius )
+void darius_state::video_start()
 {
-	darius_state *state = machine.driver_data<darius_state>();
 
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info,tilemap_scan_rows,8,8,128,64);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(darius_state::get_fg_tile_info),this),TILEMAP_SCAN_ROWS,8,8,128,64);
 
-	state->m_fg_tilemap->set_transparent_pen(0);
+	m_fg_tilemap->set_transparent_pen(0);
 }
 
 /***************************************************************************/

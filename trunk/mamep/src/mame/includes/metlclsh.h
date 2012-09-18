@@ -30,8 +30,8 @@ public:
 	UINT8          m_gfxbank;
 
 	/* devices */
-	device_t *m_maincpu;
-	device_t *m_subcpu;
+	cpu_device *m_maincpu;
+	cpu_device *m_subcpu;
 	DECLARE_WRITE8_MEMBER(metlclsh_cause_irq);
 	DECLARE_WRITE8_MEMBER(metlclsh_ack_nmi);
 	DECLARE_WRITE8_MEMBER(metlclsh_cause_nmi2);
@@ -43,11 +43,17 @@ public:
 	DECLARE_WRITE8_MEMBER(metlclsh_bgram_w);
 	DECLARE_WRITE8_MEMBER(metlclsh_fgram_w);
 	DECLARE_INPUT_CHANGED_MEMBER(coin_inserted);
+	TILEMAP_MAPPER_MEMBER(metlclsh_bgtilemap_scan);
+	TILE_GET_INFO_MEMBER(get_bg_tile_info);
+	TILE_GET_INFO_MEMBER(get_fg_tile_info);
+	virtual void machine_start();
+	virtual void machine_reset();
+	virtual void video_start();
 };
 
 
 /*----------- defined in video/metlclsh.c -----------*/
 
 
-VIDEO_START( metlclsh );
+
 SCREEN_UPDATE_IND16( metlclsh );

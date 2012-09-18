@@ -10,8 +10,8 @@
 
 static INTERRUPT_GEN( kopunch_interrupt )
 {
-	device_set_input_line(device, I8085_RST75_LINE, ASSERT_LINE);
-	device_set_input_line(device, I8085_RST75_LINE, CLEAR_LINE);
+	device->execute().set_input_line(I8085_RST75_LINE, ASSERT_LINE);
+	device->execute().set_input_line(I8085_RST75_LINE, CLEAR_LINE);
 }
 
 READ8_MEMBER(kopunch_state::kopunch_in_r)
@@ -73,7 +73,7 @@ INPUT_CHANGED_MEMBER(kopunch_state::left_coin_inserted)
 
 	/* left coin insertion causes a rst6.5 (vector 0x34) */
 	if (newval)
-		device_set_input_line(m_maincpu, I8085_RST65_LINE, HOLD_LINE);
+		m_maincpu->set_input_line(I8085_RST65_LINE, HOLD_LINE);
 }
 
 INPUT_CHANGED_MEMBER(kopunch_state::right_coin_inserted)
@@ -81,7 +81,7 @@ INPUT_CHANGED_MEMBER(kopunch_state::right_coin_inserted)
 
 	/* right coin insertion causes a rst5.5 (vector 0x2c) */
 	if (newval)
-		device_set_input_line(m_maincpu, I8085_RST55_LINE, HOLD_LINE);
+		m_maincpu->set_input_line(I8085_RST55_LINE, HOLD_LINE);
 }
 
 static INPUT_PORTS_START( kopunch )
@@ -169,20 +169,18 @@ static GFXDECODE_START( kopunch )
 GFXDECODE_END
 
 
-static MACHINE_START( kopunch )
+void kopunch_state::machine_start()
 {
-	kopunch_state *state = machine.driver_data<kopunch_state>();
 
-	state->m_maincpu = machine.device("maincpu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
 
-	state->save_item(NAME(state->m_gfxbank));
+	save_item(NAME(m_gfxbank));
 }
 
-static MACHINE_RESET( kopunch )
+void kopunch_state::machine_reset()
 {
-	kopunch_state *state = machine.driver_data<kopunch_state>();
 
-	state->m_gfxbank = 0;
+	m_gfxbank = 0;
 }
 
 static MACHINE_CONFIG_START( kopunch, kopunch_state )
@@ -193,8 +191,6 @@ static MACHINE_CONFIG_START( kopunch, kopunch_state )
 	MCFG_CPU_IO_MAP(kopunch_io_map)
 	MCFG_CPU_VBLANK_INT("screen",kopunch_interrupt)
 
-	MCFG_MACHINE_START(kopunch)
-	MCFG_MACHINE_RESET(kopunch)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -207,8 +203,6 @@ static MACHINE_CONFIG_START( kopunch, kopunch_state )
 	MCFG_GFXDECODE(kopunch)
 	MCFG_PALETTE_LENGTH(8)
 
-	MCFG_PALETTE_INIT(kopunch)
-	MCFG_VIDEO_START(kopunch)
 
 	/* sound hardware */
 MACHINE_CONFIG_END

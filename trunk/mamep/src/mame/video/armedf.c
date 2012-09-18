@@ -14,35 +14,34 @@
 
 ***************************************************************************/
 
-static TILEMAP_MAPPER( armedf_scan_type1 )
+TILEMAP_MAPPER_MEMBER(armedf_state::armedf_scan_type1)
 {	/* col: 0..63; row: 0..31 */
 	/* armed formation */
 	return col * 32 + row;
 }
 
-static TILEMAP_MAPPER( armedf_scan_type2 )
+TILEMAP_MAPPER_MEMBER(armedf_state::armedf_scan_type2)
 {	/* col: 0..63; row: 0..31 */
 	return 32 * (31 - row) + (col & 0x1f) + 0x800 * (col / 32);
 }
 
-static TILEMAP_MAPPER( armedf_scan_type3 )
+TILEMAP_MAPPER_MEMBER(armedf_state::armedf_scan_type3)
 {	/* col: 0..63; row: 0..31 */
 	/* legion & legiono */
 	return (col & 0x1f) * 32 + row + 0x800 * (col / 32);
 }
 
-static TILE_GET_INFO( get_nb1414m4_tx_tile_info )
+TILE_GET_INFO_MEMBER(armedf_state::get_nb1414m4_tx_tile_info)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
-	int tile_number = state->m_text_videoram[tile_index] & 0xff;
+	int tile_number = m_text_videoram[tile_index] & 0xff;
 	int attributes;
 
 	/* TODO: Armed F doesn't seem to use the NB1414M4! */
-	//if (state->m_scroll_type == 1)
-	//  attributes = state->m_text_videoram[tile_index + 0x800] & 0xff;
+	//if (m_scroll_type == 1)
+	//  attributes = m_text_videoram[tile_index + 0x800] & 0xff;
 	//else
 	{
-		attributes = state->m_text_videoram[tile_index + 0x400] & 0xff;
+		attributes = m_text_videoram[tile_index + 0x400] & 0xff;
 
 		if(tile_index < 0x12) /* don't draw the NB1414M4 params! TODO: could be a better fix */
 			tile_number = attributes = 0x00;
@@ -51,25 +50,24 @@ static TILE_GET_INFO( get_nb1414m4_tx_tile_info )
 	/* bit 3 controls priority, (0) nb1414m4 has priority over all the other video layers */
 	tileinfo.category = (attributes & 0x8) >> 3;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			tile_number + 256 * (attributes & 0x3),
 			attributes >> 4,
 			0);
 }
 
-static TILE_GET_INFO( get_armedf_tx_tile_info )
+TILE_GET_INFO_MEMBER(armedf_state::get_armedf_tx_tile_info)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
-	int tile_number = state->m_text_videoram[tile_index] & 0xff;
+	int tile_number = m_text_videoram[tile_index] & 0xff;
 	int attributes;
 
 	/* TODO: Armed F doesn't seem to use the NB1414M4! */
-	//if (state->m_scroll_type == 1)
-		attributes = state->m_text_videoram[tile_index + 0x800] & 0xff;
+	//if (m_scroll_type == 1)
+		attributes = m_text_videoram[tile_index + 0x800] & 0xff;
 	//else
 	//{
-	//  attributes = state->m_text_videoram[tile_index + 0x400] & 0xff;
+	//  attributes = m_text_videoram[tile_index + 0x400] & 0xff;
 //
 	//  if(tile_index < 0x12) /* don't draw the NB1414M4 params! TODO: could be a better fix */
 	//      tile_number = attributes = 0x00;
@@ -78,7 +76,7 @@ static TILE_GET_INFO( get_armedf_tx_tile_info )
 	/* bit 3 controls priority, (0) nb1414m4 has priority over all the other video layers */
 	tileinfo.category = (attributes & 0x8) >> 3;
 
-	SET_TILE_INFO(
+	SET_TILE_INFO_MEMBER(
 			0,
 			tile_number + 256 * (attributes & 0x3),
 			attributes >> 4,
@@ -86,11 +84,10 @@ static TILE_GET_INFO( get_armedf_tx_tile_info )
 }
 
 
-static TILE_GET_INFO( get_fg_tile_info )
+TILE_GET_INFO_MEMBER(armedf_state::get_fg_tile_info)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
-	int data = state->m_fg_videoram[tile_index];
-	SET_TILE_INFO(
+	int data = m_fg_videoram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			1,
 			data&0x7ff,
 			data>>11,
@@ -98,11 +95,10 @@ static TILE_GET_INFO( get_fg_tile_info )
 }
 
 
-static TILE_GET_INFO( get_bg_tile_info )
+TILE_GET_INFO_MEMBER(armedf_state::get_bg_tile_info)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
-	int data = state->m_bg_videoram[tile_index];
-	SET_TILE_INFO(
+	int data = m_bg_videoram[tile_index];
+	SET_TILE_INFO_MEMBER(
 			2,
 			data & 0x3ff,
 			data >> 11,
@@ -117,48 +113,47 @@ static TILE_GET_INFO( get_bg_tile_info )
 
 ***************************************************************************/
 
-VIDEO_START( terraf )
+VIDEO_START_MEMBER(armedf_state,terraf)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
 
-	state->m_sprite_offy = (state->m_scroll_type & 2 ) ? 0 : 128;  /* legion, legiono, crazy climber 2 */
+	m_sprite_offy = (m_scroll_type & 2 ) ? 0 : 128;  /* legion, legiono, crazy climber 2 */
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_cols, 16, 16, 64, 32);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_cols, 16, 16, 64, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(armedf_state::get_bg_tile_info),this), TILEMAP_SCAN_COLS, 16, 16, 64, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(armedf_state::get_fg_tile_info),this), TILEMAP_SCAN_COLS, 16, 16, 64, 32);
 
-	state->m_tx_tilemap = tilemap_create(machine, get_nb1414m4_tx_tile_info, (state->m_scroll_type == 2) ? armedf_scan_type3 : armedf_scan_type2, 8, 8, 64, 32);
+	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(armedf_state::get_nb1414m4_tx_tile_info),this),
+		(m_scroll_type == 2) ? tilemap_mapper_delegate(FUNC(armedf_state::armedf_scan_type3),this) : tilemap_mapper_delegate(FUNC(armedf_state::armedf_scan_type2),this), 8, 8, 64, 32);
 
-	state->m_bg_tilemap->set_transparent_pen(0xf);
-	state->m_fg_tilemap->set_transparent_pen(0xf);
-	state->m_tx_tilemap->set_transparent_pen(0xf);
+	m_bg_tilemap->set_transparent_pen(0xf);
+	m_fg_tilemap->set_transparent_pen(0xf);
+	m_tx_tilemap->set_transparent_pen(0xf);
 
-	if (state->m_scroll_type != 1)
-		state->m_tx_tilemap->set_scrollx(0, -128);
+	if (m_scroll_type != 1)
+		m_tx_tilemap->set_scrollx(0, -128);
 
-	state->m_text_videoram = auto_alloc_array(machine, UINT8, 0x1000);
-	memset(state->m_text_videoram, 0x00, 0x1000);
+	m_text_videoram = auto_alloc_array(machine(), UINT8, 0x1000);
+	memset(m_text_videoram, 0x00, 0x1000);
 }
 
-VIDEO_START( armedf )
+VIDEO_START_MEMBER(armedf_state,armedf)
 {
-	armedf_state *state = machine.driver_data<armedf_state>();
 
-	state->m_sprite_offy = (state->m_scroll_type & 2 ) ? 0 : 128;  /* legion, legiono, crazy climber 2 */
+	m_sprite_offy = (m_scroll_type & 2 ) ? 0 : 128;  /* legion, legiono, crazy climber 2 */
 
-	state->m_bg_tilemap = tilemap_create(machine, get_bg_tile_info, tilemap_scan_cols, 16, 16, 64, 32);
-	state->m_fg_tilemap = tilemap_create(machine, get_fg_tile_info, tilemap_scan_cols, 16, 16, 64, 32);
+	m_bg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(armedf_state::get_bg_tile_info),this), TILEMAP_SCAN_COLS, 16, 16, 64, 32);
+	m_fg_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(armedf_state::get_fg_tile_info),this), TILEMAP_SCAN_COLS, 16, 16, 64, 32);
 
-	state->m_tx_tilemap = tilemap_create(machine, get_armedf_tx_tile_info, armedf_scan_type1, 8, 8, 64, 32);
+	m_tx_tilemap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(armedf_state::get_armedf_tx_tile_info),this), tilemap_mapper_delegate(FUNC(armedf_state::armedf_scan_type1),this), 8, 8, 64, 32);
 
-	state->m_bg_tilemap->set_transparent_pen(0xf);
-	state->m_fg_tilemap->set_transparent_pen(0xf);
-	state->m_tx_tilemap->set_transparent_pen(0xf);
+	m_bg_tilemap->set_transparent_pen(0xf);
+	m_fg_tilemap->set_transparent_pen(0xf);
+	m_tx_tilemap->set_transparent_pen(0xf);
 
-	if (state->m_scroll_type != 1)
-		state->m_tx_tilemap->set_scrollx(0, -128);
+	if (m_scroll_type != 1)
+		m_tx_tilemap->set_scrollx(0, -128);
 
-	state->m_text_videoram = auto_alloc_array(machine, UINT8, 0x1000);
-	memset(state->m_text_videoram, 0x00, 0x1000);
+	m_text_videoram = auto_alloc_array(machine(), UINT8, 0x1000);
+	memset(m_text_videoram, 0x00, 0x1000);
 }
 
 /***************************************************************************
@@ -266,29 +261,29 @@ WRITE16_MEMBER(armedf_state::armedf_bg_scrolly_w)
 ***************************************************************************/
 
 /* custom code to handle color cycling effect, handled by m_spr_pal_clut */
-void armedf_drawgfx(running_machine &machine, bitmap_ind16 &dest_bmp,const rectangle &clip,const gfx_element *gfx,
+void armedf_drawgfx(running_machine &machine, bitmap_ind16 &dest_bmp,const rectangle &clip,gfx_element *gfx,
 							UINT32 code,UINT32 color, UINT32 clut,int flipx,int flipy,int offsx,int offsy,
 							int transparent_color)
 {
 	armedf_state *state = machine.driver_data<armedf_state>();
-	const pen_t *pal = &gfx->machine().pens[gfx->color_base + gfx->color_granularity * (color % gfx->total_colors)];
-	const UINT8 *source_base = gfx_element_get_data(gfx, code % gfx->total_elements);
+	const pen_t *pal = &gfx->machine().pens[gfx->colorbase() + gfx->granularity() * (color % gfx->colors())];
+	const UINT8 *source_base = gfx->get_data(code % gfx->elements());
 	int x_index_base, y_index, sx, sy, ex, ey;
 	int xinc, yinc;
 
 	xinc = flipx ? -1 : 1;
 	yinc = flipy ? -1 : 1;
 
-	x_index_base = flipx ? gfx->width-1 : 0;
-	y_index = flipy ? gfx->height-1 : 0;
+	x_index_base = flipx ? gfx->width()-1 : 0;
+	y_index = flipy ? gfx->height()-1 : 0;
 
 	/* start coordinates */
 	sx = offsx;
 	sy = offsy;
 
 	/* end coordinates */
-	ex = sx + gfx->width;
-	ey = sy + gfx->height;
+	ex = sx + gfx->width();
+	ey = sy + gfx->height();
 
 	if (sx < clip.min_x)
 	{ /* clip left */
@@ -319,7 +314,7 @@ void armedf_drawgfx(running_machine &machine, bitmap_ind16 &dest_bmp,const recta
 		{
 			for (y = sy; y < ey; y++)
 			{
-				const UINT8 *source = source_base + y_index*gfx->line_modulo;
+				const UINT8 *source = source_base + y_index*gfx->rowbytes();
 				UINT16 *dest = &dest_bmp.pix16(y);
 				int x_index = x_index_base;
 				for (x = sx; x < ex; x++)

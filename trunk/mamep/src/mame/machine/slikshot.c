@@ -494,9 +494,9 @@ static TIMER_CALLBACK( delayed_z80_control_w )
 
 	/* this is a big kludge: only allow a reset if the Z80 is stopped */
 	/* at its endpoint; otherwise, we never get a result from the Z80 */
-	if ((data & 0x10) || cpu_get_reg(machine.device("sub"), Z80_PC) == 0x13a)
+	if ((data & 0x10) || machine.device("sub")->state().state_int(Z80_PC) == 0x13a)
 	{
-		cputag_set_input_line(machine, "sub", INPUT_LINE_RESET, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
+		machine.device("sub")->execute().set_input_line(INPUT_LINE_RESET, (data & 0x10) ? CLEAR_LINE : ASSERT_LINE);
 
 		/* on the rising edge, make the crosshair visible again */
 		if ((data & 0x10) && !(state->m_z80_ctrl & 0x10))
@@ -525,21 +525,20 @@ WRITE8_HANDLER( slikshot_z80_control_w )
  *************************************/
 
 
-VIDEO_START( slikshot )
+VIDEO_START_MEMBER(itech8_state,slikshot)
 {
-	itech8_state *state = machine.driver_data<itech8_state>();
-	VIDEO_START_CALL( itech8 );
+	itech8_state::video_start();
 
-	state->m_z80_ctrl = 0;
-	state->m_z80_port_val = 0;
-	state->m_z80_clear_to_send = 0;
+	m_z80_ctrl = 0;
+	m_z80_port_val = 0;
+	m_z80_clear_to_send = 0;
 
-	state->m_sensor0 = state->m_sensor1 = state->m_sensor2 = state->m_sensor3 = 0;
-	state->m_curvx = 0, state->m_curvy = 1, state->m_curx = 0;
-	state->m_ybuffer_next = 0;
-	state->m_curxpos = 0;
-	state->m_last_ytotal = 0;
-	state->m_crosshair_vis = 0;
+	m_sensor0 = m_sensor1 = m_sensor2 = m_sensor3 = 0;
+	m_curvx = 0, m_curvy = 1, m_curx = 0;
+	m_ybuffer_next = 0;
+	m_curxpos = 0;
+	m_last_ytotal = 0;
+	m_crosshair_vis = 0;
 }
 
 

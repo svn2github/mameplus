@@ -22,8 +22,7 @@
 #define VERBOSE_SERIAL	0
 #define VERBOSE_CHKSUM	0
 
-typedef struct _atari_drive atari_drive;
-struct _atari_drive
+struct atari_drive
 {
 	UINT8 *image;		/* malloc'd image */
 	int type;			/* type of image (XFD, ATR, DSK) */
@@ -38,8 +37,7 @@ struct _atari_drive
 	int sectors;		/* total sectors, ie. tracks x heads x spt */
 };
 
-typedef struct _atari_fdc_t atari_fdc_t;
-struct _atari_fdc_t
+struct atari_fdc_t
 {
 	int  serout_count;
 	int  serout_offs;
@@ -74,7 +72,7 @@ INLINE atari_fdc_t *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == ATARI_FDC);
 
-	return (atari_fdc_t *)downcast<legacy_device_base *>(device)->token();
+	return (atari_fdc_t *)downcast<atari_fdc_device *>(device)->token();
 }
 
 /*****************************************************************************
@@ -87,8 +85,7 @@ INLINE atari_fdc_t *get_safe_token(device_t *device)
  * It is used to determine the format of a XFD image by it's size only
  *****************************************************************************/
 
-typedef struct _dsk_format dsk_format;
-struct _dsk_format
+struct dsk_format
 {
 	UINT8 density;
 	UINT8 tracks;
@@ -108,8 +105,7 @@ struct _dsk_format
 };
 
 /* combined with the size the image should have */
-typedef struct _xfd_format xfd_format;
-struct _xfd_format
+struct xfd_format
 {
 	int size;
 	dsk_format dsk;
@@ -816,29 +812,50 @@ static DEVICE_RESET(atari_fdc)
 {
 }
 
-DEVICE_GET_INFO( atari_fdc )
+const device_type ATARI_FDC = &device_creator<atari_fdc_device>;
+
+atari_fdc_device::atari_fdc_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, ATARI_FDC, "Atari FDC", tag, owner, clock)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_INLINE_CONFIG_BYTES:			info->i = 0;												break;
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(atari_fdc_t);								break;
-
-		/* --- the following bits of info are returned as pointers --- */
-		case DEVINFO_PTR_MACHINE_CONFIG:				info->machine_config = MACHINE_CONFIG_NAME(atari_fdc);		break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(atari_fdc);					break;
-		case DEVINFO_FCT_STOP:							/* Nothing */												break;
-		case DEVINFO_FCT_RESET:							info->reset = DEVICE_RESET_NAME(atari_fdc);					break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Atari FDC");								break;
-		case DEVINFO_STR_FAMILY:						strcpy(info->s, "Atari FDC");								break;
-		case DEVINFO_STR_VERSION:						strcpy(info->s, "1.0");										break;
-		case DEVINFO_STR_SOURCE_FILE:					strcpy(info->s, __FILE__);									break;
-		case DEVINFO_STR_CREDITS:						strcpy(info->s, "Copyright the MESS Team"); 				break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(atari_fdc_t));
 }
 
-DEFINE_LEGACY_DEVICE(ATARI_FDC, atari_fdc);
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void atari_fdc_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void atari_fdc_device::device_start()
+{
+	DEVICE_START_NAME( atari_fdc )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void atari_fdc_device::device_reset()
+{
+	DEVICE_RESET_NAME( atari_fdc )(this);
+}
+
+//-------------------------------------------------
+//  device_mconfig_additions - return a pointer to
+//  the device's machine fragment
+//-------------------------------------------------
+
+machine_config_constructor atari_fdc_device::device_mconfig_additions() const
+{
+	return MACHINE_CONFIG_NAME( atari_fdc  );
+}
+
+

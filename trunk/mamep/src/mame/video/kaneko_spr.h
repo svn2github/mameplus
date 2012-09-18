@@ -11,10 +11,10 @@
 
 
 
-typedef struct
+struct kaneko16_priority_t
 {
 	int sprite[4];
-} kaneko16_priority_t;
+};
 
 struct tempsprite
 {
@@ -82,7 +82,7 @@ private:
 
 	void kaneko16_draw_sprites(running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, UINT16* spriteram16, int spriteram16_bytes);
 
-	void kaneko16_draw_sprites_custom(bitmap_ind16 &dest_bmp,const rectangle &clip,const gfx_element *gfx,
+	void kaneko16_draw_sprites_custom(bitmap_ind16 &dest_bmp,const rectangle &clip,gfx_element *gfx,
 			UINT32 code,UINT32 color,int flipx,int flipy,int sx,int sy,
 			int priority);
 

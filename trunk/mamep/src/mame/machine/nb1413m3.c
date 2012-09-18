@@ -53,7 +53,7 @@ static TIMER_CALLBACK( nb1413m3_timer_callback )
 
 		if (nb1413m3_nmi_enable)
 		{
-			cputag_set_input_line(machine, "maincpu", INPUT_LINE_NMI, PULSE_LINE);
+			machine.device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 			nb1413m3_nmi_count++;
 		}
 
@@ -192,7 +192,7 @@ INTERRUPT_GEN( nb1413m3_interrupt )
 {
 //  nb1413m3_busyflag = 1;
 //  nb1413m3_busyctr = 0;
-	device_set_input_line(device, 0, HOLD_LINE);
+	device->execute().set_input_line(0, HOLD_LINE);
 
 #if NB1413M3_DEBUG
 	popmessage("NMI SW:%01X CLOCK:%02X COUNT:%02X", nb1413m3_nmi_enable, nb1413m3_nmi_clock, nb1413m3_nmi_count);
@@ -209,7 +209,7 @@ READ8_HANDLER( nb1413m3_sndrom_r )
 	int rombank;
 
 	/* get top 8 bits of the I/O port address */
-	offset = (offset << 8) | (cpu_get_reg(&space->device(), Z80_BC) >> 8);
+	offset = (offset << 8) | (space->device().state().state_int(Z80_BC) >> 8);
 
 	switch (nb1413m3_type)
 	{

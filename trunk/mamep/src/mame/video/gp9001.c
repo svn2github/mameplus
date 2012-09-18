@@ -233,77 +233,66 @@ const address_space_config *gp9001vdp_device::memory_space_config(address_spacen
 	return (spacenum == 0) ? &m_space_config : NULL;
 }
 
-
-
-
-static TILE_GET_INFO_DEVICE( get_top0_tile_info )
+TILE_GET_INFO_MEMBER(gp9001vdp_device::get_top0_tile_info)
 {
 	int color, tile_number, attrib;
 
-	gp9001vdp_device *vdp = (gp9001vdp_device*)device;
+	attrib = top.vram16[2*tile_index];
 
-	attrib = vdp->top.vram16[2*tile_index];
+	tile_number = top.vram16[2*tile_index+1];
 
-	tile_number = vdp->top.vram16[2*tile_index+1];
-
-	if (vdp->gp9001_gfxrom_is_banked)
+	if (gp9001_gfxrom_is_banked)
 	{
-		tile_number = ( vdp->gp9001_gfxrom_bank[(tile_number >> 13) & 7] << 13 ) | ( tile_number & 0x1fff );
+		tile_number = ( gp9001_gfxrom_bank[(tile_number >> 13) & 7] << 13 ) | ( tile_number & 0x1fff );
 	}
 
 	color = attrib & 0x0fff; // 0x0f00 priority, 0x007f colour
-	SET_TILE_INFO_DEVICE(
-			vdp->tile_region,
+	SET_TILE_INFO_MEMBER(
+			tile_region,
 			tile_number,
 			color,
 			0);
 	//tileinfo.category = (attrib & 0x0f00) >> 8;
 }
 
-
-
-static TILE_GET_INFO_DEVICE( get_fg0_tile_info )
+TILE_GET_INFO_MEMBER(gp9001vdp_device::get_fg0_tile_info)
 {
 	int color, tile_number, attrib;
 
-	gp9001vdp_device *vdp = (gp9001vdp_device*)device;
+	attrib = fg.vram16[2*tile_index];
 
-	attrib = vdp->fg.vram16[2*tile_index];
-
-	tile_number = vdp->fg.vram16[2*tile_index+1];
+	tile_number = fg.vram16[2*tile_index+1];
 
 
-	if (vdp->gp9001_gfxrom_is_banked)
+	if (gp9001_gfxrom_is_banked)
 	{
-		tile_number = ( vdp->gp9001_gfxrom_bank[(tile_number >> 13) & 7] << 13 ) | ( tile_number & 0x1fff );
+		tile_number = ( gp9001_gfxrom_bank[(tile_number >> 13) & 7] << 13 ) | ( tile_number & 0x1fff );
 	}
 
 	color = attrib & 0x0fff; // 0x0f00 priority, 0x007f colour
-	SET_TILE_INFO_DEVICE(
-			vdp->tile_region,
+	SET_TILE_INFO_MEMBER(
+			tile_region,
 			tile_number,
 			color,
 			0);
 	//tileinfo.category = (attrib & 0x0f00) >> 8;
 }
 
-static TILE_GET_INFO_DEVICE( get_bg0_tile_info )
+TILE_GET_INFO_MEMBER(gp9001vdp_device::get_bg0_tile_info)
 {
 	int color, tile_number, attrib;
-	gp9001vdp_device *vdp = (gp9001vdp_device*)device;
+	attrib = bg.vram16[2*tile_index];
 
-	attrib = vdp->bg.vram16[2*tile_index];
+	tile_number = bg.vram16[2*tile_index+1];
 
-	tile_number = vdp->bg.vram16[2*tile_index+1];
-
-	if (vdp->gp9001_gfxrom_is_banked)
+	if (gp9001_gfxrom_is_banked)
 	{
-		tile_number = ( vdp->gp9001_gfxrom_bank[(tile_number >> 13) & 7] << 13 ) | ( tile_number & 0x1fff );
+		tile_number = ( gp9001_gfxrom_bank[(tile_number >> 13) & 7] << 13 ) | ( tile_number & 0x1fff );
 	}
 
 	color = attrib & 0x0fff; // 0x0f00 priority, 0x007f colour
-	SET_TILE_INFO_DEVICE(
-			vdp->tile_region,
+	SET_TILE_INFO_MEMBER(
+			tile_region,
 			tile_number,
 			color,
 			0);
@@ -314,9 +303,9 @@ void gp9001vdp_device::create_tilemaps(int region)
 {
 	tile_region = region;
 
-	top.tmap = tilemap_create_device(this, get_top0_tile_info,tilemap_scan_rows,16,16,32,32);
-	fg.tmap = tilemap_create_device(this, get_fg0_tile_info,tilemap_scan_rows,16,16,32,32);
-	bg.tmap = tilemap_create_device(this, get_bg0_tile_info,tilemap_scan_rows,16,16,32,32);
+	top.tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gp9001vdp_device::get_top0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
+	fg.tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gp9001vdp_device::get_fg0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
+	bg.tmap = &machine().tilemap().create(tilemap_get_info_delegate(FUNC(gp9001vdp_device::get_bg0_tile_info),this),TILEMAP_SCAN_ROWS,16,16,32,32);
 
 	top.tmap->set_transparent_pen(0);
 	fg.tmap->set_transparent_pen(0);
@@ -758,7 +747,7 @@ WRITE16_DEVICE_HANDLER( pipibibi_bootleg_spriteram16_w )
 
 void gp9001vdp_device::draw_sprites( running_machine &machine, bitmap_ind16 &bitmap, const rectangle &cliprect, const UINT8* primap )
 {
-	const gfx_element *gfx = machine.gfx[tile_region+1];
+	gfx_element *gfx = machine.gfx[tile_region+1];
 
 	int offs, old_x, old_y;
 
@@ -866,13 +855,13 @@ void gp9001vdp_device::draw_sprites( running_machine &machine, bitmap_ind16 &bit
                         flipx,flipy,
                         sx,sy,0);
                     */
-					sprite %= gfx->total_elements;
-					color %= gfx->total_colors;
+					sprite %= gfx->elements();
+					color %= gfx->colors();
 
 					{
 						int yy, xx;
-						const pen_t *paldata = &gfx->machine().pens[gfx->color_base + gfx->color_granularity * color];
-						const UINT8* srcdata = gfx_element_get_data(gfx, sprite);
+						const pen_t *paldata = &gfx->machine().pens[gfx->colorbase() + gfx->granularity() * color];
+						const UINT8* srcdata = gfx->get_data(sprite);
 						int count = 0;
 						int ystart, yend, yinc;
 						int xstart, xend, xinc;

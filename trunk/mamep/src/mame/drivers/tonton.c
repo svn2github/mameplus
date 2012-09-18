@@ -41,6 +41,8 @@ public:
 	DECLARE_WRITE8_MEMBER(tonton_outport_w);
 	DECLARE_WRITE8_MEMBER(ay_aout_w);
 	DECLARE_WRITE8_MEMBER(ay_bout_w);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 #define MAIN_CLOCK XTAL_21_4772MHz
@@ -61,7 +63,7 @@ public:
 
 static void tonton_vdp0_interrupt(device_t *, v99x8_device &device, int i)
 {
-	cputag_set_input_line (device.machine(), "maincpu", 0, (i ? HOLD_LINE : CLEAR_LINE));
+	device.machine().device("maincpu")->execute().set_input_line(0, (i ? HOLD_LINE : CLEAR_LINE));
 }
 
 
@@ -187,11 +189,11 @@ INPUT_PORTS_END
 *        Machine Start & Reset Routines          *
 *************************************************/
 
-static MACHINE_START( tonton )
+void tonton_state::machine_start()
 {
 }
 
-static MACHINE_RESET( tonton )
+void tonton_state::machine_reset()
 {
 }
 
@@ -257,8 +259,6 @@ static MACHINE_CONFIG_START( tonton, tonton_state )
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 
-	MCFG_MACHINE_START(tonton)
-	MCFG_MACHINE_RESET(tonton)
 
 	/* video hardware */
 	MCFG_VIDEO_ATTRIBUTES(VIDEO_UPDATE_BEFORE_VBLANK)

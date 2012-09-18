@@ -40,7 +40,7 @@ static INTERRUPT_GEN( pandoras_master_interrupt )
 	pandoras_state *state = device->machine().driver_data<pandoras_state>();
 
 	if (state->m_irq_enable_a)
-		device_set_input_line(device, M6809_IRQ_LINE, HOLD_LINE);
+		device->execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 }
 
 static INTERRUPT_GEN( pandoras_slave_interrupt )
@@ -48,7 +48,7 @@ static INTERRUPT_GEN( pandoras_slave_interrupt )
 	pandoras_state *state = device->machine().driver_data<pandoras_state>();
 
 	if (state->m_irq_enable_b)
-		device_set_input_line(device, M6809_IRQ_LINE, HOLD_LINE);
+		device->execute().set_input_line(M6809_IRQ_LINE, HOLD_LINE);
 }
 
 WRITE8_MEMBER(pandoras_state::pandoras_int_control_w)
@@ -66,7 +66,7 @@ WRITE8_MEMBER(pandoras_state::pandoras_int_control_w)
 	switch (offset)
 	{
 		case 0x00:	if (!data)
-					device_set_input_line(m_maincpu, M6809_IRQ_LINE, CLEAR_LINE);
+					m_maincpu->set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
 				m_irq_enable_a = data;
 				break;
 		case 0x02:	coin_counter_w(machine(), 0,data & 0x01);
@@ -76,13 +76,13 @@ WRITE8_MEMBER(pandoras_state::pandoras_int_control_w)
 		case 0x05:	pandoras_flipscreen_w(space, 0, data);
 				break;
 		case 0x06:	if (!data)
-					device_set_input_line(m_subcpu, M6809_IRQ_LINE, CLEAR_LINE);
+					m_subcpu->set_input_line(M6809_IRQ_LINE, CLEAR_LINE);
 				m_irq_enable_b = data;
 				break;
-		case 0x07:	device_set_input_line(m_subcpu, INPUT_LINE_NMI, PULSE_LINE);
+		case 0x07:	m_subcpu->set_input_line(INPUT_LINE_NMI, PULSE_LINE);
 				break;
 
-		default:	logerror("%04x: (irq_ctrl) write %02x to %02x\n",cpu_get_pc(&space.device()), data, offset);
+		default:	logerror("%04x: (irq_ctrl) write %02x to %02x\n",space.device().safe_pc(), data, offset);
 				break;
 	}
 }
@@ -91,7 +91,7 @@ WRITE8_MEMBER(pandoras_state::pandoras_cpua_irqtrigger_w)
 {
 
 	if (!m_firq_old_data_a && data)
-		device_set_input_line(m_maincpu, M6809_FIRQ_LINE, HOLD_LINE);
+		m_maincpu->set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 
 	m_firq_old_data_a = data;
 }
@@ -100,14 +100,14 @@ WRITE8_MEMBER(pandoras_state::pandoras_cpub_irqtrigger_w)
 {
 
 	if (!m_firq_old_data_b && data)
-		device_set_input_line(m_subcpu, M6809_FIRQ_LINE, HOLD_LINE);
+		m_subcpu->set_input_line(M6809_FIRQ_LINE, HOLD_LINE);
 
 	m_firq_old_data_b = data;
 }
 
 WRITE8_MEMBER(pandoras_state::pandoras_i8039_irqtrigger_w)
 {
-	device_set_input_line(m_mcu, 0, ASSERT_LINE);
+	m_mcu->set_input_line(0, ASSERT_LINE);
 }
 
 WRITE8_MEMBER(pandoras_state::i8039_irqen_and_status_w)
@@ -115,7 +115,7 @@ WRITE8_MEMBER(pandoras_state::i8039_irqen_and_status_w)
 
 	/* bit 7 enables IRQ */
 	if ((data & 0x80) == 0)
-		device_set_input_line(m_mcu, 0, CLEAR_LINE);
+		m_mcu->set_input_line(0, CLEAR_LINE);
 
 	/* bit 5 goes to 8910 port A */
 	m_i8039_status = (data & 0x20) >> 5;
@@ -123,7 +123,7 @@ WRITE8_MEMBER(pandoras_state::i8039_irqen_and_status_w)
 
 WRITE8_MEMBER(pandoras_state::pandoras_z80_irqtrigger_w)
 {
-	device_set_input_line_and_vector(m_audiocpu, 0, HOLD_LINE, 0xff);
+	m_audiocpu->set_input_line_and_vector(0, HOLD_LINE, 0xff);
 }
 
 
@@ -292,33 +292,31 @@ GFXDECODE_END
 
 ***************************************************************************/
 
-static MACHINE_START( pandoras )
+void pandoras_state::machine_start()
 {
-	pandoras_state *state = machine.driver_data<pandoras_state>();
 
-	state->m_maincpu = machine.device<cpu_device>("maincpu");
-	state->m_subcpu = machine.device<cpu_device>("sub");
-	state->m_audiocpu = machine.device<cpu_device>("audiocpu");
-	state->m_mcu = machine.device<cpu_device>("mcu");
+	m_maincpu = machine().device<cpu_device>("maincpu");
+	m_subcpu = machine().device<cpu_device>("sub");
+	m_audiocpu = machine().device<cpu_device>("audiocpu");
+	m_mcu = machine().device<cpu_device>("mcu");
 
-	state->save_item(NAME(state->m_firq_old_data_a));
-	state->save_item(NAME(state->m_firq_old_data_b));
-	state->save_item(NAME(state->m_irq_enable_a));
-	state->save_item(NAME(state->m_irq_enable_b));
-	state->save_item(NAME(state->m_i8039_status));
+	save_item(NAME(m_firq_old_data_a));
+	save_item(NAME(m_firq_old_data_b));
+	save_item(NAME(m_irq_enable_a));
+	save_item(NAME(m_irq_enable_b));
+	save_item(NAME(m_i8039_status));
 }
 
-static MACHINE_RESET( pandoras )
+void pandoras_state::machine_reset()
 {
-	pandoras_state *state = machine.driver_data<pandoras_state>();
 
-	state->m_firq_old_data_a = 0;
-	state->m_firq_old_data_b = 0;
-	state->m_irq_enable_a = 0;
-	state->m_irq_enable_b = 0;
-	state->m_i8039_status = 0;
+	m_firq_old_data_a = 0;
+	m_firq_old_data_b = 0;
+	m_irq_enable_a = 0;
+	m_irq_enable_b = 0;
+	m_i8039_status = 0;
 
-	state->m_flipscreen = 0;
+	m_flipscreen = 0;
 }
 
 READ8_MEMBER(pandoras_state::pandoras_portA_r)
@@ -361,8 +359,6 @@ static MACHINE_CONFIG_START( pandoras, pandoras_state )
 
 	MCFG_QUANTUM_TIME(attotime::from_hz(6000))	/* 100 CPU slices per frame - needed for correct synchronization of the sound CPUs */
 
-	MCFG_MACHINE_START(pandoras)
-	MCFG_MACHINE_RESET(pandoras)
 
 	/* video hardware */
 	MCFG_SCREEN_ADD("screen", RASTER)
@@ -375,8 +371,6 @@ static MACHINE_CONFIG_START( pandoras, pandoras_state )
 	MCFG_GFXDECODE(pandoras)
 	MCFG_PALETTE_LENGTH(16*16+16*16)
 
-	MCFG_PALETTE_INIT(pandoras)
-	MCFG_VIDEO_START(pandoras)
 
 	/* sound hardware */
 	MCFG_SPEAKER_STANDARD_MONO("mono")

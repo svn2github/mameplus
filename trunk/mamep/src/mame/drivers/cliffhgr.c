@@ -110,6 +110,8 @@ public:
 	DECLARE_WRITE8_MEMBER(cliff_sound_overlay_w);
 	DECLARE_WRITE_LINE_MEMBER(vdp_interrupt);
 	DECLARE_DRIVER_INIT(cliff);
+	virtual void machine_start();
+	virtual void machine_reset();
 };
 
 
@@ -161,7 +163,7 @@ WRITE8_MEMBER(cliffhgr_state::cliff_coin_counter_w)
 READ8_MEMBER(cliffhgr_state::cliff_irq_ack_r)
 {
 	/* deassert IRQ on the CPU */
-	cputag_set_input_line(machine(), "maincpu", 0, CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(0, CLEAR_LINE);
 
 	return 0x00;
 }
@@ -206,7 +208,7 @@ static TIMER_CALLBACK( cliff_irq_callback )
 	if (state->m_phillips_code & 0x800000)
 	{
 //      printf("%2d:code = %06X\n", param, phillips_code);
-		cputag_set_input_line(machine, "maincpu", 0, ASSERT_LINE);
+		machine.device("maincpu")->execute().set_input_line(0, ASSERT_LINE);
 	}
 
 	state->m_irq_timer->adjust(machine.primary_screen->time_until_pos(param * 2), param);
@@ -214,23 +216,21 @@ static TIMER_CALLBACK( cliff_irq_callback )
 
 WRITE_LINE_MEMBER(cliffhgr_state::vdp_interrupt)
 {
-	cputag_set_input_line(machine(), "maincpu", INPUT_LINE_NMI, state ? ASSERT_LINE : CLEAR_LINE);
+	machine().device("maincpu")->execute().set_input_line(INPUT_LINE_NMI, state ? ASSERT_LINE : CLEAR_LINE);
 }
 
 
 
-static MACHINE_START( cliffhgr )
+void cliffhgr_state::machine_start()
 {
-	cliffhgr_state *state = machine.driver_data<cliffhgr_state>();
-	state->m_irq_timer = machine.scheduler().timer_alloc(FUNC(cliff_irq_callback));
+	m_irq_timer = machine().scheduler().timer_alloc(FUNC(cliff_irq_callback));
 }
 
-static MACHINE_RESET( cliffhgr )
+void cliffhgr_state::machine_reset()
 {
-	cliffhgr_state *state = machine.driver_data<cliffhgr_state>();
-	state->m_port_bank = 0;
-	state->m_phillips_code = 0;
-	state->m_irq_timer->adjust(machine.primary_screen->time_until_pos(17), 17);
+	m_port_bank = 0;
+	m_phillips_code = 0;
+	m_irq_timer->adjust(machine().primary_screen->time_until_pos(17), 17);
 }
 
 /********************************************************/
@@ -696,8 +696,6 @@ static MACHINE_CONFIG_START( cliffhgr, cliffhgr_state )
 	MCFG_CPU_PROGRAM_MAP(mainmem)
 	MCFG_CPU_IO_MAP(mainport)
 
-	MCFG_MACHINE_START(cliffhgr)
-	MCFG_MACHINE_RESET(cliffhgr)
 
 	MCFG_NVRAM_ADD_0FILL("nvram")
 

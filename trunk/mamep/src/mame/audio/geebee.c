@@ -11,8 +11,7 @@
 #include "includes/warpwarp.h"
 
 
-typedef struct _geebee_sound_state geebee_sound_state;
-struct _geebee_sound_state
+struct geebee_sound_state
 {
 	emu_timer *m_volume_timer;
 	UINT16 *m_decay;
@@ -29,7 +28,7 @@ INLINE geebee_sound_state *get_safe_token(device_t *device)
 	assert(device != NULL);
 	assert(device->type() == GEEBEE);
 
-	return (geebee_sound_state *)downcast<legacy_device_base *>(device)->token();
+	return (geebee_sound_state *)downcast<geebee_sound_device *>(device)->token();
 }
 
 static TIMER_CALLBACK( volume_decay )
@@ -144,20 +143,42 @@ static DEVICE_START( geebee_sound )
 	state->m_volume_timer = machine.scheduler().timer_alloc(FUNC(volume_decay), state);
 }
 
-DEVICE_GET_INFO( geebee_sound )
+const device_type GEEBEE = &device_creator<geebee_sound_device>;
+
+geebee_sound_device::geebee_sound_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, GEEBEE, "Gee Bee Custom", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		case DEVINFO_INT_TOKEN_BYTES:					info->i = sizeof(geebee_sound_state);			break;
+	m_token = global_alloc_array_clear(UINT8, sizeof(geebee_sound_state));
+}
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:							info->start = DEVICE_START_NAME(geebee_sound);	break;
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "Gee Bee Custom");				break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);						break;
-	}
+void geebee_sound_device::device_config_complete()
+{
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void geebee_sound_device::device_start()
+{
+	DEVICE_START_NAME( geebee_sound )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void geebee_sound_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(GEEBEE, geebee_sound);

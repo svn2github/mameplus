@@ -24,7 +24,7 @@ TODO:
 
 #include "emu.h"
 
-typedef struct
+struct mcd212_channel_t
 {
     UINT8 csrr;
     UINT16 csrw;
@@ -58,9 +58,9 @@ typedef struct
     UINT32 mosaic_hold_b;
     UINT8 weight_factor_a[768];
     UINT8 weight_factor_b[768];
-} mcd212_channel_t;
+};
 
-typedef struct
+struct mcd212_regs_t
 {
 	running_machine &machine() const { assert(m_machine != NULL); return *m_machine; }
 
@@ -71,7 +71,7 @@ typedef struct
 
     running_machine *m_machine;
     bitmap_rgb32 m_bitmap;
-} mcd212_regs_t;
+};
 
 #define MCD212_CURCNT_COLOR         0x00000f    // Cursor color
 #define MCD212_CURCNT_CUW           0x008000    // Cursor width
@@ -157,8 +157,7 @@ typedef INT16 SWORD68K;
 
 
 
-typedef struct _mcd212_ab_t mcd212_ab_t;
-struct _mcd212_ab_t
+struct mcd212_ab_t
 {
     //* Color limit array.
     BYTE68K limit[3 * BYTE68K_MAX];

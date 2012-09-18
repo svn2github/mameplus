@@ -52,8 +52,7 @@
 
  */
 
-typedef struct _msm5205_state msm5205_state;
-struct _msm5205_state
+struct msm5205_state
 {
 	const msm5205_interface *intf;
 	device_t *device;
@@ -73,8 +72,8 @@ struct _msm5205_state
 INLINE msm5205_state *get_safe_token(device_t *device)
 {
 	assert(device != NULL);
-	assert(device->type() == MSM5205);
-	return (msm5205_state *)downcast<legacy_device_base *>(device)->token();
+	assert(device->type() == MSM5205 || device->type() == MSM6585);
+	return (msm5205_state *)downcast<msm5205_device *>(device)->token();
 }
 
 
@@ -341,41 +340,75 @@ void msm5205_change_clock_w(device_t *device, INT32 clock)
 	voice->timer->adjust(period, 0, period);
 }
 
+const device_type MSM5205 = &device_creator<msm5205_device>;
 
-/**************************************************************************
- * Generic get_info
- **************************************************************************/
-
-DEVICE_GET_INFO( msm5205 )
+msm5205_device::msm5205_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, MSM5205, "MSM5205", tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
 {
-	switch (state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_TOKEN_BYTES:				info->i = sizeof(msm5205_state);				break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_FCT_START:						info->start = DEVICE_START_NAME( msm5205 );		break;
-		case DEVINFO_FCT_STOP:						/* nothing */									break;
-		case DEVINFO_FCT_RESET:						info->reset = DEVICE_RESET_NAME( msm5205 );		break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:						strcpy(info->s, "MSM5205");						break;
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "ADPCM");						break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "1.0");							break;
-		case DEVINFO_STR_SOURCE_FILE:				strcpy(info->s, __FILE__);						break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
-	}
+	m_token = global_alloc_array_clear(UINT8, sizeof(msm5205_state));
+}
+msm5205_device::msm5205_device(const machine_config &mconfig, device_type type, const char *name, const char *tag, device_t *owner, UINT32 clock)
+	: device_t(mconfig, type, name, tag, owner, clock),
+	  device_sound_interface(mconfig, *this)
+{
+	m_token = global_alloc_array_clear(UINT8, sizeof(msm5205_state));
 }
 
-DEVICE_GET_INFO( msm6585 )
+//-------------------------------------------------
+//  device_config_complete - perform any
+//  operations now that the configuration is
+//  complete
+//-------------------------------------------------
+
+void msm5205_device::device_config_complete()
 {
-	switch (state)
-	{
-		case DEVINFO_STR_NAME:						strcpy(info->s, "MSM6585");						break;
-		default:									DEVICE_GET_INFO_CALL(msm5205);					break;
-	}
+}
+
+//-------------------------------------------------
+//  device_start - device-specific startup
+//-------------------------------------------------
+
+void msm5205_device::device_start()
+{
+	DEVICE_START_NAME( msm5205 )(this);
+}
+
+//-------------------------------------------------
+//  device_reset - device-specific reset
+//-------------------------------------------------
+
+void msm5205_device::device_reset()
+{
+	DEVICE_RESET_NAME( msm5205 )(this);
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void msm5205_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
 }
 
 
-DEFINE_LEGACY_SOUND_DEVICE(MSM5205, msm5205);
-DEFINE_LEGACY_SOUND_DEVICE(MSM6585, msm6585);
+const device_type MSM6585 = &device_creator<msm6585_device>;
+
+msm6585_device::msm6585_device(const machine_config &mconfig, const char *tag, device_t *owner, UINT32 clock)
+	: msm5205_device(mconfig, MSM6585, "MSM6585", tag, owner, clock)
+{
+}
+
+//-------------------------------------------------
+//  sound_stream_update - handle a stream update
+//-------------------------------------------------
+
+void msm6585_device::sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples)
+{
+	// should never get here
+	fatalerror("sound_stream_update called; not applicable to legacy sound devices\n");
+}
+
+

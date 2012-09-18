@@ -39,21 +39,21 @@ enum
 	SHARC_B12,		SHARC_B13,		SHARC_B14,		SHARC_B15,
 };
 
-typedef struct
+struct SHARC_DAG
 {
 	UINT32 i[8];
 	UINT32 m[8];
 	UINT32 b[8];
 	UINT32 l[8];
-} SHARC_DAG;
+};
 
-typedef union
+union SHARC_REG
 {
 	INT32 r;
 	float f;
-} SHARC_REG;
+};
 
-typedef struct
+struct DMA_REGS
 {
 	UINT32 control;
 	UINT32 int_index;
@@ -64,10 +64,31 @@ typedef struct
 	UINT32 ext_index;
 	UINT32 ext_modifier;
 	UINT32 ext_count;
-} DMA_REGS;
+};
 
-typedef struct _SHARC_REGS SHARC_REGS;
-struct _SHARC_REGS
+struct LADDR
+{
+	UINT32 addr;
+	UINT32 code;
+	UINT32 loop_type;
+};
+
+struct DMA_OP
+{
+	UINT32 src;
+	UINT32 dst;
+	UINT32 chain_ptr;
+	INT32 src_modifier;
+	INT32 dst_modifier;
+	INT32 src_count;
+	INT32 dst_count;
+	INT32 pmode;
+	INT32 chained_direction;
+	emu_timer *timer;
+	bool active;
+};
+
+struct SHARC_REGS
 {
 	UINT32 pc;
 	SHARC_REG r[16];
@@ -84,7 +105,7 @@ struct _SHARC_REGS
 	UINT32 daddr;
 	UINT32 pcstk;
 	UINT32 pcstkp;
-	UINT32 laddr;
+	LADDR laddr;
 	UINT32 curlcntr;
 	UINT32 lcntr;
 
@@ -131,8 +152,6 @@ struct _SHARC_REGS
 	void (*opcode_handler)(SHARC_REGS *cpustate);
 	int icount;
 	UINT64 opcode;
-	UINT64 fetch_opcode;
-	UINT64 decode_opcode;
 
 	UINT32 nfaddr;
 
@@ -142,23 +161,14 @@ struct _SHARC_REGS
 
 	SHARC_BOOT_MODE boot_mode;
 
-	UINT32 dmaop_src;
-	UINT32 dmaop_dst;
-	UINT32 dmaop_chain_ptr;
-	INT32 dmaop_src_modifier;
-	INT32 dmaop_dst_modifier;
-	INT32 dmaop_src_count;
-	INT32 dmaop_dst_count;
-	INT32 dmaop_pmode;
-	INT32 dmaop_cycles;
-	INT32 dmaop_channel;
-	INT32 dmaop_chained_direction;
+	DMA_OP dma_op[12];
+	UINT32 dma_status;
 
 	INT32 interrupt_active;
 
-	INT32 iop_latency_cycles;
-	INT32 iop_latency_reg;
-	UINT32 iop_latency_data;
+	UINT32 iop_delayed_reg;
+	UINT32 iop_delayed_data;
+	emu_timer *delayed_iop_timer;
 
 	UINT32 delay_slot1, delay_slot2;
 
@@ -197,11 +207,6 @@ INLINE void CHANGE_PC(SHARC_REGS *cpustate, UINT32 newpc)
 	cpustate->daddr = newpc;
 	cpustate->faddr = newpc+1;
 	cpustate->nfaddr = newpc+2;
-
-	// next instruction to be executed
-	cpustate->decode_opcode = ROPCODE(cpustate->daddr);
-	// next instruction to be decoded
-	cpustate->fetch_opcode = ROPCODE(cpustate->faddr);
 }
 
 INLINE void CHANGE_PC_DELAYED(SHARC_REGS *cpustate, UINT32 newpc)
@@ -212,24 +217,15 @@ INLINE void CHANGE_PC_DELAYED(SHARC_REGS *cpustate, UINT32 newpc)
 	cpustate->delay_slot2 = cpustate->daddr;
 }
 
-
-
-static void add_iop_write_latency_effect(SHARC_REGS *cpustate, int iop_reg, UINT32 data, int latency)
+static TIMER_CALLBACK(sharc_iop_delayed_write_callback)
 {
-	cpustate->iop_latency_cycles = latency+1;
-	cpustate->iop_latency_reg = iop_reg;
-	cpustate->iop_latency_data = data;
-}
+	SHARC_REGS *cpustate = (SHARC_REGS *)ptr;
 
-static void iop_write_latency_effect(SHARC_REGS *cpustate)
-{
-	UINT32 data = cpustate->iop_latency_data;
-
-	switch (cpustate->iop_latency_reg)
+	switch (cpustate->iop_delayed_reg)
 	{
 		case 0x1c:
 		{
-			if (data & 0x1)
+			if (cpustate->iop_delayed_data & 0x1)
 			{
 				sharc_dma_exec(cpustate, 6);
 			}
@@ -238,17 +234,26 @@ static void iop_write_latency_effect(SHARC_REGS *cpustate)
 
 		case 0x1d:
 		{
-			if (data & 0x1)
+			if (cpustate->iop_delayed_data & 0x1)
 			{
 				sharc_dma_exec(cpustate, 7);
 			}
 			break;
 		}
 
-		default:	fatalerror("SHARC: iop_write_latency_effect: unknown IOP register %02X", cpustate->iop_latency_reg);
+		default:	fatalerror("SHARC: sharc_iop_delayed_write: unknown IOP register %02X\n", cpustate->iop_delayed_reg);
 	}
+
+	cpustate->delayed_iop_timer->adjust(attotime::never, 0);
 }
 
+static void sharc_iop_delayed_w(SHARC_REGS *cpustate, UINT32 reg, UINT32 data, int cycles)
+{
+	cpustate->iop_delayed_reg = reg;
+	cpustate->iop_delayed_data = data;
+
+	cpustate->delayed_iop_timer->adjust(cpustate->device->cycles_to_attotime(cycles), 0);
+}
 
 
 /* IOP registers */
@@ -260,14 +265,9 @@ static UINT32 sharc_iop_r(SHARC_REGS *cpustate, UINT32 address)
 
 		case 0x37:		// DMA status
 		{
-			UINT32 r = 0;
-			if (cpustate->dmaop_cycles > 0)
-			{
-				r |= 1 << cpustate->dmaop_channel;
-			}
-			return r;
+			return cpustate->dma_status;
 		}
-		default:		fatalerror("sharc_iop_r: Unimplemented IOP reg %02X at %08X", address, cpustate->pc);
+		default:		fatalerror("sharc_iop_r: Unimplemented IOP reg %02X at %08X\n", address, cpustate->pc);
 	}
 	return 0;
 }
@@ -292,7 +292,7 @@ static void sharc_iop_w(SHARC_REGS *cpustate, UINT32 address, UINT32 data)
 		case 0x1c:
 		{
 			cpustate->dma[6].control = data;
-			add_iop_write_latency_effect(cpustate, 0x1c, data, 1);
+			sharc_iop_delayed_w(cpustate, 0x1c, data, 1);
 			break;
 		}
 
@@ -311,7 +311,7 @@ static void sharc_iop_w(SHARC_REGS *cpustate, UINT32 address, UINT32 data)
 		case 0x1d:
 		{
 			cpustate->dma[7].control = data;
-			add_iop_write_latency_effect(cpustate, 0x1d, data, 30);
+			sharc_iop_delayed_w(cpustate, 0x1d, data, 30);
 			break;
 		}
 
@@ -324,7 +324,7 @@ static void sharc_iop_w(SHARC_REGS *cpustate, UINT32 address, UINT32 data)
 		case 0x4e: cpustate->dma[7].ext_modifier = data; return;
 		case 0x4f: cpustate->dma[7].ext_count = data; return;
 
-		default:		fatalerror("sharc_iop_w: Unimplemented IOP reg %02X, %08X at %08X", address, data, cpustate->pc);
+		default:		fatalerror("sharc_iop_w: Unimplemented IOP reg %02X, %08X at %08X\n", address, data, cpustate->pc);
 	}
 }
 
@@ -434,6 +434,14 @@ static CPU_INIT( sharc )
 	cpustate->internal_ram_block0 = &cpustate->internal_ram[0];
 	cpustate->internal_ram_block1 = &cpustate->internal_ram[0x20000/2];
 
+	cpustate->delayed_iop_timer = device->machine().scheduler().timer_alloc(FUNC(sharc_iop_delayed_write_callback), cpustate);
+
+	for (int i=0; i < 12; i++)
+	{
+		cpustate->dma_op[i].active = false;
+		cpustate->dma_op[i].timer = device->machine().scheduler().timer_alloc(FUNC(sharc_dma_callback), cpustate);
+	}
+
 	device->save_item(NAME(cpustate->pc));
 	device->save_pointer(NAME(&cpustate->r[0].r), ARRAY_LENGTH(cpustate->r));
 	device->save_pointer(NAME(&cpustate->reg_alt[0].r), ARRAY_LENGTH(cpustate->reg_alt));
@@ -449,7 +457,9 @@ static CPU_INIT( sharc )
 	device->save_item(NAME(cpustate->daddr));
 	device->save_item(NAME(cpustate->pcstk));
 	device->save_item(NAME(cpustate->pcstkp));
-	device->save_item(NAME(cpustate->laddr));
+	device->save_item(NAME(cpustate->laddr.addr));
+	device->save_item(NAME(cpustate->laddr.code));
+	device->save_item(NAME(cpustate->laddr.loop_type));
 	device->save_item(NAME(cpustate->curlcntr));
 	device->save_item(NAME(cpustate->lcntr));
 
@@ -510,8 +520,6 @@ static CPU_INIT( sharc )
 	device->save_pointer(NAME(cpustate->internal_ram), 2 * 0x10000);
 
 	device->save_item(NAME(cpustate->opcode));
-	device->save_item(NAME(cpustate->fetch_opcode));
-	device->save_item(NAME(cpustate->decode_opcode));
 
 	device->save_item(NAME(cpustate->nfaddr));
 
@@ -519,23 +527,26 @@ static CPU_INIT( sharc )
 	device->save_item(NAME(cpustate->irq_active));
 	device->save_item(NAME(cpustate->active_irq_num));
 
-	device->save_item(NAME(cpustate->dmaop_src));
-	device->save_item(NAME(cpustate->dmaop_dst));
-	device->save_item(NAME(cpustate->dmaop_chain_ptr));
-	device->save_item(NAME(cpustate->dmaop_src_modifier));
-	device->save_item(NAME(cpustate->dmaop_dst_modifier));
-	device->save_item(NAME(cpustate->dmaop_src_count));
-	device->save_item(NAME(cpustate->dmaop_dst_count));
-	device->save_item(NAME(cpustate->dmaop_pmode));
-	device->save_item(NAME(cpustate->dmaop_cycles));
-	device->save_item(NAME(cpustate->dmaop_channel));
-	device->save_item(NAME(cpustate->dmaop_chained_direction));
+	for (saveindex = 0; saveindex < ARRAY_LENGTH(cpustate->dma_op); saveindex++)
+	{
+		device->save_item(NAME(cpustate->dma_op[saveindex].src), saveindex);
+		device->save_item(NAME(cpustate->dma_op[saveindex].dst), saveindex);
+		device->save_item(NAME(cpustate->dma_op[saveindex].chain_ptr), saveindex);
+		device->save_item(NAME(cpustate->dma_op[saveindex].src_modifier), saveindex);
+		device->save_item(NAME(cpustate->dma_op[saveindex].dst_modifier), saveindex);
+		device->save_item(NAME(cpustate->dma_op[saveindex].src_count), saveindex);
+		device->save_item(NAME(cpustate->dma_op[saveindex].dst_count), saveindex);
+		device->save_item(NAME(cpustate->dma_op[saveindex].pmode), saveindex);
+		device->save_item(NAME(cpustate->dma_op[saveindex].chained_direction), saveindex);
+		device->save_item(NAME(cpustate->dma_op[saveindex].active), saveindex);
+	}
+
+	device->save_item(NAME(cpustate->dma_status));
 
 	device->save_item(NAME(cpustate->interrupt_active));
 
-	device->save_item(NAME(cpustate->iop_latency_cycles));
-	device->save_item(NAME(cpustate->iop_latency_reg));
-	device->save_item(NAME(cpustate->iop_latency_data));
+	device->save_item(NAME(cpustate->iop_delayed_reg));
+	device->save_item(NAME(cpustate->iop_delayed_data));
 
 	device->save_item(NAME(cpustate->delay_slot1));
 	device->save_item(NAME(cpustate->delay_slot2));
@@ -568,10 +579,9 @@ static CPU_RESET( sharc )
 			cpustate->dma[6].control		= 0x2a1;
 
 			sharc_dma_exec(cpustate, 6);
-			dma_op(cpustate, cpustate->dmaop_src, cpustate->dmaop_dst, cpustate->dmaop_src_modifier, cpustate->dmaop_dst_modifier,
-				   cpustate->dmaop_src_count, cpustate->dmaop_dst_count, cpustate->dmaop_pmode);
-			cpustate->dmaop_cycles = 0;
+			dma_op(cpustate, 6);
 
+			cpustate->dma_op[6].timer->adjust(attotime::never, 0);
 			break;
 		}
 
@@ -579,7 +589,7 @@ static CPU_RESET( sharc )
 			break;
 
 		default:
-			fatalerror("SHARC: Unimplemented boot mode %d", cpustate->boot_mode);
+			fatalerror("SHARC: Unimplemented boot mode %d\n", cpustate->boot_mode);
 	}
 
 	cpustate->pc = 0x20004;
@@ -600,9 +610,13 @@ static CPU_EXIT( sharc )
 
 static void sharc_set_irq_line(SHARC_REGS *cpustate, int irqline, int state)
 {
-	if (state)
+	if (state == ASSERT_LINE)
 	{
 		cpustate->irq_active |= 1 << (8-irqline);
+	}
+	else
+	{
+		cpustate->irq_active &= ~(1 << (8-irqline));
 	}
 }
 
@@ -618,7 +632,7 @@ void sharc_set_flag_input(device_t *device, int flag_num, int state)
 		}
 		else
 		{
-			fatalerror("sharc_set_flag_input: flag %d is set output!", flag_num);
+			fatalerror("sharc_set_flag_input: flag %d is set output!\n", flag_num);
 		}
 	}
 }
@@ -672,21 +686,6 @@ static CPU_EXECUTE( sharc )
 
 	if (cpustate->idle && cpustate->irq_active == 0)
 	{
-		// handle pending DMA transfers
-		if (cpustate->dmaop_cycles > 0)
-		{
-			cpustate->dmaop_cycles -= cpustate->icount;
-			if (cpustate->dmaop_cycles <= 0)
-			{
-				cpustate->dmaop_cycles = 0;
-				dma_op(cpustate, cpustate->dmaop_src, cpustate->dmaop_dst, cpustate->dmaop_src_modifier, cpustate->dmaop_dst_modifier, cpustate->dmaop_src_count, cpustate->dmaop_dst_count, cpustate->dmaop_pmode);
-				if (cpustate->dmaop_chain_ptr != 0)
-				{
-					schedule_chained_dma_op(cpustate, cpustate->dmaop_channel, cpustate->dmaop_chain_ptr, cpustate->dmaop_chained_direction);
-				}
-			}
-		}
-
 		cpustate->icount = 0;
 		debugger_instruction_hook(device, cpustate->daddr);
 	}
@@ -695,15 +694,6 @@ static CPU_EXECUTE( sharc )
 		check_interrupts(cpustate);
 		cpustate->idle = 0;
 	}
-
-	// fill the initial pipeline
-
-	// next executed instruction
-	cpustate->opcode = ROPCODE(cpustate->daddr);
-	cpustate->opcode_handler = sharc_op[(cpustate->opcode >> 39) & 0x1ff];
-
-	// next decoded instruction
-	cpustate->fetch_opcode = ROPCODE(cpustate->faddr);
 
 	while (cpustate->icount > 0 && !cpustate->idle)
 	{
@@ -716,21 +706,18 @@ static CPU_EXECUTE( sharc )
 		cpustate->astat_old_old = cpustate->astat_old;
 		cpustate->astat_old = cpustate->astat;
 
-		cpustate->decode_opcode = cpustate->fetch_opcode;
-
-		// fetch next instruction
-		cpustate->fetch_opcode = ROPCODE(cpustate->faddr);
+		cpustate->opcode = ROPCODE(cpustate->pc);
 
 		debugger_instruction_hook(device, cpustate->pc);
 
 		// handle looping
-		if (cpustate->pc == (cpustate->laddr & 0xffffff))
+		if (cpustate->pc == cpustate->laddr.addr)
 		{
-			switch (cpustate->laddr >> 30)
+			switch (cpustate->laddr.loop_type)
 			{
 				case 0:		// arithmetic condition-based
 				{
-					int condition = (cpustate->laddr >> 24) & 0x1f;
+					int condition = cpustate->laddr.code;
 
 					{
 						UINT32 looptop = TOP_PC(cpustate);
@@ -755,12 +742,12 @@ static CPU_EXECUTE( sharc )
 				}
 				case 1:		// counter-based, length 1
 				{
-					//fatalerror("SHARC: counter-based loop, length 1 at %08X", cpustate->pc);
+					//fatalerror("SHARC: counter-based loop, length 1 at %08X\n", cpustate->pc);
 					//break;
 				}
 				case 2:		// counter-based, length 2
 				{
-					//fatalerror("SHARC: counter-based loop, length 2 at %08X", cpustate->pc);
+					//fatalerror("SHARC: counter-based loop, length 2 at %08X\n", cpustate->pc);
 					//break;
 				}
 				case 3:		// counter-based, length >2
@@ -780,12 +767,7 @@ static CPU_EXECUTE( sharc )
 			}
 		}
 
-		// execute current instruction
-		cpustate->opcode_handler(cpustate);
-
-		// decode next instruction
-		cpustate->opcode = cpustate->decode_opcode;
-		cpustate->opcode_handler = sharc_op[(cpustate->opcode >> 39) & 0x1ff];
+		sharc_op[(cpustate->opcode >> 39) & 0x1ff](cpustate);
 
 
 
@@ -797,38 +779,6 @@ static CPU_EXECUTE( sharc )
 			if (cpustate->systemreg_latency_cycles <= 0)
 			{
 				systemreg_write_latency_effect(cpustate);
-			}
-		}
-
-		// IOP register latency effect
-		if (cpustate->iop_latency_cycles > 0)
-		{
-			--cpustate->iop_latency_cycles;
-			if (cpustate->iop_latency_cycles <= 0)
-			{
-				iop_write_latency_effect(cpustate);
-			}
-		}
-
-		// DMA transfer
-		if (cpustate->dmaop_cycles > 0)
-		{
-			--cpustate->dmaop_cycles;
-			if (cpustate->dmaop_cycles <= 0)
-			{
-				cpustate->irptl |= (1 << (cpustate->dmaop_channel+10));
-
-				/* DMA interrupt */
-				if (cpustate->imask & (1 << (cpustate->dmaop_channel+10)))
-				{
-					cpustate->irq_active |= 1 << (cpustate->dmaop_channel+10);
-				}
-
-				dma_op(cpustate, cpustate->dmaop_src, cpustate->dmaop_dst, cpustate->dmaop_src_modifier, cpustate->dmaop_dst_modifier, cpustate->dmaop_src_count, cpustate->dmaop_dst_count, cpustate->dmaop_pmode);
-				if (cpustate->dmaop_chain_ptr != 0)
-				{
-					schedule_chained_dma_op(cpustate, cpustate->dmaop_channel, cpustate->dmaop_chain_ptr, cpustate->dmaop_chained_direction);
-				}
 			}
 		}
 
@@ -1060,7 +1010,7 @@ static CPU_GET_INFO( sharc )
 		case CPUINFO_INT_CONTEXT_SIZE:					info->i = sizeof(SHARC_REGS);				break;
 		case CPUINFO_INT_INPUT_LINES:					info->i = 32;							break;
 		case CPUINFO_INT_DEFAULT_IRQ_VECTOR:			info->i = 0;							break;
-		case DEVINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
+		case CPUINFO_INT_ENDIANNESS:					info->i = ENDIANNESS_LITTLE;					break;
 		case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1;							break;
 		case CPUINFO_INT_CLOCK_DIVIDER:					info->i = 1;							break;
 		case CPUINFO_INT_MIN_INSTRUCTION_BYTES:			info->i = 8;							break;
@@ -1068,15 +1018,15 @@ static CPU_GET_INFO( sharc )
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 1;							break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 40;							break;
 
-		case DEVINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 64;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 24;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = -3;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 32;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = -2;					break;
-		case DEVINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 0;					break;
-		case DEVINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_PROGRAM:	info->i = 64;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_PROGRAM: info->i = 24;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_PROGRAM: info->i = -3;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_DATA:	info->i = 32;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_DATA:	info->i = 32;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_DATA:	info->i = -2;					break;
+		case CPUINFO_INT_DATABUS_WIDTH + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_WIDTH + AS_IO:		info->i = 0;					break;
+		case CPUINFO_INT_ADDRBUS_SHIFT + AS_IO:		info->i = 0;					break;
 
 		case CPUINFO_INT_INPUT_STATE:					info->i = CLEAR_LINE;					break;
 
@@ -1193,13 +1143,13 @@ static CPU_GET_INFO( sharc )
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &cpustate->icount;			break;
 		case CPUINFO_FCT_READ:							info->read = CPU_READ_NAME(sharc);		break;
 		case CPUINFO_FCT_READOP:						info->readop = CPU_READOP_NAME(sharc);	break;
-		case DEVINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map64 = ADDRESS_MAP_NAME(internal_pgm); break;
+		case CPUINFO_PTR_INTERNAL_MEMORY_MAP + AS_PROGRAM: info->internal_map64 = ADDRESS_MAP_NAME(internal_pgm); break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_FAMILY:					strcpy(info->s, "SHARC");				break;
-		case DEVINFO_STR_VERSION:					strcpy(info->s, "2.01");				break;
-		case DEVINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);				break;
-		case DEVINFO_STR_CREDITS:					strcpy(info->s, "Copyright Ville Linde"); break;
+		case CPUINFO_STR_FAMILY:					strcpy(info->s, "SHARC");				break;
+		case CPUINFO_STR_VERSION:					strcpy(info->s, "2.01");				break;
+		case CPUINFO_STR_SOURCE_FILE:						strcpy(info->s, __FILE__);				break;
+		case CPUINFO_STR_CREDITS:					strcpy(info->s, "Copyright Ville Linde"); break;
 
 		case CPUINFO_STR_FLAGS:							strcpy(info->s, " ");					break;
 
@@ -1313,7 +1263,7 @@ CPU_GET_INFO( adsp21062 )
 		case CPUINFO_FCT_SET_INFO:						info->setinfo = CPU_SET_INFO_NAME(adsp21062);		break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_NAME:							strcpy(info->s, "ADSP21062");			break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "ADSP21062");			break;
 
 		default:										CPU_GET_INFO_CALL(sharc);				break;
 	}
