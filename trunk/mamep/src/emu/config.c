@@ -118,11 +118,11 @@ int config_load_settings(running_machine &machine)
 		file_error filerr = file.open(controller, ".cfg");
 
 		if (filerr != FILERR_NONE)
-			throw emu_fatalerror("Could not load controller file %s.cfg", controller);
+			throw emu_fatalerror(_("Could not load controller file %s.cfg"), controller);
 
 		/* load the XML */
 		if (!config_load_xml(machine, file, CONFIG_TYPE_CONTROLLER))
-			throw emu_fatalerror("Could not load controller file %s.cfg", controller);
+			throw emu_fatalerror(_("Could not load controller file %s.cfg"), controller);
 	}
 
 	/* next load the defaults file */

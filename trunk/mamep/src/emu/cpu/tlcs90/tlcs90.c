@@ -2283,7 +2283,7 @@ FFED    BX      R/W     Reset   Description
 
 static READ8_HANDLER( t90_internal_registers_r )
 {
-	t90_Regs *cpustate = get_safe_token(&space->device());
+	t90_Regs *cpustate = get_safe_token(&space.device());
 
 	#define RIO		cpustate->io->read_byte( T90_IOBASE+offset )
 
@@ -2498,7 +2498,7 @@ static WRITE8_HANDLER( t90_internal_registers_w )
 {
 	#define WIO		cpustate->io->write_byte( T90_IOBASE+offset, data )
 
-	t90_Regs *cpustate = get_safe_token(&space->device());
+	t90_Regs *cpustate = get_safe_token(&space.device());
 	UINT8 out_mask;
 	UINT8 old = cpustate->internal_registers[offset];
 	switch ( T90_IOBASE + offset )
@@ -2713,8 +2713,8 @@ static CPU_INIT( t90 )
 	memset(cpustate, 0, sizeof(t90_Regs));
 	cpustate->irq_callback = irqcallback;
 	cpustate->device = device;
-	cpustate->program = device->space(AS_PROGRAM);
-	cpustate->io = device->space(AS_IO);
+	cpustate->program = &device->space(AS_PROGRAM);
+	cpustate->io = &device->space(AS_IO);
 
 	cpustate->timer_period = attotime::from_hz(device->unscaled_clock()) * 8;
 

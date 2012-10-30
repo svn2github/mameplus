@@ -197,8 +197,8 @@ struct tms34010_config
 	void	(*scanline_callback_ind16)(screen_device &screen, bitmap_ind16 &bitmap, int scanline, const tms34010_display_params *params);
 	void	(*scanline_callback_rgb32)(screen_device &screen, bitmap_rgb32 &bitmap, int scanline, const tms34010_display_params *params);
 	void	(*output_int)(device_t *device, int state);			/* output interrupt callback */
-	void	(*to_shiftreg)(address_space *space, offs_t, UINT16 *);	/* shift register write */
-	void	(*from_shiftreg)(address_space *space, offs_t, UINT16 *);	/* shift register read */
+	void	(*to_shiftreg)(address_space &space, offs_t, UINT16 *);	/* shift register write */
+	void	(*from_shiftreg)(address_space &space, offs_t, UINT16 *);	/* shift register read */
 };
 
 
@@ -222,12 +222,12 @@ int			tms34010_host_r(device_t *cpu, int reg);
 
 
 /* Reads & writes to the 34010 I/O registers; place at 0xc0000000 */
-WRITE16_HANDLER( tms34010_io_register_w );
-READ16_HANDLER( tms34010_io_register_r );
+DECLARE_WRITE16_HANDLER( tms34010_io_register_w );
+DECLARE_READ16_HANDLER( tms34010_io_register_r );
 
 /* Reads & writes to the 34020 I/O registers; place at 0xc0000000 */
-WRITE16_HANDLER( tms34020_io_register_w );
-READ16_HANDLER( tms34020_io_register_r );
+DECLARE_WRITE16_HANDLER( tms34020_io_register_w );
+DECLARE_READ16_HANDLER( tms34020_io_register_r );
 
 
 /* Use this macro in the memory definitions to specify bit-based addresses */

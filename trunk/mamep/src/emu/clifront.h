@@ -75,7 +75,9 @@
 #define CLICOMMAND_LISTSLOTS			"listslots"
 #define CLICOMMAND_LISTMEDIA			"listmedia"		// needed by MESS
 #define CLICOMMAND_LISTSOFTWARE			"listsoftware"
+#define CLICOMMAND_VERIFYSOFTWARE		"verifysoftware"
 #define CLICOMMAND_GETSOFTLIST			"getsoftlist"
+#define CLICOMMAND_VERIFYSOFTLIST		"verifysoftlist"
 #define CLICOMMAND_LISTGAMES			"listgames"		// for make tp_manufact.txt
 
 
@@ -121,10 +123,12 @@ public:
 	void listslots(const char *gamename = "*");
 	void listmedia(const char *gamename = "*");
 	void listsoftware(const char *gamename = "*");
+	void verifysoftware(const char *gamename = "*");
 	void verifyroms(const char *gamename = "*");
 	void verifysamples(const char *gamename = "*");
 	void romident(const char *filename);
 	void getsoftlist(const char *gamename = "*");
+	void verifysoftlist(const char *gamename = "*");
 	void listgames(const char *gamename = "*");		// for make tp_manufact.txt
 
 private:

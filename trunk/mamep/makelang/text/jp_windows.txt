@@ -2,7 +2,7 @@
 (primary)
 (プライマリ)
 
-# osd/windows/input.c: 1231
+# osd/windows/input.c: 1226
 Assign joystick %s to player %d\n
 ジョイスティック%sをプレイヤー%dに割り当てます\n
 
@@ -230,159 +230,159 @@ Direct3D: デバイスのリソ\ース再生成が失敗しました。
 Direct3D: resetting device\n
 Direct3D: デバイスをリセットしています\n
 
-# osd/windows/drawdd.c: 794
+# osd/windows/drawdd.c: 791
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %sバッファを作成しました: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1131
+# osd/windows/drawdd.c: 1128
 DirectDraw: Configuring device %s\n
 DirectDraw: デバイス%sを設定中\n
 
-# osd/windows/drawdd.c: 622
+# osd/windows/drawdd.c: 619
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: ガンマ補正の設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 505
+# osd/windows/drawdd.c: 502
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: 描画モードを%dx%d@%dに設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1091
+# osd/windows/drawdd.c: 1088
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: 画面への描画でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1058, 1067, 1076, 1085
+# osd/windows/drawdd.c: 1055, 1064, 1073, 1082
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: 画面の消去でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 779
+# osd/windows/drawdd.c: 776
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: %sバッファの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 820
+# osd/windows/drawdd.c: 817
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: クリッパーの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 470, 1120
+# osd/windows/drawdd.c: 467, 1117
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: DirectDrawCreateEx呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1217
+# osd/windows/drawdd.c: 1214
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: 呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1336
+# osd/windows/drawdd.c: 1333
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: EnumDisplayModes呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 721
+# osd/windows/drawdd.c: 718
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: IDirectDraw7_GetCaps呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 495
+# osd/windows/drawdd.c: 492
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 489
+# osd/windows/drawdd.c: 486
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 787
+# osd/windows/drawdd.c: 784
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: %sバッファの詳細を取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 554
+# osd/windows/drawdd.c: 551
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: 割り当てられた裏画面バッファの取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1139
+# osd/windows/drawdd.c: 1136
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: 現在の画面モード取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 363
+# osd/windows/drawdd.c: 360
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: blitバッファのロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 828
+# osd/windows/drawdd.c: 825
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: ウィンドウのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 836
+# osd/windows/drawdd.c: 833
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: primaryバッファのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 436
+# osd/windows/drawdd.c: 433
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: blitバッファのアンロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 442, 1097
+# osd/windows/drawdd.c: 439, 1094
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: VBLANK待ちでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 478
+# osd/windows/drawdd.c: 475
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: エラー: デバイスはDirectDraw描画に必要最小限の要件をサポートしていません\n
 
-# osd/windows/drawdd.c: 357
+# osd/windows/drawdd.c: 354
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: バッファの消失。次のフレームに削除してやり直します\n
 
-# osd/windows/drawdd.c: 1337
+# osd/windows/drawdd.c: 1334
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: 選択されたモードは%4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 932
+# osd/windows/drawdd.c: 929
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: 新しいバッファサイズは%dx%d\n
 
-# osd/windows/drawdd.c: 1334
+# osd/windows/drawdd.c: 1331
 DirectDraw: Selecting video mode...\n
 DirectDraw: 描画モードを選択中です...\n
 
-# osd/windows/drawdd.c: 202
+# osd/windows/drawdd.c: 199
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: ddraw.dllにアクセス出来ません\n
 
-# osd/windows/drawdd.c: 210
+# osd/windows/drawdd.c: 207
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: DirectDrawCreateExを見つける事が出来ません\n
 
-# osd/windows/drawdd.c: 220
+# osd/windows/drawdd.c: 217
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: DirectDrawEnumerateExAを見つける事が出来ません\n
 
-# osd/windows/drawdd.c: 392, 428, 1173
+# osd/windows/drawdd.c: 389, 425, 1170
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: 不明な画面モード: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 235
+# osd/windows/drawdd.c: 232
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: DirectDraw 7を使用します\n
 
-# osd/windows/drawdd.c: 728
+# osd/windows/drawdd.c: 725
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: 警告: デバイスはハードウェア拡大表\示をサポートしていません\n
 
-# osd/windows/drawdd.c: 482
+# osd/windows/drawdd.c: 479
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: 警告: デバイスはDirectDraw描画にあまり適していないかも知れません\n
 
-# osd/windows/drawdd.c: 605
+# osd/windows/drawdd.c: 602
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告: デバイスはフルスクリーンのガンマ補正をサポートしていません。\n
 
-# osd/windows/input.c: 1215
+# osd/windows/input.c: 1210
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 DirectInput: ジョイスティックの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1200
+# osd/windows/input.c: 1195
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 DirectInput: キーボードの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1209
+# osd/windows/input.c: 1204
 DirectInput: Unable to enumerate mice (result=%08X)\n
 DirectInput: マウスの列挙が出来ません (result=%08X)\n
 
-# osd/windows/input.c: 1189
+# osd/windows/input.c: 1184
 DirectInput: Using DirectInput %d\n
 DirectInput: DirectInput %dを使用します\n
 
@@ -414,7 +414,7 @@ DirectSoundの情報が取得出来ません: %08x\n
 Error getting identifier for adapter #%d\n
 アダプタ#%dの識別情報の取得でエラーが発生しました\n
 
-# osd/windows/drawdd.c: 1128
+# osd/windows/drawdd.c: 1125
 Error getting identifier for device\n
 デバイスの識別情報の取得でエラーが発生しました\n
 
@@ -490,7 +490,7 @@ PER-WINDOW VIDEO OPTIONS
 Proposed video mode not supported on device %s\n
 指定された画面モードはデバイス%sではサポートされていません\n
 
-# osd/windows/input.c: 1781
+# osd/windows/input.c: 1776
 RawInput: APIs detected\n
 RawInput: APIが検出されました\n
 
@@ -506,11 +506,11 @@ Sound: buffer overflows=%d underflows=%d\n
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 テクスチャが大きすぎます!(要求: %dx%d、最大: %dx%d)\n
 
-# osd/windows/input.c: 834
+# osd/windows/input.c: 829
 Toggle Fullscreen
 フルスクリーン切り替え
 
-# osd/windows/ledutil.c: 603, 609
+# osd/windows/ledutil.c: 602, 608
 Unable to close the keyboard device. (error %d)\n
 キーボードデバイスがクローズ出来ません。(エラー %d)\n
 
@@ -530,7 +530,7 @@ Unable to get network devices: %s\n
 Unable to initialize Direct3D.\n
 Direct3Dを初期化出来ません。\n
 
-# osd/windows/drawdd.c: 277
+# osd/windows/drawdd.c: 274
 Unable to initialize DirectDraw.\n
 DirectDrawを初期化出来ません\n
 
@@ -538,7 +538,7 @@ DirectDrawを初期化出来ません\n
 Unable to load winpcap: %lx\n
 winpcapの読込みに失敗しました: %lx\n
 
-# osd/windows/ledutil.c: 567, 575
+# osd/windows/ledutil.c: 566, 574
 Unable to open the keyboard device. (error %d)\n
 キーボードデバイスがオープン出来ません。(エラー %d)\n
 
@@ -546,7 +546,7 @@ Unable to open the keyboard device. (error %d)\n
 Unknown texture blendmode=%d format=%d\n
 不明なテクスチャブレンドモード=%d 形式=%d\n
 
-# osd/windows/input.c: 569
+# osd/windows/input.c: 564
 Use joystick #%d for player %d\n
 ジョイスティック #%d をプレイヤー %d で使用します\n
 
@@ -930,15 +930,15 @@ Direct3D: Warning - Unable to access d3dx9_43.dll; disabling post-effect renderi
 Direct3D: Warning - Unable to get a handle to D3DXCreateEffectFromFileW; disabling post-effect rendering\n
 
 
-# osd/windows/input.c: 1617
+# osd/windows/input.c: 1612
 DirectInput: Unable to reset saturation for joystick %d (%s)\n
 
 
-# osd/windows/input.c: 1607
+# osd/windows/input.c: 1602
 DirectInput: Unable to set absolute mode for joystick %d (%s)\n
 
 
-# osd/windows/input.c: 1512
+# osd/windows/input.c: 1507
 DirectInput: Unable to set relative mode for mouse %d (%s)\n
 
 
@@ -1086,7 +1086,7 @@ Phosphor Defocus Y
 Q filter cutoff frequency for NTSC signal processing
 
 
-# osd/windows/input.c: 846
+# osd/windows/input.c: 841
 Record Rendered Video
 
 
@@ -1190,7 +1190,7 @@ Shadow Mask X Count
 Shadow Mask Y Count
 
 
-# osd/windows/input.c: 840
+# osd/windows/input.c: 835
 Take Rendered Snapshot
 
 
@@ -1250,7 +1250,7 @@ green output signal generated by input signal
 individual height scaling value for scanlines
 
 
-# osd/windows/input.c: 553
+# osd/windows/input.c: 548
 invalid %s value: joystick #%d is used by player %d\n
 
 

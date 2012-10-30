@@ -68,7 +68,7 @@
 
 /* increase / decrease */
 #define M_INR(R) {UINT8 hc = ((R & 0x0f) == 0x0f) ? HF : 0; ++R; cpustate->AF.b.l= (cpustate->AF.b.l & CF ) | ZSP[R] | hc; }
-#define M_DCR(R) {UINT8 hc = ((R & 0x0f) == 0x00) ? HF : 0; --R; cpustate->AF.b.l= (cpustate->AF.b.l & CF ) | ZSP[R] | hc | VF; }
+#define M_DCR(R) {UINT8 hc = ((R & 0x0f) != 0x00) ? HF : 0; --R; cpustate->AF.b.l= (cpustate->AF.b.l & CF ) | ZSP[R] | hc | VF; }
 
 /* arithmetic */
 #define M_ADD(R) {																	\
@@ -85,29 +85,28 @@
 
 #define M_SUB(R) {																	\
 	int q = cpustate->AF.b.h-R;														\
-	cpustate->AF.b.l=ZSP[q&255]|((q>>8)&CF)|((cpustate->AF.b.h^q^R)&HF)|VF;			\
+	cpustate->AF.b.l=ZSP[q&255]|((q>>8)&CF)|(~(cpustate->AF.b.h^q^R)&HF)|VF;		\
 	cpustate->AF.b.h=q;																\
 }
 
 #define M_SBB(R) {																	\
 	int q = cpustate->AF.b.h-R-(cpustate->AF.b.l&CF);								\
-	cpustate->AF.b.l=ZSP[q&255]|((q>>8)&CF)|((cpustate->AF.b.h^q^R)&HF)|VF;			\
+	cpustate->AF.b.l=ZSP[q&255]|((q>>8)&CF)|(~(cpustate->AF.b.h^q^R)&HF)|VF;		\
 	cpustate->AF.b.h=q;																\
 }
 
 #define M_CMP(R) {																	\
 	int q = cpustate->AF.b.h-R;														\
-	cpustate->AF.b.l=ZSP[q&255]|((q>>8)&CF)|((cpustate->AF.b.h^q^R)&HF)|VF;			\
+	cpustate->AF.b.l=ZSP[q&255]|((q>>8)&CF)|(~(cpustate->AF.b.h^q^R)&HF)|VF;		\
 }
 
-#define M_DAD(R) {                                              					\
-	int q = cpustate->HL.d + cpustate->R.d; 										\
-	cpustate->AF.b.l = ( cpustate->AF.b.l & ~(HF+CF) ) |							\
-		( ((cpustate->HL.d^q^cpustate->R.d) >> 8) & HF ) |							\
-		( (q>>16) & CF );															\
+#define M_DAD(R) {																	\
+	int q = cpustate->HL.d + cpustate->R.d;											\
+	cpustate->AF.b.l = (cpustate->AF.b.l & ~CF) | (q>>16 & CF );					\
 	cpustate->HL.w.l = q;															\
 }
 
+// DSUB is 8085-only, not sure if H flag handling is correct
 #define M_DSUB(cpustate) {															\
 	int q = cpustate->HL.b.l-cpustate->BC.b.l;										\
 	cpustate->AF.b.l=ZS[q&255]|((q>>8)&CF)|VF|										\

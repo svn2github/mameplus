@@ -317,7 +317,7 @@ void ppccom_init(powerpc_state *ppc, powerpc_flavor flavor, UINT32 cap, int tb_d
 	ppc->cpu_clock = device->clock();
 	ppc->irq_callback = irqcallback;
 	ppc->device = device;
-	ppc->program = device->space(AS_PROGRAM);
+	ppc->program = &device->space(AS_PROGRAM);
 	ppc->direct = &ppc->program->direct();
 	ppc->system_clock = (config != NULL) ? config->bus_frequency : device->clock();
 	ppc->dcr_read_func = (config != NULL) ? config->dcr_read_func : NULL;
@@ -1121,7 +1121,7 @@ void ppccom_execute_mfdcr(powerpc_state *ppc)
 		else
 			ppc->param1 = 0;
 	} else {
-		ppc->param1 = ppc->dcr_read_func(ppc->device,ppc->param0,0xffffffff);
+		ppc->param1 = ppc->dcr_read_func(ppc->device,*ppc->program,ppc->param0,0xffffffff);
 	}
 }
 
@@ -1211,7 +1211,7 @@ void ppccom_execute_mtdcr(powerpc_state *ppc)
 		if (ppc->param0 < ARRAY_LENGTH(ppc->dcr))
 			ppc->dcr[ppc->param0] = ppc->param1;
 	} else {
-		ppc->dcr_write_func(ppc->device,ppc->param0,ppc->param1,0xffffffff);
+		ppc->dcr_write_func(ppc->device,*ppc->program,ppc->param0,ppc->param1,0xffffffff);
 	}
 }
 
@@ -2337,7 +2337,7 @@ updateirq:
 
 static READ8_HANDLER( ppc4xx_spu_r )
 {
-	powerpc_state *ppc = *(powerpc_state **)downcast<legacy_cpu_device *>(&space->device())->token();
+	powerpc_state *ppc = *(powerpc_state **)downcast<legacy_cpu_device *>(&space.device())->token();
 	UINT8 result = 0xff;
 
 	switch (offset)
@@ -2364,7 +2364,7 @@ static READ8_HANDLER( ppc4xx_spu_r )
 
 static WRITE8_HANDLER( ppc4xx_spu_w )
 {
-	powerpc_state *ppc = *(powerpc_state **)downcast<legacy_cpu_device *>(&space->device())->token();
+	powerpc_state *ppc = *(powerpc_state **)downcast<legacy_cpu_device *>(&space.device())->token();
 	UINT8 oldstate, newstate;
 
 	if (PRINTF_SPU)

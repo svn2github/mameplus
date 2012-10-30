@@ -234,9 +234,9 @@ static CPU_INIT(h8bit)
 
 	h8->mode_8bit = 1;
 
-	h8->program = device->space(AS_PROGRAM);
+	h8->program = &device->space(AS_PROGRAM);
 	h8->direct = &h8->program->direct();
-	h8->io = device->space(AS_IO);
+	h8->io = &device->space(AS_IO);
 
 	h8->timer[0] = h8->device->machine().scheduler().timer_alloc(FUNC(h8_timer_0_cb), h8);
 	h8->timer[1] = h8->device->machine().scheduler().timer_alloc(FUNC(h8_timer_1_cb), h8);
@@ -515,7 +515,7 @@ static READ8_HANDLER( h8330_itu_r )
 	UINT8 reg;
 	UINT64 frc;
 	static const UINT64 divider[4] = { 2, 8, 32, 1 };
-	h83xx_state *h8 = get_safe_token(&space->device());
+	h83xx_state *h8 = get_safe_token(&space.device());
 
 	reg = (offset + 0x88) & 0xff;
 
@@ -603,7 +603,7 @@ static READ8_HANDLER( h8330_itu_r )
 static WRITE8_HANDLER( h8330_itu_w )
 {
 	UINT8 reg;
-	h83xx_state *h8 = get_safe_token(&space->device());
+	h83xx_state *h8 = get_safe_token(&space.device());
 
 	reg = (offset + 0x88) & 0xff;
 

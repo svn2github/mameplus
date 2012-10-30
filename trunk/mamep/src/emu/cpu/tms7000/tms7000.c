@@ -126,10 +126,10 @@ INLINE tms7000_state *get_safe_token(device_t *device)
 #define SETZ		pSR |= SR_Z
 #define SETN		pSR |= SR_N
 
-static READ8_HANDLER( tms7000_internal_r );
-static WRITE8_HANDLER( tms7000_internal_w );
-static READ8_HANDLER( tms70x0_pf_r );
-static WRITE8_HANDLER( tms70x0_pf_w );
+static DECLARE_READ8_HANDLER( tms7000_internal_r );
+static DECLARE_WRITE8_HANDLER( tms7000_internal_w );
+static DECLARE_READ8_HANDLER( tms70x0_pf_r );
+static DECLARE_WRITE8_HANDLER( tms70x0_pf_w );
 
 static ADDRESS_MAP_START(tms7000_mem, AS_PROGRAM, 8, legacy_cpu_device )
 	AM_RANGE(0x0000, 0x007f)	AM_READWRITE_LEGACY(tms7000_internal_r, tms7000_internal_w)	/* tms7000 internal RAM */
@@ -165,9 +165,9 @@ static CPU_INIT( tms7000 )
 
 	cpustate->irq_callback = irqcallback;
 	cpustate->device = device;
-	cpustate->program = device->space(AS_PROGRAM);
+	cpustate->program = &device->space(AS_PROGRAM);
 	cpustate->direct = &cpustate->program->direct();
-	cpustate->io = device->space(AS_IO);
+	cpustate->io = &device->space(AS_IO);
 
 	memset(cpustate->pf, 0, 0x100);
 	memset(cpustate->rf, 0, 0x80);
@@ -557,7 +557,7 @@ static void tms7000_service_timer1( device_t *device )
 
 static WRITE8_HANDLER( tms70x0_pf_w )	/* Perpherial file write */
 {
-	tms7000_state *cpustate = get_safe_token(&space->device());
+	tms7000_state *cpustate = get_safe_token(&space.device());
 	UINT8	temp1, temp2, temp3;
 
 	switch( offset )
@@ -626,7 +626,7 @@ static WRITE8_HANDLER( tms70x0_pf_w )	/* Perpherial file write */
 
 static READ8_HANDLER( tms70x0_pf_r )	/* Perpherial file read */
 {
-	tms7000_state *cpustate = get_safe_token(&space->device());
+	tms7000_state *cpustate = get_safe_token(&space.device());
 	UINT8 result;
 	UINT8	temp1, temp2, temp3;
 
@@ -719,12 +719,12 @@ static UINT16 bcd_sub( UINT16 a, UINT16 b)
 }
 
 static WRITE8_HANDLER( tms7000_internal_w ) {
-	tms7000_state *cpustate = get_safe_token(&space->device());
+	tms7000_state *cpustate = get_safe_token(&space.device());
 	cpustate->rf[ offset ] = data;
 }
 
 static READ8_HANDLER( tms7000_internal_r ) {
-	tms7000_state *cpustate = get_safe_token(&space->device());
+	tms7000_state *cpustate = get_safe_token(&space.device());
 	return cpustate->rf[ offset ];
 }
 

@@ -6,7 +6,7 @@
 A value for NTSC signal processing
 
 
-# osd/windows/input.c: 1231
+# osd/windows/input.c: 1226
 Assign joystick %s to player %d\n
 
 
@@ -354,171 +354,171 @@ Direct3D: failed to recreate resources for device; failing permanently\n
 Direct3D: resetting device\n
 
 
-# osd/windows/drawdd.c: 794
+# osd/windows/drawdd.c: 791
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
 
-# osd/windows/drawdd.c: 1131
+# osd/windows/drawdd.c: 1128
 DirectDraw: Configuring device %s\n
 
 
-# osd/windows/drawdd.c: 622
+# osd/windows/drawdd.c: 619
 DirectDraw: Error %08X attempting to set gamma correction.\n
 
 
-# osd/windows/drawdd.c: 505
+# osd/windows/drawdd.c: 502
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 
 
-# osd/windows/drawdd.c: 1091
+# osd/windows/drawdd.c: 1088
 DirectDraw: Error %08X blitting to the screen\n
 
 
-# osd/windows/drawdd.c: 1058, 1067, 1076, 1085
+# osd/windows/drawdd.c: 1055, 1064, 1073, 1082
 DirectDraw: Error %08X clearing the screen\n
 
 
-# osd/windows/drawdd.c: 779
+# osd/windows/drawdd.c: 776
 DirectDraw: Error %08X creating %s surface\n
 
 
-# osd/windows/drawdd.c: 820
+# osd/windows/drawdd.c: 817
 DirectDraw: Error %08X creating clipper\n
 
 
-# osd/windows/drawdd.c: 470, 1120
+# osd/windows/drawdd.c: 467, 1117
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 
 
-# osd/windows/drawdd.c: 1217
+# osd/windows/drawdd.c: 1214
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 
 
-# osd/windows/drawdd.c: 1336
+# osd/windows/drawdd.c: 1333
 DirectDraw: Error %08X during EnumDisplayModes call\n
 
 
-# osd/windows/drawdd.c: 721
+# osd/windows/drawdd.c: 718
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 
 
-# osd/windows/drawdd.c: 495
+# osd/windows/drawdd.c: 492
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 
 
-# osd/windows/drawdd.c: 489
+# osd/windows/drawdd.c: 486
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 
 
-# osd/windows/drawdd.c: 787
+# osd/windows/drawdd.c: 784
 DirectDraw: Error %08X getting %s surface desciption\n
 
 
-# osd/windows/drawdd.c: 554
+# osd/windows/drawdd.c: 551
 DirectDraw: Error %08X getting attached back surface\n
 
 
-# osd/windows/drawdd.c: 1139
+# osd/windows/drawdd.c: 1136
 DirectDraw: Error %08X getting current display mode\n
 
 
-# osd/windows/drawdd.c: 363
+# osd/windows/drawdd.c: 360
 DirectDraw: Error %08X locking blit surface\n
 
 
-# osd/windows/drawdd.c: 828
+# osd/windows/drawdd.c: 825
 DirectDraw: Error %08X setting clipper hwnd\n
 
 
-# osd/windows/drawdd.c: 836
+# osd/windows/drawdd.c: 833
 DirectDraw: Error %08X setting clipper on primary surface\n
 
 
-# osd/windows/drawdd.c: 436
+# osd/windows/drawdd.c: 433
 DirectDraw: Error %08X unlocking blit surface\n
 
 
-# osd/windows/drawdd.c: 442, 1097
+# osd/windows/drawdd.c: 439, 1094
 DirectDraw: Error %08X waiting for VBLANK\n
 
 
-# osd/windows/drawdd.c: 478
+# osd/windows/drawdd.c: 475
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 
 
-# osd/windows/drawdd.c: 357
+# osd/windows/drawdd.c: 354
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 
 
-# osd/windows/drawdd.c: 1337
+# osd/windows/drawdd.c: 1334
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 
 
-# osd/windows/drawdd.c: 932
+# osd/windows/drawdd.c: 929
 DirectDraw: New blit size = %dx%d\n
 
 
-# osd/windows/drawdd.c: 1334
+# osd/windows/drawdd.c: 1331
 DirectDraw: Selecting video mode...\n
 
 
-# osd/windows/drawdd.c: 202
+# osd/windows/drawdd.c: 199
 DirectDraw: Unable to access ddraw.dll\n
 
 
-# osd/windows/drawdd.c: 210
+# osd/windows/drawdd.c: 207
 DirectDraw: Unable to find DirectDrawCreateEx\n
 
 
-# osd/windows/drawdd.c: 220
+# osd/windows/drawdd.c: 217
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 
 
-# osd/windows/drawdd.c: 392, 428, 1173
+# osd/windows/drawdd.c: 389, 425, 1170
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 
 
-# osd/windows/drawdd.c: 235
+# osd/windows/drawdd.c: 232
 DirectDraw: Using DirectDraw 7\n
 
 
-# osd/windows/drawdd.c: 728
+# osd/windows/drawdd.c: 725
 DirectDraw: Warning - Device does not support hardware stretching\n
 
 
-# osd/windows/drawdd.c: 482
+# osd/windows/drawdd.c: 479
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 
 
-# osd/windows/drawdd.c: 605
+# osd/windows/drawdd.c: 602
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 
 
-# osd/windows/input.c: 1215
+# osd/windows/input.c: 1210
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 
 
-# osd/windows/input.c: 1200
+# osd/windows/input.c: 1195
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 
 
-# osd/windows/input.c: 1209
+# osd/windows/input.c: 1204
 DirectInput: Unable to enumerate mice (result=%08X)\n
 
 
-# osd/windows/input.c: 1617
+# osd/windows/input.c: 1612
 DirectInput: Unable to reset saturation for joystick %d (%s)\n
 
 
-# osd/windows/input.c: 1607
+# osd/windows/input.c: 1602
 DirectInput: Unable to set absolute mode for joystick %d (%s)\n
 
 
-# osd/windows/input.c: 1512
+# osd/windows/input.c: 1507
 DirectInput: Unable to set relative mode for mouse %d (%s)\n
 
 
-# osd/windows/input.c: 1189
+# osd/windows/input.c: 1184
 DirectInput: Using DirectInput %d\n
 
 
@@ -558,7 +558,7 @@ Error getting DirectSound capabilities: %08x\n
 Error getting identifier for adapter #%d\n
 
 
-# osd/windows/drawdd.c: 1128
+# osd/windows/drawdd.c: 1125
 Error getting identifier for device\n
 
 
@@ -614,12 +614,12 @@ Failed to create pause event\n
 Failed to create window class\n
 
 
-# osd/windows/window.c: 263
-Failed to create window thread\n
-
-
 # osd/windows/window.c: 257
 Failed to create window thread ready event\n
+
+
+# osd/windows/window.c: 263
+Failed to create window thread\n
 
 
 # osd/windows/d3dhlsl.c: 2686
@@ -770,11 +770,11 @@ Proposed video mode not supported on device %s\n
 Q filter cutoff frequency for NTSC signal processing
 
 
-# osd/windows/input.c: 1781
+# osd/windows/input.c: 1776
 RawInput: APIs detected\n
 
 
-# osd/windows/input.c: 846
+# osd/windows/input.c: 841
 Record Rendered Video
 
 
@@ -886,7 +886,7 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 
 
-# osd/windows/input.c: 840
+# osd/windows/input.c: 835
 Take Rendered Snapshot
 
 
@@ -894,11 +894,11 @@ Take Rendered Snapshot
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 
 
-# osd/windows/input.c: 834
+# osd/windows/input.c: 829
 Toggle Fullscreen
 
 
-# osd/windows/ledutil.c: 603, 609
+# osd/windows/ledutil.c: 602, 608
 Unable to close the keyboard device. (error %d)\n
 
 
@@ -918,7 +918,7 @@ Unable to get network devices: %s\n
 Unable to initialize Direct3D.\n
 
 
-# osd/windows/drawdd.c: 277
+# osd/windows/drawdd.c: 274
 Unable to initialize DirectDraw.\n
 
 
@@ -926,7 +926,7 @@ Unable to initialize DirectDraw.\n
 Unable to load winpcap: %lx\n
 
 
-# osd/windows/ledutil.c: 567, 575
+# osd/windows/ledutil.c: 566, 574
 Unable to open the keyboard device. (error %d)\n
 
 
@@ -934,7 +934,7 @@ Unable to open the keyboard device. (error %d)\n
 Unknown texture blendmode=%d format=%d\n
 
 
-# osd/windows/input.c: 569
+# osd/windows/input.c: 564
 Use joystick #%d for player %d\n
 
 
@@ -1138,7 +1138,7 @@ green output signal generated by input signal
 individual height scaling value for scanlines
 
 
-# osd/windows/input.c: 553
+# osd/windows/input.c: 548
 invalid %s value: joystick #%d is used by player %d\n
 
 

@@ -1,4 +1,4 @@
-# 3DO (NTSC)
+# 3DO Bios
 3DO
 
 
@@ -112,6 +112,10 @@ Acclaim
 
 # Big Break Club (Ace) (ACESYS1) (set 1)
 Ace
+
+
+# 3X3 Puzzle (Enterprise)
+Ace Enterprise
 
 
 # Strike Ten (Ace) (MPS)
@@ -346,6 +350,10 @@ BS Electronics
 Bally
 
 
+# 99 Bottles of Beer
+Bally Gaming Co.
+
+
 # Arch Rivals (rev 4.0 6/29/89)
 Bally Midway
 
@@ -448,6 +456,10 @@ CD Express
 
 # Credit Poker (ver.30c, standard)
 CGI
+
+
+# Double Crown (v1.0.3)
+Cadence Technology
 
 
 # Triple Play (Ver. 1.10)
@@ -554,11 +566,11 @@ Coinworld
 Comad
 
 
-# Fantasia
+# Fantasia (940429 PCB)
 Comad & New Japan System
 
 
-# Amiga CD32 (PAL)
+# CD32 Bios
 Commodore Business Machines
 
 
@@ -630,7 +642,7 @@ Creative Electronics And Software
 Cristaltec
 
 
-# Buzzard
+# '99: The Last War (set 1)
 Crux
 
 
@@ -702,6 +714,10 @@ Data East USA, Inc.
 Datel SAS
 
 
+# 280-ZZZAP
+Dave Nutting Associates
+
+
 # Double Joker Poker (45%-75% payout)
 DellFern Ltd.
 
@@ -758,7 +774,7 @@ Dongsung
 Dooyong
 
 
-# X Se Dae Quiz
+# X Se Dae Quiz (Korea)
 Dream Island
 
 
@@ -1002,10 +1018,6 @@ Excel
 Excellent System
 
 
-# Last Bank (v1.16)
-Excellent Systems
-
-
 # Car Polo
 Exidy
 
@@ -1054,11 +1066,15 @@ Fortex Ltd
 Fujic
 
 
+# Big Deal (Hungarian, set 1)
+Fun World
+
+
 # Super A'Can
 Funtech Entertainment
 
 
-# Big Deal (Hungarian, set 1)
+# Photo Play 2000 (v2.01)
 Funworld
 
 
@@ -1071,7 +1087,7 @@ G-Rev
 
 
 # Lover Boy
-G.T Enterprise Inc
+G.T Enterprise Inc.
 
 
 # Happy Tour
@@ -1150,12 +1166,8 @@ Global
 Global Corporation
 
 
-# Global VR XP OS Update/Install - 06/11/02
-Global VR
-
-
 # Beach Head 2000 Install - 05/27/03
-Gloval VR
+Global VR
 
 
 # Movie Card
@@ -1202,6 +1214,10 @@ HAR
 HJ Corp
 
 
+# Bingo Mania (P03-P07-P14)
+HP Automaten
+
+
 # Super Free Kick (set 2)
 Haesung
 
@@ -1216,10 +1232,6 @@ Hanaho Games
 
 # The Empire Strike Back
 Hankin
-
-
-# Super Triv
-Hara Industries
 
 
 # Fruit Deuce (Hazel Grove)
@@ -1350,7 +1362,7 @@ Inder
 InfoCube
 
 
-# Jolly Card (Austrian, Funworld, bootleg)
+# Jolly Card (Austrian, Fun World, bootleg)
 Inter Games
 
 
@@ -1394,7 +1406,7 @@ Itisa
 JMK
 
 
-# Cashcade (Jpm) (SYSTEM5 VIDEO)
+# Cashcade (JPM) (SYSTEM5 VIDEO)
 JPM
 
 
@@ -1434,10 +1446,6 @@ Jeutel
 Joyland
 
 
-# Big X (Jpm)
-Jpm
-
-
 # Jubilee Double-Up Poker
 Jubilee
 
@@ -1468,10 +1476,6 @@ KH Video
 
 # Blocken (Japan)
 KID
-
-
-# Knock Out!! (bootleg?)
-KKK
 
 
 # Bakuretsu Breaker
@@ -1508,22 +1512,6 @@ Konami
 
 # Cash Train (v1.10)
 Kupidon
-
-
-# Crush Roller (Kural - bootleg?)
-Kural Electric
-
-
-# Crush Roller (Kural Esco - bootleg?)
-Kural Esco Electric
-
-
-# Crush Roller (Kural Samno)
-Kural Samno Electric
-
-
-# Crush Roller (Kural TWT)
-Kural TWT
 
 
 # Digger Man (prototype)
@@ -1682,7 +1670,7 @@ Media
 Mega
 
 
-# Big Apple Games
+# Big Apple Games (2131-13)
 Merit
 
 
@@ -1774,7 +1762,7 @@ Mirco Games
 Mitchell
 
 
-# Dribbling
+# Claybuster
 Model Racing
 
 
@@ -1958,6 +1946,10 @@ Nova Games Ltd.
 Nova Games of Canada
 
 
+# Super Triv
+Nova du Canada
+
+
 # Platoon V.?.? US
 Nova?
 
@@ -1978,8 +1970,8 @@ Novotech
 Nuova Bell Games
 
 
-# Flicker (Prototype)
-Nutting Associates
+# Glass (Ver 1.1)
+OMK
 
 
 # The Addams Family (Nintendo Super System)
@@ -2034,7 +2026,7 @@ PAL System
 PAL System Co, Ltd.
 
 
-# Always Nine (Pcp) (set 1) (PROCONN)
+# Blankity Bank (PCP) (SYSTEM80)
 PCP
 
 
@@ -2058,7 +2050,7 @@ Pacom Corporation
 Pal Company
 
 
-# Agress
+# Agress - Missile Daisenryaku (Japan)
 Palco
 
 
@@ -2082,11 +2074,15 @@ Paradise Co. Ltd.
 Pcp
 
 
-# Odisea Paris-Dakar
+# Scoop (Peter Simper, prototype?) (MPU3)
+Peter Simper
+
+
+# Nemesis
 Peyper
 
 
-# CD-i (Mono-I) (PAL)
+# CD-i Bios
 Philips
 
 
@@ -2170,10 +2166,6 @@ Psygnosis
 Public Software
 
 
-# New Double Bet Mahjong (Japan)
-Public Software Ltd.
-
-
 # Zillionare's Challenge (Pure Leisure) (MPU4) (set 1)
 Pure Leisure
 
@@ -2206,7 +2198,7 @@ Raizing
 RamTek
 
 
-# Battle Toads
+# Battletoads
 Rare
 
 
@@ -2264,10 +2256,6 @@ Royal Denshi
 
 # Attack Ufo
 Ryoto Electric Co.
-
-
-# Go 2000
-SA
 
 
 # Kasino '89
@@ -2438,10 +2426,6 @@ Shoei
 Shonan
 
 
-# Invasion (Sidam)
-Sidam
-
-
 # Astropal
 Sidam?
 
@@ -2490,7 +2474,7 @@ Solar Games
 Song Won?
 
 
-# Odin De Luxe
+# Gamatron (Sonic)
 Sonic
 
 
@@ -2616,6 +2600,10 @@ Sun Mixing
 
 # Best Of Best
 SunA
+
+
+# Go 2000
+SunA?
 
 
 # Trivia Quest
@@ -2914,8 +2902,12 @@ V-System Co.
 VEB Polytechnik Karl-Marx-Stadt
 
 
-# Noughts 'n' Crosses (VFS) (MPU3)
+# More Money (VFS) (MPU3)
 VFS
+
+
+# VLC Nevada
+VLC Inc.
 
 
 # Virtual Combat
@@ -2978,7 +2970,7 @@ Video Klein
 Video Klein?
 
 
-# Aero Fighters
+# 3 On 3 Dunk Madness (US, prototype? 1997/02/04)
 Video System Co.
 
 
@@ -3006,7 +2998,7 @@ Visco
 Vision
 
 
-# Alpha One (Vision Electronics / Kyle Hodgetts)
+# Alpha One (Vision Electronics)
 Vision Electronics
 
 
@@ -3040,6 +3032,10 @@ Wave
 
 # Zorton Brothers (Los Justicieros)
 Web Picmatic
+
+
+# Fruit Star Bonus (Ver 8.20PIR)
+Webak Elektronik
 
 
 # Caesars Palace (Whitbread / Crystal) (IMPACT, set 1)
@@ -3154,11 +3150,7 @@ Zaccaria
 Zenitone
 
 
-# Super Invaders (Zenitone-Microsec)
-Zenitone-Microsec Ltd
-
-
-# Invader's Revenge
+# Invader's Revenge (set 1)
 Zenitone-Microsec Ltd.
 
 

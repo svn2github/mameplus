@@ -78,14 +78,12 @@
  * Revisions:
  *
  * xx-xx-2002 Acho A. Tang
- *
  * - 8085 emulation was in fact never used. It's been treated as a plain 8080.
  * - protected IRQ0 vector from being overwritten
  * - modified interrupt handler to properly process 8085-specific IRQ's
  * - corrected interrupt masking, RIM and SIM behaviors according to Intel's documentation
  *
  * 20-Jul-2002 Krzysztof Strzecha
- *
  * - SBB r instructions should affect parity flag.
  *   Fixed only for non x86 asm version (#define i8080_EXACT 1).
  *   There are probably more opcodes which should affect this flag, but don't.
@@ -98,30 +96,24 @@
  *   Thanks for the info go to Anton V. Ignatichev.
  *
  * 08-Dec-2002 Krzysztof Strzecha
- *
  * - ADC r instructions should affect parity flag.
  *   Fixed only for non x86 asm version (#define i8080_EXACT 1).
  *   There are probably more opcodes which should affect this flag, but don't.
  *
  * 05-Sep-2003 Krzysztof Strzecha
- *
  * - INR r, DCR r, ADD r, SUB r, CMP r instructions should affect parity flag.
  *   Fixed only for non x86 asm version (#define i8080_EXACT 1).
  *
  * 23-Dec-2006 Tomasz Slanina
- *
  * - SIM fixed
  *
  * 28-Jan-2007 Zsolt Vasvari
- *
  * - Removed archaic i8080_EXACT flag.
  *
  * 08-June-2008 Miodrag Milanovic
- *
  * - Flag setting fix for some instructions and cycle count update
  *
  * August 2009, hap
- *
  * - removed DAA table
  * - fixed accidental double memory reads due to macro overuse
  * - fixed cycle deduction on unconditional CALL / RET
@@ -133,9 +125,14 @@
  *   fixed X5 / V flags where accidentally broken due to flag names confusion
  *
  * 21-Aug-2009, Curt Coder
- *
  * - added 8080A variant
  * - refactored callbacks to use devcb
+ *
+ * October 2012, hap
+ * - fixed H flag on subtraction opcodes
+ * - on 8080, don't push the unsupported flags(X5, X3, V) to stack
+ * - 8080 passes on 8080/8085 CPU Exerciser, 8085 errors only on the DAA test
+ *   (ref: http://www.idb.me.uk/sunhillow/8080.html - tests only 8080 opcodes)
  *
  *****************************************************************************/
 
@@ -569,7 +566,7 @@ static void execute_one(i8085_state *cpustate, int opcode)
 		case 0x25:	M_DCR(cpustate->HL.b.h);							break;	/* DCR  H */
 		case 0x26:	M_MVI(cpustate->HL.b.h);							break;	/* MVI  H,nn */
 		case 0x27:	cpustate->WZ.b.h = cpustate->AF.b.h;						/* DAA  */
-					if (cpustate->AF.b.l&VF) {
+					if (IS_8085(cpustate) && cpustate->AF.b.l&VF) {
 						if ((cpustate->AF.b.l&HF) | ((cpustate->AF.b.h&0xf)>9)) cpustate->WZ.b.h-=6;
 						if ((cpustate->AF.b.l&CF) | (cpustate->AF.b.h>0x99)) cpustate->WZ.b.h-=0x60;
 					}
@@ -580,8 +577,6 @@ static void execute_one(i8085_state *cpustate, int opcode)
 
 					cpustate->AF.b.l=(cpustate->AF.b.l&3) | (cpustate->AF.b.h&0x28) | (cpustate->AF.b.h>0x99) | ((cpustate->AF.b.h^cpustate->WZ.b.h)&0x10) | ZSP[cpustate->WZ.b.h];
 					cpustate->AF.b.h=cpustate->WZ.b.h;
-
-					if (IS_8080(cpustate)) cpustate->AF.b.l &= 0xd5; // Ignore not used flags
 					break;
 
 		case 0x28:	if (IS_8085(cpustate)) {									/* LDEH nn */
@@ -888,7 +883,8 @@ static void execute_one(i8085_state *cpustate, int opcode)
 		case 0xf2:	M_JMP( !(cpustate->AF.b.l & SF) );					break;	/* JP   nnnn */
 		case 0xf3:	set_inte(cpustate, 0);								break;	/* DI   */
 		case 0xf4:	M_CALL( !(cpustate->AF.b.l & SF) );					break;	/* CP   nnnn */
-		case 0xf5:	M_PUSH(AF);											break;	/* PUSH A */
+		case 0xf5:	if (IS_8080(cpustate)) cpustate->AF.b.l = (cpustate->AF.b.l&~(X3F|X5F))|VF; // on 8080, VF=1 and X3F=0 and X5F=0 always! (we don't have to check for it elsewhere)
+					M_PUSH(AF);											break;	/* PUSH A */
 		case 0xf6:	cpustate->WZ.b.l = ARG(cpustate); M_ORA(cpustate->WZ.b.l); break; /* ORI  nn */
 		case 0xf7:	M_RST(6);											break;	/* RST  6 */
 
@@ -1006,9 +1002,9 @@ static void init_808x_common(legacy_cpu_device *device, device_irq_acknowledge_c
 	cpustate->irq_callback = irqcallback;
 	cpustate->device = device;
 
-	cpustate->program = device->space(AS_PROGRAM);
+	cpustate->program = &device->space(AS_PROGRAM);
 	cpustate->direct = &cpustate->program->direct();
-	cpustate->io = device->space(AS_IO);
+	cpustate->io = &device->space(AS_IO);
 
 	/* resolve callbacks */
 	cpustate->out_status_func.resolve(cpustate->config.out_status_func, *device);
